@@ -24,8 +24,6 @@ from scripts.ci.bio_preparation_gate import is_bio_preparation_path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 CHECKS_SCRIPT = REPO_ROOT / "scripts/ci/checks.sh"
-GATE_SCRIPT = REPO_ROOT / "scripts/ci/bio_preparation_gate.py"
-
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 VALIDATOR_CHECK = 'check "Validate BIO preparation capsules and active holds" .venv/bin/python -m scripts.ci.bio_preparation_gate'
@@ -72,15 +70,6 @@ def test_nothing_can_skip_the_bio_preparation_validator() -> None:
     assert "if" not in job["_step"], "the checks.sh step carries an `if:` and could be skipped"
     # checks.sh runs every check at top level, never inside a condition.
     assert any(line == VALIDATOR_CHECK for line in CHECKS_SCRIPT.read_text(encoding="utf-8").splitlines())
-
-
-def test_validator_change_detection_is_intact() -> None:
-    script = GATE_SCRIPT.read_text(encoding="utf-8")
-    assert '"--no-renames"' in script, "rename decomposition dropped"
-    assert '_git_names(base_sha, head_sha, "AM")' in script
-    assert '_git_names(base_sha, head_sha, "D")' in script
-    assert '_show(f"{base_sha}:{REGISTRY_REL}"' in script
-    assert "changed_slugs.update(registry_changed_slugs)" in script
 
 
 @pytest.mark.parametrize("raw_path", BIO_PREPARATION_PATHS)

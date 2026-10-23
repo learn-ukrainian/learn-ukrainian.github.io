@@ -200,9 +200,9 @@ def is_kimi_model(model: str | None) -> bool:
     if text.startswith("kimi"):
         return True
     try:
-        from scripts.review.model_catalog import kimi_model_aliases
+        from scripts.review.model_catalog import kimi_historical_labels
 
-        return text in {alias.casefold() for alias in kimi_model_aliases()}
+        return text in kimi_historical_labels()
     except Exception:  # catalog unavailable: the prefix rule above still applies
         return False
 

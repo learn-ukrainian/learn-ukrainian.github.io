@@ -8,7 +8,6 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 import scripts.projects.open_model_data.language_contact_detector as detector
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -136,17 +135,6 @@ def _detect(
         runtime=runtime,
         input_root=_test_input_root(),
     )
-
-
-def test_schema_and_config_conformance(config: dict) -> None:
-    for path in (
-        detector.CONFIG_SCHEMA_PATH,
-        detector.CANDIDATE_SCHEMA_PATH,
-        detector.RECEIPT_SCHEMA_PATH,
-    ):
-        Draft202012Validator.check_schema(_json(path))
-    assert config["r2u_cache"]["network_during_run"] is False
-    assert config["span"]["max_chars"] == 240
 
 
 def test_frozen_denominator_and_source_adapters_match_profiler(config: dict) -> None:

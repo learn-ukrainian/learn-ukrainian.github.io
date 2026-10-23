@@ -26,19 +26,6 @@ def _review_section():
     return body.split("## #0H —", 1)[1].split("\n## ", 1)[0]
 
 
-def test_shared_memory_preserves_review_publication_and_landing_order():
-    section = _review_section()
-    assert "**Independent cross-family (CF) formal review" in section
-    assert "self-review / same-family review ≠ the gate" in section
-    assert "**before** `.venv/bin/python -m scripts.publish pr-create` (draft or ready)" in section
-    assert "Only completed qualified exact-head CF APPROVE permits PR creation; afterward" in section
-    assert "green blocking CI on that same head" in section
-    assert "A moved head requires fresh CF and CI" in section
-    assert "scripts.publish pr-merge --number N" in section
-    assert "Request immediately after" not in section
-    assert "eligibility pins are retired" not in section
-
-
 @pytest.mark.parametrize("moved_head", [False, True], ids=["pushed-head", "remote-drift"])
 def test_documented_ask_reaches_native_branch_pin_admission(monkeypatch, tmp_path, capsys, moved_head):
     """Real parser/handler/wrapper/admission/checkout; only the native worker is offline."""

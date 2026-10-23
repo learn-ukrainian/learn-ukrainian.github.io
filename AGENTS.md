@@ -35,7 +35,7 @@ non-skippable:
    `X-Agent` attribution.
 4. Use the fleet; the review gate is an independent **cross-family** review,
    not discussion.
-5. Route by model × harness fit; Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules.
+5. Route by model × harness fit; Kimi models are retired in the catalog (OO-58).
 6. Substitute a constrained lane and record that substitution.
 7. Make tool-backed claims only; outcome validity precedes paid execution:
    define semantic success and stop criteria; transport, shape, and cost are

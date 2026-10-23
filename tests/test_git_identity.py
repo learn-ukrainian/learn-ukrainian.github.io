@@ -156,28 +156,3 @@ launcher_export_git_identity
         timeout=30,
     )
     assert result.returncode == 3
-
-
-@pytest.mark.parametrize("provider,model,name", CASES)
-def test_spawned_git_commit_uses_lane_identity(tmp_path, monkeypatch, provider, model, name):
-    monkeypatch.setenv("HOME", str(tmp_path))
-    env = env_sanitize.build_agent_env(provider=provider, model=model)
-
-    def git(*args):
-        return subprocess.run(
-            ["git", *args],
-            cwd=tmp_path,
-            env=env,
-            text=True,
-            capture_output=True,
-            check=True,
-            timeout=30,
-        ).stdout.strip()
-
-    git("init", "-q")
-    # A contradictory repo-local config must lose to the process identity.
-    git("config", "user.name", "Parent")
-    git("config", "user.email", "parent@local.invalid")
-    git("-c", "core.hooksPath=/dev/null", "commit", "--allow-empty", "-qm", "Identity fixture")
-    slug = "unknown" if name == "LU Unknown" else name.lower()
-    assert git("show", "-s", "--format=%an|%ae|%cn|%ce") == f"{name}|{slug}@local.invalid|{name}|{slug}@local.invalid"

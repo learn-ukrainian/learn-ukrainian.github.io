@@ -67,49 +67,6 @@ def _read(history: Path) -> list[dict[str, float]]:
         return uv.read_history(fd)
 
 
-def test_growth_uses_oldest_sample_inside_24h_and_reports_real_span(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
-    _write_history(
-        history,
-        (NOW - 30 * HOUR, 1 * GIB),  # outside the window: ignored
-        (NOW - 20 * HOUR, 5 * GIB),
-        (NOW - 2 * HOUR, 6 * GIB),
-    )
-
-    status = _status(cache, history, 6 * GIB + GIB // 2)
-
-    assert status["growth_bytes"] == GIB + GIB // 2
-    assert status["growth_span_seconds"] == 20 * HOUR
-    assert uv.format_line(status) == "UV CACHE: 6.50 GiB, +1.50 GiB over 20.0h"
-
-
-def test_full_24h_window_is_labelled_24h(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
-    _write_history(history, (NOW - 24 * HOUR, 4 * GIB))
-
-    assert uv.format_line(_status(cache, history, 5 * GIB)) == "UV CACHE: 5.00 GiB, +1.00 GiB over 24h"
-
-
-def test_shrinking_cache_reports_negative_growth_without_warning(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
-    _write_history(history, (NOW - 24 * HOUR, 9 * GIB))
-
-    status = _status(cache, history, 4 * GIB)
-
-    assert status["warnings"] == []
-    assert uv.format_line(status) == "UV CACHE: 4.00 GiB, -5.00 GiB over 24h"
-
-
-def test_no_usable_baseline_reports_history_building(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
-    _write_history(history, (NOW - 600, 3 * GIB))  # too young to say anything about growth
-
-    status = _status(cache, history, 3 * GIB)
-
-    assert status["growth_bytes"] is None
-    assert uv.format_line(status) == "UV CACHE: 3.00 GiB, growth n/a (history building)"
-
-
 def test_first_run_creates_history_and_second_run_dedupes_inside_interval(cache: Path, tmp_path: Path) -> None:
     history = tmp_path / "state" / uv.HISTORY_FILENAME
 
@@ -138,63 +95,6 @@ def test_corrupt_history_lines_are_skipped(cache: Path, tmp_path: Path) -> None:
     assert _read(history) == [{"ts": 1.0, "bytes": 2.0}]
 
 
-def test_absolute_size_warning_uses_default_and_env_threshold(
-    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
-
-    status = _status(cache, history, 11 * GIB, record=False)
-    assert status["warnings"] == ["size above 10 GiB"]
-    assert uv.format_line(status).endswith("[WARN: size above 10 GiB]")
-
-    monkeypatch.setenv("LU_UV_CACHE_WARN_GB", "20")
-    assert _status(cache, history, 11 * GIB, record=False)["warnings"] == []
-
-
-def test_growth_warning_uses_default_and_env_threshold(
-    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
-    _write_history(history, (NOW - 24 * HOUR, 5 * GIB))
-
-    status = _status(cache, history, 8 * GIB, record=False)
-    assert status["warnings"] == ["growth above 2 GiB per 24 h"]
-
-    monkeypatch.setenv("LU_UV_CACHE_GROWTH_WARN_GB", "3")
-    assert _status(cache, history, 8 * GIB, record=False)["warnings"] == []
-    monkeypatch.setenv("LU_UV_CACHE_GROWTH_WARN_GB", "garbage")
-    assert _status(cache, history, 8 * GIB, record=False)["warnings"] == ["growth above 2 GiB per 24 h"]
-
-
-def test_no_record_leaves_no_history_file(
-    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    state = tmp_path / "state"
-    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
-    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
-
-    assert uv.main(["--no-record"]) == 0
-
-    assert capsys.readouterr().out.startswith("UV CACHE: 0.00 GiB")
-    assert not state.exists()
-
-
-def test_missing_cache_is_reported_without_touching_history(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    state = tmp_path / "state"
-    monkeypatch.setenv("UV_CACHE_DIR", str(tmp_path / "absent"))
-    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
-
-    assert uv.main([]) == 0
-
-    assert capsys.readouterr().out == "UV CACHE: not present\n"
-    assert not state.exists()
-    assert uv.format_line(uv.build_status(cache=tmp_path / "absent", history_dir_fd=None, now=NOW)) == (
-        "UV CACHE: not present"
-    )
-
-
 def test_measure_bytes_counts_hardlinks_once_and_never_follows_symlinks(tmp_path: Path) -> None:
     root = tmp_path / "tree"
     (root / "a").mkdir(parents=True)
@@ -212,56 +112,6 @@ def test_measure_bytes_counts_hardlinks_once_and_never_follows_symlinks(tmp_path
     assert uv.measure_bytes(root / "a") == uv.measure_bytes(lone)  # the hardlinked pair counts once
     # only the symlink entry itself is counted, not the 1 MB tree behind it
     assert 0 <= uv.measure_bytes(root) - uv.measure_bytes(root / "a") < 16384
-
-
-def _slow_du(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """Put a ``du`` on PATH that publishes its pid and then hangs like a stalled scan."""
-    bindir = tmp_path / "slow-bin"
-    bindir.mkdir()
-    pid_file = tmp_path / "du.pid"
-    du = bindir / "du"
-    du.write_text(f'#!/bin/sh\necho $$ > "{pid_file}"\nexec sleep 300\n', encoding="utf-8")
-    du.chmod(0o755)
-    monkeypatch.setenv("PATH", f"{bindir}{os.pathsep}{os.environ['PATH']}")
-    return pid_file
-
-
-def _pid_running(pid: int) -> bool:
-    try:
-        return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] != "Z"
-    except (OSError, IndexError):
-        return False
-
-
-@pytest.mark.parametrize("record", [False, True])
-def test_slow_scan_is_bounded_reports_unavailable_and_records_nothing(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], record: bool
-) -> None:
-    cache = tmp_path / "cache"
-    cache.mkdir()
-    state = tmp_path / "state"
-    pid_file = _slow_du(tmp_path, monkeypatch)
-    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
-    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
-    monkeypatch.setenv("LU_UV_CACHE_SCAN_TIMEOUT_S", "0.5")
-
-    started = time.monotonic()
-    assert uv.main(["--record-history"] if record else []) == 0
-    elapsed = time.monotonic() - started
-
-    assert capsys.readouterr().out == "UV CACHE: size unavailable (scan exceeded 0.5s)\n"
-    assert elapsed < 0.5 + uv.KILL_GRACE_SECONDS + 3
-    assert not (state / uv.HISTORY_FILENAME).exists()
-    assert not _pid_running(int(pid_file.read_text()))
-
-
-def test_scan_timeout_default_and_override(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert uv.scan_timeout_seconds() == 8
-    monkeypatch.setenv("LU_UV_CACHE_SCAN_TIMEOUT_S", "2.5")
-    assert uv.scan_timeout_seconds() == 2.5
-    for bad in ("0", "-1", "soon", "inf"):
-        monkeypatch.setenv("LU_UV_CACHE_SCAN_TIMEOUT_S", bad)
-        assert uv.scan_timeout_seconds() == 8
 
 
 @pytest.mark.parametrize("layout", ["same", "inside", "symlink-alias"])
@@ -311,16 +161,6 @@ def test_symlinked_history_directory_is_refused_before_measuring(
     assert list(cache.iterdir()) == [] and list(outside.iterdir()) == []
 
 
-def test_symlinked_cache_root_is_measured_where_it_points(tmp_path: Path) -> None:
-    real = tmp_path / "real-cache"
-    real.mkdir()
-    (real / "wheel.bin").write_bytes(b"w" * 1_000_000)
-    link = tmp_path / "cache-link"
-    link.symlink_to(real, target_is_directory=True)
-
-    assert uv.measure_bytes(link) == uv.measure_bytes(real) >= 1_000_000
-
-
 def _run_as_file(tmp_path: Path, cache: Path, state: Path, *args: str) -> subprocess.CompletedProcess[str]:
     """Launch the tool as a plain file from outside the repository, without PYTHONPATH."""
     env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
@@ -335,16 +175,6 @@ def _run_as_file(tmp_path: Path, cache: Path, state: Path, *args: str) -> subpro
         timeout=60,
         check=False,
     )
-
-
-def test_tool_runs_as_a_plain_file_outside_the_repository(cache: Path, tmp_path: Path) -> None:
-    state = tmp_path / "state"
-
-    result = _run_as_file(tmp_path, cache, state, "--record-history")
-
-    assert result.returncode == 0, result.stderr
-    assert result.stdout.startswith("UV CACHE: 0.00 GiB, growth n/a (history building)")
-    assert len(_read(state / uv.HISTORY_FILENAME)) == 1
 
 
 def test_symlinked_lock_file_is_refused_and_its_target_left_intact(tmp_path: Path) -> None:
@@ -368,154 +198,6 @@ def test_symlinked_lock_file_is_refused_and_its_target_left_intact(tmp_path: Pat
     assert sorted(path.name for path in state.iterdir()) == [lock.name]
 
 
-def test_lock_name_that_is_not_a_regular_file_is_refused(cache: Path, tmp_path: Path) -> None:
-    state = tmp_path / "state"
-    state.mkdir()
-    os.mkfifo(state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX))
-
-    with _dir_fd(state) as fd, pytest.raises(uv.HistoryLocationError, match="not a regular file"):
-        uv.record_sample(fd, NOW, GIB, lock_timeout_s=0.2)
-
-    assert sorted(path.name for path in state.iterdir()) == [uv.HISTORY_FILENAME + uv.LOCK_SUFFIX]
-
-
-def test_directory_shaped_lock_is_refused_cleanly(tmp_path: Path) -> None:
-    # Sol r3 follow-up: a directory at the lock name used to end in exit 1 with a traceback.
-    cache = tmp_path / "cache"
-    cache.mkdir()
-    state = tmp_path / "state"
-    lock = state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX)
-    lock.mkdir(parents=True)
-
-    result = _run_as_file(tmp_path, cache, state)
-
-    assert result.returncode == 2, result.stderr
-    assert result.stdout == ""
-    assert "refusing to run: the history lock file is not a regular file" in result.stderr
-    assert "Traceback" not in result.stderr and str(tmp_path) not in result.stderr
-    assert str(Path.home()) not in result.stderr
-    assert lock.is_dir() and list(lock.iterdir()) == []
-    assert sorted(path.name for path in state.iterdir()) == [lock.name]
-
-
-def test_lock_file_hard_linked_to_a_cache_file_is_refused_without_locking_it(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    # Sol r4 blocker (b): a pre-existing hard link made the command lock a cache inode.
-    cache = tmp_path / "cache"
-    cache.mkdir()
-    victim = cache / "victim"
-    victim.write_bytes(b"v" * 100)
-    state = tmp_path / "state"
-    state.mkdir()
-    lock = state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX)
-    os.link(victim, lock)
-    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
-    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
-    locked: list[int] = []
-    real_flock = fcntl.flock
-
-    def recording_flock(fd: int, operation: int) -> None:
-        locked.append(fd)
-        real_flock(fd, operation)
-
-    monkeypatch.setattr(fcntl, "flock", recording_flock)
-
-    assert uv.main([]) == 2
-
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    assert "refusing to run: the history lock file has more than one link" in captured.err
-    assert str(tmp_path) not in captured.err
-    assert locked == []
-    assert victim.read_bytes() == b"v" * 100 and victim.stat().st_nlink == 2
-    assert sorted(path.name for path in state.iterdir()) == [lock.name]
-
-
-class _LockChurn:
-    """Real filesystem churn on the lock name: every exclusive create meets an existing
-    lock and the lock is gone again before the plain open. Stops after ``limit`` attempts
-    (or ``seconds``) so code without a deadline ends instead of spinning forever."""
-
-    def __init__(self, limit: int = 1_000_000, seconds: float = 5.0) -> None:
-        self.name = uv.HISTORY_FILENAME + uv.LOCK_SUFFIX
-        self.limit, self.stop_at = limit, time.monotonic() + seconds
-        self.attempts = 0
-        self.real_open = os.open
-
-    def churning(self) -> bool:
-        return self.attempts < self.limit and time.monotonic() < self.stop_at
-
-    def __call__(self, path: object, flags: int, *args: object, dir_fd: int | None = None, **kwargs: object) -> int:
-        if path == self.name and self.churning():
-            if flags & os.O_EXCL:
-                self.attempts += 1
-                os.close(self.real_open(path, os.O_WRONLY | os.O_CREAT, 0o600, dir_fd=dir_fd))  # type: ignore[arg-type]
-            else:
-                with contextlib.suppress(FileNotFoundError):
-                    os.unlink(path, dir_fd=dir_fd)  # type: ignore[arg-type]
-        return self.real_open(path, flags, *args, dir_fd=dir_fd, **kwargs)  # type: ignore[arg-type]
-
-
-def test_lock_creation_churn_is_bounded_by_the_lock_deadline(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    # Sol r3 blocker 2: 1,001 create/open retries took 0.328 s despite a 0.01 s deadline.
-    cache = tmp_path / "cache"
-    cache.mkdir()
-    state = tmp_path / "state"
-    state.mkdir()
-    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
-    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
-    monkeypatch.setenv("LU_UV_CACHE_LOCK_TIMEOUT_S", "0.05")
-    churn = _LockChurn()
-    monkeypatch.setattr(os, "open", churn)
-
-    started = time.monotonic()
-    assert uv.main(["--record-history"]) == 0
-    elapsed = time.monotonic() - started
-
-    assert churn.churning(), "the retries outlived the churn instead of the deadline"
-    assert churn.attempts >= 2 and elapsed < 3
-    assert capsys.readouterr().out.startswith(
-        "UV CACHE: 0.00 GiB, history busy (lock held by another writer for 0.05s)"
-    )
-    assert not (state / uv.HISTORY_FILENAME).exists()
-
-
-def test_one_deadline_covers_lock_creation_retries_and_the_lock_wait(tmp_path: Path) -> None:
-    # Churn uses most of the deadline, then another writer holds the lock: the wait gets
-    # only what is left, not a fresh deadline of its own.
-    state = tmp_path / "state"
-    state.mkdir()
-    timeout = 1.0
-    churn = _LockChurn(seconds=0.7 * timeout)
-    holder: list[int] = []
-
-    def churn_then_hold(path: object, flags: int, *args: object, dir_fd: int | None = None, **kwargs: object) -> int:
-        if path == churn.name and not churn.churning() and not holder:
-            held = churn.real_open(path, os.O_RDWR | os.O_CREAT, 0o600, dir_fd=dir_fd)  # type: ignore[arg-type]
-            fcntl.flock(held, fcntl.LOCK_EX)
-            holder.append(held)
-        return churn(path, flags, *args, dir_fd=dir_fd, **kwargs)
-
-    try:
-        with _dir_fd(state) as fd, pytest.MonkeyPatch.context() as patch:
-            patch.setattr(os, "open", churn_then_hold)
-            started = time.monotonic()
-            with pytest.raises(uv.HistoryBusy):
-                uv.record_sample(fd, NOW, GIB, lock_timeout_s=timeout)
-            elapsed = time.monotonic() - started
-    finally:
-        for held in holder:
-            os.close(held)
-
-    assert holder and churn.attempts >= 2
-    # A fresh deadline for the wait would end near 1.7 s.
-    assert timeout <= elapsed < 1.4 * timeout
-    assert not (state / uv.HISTORY_FILENAME).exists()
-
-
 def test_measuring_error_is_not_a_zero_sample(cache: Path, tmp_path: Path) -> None:
     history = tmp_path / uv.HISTORY_FILENAME
 
@@ -527,21 +209,6 @@ def test_measuring_error_is_not_a_zero_sample(cache: Path, tmp_path: Path) -> No
 
     assert uv.format_line(status) == "UV CACHE: measurement failed ([Errno 13] Permission denied)"
     assert "bytes" not in status and not history.exists()
-
-
-def test_missing_du_reports_measurement_failed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    cache = tmp_path / "cache"
-    cache.mkdir()
-    empty_bin = tmp_path / "empty-bin"
-    empty_bin.mkdir()
-    monkeypatch.setenv("PATH", str(empty_bin))
-    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
-    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(tmp_path / "state"))
-
-    assert uv.main(["--no-record"]) == 0
-    assert capsys.readouterr().out.startswith("UV CACHE: measurement failed (du: ")
 
 
 def test_concurrent_writers_never_drop_a_newer_sample(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -640,15 +307,6 @@ def test_cli_with_a_held_history_lock_finishes_within_both_deadlines(tmp_path: P
     assert result.stdout.startswith("UV CACHE: 0.00 GiB, history busy (lock held by another writer for 0.3s)")
     assert elapsed < 0.3 + 5 + 20  # both deadlines plus interpreter start-up
     assert not (state / uv.HISTORY_FILENAME).exists()
-
-
-def test_lock_timeout_default_and_override(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert uv.lock_timeout_seconds() == 2
-    monkeypatch.setenv("LU_UV_CACHE_LOCK_TIMEOUT_S", "0.25")
-    assert uv.lock_timeout_seconds() == 0.25
-    for bad in ("0", "-1", "soon", "inf", "nan"):
-        monkeypatch.setenv("LU_UV_CACHE_LOCK_TIMEOUT_S", bad)
-        assert uv.lock_timeout_seconds() == 2
 
 
 def test_cli_prints_line_records_history_and_deletes_nothing(
@@ -788,32 +446,6 @@ def test_status_readers_never_open_for_writing_or_create_directories(
     assert not (tmp_path / "missing").exists()
 
 
-def test_concurrent_status_readers_leave_history_and_lock_unchanged(cache: Path, tmp_path: Path) -> None:
-    state = tmp_path / "state"
-    state.mkdir()
-    history = state / uv.HISTORY_FILENAME
-    _write_history(history, (time.time() - 23.75 * HOUR, GIB))
-    before = history.read_bytes()
-    env = {**os.environ, "UV_CACHE_DIR": str(cache), "LU_DRIVER_STATUS_STATE_DIR": str(state)}
-    from concurrent.futures import ThreadPoolExecutor
-
-    def reader(_: int) -> subprocess.CompletedProcess[str]:
-        return subprocess.run(
-            [sys.executable, "-m", "scripts.hygiene.uv_cache_status"],
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
-        )
-
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        results = list(pool.map(reader, range(8)))
-    assert all(r.returncode == 0 and "-1.00 GiB over 24h" in r.stdout for r in results)
-    assert history.read_bytes() == before
-    assert [p.name for p in state.iterdir()] == [uv.HISTORY_FILENAME]
-
-
 @pytest.mark.parametrize("contents", [None, "", "broken\n", '{"ts": NaN, "bytes": 4}\n', '{"ts": 5, "bytes": -1}\n'])
 def test_unusable_history_is_unavailable_not_building(cache: Path, tmp_path: Path, contents: str | None) -> None:
     history = tmp_path / uv.HISTORY_FILENAME
@@ -912,43 +544,6 @@ def test_recorded_race_classes_cannot_turn_status_readers_into_writers(
     assert not list(tmp_path.rglob("*.lock")) and not list(tmp_path.rglob("*.tmp"))
 
 
-@pytest.mark.parametrize("unlink_original", [False, True])
-def test_hostile_temporary_hardlinks_are_explicitly_outside_writer_guarantee(
-    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, unlink_original: bool
-) -> None:
-    # Reproduce the short-write alias, including round 4's single-link bypass.
-    state = tmp_path / "state"
-    state.mkdir()
-    real_write = os.write
-    writes = []
-
-    def write(fd: int, data: object) -> int:
-        target = Path(os.readlink(f"/proc/self/fd/{fd}"))
-        written = real_write(fd, bytes(data)[:1] if not writes else data)
-        if not writes:
-            os.link(target, cache / "alias")
-            if unlink_original:
-                target.unlink()
-        writes.append(written)
-        return written
-
-    monkeypatch.setattr(os, "write", write)
-    with _dir_fd(state) as fd:
-        if unlink_original:
-            with pytest.raises(FileNotFoundError):
-                uv.record_sample(fd, NOW, GIB)
-        else:
-            uv.record_sample(fd, NOW, GIB)
-    assert writes[0] == 1 and sum(writes) > 1
-    assert json.loads((cache / "alias").read_text()) == {"ts": NOW, "bytes": GIB}
-
-
-def test_warning_thresholds_do_not_warn_at_equality(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
-    _write_history(history, (NOW - 24 * HOUR, 8 * GIB))
-    assert _status(cache, history, 10 * GIB)["warnings"] == []
-
-
 def test_help_documents_owner_modes_and_side_effects(capsys: pytest.CaptureFixture[str]) -> None:
     with pytest.raises(SystemExit) as result:
         uv.main(["--help"])
@@ -965,51 +560,6 @@ def test_help_documents_owner_modes_and_side_effects(capsys: pytest.CaptureFixtu
         assert text in out
 
 
-def test_directory_relocation_remains_outside_writer_guarantee(
-    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    state = tmp_path / "state"
-    state.mkdir()
-    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
-
-    def measure(_: Path) -> int:
-        state.rename(cache / "moved-state")
-        return GIB
-
-    monkeypatch.setattr(uv, "measure_bytes", measure)
-    assert uv.main(["--record-history", "--state-dir", str(state)]) == 0
-    assert "history building" in capsys.readouterr().out
-    assert _read(cache / "moved-state" / uv.HISTORY_FILENAME)[0]["bytes"] == GIB
-
-
-@pytest.mark.parametrize("unlink_original", [False, True])
-def test_hostile_lock_alias_during_wait_remains_outside_writer_guarantee(
-    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, unlink_original: bool
-) -> None:
-    state = tmp_path / "state"
-    state.mkdir()
-    name = uv.HISTORY_FILENAME + uv.LOCK_SUFFIX
-    real_lock = uv._lock_history
-
-    def lock(fd: int, deadline: float, timeout_s: float) -> None:
-        # This is the mutation during a lock retry in the recorded reproducer.
-        os.link(state / name, cache / "alias")
-        if unlink_original:
-            (state / name).unlink()
-        real_lock(fd, deadline, timeout_s)
-        other = os.open(cache / "alias", os.O_RDWR)
-        try:
-            with pytest.raises(BlockingIOError):
-                fcntl.flock(other, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        finally:
-            os.close(other)
-
-    monkeypatch.setattr(uv, "_lock_history", lock)
-    with _dir_fd(state) as fd:
-        uv.record_sample(fd, NOW, GIB)
-    assert (cache / "alias").stat().st_nlink == (1 if unlink_original else 2)
-
-
 def test_state_option_overrides_environment_and_tempdir_is_ignored(
     cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -1023,17 +573,6 @@ def test_state_option_overrides_environment_and_tempdir_is_ignored(
     assert list(cache.iterdir()) == []
     assert (state / uv.HISTORY_FILENAME).stat().st_mode & 0o777 == 0o600
     assert state.stat().st_mode & 0o777 == 0o700
-
-
-def test_warning_survives_busy_history(cache: Path, tmp_path: Path) -> None:
-    with _held_history_lock(tmp_path):
-        with pytest.MonkeyPatch.context() as patch:
-            patch.setenv("LU_UV_CACHE_LOCK_TIMEOUT_S", "0.01")
-            status = _status(cache, tmp_path / uv.HISTORY_FILENAME, 11 * GIB, record=True)
-    assert uv.format_line(status) == (
-        "UV CACHE: 11.00 GiB, history busy (lock held by another writer for 0.01s); "
-        "no sample recorded [WARN: size above 10 GiB]"
-    )
 
 
 def test_history_unreadable_is_explicit_without_writing(

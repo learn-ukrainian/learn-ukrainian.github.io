@@ -6427,3 +6427,24 @@ entries:
   count: 2
   kind: non_model_label
   reason: Fleet supervisory sender and summary recipient identities, not model selections.
+- path: scripts/agent_runtime/adapters/kimicc.py
+  scope: kimicc_default_model
+  context: expression
+  id: kimi-code/k3
+  count: 1
+  kind: frozen_identity
+  reason: Historical omitted-model identity retained so catalog retirement can refuse it; never an executable route.
+- path: scripts/agent_runtime/adapters/kimicc.py
+  scope: KimiccHarness
+  context: expression
+  id: kimi-code/k3
+  count: 1
+  kind: frozen_identity
+  reason: Historical adapter identity retained for the existing catalog retirement refusal.
+- path: scripts/review/model_catalog.py
+  scope: kimi_historical_labels
+  context: docstring
+  id: k3
+  count: 1
+  kind: documentation
+  reason: Example of a historical alias recognized for refusal after executable transports are removed.

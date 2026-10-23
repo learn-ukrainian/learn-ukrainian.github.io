@@ -5,6 +5,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 from pathlib import Path
+from unittest.mock import Mock, call
 
 import pytest
 
@@ -18,88 +19,11 @@ UNITS = (
     "learn-ukrainian-backup-retention.timer",
     "learn-ukrainian-backup-alert@.service",
 )
-ALERT_SCRIPT = "scripts/orchestration/backup_failure_alert.py"
 RENDERED_ROOT = "/srv/learn-ukrainian"
 
 
 def _render(name: str) -> str:
     return (PACKAGING / name).read_text(encoding="utf-8").replace("@REPO_ROOT@", RENDERED_ROOT)
-
-
-def test_backup_service_contract() -> None:
-    service = _render("learn-ukrainian-backup.service")
-    assert "Type=oneshot" in service
-    assert "EnvironmentFile=" not in service
-    assert "Environment=LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env" in service
-    assert f"WorkingDirectory={RENDERED_ROOT}" in service
-    assert f"LU_BACKUP_TMPDIR={RENDERED_ROOT}/data/.backup-staging" in service
-    assert "Nice=15" in service
-    assert "IOSchedulingClass=idle" in service
-    assert "TimeoutStartSec=" in service
-    assert "run_scheduled_backup.sh" in service
-    assert "[Install]" not in service
-    assert "After=network.target" not in service
-    dropin = (PACKAGING / "dropins/learn-ukrainian-backup.service.d/data-volume.conf").read_text(encoding="utf-8")
-    assert (
-        "data_volume_guard.sh -- /usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh\n"
-        in dropin
-    )
-
-
-def test_backup_timer_contract() -> None:
-    timer = _render("learn-ukrainian-backup.timer")
-    assert "OnCalendar=*-*-* 03:30:00 UTC" in timer
-    assert "Persistent=true" in timer
-    assert "RandomizedDelaySec=15min" in timer
-    assert "Unit=learn-ukrainian-backup.service" in timer
-
-
-def test_retention_units_run_weekly_tag_scoped_forget() -> None:
-    service = _render("learn-ukrainian-backup-retention.service")
-    assert "Type=oneshot" in service
-    assert "run_scheduled_backup.sh retention" in service
-    assert "EnvironmentFile=" not in service
-    assert "Environment=LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env" in service
-    assert "[Install]" not in service
-    assert "After=network.target" not in service
-    dropin = (PACKAGING / "dropins/learn-ukrainian-backup-retention.service.d/data-volume.conf").read_text(
-        encoding="utf-8"
-    )
-    assert (
-        "data_volume_guard.sh -- /usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh retention\n"
-        in dropin
-    )
-    timer = _render("learn-ukrainian-backup-retention.timer")
-    assert timer.count("OnCalendar=") == 1
-    assert "OnCalendar=Sun" in timer
-    assert "Persistent=true" in timer
-
-
-@pytest.mark.parametrize("name", ["learn-ukrainian-backup.service", "learn-ukrainian-backup-retention.service"])
-def test_backup_services_alert_on_failure_and_report_recovery(name: str) -> None:
-    service = _render(name)
-    unit_section, service_section = service.split("[Service]", 1)
-    assert "OnFailure=learn-ukrainian-backup-alert@%n.service" in unit_section
-    assert (
-        f"ExecStartPost=-/usr/bin/env {RENDERED_ROOT}/.venv/bin/python {RENDERED_ROOT}/{ALERT_SCRIPT} recovered %n"
-        in service_section
-    )
-
-
-def test_alert_template_reports_the_failed_unit() -> None:
-    alert = _render("learn-ukrainian-backup-alert@.service")
-    assert "Type=oneshot" in alert
-    assert f"WorkingDirectory={RENDERED_ROOT}" in alert
-    assert f"ExecStart=/usr/bin/env {RENDERED_ROOT}/.venv/bin/python {RENDERED_ROOT}/{ALERT_SCRIPT} failed %i" in alert
-    assert not [line for line in alert.splitlines() if line.startswith("OnFailure=")]
-    assert "[Install]" not in alert
-    assert "learn-ukrainian-backup-alert@.service" in install_backup_timer.UNIT_NAMES
-
-
-def test_retention_service_gives_prune_two_backend_connections() -> None:
-    service = _render("learn-ukrainian-backup-retention.service")
-    assert "Environment=LU_BACKUP_RCLONE_CONNECTIONS=2" in service
-    assert "LU_BACKUP_RCLONE_CONNECTIONS" not in _render("learn-ukrainian-backup.service")
 
 
 def test_installer_accepts_primary_checkout_and_rejects_linked_worktree(
@@ -118,26 +42,61 @@ def test_installer_accepts_primary_checkout_and_rejects_linked_worktree(
     with pytest.raises(install_backup_timer.InstallError, match="must be the primary checkout"):
         install_backup_timer.main(["--repo-root", str(linked), "--unit-dir", str(tmp_path / "units")])
 
+    # Retirement refusal must precede rendering, writes, verification and service actions.
+    boundary = Mock(side_effect=AssertionError("enable request reached a side effect"))
+    monkeypatch.setattr(install_backup_timer, "render_units", boundary)
+    monkeypatch.setattr(install_backup_timer, "verify_units", boundary)
+    monkeypatch.setattr(install_backup_timer, "open_unit_dir", boundary)
+    monkeypatch.setattr(install_backup_timer, "systemctl_user", boundary)
+    with pytest.raises(install_backup_timer.InstallError, match=r"retired.*refused"):
+        install_backup_timer.main(["--repo-root", str(primary), "--apply", "--enable"])
+    with pytest.raises(install_backup_timer.InstallError, match=r"retired.*refused"):
+        install_backup_timer.apply({}, tmp_path / "units", enable=True)
+    boundary.assert_not_called()
+    assert not (tmp_path / "units").exists()
+
 
 def test_installer_writes_owner_only_units_and_repairs_existing_mode(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     unit_dir = tmp_path / "units"
     unit_dir.mkdir()
     existing = unit_dir / "learn-ukrainian-backup.service"
     existing.write_text("unchanged", encoding="utf-8")
     existing.chmod(0o644)
-    monkeypatch.setattr(
-        install_backup_timer,
-        "systemctl_user",
-        lambda *_args: subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr=""),
+    systemctl = Mock(
+        return_value=subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr=""),
     )
+    monkeypatch.setattr(install_backup_timer, "systemctl_user", systemctl)
 
     assert install_backup_timer.apply({existing.name: "unchanged"}, unit_dir, enable=False) == 0
     assert existing.stat().st_mode & 0o777 == 0o600
 
     assert install_backup_timer.apply({"learn-ukrainian-backup.timer": "new"}, unit_dir, enable=False) == 0
     assert (unit_dir / "learn-ukrainian-backup.timer").stat().st_mode & 0o777 == 0o600
+    assert existing.read_text() == "unchanged"
+    assert (unit_dir / "learn-ukrainian-backup.timer").read_text() == "new"
+    assert systemctl.call_args_list == [
+        call("daemon-reload"),
+        call("disable", "--now", "learn-ukrainian-backup.timer", "learn-ukrainian-backup-retention.timer"),
+        call("daemon-reload"),
+        call("disable", "--now", "learn-ukrainian-backup.timer", "learn-ukrainian-backup-retention.timer"),
+    ]
+    assert "next step: systemctl --user enable" not in capsys.readouterr().out
+
+    systemctl.reset_mock()
+    systemctl.side_effect = [
+        subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr=""),
+        subprocess.CompletedProcess(args=[], returncode=1, stdout="", stderr="disable denied"),
+    ]
+    with pytest.raises(install_backup_timer.InstallError, match="systemctl --user disable failed: disable denied"):
+        install_backup_timer.apply({existing.name: "unchanged"}, unit_dir, enable=False)
+    assert systemctl.call_args_list == [
+        call("daemon-reload"),
+        call("disable", "--now", "learn-ukrainian-backup.timer", "learn-ukrainian-backup-retention.timer"),
+    ]
+    assert existing.read_text() == "unchanged"
+    assert existing.stat().st_mode & 0o777 == 0o600
 
 
 @pytest.mark.skipif(shutil.which("systemd-analyze") is None, reason="systemd-analyze unavailable")

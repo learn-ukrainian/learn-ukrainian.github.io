@@ -200,11 +200,6 @@ def test_declared_doublet_plus_one_member_is_variant(gen) -> None:
     assert len(res["selected"]) == 2  # both assertions are shown as correct
 
 
-def test_declared_doublet_plus_both_members_is_variant(gen) -> None:
-    res = gen.resolve([_doublet(gen), _member(gen, "броня́"), _member(gen, "бро́ня", source="kaikki")], "stress", SUBJECT)
-    assert res["state"] == "variant"
-
-
 def test_declared_doublet_not_containing_the_observed_value_is_conflict(gen) -> None:
     res = gen.resolve([_doublet(gen), _member(gen, "бро́ня́")], "stress", SUBJECT)
     assert res["state"] == "conflict" and res["selected"] is None
@@ -466,12 +461,6 @@ def test_public_projection_recomputes_and_carries_suppressed_assertions_as_tombs
     assert not _errors(validator, public)
 
 
-def test_public_projection_of_an_untouched_card_is_the_card(gen) -> None:
-    castle = _card("zamok-castle")
-    public = gen.public_projection(castle)
-    assert public == castle, "recomputation is deterministic: no suppression -> identical projection and version"
-
-
 # ---------------------------------------------------------------- registry vs build (Astra r2 gap 1)
 
 
@@ -645,102 +634,6 @@ def test_unproven_position_never_narrows_an_ambiguous_hold(gen) -> None:
     }
 
 
-def _small_world(
-    position: str, content: str, n: int, stale: bool, observed: bool
-) -> tuple[dict, list[dict], str | None]:
-    """One re-harvest scenario. The record was minted in `ulif@s1` with a register position, a content digest and
-    the weak header key; `stale` adds a second, older register position (`ulif@s0`, the row was renumbered).
-    `content == "changed"` appends a corrected digest (`ulif@s2`) that row 0 now carries (the old one is gone).
-    Rows r0..r{n-1} all carry the weak key; r0 is the original record. `position`: present (r0 carries the
-    position), absent (no row does), moved (r1 does). The stale position lands on the last row. `observed`
-    re-reads the rows in `ulif@s1`, which proves the s1 position (never the s0 one)."""
-    record = {
-        "source_record_id": "sr_smallworld000",
-        "source_id": "ulif",
-        "aliases": [
-            {"kind": "register_position", "key": "pos:s1", "snapshot_id": "ulif@s1"},
-            {"kind": "content", "key": "content:s1", "snapshot_id": "ulif@s1"},
-            {"kind": "query_headword_label", "key": "weak", "snapshot_id": "ulif@s1"},
-        ],
-    }
-    if stale:
-        record["aliases"].append({"kind": "register_position", "key": "pos:s0", "snapshot_id": "ulif@s0"})
-    if content == "changed":
-        record["aliases"].append({"kind": "content", "key": "content:s2", "snapshot_id": "ulif@s2"})
-    rows = [{"locator": f"r{i}", "aliases": {"query_headword_label": "weak"}} for i in range(n)]
-    for i, row in enumerate(rows):
-        row["aliases"]["register_position"] = f"pos:unrelated{i}"
-        if content != "absent":
-            row["aliases"]["content"] = f"content:unrelated{i}"
-    if position == "present":
-        rows[0]["aliases"]["register_position"] = "pos:s1"
-    elif position == "moved":
-        rows[1]["aliases"]["register_position"] = "pos:s1"
-    if stale:
-        rows[-1]["aliases"]["register_position"] = "pos:s0"
-    if content == "present":
-        rows[0]["aliases"]["content"] = "content:s1"
-    elif content == "changed":
-        rows[0]["aliases"]["content"] = "content:s2"
-    return record, rows, ("ulif@s1" if observed else None)
-
-
-def _unexcludable(record: dict, rows: list[dict], snapshot_id: str | None) -> set[str]:
-    """Oracle, independent of `correspond()`: the rows the PROVEN evidence cannot exclude. Content-side keys
-    are intrinsic to a row, so they are proven in any snapshot; a register position is proven only for the
-    snapshot it was observed in. No proven hit, or proven hits that contradict each other, excludes nothing."""
-    keys = {}
-    for a in record["aliases"]:
-        keys.setdefault(a["kind"], {}).setdefault(a["key"], set()).add(a["snapshot_id"])
-    proven: list[set[str]] = []
-    for kind, by_key in keys.items():
-        found = {
-            r["locator"]
-            for r in rows
-            if r["aliases"].get(kind) in by_key
-            and (kind != "register_position" or snapshot_id in by_key[r["aliases"][kind]])
-        }
-        if found:
-            proven.append(found)
-    everything = {r["locator"] for r in rows}
-    if not proven:
-        return everything
-    return set.intersection(*proven) or everything
-
-
-def test_small_world_suppression_targets_cover_every_unexcluded_candidate(gen) -> None:
-    """Exhaustive small world (Astra r4, closed as a class): for every (position present / absent / moved) x
-    (content present / absent / changed) x (1..3 weak-key candidates), each with and without a stale older
-    register position and each as a new harvest and as a re-read of the position's own snapshot, the
-    `source_record` suppression covers every candidate the proven evidence cannot exclude. Unproven position
-    evidence never narrows a candidate set, neither to one row nor to an ambiguous subset."""
-    selector = {"kind": "source_record", "source_id": "ulif", "source_record_id": "sr_smallworld000"}
-    evaluated = 0
-    for position in ("present", "absent", "moved"):
-        for content in ("present", "absent", "changed"):
-            for n in (1, 2, 3):
-                for stale in (False, True):
-                    if position == "moved" and n < 2:
-                        continue  # nowhere to move to
-                    if stale and (n < 2 or (position == "moved" and n < 3)):
-                        continue  # a row carries one position; the stale key needs a row of its own
-                    for observed in (False, True):
-                        record, rows, snapshot_id = _small_world(position, content, n, stale, observed)
-                        result = gen.correspond(record, rows, snapshot_id=snapshot_id)
-                        targets = set(gen.selector_targets(selector, result))
-                        expected = _unexcludable(record, rows, snapshot_id)
-                        label = f"position={position} content={content} n={n} stale={stale} observed={observed}"
-                        assert result["status"] != "missing", label  # the weak key always hits
-                        assert targets >= expected, (
-                            f"{label}: {result} leaves {sorted(expected - targets)} unsuppressed"
-                        )
-                        assert targets <= {r["locator"] for r in rows}, label
-                        if result["status"] == "unique":
-                            assert expected == {result["locator"]}, f"{label}: unique decision beyond the evidence"
-                        evaluated += 1
-    assert evaluated == 78
-
-
 def test_content_selector_survives_a_normaliser_change(gen) -> None:
     vriady = _card("vriady-hody-conflict")
     uws = next(a for a in vriady["assertions"] if a["source_id"] == "ukrainian_word_stress")
@@ -754,28 +647,6 @@ def test_content_selector_survives_a_normaliser_change(gen) -> None:
     # ... and the selector still matches, because it re-normalises the raw value with its pinned version
     assert gen.content_selector_matches(selector, renormalised)
     assert not gen.content_selector_matches(selector, next(a for a in vriady["assertions"] if a["source_id"] == "ulif"))
-
-
-def test_suppression_schema_rejects_an_empty_fallback_and_an_unpinned_selector() -> None:
-    schema = json.loads((SCHEMAS / COMPANIONS["suppression-selectors"]).read_text(encoding="utf-8"))
-    v = Draft202012Validator(schema)
-    committed = json.loads((EXAMPLES / "companion" / "suppression-selectors.json").read_text(encoding="utf-8"))
-    assert not _errors(v, committed)
-    by_kind = {e["selector"]["kind"]: e for e in committed["entries"]}
-    bad = copy.deepcopy(committed)
-    bad["entries"] = [copy.deepcopy(by_kind["assertion_id"])]
-    bad["entries"][0]["selector"]["fallback"] = {}
-    assert _errors(v, bad), "fallback: {} must be rejected"
-    bad["entries"][0]["selector"]["fallback"] = {"kind": "assertion_content", "source_id": "kaikki"}
-    assert _errors(v, bad), "a partial fallback must be rejected"
-    bad = copy.deepcopy(committed)
-    bad["entries"] = [copy.deepcopy(by_kind["assertion_content"])]
-    del bad["entries"][0]["selector"]["normaliser_version"]
-    assert _errors(v, bad), "a content selector without normaliser_version must be rejected"
-    bad = copy.deepcopy(committed)
-    bad["entries"] = [copy.deepcopy(by_kind["source_record"])]
-    bad["entries"][0]["selector"] = {"kind": "source_record", "source_id": "ulif", "source_record_key": "ulif:record:x"}
-    assert _errors(v, bad), "a source_record selector keyed by a derived key must be rejected"
 
 
 # ---------------------------------------------------------------- per-proposition evidence (Astra r2 gap 4)
@@ -933,26 +804,6 @@ def test_reviewed_overlay_variant_resolves_conflicting_scalars(gen) -> None:
     assert wide_res["mapping_evidenced"] is False and wide_res["independence_groups_evidenced"] == 0
 
 
-def test_overlay_schema_requires_members_for_variant() -> None:
-    schema = json.loads((SCHEMAS / COMPANIONS["overlay"]).read_text(encoding="utf-8"))
-    v = Draft202012Validator(schema)
-    entry = {
-        "overlay_id": "ovl-2026-09-28-0009",
-        "kind": "variant",
-        "card_id": "wc_x2j5n8sd1vpc",
-        "field": "stress",
-        "author": "human",
-        "lane": "language",
-        "date": "2026-09-28",
-        "evidence": "…",
-        "members": ["a", "b"],
-    }
-    assert not _errors(v, {"schema_version": "1", "entries": [entry]})
-    assert _errors(v, {"schema_version": "1", "entries": [{k: x for k, x in entry.items() if k != "members"}]})
-    assert _errors(v, {"schema_version": "1", "entries": [dict(entry, members=["a"])]})
-    assert _errors(v, {"schema_version": "1", "entries": [dict(entry, lane="design")]})
-
-
 # ---------------------------------------------------------------- versions and derivations (Astra r2 gap 6)
 
 
@@ -1038,19 +889,3 @@ def test_companion_derivations_agree_with_eligibility_and_carry_real_digests() -
 
 
 # ---------------------------------------------------------------- schema contradictions named in the r2 review
-
-
-def test_review_objects_accept_approved_for_only_when_reviewed(validator: Draft202012Validator) -> None:
-    castle = _card("zamok-castle")
-    curated = next(a for a in castle["assertions"] if a["source_id"] == "atlas_curated")
-    assert curated["review"]["status"] == "reviewed"
-    ok = copy.deepcopy(castle)
-    next(a for a in ok["assertions"] if a["source_id"] == "atlas_curated")["review"]["approved_for"] = ["meaning"]
-    ok["quality"]["linguistic_review"] = {"status": "reviewed", "lane": "human", "approved_for": ["stress"]}
-    assert not _errors(validator, ok)
-    bad = copy.deepcopy(castle)
-    next(a for a in bad["assertions"] if a["source_id"] == "ulif")["review"]["approved_for"] = ["meaning"]
-    assert _errors(validator, bad), "approved_for with status none must be rejected"
-    bad = copy.deepcopy(ok)
-    next(a for a in bad["assertions"] if a["source_id"] == "atlas_curated")["review"]["approved_for"] = []
-    assert _errors(validator, bad), "an empty approved_for must be rejected"

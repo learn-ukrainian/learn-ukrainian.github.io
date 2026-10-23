@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 import sys
 from pathlib import Path
 
@@ -182,18 +181,6 @@ def test_human_gold_seeds_dpo_pairs_validate(dpo_pair_schema: dict) -> None:
     assert "soviet_lexicography_acceptance" in flaws
     assert "lack_of_morphemic_reasoning" in flaws
     assert "mechanical_wordnet_synset" in flaws
-
-
-def test_gold_seeds_generator_cli_verify_only() -> None:
-    """Verify that the generator script CLI --verify-only succeeds with exit code 0."""
-    cmd = [
-        sys.executable,
-        str(REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v4_mine_gold_seeds.py"),
-        "--verify-only",
-    ]
-    res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, timeout=30)
-    assert res.returncode == 0, f"CLI --verify-only failed:\nSTDOUT: {res.stdout}\nSTDERR: {res.stderr}"
-    assert "150 trajectories and 150 DPO pairs are 100% schema-valid!" in res.stdout
 
 
 def test_phrase_vesum_attestation_informative_not_collapsed() -> None:

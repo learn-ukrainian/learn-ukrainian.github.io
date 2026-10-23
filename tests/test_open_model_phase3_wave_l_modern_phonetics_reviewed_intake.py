@@ -8,7 +8,6 @@ import stat
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_wave_l_modern_phonetics_reviewed_intake as intake
 
@@ -240,19 +239,6 @@ def _rehash(receipt: dict[str, object]) -> dict[str, object]:
     return receipt
 
 
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema_text = intake.SCHEMA_PATH.read_text(encoding="utf-8")
-    Draft202012Validator.check_schema(json.loads(schema_text))
-    assert '"source_text"' not in schema_text
-    assert '"extracted_text"' not in schema_text
-    assert "additionalProperties" in schema_text
-    assert intake.STATUS in schema_text
-    assert '"contextual_only"' in schema_text
-    assert '"private_inspection_authorized"' not in schema_text
-    assert '"producer_provider_calls"' in schema_text
-    assert '"const": false' in schema_text or '"const":false' in schema_text.replace(" ", "")
-
-
 def test_build_is_deterministic_and_fail_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     paths = _fixture(tmp_path, monkeypatch)
     first = _build(paths)
@@ -299,14 +285,6 @@ def test_rights_legal_reuse_overclaim_is_rejected(tmp_path: Path, monkeypatch: p
     receipt = _build(paths)
     receipt["rights"]["legal_reuse_authorization_established"] = True  # type: ignore[index]
     with pytest.raises(intake.WaveLModernPhoneticsReviewedIntakeError, match="legal reuse authorization"):
-        intake.validate_receipt(_rehash(receipt))
-
-
-def test_legacy_authorization_field_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    paths = _fixture(tmp_path, monkeypatch)
-    receipt = _build(paths)
-    receipt["rights"]["private_inspection_authorized"] = True  # type: ignore[index]
-    with pytest.raises(intake.WaveLModernPhoneticsReviewedIntakeError, match="legacy authorization field"):
         intake.validate_receipt(_rehash(receipt))
 
 

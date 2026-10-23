@@ -2605,19 +2605,24 @@ def test_review_route_capacity_reads_the_selected_account(monkeypatch):
 
     claude_seats = {name for name, candidate in REVIEW_CANDIDATES.items() if candidate.route == "claude"}
     assert claude_seats
-    budget = _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(89.0)})
+    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(0.5)})
     seen: list[dict] = []
 
-    def review_select(snapshot, _excluded):
+    def review_select(snapshot, excluded):
+        assert excluded == ("claude" if snapshot["review_capacity_exclusions"] else "")
         seen.append(snapshot)
         return "claude", "claude-opus-5-5"
 
-    for label, excluded in (("b", set()), (None, claude_seats)):
+    for label, excluded in (("b", claude_seats), (None, set())):
         seen.clear()
-        assert _account_guard(monkeypatch, budget, label, review_select=review_select) == "claude"
+        if excluded:
+            with pytest.raises(delegate.BudgetGuardRefuseError, match="near_cap"):
+                _account_guard(monkeypatch, budget, label, review_select=review_select)
+        else:
+            assert _account_guard(monkeypatch, budget, label, review_select=review_select) == "claude"
         (snapshot,) = seen
         assert set(snapshot["review_capacity_exclusions"]) & claude_seats == excluded
-        expected_remaining = 89.0 if label == "b" else 0.5
+        expected_remaining = 0.5 if label == "b" else 90.0
         assert snapshot["agents"]["claude"]["remaining_pct"] == pytest.approx(expected_remaining)
 
 
@@ -2713,7 +2718,7 @@ def test_unattributed_rate_limits_never_refuse_a_selected_account_with_headroom(
         assert "BUDGET_PIN_RETAINED" in capsys.readouterr().err
 
 
-def test_unattributed_rate_limits_never_exclude_a_selected_account_reviewer(monkeypatch, tmp_path):
+def test_observed_rate_limit_cluster_excludes_default_account_reviewer(monkeypatch, tmp_path):
     budget = _accounts_budget(_unattributed_rate_limited_lane(tmp_path), {"b": _account_row(89.0)})
     seen: list[dict] = []
 
@@ -2721,13 +2726,16 @@ def test_unattributed_rate_limits_never_exclude_a_selected_account_reviewer(monk
         seen.append(snapshot)
         return "claude", "claude-opus-5-5"
 
-    for label, excluded in (("b", set()), (None, _claude_seats())):
+    for label in ("b", None):
         seen.clear()
-        assert _account_guard(monkeypatch, budget, label, review_select=review_select) == "claude"
+        if label is None:
+            with pytest.raises(delegate.BudgetGuardRefuseError, match="runtime headroom blocked"):
+                _account_guard(monkeypatch, budget, label, review_select=review_select)
+        else:
+            assert _account_guard(monkeypatch, budget, label, review_select=review_select) == "claude"
         (snapshot,) = seen
-        assert set(snapshot["review_capacity_exclusions"]) & _claude_seats() == excluded
-        causes = {snapshot["review_capacity_exclusions"].get(seat) for seat in excluded}
-        assert causes <= {"runtime headroom blocked"}
+        expected = _claude_seats() if label is None else set()
+        assert set(snapshot["review_capacity_exclusions"]) & _claude_seats() == expected
 
 
 @pytest.mark.parametrize(

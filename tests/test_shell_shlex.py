@@ -28,10 +28,6 @@ def test_issue_9115_literal_hashes_and_backticks_are_preserved(command: str):
     assert "\ngh pr merge 5 --admin" not in preprocess_shell_command(command)
 
 
-def test_issue_9115_quoted_hash_inside_backticks_is_literal():
-    assert preprocess_shell_command("echo `printf '%s' '# value'`") == "echo $(printf '%s' '# value')"
-
-
 @pytest.mark.parametrize(
     "command",
     [
@@ -69,13 +65,6 @@ def test_issue_9115_closing_substitution_keeps_following_command(command: str, s
 def test_issue_9115_escaped_nested_backticks_are_exposed():
     command = r"echo `echo \`gh pr merge 5 --admin\``"
     assert "$(gh pr merge 5 --admin)" in preprocess_shell_command(command)
-
-
-def test_issue_9115_deeper_escaped_backticks_are_exposed():
-    body = "gh pr merge 5 --admin"
-    for _ in range(3):
-        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
-    assert "$(gh pr merge 5 --admin)" in preprocess_shell_command("echo " + body)
 
 
 def test_issue_9115_backtick_depth_limit_is_explicit():

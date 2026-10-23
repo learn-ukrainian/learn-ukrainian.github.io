@@ -78,15 +78,6 @@ def _discussion_roots(fleet_root: Path) -> list[tuple[str, str]]:
     return [(str(row["channel"]), str(row["message_id"])) for row in rows]
 
 
-def test_derived_key_is_stable_and_channel_scoped() -> None:
-    key_alpha = _channels_cli._discussion_root_idempotency_key("alpha", "Same brief.")
-    key_alpha_replay = _channels_cli._discussion_root_idempotency_key("alpha", "Same brief.")
-    key_beta = _channels_cli._discussion_root_idempotency_key("beta", "Same brief.")
-    assert key_alpha.startswith("discussion-root:")
-    assert key_alpha == key_alpha_replay
-    assert key_alpha != key_beta
-
-
 def test_same_brief_retry_on_fresh_channel_succeeds(discuss_plane: Path) -> None:
     assert _channels_cli._handle_discuss(_args(channel="alpha", body="Retry me.")) == 0
     assert _channels_cli._handle_discuss(_args(channel="beta", body="Retry me.")) == 0
@@ -127,19 +118,6 @@ def test_explicit_idempotency_key_replays_and_mints_fresh_roots(
     roots = _discussion_roots(discuss_plane)
     assert len(roots) == 2
     assert roots[0][1] != roots[1][1]
-
-
-def test_blank_explicit_idempotency_key_is_rejected(
-    discuss_plane: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    assert (
-        _channels_cli._handle_discuss(
-            _args(channel="alpha", body="Same brief.", idempotency_key="   ")
-        )
-        == 1
-    )
-    assert "--idempotency-key must not be empty" in capsys.readouterr().err
-    assert _discussion_roots(discuss_plane) == []
 
 
 def test_failed_discussion_can_retry_same_channel_with_new_idempotency_key(

@@ -104,6 +104,9 @@ Options:
   --isolate-config           Kimi/GLM Claude-Code config isolation (default).
   --no-isolate-config        Use the existing Claude-Code config only when route-safe.
   --                         Pass all remaining arguments verbatim to the provider CLI.
+                             Native Grok drivers take prompt words before this separator;
+                             after it, only supported session options are accepted.
+                             For option-looking text, use a prompt such as 'Task: --flag'.
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
@@ -446,6 +449,9 @@ launcher_defaults() {
   LC_HARNESS_EXPLICIT=0
   LC_MODEL_CLI=0
   LC_FORWARD_ARGS=()
+  LC_CALLER_PROMPT_ARGS=()
+  LC_PROVIDER_ARGS=()
+  LC_UNSEPARATED_PROVIDER_ARGS=0
 }
 
 launcher_need_value() {
@@ -498,6 +504,7 @@ launcher_parse() {
         shift
         while [ "$#" -gt 0 ]; do
           LC_FORWARD_ARGS+=("$1")
+          LC_PROVIDER_ARGS+=("$1")
           shift
         done
         ;;
@@ -557,7 +564,11 @@ launcher_parse() {
         if [ "$LC_MODE" = "driver" ] && [ -n "$LC_EPIC" ]; then
           case "${0##*/}" in
             start-claude-cto.sh|start-codex-cto.sh) ;;
-            *) LC_FORWARD_ARGS+=("$1"); shift; continue ;;
+            *)
+              # shellcheck disable=SC2034 # consumed by the native Grok adapter
+              LC_UNSEPARATED_PROVIDER_ARGS=1
+              LC_FORWARD_ARGS+=("$1"); shift; continue
+              ;;
           esac
         fi
         launcher_error "unknown launcher flag '$1'; run --help."
@@ -568,6 +579,7 @@ launcher_parse() {
           LC_EPIC="$1"
         else
           LC_FORWARD_ARGS+=("$1")
+          LC_CALLER_PROMPT_ARGS+=("$1")
         fi
         shift
         ;;
@@ -1418,12 +1430,12 @@ launcher_bind_drive_epic() {
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"
   else
-    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — exact-head cross-family APPROVE before opening PR, same-head CI Gate green, driver enqueue through merge queue, closeout; authority mode is durable state and ACP is provider transport.'
+    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6). PRs may open so CI runs; enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate. The driver enqueues through the merge queue and runs closeout; authority mode is durable state and ACP is provider transport.'
   fi
   local canary_status='not run'
   # A successful hook alone is no execution evidence; dry runs never run a probe.
   if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
-  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review. Your pinned epic, goals and next step live in .claude/${LC_EPIC}-epic/DRIVER-STATE.md; after any compaction or doubt run .venv/bin/python -m scripts.driver_state whoami, and update that file when a goal lands. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed. Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${LC_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${LC_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
+  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review. Your pinned epic, goals and next step live in .claude/${LC_EPIC}-epic/DRIVER-STATE.md; after any compaction or doubt run .venv/bin/python -m scripts.driver_state whoami, and update that file when a goal lands. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed. Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${LC_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${LC_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta). if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority. Complete means exhaustive coverage including explicit unknown attention, not proven historical attribution. Generated rows retain current reporting custody only until positive exact-run status or other-stream proof; unsafe or lost source blocks recording and preserves its baseline. UNCHANGED means unchanged attention, not zero blockers. Measure actual observation, post, indented ledger and diagnostics bytes before posting; stop on overflow."
   if [ "${LC_PROVIDER:-}" = grok ]; then
     # Grok has no SessionStart hook to inject the lane handoff (#10835); the
     # file name is shared with every provider.

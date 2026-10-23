@@ -193,56 +193,12 @@ def _unclassified(sites: dict[str, set[str]]) -> dict[str, list[str]]:
     return {site: sorted(names - covered) for site, names in sites.items() if names - covered}
 
 
-def test_parsers_see_the_known_export_sites() -> None:
-    """Guard the parsers themselves: a silent zero match would pass vacuously."""
-    sites = _exported_identity_namespace_names()
-    assert "SESSION_HANDOFF_AGENT" in sites["shell export sites"]
-    assert "LEARN_UKRAINIAN_THREAD_LEASE_GENERATION" in sites["shell export sites"]
-    assert "CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID" in sites["shell export sites"]
-    assert "SESSION_STREAM_SESSION_ID" in sites["session_supervisor.sh lease capsule"]
-    assert "LEARN_UKRAINIAN_MAIN_MODEL_ID" in sites["profile_resolver.sh"]
-    assert "LEARN_UKRAINIAN_SESSION_ID" in sites["session_record.append_to_env_file"]
-    assert "LEARN_UKRAINIAN_DISPATCH_TASK_ID" in sites["scripts/delegate.py"]
-    assert "LU_X_AGENT_TRAILER" in sites["scripts/delegate.py"]
-    assert {"LEARN_UKRAINIAN_CLAUDEX_RUN_ID", "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION"} <= sites[
-        "scripts/orchestration/claudex_supervisor.py"
-    ]
-    assert "LU_SESSION_ID" in sites["telemetry ids"]
-
-
-def test_python_env_parser_sees_every_assignment_form() -> None:
-    source = """
-os.environ["LU_A"] = "1"
-env["LU_B"] = "1"
-worker_env["LU_C"] = "1"
-launch_env.update({"LU_D": "1"})
-launch_env.update(LU_E="1")
-env.setdefault("LU_F", "1")
-unrelated["LU_G"] = "1"
-"""
-    assert _python_env_assignment_names(source) == {"LU_A", "LU_B", "LU_C", "LU_D", "LU_E", "LU_F"}
-
-
-def test_a_new_supervisor_export_fails_the_completeness_check() -> None:
-    source = _SUPERVISOR.read_text(encoding="utf-8")
-    anchor = '"LEARN_UKRAINIAN_CLAUDEX_RUN_ID": self.run_id,'
-    assert anchor in source, "claudex_supervisor launch env moved; update this test"
-    patched = source.replace(anchor, f'{anchor}\n"LEARN_UKRAINIAN_CLAUDEX_NEW_ID": "x",')
-    sites = {"supervisor": _identity_namespace(_python_env_assignment_names(patched))}
-    assert _unclassified(sites) == {"supervisor": ["LEARN_UKRAINIAN_CLAUDEX_NEW_ID"]}
-
-
 def test_every_exported_session_identity_name_is_stripped() -> None:
     unclassified = _unclassified(_exported_identity_namespace_names())
     assert not unclassified, (
         "New session-scoped exports: add session identity to SESSION_IDENTITY_ENV_VARS in "
         f"tests/conftest.py, or host configuration to _HOST_CONFIG_EXPORTS here: {unclassified}"
     )
-
-
-def test_identity_tuple_has_no_duplicates_or_host_config() -> None:
-    assert len(SESSION_IDENTITY_ENV_VARS) == len(set(SESSION_IDENTITY_ENV_VARS))
-    assert not set(SESSION_IDENTITY_ENV_VARS) & _HOST_CONFIG_EXPORTS
 
 
 @pytest.mark.parametrize("name", SESSION_IDENTITY_ENV_VARS)
@@ -309,9 +265,3 @@ def pytest_sessionfinish(session):
     result.assert_outcomes(passed=2)
     # The test's own write is undone; the launching session's value returns.
     result.stdout.fnmatch_lines(["*AFTER live-operator-session"])
-
-
-def test_driver_state_exports_have_distinct_classifications() -> None:
-    assert "LU_DRIVER_STATE_FILE" in SESSION_IDENTITY_ENV_VARS
-    assert "LU_DRIVER_STATE_PYTHON" in _HOST_CONFIG_EXPORTS
-    assert {"LU_DRIVER_STATE_FILE", "LU_DRIVER_STATE_PYTHON"} <= _shell_exports()

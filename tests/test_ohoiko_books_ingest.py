@@ -117,15 +117,6 @@ def test_parse_book_section_terminator_stops_body(tmp_path: Path) -> None:
     assert "Якщо́ ти го́лодний" in body_blob
 
 
-def test_parse_book_full_text_renders_clean_header(tmp_path: Path) -> None:
-    """full_text() yields ``<headword>  —  <english>`` followed by examples."""
-    entries = obi.parse_book(_write_fixture(tmp_path), max_entry_number=10)
-    a = entries[0]
-    blob = a.full_text()
-    assert blob.startswith("а  —  and, but\n"), blob[:40]
-    assert "Я люблю́ готува́ти" in blob
-
-
 def _make_textbooks_db(path: Path) -> sqlite3.Connection:
     """Minimal textbooks schema for round-trip tests (no FTS triggers
     needed — we exercise the INSERT layer, not retrieval)."""

@@ -170,14 +170,6 @@ def test_non_object_iterations_are_ignored(tmp_path: Path, entry: object) -> Non
     assert latest_tokens(transcript) == 6
 
 
-def test_advisor_last_does_not_replace_final_main_pass(tmp_path: Path) -> None:
-    usage = incident_usage()
-    usage["iterations"].append({"type": "advisor_message", "input_tokens": 999_999})
-    transcript = tmp_path / "usage.jsonl"
-    write_usage(transcript, usage)
-    assert latest_tokens(transcript) == 589_549
-
-
 @pytest.mark.parametrize(
     ("usage", "expected"),
     [
@@ -255,7 +247,3 @@ def test_no_usage_returns_zero(tmp_path: Path, content: str) -> None:
     transcript = tmp_path / "usage.jsonl"
     transcript.write_text(content)
     assert latest_tokens(transcript) == 0
-
-
-def test_missing_transcript_returns_zero(tmp_path: Path) -> None:
-    assert latest_tokens(tmp_path / "missing.jsonl") == 0

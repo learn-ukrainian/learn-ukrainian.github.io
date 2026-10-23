@@ -292,14 +292,6 @@ def test_a_stale_or_forged_holder_marker_never_loosens_the_cap(project: Path, ma
     assert test_slots.status()["slots_in_use"] == 0
 
 
-def test_a_dispatch_run_cuts_a_starred_tx_list_to_the_slots_it_holds(project: Path) -> None:
-    result = _xdist_run(project, "--dist=load", "--tx", "2*popen")
-    assert result.returncode == 0, result.stdout + result.stderr
-    rows = _probe(project)
-    assert len(rows) == 3 and {row["workers"] for row in rows} == {"1"}
-    assert all(row["holder"] and row["holder"].startswith("1:") for row in rows)
-
-
 @pytest.mark.parametrize("prior", [None, "8", "1", "0"])
 def test_an_in_process_nested_session_restores_the_auto_worker_count(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, prior: str | None

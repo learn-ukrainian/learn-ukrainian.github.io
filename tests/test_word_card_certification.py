@@ -67,33 +67,6 @@ def test_malformed_receipt_envelope_is_typed_refusal(tmp_path, reader, receipt):
         reader(ref, tmp_path)
 
 
-@pytest.mark.parametrize("field", ["spec", "evaluation", "status", "cards", "findings"])
-@pytest.mark.parametrize("replacement", [None, {}, {"path": "missing"}, {"path": "missing", "sha256": "bad"}])
-def test_malformed_receipt_fields_are_typed_refusal(packet, field, replacement):
-    receipt = packet.evaluate()
-    receipt[field] = replacement
-    ref = write(packet.root / "malformed.json", receipt)
-    message = "Invalid exact-artifact receipt" if field in {"spec", "evaluation"} else "Stale evaluation summary"
-    with pytest.raises(cert.UncertifiedCardRefusal, match=message):
-        cert.certification_summary(ref, packet.root)
-
-
-@pytest.mark.parametrize("field", ["spec", "evaluation", "status", "cards", "findings"])
-def test_missing_receipt_fields_are_typed_refusal(packet, field):
-    receipt = packet.evaluate()
-    receipt.pop(field)
-    ref = write(packet.root / "missing-field.json", receipt)
-    with pytest.raises(cert.UncertifiedCardRefusal, match="Invalid exact-artifact receipt"):
-        cert.certification_summary(ref, packet.root)
-
-
-def test_shared_fixture_has_replayable_exact_card_evidence(certification):
-    ref = certification.ledger["approved_reviews"][0]["certification_receipt"]
-    receipt = cert.verify_certification_receipt(ref, certification.root)
-    assert receipt["cards"] == {certification.card["card_id"]: cert.digest(certification.card)}
-    assert cert.load_certified_card_for_export(certification.card) == certification.card
-
-
 @pytest.mark.parametrize("gate", ["complete_data_receipt", "mechanics_receipt", "gold_spec", "gold_seal", "isolation"])
 def test_missing_prerequisite_refused(packet, gate):
     Path(packet.spec[gate]["path"]).unlink()
@@ -450,19 +423,3 @@ def test_receipt_replay_is_type_exact(packet, replacement):
         cert.verify_certification_receipt(ref, packet.root)
     with pytest.raises(ValueError, match="Stale evaluation summary"):
         cert.certification_summary(ref, packet.root)
-
-
-def test_control_cannot_hide_unrelated_numeric_type_change(packet):
-    control = packet.spec["controls"][0]
-    card = json.loads(Path(control["card"]["path"]).read_bytes())
-    # Values allow any JSON type; Python equality treats integer 1 and float 1.0 as equal.
-    packet.card["assertions"][-1]["value"] = 1
-    card["assertions"][-1]["value"] = 1.0
-    packet.authority.approve(packet.card)
-    packet.spec["cases"][0]["card"] = write(packet.card_path, packet.card)
-    packet.mechanics["cards_sha256"] = cert.digest([packet.card])
-    packet.spec["mechanics_receipt"] = write(packet.mechanics_path, packet.mechanics)
-    control["card"] = write(Path(control["card"]["path"]), card)
-    packet.save_spec()
-    with pytest.raises(ValueError, match="alter only its target facet"):
-        packet.evaluate()

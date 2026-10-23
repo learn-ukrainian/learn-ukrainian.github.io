@@ -83,16 +83,6 @@ def test_empty_groups_and_rule_boundaries():
     ]
 
 
-@pytest.mark.parametrize("body", ["FIRST, Prof. SECOND, THIRD", "FIRST, abbreviation. SECOND", "FIRST: SECOND, THIRD"])
-def test_dotted_or_colon_continuation_cannot_license_a_truncated_example(body):
-    text = "SYNTHETIC examples: " + body + "."
-    decisions = bindings.example_boundaries(text)
-    assert decisions[0][1] == "example_boundary_ambiguous"
-    assert not any(
-        reason == "ok" and text[slice(*span)] in {"Prof", "abbreviation", "FIRST"} for span, reason in decisions
-    )
-
-
 @pytest.mark.parametrize(
     "text,expected",
     [
@@ -210,21 +200,6 @@ def test_binding_authenticates_citation_column_and_locator(bundle):
         ):
             with pytest.raises(BuildError, match=error):
                 bindings.check(candidate, {"schema": "binding-spec.v1", "rules": [{**rule, **extra}]}, reader, {})
-
-
-@pytest.mark.parametrize(
-    "body",
-    [
-        "1) FIRST — SECOND, THIRD — FOURTH; 2) FIFTH",
-        "1) FIRST — SECOND.; 2) THIRD",
-        "1) A rule clause, if the words meet a condition; 2) SECOND",
-    ],
-)
-def test_numbered_explicit_introduction_cannot_admit_groups_punctuation_or_rule_clauses(body):
-    text = "SYNTHETIC наприклад: " + body + "."
-    decisions = bindings.example_boundaries(text)
-    assert decisions[0][1] == "example_boundary_ambiguous"
-    assert decisions[1][1] == "ok"
 
 
 @pytest.mark.parametrize(

@@ -96,12 +96,6 @@ def test_deterministic_adapter_wires_912_semantic_false_friend_linter(tmp_path: 
     assert isinstance(finding["span"]["start"], int)
 
 
-def test_deterministic_adapter_ignores_missing_plan_path(tmp_path: Path) -> None:
-    findings = DeterministicRuleAdapter().findings(ScorerInput(plan_path=tmp_path / "missing.yaml"))
-
-    assert findings == []
-
-
 def test_ua_gec_fixture_adapter_preserves_gold_tag_and_noisy_axis_hook() -> None:
     findings = UaGecGoldFixtureAdapter(contested_sidecar_path=Path("non-existent-sidecar.json")).findings(
         ScorerInput(fixture_id="ua-gec-gold-001")

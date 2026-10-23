@@ -100,15 +100,6 @@ def is_registered_source_family(source_family: object) -> bool:
     return isinstance(source_family, str) and source_family.casefold() in SOURCE_FAMILY_REGISTRY
 
 
-def source_family_definition(source_family: str) -> SourceFamilyDefinition:
-    """Return the registry definition for a source family."""
-    family = source_family.casefold()
-    try:
-        return SOURCE_FAMILY_REGISTRY[family]
-    except KeyError as exc:
-        raise KeyError(f"unregistered Atlas source family: {source_family}") from exc
-
-
 def registry_payload() -> dict[str, object]:
     """Return a JSON-ready registry summary safe for public reports."""
     return {

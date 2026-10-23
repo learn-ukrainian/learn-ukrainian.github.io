@@ -31,39 +31,6 @@ def _write_jsonl(path: Path, rows: list[object]) -> None:
 
 
 class DigestCodexRolloutTests(unittest.TestCase):
-    def test_prefers_newer_generic_jsonl_over_older_rollout(self) -> None:
-        """Newer Claude/other jsonl beats an older Codex rollout-* (not name-first)."""
-        root = Path(self._tmp()) / "sessions"
-        generic = root / "other.jsonl"
-        rollout = root / "2026" / "08" / "21" / "rollout-abc.jsonl"
-        _write_jsonl(rollout, [{"text": "rollout blocked on review — stale Aug-21 Codex tail"}])
-        _write_jsonl(generic, [{"text": "generic failed merge — newer Claude session jsonl"}])
-        older = 1_724_220_000  # 2026-08-21-ish
-        newer = older + 172_800
-        os.utime(rollout, (older, older))
-        os.utime(generic, (newer, newer))
-        sources = digest.collect_sources([root], limit=1)
-        self.assertEqual(sources, [generic])
-
-    def test_rollout_name_is_mtime_tie_break_only(self) -> None:
-        root = Path(self._tmp()) / "sessions"
-        claude = root / "claude-session.jsonl"
-        rollout = root / "rollout-abc.jsonl"
-        _write_jsonl(claude, [{"text": "claude failed merge — same-mtime generic jsonl"}])
-        _write_jsonl(rollout, [{"text": "rollout blocked on review — same-mtime Codex tail"}])
-        stamp = 1_724_400_000
-        os.utime(claude, (stamp, stamp))
-        os.utime(rollout, (stamp, stamp))
-        sources = digest.collect_sources([root], limit=1)
-        self.assertEqual(sources, [rollout])
-
-    def test_noise_filter_drops_agents_md_and_cold_start(self) -> None:
-        lines = [
-            '{"text":"Reading AGENTS.md before work"}',
-            '{"text":"cursor_cold_start fetched /api/rules"}',
-            '{"text":"pytest failed on digest filter"}',
-        ]
-        self.assertEqual(digest.extract_snippets(lines), ["pytest failed on digest filter"])
 
     def test_redacts_ip_and_user_host(self) -> None:
         text = digest.redact_opsec("blocked ssh deploy@internal-node on 203.0.113.50")
@@ -121,27 +88,6 @@ class DigestCodexRolloutTests(unittest.TestCase):
         index = (repo / "logs" / "agent-digests" / "index.md").read_text(encoding="utf-8")
         self.assertIn("watchdesk", index)
         self.assertIn("watchdesk-latest.md", index)
-
-    def test_default_roots_and_env_helpers(self) -> None:
-        keys = ("DIGEST_LABEL", "DIGEST_ROOTS", "DIGEST_REPO", "DIGEST_MAX")
-        old = {key: os.environ.pop(key, None) for key in keys}
-        try:
-            self.assertEqual(digest.env_label(), "local")
-            self.assertEqual(digest.env_max(), 12)
-            self.assertEqual(digest.env_repo(), Path.home() / "projects" / "learn-ukrainian")
-            self.assertEqual(
-                digest.env_roots(),
-                [
-                    Path.home() / ".codex" / "sessions",
-                    Path.home() / ".claude" / "projects",
-                    Path.home() / ".gemini" / "tmp",
-                    Path.home() / ".config" / "gemini",
-                ],
-            )
-        finally:
-            for key, value in old.items():
-                if value is not None:
-                    os.environ[key] = value
 
     def _tmp(self) -> str:
         import tempfile

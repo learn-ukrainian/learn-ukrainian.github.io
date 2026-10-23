@@ -130,30 +130,6 @@ def build_targeted_fix_prompt(
     return targeted_text
 
 
-def inject_findings_into_fix_plan(
-    orch_dir: Path, fix_plan: str, label: str = "review",
-) -> str:
-    """Load review findings and inject into fix_plan. Returns updated fix_plan.
-
-    Logs the injection count. Silently returns the original fix_plan if
-    no findings are found or if loading fails.
-    """
-    import logging
-
-    from pipeline.core import log
-
-    try:
-        findings = load_review_findings(orch_dir)
-        if findings:
-            fix_plan = build_targeted_fix_prompt(findings, fix_plan)
-            log(f"  {label}: Injected {len(findings)} structured finding(s) into fix prompt")
-    except (FileNotFoundError, OSError) as e:
-        logging.getLogger(__name__).debug("%s: Could not load review findings: %s", label, e)
-    except Exception as e:
-        logging.getLogger(__name__).warning("%s: Unexpected error injecting review findings: %s", label, e)
-    return fix_plan
-
-
 def load_review_findings(orch_dir: Path) -> list[dict]:
     """Load review findings from the orchestration directory.
 

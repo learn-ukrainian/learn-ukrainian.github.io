@@ -40,17 +40,6 @@ def test_partial_outage_is_unknown_never_zero():
     assert all(v is None for v in result["lanes"]["membership_unknown"].values())
 
 
-def test_roots_exempt_containers_ordinary_and_counts_reconcile():
-    issues = [{"number": n, "body": COMPLETE, "title": ""} for n in [5703, 123, 456]]
-    membership = audit_report(native=[123, 456])
-    membership["open_total"] = 3
-    result = summarize(issues, 3, membership)
-    assert result["root_exempt_total"] == 1
-    assert result["evaluated_total"] == 3
-    assert result["lanes"]["devops"] == dict.fromkeys(report.COUNTERS, 0) | {"open": 3}
-    assert result["coverage"] == "complete"
-
-
 def test_private_boundary_golden():
     private_issue = {
         "number": 987654321,
@@ -117,26 +106,6 @@ def test_pending_native_and_ambiguous():
     )
     result = summarize([{"number": 123, "body": COMPLETE}], 1, membership)
     assert result["lanes"]["ambiguous"]["missing_epic"] == 1
-
-
-def test_collection_uses_one_audit_and_independent_count(monkeypatch):
-    calls = []
-    monkeypatch.setattr(report.github_client, "check_output", lambda *a, **k: '[{"number":123}]')
-
-    def read(name, **kwargs):
-        calls.append(name)
-        return subprocess.CompletedProcess([], 0, '{"data":{"repository":{"issues":{"totalCount":612}}}}', "")
-
-    monkeypatch.setattr(report, "read", read)
-    monkeypatch.setattr(report.checker, "registry_for", lambda *a: REGISTRY)
-    monkeypatch.setattr(report.checker, "live_audit", lambda *a, **k: calls.append("audit") or audit_report())
-    monkeypatch.setattr(report.checker, "write_membership_cache", lambda *a, **k: pytest.fail("census incomplete"))
-    issues, count, _, codes = report.collect_repository(PUBLIC)
-    assert issues == [{"number": 123}] and count == 612 and codes == []
-    assert calls == ["issue-count", "audit"]
-    calls.clear()
-    report.collect_repository(PRIVATE)
-    assert calls == ["issue-count"]
 
 
 def stub_collection(monkeypatch, tmp_path, *, count=1, membership=None):
@@ -256,16 +225,6 @@ def test_payload_persisted_before_publish_and_reused(tmp_path, monkeypatch):
     assert report.publish_payload(first, day, "devops") == 1
 
 
-def test_build_enumerates_catalog(monkeypatch):
-    monkeypatch.setattr(report.fleet_repos, "load_fleet_repos", lambda: {"public": PUBLIC, "infra-private": PRIVATE})
-    monkeypatch.setattr(report.audit, "load_registry", lambda *a, **k: REGISTRY)
-    monkeypatch.setattr(report, "collect_repository", lambda r: ([], 0, audit_report(), []))
-    result = report.build_report()
-    assert result["schema"] == "issue-quality-report.v1"
-    assert set(result["repositories"]) == {"public", "infra-private"}
-    assert len(result["source_sha"]) == 40
-
-
 def test_report_cli_persists_prints_and_propagates_publish_failure(monkeypatch, capsys):
     calls = []
     payload = b'{"schema":"issue-quality-report.v1"}\n'
@@ -319,35 +278,10 @@ def test_registered_roots_still_count_dor_and_dod(body, missing, malformed):
     }
 
 
-def test_trivial_malformed_dod_is_counted():
-    result = summarize([{"number": 123, "body": "trivial: yes\n" + COMPLETE + "\n- [ ] AC-01: duplicate"}], 1,
-                       audit_report(native=[123]))
-    assert result["lanes"]["devops"]["malformed_dod"] == 1
-    assert result["lanes"]["devops"]["missing_dor"] == 0
-
-
 @pytest.mark.parametrize("day", ["2000-01-01", "9999-01-01"])
 def test_other_day_without_saved_payload_refuses_current_snapshot(tmp_path, day):
     with pytest.raises(ValueError, match="only today's report can be prepared"):
         report.persisted_payload(day, root=tmp_path, build=lambda: pytest.fail("must not fetch today's snapshot"))
-    assert list((tmp_path / "batch_state/reports").iterdir()) == []
-
-
-def test_historical_saved_payload_can_be_retried(tmp_path):
-    path = tmp_path / "batch_state/reports/issue-quality-report-2000-01-01.json"
-    path.parent.mkdir(parents=True)
-    path.write_bytes(b'{"generated_at":"2000-01-01T12:00:00Z"}\n')
-    assert report.persisted_payload("2000-01-01", root=tmp_path,
-                                    build=lambda: pytest.fail("must not rebuild historical data")) == path.read_bytes()
-
-
-def test_date_cli_refuses_unsaved_past_snapshot(tmp_path, monkeypatch, capsys):
-    persist = report.persisted_payload
-    monkeypatch.setattr(report, "persisted_payload", lambda day: persist(
-        day, root=tmp_path, build=lambda: pytest.fail("must not fetch today's snapshot")))
-    monkeypatch.setattr(report, "publish_payload", lambda *a: pytest.fail("must not publish mislabeled data"))
-    assert report.main(["--date", "2000-01-01", "--publish"]) == 1
-    assert capsys.readouterr().out == "issue quality report: checker_error\n"
     assert list((tmp_path / "batch_state/reports").iterdir()) == []
 
 

@@ -43,7 +43,6 @@ _PHASE_SORT = {
     "enrich": 5,
     "review": 6,
 }
-_WRITER_PHASES = {"pre-verify", "skeleton", "write", "activities", "vocab"}
 _WINDOW_SPECS = (
     ("all_time", None),
     ("last_7_days", 7),
@@ -541,30 +540,6 @@ def build_cost_windows(
         "generated_at": _isoformat_z(current_time),
         "windows": windows,
     }
-
-
-def format_module_cost_summary(level: str, slug: str) -> str | None:
-    summary = build_cost_summary(level=level, slug=slug)
-    total = float(summary["totals"]["cost_usd_est"])
-    if total <= 0:
-        return None
-
-    phase_costs = {item["name"]: float(item["cost_usd_est"]) for item in summary["per_phase"]}
-    writer_cost = sum(phase_costs.get(name, 0.0) for name in _WRITER_PHASES)
-    review_cost = phase_costs.get("review", 0.0)
-    enrich_cost = phase_costs.get("enrich", 0.0)
-
-    parts = []
-    if writer_cost > 0:
-        parts.append(f"writer: ${writer_cost:.2f}")
-    if review_cost > 0:
-        parts.append(f"review: ${review_cost:.2f}")
-    if enrich_cost > 0:
-        parts.append(f"enrich: ${enrich_cost:.2f}")
-
-    if parts:
-        return f"💰 Cost: ~${total:.2f} USD ({', '.join(parts)})"
-    return f"💰 Cost: ~${total:.2f} USD"
 
 
 def _fmt_int(value: int) -> str:

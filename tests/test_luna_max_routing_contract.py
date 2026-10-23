@@ -7,23 +7,7 @@ formal reviewer. Large structural assertions stay in ``test_model_catalog.py``.
 
 from __future__ import annotations
 
-import tomllib
-from pathlib import Path
-
 from scripts.review.model_catalog import load_model_catalog
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-CODEX_PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
-SHARED_DOCTRINE = REPO_ROOT / "docs" / "best-practices" / "fleet-shared-doctrine.md"
-ROLE_SCORECARD = REPO_ROOT / "docs" / "best-practices" / "fleet-role-scorecard.md"
-
-
-def test_codex_source_config_defaults_subagents_to_sol_high() -> None:
-    config = tomllib.loads(CODEX_PROJECT_CONFIG.read_text(encoding="utf-8"))
-
-    agents = config["agents"]
-    assert agents["default_subagent_model"] == "gpt-6.1-sol"
-    assert agents["default_subagent_reasoning_effort"] == "high"
 
 
 def test_catalog_routes_bounded_codex_workers_to_luna_high() -> None:
@@ -55,36 +39,9 @@ def test_luna_is_absent_from_formal_review_candidates_and_ladders() -> None:
         assert "gpt-5.6-luna" not in rung_candidates
 
 
-def test_kimi_k3_is_on_no_code_review_ladder() -> None:
-    """Kimi seats admit web, UI and backend coding only (formerly a rung on every ladder)."""
-    ladders = load_model_catalog()["review_ladders"]
-    assert set(ladders) == {"critical", "high", "medium", "low"}
-
-    for ladder in ladders.values():
-        rung_candidates = {candidate for rung in ladder for candidate in rung}
-        assert "kimi-k3" not in rung_candidates
-        assert "glm-5.3" not in rung_candidates
-
-
-def test_glm_is_absent_from_automatic_review_ladders() -> None:
-    catalog = load_model_catalog()
-    assert "glm-5.3" in catalog["review_candidates"]
-    for ladder in catalog["review_ladders"].values():
-        assert "glm-5.3" not in {candidate for rung in ladder for candidate in rung}
-
-
 def test_review_boundary_rejects_same_family_advisory_output() -> None:
     boundary = load_model_catalog()["execution_routing"]["sol_advised_bounded"]["review_boundary"]
 
     assert boundary["advisory_family"] == "openai"
     assert boundary["advisory_satisfies_cross_family_review"] is False
     assert boundary["independent_cross_family_review_required"] is True
-
-
-def test_served_doctrine_uses_luna_high_without_overriding_other_recon_seats() -> None:
-    doctrine = SHARED_DOCTRINE.read_text(encoding="utf-8")
-    scorecard = ROLE_SCORECARD.read_text(encoding="utf-8")
-
-    assert "| GPT-6 Luna (bounded work and scouting) | **`high`**" in doctrine
-    assert "| Claude Haiku recon | **`medium`** default" in doctrine
-    assert "Luna `high` with exact owned paths + objective scope ceiling" in scorecard

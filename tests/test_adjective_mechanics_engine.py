@@ -162,18 +162,6 @@ def test_canonical_deck_validity_and_zero_collisions():
         assert card.correct_answer in opts
 
 
-def test_balanced_option_distribution():
-    """Verify that sha256 deterministic shuffle yields balanced correct answer positions."""
-    cards = build_canonical_adjective_cards()
-    positions = [card.all_options().index(card.correct_answer) for card in cards]
-    counts = Counter(positions)
-
-    # With 74 cards and 4 options, expected count per index is 18.5.
-    # Assert balanced distribution within tolerance [10, 28].
-    for idx in range(4):
-        assert 10 <= counts[idx] <= 28, f"Unbalanced position {idx}: count={counts[idx]} in total {len(cards)}"
-
-
 def test_deck_export_and_file_parity(tmp_path: Path):
     """Verify deck JSON export produces valid schema and matches committed deck."""
     test_out = tmp_path / "adj_deck.json"

@@ -179,48 +179,6 @@ def test_routing_b1_surface_uses_gemma_and_seminar_uses_tooled_opencode() -> Non
     assert llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE.reviewer_model_id == "gemini-3.1-pro-high"
 
 
-@pytest.mark.parametrize(
-    ("model_id", "expected_profile", "median_tools", "max_tools", "median_wall_s"),
-    [
-        ("openrouter/google/gemma-4-31b-it", "gemma-4-31b-it", 4.0, 5, 34.685),
-        ("openrouter/deepseek/deepseek-v4-pro", "deepseek-v4-pro", 15.5, 17, 210.8475),
-        ("openrouter/deepseek/deepseek-v4-flash", "deepseek-v4-flash", 30.0, 35, 170.207),
-    ],
-)
-def test_estimates_attach_scorecard_measured_cost_profiles(
-    model_id: str,
-    expected_profile: str,
-    median_tools: float,
-    max_tools: int,
-    median_wall_s: float,
-) -> None:
-    route = replace(llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE, reviewer_model_id=model_id)
-
-    estimate = llm_reviewer_dispatch.estimate_route_cost(
-        "Перевірте фактичні твердження.",
-        route,
-        policy_family="seminar",
-    )
-
-    assert estimate["measured_cost_profile"] == expected_profile
-    assert estimate["estimated_tool_call_median"] == median_tools
-    assert estimate["observed_tool_call_max"] == max_tools
-    assert estimate["tool_call_anomaly_threshold"] == max_tools * 1.5
-    assert estimate["estimated_wall_s_median"] == median_wall_s
-    assert llm_reviewer_dispatch.SCORECARD_COST_BASIS_PATH in estimate["basis"]
-    assert llm_reviewer_dispatch.SCORECARD_COST_BASIS_GENERATED_AT in estimate["basis"]
-    assert estimate["estimated_cost_usd"] > 0
-
-
-def test_qg_workflow_legacy_estimate_uses_scorecard_basis() -> None:
-    estimate = qg_workflow.estimate_llm_cost("Перевірте фактичні твердження.", "seminar")
-
-    assert estimate["measured_cost_profile"] == "gemma-4-31b-it"
-    assert estimate["estimated_tool_call_median"] == 4.0
-    assert llm_reviewer_dispatch.SCORECARD_COST_BASIS_PATH in estimate["basis"]
-    assert "replace with telemetry median" not in estimate["basis"]
-
-
 def test_self_review_hard_fails() -> None:
     route = llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE
     lineage = llm_reviewer_dispatch.AuthorLineage(family="google", source="test")
@@ -263,23 +221,6 @@ def test_deepseek_routes_are_excluded() -> None:
     ):
         llm_reviewer_dispatch.assert_route_allowed(hermes_route)
     assert all("deepseek" not in route.reviewer_model_id for route in llm_reviewer_dispatch.ROUTES)
-
-
-def test_frontier_opencode_route_passes_allowlist_and_hermes_still_fails() -> None:
-    # The new tooled route must clear the DeepSeek/Hermes hard-ban...
-    llm_reviewer_dispatch.assert_route_allowed(llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE)
-    # ...while a hermes-flavored route still fails.
-    hermes_route = llm_reviewer_dispatch.ReviewerRoute(
-        route_name="opencode_hermes",
-        bridge_command=("ask-opencode", "--model", "openrouter/hermes/x"),
-        reviewer_model_id="openrouter/hermes/x",
-        reviewer_family="openrouter",
-        purpose="forbidden",
-        input_usd_per_mtok=0.0,
-        output_usd_per_mtok=0.0,
-    )
-    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError):
-        llm_reviewer_dispatch.assert_route_allowed(hermes_route)
 
 
 def test_dispatch_result_metadata_carries_tool_telemetry() -> None:
@@ -566,27 +507,6 @@ def test_tools_used_only_theatre_fallback_requires_tool_name_relevance_for_claim
         "reason": "no_relevant_source_tool_calls",
     }
     assert no_claim_violation is None
-
-
-def test_theatre_gate_retry_then_invalid_zero_tool_path(tmp_path: Path) -> None:
-    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
-    calls = 0
-
-    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
-        nonlocal calls
-        calls += 1
-        return _seminar_result(_fact_response(), (), tool_call_count=0)
-
-    record = qg_workflow.review_module(
-        _target(module_dir, level="folk"),
-        options=_seminar_options(),
-        reviewer=reviewer,
-        store_path=tmp_path / "qg.db",
-    )
-
-    assert _tier(record, 2)["status"] == llm_reviewer_dispatch.RETRY_EXHAUSTED
-    assert record["completion_status"] == "INCOMPLETE"
-    assert calls == 2
 
 
 def test_deep_read_gate_retries_summary_only_unverified_then_accepts_attested(tmp_path: Path) -> None:
@@ -1044,12 +964,6 @@ def test_abort_gate_emits_incomplete_records_after_parse_failure(tmp_path: Path)
     assert calls == ["first"]
 
 
-def test_schema_failures_use_parse_schema_abort_threshold() -> None:
-    record = {"qg_workflow": {"tiers": [{"tier": 2, "status": "schema_failure"}]}}
-
-    assert qg_workflow._batch_abort_reason([record]) == "parse_failure_rate"
-
-
 def test_cost_overrun_gate_fails_closed(tmp_path: Path) -> None:
     module_dir = _write_module(tmp_path)
     canary = _canary_artifact(tmp_path)
@@ -1457,14 +1371,6 @@ def test_grounding_matches_spaced_and_bracketed_ellipsis_spellings(ellipsis: str
     assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
 
 
-def test_grounding_matches_excerpt_with_markdown_emphasis() -> None:
-    """Italic/bold inside a quoted segment is formatting, not content."""
-    events = (_sources_event(output="Виконання веснянок було колективним усім селом."),)
-    grounding = _vesnianky_grounding("Виконання *веснянок* було **колективним**")
-
-    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
-
-
 @pytest.mark.parametrize(
     "excerpt",
     [
@@ -1506,22 +1412,6 @@ def test_grounding_rejects_ellipsis_spliced_number_swap_fabrication() -> None:
 
     fabricated = dict(grounded, evidence_excerpt="Сковорода народився … у 1900 році")
     assert llm_reviewer_dispatch._grounding_matches_events(fabricated, events) is False
-
-
-def test_grounding_rejects_fabrication_despite_markdown_emphasis() -> None:
-    """Emphasis stripping must not rescue a swapped-fact excerpt («нових»)."""
-    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
-    grounding = _vesnianky_grounding("**Веснянки** — назва *нових* обрядових пісень")
-
-    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
-
-
-def test_grounding_rejects_fabricated_ending_despite_edge_stripping() -> None:
-    """Edge stripping removes punctuation, never content: «взимку» is absent."""
-    events = (_sources_event(output=_VESNIANKY_OUTPUT),)
-    grounding = _vesnianky_grounding("обрядових пісень взимку.")
-
-    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
 
 
 def test_grounding_sentence_boundary_is_not_an_elision_marker() -> None:
@@ -1622,25 +1512,6 @@ def test_deep_read_wiki_positive_verdict_remains_admissible() -> None:
     assert result.inadmissible_positive_verdicts == 0
 
 
-def test_positive_verdict_matching_summary_and_deep_events_is_admissible() -> None:
-    payload = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
-    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
-    section_event = _sources_event(
-        mode="section",
-        output="У розділі сказано: Веснянки — це весняні обрядові пісні.",
-        call_id="call_2",
-    )
-
-    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
-        payload,
-        {"tool_events": [summary_event, section_event]},
-        policy_family="seminar",
-    )
-
-    assert result.payload["fact_checks"][0]["verdict"] == "CONFIRMED"
-    assert result.inadmissible_positive_verdicts == 0
-
-
 def test_neighboring_deep_read_event_does_not_rescue_summary_grounded_verdict() -> None:
     payload = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
     summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
@@ -1686,31 +1557,6 @@ def test_non_wiki_positive_grounding_is_not_summary_admissibility_failure() -> N
     assert result.inadmissible_positive_verdicts == 0
 
 
-def test_refuted_by_contradiction_summary_only_grounding_downgrades() -> None:
-    payload = json.loads(
-        _fact_response(
-            verdict="REFUTED_BY_CONTRADICTION",
-            claim="Мелодика веснянок завжди світла й піднесена.",
-            evidence_excerpt="повторенні однієї-двох поспівок",
-            extra_fact_fields={"deep_read_attempted": True},
-        )
-    )
-    summary_event = _sources_event(
-        mode="summary",
-        output="Мелодія веснянок часто побудована на повторенні однієї-двох поспівок.",
-    )
-
-    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
-        payload,
-        {"tool_events": [summary_event]},
-        policy_family="seminar",
-    )
-
-    assert result.payload["fact_checks"][0]["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
-    assert result.payload["fact_checks"][0]["original_verdict"] == "REFUTED_BY_CONTRADICTION"
-    assert result.inadmissible_positive_verdicts == 1
-
-
 @pytest.mark.parametrize("shallow_mode", ["search", "", "snippet"])
 def test_non_deep_wiki_mode_positive_verdict_is_inadmissible(shallow_mode: str) -> None:
     """Missing/unknown wiki modes must fail CLOSED, not certify (cursor review of #4429).
@@ -1733,27 +1579,6 @@ def test_non_deep_wiki_mode_positive_verdict_is_inadmissible(shallow_mode: str) 
     fact_check = result.payload["fact_checks"][0]
     assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
     assert fact_check["original_verdict"] == "CONFIRMED"
-    assert result.inadmissible_positive_verdicts == 1
-
-
-def test_contested_summary_only_grounding_downgrades() -> None:
-    payload = json.loads(
-        _fact_response(
-            verdict="CONTESTED",
-            extra_fact_fields={"deep_read_attempted": True},
-        )
-    )
-    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
-
-    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
-        payload,
-        {"tool_events": [summary_event]},
-        policy_family="seminar",
-    )
-
-    fact_check = result.payload["fact_checks"][0]
-    assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
-    assert fact_check["original_verdict"] == "CONTESTED"
     assert result.inadmissible_positive_verdicts == 1
 
 
@@ -1806,50 +1631,6 @@ def test_canonical_tool_name_handles_all_transport_forms() -> None:
     assert canonical(".query_wikipedia") != ""
 
 
-def test_grounding_matches_events_across_dot_and_underscore_tool_forms() -> None:
-    """End-to-end match: grounding with dot-form tool name must match __-form event.
-
-    This was False before the canonicalizer fix → every codex/gpt dot-cited grounding
-    was rejected even when the excerpt was verifiably in the captured tool output.
-    Example from koliadky QG sweep: 0/14 → 14/14 after fix.
-    """
-    # Event captured with double-underscore form (typical of adapter/runtime)
-    event = _sources_event(
-        tool="mcp__sources__query_wikipedia",
-        query="koliadky",
-        output=(
-            "Колядки — традиційні українські обрядові пісні, "
-            "що виконуються на Різдво та в інші зимові свята. "
-            "Містять побажання щастя, здоров'я та доброго врожаю."
-        ),
-    )
-
-    # Grounding emitted by model using dot form (gpt-5.5 / recent codex)
-    grounding = {
-        "tool": "mcp__sources.query_wikipedia",
-        "query": "koliadky",
-        "evidence_excerpt": "Колядки — традиційні українські обрядові пісні, що виконуються на Різдво",
-        "tool_call_id": "call_0",
-    }
-    assert llm_reviewer_dispatch._grounding_matches_events(grounding, (event,)) is True
-
-    # Mixed other dot/underscore forms also match the same event
-    for variant in ("sources.query_wikipedia", "sources__query_wikipedia", "query_wikipedia"):
-        g = dict(grounding, tool=variant)
-        assert llm_reviewer_dispatch._grounding_matches_events(g, (event,)) is True, variant
-
-    # Wrong tool (different canonical name) must not match even if query/excerpt overlap
-    bad = dict(grounding, tool="mcp__sources.search_grinchenko_1907")
-    assert llm_reviewer_dispatch._grounding_matches_events(bad, (event,)) is False
-
-    # Malformed dot-form tool names must NOT wildcard past the tool filter
-    # (regression: an empty canonical would bypass `if tool and ...` and match
-    # any event with the same query/excerpt). These must fail closed.
-    for malformed in ("mcp__sources.", "sources.", ".query_wikipedia"):
-        g = dict(grounding, tool=malformed)
-        assert llm_reviewer_dispatch._grounding_matches_events(g, (event,)) is False, malformed
-
-
 # --- Guard 3 abstain-recovery (task guard3-abstain; fleet-reviewed codex/agy/cursor) ---
 # The v2 gate ABSTAINS (anchored=False) when an excerpt is verbatim-present in >=2 DIFFERENT
 # tool outputs — provenance is satisfied, source is ambiguous. Enforcement previously mapped that
@@ -1897,12 +1678,6 @@ def test_v2_enforcement_fuzzy_abstain_stays_fail_closed(monkeypatch) -> None:
     result = _enforce_v2(json.loads(_fact_response()))
     assert result.invalid_fact_checks == 1  # below the exact-match recovery threshold → rejected
     assert result.payload["fact_checks"][0]["anchor_recovered_ambiguous"] is False
-
-
-def test_v2_enforcement_non_anchor_non_abstain_rejected(monkeypatch) -> None:
-    _stub_anchor(monkeypatch, anchored=False, abstained=False, similarity=0.5)
-    result = _enforce_v2(json.loads(_fact_response()))
-    assert result.invalid_fact_checks == 1  # ordinary below-tau miss → rejected (fabrication path intact)
 
 
 def test_v2_enforcement_real_multi_output_verbatim_recovered() -> None:

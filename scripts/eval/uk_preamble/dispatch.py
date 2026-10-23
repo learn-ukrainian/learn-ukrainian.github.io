@@ -18,7 +18,12 @@ redirect every task to a different automatic checkout, invalidating the paired
 frame. Pass one existing isolated worktree as ``--worker-cwd``. When ``--cwd``
 lies in a registered worktree it adds its worktree
 block (whose sparse-checkout note depends on paths the prompt names) and then
-the rules core again in front of it. ``DelegateComposer`` computes that
+the rules core again in front of it. Delegate also appends its supported
+evidence-directory block (#11342), which is deliberately path-free: the real
+``evidence/`` path is task-specific, so interpolating it would change
+``suffix_sha256`` per task and break both exact-prompt verification and the
+paired frame. The worker reads it from ``$LU_TASK_EVIDENCE_DIR`` instead, and
+the block itself is constant across tasks. ``DelegateComposer`` computes that
 composition with delegate's own functions, without spawning anything, so every
 task has an expected effective prompt hash, prompt blocks, cwd and worktree
 path. ``condition_problems`` accepts a task record only when it matches, and
@@ -63,6 +68,10 @@ SPAWN_TIMEOUT = 900  # seconds for dispatch, which may create a read-only worktr
 WAIT_MARGIN = 900  # seconds a wait may outlast the worker's hard timeout
 RULES_SEAT = "core"
 READ_ONLY = "read-only"
+# Delegate always exports and names the supported evidence directory (#11342).
+# The block is path-free, so this presence marker reproduces delegate's prompt
+# exactly while the real per-task lease path stays out of the paired frame.
+EVIDENCE_BLOCK = "evidence"
 # Classification is a property of the task kind, not the seat. Judge compares Ukrainian writing, so it is review.
 TASK_FAMILIES = {
     "review": "ukrainian-review",
@@ -255,6 +264,7 @@ class DelegateComposer:
                 advisory_block_kind=None,
                 rules_seat=self.rules_seat,
                 blocks=blocks,
+                evidence_dir=EVIDENCE_BLOCK,
             )
         except (OSError, RuntimeError, ValueError, RulesCoreError) as exc:
             raise DispatchError(f"cannot compute delegate's composition: {exc}") from exc

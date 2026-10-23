@@ -181,7 +181,7 @@ def test_dry_run_reads_but_never_writes(tmp_path):
     assert not db.exists()
 
 
-def test_existing_database_is_backed_up_before_the_write(tmp_path):
+def test_existing_database_is_backed_up_before_the_write(tmp_path, monkeypatch):
     cache = tmp_path / "cache"
     write_cache(cache, snapshot())
     db = tmp_path / "sources.db"
@@ -189,13 +189,26 @@ def test_existing_database_is_backed_up_before_the_write(tmp_path):
         conn.execute("CREATE TABLE marker (value TEXT)")
         conn.execute("INSERT INTO marker VALUES ('before')")
     backups = tmp_path / "bk"
+    copy_contents = []
+    real_backup = ingest.backup_database
+
+    def capture_backup(conn, db_path, backup_dir=None):
+        target = real_backup(conn, db_path, backup_dir)
+        with sqlite3.connect(target) as copy_conn:
+            copy_contents.append((
+                copy_conn.execute("SELECT value FROM marker").fetchall(),
+                copy_conn.execute("SELECT name FROM sqlite_master WHERE name = 'slovnyk_me_entries'").fetchall(),
+            ))
+        return target
+
+    monkeypatch.setattr(ingest, "backup_database", capture_backup)
     report = ingest.ingest_cache(
         db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200, backup_dir=backups,
     )
-    assert report.backup_path.parent == backups
-    with sqlite3.connect(report.backup_path) as conn:
-        assert conn.execute("SELECT value FROM marker").fetchall() == [("before",)]
-        assert not conn.execute("SELECT name FROM sqlite_master WHERE name = 'slovnyk_me_entries'").fetchall()
+    assert copy_contents == [([("before",)], [])]
+    assert report.backup_removed is True
+    assert report.backup_path is None
+    assert not list(backups.glob("*.db"))
 
 
 def test_network_database_is_refused_before_any_write(tmp_path, monkeypatch):

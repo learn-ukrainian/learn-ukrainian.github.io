@@ -586,6 +586,7 @@ def check_dispatch_binding(
         rules_seat=None,
         blocks=expected_blocks,
         agent=agent,
+        evidence_dir=dispatched.get("evidence_dir") or None,
     )
     if dispatched.get("prompt_blocks") != expected_blocks:
         raise AdjudicationError(

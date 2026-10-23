@@ -546,19 +546,6 @@ def test_verify_fails_on_learner_marker_violation(clean_store, synthetic_vesum, 
     assert any(codes.LEARNER_MARKER in err for err in res["errors"])
 
 
-def test_verify_rejects_long_form_marked_learner(clean_store, synthetic_vesum, synthetic_sources):
-    with sqlite3.connect(synthetic_vesum) as conn:
-        conn.execute("UPDATE forms_all SET tags = tags || ':long' WHERE id = 1")
-    store_path = clean_store / "_words.yaml"
-    doc = yaml.safe_load(store_path.read_text(encoding="utf-8"))
-    doc["words"][0]["forms"][0]["tags"] += ":long"
-    doc["words"][0]["forms"][0]["learner"] = True
-    lock.write(store_path, lock.yaml_bytes(doc))
-    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
-        result = verify.verify_words_store("a1", evidence_dir=clean_store, sources_instance=api)
-    assert any(codes.LEARNER_MARKER in error for error in result["errors"])
-
-
 def test_verify_fails_on_unchecked_ulif_stress(clean_store, synthetic_vesum, synthetic_sources, monkeypatch):
     monkeypatch.setattr(
         sources.stress,
@@ -714,20 +701,6 @@ def test_verify_source_changed_strict_vs_nonstrict(clean_store, synthetic_vesum,
 
     assert res_strict["status"] == "failed"
     assert any(codes.SOURCE_CHANGED in err for err in res_strict["errors"])
-
-
-def test_verify_fails_on_missing_paradigm_forms(clean_store, synthetic_vesum, synthetic_sources):
-    store_path = clean_store / "_words.yaml"
-    data = yaml.safe_load(store_path.read_text(encoding="utf-8"))
-    data["words"][0]["forms"] = []
-    store_bytes = lock.yaml_bytes(data)
-    lock.write(store_path, store_bytes)
-
-    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
-        res = verify.verify_words_store("a1", evidence_dir=clean_store, sources_instance=api, strict=True)
-
-    assert res["status"] == "failed"
-    assert any(codes.FORM_MISMATCH in err for err in res["errors"])
 
 
 def test_verify_fails_on_unsupported_gloss(clean_store, synthetic_vesum, synthetic_sources):

@@ -5,6 +5,16 @@ itself is stated once in the core `SKILL.md` loop.
 
 ## §0. Orient
 
+Read the pinned provider facts in `.claude/<lane>-epic/DRIVER-STATE.md`, then run
+`lu-driver-state render --lane <lane>` for open work and
+`lu-driver-state check --lane <lane>`. Use your assigned lane key for `<lane>`.
+Treat `UNOWNED`, `STALE` and `OVERDUE` findings as a worklist. Read the program and
+plan first: the `operator_order` item and its child `goal` items. Use
+`lu-driver-state show <id>` for their full history and links, then read standing
+orders, the latest `handoff_note`, in-flight work, blockers, decisions and next
+actions. The database is the lane's handoff; the markdown file is only a pointer
+([handoff](handoff.md)).
+
 ```bash
 .venv/bin/python -m scripts.fleet_comms cold-start-board   # cold-start first action
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
@@ -39,13 +49,13 @@ and next-action time alongside the projection — also a queue INPUT, never a re
 (absent) cache → `503` `building` + `retry_after_s` (does not trigger a build); unknown
 `stream` → `400` with `valid_streams`.
 
-**Entire cold-start companion (not a substitute for the file handoff):** after orienting,
+**Entire cold-start companion (supplemental to the lane tracker):** after orienting,
 run `.venv/bin/python -m scripts.entire_context status` and
 `search --query "<path-or-sha-needle>"` (and optional `handoff --query`) so promoted SHAs
 surface before dispatch. Ranking is **one substring** (prefer path tokens like `practice`
 or a full SHA — not multi-word sentences). Empty search = nothing indexed for that needle;
 `handoff --query` with zero hits may return `seed_invalid` — use `--locator-id` from
-bootstrap/search instead. Fall through to GH issues + file handoff.
+bootstrap/search instead. Fall through to GH issues and the lane tracker.
 
 ## §0b. Optional Monitor inbox-watcher wakeup — cold start only
 

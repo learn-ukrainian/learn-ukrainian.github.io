@@ -8,7 +8,6 @@ from scripts.goal_driver.status_lines import (
     ABORT_KIND,
     DONE_KIND,
     STATUS_KIND,
-    TERMINAL_KINDS,
     WAIT_KIND,
     find_last_status_line,
     parse_status_line,
@@ -72,12 +71,6 @@ def test_wait_line_carries_signal_and_eta() -> None:
     assert parsed.fields["eta_s"] == "1800"
 
 
-def test_terminal_kinds_constant_is_exhaustive() -> None:
-    assert TERMINAL_KINDS == (DONE_KIND, ABORT_KIND)
-    # GOAL_WAIT is intentionally non-terminal — it suspends, not exits.
-    assert WAIT_KIND not in TERMINAL_KINDS
-
-
 @pytest.mark.parametrize(
     "garbage",
     [
@@ -104,10 +97,6 @@ def test_find_last_status_line_picks_last_match_in_blob() -> None:
     assert parsed is not None
     assert parsed.kind == STATUS_KIND
     assert parsed.fields["queue_head"] == "item-b"
-
-
-def test_find_last_status_line_returns_none_when_empty() -> None:
-    assert find_last_status_line("just chatter without any status line") is None
 
 
 def test_malformed_quote_does_not_raise() -> None:

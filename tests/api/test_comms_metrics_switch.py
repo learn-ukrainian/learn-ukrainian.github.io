@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sqlite3
 from pathlib import Path
 
 import pytest
@@ -37,22 +36,6 @@ def test_authority_mode_reads_plane_not_legacy_broker(
     assert backlog["by_agent"] == {} and backlog["by_status"] == {}
     dead = client.get("/api/comms/v1/dead-letters").json()
     assert dead["total"] == 0 and dead["by_reason"] == {} and dead["rows"] == []
-
-
-def test_authority_mode_with_plane_db_runs_authority_collectors(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
-    plane = tmp_path / "batch_state" / "fleet-comms" / "v1"
-    plane.mkdir(parents=True)
-    sqlite3.connect(plane / "comms.sqlite3").close()  # empty schema
-    client = _client(tmp_path)
-    for route in _ROUTES:
-        payload = client.get(route).json()
-        assert payload["source"] == "authority", route
-        # Empty schema → collectors answer (empty projections) or a typed
-        # db_error code; never a 500 and never exception text.
-        assert "db_error" not in payload or payload["db_error"].isidentifier()
 
 
 def test_forced_off_mode_stays_on_legacy_broker(

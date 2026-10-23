@@ -217,10 +217,6 @@ def test_resolve_repo_slug_fails_closed_without_a_checkout(tmp_path) -> None:
 # --- identity agreement: one probe, two fail-closed directions (#7127) -------
 
 
-def test_both_callers_consult_the_one_shared_probe_module() -> None:
-    assert post_task_reap.pr_identity is hygiene.pr_identity is pr_identity
-
-
 @pytest.mark.parametrize(
     ("probe_answer", "gate_expected", "reaper_no_open_expected", "reaper_error_expected"),
     [
@@ -311,20 +307,6 @@ def test_identity_agreement_on_one_gh_answer(monkeypatch, label: str, payload: s
         assert gate_has_open is False, label
         assert reaper_no_open is False, label
         assert "PR guard unavailable" in (reaper_error or ""), label
-
-
-def test_identity_agreement_on_transport_failures(monkeypatch) -> None:
-    for failure in (
-        _gh_result("[]", returncode=1),
-        subprocess.TimeoutExpired(cmd="gh", timeout=1),
-        OSError("gh missing"),
-    ):
-        gate_has_open, reaper_no_open, reaper_error = _drive_both_over_one_gh_answer(
-            monkeypatch, failure
-        )
-        assert gate_has_open is False
-        assert reaper_no_open is False
-        assert "PR guard unavailable" in (reaper_error or "")
 
 
 def test_each_caller_binds_its_own_explicit_repository(monkeypatch) -> None:

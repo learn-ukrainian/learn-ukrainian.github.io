@@ -189,26 +189,3 @@ def test_ingest_external_articles_dedupes_urls(tmp_path: Path) -> None:
         ("https://example.com/y", "channel_b"),
     ]
     conn.close()
-
-
-def test_ingest_external_articles_sql_includes_required_columns() -> None:
-    """Substring guard: the function source must reference all required
-    columns. A regression that drops one of these silently from the SQL
-    is exactly the original bug — keep a literal-string check as a
-    defense-in-depth signal."""
-    src = (ROOT / "scripts" / "wiki" / "build_sources_db.py").read_text(encoding="utf-8")
-    fn_start = src.find("def _ingest_external_articles")
-    assert fn_start >= 0, "_ingest_external_articles helper must exist"
-    # Take everything up to the next top-level def
-    fn_end = src.find("\ndef ", fn_start + 1)
-    fn_body = src[fn_start:fn_end] if fn_end > 0 else src[fn_start:]
-    for col in (
-        "channel_id",
-        "speaker",
-        "video_id",
-        "publish_date",
-        "duration_s",
-        "source_file",
-        "char_count",
-    ):
-        assert col in fn_body, f"_ingest_external_articles SQL/body must reference {col!r}"

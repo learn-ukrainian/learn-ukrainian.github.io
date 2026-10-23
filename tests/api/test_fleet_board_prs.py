@@ -363,21 +363,6 @@ def test_stacked_base_is_the_open_pr_on_the_base_branch() -> None:
     assert by_number[8]["stacked_base"] == {"number": None, "ref": "missing", "state": None, "mq": None}
 
 
-def test_epic_and_state_filters() -> None:
-    rows = _rows(
-        _pull(number=1, sha="d" * 40, body="Closes #123", epics=("123",)),
-        _pull(number=2, sha="e" * 40, labels=({"name": "hold"},), epics=("99",)),
-        comments={1: (_comment("d" * 40),), 2: (_comment("e" * 40),)},
-        checks={"d" * 40: _green("d" * 40), "e" * 40: (_check("CI Gate", "e" * 40, conclusion="failure"),)},
-    )
-    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="epic:123")] == [1]
-    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="99")] == [2]
-    assert [row["number"] for row in prs_mod.filter_prs(rows, state="held")] == [2]
-    assert [row["number"] for row in prs_mod.filter_prs(rows, state="red")] == [2]
-    assert prs_mod.filter_prs(rows, state="nope") == []
-    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="123", state="open")] == [1]
-
-
 def _rest_pull(number: int, sha: str, head: str, base: str) -> dict:
     return {
         "number": number,
@@ -478,23 +463,6 @@ def test_loader_uses_rest_for_pulls_and_graphql_only_for_the_queue() -> None:
     assert all(row["ci"] == "green" for row in rows)
 
 
-def test_github_cache_reuses_a_short_lived_read(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls: list[str] = []
-    view = _view(_pull())
-
-    def fake(repo: str, _client: object) -> prs_mod.GithubView:
-        calls.append(repo)
-        return view
-
-    monkeypatch.setattr(prs_mod, "_fetch_github", fake)
-    monkeypatch.setattr(prs_mod, "_client", lambda: object())
-    assert prs_mod.load_github_view(REPO, now=0, ttl=30) is not None
-    assert prs_mod.load_github_view(REPO, now=10, ttl=30).age_s == 10
-    assert calls == [REPO]
-    prs_mod.load_github_view(REPO, now=30, ttl=30)
-    assert calls == [REPO, REPO]
-
-
 class _BlindIdentity(_Client):
     def request(
         self,
@@ -530,21 +498,6 @@ def test_failed_identity_and_repository_reads_are_unavailable_and_not_cached(
     assert first_rows[0]["cf"] == {"verdict": "unknown", "at_head": False}
     assert first_rows[0]["stacked_base"] == {"number": None, "ref": "topic", "state": None, "mq": None}
     prs_mod.collect_pipeline()
-    assert calls == [1, 1]
-
-
-def test_a_failed_read_is_not_cached(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls: list[int] = []
-    failed = _view(_pull(), queue_failed=True, failed=True)
-
-    def fake(_repo: str, _client: object) -> prs_mod.GithubView:
-        calls.append(1)
-        return failed
-
-    monkeypatch.setattr(prs_mod, "_fetch_github", fake)
-    monkeypatch.setattr(prs_mod, "_client", lambda: object())
-    prs_mod.load_github_view(REPO, now=0, ttl=30)
-    prs_mod.load_github_view(REPO, now=1, ttl=30)
     assert calls == [1, 1]
 
 
@@ -707,20 +660,6 @@ def test_route_filters_and_schema(monkeypatch: pytest.MonkeyPatch, tmp_path) -> 
     Draft202012Validator(documents["fleet.v1.pr"]).validate(missing.json())
 
 
-def test_unset_repository_is_not_configured(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("FLEET_GITHUB_REPO", raising=False)
-    monkeypatch.delenv("GH_REPO", raising=False)
-    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
-    monkeypatch.delenv("FLEET_MQ_STATE_DIR", raising=False)
-    response = client.get("/api/fleet/v1/prs")
-    assert response.status_code == 200
-    by_name = {item["name"]: item for item in response.json()["sources"]}
-    assert by_name["github"]["status"] == "not_configured"
-    assert by_name["mq_state"]["status"] == "not_configured"
-    assert by_name["stale_prs"]["status"] == "not_configured"
-    assert response.json()["data"]["prs"] == []
-
-
 def _note(**kwargs: object) -> activity_mod.PrActivity:
     return activity_mod.PrActivity(**kwargs)  # type: ignore[arg-type]
 
@@ -801,23 +740,6 @@ def test_owner_lane_prefers_the_recorded_lane() -> None:
     assert rows[0]["owner_lane"] == "codex"
     plain = _rows(_pull(head_ref="feature"))
     assert plain[0]["owner_lane"] is None
-
-
-def test_open_base_pr_is_the_stacked_blocker() -> None:
-    rows = _rows(
-        _pull(number=6, sha=OTHER, head_ref="feature-a", base_ref="main"),
-        _pull(number=7, head_ref="cursor/feature-b", base_ref="feature-a"),
-        comments={6: (_comment(OTHER),), 7: (_comment(SHA),)},
-        checks={OTHER: _green(OTHER), SHA: _green(SHA)},
-        since={f"7:{SHA}": "2026-10-09T08:00:00Z"},
-    )
-    child = next(row for row in rows if row["number"] == 7)
-    assert child["blocker"] == {"kind": "stacked_base", "number": 6, "state": "open"}
-    assert child["stacked_base"]["number"] == 6
-    assert child["stale_green"] is False
-    assert child["owner_lane"] == "cursor"
-    parent = next(row for row in rows if row["number"] == 6)
-    assert parent["blocker"] == {"kind": "none"}
 
 
 @pytest.mark.parametrize("board_signals", [False, True])

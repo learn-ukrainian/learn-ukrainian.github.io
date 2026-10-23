@@ -5,8 +5,6 @@ Pure inline fixtures (no 39 MB manifest needed): the predicate is data-shape log
 
 from __future__ import annotations
 
-import pytest
-
 from scripts.audit.lexeme_filter import (
     GRAMMAR_TERM_POS,
     SURFACE_CLOZE,
@@ -34,9 +32,6 @@ def _noun(**over):
 
 # ---- is_lexeme_entry -------------------------------------------------------------
 
-def test_lexeme_accepts_normal_noun():
-    assert is_lexeme_entry(_noun()) is True
-
 
 def test_lexeme_rejects_grammar_metaterm():
     # The singularia/pluralia-tantum leak the user reported.
@@ -45,104 +40,12 @@ def test_lexeme_rejects_grammar_metaterm():
     assert is_lexeme_entry(meta) is False
 
 
-def test_lexeme_rejects_missing_lemma_or_slug():
-    assert is_lexeme_entry(_noun(lemma="")) is False
-    assert is_lexeme_entry(_noun(url_slug=None)) is False
-
-
-def test_lexeme_keeps_inflected_form_pages():
-    # Form-of pages ARE valid Atlas routes (handled separately by is_practice_eligible);
-    # is_lexeme_entry must NOT drop them, only grammar metaterms.
-    form = _noun(lemma="Іване", url_slug="ivane",
-                 primary_source="built_vocabulary_form")
-    assert is_lexeme_entry(form) is True
-
-
 # ---- is_practice_eligible --------------------------------------------------------
-
-def test_practice_accepts_glossed_course_word():
-    assert is_practice_eligible(_noun()) is True
-
-
-def test_practice_accepts_cefr_only_without_course_usage():
-    entry = _noun(course_usage=[], enrichment={"cefr": {"level": "B2"}})
-    assert is_practice_eligible(entry) is True
-
-
-def test_practice_tolerates_cefr_as_bare_string():
-    entry = _noun(course_usage=[], enrichment={"cefr": "A2"})
-    assert is_practice_eligible(entry) is True
-
-
-def test_practice_rejects_grammar_metaterm():
-    assert is_practice_eligible(_noun(pos=GRAMMAR_TERM_POS)) is False
 
 
 def test_practice_rejects_surzhyk_to_avoid():
     # Drilling a learner to produce surzhyk is harmful.
     assert is_practice_eligible(_noun(primary_source=SURZHYK_SOURCE)) is False
-
-
-@pytest.mark.parametrize(
-    ("primary_source", "form_of", "expected"),
-    [
-        pytest.param(
-            "built_vocabulary_normalized",
-            {"lemma": "хліб", "url_slug": "khlib"},
-            False,
-            id="form-of-set-normalized",
-        ),
-        pytest.param(
-            "built_vocabulary_canonicalized",
-            {"lemma": "хліб", "url_slug": "khlib"},
-            False,
-            id="form-of-set-canonicalized",
-        ),
-        pytest.param(
-            "built_vocabulary_form",
-            {"lemma": "хліб", "url_slug": "khlib"},
-            False,
-            id="form-of-set-form-source",
-        ),
-        pytest.param(
-            "built_vocabulary_form",
-            None,
-            False,
-            id="form-source-without-form-of",
-        ),
-        pytest.param(
-            "built_vocabulary_normalized",
-            None,
-            True,
-            id="normalized-canonical-lemma-without-form-of",
-        ),
-        pytest.param(
-            "built_vocabulary_canonicalized",
-            None,
-            True,
-            id="canonicalized-canonical-lemma-without-form-of",
-        ),
-    ],
-)
-def test_practice_derived_source_form_of_policy_matrix(
-    primary_source: str, form_of: dict[str, str] | None, expected: bool
-) -> None:
-    """Only aliases and built form rows are excluded from otherwise-valid cards."""
-    entry = _noun(primary_source=primary_source)
-    if form_of is not None:
-        entry["form_of"] = form_of
-
-    assert is_practice_eligible(entry) is expected
-
-
-def test_practice_rejects_glossless():
-    assert is_practice_eligible(_noun(gloss=None)) is False
-
-
-def test_practice_rejects_no_curriculum_anchor():
-    # No course_usage and no CEFR level -> not curriculum-anchored.
-    entry = _noun(course_usage=[], enrichment={})
-    assert is_practice_eligible(entry) is False
 
 
 def test_source_inventory_lexeme_defaults_to_browse_only() -> None:

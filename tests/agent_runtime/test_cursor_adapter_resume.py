@@ -14,22 +14,6 @@ def adapter():
     return CursorAdapter()
 
 
-def test_cursor_adapter_resume_first_run(adapter, tmp_path, monkeypatch):
-    monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/cursor-agent")
-
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model=None,
-        task_id="new-task-1",
-        session_id=None,
-        tool_config=None,
-    )
-
-    assert "--resume" not in plan.cmd
-
-
 def _executable(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")

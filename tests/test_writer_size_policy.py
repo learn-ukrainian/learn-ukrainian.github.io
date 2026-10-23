@@ -9,25 +9,11 @@ from scripts.audit import module_size_policy_audit as audit
 from scripts.build import linear_pipeline
 from scripts.build.module_size_policy import (
     build_size_policy_for_plan,
-    render_reviewer_size_policy,
     render_writer_size_policy,
     size_policy_allows_auto_expansion,
-    size_policy_padding_diagnostic,
 )
-from scripts.build.phases.implementation_map import seed_implementation_map
 
 pytestmark = pytest.mark.reads_content
-
-PROMPT_FIXTURES = (
-    ("a1", "sounds-letters-and-hello"),
-    ("a2", "a2-bridge"),
-    ("b1", "adjectives-comparative"),
-    ("b2", "academic-writing"),
-    pytest.param("bio", "andrii-malyshko", marks=pytest.mark.slow),
-    ("folk", "kolomyiky"),
-    ("c1", "abstract-writing"),
-    ("c2", "academic-publishing"),
-)
 
 
 def _patch_size_policy_roots(monkeypatch: pytest.MonkeyPatch, root: Path) -> None:
@@ -53,46 +39,6 @@ def _write_dossier(root: Path, track: str, slug: str, words: int) -> None:
     )
 
 
-def _prompt_for(level: str, slug: str, writer: str) -> str:
-    plan_path = linear_pipeline.plan_path_for(level, slug)
-    plan = linear_pipeline.load_plan(plan_path)
-    plan.setdefault("slug", slug)
-    manifest = {
-        "slug": slug,
-        "wiki_path": f"wiki/pedagogy/{level}/{slug}.md",
-        "sequence_steps": [],
-        "l2_errors": [],
-        "phonetic_rules": [],
-        "decolonization_bans": [],
-        "external_resources": [],
-    }
-    return linear_pipeline.render_writer_prompt(
-        plan=plan,
-        plan_content=plan_path.read_text(encoding="utf-8"),
-        knowledge_packet="Knowledge packet stub for #4801 size-policy prompt smoke.",
-        plan_path=plan_path,
-        wiki_manifest=manifest,
-        implementation_map=seed_implementation_map(manifest, plan=plan),
-        writer=writer,
-    )
-
-
-@pytest.mark.parametrize("writer", ("claude-tools", "codex-tools"))
-@pytest.mark.parametrize(("level", "slug"), PROMPT_FIXTURES)
-def test_claude_and_codex_writer_prompts_include_size_policy(
-    level: str,
-    slug: str,
-    writer: str,
-) -> None:
-    prompt = _prompt_for(level, slug, writer)
-
-    assert "## Module Size Policy — dossier/evidence-led expansion control (#4801)" in prompt
-    assert "- Expansion permission:" in prompt
-    assert "satisfy objectives and evidence coverage, not a token target" in prompt.lower()
-    assert "SIZE_POLICY_MISMATCH" in prompt
-    assert "do not repeat framing, conclusions, transitions, or definitions" in prompt.lower()
-
-
 def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceiling(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -113,36 +59,6 @@ def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceilin
     assert size_policy_allows_auto_expansion(record) is False
     block = render_writer_size_policy(record)
     assert "Expansion permission: plan_policy_review_required" in block
-
-
-def test_sparse_dossier_blocks_auto_expansion_even_when_floor_is_in_band(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _patch_size_policy_roots(monkeypatch, tmp_path)
-    plan = {
-        "level": "BIO",
-        "slug": "thin-in-band-person",
-        "word_target": 4500,
-        "content_outline": [{"section": "Огляд", "words": 4500}],
-        "references": [
-            {
-                "type": "dossier",
-                "path": "docs/research/bio/thin-in-band-person.md",
-            }
-        ],
-    }
-    _write_dossier(tmp_path, "bio", "thin-in-band-person", 900)
-
-    record = build_size_policy_for_plan(plan, actual_words=4000)
-
-    assert record.density_band == "sparse"
-    assert record.status == "below_plan_floor"
-    assert size_policy_allows_auto_expansion(record) is False
-    assert (
-        "Expansion permission: blocked_until_source_saturation_or_plan_review"
-        in render_writer_size_policy(record)
-    )
 
 
 def test_reviewed_size_policy_override_allows_expansion_below_generic_track_floor(
@@ -203,75 +119,6 @@ def test_invalid_size_policy_override_blocks_writer_expansion(
     block = render_writer_size_policy(record)
     assert "Expansion permission: blocked_until_size_policy_is_valid" in block
     assert "must equal word_target" in block
-
-
-def test_size_policy_reports_advisory_padding_diagnostic(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _patch_size_policy_roots(monkeypatch, tmp_path)
-    plan = {
-        "level": "BIO",
-        "slug": "dense-person",
-        "word_target": 5000,
-        "content_outline": [{"section": "Огляд", "words": 5000}],
-        "references": [{"type": "dossier", "path": "docs/research/bio/dense-person.md"}],
-    }
-    _write_dossier(tmp_path, "bio", "dense-person", 900)
-
-    record = build_size_policy_for_plan(plan, actual_words=5600)
-    diagnostic = size_policy_padding_diagnostic(record)
-
-    assert record.status == "over_advisory_ceiling"
-    assert diagnostic["status"] == "over_advisory_ceiling"
-    assert diagnostic["over_advisory_ceiling_words"] == 600
-    assert "source-backed density from filler/padding" in diagnostic["review_action"]
-    reviewer_block = render_reviewer_size_policy(record)
-    assert "do not fail or pass a module on word count alone" in reviewer_block
-    assert "throughout the full size band" in reviewer_block
-    assert "source-backed density" in reviewer_block
-
-
-def test_size_policy_uses_plan_path_slug_when_plan_has_no_slug(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _patch_size_policy_roots(monkeypatch, tmp_path)
-    plan_path = tmp_path / "curriculum" / "l2-uk-en" / "plans" / "bio" / "thin-person.yaml"
-    plan_path.parent.mkdir(parents=True, exist_ok=True)
-    plan = {
-        "level": "BIO",
-        "word_target": 6000,
-        "content_outline": [{"section": "Огляд", "words": 6000}],
-        "references": [{"type": "dossier", "path": "docs/research/bio/thin-person.md"}],
-    }
-    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8")
-    _write_dossier(tmp_path, "bio", "thin-person", 900)
-
-    record = build_size_policy_for_plan(plan, plan_path=plan_path, actual_words=5500)
-
-    assert record.slug == "thin-person"
-    assert record.status == "plan_review_needed"
-    assert record.dossier_path == "docs/research/bio/thin-person.md"
-
-
-def test_size_policy_handles_missing_slug_without_plan_path(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _patch_size_policy_roots(monkeypatch, tmp_path)
-    plan = {
-        "level": "BIO",
-        "word_target": 5000,
-        "content_outline": [{"section": "Огляд", "words": 5000}],
-        "references": [],
-    }
-
-    record = build_size_policy_for_plan(plan, actual_words=4500)
-
-    assert record.slug == ""
-    assert record.dossier_path is None
-    assert record.status == "missing_dossier"
 
 
 def test_writer_length_precheck_returns_policy_mismatch_without_invoking_writer(

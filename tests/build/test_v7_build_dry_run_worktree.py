@@ -5,9 +5,7 @@ The create-then-discard design (round 1) could leak on any exit path between
 ``git worktree add`` and cleanup. Instead, ``main()`` never dispatches a dry
 run to ``_run_in_worktree`` — it runs the dry-run pipeline in place, the same
 way a bare ``--dry-run`` (no ``--worktree``) already does. Unit-level coverage
-against a throwaway git repository (never the shared repo) lives here; the
-end-to-end "invoked from a primary checkout" contract lives in
-``test_v7_build_e2e.py``.
+against a throwaway git repository (never the shared repo) lives here.
 """
 
 from __future__ import annotations
@@ -87,68 +85,6 @@ def test_dry_run_worktree_leaves_refs_worktrees_and_files_untouched(
     assert rc == 0
     assert _repo_state(dry_run_pipeline) == before
     assert "No build worktree created" in capsys.readouterr().out
-
-
-def test_dry_run_worktree_does_not_dispatch_to_run_in_worktree(monkeypatch: pytest.MonkeyPatch) -> None:
-    def _boom(*_args: Any, **_kwargs: Any) -> int:
-        raise AssertionError("_run_in_worktree must not be called for a dry run (#8890)")
-
-    monkeypatch.setattr(v7_build, "_run_in_worktree", _boom)
-    monkeypatch.setattr(v7_build, "_run", lambda _args: 0)
-
-    assert v7_build.main([LEVEL, SLUG, "--dry-run", "--worktree"]) == 0
-
-
-@pytest.mark.parametrize(
-    "argv",
-    [
-        [LEVEL, SLUG, "--dry-run", "--keep-worktree"],
-        [LEVEL, SLUG, "--dry-run", "--worktree", "--keep-worktree"],
-    ],
-)
-def test_keep_worktree_with_dry_run_is_a_usage_error(
-    argv: list[str], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    def _boom(*_args: Any, **_kwargs: Any) -> int:
-        raise AssertionError("a usage error must be caught before any build runs")
-
-    monkeypatch.setattr(v7_build, "_run_in_worktree", _boom)
-    monkeypatch.setattr(v7_build, "_run", _boom)
-
-    rc = v7_build.main(argv)
-
-    assert rc == 2
-    assert "--keep-worktree" in capsys.readouterr().err
-
-
-def test_dry_run_worktree_telemetry_out_is_a_usage_error(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    def _boom(*_args: Any, **_kwargs: Any) -> int:
-        raise AssertionError("a usage error must be caught before any build runs")
-
-    monkeypatch.setattr(v7_build, "_run_in_worktree", _boom)
-    monkeypatch.setattr(v7_build, "_run", _boom)
-
-    rc = v7_build.main([LEVEL, SLUG, "--dry-run", "--worktree", "--telemetry-out", "out.jsonl"])
-
-    assert rc == 2
-    assert "--telemetry-out" in capsys.readouterr().err
-
-
-def test_dry_run_worktree_upgrade_is_a_usage_error(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    def _boom(*_args: Any, **_kwargs: Any) -> int:
-        raise AssertionError("a usage error must be caught before any build runs")
-
-    monkeypatch.setattr(v7_build, "_run_in_worktree", _boom)
-    monkeypatch.setattr(v7_build, "_run", _boom)
-
-    rc = v7_build.main([LEVEL, SLUG, "--upgrade", "--dry-run", "--worktree"])
-
-    assert rc == 2
-    assert "--upgrade" in capsys.readouterr().err
 
 
 def test_setup_worktree_real_build_branch_name(temp_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:

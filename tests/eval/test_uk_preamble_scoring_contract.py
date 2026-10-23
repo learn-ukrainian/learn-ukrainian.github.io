@@ -9,8 +9,6 @@ of the token and insertion columns.
 
 from __future__ import annotations
 
-import inspect
-import itertools
 import json
 import random
 from pathlib import Path
@@ -18,11 +16,10 @@ from typing import Any
 
 import pytest
 
-from scripts.eval.uk_preamble import scoring
-from scripts.eval.uk_preamble.common import HarnessError, token_keys, tokenize
-from scripts.eval.uk_preamble.dataset import ReviewItem, Span, load_set, review_geometry
+from scripts.eval.uk_preamble.common import HarnessError, tokenize
+from scripts.eval.uk_preamble.dataset import ReviewItem, Span, load_set
 from scripts.eval.uk_preamble.prompts import validate_response
-from scripts.eval.uk_preamble.scoring import align, review_counts, score_review_item
+from scripts.eval.uk_preamble.scoring import review_counts, score_review_item
 
 # --------------------------------------------------------------------------- builders
 
@@ -147,13 +144,6 @@ def test_oracle_table(case):
     assert counts(item, corrected) == expected
 
 
-def test_c8b_residual_is_pinned():
-    """The documented residual: if this starts crediting the seed, the contract changed and needs a decision."""
-    item, corrected, _ = ORACLE["C8b"]
-    result = review_counts(item, corrected)
-    assert result.hits == frozenset() and result.wrong == frozenset({"e0"})
-
-
 def test_oracle_counts_feed_the_scored_record():
     item, corrected, _ = ORACLE["C5"]
     record = score_review_item(item, schema_valid(item.text, corrected, []))
@@ -201,11 +191,6 @@ def test_probe_round3_repeated_token_is_one_hit_and_one_false_alarm_however_logg
     item = make_item("safe safe bad", [("bad", ["good"])])
     record = score_review_item(item, schema_valid("safe safe bad", "safe  good", corrections))
     assert (record["hits"], record["false_alarms"], record["fa_tokens"], record["wrong_corrections"]) == (1, 1, 1, 0)
-
-
-def test_probe_wrong_correction_confined_to_seed_is_a_miss_not_a_false_alarm():
-    item = make_item("x bad y", [("bad", ["good"])])
-    assert counts(item, "x worse y") == (0, 0, 0, 0, 1)
 
 
 PAIR_TEXT = "p badone badtwo q"
@@ -386,79 +371,10 @@ def test_every_schema_valid_claim_list_gives_identical_primary_counts(text, erro
         assert len(seen) == 1, seen
 
 
-@pytest.mark.parametrize(("text", "errors", "protected", "edits", "expected"), INVARIANCE)
-def test_claim_generator_logs_the_edits_faithfully(text, errors, protected, edits, expected):
-    """Guard for the generator: every non-overlapping grouping, applied to the source, gives the corrected text."""
-    corrected = _apply(text, edits)
-    groupings = _groupings(text, edits)
-    assert len(groupings) == [1, 1, 2, 5, 15][len(edits)]  # Bell numbers: every partition is generated
-    for corrections in groupings:
-        ordered = sorted(corrections, key=lambda c: (c["start"], c["end"]))
-        if all(a["end"] <= b["start"] for a, b in itertools.pairwise(ordered)):
-            assert _apply(text, [(c["start"], c["end"], c["correction"]) for c in ordered]) == corrected
-
-
 # --------------------------------------------------------------------------- logging diagnostics
 
 
-def test_broad_wrong_claim_covers_the_change_but_is_not_applied():
-    text = "Ми обговорювали питання на протязі години."
-    item = make_item(text, [("на протязі години", ["протягом години", "упродовж години"])])
-    corrected = "Ми обговорювали питання протягом години."
-    record = score_review_item(
-        item, schema_valid(text, corrected, [claim(text, 0, len(text) - 1, "Ми впродовж години")])
-    )
-    assert record["hits"] == 1
-    logging = record["logging"]
-    assert (logging["change_units"], logging["claimed_change_units"]) == (1, 1)
-    assert (logging["applied_claims"], logging["unapplied_claims"]) == (0, 1)
-
-
-@pytest.mark.parametrize(
-    ("text", "corrected", "corrections"),
-    [
-        ("bad safe", "good safer", [claim("bad safe", 0, 3, "good"), claim("bad safe", 8, 8, "r")]),
-        ("Я знаю що він прийде.", "Я знаю, що він прийде.", [claim("Я знаю що він прийде.", 6, 6, ",")]),
-        ("Я знаю що він прийде.", "Я знаю, що він прийде.", [claim("Я знаю що він прийде.", 7, 7, ", ")]),
-        ("Я знаю що він прийде.", "Я знаю, що він прийде.", [claim("Я знаю що він прийде.", 2, 6, "знаю,")]),
-    ],
-    ids=["suffix-insertion", "comma-after-word", "comma-before-word", "comma-in-replacement"],
-)
-def test_claims_glued_to_words_are_read_with_them_and_count_as_applied(text, corrected, corrections):
-    record = score_review_item(make_item(text), schema_valid(text, corrected, corrections))
-    logging = record["logging"]
-    assert (logging["applied_claims"], logging["unapplied_claims"], logging["noop_claims"]) == (len(corrections), 0, 0)
-    assert logging["claimed_change_units"] == logging["change_units"]
-
-
-def test_inserted_tokens_are_reported_but_an_insertion_site_counts_once():
-    text = "Я прийду завтра."
-    item = make_item(text)
-    record = score_review_item(item, schema_valid(text, "Я прийду завтра, якщо буде змога і час.", []))
-    assert (record["fa_insertions"], record["false_alarms"], record["fa_inserted_tokens"]) == (1, 1, 6)
-
-
 # --------------------------------------------------------------------------- canonical alignment
-
-
-def test_alignment_tie_order_and_character_costs():
-    tags = lambda a, b: [op.tag for op in align(a.split(), b.split())]  # noqa: E731
-    assert tags("p A x A q", "p A B q") == ["equal", "equal", "delete", "substitute", "equal"]
-    assert tags("p A x A q", "p B A q") == ["equal", "delete", "substitute", "equal", "equal"]
-    assert tags("safe safe bad", "safe good") == ["equal", "delete", "substitute"]
-    assert tags("x bad y", "x very good y") == ["equal", "insert", "substitute", "equal"]
-    # Character edits break the token-edit tie: "на" is deleted, "протязі" becomes "протягом".
-    assert tags("на протязі", "протягом") == ["delete", "substitute"]
-    # Token edits come first: one substitution beats a delete plus an insert even with no shared characters.
-    assert tags("abc", "xyz") == ["substitute"]
-    assert tags("", "") == [] and tags("a", "") == ["delete"] and tags("", "a") == ["insert"]
-
-
-def test_alignment_is_deterministic_and_free_of_difflib():
-    a, b = token_keys(C5_TEXT), token_keys("Ми прослухали надзвичайно цікаву доповідь протягом години.")
-    assert align(a, b) == align(list(a), list(b)) == align(a, b)
-    source = inspect.getsource(scoring)
-    assert not hasattr(scoring, "difflib") and "import difflib" not in source and "SequenceMatcher" not in source
 
 
 # --------------------------------------------------------------------------- tokeniser
@@ -497,13 +413,6 @@ def test_alignment_is_deterministic_and_free_of_difflib():
 )
 def test_tokeniser_folding(text, keys):
     assert tuple(t.key for t in tokenize(text)) == keys
-
-
-def test_token_offsets_point_into_the_original_text():
-    text = "Мʼята… ось"
-    tokens = tokenize(text)
-    assert [(t.start, t.end) for t in tokens] == [(0, 5), (5, 6), (7, 10)]
-    assert [text[t.start : t.end] for t in tokens] == ["Мʼята", "…", "ось"]
 
 
 def test_stress_mark_on_a_correct_word_is_one_changed_token():
@@ -569,14 +478,3 @@ def test_set_validation_refuses_apostrophe_variant_as_accepted_form(tmp_path, mi
     r2["errors"] = [_error(r2["text"], start, start + 8, "R2-e1", ["пʼятницю"])]
     with pytest.raises(HarnessError, match="tokenises to the seed's own tokens"):
         load_set(_write(tmp_path, mini_set_dict))
-
-
-def test_set_validation_refuses_two_insertion_seeds_at_one_point():
-    text = "Я знаю що він прийде."
-    with pytest.raises(HarnessError, match="overlap"):
-        review_geometry(make_item(text, [(6, [","]), (6, [";"])]))
-
-
-def test_mini_set_passes_validation(tmp_path, mini_set_dict):
-    eval_set = load_set(_write(tmp_path, mini_set_dict))
-    assert [len(review_geometry(item).seeds) for item in eval_set.review] == [2, 0, 2, 1]

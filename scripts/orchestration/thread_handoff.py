@@ -3828,68 +3828,6 @@ def format_table(rows: list[list[str]], headers: list[str]) -> str:
     return "\n".join([header_line, sep_line, *row_lines])
 
 
-def summarize_prs(open_prs: Any) -> str:
-    if isinstance(open_prs, dict) and open_prs.get("_error"):
-        return f"_Unavailable: {open_prs['_error']}_"
-    rows = []
-    for pr in open_prs if isinstance(open_prs, list) else []:
-        rows.append(
-            [
-                f"#{pr.get('number')}",
-                str(pr.get("headRefName") or ""),
-                str(pr.get("mergeStateStatus") or ""),
-                "yes" if pr.get("isDraft") else "no",
-                str(pr.get("title") or ""),
-            ]
-        )
-    return format_table(rows, ["PR", "Branch", "Merge", "Draft", "Title"])
-
-
-def summarize_issues(open_issues: Any) -> str:
-    if isinstance(open_issues, dict) and open_issues.get("_error"):
-        return f"_Unavailable: {open_issues['_error']}_"
-    rows = []
-    for issue in open_issues if isinstance(open_issues, list) else []:
-        rows.append(
-            [
-                f"#{issue.get('number')}",
-                str(issue.get("updatedAt") or ""),
-                str(issue.get("title") or ""),
-            ]
-        )
-    return format_table(rows, ["Issue", "Updated", "Title"])
-
-
-def summarize_tasks(tasks_payload: Any) -> str:
-    if not isinstance(tasks_payload, dict):
-        return "_Unavailable._"
-    if tasks_payload.get("_error"):
-        return f"_Unavailable: {tasks_payload['_error']}_"
-    rows = []
-    for task in tasks_payload.get("tasks") or []:
-        rows.append(
-            [
-                str(task.get("task_id") or ""),
-                str(task.get("agent") or ""),
-                str(task.get("status") or ""),
-                str(task.get("age_s") or task.get("duration_s") or ""),
-            ]
-        )
-    return format_table(rows, ["Task", "Agent", "Status", "Age/Duration"])
-
-
-def summarize_modified_files(files: list[dict[str, str]]) -> str:
-    if not files:
-        return "_None._"
-    rows = [[item.get("status", ""), item.get("path", "")] for item in files]
-    return format_table(rows, ["Status", "Path"])
-
-
-def summarize_commits(commits: list[dict[str, str]]) -> str:
-    rows = [[item.get("sha", ""), item.get("subject", "")] for item in commits]
-    return format_table(rows, ["SHA", "Subject"])
-
-
 def context_line(
     context_percent: float | None,
     threshold: float,

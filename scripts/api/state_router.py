@@ -778,6 +778,7 @@ def _recommend_agent(
     """
     # Use the picker's live inventory and shared-subscription mirror: Gemini
     # telemetry belongs to AGY, while GLM must never supply Cursor quota.
+    agents = credit_lane.shared_usage_agents(agents)
     lane_inventory = {}
     for lane in capacity_pick.CODE_LANES:
         info, quota_source = capacity_pick._mirror_retired_quota(agents, lane, agents.get(lane, {}))

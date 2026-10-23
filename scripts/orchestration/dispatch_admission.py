@@ -59,7 +59,7 @@ every check passes. Read-only dispatches are exempt.
   this one. A dispatch that reuses an existing worktree skips the disk check.
   Paths in reaper, probe and alert details are redacted. A caller without
   a reaper (status queries, dry runs, the locked recheck) only measures. At or
-  above ``DISPATCH_DISK_ALERT_USED_PERCENT`` (default 80) one alert is posted
+  above ``DISPATCH_DISK_ALERT_USED_PERCENT`` (default 75) one alert is posted
   to the epics Fleet Comms channel per :data:`DISK_ALERT_INTERVAL_S`; the
   state file lives beside the admission lock. A disk probe that fails, or an
   alert that fails, never refuses: the reason is logged and shown.
@@ -144,7 +144,7 @@ _DEFAULT_WORKER_MEM_RESERVE_GIB = 2.5
 _DEFAULT_MAX_TEST_SLOT_QUEUE = 4
 _DEFAULT_DISK_REAP_USED_PERCENT = 85.0
 _DEFAULT_DISK_REFUSE_USED_PERCENT = 90.0
-_DEFAULT_DISK_ALERT_USED_PERCENT = 80.0
+_DEFAULT_DISK_ALERT_USED_PERCENT = 75.0
 
 # Disk alert (#10776): one post per interval; a failed post is retried after
 # the shorter backoff. The state file sits beside the admission lock and has

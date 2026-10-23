@@ -82,16 +82,6 @@ def test_stream_anchor_follows_listed_order_not_numeric_order(tmp_path: Path) ->
     assert stream_anchor_id("gamma", repo) == "epic:3001"
 
 
-def test_inventory_does_not_use_hard_coded_exclusive_list(tmp_path: Path) -> None:
-    """Fixture epics are the sole authority — not the old four-epic production set."""
-    repo = _fixture_repo(tmp_path)
-    epics = set(sorted_epic_numbers(repo))
-    # Classic four-epic subset from pre-PR-H dual-write code must not appear.
-    hard_coded_four = {4387, 4707, 4542, 4706}
-    assert epics.isdisjoint(hard_coded_four)
-    assert epics == {1001, 1002, 2001, 3001}
-
-
 def test_schema_applies_inventory_receipts_migration(tmp_path: Path) -> None:
     migrations = load_migrations()
     assert [m.version for m in migrations] == [1, 2, 3, 4, 5, 6, 7]

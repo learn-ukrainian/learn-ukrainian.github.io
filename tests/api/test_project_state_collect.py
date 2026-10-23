@@ -14,7 +14,6 @@ from scripts.api.project_state_collect import (
     collect_local_document,
     collect_primary_state,
     collect_service_row,
-    collect_worktree_count,
     resolve_primary_repo_root,
 )
 from scripts.api.project_state_sanitize import validate_report_document
@@ -88,11 +87,6 @@ def test_classify_checkout_root(tmp_path: Path) -> None:
     classified = classify_serving_root(repo)
     assert classified["serving_mode"] == "checkout"
     assert classified["checkout_sha"] is not None
-
-
-def test_worktree_count(tmp_path: Path) -> None:
-    repo = _init_repo(tmp_path)
-    assert collect_worktree_count(repo) >= 1
 
 
 def test_resolve_primary_from_dispatch_worktree(tmp_path: Path) -> None:

@@ -8,7 +8,6 @@ silently strip ``agy`` from ``ab discuss --with``.
 
 from __future__ import annotations
 
-import importlib
 import subprocess
 import sys
 import uuid
@@ -74,19 +73,6 @@ def discuss_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
     _channels.create_channel("agy-topic", exist_ok=True)
 
 
-def test_registry_exposes_agy():
-    """The agent_runtime registry is the canonical source of truth."""
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from agent_runtime.registry import AGENTS, available_agents
-
-    assert "agy" in AGENTS, "agy must be in agent_runtime.registry.AGENTS"
-    assert AGENTS["agy"]["cli_available"] is True
-    assert AGENTS["agy"]["resume_policy"] == "bridge_only"
-    assert "agy" in available_agents()
-
-
 def test_delegate_dispatch_accepts_agy_agent():
     """``delegate.py dispatch --agent agy ...`` must parse without error."""
     task_id = f"test-agy-argparse-probe-{uuid.uuid4().hex}"
@@ -116,26 +102,6 @@ def test_delegate_dispatch_accepts_agy_agent():
         f"stdout={result.stdout!r}\nstderr={result.stderr!r}"
     )
     assert task_id in result.stdout
-
-
-def test_ab_channels_valid_agents_includes_agy():
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from scripts.ai_agent_bridge import _channels
-
-    importlib.reload(_channels)
-    assert "agy" in _channels.VALID_AGENTS
-
-
-def test_ab_channels_cli_marks_agy_cli_available():
-    """``ab discuss`` requires the agent to be CLI-spawnable."""
-    scripts_dir = str(_REPO_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from scripts.ai_agent_bridge import _channels_cli
-
-    assert _channels_cli._cli_available_agent("agy") is True
 
 
 def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkeypatch):

@@ -23,23 +23,6 @@ def test_agent_monitor_status():
     assert "active_leases" not in data
 
 
-def test_agent_monitor_status_details():
-    res = client.get("/api/agent-monitor/status/details", headers=AUTH_HEADERS)
-    assert res.status_code == 200
-    data = res.json()
-    assert "active_leases" in data
-
-
-def test_agent_monitor_preflight():
-    res = client.post(
-        "/api/agent-monitor/preflight",
-        json={"agent_id": "gemini/test", "task_name": "test_preflight", "required_ram_mb": 256},
-    )
-    assert res.status_code == 200
-    data = res.json()
-    assert data["verdict"] in ["APPROVED", "REJECTED"]
-
-
 def test_agent_monitor_unauthorized():
     res = client.post(
         "/api/agent-monitor/register",

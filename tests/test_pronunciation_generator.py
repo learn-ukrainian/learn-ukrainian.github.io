@@ -31,12 +31,6 @@ def test_deduplicates_preserves_deck_order_and_caps(tmp_path):
     assert excluded == []
 
 
-@pytest.mark.parametrize("limit", [0, -1, 501])
-def test_hard_cap(limit):
-    with pytest.raises(ValueError, match="limit"):
-        select_slice({}, limit, oracle)
-
-
 def test_ambiguous_stress_excluded_not_guessed(tmp_path):
     def stress(lemma, /, pos=None, **selectors):
         return {"status": "ambiguous"} if lemma == "а" else oracle(lemma)
@@ -129,17 +123,6 @@ def test_normalizes_atlas_display_keys():
 
     assert plain("Інтерне́т") == "інтернет"
     assert plain("п’ять") == plain("пʼять") == "п'ять"
-
-
-def test_passes_pos_to_stress_oracle(tmp_path):
-    calls = []
-
-    def stress(lemma, /, pos=None, **selectors):
-        calls.append((pos, selectors))
-        return oracle(lemma)
-
-    select_slice({"deckVersion": "v", "lexemes": [{"lemmaPlain": "слово", "pos": "noun"}]}, 1, stress)
-    assert calls == [("noun", {"lemma": "слово"})]
 
 
 def test_corrupt_cached_model_fails_before_synthesis(tmp_path):

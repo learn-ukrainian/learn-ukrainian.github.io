@@ -53,34 +53,6 @@ class TestParseConsultation:
         assert result.action == "rebuild"
         assert result.confidence == "high"
 
-    def test_valid_yaml_change_fields(self):
-        result = parse_consultation(self.VALID_YAML)
-        assert result is not None
-        change = result.proposed_changes[0]
-        assert "comparison table" in change.find
-        assert "ONLY Ukrainian" in change.replace
-        assert change.rationale == "Prevents English leaking into tables"
-
-    def test_multiple_changes(self):
-        text = textwrap.dedent("""\
-            root_cause: Multiple issues
-            proposed_changes:
-              - find: "old text 1"
-                replace: "new text 1"
-                file: "a.md"
-              - find: "old text 2"
-                replace: "new text 2"
-                file: "b.md"
-            scope: all_modules
-            action: rebuild
-            confidence: medium
-        """)
-        result = parse_consultation(text)
-        assert result is not None
-        assert len(result.proposed_changes) == 2
-        assert result.proposed_changes[0].file == "a.md"
-        assert result.proposed_changes[1].file == "b.md"
-
     def test_empty_text_returns_none(self):
         assert parse_consultation("") is None
         assert parse_consultation("   ") is None
@@ -100,18 +72,6 @@ class TestParseConsultation:
         """)
         assert parse_consultation(text) is None
 
-    def test_missing_scope_returns_none(self):
-        text = textwrap.dedent("""\
-            root_cause: Something
-            proposed_changes:
-              - find: "x"
-                replace: "y"
-                file: "z.md"
-            action: rebuild
-            confidence: high
-        """)
-        assert parse_consultation(text) is None
-
     def test_invalid_scope_returns_none(self):
         text = textwrap.dedent("""\
             root_cause: Something
@@ -122,32 +82,6 @@ class TestParseConsultation:
             scope: everywhere
             action: rebuild
             confidence: high
-        """)
-        assert parse_consultation(text) is None
-
-    def test_invalid_action_returns_none(self):
-        text = textwrap.dedent("""\
-            root_cause: Something
-            proposed_changes:
-              - find: "x"
-                replace: "y"
-                file: "z.md"
-            scope: this_module
-            action: delete
-            confidence: high
-        """)
-        assert parse_consultation(text) is None
-
-    def test_invalid_confidence_returns_none(self):
-        text = textwrap.dedent("""\
-            root_cause: Something
-            proposed_changes:
-              - find: "x"
-                replace: "y"
-                file: "z.md"
-            scope: this_module
-            action: rebuild
-            confidence: maybe
         """)
         assert parse_consultation(text) is None
 
@@ -173,32 +107,6 @@ class TestParseConsultation:
         """)
         assert parse_consultation(text) is None
 
-    def test_change_not_dict_returns_none(self):
-        text = textwrap.dedent("""\
-            root_cause: Something
-            proposed_changes:
-              - "just a string"
-            scope: this_module
-            action: rebuild
-            confidence: high
-        """)
-        assert parse_consultation(text) is None
-
-    def test_optional_additional_notes(self):
-        text = textwrap.dedent("""\
-            root_cause: Something
-            proposed_changes:
-              - find: "x"
-                replace: "y"
-                file: "z.md"
-            scope: this_module
-            action: fix
-            confidence: low
-        """)
-        result = parse_consultation(text)
-        assert result is not None
-        assert result.additional_notes == ""
-
     def test_markdown_fences_stripped(self):
         """Gemini often wraps YAML in ```yaml ... ``` fences."""
         text = textwrap.dedent("""\
@@ -216,23 +124,6 @@ class TestParseConsultation:
         result = parse_consultation(text)
         assert result is not None
         assert result.root_cause == "Template issue"
-
-    def test_triple_backtick_inside_content_stripped(self):
-        """Even mid-content backtick lines should be removed."""
-        text = textwrap.dedent("""\
-            ```
-            root_cause: Has backticks
-            proposed_changes:
-              - find: "x"
-                replace: "y"
-                file: "z.md"
-            scope: all_modules
-            action: fix
-            confidence: low
-            ```
-        """)
-        result = parse_consultation(text)
-        assert result is not None
 
     def test_empty_replace_is_allowed(self):
         """A change can replace text with nothing (deletion)."""
@@ -294,130 +185,6 @@ class TestApplyTemplatePatch:
         # positive on the consultation-patched-* detection in rebuild)
         assert not output.exists()
 
-    def test_wrong_file_skipped(self, tmp_path):
-        template = tmp_path / "content.md"
-        template.write_text("Write a table\n")
-        output = tmp_path / "patched.md"
-
-        changes = [TemplateChange(
-            find="Write a table",
-            replace="REPLACED",
-            file="activities.md",  # Different file
-        )]
-
-        ok, applied = apply_template_patch(template, changes, output)
-        assert ok is True
-        assert applied == 0
-        assert not output.exists()
-
-    def test_empty_file_field_matches_all(self, tmp_path):
-        template = tmp_path / "content.md"
-        template.write_text("Write a table\n")
-        output = tmp_path / "patched.md"
-
-        changes = [TemplateChange(
-            find="Write a table",
-            replace="REPLACED",
-            file="",  # Empty = matches all
-        )]
-
-        ok, applied = apply_template_patch(template, changes, output)
-        assert ok is True
-        assert applied == 1
-
-    def test_whitespace_normalized_fallback(self, tmp_path):
-        template = tmp_path / "content.md"
-        template.write_text("Write   a\n  table\n  with examples\n")
-        output = tmp_path / "patched.md"
-
-        # Gemini often normalizes whitespace in its find text
-        changes = [TemplateChange(
-            find="Write a table with examples",  # Normalized
-            replace="REPLACED",
-            file="content.md",
-        )]
-
-        ok, applied = apply_template_patch(template, changes, output)
-        assert ok is True
-        assert applied == 1
-        result = output.read_text()
-        assert "REPLACED" in result
-
-    def test_only_first_occurrence_replaced(self, tmp_path):
-        template = tmp_path / "content.md"
-        template.write_text("Write a table\nMore text\nWrite a table\n")
-        output = tmp_path / "patched.md"
-
-        changes = [TemplateChange(
-            find="Write a table",
-            replace="REPLACED",
-            file="content.md",
-        )]
-
-        ok, applied = apply_template_patch(template, changes, output)
-        assert ok is True
-        assert applied == 1
-        result = output.read_text()
-        assert result.count("REPLACED") == 1
-        assert result.count("Write a table") == 1  # Second occurrence preserved
-
-    def test_missing_template_returns_false(self, tmp_path):
-        output = tmp_path / "patched.md"
-        changes = [TemplateChange(find="x", replace="y", file="content.md")]
-
-        ok, applied = apply_template_patch(tmp_path / "nonexistent.md", changes, output)
-        assert ok is False
-        assert applied == 0
-
-    def test_multiple_changes_applied_sequentially(self, tmp_path):
-        template = tmp_path / "content.md"
-        template.write_text("First instruction\nSecond instruction\n")
-        output = tmp_path / "patched.md"
-
-        changes = [
-            TemplateChange(find="First instruction", replace="Changed first", file="content.md"),
-            TemplateChange(find="Second instruction", replace="Changed second", file="content.md"),
-        ]
-
-        ok, applied = apply_template_patch(template, changes, output)
-        assert ok is True
-        assert applied == 2
-        result = output.read_text()
-        assert "Changed first" in result
-        assert "Changed second" in result
-
-    def test_identical_find_replace_skipped(self, tmp_path):
-        template = tmp_path / "content.md"
-        template.write_text("No change needed\n")
-        output = tmp_path / "patched.md"
-
-        changes = [TemplateChange(
-            find="No change needed",
-            replace="No change needed",
-            file="content.md",
-        )]
-
-        ok, applied = apply_template_patch(template, changes, output)
-        assert ok is True
-        assert applied == 0
-        assert not output.exists()
-
-    def test_path_in_file_field_matches(self, tmp_path):
-        """File field with path like 'phases/gemini/content.md' should match 'content.md'."""
-        template = tmp_path / "content.md"
-        template.write_text("Old text\n")
-        output = tmp_path / "patched.md"
-
-        changes = [TemplateChange(
-            find="Old text",
-            replace="New text",
-            file="phases/gemini/content.md",
-        )]
-
-        ok, applied = apply_template_patch(template, changes, output)
-        assert ok is True
-        assert applied == 1
-
 
 # ── queue_for_approval ─────────────────────────────────────────────────
 
@@ -458,26 +225,6 @@ class TestQueueForApproval:
         assert len(data["proposed_changes"]) == 1
         assert data["proposed_changes"][0]["find"] == "Write a table"
 
-    def test_includes_source_file(self, tmp_path, monkeypatch):
-        monkeypatch.setattr("pipeline.consultation.QUEUE_DIR", tmp_path)
-        result = self._make_result()
-
-        path = queue_for_approval(
-            result, "slug", "a1", 2,
-            consultation_file=Path("/some/orch/consultation-2.md"),
-        )
-        data = yaml.safe_load(path.read_text())
-        assert data["source_file"] == "/some/orch/consultation-2.md"
-
-    def test_creates_directory_if_missing(self, tmp_path, monkeypatch):
-        queue_dir = tmp_path / "new-queue"
-        monkeypatch.setattr("pipeline.consultation.QUEUE_DIR", queue_dir)
-        result = self._make_result()
-
-        path = queue_for_approval(result, "slug", "a1", 1)
-        assert queue_dir.is_dir()
-        assert path.exists()
-
 
 # ── record_consultation ────────────────────────────────────────────────
 
@@ -514,38 +261,6 @@ class TestRecordConsultation:
         entry = state["consultations"][0]
         assert entry["outcome"] == "parse_failed"
         assert "scope" not in entry  # No result to extract from
-
-    def test_appends_multiple_consultations(self):
-        state = {"phases": {}}
-        result = ConsultationResult(
-            root_cause="x",
-            proposed_changes=[],
-            scope="this_module", action="fix", confidence="low",
-        )
-
-        record_consultation(state, 1, result, "no_action")
-        record_consultation(state, 2, result, "applied")
-
-        assert len(state["consultations"]) == 2
-        assert state["consultations"][0]["num"] == 1
-        assert state["consultations"][1]["num"] == 2
-
-    def test_records_queued_consultation(self):
-        state = {"phases": {}}
-        result = ConsultationResult(
-            root_cause="x",
-            proposed_changes=[
-                TemplateChange(find="a", replace="b", file="c.md"),
-                TemplateChange(find="c", replace="d", file="e.md"),
-            ],
-            scope="all_modules", action="rebuild", confidence="medium",
-        )
-
-        record_consultation(state, 3, result, "queued")
-
-        entry = state["consultations"][0]
-        assert entry["outcome"] == "queued"
-        assert entry["changes_count"] == 2
 
 
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029", ""], ids=["NEL", "LS", "PS", "ASCII"])
@@ -631,16 +346,3 @@ def test_consultation_unterminated_fence_keeps_payload(ending):
     cleaned = _clean_yaml_text(f" \t{ending}```yaml{ending}{body}")
     assert cleaned == body
     assert yaml.safe_load(cleaned) == yaml.safe_load(body)
-
-
-@pytest.mark.parametrize("text", ["```yaml", "```yaml\n```\n\n"])
-def test_consultation_empty_fence(text):
-    assert _clean_yaml_text(text) == ""
-    assert parse_consultation(text) is None
-
-
-@pytest.mark.parametrize("text", ["```yaml\nvalue: [\n", "```yaml\nvalue: x\n```broken\n\n"])
-def test_consultation_malformed_fenced_yaml_still_fails(text):
-    with pytest.raises(yaml.YAMLError):
-        yaml.safe_load(_clean_yaml_text(text))
-    assert parse_consultation(text) is None

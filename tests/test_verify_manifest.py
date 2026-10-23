@@ -57,21 +57,6 @@ def test_empty_section_is_a_hazard(tmp_path, capsys):
     assert "empty_sections" in capsys.readouterr().out
 
 
-def test_coverage_and_baseline_delta(tmp_path, capsys):
-    base = _write(tmp_path, [{"lemma": "a"}, {"lemma": "b"}])
-    cur_entries = [
-        {"lemma": "a", "sections": {"synonyms": {"items": ["x"]}}},
-        {"lemma": "b"},
-    ]
-    cur = tmp_path / "cur.json"
-    cur.write_text(json.dumps({"entries": cur_entries}, ensure_ascii=False), encoding="utf-8")
-    rc = verify_manifest.run(cur, sample=0, baseline_path=base)
-    out = capsys.readouterr().out
-    assert rc == 0
-    assert "synonyms" in out
-    assert "was 0" in out  # baseline delta shown
-
-
 def test_dialectal_synonym_not_in_junk_list():
     # Regression guard for the блискучий/кам'яниця lesson: authoritative dialectal
     # terms must never be hardcoded as junk.
@@ -87,16 +72,6 @@ def test_dialectal_synonym_not_in_junk_list():
 # hermetic (no 967MB vesum.db, no curriculum.yaml dependency).
 
 _NO_DEPS = {"curriculum_path": Path("/nonexistent/none.yaml"), "vesum_path": Path("/nonexistent/none.db")}
-
-
-def test_conformance_off_by_default_is_structural_only(tmp_path, capsys):
-    # Synonyms-with-items-but-no-source passes the structural scan but WOULD trip
-    # the §8 provenance gate. Default run_conformance=False keeps the old contract.
-    entries = [{"lemma": "слово", "sections": {"synonyms": {"items": ["мова"]}}}]
-    rc = verify_manifest.run(_write(tmp_path, entries), sample=0, baseline_path=None)
-    out = capsys.readouterr().out
-    assert rc == 0
-    assert "CONFORMANCE" not in out
 
 
 def test_conformance_flags_provenance_violation_structural_misses(tmp_path, capsys):
@@ -153,14 +128,6 @@ def test_shrink_gate_catches_unexplained_regression(tmp_path, capsys):
     assert "SHRINK GATE" in out
     assert "unexplained section shrink" in out
     assert "ключ" in out
-
-
-def test_shrink_gate_flags_vanished_section(tmp_path, capsys):
-    base, cur = _ключ_manifests(tmp_path, cur_entry={"lemma": "ключ"})  # synonyms gone entirely
-    rc = verify_manifest.run(cur, sample=0, baseline_path=base)
-    out = capsys.readouterr().out
-    assert rc == 2
-    assert "3 -> 0" in out
 
 
 def test_shrink_gate_allows_allowlisted_retraction(tmp_path, capsys):

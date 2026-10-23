@@ -3,7 +3,6 @@ from pathlib import Path
 import pytest
 
 from scripts.build.linear_pipeline import LinearPipelineError, plan_check
-from scripts.curriculum.backfill_seminar_ref_titles import derive_title
 
 pytestmark = pytest.mark.reads_content
 
@@ -36,23 +35,3 @@ def test_all_seminar_plans_pass_validate_plan():
                "Plan references must be a non-empty list" in msg or \
                "missing required keys: references" in msg:
                 pytest.fail(f"Reference validation failed for {plan_path}: {msg}")
-
-def test_backfilled_titles_match_derivation_rules():
-    """
-    Check the title is what rule 1-5 would produce for major shapes.
-    """
-    # 1. work-based
-    ref_work = {'author': 'Serhii Plokhy', 'work': 'The Gates of Europe', 'type': 'primary'}
-    assert derive_title(ref_work) == 'The Gates of Europe'
-
-    # 2. name-based
-    ref_name = {'name': 'Тексти та аналіз творів Лесі Українки', 'type': 'primary'}
-    assert derive_title(ref_name) == 'Тексти та аналіз творів Лесі Українки'
-
-    # 3. wiki-path-based
-    ref_path = {'path': 'wiki/hist/soviet-ukraine/afghan-war.md', 'type': 'wiki'}
-    assert derive_title(ref_path) == 'Afghan War'
-
-    # 4. url-based
-    ref_url = {'url': 'https://uk.wikipedia.org/wiki/Олена_Пчілка'}
-    assert derive_title(ref_url) == 'Олена Пчілка'

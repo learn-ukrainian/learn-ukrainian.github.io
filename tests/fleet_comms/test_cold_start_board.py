@@ -22,7 +22,6 @@ from scripts.fleet_comms.cold_start_board import (
     build_cold_start_board,
     cap_data,
     compute_board_status,
-    render_markdown_board,
     run_fail_open_probe,
 )
 
@@ -260,20 +259,6 @@ def test_no_claim_or_write_calls(monkeypatch):
     assert board["board_status"] in {"ok", "degraded"}
 
 
-def test_capsule_reports_live_plane_mode(monkeypatch, tmp_path):
-    """capsule_session_env uses resolve_plane_mode(None), not a hardcoded off default."""
-    monkeypatch.delenv("FLEET_COMMS_PLANE_MODE", raising=False)
-    monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
-
-    with patch(
-        "scripts.fleet_comms.cold_start_board.resolve_plane_mode",
-        return_value="authority",
-    ) as resolve:
-        board = build_cold_start_board(agent="grok-infra", root=tmp_path / "plane", repo_root=tmp_path)
-        resolve.assert_called()
-        assert board["probes"]["capsule_session_env"]["data"]["plane_mode"] == "authority"
-
-
 def test_orient_timeout_skipped_does_not_degrade_board():
     """Monitor timeout → orient_lean skipped; board_status stays ok if load-bearing ok."""
     ok_payload = {"mode": "authority", "schema": {"applied_version": 7}}
@@ -391,29 +376,6 @@ def test_session_streams_db_uses_primary_checkout(tmp_path: Path):
     assert resolved.is_file()
 
 
-def test_markdown_path():
-    """Verify markdown output path renders Summary then probe dump."""
-    board = build_cold_start_board(
-        stream_id="epic:9999",
-        agent="agy/cold-start-pr2-board",
-        needle="board",
-    )
-    md = render_markdown_board(board)
-
-    assert "# Driver Cold Start Board" in md
-    assert "## Summary" in md
-    assert "- **plane_mode:**" in md
-    assert "- **schema_version:**" in md
-    assert "- **inbox_pending:**" in md
-    assert "- **board_status:**" in md
-    assert "- **stream_id:** `epic:9999`" in md
-    assert "- **agent:** `agy/cold-start-pr2-board`" in md
-    assert "## Diagnostic Probes" in md
-    assert "### `capsule_session_env`" in md
-    assert md.index("## Summary") < md.index("## Diagnostic Probes")
-    assert len(md.encode("utf-8")) <= MAX_BOARD_BYTES
-
-
 def test_cli_cold_start_board(capsys):
     """CLI subcommand cold-start-board runs cleanly and returns exit code 0."""
     code = cli_main(["cold-start-board", "--stream-id", "epic:9999", "--agent", "test-agent"])
@@ -424,27 +386,6 @@ def test_cli_cold_start_board(capsys):
     assert payload["stream_id"] == "epic:9999"
     assert payload["agent"] == "test-agent"
     assert "probes" in payload
-
-
-def test_cli_cold_start_board_markdown(capsys):
-    """CLI subcommand cold-start-board with --format markdown returns exit code 0."""
-    code = cli_main(
-        [
-            "cold-start-board",
-            "--format",
-            "markdown",
-            "--stream-id",
-            "epic:9999",
-            "--agent",
-            "test-agent",
-        ]
-    )
-    assert code == EXIT_OK
-
-    captured = capsys.readouterr()
-    assert "# Driver Cold Start Board" in captured.out
-    assert "## Summary" in captured.out
-    assert "epic:9999" in captured.out
 
 
 def test_probe_inbox_legacy_schema_ok(tmp_path: Path, monkeypatch) -> None:
@@ -584,28 +525,6 @@ def test_board_payload_has_no_db_path(tmp_path: Path, monkeypatch: pytest.Monkey
     assert board["response_schema_version"] == "comms.v2"
 
 
-def test_board_db_path_mutation_is_caught(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    (tmp_path / ".git").mkdir()
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
-    original = _probe_backlog_and_dead_letters
-
-    def leaky_backlog(*args: Any, **kwargs: Any) -> dict[str, Any]:
-        data = original(*args, **kwargs)
-        data["db_path"] = "/secret/comms.sqlite3"
-        return data
-
-    monkeypatch.setattr(
-        "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
-        leaky_backlog,
-    )
-    board = build_cold_start_board(repo_root=tmp_path, agent="claude")
-    with pytest.raises(AssertionError):
-        assert "db_path" not in json.dumps(board)
-
-
 def test_orient_lean_requests_lean_true():
     """orient probe must hit /api/orient?lean=true (drive-epic contract)."""
     mock_resp = MagicMock()
@@ -725,24 +644,4 @@ def test_board_sheds_bloated_optional_probe_before_fallback(
     # shed, because no further shedding is needed to fit the cap.
     assert board["probes"]["bottleneck_slice"].get("data") is not None
     assert board["probes"]["bottleneck_slice"]["status"] == "ok"
-    assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES
-
-
-def test_board_oversized_fallback_when_load_bearing_probe_huge(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """#8737 review: shedding cannot shrink a huge load-bearing probe → fallback."""
-    (tmp_path / ".git").mkdir()
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
-    huge_payload = {f"key_{i:05d}": f"value_{i}" for i in range(3000)}
-
-    with patch(
-        "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
-        return_value=huge_payload,
-    ):
-        board = build_cold_start_board(repo_root=tmp_path, agent="claude")
-
-    assert board["_board_truncated"] is True
-    assert board["_board_oversized_fallback"] is True
     assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES

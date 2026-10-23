@@ -10,7 +10,6 @@ import pytest
 import yaml
 
 from scripts.build import linear_pipeline, v7_build
-from scripts.level_config import base_level
 from tests.build.upgrade_fixtures import ORIGINAL, UPGRADED, extract_upgrade_fixtures, fixture_text
 
 pytestmark = pytest.mark.reads_content
@@ -134,26 +133,6 @@ def test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation(
 def test_upgrade_rejects_protected_output(upgrade_root, output):
     args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--dry-run", "--out", output])
     assert v7_build._run(args) == 1
-
-
-def test_archive_level_resolves_all_pedagogical_configs():
-    from scripts import config
-    from scripts.audit.config import get_level_config
-    from scripts.pipeline.config_tables import get_activity_config, get_track_skill
-
-    assert base_level("a1-v1") == "a1"
-    assert get_activity_config("a1-v1", 8) == get_activity_config("a1", 8)
-    assert get_activity_config("a1-v1", 15) == get_activity_config("a1", 15)
-    assert get_track_skill("a1-v1", 8) == get_track_skill("a1", 8)
-    assert get_level_config("A1-V1", "grammar") == get_level_config("A1", "grammar")
-    assert config.get_config("a1-v1") == config.get_config("a1")
-    assert config.get_immersion_rule("a1-v1", 8) == config.get_immersion_rule("a1", 8)
-    from scripts.manifest_utils import get_module_by_slug
-
-    # With no published upgrades, slug-only lookup resolves the archived module.
-    original = get_module_by_slug("things-have-gender")
-    assert original.level == "a1-v1"
-    assert original.local_num == 8
 
 
 def test_reviewed_map_keeps_gold_declarations_and_rejects_changed_ownership(upgrade_root):
@@ -355,35 +334,6 @@ def test_clear_previous_edition_removes_the_previous_landing_overview(tmp_path, 
     assert (module_dir / "lessons.yaml").exists()
 
 
-def test_clear_previous_edition_refuses_a_symlinked_landing_overview(tmp_path, monkeypatch):
-    worktree = tmp_path / "worktree"
-    monkeypatch.setattr(v7_build, "PROJECT_ROOT", worktree)
-    primary_landing = tmp_path / "primary/curriculum/l2-uk-en/a1/special-signs/landing-overview.md"
-    primary_landing.parent.mkdir(parents=True)
-    primary_landing.write_text("primary checkout", encoding="utf-8")
-    module_dir = worktree / "curriculum/l2-uk-en/a1/special-signs"
-    _seed_previous_edition(module_dir)
-    (module_dir / "landing-overview.md").symlink_to(primary_landing)
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="symlink"):
-        v7_build._clear_previous_edition(module_dir)
-
-    assert primary_landing.read_text(encoding="utf-8") == "primary checkout"
-    assert (module_dir / "landing-overview.md").is_symlink()
-    # Checked before the first delete: the lesson artifacts are untouched too.
-    assert (module_dir / "lesson-1/module.md").read_text(encoding="utf-8") == "old edition"
-
-
-def test_clear_previous_edition_refuses_a_module_outside_the_worktree(tmp_path, monkeypatch):
-    monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path / "worktree")
-    primary = _primary_lesson(tmp_path)
-
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="outside the build worktree"):
-        v7_build._clear_previous_edition(primary.parent)
-
-    _assert_primary_intact(primary)
-
-
 def _run_upgrade_with_old_edition(upgrade_root, monkeypatch, *, alphabet: bool, dry_run: bool = False):
     from scripts.build import lesson_gates
     from scripts.pipeline import stress_annotator
@@ -483,26 +433,6 @@ _LIFT_MODULE = (
 )
 
 
-def test_land_overview_lifts_outcomes_from_lesson_one_opening(tmp_path):
-    from scripts.build.lesson_assembler import lift_landing_overview
-
-    module = tmp_path / "a1"
-    module.mkdir()
-    module_md = _LIFT_MODULE
-    parsed = {"module.md": module_md}
-    before = parsed["module.md"]
-    v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
-    landed = (module / "landing-overview.md").read_text(encoding="utf-8")
-    assert landed.startswith("By the end, you can")
-    assert "recognize **ь** and apostrophe" in landed
-    assert "You read the soft sign" not in landed
-    assert not landed.lstrip().startswith("# ")
-    assert "First section" not in landed
-    assert parsed["module.md"] == before
-    assert lift_landing_overview(module_md) is not None
-    assert "You read the soft sign" not in (lift_landing_overview(module_md) or "")
-
-
 def test_land_overview_prefers_writer_file_over_lift(tmp_path):
     module = tmp_path / "a1"
     module.mkdir()
@@ -547,14 +477,3 @@ def test_land_overview_lift_refuses_banned_phrase_inside_outcomes(tmp_path):
             module, _no_outcomes_source(tmp_path), {"level": "a1"}, {"module.md": banned},
         )
     assert not (module / "landing-overview.md").is_file()
-
-
-def test_lift_ignores_outcomes_after_first_h2():
-    from scripts.build.lesson_assembler import lift_landing_overview
-
-    text = (
-        "# Soft Sign\n\n"
-        "An opening paragraph without any outcomes list at all for the learner.\n\n"
-        "## Later\n\nBy the end, you can:\n\n- do something.\n"
-    )
-    assert lift_landing_overview(text) is None

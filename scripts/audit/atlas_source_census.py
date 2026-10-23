@@ -763,10 +763,6 @@ def _add_text_surface(census: AtlasSourceCensus, surface_id: str, text: str, *, 
         track_stats.add_text(text)
 
 
-def _add_textbook_grade_text(census: AtlasSourceCensus, surface_id: str, grade: str, text: str) -> None:
-    _add_textbook_grade_counts(census, surface_id, grade, candidate_token_counts(text))
-
-
 def _add_textbook_grade_counts(
     census: AtlasSourceCensus,
     surface_id: str,

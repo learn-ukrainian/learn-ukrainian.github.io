@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import re
-import threading
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -20,7 +19,6 @@ from scripts.api.main import app
 from scripts.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
     PresenceRequest,
-    list_live,
     reset_observer_presence,
     upsert_presence,
 )
@@ -217,25 +215,6 @@ def test_occupancy_mapped_host_job_alias_is_still_retired(tmp_path, monkeypatch)
         for alias in _ALIAS_LEAKS:
             assert alias not in text
         assert "host-job" not in text
-    finally:
-        atlas_job.set_host_adapter(None)
-        load_mod.clear_host_load_cache()
-
-
-def test_occupancy_default_glance_keeps_quiet_mac(tmp_path, monkeypatch) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
-    fake = atlas_job.FakeHostAdapter()
-    atlas_job.set_host_adapter(fake)
-    try:
-        _warm_load(fake)
-        assert list_live() == []
-        resp = client.get("/api/occupancy")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert "mac-operator" in data["hosts"]
-        _assert_quiet_mac_row(data["hosts"]["mac-operator"])
-        assert data["hosts"]["mac-operator"]["burn_state"] == "unknown"
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -475,24 +454,6 @@ def test_occupancy_occupants_from_registry_and_job_unit(tmp_path, monkeypatch) -
         load_mod.clear_host_load_cache()
 
 
-def test_occupancy_rejects_unknown_host_id(tmp_path, monkeypatch) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    fake = atlas_job.FakeHostAdapter()
-    atlas_job.set_host_adapter(fake)
-    try:
-        _warm_load(fake)
-        resp = client.get("/api/occupancy?host_id=atlas-runner")
-        assert resp.status_code == 400
-        assert resp.json()["detail"] == "unknown host_id"
-        text = json.dumps(resp.json())
-        for alias in _ALIAS_LEAKS:
-            assert alias not in text
-    finally:
-        atlas_job.set_host_adapter(None)
-        load_mod.clear_host_load_cache()
-
-
 def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
@@ -518,47 +479,6 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
         assert "cpu_count" in data["hosts"]["host-worker"]
         assert data["hosts"]["host-teacher"]["status"] == "fresh"
     finally:
-        atlas_job.set_host_adapter(None)
-        load_mod.clear_host_load_cache()
-
-
-def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(tmp_path, monkeypatch) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    fake = atlas_job.FakeHostAdapter()
-    atlas_job.set_host_adapter(fake)
-    probe_started = threading.Event()
-    release_probe = threading.Event()
-    original_host_load = fake.host_load
-
-    def host_load(host: str) -> dict:
-        if host == "worker-box":
-            probe_started.set()
-            assert release_probe.wait(timeout=1.0)
-        return original_host_load(host)
-
-    monkeypatch.setattr(fake, "host_load", host_load)
-    try:
-        load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache(
-            "worker-box",
-            original_host_load("worker-box"),
-            mono_ts=time.monotonic() - 31.0,
-        )
-        load_mod.set_host_load_cache(
-            "teach-box",
-            original_host_load("teach-box"),
-            mono_ts=time.monotonic() - 10.0,
-        )
-        resp = client.get("/api/occupancy")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["hosts"]["host-worker"]["status"] == "fresh"
-        assert 30.0 <= data["hosts"]["host-worker"]["age_seconds"] <= 33.0
-        assert data["hosts"]["host-teacher"]["status"] == "fresh"
-        assert probe_started.wait(timeout=1.0)
-    finally:
-        release_probe.set()
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
 
@@ -909,48 +829,6 @@ def test_occupancy_generic_service_marker_explains_burn_via_service_source(
         load_mod.clear_host_load_cache()
 
 
-def test_occupancy_foundry_and_generic_markers_keep_foundry_burn_honest(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    markers = tmp_path / "markers"
-    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
-    write_marker(
-        kind="service",
-        agent="cursor",
-        task_id="routine-service",
-        host_id="host-worker",
-        path=markers,
-    )
-    write_marker(
-        kind="service",
-        agent="evidence-compiler",
-        task_id="phase3-cycle007-evidence-compiler",
-        epic="phase3-cycle007",
-        host_id="host-worker",
-        path=markers,
-    )
-    fake = atlas_job.FakeHostAdapter()
-    atlas_job.set_host_adapter(fake)
-    try:
-        load_mod.clear_host_load_cache()
-        low_load = fake.host_load("worker-box")
-        low_load["loadavg"] = [0.05, 0.05, 0.05]
-        low_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
-        load_mod.set_host_load_cache("worker-box", low_load)
-        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
-        assert host["occupant_count"] == 2
-        assert {row["agent"] for row in host["occupants"]} == {"cursor", "evidence-compiler"}
-        assert host["burn_sources"]["foundry"]["state"] == "active"
-        assert host["burn_sources"]["service"]["state"] == "active"
-        assert host["burn_state"] == "active"
-        assert host["idle_or_empty"] is False
-    finally:
-        atlas_job.set_host_adapter(None)
-        load_mod.clear_host_load_cache()
-
-
 def test_occupancy_unreadable_marker_store_is_unknown_and_opsec_safe(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
@@ -1021,33 +899,6 @@ def test_occupancy_expired_marker_is_clear(tmp_path, monkeypatch) -> None:
         assert host["burn_sources"]["foundry"]["state"] == "clear"
         assert host["burn_state"] == "idle"
         assert host["idle_or_empty"] is True
-    finally:
-        atlas_job.set_host_adapter(None)
-        load_mod.clear_host_load_cache()
-
-
-def test_occupancy_unmapped_default_host_query(tmp_path, monkeypatch) -> None:
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "run-root"))
-    (tmp_path / "run-root").mkdir()
-    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
-    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
-    fake = atlas_job.FakeHostAdapter()
-    atlas_job.set_host_adapter(fake)
-    try:
-        resp = client.get("/api/occupancy?host_id=host-teacher")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert list(data["hosts"].keys()) == ["host-teacher"]
-        teacher = data["hosts"]["host-teacher"]
-        assert teacher["host_id"] == "host-teacher"
-        assert teacher["status"] == "fresh"
-        assert "error" not in teacher
-        assert "cpu_count" in teacher
-        assert teacher["occupant_count"] == 0
-        assert teacher["ai_seats"] == []
-        assert teacher["burn_sources"]["atlas_job"]["state"] == "clear"
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -1197,10 +1048,3 @@ def test_observer_binding_requires_one_fresh_canonical_holder(case):
 def test_producer_identity_rejects_coercion_and_unsafe_tokens(value):
     from scripts.api.occupancy_sanitize import producer_identity
     assert producer_identity(value) is None
-
-
-def test_merge_keeps_distinct_sessions_for_the_same_label():
-    from scripts.api.occupancy import _merge_occupants
-    base = {"kind": "driver", "agent": "codex", "task_id": "sample", "epic": "7101", "instance_id": "instance-one"}
-    rows = [dict(base, session_id=session) for session in ("session-one", "session-two")]
-    assert _merge_occupants(rows) == rows

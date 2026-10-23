@@ -31,6 +31,7 @@ from tests.test_kimi_coding_only_admission import _FAKE_TOKEN, HOSTILE_GIT_ERROR
 pytestmark = pytest.mark.usefixtures("tmp_tasks_dir")
 rescue_app = _rescue_app_fixture
 _DRIVER_CONTEXT = delegate._rescue_execution_context
+_DRIVER_IDENTITY = delegate._rescue_identity
 
 TASK_ID = "kimi-rescue"
 BRANCH = f"kimi/{TASK_ID}"
@@ -82,14 +83,14 @@ def kimi_rescue(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
     from scripts.orchestration.safe_git_context import SafeGitContext
 
-    monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda: str(origin))
+    monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda _repo: str(origin))
     monkeypatch.setattr(
         delegate,
         "_rescue_execution_context",
         lambda repo: SafeGitContext(
             objects=repo.git_dir / "objects",
             temp_root=tmp_path,
-            origin=delegate._rescue_canonical_push_url(),
+            origin=delegate._rescue_canonical_push_url(repo),
             local_remote=True,
         ),
     )
@@ -223,14 +224,19 @@ def test_rescue_ignores_a_push_url_the_kimi_worktree_set_for_itself(kimi_rescue,
 # --- #9878 review probes: rescue runs nothing the worker's worktree configured ---------------
 
 
-def _seat(kimi_rescue, seat: str) -> str:
+def _seat(kimi_rescue, seat: str, *, keep_boundary: bool = False) -> tuple[str, Path]:
     """Make the fixture's task a ``seat`` task; the rescue ref it gets."""
     worktree, _origin, state_path, _write = kimi_rescue
     if seat != "kimi":
-        kimi_boundary.remove(worktree)
+        if not keep_boundary:
+            kimi_boundary.remove(worktree)
+        moved = worktree.parent.parent / seat / worktree.name
+        moved.parent.mkdir(exist_ok=True)
+        _git(worktree.parents[3], "worktree", "move", str(worktree), str(moved))
+        worktree = moved
         state = delegate._read_state(state_path)
-        delegate._write_state_atomic(state_path, {**state, "agent": seat})
-    return f"rescue/{seat}/{delegate._x_agent_task_id(seat, TASK_ID)}"
+        delegate._write_state_atomic(state_path, {**state, "agent": seat, "worktree_path": str(worktree)})
+    return f"rescue/{seat}/{delegate._x_agent_task_id(seat, TASK_ID)}", worktree
 
 
 def _worktree_hooks(worktree: Path, tmp_path: Path) -> Path:
@@ -268,8 +274,8 @@ def _registered_worktrees(worktree: Path) -> list[str]:
 @pytest.mark.parametrize("committed", [False, True])
 def test_rescue_runs_no_hook_of_the_worker_worktree(kimi_rescue, tmp_path, committed, seat):
     worktree, origin, state_path, write = kimi_rescue
-    rescue_ref = _seat(kimi_rescue, seat)
     write("export const label = 'Lesson';\n", commit=committed)
+    rescue_ref, worktree = _seat(kimi_rescue, seat)
     marker = _worktree_hooks(worktree, tmp_path)
     before, registered = _worker_snapshot(worktree), _registered_worktrees(worktree)
 
@@ -586,9 +592,10 @@ def test_rescue_refuses_inputs_changed_after_content_check(kimi_rescue, monkeypa
 
 
 @pytest.mark.parametrize("token", [None, "synthetic-driver-identity"])
-def test_driver_context_pins_destination_and_supplies_identity_explicitly(kimi_rescue, monkeypatch, token):
+def test_driver_context_pins_destination_and_supplies_identity_explicitly(kimi_rescue, tmp_path, monkeypatch, token):
     from scripts.agent_runtime import agent_github_identity
-    from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN
+    from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext
+    from tests.test_delegate import _rescue_checkout
 
     worktree, _origin, _state_path, _write = kimi_rescue
     supplied = []
@@ -598,7 +605,17 @@ def test_driver_context_pins_destination_and_supplies_identity_explicitly(kimi_r
         return agent_github_identity.GitHubIdentity(token, "test")
 
     monkeypatch.setattr(agent_github_identity, "resolve_agent_github_identity", identity)
-    monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda: CANONICAL_ORIGIN)
+    origin = CANONICAL_ORIGIN
+    repository = "learn-ukrainian/learn-ukrainian.github.io"
+    if token is not None:
+        fixture = tmp_path / "registered"
+        fixture.mkdir()
+        _, worktree, _, _ = _rescue_checkout(fixture, monkeypatch, dirty=False, repo_key="infra-private")
+        repository = delegate._rescue_repo(worktree).repository.github
+        origin = f"https://github.com/{repository}.git"
+        monkeypatch.setattr(delegate, "SafeGitContext", SafeGitContext)
+        monkeypatch.setattr(delegate, "_rescue_identity", _DRIVER_IDENTITY)
+    monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda _repo: origin)
     repo = delegate._rescue_repo(worktree)
     if token is None:
         with pytest.raises(delegate._RescueFailure) as refused:
@@ -607,11 +624,11 @@ def test_driver_context_pins_destination_and_supplies_identity_explicitly(kimi_r
         assert refused.value.cause.code == "rescue_identity_unavailable"
     else:
         with _DRIVER_CONTEXT(repo) as context:
-            assert context.checked("config", "remote.origin.url") == CANONICAL_ORIGIN
-            assert context.checked("config", "http." + CANONICAL_ORIGIN + ".extraHeader").startswith(
+            assert context.checked("config", "remote.origin.url") == origin
+            assert context.checked("config", "http." + origin + ".extraHeader").startswith(
                 "Authorization: Basic "
             )
-    assert supplied[0]["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
+    assert supplied[0]["repository"] == repository
     assert supplied[0]["rescue"] is True
 
 
@@ -634,9 +651,7 @@ def test_rescue_seat_configuration_matrix(kimi_rescue, rescue_app, monkeypatch, 
     worktree, origin, state_path, write = kimi_rescue
     directory, environment, material, token, requests = rescue_app
     write("export const label = 'Lesson';\n")
-    state = delegate._read_state(state_path)
-    state["agent"] = seat
-    delegate._write_state_atomic(state_path, state)
+    _, worktree = _seat(kimi_rescue, seat, keep_boundary=True)
     if configuration in {"absent", "legacy"}:
         directory.rename(directory.with_name("unused"))
     if configuration == "mode":

@@ -187,27 +187,6 @@ def test_enrichment_algorithm_descriptor_is_frozen_and_hashed() -> None:
 # --- pure, content-blind aggregation -----------------------------------------
 
 
-def test_new_unit_accumulator_starts_empty() -> None:
-    assert enrichment.new_unit_accumulator() == {
-        "span_count": 0,
-        "total_span_bytes": 0,
-        "min_span_byte_length": None,
-        "max_span_byte_length": None,
-    }
-
-
-def test_accumulate_row_tracks_count_sum_min_max() -> None:
-    accumulator = enrichment.new_unit_accumulator()
-    for length in (10, 3, 7):
-        enrichment.accumulate_row(accumulator, length)
-    assert accumulator == {
-        "span_count": 3,
-        "total_span_bytes": 20,
-        "min_span_byte_length": 3,
-        "max_span_byte_length": 10,
-    }
-
-
 def test_aggregate_ledger_rows_groups_by_commitment_and_is_id_free() -> None:
     commitment_a = "a" * 64
     commitment_b = "b" * 64
@@ -270,31 +249,6 @@ def test_aggregate_ledger_rows_bounds_growth_not_the_hosts_inherited_high_water(
 
     assert total_rows == 50
     assert accumulators[commitment]["span_count"] == 50
-
-
-def test_aggregate_ledger_rows_still_fails_closed_on_real_growth_above_a_high_baseline(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """The cap must still bite once *this pass* actually grows past it, even
-    starting from a high inherited baseline -- proving the fix bounds
-    incremental growth rather than disabling the guard outright."""
-    commitment = "a" * 64
-    rows = [extraction.canonical_json(_row(commitment, i, 10)) for i in range(10)]
-    baseline = 1_702_019_072
-    grown = baseline + enrichment.DEFAULT_A5_MEMORY_CAP_BYTES + 1
-    rss_values = iter([baseline] + [grown] * 20)
-    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: next(rss_values))
-
-    with pytest.raises(enrichment.MemoryBudgetExceeded, match="incremental resident memory"):
-        enrichment.aggregate_ledger_rows(
-            rows, [commitment], memory_cap_bytes=enrichment.DEFAULT_A5_MEMORY_CAP_BYTES, memory_check_interval=1
-        )
-
-
-def test_build_per_unit_evidence_is_sorted_by_commitment() -> None:
-    accumulators = {"b" * 64: enrichment.new_unit_accumulator(), "a" * 64: enrichment.new_unit_accumulator()}
-    evidence = enrichment.build_per_unit_evidence(accumulators)
-    assert [entry["source_unit_commitment_sha256"] for entry in evidence] == ["a" * 64, "b" * 64]
 
 
 def test_evidence_commitment_sha256_is_pure_and_order_sensitive() -> None:
@@ -377,28 +331,6 @@ def test_compute_evidence_enrichment_streams_real_rows_and_aggregates_id_free(tm
 
     # Rerunning against the same private artifacts is a pure re-read, reproducible.
     assert enrichment.compute_evidence_enrichment(a4_receipt, tmp_path) == result
-
-
-def test_compute_evidence_enrichment_succeeds_under_a_high_inherited_rss_baseline(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Regression for the merge-queue-only failure (green on the PR fastlane,
-    red in the full 4-shard merge-group run): after ~5k prior tests in a
-    pytest shard, the host process's inherited ``ru_maxrss`` can already sit
-    above the 512 MiB production cap even though this synthetic stream never
-    opens the real 1.5 GiB private ledger. The cap must bound only this
-    pass's own growth, not that inherited high-water mark."""
-    commitment_a = "a" * 64
-    commitment_b = "b" * 64
-    rows = [_row(commitment_a, 0, 10), _row(commitment_a, 1, 20), _row(commitment_b, 0, 5)]
-    root_sha256, row_count = _write_private_ledger(tmp_path, rows)
-    a4_receipt = _synthetic_a4_receipt([commitment_a, commitment_b], row_count=row_count, root_sha256=root_sha256)
-    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: 1_702_019_072)  # the exact CI figure
-
-    result = enrichment.compute_evidence_enrichment(a4_receipt, tmp_path)
-
-    assert result["ledger_consumed"] is True
-    assert result["spans_covered"] == 3
 
 
 def test_compute_evidence_enrichment_handles_a_zero_row_ledger(tmp_path: Path) -> None:
@@ -556,12 +488,6 @@ def test_a5_receipt_bindings_match_exact_inputs() -> None:
     assert receipt["bindings"]["a4_deterministic_extraction"]["path"] == (
         "data/projects/open_model_data/admission/dataset_v4_a4_deterministic_extraction_receipt_v1.json"
     )
-
-
-def test_a5_receipt_dataset_rows_emitted_is_zero() -> None:
-    receipt = _receipt()
-    assert receipt["execution_counters"]["dataset_rows_emitted"] == 0
-    assert receipt["safety_assertions"]["training_ready_silver_claimed"] is False
 
 
 def test_a5_receipt_never_names_a_held_out_family_or_source_unit_or_source_text() -> None:

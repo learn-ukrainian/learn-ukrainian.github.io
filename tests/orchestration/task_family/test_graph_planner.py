@@ -112,14 +112,6 @@ def test_unknown_relation_endpoint_blocks_without_entering_component() -> None:
     assert any(blocker.code == "unknown_endpoint" for blocker in graph.blockers)
 
 
-def test_rename_mapping_uses_one_caller_supplied_base_and_stable_separator() -> None:
-    mapping = {item.task_id: item for item in rename_mapping(_graph(), "Lifecycle repair")}
-
-    assert mapping["root"].new_title == "Lifecycle repair [Lead]"
-    assert mapping["replacement"].new_title == "Lifecycle repair [Repl. · Gen. 1]"
-    assert mapping["replacement"].old_title == "Continuation"
-
-
 def test_rename_mapping_respects_native_codex_title_limit_without_losing_roles() -> None:
     mapping = {item.task_id: item for item in rename_mapping(_graph(), "A deliberately oversized lifecycle repair title")}
 

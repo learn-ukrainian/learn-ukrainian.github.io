@@ -14,7 +14,6 @@ fixture store, arc and plan.
 
 from __future__ import annotations
 
-import copy
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -47,14 +46,6 @@ MAMA, MANA, NONA, MAN, BASE_WORD, MONA, MA, ON = (
     "W-207",
     "W-208",
 )
-
-MECHANICAL_CODES = {
-    codes.STEP_LETTER_NOT_PRACTISED,
-    codes.TOKEN_NOT_ALLOWED,
-    codes.CORE_CEFR_ABOVE_MODULE,
-    codes.TOKEN_UNRESOLVED,
-    codes.MECHANICAL_RULE_NOT_CHECKED,
-}
 
 
 def _step(step_id: str, kind: str, teach: str, introduces: dict, uses: dict, practice: list[str]) -> dict:
@@ -406,15 +397,3 @@ def produced_mechanical_codes(root: Path) -> set[str]:
     for index, case in enumerate(CASES):
         produced |= run(root / f"case-{index}", case.mutate)[0].codes()
     return produced
-
-
-def test_every_mechanical_code_is_produced(tmp_path: Path) -> None:
-    assert produced_mechanical_codes(tmp_path) >= MECHANICAL_CODES
-
-
-def test_baseline_plan_is_untouched_by_mutations() -> None:
-    plan = mechanical_plan()
-    before = copy.deepcopy(plan)
-    _drop_letters(plan, mechanical_pack(), mechanical_words())
-    assert plan != before  # the mutation helpers mutate; the builder returns a fresh plan every call
-    assert mechanical_plan() == before

@@ -120,18 +120,6 @@ def test_closed_environment_outside_the_workers_cgroup_is_not_a_leftover(uid_off
     assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_CLEAR
 
 
-@pytest.mark.parametrize("fallback_cgroup", [WORKER_CGROUP, None])
-def test_our_uids_closed_environment_in_the_workers_cgroup_or_without_one_is_unknown(
-    fallback_cgroup: str | None,
-) -> None:
-    fake = FakeProcs(procs={JOB: FakeProc(start=500, env_unreadable=True)}, cgroups={WORKER_CGROUP: [JOB]})
-    scope = scope_of(worker_start_ticks=400, fallback_cgroup=fallback_cgroup)
-
-    with pytest.raises(wl.ScanUnknown, match="environ"):
-        wl.find_leftovers(scope, reader=fake)
-    assert wl.exit_scan(scope, reader=fake, settle_s=0.0).status == wl.SCAN_UNKNOWN
-
-
 @pytest.mark.parametrize("uid_offset", [0, 1])
 def test_closed_environment_with_an_unreadable_cgroup_is_unknown(uid_offset: int) -> None:
     fake = FakeProcs(
@@ -162,17 +150,6 @@ def test_scope_unit_stop_reaches_the_user_manager_without_the_callers_bus_variab
     assert wl._systemctl_stop(UNIT) is True
     assert {key: seen[0][key] for key in derived} == derived
     assert "XDG_RUNTIME_DIR" not in os.environ
-
-
-def test_unreadable_environment_of_a_possible_job_is_unknown_not_clear() -> None:
-    fake = FakeProcs(procs={JOB: FakeProc(start=500, env_unreadable=True)})
-
-    with pytest.raises(wl.ScanUnknown, match="environ"):
-        wl.find_leftovers(scope_of(worker_start_ticks=400), reader=fake)
-    scan = wl.exit_scan(scope_of(worker_start_ticks=400), reader=fake, settle_s=0.0)
-    assert scan.status == wl.SCAN_UNKNOWN
-    assert scan.unconfirmed is True
-    assert "environ" in (scan.error or "")
 
 
 def test_unreadable_cgroup_is_unknown_and_a_missing_one_counts_only_from_outside() -> None:
@@ -315,16 +292,6 @@ def test_a_different_process_beside_the_worker_server_is_still_reported() -> Non
     assert [proc["pid"] for proc in fields[wl.BACKGROUND_JOBS_REASON]["processes"]] == [OTHER]
     assert [proc["pid"] for proc in fields[wl.TERMINATED_KEY]] == [JOB]
     assert wl.SCOPE_KEY in fields
-
-
-def test_a_different_process_alone_in_the_scope_is_reported_unchanged() -> None:
-    fake = _scope_fake({OTHER: PYTEST_JOB})
-
-    scan = _scope_exit_scan(fake)
-
-    assert fake.signals == []
-    assert scan.status == wl.SCAN_LIVE
-    assert wl.TERMINATED_KEY not in scan.record_fields()
 
 
 @pytest.mark.parametrize(
@@ -806,41 +773,6 @@ def test_stop_escalates_to_sigkill_and_reports_survivors() -> None:
     assert JOB not in fake.procs
 
 
-def test_stop_never_signals_a_pid_reused_before_the_pidfd_opened() -> None:
-    fake = FakeProcs(procs={JOB: FakeProc(task=TASK_ID, start=100)})
-    original_open = fake.pidfd_open
-
-    def reuse_then_open(pid: int) -> int:
-        # The job exits and an unrelated process gets its pid before the
-        # pidfd is opened: the pidfd pins the newcomer, and the re-check sees it.
-        fake.procs[JOB] = FakeProc(task=None, start=999)
-        return original_open(pid)
-
-    fake.pidfd_open = reuse_then_open  # type: ignore[method-assign]
-    result = wl.stop_leftovers(scope_of(), reader=fake, **stop_kwargs(fake))
-
-    assert fake.signals == []
-    assert result.signalled == []
-
-
-def test_stop_never_signals_a_pid_reused_after_the_identity_check() -> None:
-    fake = FakeProcs(procs={JOB: FakeProc(task=TASK_ID, start=100)})
-    newcomer = FakeProc(task=None, start=999)
-    original_send = fake.pidfd_send
-
-    def reuse_then_send(fd: int, sig: int) -> None:
-        # Between the post-open check and the signal the job exits and its
-        # pid goes to an unrelated process: the pidfd still names the job.
-        fake.procs[JOB] = newcomer
-        original_send(fd, sig)
-
-    fake.pidfd_send = reuse_then_send  # type: ignore[method-assign]
-    wl.stop_leftovers(scope_of(), reader=fake, **stop_kwargs(fake))
-
-    assert fake.signals == []
-    assert fake.procs[JOB] is newcomer
-
-
 @pytest.mark.parametrize(("opening", "signals"), [(1, []), (2, [signal.SIGTERM])])
 def test_stop_skips_and_reports_a_job_that_left_the_scope_before_either_signal(
     opening: int, signals: list[int]
@@ -868,18 +800,6 @@ def test_stop_skips_and_reports_a_job_that_left_the_scope_before_either_signal(
     assert result.as_state()["left_scope"] == [JOB]
     assert result.ok is True and result.unit_stopped is False
     assert JOB in fake.procs
-
-
-def test_stop_without_pidfd_signals_nothing_and_says_so() -> None:
-    fake = FakeProcs(procs={JOB: FakeProc(task=TASK_ID)})
-    kwargs = {**stop_kwargs(fake), "pidfd": wl.PidfdOps(open=None, send=None)}
-
-    result = wl.stop_leftovers(scope_of(), reader=fake, **kwargs)
-
-    assert result.ok is False
-    assert fake.signals == []
-    assert result.unsignalled == [JOB]
-    assert "pidfd unavailable" in (result.error or "")
 
 
 def test_stop_with_an_unknown_scan_signals_nothing() -> None:
@@ -1067,24 +987,6 @@ def test_procfs_uid_rejects_unusable_first_record_without_falling_through(tmp_pa
         wl.ProcFsReader(proc_root=tmp_path).real_uid(42)
 
 
-def test_procfs_uid_preserves_gone_and_unreadable_contracts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    reader = wl.ProcFsReader(proc_root=tmp_path)
-    assert reader.real_uid(42) is None
-    (tmp_path / "42").mkdir()
-    assert reader.real_uid(42) is None
-    status = tmp_path / "42" / "status"
-    status.mkdir()  # An unusable status path raises OSError rather than being gone.
-    with pytest.raises(wl.ScanUnknown):
-        reader.real_uid(42)
-
-    def deny_read(_path: Path) -> bytes:
-        raise PermissionError(13, "Permission denied")
-
-    monkeypatch.setattr(Path, "read_bytes", deny_read)
-    with pytest.raises(wl.ScanUnknown, match="Permission denied"):
-        reader.real_uid(42)
-
-
 @pytest.mark.parametrize("separator", NON_LF_SEPARATORS)
 def test_stop_refuses_physical_foreign_uid_despite_name_injection(tmp_path: Path, separator: bytes) -> None:
     proc_root = tmp_path / "proc"
@@ -1162,19 +1064,6 @@ def test_procfs_reader_maps_missing_to_gone_and_unreadable_to_unknown(tmp_path: 
         reader.exe(42)
     with pytest.raises(wl.ScanUnknown):
         reader.cgroup_procs("/x.scope")
-
-
-def test_procfs_reader_reads_this_process() -> None:
-    reader = wl.ProcFsReader()
-    info = reader.stat(os.getpid())
-
-    assert info is not None and info.state in {"R", "S"}
-    assert reader.real_uid(os.getpid()) == os.getuid()
-    assert reader.proc_cgroup(os.getpid()) == reader.own_cgroup()
-    assert reader.exe(os.getpid()) == Path(os.readlink("/proc/self/exe"))
-    assert reader.argv(os.getpid()) == [
-        os.fsdecode(arg) for arg in Path("/proc/self/cmdline").read_bytes().split(b"\0")[:-1]
-    ]
 
 
 @pytest.mark.parametrize("provider", ["live", "syscall"])

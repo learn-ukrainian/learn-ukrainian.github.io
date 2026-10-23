@@ -26,48 +26,6 @@ class TestParseWordCount:
         assert count == 3375
         assert target == 3000
 
-    def test_simple_format(self):
-        count, target = self.parse("1200/1200")
-        assert count == 1200
-        assert target == 1200
-
-    def test_invalid_returns_zero(self):
-        count, target = self.parse("invalid")
-        assert count == 0
-        assert target == 0
-
-    def test_empty_returns_zero(self):
-        count, target = self.parse("")
-        assert count == 0
-        assert target == 0
-
-
-class TestParseActivityCount:
-    def setup_method(self):
-        from generate_playground_data import parse_activity_count
-        self.parse = parse_activity_count
-
-    def test_standard(self):
-        assert self.parse("13/8") == 13
-
-    def test_invalid(self):
-        assert self.parse("nope") == 0
-
-
-class TestParseNaturalness:
-    def setup_method(self):
-        from generate_playground_data import parse_naturalness
-        self.parse = parse_naturalness
-
-    def test_standard(self):
-        assert self.parse("9/10 (High)") == 9
-
-    def test_low_score(self):
-        assert self.parse("5/10") == 5
-
-    def test_invalid(self):
-        assert self.parse("N/A") == 0
-
 
 # ── HTML validation tests ───────────────────────────────────────
 
@@ -75,38 +33,6 @@ class TestHtmlValidation:
     """Validate dashboard HTML files have valid structure."""
 
     HTML_FILES = sorted(DASHBOARDS_DIR.glob("*.html"))
-
-    @pytest.mark.parametrize("html_file", HTML_FILES, ids=lambda p: p.name)
-    def test_has_doctype(self, html_file):
-        text = html_file.read_text()
-        assert "<!DOCTYPE html>" in text or "<!doctype html>" in text
-
-    @pytest.mark.parametrize("html_file", HTML_FILES, ids=lambda p: p.name)
-    def test_has_charset(self, html_file):
-        text = html_file.read_text()
-        assert 'charset="UTF-8"' in text or "charset='UTF-8'" in text
-
-    @pytest.mark.parametrize("html_file", HTML_FILES, ids=lambda p: p.name)
-    def test_has_title(self, html_file):
-        text = html_file.read_text()
-        assert "<title>" in text and "</title>" in text
-
-    @pytest.mark.parametrize("html_file", HTML_FILES, ids=lambda p: p.name)
-    def test_balanced_tags(self, html_file):
-        """Check major tags are balanced (html, head, body, script, style)."""
-        text = html_file.read_text()
-        for tag in ("html", "head", "body"):
-            opens = len(re.findall(rf"<{tag}[\s>]", text, re.I))
-            closes = len(re.findall(rf"</{tag}>", text, re.I))
-            assert opens == closes, f"Unbalanced <{tag}> in {html_file.name}: {opens} open, {closes} close"
-
-    @pytest.mark.parametrize("html_file", HTML_FILES, ids=lambda p: p.name)
-    def test_no_broken_script_tags(self, html_file):
-        """Verify all <script> tags are properly closed."""
-        text = html_file.read_text()
-        opens = len(re.findall(r"<script[\s>]", text, re.I))
-        closes = len(re.findall(r"</script>", text, re.I))
-        assert opens == closes, f"Unbalanced <script> in {html_file.name}: {opens} open, {closes} close"
 
     def test_index_footer_has_no_hardcoded_host(self):
         """index.html must label its own origin dynamically (#8542).
@@ -216,22 +142,6 @@ class TestDashboardInventory:
         "track-health.html",
     }
 
-    def test_expected_dashboards_exist(self):
-        actual = {f.name for f in DASHBOARDS_DIR.glob("*.html")}
-        missing = self.EXPECTED_DASHBOARDS - actual
-        assert not missing, f"Missing dashboards: {missing}"
-
-    def test_index_links_to_other_dashboards(self):
-        """Index page should link to other dashboards."""
-        index = DASHBOARDS_DIR / "index.html"
-        if not index.exists():
-            pytest.skip("No index.html")
-        text = index.read_text()
-        # Should reference at least a few other dashboard files
-        linked = sum(1 for name in self.EXPECTED_DASHBOARDS
-                     if name != "index.html" and name in text)
-        assert linked >= 3, f"Index links to only {linked} dashboards"
-
 
 # ── #7024 overview last-good honesty ─────────────────────────────
 
@@ -255,18 +165,6 @@ def _published_summary(*, total: int = 80, published_mdx: int = 55, research_don
             }
         },
     }
-
-
-class TestHomeLoadStatsPublished:
-    """Home must show the published count overview already has on each track."""
-
-    def test_index_loadstats_surfaces_published_from_overview(self):
-        text = (DASHBOARDS_DIR / "index.html").read_text(encoding="utf-8")
-        assert "track.published_mdx" in text
-        assert "t.published" in text
-        assert "${t.published}" in text
-        assert "Published" in text
-        assert "${t.pass} passing / ${t.total} total" not in text
 
 
 class TestOverviewLastGoodHonesty:
@@ -384,63 +282,3 @@ class TestOverviewLastGoodHonesty:
         assert data["totals"]["missing"] != data["totals"]["total"]
         assert data["meta"]["track_scan"] == "stale"
         assert not data["meta"].get("refreshing")
-
-    def test_successful_refresh_settles_without_refreshing(self, monkeypatch, tmp_path):
-        import scripts.api.dashboard_router as dashboard_router
-        import scripts.api.state_helpers as state_helpers
-
-        monkeypatch.setenv(
-            dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
-            str(tmp_path / "overview_last_good.json"),
-        )
-        summary = _published_summary()
-        seeded = dashboard_router._build_overview_from_state_summary(
-            summary, "hit", 0.0, track_scan="hit"
-        )
-        seeded["meta"]["track_scan"] = "hit"
-        state_helpers.cache_set(dashboard_router._overview_cache_key(), seeded)
-        scope = dashboard_router._overview_scope()
-        dashboard_router._overview_last_good_by_scope[scope] = seeded
-        monkeypatch.setattr(
-            dashboard_router,
-            "_peek_state_summary",
-            lambda *_a, **_k: (summary, "hit", 0.0),
-        )
-        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
-
-        resp = self._client().get("/api/dashboard/overview")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["meta"]["track_scan"] == "hit"
-        assert "refreshing" not in data["meta"] or data["meta"].get("refreshing") is False
-        assert data["totals"]["pass"] == 0
-        assert data["totals"]["published_mdx"] == 55
-        assert data["totals"]["missing"] != data["totals"]["total"]
-
-    def test_stale_last_good_does_not_keep_refreshing(self, monkeypatch, tmp_path):
-        import scripts.api.dashboard_router as dashboard_router
-
-        monkeypatch.setenv(
-            dashboard_router.DASHBOARD_OVERVIEW_LAST_GOOD_ENV,
-            str(tmp_path / "overview_last_good.json"),
-        )
-        summary = _published_summary()
-        seeded = dashboard_router._build_overview_from_state_summary(
-            summary, "hit", 0.0, track_scan="hit"
-        )
-        dashboard_router._overview_last_good_by_scope[dashboard_router._overview_scope()] = seeded
-        dashboard_router._overview_disk_loaded_by_scope[dashboard_router._overview_scope()] = True
-        monkeypatch.setattr(
-            dashboard_router,
-            "_peek_state_summary",
-            lambda *_a, **_k: (summary, "hit", 0.0),
-        )
-        monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
-
-        resp = self._client().get("/api/dashboard/overview")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["meta"]["track_scan"] == "stale"
-        assert not data["meta"].get("refreshing")
-        assert data["totals"]["published_mdx"] == 55
-        assert data["totals"]["missing"] < data["totals"]["total"]

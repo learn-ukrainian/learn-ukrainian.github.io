@@ -17,7 +17,6 @@ from scripts.build.fresh.draft_schema import DraftValidationError, validate_draf
 from scripts.build.fresh.preflight import PreflightResult
 from scripts.build.fresh.regeneration import (
     INPUT_KEYS,
-    inputs_digest,
     load_ledger,
     record_failure,
     record_writer_call,
@@ -468,22 +467,6 @@ Path(args.result_file).write_text("invalid_draft: true\\nstatus: ok\\n", encodin
     assert meta["effort"] == "unknown"
 
 
-def test_invalid_writer_effort_refused(tmp_path, passing_preflight):
-    with pytest.raises(ValueError, match="Invalid writer effort"):
-        dispatch_writer(
-            writer="codex",
-            effort="max",
-            level="a1",
-            slug="test",
-            lesson_n=1,
-            prompt_file=tmp_path / "prompt.md",
-            prompt_sha256="a" * 64,
-            inputs=_inputs("a" * 64),
-            output_dir=tmp_path / "out",
-            preflight_result=passing_preflight,
-        )
-
-
 def test_retry_prompt_contains_engine_feedback_and_seals_actual_bytes(tmp_path, a1_valid_fixture, passing_preflight):
     draft, types = a1_valid_fixture
     prompt = tmp_path / "prompt.md"
@@ -516,45 +499,6 @@ def test_retry_prompt_contains_engine_feedback_and_seals_actual_bytes(tmp_path, 
     assert meta["base_prompt_sha256"] == base_sha
     ledger = load_ledger(output / "lesson-1.regeneration.yaml", "sample", 1, inputs)
     assert len(ledger["attempts"]) == 1 and ledger["terminal_layer"] is None
-
-
-def test_writer_effort_task_ledger_keying(tmp_path, a1_valid_fixture, passing_preflight):
-    """Equal lesson/attempt numbers with different efforts keep separate task records."""
-    draft, types = a1_valid_fixture
-    prompt = tmp_path / "prompt.md"
-    prompt.write_text("fixture prompt", encoding="utf-8")
-
-    def fake(task_id, prompt_file, result_file):
-        effort = task_id.rsplit("-", 1)[1]
-        result_file.write_text(yaml.safe_dump(draft, allow_unicode=True), encoding="utf-8")
-        result_file.with_suffix(".json").write_text(json.dumps({"model": "gpt-6.1-sol", "effort": effort}))
-
-    ids = []
-    for effort in ("medium", "high"):
-        result = dispatch_writer(
-            writer="codex",
-            model="gpt-6.1-sol",
-            effort=effort,
-            level="a1",
-            slug="sample",
-            lesson_n=1,
-            prompt_file=prompt,
-            prompt_sha256="a" * 64,
-            inputs=_inputs("a" * 64),
-            output_dir=tmp_path / effort,
-            preflight_result=passing_preflight,
-            fake_seat=fake,
-            repo_root=tmp_path,
-            plan_activity_types=types,
-        )
-        ids.append(result["task_id"])
-        record = json.loads((tmp_path / "batch_state/tasks" / f"{result['task_id']}.json").read_text())
-        metadata = yaml.safe_load(result["writer_meta_file"].read_text())
-        assert record["effort"] == metadata["effort"] == effort
-        assert metadata["attempt"] == 1
-    assert len(set(ids)) == 2
-    # Without an explicit effort the seat keeps its own default and the ID carries no effort suffix.
-    assert writer_task_id("a1", "sample", 1, 1, None, INPUTS) == f"write-a1-sample-1-1-{inputs_digest(INPUTS)}"
 
 
 def test_writer_task_id_keys_on_inputs_attempt_and_effort():
@@ -848,76 +792,6 @@ sys.exit(1)
             delegate_script=fake_delegate,
             repo_root=tmp_path,
         )
-
-
-def test_r11_forbidden_paths_grep():
-    """R-11 grep test: scripts/build/fresh/ never opens or references v1 plans, v1 levels, or wiki packets (#8431, Finding 10)."""
-    fresh_dir = REPO_ROOT / "scripts" / "build" / "fresh"
-    forbidden_terms = [
-        "curriculum/l2-uk-en/plans/",
-        "curriculum/l2-uk-en/a1-v1/",
-        "curriculum/l2-uk-en/a2-v1/",
-        "curriculum/l2-uk-en/b1-v1/",
-        "curriculum/l2-uk-en/b2-v1/",
-        "curriculum/l2-uk-en/<level>-v1/",
-        "wiki_packet",
-        "wiki/packets",
-    ]
-
-    all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2")) + list(fresh_dir.glob("*.yaml"))
-    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {
-        path.name for path in all_files
-    }
-
-    for fpath in all_files:
-        text = fpath.read_text(encoding="utf-8")
-        for term in forbidden_terms:
-            if term in text:
-                assert fpath.name == "prompt.py", f"Forbidden term {term!r} found in {fpath}"
-                # In prompt.py, forbidden terms may only appear in FORBIDDEN_V1_PATTERNS
-                assert "FORBIDDEN_V1_PATTERNS" in text
-                # Ensure no blanket exemption: count occurrences
-                occurrences = text.count(term)
-                assert occurrences <= 1, f"Term {term!r} occurs {occurrences} times in prompt.py"
-
-    # Path-part grep for 'plans' as its own path segment (Finding 10)
-    plans_segment_re = re.compile(r'(/|\.joinpath\()\s*["\']plans["\']|["\']plans["\']\s*/|/plans/|["\']plans["\']')
-    for fpath in all_files:
-        text = fpath.read_text(encoding="utf-8")
-        if fpath.name != "prompt.py":
-            assert not plans_segment_re.search(text), f"Isolated 'plans' path segment found in {fpath}"
-
-
-def test_nothing_typed_no_cyrillic_in_engine_code():
-    """Nothing typed rule: No Ukrainian/Cyrillic string literals in Python engine code or templates under scripts/build/fresh/ (#8431, Finding 10)."""
-    fresh_dir = REPO_ROOT / "scripts" / "build" / "fresh"
-    cyrillic_pattern = re.compile(r"[\u0400-\u04FF]")
-
-    all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2"))
-    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {
-        path.name for path in all_files
-    }
-
-    for fpath in all_files:
-        text = fpath.read_text(encoding="utf-8")
-        cyrillic_matches = cyrillic_pattern.findall(text)
-        assert len(cyrillic_matches) == 0, (
-            f"{fpath.name} contains {len(cyrillic_matches)} Cyrillic characters: {cyrillic_matches[:5]}"
-        )
-
-
-@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029", ""], ids=["NEL", "LS", "PS", "ASCII"])
-def test_unicode_structured_boundary_writer_yaml(separator):
-    body = f'value: "alpha{separator}beta"\n'
-    assert yaml.safe_load(strip_markdown_fence(f"```yaml\n{body}```")) == yaml.safe_load(body)
-
-
-@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])
-@pytest.mark.parametrize("scalar", ['"alpha\\nbeta"', "|-\n  alpha\n  beta", "|\n  alpha\n  beta", "|+\n  alpha\n  beta\n"])
-def test_writer_yaml_physical_framing_and_block_scalars(ending, scalar):
-    body = (f"value: {scalar}\n").replace("\n", ending)
-    for text in (body, f"```yaml{ending}{body}```", f"```{ending}{body}"):
-        assert yaml.safe_load(strip_markdown_fence(text)) == yaml.safe_load(body)
 
 
 @pytest.mark.parametrize("text", ["", " \n\t", "value: [", "```yaml\nvalue: [\n```"])

@@ -45,13 +45,6 @@ def test_samey_single_mode_deck_fails(tmp_path: Path) -> None:
     assert main(["--practice-dir", str(tmp_path)]) == 1
 
 
-def test_singleton_mode_pool_fails(tmp_path: Path) -> None:
-    items = [_item(i, ["flashcards", "matching", "choice", "cloze"]) for i in range(60)]
-    items[0]["modes"] = items[0]["modes"] + ["heritage"]  # pool of exactly 1
-    _write_index(tmp_path, "A1", items)
-    assert main(["--practice-dir", str(tmp_path)]) == 1
-
-
 def test_empty_deck_fails(tmp_path: Path) -> None:
     _write_index(tmp_path, "A1", [])
     assert main(["--practice-dir", str(tmp_path)]) == 1

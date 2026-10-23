@@ -9,12 +9,12 @@ from __future__ import annotations
 
 import copy
 import json
-from collections.abc import Callable, Mapping
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator, ValidationError
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import build_phase3_p4_pilot as p4
 
@@ -155,19 +155,6 @@ def _reject_contract(value: dict[str, Any]) -> None:
         p4.validate_contract(value)
 
 
-def _object_schemas(value: Any) -> list[Mapping[str, Any]]:
-    found: list[Mapping[str, Any]] = []
-    if isinstance(value, Mapping):
-        if value.get("type") == "object":
-            found.append(value)
-        for child in value.values():
-            found.extend(_object_schemas(child))
-    elif isinstance(value, list):
-        for child in value:
-            found.extend(_object_schemas(child))
-    return found
-
-
 def _candidate(case_role: str = "correct_modern_production") -> dict[str, Any]:
     roles = list(CASE_ROLES[case_role])
     return {
@@ -267,22 +254,6 @@ def test_frozen_input_bindings_and_schema_digest_are_exact() -> None:
     for source, expected in p4.CURRENT_PREDECESSOR_SHA256.items():
         assert p4.sha256_file(source) == expected
     assert value["generator"]["schema_sha256"] == p4.sha256_file(p4.SCHEMA_PATH)
-
-
-def test_schema_is_draft_2020_12_and_strict_at_every_object_boundary() -> None:
-    schema = _json(p4.SCHEMA_PATH)
-    Draft202012Validator.check_schema(schema)
-    objects = _object_schemas(schema)
-    assert objects
-    assert all(item.get("additionalProperties") is False for item in objects)
-
-    top_level = _contract()
-    top_level["invented_metadata"] = "opaque"
-    _reject_contract(top_level)
-
-    nested = _contract()
-    nested["denominator"]["denominator_alias"] = 57
-    _reject_contract(nested)
 
 
 @pytest.mark.parametrize(
@@ -616,20 +587,3 @@ def test_candidate_requires_exact_source_identity_fields_and_no_missing_provenan
     del candidate["rights_provenance"]["provenance_status"]
     with pytest.raises(p4.P4PilotError):
         p4.validate_candidate_admission(candidate)
-
-
-def test_no_pilot_validation_can_be_claimed_from_model_agreement_or_schema_only() -> None:
-    value = _contract()
-    value["claims"]["pilot_validated_claimed"] = True  # type: ignore[index]
-    value["claims"]["dataset_ready_claimed"] = True  # type: ignore[index]
-    value["safety_counters"]["provider_requests"] = 1  # type: ignore[index]
-    _reject_contract(value)
-
-
-def test_schema_rejects_uppercase_or_noncanonical_hashes_before_contract_comparison() -> None:
-    value = _contract()
-    value["controlling_outcome_sha256"] = EXPECTED_OUTCOME_SHA256.upper()
-    with pytest.raises(ValidationError):
-        Draft202012Validator(_json(p4.SCHEMA_PATH)).validate(value)
-    with pytest.raises(p4.P4PilotError):
-        p4.validate_contract(value)

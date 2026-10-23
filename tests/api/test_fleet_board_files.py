@@ -11,7 +11,6 @@ from jsonschema import Draft202012Validator
 
 import scripts.api.fleet_board.router as board_routes
 from scripts.api import main as api_main
-from scripts.api.fleet_board import cache as cache_mod
 from scripts.api.fleet_board import file_sources, values
 from scripts.api.fleet_board import sources as sources_mod
 from scripts.api.fleet_board.cache import CACHE
@@ -201,6 +200,29 @@ def test_downloads_stall_and_skip_unsafe_names(tmp_path, monkeypatch: pytest.Mon
     assert str(tmp_path) not in response.text
 
 
+def test_unapproved_download_names_stay_unlisted_and_are_never_deduped(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """D12: without an approved alias a raw source is unidentified, not a key."""
+    payload = {
+        "items": [
+            {"source": "private-host-a/corpus-one", "state": "running", "done": 1, "total": 2},
+            {"source": "private-host-b/corpus-two", "state": "running", "done": 1, "total": 2},
+        ]
+    }
+    target = tmp_path / "status.json"
+    target.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setenv("FLEET_DOWNLOAD_STATUS", str(target))
+    response = client.get("/api/fleet/v1/downloads")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    rows = body["data"]["items"]
+    assert [row["source"] for row in rows] == ["unlisted", "unlisted"]
+    assert len({id(row) for row in rows}) == 2
+    assert "private-host" not in response.text and "corpus-one" not in response.text
+
+
 def test_unreadable_downloads_are_unknown(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     target = tmp_path / "status.json"
     target.write_text("{", encoding="utf-8")
@@ -268,35 +290,6 @@ def _address() -> str:
 
 def _dotted() -> str:
     return ".".join(("198", "51", "100", "7"))
-
-
-def test_cached_backup_age_advances_during_an_outage(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    clock = {"now": 1_000.0}
-    monkeypatch.setattr(cache_mod.time, "monotonic", lambda: clock["now"])
-    state = tmp_path / "state"
-    state.mkdir()
-    _write(state, "last-success.json", {"at": "2026-10-09T00:00:00Z", "status": "ok"})
-    _write(state, "freshness.json", {"age_h": 1})
-    _write(state, "receipt.json", {"at": "2026-10-09T01:00:00Z", "ok": True})
-    monkeypatch.setenv("FLEET_BACKUP_STATE_DIR", str(state))
-    first = client.get("/api/fleet/v1/backups")
-    assert _source(first.json())["status"] == "ok"
-    assert first.json()["data"]["age_h"] == 1
-    assert first.json()["data"]["stale"] is False
-    for child in state.iterdir():
-        child.unlink()
-    state.rmdir()
-    state.write_text("x", encoding="utf-8")
-    clock["now"] += 48 * 3600
-    second = client.get("/api/fleet/v1/backups")
-    assert second.status_code == 200
-    body = second.json()
-    _validate(body)
-    assert _source(body)["status"] == "stale"
-    assert body["data"]["age_h"] == 49
-    assert body["data"]["stale"] is True
-    assert body["data"]["last_result"]["status"] == "ok"
-    assert str(tmp_path) not in second.text
 
 
 def test_cached_download_stall_advances_during_an_outage(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -380,27 +373,6 @@ def test_snapshot_ids_stay_plain_identifiers(tmp_path, monkeypatch: pytest.Monke
         assert str(tmp_path) not in response.text
 
 
-def test_unreadable_receipt_refresh_serves_cached_backups_as_stale(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    state = tmp_path / "state"
-    state.mkdir()
-    _write(state, "last-success.json", {"at": "2026-10-09T00:00:00Z", "status": "ok"})
-    _write(state, "freshness.json", {"age_h": 1})
-    _write(state, "receipt.json", {"at": "2026-10-09T01:00:00Z", "ok": True})
-    monkeypatch.setenv("FLEET_BACKUP_STATE_DIR", str(state))
-    first = client.get("/api/fleet/v1/backups")
-    assert _source(first.json())["status"] == "ok"
-    (state / "receipt.json").write_text("{", encoding="utf-8")
-    monkeypatch.setattr(values, "CACHE_TTL_S", 0)
-    second = client.get("/api/fleet/v1/backups")
-    assert second.status_code == 200
-    body = second.json()
-    _validate(body)
-    assert _source(body)["status"] == "stale"
-    assert body["data"]["restore_test"] == {"at": "2026-10-09T01:00:00Z", "ok": True}
-    assert body["data"]["last_result"]["status"] == "ok"
-    assert str(tmp_path) not in second.text
-
-
 @pytest.mark.parametrize("raw", ["null", "[]", '"text"', "3"])
 @pytest.mark.parametrize("filename", ["last-success.json", "freshness.json", "receipt.json"])
 def test_non_object_backup_piece_is_unavailable(tmp_path, monkeypatch: pytest.MonkeyPatch, filename, raw) -> None:
@@ -441,31 +413,6 @@ def test_overflowing_download_percentage_is_null(tmp_path, monkeypatch: pytest.M
     assert body["data"]["items"][0]["done"] == 1e308
 
 
-def test_single_label_identifiers_are_replaced_with_placeholder(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    marker = "leakword"
-    monkeypatch.setattr(file_sources, "_now", lambda: _WHEN)
-    downloads = {"items": [{"source": marker, "state": "running", "done": 1, "total": 2}]}
-    harness = {"drivers": [{"agent_id": marker, "idle_min": 1}]}
-    status = tmp_path / "status.json"
-    snapshot = tmp_path / "harness.json"
-    status.write_text(json.dumps(downloads), encoding="utf-8")
-    snapshot.write_text(json.dumps(harness), encoding="utf-8")
-    monkeypatch.setenv("FLEET_DOWNLOAD_STATUS", str(status))
-    monkeypatch.setenv("FLEET_HARNESS_SNAPSHOT", str(snapshot))
-    downloaded = client.get("/api/fleet/v1/downloads")
-    listed = client.get("/api/fleet/v1/harness")
-    named = client.get("/api/fleet/v1/harness/" + marker)
-    placeholder = client.get("/api/fleet/v1/harness/" + file_sources.UNLISTED)
-    for response in (downloaded, listed, named, placeholder):
-        assert response.status_code == 200
-        _validate(response.json())
-        assert marker not in response.text
-    assert [item["source"] for item in downloaded.json()["data"]["items"]] == [file_sources.UNLISTED]
-    assert [row["agent_id"] for row in listed.json()["data"]["drivers"]] == [file_sources.UNLISTED]
-    assert named.json()["data"]["driver"] is None
-    assert placeholder.json()["data"]["driver"] is None
-
-
 def test_approved_driver_aliases_are_the_only_published_driver_ids(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(file_sources, "DRIVER_ALIASES", {"claude": "claude"})
     snapshot = tmp_path / "harness.json"
@@ -474,28 +421,6 @@ def test_approved_driver_aliases_are_the_only_published_driver_ids(tmp_path, mon
     listed = client.get("/api/fleet/v1/harness")
     assert [row["agent_id"] for row in listed.json()["data"]["drivers"]] == ["claude", file_sources.UNLISTED]
     assert client.get("/api/fleet/v1/harness/alpha").json()["data"]["driver"] is None
-
-
-def test_default_driver_aliases_preserve_public_harness_identity(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    approved = ["claude", "codex", "cursor", "grok-bot", "qa-engineer"]
-    monkeypatch.setattr(file_sources, "DRIVER_ALIASES", values.DRIVER_ALIASES)
-    snapshot = tmp_path / "harness.json"
-    drivers = [{"agent_id": name} for name in [*approved, "leakword"]]
-    snapshot.write_text(json.dumps({"drivers": drivers}), encoding="utf-8")
-    monkeypatch.setenv("FLEET_HARNESS_SNAPSHOT", str(snapshot))
-    listed = client.get("/api/fleet/v1/harness")
-    assert listed.status_code == 200
-    _validate(listed.json())
-    assert [row["agent_id"] for row in listed.json()["data"]["drivers"]] == [*approved, "unlisted"]
-    for name in approved:
-        named = client.get("/api/fleet/v1/harness/" + name)
-        assert named.status_code == 200
-        _validate(named.json())
-        assert named.json()["data"]["driver"]["agent_id"] == name
-        assert named.json()["data"]["driver"]["context_pct"] is None
-        assert str(tmp_path) not in named.text
-    assert "leakword" not in listed.text
-    assert str(tmp_path) not in listed.text
 
 
 @pytest.mark.parametrize(

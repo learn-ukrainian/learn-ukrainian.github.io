@@ -93,6 +93,11 @@ template is `drive-epic` `references/review-merge-cleanup.md` §6; a review-type
 dispatch whose brief has no heading naming the dispositions gets the typed
 warning `review_brief_no_dispositions` (stderr and task record), not a refusal.
 
+For round 2 and later, the reviewer brief states DELTA scope and names the last
+reviewed head, the new exact head, the fix diff between them, and resolution
+evidence for each earlier blocker. Apply the canonical
+[review stopping rule](../drive-epic/references/review-merge-cleanup.md#review-stopping-rule).
+
 Learner-content semantic review is unsupported here. A normal BIO request uses
 `$curriculum-lifecycle` / `$track-completion`, with `$post-build-review` as its
 single bounded semantic gate; do not freeze or resolve a content profile in
@@ -212,13 +217,14 @@ frozen target's diff — nothing outside `frozen_files`.
 elsewhere in the codebase, only widen the *look* to sibling instances of
 that exact bug class within the frozen touched surfaces — not a general
 audit of the owning module, and not files outside `frozen_files` unless a
-sibling instance is actually found there (in which case treat it as a new
-finding subject to the same breakers as everything else, not a freebie).
+sibling instance is actually found there. Its disposition follows this round's
+scope under the review stopping rule and the Step 6 breakers.
 
 **Class-level findings (#10665)**: the reviewer reports one finding per input
 class, with one reproducer and every sibling spelling found in this round, not
-one spelling per round. A discovery outside the stated classes still blocks or
-escalates when it exposes a material defect. Reviewers keep their own
+one spelling per round. In round 1, a discovery outside the stated classes still
+blocks or escalates when it exposes a material defect. Later rounds apply the
+review stopping rule. Reviewers keep their own
 independent adversarial cases; the author's matrix narrows nothing.
 
 ---
@@ -236,7 +242,7 @@ For every finding, raise it, then adjudicate it:
   --rationale "<why this disposition>"
 ```
 
-Disposition guide:
+Disposition guide, subject to this round's scope under the review stopping rule:
 
 - **`in_scope_blocker`** — a real, verified bug inside the frozen scope
   that must be fixed before this closes out: it violates the stated
@@ -257,8 +263,11 @@ Disposition guide:
 only an `in_scope_blocker` (or an open `stop_and_escalate`) withholds approval.
 Every blocker states a reproducible failure, its impact and the required
 corrected behaviour; a code-level fix is a suggestion, not the requirement. A
-delta review (round 2 onwards) attests the new exact head and checks the fix's
-interactions with the rest of the change, including weakened or deleted tests.
+delta review (round 2 onwards) attests the new exact head and checks only the fix
+diff since the last reviewed head and resolution of earlier blockers. Checking
+the fix's interactions includes weakened or deleted tests in that diff. A new
+blocker must satisfy the canonical review stopping rule, including its security
+FAIL exception; other findings are tracked follow-ups with owners.
 A reviewer that lacks a capability the brief requires (shell, diff access,
 hashing, the `sources` tools) returns INCONCLUSIVE: the verdict line uses the
 `BLOCKED` token and names the missing capability. INCONCLUSIVE still blocks
@@ -335,8 +344,14 @@ Then record the cycle:
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" record-cycle --outstanding-count <N>
 ```
 
+Apply the canonical
+[review stopping rule](../drive-epic/references/review-merge-cleanup.md#review-stopping-rule)
+before another fix or review. Its round limit applies even when findings shrink;
+the security FAIL exception never permits landing without approval and green CI.
+
 Stop and reclassify (treat as `stop_and_escalate`, do not keep patching) when:
 
+- the review stopping rule requires a split, an approach change, or escalation;
 - `check-expansion` triggers — review-triggered files or non-test LOC
   exceed 2x the frozen baseline;
 - `record-cycle` triggers — two review-triggered patch cycles in a row
@@ -345,15 +360,14 @@ Stop and reclassify (treat as `stop_and_escalate`, do not keep patching) when:
   frozen in Step 2;
 - a canonical contract/design decision is required to proceed.
 
-**Only** these justify pushing through a tripped breaker anyway: active
+For the expansion and finding-count breakers only, these justify proceeding: active
 data loss, a crash, a broken install/upgrade, a release blocker, or a
 concrete security exposure. "It would be nice to fix this too" is never
-one of them.
+one of them. None overrides the review stopping rule or the security FAIL block.
 
 Security code (hooks, launchers, credentials, admission, sandbox, guards)
-adds one stop to these breakers: after the second rejected review round the
-author stops and the driver takes a design decision (`drive-epic`
-`references/routing-and-dispatch.md` §4, #10665).
+also follows `drive-epic` `references/routing-and-dispatch.md` §4 (#10665),
+subject to the same review stopping rule.
 
 ---
 
@@ -454,3 +468,10 @@ Trace: {full candidate trace, so every exclusion/substitution is visible}
 ### Summary
 {final disposition: closed out / stop_and_escalate with reason / blocked on X}
 ```
+
+Write the report and every artifact a later reader needs (archives, logs,
+screenshots, reproducer scripts) under `$LU_TASK_EVIDENCE_DIR` (#11342), then
+cite its preserved `batch_state/preserved/<task>/` path from the result. Files
+left in the worktree are not durable: a later dispatch that reuses the worktree
+runs a cone sparse-checkout that removes ignored files, and worktree reuse is
+refused while a terminal task's evidence has no retrieval receipt.

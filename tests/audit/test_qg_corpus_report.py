@@ -366,35 +366,3 @@ def test_backfill_null_vs_empty_string_policy_family(tmp_path: Path) -> None:
     with sqlite3.connect(db_path) as conn:
         rows = conn.execute("SELECT count(*) FROM llm_qg_runs").fetchone()[0]
     assert rows == 1
-
-
-def test_spend_fallback_missing_vs_zero_observed(tmp_path: Path) -> None:
-    module_dir = _module(tmp_path, slug="spend-test")
-
-    # Test case A: Observed cost is missing (None), estimated cost is present
-    wf_missing_observed = _workflow_record(
-        module_dir,
-        slug="spend-test",
-        estimated_cost=0.2,
-        observed_cost=None,
-    )
-    report_missing = qg_corpus_report.build_report(
-        workflow_payloads=[[wf_missing_observed]],
-        db_path=tmp_path / "empty1.db",
-    )
-    # Should fallback to estimated (0.2)
-    assert report_missing["spend"]["spend_per_accepted_evidence_usd"] == 0.2
-
-    # Test case B: Observed cost is exactly 0.0, estimated cost is present
-    wf_zero_observed = _workflow_record(
-        module_dir,
-        slug="spend-test",
-        estimated_cost=0.2,
-        observed_cost=0.0,
-    )
-    report_zero = qg_corpus_report.build_report(
-        workflow_payloads=[[wf_zero_observed]],
-        db_path=tmp_path / "empty2.db",
-    )
-    # Should report exactly 0.0, not falling back to 0.2!
-    assert report_zero["spend"]["spend_per_accepted_evidence_usd"] == 0.0

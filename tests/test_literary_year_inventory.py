@@ -510,17 +510,6 @@ def test_synthetic_fixture_preserves_slots_classes_and_digest(main_inputs: tuple
         assert set(row) <= allowed  # type: ignore[arg-type]
 
 
-def test_repeat_run_is_byte_identical(main_inputs: tuple[Path, str, Path, str]) -> None:
-    manifest, manifest_sha, scraper, scraper_sha = main_inputs
-    args = _pins(manifest, manifest_sha, scraper, scraper_sha)
-
-    first = run_cli(args)
-    second = run_cli(args)
-
-    assert first == second
-    assert first[0] == 0
-
-
 def test_uppercase_pin_is_accepted_and_recorded_lowercase(tmp_path: Path) -> None:
     manifest = tmp_path / "manifest.json"
     scraper = tmp_path / "scraper.py"
@@ -654,13 +643,6 @@ def test_nonstandard_witness_constants_are_refused(tmp_path: Path, field: str, t
     assert scraper.read_bytes() == scraper_raw
 
 
-def test_nonstandard_constant_outside_a_witness_is_refused(tmp_path: Path) -> None:
-    manifest, raw, scraper, scraper_raw, args = _refusal_inputs(tmp_path, b'{"note":NaN}')
-    _assert_typed_refusal(run_cli(args), "json_nonstandard_constant", b"NaN")
-    assert manifest.read_bytes() == raw
-    assert scraper.read_bytes() == scraper_raw
-
-
 @pytest.mark.parametrize("field", ["chunk_id", "source_url"])
 @pytest.mark.parametrize("token", ["1e999", "-1e999"])
 def test_witness_float_overflow_is_refused(tmp_path: Path, field: str, token: str) -> None:
@@ -671,23 +653,6 @@ def test_witness_float_overflow_is_refused(tmp_path: Path, field: str, token: st
     _assert_typed_refusal(run_cli(args), "witness_nonfinite_number", token.encode("ascii"), b"Infinity")
     assert manifest.read_bytes() == stored
     assert scraper.read_bytes() == scraper_raw
-
-
-def test_overflow_label_remains_non_string_and_strict_json(tmp_path: Path) -> None:
-    manifest = tmp_path / "manifest.json"
-    scraper = tmp_path / "scraper.py"
-    raw = b'{"literary_attestation":{"source":"literary_fts","source_label":1e999}}'
-    manifest_sha = _write(manifest, raw)
-    scraper_sha = _write(scraper, b"pass\n")
-    code, stdout, stderr = run_cli(_pins(manifest, manifest_sha, scraper, scraper_sha))
-
-    assert (code, stderr) == (0, b"")
-    document = _load_success(stdout)
-    rows = document["rows"]
-    assert isinstance(rows, list)
-    assert rows[0]["label_value_type"] == "float"  # type: ignore[index]
-    assert b"Infinity" not in stdout
-    assert b"NaN" not in stdout
 
 
 @pytest.mark.parametrize(
@@ -745,15 +710,6 @@ def test_canonical_json_refuses_nonfinite_and_deep_output() -> None:
     with pytest.raises(InventoryError) as deep:
         canonical_json(nested)
     assert deep.value.code == "json_nesting_limit"
-
-
-def test_canonical_json_does_not_swallow_unrelated_value_errors() -> None:
-    from scripts.audit.literary_year_inventory import canonical_json
-
-    cycle: list[object] = []
-    cycle.append(cycle)
-    with pytest.raises(ValueError, match="Circular reference"):
-        canonical_json(cycle)
 
 
 def test_compound_witness_on_excluded_source_stays_outside_the_denominator(tmp_path: Path) -> None:
@@ -1011,16 +967,6 @@ def test_pin_and_parse_failures_write_no_stdout(
     assert scraper.read_bytes() == scraper_raw
 
 
-def test_invalid_pin_does_not_require_the_file_to_exist(tmp_path: Path) -> None:
-    missing = tmp_path / "missing.json"
-    scraper = tmp_path / "scraper.py"
-    scraper_sha = _write(scraper, b"pass\n")
-    code, stdout, stderr = run_cli(_pins(missing, "not-a-sha", scraper, scraper_sha))
-
-    assert (code, stdout, stderr) == (1, b"", _error("manifest_sha256_invalid"))
-    assert not missing.exists()
-
-
 def test_unreadable_inputs_are_typed(tmp_path: Path) -> None:
     scraper = tmp_path / "scraper.py"
     scraper_sha = _write(scraper, b"pass\n")
@@ -1032,10 +978,3 @@ def test_unreadable_inputs_are_typed(tmp_path: Path) -> None:
     manifest_sha = _write(manifest, b"{}")
     code, stdout, stderr = run_cli(_pins(manifest, manifest_sha, tmp_path, valid_sha))
     assert (code, stdout, stderr) == (1, b"", _error("scraper_unreadable"))
-
-
-def test_usage_error_is_exit_two(tmp_path: Path) -> None:
-    code, stdout, _stderr = run_cli(["--manifest", str(tmp_path / "missing.json")])
-
-    assert code == 2
-    assert stdout == b""

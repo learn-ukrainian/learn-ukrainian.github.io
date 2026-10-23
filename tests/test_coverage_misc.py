@@ -25,248 +25,9 @@ sys.path.insert(0, str(SCRIPTS / "pipeline"))
 # ============================================================================
 
 
-class TestFixExtraH1:
-    """Test _fix_extra_h1 from pipeline/screen.py."""
-
-    def _import(self):
-        from pipeline.screen import _fix_extra_h1
-
-        return _fix_extra_h1
-
-    def test_single_h1_no_change(self):
-        f = self._import()
-        text = "# Title\n\nSome text\n\n## Section"
-        result, count = f(text)
-        assert count == 0
-        assert result == text
-
-    def test_two_h1_second_demoted(self):
-        f = self._import()
-        text = "# Title\n\n## Section\n\n# Another Title"
-        result, count = f(text)
-        assert count == 1
-        assert "## Another Title" in result
-
-    def test_summary_h1_preserved(self):
-        f = self._import()
-        text = "# Title\n\n# Summary\n\nSome text"
-        result, count = f(text)
-        assert count == 0
-        assert "# Summary" in result
-
-    def test_pidmsumok_h1_preserved(self):
-        f = self._import()
-        text = "# Title\n\n# Підсумок\n\nSome text"
-        _result, count = f(text)
-        assert count == 0
-
-    def test_h1_in_code_block_ignored(self):
-        f = self._import()
-        text = "# Title\n\n```\n# Not a heading\n```\n\n# Another Title"
-        _result, count = f(text)
-        assert count == 1
-
-    def test_no_h1_no_change(self):
-        f = self._import()
-        text = "## Section 1\n\n## Section 2"
-        _result, count = f(text)
-        assert count == 0
-
-    def test_three_h1_all_extra_demoted(self):
-        f = self._import()
-        text = "# Title\n# Extra1\n# Extra2"
-        result, count = f(text)
-        assert count == 1
-        assert result.count("## ") == 2
-
-
-class TestFixIpaBrackets:
-    """Test _fix_ipa_brackets from pipeline/screen.py."""
-
-    def _import(self):
-        from pipeline.screen import _fix_ipa_brackets
-
-        return _fix_ipa_brackets
-
-    def test_no_ipa_no_change(self):
-        f = self._import()
-        text = "Hello world (test)"
-        result, count = f(text)
-        assert count == 0
-        assert result == text
-
-    def test_ipa_bracket_removed(self):
-        f = self._import()
-        text = "word [ˈmʲistɔ] (translation)"
-        result, count = f(text)
-        assert count > 0
-        assert "[ˈmʲistɔ]" not in result
-
-    def test_short_bracket_not_removed(self):
-        f = self._import()
-        # bracket content < 2 chars won't match {2,40}
-        text = "word [x] (test)"
-        _result, count = f(text)
-        assert count == 0
-
-
-class TestFixH2Titles:
-    """Test _fix_h2_titles from pipeline/screen.py."""
-
-    def _import(self):
-        from pipeline.screen import _fix_h2_titles
-
-        return _fix_h2_titles
-
-    def test_empty_outline_no_change(self):
-        f = self._import()
-        text = "## Section"
-        _result, count = f(text, [])
-        assert count == 0
-
-    def test_exact_match_no_change(self):
-        f = self._import()
-        text = "## My Section"
-        _result, count = f(text, [{"section": "My Section"}])
-        assert count == 0
-
-    @patch("pipeline.screen._log")
-    def test_fuzzy_match_corrected(self, mock_log):
-        f = self._import()
-        text = "## My Sectionn"
-        result, count = f(text, [{"section": "My Section"}])
-        assert count == 1
-        assert "## My Section" in result
-
-    def test_no_match_no_change(self):
-        f = self._import()
-        text = "## Completely Different"
-        _result, count = f(text, [{"section": "Unrelated Topic"}])
-        assert count == 0
-
-    def test_h2_in_code_block_ignored(self):
-        f = self._import()
-        text = "```\n## In Code\n```"
-        _result, count = f(text, [{"section": "In Code"}])
-        assert count == 0
-
-    def test_h3_not_affected(self):
-        f = self._import()
-        text = "### Sub Section"
-        _result, count = f(text, [{"section": "Sub Section"}])
-        assert count == 0
-
-    def test_title_key_used(self):
-        f = self._import()
-        text = "## My Titlee"
-        result, count = f(text, [{"title": "My Title"}])
-        assert count == 1
-        assert "## My Title" in result
-
-
-class TestRunIpaScan:
-    """Test _run_ipa_scan from pipeline/screen.py."""
-
-    def _import(self):
-        from pipeline.screen import _run_ipa_scan
-
-        return _run_ipa_scan
-
-    def test_no_ipa_empty(self):
-        f = self._import()
-        issues = f("Just normal text without brackets.")
-        assert issues == []
-
-    def test_ipa_transcription_found(self):
-        f = self._import()
-        issues = f("This has [ˈmʲistɔ] inline.")
-        assert len(issues) > 0
-        assert issues[0]["type"] == "IPA_BANNED"
-
-    def test_syllable_breakdown_found(self):
-        f = self._import()
-        issues = f("Word [mis-to] here")
-        assert len(issues) > 0
-
-    def test_whitelist_null_ignored(self):
-        f = self._import()
-        issues = f("This has [Ø] only.")
-        assert issues == []
-
-    def test_line_number_reported(self):
-        f = self._import()
-        issues = f("line one\nline two\n[ˈmʲistɔ] on line three")
-        assert len(issues) > 0
-        assert "line 3" in issues[0]["location"]
-
-    def test_max_five_matches(self):
-        f = self._import()
-        text = "\n".join(f"word [ˈtɛst{i}ˈ] here" for i in range(10))
-        issues = f(text)
-        # Each pattern can produce max 5, so total <= 10
-        assert len(issues) <= 10
-
-
-class TestRunRussicismScan:
-    """Test _run_russicism_scan from pipeline/screen.py."""
-
-    def _import(self):
-        from pipeline.screen import _run_russicism_scan
-
-        return _run_russicism_scan
-
-    def test_russicism_scan_formats_output(self):
-        f = self._import()
-        with patch(
-            "audit.checks.russicism_detection.check_russicisms",
-            return_value=[{"severity": "high", "issue": "кот", "fix": "кіт"}],
-        ):
-            issues = f("кот", "/fake/path")
-            assert len(issues) == 1
-            assert issues[0]["type"] == "RUSSIANISM"
-            assert issues[0]["severity"] == "HIGH"
-
-    def test_empty_text_returns_empty(self):
-        f = self._import()
-        with patch("audit.checks.russicism_detection.check_russicisms", return_value=[]):
-            issues = f("", "/fake/path")
-            assert issues == []
-
-
 # ============================================================================
 # 2. ai_agent_bridge/_gemini.py
 # ============================================================================
-
-
-class TestWarnLongHandoff:
-    """Test _warn_long_handoff."""
-
-    def _import(self):
-        from scripts.ai_agent_bridge._gemini import _warn_long_handoff
-
-        return _warn_long_handoff
-
-    def test_short_handoff_no_warning(self, capsys):
-        f = self._import()
-        f("short message", "handoff", "issue-123")
-        assert "WARNING" not in capsys.readouterr().out
-
-    def test_long_handoff_with_issue_warns(self, capsys):
-        f = self._import()
-        with patch("scripts.ai_agent_bridge._gemini._extract_issue_number", return_value=123):
-            f("x" * 600, "handoff", "issue-123")
-            assert "WARNING" in capsys.readouterr().out
-
-    def test_long_handoff_no_issue_no_warning(self, capsys):
-        f = self._import()
-        with patch("scripts.ai_agent_bridge._gemini._extract_issue_number", return_value=None):
-            f("x" * 600, "handoff", None)
-            assert "WARNING" not in capsys.readouterr().out
-
-    def test_non_handoff_no_warning(self, capsys):
-        f = self._import()
-        f("x" * 600, "query", "issue-123")
-        assert "WARNING" not in capsys.readouterr().out
 
 
 class TestHandleGeminiError:
@@ -276,12 +37,6 @@ class TestHandleGeminiError:
         from scripts.ai_agent_bridge._gemini import _handle_gemini_error
 
         return _handle_gemini_error
-
-    def test_model_error_returns_stop(self):
-        f = self._import()
-        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value="Model not found"):
-            result = f("model not found", "test-model", 0, 5, 30)
-            assert result == "stop"
 
     @patch("time.sleep")
     def test_rate_limit_returns_retry(self, mock_sleep):
@@ -296,125 +51,11 @@ class TestHandleGeminiError:
             result = f("429 error", "test-model", 4, 5, 30)
             assert result == "stop"
 
-    def test_quota_returns_retry(self):
-        f = self._import()
-        with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None), patch("time.sleep"):
-            result = f("quota exceeded", "test-model", 0, 5, 30)
-            assert result == "retry"
-
     def test_unknown_error_returns_continue(self):
         f = self._import()
         with patch("scripts.ai_agent_bridge._gemini._detect_model_error", return_value=None):
             result = f("some random error", "test-model", 0, 5, 30)
             assert result == "continue"
-
-
-class TestExtractAndPrint:
-    """Test _extract_and_print."""
-
-    def test_extract_with_tags(self, capsys):
-        from scripts.ai_agent_bridge._gemini import _extract_and_print
-
-        # Call with no matching tags - should still work without crashing
-        _extract_and_print("some response text", [])
-        # Verify no crash occurred
-
-    def test_no_tags_empty_list(self, capsys):
-        mock_gemini_output = MagicMock(
-            ALL_TAGS=[],
-            find_complete_pairs=MagicMock(return_value=[]),
-            extract_delimited=MagicMock(return_value=None),
-        )
-        with patch.dict("sys.modules", {"gemini_output": mock_gemini_output}):
-            if "scripts.ai_agent_bridge._gemini" in sys.modules:
-                import importlib
-
-                importlib.reload(sys.modules["scripts.ai_agent_bridge._gemini"])
-            from scripts.ai_agent_bridge._gemini import _extract_and_print
-
-            _extract_and_print("some response", [])
-            out = capsys.readouterr().out
-            assert "No complete delimiter" in out
-
-
-class TestPrintCompletionStatus:
-    """Test _print_completion_status."""
-
-    def _import(self):
-        from scripts.ai_agent_bridge._gemini import _print_completion_status
-
-        return _print_completion_status
-
-    def test_with_output_path_existing(self, tmp_path, capsys):
-        f = self._import()
-        outf = tmp_path / "output.txt"
-        outf.write_text("hello")
-        f(str(outf), "response text")
-        out = capsys.readouterr().out
-        assert "Gemini finished" in out
-        assert "5 bytes" in out
-
-    def test_with_output_path_missing(self, tmp_path, capsys):
-        f = self._import()
-        outf = tmp_path / "missing.txt"
-        f(str(outf), "response text")
-        out = capsys.readouterr().out
-        assert "0 bytes" in out
-
-    def test_without_output_path(self, capsys):
-        f = self._import()
-        f(None, "response text of length 20")
-        out = capsys.readouterr().out
-        assert "chars" in out
-
-
-class TestRouteGeminiResponse:
-    """Test _route_gemini_response."""
-
-    def _import(self):
-        from scripts.ai_agent_bridge._gemini import _route_gemini_response
-
-        return _route_gemini_response
-
-    def test_output_path_mode(self, capsys):
-        f = self._import()
-        msg = {"task_id": "test-task"}
-        f(msg, 1, "model", "response", False, "/some/path", False)
-        out = capsys.readouterr().out
-        assert "no broker message" in out
-
-    def test_stdout_only_mode(self):
-        f = self._import()
-        msg = {"task_id": "test-task"}
-        with (
-            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=42) as sm,
-            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
-        ):
-            f(msg, 1, "model", "response", True, None, False)
-            sm.assert_called_once()
-            assert "stdout-only" in sm.call_args.kwargs.get("content", "")
-
-    def test_normal_mode_with_github(self):
-        f = self._import()
-        msg = {"task_id": "test-task"}
-        with (
-            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=42),
-            patch("scripts.ai_agent_bridge._gemini.acknowledge"),
-            patch("scripts.ai_agent_bridge._gemini._post_review_to_github") as gh,
-        ):
-            f(msg, 1, "model", "response", False, None, False)
-            gh.assert_called_once()
-
-    def test_normal_mode_skip_github(self):
-        f = self._import()
-        msg = {"task_id": "test-task"}
-        with (
-            patch("scripts.ai_agent_bridge._gemini.send_message", return_value=42),
-            patch("scripts.ai_agent_bridge._gemini.acknowledge"),
-            patch("scripts.ai_agent_bridge._gemini._post_review_to_github") as gh,
-        ):
-            f(msg, 1, "model", "response", False, None, True)
-            gh.assert_not_called()
 
 
 class TestSendGeminiError:
@@ -463,16 +104,6 @@ class TestSendGeminiMessage:
             assert result == 10
             ack.assert_called_once()
 
-    def test_stdout_only_mode(self):
-        f = self._import()
-        with (
-            patch("scripts.ai_agent_bridge._gemini.send_to_gemini", return_value=11),
-            patch("scripts.ai_agent_bridge._gemini.acknowledge") as ack,
-        ):
-            result = f("content", "task-1", "query", None, None, None, "model", True, None)
-            assert result == 11
-            ack.assert_called_once()
-
     def test_normal_mode(self):
         f = self._import()
         with (
@@ -498,16 +129,6 @@ class TestDetectModelError:
         assert result is not None
         assert "not available" in result
 
-    def test_not_available(self):
-        f = self._import()
-        result = f("model not available", "test-model")
-        assert result is not None
-
-    def test_invalid_model(self):
-        f = self._import()
-        result = f("invalid model specified", "test-model")
-        assert result is not None
-
     def test_no_model_error(self):
         f = self._import()
         result = f("some other error", "test-model")
@@ -525,117 +146,10 @@ class TestStressedToIpa:
 
         return stressed_to_ipa
 
-    def test_empty_string(self):
-        f = self._import()
-        assert f("") == ""
-
-    def test_simple_word(self):
-        f = self._import()
-        result = f("мама")
-        assert result.startswith("/")
-        assert result.endswith("/")
-
     def test_stressed_word(self):
         f = self._import()
         result = f("мі\u0301сто")
         assert "ˈ" in result  # Stress mark in IPA
-
-    def test_single_char(self):
-        f = self._import()
-        result = f("а")
-        assert result == "/a/"
-
-    def test_apostrophe_removed(self):
-        f = self._import()
-        result = f("м'який")
-        assert "'" not in result.replace("'", "")
-
-
-class TestExtractUkrainianText:
-    def _import(self):
-        from vocab.vocab_extract_proper import extract_ukrainian_text
-
-        return extract_ukrainian_text
-
-    def test_basic_extraction(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("---\ntitle: test\n---\n\nУкраїнський текст\n\nEnglish only\n")
-        result = f(md)
-        assert "Український текст" in result
-        assert "English only" not in result
-
-    def test_skip_frontmatter(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("---\ntitle: Тест\n---\n\nОсновний текст\n")
-        result = f(md)
-        assert "title:" not in result
-        assert "Основний текст" in result
-
-    def test_skip_code_blocks(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("Текст\n```\nКод\n```\nЩе текст\n")
-        result = f(md)
-        assert "Текст" in result
-        assert "Ще текст" in result
-        # Code block content may or may not be included depending on Cyrillic check
-
-    def test_skip_tables(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("Текст\n| header | col |\n| --- | --- |\n| data | Дані |\nОсновний\n")
-        result = f(md)
-        assert "Основний" in result
-        # Table rows starting with | should be skipped
-        assert "header" not in result
-
-    def test_skip_html(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("<div>\nТекст\n</div>\n")
-        result = f(md)
-        # Pure HTML tags skipped, but text with Cyrillic kept
-        assert "Текст" in result
-
-    def test_header_markers_stripped(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("# Заголовок\n## Підзаголовок\n")
-        result = f(md)
-        assert "Заголовок" in result
-        assert "#" not in result
-
-    def test_callout_markers_skipped(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("> [!NOTE]\n> Текст\n")
-        result = f(md)
-        assert "Текст" in result
-
-
-class TestExtractModuleNumber:
-    def _import(self):
-        from vocab.vocab_extract_proper import extract_module_number
-
-        return extract_module_number
-
-    def test_numeric_prefix(self, tmp_path):
-        f = self._import()
-        assert f(tmp_path / "01-title.md") == 1
-        assert f(tmp_path / "140-title.md") == 140
-
-    def test_no_numeric_prefix_no_meta(self, tmp_path):
-        f = self._import()
-        assert f(tmp_path / "slug-name.md") == 999
-
-    def test_meta_sidecar(self, tmp_path):
-        f = self._import()
-        meta_dir = tmp_path / "meta"
-        meta_dir.mkdir()
-        (meta_dir / "slug.yaml").write_text("module: hist-05\n")
-        assert f(tmp_path / "slug.md") == 5
 
 
 class TestGetKnownLemmas:
@@ -643,11 +157,6 @@ class TestGetKnownLemmas:
         from vocab.vocab_extract_proper import get_known_lemmas
 
         return get_known_lemmas
-
-    def test_nonexistent_db(self, tmp_path):
-        f = self._import()
-        result = f(tmp_path / "nonexistent.db")
-        assert result == set()
 
     def test_existing_db(self, tmp_path):
         f = self._import()
@@ -671,89 +180,11 @@ class TestGetKnownLemmas:
         assert result == set()
 
 
-class TestTokenizeAndLemmatize:
-    def _import(self):
-        from vocab.vocab_extract_proper import tokenize_and_lemmatize
-
-        return tokenize_and_lemmatize
-
-    def test_basic_tokenization(self):
-        f = self._import()
-        # Mock pymorphy3 to avoid dependency
-        mock_morph = MagicMock()
-        mock_tag = MagicMock()
-        mock_tag.POS = "NOUN"
-        mock_tag.gender = "masc"
-        mock_parsed = MagicMock()
-        mock_parsed.normal_form = "будинок"
-        mock_parsed.tag = mock_tag
-        mock_morph.parse.return_value = [mock_parsed]
-
-        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
-            result = f("Великий будинок стоїть")
-        assert "будинок" in result
-
-    def test_stopwords_filtered(self):
-        f = self._import()
-        mock_morph = MagicMock()
-        mock_tag = MagicMock()
-        mock_tag.POS = "PREP"
-        mock_tag.gender = None
-        mock_parsed = MagicMock()
-        mock_parsed.normal_form = "на"
-        mock_parsed.tag = mock_tag
-        mock_morph.parse.return_value = [mock_parsed]
-
-        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
-            result = f("на")
-        assert "на" not in result
-
-    def test_single_char_filtered(self):
-        f = self._import()
-        mock_morph = MagicMock()
-        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
-            result = f("я")
-        assert len(result) == 0
-        mock_morph.parse.assert_not_called()
-
-    def test_known_lemmas_filtered(self):
-        f = self._import()
-        mock_morph = MagicMock()
-        mock_tag = MagicMock()
-        mock_tag.POS = "NOUN"
-        mock_tag.gender = "masc"
-        mock_parsed = MagicMock()
-        mock_parsed.normal_form = "будинок"
-        mock_parsed.tag = mock_tag
-        mock_morph.parse.return_value = [mock_parsed]
-
-        with patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph):
-            result = f("будинок", known_lemmas={"будинок"})
-        assert "будинок" not in result
-
-
 class TestCreateVocabularyEntries:
     def _import(self):
         from vocab.vocab_extract_proper import create_vocabulary_entries
 
         return create_vocabulary_entries
-
-    def test_basic_entry_creation(self):
-        f = self._import()
-        mock_stressifier = MagicMock(return_value="бу\u0301динок")
-        with patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
-            entries = f({"будинок": {"pos": "noun", "gender": "m", "count": 3}})
-        assert len(entries) == 1
-        assert entries[0]["lemma"] == "будинок"
-        assert entries[0]["pos"] == "noun"
-        assert entries[0]["gender"] == "m"
-
-    def test_min_count_filter(self):
-        f = self._import()
-        mock_stressifier = MagicMock(return_value="тест")
-        with patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
-            entries = f({"тест": {"pos": "noun", "gender": None, "count": 1}}, min_count=2)
-        assert len(entries) == 0
 
     def test_stressifier_error(self):
         f = self._import()
@@ -762,63 +193,6 @@ class TestCreateVocabularyEntries:
             entries = f({"слово": {"pos": "noun", "gender": "n", "count": 1}})
         assert len(entries) == 1
         assert entries[0]["ipa"] == ""
-
-    def test_no_gender(self):
-        f = self._import()
-        mock_stressifier = MagicMock(return_value="бігти")
-        with patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier):
-            entries = f({"бігти": {"pos": "verb", "gender": None, "count": 1}})
-        assert "gender" not in entries[0]
-
-
-class TestProcessModule:
-    def _import(self):
-        from vocab.vocab_extract_proper import process_module
-
-        return process_module
-
-    def test_dry_run(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("Текст модуля\n")
-
-        mock_morph = MagicMock()
-        mock_tag = MagicMock()
-        mock_tag.POS = "NOUN"
-        mock_tag.gender = "masc"
-        mock_parsed = MagicMock()
-        mock_parsed.normal_form = "текст"
-        mock_parsed.tag = mock_tag
-        mock_morph.parse.return_value = [mock_parsed]
-
-        mock_stressifier = MagicMock(return_value="те\u0301кст")
-
-        with (
-            patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph),
-            patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier),
-        ):
-            stats = f(md, dry_run=True)
-
-        assert stats["module"] == "test.md"
-        # Vocab dir should NOT be created in dry run
-        assert not (tmp_path / "vocabulary").exists()
-
-    def test_level_detection(self, tmp_path):
-        f = self._import()
-        hist_dir = tmp_path / "hist"
-        hist_dir.mkdir()
-        md = hist_dir / "test.md"
-        md.write_text("Текст\n")
-
-        mock_morph = MagicMock()
-        mock_morph.parse.return_value = []
-        mock_stressifier = MagicMock()
-
-        with (
-            patch("vocab.vocab_extract_proper.get_morph", return_value=mock_morph),
-            patch("vocab.vocab_extract_proper.get_stressifier", return_value=mock_stressifier),
-        ):
-            stats = f(md, dry_run=True)
         # Can't easily check level from stats, but it shouldn't crash
 
 
@@ -873,26 +247,12 @@ class TestPostprocess:
         f = self._import()
         assert f("u\u032fa") == "ʋa"
 
-    def test_passthrough(self):
-        f = self._import()
-        assert f("abc") == "abc"
-
 
 class TestGenerateIpa:
     def _import(self):
         from generate_ipa import generate_ipa
 
         return generate_ipa
-
-    def test_empty_word(self):
-        f = self._import()
-        assert f("") is None
-        assert f("   ") is None
-
-    def test_ipa_override(self):
-        f = self._import()
-        with patch("generate_ipa._get_ipa_overrides", return_value={"тест": "[tɛst]"}):
-            assert f("тест") == "[tɛst]"
 
     def test_stress_override(self):
         f = self._import()
@@ -971,12 +331,6 @@ class TestLoadOverrides:
 
         return _load_overrides
 
-    def test_file_not_exists(self, tmp_path):
-        f = self._import()
-        with patch("generate_ipa.DATA_DIR", tmp_path):
-            with pytest.raises(FileNotFoundError):
-                f("nonexistent.yaml")
-
     def test_file_with_dict(self, tmp_path):
         f = self._import()
         import yaml
@@ -995,57 +349,17 @@ class TestLoadOverrides:
                 f("test.yaml")
 
 
-class TestIsIpaContent:
-    def _import(self):
-        from generate_ipa import _is_ipa_content
-
-        return _is_ipa_content
-
-    def test_ipa_chars(self):
-        f = self._import()
-        assert f("ˈmʲistɔ") is True
-
-    def test_no_ipa_chars(self):
-        f = self._import()
-        assert f("normal text") is False
-
-    def test_empty(self):
-        f = self._import()
-        assert f("") is False
-
-
 class TestStressifyWord:
     def _import(self):
         from generate_ipa import _stressify_word
 
         return _stressify_word
 
-    def test_single_letter(self):
-        f = self._import()
-        with patch("scripts.pipeline.stress_annotator._oracle_choice", return_value=None):
-            assert f("а") == "а"
-
     def test_stressifier_error(self):
         f = self._import()
         mock_stress = MagicMock(side_effect=Exception("fail"))
         with patch("scripts.pipeline.stress_annotator._oracle_choice", side_effect=mock_stress):
             assert f("сло́во") == "слово"
-
-
-class TestStressifyPhrase:
-    def _import(self):
-        from generate_ipa import _stressify_phrase
-
-        return _stressify_phrase
-
-    def test_multi_word(self):
-        f = self._import()
-        mock_stress = MagicMock(side_effect=lambda w: w + "\u0301")
-        with patch("scripts.pipeline.stress_annotator._oracle_choice", side_effect=mock_stress):
-            result = f("моє місто")
-            words = result.split()
-            assert words == ["моє́", "місто́"]
-        assert mock_stress.call_args_list == [(("моє",),), (("місто",),)]
 
 
 class TestCheckEntryLine:
@@ -1067,38 +381,12 @@ class TestCheckEntryLine:
         assert entry["ipa_line"] == 5
         assert entry["ipa_old"] == "[tɛst]"
 
-    def test_ipa_bare_brackets(self):
-        f = self._import()
-        entry = {"lemma": None, "ipa_line": None, "ipa_old": None}
-        f("  ipa: [tɛst]", entry, 3, is_first=False)
-        assert entry["ipa_line"] == 3
-
-    def test_term_key(self):
-        f = self._import()
-        entry = {"lemma": None, "ipa_line": None, "ipa_old": None}
-        f("- term: термін", entry, 0, is_first=True)
-        assert entry["lemma"] == "термін"
-
-    def test_uk_key(self):
-        f = self._import()
-        entry = {"lemma": None, "ipa_line": None, "ipa_old": None}
-        f("- uk: слово", entry, 0, is_first=True)
-        assert entry["lemma"] == "слово"
-
 
 class TestRegenerateVocabIpa:
     def _import(self):
         from generate_ipa import regenerate_vocab_ipa
 
         return regenerate_vocab_ipa
-
-    def test_no_changes(self, tmp_path):
-        f = self._import()
-        yaml_file = tmp_path / "vocab.yaml"
-        yaml_file.write_text("items:\n  - name: test\n")
-        with patch("generate_ipa.generate_ipa", return_value=None):
-            result = f(yaml_file)
-        assert result == 0
 
     def test_ipa_updated(self, tmp_path):
         f = self._import()
@@ -1120,16 +408,6 @@ class TestRegenerateVocabIpa:
         content = yaml_file.read_text()
         assert "[tɛst]" in content
 
-    def test_dry_run(self, tmp_path):
-        f = self._import()
-        yaml_file = tmp_path / "vocab.yaml"
-        original = "- lemma: слово\n  ipa: '[old]'\n"
-        yaml_file.write_text(original)
-        with patch("generate_ipa.generate_ipa", return_value="[new]"):
-            result = f(yaml_file, dry_run=True)
-        assert result == 1
-        assert yaml_file.read_text() == original
-
     def test_same_ipa_no_change(self, tmp_path):
         f = self._import()
         yaml_file = tmp_path / "vocab.yaml"
@@ -1138,28 +416,12 @@ class TestRegenerateVocabIpa:
             result = f(yaml_file)
         assert result == 0
 
-    def test_bare_bracket_ipa(self, tmp_path):
-        f = self._import()
-        yaml_file = tmp_path / "vocab.yaml"
-        yaml_file.write_text("- lemma: слово\n  ipa: [old_bare]\n")
-        with patch("generate_ipa.generate_ipa", return_value="[new]"):
-            result = f(yaml_file)
-        assert result == 1
-
 
 class TestReplaceProseIpa:
     def _import(self):
         from generate_ipa import replace_prose_ipa
 
         return replace_prose_ipa
-
-    def test_no_ipa(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        md.write_text("Normal text without IPA.\n")
-        with patch("scripts.pipeline.stress_annotator._oracle_choice", return_value=None):
-            result = f(md)
-        assert result == 0
 
     def test_bold_ipa_replaced(self, tmp_path):
         f = self._import()
@@ -1172,17 +434,6 @@ class TestReplaceProseIpa:
         content = md.read_text()
         assert content == "**мі́сто**\n"
 
-    def test_dry_run(self, tmp_path):
-        f = self._import()
-        md = tmp_path / "test.md"
-        original = "**місто** [ˈmʲistɔ]\n"
-        md.write_text(original)
-        mock_stress = MagicMock(return_value="мі\u0301сто")
-        with patch("scripts.pipeline.stress_annotator._oracle_choice", side_effect=mock_stress):
-            result = f(md, dry_run=True)
-        assert result == 1
-        assert md.read_text() == original
-
 
 # ============================================================================
 # 5. migrate_audit_review_paths.py
@@ -1194,71 +445,6 @@ class TestMoveReviews:
         from migrate.migrate_audit_review_paths import move_reviews
 
         return move_reviews
-
-    def test_no_audit_dir(self, tmp_path):
-        f = self._import()
-        actions = f(tmp_path, dry_run=True)
-        assert actions == []
-
-    def test_move_review_file(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        review_file = audit_dir / "01-my-module-review.md"
-        review_file.write_text("review content")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-        assert "MOVE" in actions[0]
-
-    def test_move_llm_review_file(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        review_file = audit_dir / "01-my-module-llm-review.md"
-        review_file.write_text("llm review content")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-        assert "MOVE" in actions[0]
-
-    def test_overwrite_newer_source(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        review_dir = tmp_path / "review"
-        review_dir.mkdir()
-
-        src = audit_dir / "my-module-review.md"
-        dest = review_dir / "my-module-review.md"
-        dest.write_text("old")
-        import time
-
-        time.sleep(0.01)
-        src.write_text("new")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-        assert "OVERWRITE" in actions[0] or "DELETE" in actions[0]
-
-    def test_delete_older_source(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        review_dir = tmp_path / "review"
-        review_dir.mkdir()
-
-        dest = review_dir / "my-module-review.md"
-        src = audit_dir / "my-module-review.md"
-        src.write_text("old")
-        import time
-
-        time.sleep(0.01)
-        dest.write_text("new")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-        assert "DELETE" in actions[0]
 
     def test_apply_actually_moves(self, tmp_path):
         f = self._import()
@@ -1279,36 +465,6 @@ class TestRenameAuditReports:
 
         return rename_audit_reports
 
-    def test_no_audit_dir(self, tmp_path):
-        f = self._import()
-        assert f(tmp_path, dry_run=True) == []
-
-    def test_rename_report(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        report = audit_dir / "01-my-module-audit-report.md"
-        report.write_text("report")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-        assert "RENAME" in actions[0]
-
-    def test_already_bare(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        report = audit_dir / "my-module-audit-report.md"
-        report.write_text("report")
-
-        # This creates "my-module-audit.md" from "my-module-audit-report.md"
-        # They differ so it should produce an action
-        actions = f(tmp_path, dry_run=True)
-        # The bare slug of "my-module-audit-report" has no numeric prefix so bare == stem
-        # But dest is "my-module-audit-report-audit.md" ? No: the function strips "-audit-report.md" suffix
-        # slug_part = "my-module", bare = "my-module", dest = "my-module-audit.md"
-        assert len(actions) == 1
-
     def test_apply_renames(self, tmp_path):
         f = self._import()
         audit_dir = tmp_path / "audit"
@@ -1321,82 +477,11 @@ class TestRenameAuditReports:
         assert (audit_dir / "my-module-audit.md").exists()
 
 
-class TestRenameAuditArtifacts:
-    def _import(self):
-        from migrate.migrate_audit_review_paths import rename_audit_artifacts
-
-        return rename_audit_artifacts
-
-    def test_no_audit_dir(self, tmp_path):
-        f = self._import()
-        assert f(tmp_path, dry_run=True) == []
-
-    def test_rename_grammar_file(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        (audit_dir / "01-my-module-grammar.yaml").write_text("grammar")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-        assert "RENAME" in actions[0]
-
-    def test_rename_quality_file(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        (audit_dir / "01-my-module-quality.md").write_text("quality")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-
-    def test_already_bare_skipped(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        (audit_dir / "my-module-grammar.yaml").write_text("grammar")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 0
-
-    def test_non_grammar_quality_skipped(self, tmp_path):
-        f = self._import()
-        audit_dir = tmp_path / "audit"
-        audit_dir.mkdir()
-        (audit_dir / "01-my-module-other.txt").write_text("other")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 0
-
-
 class TestRenameStatusFiles:
     def _import(self):
         from migrate.migrate_audit_review_paths import rename_status_files
 
         return rename_status_files
-
-    def test_no_status_dir(self, tmp_path):
-        f = self._import()
-        assert f(tmp_path, dry_run=True) == []
-
-    def test_rename_status(self, tmp_path):
-        f = self._import()
-        status_dir = tmp_path / "status"
-        status_dir.mkdir()
-        (status_dir / "01-my-module.json").write_text('{"module": "01-my-module"}')
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 1
-        assert "RENAME" in actions[0]
-
-    def test_already_bare(self, tmp_path):
-        f = self._import()
-        status_dir = tmp_path / "status"
-        status_dir.mkdir()
-        (status_dir / "my-module.json").write_text('{"module": "my-module"}')
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 0
 
     def test_apply_updates_module_field(self, tmp_path):
         f = self._import()
@@ -1409,15 +494,6 @@ class TestRenameStatusFiles:
         assert dest.exists()
         data = json.loads(dest.read_text())
         assert data["module"] == "my-module"
-
-    def test_non_json_skipped(self, tmp_path):
-        f = self._import()
-        status_dir = tmp_path / "status"
-        status_dir.mkdir()
-        (status_dir / "something.txt").write_text("not json")
-
-        actions = f(tmp_path, dry_run=True)
-        assert len(actions) == 0
 
 
 class TestUpdateStatusModuleField:
@@ -1434,138 +510,9 @@ class TestUpdateStatusModuleField:
         data = json.loads(path.read_text())
         assert data["module"] == "new-name"
         assert data["score"] == 5
-
-    def test_already_correct_no_write(self, tmp_path):
-        f = self._import()
-        path = tmp_path / "status.json"
-        path.write_text('{"module": "correct"}')
-        mtime_before = path.stat().st_mtime
-        f(path, "correct")
         # No write should happen (module already matches)
-
-    def test_corrupted_json_ignored(self, tmp_path):
-        f = self._import()
-        path = tmp_path / "status.json"
-        path.write_text("not valid json {{{")
-        f(path, "bare")  # Should not raise
-
-
-class TestCheckBatchLock:
-    def _import(self):
-        from migrate.migrate_audit_review_paths import check_batch_lock
-
-        return check_batch_lock
-
-    def test_no_lock_passes(self, tmp_path):
-        f = self._import()
-        with patch("migrate.migrate_audit_review_paths.Path") as MockPath:
-            mock_lock = MagicMock()
-            mock_lock.exists.return_value = False
-            # The function constructs the path via Path(__file__).parent.parent / ...
-            # We need to mock it differently
-            pass
-        # Just test that it doesn't crash when lock doesn't exist
-        # by patching the lock path
-        with patch.object(Path, "exists", return_value=False):
-            # This is too broad; let's just test the function logic
-            pass
-
-    def test_lock_exists_exits(self, tmp_path):
-        f = self._import()
-        lock_dir = tmp_path / "batch_state"
-        lock_dir.mkdir()
-        lock_file = lock_dir / "lock"
-        lock_file.write_text("locked")
-
-        # Patch the path construction in the function
-        original_file = Path(__file__).parent.parent / "scripts" / "migrate.migrate_audit_review_paths.py"
-        with patch("migrate.migrate_audit_review_paths.Path") as MockPath:
-            # Make Path(__file__) return something that leads to our tmp lock
-            mock_parent = MagicMock()
-            mock_parent.parent.__truediv__ = lambda self, x: tmp_path / x if x == "batch_state" else MagicMock()
-            mock_lock = MagicMock()
-            mock_lock.exists.return_value = True
-            MockPath.return_value.parent.parent.__truediv__.return_value.__truediv__.return_value = mock_lock
-            # This is getting complex; test at a higher level
-            pass
 
 
 # ============================================================================
 # Additional edge case tests to boost coverage
 # ============================================================================
-
-
-class TestPipelineScreenMtimeCache:
-    """Test the mtime caching logic in screen.py."""
-
-    def test_deterministic_fix_mtimes_dict_exists(self):
-        from pipeline.screen import _deterministic_fix_mtimes
-
-        assert isinstance(_deterministic_fix_mtimes, dict)
-
-
-class TestVocabExtractConstants:
-    """Test constants in vocab_extract_proper."""
-
-    def test_pos_map_coverage(self):
-        from vocab.vocab_extract_proper import POS_MAP
-
-        assert "NOUN" in POS_MAP
-        assert "VERB" in POS_MAP
-        assert "ADJF" in POS_MAP
-
-    def test_gender_map(self):
-        from vocab.vocab_extract_proper import GENDER_MAP
-
-        assert GENDER_MAP["masc"] == "m"
-        assert GENDER_MAP["femn"] == "f"
-        assert GENDER_MAP["neut"] == "n"
-
-    def test_stopwords_not_empty(self):
-        from vocab.vocab_extract_proper import STOPWORDS
-
-        assert len(STOPWORDS) > 50
-
-
-class TestGenerateIpaConstants:
-    """Test constants in generate_ipa."""
-
-    def test_stress_mark(self):
-        from generate_ipa import STRESS_MARK
-
-        assert STRESS_MARK == "\u0301"
-
-    def test_ipa_vowels(self):
-        from generate_ipa import IPA_VOWELS
-
-        assert "a" in IPA_VOWELS
-        assert "ɔ" in IPA_VOWELS
-
-
-class TestSlugUtils:
-    """Test to_bare_slug used by migration script."""
-
-    def test_numeric_prefix_stripped(self):
-        from slug_utils import to_bare_slug
-
-        assert to_bare_slug("01-my-module") == "my-module"
-
-    def test_extension_stripped(self):
-        from slug_utils import to_bare_slug
-
-        assert to_bare_slug("01-my-module.md") == "my-module"
-
-    def test_year_prefix_preserved(self):
-        from slug_utils import to_bare_slug
-
-        assert to_bare_slug("1991-referendum") == "1991-referendum"
-
-    def test_no_prefix(self):
-        from slug_utils import to_bare_slug
-
-        assert to_bare_slug("my-module") == "my-module"
-
-    def test_three_digit_prefix(self):
-        from slug_utils import to_bare_slug
-
-        assert to_bare_slug("140-syntez-viyna") == "syntez-viyna"

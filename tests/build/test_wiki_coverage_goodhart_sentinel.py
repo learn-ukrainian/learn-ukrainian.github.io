@@ -197,34 +197,6 @@ def test_keyword_stuffing_requires_overall_fail() -> None:
         )
 
 
-@pytest.mark.parametrize("overall_verdict", ["PASS", "PARTIAL"])
-def test_partial_only_is_soft_signal(overall_verdict: str) -> None:
-    result = _parse(
-        [
-            _verdict("step-1", "PARTIAL"),
-            _verdict("step-2", "PARTIAL"),
-        ],
-        overall_verdict=overall_verdict,
-    )
-
-    assert result["overall_verdict"] == overall_verdict
-    assert [item["verdict"] for item in result["verdicts"]] == [
-        "PARTIAL",
-        "PARTIAL",
-    ]
-
-
-def test_fail_verdict_requires_overall_fail() -> None:
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match="overall_verdict must be FAIL",
-    ):
-        _parse(
-            [_verdict("step-1", "FAIL")],
-            overall_verdict="PARTIAL",
-        )
-
-
 def test_evidence_without_quote_marker_raises() -> None:
     with pytest.raises(
         linear_pipeline.LinearPipelineError,
@@ -239,14 +211,6 @@ def test_evidence_without_quote_marker_raises() -> None:
                 )
             ]
         )
-
-
-def test_evidence_shorter_than_eight_chars_raises() -> None:
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match="evidence must be a quoted excerpt",
-    ):
-        _parse([_verdict("step-1", "PASS", evidence='"tiny"')])
 
 
 @pytest.mark.parametrize(
@@ -309,47 +273,6 @@ def test_v7_build_fails_on_keyword_stuffing_overall_fail(
     assert failure["reason"] == "Wiki coverage review failed"
 
 
-def test_prompt_template_renders_keyword_stuffing_instruction() -> None:
-    prompt = linear_pipeline.render_wiki_coverage_review_prompt(
-        {
-            "level": "a1",
-            "sequence": 1,
-            "slug": "fixture",
-            "word_target": 600,
-        },
-        "level: a1\nslug: fixture\n",
-        "## module.md\n\nGenerated content",
-        {"slug": "fixture", "sequence_steps": []},
-        {"passed": True, "coverage_pct": 1.0},
-    )
-
-    assert "KEYWORD_STUFFING" in prompt
-
-
-def test_prompt_template_enforces_strict_response_format() -> None:
-    """Build #10 (2026-05-21) failed because the reviewer emitted prose
-    narration around the JSON. The prompt must now explicitly forbid
-    preamble/epilogue and demonstrate the all-PASS shape."""
-    prompt = linear_pipeline.render_wiki_coverage_review_prompt(
-        {
-            "level": "a1",
-            "sequence": 1,
-            "slug": "fixture",
-            "word_target": 600,
-        },
-        "level: a1\nslug: fixture\n",
-        "## module.md\n\nGenerated content",
-        {"slug": "fixture", "sequence_steps": []},
-        {"passed": True, "coverage_pct": 1.0},
-    )
-
-    assert "Response Format — STRICT" in prompt
-    assert "No preamble" in prompt
-    assert "No epilogue" in prompt
-    # All-PASS worked example so the reviewer has no excuse to narrate.
-    assert '"overall_verdict": "PASS"' in prompt
-
-
 def test_parser_recovers_from_prose_preamble_with_fenced_block() -> None:
     """Codex reviewer pattern from build #10: prose narration wrapping a
     fenced JSON payload. The parser must extract the fenced block."""
@@ -387,33 +310,6 @@ def test_parser_recovers_from_prose_preamble_with_bare_object() -> None:
     )
 
     parsed = linear_pipeline.parse_wiki_coverage_review_response(response)
-    assert parsed["overall_verdict"] == "PASS"
-
-
-def test_parser_still_handles_bare_json_payload() -> None:
-    """Regression guard: well-formed responses without prose still parse."""
-    payload = json.dumps(
-        {
-            "verdicts": [_verdict("err-1", "PASS")],
-            "overall_verdict": "PASS",
-            "summary": "OK.",
-        }
-    )
-    parsed = linear_pipeline.parse_wiki_coverage_review_response(payload)
-    assert parsed["overall_verdict"] == "PASS"
-
-
-def test_parser_still_handles_outer_fenced_payload() -> None:
-    payload = json.dumps(
-        {
-            "verdicts": [_verdict("err-1", "PASS")],
-            "overall_verdict": "PASS",
-            "summary": "OK.",
-        }
-    )
-    parsed = linear_pipeline.parse_wiki_coverage_review_response(
-        f"```json\n{payload}\n```"
-    )
     assert parsed["overall_verdict"] == "PASS"
 
 

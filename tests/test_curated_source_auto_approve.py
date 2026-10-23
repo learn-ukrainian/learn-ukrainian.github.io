@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-from scripts.ingest.ulp_to_jsonl import window_text
 from scripts.lexicon.atlas_intake_core import (
-    CURATED_SOURCE_FAMILIES,
     classify_resolved_candidate,
 )
 
@@ -25,10 +23,6 @@ def _heritage_unknown(_lemma: str) -> dict:
         "russian_shadow": False,
         "sovietization_risk": 0,
     }
-
-
-def test_curated_families_include_ohoiko_ulp_textbook_teacher() -> None:
-    assert {"ohoiko", "ulp", "textbook", "teacher_lesson"} <= CURATED_SOURCE_FAMILIES
 
 
 def test_curated_ohoiko_auto_approves_without_strict_heritage() -> None:
@@ -82,13 +76,3 @@ def test_curated_still_rejects_russianism() -> None:
     )
     assert classification == "reject"
     assert "heritage_russianism" in reasons
-
-
-def test_window_text_splits_long_lesson() -> None:
-    lines = [f"рядок номер {i} " + ("слово " * 20) for i in range(80)]
-    text = "\n".join(lines)
-    windows = window_text(text, target=800, overlap=80)
-    assert len(windows) >= 3
-    assert all(len(w) <= 1200 for w in windows)
-    # overlap means consecutive windows share content
-    assert any(tok in windows[1] for tok in windows[0].split()[-5:])

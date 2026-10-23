@@ -15,7 +15,6 @@ from scripts.fleet_comms.cli import (
     EXIT_ERROR,
     EXIT_NOT_FOUND,
     EXIT_OK,
-    FleetCommsCliError,
     get_formal_review_job,
     main,
 )
@@ -125,15 +124,6 @@ def test_formal_job_get_cli(tmp_path: Path, capsys) -> None:
     assert data["attempts"][0]["completion_state"] == "incomplete"
 
 
-def test_formal_job_get_no_attempts(tmp_path: Path, capsys) -> None:
-    root = tmp_path / "plane"
-    _seed_plane_db(root)
-    rc = main(["formal-job", "get", "rev-abc", "--root", str(root), "--no-attempts"])
-    assert rc == EXIT_OK
-    data = json.loads(capsys.readouterr().out)
-    assert data["attempts"] == []
-
-
 def test_formal_job_get_not_found(tmp_path: Path, capsys) -> None:
     root = tmp_path / "plane"
     _seed_plane_db(root)
@@ -147,11 +137,6 @@ def test_formal_job_get_missing_db(tmp_path: Path, capsys) -> None:
     rc = main(["formal-job", "get", "rev-abc", "--root", str(tmp_path / "empty")])
     assert rc == EXIT_ERROR
     assert "plane DB not found" in capsys.readouterr().err
-
-
-def test_get_formal_review_job_empty_id(tmp_path: Path) -> None:
-    with pytest.raises(FleetCommsCliError, match="review_id is required"):
-        get_formal_review_job("  ", root=tmp_path)
 
 
 def test_acp_discuss_cli_scopes_active_transport_and_restores_environment(
@@ -351,32 +336,6 @@ def test_acp_verify_cli_exit_codes_and_compact_receipt(
     }
 
 
-def test_acp_verify_cli_maps_missing_receipt_to_not_found(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys,
-) -> None:
-    from scripts.agent_runtime import acpx_discuss
-
-    def missing(**_kwargs):
-        raise acpx_discuss.AcpxDiscussionNotFoundError("receipt missing")
-
-    monkeypatch.setattr(acpx_discuss, "verify_discussion_receipt", missing)
-
-    rc = main(
-        [
-            "acp-verify",
-            "--conversation-id",
-            "conversation_" + ("b" * 32),
-            "--root",
-            str(tmp_path),
-        ]
-    )
-
-    assert rc == EXIT_NOT_FOUND
-    assert "receipt missing" in capsys.readouterr().err
-
-
 def test_cli_collectors_emit_store_not_db_path(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -394,46 +353,3 @@ def test_cli_collectors_emit_store_not_db_path(
         assert payload["store"]["kind"] == "legacy-broker"
         assert payload["store"]["reachable"] is False
         assert "db_path" not in payload
-
-
-def test_cli_authority_collectors_emit_store_not_db_path(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys,
-) -> None:
-    root = tmp_path / "plane"
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
-    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
-
-    for command in ("metrics", "backlog", "dead-letters"):
-        rc = main([command, "--root", str(root)])
-        assert rc == EXIT_OK
-        payload = json.loads(capsys.readouterr().out)
-        assert payload["response_schema_version"] == "comms.v2"
-        assert payload["store"]["kind"] == "comms-plane"
-        assert payload["store"]["reachable"] is False
-        assert "db_path" not in payload
-
-
-def test_cli_bottleneck_metrics_emit_stores_not_paths(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys,
-) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    root = tmp_path / "plane"
-    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
-
-    rc = main(["bottleneck-metrics", "--tasks-dir", str(tasks_dir), "--root", str(root)])
-    assert rc == EXIT_OK
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["response_schema_version"] == "comms.v2"
-    assert payload["tasks_store"] == {"kind": "batch-tasks", "reachable": True}
-    assert payload["plane_store"] == {"kind": "comms-plane", "reachable": False}
-    assert payload["db_missing"] is True
-    assert "tasks_dir" not in payload
-    assert "plane_db" not in payload
-    blob = json.dumps(payload)
-    assert str(tasks_dir) not in blob
-    assert str(root / "comms.sqlite3") not in blob

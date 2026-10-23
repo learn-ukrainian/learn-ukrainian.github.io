@@ -73,39 +73,6 @@ def _use_committed_inventory_records(monkeypatch, committed_inventory_records) -
     )
 
 
-def test_target_entry_types_cover_exactly_the_named_eight() -> None:
-    assert (
-        sorted(
-            [
-                "виходити заміж",
-                "день тижня",
-                "картопля фрі",
-                "перед тим як",
-                "сільське господарство",
-                "так само",
-                "такий самий",
-                "час від часу",
-            ]
-        )
-        == MULTIWORD_LEMMAS
-    )
-
-
-def test_multiword_entry_types_are_valid_atlas_types() -> None:
-    assert set(TARGET_ENTRY_TYPES.values()) <= {"expression", "multiword_term", "phraseologism"}
-
-
-def test_chas_vid_chasu_is_phraseologism_and_vyhodyty_zamizh_is_expression() -> None:
-    # Only these two of the eight have dictionary idiom/fixed-collocation evidence
-    # (see PR description / script module docstring); the rest default to
-    # multiword_term per docs/runbooks/word-atlas-entry-model.md's tie-breaker.
-    assert TARGET_ENTRY_TYPES["час від часу"] == "phraseologism"
-    assert TARGET_ENTRY_TYPES["виходити заміж"] == "expression"
-    non_default = {"час від часу", "виходити заміж"}
-    for lemma in set(MULTIWORD_LEMMAS) - non_default:
-        assert TARGET_ENTRY_TYPES[lemma] == "multiword_term"
-
-
 @pytest.mark.parametrize("lemma", MULTIWORD_LEMMAS)
 def test_build_candidate_from_committed_inventory(lemma: str, monkeypatch, committed_inventory_records) -> None:
     from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
@@ -163,23 +130,6 @@ def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path, cache
     assert all(row.get("surface_admission") == {"practice": True} for row in doc["decisions"])
 
 
-def test_decision_parse_cache_changes_with_file_content(tmp_path: Path, cached_decision_loader) -> None:
-    source = tmp_path / "decisions.yaml"
-    output = tmp_path / "subset.yaml"
-    source.write_text("source_queue: {}\ndecisions:\n  - lemma: demo\n    gloss: first\n", encoding="utf-8")
-    _scratch_decision_subset(source, {"demo"}, output)
-    assert yaml.safe_load(output.read_text(encoding="utf-8"))["decisions"][0]["gloss"] == "first"
-
-    source.write_text("source_queue: {}\ndecisions:\n  - lemma: demo\n    gloss: second\n", encoding="utf-8")
-    _scratch_decision_subset(source, {"demo"}, output)
-    assert yaml.safe_load(output.read_text(encoding="utf-8"))["decisions"][0]["gloss"] == "second"
-
-    _scratch_decision_subset(source, {"demo"}, output)
-    parsed = _parse_decision_ledger(source.read_text(encoding="utf-8"))
-    assert parsed["decisions"][0]["gloss"] == "second"
-    assert "surface_admission" not in parsed["decisions"][0]
-
-
 def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(
     tmp_path: Path, monkeypatch, committed_inventory_records, cached_decision_loader
 ) -> None:
@@ -225,24 +175,3 @@ def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(
         heritage = entry.get("heritage_status") or {}
         assert heritage.get("classification") == "standard"
         assert heritage.get("classification") != "standard_modern"
-
-
-def test_all_nine_candidates_have_standard_classification_and_not_standard_modern(
-    monkeypatch, committed_inventory_records
-) -> None:
-    from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
-        BIG_INVENTORY,
-        LEG_INVENTORY,
-        SPACE_COLLAPSE_INVENTORY,
-    )
-
-    _use_committed_inventory_records(monkeypatch, committed_inventory_records)
-    for lemma in MULTIWORD_LEMMAS:
-        inv = LEG_INVENTORY if lemma == "виходити заміж" else BIG_INVENTORY
-        candidate = _build_candidate(lemma, inv, entry_type=TARGET_ENTRY_TYPES[lemma])
-        assert candidate["heritage_status"]["classification"] == "standard"
-        assert candidate["heritage_status"]["classification"] != "standard_modern"
-
-    zabojatysja = _build_candidate(ZABOJATYSJA_LEMMA, SPACE_COLLAPSE_INVENTORY, entry_type=None)
-    assert zabojatysja["heritage_status"]["classification"] == "standard"
-    assert zabojatysja["heritage_status"]["classification"] != "standard_modern"

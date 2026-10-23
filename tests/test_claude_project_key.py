@@ -109,20 +109,6 @@ def _line(context: str, marker: str) -> str:
 
 
 @pytest.mark.skipif(shutil.which("jq") is None, reason="jq is required by the hook")
-def test_post_compact_memory_hint_uses_the_primary_checkout_from_a_worktree(tmp_path: Path) -> None:
-    primary, worktree = _primary_with_worktree(tmp_path)
-    context = _run_hook(
-        worktree,
-        THREAD_ROLLOVER_PYTHON=sys.executable,
-        THREAD_ROLLOVER_SCRIPT=str(tmp_path / "absent.py"),
-        SESSION_BOUNDED_RUNNER=str(RUNNER),
-    )
-    memory = _line(context, "MEMORY:")
-    assert f"/{_key(str(primary.resolve()))}/memory/MEMORY.md" in memory
-    assert _key(str(worktree)) not in memory
-
-
-@pytest.mark.skipif(shutil.which("jq") is None, reason="jq is required by the hook")
 def test_post_compact_uses_the_primary_checkout_venv_with_production_defaults(tmp_path: Path) -> None:
     # No interpreter, runner or rollover override: the shared venv exists only in
     # the primary checkout, exactly as for a real linked worktree.

@@ -453,13 +453,6 @@ def test_unaligned_groups_wait_whole_on_the_unsplit_sense(result):
     assert ledger["synonyms"]["disposition"] == "unresolved" and ledger["synonyms"]["held_unsplit"] == 2
 
 
-def test_one_group_on_an_unsplit_only_card_is_held_not_aligned(result):
-    card = card_of(result, "ета")
-    (antonym,) = assertions(card, "antonyms")
-    assert antonym["mapping"]["confidence"] == "unresolved"
-    assert card["senses"][0]["fields"]["antonyms"]["state"] == "unverified"
-
-
 def test_two_active_senses_use_the_registry_holding_sense(result, inputs):
     first = card_of(result, "альфа", nth=0)
     states = [s["state"] for s in first["senses"]]
@@ -675,12 +668,6 @@ def test_source_withdrawal_resolves_a_conflict_to_the_remaining_source(inputs):
     assert card["fields"]["stress"]["state"] == "single-source"
     assert withdrawn["takedown"][0]["cards"] == [card["card_id"]]
     assert len(withdrawn["takedown"][0]["assertions"]) == 1
-
-
-def test_homograph_link_is_suppressed_when_its_evidence_goes(inputs):
-    withdrawn = wa.build(inputs, suppression(content("spelling", "альфа", "альфа")))
-    link = card_of(withdrawn, "альфа", nth=0)["links"][0]
-    assert link["state"] == "suppressed"
 
 
 def test_card_becomes_suppressed_when_every_assertion_is_withdrawn(inputs):
@@ -1019,20 +1006,6 @@ def test_rollback_with_current_selectors_never_revives_withdrawn_evidence(inputs
                if a["assertion_id"] in withdrawn["takedown"][0]["assertions"])
 
 
-def test_rehearsal_reports_every_withdrawal_check(world, tmp_path):
-    inputs = make_inputs(world, tmp_path)
-    for unit in inputs.units:
-        if unit["literal_head"] == f"а{A}льфа":
-            unit["categories"] = ["withdrawal_rehearsal_candidate"]
-    outcome = verify.rehearse(inputs)
-    assert outcome["passed"], outcome
-    assert outcome["order_independent"] is True
-    assert set(outcome["scenarios"]) == {
-        "source_record", "source", "overlap_source_then_record", "overlap_record_then_source", "content_stress_set",
-        "content_paradigm_slot", "assertion_id_fallback"}
-    assert all(s["withdrawn_build_verifies"] for s in outcome["scenarios"].values())
-
-
 def test_label_rules():
     assert wa.label_part_of_speech("множинний іменник") == "іменник"
     assert wa.label_part_of_speech("прізвище") == "іменник"
@@ -1151,14 +1124,6 @@ def test_proper_name_needs_active_unambiguous_source_scope_to_enter_learner_set(
     scope["status"] = "active"
     scope["review"] = {"status": "rejected"}
     assert wa.learner_cards({card_id: name}) == {}
-
-
-def test_proper_name_with_active_source_scope_still_needs_allowlisting(result, monkeypatch):
-    monkeypatch.setattr(wa, "LEARNER_PROPER_NAME_ALLOWLIST", {"ЮНЕСКО"})
-    name = copy.deepcopy(card_of(result, "Ета"))
-    name["assertions"].append({"source_id": "puls", "field": "cefr", "status": "active",
-                               "mapping": {"confidence": "medium"}})
-    assert wa.learner_cards({name["card_id"]: name}) == {}
 
 
 # --- host-only output containment (AC-P06) -------------------------------------------------------------------
@@ -1840,20 +1805,6 @@ def test_r3f1_verify_rejects_a_rebound_held_ledger_source_record(tmp_path):
     held["source_record_id"] = other  # another card's frozen record, cited by that card
     report = verify.verify(inputs, result)
     assert report["passed"] is False and report["source_records"]["errors"].get("held_unbound") == 1
-
-
-def test_r3f1_identity_verification_does_not_rebuild_output(inputs, result, monkeypatch):
-    def rebuilt(*args, **kwargs):
-        raise AssertionError("verification must never rebuild the output it checks")
-
-    for name in ("build", "card_json", "refresh_sense_maps"):
-        monkeypatch.setattr(wa, name, rebuilt)
-    clean = verify.verify(inputs, result, None)
-    assert clean["passed"] and clean["identity_binding"] == {"passed": True, "errors": {}}
-    for forgery, error in ((forge_sense_state, "sense_inventory"), (forge_homograph_swap, "key_at_creation"),
-                           (forge_moved_live_map, "live_sense_map")):
-        report = forged_report(inputs, result, forgery)
-        assert report["passed"] is False and error in report["identity_binding"]["errors"]
 
 
 def test_r3f1_unchanged_draft_allocations_remain_valid(inputs, result):

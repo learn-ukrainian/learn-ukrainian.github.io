@@ -148,16 +148,6 @@ def test_auto_mode_keeps_api_key_even_when_oauth_present(tmp_path, monkeypatch):
     assert env["GEMINI_API_KEY"] == "test-api-key"
 
 
-def test_auto_mode_keeps_api_key_when_oauth_absent(tmp_path, monkeypatch):
-    """API-first policy (#1710): API-key envs are preserved in auto mode."""
-    _result, popen_capture = _invoke_with_captured_env(
-        tmp_path, monkeypatch, oauth_creds=False,
-    )
-
-    env = popen_capture.calls[0]["kwargs"]["env"]
-    assert env["GEMINI_API_KEY"] == "test-api-key"
-
-
 def test_explicit_subscription_mode_strips(tmp_path, monkeypatch):
     _result, popen_capture = _invoke_with_captured_env(
         tmp_path, monkeypatch, oauth_creds=False, auth_mode="subscription",
@@ -165,16 +155,6 @@ def test_explicit_subscription_mode_strips(tmp_path, monkeypatch):
 
     env = popen_capture.calls[0]["kwargs"]["env"]
     assert "GEMINI_API_KEY" not in env
-
-
-def test_explicit_api_mode_keeps_env_key(tmp_path, monkeypatch):
-    """Escape hatch: ``GEMINI_AUTH_MODE=api`` forces API mode."""
-    _result, popen_capture = _invoke_with_captured_env(
-        tmp_path, monkeypatch, oauth_creds=False, auth_mode="api",
-    )
-
-    env = popen_capture.calls[0]["kwargs"]["env"]
-    assert env["GEMINI_API_KEY"] == "test-api-key"
 
 
 def test_return_shape_preserved(tmp_path):

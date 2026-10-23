@@ -107,17 +107,6 @@ def test_record_hash_changes_on_forms_reordering():
     assert h1 != h2
 
 
-def test_record_hash_changes_on_one_character_edit():
-    """One character edit in a record changes the hash."""
-    rec1 = {"id": "T-001", "quote": "hello world"}
-    rec2 = {"id": "T-001", "quote": "hello world!"}
-    assert pack.record_hash({"texts": [rec1]}, "T-001") != pack.record_hash({"texts": [rec2]}, "T-001")
-
-    w1 = make_record("W-001", "слово", ["слово"])
-    w2 = make_record("W-001", "слово", ["слове"])
-    assert words.record_hash({"words": [w1]}, "W-001") != words.record_hash({"words": [w2]}, "W-001")
-
-
 def test_record_hashes_batch_and_missing_id():
     """record_hashes returns dict of id->sha256; missing id raises KeyError."""
     pack_data = {

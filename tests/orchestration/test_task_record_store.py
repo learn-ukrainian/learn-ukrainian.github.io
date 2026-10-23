@@ -32,6 +32,21 @@ def test_locate_prefers_the_hot_record(tmp_path):
     assert store.locate_task_record(tasks, "codex/task") == hot
     assert store.locate_task_record(tasks, "absent") is None
 
+    names = (
+        "codex_task.json", "codex_task.20261023T091234123Z.archived.json",
+        "codex_task.20261023T091234Z.42.archived.json",
+        "codex_task.20261023T091234Z.42.archived.20261023T101234Z.7.archived.json",
+        "codex_task-extra.json", "codex_task.bad.archived.json", "codex_task.result",
+    )
+    expected = tuple(sorted(names[:4]))
+    assert store.candidate_task_record_names("codex/task", names) == expected
+    assert store.candidate_task_record_names("codex\\task", names) == expected
+    # Pure filtering does not hide an unsafe matching filesystem entry.
+    hot.unlink()
+    hot.mkdir()
+    assert store.candidate_task_record_names("codex/task", [hot.name]) == (hot.name,)
+    assert store.candidate_task_record_names("other", names) == ()
+
 
 def test_relocated_result_file_points_at_the_moved_sidecar(tmp_path):
     tasks = tmp_path / "tasks"

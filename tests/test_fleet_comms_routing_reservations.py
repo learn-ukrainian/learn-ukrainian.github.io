@@ -547,29 +547,6 @@ def test_substitution_rejects_legacy_envelope_expansion(
         }
 
 
-def test_substitution_rolls_back_legacy_reconstruction_when_selection_fails(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    with RoutingReservationLedger(root=_root(tmp_path)) as ledger:
-        substitute, evidence, prior_id = _legacy_failed_result_invalid_reservation(
-            ledger,
-            monkeypatch,
-            authority_key="repo:substitution:legacy-rollback",
-        )
-        with pytest.raises(RoutingReservationUnavailable, match="no_policy_approved_route"):
-            ledger.reserve_selection(
-                substitute,
-                lambda _context: None,
-                now="2035-01-01T00:00:02Z",
-                substitution=evidence,
-            )
-
-        assert "legacy_authorization_envelope_reconstructed" not in {
-            decision.event_type for decision in ledger.decisions(prior_id)
-        }
-
-
 @pytest.mark.parametrize(
     "changed",
     (

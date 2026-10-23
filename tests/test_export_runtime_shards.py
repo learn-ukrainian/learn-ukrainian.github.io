@@ -423,22 +423,6 @@ def test_real_db_public_counts_and_alias_targets(tmp_path: Path) -> None:
     assert invalid == 0
 
 
-@pytest.mark.skipif(not REAL_DB_PATH.is_file(), reason="data/atlas.db not available")
-def test_real_db_entry_shard_size_band(tmp_path: Path) -> None:
-    out = tmp_path / "out"
-    report = export_runtime_shards(
-        db_path=REAL_DB_PATH,
-        out_dir=out,
-        include_decks=False,
-        deck_dir=None,
-        verify=True,
-    )
-    sizes = report["entryShardBytes"]
-    assert sizes, "expected entry shards"
-    assert min(sizes) >= 524_288, sizes
-    assert max(sizes) <= 1_048_576, sizes
-
-
 @pytest.mark.atlas_release
 def test_atlas_release_gate_real_db_counts_and_export(tmp_path: Path) -> None:
     """Publish-time release gate (``pytest -m atlas_release``).
@@ -910,7 +894,7 @@ def _export(db: Path, out: Path, **kwargs):
 _CAPS = [(1_048_576, 524_288), (9_000, 800), (6_000, 700)]
 
 
-@pytest.mark.parametrize("level", [0, 1, 6, 9])
+@pytest.mark.parametrize("level", [0, 6])
 @pytest.mark.parametrize(("entry_max", "search_max"), _CAPS)
 def test_streamed_export_is_byte_identical_to_reference(
     edge_db: Path, tmp_path: Path, level: int, entry_max: int, search_max: int

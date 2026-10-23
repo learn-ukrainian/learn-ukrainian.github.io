@@ -821,7 +821,7 @@ def test_guard_active_during_fresh_build_and_sources_samples() -> None:
                 "tests/build/test_fresh_runner.py",
                 "tests/test_mcp_sources_server.py",
                 "-k",
-                "test_runner_real_draft_report_has_numeric_single_lesson_totals or test_unknown_tool_returns_error",
+                "test_counting_contract_urok_only_with_quoted_term_and_english or test_unknown_tool_returns_error",
             ],
             capture_output=True,
             text=True,

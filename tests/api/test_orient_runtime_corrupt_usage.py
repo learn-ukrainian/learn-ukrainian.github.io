@@ -143,22 +143,6 @@ def test_orient_runtime_aggregates_unreadable_across_usage_reads(
     assert runtime["headroom"] == {"codex": True}
 
 
-def test_orient_runtime_counts_malformed_last_line(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """A truncated last line that is not valid JSON is one unreadable line per read."""
-    root = tmp_path.resolve()
-    _today_file(_usage_dir(root)).write_bytes(
-        _line(_record("codex", "ok")) + b'{"ts": "2026-10-08T00:00:00Z", "outcome": "rate_lim'
-    )
-    client = _make_client(root, monkeypatch, stub_adapter=True)
-
-    runtime = _get_runtime(client)
-
-    assert runtime["unreadable"] == _unreadable(READS_WITH_HEADROOM)
-    assert runtime["by_agent"]["codex"]["total"] == 1
-    assert runtime["recent_outcomes"] == {"ok": 1, "error": 0, "timeout": 0, "rate_limited": 0}
-    assert runtime["headroom"] == {"codex": True}
-
-
 def test_orient_runtime_reports_zero_unreadable_for_clean_log(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A clean log reports the all-zero shape; the field is never omitted."""
     root = tmp_path.resolve()

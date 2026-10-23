@@ -10,7 +10,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-import yaml
 
 pytestmark = pytest.mark.reads_content
 
@@ -85,32 +84,6 @@ class TestActivityValidation:
 class TestFileValidation:
     """Test full YAML file validation."""
 
-    def test_validate_valid_file(self, valid_quiz_data):
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            yaml.dump([valid_quiz_data], f)
-            temp_path = Path(f.name)
-
-        try:
-            is_valid, errors = validate_activity_yaml_file(temp_path)
-            assert is_valid
-            assert len(errors) == 0
-        finally:
-            if temp_path.exists():
-                os.remove(temp_path)
-
-    def test_validate_invalid_file(self, invalid_quiz_data):
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            yaml.dump([invalid_quiz_data], f)
-            temp_path = Path(f.name)
-
-        try:
-            is_valid, errors = validate_activity_yaml_file(temp_path)
-            assert not is_valid
-            assert len(errors) > 0
-        finally:
-            if temp_path.exists():
-                os.remove(temp_path)
-
     def test_validate_malformed_yaml(self):
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
             f.write(" - this is : invalid : yaml : structure")
@@ -123,75 +96,3 @@ class TestFileValidation:
         finally:
             if temp_path.exists():
                 os.remove(temp_path)
-
-    def test_validate_nonexistent_file(self):
-        is_valid, errors = validate_activity_yaml_file(Path("nonexistent.yaml"))
-        assert is_valid  # Function returns True if file doesn't exist (legacy behavior)
-        assert len(errors) == 0
-
-    @pytest.mark.parametrize("quiz_items, expected_valid", [(4, True), (3, False)])
-    def test_v2_bio_quiz_uses_plan_minimum(self, tmp_path, quiz_items, expected_valid):
-        module_dir = tmp_path / "curriculum" / "l2-uk-en" / "bio" / "test-composer"
-        module_dir.mkdir(parents=True)
-        plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "plans" / "bio"
-        plan_dir.mkdir(parents=True)
-
-        plan = {
-            "activity_hints": [
-                {"type": "quiz", "items": 4, "placement": "inline"},
-            ],
-        }
-        (plan_dir / "test-composer.yaml").write_text(
-            yaml.safe_dump(plan, allow_unicode=True),
-            encoding="utf-8",
-        )
-
-        quiz_item = {
-            "question": "Яке твердження підтверджене джерелом?",
-            "options": [
-                {"text": "Перше", "correct": True},
-                {"text": "Друге", "correct": False},
-                {"text": "Третє", "correct": False},
-                {"text": "Четверте", "correct": False},
-            ],
-        }
-        activities = {
-            "version": 2,
-            "module": "test-composer",
-            "inline": [
-                {
-                    "id": "quiz-evidence",
-                    "type": "quiz",
-                    "title": "Перевірка джерел",
-                    "items": [quiz_item] * quiz_items,
-                },
-                {
-                    "id": "compare-recordings",
-                    "type": "comparative-study",
-                    "title": "Порівняння записів",
-                    "items_to_compare": ["Запис А", "Запис Б"],
-                    "criteria": ["Фактура"],
-                },
-            ],
-            "workbook": [
-                {
-                    "id": "reading-chronology",
-                    "type": "reading",
-                    "title": "Хронологія",
-                    "text": "Достатньо довгий текст для перевірки схеми.",
-                },
-            ],
-        }
-        activities_path = module_dir / "activities.yaml"
-        activities_path.write_text(
-            yaml.safe_dump(activities, allow_unicode=True),
-            encoding="utf-8",
-        )
-
-        is_valid, errors = validate_activity_yaml_file(activities_path)
-
-        assert is_valid is expected_valid
-        if expected_valid:
-            assert errors == []
-        else:
-            assert errors

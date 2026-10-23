@@ -19,7 +19,7 @@ launcher_adapter_preflight() {
     py="$(launcher_project_python)" || exit 3
     if ! LC_MODEL="$("$py" "$LC_ROOT/scripts/review/model_catalog.py" \
         --resolve-kimi-model "$LC_MODEL" --format native)"; then
-      launcher_error "unknown --model '$LC_MODEL' (use k3-256k, k3, k2.7, k2.7-highspeed)."
+      launcher_error "unknown --model '$LC_MODEL'. Kimi models are retired in the model catalog."
       exit 2
     fi
     return

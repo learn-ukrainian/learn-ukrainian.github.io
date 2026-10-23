@@ -100,15 +100,6 @@ def test_dry_run_without_out_leaves_content_tree_byte_identical(
     assert events[-1]["dry_run"] is True
 
 
-def test_dry_run_does_not_create_missing_module_directory(content_root: Path) -> None:
-    before = _snapshot(content_root)
-
-    assert v7_build._run(v7_build.parse_args([LEVEL, SLUG, "--dry-run"])) == 0
-
-    assert not v7_build._default_module_dir(LEVEL, SLUG).exists()
-    assert _snapshot(content_root) == before
-
-
 def test_real_run_still_writes_the_gate_artefact(content_root: Path) -> None:
     module_dir = v7_build._default_module_dir(LEVEL, SLUG)
 

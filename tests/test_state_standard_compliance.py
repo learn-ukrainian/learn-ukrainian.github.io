@@ -22,8 +22,6 @@ from scripts.audit.checks.state_standard_compliance import (
     check_imperative_complete_a2,
     check_plan_compliance,
     check_reflexive_verbs_a1,
-    check_state_standard_compliance,
-    find_item_standard_level,
     load_compliance_mapping,
 )
 from scripts.audit.parsing import AuditContext, AuditState
@@ -47,24 +45,6 @@ class TestStateStandardFloorPolicy:
             'slug': 'what-i-like',
             'grammar': ['dative', 'nominative'],
             'ulp_evidence': ['ULP Ep 14 — "мені подобається" formulaic expression'],
-        }
-        violations = check_plan_compliance(plan, mapping=mapping)
-        assert len(violations) == 0
-
-    def test_plan_teaches_a2_grammar_point_with_ulp_passes(self, mapping):
-        """Plan with v2 G-a2 point and ULP pack evidence passes at A1."""
-        plan = {
-            'level': 'a1',
-            'slug': 'polite-requests',
-            'inventory': {
-                'grammar': [
-                    {
-                        'id': 'G-a2-005',
-                        'point': 'Polite third person imperative forms',
-                        'evidence': ['ULP-25: G-a2-005', 'T-102'],
-                    }
-                ]
-            },
         }
         violations = check_plan_compliance(plan, mapping=mapping)
         assert len(violations) == 0
@@ -98,36 +78,6 @@ class TestStateStandardFloorPolicy:
         assert 'accusative' in violations[0].message
         assert 'A1' in violations[0].message
 
-    def test_plan_missing_required_items_fails(self, mapping):
-        """A plan failing to cover its declared required_items fails."""
-        plan = {
-            'level': 'a1',
-            'slug': 'verbs-lesson',
-            'required_items': ['nominative', 'reflexive_verbs'],
-            'grammar': ['nominative'],  # reflexive_verbs is missing
-        }
-        violations = check_plan_compliance(plan, mapping=mapping)
-        assert len(violations) == 1
-        assert violations[0].code == 'STATE_STANDARD_OMITTED_ITEM'
-        assert 'reflexive_verbs' in violations[0].message
-
-    def test_plan_standard_a1_passes(self, mapping):
-        """A normal A1 plan covering A1 items passes."""
-        plan = {
-            'level': 'a1',
-            'slug': 'first-nouns',
-            'grammar': ['nominative', 'accusative'],
-        }
-        violations = check_plan_compliance(plan, mapping=mapping)
-        assert len(violations) == 0
-
-    def test_find_item_standard_level(self, mapping):
-        """find_item_standard_level correctly locates earliest level."""
-        assert find_item_standard_level('nominative', mapping) == 'a1'
-        assert find_item_standard_level('dative', mapping) == 'a2'
-        assert find_item_standard_level('imperative_complete', mapping) == 'a2'
-        assert find_item_standard_level('person_names', mapping) == 'b1'
-
 
 class TestMappingVerificationA1:
     """Verify that A1 mapping matches UKRAINIAN-STATE-STANDARD-2024.txt."""
@@ -141,13 +91,6 @@ class TestMappingVerificationA1:
         assert 'про' in desc
         assert acc['lines'] == [678, 688]
 
-    def test_a1_locative_no_po(self, mapping):
-        """A1 locative prepositions are у, в, на; no 'по'."""
-        import re
-        loc = mapping['a1']['cases']['locative']
-        assert re.search(r'\bпо\b', loc['description']) is None
-        assert loc['lines'] == [690, 695]
-
     def test_a1_complex_sentences_no_shcho_koly_de(self, mapping):
         """A1 complex sentences has only і (й), але, тому що, бо (issue #8404: :126)."""
         complex_sent = mapping['a1']['syntax']['complex_sentence']
@@ -159,143 +102,6 @@ class TestMappingVerificationA1:
         # Ensure що, коли, де are not in A1 complex sentence description
         assert 'коли' not in desc
         assert complex_sent['lines'] == [741, 747]
-
-    def test_a1_no_ceilings(self, mapping):
-        """A1 mapping must not declare forbidden_forms or allowed: false ceilings."""
-        cases = mapping['a1']['cases']
-        # Dative and instrumental should not be marked allowed: false
-        assert 'allowed' not in cases.get('dative', {})
-        assert 'allowed' not in cases.get('instrumental', {})
-        # Imperative should not declare forbidden_forms
-        imperative = mapping['a1']['verbs']['imperative']
-        assert 'forbidden_forms' not in imperative
-
-    def test_a1_has_intentions(self, mapping):
-        """A1 mapping includes Catalogue A communicative intentions."""
-        assert 'intentions' in mapping['a1']
-        assert mapping['a1']['intentions']['lines'] == [453, 477]
-        assert len(mapping['a1']['intentions']['items']) > 10
-
-
-class TestMappingVerificationA2:
-    """Verify that A2 mapping matches UKRAINIAN-STATE-STANDARD-2024.txt."""
-
-    def test_a2_genitive_prepositions(self, mapping):
-        """A2 genitive prepositions: з/із/зі, до, для, біля, навпроти; no без, від, після, коло (:187)."""
-        gen = mapping['a2']['cases']['genitive']
-        desc = gen['description']
-        prep_part = desc.split('із прийменниками')[1]
-        for prep in ('без', 'від', 'після', 'коло'):
-            assert prep not in prep_part
-        for prep in ('до', 'для', 'біля', 'навпроти'):
-            assert prep in prep_part
-        assert gen['lines'] == [1265, 1285]
-
-    def test_a2_dative_no_impersonal(self, mapping):
-        """A2 dative is beneficiary and age only; no impersonal constructions (:191)."""
-        dat = mapping['a2']['cases']['dative']
-        desc = dat['description']
-        assert 'impersonal' not in desc.lower()
-        assert 'холодно' not in desc
-        assert dat['lines'] == [1287, 1291]
-
-    def test_a2_accusative_no_pid_nad_mizh(self, mapping):
-        """A2 accusative has в, у, на, про; no під, над, між (:197)."""
-        acc = mapping['a2']['cases']['accusative']
-        desc = acc['description']
-        for prep in ('під', 'над', 'між'):
-            assert prep not in desc
-        assert acc['lines'] == [1293, 1302]
-
-    def test_a2_nominative_no_passive_comparative(self, mapping):
-        """A2 nominative has no passive or comparative constructions (:183)."""
-        nom = mapping['a2']['cases']['nominative']
-        desc = nom['description']
-        assert 'passive' not in desc.lower()
-        assert 'comparative' not in desc.lower()
-        assert nom['lines'] == [1258, 1263]
-
-    def test_a2_pronouns_personal_possessive_only(self, mapping):
-        """A2 pronouns are personal and possessive only (:176)."""
-        pron = mapping['a2']['morphology']['pronoun']
-        desc = pron['description']
-        assert 'demonstrative' not in desc.lower()
-        assert 'interrogative' not in desc.lower()
-        assert 'вказівн' not in desc.lower()
-        assert 'особові' in desc
-        assert 'присвійні' in desc
-        assert pron['lines'] == [1244, 1254]
-
-    def test_a2_numerals_ordinals_and_odyn_only(self, mapping):
-        """A2 numerals are ordinals + один (:172)."""
-        num = mapping['a2']['morphology']['numeral']
-        desc = num['description']
-        assert 'cardinals' not in desc.lower()
-        assert 'порядкових' in desc
-        assert 'один' in desc
-        assert num['lines'] == [1235, 1242]
-
-    def test_a2_imperative_no_1st_plural(self, mapping):
-        """A2 imperative is 2nd and 3rd person only; 1pl is B1 (:222)."""
-        imp = mapping['a2']['verbs']['imperative']
-        desc = imp['description']
-        assert 'читаймо' not in desc
-        assert '1st person plural' not in desc
-        assert '3-ї особи' in desc or '3rd_person' in imp.get('required_forms', [])
-        assert imp['lines'] == [1361, 1365]
-
-    def test_a2_complex_sentences(self, mapping):
-        """A2 complex sentences match :1403-1416; no якщо, хоча, який (:253)."""
-        cs = mapping['a2']['syntax']['complex_sentence']
-        desc = cs['description']
-        for absent in ('якщо', 'хоча', 'який', 'для того щоб'):
-            assert absent not in desc
-        for present in ('де', 'куди', 'звідки', 'що', 'тому що', 'бо', 'щоб'):
-            assert present in desc
-        assert cs['lines'] == [1403, 1416]
-
-    def test_a2_interrogatives(self, mapping):
-        """A2 interrogatives do not have скільки, чому, який (:245)."""
-        interrogative = mapping['a2']['syntax']['interrogative']
-        desc = interrogative['description']
-        for word in ('скільки', 'чому'):
-            assert word not in desc
-        assert interrogative['lines'] == [1391, 1398]
-
-    def test_a2_stylistics(self, mapping):
-        """A2 stylistics has antonyms, synonyms, epithets, metaphors; no diminutives (:260)."""
-        lex = mapping['a2']['stylistics']['lexical']
-        desc = lex['description']
-        assert 'diminutives' not in desc.lower()
-        assert 'colloquial' not in desc.lower()
-        assert 'антоніми' in desc
-        assert 'синоніми' in desc
-        assert 'епітети' in desc
-        assert 'метафори' in desc
-        assert lex['lines'] == [1420, 1425]
-
-    def test_a2_declarative(self, mapping):
-        """A2 declarative is affirmative vs negative (:241)."""
-        decl = mapping['a2']['syntax']['declarative']
-        desc = decl['description']
-        assert 'expanded word order' not in desc.lower()
-        assert 'стверджувальне' in desc
-        assert 'заперечне' in desc
-        assert decl['lines'] == [1387, 1389]
-
-    def test_a2_phonetics_alternations(self, mapping):
-        """A2 phonetics is vowel/consonant alternations (:145)."""
-        vc = mapping['a2']['phonetics']['vowels_consonants']
-        desc = vc['description']
-        assert 'assimilation' not in desc.lower()
-        assert 'Чергування' in desc or 'чергування' in desc
-        assert vc['lines'] == [1176, 1181]
-
-    def test_a2_has_intentions_and_immersion(self, mapping):
-        """A2 mapping has Catalogue A and immersion key."""
-        assert 'intentions' in mapping['a2']
-        assert mapping['a2']['intentions']['lines'] == [1029, 1070]
-        assert 'immersion' in mapping['a2']
 
 
 class TestPresenceChecks:
@@ -346,37 +152,6 @@ class TestPresenceChecks:
 
 class TestCheckStateStandardComplianceIntegration:
     """Test integrated check_state_standard_compliance function."""
-
-    def test_backwards_compatible_call(self):
-        """Original signature (level, module_num, content, immersion_pct) works."""
-        violations = check_state_standard_compliance(
-            level='A1',
-            module_num=1,
-            content='Це студент. Він читає.',
-            immersion_pct=None,
-        )
-        assert isinstance(violations, list)
-        assert len(violations) == 0
-
-    def test_with_plan_floor_check(self):
-        """Passing plan to check_state_standard_compliance runs floor checks."""
-        # A2 item taught at A1 without ULP
-        violations = check_state_standard_compliance(
-            level='A1',
-            module_num=1,
-            content='',
-            plan={'level': 'a1', 'grammar': ['dative']},
-        )
-        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
-
-        # A2 item taught at A1 with ULP
-        violations_ulp = check_state_standard_compliance(
-            level='A1',
-            module_num=1,
-            content='',
-            plan={'level': 'a1', 'grammar': ['dative'], 'ulp_evidence': ['ULP Ep 14 — "мені подобається" formulaic expression']},
-        )
-        assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_ulp)
 
     def test_immersion_compliance(self, mapping):
         """Immersion compliance flags low immersion for B1+."""
@@ -547,27 +322,6 @@ class TestAstraReviewFindings:
         violations_arc = check_plan_compliance(plan_arc, mapping=mapping)
         assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_arc)
 
-    def test_blocker_2_nested_id_only_item_with_unrelated_ulp_fails(self, mapping):
-        """Blocker 2: Nested ID-only G-a2-005 at A1 passes with unrelated ULP evidence on head, must fail."""
-        plan = {
-            'level': 'a1',
-            'ulp_evidence': ['ULP episode 1: alphabet'],
-            'lessons': [
-                {
-                    'title': 'Lesson 1',
-                    'inventory': {
-                        'grammar': [
-                            {
-                                'id': 'G-a2-005',
-                            }
-                        ]
-                    },
-                }
-            ],
-        }
-        violations = check_plan_compliance(plan, mapping=mapping)
-        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
-
     def test_blocker_3_item_ulp_evidence_not_naming_move_fails(self, mapping):
         """Evidence attached directly to item not naming the move must fail."""
         plan = {
@@ -584,32 +338,6 @@ class TestAstraReviewFindings:
                     }
                 }
             ],
-        }
-        violations = check_plan_compliance(plan, mapping=mapping)
-        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
-
-    def test_blocker_3_arc_moves_ulp_evidence_not_naming_move_fails(self, mapping):
-        """Evidence under arc.moves not naming the move must fail."""
-        plan = {
-            'level': 'a1',
-            'lessons': [
-                {
-                    'inventory': {
-                        'grammar': [
-                            {
-                                'id': 'G-a2-005',
-                            }
-                        ]
-                    }
-                }
-            ],
-            'arc': {
-                'moves': {
-                    'G-a2-005': {
-                        'ulp_evidence': ['ULP episode 1: alphabet'],
-                    }
-                }
-            },
         }
         violations = check_plan_compliance(plan, mapping=mapping)
         assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)

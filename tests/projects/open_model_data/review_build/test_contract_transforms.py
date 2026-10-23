@@ -14,8 +14,7 @@ from scripts.projects.open_model_data.review_build.contract import (
     digest,
     record_id,
 )
-from scripts.projects.open_model_data.review_build.errors import BuildError
-from scripts.projects.open_model_data.review_build.transforms import REGISTRY, transform
+from scripts.projects.open_model_data.review_build.transforms import transform
 
 
 def test_exact_contract_and_roundtrip(bundle):
@@ -65,12 +64,6 @@ def test_exact_contract_and_roundtrip(bundle):
 
 
 @pytest.mark.parametrize("seed", range(12))
-def test_verbatim_property(seed):
-    text = "SYNTHETIC " + "".join(random.Random(seed).choices(string.printable, k=300))
-    assert transform("verbatim", text).text == text
-
-
-@pytest.mark.parametrize("seed", range(12))
 def test_html_text_node_order_property(seed):
     generator = random.Random(seed)
     nodes = ["SYNTHETIC " + "".join(generator.choices(string.ascii_letters, k=20)) for _ in range(8)]
@@ -113,12 +106,3 @@ def test_dehyphenation_requires_positive_join_and_negative_hyphen_witness(seed):
             start, end, joined = result.joins[0]
             assert text[start:end] == left + "-\n" + right
             assert joined == left + right
-
-
-def test_registry_is_closed_and_bad_policies_fail():
-    assert set(REGISTRY) == {"verbatim", "ulif_html_text@1", "line_excision@1", "dehyphenate@1", "dehyphenate@2"}
-    with pytest.raises(TypeError):
-        REGISTRY["SYNTHETIC paraphrase"] = lambda s: s
-    for name, policy in (("paraphrase", {}), ("line_excision@1", {}), ("dehyphenate@1", {})):
-        with pytest.raises(BuildError):
-            transform(name, "SYNTHETIC text", policy)

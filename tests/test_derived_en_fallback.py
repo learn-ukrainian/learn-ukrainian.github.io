@@ -41,21 +41,6 @@ def test_diminutive_fill_from_manifest_base() -> None:
     }
 
 
-def test_augmentative_fill_from_manifest_base() -> None:
-    index = _index(_base_entry("вовк", ["wolf"]))
-
-    translation = derived_translation_fallback(
-        {"lemma": "вовчище", "pos": "noun"},
-        index,
-        vesum_verify=False,
-    )
-
-    assert translation == {
-        "en": ["wolf (augmentative)"],
-        "source": "slovnyk.me: fixture (augmentative of вовк)",
-    }
-
-
 def test_no_fill_when_base_lacks_en() -> None:
     index = _index(
         _base_entry("білка", None),

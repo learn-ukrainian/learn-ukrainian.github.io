@@ -12,7 +12,6 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter
-from agent_runtime.tool_calls import summarize_tool_output
 from tests.helpers.codex_exec_stream import THREAD_ID, command, completed_stream, mcp_call
 
 
@@ -256,13 +255,6 @@ def test_codex_adapter_maps_typed_mcp_items_to_tool_calls(tmp_path: Path) -> Non
     assert search["result"] == [{"type": "text", "text": "Found 1 result"}]
     assert search["output_summary"] == '[{"text": "Found 1 result", "type": "text"}]'
     assert failed["status"] == "failed" and failed["output_summary"] == "server unavailable"
-
-
-def test_tool_call_output_summary_truncation() -> None:
-    summary = summarize_tool_output("x" * 10_000)
-
-    assert len(summary) == 500
-    assert summary.endswith("[...truncated]")
 
 
 def test_tool_call_arguments_are_bounded(tmp_path: Path) -> None:

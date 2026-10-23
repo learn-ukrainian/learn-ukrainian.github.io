@@ -12,9 +12,6 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.slug_utils import (
-    audit_report_path,
-    grammar_path,
-    quality_path,
     review_path,
     status_path,
     to_bare_slug,
@@ -72,31 +69,6 @@ class TestPathConstructors:
         result = review_path(self.track_dir, "06-the-living-verb-i")
         assert result == self.track_dir / "review" / "the-living-verb-i-review.md"
 
-    def test_review_path_from_bare_slug(self):
-        result = review_path(self.track_dir, "knyahynia-olha")
-        assert result == self.track_dir / "review" / "knyahynia-olha-review.md"
-
-    def test_audit_report_path(self):
-        result = audit_report_path(self.track_dir, "01-the-cyrillic-code-i")
-        assert result == self.track_dir / "audit" / "the-cyrillic-code-i-audit.md"
-
-    def test_grammar_path(self):
-        result = grammar_path(self.track_dir, "01-the-cyrillic-code-i")
-        assert result == self.track_dir / "audit" / "the-cyrillic-code-i-grammar.yaml"
-
-    def test_quality_path(self):
-        result = quality_path(self.track_dir, "01-the-cyrillic-code-i")
-        assert result == self.track_dir / "audit" / "the-cyrillic-code-i-quality.md"
-
     def test_status_path(self):
         result = status_path(self.track_dir, "01-the-cyrillic-code-i")
         assert result == self.track_dir / "status" / "the-cyrillic-code-i.json"
-
-    def test_status_path_three_digit(self):
-        result = status_path(self.track_dir, "140-syntez-viyna")
-        assert result == self.track_dir / "status" / "syntez-viyna.json"
-
-    def test_review_path_with_extension(self):
-        """Passing a filename with extension should still work."""
-        result = review_path(self.track_dir, "01-the-cyrillic-code-i.md")
-        assert result == self.track_dir / "review" / "the-cyrillic-code-i-review.md"

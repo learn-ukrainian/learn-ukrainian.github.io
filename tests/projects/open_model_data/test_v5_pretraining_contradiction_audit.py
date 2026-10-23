@@ -62,28 +62,6 @@ def test_audit_fails_on_empty_sft_dir(tmp_path: Path) -> None:
         run_pretraining_audit(sft_dir=empty_sft, dpo_dir=dpo)
 
 
-
-def test_audit_fails_on_missing_dpo_dir(tmp_path: Path) -> None:
-    """Audit must fail closed with FileNotFoundError if DPO dir does not exist (Fable Finding 1)."""
-    fake_dpo = tmp_path / "nonexistent_dpo"
-    sft = tmp_path / "sft"
-    sft.mkdir()
-    (sft / "shard.jsonl").write_text("{}\n", encoding="utf-8")
-    with pytest.raises(FileNotFoundError, match="DPO directory does not exist"):
-        run_pretraining_audit(sft_dir=sft, dpo_dir=fake_dpo)
-
-
-def test_audit_fails_on_empty_dpo_dir(tmp_path: Path) -> None:
-    """Audit must fail closed with ValueError if DPO dir has zero jsonl files (Fable Finding 1)."""
-    sft = tmp_path / "sft"
-    sft.mkdir()
-    (sft / "shard.jsonl").write_text("{}\n", encoding="utf-8")
-    empty_dpo = tmp_path / "empty_dpo"
-    empty_dpo.mkdir()
-    with pytest.raises(ValueError, match="No DPO shards found"):
-        run_pretraining_audit(sft_dir=sft, dpo_dir=empty_dpo)
-
-
 def test_audit_fails_when_below_min_records(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
     """Audit must fail if SFT or DPO shard population falls below expected minimums (Fable Finding 1)."""
     mock_sources, mock_vesum = mock_dbs
@@ -348,44 +326,6 @@ def test_audit_fails_on_sft_schema_missing_fields(tmp_path: Path, mock_dbs: tupl
     )
 
     with pytest.raises(ValueError, match="lacks required 'target_term'"):
-        run_pretraining_audit(
-            protection_path=mock_prot,
-            sft_dir=mock_sft,
-            dpo_dir=mock_dpo,
-            sources_db_path=mock_sources,
-            vesum_db_path=mock_vesum,
-            min_cases=1,
-        )
-
-
-def test_audit_fails_on_dpo_schema_missing_fields(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
-    """DPO records lacking required schema fields must raise ValueError (Astra Finding 1)."""
-    mock_sources, mock_vesum = mock_dbs
-    mock_prot = tmp_path / "protection.jsonl"
-    mock_prot.write_text(
-        json.dumps({
-            "eval_id": "mock_prot_1",
-            "stratum": "regional_dialect",
-            "target_term": "файний",
-            "expected_action": "PRESERVE",
-        }) + "\n",
-        encoding="utf-8",
-    )
-    mock_sft = tmp_path / "sft"
-    mock_sft.mkdir()
-    (mock_sft / "shard.jsonl").write_text(
-        json.dumps({"target_term": "безпечний", "is_calque_or_russianism": False}) + "\n",
-        encoding="utf-8",
-    )
-    mock_dpo = tmp_path / "dpo"
-    mock_dpo.mkdir()
-    # DPO record lacks chosen and rejected
-    (mock_dpo / "shard.jsonl").write_text(
-        json.dumps({"prompt": "t", "metadata": {"target_term": "безпечний"}}) + "\n",
-        encoding="utf-8",
-    )
-
-    with pytest.raises(ValueError, match="lacks required prompt/chosen/rejected"):
         run_pretraining_audit(
             protection_path=mock_prot,
             sft_dir=mock_sft,

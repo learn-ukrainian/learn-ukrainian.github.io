@@ -489,7 +489,7 @@ def test_citation_module_skip_is_a_reported_outcome(tmp_path: Path) -> None:
     assert scratch_db.stat().st_size > 0
 
     citation = "tests/test_citation_resolution_invariant.py"
-    companion = "tests/test_scripts_import_root.py"
+    companion = "tests/test_test_source_cache.py"
     targets = [citation, companion]
     completed, outcomes = collect_with_absent_trees(
         targets,

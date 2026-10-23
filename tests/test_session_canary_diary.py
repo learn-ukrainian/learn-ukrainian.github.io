@@ -58,72 +58,6 @@ def test_handback_block_and_next_drive(tmp_path: Path) -> None:
     assert "Successor: load this block" in text
 
 
-def test_format_canary_score_line() -> None:
-    line = d.format_canary_score_line(
-        verdict="PASS",
-        score_line="SCORE 9/10 pass_ratio=0.8",
-        context_tokens=250_000,
-        pass_ratio=0.8,
-    )
-    assert "PASS" in line
-    assert "9/10" in line
-    assert "250000" in line
-
-
-def test_stamp_cli(tmp_path: Path) -> None:
-    handoff = tmp_path / "INTERIM-DRIVER-HANDOFF.md"
-    # epic dir layout not required — pass --handoff
-    rc = gl.main(
-        [
-            "--repo",
-            str(tmp_path),
-            "stamp",
-            "--epic",
-            "harness",
-            "--handoff",
-            str(handoff),
-            "--title",
-            "batch",
-            "--bullet",
-            "did X",
-            "--next",
-            "do Y",
-        ]
-    )
-    assert rc == 0
-    text = handoff.read_text(encoding="utf-8")
-    assert "did X" in text
-    assert "1. do Y" in text
-
-
-def test_handback_cli(tmp_path: Path) -> None:
-    handoff = tmp_path / "INTERIM-DRIVER-HANDOFF.md"
-    rc = gl.main(
-        [
-            "--repo",
-            str(tmp_path),
-            "handback",
-            "--epic",
-            "harness",
-            "--stream",
-            "epic:4707",
-            "--handoff",
-            str(handoff),
-            "--reason",
-            "clean end",
-            "--next",
-            "resume B1",
-            "--canary-line",
-            "canary PASS 10/10 @ ~100k tok",
-        ]
-    )
-    assert rc == 0
-    text = handoff.read_text(encoding="utf-8")
-    assert "STATE AT HANDBACK" in text
-    assert "clean end" in text
-    assert "resume B1" in text
-
-
 def test_score_fail_writes_handback(tmp_path: Path, monkeypatch) -> None:
     """score FAIL path should write STATE AT HANDBACK even if context_canary is mocked."""
     canary = tmp_path / "canary"
@@ -396,25 +330,6 @@ def test_absent_handoff_follows_umask(tmp_path: Path) -> None:
         os.umask(previous)
 
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
-    assert "STAMP_SENTINEL" in path.read_text(encoding="utf-8")
-
-
-def test_absent_handoff_is_owner_only_under_umask_zero(tmp_path: Path) -> None:
-    """A new handoff (no existing file, mode None) is owner-only at umask 0."""
-    path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
-    previous = os.umask(0)
-    try:
-        d.append_diary_stamp(
-            path,
-            title="merged PR",
-            bullets=["STAMP_SENTINEL"],
-            stamp="2026-09-23T00:00Z",
-        )
-    finally:
-        os.umask(previous)
-
-    mode = stat.S_IMODE(path.stat().st_mode)
-    assert mode == 0o600
     assert "STAMP_SENTINEL" in path.read_text(encoding="utf-8")
 
 

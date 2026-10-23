@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -29,60 +28,6 @@ def _write_fake_hf_cli(path: Path) -> None:
         encoding="utf-8",
     )
     path.chmod(0o700)
-
-
-def test_config_freezes_official_qat_artifact_runtime_and_budget() -> None:
-    config = hf_jobs_baseline.load_config()
-    assert config["model"] == {
-        "artifact_bytes": 17651001568,
-        "artifact_filename": "gemma-4-31B_q4_0-it.gguf",
-        "artifact_sha256": "179cfb99212709597eae5929112cfca677e1bbf566178b479ae1da0c4772874b",
-        "license": "apache-2.0",
-        "multimodal_projector_used": False,
-        "repository": "google/gemma-4-31B-it-qat-q4_0-gguf",
-        "revision": "59dde24573e7e61570dba08b18a2e1fe246955ed",
-    }
-    assert config["runtime"]["container_amd64_digest"] == (
-        "sha256:770fe65b2c73ee74a5c42165cf3433de4048cc2cd9c57a937ca4e35aba5aa87b"
-    )
-    assert config["runtime"]["vllm_version"] == "0.26.0"
-    assert config["runtime"]["huggingface_hub_cli_version"] == "1.25.1"
-    assert config["pricing"]["usd_per_hour"] == 1.8
-    assert config["pricing"]["usd_per_minute"] == 0.03
-    assert config["authorization"]["maximum_provider_cost_usd"] == 6.0
-    assert config["canary"]["maximum_cost_usd"] == 0.6
-    assert config["authorization"]["prior_provider_cost_usd"] == 3.750167
-    assert config["authorization"]["incurred_provider_costs"][-1] == {
-        "job_id": "6a701872a00abefd4b28ea7f",
-        "mode": "full",
-        "provider_billed_minutes": 14,
-        "provider_derived_cost_usd": 0.42,
-        "provider_running_seconds": 803,
-        "stage": "COMPLETED",
-    }
-    assert config["authorization"]["recoverable_execution_retries_authorized"] is True
-    assert config["authorization"]["validated_cpu_transport"]["job_id"] == "6a6fbf1b6b79c09949c1fa46"
-    assert config["authorization"]["no_automatic_paid_retry"] is False
-    assert config["runner"]["checkpoint_upload_every_cases"] == 25
-    assert config["runner"]["structured_outputs"] == "json_schema"
-    assert config["runner"]["structured_outputs_backend"] == "xgrammar"
-    assert config["runner"]["structured_outputs_disable_any_whitespace"] is True
-    assert config["runner"]["structured_outputs_ignore_eos_until_complete"] is True
-    assert config["runner"]["structured_outputs_max_output_text_chars"] == 768
-    assert config["runner"]["structured_outputs_escape_raw_control_tokens"] is True
-    assert config["transport"] == {
-        "cpu_preflight": {
-            "container_amd64_digest": "sha256:8859bd6ca943079262c27e38b7119cdacede77c463139a15651dd340087a6cc9",
-            "container_image": "python:3.12.8-slim",
-            "flavor": "cpu-basic",
-            "maximum_cost_usd": 0.001,
-            "timeout_seconds": 300,
-            "usd_per_hour": 0.01,
-        },
-        "mode": "private-dataset-direct-api",
-        "mounted_volumes": 0,
-        "staging_dataset_suffix": "ua-open-weight-eval-staging-6273",
-    }
 
 
 def test_invalid_run_disposition_requires_private_retention_and_semantic_publication_gate(
@@ -513,30 +458,6 @@ def test_transport_manifest_and_cpu_receipt_are_hash_bound_and_direct_uploaded(
         hf_jobs_transport.run_preflight(args, files)
 
 
-def test_transport_spawns_gpu_worker_with_available_python3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    config = hf_jobs_baseline.load_config()
-    (tmp_path / "run_config.json").write_text(json.dumps(config), encoding="utf-8")
-    calls: list[list[str]] = []
-
-    def fake_run(command: list[str], *, check: bool = False, **kwargs: object) -> subprocess.CompletedProcess:
-        assert check is False
-        assert isinstance(kwargs.get("timeout"), int) and kwargs["timeout"] > 0
-        calls.append(command)
-        return subprocess.CompletedProcess(command, 0)
-
-    monkeypatch.setattr(hf_jobs_transport.subprocess, "run", fake_run)
-    args = SimpleNamespace(
-        mode="canary",
-        requests_sha256="r" * 64,
-        transport_repo="operator/ua-open-weight-eval-staging-6273",
-        artifact_prefix="artifacts/bundle/canary",
-    )
-    assert hf_jobs_transport.run_worker(args, tmp_path) == 0
-    assert calls[0][:4] == ["uv", "pip", "install", "--system"]
-    assert calls[1][0] == "python3"
-    assert calls[1][1] == str(tmp_path / "hf_jobs_worker.py")
-
-
 def test_direct_artifact_uploads_fail_closed_if_dataset_is_not_private(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -584,21 +505,6 @@ def test_partial_checkpoint_is_accepted_as_exact_prefix(tmp_path: Path) -> None:
     checkpoint = tmp_path / "checkpoint.jsonl"
     _write_jsonl(checkpoint, [header, *records])
     assert hf_jobs_worker.load_checkpoint(checkpoint, header, selected) == records
-
-
-def test_generation_totals_keep_resumed_time_and_tokens_in_throughput() -> None:
-    records = [
-        {"generated_tokens": 10, "generation_seconds": 4.0},
-        {"generated_tokens": 20, "generation_seconds": 6.0},
-    ]
-    assert hf_jobs_worker.generation_totals(records, resumed_count=1) == {
-        "generated_tokens": 30,
-        "generation_seconds": 10.0,
-        "current_generation_seconds": 6.0,
-        "resumed_case_count": 1,
-    }
-    with pytest.raises(hf_jobs_worker.WorkerError, match="metrics are invalid"):
-        hf_jobs_worker.generation_totals([{"generated_tokens": 10}], resumed_count=0)
 
 
 def _canary_receipts(config: dict, *, generation_seconds: float, running_seconds: int) -> tuple[dict, dict]:

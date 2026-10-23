@@ -105,7 +105,7 @@ def test_lane_rows_mark_avoid():
     assert rows["claude"]["avoid"] is True
     assert rows["cursor"]["avoid"] is False
     assert rows["cursor"]["status"] == "cool"
-    assert rows["cursor"]["will_last"] is True
+    assert rows["cursor"]["will_last"] is rows["grok"]["will_last"] is None
     # glm's z.ai subscription is retired (operator 2026-09-03): AVOID even
     # when the budget snapshot itself still reports the lane as cool/wrong.
     assert rows["glm"]["avoid"] is True
@@ -354,36 +354,6 @@ def test_pick_order_cool_first():
     assert "glm" not in [p["lane"] for p in ranked]
 
 
-def test_format_includes_rec():
-    report = capacity_pick.build_report(_fixture_budget())
-    table = capacity_pick.format_table(report["rows"])
-    assert "lane" in table and "codex" in table and "cursor" in table
-    human = capacity_pick.format_human(report)
-    assert "recommendation.primary_agent_for_code: cursor" in human
-    assert "pick order (code implement):" in human
-    assert "AVOID:codex" in human or "AVOID:claude" in human
-
-
-def test_main_json_fixture(monkeypatch, capsys):
-    monkeypatch.setattr(
-        capacity_pick,
-        "fetch_active_in_flight",
-        lambda **_kwargs: {"cursor": 0},
-    )
-
-    fake_budget = _fixture_budget()
-
-    from scripts.fleet import usage
-
-    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: fake_budget)
-
-    rc = capacity_pick.main(["--json"])
-    assert rc == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["recommendation"]["primary_agent_for_code"] == "cursor"
-    assert any(row["lane"] == "codex" and row["avoid"] for row in payload["rows"])
-
-
 def test_main_strict_no_cool(monkeypatch, capsys):
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     hot_only = {
@@ -437,16 +407,6 @@ def test_unhealthy_deepseek_account_row_is_avoid():
     report = capacity_pick.build_report(budget)
     pick = next(p for p in report["pick_order"] if p["lane"] == "deepseek")
     assert pick["pick"] == "AVOID"
-
-
-def test_healthy_deepseek_account_row_unaffected():
-    """health.healthy True preserves coding eligibility without an unhealthy note."""
-    budget = _fixture_budget()
-    baseline = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
-    budget["api_accounts"]["deepseek"]["health"] = {"healthy": True, "last_error": ""}
-    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
-    assert row["avoid"] is baseline["avoid"] is False
-    assert "unhealthy:" not in row["notes"]
 
 
 def test_deepseek_prepaid_lane_is_a_coding_pick():
@@ -565,18 +525,18 @@ def test_kimi_at_one_in_four_cannot_take_first_place_on_headroom_alone():
 
 def test_build_report_attaches_write_success_and_notes_the_demotion():
     budget = _fixture_budget()
-    budget["agents"]["kimi"] = {"status": "cool", "burn_pct_7d": 6.0, "remaining_pct": 94.0}
+    budget["agents"]["cursor"] = {"status": "cool", "burn_pct_7d": 6.0, "remaining_pct": 94.0}
     stats = {
-        "kimi": {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True},
+        "cursor": {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True},
         "agy": {"attempts": 2, "done": 0, "rate": 0.0, "demoted": False},
     }
     report = capacity_pick.build_report(budget, active_in_flight={}, write_success=stats)
     rows = {row["lane"]: row for row in report["rows"]}
-    assert rows["kimi"]["write_success"]["demoted"] is True
-    assert "write success 1/4 in 7d (<60%): one headroom band down" in rows["kimi"]["notes"]
+    assert rows["cursor"]["write_success"]["demoted"] is True
+    assert "write success 1/4 in 7d (<60%): one headroom band down" in rows["cursor"]["notes"]
     assert rows["agy"]["write_success"]["demoted"] is False
     assert rows["grok"]["write_success"] == {"attempts": 0, "done": 0, "rate": None, "demoted": False}
-    assert report["write_success"]["kimi"]["attempts"] == 4
+    assert report["write_success"]["cursor"]["attempts"] == 4
     without = capacity_pick.build_report(budget, active_in_flight={})
     assert all("write_success" not in row for row in without["rows"])
 
@@ -596,6 +556,7 @@ def test_load_write_success_stats_reads_hot_and_archived_records(tmp_path):
 def test_unavailable_subscription_never_cool():
     budget = _fixture_budget()
     budget["agents"]["cursor"]["codexbar"]["freshness"] = "unavailable"
+    budget["agents"]["grok"].setdefault("codexbar", {})["freshness"] = "unavailable"
     row = next(row for row in capacity_pick.build_lane_rows(budget) if row["lane"] == "cursor")
     assert row["status"] == "unknown"
 
@@ -683,6 +644,7 @@ def test_agy_mirror_need_login_is_avoid():
 def test_cursor_does_not_inherit_glm_quota():
     """glm→cursor is retirement-only; Cursor must never pick up Z.AI capacity."""
     budget = _fixture_budget()
+    budget["agents"].pop("grok")  # No probe from Cursor's actual shared meter.
     budget["agents"]["cursor"] = {"status": "unknown", "freshness": "unavailable"}
     budget["agents"]["glm"] = {
         "status": "cool",

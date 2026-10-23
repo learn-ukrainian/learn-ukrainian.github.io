@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import ast
 import builtins
-import json
 import sqlite3
 from contextlib import closing
 from pathlib import Path
@@ -112,22 +111,6 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
         with pytest.raises(sqlite3.DatabaseError):
             connection.execute("ATTACH DATABASE ':memory:' AS attached")
     assert db.read_bytes() == before
-
-
-def test_dashboard_broker_constructor_reference_is_migrated():
-    """Broker reads stay on MonitorContext; the connection annotation is not a constructor."""
-    reader = "scripts/api/dashboard_comms.py"
-    assert reader not in READERS
-    tree = ast.parse((ROOT / reader).read_text())
-    assert not any(
-        isinstance(node, ast.Attribute)
-        and isinstance(node.value, ast.Name)
-        and node.value.id == "sqlite3"
-        and node.attr == "Connection"
-        for node in ast.walk(tree)
-    )
-    manifest = json.loads((ROOT / "scripts/hygiene/sqlite_reference_allowlist.json").read_text())
-    assert [entry for entry in manifest if entry["path"] == reader] == []
 
 
 def test_dashboard_broker_routes_through_monitor_context(tmp_path):

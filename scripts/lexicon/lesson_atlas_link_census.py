@@ -194,17 +194,6 @@ def blocking_atlas_hrefs(docs_root: Path, catalog: PublishedCatalog) -> list[Lin
     ]
 
 
-def mask_atlas_href_fields(text: str) -> str:
-    """Drop ``atlas_href`` JSON fields so a regen diff can ignore link edits.
-
-    Value changes, added fields, and removed fields all disappear. Any other
-    character change remains.
-    """
-    stripped = _ATLAS_FIELD_WITH_FOLLOWING_COMMA.sub("", text)
-    stripped = _ATLAS_FIELD_WITH_PRECEDING_COMMA.sub("", stripped)
-    return _ATLAS_FIELD.sub("", stripped)
-
-
 def _counts(hits: list[LinkHit]) -> dict[str, int]:
     counts = {name: 0 for name in CLASSES}
     for hit in hits:

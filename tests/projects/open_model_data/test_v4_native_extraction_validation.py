@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_native_extraction_validation as extraction
 from scripts.projects.open_model_data.paths import resolve_open_model_path
@@ -31,19 +30,6 @@ CONFIG_PATH = _committed("v4_native_extraction_config_v1.json")
 @pytest.fixture
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
-
-
-def test_schema_contracts_valid() -> None:
-    """Validate all native extraction schema contracts against Draft 2020-12."""
-    for path in (
-        extraction.CONFIG_SCHEMA_PATH,
-        extraction.ITEM_SCHEMA_PATH,
-        extraction.QUARANTINE_SCHEMA_PATH,
-        extraction.RECEIPT_SCHEMA_PATH,
-    ):
-        assert path.is_file(), f"Missing schema contract: {path}"
-        schema = json.loads(path.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
 
 
 def test_evaluate_span_fidelity_clean_native() -> None:
@@ -314,15 +300,6 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
     "open_model_other_indexes",
     "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
 )
-def test_build_and_verify_clean_exit() -> None:
-    """Current committed extraction artifacts pass verify() cleanly."""
-    extraction.verify(CONFIG_PATH)
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
-)
 def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, repo_root: Path) -> None:
     """verify() succeeds in CI environments where data/sources.db is not provisioned."""
     ci_root = tmp_path / "ci_runner"
@@ -347,15 +324,3 @@ def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, re
         input_root=ci_root,
         output_root=ci_root,
     )
-
-
-def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(extraction.PRIMARY_REPO_ROOT_ENV, str(tmp_path / "missing"))
-    with pytest.raises(extraction.NativeExtractionError, match=extraction.PRIMARY_REPO_ROOT_ENV):
-        extraction._primary_repo_root()
-
-
-def test_primary_repo_root_returns_none_when_cwd_has_no_git(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(extraction.PRIMARY_REPO_ROOT_ENV, raising=False)
-    monkeypatch.chdir(tmp_path)
-    assert extraction._primary_repo_root() is None

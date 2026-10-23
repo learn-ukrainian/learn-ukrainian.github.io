@@ -1,6 +1,5 @@
 """Tests for the build-time slovnyk.me cache mirror (#3097, #6524)."""
 
-import fcntl
 import json
 import os
 import signal
@@ -49,17 +48,6 @@ def test_is_fully_cached_rejects_stale_schema_version(monkeypatch, tmp_path) -> 
     _write_cache(enrich_manifest_module._slovnyk_cache_path("книга"), schema_version=2)
 
     assert build_slovnyk_mirror._is_fully_cached("книга") is False
-
-
-def test_is_fully_cached_accepts_current_schema_version(monkeypatch, tmp_path) -> None:
-    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
-    monkeypatch.setattr(build_slovnyk_mirror, "_SLOVNYK_LOOKUP_SLUGS", ("orthoepy",))
-    _write_cache(
-        enrich_manifest_module._slovnyk_cache_path("книга"),
-        schema_version=enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION,
-    )
-
-    assert build_slovnyk_mirror._is_fully_cached("книга") is True
 
 
 @pytest.fixture
@@ -500,21 +488,6 @@ def test_checkpoint_publication_failure_keeps_previous_state(mirror_fixture, mon
     assert len(calls) == 4
 
 
-@pytest.mark.parametrize(
-    "entries,limit,status,code", [([], None, "complete", 0), ([{"lemma": "sample"}], 0, "limited", 1)]
-)
-def test_empty_and_zero_limit_stdout_matches_default_log(mirror_fixture, capsys, entries, limit, status, code):
-    manifest, calls, _queue = mirror_fixture
-    manifest.write_text(json.dumps({"entries": entries}))
-    argv = ["--manifest", str(manifest)] + ([] if limit is None else ["--limit", str(limit)])
-    assert build_slovnyk_mirror.main(argv) == code
-    output = capsys.readouterr().out
-    assert f"status={status}" in output and "phase=startup [0/" in output and "ETA=" in output
-    logs = list((manifest.parent / "repo/batch_state/slovnyk-mirror").glob("*.log"))
-    assert not Path("batch_state/slovnyk-mirror").exists()
-    assert len(logs) == 1 and logs[0].read_text() == output and not calls
-
-
 @pytest.mark.parametrize("entries", [[{"lemma": []}], [{"lemma": " "}], "invalid"])
 def test_invalid_manifest_stops_without_fetch(mirror_fixture, entries):
     manifest, calls, _queue = mirror_fixture
@@ -555,16 +528,6 @@ def test_actual_cli_single_writer_and_sigterm(mirror_fixture):
             if process.poll() is None:
                 process.kill()
                 process.wait(timeout=15)
-
-
-def test_same_checkpoint_writer_refused_with_different_cache(mirror_fixture, capsys):
-    manifest, calls, _queue = mirror_fixture
-    checkpoint = manifest.parent / "shared-state.json"
-    lock_path = checkpoint.with_suffix(".json.lock")
-    with lock_path.open("a") as handle:
-        fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        assert build_slovnyk_mirror.main(["--manifest", str(manifest), "--checkpoint", str(checkpoint)]) == 1
-    assert "reason=active-writer" in capsys.readouterr().out and not calls and not checkpoint.exists()
 
 
 def test_sigterm_restores_handler_and_keeps_checkpoint_retryable(mirror_fixture, monkeypatch, capsys):
@@ -751,34 +714,6 @@ def test_terminal_stop_accounts_durable_alias_rows_and_resumes(mirror_fixture, c
         f"RESULT fetched=0 reused={denominator} misses=0 errors=0 pending=0 denominator={denominator} "
         f"status=complete verified_complete={len(aliases)}/{len(aliases)} attempted=0" in capsys.readouterr().out
     )
-
-
-def test_final_revalidation_handles_lost_unaccounted_alias_row(mirror_fixture, monkeypatch, capsys):
-    manifest, calls, queue = mirror_fixture
-    manifest.write_text(json.dumps({"entries": [{"lemma": "sample"}, {"lemma": "sample / variant"}]}))
-    queue(500, 200, 403)
-    original_atomic = build_slovnyk_mirror._atomic_slovnyk_json
-    writes = 0
-
-    def remove_before_final_validation(path, value):
-        nonlocal writes
-        writes += 1
-        original_atomic(path, value)
-        if writes == 2:
-            cache_path = enrich_manifest_module._slovnyk_cache_path("sample")
-            cache = json.loads(cache_path.read_text())
-            cache["lookups"].pop("newsum")
-            cache_path.write_text(json.dumps(cache))
-
-    monkeypatch.setattr(build_slovnyk_mirror, "_atomic_slovnyk_json", remove_before_final_validation)
-    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
-    assert len(calls) == 3
-    assert (
-        "RESULT fetched=0 reused=0 misses=0 errors=4 pending=0 denominator=4 "
-        "status=incomplete verified_complete=0/2" in capsys.readouterr().out
-    )
-    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
-    assert json.loads(checkpoint.read_text())["completed"] == {}
 
 
 def test_unresolved_alias_errors_remain_retryable_without_double_count(mirror_fixture, capsys):

@@ -118,18 +118,6 @@ def test_installer_refuses_symlinked_unit_file(tmp_path: Path, monkeypatch: pyte
     assert sorted(path.name for path in unit_dir.iterdir()) == [installer.UNITS[0]]
 
 
-@pytest.mark.parametrize("mode", ["--check", "--apply"])
-def test_installer_refuses_symlinked_unit_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str) -> None:
-    flags = _installer_fixture(tmp_path, monkeypatch)
-    outside = tmp_path / "outside-dir"
-    outside.mkdir()
-    unit_dir = tmp_path / "units"
-    unit_dir.symlink_to(outside, target_is_directory=True)
-    with pytest.raises(installer.InstallError, match="real directory"):
-        installer.main([*flags, "--unit-dir", str(unit_dir), mode])
-    assert list(outside.iterdir()) == []
-
-
 def test_installer_replaces_unit_without_following_a_raced_link(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

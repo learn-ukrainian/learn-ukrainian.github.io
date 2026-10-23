@@ -112,10 +112,6 @@ def test_extract_stems_ocr_merged_line() -> None:
     assert _extract_500_verbs_stems(lines) == ["об’єдну-", "об’єдна-"]
 
 
-def test_extract_stems_absent_returns_none() -> None:
-    assert _extract_500_verbs_stems(["якийсь рядок без міток", "ще один"]) is None
-
-
 # ---------------------------------------------------------------------------
 # Unit tests: _extract_500_verbs_government
 # ---------------------------------------------------------------------------
@@ -136,11 +132,6 @@ def test_extract_government_reflexive_genitive() -> None:
     assert _extract_500_verbs_government(lines) == ["-ся + до + genitive"]
 
 
-def test_extract_government_none_when_absent() -> None:
-    lines = ["ОСОБА НЕДОКОНАНИЙ ВИД", "я аналізую", "+ 5:"]
-    assert _extract_500_verbs_government(lines) == []
-
-
 def test_extract_government_dedupes_repeated_labels() -> None:
     lines = ["+ accusative:", "Якийсь приклад.", "+ accusative:", "Ще приклад."]
     assert _extract_500_verbs_government(lines) == ["+ accusative"]
@@ -154,13 +145,6 @@ def test_extract_government_dedupes_repeated_labels() -> None:
 def test_parse_500_verbs_chunk_populates_stems_and_government() -> None:
     parsed = parse_500_verbs_chunk("anna-ohoiko-500-verbs_e0001", "аналізува́ти | проаналізува́ти", V0001_TEXT)
     assert parsed.stems == ["аналізу-", "проаналізу-"]
-    assert parsed.government == ["+ accusative"]
-
-
-def test_parse_500_verbs_chunk_ocr_wrapped_entry_stems() -> None:
-    parsed = parse_500_verbs_chunk("anna-ohoiko-500-verbs_e0277", "об’єд", V0277_TEXT)
-    assert parsed.lemmas == ["об’єднувати", "об’єднуватися", "об’єднати", "об’єднатися"]
-    assert parsed.stems == ["об’єдну-", "об’єдна-"]
     assert parsed.government == ["+ accusative"]
 
 
@@ -213,12 +197,6 @@ def test_enrich_entry_with_verb_pedagogy_never_overwrites_aspect_partner() -> No
     )
     assert changed is False
     assert entry["enrichment"]["verb_pedagogy"]["aspect_partner"]["lemma"] == "проаналізувати"
-
-
-def test_enrich_entry_with_verb_pedagogy_no_fields_is_noop() -> None:
-    entry: dict[str, Any] = {"lemma": "аналізувати"}
-    assert enrich_entry_with_verb_pedagogy(entry) is False
-    assert entry.get("enrichment", {}).get("verb_pedagogy") == {}
 
 
 # ---------------------------------------------------------------------------

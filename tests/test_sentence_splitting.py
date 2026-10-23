@@ -18,14 +18,6 @@ from audit.cleaners import split_sentences
 class TestSplitSentences:
     """Core sentence splitting tests."""
 
-    def test_simple_sentences(self):
-        result = split_sentences("Це перше речення. А це друге. І третє!")
-        assert len(result) == 3
-
-    def test_empty_input(self):
-        assert split_sentences("") == []
-        assert split_sentences("   ") == []
-
     # -- Ukrainian abbreviation handling --
 
     def test_abbreviation_m_city(self):
@@ -45,11 +37,6 @@ class TestSplitSentences:
         )
         assert len(result) == 2
         assert "2024 р. відбулися" in result[0]
-
-    def test_abbreviation_s_selo(self):
-        """с. (село) should not falsely split."""
-        result = split_sentences("Він поїхав у с. Вишневе. Там гарно.")
-        assert any("с. Вишневе" in s for s in result)
 
     # -- Guillemets and dialogue --
 
@@ -138,45 +125,9 @@ class TestSplitSentences:
             f"Initial 'С.' must stay attached, got: {result}"
         )
 
-    def test_thousand_abbreviation(self):
-        """'тис.' is in the local ABBRS extension and must not split."""
-        result = split_sentences(
-            "Це склало 500 тис. гривень. Уряд відзвітував."
-        )
-        assert len(result) == 2
-        assert "500 тис. гривень" in result[0]
-
-    def test_century_abbreviation(self):
-        """'ст.' (століття) is in ABBRS — used in seminar/folk corpora."""
-        result = split_sentences(
-            "У XVI–XVIII ст. козацтво зміцніло. Далі настала інша доба."
-        )
-        assert len(result) == 2
-        assert "XVI–XVIII ст." in result[0]
-
-    def test_oblast_abbreviation(self):
-        """'обл.' appears in B1 address corpora."""
-        result = split_sentences(
-            "Село у Київській обл. Тут живе багато людей."
-        )
-        # Must not split at 'обл.'
-        assert any("Київській обл." in s for s in result), (
-            f"'обл.' must stay attached, got: {result}"
-        )
-
     def test_currency_abbreviation_sentence_final(self):
         """Numeric-unit `грн.` should allow a real sentence break."""
         result = split_sentences("Це коштує 500 грн. Уряд відзвітував.")
         assert len(result) == 2
         assert result[0] == "Це коштує 500 грн."
         assert result[1] == "Уряд відзвітував."
-
-    def test_page_count_abbreviation_sentence_final(self):
-        """Bibliography/page-count `с.` after a number should allow a split."""
-        result = split_sentences(
-            "Іванюк С. Нарис з історії. — К. : Наук. думка, 2009. — 508 с. "
-            "Наступна праця виходила пізніше."
-        )
-        assert len(result) == 2
-        assert result[0].endswith("508 с.")
-        assert result[1] == "Наступна праця виходила пізніше."

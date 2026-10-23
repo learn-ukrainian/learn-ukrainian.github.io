@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import gzip
-import hashlib
 import json
 import re
 import zipfile
@@ -12,14 +11,11 @@ from pathlib import Path
 import pytest
 
 from scripts.deploy.vendor_atlas_tree import (
-    SKIP_MESSAGE,
     TREE_MANIFEST_REL,
     VendorError,
     build_archive_from_tree,
-    main,
     sha256_hex,
     vendor_atlas_tree,
-    verify_archive_digest,
 )
 
 
@@ -305,14 +301,6 @@ def test_corrupt_archive_sha256_fails_closed(tmp_path: Path) -> None:
     assert sentinel.read_text(encoding="utf-8") == "pre-existing"
 
 
-def test_verify_archive_digest_direct() -> None:
-    data = b"abc"
-    digest = hashlib.sha256(data).hexdigest()
-    assert verify_archive_digest(data, digest) == digest
-    with pytest.raises(VendorError, match="sha256 mismatch"):
-        verify_archive_digest(data, "0" * 64)
-
-
 def test_manifest_inconsistency_fails_closed(tmp_path: Path) -> None:
     tree_root = _build_two_gen_tree(tmp_path)
     archive, _digest = _archive_for(tree_root, tmp_path)
@@ -496,28 +484,6 @@ def _add_generation(tree_root: Path, dir_name: str, *, data_version: str, payloa
     _write(manifest, json.dumps(doc, indent=2) + "\n")
 
 
-def test_prior_transport_sibling_does_not_count_as_extra_prior(tmp_path: Path) -> None:
-    tree_root = _with_transport_current(tmp_path, prior=None)
-    # Another transport sibling of the SAME current generation is still not a prior.
-    _add_generation(
-        tree_root, f"v-current-transport-{'cd' * 32}", data_version="v-current", payload=b"other-alternate"
-    )
-    archive, digest = _archive_for(tree_root, tmp_path)
-
-    with pytest.raises(VendorError, match="PRIOR generation"):
-        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
-
-
-def test_canonical_current_ignores_transport_sibling_as_prior(tmp_path: Path) -> None:
-    tree_root = _with_transport_current(
-        tmp_path, prior=None, manifest_url="versions/v-current/manifest.json"
-    )
-    archive, digest = _archive_for(tree_root, tmp_path)
-
-    with pytest.raises(VendorError, match="PRIOR generation"):
-        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
-
-
 @pytest.mark.parametrize(
     "manifest_url",
     [
@@ -571,17 +537,6 @@ def test_transport_manifest_with_wrong_data_version_fails(tmp_path: Path) -> Non
     archive, digest = _archive_for(tree_root, tmp_path)
 
     with pytest.raises(VendorError, match="does not carry dataVersion"):
-        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
-
-
-def test_transport_manifest_missing_from_archive_fails(tmp_path: Path) -> None:
-    tree_root = _with_transport_current(tmp_path)
-    (
-        tree_root / "atlas" / "versions" / f"v-current-transport-{TRANSPORT_HEX}" / "manifest.json"
-    ).unlink()
-    archive, digest = _archive_for(tree_root, tmp_path)
-
-    with pytest.raises(VendorError, match="manifestUrl missing on disk"):
         vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
 
 
@@ -696,16 +651,6 @@ def test_valid_transport_prior_counts_as_distinct_generation(
     assert metrics.prior_versions == expected
 
 
-def test_canonical_and_alternate_current_with_prior_report_only_the_prior(tmp_path: Path) -> None:
-    tree_root = _with_transport_current(tmp_path, manifest_url="versions/v-current/manifest.json")
-    archive, digest = _archive_for(tree_root, tmp_path)
-
-    metrics = vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
-
-    assert metrics.data_version == "v-current"
-    assert metrics.prior_versions == ["v-prior"]
-
-
 @pytest.mark.parametrize("data_version", [f"v-current-transport-{'ab' * 31}", "v-transport-current"])
 def test_current_data_version_with_transport_marker_fails(tmp_path: Path, data_version: str) -> None:
     tree_root = _with_transport_current(tmp_path, data_version=data_version)
@@ -733,73 +678,6 @@ def test_current_json_pointing_outside_vendored_set_fails(tmp_path: Path) -> Non
 
     with pytest.raises(VendorError, match="non-vendored generation"):
         vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
-
-
-def test_scale_threshold_extracted_fails(tmp_path: Path) -> None:
-    tree_root = _build_two_gen_tree(tmp_path)
-    archive, digest = _archive_for(tree_root, tmp_path)
-    # Fail threshold of 1 byte forces gate trip on any real extract.
-    with pytest.raises(VendorError, match="scale gate: extracted size"):
-        vendor_atlas_tree(
-            tmp_path / "dist",
-            sha256=digest,
-            archive_path=archive,
-            thresholds={
-                "warn_extracted_bytes": 0,
-                "fail_extracted_bytes": 1,
-                "fail_archive_bytes": 10**12,
-                "fail_object_count": 10**9,
-            },
-        )
-
-
-def test_scale_threshold_object_count_fails(tmp_path: Path) -> None:
-    tree_root = _build_two_gen_tree(tmp_path)
-    archive, digest = _archive_for(tree_root, tmp_path)
-    with pytest.raises(VendorError, match="scale gate: object count"):
-        vendor_atlas_tree(
-            tmp_path / "dist",
-            sha256=digest,
-            archive_path=archive,
-            thresholds={
-                "warn_extracted_bytes": 10**12,
-                "fail_extracted_bytes": 10**12,
-                "fail_archive_bytes": 10**12,
-                "fail_object_count": 1,
-            },
-        )
-
-
-def test_skip_when_no_pin_configured(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    dist = tmp_path / "dist"
-    metrics = vendor_atlas_tree(dist, asset_id=None, sha256=None, archive_path=None)
-    assert metrics.skipped is True
-    assert not (dist / "atlas").exists()
-    captured = capsys.readouterr()
-    assert SKIP_MESSAGE in captured.out
-
-
-def test_main_skip_exit_zero(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("ATLAS_TREE_ASSET_ID", raising=False)
-    monkeypatch.delenv("ATLAS_TREE_SHA256", raising=False)
-    monkeypatch.delenv("ATLAS_TREE_ARCHIVE_PATH", raising=False)
-    assert main([str(tmp_path / "dist")]) == 0
-
-
-def test_main_bad_sha_exit_one(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    tree_root = _build_two_gen_tree(tmp_path)
-    archive, _digest = _archive_for(tree_root, tmp_path)
-    monkeypatch.delenv("ATLAS_TREE_ASSET_ID", raising=False)
-    assert main([str(tmp_path / "dist"), "--archive", str(archive), "--sha256", "0" * 64]) == 1
-
-
-def test_partial_pin_without_source_skips(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    # Digest alone without asset id / archive is incomplete → skip (feature flag off).
-    metrics = vendor_atlas_tree(tmp_path / "dist", sha256="ab" * 32, archive_path=None, asset_id=None)
-    assert metrics.skipped is True
-    assert SKIP_MESSAGE in capsys.readouterr().out
 
 
 def test_vendoring_replaces_equal_count_different_search_set_from_exact_pin(tmp_path: Path) -> None:

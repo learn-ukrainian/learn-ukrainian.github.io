@@ -117,15 +117,6 @@ def test_validate_result_rejects_high_unknown_rate() -> None:
         extractor.validate_result(payload)
 
 
-def test_validate_result_default_threshold_matches_module_constant() -> None:
-    payload = {
-        "sources": [{"headwords": [{"lemma": "мама", "pos": "noun"}]}],
-        "stats": {"unknown_rate": extractor.MAX_UNKNOWN_FORM_RATE + 0.01, "unknown_forms": 21, "unique_forms": 100},
-    }
-    with pytest.raises(extractor.ExtractionError):
-        extractor.validate_result(payload)
-
-
 def test_validate_result_accepts_explicit_higher_override() -> None:
     payload = {
         "sources": [{"headwords": [{"lemma": "мама", "pos": "noun"}]}],

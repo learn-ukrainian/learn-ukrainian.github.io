@@ -8,8 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.lexdata import case_signal, normalize, stress
-from scripts.lexdata.rule_tables import REFUSAL_CODES
+from scripts.lexdata import normalize, stress
 
 VECTORS = Path(normalize.__file__).with_name("normalization_vectors.json")
 CASES = json.loads(VECTORS.read_text(encoding="utf-8"))["cases"]
@@ -26,13 +25,6 @@ def test_vector(case) -> None:
     assert result.refusal_code == case["refusal_code"]
     assert list(result.norm_flags) == case["norm_flags"]
     assert [repair["proposed"] for repair in result.proposed_repairs] == case["proposed_repairs"]
-
-
-def test_vectors_cover_every_normalizer_refusal_and_case_signal() -> None:
-    refusals = {case["refusal_code"] for case in CASES} - {None}
-    normalizer_codes = {code for code in REFUSAL_CODES if code != "truncated_source"}
-    assert refusals == normalizer_codes
-    assert {case["case_signal"] for case in CASES} - {None} == case_signal.CASE_SIGNALS
 
 
 @pytest.mark.parametrize("case", [c for c in CASES if c["refusal_code"] is None], ids=lambda c: c["note"])

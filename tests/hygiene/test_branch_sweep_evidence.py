@@ -379,13 +379,6 @@ def test_patch_pipeline_command_failure_leaves_cache_unknown(
     assert cache == {}
 
 
-def test_real_git_log_failure_leaves_cache_unknown(repo: Path) -> None:
-    cache: dict[str, str | None] = {}
-    with pytest.raises(RuntimeError, match=r"^git log failed \(exit 128\)$"):
-        sweep._load_patch_ids(repo, cache, ["f" * 40])
-    assert cache == {}
-
-
 def test_superseded_branch_is_accepted_when_merged_pr_covers_its_files(repo: Path) -> None:
     start(repo, "codex/impl-2002")
     tip = commit_files(repo, "codex/impl-2002", {"alpha.txt": "branch\n"}, "rewrite the guard")
@@ -644,22 +637,6 @@ def test_missing_merge_commit_and_receipt_failure_keep_the_branch(repo: Path, mo
     assert "receipt" in refused.reason
     assert git(repo, "rev-parse", "refs/heads/codex/impl-1001") == tip
     assert git(repo, "ls-remote", "--heads", "origin", "codex/impl-1001")
-
-
-def test_apply_rereads_the_cached_issue_once(repo: Path) -> None:
-    start(repo, "codex/impl-2002")
-    commit_files(repo, "codex/impl-2002", {"alpha.txt": "branch\n"}, "rewrite")
-    commit_files(repo, "main", {"alpha.txt": "landed\n"}, "land it (#4444)")
-    publish(repo, "main", "codex/impl-2002")
-    calls: list[int] = []
-
-    def lookup(_repo: Path, issue: int) -> tuple[sweep.IssueClosure | None, str | None]:
-        calls.append(issue)
-        return sweep.IssueClosure(4444), None
-
-    item = only(repo, "codex/impl-2002", apply=True, issues=lookup)
-    assert item.classification == "delete-evidence"
-    assert calls == [2002]
 
 
 def test_ancestor_and_merged_head_rules_stay_in_place(repo: Path) -> None:

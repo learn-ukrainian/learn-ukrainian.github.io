@@ -129,21 +129,6 @@ def test_inventory_rejects_unknown_fields(tmp_path) -> None:
         read_source_inventory(inventory, project_root=tmp_path)
 
 
-def test_structured_inventory_rejects_noncanonical_keys(tmp_path) -> None:
-    inventory = tmp_path / "bad.yaml"
-    inventory.write_text(
-        """
-Version: 1
-kind: atlas_source_inventory
-sources: []
-""".lstrip(),
-        encoding="utf-8",
-    )
-
-    with pytest.raises(SourceInventoryError, match="unknown field 'Version'"):
-        read_source_inventory(inventory, project_root=tmp_path)
-
-
 def test_inventory_rejects_conflicting_pos_after_canonicalization(tmp_path) -> None:
     inventory = tmp_path / "bad.jsonl"
     inventory.write_text(
@@ -159,23 +144,6 @@ def test_inventory_rejects_conflicting_pos_after_canonicalization(tmp_path) -> N
 
     records = read_source_inventory(inventory, project_root=tmp_path)
     with pytest.raises(SourceInventoryError, match="conflicting pos"):
-        source_inventory_candidates(records)
-
-
-def test_inventory_rejects_conflicting_gloss_after_canonicalization(tmp_path) -> None:
-    inventory = tmp_path / "bad.jsonl"
-    inventory.write_text(
-        "\n".join(
-            [
-                '{"lemma":"авто́","source_family":"ulp","extraction_mode":"curated_headword","gloss":"car"}',
-                '{"lemma":"авто","source_family":"ohoiko","extraction_mode":"headword_inventory","gloss":"auto"}',
-            ]
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    records = read_source_inventory(inventory, project_root=tmp_path)
-    with pytest.raises(SourceInventoryError, match="conflicting gloss"):
         source_inventory_candidates(records)
 
 

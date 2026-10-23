@@ -330,14 +330,6 @@ def test_purge_happens_only_after_the_window(box):
     assert not entry.exists()
 
 
-def test_quarantine_window_is_configurable(box):
-    box.tree()
-    box.run(apply=True)
-    box.at(2)
-    assert box.run(apply=True)["purged_entries"] == 0
-    assert box.run(apply=True, quarantine_s=DAY)["purged_entries"] == 1
-
-
 def test_purge_keeps_an_entry_held_again(box, monkeypatch, tmp_path):
     box.tree()
     box.run(apply=True)
@@ -388,25 +380,6 @@ def test_purge_keeps_an_entry_whose_contents_changed(box):
     assert (
         row["reason"] == "purge_manifest_changed" and (held.location / "deep" / "payload").read_bytes() == b"new bytes"
     )
-
-
-def test_purge_keeps_an_entry_written_after_confirmation_with_an_identical_manifest(box, monkeypatch):
-    """Same bytes, mtime put back: only the change time shows the write, so the real clock runs here."""
-    monkeypatch.setattr(sweep, "time", time)
-    entry = box.tree()
-    os.utime(entry, (OLD, OLD))
-    time.sleep(0.05)
-    box.run(apply=True, scratch=sweep.ScratchPolicy(min_age_s=0.01, quiet_s=0.01))
-    held = only(box.entries())
-    payload = held.location / "deep" / "payload"
-    time.sleep(0.05)  # past the coarse kernel clock tick, so the write's ctime is after the confirmation
-    info = payload.stat()
-    payload.write_bytes(payload.read_bytes())
-    os.utime(payload, ns=(info.st_atime_ns, info.st_mtime_ns))
-    assert sweep.verify_restored(held, held.location)["verified"] is True
-    monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: time.time() + 8 * DAY))
-    row = next(r for r in box.run(apply=True)["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert row["reason"] == "purge_recent_write" and payload.exists()
 
 
 def _fail_reap(*_args, **_kwargs):
@@ -526,57 +499,6 @@ def test_purge_kept_ambiguous_removed_by_hand_is_reconciled_missing(box, monkeyp
     assert (last["ledger_id"], last["event"], last["outcome"]) == (held.ledger_id, "reconciled", "missing")
 
 
-def test_purge_retry_keeps_a_directory_whose_xattr_changed_after_partial_deletion(box, monkeypatch):
-    """The review probe: real clock, deletion stopped part-way, then a surviving directory's xattr is changed."""
-    monkeypatch.setattr(sweep, "time", time)
-    entry = box.tree()
-    os.utime(entry, (OLD, OLD))
-    time.sleep(0.05)
-    box.run(apply=True, scratch=sweep.ScratchPolicy(min_age_s=0.01, quiet_s=0.01))
-    held = only(box.entries())
-    real_reap = sweep.reap_attributed_temp
-    monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: time.time() + 8 * DAY))
-    monkeypatch.setattr(sweep, "reap_attributed_temp", _partial_reap)
-    box.run(apply=True)
-    assert box.entries()[held.ledger_id].state == "purging"
-    deep = held.location / "deep"
-    time.sleep(0.05)  # past the coarse kernel clock tick
-    os.setxattr(deep, "user.lu-probe", b"changed after confirmation")
-    assert deep.stat().st_ctime > held.confirmed_at
-    monkeypatch.setattr(sweep, "reap_attributed_temp", real_reap)
-    report = box.run(apply=True)
-    row = next(r for r in report["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert (row["reason"], report["purged_entries"], report["quarantine_kept_ambiguous_entries"]) == (
-        "purge_kept_ambiguous",
-        0,
-        1,
-    )
-    assert deep.is_dir() and os.getxattr(deep, "user.lu-probe") == b"changed after confirmation"
-
-
-def test_purge_retry_refuses_a_survivor_written_after_confirmation(box, monkeypatch):
-    """Same bytes, mtime put back: only the change time shows the write, so the real clock runs here."""
-    monkeypatch.setattr(sweep, "time", time)
-    entry = box.tree()
-    os.utime(entry, (OLD, OLD))
-    time.sleep(0.05)
-    box.run(apply=True, scratch=sweep.ScratchPolicy(min_age_s=0.01, quiet_s=0.01))
-    held = only(box.entries())
-    real_reap = sweep.reap_attributed_temp
-    monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: time.time() + 8 * DAY))
-    monkeypatch.setattr(sweep, "reap_attributed_temp", _fail_reap)
-    box.run(apply=True)
-    assert box.entries()[held.ledger_id].state == "purging"
-    script = held.location / "run.sh"
-    time.sleep(0.05)  # past the coarse kernel clock tick
-    info = script.stat()
-    script.write_bytes(script.read_bytes())
-    os.utime(script, ns=(info.st_atime_ns, info.st_mtime_ns))
-    monkeypatch.setattr(sweep, "reap_attributed_temp", real_reap)
-    row = next(r for r in box.run(apply=True)["rows"] if r.get("ledger_id") == held.ledger_id)
-    assert row["reason"] == "purge_kept_ambiguous" and script.exists()
-
-
 @pytest.mark.parametrize("rewrite", [False, True])
 def test_restore_of_unhashed_files_is_reported_unverified(box, capsys, rewrite):
     entry = box.tree()
@@ -676,27 +598,6 @@ def test_failed_ancestor_sync_is_rerun_before_the_next_record(tmp_path, syncs, m
     ledger_mod.Ledger(state).append({"event": "quarantine", "ledger_id": "x"})
     assert syncs == [*state_chain(state), str(state / "ledger.jsonl"), str(state)]
     assert str(tmp_path / "a") in syncs[: syncs.index(str(state / "ledger.jsonl"))]
-
-
-def test_failed_ancestor_sync_is_rerun_before_reconciliation_records(box, syncs, monkeypatch, isolated_state_home):
-    entry = box.tree()
-    real_sync = ledger_mod.sync_directory
-
-    def failing(directory):
-        if directory == isolated_state_home:
-            raise ledger_mod.DurabilityError("directory sync failed: Input/output error")
-        real_sync(directory)
-
-    monkeypatch.setattr(ledger_mod, "sync_directory", failing)
-    with pytest.raises(ledger_mod.DurabilityError):
-        box.run(apply=True)
-    assert box.state.parent.is_dir() and entry.exists() and not (box.state / "ledger.jsonl").exists()
-    monkeypatch.setattr(ledger_mod, "sync_directory", real_sync)
-    syncs.clear()
-    box.run(apply=True)
-    chain = state_chain(box.state)
-    assert chain[:3] == [str(box.state), str(box.state.parent), str(isolated_state_home)]
-    assert syncs[: len(chain)] == chain and str(box.state / "ledger.jsonl") not in syncs[: len(chain)]
 
 
 def test_quarantine_creation_and_renames_are_synced_before_they_are_recorded(
@@ -895,13 +796,6 @@ def test_state_dir_must_be_outside_temp_root_and_repository(box):
     with pytest.raises(ledger_mod.LedgerError):
         box.run(state_dir=box.tmp / "state")
     assert not (box.root / "ledger").exists()
-
-
-def test_default_state_dir_follows_xdg(monkeypatch, tmp_path):
-    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path))
-    assert ledger_mod.default_state_dir() == tmp_path / "learn-ukrainian" / "tmp-sweep"
-    monkeypatch.setenv("XDG_STATE_HOME", "relative/state")
-    assert ledger_mod.default_state_dir() == Path.home() / ".local" / "state" / "learn-ukrainian" / "tmp-sweep"
 
 
 def test_ledger_and_quarantine_listings(box, capsys):

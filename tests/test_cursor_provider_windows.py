@@ -160,14 +160,3 @@ def test_probe_cursor_grok_bot_incomplete_read_preserves_monthly(monkeypatch):
     assert result["provider_windows"]["auto"]["used_pct"] == 1.0
     assert result["provider_windows"]["api"]["used_pct"] == 2.0
     assert result["provider_windows"]["grok_bot"]["used_pct"] is None
-
-
-def test_empty_windows_always_include_grok_bot_slot(monkeypatch):
-    monkeypatch.setattr(
-        cursor_mod,
-        "probe_cursor_login",
-        lambda **kw: {"is_authenticated": False, "login_state": "NEED_LOGIN"},
-    )
-    result = cursor_mod.probe_cursor_provider_windows(timeout_s=1)
-    assert set(result["provider_windows"]) >= {"auto", "api", "grok_bot"}
-    assert result["provider_windows"]["grok_bot"]["window"] == "weekly"

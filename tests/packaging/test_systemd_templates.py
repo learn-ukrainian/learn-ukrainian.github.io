@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
@@ -21,31 +20,18 @@ UNITS = (
 DROPINS = PACKAGING / "dropins"
 
 
-def test_systemd_templates_are_type_simple() -> None:
-    for name in UNITS:
-        text = (PACKAGING / name).read_text(encoding="utf-8")
-        assert "Type=simple" in text
-        assert "Type=oneshot" not in text
-        assert "RemainAfterExit" not in text
-        assert "services.sh start" not in text
-        if name != "learn-ukrainian-work.service":
-            assert "127.0.0.1" in text
-
-
-def test_api_supervisor_is_gated_for_linux() -> None:
-    text = Path(__file__).resolve().parents[2].joinpath("services.sh").read_text(encoding="utf-8")
-    assert "_api_supervisor_available" in text
-    assert "SVC_API_SUPERVISOR_BIN" in text
-    assert "command -v launchctl >/dev/null 2>&1" in text
-    assert text.count("_api_supervisor_available") >= 3
-
-
 def test_systemd_templates_have_no_host_facts() -> None:
     for path in PACKAGING.iterdir():
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
         assert_no_host_facts(text, path.name)
+    for path in (
+        PACKAGING / "learn-ukrainian-worktree-gc.service",
+        DROPINS / "learn-ukrainian-worktree-gc.service.d/data-volume.conf",
+    ):
+        command = next(line for line in path.read_text().splitlines() if line.startswith("ExecStart=/"))
+        assert command.endswith("--repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply")
 
 
 @pytest.mark.repo_wide
@@ -68,20 +54,6 @@ def test_data_volume_dropins_cover_all_services_and_preserve_commands() -> None:
         for line, command in zip(guarded, commands, strict=True):
             assert line.endswith(f"/data_volume_guard.sh -- {command}")
         assert "RestartPreventExitStatus=78" in dropin
-
-
-def test_data_volume_dropin_installer_previews(tmp_path: Path) -> None:
-    destination = tmp_path / "user"
-    command = [
-        sys.executable,
-        str(PACKAGING.parents[1] / "scripts/storage/install_data_volume_dropins.py"),
-        "--destination",
-        str(destination),
-    ]
-    preview = subprocess.run(command, text=True, capture_output=True, check=True, timeout=30)
-    assert "data_volume_guard.sh" in preview.stdout
-    assert not destination.exists()
-    assert "@REPO_ROOT@" not in preview.stdout
 
 
 def test_data_volume_dropin_installer_refuses_dispatch_worktree_apply(

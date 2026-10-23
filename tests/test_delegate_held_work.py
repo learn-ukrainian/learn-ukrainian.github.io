@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import errno
 import json
+import os
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -471,3 +472,217 @@ def test_copy_mutation_refuses_cleanup(lease, monkeypatch):
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=f"`{root}/patch`")
     assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
     assert root.exists()
+
+
+def test_supported_evidence_directory_is_preserved_before_lease_reap(lease, tmp_path):
+    root, namespace, record = lease
+    (root / "evidence" / "screenshots").mkdir(parents=True)
+    (root / "evidence" / "publish-review.md").write_text("report\n")
+    (root / "evidence" / "screenshots" / "card.png").write_bytes(b"png")
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    saved = delegate._read_state(delegate._state_path(record["task_id"]))
+    receipt = saved["preserved_evidence"]
+    assert receipt["schema"] == held.EVIDENCE_SCHEMA
+    assert receipt["task_id"] == record["task_id"]
+    assert receipt["run_nonce"] == record["run_nonce"]
+    assert receipt["count"] == 2
+    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
+    location = tmp_path / receipt["location"]
+    assert (location / "publish-review.md").read_text() == "report\n"
+    assert (location / "screenshots" / "card.png").read_bytes() == b"png"
+
+
+def test_evidence_over_cap_refuses_reap_and_keeps_the_lease(lease, monkeypatch):
+    root, namespace, record = lease
+    (root / "evidence").mkdir()
+    (root / "evidence" / "archive.tar.gz").write_bytes(b"x" * 64)
+    monkeypatch.setattr(held.output, "MAX_PRESERVED_BYTES", 8)
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
+    assert result["tmp_reap_error"] == held.EvidenceLimitExceeded.code
+    assert root.exists()
+    assert (root / "evidence" / "archive.tar.gz").read_bytes() == b"x" * 64
+    assert "preserved_evidence" not in delegate._read_state(delegate._state_path(record["task_id"]))
+
+
+def test_linked_evidence_refuses_reap_without_following_the_link(lease, tmp_path):
+    root, namespace, record = lease
+    (root / "evidence").mkdir()
+    outside = tmp_path / "outside.txt"
+    outside.write_text("secret")
+    (root / "evidence" / "link.txt").symlink_to(outside)
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
+    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
+    assert root.exists()
+    assert outside.read_text() == "secret"
+
+
+def test_orphan_sweep_keeps_an_unattributed_evidence_lease(lease):
+    root, _namespace, record = lease
+    delegate._state_path(record["task_id"]).unlink()
+    # Dispatch attribution survives loss of the task record.
+    assert (root / delegate._RUNTIME_TMP_TASK_ID_MARKER).is_file()
+    (root / "evidence").mkdir()
+    (root / "evidence" / "report.md").write_text("report\n")
+    old = 0.0
+    os.utime(root, (old, old))
+    result = delegate._sweep_runtime_tmp_orphans(now=8 * 24 * 60 * 60.0)
+    assert result["leases_reaped"] == 0
+    assert result["errors"] == 1
+    assert (root / "evidence" / "report.md").read_text() == "report\n"
+
+
+def test_worker_env_exposes_the_supported_evidence_directory(tmp_path):
+    lease_root = tmp_path / "lease"
+    env = delegate._build_worker_env(
+        task_id="evidence-worker",
+        dispatch_agent="codex",
+        runtime_tmp_root=lease_root,
+        runtime_tmp_namespace_root=tmp_path / "namespace",
+    )
+    assert env["LU_TASK_EVIDENCE_DIR"] == str(lease_root / "evidence")
+
+
+def test_worker_prompt_names_the_supported_evidence_directory(tmp_path):
+    blocks: list[str] = []
+    evidence = tmp_path / "lease" / "evidence"
+    prompt = delegate._compose_dispatch_prompt(
+        "brief",
+        worktree_path=tmp_path / "wt",
+        mode="read-only",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        blocks=blocks,
+        evidence_dir=evidence,
+    )
+    assert "LU_TASK_EVIDENCE_DIR" in prompt
+    assert "batch_state/preserved/<task>/" in prompt
+    # The concrete per-task lease path is deliberately absent: the prompt (and
+    # its hash, and the evaluation's paired frame) must not depend on it.
+    assert str(evidence) not in prompt
+    assert "evidence" in blocks
+
+
+def test_evidence_prompt_block_is_identical_for_different_lease_paths(tmp_path):
+    def compose(evidence_dir: Path) -> str:
+        return delegate._compose_dispatch_prompt(
+            "brief",
+            worktree_path=None,
+            mode="read-only",
+            sparse_telemetry=None,
+            delegate_commits=False,
+            research_block="",
+            advisory_block="",
+            advisory_block_kind=None,
+            rules_seat=None,
+            evidence_dir=evidence_dir,
+        )
+
+    first = compose(tmp_path / "lease-one" / "evidence")
+    second = compose(tmp_path / "a-different-task-lease" / "evidence")
+    assert first == second
+    assert delegate._evidence_prompt_block() in first
+
+
+def _one_shot_copy_hook(monkeypatch, action):
+    """Run ``action`` once after the first verified evidence copy, deterministically."""
+    original = held.artifacts._copy_verified
+    state = {"fired": False}
+
+    def copy_then_action(*args, **kwargs):
+        original(*args, **kwargs)
+        if not state["fired"]:
+            state["fired"] = True
+            action()
+
+    monkeypatch.setattr(held.artifacts, "_copy_verified", copy_then_action)
+    return state
+
+
+def test_evidence_added_during_the_copy_is_preserved(lease, tmp_path, monkeypatch):
+    """A file created while evidence is copied must reach the receipt, not vanish with the lease."""
+    root, namespace, record = lease
+    (root / "evidence").mkdir()
+    (root / "evidence" / "report.md").write_text("first report")
+    _one_shot_copy_hook(monkeypatch, lambda: (root / "evidence" / "late-report.md").write_text("late unique evidence"))
+
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
+
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    saved = delegate._read_state(delegate._state_path(record["task_id"]))
+    receipt = saved["preserved_evidence"]
+    assert [entry["path"] for entry in receipt["paths"]] == ["late-report.md", "report.md"]
+    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
+    location = tmp_path / receipt["location"]
+    assert (location / "report.md").read_text() == "first report"
+    assert (location / "late-report.md").read_text() == "late unique evidence"
+
+
+def test_evidence_changed_during_the_copy_is_copied_again(lease, tmp_path, monkeypatch):
+    """The receipt must describe the bytes at the final enumeration, not an older copy."""
+    root, namespace, record = lease
+    (root / "evidence").mkdir()
+    evidence = root / "evidence" / "report.md"
+    evidence.write_text("first copy")
+    _one_shot_copy_hook(monkeypatch, lambda: evidence.write_text("rewritten during copy"))
+
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
+
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    saved = delegate._read_state(delegate._state_path(record["task_id"]))
+    receipt = saved["preserved_evidence"]
+    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
+    assert (tmp_path / receipt["location"] / "report.md").read_text() == "rewritten during copy"
+
+
+def test_evidence_written_after_the_receipt_refuses_before_deletion(lease, monkeypatch):
+    """The pre-deletion recheck keeps a lease when a file appears after preservation returns."""
+    root, namespace, record = lease
+    (root / "evidence").mkdir()
+    (root / "evidence" / "report.md").write_text("report\n")
+    original = held.preserve_evidence
+
+    def preserve_then_write_again(*args, **kwargs):
+        receipt = original(*args, **kwargs)
+        (root / "evidence" / "after-receipt.md").write_text("written after the final enumeration")
+        return receipt
+
+    monkeypatch.setattr(held, "preserve_evidence", preserve_then_write_again)
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
+
+    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
+    assert result["tmp_bytes_freed"] == 0
+    assert root.exists()
+    assert (root / "evidence" / "after-receipt.md").read_text() == "written after the final enumeration"
+
+
+def test_evidence_that_never_settles_refuses_and_keeps_the_lease(lease, tmp_path, monkeypatch):
+    """Bounded retries, then a typed refusal: an unstable source is never partially receipted."""
+    root, namespace, record = lease
+    (root / "evidence").mkdir()
+    evidence = root / "evidence" / "report.md"
+    evidence.write_text("0")
+    original = held.artifacts._copy_verified
+    counter = {"n": 0}
+
+    def flip_every_copy(*args, **kwargs):
+        original(*args, **kwargs)
+        counter["n"] += 1
+        evidence.write_text(f"attempt-{counter['n']}")
+
+    monkeypatch.setattr(held.artifacts, "_copy_verified", flip_every_copy)
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
+
+    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
+    assert result["tmp_bytes_freed"] == 0
+    assert root.exists()
+    assert evidence.read_text() == f"attempt-{counter['n']}"
+    assert "preserved_evidence" not in delegate._read_state(delegate._state_path(record["task_id"]))
+    assert not any((tmp_path / "batch_state/preserved").glob("**/evidence-*"))

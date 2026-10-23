@@ -26,6 +26,7 @@ from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _TOKEN = "KIMI CODING-ONLY"
+_RETIRED_MODEL = "is retired in the model catalog"
 _BACKEND_OWNED = ("scripts/agent_runtime/runner.py", "tests/agent_runtime/test_runner.py")
 _UI_OWNED = ("site/src/components/LiveStatus.tsx", "site/src/styles/match-up.css", "site/vitest.config.ts")
 
@@ -1126,15 +1127,23 @@ _LANGUAGE_LANES_REASON = "--agent kimi cannot author, review, critique, settle, 
 
 
 def _assert_refused(no_spawn, capsys, argv, reason, *, policy=_TOKEN):
-    """Refused with exit 2 by exactly ``policy`` (the Kimi gate unless stated) for ``reason``, and nothing recorded."""
+    """Refused with exit 2 before any task record.
+
+    OO-58 retires the Kimi default, so ``cmd_dispatch`` prints the catalog
+    retirement sentence before the coding-only gate. That early refusal is the
+    same no-side-effect outcome. A request that is not retired still has to
+    show exactly ``policy`` and ``reason``.
+    """
     rc = delegate.main(argv)
     err = capsys.readouterr().err
     assert rc == 2, err
+    assert not no_spawn.exists() or not any(no_spawn.iterdir())
+    if "is retired in the model catalog" in err:
+        return
     assert policy in err, err
     other = _LANGUAGE_LANES_RULE if policy == _TOKEN else _TOKEN
     assert other not in err, err
     assert reason in err, err
-    assert not no_spawn.exists() or not any(no_spawn.iterdir())
 
 
 @pytest.mark.parametrize(
@@ -1323,7 +1332,12 @@ def clean_git_env(monkeypatch):
 def test_dispatch_reads_owned_paths_at_the_new_worktree_base_commit(
     no_spawn, capsys, monkeypatch, tmp_path, clean_git_env
 ):
-    """The base commit holds Cyrillic text the dispatcher's checkout lacks: refused with no log and no worktree."""
+    """A retired Kimi default is refused before the owned-path scan, with no worktree.
+
+    Cyrillic in the base commit stays on
+    ``test_a_scope_holding_cyrillic_or_non_text_content_is_refused_in_a_commit``.
+    If the retirement sentence is absent, the scan's reason is still required.
+    """
     path = "site/src/components/LiveStatus.tsx"
     primary = tmp_path / "primary"
     (primary / path).parent.mkdir(parents=True)
@@ -1341,7 +1355,7 @@ def test_dispatch_reads_owned_paths_at_the_new_worktree_base_commit(
 
     reason = f"Cyrillic text in {path!r}, in commit {base[:12]}"
     _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path), reason)
-    assert set(ran) <= _GATE_GIT and "ls-tree" in ran
+    assert "ls-tree" not in ran
     assert not (primary / ".worktrees").exists()
     assert _git(primary, "worktree", "list").count("\n") == 1
 
@@ -1395,14 +1409,18 @@ def test_a_new_worktree_is_read_at_the_discovered_default_branch_not_an_assumed_
 
 
 def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, monkeypatch, tmp_path, clean_git_env):
-    """A reused worktree is read on disk and at its commit, whatever the dispatcher's checkout holds."""
+    """A retired Kimi default is refused before a reused worktree is read.
+
+    The on-disk and in-commit Cyrillic scan stays on the admission-function
+    tests. The refusal still names no host path and writes no task record.
+    """
     path = "site/src/components/LiveStatus.tsx"
     assert not kimi_admission.CYRILLIC.search((_REPO_ROOT / path).read_text(encoding="utf-8"))
     reused = tmp_path / "reused"
     (reused / path).parent.mkdir(parents=True)
     _git(reused, "init", "-q", "--initial-branch=kimi/task")
     (reused / path).write_text("export const label = 'Урок';\n", encoding="utf-8")
-    commit = _commit_all(reused, "committed Ukrainian content")
+    _commit_all(reused, "committed Ukrainian content")
     (reused / path).write_text("export const label = 'Lesson';\n", encoding="utf-8")  # clean on disk only
     (reused / "site/src/components/Draft.tsx").write_text("export const d = 'Чернетка';\n", encoding="utf-8")
     monkeypatch.setattr(delegate, "_auto_worktree_path", lambda *_a, **_k: reused)
@@ -1410,19 +1428,16 @@ def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, mon
     argv = _dispatch(*_WRITE, "--owned-path", "site/src/components/")
     rc = delegate.main(argv)
     err = capsys.readouterr().err
-    assert rc == 2 and _TOKEN in err, err
-    assert f"Cyrillic text in {path!r}, in commit {commit[:12]}" in err
-    assert "Cyrillic text in 'site/src/components/Draft.tsx', in the working tree" in err
+    assert rc == 2 and "is retired in the model catalog" in err, err
     assert str(reused) not in err  # #9878: a refusal never names a host path
     assert not no_spawn.exists() or not any(no_spawn.iterdir())
 
 
 def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, monkeypatch, capsys, clean_git_env):
-    """The commit a new worktree starts at must be the commit the gate read.
+    """A retired Kimi default is refused before a moved base can be compared.
 
-    The gate reads the local base; review admission then observes the
-    canonical default branch and freezes that commit for creation (#9739 A7).
-    When the branch moved in between, the worktree would start elsewhere.
+    The moved-base comparison stays in review admission for seats that still
+    launch. This dispatch writes no task record.
     """
     from tests.test_authoring_review_feasibility import pin_review_target
 
@@ -1449,10 +1464,9 @@ def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, mo
     argv = _dispatch(*_WRITE, "--dry-run", "--owned-path", "scripts/agent_runtime/runner.py")
     rc = delegate.main(argv)
     err = capsys.readouterr().err
-    assert rc == 2, err
-    assert (
-        _TOKEN in err and f"the worktree base {moved} is not the commit {gate_base} its owned paths were read at" in err
-    )
+    assert rc == 2 and "is retired in the model catalog" in err, err
+    tasks = tmp_path / "tasks"
+    assert not tasks.exists() or not any(tasks.iterdir())
 
 
 def test_dispatch_refuses_a_kimi_model_on_another_seat(no_spawn, capsys):
@@ -1467,8 +1481,8 @@ def test_dispatch_refuses_a_private_state_prompt_file(no_spawn, capsys, tmp_path
     argv = ["dispatch", "--agent", "kimi", "--task-id", "kimi-admission-fixture", "--prompt-file", str(prompt)]
     rc = delegate.main([*argv, *_WRITE])
     err = capsys.readouterr().err
-    assert rc == 2
-    assert "agent-private state" in err
+    assert rc == 2 and "is retired in the model catalog" in err, err
+    assert not no_spawn.exists() or not any(no_spawn.iterdir())
 
 
 class _AdmittedSentinel(Exception):
@@ -1482,8 +1496,11 @@ class _AdmittedSentinel(Exception):
         pytest.param(_UI_OWNED, id="ui"),
     ],
 )
-def test_web_ui_and_backend_dispatches_pass_admission(tmp_path, monkeypatch, owned):
-    """The allowed classes clear both admission checks and reach the capacity hint."""
+def test_web_ui_and_backend_dispatches_pass_admission(tmp_path, monkeypatch, capsys, owned):
+    """Allowed owned paths used to reach the capacity hint. The retired default is refused first.
+
+    ``test_web_ui_and_backend_coding_is_admitted`` still proves the allowlist.
+    """
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
     monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
@@ -1507,9 +1524,12 @@ def test_web_ui_and_backend_dispatches_pass_admission(tmp_path, monkeypatch, own
     for path in owned:
         ownership += ["--owned-path", path, "--research-owned-path", path]
     argv = _dispatch(*_WRITE, "--research-role", "harness", *ownership)
-    with pytest.raises(_AdmittedSentinel):
-        delegate.main(argv)
-    assert seen == ["kimi"]
+    rc = delegate.main(argv)
+    err = capsys.readouterr().err
+    assert rc == 2 and "is retired in the model catalog" in err, err
+    assert seen == []
+    tasks = tmp_path / "tasks"
+    assert not tasks.exists() or not any(tasks.iterdir())
 
 
 # --- delegate worker ----------------------------------------------------------------
@@ -1696,11 +1716,12 @@ def test_the_runtime_refuses_kimi_workspace_write_without_admitted_ownership(lau
     assert planned == []
 
 
-def test_the_runtime_admits_kimi_workspace_write_that_owns_a_cyrillic_free_file(launch_probe):
+def test_the_runtime_refuses_a_retired_kimi_even_when_ownership_is_admitted(launch_probe):
+    """OO-58: an admitted Cyrillic-free path still does not launch a retired Kimi model."""
     from scripts.agent_runtime import runner
 
-    planned, reached = launch_probe
-    with pytest.raises(reached):
+    planned, _reached = launch_probe
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
         runner.invoke(
             "kimi",
             "Add a tooltip.",
@@ -1708,7 +1729,7 @@ def test_the_runtime_admits_kimi_workspace_write_that_owns_a_cyrillic_free_file(
             cwd=_REPO_ROOT,
             tool_config=_owned_config(_ADMITTED_COMPONENT),
         )
-    assert planned == ["kimi"]
+    assert planned == []
 
 
 @pytest.mark.parametrize("harness", [None, "kimicc"])
@@ -1736,20 +1757,21 @@ def test_the_native_adapters_refuse_unscoped_or_cyrillic_workspace_write_before_
         assert ("Ukrainian content" if owned else "without an owned path") in str(refused.value)
 
 
-def test_the_native_adapter_plans_workspace_write_that_owns_a_cyrillic_free_file(monkeypatch):
+def test_the_native_adapter_refuses_a_retired_model_before_planning_an_admitted_file(monkeypatch):
+    """OO-58: Cyrillic-free ownership does not produce a Kimi command."""
     from scripts.agent_runtime.adapters import kimi as kimi_adapter
 
-    monkeypatch.setattr(kimi_adapter, "_resolve_kimi_binary", lambda: "/bin/true")
-    plan = kimi_adapter.KimiAdapter().build_invocation(
-        prompt="Add a tooltip.",
-        mode="workspace-write",
-        cwd=_REPO_ROOT,
-        model=None,
-        task_id="t",
-        session_id=None,
-        tool_config=_owned_config(_ADMITTED_COMPONENT),
-    )
-    assert plan.cmd[0] == "/bin/true"
+    monkeypatch.setattr(kimi_adapter, "_resolve_kimi_binary", lambda: pytest.fail("binary resolved"))
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        kimi_adapter.KimiAdapter().build_invocation(
+            prompt="Add a tooltip.",
+            mode="workspace-write",
+            cwd=_REPO_ROOT,
+            model=None,
+            task_id="t",
+            session_id=None,
+            tool_config=_owned_config(_ADMITTED_COMPONENT),
+        )
 
 
 def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(tmp_path, monkeypatch):
@@ -1770,7 +1792,7 @@ def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(
         return _REAL_POPEN(cmd, *args, **kwargs)
 
     monkeypatch.setattr(subprocess, "Popen", git_only)
-    with pytest.raises(ValueError, match=_TOKEN) as refused:
+    with pytest.raises(ValueError, match="is retired in the model catalog") as refused:
         runner.invoke(
             "kimi",
             "Implement it.",
@@ -1779,7 +1801,7 @@ def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(
             task_id="kimi-isolation",
             tool_config=config,
         )
-    assert "credential isolation could not be established" in str(refused.value)
+    assert "credential isolation could not be established" not in str(refused.value)
 
 
 def test_trail_isolation_refuses_kimi():
@@ -2475,9 +2497,9 @@ _NESTED_WITHOUT_PARENT = _nested_dispatch(None)
 @pytest.mark.parametrize(
     ("seed", "call", "refusal"),
     [
-        pytest.param(None, _dispatch_main(_dispatch()), _TOKEN, id="dispatch-read-only"),
-        pytest.param(None, _dispatch_main(_dispatch(*_WRITE)), _TOKEN, id="dispatch-unowned-write"),
-        pytest.param(*_NESTED_WITH_PARENT, _TOKEN, id="nested-dispatch-with-parent"),
+        pytest.param(None, _dispatch_main(_dispatch()), _RETIRED_MODEL, id="dispatch-read-only"),
+        pytest.param(None, _dispatch_main(_dispatch(*_WRITE)), _RETIRED_MODEL, id="dispatch-unowned-write"),
+        pytest.param(*_NESTED_WITH_PARENT, _RETIRED_MODEL, id="nested-dispatch-with-parent"),
         pytest.param(*_NESTED_READ_ONLY_PARENT, _PARENT_UNAVAILABLE, id="nested-dispatch-read-only-parent"),
         pytest.param(*_NESTED_WITHOUT_PARENT, _PARENT_UNAVAILABLE, id="nested-dispatch-without-parent"),
         pytest.param(None, _worker("read-only"), _TOKEN, id="worker-read-only"),

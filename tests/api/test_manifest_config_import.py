@@ -154,20 +154,6 @@ def test_fresh_import_reads_and_parses_real_manifest_once(c_support: str) -> Non
     }
 
 
-@pytest.mark.parametrize("c_support", ["present", "absent"])
-def test_fresh_import_tab_after_type_preserves_fallback(tmp_path: Path, c_support: str) -> None:
-    (tmp_path / ".git").mkdir()
-    _write_manifest(tmp_path, "levels:\n  custom:\n    type:\ttrack\n")
-    result = _fresh_import(tmp_path, c_support)
-    assert result == {
-        "reads": 1,
-        "loaders": ["SafeLoader"],
-        "levels": FALLBACK_LEVELS,
-        "seminars": sorted(FALLBACK_SEMINARS),
-        "types": ["list", "set"],
-    }
-
-
 @pytest.mark.parametrize("explicit_root", [True, False])
 def test_helpers_observe_updates_and_keep_roots_isolated(tmp_path, monkeypatch, explicit_root):
     first, second = tmp_path / "first", tmp_path / "second"

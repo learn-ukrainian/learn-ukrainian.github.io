@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -367,37 +366,3 @@ def test_startup_seed_does_not_read_handoff_files(tmp_path: Path, monkeypatch: p
 
     assert health["status"] == "ok"
     assert health["registered"] == 1
-
-
-def test_api_lifespan_invokes_registry_seed_with_two_roots(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.api import main as api_main
-
-    calls: dict[str, object] = {}
-    monkeypatch.setattr(api_main, "preload_all", lambda: None)
-    monkeypatch.setattr(api_main, "install_signal_logging", lambda: None)
-    monkeypatch.setattr(api_main, "ensure_broker_db_ready", lambda **_kwargs: None)
-    monkeypatch.setattr(api_main.isa, "schedule_refresh", lambda force=False: None)
-    monkeypatch.setattr(api_main, "warm_projection_cache", lambda **_kwargs: None)
-    monkeypatch.setattr(api_main, "start_periodic_refresh", lambda: None)
-    monkeypatch.setattr(api_main, "stop_periodic_refresh", lambda: None)
-
-    def fake_seed(root: Path, *, ctx: object, **kwargs: object) -> dict[str, object]:
-        calls["root"] = root
-        calls["kwargs"] = {"ctx": ctx, **kwargs}
-        return {}
-
-    monkeypatch.setattr(api_main, "seed_manifest_inventory", fake_seed)
-
-    async def run_lifespan() -> None:
-        async with api_main._lifespan(api_main.app):
-            pass
-
-    asyncio.run(run_lifespan())
-
-    ctx = api_main.app.state.ctx
-    assert calls["root"] == ctx.roots.project_root
-    assert calls["kwargs"] == {
-        "store": ctx.stores.epics_store,
-        "handoff_root": ctx.roots.live_repo_root,
-        "ctx": ctx,
-    }

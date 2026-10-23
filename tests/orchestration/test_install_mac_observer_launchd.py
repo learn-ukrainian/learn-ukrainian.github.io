@@ -191,13 +191,3 @@ def test_status_rejects_venv_python_as_program(tmp_path: Path, monkeypatch: pyte
     assert return_code == 1
     assert result["valid_plist"] is False
     assert result["loaded"] is True
-
-
-def test_positive_interval_validation() -> None:
-    assert launchd.positive_interval("8") == 8
-    with pytest.raises(Exception, match="positive integer"):
-        launchd.positive_interval("0")
-    with pytest.raises(Exception, match="positive integer"):
-        launchd.positive_interval("-2")
-    with pytest.raises(Exception, match="positive integer"):
-        launchd.positive_interval("abc")

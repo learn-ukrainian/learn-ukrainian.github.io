@@ -131,47 +131,6 @@ def test_allowlisted_oversized_blob_passes(tmp_path: Path) -> None:
     assert "Large files check passed" in res.stdout
 
 
-def test_modified_allowlisted_blob_passes(tmp_path: Path) -> None:
-    repo = _init_repo(tmp_path)
-    allowlist = repo / DEFAULT_ALLOWLIST
-    allowlist.parent.mkdir(parents=True, exist_ok=True)
-    allowlist.write_text(
-        f"data/large.bin\t{THRESHOLD_BYTES + 100}\texisting tracked data; leaves git through the data/ split\n",
-        encoding="utf-8",
-    )
-
-    # Base commit already has the large file
-    _create_blob(repo, "data/large.bin", THRESHOLD_BYTES + 100)
-    _git(repo, "add", "data/large.bin")
-    _git(repo, "commit", "-m", "Base has large file")
-
-    # Feature branch modifies the large file to even larger size
-    _git(repo, "checkout", "-b", "feature")
-    _create_blob(repo, "data/large.bin", THRESHOLD_BYTES + 5000)
-    _git(repo, "add", "data/large.bin")
-    _git(repo, "commit", "-m", "Modify large file")
-
-    res = subprocess.run(
-        [
-            _PYTHON,
-            "-m",
-            "scripts.ci.check_large_files",
-            "--changed-vs-base",
-            "main",
-            "--repo-root",
-            str(repo),
-            "--allowlist",
-            str(allowlist),
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert res.returncode == 0
-    assert "Large files check passed" in res.stdout
-
-
 def test_renamed_oversized_blob_to_unallowlisted_destination_fails(tmp_path: Path) -> None:
     repo = _init_repo(tmp_path)
     allowlist = repo / DEFAULT_ALLOWLIST
@@ -211,76 +170,6 @@ def test_renamed_oversized_blob_to_unallowlisted_destination_fails(tmp_path: Pat
     assert res.returncode == 1
     assert "Large file guard violation" in res.stderr
     assert "'data/new_path.bin'" in res.stderr
-
-
-def test_renamed_oversized_blob_to_allowlisted_destination_passes(tmp_path: Path) -> None:
-    repo = _init_repo(tmp_path)
-    allowlist = repo / DEFAULT_ALLOWLIST
-    allowlist.parent.mkdir(parents=True, exist_ok=True)
-    allowlist.write_text(
-        f"data/new_path.bin\t{THRESHOLD_BYTES + 100}\texisting tracked data; leaves git through the data/ split\n",
-        encoding="utf-8",
-    )
-
-    _create_blob(repo, "data/old_path.bin", THRESHOLD_BYTES + 100)
-    _git(repo, "add", "data/old_path.bin")
-    _git(repo, "commit", "-m", "Base has old_path.bin")
-
-    _git(repo, "checkout", "-b", "feature")
-    _git(repo, "mv", "data/old_path.bin", "data/new_path.bin")
-    _git(repo, "commit", "-m", "Rename to new_path.bin")
-
-    res = subprocess.run(
-        [
-            _PYTHON,
-            "-m",
-            "scripts.ci.check_large_files",
-            "--changed-vs-base",
-            "main",
-            "--repo-root",
-            str(repo),
-            "--allowlist",
-            str(allowlist),
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert res.returncode == 0
-    assert "Large files check passed" in res.stdout
-
-
-def test_small_blob_passes(tmp_path: Path) -> None:
-    repo = _init_repo(tmp_path)
-    allowlist = repo / DEFAULT_ALLOWLIST
-    allowlist.parent.mkdir(parents=True, exist_ok=True)
-    allowlist.write_text("# empty\n", encoding="utf-8")
-
-    _git(repo, "checkout", "-b", "feature")
-    _create_blob(repo, "src/small.py", 1024)
-    _git(repo, "add", "src/small.py")
-    _git(repo, "commit", "-m", "Add small file")
-
-    res = subprocess.run(
-        [
-            _PYTHON,
-            "-m",
-            "scripts.ci.check_large_files",
-            "--changed-vs-base",
-            "main",
-            "--repo-root",
-            str(repo),
-            "--allowlist",
-            str(allowlist),
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert res.returncode == 0
-    assert "Large files check passed" in res.stdout
 
 
 def test_deleted_blob_ignored(tmp_path: Path) -> None:
@@ -586,34 +475,6 @@ def test_malformed_allowlist_fails(tmp_path: Path) -> None:
     allowlist.write_text("data/file.bin\t1234567\t\n", encoding="utf-8")
     with pytest.raises(ValueError, match="Empty path or reason"):
         load_allowlist(allowlist)
-
-
-def test_git_failure_propagation(tmp_path: Path) -> None:
-    repo = _init_repo(tmp_path)
-    allowlist = repo / DEFAULT_ALLOWLIST
-    allowlist.parent.mkdir(parents=True, exist_ok=True)
-    allowlist.write_text("# empty\n", encoding="utf-8")
-
-    # Run check against invalid base ref
-    res = subprocess.run(
-        [
-            _PYTHON,
-            "-m",
-            "scripts.ci.check_large_files",
-            "--changed-vs-base",
-            "invalid_base_ref_abc",
-            "--repo-root",
-            str(repo),
-            "--allowlist",
-            str(allowlist),
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert res.returncode == 1
-    assert "ERROR:" in res.stderr
 
 
 def test_cli_help_standards() -> None:

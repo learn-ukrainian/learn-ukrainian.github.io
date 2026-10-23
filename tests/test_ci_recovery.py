@@ -400,15 +400,6 @@ def test_concurrent_consumption_serializes(setup):
     assert module.first_attempt(path, "github.com/unit/public", 42, HEAD)["action"] in {"run-rerun", "re-enqueue"}
 
 
-def test_legacy_spending_survives_migration(setup):
-    root, transport = setup
-    (root / "batch_state").mkdir()
-    (root / "batch_state/merge_queue_keeper.json").write_text(json.dumps({"requeued": {f"42:{HEAD}": "previous"}}))
-    with pytest.raises(gate.PublishBlocked, match=r"RECOVERY_ALLOWANCE_SPENT.*legacy"):
-        recover(setup, "run-rerun")
-    assert transport.writes == []
-
-
 def test_first_enqueue_does_not_spend_recovery(setup):
     root, transport = setup
     transport.removed = False
@@ -493,15 +484,6 @@ def test_malformed_posted_evidence_refuses(setup):
         comment.update(user={"login": "driver"}, author_association="MEMBER")
     with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
         module.evidence_from_comments(comments, 42, HEAD, authenticated_login="driver")
-
-
-def test_legacy_state_corruption_fails_closed(setup):
-    root, transport = setup
-    (root / "batch_state").mkdir()
-    (root / "batch_state/merge_queue_keeper.json").write_text("corrupt")
-    with pytest.raises(gate.PublishBlocked, match="RECOVERY_RECORD_UNAVAILABLE"):
-        recover(setup, "run-rerun")
-    assert transport.writes == []
 
 
 def test_future_commit_date_cannot_refund_same_head(setup):

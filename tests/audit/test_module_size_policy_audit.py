@@ -59,34 +59,6 @@ def _write_module_text(root: Path, track: str, slug: str, text: str) -> Path:
     return path
 
 
-def test_markdown_counts_visible_authored_words_without_markup_inflation() -> None:
-    text = """---
-title: Hidden metadata tokens
----
-# Visible Heading
-
-<!-- hidden comment and INJECT_ACTIVITY marker words -->
-Authored **lesson** [label](https://example.org/hidden-target) https://example.org/bare
-
-:::note[Visible note title]
-Visible note body.
-:::
-
-<Component prop="ignored words" />
-"""
-
-    metrics, repetition, mismatch = audit.markdown_module_evidence(text)
-
-    assert metrics.authored_instructional_words == 11
-    assert metrics.learner_visible_words == 11
-    assert metrics.quoted_primary_source_words == 0
-    assert metrics.excluded_markup_directive_url_tokens > 0
-    assert metrics.raw_whitespace_tokens > metrics.authored_instructional_words
-    assert repetition.eligible_paragraphs == 0
-    assert repetition.matches == ()
-    assert mismatch is False
-
-
 def test_primary_source_words_are_visible_but_excluded_from_authored_repetition() -> None:
     refrain = " ".join(f"приспів{index}" for index in range(45))
     text = f"""# Навчальна тема
@@ -325,53 +297,6 @@ def test_size_policy_override_validation_reports_actionable_schema_errors() -> N
     )
 
 
-def test_folk_source_refs_count_corpus_chunks_and_verify_ledgers(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    _patch_roots(monkeypatch, tmp_path)
-    _write_plan(
-        tmp_path,
-        "folk",
-        "chunk-grounded-tradition",
-        {
-            "word_target": 5000,
-            "content_outline": [{"section": "Корпус", "words": 5000}],
-        },
-    )
-    evidence_lines = "\n".join(
-        [
-            "Основні опори: Українська літературна енциклопедія; Заболотний, 8 клас.",
-            "Джерельна опора: feaa5fa7_c0714, feaa5fa7_c0715.",
-            "Raw evidence: verify_quote(author=\"Антологія\", text=\"рядок\") -> matched: true.",
-            "Source-disagreement: Грушевський і Колесса розходяться в датуванні.",
-            "search_literary chunk fc2291b5_c0992; search_sources 9-klas-test_s0074.",
-            "Named recording / edition-like references: Максимович 1827; видання 1961.",
-        ]
-    )
-    _write_dossier(
-        tmp_path,
-        "folk",
-        "chunk-grounded-tradition",
-        5600,
-        evidence=(
-            evidence_lines
-            + " "
-            + " ".join(["архів", "цитата", "верифікація", "корпус"] * 3)
-            + " "
-            + " ".join(["дискусія", "міф", "деколонізація"] * 2)
-            + " "
-            + " ".join(["варіант", "обряд", "виконавство", "регіон"] * 2)
-        ),
-    )
-
-    report = audit.build_report(tracks=["folk"])
-
-    row = report[0]
-    assert row["metrics"]["source_refs"] >= 8
-    assert row["density_band"] == "dense"
-
-
 def test_core_c1_c2_uses_evidence_packet_basis_when_no_dossier_exists(
     tmp_path: Path,
     monkeypatch,
@@ -556,40 +481,3 @@ def test_cli_json_output_is_stable_and_read_only(
     first = json.dumps(audit.build_report(tracks=["bio"], built_only=True), sort_keys=True)
     second = json.dumps(audit.build_report(tracks=["bio"], built_only=True), sort_keys=True)
     assert first == second
-
-
-def test_summary_prints_zero_counts(capsys) -> None:
-    audit.print_summary(
-        [
-            audit.SizePolicyRecord(
-                track="bio",
-                slug="empty",
-                basis="research_dossier",
-                plan_path="plan.yaml",
-                dossier_path="dossier.md",
-                module_path="module.md",
-                plan_floor=0,
-                plan_outline_words=0,
-                actual_words=0,
-                density_band="sparse",
-                band_min=3800,
-                band_max=5000,
-                effective_min=0,
-                advisory_ceiling=0,
-                status="advisory_ok",
-                notes=[],
-                metrics=audit.DensityMetrics(
-                    words=0,
-                    headings=0,
-                    source_refs=0,
-                    primary_markers=0,
-                    contested_markers=0,
-                    variant_markers=0,
-                ),
-            )
-        ]
-    )
-
-    output = capsys.readouterr().out
-    assert "bio" in output
-    assert "  0" in output

@@ -4,7 +4,6 @@ import json
 
 import pytest
 
-from scripts.agent_runtime.jsonl import jsonl_lines as runtime_lines
 from scripts.common.jsonl import jsonl_lines, physical_lines
 
 
@@ -20,10 +19,6 @@ def test_only_lf_splits_shared_text_and_bytes_splitlines_preserves_separators(se
     raw = f"a{sep}b"
     assert jsonl_lines(raw + "\nc") == [raw, "c"]
     assert raw.encode("utf-8").splitlines() == [raw.encode("utf-8")]
-
-
-def test_compatibility_import_is_the_shared_function():
-    assert runtime_lines is jsonl_lines
 
 
 def test_empty_trailing_lf_and_single_cr_removal():

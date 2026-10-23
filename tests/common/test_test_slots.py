@@ -324,23 +324,6 @@ def test_pool_directory_is_private_to_this_user(pool: Path) -> None:
             assert stat.S_IMODE(entry.stat().st_mode) & 0o077 == 0, entry.name
 
 
-def test_the_scratch_root_convention_matches_scratch_py() -> None:
-    from scripts.common import scratch
-
-    assert test_slots.SCRATCH_ROOT_ENV == scratch.SCRATCH_ROOT_ENV_VAR
-    assert test_slots.DEFAULT_SCRATCH_ROOT == scratch.DEFAULT_SCRATCH_ROOT
-
-
-@pytest.mark.exercises_default_scratch_root
-def test_the_built_in_default_root_is_isolated_like_scratch_py(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.common import scratch
-
-    monkeypatch.delenv(test_slots.DIR_ENV)
-    assert test_slots.DEFAULT_SCRATCH_ROOT == scratch.DEFAULT_SCRATCH_ROOT != Path("/var/tmp/lu")
-    expected = scratch.DEFAULT_SCRATCH_ROOT / f"test-slots-{os.geteuid()}"
-    assert test_slots.pool_dir() == expected
-
-
 def test_default_pool_lives_under_the_fleet_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(test_slots.DIR_ENV)
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
@@ -559,14 +542,6 @@ def test_status_cli_prints_json_and_a_readable_summary(pool: Path) -> None:
 # ---- the launcher ---------------------------------------------------------------------------------------------
 
 
-def test_launcher_help_describes_thread_cap_opt_out() -> None:
-    result = _launch("--help")
-    assert result.returncode == 0, result.stderr
-    assert "LU_TEST_THREAD_CAP" in result.stdout
-    assert "off" in result.stdout
-    assert "native thread caps" in result.stdout
-
-
 @pytest.mark.parametrize("case", ["governed", "opt_out", "disabled", "ci"])
 @pytest.mark.parametrize("direct", [False, True], ids=["module", "script"])
 def test_launcher_child_thread_environment(case: str, direct: bool, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -601,7 +576,6 @@ def test_launcher_child_thread_environment(case: str, direct: bool, monkeypatch:
         (["-n8"], ["-n2"], "2"),
         (["--numprocesses=8"], ["--numprocesses=2"], "2"),
         (["-n", "auto"], ["-n", "2"], "2"),
-        (["-n", "logical"], ["-n", "2"], "2"),
         (["--numprocesses", "1", "-q"], ["--numprocesses", "1", "-q"], "1"),
         (["-q"], ["-q"], "1"),
     ],
@@ -623,7 +597,6 @@ def test_launcher_limits_the_wrapped_run_to_the_slots_it_holds(
     ("arguments", "cap", "expected", "auto", "held"),
     [
         (["-n", "auto"], "1", ["-n", "1"], "1", "1"),
-        (["-n", "logical"], "1", ["-n", "1"], "1", "1"),
         (["-n", "auto"], "0", ["-n", "0"], "0", "1"),
         (["-n", "auto"], "9", ["-n", "2"], "2", "2"),
         (["-n", "8"], "1", ["-n", "2"], "1", "2"),

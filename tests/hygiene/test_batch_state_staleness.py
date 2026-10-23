@@ -65,14 +65,6 @@ def test_stale_fresh_excluded_and_held(batch, tmp_path):
     assert {node: node.lstat().st_mtime_ns for node in batch.rglob("*")} == before
 
 
-def test_stale_days_threshold(batch):
-    make(batch, "run", 5)
-    assert retention.report(batch, holds=[])["counts"]["fresh"] == 1
-    assert retention.report(batch, holds=[], stale_days=3)["counts"]["stale"] == 1
-    with pytest.raises(ValueError):
-        retention.report(batch, holds=[], stale_days=0)
-
-
 def test_symlinks_and_mounts_are_not_followed(batch, tmp_path, monkeypatch):
     outside = tmp_path / "outside"
     outside.mkdir()

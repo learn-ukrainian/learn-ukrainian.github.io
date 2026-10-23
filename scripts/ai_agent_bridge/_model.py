@@ -45,6 +45,10 @@ def _build_agy_probe_plan(model: str, task_id: str = "check-model"):
 
 def _build_kimi_probe_plan(model: str, task_id: str = "check-model"):
     """Build a native Kimi probe plan without executing a live request."""
+    from scripts.review.model_catalog import retired_model_refusal
+
+    if refusal := retired_model_refusal(model):
+        raise ValueError(refusal)
     try:
         resolve_kimi_model(model)
     except ValueError:

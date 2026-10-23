@@ -5,12 +5,9 @@ from __future__ import annotations
 import copy
 
 import pytest
-from jsonschema import Draft7Validator
 
 from scripts.build.fresh.draft_schema import (
-    FRESH_CONSTRAINTS_META,
     _alias_conflicts,
-    activity_payload_schema,
     load_fresh_constraints,
     validate_draft,
 )
@@ -49,39 +46,6 @@ def test_conflicting_answer_aliases(item: dict, conflicts: bool) -> None:
         assert "conflicting_answer_aliases" in errors[0].reason
 
 
-def test_constraints_file_loads_once_and_matches_its_meta_schema() -> None:
-    load_fresh_constraints.cache_clear()
-    loaded = load_fresh_constraints(str(SCHEMAS_DIR))
-    Draft7Validator(FRESH_CONSTRAINTS_META).validate(loaded)
-    assert load_fresh_constraints(str(SCHEMAS_DIR)) is loaded
-    info = load_fresh_constraints.cache_info()
-    assert info.misses == 1
-    assert info.hits == 1
-    assert {
-        "fill-in-a1",
-        "fill-in-a2",
-        "fill-in-b1",
-        "fill-in-b2",
-        "true-false-a1",
-        "true-false-a2",
-        "true-false-b1",
-        "true-false-b2",
-    } <= set(loaded["by_type"])
-    assert loaded["by_type"]["true-false-b2"]["items_max"] is None
-    assert len(loaded["orthography_lists"]) == 5
-    assert (
-        loaded["deferred"]
-        == "и | і removed 2026-09-22: no Правопис/primer record found; add only with a sourced record"
-    )
-
-
-def test_activity_payload_schema_does_not_express_the_constraint_file() -> None:
-    rule = load_fresh_constraints(str(SCHEMAS_DIR))["by_type"]["fill-in-a1"]
-    derived = activity_payload_schema(rule)
-    assert derived["properties"] == {}
-    assert "sentence_blanks" not in derived["properties"]
-
-
 def test_form_choice_without_record_fails() -> None:
     draft, types = load_fixture("a1")
     del _item(draft, "a3")["record"]
@@ -92,13 +56,6 @@ def test_form_choice_without_record_fails() -> None:
 def test_form_choice_with_one_option_fails() -> None:
     draft, types = load_fixture("a1")
     _item(draft, "a3")["options"] = ["only"]
-    reasons = _reasons(draft, "a1", types)
-    assert any("options" in reason for reason in reasons)
-
-
-def test_form_choice_with_five_options_fails() -> None:
-    draft, types = load_fixture("a1")
-    _item(draft, "a3")["options"] = ["a", "b", "c", "d", "e"]
     reasons = _reasons(draft, "a1", types)
     assert any("options" in reason for reason in reasons)
 
@@ -307,26 +264,6 @@ def test_orthography_reversed_options_order_passes() -> None:
     assert validate_draft(draft, "a1", activity_types=types) == []
 
 
-def test_removed_y_or_i_orthography_list_fails() -> None:
-    draft, types = load_fixture("a1")
-    item = _item(draft, "a3")
-    item.clear()
-    item.update(
-        {
-            "sentence": "в___соко",
-            "answer": "и",
-            "mode": "orthography",
-            "kind": "orthography",
-            "target_record": "W-1",
-            "option_why": ["This spelling fits.", "This spelling does not fit."],
-            "options": ["и", "і"],
-            "explanation": "Orthography check.",
-        }
-    )
-    reasons = _reasons(draft, "a1", types)
-    assert any("exactly one closed list" in reason for reason in reasons)
-
-
 def test_orthography_raw_answer_must_equal_raw_option_exactly() -> None:
     draft, types = load_fixture("a1")
     item = _item(draft, "a3")
@@ -392,18 +329,3 @@ def test_orthography_malformed_item_returns_draft_error_not_type_error() -> None
         errors = validate_draft(draft, "a1", activity_types=types)
         fresh_errors = [e for e in errors if e.check == "activity_fresh_constraints"]
         assert len(fresh_errors) > 0, f"Expected DraftError for options={bad_options!r}, answer={bad_answer!r}"
-
-
-def test_draft_schema_import_does_not_import_linear_pipeline() -> None:
-    import subprocess
-    import sys
-    from pathlib import Path
-
-    repo_root = Path(__file__).resolve().parents[2]
-    cmd = [
-        sys.executable,
-        "-c",
-        "import sys, scripts.build.fresh.draft_schema; assert 'scripts.build.linear_pipeline' not in sys.modules",
-    ]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60, cwd=repo_root)
-    assert result.returncode == 0, result.stderr

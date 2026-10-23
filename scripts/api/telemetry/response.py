@@ -49,13 +49,6 @@ def session_id_from_request(request) -> str | None:
     )
 
 
-def current_telemetry() -> TranscriptTelemetry | None:
-    """Return newest-checkout context telemetry when footer is enabled."""
-    if not telemetry_footer_enabled():
-        return None
-    return current_context_telemetry(PROJECT_ROOT)
-
-
 def telemetry_dict(telemetry: TranscriptTelemetry, session_id: str | None = None) -> dict[str, Any]:
     """Return transcript usage plus the caller's trusted context contract."""
     tier = "premium" if telemetry.tokens > PREMIUM_THRESHOLD_TOKENS else "base"

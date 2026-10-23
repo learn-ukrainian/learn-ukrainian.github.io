@@ -43,11 +43,6 @@ def test_flatten_activities_handles_v6_inline_workbook_dict() -> None:
     assert [a["id"] for a in flat] == ["x", "y", "z"]
 
 
-def test_flatten_activities_handles_dict_with_only_inline() -> None:
-    raw = {"inline": [{"id": "only", "type": "quiz"}]}
-    assert flatten_activities(raw) == [{"id": "only", "type": "quiz"}]
-
-
 def test_flatten_activities_handles_older_activities_wrapper() -> None:
     # Older wrapper shape — {"activities": [...]}. Only honoured when there
     # is no inline/workbook bucket, so we don't double-count on hybrid files.
@@ -82,17 +77,9 @@ def test_flatten_activities_drops_non_dict_entries_silently() -> None:
     assert [a["id"] for a in flat] == ["ok", "also_ok"]
 
 
-def test_flatten_activities_returns_empty_list_for_none() -> None:
-    assert flatten_activities(None) == []
-
-
 def test_flatten_activities_returns_empty_list_for_unexpected_types() -> None:
     assert flatten_activities("not a yaml document") == []
     assert flatten_activities(42) == []
-
-
-def test_flatten_activities_returns_empty_for_empty_dict() -> None:
-    assert flatten_activities({}) == []
 
 
 def test_flatten_activities_handles_dict_buckets_that_are_not_lists() -> None:

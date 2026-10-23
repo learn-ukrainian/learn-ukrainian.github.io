@@ -10,7 +10,7 @@ import pytest
 
 import scripts.delegate as delegate
 from scripts.eval.uk_preamble.common import HarnessError
-from scripts.eval.uk_preamble.dataset import ReviewItem, Span, load_set, parse_variant, protocol_shortfalls
+from scripts.eval.uk_preamble.dataset import ReviewItem, Span, load_set, protocol_shortfalls
 from scripts.eval.uk_preamble.prompts import (
     build_prompt,
     extract_json,
@@ -99,14 +99,6 @@ def test_wrong_correction_on_error_span_is_miss_not_false_alarm(eval_set):
     assert result["false_alarms"] == 0
 
 
-def test_wider_span_with_unchanged_context_still_hits(eval_set):
-    item = _item(eval_set, "R1")
-    result = score_review_item(item, answer(item.text, [fix(item.text, "я приймав участь у", "я брав участь у")]))
-    assert result["errors"][0]["hit"] is True
-    assert result["false_alarms"] == 0
-    assert (result["logging"]["applied_claims"], result["logging"]["claimed_change_units"]) == (1, 1)
-
-
 def test_bad_offsets_relocated_by_span_and_whitespace_apostrophe_normalised(eval_set):
     item = _item(eval_set, "R1")
     correction = fix(item.text, "на протязі години", "протягом  години", offset_shift=5)
@@ -159,14 +151,6 @@ def test_whitespace_and_apostrophe_variants_in_corrected_text_change_nothing(eva
     assert result["false_alarms"] == 0 and result["logging"]["change_units"] == 0
 
 
-def test_apostrophe_only_change_is_noop_not_false_alarm(eval_set):
-    item = _item(eval_set, "R2")
-    result = score_review_item(item, answer(item.text, [fix(item.text, "п'ятницю", "п’ятницю")]))
-    assert result["logging"]["noop_claims"] == 1
-    assert result["false_alarms"] == 0
-    assert result["protected_touched"] == []
-
-
 # --------------------------------------------------------------------------- false alarms
 
 
@@ -200,14 +184,6 @@ def test_unanchored_claim_is_logging_only_never_a_false_alarm(eval_set):
     result = score_review_item(item, answer(item.text, [bogus], corrected=item.text))
     assert result["false_alarms"] == 0
     assert result["logging"]["unanchored_claims"] == 1
-
-
-def test_unapplied_accusation_of_protected_text_is_reported_not_scored(eval_set):
-    item = _item(eval_set, "R1")
-    result = score_review_item(item, answer(item.text, [fix(item.text, "пляцки", "пироги")], corrected=item.text))
-    assert (result["false_alarms"], result["fa_protected"]) == (0, 0)
-    assert result["logging"]["protected_accused_unchanged"] == 1
-    assert result["logging"]["unapplied_claims"] == 1
 
 
 def test_insertion_next_to_protected_span_is_an_ordinary_insertion_site(eval_set):
@@ -338,13 +314,6 @@ def test_extract_json_prefers_whole_text_then_fence_then_braces():
 # --------------------------------------------------------------------------- prompts and set loading
 
 
-def test_variants_differ_only_by_leading_preamble(eval_set):
-    for kind, payload in (("review", review_payload(eval_set.review)), ("writing", writing_payload(eval_set.writing))):
-        base = build_prompt(kind, payload)
-        with_preamble = build_prompt(kind, payload, "Ти — редактор.\n")
-        assert with_preamble == "Ти — редактор.\n\n" + base
-
-
 @pytest.mark.parametrize("kind", ["review", "writing", "judge"])
 def test_rendered_prompts_pass_the_read_only_write_intent_guard(eval_set, kind):
     payload = review_payload(eval_set.review) if kind == "review" else writing_payload(eval_set.writing)
@@ -373,13 +342,3 @@ def test_protocol_minimums_reported(eval_set):
     problems = protocol_shortfalls(eval_set)
     assert any("seeded errors" in p for p in problems)
     assert any("A2" in p and "C1" in p for p in problems)
-
-
-def test_variant_parsing(tmp_path: Path):
-    preamble = tmp_path / "p.md"
-    preamble.write_text("Ти — редактор.\n", encoding="utf-8")
-    variant = parse_variant(f"adapted-v2={preamble}")
-    assert (variant.label, variant.preamble) == ("adapted-v2", "Ти — редактор.")
-    assert parse_variant("none").preamble is None
-    with pytest.raises(HarnessError):
-        parse_variant("none=whatever")

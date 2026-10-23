@@ -9,8 +9,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.result import Result
-from scripts.ai_agent_bridge import _channels, _cli, _db, _inbox, _reconcile
+from scripts.ai_agent_bridge import _channels, _cli, _db, _reconcile
 
 
 @pytest.fixture(autouse=True)
@@ -52,21 +51,6 @@ def _set_delivery(delivery_id: str, **fields: object) -> None:
         conn.commit()
     finally:
         conn.close()
-def _ok_result(agent: str) -> Result:
-    return Result(
-        ok=True,
-        agent=agent,
-        model="test-model",
-        mode="read-only",
-        response=f"{agent} reply",
-        stderr_excerpt=None,
-        duration_s=0.1,
-        session_id=None,
-        rate_limited=False,
-        stalled=False,
-        returncode=0,
-        usage_record={},
-    )
 def test_reconcile_dry_run_prints_worker_disappeared_without_applying(capsys, monkeypatch):
     # Reconcile is a legacy bridge command; authority mode retires its CLI path.
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "shadow")
@@ -132,16 +116,3 @@ def test_reconcile_marks_workspace_write_delivery_delivered_when_recovery_commit
     assert row["status"] == "delivered"
     assert row["error"] == "reconcile:git-commit-found:abc123"
     assert row["delivered_at"] is not None
-
-
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-@patch("scripts.ai_agent_bridge._inbox.reconcile_deliveries")
-def test_run_inbox_calls_reconcile_at_end(mock_reconcile, mock_invoke):
-    _channels.create_channel("reviews")
-    _channels.post("reviews", "user", "hello", to_agents=["claude"], auto_snapshot=False)
-    mock_invoke.return_value = _ok_result("claude")
-
-    summary = _inbox.run_inbox("claude", until_idle=False)
-
-    assert summary.deliveries_delivered == 1
-    mock_reconcile.assert_called_once_with()

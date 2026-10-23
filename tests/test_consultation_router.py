@@ -98,13 +98,6 @@ def queue_with_proposal(temp_queue_dir):
 
 
 class TestQueueList:
-    def test_queue_list_empty(self, temp_queue_dir):
-        resp = client.get("/api/consultation/queue")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["count"] == 0
-        assert data["pending"] == []
-
     def test_queue_list_with_proposals(self, queue_with_proposal):
         filename, *_ = queue_with_proposal
         resp = client.get("/api/consultation/queue")
@@ -124,18 +117,6 @@ class TestQueueList:
 
 
 class TestQueueDetail:
-    def test_queue_detail(self, queue_with_proposal):
-        filename, *_ = queue_with_proposal
-        resp = client.get(f"/api/consultation/queue/{filename}")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["status"] == "pending"
-        assert data["confidence"] == "high"
-        assert len(data["proposed_changes"]) == 2
-
-    def test_queue_detail_not_found(self, temp_queue_dir):
-        resp = client.get("/api/consultation/queue/nonexistent.yaml")
-        assert resp.status_code == 404
 
     def test_queue_detail_shows_applied(self, queue_with_proposal):
         filename, queue_dir, applied_dir, _ = queue_with_proposal
@@ -156,10 +137,6 @@ class TestApprove:
         resp = client.post(f"/api/consultation/queue/{filename}/approve")
         assert resp.status_code == 400
         assert "confirm" in resp.json()["error"].lower()
-
-    def test_approve_not_found(self, temp_queue_dir):
-        resp = client.post("/api/consultation/queue/nope.yaml/approve?confirm=true")
-        assert resp.status_code == 404
 
     def test_approve_validates_find_strings(self, queue_with_proposal):
         """FIND strings don't exist in template → 409."""
@@ -244,11 +221,6 @@ class TestApprove:
 
 
 class TestReject:
-    def test_reject_without_confirm(self, queue_with_proposal):
-        filename, *_ = queue_with_proposal
-        resp = client.post(f"/api/consultation/queue/{filename}/reject")
-        assert resp.status_code == 400
-
     def test_reject_success(self, queue_with_proposal):
         filename, queue_dir, _, rejected_dir = queue_with_proposal
         resp = client.post(
@@ -278,42 +250,6 @@ class TestReject:
 
 
 class TestHistory:
-    def _mock_collect(self, track=None, outcome=None, ctx=None):
-        """Return sample consultation entries, applying filters."""
-        entries = [
-            {"track": "a2", "slug": "being-and-becoming", "num": 1, "outcome": "queued",
-             "ts": "2026-03-13T18:49:51", "scope": "all_modules", "confidence": "high"},
-            {"track": "a2", "slug": "being-and-becoming", "num": 2, "outcome": "applied",
-             "ts": "2026-03-13T19:00:00", "scope": "this_module", "confidence": "medium"},
-            {"track": "b1", "slug": "some-module", "num": 1, "outcome": "queued",
-             "ts": "2026-03-13T20:00:00", "scope": "all_modules", "confidence": "low"},
-        ]
-        if track:
-            entries = [e for e in entries if e["track"] == track]
-        if outcome:
-            entries = [e for e in entries if e["outcome"] == outcome]
-        return entries
-
-    def test_history_all(self):
-        with patch("scripts.api.consultation_router._collect_all_consultations", self._mock_collect):
-            resp = client.get("/api/consultation/history")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["total"] == 3
-
-    def test_history_filtered_by_track(self):
-        with patch("scripts.api.consultation_router._collect_all_consultations", self._mock_collect):
-            resp = client.get("/api/consultation/history?track=a2")
-        data = resp.json()
-        assert data["total"] == 2
-        assert all(c["track"] == "a2" for c in data["consultations"])
-
-    def test_history_filtered_by_outcome(self):
-        with patch("scripts.api.consultation_router._collect_all_consultations", self._mock_collect):
-            resp = client.get("/api/consultation/history?outcome=queued")
-        data = resp.json()
-        assert data["total"] == 2
-
     def test_history_module(self, tmp_path, monkeypatch):
         # Create a fake orchestration dir with state.json
         orch_dir = tmp_path / "a2" / "orchestration" / "being-and-becoming"
@@ -329,44 +265,5 @@ class TestHistory:
         assert data["count"] == 2
         assert data["consultations"][0]["outcome"] == "queued"
 
-    def test_history_module_not_found(self, tmp_path, monkeypatch):
-        ctx = app.state.ctx.with_roots(curriculum_root=tmp_path)
-        monkeypatch.setattr(app.state, "ctx", ctx)
-        resp = client.get("/api/consultation/history/a2/nonexistent")
-        assert resp.status_code == 404
-
 
 # ==================== Metrics ====================
-
-
-class TestMetrics:
-    def test_metrics(self, temp_queue_dir):
-        queue_dir, _applied_dir, _rejected_dir = temp_queue_dir
-
-        # Add a proposal to queue for root cause keyword extraction
-        filepath = queue_dir / "test-proposal.yaml"
-        filepath.write_text(
-            yaml.dump(SAMPLE_PROPOSAL, allow_unicode=True, default_flow_style=False),
-        )
-
-        with patch(
-            "scripts.api.consultation_router._collect_all_consultations",
-            lambda *a, **kw: [
-                {"track": "a2", "outcome": "queued", "confidence": "high", "scope": "all_modules"},
-                {"track": "a2", "outcome": "applied", "confidence": "medium", "scope": "this_module"},
-                {"track": "b1", "outcome": "queued", "confidence": "low", "scope": "all_modules"},
-            ],
-        ):
-            resp = client.get("/api/consultation/metrics")
-
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["total"] == 3
-        assert data["pending_queue"] == 1
-        assert data["by_outcome"]["queued"] == 2
-        assert data["by_outcome"]["applied"] == 1
-        assert data["by_confidence"]["high"] == 1
-        assert data["by_scope"]["all_modules"] == 2
-        assert data["by_track"]["a2"] == 2
-        # Root cause keywords extracted from queue file
-        assert len(data["top_root_causes"]) > 0

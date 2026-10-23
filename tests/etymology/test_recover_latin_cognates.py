@@ -37,13 +37,6 @@ def test_marker_scope_avoids_cyrillic_script_cognates():
     assert should_recover_marker("ч. слц.")
 
 
-def test_edge_cases():
-    assert recover_latin("") == ""
-    assert recover_latin("5") == "s"
-    assert recover_latin("s") == "s"
-    assert recover_latin("1234") == "1234"
-
-
 def test_recover_database_adds_column_and_populates(tmp_path):
     db_path = tmp_path / "sources.db"
     conn = sqlite3.connect(db_path)

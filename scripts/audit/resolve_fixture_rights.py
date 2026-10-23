@@ -503,52 +503,6 @@ def lookup_fts(
     return best
 
 
-def lookup_substring(
-    connections: dict[str, SQLiteConnection],
-    quotes: list[str],
-) -> SourceHit | None:
-    best: SourceHit | None = None
-    substring_tables = {"external_articles", "literary_texts", "textbooks", "wikipedia", "ukrainian_wiki"}
-    for spec in SOURCE_TABLES:
-        if spec.table not in substring_tables:
-            continue
-        conn = connections.get(spec.db_name)
-        if conn is None or not table_exists(conn, spec.table):
-            continue
-        columns = table_columns(conn, spec.table)
-        searchable_cols = [column for column in spec.text_cols if column in columns]
-        if not searchable_cols:
-            continue
-        selected = select_columns(spec, conn)
-        for quote in quotes:
-            for segment in quote_segments(quote)[:1]:
-                normalized_segment = normalize_text(segment)
-                if len(normalized_segment) < 16 or len(normalized_segment) > 160:
-                    continue
-                clauses = " OR ".join(f"{column} LIKE ?" for column in searchable_cols)
-                params = tuple(f"%{segment}%" for _ in searchable_cols)
-                try:
-                    rows = conn.execute(
-                        f"""
-                        SELECT {selected}
-                        FROM {spec.table}
-                        WHERE {clauses}
-                        ORDER BY {spec.id_col}
-                        LIMIT 20
-                        """,
-                        params,
-                    ).fetchall()
-                except sqlite3.Error:
-                    continue
-                for row in rows:
-                    hit = candidate_hit(spec, row, [quote], "substring-scan")
-                    if hit and (best is None or hit.score > best.score):
-                        best = hit
-                if best:
-                    return best
-    return best
-
-
 def resolve_hit(
     connections: dict[str, SQLiteConnection],
     evidence_text: str,

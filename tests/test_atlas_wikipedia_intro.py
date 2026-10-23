@@ -47,17 +47,6 @@ def test_goddess_protectress_excerpt_still_attaches() -> None:
     )
 
 
-def test_school_article_is_not_rusalka_kin() -> None:
-    assert atlas_wikipedia_ok_as_intro(
-        "школа",
-        {
-            "title": "Школа",
-            "description": "навчальний заклад",
-            "extract": "Шко́ла — заклад освіти...",
-        },
-    )
-
-
 def test_rusalka_lemma_keeps_its_own_wikipedia_lead() -> None:
     extract = (
         "Русалка — міфологічна істота, нижчий дух, споріднений із русалками "

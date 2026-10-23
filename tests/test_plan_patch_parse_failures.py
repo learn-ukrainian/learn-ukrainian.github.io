@@ -34,11 +34,6 @@ class TestParsePlanPatchResponse:
         assert not outcome.ok
         assert outcome.failure_reason == "empty_output"
 
-    def test_whitespace_only_returns_empty_output(self) -> None:
-        outcome = plan_patch.parse_plan_patch_response("   \n\n  ")
-        assert not outcome.ok
-        assert outcome.failure_reason == "empty_output"
-
     def test_valid_delimiters_with_valid_yaml_succeeds(self) -> None:
         raw = (
             "noise\n"

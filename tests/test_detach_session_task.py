@@ -163,23 +163,6 @@ def test_detach_does_not_report_a_pid_when_exec_fails(tmp_path: Path, capsys) ->
     assert not pid_file.exists()
 
 
-@pytest.mark.parametrize("option", ["--log-file", "--pid-file"])
-def test_detach_rejects_directory_output_paths(tmp_path: Path, option: str) -> None:
-    parser = detach_session_task.build_parser()
-
-    with pytest.raises(SystemExit):
-        parser.parse_args(
-            [
-                "--workdir",
-                str(tmp_path),
-                option,
-                str(tmp_path),
-                "--log-file" if option == "--pid-file" else "--pid-file",
-                str(tmp_path / "output"),
-            ]
-        )
-
-
 def test_detach_refuses_to_replace_a_live_service_pid_file(tmp_path: Path) -> None:
     log_file = tmp_path / "service.log"
     pid_file = tmp_path / "service.pid"

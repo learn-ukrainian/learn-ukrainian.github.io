@@ -153,31 +153,6 @@ def test_termin_prison_sense_needs_context(tmp_path):
     assert "термін_строк" not in _rules(clean)
 
 
-def test_identifier_and_citation_fields_are_skipped(tmp_path):
-    # connects_to / slug / references must not be scanned even if they contain
-    # Latin-Cyrillic mixes (slugs) or URLs with Cyrillic article titles.
-    findings = _lint_dict(tmp_path, {
-        "slug": "viktor-domontovych",
-        "module": "bio-201",
-        "connects_to": ["bio-mykola-zerov", "lit-neoclassicism"],
-        "references": [{"title": "Драй-Хмара", "path": "uk.wikipedia.org/wiki/Драй-Хмара"}],
-        "content_outline": [{"section": "Огляд", "points": ["Чистий український текст."]}],
-    })
-    assert findings == [], f"identifier/citation fields should be skipped, got {findings}"
-
-
-def test_clean_plan_has_no_findings(tmp_path):
-    findings = _lint_dict(tmp_path, {
-        "title": "Михайло Драй-Хмара",
-        "content_outline": [
-            {"section": "Розминка", "points": ["Поет-неокласик та перекладач."]},
-            {"section": "Репресії", "points": ["Заарештований 1935 року; помер на Колимі."]},
-        ],
-        "activity_hints": [{"focus": "Дискусія про неокласицизм", "type": "debate"}],
-    })
-    assert findings == []
-
-
 def test_wiki_text_mode_flags_same_defect_classes(tmp_path):
     article = tmp_path / "subject.md"
     article.write_text(

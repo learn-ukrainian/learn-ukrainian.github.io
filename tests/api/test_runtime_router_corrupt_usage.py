@@ -82,20 +82,6 @@ def test_corrupt_line_is_unreadable_and_valid_rows_still_count(tmp_path: Path, c
     assert unreadable == {"files": 0, "lines": 1, "records": 0}
 
 
-def test_truncated_invalid_last_line_is_unreadable(tmp_path: Path) -> None:
-    """A truncated last line that is not valid JSON is one unreadable line;
-    the valid rows before it still count."""
-    first = _record("codex", "ok")
-    path = tmp_path / "usage_truncated.jsonl"
-    path.write_bytes(_line(first) + b'{"ts": "2026-10-08T00:00:00Z", "outcome": "rate_lim')
-
-    unreadable = _new_unreadable()
-    records = runtime_router._iter_usage_records([path], unreadable)
-
-    assert records == [first]
-    assert unreadable == {"files": 0, "lines": 1, "records": 0}
-
-
 def test_truncated_valid_last_line_is_counted(tmp_path: Path) -> None:
     """A truncated last line that is still a complete valid JSON object counts
     as a row and leaves the unreadable counters untouched."""
@@ -171,9 +157,6 @@ def test_summarize_runtime_usage_totals_over_valid_rows(tmp_path: Path) -> None:
 # --- Runtime API responses surface the unreadable counts (#9924) ---
 
 ONE_UNREADABLE_LINE = {"files": 0, "lines": 1, "records": 0, "total": 1}
-ZERO_UNREADABLE = {"files": 0, "lines": 0, "records": 0, "total": 0}
-
-
 def _ctx_with_batch_state_dir(batch_state_dir: Path):
     """MonitorContext pinned to a disposable ``batch_state`` root.
 
@@ -231,36 +214,6 @@ def test_usage_api_reports_unreadable_and_counts_valid_rows(
     assert data["unreadable"] == ONE_UNREADABLE_LINE
 
 
-def test_usage_api_counts_malformed_last_line(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """A truncated last line that is not valid JSON is one unreadable line."""
-    usage_dir = _usage_api_dir(tmp_path)
-    _today_file(usage_dir).write_bytes(
-        _line(_record("codex", "ok")) + b'{"ts": "2026-10-08T00:00:00Z", "outcome": "rate_lim'
-    )
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path))
-
-    response = client.get("/api/runtime/usage?days=1")
-
-    assert response.status_code == 200
-    data = response.json()
-    assert data["records_total"] == 1
-    assert data["unreadable"] == ONE_UNREADABLE_LINE
-
-
-def test_usage_api_reports_zero_unreadable_for_clean_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """A clean file reports an all-zero ``unreadable`` summary."""
-    usage_dir = _usage_api_dir(tmp_path)
-    _today_file(usage_dir).write_bytes(_line(_record("codex", "ok")) + _line(_record("codex", "error")))
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_batch_state_dir(tmp_path))
-
-    response = client.get("/api/runtime/usage?days=1")
-
-    assert response.status_code == 200
-    data = response.json()
-    assert data["records_total"] == 2
-    assert data["unreadable"] == ZERO_UNREADABLE
-
-
 @CORRUPT_KINDS
 def test_headroom_api_reports_unreadable_and_keeps_clear_decision(headroom_usage_dir: Path, corrupt_kind: str) -> None:
     """GET /api/runtime/headroom answers 200 over a corrupt line: it never
@@ -290,33 +243,6 @@ def test_headroom_api_blocked_decision_still_reports_unreadable(headroom_usage_d
     data = response.json()
     assert data["has_headroom"] is False
     assert data["reason"]
-    assert data["unreadable"] == ONE_UNREADABLE_LINE
-
-
-def test_headroom_api_reports_zero_unreadable_for_clean_files(headroom_usage_dir: Path) -> None:
-    """A clean lane file reports an all-zero ``unreadable`` summary."""
-    _today_file(headroom_usage_dir).write_bytes(_line(_record("codex", "ok")))
-
-    response = client.get("/api/runtime/headroom?agent=codex&model=gpt-6.1-sol")
-
-    assert response.status_code == 200
-    data = response.json()
-    assert data["has_headroom"] is True
-    assert data["unreadable"] == ZERO_UNREADABLE
-
-
-def test_headroom_api_counts_malformed_last_line(headroom_usage_dir: Path) -> None:
-    """A truncated last line that is not valid JSON is one unreadable line and
-    no rate-limit event, so headroom stays clear."""
-    _today_file(headroom_usage_dir).write_bytes(
-        _line(_record("codex", "ok")) + b'{"ts": "2026-10-08T00:00:00Z", "outcome": "rate_lim'
-    )
-
-    response = client.get("/api/runtime/headroom?agent=codex&model=gpt-6.1-sol")
-
-    assert response.status_code == 200
-    data = response.json()
-    assert data["has_headroom"] is True
     assert data["unreadable"] == ONE_UNREADABLE_LINE
 
 

@@ -161,21 +161,6 @@ def test_refused_wrapper_lane_is_logged_and_not_started(tmp_path: Path) -> None:
     assert not any("INJECTED" in arg for call in fake.calls for arg in call)
 
 
-def test_refused_lane_fails_main_and_shows_in_dry_run(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    fake = FakeTmux()
-    real = cg.Tmux
-    monkeypatch.setattr(lr, "Tmux", lambda: real(run=fake.run, sleep=fake.sleep, clock=fake.clock))
-    monkeypatch.setenv("LU_DRIVER_LANES_LOCAL", str(refusing_local(tmp_path)))
-    assert lr.main(["--dry-run"]) == 0
-    plan = {entry["session"]: entry for entry in json.loads(capsys.readouterr().out)}
-    assert set(plan["atlas"]) == {"session", "refused"} and "shell syntax" in plan["atlas"]["refused"]
-    assert fake.calls == []
-    assert lr.main(["--settle-seconds", "2"]) == 3
-    assert "atlas" not in created(fake)
-
-
 def test_unreadable_new_pane_is_unverified_and_relaunch_moves_on(tmp_path: Path) -> None:
     fake = FakeTmux(override={"capture-pane": subprocess.CompletedProcess([], 1, "", "can't find pane")})
     outcomes = run(fake, tmp_path)

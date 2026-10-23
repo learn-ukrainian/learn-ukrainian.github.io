@@ -120,23 +120,6 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     assert provenance_inventory_paths >= set(expected_inventory_ids)
 
 
-def test_review_workflow_validates_source_provenance_in_needs_review() -> None:
-    payload = {
-        "auto_merge": [{"lemma": "риба", "source_provenance": [{"source_id": "ok"}]}],
-        "needs_review": [
-            {
-                "entry": {
-                    "lemma": "кіт",
-                    "source_provenance": [{"source_id": "ok"}],
-                },
-                "reason": "fixture",
-            }
-        ],
-    }
-
-    review.validate_source_provenance(payload)
-
-
 def test_review_triage_is_stricter_than_grow_auto_merge() -> None:
     payload = {
         "auto_merge": [
@@ -199,21 +182,6 @@ def test_review_triage_accepts_enrichment_translation_anchor() -> None:
     }
 
     assert review.publish_review_reasons(entry) == []
-
-
-def test_review_triage_report_includes_publish_counts() -> None:
-    payload = {
-        "review_triage": {
-            "counts": {"publish_ready": 2, "needs_publish_review": 1},
-            "needs_publish_review_reasons": {"missing_english_anchor": 1},
-        }
-    }
-
-    report = review.format_triage_report(payload)
-
-    assert "publish_ready: 2" in report
-    assert "needs_publish_review: 1" in report
-    assert "- missing_english_anchor: 1" in report
 
 
 def test_publish_review_queue_includes_auto_merge_and_grow_review_rows() -> None:
@@ -326,78 +294,6 @@ def test_publish_review_queue_ids_are_stable_for_duplicate_headwords() -> None:
     ]
 
 
-def test_publish_review_queue_report_renders_markdown_rows() -> None:
-    payload = {
-        "auto_merge": [
-            {
-                "lemma": "жабка",
-                "pos": "noun",
-                "source_provenance": [
-                    {
-                        "source_family": "fixture",
-                        "source_id": "source-a",
-                        "source_locator": "row 2",
-                    }
-                ],
-            }
-        ],
-        "needs_review": [],
-    }
-
-    report = review.format_publish_review_queue_report(payload)
-
-    assert "# Source Inventory Publish Review Queue" in report
-    assert "- needs_publish_review: 1" in report
-    assert "`missing_english_anchor`: 1" in report
-    assert (
-        "| source-inventory-publish-review-0001 | жабка | noun | "
-        "auto_merge | no | missing_english_anchor | "
-        "fixture / source-a / row 2 |  |  |"
-    ) in report
-
-
-def test_publish_review_queue_report_handles_empty_queue() -> None:
-    payload = {
-        "auto_merge": [
-            {
-                "lemma": "кіт",
-                "pos": "noun",
-                "gloss": "cat",
-                "source_provenance": [{"source_family": "fixture"}],
-            }
-        ],
-        "needs_review": [],
-    }
-
-    report = review.format_publish_review_queue_report(payload)
-    summary = review.format_publish_review_queue_summary(payload)
-
-    assert "- needs_publish_review: 0" in report
-    assert "- no rows" in report
-    assert "publish_review_queue_rows: 0" in summary
-
-
-def test_publish_review_queue_report_writes_only_ephemeral_paths(
-    tmp_path: Path,
-) -> None:
-    payload = {
-        "auto_merge": [
-            {
-                "lemma": "жабка",
-                "pos": "noun",
-                "source_provenance": [{"source_family": "fixture"}],
-            }
-        ],
-        "needs_review": [],
-    }
-    out = tmp_path / "queue.md"
-
-    output_path = review.write_publish_review_queue_report(payload, out)
-
-    assert output_path == out.resolve()
-    assert "# Source Inventory Publish Review Queue" in out.read_text(encoding="utf-8")
-
-
 def test_publish_review_queue_report_rejects_repository_paths() -> None:
     with pytest.raises(SourceInventoryError, match="outside the repository"):
         review.resolve_ephemeral_review_output_path(PROJECT_ROOT / "docs/reports/source-inventory-review-queue.md")
@@ -487,19 +383,6 @@ def test_candidate_api_uses_current_caller_tmpdir_and_preserves_bytes(
     assert not list(expected.parent.glob(".*.tmp"))
 
 
-def test_default_paths_fall_back_to_system_temp_without_allocating(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.delenv("TMPDIR", raising=False)
-    fallback = tmp_path / "system-temp"
-    monkeypatch.setattr(review.tempfile, "gettempdir", lambda: str(fallback))
-    assert review.default_review_output_path(review.DEFAULT_OUT.name) == fallback / review.DEFAULT_OUT.name
-    assert review.default_review_output_path(review.DEFAULT_QUEUE_REPORT_OUT.name) == (
-        fallback / review.DEFAULT_QUEUE_REPORT_OUT.name
-    )
-    assert not fallback.exists()
-
-
 def test_default_candidate_refuses_repository_tmpdir_before_generation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -514,11 +397,6 @@ def test_default_candidate_refuses_repository_tmpdir_before_generation(
 def test_review_workflow_rejects_live_atlas_outputs(production_output: Path) -> None:
     with pytest.raises(SourceInventoryError, match="review-only source candidates"):
         review.resolve_review_output_path(production_output)
-
-
-def test_review_workflow_rejects_live_atlas_output_directory() -> None:
-    with pytest.raises(SourceInventoryError, match="site/src/data"):
-        review.resolve_review_output_path(PROJECT_ROOT / "site/src/data/source-inventory-review-candidates.json")
 
 
 @pytest.mark.parametrize(

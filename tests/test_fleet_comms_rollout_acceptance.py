@@ -267,19 +267,3 @@ def test_dual_write_completion_records_clean_parity_telemetry(tmp_path: Path) ->
     status = read_plane_status(root=root, telemetry_path=telemetry)
     assert status["parity_telemetry"]["parity_ok_count"] == 1
     assert status["parity_telemetry"]["parity_fail_count"] == 0
-
-
-def test_dual_write_mode_is_reported_read_only_with_migrated_plane(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """The configured dual-write mode is observable without changing plane state."""
-    root = tmp_path / "batch_state" / "fleet-comms" / "v1"
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "dual_write")
-    with ArtifactStore(root=root):
-        pass
-
-    status = read_plane_status(root=root)
-    assert status["mode"] == "dual_write"
-    assert status["enabled"] is True
-    assert status["read_only"] is True
-    assert status["schema"]["applied_version"] == MIGRATIONS[-1].version

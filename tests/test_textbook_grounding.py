@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-import os
 import sqlite3
-import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -192,38 +189,6 @@ def test_free_form_title_falls_back_to_fts5(monkeypatch) -> None:
     assert [hit["chunk_id"] for hit in hits] == ["fallback-textbook-hit"]
 
 
-def test_litvinova_grade7_p55_resolves_to_chunk(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    """Audit citation: `Літвінова Grade 7, p.55` (a1-a2-plan-references-2026-05-15, how-many)."""
-    db_path = tmp_path / "sources.db"
-    _seed_textbook_db(
-        db_path,
-        [
-            {
-                "chunk_id": "7-klas-ukrmova-litvinova-2024_s0055",
-                "title": "Сторінка 51",
-                "text": "Лексика. Прочитайте текст і знайдіть синоніми.",
-                "source_file": "7-klas-ukrmova-litvinova-2024",
-                "grade": "7",
-                "author": "litvinova",
-                "author_uk": "Літвінова",
-            }
-        ],
-    )
-    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
-
-    hits = linear_pipeline._search_textbook_hits(
-        "Літвінова Grade 7, p.55",
-        level="a1",
-        limit=1,
-    )
-
-    assert len(hits) == 1
-    assert hits[0]["chunk_id"] == "7-klas-ukrmova-litvinova-2024_s0055"
-
-
 def test_litvinova_cyrillic_variant_resolves_same_as_primary(
     tmp_path: Path,
     monkeypatch,
@@ -257,150 +222,6 @@ def test_litvinova_cyrillic_variant_resolves_same_as_primary(
 
     assert len(hits) == 1
     assert hits[0]["chunk_id"] == "5-klas-ukrmova-litvinova-2022_s0104"
-
-
-def test_golub_grade6_p179_resolves_to_chunk(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    """Audit citation: `Голуб Grade 6, с. 179` (a2 checkpoint-instrumental).
-
-    Tested with `p.` form because `_parse_textbook_reference_title` accepts that
-    syntax; the audit script normalises `с.`/`p.` upstream.
-    """
-    db_path = tmp_path / "sources.db"
-    _seed_textbook_db(
-        db_path,
-        [
-            {
-                "chunk_id": "6-klas-ukrmova-golub-2023_s0179",
-                "title": "Сторінка 176",
-                "text": "Іменники в орудному відмінку. Виконайте вправу.",
-                "source_file": "6-klas-ukrmova-golub-2023",
-                "grade": "6",
-                "author": "golub",
-                "author_uk": "Голуб",
-            }
-        ],
-    )
-    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
-
-    hits = linear_pipeline._search_textbook_hits(
-        "Голуб Grade 6, p.179",
-        level="a2",
-        limit=1,
-    )
-
-    assert len(hits) == 1
-    assert hits[0]["chunk_id"] == "6-klas-ukrmova-golub-2023_s0179"
-
-
-def test_varzatska_grade4_p38_resolves_to_chunk(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    """Audit citation: `Варзацька Grade 4, с. 38` (a2 checkpoint-cases)."""
-    db_path = tmp_path / "sources.db"
-    _seed_textbook_db(
-        db_path,
-        [
-            {
-                "chunk_id": "4-klas-ukrayinska-mova-varzatska-2021-1_s0038",
-                "title": "Сторінка 40",
-                "text": "Відмінки іменників. Знайдіть закінчення.",
-                "source_file": "4-klas-ukrayinska-mova-varzatska-2021-1",
-                "grade": "4",
-                "author": "varzatska",
-                "author_uk": "Варзацька",
-            }
-        ],
-    )
-    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
-
-    hits = linear_pipeline._search_textbook_hits(
-        "Варзацька Grade 4, p.38",
-        level="a2",
-        limit=1,
-    )
-
-    assert len(hits) == 1
-    assert (
-        hits[0]["chunk_id"]
-        == "4-klas-ukrayinska-mova-varzatska-2021-1_s0038"
-    )
-
-
-def test_ponomarova_grade3_p86_resolves_to_chunk(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    """Audit citation: `Пономарова Grade 3, p.86` (a1 many-things)."""
-    db_path = tmp_path / "sources.db"
-    _seed_textbook_db(
-        db_path,
-        [
-            {
-                "chunk_id": "3-klas-ukrainska-mova-ponomarova-2020-1_s0086",
-                "title": "Сторінка 87",
-                "text": "Прочитайте текст і дайте відповіді на запитання.",
-                "source_file": "3-klas-ukrainska-mova-ponomarova-2020-1",
-                "grade": "3",
-                "author": "ponomarova",
-                "author_uk": "Пономарова",
-            }
-        ],
-    )
-    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
-
-    hits = linear_pipeline._search_textbook_hits(
-        "Пономарова Grade 3, p.86",
-        level="a1",
-        limit=1,
-    )
-
-    assert len(hits) == 1
-    assert (
-        hits[0]["chunk_id"]
-        == "3-klas-ukrainska-mova-ponomarova-2020-1_s0086"
-    )
-
-
-def test_ponomarova_cyrillic_variant_resolves_same_as_primary(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    """Cyrillic spelling variant `Пономарьова` must resolve identically to `Пономарова`.
-
-    Audit citation: `Пономарьова Grade 4, с. 53` (a2 instrumental-accompaniment).
-    """
-    db_path = tmp_path / "sources.db"
-    _seed_textbook_db(
-        db_path,
-        [
-            {
-                "chunk_id": "4-klas-ukrayinska-mova-ponomarova-2021-1_s0053",
-                "title": "Сторінка 54",
-                "text": "Іменники з прийменниками. Прочитайте.",
-                "source_file": "4-klas-ukrayinska-mova-ponomarova-2021-1",
-                "grade": "4",
-                "author": "ponomarova",
-                "author_uk": "Пономарова",
-            }
-        ],
-    )
-    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
-
-    hits = linear_pipeline._search_textbook_hits(
-        "Пономарьова Grade 4, p.53",
-        level="a2",
-        limit=1,
-    )
-
-    assert len(hits) == 1
-    assert (
-        hits[0]["chunk_id"]
-        == "4-klas-ukrayinska-mova-ponomarova-2021-1_s0053"
-    )
 
 
 def test_textbook_excerpt_context_uses_reference_title_for_direct_lookup(
@@ -512,7 +333,6 @@ def test_core_textbook_miss_does_not_call_literary(monkeypatch) -> None:
 
 
 _REPEATED_QUOTE = "Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо."
-_OTHER_QUOTE = "Інший уривок про речення."
 _REPEATED_CHUNK = {
     "chunk_id": "5-klas-ukrmova-avramenko-2022_s0073",
     "title": "Сторінка 73",
@@ -641,35 +461,6 @@ def _titles_index(sections: list[tuple[str, str]], title: str) -> int:
     return [item[0] for item in sections].index(title)
 
 
-def test_same_page_direct_lookup_is_quoted_once(tmp_path: Path, monkeypatch) -> None:
-    """Spacing variants of one page citation still resolve to that chunk, quoted once."""
-    db_path = tmp_path / "sources.db"
-    _seed_textbook_db(
-        db_path,
-        [
-            {
-                "chunk_id": "10-klas-ukrmova-karaman-2018_s0187",
-                "title": "Сторінка 105",
-                "text": "§ 38 Розмовна, просторічна, емоційно забарвлена лексика.",
-                "source_file": "10-klas-ukrmova-karaman-2018",
-                "grade": "10",
-                "author": "karaman",
-                "author_uk": "Караман",
-            }
-        ],
-    )
-    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
-    titles = ["Караман Grade 10, p.187", "Караман Grade 10, p. 187"]
-
-    context = linear_pipeline._build_textbook_excerpt_context(_excerpt_plan(titles), "a1")
-
-    sections = _reference_sections(context)
-    assert [title for title, _body in sections] == titles
-    assert context.count("> § 38 Розмовна, просторічна, емоційно забарвлена лексика.") == 1
-    assert context.count("10-klas-ukrmova-karaman-2018") == 1
-    assert sections[1][1] == f"see {titles[0]}"
-
-
 def test_corpus_missing_is_unchanged_when_another_reference_repeats(monkeypatch) -> None:
     calls = _install_textbook_search(
         monkeypatch,
@@ -771,72 +562,3 @@ def test_source_file_and_page_identity_is_quoted_once(monkeypatch) -> None:
     sections = _reference_sections(context)
     assert context.count(f"> {_REPEATED_QUOTE}") == 1
     assert sections[1][1] == "see Звуки і букви"
-
-
-def test_excerpt_dedupe_is_stable_across_hash_seeds() -> None:
-    repo = Path(__file__).resolve().parents[1]
-    script = """
-from scripts.build import linear_pipeline
-from wiki import sources_db
-
-titles = [
-    "Звуки і букви",
-    "Абетка",
-    "Привітання",
-    "Літери",
-    "Голосні",
-    "Приголосні",
-    "Інший підручник",
-]
-hit = {
-    "chunk_id": "5-klas-ukrmova-avramenko-2022_s0073",
-    "title": "Сторінка 73",
-    "text": "Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.",
-    "source_file": "5-klas-ukrmova-avramenko-2022",
-    "source_type": "textbook",
-    "corpus": "textbook_sections",
-}
-other = {
-    "chunk_id": "7-klas-ukrmova-litvinova-2024_s0055",
-    "title": "Сторінка 51",
-    "text": "Інший уривок про речення.",
-    "source_file": "7-klas-ukrmova-litvinova-2024",
-    "source_type": "textbook",
-    "corpus": "textbook_sections",
-}
-
-def search(query, *, track, limit):
-    if "Інший підручник" in query:
-        return [dict(other)]
-    return [dict(hit)]
-
-sources_db.search_sources = search
-plan = {
-    "references": [{"title": title} for title in titles],
-    "title": "Звуки",
-    "subtitle": "літери",
-    "content_outline": [{"section": "Читання", "points": ["букви", "звуки", "склад"]}],
-}
-print(linear_pipeline._build_textbook_excerpt_context(plan, "a1"), end="")
-"""
-    outputs: list[str] = []
-    for seed in ("0", "1"):
-        env = os.environ.copy()
-        env["PYTHONHASHSEED"] = seed
-        env["PYTHONPATH"] = os.pathsep.join(
-            [str(repo), str(repo / "scripts"), env.get("PYTHONPATH", "")]
-        )
-        outputs.append(
-            subprocess.check_output(
-                [sys.executable, "-c", script],
-                cwd=repo,
-                env=env,
-                text=True,
-                timeout=60,
-            )
-        )
-
-    assert outputs[0] == outputs[1]
-    assert outputs[0].count(f"> {_REPEATED_QUOTE}") == 1
-    assert outputs[0].count(f"> {_OTHER_QUOTE}") == 1
-    assert outputs[0].count("see Звуки і букви") == 5

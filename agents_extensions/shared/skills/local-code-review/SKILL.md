@@ -71,10 +71,27 @@ follows the stated contract, existing invariants on the change's paths and
 regressions against main, verdicts are proportional, and a missing required
 capability is INCONCLUSIVE, which still blocks (Step 5); exact-head CI that
 answers the execution questions is valid evidence, a capability note is not a
-verdict, and new tests name their defect class (Step 5); the breakers are
-unchanged (Step 6).
+verdict, and new tests name their defect class (Step 5). From round 2 on, the
+reviewer brief uses DELTA scope. Step 6 applies the canonical
+[review stopping rule](../drive-epic/references/review-merge-cleanup.md#review-stopping-rule)
+alongside the scope breakers.
 
 ## Output
 
 Print a structured report to the conversation (the checklist's Step 8 gives
 the exact shape). Do NOT write a file unless specifically asked.
+
+## Durable evidence (#11342)
+
+A review whose evidence is not in the result text is unauditable after the
+task ends. Write every artifact a later reader needs (report, archives, logs,
+screenshots, scripts) under `$LU_TASK_EVIDENCE_DIR`, which dispatch creates
+under the task runtime lease and names in the worker preamble. Task cleanup
+copies that directory to `batch_state/preserved/<task>/` with a retrieval
+receipt before it deletes the lease; it is capped at 256 MiB, and an over-cap
+or unreadable directory is a typed refusal that keeps the lease. Ignored files
+written elsewhere in the worktree are not safe: a later dispatch that reuses
+the worktree runs a cone sparse-checkout that removes them, and reuse is now
+refused while a terminal task's worktree evidence has no retrieval receipt.
+Cite preserved evidence by its repository-relative `batch_state/preserved/`
+path, and put the verdict in the result text too.

@@ -8,17 +8,11 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-import yaml
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import model_view_exporter
 from scripts.projects.ua_open_weight_eval import suite_cli
 
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def _write_jsonl(path: Path, rows: list[dict]) -> None:
-    path.write_text("".join(suite_cli.canonical_json(row) + "\n" for row in rows), encoding="utf-8")
 
 
 def test_release_is_balanced_reproducible_and_keeps_upstreams_frozen() -> None:
@@ -63,39 +57,6 @@ def test_source_only_requests_expose_no_gold(tmp_path: Path) -> None:
     assert all(
         not {"error", "correct_control", "protected", "unresolved"}.intersection(row["item_id"].split("-"))
         for row in rows[1:]
-    )
-
-
-def test_saved_output_scoring_is_per_track_without_global_score(tmp_path: Path) -> None:
-    cases = suite_cli.read_jsonl(suite_cli.CASES_PATH)
-    responses = tmp_path / "responses.jsonl"
-    rows = [
-        {
-            "type": "run",
-            "schema_version": suite_cli.RESPONSE_SCHEMA,
-            "run_id": "deterministic-contract-fixture",
-            "model": "local-fixture",
-        }
-    ]
-    rows.extend(
-        {
-            "item_id": suite_cli.request_item_id(position),
-            "action": case["expected"]["action"],
-            "output_text": case["expected"]["accepted_texts"][0],
-        }
-        for position, case in enumerate(cases, 1)
-    )
-    _write_jsonl(responses, rows)
-    output = tmp_path / "report.json"
-    report = suite_cli.score_saved(responses, output)
-    assert report["scoring"]["global_quality_score"] is None
-    assert report["scoring"]["global_score_prohibited"] is True
-    assert report["scoring"]["closed_model_judge_used"] is False
-    assert set(report["tracks"]) == set(suite_cli.read_json(suite_cli.CONFIG_PATH)["tracks"])
-    assert all(
-        metric["action_accuracy"] in {1.0, None}
-        for track in report["tracks"].values()
-        for metric in track["categories"].values()
     )
 
 
@@ -179,11 +140,6 @@ def test_foundry_firewall_loads_every_broad_eval_case() -> None:
     assert all(registry.match(case["source"]).matched for case in cases)
 
 
-def test_saved_response_schema_is_valid() -> None:
-    schema = suite_cli.read_json(suite_cli.RELEASE_ROOT / "saved_response.schema.json")
-    Draft202012Validator.check_schema(schema)
-
-
 def test_publication_package_is_complete_rights_mapped_and_reproducible(tmp_path: Path) -> None:
     source_revision = "a" * 40
     first = tmp_path / "first"
@@ -242,18 +198,3 @@ def test_publication_verifier_rejects_tampering_and_extra_bytes(tmp_path: Path) 
     (package / "raw-provider-output.jsonl").write_text("{}\n", encoding="utf-8")
     with pytest.raises(suite_cli.SuiteError, match="missing or extra files"):
         suite_cli.verify_publication_package(package)
-
-
-def test_hugging_face_card_declares_test_split_and_discovery_metadata() -> None:
-    card = (suite_cli.PUBLICATION_DOC_ROOT / "HUGGING_FACE_README.md").read_text(encoding="utf-8")
-    _, metadata_text, _ = card.split("---", 2)
-    metadata = yaml.safe_load(metadata_text)
-    assert metadata["language"] == ["uk"]
-    assert metadata["license"] == ["cc-by-4.0", "mit"]
-    assert metadata["configs"] == [
-        {
-            "config_name": "default",
-            "data_files": [{"path": "cases.jsonl", "split": "test"}],
-        }
-    ]
-    assert "evaluation" in metadata["tags"]

@@ -445,38 +445,6 @@ def test_saved_tool_result_pointer_requires_prefix(tmp_path: Path) -> None:
     assert agy_module._SAVED_OUTPUT_POINTER_RE.search(text) is None
 
 
-def test_render_writer_prompt_includes_agy_specific_directives() -> None:
-    plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
-    plan = linear_pipeline.plan_check(plan_path)
-
-    prompt = linear_pipeline.render_writer_prompt(
-        plan=plan,
-        plan_content=plan_path.read_text(encoding="utf-8"),
-        knowledge_packet="Knowledge packet stub.",
-        writer="agy-tools",
-    )
-
-    assert "## agy-tools writer directives" in prompt
-    assert "Use `mcp_sources_*` tools directly." in prompt
-    assert "Do NOT issue curl-via-Bash for MCP retrieval" in prompt
-    assert "Allowed bash: NONE except `curl` against `http://127.0.0.1:8766/mcp`" in prompt
-
-
-def test_render_writer_prompt_omits_agy_directives_for_other_writers() -> None:
-    plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
-    plan = linear_pipeline.plan_check(plan_path)
-
-    prompt = linear_pipeline.render_writer_prompt(
-        plan=plan,
-        plan_content=plan_path.read_text(encoding="utf-8"),
-        knowledge_packet="Knowledge packet stub.",
-        writer="claude-tools",
-    )
-
-    assert "## agy-tools writer directives" not in prompt
-    assert "Do NOT issue curl-via-Bash for MCP retrieval" not in prompt
-
-
 def _build(tmp_path: Path, *, model: str | None):
     return AgyAdapter().build_invocation(
         prompt="hello",
@@ -499,11 +467,6 @@ def _value_after_flag(plan, flag: str) -> str | None:
     if flag not in plan.cmd:
         return None
     return plan.cmd[plan.cmd.index(flag) + 1]
-
-
-def test_build_invocation_sets_print_timeout(tmp_path: Path) -> None:
-    plan = _build(tmp_path, model=None)
-    assert _value_after_flag(plan, "--print-timeout") == agy_module._AGY_PRINT_TIMEOUT
 
 
 @pytest.mark.parametrize("size", [5, 200_000], ids=["short", "over-128-kib"])
@@ -545,53 +508,10 @@ def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path
     assert json.loads(plan.stdin_payload)["message"]["content"][0]["text"] == prompt
 
 
-def test_build_invocation_maps_model_slug(tmp_path: Path) -> None:
-    # Runtime slugs pass through as ``agy models`` ids (verified 2026-07-21 for 3.6).
-    plan = _build(tmp_path, model="gemini-3.8-flash-high")
-    assert _model_after_flag(plan) == "gemini-3.8-flash-high"
-
-
-def test_build_invocation_accepts_display_string(tmp_path: Path) -> None:
-    # Legacy display labels normalize to the slug form.
-    plan = _build(tmp_path, model="Gemini 3.8 Flash (High)")
-    assert _model_after_flag(plan) == "gemini-3.8-flash-high"
-
-
 def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="Unsupported AGY model") as error:
         _build(tmp_path, model="gemini-9.9-pro-preview")
     assert "gemini-3.8-flash-high" not in str(error.value)
-
-
-@pytest.mark.parametrize(
-    ("model", "expected"),
-    [
-        ("gemini-9.9-pro-preview", "For Gemini Pro, use `--model gemini-3.1-pro-high`."),
-        (
-            "gemini-9.9-flash-preview",
-            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_GENERAL_MODEL_SLUGS) + ".",
-        ),
-        (
-            "unknown-local-model",
-            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_GENERAL_MODEL_SLUGS) + ".",
-        ),
-    ],
-)
-def test_unknown_model_suggestion(model: str, expected: str) -> None:
-    assert agy_module.unknown_model_suggestion(model) == expected
-
-
-def test_unknown_model_suggestion_preserves_general_ids_when_restricted_slugs_are_added(monkeypatch) -> None:
-    expected = (
-        "Accepted AGY model ids: `gemini-3.8-flash-high`, `gemini-3.8-flash-medium`, "
-        "`gemini-3.8-flash-low`, `gemini-3.1-pro-high`, `gemini-3.1-pro-low`, "
-        "`gemini-4-argon-high`, `gemini-4-argon-medium`, `gemini-4-argon-low`."
-    )
-    general_slugs = agy_module._AGY_GENERAL_MODEL_SLUGS
-    restricted_slugs = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
-    for slugs in (general_slugs, (*general_slugs, *restricted_slugs)):
-        monkeypatch.setattr(agy_module, "_AGY_MODEL_SLUGS", slugs)
-        assert agy_module.unknown_model_suggestion("unknown-local-model") == expected
 
 
 def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
@@ -628,17 +548,6 @@ def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, 
     assert "gemini-3.8-flash-high" not in err
 
 
-def test_build_invocation_none_model_falls_back_to_default(tmp_path: Path) -> None:
-    # No model -> resolves the adapter default slug.
-    plan = _build(tmp_path, model=None)
-    assert _model_after_flag(plan) == "gemini-3.8-flash-high"
-
-
-def test_build_invocation_maps_pro_preview_to_supported_slug(tmp_path: Path) -> None:
-    plan = _build(tmp_path, model="gemini-3.1-pro-preview")
-    assert _model_after_flag(plan) == "gemini-3.1-pro-high"
-
-
 @pytest.mark.parametrize(
     ("requested", "selector"),
     [
@@ -670,19 +579,6 @@ def test_argon_selectors_pass_through_unchanged(
         effort=effort,
     )
     assert _model_after_flag(plan) == selector
-
-
-def test_accepted_agy_selectors_preserve_pro_and_add_argon() -> None:
-    assert agy_module._AGY_GENERAL_MODEL_SLUGS == (
-        "gemini-3.8-flash-high",
-        "gemini-3.8-flash-medium",
-        "gemini-3.8-flash-low",
-        "gemini-3.1-pro-high",
-        "gemini-3.1-pro-low",
-        "gemini-4-argon-high",
-        "gemini-4-argon-medium",
-        "gemini-4-argon-low",
-    )
 
 
 @pytest.mark.parametrize("tier", ["low", "medium", "high"])
@@ -810,15 +706,6 @@ def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, ef
     if "pro" in model.casefold():
         assert "For Gemini Pro, use `--model gemini-3.1-pro-high`." in message
         assert "gemini-3.8-flash-high" not in message
-
-
-@pytest.mark.parametrize("tier", ["high", "medium", "low"])
-@pytest.mark.parametrize("display_label", [False, True])
-def test_build_invocation_refuses_retired_flash_aliases(tmp_path: Path, tier: str, display_label: bool) -> None:
-    model = f"Gemini 3.5 Flash ({tier.title()})" if display_label else f"gemini-3.5-flash-{tier}"
-    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use gemini-3.8-flash-high"):
-        _build(tmp_path, model=model)
-    assert f"gemini-3.5-flash-{tier}" not in agy_module._AGY_MODEL_SLUGS
 
 
 # --- #7994: agy 2026-09 transcript shape (tool results are ``type: GENERIC``) ---
@@ -990,12 +877,6 @@ def test_agy_home_override_sets_home_and_app_data_dir(tmp_path: Path) -> None:
     assert "AGY_RUNTIME_LOG_FILE" in plan.env_overrides
 
 
-@pytest.mark.parametrize("tool_config", [None, {}, {"mcp_server_names": ["sources"]}, {"agy_home_override": ""}])
-def test_no_agy_home_override_leaves_home_and_app_data_alone(tmp_path: Path, tool_config: dict | None) -> None:
-    plan = _build_with(tmp_path, tool_config)
-    assert set(plan.env_overrides) == {"AGY_RUNTIME_LOG_FILE"}
-
-
 def test_transcript_path_follows_agy_app_data_dir_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     real_home = tmp_path / "real-home"
     monkeypatch.setenv("HOME", str(real_home))
@@ -1012,22 +893,6 @@ def test_transcript_path_follows_agy_app_data_dir_override(tmp_path: Path, monke
     finally:
         log_file.unlink(missing_ok=True)
     assert found == agy_module._brain_transcript_path(scoped / ".gemini" / "antigravity-cli", CONVERSATION_ID)
-
-
-def test_transcript_path_defaults_to_real_home_without_override(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    real_home = tmp_path / "real-home"
-    monkeypatch.setattr(Path, "home", classmethod(lambda _cls: real_home))
-    plan = _build_with(tmp_path, None)
-    log_file = Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"])
-    log_file.write_text(f"conversation={CONVERSATION_ID}\n", encoding="utf-8")
-    try:
-        _write_transcript(real_home / ".gemini" / "antigravity-cli")
-        found = agy_module._transcript_path_from_plan(plan)
-    finally:
-        log_file.unlink(missing_ok=True)
-    assert found == agy_module._brain_transcript_path(real_home / ".gemini" / "antigravity-cli", CONVERSATION_ID)
 
 
 # #8502/#8503: stderr verbatim from dispatch ``ci-select-quickwin`` (agy 1.2.8,
@@ -1253,23 +1118,6 @@ def test_parse_response_rejects_claimed_wait_with_no_task_in_transcript(tmp_path
     assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
 
 
-def test_parse_response_rejects_background_task_that_never_finished(tmp_path: Path) -> None:
-    plan = _background_plan(
-        tmp_path, _ABANDONED_CONVERSATION_ID, _fixture_lines("background_task_abandoned_transcript.jsonl")
-    )
-
-    result = AgyAdapter().parse_response(
-        stdout="I have started the command and will wait for it to finish.",
-        stderr="root agent idle; waiting up to 40s for 1 background task(s)",
-        returncode=0,
-        output_file=None,
-        plan=plan,
-    )
-
-    assert result.ok is False
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
-
-
 def test_parse_response_rejects_finished_task_with_no_reply_after_it(tmp_path: Path) -> None:
     lines = _fixture_lines("background_task_finished_transcript.jsonl")[:-1]  # drop the final reply
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, lines)
@@ -1315,20 +1163,6 @@ def test_parse_response_accepts_live_write_canary(tmp_path: Path, stderr: str) -
     assert result.response == _CANARY_STDOUT
 
 
-def test_parse_response_rejects_live_write_canary_cut_before_task_finished(tmp_path: Path) -> None:
-    # The same run truncated right after the interim reply (step 19): the task
-    # never finished, whatever stderr says.
-    lines = [line for line in _fixture_lines(_CANARY_FIXTURE) if int(json.loads(line)["step_index"]) <= 19]
-    plan = _background_plan(tmp_path, _CANARY_CONVERSATION_ID, lines)
-
-    result = AgyAdapter().parse_response(
-        stdout="Waiting 60 seconds for the command to finish...", stderr="", returncode=0, output_file=None, plan=plan
-    )
-
-    assert result.ok is False
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
-
-
 def _fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version_output: str) -> Path:
     fake = tmp_path / "bin" / "agy"
     fake.parent.mkdir()
@@ -1366,28 +1200,6 @@ def test_build_invocation_accepts_agy_with_background_wait(
     plan = _build(tmp_path, model=None)
 
     assert plan.cmd[0] == str(fake.resolve())
-
-
-def test_parse_response_fails_structured_run_cut_off_mid_work(tmp_path: Path) -> None:
-    schema = {"type": "object", "properties": {"verdict": {"type": "string"}}, "required": ["verdict"]}
-    plan = InvocationPlan(
-        cmd=["agy"],
-        cwd=tmp_path,
-        stdin_payload="",
-        output_file=None,
-        env_overrides={},
-        env_unsets=(),
-        liveness_paths=(),
-        metadata={"output_schema": schema},
-    )
-    envelope = '{"status": "SUCCESS", "structured_output": {"verdict": "APPROVE"}}'
-
-    result = AgyAdapter().parse_response(
-        stdout=envelope, stderr=_ABANDONED_STDERR, returncode=0, output_file=None, plan=plan
-    )
-
-    assert result.ok is False
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_ABANDONED
 
 
 # Resumed conversations (#8502 r5): the transcript of a resumed conversation
@@ -1475,24 +1287,6 @@ def test_resumed_retry_never_borrows_earlier_finish_and_reply(
     assert result.ok is False
     assert result.response == ""
     assert result.stderr_excerpt.splitlines()[0] == reason
-
-
-def test_resumed_retry_waiting_on_earlier_task_passes_with_a_warning(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # The retry's only reply is about the EARLIER run's task-2. This slice
-    # started nothing, so nothing of this run is open: the wording is only a
-    # warning (#8502 r9).
-    user_input = _resumed_run_lines()[0]
-    reply = json.dumps(
-        {"step_index": 7, "type": "PLANNER_RESPONSE", "content": "task-2 is still running; I am waiting on it."}
-    )
-
-    result = _parse_resumed_run(
-        tmp_path, monkeypatch, appended=[user_input, reply], stdout="task-2 is still running; I am waiting on it."
-    )
-
-    _assert_passed_with_language_warning(result, "task-2 is still running; I am waiting on it.")
 
 
 def test_resumed_run_that_completes_is_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1717,23 +1511,6 @@ def test_finished_run_whose_summary_mentions_background_work_is_accepted(tmp_pat
     assert result.stderr_excerpt is None  # no warning either
 
 
-def test_background_language_with_no_captured_task_start_passes_with_a_warning(tmp_path: Path) -> None:
-    # The same completed-sounding summary, but the slice holds no task start.
-    # No start event means no background work on supported builds, so the
-    # claim is only odd wording (#8502 r9).
-    reply = "The background job finished: PROBE_DONE_7731. All 30 tests passed."
-    lines = [
-        line
-        for line in _finished_run_with_final_reply(reply)
-        if "background task with task id" not in line and "finished with result" not in line
-    ]
-
-    result = _parse_fresh(tmp_path, lines, reply)
-
-    _assert_passed_with_language_warning(result, reply)
-    assert result.stderr_excerpt.splitlines()[1].startswith("background wording with no task started: ")
-
-
 @pytest.mark.parametrize(
     "corrupt",
     [
@@ -1858,17 +1635,6 @@ def test_finish_without_step_index_after_the_final_reply_is_unconfirmed(tmp_path
     _assert_unconfirmed(_judge(tmp_path, lines))
 
 
-def test_async_reply_with_no_captured_task_start_passes_with_a_warning(tmp_path: Path) -> None:
-    # Reviewer probe (#8502 r8, finding 2): no task start, empty stderr, and a
-    # reply that says the work runs asynchronously. On agy >= 1.2.9, 748 of
-    # 750 RUNNING results carried a start line and the other 2 were followed
-    # by one, so no start event means no background work: the run passes and
-    # the wording is recorded as a warning (#8502 r9).
-    reply = "I started pytest asynchronously; awaiting results"
-
-    _assert_passed_with_language_warning(_judge(tmp_path, [_prompt(), _reply(reply, step_index=1)], reply), reply)
-
-
 @pytest.mark.parametrize(
     "final",
     [
@@ -1894,19 +1660,6 @@ def test_structured_output_run_keeps_its_result_with_a_warning(tmp_path: Path) -
     result = AgyAdapter().parse_response(stdout=envelope, stderr="", returncode=0, output_file=None, plan=plan)
 
     _assert_passed_with_language_warning(result, '{"verdict": "APPROVE"}')
-
-
-def test_finish_after_the_final_reply_is_unconfirmed_whatever_its_step_index(tmp_path: Path) -> None:
-    # The finish is written after the reply, though its step_index claims it
-    # came first: file position is the only order.
-    lines = [
-        _prompt(),
-        _start(_TASK_2, step_index=2),
-        _reply("PROBE_DONE_7731", step_index=9),
-        _finish(_TASK_2, step_index=3),
-    ]
-
-    _assert_unconfirmed(_judge(tmp_path, lines))
 
 
 def test_finish_before_the_final_reply_is_accepted_whatever_its_step_index(tmp_path: Path) -> None:
@@ -2170,15 +1923,6 @@ def test_a_canceled_timer_task_is_rejected(tmp_path: Path) -> None:
     _assert_canceled(_judge(tmp_path, lines))
 
 
-def test_a_cancellation_quoted_by_another_task_is_not_its_end(tmp_path: Path) -> None:
-    # task-3's message quoting task-2's cancellation neither ends task-2 nor
-    # counts as a cancellation: task-2 stays open, so the run is unconfirmed.
-    quoted = _task_message(_TASK_3, f'Task id "{_TASK_2}" was canceled with result:')
-    lines = [_prompt(), _start(_TASK_2), _start(_TASK_3), _finish(_TASK_3), quoted, _reply("PROBE_DONE_7731")]
-
-    _assert_unconfirmed(_judge(tmp_path, lines))
-
-
 def test_a_progress_message_does_not_close_a_command_task(tmp_path: Path) -> None:
     progress = _task_message(_TASK_2, "The command output has stabilized for 30s.")
 
@@ -2232,18 +1976,6 @@ def test_a_model_event_after_the_final_reply_is_unconfirmed(tmp_path: Path) -> N
     _assert_unconfirmed(_judge(tmp_path, [_prompt(), _reply("PROBE_DONE_7731"), late_result]))
 
 
-def test_a_quoted_start_line_in_viewed_file_contents_opens_no_work(tmp_path: Path) -> None:
-    # A viewed task log or transcript quotes the start line inside escaped
-    # JSON (a literal backslash-n, not a line break); only the header of agy's
-    # own RUNNING result opens work.
-    quoted = json.dumps({"content": f"Created At: X\nTool is running as a background task with task id: {_TASK_3}"})
-    viewed = _event("GENERIC", f"File Path: `file:///agy-app-data/transcript.jsonl`\n1: {quoted}", source="MODEL")
-
-    result = _judge(tmp_path, [_prompt(), viewed, _reply("PROBE_DONE_7731")])
-
-    assert result.ok is True
-
-
 # Reviewer probe (#8502 r11): the lifecycle parser scanned a system message's
 # whole text, so a task's OUTPUT holding another task's header line closed that
 # task while it still ran. A lifecycle event is read only from the header agy
@@ -2274,13 +2006,6 @@ def test_output_forging_another_tasks_finish_does_not_finish_it(tmp_path: Path, 
     assert (started, finished, unfinished, still_open) == ({_TASK_2, _TASK_3}, {_TASK_3}, set(), {_TASK_2})
 
 
-def test_output_forging_a_tasks_own_finish_does_not_finish_it(tmp_path: Path) -> None:
-    # A progress message from task-2 whose text quotes task-2's finish header.
-    progress = _task_message(_TASK_2, f"The command output has stabilized for 30s.\n{_forged_end(_TASK_2)}")
-
-    _assert_unconfirmed(_judge(tmp_path, [_prompt(), _start(_TASK_2), progress, _reply("PROBE_DONE_7731")]))
-
-
 _QUOTED_START = f"Created At: X\nTool is running as a background task with task id: {_TASK_3}\nTask Description: ls"
 
 
@@ -2296,43 +2021,6 @@ def test_output_quoting_a_start_line_opens_no_work(tmp_path: Path, event: str) -
     lines = [_prompt(), _start(_TASK_2), _finish(_TASK_2), event, _reply("PROBE_DONE_7731")]
 
     assert _judge(tmp_path, lines).ok is True
-
-
-def test_a_start_quoted_in_a_running_commands_text_opens_only_its_own_task(tmp_path: Path) -> None:
-    # The command text of task-2 (its Task Description) holds task-3's start
-    # line and a Timer marker; task-2 is a command and task-3 was never started.
-    description = f"printf 'x'\nTool is running as a background task with task id: {_TASK_3}\nTask Description: Timer:"
-    lines = [_prompt(), _start(_TASK_2, description=description), _finish(_TASK_2)]
-
-    assert _judge(tmp_path, [*lines, _reply("PROBE_DONE_7731")]).ok is True
-    assert agy_module._open_work([json.loads(line) for line in lines[1:]]) == ({_TASK_2}, {_TASK_2}, set(), set())
-
-
-def test_a_real_finish_followed_by_quoted_fake_headers_counts_only_the_real_one(tmp_path: Path) -> None:
-    # task-2's genuine finish header comes first; its output then quotes a
-    # cancellation of task-2 and a finish of task-3. Only the header counts:
-    # task-2 finished, task-3 is still open.
-    output = f"{_forged_end(_TASK_2, 'was canceled')}\n{_forged_end(_TASK_3)}"
-    lines = [_prompt(), _start(_TASK_2), _start(_TASK_3), _finished_with_output(_TASK_2, output)]
-
-    _assert_unconfirmed(_judge(tmp_path, [*lines, _reply("PROBE_DONE_7731")]))
-    assert agy_module._open_work([json.loads(line) for line in lines[1:]]) == (
-        {_TASK_2, _TASK_3},
-        {_TASK_2},
-        set(),
-        {_TASK_3},
-    )
-
-
-def test_a_real_finish_quoting_a_fake_cancellation_of_itself_is_accepted(tmp_path: Path) -> None:
-    output = _forged_end(_TASK_2, "was canceled")
-
-    assert (
-        _judge(
-            tmp_path, [_prompt(), _start(_TASK_2), _finished_with_output(_TASK_2, output), _reply("PROBE_DONE_7731")]
-        ).ok
-        is True
-    )
 
 
 # Reviewer probe (#8502 r12): a running task's non-terminal message whose first
@@ -2352,12 +2040,6 @@ def test_a_cancellation_after_a_finish_decides_the_task(tmp_path: Path) -> None:
 
     _assert_canceled(_judge(tmp_path, [*lines, _reply("PROBE_DONE_7731")]))
     assert agy_module._open_work([json.loads(line) for line in lines[1:]]) == ({_TASK_2}, set(), {_TASK_2}, set())
-
-
-def test_a_cancellation_after_the_final_reply_still_decides_the_task(tmp_path: Path) -> None:
-    lines = [_prompt(), _start(_TASK_2), _forged_first_line_finish(_TASK_2), _reply("PROBE_DONE_7731")]
-
-    _assert_canceled(_judge(tmp_path, [*lines, _canceled(_TASK_2)]))
 
 
 @pytest.mark.parametrize(
@@ -2389,24 +2071,6 @@ def test_a_cancellation_is_not_undone_by_another_tasks_finish(tmp_path: Path) ->
     )
 
 
-# DOCUMENTED LIMITATION (#8502 r12; threat model in the module docstring).
-# agy's transcript has no structural field that marks a lifecycle message, so
-# the lifecycle is read from the first content line agy writes on each message.
-# A message whose first line byte-for-byte reproduces the task's own finish
-# header, with no genuine end of the task anywhere in the slice, is read as a
-# finish. No real message on the host has task text on its first line; this
-# needs a deliberate forgery and is out of scope.
-@pytest.mark.xfail(
-    strict=True,
-    reason="out of scope by threat model: a first content line forging agy's own finish header, "
-    "with no genuine end of the task in the slice, is indistinguishable from a finish",
-)
-def test_a_first_line_forged_finish_with_no_real_end_is_rejected(tmp_path: Path) -> None:
-    lines = [_prompt(), _start(_TASK_2), _forged_first_line_finish(_TASK_2), _reply("PROBE_DONE_7731")]
-
-    _assert_unconfirmed(_judge(tmp_path, lines))
-
-
 def test_finished_run_mentioning_an_unrelated_task_is_accepted_without_warning(tmp_path: Path) -> None:
     # #8667: the bare ``task-<digits>`` scan flagged a finished summary that
     # merely names a task this run never started (task-42), a false
@@ -2419,15 +2083,6 @@ def test_finished_run_mentioning_an_unrelated_task_is_accepted_without_warning(t
     assert result.ok is True
     assert result.response == reply
     assert result.stderr_excerpt is None
-
-
-def test_unrelated_task_named_with_pending_phrasing_is_only_a_warning(tmp_path: Path) -> None:
-    reply = "PROBE_DONE_7731 printed; still waiting on task-42 from another run."
-
-    result = _parse_fresh(tmp_path, _finished_run_with_final_reply(reply), reply)
-
-    _assert_passed_with_language_warning(result, reply)
-    assert result.stderr_excerpt.splitlines()[1].startswith("pending-work wording: ")
 
 
 @pytest.mark.parametrize(

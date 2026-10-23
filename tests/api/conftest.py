@@ -37,7 +37,7 @@ def _judge_git_below_tmp_path(tmp_path, monkeypatch):
     monkeypatch.setattr(claude_account_usage, "_inside_git", inside_git)
 
 
-def _no_provider(_token: str) -> str:
+def _no_provider(_token: str) -> tuple[str, object]:
     from scripts.api.claude_account_usage import ClaudeAccountRefused
 
     raise ClaudeAccountRefused("claude_account_identity_unavailable")

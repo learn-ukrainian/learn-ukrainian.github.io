@@ -2,7 +2,7 @@
 
 import pytest
 
-from scripts.fleet.capacity_pick import build_pick_order, main
+from scripts.fleet.capacity_pick import build_pick_order
 
 
 @pytest.mark.parametrize(
@@ -41,13 +41,3 @@ def test_cursor_does_not_lead_without_stronger_evidence(headroom, expected):
         for lane, remaining in headroom.items()
     ]
     assert [row["lane"] for row in build_pick_order(rows)] == expected
-
-
-def test_cli_help_describes_resource_order(capsys):
-    with pytest.raises(SystemExit) as result:
-        main(["--help"])
-    assert result.value.code == 0
-    help_text = " ".join(capsys.readouterr().out.split())
-    assert "heat first; then plan headroom in 10-point bands" in help_text
-    assert "Codex, Claude, Cursor" in help_text
-    assert "a cool Cursor leads" not in help_text

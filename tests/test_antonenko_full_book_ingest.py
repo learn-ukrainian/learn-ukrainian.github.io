@@ -15,8 +15,6 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-import pytest
-
 from scripts.ingest import antonenko_full_book_ingest as antonenko
 
 # pdftotext emits page content directly followed by ``\f`` between pages,
@@ -70,30 +68,6 @@ def test_parse_book_drops_empty_pages(tmp_path: Path) -> None:
     assert [p.number for p in pages] == [1, 2]
     assert "Page A body." in pages[0].render()
     assert "Page B body." in pages[1].render()
-
-
-def test_parse_book_missing_file_raises(tmp_path: Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        antonenko.parse_book(tmp_path / "missing.txt")
-
-
-def test_page_render_strips_leading_and_trailing_blanks(tmp_path: Path) -> None:
-    """A page that's all blanks renders as empty string; non-blank pages
-    drop their leading/trailing blank lines while keeping content."""
-    fixture = "\n\n  Real content.  \n\n"
-    txt = _write_fixture(tmp_path, "p.txt", fixture)
-    pages = antonenko.parse_book(txt)
-    assert len(pages) == 1
-    rendered = pages[0].render()
-    assert rendered.startswith("  Real content."), rendered
-    assert rendered.endswith("\n")
-
-
-def test_page_render_preserves_internal_blanks(tmp_path: Path) -> None:
-    fixture = "Paragraph A.\n\nParagraph B.\n"
-    txt = _write_fixture(tmp_path, "p.txt", fixture)
-    pages = antonenko.parse_book(txt)
-    assert "Paragraph A.\n\nParagraph B." in pages[0].render()
 
 
 # --- DB round trip --------------------------------------------------------

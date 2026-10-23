@@ -1,7 +1,8 @@
 ---
 import CourseLayout from '../../layouts/CourseLayout.astro';
 import WordAtlasPageShell from '../../lexicon/WordAtlasPageShell.astro';
-import WordCardPreview from '../../lexicon/WordCardPreview';
+import AtlasTypeahead from '../../lexicon/AtlasTypeahead.astro';
+import WordCardPreview, { candidateSearchVisible } from '../../lexicon/WordCardPreview';
 import type { PreviewCard } from '../../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
 import type { LoadedRelease, ReleaseCard } from '../../lib/lexicon/word-card-release';
@@ -28,6 +29,7 @@ interface Props {
 }
 const { card, current, compare, fingerprint, source, generatedAt, manifestVersion } = Astro.props;
 const page = card.kind === 'release-page' ? card.page : null;
+const showCandidateSearch = candidateSearchVisible(Astro.params.path ?? '');
 ---
 <CourseLayout title={page ? `${page.title} — word-card preview` : 'Word-card preview'} description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
   <meta slot="head" name="robots" content="noindex, nofollow" />
@@ -46,7 +48,14 @@ const page = card.kind === 'release-page' ? card.page : null;
       {compare && <section aria-label="Current presentation"><h2>Current presentation</h2>
         {current ? <WordAtlasPageShell state={{ status: 'ready', record: current, generatedAt, manifestVersion }} /> : <p>Unavailable: unresolved identity pairing.</p>}
       </section>}
-      <section aria-label="Candidate presentation"><WordCardPreview card={card} current={current} compare={compare} /></section>
+      <section aria-label="Candidate presentation">
+        {showCandidateSearch && <div class="word-switch">
+          <AtlasTypeahead id="atlas-candidate-search" label="Шукати слово в Лексиконі" />
+          <a class="atlas-button filter" href="/lexicon/">До Атласу</a>
+          <span class="poc-label">Атлас слів (Лексикон)</span>
+        </div>}
+        <WordCardPreview card={card} current={current} compare={compare} />
+      </section>
     </div>
     {page && <p class="input-line">Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code>. Producer status is not linguistic certification or switch approval.</p>}
   </main>

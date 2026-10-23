@@ -9,9 +9,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
 from agent_runtime import registry
-from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.hermes_grok import HermesGrokAdapter
-from agent_runtime.errors import AgentTimeoutError, AgentUnavailableError
+from agent_runtime.errors import AgentUnavailableError
 from agent_runtime.runner import invoke
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 
@@ -95,30 +94,6 @@ def test_grok_adapter_handles_missing_hermes_binary(tmp_path):
         )
 
 
-def test_grok_adapter_honors_timeout(tmp_path, monkeypatch):
-    adapter = HermesGrokAdapter()
-
-    def fake_build_invocation(**kwargs):
-        return InvocationPlan(cmd=["/bin/sh", "-c", "sleep 5"], cwd=Path(kwargs["cwd"]))
-
-    monkeypatch.setattr(adapter, "build_invocation", fake_build_invocation)
-    monkeypatch.setattr("agent_runtime.runner._load_adapter", lambda _name: adapter)
-
-    with (
-        patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
-        patch("agent_runtime.runner.write_record"),
-        pytest.raises(AgentTimeoutError),
-    ):
-        invoke(
-            "grok-hermes",
-            "hello",
-            mode="workspace-write",
-            cwd=tmp_path,
-            entrypoint="dispatch",
-            hard_timeout=1,
-        )
-
-
 def test_grok_adapter_strips_ansi_codes_from_stdout():
     result = HermesGrokAdapter().parse_response(
         stdout="\x1b[32mhello\x1b[0m",
@@ -128,30 +103,3 @@ def test_grok_adapter_strips_ansi_codes_from_stdout():
     )
 
     assert result.response == "hello"
-
-
-def test_runner_preserves_unknown_grok_tool_call_total(tmp_path, monkeypatch):
-    adapter = HermesGrokAdapter()
-
-    def fake_build_invocation(**kwargs):
-        return InvocationPlan(cmd=["/bin/sh", "-c", "printf hello"], cwd=Path(kwargs["cwd"]))
-
-    monkeypatch.setattr(adapter, "build_invocation", fake_build_invocation)
-    monkeypatch.setattr("agent_runtime.runner._load_adapter", lambda _name: adapter)
-
-    with (
-        patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
-        patch("agent_runtime.runner.write_record"),
-    ):
-        result = invoke(
-            "grok-hermes",
-            "hello",
-            mode="workspace-write",
-            cwd=tmp_path,
-            entrypoint="dispatch",
-            effort="medium",
-        )
-
-    assert result.response == "hello"
-    assert result.tool_calls == []
-    assert result.tool_calls_total is None

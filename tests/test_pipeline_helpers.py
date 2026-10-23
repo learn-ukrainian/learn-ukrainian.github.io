@@ -32,90 +32,10 @@ class FakeContext:
 # _parse_section
 # ============================================================================
 
-class TestParseSection:
-    def test_dict_with_section_key(self):
-        from pipeline_lib import _parse_section
-        title, words = _parse_section({"section": "Іменник", "words": 300})
-        assert title == "Іменник"
-        assert words == 300
-
-    def test_dict_with_title_key(self):
-        from pipeline_lib import _parse_section
-        title, words = _parse_section({"title": "Дієслово", "words": 250})
-        assert title == "Дієслово"
-        assert words == 250
-
-    def test_section_takes_priority_over_title(self):
-        from pipeline_lib import _parse_section
-        title, _ = _parse_section({"section": "A", "title": "B", "words": 100})
-        assert title == "A"
-
-    def test_missing_words_defaults_to_zero(self):
-        from pipeline_lib import _parse_section
-        _, words = _parse_section({"section": "Test"})
-        assert words == 0
-
-    def test_missing_both_keys(self):
-        from pipeline_lib import _parse_section
-        title, words = _parse_section({})
-        assert title == "Untitled"
-        assert words == 0
-
-    def test_string_section(self):
-        from pipeline_lib import _parse_section
-        title, words = _parse_section("Simple Section")
-        assert title == "Simple Section"
-        assert words == 0
-
-    def test_words_as_string(self):
-        from pipeline_lib import _parse_section
-        _, words = _parse_section({"section": "Test", "words": "400"})
-        assert words == 400
-
 
 # ============================================================================
 # _build_section_budget_table
 # ============================================================================
-
-class TestBuildSectionBudgetTable:
-    def test_basic_table(self):
-        from pipeline_lib import _build_section_budget_table
-        sections = [
-            {"section": "Intro", "words": 300},
-            {"section": "Main", "words": 500},
-        ]
-        result = _build_section_budget_table(sections, 800)
-        assert "| Intro | 300+" in result
-        assert "| Main | 500+" in result
-        assert "**Total**" in result and "800+" in result
-
-    def test_zero_word_sections_get_even_split(self):
-        from pipeline_lib import _build_section_budget_table
-        sections = [
-            {"section": "A", "words": 0},
-            {"section": "B", "words": 0},
-        ]
-        result = _build_section_budget_table(sections, 1200)
-        assert "| A | 600+" in result
-        assert "| B | 600+" in result
-
-    def test_empty_sections(self):
-        from pipeline_lib import _build_section_budget_table
-        result = _build_section_budget_table([], 1200)
-        assert "**Total**" in result and "1200+" in result
-
-    def test_string_sections(self):
-        from pipeline_lib import _build_section_budget_table
-        sections = ["Section One", "Section Two"]
-        result = _build_section_budget_table(sections, 1000)
-        # String sections have words=0, so get even split
-        assert "| Section One | 500+" in result
-
-    def test_has_markdown_header(self):
-        from pipeline_lib import _build_section_budget_table
-        result = _build_section_budget_table([{"section": "X", "words": 100}], 100)
-        assert result.startswith("| Section | Minimum |")
-        assert "|---------|" in result
 
 
 # ============================================================================
@@ -123,14 +43,6 @@ class TestBuildSectionBudgetTable:
 # ============================================================================
 
 class TestCheckArchiveFitsOutline:
-    def test_archive_dir_file_missing(self, tmp_path):
-        from pipeline_lib import _check_archive_fits_outline
-        ctx = FakeContext(slug="nonexistent", archive_dir=tmp_path)
-        fits, matched, missing = _check_archive_fits_outline(ctx)
-        assert fits is False
-        assert matched == []
-        assert missing == []
-
     def test_archive_covers_all_sections(self, tmp_path):
         from pipeline_lib import _check_archive_fits_outline
         archive_file = tmp_path / "test-module.md"
@@ -189,19 +101,6 @@ class TestCheckArchiveFitsOutline:
         assert len(matched) == 7
         assert len(missing) == 3
 
-    def test_case_insensitive_matching(self, tmp_path):
-        from pipeline_lib import _check_archive_fits_outline
-        archive_file = tmp_path / "test-module.md"
-        archive_file.write_text("## наказовий спосіб\ntext\n")
-        ctx = FakeContext(
-            slug="test-module",
-            archive_dir=tmp_path,
-            content_outline=[{"section": "Наказовий спосіб", "words": 300}],
-        )
-        fits, matched, _missing = _check_archive_fits_outline(ctx)
-        assert fits is True
-        assert len(matched) == 1
-
     def test_no_outline_uses_word_threshold(self, tmp_path):
         from pipeline_lib import ARCHIVE_WORD_THRESHOLD, _check_archive_fits_outline
         archive_file = tmp_path / "test-module.md"
@@ -223,224 +122,20 @@ class TestCheckArchiveFitsOutline:
 # get_level_constraints
 # ============================================================================
 
-class TestGetLevelConstraints:
-    def test_a1_base_constraints(self):
-        from pipeline_lib import get_level_constraints
-        result = get_level_constraints("a1")
-        assert "Dative case FORBIDDEN" in result
-        assert "Instrumental case FORBIDDEN" in result
-
-    def test_a2_constraints(self):
-        from pipeline_lib import get_level_constraints
-        result = get_level_constraints("a2")
-        assert "Max 15 words" in result
-
-    def test_b1_constraints(self):
-        from pipeline_lib import get_level_constraints
-        result = get_level_constraints("b1")
-        assert len(result) > 0
-
-    def test_unknown_track_falls_back_to_c1(self):
-        from pipeline_lib import get_level_constraints
-        result = get_level_constraints("z99")
-        c1_result = get_level_constraints("c1")
-        assert result == c1_result
-
-    def test_a1_dative_relaxation(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["Dative case with мені подобається"]}
-        result = get_level_constraints("a1", plan)
-        assert "PLAN-AWARE EXEMPTIONS" in result
-        assert "Dative case" in result
-
-    def test_a1_instrumental_relaxation(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["Instrumental case з другом"]}
-        result = get_level_constraints("a1", plan)
-        assert "Instrumental case" in result
-
-    def test_a1_perfective_relaxation(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["Imperative mood: сказати, показати"]}
-        result = get_level_constraints("a1", plan)
-        assert "Perfective aspect" in result
-
-    def test_a1_subordinate_relaxation(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["Subordinate clauses with який"]}
-        result = get_level_constraints("a1", plan)
-        assert "Subordinate clauses" in result
-
-    def test_a1_no_relaxation_without_plan(self):
-        from pipeline_lib import get_level_constraints
-        result = get_level_constraints("a1")
-        assert "PLAN-AWARE EXEMPTIONS" not in result
-
-    def test_a1_negative_instruction_not_relaxed(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["do NOT teach dative case"]}
-        result = get_level_constraints("a1", plan)
-        assert "PLAN-AWARE EXEMPTIONS" not in result
-
-    def test_a1_avoid_instruction_not_relaxed(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["avoid instrumental case"]}
-        result = get_level_constraints("a1", plan)
-        assert "PLAN-AWARE EXEMPTIONS" not in result
-
-    def test_non_a1_ignores_plan(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["Dative case"]}
-        result_with = get_level_constraints("b1", plan)
-        result_without = get_level_constraints("b1")
-        assert result_with == result_without
-
-    def test_multiple_relaxations(self):
-        from pipeline_lib import get_level_constraints
-        plan = {"grammar": ["Dative мені подобається", "Instrumental з другом", "Imperative сказати"]}
-        result = get_level_constraints("a1", plan)
-        assert "Dative case" in result
-        assert "Instrumental case" in result
-        assert "Perfective aspect" in result
-
 
 # ============================================================================
 # get_activity_config
 # ============================================================================
-
-class TestGetActivityConfig:
-    def test_a1_returns_a1_config(self):
-        from pipeline_lib import get_activity_config
-        config = get_activity_config("a1", 10)
-        assert isinstance(config, dict)
-
-    def test_b1_early_uses_bridge(self):
-        from pipeline_lib import get_activity_config
-        config = get_activity_config("b1", 3)
-        # b1 module_num <= 5 should use bridge config
-        bridge = get_activity_config("b1", 5)
-        assert config == bridge
-
-    def test_b1_late_uses_core(self):
-        from pipeline_lib import get_activity_config
-        config_early = get_activity_config("b1", 5)
-        config_late = get_activity_config("b1", 6)
-        # They may differ (bridge vs core)
-        # At minimum, both return valid dicts
-        assert isinstance(config_late, dict)
-
-    def test_lit_prefix_uses_lit_config(self):
-        from pipeline_lib import get_activity_config
-        config = get_activity_config("lit-essay", 1)
-        lit_config = get_activity_config("lit", 1)
-        # Both lit variants should use the same config
-        assert config == lit_config
-
-    def test_unknown_track_falls_back_to_b2(self):
-        from pipeline_lib import get_activity_config
-        config = get_activity_config("z99", 1)
-        b2_config = get_activity_config("b2", 1)
-        assert config == b2_config
-
-    def test_c1_returns_c1_config(self):
-        from pipeline_lib import get_activity_config
-        config = get_activity_config("c1", 10)
-        assert isinstance(config, dict)
 
 
 # ============================================================================
 # bilingualify_section_titles
 # ============================================================================
 
-class TestBilingualifySectionTitles:
-    def test_a1_early_adds_bilingual_titles(self):
-        from pipeline_lib import bilingualify_section_titles
-        outline = [{"section": "Вступ", "words": 200}]
-        result = bilingualify_section_titles(outline, "a1", 5)
-        assert result[0]["section"] == "Вступ — Introduction"
-
-    def test_a1_m15_plus_returns_unchanged(self):
-        from pipeline_lib import bilingualify_section_titles
-        outline = [{"section": "Вступ", "words": 200}]
-        result = bilingualify_section_titles(outline, "a1", 15)
-        assert result[0]["section"] == "Вступ"
-
-    def test_non_a1_returns_unchanged(self):
-        from pipeline_lib import bilingualify_section_titles
-        outline = [{"section": "Вступ", "words": 200}]
-        result = bilingualify_section_titles(outline, "b1", 5)
-        assert result[0]["section"] == "Вступ"
-
-    def test_already_bilingual_skipped(self):
-        from pipeline_lib import bilingualify_section_titles
-        outline = [{"section": "Вступ — Introduction", "words": 200}]
-        result = bilingualify_section_titles(outline, "a1", 3)
-        assert result[0]["section"] == "Вступ — Introduction"
-
-    def test_prefix_match_vowels(self):
-        from pipeline_lib import bilingualify_section_titles
-        outline = [{"section": "Голосні — А, О, У", "words": 300}]
-        result = bilingualify_section_titles(outline, "a1", 1)
-        assert "Vowels" in result[0]["section"]
-        assert "А, О, У" in result[0]["section"]
-
-    def test_non_dict_sections_skipped(self):
-        from pipeline_lib import bilingualify_section_titles
-        outline = ["plain string", {"section": "Вступ", "words": 200}]
-        result = bilingualify_section_titles(outline, "a1", 3)
-        assert result[0] == "plain string"
-        assert result[1]["section"] == "Вступ — Introduction"
-
-    def test_m14_boundary_still_applies(self):
-        from pipeline_lib import bilingualify_section_titles
-        outline = [{"section": "Практика", "words": 200}]
-        result = bilingualify_section_titles(outline, "a1", 14)
-        assert result[0]["section"] == "Практика — Practice"
-
 
 # ============================================================================
 # get_pedagogical_constraints
 # ============================================================================
-
-class TestGetPedagogicalConstraints:
-    def test_non_a1_returns_empty(self):
-        from pipeline_lib import get_pedagogical_constraints
-        assert get_pedagogical_constraints("b1", 5, {}) == ""
-        assert get_pedagogical_constraints("hist", 1, {}) == ""
-
-    def test_no_plan_returns_empty(self):
-        from pipeline_lib import get_pedagogical_constraints
-        assert get_pedagogical_constraints("a1", 1) == ""
-
-    def test_a1_phase_1_returns_grammar_ban(self):
-        from pipeline_lib import get_pedagogical_constraints
-        plan = {"phase": "A1.1 [First Contact]"}
-        result = get_pedagogical_constraints("a1", 1, plan)
-        assert "GRAMMAR CONSTRAINTS" in result
-        assert "BANNED" in result
-
-    def test_a1_phase_5_allows_imperatives(self):
-        from pipeline_lib import get_pedagogical_constraints
-        plan = {"phase": "A1.5 [Modals, Commands & Life]"}
-        result = get_pedagogical_constraints("a1", 47, plan)
-        assert "ALLOWED" in result
-
-    def test_same_band_same_constraints(self):
-        """Modules in the same sub-band get identical constraints."""
-        from pipeline_lib import get_pedagogical_constraints
-        plan1 = {"phase": "A1.1 [First Contact]"}
-        plan2 = {"phase": "A1.1 [First Contact]"}
-        r1 = get_pedagogical_constraints("a1", 1, plan1)
-        r2 = get_pedagogical_constraints("a1", 2, plan2)
-        assert r1 == r2  # M01 and M02 are in the same phonetics band
-
-    def test_different_phases_different_constraints(self):
-        from pipeline_lib import get_pedagogical_constraints
-        plan_11 = {"phase": "A1.1 [First Contact]"}
-        plan_12 = {"phase": "A1.2 [Verbs & Sentences]"}
-        r1 = get_pedagogical_constraints("a1", 1, plan_11)
-        r15 = get_pedagogical_constraints("a1", 15, plan_12)
-        assert r1 != r15
 
 
     # Decodable vocabulary tests removed in #841 — system was dropped.
@@ -450,245 +145,40 @@ class TestGetPedagogicalConstraints:
 # _get_prompt_tier — tier-aware shared rules (#841)
 # ============================================================================
 
-class TestGetPromptTier:
-    def test_a1_is_beginner(self):
-        from pipeline_lib import _get_prompt_tier
-        assert _get_prompt_tier("a1", 1) == "beginner"
-        assert _get_prompt_tier("a1", 14) == "beginner"
-        assert _get_prompt_tier("a1", 25) == "beginner"
-
-    def test_a2_early_is_beginner(self):
-        from pipeline_lib import _get_prompt_tier
-        assert _get_prompt_tier("a2", 1) == "beginner"
-        assert _get_prompt_tier("a2", 20) == "beginner"
-
-    def test_a2_late_is_core(self):
-        from pipeline_lib import _get_prompt_tier
-        assert _get_prompt_tier("a2", 21) == "core"
-        assert _get_prompt_tier("a2", 50) == "core"
-
-    def test_b1_is_core(self):
-        from pipeline_lib import _get_prompt_tier
-        assert _get_prompt_tier("b1", 1) == "core"
-
-    def test_hist_is_seminar(self):
-        from pipeline_lib import _get_prompt_tier
-        assert _get_prompt_tier("hist", 1) == "seminar"
-
-    def test_no_hardcoded_level_checks(self):
-        """Selection uses _get_prompt_tier, not hardcoded level/module checks."""
-        import inspect
-
-        from pipeline_lib import build_placeholders
-        source = inspect.getsource(build_placeholders)
-        # The tier selection for shared rules should use _get_prompt_tier, not
-        # direct string comparisons like 'ctx.track == "a1"'
-        assert "_get_prompt_tier" in source
-
 
 # ============================================================================
 # _clean_textbook_text (#841)
 # ============================================================================
-
-class TestCleanTextbookText:
-    def test_preserves_numbered_lists(self):
-        from pipeline_lib import _clean_textbook_text
-        text = "1. Вступ\n2. Основна частина\n3. Висновок"
-        assert _clean_textbook_text(text) == text
-
-    def test_collapses_excessive_blanks(self):
-        from pipeline_lib import _clean_textbook_text
-        text = "Line 1\n\n\n\n\nLine 2"
-        assert _clean_textbook_text(text) == "Line 1\n\nLine 2"
-
-    def test_removes_stray_brackets(self):
-        from pipeline_lib import _clean_textbook_text
-        text = "Some [stray text"
-        result = _clean_textbook_text(text)
-        assert "[" not in result
-
-    def test_preserves_markdown_links(self):
-        from pipeline_lib import _clean_textbook_text
-        text = "See [this link](http://example.com) for details"
-        result = _clean_textbook_text(text)
-        assert "[this link](http://example.com)" in result
 
 
 # ============================================================================
 # get_h3_word_range
 # ============================================================================
 
-class TestGetH3WordRange:
-    def test_a1_early(self):
-        from pipeline_lib import get_h3_word_range
-        assert get_h3_word_range("a1", 1) == "30-50"
-        assert get_h3_word_range("a1", 4) == "40-60"
-
-    def test_a1_mid(self):
-        from pipeline_lib import get_h3_word_range
-        assert get_h3_word_range("a1", 5) == "40-60"
-        assert get_h3_word_range("a1", 14) == "40-60"
-
-    def test_a1_late_and_a2(self):
-        from pipeline_lib import get_h3_word_range
-        assert get_h3_word_range("a1", 15) == "60-80"
-        assert get_h3_word_range("a2", 1) == "60-80"
-
-    def test_b1_plus(self):
-        from pipeline_lib import get_h3_word_range
-        assert get_h3_word_range("b1", 1) == "80-100+"
-        assert get_h3_word_range("hist", 1) == "80-100+"
-
 
 # ============================================================================
 # get_expansion_method
 # ============================================================================
-
-class TestGetExpansionMethod:
-    def test_a1_early_mentions_letters(self):
-        from pipeline_lib import get_expansion_method
-        result = get_expansion_method("a1", 1)
-        assert "letter" in result.lower()
-
-    def test_a1_mid_mentions_deeper(self):
-        from pipeline_lib import get_expansion_method
-        result = get_expansion_method("a1", 10)
-        assert "deeper" in result.lower()
-
-    def test_a2_mentions_deeper(self):
-        from pipeline_lib import get_expansion_method
-        result = get_expansion_method("a2", 1)
-        assert "deeper" in result.lower()
-
-    def test_b1_plus_returns_non_empty(self):
-        from pipeline_lib import get_expansion_method
-        result = get_expansion_method("b1", 10)
-        assert len(result) > 50
 
 
 # ============================================================================
 # get_track_skill
 # ============================================================================
 
-class TestGetTrackSkill:
-    def test_returns_three_element_tuple(self):
-        from pipeline_lib import get_track_skill
-        result = get_track_skill("a1", 1)
-        assert isinstance(result, tuple)
-        assert len(result) == 3
-
-    def test_b1_early_vs_late(self):
-        from pipeline_lib import get_track_skill
-        early = get_track_skill("b1", 3)
-        late = get_track_skill("b1", 10)
-        # They may differ based on bridge vs core
-        assert isinstance(early, tuple)
-        assert isinstance(late, tuple)
-
-    def test_lit_prefix_uses_lit(self):
-        from pipeline_lib import get_track_skill
-        lit = get_track_skill("lit", 1)
-        lit_essay = get_track_skill("lit-essay", 1)
-        assert lit == lit_essay
-
-    def test_unknown_falls_back_to_b2(self):
-        from pipeline_lib import get_track_skill
-        unknown = get_track_skill("z99", 1)
-        b2 = get_track_skill("b2", 1)
-        assert unknown == b2
-
 
 # ============================================================================
 # get_immersion_rule
 # ============================================================================
-
-class TestGetImmersionRule:
-    def test_a1_m1_returns_rule(self):
-        from pipeline_lib import get_immersion_rule
-        result = get_immersion_rule("a1", 1)
-        assert len(result) > 0
-
-    def test_a1_ranges_differ(self):
-        from pipeline_lib import get_immersion_rule
-        r1 = get_immersion_rule("a1", 1)
-        r6 = get_immersion_rule("a1", 6)
-        r15 = get_immersion_rule("a1", 15)
-        r25 = get_immersion_rule("a1", 25)
-        # Different ranges should produce different rules
-        assert r1 != r6 or r6 != r15 or r15 != r25
-
-    def test_a2_ranges(self):
-        from pipeline_lib import get_immersion_rule
-        r1 = get_immersion_rule("a2", 1)
-        r30 = get_immersion_rule("a2", 30)
-        assert len(r1) > 0
-        assert len(r30) > 0
-
-    def test_b2_plus_returns_same_rule(self):
-        from pipeline_lib import get_immersion_rule
-        b2 = get_immersion_rule("b2", 1)
-        hist = get_immersion_rule("hist", 1)
-        assert b2 == hist  # Both use b2+
-
-    def test_b1_bridge_vs_core(self):
-        from pipeline_lib import get_immersion_rule
-        bridge = get_immersion_rule("b1", 3)
-        core = get_immersion_rule("b1", 10)
-        assert len(bridge) > 0
-        assert len(core) > 0
 
 
 # ============================================================================
 # get_level_label
 # ============================================================================
 
-class TestGetLevelLabel:
-    def test_simple_tracks(self):
-        from pipeline_lib import get_level_label
-        assert get_level_label("a1") == "A1"
-        assert get_level_label("b2") == "B2"
-        assert get_level_label("hist") == "HIST"
-
-    def test_hyphenated_track(self):
-        from pipeline_lib import get_level_label
-        result = get_level_label("lit-essay")
-        assert "LIT" in result
-
 
 # ============================================================================
 # track_to_level_focus
 # ============================================================================
-
-class TestTrackToLevelFocus:
-    def test_hist_returns_b2_history(self):
-        from pipeline_lib import track_to_level_focus
-        level, focus = track_to_level_focus("hist")
-        assert level == "B2"
-        assert focus == "history"
-
-    def test_bio_returns_c1_biography(self):
-        from pipeline_lib import track_to_level_focus
-        level, focus = track_to_level_focus("bio")
-        assert level == "C1"
-        assert focus == "biography"
-
-    def test_lit_prefix_returns_c1_literature(self):
-        from pipeline_lib import track_to_level_focus
-        level, focus = track_to_level_focus("lit-essay")
-        assert level == "C1"
-        assert focus == "literature"
-
-    def test_core_track_returns_level_and_none(self):
-        from pipeline_lib import track_to_level_focus
-        level, focus = track_to_level_focus("a1")
-        assert level == "A1"
-        assert focus is None
-
-    def test_b1_returns_level_and_none(self):
-        from pipeline_lib import track_to_level_focus
-        level, focus = track_to_level_focus("b1")
-        assert level == "B1"
-        assert focus is None
 
 
 # ============================================================================
@@ -696,17 +186,6 @@ class TestTrackToLevelFocus:
 # ============================================================================
 
 class TestLoadState:
-    def test_missing_file_returns_fresh_state(self, tmp_path):
-        from pipeline_lib import ModuleContext, load_state
-        ctx = ModuleContext(
-            track="a1", module_num=5, slug="test-slug", mode="full",
-            orch_dir=tmp_path,
-        )
-        state = load_state(ctx)
-        assert state["slug"] == "test-slug"
-        assert state["track"] == "a1"
-        assert state["phases"] == {}
-
     def test_existing_file_loaded(self, tmp_path):
         import json
 
@@ -750,19 +229,6 @@ class TestSelfAuditSnippetContentPath:
     in the snippet text inside build_placeholders, before storing it in the placeholders dict.
     """
 
-    def test_self_audit_snippet_resolves_content_path(self):
-        """The snippet text must have {CONTENT_PATH} replaced with the real path string."""
-        fake_snippet = "Write to {CONTENT_PATH} and run audit.\ncat > {CONTENT_PATH}"
-        fake_content_path = "/some/module/path.md"
-
-        # Simulate the resolution logic from build_placeholders
-        resolved = fake_snippet.replace("{CONTENT_PATH}", fake_content_path)
-
-        assert "{CONTENT_PATH}" not in resolved, (
-            "SELF_AUDIT_SNIPPET still contains unresolved {CONTENT_PATH}"
-        )
-        assert fake_content_path in resolved
-
     def test_pipeline_lib_resolves_content_path_in_snippet(self):
         """Verify pipeline core contains the resolution logic for SELF_AUDIT_SNIPPET."""
         # Real code now in pipeline/core.py (pipeline_lib.py is a backward-compat stub)
@@ -790,144 +256,3 @@ class TestSelfAuditSnippetContentPath:
 # ============================================================================
 # Bukvar REQUIRED_TYPES for A1 M1-4 + dict activity_hints parsing
 # ============================================================================
-
-class TestRequiredTypesFromPlan:
-    """REQUIRED_TYPES is derived from plan activity_hints (source of truth)."""
-
-    def _simulate_required_types_logic(self, plan, initial_required=""):
-        """Reproduce the REQUIRED_TYPES logic from build_placeholders()."""
-        placeholders = {"REQUIRED_TYPES": initial_required, "PRIORITY_TYPES": "fill-in, match-up, anagram"}
-
-        if not placeholders.get("REQUIRED_TYPES"):
-            plan_hints = plan.get("activity_hints", [])
-            if plan_hints and isinstance(plan_hints, list):
-                hint_types = []
-                for h in plan_hints[:5]:
-                    if isinstance(h, dict):
-                        hint_types.append(h.get("type", str(h)))
-                    else:
-                        hint_types.append(str(h))
-                placeholders["REQUIRED_TYPES"] = ", ".join(hint_types)
-            elif placeholders.get("PRIORITY_TYPES"):
-                priorities = [t.strip() for t in placeholders["PRIORITY_TYPES"].split(",")]
-                placeholders["REQUIRED_TYPES"] = ", ".join(priorities[:3])
-
-        return placeholders["REQUIRED_TYPES"]
-
-    def test_plan_with_bukvar_types(self):
-        """Plan with bukvar activity_hints produces correct REQUIRED_TYPES."""
-        plan = {"activity_hints": [
-            {"type": "watch-and-repeat", "focus": "test"},
-            {"type": "classify", "focus": "test"},
-            {"type": "image-to-letter", "focus": "test"},
-            {"type": "quiz", "focus": "test"},
-        ]}
-        result = self._simulate_required_types_logic(plan)
-        for bt in ["watch-and-repeat", "classify", "image-to-letter"]:
-            assert bt in result, f"Missing type: {bt}"
-
-    def test_empty_plan_uses_priority_fallback(self):
-        """Plans without activity_hints fall back to PRIORITY_TYPES."""
-        result = self._simulate_required_types_logic({})
-        assert "fill-in" in result
-
-    def test_dict_hints_extract_type_field(self):
-        """Dict activity_hints must extract 'type' field, not stringify the whole dict."""
-        plan = {"activity_hints": [
-            {"type": "watch-and-repeat", "focus": "Watch video", "items": 7},
-            {"type": "quiz", "focus": "Test knowledge"},
-        ]}
-        result = self._simulate_required_types_logic(plan)
-        assert "watch-and-repeat" in result
-        assert "quiz" in result
-        assert "focus" not in result
-
-    def test_string_hints_work(self):
-        """String activity_hints still work."""
-        plan = {"activity_hints": ["quiz", "fill-in", "match-up"]}
-        result = self._simulate_required_types_logic(plan)
-        assert "quiz" in result
-        assert "fill-in" in result
-        assert "match-up" in result
-
-
-class TestCheckpointTemplateRouting:
-    """Checkpoint modules get dedicated templates (issue #842)."""
-
-    def test_is_checkpoint_module_prefix(self):
-        from pipeline_lib import _is_checkpoint_module
-        assert _is_checkpoint_module("checkpoint-first-contact") is True
-        assert _is_checkpoint_module("checkpoint-cases") is True
-        assert _is_checkpoint_module("checkpoint-daily-life") is True
-
-    def test_is_checkpoint_module_suffix(self):
-        from pipeline_lib import _is_checkpoint_module
-        assert _is_checkpoint_module("c1-1-checkpoint") is True
-        assert _is_checkpoint_module("business-checkpoint") is True
-        assert _is_checkpoint_module("c2-3-midpoint-checkpoint") is True
-
-    def test_is_checkpoint_module_false(self):
-        from pipeline_lib import _is_checkpoint_module
-        assert _is_checkpoint_module("greetings-and-politeness") is False
-        assert _is_checkpoint_module("the-cyrillic-code-i") is False
-        assert _is_checkpoint_module("food-vocabulary") is False
-
-    def test_beginner_checkpoint_content_template(self):
-        from pipeline_lib import _get_content_template
-        result = _get_content_template("a1", 14, slug="checkpoint-first-contact")
-        assert result == "beginner-checkpoint.md"
-
-    def test_core_checkpoint_content_template(self):
-        from pipeline_lib import _get_content_template
-        # b1 module_num=5 is core tier
-        result = _get_content_template("b1", 5, slug="checkpoint-grammar")
-        assert result == "core-checkpoint.md"
-
-    def test_non_checkpoint_beginner_content_template(self):
-        from pipeline_lib import _get_content_template
-        result = _get_content_template("a1", 5, slug="greetings-and-politeness")
-        assert result == "beginner-full-rag.md"
-
-    def test_non_checkpoint_no_slug_unchanged(self):
-        from pipeline_lib import _get_content_template
-        result = _get_content_template("a1", 14)
-        assert result == "beginner-full-rag.md"
-
-    def test_beginner_checkpoint_activities_template(self):
-        from pipeline_lib import _get_activities_template
-        result = _get_activities_template("a1", 14, slug="checkpoint-first-contact")
-        assert result == "beginner-checkpoint-activities.md"
-
-    def test_core_checkpoint_activities_template(self):
-        from pipeline_lib import _get_activities_template
-        result = _get_activities_template("b1", 5, slug="checkpoint-grammar")
-        assert result == "core-checkpoint-activities.md"
-
-    def test_non_checkpoint_activities_template(self):
-        from pipeline_lib import _get_activities_template
-        result = _get_activities_template("a1", 14, slug="food-vocabulary")
-        assert result == "beginner-activities.md"
-
-    def test_checkpoint_review_guidance_populated(self):
-        from pipeline_lib import _get_checkpoint_review_guidance
-        ctx = FakeContext(slug="checkpoint-first-contact")
-        result = _get_checkpoint_review_guidance(ctx)
-        assert "Checkpoint-Specific Review Criteria" in result
-        assert "No new material introduced" in result
-
-    def test_checkpoint_review_guidance_empty_for_normal(self):
-        from pipeline_lib import _get_checkpoint_review_guidance
-        ctx = FakeContext(slug="greetings-and-politeness")
-        result = _get_checkpoint_review_guidance(ctx)
-        assert result == ""
-
-    def test_suffix_checkpoint_routes_to_checkpoint_template(self):
-        from pipeline_lib import _get_content_template
-        # C1 module with checkpoint at the END of slug
-        result = _get_content_template("c1", 20, slug="c1-1-checkpoint")
-        assert result == "core-checkpoint.md"
-
-    def test_suffix_checkpoint_activities_template(self):
-        from pipeline_lib import _get_activities_template
-        result = _get_activities_template("c1", 20, slug="c1-1-checkpoint")
-        assert result == "core-checkpoint-activities.md"

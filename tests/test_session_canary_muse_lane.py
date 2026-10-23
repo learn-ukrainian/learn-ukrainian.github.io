@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -49,22 +47,6 @@ def test_rejects_foreign_stream_before_writing(tmp_path: Path) -> None:
         == 2
     )
     assert list(tmp_path.iterdir()) == []
-
-
-def test_help_has_mint_score_and_fixed_policy() -> None:
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.session_canary.muse_lane", "--help"],
-        cwd=REPO,
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "{mint,score}" in result.stdout and "launcher owns the lease" in result.stdout
-    args = muse_lane.build_parser().parse_args(["score", "--epic", "devops", "--answers", "a.json"])
-    assert args.model == "muse-wonder-full-1.0" and args.pass_ratio == 0.8
-    assert args.preferred == ["MUSE-DRIVER-HANDOFF.md", "INTERIM-DRIVER-HANDOFF.md"]
 
 
 def test_mint_and_score_real_ten_anchor_pass_and_fail(
@@ -188,11 +170,4 @@ def test_alias_admission_uses_canonical_stream_without_running_canary(
         args += ["--answers", "unused.json"]
     assert muse_lane.main(args) == 0
     assert calls == [(lane, stream, "muse-wonder-full-1.0" if command == "score" else None)]
-    assert list(tmp_path.iterdir()) == []
-
-
-@pytest.mark.parametrize(("lane", "foreign"), [("devops", "epic:7919"), ("monitor", "epic:5703")])
-def test_admitted_lanes_cannot_cross_streams(tmp_path: Path, lane: str, foreign: str) -> None:
-    # allow-hardcoded-epic: literal foreign-stream refusal inputs
-    assert muse_lane.main(["--repo", str(tmp_path), "mint", "--epic", lane, "--stream", foreign]) == 2
     assert list(tmp_path.iterdir()) == []

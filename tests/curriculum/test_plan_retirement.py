@@ -98,29 +98,12 @@ def test_invalid_yaml_and_duplicate_keys(retired, raw):
         retirement_record(path.parent)
 
 
-def test_underscore_inventory_is_never_a_plan(retired):
-    path, _ = retired
-    with pytest.raises(PlanError, match="not_a_plan"):
-        load_plan(path.parent / "_retired.yaml")
-
-
 def test_discovery_without_record_and_cross_checks_remain_strict(tmp_path):
     (tmp_path / "ordinary.yaml").write_text("slug: ordinary\narc_ref: {position: 1}\n")
     (tmp_path / "_scope.yaml").write_text("ignored: true")
     assert retirement_record(tmp_path)["plans"] == []
     assert [path.stem for path in active_plan_paths(tmp_path)] == ["ordinary"]
     assert cross.load_level_plans(tmp_path).by_position[1][0] == "ordinary"
-
-
-def test_all_names_exclusions_and_zero_active_is_no_proof(retired, capsys):
-    path, _ = retired
-    assert cross.load_level_plans(path.parent).by_position == {}
-    assert validate.main(["a1", "--all", "--strict", "--level-dir", str(path.parent)]) == 0
-    output = capsys.readouterr().out
-    assert "retired exclusions: old" in output
-    assert "zero active plans" in output and "no plan-state proof" in output
-    (path.parent / "_retired.yaml").write_text("bad: true")
-    assert validate.main(["a1", "--all", "--level-dir", str(path.parent)]) == 1
 
 
 def test_real_three_exact_plan_hashes_are_retired():

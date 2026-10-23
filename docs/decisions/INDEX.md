@@ -12,9 +12,9 @@ Staleness check: `.venv/bin/python scripts/check_decisions.py`
 | dec-013 | 2026-07-28 | 2026-10-26 | atlas-practice | active | Lexicon explains words; practice decks drill them |
 | dec-012 | 2026-07-12 | 2027-07-12 | architecture | active | Static delivery is canonical; learning works without dynamic services |
 | dec-011 | 2026-07-11 | 2027-07-11 | architecture | superseded | Static-first forever: github.io canonical, backend = progressive enhancement, split at defined trigger |
-| dec-010 | 2026-07-10 | 2026-10-08 | harness | active | Grammar + word-choice gate priority; finetuning parked |
-| dec-009 | 2026-07-07 | 2026-10-05 | benchmark-2156 | active | Public benchmark release (epic #4639) parked; deploy-first |
-| dec-008 | 2026-06-14 | 2026-09-12 | content | active | A1/A2 live maintenance favors workbook enrichment over rebuilds |
+| dec-010 | 2026-07-10 | 2026-10-08 | harness | superseded | Grammar + word-choice gate priority; finetuning parked |
+| dec-009 | 2026-07-07 | 2026-10-05 | benchmark-2156 | superseded | Public benchmark release (epic #4639) parked; deploy-first |
+| dec-008 | 2026-06-14 | 2026-09-12 | content | superseded | A1/A2 live maintenance favors workbook enrichment over rebuilds |
 | dec-007 | 2026-04-24 | 2027-04-23 | pipeline | active | Enforce dec-001 at code level — no LLM regeneration during review (ADR-007) |
 | dec-005 | 2026-04-03 | 2026-07-03 | tooling | superseded | Keep gemini-cli, fix dispatch retry logic |
 | dec-004 | 2026-03-28 | 2027-07-07 | architecture | active | Bare slug filenames, no number prefixes |

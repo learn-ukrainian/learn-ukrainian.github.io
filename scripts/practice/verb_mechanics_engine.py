@@ -294,41 +294,6 @@ def resolve_imperative_rule(stem_type: str) -> tuple[str, str, str]:
     raise ValueError(f"Unknown imperative stem type: {stem_type}")
 
 
-def resolve_participle_anti_calque_rule() -> tuple[str, str, str]:
-    """Resolve active participle anti-calque rule per Правопис 2019 § 119."""
-    return (
-        "Подолання активних дієприкметників",
-        "Активні дієприкметники теперішнього часу на -ачий/-ячий/-учий/-ючий замінюються прикметниками, іменниками чи підрядними реченнями (охочий, чинний).",
-        "Active present participles in -achy/-uchy are replaced with proper adjectives, agent nouns, or subordinate clauses (okhochyi, chynnyi).",
-    )
-
-
-def resolve_impersonal_form_rule() -> tuple[str, str, str]:
-    """Resolve impersonal predicate rule per Правопис 2019 § 119."""
-    return (
-        "-но / -то",
-        "У безособових реченнях присудок виражається незмінюваними дієслівними формами на -но / -то із прямим додатком у знахідному відмінку (роботу виконано, закон прийнято).",
-        "Impersonal state predicates require invariant verbal forms ending in -no / -to with the direct object in the accusative (robotu vykonano, zakon pryiniato).",
-    )
-
-
-def resolve_gerund_aspect_rule(aspect: str) -> tuple[str, str, str]:
-    """Resolve gerund aspect suffix rule per Правопис 2019 § 120."""
-    if aspect == "imperfective":
-        return (
-            "-учи/-ючи / -ачи/-ячи",
-            "Дієприслівники недоконаного виду для одночасної дії творяться за допомогою суфіксів -учи/-ючи (I дієвідміна) або -ачи/-ячи (II дієвідміна) (читаючи, сидячи).",
-            "Imperfective gerunds for simultaneous action take suffixes -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy).",
-        )
-    if aspect == "perfective":
-        return (
-            "-вши / -ши",
-            "Дієприслівники доконаного виду для передуючої завершеної дії творяться за допомогою суфіксів -вши (після голосних) та -ши (після приголосних) (прочитавши, принісши).",
-            "Perfective gerunds for prior completed action take suffixes -vshy (after vowels) and -shy (after consonants) (prochytaffshy, prynisshy).",
-        )
-    raise ValueError(f"Unknown gerund aspect: {aspect}")
-
-
 # Curated, academically authoritative cards covering all 15 verb categories
 CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
     # =========================================================================

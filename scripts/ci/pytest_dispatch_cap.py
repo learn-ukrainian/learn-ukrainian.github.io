@@ -115,21 +115,6 @@ def repository_root() -> Path:
     raise RuntimeError("pytest dispatch cap cannot locate the repository root from its module path")
 
 
-def is_tests_root(raw: str, *, invocation_dir: Path, rootpath: Path) -> bool:
-    """True when ``raw`` is the tests directory and not a node id or a file under it."""
-    if "::" in raw:
-        return False
-    candidate = Path(raw)
-    if not candidate.is_absolute():
-        candidate = invocation_dir / candidate
-    try:
-        resolved = _resolved(candidate)
-        tests_root = _resolved(rootpath / "tests")
-    except OSError:
-        return False
-    return resolved == tests_root
-
-
 def path_covers_full_suite(raw: str, *, invocation_dir: Path) -> bool:
     """True when ``raw`` covers this checkout's tests tree.
 

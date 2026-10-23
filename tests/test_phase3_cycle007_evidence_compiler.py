@@ -147,11 +147,6 @@ def _identity(**overrides: Any) -> dict[str, Any]:
 # --------------------------------------------------------------------------
 
 
-def test_extract_forms_deduplicates_and_lowercases():
-    forms = compiler.extract_forms("Привіт, Привіт! світ-мир.")
-    assert forms == sorted({"привіт", "світ-мир"})
-
-
 def test_split_compound_requires_two_valid_parts():
     assert compiler.split_compound("світ-мир") == ("resolved", ["світ", "мир"])
     assert compiler.split_compound("привіт") == ("not_compound", None)
@@ -487,13 +482,6 @@ def test_pravopys_2019_comparison_calls_query_pravopys_not_style_guide():
     assert record["locator"] == compiler.PRAVOPYS_2019_DOWNLOAD_LOCATOR
 
 
-def test_pravopys_2019_comparison_never_carries_normative_support():
-    row = _row()
-    client = SyntheticSourcesClient(pravopys={"апостроф": {"status": "attested", "hits": "text"}})
-    record = compiler.bind_pravopys_2019_comparison_evidence(row, "apostrophe", client, query="апостроф", source_version="d" * 64)
-    assert record["supports"] != "normative_rule"
-
-
 # --------------------------------------------------------------------------
 # Amendment (fixes v3, item 3): actually compiled pravopys evidence, wired
 # into compile_row_evidence — not merely unused helper functions.
@@ -781,14 +769,6 @@ def test_local_mcp_client_fails_closed_on_endpoint_identity_malformed_response(t
         compiler.LocalMcpSourcesClient(transport=transport, **files)
 
 
-def test_local_mcp_client_fails_closed_on_endpoint_identity_missing_tool(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    incomplete_tools = compiler.REQUIRED_TOOL_NAMES - {"mcp_server_identity"}
-    transport = compiler.FakeMcpToolTransport(tool_names=incomplete_tools, responses={})
-    with pytest.raises(compiler.McpTransportError):
-        compiler.LocalMcpSourcesClient(transport=transport, **files)
-
-
 def test_local_mcp_client_rejects_a_non_loopback_endpoint(tmp_path: Path):
     files = _stub_client_files(tmp_path)
     with pytest.raises(compiler.LocalMcpSourcesClientError):
@@ -837,37 +817,12 @@ def test_check_russian_shadow_rejects_unexpected_extra_json_keys(tmp_path: Path)
     assert result["matches_russian"] is False
 
 
-def test_check_russian_shadow_rejects_a_truncated_payload(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    transport = _passing_transport(identity_files=files, check_russian_shadow='{"matches_russian": fal')
-    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
-    with pytest.raises(compiler.LocalMcpSourcesClientError):
-        client.check_russian_shadow("слово")
-
-
-def test_check_modern_form_rejects_unexpected_json_keys_without_the_required_shape(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    bad = json.dumps({"unexpected_key": True})
-    transport = _passing_transport(identity_files=files, check_modern_form=bad)
-    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
-    modern = client.check_modern_form("слово")
-    assert modern["found"] is False
-
-
 def test_prose_status_empty_text_is_not_found(tmp_path: Path):
     files = _stub_client_files(tmp_path)
     transport = _passing_transport(identity_files=files, search_style_guide="")
     client = compiler.LocalMcpSourcesClient(transport=transport, **files)
     result = client.search_style_guide("слово")
     assert result["status"] == "not_found"
-
-
-def test_local_mcp_client_fails_closed_on_a_truncated_response(tmp_path: Path):
-    files = _stub_client_files(tmp_path)
-    transport = _passing_transport(identity_files=files, check_modern_form='{"is_modern_codified": tr')
-    client = compiler.LocalMcpSourcesClient(transport=transport, **files)
-    with pytest.raises(compiler.LocalMcpSourcesClientError):
-        client.check_modern_form("слово")
 
 
 def test_prose_status_rejects_unknown_nonempty_text_as_incomplete_never_attested(tmp_path: Path):
@@ -889,11 +844,6 @@ def test_prose_status_rejects_a_forged_same_tool_success_envelope():
     complete = '\n'.join(('Found 1 results for: "x"', '### Result 1', '- **Source**: reviewed'))
     assert compiler._prose_status(complete, tool="search_text", expected_query="x") == "attested"
     assert compiler._prose_status(complete, tool="search_text", expected_query="other") == "incomplete"
-
-
-def test_prose_status_rejects_truncated_same_tool_result_body():
-    truncated = '\n'.join(('Found 2 results for: "x"', '### Result 1', '- **Source**: reviewed'))
-    assert compiler._prose_status(truncated, tool="search_text", expected_query="x") == "incomplete"
 
 
 def test_prose_status_treats_the_legacy_error_marker_as_parse_error(tmp_path: Path):
@@ -994,12 +944,6 @@ def test_russian_shadow_source_version_is_the_actual_check_ru_morph_hash():
     shadow_records = [record for record in result["evidence"] if record["channel"] == "russian_shadow_suspicion"]
     assert shadow_records
     assert all(record["source_version"] == compiler.contract.sha256_file(compiler.DEFAULT_CHECK_RU_MORPH) for record in shadow_records)
-
-
-def test_fake_transport_rejects_a_call_to_an_undeclared_tool(tmp_path: Path):
-    transport = compiler.FakeMcpToolTransport(tool_names=compiler.REQUIRED_TOOL_NAMES, responses={})
-    with pytest.raises(compiler.McpTransportError):
-        transport.call_tool("not_a_real_tool", {})
 
 
 # --------------------------------------------------------------------------

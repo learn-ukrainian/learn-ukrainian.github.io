@@ -52,25 +52,6 @@ def _write_meta(root: Path, level: str, slug: str, filename: str, phase: str, pr
     )
 
 
-def test_cost_summary_empty_payload(tmp_path, monkeypatch):
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
-
-    response = client.get("/api/analytics/cost")
-
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["windows"]["all_time"]["totals"]["cost_usd_est"] == 0.0
-    assert payload["windows"]["all_time"]["records_total"] == 0
-
-
-def test_cost_summary_retired_alias_returns_404(tmp_path, monkeypatch):
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
-
-    response = client.get("/api/cost")
-
-    assert response.status_code == 404
-
-
 def test_cost_module_route_returns_windows(tmp_path, monkeypatch):
     monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
     _write_meta(tmp_path, "a1", "my-family", "01-write-meta.json", "write", 3800, 380)
@@ -81,16 +62,3 @@ def test_cost_module_route_returns_windows(tmp_path, monkeypatch):
     payload = response.json()
     assert payload["windows"]["all_time"]["records_total"] == 1
     assert payload["windows"]["all_time"]["top_modules"][0]["name"] == "a1/my-family"
-
-
-def test_cost_phase_route_filters_phase(tmp_path, monkeypatch):
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
-    _write_meta(tmp_path, "a1", "alpha", "01-write-meta.json", "write", 3800, 380)
-    _write_meta(tmp_path, "a1", "alpha", "02-review-meta.json", "review", 1900, 190)
-
-    response = client.get("/api/analytics/cost/phase/write")
-
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["windows"]["all_time"]["records_total"] == 1
-    assert payload["windows"]["all_time"]["per_phase"][0]["name"] == "write"

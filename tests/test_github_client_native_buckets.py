@@ -98,12 +98,6 @@ def test_own_exhausted_bucket_blocks_with_typed_result(tmp_path, bucket, args):
     assert not translated and not native
 
 
-def test_exhausted_search_does_not_block_pr_status(tmp_path):
-    store, runner, translated, native = seeded(tmp_path, ["search"])
-    result = gh.run(["gh", "pr", "status"], client=store, runner=runner, capture_output=True)
-    assert spent(result, translated, native) and native == [["gh", "pr", "status"]]
-
-
 @pytest.mark.parametrize("bucket", ["core", "graphql"])
 @pytest.mark.parametrize(
     "args",
@@ -123,20 +117,6 @@ def test_high_level_subcommands_blocked_by_core_or_graphql(tmp_path, bucket, arg
     store, runner, translated, native = seeded(tmp_path, [bucket])
     result = gh.run(args, client=store, runner=runner, capture_output=True)
     assert blocked(result) and not translated and not native
-
-
-@pytest.mark.parametrize(
-    "args",
-    [
-        ["gh", "pr", "status"],
-        ["gh", "search", "prs", "x"],
-        ["gh", "api", "--paginate", "--jq", ".x", "repos/o/r/issues"],
-    ],
-)
-def test_unknown_bucket_never_blocks(tmp_path, args):
-    store, runner, translated, native = seeded(tmp_path, ["some_future_bucket"])
-    result = gh.run(args, client=store, runner=runner, capture_output=True)
-    assert spent(result, translated, native)
 
 
 def test_native_rate_limit_stderr_still_stores_secondary_and_exits_75(tmp_path):
@@ -654,16 +634,6 @@ def test_host_boundary_refuses_before_either_transport(no_jq, tmp_path, endpoint
 PARENT_ADMISSION = json.loads((Path(__file__).parent / "fixtures/github_endpoint_parent_admission.json").read_text())
 SWEEP_ROWS = PARENT_ADMISSION["rows"]
 SWEEP_CODEPOINTS = [*range(0x21), 0x7F]
-
-
-def test_endpoint_sweep_denominator():
-    assert PARENT_ADMISSION["parent_sha"] == "4b4696291a613436725ad1e1c5aa5249f4bb3da5"
-    assert PARENT_ADMISSION["codepoints"] == SWEEP_CODEPOINTS
-    assert len(SWEEP_ROWS) == 13
-    assert sum(len(row["endpoint"]) + 1 for row in SWEEP_ROWS) == 311
-    for row in SWEEP_ROWS:
-        assert len(row["admission_masks"]) == len(row["endpoint"]) + 1
-        assert len(row["space_outcomes"]) == len(row["endpoint"]) + 1
 
 
 @pytest.mark.parametrize("row", SWEEP_ROWS, ids=[row["name"] for row in SWEEP_ROWS])

@@ -43,32 +43,6 @@ def extract_lemmas_from_hints(hints: list[str]) -> list[str]:
     return lemmas
 
 
-def build_search_keywords(
-    topic_title: str,
-    vocab_hints: list[str] | dict,
-    max_keywords: int = 8,
-) -> list[str]:
-    """Build clean keyword list for video/blog search."""
-    keywords = [topic_title]
-
-    hints_list: list[str] = []
-    if isinstance(vocab_hints, dict):
-        hints_list = vocab_hints.get("required", [])[:10]
-    elif isinstance(vocab_hints, list):
-        hints_list = vocab_hints[:10]
-
-    lemmas = extract_lemmas_from_hints(hints_list)
-    seen: set[str] = {topic_title.lower()}
-    for lemma in lemmas:
-        if lemma.lower() not in seen:
-            seen.add(lemma.lower())
-            keywords.append(lemma)
-        if len(keywords) >= max_keywords:
-            break
-
-    return keywords
-
-
 def _extract_noun_phrases(text: str) -> list[str]:
     """Extract key noun phrases from objective strings."""
     phrases: list[str] = []

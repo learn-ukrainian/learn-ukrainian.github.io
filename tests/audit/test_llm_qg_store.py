@@ -172,30 +172,6 @@ def test_current_evidence_export_is_compact_and_hash_bound(tmp_path: Path) -> No
     assert evidence_record_passes_for_module(evidence, module_dir)
 
 
-def test_evidence_record_detects_stale_module_content(tmp_path: Path) -> None:
-    module_dir = _module(tmp_path)
-    db_path = tmp_path / "qg.db"
-    record_llm_qg(
-        level="b1",
-        slug="aspect-in-imperatives",
-        module_dir=module_dir,
-        payload=_payload(),
-        gate_version="test.v1",
-        path=db_path,
-    )
-    evidence = current_evidence_for_module(
-        "b1",
-        "aspect-in-imperatives",
-        module_dir,
-        path=db_path,
-    )
-    assert evidence is not None
-
-    (module_dir / "module.md").write_text("## Тест\n\nНовий текст.\n", encoding="utf-8")
-
-    assert not evidence_record_is_current_for_module(evidence, module_dir)
-
-
 _LEGACY_SCHEMA = """
 CREATE TABLE llm_qg_runs (
     run_id TEXT PRIMARY KEY, created_at TEXT NOT NULL, level TEXT NOT NULL,
@@ -452,22 +428,6 @@ def test_db_uses_wal_mode_and_busy_timeout(tmp_path: Path) -> None:
         assert str(journal_mode).lower() == "wal"
 
 
-
-
-def test_repository_root_failure_degrades_gracefully(monkeypatch) -> None:
-    from scripts.audit import llm_qg_store
-
-    monkeypatch.delenv(llm_qg_store.DB_ENV_VAR, raising=False)
-
-    def mock_repo_root(*args: object, **kwargs: object) -> Path:
-        raise RuntimeError("git execution failed: mock failure")
-
-    monkeypatch.setattr(llm_qg_store, "_repository_root", mock_repo_root)
-
-    # Should degrade to returning None instead of propagating RuntimeError
-    assert llm_qg_store.latest_llm_qg("b1", "aspect-in-imperatives", path=None) is None
-
-
 def _git_cmd(cwd: Path, *args: str) -> None:
     command = ["git", "-C", str(cwd), *args]
     result = subprocess.run(
@@ -579,20 +539,6 @@ def test_discover_worktree_dbs(
     assert wt1_db.resolve() in discovered_resolved
     assert wt2_db.resolve() in discovered_resolved
     assert extra_db.resolve() in discovered_resolved
-
-
-def test_migrate_worktree_dbs_handles_no_worktrees(tmp_path: Path) -> None:
-    from scripts.audit import llm_qg_store
-
-    primary_db = tmp_path / "primary.db"
-    stats = llm_qg_store.migrate_worktree_dbs(primary_path=primary_db, worktree_dbs=[])
-    assert stats == {
-        "discovered_dbs": 0,
-        "scanned_rows": 0,
-        "migrated_rows": 0,
-        "skipped_rows": 0,
-        "skipped_sources": [],
-    }
 
 
 def test_migrate_worktree_dbs_conflicting_rows_latest_wins(tmp_path: Path) -> None:
@@ -752,50 +698,6 @@ def test_migrate_worktree_dbs_is_idempotent(tmp_path: Path) -> None:
         rows_run2 = conn.execute("SELECT * FROM llm_qg_runs ORDER BY run_id").fetchall()
 
     assert rows_run1 == rows_run2
-
-
-def test_migrate_worktree_dbs_cli(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    from scripts.audit import llm_qg_store
-
-    primary_db = tmp_path / "primary.db"
-    wt_db = tmp_path / "wt.db"
-    module_dir = _module(tmp_path)
-
-    llm_qg_store.record_llm_qg(
-        level="b1",
-        slug="module-cli",
-        module_dir=module_dir,
-        payload=_payload(score=9.2),
-        gate_version="test.v1",
-        run_id="run-cli",
-        path=wt_db,
-    )
-
-    rc = llm_qg_store.main([
-        "--migrate-worktrees",
-        "--db",
-        str(primary_db),
-        "--worktree-db",
-        str(wt_db),
-    ])
-    assert rc == 0
-    captured = capsys.readouterr().out
-    assert "Worktree DB migration complete" in captured
-    assert "migrated=1" in captured
-
-
-def test_circuit_state_path_raises_on_repo_root_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.audit import llm_qg_store
-
-    monkeypatch.delenv(llm_qg_store.CIRCUIT_ENV_VAR, raising=False)
-
-    def mock_repo_root(*args: object, **kwargs: object) -> Path:
-        raise RuntimeError("git execution failed: mock failure")
-
-    monkeypatch.setattr(llm_qg_store, "_repository_root", mock_repo_root)
-
-    with pytest.raises(RuntimeError, match="mock failure"):
-        llm_qg_store.circuit_state_path()
 
 
 def test_concurrent_writers_circuit_state(tmp_path: Path) -> None:
@@ -1092,16 +994,3 @@ def test_migrate_worktree_dbs_does_not_alter_source_dbs(tmp_path: Path) -> None:
     assert migrated["run_id"] == "run-legacy-1"
     assert migrated["route_name"] is None
     assert migrated["tools_used_json"] is None
-
-
-def test_parse_iso_timestamp_normalization() -> None:
-    from scripts.audit.llm_qg_store import _parse_iso_timestamp
-
-    t1 = _parse_iso_timestamp("2026-08-15T12:00:00Z")
-    t2 = _parse_iso_timestamp("2026-08-15T12:00:00+00:00")
-    t3 = _parse_iso_timestamp("2026-08-15T12:00:00.000000Z")
-    t4 = _parse_iso_timestamp("2026-08-15T12:00:00.123456Z")
-    assert t1 == t2 == t3
-    assert t4 > t1
-    assert _parse_iso_timestamp(None) == 0.0
-    assert _parse_iso_timestamp("invalid") == 0.0

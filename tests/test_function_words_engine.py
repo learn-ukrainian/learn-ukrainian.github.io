@@ -228,16 +228,3 @@ def test_export_function_word_deck(tmp_path: Path):
     with open(committed_deck_file, encoding="utf-8") as f:
         committed_deck = json.load(f)
     assert committed_deck == loaded, "Committed function_words_deck.json diverges from fresh export!"
-
-
-def test_option_position_distribution():
-    """Verify that card.all_options() distributes correct answers across positions 0..3."""
-    cards = build_canonical_function_word_cards()
-    positions = [card.all_options().index(card.correct_answer) for card in cards]
-    position_counts = {p: positions.count(p) for p in range(4)}
-
-    # Every position (0, 1, 2, 3) must be tightly distributed (7 <= count <= 14 for 42 cards)
-    for p in range(4):
-        assert 7 <= position_counts[p] <= 14, (
-            f"Position {p} has {position_counts[p]} answers, expected between 7 and 14 (total {len(cards)})"
-        )

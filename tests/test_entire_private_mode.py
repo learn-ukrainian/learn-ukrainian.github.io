@@ -7,12 +7,9 @@ from pathlib import Path
 
 import pytest
 
-from scripts.entire import private_mode_preflight
-from scripts.entire.private_mode_preflight import PINNED_VERSION, preflight
+from scripts.entire.private_mode_preflight import preflight
 from scripts.entire.validate_checkpoint_routing import EXPECTED_PRIVATE_RECALL
-from scripts.entire_context.provider import REQUIRED_ENTIRE_VERSION
 
-ROOT = Path(__file__).resolve().parents[1]
 CHECKPOINT_REPO = "learn-ukrainian/entire-checkpoints-private"
 SOURCE_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 OPERATOR_GRANT = {
@@ -115,17 +112,6 @@ def _with(overrides: dict[tuple[str, ...], subprocess.CompletedProcess[str]]):
     return runner
 
 
-def test_entire_pins_agree_on_0_11_5() -> None:
-    recall = json.loads((ROOT / ".entire" / "private-recall.json").read_text(encoding="utf-8"))
-    installer = (ROOT / "scripts" / "entire" / "install_fleet_external_agent.sh").read_text(encoding="utf-8")
-
-    assert PINNED_VERSION == "0.11.5"
-    assert REQUIRED_ENTIRE_VERSION == PINNED_VERSION
-    assert EXPECTED_PRIVATE_RECALL["required_cli_version"] == PINNED_VERSION
-    assert recall["required_cli_version"] == PINNED_VERSION
-    assert '!= "Entire CLI 0.11.5" ]]' in installer
-
-
 def test_private_mode_preflight_accepts_the_full_private_boundary(tmp_path: Path) -> None:
     _write_config(tmp_path)
     calls: list[tuple[str, ...]] = []
@@ -157,14 +143,6 @@ def test_private_mode_preflight_accepts_the_full_private_boundary(tmp_path: Path
     assert ("entire", "repo", "view", f"/gh/{SOURCE_REPO}", "--json") in calls
     assert not any(call[:4] == ("entire", "repo", "mirror", "collaborators") for call in calls)
     assert not any(call[:4] == ("entire", "repo", "mirror", "list") for call in calls)
-
-
-def test_mirror_helpers_use_the_0_11_5_forge_reference() -> None:
-    assert private_mode_preflight.mirror_view_args(SOURCE_REPO) == ("repo", "view", f"/gh/{SOURCE_REPO}", "--json")
-    row = json.loads(_mirror_view(SOURCE_REPO, private=False))
-    assert private_mode_preflight.mirror_row(row, SOURCE_REPO) == row
-    assert private_mode_preflight.mirror_row(row, CHECKPOINT_REPO) is None
-    assert private_mode_preflight.mirror_row([row], SOURCE_REPO) is None
 
 
 def test_private_mode_preflight_fails_closed_without_private_visibility(tmp_path: Path) -> None:

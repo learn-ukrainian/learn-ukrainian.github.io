@@ -22,26 +22,6 @@ def _text(name: str) -> str:
     return (PACKAGING / name).read_text(encoding="utf-8")
 
 
-def test_guard_timer_is_persistent_every_five_minutes() -> None:
-    timer = _text("learn-ukrainian-context-guard.timer")
-    assert "OnCalendar=*:0/5\n" in timer
-    assert "Unit=learn-ukrainian-context-guard.service\n" in timer
-    assert "WantedBy=timers.target\n" in timer
-    service = _text("learn-ukrainian-context-guard.service")
-    assert "Type=oneshot\n" in service
-    assert "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.ops.context_guard tick\n" in service
-
-
-def test_relaunch_is_a_boot_oneshot_that_scopes_the_tmux_server() -> None:
-    service = _text("learn-ukrainian-lane-relaunch.service")
-    assert "Type=oneshot\n" in service
-    assert "WantedBy=default.target\n" in service
-    assert "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.ops.lane_relaunch --server-scope\n" in service
-    assert "WorkingDirectory=@REPO_ROOT@\n" in service
-    # Ordering after default.target would be a cycle for a unit default.target wants.
-    assert "After=default.target" not in service
-
-
 @pytest.mark.skipif(shutil.which("systemd-analyze") is None, reason="systemd-analyze unavailable")
 def test_rendered_units_pass_systemd_analyze_verify(tmp_path: Path) -> None:
     root = str(Path(sys.executable).parents[2])

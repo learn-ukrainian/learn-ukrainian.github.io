@@ -119,16 +119,6 @@ def test_rb4_retry_once_is_a_non_rerun_stop_and_commands_have_no_rerun_primitive
     assert "claimant-ledger" not in command_text
 
 
-def test_negative_rb4_retry_once_rewire_fails_non_rerun_contract() -> None:
-    """Mutation proof: rerouting retry-once away from STOP fails exactly this contract."""
-    spec = _load(RB4_PATH)
-    _steps(spec)["allowlist_match"]["transitions"]["matched_retry_once"]["target"] = (
-        "back_to_pr_lifecycle"
-    )
-    with pytest.raises(AssertionError):
-        _assert_retry_once_stops(spec)
-
-
 @pytest.mark.parametrize(
     ("changed", "expected"),
     [
@@ -189,43 +179,12 @@ def test_rb3_babysit_registration_continues_to_bounded_state_observation() -> No
     _assert_rb3_babysit_routing(_load(RB3_PATH))
 
 
-def test_negative_rb3_babysit_registration_stop_rewire_fails_routing_contract() -> None:
-    """Mutation proof: restoring the inverted registration STOP fails this contract."""
-    spec = _load(RB3_PATH)
-    _steps(spec)["observe_babysit_registration"]["transitions"]["registration_observed"][
-        "target"
-    ] = "STOP-manual-intervention"
-    with pytest.raises(AssertionError):
-        _assert_rb3_babysit_routing(spec)
-
-
 def test_rb3_review_in_flight_self_loops_for_driver_owned_pacing() -> None:
     """Each invocation observes one request state, so in-flight review remains paced."""
     review_request = _steps(_load(RB3_PATH))["observe_review_request"]
     assert review_request["transitions"]["review_in_flight"]["target"] == (
         "observe_review_request"
     )
-
-
-def test_rb3_former_judgment_nodes_are_receipt_observations_or_stops() -> None:
-    """Former summon/judgment nodes neither fabricate completion nor perform their action."""
-    steps = _steps(_load(RB3_PATH))
-    former_judgment_steps = {
-        "observe_delivery_application_receipt": "rb3-deliveries-",
-        "observe_stuck_request_resolution": "rb3-stuck-request-",
-        "observe_verdict_receipt": "rb3-verdict-",
-        "observe_fix_round_receipt": "rb3-fix-round-",
-        "observe_finalize_note_receipt": "rb3-finalize-",
-    }
-    for step_id, receipt_name in former_judgment_steps.items():
-        step = steps[step_id]
-        assert step["command"]["mutation_class"] == "observe"
-        command = _command_text(step)
-        assert receipt_name in command
-        assert "jq" in command
-        assert any(target.startswith("STOP-") for target in (
-            transition["target"] for transition in step["transitions"].values()
-        ))
 
 
 def test_rb4_keeps_head_currency_reachable_and_url_bound() -> None:

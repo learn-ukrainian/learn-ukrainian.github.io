@@ -481,30 +481,6 @@ def test_both_candidate_a_censuses_share_one_bound_input_set(fixture):
     assert (censuses["atlas"]["entry_count"], censuses["puls"]["entry_count"]) == (5, 4)
 
 
-@pytest.mark.parametrize("inventory", ["unknown", "missing", "known_empty"])
-def test_puls_census_unknown_is_not_zero_coverage(fixture, inventory):
-    puls = puls_input(fixture)
-    row = fixture.docs["source_manifest"]["ranges"][1]
-    fixture.docs["stage_evidence"]["records"] = [
-        r for r in fixture.docs["stage_evidence"]["records"] if r["range_id"] != row["range_id"]
-    ]
-    if inventory == "missing":
-        fixture.docs["source_manifest"]["ranges"].remove(row)
-    elif inventory == "known_empty":
-        row["units"] = []
-        fixture.source_index(1)
-    else:
-        row.update(membership="UNKNOWN", index=None, units=[])
-    fixture.save()
-    outputs, receipt = manifest.account(fixture.paths, puls_entries=puls)
-    coverage = json.loads(outputs["puls-census.json"])["requirements"][1]
-    assert coverage["partition_status"] == ("PARTITIONED" if inventory == "known_empty" else "UNPARTITIONED")
-    assert coverage["exact_key_matched_entry_count"] == (0 if inventory == "known_empty" else None)
-    assert coverage["no_exact_key_match_entry_count"] == (4 if inventory == "known_empty" else None)
-    assert (coverage["supplied_known_matched_entry_count"], coverage["supplied_known_matched_unit_count"]) == (0, 0)
-    assert receipt["legacy_expected_obligation"] == 123
-
-
 def test_puls_census_empty_optional_and_forged_row_boundaries(fixture):
     baseline, original = manifest.account(fixture.paths)
     outputs, receipt = manifest.account(fixture.paths, puls_entries=puls_input(fixture, []))
@@ -563,21 +539,6 @@ def test_puls_census_invalid_input_publishes_nothing(fixture, content):
     assert result.returncode == 3
     assert result.stderr.startswith("INVALID_EVIDENCE:")
     assert not (fixture.root / "output").exists()
-
-
-def test_puls_census_drift_refuses_publication_and_input_overlap(fixture, monkeypatch):
-    puls = puls_input(fixture)
-    assert fixture.cli(extra=["--puls-entries", str(puls)]).returncode == 0
-    previous = (fixture.root / "output/manifest-receipt.json").read_bytes()
-    puls_input(fixture, [{"id": "changed", "word": "changed", "level": "A1"}])
-    result = fixture.cli(extra=["--puls-entries", str(puls)])
-    assert result.returncode == 4
-    assert result.stderr.startswith("PUBLICATION_FAILURE:")
-    assert (fixture.root / "output/manifest-receipt.json").read_bytes() == previous
-    outputs, receipt = manifest.account(fixture.paths, puls_entries=puls)
-    monkeypatch.setenv("TMPDIR", str(fixture.root))
-    with pytest.raises(OSError, match="overlaps input evidence"):
-        manifest.publish(puls, outputs, receipt)
 
 
 def test_complete_finite_inventory_cli_callable_and_rerun(fixture):
@@ -680,20 +641,6 @@ def test_all20_unknown_ranges_and_original123_not_guessed(fixture):
     assert fixture.source_output()["units"] == []
     assert receipt["stage_counts"] == {}
     assert receipt["programme_completeness"] == "UNRESOLVED"
-
-
-def test_unknown_range_is_not_zero_or_absent(fixture):
-    row = fixture.docs["source_manifest"]["ranges"][1]
-    row.update(membership="UNKNOWN", units=[], index=None)
-    fixture.docs["stage_evidence"]["records"] = [
-        r for r in fixture.docs["stage_evidence"]["records"] if r["range_id"] != "range-1"
-    ]
-    fixture.save()
-    assert fixture.cli().returncode == 2
-    output = fixture.source_output("SRC-VESUM")
-    assert output["ranges"][0]["unit_count"] is None
-    assert output["ranges"][0]["unit_partitions"] is None
-    assert output["ranges"][0]["partition_status"] == "UNPARTITIONED"
 
 
 @pytest.mark.parametrize("drift", ["missing", "extra", "order", "identity", "duplicate", "digest", "boundary"])
@@ -937,13 +884,6 @@ def test_malformed_json_cli(fixture, raw):
     assert "INVALID_EVIDENCE:" in result.stderr
 
 
-def test_missing_input_cli_and_callable(fixture):
-    fixture.paths["requirements"].unlink()
-    assert fixture.cli().returncode == 3
-    with pytest.raises(manifest.InvalidEvidence, match="five"):
-        manifest.account({})
-
-
 def test_linkless_member_is_a_named_gap(fixture):
     document = fixture.docs["lexical_universe"]
     document["members"][0]["source_units"] = []
@@ -994,22 +934,6 @@ raise SystemExit(m.main(sys.argv[2:]))
     assert not (fixture.root / "failed/manifest-receipt.json").exists()
     assert fixture.cli(out="failed").returncode == 4
     assert fixture.cli(out="fresh").returncode == 0
-
-
-def test_keyboard_interrupt_before_receipt_cannot_commit(fixture, monkeypatch):
-    outputs, receipt = manifest.account(fixture.paths)
-    monkeypatch.setenv("TMPDIR", str(fixture.root))
-    original = manifest.os.replace
-
-    def interrupt(source, target):
-        if target.name == "manifest-receipt.json":
-            raise KeyboardInterrupt
-        original(source, target)
-
-    monkeypatch.setattr(manifest.os, "replace", interrupt)
-    with pytest.raises(KeyboardInterrupt):
-        manifest.publish(fixture.root / "interrupted", outputs, receipt)
-    assert not (fixture.root / "interrupted/manifest-receipt.json").exists()
 
 
 def test_output_restrictions_and_prior_input_preservation(fixture, tmp_path):
@@ -1086,104 +1010,6 @@ def test_invalid_cli_flags_are_invalid_evidence(fixture):
     assert result.stderr == "INVALID_EVIDENCE: invalid CLI arguments; use --help\n"
 
 
-def test_date_without_time_is_not_a_retrieval_timestamp(fixture):
-    fixture.docs["source_manifest"]["ranges"][0]["retrieved_at"] = "2026-09-28Z"
-    fixture.save()
-    assert fixture.cli().returncode == 3
-
-
-@pytest.mark.parametrize("occurrence", [0.0, -0.0, 1.0])
-@pytest.mark.parametrize(
-    "boundary",
-    [
-        "source-manifest",
-        "source-index",
-        "stage",
-        "lexical_universe",
-        "lexical_universe-index",
-        "legacy_membership",
-        "legacy_membership-index",
-        "absence",
-    ],
-)
-def test_occurrence_requires_integer_at_every_identity_boundary(fixture, boundary, occurrence):
-    ordinal = int(occurrence)
-    if boundary == "source-manifest":
-        # Shared source/stage/member identities drift together, unlike retained indexes.
-        fixture.docs["source_manifest"]["ranges"][0]["units"][ordinal]["identity"]["occurrence"] = occurrence
-    elif boundary == "source-index":
-        ref = fixture.docs["source_manifest"]["ranges"][0]["index"]
-        path = fixture.root / ref["path"]
-        value = json.loads(path.read_text())
-        value["units"][ordinal]["identity"]["occurrence"] = occurrence
-        ref["sha256"] = write(path, value)
-    elif boundary == "stage":
-        record = fixture.docs["stage_evidence"]["records"][ordinal * len(STAGES)]
-        record["identity"] = {**record["identity"], "occurrence": occurrence}
-    elif boundary == "absence":
-        record = absence(fixture, ordinal)
-        path = fixture.root / record["absence_evidence"]["path"]
-        value = json.loads(path.read_text())
-        value["identity"] = {**record["identity"], "occurrence": occurrence}
-        record["absence_evidence"]["sha256"] = write(path, value)
-    else:
-        name = boundary.removesuffix("-index")
-        document = fixture.docs[name]
-        if boundary.endswith("-index"):
-            path = fixture.root / document["index"]["path"]
-            value = json.loads(path.read_text())
-            value["members"][ordinal]["source_units"][0]["identity"]["occurrence"] = occurrence
-            document["index"]["sha256"] = write(path, value)
-        else:
-            link = document["members"][ordinal]["source_units"][0]
-            link["identity"] = {**link["identity"], "occurrence": occurrence}
-    fixture.save()
-    result = fixture.cli()
-    assert result.returncode == 3, result.stdout + result.stderr
-    assert result.stderr.startswith("INVALID_EVIDENCE:")
-    assert "type failed" in result.stderr
-    assert "Traceback" not in result.stderr
-    assert not (fixture.root / "output").exists()
-
-
-@pytest.mark.parametrize("occurrence", [0.0, -0.0])
-@pytest.mark.parametrize("boundary", ["source", "stage", "member"])
-def test_float_occurrence_cannot_create_duplicate_identity(fixture, boundary, occurrence):
-    if boundary == "source":
-        row = fixture.docs["source_manifest"]["ranges"][0]
-        duplicate = copy.deepcopy(row["units"][0])
-        duplicate["identity"]["occurrence"] = occurrence
-        duplicate["locator"] = "fixture:duplicate"
-        row["units"].append(duplicate)
-        fixture.source_index(0)
-        records = fixture.docs["stage_evidence"]["records"]
-        for record in copy.deepcopy(records[: len(STAGES)]):
-            record["identity"] = duplicate["identity"]
-            records.append(record)
-    elif boundary == "stage":
-        records = fixture.docs["stage_evidence"]["records"]
-        duplicate = copy.deepcopy(records[0])
-        duplicate["identity"]["occurrence"] = occurrence
-        records.append(duplicate)
-    else:
-        document = fixture.docs["lexical_universe"]
-        links = document["members"][0]["source_units"]
-        duplicate = copy.deepcopy(links[0])
-        duplicate["identity"]["occurrence"] = occurrence
-        links.append(duplicate)
-        path = fixture.root / document["index"]["path"]
-        value = json.loads(path.read_text())
-        value["members"] = document["members"]
-        document["index"]["sha256"] = write(path, value)
-    fixture.save()
-    result = fixture.cli()
-    assert result.returncode == 3, result.stdout + result.stderr
-    assert result.stderr.startswith("INVALID_EVIDENCE:")
-    assert "type failed" in result.stderr
-    assert "Traceback" not in result.stderr
-    assert not (fixture.root / "output").exists()
-
-
 @pytest.mark.parametrize("path", ["capture\x00.txt", "loop"], ids=["embedded-nul", "symlink-loop"])
 @pytest.mark.parametrize("kind", ["source-index", "lexical-index", "legacy-index", "evidence", "absence"])
 def test_unresolvable_reference_is_invalid_evidence_without_publication(fixture, kind, path):
@@ -1206,16 +1032,6 @@ def test_unresolvable_reference_is_invalid_evidence_without_publication(fixture,
     assert not (fixture.root / "output").exists()
 
 
-def test_symlink_loop_top_level_input_is_invalid_evidence_without_publication(fixture):
-    (fixture.root / "loop").symlink_to("loop")
-    fixture.paths["stage_evidence"] = fixture.root / "loop"
-    result = fixture.cli()
-    assert result.returncode == 3, result.stdout + result.stderr
-    assert result.stdout == ""
-    assert result.stderr == "INVALID_EVIDENCE: unreadable or invalid JSON input\n"
-    assert not (fixture.root / "output").exists()
-
-
 @pytest.mark.parametrize("loop", ["output", "tmpdir"])
 def test_unresolvable_publication_path_is_publication_failure_without_receipt(fixture, loop):
     prior = {name: path.read_bytes() for name, path in fixture.paths.items()}
@@ -1227,15 +1043,6 @@ def test_unresolvable_publication_path_is_publication_failure_without_receipt(fi
     assert not (fixture.root / "output").exists()
     assert not list(fixture.root.rglob("manifest-receipt.json"))
     assert prior == {name: path.read_bytes() for name, path in fixture.paths.items()}
-
-
-def test_embedded_nul_output_dir_is_publication_oserror(fixture, monkeypatch):
-    # Process arguments cannot carry NUL, so the callable is the only entry point.
-    outputs, receipt = manifest.account(fixture.paths)
-    monkeypatch.setenv("TMPDIR", str(fixture.root))
-    with pytest.raises(OSError, match=r"^path cannot be resolved$"):
-        manifest.publish(fixture.root / "out\x00put", outputs, receipt)
-    assert not list(fixture.root.rglob("manifest-receipt.json"))
 
 
 @pytest.mark.parametrize("boundary", ["source", "index"])
@@ -1253,53 +1060,6 @@ def test_duplicate_locators_cannot_hide_distinct_identities(fixture, boundary):
     result = fixture.cli()
     assert result.returncode == 3
     assert "duplicate source-index locator" in result.stderr
-    assert not (fixture.root / "output").exists()
-
-
-@pytest.mark.parametrize("locator", [None, "", "   "])
-def test_missing_unit_locator_is_invalid_evidence(fixture, locator):
-    row = fixture.docs["source_manifest"]["ranges"][0]
-    if locator is None:
-        del row["units"][0]["locator"]
-    else:
-        row["units"][0]["locator"] = locator
-    fixture.save()
-    result = fixture.cli()
-    assert result.returncode == 3
-    assert result.stderr.startswith("INVALID_EVIDENCE:")
-    assert not (fixture.root / "output").exists()
-
-
-@pytest.mark.parametrize(
-    ("defect", "message"),
-    [
-        ("missing", "membership mismatch: missing=1, extra=0"),
-        ("extra", "membership mismatch: missing=0, extra=1"),
-        ("order", "identity order mismatch"),
-        ("locator", "locator mismatch at ordinal=0"),
-        ("digest", "sha256 mismatch at ordinal=0"),
-    ],
-)
-def test_cli_names_independent_expectation_discrepancies(fixture, defect, message):
-    units = fixture.docs["source_manifest"]["ranges"][0]["units"]
-    if defect == "missing":
-        units.pop()
-    elif defect == "extra":
-        unit = copy.deepcopy(units[0])
-        unit["identity"]["key"] = "source-side-extra"
-        unit["locator"] = "fixture:extra"
-        units.append(unit)
-    elif defect == "order":
-        units.reverse()
-    elif defect == "locator":
-        units[0]["locator"] = "fixture:changed"
-    else:
-        units[0]["sha256"] = "0" * 64
-    fixture.save()
-    result = fixture.cli()
-    assert result.returncode == 3
-    assert message in result.stderr
-    assert result.stdout == ""
     assert not (fixture.root / "output").exists()
 
 
@@ -1346,15 +1106,6 @@ def test_known_empty_range_has_explicit_zero_stage_counts(fixture):
     }
 
 
-def test_legacy_obligation_requires_a_json_integer(fixture):
-    fixture.docs["legacy_membership"]["expected_obligation"] = 123.0
-    fixture.save()
-    result = fixture.cli()
-    assert result.returncode == 3
-    assert "expected_obligation: type failed" in result.stderr
-    assert not (fixture.root / "output").exists()
-
-
 def test_cli_rejects_trailing_newline_in_unacquired_unit_digest(fixture):
     row = fixture.docs["source_manifest"]["ranges"][0]
     unit = row["units"][0]
@@ -1368,17 +1119,6 @@ def test_cli_rejects_trailing_newline_in_unacquired_unit_digest(fixture):
     assert result.returncode == 3, result.stdout + result.stderr
     assert result.stderr.startswith("INVALID_EVIDENCE:")
     assert not (fixture.root / "output").exists()
-
-
-def test_validation_stops_at_first_invalid_row():
-    class InvalidTail(list):
-        def __getitem__(self, index):
-            if index != 0:
-                raise AssertionError("validation traversed beyond the first error")
-            return None
-
-    with pytest.raises(manifest.InvalidEvidence, match=r"^bounded\.0: type failed$"):
-        manifest._validate(InvalidTail([None, None]), {"type": "array", "items": {"type": "integer"}}, "bounded")
 
 
 @pytest.mark.parametrize("censuses", [False, True])

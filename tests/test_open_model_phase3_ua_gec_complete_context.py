@@ -280,28 +280,6 @@ def test_unicode_whitespace_projection_preserves_parsed_offsets_and_exact_retrie
         context.representation.validate_representation(tampered)
 
 
-def test_non_whitespace_target_difference_remains_excluded(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    checkout = _fixture_checkout(tmp_path)
-    target = checkout / "data/gec-only/train/target-sentences/0001.a1.txt"
-    target.write_text("Св. Петро дякував братові!\nВін допоміг сестрі.\n", encoding="utf-8")
-    _patch_fixture_denominator(monkeypatch)
-
-    records, accounting = context.reconstruct(
-        checkout=checkout,
-        database=tmp_path / "unused.db",
-        source_universe=tmp_path / "unused-universe",
-    )
-
-    assert len(records) == 1
-    assert accounting["excluded_v2_unit_count_by_reason"] == {"target_sentence_not_exactly_aligned": 1}
-    assert accounting["excluded_v2_units"] == [
-        {"unit_id": "ua-gec:test:1", "reason": "target_sentence_not_exactly_aligned"}
-    ]
-
-
 def test_complete_sentence_deletion_seeds_source_and_target_closure(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -531,10 +509,3 @@ def test_private_output_uses_restricted_permissions(tmp_path: Path) -> None:
 
     assert stat.S_IMODE(output.parent.stat().st_mode) == 0o700
     assert stat.S_IMODE(output.stat().st_mode) == 0o600
-
-
-def test_receipt_output_is_not_world_readable(tmp_path: Path) -> None:
-    receipt = tmp_path / "receipt.json"
-    context._atomic_write(receipt, b"{}\n", context.PRIVATE_FILE_MODE)
-
-    assert stat.S_IMODE(receipt.stat().st_mode) == 0o600

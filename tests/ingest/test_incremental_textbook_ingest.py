@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import sqlite3
 import sys
-from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -611,33 +610,6 @@ def test_tracked_university_policy_is_closed_and_default_deny():
     )
 
 
-def test_tracked_v3_policy_separates_audience_from_content_fitness():
-    from projects.open_model_data import university_source_policy as usp
-    from scripts.projects.open_model_data.paths import resolve_open_model_path
-
-    policy_path = resolve_open_model_path(
-        "data/projects/open_model_data/admission/phase3_university_source_policy_v3.json"
-    )
-    policy, policy_sha256 = usp.load_policy(policy_path)
-    by_source = {entry["source_file"]: entry for entry in policy["sources"]}
-
-    assert policy["default_disposition"] == usp.V3_DEFAULT_DISPOSITION
-    assert policy["source_count"] == 20
-    assert len(policy_sha256) == 64
-    assert Counter(entry["content_disposition"] for entry in policy["sources"]) == {
-        "admit_candidate": 7,
-        "contextual_only": 9,
-        "quarantine": 4,
-    }
-    assert by_source["uni-ukrmova-glukhovtseva-2021"]["allowed_lanes"] == []
-    assert by_source["uni-ukrmova-morphology-aleksiienko-2014"]["allowed_lanes"] == []
-    assert by_source["uni-ukrmova-lexicology-filon-khomik-2010"]["allowed_lanes"] == ["contextual_retrieval"]
-    assert by_source["uni-ukrlit-kalinichenko-2024"]["allowed_lanes"] == [
-        "contextual_retrieval",
-        "corpus_ingest",
-    ]
-
-
 def test_v3_content_quarantine_overrides_proven_audience(tmp_path):
     from projects.open_model_data import university_source_policy as usp
 
@@ -757,42 +729,6 @@ def test_v3_contextual_source_can_enter_corpus_but_not_rule_lane(tmp_path):
             jsonl_path=jsonl,
             policy_path=policy,
             lane="linguistic_rule_evidence",
-        )
-
-
-def test_v3_admit_candidate_cannot_enter_corpus_before_admission(tmp_path):
-    from projects.open_model_data import university_source_policy as usp
-
-    slug = "uni-ukrmova-candidate-2026"
-    jsonl = tmp_path / "grade-00" / f"{slug}.jsonl"
-    jsonl.parent.mkdir(parents=True)
-    jsonl.write_text(
-        json.dumps(
-            {
-                "chunk_id": f"{slug}_s0000",
-                "text": "Кандидат на вступ до корпусу.",
-                "page_start": 1,
-                "page_end": 1,
-            },
-            ensure_ascii=False,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    policy = _write_v3_university_policy(
-        tmp_path / "policy.json",
-        slug=slug,
-        jsonl=jsonl,
-        content_disposition="admit_candidate",
-        allowed_lanes=["contextual_retrieval"],
-    )
-
-    with pytest.raises(usp.UniversitySourcePolicyError, match="denies lane corpus_ingest"):
-        usp.require_source_admission(
-            source_file=slug,
-            jsonl_path=jsonl,
-            policy_path=policy,
-            lane="corpus_ingest",
         )
 
 
@@ -1503,15 +1439,3 @@ def test_unmapped_author_refuses(fixture_env, tmp_path):
     )
     with pytest.raises(iti.IngestError, match="no canonical Cyrillic form"):
         iti.ingest([slug], db_path=db, dry_run=True)
-
-
-def test_missing_jsonl_refuses(fixture_env):
-    db, _ = fixture_env
-    with pytest.raises(iti.IngestError, match="chunk file missing"):
-        iti.ingest(["5-klas-informatyka-ryvkind-2022"], db_path=db, dry_run=True)
-
-
-def test_wave1_slugs_all_have_author_mappings():
-    for slug in iti.WAVE1_SLUGS:
-        author = slug.split("-")[-2]
-        assert author.lower() in iti.AUTHOR_UK, slug

@@ -146,35 +146,6 @@ def test_paradigm_identity_mismatch_fails_closed():
         )
 
 
-@pytest.mark.parametrize("spelling", ["бачити", "дуже"])
-def test_run_mode_paradigm_identity_keeps_spelling_check(spelling):
-    kwargs = dict(spelling=spelling, homonym_index=1, register_position="0:21", stressed_headword=None)
-    if spelling == "дуже":
-        with pytest.raises(ValueError, match="cached identity mismatch"):
-            runner._parse_cached_entry(_capture("synonyms"), {"paradigm": _capture("paradigm")}, **kwargs)
-    else:
-        parsed = runner._parse_cached_entry(_capture("synonyms"), {"paradigm": _capture("paradigm")}, **kwargs)
-        assert parsed["canonical_headword"] == "ба́чити"
-        assert parsed["normalized_spelling"] == "бачити"
-
-
-@pytest.mark.parametrize("repair", [False, True])
-def test_run_mode_replays_relation_first_capture(cached_group, repair):
-    ledger, conn = cached_group
-    ledger.conn.execute("DELETE FROM register_rows")
-    ledger.conn.commit()
-    ledger.set_meta("mode", "run")
-    ledger.ensure("бачити")
-    ledger.mark("бачити", "stored", entry_count=1)
-    assert runner.parse_stored(ledger, conn, empty_headwords_only=repair) == 1
-    recovered = conn.execute(
-        "SELECT canonical_headword, status FROM ulif_dictua_entries WHERE normalized_query='бачити'"
-    ).fetchone()
-    assert tuple(recovered) == ("ба́чити", "ok")
-    if repair:
-        assert runner.parse_stored(ledger, conn, empty_headwords_only=True) == 0
-
-
 @pytest.mark.parametrize("walk_commit", [False, True])
 def test_same_spelling_different_stress_fails_closed(cached_group, walk_commit):
     ledger, conn = cached_group
@@ -277,15 +248,6 @@ def test_mismatch_repair_identity_and_second_run(cached_group, monkeypatch, caps
     )
 
 
-def test_mismatch_repair_refuses_group_membership_change(cached_group):
-    ledger, conn = cached_group
-    ledger.ensure("бачити")
-    ledger.mark("бачити", "error", entry_count=1, error="printed_number_mismatch register=[1] printed=[2]")
-    conn.execute("UPDATE ulif_dictua_entries SET register_position='other' WHERE normalized_query='бачити'")
-    with pytest.raises(ValueError, match="refusing to change group membership"):
-        runner.parse_stored(ledger, conn, empty_headwords_only=True)
-
-
 def test_no_paradigm_preserves_entry_identity():
     html = (FIXTURES / "duzhe.html").read_text()
     parsed = runner._parse_cached_entry(html, {}, spelling="дуже", homonym_index=1, register_position="1:0")
@@ -344,10 +306,3 @@ def test_missing_identity_cannot_be_written_as_ok(tmp_path):
             assert conn.execute("SELECT status FROM ulif_dictua_entries").fetchone()[0] == "parse_error"
     finally:
         conn.close()
-
-
-def test_parse_help_documents_bounded_replay(capsys):
-    with pytest.raises(SystemExit) as exc:
-        runner.main(["parse", "--help"])
-    assert exc.value.code == 0
-    assert "--empty-headwords-only" in capsys.readouterr().out

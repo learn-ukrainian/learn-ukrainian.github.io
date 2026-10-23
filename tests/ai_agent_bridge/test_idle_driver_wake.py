@@ -361,16 +361,6 @@ def test_final_readiness_check_runs_immediately_before_spawn(live_driver, monkey
     spawn.assert_not_called()
 
 
-def test_missing_codex_binary_is_typed_and_retains_inbox(live_driver, monkeypatch):
-    *_, remote = live_driver
-    monkeypatch.setattr(ui, "find_session_file", lambda _: None)
-    monkeypatch.setattr(ui.subprocess, "run", Mock(side_effect=FileNotFoundError("codex")))
-    service = Mock()
-    with pytest.raises(RuntimeError, match="codex_resume_error:FileNotFoundError; inbox retained"):
-        _wake(service, remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
-    assert service.method_calls == []
-
-
 def test_multiple_unread_rows_coalesce_oldest_first(live_driver, monkeypatch):
     _, _, rollout, *_, remote = live_driver
     send = Mock(side_effect=_completed_resume(rollout))

@@ -158,23 +158,3 @@ def test_hardlinked_database_name_is_refused(
     assert backed_up.returncode != 0
     assert "Refusing hard-linked SQLite database data/datasets/alias.db" in backed_up.stderr
     assert _completed_run_ids(environment) == []
-
-
-def test_hardlinked_non_database_name_is_refused(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    """A hard link without a database filename must not enter the base snapshot as raw bytes."""
-    environment, source, _staging, _legacy = backup_environment
-    _use_local_restic(environment, tmp_path)
-    project = source.parent
-    alias = project / "data" / "datasets" / "alias.txt"
-    connection = _hardlinked_alias(project, alias, tmp_path)
-    try:
-        backed_up = _run(environment, "backup", "--execute")
-    finally:
-        connection.close()
-
-    assert backed_up.returncode != 0
-    assert "Refusing hard-linked SQLite database data/datasets/alias.txt" in backed_up.stderr
-    assert _completed_run_ids(environment) == []

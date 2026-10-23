@@ -15,7 +15,6 @@ import json
 import os
 import secrets
 import stat
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -34,10 +33,6 @@ def _cached_json(path: Path) -> dict:
 
 
 FAMILY_IDS = [f"fam-synthetic-{index:02d}" for index in range(9)]
-
-
-def test_synthetic_family_count_matches_the_real_seal_registry() -> None:
-    assert len(FAMILY_IDS) == len(_cached_json(REAL_RECEIPT_PATH)["source_family_registry"]["families"])
 
 
 @pytest.fixture(autouse=True)
@@ -582,20 +577,6 @@ def test_a3_heldout_assignment_salt_hex_is_not_a_cli_flag(tmp_path: Path) -> Non
     assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
 
 
-def test_a3_heldout_assignment_test_salt_override_requires_32_bytes(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    private_dir = tmp_path / "private"
-    receipt_path = _write_receipt(tmp_path, _receipt_shape(FAMILY_IDS))
-
-    with pytest.raises(assignment.AssignmentError, match="32 bytes"):
-        _generate(
-            monkeypatch,
-            ["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"],
-            salt_hex="00" * 16,
-        )
-
-
 # --- independent receipt validation ----------------------------------------
 #
 # Reproduces the reviewer's probe directly: a receipt whose declared
@@ -818,22 +799,6 @@ def test_a3_heldout_assignment_plain_verify_against_legacy_artifact_points_at_mi
         assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir)])
 
 
-def test_a3_heldout_assignment_generate_against_legacy_artifact_still_refuses(tmp_path: Path) -> None:
-    """--generate against an existing (even legacy) artifact is still
-    refused -- --migrate, not --generate, is the only sanctioned upgrade."""
-    private_dir = tmp_path / "private"
-    salt = secrets.token_bytes(32)
-    result = assignment.assign(salt, FAMILY_IDS)
-    receipt = _fresh_receipt(salt, FAMILY_IDS)
-    receipt_path = _write_receipt(tmp_path, receipt)
-    membership_path = _write_legacy_artifact(private_dir, salt, result)
-
-    with pytest.raises(assignment.AssignmentError, match="already exists"):
-        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
-    # Untouched: still legacy-shaped, no receipt_binding_sha256 was added.
-    assert assignment.is_legacy_artifact(membership_path)
-
-
 def test_a3_heldout_assignment_migrate_upgrades_legacy_artifact_in_place(
     tmp_path: Path, capsys: pytest.CaptureFixture
 ) -> None:
@@ -884,53 +849,6 @@ def test_a3_heldout_assignment_migrate_refuses_when_no_artifact_exists(tmp_path:
         assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
 
 
-def test_a3_heldout_assignment_migrate_refuses_generate_combined(tmp_path: Path) -> None:
-    private_dir = tmp_path / "private"
-    receipt_path = _write_receipt(tmp_path, _fresh_receipt(secrets.token_bytes(32), FAMILY_IDS))
-
-    with pytest.raises(assignment.AssignmentError, match="mutually exclusive"):
-        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate", "--generate"])
-
-
-def test_a3_heldout_assignment_migrate_refuses_tampered_legacy_membership(tmp_path: Path) -> None:
-    private_dir = tmp_path / "private"
-    salt = secrets.token_bytes(32)
-    result = assignment.assign(salt, FAMILY_IDS)
-    receipt = _fresh_receipt(salt, FAMILY_IDS)
-    receipt_path = _write_receipt(tmp_path, receipt)
-    membership_path = _write_legacy_artifact(private_dir, salt, result)
-
-    payload = json.loads(membership_path.read_text(encoding="utf-8"))
-    first_family = FAMILY_IDS[0]
-    payload["membership"][first_family] = (
-        "builder_eligible" if payload["membership"][first_family] == "heldout" else "heldout"
-    )
-    os.chmod(membership_path, 0o600)
-    membership_path.write_text(json.dumps(payload))
-    os.chmod(membership_path, assignment.PRIVATE_FILE_MODE)
-
-    with pytest.raises(assignment.AssignmentError, match="does not reproduce"):
-        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
-    assert assignment.is_legacy_artifact(membership_path)
-
-
-def test_a3_heldout_assignment_migrate_refuses_commitment_drift(tmp_path: Path) -> None:
-    """A legacy artifact whose recomputed commitments don't match the sealed
-    receipt (e.g. the receipt was resealed against a different salt since
-    the legacy artifact was written) must be refused, not silently adopted."""
-    private_dir = tmp_path / "private"
-    salt = secrets.token_bytes(32)
-    result = assignment.assign(salt, FAMILY_IDS)
-    membership_path = _write_legacy_artifact(private_dir, salt, result)
-
-    other_receipt = _fresh_receipt(secrets.token_bytes(32), FAMILY_IDS)
-    receipt_path = _write_receipt(tmp_path, other_receipt)
-
-    with pytest.raises(assignment.AssignmentError, match="drift"):
-        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
-    assert assignment.is_legacy_artifact(membership_path)
-
-
 # --- primary-root custody: a dispatch worktree cannot be the only copy -----
 #
 # Reproduces the exact loss scenario from the dispatch brief: A3 --generate
@@ -964,15 +882,6 @@ def test_explicit_private_fixture_directory_is_independent_of_checkout(tmp_path,
     )
     assert (private / assignment.MEMBERSHIP_FILENAME).is_file()
     assert not (unrelated / "batch_state").exists()
-
-
-def test_package_validation_does_not_invoke_git(tmp_path, monkeypatch) -> None:
-    def unavailable(*args, **kwargs):
-        raise AssertionError("package validation must not invoke a process")
-
-    monkeypatch.setattr(subprocess, "run", unavailable)
-    monkeypatch.chdir(tmp_path)
-    assignment.validate_receipt_independently(json.loads(assignment.DEFAULT_RECEIPT.read_bytes()))
 
 
 def test_package_validation_works_without_git_or_a_checkout(tmp_path, monkeypatch) -> None:

@@ -50,9 +50,16 @@ ENV_KEY_RE = re.compile(r"[A-Z_][A-Z0-9_]*\Z")
 WRAPPER_WORD_RE = re.compile(r"[A-Za-z0-9_@%+=:,./-]+\Z")
 # The marker the relaunch looks for when a launcher exits (for example on a lease conflict).
 EXIT_MARKER = "lane-relaunch: launcher exited rc="
+START_MARKER = "lane-relaunch: launcher started id="
+RELAUNCH_ID_ENV = "LU_LANE_RELAUNCH_ID"
 # The pane runs the launcher's argument vector as "$@" under this fixed script, so no config or lane
-# value is ever parsed as shell syntax. It reports the exit status, then keeps a shell open.
-PANE_SCRIPT = f'"$@"; printf "\\n{EXIT_MARKER}%s\\n" "$?"; exec bash'
+# value is ever parsed as shell syntax. A watched relaunch tags its output boundaries with an
+# occurrence ID, consumed here so child launchers cannot inherit it. Then it keeps a shell open.
+PANE_SCRIPT = (
+    f'relaunch_id=${{{RELAUNCH_ID_ENV}-}}; unset {RELAUNCH_ID_ENV}; '
+    f'if [ -n "$relaunch_id" ]; then printf "\\n{START_MARKER}%s\\n" "$relaunch_id"; fi; '
+    f'"$@"; printf "\\n{EXIT_MARKER}%s%s\\n" "$?" "${{relaunch_id:+ id=$relaunch_id}}"; exec bash'
+)
 PANE_ARGV0 = "lane-launch"
 SETTINGS = (
     "claude_handoff_pct",

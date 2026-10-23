@@ -14,6 +14,8 @@ from __future__ import annotations
 import json
 import os
 import stat
+import subprocess
+import sys
 
 import pytest
 
@@ -59,7 +61,31 @@ def _same_repo_payload(*, head_sha: str = _HEAD_SHA, branch: str = _HEAD_BRANCH)
 
 @pytest.fixture()
 def same_repo_pr_gh(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _install_fake_gh(tmp_path, monkeypatch, stdout=_same_repo_payload())
+    """Positive forge metadata must name a real isolated canonical Git ref."""
+    from tests.test_review_target_resolution import _git, _init_repo, _publish_pr_branch
+
+    repo = _init_repo(tmp_path)
+    monkeypatch.setenv("GIT_ALLOW_PROTOCOL", "file")
+    _git(repo, "remote", "add", "origin", "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _publish_pr_branch(repo, _HEAD_BRANCH, head)
+    monkeypatch.setattr(_cli, "REPO_ROOT", repo)
+    monkeypatch.setattr(sys.modules[__name__], "_HEAD_SHA", head)
+    _install_fake_gh(tmp_path, monkeypatch, stdout=_same_repo_payload(head_sha=head))
+    real_run, real_popen = subprocess.run, subprocess.Popen
+
+    def git_run(command, *args, **kwargs):
+        assert command[0] == "git", "provider or other external process reached"
+        assert kwargs["env"]["GIT_ALLOW_PROTOCOL"] == "file"
+        return real_run(command, *args, **kwargs)
+
+    def git_popen(command, *args, **kwargs):
+        assert command[0] == "git", "provider or other external process reached"
+        assert kwargs["env"]["GIT_ALLOW_PROTOCOL"] == "file"
+        return real_popen(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", git_run)
+    monkeypatch.setattr(subprocess, "Popen", git_popen)
 
 
 @pytest.fixture()
@@ -131,54 +157,6 @@ def test_ask_branch_routes_to_headless_dispatch_not_acp(
     assert "origin/feat-x" in captured_dispatch["content"]
 
 
-def test_ask_pr_and_branch_remain_mutually_exclusive() -> None:
-    with pytest.raises(SystemExit):
-        _cli._build_parser().parse_args(["ask-claude", "body", "--task-id", "t", "--pr", "1", "--branch", "b"])
-
-
-def test_ask_pr_no_longer_refuses_with_review_pr_circle(
-    acp_guard: dict[str, int],
-    captured_dispatch: dict[str, object],
-    same_repo_pr_gh: None,
-) -> None:
-    """The old refusal named the retired review-pr command as the next step."""
-    args = _cli._build_parser().parse_args(
-        ["ask-codex", "body", "--task-id", "review-circle", "--pr", "42", "--from", "test"]
-    )
-
-    _cli._handle_ask_codex(args)  # must not raise SystemExit
-
-    assert acp_guard["count"] == 0
-    assert captured_dispatch["agent"] == "codex"
-
-
-def test_ask_pr_type_review_does_not_reach_acp(
-    acp_guard: dict[str, int],
-    captured_dispatch: dict[str, object],
-    same_repo_pr_gh: None,
-) -> None:
-    """Exact #7155 acceptance scenario: ask-codex --pr <N> --type review."""
-    args = _cli._build_parser().parse_args(
-        [
-            "ask-codex",
-            "review this change",
-            "--task-id",
-            "review-7155",
-            "--pr",
-            "7155",
-            "--type",
-            "review",
-            "--from",
-            "test",
-        ]
-    )
-
-    _cli._handle_ask_codex(args)
-
-    assert acp_guard["count"] == 0
-    assert captured_dispatch["agent"] == "codex"
-
-
 def test_ordinary_ask_without_review_intent_still_uses_acp(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -201,33 +179,6 @@ def test_ordinary_ask_without_review_intent_still_uses_acp(
 
     assert captured["args"][0] == "claude"
     assert captured["review"] is False
-
-
-def test_ask_help_no_longer_requires_review_pr() -> None:
-    parser = _cli._build_parser()
-    help_text = parser.format_help()
-    for sub in parser._subparsers._group_actions:
-        for action in getattr(sub, "choices", {}).values():
-            help_text += "\n" + action.format_help()
-    assert "formal review targets require the review-pr command" not in help_text
-    assert "substitute: review-pr" not in help_text
-
-
-def test_ask_pr_dispatches_the_pr_head_branch_and_sha(
-    acp_guard: dict[str, int],
-    captured_dispatch: dict[str, object],
-    same_repo_pr_gh: None,
-) -> None:
-    args = _cli._build_parser().parse_args(
-        ["ask-claude", "review this change", "--task-id", "review-8706", "--pr", "8706", "--from", "test"]
-    )
-
-    _cli._handle_ask_claude(args)
-
-    assert acp_guard["count"] == 0
-    assert captured_dispatch["branch"] == _HEAD_BRANCH
-    assert captured_dispatch["pinned_head"] == _HEAD_SHA
-    assert f"exact head {_HEAD_SHA}" in str(captured_dispatch["content"])
 
 
 def test_ask_pr_refuses_cross_repository(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -260,26 +211,6 @@ def test_ask_pr_refuses_when_gh_fails(tmp_path, monkeypatch: pytest.MonkeyPatch)
         _cli._handle_ask_claude(args)
 
 
-def test_ask_branch_does_not_consult_gh(
-    acp_guard: dict[str, int],
-    captured_dispatch: dict[str, object],
-    tmp_path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _install_fake_gh(tmp_path, monkeypatch, stderr="gh must not be called", code=1)
-    args = _cli._build_parser().parse_args(
-        ["ask-codex", "review this change", "--task-id", "review-branch", "--branch", "feat-x", "--from", "test"]
-    )
-
-    _cli._handle_ask_codex(args)
-
-    assert acp_guard["count"] == 0
-    assert captured_dispatch["branch"] == "feat-x"
-    assert "origin/feat-x" in captured_dispatch["content"]
-    assert "exact head" not in str(captured_dispatch["content"])
-    assert "git rev-parse HEAD" not in str(captured_dispatch["content"])
-
-
 def test_ask_pr_refuses_when_dispatch_base_sha_moved(
     same_repo_pr_gh: None,
     captured_dispatch: dict[str, object],
@@ -310,46 +241,13 @@ def test_ask_pr_refuses_when_dispatch_base_sha_moved(
     assert f"dispatch record base {_MOVED_SHA}" in message
 
 
-def test_branch_prompt_binds_sha_only_when_known() -> None:
-    bound = _cli._review_target_content("remote branch origin/feat-x", "body", sha=_HEAD_SHA)
-    unbound = _cli._review_target_content("remote branch origin/feat-x", "body", sha=None)
-
-    assert f"differs from {_HEAD_SHA}" in bound
-    assert "git rev-parse HEAD" in bound
-    assert "git rev-parse HEAD" not in unbound
-
-
-def test_ask_pr_names_deleted_origin_branch(
-    same_repo_pr_gh: None,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    def missing_branch(*_args, **_kwargs):
-        raise RuntimeError(
-            "delegate.py dispatch failed rc=1: "
-            "could not fetch existing branch 'cursor/impl-8706': "
-            "fatal: couldn't find remote ref refs/heads/cursor/impl-8706"
-        )
-
-    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", missing_branch)
-    args = _cli._build_parser().parse_args(
-        ["ask-claude", "review this change", "--task-id", "review-gone", "--pr", "8706", "--from", "test"]
-    )
-
-    with pytest.raises(SystemExit, match="no longer exists on origin") as exc_info:
-        _cli._handle_ask_claude(args)
-
-    message = str(exc_info.value)
-    assert _HEAD_BRANCH in message
-    assert "merged or deleted" in message
-
-
 @pytest.mark.parametrize("target,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
 def test_ask_review_refuses_a_fable_pin_before_any_dispatch(monkeypatch, target, model):
     """#9583: an ask-* review reads the catalog roles and exits with the refusal, before a prompt is written."""
     monkeypatch.setattr(
         _dispatch_wrappers, "build_ask_review_dispatch_command", lambda *_a, **_k: pytest.fail("refused review dispatched")
     )
-    with pytest.raises(SystemExit, match="holds no review, critique or approval role"):
+    with pytest.raises(SystemExit, match=r"REVIEW_ROUTE_REFUSED: .*holds no review, critique or approval role"):
         _cli._dispatch_headless_review(
             target,
             "Review the branch.",

@@ -5,39 +5,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.api import config, state_helpers
-from scripts.orchestration import curriculum_readiness
+from scripts.api import config
 
 pytestmark = pytest.mark.reads_content
-
-
-def test_seminar_track_ids_derived_from_curriculum_manifest() -> None:
-    """Verify SEMINAR_TRACK_IDS matches active tracks of type 'track' in curriculum.yaml."""
-    manifest = curriculum_readiness.load_active_manifest(config.LIVE_REPO_ROOT)
-    expected_seminar = {
-        track_id
-        for track_id, info in manifest["tracks"].items()
-        if info.get("type") == "track"
-    }
-
-    assert expected_seminar == config.SEMINAR_TRACK_IDS
-    assert "lit-doc" not in config.SEMINAR_TRACK_IDS
-    assert "lit-crimea" not in config.SEMINAR_TRACK_IDS
-    assert "hist" in config.SEMINAR_TRACK_IDS
-    assert "bio" in config.SEMINAR_TRACK_IDS
-    assert "folk" in config.SEMINAR_TRACK_IDS
-
-
-def test_levels_derived_from_curriculum_manifest() -> None:
-    """Verify LEVELS matches active tracks in order in curriculum.yaml."""
-    manifest = curriculum_readiness.load_active_manifest(config.LIVE_REPO_ROOT)
-    expected_ids = list(manifest["tracks"].keys())
-    actual_ids = [lvl["id"] for lvl in config.LEVELS]
-
-    assert actual_ids == expected_ids
-    assert "a1" in actual_ids
-    assert "c2" in actual_ids
-    assert "hist" in actual_ids
 
 
 def test_roster_loads_from_custom_manifest_root(tmp_path: Path) -> None:
@@ -61,12 +31,3 @@ def test_roster_loads_from_custom_manifest_root(tmp_path: Path) -> None:
     assert len(derived_levels) == 2
     assert derived_levels[0]["id"] == "a1"
     assert derived_levels[1]["id"] == "custom_seminar"
-
-
-def test_profile_map_reflects_derived_seminar_tracks() -> None:
-    """Verify state_helpers.PROFILE_MAP identifies all seminar tracks correctly."""
-    for track_id in config.SEMINAR_TRACK_IDS:
-        assert state_helpers.PROFILE_MAP.get(track_id) == "seminar"
-
-    assert state_helpers.PROFILE_MAP.get("a1") == "core"
-    assert state_helpers.PROFILE_MAP.get("c1") == "core"

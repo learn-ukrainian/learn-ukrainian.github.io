@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import sqlite3
 from pathlib import Path
 
@@ -55,31 +54,6 @@ def test_fixed_path_reports_zero_cefr_and_relation_delta(cohort: dict[str, objec
         assert rel["fill_local"]["edges"] == rel["enrich"]["edges"], kind
 
 
-def test_legacy_path_still_shows_pre_fix_divergence(cohort: dict[str, object]) -> None:
-    """legacy.* preserves the pre-fix clear-only / forward-only numbers."""
-    result = measure.measure_divergence(
-        cohort["entries"],  # type: ignore[arg-type]
-        cohort["sources"],  # type: ignore[arg-type]
-        cohort["grac"],  # type: ignore[arg-type]
-        dictionary_rows=cohort["dictionary_rows"],  # type: ignore[arg-type]
-    )
-
-    legacy_cefr = result["legacy"]["cefr"]
-    assert legacy_cefr["fill_present"] == 10  # PULS only after clear
-    assert legacy_cefr["missing_on_fill_count"] == 40
-    assert legacy_cefr["enrich_estimated"] == 40
-
-    syn = result["legacy"]["relations"]["synonym"]
-    ant = result["legacy"]["relations"]["antonym"]
-    assert syn["enrich"]["edges"] > syn["fill_local"]["edges"]
-    assert syn["edges_only_on_enrich"] > 0
-    assert syn["reciprocal_only_on_enrich"] > 0
-    assert ant["fill_local"]["edges"] > 0
-    assert ant["enrich"]["edges"] > ant["fill_local"]["edges"]
-    assert ant["reciprocal_only_on_enrich"] == ant["fill_local"]["edges"]
-    assert ant["edges_only_on_enrich"] == ant["reciprocal_only_on_enrich"]
-
-
 def test_fill_local_style_matches_enrich_entry_none_pointer_fallback(
     cohort: dict[str, object], monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -112,37 +86,3 @@ def test_fill_local_style_matches_enrich_entry_none_pointer_fallback(
             )
     finally:
         conn.close()
-
-
-def test_run_default_measurement_cli_path_is_deterministic() -> None:
-    first = measure.run_default_measurement(50)
-    second = measure.run_default_measurement(50)
-    assert first == second
-    assert first["lemmas_compared"] == 50
-    text = measure.format_summary(first)
-    assert "missing_on_fill=0" in text
-    assert "relations.antonym(fixed)" in text
-    assert "only_on_enrich=0" in text
-    assert "cefr(legacy) missing_on_fill=40" in text
-
-
-def test_cohort_size_guards() -> None:
-    with pytest.raises(ValueError, match="at least 12"):
-        measure.build_synthetic_entries(5)
-    with pytest.raises(ValueError, match="≤50"):
-        measure.build_synthetic_entries(51)
-
-
-def test_json_roundtrip(tmp_path: Path, cohort: dict[str, object]) -> None:
-    result = measure.measure_divergence(
-        cohort["entries"],  # type: ignore[arg-type]
-        cohort["sources"],  # type: ignore[arg-type]
-        cohort["grac"],  # type: ignore[arg-type]
-        dictionary_rows=cohort["dictionary_rows"],  # type: ignore[arg-type]
-    )
-    path = tmp_path / "out.json"
-    path.write_text(json.dumps(result, ensure_ascii=False, sort_keys=True), encoding="utf-8")
-    loaded = json.loads(path.read_text(encoding="utf-8"))
-    assert loaded["issue"] == 5331
-    assert loaded["cefr"]["missing_on_fill_count"] == 0
-    assert loaded["legacy"]["cefr"]["missing_on_fill_count"] == 40

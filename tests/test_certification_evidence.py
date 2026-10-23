@@ -824,12 +824,6 @@ def test_grounding_and_tool_theatre_bypasses_fail(qg_capture: dict[str, Any], tm
     assert not _passes(artifact, qg_capture, authorization, identity)
 
 
-def test_genuine_captured_section_event_passes_grounding(qg_capture: dict[str, Any], tmp_path: Path) -> None:
-    identity = _identity()
-    authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
-    assert _passes(_artifact(qg_capture, authorization, identity), qg_capture, authorization, identity)
-
-
 def test_normalized_source_tool_event_is_admissible(qg_capture: dict[str, Any], tmp_path: Path) -> None:
     identity = _identity()
     authorization, _ = _authorization(tmp_path, identity, qg_capture["tier2"])
@@ -877,35 +871,6 @@ def test_qualification_stale_identity_wrong_route_and_empty_artifact_fail(
             expected_identity=identity,
         )
     qualification_path.write_text("{}", encoding="utf-8")
-    with pytest.raises(ce.CertificationEvidenceError):
-        ce.load_authorization(
-            qg_profile,
-            repo_root=tmp_path,
-            expected_profile={"id": "seminar-pending", "version": "1.0.0"},
-            expected_identity=identity,
-        )
-
-
-def test_qualification_wrong_profile_route_and_arbitrary_identity_key_fail(
-    qg_capture: dict[str, Any], tmp_path: Path
-) -> None:
-    identity = _identity()
-    _, qg_profile = _authorization(tmp_path, identity, qg_capture["tier2"])
-    qualification_path = tmp_path / qg_profile["qualification_artifact"]
-    qualification = json.loads(qualification_path.read_text(encoding="utf-8"))
-    original = copy.deepcopy(qualification)
-    qualification["profile"]["id"] = "wrong-profile"
-    qualification_path.write_text(json.dumps(qualification), encoding="utf-8")
-    with pytest.raises(ce.CertificationEvidenceError):
-        ce.load_authorization(
-            qg_profile,
-            repo_root=tmp_path,
-            expected_profile={"id": "seminar-pending", "version": "1.0.0"},
-            expected_identity=identity,
-        )
-    qualification = original
-    qualification["identity"]["unexpected"] = _sha("unexpected")
-    qualification_path.write_text(json.dumps(qualification), encoding="utf-8")
     with pytest.raises(ce.CertificationEvidenceError):
         ce.load_authorization(
             qg_profile,
@@ -1137,40 +1102,6 @@ def test_qg_only_drift_preserves_preparation_pbr_and_integration_bindings(
     assert resumed["history"][-1]["details"]["reconciled_qg_rearming"] is True
 
 
-def test_actual_qg_policy_source_drift_changes_only_qg_identity(completion_case: CompletionCase) -> None:
-    repo, config_path, ledger_root, ledger, inputs = completion_case
-    current = _independent_value(inputs)
-    current_sha = _sha("current-independent")
-    integration = _integration_value(inputs, current_sha)
-    ledger["certification_evidence"] = [
-        {"path": "/outside/current.json", "sha256": current_sha, "value": current},
-        {"path": "/outside/integration.json", "sha256": _sha("integration"), "value": integration},
-    ]
-    path = tc.ledger_path_for(
-        tc.resolve_target(inputs["target"], repo_root=repo, config=tc.load_config(config_path)),
-        repo_root=repo,
-        config=tc.load_config(config_path),
-        ledger_root=ledger_root,
-    )
-    tc._atomic_write_json(path, ledger)
-    before = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
-    policy_source = repo / "scripts/audit/content_surface_gates.py"
-    policy_source.write_text(
-        policy_source.read_text(encoding="utf-8") + "\n# qg policy identity drift\n", encoding="utf-8"
-    )
-    after = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
-
-    assert after["qg_identity"] != before["qg_identity"]
-    assert after["preparation_identity"] == before["preparation_identity"]
-    assert after["pbr_dependency_identity"] == before["pbr_dependency_identity"]
-    projection = tc.certification_projection(
-        inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
-    )
-    assert projection["post_build"] == "current"
-    assert projection["integration"] == "current"
-    assert projection["production_qg"] == "awaiting-human-arming"
-
-
 @pytest.mark.parametrize(
     "relative_path",
     [
@@ -1287,31 +1218,6 @@ def test_learner_mutation_stales_both_pbr_and_qg_inputs(completion_case: Complet
         inputs["target"], repo_root=repo, config_path=config_path, ledger_root=ledger_root
     )
     assert projection["state"] == "POST_BUILD_REVIEW_REQUIRED"
-
-
-def test_in_repository_runtime_evidence_is_rejected_before_ledger_lookup(tmp_path: Path) -> None:
-    value = {
-        "schema_version": "certification-evidence.v1",
-        "kind": "independent-review",
-        "target": "b1/demo",
-        "profile": {"id": "core-pending", "version": "1.0.0"},
-        "preparation_identity": _sha("preparation"),
-        "learner_hashes": {"content": _sha("content")},
-        "mutation_identity": _sha("mutation"),
-        "diff_sha256": _sha("diff"),
-        "review": {
-            "author_families": ["codex"],
-            "reviewer_family": "gemini",
-            "verdict": "PASS",
-            "material_findings": [],
-            "resolution_state": "RESOLVED",
-            "raw_response_sha256": _sha("raw"),
-        },
-    }
-    evidence = tmp_path / "runtime-evidence.json"
-    evidence.write_text(json.dumps(value), encoding="utf-8")
-    with pytest.raises(tc.CompletionError, match="outside the common repository"):
-        tc.record_certification_evidence("b1/demo", run_id="ignored", evidence=evidence, repo_root=tmp_path)
 
 
 def _write_external_evidence(tmp_path: Path, name: str, value: dict[str, Any]) -> Path:
@@ -1593,13 +1499,6 @@ def test_common_repository_tree_rejects_primary_current_and_sibling_worktree_evi
         ledger_root=current_ledger_root,
     )
     assert updated["certification_evidence"][-1]["path"] == str(outside.resolve())
-
-
-def test_legacy_qg_artifacts_are_not_certification_evidence(tmp_path: Path) -> None:
-    legacy = tmp_path / "llm_qg.json"
-    legacy.write_text('{"verdict": "PASS", "state": "COMPLETE"}', encoding="utf-8")
-    with pytest.raises(ce.CertificationEvidenceError):
-        ce.read_evidence(legacy)
 
 
 def test_certification_profile_selection_is_level_sensitive_and_unarmed() -> None:

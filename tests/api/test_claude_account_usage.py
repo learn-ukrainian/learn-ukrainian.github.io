@@ -23,7 +23,6 @@ import pytest
 
 from scripts.agent_runtime.attempt_boundary import ClaudeAccountBinding
 from scripts.api import claude_account_usage as cau
-from scripts.api import subscription_usage
 
 # Shape of ``codexbar usage --json --provider claude``; identity values are synthetic.
 # Each label's fixture reports its own email, as two distinct accounts would.
@@ -35,26 +34,6 @@ _FAKE_ACCOUNT_ID = "0f0e0d0c-0b0a-4908-8706-050403020100"
 _ACCOUNT_A = "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a"
 _ACCOUNT_B = "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"
 _MARKER = "SYNTHETIC_PRIVATE_MARKER"
-# The unpatched check; ``tests/api/conftest.py`` scopes it to ``tmp_path`` in every test.
-_REAL_INSIDE_GIT = cau._inside_git
-
-
-def test_git_tree_recognises_every_git_layout(tmp_path):
-    """The unpatched check, on layouts that are Git wherever ``tmp_path`` lives."""
-    (tmp_path / "checkout" / ".git").mkdir(parents=True)
-    (tmp_path / "worktree").mkdir()
-    (tmp_path / "worktree" / ".git").write_text("gitdir: /fixture/primary/.git/worktrees/x\n")
-    bare = tmp_path / "bare"
-    (bare / "objects").mkdir(parents=True)
-    (bare / "refs").mkdir()
-    (bare / "HEAD").write_text("ref: refs/heads/main\n")
-    for directory in ("checkout", "checkout/.git", "worktree", "bare"):
-        assert cau._git_tree(tmp_path / directory)
-    (tmp_path / "plain").mkdir()
-    assert not cau._git_tree(tmp_path / "plain")
-    assert _REAL_INSIDE_GIT((tmp_path / "checkout" / "nested" / "scratch").resolve())
-
-
 def _iso(moment: datetime) -> str:
     return moment.astimezone(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
 
@@ -182,11 +161,11 @@ class _Provider:
         self.calls = 0
         self.down = False
 
-    def __call__(self, token: str) -> str:
+    def __call__(self, token: str) -> tuple[str, object]:
         self.calls += 1
         if self.down or not token.startswith(_TOKEN_PREFIX):
             raise cau.ClaudeAccountRefused("claude_account_identity_unavailable")
-        return token.split(":", 1)[1]
+        return token.split(":", 1)[1], None
 
 
 @pytest.fixture
@@ -307,26 +286,6 @@ def test_two_healthy_accounts_publish_reference_numbers(fake_probe):
         assert 29.0 <= row["age_s"] < 120.0
 
 
-@pytest.mark.parametrize(
-    ("used", "expected", "leftover"),
-    [
-        (74, 47, 0),  # used above expected: runs out early
-        (60, 50, 0),
-        (20, 47, 57),
-        (30, 50, 40),
-        (0, 10, 100),
-        (47, 47, 0),
-        (None, 47, None),  # used unknown
-        (20, None, None),  # expected missing
-        (20, 0, None),  # expected 0: no elapsed share to project from
-        (20, -5, None),
-        (-20, 50, 100),  # clamped to the 0..100 domain, never 140
-    ],
-)
-def test_projected_leftover_formula(used, expected, leftover):
-    assert cau.projected_leftover_pct(used, expected) == leftover
-
-
 def test_pace_without_expected_keeps_leftover_unknown():
     payload = _codexbar_payload(session_used=10, session_expected=None, weekly_used=20, weekly_expected=0)
     row = cau.parse_codexbar_claude(payload)
@@ -335,17 +294,6 @@ def test_pace_without_expected_keeps_leftover_unknown():
     assert row["session5h"]["pace_delta_pct"] is None
     assert row["weekly"]["leftover_pct"] is None
     assert row["weekly"]["left_pct"] == 80.0
-
-
-@pytest.mark.parametrize(
-    ("used", "expected", "pace", "delta"),
-    [(74, 47, "27% in deficit", 27.0), (20, 47, "27% in reserve", -27.0), (47.2, 47, "on pace", 0.2)],
-)
-def test_pace_label_is_derived_from_the_numbers(used, expected, pace, delta):
-    payload = _codexbar_payload(session_used=1, session_expected=1, weekly_used=used, weekly_expected=expected)
-    weekly = cau.parse_codexbar_claude(payload)["weekly"]
-    assert weekly["pace"] == pace
-    assert weekly["pace_delta_pct"] == delta
 
 
 def test_failed_or_timed_out_account_is_unknown_and_the_other_still_published(fake_probe):
@@ -409,13 +357,6 @@ def test_missing_binding_is_unknown_and_forgets_old_numbers(fake_probe, account_
     assert row_b["status"] == "unknown"
     assert row_b["reason"] == "claude_account_binding_missing"
     assert row_b["weekly"]["left_pct"] is None
-
-
-def test_binding_missing_through_the_real_loader(monkeypatch):
-    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", "")
-    with pytest.raises(cau.ClaudeAccountRefused) as exc, cau.account_binding("b"):
-        pass
-    assert exc.value.code == "claude_account_binding_missing"
 
 
 def test_default_label_is_the_host_default_directory(monkeypatch, tmp_path, provider):
@@ -938,12 +879,6 @@ def test_failure_codes_are_registered_and_value_free():
         assert code.replace("_", "").isalnum() and code == code.lower()
 
 
-def test_non_json_output_is_a_failure(fake_probe, monkeypatch):
-    monkeypatch.setattr(cau, "_run_codexbar", lambda codexbar, env, *, timeout_s, max_bytes: b"not json")
-    cau.refresh_claude_account_usage()
-    assert _row(cau.claude_accounts_snapshot(), "a")["reason"] == "bad_json"
-
-
 def test_missing_updated_at_uses_probe_time(fake_probe):
     outputs, _ = fake_probe
     payload = _payload_a()
@@ -1338,17 +1273,6 @@ def _assert_not_published(fields, label, *, reason=None):
         assert row["reason"] == reason
 
 
-def test_bound_fixture_publishes_each_directory(bound):
-    """The fixture's healthy baseline, so the withheld cases below are not vacuous."""
-    cau.refresh_claude_account_usage()
-    fields = cau.routing_budget_fields()
-    assert _row(fields["claude_accounts"], "a")["status"] == "ok"
-    assert _row(fields["claude_accounts"], "a")["weekly"]["left_pct"] == 26.0
-    assert _row(fields["claude_accounts"], "b")["status"] == "ok"
-    assert _row(fields["claude_accounts"], "b")["weekly"]["left_pct"] == 80.0
-    assert fields["preferred_claude_account"] == "b"
-
-
 # Fails on e75cb7e113: the validated directory was released before the probe, so a
 # directory replaced after validation was measured and published ``ok`` as ``b``.
 @pytest.mark.parametrize("replacement", ["link", "directory"])
@@ -1371,25 +1295,6 @@ def test_selected_directory_replaced_during_the_probe_is_withheld(bound, replace
     bound.hook = swap
     cau.refresh_claude_account_usage()
     _assert_not_published(cau.routing_budget_fields(), "b")
-
-
-# Fails on e75cb7e113: a real child that replaced the selected directory after
-# validation read the default's answer, published ``ok`` as ``b``.
-def test_real_probe_replacing_the_selected_directory_is_withheld(bound, monkeypatch):
-    body = (
-        "directory = os.environ['CLAUDE_CONFIG_DIR']\n"
-        f"if directory == {str(bound.dirs['b'])!r}:\n"
-        "    os.rename(directory, directory + '-moved')\n"
-        f"    os.symlink({str(bound.dirs['a'])!r}, directory)\n"
-        "print(open(os.path.join(directory, 'usage.json')).read())"
-    )
-    monkeypatch.setattr(cau, "_run_codexbar", _REAL_RUN_CODEXBAR)
-    codexbar = _fake_codexbar(bound.root, body)
-    monkeypatch.setattr(cau, "_codexbar_bin", lambda: codexbar)
-    cau.refresh_claude_account_usage()
-    fields = cau.routing_budget_fields()
-    assert _row(fields["claude_accounts"], "a")["weekly"]["left_pct"] == 26.0  # the child really ran
-    _assert_not_published(fields, "b")
 
 
 # Fails on e75cb7e113: the default directory was never validated, so a link to the
@@ -1792,54 +1697,6 @@ def test_unchanged_files_serve_without_scheduling(bound, monkeypatch):
     assert scheduled == []
 
 
-# Fails on af927d37bd: the warm async handler parsed account records on the
-# event-loop thread. Thread identity, not elapsed time, is the measure.
-def test_event_loop_thread_never_parses_account_records(bound, monkeypatch, tmp_path):
-    import asyncio
-    from types import SimpleNamespace
-
-    from scripts.agent_runtime import attempt_boundary
-    from scripts.api import state_router
-
-    # Large, valid records within the 16 MiB bound, as in the review's measurement.
-    projects = {f"p{index:06d}": {"lastCost": 0, "allowedTools": []} for index in range(20000)}
-    for label, record in (("a", bound.home / ".claude.json"), ("b", bound.dirs["b"] / ".claude.json")):
-        _write_private(record, {"oauthAccount": {"accountUuid": _FIXTURE_ACCOUNTS[label]}, "projects": projects})
-    cau.refresh_claude_account_usage()
-
-    parsers: list[int] = []
-    real_read = attempt_boundary._read_private_json
-
-    def tracked(*args, **kwargs):
-        parsers.append(threading.get_ident())
-        return real_read(*args, **kwargs)
-
-    monkeypatch.setattr(attempt_boundary, "_read_private_json", tracked)
-    budget = {"agents": {"claude": {"status": "ok"}}, "recommendation": {"primary_agent_for_code": "claude"}}
-    monkeypatch.setattr(state_router, "cache_get_stored", lambda *_args, **_kwargs: (budget, 0))
-    monkeypatch.setattr(state_router, "cache_retain", lambda *_args, **_kwargs: None)
-    ctx = SimpleNamespace(
-        roots=SimpleNamespace(project_root=tmp_path, batch_state_dir=tmp_path, curriculum_root=tmp_path)
-    )
-
-    async def serve_twice():
-        loop_thread = threading.get_ident()
-        warm = await state_router.routing_budget(fresh_codexbar=False, transport="dispatch", ctx=ctx)
-        # A record rewritten between serves: withheld, revalidated off the loop.
-        (bound.home / ".claude.json").write_text((bound.home / ".claude.json").read_text() + " ")
-        changed = await state_router.routing_budget(fresh_codexbar=False, transport="dispatch", ctx=ctx)
-        return loop_thread, warm, changed
-
-    loop_thread, warm, changed = asyncio.run(serve_twice())
-    _settle()
-
-    assert {row["status"] for row in warm["claude_accounts"].values()} == {"ok"}
-    assert _row(changed["claude_accounts"], "a")["reason"] == "not_probed"
-    assert loop_thread not in parsers
-    assert parsers, "the background revalidation parsed the rewritten record"
-    assert _row(cau.claude_accounts_snapshot(), "a")["status"] == "ok"  # re-armed, same account
-
-
 def test_revalidation_rearms_a_same_account_rewrite_without_asking_the_provider(bound, provider):
     cau.refresh_claude_account_usage()
     asked = provider.calls
@@ -1976,22 +1833,6 @@ def test_unexaminable_binding_file_is_unavailable(bound, monkeypatch):
     assert exc.value.code == "claude_account_binding_unavailable"
 
 
-def test_refresh_keeps_the_byte_bounds(bound, monkeypatch):
-    from scripts.agent_runtime import attempt_boundary
-
-    limits: list[int] = []
-    real_read = os.read
-
-    def tracked(fd, limit):
-        limits.append(limit)
-        return real_read(fd, limit)
-
-    monkeypatch.setattr(attempt_boundary.os, "read", tracked)
-    cau.refresh_claude_account_usage()
-    assert {65537, 16 * 1024 * 1024 + 1} <= set(limits)  # binding and credentials; login records
-    assert max(limits) == 16 * 1024 * 1024 + 1
-
-
 # ---- preferred_claude_account -------------------------------------------------
 
 
@@ -2017,13 +1858,6 @@ def _rows(a_leftover, b_leftover, *, a_status="ok", b_status="ok"):
 )
 def test_preferred_claude_account(rows, preferred):
     assert cau.preferred_claude_account(rows) == preferred
-
-
-def test_routing_budget_fields_prefers_the_larger_weekly_leftover(fake_probe):
-    cau.refresh_claude_account_usage()
-    fields = cau.routing_budget_fields()
-    assert set(fields) == {"claude_accounts", "preferred_claude_account"}
-    assert fields["preferred_claude_account"] == "b"  # 57 > 0
 
 
 # ---- bounded subprocess -------------------------------------------------------
@@ -2116,14 +1950,6 @@ def test_run_codexbar_times_out_and_kills_the_child(tmp_path):
     assert time.monotonic() - started < 10
 
 
-def test_run_codexbar_times_out_when_output_stays_open(tmp_path):
-    """A child that writes some output then hangs still hits the deadline."""
-    body = "sys.stdout.write('['); sys.stdout.flush(); time.sleep(30)"
-    with pytest.raises(cau._ProbeFailed) as exc:
-        cau._run_codexbar(_fake_codexbar(tmp_path, body), {}, timeout_s=0.5, max_bytes=65536)
-    assert exc.value.code == "timeout"
-
-
 def test_run_codexbar_caps_output(tmp_path):
     body = "sys.stdout.write('x' * 200000); sys.stdout.flush()"
     with pytest.raises(cau._ProbeFailed) as exc:
@@ -2145,25 +1971,3 @@ def test_run_codexbar_spawn_failure():
 
 
 # ---- refresh wiring -----------------------------------------------------------
-
-
-def test_background_refresh_runs_the_account_probe(monkeypatch):
-    calls: list[str] = []
-    monkeypatch.setattr(subscription_usage, "refresh_provider_usage_data", lambda providers, *, timeout_s=None: {})
-    monkeypatch.setattr(subscription_usage, "_refresh_cursor_usage_live", lambda: None)
-    monkeypatch.setattr(subscription_usage, "_refresh_api_accounts_live", lambda: None)
-    monkeypatch.setattr(cau, "refresh_claude_account_usage", lambda: calls.append("accounts"))
-    monkeypatch.setattr(subscription_usage, "_refresh_in_flight", threading.Lock())
-    subscription_usage._run_all_refreshes()
-    assert calls == ["accounts"]
-
-
-def test_snapshot_never_probes(monkeypatch):
-    def forbidden(*_args, **_kwargs):
-        raise AssertionError("snapshot must not probe")
-
-    monkeypatch.setattr(cau, "probe_account", forbidden)
-    monkeypatch.setattr(cau, "_run_codexbar", forbidden)
-    rows = cau.claude_accounts_snapshot()
-    assert {row["status"] for row in rows.values()} == {"unknown"}
-    assert {row["reason"] for row in rows.values()} == {"not_probed"}

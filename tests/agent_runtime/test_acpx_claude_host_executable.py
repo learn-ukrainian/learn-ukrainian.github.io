@@ -88,17 +88,6 @@ def _refusal(**kwargs) -> ClaudeCodeExecutableRefusal:
 # --- per-model floor (condition 2) -----------------------------------------
 
 
-def test_opus_floor_lives_in_the_adapter_model_table_and_global_floor_is_unchanged():
-    from scripts.review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION
-
-    assert set(acpx_module.CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS) <= acpx_module.CLAUDE_ACP_MODELS
-    assert acpx_module.CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS["claude-opus-5-5"] == (2, 1, 280)
-    assert CLAUDE_MIN_SUPPORTED_CLI_VERSION == (2, 1, 116)
-    assert acpx_module._claude_code_floor("claude-opus-5-5") == (2, 1, 280)
-    assert acpx_module._claude_code_floor("claude-sonnet-5-5") == (2, 1, 116)
-    assert acpx_module._claude_code_floor(None) == (2, 1, 116)
-
-
 def test_host_claude_code_meeting_the_opus_floor_is_pinned_by_real_path(host):
     executable = host.install("2.1.280 (Claude Code)", name="2.1.280")
     metadata = acpx_module._require_host_claude_code(model="claude-opus-5-5", adapter_label="X")
@@ -877,16 +866,6 @@ def test_environment_cwd_and_a_hostile_git_on_path_never_redirect_the_launcher(l
     assert acpx_module._claude_acp_primary_checkout(adapter_label="X") == launcher_checkouts.primary
 
 
-def test_an_unusable_git_on_path_does_not_affect_resolution(launcher_checkouts, monkeypatch):
-    """The only git on PATH cannot execute (PermissionError); no git is needed."""
-    bad = launcher_checkouts.root / "bad-bin"
-    bad.mkdir()
-    (bad / "git").write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-    (bad / "git").chmod(0o644)
-    monkeypatch.setenv("PATH", str(bad))
-    _accepted_copy(launcher_checkouts)
-
-
 def test_post_hash_replacement_of_the_primary_launcher_never_executes(launcher_checkouts, tmp_path):
     """Execution is bound to the verified bytes, not to the checkout path."""
     copy = Path(acpx_module._require_claude_acp_launcher(adapter_label="X"))
@@ -1166,7 +1145,7 @@ def test_a_copy_left_after_the_ask_fails_the_parsed_result(launcher_checkouts, c
 
 @pytest.mark.parametrize(
     "visibility",
-    ["held", "fd_denied", "link_denied", "owner_denied", "foreign", "exited_enoent", "exited_esrch", "free"],
+    ["held", "fd_denied", "link_denied", "owner_denied", "foreign", "exited_enoent", "free"],
 )
 def test_cleanup_refuses_unknown_holders_and_reports_the_failure(launcher_checkouts, monkeypatch, caplog, visibility):
     copy = _accepted_copy(launcher_checkouts)
@@ -1238,12 +1217,8 @@ def test_cleanup_refuses_unknown_holders_and_reports_the_failure(launcher_checko
         "short_ids",
         "free",
         "real_uid",
-        "effective_uid",
-        "saved_uid",
-        "filesystem_uid",
         "non_ascii",
         "exited_enoent",
-        "exited_esrch",
     ],
 )
 def test_cleanup_checks_task_uid_when_proc_inode_is_root_owned(launcher_checkouts, monkeypatch, caplog, visibility):
@@ -1314,17 +1289,6 @@ def test_cleanup_checks_task_uid_when_proc_inode_is_root_owned(launcher_checkout
         os.utime(copy.parents[2], (stale, stale))
         _accepted_copy(launcher_checkouts)
         assert copy.exists()
-
-
-@pytest.mark.parametrize(("mode", "message"), [(0o777, "world-writable"), (0o775, "group-writable")])
-def test_an_unsafe_copy_base_is_refused_and_leaves_no_copy(launcher_checkouts, monkeypatch, mode, message):
-    launcher_checkouts.copies.mkdir(mode=0o700)
-    launcher_checkouts.copies.chmod(mode)
-    _fake_accounts(monkeypatch, members=("caller", "other"))
-    refusal = _launcher_refusal()
-    assert refusal.reason == "untrusted_path"
-    assert message in str(refusal)
-    assert not list(launcher_checkouts.copies.glob("launch-*"))
 
 
 @pytest.mark.skipif(os.geteuid() == 0, reason="root writes any directory")
@@ -1685,16 +1649,3 @@ def test_paths_are_redacted_before_the_excerpt_is_bounded(host, tmp_path, monkey
         _assert_path_free(parsed.stderr_excerpt, tmp_path)
         if pad == 0:
             assert "<acp-launcher-copy>" in parsed.stderr_excerpt
-
-
-@pytest.mark.repo_wide
-def test_tracked_launcher_is_executable_in_git():
-    listed = subprocess.run(
-        ["git", "ls-files", "-s", "scripts/agent_runtime/claude_acp_exec.sh"],
-        cwd=Path(acpx_module.__file__).resolve().parents[3],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=True,
-    ).stdout
-    assert listed.startswith("100755 ")

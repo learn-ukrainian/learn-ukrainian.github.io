@@ -607,6 +607,53 @@ def budget_substitution_table(catalog: dict[str, Any] | None = None) -> dict[str
     return table
 
 
+def _validate_usage_pools(raw: Any) -> None:
+    """Record shared meters. This is not a dispatch gate."""
+    if raw is None:
+        return
+    pools = _require_mapping(raw, "usage_pools")
+    seen: set[str] = set()
+    for pool_id, spec in pools.items():
+        _require_string(pool_id, "usage_pools id")
+        entry = _require_mapping(spec, f"usage_pools.{pool_id}")
+        seats = _require_string_list(entry.get("seats"), f"usage_pools.{pool_id}.seats")
+        if len(seats) < 2:
+            raise ModelCatalogError(f"usage_pools.{pool_id}.seats needs at least two seats")
+        for seat in seats:
+            if seat != seat.strip().lower():
+                raise ModelCatalogError(f"usage_pools.{pool_id} seat {seat!r} must be a lowercase seat name")
+            if seat in seen:
+                raise ModelCatalogError(f"usage pool seat {seat!r} is listed more than once")
+            seen.add(seat)
+
+
+def usage_pool_for_seat(seat: str, catalog: dict[str, Any] | None = None) -> str:
+    """Return the usage-pool id for a seat. A seat outside every pool is its own pool.
+
+    Operator 2026-10-21 (OO-58, #11327): native Grok and Cursor are one meter.
+    """
+    needle = str(seat or "").strip().lower()
+    source = catalog if catalog is not None else load_model_catalog()
+    pools = source.get("usage_pools") or {}
+    if isinstance(pools, dict):
+        for pool_id, spec in pools.items():
+            seats = spec.get("seats") if isinstance(spec, dict) else None
+            if isinstance(seats, list) and needle in {str(item).strip().lower() for item in seats}:
+                return str(pool_id)
+    return needle
+
+
+def usage_pool_representative(seat: str, catalog: dict[str, Any] | None = None) -> str:
+    """First listed member of the seat's pool, used when budget routing names one meter."""
+    source = catalog if catalog is not None else load_model_catalog()
+    pool_id = usage_pool_for_seat(seat, source)
+    spec = (source.get("usage_pools") or {}).get(pool_id) if isinstance(source.get("usage_pools"), dict) else None
+    seats = spec.get("seats") if isinstance(spec, dict) else None
+    if isinstance(seats, list) and seats and isinstance(seats[0], str) and seats[0].strip():
+        return seats[0].strip().lower()
+    return str(seat or "").strip().lower()
+
+
 def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> None:
     if raw is None:
         return
@@ -906,6 +953,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             if not transport_fallback:
                 previous_rank = rung_rank
             seen_models.update(rung_models)
+    _validate_usage_pools(catalog.get("usage_pools"))
     _validate_budget_substitution_models(catalog.get("budget_substitution_models"), catalog)
     from scripts.review.role_resolution import validate_role_catalog
 
@@ -1293,9 +1341,44 @@ def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
     return aliases
 
 
+_KIMI_ROUTE_LABELS = ("kimicc_alias", "platform_model_id", "coding_model_id")
+
+
+def kimi_historical_labels(catalog: dict[str, Any] | None = None) -> frozenset[str]:
+    """Casefolded ids, aliases and route spellings of every Kimi catalog model.
+
+    Admission still recognises a stored ``k3`` after transports are emptied.
+    This is not an executable map: ``kimi_model_aliases`` stays empty while no
+    model lists ``native_kimi``. ``context_profile`` is a window name, not a
+    model id, and other Moonshot models (Composer) are not included.
+    """
+    models = (catalog or load_model_catalog())["models"]
+    labels: set[str] = set()
+    for model_id, model in models.items():
+        if "kimi" not in str(model_id).casefold():
+            continue
+        labels.add(str(model_id).casefold())
+        for alias in model.get("aliases") or []:
+            if isinstance(alias, str) and alias.strip():
+                labels.add(alias.casefold())
+        routes = model.get("kimi_routes") or {}
+        if isinstance(routes, dict):
+            for key in _KIMI_ROUTE_LABELS:
+                value = routes.get(key)
+                if isinstance(value, str) and value.strip():
+                    labels.add(value.casefold())
+    return frozenset(labels)
+
+
 def resolve_kimi_model(model: str, catalog: dict[str, Any] | None = None) -> tuple[str, dict[str, str]]:
-    """Resolve one Kimi input alias to native and KimiCC route metadata."""
+    """Resolve one Kimi input alias to native and KimiCC route metadata.
+
+    A retired id has no executable route. The refusal is the catalog message,
+    raised before the empty alias map can call the id unsupported.
+    """
     source = catalog or load_model_catalog()
+    if refusal := retired_model_refusal(model, source):
+        raise ModelCatalogError(refusal)
     aliases = kimi_model_aliases(source)
     try:
         model_id = aliases[model]

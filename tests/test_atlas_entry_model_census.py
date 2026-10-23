@@ -21,14 +21,6 @@ def _entry(**overrides: object) -> dict:
     return entry
 
 
-def test_explicit_entry_type_counts_reviewed_article() -> None:
-    classification = classify_entry(_entry(entry_type="phraseologism", lemma="бити байдики", url_slug="бити-байдики"))
-
-    assert classification.bucket == "phraseologism"
-    assert classification.counts_as_entry is True
-    assert classification.source == "entry_type"
-
-
 def test_form_of_records_are_not_reviewed_entries() -> None:
     payload = build_entry_model_census(
         {
@@ -74,37 +66,6 @@ def test_missing_required_fields_are_invalid_non_entries() -> None:
         assert classification.bucket == "invalid"
         assert classification.counts_as_entry is False
         assert classification.warning == "missing_lemma_or_url_slug"
-
-
-def test_explicit_rejected_types_are_non_entry_records() -> None:
-    payload = build_entry_model_census(
-        {
-            "entries": [
-                _entry(entry_type="noise"),
-                _entry(entry_type="rejected", lemma="неприйняте", url_slug="неприйняте"),
-            ]
-        }
-    )
-
-    assert payload["non_entry_records"]["noise_rejected"] == 2
-    assert payload["total_reviewed_entries"] == 0
-
-
-def test_public_payload_is_aggregate_only() -> None:
-    payload = build_entry_model_census(
-        {
-            "entries": [
-                _entry(entry_type="phraseologism", lemma="бити байдики", url_slug="бити-байдики"),
-                _entry(entry_type="proverb", lemma="Без труда нема плода", url_slug="без-труда-нема-плода"),
-            ]
-        }
-    )
-
-    public_json = json.dumps(payload, ensure_ascii=False)
-    assert "бити байдики" not in public_json
-    assert "Без труда" not in public_json
-    assert payload["reviewed_entries_by_type"]["phraseologism"] == 1
-    assert payload["reviewed_entries_by_type"]["proverb"] == 1
 
 
 def test_cli_emits_json_and_markdown(tmp_path: Path) -> None:

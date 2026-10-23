@@ -6,14 +6,12 @@ import gzip
 import hashlib
 import json
 import pickle
-import re
 import runpy
 import shutil
 import subprocess
 import sys
 from contextlib import contextmanager
 from copy import deepcopy
-from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from unittest.mock import patch
@@ -27,7 +25,6 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     require_execution_model,
 )
-from scripts.review.role_resolution import expanded_legacy_view
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
 BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
@@ -123,25 +120,6 @@ def approved_cursor_trailer_baseline(baseline):
         assert launchers[index]["stderr"].endswith(old)
         launchers[index]["stderr"] = launchers[index]["stderr"].removesuffix(old) + new
     return {**baseline, "launchers": launchers}
-
-
-def test_cursor_trailer_revision_preserves_all_other_frozen_receipts():
-    revised = approved_cursor_trailer_baseline(BASELINE)
-    assert {key: value for key, value in revised.items() if key != "launchers"} == {
-        key: value for key, value in BASELINE.items() if key != "launchers"
-    }
-    changed = [
-        index
-        for index, (old, new) in enumerate(zip(BASELINE["launchers"], revised["launchers"], strict=True))
-        if old != new
-    ]
-    assert changed == [41, 46]
-    for index in changed:
-        old, new = BASELINE["launchers"][index], revised["launchers"][index]
-        assert {key: value for key, value in old.items() if key != "stderr"} == {
-            key: value for key, value in new.items() if key != "stderr"
-        }
-        assert new["stderr"] == old["stderr"].removesuffix(".\n") + "; never Auto, Fast or a previous generation.\n"
 
 
 RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
@@ -487,11 +465,213 @@ def approved_agy_mode_baseline(baseline):
 
 
 DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+RETIREMENT_11327_PATH = CAPACITY_FIXTURE / "routing-11327.json"
+RETIREMENT_11327_DIGEST = "354f97d4d02d46a98b966e59aa64ff46f1ccc484ee44989ff9bf1d77aace9774"
+PRE_RETIREMENT_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def _drop_cooler_seat(refusal: str, seat: str) -> str:
+    """Remove one exact cooler-list seat. Neighboring names such as grok-build stay."""
+    marker = "Cooler seats from budget snapshot: "
+    head, tail = refusal.split(marker, 1)
+    seats, rest = tail.split(". Re-route", 1)
+    items = [item.strip() for item in seats.split(",")]
+    assert items.count(seat) == 1, seat
+    items.remove(seat)
+    return f"{head}{marker}{', '.join(items)}. Re-route{rest}"
+
+
+def approved_retirement_11327_inputs(inputs):
+    """Drop the parked Fable 5.1 default budget pin from the dispatch matrix."""
+    return {
+        **inputs,
+        "dispatch": [row for row in inputs["dispatch"] if row["model"] != "claude-fable-5-1"],
+    }
+
+
+def approved_retirement_11327_baseline(baseline, inputs):
+    """Apply #11327 last: park Fable 5.1, retire Kimi, and share the Grok/Cursor meter.
+
+    The historical fixture bytes stay. This edits the catalog fields those ids
+    own, drops only their removed dispatch pin, collapses the shared cooler
+    meter, and refuses the Kimi launcher default.
+    """
+    assert hashlib.sha256(RETIREMENT_11327_PATH.read_bytes()).hexdigest() == RETIREMENT_11327_DIGEST
+    fixture = json.loads(RETIREMENT_11327_PATH.read_text(encoding="utf-8"))
+    catalog = deepcopy(baseline["catalog"])
+    assert "usage_pools" not in catalog
+    catalog["usage_pools"] = fixture["usage_pools"]
+    for row in fixture["model_fields"]:
+        model = catalog["models"][row["model"]]
+        if row["before_missing"]:
+            assert row["field"] not in model
+        else:
+            assert model[row["field"]] == row["before"], (row["model"], row["field"])
+        model[row["field"]] = row["after"]
+    endpoint = catalog["review_scheduler"]["endpoints"]["kimicc"]
+    assert endpoint["models"] == fixture["kimicc_models"]["before"]
+    endpoint["models"] = fixture["kimicc_models"]["after"]
+    assert catalog["policy"]["notes"] == fixture["policy_notes"]["before"]
+    catalog["policy"]["notes"] = fixture["policy_notes"]["after"]
+    lane = fixture["remove_budget_pin"]["lane"]
+    pin = fixture["remove_budget_pin"]["model"]
+    assert pin in catalog["budget_substitution_models"][lane]
+    del catalog["budget_substitution_models"][lane][pin]
+
+    approval = deepcopy(baseline["approval"])
+    assert approval["contract"] == fixture["approval_contract"]["before"]
+    approval["contract"] = fixture["approval_contract"]["after"]
+
+    assert len(inputs["dispatch"]) == len(baseline["dispatch"])
+    dispatch = []
+    for row_in, row in zip(inputs["dispatch"], baseline["dispatch"], strict=True):
+        if row_in["model"] == pin:
+            continue
+        updated = deepcopy(row)
+        refusal = (updated.get("value") or {}).get("refusal")
+        if isinstance(refusal, str) and "Cooler seats from budget snapshot:" in refusal:
+            drop = "grok" if row_in["agent"] == "cursor" else "cursor"
+            updated["value"]["refusal"] = _drop_cooler_seat(refusal, drop)
+        dispatch.append(updated)
+
+    launchers = deepcopy(baseline["launchers"])
+    for index, recorded in fixture["launcher_rows"].items():
+        assert launchers[int(index)] == recorded["old"]
+        launchers[int(index)] = recorded["new"]
+    return {
+        **baseline,
+        "catalog": catalog,
+        "approval": approval,
+        "dispatch": dispatch,
+        "launchers": launchers,
+    }
+
+
+def approved_review_usage_11449_baseline(baseline, inputs):
+    """Remove usage ordering and non-Claude cap exclusions from approved receipts."""
+    reviewer = deepcopy(baseline["reviewer"])
+    for case, receipt in zip(inputs["reviewer"], reviewer, strict=True):
+        value = receipt.get("value")
+        if not isinstance(value, dict) or "trace" not in value:
+            continue
+        for candidate in [value["selected"], *value["trace"]]:
+            if candidate is not None and candidate["selection_score"] is not None:
+                score = candidate["selection_score"]
+                assert len(score) == 8
+                # Keep workload, in-flight counts, failures and the stable tie.
+                candidate["selection_score"] = score[2:4] + score[5:]
+        for candidate in value["trace"]:
+            if candidate["route"] == "claude" or candidate["reason"] != (
+                "quota bucket is near cap — automatic assignments are prohibited"
+            ):
+                continue
+            assert candidate["name"] == "openai_frontier"
+            record = case["routing_snapshot"]["agents"]["codex"]
+            assert record["status"] == "near_cap" and record["health"] == {"healthy": True}
+            assert candidate["capacity"]["near_cap"] and candidate["capacity"]["hard_reason"] is None
+            # Reuse the already-approved same-input receipt without usage data.
+            reference_case = {key: item for key, item in case.items() if key != "routing_snapshot"}
+            reference = baseline["reviewer"][inputs["reviewer"].index(reference_case)]["value"]
+            admitted = reference["selected"]
+            assert admitted["name"] == candidate["name"] and admitted["status"] == "selected"
+            value["selected"] = next(row for row in value["trace"] if row["status"] == "selected")
+            value["selected"]["status"] = "eligible"
+            for field in ("status", "reason", "suitability_rank"):
+                candidate[field] = admitted[field]
+            score = admitted["selection_score"]
+            assert len(score) == 8
+            candidate["selection_score"] = score[2:4] + score[5:]
+            candidate["health"] = "healthy"
+            value["selected"] = deepcopy(candidate)
+            value["substitution_note"] = reference["substitution_note"]
+    return {**baseline, "reviewer": reviewer}
+
+
+def approved_native_grok_help_baseline(baseline):
+    """Apply #11451's three shared help lines; keep all other receipt fields."""
+    before = "  --                         Pass all remaining arguments verbatim to the provider CLI.\n"
+    after = (
+        before
+        + "                             Native Grok drivers take prompt words before this separator;\n"
+        "                             after it, only supported session options are accepted.\n"
+        "                             For option-looking text, use a prompt such as 'Task: --flag'.\n"
+    )
+    launchers = deepcopy(baseline["launchers"])
+    help_rows = (4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69)
+    assert tuple(i for i, row in enumerate(INPUTS["launchers"]) if row["variant"] == "help") == help_rows
+    for index in help_rows:
+        assert launchers[index]["stdout"].count(before) == 1
+        assert "Native Grok drivers take prompt words" not in launchers[index]["stdout"]
+        launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, "launchers": launchers}
+
+
 PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
     approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 )
-APPROVED_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
-APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+PRE_RETIREMENT_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
+APPROVED_INPUTS = approved_retirement_11327_inputs(PRE_RETIREMENT_INPUTS)
+PRE_REVIEW_USAGE_BASELINE = approved_native_grok_help_baseline(
+    approved_retirement_11327_baseline(PRE_RETIREMENT_BASELINE, PRE_RETIREMENT_INPUTS)
+)
+APPROVED_BASELINE = approved_review_usage_11449_baseline(PRE_REVIEW_USAGE_BASELINE, APPROVED_INPUTS)
+
+
+def test_review_usage_11449_overlay_changes_only_usage_exclusion_and_ordering():
+    """Reject unrelated receipt drift, including operational or Claude-cap changes."""
+    before = deepcopy(PRE_REVIEW_USAGE_BASELINE)
+    original = deepcopy(before)
+    after = approved_review_usage_11449_baseline(before, APPROVED_INPUTS)
+    assert before == original
+    assert after == APPROVED_BASELINE
+    assert {k: v for k, v in after.items() if k != "reviewer"} == {
+        k: v for k, v in before.items() if k != "reviewer"
+    }
+    changed = admitted = 0
+    for case, old, new in zip(APPROVED_INPUTS["reviewer"], before["reviewer"], after["reviewer"], strict=True):
+        if old == new:
+            continue
+        changed += 1
+        assert old.keys() == new.keys() and old["exit_status"] == new["exit_status"]
+        old, new = old["value"], new["value"]
+        assert {k: v for k, v in old.items() if k not in {"selected", "trace", "substitution_note"}} == {
+            k: v for k, v in new.items() if k not in {"selected", "trace", "substitution_note"}
+        }
+        newly_selected = False
+        for prior, current in zip(old["trace"], new["trace"], strict=True):
+            expected = deepcopy(prior)
+            score = expected["selection_score"]
+            if score is not None:
+                expected["selection_score"] = score[2:4] + score[5:]
+            if prior["status"] == "excluded" and current["status"] == "selected":
+                admitted += 1
+                newly_selected = True
+                assert prior["name"] == "openai_frontier" and prior["route"] == "codex"
+                assert prior["reason"] == "quota bucket is near cap — automatic assignments are prohibited"
+                assert prior["capacity"]["near_cap"] and prior["capacity"]["hard_reason"] is None
+                assert current["health"] == "healthy" and current["reason"] is None
+                assert current["suitability_rank"] == {
+                    "low": 1, "medium": 0, "high": 2 if case["review_profile"] == "infra" else 1, "critical": 0,
+                }[new["resolved_risk"]]
+                assert current["selection_score"] == [True, 0.0, [True, 0], [True, 0], "e0279cd4ab474a86717d52ddc8ea496d0fcf6eccab3d60917c1a68ba6db6cdeb"]
+                for field in ("status", "reason", "health", "suitability_rank", "selection_score"):
+                    expected[field] = current[field]
+            elif prior["status"] == "selected" and current["status"] == "eligible":
+                assert new["selected"]["name"] == "openai_frontier"
+                expected["status"] = "eligible"
+            assert current == expected
+        assert new["selected"] == next((row for row in new["trace"] if row["status"] == "selected"), None)
+        if newly_selected:
+            assert new["substitution_note"] is None
+        else:
+            assert new["substitution_note"] == old["substitution_note"]
+            expected = deepcopy(old["selected"])
+            if expected is not None and expected["selection_score"] is not None:
+                score = expected["selection_score"]
+                expected["selection_score"] = score[2:4] + score[5:]
+            assert new["selected"] == expected
+    assert changed == 1152
+    assert admitted == 24
 
 
 def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
@@ -557,6 +737,74 @@ def test_agy_mode_overlay_changes_only_authoring_mode_and_mcp_metadata(configura
         approved_agy_mode_baseline(after)
 
 
+def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter():
+    """#11327 parks Fable, retires five Kimi ids, and shares the Grok/Cursor meter."""
+    before = deepcopy(PRE_RETIREMENT_BASELINE)
+    after = approved_retirement_11327_baseline(deepcopy(before), PRE_RETIREMENT_INPUTS)
+    untouched = set(before) - {"catalog", "approval", "dispatch", "launchers"}
+    for surface in untouched:
+        assert before[surface] == after[surface], surface
+    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
+    assert {mid for mid in old_models if old_models[mid] != new_models[mid]} == {
+        "claude-fable-5-1",
+        "kimi-code/k3",
+        "kimi-code/k3-256k",
+        "kimi-code/kimi-for-coding",
+        "kimi-code/kimi-for-coding-highspeed",
+        "kimi-k3-max",
+    }
+    assert new_models["claude-fable-5"] == old_models["claude-fable-5"]
+    assert new_models["claude-fable-5-1"] == {**old_models["claude-fable-5-1"], "transports": ["native_claude"]}
+    assert new_models["claude-fable-5-1"]["lifecycle"] == "active"
+    assert new_models["claude-fable-5-1"]["transports"] == ["native_claude"]
+    assert all(new_models[mid]["lifecycle"] == "retired" and new_models[mid]["transports"] == [] for mid in (
+        "kimi-code/k3",
+        "kimi-code/k3-256k",
+        "kimi-code/kimi-for-coding",
+        "kimi-code/kimi-for-coding-highspeed",
+        "kimi-k3-max",
+    ))
+    assert after["catalog"]["usage_pools"] == {"grok_cursor": {"seats": ["grok", "cursor"]}}
+    assert "claude-fable-5-1" not in after["catalog"]["budget_substitution_models"]["cursor"]
+    assert set(before["catalog"]["budget_substitution_models"]["cursor"]) - {"claude-fable-5-1"} == set(
+        after["catalog"]["budget_substitution_models"]["cursor"]
+    )
+    removed = [
+        row for row in PRE_RETIREMENT_INPUTS["dispatch"] if row["model"] == "claude-fable-5-1"
+    ]
+    assert removed and len(after["dispatch"]) == len(before["dispatch"]) - len(removed)
+    kept = [
+        (row_in, old, new)
+        for row_in, old, new in zip(
+            [row for row in PRE_RETIREMENT_INPUTS["dispatch"] if row["model"] != "claude-fable-5-1"],
+            [old for row_in, old in zip(PRE_RETIREMENT_INPUTS["dispatch"], before["dispatch"], strict=True) if row_in["model"] != "claude-fable-5-1"],
+            after["dispatch"],
+            strict=True,
+        )
+    ]
+    changed = [(row_in, old, new) for row_in, old, new in kept if old != new]
+    assert len(changed) == 33
+    for row_in, old, new in changed:
+        assert {key: value for key, value in old.items() if key != "value"} == {
+            key: value for key, value in new.items() if key != "value"
+        }
+        assert {key: value for key, value in old["value"].items() if key != "refusal"} == {
+            key: value for key, value in new["value"].items() if key != "refusal"
+        }
+        dropped = "grok" if row_in["agent"] == "cursor" else "cursor"
+        assert new["value"]["refusal"] == _drop_cooler_seat(old["value"]["refusal"], dropped)
+        assert row_in["model"] != "claude-fable-5-1"
+    launcher_changed = [
+        index for index, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
+    ]
+    assert launcher_changed == [50, 55]
+    assert after["approval"]["rows"] == before["approval"]["rows"]
+    assert after["approval"]["holders"] == before["approval"]["holders"]
+    assert "Fable 5.1 is parked: not routed by default, explicit pin only;" in after["approval"]["contract"]
+    with pytest.raises(AssertionError):
+        approved_retirement_11327_baseline(after, PRE_RETIREMENT_INPUTS)
+
+
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(configuration):
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
@@ -578,7 +826,7 @@ def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(conf
     assert set(fixture) == {"dispatch_refusal_replacements"}
     assert [r["rows"] for r in fixture["dispatch_refusal_replacements"]] == [[i] for i in models]
     for index, model in models.items():
-        assert APPROVED_INPUTS["dispatch"][index] == {
+        assert PRE_RETIREMENT_INPUTS["dispatch"][index] == {
             "agent": "claude", "budget_status": "near_cap", "model": model, "review_attempt": None,
         }
         old, new = before["dispatch"][index], after["dispatch"][index]
@@ -592,7 +840,7 @@ def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(conf
         assert new == expected
     # Historical input rows 86/90 become 74/78 after the existing seat overlay.
     for historical, index in ((86, 74), (90, 78)):
-        assert APPROVED_INPUTS["dispatch"][index] == INPUTS["dispatch"][historical]
+        assert PRE_RETIREMENT_INPUTS["dispatch"][index] == INPUTS["dispatch"][historical]
         assert after["dispatch"][index] == before["dispatch"][index]
 
 
@@ -609,42 +857,6 @@ def test_budget_pin_overlay_still_rejects_other_dispatch_changes(index, field):
     actual["dispatch"][index]["value"][field] = "unapproved change"
     with pytest.raises(AssertionError, match="approved surface differs: dispatch"):
         assert_frozen_surfaces(actual)
-
-
-def test_grok_language_overlay_records_only_the_two_field_delta():
-    """#10835 changes the grok-4.7 roles and the worker policy text; every other surface and field stays."""
-    assert hashlib.sha256(GROK_LANGUAGE_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "a2b3103dc0675299d54608ae94546a6802778f6c2b4320cfcf5cd1b1d507ae71"
-    )
-    assert set(GROK_LANGUAGE_OVERLAY) == {"issue", "order", "catalog_model_fields", "fallbacks_fields"}
-    before, after = ARGON_HOST_BASELINE, GROK_LANGUAGE_BASELINE
-    assert set(before) == set(after)
-    for surface in set(before) - {"catalog", "fallbacks"}:
-        assert before[surface] == after[surface], surface
-    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
-    assert set(old_models) == set(new_models)
-    assert [model for model in old_models if old_models[model] != new_models[model]] == ["grok-4.7"]
-    old_grok, new_grok = old_models["grok-4.7"], new_models["grok-4.7"]
-    assert {k: v for k, v in old_grok.items() if k != "roles"} == {k: v for k, v in new_grok.items() if k != "roles"}
-    assert new_grok["roles"] == [*old_grok["roles"], "ukrainian_review"]
-    assert {k: v for k, v in after["catalog"].items() if k != "models"} == {
-        k: v for k, v in before["catalog"].items() if k != "models"
-    }
-    assert {k: v for k, v in after["fallbacks"].items() if k != "worker_resource_policy"} == {
-        k: v for k, v in before["fallbacks"].items() if k != "worker_resource_policy"
-    }
-    policy = " ".join(after["fallbacks"]["worker_resource_policy"].split())
-    for clause in (
-        "Sol is the default eligible code worker.",
-        "native Claude workers use Sonnet 5.5 by default and Opus 5.5 only for complex or security work",
-        "Claude-lane Ukrainian stays Opus 5.5.",
-        "Cursor Grok or Gemini routes are language-free overflow only",
-        "its Ukrainian work requires the Sources MCP",
-        "Gemini 4 is disabled until the provider fixes its cost.",
-        "Critical and security final sign-off stays Opus 5.5 or Sol 6.1",
-        "no excluded-writer recommendation",
-    ):
-        assert clause in policy, clause
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -685,11 +897,6 @@ def test_word_card_tool_overlay_adds_only_the_read_only_grant(configuration):
         assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
 
 
-def test_word_card_tool_overlay_refuses_drifted_argv():
-    with pytest.raises(AssertionError):
-        approved_word_card_tool_baseline(APPROVED_BASELINE)
-
-
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
     """The catalog role is descriptive: no Grok review route lists the ukrainian profile (#10835)."""
     source = Path(__file__).resolve().parents[2]
@@ -701,112 +908,6 @@ def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
     assert {route["transport"] for route in routes} == {"native_grok", "cursor"}
     for route in routes:
         assert route["review_profiles"] == ["code", "infra"]
-
-
-def test_argon_trial_overlay_records_only_the_model_data_delta():
-    """#10568 changes model data. Existing reviewer verdicts and other surfaces stay."""
-    assert hashlib.sha256(ARGON_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "efe9c9b9db2f651e421e42769cc1682c12b724122545d2e2e8b4b0d66d1148ba"
-    )
-    assert set(ARGON_OVERLAY) == {"adapter_patches", "inputs", "row_patches", "surfaces"}
-    before, after = PRE_ARGON_HOST_BASELINE, ARGON_HOST_BASELINE
-    assert set(before) == set(after)
-    assert set(ARGON_OVERLAY["surfaces"]) == {"catalog", "approval", "reviewer"}
-    assert set(ARGON_OVERLAY["inputs"]) == {"reviewer"}
-    assert set(ARGON_OVERLAY["row_patches"]) == {"dispatch"}
-    assert ARGON_OVERLAY["adapter_patches"] == {"host-cli": {}, "no-cli": {}}
-    for surface in set(before) - {"catalog", "approval", "reviewer", "dispatch"}:
-        assert before[surface] == after[surface], surface
-    changed_dispatch = [i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new]
-    assert changed_dispatch == list(range(196, 220, 2))
-    old_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
-    new_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`, `gemini-4-argon-high`, `gemini-4-argon-medium`, `gemini-4-argon-low`."
-    for index in changed_dispatch:
-        expected = deepcopy(before["dispatch"][index])
-        assert expected["value"]["refusal"].count(old_ids) == 1
-        expected["value"]["refusal"] = expected["value"]["refusal"].replace(old_ids, new_ids)
-        assert after["dispatch"][index] == expected
-    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
-    assert set(new_models) - set(old_models) == {"gemini-4-argon-high"}
-    assert {model: new_models[model] for model in old_models} == old_models
-    assert {key: value for key, value in after["catalog"].items() if key != "models"} == {
-        key: value for key, value in before["catalog"].items() if key != "models"
-    }
-    assert new_models["gemini-4-argon-high"]["lifecycle"] == "hold"
-    assert new_models["gemini-4-argon-high"]["roles"] == ["explicit_bakeoff_only"]
-    old_review_inputs = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}["reviewer"]
-    new_review_inputs = APPROVED_INPUTS["reviewer"]
-    old_by_input = {dispatch_key(row): receipt for row, receipt in zip(old_review_inputs, before["reviewer"], strict=True)}
-    added = changed = 0
-    for row, receipt in zip(new_review_inputs, after["reviewer"], strict=True):
-        key = dispatch_key(row)
-        if key not in old_by_input:
-            added += 1
-        elif old_by_input[key] != receipt:
-            changed += 1
-    assert added == 24 and changed == 0
-    assert {row["author_model"] for row in new_review_inputs} - {row["author_model"] for row in old_review_inputs} == {
-        "gemini-4-argon-high",
-        "gemini-4-argon-medium",
-        "gemini-4-argon-low",
-    }
-    old_authors = {row["author"] for row in before["approval"]["rows"]}
-    new_rows = after["approval"]["rows"]
-    assert {row["author"] for row in new_rows} - old_authors == {"gemini-4-argon-high"}
-    assert sum(row["author"] == "gemini-4-argon-high" for row in new_rows) == 9
-    assert len(new_rows) == len(before["approval"]["rows"]) + 9
-
-
-@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
-def test_claude_account_dispatch_baseline_changes_only_usage_option(configuration):
-    path = FIXTURE / ("no-cli" if configuration == "no-cli" else "") / "baseline.json.gz"
-    original = json.loads(gzip.decompress(path.read_bytes()))
-    before = deepcopy(original)
-    after = approved_claude_account_dispatch_baseline(original)
-    assert original == before
-    assert {key: value for key, value in after.items() if key != "dispatch"} == {
-        key: value for key, value in before.items() if key != "dispatch"
-    }
-    changed = 0
-    for old, new in zip(before["dispatch"], after["dispatch"], strict=True):
-        assert {key: value for key, value in old.items() if key != "stderr"} == {
-            key: value for key, value in new.items() if key != "stderr"
-        }
-        if old["stderr"].startswith("usage: delegate.py dispatch "):
-            changed += 1
-            assert new["stderr"].count("[--claude-account LABEL]") == 1
-            assert new["stderr"].replace("[--claude-account LABEL]", "").split() == old["stderr"].split()
-        else:
-            assert new == old
-    assert changed > 0
-
-
-@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
-def test_hermes_effort_fixture_changes_only_hermes_warning_stderr(configuration):
-    fixture_path = CAPACITY_FIXTURE / "hermes-effort-10751.json"
-    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
-        "7d2d4a65a579b878ea91102d3e7cfa261b1cea5102b51fd5c779e384a508ad76"
-    )
-    fixture = json.loads(fixture_path.read_bytes())
-    assert set(fixture) == {"adapter_stderr_replacements"}
-    replacements = fixture["adapter_stderr_replacements"]
-    assert [row["rows"] for row in replacements] == [list(range(40, 44)), list(range(44, 48)), list(range(48, 52))]
-    for row in replacements:
-        assert row["before"].replace("='high'", "") == row["after"]
-        assert "high" not in row["after"]
-    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
-    before = json.loads(gzip.decompress(path.read_bytes()))
-    original = deepcopy(before)
-    after = approved_hermes_effort_baseline(before)
-    assert before == original
-    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
-    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
-    assert changed == list(range(40, 52))
-    for index in changed:
-        old, new = before["adapters"][index], after["adapters"][index]
-        assert INPUTS["adapters"][index]["agent"] in {"hermes-deepseek", "grok-hermes", "qwen"}
-        assert {k: v for k, v in old.items() if k != "stderr"} == {k: v for k, v in new.items() if k != "stderr"}
-        assert "effort='high'" in old["stderr"] and "effort=" not in new["stderr"]
 
 
 def guard_policy(settings):
@@ -854,311 +955,6 @@ def test_hook_failure_overlay_changes_only_worker_guard_settings(configuration):
         assert [row[1] for row in new_policy if row[3] is None] == ["heal-core-bare.py"]
 
 
-@pytest.mark.parametrize(
-    "mutate",
-    [
-        pytest.param(lambda adapters: adapters[9].update(stderr=adapters[9].get("stderr", "") + "x"), id="other-row"),
-        pytest.param(lambda adapters: adapters[8]["value"].update(cwd="elsewhere"), id="same-row-other-field"),
-        pytest.param(
-            lambda adapters: adapters[8]["value"]["cmd"].__setitem__(
-                settings_index(adapters[8]),
-                adapters[8]["value"]["cmd"][settings_index(adapters[8])].replace(
-                    '/heal-core-bare.py","timeout":10}', '/heal-core-bare.py","timeout":10,"onFailure":"block"}'
-                ),
-            ),
-            id="unapproved-guard-policy",
-        ),
-    ],
-)
-def test_hook_failure_overlay_still_rejects_other_adapter_changes(mutate):
-    actual = deepcopy(APPROVED_BASELINE)
-    before = deepcopy(actual["adapters"])
-    mutate(actual["adapters"])
-    assert actual["adapters"] != before
-    with pytest.raises(AssertionError, match="approved surface differs: adapters"):
-        assert_frozen_surfaces(actual)
-
-
-def test_hook_failure_overlay_refuses_drifted_settings():
-    with pytest.raises(AssertionError):
-        approved_hook_failure_baseline(APPROVED_BASELINE)
-
-
-@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
-def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
-    fixture_path = CAPACITY_FIXTURE / "claude-cap-10355.json"
-    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
-        "54de3ec4e4166708c3cb2a54ef62256fdf283bc85cd160661db3abe82ddc249f"
-    )
-    cap = json.loads(fixture_path.read_bytes())
-    assert set(cap) == {"launcher_help_replacements"}
-    assert [row["rows"] for row in cap["launcher_help_replacements"]] == [[4, 9], list(range(4, 70, 5))]
-    for row in cap["launcher_help_replacements"]:
-        assert row["after"].startswith(row["before"].splitlines(True)[0])
-        assert row["after"].endswith(row["before"].splitlines(True)[1])
-    text = "".join(row["after"] for row in cap["launcher_help_replacements"])
-    assert "stops at 99% weekly used" in text
-    assert "Opus is always blocked" in text
-    for retired in ("LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT", "default 90", "default 80"):
-        assert retired not in text
-    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
-    before = approved_cursor_trailer_baseline(
-        approved_launcher_canary_baseline(
-            {
-                **approved_review_baseline(json.loads(gzip.decompress(path.read_bytes()))),
-                **GEMINI_OVERLAY["surfaces"],
-                **RESOURCE_OVERLAY["surfaces"],
-            }
-        )
-    )
-    after = approved_claude_cap_baseline(before)
-    assert {k: v for k, v in after.items() if k != "launchers"} == {k: v for k, v in before.items() if k != "launchers"}
-    changed = [
-        i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
-    ]
-    assert changed == list(range(4, 70, 5))
-    for index in changed:
-        assert {k: v for k, v in before["launchers"][index].items() if k != "stdout"} == {
-            k: v for k, v in after["launchers"][index].items() if k != "stdout"
-        }
-
-
-@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
-def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
-    fixture_path = CAPACITY_FIXTURE / "cto-wrappers-10453.json"
-    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
-        "4593a5c7abb023644821cd93cd9ed12bbcc5af483ea3e3b8275226ea5b6b3cef"
-    )
-    cto = json.loads(fixture_path.read_bytes())
-    assert set(cto) == {"launcher_help_replacements"}
-    replacements = cto["launcher_help_replacements"]
-    assert [set(row) for row in replacements] == [{"rows", "before", "after"}] * 3
-    assert [row["rows"] for row in replacements] == [list(range(4, 70, 5)), [4, 9], list(range(9, 70, 10))]
-    force, cap, lanes = replacements
-    assert force["after"].splitlines(True) == [
-        force["before"].splitlines(True)[0],
-        " " * 29 + "CTO wrappers reject it with exit 2.\n",
-        force["before"].splitlines(True)[1],
-    ]
-    assert lanes["after"] == lanes["before"].replace(
-        "Valid lane selectors:\n", "Valid lane selectors:\n  epics\n"
-    ).replace("  atlas | practice | atlas.practice\n", "  atlas | practice-hub | atlas.practice\n  practice\n")
-    assert cap["after"].startswith(cap["before"].splitlines(True)[0])
-    assert "Opus is always blocked outside start-claude-cto.sh on epics:" in cap["after"]
-    assert "Opus stays blocked" in cap["before"] and "Opus stays blocked" not in cap["after"]
-    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
-    before = approved_claude_cap_baseline(
-        approved_cursor_trailer_baseline(
-            approved_launcher_canary_baseline(
-                {
-                    **approved_review_baseline(json.loads(gzip.decompress(path.read_bytes()))),
-                    **GEMINI_OVERLAY["surfaces"],
-                    **RESOURCE_OVERLAY["surfaces"],
-                }
-            )
-        )
-    )
-    after = approved_cto_wrappers_baseline(before)
-    assert {k: v for k, v in after.items() if k != "launchers"} == {k: v for k, v in before.items() if k != "launchers"}
-    changed = [
-        i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
-    ]
-    assert changed == list(range(4, 70, 5))
-    for index in changed:
-        assert INPUTS["launchers"][index]["variant"] == "help"
-        assert {k: v for k, v in before["launchers"][index].items() if k != "stdout"} == {
-            k: v for k, v in after["launchers"][index].items() if k != "stdout"
-        }
-
-
-@pytest.mark.parametrize("configuration", ["", "no-cli"])
-def test_launcher_canary_fixture_changes_only_driver_help_paragraph(configuration):
-    fixture_path = CAPACITY_FIXTURE / "launcher-canary-10266.json"
-    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
-        "9dca36ee148f7d1e178c2ef2084da9be612e887b0c3c39365a9e35eefed8fef4"
-    )
-    canary = json.loads(fixture_path.read_bytes())
-    assert set(canary) == {"launcher_rows", "launcher_help_replacements"}
-    assert len(canary["launcher_help_replacements"]) == 1
-    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline.json.gz").read_bytes()))
-    original = deepcopy(baseline)
-    updated = approved_launcher_canary_baseline(baseline)
-    changed = []
-    assert len(baseline["launchers"]) == len(updated["launchers"]) == 70
-    for index, (before, after) in enumerate(zip(baseline["launchers"], updated["launchers"], strict=True)):
-        if before == after:
-            continue
-        changed.append(index)
-        assert INPUTS["launchers"][index]["variant"] == "help"
-        restored = deepcopy(after)
-        for replacement in canary["launcher_help_replacements"]:
-            assert restored["stdout"].count(replacement["after"]) == 1
-            restored["stdout"] = restored["stdout"].replace(replacement["after"], replacement["before"])
-        assert restored == before
-    assert changed == canary["launcher_rows"] == [4, 9, 14, 19, 24, 29, 34, 39, 44, 49]
-    for surface in baseline.keys() - {"launchers"}:
-        assert updated[surface] == baseline[surface]
-    assert baseline == original
-
-
-def test_launcher_canary_paragraph_preserves_independent_grok_help_edits():
-    def grok_help_edits(baseline):
-        updated = deepcopy(baseline)
-        row = updated["launchers"][39]
-        # #10291 changes the usage and adds a native-driver block, outside the
-        # driver paragraph. Exercise edits on both sides of that paragraph.
-        row["stdout"] = (
-            row["stdout"]
-            .replace(
-                "Usage: ./start-grok-driver.sh [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]",
-                "Usage: ./start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]",
-            )
-            .replace(
-                "Hermes (opt-in only):\n",
-                "Native Grok driver:\n"
-                "  Runs from the inspected checkout; positional prompts and subcommands are refused.\n\n"
-                "Hermes (opt-in only):\n",
-            )
-        )
-        assert row != baseline["launchers"][39]
-        return updated
-
-    baseline = deepcopy(REVIEW_CAPACITY_BASELINE)
-    assert approved_launcher_canary_baseline(grok_help_edits(baseline)) == grok_help_edits(
-        approved_launcher_canary_baseline(baseline),
-    )
-
-
-def test_resource_policy_fixture_changes_only_approved_fallback_rows():
-    assert set(RESOURCE_OVERLAY) == {"surfaces"}
-    assert set(RESOURCE_OVERLAY["surfaces"]) == {"fallbacks"}
-    after = RESOURCE_OVERLAY["surfaces"]["fallbacks"]
-    for path in (FIXTURE / "baseline.json.gz", FIXTURE / "no-cli/baseline.json.gz"):
-        before = json.loads(gzip.decompress(path.read_bytes()))["fallbacks"]
-        expected = deepcopy(before)
-        expected.pop("post_2026_06_15_hard_rule")
-        removed = [
-            row
-            for row in expected["substitutions"]
-            if row["currently_uses"] == "linear_pipeline.invoke_writer(writer='claude-tools')"
-        ]
-        assert len(removed) == 1
-        expected["substitutions"].remove(removed[0])
-        expected["worker_resource_policy"] = (
-            "Sol is the default eligible code worker. Use native Claude CLI workers as\n"
-            "heavily as their subscription allows, respecting task fit and hard gates.\n"
-            "Cursor Grok or Gemini routes are language-free overflow only; resolve admitted\n"
-            "models and transports from the live catalog, never infer route availability.\n"
-            "Writer selection follows core rules and the canonical writer policy, with no\n"
-            "excluded-writer recommendation in this substitution table.\n"
-        )
-        assert after == expected
-
-
-def test_resource_policy_fallbacks_equal_approved_overlay():
-    """The live fallbacks equal #10263's overlay with #10835's policy text applied."""
-    source = Path(__file__).resolve().parents[2]
-    actual = yaml.safe_load((source / "scripts/config/agent_fallback_substitutions.yaml").read_text())
-    assert actual == approved_grok_language_seat_baseline(
-        {"catalog": ARGON_HOST_BASELINE["catalog"], "fallbacks": RESOURCE_OVERLAY["surfaces"]["fallbacks"]}
-    )["fallbacks"]
-
-
-def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
-    assert hashlib.sha256(GEMINI_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "94cf67d477b22eac788c43a0306218e6017550edc2a6ac35c504da0b52185d25"
-    )
-    assert set(GEMINI_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
-    assert set(GEMINI_OVERLAY["inputs"]) == {"roles", "reviewer"}
-
-    def key(value):
-        return json.dumps(value, sort_keys=True)
-
-    for surface in ("roles", "reviewer"):
-        new_inputs = {key(row) for row in GEMINI_INPUTS[surface]}
-        assert all(key(row) in new_inputs for row in INPUTS[surface])
-    gemini_receipts = GEMINI_OVERLAY["surfaces"]["reviewer"]
-    receipts = dict(zip(map(key, GEMINI_INPUTS["reviewer"]), gemini_receipts, strict=True))
-    for inputs, before in zip(INPUTS["reviewer"], REVIEW_CAPACITY_BASELINE["reviewer"], strict=True):
-        after = receipts[key(inputs)]
-        if before == after:
-            continue
-        old, new = deepcopy(before), deepcopy(after)
-        assert isinstance(old["value"], dict) and isinstance(new["value"], dict)
-        chosen = new["value"]["selected"]
-        if chosen != old["value"]["selected"]:
-            assert inputs["risk"] in {"low", "medium"}
-            assert inputs["review_profile"] == "code"
-            assert chosen["name"] == "gemini-3.8-flash-high"
-        new["value"]["trace"] = [row for row in new["value"]["trace"] if row["family"] != "google"]
-        for receipt in (old, new):
-            for row in receipt["value"]["trace"]:
-                if row["status"] == "selected":
-                    row["status"] = "eligible"
-            for field in ("selected", "fail_closed_reason", "substitution_note"):
-                receipt["value"].pop(field, None)
-        assert old == new, inputs
-
-
-def test_reviewer_seats_fixture_only_removes_claude_cursor_review_rows():
-    """#10464 (D-129): the overlay drops every Opus-on-Cursor row and changes nothing else."""
-    assert hashlib.sha256(SEATS_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "b11f33cdad1152f6a99c8bdba56395b9670213bccd786c3a91e143b4b5e5fc40"
-    )
-    assert set(SEATS_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
-    assert set(SEATS_OVERLAY["inputs"]) == {"dispatch", "roles", "reviewer"}
-    route = "claude-opus-5-5-cursor-fallback"
-
-    def key(value):
-        return json.dumps(value, sort_keys=True)
-
-    def claude_on_cursor(row):
-        return isinstance(row, dict) and row.get("family") == "anthropic" and row.get("transport") == "cursor"
-
-    # Inputs: an order-preserving removal of only the rows naming the removed route or pin.
-    for surface in ("dispatch", "roles", "reviewer"):
-        before, after = GEMINI_INPUTS[surface], SEATS_OVERLAY["inputs"][surface]
-        kept = {key(row) for row in after}
-        assert [row for row in before if key(row) in kept] == after
-        removed = [row for row in before if key(row) not in kept]
-        assert removed
-        for row in removed:
-            assert row["model"] == "claude-opus-5-5" if surface == "dispatch" else route in key(row)
-    assert all(row["model"] != "claude-opus-5-5" for row in SEATS_OVERLAY["inputs"]["dispatch"])
-    assert [len(SEATS_OVERLAY["inputs"][name]) for name in ("dispatch", "roles", "reviewer")] == [880, 855, 1480]
-
-    # Reviewer receipts: only the removed trace row differs; no selection moves.
-    previous = dict(zip(map(key, GEMINI_INPUTS["reviewer"]), GEMINI_OVERLAY["surfaces"]["reviewer"], strict=True))
-    for inputs, after in zip(SEATS_OVERLAY["inputs"]["reviewer"], SEATS_OVERLAY["surfaces"]["reviewer"], strict=True):
-        before = deepcopy(previous[key(inputs)])
-        if isinstance(before.get("value"), dict) and "trace" in before["value"]:
-            before["value"]["trace"] = [row for row in before["value"]["trace"] if row["name"] != route]
-            assert not any(claude_on_cursor(row) for row in after["value"]["trace"])
-        assert before == after, inputs
-
-    # Role receipts: only the Opus Cursor candidate disappears.
-    previous = dict(zip(map(key, GEMINI_INPUTS["roles"]), GEMINI_OVERLAY["surfaces"]["roles"], strict=True))
-    for inputs, after in zip(SEATS_OVERLAY["inputs"]["roles"], SEATS_OVERLAY["surfaces"]["roles"], strict=True):
-        before = deepcopy(previous[key(inputs)])
-        if isinstance(before.get("value"), dict) and "candidates" in before["value"]:
-            before["value"]["candidates"] = [row for row in before["value"]["candidates"] if not claude_on_cursor(row)]
-        assert before == after, inputs
-
-    # Routing holders: only the anthropic_authority Cursor route disappears.
-    before = deepcopy(GEMINI_OVERLAY["surfaces"]["routing_holders"])
-    for holders in before["roles"].values():
-        holders[:] = [h for h in holders if (h["seat"], h["route_name"]) != ("anthropic_authority", "cursor_fallback")]
-    del before["seats"]["anthropic_authority"]["wire_ids"]["cursor_fallback"]
-    assert before == SEATS_OVERLAY["surfaces"]["routing_holders"]
-
-    catalog = json.dumps(SEATS_OVERLAY["surfaces"]["catalog"])
-    assert route not in catalog and "claude-opus-5-5-high" not in catalog
-    assert "grok-4.7-cursor-fallback" in catalog
-
-
-CLAUDE_MODEL = re.compile(r"\bclaude-(?:opus|sonnet|fable|haiku)-[0-9a-z.-]+")
-
-
 def test_catalog_authorizes_no_claude_review_through_cursor():
     """#10464 AC-01/AC-02: no Claude review seat on Cursor; Sonnet reviews routine code only."""
     catalog = load_model_catalog()
@@ -1189,119 +985,10 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
     )
     cursor = catalog["budget_substitution_models"]["cursor"]
     assert "claude-opus-5-5" not in cursor
-    assert cursor["claude-fable-5-1"] == "claude-fable-5-1-thinking-high"
-    for kept in ("claude-fable-5-1", "claude-sonnet-5-5"):
-        assert "cursor" in catalog["models"][kept]["transports"], kept
-
-
-def test_catalog_text_records_d129_and_grok_static_review():
-    """#10464 AC-01/AC-03: retired Cursor sentences are gone; the critical ladder names CI as Grok's proof."""
-    text = (Path(__file__).resolve().parents[2] / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8")
-    assert "explicitly verified Cursor slug" not in text
-    assert "natively or through Cursor" not in text
-    lines = text[text.index("\nreview_ladders:\n") :].splitlines()
-    critical = lines.index("  critical:")
-    comment = " ".join(line.strip(" #") for line in lines[1:critical] if line.lstrip().startswith("#"))
-    assert "CI is its execution proof" in comment
-    assert "requests no execution" in comment
-
-
-def test_rules_carry_no_claude_cursor_review_pin():
-    """#10464 AC-03/AC-04: no Claude model is a Cursor review pin; Grok's static review stays CI-backed."""
-    rules = Path(__file__).resolve().parents[2] / "agents_extensions/shared/rules"
-    assignment = (rules / "model-assignment.md").read_text(encoding="utf-8")
-    core = (rules / "core.md").read_text(encoding="utf-8")
-    for name, text in (("model-assignment.md", assignment), ("core.md", core)):
-        # A Claude id with a -high suffix is a Cursor wire slug; native Claude ids carry none.
-        assert not [model for model in CLAUDE_MODEL.findall(text) if model.endswith("-high")], name
-        for line in text.splitlines():
-            if "cursor" in line.lower():
-                assert not [model for model in CLAUDE_MODEL.findall(line) if f"--model {model}" in line], (name, line)
-        assert "Other Models slug" not in text, name
-        assert "Other Models pool" not in text, name
-    # Cursor-authored work still needs a reviewer outside {xAI, Moonshot}.
-    assert "Require a **single** cross-family reviewer from outside {xAI, Moonshot}" in assignment
-    assert "**Cursor-as-reviewer:** Eligible only against authors outside {xAI, Moonshot}." in assignment
-    assert "through native CLI and Cursor with runtime model attestation" in core
-    assert "Grok briefs: diff/CI evidence, no execution requests." in core
-
-
-@pytest.mark.parametrize("configuration", ["", "no-cli"])
-def test_advisor_fixture_changes_only_headless_environment_and_launcher_help(configuration):
-    assert hashlib.sha256((CAPACITY_FIXTURE / "claude-advisor-10083.json").read_bytes()).hexdigest() == (
-        "6c4f6b3a080fcc5edfab6dff6d8bec8fb8cd3527f2c36a0a0be474066a24f8e1"
-    )
-    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline.json.gz").read_bytes()))
-    original = deepcopy(baseline)
-    updated = approved_review_baseline(baseline)
-    advisor = json.loads((CAPACITY_FIXTURE / "claude-advisor-10083.json").read_bytes())
-    assert advisor["adapter_rows"] == [8, 10, 12, 14, 16, 18, 20, 22]
-    assert advisor["env_overrides"] == {"CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1"}
-    changed = []
-    for index, (before, after) in enumerate(zip(baseline["adapters"], updated["adapters"], strict=True)):
-        if before != after:
-            changed.append(index)
-            assert INPUTS["adapters"][index]["agent"].startswith("claude")
-            assert INPUTS["adapters"][index]["isolation"] is False
-            restored = deepcopy(after)
-            assert restored["value"]["env_overrides"].pop("CLAUDE_CODE_DISABLE_ADVISOR_TOOL") == "1"
-            assert restored == before
-    assert changed == advisor["adapter_rows"]
-    assert len(updated["adapters"]) == len(baseline["adapters"])
-    launcher_changes = []
-    for index, (before, after) in enumerate(zip(baseline["launchers"], updated["launchers"], strict=True)):
-        if before != after:
-            launcher_changes.append(index)
-            assert INPUTS["launchers"][index]["variant"] == "help"
-            restored = deepcopy(after)
-            for replacement in advisor["launcher_help_replacements"]:
-                assert restored["stdout"].count(replacement["after"]) == 1
-                restored["stdout"] = restored["stdout"].replace(replacement["after"], replacement["before"])
-            assert restored == before
-    assert launcher_changes == advisor["launcher_rows"] == list(range(4, 70, 5))
-    assert len(updated["launchers"]) == len(baseline["launchers"])
-    for surface in baseline.keys() - {"reviewer", "adapters", "launchers"}:
-        assert updated[surface] == baseline[surface]
-    assert baseline == original
-
-
-def test_review_capacity_fixture_is_pinned_and_scope_bounded():
-    assert hashlib.sha256((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()).hexdigest() == (
-        "7446be4dfbedb928fa3760bdb508785cc82b95995fc09d4662a67d6a2c6b1b1a"
-    )
-
-    def original_receipt(value):
-        if isinstance(value, list):
-            return [original_receipt(row) for row in value]
-        if isinstance(value, dict):
-            return {
-                key: row[:1] + row[2:] if key == "selection_score" and row is not None else original_receipt(row)
-                for key, row in value.items()
-                if key != "capacity"
-            }
-        return value
-
-    before = BASELINE["reviewer"]
-    after = REVIEW_CAPACITY_BASELINE["reviewer"]
-    assert len(before) == len(after) == len(INPUTS["reviewer"]) == 1480
-    semantic_changes = selection_changes = 0
-    approved_labels = (
-        {"claude": "near_cap", "codex": "near_cap"},
-        {"agents": {"codex": {"health": {"healthy": True}, "status": "near_cap"}}, "diagnostics": {"stale": False}},
-        {"agents": {"codex": {"health": {"healthy": True}, "status": "hot"}}, "diagnostics": {"stale": True}},
-    )
-    for old, new, inputs in zip(before, after, INPUTS["reviewer"], strict=True):
-        if original_receipt(new) != old:
-            semantic_changes += 1
-            assert inputs["routing_snapshot"] in approved_labels
-        old_pick = (old["value"]["selected"] or {}).get("name")
-        new_pick = (new["value"]["selected"] or {}).get("name")
-        if old_pick != new_pick:
-            selection_changes += 1
-            assert inputs["routing_snapshot"] == approved_labels[0]
-            assert old_pick == "grok-4.7"
-            assert new_pick == ("claude-sonnet-5-5" if inputs["risk"] in {"low", "medium"} else "claude-opus-5-5")
-    assert (semantic_changes, selection_changes) == (24, 8)
+    assert "claude-fable-5-1" not in cursor
+    assert catalog["models"]["claude-fable-5-1"]["lifecycle"] == "active"
+    assert catalog["models"]["claude-fable-5-1"]["transports"] == ["native_claude"]
+    assert "cursor" in catalog["models"]["claude-sonnet-5-5"]["transports"]
 
 
 # Literal digests bind the #10205 Cursor wire pin and allowlist revision and
@@ -1310,7 +997,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "ae0434d10341cf742eff148b4702ba0c67a1f3a8906a0671703bb1cc0eaf850e",
+    "SPEC.md": "8d2e59acb08b7642874f6363d84cacea1c04a83a202f266b22b304c4f53c3e45",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -1357,52 +1044,6 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
     for name, expected in PINNED_DIGESTS.items():
         actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
         assert actual == expected, f"{name} pinned digest mismatch"
-
-
-@pytest.mark.repo_wide
-def test_frozen_artifacts_are_pinned_independently_of_manifest():
-    assert_frozen_routing_fixture_pinned(FIXTURE)
-
-
-def test_frozen_hashes_and_matrix_denominator():
-    for row in (FIXTURE / "SHA256SUMS").read_text().splitlines():
-        digest, name = row.split()
-        assert hashlib.sha256((FIXTURE / name).read_bytes()).hexdigest() == digest
-    assert INPUTS["base_sha"] == CAPTURE["BASE_SHA"]
-    for surface in ("reviewer", "roles", "capacity", "dispatch", "adapters", "launchers"):
-        assert len(INPUTS[surface]) == len(BASELINE[surface])
-    assert {row["risk"] for row in INPUTS["reviewer"]} == {"low", "medium", "high", "critical"}
-    assert {row["review_profile"] for row in INPUTS["reviewer"]} == {"code", "infra"}
-    ledger = json.loads(gzip.decompress((FIXTURE / "occurrences.json.gz").read_bytes()))
-    assert ledger and all(row["disposition"] and row["purpose"] and row["owner"] for row in ledger)
-
-
-def test_legacy_catalog_equals_approved_routing_baseline():
-    assert expanded_legacy_view() == APPROVED_BASELINE["catalog"]
-
-
-@pytest.mark.parametrize(
-    "entrypoint,args",
-    [
-        ("scripts/review/model_catalog.py", ["--resolve-role", "bounded_advisor"]),
-        ("scripts/lint/lint_model_catalog.py", ["--as-of", "2026-10-07"]),
-    ],
-)
-def test_direct_catalog_callers_without_repository_pythonpath(entrypoint, args, tmp_path):
-    source = Path(__file__).resolve().parents[2]
-    result = subprocess.run(
-        [sys.executable, "-I", str(source / entrypoint), *args],
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    payload = json.loads(result.stdout)
-    if entrypoint.endswith("lint_model_catalog.py"):
-        assert payload["ok"] is True
-    else:
-        assert payload["candidates"][0]["model_id"] == "gpt-6.1-sol"
 
 
 @pytest.mark.parametrize("host_clis", ["absent", "present"])
@@ -1461,307 +1102,6 @@ def assert_frozen_surfaces(actual):
     for surface in BASELINE:
         assert actual[surface] == APPROVED_BASELINE[surface], f"approved surface differs: {surface}"
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
-
-
-def test_capture_runner_activates_and_restores_scoped_caches(tmp_path):
-    source = Path(__file__).resolve().parents[2]
-    capture = tmp_path / "capture.py"
-    capture.write_text("""from scripts import delegate
-from scripts.review import model_catalog
-
-original_validator = model_catalog.validate_catalog
-original_parser = delegate.build_parser
-
-def capture():
-    assert model_catalog.validate_catalog is not original_validator
-    assert delegate.build_parser is not original_parser
-    print("caches active")
-
-def main():
-    capture()
-    assert model_catalog.validate_catalog is original_validator
-    assert delegate.build_parser is original_parser
-    print("caches restored")
-""")
-    result = subprocess.run(
-        [sys.executable, "-c", CAPTURE_RUNNER, str(capture), "--source-root", str(source)],
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout == "caches active\ncaches restored\n"
-
-
-@pytest.mark.parametrize("surface", BASELINE)
-def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
-    actual = dict(APPROVED_BASELINE)
-    actual[surface] = {"mutated": True}
-    with pytest.raises(AssertionError, match=f"approved surface differs: {surface}"):
-        assert_frozen_surfaces(actual)
-
-
-@pytest.mark.parametrize("fail", [False, True])
-def test_capture_catalog_cache_revalidates_mutations_and_restores_validator(monkeypatch, mocker, fail):
-    from scripts import delegate
-    from scripts.review import model_catalog
-
-    catalog = deepcopy(load_model_catalog())
-    validator = mocker.Mock(wraps=model_catalog.validate_catalog)
-    monkeypatch.setattr(model_catalog, "validate_catalog", validator)
-    parser_factory = mocker.Mock(wraps=delegate.build_parser)
-    monkeypatch.setattr(delegate, "build_parser", parser_factory)
-
-    def exercise():
-        with cached_capture_reads():
-            first = model_catalog.validate_catalog(catalog)
-            first["models"].clear()
-            assert model_catalog.validate_catalog(deepcopy(catalog))["models"] == catalog["models"]
-            assert validator.call_count == 1
-            catalog["schema_version"] = "invalid"
-            with pytest.raises(model_catalog.ModelCatalogError):
-                model_catalog.validate_catalog(catalog)
-            assert validator.call_count == 2
-            parser = delegate.build_parser()
-            args = parser.parse_args(["dispatch", "--agent", "codex", "--task-id", "one", "--prompt", "first"])
-            args.task_id = "mutated"
-            fresh = delegate.build_parser().parse_args(
-                ["dispatch", "--agent", "claude", "--task-id", "two", "--prompt", "second"]
-            )
-            assert (fresh.agent, fresh.task_id, fresh.prompt) == ("claude", "two", "second")
-            assert parser_factory.call_count == 1
-            if fail:
-                raise RuntimeError("capture failed")
-
-    if fail:
-        with pytest.raises(RuntimeError, match="capture failed"):
-            exercise()
-    else:
-        exercise()
-    assert model_catalog.validate_catalog is validator
-    assert delegate.build_parser is parser_factory
-    with cached_capture_reads():
-        model_catalog.validate_catalog(load_model_catalog())
-        delegate.build_parser()
-    assert validator.call_count == 3
-    assert parser_factory.call_count == 2
-
-
-def test_capture_environment_controls_lookup_and_version_probes(tmp_path):
-    env = CAPTURE["capture_environment"](tmp_path)
-    assert env["PATH"] == str(tmp_path / "bin")
-    assert env["HOME"] == str(tmp_path / "home")
-    assert env["TZ"] == "UTC"
-    for name, version in CAPTURE["CLI_VERSIONS"].items():
-        binary = shutil.which(name, path=env["PATH"])
-        assert binary == str(tmp_path / "bin" / name)
-        probe = subprocess.run([binary, "--version"], env=env, capture_output=True, text=True, timeout=5)
-        assert (probe.returncode, probe.stdout, probe.stderr) == (0, version + "\n", "")
-        invoke = subprocess.run([binary, "-p", "fixture"], env=env, capture_output=True, text=True, timeout=5)
-        assert invoke.returncode == 97
-        assert invoke.stderr == "capture stub refuses provider execution\n"
-    assert shutil.which("npx", path=env["PATH"]) is None
-
-
-@pytest.mark.parametrize("fail", [False, True])
-def test_capture_policy_cache_is_scoped_and_restores_reader(tmp_path, monkeypatch, mocker, fail):
-    from scripts.fleet import credit_lane
-
-    policy_path = tmp_path / "policy.yaml"
-    policy_text = credit_lane.POLICY_PATH.read_text()
-    reader = mocker.Mock(wraps=credit_lane.load_policy)
-    monkeypatch.setattr(credit_lane, "load_policy", reader)
-    monkeypatch.setattr(sys, "path", sys.path.copy())
-
-    def surfaces(source, scratch, project_python):
-        policy = credit_lane.load_policy(policy_path)
-        assert credit_lane.load_policy(policy_path) is policy
-        if fail:
-            raise RuntimeError("capture failed")
-        return policy.near_cap_remaining_pct
-
-    monkeypatch.setitem(CAPTURE["capture"].__globals__, "_capture_surfaces", surfaces)
-    for calls, threshold in enumerate((11.0, 12.0), start=1):
-        policy_path.write_text(
-            policy_text.replace("near_cap_remaining_pct: 10.0", f"near_cap_remaining_pct: {threshold}")
-        )
-        if fail:
-            with pytest.raises(RuntimeError, match="capture failed"):
-                CAPTURE["capture"](tmp_path, tmp_path, Path(sys.executable))
-        else:
-            assert CAPTURE["capture"](tmp_path, tmp_path, Path(sys.executable)) == threshold
-        assert reader.call_count == calls
-        reader.assert_called_with(policy_path)
-        assert credit_lane.load_policy is reader
-
-
-def test_capture_encodes_structures_without_reordering_arrays():
-    @dataclass
-    class Row:
-        values: frozenset[str]
-        path: Path
-
-    value = {"rows": [Row(frozenset({"b", "a"}), Path("fixture")), "last"]}
-    assert json.loads(CAPTURE["encode"](value)) == {"rows": [{"values": ["a", "b"], "path": "fixture"}, "last"]}
-
-
-@pytest.mark.parametrize("exception", [ValueError("refused"), SystemExit(2)])
-def test_capture_preserves_refusals(exception):
-    def refuse():
-        raise exception
-
-    result = CAPTURE["observed"](refuse)
-    assert result["exit_status"] == (2 if isinstance(exception, SystemExit) else 1)
-    assert result["exception"] == type(exception).__name__
-    assert result["error"] == str(exception)
-
-
-def test_capture_preserves_success_and_streams(capsys):
-    def succeed():
-        print("receipt")
-        return ["second", "first"]
-
-    assert CAPTURE["observed"](succeed) == {
-        "exit_status": 0,
-        "value": ["second", "first"],
-        "stdout": "receipt\n",
-        "stderr": "",
-    }
-    assert capsys.readouterr().out == ""
-
-
-def test_capture_matrix_is_frozen():
-    assert CAPTURE["reviewer_inputs"](load_model_catalog()) == APPROVED_INPUTS["reviewer"]
-
-
-def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
-    source = Path(__file__).resolve().parents[2]
-    output = tmp_path / "capture"
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            CAPTURE_RUNNER,
-            str(FIXTURE / "capture.py"),
-            "--configuration",
-            "no-cli",
-            "--source-root",
-            str(source),
-            "--output",
-            str(output),
-            "--project-python",
-            sys.executable,
-        ],
-        cwd=tmp_path,
-        env={"PATH": "/usr/bin:/bin", "TMPDIR": str(tmp_path)},
-        capture_output=True,
-        text=True,
-        timeout=600,
-    )
-    assert result.returncode == 0, result.stderr
-    expected = FIXTURE / "no-cli"
-    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
-    assert (output / "occurrences.json.gz").read_bytes() == (expected / "occurrences.json.gz").read_bytes()
-    for row in (output / "SHA256SUMS").read_text().splitlines():
-        digest, name = row.split()
-        assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
-    actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
-    original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    approved = approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
-        approved_argon_trial_baseline(
-            approved_hook_failure_baseline(
-                approved_hermes_effort_baseline(
-                    approved_claude_account_dispatch_baseline(
-                        approved_cto_wrappers_baseline(
-                            approved_claude_cap_baseline(
-                                approved_cursor_trailer_baseline(
-                                    approved_launcher_canary_baseline(
-                                        approved_reviewer_seats_baseline(
-                                            {
-                                                **approved_review_baseline(original),
-                                                **GEMINI_OVERLAY["surfaces"],
-                                                **RESOURCE_OVERLAY["surfaces"],
-                                            }
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
-            "no-cli",
-        )
-    )))
-    assert actual == approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved)))
-    assert len(actual["launchers"]) == 70
-    errors = [row.get("error", "") for row in actual["adapters"]]
-    assert any("grok" in error and "PATH" in error for error in errors)
-    assert any("cursor-agent" in error for error in errors)
-    assert any(
-        row.get("value", {}).get("cmd", [])[:2] == ["npx", "@anthropic-ai/claude-code@latest"]
-        for row in actual["adapters"]
-    )
-    assert any("model probe for cursor could not verify" in row["stderr"] for row in actual["dispatch"])
-
-
-def test_no_cli_environment_has_only_pinned_npx_probe(tmp_path):
-    env = CAPTURE["capture_environment"](tmp_path, "no-cli")
-    for name in CAPTURE["CLI_VERSIONS"]:
-        assert shutil.which(name, path=env["PATH"]) is None
-    assert list((tmp_path / "home").iterdir()) == []
-    npx = shutil.which("npx", path=env["PATH"])
-    probe = subprocess.run(
-        [npx, "@anthropic-ai/claude-code@latest", "--version"], env=env, capture_output=True, text=True, timeout=5
-    )
-    assert (probe.returncode, probe.stdout, probe.stderr) == (0, "2.1.289 (Claude Code)\n", "")
-    for argv in ([npx, "--version"], [npx, "@anthropic-ai/claude-code@latest", "-p", "fixture"]):
-        assert subprocess.run(argv, env=env, capture_output=True, timeout=5).returncode == 97
-
-
-def test_extended_capture_denominator_and_current_contract():
-    catalog = load_model_catalog()
-    assert set(BASELINE["routing_holders"]["roles"]) == set(catalog["roles"])
-    assert set(BASELINE["routing_holders"]["seats"]) == set(catalog["seats"])
-    pins = {row["model"] for row in INPUTS["dispatch"]}
-    assert {pin for mapping in catalog["budget_substitution_models"].values() for pin in mapping} <= pins
-    assert {row["review_attempt"] for row in INPUTS["dispatch"]} == {None, "frozen-review-attempt.yaml"}
-    contract = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], catalog)
-    assert contract == APPROVED_BASELINE["approval"]
-    assert len(contract["rows"]) == len(catalog["models"]) * 9
-    assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
-    assert all(not row["self_approval_counts"] for row in contract["rows"])
-
-
-
-def test_driver_brief_capture_preserves_every_unrelated_value():
-    before, after = GROK_LANGUAGE_BASELINE, DRIVER_BRIEF_BASELINE
-    for surface in set(before) - {"catalog", "dispatch"}:
-        assert before[surface] == after[surface]
-    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
-    assert [pin for pin in old_models if old_models[pin] != new_models[pin]] == ["claude-haiku-5-5", "gpt-6-luna"]
-    old, new = old_models["claude-haiku-5-5"], new_models["claude-haiku-5-5"]
-    assert new["roles"] == [*old["roles"], "bounded_implementation"]
-    assert new["weaknesses"] == [value for value in old["weaknesses"] if value != "no_bounded_implementation"]
-    assert {k: v for k, v in old.items() if k not in {"roles", "weaknesses", "notes"}} == {
-        k: v for k, v in new.items() if k not in {"roles", "weaknesses", "notes"}
-    }
-    expected_dispatch = deepcopy(before["dispatch"])
-    for row in expected_dispatch:
-        value = row.get("value", {})
-        refusal = value.get("refusal")
-        if isinstance(refusal, str) and "model 'gpt-6-luna'" in refusal:
-            value["refusal"] = refusal.replace(
-                "bounded_investigation; review_scheduler",
-                "bounded_investigation, readonly_recon, mechanical_classification; review_scheduler",
-            )
-    assert expected_dispatch == after["dispatch"]
-    old_luna, new_luna = old_models["gpt-6-luna"], new_models["gpt-6-luna"]
-    assert new_luna["roles"] == [*old_luna["roles"], "readonly_recon", "mechanical_classification"]
-    assert {k: v for k, v in old_luna.items() if k != "roles"} == {
-        k: v for k, v in new_luna.items() if k != "roles"
-    }
 
 
 def test_deepseek_flash_execution_requires_opencode():

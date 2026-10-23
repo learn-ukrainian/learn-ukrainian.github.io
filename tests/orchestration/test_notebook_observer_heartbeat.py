@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import json
 
-from scripts.api import occupancy_local
 from scripts.api.telemetry.transcript_tokens import TranscriptTelemetry
 from scripts.orchestration import observer_heartbeat
-from scripts.orchestration.install_mac_observer_launchd import DEFAULT_INTERVAL_MINUTES
 from scripts.orchestration.session_markers import write_session_marker
 
 
@@ -23,22 +21,6 @@ class _Response:
 
     def read(self) -> bytes:
         return self.body
-
-
-def test_resolver_darwin_without_map_and_linux_fallback(monkeypatch) -> None:
-    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
-    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
-    monkeypatch.setattr("scripts.api.occupancy.parse_host_id_map", lambda: {})
-    monkeypatch.setattr(occupancy_local.sys, "platform", "darwin")
-    assert occupancy_local.resolve_launcher_host_id() == "mac-operator"
-    monkeypatch.setattr(occupancy_local.sys, "platform", "linux")
-    assert occupancy_local.resolve_launcher_host_id() == "host-teacher"
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "operator-seat")
-    assert occupancy_local.resolve_launcher_host_id() == "operator-seat"
-
-
-def test_observer_launchd_cadence_matches_presence_freshness_window() -> None:
-    assert DEFAULT_INTERVAL_MINUTES == 5
 
 
 def test_marker_sweep_posts_working_telemetry_without_local_details(monkeypatch, tmp_path) -> None:

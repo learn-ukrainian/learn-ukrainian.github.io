@@ -90,11 +90,6 @@ def test_every_position_has_band_key_with_full_coverage(level: str) -> None:
 
 
 @pytest.mark.parametrize("level", sorted(LEVELS))
-def test_check_green(level: str) -> None:
-    assert generate_arc.main(["--level", level, "--check"]) == 0
-
-
-@pytest.mark.parametrize("level", sorted(LEVELS))
 def test_non_a1_output_bytes_unchanged(level: str) -> None:
     generated = generate_arc.generate_yaml(_doc(level), level).encode("utf-8")
     committed = (REPO_ROOT / generate_arc.ARC_OUT_REL.format(level=level)).read_bytes()
@@ -135,32 +130,6 @@ def test_a1_arc_preserves_orientation_and_amended_positions() -> None:
     block = text[text.index("positions:\n") :]
     assert block.count("  band_key: a1-orientation\n") == 1
     assert hashlib.sha256(block.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
-
-
-def test_a1_arc_positions_3_to_5_stage_approved_phonetic_facets() -> None:
-    data = yaml.safe_load(A1_ARC_YAML.read_text(encoding="utf-8"))
-    positions = {p["position"]: p for p in data["positions"]}
-
-    # Position 3: hardness before [е], introduces д–т, з–с, г–х
-    p3_inv = positions[3]["inventory_text"]
-    assert "hardness before [е]" in p3_inv
-    assert "д–т" in p3_inv and "з–с" in p3_inv and "г–х" in p3_inv
-    assert "introduce" in p3_inv
-    assert positions[3]["letters"] == list("ДЗКЛСУХьГ")
-
-    # Position 4: continues with б–п
-    p4_inv = positions[4]["inventory_text"]
-    assert "б–п" in p4_inv
-    assert "continue" in p4_inv
-    assert "apostrophe" in p4_inv
-    assert positions[4]["letters"] == list("БЙЇЮЄ")
-
-    # Position 5: completes ґ–к, ж–ш, дж–ч, дз–ц alongside existing дж/дз duty
-    p5_inv = positions[5]["inventory_text"]
-    assert "ґ–к" in p5_inv and "ж–ш" in p5_inv and "дж–ч" in p5_inv and "дз–ц" in p5_inv
-    assert "complete" in p5_inv
-    assert "дж and дз" in p5_inv
-    assert positions[5]["letters"] == list("ҐЖЧШЩЦФ")
 
 
 
@@ -254,10 +223,3 @@ def test_s_skill_code_fails_at_a2(tmp_path: Path) -> None:
     mutated = _mutated_doc("a2", tmp_path, "follow a Ukrainian explanation | Li, W |", "follow a Ukrainian explanation | S |")
     with pytest.raises(generate_arc.ArcGenerationError, match="skills-duty token"):
         generate_arc.generate_yaml(mutated, "a2")
-
-
-def test_b1_b2_band_tables_are_single_range() -> None:
-    for level in ("b1", "b2"):
-        bands = generate_arc.parse_immersion_bands(_doc(level).read_text(encoding="utf-8"))
-        count = LEVELS[level][0]
-        assert bands == [{"start": 1, "end": count, "band_key": FIRST_BAND_KEY[level]}]

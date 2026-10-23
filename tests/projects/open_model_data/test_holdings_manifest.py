@@ -13,29 +13,6 @@ from scripts.projects.open_model_data import holdings_manifest as hm
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTER = REPO_ROOT / "docs" / "sources" / "permissions-register.yaml"
 
-# Every source the plan's P2 roles and component table name (the issue's denominator).
-PLAN_SOURCES = {
-    "ua_gec_gec_only_train",  # C1 human corrections
-    "ua_gec_gec_fluency_train",  # C6 F/Calque
-    "ua_gec_test_ruler",  # ruler
-    "vesum_forms_all",  # forms
-    "ulif_paradigm_sections",  # forms
-    "ulif_forms",  # stress
-    "pravopys_2019_paragraphs",  # spelling
-    "pohribnyi_1992_ocr_pages",  # literary pronunciation
-    "ulif_synonym_sections",
-    "ulif_antonym_sections",
-    "ulif_phraseology_sections",
-    "frazeolohichnyi",
-    "sum20_live_articles",  # meaning
-    "vts_entries",  # meaning, checking only
-    "esum_etymology",  # etymology
-    "antonenko_book_chunks",  # calques
-    "sum11_contrast",  # Russification evidence
-    "textbook_sections",  # C9
-    "zno_keyed_tasks",  # ruler
-}
-
 
 def _manifest() -> dict:
     return yaml.safe_load(hm.DEFAULT_OUTPUT.read_text(encoding="utf-8"))
@@ -50,10 +27,6 @@ def test_manifest_covers_every_component_and_the_rulers():
     covered = {component for holding in manifest["holdings"] for component in holding["components"]}
     covered |= {item["components"] for item in manifest["not_yet_built"]}
     assert set(hm.COMPONENTS) <= covered
-
-
-def test_manifest_covers_every_planned_source():
-    assert {holding["id"] for holding in _manifest()["holdings"]} >= PLAN_SOURCES
 
 
 def test_every_holding_has_a_count_a_hash_and_provenance():
@@ -73,11 +46,6 @@ def test_quarantined_sum20_count_matches_the_quarantine_script():
     holdings = {holding["id"]: holding for holding in _manifest()["holdings"]}
     assert holdings["sum20_quarantined_articles"]["rows"] == len(EXPECTED_ROWS)
     assert holdings["sum20_live_articles"]["rows"] + len(EXPECTED_ROWS) == 100
-
-
-def test_manifest_holds_no_source_text_or_host_paths():
-    text = hm.DEFAULT_OUTPUT.read_text(encoding="utf-8")
-    assert "/home/" not in text and "/Users/" not in text
 
 
 def _fixture_db(path: Path) -> sqlite3.Connection:

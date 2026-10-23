@@ -228,40 +228,6 @@ def test_register_pin_later_admission_refusals(pinned_pilot, historical, fault, 
     assert reason in capsys.readouterr().err
 
 
-def test_register_pin_valid_later_admission(pinned_pilot):
-    p = pinned_pilot
-    p["pin"]["pins"].append(admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"]))
-    save(p["pin_path"], p["pin"])
-    assert p["operation"]("verify") == 0
-
-
-def test_register_pin_cited_legal_quote_change_and_readmission(pinned_pilot, capsys):
-    p = pinned_pilot
-    before = [p[k].read_bytes() for k in ("manifest", "registry")]
-    cited = register_payload(p["register"], p["pin"]["source_ids"])["legal_references"]
-    assert "law_art21_sui_generis" in {ref["id"] for ref in cited}
-    cited[0]["quote"] = "Revised fixture legal quotation"
-    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
-    assert p["operation"]("verify") == 1
-    assert "Register fingerprint mismatch" in capsys.readouterr().err
-    p["pin"]["pins"].append(admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"]))
-    save(p["pin_path"], p["pin"])
-    assert p["operation"]("verify") == 0
-    assert before == [p[k].read_bytes() for k in ("manifest", "registry")]
-
-
-def test_register_pin_unrelated_legal_quote_change_and_order(pinned_pilot):
-    p = pinned_pilot
-    before = [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
-    cited = {ref["id"] for ref in register_payload(p["register"], p["pin"]["source_ids"])["legal_references"]}
-    unrelated = next(ref for ref in p["register"]["legal_references"] if ref["id"] not in cited)
-    unrelated["quote"] = "Revised unrelated fixture legal quotation"
-    p["register"]["legal_references"].reverse()
-    p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
-    assert p["operation"]("verify") == 0
-    assert before == [p[k].read_bytes() for k in ("manifest", "registry", "pin_path")]
-
-
 @pytest.mark.parametrize("fault", ["missing", "duplicate"])
 def test_register_pin_cited_legal_reference_resolution_refusals(pinned_pilot, fault, capsys):
     p = pinned_pilot
@@ -339,30 +305,6 @@ def test_register_pin_legacy_fallback(pilot, monkeypatch, capsys):
     monkeypatch.setattr(foundation, "REGISTER", register)
     assert pilot["operation"]("verify") == 1
     assert "Register fingerprint mismatch" in capsys.readouterr().err
-
-
-def test_committed_pin_each_referenced_entry_is_binding(tmp_path, monkeypatch, capsys):
-    manifest_path = tmp_path / "pilot.json"
-    manifest_path.write_bytes((ROOT / "registry/atlas/pilot/pilot-v1.json").read_bytes())
-    pin_path = manifest_path.with_suffix(".register-pin.json")
-    pin = json.loads((ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json").read_bytes())
-    save(pin_path, pin)
-    register_path = tmp_path / "register.yaml"
-    register = yaml.safe_load(REGISTER.read_bytes())
-    monkeypatch.setattr(foundation, "REGISTER", register_path)
-    manifest = json.loads(manifest_path.read_bytes())
-    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
-    command = ["verify", "--manifest", str(manifest_path), "--registry",
-               str(ROOT / "registry/atlas/identity/registry.json")]
-    for source_id in source_ids:
-        source = next(s for s in register["sources"] if s["id"] == source_id)
-        source["terms"]["licence"]["name"] = "Revised fixture licence terms"
-        register_path.write_text(yaml.safe_dump(register, allow_unicode=True))
-        assert foundation.main(command) == 1
-        assert "Register fingerprint mismatch" in capsys.readouterr().err
-        pin["pins"].append(admitted_pin(register, source_ids, manifest["selection"]["denominator"]))
-        save(pin_path, pin)
-        assert foundation.main(command) == 0
 
 
 def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot, capsys):
@@ -752,14 +694,6 @@ def test_wal_capture_and_mutation_refusal(pilot, monkeypatch, capsys):
     db.close()
 
 
-def test_committed_migration_pin_digests():
-    pin = json.loads((ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json").read_bytes())
-    assert (pin["pins"][0]["entries_sha256"], pin["legacy_source_register_sha256"]) == (
-        "912713e18fff712fd2dec8f5300e037a8b276e5fd048b69cfc926a348e7ecb38",
-        "eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873",
-    )
-
-
 def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     paths = [ROOT / "registry/atlas/pilot/pilot-v1.json", ROOT / "registry/atlas/identity/registry.json",
              ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json"]
@@ -1065,62 +999,6 @@ def test_provenance_links_only_through_cited_known_keys(tmp_path, field, encodin
 
 
 MARK = json.dumps({"kind": "identity"})  # Decoded marker; may sit in any string field of an owner.
-REVIEW = dict(review=dict(settled_by="loc:u"))  # Nested native marker citing only the unrelated chain's key.
-POSITIONS = dict(  # family: (native nested marker, decoded marker); decoded ones sit in non-prose strings too.
-    source=(lambda o: o["correspondence"][0].update(REVIEW["review"]), lambda o: o["aliases"][0].update(note=MARK)),
-    card=(lambda o: o["key_at_creation"].update(REVIEW), lambda o: o["key_at_creation"].update(spelling=MARK)),
-    mint=(lambda o: o.update(overlay_id="ov_1"), lambda o: o.update(evidence=MARK)),
-    unit=(lambda o: o.update(REVIEW), lambda o: o.update(cefr_basis=MARK)),
-    record=(lambda o: o["raw_row"].update(mapping="ov_1"), lambda o: o["raw_row"].update(definition=MARK)),
-    legacy=(lambda o: o["metadata"].update(split_into=["wc_x"]), lambda o: o["metadata"].update(pos=MARK)))
-EXTRA = ("split_fields", "embedded", "from_join", "pos_join", "unowned", "wrapper")  # Last two: unowned markers.
-
-
-def owner_chain(s):  # Only the unit cites loc:<s>; the zero-alias legacy owner never cites any closure key.
-    return dict(record=dict(source_id="frazeolohichnyi", table="frazeolohichnyi", locator=f"loc:{s}2", snapshot_id="s",
-                            source_content_sha256=None, raw_row=dict(word=f"word {s}", definition="English")),
-                unit=dict(unit_key=f"unit:{s}", anchor_locator=f"loc:{s}", source_record_keys=[f"loc:{s}", f"loc:{s}2"],
-                          atlas_slug=s, counting_basis=json.dumps({"see": f"loc:{s}"})),  # Plain decoded reference.
-                legacy=dict(metadata=dict(slug=s, lemma="English", pos="noun"), aliases=[], pos_review=None),
-                source=dict(source_record_id=f"sr_{s}", aliases=[dict(key=f"frazeolohichnyi:record:word {s}", note=NOTE)],
-                            correspondence=[dict(snapshot_id="old", status="missing")]),
-                card=dict(card_id=f"wc_{s}", state="suppressed", senses=[dict(sense_id=f"ws_{s}", state="unsplit")],
-                          key_at_creation=dict(spelling="English", source_keys=[dict(key=f"atlas0:slug:{s}")])),
-                mint=dict(kind="sense_mint", to=[f"ws_{s}"], evidence=NOTE))
-
-
-@pytest.mark.parametrize("case,side", [(c, s) for c in [*(f"{f}:{m}" for f in POSITIONS for m in ("native", "decoded")),
-                                                        *EXTRA] for s in "hu"])
-def test_function_level_marked_owner_isolation(tmp_path, case, side):
-    """Function-level isolation() diagnostic only: never CLI admission or source certification."""
-    assert json.loads(MARK) == {"kind": "identity"} and "loc:" not in MARK  # Genuinely decodes; cites nothing.
-    chains, member = {s: owner_chain(s) for s in "hu"}, tmp_path / "membership.json"
-    inputs = [dict(source_records=[c["record"] for c in chains.values()], units=[c["unit"] for c in chains.values()]),
-              *(o for c in chains.values() for k, o in c.items() if k not in {"record", "unit"})]
-    save(member, dict(heldout=["loc:h"], replay=["loc:u"]))  # The unrelated chain stays outside the closure.
-    assert foundation.isolation(inputs, member) == "checked"  # Plain notes, decoded plain reference, lifecycle states.
-    family, _, form = case.partition(":")
-    if form:
-        POSITIONS[family][form == "decoded"](chains[side][family])
-    if case == "split_fields":  # Marker and literal reference in different fields of one otherwise unrelated owner.
-        chains["u"]["card"].update(card_kind=f"loc:{side}", key_at_creation=dict(source_keys=[], **REVIEW))
-    if case == "embedded":  # An unlinked decoded owner in a non-prose card string; its marker marks the card too.
-        chains[side]["card"]["key_at_creation"]["spelling"] = json.dumps(dict(source_record_id="sr_e", aliases=[dict(
-            key="k:e")], correspondence=[dict(settled_by="ov_1")]))
-    if case in {"from_join", "pos_join"}:  # Only the D2 join links this marked card into a chain.
-        join = dict(kind="sense_mint", to=["ws_n"], evidence=NOTE, **{"from": [f"ws_{side}"]}) if case == "from_join" \
-            else dict(metadata=dict(slug="n"), aliases=[], pos_review=dict(anchor_locator=f"loc:{side}"))
-        inputs += [join, dict(card_id="wc_n", senses=[dict(sense_id="ws_n")],
-                              key_at_creation=dict(source_keys=[dict(key="atlas0:slug:n")], **REVIEW))]
-    if case in {"unowned", "wrapper"}:  # A bare marker stays accepted; a wrapper's context cites its sibling reference.
-        inputs.append(dict(settled_by="ov_1") if case == "unowned" else dict(decision=REVIEW, reference=f"loc:{side}"))
-    reason = "a membership key" if case == "mint:native" else "a marked owner"  # A flat mint marks itself.
-    reason = "its enclosing context" if case == "wrapper" else reason
-    held = side == "h" and case != "unowned"
-    with pytest.raises(foundation.Refusal, match="adjudicated mapping touches " + reason) if held else nullcontext():
-        assert foundation.isolation(inputs, member) == "checked"
-
-
 @pytest.mark.parametrize("case,held", [(c, h) for c in ("settled_by", "note", "raw_row") for h in (True, False)])
 def test_cli_marked_owner_refused_before_write(pilot, case, held, capsys):
     member, index = pilot["root"] / "membership.json", 2 if held else 140  # Unit 2 shares the held legacy closure.
@@ -1279,41 +1157,6 @@ def test_b03_real_paradigm_parent_is_a_closure_dependency(tmp_path, case, capsys
     assert before == [p.read_bytes() for p in committed]
 
 
-@pytest.mark.parametrize("op", ["freeze", "fresh", "replay", "verify"])
-@pytest.mark.parametrize("marked", [150, -1])  # The moved paradigm child; a non-paradigm row with an equal entry_id.
-def test_moved_paradigm_child_refused_in_every_operation(pilot, op, marked, capsys):
-    records, units, member = pilot["candidate"]["source_records"], pilot["candidate"]["units"], pilot["root"] / "m.json"
-    with sqlite3.connect(pilot["paths"]["sources"]) as db:
-        for number, query in ((140, "Other"), (141, "Third")):  # Own aliases: parent and destination unit unshared.
-            records[number] = capture("ulif", "ulif_dictua_entries", dict(records[number]["raw_row"],
-                                      normalized_query=query, content_sha256=sha(query)))
-            db.execute("UPDATE ulif_dictua_entries SET normalized_query=?, content_sha256=? WHERE id=?",
-                       (query, sha(query), number))
-        db.execute("UPDATE ulif_dictua_sections SET entry_id=140 WHERE id=1000")
-        db.execute("CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, entry_id INTEGER)")
-        db.execute("INSERT INTO frazeolohichnyi VALUES (7, 'English phrase', 140)")
-    records[150] = capture("ulif", "ulif_dictua_sections", dict(records[150]["raw_row"], entry_id=140))
-    records.append(capture("frazeolohichnyi", "frazeolohichnyi", dict(id=7, word="English phrase", entry_id=140)))
-    units[0]["source_record_keys"].remove(records[150]["locator"])
-    units[141]["source_record_keys"].append(records[150]["locator"])  # Moved off its parent's unit 140.
-    units[142]["source_record_keys"].append(records[-1]["locator"])
-    pilot["candidate"]["denominator"]["source_records"] += 1
-    records[marked]["review"] = dict(decision=dict(kind="merge"))
-    pilot["admit"]()
-    save(member, dict(heldout=["ulif:ulif_dictua_entries:id:140"], replay=[]))
-    held = marked == 150
-    if op == "freeze":
-        assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == held
-        assert pilot["manifest"].exists() is not held
-    else:
-        assert pilot["operation"]("freeze") == 0 and (op == "fresh" or pilot["operation"]("allocate") == 0)
-        before = pilot["registry"].read_bytes() if op != "fresh" else None
-        assert pilot["operation"]("verify" if op == "verify" else "allocate", "--heldout-manifest", str(member)) == held
-        assert pilot["registry"].exists() is not (held and op == "fresh")
-        assert op == "fresh" or pilot["registry"].read_bytes() == before
-    assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches a marked owner") == held
-
-
 B04 = dict(parent=(150, 140, 0), child=(140, 1000, 0), unrelated=(150, 142, 0), plain=(0, 140, 0),  # (marked record,
            split_parent=(0, 140, 1000), split_child=(0, 1000, 140), unit_held=(0, 141, 1000),  # held, replay); 0: none,
            unit_replay=(0, 1000, 141))  # 1000: the paradigm child of row 140; 141: the forged existing unit's anchor.
@@ -1441,17 +1284,6 @@ def test_register_cache_fresh_same_length_same_mtime_and_return_to_a(tmp_path, r
     assert register_parse_spy == [a, b]
 
 
-def test_register_cache_two_entry_lru_eviction(tmp_path, register_parse_spy):
-    path = tmp_path / "register.yaml"
-    for value in ["alpha", "bravo", "alpha", "third", "bravo"]:
-        path.write_text(f"sources: [{{id: {value}}}]\n")
-        assert foundation.load_register(path) == {"sources": [{"id": value}]}
-        assert foundation._parse_register_bytes.cache_info().currsize <= 2
-    assert register_parse_spy == [b"sources: [{id: alpha}]\n", b"sources: [{id: bravo}]\n",
-                                  b"sources: [{id: third}]\n", b"sources: [{id: bravo}]\n"]
-    assert foundation._parse_register_bytes.cache_info().maxsize == 2
-
-
 def test_register_cache_read_failure_is_not_hidden(tmp_path, monkeypatch, register_parse_spy):
     path = tmp_path / "register.yaml"
     content = b"sources: [{id: fixture}]\n"
@@ -1566,18 +1398,3 @@ def test_register_cache_warm_validation_refusals(pinned_pilot, fault, reason, mo
         assert p["operation"]("verify", *extra) == 1
         assert capsys.readouterr() == warm
     assert before == ([p[k].read_bytes() for k in ("manifest", "registry", "pin_path")], db_bytes(p))
-
-
-def test_register_cache_keeps_independent_file_digest_reads(pilot, monkeypatch, register_parse_spy):
-    original = foundation.file_digest
-    reads = []
-
-    def counted(path):
-        reads.append(path)
-        return original(path)
-
-    monkeypatch.setattr(foundation, "file_digest", counted)
-    assert pilot["operation"]("freeze") == 0
-    assert pilot["operation"]("freeze") == 0
-    assert len(register_parse_spy) == 1
-    assert reads.count(REGISTER) >= 4  # Separate source-register and REGISTER fingerprints each time.

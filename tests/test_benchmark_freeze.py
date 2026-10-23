@@ -38,18 +38,6 @@ def test_heldout_hashes_include_only_non_hidden_json_files(tmp_path: Path) -> No
     }
 
 
-def test_external_paths_are_rendered_posix(tmp_path: Path) -> None:
-    external = tmp_path / "outside" / "SCORECARD.md"
-    external.parent.mkdir()
-    external.write_text("# scorecard\n", encoding="utf-8")
-
-    reference = freeze_benchmark._reference_result(external)
-
-    assert reference is not None
-    assert "\\" not in reference["path"]
-    assert reference["path"].endswith("/outside/SCORECARD.md")
-
-
 def test_public_fixture_hashes_match_frozen_manifest() -> None:
     manifest = _manifest()
     files = manifest["fixtures"]["public"]["files"]

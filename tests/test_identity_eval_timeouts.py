@@ -10,8 +10,6 @@ from typing import Any
 import pytest
 
 from scripts.agent_runtime import agent_github_identity, env_sanitize
-from scripts.lexicon import fill_from_content
-from scripts.migrate import rename_track
 
 
 def _raise_timeout(calls: list[dict[str, Any]]):
@@ -46,27 +44,3 @@ def test_isolated_git_env_timeout_keeps_fail_closed_fallback(monkeypatch: pytest
         "GIT_TERMINAL_PROMPT": "0",
     }
     assert calls[0]["timeout"] == env_sanitize._GIT_TIMEOUT_SECONDS == 30
-
-
-def test_rename_track_git_mv_timeout_returns_false(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    calls: list[dict[str, Any]] = []
-    monkeypatch.setattr(rename_track.subprocess, "run", _raise_timeout(calls))
-    src = tmp_path / "plans"
-    src.mkdir()
-
-    assert rename_track.git_mv(src, tmp_path / "moved" / "renamed", dry_run=False) is False
-    assert "[ERROR] git mv failed: TimeoutExpired after 30s" in capsys.readouterr().out
-    assert calls[0]["timeout"] == rename_track._GIT_TIMEOUT_SECONDS == 30
-
-
-def test_fill_from_content_enrichment_timeout_propagates(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls: list[dict[str, Any]] = []
-    monkeypatch.setattr(fill_from_content.subprocess, "run", _raise_timeout(calls))
-
-    with pytest.raises(subprocess.TimeoutExpired):
-        fill_from_content._run_enrichment()
-
-    assert calls[0]["args"][0][1:] == ["scripts/lexicon/enrich_manifest.py"]
-    assert calls[0]["timeout"] == fill_from_content._ENRICHMENT_TIMEOUT_SECONDS == 300

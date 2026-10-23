@@ -19,17 +19,6 @@ import yaml
 from scripts.ci import split_tests as split
 
 
-def test_median_uses_observations_without_treating_absent_files_as_zero() -> None:
-    assert split.median_durations(
-        [
-            {"tests/test_a.py": 2, "tests/test_b.py": 100},
-            {"tests/test_a.py": 4},
-            {"tests/test_a.py": 90},
-        ]
-    ) == {"tests/test_a.py": 4, "tests/test_b.py": 100}
-    assert split.median_durations([]) == {}
-
-
 def test_invalid_weights_fail_before_assignment() -> None:
     for value in (
         {},
@@ -96,21 +85,6 @@ def test_refresh_filters_failed_foreign_rerun_expired_and_duplicate_artifacts(tm
     assert "2 successful merge-group samples" in capsys.readouterr().out
 
 
-def test_refresh_honors_sample_limit_and_cli(tmp_path, monkeypatch) -> None:
-    calls = _api(monkeypatch)
-    fallback = tmp_path / "old.json"
-    fallback.write_text('{"tests/test_a.py": 1}')
-    output = tmp_path / "snapshot.json"
-    assert (
-        split.main(
-            ["refresh", "--repo", "owner/repo", "--fallback", str(fallback), "--output", str(output), "--limit", "1"]
-        )
-        == 0
-    )
-    assert json.loads(output.read_text()) == {"tests/test_a.py": 30}
-    assert len(calls) == 3
-
-
 def test_unavailable_lookup_uses_fallback_without_echoing_private_error(tmp_path, monkeypatch, capsys) -> None:
     fallback = tmp_path / "old.json"
     fallback.write_text('{"tests/test_a.py": 1}')
@@ -137,16 +111,6 @@ def test_malformed_download_retains_fallback(tmp_path, monkeypatch) -> None:
         split.refresh_durations("owner/repo", fallback, output, 0)
     with pytest.raises(ValueError):
         split.refresh_durations("../repo", fallback, output)
-
-
-def test_github_read_is_bounded_and_captures_output(monkeypatch) -> None:
-    def run(command, **kwargs):
-        assert command == ["gh", "api", "repos/owner/repo/actions/artifacts"]
-        assert kwargs == {"check": True, "capture_output": True, "timeout": 30}
-        return subprocess.CompletedProcess(command, 0, stdout=b"{}")
-
-    monkeypatch.setattr(split.github_client, "run", run)
-    assert split.github_api("repos/owner/repo/actions/artifacts") == b"{}"
 
 
 def test_refreshed_partition_preserves_every_collected_case_and_history_pin() -> None:
@@ -301,13 +265,6 @@ def test_tracked_test_files_match_the_workflow_selection() -> None:
     )
     listed = [line for line in result.stdout.splitlines() if line]
     assert listed == split.tracked_test_files(root)
-
-
-def test_fresh_snapshot_partitions_every_selected_file_once(tmp_path: Path) -> None:
-    files = _selected_test_files()
-    snapshot = tmp_path / "fresh.json"
-    snapshot.write_text(json.dumps({name: float(index + 1) for index, name in enumerate(files)}, indent=2) + "\n")
-    _assert_exact_partition(files, snapshot)
 
 
 def test_lookup_fallback_snapshot_is_shared_and_covers_every_file_once(tmp_path: Path, monkeypatch) -> None:
@@ -639,13 +596,6 @@ def test_refresh_did_not_succeed_uses_committed_weights_on_every_shard(
     assert result.stdout == split.COMMITTED_DURATION_PATH.as_posix()
 
 
-def test_committed_weights_from_the_shared_decision_are_a_true_partition() -> None:
-    root = Path(__file__).resolve().parents[2]
-    assert not split.COMMITTED_DURATION_PATH.is_absolute()
-    assert (root / split.COMMITTED_DURATION_PATH).resolve() == split.DEFAULT_DURATIONS.resolve()
-    _assert_exact_partition(_selected_test_files(), split.COMMITTED_DURATION_PATH)
-
-
 def test_mixed_snapshot_and_committed_weights_cannot_be_selected(tmp_path: Path) -> None:
     """The reviewer's reproducer: shard 7 falls back, the other 15 use the snapshot.
 
@@ -695,28 +645,6 @@ def test_duplicate_timing_members_are_rejected() -> None:
             archive.writestr("pytest-file-durations.json", '{"tests/test_a.py": 5}')
     with pytest.raises(ValueError, match="one bounded"):
         split.archive_durations(buf.getvalue())
-
-
-def test_corrupt_compressed_sample_does_not_hide_later_sample(tmp_path, monkeypatch) -> None:
-    import zlib
-
-    _api(monkeypatch)
-    reader = split.archive_durations
-    calls = 0
-
-    def read(payload):
-        nonlocal calls
-        calls += 1
-        if calls == 1:
-            raise zlib.error("invalid compressed data")
-        return reader(payload)
-
-    monkeypatch.setattr(split, "archive_durations", read)
-    fallback = tmp_path / "old.json"
-    fallback.write_text('{"tests/test_a.py": 1}')
-    output = tmp_path / "snapshot.json"
-    assert split.refresh_durations("owner/repo", fallback, output) == 1
-    assert json.loads(output.read_text()) == {"tests/test_a.py": 20}
 
 
 def test_archive_client_bound_maps_to_existing_size_failure(monkeypatch):

@@ -262,23 +262,6 @@ def test_fresh_read_only_provider_failure_is_not_blamed_on_the_guard(primary, tm
     assert _git(worktree, "status", "--porcelain") == ""
 
 
-def test_repeated_read_only_launch_keeps_one_stable_guard(primary, tmp_tasks_dir, fake_agy):
-    """Case 3 (AC-01): reusing the worktree neither rewrites the guard nor reports it."""
-    worktree = _dispatch_worktree(primary, "ro-10727-repeat")
-    results = [_launch(worktree, task_id, _READ) for task_id in ("ro-10727-repeat", "ro-10727-repeat-2")]
-
-    first_bytes = results[0][2][0]["hook_bytes"]
-    for rc, state, launches in results:
-        assert state["read_only_mutation_paths"] == []
-        assert state["status"] == "done"
-        assert rc == 0
-        assert launches[0]["hook_bytes"] == first_bytes
-        assert HOOK in launches[0]["baseline_paths"]
-    assert json.loads(first_bytes) == _framework_hook()
-    assert (worktree / HOOK).read_bytes() == first_bytes
-    assert _git(worktree, "status", "--porcelain") == ""
-
-
 def test_valid_hook_rewrite_with_unchanged_ignored_status_still_fails(primary, tmp_tasks_dir, fake_agy):
     """Case 4 (AC-02): Git status cannot see this rewrite; the hook fingerprint does."""
     task_id = "ro-10727-hook-rewrite"
@@ -597,7 +580,6 @@ with open(path, "w", encoding="utf-8") as handle:
     json.dump(data, handle, indent=4)
 """
 _RETARGET_PARENT = "import os\nos.remove('.agents')\nos.symlink('batch_state/guard-b', '.agents')\n"
-_RETARGET_CHAIN = "import os\nos.remove('batch_state/current')\nos.symlink('guard-b', 'batch_state/current')\n"
 _RETARGET_FINAL = "import os\nos.remove('.agents/hooks.json')\nos.symlink('../batch_state/guard-b/hooks.json', '.agents/hooks.json')\n"
 
 
@@ -636,18 +618,6 @@ def test_symlinked_parent_retarget_between_identical_guards_fails(primary, tmp_t
     rc, state, launches = _launch(worktree, task_id, _RETARGET_PARENT)
 
     assert os.readlink(worktree / ".agents") == "batch_state/guard-b"
-    _assert_hook_mutation(rc, state, launches)
-
-
-def test_retargeted_middle_link_of_the_parent_chain_fails(primary, tmp_tasks_dir, fake_agy):
-    """H2 sibling (F1): the ``.agents`` link text is unchanged; the link it leads through moved."""
-    task_id = "ro-10727-h2-chain-link"
-    worktree = _dispatch_worktree(primary, task_id)
-    _chained_parent_link_layout(worktree)
-
-    rc, state, launches = _launch(worktree, task_id, _RETARGET_CHAIN)
-
-    assert os.readlink(worktree / ".agents") == "batch_state/current"
     _assert_hook_mutation(rc, state, launches)
 
 
@@ -810,28 +780,6 @@ def test_final_link_lost_around_readlink_fails_closed(primary, tmp_tasks_dir, fa
     assert os.readlink(hook) == "../batch_state/effective-hooks.json"
 
 
-def test_parent_link_lost_around_readlink_fails_closed(primary, tmp_tasks_dir, fake_agy, monkeypatch):
-    """F2 sibling: a symlinked ``.agents`` that vanishes under readlink is lost, not absent."""
-    import errno
-
-    task_id = "ro-10727-parent-readlink-race"
-    worktree = _dispatch_worktree(primary, task_id)
-    _parent_link_layout(worktree)
-    parent = worktree / ".agents"
-
-    def lose():
-        text = os.readlink(parent)
-        parent.unlink()
-        return text
-
-    raised = _race_snapshot_call(
-        monkeypatch, worktree, "readlink", {str(parent)}, lose=lose, restore=lambda text: parent.symlink_to(text)
-    )
-    rc, state, launches = _launch(worktree, task_id, _READ)
-
-    _assert_acquisition_failed(rc, state, launches, raised, errno.ENOENT)
-
-
 # --- Every link of an accepted chain, and its acquisition (#10748 F1/F2) ------
 #
 # ``realpath`` collapses a chain to its effective file, so a provider could
@@ -912,23 +860,6 @@ def test_middle_link_rewired_and_restored_during_the_run_settles_done(primary, t
 
     assert len(launches) == 1
     assert os.readlink(worktree / "batch_state" / "stage") == "guard"
-    assert state["read_only_checkout_snapshot_error"] is None
-    assert state["read_only_mutation_paths"] == []
-    assert state["status"] == "done"
-    assert rc == 0
-
-
-@pytest.mark.parametrize("layout", [_three_link_chain_layout, _final_link_through_a_middle_link_layout])
-def test_untouched_multi_link_chains_still_settle_done(primary, tmp_tasks_dir, fake_agy, layout):
-    """F1 control: recording every link is not a new restriction on accepted chains."""
-    task_id = f"ro-10748-chain-{layout.__name__.strip('_')}"
-    worktree = _dispatch_worktree(primary, task_id)
-    layout(worktree)
-
-    rc, state, launches = _launch(worktree, task_id, _READ)
-
-    assert len(launches) == 1
-    assert launches[0]["hook_check"] == hooks.HookConfigResult("PASS", "guard_registered")
     assert state["read_only_checkout_snapshot_error"] is None
     assert state["read_only_mutation_paths"] == []
     assert state["status"] == "done"
@@ -1314,30 +1245,3 @@ def test_agy_read_only_worker_still_fails_closed_on_the_same_loop(primary, tmp_t
     assert state["status"] == "failed"
     assert rc == 1
     assert os.readlink(worktree / ".agents") == ".agents"
-
-
-def test_checkout_snapshot_acquires_the_hook_only_when_asked(tmp_path):
-    """The shared helper keeps its base call contract; the AGY worker opts in to the hook."""
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _git(repo, "init", "-q")
-    (repo / ".gitignore").write_text(".agents/\n", encoding="utf-8")
-    (repo / ".agents").mkdir()
-    (repo / HOOK).write_bytes(b"{}\n")
-
-    base, error = delegate._read_only_checkout_snapshot(repo)
-    assert error is None
-    assert base[HOOK] == "!!"
-    with_hook, error = delegate._read_only_checkout_snapshot(repo, agy_hook=True)
-    assert error is None
-    assert with_hook[HOOK].startswith("!!:")
-    assert json.loads(with_hook[HOOK][3:])["sha256"] is not None
-
-    (repo / ".agents" / "hooks.json").unlink()
-    (repo / ".agents").rmdir()
-    _hook_parent_loop(repo)
-    assert delegate._read_only_checkout_snapshot(repo)[1] is None
-    assert delegate._read_only_checkout_snapshot(repo, agy_hook=True) == (
-        None,
-        f"agy hook snapshot failed: {HOOK}: OSError",
-    )

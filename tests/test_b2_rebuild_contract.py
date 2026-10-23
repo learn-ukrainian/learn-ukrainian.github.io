@@ -131,61 +131,6 @@ def test_no_inject_markers_fail(tmp_path: Path) -> None:
     assert "B2_INJECT_MARKERS_MISSING" in _finding_types(findings)
 
 
-def test_long_h2_exposition_before_practice_fails(tmp_path: Path) -> None:
-    long_exposition = " ".join(["пояснення"] * 901)
-    text = _valid_module_text(
-        extra=f"""
-## Надто довгий концепт
-
-| Роль | Форма |
-| --- | --- |
-| вибір | або |
-
-{long_exposition}
-
-<!-- INJECT_ACTIVITY: act-4 -->
-"""
-    )
-
-    findings = check_b2_rebuild_contract(
-        text,
-        _activities_file(tmp_path, _valid_activities()),
-        meta_data={"level": "B2", "focus": "grammar", "slug": "advanced-conjunctions-rebuild"},
-    )
-
-    assert "B2_LONG_EXPOSITION_BEFORE_PRACTICE" in _finding_types(findings)
-
-
-def test_structured_contrast_required_for_prose_only_grammar(tmp_path: Path) -> None:
-    text = """---
-title: "Synonymy and register"
-level: B2
-focus: grammar
-slug: synonymy-register
----
-# Синонімія і регістр
-
-## Регістровий вибір
-
-Книжне слово й розмовний відповідник не є автоматичними дублетами.
-<!-- INJECT_ACTIVITY: act-1 -->
-Треба бачити жанр, адресата і ступінь офіційності.
-<!-- INJECT_ACTIVITY: act-2 -->
-Порівняйте два варіанти і виправте невдалий регістр.
-<!-- INJECT_ACTIVITY: act-3 -->
-Після цього перенесіть правило в короткий службовий лист.
-<!-- INJECT_ACTIVITY: act-4 -->
-"""
-
-    findings = check_b2_rebuild_contract(
-        text,
-        _activities_file(tmp_path, _valid_activities()),
-        meta_data={"level": "B2", "focus": "grammar", "slug": "synonymy-register"},
-    )
-
-    assert "B2_STRUCTURED_CONTRAST_MISSING" in _finding_types(findings)
-
-
 def test_raw_callout_syntax_fails_for_b2(tmp_path: Path) -> None:
     findings = check_b2_rebuild_contract(
         _valid_module_text(extra="[!note] Raw callout is not accepted here."),

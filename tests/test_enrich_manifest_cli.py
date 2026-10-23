@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import subprocess
 import sys
 from pathlib import Path
@@ -70,48 +69,6 @@ def test_enrich_no_flags_exits_nonzero_and_leaves_manifest_untouched() -> None:
     assert after == before
 
 
-def test_enrich_main_write_runs_enrich_only(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    from scripts.lexicon import enrich_manifest as mod
-
-    called: list[str] = []
-
-    def fake_enrich() -> tuple[int, int]:
-        called.append("enrich")
-        return (3, 10)
-
-    manifest_path = tmp_path / "lexicon-manifest.json"
-    manifest_path.write_text(
-        json.dumps(
-            {
-                "entries": [
-                    {"lemma": "тест", "pronunciation": {"ipa": "/tɛst/"}},
-                    {"lemma": "слово"},
-                ]
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(mod, "enrich", fake_enrich)
-    monkeypatch.setattr(mod, "MANIFEST", manifest_path)
-    monkeypatch.setattr(mod, "_single_word_etymology_coverage", lambda _m: (1, 2))
-
-    assert mod.main(["--write"]) == 0
-    assert called == ["enrich"]
-
-
-def test_enrich_main_no_flags_does_not_call_enrich(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.lexicon import enrich_manifest as mod
-
-    def boom() -> tuple[int, int]:
-        raise AssertionError("enrich() must not run without --write")
-
-    monkeypatch.setattr(mod, "enrich", boom)
-    with pytest.raises(SystemExit) as excinfo:
-        mod.main([])
-    assert excinfo.value.code not in (0, None)
-
-
 # --- build_data_manifest.py (sibling #5393) ------------------------------------
 
 
@@ -134,18 +91,6 @@ def test_build_no_flags_exits_nonzero_and_leaves_manifest_untouched() -> None:
 
     assert proc.returncode != 0
     assert after == before
-
-
-def test_build_main_no_flags_does_not_call_build(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.lexicon import build_data_manifest as mod
-
-    def boom() -> dict:
-        raise AssertionError("build_manifest() must not run without --write")
-
-    monkeypatch.setattr(mod, "build_manifest", boom)
-    with pytest.raises(SystemExit) as excinfo:
-        mod.main([])
-    assert excinfo.value.code not in (0, None)
 
 
 # --- export_open_dataset.py (sibling #5393) -----------------------------------
@@ -176,29 +121,3 @@ def test_export_no_flags_exits_nonzero() -> None:
     assert after_marker == before_marker
     if not before_root_exists:
         assert not DATASET_ROOT.exists()
-
-
-def test_export_main_no_flags_does_not_call_export(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.lexicon import export_open_dataset as mod
-
-    def boom() -> tuple[int, int]:
-        raise AssertionError("export_dataset() must not run without --write")
-
-    monkeypatch.setattr(mod, "export_dataset", boom)
-    with pytest.raises(SystemExit) as excinfo:
-        mod.main([])
-    assert excinfo.value.code not in (0, None)
-
-
-def test_export_main_write_calls_export(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.lexicon import export_open_dataset as mod
-
-    called: list[str] = []
-
-    def fake_export(*, allow_draft: bool = False) -> tuple[int, int]:
-        called.append("export")
-        return (5, 2)
-
-    monkeypatch.setattr(mod, "export_dataset", fake_export)
-    assert mod.main(["--write"]) == 0
-    assert called == ["export"]

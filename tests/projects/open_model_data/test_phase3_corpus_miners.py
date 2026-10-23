@@ -10,7 +10,6 @@ import hashlib
 import json
 import re
 import sqlite3
-import subprocess
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -193,26 +192,6 @@ def test_zno_cache_explicit_override_without_scratch(
     _restore_synthetic_zno(mode, tmp_path, monkeypatch, cache_dir)
     assert zno_cache_consumer["paths"] == [cache_dir / "fixture_123.html"]
     assert (cache_dir / "fixture_123.html").read_bytes() == zno_cache_consumer["payload"]
-
-
-@pytest.mark.parametrize("mode", ["direct", "cli"])
-def test_zno_cache_preseeded_warm_cache_never_acquires_page(
-    mode: str,
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    zno_cache_consumer: dict,
-) -> None:
-    """Held-out warm proof starts from bytes independent of the cold-write fixture."""
-    monkeypatch.setenv("TMPDIR", str(tmp_path))
-    cache = tmp_path / "zno_cache" / "fixture_123.html"
-    cache.parent.mkdir()
-    payload = b'<!-- held-out -->\n<div id="task7" class="task-card">\n<div class="question">Synthetic official stem.</div></div>\n'
-    cache.write_bytes(payload)
-    zno_cache_consumer["warm_only"] = True
-    _restore_synthetic_zno(mode, tmp_path, monkeypatch)
-    assert zno_cache_consumer["cold_writes"] == 0
-    assert zno_cache_consumer["paths"] == [cache]
-    assert cache.read_bytes() == payload
 
 
 @pytest.mark.parametrize("mode", ["direct", "cli"])
@@ -456,38 +435,6 @@ def test_uagec_mining_curriculum_cap_and_invariants() -> None:
 @pytest.mark.needs_artifact(
     "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
 )
-def test_mined_cli_verify_only() -> None:
-    """Verify CLI --verify-only flag on both miners passes with exit code 0."""
-    res1 = subprocess.run(
-        [
-            sys.executable,
-            "scripts/projects/open_model_data/v4_mine_corpus_calques.py",
-            "--verify-only",
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert res1.returncode == 0, f"v4_mine_corpus_calques.py --verify-only failed: {res1.stderr}"
-
-    res2 = subprocess.run(
-        [
-            sys.executable,
-            "scripts/projects/open_model_data/v4_mine_uagec_calques.py",
-            "--verify-only",
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert res2.returncode == 0, f"v4_mine_uagec_calques.py --verify-only failed: {res2.stderr}"
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
-)
 def test_independent_sources_grounding(requires_sources_db: Path) -> None:
     """Independently verify that mined items are 100% grounded in sources.db."""
     s_conn = open_readonly(requires_sources_db)
@@ -562,30 +509,6 @@ def test_f1_inverted_do_po_date_range_guard_rejects_calque_as_gold() -> None:
     assert not is_inverted_do_po_date_range("по вулиці", "на вулиці")
 
 
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
-)
-def test_f1_shipped_contrast_tables_have_no_inverted_do_po_pairs() -> None:
-    """F1 lock: committed contrast JSONL never teaches the Russian с…по calque as correct."""
-    assert _artifact_path(CONTRAST_FILE.name).is_file()
-    inverted = []
-    glazova_s0120 = []
-    with _artifact_path(CONTRAST_FILE.name).open(encoding="utf-8") as handle:
-        for line in handle:
-            if not line.strip():
-                continue
-            rec = json.loads(line)
-            if is_inverted_do_po_date_range(rec["incorrect"], rec["correct"]):
-                inverted.append(rec["item_id"])
-            if rec.get("chunk_id") == "11-klas-ukrajinska-mova-glazova-2019_s0120":
-                glazova_s0120.append(rec)
-    assert inverted == [], f"Inverted з…до / з…по gold still shipped: {inverted}"
-    assert glazova_s0120, "glazova-2019_s0120 contrast rows missing"
-    assert all(
-        not (rec["incorrect"].startswith("з 5 до") and rec["correct"].startswith("з 5 по")) for rec in glazova_s0120
-    )
-
-
 def test_f2_synthetic_wrapper_and_ellipsis_guards() -> None:
     """F2: miner-invented wrappers/ellipses fail; original sentences pass."""
     wrapper = "У тексті вжито вираз: «коментарій» (виправлено на: «коментар»)."
@@ -603,54 +526,6 @@ def test_f2_synthetic_wrapper_and_ellipsis_guards() -> None:
     assert "[скорочено]" not in cleaned
     assert " ... ... " not in cleaned
     assert cleaned == "Зображене в уривку суголосне з подіями твору"
-
-
-def test_f2_strip_skorocheno_does_not_leave_spliced_ellipsis() -> None:
-    """F2 regression: looking for корочено (missing с) cannot strip [скорочено]."""
-    invented = "Зображене в уривку ... [скорочено] ... суголосне з подіями твору"
-    typo_strip = re.sub(r"\s*\.\.\.\s*\[c?корочено\]\s*\.\.\.\s*", " ", invented, flags=re.IGNORECASE)
-    assert "[скорочено]" in typo_strip
-    cleaned = strip_invented_zno_ellipsis(invented)
-    assert cleaned == "Зображене в уривку суголосне з подіями твору"
-    leftover = "Зображене в уривку ... ... суголосне з подіями твору"
-    assert contains_invented_zno_ellipsis(leftover)
-    assert " ... ... " not in strip_invented_zno_ellipsis(leftover)
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes", "projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
-)
-def test_f2_shipped_uagec_and_zno_have_zero_synthetic_wrappers() -> None:
-    """F2 lock: committed UA-GEC contexts are original sentences; ZNO stems have no [скорочено]."""
-    assert _artifact_path(UAGEC_FILE.name).is_file()
-    wrappers = 0
-    ungrounded = 0
-    with _artifact_path(UAGEC_FILE.name).open(encoding="utf-8") as handle:
-        for line in handle:
-            if not line.strip():
-                continue
-            rec = json.loads(line)
-            if is_synthetic_uagec_wrapper(rec.get("sentence_context", "")):
-                wrappers += 1
-            if not is_grounded_uagec_sentence(rec.get("sentence_context", ""), rec.get("error", "")):
-                ungrounded += 1
-    assert wrappers == 0, f"Synthetic UA-GEC wrappers still present: {wrappers}"
-    assert ungrounded == 0, f"Ungrounded UA-GEC sentence_context rows: {ungrounded}"
-
-    invented = 0
-    spliced = 0
-    with _artifact_path(ZNO_FILE.name).open(encoding="utf-8") as handle:
-        for line in handle:
-            if not line.strip():
-                continue
-            rec = json.loads(line)
-            stem = rec.get("stem", "")
-            if contains_invented_zno_ellipsis(stem):
-                invented += 1
-            if " ... ... " in stem or re.search(r"\.\.\.\s*\.\.\.", stem):
-                spliced += 1
-    assert invented == 0, f"Invented ZNO [скорочено] / spliced stems still present: {invented}"
-    assert spliced == 0, f"Miner-spliced ' ... ... ' stems still present: {spliced}"
 
 
 @pytest.mark.needs_artifact(

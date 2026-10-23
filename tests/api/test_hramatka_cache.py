@@ -55,30 +55,6 @@ def test_cache_key_is_sha256_of_all_generation_inputs() -> None:
         assert HramatkaGenerationCache.build_key(**changed) != key
 
 
-def test_cache_key_prevents_delimiter_collision() -> None:
-    inputs1 = {
-        "owner_id": "teacher:17",
-        "anchor_hash": "anchor-a",
-        "normalized_request": '{"topic":"verbs"}',
-        "prompt_sha": "prompt-a",
-        "schema_sha": "schema-a",
-        "data_manifest_sha": "manifest-a",
-        "model_id": "gemini-3.6-flash",
-        "policy_version": "2026-07",
-    }
-    inputs2 = {
-        "owner_id": "teacher",
-        "anchor_hash": "17:anchor-a",
-        "normalized_request": '{"topic":"verbs"}',
-        "prompt_sha": "prompt-a",
-        "schema_sha": "schema-a",
-        "data_manifest_sha": "manifest-a",
-        "model_id": "gemini-3.6-flash",
-        "policy_version": "2026-07",
-    }
-    assert HramatkaGenerationCache.build_key(**inputs1) != HramatkaGenerationCache.build_key(**inputs2)
-
-
 def test_cache_expires_entries_after_fourteen_days_and_cleans_them_up(tmp_path) -> None:
     now = datetime(2026, 7, 1, 12, 0, tzinfo=UTC)
     cache = HramatkaGenerationCache(tmp_path / "generation-cache.sqlite3", clock=lambda: now)

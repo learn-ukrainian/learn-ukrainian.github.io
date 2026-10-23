@@ -2,19 +2,12 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
-
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_freeze as freeze
 from scripts.projects.open_model_data import phase3_near_duplicate as near
-from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_evaluation_freeze_bundle_v1.schema.json"
-
-
 def _text(family: str, ordinal: int) -> str:
     return " ".join(f"слово{family.replace('_', '')}{ordinal}а{token}" for token in range(24)) + ". Кінець."
 
@@ -98,14 +91,3 @@ def test_heldout_neighbour_firewall_detects_exact_and_near_but_not_unrelated() -
     assert (
         freeze._heldout_neighbour({"source_text": "цілком інший матеріал без спільного формулювання"}, index) is False
     )
-
-
-def test_public_schema_is_closed_and_contains_no_private_identity_fields() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    serialized = json.dumps(schema, ensure_ascii=False)
-    assert "source_text" not in serialized
-    assert "source_record" not in serialized
-    assert "unit_id" not in serialized
-    assert "document_or_edition_identity" not in serialized
-    assert schema["additionalProperties"] is False

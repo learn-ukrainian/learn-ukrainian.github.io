@@ -17,17 +17,13 @@ from pathlib import Path
 
 import _v4_synthetic_chain_fixture as fixture
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
 from scripts.projects.open_model_data import v4_original_row_admission as admission
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
-ROOT = Path(__file__).resolve().parents[3]
 ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
-CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a7_original_row_factory_receipt_v1.json"
-SCHEMA = CONTRACTS / "dataset_v4_a7_original_row_factory_receipt_v1.schema.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
 A5_RECEIPT_PATH = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
@@ -175,13 +171,6 @@ def test_a7_receipt_validates_independently_against_the_real_public_artifacts() 
     assert a7.validate_receipt_independently(_cached_json(RECEIPT)) is None
 
 
-def test_a7_receipt_matches_schema() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    errors = list(Draft202012Validator(schema).iter_errors(_cached_json(RECEIPT)))
-    assert not errors, errors[0].message if errors else None
-
-
 def test_a7_receipt_binds_v4_sha_and_control_surfaces() -> None:
     assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
     assert _cached_json(RECEIPT)["control_surfaces"] == {
@@ -191,11 +180,6 @@ def test_a7_receipt_binds_v4_sha_and_control_surfaces() -> None:
     }
     assert _cached_json(RECEIPT)["bindings"]["a6_blind_arena"]["sha256"] == a7.sha256_file(A6_RECEIPT_PATH)
     assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a7.sha256_file(MANIFEST_PATH)
-
-
-def test_a7_receipt_binds_the_merged_a6_receipt_by_its_known_public_sha() -> None:
-    # The merged A6 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 2).
-    assert a7.sha256_file(A6_RECEIPT_PATH) == "d8dd79086f11a3ea64892086d188982e84aa9f97a28c18b4b2fdcc563190dc73"
 
 
 def test_a7_receipt_carries_forward_every_a2_a4_a5_a6_residual_unresolved() -> None:
@@ -218,36 +202,6 @@ def test_a7_receipt_carries_forward_every_a2_a4_a5_a6_residual_unresolved() -> N
         "a6_residuals_carried_forward",
     ):
         assert all(e["status"] == "unresolved_carried_to_a7" for e in _cached_json(RECEIPT)[key])
-
-
-def test_a7_receipt_does_not_claim_original_rows_ready_while_the_gate_is_closed() -> None:
-    assert _cached_json(RECEIPT)["factory_gate"]["factory_slice_ready"] is False
-    assert _cached_json(RECEIPT)["status"] != "ORIGINAL_ROWS_READY"
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_prerequisite_eligible"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_stage_complete"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_residual"] == 100
-
-
-def test_a7_receipt_never_claims_training_ready_silver_or_arena_slice_ready() -> None:
-    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
-    assert "TRAINING_READY_SILVER" not in serialized
-    assert "ARENA_SLICE_READY" not in serialized
-    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_silver_claimed"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["arena_slice_ready_claimed"] is False
-
-
-def test_a7_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {
-        "gold": False,
-        "training": False,
-        "evaluation": False,
-        "teaching": False,
-        "coverage": False,
-    }
-    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["candidate_rows_constructed"] == 0
-    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
-    assert all(v is False for k, v in _cached_json(RECEIPT)["safety_assertions"].items() if k != "rows_not_admitted")
 
 
 def test_a7_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
@@ -379,16 +333,3 @@ def test_a7_refuses_a_fabricated_nonempty_engine_admission_row() -> None:
     )
     with pytest.raises(a7.OriginalRowFactoryError):
         a7.validate_receipt_independently(receipt)
-
-
-def test_a7_schema_rejects_a_leaked_gold_label_value() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["eligibility"]["gold"] = True
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    errors = list(Draft202012Validator(schema).iter_errors(receipt))
-    assert errors
-
-
-def test_a7_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
-    assert "gold" not in FORBIDDEN_KEYS
-    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False

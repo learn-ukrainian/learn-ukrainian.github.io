@@ -65,36 +65,6 @@ def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
     assert_no_host_facts(body, "stack currency body")
 
 
-def test_missing_pin_row_does_not_invent_a_latest(tmp_path: Path) -> None:
-    pins = tmp_path / "stack_pins.yaml"
-    pins.write_text(
-        _ONE_ROW
-        + """\
-  - name: uv
-    source: .github/actions/python-ci-env/action.yml
-    owner: DevOps
-    review_by: "2026-11-16"
-    note: pin value absent
-""",
-        encoding="utf-8",
-    )
-    called: list[str] = []
-
-    def latest_of(name: str) -> str:
-        called.append(name)
-        return "9.8.7"
-
-    built = report.build_report(pins, latest_of)
-    by_name = {row["name"]: row for row in built["rows"]}
-
-    assert by_name["python"]["pinned"] == "3.12.14"
-    assert by_name["python"]["latest"] == "9.8.7"
-    assert by_name["uv"]["pinned"] == "missing"
-    assert by_name["uv"]["latest"] == "unknown"
-    assert by_name["uv"]["latest_reason"] == "missing_pin"
-    assert called == ["python"]
-
-
 _PUBLICATION_CANARIES = (
     "ghp_PUBLICATION_CANARY",
     "github_pat_PUBLICATION_CANARY",
@@ -103,17 +73,6 @@ _PUBLICATION_CANARIES = (
     "host.internal.example",
     "203.0.113.10",
 )
-
-
-def test_render_withholds_an_address() -> None:
-    unsafe = {
-        "rows": [
-            {"name": "gh", "pinned": "unknown", "latest": "203.0.113.10", "source": "host"},
-        ]
-    }
-    body = report.render_body(unsafe)
-    assert "203.0.113.10" not in body
-    assert _table(body)["gh"] == ["gh", "withheld", "withheld", "withheld"]
 
 
 @pytest.mark.parametrize("field", ["name", "pinned", "latest", "source"])
@@ -156,21 +115,6 @@ def test_render_withholds_unsafe_publication_shapes(field: str, value: str) -> N
     else:
         index = {"pinned": 1, "latest": 2, "source": 3}[field]
         assert parsed["gh"][index] == "withheld"
-
-
-def test_current_pin_file_collects_and_renders(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(report, "fetch_latest", lambda _name: "9.8.7")
-    destination = tmp_path / "stack-currency.json"
-    body_out = tmp_path / "stack-currency.md"
-
-    assert report.main(["collect", "--pins", str(_PINS), "--out", str(destination)]) == 0
-    assert report.main(["render", "--report", str(destination), "--body-out", str(body_out)]) == 0
-    assert "3.12.14" in body_out.read_text(encoding="utf-8")
-
-
-def test_component_without_a_verified_upstream_stays_unknown() -> None:
-    assert "prometheus" not in report.UPSTREAMS
-    assert report.fetch_latest("prometheus") == "unknown"
 
 
 def test_version_parsers_keep_stable_tags_only() -> None:

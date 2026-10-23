@@ -8,6 +8,11 @@ name: Coverage for an exact commit
         description: Repository commit SHA to measure (40 hexadecimal characters)
         required: true
         type: string
+      contexts:
+        description: Record per-test dynamic coverage contexts (pytest-cov --cov-context=test)
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 env:
@@ -136,6 +141,9 @@ jobs:
       COVERAGE_FILE: ${{ github.workspace }}/ci-artifacts/raw/.coverage
       # Bound branch-tracing memory pressure; -n logical still selects the same tests.
       PYTEST_XDIST_AUTO_NUM_WORKERS: '2'
+      # Opt-in per-test dynamic contexts via pytest-cov --cov-context=test;
+      # coverage 7.16.2 documents [run] dynamic_context in its config reference.
+      COVERAGE_REF_CONTEXTS: ${{ inputs.contexts }}
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:

@@ -1334,75 +1334,6 @@ def test_real_codex_devops_launcher_fails_before_lease_on_rollover_ambiguity(
     )  # allow-hardcoded-epic: e2e rollover fixture stream
 
 
-def test_real_codex_devops_launcher_refuses_second_live_devops_driver(
-    tmp_path: Path,
-) -> None:
-    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
-    store = seed_driver_stream(
-        primary,
-        stream_id="epic:5703",
-        close=False,
-        instance_id="live-devops",
-    )
-    fake_bin = tmp_path / "bin"
-    fake_home_bin = tmp_path / "home" / ".local" / "bin"
-    fake_bin.mkdir(parents=True)
-    fake_home_bin.mkdir(parents=True)
-    started = tmp_path / "codex-started"
-
-    fake_npm = fake_home_bin / "npm"
-    fake_npm.write_text(
-        "#!/bin/bash\n"
-        "set -e\n"
-        "mkdir -p .codex/hooks\n"
-        "cp agents_extensions/codex/hooks.json .codex/hooks.json\n"
-        "cp agents_extensions/shared/hooks/session-setup.sh .codex/hooks/session-setup.sh\n",
-        encoding="utf-8",
-    )
-    fake_npm.chmod(0o755)
-    fake_codex = fake_home_bin / "codex"
-    fake_codex.write_text(
-        f"#!/bin/bash\ntouch {os.fspath(started)!r}\n",
-        encoding="utf-8",
-    )
-    fake_codex.chmod(0o755)
-
-    env = os.environ.copy()
-    for key in tuple(env):
-        if (
-            key.startswith("SESSION_")
-            or key.startswith("LEARN_UKRAINIAN_")
-            or key.startswith("CODEX_LAUNCHER_ROLLOVER_")
-            or key in {"CODEX_CANONICAL_REPO_ROOT", "CODEX_SESSION"}
-        ):
-            env.pop(key, None)
-    env.update(
-        {
-            "HOME": os.fspath(tmp_path / "home"),
-            "PATH": f"{fake_bin}:{fake_home_bin}:/usr/bin:/bin",
-            "PYENV_ROOT": os.fspath(tmp_path / "pyenv"),
-        }
-    )
-    with epics_monitor_stub(store) as monitor_url:
-        env["LU_MONITOR_LOOPBACK"] = monitor_url
-        launched = run(
-            [primary / "start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol"],
-            cwd=primary,
-            env=env,
-        )
-
-    assert launched.returncode == 1
-    assert "already has live session" in launched.stderr
-    assert "live-devops" in launched.stderr
-    assert "expires_at=" in launched.stderr
-    assert not started.exists()
-    assert len(store.dump_stream("epic:5703")["sessions"]) == 1  # allow-hardcoded-epic: e2e rollover fixture stream
-    assert (
-        store.dump_stream("epic:5703")["sessions"][0]["state"] == "open"
-    )  # allow-hardcoded-epic: e2e rollover fixture stream
-    assert git(primary, "status", "--short", "--untracked-files=all").stdout == ""
-
-
 @pytest.mark.parametrize(
     ("first_provider", "second_provider", "first_model", "second_model"),
     (
@@ -1599,13 +1530,12 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
     provider = Path(env["HOME"]) / ".local/bin/grok"
     command = [primary / "start-grok-driver.sh", "devops"]
     if failure == "approval-required":
-        # The synthetic provider models an unavailable consent decision. It
-        # rejects unless the configured approval arguments arrive unchanged,
-        # then refuses the operation; the launcher must propagate that refusal.
+        # Unsupported native options must fail before provider invocation or
+        # lease acquisition. The sentinel exposes any accidental provider call.
+        before_failure = store.dump_stream("epic:5703")
         provider.write_text(
-            '#!/bin/bash\n[ "$#" = 3 ] && [ "$1" = --approval-mode ] && [ "$2" = required ] || exit 99\n'
-            'case "$3" in "Load agents_extensions/"*) ;; *) exit 99 ;; esac\n'
-            "echo approval-required >&2\nexit 23\n",
+            f"#!/bin/bash\ntouch {os.fspath(started['grok'])!r}\n"
+            "echo unexpected-provider-invocation >&2\nexit 99\n",
             encoding="utf-8",
         )
         command += ["--", "--approval-mode", "required"]
@@ -1615,17 +1545,21 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
         failed = run(command, cwd=primary, env=env)
-        assert failed.returncode == (23 if failure == "approval-required" else 17), failed.stderr + failed.stdout
+        assert failed.returncode == (2 if failure == "approval-required" else 17), failed.stderr + failed.stdout
         if failure == "approval-required":
-            assert "approval-required" in failed.stderr
+            assert "Unsupported native Grok driver provider argument" in failed.stderr
         assert not started["grok"].exists()
         after_failure = store.dump_stream("epic:5703")
+        if failure == "approval-required":
+            assert after_failure == before_failure
+            assert [session["state"] for session in after_failure["sessions"]] == ["closed"]
+            assert after_failure["lease"]["state"] == "released"
+            assert after_failure["lease"]["generation"] == 1
+            return
+
         assert [session["state"] for session in after_failure["sessions"]] == ["closed", "closed"]
         assert after_failure["lease"]["state"] == "released"
         assert after_failure["lease"]["generation"] == 2
-
-        if failure == "approval-required":
-            return
 
         # A subsequent ordinary launch can acquire immediately, without a TTL
         # wait or a force-release repair of the failed provider's generation.

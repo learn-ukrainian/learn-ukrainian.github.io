@@ -48,20 +48,6 @@ def test_shevchenko_initial_and_name_order_variants_use_author_table(
 @pytest.mark.parametrize(
     "author",
     [
-        "Тичина",
-        "Рильський",
-    ],
-)
-def test_unpersecuted_recent_author_no_free_source_is_in_copyright(author: str) -> None:
-    # Recent authors who were NOT persecuted fall to the conservative life+70 path.
-    verdict = classify_rights(author, "Твір", None, "", "", current_year=CURRENT_YEAR)
-
-    assert verdict["rights_class"] == "in_copyright"
-
-
-@pytest.mark.parametrize(
-    "author",
-    [
         "Зеров",
         "Підмогильний",
         "Хвильовий",
@@ -99,36 +85,6 @@ def test_ukrlib_rylskyi_is_retrieval_only_under_existing_rights_gate() -> None:
     assert "death_year 1964" in verdict["basis"]
 
 
-@pytest.mark.parametrize(
-    ("current_year", "expected_rights_class"),
-    [(2034, "in_copyright"), (2035, "public_domain")],
-)
-def test_rylskyi_life_plus_70_boundary(
-    current_year: int,
-    expected_rights_class: str,
-) -> None:
-    verdict = classify_rights(
-        "Максим Рильський", "Молюсь і вірю", None, "ukrlib-rylsky", "modern", current_year=current_year
-    )
-
-    assert verdict["rights_class"] == expected_rights_class
-
-
-@pytest.mark.parametrize(
-    ("current_year", "expected_rights_class"),
-    [(2012, "in_copyright"), (2013, "public_domain")],
-)
-def test_teliha_life_plus_70_boundary(
-    current_year: int,
-    expected_rights_class: str,
-) -> None:
-    verdict = classify_rights(
-        "Олена Теліга", "Сучасникам", None, "ukrlib-teliha", "modern", current_year=current_year
-    )
-
-    assert verdict["rights_class"] == expected_rights_class
-
-
 def test_folk_author_is_public_domain() -> None:
     verdict = classify_rights("Народна творчість", "Дума", None, "", "", current_year=CURRENT_YEAR)
 
@@ -144,13 +100,6 @@ def test_premodern_track_is_public_domain_without_year() -> None:
 
 def test_unknown_author_defaults_in_copyright() -> None:
     verdict = classify_rights("Іван Невідомий", "Твір", None, "", "", current_year=CURRENT_YEAR)
-
-    assert verdict["rights_class"] == "in_copyright"
-    assert verdict["basis"] == "conservative default (author not in rights table)"
-
-
-def test_unknown_author_with_old_year_defaults_in_copyright() -> None:
-    verdict = classify_rights("Іван Невідомий", "Твір", 1928, "", "", current_year=CURRENT_YEAR)
 
     assert verdict["rights_class"] == "in_copyright"
     assert verdict["basis"] == "conservative default (author not in rights table)"

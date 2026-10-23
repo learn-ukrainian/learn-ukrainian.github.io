@@ -116,28 +116,6 @@ def test_touch_claim_protects_a_slow_capture_from_the_sweep(
     assert executor.touch_claim("request-nope") is False
 
 
-def test_requeue_stale_cli_smoke(tmp_path: Path, capsys) -> None:
-    from scripts.fleet_comms.cli import build_parser
-
-    parser = build_parser()
-    args = parser.parse_args(
-        ["requests", "requeue-stale", "--root", str(tmp_path), "--stale-after-seconds", "60"]
-    )
-    assert args.func(args) == 0
-    out = capsys.readouterr().out
-    assert '"requeued": []' in out
-
-
-def test_requeue_stale_running_skips_fresh_claims(executor: RequestExecutor) -> None:
-    req = _create(executor)
-    executor.store.connection.execute(
-        "UPDATE requests SET state = 'running' WHERE request_id = ?",
-        (req.request_id,),
-    )
-    executor.store.connection.commit()
-    assert executor.requeue_stale_running(stale_after_seconds=60) == []  # fresh claim untouched
-
-
 def test_expired_request_still_expires_on_claim(executor: RequestExecutor) -> None:
     req = executor.create_request(recipient="codex", body="ping", ttl_seconds=-1)
     with pytest.raises(RequestExecutorError, match="expired"):

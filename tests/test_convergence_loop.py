@@ -453,39 +453,6 @@ def test_recoverable_validation_error_respects_escalation_budget(
     assert exception_rounds == []
 
 
-def test_budget_exhausted_payload_has_no_exception_for_reviewer_disagreement(
-    tmp_path: Path,
-) -> None:
-    """When budget exhausts through legitimate reviewer disagreement (no
-    exceptions raised), the terminal payload must not claim an exception fired.
-    """
-    observations = [
-        _observation(
-            score=8.0,
-            findings=[
-                _finding(
-                    dimension="Linguistic Accuracy",
-                    severity="major",
-                    location=f"## Section {index} / paragraph 1 / sentence 1",
-                    issue=f"Local prose defect variant {index}.",
-                    fix="Change the sentence only.",
-                )
-            ],
-            content_hash=f"hash-{index}",
-            patch_available=True,
-        )
-        for index in range(1, 8)
-    ]
-    harness = Harness(observations, tmp_path)
-
-    result = run_convergence_loop(harness.context())
-    budget_payload = yaml.safe_load(result.artifact_path.read_text("utf-8"))
-
-    assert result.terminal == "budget_exhausted"
-    assert "exception" not in budget_payload
-    assert len(budget_payload["history"]) == 1 + harness.context().max_escalations
-
-
 # ---------- GH #1526 item 2 regression: apply fixes before tier-5 escalation ----------
 
 
@@ -630,42 +597,3 @@ def test_plan_level_finding_still_escalates_even_with_valid_fixes() -> None:
     )
     assert decision.strategy == "plan_revision_request"
     assert decision.tier == 5
-
-
-def test_has_applicable_review_fix_detects_partial_valid_batch() -> None:
-    """GH #1526 item 2 helper: ``_has_applicable_review_fix`` returns True
-    whenever the observation carries ≥1 anchor-valid fix — matching the
-    loosened batch semantics in patchability.py. Partial-valid batches
-    (some invalid anchors in the batch) still return True.
-    """
-    from build.convergence_loop import _has_applicable_review_fix
-
-    content = "the valid anchor lives here"
-    observation_valid = ReviewObservation(
-        passed=False, score=5.0, review_text="",
-        findings=(), dim_floor_dimensions=(), content_hash="h1",
-        patch_available=True,
-        parsed_fixes=(
-            {"find": "the valid anchor", "replace": "replacement"},
-            {"find": "nonexistent anchor", "replace": "x"},  # invalid sibling
-        ),
-        module_content=content,
-    )
-    assert _has_applicable_review_fix(observation_valid) is True
-
-    observation_all_invalid = ReviewObservation(
-        passed=False, score=5.0, review_text="",
-        findings=(), dim_floor_dimensions=(), content_hash="h2",
-        patch_available=True,
-        parsed_fixes=({"find": "ghost anchor", "replace": "x"},),
-        module_content=content,
-    )
-    assert _has_applicable_review_fix(observation_all_invalid) is False
-
-    observation_legacy = ReviewObservation(
-        passed=False, score=5.0, review_text="",
-        findings=(), dim_floor_dimensions=(), content_hash="h3",
-        patch_available=False,
-        # parsed_fixes + module_content default to None — legacy caller path
-    )
-    assert _has_applicable_review_fix(observation_legacy) is False

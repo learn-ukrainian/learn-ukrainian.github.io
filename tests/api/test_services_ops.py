@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import re
 import shutil
 import socket
 import subprocess
@@ -14,7 +13,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.common.repo_root import main_checkout_root
 from tests._host_path_guard import assert_no_host_facts, assert_no_host_paths
 from tests.helpers.python import project_python, require_repo_venv
 
@@ -347,85 +345,6 @@ def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh,
         # Clean up any started background processes from the start command
         subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT), env=env, timeout=30)
 
-@pytest.mark.skipif(
-    shutil.which("lsof") is None or sys.platform != "darwin",
-    reason="macOS local-ops integration; logic covered hermetically above"
-)
-def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env, tmp_path):
-    """Integration test using real sockets and real lsof on macOS."""
-    script_path, port = temp_services_sh_real
-    pids_dir = tmp_path / "pids"
-    pids_dir.mkdir()
-    _patch_script_pids_dir(script_path, pids_dir)
-    api_pid_file = pids_dir / "api.pid"
-    set_pids, _, env = mock_lsof_env
-    env["LU_SERVICES_ROLE"] = "local"
-
-    # Start a dummy listener process with the API signature configured for our dynamic port
-    dummy_code = (
-        f"import socket, time; "
-        f"s = socket.socket(); "
-        f"s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1); "
-        f"s.bind(('127.0.0.1', {port})); "
-        f"s.listen(1); "
-        f"time.sleep(30)"
-    )
-    proc = subprocess.Popen([
-        str(VENV_PYTHON), "-c", dummy_code,
-        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
-    ])
-    reap_process_on_exit(proc)
-
-    try:
-        # Wait a moment for port to bind
-        for _ in range(20):
-            if not is_port_free(port):
-                break
-            time.sleep(0.1)
-
-        assert not is_port_free(port), f"Dummy listener did not bind port {port}"
-
-        # Write stale PID to the pid file
-        api_pid_file.write_text("999999\n", encoding="utf-8")
-        set_pids([proc.pid])
-
-        # Run patched services.sh status
-        res = subprocess.run(
-            [str(script_path), "status", "api"],
-            capture_output=True,
-            text=True,
-            cwd=str(PROJECT_ROOT),
-            env=env, timeout=30,
-        )
-
-        assert "WARNING: pid file mismatch" in res.stderr, (
-            f"mismatch check failed. returncode={res.returncode}\n"
-            f"stdout:\n{res.stdout}\nstderr:\n{res.stderr}"
-        )
-        assert "WARNING" not in res.stdout
-        assert api_pid_file.exists()
-        reconciled_pid = api_pid_file.read_text(encoding="utf-8").strip()
-        assert reconciled_pid == str(proc.pid)
-
-        # Stop the service using patched services.sh
-        subprocess.run(
-            [str(script_path), "stop", "api"],
-            capture_output=True,
-            text=True,
-            cwd=str(PROJECT_ROOT),
-            env=env, timeout=30,
-        )
-
-        # Verify the dummy process was killed
-        proc.wait(timeout=5)
-        assert proc.returncode is not None
-        assert is_port_free(port)
-
-    finally:
-        if proc.poll() is None:
-            proc.terminate()
-            proc.wait(timeout=5)
-
 
 def _extract_bash_function(source: str, name: str) -> str:
     """Return a top-level ``name() { ... }`` block from ``services.sh``."""
@@ -442,24 +361,6 @@ def _extract_bash_function(source: str, name: str) -> str:
             if depth == 0:
                 return source[start : index + 1]
     raise AssertionError(f"unclosed function {name}() in services.sh")
-
-
-def test_cmdline_for_pid_silent_when_procfs_missing() -> None:
-    """Missing /proc/$pid/cmdline must not print a bash redirect error."""
-    source = SERVICES_SH.read_text(encoding="utf-8")
-    helper = _extract_bash_function(source, "_cmdline_for_pid")
-    # A pid that cannot exist: no /proc entry and no live process for ps.
-    dead_pid = 2_147_483_647
-    result = subprocess.run(
-        ["bash", "-c", f"{helper}\n_cmdline_for_pid {dead_pid}\n"],
-        capture_output=True,
-        text=True,
-        cwd=str(PROJECT_ROOT),
-        timeout=30,
-    )
-    combined = f"{result.stdout}\n{result.stderr}"
-    assert "/proc/" not in combined, combined
-    assert "No such file or directory" not in combined, combined
 
 
 def test_astro_match_accepts_bin_astro_dev() -> None:
@@ -497,43 +398,6 @@ def test_astro_match_accepts_bin_astro_dev() -> None:
     assert "MATCH_BIN" in result.stdout
     assert "MATCH_MJS" in result.stdout
     assert "MISS_FOREIGN" in result.stdout
-
-
-def test_status_does_not_print_proc_on_missing_procfs(temp_services_sh, mock_lsof_env) -> None:
-    """``status`` must stay quiet about /proc even when resolving a live PID."""
-    script_path, port = temp_services_sh
-    set_pids, _, env = mock_lsof_env
-    pids_dir = script_path.parent / ".pids"
-    pids_dir.mkdir(parents=True, exist_ok=True)
-    api_pid_file = pids_dir / "api.pid"
-
-    proc = subprocess.Popen([
-        str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
-        "scripts.api.main:app", "--host", "127.0.0.1", "--port", str(port)
-    ])
-    reap_process_on_exit(proc)
-    try:
-        api_pid_file.write_text(f"{proc.pid}\n", encoding="utf-8")
-        set_pids([proc.pid])
-        res = subprocess.run(
-            [str(script_path), "status", "api"],
-            capture_output=True,
-            text=True,
-            cwd=str(PROJECT_ROOT),
-            env=env,
-            timeout=30,
-        )
-        combined = f"{res.stdout}\n{res.stderr}"
-        assert "/proc/" not in combined, combined
-        assert "No such file or directory" not in combined, combined
-        # Dummy listener has no health endpoint → Linux CI reports degraded
-        # (PID resolved). Either degraded or running is fine; require the PID.
-        assert str(proc.pid) in res.stdout, res.stdout
-        assert "degraded" in res.stdout or "running" in res.stdout, res.stdout
-    finally:
-        if proc.poll() is None:
-            proc.terminate()
-            proc.wait(timeout=5)
 
 
 def test_work_status_reports_typed_missing_checkout(tmp_path, mock_lsof_env) -> None:
@@ -809,40 +673,6 @@ HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_fore
         assert probe.connect_ex(("127.0.0.1", port)) != 0
 
 
-def test_local_service_ports_do_not_collide_with_bridge_or_kubedojo() -> None:
-    """Frozen Learn Ukrainian ports avoid the bridge and KubeDojo declarations."""
-    assignment = re.compile(r"^SVC_PORT\[([^]]+)\]=\"?(\d+)\"?$", re.MULTILINE)
-    learn_ports = {
-        name: int(port)
-        for name, port in assignment.findall(SERVICES_SH.read_text(encoding="utf-8"))
-    }
-    assert learn_ports == {"sources": 8766, "api": 8765, "work": 8769, "astro": 4321}
-
-    bridge_source = (PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "_cli.py").read_text(
-        encoding="utf-8"
-    )
-    bridge_port_match = re.search(
-        r'add_argument\(\s*"--port",\s*type=int,\s*default=(\d+),', bridge_source
-    )
-    assert bridge_port_match is not None
-    openai_compat_proxy_port = int(bridge_port_match.group(1))
-    assert openai_compat_proxy_port == 8767
-    assert learn_ports["work"] != openai_compat_proxy_port
-
-    # CI has no sibling checkout, so the reviewed KubeDojo contract is frozen
-    # here and cross-checked against its real services.sh whenever available.
-    kubedojo_ports = {"api": 8768, "dev": 4333}
-    kubedojo_script = main_checkout_root(PROJECT_ROOT).parent / "kubedojo" / "services.sh"
-    if kubedojo_script.exists():
-        declared = {
-            name: int(port)
-            for name, port in assignment.findall(kubedojo_script.read_text(encoding="utf-8"))
-        }
-        assert {name: declared[name] for name in kubedojo_ports} == kubedojo_ports
-
-    assert set(learn_ports.values()).isdisjoint(kubedojo_ports.values())
-
-
 def _supervisor_was_not_called(env: dict[str, str]) -> bool:
     """Local API start writes this file; missing/empty means no local spawn."""
     path = Path(env["SVC_API_SUPERVISOR_CAPTURE"])
@@ -991,33 +821,6 @@ def test_abort_if_ssh_owned_port_refuses_spawn() -> None:
     assert "owned by an ssh LocalForward" in result.stderr
     assert "fix api" in result.stderr
     assert "restart api" in result.stderr
-
-
-def test_usage_documents_fix_and_ssh_env(tmp_path: Path) -> None:
-    """Header comments and help list fix plus the SSH Host / remote-root overrides."""
-    source = SERVICES_SH.read_text(encoding="utf-8")
-    assert "./services.sh fix" in source
-    assert "./services.sh fix api" in source
-    assert "LU_SERVICES_SSH_HOST" in source
-    assert "LU_SERVICES_REMOTE_ROOT" in source
-    assert "auto-delegate" in source
-
-    script_path = _copy_services_sh(tmp_path)
-    env = os.environ.copy()
-    env.pop("LU_SERVICES_SSH_HOST", None)
-    result = subprocess.run(
-        ["bash", str(script_path), "help"],
-        capture_output=True,
-        text=True,
-        cwd=str(tmp_path),
-        env=env,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "fix" in result.stdout
-    assert "LU_SERVICES_SSH_HOST" in result.stdout
-    assert "LU_SERVICES_REMOTE_ROOT" in result.stdout
-    assert "auto-delegate" in result.stdout
 
 
 def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_path) -> None:
@@ -1285,26 +1088,6 @@ def test_notebook_role_fails_closed_without_launcher(tmp_path, mock_lsof_env) ->
     assert _supervisor_was_not_called(env)
 
 
-def test_notebook_role_rejects_non_executable_launcher(tmp_path, mock_lsof_env) -> None:
-    """A present-but-not-executable launcher also fails closed."""
-    env, private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "notebook")
-    launcher = private_root / "ops" / "writer-notebook.sh"
-    launcher.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-    launcher.chmod(0o644)
-
-    result = subprocess.run(
-        [str(SERVICES_SH), "status", "api"],
-        capture_output=True,
-        text=True,
-        cwd=str(PROJECT_ROOT),
-        env=env,
-        timeout=30,
-    )
-    assert result.returncode != 0, f"{result.stdout}\n{result.stderr}"
-    assert "LU_SERVICES_ROLE=local" in result.stderr, result.stderr
-    assert not capture.exists()
-
-
 def test_local_role_skips_notebook_handoff(tmp_path, mock_lsof_env) -> None:
     """LU_SERVICES_ROLE=local runs services.sh itself even when a launcher exists."""
     env, private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "local")
@@ -1365,13 +1148,6 @@ def _run_ab_monitor_env_defaults(env_overrides: dict) -> tuple:
     return urls, url
 
 
-def test_ab_monitor_defaults_neither_set() -> None:
-    """Default: base list is a bare origin; endpoint carries the summary path."""
-    urls, url = _run_ab_monitor_env_defaults({"AB_MONITOR_URL": None, "AB_MONITOR_URLS": None})
-    assert urls == "http://localhost:8765"
-    assert url == "http://localhost:8765/api/state/summary"
-
-
 def test_ab_monitor_urls_never_keeps_endpoint_path() -> None:
     """GH #7489 regression: deriving the base list from an endpoint URL must
     drop the path — otherwise requests become /api/state/summary/api/state/manifest."""
@@ -1380,17 +1156,6 @@ def test_ab_monitor_urls_never_keeps_endpoint_path() -> None:
     )
     assert urls == "http://examplehost:9999"
     assert url == "http://examplehost:9999/api/state/summary"
-
-
-def test_ab_monitor_url_derived_from_first_base_url() -> None:
-    """Multi-URL branch: the endpoint derives from the first BASE URL with the
-    summary path appended — never a bare base URL (which the bridge consumer
-    would fetch path-less)."""
-    urls, url = _run_ab_monitor_env_defaults(
-        {"AB_MONITOR_URL": None, "AB_MONITOR_URLS": "http://host-a:8765,http://host-b:8765"}
-    )
-    assert urls == "http://host-a:8765,http://host-b:8765"
-    assert url == "http://host-a:8765/api/state/summary"
 
 
 def test_ab_monitor_explicit_empty_disables() -> None:

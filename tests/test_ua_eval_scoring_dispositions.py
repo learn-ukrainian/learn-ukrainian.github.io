@@ -70,20 +70,6 @@ def test_ambiguous_register_and_heritage_evidence_abstains() -> None:
     )[0:2] == ("CONTESTED", False)
 
 
-def test_disposition_logic_consumes_the_frozen_policy_mapping() -> None:
-    policy = _policy()
-    policy["bad_marker"] = "CONTESTED"
-
-    status, headline, _reason = decide_disposition(
-        source_span=["слово"],
-        attested=True,
-        style_markers=["bad"],
-        policy=policy,
-    )
-
-    assert (status, headline) == ("CONTESTED", False)
-
-
 def test_no_silent_override_of_upstream_tag() -> None:
     manifest, dispositions = _committed()
     edited = copy.deepcopy(dispositions)

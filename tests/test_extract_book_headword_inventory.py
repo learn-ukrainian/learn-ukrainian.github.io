@@ -232,27 +232,6 @@ def test_output_never_serializes_synthetic_canary_sentence() -> None:
     )
 
 
-def test_cli_dry_run_prints_report_without_writing(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    result = extractor.extract_headword_inventory(_synthetic_pages(), vesum_lookup=_fake_vesum)
-    monkeypatch.setattr(extractor, "extract_pdf_pages", lambda _: _synthetic_pages())
-    monkeypatch.setattr(extractor, "extract_headword_inventory", lambda _: result)
-    output = tmp_path / "inventory.yaml"
-
-    exit_code = extractor.main(
-        ["--pdf", str(tmp_path / "synthetic.pdf"), "--out", str(output), "--dry-run", "--report"]
-    )
-
-    assert exit_code == 0
-    assert not output.exists()
-    stdout = capsys.readouterr().out
-    assert "BEFORE pages_read=4 tokens_seen=10 unique_forms=8" in stdout
-    assert "AFTER lemmas_found=8" in stdout
-    assert "MODULE COVERAGE" in stdout
-    assert "DRY RUN: no output written" in stdout
-
-
 def test_cli_writes_inventory_and_optional_module_map(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

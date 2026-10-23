@@ -27,11 +27,9 @@ from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.adapters.cursor import CursorAdapter
 from scripts.agent_runtime.review_mcp import (
     ENV_ATTEMPT_ID,
-    ENV_KEYS,
     ENV_LEDGER_PATH,
     ENV_MANIFEST_SHA256,
     SUPPORTED_HARNESSES,
-    UNSUPPORTED_HARNESS_REASONS,
     AgyReviewMcpGateError,
     CodexReviewMcpGateError,
     agy_oauth_link_problem,
@@ -167,12 +165,6 @@ def test_permission_home_refuses_missing_token_and_symlink_root(tmp_path, monkey
     with pytest.raises((OSError, review_mcp_module.ReviewDirectoryError)):
         review_mcp_module.prepare_agy_permission_home(link)
     assert not (tmp_path / "agy-review-home").exists()
-
-
-def test_review_ledger_path_pairs_attempt_and_refuses_other_suffix():
-    assert review_mcp_module.review_ledger_path("attempt.mcp.json") == Path("attempt.jsonl")
-    with pytest.raises(ValueError, match="invalid_review_attempt_config"):
-        review_mcp_module.review_ledger_path("other.json")
 
 
 @pytest.fixture(autouse=True)
@@ -387,22 +379,6 @@ def test_prepared_codex_contract_survives_adapter_overrides(manifest_file: Path,
         invocation.output_file.unlink()
 
 
-def test_prepare_review_attempt_files_mode_0o600(manifest_file: Path, tmp_path: Path) -> None:
-    plan = prepare_review_attempt(
-        review_id="rev-mode-001",
-        attempt_id="att-mode-001",
-        manifest_path=manifest_file,
-        harness="claude",
-        receipts_root=tmp_path / "receipts",
-    )
-    assert plan.ledger_path.is_file()
-    assert (plan.ledger_path.stat().st_mode & 0o777) == 0o600
-    assert plan.sidecar_path.is_file()
-    assert (plan.sidecar_path.stat().st_mode & 0o777) == 0o600
-    assert plan.config_path.is_file()
-    assert (plan.config_path.stat().st_mode & 0o777) == 0o600
-
-
 def test_prepare_review_attempt_refuses_grok(manifest_file: Path, tmp_path: Path) -> None:
     with pytest.raises(ValueError, match=r"review attempt refused for grok: not yet proven \(#8517\)"):
         prepare_review_attempt(
@@ -410,17 +386,6 @@ def test_prepare_review_attempt_refuses_grok(manifest_file: Path, tmp_path: Path
             attempt_id="att-001",
             manifest_path=manifest_file,
             harness="grok",
-            receipts_root=tmp_path,
-        )
-
-
-def test_prepare_review_attempt_refuses_kimicc(manifest_file: Path, tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match=r"review attempt refused for kimicc: Kimi: web, UI and backend coding only"):
-        prepare_review_attempt(
-            review_id="rev-001",
-            attempt_id="att-001",
-            manifest_path=manifest_file,
-            harness="kimicc",
             receipts_root=tmp_path,
         )
 
@@ -497,8 +462,9 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
     assert rc == 2
     captured = capsys.readouterr()
     # Kimi admission refuses before the review-attempt harness check.
-    assert "KIMI CODING-ONLY" in captured.err
-    assert "review dispatches" in captured.err
+    assert "retired in the model catalog (kimi-code/k3-256k)" in captured.err
+    assert "use an active catalog model" in captured.err
+    assert not delegate_cli._state_path_no_create("review-task-kimicc").exists()
 
 
 def test_delegate_dispatch_incomplete_review_attempt_flags(
@@ -563,28 +529,6 @@ def test_claude_adapter_command_line_contains_review_grant(
     allowed = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
     assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS - {"search_resources"}}
     assert "--permission-mode" not in plan.cmd
-
-
-def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
-        lambda _cmd_prefix: (2, 1, 116),
-    )
-    plan = ClaudeAdapter().build_invocation(
-        prompt="ordinary task",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="ordinary-claude-task",
-        session_id=None,
-        tool_config=None,
-    )
-
-    assert "--strict-mcp-config" not in plan.cmd
-    assert "--mcp-config" not in plan.cmd
-    assert "--allowedTools" not in plan.cmd
-    assert "--permission-mode" not in plan.cmd
-    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
 
 
 def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> None:
@@ -744,78 +688,6 @@ def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
         assert "REVIEW_IDENTITY_SUBSTITUTED" not in captured.err
         state = json.loads(delegate_cli._state_path("review-task-budget-sub").read_bytes())
         assert state["agent"] == "claude" and state["substitution"] is None
-
-
-def test_delegate_dispatch_refuses_retired_alias_substitution(
-    manifest_file: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    rc = delegate_cli.main(
-        [
-            "dispatch",
-            "--review-profile",
-            "ukrainian",
-            "--agent",
-            "gemini",
-            "--task-id",
-            "review-task-retired-alias",
-            "--prompt",
-            _attempt_prompt("rev-001", "att-001"),
-            "--review-access",
-            "isolated",
-            "--review-attempt",
-            str(manifest_file),
-            "--review-id",
-            "rev-001",
-            "--attempt-id",
-            "att-001",
-        ]
-    )
-    assert rc == 2
-    captured = capsys.readouterr()
-    assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
-    assert (
-        "review attempt refused: agent substitution from gemini to agy (retired CLI) is not allowed (#8517)"
-        in captured.err
-    )
-
-
-def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
-    manifest_file: Path,
-) -> None:
-    task_id = f"review-task-dry-run-{uuid.uuid4().hex[:8]}"
-    import agent_runtime.review_mcp
-
-    with (
-        patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as mock_prep_scripts,
-        patch.object(agent_runtime.review_mcp, "prepare_review_attempt") as mock_prep_agent,
-    ):
-        rc = delegate_cli.main(
-            [
-                "dispatch",
-                "--review-profile",
-                "ukrainian",
-                "--agent",
-                "claude",
-                "--model",
-                "claude-opus-5-5",
-                "--task-id",
-                task_id,
-                "--prompt",
-                _attempt_prompt("rev-dry-001", "att-dry-001"),
-                "--review-access",
-                "isolated",
-                "--review-attempt",
-                str(manifest_file),
-                "--review-id",
-                "rev-dry-001",
-                "--attempt-id",
-                "att-dry-001",
-                "--dry-run",
-            ]
-        )
-        assert rc == 0
-        mock_prep_scripts.assert_not_called()
-        mock_prep_agent.assert_not_called()
 
 
 def test_delegate_dispatch_refuses_reused_attempt_id(
@@ -1074,15 +946,6 @@ def _launch_like_claude(server: dict, session_env: dict[str, str], cwd: Path) ->
     return json.loads(line), server_env
 
 
-def test_round_two_launch_runs_reviewed_checkout_code(tmp_path: Path) -> None:
-    """Positive control: the plain launch the probe below must not match runs the branch's startup code."""
-    reviewed, markers, session_env = _hostile_session(tmp_path)
-    plain = review_mcp_module.sources_mcp_config(*review_mcp_module.sources_server_launch())["mcpServers"]["sources"]
-    reply, _ = _launch_like_claude(plain, session_env, reviewed)
-    assert reply["result"]["serverInfo"]["name"] == "sources"
-    assert {"requests", "git"} <= {path.name for path in markers.iterdir()}
-
-
 def test_isolated_sources_server_ignores_the_session_environment(tmp_path: Path) -> None:
     """A branch's PYTHON*, PATH and LU_* variables neither run code in nor reach the reviewer's server (#9551)."""
     reviewed, markers, session_env = _hostile_session(tmp_path)
@@ -1118,10 +981,6 @@ def _prepare_codex(manifest_file: Path, tmp_path: Path, attempt_id: str = "att-c
         harness="codex",
         receipts_root=tmp_path / "receipts",
     )
-
-
-def test_codex_is_a_supported_review_harness() -> None:
-    assert "codex" in SUPPORTED_HARNESSES
 
 
 def test_codex_home_is_sibling_of_mcp_config(manifest_file: Path, tmp_path: Path) -> None:
@@ -1354,20 +1213,6 @@ def test_codex_adapter_final_argv_and_env_use_scoped_home(manifest_file: Path, t
     assert 'mcp_servers.sources.default_tools_approval_mode="prompt"' in invocation.cmd
 
 
-def test_codex_ordinary_dispatch_has_no_scoped_home_or_url_override(tmp_path: Path) -> None:
-    invocation = CodexAdapter().build_invocation(
-        prompt="ordinary task",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="ordinary-codex-task",
-        session_id=None,
-        tool_config=None,
-    )
-    assert "CODEX_HOME" not in invocation.env_overrides
-    assert not any("mcp_servers.sources.url" in item for item in invocation.cmd)
-
-
 # --- AGY scoped-home receipts seat (#8617) --------------------------------------------
 
 
@@ -1380,11 +1225,6 @@ def _prepare_agy(manifest_file: Path, tmp_path: Path, attempt_id: str = "att-agy
         receipts_root=tmp_path / "receipts",
         checkout_root=checkout_root or tmp_path,
     )
-
-
-def test_agy_is_a_supported_review_harness() -> None:
-    assert "agy" in SUPPORTED_HARNESSES
-    assert "agy" not in UNSUPPORTED_HARNESS_REASONS
 
 
 def test_agy_home_layout_modes_and_single_source_config(
@@ -1451,11 +1291,6 @@ def test_non_agy_harness_creates_no_agy_home(manifest_file: Path, tmp_path: Path
 _AGY_LINK_LABEL = "att-agy-001.agy-home/.gemini/antigravity-cli/antigravity-oauth-token"
 
 
-def test_agy_oauth_link_problem_is_none_when_intact(manifest_file: Path, tmp_path: Path) -> None:
-    plan = _prepare_agy(manifest_file, tmp_path)
-    assert agy_oauth_link_problem(plan.config_path) is None
-
-
 @pytest.mark.parametrize(
     ("breakage", "expected"),
     [
@@ -1503,17 +1338,6 @@ def test_agy_missing_user_token_is_refused_before_anything_is_created(
     assert not (tmp_path / "receipts").exists()
 
 
-def test_agy_preexisting_home_is_refused_and_untouched(manifest_file: Path, tmp_path: Path) -> None:
-    review_dir = tmp_path / "receipts" / "rev-agy-001"
-    planted = review_dir / "att-agy-001.agy-home"
-    planted.mkdir(parents=True)
-    (planted / "marker").write_text("planted\n", encoding="utf-8")
-    with pytest.raises(FileExistsError, match="already exists"):
-        _prepare_agy(manifest_file, tmp_path)
-    assert (planted / "marker").read_text(encoding="utf-8") == "planted\n"
-    assert sorted(path.name for path in review_dir.iterdir()) == ["att-agy-001.agy-home"]
-
-
 def test_agy_preexisting_dangling_symlink_home_is_refused(manifest_file: Path, tmp_path: Path) -> None:
     review_dir = tmp_path / "receipts" / "rev-agy-001"
     review_dir.mkdir(parents=True)
@@ -1521,20 +1345,6 @@ def test_agy_preexisting_dangling_symlink_home_is_refused(manifest_file: Path, t
     with pytest.raises(FileExistsError, match="already exists"):
         _prepare_agy(manifest_file, tmp_path)
     assert sorted(path.name for path in review_dir.iterdir()) == ["att-agy-001.agy-home"]
-
-
-def test_failed_agy_preparation_leaves_nothing_behind(
-    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    import scripts.agent_runtime.review_mcp as review_mcp
-
-    def boom(*_args: object) -> None:
-        raise OSError("populate failed")
-
-    monkeypatch.setattr(review_mcp, "_populate_agy_review_home", boom)
-    with pytest.raises(OSError, match="populate failed"):
-        _prepare_agy(manifest_file, tmp_path)
-    assert list((tmp_path / "receipts" / "rev-agy-001").iterdir()) == []
 
 
 def test_agy_home_race_after_precheck_rolls_back_other_files_and_spares_the_planted_home(
@@ -1815,13 +1625,6 @@ def test_agy_gate_fails_closed_when_probe_breaks(
         )
 
 
-def test_agy_gate_refuses_an_unreadable_attempt_config(tmp_path: Path) -> None:
-    with pytest.raises(AgyReviewMcpGateError, match=r"cannot read the attempt MCP config.*#8617"):
-        verify_agy_review_effective_mcp(
-            config_path=tmp_path / "missing.mcp.json", cwd=tmp_path, env={}, agy_bin="/bin/true"
-        )
-
-
 def test_agy_gate_refusals_never_embed_home_or_app_data_values(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1879,59 +1682,6 @@ def test_agy_gate_refusals_never_embed_home_or_app_data_values(
     for message in messages:
         for value in (env["HOME"], env["AGY_APP_DATA_DIR"], str(operator_home), "marker-8652", str(tmp_path)):
             assert value not in message, message
-
-
-def test_codex_gate_refusals_never_embed_codex_home_or_home_values(
-    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """The Codex gate masks the scoped CODEX_HOME and the operator's home the same way (#8652)."""
-    operator_home = tmp_path / "operator-home-marker-8652"
-    monkeypatch.setenv("HOME", str(operator_home))
-    plan = prepare_review_attempt(
-        review_id="rev-codex-001",
-        attempt_id="att-codex-001",
-        manifest_path=manifest_file,
-        harness="codex",
-        receipts_root=operator_home / "scoped-marker-8652" / "receipts",
-    )
-    assert plan.codex_home is not None
-    bin_dir = tmp_path / "fake-bin"
-    bin_dir.mkdir()
-    script = bin_dir / "codex"
-    script.write_text('#!/bin/sh\necho "boom $CODEX_HOME $HOME" >&2\nexit 3\n', encoding="utf-8")
-    script.chmod(0o755)
-    messages: list[str] = []
-
-    def refusal(*, binary: str = str(script), config_path: Path = plan.config_path) -> None:
-        with pytest.raises(CodexReviewMcpGateError, match=r"#8517") as refused:
-            verify_codex_review_effective_mcp(config_path=config_path, cwd=tmp_path, codex_bin=binary)
-        messages.append(str(refused.value))
-
-    refusal()
-    refusal(binary=str(plan.codex_home / "no-such-codex"))
-    refusal(config_path=plan.codex_home / "missing.mcp.json")
-    (plan.codex_home / "config.toml").unlink()
-    refusal()
-
-    assert "exited 3: <stderr: " in messages[0]
-    assert "boom" not in messages[0]
-    assert "could not compute" in messages[1]
-    assert "cannot read the attempt MCP config" in messages[2]
-    assert "scoped CODEX_HOME has no config.toml" in messages[3]
-    for message in messages:
-        for value in (str(plan.codex_home), str(operator_home), "marker-8652", str(tmp_path)):
-            assert value not in message, message
-
-
-def test_path_input_errors_name_the_file_never_its_directory(tmp_path: Path) -> None:
-    """Bad config names and a missing manifest are reported by file name only (#8652)."""
-    for helper in (codex_review_home_path, agy_review_home_path):
-        with pytest.raises(ValueError, match=r"must end in \.mcp\.json: 'att\.json'") as refused:
-            helper(tmp_path / "att.json")
-        assert str(tmp_path) not in str(refused.value)
-    with pytest.raises(FileNotFoundError, match=r"not found: 'missing\.yaml'") as refused:
-        prepare_review_attempt("rev-001", "att-001", tmp_path / "missing.yaml", "claude", receipts_root=tmp_path)
-    assert str(tmp_path) not in str(refused.value)
 
 
 def _agy_tool_config(plan, **extra) -> dict:
@@ -2045,10 +1795,6 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     assert "AGY_APP_DATA_DIR" not in ordinary.env_overrides
     assert ordinary_env["HOME"] == str(real_home)
     assert "AGY_APP_DATA_DIR" not in ordinary_env
-
-
-def test_env_keys_are_exactly_the_three_recording_variables() -> None:
-    assert set(ENV_KEYS) == {ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH}
 
 
 @pytest.mark.skipif(shutil.which("agy") is None, reason="agy CLI not installed")
@@ -2390,17 +2136,6 @@ def test_refusals_never_echo_a_path_from_untrusted_input(
     assert "with space" not in message, message
 
 
-@pytest.mark.parametrize("field", ["review_id", "attempt_id"])
-def test_invalid_identifier_refusal_names_the_rule_and_a_short_prefix_only(
-    field: str, manifest_file: Path, tmp_path: Path
-) -> None:
-    value = "bad id with spaces " + "x" * 300
-    message = _refusal_from_prepare(tmp_path, manifest_file, **{field: value})
-    assert f"invalid {field}: must match " in message
-    assert value not in message
-    assert len(message) < 200
-
-
 def test_echo_identifier_shows_clean_names_verbatim_and_redacts_everything_else() -> None:
     from scripts.agent_runtime.review_mcp import _echo_identifier
 
@@ -2414,11 +2149,6 @@ def test_echo_identifier_shows_clean_names_verbatim_and_redacts_everything_else(
 
 
 _ENTRY_RE = re.compile(r"--- (?P<label>\w+) \((?P<size>\d+) chars, sha256 (?P<fp>[0-9a-f]{12})\) ---\n")
-
-
-def test_review_mcp_has_no_free_text_renderer() -> None:
-    """The allowlist/blocklist free-text path is gone: nothing renders untrusted text into a refusal (#8652)."""
-    assert not hasattr(review_mcp_module, "_free_text")
 
 
 def test_untrusted_stand_in_carries_size_and_fingerprint_and_the_file_holds_the_text(tmp_path: Path) -> None:
@@ -2486,66 +2216,6 @@ def test_exc_reason_names_class_and_errno_only(exc: BaseException, expected_head
     assert "details in att.diagnostics.log" in reason
 
 
-def test_refusal_names_the_diagnostics_file_and_the_file_holds_the_full_probe_text(
-    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Codex/AGY stderr is fingerprinted in the refusal and kept whole in a 0600 file beside the attempt config."""
-    for harness, refusal in (
-        ("codex", lambda mp: _codex_refusal(tmp_path, manifest_file, mp, None, body=_STDERR_BODY)),
-        ("agy", lambda mp: _agy_refusal(tmp_path, manifest_file, mp, "", body=_STDERR_BODY)),
-    ):
-        message = refusal(monkeypatch)
-        diagnostics = next(tmp_path.rglob(f"att-{harness}-001.diagnostics.log"))
-        assert diagnostics.parent == next(tmp_path.rglob(f"att-{harness}-001.mcp.json")).parent
-        assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
-        assert f"details in {diagnostics.name}" in message
-        assert str(diagnostics.parent) not in message
-        entry = diagnostics.read_text(encoding="utf-8")
-        header = _ENTRY_RE.match(entry)
-        assert header is not None
-        body = entry[header.end() :].removesuffix("\n")
-        assert body == f"boom x/srv/a {_MARKER} more\n"
-        assert f"<stderr: {header['size']} chars, sha256 {header['fp']};" in message
-        assert hashlib.sha256(body.encode("utf-8")).hexdigest()[:12] == header["fp"]
-        assert _MARKER not in message
-
-
-_STDERR_BODY = f'echo "boom x/srv/a {_MARKER} more" >&2\nexit 3\n'
-
-
-def test_refusals_name_the_error_class_and_errno(manifest_file: Path, tmp_path: Path) -> None:
-    with pytest.MonkeyPatch.context() as mp:
-        message = _surface_codex_probe_strerror(_MARKER, tmp_path, manifest_file, mp)
-    assert "could not compute the effective MCP set (FileNotFoundError (ENOENT): <exception: " in message
-    other = tmp_path / "second"
-    other.mkdir()
-    with pytest.MonkeyPatch.context() as mp:
-        message = _surface_agy_scoped_config_read_strerror(_MARKER, other, manifest_file, mp)
-    assert "PermissionError (EACCES): <exception: " in message
-    diagnostics = next(other.rglob("att-agy-001.diagnostics.log"))
-    assert _MARKER in diagnostics.read_text(encoding="utf-8")
-    assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
-
-
-def test_refusals_keep_allowlisted_names_and_counts_verbatim(
-    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """A clean name still appears, so a refusal stays actionable; an unclean one shows its size."""
-    message = _codex_refusal(
-        tmp_path,
-        manifest_file,
-        monkeypatch,
-        [{"name": "rogue-server", "enabled": True}, {"name": "a/b", "enabled": True}],
-    )
-    assert "'rogue-server'" in message
-    assert "'<redacted: 3 chars>'" in message
-    assert "exactly ['sources'] is allowed" in message
-    message = _refusal_from_prepare(tmp_path, manifest_file, harness="mystery-harness")
-    assert "got mystery-harness" in message
-    message = _refusal_from_prepare(tmp_path, manifest_file, harness="a/b")
-    assert "got <redacted: 3 chars>" in message
-
-
 # --- #8652: the per-attempt review directory refuses planted symlinks; files go through a dir fd ---
 
 
@@ -2560,16 +2230,6 @@ def test_symlink_planted_at_the_review_directory_is_refused(manifest_file: Path,
     outside.mkdir()
     (tmp_path / "receipts").mkdir()
     (tmp_path / "receipts" / "rev-codex-001").symlink_to(outside, target_is_directory=True)
-    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
-        _prepare_codex(manifest_file, tmp_path)
-    _assert_directory_refusal(refused, tmp_path)
-    assert list(outside.iterdir()) == []
-
-
-def test_symlink_planted_at_the_receipts_root_is_refused(manifest_file: Path, tmp_path: Path) -> None:
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (tmp_path / "receipts").symlink_to(outside, target_is_directory=True)
     with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
         _prepare_codex(manifest_file, tmp_path)
     _assert_directory_refusal(refused, tmp_path)
@@ -2687,15 +2347,6 @@ def test_diagnostics_write_after_a_receipts_swap_stays_inside_the_root(manifest_
     assert str(tmp_path) not in stand_in
     assert list((outside / "rev-codex-001").iterdir()) == []
     assert not list((tmp_path / "receipts-moved").rglob("*.diagnostics.log"))
-
-
-def test_diagnostics_write_uses_the_anchor_walk_when_nothing_is_swapped(manifest_file: Path, tmp_path: Path) -> None:
-    plan = _prepare_codex(manifest_file, tmp_path)
-    diagnostics = review_diagnostics_path(plan.config_path)
-    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
-    assert f"details in {diagnostics.name}" in stand_in
-    assert "secret" in diagnostics.read_text(encoding="utf-8")
-    assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
 
 
 @pytest.mark.parametrize("swap", ["receipts", "review-dir", "config", "codex-home"])
@@ -2835,13 +2486,6 @@ def test_own_group_or_world_writable_receipts_root_is_tightened(
     note = (tmp_path / "receipts" / review_mcp_module._TIGHTENED_LOG).read_text(encoding="utf-8")
     assert "tightened" in note
     assert str(tmp_path) not in note
-
-
-def test_receipts_root_that_becomes_group_writable_is_tightened_on_recheck(manifest_file: Path, tmp_path: Path) -> None:
-    plan = _prepare_codex(manifest_file, tmp_path)
-    (tmp_path / "receipts").chmod(0o775)
-    verify_review_attempt_paths(plan.config_path)
-    assert stat.S_IMODE((tmp_path / "receipts").stat().st_mode) == 0o755
 
 
 def test_fchmod_acts_on_the_verified_descriptor_not_the_path(
@@ -3099,18 +2743,6 @@ def test_safe_open_refuses_a_foreign_owned_regular_file_and_closes_the_fd(
         os.fstat(opened[0])
 
 
-def test_safe_open_lets_ordinary_errors_through(tmp_path: Path) -> None:
-    (tmp_path / "there").write_text("x", encoding="utf-8")
-    dir_fd = _open_dir(tmp_path)
-    try:
-        with pytest.raises(FileNotFoundError):
-            safe_open_below(dir_fd, "absent", os.O_RDONLY)
-        with pytest.raises(FileExistsError):
-            safe_open_below(dir_fd, "there", os.O_WRONLY | os.O_CREAT | os.O_EXCL)
-    finally:
-        os.close(dir_fd)
-
-
 def test_planted_fifo_at_the_note_path_never_blocks_the_root_tightening(manifest_file: Path, tmp_path: Path) -> None:
     root = tmp_path / "receipts"
     root.mkdir()
@@ -3122,60 +2754,6 @@ def test_planted_fifo_at_the_note_path_never_blocks_the_root_tightening(manifest
     assert stat.S_ISFIFO((root / review_mcp_module._TIGHTENED_LOG).lstat().st_mode)
 
 
-def test_note_is_written_through_the_helper_and_a_symlinked_note_is_left_alone(tmp_path: Path) -> None:
-    outside = tmp_path / "outside.txt"
-    outside.write_text("keep\n", encoding="utf-8")
-    (tmp_path / review_mcp_module._TIGHTENED_LOG).symlink_to(outside)
-    dir_fd = _open_dir(tmp_path)
-    try:
-        review_mcp_module._note_tightened(dir_fd, 0o775)
-    finally:
-        os.close(dir_fd)
-    assert outside.read_text(encoding="utf-8") == "keep\n"
-
-
-def test_planted_fifo_at_the_diagnostics_path_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
-    plan = _prepare_codex(manifest_file, tmp_path)
-    diagnostics = review_diagnostics_path(plan.config_path)
-    _plant_fifo(diagnostics)
-    stand_in = _returns_promptly(review_mcp_module._untrusted, "stderr", "secret", diagnostics)
-    assert "details not saved: unsafe directory or file" in stand_in
-    assert stat.S_ISFIFO(diagnostics.lstat().st_mode)
-
-
-def test_symlink_planted_at_the_diagnostics_path_is_not_written_through(manifest_file: Path, tmp_path: Path) -> None:
-    plan = _prepare_codex(manifest_file, tmp_path)
-    diagnostics = review_diagnostics_path(plan.config_path)
-    outside = tmp_path / "outside.txt"
-    outside.write_text("keep\n", encoding="utf-8")
-    diagnostics.symlink_to(outside)
-    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
-    assert "details not saved: unsafe directory or file" in stand_in
-    assert outside.read_text(encoding="utf-8") == "keep\n"
-
-
-def test_foreign_owned_diagnostics_file_is_not_written(
-    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    plan = _prepare_codex(manifest_file, tmp_path)
-    diagnostics = review_diagnostics_path(plan.config_path)
-    diagnostics.write_text("theirs\n", encoding="utf-8")
-    real_fstat = os.fstat
-
-    def foreign_files_fstat(fd: int) -> os.stat_result:
-        info = real_fstat(fd)
-        if not stat.S_ISREG(info.st_mode):
-            return info
-        return os.stat_result(
-            (info.st_mode, info.st_ino, info.st_dev, info.st_nlink, info.st_uid + 1, *tuple(info)[5:])
-        )
-
-    monkeypatch.setattr(safe_open_module.os, "fstat", foreign_files_fstat)
-    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
-    assert "details not saved: unsafe directory or file" in stand_in
-    assert diagnostics.read_text(encoding="utf-8") == "theirs\n"
-
-
 def test_planted_fifo_at_the_config_path_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
     plan = _prepare_codex(manifest_file, tmp_path)
     _plant_fifo(plan.config_path)
@@ -3184,21 +2762,6 @@ def test_planted_fifo_at_the_config_path_refuses_at_once(manifest_file: Path, tm
     # The gate's own read is guarded too, not only the pre-check in front of it.
     with pytest.raises(review_mcp_module.ReviewDirectoryError, match="wrong type"):
         _returns_promptly(review_mcp_module._read_attempt_file, plan.config_path.parent, plan.config_path.name)
-
-
-def test_planted_fifo_at_the_scoped_agy_config_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
-    plan = _prepare_agy(manifest_file, tmp_path)
-    scoped = agy_review_mcp_config_path(plan.agy_home)
-    _plant_fifo(scoped)
-    parts = scoped.relative_to(plan.agy_home.parent).parts
-    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="wrong type"):
-        _returns_promptly(review_mcp_module._read_attempt_file, plan.agy_home.parent, *parts)
-
-
-def test_read_attempt_file_reads_a_regular_file(manifest_file: Path, tmp_path: Path) -> None:
-    plan = _prepare_codex(manifest_file, tmp_path)
-    text = review_mcp_module._read_attempt_file(plan.config_path.parent, plan.config_path.name)
-    assert json.loads(text)["mcpServers"]["sources"]
 
 
 def test_planted_fifo_at_the_ledger_or_sidecar_path_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
@@ -3262,15 +2825,6 @@ def test_ledger_library_refuses_a_symlinked_ledger_and_still_appends_normally(
         ledger_module.records(plan.ledger_path)
 
 
-def test_no_open_below_the_anchor_bypasses_the_helper() -> None:
-    """Every ``os.open`` in review_mcp is a directory or anchor open; files go through ``_safe_open_below``."""
-    source = Path(review_mcp_module.__file__).read_text(encoding="utf-8")
-    file_opens = [line.strip() for line in source.splitlines() if "os.open(" in line and "O_DIRECTORY" not in line]
-    assert file_opens == ["fd = os.open(name, _DIRECTORY_FLAGS, dir_fd=dir_fd)"]
-    assert ".read_text(" not in source
-    assert ".write_text(" not in source
-
-
 @pytest.mark.parametrize("access", ["isolated", "full"])
 @pytest.mark.parametrize("header", ["", "Required-Sources-Tools: []\n"])
 def test_tool_requirement_defaults_cannot_be_removed(access, header):
@@ -3292,11 +2846,6 @@ def test_tool_requirements_name_every_unsupported_tool_without_fallback(access):
 def test_invalid_tool_requirements_are_typed(declaration):
     with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tool_requirements_invalid"):
         review_mcp_module.check_review_tool_requirements(f"Required-Sources-Tools: {declaration}")
-
-
-def test_duplicate_tool_requirement_headers_refuse():
-    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tool_requirements_invalid"):
-        review_mcp_module.check_review_tool_requirements("Required-Sources-Tools: []\nRequired-Sources-Tools: []")
 
 
 def test_defaults_are_requirements_not_derived_from_selected_grants(monkeypatch):

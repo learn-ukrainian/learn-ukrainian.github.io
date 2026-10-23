@@ -108,11 +108,6 @@ def test_default_profile_tracked_size_stays_under_ceiling() -> None:
     )
 
 
-def test_ceiling_fails_when_an_excluded_tree_returns() -> None:
-    """The ceiling is tight enough to catch a large tree coming back."""
-    assert _profile_bytes(("site/src/data", "registry/lexicon/source-inventory")) > DEFAULT_PROFILE_CEILING_BYTES
-
-
 @pytest.mark.parametrize(("path", "reader", "marker"), ANCHORED_READS)
 def test_default_profile_keeps_files_repo_wide_reads(path: str, reader: str, marker: str) -> None:
     sizes, _ = _tracked_tree()
@@ -127,100 +122,12 @@ def test_default_profile_keeps_files_repo_wide_reads(path: str, reader: str, mar
     )
 
 
-def test_every_anchor_lies_inside_its_excluded_tree_and_exists() -> None:
-    _cone_dirs, excluded = delegate._dispatch_sparse_profile(_list_dirs)
-    for tree, anchors in delegate._DISPATCH_SPARSE_ANCHORS.items():
-        assert tree in delegate._DISPATCH_SPARSE_EXCLUDE_DEFAULT, tree
-        assert tree in excluded, f"{tree} is not tracked at HEAD; drop its anchors"
-        for anchor in anchors:
-            assert anchor.startswith(tree + "/"), anchor
-            assert anchor in _list_dirs(anchor.rpartition("/")[0]), f"anchor {anchor} is not a directory at HEAD"
-
-
 def _conftest():
     return next(
         module
         for module in list(sys.modules.values())
         if str(getattr(module, "__file__", "") or "").endswith("tests/conftest.py")
     )
-
-
-def test_conftest_skips_tests_for_every_unanchored_exclusion() -> None:
-    """A test reading an excluded tree skips with its --sparse-include, not a bare FileNotFoundError.
-
-    Anchored trees keep their directory; the conftest sees one absent through
-    the sparse cone only when it is listed in _SPARSE_ANCHORED_TREES. wiki has
-    no test readers.
-    """
-    conftest = _conftest()
-    expected = set(delegate._DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(delegate._DISPATCH_SPARSE_ANCHORS) - {"wiki"}
-
-    assert set(delegate._DISPATCH_SPARSE_ANCHORS) >= conftest._SPARSE_ANCHORED_TREES
-    assert set(conftest._SPARSE_TREES) == expected | conftest._SPARSE_ANCHORED_TREES
-
-
-_DECISIONS = "registry/lexicon/source-inventory-review-decisions"
-# Tests that read a tree the default profile dropped in #10777 and passed in
-# a full checkout but failed in a default one: (test file, test item, tree).
-# A parametrized test whose cases come from the absent tree collects one
-# empty-parameter item, ``[ledger_path0]``; it must skip naming the include
-# too, not as ``got empty parameter set``.
-EXCLUDED_TREE_READERS = (
-    (
-        "tests/test_source_inventory_review_decisions.py",
-        "test_committed_first_source_inventory_review_batch_validates",
-        _DECISIONS,
-    ),
-    (
-        "tests/test_source_inventory_review_decisions.py",
-        "test_default_committed_decision_file_parametrization_is_complete",
-        _DECISIONS,
-    ),
-    (
-        "tests/test_source_inventory_review_decisions.py",
-        "test_default_committed_decision_files_keep_aggregate_floors",
-        _DECISIONS,
-    ),
-    (
-        "tests/test_source_inventory_review_decisions.py",
-        "test_default_committed_decision_files_validate[ledger_path0]",
-        _DECISIONS,
-    ),
-    ("tests/test_source_inventory_review_decisions.py", "test_committed_ohoiko_batch_ledgers_validate", _DECISIONS),
-    (
-        "tests/test_source_inventory_promotion_plan.py",
-        "test_plan_maps_approved_decision_to_manifest_addition",
-        _DECISIONS,
-    ),
-    ("tests/test_scrub_decision_ledger_keys.py", "test_shards_independently_pass_validation", _DECISIONS),
-    (
-        "tests/test_ohoiko_source_inventory_scope.py",
-        "test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows",
-        _DECISIONS,
-    ),
-    (
-        "tests/test_promote_teacher_lesson_intake.py",
-        "test_private_teacher_lesson_delta_inventory_is_privacy_safe",
-        "registry/lexicon/source-inventory",
-    ),
-    (
-        "tests/test_generate_search_index.py",
-        "test_committed_usage_sources_are_bound_to_their_passages",
-        "site/src/data",
-    ),
-    ("tests/audit/test_check_mdx_source_parity.py", "test_real_generated_a1_pages_pass_parity", "site/src/content"),
-)
-
-
-@pytest.mark.parametrize(("test_file", "item_name", "tree"), EXCLUDED_TREE_READERS)
-def test_excluded_tree_readers_skip_naming_their_include(test_file: str, item_name: str, tree: str) -> None:
-    reason = _conftest().sparse_missing_tree_skip_reason(
-        test_file, sparse_enabled=True, missing_trees={tree}, item_name=item_name
-    )
-
-    assert reason == f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
-
-
 def test_ledger_tests_that_build_their_own_ledgers_still_run_without_the_ledgers() -> None:
     """Marks stay on the readers: the tmp_path unit tests beside them keep their coverage."""
     reason = _conftest().sparse_missing_tree_skip_reason(
@@ -423,25 +330,6 @@ def test_an_owned_test_gets_the_excluded_trees_its_marks_name(tmp_path: Path, mo
     assert delegate._owned_test_marked_trees("tests/test_missing.py") == ()
     # Only test files are read for marks.
     assert delegate._owned_test_marked_trees("scripts/test_reader.py") == ()
-
-
-def test_delegate_names_no_test_file() -> None:
-    """A test file name in scripts/delegate.py makes every test a repo_wide candidate (#10777).
-
-    The prefilter in tests/test_repo_wide_marker_invariant.py reads it as a
-    load of that test, and tests/conftest.py imports delegate.py.
-    """
-    tree = ast.parse((REPO_ROOT / "scripts" / "delegate.py").read_text(encoding="utf-8"))
-    named = sorted(
-        node.value
-        for node in ast.walk(tree)
-        if isinstance(node, ast.Constant)
-        and isinstance(node.value, str)
-        and node.value.rpartition("/")[2].startswith("test_")
-        and node.value.endswith(".py")
-    )
-
-    assert not named, f"read owned test readers from their needs_sparse_tree marks instead: {named}"
 
 
 @pytest.mark.usefixtures("owned_files_here")

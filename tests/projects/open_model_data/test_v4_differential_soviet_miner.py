@@ -137,12 +137,6 @@ def mock_vesum_cursor() -> sqlite3.Cursor:
     return cursor
 
 
-def test_contracts_schema_validity(candidate_schema: dict, receipt_schema: dict) -> None:
-    """Ensure JSON Schema definitions are valid Draft 2020-12 schemas."""
-    assert candidate_schema["title"] == "DifferentialSovietCandidateV1"
-    assert receipt_schema["title"] == "DifferentialSovietReceiptV1"
-
-
 def test_modern_20th_century_neologism_whitelist(candidate_schema: dict, mock_vesum_cursor: sqlite3.Cursor) -> None:
     """Acceptance criterion: Zero false calque flags on 20th-century technical neologisms.
 

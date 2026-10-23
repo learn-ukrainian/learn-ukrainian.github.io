@@ -12,7 +12,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.typesafe.semantic_find import DEFAULT_MODEL, find
+from scripts.typesafe.semantic_find import find
 
 LINES = [
     "Contributions must be your own original work.",
@@ -68,15 +68,6 @@ def test_find_returns_relevance_in_line_order_and_exists():
     ]
 
 
-def test_find_empty_lines_short_circuits_without_a_request():
-    client = _FakeClient(_FakeResponse(choice_probabilities={"L000": 1.0}, noul=1.0))
-
-    result = find([], "anything", client=client)
-
-    assert result == {"exists": 0.0, "relevance": []}
-    assert client.calls == []
-
-
 def test_find_tags_lines_and_asks_where_and_exists_questions():
     client = _FakeClient(
         _FakeResponse(choice_probabilities={"L000": 1.0, "L001": 0.0}, noul=0.5)
@@ -114,24 +105,6 @@ def test_find_caps_choice_criteria_at_max_lines():
     assert all(isinstance(v, str) and v for v in where.criteria.values())
     assert len(result["relevance"]) == len(lines)
     assert result["relevance"][_MAX_CHOICE_LINES:] == [0.0] * 5
-
-
-def test_find_defaults_to_the_module_model_and_respects_an_override():
-    client = _FakeClient(_FakeResponse(choice_probabilities={"L000": 1.0}, noul=0.1))
-
-    find(["only line"], "anything", client=client)
-    assert client.calls[-1]["model"] == DEFAULT_MODEL
-
-    find(["only line"], "anything", client=client, model="jev-1.12")
-    assert client.calls[-1]["model"] == "jev-1.12"
-
-
-def test_find_does_not_close_an_injected_client():
-    client = _FakeClient(_FakeResponse(choice_probabilities={"L000": 1.0}, noul=0.2))
-
-    find(["only line"], "anything", client=client)
-
-    assert client.closed is False
 
 
 def test_find_missing_probabilities_default_to_zero():

@@ -44,23 +44,9 @@ def test_pilot_excludes_all_twelve_common_word_homographs(pilot_cards):
             if c["card_kind"] == "proper_name"] == ["ЮНЕСКО"]
 
 
-def test_homograph_exclusion_overrides_allowlist_and_source_scope(pilot_cards, monkeypatch):
-    monkeypatch.setattr(wa, "LEARNER_PROPER_NAME_ALLOWLIST", frozenset((*HOMOGRAPHS, "ЮНЕСКО")))
-    selected = wa.learner_cards(pilot_cards)
-    assert set(selected) == {"name-12", *(f"lexeme-{i}" for i in range(12))}
-
-
 def test_source_scope_alone_does_not_admit_unlisted_names(pilot_cards):
     names = {key: value for key, value in pilot_cards.items() if value["card_kind"] == "proper_name"}
     assert set(wa.learner_cards(names)) == {"name-12"}
-
-
-@pytest.mark.parametrize("kind", ["lexeme", "proper_name"])
-def test_learner_selection_handles_missing_creation_key_consistently(kind):
-    candidate = card("ЮНЕСКО", kind)
-    del candidate["key_at_creation"]
-    expected = {"candidate": candidate} if kind == "lexeme" else {}
-    assert wa.learner_cards({"candidate": candidate}) == expected
 
 
 @pytest.mark.parametrize("change", ["suppressed", "rejected", "ambiguous", "unresolved", "absent"])

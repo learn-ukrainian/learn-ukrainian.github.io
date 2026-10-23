@@ -8,8 +8,6 @@ state DB.
 from __future__ import annotations
 
 import contextlib
-import dataclasses
-import json
 import re
 import sqlite3
 import time
@@ -573,76 +571,3 @@ def reconcile_thread_restore(
         expected_host=expected_host,
         timeout_seconds=timeout_seconds,
     )
-
-
-def reconcile_task_thread(
-    *,
-    task_id: str,
-    action: str,
-    expected_title: str,
-    expected_cwd: str,
-    db_path: Path | str,
-    expected_host: str | None = None,
-    timeout_seconds: float = 5.0,
-    archive_now: str | None = None,
-) -> tuple[ThreadRecord, ThreadRecord, bool]:
-    """Reconcile a task thread by action string: ``archive`` or ``restore``."""
-    verb = action.lower()
-    if verb == "archive":
-        return reconcile_thread_archive(
-            thread_id=_coerce_task_id(task_id),
-            expected_title=expected_title,
-            expected_cwd=expected_cwd,
-            archived=True,
-            db_path=db_path,
-            expected_host=expected_host,
-            archive_now=archive_now,
-            timeout_seconds=timeout_seconds,
-        )
-    if verb == "restore":
-        return reconcile_thread_restore(
-            thread_id=_coerce_task_id(task_id),
-            expected_title=expected_title,
-            expected_cwd=expected_cwd,
-            db_path=db_path,
-            expected_host=expected_host,
-            timeout_seconds=timeout_seconds,
-        )
-    raise CodexStateContextError(f"unsupported action: {action!r}")
-
-
-def build_reconciliation_payload(
-    before: ThreadRecord,
-    after: ThreadRecord,
-    changed: bool,
-    *,
-    action: str,
-    archived_at: str | None = None,
-) -> dict[str, Any]:
-    return {
-        "action": action,
-        "thread_id": before.thread_id,
-        "changed": bool(changed),
-        "expected": {
-            "title": before.title,
-            "archived": after.archived,
-            "archived_at": after.archived_at,
-        },
-        "before": {
-            "title": before.title,
-            "archived": before.archived,
-            "archived_at": before.archived_at,
-        },
-        "after": {
-            "title": after.title,
-            "archived": after.archived,
-            "archived_at": after.archived_at,
-        },
-        "evidence": {
-            "archived_at": archived_at,
-        },
-    }
-
-
-def dump_thread_state(record: ThreadRecord) -> dict[str, Any]:
-    return json.loads(json.dumps(dataclasses.asdict(record)))

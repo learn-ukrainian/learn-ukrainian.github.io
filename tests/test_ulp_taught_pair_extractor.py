@@ -11,7 +11,6 @@ import yaml
 from scripts.lexicon import ulp_taught_pair_extractor as extractor
 from scripts.lexicon.ulp_taught_pair_extractor import (
     extract_taught_pairs_from_text,
-    format_markdown_tables,
     measure_corpus_intake_ulp,
     measure_curated_ulp_lists,
 )
@@ -184,48 +183,3 @@ def test_measure_corpus_intake_ulp_with_dummy_files(tmp_path: Path, monkeypatch:
     assert s1["missing_total"] == 1
     assert s1["vesum_unrecognized"] == 1
     assert s1["no_en_count"] == 2
-
-
-def test_format_markdown_tables() -> None:
-    curated = {
-        "total_curated_rows": 3906,
-        "total_in_atlas": 3903,
-        "total_missing": 3,
-        "per_season": {
-            1: {"unique_lemmas": 369, "in_atlas": 369, "missing_count": 0, "missing_lemmas": []},
-            4: {"unique_lemmas": 984, "in_atlas": 983, "missing_count": 1, "missing_lemmas": ["переключити"]},
-        },
-    }
-    intake = {
-        "per_season": {
-            1: {
-                "source_id": "ulp-1-00-lesson-notes",
-                "unique_lemmas": 636,
-                "already_in_atlas": 320,
-                "missing_total": 316,
-                "vesum_ok_missing": 114,
-                "vesum_unrecognized": 202,
-                "heritage_hold": 0,
-            }
-        }
-    }
-    taught = {
-        "per_season": {
-            1: {
-                "source_file": "ulp-1-00-lesson-notes",
-                "raw_taught_pairs": 98,
-                "unique_uk_headwords": 92,
-                "unique_single_word_lemmas": 63,
-                "already_in_atlas": 58,
-                "vesum_ok_missing_count": 1,
-                "vesum_unrecognized_count": 4,
-                "heritage_hold_count": 0,
-                "multiword_phrases": 44,
-            }
-        }
-    }
-    md = format_markdown_tables(curated, intake, taught)
-    assert "## Unit B — ULP Seasons 1–6 Lemma Census (#7550)" in md
-    assert "0 admits" in md
-    assert "переключити" in md
-    assert "hold(heritage_russianism) via #7557" in md

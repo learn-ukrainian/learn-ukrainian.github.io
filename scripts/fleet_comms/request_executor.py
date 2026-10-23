@@ -876,8 +876,3 @@ class RequestExecutor:
 
         with self.store._transaction() as conn:
             v4_store.persist_authorship_receipt(receipt, task_id=task_id, run_id=run_id, conn=conn, is_pg=self._is_pg, commit=False)
-
-
-def open_executor(root: Path | None = None) -> RequestExecutor:
-    """Factory used by CLI/tests."""
-    return RequestExecutor(root=root)

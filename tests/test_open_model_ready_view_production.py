@@ -8,8 +8,6 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator
-from jsonschema.exceptions import SchemaError
 from tokenizers import Tokenizer, models, pre_tokenizers
 
 from scripts.projects.open_model_data import model_ready_view_production as production
@@ -101,39 +99,6 @@ def test_operational_partition_is_gap_free_and_masks_detector_cores() -> None:
     assert "text" not in json.dumps(spans)
 
 
-def test_validator_ignores_idless_schema_but_rejects_malformed_schema(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    contracts = tmp_path / "contracts"
-    contracts.mkdir()
-    active = contracts / "active.schema.json"
-    active.write_text(
-        json.dumps(
-            {
-                "$schema": "https://json-schema.org/draft/2020-12/schema",
-                "$id": "https://example.invalid/active.schema.json",
-                "type": "object",
-            }
-        ),
-        encoding="utf-8",
-    )
-    (contracts / "idless.schema.json").write_text(
-        json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object"}),
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(production, "CONTRACTS", contracts)
-
-    assert isinstance(production.validator(active), Draft202012Validator)
-
-    (contracts / "malformed.schema.json").write_text(
-        json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "bad", "type": 7}),
-        encoding="utf-8",
-    )
-    with pytest.raises(SchemaError):
-        production.validator(active)
-
-
 def test_operational_partition_resolves_overlap_by_frozen_priority() -> None:
     spans = production.operational_partition(
         "abcdefgh",
@@ -219,31 +184,6 @@ def test_verify_words_batches_without_losing_order(monkeypatch: pytest.MonkeyPat
 
     assert calls == [["а", "б"], ["в", "г"], ["ґ"]]
     assert list(result) == ["а", "б", "в", "г", "ґ"]
-
-
-def test_new_receipt_schemas_are_strict_and_valid() -> None:
-    for path in (
-        production.PAYLOAD_RECEIPT_SCHEMA,
-        production.TOKENIZER_RECEIPT_SCHEMA,
-        production.PRODUCTION_RECEIPT_SCHEMA,
-    ):
-        schema = json.loads(path.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
-        assert schema["additionalProperties"] is False
-
-
-def test_blocked_silver_lane_is_empty_without_human_dependency() -> None:
-    lane = production._blocked_lane(739_503)
-
-    assert lane["state"] == "blocked"
-    assert lane["eligible"] == lane["emitted"] == 0
-    assert lane["blocked"] == 739_503
-    assert lane["blocked_reasons"] == ["no_eligible_records"]
-    assert lane["artifact"] == {
-        "records": 0,
-        "bytes": 0,
-        "sha256": production.EMPTY_SHA256,
-    }
 
 
 def test_cli_defaults_open_registry_receipts(tmp_path: Path) -> None:

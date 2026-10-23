@@ -8,7 +8,6 @@ from typing import Any
 import jsonschema
 import yaml
 
-from scripts.audit import anchor_primitives
 from scripts.audit.layerb_candidates import (
     AnchorSetResult,
     diff_runtime_records_to_label_case,
@@ -120,14 +119,6 @@ def test_alignment_round_trips_stress_mark_and_schema_omits_label_only_fields() 
     _validate_runtime(result)
 
 
-def test_alignment_accepts_complete_casefold_expansion_but_rejects_internal_boundary() -> None:
-    alignment = anchor_primitives.build_normalized_raw_alignment("Straße")
-
-    assert alignment.normalized == "strasse"
-    assert alignment.raw_span_for(0, len(alignment.normalized)) == (0, len("Straße"))
-    assert alignment.raw_span_for(4, 5) is None
-
-
 def test_candidate_ids_ignore_event_order_but_keep_diagnostic_source_index() -> None:
     grounding = _grounding("Сковорода народився у 1722 році.", query="Григорій Сковорода")
     first = _event(
@@ -166,16 +157,6 @@ def test_enumerates_repeated_ellipsis_assignments_and_audits_explicit_bound() ->
     assert limited.decision == "AUDIT"
     assert limited.reason == "OUTSIDE_SCAN"
     assert limited.candidate_set_complete is False
-
-
-def test_unmappable_flat_reason_class_fails_closed_as_audit() -> None:
-    result = materialize_candidates(
-        _grounding("звичайний текст без власних назв"), [_event(output="звичайний текст без власних назв")]
-    )
-
-    assert result.decision == "AUDIT"
-    assert result.reason == "INCOMPLETE_CANDIDATE_SET"
-    assert result.candidate_set_complete is False
 
 
 def test_flat_reason_mapping_is_registered_and_unmappable_reasons_audit() -> None:

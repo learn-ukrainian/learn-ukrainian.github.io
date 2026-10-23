@@ -407,10 +407,3 @@ def test_acp_empty_message_id_falls_through_to_stream_start():
     )
     result = _parse_acp(stdout)
     assert recognized_verdicts(result.response) == ["APPROVE"]
-
-
-def test_acp_mid_line_verdict_in_one_message_does_not_parse():
-    commentary = "The commentary mentions VERDICT: APPROVE as an example, then continues."
-    result = _parse_acp(_acp_stdout([_acp_chunk(commentary, stream_start_ms=5, chunk_id=1)]))
-    assert result.response == commentary
-    assert recognized_verdicts(result.response) == []

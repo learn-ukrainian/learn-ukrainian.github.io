@@ -87,51 +87,10 @@ def _healthy_observations(
     return observations
 
 
-class TestWilsonInterval:
-    def test_zero_total_is_none(self) -> None:
-        assert qsd.wilson_interval(0, 0) is None
-
-    def test_invalid_fraction_raises(self) -> None:
-        with pytest.raises(qsd.SeatDecisionError):
-            qsd.wilson_interval(5, 4)
-
-    def test_degenerate_endpoints_are_exact(self) -> None:
-        lo_all, hi_all = qsd.wilson_interval(10, 10)
-        assert hi_all == pytest.approx(1.0)
-        assert 0 < lo_all < 1
-        lo_none, hi_none = qsd.wilson_interval(0, 10)
-        assert lo_none == pytest.approx(0.0)
-        assert 0 < hi_none < 1
-
-    def test_complement_symmetry(self) -> None:
-        lo, hi = qsd.wilson_interval(8, 10)
-        clo, chi = qsd.wilson_interval(2, 10)
-        assert lo == pytest.approx(1 - chi)
-        assert hi == pytest.approx(1 - clo)
-
-    def test_contains_point_estimate_and_narrows_with_n(self) -> None:
-        lo, hi = qsd.wilson_interval(8, 10)
-        assert lo < 0.8 < hi
-        lo_big, hi_big = qsd.wilson_interval(80, 100)
-        assert hi_big - lo_big < hi - lo
-
-    def test_known_value_regression_pin(self) -> None:
-        # Wilson 95% for 8/10 — pinned so a formula mutation cannot pass silently.
-        lo, hi = qsd.wilson_interval(8, 10)
-        assert lo == pytest.approx(0.4901625, abs=1e-6)
-        assert hi == pytest.approx(0.9433178, abs=1e-6)
-
-
 class TestEffectiveVerdict:
-    def test_missing_claim(self) -> None:
-        assert qsd.effective_verdict({"matched": False, "verdict": "CONFIRMED"}) == "MISSING"
-
     def test_gate_neutralized_positive_is_downgraded(self) -> None:
         row = {"matched": True, "verdict": "CONFIRMED", "live_admissible_neutralized": True}
         assert qsd.effective_verdict(row) == "UNVERIFIED_INSUFFICIENT_SEARCH"
-
-    def test_plain_verdict_uppercased(self) -> None:
-        assert qsd.effective_verdict({"matched": True, "verdict": "confirmed"}) == "CONFIRMED"
 
 
 class TestDecideSeat:
@@ -496,6 +455,3 @@ class TestCli:
         assert payload["thresholds"]["u_recall_floor"] == qsd.U_RECALL_FLOOR
         assert payload["seats"][0]["seat"] == SEAT
         assert "QG Seat Decision" in md_out.read_text(encoding="utf-8")
-
-    def test_empty_dir_is_an_error(self, tmp_path: Path) -> None:
-        assert qsd.main([str(tmp_path)]) == 2

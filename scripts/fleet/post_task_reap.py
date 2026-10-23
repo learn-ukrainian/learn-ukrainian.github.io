@@ -31,7 +31,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
-from scripts.fleet import ignored_task_output, pr_identity
+from scripts.fleet import ignored_task_output, pr_identity, regenerable_output
 from scripts.orchestration import (
     lifecycle_observation,
     reap_worktrees,
@@ -656,10 +656,16 @@ def _reap_via_canonical(
 ) -> dict[str, Any] | None:
     """Delegate to the canonical P0 reaper for one bound dispatch worktree."""
     try:
-        observations = lifecycle_observation.before_reap(
-            repo_root, bound_path, tasks_dir=tasks_dir,
-            no_lifecycle_observation=no_lifecycle_observation,
-        ) if apply else []
+        observations = (
+            lifecycle_observation.before_reap(
+                repo_root,
+                bound_path,
+                tasks_dir=tasks_dir,
+                no_lifecycle_observation=no_lifecycle_observation,
+            )
+            if apply
+            else []
+        )
         rows = reap_worktrees.reap_worktrees(
             repo_root=repo_root,
             apply=apply,
@@ -691,6 +697,7 @@ def _reap_via_canonical(
         "branch": row.branch,
         "needs_attention": row.needs_attention,
         "preserved_artifacts": row.preserved_artifacts,
+        "freed_bytes": row.freed_bytes,
     }
 
 
@@ -797,6 +804,7 @@ def _reap_terminal_without_pr(
         "pr": result.pr,
         "recovery_ref": result.recovery_ref,
         "preserved_artifacts": result.preserved_artifacts,
+        "freed_bytes": result.freed_bytes,
     }
 
 
@@ -806,6 +814,28 @@ def _cwd_within(cwd: Path, worktree: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+@contextlib.contextmanager
+def _copy_proof_for_post_task(*, repo_root: Path, tasks_dir: Path):
+    """Bind copy proof once for a post-task invocation; reuse an active run.
+
+    The post-task ACP removal and retained-reuse retrieval do not pass through
+    the canonical reaper's ``copy_proof_run``, so their cap classification would
+    see no trusted primary root and count byte-identical external copies as
+    output. An unreadable control plane leaves the run unset: classification
+    then stays fail-closed instead of trusting the target's own ``.git``.
+    """
+    if regenerable_output._COPY_PROOF_RUN.get() is not None:
+        yield
+        return
+    try:
+        primary = worktree_claims.control_plane_root(repo_root)
+    except worktree_claims.ControlPlaneError:
+        yield
+        return
+    with regenerable_output.copy_proof_run(primary=primary, tasks=tasks_dir, publish_receipts=True):
+        yield
 
 
 def _reap_acp_runtime_worktrees(
@@ -953,37 +983,38 @@ def post_task_reap(
             "needs_attention": [],
         }
 
-    if release_retention:
-        refusal = _release_retention(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=apply)
-        if refusal:
-            return {
-                "task_id": task_id,
-                "task_status": state.get("status"),
-                "apply": apply,
-                "main_worktree": {"action": "retained", "reason": refusal, "error": refusal},
-                "acp_runtimes": [],
-                "errors": [refusal],
-                "needs_attention": [],
-            }
-        state = _load_task_state(tasks_dir, task_id)
+    with _copy_proof_for_post_task(repo_root=repo_root, tasks_dir=tasks_dir):
+        if release_retention:
+            refusal = _release_retention(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=apply)
+            if refusal:
+                return {
+                    "task_id": task_id,
+                    "task_status": state.get("status"),
+                    "apply": apply,
+                    "main_worktree": {"action": "retained", "reason": refusal, "error": refusal},
+                    "acp_runtimes": [],
+                    "errors": [refusal],
+                    "needs_attention": [],
+                }
+            state = _load_task_state(tasks_dir, task_id)
 
-    main_result = _reap_main_worktree(
-        task_id=task_id,
-        state=state,
-        repo_root=repo_root,
-        apply=apply,
-        tasks_dir=tasks_dir,
-        **({"no_lifecycle_observation": no_lifecycle_observation} if no_lifecycle_observation is not None else {}),
-    )
-    acp_results: list[dict[str, Any]] = []
-    if include_acp_runtime:
-        acp_results = _reap_acp_runtime_worktrees(
+        main_result = _reap_main_worktree(
             task_id=task_id,
             state=state,
-            tasks_dir=tasks_dir,
             repo_root=repo_root,
             apply=apply,
+            tasks_dir=tasks_dir,
+            **({"no_lifecycle_observation": no_lifecycle_observation} if no_lifecycle_observation is not None else {}),
         )
+        acp_results: list[dict[str, Any]] = []
+        if include_acp_runtime:
+            acp_results = _reap_acp_runtime_worktrees(
+                task_id=task_id,
+                state=state,
+                tasks_dir=tasks_dir,
+                repo_root=repo_root,
+                apply=apply,
+            )
 
     errors: list[str] = []
     if main_result.get("error"):
@@ -1174,7 +1205,8 @@ Related: #9934; scripts/orchestration/reap_worktrees.py; docs/runbooks/worktree-
     )
     parser.add_argument("--task-id", required=True, help="Task id whose worktree should be reaped")
     parser.add_argument(
-        "--no-lifecycle-observation", metavar="REASON",
+        "--no-lifecycle-observation",
+        metavar="REASON",
         help="Bypass lifecycle capture with an explicit reason logged in the report (default: capture required).",
     )
     parser.add_argument(

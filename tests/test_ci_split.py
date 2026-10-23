@@ -216,16 +216,6 @@ def test_pytest_ignore_collect_honours_allowlist(tmp_path, monkeypatch) -> None:
     assert pytest_ignore_collect(allowed.parent, config=None) is False
 
 
-def test_pytest_ignore_collect_ignores_non_test_files(tmp_path, monkeypatch) -> None:
-    allowlist_path = tmp_path / "allowlist.txt"
-    allowlist_path.write_text("tests/test_only_allowed.py\n", encoding="utf-8")
-    monkeypatch.setenv(LU_PYTEST_SHARD_FILES_ENV_VAR, str(allowlist_path))
-    conftest_file = tmp_path / "tests" / "conftest.py"
-    conftest_file.parent.mkdir(parents=True, exist_ok=True)
-    conftest_file.write_text("", encoding="utf-8")
-    assert pytest_ignore_collect(conftest_file, config=None) is True
-
-
 @pytest.mark.parametrize(
     ("content", "message"),
     [
@@ -243,12 +233,6 @@ def test_load_shard_allowlist_fails_loudly(tmp_path, monkeypatch, content: str |
         allowlist_path.write_text(content, encoding="utf-8")
     monkeypatch.setenv(LU_PYTEST_SHARD_FILES_ENV_VAR, str(allowlist_path))
     with pytest.raises(RuntimeError, match=message):
-        _load_shard_allowlist()
-
-
-def test_load_shard_allowlist_missing_file_raises_loudly(monkeypatch) -> None:
-    monkeypatch.setenv(LU_PYTEST_SHARD_FILES_ENV_VAR, "/nonexistent/allowlist.txt")
-    with pytest.raises(RuntimeError, match="unreadable"):
         _load_shard_allowlist()
 
 

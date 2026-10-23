@@ -50,7 +50,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common import github_client, task_store_paths
+from scripts.common import github_client, task_scratch, task_store_paths
 from scripts.common.acp_runtime_lock import (
     holds_only_git_pointer,
 )
@@ -63,6 +63,7 @@ from scripts.common.acp_runtime_lock import (
 from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
+from scripts.fleet.regenerable_output import _COPY_PROOF_RUN, copy_proof_run
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
 from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
@@ -125,6 +126,191 @@ class ReapResult:
     # Report-only findings (#8663): kind, evidence, and a "verify first:"
     # removal command a human runs; the reaper never acts on them.
     needs_attention: dict[str, Any] | None = None
+    # Logical sizes of verified, last-link-unlinked regular files. Copies made
+    # by preservation are excluded; this is not a filesystem free-space estimate.
+    freed_bytes: int | None = 0
+
+
+class _MeasurementUnavailable(Exception):
+    """The pin directory cannot hard-link the checkout, so bytes stay unmeasured."""
+
+
+def _measured_removal(
+    measurement: dict[str, Any],
+    stage: worktree_claims.RemovalStager = contextlib.nullcontext,
+) -> worktree_claims.RemovalStager:
+    """Pin inodes without retaining one descriptor per file through Git removal.
+
+    Private same-filesystem hard links keep the original inodes observable. Git
+    remains the checkout remover. Afterwards each pin is opened, unlinked and
+    fstat'ed before closing, so only proven last-link releases are counted.
+
+    Measurement is best effort: if the pin directory is on another filesystem,
+    hard links fail and removal still proceeds with ``freed_bytes`` unmeasured.
+    """
+    from scripts.common.nofollow_walk import ComponentOpenError
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    @contextlib.contextmanager
+    def measured(target: Path) -> Iterator[Path]:
+        with stage(target) as staged, contextlib.ExitStack() as scratch_stack:
+            scratch = task_scratch.allocate("reaper-measure")
+            # Preserve closes the lease if removal fails; after successful
+            # removal it is a no-op. Existing orphan recovery owns killed runs.
+            scratch_stack.callback(scratch.preserve)
+            scratch_stack.callback(scratch.remove)
+            leaves: list[tuple[str, str, os.stat_result]] = []
+            snapshots: dict[tuple[int, int], os.stat_result] = {}
+            pin_root = scratch.payload_dir
+            root_fd = artifacts._open_trusted_root(staged)
+            pin_fd = artifacts._open_trusted_root(pin_root)
+
+            def identity(info: os.stat_result) -> tuple[int, ...]:
+                return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns)
+
+            def walk(prefix: tuple[str, ...] = ()) -> None:
+                # Reopen each directory from the root, so depth also consumes
+                # only a constant number of descriptors.
+                fd, owned = artifacts._open_parent(root_fd, prefix)
+                try:
+                    before = os.fstat(fd)
+                    names = sorted(os.listdir(fd))
+                finally:
+                    if owned:
+                        os.close(fd)
+                for name in names:
+                    fd, owned = artifacts._open_parent(root_fd, prefix)
+                    try:
+                        info = os.stat(name, dir_fd=fd, follow_symlinks=False)
+                        if stat.S_ISDIR(info.st_mode):
+                            if owned:
+                                os.close(fd)
+                                owned = False
+                            walk((*prefix, name))
+                            fd, owned = artifacts._open_parent(root_fd, prefix)
+                            current = os.stat(name, dir_fd=fd, follow_symlinks=False)
+                            if (current.st_dev, current.st_ino) != (info.st_dev, info.st_ino):
+                                raise ValueError("directory identity changed")
+                        elif stat.S_ISLNK(info.st_mode):
+                            continue
+                        elif stat.S_ISREG(info.st_mode):
+                            leaf = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
+                            try:
+                                opened = os.fstat(leaf)
+                                if identity(info) != identity(opened) or info.st_ctime_ns != opened.st_ctime_ns:
+                                    raise ValueError("file identity changed")
+                                previous = snapshots.get((opened.st_dev, opened.st_ino))
+                                if previous is not None and (
+                                    opened != previous or opened.st_ctime_ns != previous.st_ctime_ns
+                                ):
+                                    raise ValueError("linked file changed during walk")
+                                pin = str(len(leaves))
+                                try:
+                                    os.link(name, pin, src_dir_fd=fd, dst_dir_fd=pin_fd, follow_symlinks=False)
+                                except OSError:
+                                    # Hard links cannot cross filesystems. Measurement
+                                    # is optional; removal proceeds with bytes unmeasured.
+                                    raise _MeasurementUnavailable from None
+                                held = os.stat(pin, dir_fd=pin_fd, follow_symlinks=False)
+                                after = os.fstat(leaf)
+                                if identity(held) != identity(opened) or identity(after) != identity(opened):
+                                    raise ValueError("file identity changed")
+                                snapshots[after.st_dev, after.st_ino] = after
+                                leaves.append((Path(*prefix, name).as_posix(), pin, after))
+                            finally:
+                                os.close(leaf)
+                        else:
+                            raise ValueError("unsupported entry")
+                    finally:
+                        if owned:
+                            os.close(fd)
+                fd, owned = artifacts._open_parent(root_fd, prefix)
+                try:
+                    after = os.fstat(fd)
+                    if names != sorted(os.listdir(fd)) or (
+                        before.st_dev, before.st_ino, before.st_mtime_ns, before.st_ctime_ns
+                    ) != (after.st_dev, after.st_ino, after.st_mtime_ns, after.st_ctime_ns):
+                        raise ValueError("directory changed")
+                finally:
+                    if owned:
+                        os.close(fd)
+
+            try:
+                try:
+                    proof = _COPY_PROOF_RUN.get()
+                    if proof is not None:
+                        proof.receipt_publication_attempted = True
+                        try:
+                            proof.retain_receipts()
+                        except (OSError, ValueError, TypeError):
+                            raise worktree_claims.RemovalStageRefused("copy proof receipt publication unproven") from None
+                    try:
+                        walk()
+                    except _MeasurementUnavailable:
+                        measurement["unmeasured"] = True
+                    else:
+                        # Hard-link creation changes ctime/nlink. Check the common
+                        # inode's final snapshot for all its names after pinning.
+                        for _name, pin, expected in leaves:
+                            info = os.stat(pin, dir_fd=pin_fd, follow_symlinks=False)
+                            expected = snapshots[expected.st_dev, expected.st_ino]
+                            if info != expected or info.st_ctime_ns != expected.st_ctime_ns:
+                                raise ValueError("file changed during walk")
+                        for name, _pin, expected in leaves:
+                            parts = Path(name).parts
+                            parent_fd, owned = artifacts._open_parent(root_fd, parts[:-1])
+                            try:
+                                current = os.stat(parts[-1], dir_fd=parent_fd, follow_symlinks=False)
+                                expected = snapshots[expected.st_dev, expected.st_ino]
+                                if current != expected or current.st_ctime_ns != expected.st_ctime_ns:
+                                    raise ValueError("file changed during walk")
+                            finally:
+                                if owned:
+                                    os.close(parent_fd)
+                except (OSError, ValueError, ComponentOpenError):
+                    raise worktree_claims.RemovalStageRefused("freed-byte inventory unproven") from None
+                try:
+                    yield staged
+                finally:
+                    unlinked: dict[str, tuple[int, int, int]] = {}
+                    released = set()
+                    for _name, pin, before in leaves:
+                        leaf = os.open(pin, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=pin_fd)
+                        try:
+                            os.unlink(pin, dir_fd=pin_fd)
+                            after = os.fstat(leaf)
+                            if after.st_nlink == 0 and identity(before) == identity(after):
+                                released.add((before.st_dev, before.st_ino))
+                        finally:
+                            os.close(leaf)
+                    for name, _, before in leaves:
+                        if (before.st_dev, before.st_ino) in released:
+                            unlinked[name] = (before.st_dev, before.st_ino, before.st_size)
+                    measurement["unlinked"] = unlinked
+            finally:
+                os.close(pin_fd)
+                os.close(root_fd)
+
+    return measured
+
+
+def _freed_bytes(measurement: dict[str, Any], preserved: dict[str, Any] | None) -> int | None:
+    """Exclude every preserved original from the verified unlinked inventory.
+
+    ``None`` means the inventory could not be measured, which never blocks
+    removal or counts as zero.
+    """
+    if measurement.get("unmeasured"):
+        return None
+    kept = {entry["path"] for entry in (preserved or {}).get("paths", [])}
+    unlinked = measurement.get("unlinked", {})
+    kept_ids = {entry[:2] for name, entry in unlinked.items() if name in kept}
+    # Multiple removed names can share one inode. Count its bytes once, and
+    # exclude the whole inode if any name was preserved outside the checkout.
+    return sum({
+        entry[:2]: entry[2] for name, entry in unlinked.items()
+        if name not in kept and entry[:2] not in kept_ids
+    }.values())
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -3380,11 +3566,32 @@ def _stale_index_lock(path: Path) -> Path | None:
     return lock
 
 
-def _preserve_dirty_worktree(info: WorktreeInfo, *, timeout: float | None = None) -> str | None:
+def _preserve_dirty_worktree(
+    info: WorktreeInfo, *, timeout: float | None = None, receipt: dict[str, Any] | None = None
+) -> str | None:
+    if receipt is not None:
+        head = _run(["git", "rev-parse", "HEAD"], cwd=info.path, timeout=timeout)
+        if (
+            head.returncode != 0
+            or head.stdout.strip() != info.head
+            or worktree_claims.checked_out_branch(info.path) != info.branch
+        ):
+            return "checkout changed before preservation"
+        before = _entries(info.path, _VOLATILE_TREE)
     branch = info.branch or "detached"
     add_proc = _run(["git", "add", "-A"], cwd=info.path, timeout=timeout)
     if add_proc.returncode != 0:
         return f"git add failed: {_format_failure(add_proc)}"
+    if receipt is not None:
+        if _entries(info.path, _VOLATILE_TREE) != before:
+            return "worktree changed during preservation staging"
+        snapshot = _run(
+            ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", info.head],
+            cwd=info.path,
+            timeout=timeout,
+        )
+        if snapshot.returncode != 0:
+            return f"cannot bind preservation tree: {_format_failure(snapshot)}"
     commit_proc = _run(
         [
             "git",
@@ -3398,7 +3605,55 @@ def _preserve_dirty_worktree(info: WorktreeInfo, *, timeout: float | None = None
     )
     if commit_proc.returncode != 0:
         return f"git commit failed: {_format_failure(commit_proc)}"
+    if receipt is not None:
+        if _entries(info.path, _VOLATILE_TREE) != before:
+            return "worktree changed during preservation commit"
+        commit = _run(["git", "rev-parse", "HEAD"], cwd=info.path, timeout=timeout)
+        if commit.returncode != 0:
+            return "cannot read preservation head"
+        head_sha = commit.stdout.strip()
+        tree = _run(["git", "rev-parse", f"{head_sha}^{{tree}}"], cwd=info.path, timeout=timeout)
+        captured = _run(
+            ["git", "diff", "--raw", "--no-abbrev", "--no-renames", info.head, head_sha],
+            cwd=info.path,
+            timeout=timeout,
+        )
+        if tree.returncode != 0 or captured.returncode != 0 or captured.stdout != snapshot.stdout:
+            return "staged snapshot changed during preservation"
+        binding = {"parent_sha": info.head, "head_sha": commit.stdout.strip(), "tree_sha": tree.stdout.strip()}
+        if not _preserved_merged_head_valid(info, binding, require_rescue=False):
+            return "checkout changed during preservation"
+        receipt.update(binding)
     return None
+
+
+def _preserved_merged_head_valid(
+    info: WorktreeInfo, preservation: dict[str, Any], *, require_rescue: bool = True
+) -> bool:
+    """Verify the exact reaper snapshot, never treat it as a merged commit."""
+    head = preservation.get("head_sha")
+    tree = preservation.get("tree_sha")
+    if (
+        preservation.get("parent_sha") != info.head
+        or not isinstance(head, str)
+        or re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", head) is None
+        or not isinstance(tree, str)
+        or re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", tree) is None
+        or worktree_claims.checked_out_branch(info.path) != info.branch
+        or _worktree_clean(info.path) is not True
+    ):
+        return False
+    identity = _run(["git", "rev-list", "--no-walk", "--format=%H%n%P%n%T", "HEAD"], cwd=info.path)
+    if identity.returncode != 0 or identity.stdout.splitlines() != [f"commit {head}", head, info.head, tree]:
+        return False
+    if require_rescue:
+        ref = preservation.get("recovery_ref")
+        if not isinstance(ref, str) or not ref.startswith("refs/reaper-rescue/"):
+            return False
+        rescued = _run(["git", "rev-parse", "--verify", ref], cwd=info.path)
+        if rescued.returncode != 0 or rescued.stdout.strip() != head:
+            return False
+    return True
 
 
 def _prune_branch(
@@ -3528,9 +3783,18 @@ def _released_reuse_claim_proven_settled(
 
 
 def _same_branch_merged_cohort(
-    info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
+    info: WorktreeInfo,
+    pr: PullRequestState | None,
+    cohort: list[tuple[Path, dict[str, Any]]],
+    *,
+    preservation: dict[str, Any] | None = None,
 ) -> bool:
     """Settle inactive same-branch rounds without requiring a done successor."""
+    expected_head = info.head
+    if preservation is not None:
+        if not _preserved_merged_head_valid(info, preservation):
+            return False
+        expected_head = preservation["head_sha"]
     if (
         not info.branch
         or not info.head
@@ -3547,7 +3811,7 @@ def _same_branch_merged_cohort(
     return bool(
         branch == info.branch
         and tip.returncode == 0
-        and tip.stdout.strip() == info.head
+        and tip.stdout.strip() == expected_head
         and len(cohort) >= 2
         and all(
             member.get("status") in _TERMINAL_DISPATCH_STATUSES
@@ -3569,6 +3833,7 @@ def _continuation_head_is_merged(
     cohort: list[tuple[Path, dict[str, Any]]],
     *,
     allow_equivalent: bool = False,
+    preservation: dict[str, Any] | None = None,
 ) -> bool:
     """Prove an exact PR head, or a detached cohort's complete earlier lineage.
 
@@ -3576,7 +3841,11 @@ def _continuation_head_is_merged(
     absent workers, and complete contained identities. Detached ancestry
     additionally requires a done successor at that checkout head. Missing
     Git objects and commit-search membership alone are never proof.
+    A validated preservation binding changes only the expected live branch tip;
+    merged ancestry still uses the original checkout head in ``info``.
     """
+    if preservation is not None and not _preserved_merged_head_valid(info, preservation):
+        return False
     if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
         return False
     if allow_equivalent and not _pr_matches_worktree_head(info, pr) and _merged_equivalent(info, pr):
@@ -3588,7 +3857,7 @@ def _continuation_head_is_merged(
     if info.branch and any(
         member.get("worktree_reused") is True and member.get("status") == "needs_finalize" for _, member in cohort
     ):
-        return _same_branch_merged_cohort(info, pr, cohort)
+        return _same_branch_merged_cohort(info, pr, cohort, preservation=preservation)
     if pr.head_sha == info.head:
         return True
     branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=info.path)
@@ -4003,11 +4272,17 @@ def _preservation_merged_creator(
     branch = worktree_claims.checked_out_branch(worktree)
     info = WorktreeInfo(worktree, branch, proof.get("head_sha"), detached=branch is None)
     pr = PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"))
+    preservation = proof.get("preservation")
+    expected_head = info.head
+    if preservation is not None:
+        if not isinstance(preservation, dict) or not _preserved_merged_head_valid(info, preservation):
+            raise ValueError("merged continuation preservation head changed")
+        expected_head = preservation["head_sha"]
     if (
         proof.get("owner") != creator.get("task_id")
         or proof.get("run_nonce") != creator.get("run_nonce")
         or head.returncode != 0
-        or head.stdout.strip() != info.head
+        or head.stdout.strip() != expected_head
         or proof.get("clean") is not True
         or _worktree_clean(worktree) is not True
         or proof.get("head_relation") != _merged_head_relation(info, pr)
@@ -4032,7 +4307,11 @@ def _preservation_merged_creator(
             for _, member in cohort
         ]
         or not _continuation_head_is_merged(
-            info, pr, cohort, allow_equivalent=proof.get("head_relation") == "patch-equivalent"
+            info,
+            pr,
+            cohort,
+            allow_equivalent=proof.get("head_relation") == "patch-equivalent",
+            preservation=preservation,
         )
     ):
         raise ValueError("merged continuation preservation proof changed")
@@ -4193,6 +4472,7 @@ def _record_merged_reuse_proof(
     *,
     tasks_dir: Path,
     allow_equivalent: bool = False,
+    preservation: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     """Record merged-head containment proof under the caller's worktree lock.
 
@@ -4219,7 +4499,9 @@ def _record_merged_reuse_proof(
             if _retention_release_present(matches):
                 return None  # Preserve #9940's explicit receipt-release path.
             raise ValueError("continuation requires a proven merged PR head containing the checkout")
-    elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
+    elif not _continuation_head_is_merged(
+        info, pr, cohort, allow_equivalent=allow_equivalent, preservation=preservation
+    ):
         if _retention_release_present(matches):
             return None  # Preserve #9940's explicit receipt-release path.
         raise ValueError("continuation requires a proven merged PR head containing the checkout")
@@ -4256,6 +4538,8 @@ def _record_merged_reuse_proof(
             for _, member in cohort
         ],
     }
+    if preservation is not None:
+        proof["preservation"] = dict(preservation)
     with contextlib.ExitStack() as stack:
         for member_path, member in sorted(matches):
             stack.enter_context(ignored_task_output.artifacts.task_state_lock(member_path))
@@ -4271,7 +4555,13 @@ def _record_merged_reuse_proof(
         if not all(_pid_proven_absent(member) for _, member in cohort):
             raise ValueError("continuation process absence changed before merged-head proof")
         head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
-        if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
+        expected_head = info.head if preservation is None else preservation.get("head_sha")
+        if (
+            head.returncode != 0
+            or head.stdout.strip() != expected_head
+            or _worktree_clean(info.path) is not True
+            or (preservation is not None and not _preserved_merged_head_valid(info, preservation))
+        ):
             raise ValueError("checkout changed before merged-head proof")
         rebound_path, rebound_creator, rebound_alternate = _resolve_merged_reuse_creator(
             matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=pr
@@ -4281,7 +4571,9 @@ def _record_merged_reuse_proof(
         if alternate:
             if not _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head):
                 raise ValueError("continuation ancestry changed before merged-head proof")
-        elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
+        elif not _continuation_head_is_merged(
+            info, pr, cohort, allow_equivalent=allow_equivalent, preservation=preservation
+        ):
             raise ValueError("continuation ancestry changed before merged-head proof")
         reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
     return proof
@@ -4609,6 +4901,7 @@ def _reap_qualified_worktree(
 
     pending_marked = False
     recovery_ref: str | None = None
+    preservation: dict[str, Any] | None = None
     dispatch_guard = contextlib.ExitStack()
     try:
         # This reservation is intentionally before the final TOCTOU checks.
@@ -4726,7 +5019,13 @@ def _reap_qualified_worktree(
                         pr=_pr_dict(pr_state),
                     )
             if dirty and not abandoning:
-                preserve_error = _preserve_dirty_worktree(info, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
+                preservation = {}
+                try:
+                    preserve_error = _preserve_dirty_worktree(
+                        info, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S, receipt=preservation
+                    )
+                except OSError as exc:
+                    preserve_error = f"cannot inventory preservation worktree: {type(exc).__name__}"
                 if preserve_error is not None:
                     return ReapResult(
                         path=str(info.path),
@@ -5037,6 +5336,8 @@ def _reap_qualified_worktree(
                     pr=_pr_dict(pr_state),
                     error=recovery_error,
                 )
+            if preservation is not None:
+                preservation["recovery_ref"] = recovery_ref
 
             # Decide branch deletion while the worktree directory still exists.
             # ``git merge-base`` cannot run with a cwd that ``worktree remove``
@@ -5070,6 +5371,7 @@ def _reap_qualified_worktree(
                     pr_state,
                     tasks_dir=task_store_paths.tasks_dir(),
                     allow_equivalent=reason.endswith("MERGED; patch-equivalent"),
+                    preservation=preservation,
                 )
             )
         except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
@@ -5102,17 +5404,44 @@ def _reap_qualified_worktree(
                     recovery_ref=recovery_ref,
                     preserved_artifacts=preservation_receipt or None,
                 )
-        remove_error = worktree_claims.git_worktree_remove(
-            repo_root,
-            target,
-            force=merged_reuse_proof is None and not reason.endswith("MERGED; patch-equivalent"),
-            control_root=control_root,
-            task_id=_dispatch_task_id(repo_root, info),
-            tasks_dir=task_store_paths.tasks_dir(),
-            preservation_receipt=preservation_receipt,
-            **approval,
-        )
+        measurement: dict[str, Any] = {}
+
+        @contextlib.contextmanager
+        def recheck_preservation(target: Path) -> Iterator[Path]:
+            # A replacement creator can hide the fresh proof from the output
+            # selector. This removal still belongs to the original cohort.
+            if merged_reuse_proof is not None and preservation is not None:
+                from scripts.fleet import ignored_task_output
+
+                try:
+                    matches = ignored_task_output.matching_worktree_records(
+                        target, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
+                    )
+                    _, creator = _preservation_merged_creator(
+                        matches, target, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
+                    )
+                    if creator.get("worktree_reap_proof") != merged_reuse_proof:
+                        raise ValueError("merged continuation proof changed before removal")
+                except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+                    raise worktree_claims.RemovalStageRefused(
+                        "merged continuation preservation changed before removal"
+                    ) from exc
+            yield target
+
+        with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
+            remove_error = worktree_claims.git_worktree_remove(
+                repo_root,
+                target,
+                force=merged_reuse_proof is None and not reason.endswith("MERGED; patch-equivalent"),
+                control_root=control_root,
+                task_id=_dispatch_task_id(repo_root, info),
+                tasks_dir=task_store_paths.tasks_dir(),
+                preservation_receipt=preservation_receipt,
+                stage_removal=_measured_removal(measurement, recheck_preservation),
+                **approval,
+            )
         preserved_artifacts = preservation_receipt or None
+        freed_bytes = _freed_bytes(measurement, preserved_artifacts)
         if remove_error is not None:
             preservation_failed = remove_error.startswith("artifact preservation failed:")
             return ReapResult(
@@ -5125,6 +5454,7 @@ def _reap_qualified_worktree(
                 error=None if preservation_failed else remove_error,
                 recovery_ref=recovery_ref,
                 preserved_artifacts=preserved_artifacts,
+                freed_bytes=freed_bytes,
             )
 
         # Prune and the daily-cap write do not need the per-worktree lock.
@@ -5160,6 +5490,7 @@ def _reap_qualified_worktree(
                 error=branch_prune_error,
                 recovery_ref=recovery_ref,
                 preserved_artifacts=preserved_artifacts,
+                freed_bytes=freed_bytes,
             )
         return ReapResult(
             path=str(info.path),
@@ -5171,6 +5502,7 @@ def _reap_qualified_worktree(
             branch_pruned=branch_pruned,
             recovery_ref=recovery_ref,
             preserved_artifacts=preserved_artifacts,
+            freed_bytes=freed_bytes,
         )
     except subprocess.TimeoutExpired as exc:
         # A git call outlived its locked-region bound (#8748): skip, never
@@ -5724,6 +6056,7 @@ class CleanPushedOutcome:
     branch: str | None = None
     task_status: str | None = None
     size_mb: int | None = None
+    freed_bytes: int | None = 0
 
 
 @dataclass(frozen=True)
@@ -5753,6 +6086,7 @@ class CleanPushedReport:
     unpublished_reflog_commit: tuple[str, ...] = ()
     census_refs: int = 0
     census_missing: int = 0
+    freed_bytes: int | None = 0
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -7634,19 +7968,24 @@ def reap_clean_pushed(
                         replace(outcome, action="error", reason=f"journal write failed ({exc}); run stopped")
                     )
                     break
-                removal = worktree_claims.remove_unclaimed_worktree(
-                    info.path,
-                    repo_root=primary,
-                    reason=CLEAN_PUSHED_REASON,
-                    owner_task_id=None,
-                    releasable=recheck,
-                    force=False,
-                    control_root=control_root,
-                    tasks_dir=tasks_dir,
-                    lock_timeout_s=_CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S,
-                    settled_claim=_worker_proven_gone,
-                    stage_removal=_quarantine_stager(primary, info.path, guards, taken),
-                )
+                measurement: dict[str, Any] = {}
+                with copy_proof_run(primary=control_root, tasks=tasks_dir, publish_receipts=True):
+                    removal = worktree_claims.remove_unclaimed_worktree(
+                        info.path,
+                        repo_root=primary,
+                        reason=CLEAN_PUSHED_REASON,
+                        owner_task_id=None,
+                        releasable=recheck,
+                        force=False,
+                        control_root=control_root,
+                        tasks_dir=tasks_dir,
+                        lock_timeout_s=_CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S,
+                        settled_claim=_worker_proven_gone,
+                        stage_removal=_measured_removal(
+                            measurement, _quarantine_stager(primary, info.path, guards, taken)
+                        ),
+                    )
+                outcome = replace(outcome, freed_bytes=_freed_bytes(measurement, removal.preserved_artifacts))
                 if removal.action != "removed":
                     detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason
                     if detail.startswith(worktree_claims.REMOVAL_STAGE_REFUSED):
@@ -7680,11 +8019,17 @@ def reap_clean_pushed(
             busy_reason = str(exc)
             skipped.append(replace(outcome, action="skipped", reason=busy_reason))
             break
+    freed_values = [outcome.freed_bytes for outcome in (*removed, *skipped)]
     return CleanPushedReport(
         dry_run=dry_run,
         removed=tuple(removed),
         skipped=tuple(skipped),
         freed_mb=sum(outcome.size_mb or 0 for outcome in removed),
+        freed_bytes=(
+            None
+            if any(value is None for value in freed_values)
+            else sum(value for value in freed_values if value is not None)
+        ),
         lock_busy=bool(busy_reason),
         refusal=busy_reason,
         uninspectable=tuple(sorted(ctx.uninspectable)),

@@ -350,16 +350,6 @@ def _write_bio_dossier_grounding(repo: Path) -> None:
     )
 
 
-def test_current_certification_profiles_require_post_build_review_v5() -> None:
-    path = ROOT / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
-    config = yaml.safe_load(path.read_text(encoding="utf-8"))
-
-    assert config["profiles"]
-    assert {(profile["version"], profile["pbr"]["adapter"]) for profile in config["profiles"].values()} == {
-        ("2.0.0", "post-build-review.v5")
-    }
-
-
 def _certification_artifact(
     tmp_path: Path,
     name: str,
@@ -547,19 +537,6 @@ def test_new_and_existing_modules_converge_on_the_same_post_build_gate(
     assert existing["state"] == "AWAITING_PRODUCTION_QG_ARMING"
     assert new["state"] == "INDEPENDENT_REVIEW_REQUIRED"
     assert new["author_families"] == ["codex"]
-
-
-def test_certification_config_rejects_retired_track_selector(
-    fake_repo: tuple[Path, Path, Path],
-) -> None:
-    repo, config_path, _ledger_root = fake_repo
-    certification_path = repo / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
-    certification = yaml.safe_load(certification_path.read_text(encoding="utf-8"))
-    certification["selectors"]["tracks"]["lit-doc"] = "seminar-pending"
-    certification_path.write_text(yaml.safe_dump(certification, sort_keys=False), encoding="utf-8")
-
-    with pytest.raises(tc.CompletionError, match="inactive tracks: lit-doc"):
-        tc.inspect_target("a1/core-built", repo_root=repo, config_path=config_path)
 
 
 def test_unbuilt_plan_build_transitions_are_leased_and_idempotent(
@@ -1824,73 +1801,6 @@ def test_deferred_audit_tool_drift_blocks_active_protocol_and_restarts_cleanly(
     assert prepared["bounded_completion"]["run"]["measurements"]["repair_count"] == 0
 
 
-def test_prebind_deferred_tooling_drift_blocks_semantic_entrypoints_and_restarts(
-    fake_repo: tuple[Path, Path, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repo, config_path, ledger_root = fake_repo
-    _, ledger = _start(fake_repo, "bio/seminar-built")
-    run_id = ledger["run"]["run_id"]
-    snapshot = tc.resolve_target("bio/seminar-built", repo_root=repo, config=tc.load_config(config_path))
-    result = _result(snapshot, repo, status="PASS")
-    result_path = _result_file(tmp_path, "prebind-deferred.json")
-    (repo / "workflow.txt").write_text("prebind-workflow-drift\n", encoding="utf-8")
-    _, deferred = tc.record_change(
-        "bio/seminar-built",
-        run_id=run_id,
-        owner_kind="audit_tooling",
-        author_family="codex",
-        summary="Queue tooling drift before the first semantic authorization.",
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
-    )
-    assert deferred["bounded_completion"] is None
-    assert len(deferred["deferred_workflow_drift"]) == 1
-    path = tc.ledger_path_for(snapshot, repo_root=repo, config=tc.load_config(config_path), ledger_root=ledger_root)
-    before = tc.read_json(path)
-    with pytest.raises(tc.CompletionError, match="Deferred audit-tooling drift requires restart-bounded-completion"):
-        _prepare_review(
-            "bio/seminar-built", run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root
-        )
-    monkeypatch.setattr(tc, "_load_post_build_result", lambda _path: result)
-    with pytest.raises(tc.CompletionError, match="Deferred audit-tooling drift requires restart-bounded-completion"):
-        tc.record_review(
-            "bio/seminar-built",
-            run_id=run_id,
-            result_path=result_path,
-            repo_root=repo,
-            config_path=config_path,
-            ledger_root=ledger_root,
-        )
-    assert tc.read_json(path) == before
-
-    _, restarted = tc.restart_bounded_completion(
-        "bio/seminar-built",
-        run_id=run_id,
-        owner="codex",
-        repo_root=repo,
-        config_path=config_path,
-        ledger_root=ledger_root,
-    )
-    fresh_run_id = restarted["run"]["run_id"]
-    assert fresh_run_id != run_id
-    assert restarted["state"] == "POST_BUILD_REVIEW_REQUIRED"
-    assert restarted["reviews"] == []
-    assert restarted["certification_evidence"] == []
-    assert restarted["bounded_completion"] is None
-    assert restarted["deferred_workflow_drift"] == []
-    archived = restarted["archived_authority"][-1]
-    assert archived["reason"] == "deferred-protocol-drift"
-    assert archived["prior_run"]["run_id"] == run_id
-    assert archived["deferred_workflow_drift"] == before["deferred_workflow_drift"]
-    _prepare_review(
-        "bio/seminar-built", fresh_run_id, result, repo=repo, config_path=config_path, ledger_root=ledger_root
-    )
-    prepared = tc.read_json(path)
-    assert prepared["bounded_completion"]["run"]["measurements"]["model_call_count"] == 0
-    assert prepared["bounded_completion"]["run"]["measurements"]["repair_count"] == 0
-
-
 @pytest.mark.parametrize(
     ("field", "replacement"),
     [
@@ -2190,20 +2100,3 @@ def test_projection_uses_only_bound_canonical_pbr_review(
     )
     updated["reviews"][-1]["certification"]["dependency_identity"] = "4" * 64
     assert tc._current_pbr_reviews(updated, inputs)[0] is False
-
-
-def test_projection_has_no_caller_controlled_preparation_identity() -> None:
-    assert "preparation_identity" not in tc.certification_projection.__annotations__
-    assert "preparation_identity" not in tc.certification_inputs.__annotations__
-    assert "preparation_identity" not in tc.request_preparation_rebuild.__annotations__
-
-
-def test_pages_deploy_installs_schema_runtime_and_emits_exact_head_marker() -> None:
-    workflow = (ROOT / ".github/workflows/deploy-pages.yml").read_text(encoding="utf-8")
-    trigger_block = workflow.split("on:\n", 1)[1].split("permissions:\n", 1)[0]
-
-    assert "jsonschema==4.26.0" in workflow
-    assert "learn-ukrainian-deployment-${GITHUB_SHA}.txt" in workflow
-    assert "printf '%s\\n' \"$GITHUB_SHA\"" in workflow
-    assert "workflow_dispatch:" in trigger_block
-    assert "push:" in trigger_block

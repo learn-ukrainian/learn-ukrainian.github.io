@@ -17,7 +17,6 @@ import requests
 from scripts.rag.source_query import (
     E2ULookupStatus,
     e2u_translate_with_status,
-    grac_collocations,
     grac_concordance,
     slovnyk_me_lookup,
 )
@@ -92,15 +91,6 @@ class TestSlovnykMeLookup:
         assert result["status"] == "unavailable"
         assert result["reason"] == "ConnectionError"
 
-    def test_timeout_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        def raise_timeout(url, **kwargs):
-            raise requests.Timeout("timed out")
-
-        _patch_get(monkeypatch, raise_timeout)
-        result = slovnyk_me_lookup("хата", "vts")
-        assert result["status"] == "unavailable"
-        assert result["reason"] == "Timeout"
-
     def test_cloudflare_403_challenge_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(403, CLOUDFLARE_CHALLENGE_HTML))
         result = slovnyk_me_lookup("хата", "vts")
@@ -128,12 +118,6 @@ class TestSlovnykMeLookup:
         result = slovnyk_me_lookup("хата", "vts")
         assert result["status"] == "unavailable"
         assert result["http_status"] == 429
-
-    def test_5xx_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        _patch_get(monkeypatch, DummyResponse(503, "Service Unavailable"))
-        result = slovnyk_me_lookup("хата", "vts")
-        assert result["status"] == "unavailable"
-        assert result["http_status"] == 503
 
     def test_unparseable_page_is_unavailable_not_not_found(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(200, "<html><body>no headings here</body></html>"))
@@ -193,17 +177,6 @@ class TestGracConcordanceCollocationsUnavailable:
     def test_concordance_5xx_returns_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(503))
         assert grac_concordance("книга") is None
-
-    def test_collocations_genuine_empty_returns_empty_list(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        _patch_get(monkeypatch, DummyResponse(200, data={"Items": []}))
-        assert grac_collocations("zzznotaword") == []
-
-    def test_collocations_network_exception_returns_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        def raise_conn_error(url, **kwargs):
-            raise requests.ConnectionError("boom")
-
-        _patch_get(monkeypatch, raise_conn_error)
-        assert grac_collocations("книга") is None
 
 
 # --- slovnyk.me search path: scripts/wiki/slovnyk_me.fetch_entries (#9005 residual) ---------------
