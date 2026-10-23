@@ -61,6 +61,13 @@ describe('committed public route inventory', () => {
       expect(route.href).toBe(pagePath(key!, Boolean(compare)));
     }
   });
+  it('binds C37 search to all 568 word/card routes and keeps the two summaries separate', () => {
+    expect(inventory.counts.routes_by_class).toEqual({ 'release-summary': 1, 'compare-release-summary': 1,
+      'card-diagnostic': 150, 'compare-card-diagnostic': 150, 'word-page': 134, 'compare-word-page': 134 });
+    const search = ['card-diagnostic', 'compare-card-diagnostic', 'word-page', 'compare-word-page']
+      .reduce((n, name) => n + inventory.counts.routes_by_class[name]!, 0);
+    expect([search, inventory.counts.emitted_routes - search]).toEqual([568, 2]);
+  });
   it('separates the source-card, learner-page, entry and route denominators', () => {
     const listed = inventory.cards.filter(c => c.listed);
     expect(new Set(inventory.cards.map(c => c.card_id)).size).toBe(inventory.cards.length);
