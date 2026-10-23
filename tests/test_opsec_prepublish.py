@@ -715,20 +715,29 @@ def test_bridge_comment_refusal_is_rendered_and_returns_false(monkeypatch, capsy
 
 
 @pytest.mark.parametrize(
-    "command",
+    "command,valid_shell",
     [
-        "printf hello\ngh issue list",
-        "cat <<'EOF'\nhello\nEOF\ngh issue list",
-        "if gh issue list; then printf hello; fi",
-        "time gh issue list",
-        "timeout 30 gh issue list",
-        "timeout --signal TERM 30s gh issue list",
-        "printf 1 | xargs gh issue view",
-        "bash -c 'gh issue list'",
-        "bash -lc 'gh issue list'",
+        ("printf hello\ngh issue list", True),
+        ("cat <<'EOF'\nhello\nEOF\ngh issue list", True),
+        ("if gh issue list; then printf hello; fi", True),
+        ("time gh issue list", True),
+        ("timeout 30 gh issue list", True),
+        ("timeout --signal TERM 30s gh issue list", True),
+        ("printf 1 | xargs gh issue view", True),
+        ("bash -c 'gh issue list'", True),
+        ("bash -lc 'gh issue list'", True),
+        ('gh issue create -b "line1\nline2"', True),
+        ("gh issue create -b 'line1\nline2'", True),
+        ('gh pr create --body "$(cat <<\'EOF\'\nline1\nline2\nEOF\n)"', True),
+        ('echo "a\nb" && gh issue create -b "c\nd"', True),
+        ('git commit -m "subject\n\nbody" && gh pr create --body "line1\nline2"', True),
+        ("printf hello # comment\ngh issue list", True),
+        ('echo "unterminated; gh issue create -b text', False),
+        ('echo "unterminated', False),
+        ("echo 'unterminated", False),
     ],
 )
-def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys, tmp_path):
+def test_hook_detects_wrapped_and_newline_gh(command, valid_shell, monkeypatch, capsys, tmp_path):
     """Redirects and multiline quoted bodies must not bypass the publishing shim."""
     spec = importlib.util.spec_from_file_location(
         "wrapped_hook", ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py"
@@ -740,32 +749,34 @@ def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys, tmp_p
     fake_gh = fake_bin / "gh"
     fake_gh.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$GH_RECORD"\n')
     fake_gh.chmod(0o755)
+    fake_git = fake_bin / "git"
+    fake_git.write_text("#!/bin/sh\nexit 0\n")
+    fake_git.chmod(0o755)
     record = tmp_path / "gh-record"
     monkeypatch.setenv("PATH", str(fake_bin) + os.pathsep + os.defpath)
     monkeypatch.setenv("GH_RECORD", str(record))
     (tmp_path / "input").write_text("synthetic input")
-    for candidate in (
-        command,
-        'gh issue create -b "line1\nline2"',
-        "gh issue create -b 'line1\nline2'",
-        'gh pr create --body "$(cat <<\'EOF\'\nline1\nline2\nEOF\n)"',
+    for prefix, suffix in (
+        ("", ""), ("2>&1 ", ""), (">output ", ""), (">>output ", ""),
+        ("2>/dev/null ", ""), ("&>output ", ""), ("<input ", ""), ("</dev/null ", ""),
+        ("true &&>output ", ""), ("{fd}>output ", ""), ("", " | cat"),
     ):
-        for prefix, suffix in (
-            ("", ""), ("2>&1 ", ""), (">output ", ""), (">>output ", ""),
-            ("2>/dev/null ", ""), ("&>output ", ""), ("<input ", ""),
-            ("true &&>output ", ""), ("{fd}>output ", ""), ("", " | cat"),
-        ):
-            redirected = candidate.replace("gh ", prefix + "gh ", 1) + suffix
-            before = record.read_text() if record.exists() else ""
-            oracle = subprocess.run(
-                ["bash", "--noprofile", "--norc", "-c", redirected],
-                cwd=tmp_path, capture_output=True, text=True, timeout=10,
-            )
+        redirected = command.replace("gh ", prefix + "gh ", 1) + suffix
+        before = record.read_text() if record.exists() else ""
+        oracle = subprocess.run(
+            ["bash", "--noprofile", "--norc", *([] if valid_shell else ["-n"]), "-c", redirected],
+            cwd=tmp_path, capture_output=True, text=True, timeout=10,
+        )
+        if valid_shell:
             assert oracle.returncode == 0, (redirected, oracle.stderr)
             assert record.read_text() != before, redirected
+        else:
+            assert oracle.returncode != 0, redirected
+        assert module.invokes_gh(redirected), redirected
+        for tool_name in ("Bash", "Shell"):
             monkeypatch.setattr(
                 sys, "stdin", __import__("io").StringIO(json.dumps({
-                    "tool_name": "Bash", "tool_input": {"command": redirected},
+                    "tool_name": tool_name, "tool_input": {"command": redirected},
                 }))
             )
             assert module.main() == 0

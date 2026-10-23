@@ -8,69 +8,96 @@ import json
 import os
 import shlex
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 
+def _shell_words(command: str) -> list[str]:
+    lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n")
+    lexer.whitespace = " \t\r"
+    lexer.whitespace_split = True
+    return list(lexer)
+
+
+def _redirect_words(command: str) -> Iterator[str]:
+    from shell_redirects import _split_scopes
+    from shell_shlex import strip_shell_comments
+
+    pending = False
+    # Scan the complete command so quotes keep their state across newlines.
+    for kind, raw in _split_scopes(strip_shell_comments(command)):
+        if kind == "text":
+            words = _shell_words(raw)
+            if pending and words:
+                if words[0] == "\n":
+                    raise ValueError("missing redirect operand")
+                words.pop(0)
+                pending = False
+            yield from words
+        elif pending:
+            raise ValueError("missing redirect operand")
+        elif kind == "redirect":
+            pending = True
+        else:
+            yield raw
+    if pending:
+        raise ValueError("missing redirect operand")
+
+
 def invokes_gh(command: str) -> bool:
     """Recognize command positions, common wrappers and nested shell -c forms."""
-    from shell_redirects import scope_events
-
-    events = scope_events(
-        command, mark_redirect_unreadable=False, unreadable_marker="",
-        # Multiline quotes do not lex per line; conservatively route possible gh calls.
-        unparsed=["gh"], may_match=lambda line: "gh" in line.replace("\\", "").replace("'", "").replace('"', ""),
-    )
     try:
-        lexer = (word for kind, argv in events if kind == "segment" for word in (*argv, "\n"))
-        expecting_command = True
-        shell = False
-        shell_script = False
-        wrapper = False
-        for word in lexer:
-            if shell_script:
-                if invokes_gh(word):
-                    return True
-                shell_script = False
-                expecting_command = False
-            elif word and all(char in ";|&()\n" for char in word):
-                expecting_command = True
-                shell = False
-                wrapper = False
-            elif shell and word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
-                shell_script = True
-            elif expecting_command:
-                if "=" in word or word in {
-                    "env",
-                    "command",
-                    "exec",
-                    "sudo",
-                    "time",
-                    "timeout",
-                    "xargs",
-                    "if",
-                    "then",
-                    "elif",
-                    "while",
-                    "until",
-                    "do",
-                    "!",
-                }:
-                    wrapper = word in {"time", "timeout", "xargs", "env", "sudo"} or wrapper
-                    continue
-                if Path(word).name == "gh":
-                    return True
-                if Path(word).name in {"bash", "sh", "zsh", "dash"}:
-                    shell = True
+        # Keep the original whole-command lexer as the primary detection path.
+        for lexer in (_shell_words(command), _redirect_words(command)):
+            expecting_command = True
+            shell = False
+            shell_script = False
+            wrapper = False
+            for word in lexer:
+                if shell_script:
+                    if invokes_gh(word):
+                        return True
+                    shell_script = False
                     expecting_command = False
-                elif wrapper or word.startswith("-") or word.replace(".", "").isdigit():
-                    continue
-                else:
-                    expecting_command = False
+                elif word and all(char in ";|&()\n" for char in word):
+                    expecting_command = True
+                    shell = False
+                    wrapper = False
+                elif shell and word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
+                    shell_script = True
+                elif expecting_command:
+                    if "=" in word or word in {
+                        "env",
+                        "command",
+                        "exec",
+                        "sudo",
+                        "time",
+                        "timeout",
+                        "xargs",
+                        "if",
+                        "then",
+                        "elif",
+                        "while",
+                        "until",
+                        "do",
+                        "!",
+                    }:
+                        wrapper = word in {"time", "timeout", "xargs", "env", "sudo"} or wrapper
+                        continue
+                    if Path(word).name == "gh":
+                        return True
+                    if Path(word).name in {"bash", "sh", "zsh", "dash"}:
+                        shell = True
+                        expecting_command = False
+                    elif wrapper or word.startswith("-") or word.replace(".", "").isdigit():
+                        continue
+                    else:
+                        expecting_command = False
     except ValueError:
-        pass
+        return True
     return False
 
 
