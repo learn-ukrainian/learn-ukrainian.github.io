@@ -16,10 +16,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 def invokes_gh(command: str) -> bool:
     """Recognize command positions, common wrappers and nested shell -c forms."""
+    from shell_redirects import scope_events
+
+    events = scope_events(
+        command, mark_redirect_unreadable=False, unreadable_marker="",
+        unparsed=[], may_match=lambda line: False,
+    )
     try:
-        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n")
-        lexer.whitespace = " \t\r"
-        lexer.whitespace_split = True
+        lexer = (word for kind, argv in events if kind == "segment" for word in (*argv, "\n"))
         expecting_command = True
         shell = False
         shell_script = False

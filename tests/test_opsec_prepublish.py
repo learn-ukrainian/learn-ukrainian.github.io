@@ -728,18 +728,41 @@ def test_bridge_comment_refusal_is_rendered_and_returns_false(monkeypatch, capsy
         "bash -lc 'gh issue list'",
     ],
 )
-def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys):
+def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys, tmp_path):
     spec = importlib.util.spec_from_file_location(
         "wrapped_hook", ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py"
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    monkeypatch.setenv("PATH", os.defpath)
-    monkeypatch.setattr(
-        sys, "stdin", __import__("io").StringIO(json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}))
-    )
-    assert module.main() == 0
-    assert "export PATH=" in json.loads(capsys.readouterr().out)["hookSpecificOutput"]["updatedInput"]["command"]
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_gh = fake_bin / "gh"
+    fake_gh.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$GH_RECORD"\n')
+    fake_gh.chmod(0o755)
+    record = tmp_path / "gh-record"
+    monkeypatch.setenv("PATH", str(fake_bin) + os.pathsep + os.defpath)
+    monkeypatch.setenv("GH_RECORD", str(record))
+    (tmp_path / "input").write_text("synthetic input")
+    for prefix in ("", "2>&1 ", ">output ", ">>output ", "2>/dev/null ", "&>output ",
+                   "<input ", "true &&>output ", "{fd}>output "):
+        redirected = command.replace("gh ", prefix + "gh ", 1)
+        before = record.read_text() if record.exists() else ""
+        oracle = subprocess.run(
+            ["bash", "--noprofile", "--norc", "-c", redirected],
+            cwd=tmp_path, capture_output=True, text=True, timeout=10,
+        )
+        assert oracle.returncode == 0, (redirected, oracle.stderr)
+        assert record.read_text() != before, redirected
+        monkeypatch.setattr(
+            sys, "stdin", __import__("io").StringIO(json.dumps({
+                "tool_name": "Bash", "tool_input": {"command": redirected},
+            }))
+        )
+        assert module.main() == 0
+        updated = json.loads(capsys.readouterr().out)["hookSpecificOutput"]["updatedInput"]["command"]
+        assert "export PATH=" in updated
+        assert updated.endswith(redirected)
+
 
 
 def test_no_text_override_unclaimed_without_loading_matcher(monkeypatch, tmp_path):
