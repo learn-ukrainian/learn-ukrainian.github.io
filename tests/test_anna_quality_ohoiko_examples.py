@@ -719,7 +719,10 @@ def test_merge_translation_preserves_distinct_prior_senses() -> None:
 
 def test_merge_translation_empty_prior() -> None:
     merged = merge_translation(None, "agriculture")
-    assert merged == {"en": ["agriculture"], "source": "learner_english_gloss"}
+    assert merged == {
+        "en": ["agriculture"], "source": "learner_english_gloss",
+        "attributions": [{"text": "agriculture", "source": "Anna Ohoiko"}],
+    }
 
 
 # ---------------------------------------------------------------------------
