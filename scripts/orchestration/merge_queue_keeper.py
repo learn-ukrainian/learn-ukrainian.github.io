@@ -74,10 +74,9 @@ SLOW_INTERVAL_SECONDS = 300
 INTERVAL_SLACK_SECONDS = 15
 # Gate holds the keeper reports without a PR comment: the drop comment already says why.
 QUIET_GATE_REASONS = frozenset({"requeue-pending"})
-# A queue removal whose failing jobs also failed another PR's merge_group run in
-# the failure window is a queue-wide failure, not this head's: the head returns
-# to the queue without counting a drop or spending a requeue, up to this many
-# times per head. Aggregate jobs only mirror other jobs and never attribute.
+# Matching failed jobs identify a possible shared failure only. Recovery still
+# needs posted diagnosis of the complete queue candidate diff and consumes the
+# shared one-attempt allowance. Aggregate jobs cannot establish attribution.
 SHARED_FAILURE_REQUEUE_LIMIT = 3
 AGGREGATE_JOBS = frozenset({"CI Gate"})
 # Job and check names and failed-test identifiers come from workflow files and CI
@@ -622,7 +621,11 @@ def _gate_hold(
     hold = _requeue_hold(drop_key, drops, grants, previous)
     if hold is None and needs_recovery:
         try:
-            recovery.evidence_from_comments(comments, number, head, authenticated_login=login)
+            evidence = recovery.evidence_from_comments(comments, number, head, authenticated_login=login)
+            if not isinstance(evidence.get("queue_group_diff"), dict):
+                return "RECOVERY_QUEUE_DIFF_UNKNOWN"
+            # The publisher resolves the real failed candidate's complete
+            # merge-base diff and verifies these paths before any mutation.
         except PublishBlocked as exc:
             return str(exc)
     return hold
@@ -949,7 +952,8 @@ def run(
                         detail += (
                             " The same jobs also failed merge_group runs of "
                             + ", ".join(f"#{n}" for n in shared)
-                            + "; any re-enqueue uses this head's shared recovery allowance."
+                            + "; this alone does not prove a service failure. Recovery requires diagnosis of the "
+                            "whole queue-group diff and uses this head's shared recovery allowance."
                         )
                 else:
                     detail = " Queue removal diagnosis unknown."

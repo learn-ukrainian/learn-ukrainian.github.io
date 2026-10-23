@@ -41,7 +41,6 @@ READ_CALLERS = [
     ("agents_extensions/shared/skills/track-completion/scripts/track_completion.py", ["api", "repos/{owner}/{repo}/actions/runs/1"]),
     ("agents_extensions/shared/skills/track-completion/scripts/track_completion.py", ["api", "repos/{owner}/{repo}/compare/" + "a" * 40 + "..." + "b" * 40]),
     ("scripts/deploy/vendor_atlas_tree.py", ["api", "repos/unit/public/releases/assets/1", "-H", "Accept: application/octet-stream"]),
-    ("scripts/ci/reuse_green_run.py", ["api", "repos/unit/public/pulls/1", "--jq", ".head.sha"]),
     ("scripts/ci/cache_hygiene.py", ["api", "repos/unit/public/actions/caches?per_page=100&page=1"]),
     ("scripts/ci/ci_timings.py", ["api", "repos/unit/public/actions/runs/1/jobs?per_page=100&page=1"]),
 ]

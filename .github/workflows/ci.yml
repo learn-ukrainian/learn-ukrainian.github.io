@@ -1,11 +1,8 @@
 name: CI
 
-# See docs/runbooks/ci-gate.md. Every event runs the same jobs and the full
-# non-slow pytest suite plus the slow sparse collection guard in Checks
-# (other slow tests: pytest-slow-nightly.yml). The merge queue
-# reuses a green full run of the identical tree instead of rerunning its jobs
-# (scripts/ci/reuse_green_run.py), but always scans the queue commit's own
-# metadata for secrets. The one required context is "CI Gate".
+# PRs run admission checks and collect pytest without executing the full suite.
+# merge_group, nightly and opt-in workflow_dispatch run the full supported suite.
+# Every merge candidate must pass the same required "CI Gate" context.
 
 concurrency:
   # A push cancels the stale pull_request run; other events are never cancelled.
@@ -38,49 +35,9 @@ on:
     - cron: '30 3 * * *'
 
 jobs:
-  reuse:
-    name: Reuse check
-    if: github.event_name == 'merge_group'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      actions: read
-      pull-requests: read
-    outputs:
-      reuse: ${{ steps.find.outputs.reuse }}
-      run_id: ${{ steps.find.outputs.run_id }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          sparse-checkout: |
-            scripts/ci/
-            scripts/__init__.py
-            scripts/common/__init__.py
-            scripts/common/github_client.py
-            scripts/common/scratch.py
-            scripts/opsec/__init__.py
-            scripts/opsec/gh_snapshot.py
-            scripts/opsec/prepublish.py
-            .github/workflows/ci.yml
-            .python-version
-          sparse-checkout-cone-mode: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
-      - id: find
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.merge_group.head_sha }}
-          HEAD_REF: ${{ github.event.merge_group.head_ref }}
-        run: python3 -m scripts.ci.reuse_green_run
-
   queue-metadata-scan:
     # The queue writes PR-derived text into its commit's message, so the
-    # commit's metadata is new even when the reuse check reuses a run's
-    # file-content secret scan of the identical tree. Scans message, author
+    # commit's metadata needs its own scan. Scans message, author
     # and committer only (an empty-diff commit carrying that metadata).
     name: Queue commit metadata scan
     if: github.event_name == 'merge_group'
@@ -90,10 +47,21 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 2  # the queue commit and its parents; no blob filter (TruffleHog clones this repo)
+          fetch-depth: 0  # verify the original group base is an ancestor of the candidate
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+      - name: Record original queue candidate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          QUEUE_RECORD: ${{ runner.temp }}/queue-candidate.json
+        run: python3 -m scripts.ci.gate --record-queue
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ci-queue-candidate
+          path: ${{ runner.temp }}/queue-candidate.json
+          if-no-files-found: error
+          retention-days: 14
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
       # `version` is the scanner image tag. The uses SHA pins this action's
@@ -110,8 +78,7 @@ jobs:
 
   secret-scan:
     name: Secret scan
-    needs: [reuse]
-    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     # Only a deliberate manual audit gets the full-history budget.
     timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}
@@ -172,12 +139,11 @@ jobs:
 
   checks:
     name: Checks
+    if: ${{ !cancelled() }}
     permissions:
       contents: read
       actions: read
       issues: read
-    needs: [reuse]
-    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -197,10 +163,16 @@ jobs:
         uses: ./.github/actions/python-ci-env
       # CI Gate requires Checks; ordinary pytest shards deselect this slow node.
       - name: Sparse tree collection guard
+        if: github.event_name != 'pull_request'
         run: >-
           .venv/bin/python -m pytest
           tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent
           --override-ini addopts=-q -m slow --strict-markers
+      - name: Collect pytest for PR admission
+        if: github.event_name == 'pull_request'
+        run: >-
+          .venv/bin/python -m pytest tests --collect-only --strict-markers
+          --override-ini addopts=-q --override-ini 'norecursedirs=.* node_modules'
       - name: Verify flake quarantine admissions
         env:
           GH_TOKEN: ${{ github.token }}
@@ -219,8 +191,7 @@ jobs:
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
     # (site/ plus the backend inputs hydrate reads) or the base is unknown.
     name: Frontend
-    needs: [reuse]
-    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
+    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -277,11 +248,9 @@ jobs:
 
   # One snapshot per run, then every shard downloads that same artifact (#11040).
   # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
-  # Queue reuse skips the steps: pytest does not run, so there is nothing to balance.
   refresh-pytest-durations:
     name: Refresh pytest durations
-    needs: [reuse]
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -289,7 +258,6 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: needs.reuse.outputs.reuse != 'true'
         with:
           persist-credentials: false
           fetch-depth: 1
@@ -305,11 +273,9 @@ jobs:
             .python-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        if: needs.reuse.outputs.reuse != 'true'
         with:
           python-version-file: '.python-version'
       - name: Refresh pytest duration snapshot
-        if: needs.reuse.outputs.reuse != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -329,7 +295,6 @@ jobs:
             echo "::notice::duration lookup unavailable; retaining committed weights"
           fi
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: needs.reuse.outputs.reuse != 'true'
         with:
           name: pytest-duration-input
           path: ci-artifacts/pytest-file-durations.json
@@ -338,8 +303,8 @@ jobs:
 
   pytest:
     name: pytest (${{ matrix.shard }})
-    needs: [reuse, refresh-pytest-durations]
-    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
+    needs: [refresh-pytest-durations]
+    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # actions:read is only so this job can download the same-run snapshot.
@@ -509,11 +474,10 @@ jobs:
 
   dependency-audit:
     name: Dependency audit
+    if: ${{ !cancelled() }}
     # Runs the full audit only when the diff touches a dependency input
     # (scripts/ci/dependency_change_denominator.json) or the base is unknown;
     # otherwise the scope step cheap-exits and the job still ends success (#9871).
-    needs: [reuse]
-    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -544,13 +508,12 @@ jobs:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
-    # The refresh job is waited on and is not a gate result: lookup failure stays green.
-    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, refresh-pytest-durations, pytest, pytest-report]
+    # Every dependency must finish with the result required by its event tier.
+    needs: [queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Check out repository
-        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || '' }}
@@ -558,7 +521,6 @@ jobs:
           fetch-depth: 0
       - name: Set up Python
         id: setup-python-gate
-        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -582,50 +544,10 @@ jobs:
       - name: Require every job
         env:
           EVENT_NAME: ${{ github.event_name }}
-          REUSE_JOB: ${{ needs.reuse.result }}
-          REUSE: ${{ needs.reuse.outputs.reuse }}
-          REUSED_RUN: ${{ needs.reuse.outputs.run_id }}
-          METADATA_SCAN: ${{ needs.queue-metadata-scan.result }}
-          SECRET_SCAN: ${{ needs.secret-scan.result }}
-          CHECKS: ${{ needs.checks.result }}
-          FRONTEND: ${{ needs.frontend.result }}
-          DEPENDENCY_AUDIT: ${{ needs.dependency-audit.result }}
-          PYTEST: ${{ needs.pytest.result }}
-          PYTEST_REPORT: ${{ needs.pytest-report.result }}
-        run: |
-          status=0
-          want() {  # want JOB RESULT EXPECTED
-            if [ "$2" = "$3" ]; then echo "$1: $2"; else
-              [ "$2" != cancelled ] || echo "::error::required job was cancelled: $1"
-              echo "::error::$1 is '${2:-missing}', expected '$3'"; status=1; fi
-          }
-          if [ "$EVENT_NAME" = merge_group ]; then
-            want reuse "$REUSE_JOB" success; want queue-metadata-scan "$METADATA_SCAN" success
-          else
-            want reuse "$REUSE_JOB" skipped; want queue-metadata-scan "$METADATA_SCAN" skipped
-          fi
-          expected=success
-          if [ "$EVENT_NAME" = merge_group ] && [ "$REUSE" = true ]; then
-            [ -n "$REUSED_RUN" ] || { echo "::error::reuse=true without a run id"; status=1; }
-            expected=skipped
-          fi
-          jobs=(
-            secret-scan:SECRET_SCAN
-            checks:CHECKS
-            frontend:FRONTEND
-            dependency-audit:DEPENDENCY_AUDIT
-            pytest:PYTEST
-            pytest-report:PYTEST_REPORT
-          )
-          for job in "${jobs[@]}"; do
-            var="${job#*:}"; want "${job%%:*}" "${!var}" "$expected"
-            [ "$expected" = success ] || echo "${job%%:*} reused from run ${REUSED_RUN}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${REUSED_RUN}"
-          done
-          [ "$status" != 0 ] || echo "CI Gate green"; exit "$status"
-      # docs/runbooks/agent-attribution.md. Runs on reused-tree queue runs too: the queue
-      # commit's message is new even when its tree's run is reused. Report-only until the
-      # repository variable ATTRIBUTION_ENFORCE is exactly 1; report-only downgrades
-      # attribution violations only, so a crash of the checker still fails this step.
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: '"$PYTHON_BIN" -m scripts.ci.gate'
+      # Attribution retains the repository's existing enforcement mode.
       - name: Check agent attribution
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         env:

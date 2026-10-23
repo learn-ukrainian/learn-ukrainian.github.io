@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import io
 import json
 import subprocess
+import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Barrier
@@ -28,6 +30,7 @@ def evidence(head=HEAD):
         "run_id": 123,
         "job_ids": [456],
         "tested_sha": TESTED,
+        "queue_group_diff": {"base_sha": "d" * 40, "head_sha": TESTED, "paths": ["scripts/earlier-pr.py", "scripts/this-pr.py"]},
         "failure_evidence": "Job log confirms runner checkout failure",
         "unrelated_to_diff": "Failure precedes execution of changed code",
     }
@@ -61,6 +64,9 @@ class Transport:
         self.moved = False
         self.pull_reads = 0
         self.writes = []
+        self.compare_rows = {"base_commit": {"sha": "d" * 40}, "merge_base_commit": {"sha": "d" * 40}, "status": "ahead", "files": [{"filename": "scripts/earlier-pr.py"}, {"filename": "scripts/this-pr.py"}]}
+        self.candidate_record = {"base_sha": "d" * 40, "head_sha": TESTED, "head_ref": "refs/heads/gh-readonly-queue/main/pr-42-" + "e" * 40, "run_id": 123, "run_attempt": 1}
+
 
     def __call__(self, argv, **kwargs):
         if argv[1:3] == ["pr", "view"]:
@@ -175,12 +181,22 @@ class Transport:
                     "conclusion": self.conclusion,
                     "head_sha": TESTED,
                     "event": self.event,
-                    "head_branch": "gh-readonly-queue/main/pr-42-abcdef",
+                    "head_branch": "gh-readonly-queue/main/pr-42-" + "e" * 40,
                     "run_attempt": self.attempt,
                     "pull_requests": self.associations
                     if self.associations is not None
                     else ([] if self.event == "merge_group" else [{"number": 42, "head": {"sha": self.head}}]),
                 }
+            elif endpoint.endswith("/actions/runs/123/artifacts"):
+                data = {"total_count": 1, "artifacts": [{"name": "ci-queue-candidate", "id": 77, "expired": False, "size_in_bytes": 1024}]}
+            elif endpoint.endswith("/actions/artifacts/77/zip"):
+                with io.BytesIO() as buffer:
+                    with zipfile.ZipFile(buffer, "w") as archive:
+                        archive.writestr("queue-candidate.json", json.dumps(self.candidate_record))
+                    kwargs["stdout"].write(buffer.getvalue())
+                return subprocess.CompletedProcess(argv, 0, "", "")
+            elif "/compare/" in endpoint:
+                data = self.compare_rows
             elif endpoint.endswith("/pulls/42"):
                 self.pull_reads += 1
                 data = {"state": "open", "head": {"sha": NEW_HEAD if self.moved and self.pull_reads > 1 else self.head}}
@@ -347,6 +363,33 @@ def test_partial_evidence_refuses(setup, field):
     with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
         recover(setup, "run-rerun")
     assert transport.writes == []
+    # Queue recovery must also prove the complete candidate diff, regardless
+    # of which legacy evidence field this existing case exercises.
+    transport.proof = evidence()
+    original = json.loads(json.dumps(transport.proof["queue_group_diff"]))
+    for bad in (None, {}, {**original, "paths": ["scripts/this-pr.py"]}, {**original, "base_sha": "f" * 40}, {**original, "head_sha": HEAD}):
+        transport.proof["queue_group_diff"] = bad
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_QUEUE_DIFF_UNKNOWN"):
+            recover(setup, "direct")
+        assert transport.writes == []
+    transport.proof["queue_group_diff"] = original
+    for bad in ({}, {**transport.compare_rows, "files": [{"filename": "scripts/this-pr.py"}] * 300}, {**transport.compare_rows, "status": "diverged"}):
+        saved = transport.compare_rows
+        transport.compare_rows = bad
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_QUEUE_DIFF_UNKNOWN"):
+            recover(setup, "direct")
+        assert transport.writes == []
+        transport.compare_rows = saved
+    # A moved main cannot narrow the original event's group delta. Missing
+    # original-base proof and candidate/run mismatches must remain blockers.
+    saved_record = dict(transport.candidate_record)
+    for bad in ({}, {**saved_record, "base_sha": "f" * 40}, {**saved_record, "head_sha": HEAD}, {**saved_record, "run_id": 124}, {**saved_record, "run_attempt": 2}):
+        transport.candidate_record = bad
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_QUEUE_DIFF_UNKNOWN"):
+            recover(setup, "direct")
+        assert transport.writes == []
+    transport.candidate_record = saved_record
+
 
 
 @pytest.mark.parametrize("action", ["run-rerun", "direct"])
