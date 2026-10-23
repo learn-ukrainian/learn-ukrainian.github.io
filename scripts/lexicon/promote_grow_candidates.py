@@ -1220,10 +1220,6 @@ def _json_bytes(payload: object) -> bytes:
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
-def _held_lemmas(raw_items: object) -> list[HeldLemma]:
-    return [HeldLemma(lemma=row.lemma, reason=row.reason) for row in _held_rows(raw_items)]
-
-
 def _held_rows(raw_items: object) -> list[HeldRow]:
     """Parse needs_review payload rows into HeldRow values (entry + reason)."""
     if not isinstance(raw_items, list):
