@@ -35,6 +35,7 @@ import re
 import sqlite3
 import sys
 import threading
+import time
 import unicodedata
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -4443,6 +4444,187 @@ async def main_stdio():
         await server.run(read_stream, write_stream, server.create_initialization_options())
 
 
+# Prometheus families for this process. A private registry stays out of the
+# global default registry, so importing this module twice (the HTTP tests do)
+# does not raise duplicate-collector errors, and /metrics cannot export
+# another library's series. Labels are the bounded triple
+# (request_type, method, status): no query, word, prompt, token, or path.
+from mcp_types.methods import SPEC_CLIENT_METHODS, SPEC_CLIENT_NOTIFICATION_METHODS
+from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, Counter, Histogram, generate_latest
+
+_METRICS_REGISTRY = CollectorRegistry()
+_METRIC_LABELS = ("request_type", "method", "status")
+_REQUESTS = Counter(
+    "sources_mcp_requests_total",
+    "Sources MCP and HTTP request outcomes.",
+    labelnames=_METRIC_LABELS,
+    registry=_METRICS_REGISTRY,
+)
+_ERRORS = Counter(
+    "sources_mcp_request_errors_total",
+    "Sources MCP and HTTP terminal request failures.",
+    labelnames=_METRIC_LABELS,
+    registry=_METRICS_REGISTRY,
+)
+_LATENCY = Histogram(
+    "sources_mcp_request_duration_seconds",
+    "Sources MCP and HTTP request latency in seconds.",
+    labelnames=_METRIC_LABELS,
+    registry=_METRICS_REGISTRY,
+)
+_BOUNDED_MCP_METHODS = frozenset(SPEC_CLIENT_METHODS) | frozenset(SPEC_CLIENT_NOTIFICATION_METHODS)
+_HTTP_METHODS = frozenset({"DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"})
+# Stateless Streamable HTTP runs the MCP message on a child task. A copied
+# contextvar shares this list, so the outer HTTP middleware can see that the
+# protocol layer already recorded the outcome.
+_MCP_OBSERVED: contextvars.ContextVar[list[int] | None] = contextvars.ContextVar(
+    "sources_mcp_metrics_observed",
+    default=None,
+)
+
+
+def _note_mcp_observed() -> None:
+    holder = _MCP_OBSERVED.get()
+    if holder is not None:
+        holder[0] += 1
+
+
+def _normalized_mcp_method(method: object) -> str:
+    if isinstance(method, str) and method in _BOUNDED_MCP_METHODS:
+        return method
+    return "other"
+
+
+def _mcp_request_type(ctx: Any) -> str:
+    if getattr(ctx, "request_id", None) is None:
+        return "notification"
+    return "mcp"
+
+
+def _mcp_result_failed(method: object, result: Any) -> bool:
+    """Tool failures are successful HTTP responses. Count them at this layer."""
+    if method != "tools/call":
+        return False
+    if isinstance(result, CallToolResult):
+        return result.is_error is True
+    return isinstance(result, dict) and result.get("isError") is True
+
+
+def _normalized_http_method(method: object) -> str:
+    if isinstance(method, str):
+        token = method.upper()
+        if token in _HTTP_METHODS:
+            return token
+    return "OTHER"
+
+
+def _http_status_class(code: int) -> str:
+    if 100 <= code <= 599:
+        return f"{code // 100}xx"
+    return "5xx"
+
+
+def _http_request_type(path: object) -> str:
+    if path == "/health":
+        return "health"
+    if path == "/metrics":
+        return "metrics"
+    return "http"
+
+
+def _observe_outcome(request_type: str, method: str, status: str, elapsed: float, *, failed: bool) -> None:
+    labels = {"request_type": request_type, "method": method, "status": status}
+    _REQUESTS.labels(**labels).inc()
+    _LATENCY.labels(**labels).observe(elapsed)
+    if failed:
+        _ERRORS.labels(**labels).inc()
+
+
+class _SourcesRequestMetrics:
+    """Official MCP middleware: one observation per inbound message.
+
+    ``Server.middleware`` wraps initialize, lookup, validation, the handler,
+    and notifications on both stdio and Streamable HTTP. A raised failure and
+    a ``tools/call`` error result are each recorded once, then re-raised.
+    """
+
+    async def __call__(self, ctx: Any, call_next: Any) -> Any:
+        _note_mcp_observed()
+        started = time.perf_counter()
+        status = "error"
+        try:
+            result = await call_next(ctx)
+            if not _mcp_result_failed(getattr(ctx, "method", None), result):
+                status = "ok"
+            return result
+        finally:
+            _observe_outcome(
+                _mcp_request_type(ctx),
+                _normalized_mcp_method(getattr(ctx, "method", None)),
+                status,
+                time.perf_counter() - started,
+                failed=status == "error",
+            )
+
+
+class _SourcesHttpMetrics:
+    """ASGI middleware for HTTP outcomes that never become an MCP message.
+
+    ``/health``, ``/metrics``, rejected methods, and transport failures are
+    recorded here. A message the MCP middleware already observed is not
+    recorded again.
+    """
+
+    def __init__(self, app: Any) -> None:
+        self.app = app
+
+    async def __call__(self, scope: dict[str, Any], receive: Any, send: Any) -> None:
+        if scope.get("type") != "http":
+            await self.app(scope, receive, send)
+            return
+        holder = [0]
+        token = _MCP_OBSERVED.set(holder)
+        started = time.perf_counter()
+        status_code = 500
+        response_started = False
+        recorded = False
+
+        async def send_wrapper(message: dict[str, Any]) -> None:
+            nonlocal status_code, response_started
+            if message.get("type") == "http.response.start":
+                response_started = True
+                status_code = int(message["status"])
+            await send(message)
+
+        try:
+            await self.app(scope, receive, send_wrapper)
+        except Exception:
+            if holder[0] == 0 and not recorded:
+                recorded = True
+                _observe_outcome(
+                    _http_request_type(scope.get("path")),
+                    _normalized_http_method(scope.get("method")),
+                    "5xx" if not response_started else _http_status_class(status_code),
+                    time.perf_counter() - started,
+                    failed=True,
+                )
+            raise
+        finally:
+            if holder[0] == 0 and not recorded:
+                status = _http_status_class(status_code)
+                _observe_outcome(
+                    _http_request_type(scope.get("path")),
+                    _normalized_http_method(scope.get("method")),
+                    status,
+                    time.perf_counter() - started,
+                    failed=status == "5xx",
+                )
+            _MCP_OBSERVED.reset(token)
+
+
+server.middleware.append(_SourcesRequestMetrics())
+
+
 class _RejectUnsupportedStatelessMcpMethods:
     """ASGI wrapper: 405 GET/DELETE on ``/mcp`` in stateless JSON mode.
 
@@ -4479,10 +4661,10 @@ def create_http_app():
     Uses MCP 2.0's built-in ``Server.streamable_http_app`` for the
     streamable-HTTP endpoint, with ``stateless_http=True`` and
     ``json_response=True`` so each request is independent and answered with a
-    single JSON body. Public routes are ``/mcp`` and ``/health`` only — legacy
-    SSE (``/sse``, ``/messages/``) is not advertised. GET/DELETE on ``/mcp``
-    are rejected with 405 so Streamable HTTP clients do not hang on an empty
-    SSE notification stream.
+    single JSON body. Public routes are ``/mcp``, ``/health``, and
+    ``/metrics`` on this same app — legacy SSE (``/sse``, ``/messages/``) is
+    not advertised. GET/DELETE on ``/mcp`` are rejected with 405 so Streamable
+    HTTP clients do not hang on an empty SSE notification stream.
     """
     _set_http_mode(True)
     from starlette.responses import Response
@@ -4498,8 +4680,12 @@ def create_http_app():
         }
         return Response(json.dumps(payload), media_type="application/json")
 
+    async def handle_metrics(_request):
+        return Response(generate_latest(_METRICS_REGISTRY), media_type=CONTENT_TYPE_LATEST)
+
     custom_routes = [
         Route("/health", endpoint=handle_health),
+        Route("/metrics", endpoint=handle_metrics),
     ]
 
     app = server.streamable_http_app(
@@ -4508,7 +4694,7 @@ def create_http_app():
         stateless_http=True,
         custom_starlette_routes=custom_routes,
     )
-    return _V4AttemptAuthMiddleware(_RejectUnsupportedStatelessMcpMethods(app))
+    return _SourcesHttpMetrics(_V4AttemptAuthMiddleware(_RejectUnsupportedStatelessMcpMethods(app)))
 
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):
@@ -4540,6 +4726,7 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     print(f"MCP Sources Server running on http://{host}:{port}")
     print(f"  Streamable HTTP endpoint: http://{host}:{port}/mcp")
     print(f"  Health: http://{host}:{port}/health")
+    print(f"  Metrics: http://{host}:{port}/metrics")
     sys.stdout.flush()
 
     limits = _call_governor().limits

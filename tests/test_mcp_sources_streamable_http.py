@@ -9,6 +9,7 @@ import time
 from pathlib import Path
 
 import httpx
+import prometheus_client  # noqa: F401  # Declares the Sources metrics dependency to the CI fastlane.
 import pytest
 import uvicorn
 
@@ -21,6 +22,41 @@ def _load_sources_server():
     assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
+
+
+def _metric_value(body: str, name: str, **labels: str) -> float:
+    """Return one exposition sample. Missing series are zero."""
+    wanted = tuple(sorted(labels.items()))
+    total = 0.0
+    for line in body.splitlines():
+        if not line or line.startswith("#"):
+            continue
+        pieces = line.split()
+        head = pieces[0]
+        metric, separator, raw_labels = head.partition("{")
+        if metric != name:
+            continue
+        parsed: list[tuple[str, str]] = []
+        if separator:
+            for item in raw_labels.rstrip("}").split(","):
+                if not item:
+                    continue
+                key, _, quoted = item.partition("=")
+                parsed.append((key, quoted.strip('"')))
+        if tuple(sorted(parsed)) == wanted:
+            total += float(pieces[1])
+    return total
+
+
+def _metrics_text(base_url: str) -> str:
+    response = httpx.get(f"{base_url}/metrics", timeout=5)
+    assert response.status_code == 200
+    content_type = response.headers.get("content-type", "")
+    assert content_type.startswith("text/plain")
+    assert content_type.count("charset=") == 1
+    assert "sources.db" not in response.text
+    assert "query=" not in response.text
+    return response.text
 
 
 def _free_port() -> int:
@@ -80,6 +116,47 @@ def test_streamable_http_initialize_returns_capabilities(sources_http_url):
     assert body["jsonrpc"] == "2.0"
     assert body["id"] == 1
     assert "capabilities" in body["result"]
+    before = _metrics_text(sources_http_url)
+    again = httpx.post(
+        f"{sources_http_url}/mcp",
+        json={
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+                "protocolVersion": "2025-06-18",
+                "capabilities": {},
+                "clientInfo": {"name": "test", "version": "1.0"},
+            },
+        },
+        timeout=5,
+    )
+    assert again.status_code == 200
+    after = _metrics_text(sources_http_url)
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="mcp", method="initialize", status="ok") == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="mcp", method="initialize", status="ok") + 1
+    )
+    assert _metric_value(
+        after, "sources_mcp_request_errors_total", request_type="mcp", method="initialize", status="error"
+    ) == _metric_value(
+        before, "sources_mcp_request_errors_total", request_type="mcp", method="initialize", status="error"
+    )
+    assert _metric_value(
+        after, "sources_mcp_request_duration_seconds_count", request_type="mcp", method="initialize", status="ok"
+    ) == (
+        _metric_value(
+            before, "sources_mcp_request_duration_seconds_count", request_type="mcp", method="initialize", status="ok"
+        )
+        + 1
+    )
+    for status in ("2xx", "4xx", "5xx"):
+        assert _metric_value(
+            after, "sources_mcp_requests_total", request_type="http", method="POST", status=status
+        ) == _metric_value(before, "sources_mcp_requests_total", request_type="http", method="POST", status=status)
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="health", method="GET", status="2xx") >= 1
+    assert "sources_mcp_requests_total" in after
+    assert "sources_mcp_request_errors_total" in after
+    assert "sources_mcp_request_duration_seconds" in after
 
 
 def test_streamable_http_get_mcp_returns_405_instead_of_hanging(sources_http_url):
@@ -93,6 +170,20 @@ def test_streamable_http_get_mcp_returns_405_instead_of_hanging(sources_http_url
     assert response.status_code == 405
     assert "POST" in response.headers.get("allow", "")
     assert not response.headers.get("content-type", "").startswith("text/event-stream")
+    before = _metrics_text(sources_http_url)
+    rejected = httpx.get(
+        f"{sources_http_url}/mcp",
+        headers={"Accept": "text/event-stream", "MCP-Protocol-Version": "2025-06-18"},
+        timeout=timeout,
+    )
+    assert rejected.status_code == 405
+    after = _metrics_text(sources_http_url)
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="http", method="GET", status="4xx") == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="http", method="GET", status="4xx") + 1
+    )
+    assert _metric_value(
+        after, "sources_mcp_request_errors_total", request_type="http", method="GET", status="4xx"
+    ) == _metric_value(before, "sources_mcp_request_errors_total", request_type="http", method="GET", status="4xx")
 
 
 def test_streamable_http_delete_mcp_returns_405(sources_http_url):
@@ -104,6 +195,22 @@ def test_streamable_http_delete_mcp_returns_405(sources_http_url):
     )
     assert response.status_code == 405
     assert "POST" in response.headers.get("allow", "")
+    before = _metrics_text(sources_http_url)
+    rejected = httpx.delete(
+        f"{sources_http_url}/mcp",
+        headers={"MCP-Protocol-Version": "2025-06-18"},
+        timeout=timeout,
+    )
+    assert rejected.status_code == 405
+    after = _metrics_text(sources_http_url)
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="http", method="DELETE", status="4xx") == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="http", method="DELETE", status="4xx") + 1
+    )
+    assert _metric_value(
+        after, "sources_mcp_request_errors_total", request_type="http", method="DELETE", status="4xx"
+    ) == _metric_value(
+        before, "sources_mcp_request_errors_total", request_type="http", method="DELETE", status="4xx"
+    )
 
 
 def test_streamable_http_tools_list_contains_vocabulary_vetting_tools(sources_http_url):
@@ -119,6 +226,24 @@ def test_streamable_http_tools_list_contains_vocabulary_vetting_tools(sources_ht
     assert "verify_words" in tool_names
     assert "vet_vocabulary" in tool_names
     assert "search_images" not in tool_names
+    before = _metrics_text(sources_http_url)
+    listed = httpx.post(
+        f"{sources_http_url}/mcp",
+        json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
+        timeout=5,
+    )
+    assert listed.status_code == 200
+    after = _metrics_text(sources_http_url)
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="mcp", method="tools/list", status="ok") == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="mcp", method="tools/list", status="ok") + 1
+    )
+    assert _metric_value(
+        after, "sources_mcp_request_errors_total", request_type="mcp", method="tools/list", status="error"
+    ) == _metric_value(
+        before, "sources_mcp_request_errors_total", request_type="mcp", method="tools/list", status="error"
+    )
+    assert "verify_words" not in after
+    assert "vet_vocabulary" not in after
 
 
 def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
@@ -189,6 +314,44 @@ def test_streamable_http_tool_call_returns_valid_response(sources_http_url):
         f"verify_word response is neither VESUM data nor structured error envelope; "
         f"transport likely broken. text_blob (truncated): {text_blob[:300]}"
     )
+    before = _metrics_text(sources_http_url)
+    repeated = httpx.post(
+        f"{sources_http_url}/mcp",
+        json={
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "verify_word",
+                "arguments": {"word": "стіл"},
+            },
+        },
+        timeout=10,
+    )
+    assert repeated.status_code == 200
+    repeated_text = repeated.json()["result"].get("content", [{}])[0].get("text", "")
+    repeated_failed = "Tool call failed: verify_word" in repeated_text or "Error in verify_word" in repeated_text
+    after = _metrics_text(sources_http_url)
+    outcome = "error" if repeated_failed else "ok"
+    assert _metric_value(
+        after, "sources_mcp_requests_total", request_type="mcp", method="tools/call", status=outcome
+    ) == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="mcp", method="tools/call", status=outcome) + 1
+    )
+    other = "ok" if repeated_failed else "error"
+    assert _metric_value(
+        after, "sources_mcp_requests_total", request_type="mcp", method="tools/call", status=other
+    ) == _metric_value(before, "sources_mcp_requests_total", request_type="mcp", method="tools/call", status=other)
+    assert _metric_value(
+        after, "sources_mcp_request_errors_total", request_type="mcp", method="tools/call", status="error"
+    ) == (
+        _metric_value(
+            before, "sources_mcp_request_errors_total", request_type="mcp", method="tools/call", status="error"
+        )
+        + (1 if repeated_failed else 0)
+    )
+    assert "стіл" not in after
+    assert "verify_word" not in after
 
 
 def test_legacy_sse_paths_are_not_advertised(sources_http_url):
@@ -205,3 +368,23 @@ def test_legacy_sse_paths_are_not_advertised(sources_http_url):
         timeout=timeout,
     )
     assert messages_response.status_code in {404, 405}
+    before = _metrics_text(sources_http_url)
+    sse_again = httpx.get(f"{sources_http_url}/sse", timeout=timeout)
+    messages_again = httpx.post(
+        f"{sources_http_url}/messages/",
+        content=b"{}",
+        headers={"content-type": "application/json"},
+        timeout=timeout,
+    )
+    assert sse_again.status_code in {404, 405}
+    assert messages_again.status_code in {404, 405}
+    after = _metrics_text(sources_http_url)
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="http", method="GET", status="4xx") == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="http", method="GET", status="4xx") + 1
+    )
+    assert _metric_value(after, "sources_mcp_requests_total", request_type="http", method="POST", status="4xx") == (
+        _metric_value(before, "sources_mcp_requests_total", request_type="http", method="POST", status="4xx") + 1
+    )
+    assert "/sse" not in after
+    assert "/messages" not in after
+    assert "clientInfo" not in after

@@ -28,6 +28,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import mcp  # noqa: F401  # Declares the Sources wire dependency to the CI fastlane.
 import numpy  # noqa: F401  # Declares the Sources runtime dependency to the CI fastlane.
+import prometheus_client  # Declares the Sources metrics dependency to the CI fastlane.
 import pymorphy3  # noqa: F401  # Declares the Russian-shadow runtime dependency.
 import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dictionary.
 import pytest
@@ -60,6 +61,30 @@ def server_module():
 def _run(coro):
     """Run an async coroutine synchronously."""
     return asyncio.run(coro)
+
+
+def _metric_value(body: str, name: str, **labels: str) -> float:
+    """Return one exposition sample. Missing series are zero."""
+    wanted = tuple(sorted(labels.items()))
+    total = 0.0
+    for line in body.splitlines():
+        if not line or line.startswith("#"):
+            continue
+        pieces = line.split()
+        head = pieces[0]
+        metric, separator, raw_labels = head.partition("{")
+        if metric != name:
+            continue
+        parsed: list[tuple[str, str]] = []
+        if separator:
+            for item in raw_labels.rstrip("}").split(","):
+                if not item:
+                    continue
+                key, _, quoted = item.partition("=")
+                parsed.append((key, quoted.strip('"')))
+        if tuple(sorted(parsed)) == wanted:
+            total += float(pieces[1])
+    return total
 
 
 @pytest.mark.parametrize("stale_db", [False, True])
@@ -741,6 +766,40 @@ class TestCallToolDispatch:
         result = _run(server_module.call_tool("nonexistent_tool", {}))
         assert len(result) == 1
         assert "Unknown tool" in result[0].text
+
+        middleware = next(
+            item for item in server_module.server.middleware if type(item).__name__ == "_SourcesRequestMetrics"
+        )
+
+        class _Ctx:
+            method = "tools/call"
+            request_id = "unknown-tool"
+
+        async def _call_next(_ctx):
+            return await server_module._on_call_tool(
+                None, CallToolRequestParams(name="nonexistent_tool", arguments={})
+            )
+
+        observed = _run(middleware(_Ctx(), _call_next))
+        assert observed.is_error is True
+
+        async def _boom(_ctx):
+            raise RuntimeError("secret failure detail")
+
+        with pytest.raises(RuntimeError, match="secret failure detail"):
+            _run(middleware(_Ctx(), _boom))
+
+        text = prometheus_client.generate_latest(server_module._METRICS_REGISTRY).decode()
+        assert _metric_value(text, "sources_mcp_requests_total", request_type="mcp", method="tools/call", status="error") == 2
+        assert _metric_value(text, "sources_mcp_requests_total", request_type="mcp", method="tools/call", status="ok") == 0
+        assert _metric_value(
+            text, "sources_mcp_request_errors_total", request_type="mcp", method="tools/call", status="error"
+        ) == 2
+        assert _metric_value(
+            text, "sources_mcp_request_duration_seconds_count", request_type="mcp", method="tools/call", status="error"
+        ) == 2
+        assert "nonexistent_tool" not in text
+        assert "secret failure detail" not in text
 
     def test_verify_word_dispatches(self, server_module):
         with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:
@@ -1929,6 +1988,7 @@ class TestHealthEndpoint:
             app = app.app
         route_paths = {getattr(r, "path", None) for r in app.routes}
         assert "/health" in route_paths
+        assert "/metrics" in route_paths
         assert "/sse" not in route_paths
         assert "/messages/" not in route_paths
         routes = [r for r in app.routes if getattr(r, "path", None) == "/health"]
@@ -1941,6 +2001,17 @@ class TestHealthEndpoint:
         assert "commit_sha" in data
         assert "db_path" in data
         assert "sources.db" in data["db_path"]
+
+        metrics_route = next(route for route in app.routes if getattr(route, "path", None) == "/metrics")
+        metrics_response = _run(metrics_route.endpoint(None))
+        assert metrics_response.media_type == prometheus_client.CONTENT_TYPE_LATEST
+        metrics_body = metrics_response.body.decode()
+        assert "sources.db" not in metrics_body
+        assert data["db_path"] not in metrics_body
+        middleware_names = [type(item).__name__ for item in server_module.server.middleware]
+        assert "OpenTelemetryMiddleware" in middleware_names
+        assert "_SourcesRequestMetrics" in middleware_names
+        server_module.create_http_app()
 
     def test_repeated_health_calls_do_not_spawn_git(self, server_module):
         app = server_module.create_http_app()
