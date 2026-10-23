@@ -40,7 +40,6 @@ import logging
 import os
 import re
 import shutil
-import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 
@@ -122,23 +121,6 @@ def resolve_gemini_auth_mode(
 
 def _has_gemini_api_key(env: Mapping[str, str]) -> bool:
     return bool(env.get("GEMINI_API_KEY") or env.get("GOOGLE_API_KEY"))
-
-
-def _prompt_arg_for_cli(prompt: str) -> tuple[str, Path | None]:
-    """Return the ``gemini -p`` argument and optional temp file path."""
-    if len(prompt) <= _INLINE_PROMPT_LIMIT_CHARS:
-        return prompt, None
-
-    with tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        prefix=_PROMPT_FILE_PREFIX,
-        suffix=".txt",
-        delete=False,
-    ) as handle:
-        handle.write(prompt)
-        path = Path(handle.name)
-    return f"@{path}", path
 
 
 def _cleanup_prompt_file(path: Path | None) -> None:
