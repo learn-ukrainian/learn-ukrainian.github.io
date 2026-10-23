@@ -139,16 +139,6 @@ def will_last_to_reset(agent_info: dict[str, Any] | None) -> bool | None:
     return None
 
 
-def _is_hard_avoid(agent_info: dict[str, Any] | None, *, lane: str | None = None) -> bool:
-    """True when ``lane`` is retired, ineligible, unhealthy or needs login: no capacity source relaxes these."""
-    if lane is not None and lane.strip().lower() in RETIRED_AGENT_ALIASES:
-        return True
-    info = agent_info or {}
-    if info.get("eligible") is False or (info.get("health") or {}).get("healthy") is False:
-        return True
-    return info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN"
-
-
 def is_avoid_lane(
     agent_info: dict[str, Any] | None,
     *,
