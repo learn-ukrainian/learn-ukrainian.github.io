@@ -13573,9 +13573,13 @@ def _registered_stream_epics() -> frozenset[int]:
 
 
 def _run_dor_preflight(
-    prompt: str, allow_reason: str | None, *, dispatch_repo: str
+    prompt: str, allow_reason: str | None, *, dispatch_repo: str,
+    lifecycle_carrier: dict[str, Any] | None = None,
 ) -> tuple[str | None, dict[str, Any] | None]:
-    """Check each issue named by an implementation brief before dispatch side effects.
+    """Check the bound task card, or visible issues in an unbound implementation brief.
+
+    A lifecycle carrier already validated at the dispatch boundary selects its single task issue.
+    Prompt citations cannot add cards or replace that target.
 
     A registered stream epic of this repository is linked context, not a task card (#9276): it is recorded
     as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
@@ -13589,17 +13593,30 @@ def _run_dor_preflight(
     from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE, AdmissionState, admission_state
 
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
-    for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
-        repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+    if lifecycle_carrier is not None:
+        identity = lifecycle_carrier["identity"]
+        repo = identity["repository"]
         if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
             repo = _CANONICAL_GITHUB_REPO
-        number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
-        distinct.setdefault((repo.casefold(), number), (repo, number))
-    candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
+        candidates = [(repo, identity["github_issue_number"])]
+    else:
+        for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
+            repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+            if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
+                repo = _CANONICAL_GITHUB_REPO
+            number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
+            distinct.setdefault((repo.casefold(), number), (repo, number))
+        candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
     if not candidates:
         return None, None
     epic_numbers = _registered_stream_epics()
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
+    if lifecycle_carrier is not None:
+        declared_epic = (repo, identity["stream_epic"])
+        if (
+            declared_epic in candidates or (repo == _CANONICAL_GITHUB_REPO and declared_epic[1] in epic_numbers)
+        ) and declared_epic not in epics:
+            epics.append(declared_epic)
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
     unknown: dict[str, str] = {}
@@ -13674,6 +13691,8 @@ def _run_dor_preflight(
             ), None
         stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
+        if lifecycle_carrier is not None:
+            return "❌ DoR refused: the declared lifecycle issue is not a task card", None
         return None, None
     verdict = AdmissionState.WARN if warnings else AdmissionState.UNKNOWN if unknown else AdmissionState.PASS
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings, "dor": verdict.value}
@@ -14439,8 +14458,28 @@ def _dispatch(
             print("❌ --allow-dor-warn requires a non-empty reason", file=sys.stderr)
             return 2
     dor_record: dict[str, Any] | None = None
+    lifecycle_file = getattr(args, "lifecycle_file", None)
+    try:
+        lifecycle_carrier, lifecycle_prompt = (
+            _load_task_lifecycle_carrier(lifecycle_file) if lifecycle_file else (None, "")
+        )
+        if lifecycle_carrier is not None and args.mode in {"workspace-write", "danger"}:
+            from scripts.orchestration.task_identity import _github_url
+
+            identity = lifecycle_carrier["identity"]
+            for url_key, number_key in (
+                ("github_issue_url", "github_issue_number"), ("stream_epic_url", "stream_epic"),
+            ):
+                if identity[url_key] != _github_url(identity["repository"], "issues", identity[number_key]):
+                    raise ValueError(f"{url_key} does not match the repository and exact number")
+    except (OSError, ValueError) as exc:
+        print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
+        return 2
     if early_prompt is not None and args.mode in {"workspace-write", "danger"}:
-        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason, dispatch_repo=fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(
+            early_prompt, dor_reason, dispatch_repo=fleet_repo.github,
+            **({"lifecycle_carrier": lifecycle_carrier} if lifecycle_carrier is not None else {}),
+        )
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
@@ -14887,7 +14926,10 @@ def _dispatch(
         return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
-        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, dispatch_repo=fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(
+            prompt, dor_reason, dispatch_repo=fleet_repo.github,
+            **({"lifecycle_carrier": lifecycle_carrier} if lifecycle_carrier is not None else {}),
+        )
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
@@ -14914,11 +14956,13 @@ def _dispatch(
     for code in review_brief_warnings:
         print(_review_brief_warning_line(code), file=sys.stderr)
 
-    try:
-        lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(getattr(args, "lifecycle_file", None))
-    except (OSError, ValueError) as exc:
-        print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
-        return 2
+    if not lifecycle_file:
+        # Preserve the unbound path's existing hook order; a supplied snapshot is never reloaded.
+        try:
+            lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(None)
+        except (OSError, ValueError) as exc:
+            print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
+            return 2
     # Kinds of the blocks delegate adds around the caller's prompt, in the order they appear in the final prompt (the
     # worktree block leads it, the lifecycle and research blocks follow it); recorded so a consumer can tell which
     # instructions the worker saw beyond the source prompt.

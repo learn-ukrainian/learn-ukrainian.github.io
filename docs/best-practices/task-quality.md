@@ -135,6 +135,16 @@ be established when the target fetch fails.
 Implementation dispatch checks both workspace-write and danger modes; read-only
 triage stays exempt. Non-trivial malformed DoD and conflicting ancestry cannot
 be overridden.
+With an explicit `--lifecycle-file`, dispatch loads one validated snapshot before
+DoR and requires its original issue and epic URLs to equal the canonical URLs
+for its repository and numbers, including refusing null URLs. Both applicable
+DoR checks select only that repository-qualified task issue and use the same
+snapshot carried into the worker prompt and task state. Evidence citations do
+not select additional cards or alter issue associations. An invalid binding or
+a declared PR or epic refuses without falling back to citations. Without a
+lifecycle binding, the existing conservative visible-reference scan, quoting
+and PR/epic handling remain unchanged. The URL boundary applies only to these
+write modes; read-only lifecycle applicability stays unchanged.
 Absent DoD, missing parent, unavailable registry and unknown membership refuse
 by default, with the existing recorded `--allow-dor-warn REASON` exception.
 A membership timeout on a card whose DoR and DoD read PASS is the one
