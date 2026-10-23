@@ -26,7 +26,7 @@ from tests.test_delegate import (
 
 
 @contextlib.contextmanager
-def _no_transport_credentials():
+def _no_transport_credentials(**_kwargs):
     yield []
 
 
@@ -464,7 +464,7 @@ def test_hook_substitution_is_refused_before_publication(publication, tmp_path, 
     assert delegate._resolve_sha(worktree) == head
 
 
-def test_forged_tracking_ref_is_not_delivery(publication):
+def test_forged_tracking_ref_is_not_delivery(publication, tmp_path, monkeypatch):
     worktree, origin, _base, _marker = publication
     head = write_commit(worktree)
     _git_out(worktree, "update-ref", "refs/remotes/origin/codex/finalize", head)
@@ -472,13 +472,89 @@ def test_forged_tracking_ref_is_not_delivery(publication):
     assert delegate._count_unpushed_commits(worktree, "codex/finalize") > 0
     assert "refs/heads/codex/finalize" not in refs(origin)
 
+    from tests.test_delegate import _rescue_checkout
 
-def test_explicit_push_without_upstream_is_delivered(publication):
+    fixture = tmp_path / "registered"
+    fixture.mkdir()
+    private, source, destination, state_path = _rescue_checkout(
+        fixture, monkeypatch, dirty=False, repo_key="infra-private"
+    )
+    state = delegate._read_state(state_path)
+    head = delegate._resolve_sha(source)
+    assert delegate._rescue_repo(source).root == private
+    bad = dict(state, repository="unknown/forged")
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=bad)
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, repository=None))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, repository_id="unknown/mismatch"))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, agent="codex"))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, task_id="another-task", state=state)
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, worktree_path=str(private)))
+    alias = source.with_name("alias")
+    alias.symlink_to(source, target_is_directory=True)
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(alias, state=dict(state, worktree_path=str(alias)))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(Path(str(source) + "\u202e"), state=state)
+    # A forged common-dir registration cannot borrow a foreign object store.
+    admin = delegate._rescue_repo(source).admin_dir
+    common = admin / "commondir"
+    saved = common.read_bytes()
+    common.write_text(str(delegate._REPO_ROOT / ".git"))
+    with pytest.raises(delegate._RescueFailure):
+        delegate._rescue_repo(source, state=state)
+    common.write_bytes(saved)
+    refused = delegate._auto_finalize_dirty_worktree(
+        worktree=source, task_id="another-task", agent=state["agent"], branch=state["worktree_branch"],
+        base_branch="main", owned_paths=["artifact.txt"],
+    )
+    assert not refused.ok and "rescue_worktree_unregistered" in refused.error
+    delegate._write_state_atomic(state_path, bad)
+    assert delegate._count_unpushed_commits(source, state["worktree_branch"], task_id=state["task_id"]) is None
+    row = delegate._rescue_task(state_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "not a registered dispatch worktree"
+    assert delegate._resolve_sha(source) == head
+    assert "rescue/cursor/rescue-test" not in refs(destination)
+
+
+def test_explicit_push_without_upstream_is_delivered(publication, tmp_path, monkeypatch):
     worktree, _origin, _base, _marker = publication
     write_commit(worktree)
     _git_out(worktree, "push", "origin", "HEAD:refs/heads/codex/finalize")
     _git_out(worktree, "update-ref", "-d", "refs/remotes/origin/codex/finalize")
     assert delegate._count_unpushed_commits(worktree, "codex/finalize") == 0
+
+    from tests.test_delegate import _rescue_checkout
+
+    fixture = tmp_path / "registered"
+    fixture.mkdir()
+    private, source, origin, state_path = _rescue_checkout(fixture, monkeypatch, dirty=False, repo_key="infra-private")
+    state = delegate._read_state(state_path)
+    branch = state["worktree_branch"]
+    base = _git_out(private, "rev-parse", "HEAD").strip()
+    with delegate._finalize_execution_context(source, task_id=state["task_id"]) as context:
+        assert context.driver_base == base != delegate._resolve_sha(delegate._REPO_ROOT)
+        assert context.repository == state["repository"]
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=source,
+        task_id=state["task_id"],
+        agent=state["agent"],
+        branch=branch,
+        base_branch="main",
+        base_sha=base,
+        owned_paths=["artifact.txt"],
+    )
+    assert result.ok, result.error
+    assert _git_out(origin, "rev-parse", f"refs/heads/{branch}").strip() == result.commit_sha
+    _git_out(source, "update-ref", "-d", f"refs/remotes/origin/{branch}")
+    assert delegate._count_unpushed_commits(source, branch, task_id=state["task_id"]) == 0
+    assert delegate._publication_commits_ahead(source, "origin/main", base, task_id=state["task_id"]) == 1
+    assert _git_out(source, "status", "--porcelain") == ""
 
 
 def test_forged_base_tracking_ref_cannot_hide_completed_commits(publication):
@@ -1392,7 +1468,7 @@ def test_validation_never_sees_the_transport_credential(publication, monkeypatch
         pushes[0][f"GIT_CONFIG_KEY_{index}"]: pushes[0][f"GIT_CONFIG_VALUE_{index}"]
         for index in range(int(pushes[0]["GIT_CONFIG_COUNT"]))
     }
-    assert settings[f"http.{delegate.CANONICAL_ORIGIN}.extraHeader"] == f"Authorization: Basic {encoded}"
+    assert settings[f"http.{origin}.extraHeader"] == f"Authorization: Basic {encoded}"
     hooks = Path(settings["core.hooksPath"])
     assert hooks.name == "transport-hooks"
     assert not any(sentinel in value for key, value in pushes[0].items() if not key.startswith("GIT_CONFIG_VALUE_"))
@@ -1487,6 +1563,23 @@ def test_validation_rewritten_destination_never_redirects_or_fakes_delivery(publ
     assert result.ok, result.error
     assert "refs/heads/codex/finalize " + head in refs(origin)
     assert marker.read_text() == "checked"
+    with delegate._finalize_execution_context(_worktree) as validation:
+        destination = validation.origin
+        validation.origin = "https://example.invalid/foreign.git"
+        with pytest.raises(delegate.SnapshotRefusal, match="auto_finalize_remote_unverified"):
+            with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
+                pytest.fail("moved destination accepted")
+        validation.origin = destination
+        repository = validation.repository
+        validation.repository = "unknown/forged"
+        with pytest.raises(delegate.SnapshotRefusal, match="auto_finalize_remote_unverified"):
+            with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
+                pytest.fail("moved repository accepted")
+        validation.repository = repository
+        validation.driver_base = "0" * 40
+        with pytest.raises(delegate.SnapshotRefusal, match="auto_finalize_remote_unverified"):
+            with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
+                pytest.fail("moved base accepted")
 
 
 def test_validation_written_transport_configuration_is_not_seen_by_the_credentialed_push(
