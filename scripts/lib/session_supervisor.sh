@@ -428,7 +428,34 @@ session_supervisor_stop_inbox_watch() {
 
 # Resolve before stopping the predecessor. Keep the original harness executable
 # (e.g. claude for Codex's Claude-Code harness), not the provider label (#10096).
+session_supervisor_cto_wrapper_signature() {
+  local py
+  py="$(launcher_project_python 2>/dev/null)" || return 3
+  # Private launch values travel on stdin, never in helper argv or diagnostics.
+  printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}" | "$py" -c '
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.session_supervisor import SupervisorError, cto_wrapper_signature
+try:
+    args = sys.stdin.buffer.read().decode().split("\0")[:-1]
+    print(cto_wrapper_signature(Path(sys.argv[2]), Path(sys.argv[1]), Path(sys.argv[3]), args))
+except (SupervisorError, UnicodeError):
+    sys.exit(3)
+' "$LC_ROOT" "$LC_CTO_SUCCESSOR_WRAPPER" "$0" 2>/dev/null
+}
+
 session_supervisor_preflight_successor() {
+  if [ "${0##*/}" = start-claude-cto.sh ]; then
+    LC_CTO_SUCCESSOR_WRAPPER="$HOME/.local/bin/lu-start-cto"
+    LC_CTO_SUCCESSOR_SIGNATURE=""
+    if [ "${LC_PROVIDER:-}" != claude ] || [ "${LC_MODE:-}" != driver ] \
+        || [ ! -f "$LC_CTO_SUCCESSOR_WRAPPER" ] || [ ! -x "$LC_CTO_SUCCESSOR_WRAPPER" ] \
+        || ! LC_CTO_SUCCESSOR_SIGNATURE="$(session_supervisor_cto_wrapper_signature)"; then
+      echo 'Error: cto-wrapper-unsupported: executable wrapper and source-equivalent intent required. Predecessor retained.' >&2
+      return 3
+    fi
+  fi
   local binary="${LC_DRIVER_PROVIDER_COMMAND:-}" candidate directory
   candidate="${LC_DRIVER_PROVIDER_EXECUTABLE:-}"
   if [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
@@ -465,6 +492,13 @@ session_supervisor_stop_provider_for_wake() {
 session_supervisor_exec_successor() {
   [ "${LC_DRIVER_LEASE_CLOSED:-0}" = 1 ] || return 1
   [ -n "${LC_SUPERVISORY_DELIVERY:-}" ] || return 1
+  if [ "${0##*/}" = start-claude-cto.sh ]; then
+    local signature
+    [ -n "${LC_CTO_SUCCESSOR_SIGNATURE:-}" ] || return 3
+    [ -f "$LC_CTO_SUCCESSOR_WRAPPER" ] && [ -x "$LC_CTO_SUCCESSOR_WRAPPER" ] || return 3
+    signature="$(session_supervisor_cto_wrapper_signature)" || return 3
+    [ "$signature" = "$LC_CTO_SUCCESSOR_SIGNATURE" ] || return 3
+  fi
   export SESSION_SUPERVISOR_WAKE_DELIVERY="$LC_SUPERVISORY_DELIVERY"
   export SESSION_SUPERVISOR_WAKE_STREAM="$SESSION_STREAM_ID"
   export LC_SUPERVISORY_PREDECESSOR_GENERATION="${SESSION_STREAM_GENERATION:-}"
@@ -472,12 +506,16 @@ session_supervisor_exec_successor() {
   for name in ${!SESSION_STREAM_@}; do
     unset "$name"
   done
-  # Replace this supervisor shell. Its successor uses the same approved public
-  # entrypoint and original argv (without --force; that flag is one-shot), then
-  # makes a fresh Monitor TTL/CAS claim.
+  # Claude CTO regenerates its source-proven argv through the selection wrapper.
+  # Omit a|b so the wrapper retains ownership of its saved-selection policy.
+  if [ "${0##*/}" = start-claude-cto.sh ]; then
+    exec "$LC_CTO_SUCCESSOR_WRAPPER" --here
+  fi
+  # Other seats replay original argv without the one-shot --force, then make
+  # a fresh Monitor TTL/CAS claim through their existing entrypoint.
   local entrypoint="start-${LC_PROVIDER}-driver.sh"
   case "${0##*/}" in
-    start-claude-cto.sh|start-codex-cto.sh) entrypoint="${0##*/}" ;;
+    start-codex-cto.sh) entrypoint="${0##*/}" ;;
   esac
   exec "$LC_ROOT/$entrypoint" "${LC_DRIVER_ORIGINAL_ARGS[@]}"
 }

@@ -9,8 +9,11 @@ not put lease actions in the capsule or allow workers to receive lease state.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import re
+import shlex
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
@@ -54,6 +57,83 @@ _WORKER_ENV_SECRET_SUFFIXES = ("_TOKEN", "_KEY", "_SECRET", "_PAT", "_AUTH")
 
 class SupervisorError(ValueError):
     """A launch request violates the common supervisor contract."""
+
+
+def cto_wrapper_signature(wrapper: Path, root: Path, entrypoint: Path, args: list[str]) -> str:
+    """Bind the supported wrapper template and its expanded launch intent, without executing it.
+
+    Only literal source policy inputs vary. Account selection and authentication
+    remain the wrapper's responsibility; neither account store is read here.
+    """
+    try:
+        source = wrapper.read_bytes()
+        if not source.startswith(b"#!/usr/bin/env bash\n"):
+            raise ValueError("unsupported wrapper interpreter")
+        normalized: list[str] = []
+        policy: dict[str, str] = {}
+        for line in source.decode().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            match = re.fullmatch(r"(REPO|CFG|MODEL|EFFORT|KICK)=(.*)", line)
+            if match:
+                key, value = match.groups()
+                lexer = shlex.shlex(value, posix=True, punctuation_chars=";&|<>()")
+                lexer.whitespace_split = True
+                lexer.commenters = ""
+                tokens = list(lexer)
+                if key in policy or len(tokens) != 1 or value.startswith("~") or any(c in value for c in "$`\\\n\0"):
+                    raise ValueError("nonliteral policy")
+                policy[key] = tokens[0]
+                line = key + "=<source-policy>"
+            if line.startswith('if [ "$ACCT" = b ]; then DIR='):
+                directories = re.fullmatch(r'if \[ "\$ACCT" = b \]; then DIR=([^;]+); else DIR=([^;]+); fi', line)
+                if directories is None:
+                    raise ValueError("unsupported selection")
+                for value in directories.groups():
+                    lexer = shlex.shlex(value, posix=True, punctuation_chars=";&|<>()")
+                    lexer.whitespace_split = True
+                    lexer.commenters = ""
+                    if len(list(lexer)) != 1 or value.startswith("~") or any(c in value for c in "$`\\\n\0"):
+                        raise ValueError("nonliteral selection policy")
+                line = re.sub(r"DIR=[^;]+", "DIR=<source-policy>", line)
+            normalized.append(line)
+        # This binds executable statements, quoting, order and the existing
+        # a|b/--here grammar. It admits no custom wrapper code or passthrough.
+        template = hashlib.sha256("\n".join(normalized).encode()).hexdigest()
+        if template != "44dedafd91b354e31b9fcd8a4948518b57dc9f41cce9f34fd02e5cae36157280":
+            raise ValueError("unsupported wrapper template")
+        repository = Path(policy["REPO"])
+        config = Path(policy["CFG"])
+        if (
+            not repository.is_absolute()
+            or not config.is_absolute()
+            or repository.resolve() != root.resolve()
+            or Path.cwd().resolve() != repository.resolve()
+            or entrypoint.resolve() != (repository / "start-claude-cto.sh").resolve()
+        ):
+            raise ValueError("unsupported repository intent")
+        # Match shell command substitution, including removal of every trailing
+        # newline. Never inspect credentials or the saved account selection.
+        role = (config / "CTO-ROLE-PROMPT.txt").read_bytes().rstrip(b"\n").decode()
+        expected = [
+            "--epic",
+            "epics",
+            "--model",
+            policy["MODEL"],
+            "--effort",
+            policy["EFFORT"],
+            policy["KICK"],
+            "--",
+            "--dangerously-skip-permissions",
+            "--append-system-prompt",
+            role,
+        ]
+        if "\0" in role or args != expected:
+            raise ValueError("unsupported captured intent")
+        return hashlib.sha256(source + b"\0" + json.dumps(expected).encode()).hexdigest()
+    except (OSError, UnicodeError, ValueError, KeyError) as exc:
+        raise SupervisorError("cto-wrapper-unsupported: predecessor retained") from exc
 
 
 class LaunchRole(StrEnum):

@@ -250,7 +250,17 @@ def test_supervisor_successor_reenters_cto_wrapper(
 ) -> None:
     core = (REPO / "scripts/lib/launcher_core.sh").read_text()
     core += """
-launcher_load_rules_core() { printf 'SUCCESSOR:%s|%s|%s|%s\\n' "${0##*/}" "$LC_EPIC" "$LC_MODEL" "$LC_EFFORT"; exit 0; }
+launcher_load_rules_core() {
+  [ "$SESSION_SUPERVISOR_WAKE_STREAM" = epic:10453 ] || exit 94
+  [ "$SESSION_SUPERVISOR_WAKE_DELIVERY" = fixture-event ] || exit 95
+  [ "$LC_SUPERVISORY_PREDECESSOR_GENERATION" = 1 ] || exit 96
+  [ -z "${SESSION_STREAM_LEASE_ID:-}" ] || exit 97
+  [ -z "${SESSION_STREAM_SESSION_ID:-}" ] || exit 98
+  printf 'SUCCESSOR:%s|%s|%s|%s\\n' "${0##*/}" "$LC_EPIC" "$LC_MODEL" "$LC_EFFORT"
+  printf 'CAPTURED:'
+  printf '%s\\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}"
+  exit 0
+}
 """
     root = _build_view(
         tmp_path / "checkout",
@@ -259,15 +269,134 @@ launcher_load_rules_core() { printf 'SUCCESSOR:%s|%s|%s|%s\\n' "${0##*/}" "$LC_E
             ("scripts", "lib", "claude_weekly_used.py"): "print('0')\n",
         },
     )
-    script = """source "$1"
+    home = tmp_path / "home"
+    bindir = home / ".local/bin"
+    bindir.mkdir(parents=True)
+    config = tmp_path / "source policy"
+    config.mkdir()
+    role = "fixture role with spaces\nsecond line"
+    (config / "CTO-ROLE-PROMPT.txt").write_text(role + "\n\n")
+    # This source-only template mirrors the admitted wrapper, with test-owned
+    # policy inputs. Authentication and launch executables below are fakes.
+    wrapper = bindir / "lu-start-cto"
+    wrapper_source = r"""#!/usr/bin/env bash
+set -euo pipefail
+REPO=@REPO@
+CFG=@CFG@
+ROLE=$CFG/CTO-ROLE-PROMPT.txt
+ACCT_FILE=$CFG/claude-account
+MODEL=@MODEL@
+EFFORT=@EFFORT@
+KICK=@KICK@
+
+HERE=0
+ACCT=""
+for arg in "$@"; do
+  case "$arg" in
+    --here) HERE=1 ;;
+    a|b) ACCT=$arg ;;
+    -h|--help) sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "unknown argument: $arg (usage: lu-start-cto [a|b] [--here])" >&2; exit 2 ;;
+  esac
+done
+[ -r "$ROLE" ] || { echo "missing $ROLE" >&2; exit 4; }
+pgrep -f "operator-appointed CTO AND cross-epic" >/dev/null && { echo "refused: a CTO process is still running" >&2; exit 3; }
+if [ -z "$ACCT" ]; then
+  ACCT=$(tr -d '[:space:]' < "$ACCT_FILE" 2>/dev/null || true)
+  [ "$ACCT" = b ] || ACCT=a
+fi
+if [ "$ACCT" = b ]; then DIR=@ACCOUNT@; else DIR=@ACCOUNT@; fi
+[ -s "$DIR/.credentials.json" ] || { echo "refused: account $ACCT ($DIR) is not logged in" >&2; exit 4; }
+CLAUDE_CONFIG_DIR=$DIR claude auth status 2>/dev/null | grep -q '"loggedIn": true' \
+  || { echo "refused: account $ACCT is not logged in; run: CLAUDE_CONFIG_DIR=$DIR claude, then /login" >&2; exit 4; }
+printf '%s\n' "$ACCT" > "$ACCT_FILE"
+export CLAUDE_CONFIG_DIR=$DIR
+echo "CTO seat: Claude account $ACCT ($DIR)"
+
+LAUNCH=(./start-claude-cto.sh --epic epics --model "$MODEL" --effort "$EFFORT" "$KICK" -- --dangerously-skip-permissions --append-system-prompt "$(cat "$ROLE")")
+if [ "$HERE" = 1 ]; then
+  cd "$REPO" && exec "${LAUNCH[@]}"
+fi
+tmux has-session -t =cto 2>/dev/null && { echo "refused: tmux session cto exists (use --here inside it)" >&2; exit 3; }
+tmux new-session -d -s cto -c "$REPO" -e "CLAUDE_CONFIG_DIR=$DIR" "./start-claude-cto.sh --epic epics --model $MODEL --effort $EFFORT \"$KICK\" -- --dangerously-skip-permissions --append-system-prompt \"\$(cat '$ROLE')\"; exec bash"
+echo "started; attach with: tmux attach -t cto"
+"""
+    for key, value in {
+        "REPO": str(root),
+        "CFG": str(config),
+        "MODEL": "claude-opus-5-5",
+        "EFFORT": "high",
+        "KICK": "fixture kick with spaces",
+        "ACCOUNT": str(tmp_path / "fake-account"),
+    }.items():
+        wrapper_source = wrapper_source.replace("@" + key + "@", shlex.quote(value))
+    wrapper.write_text(wrapper_source)
+    wrapper.chmod(0o755)
+    account = tmp_path / "fake-account"
+    account.mkdir()
+    (account / ".credentials.json").write_text("fixture-only")
+    (config / "claude-account").write_text("b\n")
+    cli = bindir / "claude"
+    cli.write_text("#!/bin/sh\nprintf '%s\\n' '{\"loggedIn\": true}'\n")
+    cli.chmod(0o755)
+    pgrep = bindir / "pgrep"
+    pgrep.write_text("#!/bin/sh\nexit 1\n")
+    pgrep.chmod(0o755)
+    generated = (
+        "--epic",
+        "epics",
+        "--model",
+        "claude-opus-5-5",
+        "--effort",
+        "high",
+        "fixture kick with spaces",
+        "--",
+        "--dangerously-skip-permissions",
+        "--append-system-prompt",
+        role,
+    )
+    supported = name == WRAPPERS[0] and bool(args)
+    captured = generated if supported else args
+    if name == WRAPPERS[0]:
+        from scripts.session_supervisor import SupervisorError, cto_wrapper_signature
+
+        with pytest.MonkeyPatch.context() as patch:
+            patch.chdir(root)
+            if supported:
+                assert len(cto_wrapper_signature(wrapper, root, root / name, list(captured))) == 64
+            else:
+                with pytest.raises(SupervisorError, match="cto-wrapper-unsupported"):
+                    cto_wrapper_signature(wrapper, root, root / name, list(captured))
+    script = """set -euo pipefail
+source "$1"
 LC_ROOT="$2"
 LC_PROVIDER="$3"
-LC_DRIVER_LEASE_CLOSED=1
+LC_MODE=driver
+LC_DURABLE_HELPER_ROOT="$2"
+source "$2/scripts/lib/launcher_core.sh"
+LC_DRIVER_PROVIDER_COMMAND=claude
+LC_DRIVER_PROVIDER_EXECUTABLE="$HOME/.local/bin/claude"
+LC_DRIVER_LEASE_CLOSED=0
 LC_SUPERVISORY_DELIVERY=fixture-event
-SESSION_STREAM_ID=epic:10453
-SESSION_STREAM_GENERATION=1
+export SESSION_STREAM_ID=epic:10453 SESSION_STREAM_GENERATION=1
+export SESSION_STREAM_LEASE_ID=fixture-lease SESSION_STREAM_SESSION_ID=fixture-predecessor
 shift 3
 LC_DRIVER_ORIGINAL_ARGS=("$@")
+# A live fake predecessor must survive a refused preflight. Only a successful
+# preflight permits the exact predecessor stop and existing release/exec edge.
+sleep 30 & predecessor=$!
+trap 'kill "$predecessor" 2>/dev/null || true; wait "$predecessor" 2>/dev/null || true' EXIT
+if ! session_supervisor_preflight_successor; then
+  kill -0 "$predecessor" || exit 91
+  [ "$LC_DRIVER_LEASE_CLOSED" = 0 ] || exit 92
+  printf 'PREDECESSOR_RETAINED\n'
+  exit 3
+fi
+kill "$predecessor"
+wait "$predecessor" 2>/dev/null || true
+trap - EXIT
+if session_supervisor_exec_successor; then exit 93; fi
+LC_DRIVER_LEASE_CLOSED=1
 session_supervisor_exec_successor
 """
     result = subprocess.run(
@@ -279,12 +408,22 @@ session_supervisor_exec_successor
             str(REPO / "scripts/lib/session_supervisor.sh"),
             str(root),
             "claude" if name == WRAPPERS[0] else "codex",
-            *args,
+            *captured,
         ],
-        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        cwd=root,
+        env={**os.environ, "LAUNCHER_DRY_RUN": "1", "HOME": str(home), "PATH": f"{bindir}{os.pathsep}{os.defpath}"},
         capture_output=True,
         text=True,
         timeout=30,
     )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert f"SUCCESSOR:{name}|epics|{model}|high\n" in result.stdout
+    if name == WRAPPERS[0] and not supported:
+        assert result.returncode == 3, result.stdout + result.stderr
+        assert "cto-wrapper-unsupported" in result.stderr
+        assert result.stdout == "PREDECESSOR_RETAINED\n"
+        assert "SUCCESSOR:" not in result.stdout
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        selected_model = "claude-opus-5-5" if supported else model
+        assert f"SUCCESSOR:{name}|epics|{selected_model}|high\n" in result.stdout
+        assert result.stdout.endswith("CAPTURED:" + "\0".join(captured) + "\0")
+        assert (config / "claude-account").read_text() == "b\n"
