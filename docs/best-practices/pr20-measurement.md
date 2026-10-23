@@ -45,6 +45,11 @@ Unavailable draft history is unresolved selection, not an exclusion. Missing
 telemetry, missing runs, open PRs, and closed-unmerged PRs stay explicit. There
 are no replacement PRs for unsuccessful outcomes. A missing census page prevents
 a complete selection claim. Ties use PR number, never merge order.
+An unresolved PR could have been eligible at `createdAt`. Only the stable prefix
+before the earliest such timestamp and PR-number tie is measured. Later eligible
+PRs appear in `selection_pending` until the draft history is resolved. Unfilled
+slots remain unknown against the denominator of 50. A draft transition before
+`createdAt` is contradictory input and exits with code 2.
 
 The target is ordinary median open-to-merged **at most 20 minutes** across all
 50. Report nearest-rank p90, the sorted value at `ceil(0.9*n)`, without
@@ -70,6 +75,10 @@ prospective attribution makes that comparison `UNKNOWN`. Published markers show
 recorded reviews, not independently verified reviewer eligibility or runtime
 attestation. The original baseline has no complete red-main census or removal
 attribution; absent telemetry cannot establish zero incidents or zero ejections.
+Numeric ejection rates require explicit `removal_coverage` for the whole report
+window, backed by saved completeness evidence. Timeline files alone cannot prove
+a complete removal census. Without this coverage the rate and safety status stay
+`UNKNOWN`, unless an evidenced stop condition already holds.
 
 Stop when PR-own-defect ejections **exceed 10% of enqueues**, or when any main
 break is attributed to this change. Exactly 10% does not meet the ejection stop
@@ -105,6 +114,12 @@ exclusive creation, so a rerun needs a new output path.
 | `queue_gate_completed` | Successful CI Gate completion on that queue candidate SHA |
 | `full_green` | That gate completion when recorded pytest shards all succeeded; null for reuse or missing shard evidence |
 | `queue_runs` | All associated observed runs, candidate SHAs, refs, jobs, conclusions, and membership evidence |
+
+Review counting first filters publications through merge or observation cutoff,
+then keeps the last duplicate task/head/verdict tuple within that window. A later
+repost cannot erase an earlier in-window review. Removal events use the report
+window end instead of the PR merge cutoff, so post-merge removals remain visible
+for classification. Events after the report window remain outside that report.
 
 The admission proxy is comparable to the historical method. It does not certify
 keeper eligibility, absence of holds, independent review qualification, or full
@@ -166,6 +181,12 @@ assert no coverage. Replace placeholders only with saved source observations.
   "heads": [],
   "groups": [],
   "removals": [],
+  "removal_coverage": {
+    "complete": false,
+    "start": null,
+    "end": null,
+    "evidence": []
+  },
   "main_incidents": [],
   "main_coverage": {
     "complete": false,
@@ -204,6 +225,11 @@ The driver is responsible for the truth and completeness of these declarations:
   the removal to failed checks and the responsible change, preserving raw run
   identities and the driver's reason. Duplicate/conflicting attribution remains
   unknown. An absent attribution remains unknown.
+- `removal_coverage` covers an explicit start/end interval spanning the report
+  window, with `complete: true` and saved removal-census evidence, including
+  evidence for a zero count. This applies to both baseline and next50. Unknown
+  observed causes still prevent a numeric rate. Known defect counts can trigger
+  STOP with a complete enqueue denominator even without removal coverage.
 - `main_incidents` entries contain distinct `id`, `at`, `cause`, and `evidence`.
   Causes are `change`, `other`, or `unknown`. `main_coverage` covers an explicit
   start/end interval with saved incident/run-census evidence, including evidence
@@ -214,6 +240,14 @@ Baseline guard attribution can be supplemented before the declaration without
 changing its membership or source responses. The declaration freezes those
 input digests too. Later attribution updates require a separately retained
 amendment and driver disposition, not silent replacement of the frozen baseline.
+
+The edited-marker follow-up remains owned by the accountable driver. Saved
+comment bodies with `includesCreatedEdit` do not establish when their current
+verdict text first existed. The historical publication convention still counts
+them at `createdAt`; these counts cannot certify historical body availability or
+review eligibility. Closing this follow-up requires independently sourced edit
+timestamps or body history and a driver disposition of affected counts. Missing
+history remains an explicit evidential limitation.
 
 ## Capture and retain the switch declaration
 

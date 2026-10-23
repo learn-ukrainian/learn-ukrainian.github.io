@@ -145,9 +145,9 @@ def published_reviews(detail: dict, cutoff: str) -> list[dict]:
             markers.append({"verdict": review["state"], "sha": review["commit"]["oid"],
                             "task": review["id"], "posted": review["submittedAt"]})
     # Keep the original task/head/verdict counting convention and last duplicate.
-    distinct = {(m["task"], m["sha"], m["verdict"]): m for m in markers}
-    return sorted((m for m in distinct.values() if stamp(m["posted"]) <= stamp(cutoff)),
-                  key=lambda m: stamp(m["posted"]))
+    distinct = {(m["task"], m["sha"], m["verdict"]): m for m in markers
+                if stamp(m["posted"]) <= stamp(cutoff)}
+    return sorted(distinct.values(), key=lambda m: stamp(m["posted"]))
 
 
 def run_id(check: dict) -> int | None:
@@ -161,6 +161,8 @@ def qualify(pr: dict, timeline: list[dict], complete: bool) -> tuple[str | None,
         return None, "draft_history_unknown"
     transitions = sorted((e for e in timeline if e.get("event") in ("ready_for_review", "convert_to_draft")),
                          key=lambda e: stamp(e["created_at"]))
+    if any(stamp(e["created_at"]) < stamp(pr["createdAt"]) for e in transitions):
+        raise InputError("draft transition precedes PR creation")
     if transitions:
         # A first ready event implies creation as draft; conversion implies non-draft.
         if transitions[0]["event"] == "ready_for_review":
@@ -205,7 +207,8 @@ def queue_runs(inputs: Inputs, runs: list[dict], number: int, cutoff: str, snaps
     return sorted(out, key=lambda r: (stamp(r["created"]), r["id"]))
 
 
-def ledger_row(inputs: Inputs, pr: dict, runs: list[dict], snapshot: dict, baseline: bool) -> dict:
+def ledger_row(inputs: Inputs, pr: dict, runs: list[dict], snapshot: dict, baseline: bool,
+               *, window_end: str | None = None) -> dict:
     number = pr["number"]
     detail = inputs.read(f"pr-{number}.json")
     timeline_raw = inputs.read(f"timeline-{number}.json")
@@ -250,7 +253,8 @@ def ledger_row(inputs: Inputs, pr: dict, runs: list[dict], snapshot: dict, basel
     final_queue = successful[-1] if successful else None
     removals = []
     for e in timeline:
-        if e.get("event") != "removed_from_merge_queue" or stamp(e["created_at"]) > stamp(cutoff):
+        if (e.get("event") != "removed_from_merge_queue"
+                or stamp(e["created_at"]) > stamp(window_end or observed or cutoff)):
             continue
         matches = [a for a in snapshot.get("removals", []) if a["event_id"] == e["id"] and a["pr"] == number]
         attribution = matches[0] if len(matches) == 1 else None
@@ -304,7 +308,14 @@ def guardrails(inputs: Inputs, rows: list[dict], snapshot: dict, start: str, end
     removals = [a for r in rows for a in r["removals"]]
     defects = sum(a["cause"] == "pr_own_defect" for a in removals)
     unknown = sum(a["cause"] == "unknown" for a in removals)
-    rate_known = denominator_known and unknown == 0 and enqueues > 0
+    removal_coverage = snapshot.get("removal_coverage", {})
+    removals_complete = (removal_coverage.get("complete") is True
+                         and inputs.reference(removal_coverage.get("evidence"))
+                         and stamp(removal_coverage.get("start")) is not None
+                         and stamp(removal_coverage.get("end")) is not None
+                         and stamp(removal_coverage["start"]) <= stamp(start)
+                         and stamp(removal_coverage["end"]) >= stamp(end))
+    rate_known = denominator_known and removals_complete and unknown == 0 and enqueues > 0
     incidents = []
     incident_ids = [i["id"] for i in snapshot.get("main_incidents", [])]
     if len(set(incident_ids)) != len(incident_ids):
@@ -327,6 +338,7 @@ def guardrails(inputs: Inputs, rows: list[dict], snapshot: dict, start: str, end
     return {
         "enqueues": enqueues if denominator_known else None, "observed_enqueues": enqueues,
         "pr_own_defect_ejections": defects, "unknown_removal_attribution": unknown,
+        "removal_coverage_complete": bool(removals_complete),
         "ejection_rate": defects / enqueues if rate_known else None,
         "ejection_rate_lower_bound": defects / enqueues if denominator_known and enqueues else None,
         "main_incidents": incidents, "main_coverage_complete": bool(main_complete),
@@ -353,7 +365,7 @@ def analyze(root: Path, *, baseline: bool, switch: str | None = None) -> dict:
     snapshot = inputs.read("snapshot.json") or {}
     if not baseline and (snapshot.get("schema") != "pr20-snapshot.v1" or not stamp(snapshot.get("observed_at"))):
         raise InputError("next50 requires a pr20-snapshot.v1 with observed_at")
-    excluded, eligible, unresolved = [], [], []
+    excluded, eligible, unresolved, pending = [], [], [], []
     if baseline:
         # Preserve the original selection and its raw reconstruction sources.
         inputs.read("pr-candidates.json")
@@ -371,7 +383,7 @@ def analyze(root: Path, *, baseline: bool, switch: str | None = None) -> dict:
             timeline = inputs.read(f'timeline-{pr["number"]}.json')
             at, reason = qualify(pr, events(timeline), timeline is not None and pr["number"] in snapshot.get("timelines_complete", []))
             if reason == "draft_history_unknown":
-                unresolved.append(pr["number"])
+                unresolved.append(pr)
             elif reason:
                 excluded.append({"pr": pr["number"], "reason": reason})
             elif stamp(at) <= stamp(snapshot["observed_at"]):
@@ -379,9 +391,16 @@ def analyze(root: Path, *, baseline: bool, switch: str | None = None) -> dict:
             else:
                 excluded.append({"pr": pr["number"], "reason": "never_non_draft"})
         eligible.sort(key=lambda item: (stamp(item[0]), item[1]["number"]))
-    rows = [dict(ledger_row(inputs, p, runs, snapshot, baseline), eligible_at=at) for at, p in eligible[:SIZE]]
+        if unresolved:
+            # An unresolved PR could have been non-draft since creation. Only
+            # the prefix before that earliest possible slot has stable ranks.
+            boundary = min((stamp(p["createdAt"]), p["number"]) for p in unresolved)
+            pending = [(at, p) for at, p in eligible if (stamp(at), p["number"]) >= boundary]
+            eligible = [(at, p) for at, p in eligible if (stamp(at), p["number"]) < boundary]
+    end = max((p["mergedAt"] for p in prs), key=stamp) if baseline else snapshot["observed_at"]
+    rows = [dict(ledger_row(inputs, p, runs, snapshot, baseline, window_end=end), eligible_at=at)
+            for at, p in eligible[:SIZE]]
     start = min((r["opened"] for r in rows), key=stamp) if baseline else switch
-    end = max((r["merged"] for r in rows), key=stamp) if baseline else snapshot["observed_at"]
     selection_complete = baseline or (snapshot.get("selection_complete") is True and inputs.reference(snapshot.get("selection_evidence")) and not unresolved)
     runs_complete = baseline or (snapshot.get("runs_complete") is True and inputs.reference(snapshot.get("runs_evidence")))
     if not runs_complete:
@@ -402,7 +421,8 @@ def analyze(root: Path, *, baseline: bool, switch: str | None = None) -> dict:
                          "end": max((r["merged"] for r in rows if r["merged"]), key=stamp, default=None)},
         "selected": len(rows), "not_yet_selected": SIZE - len(rows),
         "merged": sum(bool(r["merged"]) for r in rows), "unmerged": sum(not r["merged"] for r in rows),
-        "unresolved_selection": unresolved, "excluded": excluded,
+        "unresolved_selection": [p["number"] for p in unresolved], "excluded": excluded,
+        "selection_pending": [p["number"] for _, p in pending],
         "beyond_first50": [p["number"] for _, p in eligible[SIZE:]],
         "metrics": metrics, "median_20min": ("PASS" if target <= 20 else "FAIL") if complete and target is not None else "UNKNOWN",
         "guardrails": guard, "ledger": rows, "inputs": inputs.receipt(),
