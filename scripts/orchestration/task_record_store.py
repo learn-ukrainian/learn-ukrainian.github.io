@@ -20,16 +20,41 @@ This module is stdlib-only so any reader can import it cheaply.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+import re
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 
 ARCHIVE_DIR_NAME = "archive"
+_REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
 
 
 def task_record_path(tasks_dir: Path, task_id: str) -> Path:
     """Return the task record path dispatch writes for ``task_id``."""
     safe = task_id.replace("/", "_").replace("\\", "_")
     return tasks_dir / f"{safe}.json"
+
+
+def candidate_task_record_names(task_id: str, names: Iterable[str]) -> tuple[str, ...]:
+    """Filter enumerated basenames using dispatch's recursive collision grammar.
+
+    Names are locators only. The caller must check every matching file and its
+    embedded identity; neither a safe stem nor its location proves a run.
+    """
+    target = task_record_path(Path(), task_id).stem
+    result = []
+    for name in names:
+        if not name.endswith(".json"):
+            continue
+        stem = name[:-5]
+        while True:
+            if stem == target:
+                result.append(name)
+                break
+            match = _REDISPATCH_ARCHIVED_STEM_RE.fullmatch(stem)
+            if match is None:
+                break
+            stem = match["base"]
+    return tuple(sorted(result))
 
 
 def archived_task_record_path(tasks_dir: Path, task_id: str) -> Path:

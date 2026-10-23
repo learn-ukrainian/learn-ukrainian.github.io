@@ -620,23 +620,6 @@ def theatre_clean_score(writer: WriterData) -> tuple[int | None, str]:
     return 3, "0 violations"
 
 
-def writer_prompt_scores(data: BakeoffData) -> dict[str, dict[str, int | None]]:
-    rows = {
-        "CoT block usage (writer_cot_emit fields_filled)": cot_score,
-        "verify_words density (calls per 100 words)": verify_density_score,
-        "Modern-Ukrainian compliance (no archaic forms in output)": modern_ukrainian_score,
-        "Source-citation discipline (writer_tool_call success ratio)": source_discipline_score,
-        "End-gate fired (writer_end_gate gate_present)": end_gate_score,
-        "Tool-theatre clean": theatre_clean_score,
-    }
-    scores: dict[str, dict[str, int | None]] = {writer: {} for writer in data.writers}
-    for label, scorer in rows.items():
-        for writer in data.writers:
-            score, _detail = scorer(data.writer_data[writer])
-            scores[writer][label] = score
-    return scores
-
-
 def writer_prompt_table(data: BakeoffData) -> tuple[str, dict[str, dict[str, int | None]]]:
     rows = {
         "CoT block usage (writer_cot_emit fields_filled)": cot_score,

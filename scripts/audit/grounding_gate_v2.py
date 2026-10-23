@@ -59,20 +59,6 @@ def find_salient_tokens(excerpt: str, normalized_excerpt: str) -> list[dict[str,
 _last_search_truncated = False
 
 
-def _find_best_window_original(
-    normalized_excerpt: str,
-    normalized_output: str,
-    factor: float = 2.0,
-) -> tuple[float, tuple[int, int] | None, int]:
-    """Delegate legacy tuple API to the stateless primitive."""
-    result = anchor_primitives.find_best_window_original(
-        normalized_excerpt,
-        normalized_output,
-        factor=factor,
-    )
-    return result.score, result.span, result.matched_non_space_mass
-
-
 def _find_best_window(
     normalized_excerpt: str,
     normalized_output: str,

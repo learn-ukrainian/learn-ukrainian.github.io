@@ -116,7 +116,3 @@ def _nonnegative_int(value: Any) -> int | None:
     except (TypeError, ValueError):
         return None
     return count if count >= 0 else None
-
-
-def _reset_pricing_cache_for_tests() -> None:
-    _pricing_table.cache_clear()

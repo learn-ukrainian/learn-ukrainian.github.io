@@ -578,17 +578,3 @@ def _find_meta_opener(content: str) -> str | None:
 
 def has_blocking_violations(violations: list[dict]) -> bool:
     return any(item.get("severity") == "ERROR" for item in violations)
-
-
-def build_contract_correction_directive(violations: list[dict]) -> str:
-    if not violations:
-        return ""
-    lines = [
-        "<correction_directive>",
-        "CRITICAL: The draft violates the shared module contract. Fix ONLY these contract items.",
-    ]
-    for violation in violations:
-        section = violation.get("section", "(whole module)")
-        lines.append(f"- FIX [{section}] {violation.get('message', '')}")
-    lines.append("</correction_directive>")
-    return "\n".join(lines)

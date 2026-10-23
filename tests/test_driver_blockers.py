@@ -674,12 +674,17 @@ def test_epic_validation_matches_shell_rule(epic):
             blockers.validate_epic(epic)
 
 
-def test_two_racing_records_have_one_winner(ledger, tmp_path):
-    seed(ledger)
-    current = observation(item(action="repair CI"))
+def test_two_racing_records_have_one_winner(ledger, tmp_path, monkeypatch):
+    root = tmp_path / "tasks"
+    finalize_task(root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(root))
+    scope = blockers._reporting_scope(EPIC, "codex-infra")
+    complete, _, _ = blockers._collect_finalization(observation(item()), scope, None)
+    seed(ledger, complete)
+    current = {**complete, "items": [item(action="repair CI"), *complete["items"][1:]]}
     paths = record_files(tmp_path, current, posted(*current["items"]))
     command = [sys.executable, "-m", "scripts.driver_blockers", *record_args(paths)]
-    environment = {**os.environ, "SESSION_EPIC": EPIC, driver_state.STATE_ENV: str(ledger.parent / "DRIVER-STATE.md")}
+    environment = {**os.environ, "SESSION_EPIC": EPIC, "SESSION_HANDOFF_AGENT": "codex-infra", driver_state.STATE_ENV: str(ledger.parent / "DRIVER-STATE.md")}
     with (ledger.parent / f"{blockers.LEDGER_NAME}.lock").open("a+b") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         processes = [
@@ -693,7 +698,11 @@ def test_two_racing_records_have_one_winner(ledger, tmp_path):
         outputs = [process.communicate(timeout=20) for process in processes]
         assert sorted(process.returncode for process in processes) == [0, 1]
         assert sum('"recorded": true' in out for out, _ in outputs) == 1
-        assert blockers.load_ledger(ledger, EPIC)["generation"] == 2
+        stored = blockers.load_ledger(ledger, EPIC)
+        assert stored["generation"] == 2
+        assert "needs-finalize:worker:round-1" in stored["items"]
+        combined, _, _ = blockers._collect_finalization(observation(item(action="repair CI")), scope, stored)
+        assert blockers.compute_delta(combined, stored)["post_required"] is False
     finally:
         for process in processes:
             if process.poll() is None:
@@ -1158,53 +1167,89 @@ def test_invalid_age_configuration_never_suppresses_attention(tmp_path, monkeypa
 
 
 def test_configured_finite_threshold_and_scoped_terminal_scan(tmp_path, monkeypatch):
-    from datetime import UTC, datetime
-
     monkeypatch.setenv(blockers.FINALIZE_AGE_ENV, "10")
-    finalize_task(tmp_path, prompt="x" * (blockers.MAX_INPUT_BYTES + 1))
-    finalize_task(tmp_path, task_id="other-driver", initiator="atlas", prompt="x" * (blockers.MAX_INPUT_BYTES + 1))
-    finalize_task(tmp_path, task_id="other-stream", task_lifecycle={"identity": {"stream_epic": 4387}})
-    finalize_task(tmp_path, task_id="live", status="running")
-    finalize_task(tmp_path, task_id="delivered", status="done")
-    items, ages = blockers.finalization_attention(
-        tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 10, 17, 12, 11, tzinfo=UTC),
-    )
-    assert [row["id"] for row in items] == ["needs-finalize:worker:round-1"]
-    assert ages[0]["threshold_minutes"] == 10
-    assert len(ages) == 1
+    root = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(root))
+    task = finalize_task(root, prompt="x" * (blockers.MAX_INPUT_BYTES + 1))
+    finalize_task(root, task_id="other-driver", initiator="claude-infra")
+    finalize_task(root, task_id="other-stream", task_lifecycle={"identity": {"stream_epic": 4387}})
+    finalize_task(root, task_id="unknown", initiator=None, task_lifecycle={})
+    finalize_task(root, task_id="unmatched", initiator="codex-infra-run", task_lifecycle={})
+    finalize_task(root, task_id="devops", initiator="codex-devops", task_lifecycle={})
+    finalize_task(root, task_id="unregistered", task_lifecycle={"identity": {"stream_epic": 999999}})
+    finalize_task(root, task_id="nested", task_lifecycle={"identity": {"stream_epic": 11254}})
+    (root / "copy.20261023T091234Z.archived.json").write_text(json.dumps(task))
+    # Unknown purpose/status and nonce-free unrelated copies remain diagnostics.
+    (root / "stub.json").write_text(json.dumps({"task_id": "stub", "agent": "codex"}))
+    (root / "stub-copy.json").write_text(json.dumps({"task_id": "stub", "agent": "other"}))
+    finalize_task(root, task_id="live", status="running")
+    finalize_task(root, task_id="delivered", status="done")
+    noncandidate = {"task_id": "historical", "run_nonce": "one", "status": "done"}
+    (root / "historical.json").write_text(json.dumps(noncandidate))
+    (root / "historical-copy.json").write_text(json.dumps({**noncandidate, "status": "failed"}))
+    scope = blockers._reporting_scope("infra", "codex-infra", 6943)
+    reads = []
+    original = blockers.read_unit
+    def reading(fd, name, **kwargs):
+        reads.append(name)
+        return original(fd, name, **kwargs)
+    monkeypatch.setattr(blockers, "read_unit", reading)
+    combined, ages, coverage = blockers._collect_finalization(observation(), scope, None)
+    assert {row["id"] for row in combined["items"]} == {
+        f"needs-finalize:{name}:round-1" for name in ("worker", "other-driver", "unknown", "unmatched", "unregistered", "nested")
+    }
+    assert len(reads) == len(set(reads)) == coverage["hot_units"] == 15
+    assert coverage["hot_classes"]["UNKNOWN"] == 2
+    assert coverage["noncandidate_identity_unknown"] == 2
+    assert coverage["noncandidate_conflicting_runs"] == 1
+    assert coverage["same_run_copies"] == 1 and coverage["outside"] == 2
+    assert all(row["threshold_minutes"] == 10 for row in ages)
+    assert "original_stream_epic=unknown" in next(i["waits_on"] for i in combined["items"] if i["owner"] == "unknown")
+    unregistered = next(i for i in combined["items"] if i["id"] == "needs-finalize:unregistered:round-1")
+    assert "original_stream_membership=unknown" in unregistered["waits_on"]
+    # Contradictions involving a candidate are fatal, even if one copy is done.
+    task["status"] = "done"
+    (root / "copy.20261023T091234Z.archived.json").write_text(json.dumps(task))
+    with pytest.raises(ValueError, match="contradictory"):
+        blockers._collect_finalization(observation(), scope, None)
 
 
 def test_repeated_age_observation_is_unchanged_but_reason_or_attempt_change_posts(tmp_path, monkeypatch):
-    from datetime import UTC, datetime
-
+    root = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(root))
     monkeypatch.delenv(blockers.FINALIZE_AGE_ENV, raising=False)
-    finalize_task(tmp_path)
-    def observe(hour):
-        return blockers.finalization_attention(
-            tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 10, 17, hour, tzinfo=UTC),
-        )
-    first, _ = observe(13)
-    snapshot = observation(*first)
+    original = finalize_task(root)
+    scope = blockers._reporting_scope("infra", "codex-infra")
+    snapshot, _, _ = blockers._collect_finalization(observation(), scope, None)
     sidecar = tmp_path / "baseline.json"
     seed(sidecar, snapshot)
     baseline = blockers.load_ledger(sidecar, EPIC)
-    # The task file was just rewritten, but finished_at still determines age.
-    finalize_task(tmp_path)
-    later, ages = observe(14)
-    assert ages[0]["age_minutes"] == 120
-    delta = blockers.compute_delta(observation(*later), baseline)
-    assert delta["post_required"] is False
-    assert delta["items"][0]["class"] == "UNCHANGED"
-    finalize_task(tmp_path, finalize_error="auto_finalize_remote_unknown")
-    changed, _ = observe(14)
-    assert blockers.compute_delta(observation(*changed), baseline)["items"][0]["class"] == "CHANGED"
-    finalize_task(tmp_path, nonce="round-2")
-    retried, _ = observe(14)
-    delta = blockers.compute_delta(observation(*retried), baseline)
-    assert [row["class"] for row in delta["items"]] == ["NEW", "RESOLVED"]
+    monkeypatch.setenv(blockers.FINALIZE_AGE_ENV, "99999999")
+    later, _, _ = blockers._collect_finalization(observation(), blockers._reporting_scope("infra", "claude-infra"), baseline)
+    delta = blockers.compute_delta(later, baseline)
+    assert delta["post_required"] is False and delta["items"][0]["class"] == "UNCHANGED"
+    assert "age >" not in later["items"][0]["waits_on"]
+    finalize_task(root, finalize_error="auto_finalize_remote_unknown")
+    changed, _, _ = blockers._collect_finalization(observation(), scope, baseline)
+    assert blockers.compute_delta(changed, baseline)["items"][0]["class"] == "CHANGED"
+    finalize_task(root, initiator=None, task_lifecycle={})
+    unknown, _, _ = blockers._collect_finalization(observation(), scope, baseline)
+    assert unknown["items"][0]["id"] == snapshot["items"][0]["id"]
+    assert unknown["items"][0]["owner"] == "unknown"
+    assert blockers.compute_delta(unknown, baseline)["items"][0]["class"] == "CHANGED"
+    # The original source follows the recursive producer grammar into archive.
+    archive = root / "archive"
+    archive.mkdir()
+    (archive / "worker.20261023T091234Z.42.archived.20261023T101234Z.archived.json").write_text(json.dumps(original))
+    finalize_task(root, nonce="round-2")
+    retried, _, _ = blockers._collect_finalization(observation(), scope, baseline)
+    assert blockers.compute_delta(retried, baseline)["post_required"] is False
+    monkeypatch.setenv(blockers.FINALIZE_AGE_ENV, "30")
+    retried, _, _ = blockers._collect_finalization(observation(), scope, baseline)
+    assert {row["class"] for row in blockers.compute_delta(retried, baseline)["items"]} == {"NEW", "UNCHANGED"}
 
 
-def test_finalization_scan_requires_scope_and_available_store(tmp_path):
+def test_finalization_scan_requires_scope_and_available_store(tmp_path, monkeypatch):
     from datetime import datetime
 
     for scope in ({"initiator": "unknown", "stream_epic": 6943}, {"initiator": "codex-infra", "stream_epic": None}):
@@ -1214,6 +1259,231 @@ def test_finalization_scan_requires_scope_and_available_store(tmp_path):
         blockers.finalization_attention(tmp_path / "missing", initiator="codex-infra", stream_epic=6943)
     with pytest.raises(ValueError, match="timezone"):
         blockers.finalization_attention(tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 1, 1))
+
+
+    root = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(root))
+    original = finalize_task(root)
+    scope = blockers._reporting_scope("infra", "codex-infra")
+    current, _, _ = blockers._collect_finalization(observation(), scope, None)
+    sidecar = tmp_path / "baseline.json"
+    baseline = seed(sidecar, current)
+    before = sidecar.read_bytes()
+    archive = root / "archive"
+    archive.mkdir()
+    # Every supported archive spelling is found despite a newer canonical hot run.
+    for name in (
+        "worker.json", "worker.20261023T091234Z.archived.json",
+        "worker.20261023T091234123Z.42.archived.json",
+        "worker.20261023T091234Z.archived.20261023T101234Z.7.archived.json",
+    ):
+        archived = archive / name
+        archived.write_text(json.dumps(original))
+        finalize_task(root, nonce="round-2", status="running")
+        (archive / "unrelated.json").write_text("malformed but outside exact-stem lookup")
+        retained, _, coverage = blockers._collect_finalization(observation(), scope, baseline)
+        assert retained == current
+        assert coverage["exact_runs"][0]["units"] == 2
+        # A favorable hot copy cannot overrule a contradictory archived copy.
+        finalize_task(root, status="done")
+        with pytest.raises(ValueError, match="contradictory"):
+            blockers._collect_finalization(observation(), scope, baseline)
+        finalize_task(root, nonce="round-2", status="running")
+        released = {**original, "status": "done"}
+        archived.write_text(json.dumps(released))
+        resolved, _, _ = blockers._collect_finalization(observation(), scope, baseline)
+        assert blockers.compute_delta(resolved, baseline)["items"] == [{"id": current["items"][0]["id"], "class": "RESOLVED"}]
+        archived.write_text(json.dumps({**original, "task_lifecycle": {"identity": {"stream_epic": 4387}}}))
+        excluded, _, _ = blockers._collect_finalization(observation(), scope, baseline)
+        assert excluded["items"] == []
+        # Unknown status, nonce or foreign embedded identity cannot prove removal.
+        for bad in ({**original, "status": "mystery"}, {**original, "status": None},
+                    {**released, "run_nonce": None}, {**released, "task_id": "worker/foreign"},
+                    {**released, "task_id": "worker", "run_nonce": "round-2"}):
+            archived.write_text(json.dumps(bad))
+            with pytest.raises(ValueError):
+                blockers._collect_finalization(observation(), scope, baseline)
+            assert sidecar.read_bytes() == before
+        for raw in ("{", '[]', '{"status":"done","status":"done"}'):
+            archived.write_text(raw)
+            with pytest.raises(ValueError, match="invalid task record"):
+                blockers._collect_finalization(observation(), scope, baseline)
+        archived.unlink()
+        archived.symlink_to(root / "worker.json")
+        with pytest.raises(ValueError, match="unsafe"):
+            blockers._collect_finalization(observation(), scope, baseline)
+        archived.unlink()
+        with pytest.raises(ValueError, match="exact run unavailable"):
+            blockers._collect_finalization(observation(), scope, baseline)
+    archived = archive / "worker.json"
+    archived.write_text(json.dumps(original))
+    with monkeypatch.context() as small:
+        small.setattr(blockers, "MAX_TASK_RECORD_BYTES", 10)
+        with pytest.raises(ValueError, match="oversized"):
+            blockers._collect_finalization(observation(), scope, baseline)
+    with monkeypatch.context() as small:
+        small.setattr(blockers, "MAX_INPUT_BYTES", 10)
+        with pytest.raises(ValueError, match="maximum byte size"):
+            blockers._collect_finalization(observation(), scope, baseline)
+    # Exact stem selection must reject slash-to-underscore identity collisions.
+    colliding = {**original, "task_id": "worker/sub"}
+    collision_current = observation({**current["items"][0], "id": "needs-finalize:worker/sub:round-1"})
+    collision_baseline = {**baseline, "items": {row["id"]: blockers.fingerprint(row) for row in collision_current["items"]}}
+    (archive / "worker_sub.json").write_text(json.dumps({**colliding, "task_id": "worker_sub"}))
+    with pytest.raises(ValueError, match="foreign identity"):
+        blockers._collect_finalization(observation(), scope, collision_baseline)
+    # Detectable mutation after a checked read cannot certify coverage.
+    with monkeypatch.context() as unstable:
+        read = blockers.read_unit
+        reads = []
+        def changing(fd, name, **kwargs):
+            reads.append(name)
+            unit = read(fd, name, **kwargs)
+            if name == "worker.json":
+                (root / "worker.json").write_text(json.dumps({**original, "status": "failed"}))
+            return unit
+        unstable.setattr(blockers, "read_unit", changing)
+        with pytest.raises(ValueError, match="changed during read"):
+            blockers._collect_finalization(observation(), scope, baseline)
+        assert reads == ["worker.json"]
+    (root / "broken.json").write_text("{")
+    with pytest.raises(ValueError, match="invalid task record"):
+        blockers._collect_finalization(observation(), scope, baseline)
+    assert sidecar.read_bytes() == before
+
+    # Final verification can discard one otherwise valid full observation.
+    root = tmp_path / "transient-tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(root))
+    finalize_task(root)
+    verify = blockers._CheckedTasks.verify
+    for fault in ("file-version", "directory-stamp"):
+        finalize_task(root)
+        calls, descriptors, reads = [], [], []
+        clock = [0.0]
+        with monkeypatch.context() as transient:
+            def final_change(source, fault=fault, calls=calls, descriptors=descriptors, clock=clock):
+                calls.append(source)
+                descriptors.extend(fd for fd, _ in source.directories.values())
+                if len(calls) == 1:
+                    if fault == "file-version":
+                        replacement = root / "replacement.tmp"
+                        replacement.write_text(json.dumps({**original, "run_nonce": "fresh"}))
+                        replacement.replace(root / "worker.json")
+                        (root / "diagnostic.json").write_text('{}')
+                    else:
+                        info = root.stat()
+                        os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+                else:
+                    # A stable second attempt is accepted even after the budget.
+                    clock[0] = 50.0
+                verify(source)
+
+            def tracking_read(fd, name, reads=reads, **kwargs):
+                reads.append(name)
+                return read(fd, name, **kwargs)
+
+            transient.setattr(blockers._CheckedTasks, "verify", final_change)
+            transient.setattr(blockers, "read_unit", tracking_read)
+            transient.setattr(blockers.time, "monotonic", lambda clock=clock: clock[0])
+            stable, _, coverage = blockers._collect_finalization(observation(), scope, None)
+        assert len(calls) == 2 and clock[0] == 50.0
+        assert reads.count("worker.json") == 2
+        assert {row["id"] for row in stable["items"]} == {
+            "needs-finalize:worker:fresh" if fault == "file-version" else "needs-finalize:worker:round-1"
+        }
+        assert coverage["hot_units"] == 2 and coverage["hot_classes"]["UNKNOWN"] == 1
+        for fd in descriptors:
+            with pytest.raises(OSError):
+                os.fstat(fd)
+
+    # The budget only admits attempt two after a proved transient. A fully
+    # verified first result is accepted however long its collection took.
+    calls = []
+    clock = [0.0]
+    with monkeypatch.context() as late:
+        def late_stable(source):
+            calls.append(source)
+            clock[0] = 100.0
+            verify(source)
+        late.setattr(blockers._CheckedTasks, "verify", late_stable)
+        late.setattr(blockers.time, "monotonic", lambda clock=clock: clock[0])
+        stable, _, _ = blockers._collect_finalization(observation(), scope, None)
+    assert len(calls) == 1 and stable["items"]
+
+    for budget_exhausted in (False, True):
+        calls, descriptors = [], []
+        clock = [0.0]
+        with monkeypatch.context() as exhausted:
+            def unstable_final(source, calls=calls, descriptors=descriptors, clock=clock, budget_exhausted=budget_exhausted):
+                calls.append(source)
+                descriptors.extend(fd for fd, _ in source.directories.values())
+                info = root.stat()
+                os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+                if budget_exhausted:
+                    clock[0] = 10.0
+                verify(source)
+            exhausted.setattr(blockers._CheckedTasks, "verify", unstable_final)
+            exhausted.setattr(blockers.time, "monotonic", lambda clock=clock: clock[0])
+            with pytest.raises(blockers._TransientFinalizationExhausted, match=r"^TRANSIENT_SOURCE_UNSTABLE:.*baseline unchanged$"):
+                blockers._collect_finalization(observation(), scope, None)
+        assert len(calls) == (1 if budget_exhausted else 2)
+        for fd in descriptors:
+            with pytest.raises(OSError):
+                os.fstat(fd)
+
+    # A hard final-verification refusal wins even after a stamp has changed.
+    for fault in ("directory-replaced", "directory-missing", "symlink", "vanished", "nonregular", "new-archive"):
+        root = tmp_path / fault
+        monkeypatch.setenv("LU_TASKS_DIR", str(root))
+        finalize_task(root)
+        calls = []
+        with monkeypatch.context() as hard:
+            def unsafe_final(source, calls=calls, root=root, fault=fault):
+                calls.append(source)
+                info = root.stat()
+                os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+                if fault in {"directory-replaced", "directory-missing"}:
+                    root.rename(root.with_name(root.name + "-original"))
+                    if fault == "directory-replaced":
+                        root.mkdir()
+                elif fault == "new-archive":
+                    (root / "archive").mkdir()
+                else:
+                    (root / "worker.json").unlink()
+                    if fault == "symlink":
+                        (root / "worker.json").symlink_to(sidecar)
+                    elif fault == "nonregular":
+                        (root / "worker.json").mkdir()
+                verify(source)
+            hard.setattr(blockers._CheckedTasks, "verify", unsafe_final)
+            with pytest.raises(ValueError) as rejected:
+                blockers._collect_finalization(observation(), scope, baseline if fault == "new-archive" else None)
+            assert type(rejected.value) is ValueError
+        assert len(calls) == 1
+
+    # Parse, prior status and contradiction failures never reach retry handling.
+    for fault in ("malformed", "unknown-status", "contradictory"):
+        root = tmp_path / fault
+        monkeypatch.setenv("LU_TASKS_DIR", str(root))
+        finalize_task(root)
+        if fault == "malformed":
+            (root / "worker.json").write_text('{')
+        elif fault == "unknown-status":
+            finalize_task(root, status="mystery")
+        else:
+            (root / "copy.json").write_text(json.dumps({**original, "status": "done"}))
+        attempts = []
+        collect = blockers._collect_finalization_once
+        with monkeypatch.context() as hard:
+            def count_attempt(*args, attempts=attempts, collect=collect):
+                attempts.append(True)
+                return collect(*args)
+            hard.setattr(blockers, "_collect_finalization_once", count_attempt)
+            with pytest.raises(ValueError) as rejected:
+                blockers._collect_finalization(observation(), scope, baseline)
+            assert type(rejected.value) is ValueError
+        assert attempts == [True]
+    assert sidecar.read_bytes() == before
 
 
 def test_cli_includes_scoped_attention_without_sending_or_recording(ledger, tmp_path, monkeypatch, capsys):
@@ -1264,6 +1534,7 @@ def test_driver_snapshot_automatically_reports_aged_work_and_records_exact_post(
     delta = json.loads(capsys.readouterr().out)
     assert {row["id"] for row in delta["items"]} == {
         "blocked-build", "needs-finalize:worker:round-1", "needs-finalize:nested:round-1",
+        "needs-finalize:foreign-driver:round-1",
     }
     assert delta["post_required"] is True and delta["generation"] == 0
     assert {row["age_minutes"] for row in delta["finalization_attention"]} == {60}
@@ -1273,9 +1544,67 @@ def test_driver_snapshot_automatically_reports_aged_work_and_records_exact_post(
     paths[2].write_bytes(body)
     args = record_args(paths, "0")
     args[2] = selector
-    assert blockers.main(args) == 0
+    verify = blockers._CheckedTasks.verify
+    calls = []
+    with monkeypatch.context() as transient:
+        def changed_once(source):
+            calls.append(source)
+            assert ledger.with_name(ledger.name + ".lock").is_file()
+            if len(calls) == 1:
+                info = root.stat()
+                os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+            verify(source)
+        transient.setattr(blockers._CheckedTasks, "verify", changed_once)
+        assert blockers.main(args) == 0
+    assert len(calls) == 2
     assert json.loads(capsys.readouterr().out)["recorded"] is True
     before = ledger.read_bytes()
+    # A fresh row requires a new actual post, even after a permitted reread.
+    paths[1].write_text(json.dumps(receipt(body, key="next", stamp="2026-10-10T02:00:00Z")))
+    post_artifacts = [path.read_bytes() for path in paths[1:]]
+    next_args = record_args(paths)
+    next_args[2] = selector
+    calls = []
+    with monkeypatch.context() as transient:
+        def new_attention(source):
+            calls.append(source)
+            if len(calls) == 1:
+                finalize_task(root, task_id="new-attention")
+            verify(source)
+        transient.setattr(blockers._CheckedTasks, "verify", new_attention)
+        assert blockers.main(next_args) == 1
+    rejected = capsys.readouterr()
+    assert rejected.out == "" and "posted body omits NEW item id 'needs-finalize:new-attention:round-1'" in rejected.err
+    assert len(calls) == 2 and ledger.read_bytes() == before
+    assert [path.read_bytes() for path in paths[1:]] == post_artifacts
+    (root / "new-attention.json").unlink()
+
+    with monkeypatch.context() as transient:
+        calls = []
+        def always_changing(source):
+            calls.append(source)
+            info = root.stat()
+            os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+            verify(source)
+        transient.setattr(blockers._CheckedTasks, "verify", always_changing)
+        transient.setattr(blockers.time, "monotonic", lambda: 0.0)
+        assert blockers.main(next_args) == 1
+        rejected = capsys.readouterr()
+        assert rejected.out == "" and "TRANSIENT_SOURCE_UNSTABLE:" in rejected.err
+        assert len(calls) == 2
+        calls.clear()
+        assert blockers.main(delta_args) == 1
+        rejected = capsys.readouterr()
+        assert rejected.out == "" and "TRANSIENT_SOURCE_UNSTABLE:" in rejected.err
+        assert len(calls) == 2
+        assert ledger.read_bytes() == before
+        assert [path.read_bytes() for path in paths[1:]] == post_artifacts
+        calls.clear()
+        # Stale CAS is checked before collection and never causes a reread.
+        assert blockers.main(args) == 1
+        rejected = capsys.readouterr()
+        assert rejected.out == "" and "stale expected generation" in rejected.err
+        assert calls == [] and ledger.read_bytes() == before
     Clock.hour = 14
     # A newly written task file and advancing clock cannot trigger another post.
     finalize_task(root)
@@ -1295,6 +1624,39 @@ def test_driver_snapshot_automatically_reports_aged_work_and_records_exact_post(
     assert "posted body" in capsys.readouterr().err
     assert ledger.read_bytes() == before
 
+    # The same normal CLI path covers the other registered lane and its alias.
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-devops")
+    devops_ledger = ledger.parent / "devops" / blockers.LEDGER_NAME
+    monkeypatch.setattr(blockers, "ledger_path", lambda epic: devops_ledger)
+    finalize_task(root, task_id="devops-parent", initiator="claude-devops", task_lifecycle={"identity": {"stream_epic": 5703}})
+    finalize_task(root, task_id="devops-member", initiator="codex-infra", task_lifecycle={"identity": {"stream_epic": 10844}})
+    finalize_task(root, task_id="devops-custody", initiator="claude-devops", task_lifecycle={})
+    finalize_task(root, task_id="global-unknown", initiator=None, task_lifecycle={})
+    for devops_selector in ("devops", "infra.devops"):
+        monkeypatch.setenv("SESSION_EPIC", devops_selector)
+        devops_current = {"epic": devops_selector, "complete": True, "items": [item()]}
+        paths[0].write_text(json.dumps(devops_current))
+        # Each selector owns a separate normal baseline, as before.
+        monkeypatch.setattr(blockers, "ledger_path", lambda epic: devops_ledger.with_name(epic + ".json"))
+        delta_args = ["delta", "--epic", devops_selector, "--current", str(paths[0]), "--task-initiator", "codex-devops", "--task-stream-epic", "10844"]
+        assert blockers.main(delta_args) == 0
+        delta = json.loads(capsys.readouterr().out)
+        assert {row["id"] for row in delta["items"]} == {
+            "blocked-build", "needs-finalize:devops-parent:round-1", "needs-finalize:devops-member:round-1",
+            "needs-finalize:devops-custody:round-1", "needs-finalize:global-unknown:round-1",
+        }
+        body = posted(*[{key: row[key] for key in blockers.ITEM_KEYS} for row in delta["items"]])
+        paths[1].write_text(json.dumps(receipt(body)))
+        paths[2].write_bytes(body)
+        args = record_args(paths, "0")
+        args[2] = devops_selector
+        assert blockers.main(args) == 0
+        assert json.loads(capsys.readouterr().out)["generation"] == 1
+        assert blockers.main(delta_args) == 0
+        unchanged = json.loads(capsys.readouterr().out)
+        assert unchanged["post_required"] is False and unchanged["generation"] == 1
+        assert {row["class"] for row in unchanged["items"]} == {"UNCHANGED"}
+
 
 @pytest.mark.parametrize("mode", ["unknown_stream", "mismatched_session", "no_driver"])
 def test_automatic_finalization_scope_requires_launcher_identity(monkeypatch, mode):
@@ -1307,8 +1669,17 @@ def test_automatic_finalization_scope_requires_launcher_identity(monkeypatch, mo
         with pytest.raises(ValueError, match="scope unknown" if mode == "unknown_stream" else "matching epic"):
             blockers.driver_finalization_scope("unregistered" if mode == "unknown_stream" else "infra")
 
+    monkeypatch.setenv("SESSION_EPIC", "infra")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-devops")
+    with pytest.raises(ValueError, match="exact registered slot"):
+        blockers.driver_finalization_scope("infra")
+    with pytest.raises(ValueError, match="member epic"):
+        blockers._reporting_scope("infra", "codex-infra", 5703)
+    with pytest.raises(ValueError, match="exact registered slot"):
+        blockers._reporting_scope("infra", "codex-infra-run", 6943)
 
-def test_age_reporting_does_not_publish_historical_private_error(tmp_path):
+
+def test_age_reporting_does_not_publish_historical_private_error(tmp_path, monkeypatch, capsys):
     from datetime import UTC, datetime
 
     finalize_task(tmp_path, finalize_error="private historical diagnostic /private/example")
@@ -1317,3 +1688,23 @@ def test_age_reporting_does_not_publish_historical_private_error(tmp_path):
     )
     assert "private historical" not in items[0]["waits_on"]
     assert "reason=finalization evidence unavailable; inspect private task diagnostics" in items[0]["waits_on"]
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    current, _, _ = blockers._collect_finalization(observation(), blockers._reporting_scope("infra", "codex-infra"), None)
+    assert "private historical diagnostic" not in json.dumps(current)
+    assert "reason=finalization evidence unavailable; inspect private task diagnostics" in current["items"][0]["waits_on"]
+
+    # Escaped invalid Unicode in an untrusted task payload must fail privately.
+    bad_source = tmp_path / "bad-source"
+    bad = finalize_task(bad_source, prompt="private-prompt-marker\ud800")
+    (bad_source / "worker.20261023T091234Z.archived.json").write_text(json.dumps(bad))
+    monkeypatch.setenv("LU_TASKS_DIR", str(bad_source))
+    monkeypatch.setattr(blockers, "ledger_path", lambda epic: tmp_path / "local-ledger.json")
+    current_file = tmp_path / "current.json"
+    current_file.write_text(json.dumps(observation()))
+    assert blockers.main(["delta", "--epic", "infra", "--current", str(current_file),
+                          "--task-initiator", "codex-infra", "--task-stream-epic", "6943"]) == 1
+    rejected = capsys.readouterr()
+    assert rejected.out == "" and "invalid task record" in rejected.err
+    assert "private-prompt-marker" not in rejected.err
+    assert "Traceback" not in rejected.err

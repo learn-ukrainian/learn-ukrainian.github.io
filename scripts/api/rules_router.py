@@ -256,12 +256,3 @@ def rules_hash(*, project_root: Path, scope: str | None = None) -> str:
     except HTTPException:
         return ""
     return digest
-
-
-def rules_source_paths(*, project_root: Path, scope: str = "core") -> list[str]:
-    """Resolve the set of rule sources that actually exist right now.
-
-    Defaults to the binding core. Full and task references are explicit.
-    """
-    sources = RULE_SOURCES if scope == "full" else rules_core.scope_sources(scope)
-    return [rel for rel in sources if rules_core.source_path(rel, project_root).is_file()]

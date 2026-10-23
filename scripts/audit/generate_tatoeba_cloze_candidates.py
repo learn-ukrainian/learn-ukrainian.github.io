@@ -354,10 +354,6 @@ def _iter_tatoeba_link_ids(path: Path) -> Iterable[tuple[int, int]]:
             yield int(str(raw_left)), int(str(raw_right))
 
 
-def read_tatoeba_links(path: Path) -> list[tuple[int, int]]:
-    return list(_iter_tatoeba_link_ids(path))
-
-
 def read_tatoeba_pairs(
     uk_sentences: Path,
     en_sentences: Path,

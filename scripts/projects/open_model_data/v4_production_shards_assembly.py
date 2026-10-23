@@ -183,14 +183,6 @@ def write_jsonl(path: Path, records: Sequence[dict[str, Any]]) -> None:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
-def compute_token_jaccard(text1: str, text2: str) -> float:
-    t1 = set(clean_word(w) for w in text1.split() if len(clean_word(w)) >= 2)
-    t2 = set(clean_word(w) for w in text2.split() if len(clean_word(w)) >= 2)
-    if not t1 or not t2:
-        return 0.0
-    return len(t1 & t2) / len(t1 | t2)
-
-
 def get_vesum_form_count(cur: sqlite3.Cursor, lemma: str) -> int:
     clean_l = clean_word(lemma)
     try:

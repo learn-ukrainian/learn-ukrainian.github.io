@@ -638,5 +638,12 @@ def test_driver_state_banner_carries_complete_blocker_rule(tmp_path: Path) -> No
         "exact case-sensitive standalone token RESOLVED <id>",
         "on its own non-active line (no other fields or prose)",
         "if delta fails or the baseline is unknown, post everything currently blocking",
+        "typed source-uncertainty blocker",
+        "Fallback reporting cannot certify coverage",
+        "Preserve the baseline",
+        "Keep other ready work moving",
+        "exhaustive coverage including explicit unknown attention",
+        "current reporting custody only",
+        "UNCHANGED means unchanged attention, not zero blockers",
     ):
         assert fragment in result.stdout

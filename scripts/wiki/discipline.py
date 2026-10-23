@@ -457,39 +457,3 @@ def render_citation_discipline_block(source_count: int) -> str:
         f"арабські цифри в дужках, `[S1]`, `[S2]`, `[S{source_count}]`, без "
         f"пробілів, без літер).\n"
     )
-
-
-def render_canonical_anchors_for_reviewer(
-    anchors_path: Path | None = None,
-) -> str:
-    """Render canonical anchors as a REJECTION criterion block for the
-    reviewer prompt. Reviewer reads this and REJECTs any article that
-    contains a forbidden form."""
-    anchors = _iter_anchors(anchors_path)
-    rendered: list[str] = []
-    for anchor in anchors:
-        forbidden = anchor.get("forbidden") or []
-        if not forbidden:
-            continue
-        topic = anchor.get("topic_uk", "")
-        correct = anchor.get("correct", "")
-        for rule in forbidden:
-            pattern = rule.get("pattern", "")
-            reason = rule.get("reason", "")
-            rendered.append(
-                f"- **{topic}** → canonical `{correct}`; REJECT if `{pattern}` matches. Reason: {reason}"
-            )
-
-    if not rendered:
-        return "## Canonical anchors\n(registry empty)\n"
-    return (
-        "## Canonical anchors — REJECT triggers\n\n"
-        "The article under review must not contain any of the forbidden "
-        "patterns below. Every match is an automatic REJECT verdict — "
-        "these are decolonization-critical facts with state/dictionary "
-        "authority. Emit a `REJECT` verdict, cite the specific matched "
-        "text, and produce a `<fixes>` block replacing the forbidden "
-        "form with the canonical one.\n\n"
-        + "\n".join(rendered)
-        + "\n"
-    )

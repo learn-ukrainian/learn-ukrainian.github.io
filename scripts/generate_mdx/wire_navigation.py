@@ -20,7 +20,6 @@ GH issue: #702 (Tier 2)
 """
 
 import argparse
-import re
 import sys
 from pathlib import Path
 
@@ -53,65 +52,6 @@ def load_curriculum_order():
         modules = level_data.get("modules", [])
         result[level_key] = modules
     return result
-
-
-def parse_phases_from_curriculum(level):
-    """Parse phase comments from curriculum.yaml to get phase boundaries.
-
-    Returns list of (phase_name, start_idx, end_idx) tuples (0-indexed).
-    """
-    with open(CURRICULUM_YAML) as f:
-        lines = f.readlines()
-
-    # Find the level section
-    in_level = False
-    in_modules = False
-    phases = []
-    current_phase = None
-    module_idx = 0
-    phase_start = 0
-
-    for line in lines:
-        stripped = line.strip()
-
-        # Detect level start
-        if re.match(rf"^\s*{re.escape(level)}:\s*$", line):
-            in_level = True
-            continue
-
-        if in_level and not in_modules:
-            if stripped == "modules:":
-                in_modules = True
-            elif re.match(r"^\s*\w+:", stripped) and "type:" not in stripped:
-                # Hit next level
-                break
-            continue
-
-        if in_modules:
-            # Check for phase comment
-            phase_match = re.match(r"\s*#\s*(Phase|──)\s*(.+?)(?:\s*──.*)?$", stripped)
-            if phase_match:
-                if current_phase is not None and module_idx > phase_start:
-                    phases.append((current_phase, phase_start, module_idx - 1))
-                current_phase = phase_match.group(2).strip()
-                phase_start = module_idx
-                continue
-
-            # Check for module entry
-            module_match = re.match(r"\s*-\s+(\S+)", stripped)
-            if module_match:
-                module_idx += 1
-                continue
-
-            # Check for end of modules list (next level or end of file)
-            if re.match(r"^\s*\w+:", stripped) and not stripped.startswith("#"):
-                break
-
-    # Close last phase
-    if current_phase is not None and module_idx > phase_start:
-        phases.append((current_phase, phase_start, module_idx - 1))
-
-    return phases
 
 
 def wire_level(level, slugs, dry_run=False):

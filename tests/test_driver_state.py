@@ -730,6 +730,10 @@ def test_blocker_policy_requires_exact_real_heading(state, prefix):
     assert "post ordinary reports to epics" in message
     assert "--reporting-target cto only for explicit operator escalation" in message
     assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
+    assert "typed source-uncertainty blocker" in message
+    assert "Fallback reporting cannot certify coverage" in message
+    assert "Preserve the baseline" in message
+    assert "Keep other ready work moving" in message
 
 
 @pytest.mark.parametrize(
