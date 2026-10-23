@@ -191,8 +191,9 @@ read-only dispatch (#8703, above).
    classes still blocks or escalates. Later rounds use the review stopping rule to decide
    blockers and follow-ups. Each blocker states the demonstrated failure, its impact and the required
    corrected behaviour; a code fix is a suggestion. APPROVE with tracked follow-ups is allowed.
-   A delta review attests the new exact head and checks interactions, including weakened
-   tests. A missing required capability is INCONCLUSIVE: the verdict line uses `BLOCKED` and
+   A delta-review brief asks the reviewer to probe every fallback or fail-open path changed
+   by the fix diff and check listed fixes, interactions and weakened tests at the new exact
+   head. A missing required capability is INCONCLUSIVE: the verdict line uses `BLOCKED` and
    names the capability; it still blocks.
 6. **Breakers** — the review stopping rule above and `local-code-review` checklist
    Step 6 apply, even when the outstanding-finding count shrinks.

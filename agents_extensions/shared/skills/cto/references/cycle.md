@@ -20,11 +20,13 @@ never fine.
    run the reaper and retention tools before admitting write workers; never delete bulk
    corpus or data without a separate operator-authorized task (core.md P6).
 4. **Open PRs**, from the scorecard metrics when present, in every repository the fleet
-   lands in, with `number`, `headRefOid`,
-   `mergeStateStatus`, `isDraft`, `reviewDecision`. Per PR: a review of record at the
-   current `headRefOid` (verdict, reviewer model) and green CI on that head; an older-head
-   verdict is stale. An approved green PR not enqueued gets its reason from the merge-queue
-   keeper's log, not a guess. A background watcher with a deadline replaces polling.
+   lands in, with `number`, `headRefOid`, `mergeable`, `mergeStateStatus`, `isDraft`,
+   `reviewDecision`. Per PR: a review of record at the current `headRefOid` (verdict,
+   reviewer model), a CI Gate run for that head and green CI; an older-head verdict is stale.
+   A conflicting PR or missing current-head CI Gate run is an attention item. A background
+   watcher with a deadline checks both as well as failing checks, replacing polling.
+   An approved green PR not enqueued gets its reason from the merge-queue keeper's log,
+   not a guess.
 5. **Live workers.** Active dispatches from the Monitor API, then
    `.venv/bin/python scripts/delegate.py status <task-id> --run-nonce <nonce>` for each task
    the handoff or the view names; task files outrank a partial view. Every running worker
