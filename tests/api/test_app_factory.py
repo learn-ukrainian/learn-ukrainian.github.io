@@ -16,10 +16,11 @@ import pytest
 from fastapi.exception_handlers import websocket_request_validation_exception_handler
 from fastapi.exceptions import RequestValidationError, WebSocketRequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.routing import iter_route_contexts
 from fastapi.testclient import TestClient
 from prometheus_client import REGISTRY, generate_latest
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
+from starlette.requests import ClientDisconnect, Request
 
 from scripts.api import dashboard_comms
 from scripts.api import main as api_main
@@ -567,6 +568,9 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
     second_root = tmp_path / "second"
     first_ctx = fixture_context(first_root)
     second_ctx = fixture_context(second_root)
+    core_rules = first_root / "agents_extensions/shared/rules/core.md"
+    core_rules.parent.mkdir(parents=True)
+    core_rules.write_text("# Fixture core rules\n", encoding="utf-8")
 
     # Set up dashboards
     (first_root / "dashboards").mkdir(parents=True, exist_ok=True)
@@ -622,6 +626,16 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         secret_query = "metrics-probe-query"
         secret = first_client.get(f"/{secret_segment}", params={"access_token": secret_query})
         assert 400 <= secret.status_code < 500
+        assert first_client.get("/api/blue/health").status_code == 200
+        assert first_client.get("/api/blue/metrics").status_code == 200
+        assert first_client.get("/api/rules").status_code == 200
+        assert first_client.get(f"/api/blue/activity-errors/a1/{secret_segment}").status_code == 200
+        assert first_client.get("/docs").status_code == 200
+        preflight = first_client.options(
+            f"/{secret_segment}",
+            headers={"Origin": "https://example.com", "Access-Control-Request-Method": "GET"},
+        )
+        assert preflight.status_code == 200
 
         first_metrics = first_client.get("/metrics", params={"access_token": secret_query})
         assert first_metrics.status_code == 200
@@ -637,9 +651,19 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         assert 'monitor_http_requests_total{method="GET",route="/{path:path}",status_class="4xx"} 1.0' in first_body
         assert 'route="/api/health",status_class="5xx"' not in first_body
         assert 'monitor_http_request_duration_seconds_count{method="GET",route="/api/health"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/api/blue/health",status_class="2xx"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/api/blue/metrics",status_class="2xx"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/api/rules",status_class="2xx"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/api/blue/activity-errors/{track_id}/{slug}",status_class="2xx"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/docs",status_class="2xx"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="OPTIONS",route="unmatched",status_class="2xx"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/metrics"' not in first_body
+        assert 'route="/health"' not in first_body
+        assert 'route="/activity-errors/{track_id}/{slug}"' not in first_body
 
+        metrics_error = RuntimeError("metrics failure probe")
         def _raise_metrics_probe() -> None:
-            raise RuntimeError("metrics failure probe")
+            raise metrics_error
 
         first_app.dependency_overrides[api_main.get_ctx] = _raise_metrics_probe
         with pytest.raises(RuntimeError, match="metrics failure probe"):
@@ -694,6 +718,14 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         assert 'route="/api/health"' not in isolated.text
         assert first_app.state.http_metrics.registry is not second_app.state.http_metrics.registry
 
+        metrics_error = ClientDisconnect()
+        with pytest.raises(ClientDisconnect):
+            first_client.get("/api/health")
+        disconnect_body = first_client.get("/metrics").text
+        assert 'monitor_http_requests_total{method="GET",route="/api/health",status_class="5xx"} 2.0' in disconnect_body
+        assert 'monitor_http_responses_5xx_total{method="GET",route="/api/health"} 2.0' in disconnect_body
+        assert 'monitor_http_request_duration_seconds_count{method="GET",route="/api/health"} 3.0' in disconnect_body
+
     bare = Request(
         {
             "type": "http",
@@ -702,12 +734,16 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
             "query_string": f"access_token={secret_query}".encode(),
             "headers": [],
             "scheme": "http",
+            "app": first_app,
         }
     )
     assert api_main.http_metrics_route_label(bare) == "unmatched"
     bare.scope["route"] = type("_Route", (), {"path": f"/api/health?access_token={secret_query}"})()
     assert api_main.http_metrics_route_label(bare) == "unmatched"
     bare.scope["route"] = type("_Route", (), {"path": "/api/health"})()
+    assert api_main.http_metrics_route_label(bare) == "unmatched"
+    health_context = next(context for context in iter_route_contexts(first_app.routes) if context.path == "/api/health")
+    bare.scope.update(path="/api/health", endpoint=health_context.endpoint, route=health_context.original_route)
     assert api_main.http_metrics_route_label(bare) == "/api/health"
 
 

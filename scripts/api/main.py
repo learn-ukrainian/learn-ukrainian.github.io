@@ -32,6 +32,7 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
+from fastapi.routing import iter_route_contexts
 from prometheus_client import (
     CONTENT_TYPE_PLAIN_0_0_4,
     CollectorRegistry,
@@ -40,7 +41,7 @@ from prometheus_client import (
     generate_latest,
 )
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from starlette.requests import ClientDisconnect
+from starlette.routing import Match
 
 import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
@@ -1975,7 +1976,7 @@ def new_http_metrics() -> HttpMetrics:
     )
     duration = Histogram(
         "monitor_http_request_duration_seconds",
-        "HTTP response latency in seconds.",
+        "HTTP latency to response start, or failure before response start, in seconds.",
         ("method", "route"),
         registry=registry,
     )
@@ -2020,11 +2021,23 @@ def http_metrics_route_label(request: Request) -> str:
     Only the template is copied. The raw path, query string, and request content
     never become label values.
     """
-    route = request.scope.get("route")
-    template = _bounded_route_template(getattr(route, "path", None))
-    if template is None:
+    endpoint = request.scope.get("endpoint")
+    if endpoint is None:
         return _UNMATCHED_ROUTE
-    return template
+    selected_route = request.scope.get("route")
+    # FastAPI preserves included APIRoutes with router-local paths. Its public
+    # context iterator supplies full templates and supported scope matching.
+    for context in iter_route_contexts(request.app.routes):
+        if context.endpoint is not endpoint:
+            continue
+        if selected_route is not None and context.original_route is not selected_route:
+            continue
+        match, _ = context.matches(request.scope)
+        if match != Match.NONE:
+            template = _bounded_route_template(context.path)
+            if template is not None:
+                return template
+    return _UNMATCHED_ROUTE
 
 
 def _record_http_metrics(
@@ -2073,8 +2086,6 @@ async def http_metrics_middleware(request: Request, call_next: Callable[[Request
 
     try:
         response = await call_next(request)
-    except ClientDisconnect:
-        raise
     except Exception:
         _record_http_metrics(
             metrics,

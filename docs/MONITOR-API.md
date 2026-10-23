@@ -13,6 +13,40 @@ and `http://localhost:8765/redoc` (ReDoc).
 
 This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/*.py` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
 
+## Prometheus metrics
+
+`GET /metrics` and `HEAD /metrics` serve Prometheus text exposition on the
+existing loopback app. Each app instance owns a separate registry. The
+middleware serves scrapes before the concurrency limiter and records each
+scrape after rendering its payload, so its observation appears on the next
+scrape. Other methods keep the app's normal routing and response behavior.
+The scrape endpoint does not add a registered route.
+
+| Metric | Labels | Meaning |
+| --- | --- | --- |
+| `monitor_http_requests_total` | `method`, `route`, `status_class` | Response count, including handled errors and failures before response start |
+| `monitor_http_request_duration_seconds` | `method`, `route` | Histogram with `_bucket`, `_count`, and `_sum` samples, measured from entry into the metrics middleware to response start, or failure before response start |
+| `monitor_http_responses_5xx_total` | `method`, `route` | Responses with status 500 or higher, including exceptions before response start |
+
+`route` is the full matched registered template, including router prefixes
+and parameter placeholders. For example, `/api/blue/metrics` stays distinct
+from `/metrics`, and parameter values never become labels. `unmatched`
+means no registered endpoint was selected, including requests answered before
+routing, such as CORS preflights. A request matched by the static catch-all
+uses `/{path:path}`, even when its response is 404. Templates retain a
+512-character bound and reject query, fragment, backslash, and whitespace
+characters. Raw URLs, query strings, request content, and exception messages
+are never labels.
+
+`method` is one of `CONNECT`, `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`,
+`POST`, `PUT`, or `TRACE`; other methods use `OTHER`. `status_class` is
+`1xx` through `5xx`, or `other` for statuses outside those ranges.
+Exceptions before response start, including `ClientDisconnect`, record a
+500 observation and propagate through the existing exception handling.
+Latency excludes body streaming and background tasks. Failures after
+response start do not change the recorded status or add a second observation.
+WebSocket traffic is outside these HTTP metrics.
+
 ## Where agents onboard (not the HTML dashboards)
 
 Agents learn the Ops API from **live HTTP surfaces**, not from `dashboards/*.html`
