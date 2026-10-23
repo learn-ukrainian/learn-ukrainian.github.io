@@ -247,6 +247,8 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _metadata_text(plan, "effort") or _NOT_EXPOSED
     if agent_name == "codex":
         return _config_override(plan.cmd, "model_reasoning_effort")
+    if agent_name == "muse":
+        return _arg_after(plan.cmd, "--reasoning-effort")
     from .agent_identity import is_hermes_grok_seat, is_native_grok_seat
 
     if agent_name == "claude" or is_native_grok_seat(agent_name):
@@ -436,6 +438,12 @@ def _probe_version(prefix: tuple[str, ...]) -> str | None:
     its already-validated cwd; pre-plan probes use the system temp directory.
     """
     probe_cwd = _VERSION_PROBE_CWD.get() or tempfile.gettempdir()
+    # Version checks must not update the Muse executable pinned by its adapter.
+    probe_env = (
+        {"env": {**os.environ, "MUSE_NO_AUTO_UPDATE": "1"}}
+        if prefix and Path(prefix[0]).name == "muse"
+        else {}
+    )
     try:
         proc = _ORIGINAL_SUBPROCESS_POPEN(
             [*prefix, "--version"],
@@ -443,6 +451,7 @@ def _probe_version(prefix: tuple[str, ...]) -> str | None:
             stderr=subprocess.PIPE,
             text=True,
             cwd=probe_cwd,
+            **probe_env,
         )
     except BaseException:
         return None
@@ -453,6 +462,8 @@ def _probe_version(prefix: tuple[str, ...]) -> str | None:
             proc.kill()
         with contextlib.suppress(BaseException):
             proc.communicate()
+        return None
+    if probe_env and proc.returncode != 0:
         return None
     combined = f"{stdout or ''}\n{stderr or ''}".strip()
     return _extract_semverish(combined)
@@ -532,6 +543,12 @@ def kimi_cli_version(prefix: tuple[str, ...] = ("kimi",), cwd: str | None = None
 
 def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) -> str | None:
     probe_cwd = str(plan.cwd) if plan is not None else None
+    if agent_name == "muse":
+        # The adapter already checked the native build. Do not probe a second
+        # executable after admission or mistake this stamp for backend identity.
+        if plan is not None:
+            return _extract_semverish(_metadata_text(plan, "cli_version") or "")
+        return _probe_version_at(("muse",), probe_cwd)
     if _is_acp_shadow_identity(agent_name, plan):
         stamped = _metadata_text(
             plan,

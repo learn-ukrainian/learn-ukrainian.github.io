@@ -710,6 +710,81 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
     with pytest.raises(AssertionError):
         approved_muse_seat_baseline(after)
 
+    # Exercise the final shared boundary, not just the adapter's overrides.
+    import os
+    from unittest.mock import MagicMock
+
+    from scripts import delegate
+    from scripts.agent_runtime import telemetry
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from scripts.agent_runtime.env_sanitize import build_agent_env
+    from scripts.review.model_catalog import activity_role_refusal
+
+    with (
+        patch.dict(os.environ, {"PATH": "/usr/bin", "HOME": "/nonexistent", "MUSE_OTHER": "drop"}, clear=True),
+        patch("scripts.agent_runtime.agent_github_identity.resolve_agent_github_identity", return_value=None),
+    ):
+        env = build_agent_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})
+        assert env["MUSE_NO_AUTO_UPDATE"] == "1"
+        assert "MUSE_OTHER" not in env
+        assert "MUSE_NO_AUTO_UPDATE" not in build_agent_env(
+            provider="codex", overrides={"MUSE_NO_AUTO_UPDATE": "1"}
+        )
+        assert "MUSE_NO_AUTO_UPDATE" not in build_agent_env(
+            provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "sk-not-a-real-key"}
+        )
+
+    for model in ("muse-wonder-full-1.0", "muse-spark-1.3"):
+        assert activity_role_refusal(model, "review", load_model_catalog()) is not None
+        assert activity_role_refusal(model, "consult", load_model_catalog()) is not None
+        args = delegate.build_parser().parse_args([
+            "dispatch", "--agent", "muse", "--model", model, "--task-id", "worker-contract",
+            "--prompt", "fixture", "--mode", "read-only",
+        ])
+        assert delegate._muse_dispatch_refusal(args) is None
+        args.research_role = "driver"
+        assert delegate._muse_dispatch_refusal(args) == "muse_ordinary_worker_only"
+        args.research_role = None
+        args.model = "gpt-6.1-sol"
+        assert delegate._muse_dispatch_refusal(args) == "muse_worker_model_refused"
+        plan = InvocationPlan(
+            cmd=["/fixture/muse", "exec", "--model", model, "--reasoning-effort", "high"],
+            cwd=Path("/fixture/workspace"),
+            metadata={"cli_version": "Muse Code 1.4.11 (1.4.11-R6667.1)"},
+        )
+        with patch.object(telemetry, "_ORIGINAL_SUBPROCESS_POPEN") as spawn:
+            resolved = telemetry.resolve_invocation_telemetry(
+                agent_name="muse", plan=plan, requested_model="wrong-request", requested_effort="low"
+            )
+            assert (resolved.model, resolved.effort, resolved.cli_version) == (model, "high", "1.4.11")
+            plan.metadata.clear()
+            assert telemetry.resolve_invocation_telemetry(
+                agent_name="muse", plan=plan, requested_model=model, requested_effort="high"
+            ).cli_version == "unknown"
+            spawn.assert_not_called()
+    process = MagicMock()
+    process.returncode = 0
+    process.communicate.return_value = ("Muse Code 1.4.11 (1.4.11-R6667.1)", "")
+    with (
+        patch.dict(os.environ, {"MUSE_NO_AUTO_UPDATE": "0"}, clear=True),
+        patch.object(telemetry, "_ORIGINAL_SUBPROCESS_POPEN", return_value=process) as spawn,
+    ):
+        resolved = telemetry.resolve_dispatch_start_telemetry(
+            agent_name="muse", requested_model=None, requested_effort=None
+        )
+        assert (resolved.model, resolved.effort, resolved.cli_version) == ("muse-wonder-full-1.0", "high", "1.4.11")
+        assert spawn.call_args.args[0] == ["muse", "--version"]
+        assert spawn.call_args.kwargs["env"] == {"MUSE_NO_AUTO_UPDATE": "1"}
+        process.returncode = 1
+        assert telemetry.resolve_dispatch_start_telemetry(
+            agent_name="muse", requested_model=None, requested_effort=None
+        ).cli_version == "unknown"
+    with patch.object(telemetry, "_ORIGINAL_SUBPROCESS_POPEN", side_effect=OSError("unavailable")):
+        assert telemetry.resolve_dispatch_start_telemetry(
+            agent_name="muse", requested_model=None, requested_effort=None
+        ).cli_version == "unknown"
+
+
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_agy_mode_overlay_changes_only_authoring_mode_and_mcp_metadata(configuration):
@@ -1092,16 +1167,162 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     )
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
-    assert_frozen_surfaces(actual)
-    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
+    inputs = json.loads((output / "inputs.json").read_bytes())
+    assert_frozen_surfaces(actual, inputs=inputs)
+    assert {
+        **inputs,
+        **{
+            surface: [case for case in inputs[surface] if case in APPROVED_INPUTS[surface]]
+            for surface in ("adapters", "dispatch", "reviewer", "roles")
+        },
+    } == APPROVED_INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
 
-def assert_frozen_surfaces(actual):
-    assert actual.keys() == BASELINE.keys()
-    for surface in BASELINE:
-        assert actual[surface] == APPROVED_BASELINE[surface], f"approved surface differs: {surface}"
-    assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
+def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
+    """Permit only the ordered worker entries and their explicit refusal receipts."""
+    expected = deepcopy(APPROVED_BASELINE)
+    if inputs is None and surfaces is None:
+        assert actual.keys() == BASELINE.keys()
+        for surface in BASELINE:
+            assert actual[surface] == expected[surface], f"approved surface differs: {surface}"
+        return
+    workers = {
+        "muse-wonder-full-1.0": {
+            "family": "meta", "tier": "compatibility", "lifecycle": "hold",
+            "roles": ["coding"], "transports": ["native_muse"],
+            "strengths": ["explicit_native_worker"],
+            "weaknesses": ["worker_qualification_pending", "no_review_or_driver_authority"],
+            "notes": "Explicit delegate worker only. No automatic routing or fallback.",
+            "sources": ["https://dev.meta.ai/docs/muse-code"],
+        },
+        "muse-spark-1.3": {
+            "family": "meta", "tier": "compatibility", "lifecycle": "hold",
+            "roles": ["coding"], "transports": ["native_muse"],
+            "strengths": ["explicit_native_worker"],
+            "weaknesses": ["worker_qualification_pending", "no_review_or_approval_authority"],
+            "notes": "Explicit delegate worker only. Spark cannot approve or review.",
+            "sources": ["https://dev.meta.ai/docs/muse-code"],
+        },
+    }
+    assert not workers.keys() & expected["catalog"]["models"].keys()
+    expected["catalog"]["models"].update(workers)
+    expected["registry"]["muse"] = {
+        "adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter",
+        "default_model": "muse-wonder-full-1.0", "default_effort": "high",
+        "cost_tier": "unknown", "capabilities": ["code_writing"],
+        "cli_available": True, "bridge_spawnable": False, "resume_policy": "never",
+    }
+    # Additional authors still require both existing authorities, never self approval.
+    approval_rows = expected["approval"]["rows"]
+    template = [row for row in approval_rows if row["author"] == "gpt-6-luna"]
+    assert len(template) == 9
+    for model in workers:
+        for row in template:
+            assert row["required"] == expected["approval"]["holders"]
+            approval_rows.append({**deepcopy(row), "author": model})
+    approval_rows.sort(key=lambda row: row["author"])
+    if inputs is not None:
+        assert inputs.keys() == APPROVED_INPUTS.keys()
+        additions = {
+            "adapters": [
+                {"agent": "muse", "mode": mode, "isolation": isolation}
+                for mode in ("read-only", "workspace-write") for isolation in (False, True)
+            ],
+            "dispatch": [
+                {"agent": "muse", "model": model, "budget_status": status, "review_attempt": review}
+                for model in (None, "muse-wonder-full-1.0", "composer-2.5", "gpt-6-luna",
+                              "gpt-6.1-sol", "grok-4.7", "unregistered-model")
+                for status in ("cool", "near_cap") for review in (None, "frozen-review-attempt.yaml")
+            ],
+            "reviewer": [
+                case
+                for risk in ("low", "medium", "high", "critical") for profile in ("code", "infra")
+                for case in (
+                    *({"author_model": model, "risk": risk, "review_profile": profile} for model in workers),
+                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "author_family": "meta"},
+                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "subject_families": ["meta"]},
+                )
+            ],
+            "roles": [
+                {"role": role, "purpose": "inspect", "context": {"excluded_families": ["meta"]}, "health": None}
+                for role in APPROVED_BASELINE["routing_holders"]["roles"]
+            ],
+        }
+        for surface, extra_cases in additions.items():
+            reference = dict(zip(map(dispatch_key, APPROVED_INPUTS[surface]), expected[surface], strict=True))
+            added = [case for case in inputs[surface] if dispatch_key(case) not in reference]
+            assert sorted(map(dispatch_key, added)) == sorted(map(dispatch_key, extra_cases))
+            assert [case for case in inputs[surface] if dispatch_key(case) in reference] == APPROVED_INPUTS[surface]
+            rows = []
+            for case in inputs[surface]:
+                key = dispatch_key(case)
+                if key in reference:
+                    receipt = deepcopy(reference[key])
+                    if surface == "dispatch":
+                        receipt["stderr"] = receipt["stderr"].replace(
+                            "--agent {codex,", "--agent\n                            {codex,"
+                        ).replace(
+                            "cursor,glm}", "cursor,glm,muse}"
+                        ).replace("cursor, glm)", "cursor, glm, muse)")
+                        refusal = receipt.get("value", {}).get("refusal")
+                        if refusal and "Cooler seats from budget snapshot:" in refusal:
+                            receipt["value"]["refusal"] = refusal.replace("kimi, qwen.", "kimi, muse, qwen.")
+                elif surface == "adapters":
+                    receipt = {"exit_status": 1, "exception": "ValueError", "error": "muse_delegate_worker_required",
+                               "stdout": "", "stderr": ""}
+                elif surface == "reviewer":
+                    template_case = {k: v for k, v in case.items() if k not in {"subject_families", "author_family"}}
+                    if case["author_model"] in workers:
+                        template_case["author_model"] = "unknown"
+                    elif "author_family" in case:
+                        template_case["author_family"] = "anthropic"
+                    receipt = deepcopy(reference[dispatch_key(template_case)])
+                    reason = receipt["value"]["fail_closed_reason"]
+                    if case["author_model"] in workers:
+                        receipt["value"]["fail_closed_reason"] = reason.replace(
+                            "author_model='unknown'", f"author_model='{case['author_model']}'"
+                        )
+                    elif "author_family" in case:
+                        receipt["value"]["fail_closed_reason"] = reason.replace(
+                            "author_family='anthropic'", "author_family='meta'"
+                        )
+                elif surface == "roles":
+                    receipt = deepcopy(reference[dispatch_key({**case, "context": {}})])
+                else:
+                    model = case["model"]
+                    value = {"argv": None, "target": None, "refusal": None,
+                             "routing": {"alias_note": None, "requested_agent": None, "substitution": None}}
+                    if case["review_attempt"]:
+                        if model == "muse-wonder-full-1.0":
+                            value["refusal"] = (
+                                "REVIEW_ROUTE_REFUSED: model 'muse-wonder-full-1.0' (muse-wonder-full-1.0) holds no "
+                                "review, critique or approval role in the model catalog (roles: coding; "
+                                "review_scheduler.activity_roles.review, #9583)"
+                            )
+                        elif model == "gpt-6-luna":
+                            peer = {**case, "agent": "codex"}
+                            value = deepcopy(reference[dispatch_key(peer)]["value"])
+                        else:
+                            value["refusal"] = "REVIEW_TARGET_UNRESOLVED: review attempt target unreadable"
+                    else:
+                        value["routing"]["requested_agent"] = "muse"
+                        if case["budget_status"] == "near_cap":
+                            cooler = ", ".join(sorted(set(APPROVED_BASELINE["registry"]) - {"cursor"}))
+                            value["refusal"] = (
+                                "ROUTING REFUSED: --agent muse is near_cap (>90% used on FRESH snapshot) and "
+                                "dispatch_fallbacks has no usable substitute. Cooler seats from budget snapshot: "
+                                + cooler + ". Re-route (see `python -m scripts.fleet.capacity_pick`) or pass --force-agent."
+                            )
+                        else:
+                            value["argv"] = ["--agent", "muse", *(["--model", model] if model else [])]
+                            value["target"] = {"model": model, "reason": "explicit", "recipient": "muse"}
+                    receipt = {"exit_status": 0, "stdout": "", "stderr": "", "value": value}
+                rows.append(receipt)
+            expected[surface] = rows
+    assert actual.keys() == (BASELINE.keys() if surfaces is None else set(surfaces))
+    for surface in actual:
+        assert actual[surface] == expected[surface], f"approved surface differs: {surface}"
 
 
 def test_deepseek_flash_execution_requires_opencode():

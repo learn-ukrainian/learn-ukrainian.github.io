@@ -223,6 +223,8 @@ GITHUB_TOKEN_SEATS = {
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
+    # Native Muse worker plans disable updates before invoking the pinned CLI.
+    "muse": {"MUSE_NO_AUTO_UPDATE"},
     "acpx-codex-shadow": {
         # Non-secret acpx@0.13.0 auth-method selector. The literal value "1"
         # chooses the existing Codex ChatGPT login; no credential is carried
