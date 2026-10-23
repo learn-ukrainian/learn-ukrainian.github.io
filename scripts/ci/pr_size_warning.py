@@ -9,6 +9,7 @@ import re
 import subprocess
 from pathlib import Path
 
+from scripts.ci.split_tests import COMMITTED_DURATION_PATH
 from scripts.common.git_context import sanitized_git_env
 from scripts.review.target_resolution import is_test_path
 
@@ -69,7 +70,7 @@ def measure(repo: Path, base: str, head: str) -> dict:
         if raw.pop() != b"" or len(raw) != len(paths) * 3:
             raise ValueError("incomplete generated-attribute output")
         attributes = {raw[i]: raw[i + 2] for i in range(0, len(raw), 3)}
-    excluded = {"tests": 0, "fixtures": 0, "generated": 0, "whole_file_deletions": 0}
+    excluded = {"fixtures": 0, "generated": 0, "whole_file_deletions": 0}
     files, lines, binary = 0, 0, 0
     details = []
     for added, removed, path, old in entries:
@@ -80,20 +81,23 @@ def measure(repo: Path, base: str, head: str) -> dict:
             reason = "whole_file_deletions"
         elif "fixtures" in parts or "__fixtures__" in parts:
             reason = "fixtures"
-        elif is_test_path(name):
-            reason = "tests"
-        elif attributes[path] in {b"set", b"true"} or {"generated", "__generated__"}.intersection(parts[:-1]):
+        elif (
+            attributes[path] in {b"set", b"true"}
+            or {"generated", "__generated__"}.intersection(parts[:-1])
+            or name == COMMITTED_DURATION_PATH.as_posix()
+        ):
             reason = "generated"
         if reason:
             excluded[reason] += 1
         else:
             files += 1
-            if added == removed == b"-":
-                binary += 1
-            elif added.isdigit() and removed.isdigit():
-                lines += int(added) + int(removed)
-            else:
-                raise ValueError("unrecognized numstat counts")
+            if not is_test_path(name):
+                if added == removed == b"-":
+                    binary += 1
+                elif added.isdigit() and removed.isdigit():
+                    lines += int(added) + int(removed)
+                else:
+                    raise ValueError("unrecognized numstat counts")
         details.append({"path": name, "renamed_from": os.fsdecode(old) if old else None, "excluded": reason})
     return {
         "base_sha": base,
@@ -182,9 +186,12 @@ def emit(result: dict, summary: Path | None) -> None:
     text += [
         "",
         "Lines = additions + removals from the exact merge-base diff; renames counted once at the destination.",
-        "Both measures exclude tests, fixtures, generated files and whole-file deletions.",
+        "Ordinary test source files count toward eligible files but contribute zero non-test lines.",
+        "Both measures exclude fixtures, generated files and whole-file deletions.",
         "Tests use review.target_resolution.is_test_path; fixtures use fixtures/__fixtures__ directories.",
-        "Generated files use generated/__generated__ directories or head-commit linguist-generated=true/set attributes.",
+        "Known generated files use generated/__generated__ directories, head-commit linguist-generated=true/set attributes, "
+        "or the timing snapshot declared by scripts.ci.split_tests.COMMITTED_DURATION_PATH.",
+        "Other generated artifacts need a declared classification; these indicators do not identify every generated file.",
         "Advisory only. CI Gate is unchanged.",
     ]
     if result["diagnostics"]:
