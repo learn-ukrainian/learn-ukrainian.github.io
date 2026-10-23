@@ -68,14 +68,17 @@ def _run(coro):
 def _refuse_real_sources_lookup_stores():
     """Refuse real Sources/ULIF opens, including aliases, before server import."""
     from scripts.common.repo_root import main_checkout_root
+    from scripts.lexicon.ulif_raw_cache import cache_path
+    from scripts.storage.topology import StoreBinding, resolve_store
 
     checkout = SOURCES_SERVER_PATH.parents[3]
-    roots = {checkout, main_checkout_root(checkout)}
-    protected = {
-        str(root / relative)
-        for root in roots
-        for relative in ("data/sources.db", "data/lexicon/cache/ulif_raw.sqlite")
-    }
+    binding = resolve_store("sources", repository_root=main_checkout_root(checkout), env={})
+    with patch.dict(os.environ, {"LU_ULIF_RAW_CACHE": ""}):
+        protected = {str(cache_path())}
+    if isinstance(binding, StoreBinding):
+        protected.add(str(binding.path))
+    else:
+        assert binding.reason == "store_missing", binding.reason
     protected.update(os.path.realpath(store) for store in tuple(protected))
     active = True
     refused = []
