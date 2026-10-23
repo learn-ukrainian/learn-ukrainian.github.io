@@ -14511,7 +14511,11 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
     (sibling_wt / "data").mkdir()
     for name in ("sources.db", "vesum.db"):
         (primary / "data" / name).touch()
-        (sibling_wt / "data" / name).symlink_to(primary / "data" / name)
+    delegate._provision_data_symlinks(sibling_wt, primary, provision_dependencies=False)
+    primary_database_links = {
+        path.relative_to(sibling_wt): path.resolve() for path in (sibling_wt / "data").glob("*.db") if path.is_symlink()
+    }
+    assert len(primary_database_links) == 2
     custom_db = sibling / "custom.db"
     custom_db.write_bytes(b"custom database")
     (sibling_wt / "data/custom.db").symlink_to(custom_db)
@@ -14533,14 +14537,14 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
     assert Path(state["cwd"]) == sibling_wt
     assert Path(state["worktree_path"]) == sibling_wt
     assert state["worktree_reused"] is True
-    for relative in ("node_modules", "site/node_modules", "data/sources.db", "data/vesum.db"):
+    for relative in ("node_modules", "site/node_modules", *primary_database_links):
         assert not (sibling_wt / relative).exists()
         assert not (sibling_wt / relative).is_symlink()
     assert (sibling_wt / "data/custom.db").readlink() == custom_db
     assert (sibling_wt / "data/local.db").read_bytes() == b"local database"
     assert (sibling_wt / "tracked.txt").read_text() == "preserve modified source\n"
-    for name in ("sources.db", "vesum.db"):
-        assert (primary / "data" / name).read_bytes() == b""
+    for database in primary_database_links.values():
+        assert database.read_bytes() == b""
 
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
