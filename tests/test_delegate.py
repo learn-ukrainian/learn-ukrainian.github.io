@@ -1557,12 +1557,17 @@ def test_registered_stream_epics_unreadable_registry_exempts_nothing(monkeypatch
 
 
 def test_dor_preflight_stream_epic_plus_task_checks_only_the_task(monkeypatch):
-    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
-    error, record = delegate._run_dor_preflight("Issue: #9251 ... Stream epic #6943.", None, dispatch_repo=_LOCAL)
+    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943), (_LOCAL, 9252)})
+    carrier = {"identity": {"repository": _LOCAL, "github_issue_number": 9251, "stream_epic": 6943}}
+    error, record = delegate._run_dor_preflight(
+        "Issue: #9251 ... Stream epic #6943. Evidence: #9252.", None,
+        dispatch_repo=_LOCAL, lifecycle_carrier=carrier,
+    )
     assert error is None
     assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
     assert not [call for call in calls if call[-1].endswith("/issues/6943")]
+    assert not [call for call in calls if call[-1].endswith("/issues/9252")]
 
 
 def test_dor_preflight_stream_epic_plus_failing_task_still_fails(monkeypatch):

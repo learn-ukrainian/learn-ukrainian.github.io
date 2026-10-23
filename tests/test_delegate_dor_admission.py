@@ -83,8 +83,20 @@ def test_private_complete_card_admits_cursor_and_preserves_router_keys(monkeypat
     membership = checker.observe_membership({"body": COMPLETE}, PRIVATE, 123)
     assert membership["status"] == "membership_not_applicable"
     payload = checker.evaluate_issue({"body": COMPLETE}, membership)
-    refusal, record = admission(monkeypatch, payload, repo=PRIVATE)
+    run = MagicMock(side_effect=[
+        subprocess.CompletedProcess([], 0, '{"number":123}', ""),
+        subprocess.CompletedProcess([], int(payload["verdict"] != "PASS"), json.dumps(payload), ""),
+    ])
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    carrier = {"identity": {"repository": PRIVATE, "github_issue_number": 123, "stream_epic": 10}}
+    refusal, record = delegate._run_dor_preflight(
+        f"Implement {PRIVATE}#123. Evidence: https://github.com/{delegate._CANONICAL_GITHUB_REPO}/issues/124",
+        None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO, lifecycle_carrier=carrier,
+    )
     assert refusal is None
+    calls = [call.args[0] for call in run.call_args_list]
+    assert [command[-1] for command in calls if command[:2] == ["gh", "api"]] == [f"repos/{PRIVATE}/issues/123"]
+    assert [command[command.index("--repo") + 1] for command in calls if "--issue" in command] == [PRIVATE]
     assert record["issues"] == [123] and record["warnings"] == {}
     assert record["membership"][f"{PRIVATE}#123"]["status"] == "membership_not_applicable"
     assert record["issue_repositories"] == [{"issue": 123, "repo": PRIVATE}]
@@ -121,9 +133,10 @@ def test_both_actual_dispatch_mode_guards(mode, expected, callsite):
     ]
     assert len(guards) == 2
     calls = []
+    carrier = {"identity": {"repository": PRIVATE, "github_issue_number": 123, "stream_epic": 10}}
 
     def preflight(*a, **k):
-        calls.append(a)
+        calls.append((a, k))
         return None, {"issues": [123], "warnings": {}}
 
     namespace = {
@@ -132,6 +145,7 @@ def test_both_actual_dispatch_mode_guards(mode, expected, callsite):
         "prompt": "stdin #123",
         "dor_reason": None,
         "fleet_repo": argparse.Namespace(github=PRIVATE),
+        "lifecycle_carrier": carrier,
         "_run_dor_preflight": preflight,
     }
     node = ast.fix_missing_locations(
@@ -148,6 +162,10 @@ def test_both_actual_dispatch_mode_guards(mode, expected, callsite):
     )
     namespace["guard"]()
     assert len(calls) == expected
+    if expected:
+        assert calls[0][0] == (("early #123" if callsite == 0 else "stdin #123"), None)
+        assert calls[0][1]["dispatch_repo"] == PRIVATE
+        assert calls[0][1]["lifecycle_carrier"] is carrier
 
 
 @pytest.mark.parametrize("reason", [None, "override"])
@@ -448,22 +466,31 @@ def test_full_dispatch_cursor_auto_uses_final_dor(
 ):
     """Defect classes: stale PASS admission, misleading timeout advice, and a false PASS flag."""
     _tmp_dispatch_repo_root(tmp_path, monkeypatch)
+    from tests.orchestration.test_task_lifecycle_carriers import _lifecycle_file
+
+    lifecycle_file = _lifecycle_file(tmp_path, fresh=True)
+    carrier, lifecycle_prompt = delegate._load_task_lifecycle_carrier(str(lifecycle_file))
+    load_carrier = MagicMock(wraps=delegate._load_task_lifecycle_carrier)
+    monkeypatch.setattr(delegate, "_load_task_lifecycle_carrier", load_carrier)
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setenv("LU_ALLOW_NOTEBOOK_DISPATCH", "1")
     monkeypatch.setattr(delegate, "project_interpreter", lambda: Path(sys.executable))
     prompt_file = tmp_path / "prompt.md"
-    prompt_file.write_text("Implement #123", encoding="utf-8")
+    prompt_file.write_text("Implement org/repo#42. Evidence: #124", encoding="utf-8")
     calls, git_run = _make_run_stub(rev_parse_head_sha="a" * 40)
     checked_issues = []
+    lookup_targets = []
 
     def run(command, **kwargs):
         if command[:2] == ["gh", "api"]:
+            lookup_targets.append(command[-1])
             number = int(command[-1].rsplit("/", 1)[-1])
             return subprocess.CompletedProcess(command, 0, json.dumps({"number": number}), "")
         if "--issue" in command:
             issue = int(command[command.index("--issue") + 1])
             checked_issues.append(issue)
-            status = final_status if issue == 124 else "PASS"
+            assert command[command.index("--repo") + 1] == "org/repo"
+            status = final_status if len(checked_issues) == 2 else "PASS"
             membership = {
                 "UNKNOWN (timeout)": TIMEOUT,
                 "WARN": checker.membership_error("membership_missing_parent"),
@@ -472,7 +499,8 @@ def test_full_dispatch_cursor_auto_uses_final_dor(
             payload = checker.evaluate_issue({"body": body}, membership)
             # Deterministic prompt drift between the early read and launch read.
             if changed:
-                prompt_file.write_text("Implement #124", encoding="utf-8")
+                prompt_file.write_text("Implement org/repo#42. Evidence: #125", encoding="utf-8")
+                lifecycle_file.write_text("unreadable after the frozen snapshot", encoding="utf-8")
             return subprocess.CompletedProcess(command, int(payload["verdict"] != "PASS"), json.dumps(payload), "")
         return git_run(command, **kwargs)
 
@@ -491,22 +519,27 @@ def test_full_dispatch_cursor_auto_uses_final_dor(
         [
             "dispatch", "--agent", agent, *options, "--mode", "danger",
             "--task-id", "final-dor", "--prompt-file", str(prompt_file),
+            "--lifecycle-file", str(lifecycle_file),
             "--research-role", "implementation", "--owned-path", "scripts/example.py",
             "--worktree", str(tmp_path / ".worktrees" / "dispatch" / agent / "final-dor"),
         ]
     )
     result = delegate.cmd_dispatch(args)
     state = delegate._read_state(delegate._state_path("final-dor"))
-    assert checked_issues == ([123, 124] if changed and not override else [123])
+    assert checked_issues == ([42, 42] if changed and not override else [42])
+    assert lookup_targets == ["repos/org/repo/issues/42"] * len(checked_issues)
+    load_carrier.assert_called_once_with(str(lifecycle_file))
     admitted = not override and (agent != "cursor" or final_status == "PASS" or guard_disabled)
     if admitted:
         assert result == 0
         assert spawn.call_count == 1
         assert state["dor_preflight"]["dor"] == final_status
+        assert state["task_lifecycle"] == carrier
+        assert lifecycle_prompt in spawn.return_value.stdin.write.call_args.args[0].decode()
         assert "allow_warn_reason" not in state["dor_preflight"]
         if agent == "cursor":
             assert state["cursor_auto_admission"] == {
-                "admitted": final_status == "PASS", "model": "auto", "issues": [124 if changed else 123]
+                "admitted": final_status == "PASS", "model": "auto", "issues": [42]
             }
         else:
             assert "cursor_auto_admission" not in state
