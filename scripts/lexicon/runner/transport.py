@@ -17,8 +17,7 @@ import os
 import shutil
 import subprocess
 import tarfile
-import tempfile
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -552,14 +551,3 @@ def retransmit_copy(src: Path, dest_dir: Path) -> Path:
         dest.unlink(missing_ok=True)
         raise HashMismatchError(f"retransmit hash mismatch: {dest}")
     return dest
-
-
-def stage_directory(prefix: str = "runner-transport-") -> Path:
-    return Path(tempfile.mkdtemp(prefix=prefix))
-
-
-def iter_packet_paths(directory: Path) -> Iterable[Path]:
-    for path in sorted(Path(directory).glob("*.tar.zst")):
-        if path.name.endswith(".partial"):
-            continue
-        yield path

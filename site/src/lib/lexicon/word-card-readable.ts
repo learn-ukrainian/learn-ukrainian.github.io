@@ -3,6 +3,10 @@ import { attributionGap, attributionLinks, type LoadedRelease, type ReleaseRow }
 
 type Assertion = ReleaseRow['fields'][number];
 export type Credit = { sourceId: string; href: string | null; attribution: string; gap: string | null };
+/** One source marker and its distinct supplied notices for a shared credit list. */
+export type SourceCredit = {
+  sourceId: string; attributions: string[]; links: string[]; licences: Assertion['citation']['licence'][];
+};
 /** One distinct supplied value and every assertion that supplied it. */
 export type Fact = { value: string; assertionIds: string[]; credits: Credit[] };
 /** More than one fact means the sources differ; all values stay parallel. */
@@ -64,6 +68,26 @@ function credits(fields: Assertion[]): Credit[] {
     seen.set(JSON.stringify(credit), credit);
   }
   return [...seen.values()];
+}
+
+/** Display-only credits. Raw citations and release accounting retain their provenance gaps. */
+export function sourceCredits(rows: readonly ReleaseRow[]): SourceCredit[] {
+  const sources = new Map<string, SourceCredit>();
+  for (const row of rows) for (const { citation } of row.fields) {
+    const source: SourceCredit = sources.get(citation.source_id) ?? {
+      sourceId: citation.source_id, attributions: [], links: [], licences: [],
+    };
+    const gap = attributionGap(citation);
+    const attribution = gap === 'puls_reference_placeholder' ? '' : gap === 'vesum_version_placeholder' ?
+      citation.attribution.replace(/Версія\s+<used version>\.\s*/g, '') : citation.attribution;
+    if (attribution && !source.attributions.includes(attribution)) source.attributions.push(attribution);
+    for (const link of attributionLinks(citation.attribution)) if (!source.links.includes(link)) source.links.push(link);
+    if (!source.licences.some(licence => JSON.stringify(licence) === JSON.stringify(citation.licence))) {
+      source.licences.push(citation.licence);
+    }
+    sources.set(citation.source_id, source);
+  }
+  return [...sources.values()];
 }
 
 function groupFacts(fields: Assertion[], order: string[]): FactGroup[] {
