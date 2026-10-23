@@ -119,6 +119,67 @@ by snapshot and persistent record ID, then record key, then assertion locator.
 the two row totals are not necessarily disjoint. Public tombstones count under
 `_tombstone` without invented source rows.
 
+## Local Sources lookup
+
+The Sources MCP `word_card(word)` tool also reads a local pinned JSONL release
+through the existing absolute `LU_WORD_CARDS_DIR` setting. The directory must
+contain both `manifest.json` and `word-cards.jsonl`. Either name selects release
+mode, including a dangling symlink. A release mixed with `cards`, `ledger.json`,
+or `build-manifest.json` is refused as `ambiguous_store_layout`.
+Without either release marker, assembly lookup retains its existing behavior.
+
+The reader uses the deployed checkout's tracked
+`site/src/data/word-card-preview-release.pointer.json`. It reads only the two
+fixed asset names, requires their exact positive byte lengths and SHA-256
+digests, and validates the entire release before serving any match.
+It rejects duplicate keys and identities, malformed subjects or citations,
+count and version mismatches, unsupported withdrawals, invalid Unicode,
+nonfinite numbers, and numbers that cannot survive JSON serialization unchanged.
+A missing checkout pin makes the release unavailable. The reader never fetches
+assets or borrows a pin from another checkout.
+
+The reader opens resolved directories one component at a time without following
+symlinks. Asset leaves must be regular files on their checked parent's device.
+Reads are bounded by the pin, with an extra byte to detect growth. The pin's
+initial descriptor size bounds its own read. Descriptors remain open through
+response preparation, followed by descriptor, name, directory, locality, and
+layout rechecks. Any observed replacement or mutation discards the whole result.
+Each call repeats the reads and digest checks, including an empty match.
+These checks establish an observed snapshot. They cannot prevent changes after
+return or prove that a replacement restored between observations never occurred.
+The inherited locality classifier rejects known network filesystems; an unknown
+classification does not establish positive locality. Deployment requires
+separate locality and runtime capability evidence.
+
+Matching uses cited card-subject `spelling` values and MWE `mwe_form` values,
+then evidenced VESUM lemmas. It preserves whole expressions, hyphens, proper
+names, and every matching homograph. Literal matches take precedence, and each
+card ID appears once. VESUM unavailability does not suppress literal matches.
+
+Release cards retain `word-card-lookup.v1` response containers, including
+`version.card_version`, field `values[].evidence_ids`, and
+`values[].citations`. Each assertion remains a separate unselected value with
+its full citation. Sense assertions retain their subject groups. The additive
+`projection.row` preserves the complete decoded row, including link assertions,
+nullable citation properties, licence metadata, and arbitrary JSON `known_gaps`.
+Unavailable assembly identity, resolution, sense metadata, and link structure
+are explicit gaps. The reader infers no endpoints or source independence.
+
+Every served release card has `status="candidate"`, `accepted=false`,
+`certified_for=[]`, and `projection_missing_exact_artifact` certification
+refusals. Declared `CERTIFIED` rows or a nonzero certified count instead refuse
+the entire release with that reason. Release integrity never grants original
+artifact certification. Historical payloads excluded by the producer are
+refused as `projection_excluded_historical_payload`; assembly contrast handling
+is unchanged.
+
+The release `card_store` reports `format="dataset_jsonl"`, its card count,
+release version, and both digests. Assembly file counts remain zero, `ledger`
+is false, and `build_id` is null. A fully checked release with no match reports
+`available=true`. A refused release reports `available=false`, no cards, and a
+fixed path-free reason. Existing query validation and per-facet tools remain
+unchanged. This reader does not activate a deployment or certify language data.
+
 ## Exclusions and known gaps
 
 The engine excludes inactive assertions, rejected assertions, ambiguous or

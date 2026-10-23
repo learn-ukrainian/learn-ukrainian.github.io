@@ -2,14 +2,14 @@
 
 Cards ship versioned and improve over versions, so the lookup serves the
 current card of a word whether or not it is certified. The status is never
-taken from the card: every call replays the exact-artifact certification
+taken from an assembly card: each assembly lookup replays the exact-artifact certification
 boundary (``load_certified_card_for_export``) against the live review ledger.
 A card that fails it is returned as ``candidate``: each value is a cited
 source assertion awaiting review, not an accepted fact (#8977). A link endpoint's evidence enters a certified card
 only when that endpoint is itself certified, with its card version bound;
 anything else is a separate candidate relation or a withheld gap.
 
-The card store is a host-only assembly build directory (``cards/*.json`` plus
+The card store can be a host-only assembly build directory (``cards/*.json`` plus
 the optional ``ledger.json`` and ``build-manifest.json`` written by
 ``scripts.atlas.word_card_assembly``), named by ``LU_WORD_CARDS_DIR``. Nothing
 here writes, and no host path is echoed in a result. Every target is read only
@@ -17,21 +17,38 @@ after its symlinks are resolved and it is shown to be local: the root, the
 ``cards/`` directory, the ledger and the manifest by the network-locality check,
 each card file by sitting directly in the checked ``cards/`` directory on its
 filesystem, re-checked on the opened descriptor.
+
+A pinned release directory instead contains ``manifest.json`` and
+``word-cards.jsonl``. Its detached assertions remain unaccepted candidates;
+release integrity cannot supply the original artifact's certification authority.
+The release reader holds descriptors through response preparation and refuses
+the whole release if a pin, asset, directory or layout changes during its checks.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
+import math
 import os
 import re
 import stat
 import unicodedata
 from collections import defaultdict
 from collections.abc import Callable, Mapping
+from contextlib import ExitStack
 from dataclasses import dataclass
+from decimal import Decimal, DecimalException
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+
+from jsonschema import Draft202012Validator
+from jsonschema.validators import extend
+
+from scripts.common.jsonl import jsonl_lines
+from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
+from scripts.deploy.prepare_word_card_preview import CARD_SCHEMA, DEFAULT_PIN, PreviewError, check_release
 
 ENV_WORD_CARDS_DIR = "LU_WORD_CARDS_DIR"
 RESULT_SCHEMA = "word-card-lookup.v1"
@@ -121,6 +138,43 @@ class CardStore:
 
 
 @dataclass(frozen=True)
+class DatasetStore:
+    """Release intent at a checked root; never fall back to assembly after refusal."""
+
+    configured: Path
+    root: LocalTarget
+    info: os.stat_result
+
+
+@dataclass(frozen=True)
+class _ReleaseDirectory:
+    configured: Path
+    target: LocalTarget
+    descriptor: int
+    info: os.stat_result
+
+
+@dataclass(frozen=True)
+class _ReleaseLeaf:
+    parent: int
+    name: str
+    descriptor: int
+    info: os.stat_result
+
+
+@dataclass(frozen=True)
+class ReleaseSnapshot:
+    """Detached validated rows, with descriptors held until the response's final check."""
+
+    manifest: dict
+    rows: list[dict]
+    pin: dict
+    directories: tuple[_ReleaseDirectory, ...]
+    leaves: tuple[_ReleaseLeaf, ...]
+    handles: ExitStack
+
+
+@dataclass(frozen=True)
 class Endpoint:
     """A link endpoint's card and the projections its own exact-artifact certification grants."""
 
@@ -180,7 +234,7 @@ def _local_target(path: Path, *, directory: bool) -> LocalTarget:
     return LocalTarget(resolved, info.st_dev)
 
 
-def resolve_card_store(env: Mapping[str, str] | None = None) -> CardStore | str:
+def resolve_card_store(env: Mapping[str, str] | None = None) -> CardStore | DatasetStore | str:
     """Resolve the configured card build, or return a path-free refusal reason."""
     raw = (os.environ if env is None else env).get(ENV_WORD_CARDS_DIR)
     if raw is None:
@@ -194,6 +248,9 @@ def resolve_card_store(env: Mapping[str, str] | None = None) -> CardStore | str:
         return "relative_override"
     try:
         root = _local_target(path, directory=True)
+        if any(os.path.lexists(root.path / name) for name in ("manifest.json", "word-cards.jsonl")):
+            _release_layout(root.path)
+            return DatasetStore(path, root, root.path.stat())
         # A child that exists as an entry, a dangling symlink included, is checked; only absence skips it.
         child = {name: root.path / name for name in ("cards", "ledger.json", "build-manifest.json")}
         present = {name: os.path.lexists(target) for name, target in child.items()}
@@ -204,6 +261,8 @@ def resolve_card_store(env: Mapping[str, str] | None = None) -> CardStore | str:
         )
     except StoreUnavailable as exc:
         return exc.reason
+    except (OSError, RuntimeError):
+        return "store_unavailable"
     return CardStore(cards, ledger, manifest)
 
 
@@ -694,7 +753,11 @@ def lookup_word_card(
     if isinstance(store, str):
         return _store_unavailable(base, store)
     try:
+        if isinstance(store, DatasetStore):
+            return _lookup_in_release(store, normalized, vesum, base)
         return _lookup_in_store(store, normalized, vesum, base)
+    except StoreUnavailable as exc:
+        return _store_unavailable(base, exc.reason)
     except (OSError, RuntimeError):
         # The store went unreadable mid-lookup (a directory listing, a stat): explicit, path-free.
         return _store_unavailable(base, "store_unavailable")
@@ -796,3 +859,498 @@ def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict)
         "cards": projected,
         "per_facet_tools": PER_FACET_TOOLS,
     }
+
+
+def _release_layout(root: Path | int) -> None:
+    present = set()
+    for name in ("manifest.json", "word-cards.jsonl", "cards", "ledger.json", "build-manifest.json"):
+        try:
+            if isinstance(root, int):
+                os.stat(name, dir_fd=root, follow_symlinks=False)
+            else:
+                (root / name).lstat()
+        except FileNotFoundError:
+            continue
+        present.add(name)
+    if present & {"cards", "ledger.json", "build-manifest.json"}:
+        raise StoreUnavailable("ambiguous_store_layout")
+    if not {"manifest.json", "word-cards.jsonl"} <= present:
+        raise StoreUnavailable("store_unavailable")
+
+
+def _release_metadata(info: os.stat_result) -> tuple:
+    return (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
+def _directory_identity(info: os.stat_result) -> tuple:
+    return (stat.S_IFMT(info.st_mode), info.st_dev, info.st_ino)
+
+
+def _open_release_directory(path: Path) -> int:
+    descriptor = open_directory_component(None, path.anchor)
+    try:
+        for component in path.parts[1:]:
+            child = open_directory_component(descriptor, component)
+            os.close(descriptor)
+            descriptor = child
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _hold_release_directory(
+    handles: ExitStack, configured: Path, target: LocalTarget, info: os.stat_result
+) -> _ReleaseDirectory:
+    descriptor = _open_release_directory(target.path)
+    handles.callback(os.close, descriptor)
+    held = os.fstat(descriptor)
+    if _directory_identity(held) != _directory_identity(info) or held.st_dev != target.device:
+        raise StoreUnavailable("release_changed_during_read")
+    return _ReleaseDirectory(configured, target, descriptor, held)
+
+
+def _check_release_leaf(leaf: _ReleaseLeaf) -> None:
+    for current in (
+        os.fstat(leaf.descriptor),
+        os.stat(leaf.name, dir_fd=leaf.parent, follow_symlinks=False),
+    ):
+        if not stat.S_ISREG(current.st_mode) or _release_metadata(current) != _release_metadata(leaf.info):
+            raise StoreUnavailable("release_changed_during_read")
+
+
+def _read_release_leaf(
+    handles: ExitStack, directory: _ReleaseDirectory, name: str, bound: int | None = None
+) -> tuple[bytes, _ReleaseLeaf]:
+    info = os.stat(name, dir_fd=directory.descriptor, follow_symlinks=False)
+    if not stat.S_ISREG(info.st_mode) or info.st_dev != directory.info.st_dev:
+        raise StoreUnavailable("store_unavailable")
+    if bound is None:
+        bound = info.st_size  # Trusted checkout pin bootstraps its own size bound.
+    if bound <= 0 or info.st_size != bound:
+        raise StoreUnavailable("release_integrity_mismatch")
+    descriptor = os.open(name, os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=directory.descriptor)
+    handles.callback(os.close, descriptor)
+    leaf = _ReleaseLeaf(directory.descriptor, name, descriptor, info)
+    _check_release_leaf(leaf)  # Check the opened inode before any read, including its type.
+    chunks = []
+    remaining = bound + 1
+    while remaining:
+        chunk = os.read(descriptor, remaining)
+        if not chunk:
+            break
+        chunks.append(chunk)
+        remaining -= len(chunk)
+    data = b"".join(chunks)
+    _check_release_leaf(leaf)
+    if len(data) != bound:
+        raise StoreUnavailable("release_integrity_mismatch")
+    return data, leaf
+
+
+def _strict_release_json(data: bytes) -> Any:
+    def pairs(items: list[tuple[str, Any]]) -> dict:
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError("duplicate key")
+            result[key] = value
+        return result
+
+    def number(token: str) -> float:
+        value = float(token)
+        try:
+            faithful = math.isfinite(value) and Decimal(token) == Decimal(str(value))
+        except DecimalException as exc:
+            raise ValueError("unrepresentable number") from exc
+        if not faithful:
+            raise ValueError("unrepresentable number")
+        return value
+
+    def constant(_token: str) -> Any:
+        raise ValueError("nonfinite number")
+
+    value = json.loads(data.decode("utf-8"), object_pairs_hook=pairs, parse_float=number, parse_constant=constant)
+    # Reject escaped lone surrogates and values the public JSON response cannot serialize.
+    json.dumps(value, ensure_ascii=False, allow_nan=False).encode("utf-8")
+    return value
+
+
+def _release_pin(data: bytes) -> dict:
+    try:
+        pin = _strict_release_json(data)
+        if not isinstance(pin, dict) or set(pin) != {
+            "schema_version",
+            "repository",
+            "release_tag",
+            "release_version",
+            "provenance",
+            "assets",
+        }:
+            raise ValueError
+        if pin["schema_version"] != "word-card-preview-release-pin.v1" or pin["provenance"] != "producer-declared":
+            raise ValueError
+        for key, pattern in (
+            ("repository", r"[A-Za-z0-9-]+/[A-Za-z0-9._-]+"),
+            ("release_tag", r"[A-Za-z0-9][A-Za-z0-9._-]*"),
+        ):
+            if not isinstance(pin[key], str) or re.fullmatch(pattern, pin[key]) is None:
+                raise ValueError
+        if not isinstance(pin["release_version"], str) or not pin["release_version"].strip():
+            raise ValueError
+        assets = pin["assets"]
+        if not isinstance(assets, dict) or set(assets) != {"manifest.json", "word-cards.jsonl"}:
+            raise ValueError
+        for asset in assets.values():
+            if not isinstance(asset, dict) or set(asset) != {"bytes", "sha256"}:
+                raise ValueError
+            if type(asset["bytes"]) is not int or asset["bytes"] <= 0:
+                raise ValueError
+            if not isinstance(asset["sha256"], str) or re.fullmatch(r"[0-9a-f]{64}", asset["sha256"]) is None:
+                raise ValueError
+        return pin
+    except (ValueError, TypeError, RecursionError, OverflowError) as exc:
+        raise StoreUnavailable("release_pin_invalid") from exc
+
+
+def _release_validator() -> Draft202012Validator:
+    """Validate projection rows, using the trusted assembly schema only for IDs and kinds."""
+    card_schema = json.loads(CARD_SCHEMA.read_bytes())
+    nonempty = {"type": "string", "pattern": r"\S"}
+
+    def object_schema(properties: dict, optional: tuple[str, ...] = ()) -> dict:
+        return {
+            "type": "object",
+            "properties": properties,
+            "required": [k for k in properties if k not in optional],
+            "additionalProperties": False,
+        }
+
+    reference = object_schema(
+        {
+            "register_source_id": nonempty,
+            "register_version": {"type": "integer", "minimum": 1},
+            "appears_in": {"type": "array", "items": {"enum": ["internal", "site", "dataset"]}},
+        },
+        ("appears_in",),
+    )
+    citation = object_schema(
+        {
+            **dict.fromkeys(("source_id", "snapshot_id", "locator", "attribution", "terms_ref"), nonempty),
+            "source_record_id": {"type": ["string", "null"]},
+            "source_record_key": {"type": ["string", "null"]},
+            "licence_ref": reference,
+            "licence": {"type": "object", "properties": {"name": nonempty}, "required": ["name"]},
+        },
+        ("source_record_id", "source_record_key"),
+    )
+    field = object_schema(
+        {
+            "assertion_id": card_schema["$defs"]["assertion_id"],
+            "subject": object_schema({"kind": {"enum": ["card", "sense", "link"]}, "id": nonempty}),
+            "field": nonempty,
+            "value": {},
+            "citation": citation,
+        }
+    )
+    row = object_schema(
+        {
+            "card_id": card_schema["$defs"]["card_id"],
+            "card_version": nonempty,
+            "card_kind": {"enum": card_schema["properties"]["card_kind"]["enum"]},
+            "status": {"enum": ["CANDIDATE", "CERTIFIED"]},
+            "known_gaps": {"type": "array"},
+            "fields": {"type": "array", "minItems": 1, "items": field},
+        }
+    )
+    # JSON Schema's integer type also admits 1.0. This contract requires integer tokens, never bools.
+    validator_type = extend(
+        Draft202012Validator,
+        type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", lambda _checker, value: type(value) is int),
+    )
+    return validator_type(row)
+
+
+def _validate_release_rows(manifest: dict, rows: list[dict]) -> None:
+    validator = _release_validator()
+    card_ids: set[str] = set()
+    assertion_ids: set[str] = set()
+    for row in rows:
+        if not validator.is_valid(row) or row["card_id"] in card_ids:
+            raise StoreUnavailable("release_invalid")
+        card_ids.add(row["card_id"])
+        if row["status"] == "CERTIFIED":
+            raise StoreUnavailable("projection_missing_exact_artifact")
+        for field in row["fields"]:
+            assertion_id, subject, citation = field["assertion_id"], field["subject"], field["citation"]
+            if (
+                re.fullmatch(
+                    validator.schema["properties"]["fields"]["items"]["properties"]["assertion_id"]["pattern"],
+                    assertion_id,
+                )
+                is None
+                or assertion_id in assertion_ids
+                or (subject["kind"] == "card" and subject["id"] != row["card_id"])
+                or citation["source_id"] != citation["licence_ref"]["register_source_id"]
+            ):
+                raise StoreUnavailable("release_invalid")
+            assertion_ids.add(assertion_id)
+            if citation["source_id"] == "sum11" or field["field"] in {
+                "russification_exposed",
+                "soviet_colonization_context",
+            }:
+                raise StoreUnavailable("projection_excluded_historical_payload")
+    expected = {
+        "card_count": len(rows),
+        "field_citation_count": len(assertion_ids),
+        "candidate_count": len(rows),
+        "certified_count": 0,
+    }
+    if any(type(manifest.get(key)) is not int or manifest[key] != value for key, value in expected.items()):
+        raise StoreUnavailable("release_invalid")
+    if type(manifest.get("dataset_bytes")) is not int or manifest["dataset_bytes"] <= 0:
+        raise StoreUnavailable("release_invalid")
+    if "source_breakdown" in manifest:
+        breakdown = manifest["source_breakdown"]
+        if not isinstance(breakdown, dict):
+            raise StoreUnavailable("release_invalid")
+        for source, counts in breakdown.items():
+            if not source.strip() or not isinstance(counts, dict):
+                raise StoreUnavailable("release_invalid")
+            filtered, reasons = counts.get("filtered_assertions"), counts.get("filter_reasons")
+            if type(filtered) is not int or filtered < 0 or not isinstance(reasons, dict):
+                raise StoreUnavailable("release_invalid")
+            if any(not reason.strip() or type(count) is not int or count < 0 for reason, count in reasons.items()):
+                raise StoreUnavailable("release_invalid")
+
+
+def _recheck_release_snapshot(snapshot: ReleaseSnapshot) -> None:
+    try:
+        for leaf in snapshot.leaves:
+            _check_release_leaf(leaf)
+        for directory in snapshot.directories:
+            current = _local_target(directory.configured, directory=True)
+            if current != directory.target:
+                raise StoreUnavailable("release_changed_during_read")
+            descriptor = _open_release_directory(current.path)
+            try:
+                for info in (os.fstat(descriptor), os.fstat(directory.descriptor)):
+                    if _directory_identity(info) != _directory_identity(directory.info) or (
+                        info.st_mtime_ns,
+                        info.st_ctime_ns,
+                    ) != (directory.info.st_mtime_ns, directory.info.st_ctime_ns):
+                        raise StoreUnavailable("release_changed_during_read")
+            finally:
+                os.close(descriptor)
+        _release_layout(snapshot.directories[0].descriptor)
+    except (OSError, StoreUnavailable, ComponentOpenError) as exc:
+        raise StoreUnavailable("release_changed_during_read") from exc
+
+
+def _read_release_snapshot(store: DatasetStore) -> ReleaseSnapshot:
+    handles = ExitStack()
+    try:
+        if (
+            not all(getattr(os, flag, 0) for flag in ("O_NOFOLLOW", "O_NONBLOCK", "O_CLOEXEC", "O_DIRECTORY"))
+            or os.open not in os.supports_dir_fd
+            or os.stat not in os.supports_dir_fd
+            or os.stat not in os.supports_follow_symlinks
+        ):
+            raise StoreUnavailable("store_unavailable")
+        root = _hold_release_directory(handles, store.configured, store.root, store.info)
+        _release_layout(root.descriptor)
+        try:
+            pin_parent = _local_target(DEFAULT_PIN.parent, directory=True)
+            pin_directory = _hold_release_directory(handles, DEFAULT_PIN.parent, pin_parent, pin_parent.path.stat())
+            pin_bytes, pin_leaf = _read_release_leaf(handles, pin_directory, DEFAULT_PIN.name)
+        except (OSError, StoreUnavailable, ComponentOpenError) as exc:
+            raise StoreUnavailable("release_pin_invalid") from exc
+        pin = _release_pin(pin_bytes)
+        assets, leaves = {}, [pin_leaf]
+        for name in ("manifest.json", "word-cards.jsonl"):
+            expected = pin["assets"][name]
+            data, leaf = _read_release_leaf(handles, root, name, expected["bytes"])
+            if hashlib.sha256(data).hexdigest() != expected["sha256"]:
+                raise StoreUnavailable("release_integrity_mismatch")
+            assets[name] = data
+            leaves.append(leaf)
+        manifest = _strict_release_json(assets["manifest.json"])
+        if not isinstance(manifest, dict):
+            raise StoreUnavailable("release_invalid")
+        lines = jsonl_lines(assets["word-cards.jsonl"].decode("utf-8"))
+        if lines[-1] == "":
+            lines.pop()
+        rows = [_strict_release_json(line.encode("utf-8")) for line in lines]
+        # Give missing exact-artifact authority its specific refusal before the preview gate.
+        if (isinstance(manifest.get("certified_count"), (int, float)) and manifest["certified_count"] != 0) or any(
+            isinstance(row, dict) and row.get("status") == "CERTIFIED" for row in rows
+        ):
+            raise StoreUnavailable("projection_missing_exact_artifact")
+        check_release(pin, assets["manifest.json"], assets["word-cards.jsonl"])
+        _validate_release_rows(manifest, rows)
+        return ReleaseSnapshot(manifest, rows, pin, (root, pin_directory), tuple(leaves), handles)
+    except BaseException as exc:
+        handles.close()
+        if isinstance(exc, StoreUnavailable):
+            raise
+        if isinstance(exc, (ValueError, TypeError, RecursionError, OverflowError, PreviewError)):
+            raise StoreUnavailable("release_invalid") from exc
+        if isinstance(exc, (OSError, RuntimeError, ComponentOpenError)):
+            raise StoreUnavailable("store_unavailable") from exc
+        raise
+
+
+def _release_spellings(row: dict) -> list[str]:
+    names = {"spelling", "mwe_form"} if row["card_kind"] == "mwe" else {"spelling"}
+    return list(
+        dict.fromkeys(
+            field["value"]
+            for field in row["fields"]
+            if field["subject"]["kind"] == "card"
+            and field["field"] in names
+            and isinstance(field["value"], str)
+            and _spelling_key(field["value"]) is not None
+        )
+    )
+
+
+def _release_spelling_index(rows: list[dict]) -> dict[str, list[str]]:
+    index: dict[str, list[str]] = defaultdict(list)
+    for row in rows:
+        for key in dict.fromkeys(_spelling_key(spelling) for spelling in _release_spellings(row)):
+            index[key].append(row["card_id"])
+    return index
+
+
+def _project_release_row(row: dict, matched_by: str, pin: dict) -> dict:
+    fields: dict[str, dict] = {}
+    senses: dict[str, dict] = {}
+    has_links = False
+    for assertion in sorted(row["fields"], key=lambda field: field["assertion_id"]):
+        subject = assertion["subject"]
+        if subject["kind"] == "link":
+            has_links = True
+            continue
+        target = fields
+        if subject["kind"] == "sense":
+            sense = senses.setdefault(
+                subject["id"], {"sense_id": subject["id"], "order": None, "state": None, "sense_map": [], "fields": {}}
+            )
+            target = sense["fields"]
+        field = target.setdefault(
+            assertion["field"],
+            {"state": None, "accepted": False, "values": [], "gaps": ["resolution_not_in_projection"]},
+        )
+        field["values"].append(
+            {
+                "value": assertion["value"],
+                "selected": False,
+                "evidence_ids": [assertion["assertion_id"]],
+                "independence_groups": [],
+                "citations": [
+                    {**assertion["citation"], "evidence_id": assertion["assertion_id"], "value": assertion["value"]}
+                ],
+            }
+        )
+    spellings = _release_spellings(row)
+    gaps = {"projection": {"disposition": "assembly_metadata_not_exported"}}
+    if len(spellings) > 1:
+        gaps["identity"] = {"disposition": "conflicting_spelling_assertions"}
+    if senses:
+        gaps["senses"] = {"disposition": "sense_metadata_not_in_projection", "sense_ids": list(senses)}
+    if has_links:
+        gaps["links"] = {"disposition": "link_structure_not_in_projection", "links": []}
+    return {
+        "card_id": row["card_id"],
+        "card_kind": row["card_kind"],
+        "state": None,
+        "status": "candidate",
+        "accepted": False,
+        "notice": CANDIDATE_NOTICE,
+        "certified_for": [],
+        "matched_by": matched_by,
+        "certification_refusal": dict.fromkeys(APPROVALS, "projection_missing_exact_artifact"),
+        "version": {"card_version": row["card_version"], "build_id": None, "rules_version": None},
+        "identity": {
+            "spelling": spellings[0] if len(spellings) == 1 else None,
+            "spellings": spellings,
+            "stress_patterns": [],
+            "pos": None,
+            "paradigm_key": None,
+            "mwe_key": None,
+            "key_source_keys": [],
+            "confidence": None,
+            "method": None,
+            "decided_by": None,
+            "source_keys": [],
+            "notes": [],
+        },
+        "fields": fields,
+        "senses": list(senses.values()),
+        "links": [],
+        "gaps": gaps,
+        "evidence_ids": sorted(field["assertion_id"] for field in row["fields"]),
+        "projection": {
+            "schema_version": "word-card-dataset.v1",
+            "release_version": pin["release_version"],
+            "manifest_sha256": pin["assets"]["manifest.json"]["sha256"],
+            "dataset_sha256": pin["assets"]["word-cards.jsonl"]["sha256"],
+            "row": row,
+        },
+    }
+
+
+def _lookup_in_release(store: DatasetStore, normalized: str, vesum: dict, base: dict) -> dict:
+    snapshot = _read_release_snapshot(store)
+    try:
+        index = _release_spelling_index(snapshot.rows)
+        wanted = {_fold(normalized): "spelling"}
+        for lemma in vesum.get("lemmas", []):
+            key = _spelling_key(lemma)
+            if key is not None:
+                wanted.setdefault(key, "vesum_lemma")
+        matched: dict[str, str] = {}
+        for key, matched_by in wanted.items():
+            for card_id in index.get(key, []):
+                matched.setdefault(card_id, matched_by)
+        kinds = {"lexeme": 0, "mwe": 1, "proper_name": 2}
+        rows = sorted(
+            (row for row in snapshot.rows if row["card_id"] in matched),
+            key=lambda row: (
+                not any(_clean(spelling) == normalized for spelling in _release_spellings(row)),
+                kinds[row["card_kind"]],
+                row["card_id"],
+            ),
+        )
+        projected = [_project_release_row(row, matched[row["card_id"]], snapshot.pin) for row in rows]
+        result = {
+            **base,
+            "result": "card_found" if projected else "no_card",
+            "status": "candidate" if projected else "no_card",
+            "cards": projected,
+            "per_facet_tools": PER_FACET_TOOLS,
+            "card_store": {
+                "available": True,
+                "build_id": None,
+                "ledger": False,
+                "card_files": 0,
+                "unreadable_card_files": 0,
+                "off_store_card_files": 0,
+                "format": "dataset_jsonl",
+                "dataset_card_count": len(snapshot.rows),
+                "release_version": snapshot.pin["release_version"],
+                "manifest_sha256": snapshot.pin["assets"]["manifest.json"]["sha256"],
+                "dataset_sha256": snapshot.pin["assets"]["word-cards.jsonl"]["sha256"],
+            },
+        }
+        if not projected:
+            result["message"] = (
+                f"No word card exists for '{normalized}' in the checked release. Use the per-facet tools."
+            )
+        json.dumps(result, ensure_ascii=False, allow_nan=False).encode("utf-8")
+        _recheck_release_snapshot(snapshot)
+        return result
+    except (ValueError, TypeError, RecursionError, OverflowError) as exc:
+        raise StoreUnavailable("release_invalid") from exc
+    finally:
+        snapshot.handles.close()
