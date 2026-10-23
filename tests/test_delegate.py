@@ -11554,6 +11554,7 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
     monkeypatch,
     dry_run,
 ):
+    real_run, real_popen = subprocess.run, subprocess.Popen
     worktree = _tmp_dispatch_repo_root(tmp_path, monkeypatch) / ".worktrees/dispatch/claude/pinned-branch"
     worktree.mkdir(parents=True)
     branch = "claude/pinned-branch"
@@ -11601,6 +11602,101 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
     if not dry_run:
         assert state["pid"] == proc.pid
 
+    monkeypatch.setattr(delegate.subprocess, "run", real_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", real_popen)
+    # Exercise the same pin contract through registered sibling review dispatch.
+    from dataclasses import replace
+
+    from scripts.ai_agent_bridge import _agy
+    from scripts.orchestration import fleet_repos
+    from scripts.review import target_resolution
+    from tests.test_authoring_review_feasibility import SOL, mini_repo
+
+    sibling_space = tmp_path / "sibling-space"
+    sibling_space.mkdir()
+    repo = mini_repo(sibling_space, monkeypatch)
+    primary, _ = _init_repo_with_worktree(sibling_space)
+    repository = "learn-ukrainian/learn-ukrainian-infra-private"
+    url = f"https://github.com/{repository}.git"
+    repo.git("remote", "set-url", "origin", url)
+    repo.git("config", f"url.{repo.remote}.insteadOf", url)
+    repo.commit(SOL, path="src/app.py", text="reviewed = True\n")
+    pinned = repo.publish()
+    branch = "feature"
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary)
+    catalog = fleet_repos.load_fleet_repos()
+    catalog["infra-private"] = replace(catalog["infra-private"], local_name=repo.root.name)
+    monkeypatch.setattr(fleet_repos, "load_fleet_repos", lambda: catalog)
+    _patch_worker_popen(monkeypatch)
+    real_run = subprocess.run
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["gh", "pr", "view"]:
+            assert cmd[cmd.index("--repo") + 1] == repository
+            return subprocess.CompletedProcess(cmd, 0, json.dumps({
+                "number": 1051, "headRefName": branch, "headRefOid": pinned,
+                "baseRefName": "main", "baseRefOid": repo.sha("origin/main"),
+                "isCrossRepository": False,
+            }), "")
+        return real_run(cmd, **kwargs)
+
+    monkeypatch.setattr(target_resolution, "_run_gh", lambda args, cwd, **kw: fake_run(["gh", *args], cwd=cwd, **kw))
+    monkeypatch.setattr(_agy, "_run_changed_path_command", lambda cmd, **kw: fake_run(cmd, **kw).stdout)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--model", "claude-opus-5-5",
+        "--task-id", "sibling-pinned-branch", "--prompt", "Review the pinned code.\n# Dispositions\n",
+        "--mode", "read-only", "--repo", "infra-private",
+        "--require-review-verdict", "--review-profile", "code",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical",
+        *(["--pr", "1051"] if dry_run else ["--branch", branch, "--pinned-head", pinned]),
+    ])
+    args.dry_run = dry_run
+    author_before = repo.snapshot()
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path("sibling-pinned-branch"))
+    assert state is not None
+    assert state["pinned_head"] == pinned
+    assert state["repository"] == repository
+    assert state["review_author_model"] == "gpt-6.1-sol"
+    assert state["review_risk"] == "critical"
+    assert state["review_branch"] == branch
+    assert state["status"] == ("dry_run" if dry_run else "spawning")
+    worktree = Path(state["worktree_path"])
+    assert worktree == repo.root / ".worktrees/dispatch/claude/sibling-pinned-branch"
+    author_after = repo.snapshot()
+    assert author_after[0] == author_before[0]
+    assert author_after[2:] == author_before[2:]
+    if dry_run:
+        assert not worktree.exists()
+        assert state["worktree_base_sha"] is None
+    else:
+        assert state["worktree_base_sha"] == pinned
+        assert delegate._resolve_sha(worktree) == pinned
+        assert delegate._current_branch(worktree) == "HEAD"
+        assert delegate._resolve_verified_worktree_path(worktree) == worktree
+        assert state["pid"] == _GuardFakeProc().pid
+
+    refused = repo.root / ".worktrees/dispatch/claude/moved-head"
+    attach = dict(repo_root=repo.root, agent="claude", task_id="moved-head", raw_path=str(refused),
+                  detached=True, review_branch=branch, repository=repository)
+    with pytest.raises(ValueError, match="concrete repository/head pin"):
+        delegate._ensure_sibling_repo_worktree(**attach)
+    with pytest.raises(RuntimeError, match="differs from the pinned head"):
+        delegate._ensure_sibling_repo_worktree(**attach, pinned_head_sha="f" * 40)
+    assert not refused.exists()
+    with monkeypatch.context() as moved:
+        moved.setattr(target_resolution, "live_canonical_branch_head", lambda *a, **kw: "f" * 40)
+        with pytest.raises(RuntimeError, match="differs from the pinned head"):
+            delegate._ensure_sibling_repo_worktree(**attach, pinned_head_sha=pinned)
+    assert not refused.exists()
+    foreign = "https://github.com/unit/foreign.git"
+    repo.git("remote", "set-url", "origin", foreign)
+    repo.git("config", f"url.{repo.remote}.insteadOf", foreign)
+    with pytest.raises(RuntimeError, match="canonical review repository mismatch"):
+        delegate._ensure_sibling_repo_worktree(**attach, pinned_head_sha=pinned)
+    assert not refused.exists()
+
 
 def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
     calls: list[list[str]] = []
@@ -11617,6 +11713,11 @@ def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkey
             task_id="unsafe",
             raw_path=str(tmp_path / "unsafe"),
             branch="main",
+        )
+    with pytest.raises(ValueError, match="protected"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=tmp_path, agent="cursor", task_id="unsafe", raw_path=str(tmp_path / "unsafe"),
+            detached=True, review_branch="main", pinned_head_sha="a" * 40, repository="unit/repo",
         )
     assert calls == []
 
@@ -13367,6 +13468,11 @@ def test_dispatch_refuses_a_control_character_in_a_caller_path(
         f"--{flag} refused: the path contains control or format character {code} at offset {len(str(dispatch_wt))}"
     ) in err
     assert _INJECTION not in err
+    with pytest.raises(ValueError, match="control or format character"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=main, agent="codex", task_id="path-ctrl", raw_path=raw, detached=True,
+            review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
 
 
 @pytest.mark.parametrize(
@@ -13476,6 +13582,18 @@ def test_dispatch_refuses_an_explicit_worktree_under_a_symlinked_anchor(
     )
 
     assert f"--worktree refused: {str(anchor)!r} is a symlink" in err
+    with pytest.raises(ValueError, match="symlink"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=main, agent="codex", task_id="path-anchor",
+            raw_path=str(main / ".worktrees/dispatch/codex/task-1"), detached=True,
+            review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
+
+    with pytest.raises(ValueError, match="symlink"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=anchor, agent="codex", task_id="path-anchor", raw_path=str(anchor / "task-1"),
+            detached=True, review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
 
 
 def test_dispatch_refuses_an_explicit_worktree_when_the_agent_directory_is_missing(
@@ -13757,6 +13875,12 @@ def test_cross_repo_guard_refuses_worktree_from_sibling(tmp_path, monkeypatch):
     assert str(sibling) in err
     assert "--worktree" in err
     assert "primary checkout" in err
+
+    with pytest.raises(ValueError, match="outside target repo"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=primary, agent="codex", task_id="wrong-repo", raw_path=str(sibling),
+            detached=True, review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
 
 
 def test_cross_repo_guard_allows_explicit_repo_target(tmp_path, monkeypatch):
