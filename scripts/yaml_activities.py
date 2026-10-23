@@ -79,10 +79,6 @@ def _indexed_fields(data: dict, prefix: str) -> tuple[list[Any] | None, dict[str
     }
 
 
-def _indexed_extra_fields(data: dict, prefix: str) -> dict[str, Any]:
-    return {key: value for key, value in data.items() if key.startswith(prefix) and key.removeprefix(prefix).isdigit()}
-
-
 def _feedback_fields(data: dict) -> dict[str, Any]:
     feedback, flattened = _indexed_fields(data, "option_why_")
     fields = {}

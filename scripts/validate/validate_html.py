@@ -71,15 +71,6 @@ def find_source_md(lang_pair: str, level: str, module_num: int) -> Path | None:
     return None
 
 
-def is_server_running() -> bool:
-    """Check if dev server is available."""
-    import urllib.request
-    try:
-        urllib.request.urlopen(BASE_URL, timeout=5)  # nosec B310 — hardcoded localhost URL
-        return True
-    except OSError:
-        return False
-
 @dataclass
 class ValidationResult:
     module: str

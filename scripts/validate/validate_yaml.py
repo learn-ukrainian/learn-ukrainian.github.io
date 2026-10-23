@@ -44,12 +44,6 @@ def format_error(error) -> str:
     return f"  \033[31mERROR\033[0m: {error}"
 
 
-def format_warning(warning) -> str:
-    """Format a validation warning for display."""
-    # Schema validation doesn't currently produce warnings, but keeping for compatibility
-    return f"  \033[33mWARN\033[0m: {warning}"
-
-
 def validate_file(yaml_path: Path, level: str | None = None, verbose: bool = False) -> bool:
     """
     Validate a single YAML activity file.
