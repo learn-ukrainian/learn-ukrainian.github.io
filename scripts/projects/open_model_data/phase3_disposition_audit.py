@@ -873,18 +873,6 @@ def freeze_audit_populations(
     return {**base, "population_freeze_sha256": sha256_value(base)}
 
 
-def _assigned_disposition_auditor_task(
-    role_contract: Mapping[str, Any],
-    *,
-    role_contract_path: Path,
-) -> str:
-    """Resolve the one functional task authorized to audit dispositions."""
-    return _current_contract_bindings(
-        role_contract,
-        role_contract_path=role_contract_path,
-    )["auditor_task_id"]
-
-
 def validate_seed_receipt(
     receipt: Mapping[str, Any],
     population_freeze: Mapping[str, Any],
