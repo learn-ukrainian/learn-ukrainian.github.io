@@ -981,23 +981,55 @@ def test_scheduler_running_skips_on_demand_refresh(monkeypatch):
 
 
 def test_periodic_refresh_runs_immediately_then_stops(monkeypatch):
-    runs = threading.Event()
+    """A timed-out stop retains ownership, fences publication and prevents replacement."""
+    runs, release = threading.Event(), threading.Event()
+    finished = threading.Event()
+    published = []
 
     def fake_run() -> None:
         runs.set()
+        assert release.wait(10)
+        published.append(subscription_usage_mod._record_probe_result("codex", {"weekly_used_pct": 12}))
+        finished.set()
 
     monkeypatch.setenv("CODEXBAR_PERIODIC_REFRESH", "1")
     monkeypatch.setenv("CODEXBAR_REFRESH_INTERVAL_S", "30")
     monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", fake_run)
-    monkeypatch.setattr(subscription_usage_mod, "_scheduler_thread", None)
+    monkeypatch.setattr(subscription_usage_mod, "_scheduler_thread", threading.Thread(target=lambda: None))
+    codexbar_usage_mod.stop_periodic_refresh()  # Thread.start failure can leave an unstarted owner.
+    assert subscription_usage_mod._scheduler_thread is None
     try:
         codexbar_usage_mod.start_periodic_refresh(run_immediately=True)
-        assert runs.wait(timeout=1.0)
+        assert runs.wait(timeout=2.0)
+        owner = subscription_usage_mod._scheduler_thread
         assert codexbar_usage_mod.scheduler_status()["scheduler_running"] is True
         assert codexbar_usage_mod.scheduler_status()["cache_ttl_s"] == 720.0
+        codexbar_usage_mod.stop_periodic_refresh(join_timeout_s=0)
+        assert owner.is_alive()
+        assert subscription_usage_mod._scheduler_thread is owner
+        assert codexbar_usage_mod.scheduler_status()["scheduler_running"] is True
+        codexbar_usage_mod.start_periodic_refresh()
+        assert subscription_usage_mod._scheduler_thread is owner
+        assert subscription_usage_mod._scheduler_stop.is_set()
     finally:
-        codexbar_usage_mod.stop_periodic_refresh(join_timeout_s=1.0)
+        release.set()
+        codexbar_usage_mod.stop_periodic_refresh(join_timeout_s=2.0)
+    assert not owner.is_alive()
+    assert published == [False]
     assert codexbar_usage_mod.scheduler_status()["scheduler_running"] is False
+
+    # A new owner still refreshes normally once the old scheduler really exited.
+    runs.clear()
+    finished.clear()
+    try:
+        codexbar_usage_mod.start_periodic_refresh(run_immediately=True)
+        assert runs.wait(2)
+        owner = subscription_usage_mod._scheduler_thread
+        assert finished.wait(2)
+    finally:
+        codexbar_usage_mod.stop_periodic_refresh(join_timeout_s=2.0)
+    assert not owner.is_alive()
+    assert published == [False, True]
 
 
 def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
@@ -1008,20 +1040,35 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
     def fake_refresh(providers, *, timeout_s=None):
         calls.append(tuple(providers))
         started.set()
-        release.wait(timeout=1.0)
+        assert release.wait(timeout=10.0)
+        assert not subscription_usage_mod._record_probe_result("codex", {"weekly_used_pct": 99})
+        assert not subscription_usage_mod._record_probe_result("codex", {"status": "unavailable"})
+        assert not subscription_usage_mod._record_cursor_probe_result({"probe_state": "healthy"})
+        assert not subscription_usage_mod._record_api_account_result(
+            "openrouter", {"probe_state": "ok", "fetched_at": "fixture"}
+        )
         return {}
 
     monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
-    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: calls.append("late cursor"))
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: calls.append("late api"))
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: calls.append("late claude"))
     monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
+    identity = subscription_usage_mod._refresh_identity()
     worker = threading.Thread(target=subscription_usage_mod._run_all_refreshes, daemon=True)
     worker.start()
     assert started.wait(timeout=1.0)
     subscription_usage_mod._run_all_refreshes()  # must no-op while first is in flight
-    release.set()
-    worker.join(timeout=1.0)
+    try:
+        subscription_usage_mod.stop_periodic_refresh(join_timeout_s=0)
+        assert worker.is_alive()
+        assert worker in subscription_usage_mod._owned_workers
+        subscription_usage_mod._run_owned_refresh(identity, lambda: calls.append("late child"))
+    finally:
+        release.set()
+        worker.join(timeout=5.0)
+    assert not worker.is_alive()
+    assert worker not in subscription_usage_mod._owned_workers
     assert calls == [tuple(codexbar_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)]
 
 

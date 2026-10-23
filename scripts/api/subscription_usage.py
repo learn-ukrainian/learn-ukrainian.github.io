@@ -7,6 +7,7 @@ Provides background-threaded asynchronous caching of provider dashboard metrics.
 from __future__ import annotations
 
 import json
+import logging
 import math
 import os
 import platform
@@ -118,10 +119,15 @@ PROVIDER_TO_LANE = {
 # In-memory storage for the last successfully fetched usage data (lasts the lifetime of the process)
 _last_good_data: dict[str, tuple[float, dict[str, Any]]] = {}
 _last_failure_data: dict[str, dict[str, Any]] = {}
+_lifecycle_lock = threading.RLock()
+_lifecycle_generation = 0
+_stops_in_progress = 0
+_refresh_context = threading.local()
+_owned_workers: set[threading.Thread] = set()
 _refresh_lock = threading.Lock()
 _refresh_in_flight = threading.Lock()
 _refresh_thread: threading.Thread | None = None
-_scheduler_lock = threading.Lock()
+_scheduler_lock = _lifecycle_lock
 _scheduler_stop = threading.Event()
 _scheduler_thread: threading.Thread | None = None
 _last_refresh_started_at: float | None = None
@@ -134,6 +140,40 @@ _api_account_last_failure: dict[str, tuple[float, dict[str, Any]]] = {}
 API_ACCOUNT_FAILURE_TTL_S = 30.0
 _api_account_refresh_lock = threading.Lock()
 _api_account_refresh_thread: threading.Thread | None = None
+
+
+def _refresh_identity() -> tuple[int, int]:
+    """Use the admitting owner's identity through delayed phases and child submissions."""
+    from scripts.api import claude_account_usage  # noqa: PLC0415  # lazy-ok: import cycle
+
+    with _lifecycle_lock:
+        return getattr(_refresh_context, "identity", None) or (
+            _lifecycle_generation,
+            claude_account_usage.refresh_lifecycle(),
+        )
+
+
+def _publication_current() -> bool:
+    identity = getattr(_refresh_context, "identity", None)
+    return identity is None or identity[0] == _lifecycle_generation
+
+
+def _run_owned_refresh(identity: tuple[int, int], callback: Any, *args: Any, **kwargs: Any) -> Any:
+    worker = threading.current_thread()
+    previous = getattr(_refresh_context, "identity", None)
+    with _lifecycle_lock:
+        if identity[0] != _lifecycle_generation or _stops_in_progress:
+            return None
+        already_owned = worker in _owned_workers
+        _owned_workers.add(worker)
+        _refresh_context.identity = identity
+    try:
+        return callback(*args, **kwargs)
+    finally:
+        with _lifecycle_lock:
+            _refresh_context.identity = previous
+            if not already_owned:
+                _owned_workers.discard(worker)
 
 
 def _is_usable_capacity(data: dict[str, Any] | None) -> bool:
@@ -175,17 +215,20 @@ def _record_probe_result(provider: str, data: dict[str, Any] | None) -> bool:
     value.  In particular, it must never replace a valid last-known-good
     sample, otherwise a single timeout turns a usable lane into unavailable.
     """
-    if not _is_usable_capacity(data):
-        if isinstance(data, dict):
-            _last_failure_data[provider] = _failure_metadata(data)
-        return False
+    with _lifecycle_lock:
+        if not _publication_current():
+            return False
+        if not _is_usable_capacity(data):
+            if isinstance(data, dict):
+                _last_failure_data[provider] = _failure_metadata(data)
+            return False
 
-    assert data is not None  # narrowed by _is_usable_capacity
-    snapshot = dict(data)
-    _last_failure_data.pop(provider, None)
-    cache_set(f"codexbar_usage:{provider}", snapshot)
-    _last_good_data[provider] = (time.monotonic(), snapshot)
-    return True
+        assert data is not None  # narrowed by _is_usable_capacity
+        snapshot = dict(data)
+        _last_failure_data.pop(provider, None)
+        cache_set(f"codexbar_usage:{provider}", snapshot)
+        _last_good_data[provider] = (time.monotonic(), snapshot)
+        return True
 
 
 def _with_observation_metadata(
@@ -299,13 +342,14 @@ def refresh_provider_usage_data(
     if not unique_providers:
         return {}
 
+    identity = _refresh_identity()
     refreshed: dict[str, dict[str, Any]] = {}
     with ThreadPoolExecutor(max_workers=len(unique_providers)) as executor:
         futures = {
             provider: (
-                executor.submit(_refresh_cursor_usage_live)
+                executor.submit(_run_owned_refresh, identity, _refresh_cursor_usage_live)
                 if provider == "cursor"
-                else executor.submit(fetch_provider_usage, provider, timeout_s=timeout_s)
+                else executor.submit(_run_owned_refresh, identity, fetch_provider_usage, provider, timeout_s=timeout_s)
             )
             for provider in unique_providers
         }
@@ -782,16 +826,19 @@ def _api_account_is_cacheable(data: dict[str, Any] | None) -> bool:
 
 
 def _record_api_account_result(provider: str, data: dict[str, Any] | None) -> bool:
-    if not _api_account_is_cacheable(data):
-        if isinstance(data, dict):
-            _api_account_last_failure[provider] = (time.monotonic(), dict(data))
-        return False
-    assert data is not None
-    snapshot = dict(data)
-    _api_account_last_failure.pop(provider, None)
-    cache_set(_api_account_cache_key(provider), snapshot)
-    _api_account_last_good[provider] = (time.monotonic(), snapshot)
-    return True
+    with _lifecycle_lock:
+        if not _publication_current():
+            return False
+        if not _api_account_is_cacheable(data):
+            if isinstance(data, dict):
+                _api_account_last_failure[provider] = (time.monotonic(), dict(data))
+            return False
+        assert data is not None
+        snapshot = dict(data)
+        _api_account_last_failure.pop(provider, None)
+        cache_set(_api_account_cache_key(provider), snapshot)
+        _api_account_last_good[provider] = (time.monotonic(), snapshot)
+        return True
 
 
 def _with_api_account_observation_metadata(
@@ -843,10 +890,13 @@ def refresh_api_account_data(providers: Iterable[str], *, timeout_s: float | Non
     unique_providers = tuple(dict.fromkeys(providers))
     if not unique_providers:
         return {}
+    identity = _refresh_identity()
     refreshed: dict[str, dict[str, Any]] = {}
     with ThreadPoolExecutor(max_workers=len(unique_providers)) as executor:
         futures = {
-            provider: executor.submit(_probe_api_account_live, provider, timeout_s=timeout_s)
+            provider: executor.submit(
+                _run_owned_refresh, identity, _probe_api_account_live, provider, timeout_s=timeout_s
+            )
             for provider in unique_providers
         }
         for provider, future in futures.items():
@@ -861,19 +911,23 @@ def refresh_api_account_data(providers: Iterable[str], *, timeout_s: float | Non
 
 
 def _refresh_api_accounts_live() -> None:
+    identity = _refresh_identity()
     for provider in API_ACCOUNT_PROVIDERS:
-        data = _probe_api_account_live(provider)
+        data = _run_owned_refresh(identity, _probe_api_account_live, provider)
         _record_api_account_result(provider, data)
 
 
 def trigger_api_account_background_refresh() -> None:
     """Start one bounded prepaid API refresh without making an API request wait."""
     global _api_account_refresh_thread
-    with _api_account_refresh_lock:
+    with _api_account_refresh_lock, _lifecycle_lock:
+        if _stops_in_progress:
+            return
         if _api_account_refresh_thread is not None and _api_account_refresh_thread.is_alive():
             return
         _api_account_refresh_thread = threading.Thread(
-            target=_refresh_api_accounts_live,
+            target=_run_owned_refresh,
+            args=(_refresh_identity(), _refresh_api_accounts_live),
             name="api-account-refresh",
             daemon=True,
         )
@@ -1546,19 +1600,25 @@ def _agy_quota_groups_from_payload(payload: dict[str, Any]) -> list[dict[str, An
 
 def _note_agy_quota_parsed(groups: list[dict[str, Any]]) -> None:
     global _agy_quota_parsed, _agy_quota_failure
-    with _AGY_QUOTA_LOCK:
-        _agy_quota_parsed = (time.monotonic(), {"quota_groups": groups})
-        _agy_quota_failure = None
+    with _lifecycle_lock:
+        if not _publication_current():
+            return
+        with _AGY_QUOTA_LOCK:
+            _agy_quota_parsed = (time.monotonic(), {"quota_groups": groups})
+            _agy_quota_failure = None
 
 
 def _note_agy_quota_failure(kind: Any, code: Any) -> None:
     global _agy_quota_failure
-    kind, code = _public_quota_error(kind, code)
-    with _AGY_QUOTA_LOCK:
-        _agy_quota_failure = (
-            time.monotonic(),
-            {"error_kind": kind or "unavailable", "error_code": code},
-        )
+    with _lifecycle_lock:
+        if not _publication_current():
+            return
+        kind, code = _public_quota_error(kind, code)
+        with _AGY_QUOTA_LOCK:
+            _agy_quota_failure = (
+                time.monotonic(),
+                {"error_kind": kind or "unavailable", "error_code": code},
+            )
 
 
 def _agy_finish_unparsed(record: dict[str, Any]) -> dict[str, Any]:
@@ -3069,11 +3129,14 @@ def _normalize_provider_error(provider: str, error: Any) -> dict[str, Any]:
 def trigger_background_refresh() -> None:
     """Start one bounded parallel refresh without making an API request wait."""
     global _refresh_thread
-    with _refresh_lock:
+    with _refresh_lock, _lifecycle_lock:
+        if _stops_in_progress:
+            return
         if _refresh_thread is not None and _refresh_thread.is_alive():
             return
         _refresh_thread = threading.Thread(
-            target=_run_all_refreshes,
+            target=_run_owned_refresh,
+            args=(_refresh_identity(), _run_all_refreshes),
             name="codexbar-refresh",
             daemon=True,
         )
@@ -3085,19 +3148,26 @@ def _run_all_refreshes() -> None:
     global _last_refresh_started_at, _last_refresh_finished_at
     if not _refresh_in_flight.acquire(blocking=False):
         return
-    _last_refresh_started_at = time.monotonic()
+    identity = _refresh_identity()
+    with _lifecycle_lock:
+        if identity[0] != _lifecycle_generation or _stops_in_progress:
+            _refresh_in_flight.release()
+            return
+        _last_refresh_started_at = time.monotonic()
     try:
         # Bounded probes are parallel. Failed probes cannot poison LKG data.
         # Runs off the HTTP request path — it shares the same realistic timeout
         # floor as the explicit fresh-refresh path (see _codexbar_refresh_timeout_s)
         # rather than the prior 2.0s, which never let the claude lane's ~17s CLI
         # probe complete.
-        refresh_provider_usage_data(SUBSCRIPTION_LANES_WITHOUT_CURSOR)
-        _refresh_cursor_usage_live()
-        _refresh_api_accounts_live()
-        _refresh_claude_accounts_live()
+        _run_owned_refresh(identity, refresh_provider_usage_data, SUBSCRIPTION_LANES_WITHOUT_CURSOR)
+        _run_owned_refresh(identity, _refresh_cursor_usage_live)
+        _run_owned_refresh(identity, _refresh_api_accounts_live)
+        _run_owned_refresh(identity, _refresh_claude_accounts_live)
     finally:
-        _last_refresh_finished_at = time.monotonic()
+        with _lifecycle_lock:
+            if identity[0] == _lifecycle_generation:
+                _last_refresh_finished_at = time.monotonic()
         _refresh_in_flight.release()
 
 
@@ -3109,7 +3179,7 @@ def _refresh_claude_accounts_live() -> None:
     # The per-account module reads this module's CodexBar helpers, so a top-level import is a cycle.
     from scripts.api.claude_account_usage import refresh_claude_account_usage  # noqa: PLC0415, I001  # lazy-ok: import cycle
 
-    refresh_claude_account_usage()
+    refresh_claude_account_usage(lifecycle=_refresh_identity()[1])
 
 
 def _scheduler_is_running() -> bool:
@@ -3133,13 +3203,15 @@ def start_periodic_refresh(*, run_immediately: bool = True) -> None:
     if not _periodic_refresh_enabled():
         return
     with _scheduler_lock:
+        if _stops_in_progress:
+            return
         if _scheduler_thread is not None and _scheduler_thread.is_alive():
             return
         _scheduler_stop.clear()
         interval_s = _codexbar_refresh_interval_s()
         _scheduler_thread = threading.Thread(
-            target=_periodic_loop,
-            args=(interval_s, run_immediately),
+            target=_run_owned_refresh,
+            args=(_refresh_identity(), _periodic_loop, interval_s, run_immediately),
             name="codexbar-scheduler",
             daemon=True,
         )
@@ -3147,14 +3219,36 @@ def start_periodic_refresh(*, run_immediately: bool = True) -> None:
 
 
 def stop_periodic_refresh(*, join_timeout_s: float = 1.0) -> None:
-    """Stop the background scheduler. Safe to call when it was never started."""
-    global _scheduler_thread
-    _scheduler_stop.set()
-    with _scheduler_lock:
-        thread = _scheduler_thread
-        _scheduler_thread = None
-    if thread is not None and thread.is_alive():
-        thread.join(timeout=join_timeout_s)
+    """Fence background work and boundedly join owners, retaining any live scheduler."""
+    global _scheduler_thread, _lifecycle_generation, _stops_in_progress
+    from scripts.api import claude_account_usage  # noqa: PLC0415  # lazy-ok: import cycle
+
+    deadline = time.monotonic() + max(0.0, join_timeout_s)
+    with _lifecycle_lock:
+        _stops_in_progress += 1
+        _lifecycle_generation += 1
+        _scheduler_stop.set()
+        workers = (
+            _owned_workers
+            | {
+                thread
+                for thread in (_scheduler_thread, _refresh_thread, _cursor_refresh_thread, _api_account_refresh_thread)
+                if thread is not None
+            }
+            | set(claude_account_usage.invalidate_refreshes())
+        )
+    try:
+        for worker in workers:
+            if worker is not threading.current_thread() and worker.is_alive():
+                worker.join(timeout=max(0.0, deadline - time.monotonic()))
+    finally:
+        with _lifecycle_lock:
+            if _scheduler_thread is not None and not _scheduler_thread.is_alive():
+                _scheduler_thread = None
+            _stops_in_progress -= 1
+    live = sum(worker.is_alive() for worker in workers)
+    if live:
+        logging.getLogger(__name__).warning("usage refresh: stop fenced %s live owners", live)
 
 
 def _routing_budget_state_dir() -> Path:
@@ -3187,25 +3281,30 @@ def _write_provider_lkg(data: dict[str, Any]) -> None:
 
 def persist_provider_snapshot(lane: str, snapshot: dict[str, Any]) -> dict[str, Any]:
     """Append a sanitized provider snapshot to on-disk LKG (max 8 per lane)."""
-    lkg = _read_provider_lkg()
-    lane_key = str(lane)
-    history = lkg.get(lane_key)
-    if not isinstance(history, list):
-        history = []
-    provider_windows = snapshot.get("provider_windows") if isinstance(snapshot.get("provider_windows"), dict) else {}
-    auto = provider_windows.get("auto") if isinstance(provider_windows.get("auto"), dict) else {}
-    api = provider_windows.get("api") if isinstance(provider_windows.get("api"), dict) else {}
-    entry = {
-        "at": snapshot.get("fetched_at") or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        "source": snapshot.get("source"),
-        "auto_used_pct": auto.get("used_pct", snapshot.get("primary_used_pct")),
-        "api_used_pct": api.get("used_pct", snapshot.get("tertiary_used_pct")),
-        "weekly_used_pct": snapshot.get("weekly_used_pct"),
-    }
-    history.append(entry)
-    lkg[lane_key] = history[-8:]
-    _write_provider_lkg(lkg)
-    return compute_provider_trend(lane_key, history=lkg[lane_key])
+    with _lifecycle_lock:
+        if not _publication_current():
+            return {}
+        lkg = _read_provider_lkg()
+        lane_key = str(lane)
+        history = lkg.get(lane_key)
+        if not isinstance(history, list):
+            history = []
+        provider_windows = (
+            snapshot.get("provider_windows") if isinstance(snapshot.get("provider_windows"), dict) else {}
+        )
+        auto = provider_windows.get("auto") if isinstance(provider_windows.get("auto"), dict) else {}
+        api = provider_windows.get("api") if isinstance(provider_windows.get("api"), dict) else {}
+        entry = {
+            "at": snapshot.get("fetched_at") or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+            "source": snapshot.get("source"),
+            "auto_used_pct": auto.get("used_pct", snapshot.get("primary_used_pct")),
+            "api_used_pct": api.get("used_pct", snapshot.get("tertiary_used_pct")),
+            "weekly_used_pct": snapshot.get("weekly_used_pct"),
+        }
+        history.append(entry)
+        lkg[lane_key] = history[-8:]
+        _write_provider_lkg(lkg)
+        return compute_provider_trend(lane_key, history=lkg[lane_key])
 
 
 def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = None) -> dict[str, Any]:
@@ -3327,13 +3426,16 @@ def _reset_cursor_usage_state_for_tests() -> None:
 
 def _record_cursor_probe_result(data: dict[str, Any] | None) -> bool:
     global _cursor_last_good
-    if not _cursor_probe_is_cacheable(data):
-        return False
-    assert data is not None
-    snapshot = dict(data)
-    cache_set(CURSOR_CACHE_KEY, snapshot)
-    _cursor_last_good = (time.monotonic(), snapshot)
-    return True
+    with _lifecycle_lock:
+        if not _publication_current():
+            return False
+        if not _cursor_probe_is_cacheable(data):
+            return False
+        assert data is not None
+        snapshot = dict(data)
+        cache_set(CURSOR_CACHE_KEY, snapshot)
+        _cursor_last_good = (time.monotonic(), snapshot)
+        return True
 
 
 def _with_cursor_observation_metadata(
@@ -3363,11 +3465,14 @@ def _refresh_cursor_usage_live() -> dict[str, Any] | None:
 def trigger_cursor_background_refresh() -> None:
     """Start one bounded Cursor native refresh without making an API request wait."""
     global _cursor_refresh_thread
-    with _cursor_refresh_lock:
+    with _cursor_refresh_lock, _lifecycle_lock:
+        if _stops_in_progress:
+            return
         if _cursor_refresh_thread is not None and _cursor_refresh_thread.is_alive():
             return
         _cursor_refresh_thread = threading.Thread(
-            target=_refresh_cursor_usage_live,
+            target=_run_owned_refresh,
+            args=(_refresh_identity(), _refresh_cursor_usage_live),
             name="cursor-usage-refresh",
             daemon=True,
         )

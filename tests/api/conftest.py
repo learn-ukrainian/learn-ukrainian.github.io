@@ -45,12 +45,14 @@ def _no_provider(_token: str) -> tuple[str, object]:
 
 @pytest.fixture(autouse=True)
 def _isolate_status_ttl_cache(monkeypatch):
-    from scripts.api import claude_account_usage
+    from scripts.api import claude_account_usage, subscription_usage
     from scripts.api.state_helpers import cache_invalidate
 
+    subscription_usage.stop_periodic_refresh()
+    assert not claude_account_usage._reset_for_tests(), "previous account refresh owner remains live"
     cache_invalidate()
-    claude_account_usage._reset_for_tests()
     monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", _no_provider)
     yield
+    subscription_usage.stop_periodic_refresh()
+    assert not claude_account_usage._reset_for_tests(), "previous account refresh owner remains live"
     cache_invalidate()
-    claude_account_usage._reset_for_tests()

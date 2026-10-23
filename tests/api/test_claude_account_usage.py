@@ -34,6 +34,8 @@ _FAKE_ACCOUNT_ID = "0f0e0d0c-0b0a-4908-8706-050403020100"
 _ACCOUNT_A = "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a"
 _ACCOUNT_B = "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"
 _MARKER = "SYNTHETIC_PRIVATE_MARKER"
+
+
 def _iso(moment: datetime) -> str:
     return moment.astimezone(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
 
@@ -250,6 +252,10 @@ def fake_probe(monkeypatch, account_dirs):
         calls.append(dict(env))
         assert codexbar == "/fixture/bin/codexbar"
         label = next(label for label, path in account_dirs.items() if env["CLAUDE_CONFIG_DIR"] == str(path))
+        gate = outputs.get("gate")
+        if gate is not None:
+            gate[0].set()
+            assert gate[1].wait(10)
         result = outputs[label]
         if isinstance(result, Exception):
             raise result
@@ -284,6 +290,30 @@ def test_two_healthy_accounts_publish_reference_numbers(fake_probe):
         assert row["updated"] == updated
         assert isinstance(row["age_s"], float)
         assert 29.0 <= row["age_s"] < 120.0
+
+    # A reset must fence a successful probe already inside the external call.
+    lifecycle = cau.refresh_lifecycle()
+    entered, release = threading.Event(), threading.Event()
+    outputs["gate"] = (entered, release)
+    worker = threading.Thread(target=cau.refresh_claude_account_usage)
+    worker.start()
+    try:
+        assert entered.wait(2)
+        assert worker in cau._reset_for_tests(join_timeout_s=0)
+        assert worker in cau._refresh_workers
+        assert not cau._last_good and not cau._last_failure
+    finally:
+        release.set()
+        worker.join(10)
+    assert not worker.is_alive()
+    assert worker not in cau._refresh_workers
+    assert not cau._last_good and not cau._last_failure
+    outputs.pop("gate")
+    calls_before = len(fake_probe[1])
+    cau.refresh_claude_account_usage(lifecycle=lifecycle)
+    assert len(fake_probe[1]) == calls_before  # admission captured before reset cannot start late probes
+    cau.refresh_claude_account_usage()
+    assert {row["status"] for row in cau.claude_accounts_snapshot().values()} == {"ok"}
 
 
 def test_pace_without_expected_keeps_leftover_unknown():
@@ -323,6 +353,27 @@ def test_failure_after_a_good_sample_is_stale_with_last_numbers(fake_probe):
     assert row_b["stale"] is True
     assert row_b["reason"] == "exit_nonzero"
     assert row_b["weekly"] == EXPECTED_B["weekly"]
+
+    # Distinct late failure/forget/defect paths may not mutate the reset cache.
+    for outcome in (
+        cau._ProbeFailed("timeout"),
+        cau.ClaudeAccountRefused("claude_account_unverified"),
+        RuntimeError("fixture"),
+    ):
+        entered, release = threading.Event(), threading.Event()
+        outputs["a"] = outputs["b"] = outcome
+        outputs["gate"] = (entered, release)
+        worker = threading.Thread(target=cau.refresh_claude_account_usage)
+        worker.start()
+        try:
+            assert entered.wait(2)
+            assert worker in cau._reset_for_tests(join_timeout_s=0)
+        finally:
+            release.set()
+            worker.join(10)
+        assert not worker.is_alive()
+        assert not cau._last_good and not cau._last_failure
+    outputs.pop("gate")
 
 
 def test_sample_past_the_ttl_is_stale(fake_probe):
@@ -1754,18 +1805,34 @@ def test_revalidation_is_single_flight(bound, monkeypatch):
     cau.refresh_claude_account_usage()
     release = threading.Event()
     started: list[str] = []
+    entered = threading.Event()
+    revalidate = cau.revalidate_claude_accounts
 
-    def slow():
+    def slow(**kwargs):
         started.append("run")
-        release.wait(10)
+        entered.set()
+        assert release.wait(10)
+        revalidate(**kwargs)
 
     monkeypatch.setattr(cau, "revalidate_claude_accounts", slow)
     _write_login_record(bound.home / ".claude.json", _ACCOUNT_A)
     for _ in range(5):
         cau.claude_accounts_snapshot()
-    release.set()
-    _settle()
+    try:
+        assert entered.wait(2)
+        assert cau._revalidation in cau._reset_for_tests(join_timeout_s=0)
+        assert cau._revalidation.is_alive()
+    finally:
+        release.set()
+        _settle()
     assert started == ["run"]
+    assert not cau._last_good and not cau._last_failure
+    previous = cau._revalidation
+    monkeypatch.setattr(cau, "_revalidation", threading.Thread(target=lambda: None))
+    try:
+        assert not cau._reset_for_tests()  # An owner whose Thread.start failed cannot be joined.
+    finally:
+        monkeypatch.setattr(cau, "_revalidation", previous)
 
 
 def test_revalidation_does_not_replace_a_newer_sample(bound, monkeypatch):

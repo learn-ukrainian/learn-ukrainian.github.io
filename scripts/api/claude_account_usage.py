@@ -200,7 +200,8 @@ _lock = threading.Lock()
 _last_good: dict[str, _Sample] = {}
 # label -> failure code of the newest probe or revalidation; absent after a success
 _last_failure: dict[str, str] = {}
-_revalidation_lock = threading.Lock()
+_lifecycle_generation = 0
+_refresh_workers: set[threading.Thread] = set()
 _revalidation: threading.Thread | None = None
 _sandbox_residue = 0  # probe sandboxes this process could not remove
 
@@ -808,8 +809,11 @@ def _record(
     *,
     accounts: _Accounts | None = None,
     forget: bool = False,
+    lifecycle: int | None = None,
 ) -> None:
     with _lock:
+        if lifecycle is not None and lifecycle != _lifecycle_generation:
+            return
         if row is not None:
             if accounts is None:
                 raise TypeError("a sample needs its attribution")
@@ -826,25 +830,45 @@ def _record(
         _last_failure[label] = failure or "probe_error"
 
 
-def _refresh_one(label: str, timeout_s: float) -> None:
+def _refresh_one(label: str, timeout_s: float, lifecycle: int) -> None:
+    with _lock:
+        if lifecycle != _lifecycle_generation:
+            return
     try:
         row, accounts = probe_account(label, timeout_s=timeout_s)
     except ClaudeAccountRefused as exc:
         # The binding no longer names a usable directory: its old numbers are
         # not this label's numbers any more.
-        _record(label, None, exc.code, forget=True)
+        _record(label, None, exc.code, forget=True, lifecycle=lifecycle)
     except _ProbeFailed as exc:
-        _record(label, None, exc.code)
+        _record(label, None, exc.code, lifecycle=lifecycle)
     except Exception:  # a probe defect leaves the row stale or unknown, never breaks refresh
-        _record(label, None, "probe_error")
+        _record(label, None, "probe_error", lifecycle=lifecycle)
     else:
-        _record(label, row, None, accounts=accounts)
+        _record(label, row, None, accounts=accounts, lifecycle=lifecycle)
 
 
-def refresh_claude_account_usage(*, timeout_s: float = PROBE_TIMEOUT_S) -> None:
+def refresh_lifecycle() -> int:
+    """Capture refresh ownership before a caller admits background work."""
+    with _lock:
+        return _lifecycle_generation
+
+
+def refresh_claude_account_usage(*, timeout_s: float = PROBE_TIMEOUT_S, lifecycle: int | None = None) -> None:
     """Probe every registered label in parallel. Background refresh only."""
-    with ThreadPoolExecutor(max_workers=len(CLAUDE_ACCOUNT_LABELS)) as executor:
-        list(executor.map(lambda label: _refresh_one(label, timeout_s), CLAUDE_ACCOUNT_LABELS))
+    worker = threading.current_thread()
+    with _lock:
+        if lifecycle is None:
+            lifecycle = _lifecycle_generation
+        if lifecycle != _lifecycle_generation:
+            return
+        _refresh_workers.add(worker)
+    try:
+        with ThreadPoolExecutor(max_workers=len(CLAUDE_ACCOUNT_LABELS)) as executor:
+            list(executor.map(lambda label: _refresh_one(label, timeout_s, lifecycle), CLAUDE_ACCOUNT_LABELS))
+    finally:
+        with _lock:
+            _refresh_workers.discard(worker)
 
 
 def _ambiguous(samples: Mapping[str, _Sample]) -> bool:
@@ -873,10 +897,12 @@ def _unchanged(label: str, watch: _Watch) -> bool:
         return False
 
 
-def _replace_sample(label: str, old: _Sample, new: _Sample | None, failure: str | None = None) -> None:
+def _replace_sample(
+    label: str, old: _Sample, new: _Sample | None, failure: str | None = None, *, lifecycle: int
+) -> None:
     """Re-arm or forget ``old`` unless a newer sample was recorded meanwhile."""
     with _lock:
-        if _last_good.get(label) is not old:
+        if lifecycle != _lifecycle_generation or _last_good.get(label) is not old:
             return
         if new is not None:
             _last_good[label] = new
@@ -885,41 +911,55 @@ def _replace_sample(label: str, old: _Sample, new: _Sample | None, failure: str 
         _last_failure[label] = failure or "probe_error"
 
 
-def _revalidate_one(label: str, sample: _Sample) -> None:
+def _revalidate_one(label: str, sample: _Sample, lifecycle: int | None = None) -> None:
     """Re-arm a sample whose files changed while its binding keeps its generation; else forget it."""
+    with _lock:
+        if lifecycle is None:
+            lifecycle = _lifecycle_generation
+        if lifecycle != _lifecycle_generation:
+            return
     watch = sample.accounts.watch
     try:
         with account_binding(label, verified=watch) as binding:
             current = binding.watch
     except ClaudeAccountRefused as exc:
-        _replace_sample(label, sample, None, exc.code)
+        _replace_sample(label, sample, None, exc.code, lifecycle=lifecycle)
         return
     except Exception:  # a validation defect withholds the row, never breaks the revalidation
-        _replace_sample(label, sample, None, "probe_error")
+        _replace_sample(label, sample, None, "probe_error", lifecycle=lifecycle)
         return
     if current.generation != watch.generation:
-        _replace_sample(label, sample, None, "not_probed")
+        _replace_sample(label, sample, None, "not_probed", lifecycle=lifecycle)
         return
-    _replace_sample(label, sample, replace(sample, accounts=replace(sample.accounts, watch=current)))
+    _replace_sample(
+        label, sample, replace(sample, accounts=replace(sample.accounts, watch=current)), lifecycle=lifecycle
+    )
 
 
-def revalidate_claude_accounts() -> None:
+def revalidate_claude_accounts(*, lifecycle: int | None = None) -> None:
     """Re-check every cached sample whose validated files changed. Background only; never probes."""
     with _lock:
+        if lifecycle is None:
+            lifecycle = _lifecycle_generation
+        if lifecycle != _lifecycle_generation:
+            return
         cached = dict(_last_good)
     for label, sample in cached.items():
         if not _unchanged(label, sample.accounts.watch):
-            _revalidate_one(label, sample)
+            _revalidate_one(label, sample, lifecycle)
 
 
 def _schedule_revalidation() -> None:
     """Start one background revalidation unless one is running; never waits for it."""
     global _revalidation
-    with _revalidation_lock:
+    with _lock:
         if _revalidation is not None and _revalidation.is_alive():
             return
         _revalidation = threading.Thread(
-            target=revalidate_claude_accounts, name="account-usage-revalidation", daemon=True
+            target=revalidate_claude_accounts,
+            kwargs={"lifecycle": _lifecycle_generation},
+            name="account-usage-revalidation",
+            daemon=True,
         )
         _revalidation.start()
 
@@ -1007,12 +1047,28 @@ def routing_budget_fields() -> dict[str, Any]:
     return {"claude_accounts": rows, "preferred_claude_account": preferred_claude_account(rows)}
 
 
-def _reset_for_tests() -> None:
-    global _sandbox_residue
-    thread = _revalidation
-    if thread is not None:
-        thread.join(timeout=60)
+def invalidate_refreshes(*, clear: bool = False) -> tuple[threading.Thread, ...]:
+    """Fence all admitted work atomically; return its owners for joining outside locks."""
+    global _lifecycle_generation, _sandbox_residue
     with _lock:
-        _last_good.clear()
-        _last_failure.clear()
-        _sandbox_residue = 0
+        _lifecycle_generation += 1
+        if clear:
+            _last_good.clear()
+            _last_failure.clear()
+            _sandbox_residue = 0
+        workers = set(_refresh_workers)
+        if _revalidation is not None:
+            workers.add(_revalidation)
+        return tuple(workers)
+
+
+def _reset_for_tests(*, join_timeout_s: float = 1.0) -> tuple[threading.Thread, ...]:
+    workers = invalidate_refreshes(clear=True)
+    deadline = time.monotonic() + max(0.0, join_timeout_s)
+    for worker in workers:
+        if worker is not threading.current_thread() and worker.is_alive():
+            worker.join(timeout=max(0.0, deadline - time.monotonic()))
+    live = tuple(worker for worker in workers if worker.is_alive())
+    if live:
+        _log.warning("claude account usage: reset fenced %s live refresh owners", len(live))
+    return live
