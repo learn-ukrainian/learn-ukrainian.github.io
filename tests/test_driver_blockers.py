@@ -1335,7 +1335,9 @@ def test_finalization_scan_requires_scope_and_available_store(tmp_path, monkeypa
     # Detectable mutation after a checked read cannot certify coverage.
     with monkeypatch.context() as unstable:
         read = blockers.read_unit
+        reads = []
         def changing(fd, name, **kwargs):
+            reads.append(name)
             unit = read(fd, name, **kwargs)
             if name == "worker.json":
                 (root / "worker.json").write_text(json.dumps({**original, "status": "failed"}))
@@ -1343,9 +1345,144 @@ def test_finalization_scan_requires_scope_and_available_store(tmp_path, monkeypa
         unstable.setattr(blockers, "read_unit", changing)
         with pytest.raises(ValueError, match="changed during read"):
             blockers._collect_finalization(observation(), scope, baseline)
+        assert reads == ["worker.json"]
     (root / "broken.json").write_text("{")
     with pytest.raises(ValueError, match="invalid task record"):
         blockers._collect_finalization(observation(), scope, baseline)
+    assert sidecar.read_bytes() == before
+
+    # Final verification can discard one otherwise valid full observation.
+    root = tmp_path / "transient-tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(root))
+    finalize_task(root)
+    verify = blockers._CheckedTasks.verify
+    for fault in ("file-version", "directory-stamp"):
+        finalize_task(root)
+        calls, descriptors, reads = [], [], []
+        clock = [0.0]
+        with monkeypatch.context() as transient:
+            def final_change(source, fault=fault, calls=calls, descriptors=descriptors, clock=clock):
+                calls.append(source)
+                descriptors.extend(fd for fd, _ in source.directories.values())
+                if len(calls) == 1:
+                    if fault == "file-version":
+                        replacement = root / "replacement.tmp"
+                        replacement.write_text(json.dumps({**original, "run_nonce": "fresh"}))
+                        replacement.replace(root / "worker.json")
+                        (root / "diagnostic.json").write_text('{}')
+                    else:
+                        info = root.stat()
+                        os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+                else:
+                    # A stable second attempt is accepted even after the budget.
+                    clock[0] = 50.0
+                verify(source)
+
+            def tracking_read(fd, name, reads=reads, **kwargs):
+                reads.append(name)
+                return read(fd, name, **kwargs)
+
+            transient.setattr(blockers._CheckedTasks, "verify", final_change)
+            transient.setattr(blockers, "read_unit", tracking_read)
+            transient.setattr(blockers.time, "monotonic", lambda clock=clock: clock[0])
+            stable, _, coverage = blockers._collect_finalization(observation(), scope, None)
+        assert len(calls) == 2 and clock[0] == 50.0
+        assert reads.count("worker.json") == 2
+        assert {row["id"] for row in stable["items"]} == {
+            "needs-finalize:worker:fresh" if fault == "file-version" else "needs-finalize:worker:round-1"
+        }
+        assert coverage["hot_units"] == 2 and coverage["hot_classes"]["UNKNOWN"] == 1
+        for fd in descriptors:
+            with pytest.raises(OSError):
+                os.fstat(fd)
+
+    # The budget only admits attempt two after a proved transient. A fully
+    # verified first result is accepted however long its collection took.
+    calls = []
+    clock = [0.0]
+    with monkeypatch.context() as late:
+        def late_stable(source):
+            calls.append(source)
+            clock[0] = 100.0
+            verify(source)
+        late.setattr(blockers._CheckedTasks, "verify", late_stable)
+        late.setattr(blockers.time, "monotonic", lambda clock=clock: clock[0])
+        stable, _, _ = blockers._collect_finalization(observation(), scope, None)
+    assert len(calls) == 1 and stable["items"]
+
+    for budget_exhausted in (False, True):
+        calls, descriptors = [], []
+        clock = [0.0]
+        with monkeypatch.context() as exhausted:
+            def unstable_final(source, calls=calls, descriptors=descriptors, clock=clock, budget_exhausted=budget_exhausted):
+                calls.append(source)
+                descriptors.extend(fd for fd, _ in source.directories.values())
+                info = root.stat()
+                os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+                if budget_exhausted:
+                    clock[0] = 10.0
+                verify(source)
+            exhausted.setattr(blockers._CheckedTasks, "verify", unstable_final)
+            exhausted.setattr(blockers.time, "monotonic", lambda clock=clock: clock[0])
+            with pytest.raises(blockers._TransientFinalizationExhausted, match=r"^TRANSIENT_SOURCE_UNSTABLE:.*baseline unchanged$"):
+                blockers._collect_finalization(observation(), scope, None)
+        assert len(calls) == (1 if budget_exhausted else 2)
+        for fd in descriptors:
+            with pytest.raises(OSError):
+                os.fstat(fd)
+
+    # A hard final-verification refusal wins even after a stamp has changed.
+    for fault in ("directory-replaced", "directory-missing", "symlink", "vanished", "nonregular", "new-archive"):
+        root = tmp_path / fault
+        monkeypatch.setenv("LU_TASKS_DIR", str(root))
+        finalize_task(root)
+        calls = []
+        with monkeypatch.context() as hard:
+            def unsafe_final(source, calls=calls, root=root, fault=fault):
+                calls.append(source)
+                info = root.stat()
+                os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+                if fault in {"directory-replaced", "directory-missing"}:
+                    root.rename(root.with_name(root.name + "-original"))
+                    if fault == "directory-replaced":
+                        root.mkdir()
+                elif fault == "new-archive":
+                    (root / "archive").mkdir()
+                else:
+                    (root / "worker.json").unlink()
+                    if fault == "symlink":
+                        (root / "worker.json").symlink_to(sidecar)
+                    elif fault == "nonregular":
+                        (root / "worker.json").mkdir()
+                verify(source)
+            hard.setattr(blockers._CheckedTasks, "verify", unsafe_final)
+            with pytest.raises(ValueError) as rejected:
+                blockers._collect_finalization(observation(), scope, baseline if fault == "new-archive" else None)
+            assert type(rejected.value) is ValueError
+        assert len(calls) == 1
+
+    # Parse, prior status and contradiction failures never reach retry handling.
+    for fault in ("malformed", "unknown-status", "contradictory"):
+        root = tmp_path / fault
+        monkeypatch.setenv("LU_TASKS_DIR", str(root))
+        finalize_task(root)
+        if fault == "malformed":
+            (root / "worker.json").write_text('{')
+        elif fault == "unknown-status":
+            finalize_task(root, status="mystery")
+        else:
+            (root / "copy.json").write_text(json.dumps({**original, "status": "done"}))
+        attempts = []
+        collect = blockers._collect_finalization_once
+        with monkeypatch.context() as hard:
+            def count_attempt(*args, attempts=attempts, collect=collect):
+                attempts.append(True)
+                return collect(*args)
+            hard.setattr(blockers, "_collect_finalization_once", count_attempt)
+            with pytest.raises(ValueError) as rejected:
+                blockers._collect_finalization(observation(), scope, baseline)
+            assert type(rejected.value) is ValueError
+        assert attempts == [True]
     assert sidecar.read_bytes() == before
 
 
@@ -1407,9 +1544,67 @@ def test_driver_snapshot_automatically_reports_aged_work_and_records_exact_post(
     paths[2].write_bytes(body)
     args = record_args(paths, "0")
     args[2] = selector
-    assert blockers.main(args) == 0
+    verify = blockers._CheckedTasks.verify
+    calls = []
+    with monkeypatch.context() as transient:
+        def changed_once(source):
+            calls.append(source)
+            assert ledger.with_name(ledger.name + ".lock").is_file()
+            if len(calls) == 1:
+                info = root.stat()
+                os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+            verify(source)
+        transient.setattr(blockers._CheckedTasks, "verify", changed_once)
+        assert blockers.main(args) == 0
+    assert len(calls) == 2
     assert json.loads(capsys.readouterr().out)["recorded"] is True
     before = ledger.read_bytes()
+    # A fresh row requires a new actual post, even after a permitted reread.
+    paths[1].write_text(json.dumps(receipt(body, key="next", stamp="2026-10-10T02:00:00Z")))
+    post_artifacts = [path.read_bytes() for path in paths[1:]]
+    next_args = record_args(paths)
+    next_args[2] = selector
+    calls = []
+    with monkeypatch.context() as transient:
+        def new_attention(source):
+            calls.append(source)
+            if len(calls) == 1:
+                finalize_task(root, task_id="new-attention")
+            verify(source)
+        transient.setattr(blockers._CheckedTasks, "verify", new_attention)
+        assert blockers.main(next_args) == 1
+    rejected = capsys.readouterr()
+    assert rejected.out == "" and "posted body omits NEW item id 'needs-finalize:new-attention:round-1'" in rejected.err
+    assert len(calls) == 2 and ledger.read_bytes() == before
+    assert [path.read_bytes() for path in paths[1:]] == post_artifacts
+    (root / "new-attention.json").unlink()
+
+    with monkeypatch.context() as transient:
+        calls = []
+        def always_changing(source):
+            calls.append(source)
+            info = root.stat()
+            os.utime(root, ns=(info.st_atime_ns, info.st_mtime_ns + 1_000_000_000))
+            verify(source)
+        transient.setattr(blockers._CheckedTasks, "verify", always_changing)
+        transient.setattr(blockers.time, "monotonic", lambda: 0.0)
+        assert blockers.main(next_args) == 1
+        rejected = capsys.readouterr()
+        assert rejected.out == "" and "TRANSIENT_SOURCE_UNSTABLE:" in rejected.err
+        assert len(calls) == 2
+        calls.clear()
+        assert blockers.main(delta_args) == 1
+        rejected = capsys.readouterr()
+        assert rejected.out == "" and "TRANSIENT_SOURCE_UNSTABLE:" in rejected.err
+        assert len(calls) == 2
+        assert ledger.read_bytes() == before
+        assert [path.read_bytes() for path in paths[1:]] == post_artifacts
+        calls.clear()
+        # Stale CAS is checked before collection and never causes a reread.
+        assert blockers.main(args) == 1
+        rejected = capsys.readouterr()
+        assert rejected.out == "" and "stale expected generation" in rejected.err
+        assert calls == [] and ledger.read_bytes() == before
     Clock.hour = 14
     # A newly written task file and advancing clock cannot trigger another post.
     finalize_task(root)

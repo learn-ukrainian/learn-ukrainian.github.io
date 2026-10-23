@@ -24,7 +24,7 @@ compares and records reports. It does not send messages or establish routing aut
    Post every `NEW` or `CHANGED` item with all five fields on the same line.
    Post each `RESOLVED` item as exactly `RESOLVED <id>` on its own line.
    The token is case-sensitive. Do not add other fields or prose to that line.
-   If the baseline is unknown, report every current blocker. If source coverage fails, stop the normal lane transition and escalate; do not post a partial replacement.
+   if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority.
    Partial observations cannot suppress reports or establish resolutions.
 
 3. Send the report to `epics` through the existing Fleet workflow under your own
@@ -134,8 +134,8 @@ positive lifecycle membership in another registered stream. This is removal of
 finalization attention, not evidence of task delivery. Ordinary caller blocker
 absence still requires the exact standalone `RESOLVED <id>` post line.
 
-Unsafe, missing, unreadable, unstable, malformed or contradictory required source
-stops the whole lane and preserves ledger bytes, generation and anchor. Unknown
+Unsafe, missing, unreadable, malformed or contradictory required source
+blocks recording and preserves ledger bytes, generation and anchor. Unknown
 attention cannot stand in for unread source. The accountable Infra driver owns
 and escalates unprovable exact-run evidence. Recovery requires authentic original
 bytes restored by the operator through existing custody procedures to a supported
@@ -144,7 +144,40 @@ dry run and operator-executed `--apply` support valid archived records; they do
 not recover missing backups, overwrite hot destinations or change status.
 Both `.moving` and `.unplaced-*` residue remain unavailable to ordinary lookup.
 A dated operator residual acceptance disposes only the escalation. It does not
-remove attention, supply `RESOLVED` evidence or unstop the lane.
+remove attention, supply `RESOLVED` evidence or enable recording.
+
+Only a proven final-verification stamp change on a regular file, or metadata
+change on the same checked directory identity, permits one fresh complete
+collection. Each attempt reads all hot JSON once with fresh descriptors, rows,
+ages and diagnostics, using the original caller observation and same baseline.
+Discard every partial attempt and close its descriptors. Validate combined rows,
+caller conflicts and bounds before final verification. Missing or replaced
+directories, vanished files, newly appearing previously absent archives, unsafe
+entries, mid-read changes and all parse, identity, status and contradiction
+errors remain hard failures. There are at most two complete collection attempts.
+The 10-second monotonic budget only decides whether attempt two may start after
+proven instability. Accept any fully verified first or second result at any
+elapsed time. Lateness alone never causes an error. This cooperative budget
+cannot interrupt a blocked filesystem call. Exhaustion exits 1 with
+`TRANSIENT_SOURCE_UNSTABLE: finalization source changed during observation; source coverage unknown; baseline unchanged`
+and emits no delta classes. Compatibility helpers retain their existing
+`ValueError` text.
+
+Fallback uncertainty uses an ordinary five-field caller row with a stable
+stream-specific ID outside `needs-finalize:`, state `TRANSIENT_SOURCE_UNSTABLE`
+or `SOURCE_COVERAGE_UNKNOWN`, the driver owner, a sanitized cause and next action.
+Retain every known current or unknown row from authentic observations. Never
+reconstruct rows from digests or use the uncertainty row to replace them.
+Fallback reporting is incomplete and cannot resolve rows or advance the baseline.
+Other ready work continues. Escalate authentic restoration or other recovery
+requiring operator authority.
+
+Collection retries stay inside the existing recorder lock and use its same
+loaded generation. Never retry the recorder, receipt/body checks, CAS, atomic
+write or publication. Reuse a successful post's immutable body and genuine
+receipt only if the fresh stable result passes all existing exact-field checks.
+New or changed attention missing from that body requires a new actual post
+before recording; never repost automatically.
 
 Before any real post, measure the actual combined observation, changed/resolved
 body, prospective **indented** ledger and diagnostics bytes. The existing 1 MiB

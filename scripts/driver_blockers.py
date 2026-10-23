@@ -12,6 +12,7 @@ import os
 import re
 import stat
 import sys
+import time
 import unicodedata
 from collections.abc import Iterator
 from datetime import UTC, datetime
@@ -36,14 +37,13 @@ USAGE_RULE = (
     "Put every owned blocker in --current with complete: true; complete means exhaustive coverage "
     "including explicit unknown attention, not proven historical attribution. Generated rows retain "
     "current reporting custody only until positive exact-run status or other-stream proof; unsafe "
-    "or lost source stops the lane and preserves its baseline. UNCHANGED means unchanged attention, "
+    "or lost source blocks recording and preserves its baseline. UNCHANGED means unchanged attention, "
     "not zero blockers. Measure actual observation, post, indented ledger and diagnostics bytes "
     "before posting; stop on overflow. Run "
     '`.venv/bin/python -m scripts.driver_blockers delta --epic "$SESSION_EPIC" --current blockers.json`; '
     "post ordinary reports to epics; select --reporting-target cto only for explicit operator escalation; "
     "post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); "
-    "With confirmed complete source coverage, if delta fails or the baseline is unknown, post everything currently blocking; "
-    "a coverage failure stops the lane and requires escalation without replacing its baseline; "
+    "if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority. "
     "after the post succeeds, record with the receipt and the exact posted body using "
     '`.venv/bin/python -m scripts.driver_blockers record --epic "$SESSION_EPIC" --current blockers.json '
     "--receipt receipt.json --body-file posted.md --expect-generation N` (N is the generation from delta)."
@@ -118,6 +118,14 @@ def _file_stamp(info: os.stat_result) -> tuple[int, ...]:
     return info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns
 
 
+class _TransientFinalizationChange(ValueError):
+    """Final verification found changed stamps after all safety checks passed."""
+
+
+class _TransientFinalizationExhausted(ValueError):
+    """A proven transient could not yield a stable complete observation."""
+
+
 class _CheckedTasks:
     """One ephemeral checked observation; no pathname body reads or winner selection."""
 
@@ -149,6 +157,8 @@ class _CheckedTasks:
         before = os.stat(name, dir_fd=fd, follow_symlinks=False)
         unit = read_unit(fd, name, max_bytes=MAX_TASK_RECORD_BYTES)
         after = os.stat(name, dir_fd=fd, follow_symlinks=False)
+        if not stat.S_ISREG(before.st_mode) or not stat.S_ISREG(after.st_mode):
+            raise ValueError("finalization task store unreadable, unsafe or oversized; attention is unknown")
         if unit is None or _file_stamp(before) != _file_stamp(after) or len(unit[0]) != after.st_size:
             raise ValueError("finalization source changed during read; attention is unknown")
         self.files[fd, name] = _file_stamp(after)
@@ -191,16 +201,23 @@ class _CheckedTasks:
         return runs[task_id, nonce], len(selected), copies
 
     def verify(self) -> None:
+        changed = None
         for (fd, name), stamp in self.files.items():
-            if _file_stamp(os.stat(name, dir_fd=fd, follow_symlinks=False)) != stamp:
-                raise ValueError("finalization source changed during observation; attention is unknown")
+            current = os.stat(name, dir_fd=fd, follow_symlinks=False)
+            if not stat.S_ISREG(current.st_mode) or current.st_size > MAX_TASK_RECORD_BYTES:
+                raise ValueError("finalization task store unreadable, unsafe or oversized; attention is unknown")
+            if _file_stamp(current) != stamp:
+                changed = "finalization source changed during observation; attention is unknown"
         for path, (fd, stamp) in self.directories.items():
             current = open_unit_dir(path, create=False)
             if current is None:
                 raise ValueError("finalization directory changed; attention is unknown")
             try:
-                if _file_stamp(os.fstat(fd)) != stamp or _file_stamp(os.fstat(current)) != stamp:
+                held_stamp, current_stamp = _file_stamp(os.fstat(fd)), _file_stamp(os.fstat(current))
+                if held_stamp[:2] != stamp[:2] or current_stamp[:2] != stamp[:2]:
                     raise ValueError("finalization directory changed; attention is unknown")
+                if held_stamp != stamp or current_stamp != stamp:
+                    changed = "finalization directory changed; attention is unknown"
             finally:
                 os.close(current)
         if self.archive_names is not None and self.archive_fd is None:
@@ -210,6 +227,8 @@ class _CheckedTasks:
                 pass
             else:
                 raise ValueError("finalization archive changed; attention is unknown")
+        if changed is not None:
+            raise _TransientFinalizationChange(changed)
 
 
 @contextlib.contextmanager
@@ -227,8 +246,11 @@ def _checked_tasks(task_root: Path):
 
 def _finalization_tasks(task_root: Path) -> Iterator[dict]:
     """Compatibility iterator over the complete checked hot observation."""
-    with _checked_tasks(task_root) as source:
-        yield from source.hot.values()
+    try:
+        with _checked_tasks(task_root) as source:
+            yield from source.hot.values()
+    except _TransientFinalizationChange as exc:
+        raise ValueError(str(exc)) from exc
 
 
 def _recognized_statuses() -> frozenset[str]:
@@ -340,6 +362,27 @@ def _attention_item(task: dict, stream: str, membership: str) -> dict:
 def _collect_finalization(
     observation: dict, scope: tuple[str, tuple[int, ...]], stored: dict | None
 ) -> tuple[dict, list[dict], dict]:
+    deadline = time.monotonic() + 10
+    try:
+        return _collect_finalization_once(observation, scope, stored)
+    except _TransientFinalizationChange as first:
+        if time.monotonic() >= deadline:
+            raise _TransientFinalizationExhausted(
+                "TRANSIENT_SOURCE_UNSTABLE: finalization source changed during observation; "
+                "source coverage unknown; baseline unchanged"
+            ) from first
+        try:
+            return _collect_finalization_once(observation, scope, stored)
+        except _TransientFinalizationChange as second:
+            raise _TransientFinalizationExhausted(
+                "TRANSIENT_SOURCE_UNSTABLE: finalization source changed during observation; "
+                "source coverage unknown; baseline unchanged"
+            ) from second
+
+
+def _collect_finalization_once(
+    observation: dict, scope: tuple[str, tuple[int, ...]], stored: dict | None
+) -> tuple[dict, list[dict], dict]:
     from scripts.common.task_store_paths import tasks_dir
 
     initiator, epics = scope
@@ -435,13 +478,13 @@ def _collect_finalization(
                 diagnostics["below_threshold"] += 1
                 continue
             generated[key] = _attention_item(task, stream, membership)
-    current = {item["id"]: item for item in observation["items"]}
-    for key, value in current.items():
-        if key.startswith("needs-finalize:") and (key not in generated or generated[key] != value):
-            raise ValueError("current snapshot conflicts with generated finalization attention")
-    result = validate_observation({**observation, "items": list((current | generated).values())}, observation["epic"])
-    if len(json.dumps(result, ensure_ascii=False).encode("utf-8")) > MAX_INPUT_BYTES:
-        raise ValueError("combined observation exceeds maximum byte size; nothing clipped")
+        current = {item["id"]: item for item in observation["items"]}
+        for key, value in current.items():
+            if key.startswith("needs-finalize:") and (key not in generated or generated[key] != value):
+                raise ValueError("current snapshot conflicts with generated finalization attention")
+        result = validate_observation({**observation, "items": list((current | generated).values())}, observation["epic"])
+        if len(json.dumps(result, ensure_ascii=False).encode("utf-8")) > MAX_INPUT_BYTES:
+            raise ValueError("combined observation exceeds maximum byte size; nothing clipped")
     return result, ages, diagnostics
 
 
@@ -886,10 +929,21 @@ and archive moves until positive exact-run status or other-stream proof.
 One checked hot read covers every JSON unit. Prior IDs check every exact-stem
 canonical/stamped/PID/nested archive copy without choosing a newest winner.
 Unknown statuses cannot prove resolution. Unsafe, unreadable, contradictory or
-missing required source stops the lane and preserves its baseline. The Infra
+missing required source blocks recording and preserves its baseline. The Infra
 driver escalates for authentic original restoration; .moving and .unplaced
 residue is unavailable. Dated residual acceptance never supplies resolution
-proof or unstops the lane. Caller absence still uses standalone RESOLVED.
+proof or enables recording. Caller absence still uses standalone RESOLVED.
+if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority.
+Use five-field caller uncertainty rows with a stable stream-specific ID outside
+needs-finalize:, state TRANSIENT_SOURCE_UNSTABLE or SOURCE_COVERAGE_UNKNOWN, driver
+owner, sanitized cause and next action. Retain every known current/unknown row
+from authentic observations; never reconstruct rows from digests.
+Each collection reads all hot JSON once. Only proven final-verification stamp
+changes on regular files or the same directory identity permit one fresh complete
+collection. The 10-second monotonic budget only controls starting attempt two.
+Accept a fully verified first or second result at any elapsed time; lateness
+alone is never an error. All safety, identity and hard read errors remain hard.
+Exhaustion exits 1 with TRANSIENT_SOURCE_UNSTABLE and no delta classes.
 UNCHANGED means unchanged attention, not zero blockers. Exact ages and coverage
 classes are diagnostics outside row fingerprints. Measure actual combined
 observation, changed/resolved post, indented ledger and diagnostics bytes BEFORE
