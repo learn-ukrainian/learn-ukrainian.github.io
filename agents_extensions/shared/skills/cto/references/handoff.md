@@ -27,8 +27,9 @@ The `handoff_note` contains:
   and repeats by ledger item ID. A repeat of a verified correction names its next control step.
 - Parked item IDs, locations, state and condition to resume, or none.
 - The next three actions by item ID.
-- Startup: CTO launcher, exact lineage and rollover IDs to resume with `thread-rollover`,
-  and the scratch helper path.
+- Startup: host CTO launcher `lu-start-cto [a|b] [--here]` naming the account, exact lineage
+  and rollover IDs to resume with `thread-rollover`, and the scratch helper path.
+  Never print or suggest the repository launcher script; it skips account selection.
 - Watcher IDs and what each watched, so the next session can re-arm them.
 
 Copy each worker's `run_nonce` whole: `delegate.py wait --run-nonce` compares it exactly, so a

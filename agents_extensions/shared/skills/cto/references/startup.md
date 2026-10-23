@@ -12,9 +12,9 @@ the first dispatch load the rules: `/api/rules?scope=core&format=markdown`,
 
 ## 1. Confirm the launch
 
-Confirm this session was started by the CTO launcher (see the private operations doc), not
-the plain repository wrapper or an ad hoc relaunch script: the launcher sets the CTO role
-prompt and the permission mode. If not, do not drive: write the handoff, record a
+Confirm this session used the host CTO launcher `lu-start-cto [a|b] [--here]`, naming the account.
+Never print or suggest the repository launcher script in a handoff or message; it skips account choice.
+If not launched this way, do not drive: write the handoff, record a
 [ledger](learning.md) entry, and ask for or perform a relaunch through that launcher.
 
 ## 2. Read the handoff and the mistakes ledger
