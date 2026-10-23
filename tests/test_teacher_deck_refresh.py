@@ -1544,6 +1544,23 @@ def test_checker_optional_manifest_json_cli(
     if diagnostic:
         assert diagnostic in result.stdout
 
+    if case != "missing":
+        manifest["files"] = [row for row in manifest["files"] if row["path"] != artifact.name]
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        assert artifact.exists() is (case != "absent")
+        result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+        assert result.returncode == (1 if diagnostic else 0), result
+        assert result.stderr == ""
+        payload = json.loads(report.read_text(encoding="utf-8"))
+        assert payload["ok"] is (diagnostic is None)
+        assert payload["errors"] == ([diagnostic] if diagnostic else [])
+        assert payload["entries"] == 16
+        for flag in ("aspectVerified", "atlasVerified", "withheldVerified", "reviewRequired"):
+            assert payload[flag] is publication
+        assert f"teacher deck check: {'FAIL (1 errors)' if diagnostic else 'PASS (0 errors)'}" in result.stdout
+        if diagnostic:
+            assert diagnostic in result.stdout
+
 
 @pytest.mark.parametrize(
     ("error", "message"),
