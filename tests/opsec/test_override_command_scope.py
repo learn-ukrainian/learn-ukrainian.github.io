@@ -120,7 +120,7 @@ for name in config["steps"]:
 
         # Publication runs from an isolated repository bound to the driver's destination and base (#10931).
         @contextlib.contextmanager
-        def execution(worktree, prepare=False):
+        def execution(worktree, prepare=False, **_kwargs):
             remote = config["remote"]
             with SafeGitContext(objects=worktree / ".git/objects", temp_root=Path(config["scratch"]),
                                 origin=remote, local_remote=True, borrow_objects=prepare) as context:
@@ -130,7 +130,7 @@ for name in config["steps"]:
                 yield context
 
         @contextlib.contextmanager
-        def no_credentials():
+        def no_credentials(**_kwargs):
             yield []
 
         delegate._finalize_execution_context = execution

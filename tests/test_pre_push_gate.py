@@ -285,7 +285,7 @@ def _bind_local_finalization(repo: Path, tmp_path: Path, monkeypatch: pytest.Mon
                     shutil.copytree(measurements, repo / ".git/lu-pre-push-gate", dirs_exist_ok=True)
 
     @contextlib.contextmanager
-    def no_credentials():
+    def no_credentials(**_kwargs):
         yield []
 
     monkeypatch.setattr(delegate, "_finalize_execution_context", execution)
@@ -361,7 +361,8 @@ def test_finalization_context_resolves_the_interpreter_without_a_local_venv(repo
     """Reject sys.executable bypasses and worktree roots in the shared interpreter resolver."""
     from scripts import delegate
 
-    linked = repo.parent / "linked"
+    linked = repo / ".worktrees/dispatch/codex/linked"
+    linked.parent.mkdir(parents=True)
     _git(repo, "worktree", "add", "-b", "linked", str(linked))
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
     sentinel = repo.parent / "sentinel-python"
