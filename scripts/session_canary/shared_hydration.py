@@ -14,12 +14,10 @@ import json
 import math
 import os
 import re
-import signal
 import socket
 import subprocess
 import threading
 import time
-from collections.abc import Sequence
 from contextlib import suppress
 from datetime import UTC, datetime
 from enum import StrEnum
@@ -248,42 +246,6 @@ def _reap_pid(process: subprocess.Popen[str], *, timeout: float) -> bool:
         if time.monotonic() >= end:
             return False
         time.sleep(min(0.01, max(0.0, end - time.monotonic())))
-
-
-def terminate_process_group(process: subprocess.Popen[str]) -> None:
-    """Terminate a detached child group and synchronously reap its leader."""
-    with suppress(ProcessLookupError):
-        os.killpg(process.pid, signal.SIGTERM)
-    if _reap_pid(process, timeout=0.200):
-        return
-    with suppress(ProcessLookupError):
-        os.killpg(process.pid, signal.SIGKILL)
-    _reap_pid(process, timeout=0.200)
-
-
-def run_gh_json(arguments: Sequence[str], *, deadline: float, cwd: Path = ROOT) -> dict[str, Any] | None:
-    """Run a bounded ``gh`` query without allowing stdout into a capsule.
-
-    This is an optional enrichment primitive.  Callers receive parsed,
-    sanitized JSON only; timeouts return ``None`` after process-group cleanup.
-    """
-    remaining = deadline - time.monotonic()
-    if remaining <= 0:
-        return None
-    from scripts.common.github_client import run
-
-    try:
-        process = run(["gh", *arguments], cwd=cwd, capture_output=True, text=True, timeout=remaining, fresh=True)
-    except (OSError, subprocess.TimeoutExpired):
-        return None
-    stdout = process.stdout
-    if process.returncode != 0 or time.monotonic() > deadline:
-        return None
-    try:
-        payload = json.loads(stdout)
-    except json.JSONDecodeError:
-        return None
-    return sanitize_hydration_value(payload, repo_root=cwd)
 
 
 def _unavailable(reason: str) -> dict[str, str]:

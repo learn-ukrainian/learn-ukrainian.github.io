@@ -587,18 +587,6 @@ def board_handoff_view(
     return display_repo_path(repo, chosen.path), True
 
 
-def board_handoff_rel(
-    repo: Path,
-    epic: str,
-    select: Callable[[], HandoffSelection],
-    *,
-    out_dir: Path | None = None,
-) -> str:
-    """Cold-start board label. See :func:`board_handoff_view`."""
-    label, _preview = board_handoff_view(repo, epic, select, out_dir=out_dir)
-    return label
-
-
 def ordered_mint_handoffs(candidates: Sequence[Path], explicit: Path | None) -> list[Path]:
     """``--handoff`` first, then the ranked candidates. Superseded paths drop out."""
     ordered: list[Path] = []
