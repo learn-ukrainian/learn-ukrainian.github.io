@@ -188,8 +188,9 @@ def call_judge(prompt: str, task_id: str, family: str, model: str, from_agent: s
         "--task-id", task_id,
         "--from", from_agent,
         "--to-model", model,
-        "--stdout-only",
     ]
+    if target == "agy":
+        argv.append("--stdout-only")
     proc = subprocess.run(
         argv, cwd=str(PROJECT_ROOT), input=prompt,
         capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,

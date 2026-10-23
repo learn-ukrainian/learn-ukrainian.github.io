@@ -148,7 +148,9 @@ class BridgeCaller:
         task_id = f"{self.run_id}-{_slug(prompt.id)}-{_slug(model)}"
         base = [str(PYTHON), str(BRIDGE)]
         target = "agy" if family == "gemini" else family
-        argv = [*base, f"ask-{target}", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--stdout-only"]
+        argv = [*base, f"ask-{target}", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model]
+        if target == "agy":
+            argv.append("--stdout-only")
         return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
 
     def __call__(self, prompt: PromptCase, model: str) -> tuple[BridgeCall, str]:

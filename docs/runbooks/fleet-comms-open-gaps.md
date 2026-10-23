@@ -245,6 +245,10 @@ ACP carries the conversation. Successful one-shot output is returned on stdout
 and, when requested, `--output-path`. A nonzero exit or empty stdout is not a
 response. Callers must not recover it from legacy `messages` rows.
 
+The Claude and Codex commands return nonempty response stdout without an
+output flag. Their parsers do not accept `--stdout-only`. The AGY command
+accepts `--stdout-only`, which the audit callers retain for that family.
+
 | Caller | Response destination |
 | --- | --- |
 | `scripts/audit/russianism_eval.py`, `scripts/audit/russianism_judge.py` | ACP stdout for Claude, Codex, and AGY; no legacy database lookup |
