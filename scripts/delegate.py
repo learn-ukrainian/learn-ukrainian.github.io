@@ -2538,6 +2538,9 @@ def _ensure_sibling_repo_worktree(
     run_nonce: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_branch: str | None = None,
+    pinned_head_sha: str | None = None,
+    repository: str | None = None,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
@@ -2545,9 +2548,20 @@ def _ensure_sibling_repo_worktree(
     ``_fetch_base``) stay on :data:`_REPO_ROOT`. Sibling repos get a narrow
     fetch + ``git worktree add`` path so private product/infra trees are not
     forced through public monorepo provisioning (#672 P2.1). ``validated_path``,
-    when given, is used as is and never resolved again (#8775).
+    when given, is used as is and never resolved again (#8775). Direct branch
+    reviews fetch and verify the admitted pin, then detach at that exact commit.
     """
+    if review_branch:
+        error = _validated_path_changed_error("--repo", Path(repo_root))
+        if error:
+            raise ValueError(error)
     root = Path(repo_root).resolve()
+    if review_branch:
+        from scripts.review.target_resolution import TargetResolutionError, live_canonical_branch_head
+
+        review_branch = _validate_branch_reuse_name(review_branch, repo_root=root)
+        if not detached or not repository or not re.fullmatch(r"[0-9a-f]{40}", pinned_head_sha or ""):
+            raise ValueError("sibling branch review requires a detached worktree and a concrete repository/head pin")
     if validated_path is not None:
         worktree_path = validated_path
     elif raw_path is None:
@@ -2556,11 +2570,23 @@ def _ensure_sibling_repo_worktree(
         path = Path(raw_path).expanduser()
         if not path.is_absolute():
             path = root / path
+        if review_branch:
+            error = _caller_path_control_char_error("--worktree", str(path))
+            error = error or _validated_path_changed_error("--worktree", path)
+            if error:
+                raise ValueError(error)
         worktree_path = path.resolve()
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
         raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
+    if review_branch:
+        # Apply the existing path guards to automatic sibling snapshots too.
+        anchor = root / ".worktrees" / "dispatch" / agent
+        error = _caller_path_control_char_error("--worktree", str(worktree_path))
+        error = error or _validated_path_changed_error("--worktree", worktree_path)
+        if error or worktree_path == anchor or not worktree_path.is_relative_to(anchor):
+            raise ValueError(error or "sibling review worktree must be inside the dispatching agent's subtree")
     worktree_branch = None if detached else _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -2588,14 +2614,20 @@ def _ensure_sibling_repo_worktree(
         raise ValueError(
             f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
         )
-    branch_name = _base_branch_name(base)
+    branch_name = review_branch or _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
+    if review_branch:
+        try:
+            remote_sha = live_canonical_branch_head(root, review_branch, repository=repository)
+        except TargetResolutionError as exc:
+            raise RuntimeError(str(exc)) from exc
+        _refuse_if_gate_head_moved(remote_sha, pinned_head_sha)
     try:
         fetch_proc = subprocess.run(
             [
                 "git",
                 "fetch",
-                "origin",
+                f"https://github.com/{repository}.git" if review_branch else "origin",
                 f"+refs/heads/{branch_name}:refs/remotes/origin/{branch_name}",
             ],
             cwd=root,
@@ -2610,12 +2642,16 @@ def _ensure_sibling_repo_worktree(
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
-    if _resolve_sha(root, origin_ref) is None:
+    fetched_sha = _resolve_sha(root, origin_ref)
+    if fetched_sha is None:
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
+    if review_branch:
+        _refuse_if_gate_head_moved(fetched_sha, pinned_head_sha)
+    checkout_ref = pinned_head_sha if review_branch else origin_ref
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
     add_command = ["git", "worktree", "add"]
     if detached:
-        add_command.extend(["--detach", str(worktree_path), origin_ref])
+        add_command.extend(["--detach", str(worktree_path), checkout_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), origin_ref])
     _add_reserved_worktree(
@@ -2629,6 +2665,8 @@ def _ensure_sibling_repo_worktree(
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
+    if review_branch:
+        _refuse_if_gate_head_moved(actual_sha, pinned_head_sha)
     telemetry["base_sha"] = actual_sha
     return worktree_path, worktree_branch, telemetry
 
@@ -3958,12 +3996,12 @@ def _fetch_base(base: str) -> bool:
     return True
 
 
-def _validate_branch_reuse_name(branch: str) -> str:
+def _validate_branch_reuse_name(branch: str, *, repo_root: Path | None = None) -> str:
     """Reject unsafe or ambiguous ``--branch`` values before attaching a worktree."""
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
     try:
-        normalized = validate_plain_branch_name(branch, repo_root=_REPO_ROOT)
+        normalized = validate_plain_branch_name(branch, repo_root=repo_root if repo_root is not None else _REPO_ROOT)
     except UnsafeBranchNameError as exc:
         raise ValueError(
             "--branch must be a local branch name without origin/, github/, or refs/ "
@@ -14639,13 +14677,20 @@ def _dispatch(
 
     # #672 P2.1: allowlisted --repo retargets worktree creation to a sibling
     # checkout. Control-plane task state stays on the public primary.
-    if not fleet_repo.default and requested_branch:
+    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
+    sibling_branch_review = not fleet_repo.default and direct_branch_review and args.mode == "read-only"
+    if not fleet_repo.default and requested_branch and not sibling_branch_review:
         print(
             "❌ --branch attach on sibling --repo is not supported in P2.1; "
             "use --repo with bare --worktree for a fresh branch, or the manual --cwd flow.",
             file=sys.stderr,
         )
         return 2
+    if sibling_branch_review:
+        error = _validated_path_changed_error("--repo", _REPO_ROOT.parent / fleet_repo.local_name)
+        if error:
+            print(error, file=sys.stderr)
+            return 2
     # Explicit primary-root callers need the same isolation as the default
     # read-only flow (#10025). Keep their dispatch working without snapshotting
     # other drivers' local edits in that shared checkout.
@@ -14655,7 +14700,6 @@ def _dispatch(
         validated_cwd = None
     # Direct verdict reviews snapshot the admitted branch without touching its
     # author. Ordinary continuation and attempt-owned inputs keep branch reuse.
-    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
     detached_read_only = args.mode == "read-only" and not args.cwd and (direct_branch_review or not worktree_arg)
     if detached_read_only:
         worktree_arg = worktree_arg or "auto"
@@ -15367,7 +15411,7 @@ def _dispatch(
             # base or creating a worktree. Both can spawn git subprocesses.
             try:
                 if requested_branch:
-                    _validate_branch_reuse_name(requested_branch)
+                    _validate_branch_reuse_name(requested_branch, repo_root=target_repo_root)
                 changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
                 if changed_error:
                     raise ValueError(changed_error.removeprefix("❌ "))
@@ -15435,7 +15479,8 @@ def _dispatch(
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
-                    dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)
+                    (dry_run_worktree if dry_run_worktree and dry_run_worktree.exists() else None)
+                    or validated_cwd or target_repo_root
                 ),
                 "initiator": attribution.initiator,
                 "attribution_source": attribution.source,
@@ -15661,6 +15706,9 @@ def _dispatch(
                     base=worktree_base,
                     run_nonce=run_nonce,
                     detached=detached_read_only,
+                    review_branch=requested_branch if sibling_branch_review else None,
+                    pinned_head_sha=getattr(args, "pinned_head", None),
+                    repository=fleet_repo.github,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
