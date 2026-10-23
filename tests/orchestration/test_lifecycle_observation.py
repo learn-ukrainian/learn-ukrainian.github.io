@@ -250,13 +250,54 @@ def test_closeout_retains_everything_when_observation_write_fails(observation_ca
 
 
 def test_capture_replays_without_changing_ledger(observation_case):
+    """Empty task history must capture once without certifying delivery."""
     from scripts.orchestration import lifecycle_observation as lo
 
-    repo, worktree, ledger, *_ = observation_case
+    repo, worktree, ledger, task_file, *_ = observation_case
     assert lo.before_reap(repo, worktree)[0]["status"] == "recorded"
     before = ledger.read_bytes()
     assert lo.before_reap(repo, worktree) == []
     assert ledger.read_bytes() == before
+
+    task = json.loads(task_file.read_bytes())
+    base = task["worktree_base_sha"]
+    git(worktree, "reset", "--hard", base)
+    task.update(status="no_deliverable", final_branch_head_commit=base)
+    task_file.write_text(json.dumps(task))
+    with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_CONFLICT"):
+        lo.before_reap(repo, worktree)
+    assert ledger.read_bytes() == before
+
+    tl.write_lifecycle(ledger, _ledger())
+    assert lo.before_reap(repo, worktree)[0]["status"] == "recorded"
+    captured = tl.load_lifecycle(ledger)
+    assert len(captured["observation_receipts"]) == 1
+    local = captured["observation_receipts"][0]["observation"]["local"]
+    assert local["commits"] == []
+    assert local["changed_paths"] == []
+    assert local["forbidden_paths"] == []
+    assert tl._local_readiness(local) == ["no task commits were available for X-Agent validation"]
+    assert tl._latest_premerge_local(captured) is None
+    assert captured["evidence"] == _ledger()["evidence"]
+    assert captured["observation_receipts"][0]["observation"]["projection"]["goal_reached"] is False
+    before = ledger.read_bytes()
+    assert lo.before_reap(repo, worktree) == []
+    assert ledger.read_bytes() == before
+    assert worktree.exists()
+
+    (worktree / "unfinished").write_text("untracked work\n")
+    with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE"):
+        lo.before_reap(repo, worktree)
+    assert ledger.read_bytes() == before
+    git(worktree, "add", "unfinished")
+    with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE"):
+        lo.before_reap(repo, worktree)
+    assert ledger.read_bytes() == before
+    git(worktree, "commit", "-m", "unexpected work\n\nX-Agent: codex/example")
+    with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE"):
+        lo.before_reap(repo, worktree)
+    assert ledger.read_bytes() == before
+    assert worktree.exists()
 
 
 def test_capture_after_fast_forward_merge_keeps_commits(observation_case):
@@ -344,6 +385,14 @@ def test_capture_wrong_branch_refuses_reap(observation_case):
     task_file.write_text(json.dumps(task))
     with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE"):
         lo.before_reap(repo, worktree)
+    base = task["worktree_base_sha"]
+    git(worktree, "reset", "--hard", base)
+    task.update(status="no_deliverable", final_branch_head_commit=base)
+    task_file.write_text(json.dumps(task))
+    with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE"):
+        lo.before_reap(repo, worktree)
+    assert tl.load_lifecycle(observation_case[2])["observation_receipts"] == []
+    assert worktree.exists()
 
 
 def test_blank_bypass_reason_refuses(observation_case):
@@ -535,6 +584,8 @@ def test_observation_counts_only_task_history(observation_case, operation, histo
 
 
 def test_task_commit_range_refuses_ambiguous_absorbed_merge(observation_case):
+    from scripts.orchestration import lifecycle_observation as lo
+
     repo, worktree, _, task_file, *_ = observation_case
     base = json.loads(task_file.read_bytes())["worktree_base_sha"]
     (repo / "main-only").write_text("unrelated PR\n")
@@ -552,3 +603,8 @@ def test_task_commit_range_refuses_ambiguous_absorbed_merge(observation_case):
     assert local["commits"] == []
     assert local["changed_paths"] == []
     assert tl._local_readiness(local) == ["no task commits were available for X-Agent validation"]
+    before = observation_case[2].read_bytes()
+    with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE"):
+        lo.before_reap(repo, worktree)
+    assert observation_case[2].read_bytes() == before
+    assert worktree.exists()

@@ -117,7 +117,7 @@ def before_reap(
         publish_cache=False,
     )
     receipts = []
-    for _, task in records:
+    for task_path, task in records:
         carrier = task.get("task_lifecycle")
         if not carrier:
             continue
@@ -130,8 +130,7 @@ def before_reap(
             ledger = tl.load_lifecycle(path)
             if ledger["lifecycle_id"] != carrier["lifecycle_id"]:
                 raise ObservationRefusal("LIFECYCLE_IDENTITY_MISMATCH")
-            if tl._latest_premerge_local(ledger) is not None:
-                continue
+            previous = tl._latest_premerge_local(ledger)
             if not worktree.is_dir():
                 raise ObservationRefusal("LIFECYCLE_WORKTREE_ABSENT")
             head = tl._run_git(worktree, ["rev-parse", "HEAD"])
@@ -148,13 +147,76 @@ def before_reap(
                     "dispatch_worktree_used",
                     "worktree_present",
                     "worktree_branch_matches",
-                    "commits",
                 )
-            ):
+            ) or not isinstance(local.get("commits"), list):
                 raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE")
+            if local["commits"] == [] or task.get("status") == "no_deliverable":
+                # An empty range is also the observer's unavailable-history
+                # fallback. Prove a clean, unchanged attempt from its source
+                # and fresh Git authority before retaining that empty result.
+                base = task.get("worktree_base_sha")
+                task_id, nonce = task.get("task_id"), task.get("run_nonce")
+                branch = task.get("worktree_branch")
+                source, _ = _source(task_path, primary)
+                if (
+                    source != task
+                    or carrier.get("identity") != ledger["identity"]
+                    or task.get("status") != "no_deliverable"
+                    or not isinstance(task_id, str) or not task_id.strip()
+                    or not isinstance(nonce, str) or not nonce.strip()
+                    or not isinstance(branch, str) or not branch.strip()
+                    or not isinstance(base, str) or re.fullmatch(r"[0-9a-f]{40}", base) is None
+                    or head != base
+                    or task.get("final_branch_head_commit") != head
+                    or task.get("worktree_path") != str(worktree)
+                    or task_path != ignored_task_output.task_record_path(task_path.parent, task_id)
+                    or worktree.resolve() != worktree.absolute()
+                    or local.get("changed_paths") != []
+                    or local.get("forbidden_paths") != []
+                    or local["commits"] != []
+                    or local.get("worktree") != str(worktree.resolve())
+                    or local.get("branch") != branch
+                    or local.get("actual_worktree_branch") != branch
+                ):
+                    raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE")
+                try:
+                    if (
+                        tl.canonical_state_root(worktree) != primary
+                        or Path(tl._run_git(worktree, ["rev-parse", "--show-toplevel"])).resolve() != worktree.resolve()
+                        or tl._run_git(worktree, ["rev-parse", "--verify", f"{base}^{{commit}}"])
+                        != base
+                        or tl._run_git(worktree, ["symbolic-ref", "--short", "HEAD"]) != branch
+                        or tl._run_git(worktree, ["status", "--porcelain", "--untracked-files=all"])
+                        or tl.task_commit_range(worktree, head, base) != f"{base}..{head}"
+                        or tl._run_git(worktree, ["rev-list", f"{base}..{head}"])
+                        or tl._run_git(worktree, ["diff", "--name-only", base, head])
+                        or tl._run_git(worktree, ["rev-parse", "HEAD"]) != head
+                    ):
+                        raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE")
+                except tl.LifecycleError as exc:
+                    raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE") from exc
+                # A prior delivery observation cannot certify this unchanged
+                # attempt. Empty captures use reconcile's existing replay key;
+                # delivery readiness still requires nonempty task commits.
+                normalized = _local_paths(repo_root, local)
+                for prior_receipt in ledger["observation_receipts"]:
+                    prior = (prior_receipt.get("observation") or {}).get("local")
+                    if isinstance(prior, dict) and (
+                        prior.get("worktree") in (normalized["worktree"], str(worktree))
+                        or prior.get("branch") == branch
+                    ):
+                        prior_local = (
+                            _local_paths(repo_root, prior)
+                            if Path(prior.get("worktree") or "").is_absolute() else prior
+                        )
+                        if prior_local != normalized:
+                            raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_CONFLICT")
+            elif previous is not None:
+                continue
             now = datetime.now(UTC).isoformat()
-            receipt, _ = _append(path, ledger, _local_paths(repo_root, local), now)
-            receipts.append({"status": "recorded", "receipt_id": receipt["id"]})
+            receipt, replayed = _append(path, ledger, _local_paths(repo_root, local), now)
+            if not replayed:
+                receipts.append({"status": "recorded", "receipt_id": receipt["id"]})
     return receipts
 
 
