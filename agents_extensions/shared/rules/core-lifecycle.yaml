@@ -131,7 +131,7 @@ p2-kimi:
   review_by: '2026-11-22'
 
 p2-glm:
-  origin: '#6468'
+  origin: '#4316, #7150'
   tier: task_scoped
   enforcement: {kind: text}
   review_by: '2026-11-22'
@@ -289,7 +289,7 @@ p5-scope:
   review_by: '2026-11-22'
 
 p5-soviet:
-  origin: '#8039'
+  origin: '#8094'
   tier: PROTECTED
   enforcement: {kind: text}
   review_by: '2026-11-22'
@@ -369,7 +369,7 @@ p9-mission:
   review_by: '2026-11-22'
 
 p9-sources:
-  origin: '#8039'
+  origin: '#8094'
   tier: PROTECTED
   enforcement: {kind: text}
   review_by: '2026-11-22'
@@ -394,7 +394,7 @@ p9-immersion:
 
 p9-rights:
   origin: '#9618'
-  tier: PROTECTED
+  tier: core
   enforcement: {kind: text}
   review_by: '2026-11-22'
 
