@@ -50,9 +50,11 @@ def _leases(root: Path) -> dict[str, dict]:
     return found
 
 
-def _wait_for(predicate, *, timeout_s: float = 10.0, what: str = "condition"):
+def _wait_for(predicate, *, timeout_s: float = 10.0, what: str = "condition", proc=None):
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
+        if proc is not None and proc.poll() is not None:
+            raise AssertionError(f"wrapper exited with {proc.returncode} while waiting for {what}")
         value = predicate()
         if value:
             return value
@@ -97,8 +99,9 @@ def _spawn_cli(
 STUBBORN = [
     sys.executable,
     "-c",
-    "import signal, time; signal.signal(signal.SIGTERM, signal.SIG_IGN); "
-    "signal.signal(signal.SIGINT, signal.SIG_IGN); time.sleep(30)",
+    "import signal, sys, time; from pathlib import Path; "
+    "signal.signal(signal.SIGTERM, signal.SIG_IGN); "
+    "signal.signal(signal.SIGINT, signal.SIG_IGN); Path(sys.argv[1]).touch(); time.sleep(30)",
 ]
 
 
@@ -222,11 +225,11 @@ def test_wrapper_forwards_signal_waits_and_cleans(tmp_path: Path, signum: int, e
 
 def test_wrapper_escalates_to_sigkill_when_child_ignores_term(tmp_path: Path) -> None:
     root = tmp_path / "root"
-    proc = _spawn_cli(root, "stubborn", STUBBORN, cli_args=("--kill-after-s", "0.5"))
+    ready = tmp_path / "handlers-ready"
+    proc = _spawn_cli(root, "stubborn", [*STUBBORN, str(ready)], cli_args=("--kill-after-s", "0.5"))
     try:
         name, lease = _wait_running_lease(root)
-        _wait_for(lambda: _pid_alive(lease["child"]["pid"]), what="stubborn child")
-        time.sleep(0.3)  # let the child install its SIG_IGN handlers
+        _wait_for(ready.is_file, what=f"SIG_IGN handlers in child {lease['child']['pid']}", proc=proc)
         proc.send_signal(signal.SIGTERM)
         proc.wait(timeout=15)
     finally:
