@@ -18,6 +18,7 @@ from typing import Any
 
 from scripts.fleet import ignored_task_output
 from scripts.orchestration import task_lifecycle as tl
+from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
 
 class ObservationRefusal(tl.LifecycleError):
@@ -148,10 +149,27 @@ def before_reap(
                     "dispatch_worktree_used",
                     "worktree_present",
                     "worktree_branch_matches",
-                    "commits",
                 )
             ):
                 raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE")
+            if not local.get("commits"):
+                # Empty observations can also conceal Git errors. Only an exact
+                # bound base and a clean terminal attempt prove no authored work.
+                base = task.get("worktree_base_sha")
+                if (
+                    task.get("status") not in RELEASED_TASK_STATUSES
+                    or not task.get("worktree_branch")
+                    or not isinstance(base, str)
+                    or not re.fullmatch(r"[0-9a-f]{40}", base)
+                    or base != head
+                    or local.get("changed_paths")
+                    or local.get("forbidden_paths")
+                    or tl._run_git(worktree, ["rev-parse", "--verify", f"{base}^{{commit}}"]) != head
+                    or tl._run_git(worktree, ["status", "--porcelain", "--untracked-files=all"])
+                ):
+                    raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE")
+                # Capture facts only. Readiness still requires authored commits,
+                # and the common reaper still owns every removal safety gate.
             now = datetime.now(UTC).isoformat()
             receipt, _ = _append(path, ledger, _local_paths(repo_root, local), now)
             receipts.append({"status": "recorded", "receipt_id": receipt["id"]})

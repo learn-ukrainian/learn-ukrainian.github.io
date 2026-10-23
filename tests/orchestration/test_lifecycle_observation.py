@@ -535,7 +535,9 @@ def test_observation_counts_only_task_history(observation_case, operation, histo
 
 
 def test_task_commit_range_refuses_ambiguous_absorbed_merge(observation_case):
-    repo, worktree, _, task_file, *_ = observation_case
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, ledger, task_file, *_ = observation_case
     base = json.loads(task_file.read_bytes())["worktree_base_sha"]
     (repo / "main-only").write_text("unrelated PR\n")
     git(repo, "add", "main-only")
@@ -552,3 +554,7 @@ def test_task_commit_range_refuses_ambiguous_absorbed_merge(observation_case):
     assert local["commits"] == []
     assert local["changed_paths"] == []
     assert tl._local_readiness(local) == ["no task commits were available for X-Agent validation"]
+    before = ledger.read_bytes()
+    with pytest.raises(lo.ObservationRefusal, match="LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE"):
+        lo.before_reap(repo, worktree)
+    assert ledger.read_bytes() == before
