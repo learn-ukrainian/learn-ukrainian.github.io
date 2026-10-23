@@ -12,12 +12,15 @@ from __future__ import annotations
 import base64
 import hashlib
 import os
+import re
 import shlex
 import shutil
 import stat
 import subprocess
 import tempfile
 from pathlib import Path
+
+from scripts.orchestration.fleet_repos import FleetRepo, load_fleet_repos
 
 GIT = shutil.which("git", path=os.defpath) or "/usr/bin/git"
 CANONICAL_ORIGIN = "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git"
@@ -35,7 +38,7 @@ class SafeGitContext:
     """One fresh bare repo and allowlisted environment, disposed on exit.
 
     ``local_remote`` is an explicit driver/test injection, never inferred from
-    source config. Production rescue supplies the pinned HTTPS destination.
+    source config. Production rescue supplies the registered HTTPS destination.
     """
 
     def __init__(
@@ -47,9 +50,18 @@ class SafeGitContext:
         token: str | None = None,
         local_remote: bool = False,
         borrow_objects: bool = True,
+        repository: FleetRepo | None = None,
     ) -> None:
-        if origin != CANONICAL_ORIGIN and not (local_remote and Path(origin).is_absolute()):
+        registered = load_fleet_repos()
+        selected = repository or next(repo for repo in registered.values() if repo.default)
+        if registered.get(selected.key) != selected:
             raise SnapshotRefusal("rescue_push_url_unavailable")
+        canonical = f"https://github.com/{selected.github}.git"
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", selected.github):
+            raise SnapshotRefusal("rescue_push_url_unavailable")
+        if origin != canonical and not (local_remote and Path(origin).is_absolute()):
+            raise SnapshotRefusal("rescue_push_url_unavailable")
+        self.repository = selected.github
         self.objects = objects.resolve(strict=True)
         self.temp_root = temp_root
         self.origin = origin
@@ -90,7 +102,7 @@ class SafeGitContext:
             identity = ""
             if self.token:
                 header = base64.b64encode(f"x-access-token:{self.token}".encode()).decode()
-                identity = f'[http "{CANONICAL_ORIGIN}"]\n\textraHeader = "Authorization: Basic {header}"\n'
+                identity = f'[http "{self.origin}"]\n\textraHeader = "Authorization: Basic {header}"\n'
             self.git_dir.joinpath("config").write_text(
                 "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
                 "\tfilemode = true\n\tsymlinks = true\n\tcommitGraph = false\n\tuseReplaceRefs = false\n"

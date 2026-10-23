@@ -252,6 +252,7 @@ from scripts.orchestration.dead_worker_state import (
     worker_liveness,
     write_state_unlocked,
 )
+from scripts.orchestration.fleet_repos import FleetRepo, load_fleet_repos, resolve_fleet_repo
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
@@ -7462,7 +7463,9 @@ def _worktree_diff_read(
     return diff_proc.stdout, None
 
 
-def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+def _auto_finalize_additions_deletions(
+    worktree: Path, *, task_id: str | None = None
+) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
     """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
 
     Renames are not detected: git pairs a move only above a similarity
@@ -7472,7 +7475,7 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
     # The move inventory stages intent-to-add entries too. Its disposable
     # index must not execute the source's hooks or configured filters.
     try:
-        with _finalize_execution_context(worktree, prepare=True) as context:
+        with _finalize_execution_context(worktree, prepare=True, task_id=task_id) as context:
             source = context.source_git_dir
             head = context.read_source_ref(source, "HEAD")
             if head.returncode:
@@ -8326,7 +8329,7 @@ def _build_worker_env(
 
 @contextlib.contextmanager
 def _finalize_execution_context(
-    worktree: Path, *, prepare: bool = False, task_id: str | None = None
+    worktree: Path, *, prepare: bool = False, task_id: str | None = None, validated_driver_base: str | None = None
 ) -> Iterator[SafeGitContext]:
     """Use registered objects, the driver's base and its pinned destination.
 
@@ -8336,22 +8339,27 @@ def _finalize_execution_context(
     """
     step = "source_registration"
     try:
-        repo = _rescue_repo(worktree)
+        repo = _rescue_repo(worktree, task_id=task_id)
         step = "execution_context"
         manager = SafeGitContext(
             objects=repo.git_dir / "objects",
             temp_root=Path(tempfile.gettempdir()),
-            origin=CANONICAL_ORIGIN,
+            origin=_rescue_canonical_push_url(repo),
+            repository=repo.repository,
             borrow_objects=prepare,
         )
         with manager as context:
             context.source_git_dir = repo.admin_dir
-            step = "driver_ref"
-            driver = context.read_source_ref(_REPO_ROOT / ".git", "HEAD")
-            if driver.returncode:
-                _publication_diagnostic(task_id, step, driver)
-                raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
-            context.driver_base = driver.stdout.strip()
+            context.task_id = task_id
+            if validated_driver_base is None:
+                step = "driver_ref"
+                driver = context.read_source_ref(repo.git_dir, "HEAD")
+                if driver.returncode:
+                    _publication_diagnostic(task_id, step, driver)
+                    raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
+                context.driver_base = driver.stdout.strip()
+            else:
+                context.driver_base = validated_driver_base
             step = "project_interpreter"
             context.interpreter = project_interpreter(_REPO_ROOT)
             step = "context_body"
@@ -8546,7 +8554,7 @@ def _finalize_opsec_scan(context: SafeGitContext, *, branch: str, head: str, rem
 
 
 @contextlib.contextmanager
-def _rescue_identity() -> Iterator[str]:
+def _rescue_identity(repository: str = "learn-ukrainian/learn-ukrainian.github.io") -> Iterator[str]:
     """The rescue publication token; an App installation token is revoked on exit."""
     from scripts.agent_runtime.agent_github_identity import (
         RescueIdentityError,
@@ -8557,7 +8565,7 @@ def _rescue_identity() -> Iterator[str]:
     alternative = "Publish through the normal pre-push push from the worktree."
     try:
         identity = resolve_agent_github_identity(
-            repository="learn-ukrainian/learn-ukrainian.github.io",
+            repository=repository,
             rescue=True,
         )
     except RescueIdentityError as exc:
@@ -8582,11 +8590,13 @@ def _rescue_identity() -> Iterator[str]:
 
 
 @contextlib.contextmanager
-def _finalize_transport_credentials() -> Iterator[list[tuple[str, str]]]:
+def _finalize_transport_credentials(
+    *, origin: str = CANONICAL_ORIGIN, repository: str = "learn-ukrainian/learn-ukrainian.github.io"
+) -> Iterator[list[tuple[str, str]]]:
     """Git configuration entries that authorize the push to the canonical destination, and nothing else."""
-    with _rescue_identity() as token:
+    with _rescue_identity(repository) as token:
         header = base64.b64encode(f"x-access-token:{token}".encode()).decode()
-        yield [(f"http.{CANONICAL_ORIGIN}.extraHeader", f"Authorization: Basic {header}")]
+        yield [(f"http.{origin}.extraHeader", f"Authorization: Basic {header}")]
 
 
 @contextlib.contextmanager
@@ -8602,8 +8612,13 @@ def _finalize_transport_context(
     for the checks, and every tree and blob from the copy validation used;
     each fetch re-hashes what it receives.
     """
-    with _finalize_execution_context(worktree) as transport:
-        # The base the checks and validation used, even if the driver checkout moved since.
+    with _finalize_execution_context(
+        worktree, task_id=getattr(validation, "task_id", None), validated_driver_base=validation.driver_base,
+    ) as transport:
+        if transport.origin != validation.origin or transport.repository != validation.repository:
+            raise SnapshotRefusal("auto_finalize_remote_unverified")
+        # Publication must use the registered driver base the checks validated,
+        # even when that repository has advanced during validation.
         transport.driver_base = validation.driver_base
         transport.isolate_objects(base=base, head=head)
         transport.receive_publication(head=head, base=base, objects=validation.git_dir / "objects")
@@ -8629,13 +8644,13 @@ def _finalize_transport_push(
     hooks = transport.root / "transport-hooks"
     hooks.mkdir()
     scheme = "file" if transport.local_remote else "https"
-    with _finalize_transport_credentials() as entries:
+    with _finalize_transport_credentials(origin=transport.origin, repository=transport.repository) as entries:
         settings = [
             ("core.hooksPath", str(hooks)),
             ("protocol.allow", "never"),
             (f"protocol.{scheme}.allow", "always"),
             ("http.proxy", ""),
-            (f"http.{CANONICAL_ORIGIN}.proxy", ""),
+            (f"http.{transport.origin}.proxy", ""),
             *entries,
         ]
         env = {**transport.env, "GIT_CONFIG_COUNT": str(len(settings))}
@@ -8675,6 +8690,7 @@ def _push_auto_finalize_branch(
     expected_head: str | None = None,
     owned_paths: object = None,
     base_sha: str | None = None,
+    task_id: str | None = None,
 ) -> None:
     """Scan, validate and publish in a driver-configured repo; borrow only objects.
 
@@ -8692,7 +8708,7 @@ def _push_auto_finalize_branch(
     # Only the publication itself is a push; a timeout in a check before it is not.
     pushing = False
     try:
-        with _finalize_execution_context(worktree) as context:
+        with _finalize_execution_context(worktree, task_id=task_id) as context:
             if context.run("check-ref-format", f"refs/heads/{branch}").returncode:
                 raise SnapshotRefusal("auto_finalize_unsafe_branch")
             head = _finalize_source_head(context, branch)
@@ -8873,7 +8889,7 @@ def _auto_finalize_dirty_worktree(
         return _result(ok=False, error="auto_finalize_committed_scope_unknown")
     if owned and all_changed:
         try:
-            with _finalize_execution_context(worktree) as context:
+            with _finalize_execution_context(worktree, task_id=task_id) as context:
                 context.isolate_objects(base=base_sha or context.driver_base, head=intended_head)
                 _finalize_history(context, head=intended_head, base=base_sha or context.driver_base, owned=owned)
         except SnapshotRefusal as exc:
@@ -8890,7 +8906,8 @@ def _auto_finalize_dirty_worktree(
             return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
         try:
             _push_auto_finalize_branch(
-                worktree, resolved_branch, expected_head=intended_head, owned_paths=owned, base_sha=base_sha
+                worktree, resolved_branch, expected_head=intended_head, owned_paths=owned, base_sha=base_sha,
+                task_id=task_id,
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             error = _publish_cause(
@@ -8910,7 +8927,7 @@ def _auto_finalize_dirty_worktree(
     if owned is None:
         skipped = all_changed
         return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
-    added_deleted = _auto_finalize_additions_deletions(worktree)
+    added_deleted = _auto_finalize_additions_deletions(worktree, task_id=task_id)
     if added_deleted is None:
         return _result(ok=False, error="move detection failed; nothing committed")
     moves = tuple(sorted(_cross_boundary_moves(*added_deleted, owned)))
@@ -8938,7 +8955,7 @@ def _auto_finalize_dirty_worktree(
     from scripts.orchestration.execution_safe_git import prepare_scoped_commit
 
     try:
-        with _finalize_execution_context(worktree, prepare=True) as context:
+        with _finalize_execution_context(worktree, prepare=True, task_id=task_id) as context:
             if _finalize_source_head(context, resolved_branch) != intended_head:
                 return _failed(_TypedCause("auto_finalize_head_moved"))
             try:
@@ -8963,7 +8980,8 @@ def _auto_finalize_dirty_worktree(
         if not commit_sha or _resolve_sha(worktree, f"{commit_sha}^") != intended_head:
             return _failed(_TypedCause("auto_finalize_head_moved"), commit_sha=commit_sha)
         _push_auto_finalize_branch(
-            worktree, resolved_branch, expected_head=commit_sha, owned_paths=owned, base_sha=base_sha
+            worktree, resolved_branch, expected_head=commit_sha, owned_paths=owned, base_sha=base_sha,
+            task_id=task_id,
         )
     except SnapshotRefusal as exc:
         code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
@@ -9024,24 +9042,27 @@ class _RescueRepo:
     worktree: Path
     git_dir: Path
     admin_dir: Path
+    repository: FleetRepo
+    root: Path
 
     @property
     def head_ref(self) -> str:
         return f"worktrees/{self.admin_dir.name}/HEAD"
 
 
-def _rescue_canonical_push_url() -> str:
+def _rescue_canonical_push_url(repo: _RescueRepo) -> str:
     """Driver-side destination; source repository configuration is not authority."""
-    return CANONICAL_ORIGIN
+    return f"https://github.com/{repo.repository.github}.git"
 
 
 @contextlib.contextmanager
 def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
     with (
-        _rescue_identity() as token,
+        _rescue_identity(repo.repository.github) as token,
         SafeGitContext(
             objects=repo.git_dir / "objects",
-            origin=_rescue_canonical_push_url(),
+            origin=_rescue_canonical_push_url(repo),
+            repository=repo.repository,
             token=token,
             temp_root=Path(tempfile.gettempdir()),
         ) as context,
@@ -9049,31 +9070,105 @@ def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
         yield context
 
 
-def _rescue_repo(worktree: Path) -> _RescueRepo:
+def _finalize_repository(
+    worktree: Path, *, task_id: str | None = None, state: Mapping[str, Any] | None = None
+) -> tuple[FleetRepo, Path]:
+    """Bind the recorded checkout and seat to the driver's repository allowlist.
+
+    Unstamped legacy public worktrees retain their existing admission. A
+    sibling requires its repository identity in the path-bound task record;
+    worker config, URLs and environment overrides cannot select a repository.
+    """
+    refusal = SnapshotRefusal("rescue_worktree_unregistered")
+    if not worktree.is_absolute() or _caller_path_control_char_error("worktree", str(worktree)):
+        raise refusal
+    for path in (worktree, *worktree.parents):
+        if path.is_symlink():
+            raise refusal
+    if worktree.resolve() != worktree:
+        raise refusal
+    catalog = load_fleet_repos()
+    candidates = [
+        resolve_fleet_repo(key, primary_root=_REPO_ROOT, repos=catalog, require_checkout=False) for key in catalog
+    ]
+    matches = [(repo, root) for repo, root in candidates if worktree.is_relative_to(root / ".worktrees/dispatch")]
+    if len(matches) != 1:
+        raise refusal
+    repo, root = matches[0]
+    expected_root = _REPO_ROOT if repo.default else _REPO_ROOT.parent / repo.local_name
+    if expected_root != root:
+        raise refusal
+    if root.is_symlink() or (root / ".git").is_symlink() or not (root / ".git").is_dir():
+        raise refusal
+    if state is None:
+        if task_id is not None:
+            state = _read_state(_state_path_no_create(task_id))
+        else:
+            matches = []
+            for state_file in tasks_dir().glob("*.json"):
+                candidate = _read_state(state_file)
+                if isinstance(candidate, dict) and (candidate.get("worktree_path") or candidate.get("cwd")) == str(worktree):
+                    matches.append(candidate)
+            if len(matches) > 1:
+                raise refusal
+            state = matches[0] if matches else None
+    if state is None:
+        if not repo.default:
+            raise refusal
+        return repo, root
+    claims = _state_repository_claims(dict(state))
+    if (claims and claims != [repo.github]) or (not repo.default and not claims):
+        raise refusal
+    agent = state.get("agent")
+    recorded = state.get("worktree_path") or state.get("cwd")
+    if (
+        not isinstance(agent, str)
+        or not isinstance(recorded, str)
+        or recorded != str(worktree)
+        or not isinstance(state.get("task_id"), str)
+        or (task_id is not None and state["task_id"] != task_id)
+    ):
+        raise refusal
+    # A public dispatch may select a different provider after its requested
+    # seat's explicit worktree was admitted. Its recorded path and linked Git
+    # registration remain the source binding; the selected provider is not
+    # authority for that path's dispatch seat.
+    if not repo.default:
+        validated, error = _validate_explicit_worktree(recorded, agent=agent, repo_root=root)
+        if error or validated != worktree:
+            raise refusal
+    return repo, root
+
+
+def _rescue_repo(worktree: Path, *, task_id: str | None = None, state: Mapping[str, Any] | None = None) -> _RescueRepo:
     """``worktree`` as a :class:`_RescueRepo`, read from the files git keeps, without running git in it."""
     from scripts.agent_runtime import kimi_boundary
 
+    repository, root = _finalize_repository(worktree, task_id=task_id, state=state)
     admin = kimi_boundary.worktree_git_dir(worktree)
     try:
         if admin is None:
             raise FileNotFoundError(".git")
-        admin = admin.resolve(strict=True)
+        if (
+            _caller_path_control_char_error("git directory", str(admin))
+            or admin.is_symlink()
+            or admin.resolve(strict=True) != admin
+        ):
+            raise ValueError("aliased git directory")
+        if any((admin / name).is_symlink() for name in ("commondir", "gitdir")) or (worktree / ".git").is_symlink():
+            raise ValueError("aliased registration")
         git_dir = (admin / (admin / "commondir").read_text(encoding="utf-8").strip()).resolve(strict=True)
         registered = Path((admin / "gitdir").read_text(encoding="utf-8").strip()).resolve()
     except (OSError, ValueError) as exc:
         raise _RescueFailure(
             "the worktree's git directory cannot be read", _exception_cause("rescue_worktree_unregistered", exc)
         ) from exc
-    if (
-        git_dir != (_REPO_ROOT / ".git").resolve()
-        or admin.parent != git_dir / "worktrees"
-        or registered != (worktree / ".git").resolve()
-    ):
+    if git_dir != root / ".git" or admin.parent != git_dir / "worktrees" or registered != (worktree / ".git").resolve():
         raise _RescueFailure(
             "the worktree is not a linked worktree of the main repository",
             _TypedCause("rescue_worktree_unregistered"),
         )
-    return _RescueRepo(worktree, git_dir, admin)
+    return _RescueRepo(worktree, git_dir, admin, repository, root)
 
 
 def _rescue_head(repo: _RescueRepo, context: SafeGitContext) -> tuple[str, str] | None:
@@ -9225,9 +9320,10 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     if not isinstance(raw_worktree, str):
         row["reason"] = "no recorded worktree"
         return row
-    worktree = Path(raw_worktree).resolve()
-    dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
-    if not worktree.is_relative_to(dispatch_root):
+    worktree = Path(raw_worktree)
+    try:
+        _, root = _finalize_repository(worktree, task_id=task_id, state=state)
+    except (OSError, RuntimeError, ValueError):
         row["reason"] = "not a registered dispatch worktree"
         return row
     # A reaped or hand-removed worktree has nothing left to preserve. Before
@@ -9269,14 +9365,14 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 if diagnostic:
                     row["diagnostic"] = diagnostic
                 active_ids = None
-            live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
+            live_cwds = reap_worktrees._live_cwd_paths(root)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"
                 return row
             if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
                 row["reason"] = "worktree active"
                 return row
-            repo = _rescue_repo(worktree)
+            repo = _rescue_repo(worktree, task_id=task_id, state=state)
             with _rescue_execution_context(repo) as context:
                 return _rescue_in_context(repo, context, state, state_path, row, apply=apply)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:

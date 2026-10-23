@@ -92,7 +92,7 @@ def isolated_finalization_context(tmp_path, monkeypatch, synthetic_opsec):
     public = _PinnedRemotePublicHead()
 
     @contextlib.contextmanager
-    def no_credentials():
+    def no_credentials(**_kwargs):
         yield []
 
     @contextlib.contextmanager
@@ -15415,9 +15415,11 @@ def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_
     assert tmp_path.exists()
 
 
-def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
+def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str, repo_key: str | None = None):
     """Primary plus one linked dispatch worktree on its own branch."""
-    primary = tmp_path / "primary"
+    from scripts.orchestration.fleet_repos import load_fleet_repos
+
+    primary = tmp_path / (load_fleet_repos()[repo_key].local_name if repo_key else "primary")
     primary.mkdir()
     _init_git_repo_for_test(primary, monkeypatch)
     subprocess.run(
@@ -15428,6 +15430,13 @@ def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
         timeout=30,
     )
     (primary / "README").write_text("base\n", encoding="utf-8")
+    if repo_key:
+        hooks = primary / ".githooks"
+        hooks.mkdir()
+        (hooks / "pre-push").write_text("#!/bin/sh\nexit 0\n")
+        (hooks / "pre-push").chmod(0o755)
+        (hooks / "pre_push_gate.py").write_text("ADMISSION_MAX_WAIT_S = 1\nADMISSION_WAIT_S = 1\n")
+        subprocess.run(["git", "add", ".githooks"], cwd=primary, check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "add", "README"], cwd=primary, check=True, capture_output=True, timeout=30)
     subprocess.run(
         ["git", "commit", "-m", "base"],
@@ -15450,11 +15459,15 @@ def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
     return primary.resolve(), worktree.resolve(), branch
 
 
-def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
+_REGISTERED_FINALIZE_CONTEXT = delegate._finalize_execution_context
+_REGISTERED_RESCUE_CONTEXT = delegate._rescue_execution_context
+
+
+def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True, repo_key: str | None = None):
     from scripts.orchestration import reap_worktrees
     from scripts.orchestration.safe_git_context import SafeGitContext
 
-    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="rescue-test")
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="rescue-test", repo_key=repo_key)
     origin = tmp_path / "origin.git"
     subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, timeout=30)
     subprocess.run(
@@ -15491,29 +15504,83 @@ def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
             "worktree_reused": False,
         },
     )
+    if repo_key:
+        from scripts.orchestration.fleet_repos import load_fleet_repos
+
+        repository = load_fleet_repos()[repo_key]
+        public = tmp_path / "primary"
+        public.mkdir()
+        _init_git_repo_for_test(public, monkeypatch)
+        (public / "public.txt").write_text("unrelated public history\n")
+        _git_out(public, "add", "public.txt")
+        _git_out(public, "commit", "-m", "public base")
+        monkeypatch.setattr(delegate, "_REPO_ROOT", public)
+        state = delegate._read_state(state_path)
+        state["repository"] = repository.github
+        delegate._write_state_atomic(state_path, state)
+
+        def registered_context(**kwargs):
+            # Validate the production catalog destination before injecting the
+            # fixture's local transport. Source configuration supplies neither.
+            assert kwargs["origin"] == f"https://github.com/{repository.github}.git"
+            assert kwargs["repository"] == repository
+            context = SafeGitContext(**kwargs)
+            context.origin = str(origin)
+            context.local_remote = True
+            return context
+
+        monkeypatch.setattr(delegate, "SafeGitContext", registered_context)
+        monkeypatch.setattr(delegate, "_finalize_execution_context", _REGISTERED_FINALIZE_CONTEXT)
+        monkeypatch.setattr(delegate, "_rescue_execution_context", _REGISTERED_RESCUE_CONTEXT)
+        monkeypatch.setattr(delegate, "project_interpreter", lambda _root: Path(sys.executable))
+        import contextlib
+
+        @contextlib.contextmanager
+        def identity(selected):
+            assert selected == repository.github
+            yield "synthetic-fixture-identity"
+
+        monkeypatch.setattr(delegate, "_rescue_identity", identity)
     return primary, worktree, origin, state_path
 
 
 @pytest.mark.parametrize("dirty", [True, False])
 def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tasks_dir, dirty):
-    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=dirty)
-    result = delegate._rescue_task(state_path, apply=True)
-    assert result["action"] == "rescued", result
-    state = delegate._read_state(state_path)
-    assert state["rescue_ref"] == "rescue/cursor/rescue-test"
-    assert state["rescue_head_commit"] == result["head"]
-    remote = subprocess.run(
-        ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    ).stdout
-    assert remote.startswith(result["head"])
-    assert worktree.exists()
-    if not dirty:
-        repeated = delegate._rescue_task(state_path, apply=True)
-        assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
+    for repo_key in (None, "infra-private"):
+        fixture = tmp_path / (repo_key or "public")
+        fixture.mkdir()
+        _primary, worktree, origin, state_path = _rescue_checkout(
+            fixture, monkeypatch, dirty=dirty, repo_key=repo_key
+        )
+        original = delegate._read_state(state_path)
+        if repo_key is None:
+            substituted = dict(original, agent="claude")
+            delegate._write_state_atomic(state_path, substituted)
+            assert delegate._rescue_repo(worktree, task_id=original["task_id"]).root == _primary
+            assert delegate._count_unpushed_commits(
+                worktree, original["worktree_branch"], task_id=original["task_id"],
+            ) == (1 if dirty else 2)  # No remote branch: the count includes the fixture's base commit.
+            assert delegate._rescue_repo(worktree, task_id=original["task_id"], state=dict(
+                substituted, worktree_path=None, cwd=str(worktree),
+            )).root == _primary
+            delegate._write_state_atomic(state_path, original)
+        result = delegate._rescue_task(state_path, apply=True)
+        assert result["action"] == "rescued", result
+        state = delegate._read_state(state_path)
+        assert state["rescue_ref"] == "rescue/cursor/rescue-test"
+        assert state["rescue_head_commit"] == result["head"]
+        remote = subprocess.run(
+            ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        ).stdout
+        assert remote.startswith(result["head"])
+        assert worktree.exists()
+        if not dirty:
+            repeated = delegate._rescue_task(state_path, apply=True)
+            assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
 
 
 @pytest.mark.parametrize("status", ["failed", "cancelled", "rate_limited", "needs_finalize"])
@@ -15986,14 +16053,22 @@ def test_rescue_commit_failure_types_the_cause_and_keeps_stderr_local(tmp_path, 
 
 
 def test_rescue_branch_namespacing_prevents_agent_collision(tmp_path, monkeypatch, tmp_tasks_dir):
-    _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=True)
+    primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=True)
     state = delegate._read_state(state_path)
 
     state["agent"] = "codex"
+    codex_tree = worktree.parent.parent / "codex" / worktree.name
+    codex_tree.parent.mkdir()
+    _git_out(primary, "worktree", "move", str(worktree), str(codex_tree))
+    state["worktree_path"] = str(codex_tree)
     delegate._write_state_atomic(state_path, state)
     result_codex = delegate._rescue_task(state_path, apply=False)
 
     state["agent"] = "claude"
+    claude_tree = codex_tree.parent.parent / "claude" / codex_tree.name
+    claude_tree.parent.mkdir()
+    _git_out(primary, "worktree", "move", str(codex_tree), str(claude_tree))
+    state["worktree_path"] = str(claude_tree)
     delegate._write_state_atomic(state_path, state)
     result_claude = delegate._rescue_task(state_path, apply=False)
 
@@ -24595,8 +24670,10 @@ def test_accounting_projection_on_pre_spawn_failure(tmp_tasks_dir, monkeypatch, 
     assert record["model"] == "legacy-accounting-label"
     assert {key: record[key] for key in (
         "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
-    )} == {"requested_selector": model, "observed_model": None, "identity_state": "unknown",
-          "observed_model_source": None, "observed_model_provenance": None}
+    )} == {
+        "requested_selector": model, "observed_model": None, "identity_state": "unknown",
+        "observed_model_source": None, "observed_model_provenance": None,
+    }
 
 
 @pytest.mark.parametrize("identity_fields", [{}, {"identity_state": None}])
