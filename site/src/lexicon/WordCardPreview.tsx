@@ -37,8 +37,9 @@ const KIND_LABELS: Record<string, string> = { lexeme: 'Word', mwe: 'Multi-word e
 const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 function Credits({ credits }: { credits: Credit[] }) {
-  return <span className="wc-credits" data-credits>Source:{credits.map((c, i) => <span key={i}> {c.href ?
+  return <span className="wc-credits" style={{ overflowWrap: 'anywhere' }} data-credits>Source:{credits.map((c, i) => <span key={i}> {c.href ?
     <a data-credit-link href={c.href} title={c.attribution}>{c.sourceId}</a> : <span title={c.attribution}>{c.sourceId}</span>}
+    {' '}{c.attribution}
     {c.gap && <span data-credit-gap={c.gap}> (attribution incomplete)</span>}</span>)}</span>;
 }
 

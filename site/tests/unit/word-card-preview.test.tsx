@@ -245,7 +245,10 @@ describe('readable grouped release pages', () => {
     expect(b?.querySelector('[aria-label="Other source facts of entry 2"]')?.textContent).toContain('будівля');
     expect(html).not.toContain('<script>');
     expect(html).toContain('&lt;script&gt;globalThis.x=1&lt;/script&gt;');
-    expect(Array.from(dom.querySelectorAll('[data-credit-link]')).map(l => l.getAttribute('href'))).toEqual(expect.arrayContaining(['https://lcorp.ulif.org.ua/dictua/', 'https://vesum.nlp.net.ua/']));
+    expect(Array.from(dom.querySelectorAll('[data-credit-link]')).map(l => [l.getAttribute('href'), l.textContent, l.parentElement?.textContent])).toEqual(expect.arrayContaining([
+      ['https://lcorp.ulif.org.ua/dictua/', 'ulif', ' ulif ULIF https://lcorp.ulif.org.ua/dictua/'],
+      ['https://vesum.nlp.net.ua/', 'vesum', ' vesum VESUM <used version> https://vesum.nlp.net.ua/ (attribution incomplete)'],
+    ]));
     expect(Array.from(dom.querySelectorAll('a')).map(l => l.getAttribute('href') ?? '').filter(h => !/^https:\/\/(lcorp\.ulif\.org\.ua|vesum\.nlp\.net\.ua|github\.com\/learn-ukrainian)\//.test(h))).toEqual([]);
     expect(a?.querySelector('[data-credit-gap="vesum_version_placeholder"]')).not.toBeNull();
     expect(dom.querySelector('[aria-label="Field comparison"]')).toBeNull();
