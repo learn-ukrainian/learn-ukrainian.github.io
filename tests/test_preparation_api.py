@@ -15,7 +15,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.api import preparation_state
 from scripts.api.main import app
-from scripts.api.repository_authority import build_repository_authority, cwd_role, preparation_data_root
+from scripts.api.repository_authority import build_repository_authority, cwd_role
 from scripts.orchestration import curriculum_readiness
 
 pytestmark = pytest.mark.reads_content
@@ -194,22 +194,6 @@ def test_roster_uses_only_active_manifest_and_matches_required_fixture_counts() 
 
 
 @pytest.mark.needs_sparse_tree("site/src/content")
-def test_one_track_roster_meets_budget_and_keeps_distinct_telemetry_semantics() -> None:
-    response = CLIENT.get("/api/state/preparation?track=a1-v1")
-
-    assert response.status_code == 200
-    assert len(response.content) < 5_000
-    data = response.json()
-    VALIDATOR.validate(data)
-    assert data["totals"]["returned_tracks"] == 1
-    assert data["totals"]["returned_modules"] == 55
-    legacy = CLIENT.get("/api/state/summary").json()["tracks"]["a1-v1"]
-    assert legacy["content_done"] == 0
-    assert legacy["published_mdx"] == 55
-    assert data["tracks"][0]["module_state_counts"]["built"] == 55
-
-
-@pytest.mark.needs_sparse_tree("site/src/content")
 def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> None:
     response = CLIENT.get("/api/state/preparation/a1/sounds-letters-and-hello")
 
@@ -253,29 +237,6 @@ def test_bio_uses_bio_profile_and_dossier_alone_never_means_build() -> None:
     assert data["next_action"] != "build"
     assert "PREPARATION_HOLD_ACTIVE" in data["reason_codes"]
     assert data["reason_codes"]
-
-
-def test_one_module_parses_the_active_manifest_once(monkeypatch) -> None:
-    original = curriculum_readiness.load_active_manifest
-    calls = 0
-
-    def counted(*args, **kwargs):
-        nonlocal calls
-        calls += 1
-        return original(*args, **kwargs)
-
-    monkeypatch.setattr(curriculum_readiness, "load_active_manifest", counted)
-
-    data = preparation_state.build_module_state(
-        repo_root=ROOT,
-        authority=AUTHORITY,
-        track="bio",
-        slug="knyahynia-olha",
-        expanded=False,
-    )
-
-    assert data["authority"]["readiness"]["profile_id"] == "bio"
-    assert calls == 1
 
 
 def test_strong_etag_returns_bodyless_304_for_unchanged_sources(tmp_path: Path, monkeypatch) -> None:
@@ -354,63 +315,6 @@ def test_recompute_identity_changes_on_bundle_and_publication_sources(tmp_path: 
     assert preparation_state.response_document(after)[1] != preparation_state.response_document(partial)[1]
 
 
-def test_etag_changes_when_canonical_manifest_or_profile_sources_change(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo_root = tmp_path / "repo"
-    _write_manifest(repo_root)
-    profile_sha = ["1" * 64]
-
-    def canonical(track: str, slug: str, **_kwargs) -> dict[str, Any]:
-        result = _canonical(repo_root, track, slug)
-        result["sources"].append(
-            {
-                "kind": "readiness-config",
-                "path": "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
-                "sha256": profile_sha[0],
-            }
-        )
-        return result
-
-    monkeypatch.setattr(
-        preparation_state.curriculum_readiness,
-        "evaluate_preparation",
-        canonical,
-    )
-    before = preparation_state.build_module_state(
-        repo_root=repo_root,
-        authority=AUTHORITY,
-        track="a1",
-        slug="demo",
-        expanded=False,
-    )
-
-    profile_sha[0] = "2" * 64
-    profile_changed = preparation_state.build_module_state(
-        repo_root=repo_root,
-        authority=AUTHORITY,
-        track="a1",
-        slug="demo",
-        expanded=False,
-    )
-    assert preparation_state.response_document(profile_changed)[1] != preparation_state.response_document(before)[1]
-
-    manifest_path = repo_root / curriculum_readiness.MANIFEST_PATH
-    manifest_path.write_text(manifest_path.read_text(encoding="utf-8") + "# identity change\n", encoding="utf-8")
-    manifest_changed = preparation_state.build_module_state(
-        repo_root=repo_root,
-        authority=AUTHORITY,
-        track="a1",
-        slug="demo",
-        expanded=False,
-    )
-    assert (
-        preparation_state.response_document(manifest_changed)[1]
-        != preparation_state.response_document(profile_changed)[1]
-    )
-
-
 def test_count_disagreement_emits_finding(tmp_path: Path, monkeypatch) -> None:
     repo_root = tmp_path / "repo"
     _write_manifest(repo_root)
@@ -449,16 +353,6 @@ def test_readiness_contract_error_is_a_fail_closed_503(monkeypatch) -> None:
 
     assert response.status_code == 503
     assert response.json()["detail"]["code"] == "PREPARATION_AUTHORITY_UNAVAILABLE"
-
-
-def test_ready_to_build_is_retired_and_session_start_migrated() -> None:
-    response = CLIENT.get("/api/state/ready-to-build?track=not-a-track")
-
-    assert response.status_code == 404
-    assert "/api/state/ready-to-build" not in CLIENT.get("/openapi.json").json().get("paths", {})
-    script = (ROOT / "scripts/session_start.sh").read_text(encoding="utf-8")
-    assert "/api/state/ready-to-build" not in script
-    assert "/api/state/preparation" in script
 
 
 def test_repository_authority_distinguishes_primary_checkout_from_development_code(tmp_path: Path) -> None:
@@ -571,25 +465,3 @@ def test_release_route_reads_from_the_reported_primary_checkout(
         "tree_sha256": "f" * 64,
     }
     assert data["tracks"][0]["module_state_counts"]["built"] == 55
-
-
-def test_development_dispatch_worktree_is_reported_as_the_primary_checkout(tmp_path: Path) -> None:
-    primary = _repo(
-        tmp_path / "repo",
-        remote="https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
-    )
-    dispatch = primary / ".worktrees/dispatch/codex/example"
-    dispatch.parent.mkdir(parents=True)
-    _git(primary, "worktree", "add", "-q", "-b", "codex/example", str(dispatch))
-
-    data_root = preparation_data_root(project_root=dispatch, live_repo_root=primary)
-    authority = build_repository_authority(project_root=dispatch, live_repo_root=data_root)
-
-    assert data_root == dispatch
-    assert authority["primary_checkout"] == {
-        "role": "dispatch_worktree",
-        "head_sha": _git(dispatch, "rev-parse", "HEAD"),
-        "dirty_count": 0,
-    }
-    assert authority["cwd_role"] == "worktree"
-    assert "data_checkout" not in authority

@@ -171,21 +171,6 @@ def test_runner_launch_carries_switch_and_worker_reports_in_full(
     assert os.environ[ADVISOR_SWITCH] == "0"
 
 
-def test_fake_cli_reproduces_the_lost_report_without_the_switch(
-    fake_claude, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Control: without the adapter's switch the worker ends with work pending."""
-    binary, dump = fake_claude
-    monkeypatch.setattr(claude, "HEADLESS_BACKGROUND_ENV", {})
-    monkeypatch.setattr(claude, "HEADLESS_BACKGROUND_TOOL_DENIES", ())
-
-    result = _invoke(binary, tmp_path, "workspace-write")
-
-    assert SWITCH not in json.loads(dump.read_text(encoding="utf-8"))["env"]
-    assert result.response.startswith("Started in the background: Bash run_in_background")
-    assert "final report will follow" in result.response
-
-
 def test_sanitizer_keeps_switch_for_claude_and_adapter_supplied_kimi_only(monkeypatch: pytest.MonkeyPatch) -> None:
     """Claude keeps the switch; kimi keeps it only from adapter overrides (the KimiCC plan)."""
     monkeypatch.delenv(SWITCH, raising=False)
@@ -225,9 +210,48 @@ def _invoke_kimi(cwd: Path, tool_config: dict) -> runner.Result:
 def test_kimicc_runner_launch_carries_switch_and_denies(
     fake_claude, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """AC-01 on KimiCC: the real runner, sanitizer and kimicc_headless.sh hand claude -p both controls."""
+    """AC-01 on KimiCC: the real runner, sanitizer and kimicc_headless.sh hand claude -p both controls.
+
+    The catalog default is retired. The in-process refusal and the empty alias
+    map are patched so the harness still builds the wrapper argv. The wrapper
+    re-resolves ``k3`` in a fresh interpreter, which the real catalog refuses,
+    so this test points ``KIMICC_ROUTE_PYTHON`` at a stub that answers only
+    that lookup. The stub is admitted for this launch alone. An admitted
+    retired launch is proved by
+    ``test_the_runtime_refuses_a_retired_kimi_even_when_ownership_is_admitted``.
+    """
+    from scripts.agent_runtime import env_sanitize
+
     binary, dump = fake_claude
+    route_python = tmp_path / "route_python.py"
+    route_python.write_text(
+        f"#!{sys.executable}\n"
+        + textwrap.dedent(
+            """\
+            import os, sys
+            if "--resolve-kimi-model" in sys.argv:
+                sys.stdout.write("k3\\tkimi-k3[1m]\\tk3\\tkimicc_k3\\n")
+                raise SystemExit(0)
+            os.execv(sys.executable, [sys.executable, *sys.argv[1:]])
+            """
+        ),
+        encoding="utf-8",
+    )
+    route_python.chmod(0o755)
+    monkeypatch.setitem(
+        env_sanitize._PROVIDER_SAFE_NAME_ALLOWLIST,
+        "kimi",
+        env_sanitize._PROVIDER_SAFE_NAME_ALLOWLIST["kimi"] | {"KIMICC_ROUTE_PYTHON"},
+    )
+    monkeypatch.setenv("KIMICC_ROUTE_PYTHON", str(route_python))
     monkeypatch.setattr(kimicc, "_default_claude_bin", lambda: str(binary))
+    monkeypatch.setattr("scripts.review.model_catalog.retired_model_refusal", lambda *_a, **_k: None)
+    monkeypatch.setattr(
+        kimicc,
+        "resolve_kimi_model",
+        lambda *_a, **_k: ("kimi-code/k3", {"coding_model_id": "k3", "kimicc_alias": "k3"}),
+    )
+    monkeypatch.setattr(kimicc, "kimicc_routable_model_ids", lambda *_a, **_k: ("kimi-code/k3",))
     monkeypatch.setenv("KIMICC_AUTH_TOKEN", "test-route-token")
     home = tmp_path / "home"
     home.mkdir()
@@ -248,7 +272,11 @@ def test_kimicc_runner_launch_carries_switch_and_denies(
 
 
 def test_native_kimi_runner_launch_gets_neither_control(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The native Kimi CLI is not Claude Code: no switch (even when exported ambiently) and no denies."""
+    """The native Kimi CLI is not Claude Code: no switch (even when exported ambiently) and no denies.
+
+    The refusal is patched only so the native argv class stays reachable.
+    Retirement of an admitted launch is proved separately.
+    """
     script = tmp_path / "fake_kimi.py"
     script.write_text(_FAKE_KIMI, encoding="utf-8")
     binary = tmp_path / "kimi"
@@ -258,6 +286,8 @@ def test_native_kimi_runner_launch_gets_neither_control(tmp_path: Path, monkeypa
     monkeypatch.setenv("LU_FAKE_CLAUDE_DUMP", str(dump))
     monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(binary))
     monkeypatch.setenv(SWITCH, "1")
+    monkeypatch.setattr("scripts.review.model_catalog.retired_model_refusal", lambda *_a, **_k: None)
+    monkeypatch.setattr(kimi, "resolve_kimi_model", lambda model=None: "k3-256k")
     worktree = _admitted_worktree(tmp_path)
 
     result = _invoke_kimi(worktree, {"harness": "native"})
@@ -448,44 +478,26 @@ def test_every_claude_code_harness_plan_disables_background(
     """Each harness that launches Claude Code carries the switch and denies every background tool."""
     build, _ = _CLAUDE_CODE_HARNESSES[harness]
     args = (monkeypatch,) if build in {_kimicc_plan, _acpx_claude_plan} else ()
+    if harness == "adapters/kimicc.py":
+        with pytest.raises(ValueError, match="is retired in the model catalog"):
+            build(tmp_path, mode, *args)
+        return
     denied, env_overrides = build(tmp_path, mode, *args)
     assert env_overrides[SWITCH] == "1"
     assert denied == list(HEADLESS_BACKGROUND_TOOL_DENIES)
 
 
-@pytest.mark.repo_wide
-def test_claude_code_harness_denominator_is_complete() -> None:
-    """Every runtime adapter that resolves the Claude binary is in the table above."""
-    adapters = REPO_ROOT / "scripts" / "agent_runtime" / "adapters"
-    launching = {
-        f"adapters/{path.name}"
-        for path in adapters.glob("*.py")
-        if any(marker in path.read_text(encoding="utf-8") for marker in ("_default_claude_bin(", 'which("claude")'))
-    }
-    assert launching == set(_CLAUDE_CODE_HARNESSES)
-
-
 def test_native_kimi_plan_has_neither_control(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The native Kimi CLI plan carries no Claude switch and no Claude denies."""
+    """OO-58: the retired native default never builds a plan that could carry Claude controls."""
     monkeypatch.setattr(kimi, "_resolve_kimi_binary", lambda: "/usr/bin/kimi")
     for harness in (None, "native"):
-        plan = KimiAdapter().build_invocation(
-            prompt="add a tooltip",
-            mode="workspace-write",
-            cwd=tmp_path,
-            model=None,
-            task_id=None,
-            session_id=None,
-            tool_config=admitted_tool_config(tmp_path, {"harness": harness} if harness else None),
-        )
-        assert SWITCH not in plan.env_overrides
-        assert not {"--disallowedTools", "--settings"} & set(plan.cmd)
-
-
-@pytest.mark.parametrize("launcher", ["start-claude.sh", "start-claude-driver.sh", "scripts/launchers/claude.sh"])
-def test_interactive_launchers_do_not_disable_background(launcher: str) -> None:
-    """Interactive sessions are outside the adapter and keep background tasks."""
-    text = (REPO_ROOT / launcher).read_text(encoding="utf-8")
-    assert SWITCH not in text
-    assert not any(tool in text for tool in ("permissions.deny", "--disallowedTools Monitor"))
-    assert "agent_runtime" not in text
+        with pytest.raises(ValueError, match="is retired in the model catalog"):
+            KimiAdapter().build_invocation(
+                prompt="add a tooltip",
+                mode="workspace-write",
+                cwd=tmp_path,
+                model=None,
+                task_id=None,
+                session_id=None,
+                tool_config=admitted_tool_config(tmp_path, {"harness": harness} if harness else None),
+            )

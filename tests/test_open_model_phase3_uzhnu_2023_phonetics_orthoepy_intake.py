@@ -198,14 +198,3 @@ def test_materialized_receipt_validates() -> None:
         pytest.skip("receipt has not been materialized")
     receipt = intake.validate_receipt(json.loads(intake.DEFAULT_PUBLIC_RECEIPT_PATH.read_text(encoding="utf-8")))
     assert receipt["receipt_sha256"] == intake.receipt_sha256(receipt)
-
-
-def test_optional_live_drive_audit() -> None:
-    try:
-        stage = intake.default_staging_root()
-    except intake.Uzhnu2023PhoneticsOrthoepyIntakeError:
-        pytest.skip("configured Drive mount unavailable")
-    if not all((stage / values[0]).is_file() for values in intake.ARTIFACTS.values()):
-        pytest.skip("private Drive packet unavailable")
-    result = intake.private_audit(stage)
-    assert result["ok"] is True

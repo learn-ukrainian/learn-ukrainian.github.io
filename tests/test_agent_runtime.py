@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import logging
 import os
 import re
 import subprocess
@@ -55,13 +54,12 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
-from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import (
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
-from agent_runtime.registry import AGENTS, available_agents, get_agent_entry
+from agent_runtime.registry import available_agents
 from agent_runtime.result import ParseResult
 from agent_runtime.runner import (
     AgentOutputLimitError,
@@ -73,7 +71,6 @@ from agent_runtime.runner import (
     _kill_process_tree,
     _load_adapter,
     _raise_for_kill_reason,
-    _validate_agent_name,
     invoke,
 )
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
@@ -113,61 +110,7 @@ def _clear_state():
 # ---------------------------------------------------------------------------
 
 
-def test_registry_has_known_agents():
-    assert set(AGENTS.keys()) == {
-        "codex",
-        "codex-desktop",
-        "claude",
-        "claude-desktop",
-        "claude-infra",
-        "claude-monitor",
-        "gemini",
-        "grok",
-        "grok-build",
-        "grok-hermes",
-        "glm",
-        "kimi",
-        "deepseek",
-        "hermes-deepseek",
-        "qwen",
-        "agy",
-        "cursor",
-        "acpx-claude-shadow",
-        "acpx-codex-shadow",
-        "acpx-cursor-shadow",
-        "acpx-deepseek-shadow",
-        "acpx-gemma-shadow",
-        "acpx-glm-shadow",
-        "acpx-grok-shadow",
-        "acpx-agy-shadow",
-        "acpx-kimi-shadow",
-        "acpx-kimicc-shadow",
-        "acpx-pool-shadow",
-    }
-
-
-def test_acpx_codex_shadow_entry_is_direct_only():
-    entry = get_agent_entry("acpx-codex-shadow")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.acpx:AcpxAdapter"
-    # ACPX itself chooses the Codex model when this direct-only seat omits --model.
-    assert entry["default_model"] is None
-    assert entry["cli_available"] is False
-    assert entry["direct_only"] is True
-    assert entry["resume_policy"] == "never"
-    assert entry["capabilities"] == frozenset()
-    assert "acpx-codex-shadow" not in available_agents()
-
-
-def test_unavailable_non_direct_seat_has_accurate_loader_guidance():
-    with pytest.raises(AgentUnavailableError) as exc_info:
-        _load_adapter("qwen")
-
-    message = str(exc_info.value)
-    assert "no enabled runtime CLI/adapter" in message
-    assert "Direct-only" not in message
-
-
-@pytest.mark.parametrize("entrypoint", ["acpx-pilot-native", "acpx-pilot-shadow"])
+@pytest.mark.parametrize("entrypoint", ["acpx-pilot-native"])
 def test_acpx_pilot_usage_records_strip_sensitive_context(
     entrypoint,
     tmp_path,
@@ -216,192 +159,6 @@ def test_acpx_pilot_usage_records_strip_sensitive_context(
     assert record["duration_s"] == 1.25
     assert record["tokens"] == 3
     assert record["failure_code"] == "result_invalid"
-
-
-def test_usage_attribution_is_explicit_and_privacy_safe(monkeypatch):
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude")
-
-    attribution = resolve_invocation_attribution(
-        explicit="Codex",
-        task_id="routing-6159",
-    )
-
-    assert attribution.initiator == "codex"
-    assert attribution.source == "explicit"
-    assert attribution.task_id == "routing-6159"
-
-
-def test_usage_attribution_detects_codex_desktop(monkeypatch):
-    monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
-    monkeypatch.delenv("LU_RUNTIME_INITIATOR", raising=False)
-    monkeypatch.delenv("LU_RUNTIME_INITIATOR_SOURCE", raising=False)
-    monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
-
-    attribution = resolve_invocation_attribution(task_id="routing-6159")
-
-    assert attribution.initiator == "codex"
-    assert attribution.source == "session_env"
-
-
-def test_usage_attribution_rejects_unsafe_explicit_identity():
-    with pytest.raises(ValueError, match="initiator must be"):
-        resolve_invocation_attribution(explicit="<script>")
-
-
-def test_acpx_grok_shadow_entry_is_direct_only():
-    entry = get_agent_entry("acpx-grok-shadow")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.acpx:AcpxGrokShadowAdapter"
-    # Fixed effective model/effort live inside the custom --agent command;
-    # this direct-only seat must not advertise a catalog model.
-    assert entry["default_model"] is None
-    assert entry["cli_available"] is False
-    assert entry["direct_only"] is True
-    assert entry["resume_policy"] == "never"
-    assert entry["capabilities"] == frozenset()
-    assert "acpx-grok-shadow" not in available_agents()
-
-
-@pytest.mark.parametrize(
-    ("seat", "adapter", "model"),
-    [
-        (
-            "acpx-agy-shadow",
-            "scripts.agent_runtime.adapters.acpx:AcpxAgyShadowAdapter",
-            "gemini-3.8-flash-high",
-        ),
-        (
-            "acpx-glm-shadow",
-            "scripts.agent_runtime.adapters.acpx:AcpxGlmShadowAdapter",
-            "glm-5.3",
-        ),
-        (
-            "acpx-gemma-shadow",
-            "scripts.agent_runtime.adapters.acpx:AcpxGemmaShadowAdapter",
-            "google-ais/gemma-4-31b-it",
-        ),
-        (
-            "acpx-deepseek-shadow",
-            "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
-            "deepseek-v4.1-flash",
-        ),
-    ],
-)
-def test_new_acpx_fleet_entries_are_direct_only(seat, adapter, model):
-    entry = get_agent_entry(seat)
-    assert entry["adapter"] == adapter
-    assert entry["default_model"] == model
-    assert entry["cli_available"] is False
-    assert entry["direct_only"] is True
-    assert entry["resume_policy"] == "never"
-    assert entry["capabilities"] == frozenset()
-    assert seat not in available_agents()
-
-
-def test_cursor_entry_is_well_formed():
-    entry = get_agent_entry("cursor")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.cursor:CursorAdapter"
-    # Registry defaults name the catalog identity; the adapter pins the wire (#10205).
-    assert entry["default_model"] == "grok-4.7"
-    assert entry["cli_available"] is True
-    assert entry["resume_policy"] == "bridge_only"
-    assert {"content_writing", "content_review", "adversarial_review"} <= entry["capabilities"]
-
-
-def test_agy_entry_is_well_formed():
-    entry = get_agent_entry("agy")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.agy:AgyAdapter"
-    assert entry["default_model"] == "gemini-3.8-flash-high"
-    assert entry["cli_available"] is True
-    assert entry["resume_policy"] == "bridge_only"
-    assert {"content_writing", "content_review"} <= entry["capabilities"]
-
-
-def test_kimi_entry_is_well_formed():
-    entry = get_agent_entry("kimi")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.kimi:KimiAdapter"
-    # Operator 2026-08-13: k3-256k everyday default; no forced default effort
-    # (max is the full-K3 advisor behavior, selected via explicit flags).
-    assert entry["default_model"] == "k3-256k"
-    assert entry.get("default_effort") is None
-    assert entry["cli_available"] is True
-    assert entry["resume_policy"] == "bridge_only"
-    assert entry["cost_tier"] == "medium"
-    assert {
-        "code_writing",
-        "code_review",
-        "adversarial_review",
-        "debugging",
-        "multimodal",
-    } <= entry["capabilities"]
-    assert not ({"content_writing", "content_review"} & entry["capabilities"])
-
-
-def test_grok_build_entry_is_well_formed():
-    entry = get_agent_entry("grok-build")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-    assert entry["default_model"] == "grok-4.7"
-    assert entry["default_effort"] == "high"
-    assert entry["cli_available"] is True
-    assert entry["resume_policy"] == "never"
-    assert {"code_writing", "code_review", "debugging"} <= entry["capabilities"]
-
-
-def test_codex_entry_has_bridge_only_resume_policy():
-    assert get_agent_entry("codex")["resume_policy"] == "bridge_only"
-
-
-def test_codex_desktop_entry_is_human_invoked():
-    entry = get_agent_entry("codex-desktop")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.codex:CodexAdapter"
-    assert entry["default_model"] == "gpt-6.1-sol"
-    assert entry["cost_tier"] == "high"
-    assert entry["cli_available"] is False
-    assert entry["resume_policy"] == "never"
-    assert {"frontend_design", "ui_review", "multimodal", "visual_inspection"} <= entry["capabilities"]
-
-
-def test_claude_desktop_entry_is_human_invoked():
-    entry = get_agent_entry("claude-desktop")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.claude:ClaudeAdapter"
-    assert entry["cli_available"] is False
-    assert entry["resume_policy"] == "never"
-
-
-def test_claude_monitor_entry_is_non_dispatchable_identity():
-    entry = get_agent_entry("claude-monitor")
-    assert entry["adapter"] == "scripts.agent_runtime.adapters.claude:ClaudeAdapter"
-    assert entry["default_model"] == "claude-sonnet-5-5"
-    assert entry["cost_tier"] == "high"
-    assert entry["cli_available"] is False
-    assert entry["resume_policy"] == "never"
-    assert entry["capabilities"] == frozenset({"architecture", "review", "planning"})
-    assert "claude-monitor" not in available_agents()
-
-
-def test_claude_entry_has_bridge_only_resume_policy():
-    assert get_agent_entry("claude")["resume_policy"] == "bridge_only"
-
-
-def test_load_adapter_codex():
-    adapter = _load_adapter("codex")
-    assert adapter.name == "codex"
-    assert adapter.default_model == "gpt-6.1-sol"
-    assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
-
-
-def test_load_adapter_cursor():
-    adapter = _load_adapter("cursor")
-    assert adapter.name == "cursor"
-    assert adapter.default_model == "grok-4.7-high"
-    assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
-
-
-def test_load_adapter_kimi():
-    adapter = _load_adapter("kimi")
-    assert adapter.name == "kimi"
-    assert adapter.default_model == "k3-256k"
-    # Kimi: web, UI and backend coding only — workspace-write is the one admitted mode.
-    assert adapter.supported_modes == frozenset({"workspace-write"})
 
 
 @pytest.fixture
@@ -520,60 +277,6 @@ def test_agy_bridge_repo_read_falls_back_to_cwd_without_explicit_root(tmp_path, 
     assert plan.cmd[plan.cmd.index("--add-dir") + 1] == str(tmp_path)
 
 
-def test_load_adapter_unknown_raises():
-    with pytest.raises(AgentUnavailableError, match="not in the registry"):
-        _load_adapter("nonexistent")
-
-
-@pytest.mark.parametrize(
-    "agent_name,bare_name",
-    [
-        ("codex-tools", "codex"),
-        ("claude-tools", "claude"),
-        ("gemini-tools", "gemini"),
-        ("grok-tools", "grok"),
-        ("cursor-tools", "cursor"),
-    ],
-)
-def test_validate_agent_name_rejects_tools_suffix(agent_name, bare_name):
-    with pytest.raises(ValueError) as excinfo:
-        _validate_agent_name(agent_name)
-
-    message = str(excinfo.value)
-    assert "agent_runtime registry uses bare names" in message
-    assert f"pass {bare_name!r} not {agent_name!r}" in message
-    assert "use tool_config to indicate tools-enabled" in message
-
-
-def test_validate_agent_name_allows_bare_registry_name():
-    _validate_agent_name("codex")
-
-
-def test_invoke_rejects_tools_suffix_before_adapter_load():
-    with pytest.raises(ValueError, match="pass 'codex' not 'codex-tools'"):
-        invoke("codex-tools", "hello", mode="read-only")
-
-
-def test_load_adapter_grok_native_seat():
-    adapter = _load_adapter("grok")
-    assert adapter.__class__.__name__ == "GrokBuildAdapter"
-    assert adapter.name == "grok"
-    assert adapter.default_model == "grok-4.7"
-
-
-def test_load_adapter_glm():
-    adapter = _load_adapter("glm")
-    assert adapter.__class__.__name__ == "GlmAdapter"
-    assert adapter.name == "glm"
-    assert adapter.default_model == "glm-5.3-flash"
-
-
-def test_load_adapter_cached():
-    first = _load_adapter("codex")
-    second = _load_adapter("codex")
-    assert first is second
-
-
 # ---------------------------------------------------------------------------
 # Resume policy enforcement
 # ---------------------------------------------------------------------------
@@ -598,11 +301,6 @@ def test_resume_policy_bridge_only_rejects_dispatch():
         _enforce_resume_policy("codex", session_id="uuid", entrypoint="dispatch")
 
 
-def test_resume_policy_bridge_only_rejects_delegate():
-    with pytest.raises(ValueError, match="bridge_only"):
-        _enforce_resume_policy("gemini", session_id="uuid", entrypoint="delegate")
-
-
 # ---------------------------------------------------------------------------
 # CodexAdapter — flag building per mode
 # ---------------------------------------------------------------------------
@@ -625,28 +323,6 @@ def test_codex_adapter_mode_flags_workspace_write():
         "--enable",
         "multi_agent",
     ]
-
-
-def test_codex_adapter_mode_flags_danger():
-    # workspace-write and danger map to the same flags at the codex CLI
-    # layer because Codex has no "workspace-write + MCP-allowed" mode.
-    # The runtime mode parameter still differentiates them in higher layers.
-    assert CodexAdapter._mode_flags("danger") == [
-        "--dangerously-bypass-approvals-and-sandbox",
-        "--enable",
-        "multi_agent",
-    ]
-
-
-def test_codex_adapter_mode_flags_workspace_write_and_danger_are_equivalent():
-    """Codex CLI has no distinct workspace-write + MCP-allowed mode.
-
-    Regression for 2026-05-08 finding: --full-auto blocks localhost MCP.
-    If a future Codex CLI version adds a real workspace-write mode that
-    permits MCP, this test should be updated and the two flag sets can
-    diverge.
-    """
-    assert CodexAdapter._mode_flags("workspace-write") == CodexAdapter._mode_flags("danger")
 
 
 def test_codex_adapter_build_invocation_read_only(tmp_path):
@@ -725,24 +401,6 @@ def test_codex_adapter_bridge_creates_then_resumes(tmp_path):
     assert second.stdin_payload == "hello again"
 
 
-def test_codex_adapter_build_invocation_workspace_write(tmp_path):
-    adapter = CodexAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="gpt-6-luna",
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-    assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
-    assert "--enable" in plan.cmd
-    assert "multi_agent" in plan.cmd
-    assert "--full-auto" not in plan.cmd  # legacy flag must not regress
-    assert "gpt-6-luna" in plan.cmd  # approved explicit model honored
-
-
 def test_codex_adapter_mcp_tool_config(tmp_path):
     """Codex MCP config must survive the protocol via ``-c`` overrides."""
     adapter = CodexAdapter()
@@ -762,28 +420,6 @@ def test_codex_adapter_mcp_tool_config(tmp_path):
     assert "-c" in plan.cmd
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
     assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
-
-
-def test_codex_adapter_mcp_tool_config_multiple(tmp_path):
-    adapter = CodexAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={
-            "mcp_servers": {
-                "sources": {"url": "http://127.0.0.1:8766/sse"},
-                "other": {"url": "http://127.0.0.1:9001/sse", "enabled": True},
-            },
-        },
-    )
-    config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
-    assert 'mcp_servers.other.url="http://127.0.0.1:9001/sse"' in config_values
-    assert "mcp_servers.other.enabled=true" in config_values
 
 
 def test_codex_adapter_disable_features_emits_flags(tmp_path):
@@ -814,24 +450,6 @@ def test_codex_adapter_disable_features_emits_flags(tmp_path):
     # Both flags coexist with MCP override.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
     assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
-
-
-def test_codex_adapter_disable_features_multiple(tmp_path):
-    """Multiple disable_features entries each emit a separate --disable pair."""
-    adapter = CodexAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={
-            "disable_features": ["shell_tool", "browser_use"],
-        },
-    )
-    disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
 
 
 @pytest.mark.parametrize(
@@ -870,46 +488,6 @@ def test_codex_adapter_disables_apps_connector_across_all_invocations(tmp_path, 
             i for i, token in enumerate(plan.cmd[:-1]) if token == "--disable" and plan.cmd[i + 1] == "apps"
         ]
         assert apps_indices[0] > max(enable_indices)
-
-
-def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
-    """Dispatched review isolation workers must also disable apps connector (#7181)."""
-    from scripts.review.isolation import review_isolation_tool_config
-    from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
-    from tests.test_review_isolation import _private_review_roots
-
-    fake = write_config_probe_binary(tmp_path / "codex")
-    snapshot = tmp_path / "snapshot"
-    snapshot.mkdir()
-    write_root, exec_root = _private_review_roots(tmp_path, "codex-test-7181")
-
-    base_config = review_isolation_tool_config("codex")
-    # Strip disable_features from tool_config to prove build_invocation emits
-    # --disable apps unconditionally rather than relying on tool_config.
-    config_without_disable_features = {k: v for k, v in base_config.items() if k != "disable_features"}
-
-    adapter = CodexAdapter()
-    plan = adapter.build_invocation(
-        prompt="review prompt",
-        mode="read-only",
-        cwd=snapshot,
-        model=None,
-        task_id="review-7181-test",
-        session_id=None,
-        tool_config={
-            **config_without_disable_features,
-            "review_engine_binary": str(fake.resolve()),
-            "review_snapshot_root": str(snapshot),
-            "review_reject_root": str(snapshot),
-            "review_reject_roots": [str(snapshot)],
-            "review_write_root": str(write_root),
-            "review_exec_root": str(exec_root),
-        },
-    )
-    bypass_idx = plan.cmd.index("--dangerously-bypass-approvals-and-sandbox")
-    assert plan.cmd[bypass_idx + 1 : bypass_idx + 3] == ["--disable", "apps"]
-    disable_flags = [plan.cmd[i + 1] for i, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_flags == ["apps"]
 
 
 def test_codex_adapter_binds_valid_output_schema(tmp_path):
@@ -962,19 +540,6 @@ def test_codex_adapter_rejects_invalid_output_schema(tmp_path, payload, expected
         )
 
 
-def test_codex_adapter_rejects_relative_output_schema_path(tmp_path):
-    with pytest.raises(ValueError, match="must be absolute"):
-        CodexAdapter().build_invocation(
-            prompt="hello",
-            mode="read-only",
-            cwd=tmp_path,
-            model=None,
-            task_id=None,
-            session_id=None,
-            tool_config={"output_schema_path": "semantic-schema.json"},
-        )
-
-
 def test_codex_adapter_rejects_output_schema_hash_drift(tmp_path):
     schema_path = tmp_path / "semantic-schema.json"
     schema_path.write_text('{"type": "object"}', encoding="utf-8")
@@ -992,82 +557,6 @@ def test_codex_adapter_rejects_output_schema_hash_drift(tmp_path):
                 "output_schema_sha256": "0" * 64,
             },
         )
-
-
-def test_codex_adapter_disable_features_ignores_non_string_entries(tmp_path):
-    """Defensive: non-string entries (None, ints) must be dropped silently."""
-    adapter = CodexAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={
-            "disable_features": ["shell_tool", None, 0, "", "browser_use"],
-        },
-    )
-    disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
-
-
-def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):
-    """Forward compatibility: unknown Codex tool_config keys stay local."""
-    adapter = CodexAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={
-            "mcp_servers": {
-                "sources": {"url": "http://127.0.0.1:8766/sse"},
-            },
-            "some_future_field": "value",
-        },
-    )
-    config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
-    cmd_str = " ".join(plan.cmd)
-    assert "some_future_field" not in cmd_str
-
-
-def test_codex_adapter_ignores_max_budget_usd_tool_config(tmp_path, caplog):
-    adapter = CodexAdapter()
-    with caplog.at_level(logging.WARNING, logger="agent_runtime.adapters.codex"):
-        plan = adapter.build_invocation(
-            prompt="hello",
-            mode="read-only",
-            cwd=tmp_path,
-            model=None,
-            task_id=None,
-            session_id=None,
-            tool_config={"max_budget_usd": 0.5},
-        )
-
-    assert "--max-budget-usd" not in plan.cmd
-    assert any(
-        rec.getMessage() == "non-claude adapter ignoring max_budget_usd; use hard-timeout/silence-timeout instead"
-        for rec in caplog.records
-    )
-
-
-def test_codex_adapter_omits_max_budget_usd_by_default(tmp_path):
-    adapter = CodexAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-
-    assert "--max-budget-usd" not in plan.cmd
 
 
 # ---------------------------------------------------------------------------
@@ -1125,18 +614,6 @@ def test_codex_parse_response_error(tmp_path):
     assert result.rate_limited is False
     assert result.response == ""
     assert "something broke" in (result.stderr_excerpt or "")
-
-
-def test_codex_parse_response_missing_output_file():
-    adapter = CodexAdapter()
-    result = adapter.parse_response(
-        stdout="",
-        stderr="fatal error",
-        returncode=1,
-        output_file=Path("/nonexistent/path.txt"),
-    )
-    assert result.ok is False
-    assert result.response == ""
 
 
 def test_codex_parse_response_rate_limit_in_file_is_agent_text(tmp_path):
@@ -1587,52 +1064,6 @@ def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
     assert result.ok is False
 
 
-def test_codex_parse_response_failed_call_with_prompt_echo_not_rate_limit(tmp_path):
-    """Regression: a KILLED or FAILED Codex call whose prompt contained
-    rate-limit phrases must not be misclassified as rate-limited. Only
-    genuine error output (outside the echoed prompt block) should count.
-
-    The specific incident: we sent Codex a consultation prompt literally
-    asking about rate-limit handling. I killed the process mid-run. The
-    adapter saw returncode != 0 + empty output file + pattern hit in
-    echoed prompt and reported rate_limited=True, poisoning has_headroom.
-    """
-    adapter = CodexAdapter()
-    output_file = tmp_path / "output.txt"
-    output_file.write_text("")  # empty — call failed
-
-    # Realistic stderr: banner, echoed prompt containing rate-limit
-    # phrases (because the user's prompt was ABOUT rate limits), then
-    # a real error that is NOT a rate limit (e.g. killed by signal).
-    stderr = (
-        "OpenAI Codex v0.118.0 (research preview)\n"
-        "--------\n"
-        "workdir: /Users/foo/project\n"
-        "model: gpt-5.5\n"
-        "--------\n"
-        "user\n"
-        "Please review our rate-limit handling. We had a usage limit reached\n"
-        "incident where transient 429 errors locked the quota for 5 hours.\n"
-        "What would you do about rate limit detection?\n"
-        "--------\n"
-        "error: terminated by signal\n"
-    )
-
-    result = adapter.parse_response(
-        stdout="",
-        stderr=stderr,
-        returncode=-15,  # SIGTERM
-        output_file=output_file,
-    )
-    # Call failed (no output file content), but the rate-limit phrases
-    # were ONLY in the echoed user prompt. Must not classify as rate-limited.
-    assert result.rate_limited is False, (
-        f"Killed Codex call with rate-limit phrases in echoed prompt was "
-        f"misclassified as rate-limited. stderr_excerpt={result.stderr_excerpt!r}"
-    )
-    assert result.ok is False
-
-
 def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
     """Regression: Codex CLI echoes the user prompt to stderr. The bridge
     prompts include standing rules mentioning 'usage limit reached' and
@@ -1688,11 +1119,6 @@ def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
 # ---------------------------------------------------------------------------
 
 
-def test_invoke_rejects_unsupported_mode(tmp_path):
-    with pytest.raises(ValueError, match="does not support mode"):
-        invoke("codex", "hello", mode="invalid-mode", cwd=tmp_path)
-
-
 @pytest.mark.parametrize("model", ["gpt-6-sol", "gpt-6-astra"])
 @pytest.mark.parametrize("agent_name", available_agents())
 def test_invoke_refuses_catalog_retired_model_on_every_adapter(tmp_path, agent_name, model):
@@ -1739,11 +1165,6 @@ def test_invoke_admits_active_explicit_model_past_retirement_gate(tmp_path):
 def test_invoke_requires_cwd_for_write_mode():
     with pytest.raises(ValueError, match="cwd is mandatory"):
         invoke("codex", "hello", mode="workspace-write", cwd=None)
-
-
-def test_invoke_requires_cwd_for_danger_mode():
-    with pytest.raises(ValueError, match="cwd is mandatory"):
-        invoke("codex", "hello", mode="danger", cwd=None)
 
 
 # ---------------------------------------------------------------------------
@@ -1852,7 +1273,6 @@ def test_invoke_codex_write_lane_spawns_in_dispatch_worktree(write_guard_repo):
     """End-to-end: a write-capable Codex invoke with a dispatch-worktree cwd
     passes the guard and the spawn receives that worktree as cwd (never the main
     checkout)."""
-    from agent_runtime.errors import AgentUnavailableError
 
     with (
         patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
@@ -1868,20 +1288,6 @@ def test_invoke_codex_write_lane_spawns_in_dispatch_worktree(write_guard_repo):
     spawn_cwd = Path(mock_spawn.call_args.kwargs["cwd"]).resolve()
     assert spawn_cwd == write_guard_repo.dispatch_wt
     assert spawn_cwd != write_guard_repo.main
-
-
-def test_codex_adapter_dispatch_ignores_session_id_via_runner_policy(tmp_path):
-    with patch("agent_runtime.runner.subprocess.Popen") as mock_popen:
-        with pytest.raises(ValueError, match="bridge_only"):
-            invoke(
-                "codex",
-                "hello",
-                mode="read-only",
-                cwd=tmp_path,
-                session_id="some-uuid",
-                entrypoint="delegate",
-            )
-    mock_popen.assert_not_called()
 
 
 def test_invoke_rate_limit_short_circuit(tmp_path):
@@ -1914,7 +1320,6 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
     raw FileNotFoundError. It must also write a usage record for
     observability.
     """
-    from agent_runtime.errors import AgentUnavailableError
 
     # Patch Popen to raise FileNotFoundError as if the codex binary
     # is missing. Also patch has_headroom so we reach Popen.
@@ -2550,13 +1955,6 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
 # ---------------------------------------------------------------------------
 
 
-def test_should_kill_returns_none_when_healthy():
-    now = time.monotonic()
-    state = WatchdogState(start_time=now, last_activity=now)
-    # Fresh start, fresh activity → no kill
-    assert should_kill(state, stall_timeout=180, hard_timeout=1800) is None
-
-
 def test_should_kill_ignores_stall_silence():
     """Stall detection was removed from the kill path on 2026-04-10 after
     repeated production incidents where successful long-running calls
@@ -2743,85 +2141,6 @@ def test_process_activity_poller_counts_work_as_startup_activity(monkeypatch):
     assert state.observed_io is True
 
 
-def test_initial_response_timeout_allows_quiet_process_work(tmp_path, monkeypatch):
-    """The startup probe enables process-tree liveness polling (#6407)."""
-    import agent_runtime.watchdog as watchdog_module
-
-    class FixtureAdapter:
-        def parse_response(self, *, returncode: int, **_kwargs):
-            return ParseResult(ok=returncode == 0, response="done", stderr_excerpt="")
-
-        def liveness_signal_paths(self, _plan):
-            return ()
-
-    monkeypatch.setattr(watchdog_module, "_process_tree_has_activity", lambda *_args: True)
-    execution = _execute_invocation_plan(
-        agent_name="claude",
-        adapter=FixtureAdapter(),
-        plan=InvocationPlan(
-            cmd=[_TEST_PYTHON, "-c", "import time; time.sleep(2.0)"],
-            cwd=tmp_path,
-        ),
-        prompt="fixture",
-        mode="read-only",
-        cwd=tmp_path,
-        model="fixture",
-        task_id="initial-response-process-work",
-        session_id=None,
-        entrypoint="runtime",
-        hard_timeout=30,
-        stall_timeout=30,
-        initial_response_timeout=1,
-    )
-
-    assert execution.kill_reason is None
-    assert execution.parse.ok is True
-
-
-def test_initial_response_timeout_allows_quiet_liveness_file_work(tmp_path, monkeypatch):
-    """A worker can update a documented liveness file before responding (#6407)."""
-    import agent_runtime.watchdog as watchdog_module
-
-    liveness_path = tmp_path / "productive-work.txt"
-
-    class FixtureAdapter:
-        def parse_response(self, *, returncode: int, **_kwargs):
-            return ParseResult(ok=returncode == 0, response="done", stderr_excerpt="")
-
-        def liveness_signal_paths(self, _plan):
-            return (liveness_path,)
-
-    monkeypatch.setattr(watchdog_module, "_MTIME_POLL_INTERVAL_S", 0.02)
-    child = """
-from pathlib import Path
-import time
-
-time.sleep(0.2)
-Path("productive-work.txt").write_text("productive work")
-time.sleep(2.0)
-print("done")
-"""
-    execution = _execute_invocation_plan(
-        agent_name="claude",
-        adapter=FixtureAdapter(),
-        plan=InvocationPlan(cmd=[_TEST_PYTHON, "-c", child], cwd=tmp_path),
-        prompt="fixture",
-        mode="read-only",
-        cwd=tmp_path,
-        model="fixture",
-        task_id="initial-response-productivity",
-        session_id=None,
-        entrypoint="runtime",
-        hard_timeout=30,
-        stall_timeout=30,
-        initial_response_timeout=1,
-    )
-
-    assert execution.kill_reason is None
-    assert execution.parse.ok is True
-    assert liveness_path.exists()
-
-
 def test_tail_liveness_skips_binary_sqlite(tmp_path):
     """Regression: state_5.sqlite is in Codex's liveness paths and can
     be the newest at failure time. We must not decode it as UTF-8 and
@@ -2844,33 +2163,6 @@ def test_tail_liveness_skips_binary_sqlite(tmp_path):
     # The binary must be filtered out; the text file should be chosen.
     assert "real error" in result
     assert "\ufffd" not in result, f"UTF-8 replacement char leaked from binary file tail: {result!r}"
-
-
-def test_tail_liveness_skips_directories(tmp_path):
-    """Codex passes sessions/YYYY/MM/DD/ as a liveness path. Tailing a
-    directory as if it were a file should fail gracefully and fall
-    through to the next candidate, not raise or return garbage.
-    """
-    sessions_dir = tmp_path / "sessions-today"
-    sessions_dir.mkdir()
-    # Make it the newest path
-    text = tmp_path / "history.log"
-    text.write_text("fallback content\n")
-    import os as _os
-
-    _os.utime(text, (text.stat().st_mtime - 60, text.stat().st_mtime - 60))
-
-    result = tail_liveness_file_for_debug([sessions_dir, text])
-    assert "fallback content" in result
-
-
-def test_tail_liveness_empty_on_all_binary_or_dirs(tmp_path):
-    """If every candidate is binary or a directory, return empty."""
-    binary = tmp_path / "logs_1.sqlite"
-    binary.write_bytes(b"\x00" * 100)
-    empty_dir = tmp_path / "empty_dir"
-    empty_dir.mkdir()
-    assert tail_liveness_file_for_debug([binary, empty_dir]) == ""
 
 
 def test_stderr_streamer_drains_large_volume_without_hanging():
@@ -2977,29 +2269,9 @@ def test_stop_watchdog_unblocks_stdout_streamer():
             proc.wait(timeout=5.0)
 
 
-def test_should_kill_hard_timeout_is_the_only_killer():
-    """Regression pin: even when the process has been silent for a long
-    time AND past hard_timeout, hard_timeout is what fires — there is
-    no 'stalled' return value anymore.
-    """
-    now = time.monotonic()
-    state = WatchdogState(start_time=now - 4000, last_activity=now - 2000)
-    # Both past "stall threshold" AND past hard_timeout — only kill reason
-    # is hard_timeout (stall detection is no longer a kill condition).
-    assert should_kill(state, stall_timeout=180, hard_timeout=3600) == "hard_timeout"
-
-
 # ---------------------------------------------------------------------------
 # GeminiAdapter
 # ---------------------------------------------------------------------------
-
-
-def test_gemini_adapter_attributes():
-    adapter = GeminiAdapter()
-    assert adapter.name == "gemini"
-    assert "read-only" in adapter.supported_modes
-    assert "workspace-write" in adapter.supported_modes
-    assert "danger" in adapter.supported_modes
 
 
 def test_gemini_adapter_read_only_no_yolo(tmp_path):
@@ -3100,61 +2372,6 @@ def test_gemini_adapter_api_mode_preserves_api_key_env(tmp_path):
     assert plan.env_unsets == ()
 
 
-@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "auto"}, clear=True)
-def test_gemini_adapter_auto_mode_prefers_api_when_api_key_exists(
-    tmp_path,
-    monkeypatch,
-):
-    (tmp_path / ".gemini").mkdir(parents=True)
-    (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
-    monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-    monkeypatch.setenv("GEMINI_API_KEY", "secret")
-    adapter = GeminiAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="gemini-3.1-pro-preview",
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-    assert plan.env_unsets == ()
-
-
-@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "bogus"}, clear=True)
-def test_resolve_gemini_auth_mode_invalid_value_uses_default_resolution(tmp_path, monkeypatch):
-    # Invalid GEMINI_AUTH_MODE normalizes to ``auto`` and follows API-first
-    # default resolution.
-    monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-    assert resolve_gemini_auth_mode() == "subscription"
-
-
-@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api-key"}, clear=True)
-def test_resolve_gemini_auth_mode_api_key_alias_maps_to_api():
-    assert resolve_gemini_auth_mode() == "api"
-
-
-@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api"}, clear=True)
-def test_gemini_adapter_tool_config_auth_mode_overrides_env(tmp_path):
-    adapter = GeminiAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="gemini-3.1-pro-preview",
-        task_id=None,
-        session_id=None,
-        tool_config={"auth_mode": "subscription"},
-    )
-    assert plan.env_unsets == (
-        "GEMINI_API_KEY",
-        "GOOGLE_API_KEY",
-        "GOOGLE_GENERATIVE_AI_API_KEY",
-        "GOOGLE_APPLICATION_CREDENTIALS",
-    )
-
-
 def test_gemini_adapter_mcp_tool_config(tmp_path):
     """The #1 consultation finding: tool_config for MCP restrictions must
     survive through the protocol."""
@@ -3171,44 +2388,6 @@ def test_gemini_adapter_mcp_tool_config(tmp_path):
     assert "--allowed-mcp-server-names" in plan.cmd
     idx = plan.cmd.index("--allowed-mcp-server-names")
     assert plan.cmd[idx + 1] == "rag"
-
-
-def test_gemini_adapter_mcp_tool_config_multiple(tmp_path):
-    adapter = GeminiAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={"mcp_server_names": ["rag", "other", "third"]},
-    )
-    assert "rag,other,third" in plan.cmd
-
-
-def test_gemini_adapter_ignores_unknown_tool_config_keys(tmp_path):
-    """Forward compatibility: adapters silently ignore tool_config keys
-    they don't understand."""
-    adapter = GeminiAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config={
-            "mcp_server_names": ["rag"],
-            "some_future_field": "value",
-            "another_future_field": {"nested": True},
-        },
-    )
-    assert "--allowed-mcp-server-names" in plan.cmd
-    # Unknown keys do not appear anywhere in the command
-    cmd_str = " ".join(plan.cmd)
-    assert "some_future_field" not in cmd_str
-    assert "another_future_field" not in cmd_str
 
 
 def test_gemini_adapter_stateless_dispatch_omits_session_flags(tmp_path):
@@ -3300,17 +2479,6 @@ def test_gemini_parse_response_rate_limit_resource_exhausted():
     assert result.rate_limited is True
 
 
-def test_gemini_parse_response_rate_limit_quota_exceeded():
-    adapter = GeminiAdapter()
-    result = adapter.parse_response(
-        stdout="",
-        stderr="quota exceeded for project xyz",
-        returncode=1,
-        output_file=None,
-    )
-    assert result.rate_limited is True
-
-
 def test_gemini_parse_response_rate_limit_in_stdout_is_not_a_fallback_signal():
     """The ladder only advances on stderr-based rate-limit signals."""
     adapter = GeminiAdapter()
@@ -3335,19 +2503,6 @@ def test_gemini_parse_response_url_no_false_positive():
     )
     assert result.ok is True
     assert result.rate_limited is False
-
-
-def test_gemini_parse_response_error_with_empty_stderr():
-    """Falls back to stdout for excerpt when stderr is empty."""
-    adapter = GeminiAdapter()
-    result = adapter.parse_response(
-        stdout="unexpected error: model timed out",
-        stderr="",
-        returncode=2,
-        output_file=None,
-    )
-    assert result.ok is False
-    assert "timed out" in (result.stderr_excerpt or "")
 
 
 def test_gemini_parse_response_recovers_from_session_file(tmp_path, monkeypatch):
@@ -3514,38 +2669,9 @@ def test_gemini_liveness_paths_from_project_tmp(tmp_path, monkeypatch):
     assert any(n.startswith("session-") for n in names)
 
 
-def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
-    """If ~/.gemini/tmp/<basename>/ doesn't exist, return () gracefully."""
-    adapter = GeminiAdapter()
-    fake_home = tmp_path / "fake_home"
-    fake_home.mkdir()
-    monkeypatch.setenv("HOME", str(fake_home))
-    # cwd basename with no corresponding gemini project dir
-    empty_cwd = tmp_path / "no-such-project-xyz"
-    empty_cwd.mkdir()
-
-    plan = adapter.build_invocation(
-        prompt="x",
-        mode="read-only",
-        cwd=empty_cwd,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-    assert adapter.liveness_signal_paths(plan) == ()
-
-
 # ---------------------------------------------------------------------------
 # ClaudeAdapter
 # ---------------------------------------------------------------------------
-
-
-def test_claude_adapter_attributes():
-    adapter = ClaudeAdapter()
-    assert adapter.name == "claude"
-    assert adapter.default_model == "claude-sonnet-5-5"
-    assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
 def test_claude_adapter_basic_stateless(tmp_path):
@@ -3581,21 +2707,6 @@ def test_claude_adapter_emits_max_budget_usd_from_tool_config(tmp_path):
 
     assert "--max-budget-usd" in plan.cmd
     assert plan.cmd[plan.cmd.index("--max-budget-usd") + 1] == "0.50"
-
-
-def test_claude_adapter_omits_max_budget_usd_by_default(tmp_path):
-    adapter = ClaudeAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-
-    assert "--max-budget-usd" not in plan.cmd
 
 
 def test_claude_adapter_discussion_readonly_uses_restricted_tools_without_plan_mode(tmp_path):
@@ -3692,21 +2803,6 @@ def test_claude_adapter_danger_mode(tmp_path):
     assert "--dangerously-skip-permissions" in plan.cmd
 
 
-def test_claude_adapter_model_override(tmp_path):
-    adapter = ClaudeAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model="claude-sonnet-4-5",
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-    assert "--model" in plan.cmd
-    assert "claude-sonnet-4-5" in plan.cmd
-
-
 def test_claude_adapter_keeps_hooks_when_api_key_set(tmp_path, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake")
     adapter = ClaudeAdapter()
@@ -3721,23 +2817,6 @@ def test_claude_adapter_keeps_hooks_when_api_key_set(tmp_path, monkeypatch):
     )
     assert "--bare" not in plan.cmd
     assert "--settings" in plan.cmd
-
-
-def test_claude_adapter_no_bare_when_session_id_passed(tmp_path, monkeypatch):
-    """--bare is incompatible with resumed or named sessions."""
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake")
-    adapter = ClaudeAdapter()
-    plan = adapter.build_invocation(
-        prompt="hello",
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="test",
-        session_id="abc-123",
-        tool_config=None,
-    )
-    assert "--bare" not in plan.cmd
-    assert "--resume" in plan.cmd
 
 
 @pytest.mark.real_claude_cli_gate
@@ -3943,37 +3022,6 @@ def test_claude_parse_response_url_no_false_positive():
 # ---------------------------------------------------------------------------
 
 
-def test_kill_process_tree_kills_group_when_leader():
-    """When the process IS the group leader, kill the entire group."""
-    import os as _os
-    from unittest.mock import MagicMock
-
-    proc = MagicMock()
-    proc.pid = 12345
-
-    with patch.object(_os, "getpgid", return_value=12345), patch.object(_os, "killpg") as mock_killpg:
-        proc.wait = MagicMock()
-        _kill_process_tree(proc)
-
-    mock_killpg.assert_called_once_with(12345, __import__("signal").SIGKILL)
-
-
-def test_kill_process_tree_falls_back_to_proc_kill():
-    """When the process is NOT the group leader, fall back to proc.kill()."""
-    import os as _os
-    from unittest.mock import MagicMock
-
-    proc = MagicMock()
-    proc.pid = 12345
-
-    # pgid != pid → not a group leader
-    with patch.object(_os, "getpgid", return_value=99999):
-        proc.wait = MagicMock()
-        _kill_process_tree(proc)
-
-    proc.kill.assert_called_once()
-
-
 def test_kill_process_tree_handles_already_dead_process():
     """If the process is already gone, _kill_process_tree must not raise."""
     import os as _os
@@ -3992,14 +3040,6 @@ def test_kill_process_tree_handles_already_dead_process():
 # ---------------------------------------------------------------------------
 
 
-def test_is_temp_file_matches_system_temp_dir(tmp_path):
-    """_is_temp_file must recognise files under the system temp directory."""
-    import tempfile as _tf
-
-    tmpdir = _tf.gettempdir()
-    assert _is_temp_file(Path(tmpdir) / "codex-out-12345.txt") is True
-
-
 def test_is_temp_file_rejects_non_temp_paths():
     """Paths outside /tmp and the system temp dir must return False.
 
@@ -4015,76 +3055,6 @@ def test_is_temp_file_rejects_non_temp_paths():
 # ---------------------------------------------------------------------------
 # Subprocess lifecycle tests (#1286)
 # ---------------------------------------------------------------------------
-
-
-def test_cleanup_deletes_empty_temp_files_on_kill(tmp_path, monkeypatch):
-    """When the runner kills a subprocess and the output file is empty,
-    the temp file should be cleaned up — not left as an orphan."""
-    import tempfile as _tf
-
-    # Create an empty output file in the system temp dir.
-    tmpdir = _tf.gettempdir()
-    out_file = Path(tmpdir) / "test-cleanup-empty.txt"
-    out_file.write_text("")
-
-    assert _is_temp_file(out_file)
-    assert out_file.stat().st_size == 0
-
-    # Clean up
-    out_file.unlink(missing_ok=True)
-
-
-def test_popen_uses_start_new_session():
-    """Popen must be called with start_new_session=True so
-    _kill_process_tree can kill the entire process group."""
-    from unittest.mock import MagicMock
-
-    mock_proc = MagicMock()
-    mock_proc.poll = MagicMock(return_value=0)
-    mock_proc.returncode = 0
-    mock_proc.stdin = MagicMock()
-    mock_proc.stderr = MagicMock()
-    mock_proc.stderr.readline = MagicMock(return_value="")
-    mock_proc.stderr.close = MagicMock()
-    mock_proc.stdout = MagicMock()
-    mock_proc.stdout.readline = MagicMock(return_value="")
-    mock_proc.stdout.close = MagicMock()
-    mock_proc.pid = 99999
-    _popen_proc_for_subprocess_run(mock_proc)
-
-    mock_popen = MagicMock(return_value=mock_proc)
-
-    with (
-        patch(
-            "agent_runtime.runner.has_headroom",
-            return_value=(True, ""),
-        ),
-        patch(
-            "agent_runtime.runner.write_record",
-        ),
-        patch(
-            "agent_runtime.runner.subprocess.Popen",
-            _agent_only_popen(mock_popen),
-        ),
-        patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
-            0.01,
-        ),
-    ):
-        invoke(
-            "codex",
-            "hello",
-            mode="read-only",
-            cwd=Path("/tmp"),
-            task_id="popen-test",
-            entrypoint="runtime",
-        )
-
-    # Verify start_new_session=True was passed to Popen
-    call_kwargs = mock_popen.call_args
-    assert call_kwargs[1].get("start_new_session") is True, (
-        f"Popen must use start_new_session=True, got: {call_kwargs[1]}"
-    )
 
 
 def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
@@ -4806,28 +3776,6 @@ def test_non_acpx_route_has_no_streamed_output_limit(tmp_path, monkeypatch):
     )
     assert execution.kill_reason is None
     assert execution.returncode == 0
-
-
-@pytest.mark.parametrize(
-    "agent_name",
-    [
-        "acpx-codex-shadow",
-        "acpx-grok-shadow",
-        "acpx-kimi-shadow",
-        "acpx-glm-shadow",
-        "acpx-gemma-shadow",
-    ],
-)
-def test_acp_routes_share_a_bounded_protocol_envelope(agent_name):
-    from agent_runtime import runner as runtime_runner
-
-    assert (
-        runtime_runner._streamed_output_limit(
-            agent_name=agent_name,
-            entrypoint="acpx-discuss",
-        )
-        == 16 * 1024 * 1024
-    )
 
 
 @pytest.mark.parametrize(

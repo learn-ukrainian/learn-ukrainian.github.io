@@ -269,18 +269,6 @@ def test_build_excludes_stem_private_caption_and_non_view_families(tmp_path: Pat
     assert receipt["human_source_approvals_reopened"] is False
 
 
-def test_unresolved_report_is_separate_and_reopens_no_approvals(tmp_path: Path) -> None:
-    root = _environment(tmp_path)
-    _build(root)
-    report = _artifact(root, "v4_provenance_restoration_unresolved_v1.json")
-    assert report["human_source_approvals_reopened"] is False
-    assert report["by_cohort"]["literary-non-ocr"]["records"] == 2
-    assert report["by_cohort"]["literary-non-ocr"]["unresolved_keys"]["canonical_source_url"] == 1
-    assert report["by_cohort"]["public-textbooks-non-stem-non-ocr"]["unresolved_keys"]["acquisition_raw_locator"] == 1
-    receipt = _artifact(root, "v4_provenance_restoration_receipt_v1.json")
-    assert report["index_sha256"] == receipt["outputs"]["index"]["sha256"]
-
-
 def test_verify_passes_on_fresh_build(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     built = _build(root)

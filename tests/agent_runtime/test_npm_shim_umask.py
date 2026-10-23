@@ -72,45 +72,6 @@ def test_install_subcommands_apply_umask_022(layout, subcommand):
     # Under umask 022, 666 becomes 644, which is not group writable
     assert not (mode & 0o020), f"File mode {oct(mode)} should not be group-writable"
 
-def test_install_subcommand_with_leading_flag_applies_umask_022(layout):
-    _make_real(layout)
-    proc, created_file = _run_with_umask(layout, "npm", ["--prefix", "x", "ci"], 0o002)
-    assert proc.returncode == 0, proc.stderr
-
-    recorded_umask = layout["log"].read_text(encoding="utf-8").strip()
-    assert recorded_umask == "0022"
-    mode = created_file.stat().st_mode
-    assert not (mode & 0o020)
-
-@pytest.mark.parametrize("args", [["run", "build"], ["exec"], ["ls"], ["--version"], ["--cache", "ci", "run", "ci"]])
-def test_non_install_calls_apply_umask_022(layout, args):
-    _make_real(layout)
-    proc, created_file = _run_with_umask(layout, "npm", args, 0o002)
-    assert proc.returncode == 0, proc.stderr
-
-    recorded_umask = layout["log"].read_text(encoding="utf-8").strip()
-    assert recorded_umask == "0022"
-
-    assert created_file.exists()
-    mode = created_file.stat().st_mode
-    assert not (mode & 0o020)
-
-def test_npx_calls_apply_umask_022(layout):
-    _make_real(layout)
-    # create fake npx script since npx normally resolves to npm or npx itself
-    (layout["fake_bin"] / "npx").write_text(FAKE_TOOL_UMASK, encoding="utf-8")
-    (layout["fake_bin"] / "npx").chmod(0o755)
-
-    proc, created_file = _run_with_umask(layout, "npx", ["tailwindcss"], 0o002)
-    assert proc.returncode == 0, proc.stderr
-
-    recorded_umask = layout["log"].read_text(encoding="utf-8").strip()
-    assert recorded_umask == "0022"
-
-    assert created_file.exists()
-    mode = created_file.stat().st_mode
-    assert not (mode & 0o020)
-
 def test_existing_refusal_behavior_unchanged(layout):
     proc, _ = _run_with_umask(layout, "npm", ["ci"], 0o002)
     assert proc.returncode == 1

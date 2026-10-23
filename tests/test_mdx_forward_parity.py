@@ -9,48 +9,6 @@ from scripts.audit import check_mdx_forward_parity as forward_parity
 pytestmark = pytest.mark.reads_content
 
 
-def test_detects_folk_module_source() -> None:
-    path = forward_parity.SOURCE_DIR / "folk/narodna-kultura-yak-systema/module.md"
-
-    assert forward_parity.affected_source_targets([path]) == {
-        forward_parity.ModuleTarget("folk", "narodna-kultura-yak-systema")
-    }
-
-
-def test_detects_seminar_plan_source() -> None:
-    path = forward_parity.SOURCE_DIR / "plans/folk/narodna-kultura-yak-systema.yaml"
-
-    assert forward_parity.affected_source_targets([path]) == {
-        forward_parity.ModuleTarget("folk", "narodna-kultura-yak-systema")
-    }
-
-
-def test_ignores_core_track_source() -> None:
-    path = forward_parity.SOURCE_DIR / "a1/things-have-gender/module.md"
-
-    assert forward_parity.affected_source_targets([path]) == set()
-
-
-def test_normalize_strips_nav_frontmatter_and_trailing_whitespace() -> None:
-    generated = (
-        "---\n"
-        'title: "Demo"\n'
-        "prev: false\n"
-        "next: after\n"
-        "---\n"
-        "Body   \n"
-    )
-    committed = """---
-title: "Demo"
-prev: before
-next: false
----
-Body
-"""
-
-    assert forward_parity.normalize_mdx_for_parity(generated) == forward_parity.normalize_mdx_for_parity(committed)
-
-
 def test_check_targets_flags_stale_committed_mdx(tmp_path: Path, monkeypatch) -> None:
     source_dir = tmp_path / "curriculum/l2-uk-en"
     mdx_dir = tmp_path / "site/src/content/docs"

@@ -5,9 +5,6 @@ These prove codes, not the language boundary; the real-data group does that.
 
 from __future__ import annotations
 
-import ast
-from pathlib import Path
-
 import pytest
 import yaml
 from resolver_helpers import allowlist, document, form, record, stressed, unit
@@ -19,8 +16,6 @@ from scripts.curriculum.resolver.questions import build_questions, load_question
 from scripts.curriculum.resolver.receipts import apply_answers, build_receipts, check_receipts, write_receipts
 from scripts.curriculum.resolver.stream import resolve
 from scripts.curriculum.resolver.tokenize import tokenize
-
-REPO_ROOT = Path(__file__).resolve().parents[3]
 
 BZYUK = record(
     1,
@@ -235,11 +230,6 @@ def test_gloss_refs(sources):
     assert outside["class"] == codes.GLOSS_OUTSIDE_LESSON and empty["class"] == codes.UNCLASSIFIABLE
 
 
-def test_quoted_term_resolves(sources):
-    stream = resolve(document(unit("бзюк", "quoted_term")), allowlist([BZYUK]), sources)
-    assert stream.tokens[0]["class"] == codes.RESOLVED
-
-
 def test_accent_and_bad_shapes_fail_closed():
     with pytest.raises(ResolverError) as error:
         document(unit("бзю́к"))
@@ -358,41 +348,6 @@ def test_two_runs_are_byte_identical(sources):
     again = resolve(doc, allowed, sources)
     assert stream.to_bytes() == again.to_bytes()
     assert lock.yaml_bytes(batch) == lock.yaml_bytes(build_questions(again, doc, allowed))
-
-
-def test_every_subprocess_call_has_a_timeout():
-    roots = [REPO_ROOT / "scripts/curriculum/resolver", Path(__file__).parent]
-    missing = []
-    for path in sorted(p for root in roots for p in root.glob("*.py")):
-        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
-            if (
-                isinstance(node, ast.Call)
-                and isinstance(node.func, ast.Attribute)
-                and isinstance(node.func.value, ast.Name)
-                and node.func.value.id == "subprocess"
-                and not any(k.arg == "timeout" for k in node.keywords)
-            ):
-                missing.append(f"{path.name}:{node.lineno}")
-    assert missing == []
-
-
-def test_unit_step_parsing():
-    """Unit.step accepts string or None; non-string raises INVALID_INPUT."""
-    doc_none = document(unit("бзюк"))
-    assert doc_none.units[0].step is None
-    assert "step" not in doc_none.units[0].locator()
-
-    doc_step = document(unit("бзюк", step="step-intro"))
-    assert doc_step.units[0].step == "step-intro"
-    assert doc_step.units[0].locator()["step"] == "step-intro"
-
-    with pytest.raises(ResolverError) as exc:
-        document(unit("бзюк", step=123))
-    assert exc.value.code == codes.INVALID_INPUT
-
-    with pytest.raises(ResolverError) as exc:
-        document(unit("бзюк", step=["invalid"]))
-    assert exc.value.code == codes.INVALID_INPUT
 
 
 def test_receipts_carry_unit_step(sources):

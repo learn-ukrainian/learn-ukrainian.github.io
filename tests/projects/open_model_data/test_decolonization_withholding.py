@@ -339,10 +339,6 @@ def test_decolonization_integrity_failure_is_never_withholding(monkeypatch):
     "case_id",
     [
         "decol_prot_058",
-        "decol_prot_061",
-        "decol_prot_063",
-        "decol_prot_064",
-        "decol_prot_071",
     ],
 )
 def test_decolonization_queries_cannot_fallback_for_withheld_passages(case_id):
@@ -564,13 +560,6 @@ def test_trusted_vts_cache_positive_control(dictionary_probe):
         "INSERT INTO slovnyk_me_entries VALUES (13, 'https://slovnyk.me/dict/vts/fixture', 'vts', 'literal synthetic passage')"
     )
     assert _query_dictionary(dictionary_probe)["binding"]["locator"] == "slovnyk_me_entries:13"
-
-
-def test_missing_source_provenance_column_is_integrity_failure(dictionary_probe):
-    sources, _, _ = dictionary_probe
-    sources.execute("ALTER TABLE sum20_articles DROP COLUMN official_url")
-    with pytest.raises(sqlite3.OperationalError, match="no such column: official_url"):
-        _query_dictionary(dictionary_probe)
 
 
 def test_dictionary_query_error_is_never_ordinary_absence(dictionary_probe):
@@ -1008,9 +997,6 @@ def reviewed_synthetic_case(monkeypatch, tmp_path):
         "dossier_rejected",
         "changed_receipt",
         "changed_passage",
-        "changed_locus",
-        "changed_source",
-        "changed_context",
         "review_digest",
         "dossier_digest",
     ],

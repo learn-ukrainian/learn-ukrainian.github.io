@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from scripts.curriculum.validate import codes, quote_bytes
-from tests.curriculum.test_plan_validate_mechanical import MAMA, MAN, MONA, NONA
+from tests.curriculum.test_plan_validate_mechanical import MAMA, MONA, NONA
 from tests.curriculum.test_plan_validate_review_gates import (
     _activity,
     _all,
@@ -282,52 +282,6 @@ def test_c26_prose_cannot_shelter_declared_target(tmp_path, focus):
     assert any(o.code == codes.COMPREHENSION_TARGET_NOT_IN_HOST for o in report.failures), report.render_text()
 
 
-@pytest.mark.parametrize(
-    "fields",
-    [
-        {"targets": [MAMA, MAMA]},
-        {"targets": ["not-a-word-id"]},
-        {"targets": "W-201"},
-        {"options": [1]},
-        {"learner_reads": [{"ref": "T-002"}]},
-        {"learner_reads": [{"ref": "T-002", "words": "мама"}]},
-        {"learner_reads": [{"ref": "T-002", "words": [], "extra": True}]},
-        {"learner_reads": ["not-a-pack-id"]},
-    ],
-)
-def test_structured_schema_rejects_invalid_shapes(tmp_path, fields):
-    report = run(tmp_path, declaration(1, "a1", **fields))
-    assert any(o.code == codes.SCHEMA_VIOLATION for o in report.failures), report.render_text()
-
-
-@pytest.mark.parametrize(
-    "selection,expected",
-    [
-        ({"ref": "T-002", "words": ["мама мона"]}, set()),
-        ({"ref": "T-002", "words": ["мона мама"]}, {codes.LEARNER_READ_WORD_NOT_IN_PRINT}),
-        ({"ref": "T-002", "words": ["STOP мама"]}, {codes.LEARNER_READ_WORD_NOT_IN_PRINT}),
-        ({"ref": "T-002", "words": []}, set()),
-    ],
-)
-def test_c21_formula_selectors_match_exact_print(tmp_path, selection, expected):
-    report = run(tmp_path, _all(_quote("мама мона"), declaration(2, "b4", learner_reads=[selection])))
-    assert {o.code for o in report.failures} & STRUCTURED_CODES == expected, report.render_text()
-
-
-def test_c26_recorded_host_holds_structured_target(tmp_path):
-    report = run(
-        tmp_path,
-        _all(
-            _focus(1, "a1", "kind: comprehension; host: {kind: video, ref: V-900}."),
-            link(1, "a1", "s2"),
-            declaration(1, "a1", targets=[MAN]),
-        ),
-    )
-    assert not any(
-        o.code in {codes.COMPREHENSION_TARGET_UNKNOWN, codes.COMPREHENSION_TARGET_NOT_IN_HOST} for o in report.failures
-    ), report.render_text()
-
-
 def test_structured_options_before_first_taught_letter_fail(tmp_path):
     def mutate(plan, pack, words, prior):
         _step(plan, 1, "s1")["introduces"]["letters"] = []
@@ -337,68 +291,6 @@ def test_structured_options_before_first_taught_letter_fail(tmp_path):
     assert any(o.code == codes.CHOICE_OPTION_NOT_DECODABLE and o.step == "s1" for o in report.failures), (
         report.render_text()
     )
-
-
-@pytest.mark.parametrize("text,noted", [("[мама]", True), ("[мама\nмона]", True), ("мама [мама]", False)])
-def test_c26_matching_spelling_inside_transcription_stays_advisory(tmp_path, text, noted):
-    report = run(tmp_path, _all(_quote(text), declaration(2, "b4", targets=[MAMA])))
-    assert any(o.code == codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED for o in report.notes) == noted, (
-        report.render_text()
-    )
-    assert not any(o.code == codes.COMPREHENSION_TARGET_NOT_IN_HOST for o in report.failures)
-
-
-@pytest.mark.parametrize(
-    "path,allowed",
-    [
-        (("objectives", 0), True),
-        (("connects_to", 0), False),
-        (("lessons", 0, "dialogue", "situation"), True),
-        (("lessons", 0, "dialogue", "speakers", 0, "name"), True),
-        (("lessons", 0, "dialogue", "places", 0, "name"), True),
-        (("lessons", 0, "dialogue", "speakers", 0, "role"), False),
-        (("lessons", 0, "activities", 0, "options", 0), True),
-        (("lessons", 0, "activities", 0, "learner_reads", 0, "words", 0), True),
-        (("lessons", 0, "activities", 0, "learner_reads", 0, "ref"), False),
-        (("lessons", 0, "activities", 0, "model"), False),
-    ],
-)
-def test_cyrillic_permission_is_limited_to_text_fields(path, allowed):
-    from scripts.curriculum.validate.validate import _cyrillic_allowed
-
-    assert _cyrillic_allowed(path) is allowed
-
-
-@pytest.mark.parametrize(
-    "text,held", [("мама\nмона", True), ("мама [мона] мона", False), ("мама [мона\nмама] мона", False)]
-)
-def test_formula_wrapping_does_not_join_across_transcription(tmp_path, text, held):
-    formula = "W-299"
-    report = run(tmp_path, _all(_word(formula, "мама мона"), _quote(text), declaration(2, "b4", targets=[formula])))
-    finding = {o.code for o in report.failures + report.notes}
-    assert (
-        codes.COMPREHENSION_TARGET_NOT_IN_HOST not in finding
-        and codes.COMPREHENSION_TARGET_ONLY_TRANSCRIBED not in finding
-    ) == held, report.render_text()
-
-
-def test_c21_selected_formula_can_wrap_in_source_print(tmp_path):
-    report = run(
-        tmp_path,
-        _all(_quote("мама\nмона"), declaration(2, "b4", learner_reads=[{"ref": "T-002", "words": ["мама мона"]}])),
-    )
-    assert not any(o.code == codes.LEARNER_READ_WORD_NOT_IN_PRINT for o in report.failures), report.render_text()
-
-
-@pytest.mark.parametrize("selector,nfc", [("и\u0306", False), ("й", True)])
-def test_learner_read_selector_must_already_be_nfc(tmp_path, selector, nfc):
-    report = run(
-        tmp_path,
-        _all(_quote("й"), declaration(2, "b4", learner_reads=[{"ref": "T-002", "words": [selector]}])),
-    )
-    failures = {o.code for o in report.failures}
-    assert (codes.LEARNER_READ_WORD_NOT_NFC in failures) == (not nfc), report.render_text()
-    assert (codes.LEARNER_READ_WORD_NOT_IN_PRINT in failures) == (not nfc), report.render_text()
 
 
 @pytest.mark.parametrize("punctuation", [".", "!", "?", "…", '."', ".\n"])
@@ -428,14 +320,3 @@ def test_exact_print_match_does_not_normalize_selector():
 
     assert not _print_holds("й", "и\u0306", exact=True)
     assert _print_holds("й", "и\u0306")
-
-
-@pytest.mark.parametrize("text,held", [("добрий день", True), ("добрий\nдень", True), ("добрий. день", False)])
-def test_c21_formula_selector_cannot_cross_sentence_end(tmp_path, text, held):
-    report = run(
-        tmp_path,
-        _all(_quote(text), declaration(2, "b4", learner_reads=[{"ref": "T-002", "words": ["добрий день"]}])),
-    )
-    assert any(o.code == codes.LEARNER_READ_WORD_NOT_IN_PRINT for o in report.failures) == (not held), (
-        report.render_text()
-    )

@@ -44,24 +44,6 @@ def test_tracked_freeze_is_exact_and_preserves_three_frameworks():
     assert len(frameworks["nimchuk_five_stage_with_middle_subperiods"]["stages"]) == 7
 
 
-def test_five_stage_university_synthesis_is_explicit_and_not_modern_only():
-    framework = next(
-        item
-        for item in periodization.load_freeze()["frameworks"]
-        if item["framework_id"] == "university_five_stage_synthesis"
-    )
-
-    assert [item["label_uk"] for item in framework["stages"]] == [
-        "Праслов’янська мова з протосхіднослов’янськими діалектами",
-        "Протоукраїнська мова",
-        "Староукраїнська мова",
-        "Середньоукраїнська мова",
-        "Нова українська мова",
-    ]
-    assert framework["stages"][1]["start_boundary"]["label"] == "VII ст."
-    assert framework["stages"][4]["start_boundary"]["label"] == "з кінця XVIII ст."
-
-
 def test_1413_assignment_keeps_three_attributed_answers():
     assignment = periodization.classify_year(1413)
 
@@ -74,30 +56,6 @@ def test_1413_assignment_keeps_three_attributed_answers():
     assert assignment["canonical_framework_id"] is None
     assert assignment["safeguards"]["historical_forms_protected"] is True
     assert assignment["safeguards"]["modern_correction_eligible"] is False
-
-
-def test_boundary_uncertainty_is_not_silently_rounded_to_one_year():
-    assignment = periodization.classify_year(1050)
-
-    assert _matches(assignment, "university_five_stage_synthesis") == {"staroukrainska": "definite"}
-    assert _matches(assignment, "shevelov_detailed_six_period") == {
-        "protoukrainskyi": "possible_boundary_overlap",
-        "davnoukrainskyi": "possible_boundary_overlap",
-    }
-    assert _matches(assignment, "nimchuk_five_stage_with_middle_subperiods") == {"davnorusko_ukrainska": "definite"}
-
-
-def test_nimchuk_primary_text_gap_remains_explicit_and_limited():
-    freeze = periodization.load_freeze()
-    gap = next(item for item in freeze["remaining_gaps"] if item["gap_id"].startswith("nimchuk"))
-    bibliography = next(
-        item for item in freeze["evidence"] if item["evidence_id"] == "nimchuk_primary_article_bibliography"
-    )
-
-    assert bibliography["full_text_state"] == "bibliographic_only"
-    assert bibliography["document_sha256"] is None
-    assert "primary_source_grade_for_nimchuk_framework" in gap["blocking_for"]
-    assert "qualified_source_attributed_periodization_comparison" in gap["nonblocking_for"]
 
 
 def test_validator_rejects_framework_collapse_even_when_resealed():

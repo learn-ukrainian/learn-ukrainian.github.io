@@ -323,10 +323,6 @@ def _placeholders(count: int) -> str:
     return ",".join("?" for _ in range(count))
 
 
-def _logical_files(root: Path, pattern: str) -> list[str]:
-    return sorted(path.relative_to(root).as_posix() for path in root.glob(pattern) if path.is_file())
-
-
 def _source_stems(root: Path, pattern: str) -> set[str]:
     return {path.stem for path in root.glob(pattern) if path.is_file()}
 

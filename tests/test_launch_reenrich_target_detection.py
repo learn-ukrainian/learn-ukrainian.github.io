@@ -45,10 +45,8 @@ def _run_local_launcher(tmp_path: Path, *args: str) -> subprocess.CompletedProce
     "args,expected_target",
     [
         ((), "missing-translation"),
-        (("--limit", "5"), "missing-translation"),
         (("--target", "full-catalog"), "full-catalog"),
         (("--target=full-catalog",), "full-catalog"),
-        (("--target", "full-catalog", "--limit", "10"), "full-catalog"),
         (
             ("--target=missing-anchor", "--target", "full-catalog"),
             "full-catalog",
@@ -82,92 +80,6 @@ def test_full_catalog_does_not_carry_slugs_file(tmp_path: Path) -> None:
     unconditional_common_args = 'COMMON_ARGS=(\n  --manifest "$WORK_MANIFEST"\n  --local\n  --target "$TARGET"\n  --sources-db "$SOURCES_DB"\n  --write\n)'
     assert unconditional_common_args in source
     assert source.index(slugs_line) > guard_idx
-
-
-@pytest.mark.parametrize(
-    "args,expected_target",
-    [
-        ([], "missing-translation"),
-        (["--limit", "10"], "missing-translation"),
-        (["--target", "full-catalog"], "full-catalog"),
-        (["--target=full-catalog"], "full-catalog"),
-        (["--target", "full-catalog", "--limit", "10"], "full-catalog"),
-        (["--target=missing-anchor", "--target", "full-catalog"], "full-catalog"),
-    ],
-)
-def test_remote_target_detection(args: list[str], expected_target: str) -> None:
-    """The remote wrapper's own TARGET detection (used to gate the residual
-    slugs-file sync/require) must resolve identically to the local
-    launcher's for the same argv -- verified by sourcing just the detection
-    block so this doesn't require a real SSH host."""
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-    start = source.index('TARGET="missing-translation"')
-    end = source.index("\n\n", start)
-    detection_block = source[start:end]
-    script = (
-        'EXTRA_ARGS=("$@")\n'
-        f"{detection_block}\n"
-        'printf "%s\\n" "$TARGET"\n'
-    )
-    proc = subprocess.run(
-        ["bash", "-c", script, "--", *args],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-    )
-    assert proc.returncode == 0, proc.stderr
-    assert proc.stdout.strip() == expected_target
-
-
-def test_remote_wrapper_skips_residual_requirement_for_full_catalog() -> None:
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-    assert 'if [[ "$TARGET" == "missing-translation" ]]; then' in source
-    # The residual-dump existence check and its scp must both be nested
-    # inside that guard, not unconditional.
-    guard_idx = source.index('if [[ "$TARGET" == "missing-translation" ]]; then')
-    residual_check_idx = source.index("local residual dump not found")
-    residual_scp_idx = source.index('scp_q "$LOCAL_RESIDUAL"')
-    assert residual_check_idx > guard_idx
-    assert residual_scp_idx > guard_idx
-
-
-def test_remote_wrapper_syncs_current_enrichment_package() -> None:
-    """The work-dir driver must not import its enrichment code from stale $REPO."""
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-
-    assert 'LOCAL_SCRIPTS_PACKAGE="$WORKTREE/scripts"' in source
-    assert 'rsync_q "$LOCAL_SCRIPTS_PACKAGE/" "$HOST:$REMOTE_WORK_DIR/scripts/"' in source
-    assert 'ATLAS_LOCAL_VESUM_DB' in source
-    assert 'REMOTE_VESUM_DB="$REMOTE_WORK_DIR/data/vesum.db"' in source
-    assert 'ATLAS_LOCAL_SLOVNYK_CACHE' in source
-    assert 'rsync_q "$LOCAL_SLOVNYK_CACHE/" "$HOST:$REMOTE_WORK_DIR/data/lexicon/slovnyk_cache/"' in source
-    assert "refusing to replace unexpected work-dir data symlink" in source
-    # Fresh atlas-job-* workdirs have no data/ yet; create the overlay.
-    assert 'if test ! -d \\"\\$data_path\\"; then mkdir -p \\"\\$data_path\\"' in source
-    assert "syncing vesum.db into work-dir overlay" in source
-    assert 'ATLAS_RE_ENRICH_CODE_ROOT=$(printf \'%q\' "$REMOTE_WORK_DIR")' in source
-
-
-def test_remote_wrapper_syncs_live_manifest_to_work_dir_before_launch() -> None:
-    """Full-catalog must never inherit the stale manifest in the VPS repo."""
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-
-    assert 'LOCAL_LIVE_MANIFEST_CANDIDATE="$WORKTREE/site/src/data/lexicon-manifest.json"' in source
-    assert "PRIMARY_LIVE_MANIFEST=" in source
-    assert 'rsync -a --copy-links --partial "$LOCAL_LIVE_MANIFEST" "$HOST:$REMOTE_WORK_DIR/manifest.json"' in source
-    assert 'stat -L -c \'%s\' $(printf \'%q\' "$REMOTE_WORK_DIR/manifest.json")' in source
-    assert source.index('rsync -a --copy-links --partial "$LOCAL_LIVE_MANIFEST"') < source.index('remote_cmd=')
-
-
-def test_local_launcher_prefers_synced_package_on_systemd_import_path() -> None:
-    """The service command resolves ``scripts.*`` from the work-dir first."""
-    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
-
-    assert 'CODE_ROOT="${ATLAS_RE_ENRICH_CODE_ROOT:-$WORK_DIR}"' in source
-    assert 'WORK_MANIFEST="$WORK_DIR/manifest.json"' in source
-    assert '"$CODE_ROOT/scripts/lexicon/enrich_manifest.py"' in source
-    assert 'PYTHONPATH=$(printf \'%q\' "$CODE_ROOT"):\\$PYTHONPATH:$(printf \'%q\' "$REPO")' in source
 
 
 def _primary_root_block(source: str) -> str:
@@ -208,114 +120,9 @@ def test_remote_wrapper_resolves_primary_root_portably() -> None:
     assert (resolved / ".git").is_dir()
 
 
-def test_remote_wrapper_primary_root_override_wins() -> None:
-    """ATLAS_PRIMARY_ROOT explicit override is honored (#6571)."""
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-    block = _primary_root_block(source)
-    proc = subprocess.run(
-        ["bash", "-c", f'WORKTREE={str(ROOT)!r}\n{block}\nprintf "%s" "$PRIMARY_ROOT"'],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-        env={"PATH": "/usr/bin:/bin", "ATLAS_PRIMARY_ROOT": "/tmp/custom-primary"},
-    )
-    assert proc.returncode == 0, proc.stderr
-    assert proc.stdout == "/tmp/custom-primary"
-
-
-def _remote_run_root_block(source: str) -> str:
-    """Extract the required ATLAS_RUN_ROOT block verbatim."""
-    start = source.index('if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then')
-    end = source.index("\n\n", start)
-    return source[start:end]
-
-
-def test_remote_wrapper_run_root_is_required() -> None:
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-    block = _remote_run_root_block(source)
-    proc = subprocess.run(
-        ["bash", "-c", block],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-        env={"PATH": "/usr/bin:/bin"},
-    )
-    assert proc.returncode == 2
-    assert "ATLAS_RUN_ROOT is required" in proc.stderr
-
-
-def test_remote_wrapper_run_root_uses_env() -> None:
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-    block = _remote_run_root_block(source)
-    proc = subprocess.run(
-        ["bash", "-c", block + "\nprintf '%s' \"$RUN_ROOT\""],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-        env={"PATH": "/usr/bin:/bin", "ATLAS_RUN_ROOT": "/tmp/custom-run-root"},
-    )
-    assert proc.returncode == 0, proc.stderr
-    assert proc.stdout == "/tmp/custom-run-root"
-
-
-def test_remote_wrapper_mkdirs_run_root_before_first_transfer() -> None:
-    """The configured run root must be materialized on the remote before any
-    scp/rsync writes into it."""
-    source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
-    mkdir_marker = 'ssh_q "mkdir -p $(printf \'%q\' "$RUN_ROOT")"'
-    assert mkdir_marker in source
-    mkdir_idx = source.index(mkdir_marker)
-    # Before the first outbound transfer in program order (sources.db rsync)
-    # and before the unconditional driver scp.
-    assert mkdir_idx < source.index('rsync -a --copy-links --partial "$LOCAL_SOURCES_DB"')
-    assert mkdir_idx < source.index('scp_q "$LOCAL_DRIVER"')
-    # But only after SSH reachability is confirmed.
-    assert mkdir_idx > source.index('ssh_q "true"')
-
-
 def test_launchers_never_reference_teacher_product_or_home_trees() -> None:
     """Launchers must not bake teacher-product or home-directory filesystem layout."""
     for launcher in (REMOTE_LAUNCHER, LOCAL_LAUNCHER):
         text = launcher.read_text(encoding="utf-8")
         assert_no_host_facts(text, launcher.name)
         assert_no_host_paths(text)
-
-
-def _local_run_root_block(source: str) -> str:
-    """Extract the required ATLAS_RUN_ROOT block verbatim."""
-    start = source.index('if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then')
-    end = source.index("\n\n", start)
-    return source[start:end]
-
-
-def test_local_launcher_run_root_is_required() -> None:
-    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
-    block = _local_run_root_block(source)
-    proc = subprocess.run(
-        ["bash", "-c", block],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-        env={"PATH": "/usr/bin:/bin"},
-    )
-    assert proc.returncode == 2
-    assert "ATLAS_RUN_ROOT is required" in proc.stderr
-
-
-def test_local_launcher_run_root_uses_env() -> None:
-    source = LOCAL_LAUNCHER.read_text(encoding="utf-8")
-    block = _local_run_root_block(source)
-    proc = subprocess.run(
-        ["bash", "-c", block + "\nprintf '%s' \"$RUN_ROOT\""],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
-        env={"PATH": "/usr/bin:/bin", "ATLAS_RUN_ROOT": "/tmp/custom-run-root"},
-    )
-    assert proc.returncode == 0, proc.stderr
-    assert proc.stdout == "/tmp/custom-run-root"

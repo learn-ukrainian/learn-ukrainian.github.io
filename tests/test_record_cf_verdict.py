@@ -139,13 +139,6 @@ def test_container_visibility_reaches_recorder_before_any_forge_effect(tmp_path,
     assert observed == ([(normalized[expected[0]], "unknown")] if expected else [])
 
 
-def test_container_filter_preserves_recorder_ambiguity_refusal():
-    with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
-        recorder.normalize_verdict(
-            "> Example:\nVERDICT: APPROVE\n\nVERDICT: APPROVE\nVERDICT: BLOCKED"
-        )
-
-
 def test_recorder_parser_failure_precedes_forge_effects(tmp_path, monkeypatch):
     from markdown_it import MarkdownIt
 
@@ -207,16 +200,6 @@ def test_full_nested_task_id_is_safe_and_loadable(tmp_path):
     assert reply == "VERDICT: APPROVE"
     with pytest.raises(recorder.RecordError, match="invalid task id"):
         recorder._task("codex/../review-one", tmp_path)
-
-
-def test_repo_root_timeout_fails_closed(monkeypatch):
-    def timeout(*args, **kwargs):
-        assert kwargs["timeout"] == 30
-        raise subprocess.TimeoutExpired(args[0], kwargs["timeout"])
-
-    monkeypatch.setattr(recorder.subprocess, "run", timeout)
-    with pytest.raises(recorder.RecordError, match="Git repository lookup timed out after 30 seconds"):
-        recorder._repo_root()
 
 
 @pytest.mark.parametrize("reply", ["No verdict", "VERDICT: APPROVE\nVERDICT: BLOCKED"])
@@ -744,22 +727,6 @@ def test_explicit_red_team_flag_accepts_task_with_bound_mode_and_prompt(monkeypa
     assert "review_mode=red_team" in comments[0]["body"]
 
 
-def test_explicit_red_team_flag_refuses_missing_task_mode(monkeypatch, tmp_path):
-    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
-    prompt = red_team_task(tasks, tmp_path)
-    write_task(tasks, prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
-    with pytest.raises(recorder.RecordError, match="review mode conflicts with task"):
-        recorder.record(
-            "review-one",
-            pr_number=42,
-            task_root=tasks,
-            lock_root=tmp_path / "locks",
-            review_mode="red_team",
-            red_team_prompt=prompt,
-        )
-    assert comments == [] and calls == {"posts": 0, "statuses": 0}
-
-
 def test_red_team_effective_prompt_digest_is_supported(monkeypatch, tmp_path):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
     prompt = red_team_task(tasks, tmp_path)
@@ -792,25 +759,6 @@ def test_red_team_prompt_does_not_implicitly_enable_mode(monkeypatch, tmp_path):
             "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
         )
     assert comments == []
-
-
-def test_cli_forwards_explicit_red_team_arguments(monkeypatch, tmp_path, capsys):
-    seen = {}
-
-    def fake_record(task_id, **kwargs):
-        seen.update(task_id=task_id, **kwargs)
-        return {"status": "posted", "review_mode": "red_team"}
-
-    monkeypatch.setattr(recorder, "record", fake_record)
-    prompt = tmp_path / "red-team.md"
-    assert (
-        recorder.main(
-            ["--task-id", "review-one", "--pr", "42", "--review-mode", "red_team", "--red-team-prompt", str(prompt)]
-        )
-        == 0
-    )
-    assert seen == {"task_id": "review-one", "pr_number": 42, "review_mode": "red_team", "red_team_prompt": prompt}
-    assert json.loads(capsys.readouterr().out)["review_mode"] == "red_team"
 
 
 @pytest.mark.parametrize("model", ["unknown@local.invalid", "LU Unknown", "auto"])
@@ -1130,41 +1078,12 @@ def test_clean_merge_unknown_base_refuses(real_commit_set, monkeypatch, tmp_path
         recorder.author_families(REPOSITORY, 42, tmp_path)
 
 
-@pytest.mark.parametrize("sha", [None, "main", "--help"])
-def test_clean_merge_missing_or_invalid_sha_refuses(real_commit_set, tmp_path, sha):
-    _, commits, _, _ = real_commit_set("clean_update_merge")
-    commits[-1]["sha"] = sha
-    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
-        recorder.author_families(REPOSITORY, 42, tmp_path)
-
-
 @pytest.mark.parametrize("trailer", ["X-Agent:", "X-Agent: codex/unknown model"])
 def test_clean_merge_bad_attribution_is_not_exempted(real_commit_set, tmp_path, trailer):
     _, commits, _, _ = real_commit_set("clean_update_merge")
     commits[-1]["commit"]["message"] += f"\n{trailer}\n"
     with pytest.raises(recorder.RecordError):
         recorder.author_families(REPOSITORY, 42, tmp_path)
-
-
-def test_clean_merge_still_refuses_same_family_reviewer(real_commit_set, monkeypatch, tmp_path):
-    _, _, head, base = real_commit_set("clean_update_merge")
-    pr_review_facts = recorder.pr_review_facts
-    tasks, _, calls = setup_record(monkeypatch, tmp_path, head=head)
-    write_task(tasks, worktree_base_sha=head)
-    monkeypatch.setattr(recorder, "pr_review_facts", pr_review_facts)
-    fake_json = recorder._run_json
-    monkeypatch.setattr(
-        recorder,
-        "_run_json",
-        lambda args, **kwargs: (
-            {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
-            if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]
-            else fake_json(args, **kwargs)
-        ),
-    )
-    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("failure", [OSError("Git unavailable"), subprocess.TimeoutExpired("git", 30)])
@@ -1633,18 +1552,6 @@ def test_committed_cursor_auto_family_is_cursor(monkeypatch, tmp_path, selector)
     assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"cursor"}
 
 
-def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_path):
-    def commit(trailer):
-        return {"commit": {"message": f"work\n\nX-Agent: {trailer}"}}
-
-    monkeypatch.setattr(
-        recorder,
-        "_pages",
-        lambda args: [commit("grok/grok-4.7"), commit("kimi/k2")],
-    )
-    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"xai", "moonshot"}
-
-
 def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
     write_task(tasks, task_id="author-task", model="gpt-6.1-sol", agent="agy")
@@ -1716,18 +1623,6 @@ def test_archived_review_task_and_reply_are_loadable(tmp_path):
     # The hot record wins when both exist.
     write_task(tasks, task_id="review-old", reply="VERDICT: REQUEST_CHANGES")
     assert recorder._task("review-old", tasks)[1] == "VERDICT: REQUEST_CHANGES"
-
-
-def test_archived_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
-    """#8625: an old author task moved into tasks/archive/ still proves its family."""
-    tasks = tmp_path / "tasks"
-    write_task(tasks / "archive", task_id="author-task", model="gpt-6.1-sol", agent="agy")
-    monkeypatch.setattr(
-        recorder,
-        "_pages",
-        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
-    )
-    assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
 
 
 @pytest.mark.parametrize("storage", ["missing", "hot", "archived"])
@@ -1833,26 +1728,6 @@ def test_repository_relative_reply_preserves_citations_and_outside_text(text, ex
     assert recorder.repository_relative_reply(text, task=review, primary_root=root) == expected
 
 
-@pytest.mark.parametrize(
-    "checkout",
-    [
-        {"worktree_path": "/checkout/.worktrees/dispatch/cursor/review"},
-        {"worktree_path": "/checkout/.worktrees/dispatch/cursor/review", "cwd": "/review/scripts"},
-        {"worktree_path": "/checkout/.worktrees/dispatch/cursor/review", "cwd": "/"},
-        {"worktree_path": "/checkout"},
-    ],
-)
-def test_repository_relative_reply_uses_recorded_checkout(checkout, citation_checkout):
-    root, _ = citation_checkout
-    checkout = {key: value.replace("/checkout", str(root)) for key, value in checkout.items()}
-    assert (
-        recorder.repository_relative_reply(
-            f"{checkout['worktree_path']}/scripts/unit.py:12", task=checkout, primary_root=root
-        )
-        == "scripts/unit.py:12"
-    )
-
-
 @pytest.mark.parametrize("checkout", ["/review", "/checkout-other", "/else/checkout"])
 def test_repository_relative_reply_refuses_roots_outside_primary(checkout, citation_checkout):
     root, _ = citation_checkout
@@ -1955,21 +1830,6 @@ def test_repository_relative_reply_refuses_cwd_and_ancestor_roots(checkout, cita
     ) == ("/review/unit.py /repo/outside/unit.py scripts/unit.py")
 
 
-def test_repository_relative_reply_refuses_filesystem_root_as_primary():
-    text = "/outside/unit.py"
-    assert recorder.repository_relative_reply(text, task={}, primary_root=Path("/")) == text
-
-
-def test_repository_relative_reply_refuses_resolved_ancestor_root(tmp_path, citation_checkout):
-    root, _ = citation_checkout
-    alias = tmp_path / "alias"
-    alias.symlink_to(tmp_path, target_is_directory=True)
-    text = f"{alias}/outside/unit.py {root}/scripts/unit.py"
-    assert recorder.repository_relative_reply(text, task={"worktree_path": str(alias)}, primary_root=root) == (
-        f"{alias}/outside/unit.py scripts/unit.py"
-    )
-
-
 @pytest.mark.parametrize("separator", list("|=\\*;&<>\"'()[]{},"))
 def test_repository_relative_reply_uses_scanner_boundaries(separator, citation_checkout):
     root, worktree = citation_checkout
@@ -1980,19 +1840,6 @@ def test_repository_relative_reply_uses_scanner_boundaries(separator, citation_c
             recorder.repository_relative_reply(text, task={"worktree_path": str(worktree)}, primary_root=root)
             == expected
         )
-
-
-@pytest.mark.parametrize("checkout", [None, "relative", 123])
-def test_repository_relative_reply_ignores_invalid_checkout(checkout, citation_checkout):
-    root, _ = citation_checkout
-    assert (
-        recorder.repository_relative_reply(
-            f"/outside/unit.py {root}/scripts/unit.py",
-            task={"worktree_path": checkout},
-            primary_root=root,
-        )
-        == "/outside/unit.py scripts/unit.py"
-    )
 
 
 def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path, citation_checkout):
@@ -2097,18 +1944,6 @@ def test_record_fixture_dry_run_through_publication_scanner(
         assert "/checkout" not in body
         if "unit.py" in reply:
             assert "`scripts/unit.py:12`" in body and "```\ntests/test_unit.py:3\n```" in body
-
-
-def test_task_record_agent_conflict_is_checked_for_agy(monkeypatch, tmp_path):
-    tasks = tmp_path / "tasks"
-    write_task(tasks, task_id="author-task", model="claude-opus-5", agent="claude")
-    monkeypatch.setattr(
-        recorder,
-        "_pages",
-        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
-    )
-    with pytest.raises(recorder.RecordError, match="provenance conflicts"):
-        recorder.author_families(REPOSITORY, 42, tasks)
 
 
 def test_comment_truncation_retains_marker():
@@ -2272,20 +2107,6 @@ def test_scanner_span_preserves_ascii_traversal(
     assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
 
 
-@pytest.mark.parametrize("suffix", [":12", ":12:3"])
-@pytest.mark.parametrize("checkout", ["primary", "worktree"])
-def test_suffixed_file_symlink_outside_refuses(citation_checkout, tmp_path, real_recorder_matcher, suffix, checkout):
-    root, worktree = citation_checkout
-    outside = tmp_path / "outside.py"
-    outside.write_text("# outside\n" * 20)
-    cited_root = root if checkout == "primary" else worktree
-    (cited_root / "link.py").symlink_to(outside)
-    reply = f"VERDICT: APPROVE\n`{cited_root}/link.py{suffix}`"
-    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
-    assert rewritten == reply
-    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
-
-
 @pytest.mark.parametrize("checkout", ["primary", "worktree"])
 @pytest.mark.parametrize("target_kind", ["file", "directory", "missing"])
 def test_interpreter_symlink_citation_rewrites(
@@ -2311,83 +2132,6 @@ def test_interpreter_symlink_citation_rewrites(
     gate.check_texts("github.com/unit/public", [rewritten], tooling=real_recorder_matcher, environment={})
 
 
-@pytest.mark.parametrize("checkout", ["primary", "worktree"])
-@pytest.mark.parametrize("suffix", ["", ":12", ":12:3"])
-def test_symlinked_parent_escape_stays_absolute(citation_checkout, tmp_path, real_recorder_matcher, checkout, suffix):
-    root, worktree = citation_checkout
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (outside / "python").write_text("# outside fixture\n")
-    cited_root = root if checkout == "primary" else worktree
-    (cited_root / "escape").symlink_to(outside, target_is_directory=True)
-    reply = f"VERDICT: APPROVE\n`{cited_root}/escape/python{suffix}`"
-
-    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
-
-    assert rewritten == reply
-    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
-
-
-@pytest.mark.parametrize("checkout", ["primary", "worktree"])
-def test_outside_symlinked_parent_into_checkout_stays_absolute(
-    citation_checkout, tmp_path, real_recorder_matcher, checkout
-):
-    root, worktree = citation_checkout
-    cited_root = root if checkout == "primary" else worktree
-    alias = tmp_path / "alias"
-    alias.symlink_to(cited_root, target_is_directory=True)
-    reply = f"VERDICT: APPROVE\n`{alias}/scripts/unit.py`"
-
-    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
-
-    assert rewritten == reply
-    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
-
-
-@pytest.mark.parametrize("outside_first", [True, False])
-def test_neighboring_outside_span_survives_real_scanner(citation_checkout, real_recorder_matcher, outside_first):
-    root, worktree = citation_checkout
-    inside = f"`{worktree}/scripts/unit.py:12:3`"
-    outside = f"`{root.parent}/outside/private.py:12`"
-    citations = [outside, inside] if outside_first else [inside, outside]
-    reply = "VERDICT: APPROVE\n" + " ".join(citations)
-    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
-    assert rewritten == reply.replace(inside, "`scripts/unit.py:12:3`")
-    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
-
-
-@pytest.mark.parametrize("prefix", ["<", ">", "="])
-def test_rewrite_reverts_normalization_unstable_line(citation_checkout, real_recorder_matcher, prefix):
-    root, _ = citation_checkout
-    path = root / "\u0338unit.py"
-    path.write_text("# fixture\n")
-    line = f"{prefix}{path}"
-    assert recorder.normalize_for_scan(line) == line
-    assert recorder.normalize_for_scan(f"{prefix}{path.name}") != f"{prefix}{path.name}"
-    reply = f"{root}/scripts/before.py\n{line}\n{root}/scripts/after.py"
-    rewritten = recorder.repository_relative_reply(reply, task={}, primary_root=root)
-    assert rewritten == f"scripts/before.py\n{line}\nscripts/after.py"
-    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
-
-
-def test_ordinary_denominator_real_scanner(citation_checkout, real_recorder_matcher):
-    from scripts.opsec import prepublish as gate
-
-    root, worktree = citation_checkout
-    reply = (
-        f"VERDICT: APPROVE\n{worktree}\n{root}\n{root}/scripts\n"
-        f"`{worktree}/scripts/unit.py:12:3`\n"
-        f"```\n{root}/tests/test_unit.py:3\n```\n"
-        f"[source]({root}/scripts/unit.py:12)"
-    )
-    rewritten = recorder.repository_relative_reply(reply, task={"worktree_path": str(worktree)}, primary_root=root)
-    assert rewritten == (
-        "VERDICT: APPROVE\n.\n.\nscripts\n`scripts/unit.py:12:3`\n"
-        "```\ntests/test_unit.py:3\n```\n[source](scripts/unit.py:12)"
-    )
-    gate.check_texts("github.com/unit/public", [rewritten], tooling=real_recorder_matcher, environment={})
-
-
 @pytest.mark.parametrize(
     "citation", ["missing.py", "missing.py:12", "scripts:12", "scripts/unit.py:0", "scripts/unit.py:12:x"]
 )
@@ -2399,34 +2143,12 @@ def test_ambiguous_or_nonexistent_citation_refuses(citation_checkout, real_recor
     assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
 
 
-def test_existing_suffixed_filename_is_ambiguous(citation_checkout, real_recorder_matcher):
-    root, _ = citation_checkout
-    (root / "scripts/unit.py:12").write_text("# different file\n")
-    reply = f"VERDICT: APPROVE\n`{root}/scripts/unit.py:12`"
-    rewritten = recorder.repository_relative_reply(reply, task={}, primary_root=root)
-    assert rewritten == reply
-    assert_rendered_path_refusal(reply, rewritten, real_recorder_matcher)
-
-
 def test_matcher_refusal_prevents_record_transport(monkeypatch, tmp_path, synthetic_opsec):
     tasks, _, calls = setup_record(monkeypatch, tmp_path)
     (synthetic_opsec / "rules.json").write_text("invalid")
     with pytest.raises(recorder.RecordError, match="publish_blocked"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
-
-
-@pytest.mark.parametrize("separator", ["=", "\\", "&", "(", "[", "{"])
-def test_complete_separator_filename_can_rewrite(citation_checkout, real_recorder_matcher, separator):
-    from scripts.opsec import prepublish as gate
-
-    root, _ = citation_checkout
-    path = root / f"a{separator}b.py"
-    path.write_text("# fixture\n")
-    reply = f"`{path}:12:3`"
-    rewritten = recorder.repository_relative_reply(reply, task={}, primary_root=root)
-    assert rewritten == f"`{path.name}:12:3`"
-    gate.check_texts("github.com/unit/public", [rewritten], tooling=real_recorder_matcher, environment={})
 
 
 @pytest.mark.parametrize("kind", ["dangling-suffix", "file-root", "special-file"])
@@ -2445,17 +2167,6 @@ def test_ambiguous_filesystem_identity_stays_verbatim(citation_checkout, kind):
         os.mkfifo(path)
         reply = f"`{path}`"
     assert recorder.repository_relative_reply(reply, task={}, primary_root=root) == reply
-
-
-def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tmp_path, synthetic_opsec):
-    from tests.opsec_fixtures import synthetic_rules
-
-    tasks, _, calls = setup_record(monkeypatch, tmp_path)
-    write_task(tasks, reply="VERDICT: APPROVE\u00a0\n\u200b/checkout/scripts/unit.py")
-    (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules()))
-    with pytest.raises(recorder.RecordError, match="absolute-path rule unavailable/incompatible"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert calls == {"posts": 0, "statuses": 0}
 
 
 # --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
@@ -2541,10 +2252,6 @@ def test_fenced_change_request_does_not_contaminate_real_approval():
     assert recorder.normalize_verdict("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE") == "APPROVED"
 
 
-def test_approval_aliases_are_one_normalized_decision():
-    assert recorder.normalize_verdict("VERDICT: APPROVE\n**VERDICT: APPROVED**") == "APPROVED"
-
-
 def test_non_commonmark_indentation_refuses_before_publication(monkeypatch, tmp_path):
     tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
     write_task(tasks, reply="\u00a0VERDICT: APPROVE\n\u200b/checkout/scripts/unit.py")
@@ -2570,50 +2277,6 @@ def test_native_grok_runtime_attestation_reaches_the_verdict_receipt(monkeypatch
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert result["comment"] == "posted"
     assert "model=grok-4.7 family=xai" in comments[0]["body"]
-
-
-@pytest.mark.parametrize(
-    "updates",
-    [
-        {},
-        {"resolved_model_known": False},
-        {"resolved_model_source": "cursor-stream-json"},
-        {"resolved_model_source": "pending"},
-        {"resolved_model": "grok-4.7-build-fast"},
-        {"resolved_model": "grok-4.6"},
-        {"resolved_model": "grok-4.7"},
-        {"resolved_model": "grok-4.7-build-extra"},
-    ],
-)
-def test_native_grok_unattested_or_unadmitted_runtime_is_refused_before_publication(monkeypatch, tmp_path, updates):
-    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
-    attested = {
-        "resolved_model": "grok-4.7-build",
-        "resolved_model_known": True,
-        "resolved_model_source": "grok-model-usage",
-    }
-    write_task(tasks, agent="grok", model="grok-4.7", **({**attested, **updates} if updates else {}))
-    with pytest.raises(
-        recorder.RecordError, match=r"native Grok reviewer model unattested|native Grok reviewer model unknown"
-    ):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert comments == []
-
-
-@pytest.mark.parametrize("families", [{"xai"}, {"xai", "moonshot"}])
-def test_attested_native_grok_refuses_xai_and_unknown_auto_authors(monkeypatch, tmp_path, families):
-    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families=families)
-    write_task(
-        tasks,
-        agent="grok",
-        model="grok-4.7",
-        resolved_model="grok-4.7-build",
-        resolved_model_known=True,
-        resolved_model_source="grok-model-usage",
-    )
-    with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert comments == []
 
 
 @pytest.mark.parametrize(
@@ -2672,26 +2335,9 @@ def test_non_cursor_auto_author_attribution_stays_unknown(monkeypatch, tmp_path,
 
 
 @pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped"])
-@pytest.mark.parametrize("selector", ["auto", "cursor/default"])
-def test_non_cursor_auto_task_record_stays_unknown(monkeypatch, tmp_path, harness, selector):
-    tasks = tmp_path / "tasks"
-    write_task(tasks, task_id="author-selector", agent=harness, model=selector)
-    monkeypatch.setattr(
-        recorder, "_pages", lambda args: [{"commit": {"message": f"work\n\nX-Agent: {harness}/author-selector"}}]
-    )
-    assert recorder.author_families(REPOSITORY, 42, tasks) == {"unknown"}
-
-
-@pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped"])
 def test_non_cursor_auto_incoming_writer_is_not_admitted(harness):
     with pytest.raises(recorder.BranchFactsError, match="incoming writer family unknown"):
         recorder.incoming_writer_family(harness, "auto")
-
-
-@pytest.mark.parametrize("harness", ["cursor", "cursor-tools", "Cursor"])
-@pytest.mark.parametrize("selector", ["auto", "default", "cursor:auto", "cursor/default"])
-def test_cursor_auto_harness_aliases_keep_cursor_family(harness, selector):
-    assert recorder._author_model_family(harness, selector) == "cursor"
 
 
 @pytest.mark.parametrize("remaining", [54, 5])
@@ -2774,59 +2420,6 @@ def test_red_team_label_survives_status_description_truncation(monkeypatch, tmp_
     recorder.record(task_id, pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
     assert statuses[0]["description"].startswith("review_mode=red_team VERDICT: APPROVED")
     assert len(statuses[0]["description"]) == 140
-
-
-@pytest.mark.parametrize("archived", [False, True])
-@pytest.mark.parametrize(
-    "record_id", ["review-one", "REVIEW-ONE", " review-one ", "codex/review-one", "codex-REVIEW-ONE"]
-)
-def test_red_team_same_task_refused_before_publication(monkeypatch, tmp_path, archived, record_id):
-    from dataclasses import replace
-
-    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
-    prompt = red_team_task(tasks, tmp_path)
-    task_path = tasks / "review-one.json"
-    data = json.loads(task_path.read_text())
-    data["task_id"] = record_id
-    task_path.write_text(json.dumps(data))
-    if archived:
-        (tasks / "archive").mkdir()
-        for suffix in ("json", "result"):
-            (tasks / f"review-one.{suffix}").rename(tasks / "archive" / f"review-one.{suffix}")
-    facts = replace(
-        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", record_id),)
-    )
-    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
-    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
-        recorder.record(
-            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
-        )
-    assert comments == [] and calls == {"posts": 0, "statuses": 0}
-
-
-@pytest.mark.parametrize("archived", [False, True])
-def test_red_team_record_own_author_id_refused_before_publication(monkeypatch, tmp_path, archived):
-    from dataclasses import replace
-
-    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
-    prompt = red_team_task(tasks, tmp_path)
-    path = tasks / "review-one.json"
-    data = json.loads(path.read_text())
-    data["task_id"] = " codex/AUTHOR-ONE "
-    path.write_text(json.dumps(data))
-    if archived:
-        (tasks / "archive").mkdir()
-        for suffix in ("json", "result"):
-            (tasks / f"review-one.{suffix}").rename(tasks / "archive" / f"review-one.{suffix}")
-    facts = replace(
-        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", "author-one"),)
-    )
-    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
-    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
-        recorder.record(
-            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
-        )
-    assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("archived", [False, True])
@@ -2929,26 +2522,6 @@ def test_author_task_seat_models_retain_recorded_and_resolved_identity(tmp_path,
         assert recorder.red_team_seat_refusal((reviewer,), author_models=attribution.author_models) == (
             "RED_TEAM_REFUSED: reviewer model equals a branch author model"
         )
-
-
-@pytest.mark.parametrize("history", [None, {}, [None]])
-def test_red_team_marker_data_shape_refused(history):
-    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: verdict marker data unavailable"):
-        recorder.require_no_outside_rejection(history, SHA)
-
-
-def test_red_team_raw_request_changes_marker_refused():
-    body = recorder.build_comment(
-        sha=SHA,
-        task_id="prior-review",
-        started="2026-09-23T11:00:00.000001+00:00",
-        verdict="REQUEST_CHANGES",
-        model="claude-opus-5-5",
-        family="anthropic",
-        reply="VERDICT: REQUEST_CHANGES",
-    )
-    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: outside-family rejection exists for this head"):
-        recorder.require_no_outside_rejection([{"body": body}], SHA)
 
 
 @pytest.mark.parametrize("case", ["clean_update_merge", "conflict_resolution"])

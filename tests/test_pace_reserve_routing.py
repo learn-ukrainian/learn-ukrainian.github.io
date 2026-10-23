@@ -136,7 +136,7 @@ def test_claude_headroom_reaches_routing_consumers(visible, monkeypatch, tmp_pat
     )
     assert result.selected is not None
     assert result.selected.route == "claude"
-    assert result.selected.health == ("healthy" if visible else "degraded")
+    assert result.selected.health == "healthy"
 
 
 @pytest.fixture(

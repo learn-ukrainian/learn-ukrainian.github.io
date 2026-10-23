@@ -54,7 +54,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_chars": int,
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
-        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "lifecycle", "research"
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "evidence", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
         "review_contract": {render_checkout, server_checkout, server_interpreter, render_server_digest, server_digest, server_components, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
         "review_input_paths": [str] | absent,  # attempt reads outside input_root; claimed until terminal (#9597)
@@ -63,6 +63,9 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "result_file": str | null,   # path to the full response text
         "held_work": [str] | absent,  # explicit runtime-root relative files to preserve (#10000)
         "preserved_held_work": object | absent,  # verified runtime-held-work.v1 retrieval manifest
+        "runtime_tmp_root": str,  # task-scoped runtime lease (the worker's TMPDIR)
+        "evidence_dir": str,      # supported evidence directory under that lease (#11342)
+        "preserved_evidence": object | absent,  # verified runtime-evidence.v1 retrieval manifest
         "stderr_excerpt": str | null,   # the worker's raw stderr: local; never quote it in a PR or issue
         "returncode": int | null,
         "returncode_reason": str | null,
@@ -156,6 +159,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import base64
 import contextlib
 import dataclasses
 import errno
@@ -248,6 +252,7 @@ from scripts.orchestration.dead_worker_state import (
     worker_liveness,
     write_state_unlocked,
 )
+from scripts.orchestration.fleet_repos import FleetRepo, load_fleet_repos, resolve_fleet_repo
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
@@ -532,9 +537,9 @@ DEFAULT_NETWORK_GIT_TIMEOUT_S: float = 180.0
 DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 
 
-def _auto_finalize_push_timeout_s() -> float:
+def _auto_finalize_push_timeout_s(hook: Path | None = None) -> float:
     try:
-        bounds = runpy.run_path(str(_local_repo_root / ".githooks/pre_push_gate.py"))
+        bounds = runpy.run_path(str(hook or _local_repo_root / ".githooks/pre_push_gate.py"))
         return DEFAULT_NETWORK_GIT_TIMEOUT_S + bounds["ADMISSION_MAX_WAIT_S"] + bounds["ADMISSION_WAIT_S"]
     except (OSError, KeyError, SyntaxError, TypeError, ValueError) as exc:
         raise _TypedFailure(
@@ -630,10 +635,6 @@ def _read_only_snapshot_sidecar_path(task_id: str, phase: str) -> Path:
     return _read_only_snapshot_dir_for(task_id) / f"read_only_checkout_{phase}.json"
 
 
-def _read_only_snapshot_digest_path(task_id: str) -> Path:
-    return _read_only_snapshot_dir_for(task_id) / _READ_ONLY_SNAPSHOT_DIGEST_NAME
-
-
 def _write_read_only_snapshot_sidecar(
     task_id: str,
     phase: str,
@@ -720,24 +721,6 @@ def discard_read_only_snapshot_phases(snapshot_dir: Path) -> None:
             continue
         if stat.S_ISREG(info.st_mode):
             path.unlink()
-
-
-def collapse_read_only_snapshot_dir(
-    snapshot_dir: Path,
-    pre: dict[str, str] | None,
-    post: dict[str, str] | None,
-) -> int:
-    """Replace phase JSON with ``digest.json``. Return bytes reclaimed.
-
-    The digest hashes the same canonical bytes ``_write_read_only_snapshot_sidecar``
-    writes. Callers that still have to publish the task record must
-    :func:`stage_read_only_snapshot_digest`, write the record, then
-    :func:`discard_read_only_snapshot_phases`. This helper does both file steps
-    and is for a caller that has already published the record.
-    """
-    reclaimed = stage_read_only_snapshot_digest(snapshot_dir, pre, post)
-    discard_read_only_snapshot_phases(snapshot_dir)
-    return reclaimed
 
 
 def _load_read_only_snapshot_sidecar(task_id: str, phase: str) -> dict[str, str] | None:
@@ -830,6 +813,10 @@ def _core_terminal_fields(
     and not the other. One definition, both paths. (Cross-family review of
     #5807, round ten.)
     """
+    if status == "needs_finalize":
+        needs_finalize = True
+        finalize_error = finalize_error if is_public_cause(finalize_error) else "finalize_delivery_pending"
+        last_error = last_error if is_public_cause(last_error) else finalize_error
     return {
         "status": status,
         "finished_at": datetime.now(UTC).isoformat(),
@@ -846,6 +833,11 @@ def _core_terminal_fields(
         "commits_ahead": commits_ahead,
         "needs_finalize": needs_finalize,
         "finalize_error": finalize_error,
+        "finalize_next_action": (
+            "owner must inspect retained task/head, repair the named gate and retry normal publication"
+            if status == "needs_finalize"
+            else None
+        ),
         "peak_rss_mib": _children_peak_rss_mib(),
     }
 
@@ -1622,10 +1614,21 @@ def _preserve_runtime_tmp_held_work(
     record: dict[str, Any] | None,
     response: str | None = None,
 ) -> dict[str, Any]:
-    """Publish held-work retrieval metadata before any runtime lease deletion."""
+    """Publish held-work and evidence retrieval metadata before any lease deletion.
+
+    The supported ``evidence/`` directory (#11342) is preserved first: a review
+    that writes only there keeps an auditable copy after task cleanup. The
+    citation-driven held-work pass stays as before. A preservation failure is a
+    typed refusal, so the caller retains the lease instead of deleting bytes.
+    """
     from scripts.fleet import runtime_held_work
 
     if record is None:
+        # A stateless lease has no task store entry to attribute a receipt to.
+        # The dispatch marker distinguishes supported evidence from a tool's
+        # own evidence directory, which keeps its existing age-based retention.
+        if os.path.lexists(_runtime_tmp_task_id_marker_path(lease)):
+            runtime_held_work.require_empty_evidence(lease)
         return {}
     if response is None:
         task_id = record.get("task_id")
@@ -1636,12 +1639,17 @@ def _preserve_runtime_tmp_held_work(
         bound_root = record.get("runtime_tmp_root")
         if bound_root and Path(bound_root).absolute() != lease.absolute():
             raise runtime_held_work.HeldWorkPreservationError()
+        evidence = runtime_held_work.preserve_evidence(lease, primary=_main_checkout_root(_REPO_ROOT), record=record)
         receipt = runtime_held_work.preserve(
             lease, primary=_main_checkout_root(_REPO_ROOT), record=record, response=response or ""
         )
-        if receipt is None:
+        updates: dict[str, Any] = {}
+        if receipt is not None:
+            updates["preserved_held_work"] = receipt
+        if evidence is not None:
+            updates["preserved_evidence"] = evidence
+        if not updates:
             return {}
-        updates = {"preserved_held_work": receipt}
         path = _state_path_no_create(record["task_id"])
         with task_state_lock(path):
             current = _read_state_json(path)
@@ -1651,8 +1659,34 @@ def _preserve_runtime_tmp_held_work(
             _write_record_unlocked(path, current)
         record.update(updates)
         return updates
+    except runtime_held_work.EvidencePreservationError:
+        raise
     except (OSError, ValueError, TypeError):
         raise runtime_held_work.HeldWorkPreservationError() from None
+
+
+def _require_preserved_evidence_still_matches(
+    lease: Path, updates: Mapping[str, Any], *, dispatch_lease: bool
+) -> None:
+    """Refuse lease deletion when supported evidence changed after its receipt (#11342).
+
+    ``preserve_evidence`` copies to a fixed point and receipts only a set verified
+    identical to the source. Recheck immediately before deletion so a file that
+    appeared or changed after the final enumeration is never silently lost; the
+    typed refusal keeps the lease.
+    Without a receipt, dispatch evidence must still be absent or empty.
+    ``dispatch_lease`` is captured before preservation and accounting, so losing
+    the marker during either operation cannot bypass the final recheck.
+    """
+    from scripts.fleet import runtime_held_work
+
+    receipt = updates.get("preserved_evidence") if isinstance(updates, Mapping) else None
+    if receipt is None:
+        if dispatch_lease:
+            runtime_held_work.require_empty_evidence(lease)
+        return
+    if not runtime_held_work.evidence_matches_receipt(lease, receipt):
+        raise runtime_held_work.EvidencePreservationError()
 
 
 def _sweep_runtime_tmp_orphans(
@@ -1743,8 +1777,10 @@ def _sweep_runtime_tmp_orphans(
                 continue
 
             try:
-                _preserve_runtime_tmp_held_work(lease, state)
+                dispatch_lease = state is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
+                updates = _preserve_runtime_tmp_held_work(lease, state)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
+                _require_preserved_evidence_still_matches(lease, updates, dispatch_lease=dispatch_lease)
                 _remove_runtime_tmp_lease(lease, namespace)
             except (OSError, ValueError) as exc:
                 result["errors"] += 1
@@ -1849,8 +1885,10 @@ def _reap_runtime_tmp_lease(
                 if _read_runtime_tmp_task_id_marker(lease) is None
                 else None,
             )
+        dispatch_lease = task_record is not None or os.path.lexists(_runtime_tmp_task_id_marker_path(lease))
         result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
         bytes_freed = _runtime_tmp_lease_bytes(lease)
+        _require_preserved_evidence_still_matches(lease, result, dispatch_lease=dispatch_lease)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
@@ -2501,6 +2539,9 @@ def _ensure_sibling_repo_worktree(
     run_nonce: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_branch: str | None = None,
+    pinned_head_sha: str | None = None,
+    repository: str | None = None,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
@@ -2508,9 +2549,20 @@ def _ensure_sibling_repo_worktree(
     ``_fetch_base``) stay on :data:`_REPO_ROOT`. Sibling repos get a narrow
     fetch + ``git worktree add`` path so private product/infra trees are not
     forced through public monorepo provisioning (#672 P2.1). ``validated_path``,
-    when given, is used as is and never resolved again (#8775).
+    when given, is used as is and never resolved again (#8775). Direct branch
+    reviews fetch and verify the admitted pin, then detach at that exact commit.
     """
+    if review_branch:
+        error = _validated_path_changed_error("--repo", Path(repo_root))
+        if error:
+            raise ValueError(error)
     root = Path(repo_root).resolve()
+    if review_branch:
+        from scripts.review.target_resolution import TargetResolutionError, live_canonical_branch_head
+
+        review_branch = _validate_branch_reuse_name(review_branch, repo_root=root)
+        if not detached or not repository or not re.fullmatch(r"[0-9a-f]{40}", pinned_head_sha or ""):
+            raise ValueError("sibling branch review requires a detached worktree and a concrete repository/head pin")
     if validated_path is not None:
         worktree_path = validated_path
     elif raw_path is None:
@@ -2519,11 +2571,23 @@ def _ensure_sibling_repo_worktree(
         path = Path(raw_path).expanduser()
         if not path.is_absolute():
             path = root / path
+        if review_branch:
+            error = _caller_path_control_char_error("--worktree", str(path))
+            error = error or _validated_path_changed_error("--worktree", path)
+            if error:
+                raise ValueError(error)
         worktree_path = path.resolve()
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
         raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
+    if review_branch:
+        # Apply the existing path guards to automatic sibling snapshots too.
+        anchor = root / ".worktrees" / "dispatch" / agent
+        error = _caller_path_control_char_error("--worktree", str(worktree_path))
+        error = error or _validated_path_changed_error("--worktree", worktree_path)
+        if error or worktree_path == anchor or not worktree_path.is_relative_to(anchor):
+            raise ValueError(error or "sibling review worktree must be inside the dispatching agent's subtree")
     worktree_branch = None if detached else _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -2540,6 +2604,7 @@ def _ensure_sibling_repo_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
+        _refuse_unretrieved_worktree_evidence(worktree_path)
         telemetry["reused"] = True
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -2550,14 +2615,20 @@ def _ensure_sibling_repo_worktree(
         raise ValueError(
             f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
         )
-    branch_name = _base_branch_name(base)
+    branch_name = review_branch or _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
+    if review_branch:
+        try:
+            remote_sha = live_canonical_branch_head(root, review_branch, repository=repository)
+        except TargetResolutionError as exc:
+            raise RuntimeError(str(exc)) from exc
+        _refuse_if_gate_head_moved(remote_sha, pinned_head_sha)
     try:
         fetch_proc = subprocess.run(
             [
                 "git",
                 "fetch",
-                "origin",
+                f"https://github.com/{repository}.git" if review_branch else "origin",
                 f"+refs/heads/{branch_name}:refs/remotes/origin/{branch_name}",
             ],
             cwd=root,
@@ -2572,12 +2643,16 @@ def _ensure_sibling_repo_worktree(
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
-    if _resolve_sha(root, origin_ref) is None:
+    fetched_sha = _resolve_sha(root, origin_ref)
+    if fetched_sha is None:
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
+    if review_branch:
+        _refuse_if_gate_head_moved(fetched_sha, pinned_head_sha)
+    checkout_ref = pinned_head_sha if review_branch else origin_ref
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
     add_command = ["git", "worktree", "add"]
     if detached:
-        add_command.extend(["--detach", str(worktree_path), origin_ref])
+        add_command.extend(["--detach", str(worktree_path), checkout_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), origin_ref])
     _add_reserved_worktree(
@@ -2591,6 +2666,8 @@ def _ensure_sibling_repo_worktree(
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
+    if review_branch:
+        _refuse_if_gate_head_moved(actual_sha, pinned_head_sha)
     telemetry["base_sha"] = actual_sha
     return worktree_path, worktree_branch, telemetry
 
@@ -2728,7 +2805,12 @@ def _cursor_model_state(
 
 
 def _agy_model_state(
-    *, agent: str, model: str | None, identity: Any, task_id: str, run_nonce: str | None,
+    *,
+    agent: str,
+    model: str | None,
+    identity: Any,
+    task_id: str,
+    run_nonce: str | None,
 ) -> dict[str, Any]:
     """Project the canonical invocation-bound AGY observation into task state."""
     from scripts.agent_runtime.adapters.agy import agy_model_state
@@ -2820,11 +2902,6 @@ def _strip_quoted_content(prompt: str) -> str:
     """
     without_fences = _without_code_fences(prompt, keep_unclosed=True)
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
-
-
-def _is_list_or_heading_boundary(line: str) -> bool:
-    """Return True if line is a markdown heading, list item, or thematic break."""
-    return bool(_HEADING_BOUNDARY_RE.match(line) or _LIST_BOUNDARY_RE.match(line) or _THEMATIC_BREAK_RE.match(line))
 
 
 def _is_write_directive(line: str, prev_non_empty: str | None) -> bool:
@@ -3920,12 +3997,12 @@ def _fetch_base(base: str) -> bool:
     return True
 
 
-def _validate_branch_reuse_name(branch: str) -> str:
+def _validate_branch_reuse_name(branch: str, *, repo_root: Path | None = None) -> str:
     """Reject unsafe or ambiguous ``--branch`` values before attaching a worktree."""
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
     try:
-        normalized = validate_plain_branch_name(branch, repo_root=_REPO_ROOT)
+        normalized = validate_plain_branch_name(branch, repo_root=repo_root if repo_root is not None else _REPO_ROOT)
     except UnsafeBranchNameError as exc:
         raise ValueError(
             "--branch must be a local branch name without origin/, github/, or refs/ "
@@ -4173,15 +4250,6 @@ def _task_state_for_worktree(path: Path) -> tuple[str | None, dict[str, Any] | N
             continue
         return task_id, state
     return None, None
-
-
-def _task_status_for_worktree(path: Path) -> str | None:
-    """Return a path-bound worktree owner's recorded status, when present."""
-    _task_id, state = _task_state_for_worktree(path)
-    if state is None:
-        return None
-    status = state.get("status")
-    return str(status) if status is not None else None
 
 
 def _worktree_is_clean(path: Path) -> bool:
@@ -5527,7 +5595,14 @@ def _resolve_merge_base_detail(
     return unresolved()
 
 
-def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = None) -> int | None:
+def _count_commits_ahead(
+    worktree: Path,
+    base_ref: str,
+    base_sha: str | None = None,
+    *,
+    publication: bool = False,
+    task_id: str | None = None,
+) -> int | None:
     """Return commits on HEAD not reachable from an eligible base ref, or None.
 
     ``None`` means "cannot count", and a vanished worktree is exactly that: on
@@ -5538,11 +5613,17 @@ def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = N
     ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
     contract, and callers already fail closed on ``None``.
 
+    With ``publication=True`` the same order is measured on re-hashed objects
+    against driver-pinned anchors only (:func:`_publication_commits_ahead`);
+    worker tracking refs are never read.
+
     When every named candidate is gone (the base branch was deleted after it
     merged, #9451), the count falls back to the recorded ``base_sha`` and then
     the default-branch merge base; a present base is always measured first,
     unchanged.
     """
+    if publication:
+        return _publication_commits_ahead(worktree, base_ref, base_sha, task_id=task_id)
     for candidate in _commit_count_refs(worktree, base_ref):
         count, base_missing = _run_count_ahead(worktree, candidate)
         if count is not None:
@@ -5552,48 +5633,134 @@ def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = N
     return _count_commits_ahead_without_named_base(worktree, base_ref, base_sha)
 
 
-def _unpushed_commit_refs(worktree: Path, branch: str) -> tuple[str, ...]:
-    """Return ordered remote-tracking ref candidates for unpushed-commit checks."""
-    clean_branch = branch.removeprefix("refs/heads/").removeprefix("refs/remotes/")
-    if clean_branch.startswith("origin/"):
-        clean_branch = clean_branch.removeprefix("origin/")
-    if not clean_branch:
-        return ()
-
-    candidates: list[str] = [f"{clean_branch}@{{upstream}}", "@{upstream}"]
-    tracking_remote = _tracking_remote_for_current_branch(worktree)
-    if tracking_remote:
-        candidates.append(f"{tracking_remote}/{clean_branch}")
-    candidates.append(f"origin/{clean_branch}")
-    return tuple(dict.fromkeys(candidate for candidate in candidates if candidate))
+_OBJECT_ID_RE = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
 
 
-def _count_unpushed_commits(worktree: Path, branch: str) -> int | None:
-    """Return commits on HEAD not reachable from the branch's remote, or None.
+def _publication_commits_ahead(
+    worktree: Path, base_ref: str, base_sha: str | None, *, task_id: str | None = None
+) -> int | None:
+    """The worker's delivered commits, from re-hashed objects and driver-pinned anchors (#9451, #9489).
 
-    ``None`` means cannot count or no remote tracking ref exists. Fail closed
-    on unknown or unpushed commits (#7311).
+    In order, the first anchor that applies:
+
+    1. the named base branch on the driver-pinned destination: ``<base>..HEAD``;
+    2. once the destination confirms it is gone, the recorded ``base_sha``
+       when it is an ancestor of ``HEAD``: ``<sha>..HEAD``, exact, so an
+       empty commit still counts;
+    3. otherwise the driver's pinned default head, a proxy for the lost base
+       (:func:`_publication_proxy_count`).
+
+    Any failure, including a shallow source, is None: unknown, never zero.
     """
-    for candidate in _unpushed_commit_refs(worktree, branch):
-        try:
-            proc = subprocess.run(
-                ["git", "rev-list", "--count", f"{candidate}..HEAD"],
-                cwd=worktree,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
-        except (OSError, subprocess.TimeoutExpired):
-            return None
-        if proc.returncode != 0:
-            continue
-        try:
-            return int((proc.stdout or "").strip())
-        except ValueError:
-            return None
-    return None
+    name = _base_branch_name(base_ref.removeprefix("refs/remotes/"))
+    step = "execution_context"
+    try:
+        with _finalize_execution_context(worktree, task_id=task_id) as context:
+            step = "source_head"
+            source = context.read_source_ref(context.source_git_dir, "HEAD")
+            if source.returncode:
+                _publication_diagnostic(task_id, step, source)
+                return None
+            step = "base_ref_format"
+            ref = context.run("check-ref-format", f"refs/heads/{name}")
+            if ref.returncode:
+                _publication_diagnostic(task_id, step, ref)
+                return None
+            head = source.stdout.strip()
+            step = "isolate_objects"
+            context.isolate_objects(base=context.driver_base, head=head)
+            step = "remote_head"
+            named = _finalize_remote_head(context, name, task_id=task_id)
+            if named is not None:
+                step = "remote_objects"
+                if context.run("cat-file", "-e", f"{named}^{{commit}}").returncode:
+                    context.fetch_remote_commits(f"refs/heads/{name}", context.driver_base, head)
+                step = "count_named_base"
+                return int(context.checked("rev-list", "--count", f"{named}..{head}"))
+            if base_sha and _OBJECT_ID_RE.fullmatch(base_sha):
+                # Every ancestor of HEAD was received, so an absent commit is not one.
+                step = "recorded_base_ref"
+                present = context.run("rev-parse", "--verify", "--quiet", f"{base_sha}^{{commit}}")
+                if present.returncode not in (0, 1):
+                    _publication_diagnostic(task_id, step, present)
+                    return None
+                if present.returncode == 0:
+                    step = "recorded_base_ancestry"
+                    ancestry = context.run("merge-base", "--is-ancestor", base_sha, head)
+                    if ancestry.returncode == 0:
+                        step = "count_recorded_base"
+                        return int(context.checked("rev-list", "--count", f"{base_sha}..{head}"))
+                    if ancestry.returncode != 1:
+                        _publication_diagnostic(task_id, step, ancestry)
+                        return None
+            step = "proxy_count"
+            return _publication_proxy_count(context, head, task_id=task_id)
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+        _publication_diagnostic(task_id, step, exc)
+        return None
+
+
+def _publication_proxy_count(context: SafeGitContext, head: str, *, task_id: str | None = None) -> int | None:
+    """``<default>..HEAD``, or 0 when merging ``HEAD`` into the default head changes nothing (#9451).
+
+    The default head may already hold the work: an empty commit, a merge of
+    it, a cherry-pick of a change it has or a squash of work it holds is
+    ahead yet delivers nothing. ``merge-tree --write-tree`` answers exactly
+    whether merging changes the default head's tree. A conflict (exit 1) is
+    a real change; any other failure, unrelated histories included, is None.
+    The default head need not be an ancestor of ``HEAD``.
+    """
+    main = context.driver_base
+    ahead = int(context.checked("rev-list", "--count", f"{main}..{head}"))
+    if ahead == 0:
+        return 0
+    bases = context.run("merge-base", "--all", main, head)
+    if bases.returncode or not bases.stdout.split():
+        _publication_diagnostic(task_id, "proxy_merge_base", bases)
+        return None
+    # The merge reads whole snapshots: receive them, re-hashed, as validation does.
+    commits = sorted({main, head, *bases.stdout.split()})
+    context._receive(context._root_trees(commits), "--no-filter")
+    main_tree = context.checked("rev-parse", "--verify", f"{main}^{{tree}}")
+    merged = context.run("merge-tree", "--write-tree", "--no-messages", main, head)
+    if merged.returncode == 1:
+        return ahead
+    lines = merged.stdout.split()
+    if merged.returncode or not lines:
+        _publication_diagnostic(task_id, "proxy_merge_tree", merged)
+        return None
+    return 0 if lines[0] == main_tree else ahead
+
+
+def _count_unpushed_commits(worktree: Path, branch: str, task_id: str | None = None) -> int | None:
+    """Query the driver-bound remote, including pushes made without upstreams.
+
+    Absent remote branches are unpushed. Local tracking refs are never proof.
+    Unknown means a source, transport or object-graph query actually failed.
+    """
+    branch = branch.removeprefix("refs/heads/").removeprefix("origin/")
+    step = "execution_context"
+    try:
+        with _finalize_execution_context(worktree, task_id=task_id) as context:
+            step = "source_branch"
+            head = _finalize_source_head(context, branch)
+            step = "isolate_objects"
+            context.isolate_objects(base=context.driver_base, head=head)
+            step = "remote_head"
+            remote = _finalize_remote_head(context, branch, task_id=task_id)
+            if remote == head:
+                return 0
+            if remote:
+                step = "remote_objects"
+                if context.run("cat-file", "-e", f"{remote}^{{commit}}").returncode:
+                    context.fetch_remote_commits(f"refs/heads/{branch}", head)
+                step = "count_unpushed"
+                return int(context.checked("rev-list", "--count", f"{remote}..{head}"))
+            step = "count_unpublished"
+            return int(context.checked("rev-list", "--count", head))
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+        _publication_diagnostic(task_id, step, exc)
+        return None
 
 
 def _commit_count_base_ref(worktree: Path, base_branch: str) -> str:
@@ -5738,7 +5905,11 @@ _READ_ONLY_AGY_HOOK_PATH = ".agents/hooks.json"
 _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR = "agy hook snapshot failed:"
 # Snapshot errors that withhold content evidence Git status cannot provide.
 # A read-only task with one never settles ``done``.
-_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = ("linked database snapshot failed:", _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR)
+_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = (
+    "linked database snapshot failed:",
+    _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR,
+    "opencode snapshot failed:",
+)
 
 
 def _read_only_snapshot_error_fails_closed(error: str | None) -> bool:
@@ -5837,6 +6008,13 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
         path = record[3:]
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
+    # Initialization precedes the baseline. Hash its output as well as tracked
+    # plugins so an ignored-to-ignored rewrite after that baseline still trips.
+    try:
+        for path, fingerprint in _read_only_opencode_fingerprints(cwd).items():
+            entries[path] = entries.get(path, "!!") + ":" + fingerprint
+    except OSError as exc:
+        return None, f"opencode snapshot failed: {type(exc).__name__}"
     # Discover database links directly so every provisioned link is covered
     # without duplicating the provisioning paths in another scope.
     try:
@@ -5881,6 +6059,58 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
             entries.get(_READ_ONLY_AGY_HOOK_PATH, "!!") + ":" + json.dumps(hook_fingerprint)
         )
     return entries, None
+
+
+def _read_only_opencode_fingerprints(cwd: Path) -> dict[str, str]:
+    """Hash the exact OpenCode tree without traversing symlinks (#11347).
+
+    Directory descriptors and no-follow opens keep a replaced directory from
+    redirecting the walk outside the checkout. Links record their text, never
+    grant a directory exemption, and never cause an external tree to be read.
+    """
+    fingerprints: dict[str, str] = {}
+
+    def visit(parent_fd: int, name: str, relative: str) -> None:
+        info = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        value: list[Any] = [info.st_mode]
+        if stat.S_ISLNK(info.st_mode):
+            value.append(os.readlink(name, dir_fd=parent_fd))
+        elif stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode):
+            flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
+            if stat.S_ISDIR(info.st_mode):
+                flags |= os.O_DIRECTORY
+            fd = os.open(name, flags, dir_fd=parent_fd)
+            try:
+                acquired = os.fstat(fd)
+                if (acquired.st_dev, acquired.st_ino, acquired.st_mode) != (info.st_dev, info.st_ino, info.st_mode):
+                    raise OSError("OpenCode entry changed during snapshot")
+                if stat.S_ISDIR(info.st_mode):
+                    for child in sorted(os.listdir(fd)):
+                        visit(fd, child, f"{relative}/{child}")
+                else:
+                    with os.fdopen(os.dup(fd), "rb") as handle:
+                        value.append(hashlib.file_digest(handle, "sha256").hexdigest())
+                after = os.fstat(fd)
+                if (info.st_mtime_ns, info.st_ctime_ns, info.st_size) != (
+                    after.st_mtime_ns,
+                    after.st_ctime_ns,
+                    after.st_size,
+                ):
+                    raise OSError("OpenCode entry changed during snapshot")
+            finally:
+                os.close(fd)
+        fingerprints[relative] = json.dumps(value)
+
+    root_fd = os.open(cwd, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    try:
+        try:
+            os.stat(".opencode", dir_fd=root_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            return fingerprints
+        visit(root_fd, ".opencode", ".opencode")
+    finally:
+        os.close(root_fd)
+    return fingerprints
 
 
 def _provision_agy_read_only_guard(cwd: Path) -> None:
@@ -6296,6 +6526,11 @@ def _is_read_only_runtime_state_exemption(
     after_state: str | None,
 ) -> bool:
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
+    normalized = _normalize_read_only_relpath(path)
+    if normalized == ".opencode" or normalized.startswith(".opencode/"):
+        # Its install is in the baseline. Later writes, even cache-shaped
+        # names inside dependencies, belong to the worker (#11347).
+        return False
     if not _is_read_only_runtime_state_path(path):
         return False
     if _is_read_only_package_build_path(path):
@@ -6424,11 +6659,13 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
 
 
 def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
+    from scripts.orchestration.execution_safe_git import run_git as safe_git
+
     try:
         # --no-renames lists both sides of a rename, so an owned-path filter
         # never commits the new path while leaving the old one's deletion out.
-        tracked = subprocess.run(
-            ["git", "diff", "--no-renames", "--name-only", "-z", "HEAD", "--"],
+        tracked = safe_git(
+            ["diff", "--no-renames", "--name-only", "-z", "HEAD", "--"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -6436,8 +6673,8 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
             env=_sanitized_git_env(),
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
-        untracked = subprocess.run(
-            ["git", "ls-files", "-z", "--others", "--exclude-standard"],
+        untracked = safe_git(
+            ["ls-files", "-z", "--others", "--exclude-standard"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -6484,11 +6721,6 @@ def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
         from guardrails.delegate_ownership import path_is_owned  # type: ignore
 
     return path_is_owned(path, owned_paths)
-
-
-def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()) -> str | None:
-    """``git diff <diff_args>`` as if every change, untracked files included, were committed; None when unknown."""
-    return _worktree_diff_read(worktree, diff_args, git_options=git_options)[0]
 
 
 # #9878: the closed registry of public causes. A reason that can leave the
@@ -6540,12 +6772,35 @@ TYPED_CAUSE_CODES = frozenset(
         "interrupted_during_finalize",
         "finalize_skipped_paths",
         "auto_finalize_unsafe_branch",
+        "auto_finalize_validation_changed",
+        "auto_finalize_validation_unavailable",
+        "auto_finalize_invalid_tree_path",
+        "auto_finalize_fsck_failed",
+        "auto_finalize_copy_timeout",
+        "auto_finalize_object_hardening_violation",
+        "auto_finalize_preparation_refused",
+        "finalize_delivery_pending",
+        "finalize_remote_unknown",
+        "finalize_unpushed",
+        "auto_finalize_dirty_unknown",
+        "auto_finalize_changes_unknown",
+        "auto_finalize_committed_scope_unknown",
+        "auto_finalize_scope_check_timeout",
+        "auto_finalize_committed_scope_unowned",
+        "auto_finalize_remote_unknown",
+        "auto_finalize_remote_unverified",
+        "auto_finalize_head_moved",
+        "auto_finalize_changes_remaining",
+        "auto_finalize_unconfirmed",
         "auto_finalize_add_failed",
         "auto_finalize_commit_failed",
         "auto_finalize_push_failed",
+        "auto_finalize_push_unexpected_ref",
         "auto_finalize_reset_failed",
         "auto_finalize_pr_failed",
         "auto_finalize_publish_blocked",
+        "auto_finalize_opsec_blocked",
+        "no_owned_paths_declared",
         "auto_finalize_failed",
         # Rescue.
         "rescue_worktree_unregistered",
@@ -6611,7 +6866,7 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "interrupted before the completion gates ran",
     }
 )
-# Task-record fields whose value is a reason; ``auto_finalize.error`` is the nested one.
+# Task-record fields whose value is a reason, including nested delivery results.
 PUBLIC_RECORD_REASON_FIELDS = (
     "last_error",
     "finalize_error",
@@ -6623,7 +6878,7 @@ PUBLIC_RECORD_REASON_FIELDS = (
     "rescue_status",
     "kimi_content_refusal",
 )
-PUBLIC_RECORD_NESTED_REASON_FIELDS = (("auto_finalize", "error"),)
+PUBLIC_RECORD_NESTED_REASON_FIELDS = (("auto_finalize", "error"), ("finalize_delivery", "reason"))
 # Rescue and refusal rows: the keys whose value is a reason.
 PUBLIC_ROW_REASON_KEYS = ("reason", "failure_code")
 _PUBLIC_CAUSE_MAX_CHARS = 512
@@ -7112,6 +7367,30 @@ def _record_diagnostic(task_id: object, cause: _TypedCause | None, *, source: st
     return _append_diagnostics(_state_path_no_create(task_id), [(field or source, cause)], source=source)
 
 
+def _publication_diagnostic(
+    task_id: str | None, step: str, failure: BaseException | subprocess.CompletedProcess[str]
+) -> None:
+    """Retain a failed observation in the bounded private sink, never in public state."""
+    if task_id is None:
+        return
+    code = "auto_finalize_committed_scope_unknown"
+    if isinstance(failure, subprocess.CompletedProcess):
+        if step == "remote_head":
+            code = "auto_finalize_remote_unknown"
+        cause = _git_cause(code, failure)
+    else:
+        if isinstance(failure, SnapshotRefusal) and failure.code in TYPED_CAUSE_CODES:
+            code = failure.code
+        command = failure.cmd if isinstance(failure, subprocess.TimeoutExpired) else None
+        cause = _exception_cause(code, failure, command=command if isinstance(command, (list, tuple)) else None)
+        if failure.__cause__ is not None:
+            cause = dataclasses.replace(
+                cause, diagnostic=f"{cause.diagnostic}; caused by {type(failure.__cause__).__name__}: {failure.__cause__}"
+            )
+    cause = dataclasses.replace(cause, diagnostic=cause.diagnostic.encode("utf-8", "backslashreplace").decode("utf-8"))
+    _record_diagnostic(task_id, cause, source="publication", field=step)
+
+
 def _publish_cause(task_id: object, cause: _TypedCause, *, source: str, field: str = "") -> str:
     """Record ``cause`` locally and return its public form: the producer side of :func:`public_cause`."""
     _record_diagnostic(task_id, cause, source=source, field=field)
@@ -7184,15 +7463,49 @@ def _worktree_diff_read(
     return diff_proc.stdout, None
 
 
-def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+def _auto_finalize_additions_deletions(
+    worktree: Path, *, task_id: str | None = None
+) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
     """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
 
     Renames are not detected: git pairs a move only above a similarity
     threshold, so a caller that must not split a move treats every deletion
     as a possible source of every addition.
     """
-    output = _worktree_diff_output(worktree, ["--no-renames", "--name-status", "-z", "HEAD", "--"])
-    if output is None:
+    # The move inventory stages intent-to-add entries too. Its disposable
+    # index must not execute the source's hooks or configured filters.
+    try:
+        with _finalize_execution_context(worktree, prepare=True, task_id=task_id) as context:
+            source = context.source_git_dir
+            head = context.read_source_ref(source, "HEAD")
+            if head.returncode:
+                return None
+            context.checked("update-ref", "HEAD", head.stdout.strip())
+            context.checked("config", "core.bare", "false")
+            index = source / "index"
+            if index.is_file():
+                shutil.copyfile(index, context.root / "index")
+            else:
+                context.checked("read-tree", head.stdout.strip())
+            common_file = source / "commondir"
+            common = (source / common_file.read_text().strip()).resolve() if common_file.is_file() else source
+            exclude = common / "info/exclude"
+            if exclude.is_file():
+                (context.git_dir / "info").mkdir(exist_ok=True)
+                shutil.copyfile(exclude, context.git_dir / "info/exclude")
+            context.checked("add", "-A", "--intent-to-add", work_tree=worktree)
+            output = context.checked(
+                "diff",
+                "--no-ext-diff",
+                "--no-textconv",
+                "--no-renames",
+                "--name-status",
+                "-z",
+                "HEAD",
+                "--",
+                work_tree=worktree,
+            )
+    except (OSError, RuntimeError, subprocess.TimeoutExpired):
         return None
     fields = output.split("\0")
     added: list[str] = []
@@ -7997,6 +8310,7 @@ def _build_worker_env(
     if runtime_tmp_root is not None:
         worker_env["TMPDIR"] = str(runtime_tmp_root)
         worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+        worker_env["LU_TASK_EVIDENCE_DIR"] = str(Path(runtime_tmp_root) / "evidence")
         worker_env.update(_worker_tool_cache_env(Path(runtime_tmp_root)))
     if runtime_tmp_namespace_root is not None:
         worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
@@ -8013,25 +8327,453 @@ def _build_worker_env(
     return without_unneeded_secrets(worker_env, dispatch_agent)
 
 
-def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
-    timeout = _auto_finalize_push_timeout_s()
+@contextlib.contextmanager
+def _finalize_execution_context(
+    worktree: Path, *, prepare: bool = False, task_id: str | None = None, validated_driver_base: str | None = None
+) -> Iterator[SafeGitContext]:
+    """Use registered objects, the driver's base and its pinned destination.
+
+    The context never holds a credential: validation runs worker tests in it.
+    Publication adds the credential to its own transport step alone
+    (:func:`_finalize_transport_push`).
+    """
+    step = "source_registration"
     try:
-        proc = subprocess.run(
-            ["git", "push", "-u", "origin", branch],
-            cwd=worktree,
+        repo = _rescue_repo(worktree, task_id=task_id)
+        step = "execution_context"
+        manager = SafeGitContext(
+            objects=repo.git_dir / "objects",
+            temp_root=Path(tempfile.gettempdir()),
+            origin=_rescue_canonical_push_url(repo),
+            repository=repo.repository,
+            borrow_objects=prepare,
+        )
+        with manager as context:
+            context.source_git_dir = repo.admin_dir
+            context.task_id = task_id
+            if validated_driver_base is None:
+                step = "driver_ref"
+                driver = context.read_source_ref(repo.git_dir, "HEAD")
+                if driver.returncode:
+                    _publication_diagnostic(task_id, step, driver)
+                    raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
+                context.driver_base = driver.stdout.strip()
+            else:
+                context.driver_base = validated_driver_base
+            step = "project_interpreter"
+            context.interpreter = project_interpreter(_REPO_ROOT)
+            step = "context_body"
+            yield context
+            step = "context_cleanup"
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+        if step != "context_body":
+            _publication_diagnostic(task_id, step, exc)
+        raise
+
+
+def _finalize_source_head(context: SafeGitContext, branch: str) -> str:
+    head = context.read_source_ref(context.source_git_dir, "HEAD")
+    name = context.read_source_ref(context.source_git_dir, "HEAD", symbolic=True)
+    if head.returncode or name.returncode or name.stdout.strip() != f"refs/heads/{branch}":
+        raise SnapshotRefusal("auto_finalize_unsafe_branch")
+    return head.stdout.strip()
+
+
+def _finalize_remote_head(context: SafeGitContext, branch: str, *, task_id: str | None = None) -> str | None:
+    ref = f"refs/heads/{branch}"
+    proc = context.run("ls-remote", "--refs", "origin", ref, network=True)
+    if proc.returncode:
+        _publication_diagnostic(task_id, "remote_head", proc)
+        raise SnapshotRefusal("auto_finalize_remote_unknown")
+    rows = proc.stdout.splitlines()
+    if not rows:
+        return None
+    if len(rows) != 1 or not re.fullmatch(r"[0-9a-f]{40}\t" + re.escape(ref), rows[0]):
+        _record_diagnostic(
+            task_id,
+            _TypedCause(
+                "auto_finalize_remote_unknown", "ls-remote", proc.returncode, count=len(rows),
+                diagnostic="ls-remote returned an ambiguous or malformed head; output omitted",
+            ),
+            source="publication", field="remote_head",
+        )
+        raise SnapshotRefusal("auto_finalize_remote_unknown")
+    return rows[0].split("\t")[0]
+
+
+def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: Sequence[str]) -> None:
+    """Check original objects and every exposed intermediate commit."""
+    if context.run("merge-base", "--is-ancestor", base, head).returncode:
+        raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
+    commits = context.checked("rev-list", head, "--not", base, context.driver_base).splitlines()
+    comparisons = []
+    for commit in commits:
+        recorded = context.checked("merge-base", commit, base)
+        upstream = context.checked("merge-base", commit, context.driver_base)
+        # Either trusted anchor can be newer. For pre-merge worker commits,
+        # use only the portion of each anchor already in their ancestry.
+        comparison = (
+            upstream if context.run("merge-base", "--is-ancestor", recorded, upstream).returncode == 0 else recorded
+        )
+        comparisons.append((comparison, commit))
+    # Only these trees are read below; each arrives re-hashed with its attributes.
+    context.receive_trees([oid for pair in comparisons for oid in pair])
+    paths = [
+        path
+        for comparison, commit in comparisons
+        for path in context.checked("diff-tree", "-r", "-z", "--no-renames", "--name-only", comparison, commit).split(
+            "\0"
+        )
+        if path
+    ]
+    if any(
+        "\\" in path
+        or any(
+            part in {"", ".", ".."} or unicodedata.normalize("NFKC", part).casefold().rstrip(" .") in {".git", "git~1"}
+            for part in path.split("/")
+        )
+        for path in paths
+    ):
+        raise SnapshotRefusal("auto_finalize_invalid_tree_path")
+    protected = (
+        ".githooks/",
+        "scripts/pre_commit/",
+        "scripts/common/test_slots",  # Prefix covers scripts/common/test_slots.py; omit .py for the #10777 test-file prefilter.
+        ".pre-commit-config.yaml",
+        ".venv",
+    )
+    if any(unicodedata.normalize("NFKC", path).casefold().startswith(protected) for path in paths):
+        raise SnapshotRefusal("auto_finalize_validation_changed")
+    if any(not _path_is_owned(path, owned) for path in paths):
+        raise SnapshotRefusal("auto_finalize_committed_scope_unowned")
+    attributes_changed = any(path.rpartition("/")[2] == ".gitattributes" for path in paths)
+    for comparison, commit in comparisons:
+        context.refuse_tree(comparison, commit)
+        if attributes_changed:
+            # Attribute-only commits can install filters on unchanged files.
+            tree_paths = context.checked("ls-tree", "-r", "--name-only", "-z", commit)
+            base_filters, commit_filters = [
+                context.checked("check-attr", f"--source={source}", "-z", "--stdin", "filter", stdin=tree_paths).split(
+                    "\0"
+                )
+                for source in (comparison, commit)
+            ]
+            if any(
+                commit_filters[i] not in {"unspecified", "unset"} and commit_filters[i] != base_filters[i]
+                for i in range(2, len(commit_filters), 3)
+            ):
+                raise SnapshotRefusal("rescue_filtered_path")
+
+
+def _finalize_refuse_hook_override(context: SafeGitContext) -> None:
+    # Read the files as data with includes disabled. None of their execution
+    # configuration is ever imported by the publication or validation repo.
+    admin = context.source_git_dir
+    common_file = admin / "commondir"
+    common = (admin / common_file.read_text().strip()).resolve() if common_file.is_file() else admin
+    for path in (common / "config", admin / "config.worktree"):
+        if not path.is_file():
+            continue
+        result = context.run("config", "--no-includes", "--file", str(path), "--get-all", "core.hooksPath")
+        if result.returncode not in {0, 1}:
+            raise SnapshotRefusal("auto_finalize_validation_unavailable")
+        if any(value not in {".githooks"} for value in result.stdout.splitlines()):
+            raise SnapshotRefusal("auto_finalize_validation_changed")
+
+
+def _finalize_public_repository():
+    """The catalogue's canonical public repository client, read with the driver's own environment only."""
+    from scripts.opsec.git_push import CanonicalPublicRepository
+
+    return CanonicalPublicRepository.from_catalog(dict(os.environ))
+
+
+class _FinalizePublicHead:
+    """The public default-branch head, with its commits received into the isolated repository.
+
+    The driver's base can trail the public branch. The scan excludes public
+    history only when the head's commits are present (and every one hashes to
+    its id), so a head this repository lacks is fetched from the pinned
+    destination first. A failed fetch leaves it absent: the whole range is
+    scanned, which can only refuse more.
+    """
+
+    def __init__(self, client, context: SafeGitContext, head: str) -> None:
+        self.client = client
+        self.context = context
+        self.head = head
+
+    @property
+    def calls(self) -> int:
+        return getattr(self.client, "calls", 0)
+
+    def default_head(self) -> str | None:
+        public = self.client.default_head() if self.client is not None else None
+        if public and self.context.run("cat-file", "-e", f"{public}^{{commit}}").returncode:
+            with contextlib.suppress(SnapshotRefusal, subprocess.TimeoutExpired):
+                self.context.fetch_remote_commits("refs/heads/main", self.context.driver_base, self.head)
+        return public
+
+
+def _finalize_opsec_scan(context: SafeGitContext, *, branch: str, head: str, remote: str | None) -> None:
+    """Scan what publishing ``head`` to ``branch`` sends, with the agent push hook's own scanner (#9339).
+
+    It runs here, in the driver, on the re-hashed isolated repository and its
+    credential-free environment: no worker code has run yet. The update line
+    is the one Git would give the hook, and the push later sends this exact
+    id. The only override honoured is the one in the driver command's own
+    environment, claimed and logged once by the gate.
+    """
+    from scripts.opsec import git_push
+    from scripts.opsec import prepublish as gate
+    from scripts.orchestration.safe_git_context import GIT
+
+    environment = {key: value for key, value in context.env.items() if key != gate.OVERRIDE}
+    environment["LU_OPSEC_REAL_GIT"] = GIT
+    reason = os.environ.get(gate.OVERRIDE)
+    if reason is not None:
+        environment[gate.OVERRIDE] = reason
+    update = f"refs/heads/{branch} {head} refs/heads/{branch} {remote or '0' * 40}\n"
+    public = _FinalizePublicHead(_finalize_public_repository(), context, head)
+    # The scanner keeps a pushed repository's variables out of this process's
+    # own lookups by removing them from os.environ; the driver's are restored.
+    saved = dict(os.environ)
+    try:
+        git_push.scan_push(["origin", context.origin], update.encode(), environment, public_repository=public)
+    except PublishBlocked as exc:
+        # The gate's text names rules and fields, never the flagged value; it stays in the local diagnostic.
+        raise _TypedFailure(
+            "publication refused", _TypedCause("auto_finalize_opsec_blocked", diagnostic=str(exc))
+        ) from None
+    except Exception as exc:
+        # Any scanner failure refuses: nothing is published unscanned.
+        raise _TypedFailure("publication refused", _exception_cause("auto_finalize_opsec_blocked", exc)) from exc
+    finally:
+        for key, value in saved.items():
+            os.environ.setdefault(key, value)
+
+
+@contextlib.contextmanager
+def _rescue_identity(repository: str = "learn-ukrainian/learn-ukrainian.github.io") -> Iterator[str]:
+    """The rescue publication token; an App installation token is revoked on exit."""
+    from scripts.agent_runtime.agent_github_identity import (
+        RescueIdentityError,
+        resolve_agent_github_identity,
+        revoke_installation_token,
+    )
+
+    alternative = "Publish through the normal pre-push push from the worktree."
+    try:
+        identity = resolve_agent_github_identity(
+            repository=repository,
+            rescue=True,
+        )
+    except RescueIdentityError as exc:
+        raise _RescueFailure(
+            f"Rescue identity unavailable ({', '.join(exc.missing)}). {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=exc.missing),
+        ) from None
+    if not identity.token:
+        raise _RescueFailure(
+            f"Rescue identity unavailable. {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=("agent-token:missing",)),
+        )
+    try:
+        yield identity.token
+    finally:
+        if identity.source == "app":
+            try:
+                revoke_installation_token(identity.token)
+            except Exception:
+                # Cleanup must not replace the push result or expose response text.
+                print("WARNING: rescue App token revocation failed", file=sys.stderr)
+
+
+@contextlib.contextmanager
+def _finalize_transport_credentials(
+    *, origin: str = CANONICAL_ORIGIN, repository: str = "learn-ukrainian/learn-ukrainian.github.io"
+) -> Iterator[list[tuple[str, str]]]:
+    """Git configuration entries that authorize the push to the canonical destination, and nothing else."""
+    with _rescue_identity(repository) as token:
+        header = base64.b64encode(f"x-access-token:{token}".encode()).decode()
+        yield [(f"http.{origin}.extraHeader", f"Authorization: Basic {header}")]
+
+
+@contextlib.contextmanager
+def _finalize_transport_context(
+    worktree: Path, validation: SafeGitContext, *, base: str, head: str
+) -> Iterator[SafeGitContext]:
+    """A fresh repository for the credentialed push, created after validation returned.
+
+    Validation runs worker code with its repository as the code's own, so
+    that code can rewrite the repository's configuration, refs, hooks and
+    objects. The push reads none of it: this repository's configuration is
+    the driver's alone. Its commit graph comes from the worker's store, as
+    for the checks, and every tree and blob from the copy validation used;
+    each fetch re-hashes what it receives.
+    """
+    with _finalize_execution_context(
+        worktree, task_id=getattr(validation, "task_id", None), validated_driver_base=validation.driver_base,
+    ) as transport:
+        if transport.origin != validation.origin or transport.repository != validation.repository:
+            raise SnapshotRefusal("auto_finalize_remote_unverified")
+        # Publication must use the registered driver base the checks validated,
+        # even when that repository has advanced during validation.
+        transport.driver_base = validation.driver_base
+        transport.isolate_objects(base=base, head=head)
+        transport.receive_publication(head=head, base=base, objects=validation.git_dir / "objects")
+        yield transport
+
+
+def _finalize_transport_push(
+    transport: SafeGitContext, *, branch: str, head: str, timeout: float
+) -> subprocess.CompletedProcess:
+    """Send the validated, scanned ``head`` with Git's own transport alone.
+
+    Validation already ran the trusted hook chain on this exact id, without
+    any credential, in another repository (:func:`_finalize_transport_context`).
+    This push runs no hook, so nothing the worker wrote executes while the
+    credential exists. It names the pinned URL and one non-force refspec,
+    sends no tags, and pins the proxy and protocol keys over whatever its
+    repository holds. The credential is passed in this one process's
+    environment, never written to configuration or put on a command line.
+    Its bound is the publication's, as when the push itself ran the hook.
+    """
+    from scripts.orchestration.safe_git_context import GIT
+
+    hooks = transport.root / "transport-hooks"
+    hooks.mkdir()
+    scheme = "file" if transport.local_remote else "https"
+    with _finalize_transport_credentials(origin=transport.origin, repository=transport.repository) as entries:
+        settings = [
+            ("core.hooksPath", str(hooks)),
+            ("protocol.allow", "never"),
+            (f"protocol.{scheme}.allow", "always"),
+            ("http.proxy", ""),
+            (f"http.{transport.origin}.proxy", ""),
+            *entries,
+        ]
+        env = {**transport.env, "GIT_CONFIG_COUNT": str(len(settings))}
+        for index, (key, value) in enumerate(settings):
+            env[f"GIT_CONFIG_KEY_{index}"] = key
+            env[f"GIT_CONFIG_VALUE_{index}"] = value
+        return subprocess.run(
+            [
+                GIT,
+                "push",
+                "--porcelain",
+                "--no-verify",
+                "--no-follow-tags",
+                transport.origin,
+                f"{head}:refs/heads/{branch}",
+            ],
+            cwd=transport.root,
+            env=env,
             capture_output=True,
             text=True,
             check=False,
-            env=_sanitized_git_env(),
             timeout=timeout,
         )
+
+
+def _finalize_refuse_unexpected_refs(proc: subprocess.CompletedProcess, *, branch: str, head: str) -> None:
+    """Git's own list of the refs the push touched must be exactly ``head`` to ``branch``, unforced."""
+    rows = [line.split("\t") for line in proc.stdout.splitlines() if line not in {"", "Done"} and line[:3] != "To "]
+    if len(rows) != 1 or rows[0][0] not in {" ", "*", "="} or rows[0][1:2] != [f"{head}:refs/heads/{branch}"]:
+        raise _TypedFailure("push scope unverified", _TypedCause("auto_finalize_push_unexpected_ref", count=len(rows)))
+
+
+def _push_auto_finalize_branch(
+    worktree: Path,
+    branch: str,
+    *,
+    expected_head: str | None = None,
+    owned_paths: object = None,
+    base_sha: str | None = None,
+    task_id: str | None = None,
+) -> None:
+    """Scan, validate and publish in a driver-configured repo; borrow only objects.
+
+    Every step before the transport runs without a credential: the history
+    checks, the OPSEC scan of what the push sends, and the trusted hook chain,
+    which runs the worker's tests. The transport then sends that same id from
+    a fresh repository, with no hook, the credential in its own environment
+    alone, and Git's report of the refs it touched checked against that one.
+    """
+    if not branch or branch == "HEAD" or branch in _load_worktree_containment().PROTECTED_BRANCHES:
+        raise _TypedFailure("unsafe publication target", _TypedCause("auto_finalize_unsafe_branch"))
+    owned = _declared_owned_paths(owned_paths)
+    if not owned:
+        raise _TypedFailure("scope unavailable", _TypedCause("no_owned_paths_declared"))
+    # Only the publication itself is a push; a timeout in a check before it is not.
+    pushing = False
+    try:
+        with _finalize_execution_context(worktree, task_id=task_id) as context:
+            if context.run("check-ref-format", f"refs/heads/{branch}").returncode:
+                raise SnapshotRefusal("auto_finalize_unsafe_branch")
+            head = _finalize_source_head(context, branch)
+            if expected_head is not None and head != expected_head:
+                raise SnapshotRefusal("auto_finalize_head_moved")
+            base = base_sha or context.driver_base
+            context.isolate_objects(base=base, head=head)
+            _finalize_refuse_hook_override(context)
+            _finalize_history(context, head=head, base=base, owned=owned)
+            remote = _finalize_remote_head(context, branch)
+            if remote and context.run("cat-file", "-e", f"{remote}^{{commit}}").returncode:
+                context.fetch_remote_commits(f"refs/heads/{branch}", head)
+            if remote and context.run("merge-base", "--is-ancestor", remote, head).returncode:
+                raise SnapshotRefusal("auto_finalize_remote_unverified")
+            # Before any worker code runs: the exact id the push sends.
+            _finalize_opsec_scan(context, branch=branch, head=head, remote=remote)
+            context.prepare_validation(head=head, branch=branch, base=base, interpreter=context.interpreter)
+            if _finalize_source_head(context, branch) != head:
+                raise SnapshotRefusal("auto_finalize_head_moved")
+            # The base commit's hook chain, with the update line Git would
+            # give it, in the credential-free context. It runs for an
+            # unchanged retry too, for which Git itself would skip pre-push.
+            timeout = _auto_finalize_push_timeout_s(context.root / "trusted/.githooks/pre_push_gate.py")
+            pushing = True
+            hook = context.root / "trusted/.githooks/pre-push"
+            proc = subprocess.run(
+                [str(hook), "origin", context.origin],
+                cwd=context.checkout,
+                env=context.env,
+                input=f"refs/heads/{branch} {head} refs/heads/{branch} {remote or '0' * 40}\n",
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=timeout,
+            )
+            if proc.returncode:
+                # Publicly the push's own pre-push refusal, as when Git ran this hook.
+                cause = dataclasses.replace(_remote_git_cause("auto_finalize_push_failed", proc), command="push")
+                raise _TypedFailure("validation refused", cause)
+            if _finalize_source_head(context, branch) != head:
+                raise SnapshotRefusal("auto_finalize_head_moved")
+            # Validation could write ``context``'s repository: the push and its check never read it.
+            with _finalize_transport_context(worktree, context, base=base, head=head) as transport:
+                if remote != head:
+                    proc = _finalize_transport_push(transport, branch=branch, head=head, timeout=timeout)
+                    if proc.returncode:
+                        raise _TypedFailure("push refused", _remote_git_cause("auto_finalize_push_failed", proc))
+                    _finalize_refuse_unexpected_refs(proc, branch=branch, head=head)
+                if _finalize_remote_head(transport, branch) != head:
+                    raise SnapshotRefusal("auto_finalize_remote_unverified")
+            if _finalize_source_head(context, branch) != head:
+                raise SnapshotRefusal("auto_finalize_head_moved")
+    except SnapshotRefusal as exc:
+        code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
+        raise _TypedFailure("publication refused", _TypedCause(code)) from exc
     except subprocess.TimeoutExpired as exc:
+        if not pushing:
+            # The same public cause as the dirty pre-check's history timeout.
+            raise _TypedFailure(
+                "pre-publication check timed out",
+                _TypedCause("auto_finalize_scope_check_timeout", diagnostic=f"raised TimeoutExpired: {exc}"),
+            ) from exc
         raise _TypedFailure(
-            f"git push timed out after {timeout}s",
-            _exception_cause("auto_finalize_push_failed", exc, command=["git", "push"]),
+            "publication timed out", _exception_cause("auto_finalize_push_failed", exc, command=["git", "push"])
         ) from exc
-    if proc.returncode != 0:
-        raise _TypedFailure("git push failed", _remote_git_cause("auto_finalize_push_failed", proc))
 
 
 @publication_boundary(RuntimeError)
@@ -8084,8 +8826,9 @@ def _auto_finalize_dirty_worktree(
     base_branch: str,
     open_pr: bool = False,
     owned_paths: object = None,
+    base_sha: str | None = None,
 ) -> AutoFinalizeResult:
-    """Stage, commit, and push the owned part of a cleanly exited dirty dispatch.
+    """Finalize and push owned work from an eligible completed dispatch.
 
     ``owned_paths`` is the task record's ``owned_paths`` list, written at
     dispatch from the task's explicit ``--owned-path`` values (#8991). Only
@@ -8131,8 +8874,50 @@ def _auto_finalize_dirty_worktree(
             changed_files=changed_files,
         )
 
+    resolved_branch = branch.removeprefix("refs/heads/") if isinstance(branch, str) else None
+    if (
+        not resolved_branch
+        or resolved_branch == "HEAD"
+        or resolved_branch in _load_worktree_containment().PROTECTED_BRANCHES
+        or _current_branch(worktree) != resolved_branch
+    ):
+        return _result(ok=False, error="auto_finalize_unsafe_branch")
+    if _worktree_is_dirty(worktree) is None:
+        return _result(ok=False, error="auto_finalize_dirty_unknown")
+    intended_head = _resolve_sha(worktree)
+    if intended_head is None:
+        return _result(ok=False, error="auto_finalize_committed_scope_unknown")
+    if owned and all_changed:
+        try:
+            with _finalize_execution_context(worktree, task_id=task_id) as context:
+                context.isolate_objects(base=base_sha or context.driver_base, head=intended_head)
+                _finalize_history(context, head=intended_head, base=base_sha or context.driver_base, owned=owned)
+        except SnapshotRefusal as exc:
+            code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
+            return _result(ok=False, error=code, commit_sha=intended_head)
+        except subprocess.TimeoutExpired:
+            return _result(ok=False, error="auto_finalize_scope_check_timeout", commit_sha=intended_head)
+        except OSError:
+            return _result(ok=False, error="auto_finalize_committed_scope_unknown", commit_sha=intended_head)
     if not all_changed:
-        return _result(ok=False, error="clean-tree")
+        if _worktree_is_dirty(worktree) is not False:
+            return _result(ok=False, error="auto_finalize_changes_unknown")
+        if owned is None:
+            return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
+        try:
+            _push_auto_finalize_branch(
+                worktree, resolved_branch, expected_head=intended_head, owned_paths=owned, base_sha=base_sha,
+                task_id=task_id,
+            )
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            error = _publish_cause(
+                task_id,
+                _exception_cause("auto_finalize_failed", exc),
+                source="auto_finalize",
+                field="auto_finalize.error",
+            )
+            return _result(ok=False, commit_sha=intended_head, error=error)
+        return _result(ok=True, commit_sha=intended_head)
     if _auto_finalize_is_junk_only(all_changed):
         return _result(
             ok=False,
@@ -8142,7 +8927,7 @@ def _auto_finalize_dirty_worktree(
     if owned is None:
         skipped = all_changed
         return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
-    added_deleted = _auto_finalize_additions_deletions(worktree)
+    added_deleted = _auto_finalize_additions_deletions(worktree, task_id=task_id)
     if added_deleted is None:
         return _result(ok=False, error="move detection failed; nothing committed")
     moves = tuple(sorted(_cross_boundary_moves(*added_deleted, owned)))
@@ -8156,12 +8941,6 @@ def _auto_finalize_dirty_worktree(
         error = _publish_cause(task_id, cause, source="auto_finalize", field="auto_finalize.error")
         return _result(ok=False, error=error, changed_files=changed_files, **fields)
 
-    resolved_branch = branch or _current_branch(worktree)
-    if not resolved_branch or resolved_branch in {"HEAD", "main", "master"}:
-        return _failed(
-            _TypedCause("auto_finalize_unsafe_branch", diagnostic=f"unsafe or unresolved branch {resolved_branch!r}")
-        )
-
     safe_task = _x_agent_task_id(agent, task_id)
     subject = f"chore(dispatch): finalize {agent} task {safe_task}"
     body = (
@@ -8171,90 +8950,45 @@ def _auto_finalize_dirty_worktree(
         f"Agent: {agent}"
     )
 
-    # git reads the exact file list from stdin as literal pathspecs; ``commit
-    # --only`` then leaves anything the worker had already staged outside that
-    # list out of the commit.
-    scoped_input = "\0".join(changed_files)
-    scoped_args = ["--pathspec-from-file=-", "--pathspec-file-nul"]
-    git_prefix = ["git", "--literal-pathspecs"]
     commit_sha: str | None = None
-    # This commit is made by the supervisor, outside build_agent_env. Use the
-    # worker lane's identity instead of the launcher's inherited driver identity.
     from scripts.lib.git_identity import git_identity_env
+    from scripts.orchestration.execution_safe_git import prepare_scoped_commit
 
-    commit_env = {**_sanitized_git_env(), **git_identity_env(agent, model)}
     try:
-        add_proc = subprocess.run(
-            [*git_prefix, "add", "-A", *scoped_args],
-            cwd=worktree,
-            input=scoped_input,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=commit_env,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-        if add_proc.returncode != 0:
-            return _failed(_git_cause("auto_finalize_add_failed", add_proc))
-
-        commit_proc = subprocess.run(
-            [
-                *git_prefix,
-                "commit",
-                "--only",
-                *scoped_args,
-                "-m",
-                subject,
-                "-m",
-                body,
-                "--trailer",
-                _x_agent_trailer(agent, task_id),
-            ],
-            cwd=worktree,
-            input=scoped_input,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=commit_env,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-        if commit_proc.returncode != 0:
-            with contextlib.suppress(OSError, subprocess.TimeoutExpired):
-                subprocess.run(
-                    [*git_prefix, "restore", "--staged", *scoped_args],
-                    cwd=worktree,
-                    input=scoped_input,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    env=_sanitized_git_env(),
-                    timeout=DEFAULT_GIT_TIMEOUT_S,
+        with _finalize_execution_context(worktree, prepare=True, task_id=task_id) as context:
+            if _finalize_source_head(context, resolved_branch) != intended_head:
+                return _failed(_TypedCause("auto_finalize_head_moved"))
+            try:
+                prepared = prepare_scoped_commit(
+                    context,
+                    worktree=worktree,
+                    branch=resolved_branch,
+                    expected_head=intended_head,
+                    paths=changed_files,
+                    subject=subject,
+                    body=body,
+                    trailer=_x_agent_trailer(agent, task_id),
+                    identity=git_identity_env(agent, model),
                 )
-            return _failed(_git_cause("auto_finalize_commit_failed", commit_proc))
-
-        commit_sha = _resolve_sha(worktree)
-        _push_auto_finalize_branch(worktree, resolved_branch)
+            except ValueError as exc:
+                return _failed(
+                    _TypedCause("auto_finalize_preparation_refused", diagnostic=str(exc)), commit_sha=intended_head
+                )
+            if prepared.process.returncode:
+                return _failed(_git_cause(f"auto_finalize_{prepared.step}_failed", prepared.process))
+            commit_sha = prepared.head
+        if not commit_sha or _resolve_sha(worktree, f"{commit_sha}^") != intended_head:
+            return _failed(_TypedCause("auto_finalize_head_moved"), commit_sha=commit_sha)
+        _push_auto_finalize_branch(
+            worktree, resolved_branch, expected_head=commit_sha, owned_paths=owned, base_sha=base_sha,
+            task_id=task_id,
+        )
+    except SnapshotRefusal as exc:
+        code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
+        return _failed(_TypedCause(code), commit_sha=commit_sha)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         step = exc.cmd if isinstance(exc, subprocess.TimeoutExpired) and isinstance(exc.cmd, (list, tuple)) else None
         causes = [_exception_cause("auto_finalize_failed", exc, command=step)]
-        if commit_sha is not None:
-            try:
-                reset_proc = subprocess.run(
-                    ["git", "reset", "--soft", "HEAD~1"],
-                    cwd=worktree,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    env=_sanitized_git_env(),
-                    timeout=DEFAULT_GIT_TIMEOUT_S,
-                )
-            except (OSError, subprocess.TimeoutExpired) as reset_exc:
-                causes.append(_exception_cause("auto_finalize_reset_failed", reset_exc, command=["git", "reset"]))
-            else:
-                if reset_proc.returncode != 0:
-                    causes.append(_git_cause("auto_finalize_reset_failed", reset_proc))
-                else:
-                    commit_sha = None
         error = "; ".join(
             _publish_cause(task_id, cause, source="auto_finalize", field="auto_finalize.error") for cause in causes
         )
@@ -8270,8 +9004,8 @@ def _auto_finalize_dirty_worktree(
                 title=subject,
                 body=(
                     f"Auto-finalized delegate task `{task_id}` for `{agent}`.\n\n"
-                    "The agent exited with `returncode=0`, left a dirty worktree, "
-                    "and had made zero commits, so delegate.py staged and pushed the work."
+                    "The agent exited with `returncode=0` and left owned changes "
+                    "for delegate.py to finalize and push."
                 ),
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
@@ -8308,83 +9042,133 @@ class _RescueRepo:
     worktree: Path
     git_dir: Path
     admin_dir: Path
+    repository: FleetRepo
+    root: Path
 
     @property
     def head_ref(self) -> str:
         return f"worktrees/{self.admin_dir.name}/HEAD"
 
 
-def _rescue_canonical_push_url() -> str:
+def _rescue_canonical_push_url(repo: _RescueRepo) -> str:
     """Driver-side destination; source repository configuration is not authority."""
-    return CANONICAL_ORIGIN
+    return f"https://github.com/{repo.repository.github}.git"
 
 
 @contextlib.contextmanager
 def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
-    from scripts.agent_runtime.agent_github_identity import (
-        RescueIdentityError,
-        resolve_agent_github_identity,
-        revoke_installation_token,
-    )
-
-    alternative = "Publish through the normal pre-push push from the worktree."
-    try:
-        identity = resolve_agent_github_identity(
-            repository="learn-ukrainian/learn-ukrainian.github.io",
-            rescue=True,
-        )
-    except RescueIdentityError as exc:
-        raise _RescueFailure(
-            f"Rescue identity unavailable ({', '.join(exc.missing)}). {alternative}",
-            _TypedCause("rescue_identity_unavailable", missing=exc.missing),
-        ) from None
-    if not identity.token:
-        raise _RescueFailure(
-            f"Rescue identity unavailable. {alternative}",
-            _TypedCause("rescue_identity_unavailable", missing=("agent-token:missing",)),
-        )
-    try:
-        with SafeGitContext(
+    with (
+        _rescue_identity(repo.repository.github) as token,
+        SafeGitContext(
             objects=repo.git_dir / "objects",
-            origin=_rescue_canonical_push_url(),
-            token=identity.token,
+            origin=_rescue_canonical_push_url(repo),
+            repository=repo.repository,
+            token=token,
             temp_root=Path(tempfile.gettempdir()),
-        ) as context:
-            yield context
-    finally:
-        if identity.source == "app":
-            try:
-                revoke_installation_token(identity.token)
-            except Exception:
-                # Cleanup must not replace the push result or expose response text.
-                print("WARNING: rescue App token revocation failed", file=sys.stderr)
+        ) as context,
+    ):
+        yield context
 
 
-def _rescue_repo(worktree: Path) -> _RescueRepo:
+def _finalize_repository(
+    worktree: Path, *, task_id: str | None = None, state: Mapping[str, Any] | None = None
+) -> tuple[FleetRepo, Path]:
+    """Bind the recorded checkout and seat to the driver's repository allowlist.
+
+    Unstamped legacy public worktrees retain their existing admission. A
+    sibling requires its repository identity in the path-bound task record;
+    worker config, URLs and environment overrides cannot select a repository.
+    """
+    refusal = SnapshotRefusal("rescue_worktree_unregistered")
+    if not worktree.is_absolute() or _caller_path_control_char_error("worktree", str(worktree)):
+        raise refusal
+    for path in (worktree, *worktree.parents):
+        if path.is_symlink():
+            raise refusal
+    if worktree.resolve() != worktree:
+        raise refusal
+    catalog = load_fleet_repos()
+    candidates = [
+        resolve_fleet_repo(key, primary_root=_REPO_ROOT, repos=catalog, require_checkout=False) for key in catalog
+    ]
+    matches = [(repo, root) for repo, root in candidates if worktree.is_relative_to(root / ".worktrees/dispatch")]
+    if len(matches) != 1:
+        raise refusal
+    repo, root = matches[0]
+    expected_root = _REPO_ROOT if repo.default else _REPO_ROOT.parent / repo.local_name
+    if expected_root != root:
+        raise refusal
+    if root.is_symlink() or (root / ".git").is_symlink() or not (root / ".git").is_dir():
+        raise refusal
+    if state is None:
+        if task_id is not None:
+            state = _read_state(_state_path_no_create(task_id))
+        else:
+            matches = []
+            for state_file in tasks_dir().glob("*.json"):
+                candidate = _read_state(state_file)
+                if isinstance(candidate, dict) and (candidate.get("worktree_path") or candidate.get("cwd")) == str(worktree):
+                    matches.append(candidate)
+            if len(matches) > 1:
+                raise refusal
+            state = matches[0] if matches else None
+    if state is None:
+        if not repo.default:
+            raise refusal
+        return repo, root
+    claims = _state_repository_claims(dict(state))
+    if (claims and claims != [repo.github]) or (not repo.default and not claims):
+        raise refusal
+    agent = state.get("agent")
+    recorded = state.get("worktree_path") or state.get("cwd")
+    if (
+        not isinstance(agent, str)
+        or not isinstance(recorded, str)
+        or recorded != str(worktree)
+        or not isinstance(state.get("task_id"), str)
+        or (task_id is not None and state["task_id"] != task_id)
+    ):
+        raise refusal
+    # A public dispatch may select a different provider after its requested
+    # seat's explicit worktree was admitted. Its recorded path and linked Git
+    # registration remain the source binding; the selected provider is not
+    # authority for that path's dispatch seat.
+    if not repo.default:
+        validated, error = _validate_explicit_worktree(recorded, agent=agent, repo_root=root)
+        if error or validated != worktree:
+            raise refusal
+    return repo, root
+
+
+def _rescue_repo(worktree: Path, *, task_id: str | None = None, state: Mapping[str, Any] | None = None) -> _RescueRepo:
     """``worktree`` as a :class:`_RescueRepo`, read from the files git keeps, without running git in it."""
     from scripts.agent_runtime import kimi_boundary
 
+    repository, root = _finalize_repository(worktree, task_id=task_id, state=state)
     admin = kimi_boundary.worktree_git_dir(worktree)
     try:
         if admin is None:
             raise FileNotFoundError(".git")
-        admin = admin.resolve(strict=True)
+        if (
+            _caller_path_control_char_error("git directory", str(admin))
+            or admin.is_symlink()
+            or admin.resolve(strict=True) != admin
+        ):
+            raise ValueError("aliased git directory")
+        if any((admin / name).is_symlink() for name in ("commondir", "gitdir")) or (worktree / ".git").is_symlink():
+            raise ValueError("aliased registration")
         git_dir = (admin / (admin / "commondir").read_text(encoding="utf-8").strip()).resolve(strict=True)
         registered = Path((admin / "gitdir").read_text(encoding="utf-8").strip()).resolve()
     except (OSError, ValueError) as exc:
         raise _RescueFailure(
             "the worktree's git directory cannot be read", _exception_cause("rescue_worktree_unregistered", exc)
         ) from exc
-    if (
-        git_dir != (_REPO_ROOT / ".git").resolve()
-        or admin.parent != git_dir / "worktrees"
-        or registered != (worktree / ".git").resolve()
-    ):
+    if git_dir != root / ".git" or admin.parent != git_dir / "worktrees" or registered != (worktree / ".git").resolve():
         raise _RescueFailure(
             "the worktree is not a linked worktree of the main repository",
             _TypedCause("rescue_worktree_unregistered"),
         )
-    return _RescueRepo(worktree, git_dir, admin)
+    return _RescueRepo(worktree, git_dir, admin, repository, root)
 
 
 def _rescue_head(repo: _RescueRepo, context: SafeGitContext) -> tuple[str, str] | None:
@@ -8536,9 +9320,10 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     if not isinstance(raw_worktree, str):
         row["reason"] = "no recorded worktree"
         return row
-    worktree = Path(raw_worktree).resolve()
-    dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
-    if not worktree.is_relative_to(dispatch_root):
+    worktree = Path(raw_worktree)
+    try:
+        _, root = _finalize_repository(worktree, task_id=task_id, state=state)
+    except (OSError, RuntimeError, ValueError):
         row["reason"] = "not a registered dispatch worktree"
         return row
     # A reaped or hand-removed worktree has nothing left to preserve. Before
@@ -8580,14 +9365,14 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 if diagnostic:
                     row["diagnostic"] = diagnostic
                 active_ids = None
-            live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
+            live_cwds = reap_worktrees._live_cwd_paths(root)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"
                 return row
             if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
                 row["reason"] = "worktree active"
                 return row
-            repo = _rescue_repo(worktree)
+            repo = _rescue_repo(worktree, task_id=task_id, state=state)
             with _rescue_execution_context(repo) as context:
                 return _rescue_in_context(repo, context, state, state_path, row, apply=apply)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
@@ -9185,7 +9970,9 @@ def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path, 
             print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
 
 
-def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_only: bool = False) -> None:
+def _provision_data_symlinks(
+    worktree_path: Path, main_repo_root: Path, *, read_only: bool = False, provision_dependencies: bool = True
+) -> None:
     """Symlink heavy local-only files into a delegated worktree.
 
     Worktrees omit gitignored DBs and Node dependency directories, but quality
@@ -9202,6 +9989,8 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
     A relative open then creates a worktree-local file that the read-only
     guard flags, and the primary stays untouched. Workers read the primary
     databases by absolute path with ``mode=ro`` or through the ``sources`` MCP.
+    Sibling read-only reuse sets ``provision_dependencies=False`` so only
+    database-link withdrawal runs, using the same inventory as provisioning.
 
     Self-link guard: if ``worktree_path`` *is* the main checkout, provisioning
     would create ``node_modules -> node_modules`` (a self-referential loop) that
@@ -9226,6 +10015,8 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
         "node_modules",
         "site/node_modules",
     ):
+        if not provision_dependencies and relative_path not in database_links:
+            continue
         source = main_repo_root / relative_path
         target = worktree_path / relative_path
         # ``source.exists()`` follows symlinks and returns False for a looping
@@ -10062,6 +10853,26 @@ def _mark_review_attempt_worktree(worktree_path: Path, task_id: str) -> None:
     marker.write_text(f"{task_id}\n", encoding="utf-8")
 
 
+def _refuse_unretrieved_worktree_evidence(worktree_path: Path) -> None:
+    """Refuse reuse of a checkout that holds a terminal task's unretrieved evidence (#11342).
+
+    Dispatch preparation mutates a reused worktree: cone sparse-checkout removes
+    untracked/ignored directories inside a tracked cone directory. A finished task
+    that never had its ignored output preserved would lose its only copy, so reuse
+    waits until the owner preserves it (``scripts.fleet.post_task_reap``).
+    """
+    from scripts.fleet import ignored_task_output
+
+    refusal = ignored_task_output.unretrieved_reuse_refusal(
+        worktree_path,
+        tasks_dir=tasks_dir(),
+        repo_root=_REPO_ROOT,
+        primary=_REPO_ROOT,
+    )
+    if refusal is not None:
+        raise RuntimeError(refusal)
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -10160,6 +10971,7 @@ def _ensure_worktree(
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         _refuse_review_attempt_worktree_reuse(worktree_path)
+        _refuse_unretrieved_worktree_evidence(worktree_path)
         telemetry["reused"] = True
         if resolved_base_sha is None:
             telemetry["rebased"] = _validate_existing_worktree(
@@ -10586,6 +11398,27 @@ def _recorded_research_block(block: object) -> str:
     return text
 
 
+def _evidence_prompt_block() -> str:
+    """Name the supported evidence directory whose contents task cleanup preserves (#11342).
+
+    The block is deliberately independent of the task's runtime lease: the
+    worker reads the concrete ``evidence/`` path from ``$LU_TASK_EVIDENCE_DIR``
+    (see :func:`_build_worker_env`) and the task record keeps it in
+    ``evidence_dir``. Keeping the path out of the prompt means the prompt text,
+    its SHA-256 and the evaluation harness's paired frame stay identical across
+    tasks, so exact-prompt verification still holds.
+    """
+    return (
+        "\n[evidence]\n"
+        "Durable evidence (reports, archives, logs, screenshots) belongs in "
+        "`$LU_TASK_EVIDENCE_DIR`, this task's `evidence/` directory.\n"
+        "Task cleanup copies that directory to `batch_state/preserved/<task>/` with a retrieval "
+        "receipt before it removes the runtime lease. Files left elsewhere in the worktree or "
+        "runtime temp root are not preserved and can be deleted when the task ends.\n"
+        "Put every artifact a later reader needs there and cite it from your result.\n"
+    )
+
+
 def _compose_dispatch_prompt(
     base: str,
     *,
@@ -10600,13 +11433,20 @@ def _compose_dispatch_prompt(
     blocks: list[str] | None = None,
     agent: str | None = None,
     review_route: bool = False,
+    evidence_dir: Path | str | None = None,
 ) -> str:
     """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
 
-    In prompt order: the rules core, the worktree block, ``base``, the research
-    pointers and the advisory block. ``blocks``, when given, gets the kinds
-    added, in prompt order. The bounded worker rebuilds its expected prompt
-    with this function (#9275), so the two cannot drift apart.
+    In prompt order: the rules core, the worktree block, ``base``, the evidence
+    block, the research pointers and the advisory block. ``blocks``, when given,
+    gets the kinds added, in prompt order. The bounded worker rebuilds its
+    expected prompt with this function (#9275), so the two cannot drift apart.
+
+    ``evidence_dir`` is the *presence* signal for the supported evidence
+    directory (``None`` means the dispatch has none): its concrete, task-specific
+    lease path is never interpolated, so every task's prompt and SHA-256 stay
+    comparable. The worker reads the path from ``$LU_TASK_EVIDENCE_DIR`` and the
+    task record keeps it in ``evidence_dir``.
     """
     prompt = _augment_prompt_with_worktree(
         base,
@@ -10617,6 +11457,10 @@ def _compose_dispatch_prompt(
     )
     if worktree_path is not None and blocks is not None:
         blocks.insert(0, "worktree")
+    if evidence_dir is not None:
+        prompt = prompt + _evidence_prompt_block()
+        if blocks is not None:
+            blocks.append("evidence")
     if research_block and blocks is not None:
         blocks.append("research")
     prompt = prompt + research_block
@@ -10960,8 +11804,10 @@ def _emit_terminal_dispatch_event(
         usage_record = getattr(result, "usage_record", None)
         tokens = usage_record.get("tokens") if isinstance(usage_record, dict) else None
         substitution = final_state.get("substitution")
-        if substitution is None and isinstance(usage_record, dict) and not (
-            agent == "agy" and "identity_matches_request" in final_state
+        if (
+            substitution is None
+            and isinstance(usage_record, dict)
+            and not (agent == "agy" and "identity_matches_request" in final_state)
         ):
             substitution = usage_record.get("substitution")
         model = final_state.get("model")
@@ -11175,7 +12021,11 @@ def _run_worker(
 
         agy_requested_model = model or state.get("model") or AgyAdapter.default_model
         agy_start_state = _agy_model_state(
-            agent=agent, model=agy_requested_model, identity=None, task_id=task_id, run_nonce=effective_nonce,
+            agent=agent,
+            model=agy_requested_model,
+            identity=None,
+            task_id=task_id,
+            run_nonce=effective_nonce,
         )
         state.update(agy_start_state)
         if agy_start_state:
@@ -11196,19 +12046,6 @@ def _run_worker(
     # Only AGY executes the workspace guard, so only AGY acquires it, before
     # and after alike; other agents keep the base snapshot call (#10727).
     read_only_snapshot_options: dict[str, bool] = {"agy_hook": True} if agent == "agy" else {}
-    if mode == "read-only":
-        if agent == "agy":
-            _provision_agy_read_only_guard(cwd)
-        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
-            cwd, **read_only_snapshot_options
-        )
-        task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
-        task_records_snapshot_error = task_records_error
-        if read_only_snapshot_error is None:
-            read_only_snapshot_error = task_records_error
-        _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
-        state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
-        _write_state_atomic(state_path, state)
     start = time.monotonic()
     ok_outcome = False
     stderr_excerpt = None
@@ -11295,6 +12132,25 @@ def _run_worker(
 
     try:
         try:
+            if mode == "read-only":
+                if agent in {"deepseek", "glm"}:
+                    from scripts.agent_runtime.adapters.deepseek import initialize_opencode_dependencies
+
+                    initialize_opencode_dependencies(
+                        cwd, agent=agent, model=model, timeout=min(hard_timeout, 120) if hard_timeout > 0 else 120
+                    )
+                if agent == "agy":
+                    _provision_agy_read_only_guard(cwd)
+                read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
+                    cwd, **read_only_snapshot_options
+                )
+                task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
+                task_records_snapshot_error = task_records_error
+                if read_only_snapshot_error is None:
+                    read_only_snapshot_error = task_records_error
+                _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
+                state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
+                _write_state_atomic(state_path, state)
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
@@ -11533,6 +12389,7 @@ def _run_worker(
                 )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentTimeoutError as exc:
+            timed_out = True
             runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             substitution = getattr(exc, "substitution", None)
@@ -11612,7 +12469,11 @@ def _run_worker(
                     final_state.update(runtime_tmp_reap)
 
         agy_model_state = _agy_model_state(
-            agent=agent, model=agy_requested_model, identity=runtime_identity, task_id=task_id, run_nonce=effective_nonce,
+            agent=agent,
+            model=agy_requested_model,
+            identity=runtime_identity,
+            task_id=task_id,
+            run_nonce=effective_nonce,
         )
         if ok_outcome and agy_model_state and not agy_model_state["identity_matches_request"]:
             ok_outcome = False
@@ -11820,6 +12681,8 @@ def _run_worker(
                     Path(worktree_path),
                     base_ref,
                     base_sha=_recorded_base_sha(final_state),
+                    publication=True,
+                    task_id=task_id,
                 )
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
@@ -11854,12 +12717,19 @@ def _run_worker(
                 # when it had pushed earlier commits: surface them, never ``done``.
                 # Exit 0 does not override the adapter's provider-neutral verdict
                 # (#9771): rejected work stays unconfirmed, even after an earlier push.
-                run_incomplete = not ok_outcome or _worker_run_incomplete(stderr_excerpt) or leftovers_unconfirmed
+                timeout_commits = timed_out and dirty_on_exit is False and bool(commits_ahead)
+                run_incomplete = (
+                    (not ok_outcome and not timeout_commits)
+                    or (_worker_run_incomplete(stderr_excerpt) and not timeout_commits)
+                    or leftovers_unconfirmed
+                )
                 if dirty_on_exit in (True, None):
                     needs_finalize = True
 
                 # Measure the branch the continuation left checked out (#10548).
+                recorded_publication_branch = final_state.get("worktree_branch")
                 _adopt_continuation_checkout_branch(final_state, Path(worktree_path))
+                publication_branch_adopted = final_state.get("worktree_branch") != recorded_publication_branch
 
                 # Catch committed-but-unpushed write dispatches (#7311):
                 # A clean tree with local commits on the dispatch branch has commits_ahead >= 1
@@ -11873,27 +12743,56 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if normalized_branch not in containment.PROTECTED_BRANCHES and not (
-                        commits_ahead == 0 and dirty_on_exit is False
-                    ):
+                    publication_branch_safe = (
+                        normalized_branch != "HEAD"
+                        and normalized_branch not in containment.PROTECTED_BRANCHES
+                        and _current_branch(Path(worktree_path)) == normalized_branch
+                    )
+                    if not publication_branch_safe:
+                        needs_finalize = True
+                        finalize_error = "auto_finalize_unsafe_branch"
+                    elif not (commits_ahead == 0 and dirty_on_exit is False):
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
                             normalized_branch,
+                            task_id,
+                        )
+                        final_state["push_state"] = (
+                            "unknown" if unpushed_commits is None else "pushed" if unpushed_commits == 0 else "unpushed"
                         )
                         if unpushed_commits is None or unpushed_commits > 0:
                             needs_finalize = True
                             if unpushed_commits is not None and unpushed_commits > 0:
-                                rescue_status = "unpushed work - needs rescue"
+                                rescue_status = "finalize_unpushed"
                             elif commits_ahead != 0:
-                                rescue_status = "unpushed state unknown - needs rescue"
+                                rescue_status = "finalize_remote_unknown"
                             if rescue_status:
                                 finalize_error = rescue_status
 
+                    # Tracking refs are cached observations, not remote delivery
+                    # proof. Revalidate completed scoped work on retries too.
+                    if (
+                        publication_branch_safe
+                        and not publication_branch_adopted
+                        and commits_ahead
+                        and (mode == "danger" or kimi_worker)
+                        and _declared_owned_paths(final_state.get("owned_paths"))
+                    ):
+                        needs_finalize = True
+                elif commits_ahead and _declared_owned_paths(final_state.get("owned_paths")):
+                    # Scoped work cannot publish without a recorded target.
+                    # Empty work and legacy manual-delivery records keep their
+                    # existing delivery checks; this does not adopt a branch.
+                    needs_finalize = True
+                    finalize_error = "auto_finalize_unsafe_branch"
+
                 if (
                     needs_finalize
-                    and rescue_status is None
-                    and returncode == 0
-                    and (mode == "danger" or kimi_worker)
+                    and (returncode == 0 or timeout_commits)
+                    and not publication_branch_adopted
+                    and (mode == "danger" or kimi_worker or (dirty_on_exit is False and bool(commits_ahead)))
+                    and commits_ahead is not None
+                    and dirty_on_exit is not None
                     and kimi_content_refusal is None
                     and not run_incomplete
                     and not _advisory_completion_gate_fails(final_state, Path(worktree_path))
@@ -11919,22 +12818,35 @@ def _run_worker(
                         base_branch=base_branch,
                         open_pr=finalize_open_pr,
                         owned_paths=final_state.get("owned_paths"),
+                        base_sha=_recorded_base_sha(final_state),
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
                     commits_ahead = _count_commits_ahead(
-                        Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state)
+                        Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state), publication=True,
+                        task_id=task_id,
                     )
-                    if auto_finalize.ok and not auto_finalize.skipped_paths:
+                    if (
+                        auto_finalize.ok
+                        and not auto_finalize.skipped_paths
+                        and dirty_on_exit is False
+                        and commits_ahead is not None
+                    ):
                         needs_finalize = False
-                        ok_outcome = True
-                        final_status = "done"
+                        ok_outcome = not timeout_commits
+                        final_status = "timeout" if timeout_commits else "done"
+                        rescue_status = None
+                        finalize_error = None
                     elif auto_finalize.ok:
                         # Owned work is committed and pushed, but changes outside
                         # the owned paths are still in the tree (finalize_skipped_paths): a human decides.
-                        finalize_error = _TypedCause(
-                            "finalize_skipped_paths", count=len(auto_finalize.skipped_paths)
-                        ).public()
-                    elif auto_finalize.error == _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON:
+                        finalize_error = (
+                            _TypedCause("finalize_skipped_paths", count=len(auto_finalize.skipped_paths)).public()
+                            if auto_finalize.skipped_paths
+                            else "auto_finalize_changes_remaining"
+                        )
+                    else:
+                        finalize_error = auto_finalize.error or "auto_finalize_unconfirmed"
+                    if auto_finalize.error == _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON:
                         # A dirty tree with only known scratch residue has no
                         # user-visible deliverable. Refuse before staging so it
                         # cannot create a branch, push, or public PR.
@@ -12138,6 +13050,21 @@ def _run_worker(
             core_terminal_state.update(agy_telemetry.task_fields())
         final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
         final_state["rescue_status"] = rescue_status
+        if auto_finalize is not None or (needs_finalize and worktree_path and mode in _WRITE_CAPABLE_MODES):
+            pushed = auto_finalize is not None and auto_finalize.ok
+            final_state["finalize_delivery"] = {
+                "status": "pushed" if pushed else "needs_finalize",
+                "branch": final_state.get("worktree_branch"),
+                "commit_sha": auto_finalize.commit_sha if auto_finalize else final_state["final_branch_head_commit"],
+                "remote_verified": pushed,
+                "reason": core_terminal_state["finalize_error"] or core_terminal_state["last_error"],
+                "owner": final_state.get("initiator") or "unknown",
+                "action": (
+                    "obtain exact-head independent review"
+                    if pushed and not needs_finalize
+                    else "inspect finalization evidence and retained work; repair the failing gate and retry normal publication"
+                ),
+            }
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
         if clean_snapshots_to_discard is not None:
             discard_read_only_snapshot_phases(clean_snapshots_to_discard)
@@ -12263,15 +13190,19 @@ def _run_worker(
     if agy_model_state:
         # Reproject from the same bound observation. Neither Result/usage fallback
         # nor a prior task's nested attribution may resurrect rejected evidence.
-        runtime_substitution = {
-            "requested_provider": "agy",
-            "requested_model": agy_requested_model,
-            "actual_provider": "agy",
-            "actual_model": agy_model_state["resolved_model"],
-            "actual_model_known": True,
-            "source": agy_model_state["resolved_model_source"],
-            "substituted": True,
-        } if agy_model_state["resolved_model_known"] and agy_model_state["model_identity"]["substituted"] else None
+        runtime_substitution = (
+            {
+                "requested_provider": "agy",
+                "requested_model": agy_requested_model,
+                "actual_provider": "agy",
+                "actual_model": agy_model_state["resolved_model"],
+                "actual_model_known": True,
+                "source": agy_model_state["resolved_model_source"],
+                "substituted": True,
+            }
+            if agy_model_state["resolved_model_known"] and agy_model_state["model_identity"]["substituted"]
+            else None
+        )
         substitution = runtime_substitution
     else:
         substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
@@ -12735,31 +13666,53 @@ def _registered_stream_epics() -> frozenset[int]:
 
 
 def _run_dor_preflight(
-    prompt: str, allow_reason: str | None, *, dispatch_repo: str
+    prompt: str, allow_reason: str | None, *, dispatch_repo: str,
+    lifecycle_carrier: dict[str, Any] | None = None,
 ) -> tuple[str | None, dict[str, Any] | None]:
-    """Check each issue named by an implementation brief before dispatch side effects.
+    """Check the bound task card, or visible issues in an unbound implementation brief.
+
+    A lifecycle carrier already validated at the dispatch boundary selects its single task issue.
+    Prompt citations cannot add cards or replace that target.
 
     A registered stream epic of this repository is linked context, not a task card (#9276): it is recorded
     as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
     (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
     says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
+
+    A membership timeout on a card that otherwise read PASS is an UNKNOWN advisory (#11283): it is recorded
+    under ``unknown`` with ``dor: UNKNOWN (timeout)`` and needs no ``--allow-dor-warn``. Card findings, issue
+    lookup and checker failures keep their refusals; ``dor`` is PASS only when every issue read PASS.
     """
-    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE
+    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE, AdmissionState, admission_state
 
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
-    for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
-        repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+    if lifecycle_carrier is not None:
+        identity = lifecycle_carrier["identity"]
+        repo = identity["repository"]
         if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
             repo = _CANONICAL_GITHUB_REPO
-        number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
-        distinct.setdefault((repo.casefold(), number), (repo, number))
-    candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
+        candidates = [(repo, identity["github_issue_number"])]
+    else:
+        for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
+            repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+            if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
+                repo = _CANONICAL_GITHUB_REPO
+            number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
+            distinct.setdefault((repo.casefold(), number), (repo, number))
+        candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
     if not candidates:
         return None, None
     epic_numbers = _registered_stream_epics()
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
+    if lifecycle_carrier is not None:
+        declared_epic = (repo, identity["stream_epic"])
+        if (
+            declared_epic in candidates or (repo == _CANONICAL_GITHUB_REPO and declared_epic[1] in epic_numbers)
+        ) and declared_epic not in epics:
+            epics.append(declared_epic)
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
+    unknown: dict[str, str] = {}
     non_overridable: set[str] = set()
     membership_records: dict[str, Any] = {}
     issue_numbers: list[int] = []
@@ -12805,7 +13758,10 @@ def _run_dor_preflight(
                 # section is explicitly unchecked, never evidence of membership.
                 if "membership" in payload:
                     membership_records[label] = payload["membership"] or {"status": "unchecked"}
-                if result.returncode or payload.get("verdict") != "PASS":
+                state = admission_state(payload)
+                if state is AdmissionState.UNKNOWN and result.returncode == 1:
+                    unknown[label] = ",".join(payload["missing"])
+                elif result.returncode or state is not AdmissionState.PASS:
                     warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
             except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
                 if not recorded:
@@ -12828,8 +13784,13 @@ def _run_dor_preflight(
             ), None
         stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
+        if lifecycle_carrier is not None:
+            return "❌ DoR refused: the declared lifecycle issue is not a task card", None
         return None, None
-    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    verdict = AdmissionState.WARN if warnings else AdmissionState.UNKNOWN if unknown else AdmissionState.PASS
+    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings, "dor": verdict.value}
+    if unknown:
+        record["unknown"] = unknown
     if membership_records:
         record["membership"] = membership_records
     if stream_epics:
@@ -12839,12 +13800,17 @@ def _run_dor_preflight(
     if allow_reason is not None:
         record["allow_warn_reason"] = allow_reason
     if non_overridable:
-        return "❌ DoR refused: " + ",".join(sorted(non_overridable)) + "; fix the card or ancestry; no override applies", record
+        return "❌ DoR refused: " + ",".join(
+            sorted(non_overridable)
+        ) + "; fix the card or ancestry; no override applies", record
     if warnings and allow_reason is None:
         details = "; ".join(
             f"{('#' + label) if label.isdigit() else label}: {missing}" for label, missing in warnings.items()
         )
         return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
+    if unknown:
+        details = "; ".join(f"{('#' + label) if label.isdigit() else label}: {codes}" for label, codes in unknown.items())
+        print(f"⚠️ DoR UNKNOWN (timeout) ({details}); membership unverified", file=sys.stderr)
     return None, record
 
 
@@ -13300,7 +14266,16 @@ def _dispatch(
     from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
 
     # A catalog-retired model is refused before any check can run a command.
-    retired_refusal = retired_model_refusal(getattr(args, "model", None))
+    # An omitted --model is the seat's registry default. A retired default is
+    # the same refusal (OO-58: kimi's default is k3-256k).
+    requested_model = getattr(args, "model", None)
+    if not str(requested_model or "").strip():
+        from scripts.agent_runtime.telemetry import _default_model_for
+
+        default_model = _default_model_for(getattr(args, "agent", None))
+        if is_kimi_seat(args.agent, model=default_model):
+            requested_model = default_model
+    retired_refusal = retired_model_refusal(requested_model)
     if retired_refusal:
         print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
         return 2
@@ -13315,6 +14290,12 @@ def _dispatch(
 
     # #10799: an overloaded host refuses here, before routing, the DoR and
     # authoring preflights, the runtime tmp sweep and the capacity hint.
+    if getattr(args, "model", None):
+        from scripts.review.model_catalog import resolve_catalog_model_id
+
+        pinned = resolve_catalog_model_id(args.model)
+        if pinned and "fable" in pinned:
+            print(f"Warning: explicit pin {pinned} has high cost.", file=sys.stderr)
     early_refusal_rc = _early_host_refusal(args)
     if early_refusal_rc is not None:
         return early_refusal_rc
@@ -13570,8 +14551,28 @@ def _dispatch(
             print("❌ --allow-dor-warn requires a non-empty reason", file=sys.stderr)
             return 2
     dor_record: dict[str, Any] | None = None
+    lifecycle_file = getattr(args, "lifecycle_file", None)
+    try:
+        lifecycle_carrier, lifecycle_prompt = (
+            _load_task_lifecycle_carrier(lifecycle_file) if lifecycle_file else (None, "")
+        )
+        if lifecycle_carrier is not None and args.mode in {"workspace-write", "danger"}:
+            from scripts.orchestration.task_identity import _github_url
+
+            identity = lifecycle_carrier["identity"]
+            for url_key, number_key in (
+                ("github_issue_url", "github_issue_number"), ("stream_epic_url", "stream_epic"),
+            ):
+                if identity[url_key] != _github_url(identity["repository"], "issues", identity[number_key]):
+                    raise ValueError(f"{url_key} does not match the repository and exact number")
+    except (OSError, ValueError) as exc:
+        print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
+        return 2
     if early_prompt is not None and args.mode in {"workspace-write", "danger"}:
-        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason, dispatch_repo=fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(
+            early_prompt, dor_reason, dispatch_repo=fleet_repo.github,
+            **({"lifecycle_carrier": lifecycle_carrier} if lifecycle_carrier is not None else {}),
+        )
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
@@ -13579,12 +14580,6 @@ def _dispatch(
     if cursor_auto_error:
         print(cursor_auto_error, file=sys.stderr)
         return 2
-    cursor_auto_admission = (
-        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
-        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
-        else None
-    )
-
     task_id = args.task_id
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
@@ -13778,13 +14773,20 @@ def _dispatch(
 
     # #672 P2.1: allowlisted --repo retargets worktree creation to a sibling
     # checkout. Control-plane task state stays on the public primary.
-    if not fleet_repo.default and requested_branch:
+    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
+    sibling_branch_review = not fleet_repo.default and direct_branch_review and args.mode == "read-only"
+    if not fleet_repo.default and requested_branch and not sibling_branch_review:
         print(
             "❌ --branch attach on sibling --repo is not supported in P2.1; "
             "use --repo with bare --worktree for a fresh branch, or the manual --cwd flow.",
             file=sys.stderr,
         )
         return 2
+    if sibling_branch_review:
+        error = _validated_path_changed_error("--repo", _REPO_ROOT.parent / fleet_repo.local_name)
+        if error:
+            print(error, file=sys.stderr)
+            return 2
     # Explicit primary-root callers need the same isolation as the default
     # read-only flow (#10025). Keep their dispatch working without snapshotting
     # other drivers' local edits in that shared checkout.
@@ -13794,7 +14796,6 @@ def _dispatch(
         validated_cwd = None
     # Direct verdict reviews snapshot the admitted branch without touching its
     # author. Ordinary continuation and attempt-owned inputs keep branch reuse.
-    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
     detached_read_only = args.mode == "read-only" and not args.cwd and (direct_branch_review or not worktree_arg)
     if detached_read_only:
         worktree_arg = worktree_arg or "auto"
@@ -14024,10 +15025,24 @@ def _dispatch(
         return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
-        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, dispatch_repo=fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(
+            prompt, dor_reason, dispatch_repo=fleet_repo.github,
+            **({"lifecycle_carrier": lifecycle_carrier} if lifecycle_carrier is not None else {}),
+        )
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
+
+    # Bind Auto admission to the final DoR check, including a changed prompt (#11283).
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": dor_record.get("dor", "PASS") == "PASS", "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
 
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
@@ -14040,11 +15055,13 @@ def _dispatch(
     for code in review_brief_warnings:
         print(_review_brief_warning_line(code), file=sys.stderr)
 
-    try:
-        lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(getattr(args, "lifecycle_file", None))
-    except (OSError, ValueError) as exc:
-        print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
-        return 2
+    if not lifecycle_file:
+        # Preserve the unbound path's existing hook order; a supplied snapshot is never reloaded.
+        try:
+            lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(None)
+        except (OSError, ValueError) as exc:
+            print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
+            return 2
     # Kinds of the blocks delegate adds around the caller's prompt, in the order they appear in the final prompt (the
     # worktree block leads it, the lifecycle and research blocks follow it); recorded so a consumer can tell which
     # instructions the worker saw beyond the source prompt.
@@ -14410,8 +15427,8 @@ def _dispatch(
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
     # the shared ownership ledger entirely (Claude CF #5649 r11).
-    # A concrete overlap waits in the ledger's bounded FIFO queue
-    # (DELEGATE_OWNERSHIP_WAIT_S) instead of refusing at once (#11281); only
+    # A concrete overlap waits on live holders and requeues expired tickets
+    # (#11351; DELEGATE_OWNERSHIP_WAIT_S is the unknown-holder fallback); only
     # this dispatch's own worktree lock is held while it waits.
     if not bool(getattr(args, "dry_run", False)):
         try:
@@ -14420,6 +15437,7 @@ def _dispatch(
                 admit_write_paths,
                 env_guard_mode,
                 env_queue_wait_s,
+                publish_requeue_notice,
             )
         except ImportError:  # pragma: no cover - flat script path
             from guardrails.delegate_ownership import (  # type: ignore
@@ -14427,12 +15445,14 @@ def _dispatch(
                 admit_write_paths,
                 env_guard_mode,
                 env_queue_wait_s,
+                publish_requeue_notice,
             )
 
         guard_mode = env_guard_mode()
         try:
             ownership = admit_write_paths(
                 task_id=task_id,
+                cwd=validated_cwd or target_repo_root,
                 mode=str(args.mode),
                 owned_paths=_declared_owned_paths(getattr(args, "owned_path", None)),
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
@@ -14440,6 +15460,10 @@ def _dispatch(
                 guard_mode=guard_mode,
                 wait_s=env_queue_wait_s(),
                 on_queued=lambda notice: print(f"⏳ {notice}", file=sys.stderr, flush=True),
+                requeue_on_timeout=True,
+                on_requeued=lambda notice: publish_requeue_notice(
+                    notice, task_id=task_id, initiator=attribution.initiator, run_nonce=run_nonce,
+                ),
             )
         except Exception as own_exc:
             # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
@@ -14483,7 +15507,7 @@ def _dispatch(
             # base or creating a worktree. Both can spawn git subprocesses.
             try:
                 if requested_branch:
-                    _validate_branch_reuse_name(requested_branch)
+                    _validate_branch_reuse_name(requested_branch, repo_root=target_repo_root)
                 changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
                 if changed_error:
                     raise ValueError(changed_error.removeprefix("❌ "))
@@ -14551,7 +15575,8 @@ def _dispatch(
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
-                    dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)
+                    (dry_run_worktree if dry_run_worktree and dry_run_worktree.exists() else None)
+                    or validated_cwd or target_repo_root
                 ),
                 "initiator": attribution.initiator,
                 "attribution_source": attribution.source,
@@ -14777,6 +15802,9 @@ def _dispatch(
                     base=worktree_base,
                     run_nonce=run_nonce,
                     detached=detached_read_only,
+                    review_branch=requested_branch if sibling_branch_review else None,
+                    pinned_head_sha=getattr(args, "pinned_head", None),
+                    repository=fleet_repo.github,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
@@ -14892,6 +15920,7 @@ def _dispatch(
                 return 1
             try:
                 _refuse_review_attempt_worktree_reuse(resolved_wt)
+                _refuse_unretrieved_worktree_evidence(resolved_wt)
             except (OSError, ValueError, RuntimeError) as exc:
                 discard_logs()
                 print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -14916,7 +15945,15 @@ def _dispatch(
                 # Still under the worktree lock: a link an earlier write-capable
                 # dispatch provisioned must not reach the worker (#9421).
                 try:
-                    _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                    checkout_repo = _git_common_dir_identity(resolved_wt)
+                    public_repo = _git_common_dir_identity(_REPO_ROOT)
+                    if checkout_repo is None or public_repo is None:
+                        raise RuntimeError("worktree repository identity unavailable for read-only reuse")
+                    # Match fresh sibling provisioning: public resources belong
+                    # only in a checkout of the public repository.
+                    _provision_data_symlinks(
+                        resolved_wt, _REPO_ROOT, read_only=True, provision_dependencies=checkout_repo == public_repo
+                    )
                 except RuntimeError as exc:
                     discard_logs()
                     print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -15015,6 +16052,15 @@ def _dispatch(
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
         return 1
 
+    try:
+        (runtime_tmp_root / "evidence").mkdir(mode=0o700)
+    except OSError as exc:
+        _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+        stdout_fd.close()
+        stderr_fd.close()
+        print(f"❌ failed to create the evidence directory for {task_id!r}: {exc}", file=sys.stderr)
+        return 1
+
     spawned = False
     try:
         cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
@@ -15046,6 +16092,7 @@ def _dispatch(
             blocks=prompt_blocks,
             agent=dispatch_agent,
             review_route=(review_attempt is not None),
+            evidence_dir=runtime_tmp_root / "evidence",
         )
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
@@ -15100,6 +16147,7 @@ def _dispatch(
             "worktree_local_venv": worktree_telemetry.get("local_venv"),
             "ignored_output_baseline": worktree_telemetry.get("ignored_output_baseline"),
             "runtime_tmp_root": str(runtime_tmp_root),
+            "evidence_dir": str(runtime_tmp_root / "evidence"),
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,
             "keep_worktree": keep_worktree,
@@ -15433,7 +16481,7 @@ def _dispatch(
                 from guardrails.delegate_ownership import update_write_claim_pid  # type: ignore
 
             try:
-                update_write_claim_pid(task_id, int(proc.pid))
+                update_write_claim_pid(task_id, int(proc.pid), cwd=validated_cwd or target_repo_root)
             except Exception as own_exc:
                 print(
                     f"⚠️  write-path ownership: failed to bind worker pid: {own_exc}",
@@ -15528,6 +16576,10 @@ class BudgetGuardRefuseError(RuntimeError):
     """Raised when --check-budget must refuse dispatch (hot/deficit/near_cap, no fallback)."""
 
 
+class _UnmappedSubstitutionModelError(BudgetGuardRefuseError):
+    """The substitute rejects an explicit model with no catalog mapping."""
+
+
 class CapacityGuardRefuseError(RuntimeError):
     """Raised when Cursor driver lease admission must refuse a worker spawn."""
 
@@ -15599,19 +16651,34 @@ def _budget_will_last_to_reset(agent_info: dict[str, Any]) -> bool | None:
 
 
 def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
-    cool: list[str] = []
+    """Cool or warm lanes, one name per usage pool.
+
+    Seats that share the excluded seat's pool are the same meter, so they are
+    not offered as a cooler alternative (OO-58: grok and cursor).
+    """
+    from scripts.review.model_catalog import load_model_catalog, usage_pool_for_seat, usage_pool_representative
+
+    catalog = load_model_catalog()
+    agents = credit_lane.shared_usage_agents(agents, catalog=catalog)
+    excluded_pool = usage_pool_for_seat(exclude, catalog)
+    members: dict[str, list[str]] = {}
     for lane, info in agents.items():
         if not isinstance(info, dict):
             continue
         lane_l = str(lane).strip().lower()
-        if lane_l == exclude:
+        pool = usage_pool_for_seat(lane_l, catalog)
+        if lane_l == str(exclude).strip().lower() or pool == excluded_pool:
             continue
         deficit = credit_lane.pace_deficit_state(lane_l, info)
         status = deficit["status"] or _budget_lane_status(lane_l, info)
         if status in {"hot", "near_cap"} or deficit["uncovered"] is True:
             continue
         if status in {"cool", "warm"}:
-            cool.append(lane_l)
+            members.setdefault(pool, []).append(lane_l)
+    cool: list[str] = []
+    for lanes in members.values():
+        representative = usage_pool_representative(lanes[0], catalog)
+        cool.append(representative if representative in lanes else sorted(lanes)[0])
     return sorted(cool)
 
 
@@ -15883,9 +16950,11 @@ def _admit_advisory(
                 }
             )
         return _AdvisoryAdmission()
-    if advisory_task is None and model_id in bounded_advisory.driver_brief_models() and task_family in {
-        "bounded_implementation", "readonly_recon", "mechanical_classification"
-    }:
+    if (
+        advisory_task is None
+        and model_id in bounded_advisory.driver_brief_models()
+        and task_family in {"bounded_implementation", "readonly_recon", "mechanical_classification"}
+    ):
         try:
             prompt_sha256 = _binding_prompt_sha256(args, read_stdin=False)
         except (OSError, UnicodeError):
@@ -15896,7 +16965,11 @@ def _admit_advisory(
             bound_args, repo_root=repo_root, brief_sha256=prompt_sha256, model_id=model_id
         )
         return _AdvisoryAdmission(
-            prompt_sha256=prompt_sha256, args=bound_args, repo_root=repo_root, agent=dispatch_agent, model_id=model_id,
+            prompt_sha256=prompt_sha256,
+            args=bound_args,
+            repo_root=repo_root,
+            agent=dispatch_agent,
+            model_id=model_id,
             driver_brief={
                 "driver": dict(caller or {"identity": "unknown", "source": "unknown"}),
                 "advisory_args": bound_args,
@@ -15974,12 +17047,16 @@ def _bounded_prompt_composer(
             sparse_telemetry=sparse if isinstance(sparse, dict) else None,
             delegate_commits=is_kimi_seat(agent, model=model),
             research_block=_recorded_research_block(admitted.get("research_block")),
-            advisory_block=(bounded_advisory.worker_prompt_block(validated) if validated is not None
-                            else bounded_advisory.driver_brief_prompt_block(args)),
+            advisory_block=(
+                bounded_advisory.worker_prompt_block(validated)
+                if validated is not None
+                else bounded_advisory.driver_brief_prompt_block(args)
+            ),
             advisory_block_kind="advisory_envelope" if validated is not None else "driver_brief",
             rules_seat=args.get("rules_seat"),
             agent=agent,
             review_route=(record.get("review_attempt") is not None),
+            evidence_dir=record.get("evidence_dir") or None,
         )
 
     return compose
@@ -16181,9 +17258,12 @@ def _cursor_auto_refusal(
     Auto needs positive evidence of that task: ``--research-role implementation``
     (the declared functional role; a missing or any other role is unclassified for
     Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
-    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
-    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    checked an issue card and found it PASS (``--allow-dor-warn`` and UNKNOWN are not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default. An explicit
+    ``dor`` state other than PASS refuses on its own; a legacy record without ``dor`` keeps its
+    warning-map reading.
     """
+    from scripts.ci.check_issue_task_quality import AdmissionState
     from scripts.review.model_catalog import (
         CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
         cursor_pinned_models,
@@ -16206,7 +17286,12 @@ def _cursor_auto_refusal(
         reasons.append("no --owned-path")
     if not dor_record or not dor_record.get("issues"):
         reasons.append("no DoR issue card was checked")
-    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+    elif (
+        ("dor" in dor_record and dor_record["dor"] != AdmissionState.PASS.value)
+        or dor_record.get("warnings")
+        or dor_record.get("unknown")
+        or dor_record.get("allow_warn_reason") is not None
+    ):
         reasons.append("the DoR issue card is not PASS")
     if not reasons:
         return None
@@ -16888,9 +17973,7 @@ def _authoring_require_route(
     # A claude reviewer would run as the account a review dispatch resolves and binds (#10630).
     claude_account = claude_account_lane.resolve_route_account(None, strict=False)
     try:
-        resolution = structural_review_route(
-            facts, risk=risk, review_mode=review_mode, claude_account=claude_account
-        )
+        resolution = structural_review_route(facts, risk=risk, review_mode=review_mode, claude_account=claude_account)
     except ModelCatalogError as exc:
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog unavailable ({exc}).", record
@@ -17476,9 +18559,6 @@ def _dispatch_route(
                 origin_agent=original_agent,
                 fallbacks=request.fallbacks,
                 review_select=request.review_select,
-                review_trusted_inputs=bool(
-                    getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
-                ),
                 force_agent=force_agent,
                 diagnostic_sink=diagnostic_sink,
                 claude_account=request.claude_account,
@@ -17682,13 +18762,29 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
 
             try:
                 pr = _run_json(
-                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid"]
+                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid,isCrossRepository"]
                 )
             except RecordError as exc:
                 raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
-            if not isinstance(pr, dict) or pr.get("headRefOid") != target.head_sha or not pr.get("headRefName"):
+            if (
+                not isinstance(pr, dict)
+                or pr.get("isCrossRepository") is not False
+                or not isinstance(pr.get("headRefName"), str)
+                or not pr["headRefName"]
+                or not isinstance(pr.get("headRefOid"), str)
+                or not re.fullmatch(r"[0-9a-fA-F]{40}", pr["headRefOid"])
+                or pr["headRefOid"] == "0" * 40
+            ):
                 raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
             branch = pr["headRefName"]
+            from scripts.review.target_resolution import TargetResolutionError, live_canonical_branch_head
+
+            try:
+                live_head = live_canonical_branch_head(repo_root, branch, repository=repository)
+            except TargetResolutionError as exc:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
+            if live_head != target.head_sha:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
         if branch:
             unknown_history = admitted_unknown_history(
                 repository=repository,
@@ -18138,7 +19234,7 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
     if explicit_model and mapped is None:
         rejection = _adapter_model_rejection(target_agent, explicit_model)
         if rejection:
-            raise BudgetGuardRefuseError(
+            raise _UnmappedSubstitutionModelError(
                 "ROUTING REFUSED: substitute "
                 f"--agent {target_agent} rejects explicit --model {explicit_model} "
                 f"({rejection}). Refusing before spawn."
@@ -18153,6 +19249,53 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
         f"catalog default {default or '(none)'}). "
         "Refusing before spawn."
     )
+
+
+def _resolve_budget_substitution_model(
+    requested: str,
+    target: str,
+    model: str | None,
+    *,
+    info: dict[str, Any],
+    reason: str,
+    snapshot_metadata: Mapping[str, Any] | None,
+    diagnostic_sink: dict[str, Any] | None,
+) -> tuple[str, str] | None:
+    """Resolve a writer's budget shed, retaining an incompatible pin unless exhausted (#11110)."""
+    try:
+        return _resolve_substitution_model(target, model)
+    except _UnmappedSubstitutionModelError:
+        facts = _budget_owner_facts(requested, info, model=model, is_stale=False, snapshot_metadata=snapshot_metadata)
+        exhausted = "near_cap" in {
+            _budget_lane_status(requested, info),
+            facts.status,
+            credit_lane.allowance_status(facts.plan_remaining_pct),
+        } or credit_lane.plan_window_exhausted(requested, info)
+        if exhausted:
+            remaining = f"{facts.plan_remaining_pct}% remaining" if facts.plan_remaining_pct is not None else "unknown"
+            remedies = "wait for reset, request a mapped model"
+            if requested == "claude":
+                remedies += ", or select the other Claude account label where policy permits"
+            raise BudgetGuardRefuseError(
+                f"BUDGET_PINNED_MODEL_EXHAUSTED: --agent {requested} is exhausted/near_cap "
+                f"({remaining}; {reason}); explicit --model {model} has no mapping "
+                f"accepted by --agent {target}. Supported remedies: {remedies}. Refusing before spawn."
+            ) from None
+        note = {
+            "code": "BUDGET_PIN_RETAINED",
+            "agent": requested,
+            "model": model,
+            "substitute_agent": target,
+            "trigger": reason,
+        }
+        if diagnostic_sink is not None:
+            diagnostic_sink["pinned_model_retained"] = note
+        print(
+            f"NOTE: BUDGET_PIN_RETAINED: keeping --agent {requested} --model {model} "
+            f"on {reason}; the pin has no mapping accepted by --agent {target} and the original lane is not exhausted.",
+            file=sys.stderr,
+        )
+        return None
 
 
 def _substitution_model_phrase(chosen: str, how: str, explicit_model: str | None) -> str:
@@ -18280,7 +19423,6 @@ def _resolve_agent_with_budget_guard(
     origin_agent: str | None = None,
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
-    review_trusted_inputs: bool = False,
     force_agent: bool = False,
     diagnostic_sink: dict[str, Any] | None = None,
     claude_account: claude_account_lane.ClaudeAccount,
@@ -18291,13 +19433,16 @@ def _resolve_agent_with_budget_guard(
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
     route) has a known target. Without a usable fallback: refuse (raise
-    BudgetGuardRefuseError). ``force_agent`` disables that writer substitution and
+    BudgetGuardRefuseError). An unmapped explicit model rejected by the substitute
+    stays on its original lane for hot/pace triggers, with a task-record note;
+    exhaustion instead refuses with BUDGET_PINNED_MODEL_EXHAUSTED (#11110).
+    ``force_agent`` disables that writer substitution and
     the capacity refusal, and still prints and stores the lane's quota and
     health (explicit unknowns when telemetry is missing).
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path;
-    pace only orders equal fits and ``force_agent`` never bypasses review hard gates.
+    usage is advisory except Claude cap protection, and operational hard gates bind.
     A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
 
     ``claude_account`` is required: the account the dispatch's claude routes
@@ -18393,18 +19538,80 @@ def _resolve_agent_with_budget_guard(
     # #10619, #10630, #10770: every lane record below is read from the snapshot bound to the
     # dispatch's claude account; the raw payload is kept only to bind the cooler-seat advice.
     payload, account_evidence = claude_account_lane.select_account(routing_payload, account=claude_account)
-    agents = claude_account_lane.account_agents(payload, account=claude_account)
+    agents = credit_lane.shared_usage_agents(claude_account_lane.account_agents(payload, account=claude_account))
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
     subscription_data_available = codexbar_data_available or bool(agents)
-    initial_review_substitution = (
-        review_select is not None and (model_resolution or {}).get("record", {}).get("source") == "reviewer-resolver"
-    )
-    if initial_review_substitution and not (isinstance(agents.get(requested), Mapping) and agents[requested]):
-        raise BudgetGuardRefuseError(
-            f"REVIEW_ROUTE_REFUSED: substitute --agent {requested} has no usable budget snapshot; refusing before spawn"
+    # Missing lane records keep the UNKNOWN fail-open path below; inserting a
+    # Claude record would change the meter sealed into the account-bound view.
+    if review_select is not None and agents:
+        from scripts.review.capacity import review_capacity_action
+        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
+
+        if is_stale:
+            print(
+                "⚠ ROUTING CHECK ADVISORY (stale snapshot, generatedAt/data age >15min) — verify manually; no hard sub",
+                file=sys.stderr,
+            )
+        if requested == "claude":
+            if account_evidence.get("state") == "unknown":
+                print(
+                    f"⚠ ROUTING CHECK UNKNOWN: claude account {claude_account.label} meter unavailable "
+                    f"({account_evidence['reason']}); no hard sub",
+                    file=sys.stderr,
+                )
+            elif account_evidence.get("state") == "stale":
+                print(
+                    f"⚠ ROUTING CHECK ADVISORY (stale claude account {claude_account.label} meter, "
+                    f"age_s={(agents.get('claude') or {}).get('age_s')}) — verify manually; no hard sub",
+                    file=sys.stderr,
+                )
+        evaluated_account = account_evidence
+        # Read Claude's meter from the bound account for the requested seat,
+        # every candidate and the final identity, including an unchanged pick.
+        agents = dict(agents)
+        agents["claude"] = claude_account_lane.lane_record(payload, "claude", account=claude_account)
+        record = agents.get(requested)
+        record = record if isinstance(record, Mapping) else {}
+        blocked, reason = review_capacity_action(requested, record, diags, requested_model)
+        retain(record, diags, payload.get("ranked_by_headroom"))
+        exclusions = {}
+        for candidate in REVIEW_CANDIDATES.values():
+            info = agents.get(candidate.route)
+            info = info if isinstance(info, Mapping) else {}
+            unavailable, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
+            if unavailable:
+                exclusions[candidate.name] = cause
+        review_snapshot = payload.evolve(
+            agents={lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
+            review_capacity_exclusions=exclusions,
         )
+        sub, chosen = review_select(review_snapshot, requested if blocked else "")
+        sub_info = agents.get(sub)
+        sub_info = sub_info if isinstance(sub_info, Mapping) else {}
+        sub_blocked, sub_reason = review_capacity_action(sub, sub_info, diags, chosen)
+        if sub_blocked:
+            raise BudgetGuardRefuseError(
+                f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
+            )
+        if (sub, chosen) == (requested, requested_model):
+            return requested
+        print(
+            f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
+            f"({reason or 'reviewer resolver admission'}).",
+            file=sys.stderr,
+        )
+        _remember_agent_substitution(
+            model_resolution,
+            source="reviewer-resolver",
+            requested_agent=origin_agent or requested,
+            requested_model=requested_model,
+            actual_agent=sub,
+            actual_model=chosen,
+            how="reviewer-resolver",
+        )
+        return sub
 
     # An empty ledger is only unknown when the explicit subscription refresh also
     # yielded no authoritative weekly data. Never quietly fail open here.
@@ -18553,82 +19760,9 @@ def _resolve_agent_with_budget_guard(
             model=requested_model,
         )
     )
-    if review_select is not None:
-        from scripts.review.capacity import review_capacity_action
-
-        review_blocked, review_reason = review_capacity_action(requested, agent_dict, diags, requested_model)
-        if review_blocked:
-            needs_action, reason = True, review_reason
     retain(agent_dict, diags, payload.get("ranked_by_headroom"))
-    if force_agent and review_select is None:
+    if force_agent:
         return requested
-    if review_select is not None:
-        # #9959: capacity is an exclusion before the resolver ranks candidates,
-        # not a veto on its first pick. Keep coding fallbacks out of review
-        # selection, and evaluate exact candidate models with this guard's
-        # existing thresholds/credit rules. The snapshot is caller-owned data.
-        from scripts.review.capacity import review_capacity_action
-        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
-
-        capacity_exclusions: dict[str, str] = {}
-        for candidate in REVIEW_CANDIDATES.values():
-            info = agents.get(candidate.route)
-            if candidate.route != requested and not (isinstance(info, Mapping) and info):
-                capacity_exclusions[candidate.name] = "substitute has no usable budget snapshot"
-                continue
-            info = info if isinstance(info, Mapping) else {}
-            blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
-            if blocked:
-                capacity_exclusions[candidate.name] = cause
-        review_snapshot = payload.evolve(
-            agents={lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
-            review_capacity_exclusions=capacity_exclusions,
-        )
-        sub, chosen = review_select(review_snapshot, requested if needs_action else "")
-        if sub == requested and chosen == requested_model:
-            if not needs_action:
-                return requested
-            if status in {"cool", "warm"} and "deficit" in reason:
-                note = "NOTE: REVIEW_BUDGET_RETAINED: retaining resolver-selected reviewer on pace-only deficit."
-            else:
-                note = "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer" + (
-                    ";" if not review_trusted_inputs else "."
-                )
-            if not review_trusted_inputs:
-                note += (
-                    " Legacy calls without trusted author/risk inputs prove only intrinsic eligibility. "
-                    "budget substitution requires --review-author-model and --review-risk (code profile only)"
-                )
-            print(note, file=sys.stderr)
-            return requested
-        sub_info = agents.get(sub)
-        if not (isinstance(sub_info, Mapping) and sub_info):
-            raise BudgetGuardRefuseError(
-                f"REVIEW_ROUTE_REFUSED: substitute --agent {sub} has no usable budget snapshot; refusing before spawn"
-            )
-        sub_dict = dict(sub_info)
-        # #10016: the primary and substitute both use this allowance rule;
-        # pace/reset-reserve writer routing cannot override review hard gates.
-        sub_blocked, sub_reason = review_capacity_action(sub, sub_dict, diags, chosen)
-        if sub_blocked:
-            raise BudgetGuardRefuseError(
-                f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
-            )
-        print(
-            f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
-            f"({reason}; reviewer resolver).",
-            file=sys.stderr,
-        )
-        _remember_agent_substitution(
-            model_resolution,
-            source="reviewer-resolver",
-            requested_agent=origin_agent or requested,
-            requested_model=requested_model,
-            actual_agent=sub,
-            actual_model=chosen,
-            how="reviewer-resolver",
-        )
-        return sub
 
     if not needs_action:
         return requested
@@ -18656,8 +19790,20 @@ def _resolve_agent_with_budget_guard(
                 requested_model=requested_model,
                 model_resolution=model_resolution,
                 origin_agent=origin_agent or requested,
+                diagnostic_sink=diagnostic_sink,
             )
-        chosen, how = _resolve_substitution_model(fallback, requested_model)
+        resolved = _resolve_budget_substitution_model(
+            requested,
+            fallback,
+            requested_model,
+            info=agent_dict,
+            reason=reason,
+            snapshot_metadata=diags,
+            diagnostic_sink=diagnostic_sink,
+        )
+        if resolved is None:
+            return requested
+        chosen, how = resolved
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {fallback} "
             f"{_substitution_model_phrase(chosen, how, requested_model)} "
@@ -18707,6 +19853,7 @@ def _language_lane_substitute(
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
     origin_agent: str | None = None,
+    diagnostic_sink: dict[str, Any] | None = None,
 ) -> str:
     """Walk fallbacks, staying inside claude/codex/agy (#8449)."""
     seat = requested
@@ -18754,7 +19901,18 @@ def _language_lane_substitute(
                 f"Language work on --agent {requested} cannot move to "
                 f"{nxt or 'no fallback'}; allowed lanes are claude, codex (GPT), and agy (Gemini)."
             )
-        chosen, how = _resolve_substitution_model(nxt, current_model)
+        resolved = _resolve_budget_substitution_model(
+            seat,
+            nxt,
+            current_model,
+            info=info_dict,
+            reason=why,
+            snapshot_metadata=snapshot_metadata,
+            diagnostic_sink=diagnostic_sink,
+        )
+        if resolved is None:
+            return seat
+        chosen, how = resolved
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
             f"{_substitution_model_phrase(chosen, how, current_model)} "
@@ -19092,23 +20250,19 @@ def cmd_wait(args: argparse.Namespace) -> int:
 
         record_nonce = state.get("run_nonce")
         if expected_nonce is not None and record_nonce != expected_nonce:
-            if deadline and time.monotonic() >= deadline:
-                print(
-                    json.dumps(
-                        {
-                            "error": "stale_run_nonce",
-                            "task_id": args.task_id,
-                            "expected_run_nonce": expected_nonce,
-                            "record_run_nonce": record_nonce,
-                            "last_known_status": state.get("status"),
-                            "waited_s": args.timeout,
-                        }
-                    ),
-                    file=sys.stderr,
-                )
-                return 1
-            time.sleep(poll_interval)
-            continue
+            print(
+                json.dumps(
+                    {
+                        "error": "stale_run_nonce",
+                        "task_id": args.task_id,
+                        "expected_run_nonce": expected_nonce,
+                        "record_run_nonce": record_nonce,
+                        "status": "stale",
+                    }
+                ),
+                file=sys.stderr,
+            )
+            return 1
 
         # Wait is an explicit settling path; heal only on proven death.
         _heal_dead_task(state_path, state, source="wait")
@@ -19486,7 +20640,7 @@ def build_parser() -> argparse.ArgumentParser:
             f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
             f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}), or more test runs "
             f"than DISPATCH_MAX_TEST_SLOT_QUEUE\n  (default {admission_defaults.max_test_slot_queue}) wait for host "
-            "test slots (scripts/common/test_slots.py), or the .worktrees filesystem is still at or above\n"
+            "test slots (scripts.common.test_slots), or the .worktrees filesystem is still at or above\n"
             f"  DISPATCH_DISK_REFUSE_USED_PERCENT (default {admission_defaults.disk_refuse_used_percent:g}% used) "
             "after one run of the worktree reaper;\n"
             f"  at DISPATCH_DISK_REAP_USED_PERCENT (default {admission_defaults.disk_reap_used_percent:g}%) "
@@ -19504,6 +20658,13 @@ def build_parser() -> argparse.ArgumentParser:
             "  that slice is installed with its memory limits; otherwise dispatch warns and uses plain Popen.\n"
             "  A scoped start that does not prove the worker never started is marked failed and is not relaunched.\n"
             "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
+            "Worker evidence (#11342):\n"
+            "  Every worker gets an empty `$LU_TASK_EVIDENCE_DIR` (the task runtime lease's `evidence/`\n"
+            "  directory). Task cleanup copies that directory to `batch_state/preserved/<task>/` with a\n"
+            "  retrieval receipt before it deletes the lease, capped at 256 MiB; an over-cap or unreadable\n"
+            "  evidence directory is a typed refusal that keeps the lease. Write reports, archives, logs and\n"
+            "  screenshots there, because ignored files elsewhere in a worktree can be removed by a later\n"
+            "  sparse-checkout, and a terminal task's unretrieved worktree evidence now refuses reuse.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
             "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission);\n"
@@ -19582,7 +20743,10 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--allow-dor-warn",
         metavar="REASON",
-        help="Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON.",
+        help=(
+            "Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON. "
+            "A membership timeout on an otherwise PASS card is an UNKNOWN advisory and needs no override (#11283)."
+        ),
     )
     d.add_argument(
         "--lifecycle-file",
@@ -19909,10 +21073,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
-            "when the requested writer lane is near_cap/hot/deficit. Reviews always read "
-            "fresh capacity, even without this flag; pace alone orders equal fits. Code review admits a sole "
-            "eligible cross-family lane with a NOTE on pace-only deficit; hard capacity "
-            "and health gates still bind. Review substitutes follow the resolver's eligible "
+            "when the requested writer lane is near_cap/hot/deficit. Reviews ignore "
+            "remaining usage and pace except Claude cap protection; operational "
+            "availability still binds. Review substitutes follow the resolver's eligible "
             "order; no-capacity refusals name every candidate and exclusion. Prepaid DeepSeek/OpenRouter "
             "also refuse unknown, stale or empty funding. Also enabled when "
             "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
@@ -20131,9 +21294,13 @@ def build_parser() -> argparse.ArgumentParser:
     # Keep legacy argument-error output byte-identical; the option help exposes the opt-in.
     d.usage = d.format_usage().removeprefix("usage: ").rstrip("\n")
     d.add_argument(
-        "--verify-command", default=None, metavar="COMMAND",
-        help=("Acceptance command for a driver brief. Required with "
-              "owned paths for Luna/Haiku read-only recon/classification or workspace-write bounded implementation without --advisory-task. Default: None."),
+        "--verify-command",
+        default=None,
+        metavar="COMMAND",
+        help=(
+            "Acceptance command for a driver brief. Required with "
+            "owned paths for Luna/Haiku read-only recon/classification or workspace-write bounded implementation without --advisory-task. Default: None."
+        ),
     )
     d.add_argument(
         "--review-mode",

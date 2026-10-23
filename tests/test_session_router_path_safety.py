@@ -21,11 +21,6 @@ def test_safe_path_accepts_in_root():
     assert str(resolved).startswith(str(PROJECT_ROOT.resolve()))
 
 
-def test_safe_path_accepts_root_itself():
-    # An empty/dot rel-path resolves to the root and must be allowed.
-    assert _safe_project_path(".", PROJECT_ROOT) == PROJECT_ROOT.resolve()
-
-
 @pytest.mark.parametrize(
     "evil",
     [

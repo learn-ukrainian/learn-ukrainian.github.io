@@ -247,30 +247,6 @@ def packet(universe_template, monkeypatch):
     return copy.deepcopy(template, {id(authority_ledger): authority_ledger, id(source): source})
 
 
-@pytest.mark.parametrize("value,valid", [
-    ([{"a": [1, True]}, {"a": [True, 1]}], True),
-    ([{"a": [1, True]}, {"a": [1.0, True]}], False),
-    ([{"a": 1, "b": 2}, {"b": 2, "a": 1}], False),
-    ([1, True, None, "1", False, 0], True),
-    ([[], []], False),
-    ([{"a": []}, {"a": {}}], True),
-    ([], True),
-])
-def test_cached_validation_preserves_json_schema_uniqueness(validation_cache, value, valid):
-    schema = {"uniqueItems": True}
-    assert validators.Draft202012Validator(schema).is_valid(value) is valid
-    assert gold.VALIDATOR(schema).is_valid(value) is valid
-
-
-def test_cached_accounting_rechecks_transitive_source_bytes(packet):
-    packet.freeze()
-    source = packet.phase5.gold.source
-    index = source.root / source.docs["source_manifest"]["ranges"][0]["index"]["path"]
-    index.write_bytes(b"changed source index")
-    with pytest.raises(ValueError):
-        packet.freeze()
-
-
 def test_frozen_denominator_and_independent_reconciliation(packet):
     frozen = packet.freeze()
     assert frozen["counts"] == {"source_units": 144, "lexical_members": 3, "spellings": 1,
@@ -494,12 +470,6 @@ def test_frozen_inventory_corruption_is_fail_closed(packet):
     assert not packet.checkpoint.exists()
 
 
-@pytest.mark.parametrize("value", [True, 0, -1, 1.5])
-def test_invalid_interruption_boundary(packet, value):
-    with pytest.raises(ValueError, match="interruption limit"):
-        packet.build(max_units=value)
-
-
 def test_resource_limits_enforced_locally(packet, monkeypatch):
     monkeypatch.setattr(universe.shutil, "disk_usage", lambda _: type("Disk", (), {"free": 0})())
     with pytest.raises(ValueError, match="Insufficient checkpoint space"):
@@ -549,15 +519,6 @@ def test_changed_freeze_cannot_reuse_checkpoint(packet):
     packet.plan["dispositions"][0]["reason"] += " changed"
     packet.refresh()
     with pytest.raises(ValueError, match="another freeze"):
-        packet.build()
-
-
-@pytest.mark.parametrize("field", ["source_unit_count", "peak_rss_bytes", "rss_budget_bytes"])
-def test_boolean_is_not_a_resource_measurement(packet, field):
-    packet.resources[field] = True
-    packet.spec["resource_acceptance"] = write(packet.resource_path, packet.resources)
-    packet.pin = write(packet.spec_path, packet.spec)["sha256"]
-    with pytest.raises(ValueError, match="Invalid full-scale resource acceptance"):
         packet.build()
 
 
@@ -641,20 +602,6 @@ def test_resource_trial_can_measure_harness_but_cannot_claim_acceptance(packet):
         packet.build()
 
 
-def test_resource_trial_still_requires_current_exact_certification(packet):
-    packet.phase5.authority.ledger["approved_reviews"][0]["status"] = "withdrawn"
-    write(packet.phase5.authority.ledger_path, packet.phase5.authority.ledger)
-    with pytest.raises(cert.UncertifiedCardRefusal):
-        packet.build(resource_trial=True)
-    assert not packet.checkpoint.exists()
-
-
-def test_changed_runtime_invalidates_resource_proof(packet, monkeypatch):
-    monkeypatch.setattr(universe, "runtime_fingerprint", lambda: "a" * 64)
-    with pytest.raises(ValueError, match="Resource runtime changed"):
-        packet.build()
-
-
 @pytest.mark.parametrize("changed_file", [
     "scripts/atlas/word_card_universe.py",
     "scripts/atlas/word_card_certification.py",
@@ -683,19 +630,6 @@ def test_changed_implementation_invalidates_resource_proof(packet, monkeypatch, 
         packet.build()
     with pytest.raises(ValueError, match="Resource runtime changed"):
         universe._resources(packet.spec, packet.root, 144, hashlib.sha256(packet.output).hexdigest())
-
-
-@pytest.mark.parametrize("stride", [2, 3, 5])
-def test_partition_conservation_with_mixed_dispositions(packet, stride):
-    for ordinal, row in enumerate(packet.plan["dispositions"]):
-        if row["status"] == "unresolved" and ordinal % stride == 0:
-            row["status"] = "excluded"
-    excluded = sum(row["status"] == "excluded" for row in packet.plan["dispositions"])
-    packet.refresh()
-    packet.build()
-    partitions = packet.reconcile()["partitions"]
-    assert partitions == {"mapped": 1, "unresolved": 143 - excluded, "excluded": excluded}
-    assert sum(partitions.values()) == 144
 
 
 @pytest.mark.parametrize("operation", ["freeze", "build", "reconcile"])

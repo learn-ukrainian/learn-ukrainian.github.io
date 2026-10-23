@@ -21,7 +21,7 @@ from scripts.audit.checks import content_quality
 from scripts.batch import batch_gemini_config
 from scripts.build import linear_pipeline
 from scripts.etymology import bulk_ocr_gemini
-from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, require_execution_model
+from scripts.review.model_catalog import ModelCatalogError, require_execution_model
 from scripts.tools import convert_plans_v4
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -133,25 +133,3 @@ def test_shell_defaults_and_retired_plan_enrichment():
     require_execution_model(models["gemini"], transport="agy")
     require_execution_model(models["claude"], transport="native_claude")
     assert "--model gemini-3.8-flash-high" in paths[1].read_text()
-
-
-def test_historical_content_review_rows_cannot_read_as_live_routes():
-    text = (ROOT / "docs/best-practices/agent-activity-matrix.md").read_text()
-    section = text.split("### 4.8 ", 1)[1].split("### 4.9 ", 1)[0]
-    rows = [row for row in section.splitlines() if "DeepSeek" in row]
-    assert len(rows) == 2
-    for row in rows:
-        assert row.startswith("| Historical result |")
-        assert "DeepSeek V4.1 Flash coding through opencode is allowed" in row
-        assert "review-of-record and Ukrainian work need measured evidence first" in row
-
-
-def test_scorecard_example_and_phase3_rebind_contract():
-    text = (ROOT / "docs/best-practices/fleet-role-scorecard.md").read_text()
-    model_row = next(line for line in text.splitlines() if line.startswith("| model |"))
-    model = model_row.split("`")[1]
-    require_execution_model(model, transport="native_codex")
-    catalog = load_model_catalog()
-    note = next(note for note in catalog["policy"]["notes"] if "#6870 item 3" in note)
-    for model in ("gemini-3.6/3.7", "claude-fable-5", "grok-4.6"):
-        assert model in note

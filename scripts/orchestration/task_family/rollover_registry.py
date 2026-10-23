@@ -1138,10 +1138,6 @@ def is_terminal_state(state: str | RolloverState) -> bool:
     return rank is not None and rank >= SUCCESS_RANK[RolloverState.CONFIRMED]
 
 
-def is_terminal_record(record: Mapping[str, Any]) -> bool:
-    return is_terminal_state(str(record.get("state")))
-
-
 def allows_exact_progress(record: Mapping[str, Any]) -> bool:
     """Return whether ordinary exact progress is safe without blocker adjudication."""
     state = RolloverState(str(record.get("state")))

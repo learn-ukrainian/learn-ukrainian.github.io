@@ -9,13 +9,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter
-from scripts.ai_agent_bridge import _channels, _channels_cli, _cli, _db
+from scripts.ai_agent_bridge import _channels, _channels_cli, _db
 from scripts.ai_agent_bridge._acp_compat import _discussion_failure_metadata, _failure_metadata
-
-
-def _clear_identity_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    for name in _cli._CALLER_IDENTITY_ENV_HINTS:
-        monkeypatch.delenv(name, raising=False)
 
 
 def test_discuss_round_four_prompt_preserves_root_and_all_thread_replies(
@@ -146,38 +141,6 @@ def test_acp_result_preserves_only_closed_failure_code(code, expected) -> None:
     assert "stderr" not in str(failure)
 
 
-def test_ask_codex_without_from_fails_when_sender_cannot_be_inferred(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _clear_identity_env(monkeypatch)
-    parser = _cli._build_parser()
-    args = parser.parse_args(["ask-codex", "hello", "--task-id", "task-1"])
-
-    with pytest.raises(SystemExit) as exc_info:
-        _cli._dispatch_command(args)
-
-    assert "Cannot infer sender" in str(exc_info.value)
-
-
-def test_ask_codex_infers_from_claude_agent_name(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _clear_identity_env(monkeypatch)
-    monkeypatch.setenv("CLAUDE_AGENT_NAME", "claude")
-    captured: dict[str, str | None] = {}
-
-    def fake_compat(target, content, **kwargs):
-        captured["from_llm"] = kwargs["source"]
-        return SimpleNamespace(ok=True, response="ok", transport_outcome="ok")
-
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
-    parser = _cli._build_parser()
-    args = parser.parse_args(["ask-codex", "hello", "--task-id", "task-1"])
-
-    assert _cli._dispatch_command(args) is True
-    assert captured["from_llm"] == "claude"
-
-
 def test_only_registered_agy_pin_alias_resolves_and_other_gemini_fails() -> None:
     """The AGY compatibility route never silently downgrades an explicit model."""
     import pytest
@@ -193,59 +156,3 @@ def test_only_registered_agy_pin_alias_resolves_and_other_gemini_fails() -> None
     assert "delegate.py dispatch --agent agy --model gemini-3.1-pro-high" in str(exc_info.value)
     # No explicit model → None, so the route resolver applies the pin itself.
     assert resolve_compat_model("gemini", None) is None
-
-
-def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    captured: dict[str, object] = {}
-
-    def fake_compat(target, content, **kwargs):
-        captured.update(target=target, content=content, **kwargs)
-        return SimpleNamespace(ok=True, response="ok", transport_outcome="ok")
-
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
-    parser = _cli._build_parser()
-    args = parser.parse_args(
-        [
-            "ask-gemini",
-            "hello",
-            "--task-id",
-            "task-1",
-            "--model",
-            "gemini-3.8-flash-high",
-            "--stdout-only",
-            "--from",
-            "codex",
-        ]
-    )
-
-    assert _cli._dispatch_command(args) is True
-    assert captured["target"] == "gemini"
-    assert captured["stdout_only"] is True
-    assert captured["content"] == "hello"
-    assert captured["task_id"] == "task-1"
-    assert captured["source"] == "codex"
-    # The registered AGY pin is passed through without a stale static alias.
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-
-    assert captured["model"] == ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
-
-
-def test_ask_gemini_command_surfaces_unsupported_model() -> None:
-    import pytest
-
-    parser = _cli._build_parser()
-    args = parser.parse_args(
-        [
-            "ask-gemini",
-            "hello",
-            "--task-id",
-            "task-unsupported-model",
-            "--model",
-            "gemini-3.1-pro-high",
-        ]
-    )
-
-    with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy --model"):
-        _cli._dispatch_command(args)

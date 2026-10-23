@@ -268,21 +268,3 @@ def _refs_from_plan(level: str, slug: str) -> list[dict]:
             })
 
     return results[:5]
-
-
-def format_textbook_section(links: list[dict]) -> str:
-    """Format textbook links as markdown for the Ресурси tab."""
-    if not links:
-        return ""
-
-    lines = ["## Підручники (Textbooks)", ""]
-    for link in links:
-        if link["url"]:
-            page_info = f", стор. {link['page']}" if link.get("page") else ""
-            lines.append(
-                f"- [{link['author']} — {link['title']}]({link['url']}){page_info}"
-            )
-        else:
-            lines.append(f"- {link['author']} — {link['title']}")
-    lines.append("")
-    return "\n".join(lines)

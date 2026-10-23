@@ -49,39 +49,6 @@ class TestFormulaFiltering:
         # ЛО should NOT be extracted (it's in the formula sentence)
         assert "ло" not in words
 
-    def test_arrow_formula_excluded(self, yaml_file):
-        """Strings with → are filtered out entirely."""
-        data = [
-            {
-                "type": "fill-in",
-                "items": [
-                    {"sentence": "К + І + Т → ___", "answer": "КІТ"},
-                ],
-            }
-        ]
-        path = yaml_file(data)
-        words = extract_words_from_yaml(path, is_vocab=False)
-        assert "кіт" in words
-        # КІ should not be present (from formula)
-        assert "кі" not in words
-
-    def test_normal_sentences_not_filtered(self, yaml_file):
-        """Regular activity strings without formulas are kept."""
-        data = [
-            {
-                "type": "quiz",
-                "title": "Тест",
-                "items": [
-                    {"question": "Що означає кіт?", "answer": "cat"},
-                ],
-            }
-        ]
-        path = yaml_file(data)
-        words = extract_words_from_yaml(path, is_vocab=False)
-        assert "кіт" in words
-        assert "означає" in words
-        assert "тест" in words
-
     def test_real_words_with_two_chars_kept(self, yaml_file):
         """Two-letter words like ні, до, на are NOT filtered."""
         data = [

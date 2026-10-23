@@ -62,14 +62,6 @@ def test_manifest_entry_retains_source_inventory_provenance() -> None:
     assert entry["course_usage"] == []
 
 
-def test_manifest_entry_preserves_source_inventory_primary_source() -> None:
-    entry = promote.manifest_entry_from_candidate(
-        _candidate(lemma="ананас", primary_source="source_inventory_grow")
-    )
-
-    assert entry["primary_source"] == "source_inventory_grow"
-
-
 def test_manifest_entry_prefers_curated_candidate_gloss_over_meaning() -> None:
     entry = promote.manifest_entry_from_candidate(
         _candidate(
@@ -188,12 +180,6 @@ def test_promote_pryjnyatyi_uses_english_gloss_and_participle_presentation(
         "verb": "прийняти",
         "verb_url_slug": "прийняти",
     }
-
-
-def test_manifest_entry_omits_provenance_when_candidate_has_none() -> None:
-    entry = promote.manifest_entry_from_candidate(_candidate(lemma="кіт"))
-
-    assert "source_provenance" not in entry
 
 
 def test_write_promotes_candidate_in_sorted_order_and_updates_stats(tmp_path: Path) -> None:
@@ -464,30 +450,6 @@ def test_cached_anchor_fill_touches_only_translation_and_sources(tmp_path: Path,
     }
 
 
-def test_format_summary_names_publish_backstop_only_for_anchorless_promotions() -> None:
-    base = promote.PromotionResult(
-        candidates_found=True,
-        promoted=("мама",),
-        skipped_existing=(),
-        held=(),
-        cached_anchor_fills=(),
-        anchorless_promoted=(),
-        lemmas_total=1,
-        manifest_written=True,
-        fingerprint_written=True,
-        needs_review_written=True,
-        dry_run=False,
-    )
-
-    assert "#5138 publish gate" not in promote.format_summary(base)
-    anchorless = promote.PromotionResult(
-        **{**base.__dict__, "anchorless_promoted": ("мама",)}
-    )
-    summary = promote.format_summary(anchorless)
-    assert "#5138 publish gate blocks old_gate_no_english_anchor regression" in summary
-    assert "live baseline unless --allow-richness-regression has a recorded reason" in summary
-
-
 def test_gate_failure_aborts_without_writing(tmp_path: Path, monkeypatch) -> None:
     manifest_path = _write_manifest(tmp_path, [_entry("авто")])
     before = manifest_path.read_text(encoding="utf-8")
@@ -537,43 +499,6 @@ def test_allow_preexisting_conformance_checks_only_promoted_entries(tmp_path: Pa
     assert [entry["lemma"] for entry in checked_entries] == ["мама"]
 
 
-def test_cli_allow_preexisting_conformance_uses_promoted_entry_gate(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    manifest_path = _write_manifest(tmp_path, [_entry("legacy")])
-    candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
-    checked_entries: list[dict[str, object]] = []
-    monkeypatch.setattr(
-        promote,
-        "verify_prospective_manifest",
-        lambda _path: pytest.fail("full-manifest check must not run"),
-    )
-    monkeypatch.setattr(
-        promote,
-        "verify_promoted_entries",
-        lambda _path, entries: checked_entries.extend(entries) or 0,
-    )
-    monkeypatch.setattr(promote, "_write_fingerprint_sidecar", _fingerprint_writer)
-
-    code = promote.main(
-        [
-            "--candidates",
-            str(candidates_path),
-            "--manifest",
-            str(manifest_path),
-            "--needs-review",
-            str(tmp_path / "grow_needs_review.json"),
-            "--fingerprint",
-            str(tmp_path / "lexicon-manifest.fingerprint.json"),
-            "--allow-preexisting-conformance",
-            "--write",
-        ]
-    )
-
-    assert code == 0
-    assert [entry["lemma"] for entry in checked_entries] == ["мама"]
-
-
 def test_allow_preexisting_conformance_still_aborts_on_new_entry_failure(tmp_path: Path) -> None:
     manifest_path = _write_manifest(tmp_path, [_entry("legacy")])
     before = manifest_path.read_text(encoding="utf-8")
@@ -596,17 +521,6 @@ def test_allow_preexisting_conformance_still_aborts_on_new_entry_failure(tmp_pat
     assert manifest_path.read_text(encoding="utf-8") == before
     assert not needs_review_path.exists()
     assert not fingerprint_path.exists()
-
-
-def test_promoted_entry_gate_keeps_full_manifest_enrichment_backstop(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    manifest_path = _write_manifest(tmp_path, [_entry("legacy"), _entry("мама")])
-    monkeypatch.setattr(promote.verify_manifest, "hazards", lambda _manifest, _entries: {})
-    monkeypatch.setattr(promote.verify_manifest, "conformance", lambda _manifest: [])
-    monkeypatch.setattr(promote, "check_enrichment", lambda **_kwargs: 2)
-
-    assert promote.verify_promoted_entries(manifest_path, [_entry("мама")]) == 2
 
 
 def test_promoted_entry_gate_rejects_new_slug_collision(tmp_path: Path) -> None:

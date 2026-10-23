@@ -135,9 +135,29 @@ be established when the target fetch fails.
 Implementation dispatch checks both workspace-write and danger modes; read-only
 triage stays exempt. Non-trivial malformed DoD and conflicting ancestry cannot
 be overridden.
+With an explicit `--lifecycle-file`, dispatch loads one validated snapshot before
+DoR and requires its original issue and epic URLs to equal the canonical URLs
+for its repository and numbers, including refusing null URLs. Both applicable
+DoR checks select only that repository-qualified task issue and use the same
+snapshot carried into the worker prompt and task state. Evidence citations do
+not select additional cards or alter issue associations. An invalid binding or
+a declared PR or epic refuses without falling back to citations. Without a
+lifecycle binding, the existing conservative visible-reference scan, quoting
+and PR/epic handling remain unchanged. The URL boundary applies only to these
+write modes; read-only lifecycle applicability stays unchanged.
 Absent DoD, missing parent, unavailable registry and unknown membership refuse
 by default, with the existing recorded `--allow-dor-warn REASON` exception.
-Cursor Auto refuses any override. Registered fleet repositories without a
+A membership timeout on a card whose DoR and DoD read PASS is the one
+exception (#11283): dispatch records `dor: UNKNOWN (timeout)` with the timeout
+codes under `unknown`, prints an advisory and proceeds without the override.
+UNKNOWN is never PASS. It needs consistent positive evidence: DoR and DoD
+sections that read PASS with no errors, and a membership section whose single
+error is a timeout code the checker produces, matched whole (never by prefix)
+and listed exactly as the top-level `missing`. A target-fetch timeout, a
+checker failure, a card finding next to the timeout, or any missing, unchecked
+or contradictory section keeps the refusal, so a timeout never stands in for
+unread or incomplete card evidence. Cursor Auto refuses any override, any
+`unknown` entry and any explicit `dor` other than PASS. Registered fleet repositories without a
 membership registry report `membership_not_applicable` in admission, while DoR
 and DoD remain required. They need no permanent override.
 
@@ -248,7 +268,7 @@ Record pass/fail with timestamp + receipt for each command above.
 
 Keep the DoR fields current. Material scope change → re-DoR + comment.
 Mission-shrinking non-goals need operator/advisor approval (Opus 5.5 and Sol 6.1 agreeing; when one of them
-authored the proposal, the other's approval completes it; any other author needs both; Kimi: web, UI and backend coding only).
+authored the proposal, the other's approval completes it; any other author needs both; Kimi models are retired, OO-58).
 Re-run **dispatch preflight immediately before each dispatch wave and before
 each CF request** (not only when conditions “might” have moved).
 
@@ -347,7 +367,8 @@ fields listed), including when GitHub/API input cannot be read. It does **not**
 block issue creation or merge. Implementation dispatch uses `--strict`: WARN,
 GitHub/API lookup failure, or checker failure refuses dispatch by default.
 The recorded `--allow-dor-warn <reason>` exception covers absent DoD or missing
-and unknown membership. Malformed DoD and conflicting ancestry remain
+and unknown membership; a membership timeout alone on an otherwise PASS card is
+an UNKNOWN advisory that needs no override. Malformed DoD and conflicting ancestry remain
 non-overrideable. PR references are skipped after API resolution; a brief
 without an issue reference is not gated. The detailed admission rules are above.
 

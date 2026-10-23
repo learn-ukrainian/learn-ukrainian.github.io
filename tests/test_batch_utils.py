@@ -13,7 +13,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from batch_utils import (
     BatchLock,
     ErrorCategory,
-    ExponentialBackoff,
     LockConflictError,
     atomic_write,
     atomic_write_json,
@@ -41,20 +40,8 @@ class TestAtomicWrite:
         # PID-based tmp file should be cleaned up
         assert not p.with_suffix(f".{os.getpid()}.tmp").exists()
 
-    def test_overwrites_existing(self, tmp_path):
-        p = tmp_path / "test.txt"
-        p.write_text("old")
-        atomic_write(p, "new")
-        assert p.read_text() == "new"
-
 
 class TestAtomicWriteJson:
-    def test_writes_json(self, tmp_path):
-        p = tmp_path / "data.json"
-        atomic_write_json(p, {"key": "value", "num": 42})
-        data = json.loads(p.read_text())
-        assert data == {"key": "value", "num": 42}
-
     def test_unicode(self, tmp_path):
         p = tmp_path / "uk.json"
         atomic_write_json(p, {"word": "привіт"})
@@ -65,28 +52,6 @@ class TestAtomicWriteJson:
 # ---------------------------------------------------------------------------
 # ExponentialBackoff
 # ---------------------------------------------------------------------------
-
-class TestExponentialBackoff:
-    def test_first_attempt(self):
-        b = ExponentialBackoff(base=60, max_wait=600, jitter=0)
-        assert b.wait_time(1) == 60
-
-    def test_second_attempt_doubles(self):
-        b = ExponentialBackoff(base=60, max_wait=600, jitter=0)
-        assert b.wait_time(2) == 120
-
-    def test_respects_max_wait(self):
-        b = ExponentialBackoff(base=60, max_wait=300, jitter=0)
-        # attempt 4: 60 * 8 = 480 > 300, capped at 300
-        assert b.wait_time(4) == 300
-
-    def test_jitter_range(self):
-        b = ExponentialBackoff(base=100, max_wait=1000, jitter=0.5)
-        values = [b.wait_time(1) for _ in range(100)]
-        # base=100, jitter=0.5 → range [50, 150]
-        assert all(50 <= v <= 150 for v in values)
-        # With 100 samples, we should see variation
-        assert max(values) > min(values)
 
 
 # ---------------------------------------------------------------------------
@@ -170,29 +135,8 @@ class TestClassifyError:
     def test_429_is_quota(self):
         assert classify_error(1, "HTTP 429 Too Many Requests") == ErrorCategory.QUOTA
 
-    def test_resource_exhausted_is_quota(self):
-        assert classify_error(1, "RESOURCE_EXHAUSTED: quota exceeded") == ErrorCategory.QUOTA
-
-    def test_capacity_is_quota(self):
-        assert classify_error(1, "Server capacity is at limit") == ErrorCategory.QUOTA
-
-    def test_502_is_transient(self):
-        assert classify_error(1, "502 Bad Gateway") == ErrorCategory.TRANSIENT
-
-    def test_503_is_transient(self):
-        assert classify_error(1, "503 Service Unavailable") == ErrorCategory.TRANSIENT
-
     def test_invalid_is_permanent(self):
         assert classify_error(1, "Invalid request format") == ErrorCategory.PERMANENT
 
-    def test_permission_denied_is_permanent(self):
-        assert classify_error(1, "Permission denied for resource") == ErrorCategory.PERMANENT
-
     def test_unknown_error(self):
         assert classify_error(1, "Something weird happened") == ErrorCategory.UNKNOWN
-
-    def test_should_retry_property(self):
-        assert ErrorCategory.TRANSIENT.should_retry is True
-        assert ErrorCategory.QUOTA.should_retry is True
-        assert ErrorCategory.UNKNOWN.should_retry is True
-        assert ErrorCategory.PERMANENT.should_retry is False

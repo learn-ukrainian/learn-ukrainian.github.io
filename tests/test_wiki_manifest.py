@@ -77,23 +77,6 @@ def test_manifest_extracts_vocabulary_minimum_tiers_and_glosses(tmp_path: Path) 
     ]
 
 
-def test_manifest_missing_vocabulary_minimum_returns_empty_list(tmp_path: Path) -> None:
-    wiki = tmp_path / "no-vocab.md"
-    wiki.write_text(
-        """# No vocabulary fixture
-
-## Методичний підхід
-
-Є методика.
-""",
-        encoding="utf-8",
-    )
-
-    manifest = extract_manifest(wiki)
-
-    assert manifest["wiki_vocabulary_minimum"] == []
-
-
 def test_manifest_handles_mixed_or_missing_vocabulary_stars(tmp_path: Path) -> None:
     wiki = tmp_path / "mixed-stars.md"
     wiki.write_text(

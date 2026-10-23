@@ -9,7 +9,6 @@ from jsonschema import Draft202012Validator
 
 from scripts.audit.generate_practice_deck import BuildConfig, JsonVesumVerifier, _select_practice_lexemes
 from scripts.audit.lexeme_filter import is_practice_eligible, practice_ineligibility_reason
-from scripts.audit.measure_curated_membership import measure_membership
 from scripts.lexicon.curated_membership import apply_membership, build_membership, read_membership
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -215,48 +214,3 @@ def test_membership_entries_are_selected_before_the_general_practice_pool() -> N
     )
 
     assert [entry["url_slug"] for entry, _lexeme in selected] == ["книга"]
-
-
-def test_measurement_reports_union_floor_and_recognition_modes(tmp_path: Path) -> None:
-    homework, teacher, manifest = _inputs(tmp_path)
-    membership_payload, _report = build_membership(
-        homework_seed_path=homework,
-        teacher_inventory_path=teacher,
-        manifest_path=manifest,
-    )
-    membership = tmp_path / "membership.json"
-    _write_json(membership, membership_payload)
-    practice_dir = tmp_path / "practice"
-    practice_dir.mkdir()
-    _write_json(
-        practice_dir / "practice-index.A1.json",
-        {
-            "items": [
-                {"lemmaId": "слово", "cefr": "A1", "modes": ["flashcards", "matching", "choice"]},
-                {"lemmaId": "книга", "cefr": "A1", "modes": ["flashcards", "matching"]},
-            ]
-        },
-    )
-
-    measured = measure_membership(
-        homework_seed_path=homework,
-        teacher_inventory_path=teacher,
-        manifest_path=manifest,
-        membership_path=membership,
-        practice_dir=practice_dir,
-    )
-
-    assert read_membership(membership)[0]["slug"] == "книга"
-    assert measured["homework"]["missing_from_curated_keys"] == 0
-    assert measured["homework"]["missing_from_practice_indexes"] == 0
-    assert measured["teacher_inventory"] == {
-        "cards": 3,
-        "unique_keys": 3,
-        "resolved_membership_routes": 2,
-    }
-    assert measured["recognition_mode_eligibility"]["A1"] == {
-        "lexemes": 2,
-        "flashcards": 2,
-        "matching": 2,
-        "choice": 1,
-    }

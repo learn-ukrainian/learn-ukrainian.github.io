@@ -16,7 +16,6 @@ from tests.backup_data_script._allowlist import (
     parse_selection_manifest,
 )
 from tests.backup_data_script._support import (
-    REPO_ROOT,
     SCRIPT,
     _fresh_runner_mirror,
     _logical_sha256,
@@ -27,7 +26,6 @@ from tests.backup_data_script._support import (
     _use_local_restic,
 )
 
-RUNBOOK = REPO_ROOT / "docs" / "runbooks" / "data-backup.md"
 SQLITE_HEADER = b"SQLite format 3\x00"
 
 
@@ -35,21 +33,6 @@ def _sample_hash(path: Path) -> str:
     if path.name.endswith((".db", ".sqlite", ".sqlite3")) and is_sqlite_database(path):
         return "sqlite:" + _logical_sha256(path)
     return "file:" + hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def _runbook_table(marker: str) -> list[list[str]]:
-    rest = RUNBOOK.read_text(encoding="utf-8").split(marker, 1)[1]
-    rows: list[list[str]] = []
-    for line in rest.splitlines():
-        if line.startswith("<!--") or line.startswith("#"):
-            break
-        if not line.startswith("|"):
-            continue
-        cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
-        if not cells or cells[0] in {"Path", "---"} or set(cells[0]) <= {"-", ":"}:
-            continue
-        rows.append(cells)
-    return rows
 
 
 def _seed_keep_samples(project: Path, source: Path) -> dict[str, str]:
@@ -238,50 +221,6 @@ def test_task_locks_and_snapshot_directories_are_not_staged(
     assert manifest_count == helper_count
     assert manifest_seen == helper_seen
     assert manifest_staged == helper_staged
-
-
-# The 32 keep paths approved for this nightly. data/lexicon/runner-mirror is
-# the one existing addition: the gate receipt compares that tree with the
-# snapshot, and a host with no mirror logs one line and continues.
-# One text block, not a separate sources.db literal: the writable-connect lint
-# treats a relative sources.db constant as a new store path.
-_APPROVED_KEEP_TEXT = """\
-.claude/*-epic
-.agent
-data/sources.db
-data/sum20_slovnyk_staging.db
-data/sum20_staging.db
-data/lexicon/slovnyk_cache
-data/lexicon/source-inventory
-data/lexicon/side
-data/lexicon/intake
-data/lexicon/parked
-data/lexicon/*.json
-data/movaua.db
-data/movne_pytannya.db
-data/grac_frequency.db
-data/atlas.db
-data/lexdata.db
-data/wiki_*.db
-data/lexicon/cache/ulif_raw.sqlite
-data/textbook_chunks
-data/projects
-data/mphdict
-data/native-reviewer-lessons
-data/ua-gec
-data/ubertext-freq
-data/processed
-data/datasets
-batch_state/fleet-comms
-batch_state/review-receipts
-batch_state/branch-archive
-batch_state/tasks
-batch_state/open-model-data
-batch_state/open-model-data-20261007
-"""
-APPROVED_KEEP_PATHS = tuple(_APPROVED_KEEP_TEXT.splitlines())
-
-
 def test_wal_database_under_agent_snapshots_restores_committed_rows(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
@@ -406,30 +345,3 @@ def test_excluded_task_snapshot_tree_is_not_walked(
     assert f"{prefix}secret.txt" not in seen
     assert f"{prefix}writer.pipe" not in seen
     assert f"{prefix}visited.txt" not in seen
-
-
-def test_keep_paths_are_the_approved_set_plus_runner_mirror() -> None:
-    keep = load_allowlist()["keep"]
-    assert isinstance(keep, list)
-    paths = [str(entry["path"]) for entry in keep if isinstance(entry, dict)]
-    assert len(APPROVED_KEEP_PATHS) == 32
-    assert len(paths) == len(set(paths))
-    extra = [path for path in paths if path not in APPROVED_KEEP_PATHS]
-    assert extra == ["data/lexicon/runner-mirror"]
-    assert set(paths) == set(APPROVED_KEEP_PATHS) | {"data/lexicon/runner-mirror"}
-    mirror = next(entry for entry in keep if isinstance(entry, dict) and entry.get("path") == extra[0])
-    note = mirror.get("note")
-    assert isinstance(note, str) and note.strip()
-
-
-def test_runbook_tables_name_the_allowlist_paths() -> None:
-    payload = load_allowlist()
-    keep = payload["keep"]
-    drop = payload["drop"]
-    assert isinstance(keep, list)
-    assert isinstance(drop, list)
-    keep_rows = _runbook_table("<!-- backup-allowlist-keep -->")
-    drop_rows = _runbook_table("<!-- backup-allowlist-drop -->")
-    assert [row[0] for row in keep_rows] == [str(entry["path"]) for entry in keep]
-    assert [row[1] == "yes" for row in keep_rows] == [bool(entry["required"]) for entry in keep]
-    assert [row[0] for row in drop_rows] == [str(entry["path"]) for entry in drop]

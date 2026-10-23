@@ -114,7 +114,14 @@ SCHEMAS = {
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
-WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}, "stale-branch-cleanup.yml": {}}
+# workflow -> {input name: (kind, required)}. Kinds other than "bool" name a
+# PATTERNS entry. coverage-ref's contexts input is an optional typed boolean.
+WORKFLOWS = {
+    "ci.yml": {},
+    "deploy-pages.yml": {},
+    "stale-branch-cleanup.yml": {},
+    "coverage-ref.yml": {"sha": ("sha", True), "contexts": ("bool", False)},
+}
 # The merge-queue reader trusts review-verdict markers from the shared fleet login, so
 # only scripts/review/record_cf_verdict.py may write them (#11127). Comment fields
 # refuse the prefix unless the value is a CfVerdictRecord on the recorder's verb.
@@ -174,6 +181,8 @@ def _validate(verb, fields):
     )
     if required - effective:
         raise gate.PublishBlocked("OPSEC: required publisher field missing.")
+    if verb == "workflow-run":
+        fields = {**fields, "inputs": fields.get("inputs", {})}
     for key, value in fields.items():
         kind = schema[key]
         valid = True
@@ -186,7 +195,18 @@ def _validate(verb, fields):
         elif kind == "texts":
             valid = isinstance(value, (list, tuple)) and all(isinstance(x, str) for x in value)
         elif kind == "workflow_inputs":
-            valid = isinstance(value, dict) and not value  # admitted workflows have no inputs
+            workflow = fields["workflow"]
+            input_schema = WORKFLOWS.get(workflow) if isinstance(workflow, str) else None
+            valid = isinstance(value, dict) and input_schema is not None and set(value) <= set(input_schema)
+            if valid:
+                required = {name for name, (_, is_required) in input_schema.items() if is_required}
+                valid = required <= set(value) and all(
+                    type(value[name]) is bool
+                    if input_kind == "bool"
+                    else isinstance(value[name], str) and re.fullmatch(PATTERNS[input_kind], value[name]) is not None
+                    for name, (input_kind, _) in input_schema.items()
+                    if name in value
+                )
         elif kind == "assets":
             valid = isinstance(value, (list, tuple)) and bool(value) and all(isinstance(x, Asset) for x in value)
         elif kind in ENUMS:
@@ -625,6 +645,10 @@ def publish(
         elif verb == "workflow-run":
             argv.insert(3, fields["workflow"])
             option("ref")
+            for name, value in fields.get("inputs", {}).items():
+                # gh sends workflow_dispatch booleans as lowercase true/false.
+                rendered = str(value).lower() if type(value) is bool else value
+                argv.append(f"--raw-field={name}={rendered}")
         elif verb == "pr-disarm":
             argv = ["gh", "pr", "merge", str(fields["number"]), "--repo", gh_repo, "--disable-auto"]
         elif verb.startswith("release-"):

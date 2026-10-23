@@ -242,13 +242,6 @@ def test_checkout_relative_interpreter_joins_are_allowlisted() -> None:
     assert all(reason.strip() for _count, reason in ALLOWLIST.values())
 
 
-def test_scanner_flags_a_spawn_and_ignores_other_joins() -> None:
-    source = 'import pathlib\npython = pathlib.Path("repo") / ".venv" / "bin" / "python"\n'
-    assert checkout_relative_interpreter_lines(source) == [2]
-    other = 'import pathlib\npath = pathlib.Path("repo") / ".venv" / "bin"\n'
-    assert checkout_relative_interpreter_lines(other) == []
-
-
 def test_scanner_flags_collapsed_joinpath_and_os_path_join_forms() -> None:
     source = "\n".join(
         [

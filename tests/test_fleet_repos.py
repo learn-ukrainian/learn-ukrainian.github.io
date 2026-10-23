@@ -9,18 +9,9 @@ import yaml
 
 from scripts.orchestration.fleet_repos import (
     FleetRepoError,
-    default_repo_key,
     load_fleet_repos,
     resolve_fleet_repo,
 )
-
-
-def test_load_canonical_fleet_repos_catalog():
-    repos = load_fleet_repos()
-    assert set(repos) == {"public", "infra-private", "hramatka"}
-    assert default_repo_key(repos) == "public"
-    assert repos["hramatka"].github == "learn-ukrainian/hramatka"
-    assert repos["infra-private"].local_name == "learn-ukrainian-infra-private"
 
 
 def test_resolve_public_uses_primary_root(tmp_path: Path):

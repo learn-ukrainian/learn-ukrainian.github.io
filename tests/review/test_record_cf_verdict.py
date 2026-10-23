@@ -15,7 +15,6 @@ from scripts import delegate
 from scripts.orchestration import integration_sweep as sweep
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.review import record_cf_verdict as recorder
-from scripts.review.language_lane import is_ukrainian_review
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
@@ -228,14 +227,6 @@ def test_transport_failure_after_scan_never_retries_skeleton(scanned_recorder, t
     with pytest.raises(recorder.RecordError, match="publication unavailable"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert len(attempts) == 1
-    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
-
-
-def test_real_rule_rejecting_skeleton_metadata_has_no_write(scanned_recorder, tmp_path):
-    tasks, comments, calls, sent, _ = scanned_recorder
-    write_task(tasks, task_id="credential-permission", reply="VERDICT: APPROVE\nOrdinary review text.")
-    with pytest.raises(recorder.RecordError, match="rule=5-credential-context"):
-        recorder.record("credential-permission", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
 
 
@@ -471,16 +462,6 @@ def test_task_classification_cannot_bypass_sources_gate(tmp_path, count, classif
         recorder.record("review-one", task_root=tasks, lock_root=tmp_path / "locks")
 
 
-@pytest.mark.parametrize("count", [0, None])
-def test_non_ukrainian_reviews_unaffected(monkeypatch, tmp_path, count):
-    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
-    write_task(tasks, review_profile="code", sources_mcp_call_count=count)
-    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert result["status"] == "posted"
-    assert len(comments) == 1
-    assert calls == {"posts": 1, "statuses": 1}
-
-
 @pytest.mark.parametrize(
     "runtime,expected",
     [
@@ -564,19 +545,6 @@ def test_changed_runtime_count_conflicts_with_existing_marker(monkeypatch, tmp_p
     with pytest.raises(recorder.RecordError, match="conflicts with task"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 1, "statuses": 1}
-
-
-@pytest.mark.parametrize("classification,expected", [
-    ({"review_profile": " Ukrainian "}, True),
-    ({"review_language_lane": True}, True),
-    ({"language_lane": True}, True),
-    ({"research_task_family": " UKRAINIAN-REVIEW "}, True),
-    ({"task_family": "ukrainian-authoring"}, True),
-    ({"research_task_family": "generic"}, False),
-    ({}, False),
-])
-def test_shared_ukrainian_classification(classification, expected):
-    assert is_ukrainian_review(classification) is expected
 
 
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])

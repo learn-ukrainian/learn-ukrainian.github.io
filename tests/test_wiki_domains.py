@@ -9,7 +9,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from wiki.compile import _get_domain
 from wiki.domains import resolve_write_domain
 
 
@@ -29,8 +28,3 @@ def test_resolve_write_domain_uses_folk_slug_subdomains() -> None:
     assert resolve_write_domain("folk", "koliadky-shchedrivky") == "folk/ritual"
     assert resolve_write_domain("folk", "prykazky-ta-pryslivia") == "folk/short-forms"
     assert resolve_write_domain("folk", "unmapped-folk-topic") == "folk"
-
-
-def test_get_domain_is_compatibility_wrapper() -> None:
-    assert _get_domain("bio", "oleksandr-bilash") == resolve_write_domain("bio", "oleksandr-bilash")
-    assert _get_domain("folk", "koliadky-shchedrivky") == resolve_write_domain("folk", "koliadky-shchedrivky")

@@ -380,23 +380,6 @@ def corpus(tmp_path: Path) -> dict[str, Any]:
     }
 
 
-def test_contract_schemas_are_valid() -> None:
-    for path in (
-        workflow.FRAME_ITEM_SCHEMA,
-        workflow.FRAME_RECEIPT_SCHEMA,
-        workflow.SAMPLING_PLAN_SCHEMA,
-        workflow.BLIND_ITEM_SCHEMA,
-        workflow.BLIND_RESPONSE_SCHEMA,
-        workflow.WAVE_RECEIPT_SCHEMA,
-        workflow.FIRST_PASS_SUMMARY_SCHEMA,
-        workflow.CAMPAIGN_RECEIPT_SCHEMA,
-        workflow.RESOLVER_ITEM_SCHEMA,
-        workflow.RESOLVER_RESPONSE_SCHEMA,
-        workflow.GOLD_FREEZE_RECEIPT_SCHEMA,
-    ):
-        Draft202012Validator.check_schema(json.loads(path.read_text(encoding="utf-8")))
-
-
 def test_packet_salt_files_must_be_private(tmp_path: Path) -> None:
     secret = tmp_path / "packet.salt"
     secret.write_text("fixture-secret\n", encoding="utf-8")

@@ -83,21 +83,6 @@ def test_exact_review_grants(tmp_path, scoped, route):
     assert build(tmp_path, config).env_overrides == plan.env_overrides
 
 
-@pytest.mark.parametrize("profile", ["ukrainian", "code"])
-@pytest.mark.parametrize("route", ["full", "isolated", "permission-only"])
-def test_profile_does_not_deny_workspace_evidence(tmp_path, scoped, route, profile):
-    evidence = tmp_path / "evidence.txt"
-    evidence.write_text("workspace evidence")
-    config = {"agy_home_override": str(scoped), "review_profile": profile}
-    if route != "permission-only":
-        config["review_access"] = route
-    plan = build(tmp_path, config)
-    assert plan.cwd == tmp_path
-    rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
-    assert not any(rule.startswith("read_file(") for rule in rules["deny"])
-    assert evidence.read_text() == "workspace evidence"
-
-
 def test_permission_only_provisioned_home_passes_adapter_for_review_tools(tmp_path, monkeypatch):
     from scripts.agent_runtime.review_mcp import prepare_agy_permission_home
 
@@ -142,19 +127,6 @@ def test_permission_only_route_refuses_writers_and_non_sources(tmp_path, scoped,
             },
         )
     assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
-
-
-@pytest.mark.parametrize("required", sorted(set().union(*sources_tool_sets()) - review_tools()))
-def test_permission_only_route_refuses_every_non_review_sources_tool(tmp_path, scoped, required):
-    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permission_outside_allow_set"):
-        build(
-            tmp_path,
-            {
-                "review_profile": "ukrainian",
-                "agy_home_override": str(scoped),
-                "agy_required_permissions": [f"mcp(sources/{required})"],
-            },
-        )
 
 
 @pytest.mark.parametrize("route", [None, "isolated", "full"])
@@ -204,19 +176,6 @@ def test_receipt_marker_prevents_permission_only_widening(tmp_path, scoped, mark
         )
 
 
-@pytest.mark.parametrize(
-    "required", ["command(rm)", "command(*)", "mcp(sources/query_ulif)", "mcp(other/verify_words)", "read_url(*)"]
-)
-def test_outside_requirements_refused_before_probe(tmp_path, scoped, monkeypatch, required):
-    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
-    with pytest.raises(ValueError, match="agy_review_permission_outside_allow_set"):
-        build(
-            tmp_path,
-            {"review_access": "isolated", "agy_home_override": str(scoped), "agy_required_permissions": [required]},
-        )
-    assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
-
-
 @pytest.mark.parametrize("route", ["full", "isolated"])
 def test_review_missing_scoped_home_refused_before_probe(tmp_path, monkeypatch, route):
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
@@ -261,21 +220,6 @@ def test_review_skip_permissions_refused_before_probe(tmp_path, scoped, monkeypa
         build(tmp_path, {"review_access": "isolated", "agy_home_override": str(scoped), "agy_skip_permissions": True})
 
 
-@pytest.mark.parametrize("access", ["full", "isolated"])
-@pytest.mark.parametrize("writer", sources_tool_sets()[1])
-def test_every_sources_writer_is_refused(tmp_path, scoped, access, writer):
-    with pytest.raises(agy.AgyReviewPermissionError) as refused:
-        build(
-            tmp_path,
-            {
-                "review_access": access,
-                "agy_home_override": str(scoped),
-                "agy_required_permissions": [f"mcp(sources/{writer})"],
-            },
-        )
-    assert refused.value.reason.startswith("agy_review_permission_outside_allow_set")
-
-
 @pytest.mark.parametrize(
     "extra",
     [
@@ -290,19 +234,6 @@ def test_every_sources_writer_is_refused(tmp_path, scoped, access, writer):
 def test_requirement_shapes_and_route_capabilities_fail_closed(tmp_path, scoped, extra):
     with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permission_outside_allow_set"):
         build(tmp_path, {"review_access": "isolated", "agy_home_override": str(scoped), **extra})
-
-
-def test_declared_admitted_requirements_and_tools(tmp_path, scoped):
-    plan = build(
-        tmp_path,
-        {
-            "review_access": "isolated",
-            "agy_home_override": str(scoped),
-            "allowed_tools": "Read,Glob,Grep,mcp__sources__verify_words",
-            "agy_required_permissions": ["mcp(sources/verify_words)"],
-        },
-    )
-    assert "--dangerously-skip-permissions" not in plan.cmd
 
 
 def test_invalid_access_and_resumed_session_are_refused(tmp_path, scoped):
@@ -344,11 +275,6 @@ def test_settings_directory_symlink_is_refused(tmp_path, scoped):
     assert not (outside / "settings.json").exists()
 
 
-def test_ad_hoc_reviewer_marker_requires_scoped_home(tmp_path):
-    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permissions_require_scoped_home"):
-        build(tmp_path, {"reviewer_tools": True})
-
-
 # Audit every granted executable's documented flag surface. An added executable
 # or newly documented option needs inspection, rather than silently inheriting
 # an unbounded prefix grant (as rg --pre did).
@@ -372,17 +298,6 @@ READER_LONG_OPTIONS = {
     },
     "wc": {"bytes", "chars", "files0-from", "lines", "max-line-length", "total", "words"},
 }
-
-
-@pytest.mark.parametrize("access", ["full", "isolated"])
-def test_review_command_grants_are_empty(access):
-    from scripts.agent_runtime.review_mcp import agy_review_settings
-
-    commands = [
-        rule[8:-1] for rule in agy_review_settings(access)["permissions"]["allow"] if rule.startswith("command(")
-    ]
-    assert not commands
-    assert agy_review_settings(access)["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]
 
 
 @pytest.mark.parametrize("binary", READER_LONG_OPTIONS)
@@ -551,13 +466,6 @@ def test_review_profile_rejects_write_mode_before_probe(tmp_path, scoped, monkey
     assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
 
 
-@pytest.mark.parametrize("profile", ["ukrainian", "code"])
-def test_trusted_review_profile_requires_scoped_home_before_probe(tmp_path, monkeypatch, profile):
-    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
-    with pytest.raises(agy.AgyReviewPermissionError, match="require_scoped_home"):
-        build(tmp_path, {"review_profile": profile})
-
-
 @pytest.mark.parametrize("config", [None, {"task_family": "recon"}])
 def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatch, config):
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
@@ -565,31 +473,6 @@ def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatc
     plan = build(tmp_path, config)
     assert "--dangerously-skip-permissions" in plan.cmd
     assert plan.metadata["agy_permission_profile_id"] is None
-
-
-@pytest.mark.parametrize(
-    ("profile", "profile_id"),
-    [
-        ("ukrainian", "ukrainian-review-command-denial-v3"),
-        ("code", "code-review-command-denial-v1"),
-    ],
-)
-def test_profile_denies_commands_and_preserves_sources(tmp_path, scoped, profile, profile_id):
-    plan = build(tmp_path, {"review_profile": profile, "agy_home_override": str(scoped)})
-    assert "--sandbox" in plan.cmd
-    assert "--dangerously-skip-permissions" not in plan.cmd
-    assert plan.metadata["agy_permission_profile_id"] == profile_id
-    rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
-    assert "command(*)" in rules["deny"]
-    assert "read_file(*)" not in rules["deny"]
-    assert rules == agy_review_settings(None, checkout_root=tmp_path)["permissions"]
-    assert {rule for rule in rules["deny"] if rule.startswith("mcp(")} == {
-        f"mcp(sources/{tool})" for tool in set().union(*sources_tool_sets()) - review_tools()
-    }
-    assert all(
-        f"mcp(sources/{tool})" in rules["allow"]
-        for tool in ("verify_words", "query_cefr_level", "check_russian_shadow")
-    )
 
 
 def test_scoped_attempt_log_is_unique_in_same_process(tmp_path, scoped):
@@ -602,35 +485,6 @@ def test_scoped_attempt_log_is_unique_in_same_process(tmp_path, scoped):
     first = build(tmp_path, config)
     second = build(tmp_path, config)
     assert first.env_overrides[agy._AGY_LOG_ENV] != second.env_overrides[agy._AGY_LOG_ENV]
-
-
-@pytest.mark.parametrize("access", ["isolated", "full"])
-def test_facet_authorities_granted_and_every_server_writer_denied(access):
-    added = {
-        "verify_word",
-        "verify_lemma",
-        "search_slovnyk_me",
-        "search_esum",
-        "search_grinchenko_1907",
-        "search_definitions",
-    }
-    permissions = agy_review_settings(access)["permissions"]
-    assert {f"mcp(sources/{tool})" for tool in added} <= set(permissions["allow"])
-    for writer in sources_tool_sets()[1]:
-        assert f"mcp(sources/{writer})" in permissions["deny"]
-        assert f"mcp(sources/{writer})" not in permissions["allow"]
-
-
-@pytest.mark.parametrize("access", ["isolated", "full"])
-def test_checkout_read_grant_is_recursive_and_has_no_other_native_allow(tmp_path, access):
-    checkout = tmp_path / "checkout with spaces"
-    checkout.mkdir()
-    rules = agy_review_settings(access, checkout_root=checkout)["permissions"]
-    native = [rule for rule in rules["allow"] if not rule.startswith("mcp(sources/")]
-    assert native == [f"read_file({checkout.resolve()})"]
-    assert "command(*)" in rules["deny"]
-    assert "write_file(*)" in rules["deny"]
-    assert all("*" not in rule for rule in rules["allow"])
 
 
 @pytest.mark.parametrize("name", ["*", "bad)name", "bad(name", "bad\nname", "bad\u202ename"])

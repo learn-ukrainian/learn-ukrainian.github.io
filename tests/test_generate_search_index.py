@@ -406,35 +406,6 @@ def test_build_index_schema_sorting_filters_and_kind_buckets() -> None:
         {"l": "кава", "s": "кава", "g": "coffee", "r": "kava", "k": "rek", "c": "B1"},
         {"l": "офіс", "s": "офіс", "g": "office", "r": "ofis", "k": "vyv"},
     ]
-def test_build_index_uses_translation_when_gloss_missing() -> None:
-    rows = build_index(
-        [
-            {
-                "lemma": "помішувати",
-                "url_slug": "помішувати",
-                "gloss": None,
-                "primary_source": "built_vocabulary_normalized",
-                "enrichment": {
-                    "translation": {
-                        "en": ["stir", "mix lightly"],
-                        "source": "test",
-                    }
-                },
-            }
-        ]
-    )
-
-    assert rows == [
-        {
-            "l": "помішувати",
-            "s": "помішувати",
-            "g": "stir; mix lightly",
-            "r": "pomishuvaty",
-            "k": "vyv",
-        }
-    ]
-
-
 _VOYEVODA_MASHED_GLOSS = (
     "1. У давній Русі та інших слов’янських державах — вождь, полководець, "
     "а також правитель міста, округу в XVI-XVIII ст. А в Римі свято. "
@@ -474,11 +445,6 @@ def test_sanitize_typeahead_gloss_cuts_at_earliest_ellipsis_for_ba_mixed_markers
     assert len(gloss) <= 180
 
 
-def test_sanitize_typeahead_gloss_leaves_short_voda_shaped_gloss_unchanged() -> None:
-    assert _sanitize_typeahead_gloss("water") == "water"
-    assert _sanitize_typeahead_gloss("shore, bank") == "shore, bank"
-
-
 def test_search_gloss_falls_through_to_translation_when_empty_or_missing() -> None:
     translation_entry = {
         "lemma": "помішувати",
@@ -490,21 +456,6 @@ def test_search_gloss_falls_through_to_translation_when_empty_or_missing() -> No
     assert _search_gloss({**translation_entry, "gloss": ""}) == "stir; mix lightly"
     assert _search_gloss({**translation_entry, "gloss": "   "}) == "stir; mix lightly"
     assert _search_gloss({"lemma": "x", "url_slug": "x", "gloss": None}) is None
-
-
-def test_build_index_sanitizes_mashed_voyevoda_gloss_for_typeahead() -> None:
-    rows = build_index(
-        [
-            entry("воєвода", gloss=_VOYEVODA_MASHED_GLOSS),
-            entry("вода", gloss="water"),
-        ]
-    )
-    by_lemma = {row["l"]: row for row in rows}
-    assert by_lemma["вода"]["g"] == "water"
-    assert by_lemma["воєвода"]["g"] is not None
-    assert "А в Римі свято" not in by_lemma["воєвода"]["g"]
-    assert "Велике свято" not in by_lemma["воєвода"]["g"]
-    assert by_lemma["воєвода"]["g"].startswith("У давній Русі")
 
 
 def test_classification_code_precedence_and_standard_omit() -> None:

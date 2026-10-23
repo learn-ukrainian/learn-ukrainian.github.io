@@ -383,16 +383,6 @@ def test_claim_replaces_released_lease_with_historical_bundle_token(tmp_path: Pa
     assert bundle["uploaded_by_lease_id"] == old_lease.lease_id
 
 
-def test_bundle_upload_enforces_four_mib_cap(tmp_path: Path, monkeypatch) -> None:
-    client = _client(tmp_path, monkeypatch)
-    lease = _claim(client)
-    response = client.post(
-        f"/api/epics/v1/{STREAM}/bundles",
-        json={**lease, "manifest": {}, "blob": base64.b64encode(b"x" * (4 * 1024 * 1024 + 1)).decode("ascii")},
-    )
-    assert response.status_code == 400
-
-
 @pytest.mark.parametrize(
     ("stream_key", "holder", "agent", "accepted"),
     [

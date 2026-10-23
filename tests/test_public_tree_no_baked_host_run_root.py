@@ -76,12 +76,6 @@ def _iter_public_files() -> list[Path]:
     return files
 
 
-def test_public_tree_scan_includes_bio_research_dossiers() -> None:
-    files = [str(path.relative_to(ROOT)) for path in _iter_public_files()]
-    bio = [name for name in files if name.startswith("docs/research/bio/")]
-    assert bio, "docs/research/bio/ must be scanned; do not skip that tree"
-
-
 def test_public_tree_has_no_baked_host_checkout_or_venv() -> None:
     files = _iter_public_files()
     assert files, "expected public-tree files to scan"

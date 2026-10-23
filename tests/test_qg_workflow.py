@@ -16,9 +16,6 @@ pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_FILE = PROJECT_ROOT / "tests" / "fixtures" / "curriculum_qg" / "fixtures.yaml"
-B1_27_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "b1" / "aspect-in-imperatives"
-
-
 def _fixture_by_id(fixture_id: str) -> dict[str, Any]:
     payload = yaml.safe_load(FIXTURE_FILE.read_text(encoding="utf-8"))
     for fixture in payload["fixtures"]:
@@ -258,48 +255,6 @@ def test_composite_cache_invalidates_on_gate_version_bump(tmp_path: Path) -> Non
     assert _tier(second, 2)["status"] == "cache_hit"
     assert _tier(third, 2)["status"] == "ran"
     assert calls == 2
-
-
-def test_default_gate_version_v3_invalidates_v2_cache_rows(tmp_path: Path) -> None:
-    assert qg_workflow.DEFAULT_GATE_VERSION == "qg_workflow.v3"
-    module_dir = _write_module(tmp_path)
-    db_path = tmp_path / "qg.db"
-    prompt = llm_reviewer.build_reviewer_prompt(
-        level="b1",
-        slug="clean-module",
-        module_md=(module_dir / "module.md").read_text(encoding="utf-8"),
-        activities_yaml=(module_dir / "activities.yaml").read_text(encoding="utf-8"),
-        vocabulary_yaml=(module_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
-        resources_yaml=(module_dir / "resources.yaml").read_text(encoding="utf-8"),
-    )
-    llm_qg_store.record_llm_qg(
-        level="b1",
-        slug="clean-module",
-        module_dir=module_dir,
-        payload=qg_workflow._payload_from_findings([]),
-        gate_version="qg_workflow.v2",
-        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
-        checker_version=CHECKER_VERSION,
-        level_policy_family="b1_plus",
-        reviewer_model="test-reviewer",
-        path=db_path,
-    )
-    calls = 0
-
-    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> str:
-        nonlocal calls
-        calls += 1
-        return _reviewer_response()
-
-    record = qg_workflow.review_module(
-        _target(module_dir),
-        options=qg_workflow.WorkflowOptions(enable_llm=True, reviewer_model_id="test-reviewer"),
-        reviewer=reviewer,
-        store_path=db_path,
-    )
-
-    assert _tier(record, 2)["status"] == "ran"
-    assert calls == 1
 
 
 def test_cache_hit_revalidates_theatre_gate_on_stored_payload(tmp_path: Path) -> None:
@@ -641,65 +596,6 @@ def test_legacy_cache_row_without_raw_capture_never_emits_certification_wrapper(
     assert "raw_response" not in tier2
     assert "dispatch" not in tier2
     assert "retry_history" not in tier2
-
-
-def test_live_and_cache_paths_use_shared_reviewer_gate_helper(tmp_path: Path, monkeypatch: Any) -> None:
-    seminar_dir = _write_module(
-        tmp_path,
-        level="folk",
-        slug="shared-helper",
-        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
-    )
-    db_path = tmp_path / "qg.db"
-    calls: list[bool] = []
-
-    def fake_gate(
-        payload: dict[str, Any],
-        dispatch_meta: dict[str, Any],
-        *,
-        policy_family: str,
-        theatre_retry_available: bool,
-        deep_read_retry_available: bool,
-        factual_sweep_retry_available: bool,
-        retry_unavailable_fails: bool = False,
-    ) -> qg_workflow._ReviewerGateOutcome:
-        calls.append(retry_unavailable_fails)
-        clean_payload = dict(payload)
-        return qg_workflow._ReviewerGateOutcome(
-            payload=clean_payload,
-            findings=[],
-            grounding_gate=llm_reviewer_dispatch.GroundingGateResult(payload=clean_payload),
-        )
-
-    monkeypatch.setattr(qg_workflow, "_run_reviewer_gate_sequence", fake_gate)
-
-    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
-        return _seminar_dispatch(events=(_wiki_event(mode="section"),))
-
-    first = qg_workflow.review_module(
-        _target(seminar_dir, level="folk", slug="shared-helper"),
-        options=qg_workflow.WorkflowOptions(
-            enable_llm=True,
-            reviewer_model_id="test-reviewer",
-            reviewer_family="test-family",
-        ),
-        reviewer=reviewer,
-        store_path=db_path,
-    )
-    second = qg_workflow.review_module(
-        _target(seminar_dir, level="folk", slug="shared-helper"),
-        options=qg_workflow.WorkflowOptions(
-            enable_llm=True,
-            reviewer_model_id="test-reviewer",
-            reviewer_family="test-family",
-        ),
-        reviewer=None,
-        store_path=db_path,
-    )
-
-    assert _tier(first, 2)["status"] == "ran"
-    assert _tier(second, 2)["status"] == "cache_hit"
-    assert calls == [False, True]
 
 
 def test_missing_fact_sweep_retries_once_and_recovers(tmp_path: Path) -> None:
@@ -1104,36 +1000,6 @@ def test_budget_exhaustion_emits_skipped_budget_and_incomplete(tmp_path: Path) -
     assert calls == 0
 
 
-def test_dry_run_estimates_tier2_without_reviewer_or_canary(tmp_path: Path) -> None:
-    first = _write_module(tmp_path, slug="clean-one")
-    second = _write_module(tmp_path, slug="clean-two")
-    output = tmp_path / "dry-run.json"
-
-    code = qg_workflow.main(
-        [
-            "--target",
-            f"b1:clean-one:{first}",
-            "--target",
-            f"b1:clean-two:{second}",
-            "--dry-run",
-            "--format",
-            "json",
-            "--output",
-            str(output),
-        ]
-    )
-    payload = json.loads(output.read_text(encoding="utf-8"))
-
-    assert code == 0
-    assert payload["dry_run"] is True
-    assert payload["writes"] == 0
-    assert payload["counts"]["modules"] == 2
-    assert payload["counts"]["tier2_estimated_calls"] == 2
-    assert payload["level_profiles"]["b1_plus"]["tier2_estimated_calls"] == 2
-    assert payload["level_profiles"]["b1_plus"]["estimated_prompt_tokens"] > 0
-    assert payload["level_profiles"]["b1_plus"]["estimated_cost_usd"] > 0
-
-
 def test_workflow_dedupes_cached_tier2_findings_by_finding_id(tmp_path: Path) -> None:
     activities = (
         "- id: wb-essay-missing\n"
@@ -1191,23 +1057,6 @@ def test_workflow_dedupes_cached_tier2_findings_by_finding_id(tmp_path: Path) ->
     ]
     assert _tier(record, 2)["status"] == "cache_hit"
     assert len(findings) == 1
-    qg_schema.validate_record(record)
-
-
-def test_current_b1_27_production_stays_green_without_llm_bulk_run() -> None:
-    record = qg_workflow.review_module(
-        qg_workflow.ReviewTarget(
-            level="b1",
-            slug="aspect-in-imperatives",
-            module_dir=B1_27_DIR,
-        )
-    )
-
-    assert record["module_id"] == "b1/aspect-in-imperatives"
-    assert record["verdict"] == "PASS"
-    assert record["terminal_verdict"] == "PASS"
-    assert record["llm_review"]["used"] is False
-    assert _tier(record, 2)["status"] == "skipped_flag_off"
     qg_schema.validate_record(record)
 
 

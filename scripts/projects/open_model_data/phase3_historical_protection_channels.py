@@ -1047,10 +1047,6 @@ def validate_record(record: Mapping[str, Any], contract: Mapping[str, Any] | Non
     return validate_disposition_record(record, contract)
 
 
-def validate_historical_disposition(record: Mapping[str, Any], contract: Mapping[str, Any] | None = None) -> bool:
-    return validate_disposition_record(record, contract)
-
-
 def build_coverage_blocked_record(
     channel_id: str, blocker_code: str = "qualified_historical_review_pending"
 ) -> dict[str, Any]:

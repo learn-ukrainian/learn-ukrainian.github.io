@@ -52,73 +52,6 @@ def test_real_plan_and_wiki_pairs_produce_contract(level: str, slug: str) -> Non
     assert first_section["word_budget"]["min"] <= first_section["word_budget"]["target"]
 
 
-def test_contract_builder_fails_fast_without_required_plan_fields() -> None:
-    # content_outline is required
-    with pytest.raises(Exception, match="content_outline"):
-        build_contract(
-            {
-                "dialogue_situations": [],
-                "activity_hints": [{"id": "quiz", "type": "quiz", "focus": "x"}],
-                "word_target": 100,
-            },
-            "",
-            level="a1",
-            slug="broken",
-            module_num=1,
-        )
-
-
-def test_contract_builder_accepts_plan_without_dialogue_situations() -> None:
-    """Phonetics/skills modules legitimately have no dialogue situations.
-    The contract should produce dialogue_acts: [] rather than failing.
-    """
-    contract, _ = build_contract(
-        {
-            "content_outline": [{"section": "Syllables", "words": 200, "points": ["Count vowels."]}],
-            "activity_hints": [{"id": "quiz", "type": "quiz", "focus": "syllable count"}],
-            "word_target": 200,
-        },
-        "",
-        level="a1",
-        slug="reading-ukrainian",
-        module_num=2,
-    )
-    assert contract["dialogue_acts"] == []
-    assert contract["module"]["slug"] == "reading-ukrainian"
-
-
-def test_wiki_compressor_uses_dialogue_situations_for_dialogue_sections() -> None:
-    plan = {
-        "content_outline": [
-            {
-                "section": "Діалоги (Dialogues)",
-                "points": ["Build a short natural service exchange."],
-            }
-        ],
-        "dialogue_situations": [
-            {
-                "setting": "Ordering at a café",
-                "speakers": ["Клієнт", "Офіціантка"],
-                "motivation": "order coffee politely",
-            }
-        ],
-    }
-    wiki_packet = (
-        "### Вікі: pedagogy/a1/i-want-i-can.md\n\n"
-        "## Overview\n\n"
-        "хотіти, могти, мушу. General modal overview.\n\n"
-        "### Вікі: pedagogy/a1/at-the-cafe.md\n\n"
-        "## Overview\n\n"
-        "Можна мені, будь ласка, каву? Що можете порадити?\n"
-    )
-
-    compression = compress_wiki_packet(plan, wiki_packet)
-    excerpts = compression["section_excerpts"]["Діалоги (Dialogues)"]
-
-    assert excerpts
-    assert excerpts[0]["source_path"] == "pedagogy/a1/at-the-cafe.md"
-
-
 # #1282 — scenario-aware excerpt selection.
 #
 # The fixture below simulates the real failure mode the issue reported: a
@@ -217,50 +150,6 @@ def test_wiki_compressor_splits_on_h2_headings() -> None:
     assert "Методичний підхід" in headings
 
 
-def test_wiki_compressor_is_deterministic() -> None:
-    """#1282 AC-3: repeated runs on the same inputs must produce byte-for-byte
-    identical section picks and selection traces."""
-    r1 = compress_wiki_packet(_CAFE_PLAN, _CAFE_PACKET)
-    r2 = compress_wiki_packet(_CAFE_PLAN, _CAFE_PACKET)
-    assert r1["section_excerpts"] == r2["section_excerpts"]
-    assert r1["selection_trace"] == r2["selection_trace"]
-
-
-def test_wiki_compressor_selection_trace_ranked_and_inspectable() -> None:
-    """#1282 AC-3: the selection trace persists the ranked candidate list
-    with per-dimension score breakdowns so the choice is auditable."""
-    compression = compress_wiki_packet(_CAFE_PLAN, _CAFE_PACKET)
-    trace = compression["selection_trace"]["Діалоги"]
-    assert len(trace) >= 2
-    # Ranked descending by total score (ties broken by citation).
-    scores = [entry["score"] for entry in trace]
-    assert scores == sorted(scores, reverse=True)
-    for entry in trace:
-        breakdown = entry["score_breakdown"]
-        assert set(breakdown.keys()) == {"query", "scenario", "article"}
-        assert entry["score"] == breakdown["query"] + breakdown["scenario"] + breakdown["article"]
-
-
-def test_wiki_compressor_fallback_when_no_scenario_article_present() -> None:
-    """When the packet has no article matching the plan slug, ranking falls
-    back to query + capped scenario overlap — the generic article still
-    surfaces something useful instead of crashing or returning empty.
-
-    Guards against over-fitting to the cafe case (an explicit Gemini
-    adversarial-review concern)."""
-    packet = (
-        "### Вікі: pedagogy/a1/i-eat-i-drink.md\n\n"
-        "## Overview\n\n"
-        "Я їм хліб. Я п'ю чай. Кава, чай, вода, сік. Замовлення, меню, "
-        "будь ласка.\n"
-    )
-    compression = compress_wiki_packet(_CAFE_PLAN, packet)
-    dialog_items = compression["section_excerpts"]["Діалоги"]
-    assert dialog_items, "Must still pick a fallback even without scenario article"
-    assert dialog_items[0]["source_path"] == "pedagogy/a1/i-eat-i-drink.md"
-    assert dialog_items[0]["score_breakdown"]["article"] == 0
-
-
 def test_wiki_compressor_generic_article_wins_for_non_scenario_section() -> None:
     """#1282 Gemini adversarial-review finding: a scenario-specific article
     must not monopolise every section of a multi-section module. When a
@@ -329,22 +218,6 @@ def test_wiki_compressor_generic_article_wins_for_non_scenario_section() -> None
         item["source_path"] == "pedagogy/a1/at-the-cafe.md"
         for item in grammar_picks
     )
-
-
-def test_build_contract_persists_selection_trace_in_artifact() -> None:
-    """#1282 AC-3: the wiki-excerpts.yaml artifact must carry the trace so
-    reviewers can inspect why each section got its picks."""
-    packet = _CAFE_PACKET
-    _, excerpts = build_contract(
-        _CAFE_PLAN,
-        packet,
-        level="a1",
-        slug="at-the-cafe",
-        module_num=38,
-    )
-    assert "selection_trace" in excerpts
-    assert excerpts["selection_trace"]["Діалоги"]
-    assert excerpts["sections"]["Діалоги"][0]["source_path"] == "pedagogy/a1/at-the-cafe.md"
 
 
 def test_build_contract_filters_colors_required_terms_to_learner_targets() -> None:

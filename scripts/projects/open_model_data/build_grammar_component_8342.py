@@ -3944,18 +3944,6 @@ def is_valid_candidate(
     )
 
 
-def diagnose_is_valid_failure(
-    orig_text: str,
-    corr_text: str,
-    in_scope: list[tuple[int, int, str, str]],
-    vesum_cur: sqlite3.Cursor | None = None,
-    orig_tokens: list[str] | None = None,
-) -> str:
-    """Diagnose the specific policy gate or quality filter that caused is_valid_candidate to fail."""
-    reason = validate_candidate_rejection(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
-    return reason if reason is not None else "valid"
-
-
 def load_held_out_firewall(
     manifest_path: Path = DEFAULT_FIREWALL_MANIFEST,
     test_m2_path: Path | None = None,

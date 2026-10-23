@@ -114,8 +114,8 @@ kimicc_configure_route() {
     return 1
   fi
   if ! route="$("$python_bin" "$catalog_dir/scripts/review/model_catalog.py" \
-      --resolve-kimi-model "$MODEL_ALIAS" --format kimicc 2>/dev/null)"; then
-    echo "Error: unsupported model '$MODEL_ALIAS' (use k3, k2.7, k2.7-highspeed)." >&2
+      --resolve-kimi-model "$MODEL_ALIAS" --format kimicc)"; then
+    echo "Error: Kimi route refused for model '$MODEL_ALIAS'." >&2
     return 2
   fi
   IFS=$'\t' read -r MODEL_ALIAS platform_model coding_model PROFILE_ID <<< "$route"

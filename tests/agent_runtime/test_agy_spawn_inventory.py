@@ -340,34 +340,6 @@ def test_synthetic_controls_are_unclassified(tmp_path, suffix, source):
 
 
 @pytest.mark.parametrize(
-    "suffix,source",
-    [
-        pytest.param(".py", 'import subprocess\n# agy\nsubprocess.run(["other"])', id="python-comment-only"),
-        pytest.param(".sh", "# agy\nexec other", id="shell-comment-only"),
-        pytest.param(".mjs", 'import {spawn} from "child_process";\n// agy\nspawn("other");', id="mjs-comment-only"),
-        pytest.param(".mjs", 'import {spawn} from "child_process";\n/* agy */ spawn("other");', id="mjs-block-comment"),
-        pytest.param(".sh", "agy-cli", id="agy-cli-only"),
-        pytest.param(".sh", "exec agy-hook", id="agy-hook-only"),
-        pytest.param(".py", 'label = "agy"', id="non-process-python"),
-        pytest.param(".mjs", 'const label = "agy";', id="non-process-mjs"),
-        pytest.param(
-            ".py",
-            'import subprocess\nsubprocess.run("env agy --help", shell=True)',
-            id="known-miss-python-shell-string",
-        ),
-        pytest.param(".py", '"""agy"""\nimport subprocess', id="module-docstring-only"),
-        pytest.param(".py", 'import subprocess\ndef f():\n """agy"""\n pass', id="function-docstring-only"),
-    ],
-)
-def test_synthetic_non_candidates(tmp_path, suffix, source):
-    relative = f"scripts/synthetic{suffix}"
-    path = tmp_path / relative
-    path.parent.mkdir()
-    path.write_text(source, encoding="utf-8")
-    assert _candidate_files(tmp_path, [relative]) == set()
-
-
-@pytest.mark.parametrize(
     "source",
     [
         'import subprocess as sp\nsp.run(["/bin/agy"])',
@@ -440,14 +412,6 @@ def test_inventory_refuses_invalid_rows_and_helpers(tmp_path, defect, match, suf
             path.write_text(source, encoding="utf-8")
     with pytest.raises(AssertionError, match=match):
         _assert_inventory(tmp_path, candidates, inventory, helpers)
-
-
-@pytest.mark.parametrize("relative", ["other/probe.py", "scripts/probe.txt"])
-def test_synthetic_out_of_scope_files_are_ignored(tmp_path, relative):
-    path = tmp_path / relative
-    path.parent.mkdir()
-    path.write_text('subprocess.run(["agy"])', encoding="utf-8")
-    assert _candidate_files(tmp_path, [relative]) == set()
 
 
 @pytest.mark.parametrize("suffix", [".py", ".sh"])

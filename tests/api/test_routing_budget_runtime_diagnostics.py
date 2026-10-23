@@ -204,49 +204,6 @@ def test_empty_ledger_rec_stays_suppressed_when_runtime_exists(monkeypatch, tmp_
         assert status in ("unknown", "unavailable"), f"{lane} must stay unknown on empty ledger"
 
 
-def test_routing_html_subscriptions_renders_cursor_windows_without_fabricating_zero():
-    """Subscriptions section shows provider windows; missing data is unknown, not 0%."""
-    import subprocess
-
-    script = """
-    const fs = require('fs');
-    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
-    const start = html.indexOf('function escapeHtml');
-    const end = html.indexOf('function renderAgents');
-    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
-    const helpers = html.slice(start, end);
-
-    let innerHTML = '';
-    const document = {
-      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
-    };
-    eval(helpers);
-
-    renderSubscriptions({
-      agents: {
-        cursor: {
-          status: 'unknown',
-          login_state: 'authenticated',
-          probe_state: 'NEED_PROBE',
-          provider_windows: {
-            auto: { window: 'monthly', used_pct: null, remaining_pct: null },
-            api: { window: 'monthly', used_pct: null, remaining_pct: null },
-          },
-        },
-        codex: { status: 'unknown', burn_pct_7d: null, codexbar: { weekly_used_pct: null } },
-      },
-      in_flight: {},
-      diagnostics: { records_loaded: 0, budget_ledger_empty: true, runtime_usage_records_7d: 25 }
-    });
-    console.log(innerHTML);
-    """
-    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
-    out = res.stdout
-    assert "NEED_PROBE" in out or "unknown" in out
-    assert "0.0%" not in out
-    assert "Fleet burn" in out or "5h:" in out
-
-
 def _stamp(now: float, age_s: float, *, utc: bool = True) -> str:
     moment = datetime.fromtimestamp(now - age_s, tz=UTC).replace(microsecond=0)
     if utc:

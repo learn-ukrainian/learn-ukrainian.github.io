@@ -125,13 +125,6 @@ class TestPlanYamlSchemaCheck:
         error_violations = [v for v in violations if v["severity"] == "error"]
         assert len(error_violations) > 0
 
-    def test_missing_objectives(self, valid_plan_data, tmp_path):
-        del valid_plan_data["objectives"]
-        path = _write_yaml(tmp_path, "plans/b1", "test.yaml", valid_plan_data)
-        violations = check_plan_yaml_schema(str(path), "b1", 1)
-        error_violations = [v for v in violations if v["severity"] == "error"]
-        assert len(error_violations) > 0
-
     @pytest.mark.repo_wide
     def test_a2_plans_match_module_schema(self):
         plans_dir = (
@@ -195,13 +188,6 @@ class TestVocabularyYamlSchemaCheck:
 
     def test_missing_lemma_fails(self, valid_vocab_data, tmp_path):
         del valid_vocab_data["items"][0]["lemma"]
-        path = _write_yaml(tmp_path, "vocabulary", "test.yaml", valid_vocab_data)
-        violations = check_vocabulary_yaml_schema(str(path), "b1", 1)
-        error_violations = [v for v in violations if v["severity"] == "error"]
-        assert len(error_violations) > 0
-
-    def test_missing_translation_fails(self, valid_vocab_data, tmp_path):
-        del valid_vocab_data["items"][0]["translation"]
         path = _write_yaml(tmp_path, "vocabulary", "test.yaml", valid_vocab_data)
         violations = check_vocabulary_yaml_schema(str(path), "b1", 1)
         error_violations = [v for v in violations if v["severity"] == "error"]

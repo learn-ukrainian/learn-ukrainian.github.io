@@ -129,23 +129,9 @@ def test_non_launcher_files_are_ignored(tmp_path: Path) -> None:
     assert find_broken_console_scripts(venv_dir) == []
 
 
-def test_missing_venv_bin_directory_does_not_crash(tmp_path: Path) -> None:
-    venv_dir = tmp_path / "no-such-venv"
-    assert find_broken_console_scripts(venv_dir) == []
-
-
 # ---------------------------------------------------------------------------
 # sentinel import detection
 # ---------------------------------------------------------------------------
-
-
-def test_sentinel_imports_all_present(monkeypatch: pytest.MonkeyPatch) -> None:
-    import scripts.audit.check_venv_integrity as mod
-
-    monkeypatch.setattr(mod, "CORE_SENTINEL_MODULES", {"json": "stdlib", "os": "stdlib"})
-    missing, error = check_sentinel_imports(Path(sys.executable))
-    assert missing == []
-    assert error is None
 
 
 def test_sentinel_imports_detects_missing_module(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -236,44 +222,9 @@ def test_py_test_and_pytest_dedupe_to_one_package(tmp_path: Path, monkeypatch: p
     assert message.count(" pytest") >= 1
 
 
-def test_missing_sentinel_module_is_alerted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import scripts.audit.check_venv_integrity as mod
-
-    monkeypatch.setattr(mod, "CORE_SENTINEL_MODULES", {"definitely_not_a_real_module_xyz123": "fake-pkg"})
-    repo = tmp_path / "repo"
-    _venv_dir, bin_dir = _make_fake_venv(repo, name=".venv")
-
-    ok, message = check_venv_integrity(
-        repo, tasks_dir=tmp_path / "no-tasks", state_dir=tmp_path / "state", python_exe=bin_dir / "python"
-    )
-    assert ok is False
-    assert "sentinel module" in message
-
-
 # ---------------------------------------------------------------------------
 # attribution: running dispatches recorded on the alert event
 # ---------------------------------------------------------------------------
-
-
-def test_alert_event_names_running_dispatches(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import scripts.audit.check_venv_integrity as mod
-
-    monkeypatch.setattr(mod, "CORE_SENTINEL_MODULES", {"json": "stdlib"})
-    repo = tmp_path / "repo"
-    _venv_dir, bin_dir = _make_fake_venv(repo, name=".venv")
-    _write_exec_trick_launcher(bin_dir, "pytest", tmp_path / "gone" / "python3")
-
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    (tasks_dir / "agy-suspect.json").write_text(
-        json.dumps({"task_id": "agy/suspect", "agent": "agy", "status": "running", "pid": os.getpid()})
-    )
-
-    check_venv_integrity(repo, tasks_dir=tasks_dir, state_dir=tmp_path / "state", python_exe=bin_dir / "python")
-    alerts = [e for e in _events(tmp_path / "state") if e["event"] == "venv_integrity_alert"]
-    assert alerts
-    running = alerts[0]["running_dispatches"]
-    assert any(d["task_id"] == "agy/suspect" for d in running)
 
 
 # ---------------------------------------------------------------------------

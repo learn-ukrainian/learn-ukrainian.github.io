@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import json
-import os
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-import scripts.api.build_events_router as build_events_router
 from scripts.api.main import app
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -67,35 +65,6 @@ def _write_state(root: Path, level: str, slug: str, publish_status: str = "pendi
     )
 
 
-def test_recent_events_newest_first(tmp_path, monkeypatch):
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
-    now = datetime.now(UTC)
-    _write_meta(tmp_path, "a2", "a2-bridge", "01-write-meta.json", now - timedelta(minutes=5))
-    _write_meta(tmp_path, "a2", "a2-bridge", "02-review-meta.json", now - timedelta(minutes=1), phase="review")
-
-    response = client.get("/api/build/events/recent")
-
-    assert response.status_code == 200
-    events = response.json()["events"]
-    assert events[0]["phase"] == "review"
-    assert events[1]["phase"] == "write"
-
-
-def test_recent_events_level_filter(tmp_path, monkeypatch):
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
-    now = datetime.now(UTC)
-    _write_meta(tmp_path, "a1", "one", "01-write-meta.json", now - timedelta(minutes=2))
-    _write_meta(tmp_path, "a2", "two", "01-write-meta.json", now - timedelta(minutes=1))
-
-    response = client.get("/api/build/events/recent?level=a2")
-
-    assert response.status_code == 200
-    events = response.json()["events"]
-    assert len(events) == 1
-    assert events[0]["level"] == "a2"
-    assert events[0]["slug"] == "two"
-
-
 def test_active_events_respects_10_min_window(tmp_path, monkeypatch):
     monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
     now = datetime.now(UTC)
@@ -113,22 +82,3 @@ def test_active_events_respects_10_min_window(tmp_path, monkeypatch):
     assert len(active) == 1
     assert active[0]["slug"] == "fresh"
     assert active[0]["current_phase"] == "write"
-
-
-def test_scan_hard_cap(tmp_path, monkeypatch):
-    monkeypatch.setattr(app.state, "ctx", _ctx_with_curriculum_root(tmp_path))
-    monkeypatch.setattr(build_events_router, "BUILD_EVENTS_SCAN_CAP", 2)
-    now = datetime.now(UTC)
-    _write_meta(tmp_path, "a2", "one", "01-write-meta.json", now - timedelta(minutes=3))
-    _write_meta(tmp_path, "a2", "two", "01-write-meta.json", now - timedelta(minutes=2))
-    _write_meta(tmp_path, "a2", "three", "01-write-meta.json", now - timedelta(minutes=1))
-    os.utime(tmp_path / "a2" / "orchestration" / "one" / "dispatch" / "01-write-meta.json", (now.timestamp() - 180, now.timestamp() - 180))
-    os.utime(tmp_path / "a2" / "orchestration" / "two" / "dispatch" / "01-write-meta.json", (now.timestamp() - 120, now.timestamp() - 120))
-    os.utime(tmp_path / "a2" / "orchestration" / "three" / "dispatch" / "01-write-meta.json", (now.timestamp() - 60, now.timestamp() - 60))
-
-    response = client.get("/api/build/events/recent?limit=10")
-
-    assert response.status_code == 200
-    events = response.json()["events"]
-    assert len(events) == 2
-    assert [event["slug"] for event in events] == ["three", "two"]

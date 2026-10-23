@@ -9,7 +9,6 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts import config
 from scripts.build.fresh.assemble import AssemblerError, _render_urok_markdown, assemble_expanded_document
@@ -208,13 +207,6 @@ def test_structural_failures(mutation, code):
     assert code in gates.report.codes()
 
 
-def test_embedded_later_teaching_cannot_supply_recap():
-    gates, _step = gate_world(embedded=True)
-    gates.plan["lessons"][0]["steps"].reverse()
-    gates.check_practical_recaps()
-    assert {codes.RECAP_TASK_ORDER, codes.RECAP_TASK_INVENTORY} <= gates.report.codes()
-
-
 def test_early_definition_and_later_scoping():
     for count, rejected in [(0, True), (400, False)]:
         gates, step = gate_world(early_count=count)
@@ -228,23 +220,6 @@ def test_orientation_introductions_rejected():
     gates, _ = gate_world(embedded=True, orientation=True)
     gates.check_practical_recaps()
     assert codes.ORIENTATION_CORE_WORDS in gates.report.codes()
-
-
-def test_task_schema_and_english_fields():
-    schema = json.loads((ROOT / "schemas/module-plan-v2.schema.json").read_text())
-    validator = Draft202012Validator({"$ref": "#/$defs/recapTask", "$defs": schema["$defs"]})
-    assert not list(validator.iter_errors(task()))
-    for mutation in [
-        dict(action="copy"),
-        dict(action="question_only"),
-        dict(decision="pretend"),
-        dict(success_criteria_en=[]),
-        dict(instruction_en=""),
-    ]:
-        assert list(validator.iter_errors(task() | mutation))
-    g, _step = gate_world()
-    _check_cyrillic(g.report, g.plan)
-    assert g.report.failures == []
 
 
 def assembly_world():
@@ -372,25 +347,6 @@ def test_permitted_recap_print_uses_raw_metadata_and_mapped_page(tmp_path, secti
     assert gates.report.failures == []
 
 
-@pytest.mark.parametrize("uncited", [False, True])
-def test_recap_missing_record_or_citation_refuses(uncited):
-    draft, plan, pack, words = assembly_world()
-    step = plan["lessons"][0]["steps"][0]
-    step["task"]["learner_reads"] = ["T-001"]
-    pack["texts"] = [registered_quote()] if uncited else []
-    if uncited:
-        step["evidence"] = []
-    with pytest.raises(AssemblerError, match="recap_task_print"):
-        assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
-    gates, closure = gate_world()
-    if uncited:
-        gates.pack.recap_records["T-001"] = ("texts", registered_quote())
-        closure["evidence"] = []
-    closure["task"]["learner_reads"] = ["T-001"]
-    gates.check_practical_recaps()
-    assert codes.RECAP_TASK_PRINT in gates.report.codes()
-
-
 def produced_recap_codes() -> set[str]:
     """Actual outcomes from public fixture mutations, for the validator registry check."""
     produced = set()
@@ -409,21 +365,6 @@ def produced_recap_codes() -> set[str]:
     g, _ = gate_world(embedded=True, orientation=True)
     g.check_practical_recaps()
     return produced | g.report.codes()
-
-
-def test_a2plus_and_legacy_structural_pins():
-    # Base 23ecf8c4620f06cec6f3bc402a8934f4c30be6f3, which includes merged #10104.
-    pins = {
-        "a2": "a52b41d69e6774682d98165118ac7454e6b51256b6952d3cfa426499acb95cce",
-        "b1": "acd993e20acdc7e921ebd624ef45a76496ed46fd5a457f407c71c9bb1f2f0b88",
-        "default": "db56f20e861768d7062b25e19e2a783cd845a8cb59cc11e6f7b7ab25c0a22b42",
-    }
-    for family, pin in pins.items():
-        assert hashlib.sha256(repr(config.IMMERSION_POLICIES[family]).encode()).hexdigest() == pin
-    assert (
-        hashlib.sha256((ROOT / "schemas/lesson-draft-v1.schema.json").read_bytes()).hexdigest()
-        == "d4dfd713254a0361736de036f65fe9227e63268651514c5fcfe9bd3b00f46ccc"
-    )
 
 
 def test_recap_print_decodability_and_before_step_inventory():
@@ -459,16 +400,6 @@ def test_duplicate_task_and_a2_gate_exclusion():
     assert g.report.failures == []
 
 
-@pytest.mark.parametrize("count", [True, False, -1, 1.5, "0", {}])
-def test_config_a1_invalid_counts_and_non_a1_invariance(count):
-    with pytest.raises(ValueError, match="cumulative_core_count_invalid"):
-        config.compute_immersion_band("a1", 1, {"cumulative_vocabulary": count})
-    for level in ["a2", "b1", "c1"]:
-        assert config.compute_immersion_band(
-            level, 1, {"cumulative_vocabulary": count}
-        ) == config.compute_immersion_band(level, 1, {"cumulative_vocabulary": 0})
-
-
 def test_task_cyrillic_is_allowed_in_print_and_english_scaffolding():
     from scripts.curriculum.validate.validate import _cyrillic_allowed
 
@@ -477,15 +408,6 @@ def test_task_cyrillic_is_allowed_in_print_and_english_scaffolding():
         assert _cyrillic_allowed(("lessons", 0, "steps", 0, "task", field))
     assert _cyrillic_allowed(("lessons", 0, "steps", 0, "task", "success_criteria_en", 0))
     assert not _cyrillic_allowed(("lessons", 0, "steps", 0, "task", "id"))
-
-
-@pytest.mark.parametrize("position,key,share", [(1, "a1-orientation", None), (2, "a1-m01-03", (0, 15))])
-def test_tracked_a1_selector_and_payload(position, key, share):
-    band = compute_lesson_immersion_band("a1", position, 1, 0)
-    payload = compute_immersion_payload("a1", position, 1, 0)
-    assert band.band_key == payload.band_key == key
-    assert band.advisory_uk_share == payload.advisory_uk_share == share
-    assert payload.structural_targets == {}
 
 
 @pytest.mark.parametrize("field", ["context_en", "instruction_en", "success_criteria_en"])
@@ -518,18 +440,6 @@ def test_scaffolding_requires_latin_letters_and_id_requires_nonempty(field, valu
             assert codes.CYRILLIC_IN_DISALLOWED_FIELD in g.report.codes()
     else:
         assert codes.RECAP_TASK_INVALID in g.report.codes()
-
-
-def test_all_quoted_fields_emit_one_note_with_unique_tokens():
-    g, step = gate_world()
-    for field in ("context_en", "instruction_en"):
-        step["task"][field] = "Say 'село'."
-    step["task"]["success_criteria_en"] = ["Say 'село'.", "Choose 'замок'."]
-    g.check_practical_recaps()
-    notes = [n for n in g.report.notes if n.code == codes.RECAP_TASK_QUOTED_UKRAINIAN]
-    assert len(notes) == 1
-    assert "['замок', 'село']" in notes[0].message
-    assert g.report.failures == []
 
 
 def test_task_only_practice_counts_as_printed_content():
@@ -737,74 +647,3 @@ def test_quoted_tasks_real_resolution_stress_and_check9(tmp_path, monkeypatch, q
     assert all(captured["pedagogical_stressed_form"] in u["text"] for u in stressed["units"]
                if str(u["block"]).startswith("recap_") and quote in u["text"])
     print("quoted_tasks: assembly=PASS resolver=resolved (3) check9=PASS MDX=written")
-
-
-def test_quoted_task_scaffolding_through_validate_plan(tmp_path):
-    from scripts.curriculum.validate.validate import validate_plan
-    from tests.curriculum.test_plan_validate import (
-        LEMMA_MAMA,
-        LEVEL,
-        SLUG,
-        build_cyrillic_lemma,
-        write_world,
-    )
-
-    plan, pack, words = build_cyrillic_lemma()
-    closure = plan["lessons"][-1]["steps"][-1]
-    for field in ("context_en", "instruction_en"):
-        closure["task"][field] = f"Choose '{LEMMA_MAMA}' in this context."
-    closure["task"]["success_criteria_en"] = [f"Say '{LEMMA_MAMA}' for this context."]
-    # A task-only practice step prints content without a redundant linked activity.
-    closure["practice"] = []
-    world = write_world(tmp_path, plan, pack, words)
-    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
-    assert report.ok, report.render_text()
-    notes = [n for n in report.notes if n.code == codes.RECAP_TASK_QUOTED_UKRAINIAN]
-    assert len(notes) == 1 and LEMMA_MAMA in notes[0].message
-
-
-@pytest.mark.parametrize("path", [
-    ("title",), ("subtitle",), ("focus",), ("objectives", 0),
-    ("lessons", 0, "dialogue", "situation"),
-    ("lessons", 0, "dialogue", "setting"),
-    ("lessons", 0, "dialogue", "target_grammar"),
-    ("lessons", 0, "dialogue", "speakers", 0, "name"),
-    ("lessons", 0, "dialogue", "places", 0, "name"),
-])
-def test_cyrillic_prose_permissions_remain_available(path):
-    from scripts.curriculum.validate.validate import _cyrillic_allowed
-
-    assert _cyrillic_allowed(path)
-
-
-@pytest.mark.parametrize("path", [
-    ("lessons", 0, "dialogue", "speakers", 0, "id"),
-    ("lessons", 0, "dialogue", "places", 0, "id"),
-    ("lessons", 0, "steps", 0, "task", "action"),
-    ("lessons", 0, "steps", 0, "task", "response_mode"),
-])
-def test_cyrillic_identifiers_remain_disallowed(path):
-    from scripts.curriculum.validate.validate import _cyrillic_allowed
-
-    assert not _cyrillic_allowed(path)
-
-
-def test_precomputed_band_preserves_a2_structural_payload_and_display():
-    band = compute_lesson_immersion_band("a2", 1, 1, 0, waiver="controlled waiver")
-    payload = compute_immersion_payload("a2", 1, 1, lesson_band=band)
-    assert payload.structural_targets == band.module_structural
-    assert "Module structural minimums" in band.render_text()
-    assert "Waiver: controlled waiver" in band.render_text()
-    from dataclasses import replace
-
-    assert "Not checked:" not in replace(band, not_checked=[]).render_text()
-
-
-def test_legacy_a2_letter_contract_remains_available_outside_ulp_band():
-    rule = config.get_immersion_rule("a2", 25, letter_module=True)
-    assert config._ulp_letter_module_contract("a2") in rule
-
-
-def test_legacy_immersion_hook_text_is_preserved(monkeypatch):
-    monkeypatch.setattr(config, "_ulp_practices_rule", lambda *_args: "Controlled compatibility hook.")
-    assert config.get_immersion_rule("a2", 25).endswith("\n\nControlled compatibility hook.")

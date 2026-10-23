@@ -96,26 +96,6 @@ def test_dedupes_repeated_tool_call_keeping_final_status() -> None:
     assert parse.text == "done"
 
 
-def test_distinct_inputs_are_not_deduped() -> None:
-    stream = "\n".join(
-        json.dumps(
-            {
-                "type": "tool_use",
-                "part": {
-                    "type": "tool",
-                    "tool": "sources_search_text",
-                    "callID": f"call_{i}",
-                    "state": {"status": "completed", "input": {"query": query}},
-                },
-            }
-        )
-        for i, query in enumerate(("веснянки", "гаївки"))
-    )
-    parse = _parse_opencode_stream(stream)
-
-    assert len(parse.tool_events) == 2
-
-
 def test_no_tool_events_and_raw_fallback_text() -> None:
     # Robust to format drift: never silently return empty text.
     parse = _parse_opencode_stream("not json at all\n")

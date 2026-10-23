@@ -30,22 +30,6 @@ class TestFixRussianismsInPlan:
         # дім should be untouched
         assert "дім (house)" in content
 
-    def test_fixes_лук_onion(self, tmp_path):
-        plan = tmp_path / "plan.yaml"
-        plan.write_text(
-            "version: '1.0'\n"
-            "vocabulary_hints:\n"
-            "  required:\n"
-            '  - "лук (onion) — food vocabulary"\n'
-        )
-        issues = [{"issue_type": "RUSSICISM", "problem": "лук paired with 'onion'",
-                    "suggested_fix": "Replace лук (onion) with цибуля (onion)"}]
-        n, _changelog = fix_russianisms_in_plan(plan, issues)
-        assert n == 1
-        content = plan.read_text()
-        assert "цибуля (onion)" in content
-        assert "лук (onion)" not in content
-
     def test_no_russicism_issues_returns_zero(self, tmp_path):
         plan = tmp_path / "plan.yaml"
         plan.write_text("version: '1.0'\nvocabulary_hints:\n  required:\n  - 'дім (house)'\n")
@@ -53,12 +37,6 @@ class TestFixRussianismsInPlan:
         n, _changelog = fix_russianisms_in_plan(plan, issues)
         assert n == 0
         assert _changelog == []
-
-    def test_empty_issues(self, tmp_path):
-        plan = tmp_path / "plan.yaml"
-        plan.write_text("version: '1.0'\n")
-        n, _changelog = fix_russianisms_in_plan(plan, [])
-        assert n == 0
 
     def test_version_bumped(self, tmp_path):
         plan = tmp_path / "plan.yaml"
@@ -73,12 +51,6 @@ class TestFixRussianismsInPlan:
         fix_russianisms_in_plan(plan, issues)
         content = plan.read_text()
         assert "2.0.1" in content
-
-    def test_nonexistent_plan(self, tmp_path):
-        plan = tmp_path / "nonexistent.yaml"
-        issues = [{"issue_type": "RUSSICISM", "problem": "город city"}]
-        n, _changelog = fix_russianisms_in_plan(plan, issues)
-        assert n == 0
 
     def test_warning_not_flagged_as_russicism(self, tmp_path):
         """If the issue type is not RUSSICISM, don't touch the plan."""

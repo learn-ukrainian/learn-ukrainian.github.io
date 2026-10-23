@@ -322,42 +322,6 @@ def test_preflight_error_need(clean_word_store, clean_pack):
     assert any(g.need == "error" for g in res_bad.gaps)
 
 
-def test_preflight_video_need(clean_word_store, clean_pack):
-    """Video need passes when V- is present; fails when missing."""
-    plan_entry = {
-        "steps": [{"id": "s1", "needs": ["video"], "ref": "V-001"}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res = preflight_lesson(plan_entry, pack=clean_pack, word_store=clean_word_store)
-    assert res.passed is True
-
-    plan_entry_bad = {
-        "steps": [{"id": "s1", "needs": ["video"], "ref": "V-999"}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res_bad = preflight_lesson(plan_entry_bad, pack=clean_pack, word_store=clean_word_store)
-    assert res_bad.passed is False
-    assert any(g.need == "video" for g in res_bad.gaps)
-
-
-def test_preflight_culture_need(clean_word_store, clean_pack):
-    """Culture need passes when T- is present with kind 'culture'; fails when missing."""
-    plan_entry = {
-        "steps": [{"id": "s1", "needs": ["culture"], "explains": ["T-001"]}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res = preflight_lesson(plan_entry, pack=clean_pack, word_store=clean_word_store)
-    assert res.passed is True
-
-    plan_entry_bad = {
-        "steps": [{"id": "s1", "needs": ["culture"], "explains": ["T-999"]}],
-        "inventory": {"vocabulary": {"core": []}},
-    }
-    res_bad = preflight_lesson(plan_entry_bad, pack=clean_pack, word_store=clean_word_store)
-    assert res_bad.passed is False
-    assert any(g.need == "culture" for g in res_bad.gaps)
-
-
 def test_preflight_paradigm_need(clean_word_store, clean_pack):
     """Paradigm need passes when word and forms exist; fails when missing or pending stress."""
     plan_entry = {

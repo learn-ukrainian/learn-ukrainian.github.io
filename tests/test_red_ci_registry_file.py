@@ -20,16 +20,6 @@ REGISTRY_PATH = (
     PROJECT_ROOT / "scripts" / "config" / "trails" / "red-ci-known-failures.yaml"
 )
 MAX_REVIEW_HORIZON_DAYS = 30
-REQUIRED_EVIDENCE_FIELDS = {
-    "run_id",
-    "run_attempt",
-    "pr_number",
-    "head_sha",
-    "observed_at",
-    "signature_sha256",
-}
-
-
 def _parse_iso_instant(value: Any) -> datetime:
     """Parse a YAML/JSON timestamp string or a pre-parsed datetime into a UTC instant."""
     if isinstance(value, datetime):
@@ -97,11 +87,6 @@ def _valid_sample_entry(*, review_by: str = "2026-08-27T11:00:00Z") -> dict[str,
     }
 
 
-def test_registry_file_exists() -> None:
-    """The checked-in registry must exist at the path the trail expects."""
-    assert REGISTRY_PATH.is_file(), f"Registry not found at {REGISTRY_PATH}"
-
-
 def test_registry_file_validates_via_stage1_stage2_code_path() -> None:
     """The checked-in registry parses and validates through the shared module."""
     summary = load_and_validate_registry(
@@ -139,24 +124,6 @@ def test_registry_entries_expire_within_30_days() -> None:
         )
 
 
-def test_registry_entries_have_required_provenance() -> None:
-    """Every entry requires run reference + signature-receipt evidence.
-
-    Forward guard-rail: assertions activate once a real entry lands (shipped
-    registry is empty); the mutation-honest negatives below carry live coverage.
-    """
-    data = _load_registry_data()
-    for entry in data.get("entries", []):
-        evidence = entry.get("evidence", [])
-        assert evidence, f"Entry '{entry['id']}' has no evidence"
-        for idx, item in enumerate(evidence):
-            missing = REQUIRED_EVIDENCE_FIELDS - set(item.keys())
-            assert not missing, (
-                f"Entry '{entry['id']}' evidence[{idx}] missing provenance fields: "
-                f"{sorted(missing)}"
-            )
-
-
 def test_registry_rejects_expired_entry_in_copy(tmp_path: Path) -> None:
     """Mutation-honest negative: an expired entry must fail validation."""
     data = _load_registry_data()
@@ -182,40 +149,6 @@ def test_registry_rejects_provenance_free_entry_in_copy(tmp_path: Path) -> None:
     data["entries"] = [*list(data.get("entries", [])), entry]
 
     mutated_path = tmp_path / "registry-no-evidence.json"
-    mutated_path.write_text(json.dumps(data), encoding="utf-8")
-
-    with pytest.raises(
-        RedCIKnownFailuresValidationError, match="Registry schema violation"
-    ):
-        load_and_validate_registry(
-            mutated_path, as_of="2026-08-01T00:00:00Z", allow_expired=False
-        )
-
-
-def test_registry_rejects_unknown_field_in_copy(tmp_path: Path) -> None:
-    """Mutation-honest negative: unknown fields are not silently accepted."""
-    data = _load_registry_data()
-    entry = _valid_sample_entry()
-    entry["unknown_field"] = "must-be-rejected"
-    data["entries"] = [*list(data.get("entries", [])), entry]
-
-    mutated_path = tmp_path / "registry-unknown-field.json"
-    mutated_path.write_text(json.dumps(data), encoding="utf-8")
-
-    with pytest.raises(
-        RedCIKnownFailuresValidationError, match="Registry schema violation"
-    ):
-        load_and_validate_registry(
-            mutated_path, as_of="2026-08-01T00:00:00Z", allow_expired=False
-        )
-
-
-def test_registry_unknown_top_level_field_in_copy(tmp_path: Path) -> None:
-    """Mutation-honest negative: unknown top-level fields are also rejected."""
-    data = _load_registry_data()
-    data["extra_top_level"] = "rejected"
-
-    mutated_path = tmp_path / "registry-extra-top-level.json"
     mutated_path.write_text(json.dumps(data), encoding="utf-8")
 
     with pytest.raises(

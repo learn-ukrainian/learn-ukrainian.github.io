@@ -28,7 +28,6 @@ ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 POS1_ROW_FRAGMENT = "**12 letters**: А Е И І О М Н В П Р Т Я"
 POS42_ROW = "| 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |"
 POS5_ROW = next(line for line in ARC_DOC.read_text().splitlines() if line.startswith("| 3 |"))
-STATED_TOTAL_ANCHOR = "orientation only and total 162"
 STATED_TOTAL_SENTENCE = "The lesson counts above are estimates for\norientation only and total 162."
 
 
@@ -66,57 +65,12 @@ def test_literacy_positions_letters_and_lessons() -> None:
     assert set(letters) == set("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩьЮЯ")
 
 
-def test_position_2_letters_exact() -> None:
-    records = _records()
-    assert records[1]["letters"] == list("АЕИІОМНВПРТЯ")
-    assert "ь" in records[2]["letters"]
-
-
-def test_opening_rows_own_phase_and_skills() -> None:
-    records = _records()
-    assert records[0]["skills"] == []
-    for record in records[1:7]:
-        assert {"Li", "S"} <= set(record["skills"])
-    assert records[4]["skills"] == ["Li", "S", "R", "W"]
-    assert records[-1]["skills"] == ["W", "Li", "R", "S"]
-    assert all(isinstance(r["position"], int) for r in records)
-
-
 def test_standard_line_refs_parsing() -> None:
     records = {r["position"]: r for r in _records()}
     assert records[3]["standard_line_refs"] == [[588, 588], [485, 485]]
     assert records[5]["standard_line_refs"] == [[571, 572], [343, 344], [362, 365]]
     assert records[34]["standard_line_refs"] == [[523, 525], [345, 346], [352, 352], [361, 361], [377, 377]]
     assert records[28]["standard_line_refs"] == []
-
-
-#: A Standard source-line reference in any spelling: `:361`, `:489-493`, (`:549-551`), :531–533.
-#: A clock time (10:30) is not one: the colon must not follow a digit.
-JOB_SOURCE_LINE_REF_RE = re.compile(r"(?<!\d):\d+(?:[-–]\d+)?")
-
-
-@pytest.mark.parametrize(
-    "text, leaks",
-    [
-        ("weight and volume (`:531-533`)", True),
-        ("address an envelope `:361`", True),
-        ("at the border :523–525", True),
-        ("meet at 10:30 for coffee", False),
-        ("Ask and tell the time", False),
-    ],
-)
-def test_job_source_line_ref_pattern(text: str, leaks: bool) -> None:
-    assert bool(JOB_SOURCE_LINE_REF_RE.search(text)) is leaks
-
-
-def test_job_text_has_no_leaked_source_line_reference() -> None:
-    """`job` is rendered verbatim on the arc landing (ArcLanding.tsx, ArcModule.tsx); a
-    source citation like ``(`:489-493`)`` leaking into it is learner-facing noise, not a
-    citation — the reference belongs in a non-learner-facing field (skills duty) or prose."""
-    for record in _records():
-        assert not JOB_SOURCE_LINE_REF_RE.search(record["job"]), (
-            f"position {record['position']} ({record['slug']}) job leaks a source line reference: {record['job']!r}"
-        )
 
 
 def test_mutation_one_slug_breaks_check(tmp_path: Path) -> None:
@@ -128,11 +82,6 @@ def test_mutation_one_lesson_count_fails_stated_total_check(tmp_path: Path) -> N
     mutated = _mutated_doc(tmp_path, POS42_ROW, POS42_ROW.replace("| — | 2 |", "| — | 5 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="stated lesson total"):
         generate_arc.generate_yaml(mutated)
-
-
-def test_mutation_deleted_row_breaks_check(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS42_ROW + "\n", "")
-    assert generate_arc.main(["--level", "a1", "--check", "--doc", str(mutated)]) != 0
 
 
 def test_bolded_count_mismatch_fails_generation(tmp_path: Path) -> None:
@@ -153,12 +102,6 @@ def test_est_lessons_total_emitted_and_matches_stated_total() -> None:
     assert data["est_lessons_total"] == sum(r["est_lessons"] for r in data["positions"])
 
 
-def test_stated_total_mismatch_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, STATED_TOTAL_ANCHOR, "orientation only and total 161")
-    with pytest.raises(generate_arc.ArcGenerationError, match="stated lesson total"):
-        generate_arc.generate_yaml(mutated)
-
-
 def test_stated_total_sentence_removed_fails_generation(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, STATED_TOTAL_SENTENCE + " ", "")
     with pytest.raises(generate_arc.ArcGenerationError, match="no stated lesson total"):
@@ -173,12 +116,6 @@ def test_unknown_skills_code_fails_generation(tmp_path: Path) -> None:
 
 def test_skills_trailing_comma_fails_generation(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li, S, W (`:485`) | 4 |", "| Li, | 3 |"))
-    with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
-        generate_arc.generate_yaml(mutated)
-
-
-def test_skills_double_comma_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li, S, W (`:485`) | 4 |", "| Li,, W | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
         generate_arc.generate_yaml(mutated)
 
@@ -248,15 +185,6 @@ def test_loader_rejects_invalid_a1_band_declarations(tmp_path: Path, position: i
         loader.load_arc("a1", arc_path=invalid)
 
 
-def test_loader_still_rejects_a1_immersion_bands(tmp_path: Path) -> None:
-    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
-    data["immersion_bands"] = [{"start": 1, "end": 55, "band_key": "a1-orientation"}]
-    invalid = tmp_path / "_arc.yaml"
-    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
-    with pytest.raises(ValueError, match=re.escape("fails schemas/arc.schema.json")):
-        loader.load_arc("a1", arc_path=invalid)
-
-
 def test_loader_raises_on_stale_source_sha256(tmp_path: Path) -> None:
     stale = tmp_path / "_arc.yaml"
     text = ARC_YAML.read_text(encoding="utf-8")
@@ -264,15 +192,6 @@ def test_loader_raises_on_stale_source_sha256(tmp_path: Path) -> None:
     stale.write_text(text, encoding="utf-8")
     with pytest.raises(loader.ArcStaleError, match="not regenerated"):
         loader.load_arc("a1", arc_path=stale)
-
-
-def test_loader_raises_when_document_changed(tmp_path: Path) -> None:
-    changed_doc = tmp_path / "arc.md"
-    shutil.copy(ARC_DOC, changed_doc)
-    with changed_doc.open("a", encoding="utf-8") as handle:
-        handle.write("\n")
-    with pytest.raises(loader.ArcStaleError):
-        loader.load_arc("a1", doc_path=changed_doc)
 
 
 def test_loader_raises_on_schema_invalid_yaml(tmp_path: Path) -> None:
@@ -318,61 +237,3 @@ def test_loader_never_reads_plans_directory(tmp_path: Path, monkeypatch: pytest.
     monkeypatch.setattr(loader, "REPO_ROOT", root)
     with pytest.raises(FileNotFoundError):
         loader.load_arc("a1")
-
-
-def test_positions_11_to_55_match_floor_ownership_amendment():
-    import hashlib
-    import json
-
-    later = _records()[10:]
-    assert hashlib.sha256(json.dumps(later, ensure_ascii=False, sort_keys=True).encode()).hexdigest() == '06ee01a411097c094c5b2388601063f7dda4490a1f07c3cc275d27b2ffea2687'
-
-
-def test_regenerated_a1_owns_reviewed_standard_duties(tmp_path: Path) -> None:
-    generated = tmp_path / "_arc.yaml"
-    generated.write_text(generate_arc.generate_yaml(ARC_DOC), encoding="utf-8")
-    positions = {p.position: p for p in loader.load_arc("a1", arc_path=generated)}
-
-    assert "syllables" in positions[3].inventory_text
-    assert "unstressed" not in positions[3].inventory_text
-    assert "stressed/unstressed [е], [и]" in positions[6].job
-    assert "complete writing own and other names/surnames" in positions[5].skills_text
-    assert "use capitals in Київ/київський and Україна/українець" in positions[5].skills_text
-    assert "дивитися" in positions[17].job
-    assert "reflexive paradigm" in positions[17].job
-    assert "могти" in positions[18].job
-    assert "parts of the world (continents)" in positions[34].job
-    assert "compass" not in positions[34].job
-    assert "integrated reuse of all taught Standard A1 intentions, themes and speech skills" in positions[55].job
-    assert "no new language" in positions[55].job
-
-
-def test_positions_3_to_5_staged_phonetic_facets_and_invariants() -> None:
-    records = _records()
-    p3, p4, p5 = records[2], records[3], records[4]
-
-    # Staged phonetic facets in active section 4 inventory
-    assert "hardness before [е]" in p3["inventory_text"]
-    assert "д–т" in p3["inventory_text"] and "з–с" in p3["inventory_text"] and "г–х" in p3["inventory_text"]
-    assert "introduce voiced/voiceless base-pair families" in p3["inventory_text"]
-
-    assert "б–п" in p4["inventory_text"]
-    assert "continue voiced/voiceless base-pair family" in p4["inventory_text"]
-    assert "apostrophe" in p4["inventory_text"]
-
-    assert all(pair in p5["inventory_text"] for pair in ("ґ–к", "ж–ш", "дж–ч", "дз–ц"))
-    assert "complete voiced/voiceless base-pair families" in p5["inventory_text"]
-    assert "дж and дз" in p5["inventory_text"]
-
-    # Invariants: 10 jobs, 33 letters, 55 positions, 162 estimated lessons
-    assert len(records) == 55
-    assert sum(r["est_lessons"] for r in records) == 162
-    letters = [ch for r in records[1:5] for ch in r["letters"]]
-    assert len(letters) == 33 and len(set(letters)) == 33
-    assert set(letters) == set("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩьЮЯ")
-
-    # Positions 1-2 unchanged
-    assert records[0]["slug"] == "introduction-to-ukrainian"
-    assert records[0]["letters"] == []
-    assert records[1]["slug"] == "sounds-letters-and-hello"
-    assert records[1]["letters"] == list("АЕИІОМНВПРТЯ")

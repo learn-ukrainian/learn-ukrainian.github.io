@@ -47,25 +47,6 @@ def test_registry_is_closed_lazy_and_reports_only_selected_missing_id(monkeypatc
     assert components.load_components(["C1"], _test_overrides={"C1": obj}) == {"C1": obj}
 
 
-def test_missing_component_dependency_is_not_reported_as_missing_component(monkeypatch):
-    def load(target):
-        raise ModuleNotFoundError(name="SYNTHETIC_dependency")
-
-    monkeypatch.setattr(components, "import_module", load)
-    with pytest.raises(ModuleNotFoundError):
-        components.load_components(["C1"])
-    monkeypatch.setattr(components, "import_module", lambda target: SimpleNamespace())
-    with pytest.raises(BuildError, match="component_contract"):
-        components.load_components(["C1"])
-
-
-def test_adapter_conflicts_are_not_overwritten():
-    adapter = SyntheticAdapter()
-    assert components.merge_adapters({"source": adapter}, {"source": adapter}) == {"source": adapter}
-    with pytest.raises(BuildError, match="adapter_conflict"):
-        components.merge_adapters({"source": adapter}, {"source": SyntheticAdapter()})
-
-
 @pytest.mark.parametrize("component", ["C1", "C6a", "C6b"])
 def test_cli_registered_component_build_verify_and_mutations(bundle, monkeypatch, capsys, component):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
@@ -165,22 +146,6 @@ def test_component_fixture_hook_refuses_invalid_proof(tmp_path, monkeypatch, fau
     with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
         with pytest.raises(BuildError, match=expected):
             verify_component_mutations({"C1": obj}, components.ComponentContext(None, {}), [], out)
-
-
-def test_component_fixture_hook_is_optional(tmp_path, monkeypatch):
-    monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
-    with OutputGuard(tmp_path / "SYNTHETIC-output") as out:
-        assert verify_component_mutations({"C1": object()}, components.ComponentContext(None, {}), [], out) == {}
-
-
-def test_component_context_detaches_and_freezes_nested_request():
-    request = {"nested": [{"values": ["SYNTHETIC original"]}], "empty": {}, "flag": True}
-    ctx = components.ComponentContext(None, request)
-    request["nested"][0]["values"][0] = "SYNTHETIC changed"
-    assert ctx.request["nested"][0]["values"] == ("SYNTHETIC original",)
-    assert ctx.request["flag"] is True
-    with pytest.raises(TypeError):
-        ctx.request["empty"]["new"] = True
 
 
 @pytest.mark.parametrize("verify", [False, True])
@@ -461,19 +426,6 @@ def test_real_c3_variants_use_source_queries_accept_and_must_fail(bundle, real_c
         )
         with pytest.raises(BuildError, match="applicability_spec"):
             gate.applicable(candidate)
-
-
-def test_variant_names_are_data_not_a_framework_enum(bundle):
-    data = copy.deepcopy(bundle["catalog"])
-    lines = data["components"]["C1"]["instructions"][:2]
-    for i, line in enumerate(lines):
-        line["sense_variant"] = f"SYNTHETIC_variant_{i}"
-    data["components"]["C1"]["instructions"] = lines
-    catalog = Catalog(data)
-    candidate = bundle["candidates"][0]
-    assert catalog.applicable(candidate, variants={"SYNTHETIC_variant_1"}) == (lines[1]["id"],)
-    with pytest.raises(BuildError, match="catalog_inapplicable"):
-        catalog.applicable(candidate, variants={"SYNTHETIC_variant_0", "SYNTHETIC_variant_1"})
 
 
 def test_real_catalog_version_and_split_component_diagnostics_are_admitted(real_catalog):

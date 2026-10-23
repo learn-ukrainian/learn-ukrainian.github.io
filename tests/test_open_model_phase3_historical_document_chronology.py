@@ -107,22 +107,6 @@ def test_validator_rejects_forged_downgrade_even_when_record_is_resealed():
         chronology.validate_record(_reseal_record(record), freeze=periodization.load_freeze())
 
 
-def test_validator_rejects_framework_collapse_even_when_record_is_resealed():
-    record = copy.deepcopy(_record())
-    record["projection"]["canonical_framework_id"] = "university_five_stage_synthesis"
-
-    with pytest.raises(chronology.HistoricalDocumentChronologyError, match="schema violation"):
-        chronology.validate_record(_reseal_record(record), freeze=periodization.load_freeze())
-
-
-def test_schema_rejects_exact_status_without_all_three_frameworks():
-    record = copy.deepcopy(_record())
-    record["projection"]["framework_matches"] = []
-
-    with pytest.raises(chronology.HistoricalDocumentChronologyError, match="schema violation"):
-        chronology.validate_record(_reseal_record(record), freeze=periodization.load_freeze())
-
-
 def _conllu(*, document_id: str, language: str, created: str | None, sent_id: str) -> str:
     lines = [f"# newdoc id = {document_id}", f"# lang = {language}"]
     if created is not None:

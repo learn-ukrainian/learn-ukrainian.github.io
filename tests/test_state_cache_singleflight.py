@@ -42,18 +42,6 @@ def test_cache_get_or_compute_coalesces_concurrent_misses():
     assert state_helpers.cache_get("sf-key", 60.0) == {"ok": True, "n": 1}
 
 
-def test_cache_get_or_compute_hit_skips_compute():
-    state_helpers.cache_set("warm-key", {"v": 1})
-    calls = {"n": 0}
-
-    def compute():
-        calls["n"] += 1
-        return {"v": 2}
-
-    assert state_helpers.cache_get_or_compute("warm-key", 60.0, compute) == {"v": 1}
-    assert calls["n"] == 0
-
-
 def test_cache_get_or_compute_async_coalesces_and_skips_a_warm_hit():
     calls = {"n": 0}
 

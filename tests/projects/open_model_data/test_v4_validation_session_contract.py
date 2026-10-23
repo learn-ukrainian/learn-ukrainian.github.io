@@ -14,24 +14,8 @@ import pytest
 from learn_ukrainian_v4_runtime.provenance import validation_session
 
 
-def test_validation_session_accepts_a_none_returning_validator() -> None:
-    @validation_session
-    def validate(receipt: dict, root: str = "r") -> None:
-        return None
-
-    assert validate({"a": 1}) is None
-
-
 def test_validation_session_refuses_a_value_returning_validator() -> None:
     def validate(receipt: dict, root: str = "r") -> dict:
-        return receipt
-
-    with pytest.raises(TypeError, match="must be annotated '-> None'"):
-        validation_session(validate)
-
-
-def test_validation_session_refuses_an_unannotated_validator() -> None:
-    def validate(receipt, root="r"):
         return receipt
 
     with pytest.raises(TypeError, match="must be annotated '-> None'"):

@@ -694,54 +694,6 @@ def output_json_schema() -> dict[str, Any]:
     }
 
 
-def output_json_schema_for_request(parsed: ParsedRequest) -> dict[str, Any]:
-    """Bind the generic output schema's envelope identifiers to one request.
-
-    Grok's constraint grammar needs a Draft-4 tuple form here: ``const`` and
-    2020-12 tuple keywords are not reliably honored by subscription CLIs.
-    The normalizer remains the authoritative validation boundary; this only
-    reduces avoidable identifier-transcription failures before it runs.
-    """
-
-    schema = output_json_schema()
-    properties = dict(schema["properties"])
-    generic_facts = properties["fact_checks"]
-    generic_fact = generic_facts["items"]
-    generic_fact_properties = generic_fact["properties"]
-    generic_source_relations = generic_fact_properties["source_relations"]
-    generic_source_relation = generic_source_relations["items"]
-
-    pinned_facts: list[dict[str, Any]] = []
-    for request_fact in parsed.request["fact_checks"]:
-        fact_check_id = str(request_fact["fact_check_id"])
-        pinned_relations: list[dict[str, Any]] = []
-        for source in request_fact["candidate_sources"]:
-            candidate_properties = dict(generic_source_relation["properties"])
-            candidate_properties["candidate_id"] = {"type": "string", "enum": [str(source["candidate_id"])]}
-            pinned_relations.append({**generic_source_relation, "properties": candidate_properties})
-
-        relation_tuple = {
-            **generic_source_relations,
-            "items": pinned_relations,
-            "additionalItems": False,
-            "minItems": len(pinned_relations),
-            "maxItems": len(pinned_relations),
-        }
-        fact_properties = dict(generic_fact_properties)
-        fact_properties["fact_check_id"] = {"type": "string", "enum": [fact_check_id]}
-        fact_properties["source_relations"] = relation_tuple
-        pinned_facts.append({**generic_fact, "properties": fact_properties})
-
-    properties["fact_checks"] = {
-        **generic_facts,
-        "items": pinned_facts,
-        "additionalItems": False,
-        "minItems": len(pinned_facts),
-        "maxItems": len(pinned_facts),
-    }
-    return {**schema, "properties": properties}
-
-
 def grok_flat_output_schema() -> dict[str, Any]:
     """Return Grok's generic flat row contract for config attestation only."""
 

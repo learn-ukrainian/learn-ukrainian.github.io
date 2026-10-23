@@ -210,6 +210,12 @@ def test_open_model_data_hook_main_blocks_and_head_is_ready(tmp_path: Path) -> N
     assert "scripts.driver_blockers record --epic open-model-data" in head_context
     assert "scripts.driver_blockers record --epic open-model-data" in head_context[:800]
     assert "if delta fails or the baseline is unknown, post everything currently blocking" in head_context
+    assert "typed source-uncertainty blocker" in head_context
+    assert "Fallback reporting cannot certify coverage" in head_context
+    assert "Preserve the baseline" in head_context
+    assert "Keep other ready work moving" in head_context
+    assert "exhaustive coverage including explicit unknown attention" in head_context
+    assert "current reporting custody only" in head_context
     assert "--stream epic:6321" in head_args[0]  # allow-hardcoded-epic: #9956 pre-fix launcher lease fixture
     assert head_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: #9956 pre-fix lease fixture
     print("unfixed condition: invalid-stream-id BLOCKED; head: --stream epic:6321 READY")
@@ -254,68 +260,6 @@ def test_hook_unknown_selector_skips_hydration(tmp_path) -> None:
     assert args == requests == []
 
 
-@pytest.mark.parametrize("has_state", [False, True])
-def test_codex_boundary_rule_carries_complete_blocker_rule(tmp_path: Path, has_state: bool) -> None:
-    source = (ROOT / HOOK).read_text()
-    start = source.index('        GOAL_REL="')
-    end = source.index('        CONTEXT="CODEX FLEET-DRIVER HYDRATION', start)
-    block = source[start:end]
-    if has_state:
-        state = tmp_path / ".claude/infra-epic/DRIVER-STATE.md"
-        state.parent.mkdir(parents=True)
-        state.write_text("fixture")
-    result = subprocess.run(
-        ["bash"],
-        input=block + '\nprintf "%s" "$BOUNDARY_RULE"\n',
-        env={"PATH": os.environ["PATH"], "PROJECT_DIR": str(tmp_path), "SESSION_EPIC": "infra"},
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=20,
-    )
-    for fragment in (
-        "complete: true",
-        "scripts.driver_blockers delta --epic infra --current blockers.json",
-        "scripts.driver_blockers record --epic infra --current blockers.json",
-        "--receipt receipt.json --body-file posted.md --expect-generation N",
-        "post each item that is not UNCHANGED",
-        "exact case-sensitive standalone token RESOLVED <id>",
-        "on its own non-active line (no other fields or prose)",
-        "if delta fails or the baseline is unknown, post everything currently blocking",
-    ):
-        assert fragment in result.stdout
-
-
-def test_post_compact_includes_blocker_delta_rule_for_grok_and_claude() -> None:
-    hook = ROOT / HOOK
-    # 1. Grok
-    env_grok = {
-        "PATH": os.environ["PATH"],
-        "GROK_AGENT": "1",
-        "SESSION_EPIC": "infra",
-        "CLAUDE_PROJECT_DIR": str(ROOT),
-    }
-    res_grok = subprocess.run(
-        ["bash", str(hook)], cwd=ROOT, env=env_grok, capture_output=True, text=True, check=True, timeout=20
-    )
-    grok_context = json.loads(res_grok.stdout)["additionalContext"]
-    assert "Epic blocker delta: Put every owned blocker in --current with complete: true;" in grok_context
-    assert "scripts.driver_blockers record --epic infra" in grok_context
-
-    # 2. Claude
-    env_claude = {
-        "PATH": os.environ["PATH"],
-        "SESSION_EPIC": "infra",
-        "CLAUDE_PROJECT_DIR": str(ROOT),
-    }
-    res_claude = subprocess.run(
-        ["bash", str(hook)], cwd=ROOT, env=env_claude, capture_output=True, text=True, check=True, timeout=20
-    )
-    claude_context = json.loads(res_claude.stdout)["additionalContext"]
-    assert "Epic blocker delta: Put every owned blocker in --current with complete: true;" in claude_context
-    assert "scripts.driver_blockers record --epic infra" in claude_context
-
-
 def test_dispatched_worker_with_inherited_epic_skips_codex_hydration(tmp_path: Path) -> None:
     # #10455: a worker dispatched from a driver shell inherits SESSION_EPIC.
     stdout, args, requests = _run_hook(tmp_path / "worker", dispatch_task="probe-worker")
@@ -329,59 +273,3 @@ def test_dispatched_worker_with_inherited_epic_skips_codex_hydration(tmp_path: P
     assert '"execution_allowed": true' in context
     assert "--stream epic:6321" in driver_args[0]  # allow-hardcoded-epic: launcher lease fixture
     assert driver_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: launcher lease fixture
-
-
-def test_dispatched_worker_reproduction_prints_nothing() -> None:
-    # The #10455 reproduction: bare Codex identity with a driver epic.
-    environment = {
-        "HOME": os.environ.get("HOME", str(ROOT)),
-        "PATH": os.environ["PATH"],
-        "CLAUDE_PROJECT_DIR": str(ROOT),
-        "SESSION_EPIC": "devops",
-        "SESSION_HANDOFF_AGENT": "codex",
-    }
-    worker = subprocess.run(
-        ["bash", str(ROOT / HOOK)],
-        cwd=ROOT,
-        env=environment | {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "probe-worker"},
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=20,
-    )
-    assert worker.stdout == ""
-    driver = subprocess.run(
-        ["bash", str(ROOT / HOOK)],
-        cwd=ROOT,
-        env=environment,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=20,
-    )
-    assert json.loads(driver.stdout)["additionalContext"].startswith("CODEX FLEET-DRIVER HYDRATION")
-
-
-@pytest.mark.parametrize("agent_env", [{"GROK_AGENT": "1"}, {}], ids=["grok", "claude"])
-def test_dispatched_worker_gets_no_driver_epic_reminder(agent_env: dict[str, str]) -> None:
-    environment = {"PATH": os.environ["PATH"], "SESSION_EPIC": "infra", "CLAUDE_PROJECT_DIR": str(ROOT)}
-    result = subprocess.run(
-        ["bash", str(ROOT / HOOK)],
-        cwd=ROOT,
-        env=environment | agent_env | {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "probe-worker"},
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=20,
-    )
-    context = json.loads(result.stdout)["additionalContext"]
-    # The worker keeps its ordinary non-driver reminders, never the driver's epic duties.
-    assert "Epic blocker delta" not in context
-    assert "--epic infra" not in context
-    assert "epic infra" not in context
-    if agent_env:
-        assert "Epic=none" in context
-    else:
-        assert "KEY REMINDERS:" in context

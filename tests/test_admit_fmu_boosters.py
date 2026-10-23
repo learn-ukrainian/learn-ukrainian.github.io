@@ -19,6 +19,49 @@ POINTER_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.pointer.json"
 FINGERPRINT_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
 
 
+def test_booster_translation_credit_is_bound_to_declared_episode_and_each_term():
+    """Missing per-term provenance must not erase an explicitly declared episode."""
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    for episode in EPISODES_DATA:
+        entry = build_new_atlas_entry("fixture phrase", "noun", "first / second", episode)
+        translation = entry["enrichment"]["translation"]
+        assert translation["en"] == ["first", "second"]
+        assert translation["attributions"] == [
+            {"text": term, "source": "Anna Ohoiko", "source_title": episode["title"],
+             "source_url": episode["url"], "locator": f"fmu-booster-ep-{episode['num']}"}
+            for term in ["first", "second"]
+        ]
+        assert build_new_atlas_entry("fixture phrase", "noun", "first / second", episode) == entry
+
+
+@pytest.mark.parametrize("gloss", ["", " / , ; "])
+def test_booster_unsplittable_gloss_keeps_exact_text_and_episode_credit(gloss):
+    """Empty split results must retain the original gloss and its own provenance."""
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    entry = build_new_atlas_entry("fixture phrase", "noun", gloss, EPISODES_DATA[0])
+    translation = entry["enrichment"]["translation"]
+    assert translation["en"] == [gloss]
+    assert translation["terms"] == [gloss]
+    assert translation["gloss"] == gloss
+    assert translation["attributions"] == [{
+        "text": gloss, "source": "Anna Ohoiko",
+        "source_title": "Anna Ohoiko - 5 Minute Ukrainian, Episode 4: Means of Transport",
+        "source_url": "https://www.ukrainianlessons.com/fmu4/", "locator": "fmu-booster-ep-04",
+    }]
+
+
+@pytest.mark.parametrize("missing", ["num", "url", "title"])
+def test_booster_missing_episode_metadata_cannot_invent_provenance(missing):
+    """Absent authoritative fields must fail instead of synthesizing credit."""
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    episode = {key: value for key, value in EPISODES_DATA[0].items() if key != missing}
+    with pytest.raises(KeyError, match=missing):
+        build_new_atlas_entry("fixture phrase", "noun", "first", episode)
+
+
 def test_fmu_booster_inventory_is_valid():
     assert INV_PATH.is_file(), f"Missing inventory file: {INV_PATH}"
     records = read_source_inventory(INV_PATH, project_root=PROJECT_ROOT)
@@ -125,86 +168,6 @@ def test_fmu_booster_dry_run_preserves_files():
 
     assert INV_PATH.read_bytes() == inv_bytes_before
     assert DECISIONS_PATH.read_bytes() == dec_bytes_before
-
-
-def test_fmu_booster_repeated_episodes_provenance_preserved():
-    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA
-
-    word_to_eps = {}
-    for ep in EPISODES_DATA:
-        for lemma, _pos, _gloss in ep["words"]:
-            word_to_eps.setdefault(lemma, []).append(ep["num"])
-
-    assert len(word_to_eps["касир"]) >= 2
-    assert len(word_to_eps["касирка"]) >= 2
-
-
-def test_fmu_booster_existing_entry_metadata_and_provenance_preserved():
-    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA
-
-    # Simulate an existing entry with rich provenance and custom metadata
-    existing_entry = {
-        "lemma": "касир",
-        "url_slug": "касир",
-        "pos": "noun",
-        "entry_type": "lemma",
-        "primary_source": "textbook_glossary",
-        "custom_editorial_field": "do_not_erase_me",
-        "source_provenance": [
-            {
-                "source_family": "textbook",
-                "source_id": "book-grade-07-math",
-                "source_locator": "p.123",
-                "extraction_mode": "glossary",
-            }
-        ],
-        "definition_cards": [
-            {
-                "id": "sum20",
-                "source_dict": "sum20",
-                "source_label": "СУМ-20",
-                "definition": "Той, хто приймає і видає гроші.",
-                "source_url": "https://slovnyk.ua/sum20",
-            }
-        ],
-    }
-
-    word_to_episodes = {}
-    for ep in EPISODES_DATA:
-        for lemma, pos, gloss in ep["words"]:
-            word_to_episodes.setdefault(lemma, []).append(
-                {
-                    "pos": pos,
-                    "gloss": gloss,
-                    "ep": ep,
-                }
-            )
-
-    ep_list = word_to_episodes["касир"]
-    prov_list = existing_entry["source_provenance"]
-    for item in ep_list:
-        ep = item["ep"]
-        locator = f"fmu-booster-ep-{ep['num']}"
-        ep_id = f"ohoiko-fmu-booster-ep-{ep['num']}"
-        if not any(p.get("source_locator") == locator for p in prov_list):
-            prov_list.append(
-                {
-                    "source_family": "ohoiko",
-                    "source_locator": locator,
-                    "source_id": ep_id,
-                    "source_title": f"Anna Ohoiko - 5 Minute Ukrainian Episode {int(ep['num'])}",
-                    "extraction_mode": "curated_headword",
-                    "visibility": "public",
-                    "redistributable": True,
-                }
-            )
-
-    # Verify existing fields, original provenance, and definition cards are preserved
-    assert existing_entry["custom_editorial_field"] == "do_not_erase_me"
-    assert existing_entry["primary_source"] == "textbook_glossary"
-    assert existing_entry["source_provenance"][0]["source_family"] == "textbook"
-    assert len(existing_entry["source_provenance"]) >= 3  # 1 textbook + 2 FMU
-    assert existing_entry["definition_cards"][0]["source_dict"] == "sum20"
 
 
 def test_release_publication_freezes_binary_and_scans_text(tmp_path, synthetic_opsec, publisher_transport, monkeypatch):

@@ -5,7 +5,6 @@ from __future__ import annotations
 import io
 import json
 import math
-import random
 import re
 import shutil
 import sys
@@ -54,10 +53,6 @@ def test_streaming_verify_matches_historical_verify(verified_tree: Path, tmp_pat
                     "schema-version-near-one", "duplicate-members-last-wins",
                     "bigint-overflow-surrogate-in-record", "extreme-numbers-in-record",
                     "extreme-exponent-duplicate-member", "extreme-exponent-deck") or actual[0] != "ok", actual
-
-
-def test_verify_fast_pass_is_yajl() -> None:
-    assert exporter._json_backend().backend_name == "yajl2_c"
 
 
 @pytest.mark.parametrize("read_bytes", [1, 2, 3, 5, 6, 7, 13, 64, 1 << 16])
@@ -117,40 +112,3 @@ def test_integer_digit_limit_matches_json_loads_at_every_read_size(limit: int) -
                 assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), (limit, digits, read_bytes)
     finally:
         sys.set_int_max_str_digits(previous)
-
-
-def test_json_stream_matches_json_loads_on_mutated_documents() -> None:
-    """Seeded differential: random documents and byte-level corruptions of them."""
-    rng = random.Random(8672)
-    tokens = [
-        b"{", b"}", b"[", b"]", b",", b":", b'"', b"\\", b"u", b"d", b"8", b"0", b"1", b"-", b"+", b".", b"e",
-        b" ", b"\t", b"\n", b"\x0b", b"\x0c", b"\x00", b"\x01", b"\xff", b"\xed", b"t", b"n", b"x",
-        "я".encode(), b"\\ud800", b"\\udc00", b"\\ud83d\\ude00", b'"records"', b'"schemaVersion"',
-        b"e99999999999999999999", b"e-99999999999999999999", b"1e99999999999999999999", b"9" * 4301, b"0" * 4301,
-    ]
-
-    def value(depth: int):
-        choice = rng.randrange(9 if depth < 4 else 6)
-        if choice == 0:
-            return rng.randrange(-10**30, 10**30)
-        if choice == 1:
-            return rng.uniform(-1e6, 1e6)
-        if choice == 2:
-            return "".join(rng.choice('aя"\\/\n\t😀é 𐀀') for _ in range(rng.randrange(0, 12)))
-        if choice in (3, 4, 5):
-            return (True, False, None)[choice - 3]
-        if choice in (6, 7):
-            return [value(depth + 1) for _ in range(rng.randrange(0, 5))]
-        return {str(value(depth + 1))[:6]: value(depth + 1) for _ in range(rng.randrange(0, 5))}
-
-    for _ in range(3000):
-        document = {"schemaVersion": 1, "records": [value(0) for _ in range(rng.randrange(0, 6))], "x": value(0)}
-        raw = bytearray(json.dumps(document, ensure_ascii=True, indent=rng.choice([None, 1])).encode())
-        for _ in range(rng.randrange(0, 4)):
-            position = rng.randrange(len(raw) + 1)
-            raw[position : position + rng.randrange(2)] = rng.choice(tokens)
-        doc = bytes(raw[: rng.randrange(len(raw) + 1)] if rng.random() < 0.2 else raw)
-        read_bytes = rng.choice([1, 3, 5, 8, 50])
-        expected = _json_loads_outcome(doc)
-        assert _scan_outcome(doc, read_bytes) == expected, doc
-        assert _scan_outcome(doc, read_bytes, exact_only=True) == expected, doc

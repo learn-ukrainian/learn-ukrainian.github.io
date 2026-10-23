@@ -77,14 +77,3 @@ def test_p1_predicate_and_cells_are_explicit_and_fail_closed() -> None:
     assert all(item["status"] != "not_applicable_with_evidence" or not item["protection_required"] for item in cells)
     assert any(item["role"] == "protected_historical" and item["protection_required"] for item in cells)
     assert artifact["required_cell_manifest"]["implicit_cartesian_product"] is False
-
-
-def test_p1_has_no_provider_or_dataset_side_effect_claims() -> None:
-    safety = json.loads(ARTIFACT.read_text(encoding="utf-8"))["safety"]
-    assert safety == {
-        "provider_calls": False,
-        "labels_created": False,
-        "dataset_rows_emitted": False,
-        "gold_created": False,
-        "training_performed": False,
-    }

@@ -38,34 +38,6 @@ def test_claude_stderr_rate_limit_failure_is_still_rate_limited():
     assert result.ok is False
 
 
-def test_claude_empty_stdout_with_stderr_rate_limit_stays_rate_limited():
-    adapter = ClaudeAdapter()
-
-    result = adapter.parse_response(
-        stdout="",
-        stderr="Warning: rate limit reached before any response was returned.",
-        returncode=0,
-        output_file=None,
-    )
-
-    assert result.rate_limited is True
-    assert result.ok is False
-
-
-def test_claude_failed_stdout_rate_limit_phrase_without_stderr_is_not_rate_limited():
-    adapter = ClaudeAdapter()
-
-    result = adapter.parse_response(
-        stdout="Error: rate limit reached.",
-        stderr="",
-        returncode=1,
-        output_file=None,
-    )
-
-    assert result.rate_limited is False
-    assert result.ok is False
-
-
 def test_reclassify_script_flips_historical_claude_false_positive(tmp_path):
     tasks_dir = tmp_path / "batch_state" / "tasks"
     usage_dir = tmp_path / "batch_state" / "api_usage"

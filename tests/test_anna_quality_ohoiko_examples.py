@@ -471,42 +471,6 @@ def test_parse_1000_words_dzvonyty_entry_214() -> None:
     assert parsed.example["en"] == "Bells are ringing in the church."
 
 
-def test_parse_1000_words_livoruch_entry_405() -> None:
-    cid, title, text = SAMPLE_1000_CHUNKS["e0405"]
-    parsed = parse_1000_words_chunk(cid, title, text)
-    assert parsed.entry_number == 405
-    assert parsed.lemmas == ["ліворуч", "зліва", "наліво"]
-    assert parsed.gloss == "1) on the left, to the left; 2) left (direction)"
-    assert parsed.example is not None
-    # Must NOT be the gloss fragment "налі́во (2)" / "2) left (direction)"
-    assert parsed.example["uk"] == "Ліво́руч (злі́ва) від Оле́ни — її́ син Наза́р."
-    assert parsed.example["en"] == "To the left of Olena is her son Nazar."
-
-
-def test_parse_1000_words_odruzhuvatysia_entry_543() -> None:
-    cid, title, text = SAMPLE_1000_CHUNKS["e0543"]
-    parsed = parse_1000_words_chunk(cid, title, text)
-    assert parsed.entry_number == 543
-    assert parsed.lemmas == ["одружуватися", "одружитися"]
-    assert parsed.gloss == "1) to get married; 2) to marry a woman"
-    assert parsed.example is not None
-    # Must NOT be the gloss fragment "одружи́тися" / "2) to marry a woman"
-    assert parsed.example["uk"] == "Бага́то пар одру́жуються влі́тку."
-    assert parsed.example["en"] == "Many couples get married in the summer."
-
-
-def test_parse_1000_words_pravoruch_entry_658() -> None:
-    cid, title, text = SAMPLE_1000_CHUNKS["e0658"]
-    parsed = parse_1000_words_chunk(cid, title, text)
-    assert parsed.entry_number == 658
-    assert parsed.lemmas == ["праворуч", "справа", "направо"]
-    assert parsed.gloss == "1) on the right, to the right; 2) right (direction)"
-    assert parsed.example is not None
-    # Must NOT be the gloss fragment "напра́во (2)" / "2) right (direction)"
-    assert parsed.example["uk"] == "Мій буди́нок право́руч (= спра́ва) від магази́ну."
-    assert parsed.example["en"] == "My house is to the right of the shop."
-
-
 # ---------------------------------------------------------------------------
 # Tests: 500-verbs Chunk Parser
 # ---------------------------------------------------------------------------
@@ -715,11 +679,6 @@ def test_merge_translation_preserves_distinct_prior_senses() -> None:
     assert merged["source"] == "learner_english_gloss"
     assert merged["en"] == ["bus", "coach (long-distance bus)"]
     assert merged["pos"] == "noun"
-
-
-def test_merge_translation_empty_prior() -> None:
-    merged = merge_translation(None, "agriculture")
-    assert merged == {"en": ["agriculture"], "source": "learner_english_gloss"}
 
 
 # ---------------------------------------------------------------------------

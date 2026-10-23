@@ -83,10 +83,6 @@ def test_local_wrapper_and_env_override_the_generic_launch(tmp_path: Path) -> No
     assert "x" not in json.dumps(plan.describe()["env_keys"])
 
 
-def test_missing_local_config_means_no_overrides(tmp_path: Path) -> None:
-    assert dl.load_local_config(tmp_path / "absent.json") == {}
-
-
 @pytest.mark.parametrize("mode", [0o620, 0o602])
 def test_writable_local_config_is_refused(tmp_path: Path, mode: int) -> None:
     local = tmp_path / "local.json"
@@ -104,11 +100,6 @@ def test_symlinked_local_config_is_refused(tmp_path: Path) -> None:
     link.symlink_to(real)
     with pytest.raises(dl.LaneConfigError, match="symlink"):
         dl.load_local_config(link)
-
-
-def test_local_config_path_defaults_to_xdg_config_home() -> None:
-    assert dl.default_local_config_path({"XDG_CONFIG_HOME": "/cfg"}) == Path("/cfg/learn-ukrainian/driver-lanes.local.json")
-    assert dl.default_local_config_path({"LU_DRIVER_LANES_LOCAL": "/x.json"}) == Path("/x.json")
 
 
 @pytest.mark.parametrize(

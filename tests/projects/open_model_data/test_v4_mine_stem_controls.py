@@ -31,7 +31,6 @@ from scripts.projects.open_model_data.v4_mine_stem_controls import (
     classify_semantic_context,
     classify_vidnoshennia,
     is_train_textbook,
-    load_heldout_chunk_ids,
     main,
     mine_controls,
     ocr_sanity_check,
@@ -439,14 +438,3 @@ def test_module_and_docs_have_no_private_host_paths() -> None:
     for path in paths:
         text = path.read_text(encoding="utf-8")
         assert not SSH_OR_HOST_RE.search(text), path
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl",
-)
-def test_load_heldout_chunk_ids_from_phase3() -> None:
-    ids = load_heldout_chunk_ids()
-    if not ids:
-        pytest.skip("Phase 3.0 held-out suite missing")
-    assert any(item.startswith("1-klas") or "klas" in item for item in ids)

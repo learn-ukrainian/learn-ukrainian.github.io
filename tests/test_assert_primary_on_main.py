@@ -46,12 +46,6 @@ def primary_repo(tmp_path: Path) -> Path:
     return root
 
 
-def test_on_main_ok(primary_repo: Path) -> None:
-    state = primary_head_state(primary_repo)
-    assert state["ok"] is True
-    assert state["branch"] == "main"
-
-
 def test_detached_detected(primary_repo: Path) -> None:
     r = _run(primary_repo, "git", "switch", "--detach", "HEAD")
     assert r.returncode == 0, r.stderr

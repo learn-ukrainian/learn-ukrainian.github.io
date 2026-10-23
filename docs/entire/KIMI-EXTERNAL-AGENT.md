@@ -1,5 +1,8 @@
 # Kimi Code external-agent decision and evidence
 
+Retired as a dispatch lane (OO-58, #11327). The decision below is historical
+evidence about Entire agent identity. Do not start the standalone Kimi CLI.
+
 ## Decision
 
 Use one external Entire agent only for the standalone Kimi Code CLI. Do not

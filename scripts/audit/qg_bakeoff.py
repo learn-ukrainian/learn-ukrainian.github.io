@@ -2397,11 +2397,6 @@ def _refuse_frozen_reference_offline_rewrite(output_dir: Path, manifest_path: Pa
     )
 
 
-def _refuse_frozen_reference_rescore(output_dir: Path, manifest_path: Path) -> None:
-    """Backward-compatible alias for frozen-reference guard."""
-    _refuse_frozen_reference_offline_rewrite(output_dir, manifest_path)
-
-
 def emit_lm_eval_results_from_dir(output_dir: Path, emit_dir: Path) -> list[Path]:
     """Emit lang-uk/lm_eval-shaped result files from artifacts already on disk."""
     return emit_lm_eval_results(_load_all_artifacts(output_dir), emit_dir)

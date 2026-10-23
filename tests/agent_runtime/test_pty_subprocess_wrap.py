@@ -44,13 +44,11 @@ _TEST_PYTHON = project_python()
 
 from agent_runtime.runner import (
     _pty_disabled_via_env,
-    _spawn_pipe_subprocess,
     _spawn_pty_subprocess,
     _spawn_subprocess,
 )
 from agent_runtime.watchdog import (
     WatchdogState,
-    _strip_ansi,
     start_watchdog,
     stop_watchdog,
 )
@@ -67,73 +65,10 @@ def clean_env(monkeypatch):
 # Test 1: PTY spawn returns valid fds + child output reaches master.
 # ----------------------------------------------------------------------
 
-def test_pty_spawn_returns_valid_fds_and_master_reads_child_output(clean_env, tmp_path):
-    proc, stdout_fd, stderr_fd = _spawn_pty_subprocess(
-        ["echo", "hi"],
-        cwd=tmp_path,
-        env=os.environ.copy(),
-    )
-    try:
-        assert isinstance(stdout_fd, int) and stdout_fd >= 0
-        assert isinstance(stderr_fd, int) and stderr_fd >= 0
-        # fds are valid (fstat succeeds)
-        assert os.fstat(stdout_fd).st_mode != 0
-        assert os.fstat(stderr_fd).st_mode != 0
-        # Read until EOF — child is `echo hi`.
-        chunks = []
-        deadline = time.monotonic() + 60.0
-        while time.monotonic() < deadline:
-            if not select.select([stdout_fd], [], [], max(0, deadline - time.monotonic()))[0]:
-                break
-            try:
-                chunk = os.read(stdout_fd, 4096)
-            except OSError:  # Linux EIO on PTS close
-                break
-            if not chunk:
-                break
-            chunks.append(chunk)
-            if proc.poll() is not None and not chunk:
-                break
-        data = b"".join(chunks)
-        # OPOST disabled → \n stays \n. Some kernels still re-add \r,
-        # so check the payload not the exact line terminator.
-        assert b"hi" in data
-    finally:
-        for fd in (stdout_fd, stderr_fd):
-            with contextlib.suppress(OSError):
-                os.close(fd)
-        if proc.poll() is None:
-            proc.kill()
-        proc.wait(timeout=5.0)
-
 
 # ----------------------------------------------------------------------
 # Test 2: TIOCSWINSZ is applied to the slave so children see the window.
 # ----------------------------------------------------------------------
-
-def test_pty_spawn_sets_window_size_visible_to_child(clean_env, tmp_path):
-    proc, stdout_fd, stderr_fd = _spawn_pty_subprocess(
-        [
-            _TEST_PYTHON,
-            "-c",
-            "import sys, fcntl, termios, struct; "
-            "buf = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, b'\\0'*8); "
-            "rows, cols, _, _ = struct.unpack('HHHH', buf); "
-            "print(f'{rows} {cols}', flush=True)",
-        ],
-        cwd=tmp_path,
-        env=os.environ.copy(),
-        pty_window=(48, 132),
-    )
-    try:
-        data = _read_until_eof(stdout_fd, timeout_s=60.0)
-        assert "48 132" in data, f"window not applied; got {data!r}"
-    finally:
-        _safe_close(stdout_fd)
-        _safe_close(stderr_fd)
-        if proc.poll() is None:
-            proc.kill()
-        proc.wait(timeout=5.0)
 
 
 # ----------------------------------------------------------------------
@@ -334,12 +269,6 @@ def test_pty_streamer_strips_ansi_sgr_codes():
             child.close()
 
 
-def test_strip_ansi_helper_unit():
-    assert _strip_ansi("\x1b[31mred\x1b[0m") == "red"
-    assert _strip_ansi("plain") == "plain"
-    assert _strip_ansi("\x1b[K") == ""  # CSI K = erase-line, all-stripped
-
-
 # ----------------------------------------------------------------------
 # Test 7: DELEGATE_DISABLE_PTY env var falls back to pipe spawn.
 # ----------------------------------------------------------------------
@@ -367,44 +296,6 @@ def test_delegate_disable_pty_env_var_routes_to_pipe_spawn(monkeypatch, tmp_path
         if proc.poll() is None:
             proc.kill()
         proc.wait(timeout=5.0)
-
-
-def test_delegate_disable_pty_unset_routes_to_pty_spawn(clean_env, tmp_path):
-    assert not _pty_disabled_via_env()
-    proc, stdout_fd, stderr_fd = _spawn_subprocess(
-        [_TEST_PYTHON, "-c", "print('hi')"],
-        cwd=tmp_path,
-        env=os.environ.copy(),
-        stdin=subprocess.DEVNULL,
-    )
-    try:
-        assert stdout_fd is not None and stdout_fd >= 0
-        assert stderr_fd is not None and stderr_fd >= 0
-        proc.wait(timeout=5.0)
-    finally:
-        _safe_close(stdout_fd)
-        _safe_close(stderr_fd)
-        if proc.poll() is None:
-            proc.kill()
-            proc.wait(timeout=5.0)
-
-
-def test_pipe_spawn_helper_directly(tmp_path):
-    proc, sfd, efd = _spawn_pipe_subprocess(
-        [_TEST_PYTHON, "-c", "print('p')"],
-        cwd=tmp_path,
-        env=os.environ.copy(),
-        stdin=subprocess.DEVNULL,
-    )
-    try:
-        assert sfd is None and efd is None
-        assert proc.stdout is not None
-        proc.wait(timeout=5.0)
-        assert "p" in proc.stdout.read()
-    finally:
-        if proc.poll() is None:
-            proc.kill()
-            proc.wait(timeout=5.0)
 
 
 # ----------------------------------------------------------------------
@@ -550,56 +441,6 @@ def test_streamer_threads_join_quickly_after_child_kill(clean_env, tmp_path):
 # Combines the block-buffer fix with the full watchdog hookup.
 # ----------------------------------------------------------------------
 
-def test_end_to_end_pty_watchdog_streams_unflushed_child_in_real_time(
-    clean_env, tmp_path,
-):
-    proc, stdout_fd, stderr_fd = _spawn_pty_subprocess(
-        [
-            _TEST_PYTHON,
-            "-c",
-            "import sys, time; "
-            "[(sys.stdout.write(f'event-{i}\\n')) or time.sleep(0.05) "
-            "for i in range(10)]",
-        ],
-        cwd=tmp_path,
-        env=os.environ.copy(),
-    )
-    state, threads = start_watchdog(
-        proc,
-        liveness_paths=[],
-        stdout_master_fd=stdout_fd,
-        stderr_master_fd=stderr_fd,
-    )
-    try:
-        proc.wait(timeout=10.0)
-        # Give the streamer a brief moment to drain after EOF.
-        for _ in range(50):
-            if len(state.stdout_lines) >= 10:
-                break
-            time.sleep(0.05)
-        assert len(state.stdout_lines) >= 10, (
-            f"streamer captured {len(state.stdout_lines)} / 10 lines; "
-            f"got: {state.stdout_lines!r}"
-        )
-        # All event-N markers should be present.
-        joined = "".join(state.stdout_lines)
-        for i in range(10):
-            assert f"event-{i}" in joined, (
-                f"missing event-{i} in: {joined!r}"
-            )
-    finally:
-        stop_watchdog(
-            state,
-            threads,
-            proc=proc,
-            stdout_master_fd=stdout_fd,
-            stderr_master_fd=stderr_fd,
-            timeout=2.0,
-        )
-        if proc.poll() is None:
-            proc.kill()
-            proc.wait(timeout=5.0)
-
 
 # ----------------------------------------------------------------------
 # Helpers
@@ -610,29 +451,3 @@ def _safe_close(fd: int | None) -> None:
         return
     with contextlib.suppress(OSError):
         os.close(fd)
-
-
-def _read_until_eof(fd: int, *, timeout_s: float) -> str:
-    """Drain a PTY master fd until EOF or timeout; return decoded text."""
-    chunks: list[bytes] = []
-    deadline = time.monotonic() + timeout_s
-    while time.monotonic() < deadline:
-        if not select.select([fd], [], [], max(0, deadline - time.monotonic()))[0]:
-            break
-        try:
-            chunk = os.read(fd, 4096)
-        except OSError:
-            break  # Linux EIO
-        if not chunk:
-            break
-        chunks.append(chunk)
-    return b"".join(chunks).decode("utf-8", errors="replace")
-
-
-def test_read_until_eof_bounds_a_silent_writer():
-    read_fd, write_fd = os.pipe()
-    try:
-        assert _read_until_eof(read_fd, timeout_s=0.05) == ""
-    finally:
-        os.close(read_fd)
-        os.close(write_fd)

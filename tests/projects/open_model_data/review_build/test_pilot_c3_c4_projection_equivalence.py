@@ -6,7 +6,6 @@ ingestion round trip does not prove that an unrepresented operation is on cards.
 Set LU_9821_EQUIVALENCE_RECEIPT to write the content-free host verification receipt.
 """
 
-import copy
 import hashlib
 import os
 import re
@@ -196,53 +195,3 @@ def test_synthetic_full_candidate_equivalence(synthetic_sources, module):
         direct = keyed(module.iter_candidates(ctx))
         projected = keyed(u.project(ctx) for u in module.iter_card_units(ctx))
         assert direct and projected == direct
-
-
-@pytest.mark.parametrize("damage", ("members", "group", "span", "discriminator", "snapshot"))
-def test_relation_comparison_detects_payload_corruption(synthetic_sources, damage):
-    with SnapshotReader({STORE: synthetic_sources}) as reader:
-        ctx = ComponentContext(reader, {})
-        unit = next(c3_relations.iter_card_units(ctx))
-        candidate = next(c3_relations.iter_candidates(ctx))
-        members, = candidate.response
-        assertion = {"field": candidate.operation, "subject": {"kind": "sense"},
-                     "snapshot_id": "ulif-section@sha256:" + members.citations[0].field_sha256,
-                     "value": {"members": members.text, "group": unit.group_key,
-                               "span": list(members.span) if members.span else None,
-                               "discriminator": next(v.text for v in candidate.slots if v.slot == "sense")}}
-        assert_relation_payload(assertion, candidate, unit.group_key)
-        broken = copy.deepcopy(assertion)
-        if damage == "snapshot":
-            broken["snapshot_id"] = "wrong"
-        else:
-            broken["value"][damage] = "wrong"
-        with pytest.raises(AssertionError):
-            assert_relation_payload(broken, candidate, unit.group_key)
-
-
-@pytest.mark.parametrize("damage", ("definition", "missing_quote", "reordered_quotes", "duplicate_quote", "idiom"))
-def test_idiom_comparison_detects_payload_corruption(synthetic_sources, damage):
-    with SnapshotReader({STORE: synthetic_sources}) as reader:
-        ctx = ComponentContext(reader, {})
-        candidate = next(c4_phraseology.iter_candidates(ctx))
-        definition, *quotes = candidate.response
-        idiom = next(v for v in candidate.slots if v.slot == "idiom")
-        assertion = {"snapshot_id": "ulif-section@sha256:" + definition.citations[0].field_sha256}
-        rows = [{**assertion, "subject": {"kind": "sense"}, "field": "definition_uk", "value": definition.text},
-                *({**assertion, "subject": {"kind": "sense"}, "field": "examples", "value": q.text} for q in quotes),
-                {**assertion, "subject": {"kind": "card"}, "field": "mwe_form",
-                 "value": assembly.src.nfc(assembly.unstressed_idiom(idiom.text))}]
-        assert_idiom_payload(rows, candidate)
-        broken = copy.deepcopy(rows)
-        if damage == "definition":
-            broken[0]["value"] = "wrong"
-        elif damage == "idiom":
-            broken[-1]["value"] = "wrong"
-        elif damage == "missing_quote":
-            broken.pop(1)
-        elif damage == "duplicate_quote":
-            broken.insert(1, copy.deepcopy(broken[1]))
-        else:
-            broken[1:3] = reversed(broken[1:3])
-        with pytest.raises(AssertionError):
-            assert_idiom_payload(broken, candidate)

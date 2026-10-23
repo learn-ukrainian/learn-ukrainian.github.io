@@ -260,33 +260,6 @@ def test_shared_cursor_author_policy_preserves_main_family_separation(family, ro
         assert result[0] == "excluded"
 
 
-def test_cursor_bridge_and_substitution_defaults_use_role_api(monkeypatch):
-    from scripts import delegate
-    from scripts.ai_agent_bridge import _cursor
-    from scripts.review import model_catalog
-
-    monkeypatch.setattr(model_catalog, "routing_model", lambda *args, **kwargs: "role-holder")
-    assert _cursor.cursor_default_model() == "role-holder"
-    assert delegate._lane_default_model("codex") == "role-holder"
-    assert delegate._lane_default_model("cursor") == "role-holder"
-
-
-def test_routing_model_uses_resolved_snapshot_and_rejects_unresolved_values(monkeypatch):
-    from scripts.review import model_catalog
-
-    source = validate_catalog(raw_catalog())
-    monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: source)
-    assert (
-        model_catalog.routing_model("orchestrator_seats", "cursor")
-        == source["orchestrator_seats"]["cursor"]["model_id"]
-    )
-    source["orchestrator_seats"]["cursor"]["model_id"] = "composer-2.5"
-    assert model_catalog.routing_model("orchestrator_seats", "cursor") == "composer-2.5"
-    source["orchestrator_seats"]["cursor"]["model_id"] = {"role": "missing"}
-    with pytest.raises(ModelCatalogError, match="not a resolved model"):
-        model_catalog.routing_model("orchestrator_seats", "cursor")
-
-
 def test_legacy_adapter_expands_raw_authored_references():
     from scripts.review.role_resolution import expanded_legacy_view
     from tests.review.test_model_catalog import APPROVED_BASELINE

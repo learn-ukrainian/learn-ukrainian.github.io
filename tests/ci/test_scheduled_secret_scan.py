@@ -44,7 +44,9 @@ def test_scheduled_scan_uses_a_real_range_and_leaves_pr_and_push_alone(tmp_path:
     assert scope_step["env"]["DISPATCH_HEAD_SHA"] == "${{ github.sha }}"
     assert scope_step["env"]["DISPATCH_REF"] == "${{ github.ref }}"
     assert scope_step["env"]["DEFAULT_BRANCH_REF"] == "refs/heads/${{ github.event.repository.default_branch }}"
-    assert secret_scan["timeout-minutes"] == 5
+    assert secret_scan["timeout-minutes"] == (
+        "${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}"
+    )
     scan = next(step for step in secret_scan["steps"] if "trufflehog" in str(step.get("uses") or ""))
     revision = str(scan["uses"]).split("@", 1)[1]
     assert _SHA.fullmatch(revision)

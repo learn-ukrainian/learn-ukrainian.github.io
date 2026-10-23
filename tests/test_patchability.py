@@ -73,24 +73,6 @@ def test_compute_anchor_validation_aggregates_once() -> None:
     assert result == AnchorValidation(evaluated=True, total=3, valid=2, invalid=1)
 
 
-def test_compute_anchor_validation_not_evaluated_when_inputs_none() -> None:
-    assert compute_anchor_validation(None, "some content") == AnchorValidation(
-        evaluated=False, total=0, valid=0, invalid=0
-    )
-    assert compute_anchor_validation([{"find": "x", "replace": "y"}], None) == AnchorValidation(
-        evaluated=False, total=0, valid=0, invalid=0
-    )
-
-
-def test_compute_anchor_validation_accepts_tuple_without_copy() -> None:
-    # Real call-site passes observation.parsed_fixes, which is a tuple.
-    # Regression guard: don't require list conversion at the boundary.
-    content = "tuple input works"
-    result = compute_anchor_validation(({"find": "tuple", "replace": "x"},), content)
-    assert result.evaluated is True
-    assert result.valid == 1
-
-
 # ---------- plan-level hardstop (ADR-007 preservation) ----------
 
 
@@ -102,18 +84,6 @@ def test_plan_level_finding_always_hardstops() -> None:
     status, reason = classify_patchability(finding, anchor_validation=validation)
     assert status == "plan_level_hardstop"
     assert "plan_contradiction" in reason
-
-
-def test_plan_level_hardstop_fires_before_evaluation_check() -> None:
-    # Plan-level short-circuits before we read anchor_validation.evaluated —
-    # safe even if caller passed the unevaluated default.
-    finding = {"plan_level": True, "error_class": "vocab_density"}
-    status, reason = classify_patchability(
-        finding,
-        anchor_validation=AnchorValidation(evaluated=False, total=0, valid=0, invalid=0),
-    )
-    assert status == "plan_level_hardstop"
-    assert "vocab_density" in reason
 
 
 # ---------- legacy / not-evaluated path ----------

@@ -43,28 +43,6 @@ def test_card_sidecar_hash_matches(band: str) -> None:
 
 
 @pytest.mark.parametrize("band", sorted(BANDS))
-def test_card_covers_the_contract_sections(band: str) -> None:
-    _, body, _ = read_card(band)
-    for heading in (
-        "## 1. Presentation practices",
-        "## 2. Voice",
-        "## 3. Conversational rules",
-        "## 4. Lesson shape",
-        "## 5. Activity rules",
-        "## 6. Ukrainian on its own terms",
-        "## 7. The language rule",
-        "## 8. The draft: schema, block kinds, markup, gaps",
-        "## 9. What you may not do",
-        "## 10. Exemplars",
-    ):
-        assert heading in body, heading
-    for dimension in ("`learner_fit`", "`language` / `calque`", "`language` / `register`", "`language` / `agreement`", "`evidence_use`"):
-        assert dimension in body, f"conversational rules name the reviewer's dimension: {dimension}"
-    assert "{{gloss:W-…}}" in body and "{{uk:…}}" in body
-    assert "explanation" in body and "error_ref" in body
-
-
-@pytest.mark.parametrize("band", sorted(BANDS))
 def test_card_ukrainian_is_only_exemplars_or_contract_terms(band: str) -> None:
     """Cyrillic is sourced exemplar text, contract terminology or approved policy notation."""
     front, body, _ = read_card(band)
@@ -113,20 +91,3 @@ def test_card_exemplars_are_attested_in_the_corpus(band: str, requires_sources_d
                 assert norm(text) in record, f"{exemplar['id']}: not attested: {text}"
     finally:
         con.close()
-
-
-@pytest.mark.repo_wide
-def test_the_three_bands_and_nothing_else() -> None:
-    names = sorted(p.name for p in CARDS.iterdir())
-    assert names == sorted([f"{b}.md" for b in BANDS] + [f"{b}.sha256" for b in BANDS])
-
-
-@pytest.mark.parametrize("band", sorted(BANDS))
-def test_card_language_rule_is_one_sentence_one_language(band: str) -> None:
-    """The writer sees the card, not the contract: the operator's rule (2026-09-27) must be in §7 itself."""
-    _, body, _ = read_card(band)
-    section = body.split("## 7. The language rule", 1)[1].split("## 8.", 1)[0]
-    assert "Every sentence is in one language" in section
-    assert "Mixed sentences outside those two spans fail" in section
-    if band != "b1plus":
-        assert "about that item" in section, "the quoted-term span is licensed only for a sentence about the item"

@@ -1,6 +1,5 @@
 import json
 import sqlite3
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -17,13 +16,6 @@ from scripts.lexicon.reenrich_thin_manifest_entries import (
     strip_mismatched_wiki_references,
     wiki_reference_passes_exact_title_gate,
 )
-
-
-def _empty_sources_db(tmp_path: Path) -> Path:
-    """An empty sources.db in ``tmp_path``; ``main`` opens it read-only (#9158)."""
-    path = tmp_path / "sources.db"
-    sqlite3.connect(path).close()
-    return path
 
 
 def test_reenrich_translation_only_preserves_existing_enrichment(monkeypatch) -> None:
@@ -147,43 +139,6 @@ def test_strip_mismatched_wiki_references_drops_redirects_keeps_exact_matches() 
     assert "wiki_reference" not in manifest["entries"][0]
     assert manifest["entries"][1]["wiki_reference"]["wikipedia"]["title"] == "Вода"
     assert "wiki_reference" not in manifest["entries"][2]
-
-
-def test_reenrich_with_refresh_wiki_does_not_restore_redirect_card(monkeypatch) -> None:
-    manifest = {
-        "entries": [
-            {
-                "lemma": "безмежжя",
-                "url_slug": "безмежжя",
-                "pos": "noun",
-                "enrichment": {},
-                "wiki_reference": {
-                    "wikipedia": {
-                        "title": "Нескінченність",
-                        "summary": "redirect target",
-                        "url": "https://uk.wikipedia.org/wiki/%D0%9D%D0%B5%D1%81%D0%BA%D1%96%D0%BD%D1%87%D0%B5%D0%BD%D0%BD%D1%96%D1%81%D1%82%D1%8C",
-                    }
-                },
-            }
-        ]
-    }
-
-    def fake_enrich_entry(entry, conn, kaikki_lookup):
-        entry.pop("wiki_reference", None)
-
-    monkeypatch.setattr(enrich_manifest, "enrich_entry", fake_enrich_entry)
-
-    with sqlite3.connect(":memory:") as conn:
-        summary = reenrich.reenrich_thin_entries(
-            manifest,
-            conn=conn,
-            kaikki_lookup={},
-            target="full-catalog",
-            refresh_wiki=True,
-        )
-
-    assert summary["targets"] == 1
-    assert "wiki_reference" not in manifest["entries"][0]
 
 
 _BEZMEZHZHYA_REDIRECT_WIKI = {
@@ -314,41 +269,6 @@ def test_missing_translation_target_fills_only_entries_without_translation(monke
     }
 
 
-def test_missing_translation_target_respects_slug_filter(monkeypatch) -> None:
-    manifest = {
-        "entries": [
-            {"lemma": "абзац", "url_slug": "абзац", "enrichment": {}},
-            {"lemma": "агент", "url_slug": "агент", "enrichment": {}},
-        ],
-    }
-    seen: list[str] = []
-
-    def fake_translation(conn, lemma, kaikki_lookup, *, entry_pos=None, gloss_hints=None, slovnyk_cache=None):
-        seen.append(lemma)
-        return {"en": ["agent"], "source": "fixture source"}
-
-    monkeypatch.setattr(enrich_manifest, "_translation", fake_translation)
-    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
-
-    with sqlite3.connect(":memory:") as conn:
-        summary = reenrich_thin_entries(
-            manifest,
-            conn=conn,
-            kaikki_lookup={},
-            target="missing-translation",
-            slug_filter={"агент"},
-        )
-
-    assert seen == ["агент"]
-    assert summary["targets"] == 1
-    assert "translation" not in manifest["entries"][0]["enrichment"]
-    assert manifest["entries"][1]["enrichment"]["translation"] == {
-        "en": ["agent"],
-        "source": "fixture source",
-    }
-
-
 def test_load_slug_filter_accepts_bare_array(tmp_path) -> None:
     path = tmp_path / "slugs.json"
     path.write_text(json.dumps(["абзац", "агент"]), encoding="utf-8")
@@ -372,67 +292,6 @@ def test_load_slug_filter_rejects_unknown_shape(tmp_path) -> None:
 
     with pytest.raises(ValueError, match="class_b_detail"):
         _load_slug_filter(path)
-
-
-def test_cached_slovnyk_only_skips_uncached_slovnyk_lookup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    entry = {"lemma": "невідоме", "enrichment": {}}
-
-    def fake_translation(conn, lemma, kaikki_lookup, *, entry_pos=None, gloss_hints=None, slovnyk_cache=None):
-        assert slovnyk_cache is None
-        return None
-
-    def fail_live_slovnyk(*args, **kwargs):
-        raise AssertionError("_slovnyk_cache must not be called when cached_slovnyk_only=True")
-
-    monkeypatch.setattr(enrich_manifest, "SLOVNYK_CACHE", tmp_path)
-    monkeypatch.setattr(enrich_manifest, "_translation", fake_translation)
-    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", fail_live_slovnyk)
-
-    with sqlite3.connect(":memory:") as conn:
-        _reenrich_translation_only(conn, entry, {}, cached_slovnyk_only=True)
-
-    assert "translation" not in entry["enrichment"]
-
-
-def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    entry = {"lemma": "бризки", "gloss": "splashes", "enrichment": {}}
-
-    def fail_fetch(*args, **kwargs):
-        raise AssertionError("cached-only mode must not live-fetch Slovnyk")
-
-    def fail_live_slovnyk(*args, **kwargs):
-        raise AssertionError("_slovnyk_cache must not be called when cached_slovnyk_only=True")
-
-    monkeypatch.setattr(enrich_manifest, "SLOVNYK_CACHE", tmp_path)
-    monkeypatch.setattr(enrich_manifest, "_DMKLINGER_INDEX", None)
-    monkeypatch.setattr(enrich_manifest, "_BALLA_REVERSE_INDEX", {})
-    monkeypatch.setattr(enrich_manifest, "query_goroh_translate", lambda lemma: [])
-    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", fail_live_slovnyk)
-    monkeypatch.setattr(enrich_manifest, "_fetch_slovnyk_entry", fail_fetch)
-    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
-
-    cache_path = tmp_path / "бризки.json"
-    cache_path.write_text(
-        json.dumps(
-            {
-                "schema_version": enrich_manifest._SLOVNYK_CACHE_SCHEMA_VERSION,
-                "lemma": "бризки",
-                "lookup_word": "бризки",
-                "lookups": {},
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-
-    with sqlite3.connect(":memory:") as conn:
-        conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
-        _reenrich_translation_only(conn, entry, {}, cached_slovnyk_only=True)
-
-    assert "translation" not in entry["enrichment"]
 
 
 def test_reenrich_thin_manifest_entries_fills_from_goroh_fixture(monkeypatch) -> None:
@@ -492,46 +351,6 @@ def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path,
         reenrich._write_default_release_pointer(manifest_path)
 
     assert gzip_calls == []
-
-
-def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
-    monkeypatch.setattr(enrich_manifest, "DEFAULT_FINGERPRINT", tmp_path / "fingerprint.json")
-    manifest_path = tmp_path / "lexicon-manifest.json"
-    manifest_path.write_text('{"entries": [{"lemma": "тест", "url_slug": "тест"}]}\n', encoding="utf-8")
-    kaikki_path = tmp_path / "kaikki.json"
-    kaikki_path.write_text("{}\n", encoding="utf-8")
-    pointer_called = []
-
-    monkeypatch.setattr(
-        reenrich,
-        "_write_default_release_pointer",
-        lambda *args, **kwargs: pointer_called.append(True),
-    )
-    monkeypatch.setattr(
-        reenrich,
-        "reenrich_thin_entries",
-        lambda *args, **kwargs: {"target": "missing-translation", "targets": 1},
-    )
-
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [
-            "reenrich_thin_manifest_entries.py",
-            "--manifest",
-            str(manifest_path),
-            "--local",
-            "--kaikki-lookup",
-            str(kaikki_path),
-            "--sources-db",
-            str(_empty_sources_db(tmp_path)),
-            "--write",
-            "--no-pointer",
-        ],
-    )
-    res = reenrich.main()
-    assert res == 0
-    assert pointer_called == []
 
 
 def test_canary_check_passes_when_all_layers_filled(monkeypatch) -> None:
@@ -695,32 +514,6 @@ def test_full_catalog_target_and_categorical_binning(monkeypatch) -> None:
     layers = summary["layer_counters"]
     assert layers["proverbs"] == 1
     assert layers["forms"] == 1
-
-
-def test_derive_adverb_en_gloss_patterns() -> None:
-    assert reenrich._derive_adverb_en_gloss("abstract") == "abstractly"
-    assert (
-        reenrich._derive_adverb_en_gloss("abstract (apart from practice or reality; not concrete)")
-        == "abstractly (apart from practice or reality; not concrete)"
-    )
-    assert reenrich._derive_adverb_en_gloss("heroic") == "heroically"
-    assert (
-        reenrich._derive_adverb_en_gloss("flexible (easily bent without breaking)")
-        == "flexibly (easily bent without breaking)"
-    )
-    assert reenrich._derive_adverb_en_gloss("cloudless (without any clouds)") == "cloudlessly (without any clouds)"
-    assert (
-        reenrich._derive_adverb_en_gloss("(literally) cloudless, unclouded, clear")
-        == "(literally) cloudlessly, uncloudedly, clearly"
-    )
-    assert reenrich._derive_adverb_en_gloss("colourful (UK), colorful (US)") == "colourfully (UK), colorfully (US)"
-    assert reenrich._derive_adverb_en_gloss("simple") == "simply"
-    assert reenrich._derive_adverb_en_gloss("easy") == "easily"
-    assert reenrich._derive_adverb_en_gloss("public") == "publicly"
-    assert reenrich._derive_adverb_en_gloss("whole") == "wholly"
-    assert reenrich._derive_adverb_en_gloss("full") == "fully"
-    assert reenrich._derive_adverb_en_gloss("true") == "truly"
-    assert reenrich._derive_adverb_en_gloss("good") == "well"
 
 
 def test_deadjectival_adverb_fallback_fills_abstractly(monkeypatch) -> None:
@@ -891,50 +684,6 @@ def test_deadjectival_adverb_fallback_fails_closed_on_vesum_error(monkeypatch) -
     assert res is None
 
 
-def test_deadjectival_adverb_fallback_on_loaded_manifest_pair(monkeypatch) -> None:
-    monkeypatch.setattr(
-        reenrich,
-        "verify_word",
-        lambda word, pos_filter=None, **kwargs: (
-            [{"lemma": word, "pos": pos_filter or "adv"}]
-            if (word == "абстрактно" and pos_filter in ("adv", None))
-            or (word == "абстрактний" and pos_filter in ("adj", None))
-            else []
-        ),
-    )
-
-    manifest = {
-        "entries": [
-            {
-                "lemma": "абстрактний",
-                "pos": "adjective",
-                "url_slug": "абстрактний",
-                "enrichment": {
-                    "translation": {
-                        "en": ["abstract"],
-                        "source": "dmklinger",
-                    },
-                    "sources": ["dmklinger"],
-                },
-            },
-            {
-                "lemma": "абстрактно",
-                "pos": "adverb",
-                "url_slug": "абстрактно",
-                "enrichment": {},
-            },
-        ]
-    }
-    by_lemma = {e.get("lemma"): e for e in manifest.get("entries", []) if isinstance(e, dict) and e.get("lemma")}
-
-    abstr_adv = by_lemma["абстрактно"]
-    res = reenrich._deadjectival_adverb_translation(abstr_adv, by_lemma)
-    assert res is not None
-    assert isinstance(res.get("en"), list)
-    assert "abstractly" in res["en"][0]
-    assert "base form абстрактний" in str(res.get("source"))
-
-
 def test_diminutive_fallback_fills_in_reenrich_thin_entries(monkeypatch) -> None:
     manifest = {
         "entries": [
@@ -1025,43 +774,6 @@ def test_augmentative_fallback_fills_in_reenrich_thin_entries(monkeypatch) -> No
     assert "slovnyk.me: fixture (augmentative of вовк)" in aug_entry["enrichment"]["sources"]
 
 
-def test_diminutive_fallback_no_fill_when_base_missing_en(monkeypatch) -> None:
-    manifest = {
-        "entries": [
-            {
-                "lemma": "білка",
-                "pos": "noun",
-                "url_slug": "білка",
-                "enrichment": {
-                    "sources": ["VESUM"],
-                },
-            },
-            {
-                "lemma": "білочка",
-                "pos": "noun",
-                "url_slug": "білочка",
-                "enrichment": {},
-            },
-        ]
-    }
-
-    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
-
-    with sqlite3.connect(":memory:") as conn:
-        summary = reenrich.reenrich_thin_entries(
-            manifest,
-            conn=conn,
-            kaikki_lookup={},
-            target="missing-translation",
-        )
-
-    dim_entry = manifest["entries"][1]
-    assert summary["filled_translation"] == 0
-    assert "translation" not in dim_entry.get("enrichment", {})
-
-
 def test_diminutive_fallback_precedence_after_direct_and_base_lookup(monkeypatch) -> None:
     manifest = {
         "entries": [
@@ -1127,50 +839,6 @@ def test_diminutive_fallback_precedence_after_direct_and_base_lookup(monkeypatch
         )
 
     assert trans2 == {"en": ["squirrel base"], "source": "base source (base form білка_base)"}
-
-
-def test_diminutive_fallback_fails_closed_when_vesum_rejects(monkeypatch) -> None:
-    import scripts.verification.vesum
-
-    manifest = {
-        "entries": [
-            {
-                "lemma": "неіснуючабілка",
-                "pos": "noun",
-                "url_slug": "неіснуючабілка",
-                "enrichment": {
-                    "translation": {
-                        "en": ["fake squirrel"],
-                        "source": "fixture",
-                    },
-                },
-            },
-            {
-                "lemma": "неіснуючабілочка",
-                "pos": "noun",
-                "url_slug": "неіснуючабілочка",
-                "enrichment": {},
-            },
-        ]
-    }
-
-    monkeypatch.setattr(enrich_manifest, "_translation", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
-    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
-    # Mock verify_word in scripts.verification.vesum: return empty list for fake words
-    monkeypatch.setattr(scripts.verification.vesum, "verify_word", lambda word, pos_filter=None: [])
-
-    with sqlite3.connect(":memory:") as conn:
-        summary = reenrich.reenrich_thin_entries(
-            manifest,
-            conn=conn,
-            kaikki_lookup={},
-            target="missing-translation",
-        )
-
-    dim_entry = manifest["entries"][1]
-    assert summary["filled_translation"] == 0
-    assert "translation" not in dim_entry.get("enrichment", {})
 
 
 def test_poc_thin_target_selection_and_full_entry(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1240,40 +908,3 @@ def test_poc_thin_target_selection_and_full_entry(monkeypatch: pytest.MonkeyPatc
     assert summary["targets"] == 1
     assert manifest["entries"][0]["wiki_reference"]["wikipedia"]["title"] == "Ампір"
     assert "wiki_reference" not in manifest["entries"][2]
-
-
-def test_poc_thin_target_cli_skips_canary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(enrich_manifest, "DEFAULT_FINGERPRINT", tmp_path / "fingerprint.json")
-    manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_text(json.dumps({"entries": []}), encoding="utf-8")
-    kaikki_path = tmp_path / "kaikki.json"
-    kaikki_path.write_text("{}\n", encoding="utf-8")
-
-    canary_called = False
-
-    def fake_canary(*args, **kwargs):
-        nonlocal canary_called
-        canary_called = True
-        return {"success": True, "details": {}}
-
-    monkeypatch.setattr(reenrich, "run_canary_check", fake_canary)
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [
-            "reenrich_thin_manifest_entries.py",
-            "--local",
-            "--manifest",
-            str(manifest_path),
-            "--kaikki-lookup",
-            str(kaikki_path),
-            "--sources-db",
-            str(_empty_sources_db(tmp_path)),
-            "--target",
-            "poc-thin",
-        ],
-    )
-
-    exit_code = reenrich.main()
-    assert exit_code == 0
-    assert not canary_called

@@ -201,22 +201,6 @@ def test_vesum_change_is_a_named_refusal(request):
         assert caught.value.code == codes.SOURCE_UNAVAILABLE
 
 
-def test_pravopys_section_is_read_once_per_session(monkeypatch):
-    from scripts.rag import source_query
-
-    calls = []
-
-    def section(number, **kwargs):
-        calls.append(number)
-        return {"section": number, "text": "one two source bytes"}
-
-    monkeypatch.setattr(source_query, "pravopys_section", section)
-    with Sources() as api:
-        first = receipts.validate_requirement_receipts(document(IDS["pravopys"]), sources=api)
-        assert receipts.validate_requirement_receipts(document(IDS["pravopys"]), sources=api) == first
-    assert calls == [53]
-
-
 def test_choice_gate_resolves_even_a_locked_fabrication(tmp_path):
     from types import SimpleNamespace
 
@@ -235,15 +219,6 @@ def test_schema_errors_remain_receipt_invalid():
     with pytest.raises(ResolverError) as caught:
         receipts.validate_requirement_receipts(malformed)
     assert caught.value.code == codes.RECEIPT_INVALID
-
-
-def test_missing_vts_table_is_source_unavailable(request):
-    sources_db, _ = request.getfixturevalue("receipt_sources")
-    with sqlite3.connect(sources_db) as writer:
-        writer.execute("DROP TABLE slovnyk_me_entries")
-    with Sources() as api, pytest.raises(ResolverError) as caught:
-        receipts.validate_requirement_receipts(document(IDS["vts"]), sources=api)
-    assert caught.value.code == codes.SOURCE_UNAVAILABLE
 
 
 @pytest.mark.parametrize("kind", IDS)

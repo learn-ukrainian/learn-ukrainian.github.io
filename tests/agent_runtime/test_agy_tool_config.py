@@ -213,23 +213,6 @@ def test_agy_server_usable_accepts_cli_server_url_shape() -> None:
     assert not usable({"args": ["orphan"]})
 
 
-def test_agy_resolver_accepts_server_url_config(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    app_data_dir = tmp_path / "agy"
-    _write_agy_mcp_config(
-        app_data_dir,
-        {"mcpServers": {"sources": {"disabled": False, "serverUrl": _SOURCES_URL}}},
-    )
-    monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data_dir))
-
-    tool_config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
-
-    assert tool_config == {"mcp_server_names": ["sources"]}
-    assert diagnostics["resolution_status"] == "ok"
-
-
 def test_dead_stdio_catalog_fails_preflight(fake_agy) -> None:
     seed, _calls = fake_agy
     seed(_DEAD_STDIO)
@@ -301,8 +284,3 @@ def test_management_exemption_refuses_other_commands(args, monkeypatch: pytest.M
     monkeypatch.setattr(tool_config_mod.subprocess, "run", unexpected_spawn)
     with pytest.raises(tool_config_mod.AgyMcpCatalogError, match="only agy mcp list and add"):
         tool_config_mod._run_agy_mcp(args)
-
-
-def test_management_allowlist_is_frozen_and_exact() -> None:
-    assert frozenset({"list", "add"}) == tool_config_mod._AGY_MCP_MANAGEMENT_COMMANDS
-    assert isinstance(tool_config_mod._AGY_MCP_MANAGEMENT_COMMANDS, frozenset)

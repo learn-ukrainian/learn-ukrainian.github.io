@@ -281,18 +281,6 @@ def test_invalid_withdrawals_refuse(release_input, withdrawals):
         release(release_input, withdrawals=withdrawals)
 
 
-def test_cli_release_and_withdrawal(release_input, tmp_path, capsys):
-    source = tmp_path / "cards.json"
-    source.write_text(json.dumps({"cards": {release_input.card["card_id"]: release_input.card}}))
-    common = ["--cards", str(source), "--format", "json"]
-    assert projection.main([*common, "--version", "v0.1.0-pilot", "--output", str(tmp_path / "release")]) == 0
-    assert json.loads(capsys.readouterr().out)["field_citation_count"] == 2
-    assert projection.main([*common, "--version", "v0.1.1-pilot", "--output", str(tmp_path / "replacement"),
-                            "--previous-version", "v0.1.0-pilot", "--withdraw-source", "ulif",
-                            "--justification", "Removal request"]) == 0
-    assert (tmp_path / "replacement/withdrawal-notice.json").is_file()
-
-
 @pytest.mark.parametrize("shape", ["list", "map", "single", "jsonl", "directory", "assembly-directory"])
 def test_input_formats(tmp_path, shape):
     card = {"card_id": "fixture", "assertions": []}

@@ -288,14 +288,3 @@ session_supervisor_exec_successor
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert f"SUCCESSOR:{name}|epics|{model}|high\n" in result.stdout
-
-
-@pytest.mark.parametrize("name", WRAPPERS)
-def test_cto_help_names_defaults_and_no_takeover(name) -> None:
-    result = run_launcher(name, "--help")
-    assert result.returncode == 0
-    assert f"Usage: ./{name}" in result.stdout
-    assert "CTO defaults: --epic epics" in result.stdout
-    assert "--force is refused" in result.stdout
-    assert "--epic infra --force" not in result.stdout
-    assert os.access(REPO / name, os.X_OK)

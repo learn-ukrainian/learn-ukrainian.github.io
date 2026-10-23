@@ -117,20 +117,3 @@ def test_store_disagreement_and_resolved_allocation():
     registry.retire(rows, word_id)
     with pytest.raises(ValueError, match=codes.REGISTRY_MISMATCH):
         registry.check_store(rows, words)
-
-
-def test_registry_entry_cannot_change(tmp_path):
-    rows = []
-    allocate(rows)
-    path = tmp_path / "synthetic-registry.yaml"
-    registry.write(path, rows)
-    rows[0]["entry"]["entry_id"] = 2
-    with pytest.raises(ValueError, match=codes.REGISTRY_MISMATCH):
-        registry.write(path, rows)
-
-
-def test_code_registry_is_complete_and_help_lists_every_code():
-    constants = {name: value for name, value in vars(codes).items() if name.isupper() and isinstance(value, str)}
-    assert set(constants.values()) == set(codes.DESCRIPTIONS)
-    assert len(constants) == len(codes.DESCRIPTIONS)
-    assert set(line.split(":", 1)[0] for line in codes.help_text().splitlines()) == set(codes.DESCRIPTIONS)

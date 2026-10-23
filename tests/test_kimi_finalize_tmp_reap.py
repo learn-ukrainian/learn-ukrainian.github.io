@@ -19,6 +19,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.test_delegate import isolated_finalization_context  # noqa: F401
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate

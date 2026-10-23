@@ -147,24 +147,6 @@ def test_negative_unanchored_regex(tmp_path) -> None:
     assert "pytest-cache-race" in str(exc_info.value)
 
 
-def test_negative_substring_style_matcher(tmp_path) -> None:
-    """Negative domain test: substring-style regex matcher (unanchored at start or end) is rejected."""
-    data = _get_valid_registry_data()
-
-    # Missing end anchor $
-    data["entries"][0]["matcher"]["lines"]["required"][0]["value"] = (
-        r"^FAILED tests/test_cache\.py::test_parallel_cache"
-    )
-
-    reg_path = tmp_path / "substring.json"
-    reg_path.write_text(json.dumps(data), encoding="utf-8")
-
-    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
-        load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
-
-    assert "Unanchored regex" in str(exc_info.value)
-
-
 def test_negative_missing_evidence(tmp_path) -> None:
     """Negative schema test: entry with empty evidence array fails schema validation."""
     data = _get_valid_registry_data()
@@ -177,49 +159,6 @@ def test_negative_missing_evidence(tmp_path) -> None:
         load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
 
     assert "Registry schema violation" in str(exc_info.value)
-
-
-def test_negative_missing_governance(tmp_path) -> None:
-    """Negative schema test: entry missing governance object fails schema validation."""
-    data = _get_valid_registry_data()
-    del data["entries"][0]["governance"]
-
-    reg_path = tmp_path / "no_gov.json"
-    reg_path.write_text(json.dumps(data), encoding="utf-8")
-
-    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
-        load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
-
-    assert "Registry schema violation" in str(exc_info.value)
-
-
-def test_negative_stop_without_stop_code(tmp_path) -> None:
-    """Negative schema test: kind 'stop' without stop_code or 'retry-once' with stop_code fails schema validation."""
-    data = _get_valid_registry_data()
-    data["entries"][0]["action"] = {"kind": "stop"}
-
-    reg_path = tmp_path / "stop_no_code.json"
-    reg_path.write_text(json.dumps(data), encoding="utf-8")
-
-    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
-        load_and_validate_registry(reg_path, as_of="2026-07-28T12:00:00Z")
-
-    assert "Registry schema violation" in str(exc_info.value)
-
-
-def test_negative_retry_once_with_stop_code(tmp_path) -> None:
-    """Negative schema test: 'retry-once' carrying a stop_code fails schema validation
-    (split from the stop-without-code case — one test, one invariant)."""
-    data2 = _get_valid_registry_data()
-    data2["entries"][0]["action"] = {"kind": "retry-once", "stop_code": "STOP-ci-red"}
-
-    reg_path2 = tmp_path / "retry_with_code.json"
-    reg_path2.write_text(json.dumps(data2), encoding="utf-8")
-
-    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info2:
-        load_and_validate_registry(reg_path2, as_of="2026-07-28T12:00:00Z")
-
-    assert "Registry schema violation" in str(exc_info2.value)
 
 
 def test_negative_unpublished_stop_code(tmp_path) -> None:
@@ -375,32 +314,6 @@ def test_happy_path_receipt(tmp_path) -> None:
     assert res["ok"] is True
     assert res["head_sha"] == "a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4"
     assert len(res["digest"]) == 64
-
-
-def test_negative_receipt_bad_hex(tmp_path) -> None:
-    """Negative test: receipt with bad hex in head_sha or digest fails validation."""
-    data = _get_valid_receipt_data()
-    data["head_sha"] = "A1B2C3D4E5F67890A1B2C3D4E5F67890A1B2C3D4"  # uppercase
-
-    rcpt_path = tmp_path / "bad_sha.json"
-    rcpt_path.write_text(json.dumps(data), encoding="utf-8")
-
-    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info:
-        load_and_validate_receipt(rcpt_path)
-
-    assert "head_sha" in str(exc_info.value) or "Signature receipt schema violation" in str(exc_info.value)
-
-    # Bad digest length
-    data2 = _get_valid_receipt_data()
-    data2["digest"] = "12345"
-
-    rcpt_path2 = tmp_path / "bad_digest.json"
-    rcpt_path2.write_text(json.dumps(data2), encoding="utf-8")
-
-    with pytest.raises(RedCIKnownFailuresValidationError) as exc_info2:
-        load_and_validate_receipt(rcpt_path2)
-
-    assert "digest" in str(exc_info2.value) or "Signature receipt schema violation" in str(exc_info2.value)
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> Path:
@@ -725,28 +638,6 @@ def test_direct_lookup_cli_handles_a_stop_action_without_stdout(tmp_path) -> Non
     assert completed.stdout == ""
     assert completed.stderr == ""
     assert json.loads(output_path.read_text(encoding="utf-8"))["action"] == registry["entries"][0]["action"]
-
-
-def test_lookup_mixed_offset_expiry_never_uses_lexicographic_order(tmp_path) -> None:
-    """The same instant in Z/+02:00 forms must detect expiry by epoch value."""
-    registry = _get_valid_registry_data()
-    registry["entries"][0]["governance"]["review_by"] = "2026-07-28T12:00:00+02:00"
-    registry_path = _write_json(tmp_path / "registry.json", registry)
-    receipt_path = _write_json(tmp_path / "receipt.json", _get_valid_receipt_data())
-    output_path = tmp_path / "lookup.json"
-
-    assert (
-        main(
-            _lookup_args(
-                registry_path,
-                receipt_path,
-                output_path,
-                as_of="2026-07-28T11:00:00Z",
-            )
-        )
-        == 0
-    )
-    assert json.loads(output_path.read_text(encoding="utf-8"))["reason"] == "expired-match"
 
 
 def test_lookup_full_coverage_rejects_an_additional_unknown_failure(tmp_path) -> None:

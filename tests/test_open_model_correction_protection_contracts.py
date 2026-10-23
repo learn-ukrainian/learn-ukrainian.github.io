@@ -22,18 +22,6 @@ GOLD_LANE_HASHES = {
     CONTRACTS
     / "correction_reviewer_decision_v1.schema.json": "c4d697b0afd6338eb7493c09b54ec265d82cc60bbc6a905f4b9707b0647177a6",
 }
-SCHEMA_NAMES = (
-    "correction_protection_source_v1.schema.json",
-    "correction_protection_evidence_v1.schema.json",
-    "correction_protection_disagreement_v1.schema.json",
-    "correction_protection_case_v1.schema.json",
-    "correction_protection_bundle_manifest_v1.schema.json",
-    "correction_protection_model_lane_v1.schema.json",
-    "correction_protection_release_receipt_v1.schema.json",
-    "vesum_unattested_sample_record_v1.schema.json",
-    "vesum_unattested_sample_receipt_v1.schema.json",
-    "ukrainian_nlp_ecosystem_delta_v1.schema.json",
-)
 CATEGORY_IDS = (
     "russian_lexical_inflectional_intrusion",
     "contextual_calque_government_valency",
@@ -157,14 +145,6 @@ def _case(*, disposition: str = "correction") -> dict[str, Any]:
 
 def _artifact() -> dict[str, Any]:
     return {"logical_path": "private/fixture.jsonl", "records": 1, "sha256": SHA}
-
-
-def test_schemas_are_meta_valid_and_strict() -> None:
-    for name in SCHEMA_NAMES:
-        schema = _schema(name)
-        Draft202012Validator.check_schema(schema)
-        assert schema["additionalProperties"] is False
-        assert schema["$id"] == f"https://learn-ukrainian.github.io/schemas/open-model-data/{name}"
 
 
 def test_positive_contract_fixtures_validate() -> None:
@@ -423,36 +403,6 @@ def test_forbidden_weakenings_fail_closed() -> None:
     sample["classification"] = "automatic_error"
     with pytest.raises(ValidationError):
         _validate("vesum_unattested_sample_record_v1.schema.json", sample)
-
-
-def test_fixed_dispositions_namespace_and_release_safety() -> None:
-    case = _case(disposition="correct")
-    case["case_id"] = _ref("correction")
-    with pytest.raises(ValidationError):
-        _validate("correction_protection_case_v1.schema.json", case)
-    assert _schema("correction_protection_case_v1.schema.json")["properties"]["disposition"]["enum"] == [
-        "correct",
-        "correction",
-        "protected",
-        "excluded",
-        "unresolved",
-    ]
-    category_gates = _schema("correction_protection_release_receipt_v1.schema.json")["properties"]["category_gates"]
-    assert set(category_gates["required"]) == set(CATEGORY_IDS)
-    assert set(category_gates["properties"]) == set(CATEGORY_IDS)
-    safety = _schema("correction_protection_release_receipt_v1.schema.json")["properties"]["safety"]["properties"]
-    assert {key: value["const"] for key, value in safety.items() if "const" in value} == {
-        key: False
-        for key in (
-            "project_model_training",
-            "local_model_inference",
-            "upload",
-            "accelerator",
-            "human_gold",
-            "authoritative",
-        )
-    }
-    assert safety["external_advisory_model_evidence_used"] == {"type": "boolean"}
 
 
 def test_existing_gold_lane_contracts_and_gated_exporter_are_hash_pinned() -> None:

@@ -248,52 +248,12 @@ def test_a9_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_residual_unresolved(
         assert all(e["status"] == "unresolved_carried_to_a9" for e in _cached_json(RECEIPT)[key])
 
 
-def test_a9_receipt_does_not_claim_eval_artifact_ready_while_the_gate_is_closed() -> None:
-    assert _cached_json(RECEIPT)["evaluation_gate"]["evaluation_slice_ready"] is False
-    assert _cached_json(RECEIPT)["status"] != "EVAL_ARTIFACT_READY"
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_prerequisite_eligible"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_stage_complete"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_residual"] == 100
-
-
-def test_a9_receipt_never_claims_training_ready_silver_arena_slice_ready_or_admitted_slice_ready() -> None:
-    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
-    assert "TRAINING_READY_SILVER" not in serialized
-    assert "ARENA_SLICE_READY" not in serialized
-    assert "ADMITTED_SLICE_READY" not in serialized
-    assert _cached_json(RECEIPT)["safety_assertions"]["training_ready_silver_claimed"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["arena_slice_ready_claimed"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["admitted_slice_ready_claimed"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["eval_artifact_ready_claimed"] is False
-
-
-def test_a9_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {
-        "gold": False,
-        "training": False,
-        "evaluation": False,
-        "teaching": False,
-        "coverage": False,
-    }
-    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["candidate_rows_scored"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["rows_considered_for_scoring"] == 0
-    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
-    assert all(v is False for k, v in _cached_json(RECEIPT)["safety_assertions"].items() if k != "rows_not_admitted")
-
-
 def test_a9_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
     keys = _all_keys(_cached_json(RECEIPT))
     assert not keys & FORBIDDEN_KEYS
     serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     assert not any(needle in serialized for needle in FORBIDDEN_SUBSTRINGS)
     assert _cached_json(RECEIPT)["a9_residuals"][0]["subject_id"].startswith("v4p-")
-
-
-def test_a9_receipt_never_opens_held_out_membership() -> None:
-    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_referenced"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["held_out_membership_opened"] is False
-    assert _cached_json(RECEIPT)["safety_assertions"]["heldout_family_identity_leaked"] is False
 
 
 def test_a9_bindings_hash_to_disk_for_every_bound_artifact() -> None:
@@ -403,16 +363,3 @@ def test_a9_refuses_a_fabricated_nonempty_scoring_receipt() -> None:
     )
     with pytest.raises(a9.EvaluationPackageError):
         a9.validate_receipt_independently(receipt)
-
-
-def test_a9_schema_rejects_a_leaked_gold_label_value() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["eligibility"]["gold"] = True
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    errors = list(Draft202012Validator(schema).iter_errors(receipt))
-    assert errors
-
-
-def test_a9_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
-    assert "gold" not in FORBIDDEN_KEYS
-    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False

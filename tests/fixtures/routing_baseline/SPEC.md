@@ -1,5 +1,37 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Pinned Claude model on a shed lane (#11110)
+
+Both configurations were captured with the documented `capture.py` command
+against this checkout, using the test module's scoped `CAPTURE_RUNNER` cache,
+and compared with every approved surface. Only five dispatch `refusal` fields
+change, identically in both configurations:
+
+| Historical input row | Row after existing overlays | Explicit model |
+| --- | --- | --- |
+| 70 | 62 | `claude-sonnet-5-5` |
+| 74 | 66 | `claude-fable-5-1` |
+| 82 | 70 | `composer-2.5` |
+| 94 | 82 | `grok-4.7` |
+| 98 | 86 | `unregistered-model` |
+
+Every row requests the Claude lane at `near_cap` with an explicit model that
+Codex rejects and has no mapped substitute. The refusal changes from
+`ROUTING REFUSED: substitute --agent codex rejects explicit --model ...` to
+`BUDGET_PINNED_MODEL_EXHAUSTED: ...`, preserving refusal before spawn. The
+message reports the missing percentage as `unknown` and names the supported
+remedies, including the other Claude account where policy permits. Account
+remedies apply only to the Claude lane. Routing, telemetry, exit status and
+streams do not change. Historical input row 78 and mapped rows 86 and 90
+remain byte-identical; the existing seat overlay removed row 78.
+
+`tests/review/fixtures/budget-pin-11110.json` applies exact-once literal
+replacements after the other overlays. Its SHA-256 and this specification's
+SHA-256 are pinned in `tests/review/test_model_catalog.py`. Scope tests require
+these five refusals and reject other row or field changes. Historical
+baselines, inputs, occurrence ledgers, `SHA256SUMS` and `capture.py` stay
+byte-identical. Any other difference blocks regeneration.
+
 ## Required Claude account in the capture driver (#10630)
 
 `ResolverInputs.claude_account` has no default (#10630): a construction
@@ -395,3 +427,26 @@ literal replacements, and a scope test checks that no other row, field or
 surface changes. Historical baselines, inputs, the occurrence ledger,
 `SHA256SUMS` and `capture.py` stay byte-identical. Any other difference blocks
 regeneration.
+
+## Parked Fable 5.1, retired Kimi, one Grok/Cursor pool (#11327)
+
+`tests/review/fixtures/routing-11327.json` is applied last, after the AGY mode
+overlay, for both CLI configurations. Historical compressed baselines, input
+matrices, the occurrence ledger, `SHA256SUMS` and `capture.py` stay
+byte-identical. The overlay's digest is pinned beside the function that applies it.
+
+Fable 5.1 stays active with native Claude CLI transport only; its Fable 5
+predecessor is unchanged.
+It is parked: not routed by default, explicit pin only; reintroduction or a
+successor model is an operator decision. Default routing omits its Cursor budget
+substitution row; a separate CLI test proves an explicit native pin works and
+prints one cost warning. The five Kimi ids are retired with empty transports;
+the kimicc endpoint has no executable models.
+
+The overlay records Fable's native-only transport, those Kimi fields, policy
+notes, the omitted default budget pin and `usage_pools.grok_cursor`. Dispatch drops only the old Fable automatic
+substitution cases. Grok and Cursor share allowance and freshness for admission,
+capacity ordering and cooler advice, with separate transport health. Cooler
+lists name the shared meter once. The two Kimi launcher defaults refuse
+`k3-256k`. Approval holders and vote rows stay unchanged. Every unrelated seat's
+substitute and every unrelated surface stay unchanged.

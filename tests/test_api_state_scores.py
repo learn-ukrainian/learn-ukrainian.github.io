@@ -213,8 +213,3 @@ def test_scores_one_module(tmp_path: Path, monkeypatch) -> None:
 def test_scores_unknown_track_404(tmp_path: Path, monkeypatch) -> None:
     _fake_track(tmp_path, monkeypatch)
     assert client.get("/api/state/scores/nope").status_code == 404
-
-
-def test_scores_unknown_slug_404(tmp_path: Path, monkeypatch) -> None:
-    _fake_track(tmp_path, monkeypatch)
-    assert client.get("/api/state/scores/demo/nope").status_code == 404

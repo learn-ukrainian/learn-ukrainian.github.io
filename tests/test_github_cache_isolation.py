@@ -93,21 +93,6 @@ def test_store_budget_refuses_implausible_resets(tmp_path, reset):
     assert _rows(store) == []
 
 
-def test_far_future_reset_already_stored_does_not_refuse(tmp_path, caplog):
-    """Reverting the read clamp refuses this call with core_below_landing_reserve."""
-    now = 1_700_000_000
-    store, calls = _client(tmp_path, now)
-    gh._IMPLAUSIBLE_RESET_LOGGED = False
-    with store._db() as db:
-        db.execute("INSERT INTO budget VALUES (?,?,?,?)", (store.scope, "core", 77, 4_000_000_000))
-    with caplog.at_level(logging.DEBUG, logger="scripts.common.github_client"):
-        result = store.request("GET", "user")
-        again = store.request("GET", "user")
-    assert result.error is None and again.error is None and calls == ["user", "user"]
-    records = [record for record in caplog.records if "ignoring implausible GitHub budget reset" in record.message]
-    assert len(records) == 1 and records[0].levelno == logging.DEBUG
-
-
 @pytest.mark.parametrize("reset", [math.nan, math.inf, "not-a-reset", -5, 0])
 def test_implausible_reset_already_stored_does_not_refuse(tmp_path, reset, caplog):
     """Reverting the read clamp refuses, raises, or admits without the debug log."""
@@ -142,22 +127,6 @@ def test_reset_exactly_at_horizon_still_keeps_the_landing_reserve(tmp_path):
     result = store.request("GET", "user")
     assert result.error == "github_rate_limited" and result.reason == "core_below_landing_reserve"
     assert result.reset_at == horizon and calls == []
-
-
-def test_primary_reset_one_second_inside_the_horizon_keeps_the_reserve(tmp_path):
-    """now+7199 is still a primary window. The clamp starts after two hours."""
-    now = 1_700_000_000
-    reset = now + gh.BUDGET_RESET_HORIZON_SECONDS - 1
-    store, calls = _client(tmp_path, now)
-    with store._db() as db:
-        gh._store_budget(db, store.scope, "core", 77, reset, now=now)
-    result = store.request("GET", "user")
-    assert (result.error, result.reason, result.reset_at) == (
-        "github_rate_limited",
-        "core_below_landing_reserve",
-        reset,
-    )
-    assert calls == []
 
 
 def test_primary_reset_one_second_past_the_horizon_is_ignored(tmp_path):

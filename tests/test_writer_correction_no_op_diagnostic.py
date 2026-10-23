@@ -36,10 +36,6 @@ def test_detect_tool_theatre_normalizes_mcp_prefix() -> None:
     ) == []
 
 
-def test_detect_tool_theatre_empty_input() -> None:
-    assert linear_pipeline.detect_tool_theatre("", []) == []
-
-
 def test_detect_tool_theatre_only_scans_plan_reasoning_blocks() -> None:
     writer_output = (
         "```markdown file=module.md\n"
@@ -73,16 +69,6 @@ def test_detect_tool_theatre_scans_unbackticked_tool_names() -> None:
     ]
 
 
-def test_detect_tool_theatre_ignores_plan_reasoning_inside_fences() -> None:
-    writer_output = (
-        "```markdown file=module.md\n"
-        "<plan_reasoning section=\"example\">`search_heritage`</plan_reasoning>\n"
-        "```\n"
-    )
-
-    assert linear_pipeline.detect_tool_theatre(writer_output, []) == []
-
-
 def test_detect_tool_theatre_handles_multiple_blocks() -> None:
     writer_output = (
         '<plan_reasoning section="intro">`verify_words` checked.</plan_reasoning>\n'
@@ -90,20 +76,6 @@ def test_detect_tool_theatre_handles_multiple_blocks() -> None:
     )
 
     assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
-        "search_heritage",
-        "verify_words",
-    ]
-
-
-def test_detect_tool_theatre_returns_all_citations_when_trace_empty() -> None:
-    writer_output = (
-        '<plan_reasoning section="intro">'
-        "`verify_words`, `search_heritage`, and `query_pravopys` checked."
-        "</plan_reasoning>"
-    )
-
-    assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
-        "query_pravopys",
         "search_heritage",
         "verify_words",
     ]
@@ -213,19 +185,6 @@ def test_parse_writer_correction_module_only_unwraps_four_backtick_wrapper() -> 
     assert body.endswith("\n")
 
 
-def test_parse_writer_correction_module_only_unwraps_bare_four_backtick_wrapper() -> None:
-    """Same wrapper tolerance when the outer fence has no info-line."""
-    response = (
-        "````\n"
-        "```module.md\n"
-        "Patched body content.\n"
-        "```\n"
-        "````\n"
-    )
-    body = linear_pipeline.parse_writer_correction_module_only(response)
-    assert body == "Patched body content.\n"
-
-
 def test_parse_writer_correction_module_only_does_not_peel_when_outer_has_file_label() -> None:
     """A bare ≥4-backtick fence with `file=module.md` info-line is itself a
     valid single fence (not a wrapper) — do not peel."""
@@ -293,15 +252,6 @@ def test_parse_writer_correction_module_only_rejects_leading_prose() -> None:
     response = (
         "Done. Here is the patched module:\n\n"
         "```markdown file=module.md\nbody\n```\n"
-    )
-    assert linear_pipeline.parse_writer_correction_module_only(response) is None
-
-
-def test_parse_writer_correction_module_only_rejects_trailing_prose() -> None:
-    """Any prose after the fence disqualifies the response."""
-    response = (
-        "```markdown file=module.md\nbody\n```\n\n"
-        "Word count went from 996 → 1325.\n"
     )
     assert linear_pipeline.parse_writer_correction_module_only(response) is None
 

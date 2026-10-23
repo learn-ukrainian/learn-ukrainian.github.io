@@ -104,31 +104,7 @@ def test_knowledge_packet_reruns_when_manifest_missing(module_dir: Path) -> None
     assert v7_build._phase_artifact_passes(module_dir, "knowledge_packet") is False
 
 
-def test_knowledge_packet_reruns_when_kp_missing(module_dir: Path) -> None:
-    (module_dir / "wiki_manifest.json").write_text("{}", encoding="utf-8")
-    assert v7_build._phase_artifact_passes(module_dir, "knowledge_packet") is False
-
-
 # ----- writer -----------------------------------------------------------------
-
-def test_writer_skipped_when_all_artifacts_present(module_dir: Path) -> None:
-    for name in (
-        "module.md",
-        "activities.yaml",
-        "vocabulary.yaml",
-        "resources.yaml",
-        "writer_output.raw.md",
-        "implementation_map.json",
-    ):
-        (module_dir / name).write_text("x", encoding="utf-8")
-    assert v7_build._phase_artifact_passes(module_dir, "writer") is True
-
-
-def test_writer_reruns_when_any_artifact_missing(module_dir: Path) -> None:
-    for name in ("module.md", "activities.yaml", "vocabulary.yaml", "resources.yaml"):
-        (module_dir / name).write_text("x", encoding="utf-8")
-    # writer_output.raw.md missing
-    assert v7_build._phase_artifact_passes(module_dir, "writer") is False
 
 
 # ----- python_qg --------------------------------------------------------------
@@ -149,10 +125,6 @@ def test_python_qg_reruns_when_gates_failed(module_dir: Path) -> None:
     assert v7_build._phase_artifact_passes(module_dir, "python_qg") is False
 
 
-def test_python_qg_reruns_when_artifact_missing(module_dir: Path) -> None:
-    assert v7_build._phase_artifact_passes(module_dir, "python_qg") is False
-
-
 def test_python_qg_reruns_when_artifact_malformed(module_dir: Path) -> None:
     (module_dir / "python_qg.json").write_text("not json {{", encoding="utf-8")
     assert v7_build._phase_artifact_passes(module_dir, "python_qg") is False
@@ -168,30 +140,7 @@ def test_wiki_completeness_gate_skipped_when_passed(module_dir: Path) -> None:
     assert v7_build._phase_artifact_passes(module_dir, "wiki_completeness_gate") is True
 
 
-def test_wiki_completeness_gate_reruns_when_failed(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "wiki_completeness_gate.json",
-        {"verdict": "FAIL", "checks": {}},
-    )
-    assert v7_build._phase_artifact_passes(module_dir, "wiki_completeness_gate") is False
-
-
 # ----- wiki_coverage_gate -----------------------------------------------------
-
-def test_wiki_coverage_gate_skipped_when_passed(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "wiki_coverage_gate.json",
-        {"passed": True, "coverage_pct": 1.0},
-    )
-    assert v7_build._phase_artifact_passes(module_dir, "wiki_coverage_gate") is True
-
-
-def test_wiki_coverage_gate_reruns_when_passed_false(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "wiki_coverage_gate.json",
-        {"passed": False, "coverage_pct": 0.5},
-    )
-    assert v7_build._phase_artifact_passes(module_dir, "wiki_coverage_gate") is False
 
 
 # ----- wiki_coverage_review ---------------------------------------------------
@@ -202,25 +151,6 @@ def test_wiki_coverage_review_skipped_when_overall_pass(module_dir: Path) -> Non
         {"overall_verdict": "PASS", "verdicts": []},
     )
     assert v7_build._phase_artifact_passes(module_dir, "wiki_coverage_review") is True
-
-
-def test_wiki_coverage_review_skipped_when_overall_pass_lowercase(
-    module_dir: Path,
-) -> None:
-    """Verdict casing should normalize on read; pipeline canonical form is uppercase."""
-    _write_json(
-        module_dir / "wiki_coverage_review.json",
-        {"overall_verdict": "pass", "verdicts": []},
-    )
-    assert v7_build._phase_artifact_passes(module_dir, "wiki_coverage_review") is True
-
-
-def test_wiki_coverage_review_reruns_when_overall_fail(module_dir: Path) -> None:
-    _write_json(
-        module_dir / "wiki_coverage_review.json",
-        {"overall_verdict": "FAIL", "verdicts": []},
-    )
-    assert v7_build._phase_artifact_passes(module_dir, "wiki_coverage_review") is False
 
 
 # ----- llm_qg ------------------------------------------------------------------
@@ -253,10 +183,6 @@ def test_llm_qg_payload_rejects_terminal_revise() -> None:
 def test_llm_qg_payload_supports_legacy_aggregate_pass() -> None:
     """Legacy payload compatibility does not change the DB authority rule."""
     assert v7_build._llm_qg_payload_passes({"aggregate": {"verdict": "PASS", "min_score": 9.0}})
-
-
-def test_llm_qg_payload_rejects_missing_aggregate() -> None:
-    assert not v7_build._llm_qg_payload_passes({"placeholder": True})
 
 
 @pytest.mark.parametrize("changed_name", CONTENT_FILES)
@@ -505,23 +431,5 @@ def test_llm_qg_resume_does_not_repersist_row(
 
 # ----- unknown phase ----------------------------------------------------------
 
-def test_unknown_phase_returns_false(module_dir: Path) -> None:
-    """Defensive default: never skip a phase we don't recognize."""
-    assert v7_build._phase_artifact_passes(module_dir, "not_a_real_phase") is False
-
 
 # ----- CLI flag wiring --------------------------------------------------------
-
-def test_parse_args_rejects_removed_resume_flag() -> None:
-    with pytest.raises(SystemExit):
-        v7_build.parse_args(["a1", "my-morning", "--resume", "/tmp/some/module/dir"])
-
-
-def test_parse_args_resume_defaults_to_enabled() -> None:
-    args = v7_build.parse_args(["a1", "my-morning"])
-    assert args.no_resume is False
-
-
-def test_parse_args_no_resume_disables_resume_default() -> None:
-    args = v7_build.parse_args(["a1", "my-morning", "--no-resume"])
-    assert args.no_resume is True

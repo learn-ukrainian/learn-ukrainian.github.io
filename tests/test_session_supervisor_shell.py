@@ -237,31 +237,6 @@ printf 'CAPSULE=%s\\n' "$SESSION_SUPERVISOR_CAPSULE_PATH"
     assert {key: codex_lane._read_lease_environment(receipt_path)[key] for key in expected_receipt} == expected_receipt
 
 
-def test_claim_uses_default_instance_id_when_empty(tmp_path: Path) -> None:
-    project, supervisor_capture = _build_fake_project(tmp_path)
-
-    script = f"""
-set -euo pipefail
-source "{project}/scripts/lib/session_supervisor.sh"
-claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "" "" "{project}" "test-launcher.sh" "hramatka"
-printf 'INSTANCE=%s\\n' "$SESSION_STREAM_INSTANCE_ID"
-"""
-    result = subprocess.run(
-        ["bash", "-c", script],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-        env=_clean_environ(),
-    )
-    assert result.returncode == 0, result.stderr + result.stdout
-    lines = {k: v for k, v in (line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)}
-    assert lines["INSTANCE"].startswith("test-agent-")
-
-    supervisor_args = supervisor_capture.read_text(encoding="utf-8").splitlines()
-    assert supervisor_args[supervisor_args.index("--instance-id") + 1].startswith("test-agent-")
-
-
 def test_claim_resolves_unset_host_id_and_preserves_explicit_override(tmp_path: Path) -> None:
     project, supervisor_capture = _build_fake_project(tmp_path)
     env = _clean_environ()

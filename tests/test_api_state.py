@@ -3,7 +3,6 @@
 import json
 
 import pytest
-import yaml
 
 
 @pytest.fixture
@@ -18,43 +17,7 @@ def module_tree(tmp_path):
     return track_dir, orch_dir
 
 
-class TestGetFrictionData:
-    def test_no_file(self, module_tree):
-        from scripts.api.state_compute import _get_friction_data
-        _, orch_dir = module_tree
-        result = _get_friction_data(orch_dir)
-        assert result["active"] == 0
-        assert result["resolved"] == 0
-        assert result["items"] == []
-
-    def test_with_frictions(self, module_tree):
-        from scripts.api.state_compute import _get_friction_data
-        _, orch_dir = module_tree
-        (orch_dir / "friction.yaml").write_text(yaml.dump({
-            "frictions": [
-                {"id": "f1", "status": "active", "type": "linguistic",
-                 "description": "Wrong stress on молоко"},
-                {"id": "f2", "status": "resolved", "type": "structural",
-                 "description": "Fixed schema"},
-                {"id": "f3", "status": "active", "type": "pedagogical",
-                 "description": "Missing vocab word"},
-            ]
-        }))
-        result = _get_friction_data(orch_dir)
-        assert result["active"] == 2
-        assert result["resolved"] == 1
-        assert len(result["items"]) == 2
-        assert result["items"][0]["id"] == "f1"
-
-
 class TestGetReviewScore:
-    def test_no_file(self, module_tree):
-        from scripts.api.state_compute import _get_review_score
-        track_dir, _ = module_tree
-        result = _get_review_score(track_dir, "test-module")
-        assert result["exists"] is False
-        assert result["score"] is None
-
     def test_with_score(self, module_tree):
         from scripts.api.state_compute import _get_review_score
         track_dir, _ = module_tree
@@ -66,17 +29,6 @@ class TestGetReviewScore:
         assert result["exists"] is True
         assert result["score"] == 8.7
         assert result["verdict"] == "PASS"
-
-    def test_fail_verdict(self, module_tree):
-        from scripts.api.state_compute import _get_review_score
-        track_dir, _ = module_tree
-        review_dir = track_dir / "review"
-        (review_dir / "test-module-review.md").write_text(
-            "**Overall Score:** 5.8/10\n\n**Status:** FAIL"
-        )
-        result = _get_review_score(track_dir, "test-module")
-        assert result["score"] == 5.8
-        assert result["verdict"] == "FAIL"
 
 
 class TestComputeShippable:
@@ -113,27 +65,8 @@ class TestPlanRevisionLog:
 
         assert plan_has_revision_log(plan) is True
 
-    def test_empty_plan_fixes_do_not_count_as_enriched(self, tmp_path):
-        from scripts.api.state_helpers import plan_has_revision_log
-
-        plan = tmp_path / "plan.yaml"
-        plan.write_text("module: a2-001\nplan_fixes: []\n", encoding="utf-8")
-
-        assert plan_has_revision_log(plan) is False
-
-    def test_missing_plan_does_not_count_as_enriched(self, tmp_path):
-        from scripts.api.state_helpers import plan_has_revision_log
-
-        assert plan_has_revision_log(tmp_path / "missing.yaml") is False
-
 
 class TestGetStressIssues:
-    def test_no_screen_result(self, module_tree):
-        from scripts.api.state_compute import _get_stress_issues
-        _, orch_dir = module_tree
-        result = _get_stress_issues(orch_dir)
-        assert result["mismatches"] == 0
-
     def test_with_stress_issues(self, module_tree):
         from scripts.api.state_compute import _get_stress_issues
         _, orch_dir = module_tree

@@ -1,0 +1,1753 @@
+"""Hostile Git state must never select publication history, refs or transport."""
+
+from __future__ import annotations
+
+import ast
+import contextlib
+import hashlib
+import inspect
+import struct
+import subprocess
+import sys
+import time
+import zlib
+from pathlib import Path
+
+import pytest
+
+import delegate
+from scripts.orchestration.safe_git_context import SafeGitContext
+from tests.test_delegate import (
+    _agy_dispatch_worktree,
+    _git_out,
+    _PinnedRemotePublicHead,
+    _sanitize_git_env_for_test,
+)
+
+
+@contextlib.contextmanager
+def _no_transport_credentials(**_kwargs):
+    yield []
+
+
+@pytest.fixture
+def publication(tmp_path, monkeypatch, synthetic_opsec):
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "codex/finalize")
+    origin = tmp_path / "origin.git"
+    # Driver-controlled synthetic validation, frozen before worker changes.
+    hooks = worktree / ".githooks"
+    hooks.mkdir(exist_ok=True)
+    marker = tmp_path / "trusted-validation"
+    hook = hooks / "pre-push"
+    hook.write_text(f'#!/bin/sh\nprintf checked >> "{marker}"\n')
+    hook.chmod(0o755)
+    (hooks / "pre_push_gate.py").write_text("ADMISSION_MAX_WAIT_S = 1\nADMISSION_WAIT_S = 1\n")
+    _git_out(worktree, "add", ".githooks")
+    _git_out(worktree, "commit", "-m", "trusted base validation")
+    base = _git_out(worktree, "rev-parse", "HEAD").strip()
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+
+    # As in production, the store the checks read is the worker's own store.
+    @contextlib.contextmanager
+    def execution(source, **kwargs):
+        assert source == worktree
+        with SafeGitContext(
+            objects=worktree / ".git/objects",
+            borrow_objects=kwargs.get("prepare", False),
+            temp_root=tmp_path,
+            origin=str(origin),
+            local_remote=True,
+        ) as context:
+            context.source_git_dir = worktree / ".git"
+            context.driver_base = _git_out(origin, "rev-parse", "refs/heads/main").strip()
+            context.interpreter = Path(sys.executable)
+            yield context
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", execution, raising=False)
+    # The publication scan treats the pinned remote's main as public; a local remote needs no credential.
+    public = _PinnedRemotePublicHead()
+    public.origin = origin
+    monkeypatch.setattr(delegate, "_finalize_public_repository", lambda: public)
+    monkeypatch.setattr(delegate, "_finalize_transport_credentials", _no_transport_credentials)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    return worktree, origin, base, marker
+
+
+def write_commit(worktree, name="artifact.txt", content="owned\n"):
+    (worktree / name).write_text(content)
+    _git_out(worktree, "add", name)
+    _git_out(worktree, "commit", "-m", "worker change")
+    return _git_out(worktree, "rev-parse", "HEAD").strip()
+
+
+def test_dirty_first_change_publishes_from_empty_committed_range(publication):
+    worktree, origin, base, marker = publication
+    (worktree / "artifact.txt").write_text("first owned change\n")
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + result.commit_sha in refs(origin)
+    assert _git_out(origin, "show", f"{result.commit_sha}:artifact.txt") == "first owned change\n"
+    assert _git_out(worktree, "rev-parse", "HEAD^").strip() == base
+    assert _git_out(worktree, "status", "--porcelain") == ""
+    assert marker.read_text() == "checked"
+
+
+def test_recorded_base_ahead_of_driver_main_is_not_charged_to_worker(publication):
+    worktree, origin, _base, marker = publication
+    base = write_commit(worktree, "baseline.txt", "accepted dispatch baseline\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/trusted-base")
+    head = write_commit(worktree)
+
+    result = publish((worktree, origin, base, marker))
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert _git_out(origin, "show", f"{head}:baseline.txt") == "accepted dispatch baseline\n"
+    assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+    assert marker.read_text() == "checked"
+
+
+def publish(publication, *, owned_paths=None, task_id="security-finalize"):
+    worktree, _origin, base, _marker = publication
+    return delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id=task_id,
+        agent="codex",
+        branch="codex/finalize",
+        base_branch="main",
+        base_sha=base,
+        owned_paths=["artifact.txt"] if owned_paths is None else owned_paths,
+    )
+
+
+def refs(origin):
+    return _git_out(origin, "for-each-ref", "--format=%(refname) %(objectname)")
+
+
+def git_input(worktree, *args, data):
+    return subprocess.run(
+        ["git", *args],
+        cwd=worktree,
+        input=data,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+        env=delegate._sanitized_git_env(),
+    ).stdout.strip()
+
+
+@pytest.mark.parametrize("component", ["..", ".", ".git", ".GIT"])
+def test_crafted_intermediate_tree_path_is_refused(publication, component):
+    worktree, origin, base, marker = publication
+    oid = git_input(worktree, "hash-object", "-w", "--stdin", data="hostile hook\n")
+    kind, mode = "blob", "100644"
+    for name in reversed(["a", component, ".githooks", "pre-push"]):
+        oid = git_input(worktree, "mktree", data=f"{mode} {kind} {oid}\t{name}\n")
+        kind, mode = "tree", "40000"
+    entries = _git_out(worktree, "ls-tree", base)
+    nested = _git_out(worktree, "ls-tree", oid)
+    tree = git_input(worktree, "mktree", data=entries + nested)
+    hostile = _git_out(worktree, "commit-tree", tree, "-p", base, "-m", "crafted intermediate").strip()
+    clean_tree = _git_out(worktree, "rev-parse", f"{base}^{{tree}}").strip()
+    head = _git_out(worktree, "commit-tree", clean_tree, "-p", hostile, "-m", "clean final tree").strip()
+    _git_out(worktree, "update-ref", "refs/heads/codex/finalize", head)
+    history = _git_out(worktree, "log", "--format=", "--name-only", f"{base}..{head}")
+    assert f"a/{component}/.githooks/pre-push" in history
+
+    result = publish(publication, owned_paths=["a"])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("prefix", [".GITHOOKS", ".Githooks", "scripts/Pre_commit"])
+def test_mixed_case_protected_history_is_refused(publication, prefix):
+    worktree, origin, _base, marker = publication
+    path = f"{prefix}/worker"
+    (worktree / path).parent.mkdir(parents=True, exist_ok=True)
+    write_commit(worktree, path)
+    _git_out(worktree, "rm", path)
+    _git_out(worktree, "commit", "-m", "revert protected change")
+    head = delegate._resolve_sha(worktree)
+
+    result = publish(publication, owned_paths=[prefix])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("attack", ["gitlink", "filter", "attributes-only"])
+def test_reverted_gitlink_or_filter_is_refused(publication, attack):
+    worktree, origin, base, marker = publication
+    if attack == "gitlink":
+        _git_out(worktree, "update-index", "--add", "--cacheinfo", f"160000,{base},artifact.txt")
+        _git_out(worktree, "commit", "-m", "intermediate gitlink")
+        _git_out(worktree, "update-index", "--force-remove", "artifact.txt")
+        code = "rescue_new_gitlink"
+    else:
+        if attack == "filter":
+            write_commit(worktree)
+        target = "artifact.txt" if attack == "filter" else "README.md"
+        _git_out(worktree, "cat-file", "-e", f"HEAD:{target}")
+        write_commit(worktree, ".gitattributes", f"{target} filter=worker\n")
+        _git_out(worktree, "rm", ".gitattributes")
+        code = "rescue_filtered_path"
+    _git_out(worktree, "commit", "-m", "remove intermediate hazard")
+    head = delegate._resolve_sha(worktree)
+
+    result = publish(publication, owned_paths=["artifact.txt", ".gitattributes"])
+
+    assert not result.ok
+    assert result.error == code
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_scoped_preparation_value_error_is_typed_and_retains_local_commit(publication):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    (worktree / "artifact.txt").write_text("dirty owned work\n")
+
+    result = publish(publication, task_id="security\nX-Agent: injected")
+
+    assert not result.ok
+    assert result.error == "auto_finalize_preparation_refused"
+    assert result.commit_sha == head
+    assert delegate._resolve_sha(worktree) == head
+    assert (worktree / "artifact.txt").read_text() == "dirty owned work\n"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+
+
+def test_unchanged_base_filter_allows_unrelated_attribute_edit(publication):
+    worktree, origin, _base, marker = publication
+    base = write_commit(worktree, ".gitattributes", "README.md filter=existing\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    head = write_commit(worktree, ".gitattributes", "README.md filter=existing\n# unrelated comment\n")
+
+    result = publish((worktree, origin, base, marker), owned_paths=[".gitattributes"])
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+def test_finalize_history_protected_paths_are_source_literals():
+    tree = ast.parse(inspect.getsource(delegate._finalize_history))
+    protected = next(
+        node.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == "protected" for target in node.targets)
+    )
+    assert isinstance(protected, ast.Tuple)
+    assert all(isinstance(entry, ast.Constant) and isinstance(entry.value, str) for entry in protected.elts)
+    assert ast.literal_eval(protected) == (
+        ".githooks/",
+        "scripts/pre_commit/",
+        "scripts/common/test_slots",
+        ".pre-commit-config.yaml",
+        ".venv",
+    )
+
+
+@pytest.mark.parametrize("path", ["scripts/common/test_slots.py", "scripts/common/test_slots_extra.py"])
+def test_test_slots_history_is_refused_before_validation(publication, path):
+    worktree, origin, base, marker = publication
+    (worktree / path).parent.mkdir(parents=True, exist_ok=True)
+    head = write_commit(worktree, path, "worker changed validation\n")
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="security-finalize",
+        agent="codex",
+        branch="codex/finalize",
+        base_branch="main",
+        base_sha=base,
+        owned_paths=["scripts/common"],
+    )
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize(
+    "route",
+    [
+        "pre-commit",
+        "prepare-commit-msg",
+        "commit-msg",
+        "post-commit",
+        "reference-transaction",
+        "post-index-change",
+        "fsmonitor",
+        "trailer-command",
+        "trailer-cmd",
+        "filter",
+        "filter-tracked",
+    ],
+)
+def test_source_preparation_cannot_execute_worker_configuration(publication, tmp_path, route):
+    worktree, origin, _base, marker = publication
+    if route == "filter-tracked":
+        write_commit(worktree)
+    artifact = worktree / "artifact.txt"
+    artifact.write_bytes(b"owned\r\n")
+    executed = tmp_path / "source-preparation-executed"
+    program = tmp_path / "source-program"
+    program.write_text(
+        f'#!/bin/sh\nprintf executed >> "{executed}"\n'
+        "git -c core.hooksPath=/dev/null update-ref refs/heads/unvalidated-hook-write HEAD\ncat\n"
+    )
+    program.chmod(0o755)
+    if route.startswith("trailer-"):
+        _git_out(worktree, "config", f"trailer.X-Agent.{route.removeprefix('trailer-')}", str(program))
+    elif route.startswith("filter"):
+        (worktree / ".gitattributes").write_text("artifact.txt filter=worker\n")
+        _git_out(worktree, "config", "filter.worker.clean", str(program))
+    elif route == "fsmonitor":
+        _git_out(worktree, "config", "core.fsmonitor", str(program))
+    else:
+        hook = worktree / ".githooks" / route
+        hook.write_bytes(program.read_bytes())
+        hook.chmod(0o755)
+        _git_out(worktree, "config", "core.hooksPath", ".githooks")
+    result = publish(publication)
+    assert not executed.exists(), "worker code ran during finalization preparation"
+    assert "refs/heads/unvalidated-hook-write" not in refs(worktree)
+    assert artifact.read_bytes() == b"owned\r\n"
+    if route.startswith("filter"):
+        assert not result.ok
+        assert "refs/heads/codex/finalize" not in refs(origin)
+        assert not marker.exists()
+    # Source hook files themselves remain unowned dirty files. Publication may
+    # refuse those inputs; it must never execute them, even before a refusal.
+
+
+def test_replacement_cannot_hide_original_unowned_history(publication):
+    worktree, origin, base, marker = publication
+    original = write_commit(worktree, "README.md", "unowned secret history\n")
+    reverted = write_commit(worktree, "README.md", "base\n")
+    write_commit(worktree)
+    tree = _git_out(worktree, "rev-parse", f"{base}^{{tree}}").strip()
+    masked = _git_out(worktree, "commit-tree", tree, "-p", base, "-m", "mask original").strip()
+    _git_out(worktree, "replace", original, masked)
+    mask_revert = _git_out(worktree, "commit-tree", tree, "-p", original, "-m", "mask revert").strip()
+    _git_out(worktree, "replace", reverted, mask_revert)
+    result = publish(publication)
+    assert not result.ok, "replacement objects concealed the original unowned commit"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+
+
+def test_follow_tags_cannot_publish_an_unowned_ref(publication):
+    worktree, origin, _base, marker = publication
+    write_commit(worktree)
+    _git_out(worktree, "tag", "-a", "unauthorized", "-m", "unowned ref")
+    _git_out(worktree, "config", "push.followTags", "true")
+    result = publish(publication)
+    assert "refs/tags/unauthorized" not in refs(origin), "implicit tag escaped branch-only publication"
+    assert result.ok, result.error
+    assert marker.read_text() == "checked"
+
+
+def test_receivepack_cannot_redirect_a_write(publication, tmp_path):
+    worktree, origin, _base, marker = publication
+    write_commit(worktree)
+    unintended = tmp_path / "unintended.git"
+    _git_out(tmp_path, "init", "--bare", str(unintended))
+    program = tmp_path / "redirect"
+    program.write_text(f'#!/bin/sh\nexec git-receive-pack "{unintended}"\n')
+    program.chmod(0o755)
+    _git_out(worktree, "config", "remote.origin.receivepack", str(program))
+    result = publish(publication)
+    assert refs(unintended) == "", "write reached the unauthorized endpoint before verification"
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize" in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("url.ALTERNATE.insteadOf", "ORIGIN"),
+        ("url.ALTERNATE.pushInsteadOf", "ORIGIN"),
+        ("remote.origin.pushurl", "ALTERNATE"),
+        ("push.default", "matching"),
+        ("remote.origin.push", "refs/heads/*:refs/heads/*"),
+        ("core.sshCommand", "PROGRAM"),
+        ("credential.helper", "!PROGRAM"),
+        ("http.proxy", "http://invalid.invalid:1"),
+        ("include.path", "INCLUDE"),
+        ("includeIf.gitdir:*/.path", "INCLUDE"),
+    ],
+)
+def test_worker_transport_configuration_never_selects_the_destination(publication, tmp_path, key, value):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    unintended = tmp_path / "unintended.git"
+    _git_out(tmp_path, "init", "--bare", str(unintended))
+    ran = tmp_path / "hostile-program-ran"
+    program = tmp_path / "hostile-program"
+    program.write_text(f'#!/bin/sh\ntouch "{ran}"\nexit 1\n')
+    program.chmod(0o755)
+    include = tmp_path / "hostile-config"
+    include.write_text(f'[remote "origin"]\n receivepack = {program}\n pushurl = {unintended}\n')
+    key = key.replace("ALTERNATE", str(unintended))
+    value = (
+        value.replace("ORIGIN", str(origin))
+        .replace("ALTERNATE", str(unintended))
+        .replace("PROGRAM", str(program))
+        .replace("INCLUDE", str(include))
+    )
+    _git_out(worktree, "config", key, value)
+    result = publish(publication)
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert refs(unintended) == "" and not ran.exists()
+    assert marker.read_text() == "checked"
+
+
+@pytest.mark.parametrize(
+    "name,value",
+    [
+        ("GIT_CONFIG_PARAMETERS", "'push.followTags=true'"),
+        ("GIT_CONFIG_COUNT", "1"),
+        ("GIT_SSH_COMMAND", "false"),
+        ("GIT_EXEC_PATH", "/nonexistent/git-exec-path"),
+        ("GIT_REPLACE_REF_BASE", "refs/hostile-replacements/"),
+    ],
+)
+def test_inherited_git_environment_is_not_publication_authority(publication, monkeypatch, name, value):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    _git_out(worktree, "tag", "-a", "unauthorized", "-m", "unowned tag")
+    monkeypatch.setenv(name, value)
+    if name == "GIT_CONFIG_COUNT":
+        monkeypatch.setenv("GIT_CONFIG_KEY_0", "push.followTags")
+        monkeypatch.setenv("GIT_CONFIG_VALUE_0", "true")
+    result = publish(publication)
+    assert result.ok, result.error
+    monkeypatch.delenv(name)
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert "refs/tags/unauthorized" not in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+@pytest.mark.parametrize("attack", ["common-hook", "worktree-hook", "committed-hook"])
+def test_hook_substitution_is_refused_before_publication(publication, tmp_path, attack):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    if attack == "committed-hook":
+        head = write_commit(worktree, ".githooks/pre-push", "#!/bin/sh\nexit 0\n")
+    elif attack == "worktree-hook":
+        _git_out(worktree, "config", "extensions.worktreeConfig", "true")
+        _git_out(worktree, "config", "--worktree", "core.hooksPath", str(tmp_path))
+    else:
+        _git_out(worktree, "config", "core.hooksPath", str(tmp_path))
+    result = publish(publication)
+    assert not result.ok
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_forged_tracking_ref_is_not_delivery(publication, tmp_path, monkeypatch):
+    worktree, origin, _base, _marker = publication
+    head = write_commit(worktree)
+    _git_out(worktree, "update-ref", "refs/remotes/origin/codex/finalize", head)
+    _git_out(worktree, "branch", "--set-upstream-to=origin/codex/finalize")
+    assert delegate._count_unpushed_commits(worktree, "codex/finalize") > 0
+    assert "refs/heads/codex/finalize" not in refs(origin)
+
+    from tests.test_delegate import _rescue_checkout
+
+    fixture = tmp_path / "registered"
+    fixture.mkdir()
+    private, source, destination, state_path = _rescue_checkout(
+        fixture, monkeypatch, dirty=False, repo_key="infra-private"
+    )
+    state = delegate._read_state(state_path)
+    head = delegate._resolve_sha(source)
+    assert delegate._rescue_repo(source).root == private
+    bad = dict(state, repository="unknown/forged")
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=bad)
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, repository=None))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, repository_id="unknown/mismatch"))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, agent="codex"))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, task_id="another-task", state=state)
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(source, state=dict(state, worktree_path=str(private)))
+    alias = source.with_name("alias")
+    alias.symlink_to(source, target_is_directory=True)
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(alias, state=dict(state, worktree_path=str(alias)))
+    with pytest.raises(delegate.SnapshotRefusal):
+        delegate._rescue_repo(Path(str(source) + "\u202e"), state=state)
+    # A forged common-dir registration cannot borrow a foreign object store.
+    admin = delegate._rescue_repo(source).admin_dir
+    common = admin / "commondir"
+    saved = common.read_bytes()
+    common.write_text(str(delegate._REPO_ROOT / ".git"))
+    with pytest.raises(delegate._RescueFailure):
+        delegate._rescue_repo(source, state=state)
+    common.write_bytes(saved)
+    refused = delegate._auto_finalize_dirty_worktree(
+        worktree=source, task_id="another-task", agent=state["agent"], branch=state["worktree_branch"],
+        base_branch="main", owned_paths=["artifact.txt"],
+    )
+    assert not refused.ok and "rescue_worktree_unregistered" in refused.error
+    delegate._write_state_atomic(state_path, bad)
+    assert delegate._count_unpushed_commits(source, state["worktree_branch"], task_id=state["task_id"]) is None
+    row = delegate._rescue_task(state_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "not a registered dispatch worktree"
+    assert delegate._resolve_sha(source) == head
+    assert "rescue/cursor/rescue-test" not in refs(destination)
+
+
+def test_explicit_push_without_upstream_is_delivered(publication, tmp_path, monkeypatch):
+    worktree, _origin, _base, _marker = publication
+    write_commit(worktree)
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/codex/finalize")
+    _git_out(worktree, "update-ref", "-d", "refs/remotes/origin/codex/finalize")
+    assert delegate._count_unpushed_commits(worktree, "codex/finalize") == 0
+
+    from tests.test_delegate import _rescue_checkout
+
+    fixture = tmp_path / "registered"
+    fixture.mkdir()
+    private, source, origin, state_path = _rescue_checkout(fixture, monkeypatch, dirty=False, repo_key="infra-private")
+    state = delegate._read_state(state_path)
+    branch = state["worktree_branch"]
+    base = _git_out(private, "rev-parse", "HEAD").strip()
+    with delegate._finalize_execution_context(source, task_id=state["task_id"]) as context:
+        assert context.driver_base == base != delegate._resolve_sha(delegate._REPO_ROOT)
+        assert context.repository == state["repository"]
+    with monkeypatch.context() as pinned:
+        pinned.setattr(SafeGitContext, "read_source_ref", lambda *_a, **_k: pytest.fail("driver HEAD reread"))
+        with delegate._finalize_execution_context(
+            source, task_id=state["task_id"], validated_driver_base=base,
+        ) as context:
+            assert context.driver_base == base
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=source,
+        task_id=state["task_id"],
+        agent=state["agent"],
+        branch=branch,
+        base_branch="main",
+        base_sha=base,
+        owned_paths=["artifact.txt"],
+    )
+    assert result.ok, result.error
+    assert _git_out(origin, "rev-parse", f"refs/heads/{branch}").strip() == result.commit_sha
+    _git_out(source, "update-ref", "-d", f"refs/remotes/origin/{branch}")
+    assert delegate._count_unpushed_commits(source, branch, task_id=state["task_id"]) == 0
+    assert delegate._publication_commits_ahead(source, "origin/main", base, task_id=state["task_id"]) == 1
+    assert _git_out(source, "status", "--porcelain") == ""
+    # Reused checkout records must neither select a stale task nor make the
+    # explicit current task's dirty move inventory depend on scan order.
+    stale_id = "stale-finalizer"
+    delegate._write_state_atomic(delegate._state_path(stale_id), dict(
+        state, task_id=stale_id, repository="unknown/forged",
+    ))
+    with pytest.raises(delegate.SnapshotRefusal, match="rescue_worktree_unregistered"):
+        delegate._rescue_repo(source)
+    (source / "artifact.txt").write_text("current task dirty work\n")
+    assert delegate._auto_finalize_additions_deletions(source, task_id=state["task_id"]) == ((), ())
+    dirty = delegate._auto_finalize_dirty_worktree(
+        worktree=source, task_id=state["task_id"], agent=state["agent"], branch=branch,
+        base_branch="main", base_sha=base, owned_paths=["artifact.txt"],
+    )
+    assert dirty.ok, dirty.error
+    assert _git_out(origin, "show", f"{dirty.commit_sha}:artifact.txt") == "current task dirty work\n"
+
+
+def test_forged_base_tracking_ref_cannot_hide_completed_commits(publication):
+    worktree, _origin, base, _marker = publication
+    head = write_commit(worktree)
+    _git_out(worktree, "update-ref", "refs/remotes/origin/main", head)
+    assert delegate._count_commits_ahead(worktree, "origin/main", base_sha=base, publication=True) == 1
+
+
+def test_poisoned_intermediate_commit_graph_cannot_hide_protected_path(publication):
+    worktree, origin, base, marker = publication
+    (worktree / "a").mkdir()
+    harmless = write_commit(worktree, "a/owned")
+    harmless_tree = _git_out(worktree, "rev-parse", f"{harmless}^{{tree}}").strip()
+    hidden = write_commit(worktree, ".githooks/pre-push", "#!/bin/sh\nexit 0\n")
+    _git_out(worktree, "restore", f"--source={base}", "--staged", "--worktree", ".githooks/pre-push")
+    _git_out(worktree, "commit", "-m", "revert hidden hook")
+    head = delegate._resolve_sha(worktree)
+    _git_out(worktree, "commit-graph", "write", "--reachable")
+    graph = worktree / ".git/objects/info/commit-graph"
+    data = bytearray(graph.read_bytes())
+    assert data[:6] == b"CGPH\x01\x01", "probe requires the SHA-1 commit-graph format"
+    chunks = {
+        bytes(data[offset : offset + 4]): struct.unpack_from(">Q", data, offset + 4)[0]
+        for offset in range(8, 8 + data[6] * 12, 12)
+    }
+    count = struct.unpack_from(">I", data, chunks[b"OIDF"] + 255 * 4)[0]
+    oids = [bytes(data[chunks[b"OIDL"] + i * 20 : chunks[b"OIDL"] + (i + 1) * 20]) for i in range(count)]
+    record = chunks[b"CDAT"] + oids.index(bytes.fromhex(hidden)) * 36
+    data[record : record + 20] = bytes.fromhex(harmless_tree)
+    data[-20:] = hashlib.sha1(data[:-20]).digest()
+    graph.chmod(0o644)
+    graph.write_bytes(data)
+    concealed = _git_out(worktree, "-c", "core.commitGraph=true", "log", "--format=", "--name-only", f"{base}..{head}")
+    assert ".githooks/pre-push" not in concealed
+    assert "a/owned" in concealed
+    real = _git_out(worktree, "-c", "core.commitGraph=false", "diff-tree", "-r", "--name-only", harmless, hidden)
+    assert ".githooks/pre-push" in real
+
+    result = publish(publication, owned_paths=["a", ".githooks"])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_publication_uses_only_the_copied_objects(publication, monkeypatch):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    blob = _git_out(worktree, "rev-parse", "HEAD:artifact.txt").strip()
+    prepare = SafeGitContext.prepare_validation
+
+    def mutate_source_after_validation(context, **kwargs):
+        assert "GIT_ALTERNATE_OBJECT_DIRECTORIES" not in context.env
+        assert not (context.git_dir / "objects/info/alternates").exists()
+        assert context.checked("config", "core.commitGraph") == "false"
+        assert context.checked("config", "core.useReplaceRefs") == "false"
+        prepare(context, **kwargs)
+        # Damage a source object only after it was received and re-hashed.
+        # The push must keep using that received copy, never the source.
+        source_blob = worktree / ".git/objects" / blob[:2] / blob[2:]
+        source_blob.chmod(0o644)
+        source_blob.write_bytes(b"corrupt worker object")
+        assert (context.checkout / "artifact.txt").read_text() == "owned\n"
+
+    monkeypatch.setattr(SafeGitContext, "prepare_validation", mutate_source_after_validation)
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+    assert marker.read_text() == "checked"
+
+
+@pytest.mark.parametrize(
+    "attack",
+    [
+        "replace-commit",
+        "replace-tree",
+        "packed-replace",
+        "grafts",
+        "graft-config",
+        "shallow",
+        "alternates",
+        "http-alternates",
+    ],
+)
+def test_worker_object_metadata_is_a_typed_refusal(publication, attack):
+    worktree, origin, base, marker = publication
+    intermediate = write_commit(worktree)
+    head = write_commit(worktree, content="final owned\n")
+    if attack.startswith("replace") or attack == "packed-replace":
+        old, new = intermediate, base
+        if attack == "replace-tree":
+            old, new = [_git_out(worktree, "rev-parse", f"{oid}^{{tree}}").strip() for oid in (intermediate, base)]
+        _git_out(worktree, "replace", old, new)
+        if attack == "packed-replace":
+            _git_out(worktree, "pack-refs", "--all")
+    elif attack == "graft-config":
+        grafts = worktree / ".git/custom-grafts"
+        grafts.write_text(intermediate + "\n")
+        _git_out(worktree, "config", "core.graftFile", str(grafts))
+    else:
+        name, content = {
+            "grafts": ("info/grafts", intermediate + "\n"),
+            "shallow": ("shallow", intermediate + "\n"),
+            "alternates": ("objects/info/alternates", str(worktree / ".git/objects") + "\n"),
+            "http-alternates": ("objects/info/http-alternates", "https://invalid.invalid/objects\n"),
+        }[attack]
+        (worktree / ".git" / name).write_text(content)
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_object_hardening_violation"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize(
+    "component", [".git ", ".git.", "GIT~1", ".g\u200cit", "\uff0e\uff47\uff49\uff54", ".git\\hooks"]
+)
+def test_platform_alias_tree_names_are_refused(publication, component):
+    worktree, origin, base, marker = publication
+    blob = git_input(worktree, "hash-object", "-w", "--stdin", data="hostile\n")
+    nested = git_input(worktree, "mktree", data=f"100644 blob {blob}\tworker\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {nested}\t{component}\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {tree}\ta\n" + _git_out(worktree, "ls-tree", base))
+    intermediate = _git_out(worktree, "commit-tree", tree, "-p", base, "-m", "platform alias").strip()
+    clean = _git_out(worktree, "rev-parse", f"{base}^{{tree}}").strip()
+    head = _git_out(worktree, "commit-tree", clean, "-p", intermediate, "-m", "clean tip").strip()
+    _git_out(worktree, "update-ref", "refs/heads/codex/finalize", head)
+
+    result = publish(publication, owned_paths=["a"])
+
+    assert not result.ok
+    assert result.error == (
+        "auto_finalize_invalid_tree_path" if component == "\uff0e\uff47\uff49\uff54" else "auto_finalize_fsck_failed"
+    )
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("prefix", ["\u017fcripts/pre_commit", "\uff53cripts/pre_commit"])
+def test_unicode_protected_prefix_is_refused(publication, prefix):
+    worktree, origin, _base, marker = publication
+    (worktree / prefix).mkdir(parents=True)
+    head = write_commit(worktree, f"{prefix}/worker")
+
+    result = publish(publication, owned_paths=[prefix])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("shape", ["side-branch", "octopus"])
+@pytest.mark.parametrize("path", ["unowned.txt", ".githooks/worker"])
+def test_non_first_parent_history_is_checked(publication, shape, path):
+    worktree, origin, base, marker = publication
+    _git_out(worktree, "checkout", "-b", "side", base)
+    head = write_commit(worktree, path)
+    _git_out(worktree, "rm", path)
+    _git_out(worktree, "commit", "-m", "revert side branch hazard")
+    side = delegate._resolve_sha(worktree)
+    _git_out(worktree, "checkout", "codex/finalize")
+    first = write_commit(worktree)
+    parents = ["-p", first, "-p", side]
+    if shape == "octopus":
+        third = _git_out(worktree, "commit-tree", f"{base}^{{tree}}", "-p", base, "-m", "third parent").strip()
+        parents += ["-p", third]
+    head = _git_out(worktree, "commit-tree", f"{first}^{{tree}}", *parents, "-m", "merge").strip()
+    _git_out(worktree, "update-ref", "refs/heads/codex/finalize", head)
+
+    result = publish(publication, owned_paths=["artifact.txt", ".githooks"])
+
+    assert not result.ok
+    assert result.error == (
+        "auto_finalize_validation_changed" if path.startswith(".githooks") else "auto_finalize_committed_scope_unowned"
+    )
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("worker_unowned", [False, True])
+@pytest.mark.parametrize("recorded_base", ["original", "current"])
+def test_merge_of_trusted_newer_main_charges_only_worker_changes(publication, worker_unowned, recorded_base):
+    worktree, origin, base, marker = publication
+    _git_out(worktree, "checkout", "-B", "main", base)
+    write_commit(worktree, "main-only.txt", "trusted upstream\n")
+    # Even changes to validation are trusted when they come from main.
+    current = write_commit(worktree, ".githooks/upstream", "trusted hook support\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    _git_out(worktree, "checkout", "codex/finalize")
+    write_commit(worktree)
+    if worker_unowned:
+        write_commit(worktree, "unowned.txt")
+    _git_out(worktree, "merge", "--no-edit", "main")
+    head = delegate._resolve_sha(worktree)
+    packet = (worktree, origin, base if recorded_base == "original" else current, marker)
+
+    result = publish(packet)
+
+    if worker_unowned:
+        assert not result.ok
+        assert result.error == "auto_finalize_committed_scope_unowned"
+        assert "refs/heads/codex/finalize" not in refs(origin)
+        assert not marker.exists()
+    else:
+        assert result.ok, result.error
+        assert "refs/heads/codex/finalize " + head in refs(origin)
+        assert _git_out(origin, "show", f"{head}:main-only.txt") == "trusted upstream\n"
+        assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+        assert marker.read_text() == "checked"
+
+
+def test_precheck_timeout_has_its_own_typed_outcome(publication, monkeypatch):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    (worktree / "artifact.txt").write_text("dirty owned\n")
+
+    def timeout(*_args, **_kwargs):
+        raise subprocess.TimeoutExpired(["git", "pack-objects"], 120)
+
+    monkeypatch.setattr(SafeGitContext, "isolate_objects", timeout)
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_scope_check_timeout"
+    assert delegate.is_public_cause(result.error)
+    assert result.commit_sha == head
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert (worktree / "artifact.txt").read_text() == "dirty owned\n"
+
+
+@pytest.mark.parametrize("component", [".git ", "GIT~1"])
+def test_python_tree_guard_catches_alias_without_fsck(publication, component):
+    worktree, origin, base, _marker = publication
+    blob = git_input(worktree, "hash-object", "-w", "--stdin", data="hostile\n")
+    nested = git_input(worktree, "mktree", data=f"100644 blob {blob}\tworker\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {nested}\t{component}\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {tree}\ta\n" + _git_out(worktree, "ls-tree", base))
+    head = _git_out(worktree, "commit-tree", tree, "-p", base, "-m", "alias").strip()
+    # Deliberately bypass isolate_objects and its strict fsck.
+    from scripts.orchestration.safe_git_context import SnapshotRefusal
+
+    with SafeGitContext(
+        objects=worktree / ".git/objects", temp_root=worktree.parent, origin=str(origin), local_remote=True
+    ) as context:
+        context.driver_base = base
+        with pytest.raises(SnapshotRefusal, match=r"^auto_finalize_invalid_tree_path$"):
+            delegate._finalize_history(context, head=head, base=base, owned=["a"])
+
+
+@pytest.fixture(scope="session")
+def large_history_store(tmp_path_factory):
+    """100k reachable historical blobs, a small tip, no dependency on host data."""
+    root = tmp_path_factory.mktemp("finalize-large-history")
+    store = root / "history.git"
+    _git_out(root, "init", "--bare", str(store))
+    stream = root / "import"
+    with stream.open("wb") as output:
+        for i in range(100_000):
+            content = hashlib.shake_256(str(i).encode()).digest(512)
+            output.write(f"blob\nmark :{i + 1}\ndata {len(content)}\n".encode() + content + b"\n")
+        output.write(b"commit refs/heads/main\ncommitter Test <test@example.com> 1 +0000\ndata 4\nbase\n")
+        for i in range(100_000):
+            output.write(f"M 100644 :{i + 1} historical-{i}\n".encode())
+        output.write(
+            b"\ncommit refs/heads/main\ncommitter Test <test@example.com> 2 +0000\ndata 4\ntrim\ndeleteall\n\n"
+        )
+    with stream.open("rb") as source:
+        subprocess.run(
+            ["git", "fast-import", "--quiet"],
+            cwd=store,
+            stdin=source,
+            capture_output=True,
+            env=delegate._sanitized_git_env(),
+            check=True,
+            timeout=120,
+        )
+    count = len(_git_out(store, "rev-list", "--objects", "--all").splitlines())
+    assert count >= 100_000
+    return store
+
+
+def full_history_copy(context, base, head):
+    """The old production copy, retained only as the performance denominator."""
+    started = time.monotonic()
+    oids = context.checked("rev-list", "--objects", "--no-object-names", head, base)
+    pack = context.root / "full-history.pack"
+    with pack.open("wb") as output:
+        subprocess.run(
+            ["git", "pack-objects", "--stdout", "--no-reuse-delta", "--no-reuse-object"],
+            cwd=context.root,
+            env=context.env,
+            input=oids.encode(),
+            stdout=output,
+            stderr=subprocess.PIPE,
+            check=True,
+            timeout=120,
+        )
+    context.env.pop("GIT_ALTERNATE_OBJECT_DIRECTORIES")
+    with pack.open("rb") as source:
+        subprocess.run(
+            ["git", "index-pack", "--stdin"],
+            cwd=context.root,
+            env=context.env,
+            stdin=source,
+            capture_output=True,
+            check=True,
+            timeout=120,
+        )
+    assert context.run("fsck", "--strict", "--no-dangling", head, base).returncode == 0
+    return time.monotonic() - started, pack.stat().st_size
+
+
+def test_tiny_finalize_budget_on_100k_object_history(publication, large_history_store, monkeypatch):
+    worktree, origin, _base, marker = publication
+    _git_out(worktree, "fetch", str(large_history_store), "refs/heads/main")
+    _git_out(worktree, "merge", "--allow-unrelated-histories", "-m", "trusted large history", "FETCH_HEAD")
+    base = delegate._resolve_sha(worktree)
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    head = write_commit(worktree)
+    with SafeGitContext(
+        objects=worktree / ".git/objects", temp_root=worktree.parent, origin=str(origin), local_remote=True
+    ) as context:
+        full_seconds, full_bytes = full_history_copy(context, base, head)
+    copied = []
+    isolate = SafeGitContext.isolate_objects
+
+    def capture_copy(context, **kwargs):
+        isolate(context, **kwargs)
+        copied.append(sum(path.stat().st_size for path in context.git_dir.glob("objects/pack/*.pack")))
+
+    monkeypatch.setattr(SafeGitContext, "isolate_objects", capture_copy)
+    # Include both precheck and publication, not just the optimized helper.
+    (worktree / "artifact.txt").write_text("dirty owned\n")
+    started = time.monotonic()
+    result = publish((worktree, origin, base, marker))
+    elapsed = time.monotonic() - started
+
+    assert result.ok, result.error
+    assert _git_out(origin, "show", f"{result.commit_sha}:artifact.txt") == "dirty owned\n"
+    assert marker.read_text() == "checked"
+    # The precheck, the validation repository and the fresh transport repository each receive a copy.
+    assert len(copied) == 3
+    assert elapsed < full_seconds / 3, (elapsed, full_seconds)
+    assert max(copied) < full_bytes / 100
+    print(f"100k objects: full={full_seconds:.3f}s/{full_bytes}B finalize={elapsed:.3f}s copies={copied}")
+
+
+def test_copy_rehashes_corrupt_worker_object(publication):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    blob = _git_out(worktree, "rev-parse", "HEAD:artifact.txt").strip()
+    source = worktree / ".git/objects" / blob[:2] / blob[2:]
+    source.chmod(0o644)
+    source.write_bytes(zlib.compress(b"blob 5\0evil\n"))
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_copy_connectivity_never_falls_back_to_worker_base_objects(publication):
+    worktree, origin, base, marker = publication
+    head = write_commit(worktree)
+    blob = _git_out(origin, "rev-parse", f"{base}:README.md").strip()
+    source_blob = worktree / ".git/objects" / blob[:2] / blob[2:]
+    source_blob.unlink()
+    assert _git_out(origin, "show", f"{base}:README.md") == "base\n"
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def forge_loose_object(worktree, oid, kind, data):
+    """Plant other bytes under a real object name, as a same-user worker can."""
+    target = worktree / ".git/objects" / oid[:2] / oid[2:]
+    target.parent.mkdir(exist_ok=True)
+    if target.exists():
+        target.chmod(0o644)
+        target.unlink()
+    target.write_bytes(zlib.compress(f"{kind} {len(data)}\0".encode() + data))
+    # Local reads now return the forged bytes without re-hashing them.
+    shown = subprocess.run(
+        ["git", "cat-file", kind, oid],
+        cwd=worktree,
+        env=delegate._sanitized_git_env(),
+        capture_output=True,
+        check=False,
+        timeout=60,
+    )
+    assert shown.stdout == data
+
+
+@pytest.mark.parametrize("unpack_shared_pack", [False, True])
+def test_forged_base_subtree_cannot_hide_unowned_deletion(publication, unpack_shared_pack):
+    worktree, origin, _base, marker = publication
+    (worktree / "other").mkdir()
+    write_commit(worktree, "other/a.txt", "kept\n")
+    base = write_commit(worktree, "other/b.txt", "unowned\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    subtree = _git_out(worktree, "rev-parse", f"{base}:other").strip()
+    _git_out(worktree, "rm", "-r", "other")
+    _git_out(worktree, "commit", "-m", "delete unowned files")
+    head = write_commit(worktree)
+    if unpack_shared_pack:
+        # Packed objects win over loose ones, so a worker first unpacks them.
+        _git_out(worktree, "repack", "-ad")
+        pack_dir = worktree / ".git/objects/pack"
+        packs = list(pack_dir.glob("*.pack"))
+        assert packs
+        for pack in packs:
+            saved = worktree.parent / pack.name
+            for part in pack_dir.glob(pack.stem + ".*"):
+                part.rename(worktree.parent / part.name)
+            with saved.open("rb") as source:
+                subprocess.run(
+                    ["git", "unpack-objects", "-r"],
+                    cwd=worktree,
+                    env=delegate._sanitized_git_env(),
+                    stdin=source,
+                    capture_output=True,
+                    check=True,
+                    timeout=60,
+                )
+    # An empty forged subtree makes the deletion invisible to local reads.
+    forge_loose_object(worktree, subtree, "tree", b"")
+    assert "other/" not in _git_out(worktree, "diff-tree", "-r", "--name-only", base, head)
+
+    result = publish((worktree, origin, base, marker))
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_forged_base_hook_is_never_executed(publication):
+    worktree, origin, base, marker = publication
+    head = write_commit(worktree)
+    hook = _git_out(worktree, "rev-parse", f"{base}:.githooks/pre-push").strip()
+    executed = worktree.parent / "worker-code-ran"
+    forge_loose_object(worktree, hook, "blob", f'#!/bin/sh\nprintf stolen > "{executed}"\n'.encode())
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not executed.exists()
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize(
+    "path,code",
+    [("unowned.txt", "auto_finalize_committed_scope_unowned"), (".githooks/evil", "auto_finalize_validation_changed")],
+)
+def test_evil_merge_own_tree_is_checked(publication, path, code):
+    worktree, origin, base, marker = publication
+    first = write_commit(worktree)
+    second = _git_out(worktree, "commit-tree", f"{base}^{{tree}}", "-p", base, "-m", "clean side").strip()
+    write_commit(worktree, path, "only the merge introduces this\n")
+    tree = _git_out(worktree, "rev-parse", "HEAD^{tree}").strip()
+    head = _git_out(worktree, "commit-tree", tree, "-p", first, "-p", second, "-m", "evil merge").strip()
+    _git_out(worktree, "reset", "--hard", head)
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == code
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("during_publication", [False, True])
+def test_fetch_copy_timeout_is_not_a_push_timeout(publication, monkeypatch, during_publication):
+    worktree, origin, _base, marker = publication
+    write_commit(worktree)
+    if not during_publication:
+        (worktree / "artifact.txt").write_text("dirty owned\n")
+    run = SafeGitContext.run
+
+    def timeout_fetch(context, *args, **kwargs):
+        if "fetch" in args:
+            raise subprocess.TimeoutExpired(["git", "fetch"], 120)
+        return run(context, *args, **kwargs)
+
+    monkeypatch.setattr(SafeGitContext, "run", timeout_fetch)
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_copy_timeout"
+    assert delegate.is_public_cause(result.error)
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+
+
+def test_forged_base_attributes_cannot_hide_a_new_filter(publication):
+    worktree, origin, _base, marker = publication
+    base = write_commit(worktree, ".gitattributes", "README.md text\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    head = write_commit(worktree, ".gitattributes", "artifact.txt filter=worker\n")
+    # A forged base file claims the filter was already there, so comparing
+    # base and commit attributes would see no new filter.
+    attributes = _git_out(worktree, "rev-parse", f"{base}:.gitattributes").strip()
+    forge_loose_object(worktree, attributes, "blob", b"artifact.txt  filter=worker\n")
+
+    result = publish((worktree, origin, base, marker), owned_paths=["artifact.txt", ".gitattributes"])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_destination_ahead_of_every_received_commit_still_publishes(publication, tmp_path, monkeypatch):
+    worktree, origin, base, marker = publication
+    other = tmp_path / "other-writer"
+    _git_out(tmp_path, "clone", "--branch", "main", str(origin), str(other))
+    _git_out(other, "config", "user.email", "test@example.com")
+    _git_out(other, "config", "user.name", "test")
+    write_commit(other, "upstream.txt", "landed elsewhere\n")
+    _git_out(other, "push", "origin", "HEAD:refs/heads/main")
+    upstream = _git_out(other, "rev-parse", "HEAD").strip()
+    # Production: origin/main has moved past the driver's checkout, and its
+    # tip exists nowhere in the worker store or the scratch repository.
+    assert subprocess.run(
+        ["git", "cat-file", "-e", upstream], cwd=worktree, env=delegate._sanitized_git_env(), check=False, timeout=60
+    ).returncode
+    execution = delegate._finalize_execution_context
+
+    @contextlib.contextmanager
+    def driver_behind_destination(*args, **kwargs):
+        with execution(*args, **kwargs) as context:
+            context.driver_base = base
+            yield context
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", driver_behind_destination)
+    head = write_commit(worktree)
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+    assert marker.read_text() == "checked"
+
+
+# --- The publication scan runs in the driver, before any worker code (#10931) ---
+#
+# The agent git shim used to scan a finalize push in Git's own pre-push hook.
+# Publication now runs from an isolated repository, so the driver runs the
+# same scanner (scripts/opsec/git_push.scan_push) itself, credential-free,
+# on the exact id the transport later sends.
+
+_REAL_TRANSPORT_CREDENTIALS = delegate._finalize_transport_credentials
+_OVERRIDE_REASON = "synthetic: false positive"
+
+
+def commit_message(worktree, message, name="artifact.txt", content=None):
+    (worktree / name).write_text(content if content is not None else f"{message}\n")
+    _git_out(worktree, "add", name)
+    _git_out(worktree, "commit", "-q", "-m", message)
+    return _git_out(worktree, "rev-parse", "HEAD").strip()
+
+
+def advance_public_main(publication, message):
+    """A commit on the destination's main, as the public default branch, before the worker's change."""
+    worktree, origin, _base, marker = publication
+    public = commit_message(worktree, message, "public.txt")
+    _git_out(worktree, "push", "-q", "origin", "HEAD:refs/heads/main")
+    return worktree, origin, public, marker
+
+
+@pytest.fixture
+def override_log(tmp_path, monkeypatch):
+    """The gate's durable override log and claims, under the test's own root."""
+    from scripts.opsec import prepublish
+
+    root = tmp_path / "opsec-root"
+    root.mkdir()
+    monkeypatch.setattr(prepublish, "primary_root", lambda cwd=None: root)
+    log = root / "batch_state/opsec/overrides.jsonl"
+    return lambda: [line for line in log.read_text().splitlines()] if log.exists() else []
+
+
+def diagnostics(task_id):
+    """Create the task record its local diagnostic file is kept beside; return a reader of that file."""
+    if not delegate._state_path(task_id).exists():
+        delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    return lambda: delegate._diagnostic_path(task_id).read_text(encoding="utf-8")
+
+
+def assert_scan_refused(result, origin, marker, before):
+    assert not result.ok
+    assert result.error == "auto_finalize_opsec_blocked"
+    assert delegate.is_public_cause(result.error)
+    assert refs(origin) == before
+    # The scan precedes validation: no worker code ran.
+    assert not marker.exists()
+
+
+def mergetag_commit(worktree, parent, tag_name):
+    """A commit whose embedded mergetag names ``tag_name``; its own message is clean."""
+    tree = _git_out(worktree, "rev-parse", f"{parent}^{{tree}}").strip()
+    ident = "test <test@example.com> 1700000000 +0000"
+    raw = (
+        f"tree {tree}\nparent {parent}\nauthor {ident}\ncommitter {ident}\n"
+        f"mergetag object {parent}\n type commit\n tag {tag_name}\n tagger {ident}\n \n clean tag message\n"
+        "\nclean merge subject\n"
+    )
+    return git_input(worktree, "hash-object", "-t", "commit", "-w", "--stdin", data=raw)
+
+
+@pytest.mark.parametrize("shape", ["head", "intermediate", "inherited", "ref_name", "mergetag"])
+def test_flagged_publication_text_is_refused_with_remote_unchanged(publication, shape):
+    from tests.opsec_fixtures import TOKEN
+
+    worktree, origin, base, marker = publication
+    branch = "codex/finalize"
+    if shape == "head":
+        commit_message(worktree, "worker change " + TOKEN)
+    elif shape == "intermediate":
+        commit_message(worktree, "worker change " + TOKEN, content="first\n")
+        commit_message(worktree, "clean follow-up", content="second\n")
+    elif shape == "inherited":
+        # A recorded base the destination's main does not hold is not public.
+        base = commit_message(worktree, "accepted baseline " + TOKEN, "baseline.txt")
+        _git_out(worktree, "push", "-q", "origin", "HEAD:refs/heads/trusted-base")
+        commit_message(worktree, "clean worker change")
+    elif shape == "ref_name":
+        branch = f"codex/finalize-{TOKEN}"
+        _git_out(worktree, "checkout", "-q", "-b", branch)
+        commit_message(worktree, "clean worker change")
+    else:
+        clean = commit_message(worktree, "clean worker change")
+        _git_out(worktree, "update-ref", "refs/heads/codex/finalize", mergetag_commit(worktree, clean, "v-" + TOKEN))
+    head = delegate._resolve_sha(worktree)
+    before = refs(origin)
+    read_diagnostics = diagnostics("opsec-refused")
+
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="opsec-refused",
+        agent="codex",
+        branch=branch,
+        base_branch="main",
+        base_sha=base,
+        owned_paths=["artifact.txt"],
+    )
+
+    assert_scan_refused(result, origin, marker, before)
+    assert result.commit_sha == head == delegate._resolve_sha(worktree)
+    # The local diagnostic names the field, never the flagged value.
+    diagnostic = read_diagnostics()
+    field = {"ref_name": "branch[1].name", "mergetag": "mergetag[1].tagname"}.get(shape, ".message")
+    assert "OPSEC blocked: rule=synthetic-rule" in diagnostic and field in diagnostic
+    assert TOKEN not in diagnostic
+
+
+def test_flagged_public_history_with_a_clean_worker_commit_publishes(publication):
+    from tests.opsec_fixtures import TOKEN
+
+    worktree, origin, _public, marker = advance_public_main(publication, "public change " + TOKEN)
+    head = commit_message(worktree, "clean worker change")
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+def test_public_head_ahead_of_the_driver_base_is_fetched_before_the_scan(publication, monkeypatch):
+    """The public main can be newer than the driver's checkout; its history is still excluded."""
+    from tests.opsec_fixtures import TOKEN
+
+    worktree, origin, base, marker = publication
+    commit_message(worktree, "public change " + TOKEN, "public.txt")
+    _git_out(worktree, "push", "-q", "origin", "HEAD:refs/heads/main")
+    flagged = _git_out(worktree, "rev-parse", "HEAD").strip()
+    head = commit_message(worktree, "clean worker change")
+    # A later public commit, only on the destination: the scan's head is not in the received graph.
+    later = _git_out(worktree, "commit-tree", f"{flagged}^{{tree}}", "-p", flagged, "-m", "later public").strip()
+    _git_out(worktree, "push", "-q", "origin", f"{later}:refs/heads/main")
+    _git_out(worktree, "update-ref", "-d", "refs/remotes/origin/main")
+    execution = delegate._finalize_execution_context
+
+    @contextlib.contextmanager
+    def driver_behind_public(*args, **kwargs):
+        with execution(*args, **kwargs) as context:
+            context.driver_base = flagged
+            yield context
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", driver_behind_public)
+
+    result = publish((worktree, origin, base, marker))
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+
+
+@pytest.mark.parametrize("failure", ["baseline", "matcher", "audit_log"])
+def test_unavailable_scan_inputs_refuse_publication(publication, monkeypatch, tmp_path, override_log, failure):
+    from scripts.opsec import prepublish
+    from tests.opsec_fixtures import TOKEN
+
+    worktree, origin, _public, marker = advance_public_main(publication, "public change " + TOKEN)
+    if failure == "baseline":
+        # Without a bound public head the whole range is scanned, public history included.
+        monkeypatch.setattr(delegate, "_finalize_public_repository", lambda: None)
+        commit_message(worktree, "clean worker change")
+    elif failure == "matcher":
+        monkeypatch.setattr(prepublish, "private_tooling", lambda: tmp_path / "absent")
+        commit_message(worktree, "clean worker change")
+    else:
+        unwritable = tmp_path / "unwritable-root"
+        unwritable.mkdir()
+        (unwritable / "batch_state").write_text("not a directory\n")
+        monkeypatch.setattr(prepublish, "primary_root", lambda cwd=None: unwritable)
+        monkeypatch.setenv(prepublish.OVERRIDE, _OVERRIDE_REASON)
+        commit_message(worktree, "worker change " + TOKEN)
+    before = refs(origin)
+    read_diagnostics = diagnostics("security-finalize")
+
+    result = publish(publication)
+
+    assert_scan_refused(result, origin, marker, before)
+    diagnostic = read_diagnostics()
+    expected = {
+        "baseline": "OPSEC blocked: rule=synthetic-rule",
+        "matcher": "auto_finalize_opsec_blocked",
+        "audit_log": "override log unavailable",
+    }[failure]
+    assert expected in diagnostic
+
+
+def test_driver_override_publishes_once_and_is_logged_once(publication, monkeypatch, override_log):
+    from scripts.opsec import prepublish
+    from tests.opsec_fixtures import TOKEN
+
+    worktree, origin, _base, marker = publication
+    monkeypatch.setenv(prepublish.OVERRIDE, _OVERRIDE_REASON)
+    head = commit_message(worktree, "worker change " + TOKEN)
+    read_diagnostics = diagnostics("security-finalize")
+
+    first = publish(publication)
+
+    assert first.ok, first.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    rows = override_log()
+    assert len(rows) == 1 and _OVERRIDE_REASON in rows[0] and TOKEN not in rows[0]
+    # The override belongs to this command: a later flagged publication in it is refused.
+    commit_message(worktree, "second worker change " + TOKEN, content="again\n")
+    before = refs(origin)
+    marker.unlink()
+
+    second = publish(publication)
+
+    assert_scan_refused(second, origin, marker, before)
+    assert "override already consumed" in read_diagnostics()
+    assert len(override_log()) == 1
+
+
+@pytest.mark.parametrize("source", ["context_env", "task_record", "worktree_file", "worker_config"])
+def test_override_outside_the_driver_command_is_ignored(publication, monkeypatch, override_log, source):
+    from scripts.opsec import prepublish
+    from tests.opsec_fixtures import TOKEN
+
+    worktree, origin, _base, marker = publication
+    monkeypatch.delenv(prepublish.OVERRIDE, raising=False)
+    if source == "context_env":
+        execution = delegate._finalize_execution_context
+
+        @contextlib.contextmanager
+        def worker_supplied_override(*args, **kwargs):
+            with execution(*args, **kwargs) as context:
+                context.env[prepublish.OVERRIDE] = _OVERRIDE_REASON
+                yield context
+
+        monkeypatch.setattr(delegate, "_finalize_execution_context", worker_supplied_override)
+    elif source == "task_record":
+        delegate._write_state_atomic(
+            delegate._state_path("security-finalize"),
+            {
+                "task_id": "security-finalize",
+                prepublish.OVERRIDE: _OVERRIDE_REASON,
+                "env": {prepublish.OVERRIDE: _OVERRIDE_REASON},
+            },
+        )
+    elif source == "worktree_file":
+        (worktree / ".env").write_text(f"{prepublish.OVERRIDE}={_OVERRIDE_REASON}\n")
+        _git_out(worktree, "add", ".env")
+    else:
+        _git_out(worktree, "config", "--add", f"env.{prepublish.OVERRIDE}.value", _OVERRIDE_REASON)
+    commit_message(worktree, "worker change " + TOKEN)
+    before = refs(origin)
+
+    result = publish(publication, owned_paths=["artifact.txt", ".env"])
+
+    assert_scan_refused(result, origin, marker, before)
+    assert override_log() == []
+
+
+def test_head_moved_after_the_scan_is_never_pushed(publication, monkeypatch):
+    worktree, origin, _base, marker = publication
+    head = commit_message(worktree, "clean worker change")
+    real_scan = delegate._finalize_opsec_scan
+
+    def scan_then_move(context, **kwargs):
+        real_scan(context, **kwargs)
+        _git_out(worktree, "commit", "-q", "--allow-empty", "-m", "moved after the scan")
+
+    monkeypatch.setattr(delegate, "_finalize_opsec_scan", scan_then_move)
+    before = refs(origin)
+
+    result = publish(publication)
+
+    assert not result.ok and result.error == "auto_finalize_head_moved"
+    assert refs(origin) == before and not marker.exists()
+    assert result.commit_sha == head != delegate._resolve_sha(worktree)
+
+
+def test_forged_worker_public_refs_never_exempt_a_flagged_commit(publication):
+    from tests.opsec_fixtures import TOKEN
+
+    worktree, origin, _base, marker = publication
+    head = commit_message(worktree, "worker change " + TOKEN)
+    # Every local name for public history now claims the flagged commit.
+    for ref in ("refs/remotes/origin/main", "refs/heads/main", "refs/remotes/origin/HEAD"):
+        _git_out(worktree, "update-ref", ref, head)
+    before = refs(origin)
+
+    result = publish(publication)
+
+    assert_scan_refused(result, origin, marker, before)
+
+
+def test_validation_never_sees_the_transport_credential(publication, monkeypatch):
+    """The trusted hook (worker tests) runs without the token; only the hook-free transport receives it."""
+    import base64
+
+    from scripts.agent_runtime import agent_github_identity
+
+    worktree, origin, _base, marker = publication
+    sentinel = "SENTINEL-TRANSPORT-TOKEN-10931"
+    encoded = base64.b64encode(f"x-access-token:{sentinel}".encode()).decode()
+    dump = worktree.parent / "validation-dump"
+    hook = worktree / ".githooks/pre-push"
+    hook.write_text(
+        "#!/bin/sh\n"
+        f'{{ env; git config --list --show-origin; git config --get-all credential.helper; cat "$GIT_DIR/config"; }} > "{dump}" 2>&1\n'
+        f'printf checked >> "{marker}"\n'
+    )
+    _git_out(worktree, "add", ".githooks/pre-push")
+    _git_out(worktree, "commit", "-q", "-m", "trusted base dumps its environment")
+    _git_out(worktree, "push", "-q", "origin", "HEAD:refs/heads/main")
+    base = _git_out(worktree, "rev-parse", "HEAD").strip()
+    head = commit_message(worktree, "clean worker change")
+    monkeypatch.setattr(delegate, "_finalize_transport_credentials", _REAL_TRANSPORT_CREDENTIALS)
+    monkeypatch.setattr(
+        agent_github_identity,
+        "resolve_agent_github_identity",
+        lambda **_kwargs: agent_github_identity.GitHubIdentity(token=sentinel, source="token"),
+    )
+    real_run = delegate.subprocess.run
+    pushes = []
+
+    def run(args, **kwargs):
+        if list(args[1:2]) == ["push"]:
+            pushes.append(dict(kwargs["env"]))
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+
+    result = publish((worktree, origin, base, marker))
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    seen = dump.read_text()
+    assert "GIT_DIR=" in seen  # the dump really captured the validation environment
+    assert sentinel not in seen and encoded not in seen and "extraheader" not in seen.lower()
+    # Exactly one push: the transport, with no hooks and the URL-scoped header in its environment alone.
+    assert len(pushes) == 1
+    settings = {
+        pushes[0][f"GIT_CONFIG_KEY_{index}"]: pushes[0][f"GIT_CONFIG_VALUE_{index}"]
+        for index in range(int(pushes[0]["GIT_CONFIG_COUNT"]))
+    }
+    assert settings[f"http.{origin}.extraHeader"] == f"Authorization: Basic {encoded}"
+    hooks = Path(settings["core.hooksPath"])
+    assert hooks.name == "transport-hooks"
+    assert not any(sentinel in value for key, value in pushes[0].items() if not key.startswith("GIT_CONFIG_VALUE_"))
+
+
+# --- Validation code can write the repository it runs in; the credentialed push must not read it (#10931) ---
+
+
+def hostile_validation(publication, script):
+    """A trusted base hook whose run executes code that edits the validation repository, as a worker test can."""
+    worktree, origin, _base, marker = publication
+    hook = worktree / ".githooks/pre-push"
+    hook.write_text("#!/bin/sh\nset -e\n" + script + f'printf checked >> "{marker}"\n')
+    _git_out(worktree, "add", ".githooks/pre-push")
+    _git_out(worktree, "commit", "-q", "-m", "trusted base runs validation code")
+    _git_out(worktree, "push", "-q", "origin", "HEAD:refs/heads/main")
+    base = _git_out(worktree, "rev-parse", "HEAD").strip()
+    return (worktree, origin, base, marker), write_commit(worktree)
+
+
+def recorded_pushes(monkeypatch, *keys):
+    """Each push's view of its configuration, read with its own cwd and environment as it starts."""
+    real_run = delegate.subprocess.run
+    pushes = []
+
+    def config(*args, **kwargs):
+        return real_run(["git", "config", *args], capture_output=True, text=True, timeout=60, **kwargs)
+
+    def run(args, **kwargs):
+        if list(args[1:2]) == ["push"]:
+            where = {"cwd": kwargs["cwd"], "env": kwargs["env"]}
+            listed = config("--list", "--show-origin", **where)
+            assert listed.returncode == 0, listed.stderr
+            pushes.append((listed.stdout, {key: config("--get", key, **where).stdout.strip() for key in keys}))
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    return pushes
+
+
+def unintended_copy(publication, tmp_path):
+    """A writable copy of the destination: a redirected push lands there and can pass as delivered."""
+    unintended = tmp_path / "unintended.git"
+    _git_out(tmp_path, "clone", "-q", "--bare", str(publication[1]), str(unintended))
+    return unintended
+
+
+def test_validation_written_alias_and_include_never_reach_the_credentialed_push(publication, tmp_path):
+    unintended = unintended_copy(publication, tmp_path)
+    ran = tmp_path / "hostile-program-ran"
+    program = tmp_path / "hostile-program"
+    program.write_text(f'#!/bin/sh\nenv > "{ran}"\nexit 0\n')
+    program.chmod(0o755)
+    include = tmp_path / "hostile-config"
+    include.write_text(f'[remote "origin"]\n\tpushurl = {unintended}\n[alias]\n\tpush = !{program}\n')
+    publication, head = hostile_validation(
+        publication, f"git config alias.push '!{program}'\ngit config include.path '{include}'\n"
+    )
+    _worktree, origin, _base, marker = publication
+
+    result = publish(publication)
+
+    assert "refs/heads/codex/finalize" not in refs(unintended), "an included pushurl redirected the credentialed push"
+    assert not ran.exists(), "a configuration-defined command ran during publication"
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+def test_validation_created_tag_with_follow_tags_never_reaches_the_remote(publication):
+    publication, head = hostile_validation(
+        publication, "git tag -a hook-tag -m 'unowned ref' HEAD\ngit config push.followTags true\n"
+    )
+    _worktree, origin, _base, marker = publication
+
+    result = publish(publication)
+
+    assert "refs/tags/hook-tag" not in refs(origin), "a validation-time tag escaped branch-only publication"
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+def test_validation_rewritten_destination_never_redirects_or_fakes_delivery(publication, tmp_path):
+    unintended = unintended_copy(publication, tmp_path)
+    publication, head = hostile_validation(publication, f"git config --replace-all remote.origin.url '{unintended}'\n")
+    _worktree, origin, _base, marker = publication
+
+    result = publish(publication)
+
+    assert "refs/heads/codex/finalize" not in refs(unintended), "the rewritten url received the credentialed push"
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+    with delegate._finalize_execution_context(_worktree) as validation:
+        destination = validation.origin
+        validation.origin = "https://example.invalid/foreign.git"
+        with pytest.raises(delegate.SnapshotRefusal, match="auto_finalize_remote_unverified"):
+            with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
+                pytest.fail("moved destination accepted")
+        validation.origin = destination
+        repository = validation.repository
+        validation.repository = "unknown/forged"
+        with pytest.raises(delegate.SnapshotRefusal, match="auto_finalize_remote_unverified"):
+            with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
+                pytest.fail("moved repository accepted")
+        validation.repository = repository
+        validated_base = validation.driver_base
+        validation.isolate_objects(base=_base, head=head)
+        validation.receive_publication(base=_base, head=head)
+        newer = _git_out(
+            _worktree, "commit-tree", f"{_base}^{{tree}}", "-p", _base, "-m", "driver advanced"
+        ).strip()
+        _git_out(_worktree, "push", "origin", f"{newer}:refs/heads/main")
+        with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head) as transport:
+            assert transport.driver_base == validated_base != newer
+            assert delegate._finalize_remote_head(transport, "codex/finalize") == head
+        validation.driver_base = "0" * 40
+        with pytest.raises(delegate.SnapshotRefusal):
+            with delegate._finalize_transport_context(_worktree, validation, base=_base, head=head):
+                pytest.fail("invalid base accepted")
+
+
+def test_validation_written_transport_configuration_is_not_seen_by_the_credentialed_push(
+    publication, tmp_path, monkeypatch
+):
+    hostile = {
+        "http.proxy": "http://invalid.invalid:1",
+        f"http.{delegate.CANONICAL_ORIGIN}.proxy": "http://invalid.invalid:1",
+        "protocol.allow": "always",
+        "protocol.ext.allow": "always",
+        "credential.helper": "!hostile-helper",
+        "core.askPass": "hostile-askpass",
+        "push.followTags": "true",
+        "alias.push": "!hostile-alias",
+    }
+    script = "".join(f"git config '{key}' '{value}'\n" for key, value in hostile.items())
+    publication, head = hostile_validation(publication, script)
+    _worktree, origin, _base, marker = publication
+    pushes = recorded_pushes(monkeypatch, "http.proxy", "protocol.allow", "push.followTags")
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert len(pushes) == 1
+    listed, effective = pushes[0]
+    written = {f"{key}={value}".lower() for key, value in hostile.items()}
+    leaked = [line for line in listed.splitlines() if line.partition("\t")[2].lower() in written]
+    assert leaked == [], "the credentialed push reads configuration validation wrote"
+    assert all(value != hostile[key] for key, value in effective.items()), effective
+    assert marker.read_text() == "checked"
+
+
+def test_transport_pins_its_own_scope_even_in_a_configured_repository(publication, monkeypatch):
+    """Configuration in the transport repository itself cannot add a ref or a proxy to the push."""
+    worktree, origin, _base, _marker = publication
+    head = write_commit(worktree)
+    real_transport = delegate._finalize_transport_push
+    pushes = recorded_pushes(monkeypatch, "http.proxy")
+
+    def configured(transport, **kwargs):
+        transport.checked("tag", "-a", "transport-tag", "-m", "unowned ref", kwargs["head"])
+        transport.checked("config", "push.followTags", "true")
+        transport.checked("config", "http.proxy", "http://invalid.invalid:1")
+        return real_transport(transport, **kwargs)
+
+    monkeypatch.setattr(delegate, "_finalize_transport_push", configured)
+
+    result = publish(publication)
+
+    assert "refs/tags/transport-tag" not in refs(origin)
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert [effective for _listed, effective in pushes] == [{"http.proxy": ""}]
+
+
+def test_a_push_that_sends_an_extra_ref_is_a_typed_failure(publication, monkeypatch):
+    """Git's own report of the refs it sent is checked: one surprise ref fails the publication."""
+    from scripts.orchestration.safe_git_context import GIT
+
+    worktree, origin, _base, _marker = publication
+    head = write_commit(worktree)
+
+    def leaking(transport, *, branch, head, timeout):
+        transport.checked("tag", "-a", "leaked-tag", "-m", "unowned ref", head)
+        return subprocess.run(
+            [GIT, "push", "--porcelain", "--follow-tags", transport.origin, f"{head}:refs/heads/{branch}"],
+            cwd=transport.root,
+            env=transport.env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout,
+        )
+
+    monkeypatch.setattr(delegate, "_finalize_transport_push", leaking)
+
+    result = publish(publication)
+
+    assert "refs/tags/leaked-tag" in refs(origin)  # the leak really happened
+    assert not result.ok
+    assert result.error == "auto_finalize_push_unexpected_ref, count 2"
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_flagged_push_consumes_the_override_before_a_later_flagged_pr(publication, monkeypatch, override_log):
+    """One command, one override (#9681): the finalize push claims it, so its flagged draft PR is refused."""
+    import json
+
+    from scripts.opsec import prepublish
+    from tests.opsec_fixtures import CATALOG, TOKEN
+
+    worktree, origin, base, marker = publication
+    monkeypatch.setattr(prepublish, "catalog", lambda: CATALOG)
+    monkeypatch.setenv("GH_REPO", "unit/public")
+    monkeypatch.setenv(prepublish.OVERRIDE, _OVERRIDE_REASON)
+    sent = []
+
+    def gh(argv, **kwargs):
+        argv = [str(arg) for arg in argv]
+        if Path(argv[0]).name != "gh":
+            return subprocess.run(argv, timeout=kwargs.pop("timeout", 60), **kwargs)
+        if argv[1:3] == ["pr", "list"]:
+            out = ""
+        elif argv[1:3] == ["repo", "view"]:
+            out = json.dumps({"defaultBranchRef": {"name": "main"}})
+        else:
+            sent.append(argv)
+            out = "https://github.com/unit/public/pull/1\n"
+        return subprocess.CompletedProcess(argv, 0, out if kwargs.get("text") else out.encode(), "")
+
+    real_request_run = delegate.request_run
+    monkeypatch.setattr(
+        delegate, "request_run", lambda request, **kwargs: real_request_run(request, runner=gh, **kwargs)
+    )
+    (worktree / "artifact.txt").write_text("dirty owned change\n")
+    task_id = f"override-{TOKEN}"
+    read_diagnostics = diagnostics(task_id)
+
+    # The task id reaches both the commit subject and the PR title.
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id=task_id,
+        agent="codex",
+        branch="codex/finalize",
+        base_branch="main",
+        base_sha=base,
+        open_pr=True,
+        owned_paths=["artifact.txt"],
+    )
+
+    head = delegate._resolve_sha(worktree)
+    assert TOKEN in _git_out(worktree, "log", "-1", "--format=%B")
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+    assert sent == []
+    assert not result.ok and result.error == "auto_finalize_publish_blocked"
+    assert "override already consumed" in read_diagnostics()
+    assert len(override_log()) == 1

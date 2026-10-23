@@ -1274,9 +1274,12 @@ def _round4_launcher_probe(
 
 
 @pytest.mark.parametrize("provider", ["glm", "kimi"])
-def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: str) -> None:
+def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: str, monkeypatch) -> None:
     import json
 
+    from tests.agent_runtime.adapters.kimi_admitted import install_historical_kimi_catalog
+
+    route_python = install_historical_kimi_catalog(tmp_path, monkeypatch) if provider == "kimi" else sys.executable
     proc = _round4_launcher_probe(
         tmp_path,
         "import json, os\n"
@@ -1295,7 +1298,7 @@ def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: 
             "OPENAI_API_KEY": SYNTHETIC_KEY,
             "OTHER_PASSWORD": SYNTHETIC_KEY,
             "GLMCC_ROUTE_PYTHON": sys.executable,
-            "KIMICC_ROUTE_PYTHON": sys.executable,
+            "KIMICC_ROUTE_PYTHON": str(route_python),
         },
         setup=(
             f"LC_MODEL={'glm' if provider == 'glm' else 'k3'} LC_ENDPOINT=platform LC_ISOLATE_CONFIG=1 LC_DRY_RUN=0\n"
@@ -1594,13 +1597,40 @@ def test_round5_launcher_preserves_process_paths(tmp_path: Path, name: str, mode
     assert proc.stdout == "path-unchanged\n"
 
 
-@pytest.mark.parametrize("name", ["PATH", "HOME", "PWD"])
+@pytest.mark.parametrize("name", ["PATH", "HOME"])
 def test_round5_dispatcher_keeps_path_value_filter(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
     from agent_runtime import agent_github_identity as identity
     from agent_runtime.env_sanitize import build_agent_env
 
     monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
-    assert name not in build_agent_env(provider="claude", overrides={name: "synthetic/task-ghp_path"})
+    # A classic GitHub PAT body is 36 characters; the short ``ghp_path``
+    # fragment is the #11326 run-directory collision, not a credential.
+    token = "ghp_" + "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8"
+    harmless = "synthetic/plain"
+    assert build_agent_env(provider="claude", overrides={name: harmless})[name] == harmless
+    assert name not in build_agent_env(provider="claude", overrides={name: f"synthetic/task-{token}"})
+
+
+@pytest.mark.parametrize("value", ["synthetic/plain", "synthetic/task-ghp_" + "FAKE" * 9])
+def test_round5_dispatcher_excludes_pwd_independently_of_value(monkeypatch: pytest.MonkeyPatch, value: str) -> None:
+    """PWD exclusion is dispatch context policy, not evidence of credential detection."""
+    from agent_runtime import agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env, child_credential_env
+
+    monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
+    assert child_credential_env({"PWD": value}, provider="claude")["PWD"] == value
+    assert "PWD" not in build_agent_env(provider="claude", overrides={"PWD": value})
+
+
+@pytest.mark.parametrize("name", ["PATH", "HOME"])
+def test_round5_dispatcher_keeps_short_key_prefix_in_path_value(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
+    """#11326: a run-directory name embedding a key prefix is not a credential."""
+    from agent_runtime import agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env
+
+    monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
+    value = "synthetic/task-ghp_path"
+    assert build_agent_env(provider="claude", overrides={name: value})[name] == value
 
 
 @pytest.mark.parametrize("length", [40, 108, 325])

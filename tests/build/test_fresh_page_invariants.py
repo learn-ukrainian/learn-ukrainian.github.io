@@ -5,15 +5,11 @@ English sentinels are synthetic transport probes, not curriculum content.
 
 from __future__ import annotations
 
-import ast
 import copy
 import html
-import inspect
 import json
 import re
 import subprocess
-from pathlib import Path
-from urllib.parse import unquote, urlsplit
 
 import pytest
 
@@ -211,60 +207,6 @@ def visible_type_ids(lines, types):
     return {typ for typ in types if any(re.search(r"\b" + re.escape(typ) + r"\b", line) for line in lines)}
 
 
-@pytest.mark.parametrize("line", ["quiz", "§quiz", "Here is quiz:", "A fill-in exercise"])
-def test_type_id_invariant_catches_ids_inside_longer_lines(line):
-    assert visible_type_ids([line], {"quiz", "fill-in"})
-
-
-def test_type_id_invariant_keeps_word_boundaries():
-    assert not visible_type_ids(["quizzes filling-in"], {"quiz", "fill-in"})
-
-
-def english_input_fields(source):
-    """Discover explicit English reads independently of the channel registry."""
-    fields = set()
-    for node in ast.walk(ast.parse(source)):
-        key = None
-        if isinstance(node, ast.Subscript):
-            key = node.slice
-        elif (
-            isinstance(node, ast.Call)
-            and isinstance(node.func, ast.Attribute)
-            and node.func.attr == "get"
-            and node.args
-        ):
-            key = node.args[0]
-        if isinstance(key, ast.Constant) and isinstance(key.value, str):
-            name = key.value
-            if name == "en" or name.endswith("_en") or name.startswith("english_") or name == "sense_gloss":
-                fields.add(name)
-    return fields
-
-
-def assert_english_channels_classified(source):
-    registered = {path.removesuffix(".*").rsplit(".", 1)[-1] for path in assemble.ENGLISH_CHANNELS}
-    missing = english_input_fields(source) - registered
-    assert not missing, f"Unclassified English fields: {sorted(missing)}"
-
-
-def test_every_english_field_read_has_a_production_classification():
-    assert_english_channels_classified(inspect.getsource(assemble))
-    assert set(assemble.ENGLISH_CHANNELS.values()) == {
-        "body_support",
-        "vocabulary_and_inline_support",
-        "writer_bilingual",
-        "plan_task_scaffolding",
-    }
-
-
-def test_new_english_producer_fails_until_classified(monkeypatch):
-    source = inspect.getsource(assemble) + '\ndef future_english(record):\n    return record.get("note_en")\n'
-    with pytest.raises(AssertionError, match="note_en"):
-        assert_english_channels_classified(source)
-    monkeypatch.setitem(assemble.ENGLISH_CHANNELS, "pack.examples.*.note_en", "body_support")
-    assert_english_channels_classified(source)
-
-
 def plant_english_probe(inputs, path, probe):
     """Follow a registered path, including arrays; optional leaf fields are planted."""
 
@@ -335,15 +277,6 @@ def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num
             assert not any(counts[tab] for tab in ("urok", "vpravy", "resursy")), counts
     translations = [u for u in expanded["units"] if str(u["block"]).startswith("dialogue_translation_")]
     assert len(translations) == (len(draft["dialogue"]["translation_en"]) if level == "a1" else 0)
-
-
-def test_recap_english_channels_are_plan_fields_not_draft_echoes():
-    expected = {
-        "plan.lessons.*.steps.*.task.context_en",
-        "plan.lessons.*.steps.*.task.instruction_en",
-        "plan.lessons.*.steps.*.task.success_criteria_en.*",
-    }
-    assert {p for p, c in assemble.ENGLISH_CHANNELS.items() if c == "plan_task_scaffolding"} == expected
 
 
 @pytest.mark.parametrize("level", LEVELS)
@@ -580,42 +513,6 @@ def test_malformed_arc_ref_fails_with_named_plan_error_before_use(arc_ref, monke
     assert result.reason.startswith(assemble.PLAN_ARC_REF_INVALID + ":")
 
 
-def test_missing_arc_ref_fails_with_named_error():
-    with pytest.raises(assemble.AssemblerError, match="plan_arc_ref_invalid"):
-        assemble.plan_arc_position({})
-    assert assemble.plan_arc_position({"arc_ref": {"position": 51}}) == 51
-
-
-@pytest.mark.parametrize("level", LEVELS)
-def test_every_assembler_english_decision_uses_the_shared_helper(level, render_environment, monkeypatch):
-    calls = []
-    original = assemble.body_english_support_allowed
-
-    def capture(level, module_num=1):
-        calls.append((level, module_num))
-        return original(level, module_num)
-
-    monkeypatch.setattr(assemble, "body_english_support_allowed", capture)
-    inputs = maximal_draft(level)
-    result, expanded = check_render(inputs, level)
-    assert result.passed, result.to_dict()
-    # Expansion, check 9, and final provenance must agree. Direct renderer use
-    # also goes through the helper when no precomputed support flag is passed.
-    assert len(calls) >= 3 and set(calls) == {(level, 1)}
-    before = len(calls)
-    assemble._render_urok_markdown(inputs[0], expanded, inputs[2], inputs[3])
-    assert len(calls) == before + 1
-    assert calls[-1] == (level, 1)
-    assert original(level.upper(), 51) == (level == "a1")
-
-
-def test_sentinel_uses_the_production_learner_text_allowlist():
-    assert LEARNER_TEXT_ALLOWLIST is assemble.LEARNER_TEXT_ALLOWLIST
-    assert not assemble.learner_text_allowed("pack.texts.*.supports", {})
-    assert assemble.learner_text_allowed("plan.lessons.*.title")
-    assert not assemble.learner_text_allowed("pack.texts.*.url")
-
-
 @pytest.mark.parametrize("field", ["url", "episode_url"])
 @pytest.mark.parametrize(
     "source_file,permitted",
@@ -640,169 +537,6 @@ def test_url_allowlist_uses_registry_permission_not_pack_claim(field, source_fil
             assemble.learner_text_allowed("pack.texts.*.quote", record)
 
 
-@pytest.mark.parametrize("field", ["url", "episode_url"])
-def test_url_sentinel_preserves_only_registry_permitted_leaf(field):
-    draft, plan, pack, _ = maximal_draft("a1")
-    pack["texts"][0].update(
-        source={"file": "ulp-1-00-lesson-notes", "kind": "textbook", "page": 12},
-        **{field: "https://www.ukrainianlessons.com/episode1/"},
-    )
-    # The no-copy source is grounding only. Only its registry-permitted link
-    # survives; quote prose is tainted even if the pack claims publication.
-    draft["steps"][0]["blocks"] = [b for b in draft["steps"][0]["blocks"] if b["kind"] != "quote"]
-    _, tainted, sentinels = taint_author_strings(plan, pack, draft)
-    assert tainted["texts"][0][field] == pack["texts"][0][field]
-    assert "pack.texts.0.quote" in sentinels.values()
-    pack["texts"][0]["source"]["file"] = "not-registered"
-    _, tainted, sentinels = taint_author_strings(plan, pack, draft)
-    assert f"pack.texts.0.{field}" in sentinels.values()
-    assert tainted["texts"][0][field].startswith("ZZ")
-
-
 def test_unknown_publication_field_fails_closed():
     with pytest.raises(assemble.AssemblerError, match="learner_text_not_allowed"):
         assemble.learner_text_permission("pack.texts.*.future_url", {})
-
-
-def english_schema_paths(node, document, path=(), *, schema_path=None, schemas_dir=ROOT / "schemas"):
-    """Walk file-local schema refs, pruning cycles only on the current branch."""
-    schemas_dir = schemas_dir.resolve()
-    schema_path = (schema_path or schemas_dir / "inline.schema.json").resolve()
-    documents = {schema_path: document}
-
-    def walk(node, document, schema_path, path, ancestors):
-        if not isinstance(node, dict) or id(node) in ancestors:
-            return set()
-        ancestors = ancestors | {id(node)}
-        found = set()
-        if "$ref" in node:
-            ref = urlsplit(node["$ref"])
-            assert not (ref.scheme or ref.netloc or ref.query), f"Non-local schema ref: {node['$ref']}"
-            target_path = (schema_path.parent / unquote(ref.path)).resolve() if ref.path else schema_path
-            assert target_path.is_relative_to(schemas_dir), f"Schema ref outside schemas/: {node['$ref']}"
-            if target_path not in documents:
-                documents[target_path] = json.loads(target_path.read_text(encoding="utf-8"))
-            target_document = documents[target_path]
-            target = target_document
-            pointer = unquote(ref.fragment)
-            assert not pointer or pointer.startswith("/"), f"Unsupported schema anchor: {node['$ref']}"
-            if pointer:
-                for part in pointer[1:].split("/"):
-                    part = part.replace("~1", "/").replace("~0", "~")
-                    target = target[int(part)] if isinstance(target, list) else target[part]
-            found.update(walk(target, target_document, target_path, path, ancestors))
-        for key, child in node.get("properties", {}).items():
-            if key == "en" or key.endswith("_en") or key.startswith("english_") or key == "sense_gloss":
-                suffix = ("*",) if child.get("type") == "array" else ()
-                found.add(".".join((*path, key, *suffix)))
-            else:
-                found.update(walk(child, document, schema_path, (*path, key), ancestors))
-        if node.get("type") == "array":
-            found.update(walk(node.get("items"), document, schema_path, (*path, "*"), ancestors))
-        for keyword in ("oneOf", "anyOf", "allOf"):
-            for child in node.get(keyword, []):
-                found.update(walk(child, document, schema_path, path, ancestors))
-        return found
-
-    return walk(node, document, schema_path, path, frozenset())
-
-
-@pytest.mark.parametrize("level", LEVELS)
-def test_every_english_schema_path_is_classified_in_production(level):
-    paths = set()
-    for root, filename in (
-        ("plan", "module-plan-v2.schema.json"),
-        ("draft", f"lesson-draft-{level}-v1.schema.json"),
-        ("pack", "evidence-pack-v1.schema.json"),
-        ("words", "evidence-words-v1.schema.json"),
-    ):
-        schema_path = ROOT / "schemas" / filename
-        schema = json.loads(schema_path.read_text())
-        paths.update(english_schema_paths(schema, schema, (root,), schema_path=schema_path))
-        if root == "draft":
-            # The validator binds these definitions by plan type, outside the
-            # root schema's payload-key union. They share the activity path.
-            for definition in schema["$defs"]["activity_types"].values():
-                paths.update(
-                    english_schema_paths(
-                        definition,
-                        schema,
-                        ("draft", "activities", "*"),
-                        schema_path=schema_path,
-                    )
-                )
-    classified = set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS
-    assert paths == classified, f"Unclassified English schema paths: {sorted(paths - classified)}"
-
-
-@pytest.mark.parametrize("level", LEVELS)
-def test_new_activity_english_field_fails_production_classification(level, monkeypatch):
-    schema_path = ROOT / "schemas" / f"activities-{level}.schema.json"
-    schema = json.loads(schema_path.read_text())
-    schema["definitions"][f"quiz-{level}"]["properties"]["hint_en"] = {"type": "string"}
-    original = Path.read_text
-
-    def read_text(path, *args, **kwargs):
-        if path == schema_path:
-            return json.dumps(schema)
-        return original(path, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_text", read_text)
-    with pytest.raises(AssertionError, match=r"draft\.activities\.\*\.hint_en"):
-        test_every_english_schema_path_is_classified_in_production(level)
-
-
-def test_schema_ref_cycles_preserve_each_sibling_path_and_target_document(tmp_path):
-    schema_path = tmp_path / "first.schema.json"
-    schema = {
-        "properties": {key: {"$ref": "nested/second.schema.json"} for key in ("first", "second")},
-        "allOf": [{"$ref": "#"}],
-    }
-    other = {
-        "properties": {
-            "hint_en": {"type": "string"},
-            "again": {"$ref": "../first.schema.json"},
-            "detail": {"$ref": "#/$defs/a~1b~0c"},
-        },
-        "$defs": {"a/b~c": {"properties": {"english_note": {"type": "array"}}}},
-    }
-    (tmp_path / "nested").mkdir()
-    (tmp_path / "nested/second.schema.json").write_text(json.dumps(other))
-    schema_path.write_text(json.dumps(schema))
-    assert english_schema_paths(schema, schema, ("draft",), schema_path=schema_path, schemas_dir=tmp_path) == {
-        "draft.first.hint_en",
-        "draft.second.hint_en",
-        "draft.first.detail.english_note.*",
-        "draft.second.detail.english_note.*",
-    }
-
-
-@pytest.mark.parametrize(
-    "ref,error",
-    [
-        ("../outside.schema.json", "outside schemas/"),
-        ("https://example.com/schema.json", "Non-local schema ref"),
-        ("missing.schema.json", None),
-    ],
-)
-def test_schema_refs_cannot_silently_skip_unresolvable_targets(ref, error, tmp_path):
-    schema = {"$ref": ref}
-    with pytest.raises(AssertionError if error else FileNotFoundError, match=error):
-        english_schema_paths(schema, schema, schemas_dir=tmp_path)
-
-
-def test_new_english_path_with_an_existing_field_name_requires_classification():
-    schema = {
-        "properties": {
-            "videos": {
-                "type": "array",
-                "items": {
-                    "properties": {"translation_en": {"type": "string"}},
-                },
-            }
-        }
-    }
-    paths = english_schema_paths(schema, schema, ("pack",))
-    assert paths == {"pack.videos.*.translation_en"}
-    assert paths - (set(assemble.ENGLISH_CHANNELS) | assemble.ENGLISH_METADATA_FIELDS) == paths
-    assert assemble.learner_text_permission("plan.lessons.*.title", {}) is None

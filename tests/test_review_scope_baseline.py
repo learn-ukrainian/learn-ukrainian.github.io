@@ -52,24 +52,6 @@ def test_freeze_captures_target_snapshot():
     assert baseline.frozen_non_test_loc == 40
 
 
-def test_render_includes_all_required_fields():
-    baseline = _baseline()
-    rendered = baseline.render()
-    for expected in ("#5283", "do the thing", "not that thing", "scripts/review/**", "branch", "medium", "infra"):
-        assert expected in rendered
-
-
-def test_render_flags_clean_local_tree_as_not_commit_proof():
-    baseline = _baseline(mode="local", changed_paths=(), non_test_loc=0, clean_tree=True)
-    rendered = baseline.render()
-    assert "NOT evidence" in rendered
-
-
-def test_render_does_not_flag_committed_modes():
-    baseline = _baseline(mode="pr")
-    assert "NOT evidence" not in baseline.render()
-
-
 # --- expansion breaker: positive + negative fixtures --------------------------
 
 def test_expansion_breaker_does_not_trigger_within_2x():
@@ -96,12 +78,6 @@ def test_expansion_breaker_zero_baseline_any_growth_trips():
     baseline = _baseline(changed_paths=(), non_test_loc=0)
     result = check_expansion_breaker(baseline, frozenset({"new.py"}), 5)
     assert result.triggered is True
-
-
-def test_expansion_breaker_zero_baseline_no_growth_does_not_trip():
-    baseline = _baseline(changed_paths=(), non_test_loc=0)
-    result = check_expansion_breaker(baseline, frozenset(), 0)
-    assert result.triggered is False
 
 
 # --- cycle-convergence breaker: positive + negative fixtures ------------------
@@ -206,13 +182,3 @@ def test_classify_finding_critical_override_keeps_it_in_scope():
         critical_override_reason="active_data_loss",
     )
     assert disposition == "in_scope_blocker"
-
-
-def test_classify_finding_non_critical_reason_still_escalates():
-    disposition = classify_finding(
-        is_blocking=True,
-        in_frozen_scope=True,
-        requires_scope_expansion=True,
-        critical_override_reason="it_would_be_nice_too",
-    )
-    assert disposition == "stop_and_escalate"

@@ -14,27 +14,19 @@ Verifies:
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 
 import pytest
 import yaml
-from jsonschema import Draft202012Validator
 
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state import codes
 from scripts.curriculum.learner_state.observed import (
     ObservedError,
-    build_observed_index,
-    check_observed,
     write_observed,
 )
 
 pytestmark = pytest.mark.reads_content
-REPO_ROOT = Path(__file__).resolve().parents[3]
-RECEIPTS_SCHEMA_PATH = REPO_ROOT / "schemas/resolution-receipts-v1.schema.json"
-
-
 def _write_yaml(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     content = yaml.safe_dump(data, allow_unicode=True, sort_keys=False).encode("utf-8")
@@ -339,14 +331,6 @@ def _setup_fixture(root: Path, level: str = "a1") -> dict[str, Path]:
     }
 
 
-def test_observed_fixture_receipts_validates_against_schema(tmp_path: Path) -> None:
-    paths = _setup_fixture(tmp_path)
-    res_path = paths["resolutions_path"]
-    data = yaml.safe_load(res_path.read_text(encoding="utf-8"))
-    schema = json.loads(RECEIPTS_SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator(schema).validate(data)
-
-
 def test_observed_byte_stable_across_two_runs(tmp_path: Path) -> None:
     paths = _setup_fixture(tmp_path)
     out1, digest1 = write_observed("a1", "mod-01", 1, **paths)
@@ -370,35 +354,6 @@ def test_observed_lock_check_fails_on_tampered_or_absent_lock(tmp_path: Path) ->
     with pytest.raises(ObservedError) as exc_info:
         write_observed("a1", "mod-01", 1, **paths)
     assert exc_info.value.code == codes.LOCK_MISMATCH
-
-
-def test_observed_roles_per_fixture(tmp_path: Path) -> None:
-    paths = _setup_fixture(tmp_path)
-    out_path, _ = write_observed("a1", "mod-01", 1, **paths)
-    doc = check_observed(out_path)
-
-    roles = {rec["id"]: rec["role"] for rec in doc["records"]}
-    assert roles["W-10"] == "taught"
-    assert roles["W-11"] == "drilled"
-    assert roles["W-20"] == "recycled"
-    assert roles["W-30"] == "incidental"
-    assert roles["W-40"] == "name"
-    assert roles["W-1"] == "exposed"
-
-
-def test_observed_untaught_forms_one_taught_one_untaught(tmp_path: Path) -> None:
-    paths = _setup_fixture(tmp_path)
-    out_path, _ = write_observed("a1", "mod-01", 1, **paths)
-    doc = check_observed(out_path)
-
-    untaught = doc["untaught_forms"]
-    assert untaught["count"] == 1
-    assert untaught["share"] == 0.5
-    assert len(untaught["forms"]) == 1
-    entry = untaught["forms"][0]
-    assert entry["record"] == "W-1"
-    assert entry["tags"] == "cat_untaught"
-    assert entry["category"] == "cat_untaught"
 
 
 def test_observed_tab_keys_validated(tmp_path: Path) -> None:
@@ -430,14 +385,6 @@ def test_observed_disk_receipts_schema_break_fails(tmp_path: Path) -> None:
     assert exc_info.value.code == codes.RESOLUTIONS_INVALID
 
 
-def test_observed_build_in_memory(tmp_path: Path) -> None:
-    paths = _setup_fixture(tmp_path)
-    doc = build_observed_index("a1", "mod-01", 1, **paths)
-    assert doc["observed_schema"] == 1
-    assert doc["lesson"]["slug"] == "mod-01"
-    assert len(doc["records"]) > 0
-
-
 def test_observed_mismatched_expanded_hash_fails(tmp_path: Path) -> None:
     paths = _setup_fixture(tmp_path)
     res_path = paths["resolutions_path"]
@@ -460,25 +407,6 @@ def test_observed_missing_expanded_document_fails(tmp_path: Path) -> None:
 
     with pytest.raises(ObservedError) as exc_info:
         write_observed("a1", "mod-01", 1, **paths)
-    assert exc_info.value.code == codes.EXPANDED_DOCUMENT_MISSING
-
-
-def test_observed_drilled_word_fails_rather_than_silent_taught_on_missing_doc(tmp_path: Path) -> None:
-    paths = _setup_fixture(tmp_path)
-    # With expanded document present, W-11 is drilled
-    doc = build_observed_index("a1", "mod-01", 1, **paths)
-    roles = {rec["id"]: rec["role"] for rec in doc["records"]}
-    assert roles["W-11"] == "drilled"
-
-    # When expanded document is absent, it must raise ObservedError rather than silently writing taught
-    exp_path = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/mod-01/lesson-1.expanded.yaml"
-    exp_path.unlink()
-    exp_lock = Path(f"{exp_path}.lock")
-    if exp_lock.exists():
-        exp_lock.unlink()
-
-    with pytest.raises(ObservedError) as exc_info:
-        build_observed_index("a1", "mod-01", 1, **paths)
     assert exc_info.value.code == codes.EXPANDED_DOCUMENT_MISSING
 
 

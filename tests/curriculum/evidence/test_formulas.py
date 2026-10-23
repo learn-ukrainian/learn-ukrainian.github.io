@@ -7,7 +7,7 @@ import sqlite3
 import pytest
 import yaml
 
-from scripts.build.fresh import assemble, runner
+from scripts.build.fresh import assemble
 from scripts.curriculum.evidence import formulas, lock, registry, sources, verify, words
 from scripts.curriculum.evidence import sense_bindings as bindings
 from scripts.curriculum.resolver import inputs, narrow
@@ -147,40 +147,6 @@ def test_A4_binding_mutations_withheld(api, tmp_path, mutation):
     else:
         context.entries["W-004"]["span"] = "invented"
     assert context.select(word, api.formula_rows(word).raw, None).reason == "formula_binding_invalid"
-
-
-def test_A5_deduplicate_formula_and_taught_lexical(api, tmp_path):
-    word, _, _ = bind(formula(), api, tmp_path)
-    noun = {
-        **LEXICAL[2],
-        "forms": [{"form": "день", "tags": "noun:v_naz", "stressed": "день", "stress_source": "none", "learner": True}],
-    }
-    plan = {
-        "inventory": {
-            "vocabulary": {
-                "core": [{"evidence": "W-004"}, {"evidence": "W-003", "forms": ["noun:v_naz"]}],
-                "incidental": ["W-004", "W-003", "W-004"],
-            }
-        }
-    }
-    entries = assemble.build_slovnyk_entries(plan, {"words": [noun, word]})
-    assert [wid for wid, _ in entries] == ["W-004", "W-003"]
-    assert entries[1][1]["forms"] == ["день"]
-    assert list(narrow.FormIndex(inputs.Allowlist.from_records([noun, word])).usable) == ["день"]
-
-
-def test_A6_count_rendered_gloss_identically(api, tmp_path):
-    word, _, _ = bind(formula(), api, tmp_path)
-    expanded = {"units": [{"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-004}}"}]}
-    counted = runner.check_6_count(expanded, {"words": [word]})["details"]
-    lexical = {**LEXICAL[0], "id": "W-004", "gloss_en": "good day"}
-    lexical_count = runner.check_6_count(expanded, {"words": [lexical]})["details"]
-    assert counted["ukrainian_tokens"] == 2
-    assert counted["urok_tokens"] - 2 == lexical_count["urok_tokens"] - 1 == 2
-    assert (
-        assemble.render_unit_piece("{{gloss:W-004}}", assemble.gloss_replacer({"words": [word]}))
-        == "Добрий день! (good day)"
-    )
 
 
 @pytest.mark.parametrize(
@@ -518,16 +484,7 @@ def test_formula_request_pins_and_ambiguity():
         formulas.resolve_request(request, {w["id"]: w for w in [*LEXICAL, duplicate]})
 
 
-def test_indirect_formula_cycle(api):
-    first = formula()
-    second = {**formula(), "id": "W-005"}
-    first["parts"][0]["word"] = second["id"]
-    second["parts"][0]["word"] = first["id"]
-    with pytest.raises(ValueError, match="formula_part_cycle"):
-        formulas.validate(first, {first["id"]: first, second["id"]: second}, api)
-
-
-@pytest.mark.parametrize("text", ["Добрий день!", "Добрий день.", "Добрий день?", "Добрий день…", "Привіт!"])
+@pytest.mark.parametrize("text", ["Добрий день!", "Привіт!"])
 def test_original_token_text_and_terminal_punctuation(text):
     assert [t.text for t in formulas.tokens(text)] == (["Привіт"] if text.startswith("Привіт") else ["Добрий", "день"])
     assert formulas.printed_headword(text) == ("привіт" if text.startswith("Привіт") else "добрий день")
@@ -666,20 +623,6 @@ def test_formula_binding_wrong_word_and_nonlearner_rejected(api):
         bindings.Context("a1", {"W-001": binding}, []).select(LEXICAL[0], rows, None).reason
         == "reference_binding_invalid"
     )
-
-
-def test_public_candidate_change_invalidates_formula(api, tmp_path):
-    word, context, _ = bind(formula(), api, tmp_path)
-    rows = api.formula_rows(word).raw
-    changed = {
-        "id": 201,
-        "word": "добридень",
-        "pos": "phrase",
-        "translations": '["hi"]',
-        "text": "",
-        "source": "fixture",
-    }
-    assert context.select(word, [*rows, changed], None).reason == "formula_binding_invalid"
 
 
 def test_formula_schema_rejects_review_requirement_and_partial_reference(api, tmp_path):

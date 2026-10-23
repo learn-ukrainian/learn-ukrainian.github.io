@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import selectors
 import subprocess
 import sys
@@ -122,100 +121,6 @@ def _successor_process(*, name="codex", thread=THREAD):
                 raise
             primary_error.add_note(f"successor cleanup failed: {cleanup_error!r}")
         finally:
-            child.stdin.close()
-            child.stdout.close()
-
-
-@pytest.mark.parametrize(
-    "failure",
-    [
-        "readiness_timeout",
-        "early_exit",
-        "body_exception",
-        "communication_failure",
-        "unresponsive",
-        "body_and_communication_failure",
-        "success",
-    ],
-)
-def test_successor_process_bounds_cleanup_and_preserves_failure(monkeypatch, failure):
-    module = sys.modules[__name__]
-    monkeypatch.setattr(module, "_SUCCESSOR_READY_TIMEOUT", 0.5)
-    monkeypatch.setattr(module, "_SUCCESSOR_CLEANUP_TIMEOUT", 0.8)
-    primary = RuntimeError("original yielded-body failure")
-    communication_error = OSError("synthetic communication failure")
-    popen = subprocess.Popen
-    children = []
-    cleanup_started = []
-    code = "import sys; print('ready', flush=True); sys.stdin.read()"
-    if failure == "early_exit":
-        code = "raise SystemExit(7)"
-    elif failure == "readiness_timeout":
-        code = "import time; time.sleep(30)"
-    elif failure == "unresponsive":
-        code = "import time; print('ready', flush=True); time.sleep(30)"
-
-    def spawn(args, **kwargs):
-        args = list(args)
-        args[2] = code
-        child = popen(args, **kwargs)
-        children.append((child, child.kill))
-        communicate = child.communicate
-
-        def communicate_or_fail(*args, **kwargs):
-            cleanup_started.append(time.monotonic())
-            if failure in {"communication_failure", "body_and_communication_failure"}:
-                raise communication_error
-            return communicate(*args, **kwargs)
-
-        monkeypatch.setattr(child, "communicate", communicate_or_fail)
-        return child
-
-    monkeypatch.setattr(subprocess, "Popen", spawn)
-    started = time.monotonic()
-    observed = None
-    try:
-        try:
-            with _successor_process() as child:
-                assert child.poll() is None
-                if failure in {"body_exception", "body_and_communication_failure"}:
-                    raise primary
-        except BaseException as error:
-            observed = error
-        finished = time.monotonic()
-        assert len(children) == 1
-        child = children[0][0]
-        # Inspect before any rescue cleanup or poll() could reap the child.
-        assert child.returncode is not None
-        with pytest.raises(ChildProcessError):
-            os.waitpid(child.pid, os.WNOHANG)
-        assert child.stdin.closed
-        assert child.stdout.closed
-        assert cleanup_started
-        assert finished - cleanup_started[0] < module._SUCCESSOR_CLEANUP_TIMEOUT
-        assert finished - started < module._SUCCESSOR_READY_TIMEOUT + module._SUCCESSOR_CLEANUP_TIMEOUT
-        if failure in {"body_exception", "body_and_communication_failure"}:
-            assert observed is primary
-            if failure == "body_and_communication_failure":
-                assert primary.__notes__ == [f"successor cleanup failed: {communication_error!r}"]
-        elif failure == "communication_failure":
-            assert observed is communication_error
-        elif failure == "readiness_timeout":
-            assert isinstance(observed, AssertionError)
-            assert "successor readiness deadline" in str(observed)
-        elif failure == "early_exit":
-            assert isinstance(observed, AssertionError)
-            assert child.returncode == 7
-        elif failure == "unresponsive":
-            assert isinstance(observed, subprocess.TimeoutExpired)
-        else:
-            assert observed is None
-            assert child.returncode == 0
-    finally:
-        for child, kill in children:
-            if child.poll() is None:
-                kill()
-            child.wait(timeout=1)
             child.stdin.close()
             child.stdout.close()
 

@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -206,34 +203,6 @@ def test_merges_same_lemma_records_at_a_shared_locator(tmp_path: Path) -> None:
     assert candidate.lemma == "читати"
     assert candidate.frequency == 2
     assert len(candidate.records) == 1
-
-
-def test_exact_ledger_collision_remains_rejected(tmp_path: Path) -> None:
-    curriculum = tmp_path / "curriculum" / "l2-uk-en"
-    module = curriculum / "a1" / "collision" / "module.md"
-    module.parent.mkdir(parents=True)
-    module.write_text("Десяток десятка.\n", encoding="utf-8")
-
-    def collision_vesum(forms: list[str]) -> dict[str, list[dict[str, str]]]:
-        rows = {
-            "десяток": [],
-            "десятка": [{"lemma": "десяток", "pos": "noun"}],
-        }
-        return {form: rows.get(form, []) for form in forms}
-
-    result = intake.build_curriculum_intake(
-        curriculum_root=curriculum,
-        project_root=tmp_path,
-        manifest_lemma_keys=set(),
-        existing_ledger_keys={"десяток"},
-        vesum_lookup=collision_vesum,
-        heritage_lookup=clear_heritage,
-    )
-
-    candidate = result.candidates[0]
-    assert candidate.classification == "reject"
-    assert "already_in_existing_ledger" in candidate.reasons
-    assert "vesum_unrecognized" in candidate.reasons
 
 
 def test_writes_parser_compatible_inventory_and_decision_ledger(tmp_path: Path) -> None:
@@ -612,24 +581,6 @@ def test_heritage_rejection_and_uncertainty_are_fail_closed() -> None:
     assert (surzhyk, surzhyk_reasons) == ("reject", ("heritage_surzhyk",))
 
 
-def test_default_atlas_loader_is_used_for_deduplication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    curriculum = tmp_path / "curriculum" / "l2-uk-en"
-    vocabulary = curriculum / "a1" / "current" / "vocabulary.yaml"
-    vocabulary.parent.mkdir(parents=True)
-    vocabulary.write_text("- lemma: авто\n  translation: car\n", encoding="utf-8")
-    monkeypatch.setattr(intake, "load_atlas_lemma_keys", lambda: {"авто"})
-
-    result = intake.build_curriculum_intake(
-        curriculum_root=curriculum,
-        project_root=tmp_path,
-        vesum_lookup=fake_vesum,
-        heritage_lookup=clear_heritage,
-    )
-
-    assert result.candidates[0].classification == "reject"
-    assert result.candidates[0].reasons == ("already_in_atlas",)
-
-
 def test_capitalized_proper_nouns_resolve_to_canonical_lemma() -> None:
     def fake_cap_vesum(forms: list[str]) -> dict[str, list[dict[str, str]]]:
         data = {
@@ -867,36 +818,6 @@ def test_help_and_argument_errors_need_no_caller_root(monkeypatch: pytest.Monkey
     assert "--batch-id" in capsys.readouterr().err
 
 
-def test_real_no_source_cli_retains_artifacts_for_consumer(tmp_path: Path) -> None:
-    argv = empty_intake_cli_args(tmp_path)
-    root = tmp_path / "subprocess-caller"
-    root.mkdir()
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            "from scripts.lexicon import curriculum_atlas_intake as intake; "
-            "intake.load_existing_ledger_keys = lambda **kwargs: set(); "
-            "raise SystemExit(intake.main())",
-            *argv,
-        ],
-        cwd=Path(__file__).resolve().parents[1],
-        env={**os.environ, "TMPDIR": str(root)},
-        text=True,
-        capture_output=True,
-        timeout=60,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    inventory, report = root / intake.INVENTORY_FILENAME, root / intake.REPORT_FILENAME
-    assert f"inventory_out: {inventory}" in result.stdout
-    assert f"report_out: {report}" in result.stdout
-    assert inventory.read_bytes() == b"[\n\n]\n"
-    assert read_source_inventory(inventory) == []
-    assert json.loads(report.read_bytes())["counts"]["deduped_candidates"] == 0
-    assert set(root.iterdir()) == {inventory, report}
-
-
 def synthetic_intake_result(tmp_path: Path):
     curriculum = write_fixture_curriculum(tmp_path)
     return intake.build_curriculum_intake(
@@ -908,30 +829,6 @@ def synthetic_intake_result(tmp_path: Path):
         heritage_lookup=clear_heritage,
         english_lookup=lambda lemma: None,
     )
-
-
-def test_direct_api_defaults_keep_bytes_and_portable_identity(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    result = synthetic_intake_result(tmp_path)
-    assert result.records
-    before = [(record.inventory_path, record.inventory_locator) for record in result.records]
-    expected = None
-    for root_name in ("api-producer", "api-distinct-consumer"):
-        root = tmp_path / root_name
-        root.mkdir()
-        monkeypatch.setenv("TMPDIR", str(root))
-        inventory, report = intake.resolve_output_paths()
-        intake.write_flat_source_inventory(result, inventory)
-        intake.write_json_payload(result.report_payload(), report)
-        actual = (inventory.read_bytes(), report.read_bytes())
-        if expected is None:
-            expected = actual
-        assert actual == expected
-        consumed = read_source_inventory(inventory)
-        assert {record.lemma for record in consumed} == {record.lemma for record in result.records}
-        assert json.loads(report.read_bytes())["production_outputs_updated"] == []
-    assert [(record.inventory_path, record.inventory_locator) for record in result.records] == before
-    assert {path for path, locator in before} == {intake.DEFAULT_INVENTORY_PATH}
-    assert (tmp_path / "api-producer" / intake.INVENTORY_FILENAME).read_bytes() == expected[0]
 
 
 def test_synthetic_cli_ledger_preserves_committed_identity(

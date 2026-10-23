@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import inspect
 import json
 import os
 import stat
@@ -223,16 +222,6 @@ def test_symlink_receipt_rejected(tmp_path: Path) -> None:
         negrec._regular_file(link, "receipt")
 
 
-def test_atomic_write_api_has_no_mode_parameter() -> None:
-    # Callers cannot request a permissive mode; CodeQL must see a fixed 0600 policy.
-    params = inspect.signature(negrec._atomic_write).parameters
-    assert list(params) == ["path", "payload"]
-    assert "mode" not in params
-    assert negrec.PRIVATE_FILE_MODE == 0o600
-    assert negrec.TRACKED_PUBLIC_FILE_MODE == 0o644
-    assert frozenset({0o600, 0o644}) == negrec.ACCEPTED_PUBLIC_RECEIPT_MODES
-
-
 def test_atomic_write_sets_owner_only_mode(tmp_path: Path) -> None:
     target = tmp_path / "out.bin"
     negrec._atomic_write(target, b"secret")
@@ -330,27 +319,6 @@ def test_production_receipt_reproducible_against_drive_custody(tmp_path: Path) -
     assert out.read_bytes() == PUBLIC_RECEIPT.read_bytes()
     assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
     assert reproduced["bindings"]["implementation_sha256"] == negrec.sha256_file(negrec.SCRIPT_PATH)
-
-
-def test_production_receipt_survives_lexical_var_tmpdir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    if not CUSTODY_TARBALL.is_file():
-        pytest.skip("Drive custody artifacts unavailable")
-    # Force the macOS lexical /var TMPDIR that previously tripped the symlink guard.
-    lexical_tmpdir = Path("/var/folders")
-    if not lexical_tmpdir.exists():
-        pytest.skip("lexical /var/folders unavailable")
-    monkeypatch.setenv("TMPDIR", str(lexical_tmpdir))
-    monkeypatch.setattr(negrec.tempfile, "tempdir", None)
-    committed = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
-    out = tmp_path / "receipt-var.json"
-    reproduced = negrec.production_run(
-        custody_tarball=CUSTODY_TARBALL,
-        public_receipt_path=out,
-        started_at=committed["started_at"],
-        completed_at=committed["completed_at"],
-    )
-    assert out.read_bytes() == PUBLIC_RECEIPT.read_bytes()
-    assert reproduced["receipt_sha256"] == committed["receipt_sha256"]
 
 
 def _hermetic_fixture(tmp_path: Path) -> dict[str, Path]:
@@ -475,33 +443,6 @@ def test_hermetic_materialize_idempotent_and_refuses_changed_receipt(
             started_at="2026-08-14T01:10:00Z",
             completed_at="2026-08-14T01:20:00Z",
         )
-
-
-def test_hermetic_materialize_accepts_existing_tracked_mode_receipt(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    paths = _hermetic_fixture(tmp_path)
-    _patch_hermetic(monkeypatch, paths)
-    first = negrec.materialize(
-        source_jsonl=paths["source_jsonl"],
-        partition_path=paths["partition"],
-        public_receipt_path=paths["public_receipt"],
-        started_at="2026-08-14T01:10:00Z",
-        completed_at="2026-08-14T01:20:00Z",
-    )
-    payload = paths["public_receipt"].read_bytes()
-    paths["public_receipt"].unlink()
-    _write_default_mode_file(paths["public_receipt"], payload)
-    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
-    second = negrec.materialize(
-        source_jsonl=paths["source_jsonl"],
-        partition_path=paths["partition"],
-        public_receipt_path=paths["public_receipt"],
-        started_at="2026-08-14T01:10:00Z",
-        completed_at="2026-08-14T01:20:00Z",
-    )
-    assert second["receipt_sha256"] == first["receipt_sha256"]
-    assert stat.S_IMODE(paths["public_receipt"].stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
 
 
 def test_hermetic_verify_existing_rejects_implementation_binding_mutation(

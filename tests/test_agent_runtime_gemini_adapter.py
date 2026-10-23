@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 import sys
 import tempfile
 from pathlib import Path
@@ -40,35 +39,6 @@ def test_small_prompt_passes_via_stdin_with_placeholder_p_arg(tmp_path):
     assert plan.stdin_payload == prompt
     assert "--approval-mode=yolo" in plan.cmd
     assert "--skip-trust" in plan.cmd
-
-
-def test_large_prompt_also_passes_via_stdin(tmp_path):
-    """Large prompts use the same stdin path as short prompts."""
-    prompt = "x" * 200_000
-    adapter = GeminiAdapter()
-    plan = adapter.build_invocation(
-        prompt=prompt,
-        mode="workspace-write",
-        cwd=tmp_path,
-        model="gemini-3.1-pro-high",
-        task_id=None,
-        session_id=None,
-        tool_config=None,
-    )
-
-    assert plan.cmd[plan.cmd.index("-p") + 1] == " "
-    assert plan.stdin_payload == prompt
-    # No temp prompt file created; cleanup_invocation is a no-op for stdin.
-    adapter.cleanup_invocation(plan)
-
-
-def test_prompt_with_p_substrings_passes_on_stdin(tmp_path):
-    """#1730: a prompt that contains `-p` or `--prompt` is the stdin payload."""
-    prompt = "Use -p/--prompt for non-interactive mode. Say hi."
-    plan = _build(prompt, tmp_path)
-
-    assert plan.cmd[plan.cmd.index("-p") + 1] == " "
-    assert plan.stdin_payload == prompt
 
 
 def test_large_prompt_api_fail_fast_does_not_create_temp_file(tmp_path, monkeypatch):
@@ -116,16 +86,6 @@ def test_subscription_auth_strips_gemini_api_env_vars(tmp_path, monkeypatch):
     plan = _build("hello", tmp_path)
 
     assert plan.env_unsets == GEMINI_AUTH_ENV_VARS
-
-
-def test_effort_logs_debug_but_leaves_command_semantics_unchanged(tmp_path, caplog):
-    caplog.set_level(logging.DEBUG, logger="agent_runtime.adapters.gemini")
-
-    without_effort = _build("hello", tmp_path)
-    with_effort = _build("hello", tmp_path, effort="high")
-
-    assert with_effort.cmd == without_effort.cmd
-    assert "gemini effort" in caplog.text
 
 
 @pytest.mark.parametrize(

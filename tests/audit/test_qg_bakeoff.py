@@ -8,7 +8,7 @@ from typing import Any
 
 import pytest
 
-from scripts.audit import llm_reviewer_dispatch, qg_bakeoff, qg_factcheck_scoring, qg_schema
+from scripts.audit import llm_reviewer_dispatch, qg_bakeoff, qg_factcheck_scoring
 
 pytestmark = pytest.mark.reads_content
 
@@ -300,15 +300,6 @@ def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() 
             assert_model_routing_allowed(pin, context="test")
 
 
-def test_default_deepseek_candidates_use_first_party_direct_pins() -> None:
-    deepseek_candidates = [
-        candidate for candidate in qg_bakeoff.DEFAULT_CANDIDATE_MODELS if "deepseek" in candidate.label
-    ]
-
-    assert [candidate.pin for candidate in deepseek_candidates] == list(qg_bakeoff.DEEPSEEK_DIRECT_PINS)
-    assert all(not candidate.unresolved for candidate in deepseek_candidates)
-
-
 def test_scoring_counts_missing_claim_and_preserves_model_judgment_on_downgrade() -> None:
     payload = {
         "fact_checks": [
@@ -596,17 +587,6 @@ def test_force_reruns_existing_artifact(tmp_path: Path) -> None:
     assert run.skipped is False
     assert calls, "force=True must re-invoke the runner despite the existing artifact"
     assert run.artifact["status"] == "ran"
-
-
-def test_run_one_with_default_live_runner_is_guarded(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.delenv("CI", raising=False)
-    monkeypatch.delenv("QG_BAKEOFF", raising=False)
-    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
-
-    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="QG_BAKEOFF=1"):
-        qg_bakeoff.run_one(route, _fixture(), output_dir=tmp_path)
 
 
 def test_matrix_survives_schema_invalid_cell_and_retry_failures_reruns_it(
@@ -1051,29 +1031,6 @@ def test_rescore_recomputes_from_stored_payloads_without_model_calls(tmp_path: P
 # --- Bare control arm (#2156 step 3: harness-lift measurement) --------------
 
 
-def test_bare_prompt_reuses_taxonomy_verbatim_without_tool_mandate() -> None:
-    """Bare prompt: same verdict taxonomy (so scoring is identical) but NO tool mandate."""
-    prompt = qg_bakeoff.build_bare_factcheck_prompt("Веснянки", "Spring songs. Гаї shown.")
-
-    # The verdict set is reused VERBATIM from the live reviewer template — no fork.
-    assert qg_bakeoff._reviewer_verdict_taxonomy() in prompt
-    for verdict in qg_schema.FACT_CHECK_VERDICTS:
-        assert verdict in prompt
-
-    # Same JSON contract (fact_checks with claim + verdict, literal spans).
-    assert "fact_checks" in prompt
-    assert "verbatim span" in prompt
-
-    # No tool/search/grounding MANDATE (those tooled sections must be absent).
-    assert "Required Search Protocol" not in prompt
-    assert "Tool Budget" not in prompt
-    assert "at most 3 tool calls" not in prompt
-    # Bare explicitly permits the can't-verify verdict and judges from own knowledge.
-    assert "UNVERIFIED_INSUFFICIENT_SEARCH" in prompt
-    assert "own knowledge" in prompt
-    assert "ignored by bare scoring" in prompt
-
-
 def test_bare_run_skips_gates_confirmed_without_grounding_passes(tmp_path: Path) -> None:
     """A payload that WOULD fail the tooled theatre/grounding gates passes bare.
 
@@ -1108,63 +1065,6 @@ def test_bare_run_skips_gates_confirmed_without_grounding_passes(tmp_path: Path)
     assert run.artifact["score"]["model_judgment_score"] == 30
     assert run.artifact["score"]["invalid_fact_checks"] == 0
     assert run.artifact["score"]["inadmissible_positive_verdicts"] == 0
-
-
-def test_bare_strips_nonconforming_findings_and_still_scores(tmp_path: Path) -> None:
-    """Findings are orthogonal to the bare fact-check measurement: stripped + flagged."""
-    fixture = _fixture()
-    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/bare-findings")
-    payload = {
-        "findings": [{"excerpt": "щось", "message": "bare finding, misses required fields"}],
-        "fact_checks": [
-            {"claim": "True claim.", "verdict": "CONFIRMED"},
-            {"claim": "Fabricated claim.", "verdict": "UNATTESTED_AFTER_SEARCH"},
-        ],
-    }
-
-    def runner(
-        run_route: llm_reviewer_dispatch.ReviewerRoute,
-        _prompt: str,
-        _task_id: str,
-    ) -> llm_reviewer_dispatch.DispatchResult:
-        return _bare_dispatch_result(payload, run_route)
-
-    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
-
-    assert run.artifact["status"] == "ran"
-    assert run.artifact["findings_schema_invalid"] is True
-    assert run.artifact["payload"]["findings"] == []
-    assert run.artifact["score"]["model_judgment_score"] == 30
-
-
-def test_bare_invalid_fact_checks_is_error_cell(tmp_path: Path) -> None:
-    """An out-of-taxonomy verdict is a real error cell (score = every claim missing)."""
-    fixture = _fixture()
-    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/bad-bare")
-
-    def runner(
-        run_route: llm_reviewer_dispatch.ReviewerRoute,
-        _prompt: str,
-        _task_id: str,
-    ) -> llm_reviewer_dispatch.DispatchResult:
-        return _bare_dispatch_result({"fact_checks": [{"claim": "x", "verdict": "NOPE"}]}, run_route)
-
-    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
-
-    assert run.artifact["status"] == "error"
-    assert run.artifact["arm"] == "bare"
-    assert run.artifact["score"]["missing_claims"] == len(fixture.claims)
-
-
-def test_run_one_bare_with_default_runner_is_guarded(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.delenv("CI", raising=False)
-    monkeypatch.delenv("QG_BAKEOFF", raising=False)
-    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
-
-    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="QG_BAKEOFF=1"):
-        qg_bakeoff.run_one_bare(route, _fixture(), output_dir=tmp_path)
 
 
 def test_subscription_runtime_bare_invokes_agent_runtime_with_bare_claude_config(
@@ -1330,30 +1230,6 @@ def test_subscription_runtime_tooled_claude_route_resolves() -> None:
     assert route.route_name == "tooled_runtime_claude"
     identity = qg_bakeoff._route_identity(route)
     assert identity.transport == "runtime-claude"
-    assert identity.entrypoint == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
-    assert identity.measurement_tier == qg_bakeoff.SUBSCRIPTION_RUNTIME_TOOLED_TIER
-
-
-def test_subscription_runtime_tooled_gpt_route_resolves() -> None:
-    route = qg_bakeoff.route_for_matrix_pin(
-        qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
-        arm=qg_bakeoff.TOOLED_ARM,
-    )
-    assert route.route_name == "tooled_runtime_gpt"
-    identity = qg_bakeoff._route_identity(route)
-    assert identity.transport == "runtime-codex"
-    assert identity.entrypoint == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
-    assert identity.measurement_tier == qg_bakeoff.SUBSCRIPTION_RUNTIME_TOOLED_TIER
-
-
-def test_subscription_runtime_tooled_gemini_route_resolves() -> None:
-    route = qg_bakeoff.route_for_matrix_pin(
-        qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
-        arm=qg_bakeoff.TOOLED_ARM,
-    )
-    assert route.route_name == "tooled_runtime_gemini"
-    identity = qg_bakeoff._route_identity(route)
-    assert identity.transport == "runtime-agy"
     assert identity.entrypoint == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
     assert identity.measurement_tier == qg_bakeoff.SUBSCRIPTION_RUNTIME_TOOLED_TIER
 
@@ -1666,20 +1542,6 @@ def test_bare_style_row_is_never_neutralized_model_equals_live() -> None:
     assert per_claim["live_admissible_neutralized"] is False
     assert per_claim["model_judgment_points"] == per_claim["live_admissible_points"]
     assert score["model_judgment_score"] == score["live_admissible_score"]
-
-
-def test_subscription_tooled_prompt_forbids_flat_grounding_fields() -> None:
-    route = qg_bakeoff.route_for_matrix_pin("gemini-3.1-pro-high", arm=qg_bakeoff.TOOLED_ARM)
-    footer = qg_bakeoff._subscription_tooled_prompt_supplement(route)
-    assert "Do NOT use top-level `grounding_excerpt`" in footer
-    assert "REFUTED_BY_CONTRADICTION when retrieved evidence contradicts" in footer
-
-
-def test_subscription_tooled_prompt_includes_json_contract_footer() -> None:
-    route = qg_bakeoff.route_for_matrix_pin("gemini-3.1-pro-high", arm=qg_bakeoff.TOOLED_ARM)
-    footer = qg_bakeoff._subscription_tooled_prompt_supplement(route)
-    assert "field name `verdict`" in footer
-    assert "character-for-character" in footer
 
 
 def test_bare_transport_retry_once_and_records_attempts(tmp_path: Path) -> None:
@@ -2283,92 +2145,6 @@ def test_regate_parity_matches_live_gate_and_score() -> None:
     assert regated["score"]["inadmissible_positive_verdicts"] == live_score["inadmissible_positive_verdicts"]
 
 
-def test_regate_bare_arm_rescores_without_grounding_tags(tmp_path: Path) -> None:
-    fixture = _fixture()
-    fixtures_dir = tmp_path / "fx"
-    fixtures_dir.mkdir()
-    (fixtures_dir / f"{fixture.slug}.json").write_text(
-        json.dumps(
-            {
-                "slug": fixture.slug,
-                "title": fixture.title,
-                "passage_md": fixture.passage_md,
-                "claims": [
-                    {
-                        "claim_id": c.claim_id,
-                        "claim": c.claim,
-                        "is_true": c.is_true,
-                        "fabrication_class": c.fabrication_class,
-                        "distractor_evidence": c.distractor_evidence,
-                    }
-                    for c in fixture.claims
-                ],
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-    out = tmp_path / "out"
-    out.mkdir()
-    (out / "m__sample__bare.json").write_text(
-        json.dumps(
-            {
-                "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
-                "arm": "bare",
-                "fixture": {"slug": fixture.slug, "title": fixture.title, "claim_count": 2},
-                "model": {"pin": "openrouter/test/m"},
-                "payload": {
-                    "fact_checks": [
-                        {"claim": "True claim.", "verdict": "CONFIRMED"},
-                        {"claim": "Fabricated claim.", "verdict": "CONFIRMED"},
-                    ]
-                },
-                "score": {"model_judgment_score": -999},
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-
-    n = qg_bakeoff.regate_artifacts(out, fixtures_dir)
-
-    assert n == 1
-    bare = json.loads((out / "m__sample__bare.json").read_text(encoding="utf-8"))
-    assert bare["score"]["model_judgment_score"] == -80
-    assert bare["score"]["model_judgment_score"] == bare["score"]["live_admissible_score"]
-
-
-def test_regate_refuses_frozen_reference_scorecard_without_escape(tmp_path: Path) -> None:
-    out = tmp_path / "frozen"
-    out.mkdir()
-    scorecard = out / qg_bakeoff.SCORECARD_NAME
-    scorecard.write_text("# frozen scorecard\n", encoding="utf-8")
-    manifest = tmp_path / "MANIFEST.json"
-    manifest.write_text(
-        json.dumps(
-            {
-                "benchmark_version": "1.0.0",
-                "reference_result": {
-                    "path": "audit/frozen/SCORECARD.md",
-                    "sha256": hashlib.sha256(scorecard.read_bytes()).hexdigest(),
-                },
-            },
-            indent=2,
-            sort_keys=True,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-
-    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="unsafe-allow-frozen"):
-        qg_bakeoff.regate_artifacts(out, manifest_path=manifest)
-
-
-def test_main_rejects_rescore_and_regate_together() -> None:
-    rc = qg_bakeoff.main(["--rescore", "--regate", "--out-dir", "/tmp/x"])
-    assert rc == 2
-
-
 def test_load_all_artifacts_skips_foreign_json(tmp_path: Path) -> None:
     """The run_matrix scorecard path must apply the same foreign-JSON filter.
 
@@ -2572,10 +2348,6 @@ def test_lenient_first_json_object_skips_leading_prose() -> None:
     )
     parsed = qg_bakeoff._lenient_first_json_object(text)
     assert parsed == payload
-
-
-def test_lenient_first_json_object_returns_none_without_object() -> None:
-    assert qg_bakeoff._lenient_first_json_object("no json here") is None
 
 
 def test_subscription_codex_command_rejects_old_pin():

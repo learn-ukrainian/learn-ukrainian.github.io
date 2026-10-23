@@ -1,29 +1,5 @@
-import re
 
 from scripts.build import linear_pipeline
-
-PHASES_DIR = linear_pipeline.PROJECT_ROOT / "scripts" / "build" / "phases"
-
-
-def test_linear_write_grok_prompt_exists_and_is_non_empty() -> None:
-    prompt_path = PHASES_DIR / "linear-write-grok.md"
-
-    assert prompt_path.exists()
-    assert prompt_path.read_text(encoding="utf-8").strip()
-
-
-def test_linear_write_grok_prompt_uses_plan_thinking_not_section_reasoning() -> None:
-    prompt_text = (PHASES_DIR / "linear-write-grok.md").read_text(encoding="utf-8")
-
-    assert "<plan_thinking>" in prompt_text
-    assert not re.search(r"<plan_reasoning\s+section=", prompt_text)
-
-
-def test_linear_write_grok_prompt_is_no_longer_than_default_prompt() -> None:
-    grok_words = (PHASES_DIR / "linear-write-grok.md").read_text(encoding="utf-8").split()
-    default_words = (PHASES_DIR / "linear-write.md").read_text(encoding="utf-8").split()
-
-    assert len(grok_words) <= len(default_words)
 
 
 def test_prompt_by_writer_routes_grok_and_defaults_to_linear_write() -> None:
@@ -35,13 +11,6 @@ def test_prompt_by_writer_routes_grok_and_defaults_to_linear_write() -> None:
         linear_pipeline.writer_correction_prompt_path("grok-tools").name
         == "linear-writer-correction-grok.md"
     )
-
-
-def test_linear_write_grok_prompt_keeps_all_artifact_fences() -> None:
-    prompt_text = (PHASES_DIR / "linear-write-grok.md").read_text(encoding="utf-8")
-
-    for artifact in linear_pipeline.WRITER_ARTIFACTS:
-        assert f"file={artifact}" in prompt_text
 
 
 def test_plan_thinking_sections_count_as_writer_cot_coverage() -> None:

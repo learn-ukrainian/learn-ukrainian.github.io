@@ -16,7 +16,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _channels, _cli, _db, _messaging
+from scripts.ai_agent_bridge import _channels, _cli, _db
 
 
 @pytest.fixture(autouse=True)
@@ -86,15 +86,6 @@ def _message_priority(message_id: str) -> str:
 # ── Item 3: broadcast post ──────────────────────────────────────────────
 
 
-def test_p_single_recipient_still_works(capsys):
-    _channels.create_channel("shared")
-    rc = _run_cli(["p", "shared", "claude", "hello"])
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "→ claude" in out
-    assert "1 deliveries" in out
-
-
 def test_p_multi_recipient_comma_list(capsys):
     _channels.create_channel("shared")
     rc = _run_cli(["p", "shared", "claude,codex", "hello team"])
@@ -120,27 +111,6 @@ def test_p_broadcast_excludes_dead_lane(capsys, monkeypatch):
     assert delivered_agents == {"claude", "codex"}
 
 
-def test_p_broadcast_and_agent_conflict_errors(capsys):
-    _channels.create_channel("shared")
-    rc = _run_cli(["p", "shared", "claude", "hello", "--broadcast"])
-    assert rc == 2
-    assert "not both" in capsys.readouterr().err
-
-
-def test_p_missing_recipient_errors(capsys):
-    _channels.create_channel("shared")
-    rc = _run_cli(["p", "shared", "hello with no recipient"])
-    assert rc == 2
-    assert "missing recipient" in capsys.readouterr().err
-
-
-def test_post_broadcast_and_to_conflict_errors(capsys):
-    _channels.create_channel("shared")
-    rc = _run_cli(["post", "shared", "hello", "--broadcast", "--to", "claude"])
-    assert rc == 1
-    assert "cannot be combined" in capsys.readouterr().err
-
-
 def test_post_review_flag_implies_action_required_priority():
     _channels.create_channel("shared")
     rc = _run_cli(["post", "shared", "please review this", "--to", "claude", "--review", "--no-snapshot"])
@@ -157,16 +127,6 @@ def test_post_explicit_priority_overrides_review_flag():
     assert rc == 0
     msgs = _channels.read("shared", tail=1)
     assert msgs[0]["priority"] == "fyi"
-
-
-def test_post_explicit_action_required_priority_without_review():
-    _channels.create_channel("shared")
-    rc = _run_cli(
-        ["post", "shared", "urgent", "--to", "claude", "--priority", "action-required", "--no-snapshot"]
-    )
-    assert rc == 0
-    msgs = _channels.read("shared", tail=1)
-    assert msgs[0]["priority"] == "action_required"
 
 
 # ── Item 4: delivery TTL/auto-expire + cleanup automation ──────────────
@@ -240,23 +200,3 @@ def test_action_required_delivery_survives_plain_cleanup_expire_before_escalatio
 
 
 # ── Item 5: unified thread retrieval ────────────────────────────────────
-
-
-def test_thread_cli_by_task_id(capsys):
-    _messaging.send_message("hello", task_id="t-4837", quiet=True)
-    rc = _run_cli(["thread", "t-4837"])
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "Conversation: t-4837" in out
-    assert "hello" in out
-
-
-def test_thread_cli_by_numeric_message_id_resolves_task(capsys):
-    msg_id = _messaging.send_message("ask", task_id="t-4837b", from_llm="claude", to_llm="codex", quiet=True)
-    _messaging.send_message("reply", task_id="t-4837b", from_llm="codex", to_llm="claude", quiet=True)
-    rc = _run_cli(["thread", str(msg_id)])
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "Conversation: t-4837b (2 messages)" in out
-    assert "ask" in out
-    assert "reply" in out

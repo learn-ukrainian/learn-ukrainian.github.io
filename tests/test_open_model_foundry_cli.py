@@ -163,10 +163,3 @@ def test_allowed_capability_requires_its_own_evidence(tmp_path: Path) -> None:
     with pytest.raises(foundry.FoundryError, match="allows dataset_publication without evidence") as exc_info:
         foundry.read_records(input_path, max_records=1)
     assert exc_info.value.code == "FNDY-E002"
-
-
-def test_public_parser_exposes_one_prepare_and_verify_cli() -> None:
-    help_text = foundry.build_parser().format_help()
-    assert "ukrainian-data-foundry" in help_text
-    assert "prepare" in help_text
-    assert "verify" in help_text

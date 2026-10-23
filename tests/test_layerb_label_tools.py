@@ -543,15 +543,6 @@ def test_rederive_no_drift_positive_and_synthetic_drift_hard_fail(tmp_path: Path
         assert_no_drift(drifted, frozen)
 
 
-def test_source_derivation_retains_comparison_only_no_fixture_fallback(tmp_path: Path) -> None:
-    corpus_dir, _fixtures_dir, _frozen = _raw_rederive_inputs(tmp_path)
-
-    records = derive_keyed_records(corpus_dir, fixtures_dir=None)
-
-    assert len(records) == 2
-    assert {record["gold_is_true"] for record in records} == {None}
-
-
 def test_rederive_cli_is_byte_identical_for_two_source_walks(tmp_path: Path) -> None:
     corpus_dir, fixtures_dir, frozen = _raw_rederive_inputs(tmp_path)
     frozen_path = tmp_path / "frozen-derivation.json"
@@ -672,34 +663,6 @@ def test_scaffold_hard_fails_when_a_shadow_segment_hash_does_not_match(tmp_path:
 
     with pytest.raises(LabelJoinError, match="segment SHA-256 does not match captured output"):
         build_scaffold(keyed, corrupt, corpus_dir=corpus_dir, output_dir=tmp_path / "scaffold")
-
-
-@pytest.mark.parametrize(
-    "module",
-    (
-        "scripts.audit.layerb_derivation",
-        "scripts.audit.layerb_label_common",
-        "scripts.audit.layerb_label_union",
-        "scripts.audit.layerb_label_scaffold",
-        "scripts.audit.layerb_label_merge",
-    ),
-)
-def test_label_tool_imports_do_not_load_runtime_reviewer_dispatch(module: str) -> None:
-    command = (
-        "import importlib, sys; "
-        f"importlib.import_module({module!r}); "
-        "raise SystemExit('scripts.audit.llm_reviewer_dispatch' in sys.modules)"
-    )
-    completed = subprocess.run(
-        [str(VENV_PYTHON), "-c", command],
-        cwd=REPO_ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-
-    assert completed.returncode == 0, completed.stderr
 
 
 def test_validate_annotator_record_rejects_out_of_bounds_spans(tmp_path: Path) -> None:

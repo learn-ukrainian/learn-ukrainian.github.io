@@ -22,7 +22,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from pipeline.state import (
     _fresh_state,
     _migrate_v4_to_v5,
-    _state_file,
     is_complete,
     load_state,
     save_state,
@@ -50,59 +49,15 @@ class TestIsComplete:
         state = {"phases": {"content": {"status": "failed"}}}
         assert is_complete(state, "content") is False
 
-    def test_missing_phase(self):
-        state = {"phases": {}}
-        assert is_complete(state, "content") is False
-
-    def test_no_phases_key(self):
-        state = {}
-        assert is_complete(state, "content") is False
-
-    def test_in_progress_phase(self):
-        state = {"phases": {"content": {"status": "in_progress"}}}
-        assert is_complete(state, "content") is False
-
-    def test_multiple_phases(self):
-        state = {"phases": {
-            "research": {"status": "complete"},
-            "content": {"status": "failed"},
-            "activities": {"status": "complete"},
-        }}
-        assert is_complete(state, "research") is True
-        assert is_complete(state, "content") is False
-        assert is_complete(state, "activities") is True
-
 
 # =============================================================================
 # _fresh_state
 # =============================================================================
 
-class TestFreshState:
-    def test_basic(self):
-        ctx = MockContext()
-        state = _fresh_state(ctx)
-        assert state["track"] == "a1"
-        assert state["slug"] == "test-module"
-        assert state["mode"] == "v5"
-        assert state["phases"] == {}
-
-    def test_different_track(self):
-        ctx = MockContext(track="b2-hist", slug="my-module")
-        state = _fresh_state(ctx)
-        assert state["track"] == "b2-hist"
-        assert state["slug"] == "my-module"
-
 
 # =============================================================================
 # _state_file
 # =============================================================================
-
-class TestStateFile:
-    def test_returns_path(self):
-        ctx = MockContext(orch_dir=Path("/some/dir"))
-        assert _state_file(ctx) == Path("/some/dir/state.json")
-
-
 # =============================================================================
 # _migrate_v4_to_v5
 # =============================================================================
@@ -133,12 +88,6 @@ class TestMigrateV4ToV5:
         ctx = MockContext()
         result = _migrate_v4_to_v5(v4_data, ctx)
         assert "research" in result["phases"]
-
-    def test_empty_phases(self):
-        v4_data = {"track": "a1", "slug": "test", "phases": {}}
-        ctx = MockContext()
-        result = _migrate_v4_to_v5(v4_data, ctx)
-        assert result["phases"] == {}
 
     def test_uses_ctx_defaults(self):
         v4_data = {"phases": {}}

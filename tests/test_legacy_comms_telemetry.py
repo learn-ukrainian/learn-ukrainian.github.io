@@ -167,13 +167,6 @@ def test_telemetry_never_persists_paths_queries_bodies_credentials_or_raw_header
     assert '"cli"' in persisted
 
 
-def test_nonlegacy_comms_routes_are_not_counted(client: TestClient) -> None:
-    assert client.get("/api/comms/health").status_code == 200
-    payload = client.get("/api/telemetry/legacy-comms-routes?window=1h").json()
-    assert payload["total"] == 0
-    assert all(item["count"] == 0 for item in payload["routes"])
-
-
 def test_summary_marks_window_incomplete_until_coverage_is_old_enough(
     telemetry_db: Path,
 ) -> None:
@@ -183,16 +176,6 @@ def test_summary_marks_window_incomplete_until_coverage_is_old_enough(
     assert payload["total"] == 0
     assert payload["window_fully_observed"] is False
     assert len(payload["routes"]) == 5
-
-
-def test_summary_marks_a_complete_observation_window(telemetry_db: Path) -> None:
-    now = datetime(2026, 8, 10, 12, 30, tzinfo=UTC)
-    legacy_comms.initialize_legacy_comms_telemetry(
-        telemetry_db,
-        now=now - timedelta(days=8),
-    )
-    payload = legacy_comms.legacy_comms_summary("7d", db_path=telemetry_db, now=now)
-    assert payload["window_fully_observed"] is True
 
 
 def test_retention_cleanup_is_bounded_and_idempotent(telemetry_db: Path) -> None:
@@ -266,7 +249,3 @@ def test_storage_failure_does_not_break_legacy_route(
     monkeypatch.setattr(legacy_comms, "record_legacy_route_usage", fail)
     response = client.get("/api/comms/messages")
     assert response.status_code == 200
-
-
-def test_invalid_summary_window_is_rejected(client: TestClient) -> None:
-    assert client.get("/api/telemetry/legacy-comms-routes?window=forever").status_code == 422

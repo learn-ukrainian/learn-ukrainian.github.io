@@ -249,12 +249,6 @@ def test_private_receipt_replay_rejects_output_byte_drift(tmp_path: Path, monkey
         spine.audit_private_receipts(drive_root=drive_root, spine_value=value)
 
 
-def test_v1_and_v2_artifacts_remain_distinct() -> None:
-    value = spine.load_spine()
-    assert value["supersedes"]["v1_file_sha256"] == spine.sha256_file(spine.spine_v1.SPINE_PATH)
-    assert value["receipt_sha256"] != value["supersedes"]["v1_receipt_sha256"]
-
-
 def test_load_rejects_bound_source_byte_drift(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     logical_path, expected_sha256 = next(iter(spine.EXPECTED_CODE_BINDINGS.items()))
     fake_root = tmp_path / "repo"

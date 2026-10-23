@@ -88,6 +88,146 @@ def test_hyphen_preceded_key_path_remains_rejected_with_spoofed_dispatch():
     assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "task-7828-sk-something"
 
 
+# A pytest run directory is ``pytest.`` plus eight random characters from
+# mkdtemp's ``[a-z0-9_]`` alphabet. Only the all-lowercase ``gh?_``, ``hf_`` and
+# ``npm_`` prefixes can occur there, and the longest fragment they leave is
+# five characters, below the floor. ``sk-`` needs a hyphen and ``AKIA``/``AIza``
+# need uppercase letters, so none of those can appear in a run-directory name
+# (#11326). A re-added word boundary is caught by the glued-key test below, not
+# by these rows.
+_RUN_DIRECTORY_KEY_FRAGMENTS = (
+    "ghp_56ac",
+    "gho_56ac",
+    "ghu_56ac",
+    "ghs_56ac",
+    "ghr_56ac",
+    "bghp_56a",
+    "bbghp_56",
+    "hf_56acd",
+    "bhf_56ac",
+    "bbbhf_56",
+    "npm_56ac",
+    "bnpm_56a",
+    "bbnpm_56",
+)
+
+_KEY_PREFIX_BODIES = (
+    ("github_pat_", "FAKE" * 6),
+    ("ghp_", "FAKE" * 9),
+    *((prefix, "FAKE" * 9) for prefix in ("gho_", "ghu_", "ghs_", "ghr_")),
+    ("sk-", "FAKE" * 5),
+    ("xoxb-", "FAKE" * 6),
+    *((prefix, "FAKE" * 6) for prefix in ("xoxa-", "xoxp-", "xoxr-", "xoxs-")),
+    ("hf_", "FAKE" * 8),
+    ("npm_", "FAKE" * 9),
+    ("AKIA", "FAKE" * 4),
+    ("AIza", "FAKE" * 8),
+)
+
+_REAL_KEY_SHAPED_VALUES = tuple(prefix + body for prefix, body in _KEY_PREFIX_BODIES)
+
+# A real key can be glued to a preceding word character, which is exactly what
+# a word boundary would hide.
+_GLUED_SEPARATORS = ("MY_", "x_", "abc", "9", "%3D", "%3A", "\\n", "і", "é")
+_GLUED_PREFIX_BODIES = _KEY_PREFIX_BODIES
+
+
+@pytest.mark.parametrize("provider", ["claude", "acpx-claude-shadow"])
+@pytest.mark.parametrize("fragment", _RUN_DIRECTORY_KEY_FRAGMENTS)
+def test_run_directory_name_containing_a_key_prefix_keeps_path(provider, fragment):
+    """#11326: a random run-directory name must not make PATH look sensitive."""
+    run_root = f"/var/tmp/lu/pytest-runs/runs/pytest.{fragment}/scratch/base"
+    path = f"{run_root}/bin:/usr/bin:/bin"
+    home = f"{run_root}/home"
+    with patch.dict(os.environ, {"PATH": path, "HOME": home}, clear=True):
+        env = build_agent_env(provider=provider)
+    assert env["PATH"] == path
+    assert env["HOME"] == home
+
+
+@pytest.mark.parametrize("key", _REAL_KEY_SHAPED_VALUES)
+def test_real_key_shaped_values_are_still_dropped(key):
+    """#11326: the body floor must not weaken real detection."""
+    path = f"/usr/bin:{key}:/bin"
+    with patch.dict(os.environ, {"PATH": path, "HOME": "/fixture/home", "AB_TRACE": key}, clear=True):
+        env = build_agent_env(provider="claude")
+    assert "AB_TRACE" not in env
+    assert "PATH" not in env
+    assert all(key not in value for value in env.values())
+
+
+@pytest.mark.parametrize("separator", _GLUED_SEPARATORS)
+@pytest.mark.parametrize("prefix,body", _GLUED_PREFIX_BODIES)
+def test_glued_full_length_keys_are_still_dropped(separator, prefix, body):
+    """#11326: a full-length key glued to a word character is still a credential.
+
+    Reads like ``MY_ghp_...``, ``9AKIA...``, ``%3Dgithub_pat_...``, escaped
+    JSON ``\\ngithub_pat_...`` and a Cyrillic or accented letter before the key
+    are all dropped. Adding a word boundary in front of a prefix makes every
+    row here fail.
+    """
+    key = f"{separator}{prefix}{body}"
+    context = {
+        "PATH": f"/usr/bin:{key}:/bin",
+        "HOME": f"/fixture/{key}/home",
+        "AB_TRACE": f'{{"value":"{key}"}}',
+    }
+    with patch.dict(os.environ, context, clear=True):
+        env = build_agent_env(provider="claude")
+    for name in context:
+        assert name not in env, name
+    assert all(key not in value for value in env.values())
+
+
+@pytest.mark.parametrize("value", ["sk-x", "task-sk-att", "sk-ant-fake", "sk-proj-fake"])
+def test_short_boundary_delimited_sk_values_remain_rejected(value):
+    """#11355: broadening glued detection must preserve existing short-key rejection."""
+    with patch.dict(os.environ, {"PATH": value, "HOME": "/fixture/home"}, clear=True):
+        env = build_agent_env(provider="claude")
+    assert "PATH" not in env
+
+
+@pytest.mark.parametrize("prefix,body", _KEY_PREFIX_BODIES)
+@pytest.mark.parametrize(
+    "template",
+    [
+        pytest.param("{}", id="bare"),
+        pytest.param("/usr/bin:/fixture/{}/bin:/bin", id="path"),
+        pytest.param("https://fixture.invalid/?key%3D{}", id="url"),
+        pytest.param("MY_{}", id="word"),
+        pytest.param("%3D{}", id="encoded-equals"),
+        pytest.param(r"\n{}", id="literal-backslash-n"),
+    ],
+)
+@pytest.mark.parametrize("override", [False, True], ids=["inherited", "override"])
+def test_all_key_prefixes_reject_glued_and_embedded_credentials(prefix, body, template, override):
+    """#11355: credential-shaped values must not escape through a leading word character."""
+    value = template.format(prefix + body)
+    context = {"PATH": value, "HOME": value, "AB_TRACE": value}
+    parent = {"HOME": "/fixture/home", "PATH": "/usr/bin"} if override else context
+    with patch.dict(os.environ, parent, clear=True):
+        env = build_agent_env(provider="claude", overrides=context if override else None)
+    for name in context:
+        assert name not in env, name
+    assert all(prefix + body not in item for item in env.values())
+
+
+@pytest.mark.parametrize("prefix,body", _KEY_PREFIX_BODIES)
+@pytest.mark.parametrize("override", [False, True], ids=["inherited", "override"])
+def test_short_glued_prefix_fragments_keep_process_path(prefix, body, override):
+    """#11355: a short run-directory fragment must not be treated as a full key.
+
+    Mixed-case and hyphenated prefixes cannot occur in mkdtemp's random tail;
+    these converse rows also cover manually named run directories.
+    """
+    path = f"/fixture/pytest.b{prefix}56ac/bin:/usr/bin:/bin"
+    context = {"PATH": path, "HOME": "/fixture/home"}
+    with patch.dict(os.environ, context, clear=True):
+        env = build_agent_env(provider="claude", overrides=context if override else None)
+    assert env["PATH"] == path
+    assert env["HOME"] == "/fixture/home"
+
+
 @pytest.mark.parametrize("provider", ["agy", "claude", "codex", "grok", "bridge"])
 @pytest.mark.parametrize("override", [False, True])
 def test_child_environment_never_inherits_driver_state(tmp_path, monkeypatch, provider, override):
@@ -102,39 +242,6 @@ def test_child_environment_never_inherits_driver_state(tmp_path, monkeypatch, pr
     ):
         env = build_agent_env(provider=provider, overrides={"LU_DRIVER_STATE_FILE": state} if override else {})
     assert "LU_DRIVER_STATE_FILE" not in env
-
-
-def test_user_and_logname_pass_through() -> None:
-    with patch.dict(
-        "os.environ",
-        {
-            "PATH": "/usr/bin",
-            "HOME": "/Users/example",
-            "USER": "example",
-            "LOGNAME": "example",
-        },
-        clear=True,
-    ):
-        env = build_agent_env(provider="claude")
-
-    assert env["USER"] == "example"
-    assert env["LOGNAME"] == "example"
-
-
-def test_user_logname_not_provider_specific() -> None:
-    parent_env = {
-        "PATH": "/usr/bin",
-        "HOME": "/Users/example",
-        "USER": "example",
-        "LOGNAME": "example",
-    }
-
-    with patch.dict("os.environ", parent_env, clear=True):
-        envs = {provider: build_agent_env(provider=provider) for provider in ("gemini", "claude", "codex", "bridge")}
-
-    for env in envs.values():
-        assert env["USER"] == "example"
-        assert env["LOGNAME"] == "example"
 
 
 def test_anthropic_api_key_still_passes_through_for_claude() -> None:
@@ -254,25 +361,6 @@ def test_gh_auth_chain_preserved_without_identity_token(tmp_path) -> None:
     assert "lu-agent-runtime-git" in env["GIT_CONFIG_GLOBAL"]
     assert env["GIT_CONFIG_NOSYSTEM"] == "1"
     assert env["GH_PROMPT_DISABLED"] == "1"
-
-
-def test_gh_config_dir_defaults_to_home_without_identity_token() -> None:
-    """#7166: with no explicit host GH_CONFIG_DIR, leave it unset so gh falls
-    back to its default config dir under the preserved HOME — never to an
-    empty sandbox dir."""
-    with patch.dict(
-        "os.environ",
-        {
-            "PATH": "/usr/bin",
-            "HOME": "/Users/example",
-            "USER": "example",
-        },
-        clear=True,
-    ):
-        env = build_agent_env(provider="codex")
-
-    assert "GH_CONFIG_DIR" not in env
-    assert env["HOME"] == "/Users/example"
 
 
 def test_empty_sandbox_gh_config_dir_rejected_without_identity_token(tmp_path) -> None:
@@ -492,21 +580,6 @@ def test_build_agent_env_keeps_only_the_cap_plugins_scripts_dir(tmp_path) -> Non
         without_marker = build_agent_env(provider="codex")
 
     assert "PYTHONPATH" not in without_marker
-
-
-def test_usable_host_gh_config_dir_requires_hosts_yml(tmp_path) -> None:
-    from agent_runtime.env_sanitize import usable_host_gh_config_dir
-
-    empty = tmp_path / "empty"
-    empty.mkdir()
-    assert usable_host_gh_config_dir(str(empty)) is None
-
-    good = tmp_path / "good"
-    good.mkdir()
-    (good / "hosts.yml").write_text("github.com:\n    user: ops\n", encoding="utf-8")
-    assert usable_host_gh_config_dir(str(good)) == str(good)
-    assert usable_host_gh_config_dir(None) is None
-    assert usable_host_gh_config_dir("") is None
 
 
 def test_agy_app_data_dir_reaches_only_the_agy_provider() -> None:

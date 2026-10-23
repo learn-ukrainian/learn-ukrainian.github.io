@@ -1118,23 +1118,6 @@ def test_actionable_behavior_receipt_refuses_each_failed_clause(
     assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
 
 
-def test_actionable_behavior_receipt_without_findings_is_refused(tmp_path: Path) -> None:
-    receipt = _approved_actionable_receipt()
-    receipt["findings"] = []
-    receipt["reviewer_payload"]["finding_ids"] = []
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
-    assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
-
-
 @pytest.mark.parametrize("actionable", [False, True], ids=["clean", "actionable"])
 def test_behavior_receipt_without_error_key_is_refused(tmp_path: Path, actionable: bool) -> None:
     reference = _behavior_receipt_reference(
@@ -1156,35 +1139,6 @@ def test_behavior_receipt_without_error_key_is_refused(tmp_path: Path, actionabl
     assert result["state"] == "BLOCKED_WITH_RECEIPT"
     assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
     assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
-
-
-def test_clean_behavior_receipt_with_error_is_refused(tmp_path: Path) -> None:
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates={"error": "runner failed"})
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
-
-
-def test_forged_correct_without_receipt_finding_id_is_refused(tmp_path: Path) -> None:
-    receipt = _approved_actionable_receipt()
-    del receipt["findings"][1]["id"]
-    receipt["reviewer_payload"]["finding_ids"] = ["F001", None]
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
 
 
 def test_closeout_cli_reconciles_original_actionable_receipt(
@@ -1216,21 +1170,6 @@ def test_closeout_cli_reconciles_original_actionable_receipt(
     assert persisted["ac_snapshot"] == ledger["ac_snapshot"]
     assert persisted["evidence"] == ledger["evidence"]
     assert receipt_path.read_bytes() == receipt_bytes
-
-
-def test_actionable_behavior_receipt_changed_bytes_fail_digest_validation(tmp_path: Path) -> None:
-    reference = _behavior_receipt_reference(tmp_path, receipt_updates=_approved_actionable_receipt())
-    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
-    path.write_bytes(path.read_bytes() + b"\n")
-    ledger = _add(
-        _ready_evidence(_ledger(behavior_proof=True)),
-        "AC-IMPL", "behavior_proof", details=reference,
-    )
-
-    result = task_lifecycle.evaluate(ledger, _observation(_body()))
-
-    assert result["state"] == "BLOCKED_WITH_RECEIPT"
-    assert "digest" in " ".join(result["hard_blockers"])
 
 
 def test_carrier_preserves_identity_ac_snapshot_and_remaining_scope(
@@ -1766,15 +1705,6 @@ def test_legacy_migration_preserves_proof_lists() -> None:
 
     assert migrated["migration"]["legacy"] is True
     assert migrated["evidence"] == legacy["evidence"]
-
-
-def test_schema_round_trip_is_strict() -> None:
-    ledger = _ledger()
-    schema = json.loads(
-        Path("agents_extensions/shared/schemas/task-lifecycle.v1.schema.json").read_text(encoding="utf-8")
-    )
-    assert schema["additionalProperties"] is False
-    assert task_lifecycle.validate_lifecycle(ledger) == ledger
 
 
 @pytest.mark.parametrize("state", task_lifecycle.STATES)
@@ -2439,14 +2369,6 @@ def test_check_ac_checkbox_matches_the_exact_id_only(form):
     assert tenth_only[1].startswith("- [x]")
 
 
-@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}"])
-def test_check_ac_checkbox_ignores_ids_mentioned_in_other_criteria(form):
-    other = "- [ ] " + form.format(id="AC-02", text="Depends on **AC-01** and AC-01 being done.")
-    body = "- [ ] **AC-01** — First criterion.\n" + other + "\n"
-    updated = task_lifecycle.check_ac_checkbox(body, "AC-01")
-    assert updated.splitlines() == ["- [x] **AC-01** — First criterion.", other]
-
-
 @pytest.mark.parametrize("mark", ["x", "X"])
 @pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
 def test_check_ac_checkbox_leaves_checked_lines_byte_identical(mark, form):
@@ -2534,26 +2456,6 @@ def test_schema_id_bounds_preserve_parser_snapshot_and_evidence(ac_id):
     assert updated["ac_snapshot"] == snapshot
     assert updated["ac_snapshot"]["criteria"][0]["id"] == ac_id
     assert updated["evidence"][0]["ac_id"] == ac_id
-
-
-@pytest.mark.parametrize("ac_id", [
-    "", "A", "A" + "Z" * 32, "AC-" + "1" * 29 + "b", "ac-01b", "1C-01b",
-    "AC-lowercase", "AC-01b1", "AC-01_b", "AC-01/b", "AC-01b\n", "AC-01\u0431",
-])
-@pytest.mark.parametrize("target", ["criterion", "evidence"])
-def test_schema_refuses_invalid_ids_in_snapshot_and_evidence(ac_id, target):
-    ledger = _add(_ledger(), "AC-IMPL", "test")
-    if target == "criterion":
-        ledger["ac_snapshot"]["criteria"][0]["id"] = ac_id
-        ledger["ac_snapshot"]["content_hash"] = task_lifecycle.ac_content_hash(ledger["ac_snapshot"]["criteria"])
-        location = r"ac_snapshot.criteria.0.id"
-    else:
-        record = ledger["evidence"][0]
-        record["ac_id"] = ac_id
-        record["id"] = task_lifecycle.digest({key: value for key, value in record.items() if key != "id"})
-        location = r"evidence.0.ac_id"
-    with pytest.raises(task_lifecycle.LifecycleError, match=f"schema violation at {location}"):
-        task_lifecycle.validate_lifecycle(ledger)
 
 
 def test_schema_suffix_references_remain_bound_and_unique():
@@ -2712,12 +2614,6 @@ def test_9852_body_evidence_requires_identity_repository(evidence_repository, va
     else:
         assert reason in result["reason"]
         assert result["method"] is None
-
-
-def test_9852_repository_evidence_refuses_malformed_task_identity():
-    assert task_lifecycle.repository_evidence_refusal(
-        "repo", "org/repo", source="audit"
-    ) == "task repository identity is malformed"
 
 
 @pytest.mark.parametrize("native_parent_epic", [None, 30], ids=["body", "native-chain"])

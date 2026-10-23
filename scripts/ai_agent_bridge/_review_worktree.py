@@ -2769,11 +2769,6 @@ def _hardened_review_signal_handler(
                 atexit.unregister(_atexit_handler)
 
 
-def isolation_tool_config_for_engine(engine: str) -> dict[str, Any]:
-    """Public helper: isolation ``tool_config`` fragment for bridge adapters."""
-    return review_isolation_tool_config(engine)
-
-
 @contextlib.contextmanager
 def provision_review_worktree(
     target: ReviewTarget | None,

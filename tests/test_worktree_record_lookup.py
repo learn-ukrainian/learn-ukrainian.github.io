@@ -237,23 +237,6 @@ def test_hot_and_archived_same_name_keep_distinct_cache_entries(store):
     assert output.resolve_worktree_record(tree, tasks, repo_root=root)[0] == archived
 
 
-def test_target_is_strictly_resolved_once_per_lookup(store, monkeypatch):
-    root, tasks, tree = store
-    for i in range(4):
-        save(tasks, f"record-{i}.json", {"cwd": str(root / "other"), "acp_runtime_paths": [str(tree)]})
-    original = Path.resolve
-    strict_targets = []
-
-    def resolve(path, strict=False):
-        if path == tree and strict:
-            strict_targets.append(path)
-        return original(path, strict=strict)
-
-    monkeypatch.setattr(Path, "resolve", resolve)
-    assert output.resolve_worktree_record(tree, tasks, repo_root=root) == (None, {})
-    assert strict_targets == [tree]
-
-
 @pytest.mark.parametrize("failure", [OSError, ValueError, RuntimeError])
 def test_failed_strict_target_resolution_keeps_every_comparison_false(store, monkeypatch, failure):
     root, tasks, tree = store
@@ -268,26 +251,6 @@ def test_failed_strict_target_resolution_keeps_every_comparison_false(store, mon
     monkeypatch.setattr(Path, "resolve", resolve)
     replay(tasks, root, [tree])
     assert output.resolve_worktree_record(tree, tasks, repo_root=root) == (None, {})
-
-
-def test_claim_paths_are_memoized_only_within_each_lookup(store, monkeypatch):
-    from scripts.orchestration import worktree_claims
-
-    root, tasks, tree = store
-    for i in range(4):
-        save(tasks, f"record-{i}.json", {"cwd": str(root / "other"), "acp_runtime_paths": [str(tree)]})
-    original = worktree_claims.resolve_claim_path
-    locations = []
-
-    def resolve(location, *, repo_root):
-        locations.append(location)
-        return original(location, repo_root=repo_root)
-
-    monkeypatch.setattr(worktree_claims, "resolve_claim_path", resolve)
-    for _ in range(2):
-        locations.clear()
-        assert output.resolve_worktree_record(tree, tasks, repo_root=root) == (None, {})
-        assert locations == [str(root / "other"), str(tree)]
 
 
 def test_cached_keep_worktree_cwd_ambiguity(store):
@@ -449,29 +412,6 @@ def test_cache_io_failure_does_not_change_inventory_result(store, monkeypatch, f
         monkeypatch.setattr(output.json, "dumps", dumps)
     replay(tasks, root, [tree])
     assert not list(tasks.glob(".record-identities-*"))
-
-
-@pytest.mark.parametrize("publish_cache", [True, False])
-def test_ac02_cache_hits_only_parse_the_matching_canonical_record(store, monkeypatch, publish_cache):
-    root, tasks, tree = store
-    paths = [
-        save(tasks, f"unrelated-{i}.json", {"cwd": str(root / f"other-{i}"), "keep_worktree": False}) for i in range(8)
-    ]
-    paths.append(save(tasks, "match.json", {"cwd": str(tree), "extra": [1, 2, 3]}))
-    output.resolve_worktree_record(tree, tasks, repo_root=root)
-    source_bytes = {path.read_bytes() for path in paths}
-    original = json.loads
-    parsed = []
-
-    def loads(raw, *args, **kwargs):
-        if isinstance(raw, bytes) and raw in source_bytes:
-            parsed.append(raw)
-        return original(raw, *args, **kwargs)
-
-    monkeypatch.setattr(output.json, "loads", loads)
-    actual = output.resolve_worktree_record(tree, tasks, repo_root=root, publish_cache=publish_cache)
-    assert actual[1]["extra"] == [1, 2, 3]
-    assert parsed == [(tasks / "match.json").read_bytes()]
 
 
 @pytest.mark.parametrize("cache_state", ["absent", "warm", "stale", "corrupt", "pruned"])

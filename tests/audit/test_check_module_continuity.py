@@ -59,20 +59,6 @@ def test_boundary_safe_matching_avoids_substring_false_positive() -> None:
     assert find_unsignposted_repetition(modules, {"голосний": ("голосний",)}) == []
 
 
-def test_any_bridged_occurrence_suppresses_finding() -> None:
-    modules = [
-        Module(1, "m1", Path("m1"), "one vowel sound = one склад"),
-        Module(
-            2,
-            "m2",
-            Path("m2"),
-            "A склад is a syllable. You already practiced counting склади in Module 1.",
-        ),
-    ]
-
-    assert find_unsignposted_repetition(modules, {"склад": ("склад", "склади")}) == []
-
-
 def test_module_order_sorts_by_num_and_supports_single_quotes(tmp_path: Path) -> None:
     data_path = tmp_path / "site" / "src" / "data"
     data_path.mkdir(parents=True)

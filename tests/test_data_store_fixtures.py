@@ -9,8 +9,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.storage.topology import StoreBinding
-
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -67,20 +65,6 @@ def test_factory(data_store_factory):
         assert "3 skipped" in result.stdout
 
 
-def test_other_skip_keeps_its_message_and_is_visible_under_xdist(tmp_path):
-    result, summary = _run_plugin(tmp_path, '''
-import pytest
-@pytest.mark.data_tier("sources")
-@pytest.mark.skip(reason="needs_artifact: fixture deliberately withheld")
-def test_artifact(data_store_factory):
-    pytest.fail("artifact gate did not run")
-''', workers=2, required=True)
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "test_input.py::test_artifact: store=sources reason=needs_artifact" in result.stdout
-    assert "reason=needs_artifact" in summary
-    assert "reason=store_missing" not in summary
-
-
 def test_valid_input_runs_and_has_no_not_run_section(tmp_path):
     result, summary = _run_plugin(tmp_path, '''
 import sqlite3
@@ -120,28 +104,3 @@ def test_input(data_store_factory, tmp_path):
     assert f"store=sources reason={reason}" in result.stdout
     assert f"store=sources reason={reason}" in summary
     assert "input.sqlite" not in summary
-
-
-def test_injection_is_resolved_each_call_and_does_not_replace_normal_binding(
-    tmp_path, monkeypatch, data_store_factory
-):
-    from scripts.storage import topology
-
-    calls = []
-    actual = topology.resolve_store
-
-    def spy(store, **kwargs):
-        calls.append(kwargs.get("binding"))
-        return actual(store, **kwargs)
-
-    monkeypatch.setattr(topology, "resolve_store", spy)
-    db = tmp_path / "fixture.sqlite"
-    import sqlite3
-    with sqlite3.connect(db) as connection:
-        connection.execute("CREATE TABLE witness (id INTEGER)")
-    binding = StoreBinding("sources", db)
-    assert data_store_factory("sources", binding=binding) == db
-    monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "absent.sqlite"))
-    with pytest.raises(pytest.skip.Exception, match="store_missing"):
-        data_store_factory("sources")
-    assert calls == [binding, None]

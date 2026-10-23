@@ -5,6 +5,7 @@ Covers the eight acceptance criteria + v2 revisions V1–V9 (Sol-amended V3/V4/V
 
 from __future__ import annotations
 
+import gzip
 import json
 import zipfile
 from pathlib import Path
@@ -24,6 +25,7 @@ from scripts.lexicon.runner.finalize import (
     _safe_rss_bytes,
     assemble_version_tree,
     build_dry_run_report,
+    compute_data_version_from_digests,
     finalize_run,
 )
 from scripts.lexicon.runner.ledger import (
@@ -288,6 +290,220 @@ def test_vendor_round_trip_happy_and_corrupt(ledger: Ledger, tmp_path: Path) -> 
     with pytest.raises(VendorError, match="sha256 mismatch"):
         vendor_atlas_tree(dist, sha256=str(result.archive_sha256), archive_path=corrupt)
     assert not (dist / "atlas").exists()
+
+
+@pytest.mark.parametrize("form_target", [{"url_slug": "alpha"}, "alpha"])
+def test_sealed_search_preserves_articles_aliases_and_form_routes(
+    ledger: Ledger, tmp_path: Path, form_target: object
+) -> None:
+    """#11341: nonempty sealed articles cannot ship empty search or count forms as articles."""
+    arts = tmp_path / "arts"
+    run, _fp = _seed_sealed_run(ledger, arts, cohort="search-parity")
+    alpha = {
+        "lemma": "alpha",
+        "url_slug": "alpha",
+        "display_head": "Alpha head",
+        "gloss": "avoid: наступний",
+        "entry_type": "proper_name",
+        "enrichment": {
+            "cefr": {"level": "A2"},
+            "morphology": {"source": "VESUM", "pos": "advp", "paradigm": {"verb": "читати"}},
+        },
+        "search_aliases": [
+            {"alias": "Explicit alias", "kind": "spelling_variant", "target_slug": "alpha"},
+            {"alias": "Explicit alias", "kind": "spelling_variant", "target_slug": "alpha"},
+        ],
+    }
+    beta = {"lemma": "beta", "url_slug": "beta", "form_of": form_target}
+    for name, entry in (("alpha", alpha), ("beta", beta)):
+        (arts / "chunk-0" / f"{name}.json").write_text(json.dumps(entry), encoding="utf-8")
+    frozen = {p.name: p.read_bytes() for p in (arts / "chunk-0").iterdir()}
+    out = tmp_path / "out"
+    result = finalize_run(
+        ledger=ledger, run_id=run, artifacts_dir=arts, out_dir=out, grant_first_run_escape=True, verify_vendor=True
+    )
+    assert result.ok, result.detail
+    assert result.vendor_ok is True
+    runtime = out / "vendor-dist/atlas/versions" / str(result.data_version)
+    manifest = json.loads((runtime / "manifest.json").read_bytes())
+    assert manifest["counts"] == {
+        "articles": 2,
+        "publicRoutes": 3,
+        "formRoutes": 1,
+        "entryShards": 1,
+        "searchArticles": 2,
+        "searchAliases": 2,
+    }
+    records = [
+        row
+        for desc in manifest["entries"]["shards"].values()
+        for row in json.loads(gzip.decompress((runtime / desc["url"]).read_bytes()))["records"]
+    ]
+    assert {row["slug"] for row in records if row["kind"] == "article"} == {"alpha", "gamma"}
+    assert {row["slug"] for row in records if row["kind"] == "form_route"} == {"beta"}
+    assert next(row["entry"] for row in records if row["slug"] == "alpha") == alpha
+    rows = json.loads((out / "vendor-dist/lexicon/search-index.json").read_bytes())
+    assert rows == [
+        {
+            "s": "alpha",
+            "l": "Alpha head",
+            "g": "примітка Атласу: радять «наступний»; обсяг застереження не встановлено",
+            "r": "alpha-head",
+            "t": "proper_name",
+            "c": "A2",
+            "p": "читати",
+        },
+        {"s": "gamma", "l": "gamma", "g": "g-gamma", "r": "gamma", "t": "lemma"},
+    ]
+    from scripts.audit.generate_search_index import build_index
+
+    established, = build_index([alpha])
+    assert (rows[0]["g"], rows[0]["p"]) == (established["g"], established["p"])
+    aliases = json.loads((out / "vendor-dist/lexicon/search-aliases.json").read_bytes())
+    assert aliases == [
+        {"a": "beta", "s": "alpha", "h": "Alpha head", "k": "inflected_form"},
+        {"a": "Explicit alias", "s": "alpha", "h": "Alpha head", "k": "spelling_variant"},
+    ]
+    assert {p.name: p.read_bytes() for p in (arts / "chunk-0").iterdir()} == frozen
+    assert list((out / "tree").glob(".atlas-assemble-*")) == []
+
+
+@pytest.mark.parametrize("boundary", [2, 3, 4], ids=["entry", "article-search", "alias-search"])
+@pytest.mark.parametrize("defect", ["payload", "missing", "extra", "replacement"])
+def test_sealed_input_drift_rejected_at_every_reread(
+    ledger: Ledger, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, boundary: int, defect: str
+) -> None:
+    """Reject changed payloads, including equal-cardinality changes, or membership before promotion."""
+    from scripts.lexicon.runner import finalize
+
+    arts = tmp_path / "arts"
+    run, fp = _seed_sealed_run(ledger, arts)
+    out = tmp_path / "out"
+    (out / "atlas").mkdir(parents=True)
+    (out / "atlas/current.json").write_bytes(b"previous published tree\n")
+    old = {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()}
+    original = finalize.stream_lemma_payloads
+    passes = 0
+
+    def stream(*args, **kwargs):
+        nonlocal passes
+        passes += 1
+        if passes == boundary:
+            if defect == "payload":
+                path = arts / "chunk-0/alpha.json"
+                entry = json.loads(path.read_bytes())
+                entry["gloss"] = "changed gloss, same article membership"
+                path.write_text(json.dumps(entry))
+            else:
+                rows = ledger.iter_sealed_leaf_lemmas(run)
+                extra = {**rows[-1], "lemma_id": "extra"}
+                (arts / "chunk-0/extra.json").write_text(json.dumps({"lemma": "extra", "url_slug": "extra"}))
+                changed = rows[:-1] if defect == "missing" else [*rows, extra]
+                if defect == "replacement":
+                    changed = [*rows[:-1], extra]
+                monkeypatch.setattr(ledger, "iter_sealed_leaf_lemmas", lambda *a, **kw: changed)
+        yield from original(*args, **kwargs)
+
+    monkeypatch.setattr(finalize, "stream_lemma_payloads", stream)
+    with pytest.raises(FinalizeError, match="sealed input changed"):
+        assemble_version_tree(
+            ledger=ledger, run_id=run, fingerprint=fp, artifacts_dir=arts, tree_root=out,
+            prior_version_dir=None, grant_first_run_escape=True, first_run_escape_reason="fixture",
+        )
+    assert passes == boundary
+    assert {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()} == old
+    assert list(out.glob(".atlas-assemble-*")) == []
+
+
+def test_search_spool_cleanup_on_failure_and_success_preserves_published_tree(
+    ledger: Ledger, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A populated staging spool must be removed after failure and successful promotion."""
+    from scripts.lexicon.runner import finalize
+
+    arts = tmp_path / "arts"
+    run, fp = _seed_sealed_run(ledger, arts)
+    out = tmp_path / "out"
+    (out / "atlas").mkdir(parents=True)
+    (out / "atlas/current.json").write_bytes(b"previous published tree\n")
+    manual = out / ".atlas-assemble-manual"
+    manual.mkdir()
+    (manual / "keep").write_bytes(b"unrelated directory")
+    old = {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()}
+    original = finalize._build_sealed_search
+    stages = []
+
+    def build_search(**kwargs):
+        result = original(**kwargs)
+        stages.append(kwargs["scratch"].parent)
+        assert list(kwargs["scratch"].rglob("*.json"))
+        if len(stages) == 1:
+            raise RuntimeError("injected failure after search spool")
+        return result
+
+    monkeypatch.setattr(finalize, "_build_sealed_search", build_search)
+    kwargs = dict(
+        ledger=ledger, run_id=run, fingerprint=fp, artifacts_dir=arts, tree_root=out,
+        prior_version_dir=None, grant_first_run_escape=True, first_run_escape_reason="fixture",
+    )
+    with pytest.raises(RuntimeError, match="injected failure after search spool"):
+        assemble_version_tree(**kwargs)
+    assert not stages[0].exists()
+    assert {p.relative_to(out): p.read_bytes() for p in out.rglob("*") if p.is_file()} == old
+    result = assemble_version_tree(**kwargs)
+    assert len(stages) == 2
+    assert all(not staging.exists() for staging in stages)
+    assert list(out.glob(".atlas-assemble-*")) == [manual]
+    assert (manual / "keep").read_bytes() == b"unrelated directory"
+    current = json.loads((out / "atlas/current.json").read_bytes())
+    assert current["dataVersion"] == result["data_version"]
+    assert (out / "atlas/versions" / current["dataVersion"] / "manifest.json").is_file()
+
+
+@pytest.mark.parametrize(
+    "defect", ["form-target-missing", "form-target-is-form", "empty-alias", "missing-kind", "empty-head"]
+)
+def test_incoherent_sealed_search_refused_before_tree_promotion(ledger: Ledger, tmp_path: Path, defect: str) -> None:
+    """Sealed metadata must not advertise unknown targets, forms, or empty search heads."""
+    arts = tmp_path / "arts"
+    run, fp = _seed_sealed_run(ledger, arts)
+    entry = {"lemma": "beta", "url_slug": "beta"}
+    if defect.startswith("form-target"):
+        entry["form_of"] = "unknown" if defect == "form-target-missing" else "beta"
+    elif defect == "empty-head":
+        entry["lemma"] = ""
+    else:
+        entry["search_aliases"] = [
+            {
+                "alias": "" if defect == "empty-alias" else "Alias",
+                "target_slug": "alpha",
+                "kind": "" if defect == "missing-kind" else "canonical",
+            }
+        ]
+    (arts / "chunk-0/beta.json").write_text(json.dumps(entry), encoding="utf-8")
+    out = tmp_path / "out"
+    with pytest.raises(FinalizeError):
+        assemble_version_tree(
+            ledger=ledger,
+            run_id=run,
+            fingerprint=fp,
+            artifacts_dir=arts,
+            tree_root=out,
+            prior_version_dir=None,
+            grant_first_run_escape=True,
+            first_run_escape_reason="fixture",
+        )
+    assert not (out / "atlas").exists()
+
+
+def test_search_projection_changes_version_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A newly complete search projection must not reuse an immutable empty-search version."""
+    from scripts.lexicon.runner import finalize
+
+    args = {"fingerprint": "frozen-fingerprint", "lemma_digests": [("alpha", "1" * 64)]}
+    current = compute_data_version_from_digests(**args)
+    monkeypatch.setattr(finalize, "SEALED_SEARCH_PROJECTION", "previous-projection")
+    assert compute_data_version_from_digests(**args) != current
 
 
 def test_assembly_crash_mid_stream_no_partial_tree(ledger: Ledger, tmp_path: Path) -> None:

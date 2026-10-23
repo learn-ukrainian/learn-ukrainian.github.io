@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import ast
-import json
 from pathlib import Path
 
 from tests._host_path_guard import assert_no_host_paths
@@ -15,38 +13,6 @@ NOTEBOOK_PATH = (
     / "open_model_data"
     / "production_train_gemma3_4b_colab.ipynb"
 )
-
-
-def test_production_colab_notebook_structure() -> None:
-    """Verify production training notebook exists, parses as valid JSON, and has standard nbformat."""
-    assert NOTEBOOK_PATH.exists(), f"Notebook must exist at {NOTEBOOK_PATH}"
-
-    with open(NOTEBOOK_PATH, encoding="utf-8") as f:
-        nb = json.load(f)
-
-    assert nb.get("nbformat") == 4, "Notebook must be nbformat 4"
-    assert "cells" in nb, "Notebook must contain cells"
-    assert len(nb["cells"]) >= 8, f"Expected at least 8 cells, found {len(nb['cells'])}"
-
-    metadata = nb.get("metadata", {})
-    assert metadata.get("accelerator") == "GPU", "Notebook metadata accelerator must be GPU"
-
-
-def test_production_colab_notebook_cell_syntax() -> None:
-    """Verify every python code cell in the notebook is valid Python AST syntax."""
-    with open(NOTEBOOK_PATH, encoding="utf-8") as f:
-        nb = json.load(f)
-
-    for idx, cell in enumerate(nb["cells"]):
-        if cell.get("cell_type") == "code":
-            source_lines = cell.get("source", [])
-            # Filter out shell commands (!pip, etc.)
-            py_lines = [line for line in source_lines if not line.strip().startswith("!")]
-            py_code = "".join(py_lines)
-            try:
-                ast.parse(py_code)
-            except SyntaxError as e:
-                raise AssertionError(f"Syntax error in code cell {idx}: {e}\nCode:\n{py_code}") from e
 
 
 def test_production_colab_notebook_contract_invariants() -> None:

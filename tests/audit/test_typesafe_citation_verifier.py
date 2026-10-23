@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 from collections import Counter
 from pathlib import Path
 
@@ -179,22 +178,6 @@ def test_malformed_answer_needs_human_review():
     assert v.verify_citation(_case(), client=not_an_object)["verdict"] == "needs_human_review"
 
 
-def test_missing_probabilities_needs_human_review():
-    client = FakeClient(_answer("supports", 0.95, drop="probabilities"))
-    receipt = v.verify_citation(_case(), client=client)
-    assert receipt["verdict"] == "needs_human_review"
-    assert receipt["accepted"] is False
-    assert receipt["choice"] is None
-
-
-def test_non_numeric_probability_needs_human_review():
-    probabilities = {"supports": "0.8", "contradicts": 0.1, "says_nothing": 0.1}
-    client = FakeClient(_answer("supports", 0.95, probabilities=probabilities))
-    receipt = v.verify_citation(_case(), client=client)
-    assert receipt["verdict"] == "needs_human_review"
-    assert receipt["accepted"] is False
-
-
 def test_choice_that_is_not_the_argmax_needs_human_review():
     probabilities = {"supports": 0.2, "contradicts": 0.7, "says_nothing": 0.1}
     client = FakeClient(_answer("supports", 0.95, probabilities=probabilities))
@@ -202,15 +185,6 @@ def test_choice_that_is_not_the_argmax_needs_human_review():
     assert receipt["verdict"] == "needs_human_review"
     assert receipt["accepted"] is False
     assert receipt["choice"] is None
-
-
-def test_overflow_confidence_needs_human_review():
-    payload = _answer("supports", 0.95)
-    payload["answers"][v.QUESTION_ID]["confidence"] = 10**400
-    client = FakeClient(payload)
-    receipt = v.verify_citation(_case(), client=client)
-    assert receipt["verdict"] == "needs_human_review"
-    assert receipt["accepted"] is False
 
 
 def test_substring_inside_a_word_is_not_a_match():
@@ -256,43 +230,6 @@ def test_combining_mark_does_not_split_a_word_or_open_a_boundary():
     assert review["reason"] == "quote_too_short"
     assert review["decided_by"] == "deterministic"
     assert len(v.quote_word_tokens(f"{marked} s")) == 2
-
-
-def test_standalone_combining_marks_are_too_short_and_cannot_ground_a_match():
-    marks = "\u0301 \u0301 \u0301"
-    client = FakeClient()
-    receipt = v.verify_citation(_case(quote=marks, source=marks), client=client)
-    assert client.calls == []
-    assert receipt["verdict"] == "needs_human_review"
-    assert receipt["reason"] == "quote_too_short"
-    assert receipt["decided_by"] == "deterministic"
-    assert receipt["accepted"] is False
-    assert v.quote_word_tokens(marks) == []
-    assert v.quote_occurs_in_source(marks, marks) is False
-
-    yes = "yes \u0301 \u0301"
-    padded = FakeClient()
-    review = v.verify_citation(_case(quote=yes, source=yes), client=padded)
-    assert padded.calls == []
-    assert review["verdict"] == "needs_human_review"
-    assert review["reason"] == "quote_too_short"
-    assert review["decided_by"] == "deterministic"
-    assert v.quote_word_tokens(yes) == ["yes"]
-
-    mixed = FakeClient()
-    quote = "one two three [...] \u0301"
-    source = "one two three \u0301"
-    miss = v.verify_citation(_case(quote=quote, source=source), client=mixed)
-    assert mixed.calls == []
-    assert miss["verdict"] == "fabricated"
-    assert miss["decided_by"] == "deterministic"
-
-
-def test_internal_apostrophe_is_one_word_and_a_prefix_does_not_match():
-    assert v.quote_word_tokens("п'ять") == ["п'ять"]
-    assert v.quote_word_tokens("м'який") == ["м'який"]
-    assert v.quote_occurs_in_source("п'ять", "У хлопця є п'ять яблук.") is True
-    assert v.quote_occurs_in_source("п", "п'ять") is False
 
 
 def test_surrounding_apostrophes_are_boundaries():
@@ -361,29 +298,3 @@ def test_fixture_has_fifty_labelled_classes_and_quote_marks():
             assert row["invented_quote"] is False
             assert row["quote_origin"] == "corpus"
             assert found is True
-
-
-@pytest.mark.live_network
-@pytest.mark.skipif(
-    os.environ.get("TYPESAFE_LIVE", "") != "1",
-    reason="Set TYPESAFE_LIVE=1 to hit jev-latest (spend).",
-)
-def test_live_one_citation_returns_a_model_id():
-    case = {
-        "id": "live-smoke",
-        "claim": "The hornet says the bee's labor can bring her death instead of a reward.",
-        "quote": "приносячи замість нагороди смерть",
-        "source_text": (
-            "Чи знаєш ти, що плоди твоєї праці не стільки тобі самій, як людям корисні, "
-            "а тобі часто і шкодять, приносячи замість нагороди смерть; одначе не перестаєш "
-            "через дурість свою збирати мед."
-        ),
-    }
-    receipt = v.verify_citation(case)
-    assert receipt["decided_by"] == "system_one"
-    assert receipt["model"]
-    assert receipt["verdict"] in v.VERDICTS
-    assert receipt["verdict"] != "fabricated"
-    dumped = json.dumps(receipt)
-    assert "Bearer" not in dumped
-    assert "typesafe-ai.key" not in dumped

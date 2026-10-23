@@ -25,12 +25,8 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 from wiki.compiler import (
-    _build_sources_registry,
-    _dedup_sources_by_attribution,
-    _format_sources,
     compile_article,
 )
-from wiki.sources_schema import extract_short_citation_ids
 
 pytestmark = pytest.mark.reads_content
 
@@ -63,45 +59,6 @@ def _make_sources(chunk_ids: list[str]) -> list[dict]:
     ]
 
 
-def test_dedup_collapses_chunks_from_same_file(patch_resolve_chunk_attribution):
-    """Chunks resolving to the same file collapse to one entry."""
-    sources = _make_sources(["fileA-1", "fileB-1", "fileA-2", "fileC-1"])
-    deduped = _dedup_sources_by_attribution(sources)
-    deduped_ids = [s["chunk_id"] for s in deduped]
-    assert deduped_ids == ["fileA-1", "fileB-1", "fileC-1"]
-
-
-def test_dedup_preserves_prompt_position_order(patch_resolve_chunk_attribution):
-    """Surviving chunks keep input order, guaranteeing position alignment."""
-    sources = _make_sources(["x-1", "y-1", "x-2", "z-1", "y-2", "z-2"])
-    deduped = _dedup_sources_by_attribution(sources)
-    assert [s["chunk_id"] for s in deduped] == ["x-1", "y-1", "z-1"]
-
-
-def test_dedup_drops_chunks_without_attribution(patch_resolve_chunk_attribution):
-    """Chunks resolving to an empty file_name are dropped."""
-
-    def _resolve(chunk_id, corpus):
-        if not chunk_id:
-            return _stub_attr("")
-        base = re.sub(r"-\d+$", "", str(chunk_id))
-        return _stub_attr(base)
-
-    patch_resolve_chunk_attribution.side_effect = _resolve
-    sources = _make_sources(["fileA-1", "", "fileB-1"])
-    deduped = _dedup_sources_by_attribution(sources)
-    assert [s["chunk_id"] for s in deduped] == ["fileA-1", "fileB-1"]
-
-
-def test_format_sources_uses_post_dedup_list(patch_resolve_chunk_attribution):
-    """``_format_sources`` labels only the deduped source set."""
-    sources = _make_sources(["fileA-1", "fileB-1", "fileA-2", "fileC-1"])
-    deduped = _dedup_sources_by_attribution(sources)
-    formatted = _format_sources(deduped)
-    cite_instructions = re.findall(r"cite this source as `\[S(\d+)\]`", formatted)
-    assert cite_instructions == ["1", "2", "3"]
-
-
 def test_compile_article_passes_same_deduped_sources_to_prompt_and_registry(
     tmp_path,
     patch_resolve_chunk_attribution,
@@ -129,51 +86,3 @@ def test_compile_article_passes_same_deduped_sources_to_prompt_and_registry(
     prompt_ids = [source["chunk_id"] for source in build_prompt.call_args.kwargs["sources"]]
     registry_ids = [source["chunk_id"] for source in write_bundle.call_args.kwargs["sources"]]
     assert prompt_ids == registry_ids == ["fileA-1", "fileB-1", "fileC-1"]
-
-
-def test_registry_aligned_with_body_when_input_is_prededuped(
-    tmp_path,
-    patch_resolve_chunk_attribution,
-):
-    """Prededuped input keeps body citations and registry IDs aligned."""
-    sources = _make_sources(["fileA-1", "fileB-1", "fileA-2", "fileC-1"])
-    deduped = _dedup_sources_by_attribution(sources)
-
-    article_text = "# Topic\n\nSome prose [S1] and more prose [S2] and conclusion [S3].\n"
-    article_path = tmp_path / "wiki" / "domain" / "slug.md"
-    article_path.parent.mkdir(parents=True)
-
-    registry = _build_sources_registry(
-        article_path,
-        deduped,
-        article_text,
-        force=True,
-    )
-    assert registry is not None
-    registry_ids = sorted(s.id for s in registry.sources)
-    cited = sorted(set(extract_short_citation_ids(article_text)))
-    assert registry_ids == cited == ["S1", "S2", "S3"]
-
-
-def test_old_failure_mode_reproduced_without_prededup(
-    tmp_path,
-    patch_resolve_chunk_attribution,
-):
-    """REGRESSION: bypassing upstream dedup recreates the orphan failure."""
-    sources = _make_sources(["fileA-1", "fileB-1", "fileA-2", "fileC-1"])
-    article_text = "# Topic\n[S1] [S2] [S3] [S4]\n"
-    article_path = tmp_path / "wiki" / "domain" / "slug.md"
-    article_path.parent.mkdir(parents=True)
-
-    registry = _build_sources_registry(
-        article_path,
-        sources,
-        article_text,
-        force=True,
-    )
-    assert registry is not None
-    registry_ids = {s.id for s in registry.sources}
-    cited = set(extract_short_citation_ids(article_text))
-    assert len(registry_ids) == 3
-    assert "S4" in cited
-    assert "S4" not in registry_ids

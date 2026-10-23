@@ -65,38 +65,6 @@ def test_grok_schema_preserves_ordered_row_identity_and_liveness() -> None:
     assert schema["properties"]["liveness_challenge"] == {"enum": ["challenge"]}
 
 
-def test_real_cli_passes_explicit_provider_bin(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    runner = _load_runner()
-    provider = (tmp_path / "agy").resolve()
-    receipt = tmp_path / "receipt.json"
-    observed: dict[str, object] = {}
-
-    def fake_invoke(provider_name: str, provider_bin: Path, **kwargs: object) -> dict[str, object]:
-        observed.update(provider_name=provider_name, provider_bin=provider_bin, **kwargs)
-        return {"ok": True, "text_free": True}
-
-    monkeypatch.setattr(runner, "invoke_canary", fake_invoke)
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [
-            str(RUNNER),
-            "--provider",
-            "gemini",
-            "--provider-bin",
-            str(provider),
-            "--receipt",
-            str(receipt),
-        ],
-    )
-
-    assert runner.main() == 0
-    assert observed["provider_name"] == "gemini"
-    assert observed["provider_bin"] == provider
-    assert observed["execution_mode"] == "real"
-    assert observed["receipt_path"] == receipt
-
-
 def test_real_invoke_rejects_relative_and_symlink_provider(tmp_path: Path) -> None:
     runner = _load_runner()
     with pytest.raises(runner.CanaryError, match="provider_executable_not_absolute"):
@@ -798,14 +766,6 @@ def test_batch_stream_input_command_has_no_print_prompt() -> None:
     assert "--new-project" in command
     assert command.count("--print-timeout") == 1
     assert command[command.index("--print-timeout") + 1] == runner.AGY_PRINT_TIMEOUT == "120m"
-
-
-def test_public_canary_uses_the_same_explicit_agy_print_timeout() -> None:
-    canary = _load_runner()
-    command = canary._gemini_command(Path("/provider"), Path("/schema.json"), Path("/agy.log"))
-
-    assert command.count("--print-timeout") == 1
-    assert command[command.index("--print-timeout") + 1] == canary.AGY_PRINT_TIMEOUT == "120m"
 
 
 def test_grok_commands_use_only_the_reviewed_cli_isolation_flags() -> None:

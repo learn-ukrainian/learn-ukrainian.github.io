@@ -404,6 +404,35 @@ def _ensure_commit_available(repo_root: Path, sha: str) -> None:
         raise MissingReviewCommit(f"commit {sha!r} still unreachable after fetch")
 
 
+def live_canonical_branch_head(repo_root: Path, branch: str, *, repository: str) -> str:
+    """Observe exactly one canonical branch ref, refusing unknown or ambiguous output.
+
+    The returned SHA is a pin, never a suggestion to replace an existing pin.
+    Remote diagnostics are deliberately omitted because they may contain secrets.
+    """
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        branch = validate_plain_branch_name(branch, repo_root=repo_root)
+        origin = _origin_github_repo(repo_root)
+        if origin is None or origin.casefold() != repository.casefold():
+            raise TargetResolutionError("canonical review repository mismatch")
+        ref = f"refs/heads/{branch}"
+        proc = _run_git(
+            ["ls-remote", "--exit-code", "--refs", f"https://github.com/{repository}.git", ref],
+            repo_root,
+            timeout=60.0,
+        )
+    except (OSError, subprocess.TimeoutExpired, UnsafeBranchNameError) as exc:
+        raise TargetResolutionError("canonical live branch lookup unavailable") from exc
+    if proc.returncode != 0:
+        raise TargetResolutionError(f"canonical live branch lookup failed (exit {proc.returncode})")
+    match = re.fullmatch(r"([0-9a-fA-F]{40})\t" + re.escape(ref) + r"\n", proc.stdout)
+    if match is None or match[1] == "0" * 40:
+        raise TargetResolutionError("canonical live branch lookup returned an invalid ref")
+    return match[1].lower()
+
+
 def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
     """A PR's diff using the merge-base with its actual base branch (not an
     assumed default branch, and not the base branch's possibly-moved tip).
@@ -428,7 +457,7 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
             "--repo",
             slug,
             "--json",
-            "number,baseRefName,baseRefOid,headRefName,headRefOid",
+            "number,baseRefName,baseRefOid,headRefName,headRefOid,isCrossRepository",
         ],
         repo_root,
     )
@@ -438,19 +467,28 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
         payload = json.loads(proc.stdout or "{}")
     except json.JSONDecodeError as exc:
         raise TargetResolutionError(f"invalid JSON from gh pr view #{pr_number}") from exc
+    if not isinstance(payload, dict):
+        raise TargetResolutionError(f"PR #{pr_number} payload is not an object")
+    if payload.get("isCrossRepository") is not False:
+        raise TargetResolutionError(f"PR #{pr_number} cross-repository or unknown repository target")
 
     base_tip_sha = str(payload.get("baseRefOid") or "").strip()
     head_sha = str(payload.get("headRefOid") or "").strip()
     raw_base_name = payload.get("baseRefName")
-    head_ref_name = str(payload.get("headRefName") or "").strip()
+    head_ref_name = payload.get("headRefName")
     if not isinstance(raw_base_name, str) or not raw_base_name.strip():
         raise TargetResolutionError(f"PR #{pr_number} payload missing base ref name")
     base_ref_name = raw_base_name.strip()
-    if not base_tip_sha or not head_sha:
+    if not _FULL_SHA.fullmatch(base_tip_sha) or not _FULL_SHA.fullmatch(head_sha):
         raise TargetResolutionError(f"PR #{pr_number} payload missing base/head SHA")
+    if not isinstance(head_ref_name, str) or not head_ref_name:
+        raise TargetResolutionError(f"PR #{pr_number} payload missing head branch")
+    head_sha = live_canonical_branch_head(repo_root, head_ref_name, repository=slug)
 
     _ensure_commit_available(repo_root, base_tip_sha)
     _ensure_commit_available(repo_root, head_sha)
+    if live_canonical_branch_head(repo_root, head_ref_name, repository=slug) != head_sha:
+        raise TargetResolutionError("PR head moved after pinning")
     merge_base_proc = _run_git(["merge-base", base_tip_sha, head_sha], repo_root)
     if merge_base_proc.returncode != 0:
         raise TargetResolutionError(

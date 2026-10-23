@@ -95,25 +95,3 @@ def test_handle_search_external_passes_filters(server_module):
         "min_quality_tier": 1,
         "track": "hist",
     }
-
-
-def test_handle_search_external_track_changes_result_order(server_module):
-    plain_hits = [
-        {"chunk_id": "ext-ulp-001", "source_name": "Ukrainian Lessons Podcast", "speaker": "Anna Ohoiko",
-         "register_tag": "scripted", "decolonization_tag": "moderate", "quality_tier": 1,
-         "publish_date": "", "url": "https://example.test/ulp", "text": "ULP"},
-        {"chunk_id": "ext-realna-001", "source_name": "Реальна Історія", "speaker": "Акім Галімов",
-         "register_tag": "interview", "decolonization_tag": "strong", "quality_tier": 1,
-         "publish_date": "", "url": "https://example.test/realna", "text": "Realna"},
-    ]
-    hist_hits = list(reversed(plain_hits))
-
-    def _fake_search(_keywords, **kwargs):
-        return hist_hits if kwargs.get("track") == "hist" else plain_hits
-
-    with patch("wiki.sources_db.search_external", side_effect=_fake_search):
-        plain = json.loads(_run(server_module.handle_search_external({"query": "козаки"}))[0].text)
-        hist = json.loads(_run(server_module.handle_search_external({"query": "козаки", "track": "hist"}))[0].text)
-
-    assert plain[0]["chunk_id"] == "ext-ulp-001"
-    assert hist[0]["chunk_id"] == "ext-realna-001"

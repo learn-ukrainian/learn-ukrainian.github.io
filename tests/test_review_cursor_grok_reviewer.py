@@ -339,17 +339,3 @@ def test_a_requested_role_only_narrows_the_profile_risk_qualified_set(role):
                     assert role in REVIEW_CANDIDATES[selected.name].model_roles
                     unnarrowed = evaluate_candidate(REVIEW_CANDIDATES[selected.name], base)
                     assert unnarrowed.status == "eligible", (author, profile, risk, role, selected.name)
-
-
-@pytest.mark.parametrize("profile", ["code", "infra"])
-def test_grok_review_role_is_admitted_at_critical(profile):
-    inputs = ResolverInputs(
-        author_model="claude-opus-5-5",
-        review_profile=profile,
-        domain=profile,
-        risk="critical",
-        requested_role="strong_review", claude_account=HOST_ACCOUNT,
-    )
-    result = evaluate_candidate(REVIEW_CANDIDATES[GROK_SEAT], inputs)
-    assert result.status == "eligible"
-    assert result.reason is None

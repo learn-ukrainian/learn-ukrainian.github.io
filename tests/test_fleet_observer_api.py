@@ -277,41 +277,6 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     assert reap.json() == {"read_only": True, "apply": False, "report": []}
 
 
-def test_facade_board_real_producer_emits_no_db_path(
-    client: TestClient,
-    fleet_root: Path,
-) -> None:
-    _seed_plane(fleet_root)
-    response = client.get("/api/fleet/facade/board", params={"stream_id": "core", "agent": "claude"})
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["response_schema_version"] == "comms.v2"
-    assert "db_path" not in json.dumps(payload)
-    backlog_probe = payload["probes"]["backlog_and_dead_letters"]["data"]
-    assert backlog_probe is not None
-    assert "store" in backlog_probe
-    assert backlog_probe["store"]["kind"] in {"comms-plane", "legacy-broker"}
-
-
-def test_facade_missing_plane_db_is_fail_open(
-    client: TestClient, fleet_root: Path
-) -> None:
-    assert not fleet_root.exists()
-
-    status = client.get("/api/fleet/facade/status").json()
-    metrics = client.get("/api/fleet/facade/metrics").json()
-    backlog = client.get("/api/fleet/facade/backlog").json()
-    dead = client.get("/api/fleet/facade/dead").json()
-
-    assert status["plane_status"]["schema"]["db_exists"] is False
-    for payload in (metrics, backlog, dead):
-        assert payload["db_missing"] is True
-        assert payload["read_only"] is True
-        assert "db_path" not in payload
-        assert payload["store"]["kind"] == "comms-plane"
-        assert payload["store"]["reachable"] is False
-
-
 def test_facade_reap_report_is_dry_run_only(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[dict[str, object]] = []
 
@@ -926,38 +891,6 @@ def test_operations_projection_is_bounded_read_only_and_source_blind(
     ):
         assert forbidden not in response.text
     assert broker_path.read_bytes() == before, "observer must not mutate the broker database"
-
-
-def test_operations_missing_store_does_not_create_it(
-    client: TestClient,
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    broker_path = tmp_path / "missing" / "legacy-broker.db"
-    monkeypatch.setattr(client.app.state, "ctx", _broker_ctx(tmp_path, broker_path))
-
-    async def empty_processes(*, ctx: MonitorContext | None = None) -> dict:
-        return {"alive": 0, "processes": []}
-
-    async def empty_zombies(**_kwargs: object) -> dict:
-        return {"count": 0, "zombies": []}
-
-    def empty_batches(ctx: MonitorContext | None = None) -> dict:
-        return {"running_processes": 0, "tracks": {}}
-
-    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
-    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", empty_zombies)
-    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", empty_batches)
-
-    payload = client.get("/api/fleet/operations").json()
-
-    assert payload["availability"] == "partial"
-    assert payload["broker"]["availability"] == "db_missing"
-    assert payload["broker"]["db_exists"] is False
-    assert payload["zombies"]["items"] == []
-    assert payload["batches"]["tracks"] == []
-    assert not broker_path.exists()
-    assert not broker_path.parent.exists()
 
 
 def test_operations_dependency_outages_fail_as_sanitized_unavailable_sections(

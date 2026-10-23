@@ -7,7 +7,6 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_textbook_nonhit as scanner
@@ -213,15 +212,6 @@ def test_rubric_author_and_scope_critic_receipts_fail_closed(
         scanner.build_bundle(**inputs)
 
 
-def test_legacy_controller_role_contract_is_not_current_evidence(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    inputs = _fixture_inputs(tmp_path, monkeypatch)
-    _json(inputs["role_contract"], {"root": {"controller_identity_id": "controller_root"}, "seats": []})
-    with pytest.raises(scanner.TextbookNonhitError, match="functional-role"):
-        scanner.build_bundle(**inputs)
-
-
 def test_post_build_partition_retarget_cannot_reuse_old_review_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -302,16 +292,3 @@ def test_nonagree_result_invalidates_population_and_requires_fresh_entropy(tmp_p
     assert failed["status"] == "INVALID_SCANNER_POPULATION_AND_SAMPLE"
     assert failed["requires_new_scanner_hash_and_auditor_seed"] is True
     assert failed["prior_sample_reuse_forbidden"] is True
-
-
-def test_hamilton_and_production_schema_pins_denominators() -> None:
-    assert scanner.hamilton_quotas({"a": 4, "b": 3, "c": 3}, 5) == {"a": 2, "b": 2, "c": 1}
-    schema = json.loads(scanner.BUNDLE_SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert schema["additionalProperties"] is False
-    population = schema["$defs"]["population"]["properties"]
-    assert population["frozen_unit_total"] == {"const": 54979}
-    assert population["all_units"]["minItems"] == population["all_units"]["maxItems"] == 54979
-    source = schema["$defs"]["source_bindings"]["properties"]
-    assert source["tracked_file_total"] == {"const": 168}
-    assert source["section_total"] == {"const": 7250}

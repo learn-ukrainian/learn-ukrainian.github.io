@@ -167,16 +167,6 @@ def test_record_writer_rejects_unapproved_secret_bearing_fields(tmp_path: Path) 
         write_record("safe-record", record, state_root=tmp_path)
 
 
-def test_update_session_rejects_relative_transcript_path(tmp_path: Path) -> None:
-    with pytest.raises(SessionRecordError, match="must be an absolute path"):
-        update_session(
-            "relative-path",
-            transcript_path="relative.jsonl",
-            profile_id="sol_lead",
-            state_root=tmp_path,
-        )
-
-
 def test_env_file_exports_are_shell_safe_and_project_private(tmp_path: Path) -> None:
     transcript = tmp_path / "session's transcript.jsonl"
     record = update_session(

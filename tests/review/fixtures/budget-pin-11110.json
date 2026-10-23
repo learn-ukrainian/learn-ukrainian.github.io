@@ -1,0 +1,39 @@
+{
+  "dispatch_refusal_replacements": [
+    {
+      "rows": [
+        62
+      ],
+      "before": "ROUTING REFUSED: substitute --agent codex rejects explicit --model claude-sonnet-5-5 (CodexAdapter: model='claude-sonnet-5-5' rejected; approved models are gpt-6-luna, gpt-6.1-sol). Refusing before spawn.",
+      "after": "BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude is exhausted/near_cap (unknown; near_cap (>90% used on FRESH snapshot)); explicit --model claude-sonnet-5-5 has no mapping accepted by --agent codex. Supported remedies: wait for reset, request a mapped model, or select the other Claude account label where policy permits. Refusing before spawn."
+    },
+    {
+      "rows": [
+        66
+      ],
+      "before": "ROUTING REFUSED: substitute --agent codex rejects explicit --model claude-fable-5-1 (CodexAdapter: model='claude-fable-5-1' rejected; approved models are gpt-6-luna, gpt-6.1-sol). Refusing before spawn.",
+      "after": "BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude is exhausted/near_cap (unknown; near_cap (>90% used on FRESH snapshot)); explicit --model claude-fable-5-1 has no mapping accepted by --agent codex. Supported remedies: wait for reset, request a mapped model, or select the other Claude account label where policy permits. Refusing before spawn."
+    },
+    {
+      "rows": [
+        70
+      ],
+      "before": "ROUTING REFUSED: substitute --agent codex rejects explicit --model composer-2.5 (CodexAdapter: model='composer-2.5' rejected; approved models are gpt-6-luna, gpt-6.1-sol). Refusing before spawn.",
+      "after": "BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude is exhausted/near_cap (unknown; near_cap (>90% used on FRESH snapshot)); explicit --model composer-2.5 has no mapping accepted by --agent codex. Supported remedies: wait for reset, request a mapped model, or select the other Claude account label where policy permits. Refusing before spawn."
+    },
+    {
+      "rows": [
+        82
+      ],
+      "before": "ROUTING REFUSED: substitute --agent codex rejects explicit --model grok-4.7 (CodexAdapter: model='grok-4.7' rejected; approved models are gpt-6-luna, gpt-6.1-sol). Refusing before spawn.",
+      "after": "BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude is exhausted/near_cap (unknown; near_cap (>90% used on FRESH snapshot)); explicit --model grok-4.7 has no mapping accepted by --agent codex. Supported remedies: wait for reset, request a mapped model, or select the other Claude account label where policy permits. Refusing before spawn."
+    },
+    {
+      "rows": [
+        86
+      ],
+      "before": "ROUTING REFUSED: substitute --agent codex rejects explicit --model unregistered-model (CodexAdapter: model='unregistered-model' rejected; approved models are gpt-6-luna, gpt-6.1-sol). Refusing before spawn.",
+      "after": "BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude is exhausted/near_cap (unknown; near_cap (>90% used on FRESH snapshot)); explicit --model unregistered-model has no mapping accepted by --agent codex. Supported remedies: wait for reset, request a mapped model, or select the other Claude account label where policy permits. Refusing before spawn."
+    }
+  ]
+}

@@ -71,17 +71,6 @@ def test_build_coverage_report_fixture_inventory() -> None:
     }
 
 
-def test_teacher_table_absent(tmp_path: Path) -> None:
-    missing = tmp_path / "missing-teacher.json"
-    report = build_coverage_report(
-        practice_dir=PRACTICE_DIR,
-        zno_dir=ZNO_DIR,
-        teacher_table=missing,
-    )
-    assert report["teacher_table"]["present"] is False
-    assert report["teacher_table"]["lemma_keys_count"] is None
-
-
 def test_cli_writes_json_and_table(tmp_path: Path, capsys) -> None:
     out = tmp_path / "coverage-report.json"
     rc = main(

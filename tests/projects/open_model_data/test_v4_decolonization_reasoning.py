@@ -20,9 +20,7 @@ from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     generate_pipeline,
     get_partition_for_term,
     is_positive_citation,
-    normalize_text,
     scan_generated_files,
-    strip_accents,
     synthesize_trajectory_and_dpo,
 )
 from tests._host_path_guard import FIXTURE_HOME, assert_no_host_paths
@@ -72,12 +70,6 @@ def test_classify_calque_type() -> None:
     cat, src, _ = classify_calque_type("холостяк")
     assert cat == "lexical_calque"
     assert "росіянізмом" in src
-
-
-def test_normalize_and_accents() -> None:
-    raw = " «пилотя́г»! "
-    assert normalize_text(raw) == "пилотяг"
-    assert strip_accents("приймати́ у́часть") == "приймати участь"
 
 
 def test_compute_id_deterministic() -> None:
@@ -535,51 +527,6 @@ def test_negative_evidence_does_not_promote_rejected_alternative() -> None:
     assert (
         synthesize_trajectory_and_dpo(
             prohibitive_only_cand,
-            {"alpha": 10},
-            {"alpha": None},
-            {"alpha": None},
-        )
-        is None
-    )
-
-
-def test_negated_correctness_does_not_promote_rejected_alternative() -> None:
-    """I2: Negated correctness ('alpha is not correct. beta is correct.') must promote beta, not alpha."""
-    candidate = CalqueCandidate(
-        target_term="test_calque",
-        suggestions=["alpha", "beta"],
-        source_tag="curated_test",
-        curated_evidence=["alpha is not correct. beta is correct."],
-    )
-    vesum_counts = {"alpha": 10, "beta": 15}
-    tb_attestations = {"alpha": None, "beta": None}
-    dict_attestations = {"alpha": None, "beta": None}
-
-    result = synthesize_trajectory_and_dpo(
-        candidate,
-        vesum_counts,
-        tb_attestations,
-        dict_attestations,
-    )
-    assert result is not None
-    traj, _ = result
-    spectrum = traj["register_spectrum"]
-    assert spectrum["primary_living_standard"] == "beta"
-
-    alts_by_lemma = {a["lemma"]: a for a in spectrum["alternatives"]}
-    assert alts_by_lemma["beta"]["register_tier"] == "living_standard"
-    assert alts_by_lemma["alpha"]["register_tier"] != "living_standard"
-
-    # Sole negated alternative must refuse synthesis
-    sole_cand = CalqueCandidate(
-        target_term="test_calque",
-        suggestions=["alpha"],
-        source_tag="curated_test",
-        curated_evidence=["alpha is not correct."],
-    )
-    assert (
-        synthesize_trajectory_and_dpo(
-            sole_cand,
             {"alpha": 10},
             {"alpha": None},
             {"alpha": None},

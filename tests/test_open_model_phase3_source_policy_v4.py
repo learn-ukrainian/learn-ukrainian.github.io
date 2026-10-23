@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.ingest import incremental_textbook_ingest as textbook_ingest
 from scripts.projects.open_model_data import phase3_source_policy_v4 as policy_v4
@@ -133,16 +132,6 @@ def test_policy_rejects_source_omission_even_when_counts_are_rewritten():
 
     with pytest.raises(policy_v4.CompleteSourcePolicyError, match="schema violation"):
         policy_v4.validate_policy_document(_reseal(document))
-
-
-def test_schema_rejects_open_source_fields():
-    document = copy.deepcopy(_policy())
-    document["sources"][0]["unreviewed_note"] = "not allowed"
-    schema = json.loads(policy_v4.SCHEMA_PATH.read_text(encoding="utf-8"))
-
-    errors = list(Draft202012Validator(schema).iter_errors(document))
-    assert errors
-    assert any("Additional properties are not allowed" in error.message for error in errors)
 
 
 def test_legacy_policy_loader_accepts_v4_for_jsonl_consumers():

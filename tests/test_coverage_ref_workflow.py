@@ -92,12 +92,29 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
         after[after.index('.venv/bin/python "$RUNNER_TEMP') : after.index("# Postgres")].replace("\\\n", "")
     )
     instrumented = instrumented[instrumented.index("--") + 1 :]
-    assert [arg for arg in instrumented if not arg.startswith("--cov")] == original[3:]
+    # Coverage needs 5x the wall-clock budget (#11226); selection and all other
+    # pytest options must still match CI. Pin both budgets before normalizing.
+    assert original.count("--timeout=120") == 1
+    assert instrumented.count("--timeout=600") == 1
+    # A signal timeout reports a test failure and lets coverage save. The thread
+    # method calls os._exit(), losing that worker and its remaining tests.
+    assert original.count("--timeout-method=thread") == 1
+    assert instrumented.count("--timeout-method=signal") == 1
+    normalization = {"--timeout=600": "--timeout=120", "--timeout-method=signal": "--timeout-method=thread"}
+    assert [normalization.get(arg, arg) for arg in instrumented if not arg.startswith("--cov")] == original[3:]
     assert (
         step(measured, "Download pytest duration snapshot")["run"]
         == step(baseline, "Download pytest duration snapshot")["run"]
     )
     assert measured["timeout-minutes"] > baseline["timeout-minutes"]
+    assert measured["env"]["PYTEST_XDIST_AUTO_NUM_WORKERS"] == "2"
+    assert "PYTEST_XDIST_AUTO_NUM_WORKERS" not in baseline.get("env", {})
+    # Context recording is opt-in through the typed workflow input, never a
+    # permanent change to the pytest denominator.
+    assert measured["env"]["COVERAGE_REF_CONTEXTS"] == "${{ inputs.contexts }}"
+    assert "COVERAGE_REF_CONTEXTS" not in baseline.get("env", {})
+    startup = step(measured, "Isolate coverage storage from import-smoke guards")
+    assert startup["run"] == '.venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref_environment.py"'
 
 
 @pytest.mark.parametrize(
@@ -158,7 +175,13 @@ def test_workflow_is_manual_and_uploads_hidden_data_even_after_failure():
                     "description": "Repository commit SHA to measure (40 hexadecimal characters)",
                     "required": True,
                     "type": "string",
-                }
+                },
+                "contexts": {
+                    "description": "Record per-test dynamic coverage contexts (pytest-cov --cov-context=test)",
+                    "required": False,
+                    "default": False,
+                    "type": "boolean",
+                },
             }
         }
     }
@@ -170,6 +193,13 @@ def test_workflow_is_manual_and_uploads_hidden_data_even_after_failure():
     assert merge["if"] == "${{ always() }}"
     assert set(merge["needs"]) == {"prepare", "pytest"}
     assert "continue-on-error" not in step(merge, "Validate receipts, combine and report")
+
+
+def test_test_failures_use_the_combine_summary_without_a_failure_only_duplicate():
+    """Pytest failures now leave shard jobs green, so failure() hides their IDs."""
+    assert all(item.get("name") != "List failing tests in job summary" for item in WORKFLOW["jobs"]["pytest"]["steps"])
+    assert WORKFLOW["jobs"]["combine"]["if"] == "${{ always() }}"
+    assert step(WORKFLOW["jobs"]["combine"], "Validate receipts, combine and report")["if"] == "${{ always() }}"
 
 
 def test_prepare_failure_keeps_tooling_and_dependency_lock_available_for_manifest():

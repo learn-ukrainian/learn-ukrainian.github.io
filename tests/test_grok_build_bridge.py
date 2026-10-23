@@ -3,9 +3,7 @@ from __future__ import annotations
 import json
 from contextlib import contextmanager
 from types import SimpleNamespace
-from unittest.mock import patch
 
-from scripts.agent_runtime.registry import get_agent_entry
 from scripts.ai_agent_bridge import _cli, _grok_build
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 
@@ -243,28 +241,3 @@ def test_grok_build_branch_review_uses_provisioned_checkout(monkeypatch, tmp_pat
 
     assert captured["cwd"] == checkout.path
     assert str(captured["prompt"]).endswith("SEALED_DOSSIER")
-
-
-def test_grok_build_registry_key_resolves_native_adapter():
-    for key in ("grok", "grok-build"):
-        entry = get_agent_entry(key)
-        assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-        assert entry["default_model"] == "grok-4.7"
-        assert entry["default_effort"] == "high"
-
-
-def test_grok_build_dispatch_start_telemetry_has_defaults():
-    with patch(
-        "scripts.agent_runtime.telemetry._resolve_cli_version",
-        return_value="grok 0.0.test",
-    ):
-        from scripts.agent_runtime.telemetry import resolve_dispatch_start_telemetry
-
-        for agent_name in ("grok", "grok-build"):
-            telemetry = resolve_dispatch_start_telemetry(
-                agent_name=agent_name,
-                requested_model=None,
-                requested_effort=None,
-            )
-            assert telemetry.model == "grok-4.7"
-            assert telemetry.effort == "high"

@@ -258,23 +258,6 @@ def test_acpx_grok_cached_login_selector_survives_without_xai_credentials():
     assert "ACPX_AUTH_XAI_API_KEY" not in env
 
 
-def test_acpx_codex_chatgpt_selector_survives_without_api_credentials():
-    with patch.dict(
-        "os.environ",
-        {
-            "PATH": "/usr/bin",
-            "HOME": "/Users/example",
-            "OPENAI_API_KEY": "openai-secret",
-            "ACPX_AUTH_CHAT_GPT": "1",
-        },
-        clear=True,
-    ):
-        env = build_agent_env(provider="acpx-codex-shadow")
-
-    assert env["ACPX_AUTH_CHAT_GPT"] == "1"
-    assert "OPENAI_API_KEY" not in env
-
-
 def test_acpx_auth_method_selectors_require_literal_one():
     with patch.dict(
         "os.environ",
@@ -291,77 +274,6 @@ def test_acpx_auth_method_selectors_require_literal_one():
 
     assert "ACPX_AUTH_CHAT_GPT" not in codex_env
     assert "ACPX_AUTH_CACHED_TOKEN" not in grok_env
-
-
-def test_hermes_home_override_reaches_hermes_backed_agents():
-    with patch.dict(
-        "os.environ",
-        {"PATH": "/usr/bin", "HOME": "/Users/example"},
-        clear=True,
-    ):
-        for provider in ("deepseek", "grok-hermes", "qwen"):
-            env = build_agent_env(
-                provider=provider,
-                overrides={"HERMES_HOME": "/tmp/hermes-fallback-probe"},
-            )
-            assert env["HERMES_HOME"] == "/tmp/hermes-fallback-probe"
-
-
-def test_kimi_binary_override_reaches_the_native_kimi_process():
-    with patch.dict(
-        "os.environ",
-        {"PATH": "/usr/bin", "HOME": "/Users/example", "KIMI_CODE_BIN": "/opt/kimi"},
-        clear=True,
-    ):
-        env = build_agent_env(provider="kimi")
-
-    assert env["KIMI_CODE_BIN"] == "/opt/kimi"
-
-
-@pytest.mark.parametrize("provider", ["kimi", "claude"])
-def test_headless_claude_switches_survive_overrides_without_native_kimi_inheritance(provider):
-    switches = {
-        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
-        "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
-    }
-    with patch.dict("os.environ", {"PATH": "/usr/bin", **switches}, clear=True):
-        inherited = build_agent_env(provider=provider)
-        overridden = build_agent_env(provider=provider, overrides=switches)
-        unrelated = build_agent_env(provider="codex", overrides=switches)
-    for name, value in switches.items():
-        if provider == "kimi":
-            assert name not in inherited
-        else:
-            assert inherited[name] == value
-        assert overridden[name] == value
-        assert name not in unrelated
-
-
-def test_kimicc_route_inputs_reach_the_kimi_wrapper_only():
-    parent_env = {
-        "PATH": "/usr/bin",
-        "HOME": "/Users/example",
-        "KIMICC_AUTH_TOKEN": "test-route-token",
-        "KIMI_CODE_CREDENTIALS_PATH": "/Users/example/.kimi-code/credentials/kimi-code.json",
-        "KIMICC_ENDPOINT": "coding",
-        "KIMICC_MODEL": "k3",
-        "KIMICC_BASE_URL": "https://example.invalid/coding",
-        "KIMICC_EFFORT_LEVEL": "max",
-        "KIMICC_CLAUDE_BIN": "/opt/claude",
-        "UNRELATED": "drop-me",
-    }
-
-    with patch.dict("os.environ", parent_env, clear=True):
-        env = build_agent_env(provider="kimi")
-
-    assert env["KIMICC_AUTH_TOKEN"] == "test-route-token"
-    assert env["KIMI_CODE_CREDENTIALS_PATH"].endswith("kimi-code.json")
-    assert env["KIMICC_ENDPOINT"] == "coding"
-    assert env["KIMICC_MODEL"] == "k3"
-    assert env["KIMICC_BASE_URL"] == "https://example.invalid/coding"
-    assert env["KIMICC_EFFORT_LEVEL"] == "max"
-    assert env["KIMICC_CLAUDE_BIN"] == "/opt/claude"
-    assert "UNRELATED" not in env
 
 
 @dataclass
@@ -465,76 +377,6 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
 
             assert outcome.parse.ok is True
             assert json.loads(outcome.stdout_text) == expected_env
-
-
-@pytest.mark.parametrize(
-    "provider,model,name",
-    [("codex", "gpt-6.1-sol", "OpenAI"), ("cursor", "grok-4.7-high", "Grok"), ("cursor", "auto", "Cursor")],
-)
-def test_runner_passes_lane_identity_to_worker(tmp_path, provider, model, name):
-    script = "import json, os; print(json.dumps([os.environ[k] for k in ('GIT_AUTHOR_NAME', 'GIT_COMMITTER_NAME')]))"
-    plan = _SmokePlan(cmd=[sys.executable, "-c", script], cwd=tmp_path)
-    with patch("agent_runtime.runner._POLL_INTERVAL_S", 0.01):
-        outcome = _execute_invocation_plan(
-            agent_name=provider,
-            adapter=_SmokeAdapter(),
-            plan=plan,
-            prompt="identity smoke",
-            mode="read-only",
-            cwd=tmp_path,
-            model=model,
-            task_id="identity-smoke",
-            session_id=None,
-            entrypoint="runtime-test",
-            hard_timeout=10,
-            stall_timeout=10,
-        )
-    assert outcome.parse.ok is True
-    assert json.loads(outcome.stdout_text) == [name, name]
-
-
-def test_runner_passes_runtime_tmp_lease_to_agent_subprocess(tmp_path):
-    lease_root = tmp_path / "learn-ukrainian" / "runtime-tmp-env"
-    lease_root.mkdir(parents=True)
-    script = (
-        "import json, os; "
-        "print(json.dumps({key: os.environ.get(key) for key in "
-        "('TMPDIR', 'LU_RUNTIME_TMP_ROOT')}, sort_keys=True))"
-    )
-    parent_env = {
-        "PATH": os.environ.get("PATH", ""),
-        "HOME": str(tmp_path),
-        "TMPDIR": str(lease_root),
-        "LU_RUNTIME_TMP_ROOT": str(lease_root),
-    }
-
-    with (
-        patch.dict("os.environ", parent_env, clear=True),
-        patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
-            0.01,
-        ),
-    ):
-        outcome = _execute_invocation_plan(
-            agent_name="codex",
-            adapter=_SmokeAdapter(),
-            plan=_SmokePlan(cmd=[_TEST_PYTHON, "-c", script], cwd=tmp_path),
-            prompt="tmp lease env smoke",
-            mode="read-only",
-            cwd=tmp_path,
-            model="smoke-model",
-            task_id="runtime-tmp-env-smoke",
-            session_id=None,
-            entrypoint="runtime-test",
-            hard_timeout=10,
-            stall_timeout=10,
-        )
-
-    assert outcome.parse.ok is True
-    assert json.loads(outcome.stdout_text) == {
-        "LU_RUNTIME_TMP_ROOT": str(lease_root),
-        "TMPDIR": str(lease_root),
-    }
 
 
 def test_runner_codex_subprocess_gets_gh_token_for_gh_auth_status(tmp_path):

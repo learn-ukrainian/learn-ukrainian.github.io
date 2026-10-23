@@ -5,7 +5,8 @@ is the only required GitHub check. Every `pull_request`, `merge_group`,
 `schedule` (03:30 UTC on `main`) and `workflow_dispatch` run executes the same
 jobs and the full non-slow pytest suite. There are no path tiers, test areas,
 import-graph selection or labels: a change cannot pick which tests it runs.
-Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
+The slow sparse collection guard runs in the required Checks job. Other slow
+tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
 The advisory Hygiene workflow keeps a separate slim environment. Its focused
 agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
@@ -33,7 +34,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
 | Queue commit metadata scan | `merge_group` only, reuse or not. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. Skipped only on a recorded merge-queue reuse. |
-| Checks | `scripts/ci/checks.sh`: every lint and content-contract gate; runs all, fails if any failed. Skipped only on a recorded merge-queue reuse. |
+| Checks | The slow sparse collection guard, then `scripts/ci/checks.sh` for every lint and content-contract gate; fails if any failed. Skipped only on a recorded merge-queue reuse. |
 | Frontend | Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. Skipped only on a recorded merge-queue reuse. |
 | pytest (1..N) | The full `not atlas_release and not slow` suite, split over N static shards. Skipped only on a recorded merge-queue reuse. |
 | pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run. |
@@ -83,7 +84,8 @@ that chose *which* tests or checks a change ran is gone.
 | Queue commit metadata (message, author, committer) scanned for secrets | Secret scan, every queue run | Secret scan on a full queue run; Queue commit metadata scan on every queue run |
 | TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
-| Slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
+| Sparse collection guard (`tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent`) | pre-push hook and `pytest-slow-nightly.yml` | Required Checks job runs the unchanged node explicitly with `--override-ini addopts=-q -m slow --strict-markers`; nightly coverage remains. |
+| Other slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
 
 The needs_artifact audit makes two independent comparisons with the expected
 list. The collected set comes from collection, before `-m` deselects anything:

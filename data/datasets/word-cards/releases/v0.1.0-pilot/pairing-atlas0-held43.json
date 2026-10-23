@@ -1,0 +1,5284 @@
+{
+  "schema_version": "1",
+  "issue": 11361,
+  "release_version": "v0.1.0-pilot",
+  "source_head": "1177144e1d239d76d0e3015c8a92b21eb818c714",
+  "scope": "Disposition of all 43 previously held cards against active atlas0 identities and the complete current public article catalog; no registry mutation, new pages, homonym merge, certification or cutover.",
+  "evidence_roles": {
+    "source_fields": "Verbatim released assertions with their original source locators; ULIF identity fields additionally checked through sources.query_ulif_records.",
+    "page_observation": "Current Atlas display evidence only. Describes what the page aggregates; it is not normative evidence of Ukrainian meaning, stress or morphology.",
+    "no_counterpart": "No canonical standalone page for this source identity in the inspected inventories. This does not assert that the word or expression is unattested, or absent from every page body."
+  },
+  "inputs": {
+    "cards": {
+      "path": "data/datasets/word-cards/releases/v0.1.0-pilot/word-cards.jsonl",
+      "sha256": "45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6"
+    },
+    "pairing": {
+      "path": "data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json",
+      "sha256": "d187ca552f55729cc146990375dccaac851de41a9fdf48dc1047cf28c41f157e"
+    },
+    "registry": {
+      "path": "registry/atlas/identity/registry.json",
+      "sha256": "2151fa4ee02ce455e9a7e85c9ea2e55030f2235e31aa7337546645569b6e9e25"
+    },
+    "pilot": {
+      "path": "registry/atlas/pilot/pilot-v1.json",
+      "sha256": "19caa9148c76294156f12b4d1b11c11f4563ba0facac142460dd927543a7bc71"
+    },
+    "site_index": {
+      "path": "site/src/data/lexicon-search-index.json",
+      "sha256": "007b8c01bd91f32efcd72432dd91538d77af48b858e82d6df3e08ef4b29421d7"
+    },
+    "site_aliases": {
+      "path": "site/src/data/lexicon-search-aliases.json",
+      "sha256": "8d14ee25a04741abaafc86a9cb0158921750d449f3286f8658fdf51fbbb65053"
+    }
+  },
+  "inventory": {
+    "active_atlas0_identities": 114,
+    "frozen_legacy_articles": 114,
+    "site_index_entries": 27127,
+    "public_articles": 27127,
+    "public_aliases": 28293,
+    "public_article_identity_sha256": "e34c785dbcb083e8f1ab4566764ceb5a01d93a3f3eeab869d2a0bd32d576311a",
+    "public_alias_identity_sha256": "9d3700ca4b1150add596ec22fc5887cd5297dd9d7a55e0e330b253569c3a2381"
+  },
+  "counts": {
+    "examined": 43,
+    "paired": 0,
+    "no_counterpart": 33,
+    "held_ambiguous": 10,
+    "previously_paired_unchanged": 107,
+    "release_total_conserved": 150
+  },
+  "independent_review": "NOT_RUN; accountable driver owns exact-head review and any independent held-out evaluation.",
+  "entries": [
+    {
+      "card_id": "wc_02a5cjxcpbcf",
+      "card_kind": "lexeme",
+      "forms": [
+        "баран"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "atlas_entry_covers_multiple_homonyms",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/0"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/241"
+      },
+      "source_fields": [
+        {
+          "field": "spelling",
+          "value": "баран",
+          "assertion_id": "wa_011bc1b1835cd3d7befe889a",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22123 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:f7cfdae74f8bf039fb241659c41e1ca378e87da4231ff08e7629c284c751b191"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:1#/fields/0"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_6707891c16c0d7857f6ddd24",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22123 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:f7cfdae74f8bf039fb241659c41e1ca378e87da4231ff08e7629c284c751b191"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:1#/fields/9"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду, істота",
+          "assertion_id": "wa_6f94f7dab84522b193cf3223",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22123 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:f7cfdae74f8bf039fb241659c41e1ca378e87da4231ff08e7629c284c751b191"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:1#/fields/10"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "самець вівці",
+          "assertion_id": "wa_a67b61d6ba60b9bbb0ab1951",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22123 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:f7cfdae74f8bf039fb241659c41e1ca378e87da4231ff08e7629c284c751b191"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:1#/fields/13"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 22123,
+          "canonical_headword": "бара́н",
+          "grammatical_label": "іменник чоловічого роду, істота",
+          "sense_gloss": "(самець вівці)",
+          "raw_page_sha256": "faf408c1729b80c6341fb98b50738cb6078214b4f9398974caa62b401c24c269",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/150/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:баран",
+          "pilot_card_id": "wc_r25wxjx5nrb9",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/6"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/6"
+          },
+          "vesum_entry_ids": [
+            17249,
+            17250
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "баран",
+              "lemma": "баран",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "052d82f25389ac49f8bb5981018ed0462a6932854ef7111915975d107f412add",
+            "translation": {
+              "en": [
+                "ram (male sheep)",
+                "ram (male domestic sheep)"
+              ],
+              "source": "dmklinger",
+              "pos": "noun"
+            },
+            "meaning": null,
+            "homonyms": null,
+            "vts_definition_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 3
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "баран"
+        ],
+        "active_atlas0_matches": [
+          "wc_r25wxjx5nrb9"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/812"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "баран",
+            "lemma": "баран",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/1964"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entry 22123 identifies the animal. The legacy article contains two VESUM entries and several synonym groups; its animal translation does not establish that the whole article is only this ULIF lexeme.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_0a3k6ypbjhrf",
+      "card_kind": "proper_name",
+      "forms": [
+        "Баран"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/3"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/240"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_00aa8e3f45cab5c5e4c13354",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4165 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:af038066c689a08f0915d582a7687725bbe1e5c715faff30bd6c80dcd4c8343a"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:4#/fields/0"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "річка в Україні",
+          "assertion_id": "wa_b1ab6ead881548525bad30ab",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4165 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:af038066c689a08f0915d582a7687725bbe1e5c715faff30bd6c80dcd4c8343a"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:4#/fields/7"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_e0482a9c2efcfd523cb09c54",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4165 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:af038066c689a08f0915d582a7687725bbe1e5c715faff30bd6c80dcd4c8343a"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:4#/fields/8"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Баран",
+          "assertion_id": "wa_eab6e578a8cf2be3f9a7d4e9",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4165 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:af038066c689a08f0915d582a7687725bbe1e5c715faff30bd6c80dcd4c8343a"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:4#/fields/10"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 4165,
+          "canonical_headword": "Бара́н",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(річка в Україні)",
+          "raw_page_sha256": "78c09f83d73860da1c036b1570d4e874138b1a395c06fe96863a006fc21402d4",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/264/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:баран",
+          "pilot_card_id": "wc_r25wxjx5nrb9",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/6"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/6"
+          },
+          "vesum_entry_ids": [
+            17249,
+            17250
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "баран",
+              "lemma": "баран",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "052d82f25389ac49f8bb5981018ed0462a6932854ef7111915975d107f412add",
+            "translation": {
+              "en": [
+                "ram (male sheep)",
+                "ram (male domestic sheep)"
+              ],
+              "source": "dmklinger",
+              "pos": "noun"
+            },
+            "meaning": null,
+            "homonyms": null,
+            "vts_definition_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 3
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Баран"
+        ],
+        "active_atlas0_matches": [
+          "wc_r25wxjx5nrb9"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/812"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "баран",
+            "lemma": "баран",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/1964"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_0c2c6k5nrw0n",
+      "card_kind": "lexeme",
+      "forms": [
+        "щось"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "pos_mismatch_with_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/4"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/158"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "adv",
+          "assertion_id": "wa_108bb895b89515ea218bbe83",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:433347 [pos]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:5#/fields/0"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "щось",
+          "assertion_id": "wa_8b11e2c0d8430435b775411a",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:433347 [lemma]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:5#/fields/1"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "adv",
+          "assertion_id": "wa_981c7b2818cadb5ab85f82b7",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266758 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:2f2ddc6e6b88646689b21dd750882951a8f7eb5768aea91127c1de7a96d50c41"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:5#/fields/2"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "прислівник",
+          "assertion_id": "wa_a494cd04fd6066dc6725b032",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266758 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:2f2ddc6e6b88646689b21dd750882951a8f7eb5768aea91127c1de7a96d50c41"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:5#/fields/3"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "щось",
+          "assertion_id": "wa_ad905e78a1eb59a78f3ab9f2",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266758 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:2f2ddc6e6b88646689b21dd750882951a8f7eb5768aea91127c1de7a96d50c41"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:5#/fields/4"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 266758,
+          "canonical_headword": "щось",
+          "grammatical_label": "прислівник",
+          "sense_gloss": "",
+          "raw_page_sha256": "e0cd7165bccc5783229b1718421cf917647d35bc94eb2f63b458c15e3bd85d65",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/225/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:щось",
+          "pilot_card_id": "wc_bcks3tm0xg7b",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/85"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/85"
+          },
+          "vesum_entry_ids": [
+            433348
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "щось",
+              "lemma": "щось",
+              "entry_type": "lemma",
+              "pos": "pronoun"
+            },
+            "payload_sha256": "62717d52acb5cecb8a11aa5c329b762c7a722b156baaf371364fbe02da40c51e",
+            "translation": {
+              "en": [
+                "something, anything"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "pronoun"
+            },
+            "meaning": {
+              "definitions": [
+                "Невизначений або невідомий предмет, якесь явище і т. ін.; невідомо, неясно що",
+                "Що-небудь не до кінця визначене, поки що не розгадане",
+                "Яка-небудь справа, якесь заняття"
+              ],
+              "source": "Вікісловник"
+            },
+            "homonyms": {
+              "source": "СУМ-20: numbered homonym headwords",
+              "items": [
+                {
+                  "word": "щось",
+                  "gloss": "Невідомо з якої причини, неясно чому; чомусь.",
+                  "homonym_no": 2,
+                  "pos": "прислівник"
+                }
+              ],
+              "source_urls": [
+                "https://slovnyk.me/dict/newsum/%D1%89%D0%BE%D1%81%D1%8C"
+              ]
+            },
+            "vts_definition_sha256": "c51b72ae1228da5dad61c5372d9db777b87e1f6b0ad479e8691a2122cfc990c7",
+            "vts_has_numbered_partitions": true,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "щось"
+        ],
+        "active_atlas0_matches": [
+          "wc_bcks3tm0xg7b"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/26918"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "щось",
+            "lemma": "щось",
+            "entry_type": "lemma",
+            "pos": "pronoun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/19711"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "adverb_embedded_in_pronoun_page",
+      "reason": "ULIF entry 266758 is an adverb. The current article is a pronoun, but it also exposes an adverb homonym and mixed morphology. Neither a POS-only rejection nor a whole-page pairing resolves that mixed scope. No distinct adverb page is allocated.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_1nrw339ddgvm",
+      "card_kind": "mwe",
+      "forms": [
+        "різати правду-матку"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/8"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/245"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "різати правду-матку",
+          "assertion_id": "wa_099e07bf8015639f9e1c1a9e",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:2 [word]",
+            "snapshot_id": "selected-row@sha256:129f0be207989c924e2486360cbfaf682d061fcf7819edb31f40e42a631aebe6"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:9#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "різати правду-матку"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_2xzw44zg56aq",
+      "card_kind": "lexeme",
+      "forms": [
+        "яскравіший"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/10"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/149"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_4c48d051a315a33685853729",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:268912 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:0e5ae10883a037828608e7eb94f1b35f075af23d49ef197e1bab94098c343203"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:11#/fields/10"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "яскравіший",
+          "assertion_id": "wa_ba1274e407a3884e89e90ddc",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:268912 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:0e5ae10883a037828608e7eb94f1b35f075af23d49ef197e1bab94098c343203"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:11#/fields/19"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "прикметник, вищий ступінь",
+          "assertion_id": "wa_c616d38eb35d43e4e753cda7",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:268912 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:0e5ae10883a037828608e7eb94f1b35f075af23d49ef197e1bab94098c343203"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:11#/fields/21"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 268912,
+          "canonical_headword": "яскра́віший",
+          "grammatical_label": "прикметник, вищий ступінь",
+          "sense_gloss": "",
+          "raw_page_sha256": "e655c4bde46c2f2682cec18297071637b02baf58da1cc4dc31a464aea0936c7d",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/253/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "яскравіший"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_lemma_page",
+      "reason": "The cited source identity has no current article, active atlas0 identity or public alias for its lemma. Inflectional similarity or a related base lemma does not establish this card-to-page relation.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_562eqy9g3bck",
+      "card_kind": "mwe",
+      "forms": [
+        "близько не пахне"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/17"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/260"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "близько не пахне",
+          "assertion_id": "wa_cf29aa8917371146e9ea41b3",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:26 [word]",
+            "snapshot_id": "selected-row@sha256:3a56f1d31adc82759f97a41556d8972afbf1e7c900cf0b7423989f58fd193069"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:18#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "близько не пахне"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_5j37jfndz666",
+      "card_kind": "mwe",
+      "forms": [
+        "блигом світ"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/20"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/261"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "блигом світ",
+          "assertion_id": "wa_248891dc8cc3227723b56f0e",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:27 [word]",
+            "snapshot_id": "selected-row@sha256:946632d8315443c70fc6f96141246d08178a89957e529a9a706a1849756709db"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:21#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "блигом світ"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_7a6x6n8rek4y",
+      "card_kind": "mwe",
+      "forms": [
+        "Гнат-безп'ятко"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/25"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/251"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Гнат-безп'ятко",
+          "assertion_id": "wa_276f6d93681ed2b4fb6ade38",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:10 [word]",
+            "snapshot_id": "selected-row@sha256:cd6628ea3b3cf11168162035ba7702565115a5194fe0e14ef7794783943db37f"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:26#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Гнат-безп'ятко"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_91fq1gtsh9f5",
+      "card_kind": "proper_name",
+      "forms": [
+        "Новий"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/33"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/221"
+      },
+      "source_fields": [
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_bb967079f8d2bf811ee65a38",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:8 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:33bd7610c3f45468d1d7d730773aa6d2b0aafeb825c34ec26946d4faf103dc88"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:34#/fields/5"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "населений пункт в Україні",
+          "assertion_id": "wa_e048dfe17280fc518870d8c3",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:8 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:33bd7610c3f45468d1d7d730773aa6d2b0aafeb825c34ec26946d4faf103dc88"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:34#/fields/8"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Новий",
+          "assertion_id": "wa_f04ede45b3de610265381490",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:8 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:33bd7610c3f45468d1d7d730773aa6d2b0aafeb825c34ec26946d4faf103dc88"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:34#/fields/9"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_f344eb2b5b8fc4207371150b",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:8 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:33bd7610c3f45468d1d7d730773aa6d2b0aafeb825c34ec26946d4faf103dc88"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:34#/fields/10"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 8,
+          "canonical_headword": "Но́вий",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(населений пункт в Україні)",
+          "raw_page_sha256": "aa9fca109201275e06bd42c653049f9319fabe980fd1f1f11946cd97ca547468",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/269/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:новий",
+          "pilot_card_id": "wc_yy4nny14rx51",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/13"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/13"
+          },
+          "vesum_entry_ids": [
+            239967
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "новий",
+              "lemma": "новий",
+              "entry_type": "lemma",
+              "pos": "adjective"
+            },
+            "payload_sha256": "b457dcc28638c0b405eb411209bec9a6670f42d21234149b8fe03c9a77a66a60",
+            "translation": {
+              "en": [
+                "new"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "adjective"
+            },
+            "meaning": {
+              "definitions": [
+                "який недавно виник, з'явився, не існував раніше; недавно зроблений, створений і т. ін",
+                "якого раніше не використовували, не застосовували; який не був у вжитку",
+                "який стосується найближчого часу; сучасний"
+              ],
+              "source": "Вікісловник"
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "c3ccb455b02954056d518387fd1dcfa6dffcede60e306cde6101032437ef6b78",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Новий"
+        ],
+        "active_atlas0_matches": [
+          "wc_yy4nny14rx51"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/14578"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "новий",
+            "lemma": "новий",
+            "entry_type": "lemma",
+            "pos": "adjective"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/637"
+          },
+          {
+            "input": "site_aliases",
+            "pointer": "/639"
+          },
+          {
+            "input": "site_aliases",
+            "pointer": "/640"
+          },
+          {
+            "input": "site_aliases",
+            "pointer": "/642"
+          },
+          {
+            "input": "site_aliases",
+            "pointer": "/12495"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_anz167as5tn7",
+      "card_kind": "proper_name",
+      "forms": [
+        "Бабуся"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/41"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/231"
+      },
+      "source_fields": [
+        {
+          "field": "spelling",
+          "value": "Бабуся",
+          "assertion_id": "wa_0fbe8e65693d966f4188f049",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:14321 [lemma]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:42#/fields/2"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Бабуся",
+          "assertion_id": "wa_4c9d3f83f152ef6e4df898fd",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3705 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:e983f2e7608fddbf97a662712f081339e662db344495b071ab13d2fda1775310"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:42#/fields/6"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник жіночого роду",
+          "assertion_id": "wa_5a707b91cb63d4ef4541f773",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3705 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:e983f2e7608fddbf97a662712f081339e662db344495b071ab13d2fda1775310"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:42#/fields/7"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_660409486862f80bf4cdee14",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3705 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:e983f2e7608fddbf97a662712f081339e662db344495b071ab13d2fda1775310"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:42#/fields/10"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_9ed21dd6827b9deea9e313b0",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:14321 [pos]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:42#/fields/13"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "річка в Україні",
+          "assertion_id": "wa_fb4d63a51ca3ac350f530825",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3705 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:e983f2e7608fddbf97a662712f081339e662db344495b071ab13d2fda1775310"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:42#/fields/19"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 3705,
+          "canonical_headword": "Бабу́ся",
+          "grammatical_label": "іменник жіночого роду",
+          "sense_gloss": "(річка в Україні)",
+          "raw_page_sha256": "f2aff2570be41fa16f18f6dedae04ae40468d08553159e6734043e6b19c39735",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/259/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:бабуся",
+          "pilot_card_id": "wc_tgmd9j7ar9pe",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/1"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/1"
+          },
+          "vesum_entry_ids": [
+            14322
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "бабуся",
+              "lemma": "бабуся",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "2929fe7c81d66972f681c8da94808da69c7bc6221edb4a6cfc4bedf765dcb819",
+            "translation": {
+              "en": [
+                "grandmother",
+                "grandma (grandmother (informal))",
+                "granny (colloquial: grandmother)"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "пестливе до баба 1, 2"
+              ],
+              "source": "Вікісловник"
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "795a830f6b8e52e890b2a1e89413fceef7283037acb8bb61eeb6dec58c56b62f",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Бабуся"
+        ],
+        "active_atlas0_matches": [
+          "wc_tgmd9j7ar9pe"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/647"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "бабуся",
+            "lemma": "бабуся",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/13"
+          },
+          {
+            "input": "site_aliases",
+            "pointer": "/1810"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_bej8fh02sp6p",
+      "card_kind": "mwe",
+      "forms": [
+        "Боже помагай"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/43"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/246"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Боже помагай",
+          "assertion_id": "wa_fdde74e1c4b12401d7fde962",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:3 [word]",
+            "snapshot_id": "selected-row@sha256:1bdc4743bc20a8ee122bab785ac35e61012073b203b94a3b61b9ff4016bb4404"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:44#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Боже помагай"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_bgr5q9c06wxg",
+      "card_kind": "lexeme",
+      "forms": [
+        "замок"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "atlas_entry_covers_multiple_homonyms",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/45"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/255"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_2c87f6e48b7c5548c7abb963",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76793 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:923004f497c1bc6f76d6eaa3f9ae6ef6cfda353dc257b946d2c7069375a7a5ac"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:46#/fields/0"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "замок",
+          "assertion_id": "wa_5a7348bd4916b27955783093",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76793 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:923004f497c1bc6f76d6eaa3f9ae6ef6cfda353dc257b946d2c7069375a7a5ac"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:46#/fields/2"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "пристрій для замикання тощо",
+          "assertion_id": "wa_b0882a2072fb2103b30862a6",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76793 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:923004f497c1bc6f76d6eaa3f9ae6ef6cfda353dc257b946d2c7069375a7a5ac"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:46#/fields/4"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_beeb47690f7703798fed8a01",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76793 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:923004f497c1bc6f76d6eaa3f9ae6ef6cfda353dc257b946d2c7069375a7a5ac"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:46#/fields/5"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 76793,
+          "canonical_headword": "замо́к",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(пристрій для замикання тощо)",
+          "raw_page_sha256": "20f6dcf990e812485cfeccf7f17200d4719d9f050fd3ea8ac40be557a17392f0",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/268/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:замок",
+          "pilot_card_id": "wc_9weaf07bkpz1",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/9"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/9"
+          },
+          "vesum_entry_ids": [
+            128972,
+            128973
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "замок",
+              "lemma": "замок",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "38f8617ebcb5c2eb992bfd3a3098e7796fff8c5bd42f6947d28bf34731a1cd9d",
+            "translation": {
+              "en": [
+                "lock, locks",
+                "castle, castles",
+                "keystone (the top stone of an arch)"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "castle",
+                "lock"
+              ],
+              "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+              "note": "English Wiktionary gloss fallback; direct per-lemma row."
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "e31bf9d34d27fbf1add959e2d3f5684e9007211395cffec825eff03620185364",
+            "vts_has_numbered_partitions": true,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "замок"
+        ],
+        "active_atlas0_matches": [
+          "wc_9weaf07bkpz1"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/7594"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "замок",
+            "lemma": "замок",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/26557"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entries 76792 and 76793 identify the building and locking device separately. Both release cards compete for one legacy article, whose translations include both. No separate current target is allocated.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_bz5ypsm3wyj7",
+      "card_kind": "proper_name",
+      "forms": [
+        "Шуба"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/47"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/213"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_16a18466e352830c96dd71c0",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:265000 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:0fa0cfc361b4202dae7c5b4f2364b3df0baf85d2f4d40a510fed4f57ce02622c"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:48#/fields/5"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "прізвище",
+          "assertion_id": "wa_3e78b66e24f7203bf638de9a",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:265000 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:0fa0cfc361b4202dae7c5b4f2364b3df0baf85d2f4d40a510fed4f57ce02622c"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:48#/fields/8"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Шуба",
+          "assertion_id": "wa_81139df02244aa0bf2bf7bee",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:265000 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:0fa0cfc361b4202dae7c5b4f2364b3df0baf85d2f4d40a510fed4f57ce02622c"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:48#/fields/10"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 265000,
+          "canonical_headword": "Шу́ба",
+          "grammatical_label": "прізвище",
+          "sense_gloss": "",
+          "raw_page_sha256": "045c7b16e04780d7e82a92399cac5fe3eb6a8b9b953d5b2cbaa789f72abe4cca",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/200/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:шуба",
+          "pilot_card_id": "wc_kd97vhcgw6ng",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/56"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/56"
+          },
+          "vesum_entry_ids": [
+            427951
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "шуба",
+              "lemma": "шуба",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "987de0b6b888635cac4efd7431a2141bb1749bbeef19e928c1430cb169abd0fd",
+            "translation": {
+              "en": [
+                "fur coat (garment made of furry hides)"
+              ],
+              "source": "dmklinger",
+              "pos": "noun"
+            },
+            "meaning": null,
+            "homonyms": null,
+            "vts_definition_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Шуба"
+        ],
+        "active_atlas0_matches": [
+          "wc_kd97vhcgw6ng"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/26789"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "шуба",
+            "lemma": "шуба",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/19915"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_c66xvp4hvdev",
+      "card_kind": "mwe",
+      "forms": [
+        "Робінзон на безлюдному острові"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/48"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/244"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Робінзон на безлюдному острові",
+          "assertion_id": "wa_87879ea1e0fbd6ea947b7f7d",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:1 [word]",
+            "snapshot_id": "selected-row@sha256:053971a24e07475cc103f0b26c7cd84c7dd4b6d7dde2b0d77665e4465535daf3"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:49#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Робінзон на безлюдному острові"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_cvkw5nzdg00n",
+      "card_kind": "lexeme",
+      "forms": [
+        "замок"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "atlas_entry_covers_multiple_homonyms",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/51"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/254"
+      },
+      "source_fields": [
+        {
+          "field": "spelling",
+          "value": "замок",
+          "assertion_id": "wa_6bb16a2704cf78e14663d41c",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76792 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:ef51929e0bf900ff8014bf4e64f34240cada280e2f6a51f8c4b4b338abd43fbb"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:52#/fields/7"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "будівля",
+          "assertion_id": "wa_869d6c727132a1fb60df4c0f",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76792 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:ef51929e0bf900ff8014bf4e64f34240cada280e2f6a51f8c4b4b338abd43fbb"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:52#/fields/8"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_968c2c874b0f4cc48f0e4473",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76792 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:ef51929e0bf900ff8014bf4e64f34240cada280e2f6a51f8c4b4b338abd43fbb"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:52#/fields/10"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_e828ff8b399a12bdedc02a5a",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:76792 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:ef51929e0bf900ff8014bf4e64f34240cada280e2f6a51f8c4b4b338abd43fbb"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:52#/fields/15"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 76792,
+          "canonical_headword": "за́мок",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(будівля)",
+          "raw_page_sha256": "06d828ae5107fbc544a17a2229453e5915cf33f04e0cd09c22f0bf01f4e8aca6",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/267/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:замок",
+          "pilot_card_id": "wc_9weaf07bkpz1",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/9"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/9"
+          },
+          "vesum_entry_ids": [
+            128972,
+            128973
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "замок",
+              "lemma": "замок",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "38f8617ebcb5c2eb992bfd3a3098e7796fff8c5bd42f6947d28bf34731a1cd9d",
+            "translation": {
+              "en": [
+                "lock, locks",
+                "castle, castles",
+                "keystone (the top stone of an arch)"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "castle",
+                "lock"
+              ],
+              "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+              "note": "English Wiktionary gloss fallback; direct per-lemma row."
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "e31bf9d34d27fbf1add959e2d3f5684e9007211395cffec825eff03620185364",
+            "vts_has_numbered_partitions": true,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "замок"
+        ],
+        "active_atlas0_matches": [
+          "wc_9weaf07bkpz1"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/7594"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "замок",
+            "lemma": "замок",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/26557"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entries 76792 and 76793 identify the building and locking device separately. Both release cards compete for one legacy article, whose translations include both. No separate current target is allocated.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_d2d38y0ctmct",
+      "card_kind": "proper_name",
+      "forms": [
+        "Бар"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/53"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/239"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_3910f363905e3132e0c9cd62",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4148 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:015e003fa2ee8d2fe400ec8cdaf81a2cb1097e7fed62a4c166bb7cd47672c888"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:54#/fields/1"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "місто в Україні",
+          "assertion_id": "wa_5218b7feefd6eb634127970e",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4148 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:015e003fa2ee8d2fe400ec8cdaf81a2cb1097e7fed62a4c166bb7cd47672c888"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:54#/fields/3"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_c5dd10a4c1d8d6c11cafdae3",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4148 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:015e003fa2ee8d2fe400ec8cdaf81a2cb1097e7fed62a4c166bb7cd47672c888"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:54#/fields/9"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Бар",
+          "assertion_id": "wa_ee493309ec120ecf0e13e75d",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4148 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:015e003fa2ee8d2fe400ec8cdaf81a2cb1097e7fed62a4c166bb7cd47672c888"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:54#/fields/10"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 4148,
+          "canonical_headword": "Бар",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(місто в Україні)",
+          "raw_page_sha256": "3ce4096729abb3837bf2396e53c6f96c98b2ba79e29d8798af9ee408007f21a0",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/263/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:бар",
+          "pilot_card_id": "wc_331r6gx6dgb7",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/5"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/5"
+          },
+          "vesum_entry_ids": [
+            17191,
+            17192
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "бар",
+              "lemma": "бар",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "5f95c07976324135c0b5e74cc75cbda8ff5b1c53a918bd645a81bb50335a8de2",
+            "translation": {
+              "en": [
+                "bar"
+              ],
+              "source": "learner_english_gloss"
+            },
+            "meaning": null,
+            "homonyms": {
+              "source": "СУМ-20: numbered homonym headwords",
+              "items": [
+                {
+                  "word": "бар",
+                  "gloss": "метеор.",
+                  "homonym_no": 2,
+                  "pos": "іменник, чол. р."
+                },
+                {
+                  "word": "бар",
+                  "gloss": "Піщаний наносний підводний вал у прибережній зоні моря або в гирлі річки, який час від часу змінює своє розташування.",
+                  "homonym_no": 3,
+                  "pos": "іменник, чол. р."
+                },
+                {
+                  "word": "бар",
+                  "gloss": "техн.",
+                  "homonym_no": 4,
+                  "pos": "іменник, чол. р."
+                }
+              ],
+              "source_urls": [
+                "https://services.ulif.org.ua/expl/#/word/%D0%B1%D0%B0%D1%80"
+              ]
+            },
+            "vts_definition_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 1
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Бар"
+        ],
+        "active_atlas0_matches": [
+          "wc_331r6gx6dgb7"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/806"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "бар",
+            "lemma": "бар",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/1958"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_fc08gvq844db",
+      "card_kind": "mwe",
+      "forms": [
+        "Бог помилував"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/62"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/249"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Бог помилував",
+          "assertion_id": "wa_dd8e9cf64bbfa73b50c32832",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:7 [word]",
+            "snapshot_id": "selected-row@sha256:fd470fb7ef65277b452f218c9c0eb8c54e3c1bfb82c8ee4775b1fc77b46603b3"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:63#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Бог помилував"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_fvxestgxf73d",
+      "card_kind": "proper_name",
+      "forms": [
+        "Любов"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/65"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/223"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_27ce3643ec439e2bdce252d4",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:11 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:83cc2681702a49a89fe5d0713461e10f7b92789d2e40b84986d7516e6dc4d293"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:66#/fields/2"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "ім'я",
+          "assertion_id": "wa_968588cce12162f2432b38bd",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:11 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:83cc2681702a49a89fe5d0713461e10f7b92789d2e40b84986d7516e6dc4d293"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:66#/fields/10"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Любов",
+          "assertion_id": "wa_a97b2c60e3a8a85bb5f13970",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:11 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:83cc2681702a49a89fe5d0713461e10f7b92789d2e40b84986d7516e6dc4d293"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:66#/fields/14"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник жіночого роду, істота",
+          "assertion_id": "wa_ae9206d1110aad93f05d53d8",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:11 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:83cc2681702a49a89fe5d0713461e10f7b92789d2e40b84986d7516e6dc4d293"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:66#/fields/15"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 11,
+          "canonical_headword": "Любо́в",
+          "grammatical_label": "іменник жіночого роду, істота",
+          "sense_gloss": "(ім'я)",
+          "raw_page_sha256": "0d377d89bee1a72a3aef7b016cf4a9846eba421a0d85f60ff971d0aadc72503b",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/136/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:любов",
+          "pilot_card_id": "wc_qfzs6ftf8qfg",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/11"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/11"
+          },
+          "vesum_entry_ids": [
+            191446
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "любов",
+              "lemma": "любов",
+              "entry_type": "lemma",
+              "pos": "noun:f"
+            },
+            "payload_sha256": "4a0090036a6998f940aab676a44571745801942f2edacbb8a87adca5223a6b01",
+            "translation": {
+              "en": [
+                "love (noun)",
+                "fondness (the quality of being fond)",
+                "a female given name, Lyubov or Liubov (proper noun)"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "підвищений внутрішній потяг до чого-небудь, сильне бажання зайнятися чимось",
+                "любов, кохання"
+              ],
+              "source": "Вікісловник"
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "4ef850f2e26ee44ce0ce0639bab02eb77e7f979b9c8f62a3e1c4d64c8e492099",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Любов"
+        ],
+        "active_atlas0_matches": [
+          "wc_qfzs6ftf8qfg"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/11808"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "любов",
+            "lemma": "любов",
+            "entry_type": "lemma",
+            "pos": "noun:f"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/9491"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "proper_name_embedded_in_common_noun_page",
+      "reason": "ULIF entry 11 is a personal name. The current common-noun article also includes a female-given-name translation. A no-content-counterpart claim would be false, while pairing this mixed page would conflate the name and common noun. No distinct name page is allocated.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_gbh31d6zptnx",
+      "card_kind": "lexeme",
+      "forms": [
+        "самий"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "homonym_unresolved",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/66"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/226"
+      },
+      "source_fields": [
+        {
+          "field": "grammatical_label",
+          "value": "займенник",
+          "assertion_id": "wa_030b6cbd6aa921917beeb387",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:210201 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:db7cb81d213c426d8622e02ffd60dfed008a8f15e3dd95d5921d175c3e9afb58"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:67#/fields/0"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "самий",
+          "assertion_id": "wa_203a2a1da16d53662b0a62cd",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:210201 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:db7cb81d213c426d8622e02ffd60dfed008a8f15e3dd95d5921d175c3e9afb58"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:67#/fields/5"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "тільки один",
+          "assertion_id": "wa_84f72bcfc138a0d5856fa23c",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:210201 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:db7cb81d213c426d8622e02ffd60dfed008a8f15e3dd95d5921d175c3e9afb58"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:67#/fields/13"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 210201,
+          "canonical_headword": "сами́й",
+          "grammatical_label": "займенник",
+          "sense_gloss": "(тільки один)",
+          "raw_page_sha256": "6770b8fe7e58d05edb17f8605fb26fa9aa6bc49912f7c1e08764846da5a4f8d7",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/145/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:самий",
+          "pilot_card_id": "wc_rk342tbct4ay",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/15"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/15"
+          },
+          "vesum_entry_ids": [
+            349720
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "самий",
+              "lemma": "самий",
+              "entry_type": "lemma",
+              "pos": "adj"
+            },
+            "payload_sha256": "77dca60e86195d595f1c4f37f42f22b99fe8da7cf2bc663aac4c499a861aa37d",
+            "translation": {
+              "en": [
+                "(definitive) the very, the selfsame, the very same",
+                "highlights the extreme quality or level",
+                "(colloquial, Russism) the most (superlative degree)",
+                "alone, by oneself"
+              ],
+              "source": "dmklinger",
+              "pos": "pronoun"
+            },
+            "meaning": {
+              "definitions": [
+                "the very, the selfsame, the very same",
+                "highlights the extreme quality or level",
+                "the most (superlative degree)",
+                "alone, by oneself"
+              ],
+              "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+              "note": "English Wiktionary gloss fallback; direct per-lemma row."
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "588a26fad56daae45c05a00c8e4c6370484e9b522bf2618ce3edb86ba91c9703",
+            "vts_has_numbered_partitions": true,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "самий"
+        ],
+        "active_atlas0_matches": [
+          "wc_rk342tbct4ay"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/21393"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "самий",
+            "lemma": "самий",
+            "entry_type": "lemma",
+            "pos": "adj"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/19352"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entries 15 and 210201 separate the combinatorial and only-one readings. Both release cards compete for one legacy article; its meanings include both the-selfsame and alone readings. The coarse adjective label cannot adjudicate the source pronouns.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_gv7g0005qb5d",
+      "card_kind": "proper_name",
+      "forms": [
+        "Бабин"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/68"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/229"
+      },
+      "source_fields": [
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_38a0b9cd7090ed7781f3604e",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3676 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:802f770a8429df24db0214eae3149abce8e73497c2f0434ae377d53fc8d2c3a5"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:69#/fields/2"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_4a23ba709451e34bc0e545b2",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3676 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:802f770a8429df24db0214eae3149abce8e73497c2f0434ae377d53fc8d2c3a5"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:69#/fields/3"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "населений пункт в Україні",
+          "assertion_id": "wa_d2d67bb9b7d750cc810dcf5c",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3676 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:802f770a8429df24db0214eae3149abce8e73497c2f0434ae377d53fc8d2c3a5"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:69#/fields/9"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Бабин",
+          "assertion_id": "wa_da72a5fc711dc66f3933d63f",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3676 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:802f770a8429df24db0214eae3149abce8e73497c2f0434ae377d53fc8d2c3a5"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:69#/fields/10"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 3676,
+          "canonical_headword": "Ба́бин",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(населений пункт в Україні)",
+          "raw_page_sha256": "c6e2c764d9c2ce55c0e6d26fa49efd057809eca8944d8c63404090c57391d521",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/258/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:бабин",
+          "pilot_card_id": "wc_f99qh710qsh9",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/0"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/0"
+          },
+          "vesum_entry_ids": [
+            14196
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "бабин",
+              "lemma": "бабин",
+              "entry_type": "lemma",
+              "pos": "adjective"
+            },
+            "payload_sha256": "58f3f0690098b8e96f35a2f60b8286ce0b42d5f0f582a9dc002365190145db67",
+            "translation": {
+              "en": [
+                "(possessive) grandmother; grandmother's"
+              ],
+              "source": "dmklinger",
+              "pos": "adjective"
+            },
+            "meaning": null,
+            "homonyms": null,
+            "vts_definition_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Бабин"
+        ],
+        "active_atlas0_matches": [
+          "wc_f99qh710qsh9"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/638"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "бабин",
+            "lemma": "бабин",
+            "entry_type": "lemma",
+            "pos": "adjective"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/1813"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_h509ejs613sy",
+      "card_kind": "lexeme",
+      "forms": [
+        "ключ"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "homonym_unresolved",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/69"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/219"
+      },
+      "source_fields": [
+        {
+          "field": "sense_label",
+          "value": "засіб для розуміння",
+          "assertion_id": "wa_3317a296825b00c2df891573",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [sense_gloss[1]]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/4"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "знаряддя",
+          "assertion_id": "wa_5a6deca2d27d31af818f6674",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/5"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_b135b55a5782090f13530e82",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/11"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "вимикач у телеграфному апараті",
+          "assertion_id": "wa_bcbeb66c9366ad801f7f6d8a",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [sense_gloss[3]]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/12"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "найважливіший пункт",
+          "assertion_id": "wa_c18d5f45caa48e20adb065ad",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [sense_gloss[2]]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/13"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "ключ",
+          "assertion_id": "wa_caea142453c820ff2d3d0c9f",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/15"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "ряд однорідних предметів або живих істот, які рухаються один за одним, утворюючи кут",
+          "assertion_id": "wa_cf9b036abc66fea2eda84f05",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [sense_gloss[5]]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/16"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "знак на початку нотного рядка",
+          "assertion_id": "wa_eafdb350d8a0c33f7469979d",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [sense_gloss[4]]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/17"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_fd90eddbe1246cd37c42c13b",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:ebd27edde43cc60e658eb421bc52b294c6b019459463a58488fed2a7c04f778e"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:70#/fields/20"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 3,
+          "canonical_headword": "ключ",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(знаряддя; засіб для розуміння; найважливіший пункт; вимикач у телеграфному апараті; знак на початку нотного рядка; ряд однорідних предметів або живих істот, які рухаються один за одним, утворюючи кут)",
+          "raw_page_sha256": "736c9ec11a7869389cf0c5907107fda9dc8ebdc1d23828c1780497134a716055",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/257/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:ключ",
+          "pilot_card_id": "wc_safz3a3pvjf7",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/10"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/10"
+          },
+          "vesum_entry_ids": [
+            168409
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "ключ",
+              "lemma": "ключ",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "5df28bea1c214e3d6aefd8a3a4f7d887f4df7fdee8549cff8aba0dcd69d29e40",
+            "translation": {
+              "en": [
+                "key",
+                "wrench, spanner, screw wrench",
+                "keystone (the top stone of an arch)",
+                "switch (device to turn electric current on and off)"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "key",
+                "wrench, spanner, screw wrench",
+                "clue, key",
+                "clef, key",
+                "radical (in Chinese characters)"
+              ],
+              "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+              "note": "English Wiktionary gloss fallback; direct per-lemma row."
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "3d571e20a58251fc0ff8f4d9eaf8f4b187ca8e7b878a936a50c8838b5279a3dd",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "ключ"
+        ],
+        "active_atlas0_matches": [
+          "wc_safz3a3pvjf7"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/10106"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "ключ",
+            "lemma": "ключ",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/7844"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entries 3 and 98008 separate the six-sense family from the spring. Both release cards compete for one legacy article. Its one VESUM entry and unsplit source material do not select a unique ULIF identity.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_jm7nfbvag8kp",
+      "card_kind": "lexeme",
+      "forms": [
+        "ширший"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/78"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/175"
+      },
+      "source_fields": [
+        {
+          "field": "spelling",
+          "value": "ширший",
+          "assertion_id": "wa_56db8bfb10a26e5907286f50",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:262541 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:6c80673f54510302de499d21f1ca54c0b84e5e893bf0406eb9ccededd2d015be"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:79#/fields/10"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_8723ed6133b32751647645a7",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:262541 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:6c80673f54510302de499d21f1ca54c0b84e5e893bf0406eb9ccededd2d015be"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:79#/fields/14"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "прикметник, вищий ступінь",
+          "assertion_id": "wa_ebe5a8307f3205951865933a",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:262541 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:6c80673f54510302de499d21f1ca54c0b84e5e893bf0406eb9ccededd2d015be"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:79#/fields/22"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 262541,
+          "canonical_headword": "ши́рший",
+          "grammatical_label": "прикметник, вищий ступінь",
+          "sense_gloss": "",
+          "raw_page_sha256": "95531ce926a1d2ec22f2a1549e93084c27d8ad8d347acda6280788c6491b6ee6",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/176/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "ширший"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_lemma_page",
+      "reason": "The cited source identity has no current article, active atlas0 identity or public alias for its lemma. Inflectional similarity or a related base lemma does not establish this card-to-page relation.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_k1kp85tahqag",
+      "card_kind": "mwe",
+      "forms": [
+        "блекоти наїлась"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/81"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/259"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "блекоти наїлась",
+          "assertion_id": "wa_ffd1f9802abf519fdf45c233",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:25 [word]",
+            "snapshot_id": "selected-row@sha256:b426da58e809cdecfc3baf313cd2ba01ad9953b149185e927eae6b72bf95eb36"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:82#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "блекоти наїлась"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_k339xj1q2hv7",
+      "card_kind": "lexeme",
+      "forms": [
+        "шістдесятий"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/82"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/174"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_0c98e9f1f7137cd9f37402bb",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:262679 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d25f3c2e0076a5ff81b976fae06c4d7492ad20e0e31c5447edacdd279b8159c8"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:83#/fields/3"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "шістдесятий",
+          "assertion_id": "wa_23759c61b1b8bcc0a8f6f820",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:262679 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:d25f3c2e0076a5ff81b976fae06c4d7492ad20e0e31c5447edacdd279b8159c8"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:83#/fields/8"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_824cc49cb373430e6e9cfa62",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:425494 [pos]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:83#/fields/26"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "шістдесятий",
+          "assertion_id": "wa_9fe3fcd9969e261b465cc06e",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:425494 [lemma]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:83#/fields/30"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "числівник порядковий",
+          "assertion_id": "wa_eb8630623efc04ee42fb3ad4",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:262679 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d25f3c2e0076a5ff81b976fae06c4d7492ad20e0e31c5447edacdd279b8159c8"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:83#/fields/50"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 262679,
+          "canonical_headword": "шістдеся́тий",
+          "grammatical_label": "числівник порядковий",
+          "sense_gloss": "",
+          "raw_page_sha256": "1caea9ef856df05bae5d77692cf84de18fd0191afe356b672261adf93e520e2b",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/178/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "шістдесятий"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_lemma_page",
+      "reason": "The cited source identity has no current article, active atlas0 identity or public alias for its lemma. Inflectional similarity or a related base lemma does not establish this card-to-page relation.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_k45tstzkx2b6",
+      "card_kind": "lexeme",
+      "forms": [
+        "самий"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "homonym_unresolved",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/83"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/225"
+      },
+      "source_fields": [
+        {
+          "field": "grammatical_label",
+          "value": "займенник",
+          "assertion_id": "wa_34c2a3e1a5e528adc574e80d",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:15 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:91fb8d522e63c78773748cd1525207271aa084587e9e89f2e23cea64124cb324"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:84#/fields/3"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "самий",
+          "assertion_id": "wa_7e8c7860990a89cff0e8f916",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:15 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:91fb8d522e63c78773748cd1525207271aa084587e9e89f2e23cea64124cb324"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:84#/fields/11"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "у сполученні з іншими словами",
+          "assertion_id": "wa_d3b7e9c5bc81f8a227ff76dd",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:15 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:91fb8d522e63c78773748cd1525207271aa084587e9e89f2e23cea64124cb324"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:84#/fields/15"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 15,
+          "canonical_headword": "са́мий",
+          "grammatical_label": "займенник",
+          "sense_gloss": "(у сполученні з іншими словами)",
+          "raw_page_sha256": "1a3b2b33a174840d5f4129334a1187f7f7f8f231a2e1f9272667ef7a7ee33cbf",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/140/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:самий",
+          "pilot_card_id": "wc_rk342tbct4ay",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/15"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/15"
+          },
+          "vesum_entry_ids": [
+            349720
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "самий",
+              "lemma": "самий",
+              "entry_type": "lemma",
+              "pos": "adj"
+            },
+            "payload_sha256": "77dca60e86195d595f1c4f37f42f22b99fe8da7cf2bc663aac4c499a861aa37d",
+            "translation": {
+              "en": [
+                "(definitive) the very, the selfsame, the very same",
+                "highlights the extreme quality or level",
+                "(colloquial, Russism) the most (superlative degree)",
+                "alone, by oneself"
+              ],
+              "source": "dmklinger",
+              "pos": "pronoun"
+            },
+            "meaning": {
+              "definitions": [
+                "the very, the selfsame, the very same",
+                "highlights the extreme quality or level",
+                "the most (superlative degree)",
+                "alone, by oneself"
+              ],
+              "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+              "note": "English Wiktionary gloss fallback; direct per-lemma row."
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "588a26fad56daae45c05a00c8e4c6370484e9b522bf2618ce3edb86ba91c9703",
+            "vts_has_numbered_partitions": true,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "самий"
+        ],
+        "active_atlas0_matches": [
+          "wc_rk342tbct4ay"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/21393"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "самий",
+            "lemma": "самий",
+            "entry_type": "lemma",
+            "pos": "adj"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/19352"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entries 15 and 210201 separate the combinatorial and only-one readings. Both release cards compete for one legacy article; its meanings include both the-selfsame and alone readings. The coarse adjective label cannot adjudicate the source pronouns.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_ka0tp1vt39e8",
+      "card_kind": "lexeme",
+      "forms": [
+        "щочетверга"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/84"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/198"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "adv",
+          "assertion_id": "wa_100ec13b4351ed96dce8943a",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:433370 [pos]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:85#/fields/0"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "adv",
+          "assertion_id": "wa_12e6d8b876cf478f0d0f753b",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266777 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:b994c6daf6b2f5ed949f766ac1100652946b172064e10c585124ad8c36e61c36"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:85#/fields/1"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "щочетверга",
+          "assertion_id": "wa_1878f42c5f17ebaece5639d0",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266777 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:b994c6daf6b2f5ed949f766ac1100652946b172064e10c585124ad8c36e61c36"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:85#/fields/2"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "прислівник",
+          "assertion_id": "wa_42090e029ac5f767f381cc87",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266777 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:b994c6daf6b2f5ed949f766ac1100652946b172064e10c585124ad8c36e61c36"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:85#/fields/3"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "щочетверга",
+          "assertion_id": "wa_eb58a599f9de9014fff7ca79",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:433370 [lemma]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:85#/fields/6"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 266777,
+          "canonical_headword": "щочетверга́",
+          "grammatical_label": "прислівник",
+          "sense_gloss": "",
+          "raw_page_sha256": "44ce0fe0cdec4d661fffb899c5ec112ef01039ef50c37a2b5b84674f9979c8f9",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/228/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "щочетверга"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_lemma_page",
+      "reason": "The cited source identity has no current article, active atlas0 identity or public alias for its lemma. Inflectional similarity or a related base lemma does not establish this card-to-page relation.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_p1d31y378qs1",
+      "card_kind": "mwe",
+      "forms": [
+        "Господь його розбере"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/90"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/252"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Господь його розбере",
+          "assertion_id": "wa_79a4257c592832f9ac639e04",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:13 [word]",
+            "snapshot_id": "selected-row@sha256:05e04dac328b1214ece0253493d4d01888dc177b0a169a92799980ad5d61ff3b"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:91#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Господь його розбере"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_p646xsqq40xt",
+      "card_kind": "lexeme",
+      "forms": [
+        "ключ"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "homonym_unresolved",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/92"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/220"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_47784d9519f81bf1f6997c50",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:98008 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d73b4d641b1c1576edfafc7c31296f0865469f0bc38d0f2e90b890c41589fa15"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:93#/fields/3"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "джерело",
+          "assertion_id": "wa_64de56ad0aac17ae0fc2a9d5",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:98008 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:d73b4d641b1c1576edfafc7c31296f0865469f0bc38d0f2e90b890c41589fa15"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:93#/fields/6"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "ключ",
+          "assertion_id": "wa_738a1842d10158e3db86ab25",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:98008 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:d73b4d641b1c1576edfafc7c31296f0865469f0bc38d0f2e90b890c41589fa15"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:93#/fields/7"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_7f15c81dfe4078c169a36a96",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:98008 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d73b4d641b1c1576edfafc7c31296f0865469f0bc38d0f2e90b890c41589fa15"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:93#/fields/9"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 98008,
+          "canonical_headword": "ключ",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(джерело)",
+          "raw_page_sha256": "949e508ca404badf1464f954c48d919bddb0b2972f2c1a05fb5aa5471138ba3f",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/270/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:ключ",
+          "pilot_card_id": "wc_safz3a3pvjf7",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/10"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/10"
+          },
+          "vesum_entry_ids": [
+            168409
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "ключ",
+              "lemma": "ключ",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "5df28bea1c214e3d6aefd8a3a4f7d887f4df7fdee8549cff8aba0dcd69d29e40",
+            "translation": {
+              "en": [
+                "key",
+                "wrench, spanner, screw wrench",
+                "keystone (the top stone of an arch)",
+                "switch (device to turn electric current on and off)"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "key",
+                "wrench, spanner, screw wrench",
+                "clue, key",
+                "clef, key",
+                "radical (in Chinese characters)"
+              ],
+              "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+              "note": "English Wiktionary gloss fallback; direct per-lemma row."
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "3d571e20a58251fc0ff8f4d9eaf8f4b187ca8e7b878a936a50c8838b5279a3dd",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "ключ"
+        ],
+        "active_atlas0_matches": [
+          "wc_safz3a3pvjf7"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/10106"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "ключ",
+            "lemma": "ключ",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/7844"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entries 3 and 98008 separate the six-sense family from the spring. Both release cards compete for one legacy article. Its one VESUM entry and unsplit source material do not select a unique ULIF identity.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_ref9xyps30mx",
+      "card_kind": "mwe",
+      "forms": [
+        "Божий світ"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/106"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/247"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Божий світ",
+          "assertion_id": "wa_20650d3acf4f6fa4d4ffee69",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:5 [word]",
+            "snapshot_id": "selected-row@sha256:86c634365de2f11fcb3769ccf0f83ff47238adf5e0f8ed700935e9415e8c55af"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:107#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Божий світ"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_rk47ephm1bts",
+      "card_kind": "proper_name",
+      "forms": [
+        "Банк"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/108"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/237"
+      },
+      "source_fields": [
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_828ecc6b2a49d1aab742c814",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4121 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:781512b1f2d809dd4a6ae9241c631f5aae2f7d389453f373fc3d80050daef110"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:109#/fields/3"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Банк",
+          "assertion_id": "wa_857f672729a529d09853af37",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4121 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:781512b1f2d809dd4a6ae9241c631f5aae2f7d389453f373fc3d80050daef110"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:109#/fields/4"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_b2b52fec82b70df80b1ccc9a",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4121 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:781512b1f2d809dd4a6ae9241c631f5aae2f7d389453f373fc3d80050daef110"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:109#/fields/7"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "населений пункт в Азербайджані",
+          "assertion_id": "wa_e9402875a28ccf9a4ef36100",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4121 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:781512b1f2d809dd4a6ae9241c631f5aae2f7d389453f373fc3d80050daef110"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:109#/fields/9"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 4121,
+          "canonical_headword": "Банк",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(населений пункт в Азербайджані)",
+          "raw_page_sha256": "55948ff4918d7c8cfb27dfedcc2a14d8431655c3bf3d229d159edda6499ada1b",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/262/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:банк",
+          "pilot_card_id": "wc_2d3vxce91rnt",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/4"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/4"
+          },
+          "vesum_entry_ids": [
+            17025
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "банк",
+              "lemma": "банк",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "783a2975984219b49cf00f0ea12699ee68957f6080bedd3f55faaee6a3da0677",
+            "translation": {
+              "en": [
+                "bank"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "ділова одиниця, яка позичає гроші іншим діловим одиницям, головно з тих грошових коштів, що вона здобула як вклади",
+                "поставлена на кін сума грошей",
+                "назва азартної гри в карти"
+              ],
+              "source": "Вікісловник"
+            },
+            "homonyms": {
+              "source": "СУМ-20: numbered homonym headwords",
+              "items": [
+                {
+                  "word": "банк",
+                  "gloss": "Фонд яких-небудь даних, що зберігаються в науковому центрі та використовуються з певною метою (інформаційною, пошуковою і т. ін.).",
+                  "homonym_no": 2,
+                  "pos": "іменник, чол. р."
+                },
+                {
+                  "word": "банк",
+                  "gloss": "Назва азартної гри в карти; банчок.",
+                  "homonym_no": 3,
+                  "pos": "іменник, чол. р."
+                }
+              ],
+              "source_urls": [
+                "https://slovnyk.me/dict/newsum/%D0%B1%D0%B0%D0%BD%D0%BA"
+              ]
+            },
+            "vts_definition_sha256": "279c3bc948826605cf4e14202ce93fcc366460479fb29b90a3dde4bbe7ff24f6",
+            "vts_has_numbered_partitions": true,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Банк"
+        ],
+        "active_atlas0_matches": [
+          "wc_2d3vxce91rnt"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/790"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "банк",
+            "lemma": "банк",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/1944"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_rmvh0tsz1y1a",
+      "card_kind": "mwe",
+      "forms": [
+        "благородний жест"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/109"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/258"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "благородний жест",
+          "assertion_id": "wa_de8fc91876957163dae0ed4d",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:24 [word]",
+            "snapshot_id": "selected-row@sha256:ad1f803a5cc41e047719f4dbd8b47fcaf5c08b4132864dc9a8963939ef5197cf"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:110#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "благородний жест"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_rq9bnybm7ybm",
+      "card_kind": "proper_name",
+      "forms": [
+        "Бандура"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/111"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/235"
+      },
+      "source_fields": [
+        {
+          "field": "spelling",
+          "value": "Бандура",
+          "assertion_id": "wa_31144d4c938e9c96ad54c452",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4111 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:d25151559d92a0b47cb948373101314f7b8b6cc089f7a19dbe08d735c94d5281"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:112#/fields/0"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "річка в Україні",
+          "assertion_id": "wa_32bd31fadff6c4b597fb70bc",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4111 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:d25151559d92a0b47cb948373101314f7b8b6cc089f7a19dbe08d735c94d5281"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:112#/fields/3"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник жіночого роду",
+          "assertion_id": "wa_4f5b2e3225a53c0dee69f84e",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4111 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d25151559d92a0b47cb948373101314f7b8b6cc089f7a19dbe08d735c94d5281"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:112#/fields/6"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_9ebfac4faf45d6b929014ccb",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4111 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d25151559d92a0b47cb948373101314f7b8b6cc089f7a19dbe08d735c94d5281"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:112#/fields/7"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 4111,
+          "canonical_headword": "Банду́ра",
+          "grammatical_label": "іменник жіночого роду",
+          "sense_gloss": "(річка в Україні)",
+          "raw_page_sha256": "d1276bc810f49430978d8e498a7bc79f43f23168a9540db2ba6150f65caac85f",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/261/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:бандура",
+          "pilot_card_id": "wc_aq5w7h0qv447",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/3"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/3"
+          },
+          "vesum_entry_ids": [
+            16968
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "бандура",
+              "lemma": "бандура",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "d0459a318bd61fff875feb418fee33aa4e766ddda7f406f11a7d523d3389e04e",
+            "translation": {
+              "en": [
+                "bandura (Ukrainian plucked stringed instrument)",
+                "bandura (old Ukrainian music instrument)",
+                "(dialectal) potato",
+                "(dialectal, colloquial, derogatory) a large, bulky object"
+              ],
+              "source": "dmklinger",
+              "pos": "noun"
+            },
+            "meaning": null,
+            "homonyms": null,
+            "vts_definition_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Бандура"
+        ],
+        "active_atlas0_matches": [
+          "wc_aq5w7h0qv447"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/785"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "бандура",
+            "lemma": "бандура",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/1934"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_sr1x6gb3wqbs",
+      "card_kind": "proper_name",
+      "forms": [
+        "Батьківщина"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/116"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/242"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_0bc2991ede94effa34a2a8ca",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:18179 [pos]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:117#/fields/1"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Батьківщина",
+          "assertion_id": "wa_2b0f35dfa6c9beb886ab5aa2",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:18179 [lemma]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:117#/fields/5"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_3f5406a4129175cd84ba111a",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4392 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:291a0e6a5e7c6cc771f93797cd07660297894ea57d5fb2cfc4977e22b7f1cca0"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:117#/fields/7"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Батьківщина",
+          "assertion_id": "wa_83e0579362ae8150314434ea",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4392 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:291a0e6a5e7c6cc771f93797cd07660297894ea57d5fb2cfc4977e22b7f1cca0"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:117#/fields/12"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник жіночого роду",
+          "assertion_id": "wa_c1b5827d6c31cc62e2fe673f",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4392 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:291a0e6a5e7c6cc771f93797cd07660297894ea57d5fb2cfc4977e22b7f1cca0"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:117#/fields/15"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "населений пункт в Україні",
+          "assertion_id": "wa_c83cfbc9b2e08848ade41ac4",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:4392 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:291a0e6a5e7c6cc771f93797cd07660297894ea57d5fb2cfc4977e22b7f1cca0"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:117#/fields/16"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 4392,
+          "canonical_headword": "Ба́тьківщина",
+          "grammatical_label": "іменник жіночого роду",
+          "sense_gloss": "(населений пункт в Україні)",
+          "raw_page_sha256": "1fb3d6521faa01ed0bd7882cb8f9fb7844fd9aa01149f7dd5ad53c6351dbe192",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/265/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:батьківщина",
+          "pilot_card_id": "wc_0yw0q5tgyqm8",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/7"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/7"
+          },
+          "vesum_entry_ids": [
+            18180
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "батьківщина",
+              "lemma": "батьківщина",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "308168b3f733ff54c01ffccc3b229ad8dabc6daf789f6418e3d700d545f3d516",
+            "translation": {
+              "en": [
+                "home (someone's native land)",
+                "motherland, fatherland, homeland",
+                "heritage, legacy",
+                "motherland (the country of one's ancestors)",
+                "homeland (country which one regards as home)",
+                "fatherland (country of one's ancestry)"
+              ],
+              "source": "dmklinger",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "спадщина від батька, батьків",
+                "країна щодо людей, які народилися в ній та є її громадянами; місце проживання людини",
+                "місце зародження, виникнення чогось"
+              ],
+              "source": "Вікісловник"
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "9878fc606469eafd08795c65ae2b32fb957932e0cf49dc8a1399139cd03265d8",
+            "vts_has_numbered_partitions": true,
+            "synonym_group_count": 3
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Батьківщина"
+        ],
+        "active_atlas0_matches": [
+          "wc_0yw0q5tgyqm8"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/874"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "батьківщина",
+            "lemma": "батьківщина",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/2022"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_sye0ppkx0dwh",
+      "card_kind": "proper_name",
+      "forms": [
+        "ЮНЕСКО"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/118"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/196"
+      },
+      "source_fields": [
+        {
+          "field": "grammatical_label",
+          "value": "абревіатура",
+          "assertion_id": "wa_1eae23a6c1a77641c5f1ad3e",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:267039 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:f1827679111f72c3c98a0fa8bb7491e22a3d319f4cb35d5eb60f9b222a74bd18"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:119#/fields/0"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "ЮНЕСКО",
+          "assertion_id": "wa_571883370d61823875368ab2",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:267039 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:f1827679111f72c3c98a0fa8bb7491e22a3d319f4cb35d5eb60f9b222a74bd18"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:119#/fields/2"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 267039,
+          "canonical_headword": "ЮНЕ́СКО",
+          "grammatical_label": "абревіатура",
+          "sense_gloss": "",
+          "raw_page_sha256": "d99e1fda05556dd5e30c13cf3488fc06316907b38e843ed7684b533f1b2d6e06",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/231/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "ЮНЕСКО"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_lemma_page",
+      "reason": "The cited source identity has no current article, active atlas0 identity or public alias for its lemma. Inflectional similarity or a related base lemma does not establish this card-to-page relation.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_tm57q9wj8y31",
+      "card_kind": "mwe",
+      "forms": [
+        "блискавкою прорізати"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/120"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/262"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "блискавкою прорізати",
+          "assertion_id": "wa_11145b961b6a8acc5e488760",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:32 [word]",
+            "snapshot_id": "selected-row@sha256:499cf6b958a0d271c2fa57a104b8a043e1b0be8533b789403ee28f4568257201"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:121#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "блискавкою прорізати"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_tnxmxw3kjras",
+      "card_kind": "proper_name",
+      "forms": [
+        "Базар"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/122"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/233"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_4e5d65248056059a76fe4488",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3828 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:a858b51c26dcd88c5f8eebddd0b107da0e29ab1ae4e8ec751c8f9d354323f861"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:123#/fields/4"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_524eb7d5fe8c3d8a6c3486cb",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3828 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:a858b51c26dcd88c5f8eebddd0b107da0e29ab1ae4e8ec751c8f9d354323f861"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:123#/fields/5"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Базар",
+          "assertion_id": "wa_9c819e563518778cf51787e6",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:3828 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:a858b51c26dcd88c5f8eebddd0b107da0e29ab1ae4e8ec751c8f9d354323f861"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:123#/fields/8"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 3828,
+          "canonical_headword": "База́р",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(селище в Україні; місце битви)",
+          "raw_page_sha256": "277d328ccbdbed06c310db74153fbcf8b6f72bf6bfba106863dea7f57fae41cb",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/260/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:базар",
+          "pilot_card_id": "wc_mktt24jctsme",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/2"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/2"
+          },
+          "vesum_entry_ids": [
+            15692
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "базар",
+              "lemma": "базар",
+              "entry_type": "lemma",
+              "pos": "noun:m"
+            },
+            "payload_sha256": "749b2629e6cb4d922179b25a1970b94e24fff5d3aa987f119e2d6d73a0eeac30",
+            "translation": {
+              "en": [
+                "market (spacious site for trading)",
+                "market, bazaar",
+                "bazaar (marketplace)",
+                "(figuratively) row, uproar",
+                "market (used attributively)"
+              ],
+              "source": "dmklinger",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "торгівля продуктами харчування або предметами широкого вжитку на площі або в спеціально збудованому приміщенні",
+                "місце, де відбувається така торгівля самій походити",
+                "час такої торгівлі людей найбільше"
+              ],
+              "source": "Вікісловник"
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "16f4d925e5ad59192dbf1ac994f287f4d81b8f7e1be61ab4ef3c0028364d60f6",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Базар"
+        ],
+        "active_atlas0_matches": [
+          "wc_mktt24jctsme"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/711"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "базар",
+            "lemma": "базар",
+            "entry_type": "lemma",
+            "pos": "noun:m"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/2042"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_vtqv6my006c3",
+      "card_kind": "lexeme",
+      "forms": [
+        "яловичий"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/129"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/189"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_8253cc9182bbd738564e39d0",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:441369 [pos]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:130#/fields/24"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "яловичий",
+          "assertion_id": "wa_875572c234975235adc044d4",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:441369 [lemma]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:130#/fields/28"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "яловичий",
+          "assertion_id": "wa_c8d2ae0f2033f48e1e1f7368",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:268370 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:a325a427050e12c9ef0294b25dd953cf0bcedafa8a01bdc9d8c5a00f10ae901d"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:130#/fields/41"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_cdda8839a4849c863764cad9",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:268370 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:a325a427050e12c9ef0294b25dd953cf0bcedafa8a01bdc9d8c5a00f10ae901d"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:130#/fields/43"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "прикметник",
+          "assertion_id": "wa_d0742e794314d37f77dab4d0",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:268370 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:a325a427050e12c9ef0294b25dd953cf0bcedafa8a01bdc9d8c5a00f10ae901d"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:130#/fields/47"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 268370,
+          "canonical_headword": "я́ловичий",
+          "grammatical_label": "прикметник",
+          "sense_gloss": "",
+          "raw_page_sha256": "f36afdc40604275bee26c01aa3a5db56474cc605d52e851c6f744ee78261c564",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/249/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "яловичий"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_lemma_page",
+      "reason": "The cited source identity has no current article, active atlas0 identity or public alias for its lemma. Inflectional similarity or a related base lemma does not establish this card-to-page relation.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_vzt7m2k3tg48",
+      "card_kind": "mwe",
+      "forms": [
+        "Валаамова ослиця"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/131"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/250"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Валаамова ослиця",
+          "assertion_id": "wa_382ebf1471ca5070b509419d",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:9 [word]",
+            "snapshot_id": "selected-row@sha256:d942bdee72eb65ae738726a92b68dd25fa74fdbda4a7f9488ca7fe02b42d1653"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:132#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Валаамова ослиця"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_w78q6xbserdn",
+      "card_kind": "lexeme",
+      "forms": [
+        "ювелірний"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/132"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/156"
+      },
+      "source_fields": [
+        {
+          "field": "grammatical_label",
+          "value": "прикметник",
+          "assertion_id": "wa_27978db7a3dae2490193d75b",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266874 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d0ba024d77dcd7754fcd83807f99d2542f0f1e2b35828ed2dd52ffaa93c2cc9a"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:133#/fields/13"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "ювелірний",
+          "assertion_id": "wa_7cc20cc91eb67c19cb380ad3",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:435873 [lemma]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:133#/fields/26"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_8a39c67adb575e9bd4697377",
+          "citation": {
+            "source_id": "vesum",
+            "locator": "vesum:entry:435873 [pos]",
+            "snapshot_id": "vesum@53923150073b4fc7"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:133#/fields/29"
+          }
+        },
+        {
+          "field": "pos",
+          "value": "adj",
+          "assertion_id": "wa_92091655f4f8e10d40468819",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266874 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:d0ba024d77dcd7754fcd83807f99d2542f0f1e2b35828ed2dd52ffaa93c2cc9a"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:133#/fields/31"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "ювелірний",
+          "assertion_id": "wa_b2bd56bd6a20e1e0c8c4baf2",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:266874 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:d0ba024d77dcd7754fcd83807f99d2542f0f1e2b35828ed2dd52ffaa93c2cc9a"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:133#/fields/38"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 266874,
+          "canonical_headword": "ювелі́рний",
+          "grammatical_label": "прикметник",
+          "sense_gloss": "",
+          "raw_page_sha256": "f3cf55e76dcac301ee3bf3427042eb9348529bb67f673eb39a4ab3df6ab61bcb",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/229/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "ювелірний"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_lemma_page",
+      "reason": "The cited source identity has no current article, active atlas0 identity or public alias for its lemma. Inflectional similarity or a related base lemma does not establish this card-to-page relation.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_wmyzn565rxp4",
+      "card_kind": "lexeme",
+      "forms": [
+        "бар"
+      ],
+      "initial_status": "ambiguous",
+      "initial_reason": "atlas_entry_covers_multiple_homonyms",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/134"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/253"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_1b9de7ac4125cf7ec228c1e0",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22087 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:85637c4e790ce5cd0f2da3101c115105a7423d72821385748bd5fddc9d9cb5aa"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:135#/fields/2"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "невеликий ресторан",
+          "assertion_id": "wa_1e042fe371d92b905e68008c",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22087 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:85637c4e790ce5cd0f2da3101c115105a7423d72821385748bd5fddc9d9cb5aa"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:135#/fields/4"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник чоловічого роду",
+          "assertion_id": "wa_b58c88e98ba4d38243738c0b",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22087 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:85637c4e790ce5cd0f2da3101c115105a7423d72821385748bd5fddc9d9cb5aa"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:135#/fields/11"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "бар",
+          "assertion_id": "wa_f1c20f298ddf5b78e46337d7",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:22087 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:85637c4e790ce5cd0f2da3101c115105a7423d72821385748bd5fddc9d9cb5aa"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:135#/fields/15"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 22087,
+          "canonical_headword": "бар",
+          "grammatical_label": "іменник чоловічого роду",
+          "sense_gloss": "(невеликий ресторан)",
+          "raw_page_sha256": "ed02765327548e5350a2c63c74cb1158b0f9a8e610329f3f21fd736517fb8c82",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/149/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:бар",
+          "pilot_card_id": "wc_331r6gx6dgb7",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/5"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/5"
+          },
+          "vesum_entry_ids": [
+            17191,
+            17192
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "бар",
+              "lemma": "бар",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "5f95c07976324135c0b5e74cc75cbda8ff5b1c53a918bd645a81bb50335a8de2",
+            "translation": {
+              "en": [
+                "bar"
+              ],
+              "source": "learner_english_gloss"
+            },
+            "meaning": null,
+            "homonyms": {
+              "source": "СУМ-20: numbered homonym headwords",
+              "items": [
+                {
+                  "word": "бар",
+                  "gloss": "метеор.",
+                  "homonym_no": 2,
+                  "pos": "іменник, чол. р."
+                },
+                {
+                  "word": "бар",
+                  "gloss": "Піщаний наносний підводний вал у прибережній зоні моря або в гирлі річки, який час від часу змінює своє розташування.",
+                  "homonym_no": 3,
+                  "pos": "іменник, чол. р."
+                },
+                {
+                  "word": "бар",
+                  "gloss": "техн.",
+                  "homonym_no": 4,
+                  "pos": "іменник, чол. р."
+                }
+              ],
+              "source_urls": [
+                "https://services.ulif.org.ua/expl/#/word/%D0%B1%D0%B0%D1%80"
+              ]
+            },
+            "vts_definition_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 1
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "бар"
+        ],
+        "active_atlas0_matches": [
+          "wc_331r6gx6dgb7"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/806"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "бар",
+            "lemma": "бар",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/1958"
+          }
+        ]
+      },
+      "status": "held_ambiguous",
+      "reason_code": "legacy_page_not_partitioned_by_source_identity",
+      "reason": "ULIF entry 22087 identifies the restaurant. The legacy article contains two VESUM entries and explicitly lists other homonyms. A generic English translation does not select one source identity.",
+      "residual_owner": "Data",
+      "release_condition": "A cited identity decision must select or allocate a separate current target, with exact-head independent review. Preserve each ULIF partition; do not merge homonyms."
+    },
+    {
+      "card_id": "wc_wzct64k4fham",
+      "card_kind": "mwe",
+      "forms": [
+        "блудний син"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/137"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/263"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "блудний син",
+          "assertion_id": "wa_55b3722e26107c44869baf81",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:40 [word]",
+            "snapshot_id": "selected-row@sha256:595bfef287879e784ade542b569fa4575488f1f57fc182283422d9333d2028f0"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:138#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "блудний син"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_xmzv71z7hwee",
+      "card_kind": "mwe",
+      "forms": [
+        "Бог зна що таке"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "phraseologism_mwe_no_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/141"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/248"
+      },
+      "source_fields": [
+        {
+          "field": "mwe_form",
+          "value": "Бог зна що таке",
+          "assertion_id": "wa_2eaa169bb99969cca054af24",
+          "citation": {
+            "source_id": "frazeolohichnyi",
+            "locator": "frazeolohichnyi:frazeolohichnyi:id:6 [word]",
+            "snapshot_id": "selected-row@sha256:e2c5452c5a17240fcc7197a045e967d51d5104b084f9a0cfbfaa982cd593bd21"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:142#/fields/0"
+          }
+        }
+      ],
+      "ulif_entries": [],
+      "candidate_pages": [],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Бог зна що таке"
+        ],
+        "active_atlas0_matches": [],
+        "site_index_matches": [],
+        "public_article_matches": [],
+        "public_alias_matches": [],
+        "site_alias_matches": []
+      },
+      "status": "no_counterpart",
+      "reason_code": "no_current_phrase_page",
+      "reason": "The cited source allocates this complete expression as an MWE. No current article, active atlas0 identity or public alias matches that expression. A component-word article is not its counterpart.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    },
+    {
+      "card_id": "wc_zhvykdar3452",
+      "card_kind": "proper_name",
+      "forms": [
+        "Мама"
+      ],
+      "initial_status": "unpaired",
+      "initial_reason": "new_candidate_no_current_atlas_entry",
+      "initial_evidence": {
+        "input": "pairing",
+        "pointer": "/entries/148"
+      },
+      "producer_identity_evidence": {
+        "input": "registry",
+        "pointer": "/entries/227"
+      },
+      "source_fields": [
+        {
+          "field": "pos",
+          "value": "noun",
+          "assertion_id": "wa_1ed013e5152b6b3847a3e17d",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:17 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:0209458c4ebc87d33305257d6bf636b399b9ffcf1bb5ec515de87305263ece96"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:149#/fields/1"
+          }
+        },
+        {
+          "field": "grammatical_label",
+          "value": "іменник жіночого роду",
+          "assertion_id": "wa_4f0c3d49ed837b994f9905d5",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:17 [grammatical_label]",
+            "snapshot_id": "selected-row@sha256:0209458c4ebc87d33305257d6bf636b399b9ffcf1bb5ec515de87305263ece96"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:149#/fields/5"
+          }
+        },
+        {
+          "field": "sense_label",
+          "value": "населений пункт у Росії",
+          "assertion_id": "wa_6071d7b414ab5e5b18cdd51c",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:17 [sense_gloss[0]]",
+            "snapshot_id": "selected-row@sha256:0209458c4ebc87d33305257d6bf636b399b9ffcf1bb5ec515de87305263ece96"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:149#/fields/6"
+          }
+        },
+        {
+          "field": "spelling",
+          "value": "Мама",
+          "assertion_id": "wa_d7505ee36434b51c09cca981",
+          "citation": {
+            "source_id": "ulif",
+            "locator": "ulif:ulif_dictua_entries:id:17 [canonical_headword]",
+            "snapshot_id": "selected-row@sha256:0209458c4ebc87d33305257d6bf636b399b9ffcf1bb5ec515de87305263ece96"
+          },
+          "evidence": {
+            "input": "cards",
+            "pointer": "line:149#/fields/10"
+          }
+        }
+      ],
+      "ulif_entries": [
+        {
+          "entry_id": 17,
+          "canonical_headword": "Ма́ма",
+          "grammatical_label": "іменник жіночого роду",
+          "sense_gloss": "(населений пункт у Росії)",
+          "raw_page_sha256": "6887fd5d84c79692cddb19082434969bd92b6d907ddc641b4f5dae5f58162b2e",
+          "evidence": {
+            "input": "pilot",
+            "pointer": "/selection/source_records/141/raw_row"
+          }
+        }
+      ],
+      "candidate_pages": [
+        {
+          "atlas0_slug": "atlas0:slug:мама",
+          "pilot_card_id": "wc_k70gc4f097nv",
+          "registry_evidence": {
+            "input": "registry",
+            "pointer": "/entries/12"
+          },
+          "article_evidence": {
+            "input": "pilot",
+            "pointer": "/legacy_articles/12"
+          },
+          "vesum_entry_ids": [
+            195009
+          ],
+          "page_observation": {
+            "metadata": {
+              "slug": "мама",
+              "lemma": "мама",
+              "entry_type": "lemma",
+              "pos": "noun"
+            },
+            "payload_sha256": "b551ec51f387fddc501ec6b3f35fe522a7f1be662db66d83951a5887f8fa727c",
+            "translation": {
+              "en": [
+                "mother, mom",
+                "mother (female (human) who parents a child, gives birth to a baby, or is pregnant)",
+                "mum (mother (informal, familiar))",
+                "ma (colloquial form of mother)",
+                "mummy (child's term for mother)"
+              ],
+              "source": "learner_english_gloss",
+              "pos": "noun"
+            },
+            "meaning": {
+              "definitions": [
+                "ласкаве називання матері й звертання до неї",
+                "звертання до матері чоловіка або жінки",
+                "уживається як ласкаве звертання до старшої віком жінки"
+              ],
+              "source": "Вікісловник",
+              "synonyms": [
+                "мати",
+                "матуся"
+              ]
+            },
+            "homonyms": null,
+            "vts_definition_sha256": "d81795a752ffe16713c7380e562dee180806a3f9bb1e1abed235848844e2853f",
+            "vts_has_numbered_partitions": false,
+            "synonym_group_count": 0
+          }
+        }
+      ],
+      "search": {
+        "method": "Unicode casefold equality against complete lemma, slug and public alias inventories; no accent removal, transliteration inference or spelling correction",
+        "terms": [
+          "Мама"
+        ],
+        "active_atlas0_matches": [
+          "wc_k70gc4f097nv"
+        ],
+        "site_index_matches": [
+          {
+            "input": "site_index",
+            "pointer": "/11995"
+          }
+        ],
+        "public_article_matches": [
+          {
+            "slug": "мама",
+            "lemma": "мама",
+            "entry_type": "lemma",
+            "pos": "noun"
+          }
+        ],
+        "public_alias_matches": [],
+        "site_alias_matches": [
+          {
+            "input": "site_aliases",
+            "pointer": "/514"
+          },
+          {
+            "input": "site_aliases",
+            "pointer": "/515"
+          },
+          {
+            "input": "site_aliases",
+            "pointer": "/9862"
+          }
+        ]
+      },
+      "status": "no_counterpart",
+      "reason_code": "proper_name_distinct_from_current_lexeme",
+      "reason": "The cited ULIF entry identifies a proper name. The casefold collision is a common-word article, not a separately allocated page for this named entity. The source label and sense, not capitalization alone, distinguish the identities.",
+      "residual_owner": null,
+      "release_condition": "Reassess only after the current page inventory or cited source identity changes."
+    }
+  ]
+}

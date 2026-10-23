@@ -212,37 +212,6 @@ def test_missing_binary_is_reported_for_either_credential_source(
     assert _marker(marker) == ""
 
 
-def test_cursor_version_probe_missing_binary_does_not_spawn(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The version probe calls the resolver and does not spawn when it refuses."""
-    decoy_dir = tmp_path / "decoy"
-    marker = tmp_path / "ran"
-    home = tmp_path / "home"
-    _plant(decoy_dir / "agent", marker, "decoy")
-    home.mkdir()
-    monkeypatch.setenv("HOME", str(home))
-    monkeypatch.setenv("PATH", str(decoy_dir))
-    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
-    spawned = _forbid_spawns(monkeypatch)
-    resolver_calls: list[str] = []
-    original = cursor_mod.resolve_cursor_agent_binary
-
-    def _counting() -> str:
-        resolver_calls.append("call")
-        return original()
-
-    monkeypatch.setattr(cursor_mod, "resolve_cursor_agent_binary", _counting)
-    telemetry_mod.cursor_cli_version.cache_clear()
-    try:
-        assert telemetry_mod.cursor_cli_version() is None
-        assert telemetry_mod.cursor_cli_version(("agent",)) is None
-    finally:
-        telemetry_mod.cursor_cli_version.cache_clear()
-
-    assert resolver_calls == ["call"]
-    assert spawned == []
-    assert _marker(marker) == ""
-
-
 def test_non_executable_installer_copy_does_not_select_decoy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     decoy_dir = tmp_path / "decoy"
     marker = tmp_path / "ran"

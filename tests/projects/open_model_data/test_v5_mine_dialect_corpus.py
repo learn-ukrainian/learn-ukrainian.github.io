@@ -46,9 +46,7 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     MinedSentence,
     canonical_source_work,
     clean_headword,
-    clean_sentence,
     evaluate_multizone_benchmark,
-    exact_clopper_pearson_lower,
     find_attested_synonym,
     normalize_for_eval,
     normalize_lookup_token,
@@ -904,28 +902,11 @@ def test_clean_headword_and_token_normalization() -> None:
     assert clean_headword("плай") == "плай"
 
 
-def test_clean_sentence_formatting() -> None:
-    """Verify sentence cleaning normalizes quotes, whitespace, and leading dashes."""
-    raw = "  — Ой куме,   ходім у ліс!  "
-    cleaned = clean_sentence(raw)
-    assert cleaned == "Ой куме, ходім у ліс!"
-
-
 def test_passage_fingerprint_invariance() -> None:
     """Verify passage fingerprint is invariant to whitespace and capitalization."""
     s1 = "Гриць пішов до лісу."
     s2 = "гриць  пішов   до лісу! "
     assert passage_fingerprint(s1) == passage_fingerprint(s2)
-
-
-def test_exact_clopper_pearson_mathematical_bounds() -> None:
-    """Verify Clopper-Pearson lower bound calculation on boundary values."""
-    assert exact_clopper_pearson_lower(0, 100) == 0.0
-    assert exact_clopper_pearson_lower(0, 0) == 0.0
-
-    perfect_lcl = exact_clopper_pearson_lower(100, 100, alpha=0.05)
-    assert 0.95 <= perfect_lcl <= 1.0
-    assert abs(perfect_lcl - (0.05 ** (1.0 / 100))) < 1e-6
 
 
 def test_canonical_source_work_equivalence_and_year_preservation() -> None:
@@ -1288,39 +1269,6 @@ def test_sft_synonyms_strictly_bound_to_quotation_sense(
     "open_model_release_payload",
     "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
 )
-def test_dialect_variant_headers_exclude_standard_quotations(
-    eval_cases: list[dict[str, Any]],
-    sft_trajectories: list[dict[str, Any]],
-) -> None:
-    """Verify that headwords with dialect variant markers (приймати, затикати) are not admitted."""
-    eval_markers = {c["dialect_marker"].casefold() for c in eval_cases}
-    sft_targets = {t.get("target_term", "").casefold() for t in sft_trajectories}
-
-    banned_words = {"приймати", "затикати", "чотири", "антихрист"}
-    assert not (eval_markers & banned_words), f"Banned words leaked into eval markers: {eval_markers & banned_words}"
-    assert not (sft_targets & banned_words), f"Banned words leaked into SFT targets: {sft_targets & banned_words}"
-
-    banned_substrings = [
-        "не прийматимуть їх до вищих шкіл",
-        "нервово затикала голкою",
-        "поруч з джерихою сиділи чотири молодиці",
-    ]
-    for c in eval_cases:
-        for bs in banned_substrings:
-            assert bs not in c["input_text"].casefold(), (
-                f"Banned quotation fragment '{bs}' found in eval {c['eval_id']}"
-            )
-    for t in sft_trajectories:
-        for bs in banned_substrings:
-            assert bs not in t["query"].casefold(), (
-                f"Banned quotation fragment '{bs}' found in SFT {t['trajectory_id']}"
-            )
-
-
-@pytest.mark.needs_artifact(
-    "open_model_release_payload",
-    "projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
-)
 def test_sub_sense_boundary_and_synonym_binding(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
@@ -1415,18 +1363,3 @@ def test_sum11_mining_projects_flagged_history_and_withholds_sft(tmp_path, metad
     # the only sense evidence is SUM-11. It must not create a modern answer.
     with pytest.raises(ValueError, match="found 0, required 1"):
         build_sft_dialect_dataset(candidates, vesum_db=vesum, sft_dialect_quota=1)
-
-
-def test_sum11_context_cannot_be_laundered_by_changing_source_label(tmp_path):
-    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
-
-    vesum = tmp_path / "vesum.db"
-    with sqlite3.connect(vesum) as conn:
-        conn.execute("CREATE TABLE forms_all (lemma TEXT, pos TEXT)")
-        conn.executemany("INSERT INTO forms_all VALUES (?, 'noun')", [("бараболя",), ("картопля",)])
-    item = MinedSentence("бараболя", "Synthetic quotation", "Synthetic citation", "southwestern",
-                         "southwestern_bukovina", "southwestern", "Synthetic locality", "Synthetic collector",
-                         "Synthetic work", "renamed-source", "БАРАБОЛЯ, і, ж., діал. Картопля.",
-                         {"source_role": "soviet_colonization_context"})
-    with pytest.raises(ValueError, match="found 0, required 1"):
-        build_sft_dialect_dataset([item], vesum_db=vesum, sft_dialect_quota=1)

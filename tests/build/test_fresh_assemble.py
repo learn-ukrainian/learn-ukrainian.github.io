@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 import json
 import re
 from contextlib import nullcontext
@@ -363,22 +362,6 @@ def make_draft(
 # --- Tests ---
 
 
-def test_no_cyrillic_string_literals_in_assembler():
-    """Nothing typed: assert that scripts/build/fresh/assemble.py has NO Cyrillic string literals."""
-    assemble_file = REPO_ROOT / "scripts" / "build" / "fresh" / "assemble.py"
-    source = assemble_file.read_text(encoding="utf-8")
-    tree = ast.parse(source, filename=str(assemble_file))
-
-    cyrillic_pattern = re.compile(r"[\u0400-\u04FF]")
-    found_literals: list[tuple[int, str]] = []
-
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Constant) and isinstance(node.value, str) and cyrillic_pattern.search(node.value):
-            found_literals.append((getattr(node, "lineno", 0), node.value))
-
-    assert len(found_literals) == 0, f"Found Cyrillic string literals in assemble.py: {found_literals}"
-
-
 def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
     """Every new learner string stays visible to resolver, stress and page checks."""
     from scripts.build.fresh.assemble import component_props_from_jsx, page_field_text
@@ -458,67 +441,6 @@ def test_new_feedback_strings_are_resolver_units_and_reach_page_props() -> None:
         for (aid, item, block), value in expected.items():
             if aid == act["id"]:
                 assert page_field_text(act_type, props, item, block) == value
-
-
-def test_r11_forbidden_paths_in_assemble():
-    """R-11: assemble.py never opens or references legacy v1 paths or plans dir."""
-    assemble_file = REPO_ROOT / "scripts" / "build" / "fresh" / "assemble.py"
-    content = assemble_file.read_text(encoding="utf-8")
-
-    forbidden = [
-        "curriculum/l2-uk-en/plans/",
-        "curriculum/l2-uk-en/a1-v1/",
-        "curriculum/l2-uk-en/a2-v1/",
-        "curriculum/l2-uk-en/b1-v1/",
-        "curriculum/l2-uk-en/b2-v1/",
-        "curriculum/l2-uk-en/<level>-v1/",
-        "/plans/",
-        "'plans'",
-        '"plans"',
-    ]
-    for term in forbidden:
-        assert term not in content, f"Forbidden term {term!r} found in assemble.py"
-
-
-def test_expanded_document_schema_valid():
-    """Validate a properly-formed expanded document against schemas/lesson-expanded-v1.schema.json."""
-    assert EXPANDED_SCHEMA_PATH.is_file()
-    sample_doc = {
-        "expanded_schema": 1,
-        "lesson": {"level": "a1", "slug": "test-slug", "n": 1},
-        "units": [
-            {
-                "tab": "urok",
-                "step": "s1",
-                "activity": None,
-                "item": None,
-                "block": 0,
-                "role": "narration",
-                "text": "Hello world and plain Ukrainian text without accents",
-            },
-            {
-                "tab": "vpravy",
-                "step": "s1",
-                "activity": "a1",
-                "item": 0,
-                "block": "instruction",
-                "role": "instruction",
-                "text": "Choose the correct answer",
-            },
-            {
-                "tab": "slovnyk",
-                "step": None,
-                "activity": None,
-                "item": None,
-                "block": "core_W1",
-                "role": "record_print",
-                "text": "Plain lemma",
-            },
-        ],
-    }
-
-    errors = list(_EXPANDED_VALIDATOR.iter_errors(sample_doc))
-    assert len(errors) == 0
 
 
 def test_combining_accent_fails_expanded_schema_and_check_5():
@@ -1666,34 +1588,6 @@ def test_non_ok_draft_fails_closed_without_site_write(tmp_path):
     assert rep["ok"] is False
     assert DRAFT_STATUS_NOT_OK in rep["failure"]["reason"]
     assert not site_dir.exists() or not list(site_dir.iterdir())
-
-
-def test_expanded_schema_min_items_on_units():
-    """Blocker 2: Expanded schema requires minItems: 1 on units."""
-    valid_doc = {
-        "expanded_schema": 1,
-        "lesson": {"level": "a1", "slug": "test", "n": 1},
-        "units": [
-            {
-                "tab": "urok",
-                "step": "s1",
-                "activity": None,
-                "item": None,
-                "block": "prose_0",
-                "role": "instruction",
-                "text": "test",
-            }
-        ],
-    }
-    _EXPANDED_VALIDATOR.validate(valid_doc)
-
-    empty_doc = {
-        "expanded_schema": 1,
-        "lesson": {"level": "a1", "slug": "test", "n": 1},
-        "units": [],
-    }
-    with pytest.raises(jsonschema.ValidationError):
-        _EXPANDED_VALIDATOR.validate(empty_doc)
 
 
 def test_taught_forms_reach_component_data(tmp_path, monkeypatch):

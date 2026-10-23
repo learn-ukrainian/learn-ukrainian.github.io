@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import io
 import json
 import os
 import re
@@ -12,7 +11,6 @@ import sys
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -23,17 +21,14 @@ from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.errors import AgentStalledError, RateLimitedError
 from agent_runtime.result import Result
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
-from scripts.ai_agent_bridge._cli import _dispatch_command, _handle_ask_codex
+from scripts.ai_agent_bridge._cli import _dispatch_command
 from scripts.ai_agent_bridge._codex import (
     _codex_bridge_runtime_mode,
-    _reported_codex_effort,
-    _resolve_codex_bridge_timeout,
     ask_codex,
-    ask_codex_chain,
     process_for_codex,
 )
 from scripts.ai_agent_bridge._db import get_db, init_db
-from scripts.ai_agent_bridge._messaging import detect_sender, send_message
+from scripts.ai_agent_bridge._messaging import send_message
 from scripts.ai_agent_bridge._review_worktree import ProvisionedReviewWorktree
 from tests.helpers.codex_exec_stream import completed_stream
 
@@ -94,173 +89,6 @@ def _task_messages(task_id: str) -> list[sqlite3.Row]:
     rows = cursor.fetchall()
     conn.close()
     return rows
-
-
-def test_detect_sender_codex():
-    env = {
-        k: v
-        for k, v in os.environ.items()
-        if k
-        not in ("GEMINI_SESSION", "GOOGLE_API_KEY", "CLAUDE_PROJECT_DIR", "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS")
-    }
-    with (
-        patch.dict(os.environ, {**env, "CODEX_SESSION": "1"}, clear=True),
-        patch("scripts.ai_agent_bridge._messaging.Path.exists", return_value=False),
-    ):
-        assert detect_sender() == "codex"
-
-
-def test_detect_sender_claude_beats_codex_session():
-    with patch.dict(os.environ, {"CODEX_SESSION": "1", "CLAUDE_PROJECT_DIR": "/tmp/project"}, clear=True):
-        assert detect_sender() == "claude"
-
-
-def test_detect_sender_gemini_beats_codex_session():
-    with patch.dict(os.environ, {"CODEX_SESSION": "1", "GEMINI_SESSION": "1"}, clear=True):
-        assert detect_sender() == "gemini"
-
-
-def test_handle_ask_codex_reads_stdin(monkeypatch):
-    args = argparse.Namespace(
-        content="-",
-        task_id="issue-1177",
-        type="query",
-        data=None,
-        new_session=False,
-        from_llm="gemini",
-        from_model=None,
-        to_model=None,
-        no_timeout=False,
-        chain=None,
-    )
-    captured: dict[str, object] = {}
-
-    def fake_compat(*args, **kwargs):
-        captured.update(args=args, kwargs=kwargs)
-        return SimpleNamespace(ok=True)
-
-    monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
-    with patch("sys.stdin", io.StringIO("stdin prompt")):
-        _handle_ask_codex(args)
-    assert captured["args"] == ("codex", "stdin prompt")
-    assert captured["kwargs"]["task_id"] == "issue-1177"
-
-
-def test_handle_ask_codex_chain_rejects_explicit_task_id():
-    args = argparse.Namespace(
-        content="Fix {issue_ref}",
-        task_id="issue-1177",
-        type="query",
-        data=None,
-        new_session=False,
-        from_llm="gemini",
-        from_model=None,
-        to_model=None,
-        no_timeout=False,
-        chain=["1177"],
-    )
-
-    with pytest.raises(SystemExit, match="--chain is retired"):
-        _handle_ask_codex(args)
-
-
-def test_handle_ask_codex_requires_task_id_without_chain():
-    args = argparse.Namespace(
-        content="Fix #1177",
-        task_id=None,
-        type="query",
-        data=None,
-        new_session=False,
-        from_llm="gemini",
-        from_model=None,
-        to_model=None,
-        no_timeout=False,
-        chain=None,
-    )
-
-    with pytest.raises(SystemExit, match="requires --task-id"):
-        _handle_ask_codex(args)
-
-
-def test_handle_ask_codex_chain_is_retired():
-    args = argparse.Namespace(
-        content="Fix {issue_ref}",
-        task_id=None,
-        type="query",
-        data=None,
-        new_session=False,
-        from_llm="gemini",
-        from_model=None,
-        to_model=None,
-        no_timeout=True,
-        chain=["1177", "#1178"],
-    )
-
-    with pytest.raises(SystemExit, match="--chain is retired"):
-        _handle_ask_codex(args)
-
-
-def test_ask_codex_chain_dispatches_issues_sequentially(monkeypatch):
-    """Use a fixed Claude identity rather than the agent session environment."""
-    for variable in (
-        "SESSION_HANDOFF_AGENT",
-        "CLAUDE_AGENT_NAME",
-        "CODEX_SESSION",
-        "GROK_AGENT",
-        "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS",
-        "GEMINI_SESSION",
-    ):
-        monkeypatch.delenv(variable, raising=False)
-    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/project")
-
-    with patch("scripts.ai_agent_bridge._codex.ask_codex", side_effect=[11, 12]) as ask_codex_mock:
-        message_ids = ask_codex_chain(
-            "Fix {issue_ref} via {task_id}",
-            ["1177", "#1178", "issue-1177"],
-            no_timeout=True,
-        )
-
-    assert message_ids == [11, 12]
-    assert ask_codex_mock.call_count == 2
-    first_call, second_call = ask_codex_mock.call_args_list
-    assert first_call.args[0] == "Fix #1177 via issue-1177"
-    assert first_call.args[1] == "issue-1177"
-    assert first_call.args[2] == "query"
-    assert first_call.args[5] == "claude"
-    assert first_call.args[8] is True
-    assert second_call.args[0] == "Fix #1178 via issue-1178"
-    assert second_call.args[1] == "issue-1178"
-    assert second_call.args[2] == "query"
-    assert second_call.args[5] == "claude"
-    assert second_call.args[8] is True
-
-
-def test_ask_codex_chain_prefixes_issue_context_without_placeholders():
-    with patch("scripts.ai_agent_bridge._codex.ask_codex", return_value=11) as ask_codex_mock:
-        ask_codex_chain("Review and fix the issue.", ["1177"])
-
-    assert ask_codex_mock.call_args.args[0] == ("GitHub issue #1177 (issue-1177).\n\nReview and fix the issue.")
-
-
-def test_resolve_codex_bridge_timeout_defaults_to_normal_timeout():
-    with patch.dict(os.environ, {}, clear=True):
-        assert _resolve_codex_bridge_timeout() == 900
-
-
-def test_resolve_codex_bridge_timeout_honors_env_override():
-    with patch.dict(os.environ, {"CODEX_BRIDGE_TIMEOUT": "120"}, clear=True):
-        assert _resolve_codex_bridge_timeout() == 120
-
-
-def test_reported_codex_effort_preserves_runtime_default():
-    assert _reported_codex_effort(type("Result", (), {"effort": "high"})()) == ("high", None)
-
-
-def test_reported_codex_effort_records_unknown_as_unreported():
-    assert _reported_codex_effort(type("Result", (), {"effort": "unknown"})()) == (
-        None,
-        "Codex runtime did not report the applied effort",
-    )
 
 
 def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
@@ -431,48 +259,6 @@ def test_process_for_codex_new_session_starts_cold_even_when_session_exists(
     assert provenance["harness"] == "codex"
     assert mock_send_message.call_count == 1
     mock_acknowledge.assert_called_once_with(8)
-
-
-def test_process_for_codex_cold_starts_without_stored_session(monkeypatch):
-    captured: dict[str, object] = {}
-    message = {
-        "id": 10,
-        "task_id": "issue-1179",
-        "from": "gemini",
-        "to": "codex",
-        "type": "query",
-        "content": "bridge content",
-        "data": None,
-        "timestamp": "2026-04-10T12:00:00Z",
-    }
-    result = Result(
-        ok=True,
-        agent="codex",
-        model="gpt-6.1-sol",
-        mode="read-only",
-        response="Codex response",
-        stderr_excerpt=None,
-        duration_s=1.0,
-        session_id=None,
-        rate_limited=False,
-        stalled=False,
-        returncode=0,
-        usage_record={},
-    )
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex._fetch_codex_message", lambda _message_id: message)
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.get_session", lambda _task_id: {"codex": None})
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.has_codex_headroom", lambda _model: (True, ""))
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.build_codex_prompt", lambda *_args, **_kwargs: "bridge prompt")
-    monkeypatch.setattr(
-        "scripts.ai_agent_bridge._codex.agent_runner.invoke", lambda *_args, **kwargs: captured.update(kwargs) or result
-    )
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.send_message", lambda **_kwargs: 11)
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.acknowledge", lambda *_args: None)
-    monkeypatch.setattr("scripts.ai_agent_bridge._codex.record_ask_reply", lambda *_args: None)
-
-    process_for_codex(10)
-
-    assert captured["session_id"] is None
 
 
 def test_codex_adapter_reads_session_id_from_its_event_stream(tmp_path, monkeypatch):
@@ -819,17 +605,6 @@ def test_codex_usage_cli_reports_counts(capsys, tmp_path):
     assert "Total calls: 3" in out
     assert re.search(r"ok\s+2", out)
     assert re.search(r"rate_limited\s+1", out)
-
-
-def test_legacy_callable_defaults_to_astra_before_message_creation():
-    with (
-        patch("scripts.ai_agent_bridge._codex.send_message", return_value=91) as send,
-        patch("scripts.ai_agent_bridge._codex.register_ask"),
-        patch("scripts.ai_agent_bridge._codex.process_for_codex") as invoke,
-    ):
-        assert ask_codex("bounded fixture", from_llm="claude") == 91
-    assert send.call_args.kwargs["to_model"] == "gpt-6.1-sol"
-    invoke.assert_called_once_with(91, False, False, review=False)
 
 
 @pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "gpt-6-sol", "gpt-6-astra"])

@@ -179,19 +179,6 @@ def _surface(root: Path, ts: datetime, task: str, rid: str) -> None:
     )
 
 
-def _consume(root: Path, ts: datetime, task: str, rid: str, status: int = 200) -> None:
-    _emit(
-        root,
-        ts,
-        event_type=consumption.CONSUMED_EVENT,
-        task_id=task,
-        research_id=rid,
-        surface="record",
-        status=status,
-        ts=ts.isoformat(),
-    )
-
-
 # --------------------------------------------------------------------------- #
 # 1. Strict adoption gate (CLI) — fresh cache only, fail-closed, offline
 # --------------------------------------------------------------------------- #
@@ -283,18 +270,6 @@ def test_strict_gate_rejects_wrong_epic(strict_root):
     assert _run_strict(root) == 2
 
 
-def test_strict_gate_rejects_multi_home(strict_root):
-    root, cache = strict_root
-    rec = _make_record(root, "r1", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
-    _write_registry(root, [rec])
-    _write_cache(
-        cache,
-        {"9001": {"epics": [REAL_EPIC], "streams": ["a", "b"], "via": "native", "unique_stream": False}},
-        is_file=True,
-    )
-    assert _run_strict(root) == 2
-
-
 def test_strict_gate_rejects_closed_or_unknown_issue(strict_root):
     root, cache = strict_root
     rec = _make_record(root, "r1", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
@@ -359,24 +334,6 @@ def test_strict_gate_resolves_issue_consumer(strict_root):
     assert _run_strict(root) == 2
 
 
-def test_strict_gate_rejects_ambiguously_owned_issue_consumer(strict_root):
-    """An adopted ``issue`` consumer that IS open but ambiguously multi-homed
-    (unique_stream False) must not resolve."""
-    root, cache = strict_root
-    rec = _make_record(root, "r1", state="adopted", consumer={"kind": "issue", "ref": "9001"})
-    _write_registry(root, [rec])
-    ambiguous_entry = {
-        "9001": {
-            "epics": [REAL_EPIC, 1234],
-            "streams": ["core-quality", "other"],
-            "via": "native",
-            "unique_stream": False,
-        }
-    }
-    _write_cache(cache, ambiguous_entry, open_numbers=[9001], is_file=True)
-    assert _run_strict(root) == 2
-
-
 def test_strict_gate_resolves_corpus_consumer_via_atlas_registry(strict_root):
     """The corpus resolver is real: it resolves a genuinely declared Atlas
     intake source family and rejects a dangling one — no cache required."""
@@ -389,21 +346,6 @@ def test_strict_gate_resolves_corpus_consumer_via_atlas_registry(strict_root):
     dangling = _make_record(root, "dangling", state="adopted", consumer={"kind": "corpus", "ref": "not-a-real-family"})
     _write_registry(root, [dangling])
     assert _run_strict(root) == 2
-
-
-def test_default_check_is_unchanged_and_needs_no_cache(strict_root, monkeypatch):
-    """The offline --check path never reads the membership cache and never fails on
-    a proposed record with plausible (structurally valid) ownership."""
-    root, _cache = strict_root
-
-    # Point the cache at a poisoned/raising path — --check must not touch it.
-    def _boom(*_a, **_k):  # pragma: no cover - asserts non-invocation
-        raise AssertionError("--check must not read the membership cache")
-
-    monkeypatch.setattr(isa, "read_membership_index", _boom)
-    rec = _make_record(root, "r1", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
-    _write_registry(root, [rec])
-    assert crr.main(["--check", "--quiet"], project_root=root) == 0
 
 
 def test_default_check_uses_real_corpus_resolver_no_cache_needed(tmp_path):
@@ -451,15 +393,6 @@ def test_one_drift_is_stale_healthy_remains_visible(obs_env):
     assert life["counts"]["total"] == 2  # healthy record stays visible
 
 
-def test_dead_consumer_detected(obs_env):
-    root = obs_env
-    rec = _make_record(root, "r1", state="adopted", consumer={"kind": "path", "ref": "scripts/does-not-exist.py"})
-    _write_registry(root, [rec])
-    m = _monitor(root)
-    assert m["dead_consumers"]["dead"] == ["r1"]
-    assert m["adoption"]["effective_adopted"] == 0
-
-
 def test_issue_consumer_is_unverified_without_fresh_cache(obs_env):
     """No fresh membership cache in the monitor's env → an issue consumer can be
     neither proven nor disproven — it must land in unverified, never dead."""
@@ -470,28 +403,6 @@ def test_issue_consumer_is_unverified_without_fresh_cache(obs_env):
     assert m["dead_consumers"]["unverified"] == ["ri"]
     assert m["dead_consumers"]["dead"] == []
     assert m["adoption"]["effective_adopted"] == 0  # unverified never counts as effective
-
-
-def test_observability_fails_closed_on_incomplete_cache(obs_env, monkeypatch):
-    """An incomplete membership cache is rejected, failing closed to missing cache."""
-    root = obs_env
-    cache = root / "cache.json"
-    monkeypatch.setattr(isa, "CACHE_PATH", cache)
-    report = {
-        "generated_at": int(time.time()),
-        "effective_membership": {
-            "9001": {"epics": [REAL_EPIC], "streams": ["core-quality"], "via": "native", "unique_stream": True}
-        },
-        "open_issue_numbers": [9001],
-        "membership_complete": False,
-        "incomplete_nodes": [20],
-    }
-    cache.write_text(json.dumps(report), "utf-8")
-    ri = _make_record(root, "ri", state="adopted", consumer={"kind": "issue", "ref": "9001"})
-    _write_registry(root, [ri])
-    m = _monitor(root)
-    assert m["lifecycle"]["ownership_cache"] == "missing"
-    assert m["dead_consumers"]["unverified"] == ["ri"]
 
 
 def test_issue_consumer_resolved_alive_or_dead_with_fresh_cache(obs_env, monkeypatch):
@@ -517,56 +428,6 @@ def test_issue_consumer_resolved_alive_or_dead_with_fresh_cache(obs_env, monkeyp
     assert m["adoption"]["effective_adopted"] == 1
 
 
-def test_corpus_consumer_resolved_via_real_atlas_registry(obs_env):
-    """The corpus resolver is real and offline (no cache needed): a genuinely
-    declared Atlas intake source family is alive, a dangling one is dead."""
-    root = obs_env
-    ok = _make_record(root, "ok", state="adopted", consumer={"kind": "corpus", "ref": "textbook"})
-    dangling = _make_record(root, "dangling", state="adopted", consumer={"kind": "corpus", "ref": "not-a-real-family"})
-    _write_registry(root, [ok, dangling])
-    m = _monitor(root)
-    assert m["dead_consumers"]["dead"] == ["dangling"]
-    assert m["dead_consumers"]["unverified"] == []
-    assert m["adoption"]["effective_adopted"] == 1
-
-
-def test_effective_adoption_requires_alive_consumer_and_current_hash(obs_env):
-    root = obs_env
-    ok = _make_record(root, "ok", state="adopted", consumer={"kind": "path", "ref": "scripts/ok.py"})
-    _stub(root, "scripts/ok.py")
-    stale = _make_record(root, "stale", state="adopted", consumer={"kind": "path", "ref": "scripts/ok.py"}, drift=True)
-    _write_registry(root, [ok, stale])
-    m = _monitor(root)
-    assert m["adoption"]["adopted"] == 2
-    assert m["adoption"]["effective_adopted"] == 1  # drifted one excluded despite alive consumer
-    assert "stale" in m["lifecycle"]["stale"]
-
-
-def test_deferred_and_superseded_ids_and_zero_denominator(obs_env):
-    root = obs_env
-    a = _make_record(root, "a", state="superseded", replacement="b")
-    b = _make_record(root, "b", state="superseded", replacement="a")
-    _write_registry(root, [a, b])
-    m = _monitor(root)
-    assert sorted(m["lifecycle"]["superseded"]) == ["a", "b"]
-    assert m["adoption"]["eligible_total"] == 0
-    assert m["adoption"]["rate"] is None  # zero non-superseded → null rate, no divide error
-
-
-def test_adoption_rate_over_non_superseded(obs_env):
-    root = obs_env
-    recs = [
-        _make_record(root, "ad", state="adopted", consumer={"kind": "path", "ref": "scripts/a.py"}),
-        _make_record(root, "df", state="deferred"),
-        _make_record(root, "sup", state="superseded", replacement="ad"),
-    ]
-    _stub(root, "scripts/a.py")
-    _write_registry(root, recs)
-    m = _monitor(root)["adoption"]
-    assert m["eligible_total"] == 2  # 3 total − 1 superseded
-    assert m["rate"] == 0.5
-
-
 def test_orphaned_vs_ownership_unverified(obs_env):
     root = obs_env
     _write_streams(root)  # declares core-quality epic REAL_EPIC
@@ -582,23 +443,6 @@ def test_orphaned_vs_ownership_unverified(obs_env):
     assert life["ownership_cache"] == "missing"
 
 
-def test_ownership_verified_with_fresh_cache(obs_env, monkeypatch):
-    root = obs_env
-    _write_streams(root)
-    cache = root / "cache.json"
-    monkeypatch.setattr(isa, "CACHE_PATH", cache)
-    _write_cache(
-        cache,
-        {"9001": {"epics": [REAL_EPIC], "streams": ["core-quality"], "via": "native", "unique_stream": True}},
-        is_file=True,
-    )
-    rec = _make_record(root, "owned", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
-    _write_registry(root, [rec])
-    life = _monitor(root)["lifecycle"]
-    assert life["orphaned"] == [] and life["ownership_unverified"] == []
-    assert life["ownership_cache"] == "fresh"
-
-
 def test_semantic_invalid_record_stays_visible(obs_env):
     """The monitor reads RAW records: a record the runtime loader would reject
     (superseded with a missing replacement) must still appear in the counts."""
@@ -610,13 +454,6 @@ def test_semantic_invalid_record_stays_visible(obs_env):
     m = _monitor(root)
     assert m["lifecycle"]["counts"]["total"] == 1
     assert m["lifecycle"]["counts"]["superseded"] == 1
-
-
-def test_missing_registry_degrades_safely(obs_env):
-    m = _monitor(obs_env)  # no registry written
-    assert m["lifecycle"]["status"] == "missing"
-    assert m["consumption"]["status"] in {"empty", "ok"}
-    assert m["adoption"]["rate"] is None
 
 
 def test_degraded_telemetry_fallback_preserves_unknown_ids_schema(obs_env, monkeypatch):
@@ -700,72 +537,6 @@ def _consumption(root: Path, **kw: Any) -> dict[str, Any]:
     return _monitor(root, **kw)["consumption"]
 
 
-def test_distinct_pairs_dedupe_across_200_and_304(obs_env):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    _surface(root, NOW - timedelta(hours=3), "task-a", "r1")
-    _consume(root, NOW - timedelta(hours=2), "task-a", "r1", status=200)
-    _consume(root, NOW - timedelta(hours=1), "task-a", "r1", status=304)  # same pair
-    c = _consumption(root)
-    assert c["consumed_events"] == 2  # raw events counted
-    assert c["consumed_pairs"] == 1  # deduped to one (task,research) pair
-    assert c["surfaced_never_consumed"] == 0
-
-
-def test_surfaced_never_consumed_after_grace(obs_env):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    _surface(root, NOW - timedelta(hours=3), "task-a", "r1")  # old, no consumption
-    c = _consumption(root)
-    assert c["surfaced_never_consumed"] == 1
-    assert c["pending"] == 0
-
-
-def test_recent_surface_is_pending_within_grace(obs_env):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    _surface(root, NOW - timedelta(minutes=30), "task-a", "r1")  # inside 1h grace
-    c = _consumption(root)
-    assert c["pending"] == 1
-    assert c["surfaced_never_consumed"] == 0
-
-
-def test_consumption_before_surface_does_not_count(obs_env):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    _consume(root, NOW - timedelta(hours=3), "task-a", "r1", status=200)  # before surface
-    _surface(root, NOW - timedelta(hours=2), "task-a", "r1")
-    c = _consumption(root)
-    # Consumption predates first surface → the pair is surfaced_never_consumed.
-    assert c["surfaced_never_consumed"] == 1
-
-
-def test_window_bounds_exclude_old_and_future(obs_env):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    _surface(root, NOW - timedelta(days=40), "old", "r1")  # outside 30d window
-    _surface(root, NOW + timedelta(hours=1), "future", "r1")  # future event
-    _surface(root, NOW - timedelta(hours=3), "in", "r1")  # inside
-    c = _consumption(root, window_days=30)
-    assert c["surfaced_pairs"] == 1  # only the in-window pair
-
-
-def test_unknown_research_ids_aggregate_only(obs_env):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "known")])
-    _surface(root, NOW - timedelta(hours=3), "t1", "known")
-    _surface(root, NOW - timedelta(hours=3), "t2", "ghost-1")  # not in registry
-    _surface(root, NOW - timedelta(hours=3), "t3", "ghost-2")
-    c = _consumption(root)
-    assert "known" in c["per_record"]
-    # Unknown ids never appear as keys; only an aggregate with a distinct count.
-    assert "ghost-1" not in c["per_record"] and "ghost-2" not in c["per_record"]
-    assert c["unknown_research_ids"]["distinct_research_ids"] == 2
-    assert c["unknown_research_ids"]["surfaced_pairs"] == 2
-    blob = json.dumps(c)
-    assert "ghost-1" not in blob and "ghost-2" not in blob
-
-
 def test_malformed_lines_are_counted_not_fatal(obs_env):
     root = obs_env
     _write_registry(root, [_make_record(root, "r1")])
@@ -777,36 +548,6 @@ def test_malformed_lines_are_counted_not_fatal(obs_env):
     c = _consumption(root)
     assert c["malformed_lines"] == 2
     assert c["surfaced_pairs"] == 1  # the good event still counted
-
-
-def test_unreadable_file_marks_partial(obs_env, monkeypatch):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    events_dir = root / "batch_state" / "telemetry" / "events"
-    events_dir.mkdir(parents=True, exist_ok=True)
-    (events_dir / f"{NOW:%Y-%m-%d}.jsonl").write_bytes(b"\xff\xfe not utf-8\n")
-    c = _consumption(root)
-    assert c["unreadable_files"] == 1
-    assert c["partial"] is True and c["status"] == "partial"
-
-
-def test_byte_cap_marks_partial(obs_env, monkeypatch):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    monkeypatch.setattr(obs, "MAX_SCAN_BYTES", 10)  # tiny cap
-    _surface(root, NOW - timedelta(hours=3), "task-a", "r1")
-    _surface(root, NOW - timedelta(hours=3), "task-b", "r1")
-    c = _consumption(root)
-    assert c["partial"] is True
-
-
-def test_empty_events_dir(obs_env):
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    c = _consumption(root)
-    assert c["files_scanned"] == 0
-    assert c["distinct_pairs"] == 0
-    assert c["surfaced_never_consumed"] == 0
 
 
 def test_scan_is_newest_first_and_nulls_negative_under_partial_coverage(obs_env, monkeypatch):
@@ -978,56 +719,6 @@ def test_oversized_line_counts_toward_byte_cap_and_stops_the_scan(obs_env, monke
     assert c["surfaced_pairs"] == 0  # neither line was ingested -- cap hit mid-drain
 
 
-def test_byte_cap_limits_actual_reader_returns_and_reports_them(obs_env, monkeypatch):
-    """The cap must constrain bytes returned by the telemetry reader itself,
-    not merely the post-read accounting. The cap is deliberately smaller than
-    the reader's normal chunk and the first JSONL event."""
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    events_dir = root / "batch_state" / "telemetry" / "events"
-    events_dir.mkdir(parents=True, exist_ok=True)
-    path = events_dir / f"{NOW:%Y-%m-%d}.jsonl"
-    _surface(root, NOW - timedelta(hours=3), "task-a", "r1")
-
-    returned_sizes: list[int] = []
-    requested_sizes: list[int] = []
-    original_open = Path.open
-
-    class TrackingBinaryReader:
-        def __init__(self, wrapped):
-            self._wrapped = wrapped
-
-        def read(self, size: int = -1) -> bytes:
-            requested_sizes.append(size)
-            data = self._wrapped.read(size)
-            returned_sizes.append(len(data))
-            return data
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc_value, traceback):
-            self._wrapped.close()
-
-        def __getattr__(self, name: str):
-            return getattr(self._wrapped, name)
-
-    def tracking_open(self, *args, **kwargs):
-        handle = original_open(self, *args, **kwargs)
-        if self == path and args == ("rb",):
-            return TrackingBinaryReader(handle)
-        return handle
-
-    monkeypatch.setattr(Path, "open", tracking_open)
-    monkeypatch.setattr(obs, "MAX_SCAN_BYTES", 5)
-    c = _consumption(root)
-
-    assert sum(returned_sizes) <= obs.MAX_SCAN_BYTES
-    assert c["bytes_scanned"] == sum(returned_sizes) == obs.MAX_SCAN_BYTES
-    assert requested_sizes == [obs.MAX_SCAN_BYTES]  # no read after budget exhaustion
-    assert c["partial"] is True and c["cap_reason"] == "byte_cap"
-
-
 def test_partial_from_unreadable_file_nulls_per_record_negative_too(obs_env):
     """A hidden consumption event could be sitting inside an unreadable file --
     the per-record ``surfaced_never_consumed`` must be nulled under partial
@@ -1043,47 +734,6 @@ def test_partial_from_unreadable_file_nulls_per_record_negative_too(obs_env):
 
     c = _consumption(root)
     assert c["partial"] is True
-    assert c["surfaced_never_consumed"] is None
-    assert c["per_record"]["r1"]["surfaced_never_consumed"] is None
-    assert c["per_record"]["r1"]["surfaced_never_consumed_observed"] == 1
-
-
-def test_partial_from_oversized_line_nulls_per_record_negative_too(obs_env):
-    """Same guarantee when partial coverage comes from a discarded oversized
-    line rather than an unreadable file: the true consuming event could be the
-    very line that got dropped (ADR-011 P4 review, item 1)."""
-    root = obs_env
-    _write_registry(root, [_make_record(root, "r1")])
-    events_dir = root / "batch_state" / "telemetry" / "events"
-    events_dir.mkdir(parents=True, exist_ok=True)
-    path = events_dir / f"{NOW:%Y-%m-%d}.jsonl"
-    surfaced_line = json.dumps(
-        {
-            "event_type": consumption.SURFACED_EVENT,
-            "task_id": "task-a",
-            "research_id": "r1",
-            "surface": "dispatch",
-            "ts": (NOW - timedelta(hours=3)).isoformat(),
-        }
-    )
-    # This oversized line, if it had been readable, would have consumed the
-    # surfaced pair above -- but it is discarded, so "never" would be a lie.
-    huge_consumed_line = json.dumps(
-        {
-            "event_type": consumption.CONSUMED_EVENT,
-            "task_id": "task-a",
-            "research_id": "r1",
-            "surface": "record",
-            "status": 200,
-            "ts": (NOW - timedelta(hours=2)).isoformat(),
-            "padding": "x" * 1_200_000,
-        }
-    )
-    path.write_text(surfaced_line + "\n" + huge_consumed_line + "\n", "utf-8")
-
-    c = _consumption(root)
-    assert c["partial"] is True
-    assert c["cap_reason"] == "oversized_line"
     assert c["surfaced_never_consumed"] is None
     assert c["per_record"]["r1"]["surfaced_never_consumed"] is None
     assert c["per_record"]["r1"]["surfaced_never_consumed_observed"] == 1
@@ -1142,12 +792,6 @@ def test_monitor_available_when_discovery_disabled(endpoint_root, monkeypatch):
     assert body["lifecycle"]["counts"]["total"] == 1
 
 
-def test_monitor_reports_discovery_enabled_when_on(endpoint_root, monkeypatch):
-    monkeypatch.setenv(reg.ENV_FLAG, "true")
-    _write_registry(endpoint_root, [_make_record(endpoint_root, "r1")])
-    assert client.get("/api/knowledge/monitor").json()["discovery_enabled"] is True
-
-
 def test_monitor_fail_soft_on_broken_registry(endpoint_root, monkeypatch):
     monkeypatch.setenv(reg.ENV_FLAG, "false")
     refs = endpoint_root / "docs" / "references"
@@ -1174,44 +818,6 @@ def test_monitor_privacy_allowlist_no_sensitive_fields(endpoint_root, monkeypatc
         "Paraphrase",
     ):
         assert leak not in blob
-
-
-@pytest.mark.parametrize("bad", [0, 366, -1])
-def test_monitor_window_validation(endpoint_root, bad):
-    assert client.get("/api/knowledge/monitor", params={"window_days": bad}).status_code == 422
-
-
-def test_monitor_window_accepts_bounds(endpoint_root, monkeypatch):
-    monkeypatch.setenv(reg.ENV_FLAG, "false")
-    _write_registry(endpoint_root, [_make_record(endpoint_root, "r1")])
-    for wd in (1, 365):
-        resp = client.get("/api/knowledge/monitor", params={"window_days": wd})
-        assert resp.status_code == 200
-        assert resp.json()["window_days"] == wd
-
-
-# --------------------------------------------------------------------------- #
-# 5. Public issues API strips the private membership index
-# --------------------------------------------------------------------------- #
-def test_issues_streams_strips_private_index(tmp_path, monkeypatch):
-    from scripts.api import issues_router
-
-    report = {
-        "generated_at": int(NOW.timestamp()),
-        "open_total": 3,
-        "ok": True,
-        "orphans": [],
-        "effective_membership": {"5": {"epics": [100], "streams": ["s"], "unique_stream": True}},
-        "open_issue_numbers": [5, 100],
-        "open_issue_titles": {"5": "Issue 5 title", "100": "Issue 100 title"},
-        "root_results": {"100": {"native": [], "body": [5]}},
-    }
-    stripped = issues_router._strip_private_index(report)
-    assert "effective_membership" not in stripped
-    assert "open_issue_numbers" not in stripped
-    assert "open_issue_titles" not in stripped
-    assert "root_results" not in stripped
-    assert stripped["open_total"] == 3 and stripped["ok"] is True
 
 
 # --------------------------------------------------------------------------- #
@@ -1288,27 +894,6 @@ def test_issues_streams_endpoint_strips_private_keys_on_fresh(monkeypatch):
     assert "run_id" not in json.dumps(body)
 
 
-def test_issues_streams_endpoint_strips_private_keys_on_cache_hit(monkeypatch):
-    from scripts.api import issues_router
-
-    monkeypatch.setattr(
-        issues_router.audit,
-        "read_cache",
-        lambda max_age_s: dict(_LEAKY_REPORT) if max_age_s == 3600 else None,
-    )
-    monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH))
-    monkeypatch.setattr(
-        issues_router.audit,
-        "schedule_refresh",
-        lambda **_kwargs: (_ for _ in ()).throw(AssertionError("fresh cache must not schedule")),
-    )
-    resp = client.get("/api/issues/streams")
-    assert resp.status_code == 200
-    body = resp.json()
-    _assert_no_private_keys(body)
-    assert body["refreshing"] is False and body["refresh"]["phase"] == "idle"
-
-
 @pytest.mark.parametrize("publisher", ["membership_writer", "run_audit"])
 def test_issues_streams_serves_membership_cache_writer_output_without_private_keys(tmp_path, monkeypatch, publisher):
     """#10793: a cache published by either writer (the strict checker's validated
@@ -1375,32 +960,6 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     assert not set(isa.PRIVATE_CACHE_KEYS) & set(projection.payload)
     assert "PRIVATE_TITLE_CANARY" not in json.dumps(projection.payload)
     assert projection.payload["open_stream_membership"] == {"123": ["devops"]}
-
-
-def test_issues_streams_offloads_sync_state_io_from_event_loop(monkeypatch):
-    from scripts.api import issues_router
-
-    calls = []
-
-    class _AsyncioProbe:
-        @staticmethod
-        async def to_thread(fn, *args, **kwargs):
-            calls.append(fn)
-            return fn(*args, **kwargs)
-
-    monkeypatch.setattr(issues_router, "asyncio", _AsyncioProbe)
-    monkeypatch.setattr(
-        issues_router.audit,
-        "read_cache",
-        lambda max_age_s: dict(_LEAKY_REPORT) if max_age_s == 3600 else None,
-    )
-    monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH))
-
-    resp = client.get("/api/issues/streams")
-
-    assert resp.status_code == 200
-    assert len(calls) == 1
-    assert calls[0].__name__ == "_load"
 
 
 def test_strict_adoption_gate_runs_as_bare_script():

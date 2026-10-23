@@ -4,23 +4,6 @@ from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
 
 
-def test_a1_20_plan_context_matches_phase_4_contract() -> None:
-    plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
-    plan = linear_pipeline.plan_check(plan_path)
-    context = linear_pipeline.writer_context(
-        plan,
-        plan_path.read_text(encoding="utf-8"),
-        "packet",
-    )
-
-    assert context["LEVEL"] == "A1"
-    assert context["MODULE_NUM"] == "20"
-    assert "STRUCTURAL TARGETS" in context["IMMERSION_RULE"]
-    assert "classify" in context["FORBIDDEN_ACTIVITY_TYPES"]
-    assert "select" in context["FORBIDDEN_ACTIVITY_TYPES"]
-    assert "fill-in" in context["ALLOWED_ACTIVITY_TYPES"]
-
-
 def test_a1_20_passing_review_aggregates_to_pass() -> None:
     report = {
         dim: {

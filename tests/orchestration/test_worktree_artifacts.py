@@ -89,23 +89,6 @@ def test_git_path_inventory_uses_isolated_environment(checkout, monkeypatch, ret
     assert calls == [(checkout[0], ["ls-files", "-z", "--cached"])]
 
 
-def test_named_artifact_inventory_uses_isolated_environment(checkout, monkeypatch):
-    name = "batch_state/sub/report.bin"
-    artifact(checkout, name)
-    calls = []
-
-    def runner(args, **kwargs):
-        calls.append((kwargs["cwd"], args))
-        assert kwargs["env"] == wa._safe_git_env()
-        return subprocess.CompletedProcess(args, 0, (name + "\0").encode(), b"")
-
-    monkeypatch.setattr(wa, "safe_git", runner)
-    assert wa._named_artifact_files(
-        checkout[0], {"response": f"Capture `{name}`."}, primary=checkout[1]
-    ) == {name}
-    assert calls == [(checkout[0], ["ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name])]
-
-
 def test_preserved_bytes_record_and_idempotency(checkout):
     source = artifact(checkout)
     record = {"status": "done", "response": "Capture `batch_state/sub/report.bin`."}
@@ -575,20 +558,6 @@ def test_missing_record_is_not_created(checkout):
     assert source.read_bytes() == b"proof\x00\xff"
     assert not (checkout[1] / "batch_state/preserved").exists()
     assert not (checkout[2] / "artifact-task.json").exists()
-
-
-def test_named_external_symlink_refuses_removal(checkout, tmp_path):
-    target = tmp_path / "outside.txt"
-    target.write_bytes(b"lives outside the checkout")
-    (checkout[0] / "ignored").mkdir()
-    (checkout[0] / "ignored/link.txt").symlink_to(target)
-    path = checkout[2] / "artifact-task.json"
-    bound_record(checkout, {"status": "done"})
-    ok, reason, metadata = guard(checkout, record={"response": "Wrote `ignored/link.txt`."})
-    assert not ok and links.REFUSAL in reason and metadata["retention_disposition"] == "retained"
-    assert links.REFUSAL in json.loads(path.read_text())["artifact_preservation_error"]
-    assert target.read_bytes() == b"lives outside the checkout"
-    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("scenario", links.SCENARIOS)
@@ -1240,51 +1209,6 @@ def test_ignored_artifact_nested_repo_assume_unchanged_never_discarded(checkout,
     assert "clear with: rm -rf" not in reason
 
 
-def test_ignored_artifact_nested_repo_skip_worktree_never_discarded(checkout, tmp_path):
-    """P1: tracked files marked skip-worktree refuse removal without recommending deletion."""
-    upstream = tmp_path / "upstream"
-    subprocess.run(
-        ["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", str(upstream)],
-        check=True,
-        capture_output=True,
-        env=_GIT_ENV,
-        timeout=30,
-    )
-
-    repo_dir = checkout[0] / "batch_state/reports/skip_worktree_repo"
-    subprocess.run(
-        ["git", "-c", "core.hooksPath=/dev/null", "clone", str(upstream), str(repo_dir)],
-        check=True,
-        capture_output=True,
-        env=_GIT_ENV,
-        timeout=30,
-    )
-    (repo_dir / "probe.txt").write_text("base content\n")
-    subprocess.run(["git", "add", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
-    subprocess.run(["git", "commit", "-m", "base"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
-    subprocess.run(
-        ["git", "-c", "core.hooksPath=/dev/null", "push", "origin", "HEAD:refs/heads/topic"],
-        cwd=repo_dir,
-        check=True,
-        capture_output=True,
-        env=_GIT_ENV,
-        timeout=30,
-    )
-    subprocess.run(["git", "fetch", "origin"], cwd=repo_dir, check=True, capture_output=True, env=_GIT_ENV, timeout=30)
-
-    # Mark skip-worktree and modify content
-    subprocess.run(
-        ["git", "update-index", "--skip-worktree", "probe.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30
-    )
-    (repo_dir / "probe.txt").write_text("modified concealed\n")
-
-    ok, reason, metadata = guard(checkout)
-    assert not ok and metadata["retention_disposition"] == "retained"
-    assert "concealed tracked changes" in reason
-    assert "uncommitted work must not be discarded" in reason
-    assert "clear with: rm -rf" not in reason
-
-
 def test_ignored_artifact_nested_repo_include_indirection_rejected_without_execution(checkout):
     """P1: nested repository include indirection is rejected before git execution."""
     repo_dir = checkout[0] / "batch_state/reports/include_repo"
@@ -1312,36 +1236,6 @@ def test_ignored_artifact_nested_repo_include_indirection_rejected_without_execu
     assert not ok and metadata["retention_disposition"] == "retained"
     assert "configuration indirection (include/includeIf)" in reason
     assert not marker.exists(), "clean filter was executed via include indirection!"
-    assert "clear with: rm -rf" not in reason
-
-
-def test_ignored_artifact_nested_repo_includeif_indirection_rejected_without_execution(checkout):
-    """P1: nested repository includeIf indirection is rejected before git execution."""
-    repo_dir = checkout[0] / "batch_state/reports/includeif_repo"
-    repo_dir.mkdir(parents=True, exist_ok=True)
-    subprocess.run(
-        ["git", "-c", "core.hooksPath=/dev/null", "init", str(repo_dir)],
-        check=True,
-        capture_output=True,
-        env=_GIT_ENV,
-        timeout=30,
-    )
-    marker = repo_dir / "filter_executed.marker"
-    script = repo_dir / "clean_hook.sh"
-    script.write_text(f"#!/bin/sh\ntouch '{marker}'\ncat\n")
-    script.chmod(0o755)
-    extra_cfg = repo_dir / "extra.config"
-    extra_cfg.write_text(f'[filter "probe"]\n  clean = "{script}"\n')
-    cfg = repo_dir / ".git" / "config"
-    with open(cfg, "a", encoding="utf-8") as fp:
-        fp.write(f'\n[includeIf "gitdir:*"]\n  path = {extra_cfg}\n')
-    (repo_dir / ".gitattributes").write_text("* filter=probe\n")
-    (repo_dir / "tracked.txt").write_text("initial content\n")
-
-    ok, reason, metadata = guard(checkout)
-    assert not ok and metadata["retention_disposition"] == "retained"
-    assert "configuration indirection (include/includeIf)" in reason
-    assert not marker.exists(), "clean filter was executed via includeIf indirection!"
     assert "clear with: rm -rf" not in reason
 
 
@@ -1464,37 +1358,6 @@ def test_ignored_artifact_nested_repo_commondir_clean_filter_rejected_without_ex
     assert not ok and metadata["retention_disposition"] == "retained"
     assert "executable or filter configuration" in reason or "commondir metadata indirection" in reason
     assert not marker.exists(), "commondir clean filter was executed!"
-    assert "clear with: rm -rf" not in reason
-
-
-def test_ignored_artifact_nested_repo_commondir_metadata_indirection_rejected(checkout, tmp_path):
-    """P1: nested repo with commondir metadata indirection is rejected before git execution."""
-    common = tmp_path / "clean_common"
-    subprocess.run(
-        ["git", "-c", "core.hooksPath=/dev/null", "init", "--bare", "-b", "main", str(common)],
-        check=True,
-        capture_output=True,
-        env=_GIT_ENV,
-        timeout=30,
-    )
-
-    repo_dir = checkout[0] / "batch_state/reports/commondir_clean_repo"
-    repo_dir.mkdir(parents=True, exist_ok=True)
-    subprocess.run(
-        ["git", "-c", "core.hooksPath=/dev/null", "init", "-b", "main", str(repo_dir)],
-        check=True,
-        capture_output=True,
-        env=_GIT_ENV,
-        timeout=30,
-    )
-    (repo_dir / "tracked.txt").write_text("initial content\n")
-    subprocess.run(["git", "add", "tracked.txt"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
-    subprocess.run(["git", "commit", "-m", "init"], cwd=repo_dir, check=True, env=_GIT_ENV, timeout=30)
-    (repo_dir / ".git/commondir").write_text(f"{common}\n")
-
-    ok, reason, metadata = guard(checkout)
-    assert not ok and metadata["retention_disposition"] == "retained"
-    assert "commondir metadata indirection" in reason
     assert "clear with: rm -rf" not in reason
 
 

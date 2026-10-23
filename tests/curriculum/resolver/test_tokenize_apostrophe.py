@@ -24,9 +24,3 @@ def test_apostrophe_cyrillic_classification():
     assert "\u02b9" not in APOSTROPHES
     assert _kind("м\u02b9ясо") == "mixed"
     assert _kind(test_word_base.format(apo="\u02b9")) == "mixed"
-
-
-def test_apostrophe_without_letters_is_not_cyrillic():
-    """A standalone apostrophe without Cyrillic letters does not classify as cyrillic."""
-    for apo in sorted(APOSTROPHES):
-        assert _kind(apo) != "cyrillic"

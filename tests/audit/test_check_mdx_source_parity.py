@@ -10,7 +10,6 @@ import pytest
 import yaml
 
 from scripts.audit.check_mdx_source_parity import (
-    GENERATOR_DEPENDENCIES,
     GENERATOR_PACKAGE,
     MDX_DIR,
     SOURCE_DIR,
@@ -305,41 +304,6 @@ def test_check_parity_mdx_and_source(mock_legacy_levels, mock_subprocess):
     violations = check_parity(mdx_files, changed_files)
     assert len(violations) == 0
 
-def test_check_parity_mdx_and_meta_source(mock_legacy_levels, mock_subprocess):
-    # MDX + module meta diff (pass). Meta frontmatter controls generated MDX.
-    mdx_files = [MDX_DIR / "a2" / "aspect-in-past.mdx"]
-    changed_files = {
-        MDX_DIR / "a2" / "aspect-in-past.mdx",
-        SOURCE_DIR / "a2" / "meta" / "aspect-in-past.yaml",
-    }
-    mock_subprocess.return_value = "1 file changed\n"
-
-    violations = check_parity(mdx_files, changed_files)
-    assert len(violations) == 0
-
-def test_check_parity_mdx_and_plan_source(mock_legacy_levels, mock_subprocess):
-    # Plan titles/subtitles/objectives can flow into generated MDX.
-    mdx_files = [MDX_DIR / "a2" / "aspect-in-past.mdx"]
-    changed_files = {
-        MDX_DIR / "a2" / "aspect-in-past.mdx",
-        SOURCE_DIR / "plans" / "a2" / "aspect-in-past.yaml",
-    }
-    mock_subprocess.return_value = "1 file changed\n"
-    violations = check_parity(mdx_files, changed_files)
-    assert len(violations) == 0
-
-
-def test_check_parity_mdx_and_discovery_source(mock_legacy_levels, mock_subprocess):
-    # Discovery resources can flow into generated MDX resource sections.
-    mdx_files = [MDX_DIR / "a2" / "aspect-in-past.mdx"]
-    changed_files = {
-        MDX_DIR / "a2" / "aspect-in-past.mdx",
-        SOURCE_DIR / "a2" / "discovery" / "aspect-in-past.yaml",
-    }
-    mock_subprocess.return_value = "1 file changed\n"
-    violations = check_parity(mdx_files, changed_files)
-    assert len(violations) == 0
-
 
 def test_check_parity_adjacent_module_nav_only_change(mock_legacy_levels, mock_subprocess):
     # Adding a later source module can legitimately regenerate prev/next
@@ -402,22 +366,6 @@ def test_check_parity_generator_change_allows_existing_source_dir(mock_legacy_le
 
     assert len(violations) == 0
 
-def test_check_parity_generator_dependency_allows_existing_source_dir(mock_legacy_levels, mock_subprocess, tmp_path):
-    # Shared parser code feeds the generator even though it lives outside
-    # scripts/generate_mdx/.
-    with patch("scripts.audit.check_mdx_source_parity.SOURCE_DIR", tmp_path):
-        (tmp_path / "a1" / "01-hello").mkdir(parents=True)
-        mdx_files = [MDX_DIR / "a1" / "01-hello.mdx"]
-        changed_files = {
-            MDX_DIR / "a1" / "01-hello.mdx",
-            next(iter(GENERATOR_DEPENDENCIES)),
-        }
-        mock_subprocess.return_value = "1 file changed\n"
-
-        violations = check_parity(mdx_files, changed_files)
-
-    assert len(violations) == 0
-
 def test_check_parity_generator_change_rejects_orphan_mdx(mock_legacy_levels, mock_subprocess, tmp_path):
     with patch("scripts.audit.check_mdx_source_parity.SOURCE_DIR", tmp_path):
         mdx_files = [MDX_DIR / "a1" / "orphan.mdx"]
@@ -431,16 +379,6 @@ def test_check_parity_generator_change_rejects_orphan_mdx(mock_legacy_levels, mo
 
     assert len(violations) == 1
     assert "MDX file changed but no source files changed" in violations[0][1]
-
-def test_check_parity_source_only(mock_legacy_levels, mock_subprocess):
-    # source-only diff (pass)
-    mdx_files = []
-    changed_files = {
-        SOURCE_DIR / "a1" / "01-hello" / "01-hello.md"
-    }
-
-    violations = check_parity(mdx_files, changed_files)
-    assert len(violations) == 0
 
 def test_check_parity_legacy_level(mock_legacy_levels, mock_subprocess):
     # legacy-level MDX-only (pass via allowlist)

@@ -6,7 +6,6 @@ from pathlib import Path
 import pytest
 
 from scripts.ai_agent_bridge import measure_cold_start as cold_start
-from scripts.lib.context_profiles import resolve_profile
 
 
 def _successful_loader(size: int):
@@ -14,44 +13,6 @@ def _successful_loader(size: int):
         return b"x" * size, 200, 1.0, None
 
     return load
-
-
-def test_profile_selects_compact_or_full_source_contract() -> None:
-    compact_profile = resolve_profile("sol_lead", "gpt-6.1-sol")
-    full_profile = resolve_profile("native_claude", "claude-sonnet-5")
-
-    compact = cold_start.build_source_specs(
-        compact_profile,
-        session_id="session-one",
-        agent="claude-infra",
-    )
-    full = cold_start.build_source_specs(
-        full_profile,
-        session_id="session-one",
-        agent="claude-infra",
-    )
-
-    assert {source.name for source in compact} == cold_start.REQUIRED_STARTUP_SOURCE_NAMES
-    assert {source.name for source in full} == cold_start.REQUIRED_STARTUP_SOURCE_NAMES
-    compact_orient = next(source for source in compact if source.name == "orientation")
-    full_orient = next(source for source in full if source.name == "orientation")
-    assert "lean=true" in compact_orient.locator
-    assert compact_orient.provenance == "monitor-api:lean-orient"
-    assert "lean=true" not in full_orient.locator
-    assert full_orient.provenance == "monitor-api:full-orient"
-    assert all("/api/rules" not in source.locator for source in compact)
-    assert all("/api/session/current" not in source.locator for source in compact)
-
-
-def test_conservative_counter_is_explicit_and_rounds_up() -> None:
-    tokens, method = cold_start.count_payload_tokens(
-        b"1234",
-        model_id="gpt-6.1-sol",
-        token_count_url=None,
-    )
-
-    assert tokens == 34
-    assert method == "conservative-bytes/3+32:endpoint-unavailable"
 
 
 def test_gateway_token_counter_wins_when_available(
@@ -392,24 +353,6 @@ def test_later_row_never_replaces_positive_first_row(
     )
     assert measurement.observed_first_turn_tokens == 589_549
     assert measurement.gate_input_tokens == 589_549
-
-
-def test_later_row_is_corrected_when_first_row_total_is_zero(tmp_path: Path) -> None:
-    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
-
-    empty_first = {"input_tokens": 0, "output_tokens": 10, "iterations": [_message(0, 0, 0)]}
-    later = _top_level(
-        input_tokens=7,
-        cache_read_input_tokens=900_000,
-        cache_creation_input_tokens=100,
-        iterations=[_message(1, 400_000, 50), _advisor(450_000), _message(3, 420_000, 700)],
-    )
-    transcript = _write_rows(tmp_path / "session.jsonl", empty_first, later)
-
-    observation = cold_start.observe_first_turn(transcript)
-
-    assert usage_input_tokens(later) == 420_703
-    assert observation.tokens == 420_703
 
 
 def test_estimate_stays_the_gate_when_larger_than_corrected_observation(

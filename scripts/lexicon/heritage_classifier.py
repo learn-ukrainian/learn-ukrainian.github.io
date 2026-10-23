@@ -1452,43 +1452,6 @@ def _cached_slovnyk_hits(term: str) -> list[dict[str, Any]]:
     return hits
 
 
-def _search_heritage_attestations(
-    term: str,
-    db_path: str | Path | None = None,
-) -> list[dict[str, Any]]:
-    try:
-        from wiki.sources_db import search_heritage
-
-        hits = search_heritage(term, limit=10, include_live_slovnyk=False, db_path=db_path)
-    except Exception:
-        hits = []
-    hits.extend(_cached_slovnyk_hits(term))
-
-    out: list[dict[str, Any]] = []
-    for hit in hits:
-        if hit.get("is_russianism"):
-            continue
-        hit_word = _normalize_word(str(hit.get("word") or ""))
-        if hit_word and hit_word != term:
-            continue
-        text = _clean_text(_heritage_hit_text(hit), limit=500)
-        classification = _classification_from_heritage_hit(hit, text)
-        if classification == "standard":
-            continue
-        out.append(
-            {
-                "classification": classification,
-                "attestation": {
-                    "source": _heritage_source_id(hit),
-                    "ref": str(hit.get("word") or hit.get("source") or term),
-                    "detail": text,
-                },
-                "sovietization_risk": int(hit.get("sovietization_risk") or 0),
-            }
-        )
-    return out
-
-
 def _heritage_hit_text(hit: dict[str, Any]) -> str:
     return str(hit.get("text") or hit.get("definition") or hit.get("etymology_text") or hit.get("snippet") or "")
 
@@ -1590,36 +1553,6 @@ def _grinchenko_exact_hits(conn: SQLiteConnection, term: str) -> list[dict[str, 
                     and _classification_from_source_text(text, default="standard") == "standard",
                 }
             )
-    return hits
-
-
-def _grinchenko_crossref_hits(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
-    rows = conn.execute(
-        "SELECT id, word, definition, source FROM grinchenko WHERE lower(definition) LIKE ? LIMIT 20",
-        (f"%{term}%",),
-    ).fetchall()
-    hits = []
-    crossref_re = re.compile(rf"(?:=|див\.)\s*{re.escape(term)}(?=\W|$)", re.IGNORECASE)
-    for row in rows:
-        definition = _normalize_word(row["definition"])
-        if not crossref_re.search(definition):
-            continue
-        text = _clean_text(row["definition"])
-        classification = _classification_from_definition(text, default="dialect")
-        hits.append(
-            {
-                "classification": classification,
-                "attestation": {
-                    "source": "grinchenko_1907",
-                    "ref": str(row["id"]),
-                    "word": row["word"],
-                    "detail": text,
-                },
-                "sovietization_risk": 0,
-                "weak_when_modern": classification == "dialect"
-                and _classification_from_source_text(text, default="standard") == "standard",
-            }
-        )
     return hits
 
 
@@ -1856,33 +1789,6 @@ def _sum11_sovietization_risk(definition: str, text: str) -> int:
     except Exception:
         return 0
     return int(risk)
-
-
-def _literary_surface_attestations(conn: SQLiteConnection, term: str) -> list[dict[str, Any]]:
-    hint = _SURFACE_QUOTE_HINTS.get(term)
-    if hint:
-        phrase, classification = hint
-        rows = _verified_literary_quote_rows(conn, phrase)
-        hits = []
-        for row in rows:
-            if phrase not in _normalize_quote(row["text"]):
-                continue
-            hits.append(
-                {
-                    "classification": classification,
-                    "attestation": {
-                        "source": "literary_fts",
-                        "ref": row["chunk_id"],
-                        "quote": phrase,
-                        "score": 1.0,
-                        "detail": _literary_ref_detail(row),
-                    },
-                }
-            )
-        if hits:
-            return hits
-
-    return _literary_term_hits(conn, term)
 
 
 def _verified_literary_quote_rows(conn: SQLiteConnection, phrase: str) -> list[sqlite3.Row]:

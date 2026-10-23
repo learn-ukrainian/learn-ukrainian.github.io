@@ -23,7 +23,6 @@ from typing import Any
 
 from scripts.review.model_catalog import (
     ModelCatalogError,
-    kimi_model_aliases,
     load_model_catalog,
     resolve_kimi_model,
 )
@@ -70,28 +69,29 @@ _SUPPORTED_TOOL_CONFIG_KEYS = (
 
 
 def kimicc_routable_model_ids(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
-    """Canonical ids listed on the catalog's kimicc endpoint, in catalog order."""
+    """Canonical ids listed on the catalog's kimicc endpoint, in catalog order.
+
+    An empty list is valid: OO-58 retired every Kimi id, so the endpoint has
+    no routable model. A non-list or a blank entry is still a catalog error.
+    """
     source = catalog or load_model_catalog()
     raw = source["review_scheduler"]["endpoints"]["kimicc"].get("models", [])
-    if not isinstance(raw, list) or not raw or not all(isinstance(item, str) and item.strip() for item in raw):
-        raise ValueError("KimiccHarness: catalog kimicc endpoint lists no routable models")
+    if not isinstance(raw, list) or not all(isinstance(item, str) and item.strip() for item in raw):
+        raise ValueError("KimiccHarness: catalog kimicc endpoint models must be a list of model ids")
     return tuple(item.strip() for item in raw)
 
 
 def kimicc_default_model(catalog: dict[str, Any] | None = None) -> str:
-    """Omitted ``--model`` on kimicc. The first routable endpoint id (kimi-code/k3 today)."""
-    return kimicc_routable_model_ids(catalog)[0]
+    """Omitted ``--model`` on kimicc.
 
-
-def kimicc_routable_aliases(catalog: dict[str, Any] | None = None) -> frozenset[str]:
-    """Every alias that resolves to a model on the kimicc endpoint."""
-    source = catalog or load_model_catalog()
-    routable_ids = set(kimicc_routable_model_ids(source))
-    names = set(routable_ids)
-    for alias, model_id in kimi_model_aliases(source).items():
-        if model_id in routable_ids:
-            names.add(alias)
-    return frozenset(names)
+    The first routable endpoint id when the catalog lists one. With no routable
+    id, the historical pin ``kimi-code/k3`` is returned so callers can refuse it
+    through ``retired_model_refusal``. It is not an executable default.
+    """
+    ids = kimicc_routable_model_ids(catalog)
+    if not ids:
+        return "kimi-code/k3"
+    return ids[0]
 
 
 def resolve_kimicc_dispatch_model(model: str | None, catalog: dict[str, Any] | None = None) -> str:
@@ -137,8 +137,9 @@ class KimiccHarness:
     """
 
     name = "kimicc"
-    # First routable id on the catalog kimicc endpoint. Not the native k3-256k default.
-    default_model = kimicc_default_model()
+    # Historical pin. OO-58 retires every Kimi id; dispatch and the runner refuse
+    # this id. Import must not call the catalog: an empty endpoint is valid.
+    default_model = "kimi-code/k3"
     supported_modes = frozenset({ADMITTED_MODE})
 
     def build_invocation(

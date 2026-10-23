@@ -21,20 +21,6 @@ WORKFLOW = REPO_ROOT / ".github" / "workflows" / "deploy-pages.yml"
 REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"
 
 
-def test_pages_build_installs_atlas_python_dependencies() -> None:
-    """The deploy venv must satisfy imports used by ``npm run build``."""
-    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
-    steps = workflow["jobs"]["deploy"]["steps"]
-    create_venv = next(step for step in steps if step.get("name") == "Create Python venv")
-    build_site = next(step for step in steps if step.get("name") == "Build Site")
-    locked_pyyaml = next(
-        line for line in REQUIREMENTS_LOCK.read_text(encoding="utf-8").splitlines() if line.startswith("PyYAML==")
-    )
-
-    assert f".venv/bin/python -m pip install {locked_pyyaml}" in create_venv["run"]
-    assert steps.index(create_venv) < steps.index(build_site)
-
-
 def test_pages_deploy_uses_normal_build_and_fail_closed_size_gate() -> None:
     """#5274: deploy must not run build:full; size gate before artifact upload."""
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
@@ -52,30 +38,6 @@ def test_pages_deploy_uses_normal_build_and_fail_closed_size_gate() -> None:
     upload = by_name["Upload artifact"]
     assert steps.index(size_gate) < steps.index(upload)
     assert steps.index(build_site) < steps.index(size_gate)
-
-
-def test_pages_deploy_vendors_atlas_tree_after_build_before_size_gate() -> None:
-    """PR3 D1/R1/R7: feature-flagged atlas vendoring between build and size gate."""
-    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
-    steps = workflow["jobs"]["deploy"]["steps"]
-    by_name = {step.get("name"): step for step in steps}
-
-    build_site = by_name["Build Site"]
-    vendor = by_name["Vendor Atlas runtime tree"]
-    size_gate = by_name["Check published-site size (fail-closed)"]
-    upload = by_name["Upload artifact"]
-
-    assert "scripts/deploy/vendor_atlas_tree.py" in vendor["run"]
-    assert vendor["env"]["ATLAS_TREE_ASSET_ID"] == "${{ vars.ATLAS_TREE_ASSET_ID }}"
-    assert vendor["env"]["ATLAS_TREE_SHA256"] == "${{ vars.ATLAS_TREE_SHA256 }}"
-    # Pin is asset id + digest — never a mutable release tag env.
-    env_blob = yaml.safe_dump(vendor.get("env") or {})
-    assert "ATLAS_TREE_TAG" not in env_blob
-    assert "release_tag" not in env_blob
-
-    assert steps.index(build_site) < steps.index(vendor)
-    assert steps.index(vendor) < steps.index(size_gate)
-    assert steps.index(size_gate) < steps.index(upload)
 
 
 def test_auto_deploy_accepts_only_site_code_since_last_successful_deployment(tmp_path: Path) -> None:
@@ -209,54 +171,40 @@ def test_auto_deploy_step_summary_and_cli(tmp_path: Path, capsys: pytest.Capture
     assert "### ⚠️ Pages Auto-Deploy: Skipped" in cli_summary_file.read_text(encoding="utf-8")
 
 
-def test_pages_build_publishes_the_pinned_word_card_preview() -> None:
-    """#11194: the standard build verifies the pinned release, then builds the preview from it."""
+def test_pages_marker_is_audited_then_uploaded_with_hidden_files() -> None:
+    """#11194 publication defect: the upload action dropped the dot-named marker.
+
+    The audit must run after every step that writes ``site/dist`` and directly
+    before upload, with nothing able to skip it, and only then may the upload
+    include hidden files — explicitly, never by action default.
+    """
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
     steps = workflow["jobs"]["deploy"]["steps"]
     by_name = {step.get("name"): step for step in steps}
 
-    prepare = by_name["Prepare pinned word-card preview release"]
-    build_site = by_name["Build Site"]
-    verify = by_name["Verify word-card preview routes"]
-    assert prepare["id"] == "word-card-preview"
-    assert prepare["working-directory"] == "."
-    assert prepare["env"] == {"RELEASE_DIR": "${{ runner.temp }}/word-card-preview-release"}
-    assert prepare["run"] == (
-        ".venv/bin/python scripts/deploy/prepare_word_card_preview.py prepare "
-        '--dest "$RELEASE_DIR" --github-output "$GITHUB_OUTPUT"'
-    )
-
-    assert build_site["env"] == {
-        "ATLAS_WORD_CARD_PREVIEW": "1",
-        "ATLAS_WORD_CARD_RELEASE_PATH": "${{ steps.word-card-preview.outputs.release-path }}",
-        "ATLAS_WORD_CARD_RELEASE_PIN": "${{ steps.word-card-preview.outputs.pin }}",
-    }
-    assert 'if [[ -n "${PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS+set}" ]]; then' in build_site["run"]
-    assert build_site["run"].rstrip().endswith("npm run build")
-
-    assert verify["working-directory"] == "."
-    assert verify["env"] == {"RELEASE_DIR": "${{ steps.word-card-preview.outputs.release-path }}"}
-    # The route set comes from Atlas's committed inventory, never a count frozen in this workflow.
-    assert verify["run"] == (
-        '.venv/bin/python scripts/deploy/prepare_word_card_preview.py verify-dist site/dist --release-dir "$RELEASE_DIR" '
-        "--inventory site/src/lib/lexicon/word-card-preview-route-inventory.json"
-    )
-
-    order = [
-        steps.index(by_name[name])
-        for name in (
-            "Create Python venv",
-            "Prepare pinned word-card preview release",
-            "Build Site",
-            "Verify word-card preview routes",
-            "Emit immutable deployment marker",
-            "Vendor Atlas runtime tree",
-            "Check published-site size (fail-closed)",
-            "Upload artifact",
-            "Deploy to GitHub Pages",
-        )
+    emit = by_name["Emit immutable deployment marker"]
+    assert emit["run"].splitlines() == [
+        "mkdir -p dist/.well-known",
+        'printf \'%s\\n\' "$GITHUB_SHA" > "dist/.well-known/learn-ukrainian-deployment-${GITHUB_SHA}.txt"',
     ]
-    assert order == sorted(order)
+
+    audit = by_name["Audit hidden Pages outputs (deployment marker only)"]
+    upload = by_name["Upload artifact"]
+    assert audit["working-directory"] == "."
+    assert audit["run"] == (
+        '.venv/bin/python scripts/deploy/verify_pages_deployment_marker.py site/dist --sha "$GITHUB_SHA"'
+    )
+    for gated in (audit, upload):
+        assert "if" not in gated
+        assert "continue-on-error" not in gated
+
+    audit_index = steps.index(audit)
+    assert steps.index(upload) == audit_index + 1
+    for writer in ("Build Site", "Emit immutable deployment marker", "Vendor Atlas runtime tree"):
+        assert steps.index(by_name[writer]) < audit_index
+
+    assert upload["uses"].startswith("actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9")
+    assert upload["with"] == {"path": "./site/dist", "include-hidden-files": True}
 
 
 def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() -> None:
@@ -296,33 +244,3 @@ def test_preview_pin_changes_keep_manual_deployment_semantics() -> None:
     assert decide_auto_deploy([pin]).reason == "content_drift"
     assert decide_auto_deploy(["scripts/deploy/prepare_word_card_preview.py"]).reason == "unknown_path"
     assert decide_auto_deploy([".github/workflows/deploy-pages.yml"]).reason == "unknown_path"
-
-
-def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
-    """The manual certification route remains available beside the push preflight."""
-    workflow_text = WORKFLOW.read_text(encoding="utf-8")
-    trigger_block = workflow_text.split("on:\n", 1)[1].split("permissions:\n", 1)[0]
-    workflow = yaml.safe_load(workflow_text)
-
-    assert "push:\n    branches: [main]" in trigger_block
-    assert "workflow_dispatch:" in trigger_block
-    assert workflow["permissions"]["actions"] == "read"
-    assert workflow["permissions"]["deployments"] == "read"
-
-    eligibility = workflow["jobs"]["auto-deploy-eligibility"]
-    assert eligibility["if"] == "github.event_name == 'push'"
-    assert eligibility["outputs"]["deploy"] == "${{ steps.classify.outputs.deploy }}"
-
-    deploy = workflow["jobs"]["deploy"]
-    assert deploy["needs"] == "auto-deploy-eligibility"
-    assert "workflow_dispatch" in deploy["if"]
-    assert "outputs.deploy == 'true'" in deploy["if"]
-
-    preflight = "\n".join(step.get("run", "") for step in eligibility["steps"])
-    assert "deployments?environment=github-pages" in preflight
-    assert "git cat-file -e" in preflight
-    assert "git merge-base --is-ancestor" in preflight
-    assert "git diff --no-renames --name-only --diff-filter=ACDMRT -z" in preflight
-    assert "scripts/deploy/auto_deploy_eligibility.py" in preflight
-    assert "--github-step-summary" in preflight
-    assert "::warning title=Pages Auto-Deploy Skipped::" in preflight

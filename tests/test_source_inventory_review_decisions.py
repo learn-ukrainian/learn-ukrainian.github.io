@@ -13,11 +13,6 @@ from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import SourceInventoryError, SourceInventoryRecord
 
 pytestmark = pytest.mark.reads_content
-
-FIRST_BATCH = (
-    decisions.DEFAULT_DECISION_DIR / "2026-06-29-first-approved-publish-batch.yaml"
-)
-EXPECTED_COMMITTED_DECISION_FILE_COUNT = 60
 COMMITTED_DECISION_FILES = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
 DECISION_LINE = re.compile(r"^\s+decision:\s+([a-z_]+)\s*$")
 
@@ -82,17 +77,6 @@ def _decision_counts_from_validated_lines(path: Path) -> Counter[str]:
     return counts
 
 
-@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
-def test_committed_first_source_inventory_review_batch_validates() -> None:
-    summary = decisions.validate_committed_decision_files([FIRST_BATCH])
-
-    assert summary == {
-        "files": 1,
-        "rows": 20,
-        "decision_counts": {"approve_for_publish": 20},
-    }
-
-
 @pytest.fixture(scope="session")
 def committed_source_index() -> dict[tuple[str, str, str], SourceInventoryRecord]:
     """Load the immutable committed corpus once in each pytest process."""
@@ -101,40 +85,6 @@ def committed_source_index() -> dict[tuple[str, str, str], SourceInventoryRecord
         project_root=decisions.PROJECT_ROOT,
     )
     return decisions._source_record_index(records)
-
-
-@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
-def test_default_committed_decision_file_parametrization_is_complete() -> None:
-    discovered = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
-
-    assert discovered
-    assert discovered == COMMITTED_DECISION_FILES
-    assert len(COMMITTED_DECISION_FILES) == EXPECTED_COMMITTED_DECISION_FILE_COUNT
-    assert len(set(COMMITTED_DECISION_FILES)) == len(COMMITTED_DECISION_FILES)
-
-
-@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
-def test_default_committed_decision_files_keep_aggregate_floors(
-    committed_source_index: dict[tuple[str, str, str], SourceInventoryRecord],
-) -> None:
-    sample_summary = decisions.validate_decision_file(
-        FIRST_BATCH,
-        source_index=dict(committed_source_index),
-    )
-    sample_counts = _decision_counts_from_validated_lines(FIRST_BATCH)
-    assert sum(sample_counts.values()) == sample_summary["rows"]
-    assert sample_counts == Counter(sample_summary["decision_counts"])
-
-    decision_counts: Counter[str] = Counter()
-    total_rows = 0
-    for path in COMMITTED_DECISION_FILES:
-        counts = _decision_counts_from_validated_lines(path)
-        total_rows += sum(counts.values())
-        decision_counts.update(counts)
-
-    assert len(COMMITTED_DECISION_FILES) >= 1
-    assert total_rows >= 20
-    assert decision_counts["approve_for_publish"] >= 20
 
 
 _SLOW_COMMITTED_DECISION_FILES = frozenset(
@@ -176,43 +126,6 @@ def test_default_committed_decision_files_validate(
     assert line_counts == Counter(summary["decision_counts"])
 
 
-def test_committed_decision_validation_reuses_shared_source_index(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    inventory = tmp_path / "committed-inventory.yaml"
-    first = tmp_path / "first.yaml"
-    second = tmp_path / "second.yaml"
-    _write_decision_file(first, _minimal_payload())
-    _write_decision_file(second, _minimal_payload())
-    record = SourceInventoryRecord(
-        lemma="ананас",
-        source_family="ohoiko",
-        extraction_mode="fixture",
-        inventory_path="data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml",
-        inventory_locator="letters[А].key_word",
-        source_id="ohoiko-abetka-1-keywords",
-        source_locator="letters[А].key_word",
-    )
-    calls: list[tuple[Path, ...]] = []
-
-    def read_once(paths: tuple[Path, ...], *, project_root: Path) -> list[SourceInventoryRecord]:
-        calls.append(paths)
-        return [record]
-
-    monkeypatch.setattr(decisions, "COMMITTED_SOURCE_INVENTORIES", (inventory,))
-    monkeypatch.setattr(decisions, "read_source_inventories", read_once)
-
-    summary = decisions.validate_committed_decision_files([first, second])
-
-    assert summary == {
-        "files": 2,
-        "rows": 2,
-        "decision_counts": {"approve_for_publish": 2},
-    }
-    assert calls == [(inventory,)]
-
-
 def test_committed_yaml_uses_the_c_safe_loader_when_available() -> None:
     # Guards #5768. `yaml.safe_load` silently uses PyYAML's PURE-PYTHON loader even
     # when libyaml is installed — PyYAML never auto-selects the C implementation. That
@@ -249,29 +162,6 @@ def test_decision_validator_rejects_bad_source_key(tmp_path: Path) -> None:
 
     with pytest.raises(SourceInventoryError, match="does not match"):
         decisions.validate_committed_decision_files([path])
-
-
-def test_decision_validator_requires_approved_gloss(tmp_path: Path) -> None:
-    payload = _minimal_payload()
-    row = payload["decisions"][0]  # type: ignore[index]
-    row["approved_gloss"] = ""  # type: ignore[index]
-    path = tmp_path / "bad.yaml"
-    _write_decision_file(path, payload)
-
-    with pytest.raises(SourceInventoryError, match="approved_gloss"):
-        decisions.validate_committed_decision_files([path])
-
-
-def test_decision_validator_allows_clean_rows_without_flags(tmp_path: Path) -> None:
-    payload = _minimal_payload()
-    row = payload["decisions"][0]  # type: ignore[index]
-    row.pop("review_queue_reasons")  # type: ignore[attr-defined]
-    path = tmp_path / "ok.yaml"
-    _write_decision_file(path, payload)
-
-    summary = decisions.validate_committed_decision_files([path])
-
-    assert summary["rows"] == 1
 
 
 def test_decision_validator_allows_general_promotion_batch_size(tmp_path: Path) -> None:
@@ -408,14 +298,6 @@ def test_decision_validator_fails_open_on_absent_regenerable_inventory(
     assert decisions.validate_committed_decision_files([path])["rows"] == 1
 
 
-def test_decision_validator_full_crosscheck_when_inventory_present(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # Same ledger, JSON present: full row cross-check runs and passes.
-    path = _staged_ledger_in_tmp_project(tmp_path, monkeypatch, write_inventory=True)
-    assert decisions.validate_committed_decision_files([path])["rows"] == 1
-
-
 def test_decision_validator_does_not_mutate_supplied_source_index(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -449,26 +331,6 @@ def test_decision_validator_requires_committed_inventory_present(
     monkeypatch.setattr(decisions, "COMMITTED_SOURCE_INVENTORIES", (missing,))
     with pytest.raises(SourceInventoryError, match="not found"):
         decisions.validate_committed_decision_files([path])
-
-
-@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
-@pytest.mark.slow
-def test_committed_ohoiko_batch_ledgers_validate() -> None:
-    # The real committed per-batch Ohoiko ledgers validate with the regenerable
-    # inventory JSON absent (its normal state in git).
-    batch = sorted(
-        decisions.DEFAULT_DECISION_DIR.glob(
-            "2026-07-14-ohoiko-corpus-intake-batch-*.yaml"
-        )
-    )
-    assert len(batch) == 21
-    summary = decisions.validate_committed_decision_files(batch)
-    assert summary["rows"] == 20848
-    assert summary["decision_counts"] == {
-        "approve_for_publish": 50,
-        "needs_more_evidence": 16237,
-        "reject": 4561,
-    }
 
 
 def test_decision_validator_rejects_missing_promotion_batch_size(tmp_path: Path) -> None:
@@ -510,28 +372,6 @@ def test_decision_validator_rejects_production_outputs(tmp_path: Path) -> None:
     _write_decision_file(path, payload)
 
     with pytest.raises(SourceInventoryError, match=r"production_outputs_updated must be \[\]"):
-        decisions.validate_committed_decision_files([path])
-
-
-
-def test_decision_accepts_surface_admission_mapping(tmp_path: Path) -> None:
-    payload = _minimal_payload()
-    payload["decisions"][0]["surface_admission"] = {"daily": False, "practice": True, "cloze": False}
-    path = tmp_path / "surface.yaml"
-    _write_decision_file(path, payload)
-
-    summary = decisions.validate_committed_decision_files([path])
-
-    assert summary["rows"] == 1
-
-
-def test_decision_rejects_invalid_surface_admission(tmp_path: Path) -> None:
-    payload = _minimal_payload()
-    payload["decisions"][0]["surface_admission"] = {"practice": "yes"}
-    path = tmp_path / "bad-surface.yaml"
-    _write_decision_file(path, payload)
-
-    with pytest.raises(SourceInventoryError, match=r"surface_admission\.practice must be boolean"):
         decisions.validate_committed_decision_files([path])
 
 

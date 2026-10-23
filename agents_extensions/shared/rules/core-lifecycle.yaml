@@ -1,0 +1,521 @@
+# Per-rule lifecycle records. Contract: docs/decisions/2026-10-22-rule-lifecycle.md.
+# Protection takes precedence over placement and tool coverage.
+# Origins cite traced orders and decisions; unknown origins await CTO review.
+# Tiers classify the existing rules; this file does not move or rewrite them.
+# Partial tool coverage does not demote a compound invariant from core.
+
+p0-tool:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p0-live:
+  origin: 'unknown'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p0-honest:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p0-report:
+  origin: '#6318'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p0-residual:
+  origin: '#5985'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p0-gates:
+  origin: '#5751'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p0-challenge:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p1-role:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p1-advisors:
+  origin: '#9616'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p1-driver:
+  origin: '#6401'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p1-worker:
+  origin: '#5737'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p1-review:
+  origin: '#5751'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p1-brief:
+  origin: 'OO-69'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p1-acp:
+  origin: '#7157'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p1-inbox:
+  origin: '#6159'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p2-select:
+  origin: '#4412'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p2-table:
+  origin: '#9275'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p2-review:
+  origin: '#9769'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p2-lang:
+  origin: '#10835'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p2-agy:
+  origin: '#10152'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p2-kimi:
+  origin: 'OO-58'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p2-glm:
+  origin: '#4316, #7150'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p2-others:
+  origin: 'cto-deepseek-unban'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p2-cursor:
+  origin: '#9274'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p2-retired:
+  origin: '#9996'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p2-capacity:
+  origin: '#4412'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p3-dor:
+  origin: '#8225'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p3-recheck:
+  origin: '#8225'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p3-outcome:
+  origin: '#8224'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p3-ac:
+  origin: '#5309'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p3-terminal:
+  origin: '#5309'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p3-residual:
+  origin: '#5985'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-worktree:
+  origin: '#5587'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-deliver:
+  origin: '#5800'
+  tier: tool_enforced
+  enforcement:
+    kind: tool
+    name: scripts/delegate.py
+  review_by: '2026-11-22'
+
+p4-order:
+  origin: 'OO-53'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-head:
+  origin: 'OO-69'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-closeout:
+  origin: '#6431'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-issues:
+  origin: 'OO-69'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-next:
+  origin: '#4703'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-reap:
+  origin: '#6431'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-sweep:
+  origin: '#9129'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-skip:
+  origin: '#6431'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p4-log:
+  origin: 'unknown'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p4-stream:
+  origin: '#4708'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p5-verify:
+  origin: '#5364'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p5-table:
+  origin: '#5364'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p5-scope:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p5-soviet:
+  origin: '#8094'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p6-alone:
+  origin: '#7098'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p6-orders:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p6-approval:
+  origin: '#9616'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p6-operator:
+  origin: '#9004'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p6-escalate:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p7-start:
+  origin: '#6263'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p7-health:
+  origin: 'unknown'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p7-end:
+  origin: '#1865'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p8-public:
+  origin: '#9297'
+  tier: PROTECTED
+  enforcement:
+    kind: tool
+    name: scripts/opsec/prepublish.py
+  review_by: '2026-11-22'
+
+p8-egress:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p8-secrets:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p9-mission:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p9-sources:
+  origin: '#8094'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p9-ukrainian:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p9-russianism:
+  origin: '#5364'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+p9-immersion:
+  origin: '2026-05-13-ulp-derived-student-aware-immersion'
+  tier: PROTECTED
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+p9-rights:
+  origin: '#9618'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+r2-quality:
+  origin: '#4412'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+r2-root:
+  origin: 'OO-69'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+r2-simple:
+  origin: '#8817'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+r2-findings:
+  origin: '#11452'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+r2-outcome:
+  origin: '#6318'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+r2-prompts:
+  origin: '#6373'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+r2-exec:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+r2-protect:
+  origin: 'unknown'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+r2-trailer:
+  origin: 'unknown'
+  tier: core
+  enforcement:
+    kind: tool
+    name: scripts/audit/lint_agent_trailer.py
+  review_by: '2026-11-22'
+
+r2-data:
+  origin: '#7019'
+  tier: core
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+r2-lease:
+  origin: 'unknown'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+r2-fleet:
+  origin: '#6159'
+  tier: task_scoped
+  enforcement: {kind: text}
+  review_by: '2026-11-22'
+
+r2-research:
+  origin: '#5008'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+r2-blocker:
+  origin: '#6379'
+  tier: task_scoped
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+ca-gates:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+ca-targets:
+  origin: '#5086'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+ca-review:
+  origin: '#1586'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+ca-language:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+ca-activities:
+  origin: '#660'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'
+
+ca-proof:
+  origin: 'unknown'
+  tier: PROTECTED
+  enforcement: {kind: checklist}
+  review_by: '2026-11-22'

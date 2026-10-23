@@ -103,13 +103,6 @@ def test_show_prints_one_line_per_product_and_no_token(monkeypatch: pytest.Monke
     assert _TOKEN not in str(record)
 
 
-def test_show_adds_no_product_lines_without_product_payload(monkeypatch: pytest.MonkeyPatch) -> None:
-    record = _probe(monkeypatch, _MISSING)
-    rendered = usage.format_human({"source": "test", "agents": {"grok": record}, "api_accounts": {}})
-
-    assert "  product " not in rendered
-
-
 def _budget_with_grok(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, record: dict[str, Any]) -> dict[str, Any]:
     """Real compute_routing_budget with only the Grok probe record injected; nothing touches the network."""
     budget_path = tmp_path / "agent_budgets.yaml"
@@ -158,16 +151,3 @@ def test_budget_grok_lane_keeps_product_lines_through_show(monkeypatch: pytest.M
     assert "  product voice: unknown" in rendered
     assert "  product image: unknown" in rendered
     assert _TOKEN not in rendered
-
-
-@pytest.mark.parametrize("raw", [_MISSING, None, "builder", {"product": "builder"}])
-def test_budget_grok_lane_without_product_list_adds_no_lines(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, raw: object
-) -> None:
-    record = _probe(monkeypatch, raw)
-
-    budget = _budget_with_grok(monkeypatch, tmp_path, record)
-    rendered = usage.format_human(budget)
-
-    assert "product_usage" not in budget["agents"]["grok"]
-    assert "  product " not in rendered

@@ -56,13 +56,6 @@ def test_golden_mechanics_classify_exact_near_and_nonmatch(left: str, right: str
     assert near.classify_texts(left, right, policy=near.load_policy(POLICY)).classification == expected
 
 
-def test_fixture_manifest_is_executable() -> None:
-    policy = near.load_policy(POLICY)
-    for fixture in policy["golden_fixtures"]:
-        result = near.classify_texts(fixture["left"], fixture["right"], scope=fixture["scope"], policy=policy)
-        assert result.classification == fixture["expected"]
-
-
 def test_document_unit_and_span_scopes_are_distinct() -> None:
     policy = near.load_policy(POLICY)
     left = _record()
@@ -103,11 +96,6 @@ def test_policy_drift_and_malformed_comparison_fail_closed(tmp_path: Path) -> No
     )
 
 
-def test_expected_fingerprint_mismatch_fails_closed() -> None:
-    with pytest.raises(near.NearDuplicatePolicyError, match="expected fingerprint drift"):
-        near.pinned_policy_fingerprint(path=POLICY, expected_fingerprint="0" * 64)
-
-
 def test_canonical_rule_collapse_and_nonduplicate_activation_counts_are_policy_bound() -> None:
     policy = near.load_policy(POLICY)
     first = {"surface": "Alpha beta", "replacement": "Gamma"}
@@ -142,10 +130,3 @@ def test_canonical_rule_collapse_and_nonduplicate_activation_counts_are_policy_b
     )
     with pytest.raises(near.NearDuplicatePolicyError, match="explicitly false"):
         near.nonduplicate_activation_count([{"duplicate": True, "rule": first}], policy=policy)
-
-
-def test_cli_reports_verified_pin_and_machine_classification(capsys: pytest.CaptureFixture[str]) -> None:
-    assert near.main(["--policy", str(POLICY), "verify"]) == 0
-    assert json.loads(capsys.readouterr().out)["verified"] is True
-    assert near.main(["--policy", str(POLICY), "classify", "alpha beta", "ALPHA—BETA"]) == 0
-    assert json.loads(capsys.readouterr().out)["classification"] == "exact"

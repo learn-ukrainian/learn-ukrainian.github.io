@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
-import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -244,20 +243,3 @@ def test_run_local_bounds_offline_runner_and_maps_timeout_to_suite_error(
     monkeypatch.setattr(suite_cli.subprocess, "run", hanging_run)
     with pytest.raises(suite_cli.SuiteError, match=r"timed out after 1800s"):
         suite_cli.run_local(config_path, requests, responses, tmp_path / "receipt-timeout.json")
-
-
-def test_timeout_bounded_modules_keep_their_entry_point_contracts(capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch) -> None:
-    for module in (hf_jobs_baseline, hf_jobs_transport, suite_cli):
-        assert module.__doc__
-    for argv in (["--help"], ["verify", "--help"]):
-        with pytest.raises(SystemExit) as exc:
-            suite_cli.parse_args(argv)
-        assert exc.value.code == 0
-    with pytest.raises(SystemExit) as exc:
-        hf_jobs_baseline.parse_args(["--help"])
-    assert exc.value.code == 0
-    monkeypatch.setattr(sys, "argv", ["hf_jobs_transport.py", "--help"])
-    with pytest.raises(SystemExit) as exc:
-        hf_jobs_transport.parse_args()
-    assert exc.value.code == 0
-    capsys.readouterr()

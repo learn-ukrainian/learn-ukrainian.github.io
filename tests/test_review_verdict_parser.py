@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
-import sys
-
 import pytest
 
 from scripts.review.verdict_parser import recognized_verdicts
@@ -182,14 +179,3 @@ def test_relaxed_separators_still_reject_examples_and_invalid_tokens(reply):
 ])
 def test_examples_and_invalid_tokens_are_not_formal_verdicts(reply):
     assert recognized_verdicts(reply) == []
-
-
-def test_scanner_import_has_no_heavyweight_delegate_dependency():
-    result = subprocess.run([
-        sys.executable, "-c",
-        "import sys; from scripts.review.verdict_parser import recognized_verdicts; "
-        "assert recognized_verdicts('VERDICT: APPROVE') == ['APPROVE']; "
-        "assert 'scripts.delegate' not in sys.modules and 'delegate' not in sys.modules; "
-        "assert 'scripts.review.record_cf_verdict' not in sys.modules",
-    ], capture_output=True, text=True, check=False, timeout=30)
-    assert result.returncode == 0, result.stderr

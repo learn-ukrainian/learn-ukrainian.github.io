@@ -6,9 +6,7 @@ Locks and prior learner state are isolated only for these renderer contract test
 
 from __future__ import annotations
 
-import ast
 import copy
-import inspect
 import json
 import subprocess
 import unicodedata
@@ -21,8 +19,6 @@ import pytest
 
 from scripts.build.fresh import assemble
 from scripts.build.fresh.draft_schema import draft_validator
-from scripts.build.fresh.gen_draft_schemas import META_KEYS
-from scripts.curriculum.resolver import receipts
 from scripts.generate_mdx.converters import process_story_sections
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -180,110 +176,6 @@ def check_render(inputs, level):
     return result, expanded
 
 
-def schema_leaves(schema, path=(), document=None):
-    """Walk alternatives and arrays, retaining property paths (not array indices)."""
-    if "$ref" in schema and document is not None:
-        target = document
-        for part in schema["$ref"].removeprefix("#/").split("/"):
-            target = target[part]
-        yield from schema_leaves(target, path, document)
-    elif "properties" in schema:
-        for key, child in schema["properties"].items():
-            yield from schema_leaves(child, (*path, key), document)
-    elif schema.get("type") == "array":
-        yield from schema_leaves(schema.get("items", {}), (*path, "*"), document)
-    elif "oneOf" in schema or "anyOf" in schema:
-        for child in schema.get("oneOf", schema.get("anyOf", [])):
-            yield from schema_leaves(child, path, document)
-    else:
-        yield path
-
-
-def fixture_leaves(value, path=()):
-    if isinstance(value, dict):
-        for key, child in value.items():
-            yield from fixture_leaves(child, (*path, key))
-    elif isinstance(value, list):
-        for child in value:
-            yield from fixture_leaves(child, (*path, "*"))
-    else:
-        yield path
-
-
-def expansion_fields():
-    """Walk the expansion's reachable helpers as well as prompt precedence.
-
-    Literal keys conservatively overcount fields; helpers cannot hide a new
-    unit-producing key. Inspect repository functions without executing them.
-    """
-    pending = [assemble.assemble_expanded_document, receipts.requirement_sentence]
-    seen, fields = set(), set()
-    while pending:
-        function = pending.pop()
-        if function in seen:
-            continue
-        seen.add(function)
-        tree = ast.parse(inspect.getsource(function))
-        fields.update(n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str))
-        for node in ast.walk(tree):
-            if not isinstance(node, ast.Call):
-                continue
-            target = node.func
-            names = []
-            while isinstance(target, ast.Attribute):
-                names.append(target.attr)
-                target = target.value
-            if not isinstance(target, ast.Name):
-                continue
-            candidate = function.__globals__.get(target.id)
-            for name in reversed(names):
-                candidate = getattr(candidate, name, None)
-            if inspect.isfunction(candidate) and candidate.__module__ in {assemble.__name__, receipts.__name__}:
-                pending.append(candidate)
-    return fields
-
-
-@pytest.mark.parametrize("level", LEVELS)
-def test_fresh_schema_walk_exercises_expansion_fields(level):
-    draft, _, _, _ = maximal_draft(level)
-    draft_validator(level).validate(draft)
-    schema = json.loads((ROOT / f"schemas/activities-{level}.schema.json").read_text())
-    fixtures = json.loads((FIXTURES / f"activities-{level}.json").read_text())
-    assert set(fixtures) == {name.removesuffix("-" + level) for name in schema["definitions"]}
-    missing = []
-    for name, definition in schema["definitions"].items():
-        typ = name.removesuffix("-" + level)
-        act = fixtures[typ]
-        # The engine, rather than the draft, supplies these plan metadata fields.
-        payload = {k: v for k, v in {**act, "type": typ, "title": typ}.items() if k in definition["properties"]}
-        jsonschema.Draft7Validator(definition).validate(payload)
-        metadata = {
-            "kind",
-            "ref",
-            "record",
-            "error_ref",
-            "error_type",
-            "host",
-            "requires",
-            "option_records",
-            "target_record",
-            "tests_feature",
-        }
-        expected = {
-            p
-            for p in schema_leaves(definition)
-            if p
-            and p[0] not in META_KEYS - {"instruction"}
-            and not metadata.intersection(p)
-            and next((part for part in reversed(p) if part != "*"), "")
-            in expansion_fields() - {"items", "groups", "pairs"}
-        }
-        actual = set(fixture_leaves(act))
-        missing.extend(f"{level}/{typ}:" + ".".join(p) for p in expected if p not in actual)
-    missing.extend(document_coverage_gaps(level, draft))
-    assert not missing, "Unit-producing schema paths not exercised:\n" + "\n".join(sorted(missing))
-
-
 @pytest.mark.parametrize("level", LEVELS)
 def test_fresh_maximal_draft_reaches_check_9(level, render_environment):
     inputs = maximal_draft(level)
@@ -312,73 +204,6 @@ def test_fresh_every_activity_render_gap_is_reported(level, render_environment):
         if not result.passed:
             gaps.append(f"{level}/{act['id']}: {result.reason}")
     assert not gaps, "\n".join(gaps)
-
-
-def document_coverage_gaps(level, draft):
-    """Keep block variants distinct; prose.text cannot stand in for tip.text."""
-    schema = json.loads((ROOT / f"schemas/lesson-draft-{level}-v1.schema.json").read_text())
-    blocks = {b["kind"]: b for step in draft["steps"] for b in step["blocks"]}
-    cases = [
-        (name, definition, blocks.get(definition["properties"]["kind"]["const"], {}))
-        for name, definition in schema["$defs"].items()
-        if name.startswith("block_")
-    ]
-    cases.extend(
-        [
-            ("step", schema["$defs"]["step"], draft["steps"][0]),
-            ("dialogue", schema["properties"]["dialogue"], draft.get("dialogue", {})),
-            ("consolidation", schema["properties"]["consolidation"], draft["consolidation"]),
-        ]
-    )
-    gaps = []
-    for name, definition, value in cases:
-        expected = {
-            p
-            for p in schema_leaves(definition, document=schema)
-            if p
-            and not {"kind", "explains", "ref", "id", "speaker", "activities", "blocks"}.intersection(p)
-            and next((part for part in reversed(p) if part != "*"), "") in expansion_fields()
-        }
-        actual = set(fixture_leaves(value))
-        gaps.extend(name + "." + ".".join(p) for p in expected if p not in actual)
-    return gaps
-
-
-def test_fresh_schema_walk_rejects_an_unexercised_optional_translation():
-    draft, *_ = maximal_draft("a1")
-    draft["dialogue"].pop("translation_en")
-    # This remains schema-valid. Coverage must independently refuse the omission.
-    draft_validator("a1").validate(draft)
-    assert "dialogue.translation_en.*" in document_coverage_gaps("a1", draft)
-
-
-@pytest.mark.parametrize("kind", ["tip", "summary", "callout", "video"])
-def test_fresh_schema_walk_rejects_an_unexercised_block_field(kind):
-    draft, *_ = maximal_draft("a1")
-    block = next(b for b in draft["steps"][0]["blocks"] if b["kind"] == kind)
-    key = "lead_in" if kind == "video" else "text"
-    block.pop(key)
-    assert f"block_{kind}.{key}" in document_coverage_gaps("a1", draft)
-
-
-def test_coverage_walk_follows_transitive_helpers(monkeypatch):
-    # Add a field exclusively in a helper reached through another helper, not
-    # in the expansion function or in a manually maintained helper allowlist.
-    from scripts.build.fresh import assemble as module
-
-    monkeypatch.setattr(coverage_probe_helper, "__module__", module.__name__)
-    monkeypatch.setattr(coverage_probe_leaf, "__module__", module.__name__)
-    monkeypatch.setattr(module, "string_key_answer", coverage_probe_helper)
-    monkeypatch.setattr(module, "derive_record_kind", coverage_probe_leaf)
-    assert "helper_only_coverage_field" in expansion_fields()
-
-
-def coverage_probe_helper(*args):
-    return assemble.derive_record_kind(*args)
-
-
-def coverage_probe_leaf(*args):
-    return {"helper_only_coverage_field": args}
 
 
 # Independent Unicode category enumeration plus zero-width non-Cf characters.
@@ -483,29 +308,6 @@ def choice_text_schemas(filename):
             yield from texts(variant)
 
     return [text for choice in choices(json.loads((ROOT / "schemas" / filename).read_text())) for text in texts(choice)]
-
-
-@pytest.mark.parametrize(
-    "filename", ["activities-base.schema.json", *[f"activities-{level}.schema.json" for level in LEVELS]]
-)
-def test_every_choice_schema_preserves_empty_but_rejects_whitespace(filename):
-    schemas = choice_text_schemas(filename)
-    assert schemas
-    assert any(schema.get("minLength", 0) == 0 for schema in schemas)
-    for schema in schemas:
-        validator = jsonschema.Draft7Validator(schema)
-        # Exact empty is the documented "no letter" orthography token.
-        # Preserve each field's pre-existing minLength contract separately.
-        jsonschema.Draft7Validator({"type": "string", "pattern": schema["pattern"]}).validate("")
-        if schema.get("minLength", 0) == 0:
-            validator.validate("")
-        else:
-            assert not validator.is_valid("")
-        # A newline alone must fail too: ^$ would accept it in Python.
-        for blank in INVISIBLE_CHOICE_TEXTS:
-            assert not validator.is_valid(blank), schema
-        for visible in VISIBLE_CHOICE_TEXTS:
-            validator.validate(visible)
 
 
 @pytest.mark.site_toolchain

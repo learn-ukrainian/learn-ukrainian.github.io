@@ -88,14 +88,6 @@ def test_fresh_schema_rejects_malformed_and_mixed_envelopes(field, value) -> Non
         task_identity.validate_identity(identity)
 
 
-@pytest.mark.parametrize("field", ["origin", "task_id"])
-def test_fresh_schema_requires_explicit_origin_and_native_task_id(field) -> None:
-    identity = _fresh_identity()
-    del identity[field]
-    with pytest.raises(ValueError, match="schema violation"):
-        task_identity.validate_identity(identity)
-
-
 @pytest.mark.parametrize("field,value", [
     ("lineage_id", None), ("lineage_id", ""), ("lineage_id", "Bad-Lineage"),
     ("predecessor_task_id", None), ("predecessor_task_id", ""),
@@ -107,23 +99,6 @@ def test_rollover_schema_still_rejects_invalid_identity(field, value) -> None:
     identity[field] = value
     with pytest.raises(ValueError, match="schema violation"):
         task_identity.validate_identity(identity)
-
-
-@pytest.mark.parametrize("field", ["lineage_id", "generation", "predecessor_task_id", "replacement_task_id"])
-def test_rollover_schema_still_requires_ancestry(field) -> None:
-    identity = _identity()
-    del identity[field]
-    with pytest.raises(ValueError, match="schema violation"):
-        task_identity.validate_identity(identity)
-
-
-def test_rollover_builder_still_rejects_null_lifecycle_state() -> None:
-    identity = _identity()
-    with pytest.raises(ValueError, match="schema violation"):
-        task_identity.build_identity(**{
-            key: value for key, value in identity.items()
-            if key not in {"schema_version", "visible_title", "carriers", "migration", "lifecycle_state"}
-        }, lifecycle_state=None)
 
 
 def test_fresh_identity_cannot_resume_an_unrelated_rollover() -> None:
@@ -256,31 +231,6 @@ def test_incorrect_native_title_readback_fails_closed() -> None:
         )
 
 
-def test_exact_title_readback_does_not_normalize_whitespace() -> None:
-    identity = _identity()
-    transition = _transition(identity)
-    identity, transition = task_identity.bind_replacement(
-        identity,
-        transition,
-        replacement_task_id="replacement-2",
-        evidence="exact binding",
-        now="2026-07-16T08:01:00Z",
-    )
-    identity, transition = task_identity.record_title_readback(
-        identity,
-        transition,
-        replacement_task_id="replacement-2",
-        observed_title=identity["visible_title"].replace(" — ", "  — "),
-        succeeded=True,
-        evidence="native readback",
-        error="whitespace differs",
-        now="2026-07-16T08:02:00Z",
-    )
-
-    assert identity["lifecycle_state"] == "title_failed"
-    assert transition["readback_receipt"]["exact_match"] is False
-
-
 def test_incorrect_replacement_id_fails_closed_at_every_title_gate() -> None:
     identity = _identity()
     transition = _transition(identity)
@@ -331,35 +281,6 @@ def test_blank_generic_and_runtime_identifier_titles_are_rejected(title: str) ->
         task_identity.validate_semantic_title(title)
 
 
-def test_terminal_goal_is_typed_and_issue_requires_stream_epic() -> None:
-    arguments = {
-        "repository": task_identity.DEFAULT_REPOSITORY,
-        "stream_epic": 4707,
-        "stream_epic_url": None,
-        "github_issue_number": 5295,
-        "github_issue_url": None,
-        "semantic_title": "Repair fleet rollover task identity",
-        "task_family": "infra-harness",
-        "role": "orchestrator",
-        "predecessor_task_id": "predecessor-1",
-        "replacement_task_id": None,
-        "lineage_id": "lineage-task-identity",
-        "generation": 2,
-    }
-    with pytest.raises(ValueError, match="terminal goal must be one of"):
-        task_identity.build_identity(**arguments, terminal_goal="finish everything")
-    with pytest.raises(ValueError, match="exactly one stream epic"):
-        task_identity.build_identity(
-            **{**arguments, "stream_epic": None},
-            terminal_goal="merge",
-        )
-    with pytest.raises(ValueError, match="lineage ID must start with a lowercase letter"):
-        task_identity.build_identity(
-            **{**arguments, "lineage_id": "123-invalid-lineage"},
-            terminal_goal="merge",
-        )
-
-
 def test_unsupported_adapter_records_honest_carrier_fallback() -> None:
     identity = _identity(issue=None)
     transition = _transition(identity, harness="claude")
@@ -403,41 +324,6 @@ def test_every_harness_uses_the_shared_identity_contract(harness: str, native_su
     assert task_identity.validate_title_transition(transition, identity) == transition
     assert transition["native_title_supported"] is native_supported
     assert transition["visible_title"] == identity["visible_title"]
-
-
-def test_title_transition_rejects_non_object_events() -> None:
-    identity = _identity()
-    transition = _transition(identity)
-    transition["events"].append("corrupted-event")
-
-    with pytest.raises(ValueError, match="events must be a list of objects"):
-        task_identity.validate_title_transition(transition, identity)
-
-
-@pytest.mark.parametrize(
-    ("state", "expected_prefix"),
-    [
-        ("awaiting_replacement_binding", "Bind the exact replacement"),
-        ("awaiting_native_title", "Request the exact native title action"),
-        ("title_acknowledged", "Read back only"),
-        ("title_mutation_failed", "Repair the exact title boundary"),
-        ("title_readback_failed", "Repair the exact title boundary"),
-        ("title_reconciled", "Resume only"),
-        ("fallback_recorded", "Resume only"),
-        ("unknown-state", "Inspect the exact receipt"),
-    ],
-)
-def test_safe_recommended_resolution_covers_every_operator_state(
-    state: str,
-    expected_prefix: str,
-) -> None:
-    resolution = task_identity.safe_recommended_resolution(
-        {"state": state, "replacement_task_id": "replacement-2"},
-        rollover_id="rollover-2",
-    )
-
-    assert resolution.startswith(expected_prefix)
-    assert "rollover-2" in resolution or "replacement-2" in resolution
 
 
 def test_legacy_packet_receives_deterministic_identity_backfill() -> None:

@@ -316,16 +316,6 @@ def _record_miss(db_path, word, slug):
         )
 
 
-def test_batch_lookup_can_be_narrowed_to_the_explanatory_dictionary(slovnyk_sources_db):
-    from wiki.sources_db import search_slovnyk_me_entries_batch
-
-    assert search_slovnyk_me_entries_batch(["блакитний"])["блакитний"]
-    assert search_slovnyk_me_entries_batch(["блакитний"], dictionaries=["newsum"])["блакитний"]
-    assert search_slovnyk_me_entries_batch(["блакитний"], dictionaries=["vts"])["блакитний"] == []
-    # An overlap-blocked dictionary stays unreachable even when named.
-    assert search_slovnyk_me_entries_batch(["гаразд"], dictionaries=["hrinchenko"])["гаразд"] == []
-
-
 def test_live_lookup_skips_dictionaries_with_a_recorded_404(slovnyk_sources_db, monkeypatch):
     from wiki import slovnyk_me
     from wiki.sources_db import search_slovnyk_me

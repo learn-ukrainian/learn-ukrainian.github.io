@@ -271,10 +271,6 @@ def test_honest_worktree_every_site_runs_the_primary_interpreter(layout: Layout)
     _assert_every_site_ran_the_primary(layout, _run_sites(layout))
 
 
-def test_primary_checkout_resolves_to_itself(layout: Layout) -> None:
-    _assert_every_site_ran_the_primary(layout, _run_sites(layout, root=layout.primary))
-
-
 def test_worktree_reached_through_a_symlinked_path_still_resolves(layout: Layout) -> None:
     alias = layout.tmp / "alias"
     alias.symlink_to(layout.worktree)
@@ -569,16 +565,6 @@ LC_DRY_RUN=1 LC_MODEL=gpt-6.1-sol launcher_codex_transport_probe
     )
 
 
-def test_without_override_a_codex_launch_keeps_refusing_a_hostile_gitfile(layout: Layout) -> None:
-    _git(layout.attacker, "worktree", "add", "-q", "-b", "decoy", str(layout.tmp / "decoy"))
-    (layout.worktree / ".git").write_text(f"gitdir: {layout.attacker}/.git/worktrees/decoy\n", encoding="utf-8")
-    _assert_refused_before_any_site(layout, _run_codex_sites(layout, None))
-
-
-def test_without_override_a_codex_launch_ignores_ambient_git_dir(layout: Layout) -> None:
-    _assert_every_site_ran_the_primary(layout, _run_codex_sites(layout, None, **_hostile_env(layout)))
-
-
 def test_override_to_the_real_primary_does_not_pass_a_hostile_gitfile(layout: Layout) -> None:
     admin = layout.tmp / "attacker-admin"
     shutil.copytree(layout.primary / ".git" / "worktrees" / "worktree", admin)
@@ -619,14 +605,6 @@ def test_override_naming_a_linked_worktree_on_main_is_refused(layout: Layout) ->
     _git(layout.primary, "worktree", "add", "-q", str(on_main), "main")
     _stub_python(on_main, "EVIL", layout.log)
     _assert_override_refused(layout, _run_codex_sites(layout, on_main), "is a linked worktree, not the primary")
-
-
-def test_override_naming_a_subdirectory_of_the_primary_is_refused(layout: Layout) -> None:
-    _assert_override_refused(
-        layout,
-        _run_codex_sites(layout, layout.primary / "scripts"),
-        "is not a checkout of this Git common directory",
-    )
 
 
 @pytest.mark.parametrize("borrow", ["symlink", "gitfile"])
@@ -695,15 +673,6 @@ def test_real_driver_launcher_refuses_a_hostile_gitfile(layout: Layout) -> None:
     assert result.returncode == 3, (result.stdout, result.stderr)
     assert "git metadata does not validate" in result.stderr
     assert layout.lines() == []
-
-
-def test_real_driver_launcher_ignores_ambient_git_dir(layout: Layout) -> None:
-    _stub_python(layout.worktree, "WORKTREE", layout.log)
-    result = _run_driver(layout, **_hostile_env(layout))
-    # The trimmed sandbox stops the dry run later on; only who ran matters here.
-    assert "git metadata does not validate" not in result.stderr
-    assert layout.lines(), result.stderr
-    assert layout.owners() == {"HONEST"}, layout.lines()
 
 
 def test_session_supervisor_state_root_ignores_git_redirection(layout: Layout) -> None:

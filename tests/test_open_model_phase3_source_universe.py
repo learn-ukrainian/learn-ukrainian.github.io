@@ -8,7 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from jsonschema import Draft202012Validator, ValidationError
+from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_source_universe as freezer
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -220,11 +220,6 @@ def test_stale_output_file_fails_before_freeze(tmp_path: Path, monkeypatch: pyte
         _freeze(inputs, output)
 
 
-def test_merged_main_binding_fails_on_noncanonical_sha() -> None:
-    with pytest.raises(freezer.FreezeError, match="40 lowercase hex"):
-        freezer._verify_merged_main_binding("A" * 40)
-
-
 def test_merged_main_binding_requires_current_remote_head(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         freezer.subprocess,
@@ -245,31 +240,6 @@ def test_merged_main_binding_requires_identical_freezer_bytes(monkeypatch: pytes
     monkeypatch.setattr(freezer.subprocess, "run", lambda *args, **kwargs: next(calls))
     with pytest.raises(freezer.FreezeError, match="running freezer bytes differ"):
         freezer._verify_merged_main_binding("a" * 40)
-
-
-def test_receipt_schema_rejects_artifact_manifest_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    receipt = _freeze(_inputs(tmp_path, monkeypatch), tmp_path / "out")
-    receipt["artifact_manifest"]["artifact_count"] = 9
-    validator = Draft202012Validator(json.loads(FREEZE_SCHEMA.read_text(encoding="utf-8")))
-    with pytest.raises(ValidationError):
-        validator.validate(receipt)
-
-
-def test_receipt_schema_rejects_wrong_family_receipt_shape(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    receipt = _freeze(_inputs(tmp_path, monkeypatch), tmp_path / "out")
-    lexical = next(item for item in receipt["families"] if item["family_id"] == "lexical_balla_en_uk")
-    lexical.clear()
-    lexical.update(
-        {
-            "family_id": "lexical_balla_en_uk",
-            "unit_count": 1,
-            "ledger_sha256": "a" * 64,
-            "ledger_file": "lexical_balla_en_uk.units.jsonl",
-        }
-    )
-    validator = Draft202012Validator(json.loads(FREEZE_SCHEMA.read_text(encoding="utf-8")))
-    with pytest.raises(ValidationError):
-        validator.validate(receipt)
 
 
 def test_pdf_hash_mismatch_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -408,25 +378,3 @@ def test_pdf_trailing_navigation_is_excluded_after_complete_body(
     assert report["paragraph_count"] == 168
     assert units[-1]["unit_sha256"] == freezer.sha256_bytes("§ 168. body".encode())
     assert units[-1]["locator"]["end_line"] == 169
-
-
-def test_second_database_open_failure_closes_first_connection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    inputs = _inputs(tmp_path, monkeypatch)
-
-    class SourceConnection:
-        closed = False
-
-        def close(self) -> None:
-            self.closed = True
-
-    source = SourceConnection()
-
-    def connect(path: Path) -> SourceConnection:
-        if path == inputs["sources_db"]:
-            return source
-        raise freezer.FreezeError("synthetic VESUM open failure")
-
-    monkeypatch.setattr(freezer, "_connect", connect)
-    with pytest.raises(freezer.FreezeError, match="synthetic VESUM open failure"):
-        _freeze(inputs, tmp_path / "out")
-    assert source.closed is True

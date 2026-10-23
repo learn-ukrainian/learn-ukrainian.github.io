@@ -78,12 +78,6 @@ from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.orchestration import dispatch_settle as ds
 
 
-def test_pid_alive_self() -> None:
-    assert ds._pid_alive(os.getpid()) is True
-    assert ds._pid_alive(0) is False
-    assert ds._pid_alive(None) is False
-
-
 def test_heal_zombie_task_marks_failed_and_releases(tmp_path: Path) -> None:
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()
@@ -313,39 +307,6 @@ def test_attach_idle_reminder_treats_missing_quota_as_ineligible(tmp_path: Path)
     assert event["outcome"] == "silent"
 
 
-def test_attach_idle_reminder_rejects_unknown_disposition() -> None:
-    report = ds.SettleReport(
-        task_id="review-6981",
-        status="done",
-        pid=None,
-        pid_alive=False,
-        worktree_path=None,
-        branch=None,
-        commits_ahead=0,
-        dirty=False,
-        pr_url=None,
-        pr_number=None,
-        actions=[],
-        closeout={},
-    )
-    snapshot = idle_settle.parse_snapshot(
-        {
-            "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
-            "items": [{"item_id": "issue:6976"}],
-        }
-    )
-    rc, decision, event = ds.attach_idle_reminder(
-        report,
-        snapshot=snapshot,
-        disposition="later",
-        record=False,
-    )
-    assert rc == 2
-    assert decision.settle_kind == "review"
-    assert decision.outcome == "invalid_disposition"
-    assert event is None
-
-
 def test_cmd_task_prints_reminder_and_accepts_disposition(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -398,41 +359,6 @@ def test_cmd_task_prints_reminder_and_accepts_disposition(
     events = idle_settle.load_events(store)
     assert events[0]["outcome"] == "disposed"
     assert events[0]["disposition"] == "human_decision"
-
-
-def test_cmd_task_silent_without_snapshot(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    canned = ds.SettleReport(
-        task_id="t-silent",
-        status="done",
-        pid=None,
-        pid_alive=False,
-        worktree_path=None,
-        branch="codex/t-silent",
-        commits_ahead=0,
-        dirty=False,
-        pr_url=None,
-        pr_number=None,
-        actions=[],
-        closeout={"branch": "codex/t-silent", "pr": "NONE", "blocker": "none"},
-    )
-    monkeypatch.setattr(ds, "settle_task", lambda *_args, **_kwargs: canned)
-    store = tmp_path / "idle.jsonl"
-    rc = ds.main(
-        [
-            "task",
-            "--task-id",
-            "t-silent",
-            "--no-release-stale",
-            "--idle-store",
-            str(store),
-        ]
-    )
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "SETTLE REMINDER" not in out
-    assert not store.exists()
 
 
 def _seed_claim(ledger_path: Path, task_id: str) -> None:

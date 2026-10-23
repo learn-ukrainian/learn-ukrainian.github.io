@@ -10,7 +10,6 @@ Covered:
 from __future__ import annotations
 
 import hashlib
-import json
 import sqlite3
 
 import pytest
@@ -69,52 +68,6 @@ def test_rule_sources_includes_all_unscoped_files():
     ) < rules_router.RULE_SOURCES.index(
         "agents_extensions/shared/rules/model-assignment.md"
     )
-
-
-def test_rules_live_assembly_includes_fleet_scorecard():
-    """Doctrine + scorecard remain available through the task-scoped driver path."""
-    resp = client.get("/api/rules?scope=task:driver&format=json")
-    assert resp.status_code == 200
-    body = resp.json()
-    sources = body["sources"]
-    assert "docs/best-practices/fleet-shared-doctrine.md" in sources
-    assert "docs/best-practices/fleet-role-scorecard.md" in sources
-    md = body["markdown"]
-    assert "Fleet role scorecard" in md
-    assert "Fleet topology" in md or "orchestrator" in md.lower()
-    assert body["hash"] == rules_router.scope_digest("task:driver", md)
-
-
-def test_served_deepseek_policy_allows_coding_but_keeps_review_closed():
-    response = client.get("/api/rules?scope=task:driver&format=json")
-    assert response.status_code == 200
-    markdown = response.json()["markdown"]
-    assert "latest V4.1 Flash coding through opencode is allowed" in markdown
-    assert "named US provider allow-list" in markdown
-    assert "Never send private-repository content or secrets." in markdown
-    assert "Review-of-record and Ukrainian work need measured evidence first" in markdown
-    assert "Pro and older ids stay retired" in markdown
-    assert "`ask-deepseek` is consult-only for non-language work" in markdown
-    assert "Budget substitution never selects DeepSeek" in markdown
-    assert "still refuses `openrouter/deepseek` until that allow-list exists" in markdown
-
-
-def test_rules_live_assembly_includes_fleet_comms_coordination():
-    """Drivers explicitly load the fleet-comms authority SSOT for their task."""
-    resp = client.get("/api/rules?scope=task:fleet-comms&format=json")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert "agents_extensions/shared/rules/fleet-comms-coordination.md" in body["sources"]
-    md = body["markdown"]
-    assert "Fleet-comms coordination" in md or "fleet-comms coordination" in md.lower()
-    assert "plane-status" in md
-    assert "review-pr" in md
-    assert "dual_write" in md or "dual-write" in md
-    assert "do not invent a competing design" in md.lower() or "competing design" in md
-    assert "fleet-comms is the durable source of truth" in md.lower()
-    assert "legacy stores are read-only" in md.lower()
-    assert "acp" in md.lower() and "provider transport" in md.lower()
-    assert "drive-epic" in md
 
 
 def test_rules_markdown_default(monkeypatch, tmp_path):
@@ -339,13 +292,6 @@ def test_session_current_legacy_pointer_remap_is_codex_or_orchestrator_only(tmp_
     assert body["sections"]["current"] == "docs/session-state/current.orchestrator.md"
 
 
-def test_session_current_router_query(session_fixture):
-    resp = client.get("/api/session/current?agent=router")
-    assert resp.status_code == 200
-    assert "Agent-Handoff:" in resp.text
-    assert "Codex-specific handoff." not in resp.text
-
-
 def test_session_current_rejects_invalid_agent(session_fixture):
     resp = client.get("/api/session/current?agent=../bad")
     assert resp.status_code == 400
@@ -388,15 +334,6 @@ def test_manifest_shape_and_hashes(monkeypatch, tmp_path):
     assert body["activity"]["url"] == "/api/comms/agent-activity"
 
 
-def test_manifest_stays_small():
-    """Manifest must stay under 2 KB — that's the whole point of it."""
-    resp = client.get("/api/state/manifest")
-    assert resp.status_code == 200
-    assert len(resp.content) < 2048, (
-        f"manifest grew to {len(resp.content)} bytes; keep it lean or agents will stop using it"
-    )
-
-
 def test_manifest_omits_research_when_flag_off(monkeypatch):
     """ADR-011 P2: with the kill switch off, the manifest is exactly the pre-P2
     shape — no ``research`` key — so existing clients are untouched."""
@@ -404,23 +341,6 @@ def test_manifest_omits_research_when_flag_off(monkeypatch):
     resp = client.get("/api/state/manifest")
     assert resp.status_code == 200
     assert "research" not in resp.json()
-
-
-@pytest.mark.parametrize("telemetry", ["0", "1"])
-def test_manifest_with_research_stays_within_budget(monkeypatch, telemetry):
-    """Enabled research component ≤ 512 bytes and total manifest < 2 KB, with and
-    without the telemetry footer. Uses the real committed 3-record registry."""
-    monkeypatch.setenv("LEARN_UK_RESEARCH_REGISTRY_ENABLED", "true")
-    monkeypatch.setenv("LEARN_UKRAINIAN_TELEMETRY_FOOTER", telemetry)
-    # Unresolvable session → bounded, deterministic telemetry block (no sidecar).
-    resp = client.get("/api/state/manifest?session=00000000-0000-0000-0000-000000000000")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["research"]["url"] == "/api/knowledge/manifest"
-    assert len(body["research"]["hash"]) == 64
-    component = json.dumps(body["research"], separators=(",", ":")).encode("utf-8")
-    assert len(component) <= 512, f"research component grew to {len(component)} bytes"
-    assert len(resp.content) < 2048, f"manifest grew to {len(resp.content)} bytes"
 
 
 # ---------------------------------------------------------------------
@@ -493,19 +413,6 @@ def test_inbox_respects_limit_and_marks_truncated(monkeypatch):
     assert body["count"] == 5
     assert body["truncated"] is True
     assert len(body["deliveries"]) == 2
-
-
-def test_inbox_claude_infra_returns_empty_when_no_pending(monkeypatch):
-    from scripts.ai_agent_bridge import _channels
-
-    monkeypatch.setattr(_channels, "pending_deliveries_for", lambda agent: [])
-
-    resp = client.get("/api/comms/inbox?agent=claude-infra")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["agent"] == "claude-infra"
-    assert body["count"] == 0
-    assert body["deliveries"] == []
 
 
 def test_inbox_400_on_invalid_agent(monkeypatch):

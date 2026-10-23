@@ -261,26 +261,6 @@ def test_identity_abstention_cannot_reach_candidate_or_gold() -> None:
     assert _artifact()["execution_gates"]["training_authorized"] is False
 
 
-def test_retry_and_substitution_are_finite_and_family_safe() -> None:
-    retry = _artifact()["retry_and_substitution"]
-    assert retry["original_attempts"] == 1
-    assert retry["format_retry_limit"] == 1
-    assert retry["independent_family_substitute_limit"] == 1
-    assert retry["maximum_attempts_per_role_per_row"] == 3
-    assert _artifact()["blindness_and_conflicts"]["substitution_requires_new_provider_family"] is True
-
-
-def test_single_operator_registry_is_procedural_not_fabricated_authority() -> None:
-    registry = _artifact()["single_human_registry"]
-    assert registry["entry_count"] == 1
-    entry = registry["entries"][0]
-    assert entry["entry_id"] == "solo_operator_v1"
-    assert entry["actor_kind"] == "human"
-    assert entry["credential_claimed"] is False
-    assert entry["institutional_independence_claimed"] is False
-    assert registry["registration_does_not_authorize_execution"] is True
-
-
 def test_human_adjudication_requires_registry_atomic_key_and_direct_inspection() -> None:
     artifact = _artifact()
     value = _human_adjudication(artifact)

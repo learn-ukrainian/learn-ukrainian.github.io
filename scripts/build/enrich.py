@@ -307,64 +307,6 @@ def _flatten_resources(resource_data: dict) -> list[dict]:
     return items
 
 
-def _build_video_embeds(plan: dict) -> str:
-    """Generate YouTube video embed section from plan pronunciation_videos.
-
-    Only emits content if there are actual videos (overview or per-letter).
-    A bare playlist link alone is not useful — skip it.
-    """
-    pv = plan.get("pronunciation_videos", {})
-    if not pv:
-        return ""
-
-    # Skip if no real video content (just a playlist link)
-    has_overview = bool(pv.get("overview"))
-    has_letters = any(pv.get(k) for k in ("vowels", "consonants", "special", "letters"))
-    if not has_overview and not has_letters:
-        return ""
-
-    lines = []
-
-    overview = pv.get("overview", "")
-    if overview:
-        label = pv.get("credit", "Ukrainian Lessons")
-        lines.append(f'<YouTubeVideo client:only="react" url="{overview}" label="Overview — {label}" />')
-        lines.append("")
-
-    playlist = pv.get("playlist", "")
-    if playlist:
-        lines.append(f"[Повний плейлист / Full playlist]({playlist})")
-        lines.append("")
-
-    # Per-letter videos — organized by group with subheadings
-    _GROUP_LABELS = {
-        "vowels": "Голосні — Vowels",
-        "consonants": "Приголосні — Consonants",
-        "special": "Спеціальні — Special letters",
-        "letters": "Літери — Letters",
-    }
-    for key in ("vowels", "consonants", "special", "letters"):
-        letter_dict = pv.get(key, {})
-        if not letter_dict:
-            continue
-        # Filter out null values
-        valid_letters = {k: v for k, v in letter_dict.items() if v and v != "null"}
-        if not valid_letters:
-            continue
-        credit = pv.get("credit", "Ukrainian Lessons")
-        group_label = _GROUP_LABELS.get(key, key.capitalize())
-        lines.append(f"#### {group_label}")
-        lines.append("")
-        for letter, url in valid_letters.items():
-            lines.append(
-                f'<YouTubeVideo client:only="react" url="{url}" '
-                f'label="Літера {letter} — {credit}" />'
-            )
-            lines.append("")
-
-    return "\n".join(lines)
-
-
 def _resolve_textbook_url(title: str) -> str:
     """Try to resolve a plan reference title to a textbook PDF URL.
 

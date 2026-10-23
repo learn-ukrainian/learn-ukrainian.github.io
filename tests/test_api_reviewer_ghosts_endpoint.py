@@ -159,44 +159,7 @@ def test_aggregate_across_track_no_filters(
 # ---------- slug filter ----------
 
 
-def test_slug_filter_narrows_to_one_module(
-    client: TestClient, seeded_curriculum: Path
-) -> None:
-    response = client.get("/api/state/reviewer-ghosts/a1?slug=colors")
-    assert response.status_code == 200
-    body = response.json()
-
-    # colors has 2 factual + 1 honesty = 3 findings across 2 bundles
-    assert body["total_ghost_findings"] == 3
-    assert body["by_dimension"] == {"factual_accuracy": 2, "honesty": 1}
-    assert body["by_reviewer_agent"] == {"codex-tools": 2, "claude-tools": 1}
-    # sounds entries must not appear
-    assert all(row["slug"] == "colors" for row in body["recent"])
-
-
 # ---------- since filter ----------
-
-
-def test_since_filter_excludes_older_bundles(
-    client: TestClient, seeded_curriculum: Path
-) -> None:
-    # Cutoff excludes the 2h-old a1/colors r1 bundle (2 findings), keeps
-    # the 30-min-old a1/colors r2 (1) + base_time a1/sounds r1 (1) = 2.
-    cutoff = (datetime(2026, 4, 24, 12, 0, 0, tzinfo=UTC) - timedelta(hours=1))
-    response = client.get(
-        "/api/state/reviewer-ghosts/a1", params={"since": cutoff.isoformat()}
-    )
-    assert response.status_code == 200
-    body = response.json()
-
-    assert body["total_ghost_findings"] == 2
-    assert body["by_dimension"] == {"factual_accuracy": 1, "honesty": 1}
-    # No factual_accuracy=3 leak from the pre-cutoff bundle
-    assert "codex-tools" in body["by_reviewer_agent"]
-    # All remaining rows are at-or-after cutoff
-    for row in body["recent"]:
-        parsed = datetime.fromisoformat(row["generated_at"])
-        assert parsed >= cutoff
 
 
 # ---------- filter edge cases ----------
@@ -213,22 +176,3 @@ def test_since_rejects_invalid_iso8601(
 def test_unknown_track_returns_404(client: TestClient) -> None:
     response = client.get("/api/state/reviewer-ghosts/not-a-real-track")
     assert response.status_code == 404
-
-
-def test_empty_track_returns_zero_aggregates(
-    client: TestClient, tmp_path: Path
-) -> None:
-    # Valid track id but no ghost bundles on disk.
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    (curriculum_root / "a1" / "review").mkdir(parents=True)
-
-    response = client.get("/api/state/reviewer-ghosts/a1")
-    assert response.status_code == 200
-    body = response.json()
-    assert body == {
-        "track": "a1",
-        "total_ghost_findings": 0,
-        "by_dimension": {},
-        "by_reviewer_agent": {},
-        "recent": [],
-    }

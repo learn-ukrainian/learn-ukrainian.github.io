@@ -4,20 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from tests.test_source_ingest_entrypoints import source_tool_clis
-
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def test_selector_imports_do_not_expand_canary_source_tool_inventory():
-    clis = source_tool_clis(ROOT)
-    for path in (
-        "scripts/session_canary/__main__.py",
-        "scripts/session_canary/grok_lane.py",
-        "scripts/session_canary/kimi_lane.py",
-        "scripts/common/epic_selector.py",
-    ):
-        assert path not in clis
 
 
 def test_leaf_file_import_and_validation_without_repository_on_sys_path(tmp_path):

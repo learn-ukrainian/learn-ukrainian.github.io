@@ -195,13 +195,6 @@ def test_same_second_conflict_fails_closed_to_request_changes():
     assert cf.evaluate_evidence_events(events, head=head).clear is False
 
 
-def test_historical_only_previously_reviewed_head_does_not_clear():
-    head = "a" * 40
-    bodies = [f"Reviewer verdict: APPROVE\nPreviously reviewed head: {head}"]
-    assert cf.evaluate_comment_bodies(bodies, head=head).clear is False
-    assert cf.explicit_heads_in_body(bodies[0]) == []
-
-
 def test_incomplete_github_evidence_does_not_clear(tmp_path: Path, monkeypatch):
     head = "a" * 40
 

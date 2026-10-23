@@ -1,0 +1,51 @@
+---
+name: PR size warning
+
+# Advisory only; deliberately separate from the required CI Gate.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  size-warning:
+    name: Small-batch size warning (advisory)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        id: python
+        with:
+          python-version-file: '.python-version'
+      - name: Install existing review-helper dependency
+        env:
+          PROJECT_PYTHON: ${{ steps.python.outputs.python-path }}
+        run: '"$PROJECT_PYTHON" -m pip install --disable-pip-version-check PyYAML==6.0.3'
+      - name: Report exact PR diff
+        id: report
+        env:
+          PROJECT_PYTHON: ${{ steps.python.outputs.python-path }}
+        run: '"$PROJECT_PYTHON" -m scripts.ci.pr_size_warning'
+      - name: Report unavailable measurement
+        if: ${{ always() && steps.report.outcome != 'success' }}
+        run: |
+          printf '%s%s\n' '{"status":"unknown","changed_non_test_lines":null,"eligible_files":null,' \
+            '"diagnostics":["size reporter did not complete"]}'
+          printf '%s%s\n' '::notice title=Small-batch measurement incomplete::' \
+            'UNKNOWN changed non-test lines; UNKNOWN eligible files. Reporter incomplete. CI Gate is unchanged.'
+          {
+            echo '### Small-batch size warning'
+            echo 'Status: unknown. UNKNOWN changed non-test lines; UNKNOWN eligible files.'
+            echo 'The advisory reporter did not complete. CI Gate is unchanged.'
+          } >> "$GITHUB_STEP_SUMMARY"

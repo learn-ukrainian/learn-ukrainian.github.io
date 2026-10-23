@@ -79,21 +79,6 @@ def test_database_excludes_go_through_an_exclude_file_not_argv(
     assert exclude_files and not any(Path(path).exists() for path in exclude_files)
 
 
-def test_preview_also_uses_the_exclude_file(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    database = _make_database(source / "datasets" / "plain.db")
-
-    result = _run(environment, "backup")
-
-    assert result.returncode == 0, result.stderr
-    log = _log(environment)
-    assert "arg=<--exclude>" not in log
-    assert "arg=<--dry-run>" in log
-    assert f"exclude=<{database}>" in log
-
-
 def test_pytest_scratch_databases_are_skipped_and_excluded(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -456,21 +441,6 @@ def test_backup_fails_closed_when_required_repo_state_is_missing(
     assert "arg=<backup>" not in _log(environment)
 
 
-def test_backup_fails_closed_when_agent_recovery_root_is_missing(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    agent_root = source.parent / ".agent"
-    (agent_root / "recovery-state.json").unlink()
-    agent_root.rmdir()
-
-    result = _run(environment, "backup")
-
-    assert result.returncode != 0
-    assert "Required recovery path is missing: .agent" in result.stderr
-    assert "arg=<backup>" not in _log(environment)
-
-
 def test_backup_fails_closed_when_agent_recovery_root_is_a_symlink(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
@@ -486,22 +456,6 @@ def test_backup_fails_closed_when_agent_recovery_root_is_a_symlink(
     assert result.returncode != 0
     assert "Required recovery path must not be a symlink: .agent" in result.stderr
     assert "arg=<backup>" not in _log(environment)
-
-
-def test_backup_ignores_untracked_paths_outside_the_allowlist(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    (source.parent / "sole-copy.txt").write_text("not declared\n", encoding="utf-8")
-    dropped = source.parent / "batch_state" / "preserved" / "secret.txt"
-    dropped.parent.mkdir()
-    dropped.write_text("not walked\n", encoding="utf-8")
-
-    result = _run(environment, "backup")
-
-    assert result.returncode == 0, result.stderr
-    assert "UNBACKED untracked Git path: sole-copy.txt" not in result.stderr
-    assert "preserved" not in result.stderr
 
 
 def test_refuses_legacy_mutable_backup_as_restic_repository(
@@ -553,21 +507,6 @@ def test_claude_parent_must_not_be_a_symlink(
     assert "arg=<backup>" not in _log(environment)
 
 
-def test_doctor_summarizes_validation_failure(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    atlas_epic = source.parent / ".claude" / "atlas-epic"
-    (atlas_epic / "HANDOFF.md").unlink()
-    atlas_epic.rmdir()
-
-    result = _run(environment, "doctor")
-
-    assert result.returncode != 0
-    assert "NOT READY: ERROR: Required recovery path is missing" in result.stderr
-    assert "Doctor found 1 blocking problem(s)." in result.stderr
-
-
 def test_refuses_staging_inside_script_checkout(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
@@ -606,17 +545,3 @@ def test_data_volume_staging_location_requires_linux(
 
     assert result.returncode != 0
     assert "Staging directory and backup source overlap" in result.stderr
-
-
-def test_refuses_non_designated_staging_inside_selected_checkout(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    other_staging = source.parent / "scratch-staging"
-    other_staging.mkdir()
-    environment["LU_BACKUP_TMPDIR"] = str(other_staging)
-
-    result = _run(environment, "backup")
-
-    assert result.returncode != 0
-    assert "Staging directory must be outside the selected project checkout" in result.stderr

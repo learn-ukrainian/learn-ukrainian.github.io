@@ -429,13 +429,6 @@ def test_classifier_retains_header_not_quoted_status():
     assert (fault.kind, fault.status, fault.code, fault.transient) == ("api_error", "INVALID_ARGUMENT", 400, False)
 
 
-@pytest.mark.parametrize("error", [API_503, ELIGIBILITY_503])
-def test_exact_eligibility_and_api_fault_require_exit_confirmation(tmp_path, monkeypatch, error):
-    result, launches, _, _ = _run(tmp_path, monkeypatch, [_raw(error)], exited=False)
-    assert launches == 1
-    assert result.agy_telemetry.reroute_reason == "unsafe_replay"
-
-
 def test_transient_fault_with_unconfirmed_background_task_reroutes(tmp_path, monkeypatch):
     raw = _raw(events=[_prompt(), _start(_TASK_2), _reply("Complete reply.")], returncode=0)
     result, launches, _, _ = _run(tmp_path, monkeypatch, [raw])

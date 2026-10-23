@@ -169,7 +169,7 @@ decisions:
       - dec-001
 
   - id: dec-008
-    status: active
+    status: superseded
     date: "2026-06-14"
     expires: "2026-09-12"
     scope: content
@@ -185,11 +185,19 @@ decisions:
         rejected_because: "They describe the initial-build phase, which is now live and no longer the current operating model"
       - option: "Rebuild A1/A2 wholesale before adding more exercises"
         rejected_because: "Live users need stable lessons; workbook enrichment can ship incrementally"
-    superseded_by: null
+    superseded_by: dec-015
+    superseded_note: >-
+      Superseded by dec-015 and the fresh A1–B2 rebuild accepted by the operator
+      2026-09-21 (docs/epics/fresh-build-requirements.md header). The remaining
+      A1-only gate, documented on 2026-10-16 in
+      docs/epics/fresh-build-a1-v1-import.md (#10881, design PR #10882),
+      requires hash-pinned repaired A1-v1 input and a single-lesson blind
+      comparison proving improvement before using the fresh engine for A1.
+      A win permits a later adoption decision, not rollout.
     depends_on: []
 
   - id: dec-009
-    status: active
+    status: superseded
     date: "2026-07-07"
     expires: "2026-10-05"
     scope: benchmark-2156
@@ -210,10 +218,17 @@ decisions:
         rejected_because: "No demonstrated audience; capacity is scarce (claude 2.5x/codex 2.1x weekly pace) and deploy-first is user-priority"
       - option: "Kill the release track outright (close epic #4639)"
         rejected_because: "Revisit triggers are plausible (Hramatka shipping / community signal); the epic is the parking record"
-    superseded_by: null
+    superseded_by: docs/decisions/2026-07-28-public-ua-eval-ownership-and-data-boundaries.md
+    superseded_note: >-
+      Superseded for public calque/grammar evaluation by the accepted ownership
+      decision in docs/decisions/2026-07-28-public-ua-eval-ownership-and-data-boundaries.md
+      (PR #5968), which assigns that evaluation to epic #2156 with separate
+      public gold and private/product data. Epic #4639 closed as not planned;
+      it is no longer an open parking record. The old factuality/BIO release
+      remains retired and excluded from the successor evaluation scope.
     depends_on: []
   - id: dec-010
-    status: active
+    status: superseded
     date: "2026-07-10"
     expires: "2026-10-08"
     scope: harness
@@ -238,7 +253,16 @@ decisions:
         rejected_because: "Closed-world corpus cannot cover arbitrary generated content; grammar/word-choice checks can"
       - option: "Treat nativeness/style as a hard gate"
         rejected_because: "Judgment-shaped, not binary - scored/advisory dimension; only calque/collocation patterns with UA-GEC/Antonenko evidence gate"
-    superseded_by: null
+    superseded_by: dec-016
+    superseded_note: >-
+      Superseded by the approved epic #6321 plan,
+      docs/projects/open-model-data/PLAN.md v3.5.0, and dec-016. The plan
+      replaces the blanket fine-tuning prohibition with scoped training work,
+      held-out learning proof and operator approval before training-resource
+      execution. Dec-016 separately shelves Layer B with no cutover. Grammar,
+      morphology and lexical quality requirements remain in force. This
+      reconciliation establishes no new global priority order and grants no
+      execution beyond existing approvals.
     depends_on: []
 
   - id: dec-011

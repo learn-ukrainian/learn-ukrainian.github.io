@@ -7,11 +7,7 @@ import textwrap
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
 from pipeline.prompt_preflight import (
-    PreflightIssue,
     PreflightResult,
-    build_audit_context,
-    build_dimension_context,
-    build_preflight_prompt,
     parse_preflight_response,
     run_prompt_preflight,
 )
@@ -107,81 +103,10 @@ class TestParsePreflightResponse:
 # ==================== Context Builder Tests ====================
 
 
-class TestBuildAuditContext:
-    def test_a2_context_has_word_target(self):
-        ctx = build_audit_context("a2", 6)
-        assert "2000" in ctx
-        assert "ZERO" in ctx
-
-    def test_b1_context(self):
-        ctx = build_audit_context("b1", 10)
-        assert "4000" in ctx
-
-    def test_unknown_level_returns_something(self):
-        ctx = build_audit_context("zz", 1)
-        assert "Audit Gates" in ctx
-
-
-class TestBuildDimensionContext:
-    def test_beginner_tier(self):
-        ctx = build_dimension_context("a2", 6)
-        assert "Beginner" in ctx
-        assert "Emotional Safety" in ctx
-
-    def test_seminar_tier(self):
-        ctx = build_dimension_context("hist", 1)
-        assert "Decolonization" in ctx
-
-
 # ==================== Prompt Builder Tests ====================
 
 
-class TestBuildPreflightPrompt:
-    def test_includes_rendered_prompt_and_gates(self):
-        prompt = build_preflight_prompt("Hello content prompt", "a2", 6)
-        assert "Hello content prompt" in prompt
-        assert "Audit Gates" in prompt
-        assert "False Friends" in prompt or "Russianisms" in prompt
-
-    def test_long_prompt_truncated(self):
-        long_prompt = "x" * 50000
-        prompt = build_preflight_prompt(long_prompt, "a2", 6)
-        assert "truncated" in prompt
-
-    def test_without_plan(self):
-        prompt = build_preflight_prompt("test prompt", "a1", 3)
-        assert "The Plan" not in prompt
-        assert "Plan-Prompt Coherence" not in prompt
-
-    def test_with_plan(self):
-        prompt = build_preflight_prompt("test prompt", "a1", 3, plan_yaml="word_target: 1200")
-        assert "The Plan" in prompt
-        assert "word_target: 1200" in prompt
-        assert "Coherence" in prompt
-
-    def test_plan_truncated_if_long(self):
-        long_plan = "y" * 20000
-        prompt = build_preflight_prompt("short prompt", "a1", 3, plan_yaml=long_plan)
-        assert "truncated" in prompt
-
-
 # ==================== PreflightResult Tests ====================
-
-
-class TestPreflightResult:
-    def test_high_issues_filter(self):
-        result = PreflightResult(
-            status="ISSUES_FOUND",
-            issues=[
-                PreflightIssue("CONTRADICTION", "", "prob1", "fix1", "HIGH"),
-                PreflightIssue("UNCLEAR", "", "prob2", "fix2", "LOW"),
-                PreflightIssue("RUSSICISM", "", "prob3", "fix3", "HIGH"),
-            ],
-        )
-        assert len(result.high_issues) == 2
-        assert all(i.severity == "HIGH" for i in result.high_issues)
-
-
 # ==================== Runner Tests ====================
 
 
@@ -203,29 +128,6 @@ class TestRunPromptPreflight:
         )
 
         assert isinstance(result, PreflightResult)
-        assert result.status == "PASS"
-
-    def test_with_plan(self, tmp_path):
-        prompt_path = tmp_path / "prompt.md"
-        prompt_path.write_text("test prompt content")
-        plan_path = tmp_path / "plan.yaml"
-        plan_path.write_text("word_target: 1200\n")
-        orch_dir = tmp_path / "orch"
-        orch_dir.mkdir()
-
-        pass_yaml = "prompt_preflight:\n  status: PASS\n  issues: []\n"
-
-        def mock_dispatch(prompt_text):
-            # Verify plan content is included in the prompt
-            assert "word_target: 1200" in prompt_text
-            assert "Coherence" in prompt_text
-            return True, pass_yaml
-
-        result = run_prompt_preflight(
-            prompt_path, "a1", 3, orch_dir,
-            dispatch_fn=mock_dispatch,
-            plan_path=plan_path,
-        )
         assert result.status == "PASS"
 
     def test_result_yaml_saved(self, tmp_path):

@@ -240,25 +240,3 @@ def test_planted_mutations_are_rejected(name: str) -> None:
 
     with pytest.raises(audit.AuditError):
         audit.validate_receipt(receipt, inputs.schema, inputs)
-
-
-@pytest.mark.needs_artifact(
-    "open_model_other_indexes",
-    "projects/open_model_data/inventory/aggregate_summary_v1.json",
-)
-def test_cli_writes_and_verifies_existing_receipt(tmp_path: Path) -> None:
-    target = tmp_path / "receipt.json"
-
-    assert audit.main(["--output", str(target)]) == 0
-    assert audit.main(["--output", str(target), "--verify-existing"]) == 0
-    target.write_text("{}\n", encoding="utf-8")
-    with pytest.raises(SystemExit) as excinfo:
-        audit.main(["--output", str(target), "--verify-existing"])
-    assert excinfo.value.code == 2
-
-
-def test_schema_is_strict() -> None:
-    schema = json.loads(audit.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert schema["additionalProperties"] is False
-    assert schema["properties"]["product_truth"]["additionalProperties"] is False

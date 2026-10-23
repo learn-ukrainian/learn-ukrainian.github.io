@@ -13,12 +13,6 @@ from scripts.lexicon import generate_needs_review_ledger as gen
 from scripts.lexicon import promote_grow_candidates as promote
 
 
-def test_cli_refuses_without_write_or_dry_run() -> None:
-    with pytest.raises(SystemExit) as exc:
-        gen.main([])
-    assert exc.value.code == 2
-
-
 def test_generator_round_trip_maps_actions(tmp_path: Path) -> None:
     candidates_path, triage_path = _write_fixture_pair(tmp_path)
     out = tmp_path / "ledger.yaml"

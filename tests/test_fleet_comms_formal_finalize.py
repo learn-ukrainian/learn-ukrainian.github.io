@@ -300,35 +300,3 @@ def test_finalize_refuses_unknown_reviewer_model(tmp_path: Path) -> None:
             plane_root=tmp_path / "plane",
             head_sha=_SHA,
         )
-
-
-def test_cli_formal_job_accept(tmp_path: Path) -> None:
-    from scripts.fleet_comms.cli import main
-
-    root = tmp_path / "plane"
-    # Inject head via --head-sha to avoid real gh
-    rc = main(
-        [
-            "formal-job",
-            "accept",
-            "--pr",
-            "300",
-            "--verdict",
-            "BLOCKED",
-            "--model",
-            _MODEL,
-            "--family",
-            "zhipu",
-            "--harness",
-            "opencode",
-            "--head-sha",
-            _SHA,
-            "--root",
-            str(root),
-        ]
-    )
-    assert rc == 0
-    with FormalReviewJobService(root=root) as svc:
-        jobs = svc.list_jobs(pr=300)
-        assert len(jobs) == 1
-        assert jobs[0].has_sealed_verdict

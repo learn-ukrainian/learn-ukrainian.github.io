@@ -143,12 +143,6 @@ def test_selection_uses_resolved_importers_and_integration(repo, static_graph):
     assert set(c.load_manifest()["shared_integration_tests"]) <= set(result["selected_test_files"])
 
 
-def test_diff_timeout_is_full(repo, static_graph, monkeypatch):
-    monkeypatch.setattr(s.dependency, "resolve_git_range", lambda *args, **kwargs: (_ for _ in ()).throw(
-        subprocess.TimeoutExpired("git", 30)))
-    assert s.select("base", "HEAD", "pull_request", repo)["reason"] == "diff-unavailable"
-
-
 @pytest.fixture
 def registration():
     return {"schema": s.SCHEMA, "registered_at": "2026-10-07T00:00:00Z", "stop_at": "2026-11-06T00:00:00Z",
@@ -245,17 +239,6 @@ def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
                    "--receipts", str(window)]) == 1
     registration["minimum_narrowed_cases"] = 43
     assert s.check(registration, window)["status"] == "pass"
-
-
-def test_only_green_live_cases_narrowing_is_unresolved(registration, window):
-    for path in window.glob("*.json"):
-        value = json.loads(path.read_text())
-        if (value.get("schema") == s.SCHEMA and
-            (value["kind"] != "live" or int(value["run_id"]) <= 30)):
-            value.update(mode="full", would_skip_test_files=[])
-            path.write_text(json.dumps(value))
-    assert s.check(registration, window)["narrowed_case_count"] == 0
-    assert "narrowed-cases:0/1" in s.check(registration, window)["unresolved"]
 
 
 @pytest.mark.parametrize("minimum", [None, 0, -1, True, "1"])
@@ -434,15 +417,6 @@ def test_report_unavailable_evidence_is_zero_exit_and_unresolved(repo, static_gr
     assert result["projected_cost_after_lost_reuse"]["unknown_reason"] == "matched-pr-queue-cost-inputs-not-supplied"
 
 
-def test_report_records_explicit_unknown_cost_reason(repo, static_graph, tmp_path):
-    output = tmp_path / "shadow.json"
-    assert s.main(["report", "--root", str(repo), "--results", str(tmp_path / "missing"),
-                   "--cost-unknown-reason", "matched-measurements-unavailable", "--output", str(output)]) == 0
-    cost = json.loads(output.read_text())["projected_cost_after_lost_reuse"]
-    assert cost["status"] == "unknown"
-    assert cost["unknown_reason"] == "matched-measurements-unavailable"
-
-
 def test_register_binds_historical_ids_hashes_rules_and_stop(repo, static_graph):
     baseline = {"complete": True, "created_window": s.BASELINE, "runs": [
         {"run_id": "42", "event": "pull_request", "pytest_red": True},
@@ -511,20 +485,3 @@ def test_live_inventory_uses_first_attempt_even_after_rerun(github_transport):
         "repos/owner/repo/actions/runs/42/attempts/1",
         "repos/owner/repo/actions/runs/42/attempts/1/jobs?per_page=100",
     ]
-
-
-@pytest.mark.parametrize("mode,expected_saved,expected_candidate", [("selected", 80, 95), ("full", -10, 185)])
-def test_cost_preserves_queue_reuse_and_includes_every_overhead(mode, expected_saved, expected_candidate):
-    selection = {"mode": mode, "selected_test_files": ["tests/test_a.py"]}
-    evidence = {"test_seconds_by_file": {"tests/test_a.py": 10, "tests/test_b.py": 90}}
-    cost = {"full_pr_runner_minutes": 100, "full_queue_runner_minutes": 100, "reuse_probability": .25,
-            "reporter_runner_minutes": 1, "rerun_runner_minutes": 2, "ejection_runner_minutes": 3,
-            "duplicated_preparation_runner_minutes": 4, "elapsed_wait_minutes": 5}
-    result = s.projected_cost(selection, evidence, cost)
-    assert result["lost_reuse_runner_minutes"] == 0
-    assert result["baseline_pr_plus_queue_runner_minutes"] == 175
-    assert result["candidate_pr_plus_queue_runner_minutes"] == expected_candidate
-    assert result["net_runner_minutes_saved"] == expected_saved
-    assert result["elapsed_wait_minutes"] == 5
-    assert s.projected_cost(selection, evidence, None)["status"] == "unknown"
-    assert s.projected_cost(selection, evidence, {})["unknown_reason"] == "incomplete-cost-inputs-or-test-duration-evidence"

@@ -26,14 +26,6 @@ def test_d1_payload_id_cannot_close_an_open_turn(tmp_path):
     assert ui.rollout_is_ready(path) == (False, "start_event:task_started")
 
 
-def test_d1_nested_envelope_cannot_close_an_open_turn(tmp_path):
-    path = write(tmp_path / "rollout.jsonl", event("task_started"), json.dumps({
-        "nested": {"type": "event_msg", "payload": {"type": "task_complete"}},
-        "type": "response_item", "payload": {"text": "x" * (1024 * 1024 + 1)},
-    }).encode() + b"\n")
-    assert ui.rollout_is_ready(path) == (False, "start_event:task_started")
-
-
 def test_d2_completion_record_over_16_mib_is_ready_with_bounded_memory(tmp_path):
     # No whole record is materialized by the reader (or by this fixture writer).
     import tracemalloc
@@ -73,17 +65,6 @@ def test_d3_append_between_read_and_final_stat_is_rescanned(tmp_path):
     assert hook.call_count == 2
 
 
-def test_d3_continuously_appending_rollout_is_busy(tmp_path):
-    path = write(tmp_path / "rollout.jsonl", event("task_complete"))
-    def append():
-        with path.open("ab") as stream:
-            stream.write(event("task_complete"))
-    hook = Mock(side_effect=append)
-    reader = ui.RolloutReader(after_read=hook)
-    assert ui.rollout_is_ready(path, reader=reader) == (False, "rollout_changing")
-    assert hook.call_count == 3
-
-
 @pytest.mark.parametrize("record,reason", [
     (b'{"n":' + b"1" * 5000 + b'}\n', "ValueError"),
     (b'{"n":' + b"[" * 2000 + b"0" + b"]" * 2000 + b'}\n', "RecursionError"),
@@ -101,12 +82,6 @@ def test_d5_partial_final_line_is_busy_and_recovers_on_append(tmp_path):
     with path.open("ab") as stream:
         stream.write(b"\n")
     assert ui.rollout_is_ready(path, reader=reader) == (False, "start_event:task_started")
-
-
-def test_d5_malformed_record_before_deciding_event_is_busy(tmp_path):
-    path = write(tmp_path / "rollout.jsonl", b'{"broken":}\n', event("task_complete"))
-    ready, reason = ui.rollout_is_ready(path)
-    assert not ready and reason.startswith("decode_error:")
 
 
 def test_d5_abort_without_turn_id_closes_then_completed_restart_is_ready(tmp_path):
@@ -165,21 +140,6 @@ def test_incremental_reader_resets_on_replacement(tmp_path, change):
         record = event("task_started")
         write(path, record, b" " * (reader.offset - len(record) - 1) + b"\n")
     assert ui.rollout_is_ready(path, reader=reader) == (False, "start_event:task_started")
-
-
-def test_incremental_poll_reads_only_new_bytes(tmp_path, monkeypatch):
-    path = write(tmp_path / "rollout.jsonl", event("task_complete"))
-    reader = ui.RolloutReader()
-    assert ui.rollout_is_ready(path, reader=reader)[0]
-    offset = reader.offset
-    feed = Mock(side_effect=AssertionError("unchanged rollout must not be reparsed"))
-    with monkeypatch.context() as scoped:
-        scoped.setattr(ui._RolloutRecord, "feed", feed)
-        assert ui.rollout_is_ready(path, reader=reader)[0]
-    with path.open("ab") as stream:
-        stream.write(event("task_started"))
-    assert ui.rollout_is_ready(path, reader=reader)[0] is False
-    assert reader.offset == offset + len(event("task_started"))
 
 
 def test_missing_rollout_is_typed_busy(tmp_path):

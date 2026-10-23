@@ -65,21 +65,6 @@ def test_pet_shop_vs_room_contradiction_detected() -> None:
     assert "room" in messages[0]
 
 
-def test_empty_dialogue_situations_passes() -> None:
-    plan = {
-        "dialogue_situations": [],
-        "content_outline": [
-            {
-                "section": "Діалоги",
-                "words": 300,
-                "points": ["Dialogue 1 — Any simple exchange."],
-            }
-        ],
-    }
-
-    assert validate_plan_consistency(plan, "reading-ukrainian") == []
-
-
 def _write_sources_db(path: Path) -> None:
     conn = sqlite3.connect(str(path))
     conn.execute("CREATE TABLE textbooks (source_file TEXT, grade INTEGER, author TEXT)")
@@ -162,10 +147,3 @@ def test_plan_review_accepts_primary_school_author_aliases(tmp_path: Path) -> No
     }
 
     assert check_textbook_references_in_corpus(plan, db_path) == []
-
-
-def test_plan_review_handles_empty_references(tmp_path: Path) -> None:
-    db_path = tmp_path / "sources.db"
-    _write_sources_db(db_path)
-
-    assert check_textbook_references_in_corpus({"references": []}, db_path) == []

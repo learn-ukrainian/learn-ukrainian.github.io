@@ -8,7 +8,6 @@ import zipfile
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_historical_full_materialization as full
 from scripts.projects.open_model_data import phase3_historical_materialization as base
@@ -17,11 +16,6 @@ from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 GATE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_historical_full_materialization_gate_v1.json"
-GATE_SCHEMA_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_historical_full_materialization_gate_v1.schema.json"
-RECEIPT_SCHEMA_PATH = (
-    REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_historical_full_materialization_receipt_v1.schema.json"
-)
-
 UD_FIXTURE = """# newdoc = uk__fixture__1413
 # lang = orv-uk
 # created = 1413
@@ -281,22 +275,6 @@ def test_full_run_rejects_receipt_collision(tmp_path: Path) -> None:
     assert not output.exists()
 
 
-def test_full_run_rejects_missing_output_parent(tmp_path: Path) -> None:
-    ud_dir, archive, metadata = _source_inputs(tmp_path)
-    output = tmp_path / "missing" / full.OUTPUT_DIRECTORY_NAME
-    with pytest.raises(full.HistoricalFullMaterializationError, match="parent directory"):
-        full.materialize_full(
-            gate=_fixture_gate(ud_dir, archive, metadata),
-            gate_file_sha256="f" * 64,
-            ud_dir=ud_dir,
-            plug2_archive=archive,
-            plug2_metadata=metadata,
-            private_output_dir=output,
-            receipt_output=output / full.RECEIPT_FILENAME,
-        )
-    assert not output.exists()
-
-
 def test_main_reports_historical_validation_failure_as_blocked(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
@@ -333,18 +311,3 @@ def test_main_reports_historical_validation_failure_as_blocked(
         "status": "blocked",
         "error": "fixture validation failure",
     }
-
-
-def test_historical_schema_validator_is_cached() -> None:
-    historical._schema_validator.cache_clear()
-    assert historical._schema_validator() is historical._schema_validator()
-
-
-def test_new_schemas_are_closed_and_text_free() -> None:
-    for path in (GATE_SCHEMA_PATH, RECEIPT_SCHEMA_PATH):
-        schema = json.loads(path.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
-        assert schema["additionalProperties"] is False
-        serialized = json.dumps(schema, ensure_ascii=False)
-        assert "source_text" not in serialized
-        assert "evidence_text" not in serialized

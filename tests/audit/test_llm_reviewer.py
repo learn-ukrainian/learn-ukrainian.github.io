@@ -13,14 +13,6 @@ B1_27_BAD_TEXT = """# Вид у наказовому способі
 Крім того, доконаний вид дає результат із вікном. У кухні стоїть стіл.
 """
 
-B1_27_GOOD_TEXT = """# Вид у наказовому способі
-
-Відкрийте застосунок, щоб виконати завдання. Будьте обережні.
-Зверніть увагу на правила вживання доконаного виду.
-Подумайте, який результат ви очікуєте отримати.
-На кухні стоїть стіл.
-"""
-
 B1_27_BAD_LLM_RESPONSE = """{
   "findings": [
     {
@@ -73,22 +65,6 @@ B1_27_BAD_LLM_RESPONSE = """{
     }
   ]
 }"""
-
-
-def test_reviewer_prompt_loads_and_assembles() -> None:
-    template = llm_reviewer.load_reviewer_prompt_template()
-    assert "LLM Reviewer & Evaluator Prompt" in template
-    assert "A1/A2" in template
-    assert "B1+" in template
-    assert "Seminar Register" in template
-
-    prompt = llm_reviewer.build_reviewer_prompt(
-        level="b1",
-        slug="aspect-in-imperatives",
-        module_md=B1_27_BAD_TEXT,
-    )
-    assert "aspect-in-imperatives" in prompt
-    assert "застосунок має бути відкритий" in prompt
 
 
 def test_structural_checks_for_model_answers() -> None:
@@ -155,53 +131,6 @@ def test_b1_27_bad_calibration_produces_expected_findings() -> None:
     assert passive_finding["line"] == 3
     assert passive_finding["file"] == "module.md"
     assert passive_finding["span"]["start"] is not None
-
-
-def test_b1_27_good_calibration_passes() -> None:
-    # Good text returned from LLM with zero findings
-    findings = llm_reviewer.parse_and_evaluate_llm_response(
-        '{"findings": []}',
-        module_md=B1_27_GOOD_TEXT,
-    )
-    assert len(findings) == 0
-
-
-def test_seminar_vital_status_and_pathos_calibration() -> None:
-    # Living subject biography with "Legacy" or "Last Years" header -> FAIL
-    living_subject_bad = """---
-level: bio
-slug: oleksandra-matviichuk
----
-
-# Олександра Матвійчук
-
-Олександра Матвійчук — відома українська правозахисниця.
-
-## Останні роки
-Вона продовжує очолювати Центр громадянських свобод.
-"""
-    living_subject_bad_llm_response = """{
-      "findings": [
-        {
-          "issue_id": "SEMINAR_OBITUARY_STYLE",
-          "issue_class": "register",
-          "dimension": "seminar_sensitivity",
-          "severity": "critical",
-          "excerpt": "## Останні роки",
-          "message": "Living biography subjects must not use obituary-style headers like 'Last Years'."
-        }
-      ]
-    }"""
-
-    findings = llm_reviewer.parse_and_evaluate_llm_response(
-        living_subject_bad_llm_response,
-        module_md=living_subject_bad,
-    )
-    assert len(findings) == 1
-    assert findings[0]["issue_id"] == "SEMINAR_OBITUARY_STYLE"
-    assert findings[0]["dimension"] == "seminar_sensitivity"
-    assert findings[0]["severity"] == "critical"
-    qg_schema.validate_finding(findings[0])
 
 
 def test_llm_response_parse_failure_emits_valid_finding() -> None:

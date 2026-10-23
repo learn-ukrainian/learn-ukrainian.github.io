@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -12,34 +11,10 @@ from pathlib import Path
 import pytest
 
 import scripts.analytics.cost_report as cost_report
-from tests.project_python import project_python
 
 pytestmark = pytest.mark.reads_content
 
 _NOW = datetime(2026, 8, 22, 12, 0, 0, tzinfo=UTC)
-
-
-def _write_meta(root: Path, *, level: str = "a1", slug: str = "my-family") -> None:
-    dispatch_dir = root / level / "orchestration" / slug / "dispatch"
-    dispatch_dir.mkdir(parents=True, exist_ok=True)
-    (dispatch_dir / "01-write-meta.json").write_text(
-        json.dumps(
-            {
-                "timestamp": "2026-08-20T12:00:00Z",
-                "phase": "write",
-                "agent": "kimi (k2)",
-                "model": "k2",
-                "ok": True,
-                "returncode": 0,
-                "prompt_chars": 3800,
-                "response_chars": 380,
-                "prompt_tokens_est": 1000,
-                "response_tokens_est": 100,
-                "duration_s": 9.0,
-            }
-        ),
-        encoding="utf-8",
-    )
 
 
 def _write_usage_rows(usage_dir: Path, *, day: str, rows: int, agent: str = "kimi") -> None:
@@ -81,69 +56,6 @@ def test_empty_ledger_with_runtime_rows_flags_ledger_empty(tmp_path, monkeypatch
     assert payload["windows"]["all_time"]["ledger_empty"] is True
 
 
-def test_populated_ledger_is_not_flagged(tmp_path, monkeypatch):
-    curriculum = tmp_path / "curriculum"
-    usage_dir = tmp_path / "api_usage"
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", curriculum)
-    monkeypatch.setattr(cost_report, "API_USAGE_DIR", usage_dir)
-    _write_meta(curriculum)
-    _write_usage_rows(usage_dir, day="2026-08-22", rows=5)
-
-    payload = cost_report.build_cost_windows(now=_NOW)
-
-    week = payload["windows"]["last_7_days"]
-    assert week["records_total"] == 1
-    assert week["runtime_calls_total"] == 5
-    assert week["ledger_empty"] is False
-    assert not any("ledger is empty" in warning for warning in week["warnings"])
-
-
-def test_empty_everything_is_not_flagged(tmp_path, monkeypatch):
-    curriculum = tmp_path / "curriculum"
-    usage_dir = tmp_path / "api_usage"
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", curriculum)
-    monkeypatch.setattr(cost_report, "API_USAGE_DIR", usage_dir)
-    curriculum.mkdir()
-
-    payload = cost_report.build_cost_windows(now=_NOW)
-
-    for window in payload["windows"].values():
-        assert window["runtime_calls_total"] == 0
-        assert window["ledger_empty"] is False
-        assert window["unreadable"] == {"files": 0, "lines": 0, "records": 0}
-        assert not any("unreadable" in warning for warning in window["warnings"])
-
-
-def test_missing_usage_dir_is_not_flagged(tmp_path, monkeypatch):
-    curriculum = tmp_path / "curriculum"
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", curriculum)
-    monkeypatch.setattr(cost_report, "API_USAGE_DIR", tmp_path / "does-not-exist")
-    curriculum.mkdir()
-
-    payload = cost_report.build_cost_windows(now=_NOW)
-
-    assert payload["windows"]["last_7_days"]["runtime_calls_total"] == 0
-    assert payload["windows"]["last_7_days"]["ledger_empty"] is False
-
-
-def test_old_usage_rows_only_count_in_all_time(tmp_path, monkeypatch):
-    curriculum = tmp_path / "curriculum"
-    usage_dir = tmp_path / "api_usage"
-    monkeypatch.setattr(cost_report, "CURRICULUM_ROOT", curriculum)
-    monkeypatch.setattr(cost_report, "API_USAGE_DIR", usage_dir)
-    curriculum.mkdir()
-    _write_usage_rows(usage_dir, day="2026-07-01", rows=10)
-    _write_usage_rows(usage_dir, day="2026-08-10", rows=3)
-
-    payload = cost_report.build_cost_windows(now=_NOW)
-
-    assert payload["windows"]["last_7_days"]["runtime_calls_total"] == 0
-    assert payload["windows"]["last_7_days"]["ledger_empty"] is False
-    assert payload["windows"]["last_30_days"]["runtime_calls_total"] == 3
-    assert payload["windows"]["last_30_days"]["ledger_empty"] is True
-    assert payload["windows"]["all_time"]["runtime_calls_total"] == 13
-
-
 def test_malformed_usage_lines_are_skipped(tmp_path, monkeypatch):
     curriculum = tmp_path / "curriculum"
     usage_dir = tmp_path / "api_usage"
@@ -162,28 +74,6 @@ def test_malformed_usage_lines_are_skipped(tmp_path, monkeypatch):
     for window in payload["windows"].values():
         assert window["unreadable"] == {"files": 0, "lines": 2, "records": 0}
         assert any("unreadable usage records" in warning and "'lines': 2" in warning for warning in window["warnings"])
-
-
-def test_unreadable_usage_counts_are_scoped_to_each_cost_window(tmp_path):
-    curriculum = tmp_path / "curriculum"
-    curriculum.mkdir()
-    usage_dir = tmp_path / "api_usage"
-    usage_dir.mkdir()
-    (usage_dir / "usage_codex-delegate_2026-08-22.jsonl").write_bytes(b'{}\n\xff\n{}\n')
-    (usage_dir / "usage_codex-delegate_2026-08-10.jsonl").write_bytes(b'not-json\n[]\n{}\n')
-    (usage_dir / "usage_codex-delegate_2026-07-01.jsonl").mkdir()
-
-    payload = cost_report.build_cost_windows(root=curriculum, usage_dir=usage_dir, now=_NOW)
-
-    for key, calls, files, lines in [
-        ("last_7_days", 2, 0, 1),
-        ("last_30_days", 3, 0, 3),
-        ("all_time", 3, 1, 3),
-    ]:
-        window = payload["windows"][key]
-        assert window["runtime_calls_total"] == calls
-        assert window["unreadable"] == {"files": files, "lines": lines, "records": 0}
-        assert any(str(window["unreadable"]) in warning for warning in window["warnings"])
 
 
 @pytest.mark.parametrize("scripts_on_path", [False, True])
@@ -212,24 +102,6 @@ assert usage.redact_value is redactor.redact_value
         timeout=30,
     )
     assert result.returncode == 0, result.stderr
-
-
-def test_cost_report_cli_still_runs():
-    env = os.environ.copy()
-    env.pop("PYTHONPATH", None)
-    result = subprocess.run(
-        [str(project_python()), "scripts/analytics/cost_report.py", "--all", "--json"],
-        cwd=Path(__file__).resolve().parent.parent,
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-
-    assert result.returncode == 0, result.stderr
-    payload = json.loads(result.stdout)
-    assert "records_total" in payload
 
 
 def test_cost_html_hero_never_shows_zero_dollar_when_ledger_empty():

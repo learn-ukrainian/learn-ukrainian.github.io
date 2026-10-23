@@ -112,7 +112,8 @@ Every `delegate.py dispatch` `--prompt-file` (and equivalent inline prompt) must
   approved it does not pause mid-implementation to ask whether to slice it further — see
   `operator-expectations.md` items 10 and 12. Files that outcome touches stay together in
   the PR; a genuinely separate user-visible outcome is a different PR, not a slice of this
-  one.
+  one. Briefs name one behaviour. Apply the small-batches trial in § Merge policy
+  before review, using its justification option when that behaviour needs to stay whole.
 - **Acceptance criteria:** checklist or equivalent that can be verified before PR
   open (commands, evidence types, stop conditions). Weak criteria ("improve X",
   "clean up the area") are not a brief — the orchestrator must decompose first.
@@ -179,8 +180,9 @@ or `--pr` and is checked against the fetched and reused heads before launch.
 reviewer admission applies them to code and Ukrainian profiles alike. Write
 dispatches use them for authoring review admission without becoming review-typed.
 Other non-review read-only calls refuse these flags instead of ignoring them.
-Review substitutes require their own budget snapshot; direct and substituted
-reviewers share the allowance rule (#10016), with pace advisory for both.
+Review substitutes need no usage snapshot. Usage, pace, near-cap state and usage
+forecasts never exclude direct or substituted review seats. Operational causes
+and the bound-account Claude weekly cap still exclude them.
 A review-typed brief (other than a formal `--review-attempt` prompt) with no
 Markdown heading naming its dispositions is still dispatched, with the typed
 warning `review_brief_no_dispositions` on stderr and in the task record's
@@ -223,6 +225,29 @@ or cancelled required checks fail the gate; never use `--admin` to bypass CI.
 Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
 ejection, and re-establish the gates before re-enqueueing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
+
+**Small batches (trial until 2026-11-05).** One behaviour per PR. Before review,
+split a PR above about 400 changed non-test lines or about 8 files, or have the
+driver record a one-line justification in the PR body. Test fixtures, generated
+files and whole-file deletions do not count toward either size measure. A
+reviewer may reject a PR for size alone, even with a justification.
+
+**Revert first (trial until 2026-11-05).** When a merged change breaks main
+(red CI on main), bypasses a gate, or breaks a deployed service, the owning
+driver's default mitigation is a clean `git revert` of exactly that merge as a
+PR. Target mitigation in under 30 minutes. Its exact-head cross-family review
+checks only that it is a pure revert, with no other edits. Normal CI and the
+merge queue still apply. The fixed change re-lands as a normal PR.
+
+The driver records any exception in the PR or issue: a security fix whose revert
+would reopen the hole; a data or schema migration or deployed data change; or a
+ready, smaller fix-forward that lands within the hour. All existing gates stay
+unchanged, including for exceptions.
+
+These trials draw on DORA's [small batches](https://dora.dev/capabilities/working-in-small-batches/)
+and [version control](https://dora.dev/capabilities/version-control/) capabilities
+and Google's [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
+The size thresholds and mitigation targets are local trial policy.
 
 **Red-team exception (operator 2026-10-11, #10437).** For code review
 only, when no independent outside-family reviewer can be obtained, a
@@ -470,14 +495,17 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 `scripts/config/issue_streams.yaml` (streams → epic numbers; mirrored in
 `docs/WORKSTREAMS.md` § Streams). This is how orchestrators stay on track and schedule:
 
+**Only the CTO opens GitHub issues.** Epic and lane drivers report findings to the CTO
+through Fleet Comms; the CTO opens, folds or drops them.
+
 - **Cold start**: your queue = YOUR stream's epic checklist/sub-issues, not the global
   issue list. Check `/api/issues/streams` (from `scripts.orchestration.issue_stream_audit`) for drift.
-- **Before filing (#10665)**: search open issues for duplicates by symptom AND by
+- **Before the CTO files (#10665)**: search open issues for duplicates by symptom AND by
   affected file. When an open parent issue has the same outcome, add the finding there as
-  a checklist item. File a new linked issue only when the work needs its own PR or has a
+  a checklist item. Open a new linked issue only when the work needs its own PR or has a
   different outcome, and give it an owner and acceptance criteria. Security work and
   evidence-backed preventive reliability work may keep their own issue.
-- **Creating an issue**: link it to its stream epic AT CREATION — native sub-issue
+- **Creating an issue (CTO only)**: link it to its stream epic AT CREATION — native sub-issue
   (preferred) or a `#N` checklist line in the epic body. An unlinked issue is an ORPHAN
   and gets flagged at every agent's cold start until adopted.
 - **Finish before starting (#10665)**: a lane with an open PR that has waited more than
@@ -517,8 +545,9 @@ default); unknown attribution or liveness always preserves them.
 
 Every task follows this workflow. No exceptions for non-trivial changes.
 
-1. **Create GH issue** — after the duplicate search in § Work intake, describe the problem
-   and link it to exactly one stream epic.
+1. **Use the CTO's issue** — only the CTO opens GitHub issues; epic and lane drivers
+   report findings to the CTO through Fleet Comms. When the CTO orders a brief with no
+   issue, use that brief as the card. The issue is linked to exactly one stream epic.
 2. **Review the plan** — obtain outside input and incorporate the disposition.
 3. **Finalize stable ACs** — use `- [ ] **AC-ID** — text`, then snapshot their
    applicability, due state, evidence types, and content hash in
@@ -545,7 +574,7 @@ Every task follows this workflow. No exceptions for non-trivial changes.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining
-   scope first, close the issue explicitly, then remove the exact branch/worktree.
+   scope first, close the issue if one exists, then remove the exact branch/worktree.
 
 The machine gate is:
 
@@ -583,7 +612,9 @@ printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
 
 ### Tests (#11226)
 
-A new test must be able to fail for a real defect class; name that class in the
+Do not add a test file or test case unless the CTO approves that specific test. Never
+brief a worker for a reproducer, a regression test or repeated runs. A CTO-approved new
+test must be able to fail for a real defect class; name that class in the
 test name or docstring. D1–D7 are "do not write"; K1–K13 are "must test". K is
 evaluated first and overrides every D class. Unresolved protection means keep the
 test. Protection is for demonstrated behaviour, not blanket immunity for a
@@ -699,10 +730,10 @@ channels for anything that will have >1 turn.
 **Why**: GH issues are persistent memory. Without them, context is lost between sessions and work gets repeated or silently broken.
 
 **Issue discipline (coding issues)**:
-- **Never leave half-done.** If you open it, finish it. If you can't finish it now, document exactly where you stopped and what remains.
+- **Never leave half-done.** If the CTO opened it for you, finish it. If you can't finish it now, document exactly where you stopped and what remains.
 - **Never close unless ALL acceptance criteria are verified.** Partial completion = still open.
 - **Aim to fully resolve and close.** Open issues are debt. Minimize them aggressively.
-- **The human manages content generation issues.** Claude owns coding/infrastructure issues. But proactively remind when it's time to start building a new track or batch — initiative is welcome.
+- **The human manages content generation issues.** The CTO opens coding/infrastructure issues. But proactively remind when it's time to start building a new track or batch — initiative is welcome.
 
 **Proactive issue hygiene**: At the start of each session, check open coding issues. Prioritize, resolve, close — don't let them go stale.
 

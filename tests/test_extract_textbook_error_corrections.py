@@ -526,14 +526,6 @@ _PARTICIPATION_FORMS = {
 }
 
 
-def test_changed_words_are_what_the_edit_replaces():
-    from scripts.practice.extract_textbook_error_corrections import _changed_words
-
-    assert _changed_words(["брати", "участь"], ["купити", "участь"]) == (["брати"], ["купити"])
-    assert _changed_words(["нетактична", "поведінка"], ["нетактовна", "поведінка"]) == ([], [])
-    assert _changed_words(["у", "травні", "місяці"], ["у", "травні"]) == (["місяці"], [])
-
-
 def test_a_kept_word_names_the_source_row_as_its_evidence(tmp_path: Path):
     """Round 3 probe: «брати участь → купити участь» was accepted as `shared_stem`.
 

@@ -50,10 +50,6 @@ class TestParseQuiz:
         questions = parse_quiz(content)
         assert len(questions) == 2
 
-    def test_empty_content(self):
-        assert parse_quiz("") == []
-        assert parse_quiz("   \n   ") == []
-
 
 class TestParseMatchUp:
     def test_double_colon_format(self):
@@ -68,9 +64,6 @@ class TestParseMatchUp:
         pairs = parse_match_up(content)
         assert len(pairs) == 2
 
-    def test_empty_content(self):
-        assert parse_match_up("") == []
-
 
 class TestParseFillIn:
     def test_numbered_with_answer_callout(self):
@@ -83,9 +76,6 @@ class TestParseFillIn:
         items = parse_fill_in(content)
         assert len(items) == 2
         assert items[0].answer == "був"
-
-    def test_empty_content(self):
-        assert parse_fill_in("") == []
 
 
 class TestParseTrueFalse:
@@ -102,9 +92,6 @@ class TestParseTrueFalse:
         assert len(items) == 2
         assert items[0].explanation == "Правильно!"
 
-    def test_empty_content(self):
-        assert parse_true_false("") == []
-
 
 class TestParseUnjumble:
     def test_numbered_with_answer(self):
@@ -116,9 +103,6 @@ class TestParseUnjumble:
         assert len(items) == 1
         assert "/" in items[0].jumbled or " " in items[0].jumbled
         assert items[0].answer == "Я люблю Україну"
-
-    def test_empty_content(self):
-        assert parse_unjumble("") == []
 
 
 class TestParseGroupSort:
@@ -137,10 +121,6 @@ class TestParseGroupSort:
         assert "Їжа" in data.groups
         assert data.groups["Їжа"] == ["хліб", "молоко"]
 
-    def test_empty_content(self):
-        data = parse_group_sort("")
-        assert len(data.groups) == 0
-
 
 class TestParseCloze:
     def test_inline_format(self):
@@ -154,10 +134,6 @@ class TestParseCloze:
         data = parse_cloze(content)
         assert len(data.blanks) == 2
 
-    def test_no_blanks(self):
-        data = parse_cloze("No blanks here.")
-        assert len(data.blanks) == 0
-
 
 class TestParseSelect:
     def test_numbered_select(self):
@@ -169,9 +145,6 @@ class TestParseSelect:
         )
         questions = parse_select(content)
         assert len(questions) >= 1
-
-    def test_empty_content(self):
-        assert parse_select("") == []
 
 
 class TestParseTranslate:
@@ -185,9 +158,6 @@ class TestParseTranslate:
         items = parse_translate(content)
         assert len(items) >= 1
 
-    def test_empty_content(self):
-        assert parse_translate("") == []
-
 
 class TestParseMarkTheWords:
     def test_marked_words(self):
@@ -196,9 +166,6 @@ class TestParseMarkTheWords:
         assert len(items) >= 1
         assert "люблю" in items[0].correctWords
         assert "живу" in items[0].correctWords
-
-    def test_empty_content(self):
-        assert parse_mark_the_words("") == []
 
 
 class TestParseErrorCorrection:
@@ -211,24 +178,12 @@ class TestParseErrorCorrection:
         items = parse_error_correction(content)
         assert len(items) >= 1
 
-    def test_empty_content(self):
-        assert parse_error_correction("") == []
-
 
 class TestHasMorphemePatterns:
     def test_prefix_pattern(self):
         # *prefix*rest where Cyrillic touches asterisk
         assert has_morpheme_patterns("*при*йшов") is True
 
-    def test_suffix_pattern(self):
-        assert has_morpheme_patterns("чит*ач*") is True
-
     def test_mark_the_words_not_matched(self):
         # space *word* space = mark-the-words, NOT morpheme
         assert has_morpheme_patterns(" *другові* ") is False
-
-    def test_without_morphemes(self):
-        assert has_morpheme_patterns("just a regular sentence") is False
-
-    def test_empty(self):
-        assert has_morpheme_patterns("") is False

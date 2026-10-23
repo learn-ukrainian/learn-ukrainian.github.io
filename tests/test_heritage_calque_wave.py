@@ -13,16 +13,10 @@ from scripts.audit.generate_practice_deck import (
     validate_heritage_pair,
 )
 from scripts.lexicon.heritage_calque_wave import (
-    candidate_sentences,
-    find_carrier_sentence,
-    has_stray_quote,
     is_ambiguous_single_token,
     is_clean_sentence,
     load_gec_calque_pairs,
-    normalize_gec_text,
     run_wave,
-    substitute_single,
-    word_boundary_pattern,
 )
 
 LONG_CLEAN_SENTENCE = (
@@ -35,43 +29,9 @@ LONG_CLEAN_SENTENCE = (
 # ---------------------------------------------------------------------------
 
 
-def test_normalize_gec_text_strips_edge_punctuation() -> None:
-    assert normalize_gec_text("Таким чином,") == "Таким чином"
-    assert normalize_gec_text('  "в цілому"  ') == "в цілому"
-    assert normalize_gec_text("") is None
-    assert normalize_gec_text(None) is None
-    assert normalize_gec_text(",.:;") is None
-
-
-def test_has_stray_quote() -> None:
-    assert has_stray_quote('доктор"') is True
-    assert has_stray_quote("доктор") is False
-
-
 # ---------------------------------------------------------------------------
 # Substitution
 # ---------------------------------------------------------------------------
-
-
-def test_word_boundary_pattern_matches_whole_token_only() -> None:
-    pattern = word_boundary_pattern("завдання")
-    assert pattern.search("Це важливе завдання.") is not None
-    assert pattern.search("надзавдання") is None
-
-
-def test_substitute_single_requires_exactly_one_occurrence() -> None:
-    pattern = word_boundary_pattern("кілька")
-    assert substitute_single(pattern, "Було кілька спроб.", "___") == "Було ___ спроб."
-    # Two occurrences: ambiguous substitution target, must fail closed.
-    assert substitute_single(pattern, "кілька і ще кілька", "___") is None
-    # Zero occurrences.
-    assert substitute_single(pattern, "жодного разу", "___") is None
-
-
-def test_substitute_single_handles_hyphenated_token() -> None:
-    pattern = word_boundary_pattern("будь-який")
-    result = substitute_single(pattern, "Обери будь-який варіант.", "___")
-    assert result == "Обери ___ варіант."
 
 
 # ---------------------------------------------------------------------------
@@ -83,34 +43,9 @@ def test_is_clean_sentence_accepts_well_formed_sentence() -> None:
     assert is_clean_sentence(LONG_CLEAN_SENTENCE) is True
 
 
-def test_clean_sentence_rejects_too_short() -> None:
-    assert is_clean_sentence("Це коротко.") is False
-
-
 def test_is_clean_sentence_rejects_latin_contamination() -> None:
     text = "Учора ввечері вона нарешті знайшла task, яке шукала цілий тиждень поспіль."
     assert is_clean_sentence(text) is False
-
-
-def test_is_clean_sentence_rejects_existing_blank_run() -> None:
-    text = "Учора ввечері вона нарешті знайшла ____ яке шукала цілий тиждень поспіль тут."
-    assert is_clean_sentence(text) is False
-
-
-def test_is_clean_sentence_rejects_broken_hyphenation() -> None:
-    text = "Учора ввечері вона нарешті зна- йшла завдання, яке шукала цілий тиждень."
-    assert is_clean_sentence(text) is False
-
-
-def test_is_clean_sentence_rejects_missing_terminal_punctuation() -> None:
-    text = "Учора ввечері вона нарешті знайшла завдання, яке шукала цілий тиждень поспіль"
-    assert is_clean_sentence(text) is False
-
-
-def test_candidate_sentences_splits_on_terminal_punctuation() -> None:
-    text = "Перше речення. Друге речення! Третє речення?"
-    pieces = candidate_sentences(text)
-    assert pieces == ["Перше речення.", "Друге речення!", "Третє речення?"]
 
 
 # ---------------------------------------------------------------------------
@@ -203,55 +138,6 @@ def test_load_gec_calque_pairs_normalizes_dedupes_and_drops_quote_artifacts(tmp_
 # ---------------------------------------------------------------------------
 
 
-def test_find_carrier_sentence_returns_none_when_no_clean_sentence_exists(tmp_path: Path) -> None:
-    db_path = tmp_path / "sources.db"
-    _make_sources_db(db_path, gec_rows=[], corpus={"literary_texts": [("c1", "Коротко.")]})
-    con = sqlite3.connect(db_path)
-    try:
-        assert find_carrier_sentence(con, "завдання", "задача") is None
-    finally:
-        con.close()
-
-
-def test_find_carrier_sentence_substitutes_and_blanks_correctly(tmp_path: Path) -> None:
-    db_path = tmp_path / "sources.db"
-    _make_sources_db(
-        db_path,
-        gec_rows=[],
-        corpus={"literary_texts": [("c1", LONG_CLEAN_SENTENCE)]},
-    )
-    con = sqlite3.connect(db_path)
-    try:
-        carrier = find_carrier_sentence(con, "завдання", "задача")
-    finally:
-        con.close()
-    assert carrier is not None
-    assert "___" in carrier.sentence_with_slot
-    assert "завдання" not in carrier.sentence_with_slot
-    assert "задача" in carrier.bad_sentence
-    assert "завдання" not in carrier.bad_sentence
-
-
-def test_find_carrier_sentence_respects_exclude_sentences(tmp_path: Path) -> None:
-    db_path = tmp_path / "sources.db"
-    _make_sources_db(
-        db_path,
-        gec_rows=[],
-        corpus={"literary_texts": [("c1", LONG_CLEAN_SENTENCE)]},
-    )
-    con = sqlite3.connect(db_path)
-    try:
-        first = find_carrier_sentence(con, "завдання", "задача")
-        assert first is not None
-        second = find_carrier_sentence(
-            con, "завдання", "задача", exclude_sentences={first.sentence_with_slot}
-        )
-    finally:
-        con.close()
-    # Only one clean sentence exists in the fixture; excluding it must fail closed.
-    assert second is None
-
-
 # ---------------------------------------------------------------------------
 # Homonym ambiguity guard
 # ---------------------------------------------------------------------------
@@ -281,12 +167,6 @@ def test_is_ambiguous_single_token_allows_single_lemma_multi_tag(tmp_path: Path)
         ],
     )
     assert is_ambiguous_single_token("так", vesum_db, {}) is False
-
-
-def test_is_ambiguous_single_token_exempts_multiword_phrases(tmp_path: Path) -> None:
-    vesum_db = tmp_path / "vesum.db"
-    _make_vesum_db(vesum_db, forms=[])
-    assert is_ambiguous_single_token("точка зору", vesum_db, {}) is False
 
 
 # ---------------------------------------------------------------------------

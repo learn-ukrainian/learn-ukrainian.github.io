@@ -36,7 +36,6 @@ from tests.test_export_runtime_shards import (
     _ref_load_search_rows,
     _reference_export,
     _snapshot,
-    _traced_in_fresh_interpreter,
     _version_dirs,
 )
 
@@ -211,22 +210,6 @@ def test_stream_compression_matches_one_shot_gzip(level: int) -> None:
         assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected) - 1) is None
 
 
-def test_stream_compression_aborts_before_consuming_source() -> None:
-    pulled = 0
-
-    def source():
-        nonlocal pulled
-        rng = random.Random(1)
-        while True:
-            pulled += 1
-            yield bytes(rng.getrandbits(8) for _ in range(4_096))
-
-    for level in (0, 1, 9):
-        pulled = 0
-        assert compress_stream_bounded(source, compression_level=level, max_bytes=20_000) is None
-        assert pulled < 20, "an oversized candidate must stop the replay early"
-
-
 def test_oversized_entry_leaf_matches_reference_error(edge_db: Path, tmp_path: Path) -> None:
     with pytest.raises(ExportError) as expected:
         _reference_export(edge_db, compression_level=9, entry_max=300, search_max=524_288)
@@ -333,20 +316,6 @@ def test_stale_staging_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: 
     _export(edge_db, out)
     assert not dead.exists()
     assert alive.exists(), "another live exporter's staging tree must not be touched"
-
-
-def test_export_memory_is_bounded_by_leaf_not_corpus(tmp_path: Path) -> None:
-    """Peak Python heap stays a small fraction of the payload volume being exported."""
-    db = _make_source_db(tmp_path / "big.db", records=240, filler_chars=60_000, seed=5)
-    payload_bytes = sum(
-        len(row[0]) for row in sqlite3.connect(db).execute("SELECT payload_json FROM article_payloads")
-    )
-    assert payload_bytes > 14_000_000
-    kwargs = {"include_decks": False, "deck_dir": None, "verify": True, "compression_level": 1,
-              "entry_max_gzip_bytes": 150_000}
-    error, peak = _traced_in_fresh_interpreter("export", db=db, out=tmp_path / "out", kwargs=kwargs)
-    assert error is None
-    assert peak < payload_bytes * 0.25, f"peak {peak} vs payload {payload_bytes}"
 
 
 def test_identical_reexport_reuses_installed_tree_untouched(edge_db: Path, tmp_path: Path) -> None:

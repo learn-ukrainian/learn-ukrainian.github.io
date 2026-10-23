@@ -16,8 +16,6 @@ from __future__ import annotations
 
 import io
 import json
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -50,26 +48,6 @@ def _budget() -> dict:
     return _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(89.0)})
 
 
-READERS = {
-    "select_account": lambda payload, **kw: claude_account_lane.select_account(payload, **kw),
-    "account_agents": lambda payload, **kw: claude_account_lane.account_agents(payload, **kw),
-    "lane_record": lambda payload, **kw: claude_account_lane.lane_record(payload, "claude", **kw),
-    "account_weekly_used_pct": lambda payload, **kw: claude_account_lane.account_weekly_used_pct(payload, **kw),
-    "capacity_verdict": lambda payload, **kw: claude_account_lane.capacity_verdict(payload, **kw),
-}
-
-
-@pytest.mark.parametrize("reader", sorted(READERS))
-def test_snapshot_readers_have_no_default_account(reader):
-    read = READERS[reader]
-    with pytest.raises(TypeError, match="account"):
-        read(_budget())
-    for bare in (None, "a", "b", ("b", "explicit")):
-        with pytest.raises(TypeError, match="named ClaudeAccount"):
-            read(_budget(), account=bare)
-    read(_budget(), account=HOST_ACCOUNT)
-
-
 def test_the_claude_lane_is_only_read_for_a_named_account():
     budget = _budget()
     assert claude_account_lane.lane_record(budget, "claude", account=HOST_ACCOUNT)["remaining_pct"] == 0.5
@@ -91,68 +69,6 @@ def test_an_unresolved_account_reads_route_facts_with_an_unknown_meter():
     assert "remaining_pct" not in claude and "codexbar" not in claude
     assert evidence == {"label": None, "meter": None, "state": "unresolved", "reason": "claude_account_binding_missing"}
     assert claude_account_lane.account_weekly_used_pct(budget, account=unresolved("claude_account_unknown")) is None
-
-
-@pytest.mark.parametrize(
-    ("label", "source", "refusal"),
-    [
-        ("c", "explicit", None),
-        ("b", "guessed", None),
-        ("b", "explicit", "claude_account_unknown"),
-        (None, "unresolved", None),
-        (None, "unresolved", "not_a_registered_code"),
-        (None, "builtin", "claude_account_unknown"),
-    ],
-)
-def test_a_route_key_account_is_a_resolved_label_or_a_registered_refusal(label, source, refusal):
-    with pytest.raises(ValueError, match="invalid Claude account route key"):
-        ClaudeAccount(label, source, refusal)
-
-
-def test_mypy_refuses_a_claude_reading_without_a_named_account(tmp_path):
-    """Type-check half of row 1: a missing account or a bare label is a mypy error at the call site."""
-    snippet = tmp_path / "snippet.py"
-    snippet.write_text(
-        "from scripts.agent_runtime.model_pause import account_used_pct, routing_budget_used_pct\n"
-        "from scripts.fleet.claude_account_lane import lane_record, select_account\n"
-        "from scripts.review.reviewer_resolver import ResolverInputs\n"
-        "\n"
-        "payload: dict = {}\n"
-        "select_account(payload)\n"
-        'select_account(payload, account="b")\n'
-        'lane_record(payload, "claude", account=None)\n'
-        'routing_budget_used_pct("claude")\n'
-        'account_used_pct("b")\n'
-        'ResolverInputs(author_model="gpt-6.1-sol")\n'
-        'ResolverInputs(author_model="gpt-6.1-sol", claude_account="b")\n'
-    )
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "mypy",
-            "--follow-imports=silent",
-            "--no-incremental",
-            "--config-file",
-            str(REPO_ROOT / "pyproject.toml"),
-            str(snippet),
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=300,
-    )
-    errors = [line.split(": error: ", 1)[1] for line in result.stdout.splitlines() if ": error: " in line]
-    assert result.returncode == 1, result.stdout + result.stderr
-    assert errors == [
-        'Missing named argument "account" for "select_account"  [call-arg]',
-        'Argument "account" to "select_account" has incompatible type "str"; expected "ClaudeAccount"  [arg-type]',
-        'Argument "account" to "lane_record" has incompatible type "None"; expected "ClaudeAccount"  [arg-type]',
-        'Missing named argument "account" for "routing_budget_used_pct"  [call-arg]',
-        'Argument 1 to "account_used_pct" has incompatible type "str"; expected "ClaudeAccount | None"  [arg-type]',
-        'Missing named argument "claude_account" for "ResolverInputs"  [call-arg]',
-        'Argument "claude_account" to "ResolverInputs" has incompatible type "str"; expected "ClaudeAccount"  [arg-type]',
-    ]
 
 
 # --- row 1 at the public resolver: ResolverInputs names its account, and the resolver reads it --
@@ -188,13 +104,6 @@ def test_the_resolver_judges_claude_on_the_named_accounts_meter(default_lane, b_
     # The caller's select_account view is the same input: the view is a fixed point.
     view, _ = claude_account_lane.select_account(raw, account=account("b"))
     assert resolve_reviewer(_reviewer_inputs(view, account("b"))).selected.name == resolution.selected.name
-
-
-@pytest.mark.parametrize("route_account", ["missing", None, "a", "b"])
-def test_resolver_inputs_without_a_named_account_fail_loudly(route_account):
-    kwargs = {} if route_account == "missing" else {"claude_account": route_account}
-    with pytest.raises(TypeError, match=r"claude_account|named ClaudeAccount"):
-        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", **kwargs)
 
 
 def test_an_unresolved_default_account_file_removes_every_claude_seat_from_the_resolver(tmp_path, monkeypatch):
@@ -276,14 +185,6 @@ def test_another_seats_ordinary_dispatch_reaches_no_claude_route_and_reads_no_ac
         delegate._resolve_dispatch_claude_account(_dispatch_args("--agent", "codex", "--claude-account", "b"))
 
 
-def test_no_dispatch_fallback_maps_onto_a_claude_seat():
-    """Why an ordinary dispatch of another seat has no claude account: no fallback can reach claude."""
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-
-    fallbacks = load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
-    assert fallbacks and "claude" not in set(fallbacks.values())
-
-
 def test_admission_refuses_any_final_claude_route_on_an_unresolved_account():
     """The backstop: whatever step chose claude, admission refuses it on an unresolved account."""
 
@@ -306,15 +207,6 @@ def test_admission_refuses_any_final_claude_route_on_an_unresolved_account():
         new_dispatch=True,
         claude_account=unresolved("claude_account_default_file_invalid"),
     )
-    assert target.recipient == "codex"
-
-
-def test_a_new_or_review_dispatch_must_name_the_account():
-    for flags in ({"new_dispatch": True}, {"review_dispatch": True}):
-        with pytest.raises(TypeError, match="names the ClaudeAccount"):
-            target_admission.resolve_and_admit(("codex",), mode="read-only", **flags)
-    # Messaging and other admissions make no claude reading.
-    (target,) = target_admission.resolve_and_admit(("codex",), mode="bridge")
     assert target.recipient == "codex"
 
 

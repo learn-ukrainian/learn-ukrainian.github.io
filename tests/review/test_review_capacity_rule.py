@@ -10,7 +10,7 @@ import pytest
 from scripts.fleet import credit_lane
 from scripts.review import closeout_cli
 from scripts.review.capacity import review_capacity, review_capacity_action
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
+from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 
@@ -43,7 +43,7 @@ def test_c6b_pace_only_selects_opus_without_attesting_missing_health():
     assert result.selected.concrete_model == "claude-opus-5-5"
     # Known allowance does not manufacture verified route health.
     assert result.selected.health != "healthy"
-    assert result.selected.selection_score[:2] == (0, 9)
+    assert result.selected.capacity.pressure == 9
 
 
 @pytest.mark.parametrize("key", ["claude", "claude-opus-5-5", "anthropic"])
@@ -62,7 +62,7 @@ def test_capacity_uses_the_same_supported_aliases_as_health(key, status, remaini
     else:
         assert result.selected.name == "claude-opus-5-5"
         assert result.selected.health is None
-        assert result.selected.capacity.pressure == result.selected.selection_score[1] == 9
+        assert result.selected.capacity.pressure == 9
 
 
 def test_model_health_alias_cannot_hide_canonical_seat_exhaustion():
@@ -120,16 +120,18 @@ def test_stale_or_missing_allowance_is_advisory_and_recorded(data):
     assert not capacity.near_cap
 
 
-def test_pace_pressure_orders_only_equal_fits():
+def test_pace_pressure_does_not_rank_reviewers():
     data = snapshot()
     data["agents"]["codex"] = {"status": "cool", "remaining_pct": 40}
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
-    assert result.selected.concrete_model == "gpt-6.1-sol"
-    # Suitability/tier remains ahead of pressure: Sonnet cannot replace Opus at critical.
+    request = ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT)
+    baseline = resolve_reviewer(request).selected
+    data["agents"]["claude"]["codexbar"]["weekly_pace_delta_pct"] = 90
+    assert resolve_reviewer(request).selected.name == baseline.name
+    assert resolve_reviewer(request).selected.selection_score == baseline.selection_score
     assert resolve_reviewer(inputs(data)).selected.concrete_model == "claude-opus-5-5"
 
 
-def test_10016_known_capacity_with_pace_pressure_precedes_unknown_capacity():
+def test_10016_usage_snapshot_does_not_rank_reviewers():
     data = snapshot(remaining=80, status="cool", health={"healthy": True})
     data["agents"]["claude"]["codexbar"]["weekly_pace_delta_pct"] = 1
     result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
@@ -140,23 +142,24 @@ def test_10016_known_capacity_with_pace_pressure_precedes_unknown_capacity():
     assert sol.status == "eligible"
     assert sol.capacity.remaining_pct is None
     assert sol.capacity.freshness == credit_lane.UNKNOWN
-    assert result.selected.selection_score < sol.selection_score
+    assert result.selected.selection_score[:-1] == sol.selection_score[:-1]
 
 
 @pytest.mark.parametrize(
     "lane,reason",
     [
-        ({"runtime": {"headroom_blocked": True}}, "runtime headroom"),
+        ({"runtime": {"headroom_blocked": True}}, "runtime headroom blocked"),
         ({"scheduler": {"capacity_exhausted": True, "active_reserved_input_bytes": 900}}, "concurrency"),
         ({"scheduler": {"circuit_open": True}}, "circuit"),
         ({"health": {"healthy": False}}, "unhealthy"),
     ],
 )
-def test_sole_reviewer_still_refuses_runtime_concurrency_and_circuit(lane, reason):
+def test_sole_reviewer_distinguishes_usage_forecasts_from_operational_failures(lane, reason):
     data = snapshot(**lane)
-    assert resolve_reviewer(inputs(data)).selected is None
+    assert (resolve_reviewer(inputs(data)).selected is None) is bool(reason)
     blocked, cause = review_capacity_action("claude", data["agents"]["claude"], data["diagnostics"], "claude-opus-5-5")
-    assert blocked and reason in cause
+    assert blocked is bool(reason)
+    assert reason in cause
 
 
 def test_active_reservation_still_excludes_sole_bucket():
@@ -246,25 +249,14 @@ def test_unreadable_policy_dispatch_keeps_retained_reserve(monkeypatch, remainin
     assert reason == ("near_cap (10% remaining)" if expected_blocked else "")
 
 
-def test_capacity_free_evaluation_has_no_live_reads(monkeypatch):
-    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_: pytest.fail("resolver must stay injected"))
-    result = evaluate_candidate(REVIEW_CANDIDATES["claude-opus-5-5"], replace(inputs(None), routing_snapshot=None))
-    assert result.status == "eligible" and result.health is None
-
-
-def test_legacy_normalization_keeps_writer_policy_and_hot_orders_equal_review_fits():
+def test_legacy_normalization_keeps_writer_policy_but_review_ignores_hot():
     from scripts.review.reviewer_resolver import normalize_routing_snapshot
 
     data = {"claude": "hot", "codex": "healthy"}
     assert normalize_routing_snapshot(data) == {"claude": "near_cap", "codex": "healthy"}
     result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
-    assert result.selected.concrete_model == "gpt-6.1-sol"
-    assert next(item for item in result.trace if item.concrete_model == "claude-opus-5-5").status == "eligible"
-
-
-@pytest.mark.parametrize("delta", [None, True, float("nan"), float("inf"), -5])
-def test_invalid_or_negative_pace_does_not_invent_pressure(delta):
-    assert review_capacity({"codexbar": {"weekly_pace_delta_pct": delta}}).pressure == 0
+    assert result.selected.concrete_model == "claude-opus-5-5"
+    assert next(item for item in result.trace if item.concrete_model == "claude-opus-5-5").status == "selected"
 
 
 @pytest.mark.parametrize(

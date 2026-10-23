@@ -224,12 +224,6 @@ def test_notation_pins_reconciled_order(table):
         tooling.validate_notation(table)
 
 
-def test_notation_requires_unicode_15(monkeypatch, table):
-    monkeypatch.setattr(tooling.unicodedata, "unidata_version", "14.0.0")
-    with pytest.raises(ValueError, match="Unicode 15"):
-        tooling.validate_notation(table)
-
-
 def test_notation_rejects_inconsistent_status(table):
     table["status"] = "provisional"
     with pytest.raises(ValueError, match="status and provisional"):

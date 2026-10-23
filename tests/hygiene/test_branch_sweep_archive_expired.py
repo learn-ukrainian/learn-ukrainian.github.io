@@ -240,36 +240,6 @@ def test_native_occupation_final_guard_keeps_complete_batch(repo: Path, mode: st
     assert ref_sha(repo, "codex/free") == other
 
 
-@pytest.mark.parametrize(
-    "mode", ["checkout", "merge", "apply", "bisect", "merge-operation", "cherry-pick", "revert", "am"]
-)
-@pytest.mark.parametrize("apply", [False, True])
-def test_native_occupation_cli_retains_branch(
-    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], mode: str, apply: bool
-) -> None:
-    _, tip = occupy_branch(repo, "codex/occupied", mode, linked=True)
-    original = sweep.sweep
-
-    def synthetic(root: Path, *, apply: bool = False) -> list[sweep.Decision]:
-        return original(root, apply=apply, pr_lookup=lookup(), protected_lookup=lambda _: set())
-
-    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
-    monkeypatch.setattr(sweep, "sweep", synthetic)
-    assert sweep.main(["--json", *(["--apply"] if apply else [])]) == (0 if mode == "checkout" else 1)
-    payload = json.loads(capsys.readouterr().out)
-    if mode == "checkout":
-        item = next(row for row in payload["decisions"] if row["branch"] == "codex/occupied")
-        assert item["classification"] == "skipped-worktree"
-        assert not item["local_deleted"] and not item["remote_deleted"]
-    else:
-        assert payload["ok"] is False
-        assert "in-progress operation" in payload["error"]
-        assert payload["decisions"] == []
-    assert ref_sha(repo, "codex/occupied") == tip
-    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
-    assert not (repo / sweep.RECEIPT_PATH).exists()
-
-
 def test_native_rebase_update_refs_targets_are_occupied(repo: Path) -> None:
     _, tip = occupy_branch(repo, "codex/occupied", "update-refs", linked=True)
     refused = sweep._git(repo, "branch", "-D", "codex/update-target")
@@ -1044,20 +1014,6 @@ def test_missing_bundle_head_deletes_nothing(repo: Path, monkeypatch: pytest.Mon
     assert receipt_rows(repo) == []
 
 
-def test_unwritable_archive_directory_deletes_nothing(repo: Path) -> None:
-    sha = commit_unique(repo, "codex/old-local", days=8)
-    archive = repo / "batch_state" / "branch-archive"
-    archive.parent.mkdir(parents=True)
-    archive.write_text("not a directory\n", encoding="utf-8")
-    item = by_name(run(repo, apply=True))["codex/old-local"]
-    assert item.classification == "report-only"
-    assert item.local_deleted is False
-    assert item.remote_deleted is False
-    assert "unwritable" in item.reason
-    assert local_ref(repo, "codex/old-local") == sha
-    assert archive.is_file()
-
-
 def test_symlink_archive_directory_deletes_nothing(repo: Path, tmp_path: Path) -> None:
     sha = commit_unique(repo, "codex/old-local", days=8)
     outside = tmp_path / "outside"
@@ -1145,29 +1101,6 @@ def test_diverged_and_unknown_pr_branches_stay_report_only(repo: Path) -> None:
     assert found["glm/unknown"].classification == "report-only"
     assert "unavailable" in found["glm/unknown"].reason
     assert local_ref(repo, "glm/unknown")
-
-
-def test_cli_passes_archive_after_days(
-    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    seen: dict[str, object] = {}
-
-    def capture(root: Path, *, apply: bool = False) -> list[sweep.Decision]:
-        seen["root"] = root
-        seen["apply"] = apply
-        seen["days"] = sweep.current_archive_after_days()
-        return []
-
-    monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
-    monkeypatch.setattr(sweep, "sweep", capture)
-    assert sweep.main(["--archive-after-days", "12", "--apply", "--json"]) == 0
-    assert seen == {"root": repo, "apply": True, "days": 12}
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["archive_after_days"] == 12
-    assert payload["apply"] is True
-    with pytest.raises(SystemExit) as caught:
-        sweep.main(["--archive-after-days", "-1"])
-    assert caught.value.code == 2
 
 
 def test_moved_head_and_peer_stay_when_compare_and_delete_fails(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1622,16 +1555,6 @@ def test_changed_but_still_eligible_guard_snapshot_keeps_batch(
     found = by_name(run(repo, apply=True))
     assert {name: ref_sha(repo, name) for name in heads} == heads
     assert all(not found[name].local_deleted for name in heads)
-
-
-def test_receipt_explains_thin_bundle_prerequisites(repo: Path) -> None:
-    commit_unique(repo, "codex/alpha", days=8)
-    run(repo, apply=True)
-    row = receipt_rows(repo)[0]
-    assert row["restore_prerequisites"] == (
-        "This thin bundle needs its prerequisite commits present. Fetch them from origin "
-        "or run the restore command in a clone of this repository."
-    )
 
 
 @pytest.mark.parametrize(

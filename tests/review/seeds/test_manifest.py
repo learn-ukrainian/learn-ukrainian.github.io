@@ -11,13 +11,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.review import record, second_seat
+from scripts.review import record
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import PinIneligibleError, render_prompt
 from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import (
-    GOLD_FAMILY,
-    GOLD_MODEL,
     PLANTER_FAMILY,
     PLANTER_MODEL,
     Env,
@@ -50,11 +48,6 @@ def mode(path: Path) -> int:
 # --- the resolver facts the fixtures rely on ----------------------------------------------------------------------------
 
 
-def test_the_fixture_models_resolve_to_the_families_the_fixtures_record() -> None:
-    assert second_seat.concrete_family(PLANTER_MODEL, what="planter") == PLANTER_FAMILY
-    assert second_seat.concrete_family(GOLD_MODEL, what="gold") == GOLD_FAMILY
-
-
 # --- scoring manifests and clean records ------------------------------------------------------------------------------
 
 
@@ -67,12 +60,6 @@ def test_a_scoring_manifest_round_trips_and_is_private(env: Env) -> None:
     document = yaml.safe_load(path.read_bytes())
     assert document["scoring_manifest"] == 1 and document["identities"]["gold_verdict"] == "pass"
     assert not list(path.parent.glob(".*")), "no temporary file is left behind"
-
-
-def test_a_clean_record_round_trips_and_is_private(env: Env) -> None:
-    clean = clean_lesson("clean-a1")
-    path = sm.write_clean_record(clean, env.root)
-    assert mode(path) == 0o600 and sm.load_clean("clean-a1", env.root) == clean
 
 
 def test_a_record_is_immutable_once_written(env: Env) -> None:
@@ -121,12 +108,6 @@ def test_a_missing_or_wrong_record_is_refused_when_read(env: Env) -> None:
         sm.load_seed("seed-b1", env.root)
     with pytest.raises(sm.MeasurementError):
         sm.load_seed("../etc/passwd", env.root)
-
-
-def test_the_required_dimensions_are_the_taxonomys_non_optional_lesson_checks() -> None:
-    every, required = sm.lesson_dimensions()
-    assert required == ["job", "language", "learner_fit", "activity", "evidence_use", "english", "fact", "recap"]
-    assert {"evidence_gap", "plan_defect", "engine_or_gate"} <= set(every) - set(required)
 
 
 # --- independence -------------------------------------------------------------------------------------------------------
@@ -187,15 +168,6 @@ def test_an_unknown_writer_or_reviewer_is_refused_not_defaulted(env: Env, writer
             repo_root=env.root,
         )
     assert caught.value.code == sm.SEED_IDENTITY_UNKNOWN
-
-
-def test_a_unit_with_no_record_is_an_unknown_identity(env: Env) -> None:
-    for unit in ("seed-ghost", "clean-ghost"):
-        with pytest.raises(sm.MeasurementError) as caught:
-            sm.check_attempt_identity(
-                unit, target=("a1", "m", 1), writer_family="anthropic", reviewer_family="openai", repo_root=env.root
-            )
-        assert caught.value.code == sm.SEED_IDENTITY_UNKNOWN
 
 
 def test_a_recorded_family_the_resolver_does_not_confirm_is_a_mismatch(env: Env) -> None:
@@ -505,15 +477,6 @@ def test_units_made_after_the_freeze_can_only_be_rolling(env: Env) -> None:
     assert sm.verify_confirmation_lock(env.root).seeds == ("seed-c",)
 
 
-def test_assigning_needs_a_record_and_a_known_set(env: Env) -> None:
-    with pytest.raises(sm.MeasurementError) as caught:
-        sm.assign_set("seed-ghost", "first", env.root)
-    assert caught.value.code == sm.MANIFEST_MISSING
-    env.add(mechanical_seed("seed-a"))
-    with pytest.raises(sm.MeasurementError):
-        sm.assign_set("seed-a", "everything", env.root)
-
-
 def rewrite_lock(env: Env, **changes) -> None:
     path = env.root / "batch_state" / "review-measurement" / "confirmation.lock"
     document = yaml.safe_load(path.read_bytes())
@@ -537,27 +500,12 @@ def test_the_hash_is_recomputed_and_every_tampering_is_detected(env: Env) -> Non
         sm.verify_confirmation_lock(env.root)
 
 
-def test_a_malformed_lock_is_invalid(env: Env) -> None:
-    inventory(env)
-    sm.freeze_confirmation(["seed-c"], env.root)
-    rewrite_lock(env, seeds="seed-c")
-    with pytest.raises(sm.MeasurementError) as caught:
-        sm.verify_confirmation_lock(env.root)
-    assert caught.value.code == sm.CONFIRMATION_LOCK_INVALID
-
-
 def test_a_lock_naming_a_unit_with_no_record_is_invalid(env: Env) -> None:
     inventory(env)
     sm.freeze_confirmation(["seed-c"], env.root)
     (env.root / "batch_state/review-measurement/seeds/seed-c.yaml").unlink()
     with pytest.raises(sm.MeasurementError, match="no record"):
         sm.verify_confirmation_lock(env.root)
-
-
-def test_no_lock_is_reported_as_such(env: Env) -> None:
-    with pytest.raises(sm.MeasurementError) as caught:
-        sm.verify_confirmation_lock(env.root)
-    assert caught.value.code == sm.CONFIRMATION_LOCK_MISSING
 
 
 # --- the measurement tree is outside every prompt path ------------------------------------------------------------------

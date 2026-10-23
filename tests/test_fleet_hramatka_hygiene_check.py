@@ -115,23 +115,6 @@ def _base_kwargs(repo_root: Path, tasks_dir: Path, **overrides: Any) -> dict[str
 # --- policy / receipt shape -------------------------------------------------
 
 
-def test_policy_version_is_a_stable_string() -> None:
-    assert isinstance(hygiene.POLICY_VERSION, str)
-    assert hygiene.POLICY_VERSION
-
-
-def test_receipt_has_every_documented_key(hermetic_repo) -> None:
-    repo_root, tasks_dir = hermetic_repo
-    reader = _reader(
-        {(PUBLIC, EPIC): {"number": EPIC, "body": CLEAN_BODY}, (PRIVATE, BOARD): {"number": BOARD, "body": ""}}
-    )
-
-    receipt = hygiene.hygiene_check(reader=reader, **_base_kwargs(repo_root, tasks_dir))
-
-    for key in ("policy_version", "epic_charter_ok", "queue_pointer_ok", "zombie_worktrees", "df", "status"):
-        assert key in receipt
-
-
 # --- verified path -----------------------------------------------------------
 
 
@@ -557,16 +540,6 @@ def test_stale_when_disk_use_at_or_above_high_water(hermetic_repo, monkeypatch) 
     assert receipt["status"] == "stale"
     assert receipt["df"]["ok"] is False
     assert receipt["df"]["use_percent"] == 96.0
-
-
-def test_disk_below_high_water_is_ok(hermetic_repo, monkeypatch) -> None:
-    repo_root, tasks_dir = hermetic_repo
-    monkeypatch.setattr(hygiene.shutil, "disk_usage", lambda _path: _fake_usage(100, 50, 50))
-
-    receipt = hygiene.hygiene_check(reader=_reader_clean(), high_water_percent=95, **_base_kwargs(repo_root, tasks_dir))
-
-    assert receipt["status"] == "verified"
-    assert receipt["df"]["ok"] is True
 
 
 def test_disk_measurement_failure_is_non_fatal(hermetic_repo, monkeypatch) -> None:

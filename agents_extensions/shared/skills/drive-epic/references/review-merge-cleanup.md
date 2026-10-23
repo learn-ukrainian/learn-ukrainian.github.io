@@ -13,6 +13,15 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 If the head moves after APPROVE, the CF is stale — re-run exact-head CF before any
 enqueue or re-queue.
 
+**Small batches (trial until 2026-11-05).** A reviewer may reject a PR for size
+alone, even when the driver has justified its size. The size guide, exclusions
+and split-or-justify rule are in [workflow.md § Merge policy](../../../rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450).
+
+**Revert first (trial until 2026-11-05).** For a revert under that Merge policy,
+the exact-head cross-family review checks only that the PR is a pure `git revert`
+of exactly the offending merge, with no other edits. Normal CI and the merge
+queue remain required. Exceptions follow the same policy and retain all gates.
+
 Label a source-only review static and state its unverified execution behavior.
 Keep the execution-dependent review route in [model-deltas](model-deltas.md);
 do not request an executing review solely because a path is integration code.
@@ -137,19 +146,38 @@ re-probe gate-driving data yourself.
 
 Review briefs must ask reviewers to cite files with repository-relative paths, including line suffixes.
 
+### Review stopping rule
+
+Every reviewer and driver follows this rule:
+
+1. Round 1 is a full review of the change.
+2. From round 2 on, the review is a DELTA review: only the fix diff since the last
+   reviewed head, plus whether each earlier blocker is resolved. A new blocker
+   must be a concrete failure introduced by that fix diff, or an earlier blocker
+   still unresolved. Everything else is a tracked follow-up with an owner.
+3. At most two fix rounds. If still blocked after round 2, the driver does not
+   start round 3 on the same approach. The driver splits the PR, changes the
+   approach, or escalates to the advisors (Opus 5.5 + Sol 6.1) or the operator.
+4. A security FAIL (`SECURITY_VERDICT FAIL`) always blocks and is never downgraded
+   to a follow-up. The quality bar and gates are unchanged: exact-head
+   cross-family APPROVE and green CI remain required.
+
 ### Review brief template (#10665)
 
 Every review brief, code or Ukrainian, uses these sections. Round 1 freezes sections 2 to 4;
-later rounds reuse them unchanged and update only section 1's exact head. A review-typed
+later rounds reuse them unchanged. From round 2 on, section 1 names both the last
+reviewed head and the new exact head, the fix diff, and each earlier blocker's
+resolution evidence. The reviewer brief states DELTA scope under the
+[review stopping rule](#review-stopping-rule). A review-typed
 dispatch whose brief has no heading naming the dispositions is still dispatched, with the
 typed warning `review_brief_no_dispositions` on stderr and in the task record. Phrase
 reviewer asks as questions or statements: a line that starts with a write verb refuses a
 read-only dispatch (#8703, above).
 
-1. **Target** — branch, exact head SHA, issue, review profile and risk.
+1. **Target** — branch, exact head SHA, issue if one exists, review profile and risk.
 2. **Outcome** — the frozen intended behaviour, acceptance criteria and non-goals.
 3. **Threat and input model** — the attacker (who controls which input) and the input
-   classes in scope, with the author's entry-point matrix, one reproducer per class and the
+   classes in scope, with the author's entry-point matrix, one concrete case per class and the
    untested boundaries. Name classes; never a "try to break it" list of individual spellings.
 4. **Dispositions** (a `## Dispositions` heading; `local-code-review` checklist Step 5):
    - `in_scope_blocker` — violates the stated contract, or an existing invariant on a path
@@ -158,15 +186,25 @@ read-only dispatch (#8703, above).
    - `follow_up` — pre-existing defects off those paths, wording, P2/P3, unless their impact
      or the change's dependency on them is material; tracked with an owner;
    - `stop_and_escalate` — material contract ambiguity, or a fix that would trip a breaker.
-5. **Reviewer duties** — one class-level finding per input class, with a reproducer and every
-   sibling found this round; a material defect outside the stated classes still blocks or
-   escalates. Each blocker states the reproducible failure, its impact and the required
+5. **Reviewer duties** — one class-level finding per input class, with a concrete example and every
+   sibling found within this round's scope. In round 1, a material defect outside the stated
+   classes still blocks or escalates. Later rounds use the review stopping rule to decide
+   blockers and follow-ups. Each blocker states the demonstrated failure, its impact and the required
    corrected behaviour; a code fix is a suggestion. APPROVE with tracked follow-ups is allowed.
-   A delta review attests the new exact head and checks interactions, including weakened
-   tests. A missing required capability is INCONCLUSIVE: the verdict line uses `BLOCKED` and
+   A delta-review brief asks the reviewer to probe every fallback or fail-open path changed
+   by the fix diff and check listed fixes, interactions and weakened tests at the new exact
+   head. A missing required capability is INCONCLUSIVE: the verdict line uses `BLOCKED` and
    names the capability; it still blocks.
-6. **Breakers** — `local-code-review` checklist Step 6, unchanged: for example, two
-   consecutive patch cycles that do not shrink the outstanding findings stop and escalate.
+6. **Breakers** — the review stopping rule above and `local-code-review` checklist
+   Step 6 apply, even when the outstanding-finding count shrinks.
+
+Every review brief names the supported evidence directory: write the report, archives,
+logs and screenshots under `$LU_TASK_EVIDENCE_DIR` (dispatch creates it and names it in
+the worker preamble). Task cleanup copies it to `batch_state/preserved/<task>/` with a
+retrieval receipt before deleting the runtime lease. Do not rely on ignored files left in
+the worktree: a later dispatch that reuses the worktree runs a cone sparse-checkout that
+removes them, and reuse is refused while a terminal task's worktree evidence is
+unretrieved. Cite the preserved path from the result as well as stating the verdict.
 
 **Security-code variant** (hooks, launchers, credentials, admission, sandbox, guards):
 section 3 also states the trust boundary, the allowed inputs, the refusal behaviour, the
@@ -181,8 +219,8 @@ or edited text blocks, one finding per error class lists every occurrence with a
 source-verified correction, and an unsourced blocker is INCONCLUSIVE.
 
 Reviewers do not re-run test suites that the PR's CI runs: review the diff, run at
-most the specific tests that reproduce a finding you are checking, and cite CI run
-ids for suite results.
+most the specific existing tests that cover a finding you are checking, and cite CI run
+ids for suite results. Add no test and repeat no run.
 
 ## §7. Landing order
 

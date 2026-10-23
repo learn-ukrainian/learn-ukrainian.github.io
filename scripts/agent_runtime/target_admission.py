@@ -510,7 +510,11 @@ def resolve_and_admit(
         selected = [target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved]
         # A new worker dispatch also answers for every model it asked for
         # (explicit, attached or also_models); reviewer selection only for what it picked.
-        _refuse_paused(selected if review_dispatch else [*models, *selected], claude_account=claude_account)
+        _refuse_paused(
+            selected if review_activity else [*models, *selected],
+            claude_account=claude_account,
+            review=review_activity,
+        )
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 
@@ -546,7 +550,9 @@ def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
     return str(raw).strip() if isinstance(raw, str) and raw.strip() else None
 
 
-def _refuse_paused(models: Iterable[str | None], *, claude_account: ClaudeAccount | None) -> None:
+def _refuse_paused(
+    models: Iterable[str | None], *, claude_account: ClaudeAccount | None, review: bool = False
+) -> None:
     """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches.
 
     ``claude_account`` is required: the claude lane's headroom is that
@@ -555,7 +561,8 @@ def _refuse_paused(models: Iterable[str | None], *, claude_account: ClaudeAccoun
     """
     from .model_pause import account_used_pct, refuse_paused_models
 
-    refuse_paused_models(models, used_pct=account_used_pct(claude_account))
+    used_pct = account_used_pct(claude_account)
+    refuse_paused_models(models, used_pct=lambda lane: used_pct(lane) if not review or lane == "claude" else None)
 
 
 def _refuse_non_review_models(models: Iterable[str | None]) -> None:

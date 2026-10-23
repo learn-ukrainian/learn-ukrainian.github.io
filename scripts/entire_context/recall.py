@@ -456,8 +456,3 @@ def prepare_handoff(
     if len(canonical_json(capsule).encode("utf-8")) > MAX_CAPSULE_BYTES:
         raise AssertionError("handoff capsule exceeded its hard byte cap")
     return capsule
-
-
-def serialize_capsule(capsule: dict[str, Any]) -> str:
-    """Deterministic canonical-JSON serialization of a handoff capsule."""
-    return canonical_json(capsule)

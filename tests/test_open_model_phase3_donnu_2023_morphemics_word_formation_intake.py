@@ -24,18 +24,6 @@ def _drive_staging() -> Path | None:
         return None
 
 
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    schema_text = SCHEMA.read_text(encoding="utf-8")
-    assert schema.get("additionalProperties") is False
-    assert '"source_text"' not in schema_text
-    assert '"page_texts"' not in schema_text
-    assert "GoogleDrive-" not in schema_text
-    assert "@gmail.com" not in schema_text
-    assert "NOTE: PLACE YOUR OWN LICENSE HERE" not in schema_text
-
-
 def test_mint_is_deterministic_and_preserves_false_completion_gates() -> None:
     first = intake.mint_receipt()
     second = intake.mint_receipt()
@@ -283,13 +271,6 @@ def test_check_cli_is_hermetic_without_drive(monkeypatch: pytest.MonkeyPatch) ->
 
     monkeypatch.setattr(intake, "default_staging_root", boom)
     assert intake.main(["--check", str(PUBLIC_RECEIPT)]) == 0
-
-
-def test_no_db_mutation_surface() -> None:
-    source = Path(intake.__file__).read_text(encoding="utf-8")
-    assert "sources.db" not in source
-    assert "sqlite3" not in source
-    assert "INSERT INTO" not in source
 
 
 def test_private_audit_against_drive_custody() -> None:
