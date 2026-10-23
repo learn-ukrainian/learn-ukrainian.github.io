@@ -92,27 +92,33 @@ describe('C37 article-arrival oracle', () => {
     expect(arrival.ok).toBe(true);
     expect(arrival).toEqual({ ok: true, url: articlePath('замок'), heading: 'Замо́к' });
     await expect(expectCurrentAtlasArticle(page, 'замок', 'ready article')).resolves.toBe('Замо́к');
+    for (const [slug, title] of [['бабине-літо', 'БА́БИНЕ літо'], ['бар-єр', "бар'єр<span class=\"word-stress\">[бар'є́р]</span>"]]) {
+      await render(articleHtml({ title }), articlePath(slug));
+      expect((await inspectCurrentAtlasArticle(page, slug)).ok).toBe(true);
+    }
   });
 
   it('folds case, stress marks and whitespace without losing Ukrainian letters', () => {
     expect(foldUkrainian('  Замо́к  ')).toBe('замок');
     expect(foldUkrainian('ЗАМОК')).toBe('замок');
     expect(foldUkrainian('за́мок')).toBe('замок');
+    expect(foldUkrainian('  Ї Й Ґ Є  ')).toBe('ї-й-ґ-є');
+    expect(foldUkrainian("  БАГАТОДІТНА  сім'я  ")).toBe('багатодітна-сім-я');
   });
 
   it('rejects URL-only navigation even though the legacy URL check accepts it', async () => {
     await render(articleHtml(), articlePath('замок'));
-    await page.evaluate(path => window.history.pushState({}, '', path), articlePath('інший'));
+    await page.evaluate(path => window.history.pushState({}, '', path), articlePath('зам'));
 
-    const legacyUrlOnly = new URL(page.url()).pathname === articlePath('інший');
-    const arrival = await inspectCurrentAtlasArticle(page, 'інший');
+    const legacyUrlOnly = new URL(page.url()).pathname === articlePath('зам');
+    const arrival = await inspectCurrentAtlasArticle(page, 'зам');
 
     expect(legacyUrlOnly).toBe(true);
     expect(arrival.ok).toBe(false);
     if (arrival.ok) throw Error('URL-only navigation was accepted as article arrival');
-    expect(arrival.reason).toContain('does not contain');
+    expect(arrival.reason).toContain('does not match');
     expect(arrival.heading).toBe('Замо́к');
-    await expect(expectCurrentAtlasArticle(page, 'інший', 'url only', 200)).rejects.toThrow(/did not arrive/);
+    await expect(expectCurrentAtlasArticle(page, 'зам', 'url only', 200)).rejects.toThrow(/did not arrive/);
   });
 
   it('rejects a mismatched pathname before reading the article', async () => {
@@ -174,13 +180,13 @@ describe('C37 article-arrival oracle', () => {
     const empty = await inspectCurrentAtlasArticle(page, 'замок');
     expect(empty.ok).toBe(false);
     if (empty.ok) throw Error('empty title was accepted');
-    expect(empty.reason).toContain('does not contain');
+    expect(empty.reason).toContain('does not match');
 
     await render(articleHtml({ title: 'Інше слово' }), articlePath('замок'));
     const wrong = await inspectCurrentAtlasArticle(page, 'замок');
     expect(wrong.ok).toBe(false);
     if (wrong.ok) throw Error('wrong title was accepted');
-    expect(wrong.reason).toContain('"Інше слово" does not contain "замок"');
+    expect(wrong.reason).toContain('"Інше слово" does not match "замок"');
   });
 
   it('rejects a matching word title without a visible hero', async () => {

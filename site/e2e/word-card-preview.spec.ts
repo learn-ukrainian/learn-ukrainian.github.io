@@ -853,16 +853,17 @@ test.describe('C37 candidate in-page search', () => {
     await input.press('Enter');
     await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug)}/`);
     const heading = await expectCurrentAtlasArticle(page, slug, 'negative-control baseline');
-    // Change only the address bar to another real Atlas word; the rendered article stays put.
-    const other = 'бабин';
-    expect(foldUkrainian(heading)).not.toContain(foldUkrainian(other));
+    // A prefix-only URL spoof leaves the real article in place.
+    const other = slug.slice(0, -1);
+    expect(foldUkrainian(heading)).toContain(foldUkrainian(other));
+    expect(foldUkrainian(heading)).not.toBe(foldUkrainian(other));
     await page.evaluate(path => window.history.pushState({}, '', path), `/lexicon/${encodeURIComponent(other)}/`);
     const legacyUrlOnly = new URL(page.url()).pathname === `/lexicon/${encodeURIComponent(other)}/`;
     expect(legacyUrlOnly, 'legacy URL-only check accepts the invalid state').toBe(true);
     const arrival = await inspectCurrentAtlasArticle(page, other);
     expect(arrival.ok, 'URL-only navigation must not count as article arrival').toBe(false);
     if (arrival.ok) throw Error('URL-only navigation was accepted as article arrival');
-    expect(arrival.reason).toContain('does not contain');
+    expect(arrival.reason).toContain('does not match');
     // The committed positive assertion rejects that same state, so it cannot regress to a bare URL check.
     await expect(expectCurrentAtlasArticle(page, other, 'negative control', 2_000)).rejects.toThrow(/did not arrive/);
     expect(new URL(page.url()).pathname).toBe(`/lexicon/${encodeURIComponent(other)}/`);
@@ -960,15 +961,24 @@ test.describe('C37 candidate in-page search', () => {
       for (const item of actions) {
         await page.goto(publicServer.origin + encodeURI(item.route), { waitUntil: 'domcontentloaded' });
         await page.waitForFunction(() => document.querySelector('[data-word-atlas],[data-release-page],[data-release-card],[data-word-atlas-state="not_found"]'), {}, { timeout: 30000 });
-        const nodes = item.kind === 'disclosure' ? page.locator('details > summary') : page.getByRole('tab');
-        const record: Record<string, unknown> = { ...item, clicks: [] as number[], timeouts: [] as Record<string, unknown>[] };
-        // Exercise every original target, but end on the reported one so its own state is observable.
-        const order = [...Array.from({ length: await nodes.count() }, (_, i) => i).filter(i => i !== item.index), item.index];
+        const article = page.locator(item.candidate ? '[data-release-page]' : '[data-word-atlas]');
+        await expect(article).toHaveCount(1);
+        const nodes = item.kind === 'disclosure' ? article.locator('details > summary') : article.getByRole('tab');
+        const targetIndex = item.kind === 'disclosure' ? item.index - 1 : item.index;
+        const record: Record<string, unknown> = { ...item, historicalGlobalIndex: item.index, articleIndex: targetIndex,
+          historicalDisposition: 'original-timeout-cause-unverified', clicks: [] as number[], timeouts: [] as Record<string, unknown>[] };
+        // The historical global disclosure ordinal included the mobile menu at zero.
+        const order = [targetIndex];
         for (const i of order) {
           try { await nodes.nth(i).click({ timeout: 2000 }); (record.clicks as number[]).push(i); }
           catch (error) { (record.timeouts as Record<string, unknown>[]).push({ index: i, error: (error as Error).message }); }
         }
-        const target = nodes.nth(item.index);
+        const target = nodes.nth(targetIndex);
+        record.targetLabel = (await target.textContent())?.trim();
+        const historicalNodes = item.kind === 'disclosure' ? page.locator('details > summary') : page.getByRole('tab');
+        expect(await target.evaluate((node, historical) => node === document.querySelectorAll(historical.selector)[historical.index],
+          { selector: item.kind === 'disclosure' ? 'details > summary' : '[role=tab]', index: item.index })).toBe(true);
+        record.historicalLabel = (await historicalNodes.nth(item.index).textContent())?.trim();
         if (item.kind === 'disclosure') {
           const opened = await target.locator('..').getAttribute('open') !== null;
           const revealed = await target.locator('..').locator(':scope > :not(summary)').first().isVisible().catch(() => false);
@@ -983,29 +993,29 @@ test.describe('C37 candidate in-page search', () => {
           record.panel = panel.title ?? null;
           if (!panel.ok) record.classification = panel.reason;
         }
+        record.freshDisposition = record.targetOpened ? 'opened-and-revealed' : 'unresolved';
         results.push(record);
       }
       await info.attach('c37-original-action-timeouts', { body: JSON.stringify(results, null, 2), contentType: 'application/json' });
       expect(results).toHaveLength(14);
-      // Every candidate-page target and both current tabs are clickable after the correction.
+      // Every original word-content target must open through its direct action.
       expect(results.filter(item => !item.candidate).map(item => [item.route, item.kind, item.index, item.targetOpened]))
-        .toEqual([['/lexicon/замок/', 'tab', 0, true], ['/lexicon/замок/', 'tab', 1, true], ['/lexicon/юридичний/', 'disclosure', 1, false]]);
+        .toEqual([['/lexicon/замок/', 'tab', 0, true], ['/lexicon/замок/', 'tab', 1, true], ['/lexicon/юридичний/', 'disclosure', 1, true]]);
       expect(results.filter(item => item.candidate).every(item => item.targetOpened === true)).toBe(true);
       // Tab success means the matching panel is exposed and owned by that tab, not just that the click returned.
       const currentTabs = results.filter(item => item.kind === 'tab');
       expect(currentTabs.map(item => typeof item.panel)).toEqual(['string', 'string']);
       for (const tab of currentTabs) expect(foldUkrainian(String(tab.panel))).toContain('замок');
       expect(new Set(currentTabs.map(item => item.panel)).size).toBe(2);
-      // The current-page disclosure is classified from its observed state, never reported as working.
-      const unresolved = results.find(item => item.route === '/lexicon/юридичний/');
-      expect(unresolved?.targetOpened).toBe(false);
-      expect(unresolved?.targetVisible).toBe(true);
-      expect(unresolved?.classification).toBe('unresolved-pointer-intercepted-on-current-page');
-      // The only surviving timeout is the shared current Atlas article, outside this repair's owned page.
+      // Fresh direct action does not establish the cause of any historical timeout.
+      const currentDisclosure = results.find(item => item.route === '/lexicon/юридичний/');
+      expect(currentDisclosure?.targetOpened).toBe(true);
+      expect(currentDisclosure?.targetVisible).toBe(true);
+      expect(results.every(item => item.historicalDisposition === 'original-timeout-cause-unverified')).toBe(true);
+      // No sibling or site-menu clicks may manufacture a current word-article failure.
       const timeouts = results.flatMap(item => (item.timeouts as { index: number; error: string }[])
         .map(timeout => ({ route: item.route as string, index: timeout.index, error: timeout.error })));
-      expect(timeouts.map(item => `${item.route}#${item.index}`)).toEqual(['/lexicon/юридичний/#1']);
-      expect(timeouts[0]?.error).toContain('intercepts pointer events');
+      expect(timeouts.map(item => `${item.route}#${item.index}`)).toEqual([]);
     });
   });
 });

@@ -2,9 +2,10 @@ import { expect, type Page } from '@playwright/test';
 
 // A URL change alone is not article arrival. This predicate reads the rendered
 // current Atlas article: exactly one trusted shell, no error state, and a
-// word-title heading whose folded text carries the navigated slug.
+// word-title heading whose canonical headword equals the navigated slug.
 export const foldUkrainian = (value: string): string => value.normalize('NFC')
-  .replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  .replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  .replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '');
 
 export type ArticleArrival =
   | { ok: true; url: string; heading: string }
@@ -22,10 +23,15 @@ export async function inspectCurrentAtlasArticle(page: Page, slug: string): Prom
   const titles = article.locator('h1.word-title:visible');
   const titlesCount = await titles.count();
   if (titlesCount < 1) return { ok: false, reason: 'no visible current-article word title', url };
-  const heading = ((await titles.first().textContent()) ?? '').replace(/\s+/g, ' ').trim();
+  const heading = await titles.first().evaluate(title => {
+    const headword = title.cloneNode(true);
+    if (!(headword instanceof Element)) throw Error('word title is not an element');
+    headword.querySelectorAll('.word-stress').forEach(stress => stress.remove());
+    return (headword.textContent ?? '').replace(/\s+/g, ' ').trim();
+  });
   const target = foldUkrainian(decodeURIComponent(slug));
-  if (!heading || !foldUkrainian(heading).includes(target)) {
-    return { ok: false, reason: `visible word title ${JSON.stringify(heading)} does not contain ${JSON.stringify(target)}`, url, heading };
+  if (!heading || foldUkrainian(heading) !== target) {
+    return { ok: false, reason: `visible word title ${JSON.stringify(heading)} does not match ${JSON.stringify(target)}`, url, heading };
   }
   if (!(await article.locator('.word-hero').first().isVisible())) {
     return { ok: false, reason: 'word title rendered without an article hero', url, heading };
