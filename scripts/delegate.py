@@ -634,10 +634,6 @@ def _read_only_snapshot_sidecar_path(task_id: str, phase: str) -> Path:
     return _read_only_snapshot_dir_for(task_id) / f"read_only_checkout_{phase}.json"
 
 
-def _read_only_snapshot_digest_path(task_id: str) -> Path:
-    return _read_only_snapshot_dir_for(task_id) / _READ_ONLY_SNAPSHOT_DIGEST_NAME
-
-
 def _write_read_only_snapshot_sidecar(
     task_id: str,
     phase: str,
@@ -724,24 +720,6 @@ def discard_read_only_snapshot_phases(snapshot_dir: Path) -> None:
             continue
         if stat.S_ISREG(info.st_mode):
             path.unlink()
-
-
-def collapse_read_only_snapshot_dir(
-    snapshot_dir: Path,
-    pre: dict[str, str] | None,
-    post: dict[str, str] | None,
-) -> int:
-    """Replace phase JSON with ``digest.json``. Return bytes reclaimed.
-
-    The digest hashes the same canonical bytes ``_write_read_only_snapshot_sidecar``
-    writes. Callers that still have to publish the task record must
-    :func:`stage_read_only_snapshot_digest`, write the record, then
-    :func:`discard_read_only_snapshot_phases`. This helper does both file steps
-    and is for a caller that has already published the record.
-    """
-    reclaimed = stage_read_only_snapshot_digest(snapshot_dir, pre, post)
-    discard_read_only_snapshot_phases(snapshot_dir)
-    return reclaimed
 
 
 def _load_read_only_snapshot_sidecar(task_id: str, phase: str) -> dict[str, str] | None:
@@ -2887,11 +2865,6 @@ def _strip_quoted_content(prompt: str) -> str:
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
 
 
-def _is_list_or_heading_boundary(line: str) -> bool:
-    """Return True if line is a markdown heading, list item, or thematic break."""
-    return bool(_HEADING_BOUNDARY_RE.match(line) or _LIST_BOUNDARY_RE.match(line) or _THEMATIC_BREAK_RE.match(line))
-
-
 def _is_write_directive(line: str, prev_non_empty: str | None) -> bool:
     """Classify whether a line in a prompt is a write directive (#8703).
 
@@ -4238,15 +4211,6 @@ def _task_state_for_worktree(path: Path) -> tuple[str | None, dict[str, Any] | N
             continue
         return task_id, state
     return None, None
-
-
-def _task_status_for_worktree(path: Path) -> str | None:
-    """Return a path-bound worktree owner's recorded status, when present."""
-    _task_id, state = _task_state_for_worktree(path)
-    if state is None:
-        return None
-    status = state.get("status")
-    return str(status) if status is not None else None
 
 
 def _worktree_is_clean(path: Path) -> bool:
@@ -6718,11 +6682,6 @@ def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
         from guardrails.delegate_ownership import path_is_owned  # type: ignore
 
     return path_is_owned(path, owned_paths)
-
-
-def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()) -> str | None:
-    """``git diff <diff_args>`` as if every change, untracked files included, were committed; None when unknown."""
-    return _worktree_diff_read(worktree, diff_args, git_options=git_options)[0]
 
 
 # #9878: the closed registry of public causes. A reason that can leave the
