@@ -40,7 +40,6 @@ import logging
 import os
 import re
 import shutil
-import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 
@@ -59,7 +58,6 @@ _TRANSIENT_ERROR_PATTERNS = (
 )
 _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNORECASE)
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
-_INLINE_PROMPT_LIMIT_CHARS = 100_000
 _PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
@@ -122,23 +120,6 @@ def resolve_gemini_auth_mode(
 
 def _has_gemini_api_key(env: Mapping[str, str]) -> bool:
     return bool(env.get("GEMINI_API_KEY") or env.get("GOOGLE_API_KEY"))
-
-
-def _prompt_arg_for_cli(prompt: str) -> tuple[str, Path | None]:
-    """Return the ``gemini -p`` argument and optional temp file path."""
-    if len(prompt) <= _INLINE_PROMPT_LIMIT_CHARS:
-        return prompt, None
-
-    with tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        prefix=_PROMPT_FILE_PREFIX,
-        suffix=".txt",
-        delete=False,
-    ) as handle:
-        handle.write(prompt)
-        path = Path(handle.name)
-    return f"@{path}", path
 
 
 def _cleanup_prompt_file(path: Path | None) -> None:
