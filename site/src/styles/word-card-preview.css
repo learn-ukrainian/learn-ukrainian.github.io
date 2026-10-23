@@ -15,7 +15,8 @@
 .wc-credits { font-size: .85rem; white-space: normal; }
 .wc-credits a:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
 .wc-source-list { padding-left: 1.25rem; }
-.wc-source-list > li { margin: 1rem 0; scroll-margin-top: 1rem; }
+/* Match Atlas index anchor clearance for the sticky CourseLayout header. */
+.wc-source-list > li { margin: 1rem 0; scroll-margin-top: 4rem; }
 .wc-source-list h4, .wc-source-list p { margin: .35rem 0; }
 .wc-binding dd { margin-left: 1rem; overflow-wrap: anywhere; }
 .wc-note { font-style: italic; }

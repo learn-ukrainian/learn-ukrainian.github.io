@@ -412,15 +412,51 @@ async function readability(page: import('@playwright/test').Page, origin: string
       writeFileSync(initialPath, shot);
       await info.attach(`${name}-${key}`, { body: shot, contentType: 'image/png' });
       const disclosure = page.locator('details[data-page-audit]'), summary = disclosure.locator(':scope > summary');
-      const marker = first.locator('[data-credit-ref]').first();
-      const markerHref = await marker.getAttribute('href');
-      await marker.focus(); await expect(marker).toBeFocused(); await page.keyboard.press('Enter');
-      await expect(disclosure).toHaveAttribute('open', '');
-      expect(new URL(page.url()).hash).toBe(markerHref);
-      const target = page.locator(`[id="${markerHref?.slice(1)}"]`);
-      await expect(target).toBeVisible(); await expect(target).toBeInViewport();
-      navigation.push({ viewport: name, key, kind: 'source-marker', href: markerHref, interaction: ['focus', 'Enter'],
-        disclosureOpened: true, targetVisible: true, url: page.url() });
+      const markers = [first.locator('[data-credit-ref]').first()];
+      if (key === 'шапка') markers.push(page.locator('[data-credit-ref][href="#source-puls"]').first());
+      for (const marker of markers) {
+        const markerHref = await marker.getAttribute('href');
+        await marker.focus(); await expect(marker).toBeFocused(); await page.keyboard.press('Enter');
+        await expect(disclosure).toHaveAttribute('open', '');
+        expect(new URL(page.url()).hash).toBe(markerHref);
+        const target = page.locator(`[id="${markerHref?.slice(1)}"]`);
+        await expect(target).toBeVisible(); await expect(target).toBeInViewport();
+        // Let native anchor scrolling settle without correcting its position.
+        await page.evaluate(() => new Promise<void>(done => {
+          let previous = scrollY, stable = 0;
+          const frame = () => {
+            stable = scrollY === previous ? stable + 1 : 0;
+            previous = scrollY;
+            if (stable >= 5) done(); else requestAnimationFrame(frame);
+          };
+          requestAnimationFrame(frame);
+        }));
+        const geometry = await target.evaluate(node => {
+          const rect = (element: Element | null) => {
+            if (!element) throw Error('Missing source credit/header geometry');
+            const box = element.getBoundingClientRect();
+            return { top: box.top, bottom: box.bottom };
+          };
+          return { header: rect(document.querySelector('.lu-header')), heading: rect(node.querySelector('h4')),
+            bibliography: Array.from(node.querySelectorAll('[data-credit-attribution], [data-credit-link]')).map(rect), viewport: innerHeight };
+        });
+        expect(geometry.heading.top).toBeGreaterThanOrEqual(geometry.header.bottom);
+        expect(geometry.heading.bottom).toBeLessThanOrEqual(geometry.viewport);
+        if (markerHref === '#source-puls') for (const block of geometry.bibliography) {
+          expect(block.top).toBeGreaterThanOrEqual(geometry.header.bottom);
+          expect(block.bottom).toBeLessThanOrEqual(geometry.viewport);
+        }
+        let untouchedCapture;
+        if (name === 'phone' && markerHref === '#source-puls') {
+          const shot = await page.screenshot();
+          const path = join(screens, 'phone-puls-after-activation.png');
+          writeFileSync(path, shot);
+          untouchedCapture = { path, sha256: sha(shot) };
+          await info.attach('phone-puls-after-activation', { body: shot, contentType: 'image/png' });
+        }
+        navigation.push({ viewport: name, key, kind: 'source-marker', href: markerHref, interaction: ['focus', 'Enter'],
+          disclosureOpened: true, targetVisible: true, geometry, manualScrollCorrection: false, untouchedCapture, url: page.url() });
+      }
       await summary.focus(); await page.keyboard.press('Enter'); await expect(disclosure).not.toHaveAttribute('open', '');
       const before = await disclosure.getAttribute('open');
       await summary.scrollIntoViewIfNeeded(); await summary.focus(); await expect(summary).toBeFocused();
