@@ -234,6 +234,9 @@ jobs:
       - name: Install site toolchain
         working-directory: site
         run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Install Chromium for browser-backed unit tests
+        working-directory: site
+        run: npx --no-install playwright install --with-deps --only-shell chromium
       # Required even when the full frontend build is outside the changed-path scope.
       # Include tests/build/, normally excluded by pytest default traversal.
       - name: Real MDX compiler regressions
