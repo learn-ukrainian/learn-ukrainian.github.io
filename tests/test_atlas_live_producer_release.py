@@ -51,6 +51,14 @@ def live_packages(release_input, tmp_path):
     return packages
 
 
+# site/tests/unit/word-card-live-producer.test.ts invokes this test by node id.
+def test_generate_live_packages(live_packages):
+    """Standalone Vitest uses this entrypoint under the existing synthetic authority."""
+    assert sorted(p.name for p in live_packages.iterdir()) == [
+        "inputs-json.json", "inputs-jsonl.json", "json", "jsonl",
+    ]
+
+
 @pytest.mark.site_toolchain
 def test_current_producer_through_reader(live_packages):
     """Frontend CI runs this even for producer-only changes; unavailable runtime fails."""
