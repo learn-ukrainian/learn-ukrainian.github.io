@@ -267,6 +267,8 @@ launcher_load_rules_core() {
         {
             ("scripts", "lib", "launcher_core.sh"): core,
             ("scripts", "lib", "claude_weekly_used.py"): "print('0')\n",
+            ("scripts", "lib", "session_supervisor.sh"): (REPO / "scripts/lib/session_supervisor.sh").read_text(),
+            ("scripts", "ai_agent_bridge", "inbox_watch.sh"): "",
         },
     )
     home = tmp_path / "home"
@@ -367,6 +369,44 @@ echo "started; attach with: tmux attach -t cto"
             else:
                 with pytest.raises(SupervisorError, match="cto-wrapper-unsupported"):
                     cto_wrapper_signature(wrapper, root, root / name, list(captured))
+    # Exercise the actual watcher preflight with the metadata transported by
+    # start_inbox_watch, rather than copying the launcher's locals into a probe.
+    probe = tmp_path / "watcher_probe.py"
+    probe.write_text(f"""import os, sys
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+sys.path[:0] = [{str(REPO)!r}, {str(REPO / "scripts")!r}]
+from scripts.ai_agent_bridge import _inbox_watch as watch
+available = watch.preflight_supervisory_successor()
+if not available:
+    service = Mock()
+    supervisor = Mock()
+    lease = SimpleNamespace(session_id='fixture-predecessor', stream_id='epic:10453', generation=1)
+    request = watch.SupervisoryRequest('fixture-event', lease.stream_id, 'restart', 1)
+    delivery = SimpleNamespace(delivery_id='fixture-event', state='queued')
+    with patch.object(watch, 'pending_supervisory_delivery', return_value=delivery), \\
+         patch.object(watch, 'read_supervisory_request', return_value=request):
+        assert watch.consume_supervisory_event(
+            service, supervisor, lease, restart_preflight=watch.preflight_supervisory_successor,
+        ) is None
+    service.claim_next_delivery.assert_not_called()
+    service.record_supervisory_consumption.assert_not_called()
+    supervisor.handoff_driver.assert_not_called()
+    print('WATCHER_REFUSED_NO_CLAIM_CONSUME_PREPARE', flush=True)
+else:
+    print('WATCHER_SUPPORTED', flush=True)
+# Unknown or malformed CTO capture must never fall back to generic CLI success.
+if os.path.basename(os.environ['LC_SUPERVISORY_ENTRYPOINT']) == 'start-claude-cto.sh':
+    os.environ.pop('LC_SUPERVISORY_ORIGINAL_ARGS_JSON', None)
+    assert not watch.preflight_supervisory_successor()
+    os.environ['LC_SUPERVISORY_ORIGINAL_ARGS_JSON'] = '{{"model":"override"}}'
+    assert not watch.preflight_supervisory_successor()
+raise SystemExit(0 if available else 3)
+""")
+    watcher = root / "scripts/ai_agent_bridge/inbox_watch.sh"
+    watcher.parent.mkdir(parents=True, exist_ok=True)
+    watcher.write_text(f"#!/usr/bin/env bash\nexec {shlex.quote(sys.executable)} {shlex.quote(str(probe))}\n")
+    watcher.chmod(0o755)
     script = """set -euo pipefail
 source "$1"
 LC_ROOT="$2"
@@ -386,12 +426,21 @@ LC_DRIVER_ORIGINAL_ARGS=("$@")
 # preflight permits the exact predecessor stop and existing release/exec edge.
 sleep 30 & predecessor=$!
 trap 'kill "$predecessor" 2>/dev/null || true; wait "$predecessor" 2>/dev/null || true' EXIT
+session_supervisor_start_inbox_watch
+watcher_rc=0
+wait "$LC_SUPERVISORY_WATCH_PID" || watcher_rc=$?
+cat <&216
+LC_SUPERVISORY_WATCH_PID=""
+session_supervisor_stop_inbox_watch
+LC_SUPERVISORY_DELIVERY=fixture-event
 if ! session_supervisor_preflight_successor; then
+  [ "$watcher_rc" = 3 ] || exit 90
   kill -0 "$predecessor" || exit 91
   [ "$LC_DRIVER_LEASE_CLOSED" = 0 ] || exit 92
   printf 'PREDECESSOR_RETAINED\n'
   exit 3
 fi
+[ "$watcher_rc" = 0 ] || exit 89
 kill "$predecessor"
 wait "$predecessor" 2>/dev/null || true
 trap - EXIT
@@ -405,7 +454,7 @@ session_supervisor_exec_successor
             "-c",
             script,
             str(root / name),
-            str(REPO / "scripts/lib/session_supervisor.sh"),
+            str(root / "scripts/lib/session_supervisor.sh"),
             str(root),
             "claude" if name == WRAPPERS[0] else "codex",
             *captured,
@@ -419,11 +468,12 @@ session_supervisor_exec_successor
     if name == WRAPPERS[0] and not supported:
         assert result.returncode == 3, result.stdout + result.stderr
         assert "cto-wrapper-unsupported" in result.stderr
-        assert result.stdout == "PREDECESSOR_RETAINED\n"
+        assert result.stdout == "WATCHER_REFUSED_NO_CLAIM_CONSUME_PREPARE\nPREDECESSOR_RETAINED\n"
         assert "SUCCESSOR:" not in result.stdout
     else:
         assert result.returncode == 0, result.stdout + result.stderr
         selected_model = "claude-opus-5-5" if supported else model
+        assert result.stdout.startswith("WATCHER_SUPPORTED\n")
         assert f"SUCCESSOR:{name}|epics|{selected_model}|high\n" in result.stdout
         assert result.stdout.endswith("CAPTURED:" + "\0".join(captured) + "\0")
         assert (config / "claude-account").read_text() == "b\n"

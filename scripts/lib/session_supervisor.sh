@@ -370,6 +370,18 @@ session_supervisor_start_inbox_watch() {
     # The watcher checks the same harness CLI before claiming a restart. These
     # values come from the initial provider argv, never from the wake body.
     export LC_DRIVER_PROVIDER_COMMAND LC_DRIVER_PROVIDER_EXECUTABLE
+    export LC_ROOT LC_PROVIDER LC_MODE LC_DURABLE_HELPER_ROOT
+    export LC_SUPERVISORY_ENTRYPOINT="$0"
+    # Bash arrays do not survive exec. Encode the existing capture, without
+    # reconstructing or changing any launcher/provider argument.
+    unset LC_SUPERVISORY_ORIGINAL_ARGS_JSON
+    if [ "${0##*/}" = start-claude-cto.sh ]; then
+      local py
+      py="$(launcher_project_python 2>/dev/null)" || exit 1
+      LC_SUPERVISORY_ORIGINAL_ARGS_JSON="$(printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}" | "$py" -c \
+        'import json,sys; print(json.dumps(sys.stdin.buffer.read().decode().split("\0")[:-1]))')" || exit 1
+      export LC_SUPERVISORY_ORIGINAL_ARGS_JSON
+    fi
     exec 216<&-
     exec "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent
   ) >&217 217>&- &
