@@ -15,10 +15,12 @@ from .agy import AgyAdapter
 from .hermes_deepseek import HermesDeepSeekAdapter
 from .hermes_grok import HermesGrokAdapter
 from .hermes_qwen import HermesQwenAdapter
+from .muse import MuseAdapter
 
 __all__ = [
     "AgyAdapter",
     "HermesDeepSeekAdapter",
     "HermesGrokAdapter",
     "HermesQwenAdapter",
+    "MuseAdapter",
 ]
