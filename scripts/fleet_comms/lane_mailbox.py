@@ -6,6 +6,7 @@ five approved lanes; launcher selectors and slot inference never create aliases.
 
 from __future__ import annotations
 
+import json
 import re
 import shlex
 import sqlite3
@@ -15,6 +16,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.target_admission import stored_kimi_request, stored_kimi_row
 from scripts.lib.readonly_sqlite import open_readonly
 
 # area, stream, explicit aliases. `data` is the mailbox for open-model-data.
@@ -215,9 +217,41 @@ def migration_plan(conn: Any) -> tuple[dict[str, Any], list[tuple[Any, str, str 
     rows = conn.execute(
         "SELECT delivery_id, message_id, recipient, state FROM authority_deliveries ORDER BY created_at, delivery_id"
     ).fetchall()
+    # Match generic delivery-write protection, including historical moves and
+    # request-model payloads. Protected rows remain visible in all counts.
+    protected_ids = set()
+    origins = dict(conn.execute("SELECT delivery_id, old_recipient FROM lane_mailbox_moves"))
+    for row in rows:
+        did = row["delivery_id"]
+        if stored_kimi_row(row["recipient"]) or (did in origins and stored_kimi_row(origins[did])):
+            protected_ids.add(did)
+            continue
+        jobs = conn.execute(
+            "SELECT payload_artifact_id FROM authority_jobs WHERE job_kind='request' AND subject_id=?",
+            (row["message_id"],),
+        ).fetchall()
+        for job in jobs:
+            try:
+                from scripts.fleet_comms.artifacts import ArtifactStore
+
+                database = conn.execute("PRAGMA database_list").fetchone()[2]
+                if not database:
+                    raise ValueError("request_payload_unavailable")
+                with closing(ArtifactStore.open_readonly(root=Path(database).parent)) as store:
+                    payload = json.loads(store.read_bytes(job["payload_artifact_id"]).decode("utf-8"))
+                if not isinstance(payload, dict):
+                    raise ValueError("request_payload_invalid")
+                recipients = [payload.get("recipient"), *(payload.get("participants") or ())]
+                if stored_kimi_request(
+                    (name for name in recipients if name), attachments=(payload.get("metadata") or {},)
+                ):
+                    protected_ids.add(did)
+            except Exception:
+                # Unreadable payloads cannot prove a row eligible for mutation.
+                protected_ids.add(did)
     groups: dict[tuple[str, str], list[Any]] = {}
     report = {
-        lane: {"queued_before": 0, "planned_moves": 0, "running_held": 0, "dead_lettered_held": 0, "collisions": 0}
+        lane: {"queued_before": 0, "planned_moves": 0, "running_held": 0, "dead_lettered_held": 0, "collisions": 0, "protected_queued": 0}
         for lane in LANE_STREAMS
     }
     unmapped: dict[str, int] = {}
@@ -233,16 +267,20 @@ def migration_plan(conn: Any) -> tuple[dict[str, Any], list[tuple[Any, str, str 
             report[lane]["queued_before"] += 1
         if recipient in ALIASES:
             if row["state"] == "queued":
-                report[lane]["planned_moves"] += 1
+                if row["delivery_id"] in protected_ids:
+                    report[lane]["protected_queued"] += 1
+                else:
+                    report[lane]["planned_moves"] += 1
             elif row["state"] == "running":
                 report[lane]["running_held"] += 1
             elif row["state"] == "dead_lettered":
                 report[lane]["dead_lettered_held"] += 1
     moves: list[tuple[Any, str, str | None]] = []
     for (_mid, lane), group in groups.items():
-        candidates = [row for row in group if row["recipient"] in ALIASES and row["state"] == "queued"]
-        acknowledged = next((row for row in group if row["state"] == "acknowledged"), None)
-        canonical = next((row for row in group if row["recipient"] == lane), None)
+        eligible = [row for row in group if row["delivery_id"] not in protected_ids]
+        candidates = [row for row in eligible if row["recipient"] in ALIASES and row["state"] == "queued"]
+        acknowledged = next((row for row in eligible if row["state"] == "acknowledged"), None)
+        canonical = next((row for row in eligible if row["recipient"] == lane), None)
         survivor = acknowledged or canonical or (candidates[0] if candidates else None)
         for row in candidates:
             duplicate = survivor if survivor["delivery_id"] != row["delivery_id"] else None
@@ -259,6 +297,9 @@ def apply_alias_moves(conn: Any, *, now: str) -> dict[str, Any]:
         raise LaneMailboxError("lane_alias_running")
     moved = dead_lettered = 0
     for row, lane, duplicate in moves:
+        # The plan also excludes protected origins and request-model payloads.
+        if stored_kimi_row(row["recipient"]):
+            continue
         did = row["delivery_id"]
         action = "moved"
         if duplicate:

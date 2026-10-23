@@ -688,7 +688,7 @@ def test_requeue_publish_failure_does_not_drop_waiter(
         messages = service._conn.execute("SELECT message_id FROM comms_messages").fetchall()
         deliveries = service._conn.execute("SELECT recipient FROM authority_deliveries").fetchall()
         assert len(messages) == (1 if initiator == "claude-infra" else 0)
-        assert [row[0] for row in deliveries] == ([initiator] if initiator == "claude-infra" else [])
+        assert [row[0] for row in deliveries] == (["lane:infra"] if initiator == "claude-infra" else [])
 
 
 @pytest.mark.parametrize("claim,narrow", [
@@ -740,4 +740,4 @@ def test_requeue_notice_uses_durable_initiator_delivery_once(tmp_path, monkeypat
         rows = service._conn.execute("SELECT message_id FROM comms_messages").fetchall()
         deliveries = service._conn.execute("SELECT recipient FROM authority_deliveries").fetchall()
         assert len(rows) == 1
-        assert [row[0] for row in deliveries] == ["claude-infra"]
+        assert [row[0] for row in deliveries] == ["lane:infra"]

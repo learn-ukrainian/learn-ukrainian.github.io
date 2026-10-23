@@ -23,7 +23,10 @@ from scripts.agent_runtime.codex_hook_policy import (
     _run_enforce_venv,
     run_guard,
 )
+from tests.helpers.agy_inbox_fixtures import BODY_MARKER, add_authority, add_legacy, snapshot
 from tests.helpers.python import project_python
+
+pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
@@ -858,145 +861,108 @@ def test_bare_python_rejection_blocks_a_canonical_version_mismatch(tmp_path: Pat
     assert "expected Python 3.12.7" in completed.stderr
 
 
-def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
-    """Create a project interpreter that exposes only the live inbox CLI shape."""
-    python = tmp_path / ".venv" / "bin" / "python"
-    python.parent.mkdir(parents=True, exist_ok=True)
-    fixtures = tmp_path / "inbox-fixtures"
-    fixtures.mkdir()
-    args_log = tmp_path / "inbox-cli-args.log"
-    python.write_text(
-        "#!/bin/sh\n"
-        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"scripts.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
-        "  exit 64\n"
-        "fi\n"
-        "printf '%s\\n' \"$*\" >> \"$FAKE_INBOX_ARGS\"\n"
-        "cat \"$FAKE_INBOX_FIXTURES/$5.txt\"\n",
-        encoding="utf-8",
-    )
-    python.chmod(0o755)
-    return fixtures, args_log
-
-
-def _write_inbox_fixture(fixtures: Path, recipient: str, preview: str, *, message_id: int = 101) -> None:
-    (fixtures / f"{recipient}.txt").write_text(
-        f"📬 Inbox for {recipient}: 1 unread | 0 read-but-not-live-consumed | 0 live-consumed\n\n"
-        f"  [{message_id}] [unread] From: sender | Type: status | 2026-09-02T00:00:00Z\n"
-        f"      {preview}\n",
-        encoding="utf-8",
-    )
-
-
-def test_inbox_hook_targets_requested_provider(tmp_path: Path) -> None:
-    fixtures, args_log = _make_fake_inbox_python(tmp_path)
-    _write_inbox_fixture(fixtures, "codex", "codex-only message")
-    _write_inbox_fixture(fixtures, "claude", "claude-only message")
+def test_inbox_hook_targets_requested_provider(tmp_path: Path, stores) -> None:
+    add_authority(stores[1], recipient="codex")
+    add_legacy(stores[0], recipient="codex")
+    add_legacy(stores[0], recipient="claude", identifier=2)
+    before = snapshot(stores)
     environment = os.environ.copy()
-    environment.pop("AB_DB_PATH", None)
-    environment.update(
-        {
-            "CLAUDE_PROJECT_DIR": str(tmp_path),
-            "LEARN_UK_HOOK_RECIPIENT": "codex",
-            "FAKE_INBOX_FIXTURES": str(fixtures),
-            "FAKE_INBOX_ARGS": str(args_log),
-        }
-    )
-
+    for key in tuple(environment):
+        if key.startswith(("SESSION_", "FLEET_COMMS_", "LEARN_UK_HOOK_")) or key in {
+            "AB_DB_PATH", "GEMINI_SESSION", "LEARN_UKRAINIAN_PIPELINE", "LU_DRIVER_STATE_PYTHON",
+            "LEARN_UKRAINIAN_SESSION_ID", "CODEX_THREAD_ID", "CODEX_SESSION_ID", "TEST_INBOX_ROSTER",
+        }:
+            environment.pop(key, None)
+    environment.update({
+        "CLAUDE_PROJECT_DIR": str(REPO_ROOT), "LEARN_UK_HOOK_RECIPIENT": "codex",
+        "AB_DB_PATH": str(stores[0]), "FLEET_COMMS_ROOT": str(stores[1].parent),
+        "FLEET_COMMS_ALLOW_LOCAL_SHADOW": "1", "LU_DRIVER_STATE_PYTHON": sys.executable,
+    })
     completed = subprocess.run(
-        ["bash", str(INBOX_HOOK)],
-        input="{}",
-        text=True,
-        capture_output=True,
-        check=False,
-        env=environment,
-        timeout=10,
+        ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
+        check=False, env=environment, timeout=5,
     )
+    assert completed.returncode == 0 and completed.stderr == ""
+    output = json.loads(completed.stdout)["hookSpecificOutput"]
+    assert output["hookEventName"] == "UserPromptSubmit"
+    context = output["additionalContext"]
+    assert "AUTHORITY INBOX: 1; oldest " in context and "legacy 1;" in context
+    assert "unknown" not in context
+    assert "deliveries claim --recipient codex " in context
+    assert "scripts.ai_agent_bridge inbox --for codex" in context
+    assert "--recipient claude" not in context and "--for claude" not in context
+    assert BODY_MARKER not in context and len(context) <= 500
+    assert snapshot(stores) == before
+    assert "scripts.ai_agent_bridge" not in INBOX_HOOK.read_text()
+    assert not (tmp_path / ".agent" / "runtime").exists()
 
-    assert completed.returncode == 0, completed.stderr
-    context = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
-    assert "CODEX INBOX: 1 unread message" in context
-    assert "codex-only message" in context
-    assert "claude-only message" not in context
-    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for codex"
 
-
-def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
-    tmp_path: Path,
-) -> None:
-    fixtures, args_log = _make_fake_inbox_python(tmp_path)
-    _write_inbox_fixture(fixtures, "codex", "codex-only message")
-    _write_inbox_fixture(fixtures, "claude", "claude-only message")
+def test_inbox_repeats_current_metadata_without_session_stamp_writes(tmp_path: Path, stores) -> None:
+    """Repeated snapshots remain current across recipients and sessions, with no persistent dedup."""
+    add_authority(stores[1], recipient="codex")
+    add_legacy(stores[0], recipient="claude")
+    before = snapshot(stores)
     environment = os.environ.copy()
-    environment.pop("AB_DB_PATH", None)
-    environment.update(
-        {
-            "CLAUDE_PROJECT_DIR": str(tmp_path),
-            "LEARN_UK_HOOK_RECIPIENT": "codex",
-            "CODEX_THREAD_ID": "codex-native-session",
-            "FAKE_INBOX_FIXTURES": str(fixtures),
-            "FAKE_INBOX_ARGS": str(args_log),
-        }
-    )
-
+    for key in tuple(environment):
+        if key.startswith(("SESSION_", "FLEET_COMMS_", "LEARN_UK_HOOK_")) or key in {
+            "AB_DB_PATH", "GEMINI_SESSION", "LEARN_UKRAINIAN_PIPELINE", "LU_DRIVER_STATE_PYTHON",
+            "LEARN_UKRAINIAN_SESSION_ID", "CODEX_THREAD_ID", "CODEX_SESSION_ID", "TEST_INBOX_ROSTER",
+        }:
+            environment.pop(key, None)
+    environment.update({
+        "CLAUDE_PROJECT_DIR": str(REPO_ROOT), "LEARN_UK_HOOK_RECIPIENT": "codex",
+        "AB_DB_PATH": str(stores[0]), "FLEET_COMMS_ROOT": str(stores[1].parent),
+        "FLEET_COMMS_ALLOW_LOCAL_SHADOW": "1", "LU_DRIVER_STATE_PYTHON": sys.executable,
+    })
+    environment["CODEX_THREAD_ID"] = "codex-native-session"
     first = subprocess.run(
         ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
-        check=False, env=environment, timeout=10,
+        check=False, env=environment, timeout=5,
     )
     second = subprocess.run(
         ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
-        check=False, env=environment, timeout=10,
+        check=False, env=environment, timeout=5,
     )
     assert first.returncode == second.returncode == 0
-    assert "CODEX INBOX: 1 unread message" in first.stdout
-    assert second.stdout == ""
-
-    (fixtures / "codex.txt").write_text(
-        "📬 Inbox for codex: 2 unread | 0 read-but-not-live-consumed | 0 live-consumed\n\n"
-        "  [101] [unread] From: sender | Type: status | 2026-09-02T00:00:00Z\n"
-        "      codex-only message\n"
-        "  [103] [unread] From: sender | Type: status | 2026-09-02T00:00:00Z\n"
-        "      new codex message\n",
-        encoding="utf-8",
-    )
+    for result in (first, second):
+        assert result.stderr == ""
+        context = json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
+        assert "AUTHORITY INBOX: 1; oldest " in context and "legacy 0;" in context
+        assert "unknown" not in context and BODY_MARKER not in context and len(context) <= 500
+    assert snapshot(stores) == before
+    add_authority(stores[1], recipient="codex", identifier="authority-message_" + "b" * 32,
+                  delivery_id="delivery-2")
+    before = snapshot(stores)
     third = subprocess.run(
         ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
-        check=False, env=environment, timeout=10,
+        check=False, env=environment, timeout=5,
     )
     assert third.returncode == 0
     third_context = json.loads(third.stdout)["hookSpecificOutput"]["additionalContext"]
-    assert "CODEX INBOX: 2 unread message(s)" in third_context
-    assert "new codex message" in third_context
-
-    claude_environment = environment | {"LEARN_UK_HOOK_RECIPIENT": "claude"}
+    assert "AUTHORITY INBOX: 2; oldest " in third_context
     provider_isolation = subprocess.run(
         ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
-        check=False, env=claude_environment, timeout=10,
+        check=False, env=environment | {"LEARN_UK_HOOK_RECIPIENT": "claude"}, timeout=5,
     )
     assert provider_isolation.returncode == 0
     provider_context = json.loads(provider_isolation.stdout)["hookSpecificOutput"]["additionalContext"]
-    assert "CLAUDE INBOX: 1 unread message(s)" in provider_context
-
-    new_session_environment = environment | {"CODEX_THREAD_ID": "another-codex-session"}
+    assert "AUTHORITY INBOX: 0; oldest none; legacy 1;" in provider_context
+    assert "scripts.ai_agent_bridge inbox --for claude" in provider_context
     session_isolation = subprocess.run(
         ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
-        check=False, env=new_session_environment, timeout=10,
+        check=False, env=environment | {"CODEX_THREAD_ID": "another-codex-session"}, timeout=5,
     )
     assert session_isolation.returncode == 0
     session_context = json.loads(session_isolation.stdout)["hookSpecificOutput"]["additionalContext"]
-    assert "CODEX INBOX: 2 unread message(s)" in session_context
-    assert "new codex message" in session_context
-
-    state_files = list((tmp_path / ".agent" / "runtime").glob("inbox-*.ids"))
-    assert len(state_files) == 3
-    assert all(len(path.stem.removeprefix("inbox-")) == 64 for path in state_files)
-    assert all("message" not in path.read_text(encoding="utf-8") for path in state_files)
-    assert args_log.read_text(encoding="utf-8").splitlines() == [
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for codex",
-        "-m scripts.ai_agent_bridge inbox --for claude",
-        "-m scripts.ai_agent_bridge inbox --for codex",
-    ]
+    assert "AUTHORITY INBOX: 2; oldest " in session_context
+    for result in (third, provider_isolation, session_isolation):
+        assert result.stderr == "" and BODY_MARKER not in result.stdout
+        output = json.loads(result.stdout)["hookSpecificOutput"]
+        assert output["hookEventName"] == "UserPromptSubmit"
+        assert len(output["additionalContext"]) <= 500
+    assert snapshot(stores) == before
+    assert not (tmp_path / ".agent" / "runtime").exists()
+    assert "scripts.ai_agent_bridge" not in INBOX_HOOK.read_text()
 
 
 def _load_pytest_stamp_module():

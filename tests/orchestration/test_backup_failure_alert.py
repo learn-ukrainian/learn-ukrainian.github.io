@@ -352,7 +352,7 @@ def test_real_authority_failure_recovery_retry_and_idempotency(tmp_path: Path, a
             "SELECT recipient, message_id FROM authority_deliveries ORDER BY created_at, delivery_id"
         ).fetchall()
         assert len(deliveries) == 2
-        assert {row["recipient"] for row in deliveries} == {"claude-cto"}
+        assert {row["recipient"] for row in deliveries} == {"lane:epics"}
         assert len({row["message_id"] for row in deliveries}) == 2
         assert service.get_channel("cto").subscribers == ()
 
@@ -398,7 +398,7 @@ def test_real_authority_committed_publication_inspection_failure_retries_same_de
                 "SELECT delivery_id, message_id, recipient FROM authority_deliveries ORDER BY delivery_id"
             )
         ] == committed
-    assert all(row[2] == "claude-cto" for row in committed)
+    assert all(row[2] == "lane:epics" for row in committed)
     assert len(committed) == (1 if event == "failed" else 2)
 
 
@@ -473,4 +473,4 @@ def test_legacy_zero_delivery_key_cannot_be_upgraded_and_reconciliation_is_retry
     with AuthorityService(root=root) as service:
         assert service.get_message(old.message_id).delivery_ids == ()
         rows = service._conn.execute("SELECT recipient FROM authority_deliveries").fetchall()
-        assert [row["recipient"] for row in rows] == ["claude-cto", "claude-cto"]
+        assert [row["recipient"] for row in rows] == ["lane:epics", "lane:epics"]

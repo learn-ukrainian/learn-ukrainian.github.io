@@ -213,6 +213,35 @@ def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: 
                 "UPDATE authority_deliveries SET recipient=? WHERE delivery_id=?", (alias, message.delivery_ids[0])
             )
             service._conn.commit()
+        # Stored Kimi recipients and requested-model payloads are immutable,
+        # even when a protected sibling would sort before the claimable copy.
+        service._conn.execute(
+            "INSERT INTO authority_deliveries(delivery_id,message_id,recipient,state,created_at,updated_at) "
+            "SELECT '000-protected-kimi',message_id,'kimi-atlas','queued','1900-01-01T00:00:00Z','1900-01-01T00:00:00Z' "
+            "FROM authority_deliveries WHERE delivery_id=?",
+            (message.delivery_ids[0],),
+        )
+        service._conn.commit()
+        lone = service.publish_message(sender="fixture", body="retained", recipients=("old-seat",))
+        service._conn.execute(
+            "UPDATE authority_deliveries SET recipient='kimi-devops' WHERE delivery_id=?", (lone.delivery_ids[0],)
+        )
+        service._conn.commit()
+        model_only = service.publish_message(sender="fixture", body="retained request", recipients=("old-seat",))
+        service._conn.execute(
+            "UPDATE authority_deliveries SET recipient='codex-infra' WHERE delivery_id=?", (model_only.delivery_ids[0],)
+        )
+        service._conn.commit()
+        with service._write_transaction():
+            service._enqueue_job_tx(
+                job_kind="request", subject_id=model_only.message_id,
+                payload={"recipient": "codex-infra", "metadata": {"requested_model": "kimi-code/k3"}},
+                deadline_at=None, idempotency_key="historical-request-model",
+            )
+        protected_ids = ("000-protected-kimi", lone.delivery_ids[0], model_only.delivery_ids[0])
+        protected_rows = [tuple(row) for row in service._conn.execute(
+            "SELECT * FROM authority_deliveries WHERE delivery_id IN (?,?,?) ORDER BY delivery_id", protected_ids,
+        )]
         acknowledged = service.publish_message(sender="fixture", body="acknowledged", recipients=("infra",))
         ack_id = acknowledged.delivery_ids[0]
         service._conn.execute("UPDATE authority_deliveries SET state='acknowledged' WHERE delivery_id=?", (ack_id,))
@@ -242,6 +271,8 @@ def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: 
         assert set(dry["lanes"]) == {"lane:infra", "lane:epics", "lane:devops", "lane:data", "lane:atlas"}
         assert sum(row["planned_moves"] for row in dry["lanes"].values()) == 7
         assert sum(row["collisions"] for row in dry["lanes"].values()) == 2
+        assert sum(row["protected_queued"] for row in dry["lanes"].values()) == 3
+        assert sum(row["queued_before"] for row in dry["lanes"].values()) == 10
         assert dry["lanes"]["lane:devops"]["running_held"] == 1
         assert dry["unmapped"] == {"pool": 1}
         assert main(["lane-mailboxes", "--root", str(tmp_path), "--apply"]) == 3
@@ -271,9 +302,26 @@ def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: 
             "ack-duplicate": "lane_duplicate_of_acknowledged", "queued-duplicate": "lane_duplicate_queued"
         }
         assert service._conn.execute("SELECT COUNT(*) FROM lane_mailbox_moves").fetchone()[0] == 7
+        assert protected_rows == [tuple(row) for row in service._conn.execute(
+            "SELECT * FROM authority_deliveries WHERE delivery_id IN (?,?,?) ORDER BY delivery_id", protected_ids,
+        )]
+        assert service._conn.execute(
+            "SELECT COUNT(*) FROM lane_mailbox_moves WHERE delivery_id IN (?,?,?)", protected_ids,
+        ).fetchone()[0] == 0
+        assert service._conn.execute(
+            "SELECT COUNT(*) FROM authority_dead_letters WHERE delivery_id IN (?,?,?)", protected_ids,
+        ).fetchone()[0] == 0
+        assert service._conn.execute(
+            "SELECT COUNT(*) FROM authority_deliveries WHERE message_id=? AND recipient='lane:atlas' AND state='queued'",
+            (message.message_id,),
+        ).fetchone()[0] == 1
         assert main(["lane-mailboxes", "--root", str(tmp_path), "--apply"]) == 0
         repeated = json.loads(capsys.readouterr().out)
         assert repeated["moved"] == repeated["dead_lettered"] == 0
+        assert sum(row["protected_queued"] for row in repeated["lanes"].values()) == 3
+        assert protected_rows == [tuple(row) for row in service._conn.execute(
+            "SELECT * FROM authority_deliveries WHERE delivery_id IN (?,?,?) ORDER BY delivery_id", protected_ids,
+        )]
         assert service._conn.execute("SELECT COUNT(*) FROM lane_mailbox_moves").fetchone()[0] == 7
 
 

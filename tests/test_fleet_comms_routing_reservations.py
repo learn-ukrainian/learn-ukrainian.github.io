@@ -91,20 +91,20 @@ def _selection(context: object) -> RoutingSelection:
     )
 
 
-def test_v10_migration_is_idempotent_and_has_authority_tables(tmp_path: Path) -> None:
+def test_v11_migration_is_idempotent_and_has_authority_tables(tmp_path: Path) -> None:
     """Ledger head applies once, replays as a no-op, and carries every
     authority table this plane is responsible for.
 
     The pinned version is deliberately a literal, not ``MIGRATIONS[-1]``
     compared to itself: adding a migration must be a conscious edit here,
-    with the new tables asserted below. Head is 10 since PR #7662 repair 8
-    added runner-owned attempts, the per-attempt capability column/index, and
-    authorship receipts (v10) on top of the V4 execution dispatch binding (v9).
+    with the new tables asserted below. Head 11 adds the lane mailbox registry,
+    alias move ledger and nullable supplied-only delivery correlation to the
+    retained V4 execution and provenance tables.
     """
     connection = sqlite3.connect(tmp_path / "comms.sqlite3")
     try:
-        assert apply_migrations(connection) == MIGRATIONS[-1].version == 10
-        assert apply_migrations(connection) == 10, "re-applying the ledger must be an idempotent no-op"
+        assert apply_migrations(connection) == MIGRATIONS[-1].version == 11
+        assert apply_migrations(connection) == 11, "re-applying the ledger must be an idempotent no-op"
         tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         assert {"routing_reservations", "routing_reservation_decisions", "routing_circuit_state"} <= tables
         assert {
@@ -114,6 +114,24 @@ def test_v10_migration_is_idempotent_and_has_authority_tables(tmp_path: Path) ->
             "v4_execution_attempts",
             "v4_authorship_receipts",
         } <= tables
+        from scripts.fleet_comms.lane_mailbox import ALIASES, LANE_STREAMS
+
+        assert {"lane_mailboxes", "lane_mailbox_aliases", "lane_mailbox_moves"} <= tables
+        assert dict(connection.execute("SELECT recipient, stream_id FROM lane_mailboxes")) == LANE_STREAMS
+        assert dict(connection.execute("SELECT alias, recipient FROM lane_mailbox_aliases")) == ALIASES
+        assert len(LANE_STREAMS) == 5 and len(ALIASES) == 34
+        move_columns = {row[1] for row in connection.execute("PRAGMA table_info(lane_mailbox_moves)")}
+        assert {"delivery_id", "old_recipient", "lane_recipient", "action", "duplicate_of", "moved_at"} == move_columns
+        delivery_columns = {row[1]: row for row in connection.execute("PRAGMA table_info(authority_deliveries)")}
+        for column, kind in (("pr_number", "INTEGER"), ("task_id", "TEXT")):
+            assert delivery_columns[column][2] == kind
+            assert delivery_columns[column][3:5] == (0, None)
+        assert "idx_lane_delivery_correlation" in {
+            row[1] for row in connection.execute("PRAGMA index_list(authority_deliveries)")
+        }
+        assert [row[2] for row in connection.execute("PRAGMA index_info(idx_lane_delivery_correlation)")] == [
+            "state", "pr_number", "task_id",
+        ]
         # The V4 authority tables must carry the columns their writers rely
         # on, including the repair-7 request correlation used to derive an
         # observation's verification tool ids and to audit provenance.

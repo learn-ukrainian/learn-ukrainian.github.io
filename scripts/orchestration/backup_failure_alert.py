@@ -190,7 +190,7 @@ def fleet_comms_publisher(project_root: Path) -> Publisher:
             if (
                 delivery.get("delivery_id") != delivery_id
                 or delivery.get("message_id") != message_id
-                or delivery.get("recipient") != RECIPIENT
+                or delivery.get("recipient") not in {RECIPIENT, "lane:epics"}
             ):
                 raise AlertError("fleet_comms delivery is not bound to the publication and intended recipient")
 

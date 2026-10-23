@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import sys
 import time
 from contextlib import closing
@@ -79,8 +80,9 @@ def probe(recipient: str, *, limit: int = 5, allow_bare: bool = False) -> dict:
         stores = {}
         ids = []
         authority_result = read_inbox(authority, recipient, limit=limit)
-        if authority_result["probe"] != "ok":
-            return unknown
+        # Each store retains its own result even when the other is unavailable.
+        unknown["authority"] = authority_result
+        unknown["stores"]["authority"] = authority_result["count"]
         for name, path, table, column, where, params in (
             ("legacy", legacy, "messages", "id", legacy_where, legacy_recipients),
         ):
@@ -105,6 +107,9 @@ def probe(recipient: str, *, limit: int = 5, allow_bare: bool = False) -> dict:
                         return unknown
                     ids.append(identifier)
         if time.monotonic() >= deadline:
+            return unknown
+        unknown["stores"]["legacy"] = stores["legacy"]
+        if authority_result["probe"] != "ok":
             return unknown
         stores["authority"] = authority_result["count"]
         for identifier in authority_result["ids"]:
@@ -140,7 +145,9 @@ def hook(stdin_text: str, recipient: str) -> dict:
             raise ValueError
         result = probe(recipient)
         if result["probe"] != "ok":
-            message = UNKNOWN_LINE
+            authority = result["authority"]
+            count = authority["count"] if authority["probe"] == "ok" else "unknown"
+            message = f"PENDING ORDERS: unknown; authority {count}; {authority['drain_command']}"
         elif not result["count"]:
             return {}
         else:
@@ -151,6 +158,10 @@ def hook(stdin_text: str, recipient: str) -> dict:
                 f"PENDING ORDERS: {result['count']}; authority {authority['count']}, oldest {oldest}; "
                 + authority["drain_command"]
             )
+        legacy = result["stores"]["legacy"]
+        message += f"; legacy {legacy if legacy is not None else 'unknown'}"
+        if legacy:
+            message += f"; .venv/bin/python -m scripts.ai_agent_bridge inbox --for {shlex.quote(recipient)}"
     except Exception:
         message = UNKNOWN_LINE
     return {"injectSteps": [{"ephemeralMessage": message}]}
@@ -195,8 +206,10 @@ def main(argv: list[str] | None = None) -> int:
             count = authority["count"] if authority["probe"] == "ok" else "unknown"
             seconds = authority["oldest_age_seconds"]
             age = (f"{seconds}s" if seconds is not None else "none") if authority["probe"] == "ok" else "unknown"
-            legacy = metadata["stores"]["legacy"] if metadata["probe"] == "ok" else "unknown"
-            line = f"AUTHORITY INBOX: {count}; oldest {age}; legacy {legacy}; {authority['drain_command']}"
+            legacy = metadata["stores"]["legacy"]
+            line = f"AUTHORITY INBOX: {count}; oldest {age}; legacy {legacy if legacy is not None else 'unknown'}; {authority['drain_command']}"
+            if legacy:
+                line += f"; .venv/bin/python -m scripts.ai_agent_bridge inbox --for {shlex.quote(recipient)}"
             result = {"hookSpecificOutput": {"hookEventName": "UserPromptSubmit", "additionalContext": line}}
         else:
             result = hook(sys.stdin.read(), recipient) if args.agy_hook else probe(recipient)
