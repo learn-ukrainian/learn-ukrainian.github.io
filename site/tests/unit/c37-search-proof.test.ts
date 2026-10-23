@@ -39,13 +39,15 @@ type ArticleOptions = {
   errorStates?: number;
   hero?: boolean;
   titleHidden?: boolean;
+  body?: string;
 };
 
 function articleHtml(options: ArticleOptions = {}): string {
   const { title = 'Замо́к', shells = 1, errorStates = 0, hero = true, titleHidden = false } = options;
   const heading = title === null ? '' : `<h1 class="word-title"${titleHidden ? ' hidden' : ''}>${title}</h1>`;
   const heroHtml = hero ? '<div class="word-hero">hero</div>' : '';
-  const shell = `<main data-word-atlas>${heading}${heroHtml}</main>`;
+  const body = options.body ?? '<div class="content-area"><section class="atlas-section"><p>Recorded form.</p></section></div>';
+  const shell = `<main data-word-atlas>${heading}${heroHtml}${body}</main>`;
   const errors = Array.from({ length: errorStates }, () => '<div data-word-atlas-state="not_found"></div>').join('');
   return `${shell.repeat(shells)}${errors}`;
 }
@@ -96,6 +98,8 @@ describe('C37 article-arrival oracle', () => {
       await render(articleHtml({ title }), articlePath(slug));
       expect((await inspectCurrentAtlasArticle(page, slug)).ok).toBe(true);
     }
+    await render(articleHtml({ body: '<div class="content-area"><section class="atlas-section"><p>Recorded form.</p></section><section class="atlas-section"></section></div>' }), articlePath('замок'));
+    expect((await inspectCurrentAtlasArticle(page, 'замок')).ok).toBe(true);
   });
 
   it('folds case, stress marks and whitespace without losing Ukrainian letters', () => {
@@ -139,6 +143,11 @@ describe('C37 article-arrival oracle', () => {
     expect(arrival.ok).toBe(false);
     if (arrival.ok) throw Error('absent article shell was accepted');
     expect(arrival.reason).toContain('expected one [data-word-atlas], found 0');
+
+    await render(`<div hidden>${articleHtml()}</div>`, articlePath('замок'));
+    expect(await inspectCurrentAtlasArticle(page, 'замок')).toMatchObject({
+      ok: false, reason: 'current Atlas article is not visible',
+    });
   });
 
   it('rejects duplicate trusted article shells', async () => {
@@ -159,6 +168,16 @@ describe('C37 article-arrival oracle', () => {
     expect(arrival.ok).toBe(false);
     if (arrival.ok) throw Error('error state was accepted');
     expect(arrival.reason).toContain('reported 1 error state');
+
+    await render(articleHtml({ body: '<p role="alert">Article unavailable.</p>' }), articlePath('замок'));
+    expect(await inspectCurrentAtlasArticle(page, 'замок')).toMatchObject({
+      ok: false, reason: 'current Atlas article reports an alert or busy state',
+    });
+    await render(articleHtml(), articlePath('замок'));
+    await page.locator('.content-area').evaluate(body => body.setAttribute('aria-busy', 'true'));
+    expect(await inspectCurrentAtlasArticle(page, 'замок')).toMatchObject({
+      ok: false, reason: 'current Atlas article reports an alert or busy state',
+    });
   });
 
   it('rejects a hidden or absent word title', async () => {
@@ -197,6 +216,20 @@ describe('C37 article-arrival oracle', () => {
     expect(arrival.ok).toBe(false);
     if (arrival.ok) throw Error('title without a hero was accepted');
     expect(arrival.reason).toContain('without an article hero');
+
+    await render(articleHtml({ body: '' }), articlePath('замок'));
+    expect(await inspectCurrentAtlasArticle(page, 'замок')).toMatchObject({
+      ok: false, reason: 'no visible current-article body content', heading: 'Замо́к',
+    });
+    await render(articleHtml({ body: '<div class="content-area"><section class="atlas-section"> </section></div>' }), articlePath('замок'));
+    expect(await inspectCurrentAtlasArticle(page, 'замок')).toMatchObject({
+      ok: false, reason: 'no visible current-article body content',
+    });
+    await render(articleHtml(), articlePath('замок'));
+    await page.locator('.content-area').evaluate(body => body.setAttribute('hidden', ''));
+    expect(await inspectCurrentAtlasArticle(page, 'замок')).toMatchObject({
+      ok: false, reason: 'no visible current-article body content',
+    });
   });
 });
 
