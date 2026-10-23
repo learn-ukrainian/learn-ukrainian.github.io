@@ -108,6 +108,21 @@ def test_recovery_appends_and_is_idempotent(observation_case):
 
     repo, worktree, state_file, task, manifest, push, head = observation_case
     git(repo, "worktree", "remove", str(worktree))
+    # The older producer uses local_head/push_exit_code. Its task/run binding
+    # comes from the common reaper's verified inventory, not a rewritten task.
+    bundle = manifest.with_suffix("").with_suffix("")
+    push = bundle / "push.json"
+    push.write_text(json.dumps({
+        "local_head": head, "remote_head": head, "push_exit_code": 0,
+        "cwd": str(worktree), "branch": "codex/42-closeout",
+    }))
+    saved_manifest = json.loads(manifest.read_text())
+    saved_manifest["paths"] = lo.ignored_task_output._path_inventory(bundle, ["proof.txt", "push.json"])
+    saved_manifest["content_sha256"] = lo.ignored_task_output._content_digest(bundle, ["proof.txt", "push.json"])
+    manifest.write_text(json.dumps(saved_manifest))
+    saved_task = json.loads(task.read_text())
+    saved_task["preserved_artifacts"] = saved_manifest
+    task.write_text(json.dumps(saved_task))
     before = tl.load_lifecycle(state_file)
     receipt, replayed = lo.recover(
         repo, state_file=state_file, task_file=task, manifest_file=manifest, push_file=push, now=NOW
@@ -225,7 +240,21 @@ def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observati
 
     repo, worktree, ledger, task, manifest, push, head = observation_case
     git(repo, "worktree", "remove", str(worktree))
-    lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW)
+    original = json.loads(task.read_text())
+    original.pop("worktree_reap_proof")
+    task.write_text(json.dumps(original))
+    closeout = repo / "batch_state/closeout.json"
+    closeout.write_text(json.dumps({
+        "pr": {"number": 77, "state": "MERGED", "head_ref_name": "codex/42-closeout", "head_sha": head},
+        "apply": True, "ok": True, "errors": [], "matched_worktrees": [], "reap_results": [],
+        "branch_status": {"branch": "codex/42-closeout", "remote_gone": True, "local_gone": True},
+    }))
+    pr = {"number": 77, "url": tl.load_lifecycle(ledger)["pr"]["url"], "state": "MERGED",
+          "head_branch": "codex/42-closeout", "head_sha": head, "merge_sha": git(repo, "rev-parse", "main")}
+    before = task.read_bytes()
+    lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW,
+               closeout_file=closeout, merged_pr=pr)
+    assert task.read_bytes() == before
     data = tl.load_lifecycle(ledger)
     assert tl._latest_premerge_local(data, branch="codex/other", head_sha=head) is None
     assert tl._latest_premerge_local(data, branch="codex/42-closeout", head_sha=git(repo, "rev-parse", "main")) is None
