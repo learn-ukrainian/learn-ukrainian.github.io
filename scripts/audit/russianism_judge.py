@@ -72,6 +72,7 @@ except ModuleNotFoundError as exc:
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
@@ -205,6 +206,17 @@ def call_judge(prompt: str, task_id: str, family: str, model: str, from_agent: s
             "stderr": (proc.stderr or "")[:500],
             "duration_s": duration,
             "note": "ACP ask failed" if proc.returncode != 0 else "ACP ask returned no response stdout",
+        }
+
+    # rc 0 with stdout is the substitute's reply when stderr carries the seat-hop note.
+    _, substitution_note = _seat_substitution_from_forward_stderr(proc.stderr or "")
+    if substitution_note is not None:
+        return {
+            "verdict": "judge_error",
+            "raw": raw[:500],
+            "stderr": (proc.stderr or "")[:500],
+            "duration_s": duration,
+            "note": f"seat substituted: {substitution_note}",
         }
 
     # The judge prompt asks for raw JSON; in practice some judges wrap it

@@ -147,7 +147,7 @@ exceptions:
   # scripts/audit/russianism_eval.py
   - {module: scripts/audit/russianism_eval.py, function: "BridgeCaller.__call__", program: "call.argv", category: non-claude, reason: "runs ai_agent_bridge ask-claude/ask-codex/ask-agy under the project interpreter"}
   # scripts/audit/russianism_judge.py
-  - {module: scripts/audit/russianism_judge.py, function: "call_judge", program: "argv", category: non-claude, reason: "runs ai_agent_bridge ask-claude/ask-codex/ask-gemini under the project interpreter"}
+  - {module: scripts/audit/russianism_judge.py, function: "call_judge", program: "argv", category: non-claude, reason: "runs ai_agent_bridge ask-claude/ask-codex/ask-agy under the project interpreter"}
   # scripts/batch/batch_dispatcher_helpers.py
   - {module: scripts/batch/batch_dispatcher_helpers.py, function: "dispatch_track", program: "cmd", category: non-claude, reason: "runs the batch runner under the project interpreter"}
   # scripts/batch/batch_otaman.py

@@ -153,7 +153,7 @@ def test_optional_gec_checker_is_included(monkeypatch, tmp_path: Path) -> None:
 
 
 def test_bridge_caller_builds_family_specific_commands() -> None:
-    """Reject unsupported caller argv and stale legacy broker responses."""
+    """Reject unsupported caller argv, stale legacy responses, and seat-substituted stdout."""
     prompt = russianism_eval.PromptCase(
         id="p1",
         category="translation",
@@ -168,6 +168,9 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
     gemini = caller.plan(prompt, "gemini-3.1-pro-high")
 
     assert claude.argv[2] == "ask-claude"
+    assert claude.argv[claude.argv.index("ask-claude") + 1] == "-"
+    assert russianism_eval._redacted_command(claude) == " ".join(claude.argv)
+    assert "<prompt_text>" not in russianism_eval._redacted_command(claude)
     assert "--stdout-only" not in claude.argv
     assert "--to-model" in claude.argv
     assert claude.argv[claude.argv.index("--to-model") + 1] == "claude-opus-4-7"
@@ -218,6 +221,22 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
         assert russianism_judge.call_judge(
             "Translate.", codex.task_id, codex.family, codex.model, "russianism-eval"
         )["verdict"] == "judge_error"
+        completed.returncode = 0
+        completed.stdout = '{"verdict":"clean","issues":[]}\n'
+        completed.stderr = (
+            "ACP substitution: claude -> codex (reason: rate_limited); "
+            "explicit model/effort overrides dropped — the substitute's registered pins apply\n"
+            "deprecated ask-claude: ACP transport; outcome=ok\n"
+        )
+        with pytest.raises(RuntimeError, match="seat substituted"):
+            caller(prompt, claude.model)
+        substituted = russianism_judge.call_judge(
+            "Translate.", claude.task_id, claude.family, claude.model, "russianism-eval"
+        )
+        assert substituted["verdict"] == "judge_error"
+        assert "seat substituted" in substituted["note"]
+        assert "claude -> codex" in substituted["note"]
+        assert "issues" not in substituted
 
 
 def test_claude_bridge_extracts_target_model_metadata() -> None:

@@ -242,8 +242,9 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
 Ordinary `ask-*` commands converge on `_cli._handle_acp_compat` and
 `_acp_compat.run_compat_ask`. Fleet Comms owns the durable request and result;
 ACP carries the conversation. Successful one-shot output is returned on stdout
-and, when requested, `--output-path`. A nonzero exit or empty stdout is not a
-response. Callers must not recover it from legacy `messages` rows.
+and, when requested, `--output-path`. A nonzero exit, empty stdout, or stderr
+that carries the canonical `ACP substitution:` seat-hop note is not a response
+from the requested model. Callers must not recover it from legacy `messages` rows.
 
 The Claude and Codex commands return nonempty response stdout without an
 output flag. Their parsers do not accept `--stdout-only`. The AGY command
@@ -251,7 +252,7 @@ accepts `--stdout-only`, which the audit callers retain for that family.
 
 | Caller | Response destination |
 | --- | --- |
-| `scripts/audit/russianism_eval.py`, `scripts/audit/russianism_judge.py` | ACP stdout for Claude, Codex, and AGY; no legacy database lookup |
+| `scripts/audit/russianism_eval.py`, `scripts/audit/russianism_judge.py` | ACP stdout for Claude, Codex, and AGY; a seat-substitution note fails closed; no legacy database lookup |
 | `scripts/audit/naturalness_check.py` | One-shot stdout through `ask-agy` and `ask-claude` |
 | `scripts/audit/llm_reviewer_dispatch.py`, `scripts/audit/qg_bakeoff.py` | Existing stdout/output-file contracts; formal review intent uses the separate toolful review path |
 | `scripts/pipeline/dispatch.py`, `scripts/tools/upgrade_activity_hints.py` | `ask-agy` stdout |

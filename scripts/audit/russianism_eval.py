@@ -24,6 +24,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
 from scripts.audit.checks.russicism_detection import check_russicisms
 from scripts.common.repo_root import project_interpreter
 
@@ -171,9 +172,14 @@ class BridgeCaller:
             ) from exc
         if result.returncode != 0:
             raise RuntimeError((result.stderr or result.stdout or f"exit {result.returncode}").strip())
-        if result.stdout.strip():
-            return call, result.stdout.strip()
-        raise RuntimeError(f"ACP ask completed without response stdout for task_id={call.task_id}")
+        stdout = result.stdout.strip()
+        if not stdout:
+            raise RuntimeError(f"ACP ask completed without response stdout for task_id={call.task_id}")
+        # rc 0 with stdout is the substitute's reply when stderr carries the seat-hop note.
+        _, substitution_note = _seat_substitution_from_forward_stderr(result.stderr or "")
+        if substitution_note is not None:
+            raise RuntimeError(f"ACP seat substituted for task_id={call.task_id}: {substitution_note}")
+        return call, stdout
 
 def _issue_count(violation: dict[str, Any]) -> int:
     match = _FOUND_COUNT_RE.search(str(violation.get("issue") or ""))
@@ -310,10 +316,8 @@ def print_cost_report(rows: Sequence[EvalRow], prompts: Sequence[PromptCase], mo
 
 
 def _redacted_command(call: BridgeCall) -> str:
-    parts = list(call.argv)
-    if call.family == "claude" and "ask-claude" in parts and parts.index("ask-claude") + 1 < len(parts):
-        parts[parts.index("ask-claude") + 1] = "<prompt_text>"
-    return " ".join(parts)
+    """Return argv. Every family sends the prompt on stdin, so argv has nothing to redact."""
+    return " ".join(call.argv)
 
 
 def dry_run(prompts: Sequence[PromptCase], models: Sequence[str], max_parallel: int, caller: BridgeCaller) -> None:
