@@ -1115,6 +1115,35 @@ def test_pushing_a_commit_that_is_not_checked_out_is_refused(repo: Path) -> None
     assert _verdict(result)["reason"] == "tree_mismatch"
 
 
+def test_public_entire_checkpoint_head_cannot_escape_pre_push_gate(repo: Path) -> None:
+    """Refuse a public checkpoint destination before concurrency, object lookup or receipt reuse (AC-03)."""
+    updates = f"HEAD {'1' * 40} refs/heads/entire/checkpoints/v1 {ZERO_SHA}\n"
+    launcher, config = _hook_inputs(repo)
+    result = subprocess.run(
+        [
+            str(PYTHON),
+            str(repo / ".githooks/pre_push_gate.py"),
+            "--launcher",
+            launcher,
+            "--config",
+            config,
+            "private",
+            "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
+        ],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        input=updates,
+        text=True,
+        timeout=60,
+        env=_env({gate.MAX_CONCURRENT_RUNS_ENV: "invalid"}),
+    )
+
+    assert result.returncode == 1, result.stderr
+    assert _verdict(result) == {"outcome": "refused", "reason": "public_entire_ref", "failing": []}
+    assert "Entire destination ref classes: refs/heads/entire/*. Public origin updates are refused." in result.stderr
+
+
 def test_deletes_and_tag_pushes_are_not_validated(repo: Path) -> None:
     updates = f"(delete) {ZERO_SHA} refs/heads/old {'a' * 40}\nrefs/tags/v1 {'b' * 40} refs/tags/v1 {ZERO_SHA}\n"
 

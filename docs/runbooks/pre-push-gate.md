@@ -58,9 +58,13 @@ before pushing, as the rules require.
 | --- | --- | --- |
 | green | 0 | Push proceeds; a receipt is written. |
 | `pre_commit_failed` | 1 | Push refused; the failing hook names are listed (`lint-opsec-leaks` for the per-commit OPSEC scan, `check-no-internal-ids` for the internal-ID scan). |
+| `public_entire_ref`, `entire_destination_unknown` | 1 | An Entire head or tag aimed at the public origin, or at a destination this gate cannot identify. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change what the hooks import, but not the receipt. Commit or remove them. |
 | `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout` and `timeout_under_load` (a stage reached its bound; see Bounds), `receipt_unwritable`, `validation_error` (an I/O failure), `scope_setup_unavailable` (the scoped executor was never set up or is already closed; no check ran). The branch is preserved; return to the driver. Never retry blindly. |
+
+This check covers pushes that go through the tracked pre-push hook; Entire's own checkpoint sync does not use this hook and stays guarded by the capture-guard route checks.
+Deleting an existing public Entire ref is refused here too; that removal is operator-owned and uses the documented `--no-verify` bypass or the forge, outside this outcome.
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 After a plan is built, every `validation_incomplete` detail ends with the range it scanned (#10820), for
