@@ -103,6 +103,31 @@ class SessionStreamDatabase:
         self._repo_root = repo_root
         self.path = Path(path).resolve() if path is not None else default_database_path(repo_root)
 
+    def connect_existing_guard(self, *, timeout_ms: int = 200) -> sqlite3.Connection:
+        """Open existing local authority for a bounded lock, without migrations.
+
+        Delivery claims must not initialize, retry migration, or renew a stream
+        while holding this connection. The caller owns its transaction.
+        """
+        assert_component_supported(StoreId.SESSION_STREAMS, "session_streams")
+        if not self.path.is_file():
+            raise SessionStreamDatabaseError("session store unavailable")
+        connection = cp_connect(
+            StoreId.SESSION_STREAMS,
+            path=self.path,
+            repo_root=self._repo_root,
+            isolation_level=None,
+            timeout=timeout_ms / 1000,
+        )
+        connection.row_factory = sqlite3.Row
+        try:
+            connection.execute(f"PRAGMA busy_timeout = {timeout_ms}")
+            self._verify_migrations(connection)
+            return connection
+        except Exception:
+            connection.close()
+            raise
+
     def connect(self, *, read_only: bool = False, now: datetime | None = None) -> sqlite3.Connection:
         """Open a configured connection, serializing concurrent first-open.
 

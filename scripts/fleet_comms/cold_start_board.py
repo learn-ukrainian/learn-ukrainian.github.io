@@ -27,10 +27,7 @@ except ModuleNotFoundError as exc:
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
 from scripts.common import github_client
-from scripts.control_plane.storage import StoreId, assert_component_supported
-from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.efficiency_metrics import (
-    _AUTHORITY_BACKLOG_STATES,
     _column_names,
     _table_exists,
     collect_dead_letters,
@@ -485,86 +482,21 @@ def _probe_inbox_authority(
     plane_db: Path,
     agent: str,
 ) -> dict[str, Any]:
-    """Body-free pending inbox rows from authority_deliveries (queued/running)."""
-    import sqlite3
+    """One bounded authority snapshot, including lane and residual alias rows."""
+    from scripts.fleet_comms.lane_mailbox import read_inbox
 
-    if not plane_db.is_file():
-        return {
-            "source": "authority",
-            "agent": agent,
-            "inbox_pending_count": 0,
-            "db_missing": True,
-            "store": comms_plane_store(reachable=False),
-            "recent_deliveries": [],
-        }
-
-    placeholders = ",".join("?" for _ in _AUTHORITY_BACKLOG_STATES)
-    matched_agent = agent
-    deliveries: list[dict[str, Any]] = []
-    total = 0
-
-    assert_component_supported(StoreId.FLEET_COMMS, "cold_start_board")  # #7482
-    conn = cp_connect(StoreId.FLEET_COMMS, path=plane_db, read_only=True)
-    conn.row_factory = sqlite3.Row
-    try:
-        if not _table_exists(conn, "authority_deliveries"):
-            return {
-                "source": "authority",
-                "agent": agent,
-                "inbox_pending_count": 0,
-                "store": comms_plane_store(reachable=True),
-                "table_missing": True,
-                "recent_deliveries": [],
-            }
-        for candidate in _inbox_agent_candidates(agent):
-            count_row = conn.execute(
-                f"""
-                SELECT COUNT(*) AS cnt FROM authority_deliveries
-                WHERE recipient = ? AND state IN ({placeholders})
-                """,
-                (candidate, *_AUTHORITY_BACKLOG_STATES),
-            ).fetchone()
-            candidate_total = int(count_row["cnt"] if count_row else 0)
-            if candidate_total == 0:
-                continue
-            rows = conn.execute(
-                f"""
-                SELECT delivery_id, message_id, recipient, state,
-                       attempt_count, created_at, updated_at
-                FROM authority_deliveries
-                WHERE recipient = ? AND state IN ({placeholders})
-                ORDER BY COALESCE(updated_at, created_at, '') DESC
-                LIMIT 5
-                """,
-                (candidate, *_AUTHORITY_BACKLOG_STATES),
-            ).fetchall()
-            matched_agent = candidate
-            total = candidate_total
-            deliveries = [
-                {
-                    "delivery_id": r["delivery_id"],
-                    "message_id": r["message_id"],
-                    "recipient": r["recipient"],
-                    "to_agent": r["recipient"],
-                    "state": r["state"],
-                    "status": r["state"],
-                    "attempt_count": int(r["attempt_count"] or 0),
-                    "created_at": r["created_at"],
-                    "updated_at": r["updated_at"],
-                }
-                for r in rows
-            ]
-            break
-    finally:
-        conn.close()
-
+    result = read_inbox(plane_db, agent)
     return {
         "source": "authority",
         "agent": agent,
-        "matched_agent": matched_agent,
-        "inbox_pending_count": total,
-        "store": comms_plane_store(reachable=True),
-        "recent_deliveries": deliveries,
+        "matched_agent": agent,
+        "inbox_pending_count": result["count"],
+        "oldest_age_seconds": result["oldest_age_seconds"],
+        "drain_command": result["drain_command"],
+        "probe": result["probe"],
+        "store": comms_plane_store(reachable=result["probe"] == "ok"),
+        "recent_deliveries": result.get("deliveries", []),
+        "by_correlation": result["by_correlation"],
     }
 
 
@@ -723,24 +655,19 @@ def _probe_inbox(
         plane_root = root if root is not None else default_plane_root(repo_root=repo_root)
         if source == "authority":
             plane_db = plane_root / "comms.sqlite3"
-            if plane_db.is_file():
-                data = _probe_inbox_authority(plane_db, agent)
-            else:
-                # Authority preferred but plane DB missing → legacy fallback.
-                data = _probe_inbox_legacy(_resolve_broker_db_ro(root, repo_root), agent)
-                data["authority_db_missing"] = True
+            data = _probe_inbox_authority(plane_db, agent)
         else:
             data = _probe_inbox_legacy(_resolve_broker_db_ro(root, repo_root), agent)
 
         elapsed = (time.perf_counter() - start) * 1000.0
-        return ProbeResult(status="ok", elapsed_ms=elapsed, data=data)
-    except Exception as exc:
+        return ProbeResult(status="degraded" if data.get("probe") == "unknown" else "ok", elapsed_ms=elapsed, data=data)
+    except Exception:
         elapsed = (time.perf_counter() - start) * 1000.0
         return ProbeResult(
             status="degraded",
             elapsed_ms=elapsed,
-            error=str(exc),
-            data={"agent": agent},
+            error="inbox_unavailable",
+            data={"agent": agent, "inbox_pending_count": None, "probe": "unknown"},
         )
 
 
@@ -1023,7 +950,7 @@ def _summary_fields(board_data: dict[str, Any]) -> dict[str, str]:
 
     inbox_pending = inbox_data.get("inbox_pending_count")
     if inbox_pending is None:
-        inbox_pending = "n/a"
+        inbox_pending = "unknown"
 
     return {
         "plane_mode": str(plane_mode),

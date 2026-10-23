@@ -542,6 +542,28 @@ class SessionStreamStore:
             connection.close()
 
     @contextmanager
+    def guard_delivery_claim(self, lease: Lease, *, now: datetime) -> Iterator[sqlite3.Row]:
+        """Hold the local session lock and validate the exact launcher envelope.
+
+        The caller may acquire the delivery-authority lock only inside this
+        context. Nothing here changes stream state or performs recovery.
+        """
+        connection = self.database.connect_existing_guard()
+        try:
+            connection.execute("BEGIN IMMEDIATE")
+            row = self._require_current_lease(connection, lease, require_valid_at=now)
+            if row["session_state"] not in {"open", "rolling"}:
+                raise LeaseConflictError("session is not open or rolling")
+            yield row
+            connection.execute("COMMIT")
+        except Exception:
+            with suppress(sqlite3.Error):
+                connection.execute("ROLLBACK")
+            raise
+        finally:
+            connection.close()
+
+    @contextmanager
     def _read_snapshot(self) -> Iterator[sqlite3.Connection]:
         """Hold one WAL snapshot across every query that forms a read response."""
         connection = self.database.connect(read_only=True)

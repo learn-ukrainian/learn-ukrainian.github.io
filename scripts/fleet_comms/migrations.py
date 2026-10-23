@@ -1,4 +1,5 @@
 """Forward-only numbered migrations for the Fleet Communications v1 schema."""
+
 from __future__ import annotations
 
 import hashlib
@@ -595,6 +596,36 @@ _V10_STATEMENTS = (
     )""",
 )
 
+_V11_STATEMENTS = (
+    """CREATE TABLE lane_mailboxes (
+        recipient TEXT PRIMARY KEY, stream_id TEXT NOT NULL UNIQUE
+    )""",
+    """CREATE TABLE lane_mailbox_aliases (
+        alias TEXT PRIMARY KEY, recipient TEXT NOT NULL REFERENCES lane_mailboxes(recipient)
+    )""",
+    """CREATE TABLE lane_mailbox_moves (
+        delivery_id TEXT PRIMARY KEY REFERENCES authority_deliveries(delivery_id),
+        old_recipient TEXT NOT NULL, lane_recipient TEXT NOT NULL,
+        action TEXT NOT NULL CHECK(action IN ('moved', 'lane_duplicate_of_acknowledged', 'lane_duplicate_queued')),
+        duplicate_of TEXT REFERENCES authority_deliveries(delivery_id), moved_at TEXT NOT NULL
+    )""",
+    "ALTER TABLE authority_deliveries ADD COLUMN pr_number INTEGER CHECK(pr_number IS NULL OR (typeof(pr_number) = 'integer' AND pr_number > 0))",
+    "ALTER TABLE authority_deliveries ADD COLUMN task_id TEXT CHECK(task_id IS NULL OR length(task_id) BETWEEN 1 AND 160)",
+    "CREATE INDEX idx_lane_delivery_correlation ON authority_deliveries(state, pr_number, task_id)",
+)
+
+# Keep the approved registry in the same checksum ledger as its tables.
+from scripts.fleet_comms.lane_mailbox import ALIASES, LANE_STREAMS
+
+_V11_STATEMENTS += tuple(
+    f"INSERT INTO lane_mailboxes(recipient, stream_id) VALUES ('{recipient}', '{stream}')"
+    for recipient, stream in LANE_STREAMS.items()
+) + tuple(
+    f"INSERT INTO lane_mailbox_aliases(alias, recipient) VALUES ('{alias}', '{recipient}')"
+    for alias, recipient in ALIASES.items()
+)
+
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -638,6 +669,7 @@ MIGRATIONS = (
         name="fleet-comms-v10-v4-runner-attempts",
         statements=_V10_STATEMENTS,
     ),
+    Migration(version=11, name="fleet-comms-v11-lane-mailboxes", statements=_V11_STATEMENTS),
 )
 
 # During the pre-merge #6159 soak, one development build applied the v5

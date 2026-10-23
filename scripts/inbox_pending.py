@@ -7,8 +7,8 @@ import json
 import os
 import re
 import sys
+import time
 from contextlib import closing
-from datetime import UTC, datetime
 from pathlib import Path
 
 if __package__ in (None, ""):
@@ -18,6 +18,7 @@ from scripts.agent_runtime.agent_identity import seat_read_aliases
 from scripts.ai_agent_bridge._channels import resolve_recipient_alias
 from scripts.common.bridge_paths import configured_bridge_db_path
 from scripts.common.repo_root import main_checkout_root
+from scripts.fleet_comms.lane_mailbox import lane_address, read_inbox, unknown_inbox
 from scripts.fleet_comms.paths import default_plane_root
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.orchestration.handoff_slot_registry import is_registered_slot, registry_readable
@@ -34,14 +35,15 @@ AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
                     WHERE i.namespace = 'supervisory-consumption:' || d.delivery_id)"""
 
 
-def probe(recipient: str, *, limit: int = 5) -> dict:
+def probe(recipient: str, *, limit: int = 5, allow_bare: bool = False) -> dict:
     """Return only counts and identifiers; any uncertainty invalidates the result."""
     unknown = {
-        "count": 0,
+        "count": None,
         "ids": [],
         "truncated": False,
         "stores": {"legacy": None, "authority": None},
         "probe": "unknown",
+        "authority": unknown_inbox(recipient),
     }
     if type(limit) is not int or limit < 1 or limit > 500:
         return unknown
@@ -49,10 +51,16 @@ def probe(recipient: str, *, limit: int = 5) -> dict:
         from scripts.agent_runtime.kimi_admission import BRIDGE_MODE
         from scripts.agent_runtime.target_admission import resolve_and_admit
 
-        if not re.fullmatch(r"[a-z]+-[a-z0-9]+(?:-[a-z0-9]+)*", recipient):
+        lane = lane_address(recipient)
+        bare_seats = {"claude", "codex", "gemini", "agy", "grok", "grok-build", "orchestrator", "cursor"}
+        if lane is None and not (allow_bare and recipient in bare_seats):
+            if not re.fullmatch(r"[a-z]+-[a-z0-9]+(?:-[a-z0-9]+)*", recipient):
+                return unknown
+            if not registry_readable() or not is_registered_slot(recipient):
+                return unknown
+        if "-" in recipient and lane is not None and not registry_readable():
             return unknown
-        if not registry_readable() or not is_registered_slot(recipient):
-            return unknown
+        deadline = time.monotonic() + 1.0
         # Match check_inbox's canonical legacy read set, never a family-wide
         # fallback for a dedicated slot. Unknown alias policy fails closed.
         legacy_recipients = seat_read_aliases(resolve_recipient_alias(recipient))
@@ -70,20 +78,18 @@ def probe(recipient: str, *, limit: int = 5) -> dict:
         authority = default_plane_root(repo_root=ROOT) / "comms.sqlite3"
         stores = {}
         ids = []
-        now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+        authority_result = read_inbox(authority, recipient, limit=limit)
+        if authority_result["probe"] != "ok":
+            return unknown
         for name, path, table, column, where, params in (
             ("legacy", legacy, "messages", "id", legacy_where, legacy_recipients),
-            ("authority", authority, "authority_deliveries d", "message_id", AUTHORITY_WHERE, (recipient, now)),
         ):
             # Never create a missing store, migrate schema, claim, or read bodies.
             if not path.is_absolute() or not path.is_file():
                 return unknown
             with closing(open_readonly(path, timeout=0.2)) as conn:
+                conn.set_progress_handler(lambda: int(time.monotonic() >= deadline), 1000)
                 conn.execute("BEGIN")
-                if name == "authority":
-                    # Preserve schema uncertainty without treating receiver
-                    # observation as generation-bound supervisory consumption.
-                    conn.execute("SELECT delivery_id, state FROM authority_wake_receipts LIMIT 0")
                 stores[name] = conn.execute(f"SELECT COUNT(*) FROM {table} WHERE {where}", params).fetchone()[0]
                 rows = conn.execute(
                     f"SELECT {column} FROM {table} WHERE {where} ORDER BY {column} LIMIT ?",
@@ -98,9 +104,25 @@ def probe(recipient: str, *, limit: int = 5) -> dict:
                     ):
                         return unknown
                     ids.append(identifier)
+        if time.monotonic() >= deadline:
+            return unknown
+        stores["authority"] = authority_result["count"]
+        for identifier in authority_result["ids"]:
+            if not isinstance(identifier, str) or not re.fullmatch(
+                r"(?:[a-z][a-z0-9-]*_|legacy-message-)[0-9a-f]{32}", identifier
+            ):
+                return unknown
+            ids.append(identifier)
         count = sum(stores.values())
         shown = ids[:limit]
-        return {"count": count, "ids": shown, "truncated": count > len(shown), "stores": stores, "probe": "ok"}
+        return {
+            "count": count,
+            "ids": shown,
+            "truncated": count > len(shown),
+            "stores": stores,
+            "probe": "ok",
+            "authority": authority_result,
+        }
     except Exception:
         # Exception text can contain paths or data. It never leaves this boundary.
         return unknown
@@ -122,23 +144,13 @@ def hook(stdin_text: str, recipient: str) -> dict:
         elif not result["count"]:
             return {}
         else:
-            suffix = ""
-            if result["stores"]["legacy"]:
-                suffix += f"; legacy: ai_agent_bridge inbox --for {resolve_recipient_alias(recipient)}"
-            if result["stores"]["authority"]:
-                suffix += "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
-            prefix = f"PENDING ORDERS: {result['count']} (ids "
-            shown = []
-            for identifier in result["ids"]:
-                candidate = [*shown, str(identifier)]
-                ending = "; truncated)" if len(candidate) < result["count"] else ")"
-                if len(prefix + ",".join(candidate) + ending + suffix) > 200:
-                    break
-                shown = candidate
-            truncated = len(shown) < result["count"]
-            message = prefix + ",".join(shown) + ("; truncated" if truncated else "") + ")" + suffix
-            if not shown:
-                message = UNKNOWN_LINE
+            authority = result["authority"]
+            age = authority["oldest_age_seconds"]
+            oldest = f"{age}s" if age is not None else "none"
+            message = (
+                f"PENDING ORDERS: {result['count']}; authority {authority['count']}, oldest {oldest}; "
+                + authority["drain_command"]
+            )
     except Exception:
         message = UNKNOWN_LINE
     return {"injectSteps": [{"ephemeralMessage": message}]}
@@ -165,6 +177,11 @@ def main(argv: list[str] | None = None) -> int:
         "--recipient", default=None, help="Registered provider-lane handoff slot (default: SESSION_HANDOFF_AGENT)"
     )
     parser.add_argument(
+        "--native-hook",
+        action="store_true",
+        help="Emit native UserPromptSubmit metadata announcement (default: probe JSON)",
+    )
+    parser.add_argument(
         "--agy-hook",
         action="store_true",
         help="Read AGY JSON stdin and emit injectSteps (default: emit probe metadata)",
@@ -172,7 +189,17 @@ def main(argv: list[str] | None = None) -> int:
     try:
         args = parser.parse_args(argv)
         recipient = args.recipient if args.recipient is not None else os.environ.get("SESSION_HANDOFF_AGENT", "")
-        result = hook(sys.stdin.read(), recipient) if args.agy_hook else probe(recipient)
+        if args.native_hook:
+            metadata = probe(recipient, allow_bare=True)
+            authority = metadata["authority"]
+            count = authority["count"] if authority["probe"] == "ok" else "unknown"
+            seconds = authority["oldest_age_seconds"]
+            age = (f"{seconds}s" if seconds is not None else "none") if authority["probe"] == "ok" else "unknown"
+            legacy = metadata["stores"]["legacy"] if metadata["probe"] == "ok" else "unknown"
+            line = f"AUTHORITY INBOX: {count}; oldest {age}; legacy {legacy}; {authority['drain_command']}"
+            result = {"hookSpecificOutput": {"hookEventName": "UserPromptSubmit", "additionalContext": line}}
+        else:
+            result = hook(sys.stdin.read(), recipient) if args.agy_hook else probe(recipient)
     except SystemExit as exc:
         if exc.code == 0:
             return 0

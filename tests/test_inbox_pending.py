@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import re
 import sqlite3
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -19,8 +22,10 @@ from tests.helpers.agy_inbox_fixtures import (
     MESSAGE_ID,
     add_authority,
     add_legacy,
-    run_cli,
     snapshot,
+)
+from tests.helpers.agy_inbox_fixtures import (
+    run_cli as raw_cli,
 )
 
 pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
@@ -31,12 +36,54 @@ EXPECTED_UNKNOWN_NOTICE = (
 )
 
 
+def check_metadata(result):
+    authority = result["authority"]
+    assert authority["content_included"] is False
+    assert "deliveries claim --recipient" in authority["drain_command"]
+    assert "$SESSION_STREAM_SESSION_ID" in authority["drain_command"]
+    if result["probe"] == "ok":
+        assert authority["probe"] == "ok"
+        assert authority["count"] == result["stores"]["authority"]
+        assert sum(group["count"] for group in authority["by_correlation"]) == authority["count"]
+        assert (
+            authority["oldest_age_seconds"] is None
+            if not authority["count"]
+            else isinstance(authority["oldest_age_seconds"], int)
+        )
+    else:
+        assert authority["count"] is None
+        assert authority["oldest_age_seconds"] is None
+        assert result["count"] is None
+    return {key: value for key, value in result.items() if key != "authority"}
+
+
+def checked_probe(recipient):
+    return check_metadata(inbox_pending.probe(recipient))
+
+
+def run_cli(recipient):
+    return check_metadata(raw_cli(recipient))
+
+
+def check_notice(notice, *, count, authority_count, recipient="lane:infra"):
+    line = notice["injectSteps"][0]["ephemeralMessage"]
+    assert len(line) <= 200 and line.isascii()
+    assert re.fullmatch(
+        rf"PENDING ORDERS: {count}; authority {authority_count}, oldest (?:[0-9]+s|none); "
+        + re.escape(
+            f'.venv/bin/python -m scripts.fleet_comms deliveries claim --recipient {recipient} --worker-id "$SESSION_STREAM_SESSION_ID"'
+        ),
+        line,
+    )
+    assert BODY_MARKER not in line
+
+
 @pytest.mark.parametrize(
     ("acknowledged", "consumed", "expected"), [(0, 0, 1), (1, 0, 0), (0, 1, 0), (1, 1, 0), (None, None, 1)]
 )
 def test_legacy_delivery_states(stores, acknowledged, consumed, expected):
     add_legacy(stores[0], acknowledged=acknowledged, consumed=consumed)
-    assert inbox_pending.probe("gemini-infra") == {
+    assert checked_probe("gemini-infra") == {
         "count": expected,
         "ids": [1] if expected else [],
         "truncated": False,
@@ -60,7 +107,7 @@ def test_legacy_delivery_states(stores, acknowledged, consumed, expected):
 )
 def test_authority_delivery_states(stores, state, consumed, wake, expected):
     add_authority(stores[1], state=state, consumed=consumed, wake_consumed=wake)
-    assert inbox_pending.probe("gemini-infra") == {
+    assert checked_probe("gemini-infra") == {
         "count": expected,
         "ids": [MESSAGE_ID] if expected else [],
         "truncated": False,
@@ -69,8 +116,36 @@ def test_authority_delivery_states(stores, state, consumed, wake, expected):
     }
 
 
-def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
-    with AuthorityService(root=stores[1].parent) as service:
+def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster, monkeypatch):
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import LeaseHolder
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+
+    session_store = SessionStreamStore(SessionStreamDatabase(stores[1].parent / "sessions.sqlite3"))
+    holder = session_store.open_session(
+        stream_id="epic:6943",
+        holder=LeaseHolder(agent="codex", harness="codex", instance_id="h26", process_id=os.getpid()),
+        lineage_id="h26",
+        ttl_seconds=30,
+        session_id="h26-worker",
+        now=datetime.now(UTC),
+    )
+    fields = {
+        "ID": holder.stream_id,
+        "SESSION_ID": holder.session_id,
+        "LEASE_ID": holder.lease_id,
+        "GENERATION": str(holder.generation),
+        "FENCING_TOKEN": str(holder.fencing_token),
+        "AGENT": holder.holder.agent,
+        "HARNESS": holder.holder.harness,
+        "INSTANCE_ID": holder.holder.instance_id,
+        "PROCESS_ID": str(holder.holder.process_id),
+    }
+    for key, value in fields.items():
+        monkeypatch.setenv("SESSION_STREAM_" + key, value)
+    monkeypatch.delenv("SESSION_STREAM_TASK_ID", raising=False)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    with AuthorityService(root=stores[1].parent, session_store=session_store) as service:
         message = service.enqueue_supervisory_request(
             sender="supervisor",
             recipient="gemini-infra",
@@ -89,17 +164,6 @@ def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
             "stores": {"legacy": 0, "authority": 1},
             "probe": "ok",
         }
-        expected_notice = {
-            "injectSteps": [
-                {
-                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {message.message_id}); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
-                }
-            ]
-        }
-        print(
-            "H26 frozen expectations:",
-            json.dumps({"status": "delivered", "metadata": expected_metadata, "hook": expected_notice}),
-        )
         before = snapshot(stores)
         metadata = run_cli("gemini-infra")
         hook_proc = subprocess.run(
@@ -122,7 +186,7 @@ def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
         assert snapshot(stores) == before
         assert status == "delivered"
         assert metadata == expected_metadata
-        assert notice == expected_notice
+        check_notice(notice, count=1, authority_count=1)
 
         service.record_supervisory_consumption(
             delivery_id,
@@ -163,7 +227,7 @@ def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
 @pytest.mark.parametrize("state", ["queued", "running"])
 def test_expired_deadline_is_silent(stores, state):
     add_authority(stores[1], state=state, deadline="2000-01-01T00:00:00Z")
-    assert inbox_pending.probe("gemini-infra")["count"] == 0
+    assert checked_probe("gemini-infra")["count"] == 0
 
 
 @pytest.mark.parametrize(
@@ -174,7 +238,7 @@ def test_recipient_shapes(stores, recipient):
     add_legacy(stores[0], recipient="claude")
     add_legacy(stores[0], identifier=2)
     add_authority(stores[1], recipient="claude")
-    result = inbox_pending.probe(recipient)
+    result = checked_probe(recipient)
     if recipient == "gemini-infra":
         assert result == {
             "count": 1,
@@ -190,14 +254,14 @@ def test_recipient_shapes(stores, recipient):
 
 def test_registry_unavailable_is_unknown(stores, roster):
     roster.unlink()
-    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+    assert checked_probe("gemini-infra")["probe"] == "unknown"
 
 
 def test_counts_and_five_full_ids(stores):
     for identifier in range(1, 8):
         add_legacy(stores[0], identifier=identifier)
     add_authority(stores[1])
-    assert inbox_pending.probe("gemini-infra") == {
+    assert checked_probe("gemini-infra") == {
         "count": 8,
         "ids": [1, 2, 3, 4, 5],
         "truncated": True,
@@ -212,7 +276,7 @@ def test_readonly_hashes_and_no_body_or_artifacts(stores, tmp_path):
     before = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores}
     files = set(tmp_path.iterdir())
     for _ in range(2):
-        result = inbox_pending.probe("gemini-infra")
+        result = checked_probe("gemini-infra")
         assert result["count"] == 2
         assert BODY_MARKER not in json.dumps(result)
     assert {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores} == before
@@ -222,7 +286,7 @@ def test_readonly_hashes_and_no_body_or_artifacts(stores, tmp_path):
 @pytest.mark.parametrize("store_index", [0, 1])
 def test_missing_store_returns_unknown_without_creation(stores, store_index):
     stores[store_index].unlink()
-    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+    assert checked_probe("gemini-infra")["probe"] == "unknown"
     assert not stores[store_index].exists()
 
 
@@ -230,7 +294,7 @@ def test_missing_store_returns_unknown_without_creation(stores, store_index):
 def test_locked_store_is_unknown(stores, store_index):
     with sqlite3.connect(stores[store_index]) as conn:
         conn.execute("BEGIN EXCLUSIVE")
-        assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+        assert checked_probe("gemini-infra")["probe"] == "unknown"
 
 
 @pytest.mark.parametrize("store_index", [0, 1])
@@ -243,7 +307,8 @@ def test_unreadable_store_is_unknown(stores, monkeypatch, store_index):
         return original(path, **kwargs)
 
     monkeypatch.setattr(inbox_pending, "open_readonly", denied)
-    result = inbox_pending.probe("gemini-infra")
+    monkeypatch.setattr("scripts.fleet_comms.lane_mailbox.open_readonly", denied)
+    result = checked_probe("gemini-infra")
     assert result["probe"] == "unknown"
     assert BODY_MARKER not in json.dumps(result)
 
@@ -251,7 +316,7 @@ def test_unreadable_store_is_unknown(stores, monkeypatch, store_index):
 @pytest.mark.parametrize("store_index", [0, 1])
 def test_schema_drift_and_corrupt_store_unknown(stores, store_index):
     stores[store_index].write_bytes(b"not sqlite " + BODY_MARKER.encode())
-    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+    assert checked_probe("gemini-infra")["probe"] == "unknown"
 
 
 @pytest.mark.parametrize("schema_fault", ["table", "delivery_id", "state"])
@@ -266,7 +331,7 @@ def test_wake_schema_drift_is_unknown(stores, roster, schema_fault, pending):
             conn.execute(f"ALTER TABLE authority_wake_receipts RENAME COLUMN {schema_fault} TO unavailable")
     before = snapshot(stores)
     assert run_cli("gemini-infra") == {
-        "count": 0,
+        "count": None,
         "ids": [],
         "truncated": False,
         "stores": {"legacy": None, "authority": None},
@@ -278,7 +343,7 @@ def test_wake_schema_drift_is_unknown(stores, roster, schema_fault, pending):
 
 def test_invalid_stored_id_never_injects_data(stores):
     add_authority(stores[1], identifier=BODY_MARKER)
-    result = inbox_pending.probe("gemini-infra")
+    result = checked_probe("gemini-infra")
     assert result["probe"] == "unknown"
     assert BODY_MARKER not in json.dumps(result)
 
@@ -286,7 +351,7 @@ def test_invalid_stored_id_never_injects_data(stores):
 def test_imported_authority_identifier(stores):
     identifier = "legacy-message-" + "a" * 32
     add_authority(stores[1], identifier=identifier)
-    assert inbox_pending.probe("gemini-infra")["ids"] == [identifier]
+    assert checked_probe("gemini-infra")["ids"] == [identifier]
 
 
 def test_cli_returns_only_metadata(stores):
@@ -300,7 +365,7 @@ def test_cli_returns_only_metadata(stores):
     )
     assert result.returncode == 0
     assert result.stderr == ""
-    assert json.loads(result.stdout) == {
+    assert check_metadata(json.loads(result.stdout)) == {
         "count": 1,
         "ids": [1],
         "truncated": False,
@@ -393,16 +458,16 @@ def test_wal_reader_sees_latest_committed_order(stores):
         writer.execute("PRAGMA journal_mode=WAL")
         writer.execute("INSERT INTO messages VALUES (1, 'gemini-infra', 0, 0, ?)", (BODY_MARKER,))
         writer.commit()
-        assert inbox_pending.probe("gemini-infra")["ids"] == [1]
+        assert checked_probe("gemini-infra")["ids"] == [1]
 
 
 def test_retired_plane_and_relative_override_are_unknown(stores, monkeypatch, tmp_path):
     monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW")
     (tmp_path / "READ_ME_CANONICAL_ON_JOB_HOST.txt").write_text("retired")
-    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+    assert checked_probe("gemini-infra")["probe"] == "unknown"
     monkeypatch.setenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", "1")
     monkeypatch.setenv("AB_DB_PATH", "messages.db")
-    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+    assert checked_probe("gemini-infra")["probe"] == "unknown"
 
 
 @pytest.mark.parametrize("count", [0, 1, 8])
@@ -413,14 +478,7 @@ def test_direct_renderer_behavior(stores, count):
     if not count:
         assert result == {}
     else:
-        ids = "1" if count == 1 else "1,2,3,4,5; truncated"
-        assert result == {
-            "injectSteps": [
-                {
-                    "ephemeralMessage": f"PENDING ORDERS: {count} (ids {ids}); legacy: ai_agent_bridge inbox --for gemini-infra"
-                }
-            ]
-        }
+        check_notice(result, count=count, authority_count=0)
 
 
 @pytest.mark.parametrize("payload", ["[]", '{"value": NaN}', BODY_MARKER])
@@ -432,4 +490,4 @@ def test_direct_invalid_payload_is_unknown(stores, payload):
 
 def test_negative_legacy_identifier_is_unknown(stores):
     add_legacy(stores[0], identifier=-1)
-    assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+    assert checked_probe("gemini-infra")["probe"] == "unknown"
