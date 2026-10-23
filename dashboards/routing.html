@@ -381,11 +381,12 @@ function subscriptionFreshness(record, routing) {
   const ages = [age, elapsed].filter(value => value !== null && value >= 0);
   const effectiveAge = ages.length ? Math.max(...ages) : null;
   const threshold = subscriptionNumber(routing.diagnostics?.stale_threshold_s);
+  const hasThreshold = threshold !== null && threshold >= 0;
   const declared = typeof record.freshness === 'string' ? record.freshness.toLowerCase() : '';
   const stale = record.stale === true || declared === 'stale'
-    || (effectiveAge !== null && threshold !== null && effectiveAge > threshold);
+    || (effectiveAge !== null && hasThreshold && effectiveAge > threshold);
   const state = stale ? 'stale'
-    : declared === 'fresh' ? (effectiveAge !== null ? 'fresh' : 'freshness unknown')
+    : declared === 'fresh' ? (effectiveAge !== null && hasThreshold ? 'fresh' : 'freshness unknown')
     : declared || 'freshness unknown';
   return [state, effectiveAge !== null && effectiveAge >= 0 ? formatAge(effectiveAge) : 'age unknown',
     Number.isFinite(timestamp) ? formatTs(rawTimestamp) : 'probe time unknown'].join(' · ');
@@ -413,10 +414,12 @@ function renderRoutingPressure(agent, routing) {
   const cb = agent.codexbar || agent.notebook_report || {};
   const runtime = agent.runtime || {};
   const status = agent.status || 'unknown';
+  const hasQuota = collectSubscriptionWindows(agent).some(({ win }) =>
+    [win.used_pct, win.remaining_pct].some(value => subscriptionNumber(value) !== null && value >= 0 && value <= 100));
   let label = status === 'near_cap' ? 'near cap' : status;
   let pillStatus = status;
   let source = agent.status_source === 'weekly_pace' ? 'weekly pace'
-    : agent.status_source === 'cursor_auto' ? 'measured provider window'
+    : agent.status_source === 'cursor_auto' && hasQuota ? 'measured provider window'
     : agent.status_source === 'ledger_burn' ? 'ledger spend'
     : `unknown${agent.status_source ? ` (${agent.status_source})` : ''}`;
   let reason = '';
@@ -427,11 +430,9 @@ function renderRoutingPressure(agent, routing) {
     reason = `${spent === null ? 'Spent amount unknown' : `USD ${spent.toFixed(2)} spent`} / ${cap === null ? 'weekly cap unknown' : `USD ${cap.toFixed(2)} weekly cap`}${burn === null ? '' : ` (${burn}% of cap)`} in the last 7 days.`;
   }
   if (status === 'near_cap' && ['weekly_pace', 'cursor_auto'].includes(agent.status_source)) {
-    source = 'measured provider window';
-    const hasQuota = collectSubscriptionWindows(agent).some(({ win }) =>
-      [win.used_pct, win.remaining_pct].some(value => subscriptionNumber(value) !== null && value >= 0 && value <= 100));
+    if (hasQuota) source = 'measured provider window';
     reason = hasQuota ? 'Provider window near its cap; see measured remaining quota.'
-      : 'Provider window near its cap; measured remaining quota unavailable.';
+      : 'Near-cap status reported; measured remaining quota unavailable.';
   } else if (runtime.headroom_blocked === true) {
     label = 'runtime pressure';
     pillStatus = 'hot';
@@ -453,7 +454,9 @@ function renderRoutingPressure(agent, routing) {
 function renderSubscriptionHealth(agent, routing) {
   const health = agent.health || {};
   const runtime = agent.runtime || {};
-  const label = health.healthy === true ? 'healthy' : health.healthy === false ? 'unhealthy' : 'unknown';
+  const label = health.healthy === false ? 'unhealthy'
+    : runtime.headroom_blocked === true ? 'runtime pressure'
+    : health.healthy === true ? 'healthy' : 'unknown';
   const details = [health.basis || 'health basis unknown'];
   if (health.last_error) details.push(health.last_error);
   if (runtime.headroom_blocked === true) details.push(runtime.headroom_reason || 'runtime headroom blocked');
@@ -465,7 +468,7 @@ function renderSubscriptionHealth(agent, routing) {
   details.push(window !== null && window > 0 ? `runtime window ${window}s` : 'runtime window unknown');
   const last = runtime.last_outcome_at;
   details.push(last ? `last outcome ${formatTs(last)}` : 'last outcome unknown');
-  return `${statusPill(label === 'healthy' ? 'ok' : label === 'unhealthy' ? 'error' : 'unknown', label)}<div class="sub">${escapeHtml(details.join(' · '))}</div>
+  return `${statusPill(label === 'healthy' ? 'ok' : label === 'unhealthy' ? 'error' : label === 'runtime pressure' ? 'hot' : 'unknown', label)}<div class="sub">${escapeHtml(details.join(' · '))}</div>
     ${renderSnapshotFreshness(routing)}`;
 }
 
@@ -628,10 +631,9 @@ function renderSubscriptions(routing) {
       let windowsHtml = '';
 
       if (needLogin) {
-        windowsHtml = `<span class="pill need_login">NEED_LOGIN</span>
-          ${renderWindowBlock('Cursor Models', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}
-          ${renderWindowBlock('Other Models', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}
-          ${renderWindowBlock('Grok Bot', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}`;
+        const labels = isCursor ? ['Cursor Models', 'Other Models', 'Grok Bot'] : ['subscription window'];
+        windowsHtml = `<span class="pill need_login">NEED_LOGIN</span>` + labels.map(label =>
+          renderWindowBlock(label, {}, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })).join('');
       } else if (isCursor) {
         const pw = agent.provider_windows || {};
         windowsHtml = [

@@ -2927,7 +2927,9 @@ def test_subscription_missing_and_stale_evidence():
     snapshot['diagnostics']['stale'] = True
     snapshot['agents']['codex']['codexbar'].update(stale=True, freshness='stale', age_s=1800)
     pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert 'stale' in pressure and 'stale' in quota and 'snapshot stale' in health
+    assert '<div class="stale-note">stale · ' in pressure
+    assert '<div class="stale-note">stale · ' in quota
+    assert 'snapshot stale · ' in health
     assert '70% left' in quota
     # A cached fresh flag cannot override elapsed age, even when age_s is missing.
     snapshot['diagnostics']['stale'] = False
@@ -2935,8 +2937,15 @@ def test_subscription_missing_and_stale_evidence():
     snapshot['agents']['codex']['codexbar'].update(
         stale=False, freshness='fresh', age_s=None, fetched_at='2030-01-01T11:00:00Z',
     )
-    _, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
-    assert 'stale' in quota and '1.0h ago' in quota and 'snapshot stale' in health
+    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
+    assert '<div class="stale-note">stale · ' in pressure
+    assert '<div class="stale-note">stale · 1.0h ago' in quota
+    assert 'snapshot stale · 1.0h ago' in health
+    snapshot['diagnostics'].pop('stale_threshold_s')
+    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
+    assert '<div class="stale-note">freshness unknown · 1.0h ago' in pressure
+    assert '<div class="stale-note">freshness unknown · 1.0h ago' in quota
+    assert 'snapshot freshness unknown · 1.0h ago' in health
 
 
 @pytest.mark.parametrize('invalid', [None, 'bad', '', True, [], {}, '42', -1, 101],
@@ -2964,9 +2973,15 @@ def test_subscription_null_remaining_and_nonnumeric_freshness():
     assert 'freshness unknown · age unknown · probe time unknown' in quota
     assert '>unknown</span>' in health
     assert 'errors unknown' in health and 'rate limits unknown' in health and 'timeouts unknown' in health
-    agent['codexbar'].update(weekly_used_pct=None, weekly_remaining_pct=70)
-    quota = _subscription_cells(_render_subscription_snapshot(snapshot))[1]
+    agent['codexbar'].update(
+        weekly_used_pct=None, weekly_remaining_pct=70, age_s=30, fetched_at='2030-01-01T11:59:30Z',
+    )
+    snapshot['diagnostics']['stale_threshold_s'] = 'bad'
+    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
     assert 'unknown used · 70% left' in quota
+    assert '<div class="stale-note">freshness unknown · 30s ago' in pressure
+    assert '<div class="stale-note">freshness unknown · 30s ago' in quota
+    assert 'snapshot freshness unknown · 30s ago' in health
 
 
 def test_subscription_declared_unavailable_freshness_is_explicit():
@@ -3034,7 +3049,9 @@ def test_subscription_unaffected_lane_controls():
     cursor = _subscription_cells(rendered, 'cursor')[1]
     assert all(label in cursor for label in ['Cursor Models', 'Other Models', 'Grok Bot'])
     assert '23% used · 77% left' in cursor and '40% used · 60% left' in cursor
-    assert 'NEED_LOGIN' in _subscription_cells(rendered, 'claude')[1]
+    claude = _subscription_cells(rendered, 'claude')[1]
+    assert 'NEED_LOGIN' in claude and 'subscription window' in claude
+    assert all(label not in claude for label in ['Cursor Models', 'Other Models', 'Grok Bot'])
     assert 'NEED_PROBE' in _subscription_cells(rendered, 'kimi')[1]
     agy = _subscription_cells(rendered, 'agy')
     assert '10% used · 90% left' in agy[1] and agy[-1] == '3'
@@ -3072,6 +3089,9 @@ def test_subscription_review_near_cap_without_quota_has_no_empty_cell_reference(
     snapshot = {'agents': {'claude': {'status': 'near_cap', 'status_source': source, 'burn_pct_7d': 95.6}}}
     pressure, quota, *_ = _subscription_cells(_render_subscription_snapshot(snapshot), 'claude')
     assert 'see measured remaining quota' not in pressure
+    assert 'measured provider window' not in pressure
+    expected_reason = 'ledger spend' if source == 'ledger_burn' else 'measured remaining quota unavailable'
+    assert expected_reason in pressure
     assert 'no window data' in quota
 
 
@@ -3079,9 +3099,12 @@ def test_subscription_review_calm_status_with_runtime_pressure_warns():
     snapshot = _subscription_snapshot()
     snapshot['agents']['codex'].update(status='cool')
     snapshot['agents']['codex']['runtime'].update(headroom_blocked=True, headroom_reason='recent rate limits')
-    pressure = _subscription_cells(_render_subscription_snapshot(snapshot))[0]
+    pressure, quota, health, *_ = _subscription_cells(_render_subscription_snapshot(snapshot))
     assert '<span class="pill hot">runtime pressure</span>' in pressure
     assert 'runtime health' in pressure and 'recent rate limits' in pressure
+    assert '<span class="pill hot">runtime pressure</span>' in health
+    assert '>healthy</span>' not in health and 'recent rate limits' in health
+    assert '30% used · 70% left' in quota
 
 
 @pytest.mark.parametrize('timestamp', [1792649579, 1792649579000], ids=['seconds', 'milliseconds'])
