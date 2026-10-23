@@ -291,7 +291,7 @@ def ledger_row(inputs: Inputs, pr: dict, runs: list[dict], snapshot: dict, basel
             ("detail_missing", detail is None), ("timeline_incomplete", not complete),
             ("review_history_incomplete", not reviews_complete), ("head_event_unavailable", head_at is None),
             ("admission_unavailable", green is None), ("not_yet_merged", not merged),
-            ("successful_queue_gate_unavailable", final_queue is None),
+            ("successful_queue_gate_unavailable", not final_queue or not final_queue["gate_completed"]),
             ("full_execution_unproven", not final_queue or not final_queue["full_green"]),
             ("complete_queue_membership_unavailable", any(not r["membership_complete"] for r in queues)),
         ) if condition],
@@ -503,7 +503,8 @@ Related: docs/best-practices/pr20-measurement.md. Read the result fields before 
             if anchor.get("schema") != "pr20-declaration.v1" or anchor["implementation"] != implementation():
                 raise InputError("declaration schema or implementation digest mismatch")
             if (switched["number"] != anchor["switch_pr"] or switched["headRefOid"] != anchor["switch_head"]
-                    or switched.get("state") != "MERGED" or not switched.get("mergeCommit")
+                    or switched.get("state") != "MERGED" or switched.get("baseRefName") != "main"
+                    or not SHA.fullmatch((switched.get("mergeCommit") or {}).get("oid", ""))
                     or not switched.get("mergedAt") or stamp(switched["mergedAt"]) <= stamp(anchor["captured_at"])):
                 raise InputError("switch merge must follow declaration and match the frozen PR/head")
             before = analyze(args.baseline, baseline=True)
@@ -519,7 +520,7 @@ Related: docs/best-practices/pr20-measurement.md. Read the result fields before 
     except InputError as exc:
         print(f"pr20 measurement: {exc}", file=sys.stderr)
         return 2
-    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
         # Do not echo raw inputs or exception bodies, which may contain private data.
         print(f"pr20 measurement: invalid/unavailable input or output ({type(exc).__name__}); see protocol", file=sys.stderr)
         return 2
