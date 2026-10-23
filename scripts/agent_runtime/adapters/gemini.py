@@ -58,7 +58,6 @@ _TRANSIENT_ERROR_PATTERNS = (
 )
 _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNORECASE)
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
-_INLINE_PROMPT_LIMIT_CHARS = 100_000
 _PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"

@@ -23,8 +23,6 @@ GEMINI_AUTH_ENV_VARS = (
     "GOOGLE_GENERATIVE_AI_API_KEY",
     "GOOGLE_APPLICATION_CREDENTIALS",
 )
-_INLINE_PROMPT_LIMIT_CHARS = 100_000
-_PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
 #: Stderr/stdout markers that mean "this rung is not going to answer —
 #: advance to the next rung instead of retrying the same one 3x". Lowercase;
 #: matched via case-insensitive ``in`` on the haystack.
