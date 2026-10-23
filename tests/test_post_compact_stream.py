@@ -209,7 +209,9 @@ def test_open_model_data_hook_main_blocks_and_head_is_ready(tmp_path: Path) -> N
     assert "scripts.driver_blockers delta --epic open-model-data" in head_context
     assert "scripts.driver_blockers record --epic open-model-data" in head_context
     assert "scripts.driver_blockers record --epic open-model-data" in head_context[:800]
-    assert "if delta fails or the baseline is unknown, post everything currently blocking" in head_context
+    assert "if delta fails, stop the lane and escalate" in head_context
+    assert "exhaustive coverage including explicit unknown attention" in head_context
+    assert "current reporting custody only" in head_context
     assert "--stream epic:6321" in head_args[0]  # allow-hardcoded-epic: #9956 pre-fix launcher lease fixture
     assert head_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: #9956 pre-fix lease fixture
     print("unfixed condition: invalid-stream-id BLOCKED; head: --stream epic:6321 READY")
