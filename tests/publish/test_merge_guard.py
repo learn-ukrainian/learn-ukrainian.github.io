@@ -25,6 +25,15 @@ def merge_with_checks(stdout, returncode=0):
     def runner(args, **kwargs):
         if args[2] == "view":
             meta = {"number": 1, "isDraft": False, "headRefOid": "a" * 40}
+            if "headRefOid,statusCheckRollup" in args:
+                checks = json.loads(stdout)
+                meta["statusCheckRollup"] = [
+                    {"name": row["name"], "workflowName": row.get("workflow"),
+                     "status": "IN_PROGRESS" if row["bucket"] == "pending" else "COMPLETED",
+                     "conclusion": "" if row["bucket"] == "pending" else
+                         "FAILURE" if row["bucket"] == "fail" else "SUCCESS"}
+                    for row in checks
+                ]
             return subprocess.CompletedProcess(args, 0, json.dumps(meta), "")
         assert args[2] == "checks"
         return subprocess.CompletedProcess(args, returncode, stdout, "")
@@ -94,7 +103,7 @@ BOUND_ROLLUP = [
 ]
 
 
-def entire_runner(app, calls, *, head=HEAD, error=None, bound=None):
+def entire_runner(app, calls, *, head=HEAD, error=None, bound=None, extra_documents=None):
     def runner(args, **kwargs):
         calls.append(args)
         if args[2:5] == ["view", "1", "--json"] and args[5] == "headRefOid,statusCheckRollup":
@@ -109,6 +118,7 @@ def entire_runner(app, calls, *, head=HEAD, error=None, bound=None):
         documents = {
             STATUS: {"total_count": 0, "statuses": []},
             RUNS: {"total_count": 1, "check_runs": [{"name": "Entire Gates", "head_sha": HEAD, "app": app}]},
+            **(extra_documents or {}),
         }
         if args[:4] == ["gh", "api", "--method", "GET"] and args[4] in documents:
             return subprocess.CompletedProcess(args, 0, json.dumps(documents[args[4]]), "")
@@ -118,14 +128,40 @@ def entire_runner(app, calls, *, head=HEAD, error=None, bound=None):
 
 
 def test_oo48_publisher_proves_entire_gates_at_the_metadata_head():
+    """Superseded Actions cancellations must preserve the external app proof gate."""
     calls = []
-    runner = entire_runner({"id": 2626939, "slug": "entire"}, calls)
+    app = {"id": 2626939, "slug": "entire"}
+    old = {"name": "Body guard", "head_sha": HEAD, "status": "completed", "conclusion": "cancelled",
+           "started_at": "2026-10-23T20:00:00Z", "check_suite": {"id": 1},
+           "app": {"id": 15368, "slug": "github-actions"},
+           "details_url": "https://github.com/unit/public/actions/runs/11/job/21"}
+    current = {**old, "conclusion": "success", "started_at": "2026-10-23T21:00:00Z",
+               "check_suite": {"id": 2}, "details_url": "https://github.com/unit/public/actions/runs/12/job/22"}
+    rest = [current, old,
+            {"name": "CI Gate", "head_sha": HEAD, "status": "completed", "conclusion": "success",
+             "details_url": "https://github.com/unit/public/runs/23"},
+            {"name": "Entire Gates", "head_sha": HEAD, "status": "in_progress", "app": app,
+             "details_url": "https://github.com/unit/public/runs/24"}]
+    rollup = [{"__typename": "CheckRun", "name": row["name"], "status": row["status"].upper(),
+               "conclusion": str(row.get("conclusion") or "").upper(), "detailsUrl": row["details_url"]}
+              for row in rest]
+    endpoint = f"repos/unit/public/commits/{HEAD}/check-runs?filter=all&per_page=100"
+    documents = {endpoint: {"total_count": len(rest), "check_runs": rest},
+                 "repos/unit/public/actions/runs/11": {"id": 11, "head_sha": HEAD, "check_suite_id": 1,
+                                                       "workflow_id": 7, "name": "Body guard"},
+                 "repos/unit/public/actions/runs/12": {"id": 12, "head_sha": HEAD, "check_suite_id": 2,
+                                                       "workflow_id": 7, "name": "Body guard"}}
+    runner = entire_runner(app, calls, bound={"headRefOid": HEAD, "statusCheckRollup": rollup},
+                           extra_documents=documents)
     assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}, match_head=HEAD) == HEAD
     assert [call[1:6] for call in calls] == [
         ["pr", "view", "1", "--json", "number,isDraft,headRefOid"],
         ["pr", "checks", "1", "--json", "name,bucket,state,workflow"],
         ["pr", "view", "1", "--json", "headRefOid,statusCheckRollup"],
-        ["api", "--method", "GET", STATUS], ["api", "--method", "GET", RUNS]]
+        ["api", "--method", "GET", STATUS], ["api", "--method", "GET", RUNS],
+        ["api", "--method", "GET", endpoint],
+        ["api", "--method", "GET", "repos/unit/public/actions/runs/12"],
+        ["api", "--method", "GET", "repos/unit/public/actions/runs/11"]]
 
 
 @pytest.mark.parametrize("bound", [

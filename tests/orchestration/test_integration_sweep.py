@@ -318,6 +318,11 @@ def test_cross_workflow_failure_is_not_hidden_by_a_later_success():
         ]
     )
     assert sweep._check_blockers(item) == ["CI red CI Gate"]
+    # The shared Actions app cannot supply a missing workflow identity.
+    for row in item["statusCheckRollup"]:
+        row.pop("workflowName")
+        row["appSlug"] = "github-actions"
+    assert sweep._check_blockers(item) == ["CI red CI Gate"]
 
 
 def test_timestamp_tie_failure_is_not_hidden_by_list_order():

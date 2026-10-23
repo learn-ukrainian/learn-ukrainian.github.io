@@ -6,7 +6,6 @@ import json
 import re
 import subprocess
 from collections.abc import Callable
-from datetime import UTC, datetime
 from urllib.parse import quote
 
 from scripts.ci.advisory_checks import (
@@ -16,6 +15,13 @@ from scripts.ci.advisory_checks import (
     load_advisory_checks,
 )
 from scripts.common.github_client import GitHubRateLimited
+from scripts.github_check_rollup import (
+    bind_workflow_runs,
+    collapse_status_rollup,
+    project_check_runs,
+    rollup_identity,
+    rollup_timestamp,
+)
 from scripts.opsec.prepublish import PublishBlocked
 
 _FAIL_BUCKETS = {"fail", "failure", "error", "cancel", "canceled", "cancelled", "timed_out", "action_required"}
@@ -55,49 +61,20 @@ def _rollup_name(row: dict) -> str | None:
     return None
 
 
-def _rollup_timestamp(row: dict) -> datetime | None:
-    for field in ("startedAt", "createdAt", "updatedAt", "completedAt"):
-        value = row.get(field)
-        if not isinstance(value, str) or not value.strip():
-            continue
-        try:
-            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-        except ValueError:
-            continue
-        if parsed.tzinfo is None:
-            # Treat timestamps without an offset as UTC.
-            parsed = parsed.replace(tzinfo=UTC)
-        return parsed
-    return None
+def _rollup_timestamp(row: dict):
+    """Keep the hook's existing import bound to the shared timestamp parser."""
+    return rollup_timestamp(row)
 
 
 def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
-    latest: dict[tuple[str, ...], tuple[datetime | None, dict]] = {}
-    for row in rows:
-        name = _rollup_name(row)
-        if name is None:
-            return None
-        context = row.get("context")
-        workflow = row.get("workflowName") or row.get("workflow")
-        if isinstance(context, str) and context.strip():
-            key = ("context", context.strip())
-        elif isinstance(workflow, str) and workflow.strip():
-            key = ("check", name, workflow.strip())
-        else:
-            key = ("unresolved", name)
-            if key in latest:
-                return None
-        timestamp = _rollup_timestamp(row)
-        previous = latest.get(key)
-        if previous is not None:
-            if timestamp is None or previous[0] is None:
-                return None
-            if timestamp < previous[0]:
-                continue
-            if timestamp == previous[0]:
-                return None
-        latest[key] = (timestamp, row)
-    return [row for _timestamp, row in latest.values()]
+    """Use the shared reducer; ambiguous surviving versions remain unknown."""
+    latest = collapse_status_rollup([
+        {**row, "workflowName": row.get("workflowName") or row.get("workflow")} for row in rows
+    ])
+    identities = [rollup_identity(row) or ("unresolved", _rollup_name(row)) for row in latest]
+    if any(_rollup_name(row) is None for row in latest) or len(set(identities)) != len(identities):
+        return None
+    return latest
 
 
 def external_advisory_names(rows: object) -> frozenset[str]:
@@ -254,8 +231,43 @@ def bound_rollup_states(
     ):
         return None
     rows = bound.get("statusCheckRollup")
-    advisory = prove_external_advisory(repo, head, external_advisory_names(rows), get_json)
+    names = external_advisory_names(rows)
+    advisory = prove_external_advisory(repo, head, names, get_json)
+    if advisory is None:
+        return None
+    # gh's rollup and modern checks omit workflow/app identity. Duplicate names
+    # need authoritative check runs, joined to their exact-head Actions runs.
+    if isinstance(rows, list) and _duplicate_check_names(rows) and any(
+        isinstance(row, dict) and row.get("name") and not row.get("workflowName") for row in rows
+    ):
+        page = get_json(f"repos/{repo}/commits/{head}/check-runs?filter=all&per_page=100")
+        if not _complete_page(page, "check_runs"):
+            return None
+        runs = bind_workflow_runs(
+            page["check_runs"], head, repo,
+            lambda number: get_json(f"repos/{repo}/actions/runs/{number}"),
+        )
+        if runs is None:
+            return None
+        # Require every observed check to be in the complete REST snapshot;
+        # include extra REST rows too so a newer pending check cannot disappear.
+        for row in rows:
+            if not isinstance(row, dict):
+                return None
+            if row.get("__typename") == "CheckRun" and not any(
+                run.get("name") == row.get("name") and run.get("details_url") == row.get("detailsUrl")
+                and row.get("detailsUrl") for run in runs
+            ):
+                return None
+        rows = project_check_runs(runs) + [row for row in rows if row.get("__typename") != "CheckRun"]
+        if external_advisory_names(rows) != names:
+            advisory = prove_external_advisory(repo, head, external_advisory_names(rows), get_json)
     return None if advisory is None else _parse_status_rollup_rows(rows, advisory=advisory)
+
+
+def _duplicate_check_names(rows):
+    names = [row.get("name") for row in rows if isinstance(row, dict) and row.get("name")]
+    return len(set(names)) != len(names)
 
 
 def external_check_states(rows, parse, bound_states):
@@ -265,7 +277,12 @@ def external_check_states(rows, parse, bound_states):
     entry name switches the judgment to :func:`bound_rollup_states` at the judged head,
     a newer read. The headless rows must still be a well-formed collection.
     """
-    if not external_advisory_names(rows):
+    duplicates_need_proof = isinstance(rows, list) and _duplicate_check_names(rows) and (
+        parse is parse_checks or any(
+            isinstance(row, dict) and row.get("name") and not row.get("workflowName") for row in rows
+        )
+    )
+    if not external_advisory_names(rows) and not duplicates_need_proof:
         return parse(rows)
     return bound_states() if all(isinstance(row, dict) for row in rows) else None
 
@@ -367,11 +384,7 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
         checks = get(["checks", str(number), "--json", "name,bucket,state,workflow"])
         if _checks_json_unsupported(checks):
             bound = bound_view()
-            states = external_check_states(
-                bound.get("statusCheckRollup") if isinstance(bound, dict) else None,
-                _parse_status_rollup_rows,
-                lambda: bound_states(bound),
-            )
+            states = bound_states(bound)
         else:
             try:
                 raw_checks = json.loads(checks.stdout)
@@ -383,7 +396,10 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             if checks.returncode in {0, 1, 8} and isinstance(raw_checks, list) and (
                 checks.returncode != 1 or raw_checks
             ):
-                states = external_check_states(raw_checks, parse_checks, lambda: bound_states(bound_view()))
+                # Modern gh can itself omit historical/same-named runs. Its
+                # headless buckets cannot prove workflow/app isolation, even
+                # when the returned names are unique. Judge the bound snapshot.
+                states = bound_states(bound_view()) if raw_checks else parse_checks(raw_checks)
         if states is None:
             raise PublishBlocked("OPSEC: merge refused: cannot establish check state.")
         reason = readiness_reason(meta, states)
