@@ -19,16 +19,17 @@ def _shell_words(command: str) -> list[str]:
     lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n")
     lexer.whitespace = " \t\r"
     lexer.whitespace_split = True
+    lexer.commenters = ""
     return list(lexer)
 
 
 def _redirect_words(command: str) -> Iterator[str]:
     from shell_redirects import _split_scopes
-    from shell_shlex import strip_shell_comments
+    from shell_shlex import preprocess_shell_command
 
     pending = False
     # Scan the complete command so quotes keep their state across newlines.
-    for kind, raw in _split_scopes(strip_shell_comments(command)):
+    for kind, raw in _split_scopes(preprocess_shell_command(command)):
         if kind == "text":
             words = _shell_words(raw)
             if pending and words:
