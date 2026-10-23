@@ -91,6 +91,20 @@ describe('public A1 edition entry points', () => {
     const page = parse(await container.renderToString(CourseLayout as any, {
       props: { title: 'Course', currentPath },
     }));
+    // #8730: responsive navigation must not hide the only preference controls.
+    const controls = page.querySelector('.lu-header-controls')!;
+    expect(controls.closest('.lu-header-inner')).not.toBeNull();
+    expect(controls.closest('nav, details')).toBeNull();
+    expect([...controls.querySelectorAll('button')].map((button) => [
+      button.id, button.getAttribute('type'), button.getAttribute('aria-label'),
+    ])).toEqual([
+      ['lu-theme-toggle', 'button', 'Toggle dark and light theme'],
+      ['lu-locale-toggle', 'button', 'Switch interface language (English / Ukrainian)'],
+    ]);
+    expect(page.querySelectorAll('#lu-theme-toggle')).toHaveLength(1);
+    expect(page.querySelectorAll('#lu-locale-toggle')).toHaveLength(1);
+    expect(controls.previousElementSibling?.getAttribute('aria-label')).toBe('Primary');
+    expect(controls.nextElementSibling?.className).toBe('lu-mobile-menu');
     for (const label of ['Primary', 'Mobile primary']) {
       const nav = page.querySelector(`header nav[aria-label="${label}"]`)!;
       requireBothEditions(nav);
