@@ -168,29 +168,6 @@ def load_sealed_cefr_map(path: Path) -> dict[str, dict[str, Any]]:
         conn.close()
 
 
-def estimated_cefr_from_seal(
-    lemma: str,
-    sealed: dict[str, dict[str, Any]],
-    *,
-    grac_lookup_key_fn: Callable[[str], str],
-    source_label: str,
-) -> dict[str, str] | None:
-    """Mirror ``_estimated_cefr`` using a sealed map."""
-    word = grac_lookup_key_fn(lemma)
-    estimate = sealed.get(word)
-    if not estimate:
-        return None
-    level = str(estimate["level"])
-    rel_freq = float(estimate["rel_freq"])
-    rank = int(estimate["rank"])
-    total = int(estimate["total"])
-    return {
-        "level": level,
-        "source": source_label,
-        "text": f"{level} (орієнтовно / estimated; GRAC {rel_freq:.2f}/million, rank {rank}/{total})",
-    }
-
-
 def apply_sealed_cefr_to_engine_cache(
     sealed: dict[str, dict[str, Any]],
     engine_cache: dict[str, dict[str, Any]],

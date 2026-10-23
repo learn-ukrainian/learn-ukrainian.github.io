@@ -115,30 +115,6 @@ def write_deterministic_zip(
         raise
 
 
-def zip_tree_deterministic(
-    tree_root: Path,
-    archive_path: Path,
-    *,
-    arc_prefix: str = "",
-    compresslevel: int = DEFAULT_COMPRESSLEVEL,
-) -> str:
-    """Zip every file under ``tree_root`` with normalized metadata; return sha256.
-
-    Paths inside the archive are relative to ``tree_root`` (optionally under
-    ``arc_prefix``). Stable sort by relative POSIX path.
-    """
-    tree_root = Path(tree_root)
-    if not tree_root.is_dir():
-        raise FileNotFoundError(f"tree root missing: {tree_root}")
-
-    members: list[tuple[str, bytes]] = []
-    for path in sorted(p for p in tree_root.rglob("*") if p.is_file()):
-        rel = path.relative_to(tree_root).as_posix()
-        arcname = f"{arc_prefix.rstrip('/')}/{rel}" if arc_prefix else rel
-        members.append((arcname, path.read_bytes()))
-    return write_deterministic_zip(archive_path, members, compresslevel=compresslevel)
-
-
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as fh:

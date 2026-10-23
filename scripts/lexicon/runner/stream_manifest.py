@@ -139,16 +139,6 @@ def stream_manifest_entries_sqlite(path: Path) -> Iterator[dict[str, Any]]:
         conn.close()
 
 
-def iter_staged_lemma_ids(path: Path) -> Iterator[tuple[str, str]]:
-    """Yield (lemma_id, lemma) in deterministic order from a staged SQLite manifest."""
-    conn = _shared_open_readonly(path.resolve())
-    try:
-        for lemma_id, lemma in conn.execute("SELECT lemma_id, lemma FROM entries ORDER BY ord"):
-            yield str(lemma_id), str(lemma)
-    finally:
-        conn.close()
-
-
 class StreamingCandidateWriter:
     """Emit candidate manifest incrementally — never accumulate all results."""
 
