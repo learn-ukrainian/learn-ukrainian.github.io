@@ -1261,6 +1261,7 @@ def build_comment(
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
     if review_mode not in {"cross_family", "red_team"}:
         raise RecordError("unsupported review mode")
+    reply = reply.replace(MARKER_PREFIX, "&lt;" + MARKER_PREFIX[1:])
     if MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
     mode_field = " review_mode=red_team" if review_mode == "red_team" else ""

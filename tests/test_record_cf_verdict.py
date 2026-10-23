@@ -1947,6 +1947,7 @@ def test_record_fixture_dry_run_through_publication_scanner(
 
 
 def test_comment_truncation_retains_marker():
+    reply = ("é`<!-- cf-verdict` " * 5_000) + "尾"
     body = recorder.build_comment(
         sha=SHA,
         task_id="review-one",
@@ -1954,10 +1955,15 @@ def test_comment_truncation_retains_marker():
         verdict="APPROVED",
         model="gpt-6.1-sol",
         family="openai",
-        reply="x" * 70_000,
+        reply=reply,
     )
     assert len(body.encode()) <= recorder.MAX_COMMENT_BYTES
     assert "[Review reply truncated" in body
+    assert body.encode().decode("utf-8") == body
+    assert "é`&lt;!-- cf-verdict` " in body
+    assert body.count(recorder.MARKER_PREFIX) == 1
+    assert body.splitlines()[-1].startswith(recorder.MARKER_PREFIX)
+    assert recorder.MARKER_PREFIX not in body.split("</details>", 1)[0]
     assert recorder.parse_marker(body)["task"] == "review-one"
 
 
