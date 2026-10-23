@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 
 import pytest
 
@@ -123,6 +124,14 @@ def test_recovery_appends_and_is_idempotent(observation_case):
     saved_task = json.loads(task.read_text())
     saved_task["preserved_artifacts"] = saved_manifest
     task.write_text(json.dumps(saved_task))
+    # Custody copies retain the original manifest layout and bytes. Legacy
+    # membership must resolve beside that manifest, not at the old root.
+    relocated = repo / "batch_state/copies" / saved_manifest["location"]
+    relocated.parent.mkdir(parents=True)
+    shutil.copytree(bundle, relocated)
+    copied_manifest = relocated.with_suffix(".manifest.json")
+    shutil.copyfile(manifest, copied_manifest)
+    manifest, push = copied_manifest, relocated / "push.json"
     before = tl.load_lifecycle(state_file)
     receipt, replayed = lo.recover(
         repo, state_file=state_file, task_file=task, manifest_file=manifest, push_file=push, now=NOW
@@ -235,25 +244,37 @@ def test_recovered_receipt_rechecks_all_digests(observation_case, source):
         lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW)
 
 
-def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observation_case):
+def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observation_case, monkeypatch):
     from scripts.orchestration import lifecycle_observation as lo
+    from scripts.orchestration.task_closeout import GhGitHubAdapter
 
     repo, worktree, ledger, task, manifest, push, head = observation_case
     git(repo, "worktree", "remove", str(worktree))
     original = json.loads(task.read_text())
     original.pop("worktree_reap_proof")
-    task.write_text(json.dumps(original))
-    closeout = repo / "batch_state/closeout.json"
+    bundle = manifest.with_suffix("").with_suffix("")
+    closeout = bundle / "closeout.json"
     closeout.write_text(json.dumps({
         "pr": {"number": 77, "state": "MERGED", "head_ref_name": "codex/42-closeout", "head_sha": head},
-        "apply": True, "ok": True, "errors": [], "matched_worktrees": [], "reap_results": [],
+        "apply": True, "ok": True, "errors": [], "matched_worktrees": [str(worktree)],
+        "reap_results": [{"path": str(worktree), "branch": "codex/42-closeout",
+                          "action": "preserved_then_removed", "error": None}],
         "branch_status": {"branch": "codex/42-closeout", "remote_gone": True, "local_gone": True},
     }))
+    saved_manifest = json.loads(manifest.read_text())
+    saved_manifest["paths"] = lo.ignored_task_output._path_inventory(bundle, ["closeout.json", "proof.txt"])
+    saved_manifest["content_sha256"] = lo.ignored_task_output._content_digest(bundle, ["closeout.json", "proof.txt"])
+    manifest.write_text(json.dumps(saved_manifest))
+    original["preserved_artifacts"] = saved_manifest
+    task.write_text(json.dumps(original))
     pr = {"number": 77, "url": tl.load_lifecycle(ledger)["pr"]["url"], "state": "MERGED",
           "head_branch": "codex/42-closeout", "head_sha": head, "merge_sha": git(repo, "rev-parse", "main")}
+    reads = []
+    monkeypatch.setattr(GhGitHubAdapter, "_read_pr", lambda self, repository, number: reads.append((repository, number)) or pr)
     before = task.read_bytes()
     lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW,
                closeout_file=closeout, merged_pr=pr)
+    assert reads == [(tl.load_lifecycle(ledger)["identity"]["repository"], 77)]
     assert task.read_bytes() == before
     data = tl.load_lifecycle(ledger)
     assert tl._latest_premerge_local(data, branch="codex/other", head_sha=head) is None

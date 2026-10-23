@@ -21,12 +21,20 @@ The supported push formats are:
 
 If the original task lacks `worktree_reap_proof`, supply `--closeout-record`
 with the JSON output of the existing applied common `merge_closeout` command.
-The record must report success, no errors, a merged PR with the exact branch and
-head, and removal of both branch refs. Recovery reads that PR from the ledger's
-repository on GitHub and binds its number, URL, head, branch and merge SHA.
+The record's exact path and digest must appear in the original task/run's
+byte-verified preservation inventory. It must report success, no errors, a
+merged PR with the exact branch and head, and removal of both branch refs.
+Its matched worktrees must include the original task worktree, and its reaper
+results must include a successful `removed` or `preserved_then_removed` row for
+that exact worktree and branch. Empty or foreign-worktree results cannot prove
+cleanup. All reaper rows must report successful removal without errors.
+The recovery append function reads that PR from the ledger's repository on
+GitHub and binds its number, URL, head, branch and merge SHA. A caller-supplied
+PR object cannot replace that read; acquisition failure refuses recovery.
 The source task head must be an ancestor of the PR head, and the merge commit
 must be an ancestor of `origin/main`. Failed or dry-run cleanup cannot supply
-this proof. Recovery itself performs no cleanup or GitHub mutation.
+this proof. An absent original preserved record stays unmet; a later success
+wrapper cannot fill the gap. Recovery itself performs no cleanup or GitHub mutation.
 
 ```sh
 .venv/bin/python -m scripts.orchestration.task_closeout recover-local \
@@ -34,11 +42,15 @@ this proof. Recovery itself performs no cleanup or GitHub mutation.
   --task-record original-task.json \
   --preserved-manifest batch_state/preserved/task/attempt.manifest.json \
   --push-record batch_state/preserved/task/attempt/push.json \
-  --closeout-record common-closeout.json
+  --closeout-record batch_state/preserved/task/attempt/common-closeout.json
 ```
 
 Recovery receipts retain hashed source locators and recheck their bytes when
 used. Repeating the command with the same sources returns the existing receipt.
+The closeout-record path also reacquires the forge PR before replay and refuses
+changed authority. Relocated custody copies must retain the complete internal
+preservation layout and original manifest bytes. Inventory membership resolves
+within that verified copy for both historical push and closeout records.
 Child association still requires the original merged cohort proof; a closeout
 record does not establish an earlier carrier's child membership.
 

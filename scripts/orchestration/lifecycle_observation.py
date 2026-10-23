@@ -1,7 +1,7 @@
 """Local lifecycle capture before cleanup, and verified preserved-output recovery.
 
-No GitHub calls or removal operations live here. The lifecycle API owns receipt
-appends; the existing common reaper retains every other removal guard.
+Closeout-record recovery reads its merged PR through the existing forge adapter.
+The lifecycle API owns receipt appends; removal stays with the common reaper.
 """
 
 from __future__ import annotations
@@ -266,7 +266,9 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
         raise ObservationRefusal("RECOVERY_WORKTREE_MISMATCH")
     if not branch or push.get("cwd") != worktree:
         raise ObservationRefusal("RECOVERY_BRANCH_MISMATCH")
-    _verify_push(push, task, manifest, inputs["push"])
+    _verify_push(push, task, manifest, inputs["push"], inputs["manifest"])
+    if "closeout" in values:
+        _verify_preserved_member(manifest, inputs["manifest"], inputs["closeout"], "RECOVERY_CLEANUP_UNPROVEN")
     pr_head = _recovery_pr_head(task, ledger, recovery, values.get("closeout"))
     if not all(
         isinstance(sha, str) and len(sha) == 40 and all(c in "0123456789abcdef" for c in sha)
@@ -300,26 +302,35 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
     return local
 
 
+def _verify_preserved_member(
+    manifest: Mapping[str, Any],
+    manifest_reference: Mapping[str, str],
+    reference: Mapping[str, str],
+    reason: str,
+) -> None:
+    """Bind a source to the verified bundle, including a relocated evidence root."""
+    bundle = Path(manifest_reference["path"]).parent / Path(manifest["location"]).name
+    path = Path(reference["path"])
+    if not path.is_relative_to(bundle):
+        raise ObservationRefusal(reason)
+    relative = path.relative_to(bundle).as_posix()
+    if not any(row.get("path") == relative and row.get("sha256") == reference["sha256"] for row in manifest["paths"]):
+        raise ObservationRefusal(reason)
+
+
 def _verify_push(
     push: Mapping[str, Any],
     task: Mapping[str, Any],
     manifest: Mapping[str, Any],
     reference: Mapping[str, str],
+    manifest_reference: Mapping[str, str],
 ) -> None:
     """Read historical producer fields without upgrading their evidential content."""
     head = task.get("final_branch_head_commit")
     if "local_head" in push:
         # Historical delivery receipts did not carry a nonce. Their membership
         # in the task/run's byte-verified inventory supplies that binding.
-        location = Path(manifest["location"])
-        path = Path(reference["path"])
-        if not path.is_relative_to(location):
-            raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
-        relative = path.relative_to(location).as_posix()
-        if not any(
-            row.get("path") == relative and row.get("sha256") == reference["sha256"] for row in manifest["paths"]
-        ):
-            raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
+        _verify_preserved_member(manifest, manifest_reference, reference, "RECOVERY_PUSH_UNPROVEN")
         valid = (
             push.get("local_head") == head
             and push.get("remote_head") == head
@@ -341,6 +352,7 @@ def _verify_push(
                 step.get("name") == "push" and type(step.get("exit_code")) is int and step["exit_code"] == 0
                 for step in push.get("steps", [])
             )
+            and not ({"local_head", "push_exit_code"} & push.keys())
         )
     if not valid:
         raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
@@ -381,6 +393,11 @@ def _recovery_pr_head(
     if (
         not isinstance(closeout.get("matched_worktrees"), list)
         or not isinstance(closeout.get("reap_results"), list)
+        or task["worktree_path"] not in closeout["matched_worktrees"]
+        or not any(
+            row.get("path") == task["worktree_path"] and row.get("branch") == task["worktree_branch"]
+            for row in closeout["reap_results"]
+        )
         or closeout.get("apply") is not True
         or closeout.get("ok") is not True
         or closeout.get("errors") != []
@@ -396,7 +413,10 @@ def _recovery_pr_head(
         or branch.get("local_gone") is not True
         or branch.get("remote_error") is not None
         or branch.get("local_error") is not None
-        or any(row.get("action") != "removed" or row.get("error") for row in closeout.get("reap_results", []))
+        or any(
+            row.get("action") not in {"removed", "preserved_then_removed"} or row.get("error")
+            for row in closeout["reap_results"]
+        )
     ):
         raise ObservationRefusal("RECOVERY_CLEANUP_UNPROVEN")
     if proof and _recovery_pr_head(task, ledger, recovery, None) != pr.get("head_sha"):
@@ -463,6 +483,21 @@ def recover(
     with repository_context(repo_root), tl.lifecycle_lock(state_file):
         repo_root = tl.canonical_state_root(repo_root)
         ledger = tl.load_lifecycle(state_file)
+        if closeout_file is not None:
+            # The append boundary acquires authority itself; a caller's PR
+            # mapping cannot turn an arbitrary closeout object into proof.
+            from scripts.orchestration.task_closeout import GhGitHubAdapter
+
+            try:
+                current_pr = GhGitHubAdapter(repo_root)._read_pr(ledger["identity"]["repository"], ledger["pr"]["number"])
+            except tl.LifecycleError as exc:
+                raise ObservationRefusal("RECOVERY_MERGED_PR_UNAVAILABLE") from exc
+            if merged_pr is not None and any(
+                merged_pr.get(key) != current_pr.get(key)
+                for key in ("number", "url", "state", "head_sha", "head_branch", "merge_sha")
+            ):
+                raise ObservationRefusal("RECOVERY_MERGED_PR_UNPROVEN")
+            merged_pr = current_pr
         task = _source(task_file, repo_root)[0]
         task_id = task.get("task_id")
         if not isinstance(task_id, str) or not task_id:

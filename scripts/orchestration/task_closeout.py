@@ -1141,7 +1141,7 @@ def cmd_recover_local(args: argparse.Namespace) -> int:
 
     child_pr = None
     merged_pr = None
-    if args.associate_child or args.closeout_record:
+    if args.associate_child:
         ledger = task_lifecycle.load_lifecycle(Path(args.state_file))
         try:
             merged_pr = GhGitHubAdapter(args.repo_root)._read_pr(
@@ -1151,8 +1151,7 @@ def cmd_recover_local(args: argparse.Namespace) -> int:
             from scripts.orchestration.lifecycle_observation import ObservationRefusal
 
             raise ObservationRefusal("RECOVERY_CHILD_PR_UNAVAILABLE") from exc
-        if args.associate_child:
-            child_pr = merged_pr
+        child_pr = merged_pr
     receipt, replayed = recover(
         args.repo_root,
         state_file=Path(args.state_file),
@@ -1192,7 +1191,7 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
     recover.add_argument("--preserved-manifest", required=True, help="Canonical preservation manifest, e.g. batch_state/preserved/task/attempt.manifest.json.")
     recover.add_argument("--push-record", required=True, help="Exact-head push JSON; older local_head/remote_head/push_exit_code receipts must belong to the verified preservation inventory.")
     recover.add_argument(
-        "--closeout-record", help="Applied successful common merge_closeout JSON for an older task lacking merged reaper proof; reads its exact PR from GitHub.",
+        "--closeout-record", help="Applied successful common merge_closeout JSON listed in the verified preservation inventory, with this task's removal row; reads its exact PR from GitHub.",
     )
     recover.add_argument(
         "--associate-child", action="store_true",
