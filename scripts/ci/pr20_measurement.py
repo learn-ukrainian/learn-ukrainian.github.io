@@ -520,7 +520,7 @@ Related: docs/best-practices/pr20-measurement.md. Read the result fields before 
     except InputError as exc:
         print(f"pr20 measurement: {exc}", file=sys.stderr)
         return 2
-    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, subprocess.SubprocessError) as exc:
         # Do not echo raw inputs or exception bodies, which may contain private data.
         print(f"pr20 measurement: invalid/unavailable input or output ({type(exc).__name__}); see protocol", file=sys.stderr)
         return 2
