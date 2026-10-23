@@ -9847,7 +9847,9 @@ def _validate_existing_worktree(
         raise WorktreeDirty(
             f"worktree at {path} has uncommitted changes "
             f"(first {len(first_files)}): {first_files}. "
-            f"Commit, stash, or remove the worktree before reuse."
+            "Commit or stash the changes before reuse, or have the owning driver inspect cleanup "
+            "with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
 
     # 3. Stale-base check. Refresh origin/{base} first. Single-remote hosts

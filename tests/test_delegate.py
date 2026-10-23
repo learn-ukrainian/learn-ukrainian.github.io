@@ -12697,13 +12697,20 @@ def test_ensure_worktree_reuse_dirty_raises(tmp_tasks_dir, tmp_path, monkeypatch
     )
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    with pytest.raises(delegate.WorktreeDirty, match="uncommitted"):
+    with pytest.raises(delegate.WorktreeDirty, match="uncommitted") as exc_info:
         delegate._ensure_worktree(
             agent="codex",
             task_id="1476-dirty-task",
             raw_path=str(wt),
             base="main",
         )
+    message = str(exc_info.value)
+    assert "Commit or stash the changes before reuse" in message
+    assert "owning driver" in message
+    assert "scripts/orchestration/reap_worktrees.py" in message
+    assert "scripts.fleet.post_task_reap" in message
+    assert "remove the worktree" not in message
+    assert "git worktree remove" not in message
 
 
 def test_ensure_worktree_reuse_wrong_branch_raises(tmp_tasks_dir, tmp_path, monkeypatch):
