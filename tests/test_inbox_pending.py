@@ -41,9 +41,8 @@ def check_metadata(result):
     assert authority["content_included"] is False
     assert "deliveries claim --recipient" in authority["drain_command"]
     assert "$SESSION_STREAM_SESSION_ID" in authority["drain_command"]
-    if result["probe"] == "ok":
-        assert authority["probe"] == "ok"
-        assert authority["count"] == result["stores"]["authority"]
+    assert authority["count"] == result["stores"]["authority"]
+    if authority["probe"] == "ok":
         assert sum(group["count"] for group in authority["by_correlation"]) == authority["count"]
         assert (
             authority["oldest_age_seconds"] is None
@@ -53,7 +52,13 @@ def check_metadata(result):
     else:
         assert authority["count"] is None
         assert authority["oldest_age_seconds"] is None
+    if result["probe"] == "ok":
+        assert authority["probe"] == "ok"
+        assert result["count"] == sum(result["stores"].values())
+    else:
         assert result["count"] is None
+        assert result["ids"] == []
+        assert result["truncated"] is False
     return {key: value for key, value in result.items() if key != "authority"}
 
 
@@ -65,14 +70,22 @@ def run_cli(recipient):
     return check_metadata(raw_cli(recipient))
 
 
-def check_notice(notice, *, count, authority_count, recipient="lane:infra"):
+def check_notice(notice, *, count, authority_count, recipient="lane:infra", legacy_count=0):
     line = notice["injectSteps"][0]["ephemeralMessage"]
     assert len(line) <= 200 and line.isascii()
+    command = (
+        ".venv/bin/python -m scripts.fleet_comms deliveries --help"
+        if isinstance(legacy_count, int) and legacy_count > 0
+        else f'.venv/bin/python -m scripts.fleet_comms deliveries claim --recipient {recipient} --worker-id "$SESSION_STREAM_SESSION_ID"'
+    )
+    suffix = f"; legacy {legacy_count}"
+    if isinstance(legacy_count, int) and legacy_count > 0:
+        suffix += ": ai_agent_bridge inbox --for gemini-infra"
     assert re.fullmatch(
-        rf"PENDING ORDERS: {count}; authority {authority_count}, oldest (?:[0-9]+s|none); "
-        + re.escape(
-            f'.venv/bin/python -m scripts.fleet_comms deliveries claim --recipient {recipient} --worker-id "$SESSION_STREAM_SESSION_ID"'
-        ),
+        rf"PENDING ORDERS: {count}; authority {authority_count}, oldest "
+        + ("unknown" if authority_count == "unknown" else "(?:[0-9]+s|none)")
+        + "; "
+        + re.escape(command + suffix),
         line,
     )
     assert BODY_MARKER not in line
@@ -286,7 +299,9 @@ def test_readonly_hashes_and_no_body_or_artifacts(stores, tmp_path):
 @pytest.mark.parametrize("store_index", [0, 1])
 def test_missing_store_returns_unknown_without_creation(stores, store_index):
     stores[store_index].unlink()
-    assert checked_probe("gemini-infra")["probe"] == "unknown"
+    result = checked_probe("gemini-infra")
+    assert result["probe"] == "unknown"
+    assert result["stores"] == {"legacy": None if store_index == 0 else 0, "authority": 0 if store_index == 0 else None}
     assert not stores[store_index].exists()
 
 
@@ -294,7 +309,12 @@ def test_missing_store_returns_unknown_without_creation(stores, store_index):
 def test_locked_store_is_unknown(stores, store_index):
     with sqlite3.connect(stores[store_index]) as conn:
         conn.execute("BEGIN EXCLUSIVE")
-        assert checked_probe("gemini-infra")["probe"] == "unknown"
+        result = checked_probe("gemini-infra")
+        assert result["probe"] == "unknown"
+        assert result["stores"] == {
+            "legacy": None if store_index == 0 else 0,
+            "authority": 0 if store_index == 0 else None,
+        }
 
 
 @pytest.mark.parametrize("store_index", [0, 1])
@@ -310,13 +330,16 @@ def test_unreadable_store_is_unknown(stores, monkeypatch, store_index):
     monkeypatch.setattr("scripts.fleet_comms.lane_mailbox.open_readonly", denied)
     result = checked_probe("gemini-infra")
     assert result["probe"] == "unknown"
+    assert result["stores"] == {"legacy": None if store_index == 0 else 0, "authority": 0 if store_index == 0 else None}
     assert BODY_MARKER not in json.dumps(result)
 
 
 @pytest.mark.parametrize("store_index", [0, 1])
 def test_schema_drift_and_corrupt_store_unknown(stores, store_index):
     stores[store_index].write_bytes(b"not sqlite " + BODY_MARKER.encode())
-    assert checked_probe("gemini-infra")["probe"] == "unknown"
+    result = checked_probe("gemini-infra")
+    assert result["probe"] == "unknown"
+    assert result["stores"] == {"legacy": None if store_index == 0 else 0, "authority": 0 if store_index == 0 else None}
 
 
 @pytest.mark.parametrize("schema_fault", ["table", "delivery_id", "state"])
@@ -334,10 +357,10 @@ def test_wake_schema_drift_is_unknown(stores, roster, schema_fault, pending):
         "count": None,
         "ids": [],
         "truncated": False,
-        "stores": {"legacy": None, "authority": None},
+        "stores": {"legacy": 0, "authority": None},
         "probe": "unknown",
     }
-    assert inbox_pending.hook("{}", "gemini-infra") == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    check_notice(inbox_pending.hook("{}", "gemini-infra"), count="unknown", authority_count="unknown")
     assert snapshot(stores) == before
 
 
@@ -445,7 +468,15 @@ def test_unknown_cli_notice_guides_both_drains(stores, roster, tmp_path, monkeyp
     assert proc.stderr == ""
     assert BODY_MARKER not in proc.stdout
     result = json.loads(proc.stdout)
-    assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    if failure in {"garbage-stdin", "missing-slot"}:
+        assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    else:
+        check_notice(
+            result,
+            count="unknown",
+            authority_count=int(pending) if store_index == 0 else "unknown",
+            legacy_count="unknown" if store_index == 0 else int(pending),
+        )
     line = result["injectSteps"][0]["ephemeralMessage"]
     assert len(line) <= 200
     assert line.isascii() and all(32 <= ord(char) < 127 for char in line)
@@ -478,7 +509,7 @@ def test_direct_renderer_behavior(stores, count):
     if not count:
         assert result == {}
     else:
-        check_notice(result, count=count, authority_count=0)
+        check_notice(result, count=count, authority_count=0, legacy_count=count)
 
 
 @pytest.mark.parametrize("payload", ["[]", '{"value": NaN}', BODY_MARKER])

@@ -52,19 +52,33 @@ def run_hook(payload="{}", *, env=None, cwd=ROOT, count=None, authority_count=No
         assert line.isascii() and all(32 <= ord(char) < 127 for char in line)
         if line != EXPECTED_UNKNOWN_NOTICE:
             matched = re.fullmatch(
-                r"PENDING ORDERS: ([0-9]+); authority ([0-9]+), oldest ([0-9]+s|none); "
-                r'.venv/bin/python -m scripts.fleet_comms deliveries claim --recipient ([a-z:-]+) --worker-id "\$SESSION_STREAM_SESSION_ID"',
+                r"PENDING ORDERS: ([0-9]+|unknown); authority ([0-9]+|unknown), oldest ([0-9]+s|none|unknown); "
+                r'\.venv/bin/python -m scripts.fleet_comms deliveries (?:claim --recipient ([a-z:-]+) --worker-id "\$SESSION_STREAM_SESSION_ID"|(--help)); '
+                r"legacy ([0-9]+|unknown)(?:: ai_agent_bridge inbox --for ([a-z-]+))?",
                 line,
             )
             assert matched is not None
-            total, authority, oldest, address = matched.groups()
+            total, authority, oldest, address, help_flag, legacy, legacy_address = matched.groups()
+            if legacy not in {"0", "unknown"}:
+                assert help_flag == "--help"
+                assert legacy_address == (os.environ if env is None else env)["SESSION_HANDOFF_AGENT"]
+            else:
+                assert help_flag is None and legacy_address is None
             if count is not None:
                 assert int(total) == count
                 assert int(authority) == authority_count
-                assert address == recipient
-            if int(authority):
+                assert int(legacy) == count - authority_count
+                if help_flag is None:
+                    assert address == recipient
+            if authority == "unknown":
+                assert oldest == "unknown"
+            elif int(authority):
                 epoch = datetime(2026, 1, 1, tzinfo=UTC)
-                assert int((started - epoch).total_seconds()) <= int(oldest[:-1]) <= int((datetime.now(UTC) - epoch).total_seconds())
+                assert (
+                    int((started - epoch).total_seconds())
+                    <= int(oldest[:-1])
+                    <= int((datetime.now(UTC) - epoch).total_seconds())
+                )
             else:
                 assert oldest == "none"
     return result
@@ -176,16 +190,28 @@ def test_alias_store_failure_is_unknown(stores, roster, monkeypatch, provider, s
     try:
         metadata = run_cli(slot)
         authority_metadata = metadata.pop("authority")
-        assert authority_metadata["count"] is None
+        assert authority_metadata["count"] == (1 if store_index == 0 else None)
         assert authority_metadata["content_included"] is False
         assert metadata == {
             "count": None,
             "ids": [],
             "truncated": False,
-            "stores": {"legacy": None, "authority": None},
+            "stores": {"legacy": None if store_index == 0 else 1, "authority": 1 if store_index == 0 else None},
             "probe": "unknown",
         }
-        assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+        notice = run_hook()["injectSteps"][0]["ephemeralMessage"]
+        if store_index == 0:
+            assert notice.startswith("PENDING ORDERS: unknown; authority 1, oldest ")
+            assert (
+                f'deliveries claim --recipient {slot} --worker-id "$SESSION_STREAM_SESSION_ID"; legacy unknown'
+                in notice
+            )
+        else:
+            assert notice == (
+                "PENDING ORDERS: unknown; authority unknown, oldest unknown; "
+                ".venv/bin/python -m scripts.fleet_comms deliveries --help; "
+                f"legacy 1: ai_agent_bridge inbox --for {slot}"
+            )
         if failure == "missing":
             assert not target.exists()
     finally:
@@ -301,12 +327,20 @@ def test_denominator_matrix(stores, state, recipient, failure, monkeypatch):
     try:
         result = run_hook(
             payload,
-            count=1 if failure == "none" and recipient == "gemini-infra" and state in {
-                "legacy-unread", "authority-queued", "authority-running", "replayed"
-            } else None,
+            count=1
+            if failure == "none"
+            and recipient == "gemini-infra"
+            and state in {"legacy-unread", "authority-queued", "authority-running", "replayed"}
+            else None,
             authority_count=int(state.startswith("authority")),
         )
-        if failure != "none" or recipient != "gemini-infra":
+        if recipient == "gemini-infra" and failure in {"missing-store", "locked-store", "unreadable-store"}:
+            authority_count = int(state in {"authority-queued", "authority-running"})
+            line = result["injectSteps"][0]["ephemeralMessage"]
+            assert line.startswith(f"PENDING ORDERS: unknown; authority {authority_count}, oldest ")
+            assert line.endswith("; legacy unknown")
+            assert 'deliveries claim --recipient lane:infra --worker-id "$SESSION_STREAM_SESSION_ID"' in line
+        elif failure != "none" or recipient != "gemini-infra":
             assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
         elif state in {"legacy-acknowledged", "legacy-consumed", "authority-consumed", "authority-expired"}:
             assert result == {}

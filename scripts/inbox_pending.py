@@ -37,7 +37,7 @@ AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
 
 
 def probe(recipient: str, *, limit: int = 5, allow_bare: bool = False) -> dict:
-    """Return only counts and identifiers; any uncertainty invalidates the result."""
+    """Return metadata per store; the total is unknown if either read fails."""
     unknown = {
         "count": None,
         "ids": [],
@@ -144,24 +144,27 @@ def hook(stdin_text: str, recipient: str) -> dict:
         if not isinstance(payload, dict):
             raise ValueError
         result = probe(recipient)
-        if result["probe"] != "ok":
-            authority = result["authority"]
-            count = authority["count"] if authority["probe"] == "ok" else "unknown"
-            message = f"PENDING ORDERS: unknown; authority {count}; {authority['drain_command']}"
-        elif not result["count"]:
+        if result["probe"] == "ok" and not result["count"]:
             return {}
-        else:
-            authority = result["authority"]
-            age = authority["oldest_age_seconds"]
-            oldest = f"{age}s" if age is not None else "none"
-            message = (
-                f"PENDING ORDERS: {result['count']}; authority {authority['count']}, oldest {oldest}; "
-                + authority["drain_command"]
-            )
+        authority = result["authority"]
         legacy = result["stores"]["legacy"]
-        message += f"; legacy {legacy if legacy is not None else 'unknown'}"
-        if legacy:
-            message += f"; .venv/bin/python -m scripts.ai_agent_bridge inbox --for {shlex.quote(recipient)}"
+        if legacy is None and authority["probe"] != "ok":
+            message = UNKNOWN_LINE
+        else:
+            total = result["count"] if result["count"] is not None else "unknown"
+            count = authority["count"] if authority["probe"] == "ok" else "unknown"
+            age = authority["oldest_age_seconds"]
+            oldest = (f"{age}s" if age is not None else "none") if authority["probe"] == "ok" else "unknown"
+            # Both workflow pointers must fit the unchanged AGY line budget.
+            drain = (
+                ".venv/bin/python -m scripts.fleet_comms deliveries --help" if legacy else authority["drain_command"]
+            )
+            message = (
+                f"PENDING ORDERS: {total}; authority {count}, oldest {oldest}; {drain}; "
+                f"legacy {legacy if legacy is not None else 'unknown'}"
+            )
+            if legacy:
+                message += f": ai_agent_bridge inbox --for {shlex.quote(recipient)}"
     except Exception:
         message = UNKNOWN_LINE
     return {"injectSteps": [{"ephemeralMessage": message}]}
