@@ -13,6 +13,8 @@ The route-refusal chain used to carry TWO divergent family vocabularies
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 from scripts.audit import layerb_shadow, llm_reviewer_dispatch, model_families
@@ -150,14 +152,24 @@ def test_unknown_writer_refuses_on_live_path_with_lineage_error() -> None:
     # (never acceptance, never a silent pass).
     lineage = llm_reviewer_dispatch.AuthorLineage(family=None, source="test")
     with pytest.raises(llm_reviewer_dispatch.ReviewerLineageError):
-        llm_reviewer_dispatch.validate_cross_family(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE, lineage)
+        route = replace(
+            llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE,
+            reviewer_model_id="gemini-3.8-flash-high",
+            bridge_command=("ask-agy", "--model", "gemini-3.8-flash-high"),
+        )
+        llm_reviewer_dispatch.validate_cross_family(route, lineage)
 
 
 def test_self_review_still_blocks_when_families_match() -> None:
     # Behavior preservation: equal families still raise ReviewerSelfReviewError.
     lineage = llm_reviewer_dispatch.AuthorLineage(family="google", source="test")
     with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError):
-        llm_reviewer_dispatch.validate_cross_family(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE, lineage)
+        route = replace(
+            llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE,
+            reviewer_model_id="gemini-3.8-flash-high",
+            bridge_command=("ask-agy", "--model", "gemini-3.8-flash-high"),
+        )
+        llm_reviewer_dispatch.validate_cross_family(route, lineage)
 
 
 # Cursor's runtime reports display names, not slugs (a recorded dispatch carries

@@ -37,7 +37,7 @@ def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:
 
     assert by_name["claude"].formal_review_eligible is True
     assert by_name["codex"].formal_review_eligible is True
-    assert by_name["glm-local"].formal_review_eligible is True
+    assert "glm-local" not in by_name
     assert by_name["grok"].formal_review_eligible is True
     # #9488: Cursor is formal only for the models the catalog pins on its
     # review endpoint (grok-4.7, runtime-attested); Auto and Composer never.
@@ -62,10 +62,8 @@ def test_every_live_provider_uses_only_acp_transport() -> None:
         assert endpoint.transports == ("acp",), endpoint.name
         assert "authority_receipt" in endpoint.completion_evidence
 
-    glm, requested = registry.resolve("glm-local")
-    assert requested == "glm-local"
-    assert glm.name == "glm-local"
-    assert glm.formal_review_eligible is True
+    with pytest.raises(ValueError, match="Unknown fleet endpoint: glm-local"):
+        registry.resolve("glm-local")
 
 
 def test_endpoint_registry_rejects_duplicate_aliases(tmp_path: Path) -> None:
