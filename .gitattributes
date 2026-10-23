@@ -1,3 +1,49 @@
 data/literary_texts/*.jsonl filter=lfs diff=lfs merge=lfs -text
 data/esu/articles.jsonl filter=lfs diff=lfs merge=lfs -text
 site/src/data/lexicon-manifest.fingerprint.json merge=union
+
+# npm: package.json, site/package.json; uv: .dagger/pyproject.toml.
+/package-lock.json linguist-generated=true
+/site/package-lock.json linguist-generated=true
+/.dagger/uv.lock linguist-generated=true
+# scripts/lexicon/manifest_fingerprint.py: complete output contract.
+/site/src/data/lexicon-manifest.fingerprint.json linguist-generated=true
+
+# scripts/build/build_arc_landing.py: generated_files; configured a1 active and retired routes.
+/site/src/data/arc-a1.json linguist-generated=true
+/site/src/content/docs/a1/index.mdx linguist-generated=true
+/site/src/content/docs/a1/*/index.mdx linguist-generated=true
+# scripts/build/build_landing_pages.py: generated_pages; scripts/generate_landing_pages.py: configured track loop.
+/site/src/content/docs/a1-v1/index.mdx linguist-generated=true
+/site/src/content/docs/a2/index.mdx linguist-generated=true
+/site/src/content/docs/b1/index.mdx linguist-generated=true
+/site/src/content/docs/b2/index.mdx linguist-generated=true
+/site/src/content/docs/bio/index.mdx linguist-generated=true
+/site/src/content/docs/c1/index.mdx linguist-generated=true
+/site/src/content/docs/c2/index.mdx linguist-generated=true
+/site/src/content/docs/folk/index.mdx linguist-generated=true
+/site/src/content/docs/hist/index.mdx linguist-generated=true
+/site/src/content/docs/index.mdx linguist-generated=true
+/site/src/content/docs/istorio/index.mdx linguist-generated=true
+/site/src/content/docs/lit-drama/index.mdx linguist-generated=true
+/site/src/content/docs/lit-essay/index.mdx linguist-generated=true
+/site/src/content/docs/lit-fantastika/index.mdx linguist-generated=true
+/site/src/content/docs/lit-hist-fic/index.mdx linguist-generated=true
+/site/src/content/docs/lit-humor/index.mdx linguist-generated=true
+/site/src/content/docs/lit-war/index.mdx linguist-generated=true
+/site/src/content/docs/lit-youth/index.mdx linguist-generated=true
+/site/src/content/docs/lit/index.mdx linguist-generated=true
+/site/src/content/docs/oes/index.mdx linguist-generated=true
+/site/src/content/docs/ruth/index.mdx linguist-generated=true
+# scripts/audit/curriculum_manifest_canary.py: complete output contract.
+/curriculum/l2-uk-en/curriculum_manifest.sha256.json linguist-generated=true
+# scripts/generate_curriculum_stats.py: complete output contract.
+/site/src/data/curriculum-stats.json linguist-generated=true
+# packages/activity-kit/scripts/generate-types.mjs: complete output contract.
+/packages/activity-kit/src/lu.activity.v1.generated.ts linguist-generated=true
+/packages/activity-kit/src/lu.lesson-support.v1.generated.ts linguist-generated=true
+/packages/activity-kit/src/lu.lesson.v1.generated.ts linguist-generated=true
+# scripts/ci/split_tests.py: complete output contract.
+/scripts/ci/pytest-file-durations.json linguist-generated=true
+# scripts/projects/open_model_data/v4_decolonization_reasoning.py: complete manifest; tracked K companion in registry/artifacts/open_model_other_indexes.manifest.json.
+/registry/projects/open_model_data/decolonization/generated/decolonization_manifest.json linguist-generated=true
