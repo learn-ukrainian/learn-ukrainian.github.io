@@ -79,7 +79,8 @@ export function sourceCredits(rows: readonly ReleaseRow[]): SourceCredit[] {
     };
     const gap = attributionGap(citation);
     const attribution = gap === 'puls_reference_placeholder' ? '' : gap === 'vesum_version_placeholder' ?
-      citation.attribution.replace(/Версія\s+<used version>\.\s*/g, '') : citation.attribution;
+      citation.attribution.replace(/(?:Версія\s+)?<used version>\.?\s*/g, '') : citation.source_id === 'ulif' ?
+        citation.attribution.replace(/\s*\(entry reference and retrieval date per field\)/g, '') : citation.attribution;
     if (attribution && !source.attributions.includes(attribution)) source.attributions.push(attribution);
     for (const link of attributionLinks(citation.attribution)) if (!source.links.includes(link)) source.links.push(link);
     if (!source.licences.some(licence => JSON.stringify(licence) === JSON.stringify(citation.licence))) {

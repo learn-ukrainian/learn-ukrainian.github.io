@@ -109,10 +109,24 @@ also show manifest filtering counts: 29 PULS assertions and 156 ULIF assertions.
 Empty declared gaps do not establish completeness.
 
 The 105 `PULS citation above.` strings and 977 VESUM `<used version>` strings
-remain unchanged and have visible attribution-gap states owned by Data.
-Readable credits come directly from each citation. Links use only existing
-authoritative URLs in those strings. The preview invents no bibliographic
-metadata or source-register associations.
+remain unchanged on the raw card diagnostic routes, with their original
+attribution-gap states owned by Data. The local candidate renderer is labelled
+`v0.1.1`; the producer release remains `v0.1.0-pilot`.
+
+Learner word pages show short source markers beside each fact and one shared
+source-credit list in the page's native sources disclosure. The helper retains
+every distinct legitimate notice, licence and allowed URL across entries.
+Its display projection omits the PULS placeholder, VESUM version placeholder
+and ULIF entry-reference template suffix. A source without bibliography is
+identified by its supplied source ID. The preview invents no bibliography,
+version, retrieval date or source-register association.
+
+Entry disclosures retain literal assertion values, IDs, fields, subjects,
+source/snapshot/locator bindings and unchanged report actions. Each assertion
+links to its exact full citation on the existing raw diagnostic route. Raw gap
+codes and placeholder-bearing citation JSON stay on those diagnostics, outside
+the learner DOM. Measured absent field classes and producer-declared gaps
+remain distinct.
 
 The existing `pairCurrent` rule is unchanged. The release has no eligible
 explicit `atlas0:slug` keys: 0/150 paired, 150/150 explicitly unpaired and
@@ -135,13 +149,21 @@ For actual-release browser proof, additionally set
 `ATLAS_WORD_CARD_EXPECTATIONS_PATH` to the driver's independently frozen
 expectations file, digest
 `1e86726fb4244c2e31b7a2f67ef7d52fc78ef3fc1de3d1659d1c9b06c8d7a68a`.
-The spec checks both presentations of all 2978 assertions against those hashes,
-every emitted preview route, noindex, attribution gaps, summaries, report links and complete
+Set `ATLAS_WORD_CARD_SOURCE_BASELINES_PATH` to the independently frozen
+assertion and route baseline directory. The case verifies their fixed digests.
+The spec checks all 11,882 raw and learner presentation bindings against those hashes,
+resolving learner references to their exact raw citations. It also checks
+every emitted preview route, noindex, raw attribution gaps, summaries, report links and complete
 built HTML/JS/XML fixture-sentinel scans. It freezes sentinels before building
 and records markers shared with real data separately. Refusal and flag-off
 tests use scratch copies, preserving historical producer inputs.
 
-These author checks are local mechanical proof. Atlas retains independent
+The nine public regression pages retain twenty readability results across two
+viewports and the summaries. Five original words also have initial and natively
+opened source-credit captures at both viewports: twenty PNGs, ten unequal
+pairs, with focus, visible credits, font readiness and overflow assertions.
+These author checks are local mechanical proof, separate from independent
+acceptance with fresh controls. Atlas retains independent
 exact-head review, same-head branch and merge-group CI, merge, merged browser
 proof, typed lifecycle evidence and common cleanup. Delivery retains the
 supported public build and deployed noindex proof. Data/Atlas pairing and Data

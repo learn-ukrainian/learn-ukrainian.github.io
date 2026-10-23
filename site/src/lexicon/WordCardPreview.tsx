@@ -2,13 +2,14 @@ import type { ReactNode } from 'react';
 import { compareCurrent, type PreviewCard } from '../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../lib/lexicon/atlas-data-source';
 import { attributionGap, attributionLinks, releaseAccounting, releaseReportUrl, type LoadedRelease, type ReleaseCard, type ReleaseRow } from '../lib/lexicon/word-card-release';
-import { groupReleasePages, pagePath, type Credit, type FactGroup, type ParadigmCell, type ParadigmTable, type ReadableEntry, type ReleasePage, type SlotLabel } from '../lib/lexicon/word-card-readable';
+import { groupReleasePages, pagePath, sourceCredits, type Credit, type FactGroup, type ParadigmCell, type ParadigmTable, type ReadableEntry, type ReleasePage, type SlotLabel } from '../lib/lexicon/word-card-readable';
 
-function Accounting({ rows, scope }: Pick<LoadedRelease, 'rows'> & { scope: string }) {
+function Accounting({ rows, scope, learner = false }: Pick<LoadedRelease, 'rows'> & { scope: string; learner?: boolean }) {
+  const { attributionGaps, ...coverage } = releaseAccounting(rows);
   return <section aria-label={`Measured coverage of ${scope}`}><h3>Measured coverage of {scope}</h3>
-    <pre data-release-accounting>{JSON.stringify(releaseAccounting(rows), null, 2)}</pre>
+    <pre data-release-accounting>{JSON.stringify(learner ? coverage : { ...coverage, attributionGaps }, null, 2)}</pre>
     <p>Absent field classes are measured separately from producer-declared gaps. No declared gaps does not establish completeness.</p>
-    <p>Attribution gaps remain owned by Data. Source strings are preserved, including placeholders.</p>
+    {!learner && <p>Attribution gaps remain owned by Data. Source strings are preserved, including placeholders.</p>}
   </section>;
 }
 
@@ -18,14 +19,24 @@ function WithdrawalNotice({ notice }: { notice: LoadedRelease['withdrawalNotice'
   </section>;
 }
 
-function AssertionRecord({ card, field }: { card: ReleaseCard; field: ReleaseRow['fields'][number] }) {
-  return <article data-release-assertion={field.assertion_id}>
+const assertionTarget = (assertionId: string) => `assertion-${encodeURIComponent(assertionId)}`;
+const sourceTarget = (sourceId: string) => `source-${encodeURIComponent(sourceId)}`;
+
+function AssertionRecord({ card, field, learner = false }: { card: ReleaseCard; field: ReleaseRow['fields'][number]; learner?: boolean }) {
+  return <article id={learner ? undefined : assertionTarget(field.assertion_id)} data-release-assertion={field.assertion_id}>
     <h4>{field.field}</h4><p>{field.subject.kind}: {field.subject.id}</p>
     <pre data-raw-value>{typeof field.value === 'string' ? field.value : JSON.stringify(field.value, null, 2)}</pre>
-    <pre data-release-citation>{JSON.stringify(field.citation, null, 2)}</pre>
+    {learner ? <>
+      <dl className="wc-binding"><dt>Assertion</dt><dd>{field.assertion_id}</dd>
+        <dt>Source</dt><dd data-assertion-source>{field.citation.source_id}</dd>
+        <dt>Snapshot</dt><dd data-assertion-snapshot>{field.citation.snapshot_id}</dd>
+        <dt>Locator</dt><dd data-assertion-locator>{field.citation.locator}</dd></dl>
+      <a data-raw-diagnostic href={`/lexicon-v2/release/${encodeURIComponent(card.row.card_id)}/#${assertionTarget(field.assertion_id)}`}>Inspect original citation</a>
+    </> : <><pre data-release-citation>{JSON.stringify(field.citation, null, 2)}</pre>
     <p data-source-attribution>{field.citation.attribution}</p>
     {attributionLinks(field.citation.attribution).map(url => <a data-source-link key={url} href={url}>{url}</a>)}
     {attributionGap(field.citation) && <p data-attribution-gap={attributionGap(field.citation)}>Attribution gap: {attributionGap(field.citation)}. Owner Data. Placeholder retained verbatim.</p>}
+    </>}
     <a data-report-action href={releaseReportUrl(card, field)}>Report / improve this assertion</a>
   </article>;
 }
@@ -37,9 +48,19 @@ const KIND_LABELS: Record<string, string> = { lexeme: 'Word', mwe: 'Multi-word e
 const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 function Credits({ credits }: { credits: Credit[] }) {
-  return <span className="wc-credits" data-credits>Source:{credits.map((c, i) => <span key={i}> {c.href ?
-    <a data-credit-link href={c.href} title={c.attribution}>{c.sourceId}</a> : <span title={c.attribution}>{c.sourceId}</span>}
-    {c.gap && <span data-credit-gap={c.gap}> (attribution incomplete)</span>}</span>)}</span>;
+  return <span className="wc-credits" data-credits>Source: {[...new Set(credits.map(c => c.sourceId))].map((sourceId, i) =>
+    <span key={sourceId}>{i > 0 && ', '}<a data-credit-ref href={`#${sourceTarget(sourceId)}`}>{sourceId}</a></span>)}</span>;
+}
+
+function PageCredits({ rows }: Pick<LoadedRelease, 'rows'>) {
+  return <section aria-label="Source credits"><h3>Source credits</h3>
+    <ul className="wc-source-list">{sourceCredits(rows).map(source => <li id={sourceTarget(source.sourceId)} key={source.sourceId} data-source-credit={source.sourceId}>
+      <h4>{source.sourceId}</h4>
+      {source.attributions.map(text => <p data-credit-attribution key={text}>{text}</p>)}
+      {source.links.map(url => <p key={url}><a data-credit-link href={url}>{url}</a></p>)}
+      {source.licences.map((licence, i) => <p data-credit-licence key={i}>Licence: {typeof licence === 'string' ? licence : JSON.stringify(licence)}</p>)}
+    </li>)}</ul>
+  </section>;
 }
 
 function Facts({ groups }: { groups: FactGroup[] }) {
@@ -105,9 +126,9 @@ function Entry({ entry, pin }: { entry: ReadableEntry; pin: ReleasePage['pin'] }
       <section aria-label={`Known gaps of entry ${ordinal}`}><h3>Known gaps</h3><p>Declared metadata, not language facts.</p>
         {row.known_gaps.length ? row.known_gaps.map((gap, i) => <pre key={i}>{typeof gap === 'string' ? gap : JSON.stringify(gap, null, 2)}</pre>) : <p>No declared gaps</p>}
       </section>
-      <Accounting rows={[row]} scope="this entry" />
+      <Accounting rows={[row]} scope="this entry" learner />
       <h3>Cited assertions</h3><p>Assertions remain separate. No field resolution or semantic verdict is inferred.</p>
-      {row.fields.map(field => <AssertionRecord key={field.assertion_id} card={{ kind: 'release-card', row, pin }} field={field} />)}
+      {row.fields.map(field => <AssertionRecord key={field.assertion_id} card={{ kind: 'release-card', row, pin }} field={field} learner />)}
     </details>
   </article>;
 }
@@ -153,6 +174,7 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
     </div>;
   }
   if (card.kind === 'release-page') return <div data-release-page={card.page.key}>
+    <p data-local-artifact-version className="wc-artifact-version">Local candidate renderer v0.1.1</p>
     <p className="wc-page-meta">{card.page.entries.length === 1 ? '1 entry' : `${card.page.entries.length} numbered entries`} · Release {card.pin.release_version}</p>
     <WithdrawalNotice notice={card.withdrawalNotice} />
     {card.page.entries.map(entry => <Entry key={entry.row.card_id} entry={entry} pin={card.pin} />)}
@@ -162,9 +184,10 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
     </section>}
     <details className="wc-audit" data-page-audit><summary>Sources and audit details for this page</summary>
       <p>{card.pin.provenance === 'synthetic-fixture' ? 'Synthetic fixture. No linguistic or publication approval.' : 'Producer-declared status. No publication approval is implied.'}</p>
+      <PageCredits rows={card.page.entries.map(e => e.row)} />
       <p>Dataset SHA-256: {card.pin.dataset_sha256}. Manifest SHA-256: {card.pin.manifest_sha256}.</p>
       <p>Entries share this page because their spelling matches when lowercased. Common entries come first in release order; proper-name entries follow. Each entry keeps its own facts and citations.</p>
-      <Accounting rows={card.page.entries.map(e => e.row)} scope="this page" />
+      <Accounting rows={card.page.entries.map(e => e.row)} scope="this page" learner />
     </details>
   </div>;
   if (card.kind === 'release-card') return <div data-release-card={card.row.card_id}>
