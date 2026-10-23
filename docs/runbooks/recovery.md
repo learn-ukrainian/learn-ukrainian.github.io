@@ -10,11 +10,11 @@ operator decision tracked outside this runbook.
 
 Related runbooks:
 
-- [Data backup and recovery](data-backup.md) — restic snapshots of
-  `batch_state/`, `.agent/`, `.claude/*-epic/`, and `data/`, with the restore
-  drill used when a release asset is not the right recovery source.
-- [launchd inventory](launchd-inventory.md) — the scheduled jobs to reinstall
-  and verify after a full machine-local loss.
+- [Data backup and recovery](data-backup.md) covers explicit manual backup
+  and recovery, including the restore drill when a release asset is not the
+  right recovery source. Legacy receipts do not certify current backup coverage.
+- [launchd inventory](launchd-inventory.md) identifies active jobs to reinstall
+  and verify after a full machine-local loss, and retired jobs to keep disabled.
 - [Worktree cleanup](worktree-cleanup.md) — reaper rescue refs for recovering
   a wrongly reaped dispatch worktree.
 
@@ -204,10 +204,10 @@ check passes; only then resume writers.
 
 ## 5. Restore services and scheduled jobs
 
-Reinstall the project's LaunchAgents only from the merged primary checkout on
+Reinstall only active project LaunchAgents from the merged primary checkout on
 `main`; each plist persists absolute checkout paths, so never install from a
-dispatch worktree. The [launchd inventory](launchd-inventory.md) lists every
-job, its installer, and its log locations.
+dispatch worktree. Consult the [launchd inventory](launchd-inventory.md) for
+each job's current status, installer, and log locations.
 
 ```bash
 ./services.sh status api
@@ -217,16 +217,16 @@ job, its installer, and its log locations.
   --repo-root "$PWD"
 ```
 
-The backup job (`com.learn-ukrainian.backup`) is host-managed: its plist runs
-the private wrapper `~/.local/bin/learn-ukrainian-backup`, which sources the
-environment file under `~/.secrets/` before invoking
-`scripts/backup-data.sh backup --execute`. Recreate that wrapper and
-environment on the host and confirm them with
-`./scripts/backup-data.sh doctor` per
-[Data backup and recovery](data-backup.md); never commit the environment file
-or wrapper.
+The legacy backup job (`com.learn-ukrainian.backup`) and backup and retention
+schedules are retired. Keep them disabled. Do not recreate or reinstall the
+private legacy wrapper or its environment, restart the retired jobs, or move
+their schedules to another scheduler during checkout recovery. Preserve
+existing logs and receipts for audit; they do not certify current backup
+coverage. Use the private operations runbook and operator-held current recovery
+evidence to verify recovery readiness. [Data backup and recovery](data-backup.md)
+retains the public retirement guidance and explicit manual recovery procedures.
 
-After reinstalling, verify each service with its installer `status` command
+After reinstalling an active job, verify it with its installer `status` command
 and confirm the first receipts appear at the log and receipt paths listed in
 the inventory.
 

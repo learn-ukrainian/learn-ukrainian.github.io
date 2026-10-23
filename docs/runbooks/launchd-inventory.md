@@ -37,20 +37,17 @@ dispatch worktree.
 - Manage: `./services.sh supervise api install|status|uninstall`.
 - Reference: [Local API server](../best-practices/local-api-server.md).
 
-### `com.learn-ukrainian.backup`
+### `com.learn-ukrainian.backup` (retired)
 
-- Purpose: nightly restic snapshot of recovery-critical local state.
-- Program: the host-managed wrapper `~/.local/bin/learn-ukrainian-backup`,
-  which sources its environment from `~/.secrets/` and runs
-  `scripts/backup-data.sh backup --execute` in the primary checkout.
-- Schedule: daily at 03:30 local (`StartCalendarInterval`).
-- Delete authority: none. The backup script intentionally has no `forget`,
-  `prune`, or snapshot-delete command; snapshots are additive.
-- Logs: `~/Library/Logs/learn-ukrainian-backup/scheduled.out.log` and
-  `scheduled.err.log` — outside the repository.
-- Manage: installed host-side (plist plus wrapper); verify readiness with
-  `./scripts/backup-data.sh doctor`.
-- Reference: [Data backup and recovery](data-backup.md).
+The legacy nightly backup job is retired. Keep the legacy backup and
+retention schedules disabled; do not reinstall or restart them during checkout
+recovery. Preserve existing logs and receipts for audit. A historical receipt
+does not certify current backup coverage.
+
+Current operating procedures live in the private operations runbook.
+[Data backup and recovery](data-backup.md) retains public guidance for explicit
+manual backup, verification, restore, and retention operations. This inventory
+does not authorize running those operations.
 
 ### `com.learn-ukrainian.worktree-cleanup`
 
@@ -134,7 +131,7 @@ dispatch worktree.
 - Logs and receipts of scheduled jobs must live outside the repository so
   they survive a checkout loss and remain available for forensics.
   `worktree-cleanup` and `codex-archived-thread-cleanup` comply under
-  `~/.codex/`; `backup` logs under `~/Library/Logs/learn-ukrainian-backup/`.
+  `~/.codex/`. Preserve the retired backup job's existing logs and receipts.
   The `monitor-api` service is the intentional exception: its launchd logs
   are gitignored runtime state inside the checkout and are recreated on
   restart, not audit receipts.

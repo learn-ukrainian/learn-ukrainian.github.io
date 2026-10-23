@@ -88,9 +88,13 @@ All items must pass before the upgrade starts.
   `.venv/bin/python scripts/gh_merge_queue_status.py <pr> --json` reports it is
   not queued. A single queue-wide listing command is **NOT CHECKED**.
 - [ ] **Disk.** `df -h /` shows use below 85% and more than 40G free.
-- [ ] **Recent backup.** `systemctl --user status learn-ukrainian-backup.service`
-  and `jq . <primary-checkout>/batch_state/backups/last-run.json` show a clean
-  run within the last day (`docs/runbooks/data-backup.md`).
+- [ ] **Recovery readiness.** Verify current backup coverage, freshness, and
+  restore evidence against the private operations runbook before proceeding.
+  The legacy backup and retention schedules are retired; keep them disabled.
+  A legacy service status or `last-run.json` receipt does not certify current
+  backup coverage. See [Data backup and recovery](data-backup.md) for manual
+  maintenance and recovery guidance. Missing current recovery evidence is a
+  no-go for this window.
 - [ ] **Operator GO.** A present-tense operator GO for this window is recorded.
 
 ## 2. Upgrade and reboot
