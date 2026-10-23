@@ -67,6 +67,7 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
     """A real sources handler read must not make the dispatch guard fail (#9122)."""
     primary = tmp_path / "primary"
     primary.mkdir()
+    (primary / "scripts").mkdir()
     subprocess.run(["git", "init", str(primary)], check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "-C", str(primary), "config", "user.email", "test@example.com"], check=True, timeout=30)
     subprocess.run(["git", "-C", str(primary), "config", "user.name", "test"], check=True, timeout=30)
