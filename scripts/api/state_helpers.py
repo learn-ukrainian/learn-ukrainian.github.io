@@ -266,18 +266,6 @@ def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-pa
     return _finish_flight(key, fut, compute)
 
 
-def cache_peek(key: str) -> object | None:
-    """Return a stored value even after its TTL has elapsed.
-
-    Callers use this for stale-while-revalidate: serve the last payload and
-    refresh off the request path instead of making the caller wait.
-    """
-    stored = cache_get_stored(key)
-    if stored is None:
-        return None
-    return stored[0]
-
-
 def cache_get_stored(key: str) -> tuple[object, float] | None:
     """Return a stored value and how long it has been stored, ignoring TTL."""
     now = _ttl_clock()
@@ -684,13 +672,6 @@ def parse_phase_status_from_state(state: dict, phase_name: str) -> dict:
 def has_research_file(track_dir: Path, slug: str) -> bool:
     """Return True if a research file exists for this module (V5 or V6 format)."""
     return find_research_path(track_dir, slug) is not None
-
-
-def is_research_done(state: dict, track_dir: Path | None = None, slug: str | None = None) -> bool:
-    """Research done if pipeline state has research phase complete, or research file exists."""
-    if _phase_complete(state, "research"):
-        return True
-    return bool(track_dir is not None and slug is not None and has_research_file(track_dir, slug))
 
 
 def is_content_done(state: dict) -> bool:
