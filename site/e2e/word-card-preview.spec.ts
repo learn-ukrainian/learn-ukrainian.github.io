@@ -107,6 +107,8 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('public pinned release: 
   // Keep the real home page so sitemap exclusion has a positive ordinary-route control.
   mkdirSync(join(root, 'public/src/pages'), { recursive: true });
   copyFileSync('src/pages/index.astro', join(root, 'public/src/pages/index.astro'));
+  mkdirSync(join(root, 'public/public'), { recursive: true });
+  copyFileSync('public/count.js', join(root, 'public/public/count.js'));
   process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
   let output: string;
   try { output = buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
