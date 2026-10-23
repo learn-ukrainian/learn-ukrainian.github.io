@@ -204,7 +204,7 @@ def _child_association(
 def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mapping[str, Any]) -> dict[str, Any]:
     """Re-read every input and reconstruct facts; stored booleans are not proof."""
     inputs = recovery["inputs"]
-    if set(inputs) != {"manifest", "task", "push"}:
+    if set(inputs) not in ({"manifest", "task", "push"}, {"manifest", "task", "push", "closeout"}):
         raise ObservationRefusal("RECOVERY_INPUTS_MISSING")
     values = {}
     for name, reference in inputs.items():
@@ -266,34 +266,19 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
         raise ObservationRefusal("RECOVERY_WORKTREE_MISMATCH")
     if not branch or push.get("cwd") != worktree:
         raise ObservationRefusal("RECOVERY_BRANCH_MISMATCH")
-    if (
-        push.get("head") != head
-        or push.get("remote_head") != head
-        or push.get("status") != "pushed_exact_head"
-        or not any(
-            step.get("name") == "push" and type(step.get("exit_code")) is int and step["exit_code"] == 0
-            for step in push.get("steps", [])
-        )
-    ):
-        raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
-    proof = task.get("worktree_reap_proof") or {}
-    if proof.get("pr_state") != "MERGED" or proof.get("pr_number") != ledger["pr"]["number"]:
-        raise ObservationRefusal("RECOVERY_MERGED_PR_UNPROVEN")
-    # The preserved merged cohort binds the branch independently of its label.
-    members = proof.get("members", [])
-    if not any(
-        m.get("task_id") == task_id and m.get("branch") == branch and m.get("head_sha") == head for m in members
-    ):
-        raise ObservationRefusal("RECOVERY_BRANCH_MISMATCH")
+    _verify_push(push, task, manifest, inputs["push"])
+    pr_head = _recovery_pr_head(task, ledger, recovery, values.get("closeout"))
     if not all(
         isinstance(sha, str) and len(sha) == 40 and all(c in "0123456789abcdef" for c in sha)
-        for sha in (base, head, proof.get("pr_head_sha"))
+        for sha in (base, head, pr_head)
     ):
         raise ObservationRefusal("RECOVERY_COMMITS_MISSING")
     try:
         tl._run_git(repo_root, ["merge-base", "--is-ancestor", base, "origin/main"])
         tl._run_git(repo_root, ["merge-base", "--is-ancestor", base, head])
-        tl._run_git(repo_root, ["merge-base", "--is-ancestor", head, proof["pr_head_sha"]])
+        tl._run_git(repo_root, ["merge-base", "--is-ancestor", head, pr_head])
+        if "closeout" in values:
+            tl._run_git(repo_root, ["merge-base", "--is-ancestor", recovery["merged_pr"]["merge_sha"], "origin/main"])
         local = tl.observe_local_git(repo_root, head_sha=head, branch=branch, worktree=None, base_sha=base)
     except tl.LifecycleError as exc:
         raise ObservationRefusal("RECOVERY_COMMIT_ANCESTRY_MISMATCH") from exc
@@ -313,6 +298,110 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
         recovered_from_preserved=dict(recovery),
     )
     return local
+
+
+def _verify_push(
+    push: Mapping[str, Any],
+    task: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    reference: Mapping[str, str],
+) -> None:
+    """Read historical producer fields without upgrading their evidential content."""
+    head = task.get("final_branch_head_commit")
+    if "local_head" in push:
+        # Historical delivery receipts did not carry a nonce. Their membership
+        # in the task/run's byte-verified inventory supplies that binding.
+        location = Path(manifest["location"])
+        path = Path(reference["path"])
+        if not path.is_relative_to(location):
+            raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
+        relative = path.relative_to(location).as_posix()
+        if not any(
+            row.get("path") == relative and row.get("sha256") == reference["sha256"] for row in manifest["paths"]
+        ):
+            raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
+        valid = (
+            push.get("local_head") == head
+            and push.get("remote_head") == head
+            and push.get("branch") == task.get("worktree_branch")
+            and isinstance(task.get("run_nonce"), str)
+            and bool(task["run_nonce"])
+            and type(push.get("push_exit_code")) is int
+            and push["push_exit_code"] == 0
+            and not ({"head", "status", "steps"} & push.keys())
+            and ("task_id" not in push or push["task_id"] == task["task_id"])
+            and ("run_nonce" not in push or push["run_nonce"] == task["run_nonce"])
+        )
+    else:
+        valid = (
+            push.get("head") == head
+            and push.get("remote_head") == head
+            and push.get("status") == "pushed_exact_head"
+            and any(
+                step.get("name") == "push" and type(step.get("exit_code")) is int and step["exit_code"] == 0
+                for step in push.get("steps", [])
+            )
+        )
+    if not valid:
+        raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
+
+
+def _recovery_pr_head(
+    task: Mapping[str, Any],
+    ledger: Mapping[str, Any],
+    recovery: Mapping[str, Any],
+    closeout: Mapping[str, Any] | None,
+) -> str | None:
+    """Join an older common-closeout result to the repository-qualified forge read."""
+    proof = task.get("worktree_reap_proof") or {}
+    if closeout is None:
+        if proof.get("pr_state") != "MERGED" or proof.get("pr_number") != ledger["pr"]["number"]:
+            raise ObservationRefusal("RECOVERY_MERGED_PR_UNPROVEN")
+        if not any(
+            m.get("task_id") == task["task_id"]
+            and m.get("branch") == task["worktree_branch"]
+            and m.get("head_sha") == task["final_branch_head_commit"]
+            for m in proof.get("members", [])
+        ):
+            raise ObservationRefusal("RECOVERY_BRANCH_MISMATCH")
+        return proof.get("pr_head_sha")
+    pr = recovery.get("merged_pr") or {}
+    if (
+        pr.get("number") != ledger["pr"]["number"]
+        or pr.get("url") != ledger["pr"]["url"]
+        or pr.get("url") != f"https://github.com/{ledger['identity']['repository']}/pull/{pr.get('number')}"
+        or pr.get("state") != "MERGED"
+        or pr.get("head_branch") != task["worktree_branch"]
+        or not isinstance(pr.get("merge_sha"), str)
+        or not re.fullmatch(r"[0-9a-f]{40}", pr["merge_sha"])
+    ):
+        raise ObservationRefusal("RECOVERY_MERGED_PR_UNPROVEN")
+    cleanup_pr = closeout.get("pr") or {}
+    branch = closeout.get("branch_status") or {}
+    if (
+        not isinstance(closeout.get("matched_worktrees"), list)
+        or not isinstance(closeout.get("reap_results"), list)
+        or closeout.get("apply") is not True
+        or closeout.get("ok") is not True
+        or closeout.get("errors") != []
+        or cleanup_pr
+        != {
+            "number": pr["number"],
+            "state": "MERGED",
+            "head_ref_name": pr["head_branch"],
+            "head_sha": pr.get("head_sha"),
+        }
+        or branch.get("branch") != task["worktree_branch"]
+        or branch.get("remote_gone") is not True
+        or branch.get("local_gone") is not True
+        or branch.get("remote_error") is not None
+        or branch.get("local_error") is not None
+        or any(row.get("action") != "removed" or row.get("error") for row in closeout.get("reap_results", []))
+    ):
+        raise ObservationRefusal("RECOVERY_CLEANUP_UNPROVEN")
+    if proof and _recovery_pr_head(task, ledger, recovery, None) != pr.get("head_sha"):
+        raise ObservationRefusal("RECOVERY_MERGED_PR_UNPROVEN")
+    return pr.get("head_sha")
 
 
 def recovery_refusal(
@@ -367,6 +456,8 @@ def recover(
     push_file: Path,
     now: str,
     child_pr: Mapping[str, Any] | None = None,
+    closeout_file: Path | None = None,
+    merged_pr: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Append one recovery receipt, returning the verified existing receipt on retry."""
     with repository_context(repo_root), tl.lifecycle_lock(state_file):
@@ -383,15 +474,31 @@ def recover(
                 if refusal:
                     raise ObservationRefusal(refusal)
                 recovery = local["recovered_from_preserved"]
-                if "association" in recovery:
-                    # recovery_refusal verifies the stored locators and digests.
-                    # Also bind the caller's replay paths; for unchanged paths,
-                    # the repeated digest checks are defence in depth.
-                    for name, source in (("task", task_file), ("manifest", manifest_file), ("push", push_file)):
-                        if _source(source, repo_root)[1] != recovery["inputs"][name]:
-                            raise ObservationRefusal("RECOVERY_DIGEST_MISMATCH")
-                    if child_pr is not None and _child_association(task, ledger, child_pr) != recovery["association"]:
-                        raise ObservationRefusal("RECOVERY_ASSOCIATION_INVALID")
+                sources = {"task": task_file, "manifest": manifest_file, "push": push_file}
+                if closeout_file is not None:
+                    sources["closeout"] = closeout_file
+                if set(sources) != set(recovery["inputs"]):
+                    raise ObservationRefusal("RECOVERY_INPUTS_MISSING")
+                for name, source in sources.items():
+                    if _source(source, repo_root)[1] != recovery["inputs"][name]:
+                        raise ObservationRefusal("RECOVERY_DIGEST_MISMATCH")
+                if closeout_file is not None and recovery.get("merged_pr") != {
+                    key: (merged_pr or {}).get(key)
+                    for key in (
+                        "number",
+                        "url",
+                        "state",
+                        "head_sha",
+                        "head_branch",
+                        "merge_sha",
+                    )
+                }:
+                    raise ObservationRefusal("RECOVERY_MERGED_PR_UNPROVEN")
+                if (
+                    "association" in recovery and child_pr is not None
+                    and _child_association(task, ledger, child_pr) != recovery["association"]
+                ):
+                    raise ObservationRefusal("RECOVERY_ASSOCIATION_INVALID")
                 return receipt, True
         if not isinstance(task.get("worktree_path"), str):
             raise ObservationRefusal("RECOVERY_WORKTREE_MISMATCH")
@@ -405,6 +512,19 @@ def recover(
                 for k, p in (("manifest", manifest_file), ("task", task_file), ("push", push_file))
             },
         }
+        if closeout_file is not None:
+            recovery["inputs"]["closeout"] = _source(closeout_file, repo_root)[1]
+            recovery["merged_pr"] = {
+                key: (merged_pr or {}).get(key)
+                for key in (
+                    "number",
+                    "url",
+                    "state",
+                    "head_sha",
+                    "head_branch",
+                    "merge_sha",
+                )
+            }
         try:
             if child_pr is not None:
                 recovery["association"] = _child_association(task, ledger, child_pr)
