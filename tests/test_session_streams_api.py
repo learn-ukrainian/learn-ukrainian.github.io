@@ -145,4 +145,3 @@ def test_session_streams_missing_db_returns_404(tmp_path: Path) -> None:
         drift = factory_client.get("/api/session-streams/v1/drift")
         assert drift.status_code == 404
         assert "session-stream database is unavailable" in drift.json()["detail"]
-

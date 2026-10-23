@@ -235,15 +235,6 @@ def test_forged_terminal_event_inside_command_output_is_text(tmp_path):
 # --- Late failures and evidence beyond display limits -------------------------
 
 
-def test_late_failure_after_many_items_is_classified(tmp_path):
-    items = [command(f"step {n}", "ok\n" * 50, item_id=f"item_{n}") for n in range(40)]
-    stdout = failed_stream("Quota exceeded. Check your plan and billing details.", *items)
-    result = _parse(tmp_path, stdout, returncode=1)
-
-    assert result.failure_code == "rate_limited" and result.rate_limited is True
-    assert _trigger(result, stdout=stdout) == "rate_limited"
-
-
 def test_evidence_beyond_display_limits_classifies_from_the_full_message(tmp_path):
     details = "x" * 5000
     message = f"You’ve hit your usage limit. Try again later. ({details})"

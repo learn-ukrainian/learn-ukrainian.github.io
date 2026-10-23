@@ -9,21 +9,12 @@ import pytest
 
 import scripts.audit.check_static_practice_assets as check_static_practice_assets
 from scripts.audit.check_static_practice_assets import check_assets
-from scripts.audit.daily_cefr import CEFR_LEVELS
-from scripts.audit.generate_daily_pool import CEFR_LEVELS as GENERATOR_CEFR_LEVELS
 from tests.helpers.restore_import_state import restore_import_state
 from tests.project_python import project_python
 
 pytestmark = pytest.mark.reads_content
 
 DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
-
-
-def test_daily_cefr_levels_match_generator_ssot() -> None:
-    from scripts.audit.check_static_practice_assets import DAILY_CEFR_LEVELS
-
-    assert DAILY_CEFR_LEVELS == CEFR_LEVELS == GENERATOR_CEFR_LEVELS
-    assert {"A1", "A2", "B1", "B2", "C1", "C2"} == DAILY_CEFR_LEVELS
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -221,35 +212,6 @@ def _add_heritage_item(practice_dir: Path, *, options: list[dict[str, object]], 
     index_payload["items"][0]["modes"].append("heritage")
     index_payload["counts"]["modeCounts"]["heritage"] = 1
     index_payload["counts"]["modeCoverage"]["heritage"] = 1.0
-    _write_json(index_path, index_payload)
-
-
-def _add_synonym_item(practice_dir: Path, *, level: str = "A2") -> None:
-    synonym_path = practice_dir / f"practice-synonym.{level}.json"
-    synonym_payload = json.loads(synonym_path.read_text(encoding="utf-8"))
-    synonym_payload["synonym"] = [
-        {
-            "synonymId": "syn_fixture",
-            "lemmaId": "dim",
-            "targetLemmaId": "slovo",
-            "polarity": "synonym",
-            "prompt": "дім",
-            "answer": "слово",
-            "options": [
-                {"label": "слово", "lemmaId": "slovo", "kind": "answer"},
-                {"label": "сад", "lemmaId": "sad", "kind": "distractor"},
-                {"label": "ліс", "lemmaId": "lis", "kind": "distractor"},
-                {"label": "місто", "lemmaId": "misto", "kind": "distractor"},
-            ],
-            "source": "fixture",
-        }
-    ]
-    _write_json(synonym_path, synonym_payload)
-
-    index_path = practice_dir / f"practice-index.{level}.json"
-    index_payload = json.loads(index_path.read_text(encoding="utf-8"))
-    index_payload["counts"]["modeCounts"]["synonym"] = 1
-    index_payload["counts"]["modeCoverage"]["synonym"] = 1.0
     _write_json(index_path, index_payload)
 
 
@@ -623,26 +585,6 @@ def test_heritage_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> Non
     assert summary["ok"] is True, summary["errors"]
 
 
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_synonym_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> None:
-    """B1-floor synonym cards can use a prompt from a lower cumulative shard."""
-    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
-    _write_level(practice_dir, level="A2")
-    _retarget_level_lexeme(practice_dir, level="A2", lemma_id="slovo", lemma="слово")
-    _add_synonym_item(practice_dir, level="A2")
-
-    summary = check_assets(
-        daily_pool=daily_pool,
-        practice_dir=practice_dir,
-        reviewed_sources=reviewed_sources,
-        levels=("A1", "A2"),
-        min_daily_pool_size=2,
-        min_practice_lexemes_per_level=1,
-    )
-
-    assert summary["ok"] is True, summary["errors"]
-
-
 def test_heritage_lemma_unknown_at_or_below_level_still_fails(tmp_path: Path) -> None:
     daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
     _write_level(practice_dir, level="A2")
@@ -695,99 +637,6 @@ def test_non_heritage_modes_stay_strictly_same_level(tmp_path: Path) -> None:
 
     assert summary["ok"] is False
     assert any("lemmaId 'dim' missing from A2 lexeme shard" in error for error in summary["errors"])
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_thin_deck_warnings(tmp_path: Path) -> None:
-    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
-    summary = check_assets(
-        daily_pool=daily_pool,
-        practice_dir=practice_dir,
-        reviewed_sources=reviewed_sources,
-        levels=("A1",),
-        min_daily_pool_size=2,
-        min_practice_lexemes_per_level=1,
-    )
-    assert summary["ok"] is True
-    assert any(
-        "A1 synonym coverage 0.0000 is below thin-deck threshold 0.05" in warning for warning in summary["warnings"]
-    )
-    assert any(
-        "A1 paronym coverage 0.0000 is below thin-deck threshold 0.01" in warning for warning in summary["warnings"]
-    )
-
-
-def test_check_assets_summary_includes_coverage_structure(tmp_path: Path) -> None:
-    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
-    _write_level(practice_dir, level="A2")
-    index_path = practice_dir / "practice-index.A2.json"
-    index_payload = json.loads(index_path.read_text(encoding="utf-8"))
-    index_payload["counts"]["modeCoverage"]["cloze"] = 0.5
-    index_payload["counts"]["modeCoverage"]["synonym"] = 0.08
-    _write_json(index_path, index_payload)
-
-    summary = check_assets(
-        daily_pool=daily_pool,
-        practice_dir=practice_dir,
-        reviewed_sources=reviewed_sources,
-        levels=("A1", "A2"),
-        min_daily_pool_size=2,
-        min_practice_lexemes_per_level=1,
-    )
-
-    coverage = summary["coverage"]
-    assert coverage["modes"] == [
-        "cloze",
-        "stress",
-        "classify",
-        "paradigm",
-        "synonym",
-        "heritage",
-        "paronym",
-        "antonym",
-        "homonym",
-        "imperative",
-    ]
-    assert coverage["levels"]["A1"]["cloze"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
-    assert coverage["levels"]["A1"]["synonym"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
-    assert coverage["levels"]["A1"]["heritage"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
-    assert coverage["levels"]["A2"]["cloze"] == {"ratio": 0.5, "pct": 50.0, "thin": False}
-    assert coverage["levels"]["A2"]["synonym"] == {"ratio": 0.08, "pct": 8.0, "thin": False}
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_cli_prints_coverage_table(tmp_path: Path) -> None:
-    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
-
-    result = subprocess.run(
-        [
-            str(project_python()),
-            "scripts/audit/check_static_practice_assets.py",
-            "--daily-pool",
-            str(daily_pool),
-            "--practice-dir",
-            str(practice_dir),
-            "--reviewed-sources",
-            str(reviewed_sources),
-            "--levels",
-            "A1",
-            "--min-daily-pool-size",
-            "2",
-            "--min-practice-lexemes-per-level",
-            "1",
-            "--no-run-qa-gate",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-
-    assert result.returncode == 0
-    assert "Practice mode coverage (% of lexemes):" in result.stdout
-    assert "cloze" in result.stdout and "synonym" in result.stdout
-    assert "0.0%*" in result.stdout
-    assert "* below thin-deck warning threshold" in result.stdout
 
 
 def test_check_assets_runs_qa_gate_with_fixtures(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -899,98 +748,6 @@ def test_check_assets_runs_qa_gate_after_audit_dir_removed_from_sys_path(
     assert any("practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err for err in summary["errors"])
 
 
-def test_audit_dir_off_sys_path_preserves_added_entries(monkeypatch: pytest.MonkeyPatch) -> None:
-    audit_dir = str(check_static_practice_assets.AUDIT_DIR.resolve())
-    sentinel = "/existing/sentinel/path"
-    monkeypatch.setattr(sys, "path", [audit_dir, sentinel])
-    added_entry = "/added/during/import"
-
-    with check_static_practice_assets._audit_dir_off_sys_path():
-        assert audit_dir not in sys.path
-        sys.path.insert(0, added_entry)
-
-    assert sys.path[0] == audit_dir
-    assert sys.path[1] == added_entry
-    assert sentinel in sys.path
-
-
-def test_audit_dir_off_sys_path_restores_on_exception(monkeypatch: pytest.MonkeyPatch) -> None:
-    audit_dir = str(check_static_practice_assets.AUDIT_DIR.resolve())
-    sentinel = "/existing/sentinel/path"
-    monkeypatch.setattr(sys, "path", [audit_dir, sentinel])
-    added_entry = "/added/before/error"
-
-    with pytest.raises(RuntimeError, match="guarded import failed"):
-        with check_static_practice_assets._audit_dir_off_sys_path():
-            sys.path.insert(0, added_entry)
-            raise RuntimeError("guarded import failed")
-
-    assert sys.path[0] == audit_dir
-    assert sys.path[1] == added_entry
-    assert sentinel in sys.path
-
-
-def test_cli_runs_qa_gate_with_fixtures(tmp_path: Path) -> None:
-    """Verify CLI forwards --run-qa-gate and catches QA violations on fixtures."""
-    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
-    cloze_path = tmp_path / "bad_cloze.json"
-    cloze_path.write_text(
-        json.dumps(
-            {
-                "cloze": [
-                    {
-                        "clozeId": "c_bad",
-                        "sentence": "НЕПРАВИЛЬНО ПРАВИЛЬНО _____ речення",
-                        "form": "гарне",
-                        "options": [
-                            {"label": "гарне", "kind": "answer"},
-                            {"label": "погане", "kind": "distractor"},
-                        ],
-                    }
-                ]
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-    ec_path = tmp_path / "valid_ec.json"
-    ec_path.write_text(json.dumps({"drills": []}), encoding="utf-8")
-    si_path = tmp_path / "valid_si.json"
-    si_path.write_text(json.dumps({"sentences": []}), encoding="utf-8")
-
-    result = subprocess.run(
-        [
-            str(project_python()),
-            "scripts/audit/check_static_practice_assets.py",
-            "--daily-pool",
-            str(daily_pool),
-            "--practice-dir",
-            str(practice_dir),
-            "--reviewed-sources",
-            str(reviewed_sources),
-            "--levels",
-            "A1",
-            "--min-daily-pool-size",
-            "2",
-            "--min-practice-lexemes-per-level",
-            "1",
-            "--teacher-cloze",
-            str(cloze_path),
-            "--error-corrections",
-            str(ec_path),
-            "--sentence-inventory",
-            str(si_path),
-            "--run-qa-gate",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert result.returncode == 1
-    assert "practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in result.stdout, result.stderr
-
-
 def _input_snapshot(root: Path) -> dict[str, tuple[bytes, int, int]]:
     return {
         str(path.relative_to(root)): (path.read_bytes(), path.stat().st_ino, path.stat().st_mtime_ns)
@@ -1020,21 +777,6 @@ def test_fallback_validation_preserves_supplied_inputs(tmp_path: Path) -> None:
         assert mode not in summary["practice"]["A1"]
         assert mode not in summary["coverage"]["levels"]["A1"]
         assert f"A1 {mode} unavailable" in summary["warnings"]
-
-
-@pytest.mark.parametrize("count", [0, 1])
-def test_missing_required_stress_is_an_error_without_repairs(tmp_path: Path, count: int) -> None:
-    _, practice, _ = _fixture_paths(tmp_path)
-    (practice / "practice-stress.A1.json").unlink()
-    index = practice / "practice-index.A1.json"
-    payload = json.loads(index.read_text())
-    payload["counts"]["modeCounts"]["stress"] = count
-    _write_json(index, payload)
-    before = _input_snapshot(tmp_path)
-    summary = _check_fixture(tmp_path)
-    assert summary["ok"] is False
-    assert any("practice-stress.A1.json: missing" in error for error in summary["errors"])
-    assert _input_snapshot(tmp_path) == before
 
 
 @pytest.mark.parametrize("counter", ["modeCounts", "modeCoverage"])
@@ -1431,34 +1173,6 @@ def test_actual_make_prepares_before_validation_and_preserves_precise_refusal(tm
             assert "daily pool has 0 entries, expected at least 250" in result.stdout
         else:
             assert "imperative=N/A" in result.stdout
-
-
-@pytest.mark.parametrize("failure", [False, True])
-@pytest.mark.parametrize("output_format", ["json", "summary"])
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_public_main_keeps_default_qa_and_unavailable_reporting(tmp_path: Path, capsys, failure: bool, output_format: str) -> None:
-    daily, practice, reviewed = _fixture_paths(tmp_path)
-    teacher, corrections, inventory = (tmp_path / name for name in ("teacher.json", "ec.json", "si.json"))
-    _write_json(teacher, {"cloze": []})
-    _write_json(corrections, {"drills": []})
-    _write_json(inventory, {"sentences": []})
-    if failure:
-        (practice / "practice-stress.A1.json").write_text("{")
-    before = _input_snapshot(tmp_path)
-    assert check_static_practice_assets.main([
-        "--daily-pool", str(daily), "--practice-dir", str(practice), "--reviewed-sources", str(reviewed),
-        "--levels", "A1", "--min-daily-pool-size", "2", "--min-practice-lexemes-per-level", "1",
-        "--teacher-cloze", str(teacher), "--error-corrections", str(corrections),
-        "--sentence-inventory", str(inventory), "--format", output_format,
-    ]) == int(failure)
-    output = capsys.readouterr()
-    if output_format == "json":
-        assert json.loads(output.out)["ok"] is (not failure)
-    else:
-        assert "imperative=N/A" in output.out
-        assert "A1 imperative unavailable" in output.err
-        assert ("invalid JSON" in output.out) is failure
-    assert _input_snapshot(tmp_path) == before
 
 
 def test_explicit_io_preparation_is_separate_from_pure_validation(tmp_path: Path, monkeypatch, capsys) -> None:

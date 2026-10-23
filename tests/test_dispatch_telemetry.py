@@ -376,27 +376,6 @@ def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias
         assert telemetry.cli_version == "1.18.0"
 
 
-def test_deepseek_dispatch_start_telemetry_preserves_recorded_catalog_identity():
-    # Retirement forbids new execution, but must not rewrite historical labels.
-    for requested, identity in (
-        (None, "deepseek-v4.1-flash"),
-        ("deepseek/deepseek-flash", "deepseek-v4.1-flash"),
-        ("deepseek/deepseek-v4-pro", "deepseek-v4-pro"),
-        ("deepseek-v4-pro", "deepseek-v4-pro"),
-        ("deepseek/deepseek-v4-flash", "deepseek-v4-flash"),
-        ("deepseek/unknown-model", "deepseek/unknown-model"),
-    ):
-        with patch("agent_runtime.telemetry._probe_version", return_value="1.18.0"):
-            telemetry = resolve_dispatch_start_telemetry(
-                agent_name="deepseek",
-                requested_model=requested,
-                requested_effort=None,
-            )
-        assert telemetry.model == identity
-        assert telemetry.effort == "high"
-        assert telemetry.cli_version == "1.18.0"
-
-
 def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkeypatch, caplog):
     """Known CLI limits are explicit metadata, not dispatch warnings (#4837)."""
     hermes_home = tmp_path / "hermes"
@@ -692,30 +671,6 @@ def test_acp_gemma_shadow_reads_stamped_plan_metadata(tmp_path, caplog):
     assert "dispatch telemetry for" not in caplog.text
 
 
-def test_acp_kimi_shadow_does_not_warn_unknown_effort_or_version(tmp_path, caplog):
-    """#6852 sibling: kimi ACP shadow has the same identity-mapping gap."""
-    plan = InvocationPlan(
-        cmd=["acpx", "kimi", "exec", "-f", "-"],
-        cwd=tmp_path,
-        metadata={
-            "acpx_transport": True,
-            "target_agent": "kimi",
-            "acpx_cli_version": "0.14.7",
-        },
-    )
-    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
-    telemetry = resolve_invocation_telemetry(
-        agent_name="acpx-kimi-shadow",
-        plan=plan,
-        requested_model=None,
-        requested_effort=None,
-    )
-    assert telemetry.effort == "not-exposed"
-    assert telemetry.cli_version == "0.14.7"
-    assert "could not resolve effort" not in caplog.text
-    assert "could not resolve cli_version" not in caplog.text
-
-
 def test_acp_shadow_adapters_resolve_effort_and_cli_version_from_identity(tmp_path, caplog):
     """Sibling sweep: every ACP shadow seat maps identity, never warns unknown."""
     from scripts.agent_runtime.adapters.acpx import (
@@ -785,12 +740,16 @@ def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
     )
 
 
-def test_kimicc_telemetry_omitted_model_agrees_at_dispatch_and_after_spawn(tmp_path):
+def test_kimicc_telemetry_omitted_model_agrees_at_dispatch_and_after_spawn(tmp_path, monkeypatch):
     """An omitted --model spawns the catalog kimicc default.
 
     Dispatch-time telemetry and the after-spawn plan must record the same
-    model and effort. The default route is full k3, so both say k3 / high.
+    model and effort. The historical fixture's default is full k3, so both
+    say k3 / high; the production catalog refuses this default before spawning.
     """
+    from tests.agent_runtime.adapters.kimi_admitted import install_historical_kimi_catalog
+
+    install_historical_kimi_catalog(tmp_path, monkeypatch)
     plan = InvocationPlan(
         cmd=["kimicc_headless.sh", "--model", "k3", "--effort", "high"],
         cwd=tmp_path,

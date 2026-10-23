@@ -18,7 +18,6 @@ from scripts.audit.source_inventory_review_decisions import (
 from scripts.lexicon import promote_teacher_lesson_intake as promote_module
 from scripts.lexicon.grow_lexicon_from_content import build_skeleton_entry
 from scripts.lexicon.promote_teacher_lesson_intake import (
-    DEFAULT_FULL_DECISIONS,
     PROJECT_ROOT,
     promote,
 )
@@ -54,18 +53,6 @@ def source_records():
         }
     )
     return delta, index
-
-
-def test_default_full_decisions_is_a_committed_repository_file() -> None:
-    relative_path = DEFAULT_FULL_DECISIONS.relative_to(PROJECT_ROOT)
-
-    assert relative_path == (
-        Path("registry")
-        / "lexicon"
-        / "source-inventory-review-decisions"
-        / "2026-07-23-alona-full-document-intake.yaml"
-    )
-    assert DEFAULT_FULL_DECISIONS.is_file()
 
 
 def test_case_preserved_vesum_proper_names_do_not_resolve_to_common_noun(tmp_path, monkeypatch) -> None:
@@ -695,29 +682,6 @@ def test_temp_artifacts_destination_readback_and_lifetime(tmp_path, monkeypatch,
         for entry in plan["proposed_manifest_additions"]:
             assert _SAFE_LOCATOR.fullmatch(entry["source_inventory"]["locator"])
     assert _read_temp_artifacts(tmp_path / "first-root")[0] == _read_temp_artifacts(tmp_path / "second-root")[0]
-
-
-def test_temp_decisions_default_membership_readback(tmp_path, monkeypatch, capsys, temp_promotion):
-    kwargs, _, _, _, membership = temp_promotion
-    assert promote_module.main([
-        "--apply", "--full-decisions", str(kwargs["full_decisions"]),
-        "--manifest", str(kwargs["manifest"]), "--vesum-db", str(kwargs["vesum_db"]),
-    ]) == 0
-    out = tmp_path / "membership-out.json"
-    reader_args = ["--emit-membership", str(out), "--membership-in", str(membership),
-                   "--manifest", str(kwargs["manifest"]), "--report"]
-    assert promote_module.main(reader_args) == 0
-    assert json.loads(capsys.readouterr().out)["resolved_atlas_routes"] == 1
-    members = json.loads(out.read_bytes())["members"]
-    assert members == [{"lemma": "fixture-routed", "slug": "fixture-routed", "sources": ["teacher_inventory"]}]
-    changed_root = tmp_path / "changed-root"
-    changed_root.mkdir()
-    monkeypatch.setenv("TMPDIR", str(changed_root))
-    with pytest.raises(FileNotFoundError):
-        promote_module.main(reader_args)
-    monkeypatch.delenv("TMPDIR")
-    assert promote_module.main([*reader_args, "--decisions-in", str(kwargs["decisions_out"])]) == 0
-    capsys.readouterr()
 
 
 def test_temp_plan_override_and_invalid_root(tmp_path, monkeypatch, capsys, temp_promotion):

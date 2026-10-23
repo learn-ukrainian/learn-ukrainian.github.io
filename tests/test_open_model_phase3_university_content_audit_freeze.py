@@ -120,7 +120,3 @@ def test_text_guard() -> None:
     document["topic_coverage"]["topics"][0]["source_text"] = "forbidden"
     with pytest.raises(freeze.UniversityContentAuditFreezeError, match="Additional properties"):
         freeze.validate_document(_rehash(document))
-
-
-def test_cli_check_validates_tracked_freeze() -> None:
-    assert freeze.main([]) == 0

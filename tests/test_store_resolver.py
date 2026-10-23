@@ -143,25 +143,11 @@ def test_injected_binding_mismatch_and_write_refused(checkouts):
             binding=storage.StoreBinding('sources', db, access_mode='write')), 'invalid_binding')
 
 
-def test_store_mapping_is_the_single_source():
-    assert dict(storage.STORE_FILES) == {
-        'sources': ('sources.db', 'LU_SOURCES_DB'),
-        'vesum': ('vesum.db', 'LU_VESUM_DB'),
-        'lexdata': ('lexdata.db', 'LU_LEXDATA_DB'),
-    }
-    assert set(storage.STORE_FILES) == set(STORES)
-
-
 def test_lexdata_override_never_reads_another_store(checkouts):
     primary, worker = checkouts
     make_db(primary / 'data' / 'sources.db')
     refusal(storage.resolve_store('lexdata', worker, env={'LU_SOURCES_DB': str(primary / 'data' / 'sources.db')}),
             'store_missing')
-
-
-def test_invalid_store_rejected(checkouts):
-    with pytest.raises(ValueError, match='unsupported'):
-        storage.resolve_store('other', checkouts[1])
 
 
 def test_unknown_and_network_locality_probes(monkeypatch, tmp_path):

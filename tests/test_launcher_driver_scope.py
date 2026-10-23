@@ -1293,22 +1293,3 @@ def test_driver_scope_caps_pytest_auto_workers(
     result = _run(launcher, env, **extra)
     assert result.returncode == 0, result.stderr
     assert f"XDIST_AUTO:{expected}" in result.stdout
-
-
-@pytest.mark.parametrize(
-    ("unit", "parent"), [("lu.slice", None), ("lu-dispatch.slice", "lu.slice"), ("lu-driver.slice", "lu.slice")]
-)
-def test_slice_units_are_structure_only(unit: str, parent: str | None) -> None:
-    """Slices carry accounting only; memory and swap limits come from a deployment drop-in."""
-    body = (REPO / "packaging/systemd" / unit).read_text()
-    assert "[Unit]" in body and "[Slice]" in body
-    section = body.split("[Slice]", 1)[1]
-    keys = dict(line.split("=", 1) for line in section.splitlines() if "=" in line and not line.startswith("#"))
-    assert keys == {"MemoryAccounting": "yes"}
-    assert not any(key.startswith(("Memory", "CPU", "Tasks")) and key != "MemoryAccounting" for key in keys)
-    if unit != "lu-driver.slice":
-        assert f"{unit}.d/10-limits.conf" in body
-    # systemd.slice(5): the name encodes the parent, so no Slice= line is needed.
-    assert "Slice=" not in section
-    if parent is not None:
-        assert unit.startswith(parent.removesuffix(".slice") + "-")

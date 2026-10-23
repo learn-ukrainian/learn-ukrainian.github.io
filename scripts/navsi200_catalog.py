@@ -84,17 +84,3 @@ def get_lesson_by_id(catalog: dict[str, Any], lesson_id: str) -> dict[str, Any] 
         if lesson.get("id") == lesson_id:
             return lesson
     return None
-
-
-def get_lesson_by_video_id(catalog: dict[str, Any], video_id: str) -> dict[str, Any] | None:
-    """Find a lesson by its YouTube video ID."""
-    for lesson in catalog.get("lessons", []):
-        if lesson.get("video_id") == video_id:
-            return lesson
-    return None
-
-
-def get_catalog_summary(catalog: dict[str, Any]) -> dict[str, Any]:
-    """Return high-level summary statistics of the catalog."""
-    summary: dict[str, Any] = catalog.get("summary", {})
-    return summary

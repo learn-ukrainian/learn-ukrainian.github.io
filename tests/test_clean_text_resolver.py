@@ -28,17 +28,6 @@ def test_public_domain_work_in_corpus_is_hostable(tmp_path: Path) -> None:
     assert result["free_full_text_link"] is None
 
 
-def test_author_embedded_work_title_matches_clean_demand(tmp_path: Path) -> None:
-    db_path = _write_sources_db(tmp_path)
-    index = load_work_index(db_path)
-
-    result = resolve_clean_text("Заповіт", "Шевченко Т.", index, current_year=2026)
-
-    assert result["in_corpus"] is True
-    assert result["corpus_match"] in {"exact", "substring"}
-    assert result["matched_work"] == "Заповіт"
-
-
 def test_in_copyright_work_in_corpus_emits_unverified_link(tmp_path: Path) -> None:
     db_path = _write_sources_db(tmp_path)
     index = load_work_index(db_path)

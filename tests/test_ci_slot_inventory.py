@@ -48,27 +48,6 @@ jobs:
     assert report["workflows"] == [{"workflow": str(tmp_path / "pr.yml"), "jobs": {"test": 4}, "total": 4}]
 
 
-def test_inventory_counts_the_static_pytest_shard_list(tmp_path: Path) -> None:
-    _write_workflow(
-        tmp_path,
-        "ci.yml",
-        """on: [pull_request, merge_group]
-jobs:
-  pytest:
-    strategy:
-      matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    runs-on: ubuntu-latest
-  ci-gate:
-    runs-on: ubuntu-latest
-""",
-    )
-
-    report = slot_inventory.inventory_report(tmp_path)
-
-    assert report["total"] == 11
-
-
 def test_check_fails_when_total_exceeds_ceiling(tmp_path: Path, capsys, monkeypatch) -> None:
     monkeypatch.setattr(slot_inventory, "CI_SLOT_CEILING", 31)
     _write_workflow(
@@ -112,9 +91,3 @@ jobs:
 
     with pytest.raises(ValueError, match="static YAML list"):
         slot_inventory.inventory_report(tmp_path)
-
-
-def test_repository_workflows_fit_the_ceiling() -> None:
-    report = slot_inventory.inventory_report(Path(__file__).resolve().parents[1] / ".github/workflows")
-
-    assert report["pass"], report

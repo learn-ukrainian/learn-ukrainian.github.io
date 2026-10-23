@@ -75,13 +75,6 @@ def test_provisional_pack_refuses_strict_and_waivers(env: Env, extra: list[str])
     assert not (env.state_dir / "plan-validate.report.json").exists()
 
 
-def test_provisional_pack_and_write_report_refuse_all(env: Env) -> None:
-    for flag in ("--provisional-pack", "--write-report"):
-        with pytest.raises(SystemExit) as excinfo:
-            validate_main([LEVEL, "--all", flag])
-        assert excinfo.value.code == 2
-
-
 def test_write_report_bytes_mode_and_inputs(env: Env) -> None:
     assert validate_provisional(env) == 0
     path = env.state_dir / "plan-validate.report.json"

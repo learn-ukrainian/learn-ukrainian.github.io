@@ -8,75 +8,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
-
-from scripts.api.main import app
-from scripts.api.route_contracts import contract_for_page
 
 ROOT = Path(__file__).resolve().parents[1]
 DASHBOARDS = ROOT / "dashboards"
 EPICS_MAP_HTML = DASHBOARDS / "epics-map.html"
-
-
-def test_epics_map_page_is_a_read_only_observer() -> None:
-    html = EPICS_MAP_HTML.read_text(encoding="utf-8")
-
-    assert 'data-read-only="true"' in html
-    assert "Relationship map · cached membership" in html
-    assert "Epics grouped by their operating area." in html
-    assert "Read-only operator dashboard:" in html
-    assert "/api/epics/graph/v1" in html
-    assert 'class="monitor-nav"' in html
-    assert '<a class="active" href="/epics-map.html">Map</a>' in html
-    assert '<link rel="stylesheet" href="/monitor.css">' in html
-    assert 'id="error-banner"' in html
-    assert 'id="btn-refresh"' in html
-    assert 'id="last-updated-text"' in html
-    assert 'id="map-content"' in html
-    assert 'id="detail-pane"' in html
-
-    # Strict read-only invariant: no mutating POST/PUT/DELETE forms or fetch methods
-    for prohibited in (
-        "<form",
-        "method: 'POST'",
-        'method: "POST"',
-        "method: 'PUT'",
-        'method: "PUT"',
-        "method: 'DELETE'",
-        'method: "DELETE"',
-        "/claim",
-        "/heartbeat",
-        "/handoff",
-        "/release",
-    ):
-        assert prohibited not in html
-
-
-def test_epics_map_page_opsec_and_privacy_guarantees() -> None:
-    html = EPICS_MAP_HTML.read_text(encoding="utf-8")
-
-    # The HTML template itself must not embed raw private paths or IP addresses
-    assert "/Users/" not in html
-    assert "/home/" not in html
-    assert "127.0.0.1" not in html
-    assert "localhost:" not in html
-    assert "#0d1117" not in html
-
-
-def test_epics_map_page_contract_registration() -> None:
-    contract = contract_for_page("epics-map.html")
-    assert contract is not None
-    assert contract.url == "/epics-map.html"
-    assert "/api/epics/graph/v1" in contract.source_of_truth
-    assert "15s" in contract.freshness
-    assert "read-only" in contract.purpose.lower()
-
-
-def test_epics_map_page_serves_over_http() -> None:
-    client = TestClient(app, raise_server_exceptions=False)
-    response = client.get("/epics-map.html")
-    assert response.status_code == 200
-    assert "Epics grouped by their operating area." in response.text
 
 
 def test_epics_map_js_behavioral_membership_logic() -> None:

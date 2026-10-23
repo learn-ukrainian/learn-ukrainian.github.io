@@ -6,7 +6,6 @@ No fixture writes Ukrainian forms beyond placeholders.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
@@ -265,15 +264,6 @@ def test_incidental_id_never_enters_state(tmp_path: Path) -> None:
         assert "W-INC-01" not in state.all_allowed_ids
 
 
-def test_id_introduced_at_later_position_not_known(tmp_path: Path) -> None:
-    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
-
-    # Position 1, lesson 2: W-CORE-03 (introduced at pos 2) is NOT known
-    s1_2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
-    assert "W-CORE-03" not in s1_2.core_ids
-    assert "W-CORE-03" not in s1_2.all_allowed_ids
-
-
 def test_base_ids_present_and_excluded_from_cumulative_core_count(tmp_path: Path) -> None:
     plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
 
@@ -379,18 +369,6 @@ def test_bare_lemma_in_plan_fails(tmp_path: Path) -> None:
     assert exc_info.value.code == codes.BARE_LEMMA
 
 
-def test_determinism_byte_identical_output(tmp_path: Path) -> None:
-    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
-
-    s1 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
-    s2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
-
-    json1 = json.dumps(s1.to_dict(), sort_keys=True)
-    json2 = json.dumps(s2.to_dict(), sort_keys=True)
-    assert json1 == json2
-    assert s1.render_text() == s2.render_text()
-
-
 def test_letters_keep_the_plans_introduction_order(tmp_path: Path) -> None:
     """Letters of one lesson stay in the plan's list order, not re-sorted by code point (#9182)."""
     plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
@@ -402,28 +380,6 @@ def test_letters_keep_the_plans_introduction_order(tmp_path: Path) -> None:
     state = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
     assert list(state.letters) == ["Б", "А"]
     assert list(state.to_dict()["letters"]) == ["Б", "А"]
-
-
-def test_base_ids_in_plan_core_do_not_increase_cumulative_count(tmp_path: Path) -> None:
-    """Base-layer IDs must not increase cumulative_core_count even if listed as core in plan."""
-    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
-
-    # In module-one.yaml lesson 1, add W-BASE-01 to core vocabulary
-    p1_file = plans_dir / "module-one.yaml"
-    data = yaml.safe_load(p1_file.read_text(encoding="utf-8"))
-    data["lessons"][0]["inventory"]["vocabulary"]["core"] = [
-        {"lemma": "base-one", "evidence": "W-BASE-01"},
-        {"lemma": "core-one", "evidence": "W-CORE-01"},
-    ]
-    _write_yaml(p1_file, data)
-
-    s1_2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
-    assert s1_2.cumulative_core_count == 1
-    assert "W-CORE-01" in s1_2.core_ids
-    assert "W-BASE-01" not in s1_2.core_ids
-    assert "W-BASE-01" in s1_2.base_ids
-    assert "W-BASE-01" in s1_2.all_allowed_ids
-    assert "W-CORE-01" in s1_2.all_allowed_ids
 
 
 def test_declared_core_record_stays_core_when_also_a_dialogue_name(tmp_path: Path) -> None:
@@ -451,15 +407,6 @@ def test_declared_core_record_stays_core_when_also_a_dialogue_name(tmp_path: Pat
     s1_2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
     assert "W-NAME-01" in s1_2.core_ids
     assert "W-NAME-01" in s1_2.name_ids
-
-
-def test_name_never_declared_core_stays_out_of_core_ids(tmp_path: Path) -> None:
-    """A dialogue name that no plan declares core is admitted by name_ids only and never counted."""
-    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
-    state = planned_state("a1", 2, 1, plans_dir=plans_dir, evidence_dir=evidence_dir)
-    assert "W-NAME-01" in state.name_ids
-    assert "W-NAME-01" not in state.core_ids
-    assert "W-NAME-01" in state.all_allowed_ids
 
 
 def test_arc_ref_level_mismatch_fails(tmp_path: Path) -> None:

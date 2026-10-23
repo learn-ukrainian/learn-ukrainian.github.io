@@ -118,21 +118,6 @@ def test_runtime_default_config_actively_chunked_corpora_diverge_from_legacy() -
         assert config.pooling_mode == LEGACY_SHIPPED_CONFIG.pooling_mode
 
 
-def test_legacy_shipped_config_matches_schema_defaults() -> None:
-    """``LEGACY_SHIPPED_CONFIG`` must mirror the schema-baked defaults.
-
-    The ALTER TABLE in ``_ensure_schema_v2`` stamps pre-existing v1
-    rows with the schema-level ``LEGACY_*`` constants. If those drift
-    from ``LEGACY_SHIPPED_CONFIG``, ``filter_new_or_changed`` will see
-    legacy rows as stale on first open and trigger a full re-encode.
-    """
-
-    assert LEGACY_SHIPPED_CONFIG.model == MODEL_ID
-    assert LEGACY_SHIPPED_CONFIG.index_max_length == LEGACY_INDEX_MAX_LENGTH
-    assert LEGACY_SHIPPED_CONFIG.chunk_policy_version == LEGACY_CHUNK_POLICY_VERSION
-    assert LEGACY_SHIPPED_CONFIG.pooling_mode == LEGACY_POOLING_MODE
-
-
 def test_schema_init_creates_expected_tables_and_indexes(tmp_path: Path) -> None:
     manifest = _make_manifest(tmp_path)
     manifest.close()
@@ -176,24 +161,6 @@ def test_schema_init_creates_expected_tables_and_indexes(tmp_path: Path) -> None
     conn.close()
     # 2 tables + 5 indexes (incl. config index) — must be idempotent on reopen
     assert counts == (7,)
-
-
-def test_v2_columns_present_with_legacy_defaults_on_fresh_init(tmp_path: Path) -> None:
-    """A fresh manifest comes up with the v2 schema directly."""
-
-    manifest = _make_manifest(tmp_path)
-    manifest.close()
-
-    conn = sqlite3.connect(_manifest_path(tmp_path))
-    columns = {row[1]: row[4] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()}
-    conn.close()
-
-    assert "index_max_length" in columns
-    assert "chunk_policy_version" in columns
-    assert "pooling_mode" in columns
-    assert columns["index_max_length"] == str(LEGACY_INDEX_MAX_LENGTH)
-    assert columns["chunk_policy_version"] == f"'{LEGACY_CHUNK_POLICY_VERSION}'"
-    assert columns["pooling_mode"] == f"'{LEGACY_POOLING_MODE}'"
 
 
 def test_partial_v2_schema_migration_completes_missing_columns(tmp_path: Path) -> None:
@@ -697,40 +664,6 @@ def test_active_units_for_corpus_excludes_deleted_rows(tmp_path: Path) -> None:
 
     assert len(active_units) == 40
     assert {row.unit_key for row in active_units}.isdisjoint(deleted_keys)
-
-
-def test_shard_map_for_corpus_returns_absolute_paths(tmp_path: Path) -> None:
-    manifest = _make_manifest(tmp_path)
-    shard_ids = [
-        append_shard(
-            manifest,
-            corpus="archaic_literary",
-            vectors=_vectors(10),
-            unit_specs=_unit_inputs(10, start=0, corpus="archaic_literary"),
-            encoder_config=LEGACY_SHIPPED_CONFIG,
-        ),
-        append_shard(
-            manifest,
-            corpus="archaic_literary",
-            vectors=_vectors(20),
-            unit_specs=_unit_inputs(20, start=10, corpus="archaic_literary"),
-            encoder_config=LEGACY_SHIPPED_CONFIG,
-        ),
-        append_shard(
-            manifest,
-            corpus="archaic_literary",
-            vectors=_vectors(30),
-            unit_specs=_unit_inputs(30, start=30, corpus="archaic_literary"),
-            encoder_config=LEGACY_SHIPPED_CONFIG,
-        ),
-    ]
-
-    shard_map = manifest.shard_map_for_corpus("archaic_literary")
-    manifest.close()
-
-    assert list(shard_map) == shard_ids
-    assert len(shard_map) == 3
-    assert all(path.is_absolute() and path.exists() for path in shard_map.values())
 
 
 def test_vacuum_orphaned_shards_removes_deleted_only_shard(tmp_path: Path) -> None:

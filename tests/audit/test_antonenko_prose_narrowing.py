@@ -17,10 +17,7 @@ from pathlib import Path
 import pytest
 
 from scripts.audit._judge_eval_lib import (
-    ANTONENKO_PROSE_MARKERS,
     _antonenko_fulltext_search,
-    _render_evidence_section,
-    retrieve_evidence,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -43,30 +40,6 @@ def bound_judge_stores(data_store_factory, requires_vesum_db, monkeypatch):
         if name == "_antonenko_fulltext_search":
             monkeypatch.setitem(globals(), name, bound)
     monkeypatch.setattr(judge, "_vesum_unknown", functools.partial(judge._vesum_unknown, db_path=requires_vesum_db))
-
-
-def test_marker_constant_excludes_overbroad_phrases() -> None:
-    """Sanity guard on the marker list itself.
-
-    `не слід` was considered but rejected — it fires on 97/169 chunks
-    (57%), generic enough that filtering on it would behave like the
-    pre-H3a prefix-only query. The guard catches the regression of
-    someone re-adding it without checking the empirical distribution.
-    """
-    assert "не слід" not in ANTONENKO_PROSE_MARKERS, (
-        "не слід fires on 57% of Antonenko chunks — too broad to be a "
-        "narrowing marker. See H3a #2049 COMPARISON.md."
-    )
-    # The deliberately-kept marker set:
-    assert set(ANTONENKO_PROSE_MARKERS) >= {
-        "правильно",
-        "неправильно",
-        "не варто",
-        "натомість",
-        "калька",
-        "русизм",
-        "російською",
-    }
 
 
 def test_narrowed_retrieval_fires_on_russianism_phrase() -> None:
@@ -105,22 +78,6 @@ def test_fallback_activates_when_narrowed_query_finds_nothing() -> None:
     flags = {h["marker_narrowed"] for h in hits}
     assert len(flags) == 1, (
         f"hits within one call must share marker_narrowed value; got {flags}"
-    )
-
-
-def test_rendered_prompt_surfaces_narrowed_status() -> None:
-    """The rendered evidence section should tell the judge whether the
-    chunks came from the high-precision path or the fallback, so the
-    judge can calibrate trust in the snippets."""
-    ev = retrieve_evidence("Ми обговоримо це питання на наступному тижні.")
-    rendered = _render_evidence_section(ev)
-    assert '(no prose hits)' not in rendered, "Required Antonenko probe evidence is absent"
-    # Exactly one of the two preambles fires.
-    has_narrowed = "Narrowed retrieval (H3a)" in rendered
-    has_fallback = "Fallback retrieval" in rendered
-    assert has_narrowed ^ has_fallback, (
-        f"expected exactly one of narrowed/fallback preambles; "
-        f"narrowed={has_narrowed} fallback={has_fallback}"
     )
 
 

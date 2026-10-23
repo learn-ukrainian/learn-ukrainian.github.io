@@ -86,6 +86,8 @@ def copy_interactive_launcher_checkout(root: Path) -> None:
 # Imports are recorded from the files the import system reads (a module's
 # ``.py`` or its cached ``.pyc``), not from ``sys.modules``: compatibility shims
 # such as ``scripts/fleet_comms/contracts.py`` replace their own entry there.
+# PYTHONPYCACHEPREFIX stores that bytecode beside a mirrored package directory,
+# not under ``__pycache__``. Map both layouts back to the source path.
 _PROBE = r"""
 import importlib.util, json, os, sys
 from pathlib import Path
@@ -94,11 +96,25 @@ root = Path.cwd().resolve()
 sys.path.insert(0, str(root))  # the launcher runs the gate with `-m` from the repo root
 opened = set()
 
+def _source_for_bytecode(path):
+    parent = os.path.basename(os.path.dirname(path))
+    prefix = sys.pycache_prefix
+    under_prefix = False
+    if prefix:
+        prefix = os.path.abspath(prefix)
+        under_prefix = os.path.abspath(path).startswith(prefix + os.sep)
+    if parent != "__pycache__" and not under_prefix:
+        return path
+    try:
+        return importlib.util.source_from_cache(path)
+    except (ValueError, OSError):
+        return path
+
 def _record(event, args):
     if event == "open" and isinstance(args[0], (str, bytes, os.PathLike)):
         path = os.fsdecode(args[0])
-        if path.endswith(".pyc") and os.path.basename(os.path.dirname(path)) == "__pycache__":
-            path = importlib.util.source_from_cache(path)
+        if path.endswith(".pyc"):
+            path = _source_for_bytecode(path)
         opened.add(path)
 
 sys.addaudithook(_record)

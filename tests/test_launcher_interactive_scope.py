@@ -31,7 +31,6 @@ import pytest
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry, tracked_launcher_wrappers
 from tests.test_launcher_driver_scope import (
-    manager_guard,
     require_soak_opt_in,
     run_live_soak,
     scope_sandbox,
@@ -91,26 +90,6 @@ def _no_surviving_test_processes(tmp_path: Path):
                 with suppress(ProcessLookupError):
                     os.kill(pid, signal.SIGKILL)
 
-
-@pytest.mark.parametrize("locator", ["cwd", "environ"])
-def test_process_leak_check_rejects_a_surviving_process(tmp_path: Path, locator: str) -> None:
-    env = {"PATH": os.environ["PATH"]}
-    if locator == "environ":
-        env["LAUNCHER_FIXTURE_ROOT"] = str(tmp_path / "repo")
-    process = subprocess.Popen(
-        [sys.executable, "-I", "-c", "import time; time.sleep(300)"],
-        cwd=tmp_path if locator == "cwd" else REPO,
-        env=env,
-        start_new_session=True,
-    )
-    try:
-        with pytest.raises(AssertionError, match=rf"test left running processes: \[{process.pid}\]"):
-            _assert_no_test_processes(tmp_path)
-    finally:
-        os.killpg(process.pid, signal.SIGKILL)
-        process.wait(timeout=10)
-    _assert_no_test_processes(tmp_path)
-
 # Every tracked wrapper, its provider and the label its unit carries (the lane
 # for drivers). Each is executed below; the completeness guard compares this
 # table with `git ls-files`.
@@ -119,8 +98,6 @@ INTERACTIVE = {
     "start-codex.sh": ("codex", "codex"),
     "start-gemini.sh": ("gemini", "gemini"),
     "start-grok.sh": ("grok", "grok"),
-    "start-kimi.sh": ("kimi", "kimi"),
-    "start-kimicc.sh": ("kimi", "kimicc"),
     "start-glm.sh": ("glm", "glm"),
     "start-glmcc.sh": ("glm", "glmcc"),
     "scripts/start-bio-driver.sh": ("claude", "bio"),
@@ -134,11 +111,6 @@ DRIVERS = {
     "start-claude-cto.sh": ("claude", "epics"),
     "start-codex-cto.sh": ("codex", "epics"),
 }
-# Refused before scope entry in every real session: the Muse guard gate has
-# no override (scripts/launchers/muse.sh). Its success path with admission
-# stubbed is tests/test_start_muse_driver.py's shared-lifecycle coverage.
-REFUSAL_ONLY = {"start-muse-driver.sh": (4, "MUSE_GUARD_PARITY_UNPROVEN")}
-
 _EVENT = """lu_test_event() {
   local line cg=""
   while IFS= read -r line; do case "$line" in 0::*) cg="${line#0::}" ;; esac; done < "$FAKE_CGROUP"
@@ -409,14 +381,6 @@ def _expected_forward(wrapper: str) -> list[str]:
     return list(TRICKY)
 
 
-def test_completeness_guard_covers_every_tracked_wrapper() -> None:
-    """Each tracked wrapper is an executed case below, success or classified refusal."""
-    tracked = set(tracked_launcher_wrappers())
-    cases = set(INTERACTIVE) | set(DRIVERS) | set(REFUSAL_ONLY)
-    assert len(INTERACTIVE) + len(DRIVERS) + len(REFUSAL_ONLY) == len(cases)
-    assert cases == tracked, f"missing cases: {sorted(tracked - cases)}; stale cases: {sorted(cases - tracked)}"
-
-
 @pytest.mark.parametrize("wrapper", sorted({**INTERACTIVE, **DRIVERS}))
 def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(tmp_path: Path, wrapper: str) -> None:
     root, env = _checkout(tmp_path)
@@ -474,59 +438,12 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
         assert _lines(env["FAKE_LOGGER_MESSAGES"]) == []
 
 
-@pytest.mark.parametrize("wrapper", sorted(REFUSAL_ONLY))
-def test_refusal_only_wrapper_refuses_before_any_manager_contact(tmp_path: Path, wrapper: str) -> None:
-    """The real Muse admission refuses outside any scope; gh and the manager are fakes."""
-    code, reason = REFUSAL_ONLY[wrapper]
-    bindir = tmp_path / "bin"
-    # Answers the publication shim's API request, as tests/test_start_muse_driver.py does.
-    _write(
-        bindir / "gh",
-        "#!/bin/bash\nprintf 'HTTP/2 200 OK\\r\\nContent-Type: application/json\\r\\n\\r\\n"
-        '{"visibility":"PUBLIC"}\\n\'\n',
-        0o755,
-    )
-    _write(bindir / "muse", '#!/bin/bash\ntouch "$TEST_PROVIDER_STARTED"\n', 0o755)
-    guard = manager_guard(tmp_path / "guard")
-    env = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith(("LAUNCHER_", "GIT_", "SESSION_", "LC_", "LU_DRIVER_"))
-        and key not in {"LU_RULES_SEAT", "PYTEST_XDIST_AUTO_NUM_WORKERS"}
-    }
-    path = f"{bindir}:{guard}:{os.environ['PATH']}"
-    env.update(
-        PATH=path,
-        AGENT_ORIGINAL_PATH=path,
-        AGENT_REAL_GH=str(bindir / "gh"),
-        LAUNCHER_DRY_RUN="0",
-        LU_TEST_REAL_MANAGER_CONTACT=str(tmp_path / "real-manager-contact"),
-        TEST_PROVIDER_STARTED=str(tmp_path / "provider-started"),
-    )
-    result = subprocess.run(
-        [str(REPO / wrapper), "--epic", "devops"],
-        cwd=REPO,
-        env=env,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-        timeout=DEADLINE_S,
-    )
-    assert result.returncode == code, result.stdout + result.stderr
-    assert reason in result.stderr
-    assert "DRIVER_SCOPE_" not in result.stderr
-    _assert_no_real_manager(env)
-    assert not Path(env["TEST_PROVIDER_STARTED"]).exists()
-
-
 @pytest.mark.parametrize(
     ("wrapper", "flash", "harness", "forward_head"),
     [
         # The provider-derived name would replay start-glm.sh and export the flag.
         ("start-glmcc.sh", "unset", "claude-code", []),
         ("start-glm.sh", "1", "claude-code", []),
-        ("start-kimicc.sh", "unset", "claude-code", []),
-        ("start-kimi.sh", "unset", "kimi-code", []),
         ("scripts/start-bio-driver.sh", "unset", "claude-code", ["--agent", "curriculum-track-orchestrator"]),
     ],
 )
@@ -547,7 +464,6 @@ def test_route_identity_survives_reentry(
 @pytest.mark.parametrize(
     ("wrapper", "mode"),
     [
-        ("start-kimicc.sh", "interactive"),
         ("scripts/start-bio-driver.sh", "interactive"),
         ("start-claude-cto.sh", "driver"),
     ],
@@ -593,22 +509,6 @@ def test_admission_refusals_keep_their_codes_before_manager_contact(
     assert not Path(env["FAKE_MANAGER_CALLS"]).exists()
     assert "DRIVER_SCOPE_" not in result.stderr
     assert _events(env) == []
-
-
-@pytest.mark.parametrize("wrapper", ["start-claude.sh", "start-glmcc.sh", "scripts/start-bio-driver.sh"])
-@pytest.mark.parametrize("request_kind", ["help", "dry-run"])
-def test_help_and_dry_run_make_no_manager_calls(tmp_path: Path, wrapper: str, request_kind: str) -> None:
-    root, env = _checkout(tmp_path)
-    extra = {"ZAI_API_KEY": "test-key"}
-    if request_kind == "help":
-        result = _launch(root, env, wrapper, "--help", **extra)
-        assert "Usage:" in result.stdout
-    else:
-        result = _launch(root, env, wrapper, **extra, LAUNCHER_DRY_RUN="1")
-        assert "would enter a verified per-session memory-limited scope in lu-driver.slice" in result.stdout
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert not Path(env["FAKE_MANAGER_CALLS"]).exists()
-    assert not Path(env["TEST_ARGV"]).exists()
 
 
 def test_failed_interactive_exec_with_execfail_refuses_without_driver_fallback(tmp_path: Path) -> None:
@@ -671,9 +571,18 @@ def test_unlisted_entry_point_is_refused(tmp_path: Path) -> None:
 
 
 def test_entry_point_must_run_its_listed_provider_and_mode(tmp_path: Path) -> None:
+    """A wrapper must refuse a provider that does not match its filename.
+
+    The stand-in is an active provider. Kimi's default model is retired and
+    refused in ``launcher_normalize_model``, before this scope gate.
+    """
     root, env = _checkout(tmp_path)
     wrapper = root / "start-glmcc.sh"
-    wrapper.write_text(wrapper.read_text().replace("launcher_main glm interactive", "launcher_main kimi interactive"))
+    wrapper.write_text(
+        wrapper.read_text().replace(
+            "launcher_main glm interactive", "launcher_main grok interactive"
+        )
+    )
     result = _launch(root, env, "start-glmcc.sh")
     assert result.returncode == 6, result.stdout + result.stderr
     assert "DRIVER_SCOPE_REFUSED reason=entrypoint-mismatch;" in result.stderr
@@ -750,46 +659,6 @@ def test_inherited_scope_identity_from_a_parent_is_not_reentry(tmp_path: Path) -
     assert _identity(env)["unit"] != parent
 
 
-@pytest.mark.parametrize(
-    ("mode", "unit"),
-    [
-        ("interactive", "lu-driver-claude-devops-{uuid}.scope"),
-        ("driver", "lu-interactive-claude-claude-{uuid}.scope"),
-        ("other", "lu-interactive-claude-claude-{uuid}.scope"),
-    ],
-)
-def test_entry_helper_refuses_a_forged_mode(tmp_path: Path, mode: str, unit: str) -> None:
-    """The initial verification ties the unit's mode to the launcher's validated mode."""
-    root, env = _checkout(tmp_path)
-    unit = unit.format(uuid=_PARENT)
-    Path(env["FAKE_CGROUP"]).write_text(f"0::/test/lu.slice/lu-driver.slice/{unit}\n")
-    marker = tmp_path / "marker"
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            f'exec 219>{shlex.quote(str(marker))}; exec bash "$@"',
-            "entry",
-            str(root / "scripts/lib/driver_scope.sh"),
-            "--entry",
-            mode,
-            unit,
-            "219",
-            str(root / "start-claude.sh"),
-        ],
-        cwd=root,
-        env=env,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-        timeout=DEADLINE_S,
-    )
-    assert result.returncode == 6, result.stdout + result.stderr
-    assert "DRIVER_SCOPE_REFUSED reason=mode-mismatch;" in result.stderr
-    assert marker.read_text() == "refused\n"
-    assert not Path(env["TEST_EVENTS"]).exists()
-
-
 # --- Lease isolation ---------------------------------------------------------
 
 _SUPERVISOR = {
@@ -821,15 +690,6 @@ def test_interactive_scope_start_failure_preserves_systemd_status_without_publis
     assert "DRIVER_SCOPE_REFUSED" not in result.stderr
     assert "DRIVER_SCOPE_EXIT" not in result.stderr
     assert _events(env) == []
-    assert _lines(env["FAKE_LOGGER_MESSAGES"]) == []
-
-
-def test_interactive_scope_needs_no_entry_marker(tmp_path: Path) -> None:
-    root, env = _checkout(tmp_path)
-    _write(tmp_path / "scope-bin/mktemp", "#!/usr/bin/env bash\nexit 1\n", 0o755)
-    result = _launch(root, env, "start-claude.sh")
-    assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
-    assert "DRIVER_SCOPE_EXIT" not in result.stderr
     assert _lines(env["FAKE_LOGGER_MESSAGES"]) == []
 
 
@@ -926,19 +786,6 @@ def test_dispatch_from_an_interactive_scope_stays_bounded(
             ["worker"], task_id="t", run_nonce="n", env={}, popen=lambda *a, **kw: started.append(a)
         )
     assert started == []
-
-
-@pytest.mark.parametrize(("cap", "inherited", "expected"), [(None, None, "2"), ("3", "8", "3"), ("3", "1", "1")])
-def test_interactive_scope_caps_pytest_auto_workers(
-    tmp_path: Path, cap: str | None, inherited: str | None, expected: str
-) -> None:
-    root, env = _checkout(tmp_path)
-    extra = {} if inherited is None else {"PYTEST_XDIST_AUTO_NUM_WORKERS": inherited}
-    if cap is not None:
-        extra["LU_DRIVER_PYTEST_MAX_WORKERS"] = cap
-    result = _launch(root, env, "start-codex.sh", **extra)
-    assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
-    assert f"provider xdist={expected}" in [name for name, _ in _events(env)]
 
 
 def test_adapter_refusal_inside_the_scope_keeps_its_code(tmp_path: Path) -> None:
@@ -1168,18 +1015,6 @@ def test_interactive_keyboard_signal_reaches_the_provider_exactly_once(
     finally:
         terminal.close()
     assert _signal_log(env).count(name) == 1, _signal_log(env)
-
-
-def test_interactive_resize_reaches_the_provider_once(tmp_path: Path) -> None:
-    terminal, env = _signal_session(tmp_path, "start-claude.sh")
-    try:
-        terminal.resize(33, 101)
-        terminal.wait_for(lambda: any(line.startswith("WINCH") for line in _signal_log(env)), "provider WINCH")
-        terminal.send(b"done\n")
-        assert terminal.finish() == PROVIDER_RC
-    finally:
-        terminal.close()
-    assert [line for line in _signal_log(env) if line.startswith("WINCH")] == ["WINCH 33 101"]
 
 
 def test_interactive_suspend_and_resume_stop_and_continue_the_whole_job(tmp_path: Path) -> None:

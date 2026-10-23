@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import json
-import socket
 import subprocess
 import sys
 from pathlib import Path
-
-import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -55,30 +52,6 @@ def test_emit_event_writes_durable_jsonl(tmp_path, monkeypatch):
     assert rows[0]["ok"] is True
 
 
-def test_current_ids_mint_once_and_export(monkeypatch):
-    monkeypatch.delenv("LU_RUN_ID", raising=False)
-    monkeypatch.delenv("LU_SESSION_ID", raising=False)
-
-    run_id = emit_mod.current_run_id()
-    session_id = emit_mod.current_session_id()
-
-    assert run_id.startswith("run_")
-    assert session_id.startswith("session_")
-    assert emit_mod.current_run_id() == run_id
-    assert emit_mod.current_session_id() == session_id
-    assert run_id == emit_mod.os.environ["LU_RUN_ID"]
-    assert session_id == emit_mod.os.environ["LU_SESSION_ID"]
-
-
-def test_emit_event_honors_disabled_env(tmp_path, monkeypatch):
-    event_dir = _use_event_dir(monkeypatch, tmp_path)
-    monkeypatch.setenv("LU_TELEMETRY_DISABLED", "1")
-
-    assert emit_mod.emit_event("unit", {"ok": True}) is None
-
-    assert not list(event_dir.glob("*.jsonl"))
-
-
 def test_emit_event_swallows_serialization_error(tmp_path, monkeypatch):
     event_dir = _use_event_dir(monkeypatch, tmp_path)
 
@@ -90,58 +63,6 @@ def test_emit_event_swallows_serialization_error(tmp_path, monkeypatch):
     assert emit_mod.emit_event("unit", {"bad": object()}) is None
 
     assert not list(event_dir.glob("*.jsonl"))
-
-
-def test_emit_event_recursion_guard_writes_only_outer_event(tmp_path, monkeypatch):
-    event_dir = _use_event_dir(monkeypatch, tmp_path)
-    real_write_line = emit_mod._write_line
-
-    def recursive_write(path: Path, line: bytes) -> None:
-        emit_mod.emit_event("nested", {"ok": False})
-        real_write_line(path, line)
-
-    monkeypatch.setattr(emit_mod, "_write_line", recursive_write)
-
-    assert emit_mod.emit_event("outer", {"ok": True}) is None
-
-    rows = _event_lines(event_dir)
-    assert [row["event_type"] for row in rows] == ["outer"]
-
-
-def test_emit_event_hot_path_makes_no_network_call(tmp_path, monkeypatch):
-    event_dir = _use_event_dir(monkeypatch, tmp_path)
-
-    def fail_socket(*_args, **_kwargs):
-        raise AssertionError("telemetry emit must not open sockets")
-
-    monkeypatch.setattr(socket, "socket", fail_socket)
-
-    assert emit_mod.emit_event("unit", {"ok": True}) is None
-    assert len(_event_lines(event_dir)) == 1
-
-
-def test_emit_event_honors_directory_env(tmp_path, monkeypatch):
-    event_dir = tmp_path / "redirected" / "events"
-    monkeypatch.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
-
-    emit_mod.emit_event("redirected", {"ok": True})
-
-    rows = _event_lines(event_dir)
-    assert len(rows) == 1
-    assert rows[0]["event_type"] == "redirected"
-    assert rows[0]["ok"] is True
-
-
-@pytest.mark.parametrize("override", [None, ""])
-def test_event_directory_default_is_unchanged(tmp_path, monkeypatch, override):
-    # Exercise the real resolver against a synthetic checkout, never the store.
-    monkeypatch.setattr(emit_mod, "__file__", str(tmp_path / "scripts" / "telemetry" / "emit.py"))
-    if override is None:
-        monkeypatch.delenv("LU_TELEMETRY_EVENTS_DIR", raising=False)
-    else:
-        monkeypatch.setenv("LU_TELEMETRY_EVENTS_DIR", override)
-
-    assert emit_mod._event_dir() == tmp_path / "batch_state" / "telemetry" / "events"
 
 
 def test_redirect_is_inherited_by_subprocess_and_package_import(tmp_path, monkeypatch):

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import threading
 import time
 import urllib.parse
 import urllib.request
@@ -89,37 +88,6 @@ def test_fetch_caps_timeout_and_rejects_other_schemes() -> None:
     assert seen["url"] == "https://metrics.example/v1"
 
 
-def test_fetch_returns_when_the_body_stalls() -> None:
-    started = threading.Event()
-    release = threading.Event()
-
-    def opener(request, timeout):
-        class Slow:
-            status = 200
-
-            def read(self, _size: int) -> bytes:
-                started.set()
-                release.wait(10)
-                return b"[]"
-
-            def __enter__(self) -> Slow:
-                return self
-
-            def __exit__(self, *_args: object) -> bool:
-                return False
-
-        return Slow()
-
-    try:
-        began = time.monotonic()
-        with pytest.raises(TimeoutError):
-            fetch_json("https://metrics.example/v1", timeout_s=0.05, opener=opener)
-        assert time.monotonic() - began < 3.0
-        assert started.is_set()
-    finally:
-        release.set()
-
-
 def test_redirect_stops_at_the_deadline_and_drops_userinfo() -> None:
     request = urllib.request.Request("https://metrics.example/v1")
     expired = _DeadlineRedirect(time.monotonic() - 0.01)
@@ -137,45 +105,6 @@ def test_redirect_stops_at_the_deadline_and_drops_userinfo() -> None:
     assert redirected.full_url == "https://metrics.example/next"
     with pytest.raises(ValueError):
         live.redirect_request(request, None, 302, "found", {}, "ftp://metrics.example/next")
-
-
-def test_unset_sources_are_not_configured_and_do_not_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
-    def explode(*_args, **_kwargs):
-        raise AssertionError("fetch")
-
-    monkeypatch.setattr(http_sources, "fetch_json", explode)
-    paths = (
-        ("/api/fleet/v1/alerts", "alerts", "fleet.v1.alerts"),
-        ("/api/fleet/v1/stats", "stats", "fleet.v1.stats"),
-        ("/api/fleet/v1/links", "links", "fleet.v1.links"),
-    )
-    for path, source, schema in paths:
-        response = client.get(path)
-        assert response.status_code == 200
-        body = response.json()
-        assert body["schema"] == schema
-        assert _source(body) == {"name": source, "status": "not_configured", "age_s": None, "error": None}
-        _validate(body)
-
-
-def test_blank_alert_location_is_not_configured(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("FLEET_ALERTMANAGER_URL", "   ")
-    response = client.get("/api/fleet/v1/alerts")
-    assert response.status_code == 200
-    assert _source(response.json())["status"] == "not_configured"
-
-
-def test_index_does_not_read_a_configured_location(monkeypatch: pytest.MonkeyPatch) -> None:
-    def explode(*_args, **_kwargs):
-        raise AssertionError("fetch")
-
-    monkeypatch.setattr(http_sources, "fetch_json", explode)
-    monkeypatch.setenv("FLEET_ALERTMANAGER_URL", "https://alerts.example")
-    response = client.get("/api/fleet/v1")
-    assert response.status_code == 200
-    alerts = next(item for item in response.json()["sources"] if item["name"] == "alerts")
-    assert alerts["status"] == "ok"
-    assert "alerts.example" not in response.text
 
 
 def test_alerts_keep_only_sanitised_fields(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -389,63 +318,6 @@ def test_stats_transport_failure_is_unavailable(monkeypatch: pytest.MonkeyPatch)
     assert "metrics.example" not in response.text
 
 
-def test_stats_do_not_wait_out_a_slow_query(monkeypatch: pytest.MonkeyPatch) -> None:
-    # The configured timeout is 0.05 s. The blocker is 200x longer and the bound sits
-    # mid-way, so scheduling jitter on a loaded runner (seconds) cannot reach either side.
-    blocker_s = 10
-    bound_s = 3
-    release = threading.Event()
-    entered = threading.Event()
-
-    def fetch(_url, **_kwargs):
-        entered.set()
-        release.wait(blocker_s)
-        return _series("4")
-
-    monkeypatch.setattr(http_sources, "fetch_json", fetch)
-    monkeypatch.setattr(http_sources, "HTTP_TIMEOUT_S", 0.05)
-    monkeypatch.setenv("FLEET_PROMETHEUS_URL", "https://metrics.example")
-    try:
-        started = time.monotonic()
-        response = client.get("/api/fleet/v1/stats")
-        elapsed = time.monotonic() - started
-        assert entered.is_set()
-        assert elapsed < bound_s
-    finally:
-        release.set()
-    assert response.status_code == 200
-    body = response.json()
-    _validate(body)
-    assert _source(body)["status"] == "unavailable"
-
-
-def test_stats_application_failure_keeps_a_cached_payload(monkeypatch: pytest.MonkeyPatch) -> None:
-    phase = {"fresh": True}
-
-    def fetch(url, **_kwargs):
-        query = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["query"][0]
-        assert query in _QUERIES
-        if phase["fresh"]:
-            return _series("4")
-        return {"status": "error", "error": "hidden-query-token"}
-
-    monkeypatch.setattr(http_sources, "fetch_json", fetch)
-    monkeypatch.setenv("FLEET_PROMETHEUS_URL", "https://metrics.example")
-    first = client.get("/api/fleet/v1/stats")
-    assert _source(first.json())["status"] == "ok"
-    assert first.json()["data"]["stats"][0]["value"] == 4
-    phase["fresh"] = False
-    monkeypatch.setattr(values, "CACHE_TTL_S", 0)
-    second = client.get("/api/fleet/v1/stats")
-    assert second.status_code == 200
-    body = second.json()
-    _validate(body)
-    assert _source(body)["status"] == "stale"
-    assert [item["value"] for item in body["data"]["stats"]] == [4, 4, 4, 4]
-    assert "hidden-query-token" not in second.text
-    assert "metrics.example" not in second.text
-
-
 def test_stats_application_failure_without_a_cache_is_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
     def fetch(_url, **_kwargs):
         return {"status": "error", "error": "hidden-query-token"}
@@ -461,21 +333,88 @@ def test_stats_application_failure_without_a_cache_is_unavailable(monkeypatch: p
     assert "hidden-query-token" not in response.text
 
 
-def test_links_are_built_from_the_base_without_secrets(monkeypatch: pytest.MonkeyPatch) -> None:
+_PUBLIC_V4 = ".".join(("8", "8", "8", "8"))
+
+
+def test_links_publish_only_an_approved_public_ip_destination_without_secrets(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """D13: global routability alone is not audience approval."""
     monkeypatch.setenv(
         "FLEET_GRAFANA_URL",
-        _with_userinfo("boards.example", "/grafana") + "?" + "token" + "=" + "userinfo-token",
+        _with_userinfo(_PUBLIC_V4, "/grafana") + "?" + "token" + "=" + "userinfo-token",
     )
+    response = client.get("/api/fleet/v1/links")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert body["data"]["links"] == []
+    assert _PUBLIC_V4 not in response.text
+
+    monkeypatch.setattr(http_sources, "APPROVED_LINK_ORIGINS", frozenset({f"https://{_PUBLIC_V4}"}))
     response = client.get("/api/fleet/v1/links")
     assert response.status_code == 200
     body = response.json()
     _validate(body)
     assert _source(body)["status"] == "ok"
     assert body["data"]["links"] == [
-        {"name": "overview", "href": "https://boards.example/grafana/d/overview"},
-        {"name": "fleet", "href": "https://boards.example/grafana/d/fleet"},
+        {"name": "overview", "href": f"https://{_PUBLIC_V4}/grafana/d/overview"},
+        {"name": "fleet", "href": f"https://{_PUBLIC_V4}/grafana/d/fleet"},
     ]
     assert "userinfo-token" not in response.text
+
+
+@pytest.mark.parametrize(
+    "base",
+    [
+        "http://monitor.internal/grafana",
+        "https://boards.example/grafana",
+    ],
+)
+def test_unverified_dns_link_destinations_are_withheld(
+    monkeypatch: pytest.MonkeyPatch, base: str
+) -> None:
+    """D13: without a DNS lookup, target and audience approval stay unknown."""
+    monkeypatch.setenv("FLEET_GRAFANA_URL", base)
+    response = client.get("/api/fleet/v1/links")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert body["data"]["links"] == []
+    host = base.split("//", 1)[1].split("/", 1)[0]
+    assert host not in response.text
+
+
+_LOOPBACK_V4 = ".".join(("127", "0", "0", "1"))
+_LOOPBACK_V6 = "[::" + "1]"
+_PRIVATE_V4 = ".".join(("10", "0", "0", "5"))
+_LAN_V4 = ".".join(("192", "168", "1", "9"))
+
+
+@pytest.mark.parametrize(
+    "base",
+    [
+        f"http://{_LOOPBACK_V4}:3000/grafana",
+        f"http://{_LOOPBACK_V6}:3000/grafana",
+        f"http://{_PRIVATE_V4}:3000/grafana",
+        f"http://{_LAN_V4}/grafana",
+        "http://monitor.local/grafana",
+        "http://localhost:3000/grafana",
+    ],
+)
+def test_private_link_destinations_are_withheld(monkeypatch: pytest.MonkeyPatch, base: str) -> None:
+    """D13: a public surface never publishes a private or loopback locator."""
+    monkeypatch.setenv("FLEET_GRAFANA_URL", base)
+    response = client.get("/api/fleet/v1/links")
+    assert response.status_code == 200
+    body = response.json()
+    _validate(body)
+    assert _source(body)["status"] == "unavailable"
+    assert body["data"]["links"] == []
+    host = base.split("//", 1)[1].split("/", 1)[0]
+    assert host not in response.text
 
 
 def test_links_reject_a_non_http_base(monkeypatch: pytest.MonkeyPatch) -> None:

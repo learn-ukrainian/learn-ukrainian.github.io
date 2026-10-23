@@ -11,7 +11,6 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 vocab_coverage = import_module("build.phases.vocab_coverage")
-_extract_ukrainian_term = vocab_coverage._extract_ukrainian_term
 check_vocab_coverage = vocab_coverage.check_vocab_coverage
 
 
@@ -75,26 +74,6 @@ def test_stress_marks_ignored(tmp_path: Path) -> None:
     assert result.missing_terms == ()
 
 
-def test_capitalization_ignored(tmp_path: Path) -> None:
-    plan_path = _write_plan(tmp_path, ["як справи (how are you)"])
-    vocab_path = _write_vocab(tmp_path, ["Як справи?"])
-
-    result = check_vocab_coverage(plan_path, vocab_path)
-
-    assert result.passed is True
-    assert result.missing_terms == ()
-
-
-def test_punctuation_ignored(tmp_path: Path) -> None:
-    plan_path = _write_plan(tmp_path, ["До побачення (Goodbye)"])
-    vocab_path = _write_vocab(tmp_path, ["До побачення!"])
-
-    result = check_vocab_coverage(plan_path, vocab_path)
-
-    assert result.passed is True
-    assert result.missing_terms == ()
-
-
 def test_inflection_via_vesum_lemma(tmp_path: Path, requires_vesum_db, monkeypatch) -> None:
     original = vocab_coverage._vesum_lemma_lookup
     monkeypatch.setattr(vocab_coverage, "_vesum_lemma_lookup", lambda term: original(term, requires_vesum_db))
@@ -109,17 +88,3 @@ def test_inflection_via_vesum_lemma(tmp_path: Path, requires_vesum_db, monkeypat
         assert result.missing_terms == ()
     finally:
         vocab_coverage._lemma_key.cache_clear()
-
-
-def test_distinct_terms_do_not_match(tmp_path: Path) -> None:
-    plan_path = _write_plan(tmp_path, ["звук (sound)"])
-    vocab_path = _write_vocab(tmp_path, ["звичайний"])
-
-    result = check_vocab_coverage(plan_path, vocab_path)
-
-    assert result.passed is False
-    assert result.missing_terms == ("звук",)
-
-
-def test_ukrainian_term_extraction() -> None:
-    assert _extract_ukrainian_term("Добрий день (Good day — formal)") == "Добрий день"

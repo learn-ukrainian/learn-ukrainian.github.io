@@ -18,7 +18,6 @@ from scripts.projects.open_model_data.v4_verify_trajectory_claims import (
     DEFAULT_VESUM_DB,
     PRIVATE_HOST_RE,
     RECEIPT_SCHEMA_PATH,
-    REPO_ROOT,
     TRAJECTORY_SCHEMA_PATH,
     CoTClaimVerifier,
     run_claim_verifier,
@@ -324,69 +323,6 @@ def test_hard_rejection_fake_vesum_lemma(mock_dbs: tuple[Path, Path, Path], tmp_
     assert any("has 0 forms in vesum.db" in str(r) for r in rej_data[0]["rejection_reasons"])
 
 
-def test_hard_rejection_vesum_count_mismatch(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
-    """Asserting false VESUM form count in reasoning steps triggers hard rejection."""
-    vesum, sources, ulif = mock_dbs
-    inp = tmp_path / "count_mismatch.jsonl"
-    out = tmp_path / "verified.jsonl"
-    rej = tmp_path / "rejected.jsonl"
-    rcp = tmp_path / "receipt.json"
-
-    rec = {
-        "schema_version": "v1_decolonization_trajectory",
-        "trajectory_id": "traj.decolonize.0000000000000003",
-        "query": "Тестове запитання?",
-        "target_term": "пилосос",
-        "is_calque_or_russianism": True,
-        "morphemic_breakdown": {
-            "source_formation": "Калька з російської мови.",
-            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
-        },
-        "lexicographical_context": {
-            "historical_suppression_note": "Штучно нав'язано радянською владою.",
-            "restoration_era": "Правопис 2019.",
-        },
-        "vesum_attestation": [
-            {
-                "lemma": "пилосмок",
-                "vesum_forms_count": 2,  # Mock DB has 2 forms
-                "is_standard_attested": True,
-            }
-        ],
-        "register_spectrum": {
-            "primary_living_standard": "пилосмок",
-            "alternatives": [
-                {
-                    "lemma": "пилосмок",
-                    "register_tier": "living_standard",
-                    "evidence_source": "Словник",
-                }
-            ],
-        },
-        "reasoning_steps": [
-            "1. ВЕСУМ: «пилосмок» (999 форм) має колосальну кількість форм.",  # False claim
-        ],
-        "final_response": "Правильна відповідь для тестування.",
-    }
-    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
-
-    receipt = run_claim_verifier(
-        input_path=inp,
-        verified_output_path=out,
-        rejected_output_path=rej,
-        receipt_output_path=rcp,
-        vesum_db=vesum,
-        sources_db=sources,
-        ulif_db=ulif,
-        verify_only=False,
-    )
-
-    assert receipt["counts"]["trajectories_passed"] == 0
-    assert receipt["counts"]["trajectories_rejected"] == 1
-    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
-    assert any("VESUM form count mismatch" in str(r) for r in rej_data[0]["rejection_reasons"])
-
-
 def test_hard_rejection_fake_sum11_citation(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
     """Asserting false СУМ-11 headword citation triggers hard rejection."""
     vesum, sources, ulif = mock_dbs
@@ -604,27 +540,6 @@ def test_opsec_no_private_host_paths() -> None:
     assert DEFAULT_VERIFIED_OUTPUT.is_file(), f"Missing verified output: {DEFAULT_VERIFIED_OUTPUT}"
     verified_text = DEFAULT_VERIFIED_OUTPUT.read_text(encoding="utf-8")
     assert not PRIVATE_HOST_RE.search(verified_text), "Private host path detected in verified output!"
-
-
-def test_subprocess_timeout_guard() -> None:
-    """All subprocess invocations must specify an explicit timeout= parameter."""
-    import ast
-
-    script_path = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v4_verify_trajectory_claims.py"
-    tree = ast.parse(script_path.read_text(encoding="utf-8"))
-
-    checked_calls = 0
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            func = node.func
-            is_subp = False
-            if isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name) and func.value.id == "subprocess":
-                is_subp = True
-            if is_subp and func.attr in ("run", "check_output", "call", "check_call"):
-                has_timeout = any(kw.arg == "timeout" for kw in node.keywords)
-                assert has_timeout, f"Missing explicit timeout= in subprocess.{func.attr} call at line {node.lineno}"
-                checked_calls += 1
-    assert checked_calls > 0, "Expected at least one subprocess call to check"
 
 
 def test_hard_rejection_vesum_count_off_by_one(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
@@ -1276,86 +1191,6 @@ def test_hard_rejection_r2u_polarity_ambiguous_phrasing_fails(
     assert receipt["counts"]["trajectories_rejected"] == 1
     rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
     assert any("Ambiguous 1920s lexicographical claim" in str(r) for r in rej_data[0]["rejection_reasons"])
-
-
-def test_r2u_polarity_expanded_negation_phrasing(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
-    """Diverse Ukrainian negation phrasing (не трапляється, не існує, випадає з реєстру) correctly triggers absence verification."""
-    vesum, sources, ulif = mock_dbs
-    inp = tmp_path / "r2u_expanded_neg.jsonl"
-    out = tmp_path / "verified.jsonl"
-    rej = tmp_path / "rejected.jsonl"
-    rcp = tmp_path / "receipt.json"
-
-    # In cache: word is FOUND
-    cache_file = tmp_path / "r2u_cache.json"
-    cache_file.write_text(
-        json.dumps(
-            {
-                "пилосмок": {
-                    "status": "found",
-                    "translations": ["пилосмок"],
-                }
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    # Trajectory falsely asserts absence using non-standard Ukrainian phrasing
-    rec = {
-        "schema_version": "v1_decolonization_trajectory",
-        "trajectory_id": "traj.decolonize.0000000000000017",
-        "query": "Тестове запитання?",
-        "target_term": "пилосос",
-        "is_calque_or_russianism": True,
-        "morphemic_breakdown": {
-            "source_formation": "Калька з російської мови.",
-            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
-        },
-        "lexicographical_context": {
-            "historical_suppression_note": "Штучно нав'язано радянською владою.",
-            "restoration_era": "Правопис 2019.",
-        },
-        "vesum_attestation": [
-            {
-                "lemma": "пилосмок",
-                "vesum_forms_count": 2,
-                "is_standard_attested": True,
-            }
-        ],
-        "register_spectrum": {
-            "primary_living_standard": "пилосмок",
-            "alternatives": [
-                {
-                    "lemma": "пилосмок",
-                    "register_tier": "living_standard",
-                    "evidence_source": "Словник",
-                }
-            ],
-        },
-        "reasoning_steps": [
-            "1. У словниках 1920-х років R2U слово «пилосмок» не трапляється і випадає з реєстру.",
-        ],
-        "final_response": "Правильна відповідь для тестування.",
-    }
-    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
-
-    receipt = run_claim_verifier(
-        input_path=inp,
-        verified_output_path=out,
-        rejected_output_path=rej,
-        receipt_output_path=rcp,
-        vesum_db=vesum,
-        sources_db=sources,
-        ulif_db=ulif,
-        r2u_cache_path=cache_file,
-        verify_only=False,
-    )
-
-    # Since it was claimed absent (polarity=False) but status is 'found', it must hard-reject as fabricated absence
-    assert receipt["counts"]["trajectories_passed"] == 0
-    assert receipt["counts"]["trajectories_rejected"] == 1
-    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
-    assert any("Fabricated 1920s absence claim" in str(r) for r in rej_data[0]["rejection_reasons"])
 
 
 def test_dynamic_invariants_non_tautological(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:

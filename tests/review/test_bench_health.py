@@ -252,7 +252,11 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
 def test_bench_health_preserves_capacity_gate(status, reason, route, names, capsys):
     data = {"agents": {route: {"status": status, "remaining_pct": 5}}, "diagnostics": {"stale": False}}
     results = check_bench_health(routing_snapshot=data)
-    assert all(not names.intersection(seats) for seats in results.values())
+    blocked = status == "unhealthy" or route == "claude"
+    if blocked:
+        assert all(not names.intersection(seats) for seats in results.values())
+    else:
+        assert results == DEFAULT_COUNTS
     # Native Grok supplies the second Anthropic seat when Codex is unavailable.
     assert main([], routing_snapshot=data) == 0
     for finding in _findings(capsys.readouterr()):
@@ -260,7 +264,7 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
                 assert finding["excluded_seats"][name] == reason
     assert results["anthropic"] == (
-        [NATIVE_GROK, GROK, "gemini-3.8-flash-high"] if route == "codex" else DEFAULT_COUNTS["anthropic"]
+        [NATIVE_GROK, GROK, "gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
     )
     # Check exclusion reasons even when Grok admission prevents a CLI shortfall.
     _, excluded = bench_health._bench_inventory(
@@ -269,7 +273,10 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
     for family in AUTHOR_FAMILIES:
         for name in names:
             if REVIEW_CANDIDATES[name].family != family:
-                assert excluded[family][name] == reason
+                if blocked:
+                    assert excluded[family][name] == reason
+                else:
+                    assert name not in excluded[family]
 
 
 def test_bench_health_preserves_critical_role_gate():
@@ -281,11 +288,31 @@ def test_bench_health_preserves_critical_role_gate():
 @pytest.mark.parametrize("status", ["unhealthy", "near_cap"])
 @pytest.mark.parametrize("route,family", [("codex", "anthropic"), ("claude", "openai")])
 def test_accepted_single_seat_still_requires_available_reviewer(risk, status, route, family, capsys):
-    # Disable both newly admitted Grok routes to keep exercising the zero-seat invariant.
+    # Unhealthy routes cannot fill the bench; non-Claude near-cap routes can.
     data = {"agents": {lane: {"status": status, "remaining_pct": 5} for lane in (route, "grok", "cursor")},
             "diagnostics": {"stale": False}}
-    assert main(["--risk", risk], routing_snapshot=data) == 1
+    assert main(["--risk", risk], routing_snapshot=data) == (1 if status == "unhealthy" or route == "claude" else 0)
     captured = capsys.readouterr()
+    if status == "near_cap":
+        results = check_bench_health(routing_snapshot=data, risk=risk)
+        assert results[family] == (
+            ["openai_frontier", NATIVE_GROK, GROK] if route == "codex" else [NATIVE_GROK, GROK]
+        )
+        findings = _findings(captured)
+        if route == "claude":
+            # Claude's cap still leaves xAI authors below their two-seat minimum.
+            assert len(findings) == 1
+            assert findings[0]["author_family"] == "xai"
+            assert findings[0]["minimum"] == 2
+            assert findings[0]["counted_seats"] == ["openai_frontier"]
+            assert findings[0]["excluded_seats"]["claude-opus-5-5"] == (
+                "quota bucket is near cap — automatic assignments are prohibited"
+            )
+            assert "BENCH HEALTH FAIL" in captured.err
+        else:
+            assert not findings
+            assert "BENCH HEALTH PASS" in captured.out
+        return
     finding = next(item for item in _findings(captured) if item["author_family"] == family)
     assert finding["minimum"] == 1
     assert finding["counted_seats"] == []
@@ -298,22 +325,6 @@ def test_catalog_reserves_count_only_on_automatic_ladder():
     assert "claude-fable-5-1" not in medium["openai"]
     # #9583: Fable is no reviewer at any risk.
     assert "claude-fable-5-1" not in critical["openai"]
-
-
-def test_bench_health_main_returns_zero_when_healthy(monkeypatch, capsys):
-    """Exercise the success branch with a hypothetical adequate automatic bench."""
-    monkeypatch.setattr(
-        bench_health,
-        "_bench_inventory",
-        lambda *args, **kwargs: (
-            {family: ["seat-one", "seat-two"] for family in AUTHOR_FAMILIES},
-            {family: {} for family in AUTHOR_FAMILIES},
-        ),
-    )
-    assert main([], routing_snapshot={}) == 0
-    captured = capsys.readouterr()
-    assert "BENCH HEALTH PASS: All author families meet their required reviewer minimum." in captured.out
-    assert captured.err == ""
 
 
 def test_bench_health_main_returns_one_when_unhealthy(capsys):

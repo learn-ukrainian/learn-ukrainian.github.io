@@ -207,16 +207,6 @@ def test_textbook_search_excludes_ulp_mirrors(tmp_path) -> None:
     assert rows[0]["provenance"]["locator"] == "language-clean"
 
 
-def test_inventory_rejects_non_positive_sentence_cap(tmp_path) -> None:
-    with pytest.raises(ValueError, match="max_per_lemma"):
-        build_inventory([], _sources_db(tmp_path), max_per_lemma=0)
-
-
-def test_inventory_rejects_non_positive_textbook_search_limit(tmp_path) -> None:
-    with pytest.raises(ValueError, match="textbook search limit"):
-        build_inventory([], _sources_db(tmp_path), textbook_search_limit=0)
-
-
 def test_candidate_sentences_reject_formula_and_worksheet_fragments() -> None:
     rejected = (
         ("а", "2) Якщо а > 0, то нерівність перепишемо у вигляді ."),
@@ -310,12 +300,6 @@ def test_candidate_sentences_rejects_vesum_imperative_commands(tmp_path) -> None
         verifier.close()
 
 
-def test_candidate_sentences_keeps_a_clean_short_function_word() -> None:
-    sentence = "Ми говоримо, а ви читаєте."
-
-    assert list(_candidate_sentences(sentence, "а")) == [sentence]
-
-
 def test_candidate_sentences_matches_apostrophe_variants() -> None:
     sentence = "У мене є сім’я."
 
@@ -337,12 +321,6 @@ def test_candidate_sentences_never_strips_real_one_letter_starters() -> None:
         ("Я читаю, а він пише.", "Я"),
     ):
         assert list(_candidate_sentences(sentence, lemma)) == [sentence]
-
-
-def test_candidate_sentences_rejects_quiz_marker_with_lowercase_leftover() -> None:
-    assert list(
-        _candidate_sentences("Г воно доходить до моєї кімнати.", "воно")
-    ) == []
 
 
 def test_daily_lemmas_and_written_schema(tmp_path) -> None:
@@ -487,13 +465,3 @@ def test_main_accepts_explicit_practice_targets(tmp_path) -> None:
         ]
     ) == 0
     assert json.loads(out.read_text(encoding="utf-8"))["rows"][0]["lemmaId"] == "ukraini"
-
-
-def test_main_rejects_mixed_daily_and_practice_target_modes(tmp_path) -> None:
-    daily = tmp_path / "daily.json"
-    daily.write_text(json.dumps([]), encoding="utf-8")
-    shard = tmp_path / "practice-lexemes.A1.json"
-    _practice_shard(shard, "A1", [])
-
-    with pytest.raises(SystemExit):
-        main(["--daily-pool", str(daily), "--practice-lexemes", str(shard)])

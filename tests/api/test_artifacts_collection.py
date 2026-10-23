@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import os
-from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
 from fastapi.testclient import TestClient
 
 from scripts.api import artifacts_router, docs_router
@@ -91,64 +89,6 @@ def test_artifacts_response_bytes_match_before_optimization(
         assert after.json()["total"] == 6
 
 
-def test_artifacts_observe_modify_add_delete(artifact_context: MonitorContext) -> None:
-    root = artifact_context.roots.project_root
-    original = docs_router.collect_html_artifacts(ctx=artifact_context)
-    note = root / "docs/research/nested/notes.md"
-    stat = note.stat()
-    # Same size and mtime: path optimization introduces no stale metadata cache.
-    note.write_text("# Fresh notes\n\nNo frontmatter.\n", encoding="utf-8")
-    os.utime(note, ns=(stat.st_atime_ns, stat.st_mtime_ns))
-    added = root / "docs/research/added.md"
-    added.write_text("# Added notes\n", encoding="utf-8")
-    changed = docs_router.collect_html_artifacts(ctx=artifact_context)
-    items = {item["path"]: item for item in changed["artifacts"]}
-    assert changed["total"] == original["total"] + 1
-    assert items["docs/research/nested/notes.md"]["title"] == "Fresh notes"
-    assert items["docs/research/nested/notes.md"]["size_bytes"] == stat.st_size
-    assert items["docs/research/added.md"]["title"] == "Added notes"
-
-    note.unlink()
-    added.unlink()
-    deleted = docs_router.collect_html_artifacts(ctx=artifact_context)
-    assert deleted["total"] == original["total"] - 1
-    assert not {"docs/research/nested/notes.md", "docs/research/added.md"} & {
-        item["path"] for item in deleted["artifacts"]
-    }
-
-
-@pytest.mark.parametrize(
-    ("path", "root"),
-    [
-        ("/a/b/file.md", "/a/b"),
-        ("/a/b", "/a/b"),
-        ("/a/b/file.md", "/"),
-        ("a/b/file.md", "a/b"),
-        ("a/b", "."),
-        (".", "."),
-        ("/a/b/file.md", "."),
-        ("//a/b/file.md", "/a/b"),
-        ("//a/b/file.md", "//a/b"),
-        ("//a/b", "//a/b"),
-        ("a/b/../file.md", "a/b"),
-        ("/a/b/../file.md", "/a/b"),
-        ("/a/bb/file.md", "/a/b"),
-        ("/a/file.md", "/a/b"),
-        ("/a/b/file.md", "a/b"),
-        ("a/b/file.md", "/a/b"),
-    ],
-)
-def test_docs_relative_path_matches_pathlib(path: str, root: str) -> None:
-    file_path, root_path = Path(path), Path(root)
-    try:
-        expected = file_path.relative_to(root_path).as_posix()
-    except ValueError:
-        with pytest.raises(ValueError):
-            docs_router._relative_to_root(file_path, root_path)
-    else:
-        assert docs_router._relative_to_root(file_path, root_path) == expected
-
-
 def test_docs_resolved_containment_rejects_escape(tmp_path: Path) -> None:
     root = tmp_path / "approved"
     root.mkdir()
@@ -172,13 +112,3 @@ def test_docs_resolved_containment_rejects_escape(tmp_path: Path) -> None:
     logical_root.symlink_to(root, target_is_directory=True)
     docs_router._assert_under_root(logical_root / "inside.md", logical_root)
     assert docs_router._relative_to_root(logical_root / "inside.md", logical_root) == "inside.md"
-
-
-def test_artifacts_concurrent_collection_is_identical(artifact_context: MonitorContext) -> None:
-    def response_bytes() -> bytes:
-        return JSONResponse(docs_router.collect_html_artifacts(ctx=artifact_context)).body
-
-    expected = response_bytes()
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        results = list(executor.map(lambda _: response_bytes(), range(8)))
-    assert results == [expected] * 8

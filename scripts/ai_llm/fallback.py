@@ -1,9 +1,7 @@
 """Shared Gemini fallback ladder for direct CLI and runtime callers."""
 from __future__ import annotations
 
-import contextlib
 import os
-import tempfile
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
@@ -25,8 +23,6 @@ GEMINI_AUTH_ENV_VARS = (
     "GOOGLE_GENERATIVE_AI_API_KEY",
     "GOOGLE_APPLICATION_CREDENTIALS",
 )
-_INLINE_PROMPT_LIMIT_CHARS = 100_000
-_PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
 #: Stderr/stdout markers that mean "this rung is not going to answer —
 #: advance to the next rung instead of retrying the same one 3x". Lowercase;
 #: matched via case-insensitive ``in`` on the haystack.
@@ -292,43 +288,6 @@ def is_gemini_rate_limited(stderr_text: str | None) -> bool:
     """Return True when stderr matches the Gemini quota/rate-limit policy."""
     haystack = (stderr_text or "").lower()
     return any(marker in haystack for marker in _RATE_LIMIT_MARKERS)
-
-
-def build_gemini_subprocess_env(
-    auth_mode: AuthMode,
-    *,
-    base_env: Mapping[str, str] | None = None,
-) -> dict[str, str]:
-    """Construct a fresh subprocess env for one ladder rung."""
-    env = dict(base_env) if base_env is not None else os.environ.copy()
-    if auth_mode == "oauth":
-        for key in GEMINI_AUTH_ENV_VARS:
-            env.pop(key, None)
-    return env
-
-
-def _gemini_prompt_arg(prompt: str) -> tuple[str, Path | None]:
-    if len(prompt) <= _INLINE_PROMPT_LIMIT_CHARS:
-        return prompt, None
-    with tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        prefix=_PROMPT_FILE_PREFIX,
-        suffix=".txt",
-        delete=False,
-    ) as handle:
-        handle.write(prompt)
-        path = Path(handle.name)
-    return f"@{path}", path
-
-
-def _cleanup_gemini_prompt_file(path: Path | None) -> None:
-    if path is None:
-        return
-    if not path.name.startswith(_PROMPT_FILE_PREFIX):
-        return
-    with contextlib.suppress(FileNotFoundError):
-        path.unlink()
 
 
 def visible_sleep(seconds: int, reason: str, *, logger: Callable[[str], None] | None = None) -> None:

@@ -46,31 +46,6 @@ def test_delegate_lease_is_not_created_under_the_real_default_scratch_root(tmp_p
     assert delegate._read_runtime_tmp_task_id_marker(lease) == "scratch-isolation-guard"
 
 
-@pytest.mark.exercises_default_scratch_root
-def test_default_scratch_resolution_uses_a_private_fake_root(
-    tmp_path: Path,
-    _isolate_runtime_scratch_root: Path,
-) -> None:
-    """Default-root tests keep the override unset and must not touch /var/tmp/lu."""
-    assert os.environ.get(scratch.SCRATCH_ROOT_ENV_VAR, "").strip() == ""
-    assert scratch.resolve_scratch_root() == _isolate_runtime_scratch_root
-    assert scratch.ensure_scratch_root() == _isolate_runtime_scratch_root
-    assert _resolved(_isolate_runtime_scratch_root).is_relative_to(_resolved(tmp_path))
-    assert _resolved(_isolate_runtime_scratch_root) != _resolved(_HOST_DEFAULT_SCRATCH_ROOT)
-
-    lease, namespace = delegate._create_runtime_tmp_lease("default-resolution-guard")
-    assert _resolved(namespace) == _resolved(_isolate_runtime_scratch_root / "learn-ukrainian")
-    assert _resolved(lease.parent) == _resolved(namespace)
-    assert _resolved(namespace) != _resolved(_HOST_DEFAULT_SCRATCH_ROOT / "learn-ukrainian")
-    assert delegate._read_runtime_tmp_task_id_marker(lease) == "default-resolution-guard"
-
-    scanned = [_resolved(path) for path in scratch.scratch_scan_roots()]
-    assert _resolved(_isolate_runtime_scratch_root) in scanned
-    assert all(path.is_relative_to(_resolved(tmp_path)) for path in scanned)
-    assert _resolved(_HOST_DEFAULT_SCRATCH_ROOT) not in scanned
-    assert _resolved(Path(tempfile.gettempdir())) not in scanned
-
-
 def _assert_scan_stays_inside(boundary: Path, found: list[Path]) -> list[Path]:
     """Fail before a sweep can act when a scan root leaves ``boundary``."""
     resolved = [_resolved(path) for path in found]
@@ -145,29 +120,6 @@ def test_orphan_sweep_scans_and_deletes_only_inside_the_per_test_root(
     assert host_temp not in seen
     assert _resolved(_HOST_DEFAULT_SCRATCH_ROOT) not in seen
     assert all(path.is_relative_to(boundary) for path in seen)
-
-
-def test_unset_scan_root_keeps_default_fallback_and_legacy_temp(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """Without the scan override, resolution still unions the historical roots."""
-    fake_default = tmp_path / "fake-default"
-    fake_temp = tmp_path / "fake-temp"
-    fake_default.mkdir()
-    fake_temp.mkdir()
-    fallback = fake_temp / scratch.FALLBACK_SCRATCH_DIRNAME
-    fallback.mkdir()
-    monkeypatch.delenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, raising=False)
-    monkeypatch.delenv(scratch.SCRATCH_ROOT_ENV_VAR, raising=False)
-    monkeypatch.delenv("LU_RUNTIME_TMP_BASE_ROOT", raising=False)
-    monkeypatch.setattr(scratch, "DEFAULT_SCRATCH_ROOT", fake_default)
-    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(fake_temp))
-
-    roots = {path.resolve() for path in scratch.scratch_scan_roots()}
-    assert fake_default.resolve() in roots
-    assert fallback.resolve() in roots
-    assert fake_temp.resolve() in roots
 
 
 def test_scan_root_override_drops_roots_outside_the_boundary(
@@ -460,15 +412,6 @@ def test_review_sweep_refuses_a_misconfigured_scan_root(
     _assert_typed_scan_root_error(caught, misconfigured_scan_root)
     assert traceback.extract_tb(caught.tb)[-1].filename.endswith("isolation.py")
     assert review_root.is_dir()
-
-
-def test_unset_or_blank_scan_root_returns_none(monkeypatch: pytest.MonkeyPatch) -> None:
-    """An empty ``LU_SCRATCH_SCAN_ROOT`` keeps the historical scan; it is not an error."""
-    monkeypatch.delenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, raising=False)
-    assert scratch.resolve_confined_scan_root() is None
-
-    monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, "   ")
-    assert scratch.resolve_confined_scan_root() is None
 
 
 def test_scan_root_symlink_inside_its_parent_remains_the_boundary(

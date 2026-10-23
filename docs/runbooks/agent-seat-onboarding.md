@@ -122,7 +122,7 @@ and the narrowly allowlisted dual paths.
 | **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + legacy file handoffs** | Durable coordination authority in `authority` mode; legacy file stores remain read-only migration/projection inputs | Competing message buses; new legacy writes; silent plane/retention/eligibility flips |
-| **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi: web, UI and backend coding only); not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
+| **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (Kimi is retired, OO-58); not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
@@ -543,7 +543,7 @@ printf '%s\n' 'Compare the two bounded options and name risks.' |
 Every fleet launcher exports ACP as the routine transport. The project
 `discuss` command automatically selects the durable ACP controller when the request names
 2 to 4 distinct enabled participants: Codex, Grok, Claude,
-Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. The direct `acp-discuss` command remains available for
+Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. Never Kimi. The direct `acp-discuss` command remains available for
 operators and tests. Selection starts no process at cold start and does not
 change `delegate.py`. Any other count or invalid seat list is rejected loudly
 before it creates a conversation; there is no bridge/provider-execution
@@ -576,7 +576,7 @@ receive the contract for awareness but do not start conversations independently.
 | Codex orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | AGY/Gemini sessions (not a driver seat, #9584) | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | Grok orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
-| Kimi and KimiCC seats | Not an ACP caller or participant (web, UI and backend coding only) | Refused by `kimi_admission`; dispatch for owned web, UI and backend paths only |
+| Kimi and KimiCC seats | Not an ACP caller or participant | Retired (OO-58, #11327). Refused by `kimi_admission`; do not dispatch |
 | Cursor orchestrators with an explicit model | Eligible caller | Explicit routine ACP selection only; never use an automatic/opaque model route |
 | Dispatch-only, worker, and review-only seats | Awareness only | The accountable orchestrator owns invocation |
 
@@ -768,18 +768,13 @@ design.
 
 ---
 
-## Kimi routes (native default vs KimiCC opt-in)
+## Kimi routes
 
-| Route | When | Effort contract |
-| --- | --- | --- |
-| **Native Kimi** (`./start-kimi.sh`, `delegate.py --agent kimi`) | **Default** headless/fleet and default interactive harness | K3 is **max-only** — non-max effort requests are ignored/refused at the native boundary |
-| **KimiCC** (`./start-kimicc.sh`, `./start-kimi.sh --harness claude-code`, or `delegate.py --agent kimi --harness kimicc`) | **Bounded explicit opt-in** for Claude Code ergonomics with Kimi models | K3 defaults to **`high`** in interactive and headless/runtime paths; supported overrides remain observable in telemetry |
+Kimi models are retired (OO-58, #11327). Do not dispatch a Kimi id and do not
+select KimiCC. Short names still resolve so the catalog refusal can name them.
+Historical effort splits are not a current route.
 
-Do not weaken the shared native Kimi registry to match KimiCC. Native `kimi-code/k3`
-stays max-only; KimiCC's high default is a KimiCC-route policy only.
-
-See also: [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md) (KimiCC
-headless route) and [`docs/SCRIPTS.md`](../SCRIPTS.md) (launcher flags).
+See also: [`docs/SCRIPTS.md`](../SCRIPTS.md) (launcher flags).
 
 ---
 
@@ -795,7 +790,7 @@ printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
 
 # Normal fleet-TUI surface: automatically ACP-backed for an enabled pair.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
-  --with claude,kimicc
+  --with claude,grok
 
 # More or fewer than two participants reject loudly before provider or
 # authority work; there is no bridge/provider-execution fallback.
@@ -863,6 +858,17 @@ review as CF. Keep the resulting operational evidence private.
 ---
 
 ## Reviewer-seat transport recovery
+
+Direct read-only code reviews can target a registered sibling repository with
+`delegate.py dispatch --repo <key> --pr <number>` or
+`--repo <key> --branch <branch> --pinned-head <full-sha>`, together with the
+required review profile, author model and risk flags. Dispatch resolves the
+repository through the fleet registry and creates a detached snapshot inside
+the reviewer's dispatch subtree. The fetched branch and live canonical head
+must match the admitted SHA. The author checkout stays untouched; a moved head,
+foreign repository or unsafe worktree path refuses launch. This attach path is
+for direct read-only reviews; it does not change write continuation or formal
+attempt worktree custody.
 
 Dead reviewer seats must fail with an actionable error — never mid-review
 with a bare "not found on PATH" (#6805). The `ask-*` compatibility shim runs

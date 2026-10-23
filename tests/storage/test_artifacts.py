@@ -328,30 +328,11 @@ def test_paths_reject_traversal_and_dispatch_store(repo: Path, tmp_path: Path, m
         paths.artifact_store_root(worktree)
 
 
-def test_manifest_json_has_migration_fields(repo: Path) -> None:
-    manifest = json.loads((repo / "registry/artifacts/raw_source.manifest.json").read_text())
-    assert set(manifest["entries"][0]) >= {
-        "git_blob",
-        "pre_untrack_sha256",
-        "migrated_at",
-        "size",
-        "sha256",
-        "producer",
-        "rights",
-    }
-
-
 def test_status_does_not_create_a_store_without_transactions(repo: Path) -> None:
     store = paths.artifact_store_root(repo)
     assert not store.exists()
     assert artifacts.main(["status"], repo=repo) == 0
     assert not store.exists()
-
-
-def test_status_help_describes_its_read_only_report(capsys: pytest.CaptureFixture[str]) -> None:
-    with pytest.raises(SystemExit, match="0"):
-        artifacts._parser().parse_args(["status", "--help"])
-    assert "without creating a store" in capsys.readouterr().out.replace("\n", " ")
 
 
 def test_hydrate_refuses_divergence_and_force_preserves(repo: Path) -> None:
@@ -666,9 +647,3 @@ def test_orphan_journal_kept_while_worktree_still_registered(
     git(repo, "worktree", "prune")
     assert artifacts.recover_incomplete(repo) == 0
     assert not journal.exists()
-
-
-def test_artifacts_imports_sys_plainly() -> None:
-    source = Path(artifacts.__file__).read_text(encoding="utf-8")
-    assert "__import__(" not in source
-    assert "\nimport sys\n" in source

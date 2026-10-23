@@ -34,7 +34,6 @@ from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
     [
         (DeepSeekAdapter, "deepseek invocation"),
         (GlmAdapter, "glm invocation"),
-        (KimiAdapter, "kimi invocation"),
     ],
 )
 def test_sibling_invocation_logs_constant_message(tmp_path, monkeypatch, caplog, adapter_type, expected_message):
@@ -48,12 +47,6 @@ def test_sibling_invocation_logs_constant_message(tmp_path, monkeypatch, caplog,
     if adapter_type is DeepSeekAdapter:
         monkeypatch.setattr(f"{adapter_type.__module__}._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
     tool_config = {}
-    if adapter_type is KimiAdapter:
-        binary = tmp_path / "private-executable-value"
-        binary.write_text("#!/bin/sh\n", encoding="utf-8")
-        binary.chmod(0o755)
-        monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(binary))
-        tool_config = admitted_tool_config(tmp_path, {"kimi_add_dirs": [secret]})
     effort = secret if adapter_type in (DeepSeekAdapter, GlmAdapter) else None
     with (
         patch(f"{adapter_type.__module__}.shutil.which", return_value=str(tmp_path / "runtime-cli")),
@@ -112,7 +105,8 @@ def _assert_single_constant_warning(caplog, adapter_type, secret, expected_messa
     assert secret not in repr(vars(record))
 
 
-def test_kimi_full_k3_effort_warning_is_constant(tmp_path, monkeypatch, caplog):
+def test_kimi_full_k3_effort_secret_is_not_logged_when_the_model_is_retired(tmp_path, monkeypatch, caplog):
+    """OO-58: a retired Kimi id raises before the effort warning, and the secret stays out of the log."""
     for variable in ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL"):
         monkeypatch.delenv(variable, raising=False)
     monkeypatch.setenv("HOME", str(tmp_path))
@@ -121,7 +115,7 @@ def test_kimi_full_k3_effort_warning_is_constant(tmp_path, monkeypatch, caplog):
     binary.chmod(0o755)
     monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(binary))
     secret = "secret-looking-effort-value"
-    with caplog.at_level(logging.DEBUG):
+    with caplog.at_level(logging.DEBUG), pytest.raises(ValueError, match="is retired in the model catalog") as refusal:
         KimiAdapter().build_invocation(
             prompt="private-prompt-value",
             mode="workspace-write",
@@ -132,9 +126,9 @@ def test_kimi_full_k3_effort_warning_is_constant(tmp_path, monkeypatch, caplog):
             tool_config=admitted_tool_config(tmp_path, {}),
             effort=secret,
         )
-    _assert_single_constant_warning(
-        caplog, KimiAdapter, secret, "kimi: effort ignored for full K3, which exposes max effort only"
-    )
+    assert secret not in str(refusal.value)
+    assert secret not in caplog.text
+    assert str(binary) not in caplog.text
 
 
 def test_deepseek_max_budget_warning_is_constant(tmp_path, monkeypatch, caplog):

@@ -6,7 +6,8 @@ import or lease acquisition (#9624). That covers every driver route (normal,
 untrusted and governor), every interactive and compatibility wrapper
 (`start-claude.sh`, `start-codex.sh`, `start-gemini.sh`, `start-grok.sh`,
 `start-kimi.sh`, `start-kimicc.sh`, `start-glm.sh`, `start-glmcc.sh`) and
-`scripts/start-bio-driver.sh`. Driver units are
+`scripts/start-bio-driver.sh`. Kimi wrappers refuse retired catalog ids and are
+not a usable lane (OO-58, #11327). Driver units are
 `lu-driver-<provider>-<lane>-<uuid>.scope`. Interactive units are
 `lu-interactive-<provider>-<label>-<uuid>.scope`, where the label names the
 invoked wrapper (`claude`, `codex`, `gemini`, `grok`, `kimi`, `kimicc`, `glm`,

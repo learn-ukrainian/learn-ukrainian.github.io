@@ -19,9 +19,9 @@ no review lane is planned for it.**
 
 ## Live lane (implementation only)
 
-- `delegate.py --agent kimi` (default `k2.7-coding`; K3 via model override)
-- `./start-kimi.sh` (native Kimi Code interactive session)
-- `./start-kimi.sh --harness claude-code` (Claude Code UI → Kimi API route)
+Retired (OO-58, #11327). Do not dispatch `--agent kimi` and do not start
+`start-kimi.sh` or `start-kimicc.sh`. Those commands refuse the catalog id.
+There is no default model and no substitution.
 
 ## Substitute formal CF
 

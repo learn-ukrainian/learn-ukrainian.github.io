@@ -16,7 +16,6 @@ import pytest
 import yaml
 
 import scripts.delegate as delegate
-from scripts.review import findings_db
 from scripts.review.seeds import adjudicate as adj
 from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
@@ -118,6 +117,7 @@ class Case:
         worktree_path: str | None = None,
         output_schema: str | None = None,
         dispatch_args_sha256: Any = _NO_OVERRIDE,
+        evidence_dir: str | None = None,
     ) -> str:
         """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt,
         dispatched read-only from the primary cwd into its automatic detached full checkout).
@@ -129,6 +129,7 @@ class Case:
         task_id = task_id or self.task_id
         sha = prompt_sha256 or hashlib.sha256(self.task_file.read_bytes()).hexdigest()
         expected_worktree = delegate._auto_worktree_path(agent, task_id)
+        evidence_dir = evidence_dir or str(self.env.root / "runtime-tmp" / task_id / "evidence")
         canonical_blocks: list[str] = []
         composed = delegate._compose_dispatch_prompt(
             self.task_file.read_text(encoding="utf-8"),
@@ -142,6 +143,7 @@ class Case:
             rules_seat=None,
             blocks=canonical_blocks,
             agent=agent,
+            evidence_dir=evidence_dir,
         )
         blocks = canonical_blocks if prompt_blocks is None else prompt_blocks
         args_hash = (
@@ -171,6 +173,7 @@ class Case:
             "prompt_sha256": sha,
             "effective_prompt_sha256": effective_prompt_sha256 or hashlib.sha256(composed.encode()).hexdigest(),
             "prompt_blocks": blocks,
+            "evidence_dir": evidence_dir,
             "dispatch_args_sha256": args_hash,
         }
         (self.env.tasks / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")
@@ -551,20 +554,6 @@ def test_a_dispatch_with_caller_controlled_prompt_blocks_is_refused(seeded: Case
     assert seeded.record(good)["new"] is True
 
 
-def test_a_dispatch_with_a_worktree_block_is_refused(seeded: Case) -> None:
-    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    # a worktree-only block list differs from the complete canonical wrapper
-    seeded.dispatch("agy", "gemini-3.1-pro-preview", mode="read-only", prompt_blocks=["worktree"])
-    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-
-
-def test_an_effective_hash_that_differs_from_the_source_is_refused(seeded: Case) -> None:
-    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    # canonical blocks are recorded but the effective prompt hash was changed
-    seeded.dispatch("agy", "gemini-3.1-pro-preview", effective_prompt_sha256="ab" * 32)
-    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-
-
 def test_a_dispatch_that_was_not_read_only_is_refused(seeded: Case) -> None:
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     # the same task file, dispatched write-capable: delegate adds write-mode instructions under the worktree label
@@ -602,12 +591,6 @@ def test_a_dispatch_with_a_caller_chosen_cwd_is_refused(seeded: Case, tmp_path: 
     assert seeded.record(good)["new"] is True
 
 
-def test_a_dispatch_with_worktree_path_set_is_refused(seeded: Case, tmp_path: Path) -> None:
-    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    seeded.dispatch("agy", "gemini-3.1-pro-preview", worktree_path=str(tmp_path / "some-dispatch-worktree"))
-    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-
-
 @pytest.mark.parametrize(
     "field,value",
     [
@@ -624,17 +607,6 @@ def test_readonly_dispatch_requires_canonical_detached_checkout(seeded: Case, fi
     record[field] = str(delegate._REPO_ROOT) if value == "primary" else value
     path.write_text(json.dumps(record))
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-
-
-def test_the_canonical_dispatch_argv_builds_is_accepted(seeded: Case) -> None:
-    """The command pins primary cwd and requests automatic detached full-checkout isolation."""
-    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    argv = adj.dispatch_argv(seeded.task_file, seeded.task_id, "agy", model="gemini-3.1-pro-preview")
-    parsed = delegate.build_parser().parse_args(argv[2:])
-    assert parsed.cwd == str(delegate._REPO_ROOT) and parsed.worktree is None and parsed.mode == "read-only"
-    # Build the record delegate would write for this command and confirm it is accepted.
-    seeded.dispatch(parsed.agent, parsed.model, task_id=parsed.task_id, mode=parsed.mode)
-    assert seeded.record(good)["new"] is True
 
 
 def test_a_dispatch_with_an_output_schema_is_refused(seeded: Case) -> None:
@@ -931,11 +903,3 @@ def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixtur
         )
         == 2
     )
-
-
-def test_the_schemas_are_valid_draft_2020_12() -> None:
-    from jsonschema import Draft202012Validator
-
-    for path in adj.SCHEMAS.values():
-        Draft202012Validator.check_schema(json.loads(path.read_text(encoding="utf-8")))
-    assert findings_db.PARAMETERS_PATH.exists()

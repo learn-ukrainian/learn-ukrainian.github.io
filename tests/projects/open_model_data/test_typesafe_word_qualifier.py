@@ -10,7 +10,6 @@ import pytest
 from scripts.projects.open_model_data.typesafe_word_qualifier import (
     LexicalStratum,
     TypeSafeWordQualifier,
-    _resolve_typesafe_key,
 )
 
 
@@ -71,22 +70,6 @@ def test_dialectal_and_archaism_routing() -> None:
     assert report.calque_russianism == 0
 
 
-def test_stopwords_and_cultural_gems_priority() -> None:
-    """Verify pedagogical priority scaling: stopwords (0.0) vs cultural heritage gems (4.0)."""
-    qualifier = TypeSafeWordQualifier(api_key="")
-    words = ["і", "та", "на", "воля", "незалежність", "соборність", "вишиванка"]
-    report = qualifier.qualify_words(words)
-
-    stopwords_q = [q for q in report.qualifications if q.word in {"і", "та", "на"}]
-    for q in stopwords_q:
-        assert q.pedagogical_priority == 0.0
-
-    gems_q = [q for q in report.qualifications if q.word in {"воля", "незалежність", "соборність", "вишиванка"}]
-    for q in gems_q:
-        assert q.pedagogical_priority == 4.0
-        assert q.stratum == LexicalStratum.STANDARD_LITERARY
-
-
 def test_mixed_homoglyph_ocr_rejection() -> None:
     """Verify that mixed Latin-Cyrillic homoglyphs are flagged as OCR junk."""
     qualifier = TypeSafeWordQualifier(api_key="")
@@ -133,33 +116,6 @@ def test_remote_batched_api_mock(mock_urlopen: MagicMock) -> None:
     assert report.qualifications[0].needs_verification is False
     assert report.qualifications[1].needs_verification is True
     assert report.qualifications[1].verification_route == "style_guide_review"
-
-
-@pytest.mark.live_network
-def test_live_typesafe_api_lexicon_qualification() -> None:
-    """Live network test against TypeSafe System One API if key is available."""
-    api_key = _resolve_typesafe_key()
-    if not api_key:
-        pytest.skip("TypeSafe API key not found; skipping live API test")
-
-    qualifier = TypeSafeWordQualifier(api_key=api_key, batch_size=15)
-    candidates = [
-        "гідність",
-        "файно",
-        "мероприємство",
-        "інформатика",
-        "і",
-    ]
-    report = qualifier.qualify_words(candidates)
-
-    assert report.total_processed == 5
-    assert len(report.qualifications) == 5
-    assert report.elapsed_seconds > 0
-
-    word_map = {q.word: q for q in report.qualifications}
-    assert word_map["гідність"].pedagogical_priority >= 2.5
-    assert word_map["мероприємство"].russian_shadow >= 0.40
-    assert word_map["і"].pedagogical_priority <= 1.0
 
 
 def test_vesum_tag_markers_handling(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -3735,10 +3735,6 @@ def _synonym_exception_flag_errors(record: dict[str, Any]) -> list[str]:
     return errors
 
 
-def validate_synonym_verdict_record(record: dict[str, Any]) -> list[str]:
-    return _synonym_core_errors(record) + _synonym_exception_flag_errors(record)
-
-
 def build_synonym_verdict_sets(
     synonym_verdicts: dict[str, Any] | None,
 ) -> tuple[set[tuple[str, str, str]], set[tuple[str, str, str]], set[tuple[str, str, str]]]:

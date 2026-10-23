@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
-import subprocess
-import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -604,29 +601,6 @@ def test_help_and_argument_errors_need_no_caller_root(monkeypatch: pytest.Monkey
         intake.main(["--ledger-out", "ledger.yaml"])
     assert exc.value.code == 2
     assert "--batch-id" in capsys.readouterr().err
-
-
-def test_real_no_source_cli_retains_artifacts_for_consumer(tmp_path: Path) -> None:
-    argv = empty_intake_cli_args(tmp_path)
-    root = tmp_path / "subprocess-caller"
-    root.mkdir()
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.lexicon.ohoiko_atlas_intake", *argv],
-        cwd=Path(__file__).resolve().parents[1],
-        env={**os.environ, "TMPDIR": str(root)},
-        text=True,
-        capture_output=True,
-        timeout=60,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    inventory, report = root / intake.INVENTORY_FILENAME, root / intake.REPORT_FILENAME
-    assert f"inventory_out: {inventory}" in result.stdout
-    assert f"report_out: {report}" in result.stdout
-    assert inventory.read_bytes() == b"[\n\n]\n"
-    assert read_source_inventory(inventory) == []
-    assert json.loads(report.read_bytes())["counts"]["deduped_candidates"] == 0
-    assert set(root.iterdir()) == {inventory, report}
 
 
 def synthetic_intake_result(tmp_path: Path):

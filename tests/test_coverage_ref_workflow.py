@@ -109,6 +109,10 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
     assert measured["timeout-minutes"] > baseline["timeout-minutes"]
     assert measured["env"]["PYTEST_XDIST_AUTO_NUM_WORKERS"] == "2"
     assert "PYTEST_XDIST_AUTO_NUM_WORKERS" not in baseline.get("env", {})
+    # Context recording is opt-in through the typed workflow input, never a
+    # permanent change to the pytest denominator.
+    assert measured["env"]["COVERAGE_REF_CONTEXTS"] == "${{ inputs.contexts }}"
+    assert "COVERAGE_REF_CONTEXTS" not in baseline.get("env", {})
     startup = step(measured, "Isolate coverage storage from import-smoke guards")
     assert startup["run"] == '.venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref_environment.py"'
 
@@ -171,7 +175,13 @@ def test_workflow_is_manual_and_uploads_hidden_data_even_after_failure():
                     "description": "Repository commit SHA to measure (40 hexadecimal characters)",
                     "required": True,
                     "type": "string",
-                }
+                },
+                "contexts": {
+                    "description": "Record per-test dynamic coverage contexts (pytest-cov --cov-context=test)",
+                    "required": False,
+                    "default": False,
+                    "type": "boolean",
+                },
             }
         }
     }

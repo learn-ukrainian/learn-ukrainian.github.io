@@ -1317,16 +1317,6 @@ def run_discussion(**kwargs: Any) -> dict[str, Any]:
     return result
 
 
-def recover_expired_discussions(*, root: Path) -> list[str]:
-    """Explicit, lock-safe orphan recovery for later CLI/API integration."""
-    controller = AcpxDiscussionController(root=root)
-    try:
-        with _discussion_admission(controller.store.root):
-            return controller.recover_expired_reservations()
-    finally:
-        controller.close()
-
-
 def verify_discussion_receipt(
     *,
     root: Path,

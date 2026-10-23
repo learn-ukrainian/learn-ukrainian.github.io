@@ -41,7 +41,6 @@ tests/test_fleet_taxonomy_slot_addressing.py	1
 tests/test_github_graphql_budget.py	1
 tests/test_launcher_contract.py	5
 tests/test_launcher_driver_scope.py	1
-tests/test_learner_immersion.py	1
 tests/test_lexicon_runner_pr1.py	3
 tests/test_mcp_sources_identity_integration.py	1
 tests/test_mcp_sources_streamable_http.py	1

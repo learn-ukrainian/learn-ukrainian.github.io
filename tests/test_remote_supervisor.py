@@ -2,16 +2,17 @@
 
 from __future__ import annotations
 
-import io
 import json
 import urllib.error
 from pathlib import Path
 
 import pytest
 
+import scripts.delegate  # noqa: F401  (loaded before isolated_finalization_context binds it)
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from scripts.session_supervisor import main
 from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError, RemoteUnreachableError
+from tests.test_delegate import isolated_finalization_context  # noqa: F401  (driver-pinned origin.git)
 
 
 class _Response:
@@ -141,29 +142,6 @@ def test_remote_claim_fail_closed_without_api_and_does_not_post() -> None:
     else:  # pragma: no cover - assertion branch
         raise AssertionError("unreachable Monitor API must refuse the claim")
     assert calls == ["GET"]
-
-
-def test_remote_claim_missing_epics_route_explains_deployment_remedy() -> None:
-    def opener(request: object, timeout: int = 0) -> _Response:
-        del timeout
-        raise urllib.error.HTTPError(
-            str(getattr(request, "full_url", "")),
-            404,
-            "Not Found",
-            {},
-            io.BytesIO(b'{"detail":"Not Found"}'),
-        )
-
-    client = RemoteEpicClient(opener=opener)
-    with pytest.raises(
-        RemoteSupervisorError,
-        match=r"missing route /api/epics/v1/health.*deploy a Monitor build that includes /api/epics/v1",
-    ):
-        client.claim(
-            stream_id="epic:7178",
-            holder=LeaseHolder("codex", "codex-cli", "missing-route", process_id=1, host_id="missing-host"),
-            lineage_id="missing-route-lineage",
-        )
 
 
 def test_remote_claim_fail_closed_when_health_is_unhealthy() -> None:
@@ -690,6 +668,9 @@ def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_p
             "fixture",
         ],
         ["update-ref", "refs/remotes/origin/main", "HEAD"],
+        # The driver-pinned destination settlement counts against.
+        ["init", "--bare", "-q", "-b", "main", str(tmp_path / "origin.git")],
+        ["push", "-q", str(tmp_path / "origin.git"), "main"],
     ):
         subprocess.run(
             ["git", *args], cwd=repo, env=delegate._sanitized_git_env(), check=True, capture_output=True, timeout=10

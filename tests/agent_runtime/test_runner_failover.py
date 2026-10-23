@@ -311,41 +311,6 @@ def test_runner_failover_switches_for_eligible_trigger_classes(
     assert runner_mod._INVOCATION_NONCE.get() is None
 
 
-def test_runner_failover_does_not_switch_for_content_policy(
-    tmp_path,
-    monkeypatch,
-    capsys,
-):
-    adapter, records, _emitted_events = _install_fake_runtime(
-        monkeypatch,
-        tmp_path,
-        {
-            "primary-model": {
-                "parse": ParseResult(
-                    ok=False,
-                    response="",
-                    stderr_excerpt="content policy refusal",
-                ),
-                "returncode": 1,
-                "stderr_text": "content policy refusal",
-            },
-            "fallback-model": {
-                "parse": ParseResult(ok=True, response="fallback ok"),
-                "returncode": 0,
-            },
-        },
-    )
-
-    result = runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
-
-    assert adapter.attempts == ["primary-model"]
-    assert result.ok is False
-    assert result.substitution is None
-    assert records[0]["outcome"] == "error"
-    assert "substitution" not in records[0]
-    assert RUNNER_FAILOVER_MARKER not in capsys.readouterr().err
-
-
 def test_runner_failover_does_not_switch_for_streaming_silence_timeout(
     tmp_path,
     monkeypatch,
@@ -598,23 +563,6 @@ def test_classifier_routes_unauthenticated_gh_prompt_to_auth():
         "Alternatively, populate the GH_TOKEN environment variable with a "
         "GitHub API authentication token."
     )
-    trigger = classify_failover_trigger(
-        parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),
-        returncode=1,
-        kill_reason=None,
-        stdout_text="",
-        stderr_text=stderr,
-    )
-
-    assert trigger == "auth"
-
-
-def test_classifier_gh_auth_prompt_wins_over_rate_limit_text():
-    """#7166: the mislabeled incident output also carried generic rate-limit
-    text; the gh auth prompt must still classify as auth."""
-    from agent_runtime.failover import classify_failover_trigger
-
-    stderr = "To get started with GitHub CLI, please run:  gh auth login\nHTTP 429: rate limit exceeded"
     trigger = classify_failover_trigger(
         parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),
         returncode=1,

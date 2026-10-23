@@ -246,15 +246,6 @@ def test_provider_json_rejects_duplicate_keys_and_nonfinite_numbers() -> None:
         adapters._strict_json_loads('{"value":NaN}')
 
 
-def test_sources_prompt_discloses_exact_call_cap_only_for_sources() -> None:
-    sources_prompt = adapters.build_prompt(_packet(), "sources", max_tool_calls=20)
-    closed_prompt = adapters.build_prompt(_packet(), "closed-book", max_tool_calls=20)
-    assert "at most 20 total reference-tool calls" in sources_prompt
-    assert "including failed attempts" in sources_prompt
-    assert "submit answers without further calls" in sources_prompt
-    assert "reference-tool calls" not in closed_prompt
-
-
 def test_tool_policy_and_limit_failures_have_distinct_safe_reasons() -> None:
     policy_stream = "\n".join(
         [

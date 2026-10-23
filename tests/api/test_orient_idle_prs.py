@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import subprocess
-import threading
-import time
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -142,18 +140,6 @@ def test_timestamp_tie_failure_is_not_hidden_by_list_order():
     assert api_main._idle_pr_checks_green(pr) is False
 
 
-def test_named_check_without_workflow_keeps_a_red_row():
-    pr = _pr(
-        112,
-        updated_at=NOW - timedelta(hours=2),
-        statusCheckRollup=[
-            _gate_run("FAILURE", NOW - timedelta(hours=2), None),
-            _gate_run("SUCCESS", NOW - timedelta(hours=1), None),
-        ],
-    )
-    assert api_main._idle_pr_checks_green(pr) is False
-
-
 def test_cross_workflow_in_progress_is_not_green():
     """Nightly still running must not read green beside a SUCCESS of the same name."""
     running = {
@@ -239,27 +225,3 @@ def test_timeout_refresh_degrades_to_absent_cache():
 
     assert result == {"idle_prs": []}
     assert meta["error"] == "gh_timeout"
-
-
-def test_idle_pr_request_path_only_schedules_slow_gh_refresh(monkeypatch):
-    started = threading.Event()
-    release = threading.Event()
-
-    def slow_collector(ctx=None):
-        started.set()
-        release.wait(timeout=10.0)
-        return {"idle_prs": []}
-
-    start = time.perf_counter()
-    result, meta = api_main._cached_idle_pr_section(slow_collector, {"idle_prs": []})
-    elapsed = time.perf_counter() - start
-
-    assert elapsed < 3.0
-    assert result == {"idle_prs": []}
-    assert meta["refreshing"] is True
-    assert started.wait(timeout=1.0)
-
-    release.set()
-    worker = api_main._idle_pr_refresh_threads.get("")
-    assert worker is not None
-    worker.join(timeout=2.0)

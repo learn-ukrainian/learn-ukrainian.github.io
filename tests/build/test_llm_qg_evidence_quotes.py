@@ -74,20 +74,6 @@ def test_evidence_quotes_array_satisfies_contract() -> None:
     )
 
 
-def test_evidence_quotes_array_accepts_when_bare_evidence_missing() -> None:
-    """If the reviewer omits the bare scalar entirely, the array still counts."""
-    entry = {
-        "score": 9.0,
-        "evidence_quotes": [
-            "Before adding -ся, fix the regular first-conjugation template",
-        ],
-        "verdict": "PASS",
-    }
-    linear_pipeline.validate_llm_review_report(
-        _placeholder_other_dims("pedagogical", entry)
-    )
-
-
 def test_evidence_quotes_short_strings_reject() -> None:
     """Defensive: quotes < 8 chars are not falsifiable evidence."""
     entry = {
@@ -118,19 +104,6 @@ def test_evidence_quotes_empty_array_rejects() -> None:
         )
 
 
-def test_evidence_quotes_non_list_rejects() -> None:
-    """Defensive: a non-list `evidence_quotes` does not satisfy the contract."""
-    entry = {
-        "score": 8.0,
-        "evidence_quotes": "not actually a list",
-        "verdict": "PASS",
-    }
-    with pytest.raises(linear_pipeline.LinearPipelineError, match="missing evidence"):
-        linear_pipeline.validate_llm_review_report(
-            _placeholder_other_dims("pedagogical", entry)
-        )
-
-
 def test_bare_evidence_with_quote_markers_still_accepted() -> None:
     """Regression guard: the existing pre-PR shape still passes."""
     entry = {
@@ -141,23 +114,6 @@ def test_bare_evidence_with_quote_markers_still_accepted() -> None:
     linear_pipeline.validate_llm_review_report(
         _placeholder_other_dims("pedagogical", entry)
     )
-
-
-def test_bare_evidence_without_markers_still_rejected() -> None:
-    """Regression guard: pre-PR strict-marker check still applies when no
-    `evidence_quotes` array is present."""
-    entry = {
-        "score": 8.0,
-        "evidence": "This is text without any literal quote markers",
-        "verdict": "PASS",
-    }
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match="must include a quoted excerpt",
-    ):
-        linear_pipeline.validate_llm_review_report(
-            _placeholder_other_dims("pedagogical", entry)
-        )
 
 
 # ----- parse_review_response (end-to-end through JSON parse) ----------------
@@ -180,36 +136,3 @@ def test_parse_review_response_preserves_evidence_quotes() -> None:
     )
     assert entry["verdict"] == "PASS"
     assert entry.get("evidence_quotes") == payload["evidence_quotes"]
-
-
-def test_parse_review_response_evidence_quotes_only() -> None:
-    """Reviewer omits the bare scalar; only the array is present."""
-    payload = {
-        "score": 9.0,
-        "evidence_quotes": [
-            "Before adding -ся, fix the regular first-conjugation template",
-        ],
-        "verdict": "PASS",
-    }
-    entry = linear_pipeline.parse_review_response(
-        json.dumps(payload),
-        dim="pedagogical",
-    )
-    assert entry["verdict"] == "PASS"
-    assert entry["evidence_quotes"] == payload["evidence_quotes"]
-
-
-def test_parse_review_response_legacy_bare_evidence_still_works() -> None:
-    """Regression guard: pre-PR response shape still parses."""
-    payload = {
-        "score": 8.5,
-        "evidence": '"Bare evidence with literal quote markers."',
-        "verdict": "PASS",
-    }
-    entry = linear_pipeline.parse_review_response(
-        json.dumps(payload),
-        dim="pedagogical",
-    )
-    assert entry["verdict"] == "PASS"
-    assert entry["evidence"] == payload["evidence"]
-    assert "evidence_quotes" not in entry

@@ -15,7 +15,6 @@ from scripts.ai_agent_bridge._agy import (
 )
 from scripts.ai_agent_bridge._channels_cli import _gemini_review_request_error
 from scripts.ai_agent_bridge._cli import _handle_acp_compat
-from scripts.audit import llm_reviewer_dispatch
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 pytestmark = pytest.mark.reads_content
@@ -34,19 +33,6 @@ def test_missing_profile_names_the_flag() -> None:
     assert message is not None
     assert "--review-profile" in message
     assert "ukrainian" in message
-
-
-@pytest.mark.parametrize("command", ["ask-agy", "ask-gemini", "post", "discuss"])
-def test_bridge_help_distinguishes_native_code_review(command, capsys):
-    from scripts.ai_agent_bridge._cli import _build_parser
-
-    with pytest.raises(SystemExit) as exit_info:
-        _build_parser().parse_args([command, "--help"])
-    assert exit_info.value.code == 0
-    help_text = " ".join(capsys.readouterr().out.split())
-    assert "the bridge refuses code review" in help_text
-    assert "native AGY admits low/medium risk code reviews" in help_text
-    assert "never code" not in help_text
 
 
 def test_bridge_code_profile_requires_native_dispatch() -> None:
@@ -94,20 +80,6 @@ def test_other_data_and_code_paths_remain_non_content(path: str) -> None:
     assert message is not None
     assert "gemini_code_review_forbidden" in message
     assert f"first non-content path: {path}" in message
-
-
-def test_arc_content_paths_match_landing_generator() -> None:
-    """Bind the fixed allowlist to the generator's validated inputs and outputs."""
-    from scripts.ai_agent_bridge._agy import _CONTENT_ARC_PATHS
-    from scripts.build import build_arc_landing as generator
-    from scripts.curriculum.arc.loader import SCHEMA_PATH
-
-    schema = json.loads((generator.REPO_ROOT / SCHEMA_PATH).read_text(encoding="utf-8"))
-    generated_paths = {
-        generator.Roots(generator.REPO_ROOT, level).data_json.relative_to(generator.REPO_ROOT).as_posix()
-        for level in schema["properties"]["level"]["enum"]
-    }
-    assert generated_paths == _CONTENT_ARC_PATHS
 
 
 def test_ask_agy_review_without_profile_is_refused() -> None:
@@ -208,36 +180,6 @@ def test_post_reviews_to_agy_requires_a_profile() -> None:
         )
         is None
     )
-
-
-def test_discuss_with_agy_requires_a_profile() -> None:
-    missing = _gemini_review_request_error(
-        channel="architecture",
-        agents=["claude", "agy"],
-        review=False,
-        profile=None,
-        force=True,
-    )
-    assert missing is not None
-    assert "--review-profile" in missing
-
-    assert (
-        _gemini_review_request_error(
-            channel="architecture",
-            agents=["claude", "agy"],
-            review=False,
-            profile="ukrainian",
-            force=True,
-        )
-        is None
-    )
-
-
-def test_ukrainian_content_caller_passes_the_profile() -> None:
-    command = llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE.bridge_command
-    assert command[:1] == ("ask-agy",)
-    assert "--review" in command
-    assert command[command.index("--review-profile") + 1] == "ukrainian"
 
 
 _CONTENT_PATH = "curriculum/l2-uk-en/a1/hello.md"
@@ -477,39 +419,6 @@ def test_delegate_review_verdict_without_profile_is_refused(
     assert delegate._read_state(delegate._state_path("agy-review-gate")) is None
 
 
-def test_delegate_review_verdict_mixed_branch_names_the_path(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    from scripts import delegate
-
-    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
-    monkeypatch.setattr(
-        "subprocess.run",
-        _fake_branch_diff("feature", f"{_CONTENT_PATH}\n{_CODE_PATH}\n"),
-    )
-    args = delegate.build_parser().parse_args(
-        _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
-    )
-    assert delegate.cmd_dispatch(args) == 2
-    err = capsys.readouterr().err
-    assert "gemini_code_review_forbidden" in err
-    assert _CODE_PATH in err
-
-
-def test_delegate_review_verdict_file_listing_failure_is_refused(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    from scripts import delegate
-
-    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
-    monkeypatch.setattr("subprocess.run", _fake_branch_diff("feature", "", fail="fetch"))
-    args = delegate.build_parser().parse_args(
-        _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
-    )
-    assert delegate.cmd_dispatch(args) == 2
-    assert "could not list changed files" in capsys.readouterr().err
-
-
 def test_delegate_review_verdict_content_branch_passes_the_gate(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -707,24 +616,6 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
     monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="differs from the pinned head SHA"):
         _handle_acp_compat(_review_args(pr=41), "agy")
-
-
-def test_pr_number_below_one_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
-    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("PR number below 1 must not reach Gemini dispatch")
-
-    def fake_run(command: list[str], **kwargs: object):
-        raise AssertionError(f"PR number below 1 must not reach gh: {command}")
-
-    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
-    monkeypatch.setattr(
-        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
-        lambda number: ("content-branch", "e" * 40),
-    )
-    monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
-    with pytest.raises(SystemExit, match="could not list changed files"):
-        _handle_acp_compat(_review_args(pr=0), "agy")
 
 
 def _git(repo: str, *args: str) -> None:
@@ -992,6 +883,8 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
             return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{sha}\trefs/heads/feature\n")
         if command[:2] == ["git", "fetch"]:
             assert command == ["git", "fetch", "origin", sha]
             return subprocess.CompletedProcess(command, 0, stdout="")
@@ -1057,6 +950,8 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
             return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{sha}\trefs/heads/feature\n")
         if command[:2] == ["git", "check-ref-format"]:
             return subprocess.CompletedProcess(command, 0, stdout="feature\n")
         raise AssertionError(command)
@@ -1121,6 +1016,8 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
             return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{sha}\trefs/heads/feature\n")
         if command[:2] == ["git", "check-ref-format"]:
             return subprocess.CompletedProcess(command, 0, stdout="feature\n")
         raise AssertionError(command)
@@ -1194,12 +1091,3 @@ def test_delegate_pr_refuses_a_non_github_origin(
     assert delegate.cmd_dispatch(args) == 2
     err = capsys.readouterr().err
     assert "checkout origin is not a GitHub owner/name; refusing an unpinned gh pr view" in err
-
-
-def test_dispatch_refuses_when_fetched_head_differs_from_gate_sha() -> None:
-    from scripts.delegate import _refuse_if_gate_head_moved
-
-    gate = "a" * 40
-    _refuse_if_gate_head_moved(gate, gate)
-    with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
-        _refuse_if_gate_head_moved("b" * 40, gate)

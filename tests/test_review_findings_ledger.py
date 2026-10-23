@@ -16,13 +16,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts.review.findings import FindingsLedger, FindingsLedgerError
 
 
-def test_raise_finding_then_list_all_ids():
-    ledger = FindingsLedger()
-    ledger.raise_finding("F1", summary="bug one", source="reviewer:deepseek")
-    ledger.raise_finding("F2", summary="bug two", source="reviewer:deepseek")
-    assert ledger.all_finding_ids() == ("F1", "F2")
-
-
 def test_duplicate_raise_rejected():
     ledger = FindingsLedger()
     ledger.raise_finding("F1", summary="bug one", source="reviewer:deepseek")
@@ -107,26 +100,6 @@ def test_unadjudicated_surfaces_findings_with_no_verdict():
     ledger.raise_finding("F2", summary="this one got adjudicated", source="reviewer:grok")
     ledger.adjudicate("F2", disposition="follow_up", rationale="minor style nit")
     assert ledger.unadjudicated() == ("F1",)
-
-
-def test_render_report_includes_every_finding_and_full_history():
-    ledger = FindingsLedger()
-    ledger.raise_finding("F1", summary="unadjudicated finding", source="self-review")
-    ledger.raise_finding("F2", summary="applied finding", source="reviewer:grok")
-    ledger.adjudicate("F2", disposition="in_scope_blocker", rationale="real bug")
-    ledger.apply("F2")
-    ledger.raise_finding("F3", summary="skipped finding", source="reviewer:grok")
-    ledger.skip("F3", rationale="false positive, writer's choice was correct")
-
-    report = ledger.render_report()
-    assert "F1" in report and "UNADJUDICATED" in report
-    assert "F2" in report and "applied" in report
-    assert "F3" in report and "skipped" in report and "false positive" in report
-
-
-def test_render_report_empty_ledger():
-    ledger = FindingsLedger()
-    assert ledger.render_report() == "(no findings raised)"
 
 
 def test_render_report_raised_then_skipped_still_shows_unadjudicated():

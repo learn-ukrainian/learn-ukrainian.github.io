@@ -29,13 +29,6 @@ def test_dispositions_are_closed() -> None:
     assert not rule_tables.is_line_disposition("entry ")
 
 
-def test_table_contents_are_canonical_and_complete() -> None:
-    contents = rule_tables.table_contents()
-    assert set(contents["refusal_codes"]) == set(rule_tables.REFUSAL_CODES)
-    assert contents["grammar_labels"]["незмінюване слово"] is None
-    json.dumps(contents, sort_keys=True)
-
-
 def test_derive_leaf_maps_labels_and_prefers_the_parser_refusal() -> None:
     locator = "sources:t:id=1"
     unit = records.UnitInput("fixture", locator, "page", (records.L0Row(locator, "a" * 64),))

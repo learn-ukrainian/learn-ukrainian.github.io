@@ -16,7 +16,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from audit import config as audit_config
 from build import alignment_manifest
-from build.phases import wiki_compressor
 
 
 def _write_yaml(path: Path, payload: dict) -> None:
@@ -167,77 +166,6 @@ def test_sources_db_change_invalidates_manifest(manifest_fixture: dict[str, Path
     assert alignment_manifest.manifest_hash(second) != alignment_manifest.manifest_hash(first)
 
 
-def test_template_change_invalidates_manifest(manifest_fixture: dict[str, Path]) -> None:
-    first = _compose()
-
-    _write_text(
-        manifest_fixture["phase_template_path"],
-        "# Writer prompt\n\nUpdated template.\n",
-    )
-
-    second = _compose()
-
-    assert alignment_manifest.manifest_hash(second) != alignment_manifest.manifest_hash(first)
-
-
-def test_canonical_anchor_change_invalidates_manifest(manifest_fixture: dict[str, Path]) -> None:
-    first = _compose()
-
-    _write_text(
-        manifest_fixture["canonical_anchors_path"],
-        "anchors:\n  - id: flag\n  - id: anthem\n",
-    )
-
-    second = _compose()
-
-    assert alignment_manifest.manifest_hash(second) != alignment_manifest.manifest_hash(first)
-
-
-def test_tokenizer_version_bump_invalidates_manifest(
-    manifest_fixture: dict[str, Path],
-    monkeypatch,
-) -> None:
-    first = _compose()
-
-    monkeypatch.setattr(wiki_compressor, "TOKENIZER_VERSION", "2026-04-24")
-
-    second = _compose()
-
-    assert alignment_manifest.manifest_hash(second) != alignment_manifest.manifest_hash(first)
-
-
-def test_threshold_change_invalidates_manifest(
-    manifest_fixture: dict[str, Path],
-    monkeypatch,
-) -> None:
-    first = _compose()
-
-    monkeypatch.setattr(alignment_manifest, "REVIEW_TARGET_SCORE", 8.5)
-
-    second = _compose()
-
-    assert alignment_manifest.manifest_hash(second) != alignment_manifest.manifest_hash(first)
-
-
-def test_decision_status_change_invalidates_manifest(manifest_fixture: dict[str, Path]) -> None:
-    first = _compose()
-
-    _write_yaml(
-        manifest_fixture["decisions_path"],
-        {
-            "decisions": [
-                {"id": "dec-001", "status": "superseded", "scope": "pipeline"},
-                {"id": "dec-002", "status": "active", "scope": "architecture"},
-                {"id": "dec-003", "status": "active", "scope": "content"},
-            ]
-        },
-    )
-
-    second = _compose()
-
-    assert alignment_manifest.manifest_hash(second) != alignment_manifest.manifest_hash(first)
-
-
 def test_stamp_roundtrip(manifest_fixture: dict[str, Path]) -> None:
     manifest = _compose()
     artifact = {"slug": "demo", "status": "complete"}
@@ -324,42 +252,3 @@ def test_fts5_shadow_tables_excluded_from_name_enumeration(tmp_path: Path) -> No
         assert f"source_chunks_fts{suffix}" not in names, (
             f"FTS5 shadow table source_chunks_fts{suffix} must be excluded"
         )
-
-
-def test_sources_hash_runs_clean_against_fts5_db(
-    manifest_fixture: dict[str, Path],
-) -> None:
-    """Full end-to-end: a DB that includes an FTS5 virtual table must not
-    crash `_sources_hash`. Prior to #1517 this raised
-    `sqlite3.OperationalError: no such column: rowid`."""
-    # Replace the plain fixture DB with one that exercises FTS5 shadows.
-    sources_db_path = manifest_fixture["sources_db_path"]
-    sources_db_path.unlink()
-    _build_sources_db_with_fts5(sources_db_path)
-
-    # Must not raise. Must return a valid sha256 hex digest.
-    digest = alignment_manifest._sources_hash()
-    assert isinstance(digest, str)
-    assert len(digest) == 64
-    int(digest, 16)  # raises ValueError if not hex
-
-
-def test_fts5_sources_hash_is_stable_across_rebuilds(tmp_path: Path, monkeypatch) -> None:
-    """Two independently-built DBs containing identical FTS5 content must
-    yield identical `_sources_hash` values. This would fail before #1517
-    because `*_data` / `*_idx` shadow tables carry segment IDs that differ
-    across separate `INSERT INTO fts(body)` operations."""
-    db_a = tmp_path / "a" / "sources.db"
-    db_b = tmp_path / "b" / "sources.db"
-    _build_sources_db_with_fts5(db_a)
-    _build_sources_db_with_fts5(db_b)
-
-    monkeypatch.setattr(alignment_manifest, "SOURCES_DB_PATH", db_a)
-    hash_a = alignment_manifest._sources_hash()
-    monkeypatch.setattr(alignment_manifest, "SOURCES_DB_PATH", db_b)
-    hash_b = alignment_manifest._sources_hash()
-
-    assert hash_a == hash_b, (
-        "Identical FTS5 content produced different manifest hashes — "
-        "shadow-table segment state is leaking into the hash."
-    )

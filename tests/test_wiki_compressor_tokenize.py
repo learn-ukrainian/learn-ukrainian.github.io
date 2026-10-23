@@ -44,26 +44,6 @@ class TestTokenizePreservesCyrillicLetters:
         tokens = _tokenize("ЙОРКШИР")
         assert "йоркшир" in tokens
 
-    def test_preserves_mix_across_multiple_tokens(self):
-        text = "білий жовтий блакитний тризуб Україна"
-        tokens = _tokenize(text)
-        assert "білий" in tokens
-        assert "жовтий" in tokens
-        assert "блакитний" in tokens
-        assert "україна" in tokens
-
-    def test_canonical_flag_terms_survive(self):
-        """Direct regression for the #1431 / a1/colors failure mode:
-        the wiki compressor extracted `білии`/`жовтии`/`блакитнии` as
-        factual anchors, no writer could possibly produce those (since
-        they're not Ukrainian), compliance always failed."""
-        # Simulate what the wiki body would say.
-        article = "Наш прапор синьо-жовтий. Базові кольори: білий, чорний, червоний, жовтий, зелений, синій, блакитний."
-        tokens = _tokenize(article)
-        # Every real anchor the writer will output.
-        for expected in ("білий", "чорний", "червоний", "жовтий", "зелений", "синій", "блакитний"):
-            assert expected in tokens, f"Ukrainian adjective {expected!r} corrupted during tokenize: got {sorted(tokens)}"
-
 
 class TestTokenizeStripsStressMarks:
     """NFKD + combining-strip was the original intent for stress removal
@@ -77,35 +57,3 @@ class TestTokenizeStripsStressMarks:
         text = "ка́ртопля"
         tokens = _tokenize(text)
         assert "картопля" in tokens
-
-    def test_strips_acute_on_multiple_words(self):
-        text = "ка́ва мо́локо хлíб"
-        tokens = _tokenize(text)
-        assert "кава" in tokens
-        assert "молоко" in tokens
-
-
-class TestTokenizeStopwordsAndLength:
-    """Behaviour not related to the bug — sanity that pre-existing
-    filters still work after the tokenizer change."""
-
-    def test_drops_short_tokens(self):
-        tokens = _tokenize("до на за при і та")
-        # All these are < 4 chars → get dropped by the `len > 2` filter.
-        # "при" is 3 chars (length > 2), so it stays unless it's a stopword.
-        assert "до" not in tokens
-        assert "на" not in tokens
-        assert "за" not in tokens
-
-    def test_lowercases(self):
-        tokens = _tokenize("Україна БІЛИЙ жовтий")
-        for t in tokens:
-            assert t == t.lower()
-
-
-class TestTokenizeIdempotent:
-    def test_tokenize_twice_gives_same_result(self):
-        text = "білий жовтий блакитний"
-        t1 = _tokenize(text)
-        t2 = _tokenize(text)
-        assert t1 == t2

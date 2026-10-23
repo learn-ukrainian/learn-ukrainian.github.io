@@ -3,7 +3,8 @@
 Templates only — do not commit machine-specific paths. Copy a unit into
 `~/.config/systemd/user/` (linger enabled via `loginctl enable-linger $USER`) or
 `/etc/systemd/system/`, replace `@REPO_ROOT@` / `@PRIVATE_ROOT@`, run
-`systemctl --user daemon-reload`, then enable/start.
+`systemctl --user daemon-reload`, then follow the unit-specific instructions
+below. The retired backup and retention timers must remain disabled.
 
 ## Dispatch worker slice (`lu-dispatch.slice`)
 
@@ -146,6 +147,7 @@ runner, and orchestrator hosts).
 
 ### 2. Worktree Garbage Collection (`learn-ukrainian-worktree-gc.service` + `.timer`)
 
+- **Install**: The collector sweeps both repository roots. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template before installing it.
 - **Frequency**: Every 4 hours (`OnBootSec=15min`, `OnUnitActiveSec=4h`, `RandomizedDelaySec=1800`, `Persistent=true`) — matches the macOS launchd cadence.
 - **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and run automatic git maintenance with receipt logging.
 - **Default mode**: Apply. The shipped unit passes `--apply`, matching macOS launchd. The reaper stays fail-closed for OPEN PRs, live working directories, dirty worktrees, and unreadable GitHub state — this denser cadence does not loosen any of those guards, it only shrinks the backlog between runs.
@@ -173,23 +175,35 @@ runner, and orchestrator hosts).
   systemctl --user enable --now learn-ukrainian-project-state-reporter.timer
   ```
 
-### 4. Data Backup (`learn-ukrainian-backup.service` + `.timer`) and Retention (`learn-ukrainian-backup-retention.service` + `.timer`)
+### 4. Retired backup and retention timers
 
-- **Frequency**: backup daily at 03:30 UTC (`OnCalendar=*-*-* 03:30:00 UTC`, `Persistent=true`, `RandomizedDelaySec=15min`); retention weekly on Sunday at 05:15 UTC, after that day's backup. Target host: the data host whose checkout holds the live `data/` tree.
-- **What it does**: the backup service runs `scripts/orchestration/run_scheduled_backup.sh`, which executes `scripts/backup-data.sh backup --execute` (restic via the rclone remote) and records the outcome in `batch_state/backups/last-run.json`. The retention service uses the same wrapper's `retention` mode to run `scripts/backup-data.sh retention --execute`, applying the operator-approved `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` policy run-aware to the `learn-ukrainian-data` tag only: completed runs are kept or dropped as a unit and snapshots are forgotten by explicit snapshot ID, so a retained receipt never loses a snapshot it references. Other snapshot families in the repository are untouched.
-- **Secrets**: both services pass `LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env` to the wrapper. The wrapper opens the file once, refuses a symlink, requires a regular file owned by the service user with no group/world write bit, and requires its parent directory to be owned by that user and not group/world-writable. Mode `0600` is recommended for the file. The wrapper sources shell syntax with export enabled, expanding `$HOME` and variable references that systemd `EnvironmentFile=` cannot expand. The file's last command must succeed: sourcing checks its final exit status, so a failed earlier command can be missed. Manual runs can omit `LU_BACKUP_ENV_FILE` when the environment is already populated. Validation and sourcing errors name the variable and condition without its value. The wrapper redacts the configured repository, its rclone spec without the `rclone:` prefix, and the password-file path from both services' output before it reaches the journal. An unsafe or missing configured file fails the backup and writes a failure receipt.
-- **Disk safety**: `LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging` keeps SQLite staging on the same filesystem as `data/` (gitignored; see `scripts/backup-data.sh` — databases are staged sequentially and each staged copy is deleted before the next). `Nice=15` + `IOSchedulingClass=idle` keep the run off the fast path; `TimeoutStartSec=10800` allows one hour of lock wait plus two hours for backup or retention.
-- **Data-volume guard**: the two backup services have drop-ins among the seventeen in `packaging/systemd/dropins/`. Each checks the configured data volume before executing the redacting `run_scheduled_backup.sh` wrapper; a failed guard exits 78 and does not restart. Install the drop-ins as described in `docs/runbooks/storage-topology.md` before enabling the timers on a migrated data host.
-- **Failure visibility**: a failed run exits non-zero, and a failed log capture or `last-run.json` write fails the backup service even when the backup succeeded. Monitor's `/api/orient?sections=health` reports `health.backup_last_run.status`, `exit_status`, and `finished_at_utc` from that receipt, so the next morning's health glance shows a failed night. A success older than 26 hours is `stale`, covering a timer or systemd preflight failure before the wrapper starts. `unknown` means the receipt is absent, unreadable, or invalid; check the unit journal. `last-run.json` also carries start/end, run id, snapshot count, and bytes added.
-- **Failure alert (change-only)**: both services set `OnFailure=learn-ukrainian-backup-alert@%n.service`. The template runs `scripts/orchestration/backup_failure_alert.py failed <unit>`, which posts one report to the Fleet Comms `cto` channel (`--sender sre-timers --kind report`) and records the unit under `batch_state/backups/alerts/`. Later failures of the same unit stay quiet. Each service's `ExecStartPost=-... recovered %n` runs only after a successful run; it posts one recovery report when the unit was recorded as failing and clears the record. A publish that fails leaves the record unchanged, so the next run retries, and the alert unit shows as failed. `install_backup_timer.py` installs the template with the other four units.
-- **Broken and batch_state symlinks**: a dangling symlink under a recovery root (`data/`, `batch_state/`, `.agent/`, `.claude/*-epic`) no longer aborts the backup. It is skipped with a `WARNING: Skipping broken symlink ...` line, excluded from the snapshot, and listed in the receipt's `exclusions` as `<path> broken symlink skipped`. Absolute or escaping symlinks under `batch_state/` (such as temporary test fixtures, mock binaries, and runtime links) are likewise skipped with a warning and excluded from the snapshot so they do not abort the nightly backup. Absolute or escaping symlinks in other recovery roots (`.agent/`, `.claude/*-epic`, `data/`) still fail closed.
-- **Backend connections**: `LU_BACKUP_RCLONE_CONNECTIONS` (1-16, default 1) sets the rclone backend connection limit. `restic prune` refuses fewer than two, so prune always uses at least 2, and the retention service sets `LU_BACKUP_RCLONE_CONNECTIONS=2`.
-- **Install** (preview by default; writes only with `--apply`):
-  ```bash
-  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary
-  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary --apply --enable
-  ```
-  After merge, the data-host driver runs the preview and then the `--apply --enable` command from the updated primary checkout to replace both installed service units and reload the user manager. The driver then checks `/api/orient?sections=health` and the next timer-triggered `last-run.json` receipt.
+`learn-ukrainian-backup.timer` and
+`learn-ukrainian-backup-retention.timer` are retired and must remain disabled.
+The active offsite job owns scheduled capture; its secondary copy covers the
+same completed snapshots. Consult the private operations runbook for current
+operating procedures.
+
+The existing service, timer and failure-alert templates remain installed for
+manual maintenance. The installer previews without changing installed units or
+calling systemctl. With `--apply`, it writes owner-only units, reloads the user
+manager, then disables and stops both timers using checked
+`systemctl --user disable --now`. It never removes backup data or unit files.
+`--enable`, including `--apply --enable`, is refused before any write or
+systemctl action; direct Python `apply(..., enable=True)` is also refused.
+Stopping the timers does not cancel an already-running service.
+
+After deployment is separately authorized, run from the primary checkout:
+
+```bash
+.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary
+.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary --apply
+```
+
+Keep the retired schedules disabled; do not move them to another scheduler.
+See [Data backup and recovery](../../docs/runbooks/data-backup.md) for manual
+backup, verification, restore and explicit retention commands. The legacy
+`last-run.json` receipt and failure-alert template describe legacy service runs;
+they do not establish current offsite coverage.
 
 ### 5. OpenCode Session Retention (`learn-ukrainian-opencode-retention.service` + `.timer`)
 

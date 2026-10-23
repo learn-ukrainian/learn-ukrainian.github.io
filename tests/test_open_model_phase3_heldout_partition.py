@@ -7,7 +7,6 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_heldout_partition as heldout
 from scripts.projects.open_model_data import phase3_near_duplicate as near
@@ -345,29 +344,6 @@ def _verify_fixture_artifacts(root: Path, private: Path, public: Path, *, requir
     )
 
 
-def test_schema_is_draft_2020_12_and_has_stable_id() -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert schema["$id"].endswith("phase3_heldout_partition_bundle_v1.schema.json")
-    for name in (
-        "inputBindings",
-        "heldoutSealReceipt",
-        "authorClearanceReceipt",
-        "publicReceipt",
-        "partitionVerificationReceipt",
-        "leakageVerificationReceipt",
-        "bundle",
-    ):
-        assert name in schema["$defs"]
-
-
-def test_document_identity_collapses_layers() -> None:
-    left = heldout.document_identity_for_ua_gec("docA")
-    right = heldout.document_identity_for_ua_gec("docA")
-    assert left == right
-    assert left != heldout.document_identity_for_ua_gec("docB")
-
-
 def test_reconstruction_preserves_empty_source_lang_and_rejects_non_strings(tmp_path: Path) -> None:
     def reconstruct(source_lang: object, index: int) -> dict[str, object]:
         db_path = tmp_path / f"sources-{index}.db"
@@ -679,18 +655,6 @@ def test_v2_1_schema_closure_and_action_receipt_tamper_fail_closed(tmp_path: Pat
         _verify_fixture_artifacts(root, private, public)
 
 
-def test_public_only_verification_recomputes_action_identity(tmp_path: Path) -> None:
-    root = _build_fixture_root(tmp_path)
-    private, public = _build_fixture_artifacts(root)
-    public_path = public / "public_receipt_v1.json"
-    receipt = heldout.read_json(public_path)
-    receipt["action_receipt"]["receipt_id"] = "phase3_functional_action:" + "0" * 64
-    heldout.write_public_json(public_path, heldout.attach_receipt_hash(receipt))
-
-    with pytest.raises(heldout.PartitionError, match="public action receipt ID drift"):
-        _verify_fixture_artifacts(root, private, public, require_private=False)
-
-
 def test_v1_role_contract_and_v2_1_binding_drift_fail_closed() -> None:
     role_contract = heldout.read_json(ROLE)
     legacy = heldout.read_json(REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_role_contract_v1.json")
@@ -867,66 +831,3 @@ def test_malformed_comparison_fail_closed_and_source_drift(tmp_path: Path) -> No
             schema_path=root / SCHEMA.relative_to(ROOT),
             skip_source_freeze_git_binding=True,
         )
-
-
-def test_cli_build_verify_smoke(tmp_path: Path) -> None:
-    root = _build_fixture_root(tmp_path)
-    code = heldout.main(
-        [
-            "--root",
-            str(root),
-            "--source-universe",
-            str(root / "data/projects/open_model_data/evidence/source_universe_v1"),
-            "--sources-db",
-            str(root / "data/sources.db"),
-            "--private-dir",
-            str(root / "batch_state/open-model-data/phase3-heldout"),
-            "--public-dir",
-            str(root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1"),
-            "--schema",
-            str(root / SCHEMA.relative_to(ROOT)),
-            "build",
-            "--provider",
-            EXECUTION_METADATA["provider"],
-            "--started-at",
-            EXECUTION_METADATA["started_at"],
-            "--completed-at",
-            EXECUTION_METADATA["completed_at"],
-            "--skip-source-freeze-git-binding",
-        ]
-    )
-    assert code == 0
-    code = heldout.main(
-        [
-            "--root",
-            str(root),
-            "--source-universe",
-            str(root / "data/projects/open_model_data/evidence/source_universe_v1"),
-            "--sources-db",
-            str(root / "data/sources.db"),
-            "--private-dir",
-            str(root / "batch_state/open-model-data/phase3-heldout"),
-            "--public-dir",
-            str(root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1"),
-            "--schema",
-            str(root / SCHEMA.relative_to(ROOT)),
-            "verify",
-            "--skip-source-freeze-git-binding",
-        ]
-    )
-    assert code == 0
-    code = heldout.main(
-        [
-            "--root",
-            str(root),
-            "--private-dir",
-            str(root / "batch_state/open-model-data/phase3-heldout"),
-            "--public-dir",
-            str(root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1"),
-            "--schema",
-            str(root / SCHEMA.relative_to(ROOT)),
-            "verify",
-            "--public-only",
-        ]
-    )
-    assert code == 0

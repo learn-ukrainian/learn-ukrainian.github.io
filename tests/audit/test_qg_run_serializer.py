@@ -121,4 +121,3 @@ def test_run_canary_guards_against_invalid_level_trap() -> None:
         assert res["level"] == "seminar"  # canonical level for folk
     finally:
         llm_qg_canaries.evaluate_canaries = original_evaluate
-

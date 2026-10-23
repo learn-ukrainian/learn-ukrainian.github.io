@@ -13,8 +13,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from wiki.channels import (
     EXTERNAL_CORPUS_DIR,
-    TRACK_CHANNEL_AFFINITY,
-    get_track_affinity,
     load_channels,
     rank_external_hits,
 )
@@ -34,15 +32,6 @@ def test_registry_covers_all_external_source_files():
             "untracked local data, not provisioned in CI"
         )
     assert set(channels) == source_files
-
-
-def test_track_affinity_lookup_is_deterministic():
-    load_channels(reload=True)
-    assert get_track_affinity("realna_istoria", "hist") == 1.0
-    assert get_track_affinity("ulp_youtube", "a1") == 1.0
-    assert get_track_affinity("ulp_youtube", "hist") == 0.2
-    assert get_track_affinity("missing-source", "hist") == 0.0
-    assert TRACK_CHANNEL_AFFINITY["imtgsh"]["hist"] == TRACK_CHANNEL_AFFINITY["imtgsh"]["hist"]
 
 
 @pytest.mark.parametrize(

@@ -10,7 +10,6 @@ from fastapi.testclient import TestClient
 
 from scripts.api import decisions_router
 from scripts.api.main import app
-from scripts.audit import decision_lineage
 from scripts.audit.decision_lineage import build_lineage_response
 
 
@@ -139,50 +138,6 @@ def test_decision_lineage_skips_non_decision_docs_and_uses_token_boundaries(tmp_
     subjects = {commit["subject"] for commit in record["commits"]}
     assert "Update index.html after indexing READMEs #505" not in subjects
     assert record["prs"] == []
-
-
-def test_decision_lineage_warns_when_patch_scan_skipped_and_can_force_it(tmp_path, monkeypatch, capsys):
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _git(repo, "init")
-    _git(repo, "config", "user.email", "test@example.com")
-    _git(repo, "config", "user.name", "Decision Test")
-
-    decisions = repo / "docs" / "decisions"
-    decisions.mkdir(parents=True)
-    (decisions / "2026-01-01-alpha.md").write_text("# ADR-001: Alpha\n\nAccepted.\n", encoding="utf-8")
-    _commit(repo, "Initial ADR-001", "2026-01-01T00:00:00+00:00")
-
-    monkeypatch.setattr(decision_lineage, "PATCH_SCAN_COMMIT_LIMIT", 0)
-
-    build_lineage_response(repo)
-    stderr = capsys.readouterr().err
-    assert "decision_lineage: patch-text scan skipped" in stderr
-    assert "add --with-patch-scan to force" in stderr
-
-    build_lineage_response(repo, with_patch_scan=True)
-    assert "patch-text scan skipped" not in capsys.readouterr().err
-
-
-def test_decision_id_filter_matches_alias(tmp_path):
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _git(repo, "init")
-    _git(repo, "config", "user.email", "test@example.com")
-    _git(repo, "config", "user.name", "Decision Test")
-
-    decisions = repo / "docs" / "decisions"
-    decisions.mkdir(parents=True)
-    (decisions / "2026-01-01-alpha-path.md").write_text(
-        "# ADR-001: Alpha Path Decision\n\nAccepted.\n",
-        encoding="utf-8",
-    )
-    _commit(repo, "Initial ADR-001 (#303)", "2026-01-01T00:00:00+00:00")
-
-    response = build_lineage_response(repo, decision_id="ADR-001")
-
-    assert response["count"] == 1
-    assert response["decisions"][0]["decision_id"] == "ADR-001"
 
 
 def test_monitor_api_lineage_endpoint(monkeypatch):

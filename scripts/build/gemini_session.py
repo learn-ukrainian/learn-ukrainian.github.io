@@ -249,8 +249,3 @@ def find_session_near_time(
         return None
     candidates.sort(key=lambda x: x[0])
     return candidates[0][1]
-
-
-def gemini_chats_dir_for_project(project: str = "learn-ukrainian") -> Path:
-    """Return the chats directory for a project (may not exist)."""
-    return GEMINI_CHATS_ROOT / project / "chats"

@@ -87,12 +87,6 @@ def _row(unit_id: str, text: str) -> dict:
     }
 
 
-def test_schemas_are_valid_draft_2020_12():
-    for schema_path in (EVIDENCE_SCHEMA, SIDECAR_SCHEMA, MANIFEST_SCHEMA):
-        schema = json.loads(schema_path.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
-
-
 def test_compiled_evidence_records_validate_against_evidence_schema():
     validators = _validators()
     row = _row("unit-1", "Привіт світ")

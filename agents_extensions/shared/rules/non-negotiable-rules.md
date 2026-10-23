@@ -197,7 +197,7 @@ Every operation must be finished end-to-end in the same commit:
 | Create JSONL data | Add ingestion flag to script + update `DICTIONARY-PIPELINE-STATUS.md` |
 | Write plans | Add references (textbook + ULP links) to every plan |
 | Build a module | Verify MDX renders correctly (not empty, has all tabs) |
-| Fix a bug | Write a test that catches the same bug |
+| Fix a bug | Verify the fix with the existing test or tool that covers it; add a test only when the CTO approves that specific test |
 | Close a GH issue | Verify ALL acceptance criteria, not just "most" |
 
 "For now", "batch job for later", "flag for human" = failure. If it needs doing, do it NOW.

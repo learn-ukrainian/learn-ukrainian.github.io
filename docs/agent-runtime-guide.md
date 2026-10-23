@@ -40,18 +40,17 @@ yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 
 ## Kimi routes and KimiCC headless route
 
-Kimi seats take web, UI and backend coding only: `workspace-write`
-implementation of paths on the allowlist in
-`scripts/agent_runtime/kimi_admission.py` (`KIMI_OWNED_ROOTS`). Asks, consults,
-discussions, reviews, trail sessions and read-only or danger modes are refused
-by `refuse_kimi_if_disallowed` before any side effect. Ukrainian content is
-recognised by content: an owned file, or any file under an owned directory or
-glob, that contains a Cyrillic character is refused, and so is a directory or
-glob scope that covers an excluded file (narrow it to specific files or clean
-subdirectories). A Kimi worker does not commit: `delegate.py` checks its diff
-from the merge base and commits the owned paths only when the diff adds no
-Cyrillic character; otherwise the task ends `failed` with
-`kimi_content_refusal` and nothing is committed.
+Kimi models are retired (OO-58, #11327). Dispatch, substitution, launchers and
+the bridge refuse every Kimi id. Short names still resolve so the refusal can
+name the catalog id. There is no default interactive route and no KimiCC opt-in.
+
+The admission gate still runs first on a Kimi request. Asks, consults,
+discussions, reviews, trail sessions and read-only or danger modes raise the
+coding-only refusal before the catalog retirement is reached. An admitted
+workspace-write then hits the retired-model refusal and does not plan a launch.
+Ukrainian-content checks in `scripts/agent_runtime/kimi_admission.py` remain on
+that path; they are not a way to send work. A diff that would have been a Kimi
+commit still fails closed with `kimi_content_refusal` when it adds Cyrillic.
 
 Targets are admitted in the same step they are resolved:
 `scripts/agent_runtime/target_admission.py` `resolve_and_admit` performs every
@@ -62,29 +61,9 @@ launch sinks in the bridge, channels, ACP, fleet-comms and `delegate.py` take
 the `AdmittedTarget` it returns, never a raw name, and the resolvers are
 called from that module only (`tests/test_target_admission_structure.py`).
 
-**Native Kimi is the default** interactive and headless/fleet route
-(`./start-kimi.sh`, `delegate.py --agent kimi --mode workspace-write`). Native
-**Kimi K3 is max-only** — the native adapter does not accept a non-max effort
-ladder for K3.
-
-**KimiCC is bounded explicit opt-in** (`./start-kimicc.sh`,
-`start-kimi.sh --harness claude-code`, or runtime `harness=kimicc`). On the
-KimiCC route, **K3 defaults to `high`** in interactive and headless/runtime
-paths; supported effort overrides must remain observable in telemetry. Do not
-weaken the native Kimi registry to match KimiCC.
-
-To opt into Kimi through the headless Claude Code harness, dispatch
-`--agent kimi --harness kimicc`. The adapter runs `claude -p --bare` through
-`scripts/agent_runtime/kimicc_headless.sh`; that wrapper sources the same
-`scripts/lib/kimicc_route.sh` used by `start-kimi.sh --harness claude-code`,
-resolves the catalog route, applies the route guard and context profile, then
-resolves credentials immediately before `exec`.
-
-For `kimi login` OAuth, headless runs export one fresh token at spawn and never
-write `~/.claude` or an isolated Claude config. Kimi access tokens last roughly
-15 minutes, so a long-running headless call must be relaunched; unlike the
-interactive launcher, this stateless `--bare` route does not install an
-`apiKeyHelper` refresh loop.
+Do not dispatch `--agent kimi` or start `start-kimi.sh` / `start-kimicc.sh`.
+The historical headless Claude Code harness (`kimicc_headless.sh`) is not an
+opt-in. Catalog retirement runs after admission and before a launch plan.
 
 Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
@@ -686,14 +665,9 @@ two parts, applied in every mode:
   they still start or schedule work past the turn. A settings deny removes them
   from the tool list in `dontAsk`, `bypassPermissions` and default modes.
 
-The KimiCC harness (`--agent kimi --harness kimicc`) is also a headless
-`claude -p` run, through `kimicc_headless.sh`. Its plan reuses the same two
-constants: the variable in `env_overrides`, and the denies as one
-`--disallowedTools` argument that the wrapper forwards to `claude -p --bare`.
-The sanitizer sees the provider name `kimi` for both Kimi harnesses, so it
-keeps the variable for `kimi` only when the plan supplies it and drops an
-ambient export. The native Kimi CLI plan never sets it, so native Kimi gets
-neither control. In Claude Code 2.1.289 `--bare` already offers only Bash,
+Kimi and KimiCC ids are retired (OO-58, #11327). `build_invocation` refuses
+them before a plan exists, so neither harness reaches these background controls.
+In Claude Code 2.1.289 `--bare` already offers only Bash,
 Edit and Read, and Bash has no `run_in_background` there (a capture of the
 request sent to a local fake endpoint); the explicit controls keep the route
 closed if that reduced tool set changes.
@@ -771,9 +745,9 @@ that can background. Interactive launchers (`start-claude.sh`,
 and keep background tasks. A trailing `&` or `nohup` inside a foreground Bash
 call is a different path: `worker_leftovers.py` handles it (#8991).
 `tests/agent_runtime/test_claude_no_background.py` launches a fake CLI through
-the real runner and checks both parts, for the Claude adapter and for KimiCC
-behind its wrapper. It also checks that native Kimi gets neither, and that
-every adapter which resolves the Claude binary is in its harness table.
+the real runner and checks both parts for the Claude adapter. KimiCC and native
+Kimi refuse the retired catalog id before a plan. Every adapter which resolves
+the Claude binary stays in the harness table, including the retired KimiCC file.
 
 The CTO launchers `start-claude-cto.sh` and `start-codex-cto.sh` use driver mode
 and default to the registered `epics` stream, whose root epic is #10453.
@@ -899,8 +873,9 @@ The admission policy is fail-closed:
 - Native Grok gets a private MCP cwd, an exact three-tool allowlist, explicit
   allows for those tools, and explicit denies for Bash, reads/writes/edits,
   web, and discovery tools.
-- Every Kimi seat (native and KimiCC) refuses trail sessions: Kimi seats take
-  web, UI and backend coding only (`scripts/agent_runtime/kimi_admission.py`).
+- Every Kimi seat (native and KimiCC) refuses trail sessions. Kimi models are
+  retired (OO-58); `scripts/agent_runtime/kimi_admission.py` still refuses the
+  request before a launch is planned.
 - GLM/opencode, Hermes Grok, and every unproven harness refuse before spawn. GLM currently ignores tool restrictions, so a refusal is more
   honest than a pretend sandbox.
 

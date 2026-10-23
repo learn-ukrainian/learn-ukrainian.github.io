@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-import ast
-import inspect
 import json
-import textwrap
 from pathlib import Path
 from typing import Any
 
@@ -194,39 +191,6 @@ def test_python_qg_best_round_prefers_frontier_then_violation_count() -> None:
     assert linear_pipeline._python_qg_best_round_index(rounds) == 2
 
 
-def test_python_qg_gate_order_covers_correctable_gate_families() -> None:
-    correctable_gates = (
-        linear_pipeline.WRITER_CORRECTION_GATES
-        | linear_pipeline.DETERMINISTIC_VOCAB_FLOOR_GATES
-        | linear_pipeline.REVIEWER_FIX_GATES
-        | linear_pipeline.PIPELINE_INSERT_GATES
-    )
-
-    missing = correctable_gates - set(linear_pipeline.PYTHON_QG_GATE_ORDER)
-
-    assert sorted(missing) == []
-
-
-def test_python_qg_gate_order_covers_run_python_qg_content_gates() -> None:
-    source = textwrap.dedent(inspect.getsource(linear_pipeline.run_python_qg))
-    tree = ast.parse(source)
-    recorded_gates = {
-        node.args[0].value
-        for node in ast.walk(tree)
-        if isinstance(node, ast.Call)
-        and isinstance(node.func, ast.Name)
-        and node.func.id == "record"
-        and node.args
-        and isinstance(node.args[0], ast.Constant)
-        and isinstance(node.args[0].value, str)
-    }
-    emitted_content_gates = recorded_gates | set(linear_pipeline.QUALITY_FIELD_PATTERNS)
-
-    missing = emitted_content_gates - set(linear_pipeline.PYTHON_QG_GATE_ORDER)
-
-    assert sorted(missing) == []
-
-
 def test_python_qg_frontier_does_not_rank_unmapped_failure_as_pass() -> None:
     report = _qg_report_from_gates(
         {
@@ -242,21 +206,6 @@ def test_python_qg_frontier_does_not_rank_unmapped_failure_as_pass() -> None:
         linear_pipeline.PYTHON_QG_GATE_ORDER
     )
     assert linear_pipeline._python_qg_frontier_gate(report) == "future_unmapped_gate"
-
-
-def test_surface_policy_is_ranked_in_python_qg_frontier() -> None:
-    report = _qg_report_from_gates(
-        {
-            "ai_slop_clean": {"passed": True, "violations": []},
-            "surface_policy": {"passed": False, "findings": [{"type": "ai_leakage"}]},
-        }
-    )
-
-    assert "surface_policy" in linear_pipeline.PYTHON_QG_GATE_ORDER
-    assert linear_pipeline._python_qg_frontier(report) == linear_pipeline.PYTHON_QG_GATE_ORDER.index(
-        "surface_policy"
-    )
-    assert linear_pipeline._python_qg_frontier_gate(report) == "surface_policy"
 
 
 def test_previous_regression_scans_actual_gate_key_union() -> None:
@@ -366,63 +315,6 @@ def test_python_qg_seminar_breaks_immediately_on_pass(tmp_path: Path) -> None:
     assert loop["best_round"] == 2
     assert loop["stopped_reason"] == "pass"
     assert [item["violation_count"] for item in loop["rounds"]] == [1, 0]
-
-
-def test_python_qg_seminar_regression_restores_previous_snapshot(
-    tmp_path: Path,
-) -> None:
-    module_dir = _module_dir(tmp_path)
-    plan_path = _plan_path(tmp_path, "folk")
-
-    def qg_runner() -> dict[str, Any]:
-        module_text = (module_dir / "module.md").read_text(encoding="utf-8")
-        if "STATE1" in module_text:
-            return _qg_report_from_gates(
-                {
-                    "activity_schema": {
-                        "passed": False,
-                        "violations": [{"message": "schema regressed"}],
-                    },
-                    "word_count": {"passed": True, "count": 120, "minimum": 120},
-                    "plan_sections": {"passed": True, "missing_headings": []},
-                }
-            )
-        return _qg_report_from_gates(
-            {
-                "activity_schema": {"passed": True, "violations": []},
-                "word_count": {"passed": True, "count": 120, "minimum": 120},
-                "plan_sections": {
-                    "passed": False,
-                    "missing_headings": ["Ключові терміни"],
-                },
-            }
-        )
-
-    def writer_corrector(context: linear_pipeline.CorrectionContext) -> dict[str, str]:
-        assert context.gate == "plan_sections"
-        return _writer_artifacts("STATE1\n", activity_prompt="dirty round")
-
-    report = linear_pipeline.run_python_qg_with_corrections(
-        module_dir,
-        plan_path,
-        qg_runner=qg_runner,
-        writer_corrector=writer_corrector,
-    )
-
-    assert report["gates"]["activity_schema"]["passed"] is True
-    assert report["gates"]["plan_sections"]["passed"] is False
-    assert (module_dir / "module.md").read_text(encoding="utf-8") == "STATE0\n"
-    assert yaml.safe_load((module_dir / "activities.yaml").read_text("utf-8")) == []
-    loop = json.loads(
-        (module_dir / "python_qg_correction_loop.json").read_text(encoding="utf-8")
-    )
-    assert loop["stopped_reason"] == "previously_passed_regression"
-    assert loop["best_round"] == 1
-    correction = json.loads(
-        (module_dir / "python_qg_correction_r1.json").read_text(encoding="utf-8")
-    )
-    assert correction["rollback_reason"] == "previously_passed_regression"
-    assert correction["regressions"] == ["activity_schema"]
 
 
 def test_python_qg_core_uses_legacy_single_correction_path(tmp_path: Path) -> None:

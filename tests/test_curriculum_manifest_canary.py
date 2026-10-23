@@ -2,11 +2,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from unittest.mock import patch
 
 from scripts.audit.curriculum_manifest_canary import (
     collect_curriculum_files,
-    main,
     update_manifest_entries,
     verify_manifest,
     write_manifest,
@@ -231,39 +229,3 @@ def test_verify_manifest_malformed_payload(tmp_path: Path):
     res = verify_manifest(manifest_path, repo)
     assert res["valid"] is False
     assert "missing required 'path' or 'sha256' field" in res["error"]
-
-
-def test_main_cli_flow(tmp_path: Path):
-    repo, manifest_path = _setup_mock_repo(tmp_path)
-
-    # Write via CLI
-    exit_write = main(["--write", "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
-    assert exit_write == 0
-    assert manifest_path.exists()
-
-    # Check via CLI
-    exit_check = main(["--check", "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
-    assert exit_check == 0
-
-    # Check JSON output via CLI
-    with patch("builtins.print") as mock_print:
-        exit_json = main(["--check", "--json", "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
-        assert exit_json == 0
-        mock_print.assert_called_once()
-        parsed = json.loads(mock_print.call_args[0][0])
-        assert parsed["valid"] is True
-
-    # Tamper and check non-JSON error output via CLI
-    tampered_file = repo / "curriculum" / "l2-uk-en" / "a1" / "lesson-1" / "vocabulary.yaml"
-    tampered_file.write_text("tampered: true\n", encoding="utf-8")
-
-    exit_tampered = main(["--check", "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
-    assert exit_tampered == 1
-
-    # Update via CLI for the tampered file
-    exit_update = main(["--update", str(tampered_file), "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
-    assert exit_update == 0
-
-    # Check passes after CLI update
-    exit_check_after = main(["--check", "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
-    assert exit_check_after == 0

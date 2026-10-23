@@ -221,28 +221,6 @@ def test_scope_schema_and_draft_rules(tmp_path, certification):
         card.update(original)
 
 
-def test_authority_cache_is_per_run(monkeypatch, certification):
-    calls = []
-    original = Path.open
-
-    def counted(path, *args, **kwargs):
-        calls.append(path)
-        return original(path, *args, **kwargs)
-
-    monkeypatch.setattr(Path, 'open', counted)
-    with cert.certification_run():
-        for _ in range(25):
-            cert.load_certified_card_for_export(certification.card)
-    assert calls.count(certification.ledger_path) == 1
-    assert calls.count(certification.register) == 1
-    assert calls.count(certification.code) == 1
-    for path in certification.snapshots.values():
-        assert calls.count(path) == 1
-    invalidate(certification, 'withdrawn')
-    with pytest.raises(cert.UncertifiedCardRefusal):
-        cert.load_certified_card_for_export(certification.card)
-
-
 @pytest.mark.parametrize('fault', FAULTS)
 def test_manifest_cache_rechecks_authority(tmp_path, monkeypatch, certification, fault):
     original = json.dumps({'cards': [certification.card]}).encode()

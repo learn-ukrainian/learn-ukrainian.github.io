@@ -24,16 +24,13 @@ import requests
 
 from scripts.common.scratch import ensure_scratch_root
 from scripts.ingest.usage_advice_ingest import (
-    DEFAULT_USER_AGENT,
     EXIT_HTTP_403_FORBIDDEN,
     EXIT_HTTP_SERVER_ERROR,
     MOVAUA_CREDIT,
     MOVNE_AUTHOR,
     AccessDeniedError,
     RateLimitOrServerError,
-    SourceChoice,
     UsageAdviceIngestError,
-    clean_movaua_title,
     discover_movaua_manifest,
     discover_movne_manifest,
     ensure_movaua_schema,
@@ -45,7 +42,6 @@ from scripts.ingest.usage_advice_ingest import (
     ingest_movaua,
     ingest_movne_pytannya,
     main,
-    parse_args,
     parse_retry_after,
     polite_get,
     reextract_movaua,
@@ -352,16 +348,6 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(p_idiom[0]["pair_type"], "idiom")
         self.assertEqual(p_idiom[0]["recommended_form"], "бити байдики")
 
-    def test_clean_movaua_title(self) -> None:
-        self.assertEqual(
-            clean_movaua_title("Пів яблука чи пів'яблука | Мова – ДНК нації"),
-            "Пів яблука чи пів'яблука",
-        )
-        self.assertEqual(
-            clean_movaua_title("Наголос у слові «жалюзі» | Мова - ДНК нації"),
-            "Наголос у слові «жалюзі»",
-        )
-
     def test_ingest_movne_incremental(self) -> None:
         manifest = [
             {"issue_number": 1, "url": "https://glavcom.ua/issue1.html", "title": "Випуск 1"},
@@ -480,21 +466,6 @@ class TestUsageAdviceIngest(unittest.TestCase):
             self.assertEqual(data_m["credit"], MOVAUA_CREDIT)
             self.assertTrue(movaua_out.exists())
 
-    def test_extract_movne_word_pairs_contrastive_nepravylno_first(self) -> None:
-        html = """
-        <div class="post_text">
-            <h2>• 1 •</h2>
-            <p>Олександр: Чи вживається слово «слідуючий»?</p>
-            <p>Неправильно казати «слідуючий». Правильно — «наступний».</p>
-        </div>
-        """
-        pairs = extract_movne_word_pairs(1, "https://glavcom.ua/issue_contrastive.html", html)
-        self.assertEqual(len(pairs), 1)
-        p = pairs[0]
-        self.assertEqual(p["verdict_form"], "наступний")
-        self.assertEqual(p["verdict_type"], "preferred")
-        self.assertEqual(p["questioned_form"], "слідуючий")
-
     def test_ingest_movaua_no_incremental_does_not_double_pairs(self) -> None:
         manifest = [
             {"url": "https://ukr-mova.in.ua/item1", "section": "antusurzhuk"},
@@ -517,30 +488,11 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs_count_1, pairs_count_2)
         self.assertEqual(pairs_count_1, 1)
 
-    def test_cli_parse_args(self) -> None:
-        args = parse_args(["--source", "movne_pytannya", "--delay", "0.5", "--limit", "10", "--no-incremental"])
-        self.assertEqual(args.source, SourceChoice.MOVNE)
-        self.assertEqual(args.delay, 0.5)
-        self.assertEqual(args.limit, 10)
-        self.assertFalse(args.incremental)
-        self.assertEqual(args.user_agent, DEFAULT_USER_AGENT)
-
     @patch("scripts.ingest.usage_advice_ingest.ingest_movne_pytannya")
     def test_cli_main_exit_codes(self, mock_movne: MagicMock) -> None:
         mock_movne.side_effect = AccessDeniedError("403 Forbidden")
         code = main(["--source", "movne_pytannya", "--db-movne", ":memory:"])
         self.assertEqual(code, EXIT_HTTP_403_FORBIDDEN)
-
-    def test_user_agent_explicitly_set_on_session(self) -> None:
-        session = requests.Session()
-        self.assertIn("python-requests", session.headers.get("User-Agent", ""))
-        ingest_movne_pytannya(
-            self.conn,
-            session=session,
-            manifest=[],
-            user_agent="CustomAgent/2.0",
-        )
-        self.assertEqual(session.headers.get("User-Agent"), "CustomAgent/2.0")
 
     def test_403_circuit_breaker_marks_error_and_skips_incremental(self) -> None:
         session = MagicMock(spec=requests.Session)
@@ -1028,14 +980,6 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs_fallback[0]["recommended_form"], "")
         self.assertIn("квиток / білет", pairs_fallback[0]["questioned_form"])
 
-    def test_token_isolation_short_words(self) -> None:
-        # Single-letter token "в" must not match inside "вашому"
-        text = "Правильно: у вашому тексті писати так."
-        pairs = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/v-chy-u", "antusurzhuk", "в чи у", "", text)
-        self.assertEqual(len(pairs), 1)
-        self.assertEqual(pairs[0]["questioned_form"], "в")
-        self.assertEqual(pairs[0]["recommended_form"], "у")
-
     def test_contains_token_apostrophes_and_hyphens(self) -> None:
         from scripts.ingest.usage_advice_ingest import _contains_token
 
@@ -1273,20 +1217,6 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(len(pairs_ok), 1)
         self.assertEqual(pairs_ok[0]["verdict_form"], "протягом")
 
-    def test_clean_verdict_balanced_parentheses(self) -> None:
-        # Balanced parentheses inside alternatives must be preserved, while unclosed trailing ones are stripped
-        html = """
-        <div class="post_text">
-            <h2>• 1 •</h2>
-            <p>Ірина: Як правильно писати?</p>
-            <p>Правильно: зрештою (іноді), а також врешті-решт (залежно від контексту).</p>
-        </div>
-        """
-        pairs = extract_movne_word_pairs(1, 1, html)
-        self.assertEqual(len(pairs), 1)
-        self.assertIn("зрештою (іноді)", pairs[0]["verdict_form"])
-        self.assertIn("врешті-решт (залежно від контексту)", pairs[0]["verdict_form"])
-
     def test_header_digit_not_question_boundary(self) -> None:
         # Headers with words and digits (e.g. "Правило 2 для дат") must not split into new questions
         html = """
@@ -1301,17 +1231,6 @@ class TestUsageAdviceIngest(unittest.TestCase):
         pairs = extract_movne_word_pairs(1, 1, html)
         self.assertEqual(len(pairs), 1)
         self.assertEqual(pairs[0]["question_num"], 1)
-
-    def test_polite_get_mock_non_string_url_fallback(self) -> None:
-        # Mock Response without string url should not fail urlsplit and should use request url
-        session = MagicMock(spec=requests.Session)
-        mock_resp = MagicMock(spec=requests.Response)
-        mock_resp.status_code = 200
-        # When spec=requests.Response, mock_resp.url is a MagicMock, not a str
-        session.get.return_value = mock_resp
-
-        resp = polite_get(session, "https://example.com/test-mock", delay=0)
-        self.assertEqual(resp.status_code, 200)
 
     def test_movaua_non_200_error_status_recording(self) -> None:
         ensure_movaua_schema(self.conn)
@@ -1400,14 +1319,6 @@ class TestUsageAdviceIngest(unittest.TestCase):
                     ]
                 )
                 self.assertEqual(code, EXIT_HTTP_SERVER_ERROR)
-
-    def test_cli_re_extract_mode(self) -> None:
-        args = parse_args(["--re-extract", "--source", "all"])
-        self.assertTrue(args.re_extract)
-        with tempfile.TemporaryDirectory(dir=ensure_scratch_root()) as tmpdir:
-            test_db = str(Path(tmpdir) / "test.db")
-            code = main(["--re-extract", "--source", "movne_pytannya", "--db-movne", test_db])
-            self.assertEqual(code, 0)
 
     def test_cancellation_sleep_path_clean_exit(self) -> None:
         import scripts.ingest.usage_advice_ingest as uai

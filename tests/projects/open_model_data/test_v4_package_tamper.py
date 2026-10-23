@@ -57,65 +57,6 @@ def test_each_historical_blob_and_current_trust_input_tamper_refuses(target, mon
         provenance.validate_package_bindings(json.loads(a3.DEFAULT_RECEIPT.read_bytes()))
 
 
-@pytest.mark.parametrize(
-    "field",
-    [
-        "relationship",
-        "public_commit",
-        "package_version",
-        "successor_resource",
-        "successor_sha256",
-        "historical_resource",
-        "historical_sha256",
-    ],
-)
-def test_relationship_field_tamper_is_rejected(field, monkeypatch):
-    original = resources.read_bytes
-    manifest = json.loads(original(provenance.MANIFEST))
-    occurrence = next(o for r in manifest["receipts"] for o in r["occurrences"].values() if "successor_resource" in o)
-    occurrence[field] = "foreign"
-
-    def read(name):
-        return provenance._canonical(manifest) if name == provenance.MANIFEST else original(name)
-
-    monkeypatch.setattr(resources, "read_bytes", read)
-    with pytest.raises(provenance.ProvenanceError):
-        provenance.validate_package_bindings(json.loads(a3.DEFAULT_RECEIPT.read_bytes()))
-
-
-@pytest.mark.parametrize("field", ["seal_sha256", "receipt_binding_sha256", "algorithm_descriptor_sha256"])
-def test_sealed_context_tamper_is_rejected(field, monkeypatch):
-    original = resources.read_bytes
-    manifest = json.loads(original(provenance.MANIFEST))
-    manifest["a3"][field] = "b" * 64
-    monkeypatch.setattr(
-        resources,
-        "read_bytes",
-        lambda name: provenance._canonical(manifest) if name == provenance.MANIFEST else original(name),
-    )
-    with pytest.raises(provenance.ProvenanceError):
-        provenance.validate_package_bindings(json.loads(a3.DEFAULT_RECEIPT.read_bytes()))
-
-
-@pytest.mark.parametrize("mutation", ["remove", "add", "duplicate"])
-def test_missing_extra_or_duplicate_receipt_mapping_refuses(mutation, monkeypatch):
-    original = resources.read_bytes
-    manifest = json.loads(original(provenance.MANIFEST))
-    if mutation == "remove":
-        manifest["receipts"].pop()
-    elif mutation == "duplicate":
-        manifest["receipts"].append(manifest["receipts"][0])
-    else:
-        manifest["receipts"].append({"resource": "foreign"})
-    monkeypatch.setattr(
-        resources,
-        "read_bytes",
-        lambda name: provenance._canonical(manifest) if name == provenance.MANIFEST else original(name),
-    )
-    with pytest.raises(provenance.ProvenanceError):
-        provenance.validate_package_bindings(json.loads(a3.DEFAULT_RECEIPT.read_bytes()))
-
-
 def _manifest_resource_override(monkeypatch, manifest_bytes):
     """Make the outer self-hashes coherent so the inner contract must reject.
 

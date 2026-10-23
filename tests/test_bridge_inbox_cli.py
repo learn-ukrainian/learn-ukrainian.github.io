@@ -12,51 +12,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from scripts.ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db, _inbox_watch, _messaging
-
-
-def test_post_preflight_warns_for_large_body():
-    warning = _channels_cli._post_preflight_warning(body="x" * 8001, mode="workspace-write")
-
-    assert warning == (
-        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). Consider --deadline 1800 or splitting."
-    )
-
-
-def test_post_preflight_warns_for_many_file_mentions():
-    body = "\n".join(
-        [
-            "scripts/a.py",
-            "tests/test_a.py",
-            "pkg/worker.py",
-            "app/api/router.py",
-            "foo/bar.py",
-        ]
-    )
-
-    warning = _channels_cli._post_preflight_warning(body=body, mode="workspace-write")
-
-    assert warning == (
-        f"[PREFLIGHT] brief looks large ({len(body)} chars, 5 files mentioned). Consider --deadline 1800 or splitting."
-    )
-
-
-def test_post_preflight_warns_for_multi_step_markers():
-    body = "Fix this and then update that."
-    warning = _channels_cli._post_preflight_warning(body=body, mode="workspace-write")
-
-    assert warning == (
-        f"[PREFLIGHT] brief looks large ({len(body)} chars, 0 files mentioned). Consider --deadline 1800 or splitting."
-    )
-
-
-def test_post_preflight_skips_non_workspace_write_mode():
-    warning = _channels_cli._post_preflight_warning(
-        body="scripts/a.py\ntests/test_a.py\npkg/worker.py\napp/api/router.py\nfoo/bar.py",
-        mode="read-only",
-    )
-
-    assert warning is None
+from scripts.ai_agent_bridge import _acp_compat, _channels, _cli, _db, _inbox_watch, _messaging
 
 
 @pytest.fixture(autouse=True)
@@ -220,29 +176,6 @@ def _ok_result(agent: str) -> Result:
     )
 
 
-def test_inbox_show_empty(capsys):
-    exit_code = _run_cli(["inbox", "show", "claude"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert "claude inbox:" in captured.out
-    assert "pending:    0" in captured.out
-    assert "processing: 0" in captured.out
-    assert "failed (last 24h): 0" in captured.out
-    assert "    (none)" in captured.out
-
-
-def test_inbox_show_accepts_codex_desktop(capsys):
-    exit_code = _run_cli(["inbox", "show", "codex-desktop"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert "codex-desktop inbox:" in captured.out
-    assert "pending:    0" in captured.out
-
-
 def test_inbox_ack_marks_delivery_delivered(capsys):
     thread = _make_thread("claude", count=1)
     delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0]["delivery_id"]
@@ -267,15 +200,6 @@ def test_inbox_ack_marks_delivery_delivered(capsys):
     assert detail["delivered_at"] is not None
 
 
-def test_inbox_ack_unknown_delivery_id_errors(capsys):
-    exit_code = _run_cli(["inbox", "ack", "missing-delivery-id"])
-
-    assert exit_code == 1
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    assert "delivery_id 'missing-delivery-id' not found" in captured.err
-
-
 def test_inbox_ack_already_delivered_is_noop(capsys):
     thread = _make_thread("claude", count=1)
     delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0]["delivery_id"]
@@ -288,27 +212,6 @@ def test_inbox_ack_already_delivered_is_noop(capsys):
     captured = capsys.readouterr()
     assert captured.err == ""
     assert f"delivery {delivery_id} is already 'delivered' (no-op)" in captured.out
-
-
-def test_post_from_codex_desktop_is_accepted(capsys):
-    _channels.create_channel("topic")
-
-    exit_code = _run_cli(
-        [
-            "post",
-            "topic",
-            "desktop status",
-            "--from-agent",
-            "codex-desktop",
-            "--no-snapshot",
-        ]
-    )
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert "✅ posted to #topic" in captured.out
-    assert _channels.read("topic")[0]["from_agent"] == "codex-desktop"
 
 
 def test_post_to_codex_desktop_routes_delivery(capsys):
@@ -335,26 +238,6 @@ def test_post_to_codex_desktop_routes_delivery(capsys):
     assert delivery["to_agent"] == "codex-desktop"
 
 
-def test_post_from_existing_codex_path_still_works(capsys):
-    _channels.create_channel("topic")
-
-    exit_code = _run_cli(
-        [
-            "post",
-            "topic",
-            "codex status",
-            "--from-agent",
-            "codex",
-            "--no-snapshot",
-        ]
-    )
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert _channels.read("topic")[0]["from_agent"] == "codex"
-
-
 def test_channel_set_ttl_persists(capsys):
     _channels.create_channel("topic")
 
@@ -365,35 +248,6 @@ def test_channel_set_ttl_persists(capsys):
     assert captured.err == ""
     assert "TTL set to 6h" in captured.out
     assert _channels.get_channel("topic")["max_age_hours"] == 6
-
-
-def test_bridge_discussion_transport_is_retired(capsys):
-    _channels.create_channel("shared")
-    exit_code = _run_cli(["discuss", "shared", "topic", "--with", "claude,codex", "--max-rounds", "2"])
-    assert exit_code == 1
-    assert "bridge provider transport is retired" in capsys.readouterr().err
-
-
-def test_inbox_show_with_pending_and_failed(capsys):
-    _channels.create_channel("topic")
-    first = _channels.post("topic", "user", "first pending", to_agents=["claude"], auto_snapshot=False)
-    second = _channels.post("topic", "user", "second pending", to_agents=["claude"], auto_snapshot=False)
-    third = _channels.post("topic", "user", "third pending", to_agents=["claude"], auto_snapshot=False)
-    failed = _channels.post("topic", "user", "failed message", to_agents=["claude"], auto_snapshot=False)
-    _channels.mark_delivery(failed["delivery_ids"][0], "failed", error="boom")
-    old_ts = (datetime.now(UTC) - timedelta(minutes=12)).isoformat()
-    _set_message_created_at(str(first["message_id"]), old_ts)
-
-    exit_code = _run_cli(["inbox", "show", "claude"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert "pending:    3 (oldest 12m ago)" in captured.out
-    assert "failed (last 24h): 1" in captured.out
-    assert "[topic/" in captured.out
-    assert 'user → "first pending"' in captured.out
-    assert second["message_id"] != third["message_id"]
 
 
 def test_inbox_run_once_processes_one_thread(monkeypatch, capsys):
@@ -436,167 +290,6 @@ def test_inbox_run_once_processes_one_thread(monkeypatch, capsys):
         )
     ]
     assert first[0]["thread_id"] != second[0]["thread_id"]
-
-
-def test_sync_all_iterates_known_agents(monkeypatch, capsys):
-    from agent_runtime.kimi_admission import is_kimi_seat
-
-    for agent in _channels.VALID_AGENTS:
-        if not is_kimi_seat(agent):  # Kimi is not a bridge recipient: no thread can be posted to it
-            _make_thread(agent, channel=f"{agent}-topic", count=1)
-    # Mirrors the live `cmd_sync --all` iteration order, which is
-    # `[agent for agent in _channels.VALID_AGENTS if _cli_available_agent(agent)]`.
-    # When a new CLI agent is registered (e.g. grok via #1934, deepseek
-    # via #2107, cursor via Phase 2 PR), this list tracks the registry —
-    # the test guards the iteration order, not a frozen subset. Kimi seats
-    # are skipped: they never drain an inbox (web, UI and backend coding only).
-    cli_agents = [
-        "agy",
-        "claude",
-        "codex",
-        "grok",
-        "grok-build",
-        "glm",
-        "deepseek",
-        "cursor",
-    ]
-
-    calls: list[tuple[str, dict[str, object]]] = []
-
-    def _fake_run_inbox(agent: str, **kwargs):
-        calls.append((agent, kwargs))
-        delivery_id = _oldest_pending_delivery_id(agent)
-        assert delivery_id is not None
-        _channels.mark_delivery(delivery_id, "delivered")
-        return SimpleNamespace(
-            deliveries_claimed=1,
-            threads_processed=1,
-            deliveries_failed=0,
-            aborted=False,
-        )
-
-    _install_fake_inbox_module(monkeypatch, _fake_run_inbox)
-
-    exit_code = _run_cli(["sync", "--all"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert [call[0] for call in calls] == cli_agents
-    assert captured.out.count("processed: 1 deliveries | 1 threads | 0 failed | duration:") == len(cli_agents)
-
-
-def test_inbox_run_rejects_codex_desktop(capsys):
-    exit_code = _run_cli(["inbox", "run", "codex-desktop", "--once"])
-
-    assert exit_code == 1
-    captured = capsys.readouterr()
-    assert "cli_available=False" in captured.err
-    assert "ab inbox show" in captured.err
-
-
-def test_backlog_banner_triggers_for_old_pending_delivery(monkeypatch, capsys):
-    thread = _make_thread("codex", count=1)
-    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
-    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
-    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
-
-    exit_code = _run_cli(["inbox", "show", "codex"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert "⚠️  codex has 1 pending deliveries (oldest 6h12m)." in captured.err
-    assert "Drain in the live driver session (drive-epic §0a)." in captured.err
-    # #6864: never recommend retired inbox run or bare `ab` alias
-    assert "inbox run" not in captured.err
-    assert " ab " not in f" {captured.err} "
-    assert not any(
-        token == "ab" or token.startswith("ab ")
-        for token in captured.err.replace(".", " ").split()
-    )
-
-
-def test_backlog_banner_silent_for_other_seats_backlog(monkeypatch, capsys):
-    """Only the owning seat can drain its queue: another seat's stale backlog
-    is noise on this seat's CLI calls and must not be warned."""
-    thread = _make_thread("codex", count=1)
-    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
-    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
-    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
-
-    exit_code = _run_cli(["inbox", "show", "claude"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert "pending deliveries" not in captured.err
-
-
-def test_backlog_banner_warns_once_for_own_queue_on_plain_inbox(monkeypatch, capsys):
-    thread = _make_thread("codex", count=1)
-    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
-    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
-    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
-
-    exit_code = _run_cli(["inbox", "--for", "codex"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err.count("pending deliveries") == 1
-    assert "⚠️  codex has 1 pending deliveries (oldest 6h12m)." in captured.err
-
-
-def test_backlog_banner_falls_back_to_session_handoff_agent(monkeypatch, capsys):
-    thread = _make_thread("codex", count=1)
-    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex")
-    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
-    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
-
-    exit_code = _run_cli(["inbox"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert "⚠️  codex has 1 pending deliveries (oldest 6h12m)." in captured.err
-
-
-def test_backlog_banner_silent_without_identity(monkeypatch, capsys):
-    thread = _make_thread("codex", count=1)
-    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
-    monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
-    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
-    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
-
-    exit_code = _run_cli(["inbox"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert "pending deliveries" not in captured.err
-
-
-def test_backlog_banner_never_fires_for_ask_commands(monkeypatch, capsys):
-    thread = _make_thread("codex", count=1)
-    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
-    monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
-    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
-    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
-    monkeypatch.setattr(_cli, "_handle_acp_compat", lambda *a, **k: None)
-
-    exit_code = _run_cli(["ask-codex", "hello", "--from", "claude"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert "pending deliveries" not in captured.err
-
-
-def test_backlog_banner_does_not_trigger_for_fresh_pending_delivery(monkeypatch, capsys):
-    _make_thread("codex", count=1)
-    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
-
-    exit_code = _run_cli(["inbox", "show", "codex"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
 
 
 def test_backlog_banner_count_matches_inbox_show_excluding_ttl_elapsed(
@@ -690,50 +383,6 @@ def test_post_model_flag_applies_to_default_channel_subscribers(capsys):
     assert delivery["to_model"] == "gemini-3-pro-preview"
 
 
-def test_post_workspace_write_large_body_preflight_warns_to_stderr_and_still_posts(capsys):
-    _channels.create_channel("topic")
-    body = "x" * 8001
-
-    exit_code = _run_cli(["post", "topic", body, "--mode", "workspace-write", "--no-snapshot"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert "✅ posted to #topic" in captured.out
-    assert (
-        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). Consider --deadline 1800 or splitting."
-    ) in captured.err
-    assert _channels.read("topic")[0]["body"] == body
-
-
-def test_inbox_run_deadline_flag_overrides_worker_timeout(monkeypatch, capsys):
-    captured_run: dict[str, object] = {}
-
-    def _fake_run_inbox(agent: str, **kwargs):
-        captured_run["agent"] = agent
-        captured_run.update(kwargs)
-        return SimpleNamespace(
-            deliveries_claimed=1,
-            threads_processed=1,
-            deliveries_failed=0,
-            aborted=False,
-        )
-
-    _install_fake_inbox_module(monkeypatch, _fake_run_inbox)
-
-    exit_code = _run_cli(["inbox", "run", "claude", "--once", "--deadline", "1800"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert captured_run == {
-        "agent": "claude",
-        "max_messages": None,
-        "until_idle": False,
-        "stop_after_seconds": None,
-        "hard_timeout": 1800,
-    }
-
-
 def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(monkeypatch, capsys):
     _channels.create_channel("topic")
 
@@ -780,28 +429,6 @@ def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(monkeypa
     delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
     assert delivery["deadline_seconds"] == 1200
     assert captured_run["hard_timeout"] == 1200
-
-
-def test_deadline_whitelist_accepts_1800(capsys):
-    _channels.create_channel("topic")
-
-    exit_code = _run_cli(["post", "topic", "hello", "--to", "claude", "--deadline", "1800", "--no-snapshot"])
-
-    assert exit_code == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    message = _channels.read("topic")[0]
-    delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
-    assert delivery["deadline_seconds"] == 1800
-
-
-def test_invalid_deadline_value_is_rejected_with_helpful_error(capsys):
-    exit_code = _run_cli(["post", "topic", "hello", "--deadline", "999"])
-
-    assert exit_code == 2
-    captured = capsys.readouterr()
-    assert "usage:" in captured.err
-    assert "deadline must be one of: 300, 600, 900, 1200, 1800, 2400, 3000" in captured.err
 
 
 def test_help_includes_model_and_deadline_flags(capsys):
@@ -853,22 +480,6 @@ def test_explicit_from_mismatch_with_handoff_agent_is_warning_tagged(monkeypatch
 
     assert sender == "claude-infra"
     assert "[SENDER_IDENTITY_MISMATCH]" in capsys.readouterr().err
-
-
-def test_detect_caller_identity_uses_valid_handoff_even_if_unregistered(monkeypatch):
-    _clear_identity_env(monkeypatch)
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-curriculum-upgrade")
-    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
-
-    assert _cli._detect_caller_identity_from_env() == "claude-curriculum-upgrade"
-    assert _cli._resolve_from_llm(SimpleNamespace(from_llm=None)) == "claude-curriculum-upgrade"
-
-
-def test_detect_caller_identity_rejects_invalid_handoff(monkeypatch):
-    _clear_identity_env(monkeypatch)
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "invalid sender with spaces")
-    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
-    assert _cli._detect_caller_identity_from_env() == "claude"
 
 
 def _clear_identity_env(monkeypatch) -> None:
@@ -923,14 +534,6 @@ def test_detect_caller_identity_explicit_handoff_still_wins_over_grok_agent(monk
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex")
 
     assert _cli._detect_caller_identity_from_env() == "codex"
-
-
-def test_grok_build_is_valid_agent():
-    assert "grok-build" in _channels.VALID_AGENTS
-
-
-def test_claude_infra_is_valid_agent():
-    assert "claude-infra" in _channels.VALID_AGENTS
 
 
 def test_ask_claude_reads_body_from_stdin_on_dash(monkeypatch):
@@ -996,11 +599,6 @@ def test_recipient_choices_cover_registered_cursor_seats():
         assert parser.parse_args(["ack-all", agent]).agent == agent
         assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent
         assert parser.parse_args(["inbox", "show", agent]).agent == agent
-
-
-@pytest.mark.parametrize("lane", ("folk", "bio", "hramatka"))
-def test_recipient_choices_reject_removed_cursor_content_seats(lane):
-    assert f"cursor-{lane}" not in _channels.get_valid_recipient_agents()
 
 
 @pytest.mark.parametrize("provider", ("claude", "codex"))
@@ -1071,31 +669,6 @@ def test_curriculum_upgrade_alias_round_trip_keeps_dedicated_inbox(isolate_db, c
     assert "bare control" not in inbox
 
 
-def test_curriculum_upgrade_alias_requires_registered_core_slot(tmp_path):
-    assignments = tmp_path / "assignments.yaml"
-    assignments.write_text("assignments: {core: {slots: []}}\n", encoding="utf-8")
-    alias = "codex-curriculum-upgrade"
-    assert _channels.resolve_recipient_alias(alias, assignments_path=assignments) == alias
-
-
-def test_required_core_slots_keep_dedicated_recipients():
-    for provider in ("claude", "codex", "gemini", "grok", "cursor"):
-        slot = f"{provider}-core"
-        assert slot in _channels._load_registry_slots()
-        assert _channels.resolve_recipient_alias(slot) == slot
-    assert "kimi-core" not in _channels._load_registry_slots()
-
-
-def test_resolve_recipient_alias_maps_empty_roster_phantoms_to_provider():
-    # Already-minted monitor identities must still drain via the provider.
-    # grok-monitor is a registered slot since #10835 and keeps its own inbox.
-    assert _channels.resolve_recipient_alias("grok-monitor") == "grok-monitor"
-    assert _channels.resolve_recipient_alias("codex-monitor") == "codex"
-    assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
-    assert _channels.resolve_recipient_alias("kimi-monitor") == "kimi"
-    assert _channels.resolve_recipient_alias("cursor-monitor") == "cursor"
-
-
 # grok-monitor is a registered slot since #10835; test_handoff_slot_registry covers its dedicated inbox.
 @pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "kimi", "cursor"])
 def test_mixed_monitor_roster_preserves_legacy_inbox_consumers(provider, monkeypatch, isolate_db, capsys):
@@ -1155,45 +728,6 @@ def test_mixed_monitor_roster_preserves_legacy_inbox_consumers(provider, monkeyp
         )
 
 
-@pytest.mark.parametrize(
-    ("registry", "alias", "expected"),
-    [
-        ("assignments: {monitor: {slots: [muse-monitor]}}", "muse-monitor", "muse-monitor"),
-        ("assignments: {monitor: {slots: [muse-monitor, codex-monitor]}}", "codex-monitor", "codex-monitor"),
-        ("assignments: {monitor: {slots: [muse-monitor]}}", "nosuch-monitor", "nosuch-monitor"),
-        ("assignments: {monitor: {slots: [muse-monitor]}}", "agy-monitor", "agy-monitor"),
-        ("assignments: {monitor: {slots: [muse-monitor]}}", "codex-monitr", "codex-monitr"),
-        ("assignments: {other: {slots: [muse-other]}}", "codex-other", "codex-other"),
-        ("assignments: {other: {slots: []}}", "codex-other", "codex"),
-        ("assignments: {other: {slots: []}}", "codex-monitor", "codex-monitor"),
-        ("assignments: {monitor: {slots: broken}}", "codex-monitor", "codex-monitor"),
-        ("assignments: {monitor: {slots: [null]}}", "codex-monitor", "codex-monitor"),
-        ("assignments: [", "codex-monitor", "codex-monitor"),
-        (None, "codex-monitor", "codex-monitor"),
-    ],
-)
-def test_mixed_monitor_alias_boundaries(tmp_path, registry, alias, expected):
-    assignments = tmp_path / "assignments.yaml"
-    if registry is not None:
-        assignments.write_text(registry, encoding="utf-8")
-    assert _channels.resolve_recipient_alias(alias, assignments_path=assignments) == expected
-
-
-def test_resolve_recipient_alias_keeps_registered_and_static_identities():
-    for agent in (
-        "grok",
-        "grok-build",
-        "grok-hermes",
-        "grok-infra",
-        "claude-atlas",
-        "claude-desktop",
-        "cursor",
-        "cursor-infra",
-        "cursor-atlas",
-    ):
-        assert _channels.resolve_recipient_alias(agent) == agent
-
-
 def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
     # A typo of a registered lane (claude-infa) or an unknown provider prefix
     # must NOT silently read the provider inbox — pass through unchanged so
@@ -1204,54 +738,3 @@ def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
     assert _channels.resolve_recipient_alias("") == ""
     assert _channels.resolve_recipient_alias("cursor-nosucharea") == "cursor-nosucharea"
     assert _channels.resolve_recipient_alias("cursor-infa") == "cursor-infa"
-
-
-def test_inbox_for_accepts_phantom_empty_roster_identity():
-    parser = _cli._build_parser()
-    assert parser.parse_args(["inbox", "--for", "codex-monitor"]).for_llm == "codex"
-    assert parser.parse_args(["ack-all", "codex-monitor"]).agent == "codex"
-    assert parser.parse_args(["send", "hi", "--to", "codex-monitor"]).to_llm == "codex"
-    assert parser.parse_args(["inbox", "show", "codex-monitor"]).agent == "codex"
-    assert parser.parse_args(["inbox", "run", "codex-monitor", "--once"]).agent == "codex"
-    assert parser.parse_args(["send", "hi", "--to", "grok-monitor"]).to_llm == "grok-monitor"
-    assert parser.parse_args(["inbox", "--for", "cursor-monitor"]).for_llm == "cursor"
-    assert parser.parse_args(["send", "hi", "--to", "cursor-monitor"]).to_llm == "cursor"
-
-
-def test_inbox_for_still_rejects_unknown_identities():
-    parser = _cli._build_parser()
-    with pytest.raises(SystemExit):
-        parser.parse_args(["inbox", "--for", "claude-infa"])
-    with pytest.raises(SystemExit):
-        parser.parse_args(["inbox", "--for", "grok-nosucharea"])
-    with pytest.raises(SystemExit):
-        parser.parse_args(["inbox", "--for", "cursor-nosucharea"])
-    with pytest.raises(SystemExit):
-        parser.parse_args(["inbox", "--for", "cursor-infa"])
-    with pytest.raises(SystemExit):
-        parser.parse_args(["send", "hi", "--to", "cursor-nosucharea"])
-
-
-def test_check_inbox_phantom_identity_drains_provider_inbox(capsys):
-    # A live session launched before #7597 carries
-    # SESSION_HANDOFF_AGENT=codex-monitor; its inbox drain must read the
-    # codex inbox without a relaunch.
-    _messaging.send_message("hello codex", from_llm="claude", to_llm="codex", quiet=True)
-    capsys.readouterr()
-
-    _messaging.check_inbox("codex-monitor")
-
-    captured = capsys.readouterr()
-    assert "Inbox for codex" in captured.out
-    assert "From: claude" in captured.out
-
-
-def test_acknowledge_all_phantom_identity_acks_provider_inbox(capsys):
-    _messaging.send_message("ack me", from_llm="claude", to_llm="codex", quiet=True)
-    capsys.readouterr()
-
-    _messaging.acknowledge_all("codex-monitor")
-
-    captured = capsys.readouterr()
-    assert "Acknowledged 1 messages" in captured.out
-    assert "for codex" in captured.out

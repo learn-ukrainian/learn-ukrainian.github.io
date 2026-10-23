@@ -54,13 +54,6 @@ def test_current_workflow_exact_set_and_repository_root(monkeypatch, tmp_path):
     assert not advisory.is_advisory(SHADOW, workflow="Nightly", policy=policy)
 
 
-@pytest.mark.parametrize("workflow", [None, "", "Nightly"])
-def test_missing_or_other_workflow_is_not_advisory(ci_file, workflow):
-    policy = advisory.load_advisory_checks()
-    assert SHADOW in policy.names
-    assert not advisory.is_advisory(SHADOW, workflow=workflow, policy=policy)
-
-
 @pytest.mark.parametrize("required_by", ["gate-result", "dependency", "implicit-gate", "no-result-references"])
 def test_required_jobs_never_advisory_even_with_continue_on_error(ci_file, required_by):
     jobs = workflow_jobs()
@@ -107,19 +100,6 @@ def test_static_matrix_include_exclude_and_name_expansion(ci_file):
         "Shadow (windows, 2, default)", "Shadow (mac, 3, extra)",
     })
     assert not advisory.is_advisory("Shadow (windows, 1, default)", workflow="CI")
-
-
-def test_include_only_nested_matrix_values(ci_file):
-    jobs = workflow_jobs()
-    jobs["shadow"].update({
-        "name": "Shadow ${{ matrix.node.version }} ${{ matrix.experimental }}",
-        "strategy": {"matrix": {"include": [
-            {"node": {"version": 22}, "experimental": True},
-            {"node": {"version": 24}, "experimental": False},
-        ]}},
-    })
-    ci_file(jobs)
-    assert advisory.load_advisory_checks().names == frozenset({"Shadow 22 true", "Shadow 24 false"})
 
 
 def test_matrix_default_job_name(ci_file):

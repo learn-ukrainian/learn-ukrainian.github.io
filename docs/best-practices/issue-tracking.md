@@ -29,6 +29,9 @@ If a new agent joins and the matching label is missing in GitHub, create the mat
 
 ## When to Create an Issue
 
+Only the CTO opens GitHub issues. Epic and lane drivers report findings to the CTO through
+Fleet Comms; the CTO opens, folds or drops them.
+
 Create an issue for:
 - Any bug found (even if fixed immediately — document it)
 - Any architectural decision
@@ -186,7 +189,7 @@ Never put the substantive request in the broker message. The issue is the source
 - Close issues when done — don't leave them open indefinitely
 - Update issue titles if scope changes
 - Link related issues to each other
-- Don't create duplicate issues — search first
+- Before filing, search open issues for the same root cause. If an anchor exists, add the finding there. File a new issue only when no anchor exists, and name the searches in its body. Put review findings, residuals, and remaining items on the parent issue or the pull request.
 - Stale `working:` labels (>3 days) should be removed and issue re-triaged
 
 ---

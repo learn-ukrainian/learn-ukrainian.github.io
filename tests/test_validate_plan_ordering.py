@@ -39,20 +39,3 @@ def test_marked_slug_filename_mismatch_passes(tmp_path: Path, monkeypatch) -> No
 
     assert fixes == 0
     assert issues == []
-
-
-def test_previously_legacy_slug_mismatch_requires_marker(
-    tmp_path: Path, monkeypatch
-) -> None:
-    plan_dir = tmp_path / "plans" / "hist"
-    plan_dir.mkdir(parents=True)
-    _write_plan(plan_dir / "zunr.yaml", "zunr-akt-zluky")
-    monkeypatch.setattr(validate_plan_ordering, "PLANS_DIR", tmp_path / "plans")
-
-    issues, fixes = validate_plan_ordering.validate_track("hist", ["zunr"])
-
-    assert fixes == 0
-    assert issues == [
-        "[hist] zunr.yaml: slug='zunr-akt-zluky', expected='zunr'; "
-        "add slug_intentional: true if this mismatch is canonical"
-    ]

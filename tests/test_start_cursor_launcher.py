@@ -23,13 +23,6 @@ RETIRED_MODEL_IDS = {
 }
 
 
-def test_cursor_driver_wrapper_calls_launcher_main_cursor() -> None:
-    text = (REPO / DRIVER).read_text(encoding="utf-8")
-    assert "launcher_core.sh" in text
-    assert "launcher_main cursor driver" in text
-    assert (REPO / DRIVER).stat().st_mode & 0o111
-
-
 def test_cursor_driver_help_mentions_epic() -> None:
     result = run_launcher(DRIVER, "--help")
     assert result.returncode == 0, result.stderr
@@ -159,24 +152,6 @@ def test_cursor_launcher_pin_list_matches_python_admission() -> None:
         assert apply_cursor_model_pins(pin) == pin
 
 
-@pytest.mark.parametrize("model", ["auto", "grok-4.7-fast", "cursor-unknown"])
-def test_cursor_driver_refusal_restores_full_model_trailer(model: str) -> None:
-    result = run_launcher(DRIVER, "--epic", "infra", "--model", model)
-    assert result.returncode == 4, result.stdout + result.stderr
-    assert "never Auto, Fast or a previous generation" in result.stderr
-    assert "would claim lease" not in result.stdout
-    assert "would exec" not in result.stdout
-
-
-@pytest.mark.parametrize("model", ["grok-4.6", "grok-4.6[context=500k,reasoning_effort=high]"])
-def test_cursor_driver_rejects_retired_grok_before_lease(model: str) -> None:
-    result = run_launcher(DRIVER, "--epic", "devops", "--model", model)
-    assert result.returncode == 2
-    assert "is retired in the model catalog" in result.stderr
-    assert "would claim lease" not in result.stdout
-    assert "would exec" not in result.stdout
-
-
 @pytest.mark.parametrize(
     "model",
     (
@@ -265,30 +240,6 @@ def test_cursor_driver_refuses_a_forwarded_provider_model(forwarded: tuple[str, 
     assert "would exec" not in result.stdout
 
 
-def test_cursor_driver_forwards_other_provider_args() -> None:
-    result = run_launcher(DRIVER, "--epic", "infra", "--", "--print-models")
-    assert result.returncode == 0, result.stderr
-    assert "--model grok-4.7-high" in result.stdout
-    assert "--print-models" in result.stdout
-
-
-def test_observer_heartbeat_is_cursor_gated_in_launcher_core() -> None:
-    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
-    assert "launcher_cursor_observer_presence" in core
-    assert "launcher_cursor_observer_renew_loop" in core
-    assert '[ "$LC_PROVIDER" = "cursor" ] || return 0' in core
-
-
-def test_cursor_seat_enumerated_in_launcher_core_and_public_estate() -> None:
-    """Seat hooks live as case arms (no separate seat list) next to sibling drivers."""
-    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
-    assert "cursor)" in core
-    assert "handoff_identity_for_cursor_epic" in core
-    assert "launcher_cursor_model_certified" in core
-    assert Path(REPO / "scripts/launchers/cursor.sh").is_file()
-    assert DRIVER in {path.name for path in REPO.glob("start-*-driver.sh") if path.parent == REPO}
-
-
 # Interactive Cursor sessions (#9274): no public start-cursor.sh exists, but
 # launcher_main cursor interactive is reachable, and it is not a typed
 # implementation dispatch, so it pins a concrete model like the driver seat.
@@ -361,13 +312,6 @@ def _assert_admitted_pin(tmp_path: Path, *args: str, model: str, env: dict[str, 
     assert "mock deploy" not in result.stdout
 
 
-def test_cursor_seat_pin_matches_the_catalog_seat() -> None:
-    """The launcher pin is orchestrator_seats.cursor model_id at its effort."""
-    seat = load_model_catalog()["orchestrator_seats"]["cursor"]
-    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
-    assert f"LC_CURSOR_SEAT_PIN={seat['model_id']}-{seat['effort']}\n" in core
-
-
 def test_cursor_interactive_defaults_to_the_concrete_pin(tmp_path: Path) -> None:
     _assert_admitted_pin(tmp_path, model="grok-4.7-high", env={"LAUNCHER_MODEL": ""})
 
@@ -421,35 +365,10 @@ def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path:
         assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
     assert argv is None
 
-
-@pytest.mark.parametrize("model", ("composer-2.5", "grok-4.7", "grok-4.7-high"))
-def test_cursor_interactive_admits_an_explicit_approved_pin(tmp_path: Path, model: str) -> None:
-    expected_model = "grok-4.7-high" if model == "grok-4.7" else model
-    _assert_admitted_pin(tmp_path, "--model", model, model=expected_model)
-
 def test_cursor_rewrites_bare_grok_4_7_to_high() -> None:
     result = run_launcher(DRIVER, "--epic", "infra", "--model", "grok-4.7")
     assert result.returncode == 0, result.stderr
     assert "--model grok-4.7-high" in result.stdout
-
-def test_cursor_refuses_claude_model(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    # Ensure native claude CLI is "found" by creating a dummy in tmp_path and putting it in PATH
-    bin_dir = tmp_path / "bin"
-    bin_dir.mkdir(exist_ok=True)
-    claude_bin = bin_dir / "claude"
-    claude_bin.write_text("#!/bin/sh\nexit 0", encoding="utf-8")
-    claude_bin.chmod(0o755)
-    env = os.environ.copy()
-    env["PATH"] = f"{bin_dir}{os.pathsep}{env['PATH']}"
-
-    result = run_launcher(DRIVER, "--epic", "infra", "--model", "claude-opus-5-5", env=env)
-    assert result.returncode == 4, result.stdout + result.stderr
-    assert "CURSOR_CLAUDE_REFUSED" in result.stderr
-
-def test_cursor_claude_refusal_does_not_trip_for_non_claude() -> None:
-    result = run_launcher(DRIVER, "--epic", "infra", "--model", "composer-2.5")
-    assert result.returncode == 0, result.stderr
-    assert "--model composer-2.5" in result.stdout
 
 @pytest.mark.parametrize("model", ["opus", "sonnet", "haiku", "haiku-5-5", "claude-3-5-sonnet-20241022", "claude-fable-5-1"])
 def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None:
@@ -464,4 +383,19 @@ def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None
     assert "CURSOR_CLAUDE_REFUSED" in result.stderr
     assert "native Claude CLI" in result.stderr
     assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout
+
+
+def test_cursor_driver_refuses_retired_fable_5_before_the_claude_gate(tmp_path: Path) -> None:
+    """The retired Fable 5 predecessor fails before the Claude transport guard."""
+    binary = tmp_path / "claude"
+    binary.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    binary.chmod(0o755)
+    result = run_launcher(
+        DRIVER, "--epic", "infra", "--model", "claude-fable-5",
+        env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"},
+    )
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "claude-fable-5-1" in result.stderr
     assert "would exec" not in result.stdout

@@ -78,7 +78,7 @@ fleet_comms_cold_clause() {
     "Use fleet-comms as communication authority when current mode=${plane_mode}; " \
     "legacy bridge/channel stores are read-only migration projections in authority mode. " \
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
-    "Landing: obtain independent exact-head cross-family APPROVE before opening the PR; then require CI Gate green on that same head. " \
+    "Landing: PRs may open so CI runs; enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate. " \
     "Then the driver enqueues through the merge queue (never --auto, never ask the operator to merge), confirms MERGED and runs closeout. " \
     "Cross-family CF: direct ask-<lane> for verdict+findings (sealed review-pr / lu-review temps RETIRED — do not use). Never self-seal. " \
     "All normal inter-agent asks and discussions of 2 to 4 enabled seats use ACP; other seat counts reject loudly. " \

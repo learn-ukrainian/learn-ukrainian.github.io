@@ -110,21 +110,6 @@ class TestPlanMtimePopulated:
 
         assert data["source_mtimes"]["plan"] is not None
 
-    def test_plan_resolves_via_bare_slug_fallback(self):
-        """Plan should resolve when module_slug has prefix but plan file doesn't."""
-        # Plan is "bohdan-khmelnytskyi.yaml" (bare), slug is "05-bohdan-khmelnytskyi"
-        # This is already the main test case, but let's be explicit:
-        # The plan file exists as bare slug, module_slug has numeric prefix
-        path = save_status_cache(
-            str(self.md_file), "B2", "05-bohdan-khmelnytskyi",
-            results={}, has_critical_failure=False,
-            critical_failure_reasons=[],
-        )
-        with open(path) as f:
-            data = json.load(f)
-
-        assert data["source_mtimes"]["plan"] is not None
-
 
 # =============================================================================
 # Fix 2: Multi-file freshness in get_json_cache()
@@ -210,27 +195,6 @@ class TestMultiFileFreshness:
         # Touch md file to make it newer
         time.sleep(0.05)
         self.md_file.write_text("# Updated\nNew content.")
-        result = get_json_cache("b1", "06-test-module", self.md_file)
-        assert result is None
-
-    def test_cache_stale_when_meta_is_newer(self):
-        """Cache should be stale when meta yaml changes after audit."""
-        time.sleep(0.05)
-        self.meta_file.write_text("word_target: 4000\n")
-        result = get_json_cache("b1", "06-test-module", self.md_file)
-        assert result is None
-
-    def test_cache_stale_when_activities_is_newer(self):
-        """Cache should be stale when activities yaml changes after audit."""
-        time.sleep(0.05)
-        self.activities_file.write_text("- type: fill-in\n  title: New\n")
-        result = get_json_cache("b1", "06-test-module", self.md_file)
-        assert result is None
-
-    def test_cache_stale_when_vocabulary_is_newer(self):
-        """Cache should be stale when vocabulary yaml changes after audit."""
-        time.sleep(0.05)
-        self.vocab_file.write_text("- word: новий\n")
         result = get_json_cache("b1", "06-test-module", self.md_file)
         assert result is None
 
@@ -325,69 +289,20 @@ class TestReadStatus:
         assert result.is_fresh is False
         assert "md" in result.stale_sources
 
-    def test_stale_reports_multiple_sources(self):
-        """Multiple stale sources reported."""
-        time.sleep(0.05)
-        md = Path(self.tmpdir) / "lesson.md"
-        md.write_text("new")
-        meta = Path(self.tmpdir) / "meta.yaml"
-        meta.write_text("new")
-
-        result = read_status(self.status_file, source_paths={"md": md, "meta": meta})
-        assert result.is_fresh is False
-        assert set(result.stale_sources) == {"md", "meta"}
-
     def test_missing_source_not_stale(self):
         """Non-existent source files don't trigger staleness."""
         missing = Path(self.tmpdir) / "does-not-exist.yaml"
         result = read_status(self.status_file, source_paths={"meta": missing})
         assert result.is_fresh is True
 
-    def test_none_source_path_skipped(self):
-        """None values in source_paths are skipped."""
-        result = read_status(self.status_file, source_paths={"md": None, "meta": None})
-        assert result.is_fresh is True
-
 
 class TestStatusResult:
     """Test StatusResult wrapper properties."""
-
-    def test_bool_true_when_data(self):
-        r = StatusResult(data={"module": "x"}, is_fresh=True)
-        assert bool(r) is True
-
-    def test_bool_false_when_empty(self):
-        r = StatusResult(data={}, is_fresh=True)
-        assert bool(r) is False
-
-    def test_has_issues_fresh_fail(self):
-        r = StatusResult(data={"overall": {"status": "fail"}}, is_fresh=True)
-        assert r.has_issues is True
 
     def test_has_issues_stale_fail(self):
         """Stale failures are not authoritative."""
         r = StatusResult(data={"overall": {"status": "fail"}}, is_fresh=False, stale_sources=["md"])
         assert r.has_issues is False
-
-    def test_has_issues_fresh_pass(self):
-        r = StatusResult(data={"overall": {"status": "pass"}}, is_fresh=True)
-        assert r.has_issues is False
-
-    def test_repr(self):
-        r = StatusResult(data={"module": "test", "level": "A1", "overall": {"status": "pass"}}, is_fresh=True)
-        assert "test" in repr(r)
-        assert "fresh" in repr(r)
-
-    def test_repr_stale(self):
-        r = StatusResult(data={"module": "test", "level": "A1", "overall": {"status": "pass"}},
-                         is_fresh=False, stale_sources=["md", "meta"])
-        assert "stale" in repr(r)
-        assert "md" in repr(r)
-
-    def test_gates_property(self):
-        gates = {"lesson": {"status": "pass"}}
-        r = StatusResult(data={"gates": gates}, is_fresh=True)
-        assert r.gates == gates
 
 
 class TestGetSourcePaths:

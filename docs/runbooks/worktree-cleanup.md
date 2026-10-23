@@ -417,7 +417,7 @@ automatically.
 The dual-repo reaper and scheduler categorize all worktrees into strict canonical preservation classes:
 
 | Preservation class | Description | Default disposition |
-|---|---|---|
+| --- | --- | --- |
 | `primary` | Primary repository checkout root | Preserved |
 | `active_dispatch` | Live process CWD, active task, active worker/rollover lease, write claim, or reap reservation | Preserved |
 | `open_pr` | Worktree branch has an OPEN pull request | Preserved |
@@ -1040,6 +1040,38 @@ orphan). Before re-using a task id, kill any stale detached launcher for it:
 Confirm the match is the stale launcher, then terminate that pid before the
 new dispatch.
 
+### Reusing a worktree with evidence (#11342)
+
+Dispatch preparation applies a cone sparse-checkout to a reused worktree, and
+`git sparse-checkout set` removes untracked/ignored directories inside a
+tracked cone directory. Because of that, `delegate.py` refuses to reuse a
+worktree while any released task bound to it still has ignored output and no
+retrieval receipt (`worktree_reuse_evidence_unretrieved`). Preserve first:
+
+```bash
+.venv/bin/python -m scripts.fleet.post_task_reap --task-id <task> --apply
+```
+
+That copies the ignored output under `batch_state/preserved/<task>/` with a
+retrieval receipt and then reaps the tree; dispatch into a fresh worktree.
+
+New work should not rely on ignored worktree files surviving at all. Every
+dispatch exposes an empty `$LU_TASK_EVIDENCE_DIR` (`evidence/` in the task's
+runtime lease) and names it in the worker preamble. Task cleanup copies that
+directory to `batch_state/preserved/<task>/` with a retrieval receipt before
+deleting the lease. The copy is capped at 256 MiB; an over-cap, unreadable or
+linked entry is a typed refusal (`runtime_evidence_over_cap`,
+`runtime_evidence_preservation_failed`) that keeps the lease instead of
+deleting bytes silently.
+
+Retrieve the evidence into durable storage and verify its manifest and content
+digests, keeping the original lease until retrieval succeeds.
+Restore the original task record from a trusted recovery copy if it is missing
+or unreadable, and correct the cap, readability or linked-entry condition
+without discarding source data.
+Retry the same cleanup path to publish a verified retrieval receipt before lease
+removal; never delete evidence or the lease just to clear a refusal.
+
 ## Immediate cleanup after merge
 
 On apply, `merge_closeout` and `post_task_reap` first capture local Git facts
@@ -1226,6 +1258,9 @@ An unavailable fetch or process-activity probe blocks apply for that
 repository. Standard output contains the same summary as the receipt.
 
 ## Linux systemd default
+
+The collector sweeps both repository roots. Before installing the service
+template, replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@`.
 
 The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
 `--apply`, the same as macOS launchd. Its timer fires every 4 hours
@@ -1545,3 +1580,53 @@ is fd-relative with `O_NOFOLLOW` and proves containment on every destructive ste
 Symlinks inside a lease are unlinked, never followed, and a device change is refused.
 Anything malformed, foreign, symlinked, in use or unknown stays and is counted under
 `preserved_by_reason` in the receipt; receipts carry counts and bytes only, never paths.
+
+## Terminal worker publication
+
+A completed write-capable worker can finalize clean unpushed commits, owned
+dirty changes, or both through the existing delegate finalization boundary.
+Kimi retains its content and completion checks. A hard timeout also reaches
+this decision for clean completed commits; publication does not change the
+recorded timeout or invent a subprocess exit code. Live background jobs and
+unknown process scans prevent finalization.
+
+Finalization requires the checked-out branch to match the task's recorded
+branch and refuses protected or unknown branches. Every exposed intermediate
+commit must fit the declared ownership scope, including changes later reverted.
+Replacement objects cannot alter that check. Dirty changes retain the owned-path
+and cross-boundary move checks. Unknown or unowned committed scope blocks publication.
+
+Dirty preparation uses a fresh configuration and a private copy of the source
+index for move detection, scoped staging and trailer commit. Source hooks,
+filters and trailer commands cannot execute. Active attribute transformations
+on the scoped files cause a refusal. The prepared commit and index are installed
+only while the source branch and index still match the captured inputs.
+Staged changes outside the owned paths stay staged and uncommitted.
+
+Publication borrows objects into `SafeGitContext` and uses its own configuration,
+environment and pinned destination. Worker configuration, includes, URL rewrites,
+push URLs, transport programs, implicit tags and inherited `GIT_*` settings
+cannot select the history, destination or published refs. Publication sends one
+explicit object-to-branch refspec without force. Delivery is checked with
+`ls-remote` against that destination; forged tracking refs and a missing upstream
+do not establish or prevent delivery.
+
+The pre-push hook chain comes from the driver's trusted base commit and runs
+in an isolated validation checkout. Worker hook overrides and commits that
+change the validation chain are refused. Validation failure or incomplete
+validation prevents publication. Automatic finalization never disables the hook.
+An unchanged retry also runs validation before confirming the remote tip.
+
+`finalize_delivery` records the branch, commit, verification result, reason,
+owner and next action before the terminal checkpoint. Every `needs_finalize`
+terminal checkpoint includes a typed cause and a recovery action. A push failure
+retains the local commit and current file bytes; it never rewinds HEAD.
+Unowned dirty changes remain in the checkout and keep the task `needs_finalize`,
+even when the owned commit was pushed.
+
+This operation neither deletes worktrees nor turns historical finalization
+failures into success. Existing rescue and common-reaper eligibility rules stay
+in force. The accountable driver owns blocked validation, publication retries,
+independent exact-head review, landing, and deployed behavior proof. See
+[aged finalization reporting](fleet-blocker-reporting.md#report-aged-finalization-work)
+for attention after the finite age threshold.

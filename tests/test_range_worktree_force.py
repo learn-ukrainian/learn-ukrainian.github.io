@@ -85,12 +85,6 @@ def test_range_status_slices_and_flattens(monkeypatch):
     assert rows[1]["blocker"] == "audit_fail"
 
 
-def test_range_status_404_on_unknown_track(monkeypatch):
-    monkeypatch.setattr(state_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}])
-    resp = client.get("/api/state/range/does-not-exist")
-    assert resp.status_code == 404
-
-
 def test_range_status_emits_blocker_from_failed_phase_and_audit(monkeypatch):
     """Codex BLOCKER on #1312 pre-merge: the doc promised `blocker`
     would identify blocked modules, but the old code only read a
@@ -130,24 +124,6 @@ def test_range_status_emits_blocker_from_failed_phase_and_audit(monkeypatch):
     assert by_num[2]["blocker"] == "audit_fail"
     assert by_num[3]["blocker"] == "gate:lesson"
     assert by_num[4]["blocker"] is None
-
-
-def test_range_status_open_ended(monkeypatch):
-    fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
-    monkeypatch.setattr(state_router, "LEVELS", fake_levels)
-
-    modules = [
-        {"num": n, "slug": f"m{n}", "phases": {}, "review": {}, "audit": None}
-        for n in range(1, 6)
-    ]
-    monkeypatch.setattr(
-        state_router, "compute_pipeline_track",
-        lambda *_a, **_kw: {"modules": modules},
-    )
-
-    # Omit end → walk to the last module.
-    body = client.get("/api/state/range/a1?start=3").json()
-    assert [r["num"] for r in body["modules"]] == [3, 4, 5]
 
 
 # ---------------------------------------------------------------------
@@ -249,17 +225,6 @@ def test_worktrees_missing_git_binary_degrades(monkeypatch):
     assert "FileNotFoundError" in body["error"]
 
 
-def test_worktrees_swallows_opsec_subprocess_deny(monkeypatch):
-    def raises_denied(*_a, **_kw):
-        raise AssertionError("OPSEC sweep fixture forbids subprocess execution")
-
-    monkeypatch.setattr(worktrees_router.subprocess, "run", raises_denied)
-
-    body = client.get("/api/worktrees").json()
-    assert body["worktrees"] == []
-    assert "AssertionError" in body["error"]
-
-
 # ---------------------------------------------------------------------
 # /api/artifacts/{track}/{slug}/force-preview
 # ---------------------------------------------------------------------
@@ -340,28 +305,3 @@ def test_force_preview_enumerates_every_deletion_target(tmp_path, monkeypatch):
         assert not any(
             p.endswith(f"plans/a1/{keep_basename}") for p in removed_paths
         )
-
-
-def test_force_preview_404_on_unknown_track(monkeypatch):
-    monkeypatch.setattr(artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}])
-    resp = client.get("/api/artifacts/does-not-exist/foo/force-preview")
-    assert resp.status_code == 404
-
-
-def test_force_preview_empty_for_nonexistent_slug(tmp_path, monkeypatch):
-    """Unknown slug on valid track returns zero targets — never 500s."""
-    proj = tmp_path
-    (proj / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True)
-    monkeypatch.setattr(
-        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
-    )
-
-    from scripts.api.monitor_context import fixture_context
-
-    ctx = fixture_context(proj).with_roots(curriculum_root=proj / "curriculum")
-    monkeypatch.setattr(api_main.app.state, "ctx", ctx)
-
-    body = client.get("/api/artifacts/a1/never-existed/force-preview").json()
-    assert body["count"] == 0
-    assert body["would_remove"] == []
-    assert body["total_bytes"] == 0

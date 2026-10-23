@@ -10,6 +10,7 @@ import { tmpdir } from 'node:os';
 import snapshot from '../tests/fixtures/word-card-preview/current';
 import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
 import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals, semanticCases, semanticControls, noticeCases, noticeControls } from '../tests/fixtures/word-card-preview/release-controls';
+import { expectCurrentAtlasArticle, foldUkrainian, inspectCurrentAtlasArticle, inspectHeteronymTab } from '../tests/helpers/c37-search-proof';
 
 // Historical controls require an explicit test build; public builds omit this flag.
 process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1';
@@ -35,10 +36,12 @@ async function withScratch(prefix: string, logs: string, use: (scratch: string) 
 }
 
 const test = base.extend<{ fidelityScratch: string }, { releaseScratch: string }>({
-  fidelityScratch: async ({}, use, info) => {
+  fidelityScratch: async ({ page }, use, info) => {
+    void page;
     await withScratch('fidelity-browser-', info.outputPath('build-logs'), use);
   },
-  releaseScratch: [async ({}, use, info) => {
+  releaseScratch: [async ({ browser }, use, info) => {
+    void browser;
     await withScratch('release-browser-', join(info.project.outputDir, `release-build-logs-${info.workerIndex}`), use);
   }, { scope: 'worker' }],
 });
@@ -252,7 +255,8 @@ test('public configuration refuses synthetic, missing, tampered and malformed in
 });
 
 
-for (const prefix of ['fidelity-browser-', 'release-browser-']) test(`releases ${prefix}scratch after success and failure`, async ({}, info) => {
+for (const prefix of ['fidelity-browser-', 'release-browser-']) test(`releases ${prefix}scratch after success and failure`, async ({ page }, info) => {
+  void page;
   for (const fail of [false, true]) {
     let allocated = '';
     const logs = info.outputPath(fail ? 'failure' : 'success');
@@ -734,5 +738,284 @@ test.describe('release controls R01-R16 and R10b', () => {
     for (const file of readdirSync(outputs.off || '', { recursive: true })) if (typeof file === 'string' && /\.(html|js|json|xml)$/.test(file)) {
       expect(readFileSync(join(outputs.off || '', file), 'utf8')).not.toMatch(/lexicon-v2|fixture-head|permitted-definition|synthetic-candidate-1|wc_0123456789a[bc]/);
     }
+  });
+});
+
+// C37 candidate search on an actual Pages-style build. Configure
+// ATLAS_WORD_CARD_C37_ROOT with the public release dist and, for the both-pane
+// control, ATLAS_WORD_CARD_C37_CONTROLS_ROOT with the flag-enabled fixture dist.
+// Run through playwright.word-card-search.config.ts; every other run skips this group.
+const c37Root = process.env.ATLAS_WORD_CARD_C37_ROOT;
+const c37ControlsRoot = process.env.ATLAS_WORD_CARD_C37_CONTROLS_ROOT;
+const c37Inventory = JSON.parse(readFileSync(new URL('../src/lib/lexicon/word-card-preview-route-inventory.json', import.meta.url), 'utf8')) as {
+  routes: { path: string; class: string }[];
+};
+const c37SearchSlugs = new Set((JSON.parse(readFileSync(new URL('../src/data/lexicon-search-index.json', import.meta.url), 'utf8')) as { s: string }[])
+  .map(row => row.s));
+const C37_WORD_CLASSES = ['card-diagnostic', 'compare-card-diagnostic', 'word-page', 'compare-word-page'];
+const c37WordRoutes = c37Inventory.routes.filter(route => C37_WORD_CLASSES.includes(route.class));
+type C37Server = { origin: string; close: () => Promise<void> };
+
+async function c37Server(root: string): Promise<C37Server> {
+  const module = await import(new URL('../scripts/serve-gh-pages-404.mjs', import.meta.url).href) as {
+    createGhPages404Server: (options: { root: string; port: number; host: string }) => {
+      server: { address: () => { port: number } | string | null }; listen: () => Promise<unknown>; close: () => Promise<void>;
+    };
+  };
+  const app = module.createGhPages404Server({ root, port: 0, host: '127.0.0.1' });
+  await app.listen();
+  const address = app.server.address();
+  if (!address || typeof address === 'string') throw Error('No C37 Pages-style port');
+  return { origin: `http://127.0.0.1:${address.port}`, close: () => app.close() };
+}
+
+test.describe('C37 candidate in-page search', () => {
+  test.skip(!c37Root, 'ATLAS_WORD_CARD_C37_ROOT is not set');
+  let publicServer: C37Server;
+  let controlsServer: C37Server | undefined;
+  test.beforeAll(async () => {
+    publicServer = await c37Server(c37Root!);
+    if (c37ControlsRoot) controlsServer = await c37Server(c37ControlsRoot);
+  });
+  test.afterAll(async () => { await publicServer?.close(); await controlsServer?.close(); });
+
+  test('C37 exposes bound search, Atlas return link and page label on every word and card route', async ({ page }, info) => {
+    test.setTimeout(1_800_000);
+    const tally = Object.fromEntries(C37_WORD_CLASSES.map(name => [name, { discovered: c37Inventory.routes.filter(r => r.class === name).length,
+      run: 0, pass: 0, fail: [] as string[] }]));
+    for (const route of c37WordRoutes) {
+      const bucket = tally[route.class];
+      bucket.run += 1;
+      try {
+        await page.goto(publicServer.origin + route.path, { waitUntil: 'domcontentloaded' });
+        const candidate = page.getByRole('region', { name: 'Candidate presentation', exact: true });
+        const widget = candidate.locator('[data-atlas-typeahead]');
+        await expect(widget).toHaveCount(1);
+        await expect(widget).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+        const input = page.locator('#atlas-candidate-search-input');
+        await expect(input).toHaveCount(1);
+        await expect(input).toHaveAttribute('role', 'combobox');
+        await expect(input).toHaveAttribute('aria-controls', 'atlas-candidate-search-list');
+        await expect(page.locator('#atlas-candidate-search-list')).toHaveCount(1);
+        await expect(page.locator('#atlas-candidate-search-list')).toHaveAttribute('role', 'listbox');
+        await expect(candidate.getByRole('link', { name: 'До Атласу', exact: true })).toHaveAttribute('href', '/lexicon/');
+        await expect(candidate.getByText('Атлас слів (Лексикон)', { exact: true })).toBeVisible();
+        bucket.pass += 1;
+      } catch (error) {
+        bucket.fail.push(`${route.path}: ${(error as Error).message.split('\n')[0]}`);
+      }
+      if (Object.values(tally).reduce((total, item) => total + item.fail.length, 0) >= 10) break;
+    }
+    await info.attach('c37-route-tally', { body: JSON.stringify(tally, null, 2), contentType: 'application/json' });
+    expect(c37WordRoutes).toHaveLength(568);
+    for (const name of C37_WORD_CLASSES) expect(tally[name].fail, name).toEqual([]);
+  });
+
+  for (const [viewport, size] of [['desktop', { width: 1440, height: 1000 }], ['phone', { width: 390, height: 844 }]] as const) {
+    test(`C37 real index results, arrow selection and Enter navigate on ${viewport}`, async ({ page }, info) => {
+      test.setTimeout(180_000);
+      await page.setViewportSize(size);
+      const seen: string[] = [];
+      for (const name of C37_WORD_CLASSES) {
+        const route = c37Inventory.routes.find(item => item.class === name)!;
+        await page.goto(publicServer.origin + route.path);
+        await expect(page.locator('[data-atlas-typeahead]')).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+        const input = page.locator('#atlas-candidate-search-input');
+        await input.fill('чит');
+        const options = page.locator('#atlas-candidate-search-list [role="option"][data-slug]');
+        await expect(options.first()).toBeVisible();
+        const slug = await options.first().getAttribute('data-slug');
+        expect(slug && c37SearchSlugs.has(slug), `${route.class}: first result comes from the committed search index`).toBe(true);
+        await input.press('ArrowDown');
+        await expect(options.first()).toHaveAttribute('aria-selected', 'true');
+        await input.press('Enter');
+        await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug!)}/`);
+        const heading = await expectCurrentAtlasArticle(page, slug!, `${viewport} ${route.class} ${route.path}`);
+        seen.push(`${viewport} ${route.class} ${route.path} -> ${slug} -> ${heading}`);
+      }
+      await info.attach(`c37-keyboard-${viewport}`, { body: seen.join('\n'), contentType: 'text/plain' });
+    });
+  }
+
+  test('C37 URL-only navigation fails the article-arrival assertion (genuine negative control)', async ({ page }, info) => {
+    test.setTimeout(120_000);
+    if (!publicServer) throw Error('C37 public root is not configured');
+    const route = c37Inventory.routes.find(item => item.class === 'word-page')!;
+    await page.goto(publicServer.origin + route.path);
+    await expect(page.locator('[data-atlas-typeahead]')).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+    const input = page.locator('#atlas-candidate-search-input');
+    await input.fill('чит');
+    const options = page.locator('#atlas-candidate-search-list [role="option"][data-slug]');
+    await expect(options.first()).toBeVisible();
+    const slug = await options.first().getAttribute('data-slug');
+    if (!slug) throw Error('No search result slug');
+    await input.press('ArrowDown');
+    await input.press('Enter');
+    await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug)}/`);
+    const heading = await expectCurrentAtlasArticle(page, slug, 'negative-control baseline');
+    // A prefix-only URL spoof leaves the real article in place.
+    const other = slug.slice(0, -1);
+    expect(foldUkrainian(heading)).toContain(foldUkrainian(other));
+    expect(foldUkrainian(heading)).not.toBe(foldUkrainian(other));
+    await page.evaluate(path => window.history.pushState({}, '', path), `/lexicon/${encodeURIComponent(other)}/`);
+    const legacyUrlOnly = new URL(page.url()).pathname === `/lexicon/${encodeURIComponent(other)}/`;
+    expect(legacyUrlOnly, 'legacy URL-only check accepts the invalid state').toBe(true);
+    const arrival = await inspectCurrentAtlasArticle(page, other);
+    expect(arrival.ok, 'URL-only navigation must not count as article arrival').toBe(false);
+    if (arrival.ok) throw Error('URL-only navigation was accepted as article arrival');
+    expect(arrival.reason).toContain('does not match');
+    // The committed positive assertion rejects that same state, so it cannot regress to a bare URL check.
+    await expect(expectCurrentAtlasArticle(page, other, 'negative control', 2_000)).rejects.toThrow(/did not arrive/);
+    expect(new URL(page.url()).pathname).toBe(`/lexicon/${encodeURIComponent(other)}/`);
+    await info.attach('c37-url-only-negative-control', {
+      body: JSON.stringify({ baselineSlug: slug, baselineHeading: heading, urlOnlySlug: other, rejection: arrival.reason }, null, 2),
+      contentType: 'application/json',
+    });
+  });
+
+  test('C37 tab-activation assertion rejects an inactive tab (genuine negative control)', async ({ page }, info) => {
+    if (!publicServer) throw Error('C37 public root is not configured');
+    await page.goto(publicServer.origin + '/lexicon/' + encodeURIComponent('замок') + '/');
+    const tabs = page.getByRole('tab');
+    await expect(tabs).toHaveCount(2);
+    // Before any click tab 1 is inactive and its panel is hidden: the assertion must reject that state.
+    const inactiveControls = await tabs.nth(1).getAttribute('aria-controls');
+    expect(inactiveControls && await page.locator(`#${inactiveControls}`).count(), 'legacy panel-presence check accepts the inactive state').toBe(1);
+    const inactive = await inspectHeteronymTab(page, 1);
+    expect(inactive.ok, 'an inactive tab must not read as activated').toBe(false);
+    await tabs.nth(1).click();
+    const active = await inspectHeteronymTab(page, 1);
+    expect(active.ok, active.reason).toBe(true);
+    expect(active.title ?? '').toContain('замо́к');
+    await info.attach('c37-tab-activation-control', {
+      body: JSON.stringify({ inactiveReason: inactive.reason, activeTitle: active.title }, null, 2),
+      contentType: 'application/json',
+    });
+  });
+
+  test('C37 Atlas return link reaches the current Atlas', async ({ page }) => {
+    const route = c37Inventory.routes.find(item => item.class === 'word-page')!;
+    await page.goto(publicServer.origin + route.path);
+    await page.getByRole('region', { name: 'Candidate presentation', exact: true })
+      .getByRole('link', { name: 'До Атласу', exact: true }).click();
+    await page.waitForURL(url => url.pathname === '/lexicon/');
+    const landing = page.locator('[data-word-atlas]');
+    await expect(landing).toBeVisible();
+    await expect(landing.locator('#lexicon-landing-search-input')).toBeVisible();
+  });
+
+  test('C37 current and candidate controls stay unique and independent', async ({ page }) => {
+    test.skip(!c37ControlsRoot, 'ATLAS_WORD_CARD_C37_CONTROLS_ROOT is not set');
+    await page.goto(controlsServer!.origin + '/lexicon-v2/compare/kliuch-1/');
+    const currentInput = page.locator('#atlas-article-search-input');
+    const candidateInput = page.locator('#atlas-candidate-search-input');
+    await expect(page.locator('[data-atlas-typeahead]')).toHaveCount(2);
+    await expect(currentInput).toHaveAttribute('aria-controls', 'atlas-article-search-list');
+    await expect(candidateInput).toHaveAttribute('aria-controls', 'atlas-candidate-search-list');
+    for (const widget of await page.locator('[data-atlas-typeahead]').all())
+      await expect(widget).toHaveAttribute('data-atlas-typeahead-ready', 'true', { timeout: 5000 });
+    await candidateInput.fill('чит');
+    const candidateOptions = page.locator('#atlas-candidate-search-list [role="option"][data-slug]');
+    await expect(candidateOptions.first()).toBeVisible();
+    const candidateCount = await candidateOptions.count();
+    await currentInput.fill('чит');
+    await expect(page.locator('#atlas-article-search-list [role="option"][data-slug]').first()).toBeVisible();
+    await expect(candidateOptions).toHaveCount(candidateCount);
+    await expect(candidateInput).toHaveValue('чит');
+    await expect(currentInput).toHaveValue('чит');
+    const slug = await candidateOptions.first().getAttribute('data-slug');
+    await candidateInput.press('ArrowDown');
+    await candidateInput.press('Enter');
+    await page.waitForURL(url => url.pathname === `/lexicon/${encodeURIComponent(slug!)}/`);
+  });
+
+  test('C37 keeps the two release summaries free of candidate search', async ({ page }) => {
+    for (const path of ['/lexicon-v2/release/', '/lexicon-v2/compare/release/']) {
+      await page.goto(publicServer.origin + path);
+      await expect(page.locator('[data-release-summary]')).toHaveCount(1);
+      await expect(page.locator('[data-atlas-typeahead], #atlas-candidate-search-input')).toHaveCount(0);
+    }
+  });
+
+  test.describe('C37 original action timeout reproduction', () => {
+    test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, locale: 'uk-UA', timezoneId: 'UTC', colorScheme: 'light' });
+    test('C37 exercises the 14 original disclosure and tab targets', async ({ page }, info) => {
+      test.setTimeout(300_000);
+      const actions: { route: string; kind: 'disclosure' | 'tab'; index: number; candidate: boolean }[] = [
+        { route: '/lexicon-v2/word/близько не пахне/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/блигом світ/', kind: 'disclosure', index: 1, candidate: true },
+        { route: "/lexicon-v2/word/гнат-безп'ятко/", kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/боже помагай/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon/замок/', kind: 'tab', index: 0, candidate: false },
+        { route: '/lexicon/замок/', kind: 'tab', index: 1, candidate: false },
+        { route: '/lexicon-v2/word/бог помилував/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/блекоти наїлась/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon/юридичний/', kind: 'disclosure', index: 1, candidate: false },
+        { route: '/lexicon-v2/word/божий світ/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/благородний жест/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/валаамова ослиця/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/блудний син/', kind: 'disclosure', index: 1, candidate: true },
+        { route: '/lexicon-v2/word/бог зна що таке/', kind: 'disclosure', index: 1, candidate: true },
+      ];
+      const results: Record<string, unknown>[] = [];
+      for (const item of actions) {
+        await page.goto(publicServer.origin + encodeURI(item.route), { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction(() => document.querySelector('[data-word-atlas],[data-release-page],[data-release-card],[data-word-atlas-state="not_found"]'), {}, { timeout: 30000 });
+        const article = page.locator(item.candidate ? '[data-release-page]' : '[data-word-atlas]');
+        await expect(article).toHaveCount(1);
+        const nodes = item.kind === 'disclosure' ? article.locator('details > summary') : article.getByRole('tab');
+        const targetIndex = item.kind === 'disclosure' ? item.index - 1 : item.index;
+        const record: Record<string, unknown> = { ...item, historicalGlobalIndex: item.index, articleIndex: targetIndex,
+          historicalDisposition: 'original-timeout-cause-unverified', clicks: [] as number[], timeouts: [] as Record<string, unknown>[] };
+        // The historical global disclosure ordinal included the mobile menu at zero.
+        const order = [targetIndex];
+        for (const i of order) {
+          try { await nodes.nth(i).click({ timeout: 2000 }); (record.clicks as number[]).push(i); }
+          catch (error) { (record.timeouts as Record<string, unknown>[]).push({ index: i, error: (error as Error).message }); }
+        }
+        const target = nodes.nth(targetIndex);
+        record.targetLabel = (await target.textContent())?.trim();
+        const historicalNodes = item.kind === 'disclosure' ? page.locator('details > summary') : page.getByRole('tab');
+        expect(await target.evaluate((node, historical) => node === document.querySelectorAll(historical.selector)[historical.index],
+          { selector: item.kind === 'disclosure' ? 'details > summary' : '[role=tab]', index: item.index })).toBe(true);
+        record.historicalLabel = (await historicalNodes.nth(item.index).textContent())?.trim();
+        if (item.kind === 'disclosure') {
+          const opened = await target.locator('..').getAttribute('open') !== null;
+          const revealed = await target.locator('..').locator(':scope > :not(summary)').first().isVisible().catch(() => false);
+          record.targetVisible = await target.isVisible().catch(() => false);
+          record.targetOpened = opened && revealed;
+          // A timeout can mean the disclosure is present but covered: keep that distinction visible.
+          if (!opened) record.classification = record.targetVisible
+            ? 'unresolved-pointer-intercepted-on-current-page' : 'unresolved-not-visible-on-current-page';
+        } else {
+          const panel = await inspectHeteronymTab(page, item.index);
+          record.targetOpened = panel.ok;
+          record.panel = panel.title ?? null;
+          if (!panel.ok) record.classification = panel.reason;
+        }
+        record.freshDisposition = record.targetOpened ? 'opened-and-revealed' : 'unresolved';
+        results.push(record);
+      }
+      await info.attach('c37-original-action-timeouts', { body: JSON.stringify(results, null, 2), contentType: 'application/json' });
+      expect(results).toHaveLength(14);
+      // Every original word-content target must open through its direct action.
+      expect(results.filter(item => !item.candidate).map(item => [item.route, item.kind, item.index, item.targetOpened]))
+        .toEqual([['/lexicon/замок/', 'tab', 0, true], ['/lexicon/замок/', 'tab', 1, true], ['/lexicon/юридичний/', 'disclosure', 1, true]]);
+      expect(results.filter(item => item.candidate).every(item => item.targetOpened === true)).toBe(true);
+      // Tab success means the matching panel is exposed and owned by that tab, not just that the click returned.
+      const currentTabs = results.filter(item => item.kind === 'tab');
+      expect(currentTabs.map(item => typeof item.panel)).toEqual(['string', 'string']);
+      for (const tab of currentTabs) expect(foldUkrainian(String(tab.panel))).toContain('замок');
+      expect(new Set(currentTabs.map(item => item.panel)).size).toBe(2);
+      // Fresh direct action does not establish the cause of any historical timeout.
+      const currentDisclosure = results.find(item => item.route === '/lexicon/юридичний/');
+      expect(currentDisclosure?.targetOpened).toBe(true);
+      expect(currentDisclosure?.targetVisible).toBe(true);
+      expect(results.every(item => item.historicalDisposition === 'original-timeout-cause-unverified')).toBe(true);
+      // No sibling or site-menu clicks may manufacture a current word-article failure.
+      const timeouts = results.flatMap(item => (item.timeouts as { index: number; error: string }[])
+        .map(timeout => ({ route: item.route as string, index: timeout.index, error: timeout.error })));
+      expect(timeouts.map(item => `${item.route}#${item.index}`)).toEqual([]);
+    });
   });
 });

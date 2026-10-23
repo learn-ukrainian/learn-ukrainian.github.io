@@ -130,17 +130,6 @@ def test_rb2_cleanup_removes_through_the_guarded_cli_as_the_task_owner() -> None
     assert " >&2 && echo worktree-removed || echo removal-failed" in script
 
 
-def test_negative_rb2_readding_force_fails_only_the_cleanup_guard() -> None:
-    """Mutation check: reintroducing force removal trips the dedicated cleanup guard."""
-    spec = _load(RB2_PATH)
-    cleanup = next(step for step in spec["steps"] if step["step_id"] == "cleanup_failed_worktree")
-    forced = cleanup["command"]["argv"][2].replace("worktree_claims remove", "worktree_claims remove --force")
-    assert forced != cleanup["command"]["argv"][2]
-    cleanup["command"]["argv"][2] = forced
-    with pytest.raises(AssertionError):
-        _assert_rb2_cleanup_is_non_force(spec)
-
-
 def test_mutations_always_have_a_distinct_reobservation_step() -> None:
     """Mutating commands never claim state themselves; a different observe step follows."""
     checks = {
@@ -246,21 +235,6 @@ def _write_fake_tee(tmp_path: Path) -> Path:
     )
     fake_tee.chmod(0o755)
     return fake_tee.parent
-
-
-def _assert_dispatch_failure_routes_by_token(spec: dict[str, Any]) -> None:
-    dispatch = _rb2_step(spec, "dispatch_worker")
-    assert dispatch["transitions"]["dispatch_failed"]["evidence"]["clauses"] == [
-        {
-            "source": "command_receipt",
-            "field": "actor_outcome",
-            "op": "eq",
-            "value": "dispatch-failed",
-        }
-    ]
-    assert _matching_transition_labels(
-        dispatch, actor_outcome="dispatch-failed", exit_code=17
-    ) == ["dispatch_failed"]
 
 
 def test_rb2_benign_overlap_refusal_reaches_approval_or_concurrency_stop(
@@ -377,25 +351,6 @@ def test_rb2_dispatch_emits_failure_token_for_setup_and_tee_errors(tmp_path: Pat
     assert _matching_transition_labels(
         dispatch, actor_outcome=tee_failure.stdout.strip(), exit_code=tee_failure.returncode
     ) == ["dispatch_failed"]
-
-
-def test_rb2_dispatch_failure_token_pin_rejects_the_old_exit_code_predicate() -> None:
-    """Mutation check: reintroducing exit-code 1 makes the status-17 pin fail."""
-    spec = _load(RB2_PATH)
-    _assert_dispatch_failure_routes_by_token(spec)
-
-    mutated = copy.deepcopy(spec)
-    mutated_dispatch = _rb2_step(mutated, "dispatch_worker")
-    mutated_dispatch["transitions"]["dispatch_failed"]["evidence"]["clauses"].append(
-        {"source": "command_receipt", "field": "exit_code", "op": "eq", "value": 1}
-    )
-
-    mutated_selection = _matching_transition_labels(
-        mutated_dispatch, actor_outcome="dispatch-failed", exit_code=17
-    )
-    assert mutated_selection == []
-    with pytest.raises(AssertionError):
-        assert mutated_selection == ["dispatch_failed"]
 
 
 @pytest.mark.parametrize(

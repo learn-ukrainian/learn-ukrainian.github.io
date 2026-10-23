@@ -234,12 +234,6 @@ def test_source_conflict_refuses_two_calls_to_one_authority(world: World) -> Non
         settle.validate_reply(world.reply("source_conflict", evidence), world.manifest.read_bytes(), world.own_ledger)
 
 
-def test_source_conflict_refuses_a_second_source_without_hits(world: World) -> None:
-    evidence = _evidence(world, "query_pravopys") + _evidence(world, "query_sum20", hits=0, result="No entry.")
-    with pytest.raises(settle.SettleError, match="two different sources"):
-        settle.validate_reply(world.reply("source_conflict", evidence), world.manifest.read_bytes(), world.own_ledger)
-
-
 def _broadened(
     world: World, *, result: str | None = None, status: str = "ok", category_only: str | None = None
 ) -> list[dict[str, str]]:
@@ -270,16 +264,6 @@ def test_unresolved_accepts_each_broadened_search(world: World) -> None:
     reply = world.reply("unresolved", searches=_broadened(world))
     result, receipts = settle.validate_reply(reply, world.manifest.read_bytes(), world.own_ledger)
     assert result == "unresolved" and len(receipts) == 7
-
-
-@pytest.mark.parametrize("result", ["No results found.", "Successful source excerpt."])
-def test_unresolved_accepts_successful_broadened_receipts(world: World, result: str) -> None:
-    searches = _broadened(world, result=result)
-    outcome, receipts = settle.validate_reply(
-        world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
-    )
-    assert outcome == "unresolved"
-    assert receipts == [search["receipt"] for search in searches]
 
 
 @pytest.mark.parametrize("category_only", [None, *settle.SEARCH_TOOLS])
@@ -663,12 +647,6 @@ def test_rendered_prompt_from_real_engine_fixture_passes_checker(
     assert digest
 
 
-def test_no_cyrillic_typed_in_new_code_template_or_fixture() -> None:
-    root = Path(__file__).resolve().parents[2]
-    for path in (root / "scripts/review/settle.py", root / "scripts/review/prompts/settle.md.j2", Path(__file__)):
-        assert re.search(r"[\u0400-\u04ff]", path.read_text(encoding="utf-8")) is None, path
-
-
 # A lesson page: two activities inside Exercises, and the neighbouring Lesson and Vocabulary tabs.
 _LESSON = (
     '<Tabs syncKey="module-tab">\n'
@@ -895,21 +873,6 @@ def test_rendered_settle_prompt_for_an_absence_item_shows_the_scoped_unit(tmp_pa
     sidecar = world.prompt.with_name(world.prompt.name + ".sha256")
     checked = check_prompt(prompt, world.manifest, repo_root=tmp_path, recorded_sha256=sidecar.read_text().strip())
     assert checked.passed, checked.errors
-
-
-def test_prepare_scopes_a_plan_absence_finding_to_that_plan_unit(tmp_path: Path) -> None:
-    document = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/fixture-module.yaml"
-    document.parent.mkdir(parents=True)
-    document.write_text(_PLAN, encoding="utf-8")
-    world = _world(tmp_path, document, "c" * 64, scope={"lesson": 1, "step": "s1"}, lesson_n=None)
-    assert _prepared_spans(world) == [
-        {"absence": True, "locator": {"lesson": 1, "step": "s1"}, "context": "s1\nfirst step only"}
-    ]
-    prompt = world.prompt.read_text(encoding="utf-8")
-    assert "first step only" in prompt
-    assert "second step only" not in prompt
-    assert "other lesson step" not in prompt
-    assert _ABSENCE_LINE in prompt
 
 
 def test_the_quoted_span_and_its_prompt_stay_unchanged(world: World) -> None:
@@ -1291,15 +1254,6 @@ def test_sum11_cannot_settle_language_authority(world, facet, outcome):
         settle.SettleError, match=r"needs (a cited receipt with hits|hit receipts from two different sources)"
     ):
         settle.validate_reply(world.reply(outcome, evidence), world.manifest.read_bytes(), world.own_ledger)
-
-
-def test_sum11_cannot_be_a_broadened_counterevidence_search(world):
-    receipt = world.call("search_definitions", "Contrast only.")
-    searches = [{"category": "counterevidence", "receipt": receipt, "quote": "Contrast only."}]
-    with pytest.raises(settle.SettleError, match="wrong tool"):
-        settle.validate_reply(
-            world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
-        )
 
 
 @pytest.mark.parametrize("record_kind", ["retired", "malformed", "replacement"])

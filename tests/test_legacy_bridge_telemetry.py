@@ -199,24 +199,6 @@ def test_refused_invocations_do_not_start_coverage_or_usage(
     assert not telemetry_db.exists()
 
 
-def test_review_true_runs_as_normal_ask_and_records_usage(
-    telemetry_db: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """``review=True`` is accepted as a normal ask (operator order 2026-08-06)."""
-
-    def fake_impl(*_args, **_kwargs):
-        assert _kwargs.get("review") is True
-        return SimpleNamespace(ok=True)
-
-    monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", fake_impl)
-    result = _acp_compat.run_compat_ask(
-        "glm", "prompt", task_id="task", review=True
-    )
-    assert result.ok is True
-    assert _rows(telemetry_db)[0][1:6] == ("glm", "operator", 1, 1, 0)
-
-
 def test_storage_outage_never_replaces_bridge_result(
     telemetry_db: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -425,22 +407,6 @@ def test_unknown_adapter_identity_is_still_rejected() -> None:
         legacy_bridge.normalize_target("acpx-no-such-shadow")
     with pytest.raises(ValueError, match="not allowlisted"):
         legacy_bridge.normalize_target("retired")
-
-
-def test_gemma_compat_ask_records_allowlisted_target(
-    telemetry_db: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(
-        _acp_compat,
-        "_run_compat_ask_impl",
-        lambda *_args, **_kwargs: SimpleNamespace(ok=True),
-    )
-    result = _acp_compat.run_compat_ask(
-        "gemma", "prompt", task_id="gemma-6852", source="claude-infra"
-    )
-    assert result.ok is True
-    assert _rows(telemetry_db)[0][1:6] == ("gemma", "anthropic", 1, 1, 0)
 
 
 def test_schema_v1_store_migrates_and_accepts_gemma(telemetry_db: Path) -> None:

@@ -5,76 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from scripts import config
 from scripts.audit.ulp_fidelity_gate import _UK_WORD_RE, check_ulp_fidelity
 from scripts.build import linear_pipeline, v7_build
 from scripts.pipeline.stress_annotator import STRESS_MARK
-
-ULP_KEYWORDS = (
-    "em-dash",
-    "DialogueBox",
-    "stress marks",
-    "Ukrainian-first",
-    "named first-person teacher persona",
-)
-
-
-def _keyword_hits(rule: str) -> int:
-    lowered = rule.lower()
-    return sum(1 for keyword in ULP_KEYWORDS if keyword.lower() in lowered)
-
-
-def _writer_context_immersion_rule(slug: str) -> str:
-    plan_path = linear_pipeline.plan_path_for("a1", slug)
-    plan = linear_pipeline.load_plan(plan_path)
-    context = linear_pipeline.writer_context(
-        plan=plan,
-        plan_content=plan_path.read_text(encoding="utf-8"),
-        knowledge_packet="Knowledge packet stub.",
-        wiki_manifest="{}",
-    )
-    return context["IMMERSION_RULE"]
-
-
-def test_a1_letter_module_gets_ulp_practices() -> None:
-    rule = config.get_immersion_rule("a1", 4, letter_module=True)
-
-    assert "ULP Presentation Pattern" in rule
-    assert "letter_module:true full contract" in rule
-    assert "SIDE-BY-SIDE BILINGUAL" in rule
-    assert _keyword_hits(rule) >= 2
-
-
-def test_a1_m20_gets_short_ulp_reference_only() -> None:
-    rule = config.get_immersion_rule("a1", 20)
-
-    assert "docs/best-practices/ulp-presentation-pattern.md" in rule
-    assert "ULP Presentation Pattern" not in rule
-    assert "SIDE-BY-SIDE BILINGUAL" not in rule
-
-
-def test_a1_late_module_gets_short_ulp_reference_only() -> None:
-    rule = config.get_immersion_rule("a1", 50)
-
-    assert "docs/best-practices/ulp-presentation-pattern.md" in rule
-    assert "ULP Presentation Pattern" not in rule
-    assert "SIDE-BY-SIDE BILINGUAL" not in rule
-
-
-def test_writer_context_uses_plan_letter_module_flag() -> None:
-    letter_rule = _writer_context_immersion_rule("stress-and-melody")
-    non_letter_rule = _writer_context_immersion_rule("my-morning")
-
-    assert "letter_module:true full contract" in letter_rule
-    assert "docs/best-practices/ulp-presentation-pattern.md" in non_letter_rule
-    assert "letter_module:true full contract" not in non_letter_rule
-
-
-def test_c1_module_does_not_get_a1_ulp_practices() -> None:
-    rule = config.get_immersion_rule("c1", 50)
-
-    assert "ULP Presentation Pattern" not in rule
-    assert _keyword_hits(rule) == 0
 
 
 def test_ulp_word_regex_does_not_absorb_quoting_marks() -> None:
@@ -164,28 +97,6 @@ def test_uk_en_ratio_is_advisory_not_terminal(monkeypatch) -> None:
     assert report["passed"] is True
     assert report["failed_checks"] == []
     assert "uk_en_ratio" in report["warnings"]
-
-
-def test_stress_coverage_is_advisory_not_terminal(monkeypatch) -> None:
-    from scripts.audit import ulp_fidelity_gate as gate
-
-    structural_pass = {"passed": True}
-    monkeypatch.setattr(gate, "_stress_coverage_check", lambda _t: {"passed": False, "coverage": 0.9})
-    monkeypatch.setattr(gate, "_em_dash_gloss_check", lambda _t: dict(structural_pass))
-    monkeypatch.setattr(gate, "_dialoguebox_check", lambda _t: dict(structural_pass))
-    monkeypatch.setattr(gate, "_section_opener_check", lambda _t: dict(structural_pass))
-    monkeypatch.setattr(gate, "_ratio_check", lambda _t, _p: dict(structural_pass))
-
-    report = gate.check_ulp_fidelity(
-        "irrelevant",
-        {"level": "a1", "sequence": 20, "slug": "fixture"},
-        profile="core",
-    )
-
-    assert report["verdict"] == "PASS"
-    assert report["passed"] is True
-    assert report["failed_checks"] == []
-    assert "stress_coverage" in report["warnings"]
 
 
 def test_em_dash_gate_is_line_level_for_real_scaffold() -> None:

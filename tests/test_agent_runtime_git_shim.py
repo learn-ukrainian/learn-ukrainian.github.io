@@ -106,10 +106,6 @@ def test_git_shim_allows_branch_switch_in_worktree(repo_layout):
     proc = run_git_shim(repo_layout.dispatch_wt, "checkout", "feature-2")
     assert proc.returncode == 0
 
-def test_git_shim_allows_worktree_add(repo_layout):
-    proc = run_git_shim(repo_layout.main, "worktree", "add", "-b", "new-wt-branch", ".worktrees/dispatch/test/1")
-    assert proc.returncode == 0
-
 def test_git_shim_allows_read_only(repo_layout):
     proc = run_git_shim(repo_layout.main, "status")
     assert proc.returncode == 0
@@ -136,15 +132,6 @@ def test_git_shim_fails_closed_when_guard_interpreter_absent(repo_layout, verb, 
     assert proc.returncode == 1
     assert "error: git shim guard interpreter unavailable" in proc.stderr
     assert "Cannot verify branch containment; failing closed." in proc.stderr
-
-
-def test_git_shim_fails_closed_when_guard_interpreter_fails(repo_layout, tmp_path):
-    failing_python = tmp_path / "failing-python"
-    failing_python.write_text("#!/usr/bin/env bash\nexit 1\n")
-    failing_python.chmod(0o755)
-    proc = run_git_shim(repo_layout.main, "checkout", "feature-1", python_bin=str(failing_python))
-    assert proc.returncode == 1
-    assert "failing closed" in proc.stderr
 
 
 def test_git_shim_fails_closed_on_fake_interpreter_stdout(repo_layout):

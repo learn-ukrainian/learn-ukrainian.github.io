@@ -13,7 +13,6 @@ from typing import Any
 import pytest
 
 from scripts.fleet_comms.adapter_conformance import (
-    REMAINING_ADAPTERS,
     CaptureInput,
     conform,
     raw_capture_matches,
@@ -44,11 +43,6 @@ def test_hermes_aliases_plain_stdout_unknown(name: str) -> None:
     env = conform(CaptureInput(adapter=name, stdout="assistant final message", returncode=0))
     assert env.completion_state is CompletionState.UNKNOWN
     assert env.is_formal_review_eligible is False
-
-
-def test_remaining_adapters_set_covers_b2_targets() -> None:
-    for name in (*B2_ADAPTERS, "hermes-grok", "hermes-qwen", "hermes-deepseek", "grok-build"):
-        assert name in REMAINING_ADAPTERS or name in {"grok", "kimi", "cursor", "opencode"}
 
 
 # ── grok ─────────────────────────────────────────────────────────────────────

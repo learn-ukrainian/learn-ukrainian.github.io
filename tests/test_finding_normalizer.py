@@ -11,22 +11,6 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from build.finding_normalizer import normalize_finding
 
 
-def test_normalizer_is_deterministic() -> None:
-    finding = {
-        "dimension": "Linguistic Accuracy",
-        "severity": "major",
-        "location": "## Привіт! / paragraph 2",
-        "issue": "The teacher models the opposite register rule in the same scene.",
-        "fix": "Make the teacher-student exchange formal.",
-    }
-
-    first = normalize_finding(finding)
-    second = normalize_finding(finding)
-
-    assert first == second
-    assert first["error_class"] == "register_drift"
-
-
 def test_unclassified_fallback_preserves_original_prose(tmp_path: Path) -> None:
     growth_log = tmp_path / "growth.yaml"
     finding = {

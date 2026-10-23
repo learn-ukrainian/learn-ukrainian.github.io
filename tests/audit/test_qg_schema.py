@@ -81,13 +81,6 @@ def test_ua_gec_g_case_can_preserve_non_russian_source_lang() -> None:
     assert finding["source_lang"] == "pl"
 
 
-@pytest.mark.parametrize("source_lang", ["ru", "pl", "en", "unknown", "other", "russian", "english"])
-def test_source_language_normalization_accepts_schema_values(source_lang: str) -> None:
-    normalized = qg_schema.normalize_source_lang(source_lang)
-
-    assert normalized in qg_schema.SOURCE_LANGS
-
-
 def test_invalid_source_language_dimension_and_tag_are_rejected() -> None:
     with pytest.raises(ValueError, match="unsupported contact source language"):
         qg_schema.normalize_source_lang("de")

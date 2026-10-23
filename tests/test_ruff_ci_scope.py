@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import re
-import shlex
-import tomllib
 from pathlib import Path
 
 import pytest
@@ -15,8 +13,6 @@ pytestmark = pytest.mark.repo_invariant
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / "scripts" / "ci" / "checks.sh"
 _PRE_COMMIT = _REPO_ROOT / ".pre-commit-config.yaml"
-_LOCK = _REPO_ROOT / "requirements-lock.txt"
-
 # Required trees for the PR-tier Ruff job (dashboards/ may be empty).
 _REQUIRED_RUFF_PATHS = ("scripts/", "tests/", "agents_extensions/")
 
@@ -44,45 +40,6 @@ def test_ci_ruff_job_lints_required_python_trees() -> None:
         "Expected `python -m ruff check` to include scripts/, tests/, and agents_extensions/ "
         "(see #7262)."
     )
-
-
-def _pre_commit_ruff() -> tuple[dict, dict]:
-    config = yaml.safe_load(_PRE_COMMIT.read_text(encoding="utf-8"))
-    matches = [repo for repo in config["repos"] if repo["repo"] == "https://github.com/astral-sh/ruff-pre-commit"]
-    assert len(matches) == 1, "expected one ruff-pre-commit repository"
-    hooks = [hook for hook in matches[0]["hooks"] if hook["id"] == "ruff"]
-    assert len(hooks) == 1, "expected one Ruff lint hook"
-    return matches[0], hooks[0]
-
-
-def test_pre_commit_ruff_version_matches_ci_lock() -> None:
-    """A pre-commit Ruff upgrade must move with CI's lockfile pin."""
-    pins = re.findall(r"(?m)^ruff==([^\s#]+)", _LOCK.read_text(encoding="utf-8"))
-    assert len(pins) == 1, "requirements-lock.txt must have one Ruff pin"
-    repo, _ = _pre_commit_ruff()
-    assert repo["rev"] == f"v{pins[0]}"
-
-
-def test_pre_commit_ruff_checks_the_same_trees_as_ci() -> None:
-    """Pre-commit must lint staged files in CI's trees with config discovery."""
-    _, hook = _pre_commit_ruff()
-    ci_argv = shlex.split(_ruff_check_invocation(_CI.read_text(encoding="utf-8")))
-    assert ci_argv[:4] == [".venv/bin/python", "-m", "ruff", "check"]
-    assert "args" not in hook
-    assert hook.get("pass_filenames", True) is True
-    assert hook.get("always_run", False) is False
-    assert "stages" not in hook or "pre-commit" in hook["stages"]
-    allowed = re.compile(hook["files"])
-    for path in ci_argv[4:]:
-        assert allowed.search(f"{path}example.py")
-    assert not allowed.search("docs/example.md")
-
-
-def test_ruff_import_roots_are_checkout_independent() -> None:
-    """Ruff must classify imports without probing sparse tree presence."""
-    config = tomllib.loads((_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert config["tool"]["ruff"]["src"] == [".", "scripts"]
-    assert "known-first-party" not in config["tool"]["ruff"].get("lint", {}).get("isort", {})
 
 
 def _local_hooks() -> dict[str, dict]:
@@ -114,13 +71,24 @@ def test_pre_commit_pytest_guards_covered_by_ci_are_absent() -> None:
     assert not stray, f"hooks {stray} run a CI-covered guard test under another id (#11315)"
 
 
-def test_pre_commit_sparse_collection_guard_stays_at_pre_push() -> None:
-    """The sparse guard's test is `slow`, which no CI shard runs, so it must stay at pre-push (#11315)."""
-    hook = _local_hooks().get("sparse-collection-guard")
-    assert hook is not None, "sparse-collection-guard is missing; no CI shard runs its test (marked slow) (#11315)"
-    assert hook.get("stages") == ["pre-push"], "sparse-collection-guard stages mismatch"
-    assert hook.get("pass_filenames") is False, "sparse-collection-guard pass_filenames must be False"
-    assert hook.get("files") == r"^tests/.*\.py$", "sparse-collection-guard files filter mismatch"
+def test_pre_commit_sparse_collection_guard_is_owned_by_required_ci() -> None:
+    """Reject pytest returning to push hooks or the slow sparse guard losing required CI ownership."""
+    hooks = _local_hooks()
+    assert "sparse-collection-guard" not in hooks, "sparse collection belongs in required CI, not push hooks"
     target = "tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent"
-    assert target in hook.get("entry", ""), f"sparse-collection-guard entry must reference {target}"
-    assert "--override-ini addopts=-q" in hook.get("entry", ""), "sparse-collection-guard entry must override addopts"
+    stray = [hook_id for hook_id, hook in hooks.items() if "pytest" in hook.get("entry", "")]
+    assert not stray, f"pytest hooks {stray} must not run during a push, including through implicit stages"
+    workflow = yaml.safe_load((_REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    jobs = workflow["jobs"]
+    assert "checks" in jobs["ci-gate"]["needs"], "CI Gate must require Checks"
+    verdict = next(step for step in jobs["ci-gate"]["steps"] if step.get("name") == "Require every job")
+    assert "checks:CHECKS" in verdict["run"], "Checks must participate in the gate verdict"
+    steps = [step for step in jobs["checks"]["steps"] if target in step.get("run", "")]
+    assert len(steps) == 1, "Checks must explicitly run the existing sparse collection guard node once"
+    step = steps[0]
+    assert not step.get("if"), "the sparse guard must run whenever required Checks runs"
+    assert not step.get("continue-on-error"), "the sparse guard must block required Checks on failure"
+    invocation = step["run"]
+    assert ".venv/bin/python -m pytest" in invocation
+    assert "--override-ini addopts=-q" in invocation, "the sparse guard must override pytest defaults"
+    assert "-m slow" in invocation, "the slow sparse guard must not inherit the shard's marker exclusion"

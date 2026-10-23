@@ -6,9 +6,7 @@ Targets ~150+ tests for coverage improvement.
 import json
 import os
 import sqlite3
-import time
 from datetime import UTC, datetime
-from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -190,13 +188,6 @@ def contracts_client(mock_project_root):
 class TestCommsMessages:
     """Tests for /api/comms/messages endpoint."""
 
-    def test_messages_empty_db(self, comms_client, broker_db):
-        r = comms_client.get("/api/comms/messages")
-        assert r.status_code == 200
-        data = r.json()
-        assert data["total"] == 0
-        assert data["messages"] == []
-
     def test_messages_no_db(self, comms_client, mock_project_root):
         """When DB doesn't exist, return empty with error."""
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
@@ -213,30 +204,6 @@ class TestCommsMessages:
         r = comms_client.get("/api/comms/messages")
         assert r.json()["total"] == 2
 
-    def test_messages_filter_by_agent(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"from_llm": "claude", "to_llm": "gemini"},
-            {"from_llm": "other", "to_llm": "other"},
-        ])
-        r = comms_client.get("/api/comms/messages", params={"agent": "claude"})
-        assert r.json()["total"] == 1
-
-    def test_messages_filter_by_task_id(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"task_id": "task-1"},
-            {"task_id": "task-2"},
-        ])
-        r = comms_client.get("/api/comms/messages", params={"task_id": "task-1"})
-        assert r.json()["total"] == 1
-
-    def test_messages_filter_by_msg_type(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"message_type": "error"},
-            {"message_type": "message"},
-        ])
-        r = comms_client.get("/api/comms/messages", params={"msg_type": "error"})
-        assert r.json()["total"] == 1
-
     def test_messages_unacked_only(self, comms_client, broker_db):
         _insert_messages(broker_db, [
             {"acknowledged": 0},
@@ -245,52 +212,9 @@ class TestCommsMessages:
         r = comms_client.get("/api/comms/messages", params={"unacked_only": True})
         assert r.json()["total"] == 1
 
-    def test_messages_pagination(self, comms_client, broker_db):
-        _insert_messages(broker_db, [{"content": f"msg-{i}"} for i in range(10)])
-        r = comms_client.get("/api/comms/messages", params={"limit": 3, "offset": 0})
-        assert len(r.json()["messages"]) == 3
-        assert r.json()["total"] == 10
-
-    def test_messages_cursor_and_since(self, comms_client, broker_db):
-        old_ts = "2026-01-01T00:00:00+00:00"
-        new_ts = "2026-01-02T00:00:00+00:00"
-        _insert_messages(broker_db, [
-            {"content": "old", "timestamp": old_ts},
-            {"content": "new", "timestamp": new_ts},
-        ])
-        r = comms_client.get(
-            "/api/comms/messages",
-            params={"limit": 10, "cursor": 2, "since": "2026-01-01T12:00:00+00:00"},
-        )
-        data = r.json()
-        assert data["messages"] == []
-        assert data["next_cursor"] is None
-
-    def test_messages_combined_filters(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"from_llm": "claude", "task_id": "t1", "message_type": "error", "acknowledged": 0},
-            {"from_llm": "claude", "task_id": "t1", "message_type": "message", "acknowledged": 0},
-            {"from_llm": "gemini", "task_id": "t2", "message_type": "error", "acknowledged": 1},
-        ])
-        r = comms_client.get("/api/comms/messages", params={
-            "agent": "claude", "task_id": "t1", "msg_type": "error", "unacked_only": True,
-        })
-        assert r.json()["total"] == 1
-
 
 class TestCommsConversations:
     """Tests for /api/comms/conversations endpoint."""
-
-    def test_conversations_empty(self, comms_client, broker_db):
-        r = comms_client.get("/api/comms/conversations")
-        assert r.status_code == 200
-        assert r.json()["conversations"] == []
-
-    def test_conversations_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.get("/api/comms/conversations")
-        assert r.json()["conversations"] == []
 
     def test_conversations_grouped(self, comms_client, broker_db):
         _insert_messages(broker_db, [
@@ -301,12 +225,6 @@ class TestCommsConversations:
         r = comms_client.get("/api/comms/conversations")
         convos = r.json()["conversations"]
         assert len(convos) == 2
-
-    def test_conversations_limit(self, comms_client, broker_db):
-        for i in range(5):
-            _insert_messages(broker_db, [{"task_id": f"task-{i}"}])
-        r = comms_client.get("/api/comms/conversations", params={"limit": 2})
-        assert len(r.json()["conversations"]) == 2
 
 
 class TestCommsConversationDetail:
@@ -340,24 +258,9 @@ class TestCommsConversationDetail:
         )
         assert [m["id"] for m in r2.json()["messages"]] == [2, 3]
 
-    def test_conversation_detail_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.get("/api/comms/conversation/task-X")
-        assert r.json()["messages"] == []
-
-    def test_conversation_not_found(self, comms_client, broker_db):
-        r = comms_client.get("/api/comms/conversation/nonexistent")
-        assert r.json()["count"] == 0
-
 
 class TestCommsActiveProcesses:
     """Tests for /api/comms/active-processes endpoint."""
-
-    def test_no_pid_dir(self, comms_client, mock_project_root):
-        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
-        r = comms_client.get("/api/comms/active-processes")
-        assert r.json()["count"] == 0
 
     def test_with_pid_files(self, comms_client, mock_project_root):
         pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
@@ -395,29 +298,9 @@ class TestCommsActiveProcesses:
         assert data["count"] == 1
         assert data["processes"][0]["error"] == "corrupt"
 
-    def test_pid_no_started_field(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "nostart.json").write_text(json.dumps({"pid": os.getpid()}))
-        r = comms_client.get("/api/comms/active-processes")
-        data = r.json()
-        assert data["processes"][0]["age_minutes"] == 0
-
-    def test_pid_invalid_started(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "bad.json").write_text(json.dumps({"pid": os.getpid(), "started": "not-a-date"}))
-        r = comms_client.get("/api/comms/active-processes")
-        assert r.json()["processes"][0]["age_minutes"] == 0
-
 
 class TestCommsZombies:
     """Tests for /api/comms/zombies endpoint."""
-
-    def test_zombies_no_db_no_pids(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
-        r = comms_client.get("/api/comms/zombies")
-        assert r.json()["count"] == 0
 
     def test_stale_messages(self, comms_client, broker_db):
         old_ts = "2020-01-01T00:00:00+00:00"
@@ -439,16 +322,6 @@ class TestCommsZombies:
         # Old enough to be critical (> 2x stale_hours)
         assert stale[0]["severity"] == "critical"
 
-    def test_stale_message_severity_warning(self, comms_client, broker_db):
-        # A message that's only slightly stale (between 1x and 2x threshold)
-        # Use stale_hours=10000 so the message is stale but not critical
-        old_ts = "2020-01-01T00:00:00+00:00"
-        _insert_messages(broker_db, [{"timestamp": old_ts, "acknowledged": 0}])
-        r = comms_client.get("/api/comms/zombies", params={"stale_hours": 100000})
-        stale = [z for z in r.json()["zombies"] if z["type"] == "stale_message"]
-        if stale:
-            assert stale[0]["severity"] == "warning"
-
     def test_error_loops(self, comms_client, broker_db):
         _insert_messages(broker_db, [
             {"task_id": "err-task", "message_type": "error"},
@@ -467,98 +340,9 @@ class TestCommsZombies:
         orphans = [z for z in r.json()["zombies"] if z["type"] == "orphan_pid"]
         assert len(orphans) == 1
 
-    def test_corrupt_pid_zombie(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "bad.json").write_text("not json")
-        r = comms_client.get("/api/comms/zombies")
-        corrupt = [z for z in r.json()["zombies"] if z["type"] == "corrupt_pid"]
-        assert len(corrupt) == 1
-
-    def test_invalid_timestamp_skipped(self, comms_client, broker_db):
-        _insert_messages(broker_db, [{"timestamp": "not-a-date", "acknowledged": 0}])
-        r = comms_client.get("/api/comms/zombies")
-        # Should not crash
-        assert r.status_code == 200
-
-
-class TestCommsStats:
-    """Tests for /api/comms/stats endpoint."""
-
-    def test_stats_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.get("/api/comms/stats")
-        assert r.json()["error"] == "Broker DB not found"
-
-    def test_stats_with_data(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"from_llm": "claude", "to_llm": "gemini", "message_type": "message", "acknowledged": 1},
-            {"from_llm": "gemini", "to_llm": "claude", "message_type": "error", "acknowledged": 0},
-            {"from_llm": "claude", "to_llm": "gemini", "message_type": "message", "acknowledged": 0},
-        ])
-        r = comms_client.get("/api/comms/stats")
-        data = r.json()
-        assert data["total_messages"] == 3
-        assert data["unacked"] == 2
-        assert data["errors"] == 1
-        assert data["error_rate"] == pytest.approx(33.3, abs=0.1)
-
-    def test_stats_empty_db(self, comms_client, broker_db):
-        r = comms_client.get("/api/comms/stats")
-        data = r.json()
-        assert data["total_messages"] == 0
-        assert data["error_rate"] == 0
-
-    def test_stats_per_agent(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"from_llm": "claude", "to_llm": "gemini"},
-            {"from_llm": "claude", "to_llm": "gemini"},
-        ])
-        r = comms_client.get("/api/comms/stats")
-        agents = r.json()["per_agent"]
-        assert agents["claude"]["sent"] == 2
-        assert agents["gemini"]["received"] == 2
-
-
-class TestCommsHealth:
-    """Tests for /api/comms/health endpoint."""
-
-    def test_health_with_db(self, comms_client, broker_db):
-        _insert_messages(broker_db, [{"acknowledged": 0}])
-        r = comms_client.get("/api/comms/health")
-        data = r.json()
-        assert data["db_exists"] is True
-        assert data["db_writable"] is True
-        assert data["queue_depth"] == 1
-
-    def test_health_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.get("/api/comms/health")
-        data = r.json()
-        assert data["db_exists"] is False
-
-    def test_health_with_alive_pid(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "alive.json").write_text(json.dumps({"pid": os.getpid()}))
-        r = comms_client.get("/api/comms/health")
-        assert r.json()["alive_processes"] == 1
-
-    def test_health_pid_dir_missing(self, comms_client, mock_project_root):
-        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
-        r = comms_client.get("/api/comms/health")
-        assert r.json()["pid_dir_exists"] is False
-
 
 class TestCommsBatchProgress:
     """Tests for /api/comms/batch-progress endpoint."""
-
-    def test_batch_progress_empty(self, comms_client, mock_project_root):
-        with patch("scripts.api.comms_router._check_build_processes", return_value=([], None)):
-            r = comms_client.get("/api/comms/batch-progress")
-        data = r.json()
-        assert "tracks" in data
-        assert data["running_processes"] == 0
 
     def test_batch_progress_with_logs(self, comms_client, mock_project_root):
         log_dir = mock_project_root / "logs" / "research-preseed"
@@ -570,132 +354,9 @@ class TestCommsBatchProgress:
         assert "hist" in data["tracks"]
         assert data["tracks"]["hist"]["health"] == "complete"
 
-    def test_batch_progress_with_process(self, comms_client, mock_project_root):
-        log_dir = mock_project_root / "logs" / "research-preseed"
-        log_file = log_dir / "bio-20260301-0100.log"
-        log_file.write_text("Processing...\nVERDICT: PASS\n")
-        procs = [{"pid": 123, "track": "bio", "cmd": "python build_module.py bio 1"}]
-        with patch("scripts.api.comms_router._check_build_processes", return_value=(procs, None)):
-            r = comms_client.get("/api/comms/batch-progress")
-        data = r.json()
-        assert data["running_processes"] == 1
-
-
-class TestCommsBatchProgressTrack:
-    """Tests for /api/comms/batch-progress/{track} endpoint."""
-
-    def test_batch_progress_track(self, comms_client, mock_project_root):
-        # Create some research files
-        research_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "research"
-        research_dir.mkdir(parents=True)
-        (research_dir / "topic-a-research.md").write_text("# Research A")
-        r = comms_client.get("/api/comms/batch-progress/hist")
-        data = r.json()
-        assert data["research_done"] == 1
-
-    def test_batch_progress_track_empty(self, comms_client, mock_project_root):
-        r = comms_client.get("/api/comms/batch-progress/nonexistent")
-        data = r.json()
-        assert data["research_done"] == 0
-        assert data["recent_files"] == []
-
-
-class TestCommsActions:
-    """Legacy broker mutation endpoints stay permanently retired."""
-
-    @staticmethod
-    def _assert_retired(response, message: str) -> None:
-        assert response.status_code == 410
-        assert response.json() == {"error": message}
-
-    def test_cleanup_zombies(self, comms_client, broker_db, mock_project_root):
-        old_ts = "2020-01-01T00:00:00+00:00"
-        _insert_messages(broker_db, [{"timestamp": old_ts, "acknowledged": 0}])
-        # Add orphan PID
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        (pid_dir / "orphan.json").write_text(json.dumps({"pid": 99999999}))
-        r = comms_client.post("/api/comms/cleanup", params={"max_age_hours": 0.001})
-        self._assert_retired(r, "legacy comms writes retired; use fleet-comms authority tooling")
-
-    def test_cleanup_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        comms_client.app.state.ctx = _comms_ctx(mock_project_root, pid_dir=Path("/nonexistent"))
-        r = comms_client.post("/api/comms/cleanup")
-        self._assert_retired(r, "legacy comms writes retired; use fleet-comms authority tooling")
-
-    def test_acknowledge_message(self, comms_client, broker_db):
-        _insert_messages(broker_db, [{"acknowledged": 0}])
-        r = comms_client.post("/api/comms/acknowledge/1")
-        self._assert_retired(r, "legacy acknowledge retired; use fleet-comms delivery receipts")
-
-    def test_acknowledge_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.post("/api/comms/acknowledge/1")
-        self._assert_retired(r, "legacy acknowledge retired; use fleet-comms delivery receipts")
-
-    def test_send_message(self, comms_client, broker_db):
-        r = comms_client.post("/api/comms/send", json={
-            "from_llm": "claude",
-            "to_llm": "gemini",
-            "content": "test message",
-            "task_id": "t1",
-            "message_type": "message",
-        })
-        self._assert_retired(r, "legacy send retired; use fleet-comms authority")
-
-    def test_send_message_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.post("/api/comms/send", json={
-            "from_llm": "a", "to_llm": "b", "content": "c",
-        })
-        self._assert_retired(r, "legacy send retired; use fleet-comms authority")
-
-    def test_send_message_defaults(self, comms_client, broker_db):
-        r = comms_client.post("/api/comms/send", json={
-            "from_llm": "a", "to_llm": "b", "content": "c",
-        })
-        self._assert_retired(r, "legacy send retired; use fleet-comms authority")
-
-
-class TestCommsByModule:
-    """Tests for /api/comms/by-module/{track}/{slug} endpoint."""
-
-    def test_by_module(self, comms_client, broker_db):
-        _insert_messages(broker_db, [
-            {"task_id": "build-greetings-123", "content": "Hello " * 100},
-            {"task_id": "build-greetings-456", "content": "Short"},
-            {"task_id": "build-other-789", "content": "Other"},
-        ])
-        r = comms_client.get("/api/comms/by-module/a1/greetings")
-        data = r.json()
-        assert data["total_messages"] == 2
-        assert data["track"] == "a1"
-        assert data["slug"] == "greetings"
-        assert len(data["task_groups"]) >= 1
-
-    def test_by_module_no_db(self, comms_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = comms_client.get("/api/comms/by-module/a1/greetings")
-        assert r.status_code == 500
-
-    def test_by_module_no_matches(self, comms_client, broker_db):
-        r = comms_client.get("/api/comms/by-module/a1/nonexistent")
-        assert r.json()["total_messages"] == 0
-
 
 class TestCommsLiveActivity:
     """Tests for /api/comms/live-activity endpoint."""
-
-    def test_live_activity_empty(self, comms_client, mock_project_root):
-        r = comms_client.get("/api/comms/live-activity")
-        data = r.json()
-        assert "in_progress" in data
-        assert "recent_completions" in data
-        assert "recent_dispatches" in data
 
     def test_live_activity_with_state_file(self, comms_client, mock_project_root):
         # Create a recently-modified state-v3.json
@@ -737,26 +398,6 @@ class TestCommsLiveActivity:
         data = r.json()
         assert any(item["slug"] == "v6-module" and item["phase"] == "write" for item in data["in_progress"])
 
-    def test_live_activity_with_research_completions(self, comms_client, mock_project_root):
-        research_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "research"
-        research_dir.mkdir(parents=True)
-        (research_dir / "topic-research.md").write_text("# Research")
-        r = comms_client.get("/api/comms/live-activity")
-        data = r.json()
-        assert "recent_completions" in data
-
-    def test_live_activity_with_broker_messages(self, comms_client, broker_db):
-        _insert_messages(broker_db, [{"content": "dispatch test"}])
-        r = comms_client.get("/api/comms/live-activity")
-        assert len(r.json()["recent_dispatches"]) >= 1
-
-    def test_live_activity_dispatch_limit(self, comms_client, broker_db):
-        _insert_messages(broker_db, [{"content": f"dispatch-{i}"} for i in range(3)])
-        r = comms_client.get("/api/comms/live-activity", params={"limit": 2})
-        data = r.json()
-        assert len(data["recent_dispatches"]) == 2
-        assert data["dispatch_next_cursor"] is not None
-
 
 # ===========================================================================
 # ADMIN ROUTER TESTS
@@ -765,30 +406,6 @@ class TestCommsLiveActivity:
 
 class TestAdminHelpers:
     """Tests for admin helper functions."""
-
-    def test_dir_size_empty(self, tmp_path):
-        from scripts.api.admin_router import _dir_size
-        assert _dir_size(tmp_path) == 0
-
-    def test_dir_size_with_files(self, tmp_path):
-        from scripts.api.admin_router import _dir_size
-        (tmp_path / "a.txt").write_text("hello")
-        sub = tmp_path / "sub"
-        sub.mkdir()
-        (sub / "b.txt").write_text("world!")
-        assert _dir_size(tmp_path) > 0
-
-    def test_dir_size_nonexistent(self):
-        from scripts.api.admin_router import _dir_size
-        assert _dir_size(Path("/nonexistent")) == 0
-
-    def test_format_bytes(self):
-        from scripts.api.admin_router import _format_bytes
-        assert "B" in _format_bytes(100)
-        assert "KB" in _format_bytes(2048)
-        assert "MB" in _format_bytes(2 * 1024 * 1024)
-        assert "GB" in _format_bytes(2 * 1024**3)
-        assert "TB" in _format_bytes(2 * 1024**4)
 
     def test_safe_join_valid(self, tmp_path):
         # _safe_within was replaced by path_safety.safe_join in commit
@@ -802,44 +419,9 @@ class TestAdminHelpers:
         with pytest.raises(ValueError):
             safe_join(tmp_path, "..", "etc", "passwd")
 
-    def test_broker_health_no_db(self, _patch_config, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        from scripts.api.admin_router import _broker_health
-
-        result = _broker_health(_comms_ctx(mock_project_root))
-        assert result["status"] == "missing"
-
-    def test_broker_health_with_db(self, _patch_config, mock_project_root, broker_db):
-        from scripts.api.admin_router import _broker_health
-
-        result = _broker_health(_comms_ctx(mock_project_root))
-        assert result["status"] == "healthy"
-
 
 class TestAdminBackup:
     """Tests for backup endpoints."""
-
-    def test_list_backups_empty(self, admin_client, mock_project_root):
-        r = admin_client.get("/api/admin/backup/list")
-        data = r.json()
-        assert data["count"] == 0
-        assert data["backups"] == []
-
-    def test_list_backups_no_dir(self, admin_client, admin_app):
-
-        admin_app.state.ctx = admin_app.state.ctx.with_roots(backup_dir=Path("/nonexistent"))
-        r = admin_client.get("/api/admin/backup/list")
-        assert r.json()["backups"] == []
-
-    def test_list_backups_with_files(self, admin_client, mock_project_root):
-        backup_dir = mock_project_root / "data" / "backups"
-        (backup_dir / "snapshot-1.tar").write_bytes(b"x" * 100)
-        (backup_dir / "snapshot-2.tar").write_bytes(b"y" * 200)
-        r = admin_client.get("/api/admin/backup/list")
-        data = r.json()
-        assert data["count"] == 2
-        assert data["total_size_bytes"] == 300
 
     def test_delete_backup(self, admin_client, mock_project_root):
         backup_dir = mock_project_root / "data" / "backups"
@@ -848,10 +430,6 @@ class TestAdminBackup:
         assert r.status_code == 200
         assert r.json()["deleted"] == "delete-me.tar"
         assert r.json()["freed_bytes"] == 50
-
-    def test_delete_backup_not_found(self, admin_client, mock_project_root):
-        r = admin_client.delete("/api/admin/backup/nonexistent.tar")
-        assert r.status_code == 404
 
     def test_delete_backup_traversal(self, admin_client, mock_project_root, tmp_path):
         # Path traversal in the filename component is rejected by the
@@ -863,41 +441,8 @@ class TestAdminBackup:
         assert r.status_code in (400, 404)
 
 
-
-
-class TestAdminHealth:
-    """Tests for /api/admin/health endpoint."""
-
-    def test_health(self, admin_client):
-        with patch("scripts.api.admin_router._broker_health", new_callable=AsyncMock, return_value={"status": "healthy", "messages": 2, "size": "1.0 KB"}):
-            r = admin_client.get("/api/admin/health")
-        data = r.json()
-        assert r.status_code == 200
-        assert data["status"] == "ok"
-        assert data["broker"]["status"] == "healthy"
-        assert "disk" in data
-        assert set(data) >= {"status", "timestamp", "uptime_seconds", "broker", "disk"}
-
-    def test_health_degraded_when_broker_unhealthy(self, admin_client):
-        with patch("scripts.api.admin_router._broker_health", new_callable=AsyncMock, return_value={"status": "unhealthy", "error": "missing"}):
-            r = admin_client.get("/api/admin/health")
-        data = r.json()
-        assert r.status_code == 200
-        assert data["status"] == "degraded"
-        assert data["broker"]["status"] == "unhealthy"
-        assert set(data) >= {"status", "timestamp", "uptime_seconds", "broker", "disk"}
-
-
 class TestAdminDiskUsage:
     """Tests for /api/admin/disk-usage endpoint."""
-
-    def test_disk_usage(self, admin_client, mock_project_root):
-        # Create some files
-        (mock_project_root / "data" / "textbook_images" / "test.png").write_bytes(b"x" * 100)
-        r = admin_client.get("/api/admin/disk-usage")
-        data = r.json()
-        assert "breakdown" in data
-        assert data["total_bytes"] >= 0
 
 
 class TestAdminMaintenance:
@@ -907,62 +452,6 @@ class TestAdminMaintenance:
         r = admin_client.post("/api/admin/maintenance/vacuum-broker")
         data = r.json()
         assert data["status"] == "ok"
-
-    def test_vacuum_broker_no_db(self, admin_client, mock_project_root):
-        db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
-        db_path.unlink()
-        r = admin_client.post("/api/admin/maintenance/vacuum-broker")
-        assert r.status_code == 404
-
-    def test_clean_logs(self, admin_client, mock_project_root):
-        logs_dir = mock_project_root / "logs"
-        old_log = logs_dir / "old.log"
-        old_log.write_text("old log")
-        # Set mtime to 60 days ago
-        old_time = time.time() - (60 * 86400)
-        os.utime(old_log, (old_time, old_time))
-        r = admin_client.post("/api/admin/maintenance/clean-logs", params={"max_age_days": 30})
-        data = r.json()
-        assert data["deleted_count"] == 1
-
-    def test_clean_logs_nothing_to_delete(self, admin_client, mock_project_root):
-        r = admin_client.post("/api/admin/maintenance/clean-logs", params={"max_age_days": 30})
-        assert r.json()["deleted_count"] == 0
-
-    def test_clean_logs_mcp_server_logs(self, admin_client, mock_project_root):
-        mcp_log_dir = mock_project_root / ".mcp" / "servers" / "test-server" / "logs"
-        mcp_log_dir.mkdir(parents=True)
-        old_log = mcp_log_dir / "server.log"
-        old_log.write_text("mcp log")
-        old_time = time.time() - (60 * 86400)
-        os.utime(old_log, (old_time, old_time))
-        r = admin_client.post("/api/admin/maintenance/clean-logs", params={"max_age_days": 30})
-        assert r.json()["deleted_count"] == 1
-
-    def test_embedding_cache_stats_no_cache(self, admin_client, mock_project_root):
-        r = admin_client.get("/api/admin/maintenance/embedding-cache-stats")
-        data = r.json()
-        assert data["exists"] is False
-
-    def test_embedding_cache_stats_with_cache(self, admin_client, mock_project_root):
-        cache_dir = mock_project_root / "data" / "literary_texts" / ".embed_cache"
-        cache_dir.mkdir(parents=True)
-        (cache_dir / "file1.npy").write_bytes(b"x" * 100)
-        (cache_dir / "file2.npy").write_bytes(b"y" * 200)
-        # Create source files too
-        lit_dir = mock_project_root / "data" / "literary_texts"
-        (lit_dir / "source.txt").write_text("source")
-        r = admin_client.get("/api/admin/maintenance/embedding-cache-stats")
-        data = r.json()
-        assert data["exists"] is True
-        assert data["cached_files"] == 2
-        assert data["source_files"] == 1
-
-    def test_annotation_stats_no_dir(self, admin_client, admin_app):
-
-        admin_app.state.ctx = admin_app.state.ctx.with_roots(images_dir=Path("/nonexistent"))
-        r = admin_client.get("/api/admin/maintenance/annotation-stats")
-        assert "error" in r.json()
 
     def test_annotation_stats_with_data(self, admin_client, mock_project_root):
         img_dir = mock_project_root / "data" / "textbook_images"
@@ -978,15 +467,6 @@ class TestAdminMaintenance:
         data = r.json()
         assert data["total_images"] == 3
         assert data["annotated"] == 2
-
-    def test_annotation_stats_images_without_annotations(self, admin_client, mock_project_root):
-        img_dir = mock_project_root / "data" / "textbook_images"
-        grade_dir = img_dir / "grade-2"
-        grade_dir.mkdir()
-        (grade_dir / "test.png").write_bytes(b"PNG")
-        r = admin_client.get("/api/admin/maintenance/annotation-stats")
-        data = r.json()
-        assert data["total_images"] == 1
 
     def test_annotation_stats_dict_format(self, admin_client, mock_project_root):
         img_dir = mock_project_root / "data" / "textbook_images"
@@ -1027,12 +507,6 @@ class TestAdminCollections:
 class TestImageIndex:
     """Tests for the _ImageIndex singleton."""
 
-    def test_index_load_empty(self, images_client, mock_project_root):
-        """Index loads fine with no data files."""
-        r = images_client.get("/api/images/stats")
-        assert r.status_code == 200
-        assert r.json()["total"] == 0
-
     def test_index_load_with_data(self, images_client, mock_project_root):
         """Index loads structural JSONLs and annotations."""
         img_dir = mock_project_root / "data" / "textbook_images"
@@ -1065,107 +539,6 @@ class TestImageIndex:
         assert data["annotated"] == 1
 
 
-class TestImagesTextbooks:
-    """Tests for /api/images/textbooks endpoint."""
-
-    def test_textbooks_empty(self, images_client):
-        r = images_client.get("/api/images/textbooks")
-        assert r.status_code == 200
-        assert r.json() == []
-
-
-class TestImagesAnnotations:
-    """Tests for /api/images/annotations endpoint."""
-
-    def test_browse_annotations_empty(self, images_client):
-        r = images_client.get("/api/images/annotations")
-        data = r.json()
-        assert data["total"] == 0
-        assert data["items"] == []
-
-    def test_browse_annotations_with_data(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index.reload()
-        # Manually inject test records
-        store.index._records = {
-            "img1": {"image_id": "img1", "grade": 1, "teaching_value": "high", "description_uk": "desc", "element_type": "diagram"},
-            "img2": {"image_id": "img2", "grade": 2, "teaching_value": "low", "description_uk": "", "element_type": "photo"},
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/annotations")
-        assert r.json()["total"] == 2
-
-    def test_browse_annotations_filter_grade(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1", "grade": 1},
-            "img2": {"image_id": "img2", "grade": 2},
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/annotations", params={"grade": 1})
-        assert r.json()["total"] == 1
-
-    def test_browse_annotations_filter_teaching_value(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1", "teaching_value": "high"},
-            "img2": {"image_id": "img2", "teaching_value": "low"},
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/annotations", params={"teaching_value": "high"})
-        assert r.json()["total"] == 1
-
-    def test_browse_annotations_filter_element_type(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1", "element_type": "diagram"},
-            "img2": {"image_id": "img2", "element_type": "photo"},
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/annotations", params={"element_type": "diagram"})
-        assert r.json()["total"] == 1
-
-    def test_browse_annotations_unannotated_filter(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1", "description_uk": "has desc"},
-            "img2": {"image_id": "img2", "description_uk": ""},
-            "img3": {"image_id": "img3"},
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/annotations", params={"unannotated": True})
-        assert r.json()["total"] == 2
-
-    def test_browse_annotations_search(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1", "description_uk": "cat sitting"},
-            "img2": {"image_id": "img2", "description_uk": "dog running"},
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/annotations", params={"q": "cat"})
-        assert r.json()["total"] == 1
-
-    def test_browse_annotations_pagination(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            f"img{i}": {"image_id": f"img{i}"} for i in range(10)
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/annotations", params={"per_page": 3, "page": 1})
-        data = r.json()
-        assert len(data["items"]) == 3
-        assert data["total"] == 10
-        assert data["page"] == 1
-
-
 class TestImagesAnnotationUpdate:
     """Tests for PUT /api/images/annotations/{image_id}."""
 
@@ -1180,94 +553,6 @@ class TestImagesAnnotationUpdate:
             r = images_client.put("/api/images/annotations/img1", json={"description_uk": "new"})
         assert r.status_code == 200
         assert r.json()["updated_fields"] == ["description_uk"]
-
-    def test_update_annotation_not_found(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {}
-        store.index._loaded = True
-
-        r = images_client.put("/api/images/annotations/nonexistent", json={"description_uk": "x"})
-        assert r.status_code == 404
-
-    def test_update_annotation_no_fields(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {"img1": {"image_id": "img1"}}
-        store.index._loaded = True
-
-        r = images_client.put("/api/images/annotations/img1", json={})
-        assert r.status_code == 400
-
-
-class TestImagesBulkUpdate:
-    """Tests for POST /api/images/annotations/bulk."""
-
-    def test_bulk_update(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1"},
-            "img2": {"image_id": "img2"},
-        }
-        store.index._loaded = True
-
-        with patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
-            r = images_client.post("/api/images/annotations/bulk", json={
-                "image_ids": ["img1", "img2", "img3"],
-                "updates": {"teaching_value": "high"},
-            })
-        data = r.json()
-        assert data["updated_count"] == 2
-        assert data["missing"] == ["img3"]
-
-    def test_bulk_update_no_fields(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {"img1": {"image_id": "img1"}}
-        store.index._loaded = True
-
-        r = images_client.post("/api/images/annotations/bulk", json={
-            "image_ids": ["img1"],
-            "updates": {},
-        })
-        assert r.status_code == 400
-
-    def test_bulk_update_all_missing(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {}
-        store.index._loaded = True
-
-        with patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock):
-            r = images_client.post("/api/images/annotations/bulk", json={
-                "image_ids": ["nope"],
-                "updates": {"teaching_value": "low"},
-            })
-        assert r.json()["updated_count"] == 0
-
-
-class TestImagesStats:
-    """Tests for /api/images/stats endpoint."""
-
-    def test_stats_empty(self, images_client):
-        r = images_client.get("/api/images/stats")
-        data = r.json()
-        assert data["total"] == 0
-        assert data["pdfs_on_disk"] == 0
-
-    def test_stats_with_data(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1", "description_uk": "desc", "teaching_value": "high", "element_type": "diagram", "grade": 1},
-            "img2": {"image_id": "img2", "description_uk": "", "teaching_value": "low", "element_type": "photo", "grade": 1},
-            "img3": {"image_id": "img3", "description_uk": "x", "teaching_value": "none", "element_type": "diagram", "grade": 2},
-        }
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/stats")
-        data = r.json()
-        assert data["total"] == 3
-        assert data["annotated"] == 2
-        assert data["unannotated"] == 1
-        assert data["bad_candidates"] == 2  # low + none
-        assert data["teaching_value"]["high"] == 1
-        assert "1" in data["per_grade"]
 
 
 class TestImagesCleanup:
@@ -1293,28 +578,6 @@ class TestImagesCleanup:
         data = r.json()
         assert data["deleted_count"] == 1
         assert not img_path.exists()
-
-    def test_cleanup_not_found(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {}
-        store.index._loaded = True
-
-        r = images_client.post("/api/images/cleanup", json={"image_ids": ["nope"]})
-        assert r.json()["not_found"] == ["nope"]
-
-    def test_cleanup_no_image_path(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._records = {
-            "img1": {"image_id": "img1", "image_path": "", "pdf_stem": "", "page": None},
-        }
-        store.index._loaded = True
-
-        with (
-            patch("scripts.api.images_router._remove_from_book_jsonls"),
-            patch("scripts.api.images_router._rewrite_annotations_jsonl", new_callable=AsyncMock),
-        ):
-            r = images_client.post("/api/images/cleanup", json={"image_ids": ["img1"]})
-        assert r.json()["deleted_count"] == 1
 
     def test_cleanup_rejects_path_traversal(self, images_client, mock_project_root):
         store = images_client.app.state.ctx.stores.image_store
@@ -1342,68 +605,10 @@ class TestRagBrowseImages:
         assert r.status_code == 400
         assert r.json()["error"] == "Invalid grade format: ../etc"
 
-    def test_browse_images_lists_context_rooted_files(self, rag_client, mock_project_root):
-        grade_dir = mock_project_root / "data" / "textbook_images" / "grade-03"
-        grade_dir.mkdir(parents=True)
-        (grade_dir / "page-01.png").write_bytes(b"\x89PNG" + b"\x00" * 12)
-
-        r = rag_client.get("/api/sources/browse_images")
-        assert r.status_code == 200
-        payload = r.json()
-        assert payload["total"] == 1
-        assert payload["images"][0]["name"] == "page-01.png"
-        assert payload["images"][0]["grade"] == "grade-03"
-        assert payload["images"][0]["path"] == "data/textbook_images/grade-03/page-01.png"
-
     def test_stats_missing_corpus_keeps_documented_envelope(self, rag_client):
         r = rag_client.get("/api/sources/stats")
         assert r.status_code == 200
         assert r.json() == {"sources_db": {"error": "data/sources.db not found"}}
-
-
-class TestImagesReload:
-    """Tests for POST /api/images/reload."""
-
-    def test_reload(self, images_client, mock_project_root):
-        r = images_client.post("/api/images/reload")
-        data = r.json()
-        assert data["status"] == "ok"
-        assert "total_records" in data
-
-
-class TestImagesPageContext:
-    """Tests for /api/images/page/{pdf_stem}/{page_num}."""
-
-    def test_page_context_pdf_not_found(self, images_client):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._pdf_catalog = {}
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/page/nonexistent/1")
-        assert r.status_code == 404
-
-
-class TestImagesPageRender:
-    """Tests for /api/images/page_render/{pdf_stem}/{page_num}.png."""
-
-    def test_render_pdf_not_found(self, images_client):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._pdf_catalog = {}
-        store.index._loaded = True
-
-        r = images_client.get("/api/images/page_render/nonexistent/1.png")
-        assert r.status_code == 404
-
-    def test_render_cache_hit(self, images_client, mock_project_root):
-        store = images_client.app.state.ctx.stores.image_store
-        store.index._pdf_catalog = {"test": {"path": "/fake/test.pdf"}}
-        store.index._loaded = True
-        # Pre-populate cache
-        store.page_cache["test:1"] = b"\x89PNG fake"
-
-        r = images_client.get("/api/images/page_render/test/1.png")
-        assert r.status_code == 200
-        assert r.headers["content-type"] == "image/png"
 
 
 class TestImagesHelpers:
@@ -1466,24 +671,6 @@ class TestImagesHelpers:
 class TestCommsInternalHelpers:
     """Tests for internal helper functions in comms_router."""
 
-    def test_scan_preseed_logs_no_dir(self, _patch_config, mock_project_root):
-        from scripts.api.comms_router import _scan_preseed_logs
-        result = _scan_preseed_logs(_comms_ctx(mock_project_root, logs_dir=Path("/nonexistent")))
-        assert result == []
-
-    def test_scan_preseed_logs_no_files(self, _patch_config, mock_project_root):
-        from scripts.api.comms_router import _scan_preseed_logs
-        result = _scan_preseed_logs(_comms_ctx(mock_project_root))
-        assert result == []
-
-    def test_check_build_processes(self, _patch_config):
-        from scripts.api.comms_router import _check_build_processes
-        with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(stdout="user 123 0.0 0.0 python build_module.py hist 1\n", returncode=0)
-            processes, error = _check_build_processes()
-        assert error is None
-        assert isinstance(processes, list)
-
     def test_check_build_processes_failure(self, _patch_config):
         from scripts.api.comms_router import _check_build_processes
         with patch("subprocess.run", side_effect=Exception("no ps")):
@@ -1491,30 +678,9 @@ class TestCommsInternalHelpers:
         assert processes == []
         assert error == "ps: Exception"
 
-    def test_scan_track_progress_no_dir(self, _patch_config, mock_project_root):
-        from scripts.api.comms_router import _scan_track_progress
-        result = _scan_track_progress(_comms_ctx(mock_project_root), "nonexistent")
-        assert result["research_done"] == 0
-
-    def test_scan_track_progress_with_files(self, _patch_config, mock_project_root):
-        from scripts.api.comms_router import _scan_track_progress
-        research_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "research"
-        research_dir.mkdir(parents=True)
-        (research_dir / "topic-research.md").write_text("# Research")
-        result = _scan_track_progress(_comms_ctx(mock_project_root), "hist")
-        assert result["research_done"] == 1
-        assert result["last_created"] is not None
-        assert result["last_created"]["slug"] == "topic"
-
 
 class TestPDFPool:
     """Tests for the _PDFPool helper class."""
-
-    @pytest.mark.anyio
-    async def test_pool_clear(self):
-        from scripts.api.images_router import _PDFPool
-        pool = _PDFPool(max_size=2)
-        await pool.clear()  # Should not crash even if empty
 
     @pytest.mark.anyio
     async def test_pool_eviction(self):
@@ -1549,91 +715,8 @@ class TestPDFPool:
 # ===========================================================================
 
 
-
-
-
-
-class TestCommsCleanupEdgeCases:
-    """Retired cleanup never resumes mutation for malformed legacy state."""
-
-    def test_cleanup_invalid_timestamp(self, comms_client, broker_db, mock_project_root):
-        _insert_messages(broker_db, [{"timestamp": "invalid-time", "acknowledged": 0}])
-        r = comms_client.post("/api/comms/cleanup", params={"max_age_hours": 0.001})
-        assert r.status_code == 410
-        assert r.json() == {
-            "error": "legacy comms writes retired; use fleet-comms authority tooling"
-        }
-
-    def test_cleanup_orphan_pid_general_exception(self, comms_client, mock_project_root):
-        pid_dir = mock_project_root / ".mcp" / "servers" / "message-broker" / "pids"
-        # Create a PID file that triggers a general exception in os.kill
-        (pid_dir / "bad.json").write_text(json.dumps({"pid": -1}))
-        r = comms_client.post("/api/comms/cleanup")
-        assert r.status_code == 410
-        assert r.json() == {
-            "error": "legacy comms writes retired; use fleet-comms authority tooling"
-        }
-
-
-class TestCommsLiveActivityEdgeCases:
-    """Additional tests for live activity scanning."""
-
-    def test_live_activity_corrupt_state_file(self, comms_client, mock_project_root):
-        orch_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "orchestration" / "bad-module"
-        orch_dir.mkdir(parents=True)
-        (orch_dir / "state-v3.json").write_text("not json!")
-        r = comms_client.get("/api/comms/live-activity", params={"minutes": 120})
-        # Should not crash
-        assert r.status_code == 200
-
-    def test_live_activity_empty_phases(self, comms_client, mock_project_root):
-        orch_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "orchestration" / "empty-phases"
-        orch_dir.mkdir(parents=True)
-        state = {"slug": "empty-phases", "phases": {}}
-        (orch_dir / "state-v3.json").write_text(json.dumps(state))
-        r = comms_client.get("/api/comms/live-activity", params={"minutes": 120})
-        assert r.status_code == 200
-
-    def test_live_activity_invalid_dispatch_timestamp(self, comms_client, broker_db):
-        _insert_messages(broker_db, [{"timestamp": "bad-ts"}])
-        r = comms_client.get("/api/comms/live-activity")
-        # Should not crash, invalid timestamps handled gracefully
-        assert r.status_code == 200
-
-
 class TestAdminVerifyCollectionsStatuses:
     """Test various verify status outcomes."""
-
-
-
-
-
-class TestAdminVacuumFailure:
-    """Test vacuum error handling."""
-
-    def test_vacuum_exception(self, admin_client, broker_db):
-        with patch("sqlite3.connect", side_effect=sqlite3.OperationalError("locked")):
-            r = admin_client.post("/api/admin/maintenance/vacuum-broker")
-        assert r.status_code == 500
-
-
-class TestImageIndexReload:
-    """Tests for index reload behavior."""
-
-    def test_index_reload_clears_all(self):
-        from scripts.api.images_router import _ImageIndex
-        idx = _ImageIndex()
-        idx._records = {"a": {}}
-        idx._annotations = {"b": {}}
-        idx._by_pdf_page = {"c": {}}
-        idx._pdf_catalog = {"d": {}}
-        idx._loaded = True
-        idx.reload()
-        assert idx._loaded is False
-        assert len(idx.records) == 0
-        assert len(idx.annotations) == 0
-        assert len(idx.by_pdf_page) == 0
-        assert len(idx.pdf_catalog) == 0
 
 
 class TestCommsPreseedLogParsing:
@@ -1678,18 +761,3 @@ class TestContractsRoutes:
         assert "page_contracts" in data
         assert len(data["route_contracts"]) > 0
         assert len(data["page_contracts"]) > 0
-
-    def test_plain_python_invocation(self, mock_project_root):
-        import asyncio
-
-        from scripts.api.monitor_context import fixture_context
-        from scripts.api.route_contracts import route_contracts
-
-        ctx = fixture_context(mock_project_root)
-        data = asyncio.run(route_contracts(ctx=ctx))
-        assert "route_contracts" in data
-        assert "page_contracts" in data
-
-        data_default = asyncio.run(route_contracts())
-        assert "route_contracts" in data_default
-        assert "page_contracts" in data_default

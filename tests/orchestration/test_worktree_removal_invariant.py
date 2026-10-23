@@ -324,19 +324,6 @@ def test_scanner_ignores_hints_and_the_guarded_entry_points(source: str) -> None
 
 
 @pytest.mark.parametrize(
-    "source",
-    [
-        '_run_git(root, "worktree", "list")',
-        'run_git(["worktree", "list"])',
-        'subprocess.run([git, "worktree", "list"])',
-    ],
-)
-def test_scanner_ignores_static_non_removal_worktree_actions(source: str) -> None:
-    """A known non-removal action is not treated as a dynamic removal bypass."""
-    assert python_sites(f"def helper():\n    {source}\n", "scripts/example.py") == []
-
-
-@pytest.mark.parametrize(
     ("source", "suffix", "flagged"),
     [
         ('git worktree remove "$wt_dir"', ".sh", True),

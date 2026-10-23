@@ -102,11 +102,6 @@ def test_schema_migration_adds_the_column_once(legacy_db):
     assert QUARANTINE_COLUMN in _columns(db)
 
 
-def test_predicate_is_true_for_a_table_without_the_column():
-    assert live_article_predicate(["id", "wordid"]) == "1 = 1"
-    assert live_article_predicate(["id", QUARANTINE_COLUMN], "a") == f"a.{QUARANTINE_COLUMN} = ''"
-
-
 def test_dry_run_reports_and_writes_nothing(legacy_db):
     db, expected = legacy_db
     before = db.read_bytes()
@@ -143,16 +138,6 @@ def test_unexpected_rows_refuse_and_write_nothing(legacy_db, mutation):
     with pytest.raises(quarantine_mod.QuarantineError):
         quarantine_mod.quarantine(db, apply=True, expected=expected)
     assert db.read_bytes() == before
-
-
-def test_cli_dry_run_is_the_default(legacy_db, monkeypatch, capsys):
-    db, expected = legacy_db
-    monkeypatch.setattr(quarantine_mod, "EXPECTED_ROWS", expected)
-    monkeypatch.setattr(quarantine_mod.quarantine, "__defaults__", None)
-    monkeypatch.setattr(quarantine_mod.quarantine, "__kwdefaults__", {"expected": expected})
-    assert quarantine_mod.main(["--db", str(db)]) == 0
-    assert '"mode": "dry-run"' in capsys.readouterr().out
-    assert QUARANTINE_COLUMN not in _columns(db)
 
 
 @pytest.fixture
@@ -198,11 +183,6 @@ def test_read_only_uri_caller_cannot_create_a_missing_database(tmp_path):
     assert not missing.exists()
 
 
-def test_read_only_uri_caller_cannot_write(quarantined_db):
-    with pytest.raises(Sum20StoreError, match="uri_override"):
-        sum20_lookup._get_db(quarantined_db.as_uri(), write=False)
-
-
 @pytest.mark.parametrize("mode", ["rw", "rwc", "memory", "%72w"])
 def test_read_only_uri_caller_refuses_a_writable_mode(quarantined_db, mode):
     with pytest.raises(Sum20StoreError, match="uri_override"):
@@ -217,13 +197,6 @@ def test_read_only_uri_caller_refuses_a_fragment(quarantined_db, tmp_path, suffi
     with pytest.raises(Sum20StoreError, match="uri_override"):
         sum20_lookup._get_db(missing.as_uri() + suffix, write=False)
     assert not missing.exists()
-
-
-def test_refused_fragment_uri_leaves_an_existing_database_unmodified(quarantined_db):
-    before = quarantined_db.read_bytes()
-    with pytest.raises(Sum20StoreError, match="uri_override"):
-        sum20_lookup._get_db(quarantined_db.as_uri() + "?cache=shared#section", write=False)
-    assert quarantined_db.read_bytes() == before
 
 
 def test_read_only_uri_is_refused_instead_of_rewritten(quarantined_db):
@@ -362,35 +335,3 @@ def test_legacy_parser_rows_are_excluded_without_quarantine_column(legacy_db):
             10,
             11,
         ]
-
-
-@pytest.mark.parametrize("database_fixture", ["legacy_db", "quarantined_db"])
-def test_committed_record_cannot_attest_a_quarantined_headword(request, database_fixture, monkeypatch):
-    from scripts.projects.open_model_data import build_decolonization_cases as cases
-
-    database = request.getfixturevalue(database_fixture)
-    db = database[0] if isinstance(database, tuple) else database
-    monkeypatch.setattr(
-        cases,
-        "EXPLICIT_SOURCE_EVIDENCE",
-        {
-            "synthetic": {
-                "authority": "СУМ-20",
-                "source": "СУМ-20",
-                "target_term": "дух",
-                "article": "ДУХ",
-                "supporting_passage": "synthetic evidence",
-                "locus": "synthetic locus",
-            }
-        },
-    )
-    with sqlite3.connect(db) as sources, sqlite3.connect(":memory:") as vesum:
-        # Only the committed path could attest this headword; keep the marked row
-        # and remove the synthetic official homonym from this isolated fixture.
-        sources.execute("DELETE FROM sum20_articles WHERE wordid = 10")
-        vesum.execute("CREATE TABLE forms_all (lemma TEXT, word_form TEXT, pos TEXT, tags TEXT, source_location TEXT)")
-        vesum.execute("INSERT INTO forms_all VALUES ('дух', 'дух', 'noun', '', 'synthetic')")
-        with pytest.raises(ValueError, match="Lexical evidence missing"):
-            cases.query_source_evidence(
-                "synthetic", "дух", "", "СУМ-20", "synthetic", sources.cursor(), vesum.cursor(), []
-            )

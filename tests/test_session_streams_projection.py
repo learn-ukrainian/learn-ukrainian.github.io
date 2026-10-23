@@ -15,7 +15,6 @@ from agents_extensions.shared.session_streams.dual_write import mirror_handoff_f
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.projection import (
     classify_file_projection,
-    detect_projection_drift,
     list_projection_receipts,
     project_inventory_streams,
 )
@@ -191,20 +190,6 @@ def test_project_db_mirror_path_ok_and_failed(tmp_path: Path) -> None:
     assert failed.streams[0].status == "failed"
     assert failed.streams[0].source == "db_mirror"
     assert failed.failed == 1
-
-
-def test_detect_projection_drift_hook_structure(tmp_path: Path) -> None:
-    repo = _fixture_repo(tmp_path)
-    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"))
-    # Without inventory, ensure_inventory=False leaves missing receipts → failed
-    bare = detect_projection_drift(store, repo, ensure_inventory=False, now=NOW)
-    assert bare.epic_count == 3
-    assert bare.failed >= 1 or bare.ok >= 0
-    seeded = detect_projection_drift(
-        store, repo, ensure_inventory=True, now=NOW + timedelta(seconds=1)
-    )
-    assert seeded.receipts_written >= 1
-    assert seeded.ok + seeded.drift + seeded.failed == seeded.epic_count
 
 
 def test_cli_project_and_check_drift(tmp_path: Path, capsys) -> None:

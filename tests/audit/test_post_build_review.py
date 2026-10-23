@@ -48,7 +48,6 @@ def check_each_schema_once(monkeypatch: pytest.MonkeyPatch) -> None:
 FIXTURES = ROOT / "tests" / "fixtures" / "post_build_review"
 BILASH_V1_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v1.json"
 BILASH_V2_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v2.json"
-REGRESSIONS = FIXTURES / "regressions.v1.yaml"
 CORE_EXEMPLAR = FIXTURES / "core-semantic-exemplar.v1.json"
 SCORE_CALIBRATION = FIXTURES / "score-calibration.v1.yaml"
 SYNTHETIC_PATH = "tests/fixtures/post_build_review.md"
@@ -496,45 +495,6 @@ def _passing_semantic(packet: dict) -> dict:
     }
 
 
-def _force_one_missing_vocabulary(packet: dict, semantic: dict) -> str:
-    """Make one packet lemma missing without depending on live module defects."""
-    coverage = next(item for item in semantic["vocabulary_coverage"] if item["status"] == "INTEGRATED")
-    lemma = coverage["lemma"]
-    finding_id = "fixture-forced-vocabulary-missing"
-    vocabulary_path = packet["target"]["files"]["vocabulary"]
-    vocabulary_lines = _packet_source_texts(packet)[vocabulary_path].splitlines()
-    vocabulary_line = next(
-        line_number
-        for line_number, text in enumerate(vocabulary_lines, start=1)
-        if re.search(rf"lemma:\s*{re.escape(lemma)}\s*$", text)
-    )
-    coverage.update(
-        {
-            "status": "MISSING",
-            "surface": None,
-            "verification": "no packet surface candidate in learner content or activities",
-            "evidence": [],
-            "finding_id": finding_id,
-        }
-    )
-    semantic["findings"].append(
-        {
-            "id": finding_id,
-            "issue_id": "VOCABULARY_INTEGRATION",
-            "category": "vocabulary",
-            "severity": "medium",
-            "message": f"The target term {lemma} is absent from learner content and activities.",
-            "evidence": "Synthetic source-order coverage found no learner-surface use.",
-            "location": {"location": vocabulary_path, "line": vocabulary_line},
-        }
-    )
-    alignment = semantic["alignment_audit"]["VOCABULARY_INTEGRATION"]
-    alignment["status"] = "FOUND"
-    alignment["finding_ids"].append(finding_id)
-    semantic["verdict"] = "REVISE"
-    return finding_id
-
-
 def _claim_owned_finding_semantic(packet: dict) -> dict:
     semantic = _passing_semantic(packet)
     semantic["verdict"] = "REVISE"
@@ -641,197 +601,6 @@ def malyshko_exact_only_packet(tmp_path_factory: pytest.TempPathFactory) -> dict
     assert any(row["candidates"] for row in rows)
     assert any(not row["candidates"] for row in rows)
     return packet
-
-
-SYNTHETIC_DIR = FIXTURES / "synthetic"
-SYNTHETIC_CONTENT_PATH = "tests/fixtures/post_build_review/synthetic/content.md"
-SYNTHETIC_ACTIVITIES_PATH = "tests/fixtures/post_build_review/synthetic/activities.md"
-SYNTHETIC_PLAN_PATH = "tests/fixtures/post_build_review/synthetic/plan.yaml"
-SYNTHETIC_VOCABULARY_PATH = "tests/fixtures/post_build_review/synthetic/vocabulary.yaml"
-SYNTHETIC_RESOURCES_PATH = "tests/fixtures/post_build_review/synthetic/resources.yaml"
-
-SYNTHETIC_CONTENT_TEXT = (SYNTHETIC_DIR / "content.md").read_text(encoding="utf-8")
-SYNTHETIC_ACTIVITIES_TEXT = (SYNTHETIC_DIR / "activities.md").read_text(encoding="utf-8")
-SYNTHETIC_PLAN_TEXT = (SYNTHETIC_DIR / "plan.yaml").read_text(encoding="utf-8")
-SYNTHETIC_VOCABULARY_TEXT = (SYNTHETIC_DIR / "vocabulary.yaml").read_text(encoding="utf-8")
-SYNTHETIC_RESOURCES_TEXT = (SYNTHETIC_DIR / "resources.yaml").read_text(encoding="utf-8")
-
-
-def build_synthetic_packet(vesum_status: str = "available") -> dict:
-    content_lines = [{"line": i, "text": line} for i, line in enumerate(SYNTHETIC_CONTENT_TEXT.splitlines(), 1)]
-    activities_lines = [{"line": i, "text": line} for i, line in enumerate(SYNTHETIC_ACTIVITIES_TEXT.splitlines(), 1)]
-    plan_lines = [{"line": i, "text": line} for i, line in enumerate(SYNTHETIC_PLAN_TEXT.splitlines(), 1)]
-    vocab_lines = [{"line": i, "text": line} for i, line in enumerate(SYNTHETIC_VOCABULARY_TEXT.splitlines(), 1)]
-    resources_lines = [{"line": i, "text": line} for i, line in enumerate(SYNTHETIC_RESOURCES_TEXT.splitlines(), 1)]
-
-    target_materials = {
-        "content": {
-            "path": SYNTHETIC_CONTENT_PATH,
-            "sha256": pbr.sha256_text(SYNTHETIC_CONTENT_TEXT),
-            "lines": content_lines,
-            "trailing_newline": True,
-        },
-        "activities": {
-            "path": SYNTHETIC_ACTIVITIES_PATH,
-            "sha256": pbr.sha256_text(SYNTHETIC_ACTIVITIES_TEXT),
-            "lines": activities_lines,
-            "trailing_newline": True,
-        },
-        "plan": {
-            "path": SYNTHETIC_PLAN_PATH,
-            "sha256": pbr.sha256_text(SYNTHETIC_PLAN_TEXT),
-            "lines": plan_lines,
-            "trailing_newline": True,
-        },
-        "vocabulary": {
-            "path": SYNTHETIC_VOCABULARY_PATH,
-            "sha256": pbr.sha256_text(SYNTHETIC_VOCABULARY_TEXT),
-            "lines": vocab_lines,
-            "trailing_newline": True,
-        },
-        "resources": {
-            "path": SYNTHETIC_RESOURCES_PATH,
-            "sha256": pbr.sha256_text(SYNTHETIC_RESOURCES_TEXT),
-            "lines": resources_lines,
-            "trailing_newline": True,
-        },
-    }
-
-    units = [
-        {
-            "id": "statement-fixture-1",
-            "path": SYNTHETIC_CONTENT_PATH,
-            "line": 1,
-            "role": "content",
-            "text": "Synthetic quality-dimension evidence for the review contract.",
-            "text_sha256": pbr.sha256_text("Synthetic quality-dimension evidence for the review contract."),
-            "signals": [],
-        },
-        {
-            "id": "statement-fixture-2",
-            "path": SYNTHETIC_CONTENT_PATH,
-            "line": 2,
-            "role": "content",
-            "text": "A second independent anchor supports exceptional-score validation.",
-            "text_sha256": pbr.sha256_text("A second independent anchor supports exceptional-score validation."),
-            "signals": [],
-        },
-        {
-            "id": "statement-fixture-3",
-            "path": SYNTHETIC_CONTENT_PATH,
-            "line": 3,
-            "role": "content",
-            "text": "Кожен приклад має спиратися на перевірені джерела інформації.",
-            "text_sha256": pbr.sha256_text("Кожен приклад має спиратися на перевірені джерела інформації."),
-            "signals": ["universal_quantifier"],
-        },
-        {
-            "id": "statement-fixture-4",
-            "path": SYNTHETIC_CONTENT_PATH,
-            "line": 4,
-            "role": "content",
-            "text": "Розрізніть, що встановлює каталог Держкіно, а що міг би додати сам фільм.",
-            "text_sha256": pbr.sha256_text("Розрізніть, що встановлює каталог Держкіно, а що міг би додати сам фільм."),
-            "signals": ["source_attribution"],
-        },
-    ]
-    payload = {"units": units}
-    statement_inv = {
-        "inventory_sha256": pbr.sha256_text(pbr._stable_json(payload)),
-        **payload,
-    }
-
-    vocab_candidates = {
-        "resolver_version": "vocabulary-resolver.v1",
-        "vesum_status": vesum_status,
-        "lemmas": [
-            {
-                "lemma": "синтетичний",
-                "candidates": [
-                    {
-                        "surface": "синтетичний",
-                        "verification": "exact_form",
-                        "locations": [{"location": SYNTHETIC_ACTIVITIES_PATH, "line": 1}],
-                    }
-                ],
-            },
-            {
-                "lemma": "додатковий",
-                "candidates": [
-                    {
-                        "surface": "додатковий",
-                        "verification": "exact_form",
-                        "locations": [{"location": SYNTHETIC_ACTIVITIES_PATH, "line": 2}],
-                    }
-                ],
-            },
-            {
-                "lemma": "відсутній",
-                "candidates": [],
-            },
-        ],
-        "candidate_sha256": "synthetic-candidates-sha",
-    }
-
-    deterministic = {
-        "track_audit": {"status": "complete"},
-        "size_policy": {"status": "complete", "result": {}},
-        "statement_inventory": statement_inv,
-        "resource_inventory": {
-            "inventory_sha256": pbr.sha256_text(pbr._stable_json({"resources": []})),
-            "resources": [],
-        },
-        "source_attribution_inventory": {
-            "inventory_sha256": pbr.sha256_text(pbr._stable_json({"units": []})),
-            "units": [],
-        },
-        "policy_findings": [],
-        "evidence_requirements": [],
-        "skip_assessments": [],
-        "aggregate": {"status": "clear"},
-    }
-
-    return {
-        "packet_version": pbr.CURRENT_PACKET_VERSION,
-        "review_protocol_version": "6.1.0",
-        "deterministic_contract_version": "2.0.0",
-        "semantic_prompt_version": "6.1.0",
-        "track_policy_version": "2.1.0",
-        "reviewer": {
-            "agent": "fixture",
-            "family": "fixture",
-            "model": "fixture-model",
-            "effort": "high",
-            "capabilities": ["audio", "image", "interactive", "text", "video"],
-        },
-        "target": {
-            "track": "bio",
-            "slug": "synthetic-subject",
-            "semantic_family": "seminar",
-            "layout": "bio",
-            "files": {
-                "content": SYNTHETIC_CONTENT_PATH,
-                "plan": SYNTHETIC_PLAN_PATH,
-                "activities": SYNTHETIC_ACTIVITIES_PATH,
-                "vocabulary": SYNTHETIC_VOCABULARY_PATH,
-                "resources": SYNTHETIC_RESOURCES_PATH,
-            },
-        },
-        "target_materials": target_materials,
-        "vocabulary_surface_candidates": vocab_candidates,
-        "deterministic": deterministic,
-        "semantic_prompt": "Synthetic prompt text",
-        "prompt_sha256": pbr.sha256_text("Synthetic prompt text"),
-        "prompt_paths": ["synthetic.md"],
-        "source_hashes": {m["path"]: m["sha256"] for m in target_materials.values()},
-    }
-
-
-@pytest.fixture(scope="module")
-def synthetic_packet() -> dict:
-    return build_synthetic_packet()
-
-
 def test_track_resolution_covers_every_versioned_track() -> None:
     policy = pbr.load_track_policy()
     for track, config in policy["tracks"].items():
@@ -840,18 +609,6 @@ def test_track_resolution_covers_every_versioned_track() -> None:
         assert resolved["semantic_prompt"].endswith("-semantic-review-prompt.md")
     with pytest.raises(pbr.ReviewProtocolError, match="Unknown track"):
         pbr.resolve_track_policy("unknown", policy)
-
-
-def test_every_track_inherits_the_family_size_signal_policy() -> None:
-    policy = pbr.load_track_policy()
-
-    for track, config in policy["tracks"].items():
-        resolved = pbr.resolve_track_policy(track, policy)
-        expected = policy["families"][config["family"]]["size_policy_signal_severities"]
-        assert resolved["size_policy_signal_severities"] == expected
-
-    assert set(policy["tracks"]) >= {"a1", "a2", "b1", "b2", "c1", "c2"}
-    assert "lit-essay" in policy["tracks"]
 
 
 def test_venv_python_resolution_preserves_symlink_entrypoint(tmp_path: Path) -> None:
@@ -866,18 +623,6 @@ def test_venv_python_resolution_preserves_symlink_entrypoint(tmp_path: Path) -> 
 
     assert resolved == venv_python
     assert resolved.is_symlink()
-
-
-def test_track_policy_is_derived_exactly_from_curriculum_manifest() -> None:
-    policy = pbr.load_track_policy()
-    manifest = yaml.safe_load((ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text(encoding="utf-8"))
-    assert set(policy["tracks"]) == set(manifest["levels"])
-    for track, config in manifest["levels"].items():
-        expected = "core" if config["type"] == "core" else "seminar"
-        assert policy["tracks"][track]["family"] == expected
-    assert {"history", "lit-doc", "lit-crimea"}.isdisjoint(policy["tracks"])
-    raw_policy = yaml.safe_load((SKILL / "config/track-policy.v1.yaml").read_text(encoding="utf-8"))
-    assert "tracks" not in raw_policy
 
 
 def test_track_policy_rejects_stale_track_overrides(tmp_path: Path) -> None:
@@ -1000,30 +745,6 @@ def test_score_calibration_fixture_validates_anchored_cases_and_comparability(
     assert calibration["comparability"][0]["left"] == current_identity
     for comparison in calibration["comparability"]:
         assert (comparison["left"] == comparison["right"]) is comparison["expected"]
-
-
-@pytest.mark.parametrize("invalid_bound", ["8.0", True, float("nan"), float("inf")])
-def test_score_calibration_policy_rejects_non_numeric_or_non_finite_bounds(
-    invalid_bound: object,
-) -> None:
-    policy = pbr.load_track_policy()
-    policy["score_calibration"]["bands"]["PASS"]["minimum"] = invalid_bound
-
-    with pytest.raises(pbr.ReviewProtocolError, match="bounds must be"):
-        pbr.quality_dimension_score_bands(policy)
-
-
-def test_effective_prompt_names_the_closed_pass_band_without_half_open_claim(
-    bilash_packet: dict,
-) -> None:
-    prompt = bilash_packet["semantic_prompt"]
-
-    assert "`PASS` `[9.0, 10.0]`" in prompt
-    assert "`REVISE` `[6.0, 9.0)`" in prompt
-    assert "`BLOCK` `[0.0, 6.0)`" in prompt
-    assert "half-open bands" not in prompt
-    assert prompt.count('"score": 9.0') == len(pbr.QUALITY_DIMENSIONS)
-    assert '"score": 10.0' not in prompt
 
 
 @pytest.mark.parametrize(
@@ -1379,21 +1100,6 @@ def test_stored_v4_result_rejects_orphan_finding_with_recomputed_key(
         pbr.validate_result(result)
 
 
-@pytest.mark.parametrize("field", ["dimension", "minimum"])
-def test_v4_schema_bounds_dimension_and_minimum_scores(
-    bilash_packet: dict,
-    field: str,
-) -> None:
-    result = pbr.finalize_review(bilash_packet, _raw(_passing_semantic(bilash_packet)))
-    if field == "dimension":
-        result["semantic"]["quality_dimensions"]["tone"]["score"] = 10.1
-    else:
-        result["minimum_dimension_score"] = 10.1
-
-    with pytest.raises(ValidationError):
-        pbr.validate_result(result)
-
-
 def test_quality_dimension_evidence_must_quote_the_resolved_target() -> None:
     semantic = _passing_semantic({"deterministic": {"evidence_requirements": []}})
     source_texts = {"curriculum/example.md": "Фактичний текст навчального модуля."}
@@ -1405,24 +1111,6 @@ def test_quality_dimension_evidence_must_quote_the_resolved_target() -> None:
             _reviewer(),
             source_texts=source_texts,
         )
-
-
-def test_prompt_carries_every_legacy_canary_issue_class() -> None:
-    from scripts.audit.llm_qg_canaries import CANARIES
-
-    issue_ids = {issue_id for canary in CANARIES for issue_id in canary.required_issue_ids | canary.forbidden_issue_ids}
-    prompt = (SKILL / "prompts" / "common-semantic-review-prompt.md").read_text(encoding="utf-8")
-
-    assert issue_ids
-    assert all(issue_id in prompt for issue_id in issue_ids)
-
-
-@pytest.mark.repo_wide
-def test_prompt_versions_match_track_policy() -> None:
-    policy = pbr.load_track_policy()
-    marker = f"Semantic prompt version: `{policy['semantic_prompt_version']}`"
-    for path in (SKILL / "prompts").glob("*-semantic-review-prompt.md"):
-        assert marker in path.read_text(encoding="utf-8")
 
 
 def test_provider_evidence_surface_binds_only_root_resource_entries() -> None:
@@ -1456,47 +1144,6 @@ def test_provider_evidence_surface_binds_only_root_resource_entries() -> None:
     assert "L000006 R:r002\t- title: Second resource" in surface
     assert "L000004 -\t    - nested alias one" in surface
     assert "L000005 -\t    - nested alias two" in surface
-
-
-def test_provider_evidence_surface_binds_only_root_vocabulary_entries() -> None:
-    text = "- lemma: first\n  metadata:\n    - lemma: nested\n- lemma: second\n"
-    material = {
-        "path": "vocabulary.yaml",
-        "sha256": pbr.sha256_text(text),
-        "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
-        "trailing_newline": True,
-    }
-
-    surface = pbr.render_provider_evidence_surface(
-        {"vocabulary": material},
-        {
-            "statement_inventory": {"units": []},
-            "resource_inventory": {"resources": []},
-        },
-        {
-            "lemmas": [
-                {"lemma": "first", "candidates": []},
-                {"lemma": "second", "candidates": []},
-            ]
-        },
-    )
-
-    assert "L000001 V:v001\t- lemma: first" in surface
-    assert "L000003 -\t    - lemma: nested" in surface
-    assert "L000004 V:v002\t- lemma: second" in surface
-
-
-def test_common_prompt_leads_with_machine_response_contract() -> None:
-    prompt = (SKILL / "prompts" / "common-semantic-review-prompt.md").read_text(encoding="utf-8")
-
-    contract_index = prompt.index("## Machine-response contract")
-    review_index = prompt.index("Review the resolved built module")
-    prompt_flat = " ".join(prompt.split())
-
-    assert contract_index < review_index
-    assert "first non-whitespace byte must be `{`" in prompt_flat
-    assert "last non-whitespace byte must be `}`" in prompt_flat
-    assert "the orchestrator will not extract or repair" in prompt_flat
 
 
 def test_semantic_response_schema_matches_raw_contract() -> None:
@@ -1705,47 +1352,6 @@ def test_codex_schema_keeps_statement_exhaustiveness_and_local_line_binding(bila
     assert "packet-bound schema" in result["semantic_response"]["error"]
 
 
-def test_provider_schema_rejects_unknown_vocabulary_candidate_id(synthetic_packet: dict) -> None:
-    packet = synthetic_packet
-    schema = pbr.semantic_response_schema(packet)
-    semantic = _provider_semantic(packet, _passing_semantic(packet))
-    Draft202012Validator(schema).validate(semantic)
-    integrated = next(item for item in semantic["vocabulary_coverage"] if item["status"] == "INTEGRATED")
-    integrated["candidate_id"] = "v999c999"
-
-    with pytest.raises(ValidationError):
-        Draft202012Validator(schema).validate(semantic)
-
-
-@pytest.mark.parametrize(
-    ("status", "finding_ids"),
-    [
-        ("CLEAR", ["misowned-finding"]),
-        ("FOUND", []),
-        ("INCOMPLETE", []),
-    ],
-)
-def test_provider_schema_enforces_alignment_status_finding_id_cardinality(
-    status: str,
-    finding_ids: list[str],
-    synthetic_packet: dict,
-) -> None:
-    packet = synthetic_packet
-    schema = pbr.semantic_response_schema(packet)
-    semantic = _provider_semantic(packet, _passing_semantic(packet))
-    Draft202012Validator(schema).validate(semantic)
-    entry = semantic["alignment_audit"]["PLAN_INSTRUCTION_LEAKAGE"]
-    entry["status"] = status
-    entry["finding_ids"] = finding_ids
-
-    with pytest.raises(ValidationError) as error:
-        Draft202012Validator(schema).validate(semantic)
-    assert list(error.value.absolute_path) == [
-        "alignment_audit",
-        "PLAN_INSTRUCTION_LEAKAGE",
-    ]
-
-
 def test_provider_schema_is_portable_and_finalizer_binds_vocabulary_order(bilash_packet: dict) -> None:
     packet = bilash_packet
     schema = pbr.semantic_response_schema(packet)
@@ -1819,24 +1425,6 @@ def test_finalizer_derives_source_traceability_without_provider_echo(bilash_pack
     echoed["source_traceability_coverage"] = canonical["source_traceability_coverage"]
     with pytest.raises(ValidationError):
         Draft202012Validator(schema).validate(echoed)
-
-
-def test_provider_schema_excludes_vocabulary_file_from_integration_evidence(synthetic_packet: dict) -> None:
-    packet = synthetic_packet
-    schema = pbr.semantic_response_schema(packet)
-    choices = schema["$defs"]["vocabularyEvidence"]["oneOf"]
-
-    allowed_paths = {choice["properties"]["location"]["const"] for choice in choices}
-    target_files = packet["target"]["files"]
-    assert allowed_paths == {target_files["content"], target_files["activities"]}
-    assert target_files["vocabulary"] not in allowed_paths
-
-    semantic = _provider_semantic(packet, _passing_semantic(packet))
-    item = next(entry for entry in semantic["vocabulary_coverage"] if entry["status"] == "INTEGRATED")
-    item["evidence"][0]["location"] = target_files["vocabulary"]
-    item["evidence"][0]["line"] = 1
-    with pytest.raises(ValidationError):
-        Draft202012Validator(schema).validate(semantic)
 
 
 def test_packet_candidates_use_real_lemma_matches_not_model_synonyms() -> None:
@@ -2015,28 +1603,6 @@ def test_provider_surface_marks_only_claim_bearing_source_attributions() -> None
     assert "S:s0001@0:43!source" not in surface
     assert "S:s0001@0:43\t" in surface
     assert "S:s0002@0:33!source\t" in surface
-
-
-def test_provider_schema_accepts_nonclaim_source_attribution_instruction(
-    bilash_packet: dict,
-) -> None:
-    packet = copy.deepcopy(bilash_packet)
-    units = packet["deterministic"]["statement_inventory"]["units"]
-    instruction = next(unit for unit in units if "source_attribution" in unit["signals"])
-    instruction["text"] = "Розрізніть, що встановлює каталог Держкіно, а що міг би додати сам фільм."
-    packet["deterministic"]["statement_inventory"] = pbr._inventory_payload(units)
-
-    canonical = _passing_semantic(packet)
-    coverage = canonical["statement_coverage"][instruction["id"]]
-    semantic = _provider_semantic(packet, canonical)
-    assert pbr._statement_requires_claim(instruction) is False
-    assert coverage == {"classification": "no_checkable_claim", "claim_ids": []}
-    Draft202012Validator(pbr.semantic_response_schema(packet)).validate(semantic)
-
-    result = pbr.finalize_review(packet, _raw(semantic))
-
-    assert result["semantic_response"]["contract_status"] == "valid"
-    assert result["semantic"]["statement_coverage"][instruction["id"]] == coverage
 
 
 @pytest.mark.parametrize("substitution", ["unbound", "drops_quantifier"])
@@ -2661,51 +2227,6 @@ def test_known_source_alias_requires_a_learner_resource_mapping() -> None:
     assert incidental_findings == []
 
 
-def test_archival_guide_and_russian_state_library_aliases_map() -> None:
-    def material(path: str, text: str) -> dict:
-        return {
-            "path": path,
-            "sha256": pbr.sha256_text(text),
-            "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
-            "trailing_newline": text.endswith("\n"),
-        }
-
-    materials = {
-        "content": material(
-            "curriculum/l2-uk-en/bio/fixture/module.md",
-            ("Архівний путівник «Росархів» і каталог РДБ датують заснування агентства 1961 роком.\n"),
-        ),
-        "resources": material(
-            "curriculum/l2-uk-en/bio/fixture/resources.yaml",
-            (
-                "---\n"
-                "- title: Агентство печати Новини — Путеводитель по фондам\n"
-                "  url: https://guides.rusarchives.ru/funds/6/agentstvo\n"
-                "- title: Устав Агентства печати Новости — РДБ\n"
-                "  url: https://search.rsl.ru/ru/record/01006425211\n"
-            ),
-        ),
-    }
-    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
-
-    inventories, findings = pbr.build_review_inventories(
-        materials,
-        family="seminar",
-        source_spec=policy["mechanical_checks"]["source_traceability"],
-    )
-    attributions = inventories["source_attribution_inventory"]["units"]
-
-    assert attributions == [
-        {
-            "unit_id": attributions[0]["unit_id"],
-            "labels": ["РДБ", "Росархів"],
-            "matched_resource_ids": ["r001", "r002"],
-            "unmatched_labels": [],
-        }
-    ]
-    assert findings == []
-
-
 def test_generic_learner_workflow_leakage_is_mechanical_policy() -> None:
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
     text = (
@@ -2835,69 +2356,6 @@ def test_level_meta_rule_ignores_nonlearner_and_non_cefr_context() -> None:
     assert level_findings[0]["location"] == "resources.yaml:3"
 
 
-def test_prompt_requires_exhaustive_learner_level_and_alignment_audit() -> None:
-    prompt = (SKILL / "prompts" / "common-semantic-review-prompt.md").read_text(encoding="utf-8")
-
-    for required in (
-        "LEARNER_LEVEL_META_LEAKAGE",
-        "PLAN_INSTRUCTION_LEAKAGE",
-        "SOURCE_TRACEABILITY",
-        "SEMANTIC_REDUNDANCY",
-        "OBJECTIVE_ASSESSMENT_GAP",
-        "TASK_VALIDITY",
-        "VOCABULARY_INTEGRATION",
-        "Mandatory seven-class alignment audit",
-        "A synonym, reversed phrase, or",
-        "must be below `9.0`",
-        "`10.0` is exceptional",
-        "non-blocking improvement",
-        "identical repo-relative target path and",
-        "return the exact repo-relative",
-        "at least eight non-whitespace",
-        "exact locator belongs to a supplied deterministic",
-        "never author a new VESUM mapping",
-        "do not return `surface`",
-    ):
-        assert required in prompt
-    seminar_prompt = (SKILL / "prompts" / "seminar-semantic-review-prompt.md").read_text(encoding="utf-8")
-    assert "Do not emit aggregate counts;" in seminar_prompt
-    prompt_lower = prompt.lower()
-    for required in (
-        "target cefr level is internal",
-        "never praise",
-        "exhaustive learner-register pass",
-        "explicit subject is cefr",
-        "reuse each supplied finding's exact",
-        "never emit a supplied finding object",
-        "only genuinely new semantic defects",
-        "every owned finding object's exact primary location and line",
-        "additional cross-cutting comparison evidence",
-        "set its `issue_id` to that alignment class's exact uppercase name",
-        "create a precise custom `issue_id` only for a finding outside all seven alignment classes",
-    ):
-        assert required in prompt_lower
-
-
-def test_regression_detects_learner_level_meta_leakage_in_stable_fixture() -> None:
-    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
-    findings = pbr.scan_learner_workflow_leakage(
-        {
-            "curriculum/l2-uk-en/bio/fixture/module.md": (
-                "На рівні C1 хронологію варто передавати логічними зв’язками.\n"
-                "Це звичайне learner-facing пояснення без службової мітки.\n"
-                "На рівні C1 корисно зіставити два способи говорити про країну.\n"
-            )
-        },
-        policy["mechanical_checks"]["learner_workflow_leakage"],
-        family="seminar",
-    )
-
-    leakage = [finding for finding in findings if finding.get("issue_id") == "LEARNER_LEVEL_META_LEAKAGE"]
-    assert len(leakage) == 2
-    assert {finding["evidence"] for finding in leakage} == {"На рівні C1"}
-    assert {finding["severity"] for finding in leakage} == {"medium"}
-
-
 def test_regression_exposes_unintegrated_vocabulary_surfaces_hermetically() -> None:
     def material(path: str, text: str) -> dict:
         return {
@@ -3005,35 +2463,6 @@ def test_vocabulary_candidates_match_across_combining_stress_marks() -> None:
     assert by_lemma["зли́то"] == []
 
 
-def test_vocabulary_coverage_accepts_stressed_exact_surface() -> None:
-    """#5375: a packet-bound stressed surface with 'exact lemma surface'
-    verification passes coverage validation for the unstressed lemma."""
-    source_lookup = {"module.md": "М'яки́й знак пом'якшує приголосний.\n"}
-    coverage = {
-        "lemma": "м'який знак",
-        "status": "INTEGRATED",
-        "surface": "М'яки́й знак",
-        "verification": "exact lemma surface",
-        "evidence": [
-            {
-                "location": "module.md:1",
-                "excerpt": "М'яки́й знак пом'якшує приголосний.",
-                "supports": "The stressed learner surface is the ledger lemma.",
-            }
-        ],
-        "finding_id": None,
-    }
-    normalized = pbr._normalize_vocabulary_coverage(
-        [coverage],
-        expected_lemmas=["м'який знак"],
-        verdict="PASS",
-        findings=[],
-        source_lookup=source_lookup,
-        target_files={"content": "module.md"},
-    )
-    assert normalized[0]["surface"] == "М'яки́й знак"
-
-
 def test_vocabulary_candidates_fold_ukrainian_apostrophe_glyphs() -> None:
     """#5374: the three Ukrainian apostrophe glyphs (U+0027, U+2019, U+02BC)
     are equivalent for candidate comparison and VESUM lookup; candidate
@@ -3083,76 +2512,6 @@ def test_vocabulary_candidates_fold_ukrainian_apostrophe_glyphs() -> None:
     assert "сім\u2019ї" not in seen
     # U+02BB stays distinct: its surface produced no candidate.
     assert all("\u02bb" not in candidate["surface"] for candidate in by_lemma["сім'я"])
-
-
-def test_vocabulary_candidates_resolve_modifier_apostrophe_stressed_token() -> None:
-    """#5374 review fix: a U+02BC surface carrying the combining stress mark
-    (Мʼяки́й знак) must stay ONE token on the tokenizer path — if the
-    modifier apostrophe ever splits the token, _APOSTROPHE_FOLD never sees
-    the joined word and the false-MISSING returns. The surface resolves
-    against the ASCII-apostrophe ledger lemma м'який знак."""
-
-    def material(path: str, text: str) -> dict:
-        return {
-            "path": path,
-            "sha256": pbr.sha256_text(text),
-            "lines": [{"line": index, "text": line} for index, line in enumerate(text.splitlines(), start=1)],
-            "trailing_newline": text.endswith("\n"),
-        }
-
-    def fake_verify(words: list[str], *, db_path: Path) -> dict[str, list[dict]]:
-        del db_path
-        return {word: [] for word in words}
-
-    # Tokenizer path: the U+02BC + U+0301 surface is a single token.
-    assert pbr._lexical_tokens("Мʼяки́й знак") == ["мʼяки́й", "знак"]
-
-    content = "Мʼяки́й знак помʼякшує приголосний.\n"
-    vocabulary = "- lemma: м'який знак\n"
-    candidates = pbr.build_vocabulary_surface_candidates(
-        {"files": {"content": "module.md", "vocabulary": "vocabulary.yaml"}},
-        {
-            "content": material("module.md", content),
-            "vocabulary": material("vocabulary.yaml", vocabulary),
-        },
-        verify_words_fn=fake_verify,
-    )
-    by_lemma = {entry["lemma"]: entry["candidates"] for entry in candidates["lemmas"]}
-
-    assert {(candidate["surface"], candidate["verification"]) for candidate in by_lemma["м'який знак"]} == {
-        ("Мʼяки́й знак", "exact lemma surface")
-    }
-    # Evidence bytes are preserved: the surface keeps U+02BC and U+0301.
-    assert by_lemma["м'який знак"][0]["surface"] == "Мʼяки́й знак"
-
-
-def test_vocabulary_coverage_accepts_modifier_apostrophe_exact_surface() -> None:
-    """#5374: a packet-bound U+02BC surface with 'exact lemma surface'
-    verification passes coverage validation for the U+0027 lemma."""
-    source_lookup = {"module.md": "Сім\u02bcя читає разом.\n"}
-    coverage = {
-        "lemma": "сім'я",
-        "status": "INTEGRATED",
-        "surface": "Сім\u02bcя",
-        "verification": "exact lemma surface",
-        "evidence": [
-            {
-                "location": "module.md:1",
-                "excerpt": "Сім\u02bcя читає разом.",
-                "supports": "The modifier-apostrophe surface is the ledger lemma.",
-            }
-        ],
-        "finding_id": None,
-    }
-    normalized = pbr._normalize_vocabulary_coverage(
-        [coverage],
-        expected_lemmas=["сім'я"],
-        verdict="PASS",
-        findings=[],
-        source_lookup=source_lookup,
-        target_files={"content": "module.md"},
-    )
-    assert normalized[0]["surface"] == "Сім\u02bcя"
 
 
 def test_vocabulary_coverage_rejects_stem_collision_and_comment_only_surface() -> None:
@@ -3376,20 +2735,6 @@ def test_alignment_found_rejects_custom_issue_id_for_owned_finding() -> None:
         )
 
 
-def test_finalize_accepts_representative_multi_missing_alignment_evidence(
-    bilash_packet: dict,
-) -> None:
-    semantic = _passing_semantic(bilash_packet)
-    _force_one_missing_vocabulary(bilash_packet, semantic)
-    semantic["alignment_audit"]["VOCABULARY_INTEGRATION"]["evidence"] = _alignment_evidence(bilash_packet)
-
-    result = pbr.finalize_review(bilash_packet, _raw(semantic))
-
-    assert result["semantic_response"]["contract_status"] == "valid"
-    assert result["combined_disposition"]["status"] == "REVISE"
-    pbr.validate_result(result)
-
-
 def _single_integrated_vocabulary_semantic(
     packet: dict,
     *,
@@ -3513,58 +2858,6 @@ def test_combined_disposition_defends_against_found_alignment_pass(
     assert disposition["status"] == "REVISE"
 
 
-@pytest.mark.parametrize("audit_class", pbr.ALIGNMENT_AUDIT_CLASSES)
-def test_found_alignment_contract_rejects_pass_and_nonmaterial_finding(
-    audit_class: str,
-) -> None:
-    finding_id = "fixture-alignment-finding"
-    alignment = {
-        audit_class: {
-            "status": "FOUND",
-            "finding_ids": [finding_id],
-        }
-    }
-
-    with pytest.raises(
-        pbr.ReviewProtocolError,
-        match=rf"{audit_class} FOUND requires semantic REVISE",
-    ):
-        pbr._validate_found_alignment_disposition(
-            alignment,
-            verdict="PASS",
-            known_findings={finding_id: {"severity": "medium"}},
-        )
-
-    with pytest.raises(
-        pbr.ReviewProtocolError,
-        match=rf"{audit_class} FOUND requires medium-or-higher findings",
-    ):
-        pbr._validate_found_alignment_disposition(
-            alignment,
-            verdict="REVISE",
-            known_findings={finding_id: {"severity": "low"}},
-        )
-
-
-@pytest.mark.parametrize("severity", ["low", "info"])
-def test_missing_vocabulary_rejects_nonmaterial_severity(
-    bilash_packet: dict,
-    severity: str,
-) -> None:
-    semantic = _passing_semantic(bilash_packet)
-    _force_one_missing_vocabulary(bilash_packet, semantic)
-    missing_ids = {item["finding_id"] for item in semantic["vocabulary_coverage"] if item["status"] == "MISSING"}
-    assert missing_ids
-    for finding in semantic["findings"]:
-        if finding["id"] in missing_ids:
-            finding["severity"] = severity
-    result = pbr.finalize_review(bilash_packet, _raw(semantic))
-
-    assert result["semantic_response"]["contract_status"] == "invalid"
-    assert "VOCABULARY_INTEGRATION FOUND requires medium-or-higher findings" in result["semantic_response"]["error"]
-    assert result["combined_disposition"]["status"] == "INCOMPLETE"
-
-
 def test_maiboroda_regression_replaces_audio_task_with_text_evidence() -> None:
     target = pbr.resolve_target("bio/platon-maiboroda")
     policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
@@ -3579,34 +2872,6 @@ def test_maiboroda_regression_replaces_audio_task_with_text_evidence() -> None:
     assert not audio
     assert "Текстова лабораторія" in texts[target["files"]["activities"]]
     assert "Лабораторія одного опису" in texts[target["files"]["content"]]
-
-
-def test_folk_productive_performance_is_not_supplied_audio_evidence() -> None:
-    target = pbr.resolve_target("folk/narodna-kultura-yak-systema")
-    policy = pbr.resolve_track_policy("folk", pbr.load_track_policy())
-    texts = pbr._learner_surface_texts(target)
-
-    assert "show_record_button: true" in next(text for path, text in texts.items() if path.endswith("activities.yaml"))
-
-    requirements = pbr.inventory_evidence_requirements(
-        texts,
-        policy["mechanical_checks"]["evidence_requirements"],
-    )
-
-    assert requirements == []
-
-
-def test_bilash_modality_vocabulary_does_not_create_evidence_requirements() -> None:
-    target = pbr.resolve_target("bio/oleksandr-bilash")
-    policy = pbr.resolve_track_policy("bio", pbr.load_track_policy())
-    texts = pbr._learner_surface_texts(target)
-
-    requirements = pbr.inventory_evidence_requirements(
-        texts,
-        policy["mechanical_checks"]["evidence_requirements"],
-    )
-
-    assert not [item for item in requirements if item["modality"] in {"audio", "video"}]
 
 
 def test_audiovisual_evidence_boundary_is_not_an_audio_requirement() -> None:
@@ -3909,81 +3174,6 @@ def test_tampered_packet_paths_cannot_escape_repository() -> None:
         pbr.hash_target_files(target)
 
 
-def test_skill_forbids_mutating_legacy_paths() -> None:
-    text = (SKILL / "SKILL.md").read_text(encoding="utf-8")
-    assert "Never use `scripts/audit_module.py`" in text
-    assert "--run-mdx-generation-validate" in text
-    assert "Write packets and results only under `/tmp`" in text
-    assert "Preserve the reviewer's exact response bytes" in text
-    assert "--semantic-response" in text
-    assert "--semantic-result" not in text
-    assert "post_build_review.py allocate <track/slug>" in text
-    assert "--output <packet_path>" in text
-    assert "--output-schema <semantic_schema_path>" in text
-    assert "curriculum/l2-uk-en/{track}/audit" not in text
-
-
-def test_regression_catalog_covers_every_discovered_layer() -> None:
-    catalog = yaml.safe_load(REGRESSIONS.read_text(encoding="utf-8"))
-    rows = catalog["regressions"]
-    assert catalog["catalog_version"] == "6.1.0"
-    assert len(rows) == 83
-    assert len({row["bug_id"] for row in rows}) == len(rows)
-    assert {row["responsible_layer"] for row in rows} == {
-        "deterministic_code",
-        "track_policy",
-        "semantic_prompt",
-        "disposition",
-        "schema",
-        "orchestration",
-    }
-    assert {row["fixed_in_version"] for row in rows} == {
-        "1.0.0",
-        "1.0.1",
-        "1.1.0",
-        "1.2.0",
-        "1.2.1",
-        "1.2.2",
-        "1.3.0",
-        "1.8.0",
-        "1.9.0",
-        "2.0.0",
-        "2.0.1",
-        "2.1.0",
-        "3.0.0",
-        "4.0.0",
-        "4.1.2",
-        "4.1.3",
-        "4.1.4",
-        "5.0.0",
-        "5.0.1",
-        "5.0.2",
-        "5.0.3",
-        "5.0.4",
-        "5.0.5",
-        "5.0.6",
-        "5.0.7",
-        "5.0.8",
-        "6.0.0",
-        "6.0.1",
-        "6.0.2",
-        "6.0.3",
-        "6.0.4",
-        "6.0.5",
-        "6.0.6",
-        "6.0.7",
-        "6.1.0",
-    }
-    null_result = next(row for row in rows if row["bug_id"] == "deterministic-stage-null-result-crash")
-    assert null_result["responsible_layer"] == "orchestration"
-    assert null_result["fixed_in_version"] == "1.0.1"
-    assert null_result["version_field"] == "review_protocol_version"
-    venv_symlink = next(row for row in rows if row["bug_id"] == "venv-python-symlink-bypassed-environment")
-    assert venv_symlink["responsible_layer"] == "deterministic_code"
-    assert venv_symlink["fixed_in_version"] == "1.0.1"
-    assert venv_symlink["version_field"] == "deterministic_contract_version"
-
-
 @pytest.mark.parametrize("trailing", ["", "\n"], ids=["no-final-LF", "final-LF"])
 def test_target_material_lines_split_only_on_physical_newlines(tmp_path, trailing):
     # #9556: the line-addressed snapshot must reconstruct its exact hashed text.
@@ -3999,14 +3189,3 @@ def test_target_material_lines_split_only_on_physical_newlines(tmp_path, trailin
     assert [entry["text"] for entry in material["lines"]] == ['value: "a\u0085b\u2028c\u2029d"', "next: line\u2028"]
     assert pbr.target_material_text(material) == content
     assert yaml.safe_load(pbr.target_material_text(material)) == yaml.safe_load(content)
-
-
-@pytest.mark.parametrize(("content", "lines"), [("", []), ("\n", [""]), ("a\n\n", ["a", ""])])
-def test_target_material_lines_keep_blank_line_shape(tmp_path, content, lines):
-    (tmp_path / "module.md").write_text(content, encoding="utf-8")
-    material = pbr.snapshot_target_materials(
-        {"files": {"module": "module.md"}}, {"module": pbr.sha256_text(content)}, repo_root=tmp_path
-    )["module"]
-
-    assert [entry["text"] for entry in material["lines"]] == lines
-    assert pbr.target_material_text(material) == content

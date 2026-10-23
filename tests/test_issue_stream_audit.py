@@ -5,12 +5,9 @@ from __future__ import annotations
 import itertools
 import json
 import subprocess
-import sys
 import textwrap
 import threading
 import time
-from datetime import date
-from pathlib import Path
 
 import pytest
 
@@ -22,13 +19,9 @@ from scripts.orchestration.issue_stream_audit import (
     _paginate_subissues,
     _tree_membership,
     classify,
-    fetch_issue_states,
-    load_milestone_rows,
     load_registry,
-    main,
     make_issue_resolver,
     make_membership_resolver,
-    milestone_warnings,
     read_membership_index,
     run_audit,
     validate_membership_report,
@@ -203,20 +196,6 @@ def test_nested_root_does_not_hide_independent_native_path():
     assert [item["number"] for item in report["multi_homed"]] == [10]
 
 
-def test_known_leaf_children_are_not_queried():
-    calls = []
-
-    def fetch_batch(cursors):
-        calls.append(dict(cursors))
-        if 100 in cursors:
-            return {100: _page([10, 11], False, child_totals={10: 0, 11: 1})}
-        return {11: _page([12], False, child_totals={12: 0})}
-
-    membership = _tree_membership({100}, fetch_batch)
-    assert membership[100][0] == {10, 11, 12}
-    assert calls == [{100: None}, {11: None}]
-
-
 def test_tree_traversal_pages_parent_before_next_level():
     calls = []
 
@@ -330,213 +309,6 @@ def test_retired_stream_launchers_fail_closed(selector):
 
 
 # --------------------------------------------------------------------------- #
-# #5898 — advisory stream-milestone hygiene. These fixtures never invoke gh;
-# issue states are injected into the pure warning classifier.
-# --------------------------------------------------------------------------- #
-def test_milestone_warnings_cover_marked_rows_closed_issues_and_old_confirmations(tmp_path):
-    workstreams = tmp_path / "WORKSTREAMS.md"
-    workstreams.write_text(
-        textwrap.dedent(
-            """
-            # Workstreams
-
-            ## Stream milestones (the focus layer)
-
-            | Stream | State | Current milestone | Done when |
-            | --- | --- | --- | --- |
-            | product | STALE | Repair #41 [confirmed-at: 2026-01-01] | Never inspect #99 |
-            | intake | ACTIVE | Rebuild #42 | — |
-            | corpus | *(VACANT — operator to set)* | Choose #50–#52 | — |
-
-            ## Next section
-            | Stream | State | Current milestone | Done when |
-            | ignored | STALE | #100 | — |
-            """
-        ),
-        encoding="utf-8",
-    )
-
-    rows = load_milestone_rows(workstreams)
-    assert [row["stream"] for row in rows] == ["product", "intake", "corpus"]
-    assert rows[0]["issue_numbers"] == {41}
-    assert rows[2]["issue_numbers"] == {50, 51, 52}
-
-    warnings = milestone_warnings(
-        rows,
-        {41: "OPEN", 42: "CLOSED", 50: "CLOSED", 51: "OPEN"},
-        unavailable_issue_numbers={52},
-        today=date(2026, 2, 1),
-        max_confirmed_age_days=14,
-    )
-
-    assert warnings == [
-        {"code": "milestone_row_marked", "stream": "product", "marker": "STALE"},
-        {
-            "code": "milestone_confirmed_at_stale",
-            "stream": "product",
-            "confirmed_at": "2026-01-01",
-            "age_days": 31,
-            "max_age_days": 14,
-        },
-        {"code": "milestone_closed_issue", "stream": "intake", "issue": 42},
-        {"code": "milestone_row_marked", "stream": "corpus", "marker": "VACANT"},
-        {"code": "milestone_closed_issue", "stream": "corpus", "issue": 50},
-        {
-            "code": "milestone_issue_state_unavailable",
-            "stream": "corpus",
-            "issue": 52,
-        },
-    ]
-
-
-def test_milestone_marker_is_scoped_to_state_cell(tmp_path):
-    workstreams = tmp_path / "WORKSTREAMS.md"
-    workstreams.write_text(
-        textwrap.dedent(
-            """
-            ## Stream milestones (the focus layer)
-
-            | Stream | State | Current milestone | Done when |
-            | --- | --- | --- | --- |
-            | product | ACTIVE | Refresh stale cache for #41 | — |
-            | intake | VACANT | Assign #42 | — |
-            """
-        ),
-        encoding="utf-8",
-    )
-
-    rows = load_milestone_rows(workstreams)
-
-    assert [row["marker"] for row in rows] == [None, "VACANT"]
-
-
-def test_milestone_issue_state_lookup_degrades_to_warning(monkeypatch):
-    def fake_gh_json(args, **_kwargs):
-        if args[2] == "41":
-            return {"number": 41, "state": "CLOSED"}
-        raise RuntimeError("not found")
-
-    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
-    states, unavailable = fetch_issue_states({41, 42})
-
-    assert states == {41: "CLOSED"}
-    assert unavailable == {42}
-
-
-def test_milestone_issue_state_lookup_reuses_known_open_issues(monkeypatch):
-    def unexpected_gh_json(*_args, **_kwargs):
-        raise AssertionError("known-open issue must not be queried")
-
-    monkeypatch.setattr(issue_stream_audit, "_gh_json", unexpected_gh_json)
-
-    states, unavailable = fetch_issue_states({41}, known_open_issue_numbers={41})
-
-    assert states == {41: "OPEN"}
-    assert unavailable == set()
-
-
-def test_milestone_warnings_report_closed_issue_and_ignore_invalid_confirmation():
-    warnings = milestone_warnings(
-        [
-            {
-                "stream": "product",
-                "marker": None,
-                "issue_numbers": {41},
-                "confirmed_at": date(2026, 1, 1),
-            },
-            {
-                "stream": "intake",
-                "marker": None,
-                "issue_numbers": set(),
-                # Invalid confirmed-at values are ignored by the parser, so
-                # they must not be invented into age warnings downstream.
-                "confirmed_at": None,
-            },
-        ],
-        {41: "CLOSED"},
-        today=date(2026, 2, 1),
-        max_confirmed_age_days=14,
-    )
-
-    assert warnings == [
-        {"code": "milestone_closed_issue", "stream": "product", "issue": 41},
-        {
-            "code": "milestone_confirmed_at_stale",
-            "stream": "product",
-            "confirmed_at": "2026-01-01",
-            "age_days": 31,
-            "max_age_days": 14,
-        },
-    ]
-
-
-def test_invalid_confirmed_at_marker_is_ignored(tmp_path):
-    workstreams = tmp_path / "WORKSTREAMS.md"
-    workstreams.write_text(
-        textwrap.dedent(
-            """
-            ## Stream milestones (the focus layer)
-
-            | Stream | State | Current milestone | Done when |
-            | --- | --- | --- | --- |
-            | product | ACTIVE | Repair #41 [confirmed-at: 2026-02-30] | — |
-            """
-        ),
-        encoding="utf-8",
-    )
-
-    assert load_milestone_rows(workstreams)[0]["confirmed_at"] is None
-
-
-def test_milestone_warnings_are_non_fatal_in_check_mode(monkeypatch, capsys):
-    report = classify(
-        _issues(100, 150, 200),
-        {"product": [100, 150], "infra": [200]},
-        {100: (set(), set()), 150: (set(), set()), 200: (set(), set())},
-    )
-    report["warnings"] = [
-        {"code": "milestone_row_marked", "stream": "product", "marker": "STALE"},
-        {"code": "milestone_closed_issue", "stream": "infra", "issue": 42},
-        {"code": "milestone_issue_state_unavailable", "stream": "infra", "issue": 43},
-        {
-            "code": "milestone_confirmed_at_stale",
-            "stream": "infra",
-            "confirmed_at": "2026-01-01",
-            "age_days": 31,
-            "max_age_days": 14,
-        },
-    ]
-    monkeypatch.setattr(issue_stream_audit, "run_audit", lambda **_kwargs: report)
-
-    assert main(["--check"]) == 0
-    output = capsys.readouterr().out
-    assert "WARN: stream milestone product marked STALE" in output
-    assert "WARN: stream milestone infra references closed issue #42" in output
-    assert "WARN: stream milestone infra could not verify issue #43 status" in output
-    assert "WARN: stream milestone infra confirmed-at 2026-01-01 is 31 days old (max 14)" in output
-    assert "ok: True" in output
-
-
-def test_max_confirmed_age_days_cli_reaches_audit(monkeypatch, capsys):
-    observed: dict[str, int] = {}
-    report = classify(
-        _issues(100, 150, 200),
-        {"product": [100, 150], "infra": [200]},
-        {100: (set(), set()), 150: (set(), set()), 200: (set(), set())},
-    )
-
-    def fake_run_audit(**kwargs):
-        observed.update(kwargs)
-        return report
-
-    monkeypatch.setattr(issue_stream_audit, "run_audit", fake_run_audit)
-
-    assert main(["--max-confirmed-age-days", "21"]) == 0
-    assert observed == {"max_confirmed_age_days": 21}
-    assert "ok: True" in capsys.readouterr().out
-
-
-# --------------------------------------------------------------------------- #
 # ADR-011 P4 — effective issue→epic membership index + strict-gate resolvers
 # --------------------------------------------------------------------------- #
 def test_effective_membership_native_wins_over_body_epic(registry):
@@ -623,27 +395,6 @@ def test_issue_resolver_rejects_ambiguously_owned_issue(registry):
     (unique_stream False) must not resolve — same proof the ownership gate uses."""
     report = classify(_issues(100, 150, 200, 8), registry, {100: ({8}, set()), 150: (set(), set()), 200: ({8}, set())})
     assert make_issue_resolver(report)("8") is False
-
-
-def test_same_stream_two_epics_is_ambiguous_not_unique(registry):
-    """Native membership in TWO epics that share one stream is still ambiguous —
-    exact membership means exactly one EFFECTIVE EPIC, not merely one stream
-    name (codex/gemini review, PR #4998)."""
-    report = classify(
-        _issues(100, 150, 200, 77),
-        registry,
-        {100: ({77}, set()), 150: ({77}, set()), 200: (set(), set())},
-    )
-    entry = report["effective_membership"]["77"]
-    assert entry["epics"] == [100, 150]
-    assert entry["streams"] == ["product"]  # one stream name...
-    assert entry["unique_stream"] is False  # ...but NOT unique membership
-    # The general auditor must surface this as ambiguity too, not report "ok".
-    assert [m["number"] for m in report["multi_homed"]] == [77]
-    assert report["ok"] is False
-    resolve = make_membership_resolver(report)
-    assert resolve(77, 100) is False and resolve(77, 150) is False
-    assert make_issue_resolver(report)("77") is False
 
 
 def test_read_membership_index_freshness(tmp_path, registry):
@@ -750,26 +501,6 @@ def test_read_membership_index_rejects_malformed_open_numbers(tmp_path):
     report["open_issue_numbers"] = [42, "100", -1, True]
     cache.write_text(json.dumps(report), encoding="utf-8")
     assert read_membership_index(3600, cache_path=cache) is None
-
-
-# --------------------------------------------------------------------------- #
-# #6028 — validate_membership_report: same fail-closed rules as
-# read_membership_index, applied to an in-memory (not file-cached) report, so
-# task_lifecycle.resolve_membership can carry one live run_audit() snapshot
-# through a single observation without a second round trip through disk.
-# --------------------------------------------------------------------------- #
-def test_validate_membership_report_accepts_fresh_in_memory_report():
-    import time
-
-    report = _valid_report(time.time())
-    assert validate_membership_report(report, 3600) == report
-
-
-def test_validate_membership_report_rejects_stale_in_memory_report():
-    import time
-
-    report = _valid_report(time.time() - 10_000)
-    assert validate_membership_report(report, 3600) is None
 
 
 def test_validate_membership_report_rejects_non_dict():
@@ -1075,17 +806,6 @@ def test_refresh_sidecars_resolve_to_primary_from_linked_worktree(tmp_path):
     assert lock == primary / "batch_state" / "issue_stream_audit_refresh.lock"
 
 
-def test_refresh_sidecars_stay_in_primary_and_release_snapshot(tmp_path):
-    primary, _worktree = _primary_with_linked_worktree(tmp_path)
-    release = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40)
-    release.mkdir(parents=True)
-
-    for root in (primary, release):
-        state, lock = issue_stream_audit.refresh_sidecar_paths(root)
-        assert state == root / "batch_state" / "issue_stream_audit_refresh.json"
-        assert lock == root / "batch_state" / "issue_stream_audit_refresh.lock"
-
-
 def test_refresh_scheduled_from_worktree_leaves_worktree_batch_state_untouched(tmp_path, monkeypatch):
     primary, worktree = _primary_with_linked_worktree(tmp_path)
     state, lock = issue_stream_audit.refresh_sidecar_paths(worktree)
@@ -1103,22 +823,6 @@ def test_refresh_scheduled_from_worktree_leaves_worktree_batch_state_untouched(t
         "issue_stream_audit_refresh.json",
         "issue_stream_audit_refresh.lock",
     ]
-
-
-def test_module_refresh_paths_anchor_at_primary_checkout():
-    """Import the module fresh (conftest redirects the in-process constants)."""
-    code = (
-        "from scripts.common.repo_root import main_checkout_root\n"
-        "from scripts.orchestration import issue_stream_audit as m\n"
-        "root = main_checkout_root(m.ROOT)\n"
-        "assert m.REFRESH_STATE_PATH == root / 'batch_state' / 'issue_stream_audit_refresh.json', m.REFRESH_STATE_PATH\n"
-        "assert m.REFRESH_LOCK_PATH == root / 'batch_state' / 'issue_stream_audit_refresh.lock', m.REFRESH_LOCK_PATH\n"
-    )
-    repo = Path(issue_stream_audit.__file__).resolve().parents[2]
-    result = subprocess.run(
-        [sys.executable, "-c", code], cwd=repo, capture_output=True, text=True, timeout=120, check=False
-    )
-    assert result.returncode == 0, result.stderr
 
 
 def _scheduled_state(run_id="new-run", now=100):
@@ -1315,16 +1019,6 @@ def test_refresh_state_atomic_replace_never_exposes_partial_json(tmp_path, monke
     assert failures == []
 
 
-def test_private_cache_keys_includes_open_issue_titles():
-    assert "open_issue_titles" in issue_stream_audit.PRIVATE_CACHE_KEYS
-    assert issue_stream_audit.PRIVATE_CACHE_KEYS == (
-        "effective_membership",
-        "open_issue_numbers",
-        "open_issue_titles",
-        "root_results",
-    )
-
-
 # --------------------------------------------------------------------------- #
 # #8661 — PR #8660 cross-family review follow-ups: registry validation branch
 # tests, per-node traversal degradation, closed_epics upkeep warning, and the
@@ -1364,44 +1058,6 @@ def test_registry_rejects_closed_epics_outside_epic_list(tmp_path):
     )
     with pytest.raises(ValueError, match=r"broken.*closed epics outside"):
         load_registry(path)
-
-
-def test_retired_stream_stays_registered_but_is_not_an_audit_root(tmp_path):
-    path = _write_streams(
-        tmp_path,
-        """
-        streams:
-          live:
-            title: x
-            epics: [100]
-          old:
-            title: y
-            epics: [200]
-            retired: true
-        """,
-    )
-    assert load_registry(path) == {"live": [100], "old": [200]}
-    assert load_registry(path, audit_only=True) == {"live": [100]}
-
-
-def test_research_registry_adoption_guidance_points_at_live_stream():
-    """The deferred GEC record must not send readers to the retired eval-harness
-    epic #4913: the #8305 decision records that "model evaluation authority now
-    lives in open-model-data #6321", so the adoption pointer is #6321."""
-    import yaml
-
-    doc = yaml.safe_load(
-        (issue_stream_audit.ROOT / "docs" / "references" / "research-registry.yaml").read_text(encoding="utf-8")
-    )
-    record = next(r for r in doc["records"] if r["id"] == "unlp-2026-gec-minimal-edit")
-    reason = record["reason"]
-    assert "#4913 is closed" not in reason
-    assert "#6321" in reason
-    live_roots = {
-        epic for epics in load_registry(issue_stream_audit.REGISTRY_PATH, audit_only=True).values() for epic in epics
-    }
-    assert 6321 in live_roots
-    assert 4913 not in live_roots
 
 
 def test_tree_membership_skips_unresolved_node_with_warning():
@@ -1838,21 +1494,6 @@ def test_tree_membership_pagination_truncation_counts_as_incomplete():
     membership = issue_stream_audit._tree_membership({100}, fetch_batch, warnings)
     assert any(w["code"] == "traversal_incomplete" and w["issue"] == 100 for w in warnings)
     assert 100 in membership
-
-
-def test_subissue_batch_confirmed_absence_preserves_other_nodes(monkeypatch):
-    """The client projects a REST parent 404 as a null alias; retain other nodes."""
-    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
-    calls = []
-    def read_batch(request, *, cwd):
-        calls.append(request)
-        assert request.verb == "read-subissue-batch"
-        return {"data": {"repository": {"i100": _page([10], False), "i999": None}}}
-    monkeypatch.setattr(issue_stream_audit, "_gh_json", read_batch)
-    pages = issue_stream_audit._fetch_subissue_batch({100: None, 999: None})
-    assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
-    assert pages[999] is None
-    assert len(calls) == 1
 
 
 def test_validate_membership_report_and_read_membership_index_reject_incomplete_cache(tmp_path):

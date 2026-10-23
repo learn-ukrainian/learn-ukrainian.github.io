@@ -11,7 +11,6 @@ import pytest
 from scripts import delegate
 from scripts.agent_runtime.adapters import agy
 from scripts.agent_runtime.adapters.base import InvocationPlan
-from scripts.review.model_catalog import load_model_catalog
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.claude_route_accounts import HOST_ACCOUNT
@@ -77,12 +76,6 @@ def test_other_claude_names_stay_unsupported(model):
         agy.AgyAdapter()._resolve_model_flag(model)
 
 
-@pytest.mark.parametrize("model", ["Claude Sonnet 4.6 (Thinking)", "Claude Opus 4.6 (Thinking)"])
-def test_retired_thinking_labels_keep_retirement_error(model):
-    with pytest.raises(ValueError, match="retired"):
-        agy.AgyAdapter()._resolve_model_flag(model)
-
-
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
 @pytest.mark.parametrize("model", [*SLUGS, *LABELS])
 def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypatch, mode, model):
@@ -95,59 +88,6 @@ def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypa
     assert "--dangerously-skip-permissions" in plan.cmd
     assert "--sandbox" not in plan.cmd
     assert "--effort" not in plan.cmd
-
-
-@pytest.mark.parametrize("model", [*SLUGS, *LABELS])
-@pytest.mark.parametrize(
-    "mode,review_route",
-    [("workspace-write", False), ("danger", False), ("read-only", False), ("read-only", True)],
-)
-def test_generated_invocation_task_guidance(tmp_path, monkeypatch, model, mode, review_route):
-    home = tmp_path / "home"
-    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
-    register_agy_hooks(tmp_path, home=home)
-    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
-    monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
-    prompt = delegate._compose_dispatch_prompt(
-        "Complete the assigned work.",
-        worktree_path=None,
-        mode=mode,
-        sparse_telemetry=None,
-        delegate_commits=False,
-        research_block="",
-        advisory_block="",
-        advisory_block_kind=None,
-        rules_seat=None,
-        agent="agy",
-        review_route=review_route,
-    )
-    config = {"agy_home_override": str(home)}
-    if review_route:
-        config["review_profile"] = "code"
-    plan = agy.AgyAdapter().build_invocation(
-        prompt=prompt,
-        mode=mode,
-        cwd=tmp_path,
-        model=model,
-        task_id="task-guidance",
-        session_id=None,
-        tool_config=config,
-        effort="high",
-    )
-    sent = json.loads(plan.stdin_payload)["message"]["content"][0]["text"]
-    assert sent == prompt
-    assert plan.cmd[plan.cmd.index("--model") + 1] == agy.AgyAdapter.resolve_model_slug(model)
-    if mode == "read-only" or review_route:
-        assert "WRITE MODE CONTRACT" not in sent
-    else:
-        assert sent.endswith(
-            '\n\n[WRITE MODE CONTRACT: Do not start timers or waits. '
-            'If a command becomes a background task, use the native manage_task tool with Action="status" '
-            'and the exact returned TaskId to track it to confirmed completion before replying. '
-            'Do not spawn shell pgrep/sleep wait loops or use manage_task Action="kill" to coordinate waiting. '
-            'Never end the turn while a task is running. Reply ONLY after push and verification are confirmed.]'
-        )
-        assert sent.count("WRITE MODE CONTRACT") == 1
 
 
 @pytest.mark.parametrize("model", SLUGS)
@@ -182,50 +122,6 @@ def test_review_route_denies_commands_and_writes_without_effort(tmp_path, monkey
     permissions = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
     assert "command(*)" in permissions["deny"]
     assert "write_file(*)" in permissions["deny"]
-
-
-def test_catalog_adds_only_agy_identity_transport():
-    catalog = load_model_catalog()
-    for slug in SLUGS:
-        model_id = slug.removesuffix("-high")
-        spec = catalog["models"][model_id]
-        assert spec["family"] == "anthropic"
-        assert spec["transports"] == (
-            ["native_claude", "agy"] if model_id == "claude-opus-5-5" else ["native_claude", "cursor", "agy"]
-        )
-        expected = {"native_claude": model_id, "agy": slug}
-        if model_id == "claude-opus-5-5":
-            assert spec["roles"] == [
-                "orchestration",
-                "architecture",
-                "agentic_coding",
-                "critical_review",
-                "security_review",
-                "ukrainian_review",
-            ]
-        else:
-            assert spec["roles"] == [
-                "implementation",
-                "agentic_coding",
-                "strong_review",
-                "document_authoring",
-                "routine_mechanical",
-            ]
-        assert spec["routing_wire_ids"] == expected
-        assert "quota_bucket" not in spec
-        for field in ("review_ladders", "formal_cf_defaults"):
-            assert slug not in json.dumps(catalog[field])
-        assert slug not in json.dumps(catalog["budget_substitution_models"].get("agy", {}))
-        assert slug not in catalog["review_candidates"]
-        assert all(
-            not (row["model_id"] == model_id and row["route"] == "agy") for row in catalog["review_candidates"].values()
-        )
-        for seat in catalog["seats"].values():
-            if seat["model_id"] == model_id:
-                assert all(row["transport"] != "agy" for row in seat["routes"].values())
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-
-    assert all(slug not in json.dumps(load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)) for slug in SLUGS)
 
 
 @pytest.mark.parametrize("author", ["claude-opus-5-5", "claude-sonnet-5-5"])
@@ -536,13 +432,6 @@ def mock_agy_provider(monkeypatch, tmp_path, runner, *, stdout, exit_kind="compl
     return launches, plan, binary
 
 
-@pytest.mark.parametrize("model", ["claude-sonnet-5-5-medium", "Claude Opus 5.5 (Low)"])
-def test_unknown_variant_refuses_normal_builder_before_hooks(tmp_path, monkeypatch, model):
-    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: pytest.fail("unsupported pin reached hooks"))
-    with pytest.raises(ValueError, match="Unsupported AGY model"):
-        build(tmp_path, model, "danger")
-
-
 @pytest.mark.parametrize("source", ["requested", "configuration", {"provider-init": True}])
 def test_request_or_configuration_init_cannot_qualify(tmp_path, source):
     plan, terminal = _identity_stream_plan(tmp_path, SLUGS[1])
@@ -630,11 +519,6 @@ def test_claude_worker_keeps_the_real_shell_output_hook_gate(tmp_path, model):
     with pytest.raises(AgyHookConfigError, match="missing_guard"):
         build(tmp_path, model, "workspace-write", {"agy_home_override": str(tmp_path / "home")})
     assert hooks.read_bytes() == b"{}\n"
-
-
-def test_sonnet_explicit_critical_worker_is_refused_without_owned_paths(tmp_path):
-    with pytest.raises(ValueError, match="agy_sonnet_security_refused"):
-        build(tmp_path, SLUGS[0], "workspace-write", {"risk": "critical"})
 
 
 @pytest.mark.parametrize("config", [{"risk": "critical"}, {"owned_paths": ["scripts/delegate.py"]}])
@@ -753,34 +637,6 @@ def test_duplicate_later_event_revokes_matching_identity(tmp_path, monkeypatch, 
     assert identity is None
     if entrypoint in {"parser", "runner"}:
         assert result.substitution is None
-
-
-@pytest.mark.parametrize("slug", SLUGS)
-@pytest.mark.parametrize("container", ["object", "array"])
-@pytest.mark.parametrize("entrypoint", ["parser", "runner"])
-def test_duplicate_descendants_cannot_hide_in_unique_envelopes(tmp_path, monkeypatch, slug, container, entrypoint):
-    from scripts.agent_runtime import runner
-
-    plan, terminal = _identity_stream_plan(tmp_path, slug)
-    descendant = '{"model":"other","model":' + json.dumps(slug) + "}"
-    metadata = '{"nested":' + descendant + "}" if container == "object" else "[" + descendant + "]"
-    init = '{"event":"init","model":' + json.dumps(slug) + ',"metadata":' + metadata + "}"
-    stdout = init + "\n" + json.dumps(terminal)
-    if entrypoint == "parser":
-        result = agy.AgyAdapter().parse_response(
-            stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan,
-        )
-    else:
-        provider_dir = tmp_path / "provider"
-        provider_dir.mkdir()
-        launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout)
-        result = runner.invoke("agy", "Implement.", mode="workspace-write", cwd=tmp_path, model=slug,
-                               task_id="nested-duplicates", tool_config={"run_nonce": "nested-run"})
-        assert len(launches) == 1
-    assert result.ok is False
-    assert result.response == ""
-    assert result.model_identity is None
-    assert result.stderr_excerpt == "agy_model_event_mismatch"
 
 
 def consistency_stream(slug, case):

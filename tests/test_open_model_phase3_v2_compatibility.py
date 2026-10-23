@@ -91,16 +91,6 @@ def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
     }
 
 
-def test_engine_inventory_is_the_complete_current_v2_1_runtime_schema_closure() -> None:
-    matrix = _matrix()
-    bindings = matrix["engine_bindings"]  # type: ignore[index]
-    paths = {entry["logical_path"] for entry in bindings}  # type: ignore[index]
-    assert paths == compatibility.ENGINE_PATHS
-    assert len(bindings) == len(compatibility.ENGINE_PATHS) == 43
-    assert all(entry["artifact_sha256"] for entry in bindings)  # type: ignore[index]
-    assert all(not path.startswith("data/projects/open_model_data/evidence/") for path in paths)
-
-
 def test_engine_inventory_rejects_missing_extra_unhashed_and_historical_v1_only_paths(tmp_path: Path) -> None:
     baseline = _matrix()
     cases: list[tuple[dict[str, object], str]] = []
@@ -153,30 +143,6 @@ def test_matrix_rejects_v2_drift_semantic_reuse_and_missing_claim(tmp_path: Path
         _write(path, value)
         with pytest.raises(compatibility.CompatibilityError, match=pattern):
             compatibility.verify(path)
-
-
-def test_matrix_explicitly_invalidates_every_prohibited_legacy_claim() -> None:
-    matrix = _matrix()
-    claims = {item["claim_id"]: item for item in matrix["legacy_claims"]}  # type: ignore[index]
-    assert set(claims) == set(compatibility.REQUIRED_CLAIMS)
-    assert all(item["disposition"] == "invalidated" for item in claims.values())
-    assert matrix["legacy_provenance"]["authority"] == "legacy_provenance_only_not_current_authority"  # type: ignore[index]
-
-
-def test_pre_v2_role_contract_is_not_reused_as_independence_evidence() -> None:
-    matrix = _matrix()
-    role_contract = next(
-        item
-        for item in matrix["inventory"]  # type: ignore[index]
-        if item["logical_path"].endswith("correction_protection_role_contract_v1.json")
-    )
-    assert role_contract["artifact_class"] == "role_contract_status"
-    assert role_contract["disposition"] == "invalidated"
-    assert role_contract["machine_reason"] == "pre_v2_role_contract_invalidated"
-    assert matrix["source_authoring"] == {
-        "blocked": True,
-        "reason": "cycle002_closure_not_established",
-    }
 
 
 @pytest.mark.needs_artifact(

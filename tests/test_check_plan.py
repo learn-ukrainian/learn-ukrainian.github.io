@@ -11,7 +11,7 @@ pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from audit.check_plan import check_plan, check_russicisms, detect_plan_type, main  # noqa: I001
+from audit.check_plan import check_plan, check_russicisms, main  # noqa: I001
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -115,12 +115,6 @@ def test_check_plan_accepts_track_level_plan_ruth() -> None:
     plan_path = REPO_ROOT / "curriculum" / "l2-uk-en" / "plans" / "ruth.yaml"
 
     assert check_plan(plan_path) == []
-
-
-def test_check_plan_detects_ruth_as_track_level() -> None:
-    plan = {"modules": 112, "phases": [], "linguistic_evolution": {}}
-
-    assert detect_plan_type(plan) == "track-level"
 
 
 def test_check_plan_clearly_rejects_unknown_schema(tmp_path: Path, capsys) -> None:

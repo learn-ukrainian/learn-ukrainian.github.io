@@ -4,8 +4,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-import pytest
-
 from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
 
@@ -443,28 +441,3 @@ def test_llm_qg_explicit_max_rounds_one_is_noop(tmp_path: Path) -> None:
     assert review_calls == 1
     assert result["aggregate"]["min_score"] == 4.0
     assert (module_dir / "module.md").read_text(encoding="utf-8") == "# Lesson\n\nAnchor sentence.\n"
-
-
-@pytest.mark.parametrize(
-    ("level", "expected"),
-    [("folk", 3), ("hist", 3), ("a1", 2), ("b2", 2)],
-)
-def test_llm_qg_round_budget_seminar_vs_core(level: str, expected: int) -> None:
-    assert linear_pipeline.llm_qg_max_rounds_for_level(level) == expected
-
-
-def test_pedagogical_correction_context_preserves_manifest_string(tmp_path: Path) -> None:
-    module_dir = _module_dir(tmp_path)
-    llm_qg = _llm_report(pedagogical=6.0)
-
-    context = linear_pipeline.pedagogical_correction_context(
-        plan={"level": "folk", "sequence": 1, "slug": "sample"},
-        llm_qg=llm_qg,
-        module_text=(module_dir / "module.md").read_text(encoding="utf-8"),
-        plan_content="plan",
-        wiki_manifest='{"sources": [{"id": "S1"}]}',
-        obligation_checklist={"items": []},
-    )
-
-    assert context["WIKI_MANIFEST"] == '{"sources": [{"id": "S1"}]}'
-    assert context["OBLIGATION_CHECKLIST"] == "items: []"

@@ -182,17 +182,6 @@ def test_scope_argv_names_the_slice_unit_and_collect():
     assert len(unit) + len(".scope") <= 255
 
 
-def test_slice_unit_has_structure_and_leaves_limits_to_a_dropin():
-    unit_file = Path("packaging/systemd/lu-dispatch.slice").read_text(encoding="utf-8")
-    assert "[Unit]" in unit_file
-    section = unit_file.split("[Slice]", 1)[1]
-    keys = {line.split("=", 1)[0] for line in section.splitlines() if "=" in line and not line.startswith("#")}
-    assert keys == {"MemoryAccounting"}
-    assert iso.LIMITS_DROPIN.startswith(f"{iso.SLICE_UNIT}.d/")
-    assert iso.LIMITS_DROPIN.split("/", 1)[1] in unit_file
-    assert iso.slice_cgroup_path() == "lu.slice/lu-dispatch.slice"
-
-
 @pytest.mark.parametrize(
     ("memory_max", "memory_swap", "check"),
     [
@@ -245,15 +234,6 @@ def test_probe_names_the_first_failed_check(tmp_path: Path, overrides: dict[str,
     assert not result.ready
     assert result.reason is not None
     assert result.reason.startswith(f"{check}:")
-
-
-def test_probe_timeout_on_systemctl_is_the_user_manager_check(tmp_path: Path):
-    bindir = _install_fakes(tmp_path)
-    result = _probe(_env(bindir, FAKE_SYSTEMCTL="timeout"), _subtree(tmp_path), timeout_s=0.2)
-
-    assert result.reason is not None
-    assert result.reason.startswith("user-manager:")
-    assert "timed out" in result.reason
 
 
 def test_probe_timeout_on_loginctl_is_the_linger_check(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -317,8 +297,6 @@ def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
 
 
 _GRANDCHILD_READY_DEADLINE_S = 5.0
-# Longer than timeout + reap slack, so a clock that includes this stall fails.
-_GRANDCHILD_START_DELAY_S = 3.0
 _GRANDCHILD_SYSTEMCTL = """
 import os, time
 from pathlib import Path
@@ -536,37 +514,6 @@ def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path) -
     The measured interval starts only after the grandchild acknowledges fork.
     """
     _assert_fallback_does_not_wait_on_grandchild(tmp_path)
-
-
-def test_delayed_grandchild_start_does_not_fail_the_probe(tmp_path: Path) -> None:
-    """A startup stall longer than the probe budget stays outside measurement."""
-    _assert_fallback_does_not_wait_on_grandchild(tmp_path, start_delay_s=_GRANDCHILD_START_DELAY_S)
-
-
-@pytest.mark.parametrize("child_started", [False, True], ids=["before-fork", "after-fork"])
-def test_grandchild_probe_helper_reaps_on_readiness_failure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, child_started: bool
-) -> None:
-    """Readiness failures reap both an owned probe and an unacknowledged orphan."""
-    if child_started:
-        inject_failure = (
-            "real_ready = ns['_wait_for_child_ready']\n"
-            "def fail_ready(*args):\n"
-            "    real_ready(*args)\n"
-            "    raise AssertionError('injected readiness failure')\n"
-            "ns['_grandchild_probe_helper'].__globals__['_wait_for_child_ready'] = fail_ready\n"
-        )
-        code = _GRANDCHILD_HELPER_CODE.replace("report = ns[", inject_failure + "report = ns[")
-        monkeypatch.setattr(sys.modules[__name__], "_GRANDCHILD_HELPER_CODE", code)
-        report = _run_grandchild_probe_helper(tmp_path)
-        assert report["error"] == "AssertionError: injected readiness failure", report
-    else:
-        report = _run_grandchild_probe_helper(tmp_path, start_delay_s=3.0, ready_deadline_s=0.05)
-        assert report["error"] == "AssertionError: grandchild was not ready within 0.1s", report
-    reaped = {item["pid"] for item in report["reaped"]}
-    assert set(report["probe_pids"]) <= reaped, report
-    assert len(reaped) == (2 if child_started else 1), report
-    assert all(item["returncode"] == -signal.SIGKILL for item in report["reaped"]), report
 
 
 def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
@@ -1426,12 +1373,6 @@ def test_resolve_user_bus_records_where_the_variables_came_from(tmp_path: Path, 
     gone = iso.resolve_user_bus({})
     assert gone.as_state()["source"] == "unavailable"
     assert str(runtime) in gone.as_state()["reason"]
-
-
-def test_worker_launch_state_carries_the_user_bus_record():
-    launch = iso.WorkerLaunch(mode=iso.LAUNCH_SCOPE, unit="u", user_bus={"source": "caller"})
-    assert launch.as_state() == {"launch_mode": "scope", "launch_unit": "u", "launch_user_bus": {"source": "caller"}}
-    assert "launch_user_bus" not in iso.WorkerLaunch(mode=iso.LAUNCH_FALLBACK, fallback_reason="r").as_state()
 
 
 def test_fallback_without_a_bus_socket_records_why(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

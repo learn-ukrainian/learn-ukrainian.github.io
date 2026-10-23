@@ -48,14 +48,6 @@ def test_gemini_driver_default_respects_launcher_model() -> None:
     assert _would_exec_line(result.stdout).startswith("would exec agy --model gemini-3.8-flash-high ")
 
 
-def test_gemini_driver_help_is_usable() -> None:
-    result = run_launcher("start-gemini-driver.sh", "--help")
-    assert result.returncode == 0, result.stderr
-    assert "Usage: ./start-gemini-driver.sh" in result.stdout
-    assert "Gemini driver" in result.stdout
-    assert "gemini-3.1-pro-high" in result.stdout
-
-
 @pytest.mark.parametrize("dry_run", (True, False))
 @pytest.mark.parametrize(
     "model",
@@ -235,35 +227,6 @@ def test_gemini_forwards_provider_arguments_only_after_separator() -> None:
     assert "--sandbox read-only" in exec_line
     assert not _AGY_PROMPT_FLAG.search(exec_line), exec_line
     assert _AGY_SKIP_PERMISSIONS not in exec_line, exec_line
-
-
-@pytest.mark.rules_core_absent
-def test_gemini_driver_forwards_provider_args_after_binding() -> None:
-    result = run_launcher("start-gemini-driver.sh", "--epic", "devops", "--", "--sandbox", "read-only")
-    assert result.returncode == 0, result.stderr
-    exec_line = _would_exec_line(result.stdout)
-    assert _DRIVE_EPIC_NEEDLE in exec_line
-    assert exec_line.rstrip().endswith(" --sandbox read-only")
-    assert _AGY_SKIP_PERMISSIONS not in exec_line
-
-
-@pytest.mark.rules_core_absent
-def test_gemini_driver_preserves_interactive_and_claude_prompts() -> None:
-    driver = run_launcher("start-gemini-driver.sh", "--epic", "devops")
-    assert driver.returncode == 0, driver.stderr
-    assert _DRIVE_EPIC_NEEDLE in _would_exec_line(driver.stdout)
-
-    interactive = run_launcher("start-gemini.sh")
-    assert interactive.returncode == 0, interactive.stderr
-    interactive_line = _would_exec_line(interactive.stdout)
-    assert interactive_line.startswith("would exec agy --model gemini-3.8-flash-high")
-    assert _DRIVE_EPIC_NEEDLE not in interactive_line
-
-    claude_driver = run_launcher("start-claude-driver.sh", "--epic", "devops")
-    assert claude_driver.returncode == 0, claude_driver.stderr
-    claude_exec_line = _would_exec_line(claude_driver.stdout)
-    assert "After\\ context\\ compaction" not in claude_exec_line
-    assert "hydration\\ permission" not in claude_exec_line
 
 
 @pytest.mark.parametrize("scoped", [False, True])

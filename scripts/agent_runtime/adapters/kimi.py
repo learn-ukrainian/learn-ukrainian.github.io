@@ -20,7 +20,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from scripts.review.model_catalog import kimi_model_aliases
+from scripts.review.model_catalog import kimi_model_aliases, retired_model_refusal
 
 from ..failover import GH_AUTH_FAILURE_RE
 from ..failure_codes import provider_failure_code, provider_stderr_error
@@ -48,8 +48,14 @@ KIMI_ALLOWED_MODELS: frozenset[str] = frozenset(KIMI_MODEL_ALIASES)
 
 
 def resolve_kimi_model(model: str | None) -> str:
-    """Map a fleet short name or full CLI alias; reject unregistered names."""
+    """Map a fleet short name or full CLI alias; reject unregistered names.
+
+    A retired id, including the historical default, is the catalog refusal.
+    There is no substitution onto another model.
+    """
     requested = model or KIMI_DEFAULT_MODEL
+    if refusal := retired_model_refusal(requested):
+        raise ValueError(f"KimiAdapter: {refusal}")
     try:
         return KIMI_MODEL_ALIASES[requested]
     except KeyError as exc:

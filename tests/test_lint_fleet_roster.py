@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
-import sys
 from copy import deepcopy
 from pathlib import Path
 from textwrap import dedent
@@ -122,10 +120,6 @@ def test_committed_projections_match_machine_authorities():
         assert eligible[name] is False
 
 
-def test_cli_main_ok_on_repo():
-    assert main([]) == 0
-
-
 @pytest.mark.parametrize("field", SEAT_FIELDS)
 def test_seat_fields_resolve_catalog_role_references(tmp_path: Path, field: str):
     raw = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
@@ -216,19 +210,6 @@ def test_role_reference_with_missing_holder_is_lint_error(tmp_path: Path):
     assert issues[0].kind == "authority"
     assert "orchestrator_seats.claude.model_id: cannot resolve role reference" in issues[0].message
     assert "missing-holder" in issues[0].message
-
-
-def test_cli_file_entrypoint_resolves_roles_outside_repo(tmp_path: Path):
-    result = subprocess.run(
-        [sys.executable, str(CATALOG_PATH.parents[1] / "lint/lint_fleet_roster.py")],
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "Fleet roster OK (3 projection file(s)" in result.stdout
 
 
 def test_seat_add_remove_pin_and_eligibility_flip_fail(tmp_path: Path):

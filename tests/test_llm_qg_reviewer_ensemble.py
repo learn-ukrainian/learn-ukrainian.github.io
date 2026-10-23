@@ -125,8 +125,3 @@ def test_reviewer_ensemble_even_n_uses_lower_middle_real_sample(monkeypatch: pyt
     }
     assert events[0]["median_score"] == 7.0
     assert events[0]["chosen_sample_index"] == 2
-
-
-def test_llm_qg_reviewer_samples_profile_config() -> None:
-    assert linear_pipeline.llm_qg_reviewer_samples_for_level("folk") == 3
-    assert linear_pipeline.llm_qg_reviewer_samples_for_level("a1") == 1

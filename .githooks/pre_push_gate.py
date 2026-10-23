@@ -8,8 +8,8 @@ explicit committed range, with the per-commit OPSEC scan and the learner-surface
 internal-ID scan.  The pre-commit stage runs the hooks ``.pre-commit-config.yaml``
 places at the ``pre-push`` stage, unchanged.
 
-The gate runs no tests of its own (#11276): no pytest stage, no host test slots
-and no affected-test selector.  CI Gate runs the full suite on every pull request
+No push path runs pytest: no pytest stage, pytest hook, host test slots
+or affected-test selector. CI Gate runs the full suite on every pull request
 and again in the merge queue, and remains the merge gate.
 
 The range starts at the merge-base with ``origin/main`` after a merge of newer
@@ -61,8 +61,8 @@ CGROUP_ROOT = Path("/sys/fs/cgroup")
 # is never green.
 STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
-# What a run depends on beyond the bound tree; a receipt binds each. ``pytest`` is the version the
-# configuration's pytest-based ``pre-push`` hooks run under.
+# A receipt binds these tool fingerprints. The retained ``pytest`` fingerprint reads installed
+# package metadata only; it neither imports pytest nor executes tests during a push.
 TOOL_NAMES = ("gate_source", "launcher", "pre_commit_config", "python", "pytest", "pre_commit")
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 # One predecessor's admission allowance. Gate version 11 held admission through its run budget, a host

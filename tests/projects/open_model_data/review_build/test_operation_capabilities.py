@@ -4,7 +4,6 @@ import copy
 import json
 import sqlite3
 from dataclasses import replace
-from pathlib import Path
 
 import pytest
 
@@ -507,14 +506,6 @@ def test_selection_filters_records_accounting_metrics_and_pins(bundle, monkeypat
                 components=["C1"],
                 verify=True,
             )
-
-
-def test_default_config_uses_shared_git_directory():
-    default = cli.default_config()
-    assert default.name == "request.json"
-    assert default.parts[-3:] == ("batch_state", "review_build", "request.json")
-    assert ".worktrees" not in default.parts
-    assert (Path(cli.__file__).resolve().parents[4] / ".git").exists()
 
 
 def test_composite_multi_selector_accounts_for_all_body_pages_and_order(bundle):

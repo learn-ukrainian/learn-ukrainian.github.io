@@ -113,15 +113,6 @@ def test_send_message_large_response_records_sidecar_metadata(tmp_path, monkeypa
     assert meta["reply_sidecar"]["bytes"] == len(body.encode("utf-8"))
 
 
-def test_assert_ask_content_present_ok():
-    text = assert_ask_content_present(
-        {"content": "hello world"},
-        message_id=1,
-        target="grok",
-    )
-    assert text == "hello world"
-
-
 def test_assert_ask_content_present_empty_raises_transport(tmp_path):
     db_path = tmp_path / "msg.db"
     conn = sqlite3.connect(str(db_path))

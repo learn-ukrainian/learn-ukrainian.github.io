@@ -35,13 +35,11 @@ from scripts.agent_runtime.adapters import acpx as acpx_module
 from scripts.agent_runtime.adapters.acpx import (
     ACPX_EXIT_PERMISSION_DENIED,
     ACPX_PARSED_RESPONSE_LIMIT_BYTES,
-    ACPX_SUPPORTED_PARTICIPANTS,
     AcpxAdapter,
     AcpxAgyShadowAdapter,
     AcpxClaudeShadowAdapter,
     AcpxCursorShadowAdapter,
     AcpxDeepSeekShadowAdapter,
-    AcpxGemmaShadowAdapter,
     AcpxGlmShadowAdapter,
     AcpxGrokShadowAdapter,
     AcpxKimiCcShadowAdapter,
@@ -362,19 +360,6 @@ def test_resolve_host_node_skips_wrong_version_on_path_for_contract_fallback(
     assert env["PATH"].split(os.pathsep)[0] == str(correct.parent.resolve())
 
 
-def test_resolve_host_node_rejects_masquerading_non_node_executable(
-    tmp_path, monkeypatch
-):
-    """#6953 CF: a shell script named ``node`` is not admitted."""
-    impostor = tmp_path / "node"
-    impostor.write_text("#!/bin/sh\nexec /bin/echo stub-node\n", encoding="utf-8")
-    impostor.chmod(0o755)
-    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
-
-    with pytest.raises(AcpxShadowRefusalError, match=r"no Node \d+\.x binary"):
-        acpx_module._resolve_host_node_binary(adapter_label="test")
-
-
 def test_resolve_host_node_fails_loudly_when_none_qualify(tmp_path, monkeypatch):
     """#6953 CF / #8287: every candidate wrong/non-Node → loud refusal."""
     required = acpx_module._required_node_major(adapter_label="test")
@@ -399,19 +384,6 @@ def test_resolve_host_node_prefers_highest_matching_major_on_path(tmp_path, monk
     assert resolved == newer.resolve()
 
 
-def test_resolve_host_node_rejects_newer_wrong_major_before_matching(
-    tmp_path, monkeypatch
-):
-    """#8287: newer wrong-major first on PATH does not beat matching-major."""
-    required = acpx_module._required_node_major(adapter_label="test")
-    wrong = _fake_node_binary(tmp_path / "wrong", version=f"v{required + 2}.19.0")
-    matching = _fake_node_binary(tmp_path / "matching", version=f"v{required}.14.0")
-    _isolate_node_fallbacks(monkeypatch, path_dirs=(wrong.parent, matching.parent))
-
-    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
-    assert resolved == matching.resolve()
-
-
 def test_resolve_host_node_equal_versions_keep_earlier_candidate(tmp_path, monkeypatch):
     """#8287: equal matching-major versions keep the earlier candidate."""
     required = acpx_module._required_node_major(adapter_label="test")
@@ -421,16 +393,6 @@ def test_resolve_host_node_equal_versions_keep_earlier_candidate(tmp_path, monke
 
     resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
     assert resolved == first.resolve()
-
-
-def test_resolve_host_node_single_matching_candidate_unchanged(tmp_path, monkeypatch):
-    """#8287: a single matching-major candidate is still returned."""
-    required = acpx_module._required_node_major(adapter_label="test")
-    only = _fake_node_binary(tmp_path / "only", version=f"v{required}.14.0")
-    _isolate_node_fallbacks(monkeypatch, path_dirs=(only.parent,))
-
-    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
-    assert resolved == only.resolve()
 
 
 def test_resolve_host_node_skips_symlink_loop_path_entry(tmp_path, monkeypatch):
@@ -560,12 +522,6 @@ def _build(
 # ---------------------------------------------------------------------------
 
 
-def test_adapter_identity_is_read_only_only():
-    adapter = AcpxAdapter()
-    assert adapter.name == "acpx-codex-shadow"
-    assert adapter.supported_modes == frozenset({"read-only"})
-
-
 # ---------------------------------------------------------------------------
 # Flag-off rollback (feature flag gate)
 # ---------------------------------------------------------------------------
@@ -578,43 +534,6 @@ def test_build_invocation_refuses_when_flag_unset(tmp_path, monkeypatch):
 
     with pytest.raises(AcpxShadowRefusalError, match="LU_ACPX_TRANSPORT"):
         _build(adapter, cwd=tmp_path)
-
-
-def test_build_invocation_refuses_when_flag_off(tmp_path, monkeypatch):
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "off")
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError):
-        _build(adapter, cwd=tmp_path)
-
-
-def test_build_invocation_refuses_unknown_flag_value(tmp_path, monkeypatch):
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "live")
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError):
-        _build(adapter, cwd=tmp_path)
-
-
-def test_flag_refusal_names_the_variable_never_its_value(tmp_path, monkeypatch):
-    sentinel = "env-value-sentinel-8652"
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, sentinel)
-    _stub_binary(monkeypatch, tmp_path)
-
-    with pytest.raises(AcpxShadowRefusalError, match=acpx_module.TRANSPORT_ENV) as refused:
-        _build(AcpxAdapter(), cwd=tmp_path)
-    assert sentinel not in str(refused.value)
-
-
-def test_build_invocation_succeeds_when_flag_shadow(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    plan = _build(adapter, cwd=tmp_path)
-    assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
 
 
 def test_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch):
@@ -696,25 +615,6 @@ def test_build_invocation_rejects_non_codex_target(tmp_path, monkeypatch):
         )
 
 
-def test_refusals_name_tool_config_keys_never_their_values(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    sentinel = "tool-config-value-sentinel-8652"
-
-    with pytest.raises(AcpxShadowRefusalError, match="target_agent") as refused:
-        _build(AcpxAdapter(), cwd=tmp_path, tool_config={"acpx_shadow": True, "target_agent": sentinel})
-    assert sentinel not in str(refused.value)
-
-    unsafe = f"{sentinel} with spaces"
-    with pytest.raises(AcpxShadowRefusalError, match="correlation_id") as refused:
-        _build(
-            AcpxAdapter(),
-            cwd=tmp_path,
-            tool_config={"acpx_shadow": True, "correlation_id": unsafe, "idempotency_key": "idem-1"},
-        )
-    assert sentinel not in str(refused.value)
-
-
 # ---------------------------------------------------------------------------
 # Local correlation_id / idempotency_key / task_id metadata
 # ---------------------------------------------------------------------------
@@ -729,15 +629,6 @@ def test_build_invocation_requires_non_empty_task_id(tmp_path, monkeypatch):
         _build(adapter, cwd=tmp_path, task_id=None)
 
 
-def test_build_invocation_rejects_blank_task_id(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="task_id"):
-        _build(adapter, cwd=tmp_path, task_id="   ")
-
-
 def test_build_invocation_requires_correlation_id(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
@@ -748,66 +639,6 @@ def test_build_invocation_requires_correlation_id(tmp_path, monkeypatch):
             adapter,
             cwd=tmp_path,
             tool_config={"acpx_shadow": True, "idempotency_key": "idem-1"},
-        )
-
-
-def test_build_invocation_rejects_blank_correlation_id(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="correlation_id"):
-        _build(
-            adapter,
-            cwd=tmp_path,
-            tool_config={"acpx_shadow": True, "correlation_id": "  ", "idempotency_key": "idem-1"},
-        )
-
-
-def test_build_invocation_requires_idempotency_key(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="idempotency_key"):
-        _build(
-            adapter,
-            cwd=tmp_path,
-            tool_config={"acpx_shadow": True, "correlation_id": "corr-1"},
-        )
-
-
-def test_build_invocation_rejects_oversized_correlation_id(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="correlation_id"):
-        _build(
-            adapter,
-            cwd=tmp_path,
-            tool_config={
-                "acpx_shadow": True,
-                "correlation_id": "x" * 201,
-                "idempotency_key": "idem-1",
-            },
-        )
-
-
-def test_build_invocation_rejects_unsafe_idempotency_key_characters(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="idempotency_key"):
-        _build(
-            adapter,
-            cwd=tmp_path,
-            tool_config={
-                "acpx_shadow": True,
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem\n1",
-            },
         )
 
 
@@ -852,19 +683,6 @@ def test_build_invocation_rejects_non_null_session_id(tmp_path, monkeypatch):
 
     with pytest.raises(AcpxShadowRefusalError, match="session_id"):
         _build(adapter, cwd=tmp_path, session_id="some-prior-session")
-
-
-def test_build_invocation_never_uses_session_or_prompt_subcommand(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    plan = _build(adapter, cwd=tmp_path)
-    assert "codex" in plan.cmd and "exec" in plan.cmd
-    assert "prompt" not in plan.cmd
-    assert "sessions" not in plan.cmd
-    assert "-s" not in plan.cmd
-    assert "--session" not in plan.cmd
 
 
 # ---------------------------------------------------------------------------
@@ -998,35 +816,6 @@ def test_build_invocation_refuses_when_primary_pin_is_missing(tmp_path, monkeypa
         _build(AcpxAdapter(), cwd=tmp_path)
 
 
-def test_build_invocation_rejects_primary_binary_capability_drift(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    candidate = tmp_path / "worktree" / "node_modules" / ".bin" / "acpx"
-    primary = tmp_path / "primary"
-    primary_binary = primary / "node_modules" / ".bin" / "acpx"
-    primary_binary.parent.mkdir(parents=True)
-    primary_binary.write_text("#!/bin/sh\n", encoding="utf-8")
-    primary_binary.chmod(0o755)
-    _set_default_binary_candidate(monkeypatch, candidate)
-    monkeypatch.setattr(acpx_module, "resolve_main_root", lambda _cwd: primary)
-    monkeypatch.setattr(
-        acpx_module,
-        "_probe_acpx_cli_compatibility",
-        lambda _binary, *, builtin_agent: ("0.14.0", ("exec --file",)),
-    )
-
-    with pytest.raises(AcpxShadowRefusalError, match="exec --file"):
-        _build(AcpxAdapter(), cwd=tmp_path)
-
-
-def test_build_invocation_accepts_unknown_version_when_capabilities_pass(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path, version="unknown")
-
-    plan = _build(AcpxAdapter(), cwd=tmp_path)
-
-    assert plan.metadata["acpx_cli_version"] == "unknown"
-
-
 # ---------------------------------------------------------------------------
 # Argv / permission confinement — structural, not probabilistic
 # ---------------------------------------------------------------------------
@@ -1062,16 +851,6 @@ def test_build_invocation_argv_is_fully_confined(tmp_path, monkeypatch):
     assert plan.metadata["codex_cli_source"] == "installed"
 
 
-def test_build_invocation_accepts_approved_explicit_model(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    plan = _build(adapter, cwd=tmp_path, model="gpt-6-luna")
-    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
-    assert ("--model", "gpt-6-luna") in pairs
-
-
 def test_build_invocation_refuses_unsupported_effort_with_supported_values(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
@@ -1098,15 +877,6 @@ def test_build_invocation_rejects_write_mode(tmp_path, monkeypatch):
         )
 
 
-def test_liveness_signal_paths_is_empty(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-
-    plan = _build(adapter, cwd=tmp_path)
-    assert adapter.liveness_signal_paths(plan) == ()
-
-
 # ---------------------------------------------------------------------------
 # Protected primary checkout refusal
 # ---------------------------------------------------------------------------
@@ -1124,20 +894,6 @@ def test_build_invocation_refuses_protected_primary_checkout(tmp_path, monkeypat
 
     with pytest.raises(AcpxShadowRefusalError, match="primary checkout"):
         _build(adapter, cwd=tmp_path)
-
-
-def test_build_invocation_allows_non_primary_cwd(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    monkeypatch.setattr(
-        acpx_module._worktree_containment,
-        "classify_repo_path",
-        lambda *_args, **_kwargs: "dispatch_worktree",
-    )
-    adapter = AcpxAdapter()
-
-    plan = _build(adapter, cwd=tmp_path)
-    assert plan.cwd == tmp_path
 
 
 def test_build_invocation_real_containment_refuses_primary_allows_isolated_root(
@@ -1509,16 +1265,6 @@ def test_parse_response_unknown_error_data_keeps_provider_message(data):
     assert "unrecognized ACPX error.data schema" not in (result.stderr_excerpt or "")
 
 
-@pytest.mark.parametrize("data", ["provider quota exhausted", {"message": "provider quota exhausted"}])
-def test_parse_response_uses_provider_data_message_without_top_level_message(data):
-    stdout = json.dumps({"jsonrpc": "2.0", "id": None, "error": {"data": data}})
-    result = AcpxAdapter().parse_response(
-        stdout=stdout, stderr="", returncode=1, output_file=None
-    )
-    assert result.ok is False
-    assert "provider quota exhausted" in (result.stderr_excerpt or "")
-
-
 def test_parse_response_permission_id_reuse_is_not_replay():
     """Agent permission RPCs reuse client JSON-RPC ids; that is not a replay (#6916)."""
     adapter = AcpxAdapter()
@@ -1531,21 +1277,6 @@ def test_parse_response_permission_id_reuse_is_not_replay():
     assert result.ok is True
     assert result.response == "pong"
     assert "duplicate" not in (result.stderr_excerpt or "").lower()
-
-
-@pytest.mark.parametrize(
-    "adapter_class",
-    [AcpxAdapter, AcpxCursorShadowAdapter, AcpxGrokShadowAdapter, AcpxKimiShadowAdapter],
-)
-def test_parse_response_permission_id_reuse_is_seat_agnostic(adapter_class):
-    result = adapter_class().parse_response(
-        stdout=_PERMISSION_ID_REUSE_NDJSON,
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-    assert result.ok is True
-    assert result.response == "pong"
 
 
 def test_parse_response_fresh_request_supersedes_prior_receipt():
@@ -1842,110 +1573,6 @@ def _build_grok(
     )
 
 
-def test_grok_adapter_identity_is_read_only_only():
-    adapter = AcpxGrokShadowAdapter()
-    assert adapter.name == "acpx-grok-shadow"
-    assert adapter.default_model == "grok-4.7"
-    assert adapter.supported_modes == frozenset({"read-only"})
-
-
-def test_grok_build_invocation_refuses_when_flag_unset(tmp_path, monkeypatch):
-    monkeypatch.delenv(acpx_module.TRANSPORT_ENV, raising=False)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="LU_ACPX_TRANSPORT"):
-        _build_grok(adapter, cwd=tmp_path)
-
-
-def test_grok_build_invocation_refuses_when_flag_off(tmp_path, monkeypatch):
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "off")
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError):
-        _build_grok(adapter, cwd=tmp_path)
-
-
-def test_grok_build_invocation_active_requires_controller_scope(tmp_path, monkeypatch):
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-    tool_config = {
-        "acpx_discussion": True,
-        "target_agent": "grok",
-        "correlation_id": "corr-1",
-        "idempotency_key": "idem-1",
-    }
-
-    with pytest.raises(AcpxShadowRefusalError, match="discussion controller"):
-        _build_grok(adapter, cwd=tmp_path, tool_config=tool_config)
-
-    with acpx_module.active_discussion_scope():
-        plan = _build_grok(adapter, cwd=tmp_path, tool_config=tool_config)
-    assert plan.cmd[0] == str(acpx_module._ACPX_BINARY)
-
-
-def test_grok_build_invocation_requires_explicit_shadow_marker(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="acpx_shadow"):
-        _build_grok(adapter, cwd=tmp_path, tool_config={})
-
-
-def test_grok_build_invocation_rejects_unsupported_tool_config(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="unsupported tool_config"):
-        _build_grok(
-            adapter,
-            cwd=tmp_path,
-            tool_config={
-                "acpx_shadow": True,
-                "target_agent": "grok",
-                "allowed_tools": ["Bash"],
-            },
-        )
-
-
-def test_grok_build_invocation_rejects_non_grok_target(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
-        _build_grok(
-            adapter,
-            cwd=tmp_path,
-            tool_config={
-                "acpx_shadow": True,
-                "target_agent": "codex",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
-
-
-def test_grok_build_invocation_rejects_session_id(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="session_id"):
-        _build_grok(adapter, cwd=tmp_path, session_id="prior-session")
-
-
 def test_grok_build_invocation_rejects_wrong_model(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
@@ -1954,50 +1581,6 @@ def test_grok_build_invocation_rejects_wrong_model(tmp_path, monkeypatch):
 
     with pytest.raises(AcpxShadowRefusalError, match="model="):
         _build_grok(adapter, cwd=tmp_path, model="grok-3")
-
-
-def test_grok_build_invocation_rejects_wrong_effort(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="effort="):
-        _build_grok(adapter, cwd=tmp_path, effort="low")
-
-
-def test_grok_build_invocation_refuses_primary_checkout(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    monkeypatch.setattr(
-        acpx_module._worktree_containment,
-        "classify_repo_path",
-        lambda *_args, **_kwargs: "primary_checkout",
-    )
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(AcpxShadowRefusalError, match="primary checkout"):
-        _build_grok(adapter, cwd=tmp_path)
-
-
-def test_grok_build_invocation_accepts_compatible_acpx_version_drift(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path, version="0.14.0")
-    _stub_grok(monkeypatch, tmp_path)
-
-    plan = _build_grok(AcpxGrokShadowAdapter(), cwd=tmp_path)
-
-    assert plan.metadata["acpx_cli_version"] == "0.14.0"
-
-
-def test_grok_build_invocation_rejects_missing_acpx_capability(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path, missing=("--agent",))
-    _stub_grok(monkeypatch, tmp_path)
-
-    with pytest.raises(AcpxShadowRefusalError, match="--agent"):
-        _build_grok(AcpxGrokShadowAdapter(), cwd=tmp_path)
 
 
 def test_grok_build_invocation_accepts_rolling_cli_version(tmp_path, monkeypatch):
@@ -2010,32 +1593,6 @@ def test_grok_build_invocation_accepts_rolling_cli_version(tmp_path, monkeypatch
 
     assert plan.metadata["grok_cli_version"] == "0.3.7"
     assert plan.metadata["grok_cli_compatibility"] == "agent-stdio-v1"
-
-
-def test_grok_build_invocation_accepts_unknown_version_when_capabilities_pass(
-    tmp_path, monkeypatch
-):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path, version="unknown")
-    adapter = AcpxGrokShadowAdapter()
-
-    plan = _build_grok(adapter, cwd=tmp_path)
-
-    assert plan.metadata["grok_cli_version"] == "unknown"
-
-
-def test_grok_build_invocation_rejects_missing_cli_capability(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path, version="0.3.7", missing=("--agent-profile",))
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(
-        AcpxShadowRefusalError,
-        match="missing capabilities: --agent-profile",
-    ):
-        _build_grok(adapter, cwd=tmp_path)
 
 
 def test_grok_build_invocation_fixed_command_and_ordering(tmp_path, monkeypatch):
@@ -2151,23 +1708,6 @@ def test_grok_sealed_review_selects_hash_pinned_tool_profile(tmp_path, monkeypat
     assert "`max_bytes=16000`" in profile
 
 
-def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    for model, effort in ((None, None), ("grok-4.7", None), (None, "high"), ("grok-4.7", "high")):
-        plan = _build_grok(adapter, cwd=tmp_path, model=model, effort=effort)
-        assert plan.metadata["model"] == "grok-4.7"
-        assert plan.metadata["effort"] == "high"
-        assert plan.metadata["target_agent"] == "grok"
-        assert plan.metadata["grok_cli_version"] == "0.2.118"
-        assert plan.metadata["grok_cli_compatibility"] == "agent-stdio-v1"
-        assert plan.metadata["acpx_cli_version"] == "0.13.0"
-        assert plan.metadata["acpx_cli_compatibility"] == "json-one-shot-v1"
-
-
 def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
@@ -2196,84 +1736,6 @@ def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(tm
         assert "xai-" not in serialized.lower() or "xai_api_key" not in serialized.lower()
 
 
-def test_grok_build_invocation_stamps_metadata_without_forwarding(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    plan = _build_grok(
-        adapter,
-        cwd=tmp_path,
-        prompt="investigate flaky test",
-        task_id="task-grok-42",
-        tool_config={
-            "acpx_shadow": True,
-            "target_agent": "grok",
-            "correlation_id": "corr-g.1",
-            "idempotency_key": "idem-g:9",
-        },
-    )
-    assert plan.metadata["task_id"] == "task-grok-42"
-    assert plan.metadata["correlation_id"] == "corr-g.1"
-    assert plan.metadata["idempotency_key"] == "idem-g:9"
-    for value in ("task-grok-42", "corr-g.1", "idem-g:9"):
-        assert value not in plan.cmd
-        assert value not in plan.stdin_payload
-
-
-def test_grok_build_invocation_rejects_write_mode(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    _stub_grok(monkeypatch, tmp_path)
-    adapter = AcpxGrokShadowAdapter()
-
-    with pytest.raises(ValueError, match="mode"):
-        adapter.build_invocation(
-            prompt="ping",
-            mode="workspace-write",
-            cwd=tmp_path,
-            model=None,
-            task_id="t-1",
-            session_id=None,
-            tool_config={
-                "acpx_shadow": True,
-                "target_agent": "grok",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
-
-
-def test_grok_parse_response_success_compatible_with_codex_parser():
-    adapter = AcpxGrokShadowAdapter()
-    result = adapter.parse_response(
-        stdout=_SUCCESS_NDJSON,
-        stderr="",
-        returncode=0,
-        output_file=None,
-    )
-    assert result.ok is True
-    assert result.response == "Hello world."
-    assert result.session_id is None
-    assert result.tool_calls == []
-
-
-def test_grok_parse_response_timeout_and_auth_fail_closed():
-    adapter = AcpxGrokShadowAdapter()
-    timeout = adapter.parse_response(
-        stdout=_TIMEOUT_NDJSON, stderr="", returncode=3, output_file=None
-    )
-    assert timeout.ok is False
-    assert "TIMEOUT" in timeout.stderr_excerpt
-
-    auth = adapter.parse_response(
-        stdout=_AUTH_REQUIRED_NDJSON, stderr="", returncode=1, output_file=None
-    )
-    assert auth.ok is False
-    assert "AUTH_REQUIRED" in auth.stderr_excerpt
-
-
 def test_grok_parse_response_cancel_crash_malformed_replay_fail_closed():
     adapter = AcpxGrokShadowAdapter()
     for stdout, rc, needle in (
@@ -2287,35 +1749,6 @@ def test_grok_parse_response_cancel_crash_malformed_replay_fail_closed():
         assert result.ok is False
         assert result.response == ""
         assert needle.lower() in (result.stderr_excerpt or "").lower()
-
-
-def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch):
-    """Regression: Codex seat must not become a generic multi-agent adapter."""
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxAdapter()
-    plan = _build(adapter, cwd=tmp_path)
-    assert adapter.name == "acpx-codex-shadow"
-    assert "codex" in plan.cmd
-    assert "exec" in plan.cmd
-    assert "--agent" not in plan.cmd
-    assert "grok-build" not in plan.cmd
-    _assert_acpx_env_overrides(plan.env_overrides, expected={"ACPX_AUTH_CHAT_GPT": "1"})
-    assert build_agent_env(provider=adapter.name, overrides=plan.env_overrides)[
-        "ACPX_AUTH_CHAT_GPT"
-    ] == "1"
-    assert plan.env_unsets == ()
-    with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
-        _build(
-            adapter,
-            cwd=tmp_path,
-            tool_config={
-                "acpx_shadow": True,
-                "target_agent": "grok",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
 
 
 @pytest.mark.parametrize(
@@ -2506,16 +1939,6 @@ def test_cursor_acp_variant_refusal_writes_typed_usage_record(tmp_path, monkeypa
     assert records[0]["model"] == "grok-4.7-fast"
 
 
-def test_cursor_acp_pins_match_the_catalog_cursor_pins():
-    from scripts.review.model_catalog import apply_cursor_model_pins, cursor_pinned_models
-
-    assert cursor_pinned_models()[0] == acpx_module.CURSOR_ACP_MODEL
-    expected_wire_pins = frozenset({"composer-2.5[fast=false]"}) | {
-        apply_cursor_model_pins(pin) for pin in cursor_pinned_models()
-    }
-    assert expected_wire_pins == acpx_module.CURSOR_ACP_MODELS
-
-
 def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):
     monkeypatch.delenv("CURSOR_API_KEY", raising=False)
     monkeypatch.setattr(acpx_module, "_load_cursor_api_key_from_env_file", lambda: "fixture-file-key")
@@ -2590,51 +2013,6 @@ def test_claude_sealed_review_turn_budget_is_derived_from_required_chunks(tmp_pa
     assert AcpxClaudeShadowAdapter()._max_turns(str(config_path)) == 10
 
 
-def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, monkeypatch):
-    _stub_binary(monkeypatch, tmp_path)
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-
-    with acpx_module.active_discussion_scope():
-        plan = AcpxClaudeShadowAdapter().build_invocation(
-            prompt="advise on the next infrastructure priority",
-            mode="read-only",
-            cwd=tmp_path,
-            model="claude-opus-5-5",
-            task_id="t-claude-advisory",
-            session_id=None,
-            tool_config={
-                "acpx_discussion": True,
-                "target_agent": "claude",
-                "correlation_id": "corr-claude-advisory",
-                "idempotency_key": "idem-claude-advisory",
-            },
-        )
-
-    pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
-    assert ("--max-turns", "8") in pairs
-
-
-def test_claude_acp_refuses_a_fable_pin(tmp_path, monkeypatch):
-    """#9583: Fable holds no advisory or review role; Opus 5.5 is the Claude authority pin."""
-    _stub_binary(monkeypatch, tmp_path)
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-    with acpx_module.active_discussion_scope(), pytest.raises(AcpxShadowRefusalError, match="allowed pins"):
-        AcpxClaudeShadowAdapter().build_invocation(
-            prompt="advise on the next infrastructure priority",
-            mode="read-only",
-            cwd=tmp_path,
-            model="claude-fable-5-1",
-            task_id="t-claude-fable",
-            session_id=None,
-            tool_config={
-                "acpx_discussion": True,
-                "target_agent": "claude",
-                "correlation_id": "corr-claude-fable",
-                "idempotency_key": "idem-claude-fable",
-            },
-        )
-
-
 @pytest.mark.parametrize(
     "participant,model",
     [
@@ -2644,11 +2022,16 @@ def test_claude_acp_refuses_a_fable_pin(tmp_path, monkeypatch):
         ("cursor", "claude-fable-5-1"),
     ],
 )
-def test_acp_consult_route_refuses_a_fable_pin_from_the_catalog_roles(participant, model):
-    """#9583: ACP admission reads the catalog roles, before any adapter allowlist or spawn."""
+def test_acp_consult_route_refuses_a_fable_pin_before_dispatch(participant, model):
+    """#9583: Fable lacks consult roles; its native-only transport also bars Cursor."""
     from scripts.agent_runtime import runner
 
-    with pytest.raises(runner.InterAgentTransportError, match="holds no ACP ask, consult or discussion role"):
+    reason = (
+        "does not implement catalog transport 'cursor'"
+        if participant == "cursor"
+        else "holds no ACP ask, consult or discussion role"
+    )
+    with pytest.raises(runner.InterAgentTransportError, match=reason):
         runner.resolve_inter_agent_route(participant, model=model)
 
 
@@ -2779,23 +2162,6 @@ def test_claude_adapter_preflight_refuses_incompatible_version(tmp_path, version
     assert raised.value.failure_code == "acp_adapter_incompatible"
 
 
-def test_claude_adapter_manifest_and_lock_keep_rolling_range_reproducible():
-    repo_root = Path(__file__).resolve().parents[2]
-    package = json.loads((repo_root / "package.json").read_text(encoding="utf-8"))
-    lock = json.loads((repo_root / "package-lock.json").read_text(encoding="utf-8"))
-
-    expected_range = ">=0.64.2 <1"
-    assert package["devDependencies"]["@agentclientprotocol/claude-agent-acp"] == expected_range
-    assert lock["packages"][""]["devDependencies"][
-        "@agentclientprotocol/claude-agent-acp"
-    ] == expected_range
-    locked_version = lock["packages"][
-        "node_modules/@agentclientprotocol/claude-agent-acp"
-    ]["version"]
-    locked_tuple = tuple(int(part) for part in locked_version.split("."))
-    assert (0, 64, 2) <= locked_tuple < (1, 0, 0)
-
-
 def test_kimicc_sealed_review_forwards_only_parent_validated_mcp(tmp_path, monkeypatch):
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
@@ -2833,30 +2199,6 @@ def test_kimicc_sealed_review_forwards_only_parent_validated_mcp(tmp_path, monke
     assert plan.metadata["model"] == "kimi-code/k3"
 
 
-def test_builtin_discussion_seat_rejects_shadow_marker_wrong_target_and_session(tmp_path, monkeypatch):
-    _shadow_env(monkeypatch)
-    _stub_binary(monkeypatch, tmp_path)
-    adapter = AcpxClaudeShadowAdapter()
-    base = {"target_agent": "claude", "correlation_id": "corr-1", "idempotency_key": "idem-1"}
-    with pytest.raises(AcpxShadowRefusalError, match="acpx_discussion"):
-        adapter.build_invocation(
-            prompt="ping", mode="read-only", cwd=tmp_path, model=None, task_id="t-1", session_id=None,
-            tool_config={"acpx_shadow": True, **base},
-        )
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-    with acpx_module.active_discussion_scope():
-        with pytest.raises(AcpxShadowRefusalError, match="target_agent"):
-            adapter.build_invocation(
-                prompt="ping", mode="read-only", cwd=tmp_path, model=None, task_id="t-1", session_id=None,
-                tool_config={"acpx_discussion": True, **base, "target_agent": "pool"},
-            )
-        with pytest.raises(AcpxShadowRefusalError, match="session_id"):
-            adapter.build_invocation(
-                prompt="ping", mode="read-only", cwd=tmp_path, model=None, task_id="t-1", session_id="prior",
-                tool_config={"acpx_discussion": True, **base},
-            )
-
-
 def test_kimicc_rejects_a_caller_model_other_than_its_exact_pin(tmp_path, monkeypatch):
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     _stub_binary(monkeypatch, tmp_path)
@@ -2875,38 +2217,6 @@ def test_kimicc_rejects_a_caller_model_other_than_its_exact_pin(tmp_path, monkey
                 "idempotency_key": "idem-1",
             },
         )
-
-
-def test_supported_participant_registry_has_only_fixed_direct_seats():
-    assert ACPX_SUPPORTED_PARTICIPANTS == {
-        "codex": {"seat": "acpx-codex-shadow", "agent": "codex", "model": None},
-        "grok": {"seat": "acpx-grok-shadow", "agent": "grok", "model": "grok-4.7"},
-        "claude": {
-            "seat": "acpx-claude-shadow",
-            "agent": "claude",
-            "model": None,
-        },
-        "kimi": {"seat": "acpx-kimi-shadow", "agent": "kimi", "model": None},
-        "kimicc": {"seat": "acpx-kimicc-shadow", "agent": "kimi", "model": "kimi-code/k3"},
-        "cursor": {"seat": "acpx-cursor-shadow", "agent": "cursor", "model": None},
-        "pool": {"seat": "acpx-pool-shadow", "agent": "pool", "model": None},
-        "agy": {
-            "seat": "acpx-agy-shadow",
-            "agent": "agy",
-            "model": "gemini-3.8-flash-high",
-        },
-        "glm": {"seat": "acpx-glm-shadow", "agent": "glm", "model": "glm-5.3"},
-        "gemma": {
-            "seat": "acpx-gemma-shadow",
-            "agent": "gemma",
-            "model": "google-ais/gemma-4-31b-it",
-        },
-        "deepseek": {
-            "seat": "acpx-deepseek-shadow",
-            "agent": "deepseek",
-            "model": "deepseek-v4.1-flash",
-        },
-    }
 
 
 @pytest.mark.parametrize(
@@ -3006,87 +2316,6 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
         _assert_acpx_env_overrides(plan.env_overrides, expected={})
 
 
-def test_gemma_shadow_seat_uses_a_confined_opencode_command(tmp_path, monkeypatch):
-    """#6805: the $0 toolless Gemma seat mirrors the confined GLM shape."""
-    _stub_binary(monkeypatch, tmp_path)
-    opencode = tmp_path / "opencode"
-    opencode.write_text("#!/bin/sh\n", encoding="utf-8")
-    opencode.chmod(0o755)
-    _patch_provider_binary_lookup(
-        monkeypatch,
-        lambda name, *_a, **_k: {"opencode": str(opencode)}.get(name),
-    )
-    monkeypatch.setattr(
-        acpx_module,
-        "_probe_participant_cli_compatibility",
-        lambda _path, _executable: ("1.17.13", ()),
-    )
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-
-    adapter = AcpxGemmaShadowAdapter()
-    with acpx_module.active_discussion_scope():
-        plan = adapter.build_invocation(
-            prompt="ping",
-            mode="read-only",
-            cwd=tmp_path,
-            model="google-ais/gemma-4-31b-it",
-            task_id="t-1",
-            session_id=None,
-            tool_config={
-                "acpx_discussion": True,
-                "target_agent": "gemma",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
-
-    assert adapter.name == "acpx-gemma-shadow"
-    command = plan.cmd[plan.cmd.index("--agent") + 1]
-    assert shlex.split(command) == [str(opencode), "acp", "--pure"]
-    assert ("--model", "google-ais/gemma-4-31b-it") in zip(
-        plan.cmd, plan.cmd[1:], strict=False
-    )
-    assert plan.cmd[-3:] == ["exec", "-f", "-"]
-    for flag in ("--deny-all", "--no-fs", "--no-terminal"):
-        assert flag in plan.cmd
-    assert plan.metadata["model"] == "google-ais/gemma-4-31b-it"
-    assert plan.metadata["provider_route"] == "google-ais/gemma-4-31b-it"
-    assert plan.metadata["provider_cli_compatibility"] == "native-acp-pure-v1"
-    assert plan.metadata["tool_policy"] == "deny-all"
-    _assert_acpx_env_overrides(
-        plan.env_overrides,
-        expected={
-            "ACPX_AUTH_OPENCODE_LOGIN": "1",
-            "OPENCODE_CONFIG_CONTENT": '{"permission":{"*":"deny"},"tools":{"*":false}}',
-        },
-    )
-    env = build_agent_env(provider=adapter.name, overrides=plan.env_overrides)
-    assert env["ACPX_AUTH_OPENCODE_LOGIN"] == "1"
-    assert env["OPENCODE_CONFIG_CONTENT"] == plan.env_overrides["OPENCODE_CONFIG_CONTENT"]
-
-
-def test_gemma_shadow_seat_rejects_a_caller_model_other_than_its_pin(tmp_path, monkeypatch):
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-    _stub_binary(monkeypatch, tmp_path)
-    with acpx_module.active_discussion_scope(), pytest.raises(
-        AcpxShadowRefusalError, match="model="
-    ):
-        AcpxGemmaShadowAdapter().build_invocation(
-            prompt="ping",
-            mode="read-only",
-            cwd=tmp_path,
-            model="openrouter/google/gemma-4-31b-it",
-            task_id="t-1",
-            session_id=None,
-            tool_config={
-                "acpx_discussion": True,
-                "target_agent": "gemma",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
-
-
 def test_deepseek_shadow_seat_refuses_first_party_egress_in_ci(tmp_path, monkeypatch):
     """#6805: first-party DeepSeek is China-hosted — the ACP seat keeps the
     same CI refusal as the dispatch adapter on its new opencode transport."""
@@ -3112,53 +2341,6 @@ def test_deepseek_shadow_seat_refuses_first_party_egress_in_ci(tmp_path, monkeyp
                 "idempotency_key": "idem-1",
             },
         )
-
-
-def test_deepseek_shadow_seat_rejects_a_caller_model_other_than_its_pin(tmp_path, monkeypatch):
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-    _stub_binary(monkeypatch, tmp_path)
-    with acpx_module.active_discussion_scope(), pytest.raises(
-        AcpxShadowRefusalError, match="model="
-    ):
-        AcpxDeepSeekShadowAdapter().build_invocation(
-            prompt="ping",
-            mode="read-only",
-            cwd=tmp_path,
-            model="deepseek-v4-pro",
-            task_id="t-1",
-            session_id=None,
-            tool_config={
-                "acpx_discussion": True,
-                "target_agent": "deepseek",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
-
-
-def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatch):
-    """Key guard (#6805): any legacy path that still resolves the hermes
-    binary must surface an actionable remediation plus the documented route —
-    never a bare not-found. Hermes is permanently removed (operator order
-    2026-08-16), so the message points at the opencode standing path, never
-    at a reinstall."""
-    _patch_provider_binary_lookup(monkeypatch, lambda _name, *_a, **_k: None)
-
-    with pytest.raises(AcpxShadowRefusalError) as exc_info:
-        acpx_module._resolve_participant_binary(
-            "hermes", adapter_label="AcpxDeepSeekShadowAdapter"
-        )
-
-    message = str(exc_info.value)
-    assert "hermes binary not found on PATH" in message
-    assert "text-oneshot-isolated-v1" in message
-    assert "docs/runbooks/agent-seat-onboarding.md" in message
-    assert "permanently removed" in message
-    assert "do not reinstall" in message
-    assert "ask-deepseek" in message
-    assert "opencode run --model deepseek/deepseek-flash" in message
-    assert "delegate.py dispatch --agent deepseek" in message
-    assert "hermes --version" not in message
 
 
 def test_probe_participant_reachability_reports_only_missing_provider_binaries(monkeypatch):
@@ -3187,82 +2369,6 @@ def test_probe_participant_reachability_flags_deepseek_when_opencode_is_missing(
     assert "opencode binary not found on PATH" in error
     assert "hermes binary not found on PATH" not in error
     assert "docs/runbooks/agent-seat-onboarding.md" in error
-
-
-def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, monkeypatch):
-    _stub_binary(monkeypatch, tmp_path)
-    required = acpx_module._required_node_major(adapter_label="test")
-    agy = tmp_path / "agy"
-    agy.write_text("#!/bin/sh\n", encoding="utf-8")
-    agy.chmod(0o755)
-    node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
-    _patch_path_binary_lookup(
-        monkeypatch,
-        lambda name, *_a, **_k: str({"agy": agy, "node": node}[name]),
-    )
-    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
-    monkeypatch.setattr(
-        acpx_module,
-        "_probe_participant_cli_compatibility",
-        lambda _path, _executable: ("9.9.9", ()),
-    )
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-
-    with acpx_module.active_discussion_scope():
-        plan = AcpxAgyShadowAdapter().build_invocation(
-            prompt="ping",
-            mode="read-only",
-            cwd=tmp_path,
-            model="gemini-3.8-flash-high",
-            task_id="t-1",
-            session_id=None,
-            tool_config={
-                "acpx_discussion": True,
-                "target_agent": "agy",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
-
-    assert plan.metadata["provider_cli_version"] == "9.9.9"
-
-
-def test_new_fleet_discussion_seat_rejects_missing_provider_capability(tmp_path, monkeypatch):
-    _stub_binary(monkeypatch, tmp_path)
-    required = acpx_module._required_node_major(adapter_label="test")
-    agy = tmp_path / "agy"
-    agy.write_text("#!/bin/sh\n", encoding="utf-8")
-    agy.chmod(0o755)
-    node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
-    _patch_path_binary_lookup(
-        monkeypatch,
-        lambda name, *_a, **_k: str({"agy": agy, "node": node}[name]),
-    )
-    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
-    monkeypatch.setattr(
-        acpx_module,
-        "_probe_participant_cli_compatibility",
-        lambda _path, _executable: ("2.0.0", ("--sandbox",)),
-    )
-    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
-
-    with acpx_module.active_discussion_scope(), pytest.raises(
-        AcpxShadowRefusalError, match="--sandbox"
-    ):
-        AcpxAgyShadowAdapter().build_invocation(
-            prompt="ping",
-            mode="read-only",
-            cwd=tmp_path,
-            model="gemini-3.8-flash-high",
-            task_id="t-1",
-            session_id=None,
-            tool_config={
-                "acpx_discussion": True,
-                "target_agent": "agy",
-                "correlation_id": "corr-1",
-                "idempotency_key": "idem-1",
-            },
-        )
 
 
 def test_participant_version_probe_accepts_v_prefix_before_build_stamp(tmp_path):

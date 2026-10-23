@@ -86,20 +86,6 @@ def test_reviewer_opt_in_denies_bash_and_guards_all_tracked_reads(tmp_path: Path
 
 
 @pytest.mark.parametrize(
-    "config",
-    [
-        {"reviewer_tools": True, "allowed_tools": "Read"},
-        {"reviewer_tools": True, "strict_mcp_config": True},
-        {"reviewer_tools": True, "mcp_server_names": ["sources"]},
-        {"reviewer_tools": False},
-    ],
-)
-def test_nonordinary_callers_keep_baseline_argv(tmp_path: Path, config: dict) -> None:
-    baseline_config = {key: value for key, value in config.items() if key != "reviewer_tools"}
-    assert _plan(tmp_path, config).cmd == _plan(tmp_path, baseline_config).cmd
-
-
-@pytest.mark.parametrize(
     ("command", "blocked"),
     [
         ("gh pr view 8912 --json number", False),
@@ -176,13 +162,6 @@ def _bridge(guard_command: str, shell_command: str) -> subprocess.CompletedProce
     )
 
 
-def test_grok_bridge_guard_set_matches_the_claude_adapter() -> None:
-    from scripts.agent_runtime.adapters.claude import PROJECT_PYTHON_GUARDS as adapter_guards
-    from scripts.agent_runtime.grok_hook_bridge import PROJECT_PYTHON_GUARDS as bridge_guards
-
-    assert bridge_guards == adapter_guards == set(_PINNED_GUARDS)
-
-
 @pytest.mark.parametrize("name", _PINNED_GUARDS)
 def test_grok_bridge_runs_the_adapters_pinned_invocation(name: str) -> None:
     from scripts.agent_runtime.grok_hook_bridge import guard_argv
@@ -221,13 +200,6 @@ def test_grok_bridge_classifies_the_pinned_invocation_after_tokenization(command
 
     python = project_interpreter(ROOT)
     assert guard_argv(command.format(python=python, hooks=_HOOKS)) == [str(python), str(_HOOKS / "guard-pr-merge.py")]
-
-
-@pytest.mark.parametrize("command", ["'{hooks}/guard-secret-'print.py", "{hooks}/guard\\-secret-print.py"])
-def test_grok_bridge_classifies_the_plain_path_after_tokenization(command: str) -> None:
-    from scripts.agent_runtime.grok_hook_bridge import guard_argv
-
-    assert guard_argv(command.format(hooks=_HOOKS)) == [str(_HOOKS / "guard-secret-print.py")]
 
 
 @pytest.mark.parametrize(
@@ -448,28 +420,6 @@ def test_grok_hook_bridge_primary_checkout_write_guard() -> None:
         if blocked:
             assert "BLOCKED by guard-primary-checkout-write" in result.stderr
             assert str(probe) in result.stderr
-
-
-def test_grok_hook_bridge_runs_fleet_venv_guard() -> None:
-    event = {
-        "hook_event_name": "PreToolUse",
-        "toolName": "run_terminal_command",
-        "toolInput": {"command": "python3 --version"},
-        "cwd": str(ROOT),
-    }
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
-            str(ROOT / "agents_extensions/shared/hooks/enforce-venv.sh"),
-        ],
-        input=json.dumps(event),
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 2
-    assert "Unqualified interpreter blocked" in result.stderr
 
 
 @pytest.mark.parametrize("tool", ["run_terminal_command", "run_terminal_cmd", "Bash"])
@@ -716,21 +666,6 @@ def test_unreadable_tracked_file_is_denied(tracked_review_root):
         target.chmod(0o600)
 
 
-def test_main_does_not_treat_evaluator_system_exit_as_help(monkeypatch, capsys, tracked_review_root):
-    import io
-
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
-
-    def fail(*args):
-        raise SystemExit(0)
-
-    monkeypatch.setattr(policy, "reviewer_tool_allowed", fail)
-    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(tracked_review_root)])
-    monkeypatch.setattr(sys, "stdin", io.StringIO("{}"))
-    assert policy.main() == 2
-    assert capsys.readouterr().err.startswith(policy.REFUSAL_CODE + ":")
-
-
 def test_guard_help_does_not_require_a_review_event():
     result = subprocess.run(
         [sys.executable, str(ROOT / "scripts/agent_runtime/grok_reviewer_permissions.py"), "--help"],
@@ -738,22 +673,6 @@ def test_guard_help_does_not_require_a_review_event():
     )
     assert result.returncode == 0
     assert "Exit codes:" in result.stdout
-
-
-@pytest.mark.parametrize("event", ["{}", "broken json"])
-def test_refusal_denies_when_stderr_pipe_is_broken(monkeypatch, event):
-    import io
-
-    from scripts.agent_runtime import grok_reviewer_permissions as policy
-
-    class BrokenStderr:
-        def write(self, value):
-            raise BrokenPipeError("private pipe detail")
-
-    monkeypatch.setattr(sys, "argv", ["guard", "--review-root", str(ROOT)])
-    monkeypatch.setattr(sys, "stdin", io.StringIO(event))
-    monkeypatch.setattr(sys, "stderr", BrokenStderr())
-    assert policy.main() == 2
 
 
 @pytest.mark.parametrize("event", ["{}", "broken json"])

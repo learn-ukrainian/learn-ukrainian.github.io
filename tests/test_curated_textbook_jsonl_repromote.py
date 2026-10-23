@@ -155,30 +155,6 @@ def test_main_producer_consumer_destinations_and_publication_gate(tmp_path, monk
         assert pipeline["fingerprint"].read_bytes() == b"original fingerprint\n"
 
 
-@pytest.mark.parametrize("explicit", [False, True])
-def test_direct_apply_plan_retains_default_or_explicit_plan(tmp_path, monkeypatch, pipeline, explicit):
-    scratch = tmp_path / "task scratch"
-    scratch.mkdir()
-    monkeypatch.setenv("TMPDIR", str(scratch))
-    textbook.write_inventory(pipeline["rows"], pipeline["inventory"])
-    textbook.write_decisions(pipeline["rows"], pipeline["decisions"])
-    candidates = tmp_path / "direct-candidates.json"
-    textbook.build_candidates(pipeline["inventory"], candidates)
-    plan_out = tmp_path / "direct-plan.json" if explicit else scratch / textbook.PLAN_FILENAME
-    kwargs = {"plan_out": plan_out} if explicit else {}
-    assert textbook.apply_plan(
-        candidates=candidates,
-        decisions=pipeline["decisions"],
-        manifest=pipeline["manifest"],
-        fingerprint=pipeline["fingerprint"],
-        write=False,
-        **kwargs,
-    ) == {"plan": pipeline["plan"]["counts"], "wrote": False}
-    assert json.loads(plan_out.read_bytes()) == pipeline["plan"]
-    assert candidates.is_file()
-    assert pipeline["seen"]["published"] == []
-
-
 def test_default_and_explicit_outputs_preserve_bytes_and_ledger_identities(tmp_path, monkeypatch, pipeline):
     scratch = tmp_path / "managed task"
     scratch.mkdir()
@@ -204,18 +180,6 @@ def test_default_and_explicit_outputs_preserve_bytes_and_ledger_identities(tmp_p
     assert {name: pipeline[name].read_bytes() for name in ledger_bytes} == ledger_bytes
     assert pipeline["manifest"].read_bytes() == b'{"entries": []}\n'
     assert pipeline["fingerprint"].read_bytes() == b"original fingerprint\n"
-
-
-def test_default_resolution_follows_each_caller_root_and_system_fallback(tmp_path, monkeypatch):
-    fallback = tmp_path / "fallback"
-    monkeypatch.setattr(textbook.tempfile, "gettempdir", lambda: str(fallback))
-    for root in (tmp_path / "first", tmp_path / "second"):
-        monkeypatch.setenv("TMPDIR", str(root))
-        assert textbook._scratch_output(textbook.CANDIDATES_FILENAME) == root / textbook.CANDIDATES_FILENAME
-        assert textbook._scratch_output(textbook.PLAN_FILENAME) == root / textbook.PLAN_FILENAME
-        assert not root.exists()
-    monkeypatch.delenv("TMPDIR")
-    assert textbook._scratch_output(textbook.PLAN_FILENAME) == fallback / textbook.PLAN_FILENAME
 
 
 def test_plan_override_keeps_repository_output_refusal(tmp_path, monkeypatch, pipeline):

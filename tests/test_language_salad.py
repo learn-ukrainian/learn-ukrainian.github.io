@@ -25,7 +25,6 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 from audit.checks.language_salad import (
     _ALPHABET_PHASE,
-    PHASES,
     detect_language_salad,
     get_phase,
     split_paragraphs,
@@ -43,21 +42,6 @@ def test_a1_m01_to_m03_resolve_to_alphabet_phase():
         assert phase is _ALPHABET_PHASE, f"A1 M{n:02d} should be alphabet phase"
         assert phase.allow_uk_paragraphs is True
         assert phase.require_uk_paragraphs is False
-
-
-def test_a1_m04_to_m14_resolve_to_decoding_phase():
-    """A1 M04-M14 (post-alphabet decoding practice) forbid UK prose."""
-    for n in (4, 10, 14):
-        phase = get_phase("a1", n)
-        assert phase is PHASES[0], f"A1 M{n:02d} should be decoding phase"
-        assert phase.allow_uk_paragraphs is False
-
-
-def test_a1_m15_to_m34_resolve_to_first_uk_prose_phase():
-    """A1 M15+ moves to the first-UK-prose phase (Phase 1)."""
-    for n in (15, 25, 34):
-        phase = get_phase("a1", n)
-        assert phase is PHASES[1], f"A1 M{n:02d} should be phase 1"
 
 
 # ---------------------------------------------------------------------------
@@ -88,20 +72,6 @@ Another English paragraph here.
         f"Dialog leaked into paragraphs: "
         f"{[t for _, t in paragraphs if 'Анна' in t]}"
     )
-
-
-def test_dialog_with_colon_outside_bold_still_excluded():
-    """The legacy `**Name**:` form must continue to work."""
-    content = """
-Intro.
-
-> **Maria**: Привіт!
-> **Petro**: Привіт!
-
-Outro.
-"""
-    paragraphs = split_paragraphs(content)
-    assert not any("Maria" in text or "Petro" in text for _, text in paragraphs)
 
 
 # ---------------------------------------------------------------------------

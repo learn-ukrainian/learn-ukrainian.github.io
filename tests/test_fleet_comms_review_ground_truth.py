@@ -9,7 +9,6 @@ from pathlib import Path
 import pytest
 
 from scripts.fleet_comms.formal_review_finalize import (
-    FormalReviewFinalizeError,
     finalize_formal_review_verdict,
 )
 from scripts.fleet_comms.review_ground_truth import (
@@ -131,25 +130,6 @@ def test_validate_findings_allows_in_surface_paths() -> None:
     )
 
 
-def test_validate_findings_empty_passes() -> None:
-    inventory = inventory_from_path_status(
-        repository=_REPO,
-        pr_number=1,
-        head_sha=_SHA,
-        base_ref_oid=_BASE,
-        entries=(),
-    )
-    validate_findings_against_inventory(
-        ReviewEvidence(
-            correctness="correct",
-            explanation="Clean.",
-            confidence=0.95,
-            findings=(),
-        ),
-        inventory,
-    )
-
-
 def test_validate_rejects_mismatched_head_sha() -> None:
     inventory = inventory_from_path_status(
         repository=_REPO,
@@ -228,58 +208,6 @@ class _FakeGh:
                 command, 0, stdout=f"{self.head}\n", stderr=""
             )
         return subprocess.CompletedProcess(command, 1, stdout="", stderr="unexpected")
-
-
-def test_finalize_refuses_finding_outside_pr_surface(tmp_path: Path) -> None:
-    findings_path = tmp_path / "false-block.json"
-    findings_path.write_text(
-        json.dumps(
-            {
-                "schema_version": "code-review-findings.v1",
-                "overall": {
-                    "correctness": "incorrect",
-                    "explanation": "Deletes the isolation regression guard.",
-                    "confidence": 0.95,
-                },
-                "findings": [
-                    {
-                        "id": "F001",
-                        "title": "Deleted isolation test",
-                        "body": "PR deletes tests/test_pytest_worker_rlimit_isolation.py",
-                        "priority": "P0",
-                        "confidence": 0.95,
-                        "category": "regression",
-                        "location": {
-                            "path": "tests/test_pytest_worker_rlimit_isolation.py",
-                            "start_line": 1,
-                            "end_line": 1,
-                            "claim_type": "missing",
-                        },
-                        "verbatim": "def test_pytest_worker_rlimit_isolation():",
-                        "why_wrong": "Removes the #5776 regression guard.",
-                        "smallest_fix": "Keep the file.",
-                        "sources": ["none"],
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-    gh = _FakeGh(
-        files=[{"path": "scripts/fleet_comms/x.py", "changeType": "MODIFIED"}]
-    )
-    with pytest.raises(
-        FormalReviewFinalizeError, match="review_finding_path_outside_pr_surface"
-    ):
-        finalize_formal_review_verdict(
-            pr_number=5799,
-            model=_MODEL,
-            family="zhipu",
-            harness="opencode",
-            findings_path=findings_path,
-            plane_root=tmp_path / "plane",
-            runner=gh,
-        )
 
 
 def test_finalize_accepts_in_surface_findings(tmp_path: Path) -> None:

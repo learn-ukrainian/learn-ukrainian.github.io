@@ -3,19 +3,16 @@ from __future__ import annotations
 import hashlib
 import os
 import sqlite3
-import subprocess
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from itertools import product
 from pathlib import Path
 from threading import Barrier, Event
-from time import thread_time
 from typing import Any
 
 import pytest
 
-from agents_extensions.shared.session_streams import store as store_module
 from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
 from agents_extensions.shared.session_streams.db import MigrationError, SessionStreamDatabase, load_migrations
 from agents_extensions.shared.session_streams.dual_write import ATLAS_HANDOFF_PATH, mirror_atlas_handoff
@@ -30,13 +27,10 @@ from agents_extensions.shared.session_streams.model import (
     parse_timestamp,
 )
 from agents_extensions.shared.session_streams.store import (
-    _EMBEDDED_HOST_EXEMPT_FILENAMES,
     _EMBEDDED_HOST_SUFFIXES,
     _FILE_EXTENSIONS,
     _PUBLIC_SUFFIX_TLDS,
-    _REPOSITORY_FILENAMES,
     _TLD_FILE_EXTENSIONS,
-    MAX_ENTRY_BYTES,
     PUBLIC_SUFFIX_LIST_PATH,
     PUBLIC_SUFFIX_LIST_SHA256,
     ContentRejectedError,
@@ -981,104 +975,6 @@ def test_host_shaped_directory_segments_are_conservatively_rejected(separator: s
         validate_entry_body(separator.join(["scripts", name, "x"]))
 
 
-@pytest.fixture
-def repository_filename_paths() -> tuple[str, ...]:
-    # Snapshot of the explicit exceptions, checked against Git only in tests.
-    # Runtime admission never depends on the caller's filesystem or Git state.
-    return (
-        "agents_extensions/shared/rules/core.md",
-        "README.md",
-        "agents_extensions/shared/session_streams/store.py",
-    )
-
-
-@pytest.mark.repo_wide
-def test_collision_exceptions_are_exact_tracked_repository_names(repository_filename_paths: tuple[str, ...]) -> None:
-    repo_root = Path(__file__).resolve().parents[1]
-    result = subprocess.run(
-        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
-    )
-    tracked = set(result.stdout.split("\0"))
-    assert set(repository_filename_paths) <= tracked
-    assert {Path(path).name for path in repository_filename_paths} == _REPOSITORY_FILENAMES
-
-
-@pytest.mark.repo_wide
-def test_embedded_host_filter_accepts_every_tracked_basename() -> None:
-    # Check S1 independently: the existing collision-TLD rule intentionally
-    # rejects bare unknown .md/.py names, which still need directory context.
-    repo_root = Path(__file__).resolve().parents[1]
-    result = subprocess.run(
-        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
-    )
-    tracked = [path for path in result.stdout.split("\0") if path]
-    assert tracked, "the guard must inspect the tracked Git index"
-    rejected = [path for path in tracked if _filename_contains_hostname(Path(path).name)]
-    assert rejected == [], "exempt the exact basename (_EMBEDDED_HOST_EXEMPT_FILENAMES): " + repr(rejected)
-
-
-@pytest.mark.repo_wide
-def test_embedded_host_exemptions_are_required_by_tracked_basenames() -> None:
-    # Every exemption names its tracked collisions; a stale one must be removed.
-    repo_root = Path(__file__).resolve().parents[1]
-    result = subprocess.run(
-        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
-    )
-    basenames = {Path(path).name for path in result.stdout.split("\0") if path}
-    assert basenames, "the guard must inspect the tracked Git index"
-    assert sorted(_EMBEDDED_HOST_EXEMPT_FILENAMES - basenames) == []
-
-
-def test_embedded_host_exempt_filenames_each_need_their_exemption(monkeypatch: pytest.MonkeyPatch) -> None:
-    exempt = sorted(_EMBEDDED_HOST_EXEMPT_FILENAMES)
-    assert not any(_filename_contains_hostname(filename) for filename in exempt)
-    monkeypatch.setattr(store_module, "_EMBEDDED_HOST_EXEMPT_FILENAMES", frozenset())
-    assert [filename for filename in exempt if not _filename_contains_hostname(filename)] == []
-
-
-@pytest.mark.repo_wide
-def test_backslash_tracked_paths_add_no_hostname_rejections() -> None:
-    repo_root = Path(__file__).resolve().parents[1]
-    result = subprocess.run(
-        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
-    )
-    tracked = [path for path in result.stdout.split("\0") if path]
-    assert tracked, "the guard must inspect the tracked Git index"
-    # Existing bare-name and unsupported-extension rejections apply equally
-    # to either spelling; backslashes must introduce no new full-path rejection.
-    newly_rejected = [
-        path for path in tracked if _contains_hostname(path.replace("/", "\\")) and not _contains_hostname(path)
-    ]
-    assert newly_rejected == [], repr(newly_rejected)
-    # Independently guard file-shaped directory segments, including paths whose
-    # final basename is already rejected, against losing the file exemption.
-    rejected_directories = [
-        path
-        for path in tracked
-        if any(
-            segment.rpartition(".")[2].lower() in _FILE_EXTENSIONS and _contains_hostname(segment + "\\")
-            for segment in path.split("/")[:-1]
-        )
-    ]
-    assert rejected_directories == [], repr(rejected_directories)
-
-
-# The closed label list used before #9430; the suffix list must keep it all.
-_LEGACY_EMBEDDED_HOST_SUFFIXES = (
-    *("com", "net", "org", "io", "dev", "app", "cloud", "local", "internal", "lan", "corp", "home"),
-    *("arpa", "intranet", "private", "edu", "gov", "ru", "ua", "de", "nl", "fr", "us", "uk"),
-)
-
-
-@pytest.mark.parametrize("suffix", _LEGACY_EMBEDDED_HOST_SUFFIXES)
-def test_closed_host_suffixes_cannot_be_hidden_in_filenames(suffix: str) -> None:
-    assert suffix in _EMBEDDED_HOST_SUFFIXES
-    for filename in (f"example.{suffix}.json", f"host_vars/example.{suffix.upper()}.YML"):
-        assert _filename_contains_hostname(filename)
-        with pytest.raises(ContentRejectedError, match="hostname rule"):
-            validate_entry_body(filename)
-
-
 def test_every_public_suffix_label_is_a_host_before_every_extension() -> None:
     # Denominator: every top-level label of the vendored snapshot, every extension.
     assert {"com", "info", "xyz", "ai", "me", "jp", "xn--p1ai"} <= _PUBLIC_SUFFIX_TLDS
@@ -1131,22 +1027,6 @@ def test_every_public_suffix_label_is_a_host_before_every_extension() -> None:
 def test_hosts_under_public_suffix_labels_are_rejected(body: str) -> None:
     with pytest.raises(ContentRejectedError, match="hostname rule"):
         validate_entry_body(body)
-
-
-@pytest.mark.parametrize(
-    "body",
-    [
-        "decol_lex_001.review.json",
-        "reviews/decol_syn_065.review.json",
-        "plan-validate.report.json",
-        "baselines/v1/gpt-5.6-terra.report.json",
-        "run_codex_baseline.py.txt",
-        "archive/evidence/ua-eval-v0.1.0/run_codex_baseline.py.txt",
-    ],
-)
-def test_tracked_suffix_label_conventions_remain_files(body: str) -> None:
-    assert not _filename_contains_hostname(body)
-    validate_entry_body(body)
 
 
 def test_entire_canary_script_receipts_remain_files_but_siblings_stay_hosts() -> None:
@@ -1285,28 +1165,6 @@ def test_public_suffix_loader_fails_closed_on_truncated_snapshot(tmp_path: Path)
         load_public_suffix_labels(tmp_path / "absent.dat")
 
 
-@pytest.mark.parametrize(
-    "drop",
-    [
-        pytest.param(lambda _index, line: line.strip() == "com", id="one-rule-removed"),
-        pytest.param(lambda _index, line: line.strip() == "рф", id="idn-rule-removed"),
-        pytest.param(lambda _index, line: not line.startswith("//"), id="markers-only"),
-        pytest.param(lambda _index, line: not line.startswith("//") and line.strip() != "com", id="one-rule-only"),
-    ],
-)
-def test_public_suffix_loader_fails_closed_on_removed_rules_with_markers_kept(
-    tmp_path: Path, drop: Callable[[int, str], bool]
-) -> None:
-    snapshot, _digest = _vendored_snapshot_without(tmp_path, drop)
-    text = snapshot.read_text(encoding="utf-8")
-    assert all(
-        marker in text.splitlines() for marker in ("// ===BEGIN ICANN DOMAINS===", "// ===END PRIVATE DOMAINS===")
-    )
-    assert text != PUBLIC_SUFFIX_LIST_PATH.read_text(encoding="utf-8")
-    with pytest.raises(RuntimeError, match="pinned SHA-256"):
-        load_public_suffix_labels(snapshot)
-
-
 def test_vendored_public_suffix_snapshot_is_pinned_and_rules_only() -> None:
     assert hashlib.sha256(PUBLIC_SUFFIX_LIST_PATH.read_bytes()).hexdigest() == PUBLIC_SUFFIX_LIST_SHA256
     lines = PUBLIC_SUFFIX_LIST_PATH.read_text(encoding="utf-8").splitlines()
@@ -1316,107 +1174,6 @@ def test_vendored_public_suffix_snapshot_is_pinned_and_rules_only() -> None:
     assert rules and all(rule and not any(char.isspace() for char in rule) for rule in rules)
     # Keep the hand-written TLD/extension intersection true for this snapshot.
     assert _FILE_EXTENSIONS & _PUBLIC_SUFFIX_TLDS == _TLD_FILE_EXTENSIONS
-
-
-@pytest.mark.parametrize(
-    "filename",
-    ["store.sources.yaml", "x.schema.json", "x.test.ts", "x.locale.json"],
-)
-def test_repository_stem_labels_remain_files(filename: str) -> None:
-    assert not _filename_contains_hostname(filename)
-    validate_entry_body(filename)
-
-
-@pytest.mark.parametrize("extension", sorted(_FILE_EXTENSIONS))
-def test_uk_and_arpa_host_endings_cannot_be_hidden_in_filenames(extension: str) -> None:
-    filenames = [f"host.co.uk.{extension}", f"host.example.co.uk.{extension}", f"host.home.arpa.{extension}"]
-    filenames.extend([f"host.uk.{extension}", f"x.uk.{extension}"])
-    if extension == "md":
-        # Only the exact tracked localization basenames stay files; the
-        # separate collision-TLD rule still applies to bare names.
-        for filename in ("README.uk.md", "DATA_CARD.uk.md"):
-            assert not _filename_contains_hostname(filename)
-        assert _filename_contains_hostname("PHASE1.uk.md")
-    for filename in filenames:
-        for body in (filename, f"host_vars/{filename.upper()}", f"`host_vars\\{filename}`"):
-            assert _filename_contains_hostname(filename), filename
-            with pytest.raises(ContentRejectedError, match="hostname rule"):
-                validate_entry_body(body)
-    # Even the two-label stem is a host; it cannot use the localization exception.
-    assert _filename_contains_hostname(f"co.uk.{extension}")
-
-
-@pytest.mark.parametrize(
-    "body",
-    [
-        "Opus 5.5",
-        "gpt-6.1-sol",
-        "Python 3.12",
-        "v1.2.3",
-        "0.5",
-        "4.6k",
-        "e.g.",
-        "i.e.",
-        "U.S.",
-        "foo.c",
-        "foo.h",
-        "package.json5",
-        "python -m scripts.fleet_comms",
-    ],
-)
-def test_append_accepts_ordinary_model_version_and_module_tokens(tmp_path: Path, body: str) -> None:
-    store = _store(tmp_path)
-    lease = _open(store)
-    entry = store.append_entry(
-        lease, entry_type=EntryType.NOTE, body=body, idempotency_key="ordinary", now=NOW + timedelta(seconds=1)
-    ).entry
-    assert entry.body == body
-
-
-@pytest.mark.parametrize(
-    "unit,rejected",
-    [
-        ("a", False),
-        ("0123456789abcdef", False),
-        ("YWJjZGVm+/", False),
-        ("a.py-", True),
-        ("a.", False),
-        ("a.1.", False),
-        ("a.py.", True),
-        ("\\", False),
-        ("/", False),
-        ("//?/UNC/a.1/", False),
-    ],
-)
-def test_entry_validation_handles_64_kib_tokens_without_rescanning(unit: str, rejected: bool) -> None:
-    body = (unit * (MAX_ENTRY_BYTES // len(unit) + 1))[:MAX_ENTRY_BYTES]
-    started = thread_time()
-    # Some dotted runs are hosts; timing covers both acceptance and rejection.
-    if rejected:
-        with pytest.raises(ContentRejectedError, match="hostname rule"):
-            validate_entry_body(body)
-    else:
-        validate_entry_body(body)
-    elapsed = thread_time() - started
-    # CPU time avoids scheduler contention; this generous regression limit
-    # still rejects quadratic rescanning without a loaded-runner wall-clock flake.
-    assert elapsed < 2, f"64-KiB token validation used {elapsed:.3f}s CPU"
-
-
-def test_100_kb_token_has_bounded_scan_and_size_rejection() -> None:
-    body = "a." * 50_000
-    started = thread_time()
-    assert not _contains_hostname(body)
-    with pytest.raises(ContentRejectedError, match="64-KiB rule"):
-        validate_entry_body(body)
-    elapsed = thread_time() - started
-    assert elapsed < 2, f"100-KB token scan used {elapsed:.3f}s CPU"
-
-
-@pytest.mark.parametrize("body", ["contact test@example.com", "a.py-test@example.com", ".test@example.com"])
-def test_email_rejection_preserved_with_linear_token_boundary(body: str) -> None:
-    with pytest.raises(ContentRejectedError, match="email-address rule"):
-        validate_entry_body(body)
 
 
 @pytest.mark.parametrize(

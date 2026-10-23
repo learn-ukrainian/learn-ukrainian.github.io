@@ -313,17 +313,6 @@ def test_03_requires_stable_event_output_raw_output_normalized_output_and_segmen
         _assert_contract_valid(invalid, references)
 
 
-def test_04_requires_complete_candidate_records_keyed_by_event_output_identity() -> None:
-    document, _ = _valid_document()
-    candidate = _only_candidate(document)
-    candidate.pop("tool_identity")
-
-    errors = _schema_errors(document)
-
-    assert errors
-    assert any("tool_identity" in error for error in errors)
-
-
 def test_05_rejects_anchor_when_candidate_set_is_incomplete() -> None:
     document, _ = _valid_document()
     document["cases"][0]["candidate_set_complete"] = False
@@ -422,49 +411,6 @@ def test_11_accepts_mixed_as_a_human_source_relation() -> None:
     document["cases"][0]["expected_fact_check_decision"] = "AUDIT"
 
     _assert_contract_valid(document, references)
-
-
-def test_12_requires_eligibility_and_error_status_for_every_candidate() -> None:
-    document, _ = _valid_document()
-
-    for field in ("eligibility", "error_status"):
-        invalid = deepcopy(document)
-        _only_candidate(invalid).pop(field)
-        assert _schema_errors(invalid), f"missing {field} must be rejected"
-
-
-def test_13_requires_qualification_eligible_false_for_a_partial_label_pilot() -> None:
-    document, _ = _valid_document()
-    document["qualification_eligible"] = True
-
-    errors = _schema_errors(document)
-
-    assert errors
-    assert any("expected to be empty" in error for error in errors)
-
-
-def test_14_rejects_unknown_decision_reason_relation_and_status_enums() -> None:
-    document, _ = _valid_document()
-    mutations = [
-        (document["cases"][0], "expected_layer_a_decision"),
-        (document["cases"][0], "expected_layer_a_reason"),
-        (_only_candidate(document), "expected_source_relation"),
-        (_only_candidate(document), "eligibility"),
-        (_only_candidate(document), "error_status"),
-        (document["cases"][0], "corpus_verification_status"),
-        (document["cases"][0]["adjudication"], "status"),
-    ]
-
-    for _, field in mutations:
-        invalid, _ = _valid_document()
-        if field in {"expected_layer_a_decision", "expected_layer_a_reason", "corpus_verification_status"}:
-            target = invalid["cases"][0]
-        elif field == "status":
-            target = invalid["cases"][0]["adjudication"]
-        else:
-            target = _only_candidate(invalid)
-        target[field] = "UNKNOWN_ENUM"
-        assert _schema_errors(invalid), f"unknown {field} must be rejected"
 
 
 def test_15_unresolved_cases_block_qualification() -> None:

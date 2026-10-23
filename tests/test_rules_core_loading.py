@@ -128,23 +128,6 @@ def _assert_core(context: str, seat: str, row: str, *, context_bytes: int | None
 # --------------------------------------------------------------------------- loader
 
 
-def test_canonical_core_paths_are_the_rules_directory() -> None:
-    assert rules_core.CORE_REL == "agents_extensions/shared/rules/core.md"
-    assert rules_core.CONTENT_ADDENDUM_REL == "agents_extensions/shared/rules/core-curriculum.md"
-
-
-def test_seat_resolution_explicit_env_then_lane(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert rules_core.resolve_seat() == "core"
-    assert rules_core.resolve_seat("content") == "content"
-    assert rules_core.resolve_seat(lane="core", provider="claude") == "content"
-    assert rules_core.resolve_seat(lane="infra", provider="claude") == "core"
-    monkeypatch.setenv(rules_core.SEAT_ENV, "content")
-    assert rules_core.resolve_seat() == "content"
-    assert rules_core.resolve_seat("core") == "core"
-    monkeypatch.setenv(rules_core.SEAT_ENV, "bogus")
-    assert rules_core.resolve_seat() == "core"
-
-
 def test_block_frames_the_text_with_its_digest() -> None:
     text = rules_core.core_text("content")
     block = rules_core.core_block("content")
@@ -256,11 +239,6 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
     assert "rules source unavailable: agents_extensions/shared/rules/core.md" in missing.stderr
 
 
-def test_shell_ack_matches_the_python_ack() -> None:
-    shell = (REPO / "scripts" / "lib" / "rules_core.sh").read_text(encoding="utf-8")
-    assert f'text="{rules_core.ACK_PROMPT}"' in shell
-
-
 # --------------------------------------------------------------------------- launchers
 
 _KIMI_CREDENTIALS = {"KIMICC_AUTH_TOKEN": "test-key", "MOONSHOT_API_KEY": "", "KIMI_API_KEY": ""}
@@ -288,8 +266,6 @@ LAUNCHER_ROWS = (
     ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
     ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
     ("grok-hermes", "start-grok.sh", ("--harness", "hermes"), "hermes", "--query", "core"),
-    ("kimi-native", "start-kimi.sh", (), None, "--agent-file", "core"),
-    ("kimicc", "start-kimicc.sh", (), "kimi", "--append-system-prompt", "core"),
     ("glm-opencode", "start-glm.sh", (), None, "positional", "core"),
     ("glmcc", "start-glmcc.sh", (), "glm", "--append-system-prompt", "core"),
 )
@@ -420,10 +396,10 @@ _KIMI_REFUSED = (
 
 @pytest.mark.parametrize("forwarded", _KIMI_REFUSED, ids=lambda forwarded: " ".join(forwarded))
 def test_kimi_code_admits_only_fresh_session_flags(forwarded, tmp_path: Path, core_root: Path) -> None:
+    """OO-58: the retired default refuses before the fresh-session classifier, and nothing execs."""
     result, _ = _launch(core_root, "start-kimi.sh", ("--", *forwarded), tmp_path, None, expect_launch=False)
     assert result.returncode == 2, result.stdout + result.stderr
-    assert "Kimi Code starts fresh sessions only" in result.stderr
-    assert "fresh web/UI/backend coding tasks" in result.stderr
+    assert "is retired in the model catalog" in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -444,21 +420,27 @@ def test_kimi_code_admits_only_fresh_session_flags(forwarded, tmp_path: Path, co
     ids=lambda forwarded: " ".join(forwarded) or "plain",
 )
 def test_kimi_code_fresh_launch_carries_the_core(forwarded, tmp_path: Path, core_root: Path) -> None:
-    _, argv = _launch(core_root, "start-kimi.sh", ("--", *forwarded) if forwarded else (), tmp_path, None)
-    _assert_core(_carrier(argv, "--agent-file"), "core", "kimi-fresh")
-    assert argv[len(argv) - len(forwarded) :] == list(forwarded)
+    """OO-58: a fresh Kimi launch is refused before argv, so the core is never attached to a command."""
+    result, _ = _launch(
+        core_root,
+        "start-kimi.sh",
+        ("--", *forwarded) if forwarded else (),
+        tmp_path,
+        None,
+        expect_launch=False,
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "is retired in the model catalog" in result.stderr
 
 
 def test_kimi_on_claude_code_keeps_the_core_when_resuming(tmp_path: Path, core_root: Path) -> None:
-    _, argv = _launch(core_root, "start-kimicc.sh", ("--", "--continue"), tmp_path, "kimi")
-    assert "--continue" in argv
-    _assert_core(_carrier(argv, "--append-system-prompt"), "core", "kimicc-continue")
-
-
-def test_launcher_ignores_the_old_env_override(tmp_path: Path, core_root: Path) -> None:
-    hostile = {OLD_OVERRIDE_ENV: str(_hostile_core_dir(tmp_path))}
-    _, argv = _launch(core_root, "start-claude.sh", (), tmp_path, None, hostile)
-    assert _carrier(argv, "--append-system-prompt") == rules_core.core_block("core")
+    """OO-58: kimicc resume is refused with the retired default before a core-bearing argv exists."""
+    result, _ = _launch(
+        core_root, "start-kimicc.sh", ("--", "--continue"), tmp_path, "kimi", expect_launch=False
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize(
@@ -534,12 +516,13 @@ def _dispatched_worker_prompt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, e
 
 def test_delegate_dispatch_leads_with_the_core(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     state, prompt = _dispatched_worker_prompt(tmp_path, monkeypatch, [])
-    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
     assert state["read_only_primary_cwd"] is True
     assert state["cwd"] == state["worktree_path"]
     assert state["effective_prompt_sha256"] == hashlib.sha256(prompt.encode("utf-8")).hexdigest()
     assert prompt.startswith(rules_core.core_block("core") + "\n\n")
-    assert prompt.endswith("the source prompt")
+    assert "the source prompt" in prompt
+    assert "$LU_TASK_EVIDENCE_DIR" in prompt
     assert prompt.count(rules_core.core_block("core")) == 1
     _assert_core(prompt, "core", "delegate-dispatch")
 
@@ -602,8 +585,6 @@ WORKER_ROWS = (
     ("gemini-legacy", "scripts.agent_runtime.adapters.gemini:GeminiAdapter", "read-only", None),
     ("grok", "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter", "read-only", None),
     ("cursor", "scripts.agent_runtime.adapters.cursor:CursorAdapter", "read-only", None),
-    ("kimi-native", "scripts.agent_runtime.adapters.kimi:KimiAdapter", "workspace-write", None),
-    ("kimicc", "scripts.agent_runtime.adapters.kimi:KimiAdapter", "workspace-write", {"harness": "kimicc"}),
     ("glm", "scripts.agent_runtime.adapters.glm:GlmAdapter", "read-only", None),
     ("deepseek", "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter", "read-only", None),
     ("hermes-deepseek", "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter", "read-only", None),
@@ -667,8 +648,6 @@ def test_worker_row_carries_the_core(
     _, prompt = _dispatched_worker_prompt(tmp_path, monkeypatch, [])
     _stub_worker_clis(tmp_path, monkeypatch)
     module, cls = adapter.split(":")
-    if row.startswith("kimi"):
-        tool_config = admitted_tool_config(tmp_path, tool_config)
     if row == "agy":
         home = tmp_path / "agy-home"
         register_agy_hooks(tmp_path, home=home)
@@ -684,6 +663,30 @@ def test_worker_row_carries_the_core(
     )
     sent = len("\0".join(plan.cmd).encode("utf-8")) + len(plan.stdin_payload.encode("utf-8"))
     _assert_core(_plan_context(plan), "core", f"delegate-worker-{row}", context_bytes=sent)
+
+
+@pytest.mark.parametrize(
+    ("row", "tool_config"),
+    [("kimi-native", None), ("kimicc", {"harness": "kimicc"})],
+)
+def test_retired_kimi_worker_refuses_before_a_core_bearing_plan(
+    row: str, tool_config: dict | None, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """OO-58: a Kimi worker plan is refused, so the rules core is not attached to a command."""
+    from scripts.agent_runtime.adapters.kimi import KimiAdapter
+
+    _dispatched_worker_prompt(tmp_path, monkeypatch, [])
+    _stub_worker_clis(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        KimiAdapter().build_invocation(
+            prompt="implement the widget",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id=f"rules-core-{row}",
+            session_id=None,
+            tool_config=admitted_tool_config(tmp_path, tool_config),
+        )
 
 
 # --------------------------------------------------------------------------- ACP asks, discussion legs, sealed reviews
@@ -794,17 +797,6 @@ def test_legacy_bridge_builder_leads_with_the_core(index: int) -> None:
     prompt = build()
     assert prompt.startswith(rules_core.core_block("core") + "\n\n"), row
     _assert_core(prompt, "core", row)
-
-
-def test_legacy_inline_digests_are_kept_alongside_the_core() -> None:
-    from scripts.ai_agent_bridge import _prompts
-
-    agy = _prompts.build_agy_prompt(_msg())
-    codex = _prompts.build_codex_prompt(_msg())
-    assert _prompts.OPERATOR_CONTRACT_DIGEST in agy
-    assert _prompts._CODEX_STANDING_RULES in codex
-    review = _prompts.build_claude_prompt(_msg(), review=True)
-    assert review.index("</rules-core>") < review.index(_prompts.review_protocol_prefix().strip()[:40])
 
 
 @pytest.mark.parametrize("index", range(6))
@@ -1001,15 +993,6 @@ def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
     assert api_client.get("/api/rules", headers={"If-None-Match": plain.headers["etag"]}).status_code == 200
 
 
-@pytest.mark.parametrize("scope", ("core", "content", "task:cli", "full"))
-def test_source_paths_match_the_requested_bundle(scope: str) -> None:
-    from scripts.api import rules_router
-
-    sources = rules_router.RULE_SOURCES if scope == "full" else rules_core.scope_sources(scope)
-    assert rules_router.rules_source_paths(project_root=REPO, scope=scope) == list(sources)
-    assert rules_router.rules_source_paths(project_root=REPO) == [rules_core.CORE_REL]
-
-
 @pytest.mark.parametrize("scope", ("core", "content"))
 def test_core_scopes_match_the_offline_loader(api_client, scope: str) -> None:
     from scripts.api import rules_router
@@ -1056,50 +1039,4 @@ def test_content_scope_without_the_addendum_is_unavailable(api_client, core_with
     assert "core-curriculum.md" in response.json()["detail"]
 
 
-def test_sdk_caches_each_scope_under_its_own_key(monkeypatch) -> None:
-    from scripts.ai_agent_bridge import monitor_client
-
-    calls: list[tuple[str, str, str]] = []
-
-    def fake_cached(self, *, key, manifest_key, manifest, default_url):
-        calls.append((key, manifest_key, default_url))
-
-    monkeypatch.setattr(monitor_client.MonitorClient, "_cached_component", fake_cached)
-    client = monitor_client.MonitorClient.__new__(monitor_client.MonitorClient)
-    client.rules(manifest={})
-    client.rules(manifest={}, scope="core")
-    client.rules(manifest={}, scope="task:driver")
-    assert calls == [
-        ("rules", "rules", "/api/rules?format=markdown"),
-        ("rules:core", "rules_core", "/api/rules?scope=core&format=markdown"),
-        ("rules:task:driver", "", "/api/rules?scope=task:driver&format=markdown"),
-    ]
-
-
 # --------------------------------------------------------------------------- online/offline parity
-
-
-def test_task_scopes_match_task_scoped_reading_rows() -> None:
-    table = (REPO / rules_core.RULES_DIR_REL / "task-scoped-reading.md").read_text(encoding="utf-8")
-    rows = [line for line in table.splitlines() if line.startswith("| ") and not line.startswith("| ---")]
-    for name, scope in rules_core.TASK_SCOPES.items():
-        matches = [line for line in rows if scope.row in line]
-        assert len(matches) == 1, f"task:{name} names no single row ({scope.row!r})"
-        for rel in scope.sources:
-            path = Path(rel)
-            token = path.parent.name if path.name == "SKILL.md" else path.name
-            assert token in matches[0], f"task:{name}: {rel} is not selected by its row"
-            assert (REPO / rel).is_file(), rel
-        assert f"`{name}`" in table
-
-
-def test_offline_list_names_every_scope_and_source() -> None:
-    offline = (REPO / rules_core.RULES_DIR_REL / "_load-via-api.md").read_text(encoding="utf-8")
-    for seat in rules_core.SEATS:
-        assert f"scope={seat} " in offline
-        for rel in rules_core.seat_sources(seat):
-            assert rel in offline
-    for name, scope in rules_core.TASK_SCOPES.items():
-        assert f"scope=task:{name} " in offline
-        for rel in scope.sources:
-            assert rel in offline

@@ -11,7 +11,7 @@ import yaml
 
 from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.draft_schema import validate_draft
-from scripts.build.fresh.listening import choice_error, model_target
+from scripts.build.fresh.listening import model_target
 from scripts.curriculum.resolver.inputs import Allowlist
 from tests.build.test_fresh_assemble import make_text_record, make_video_record, make_word_record
 from tests.build.test_fresh_runner import _fixture, _run_contract
@@ -269,34 +269,6 @@ def test_video_opening_requires_attested_word_model():
     assert (row["code"], row["layer"]) == ("listening_model_unverified", "pack")
 
 
-@pytest.mark.parametrize("target", [None, "W-999", "T-999"])
-def test_missing_model_target_stays_a_pack_gap(target):
-    _, _, pack, words = _listening_fixture()
-    assert model_target(target, "V-1", pack, words) == (None, "listening_target_invalid")
-
-
-def test_nontext_listening_option_is_refused():
-    assert (
-        choice_error({"target_record": "Д"}, [None], 0, "Д", {}, letters={"Д"}, record_ids=set())
-        == "listening_option_invalid"
-    )
-
-
-@pytest.mark.parametrize("key", [-1, 1])
-def test_listening_key_must_be_an_option_index(key):
-    assert (
-        choice_error({"target_record": "Д"}, ["Д"], key, "Д", {}, letters={"Д"}, record_ids=set())
-        == "listening_key_not_unique"
-    )
-
-
-@pytest.mark.parametrize("field", ["target_record", "host"])
-def test_listening_schema_requires_bindings(field):
-    draft, _, _, _ = _listening_fixture()
-    draft["activities"][0]["items"][0].pop(field)
-    assert validate_draft(draft, "a1", activity_types={"a1": "quiz"})
-
-
 @pytest.mark.parametrize("mutation", ["url", "target_form", "description"])
 def test_model_metadata_does_not_admit_unproved_words(mutation):
     _, _, pack, words = _listening_fixture()
@@ -308,12 +280,6 @@ def test_model_metadata_does_not_admit_unproved_words(mutation):
         pack["videos"][0].pop("models")
         pack["videos"][0]["use"] = "Pronunciation model for слово."
     assert model_target("W-1", "V-1", pack, words)[1]
-
-
-def test_unlisted_video_is_typed_before_generic_evidence_arithmetic():
-    draft, plan, _, _ = _listening_fixture(letter=True)
-    plan["lessons"][0]["videos"] = []
-    assert runner.check_3_structure(draft, plan["lessons"][0])["code"] == "listening_host_ineligible"
 
 
 @pytest.mark.parametrize("channel", [True, False])

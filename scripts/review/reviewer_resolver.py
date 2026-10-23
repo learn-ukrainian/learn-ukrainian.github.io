@@ -7,9 +7,8 @@ cross-family requirement by switching harness. Domain and data-egress
 exclusions are fail-closed: an unspecified or non-matching policy excludes
 a gated candidate, it does not admit it. Missing lane-health data is fail-open
 (no signal ≠ unhealthy, matching ``scripts/api/lane_health.py``'s convention),
-but an explicitly unhealthy route is unavailable. Weekly pace only orders
-otherwise equal fits. Fresh allowance at the reserve excludes new assignments
-unless existing verified credit relief applies; stale allowance is advisory.
+but an explicitly unhealthy route is unavailable. Usage does not exclude or
+rank reviewers. Claude retains its existing account cap protection.
 
 The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
@@ -44,7 +43,7 @@ from scripts.audit import model_families
 from scripts.fleet import credit_lane
 from scripts.fleet.claude_account_lane import ClaudeAccount, bind_snapshot, require_account
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
-from scripts.review.capacity import ReviewCapacity, review_capacity
+from scripts.review.capacity import ReviewCapacity, review_capacity, review_capacity_action
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     VALID_RISKS,
@@ -700,8 +699,9 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
         return f"claude account unresolved: {account.refusal}"
     from scripts.agent_runtime.model_pause import account_used_pct, refusal_reason
 
+    used_pct = account_used_pct(None if inputs.structural else account)
     paused = refusal_reason(
-        candidate_dispatch_model(candidate), used_pct=account_used_pct(None if inputs.structural else account)
+        candidate_dispatch_model(candidate), used_pct=lambda lane: used_pct(lane) if lane == "claude" else None
     )
     if paused:
         return paused
@@ -942,18 +942,11 @@ def _evaluate_candidate(
     capacity = review_capacity(record or {}, diagnostics if isinstance(diagnostics, Mapping) else None)
     usage_status = str(record.get("status") or "").strip().lower()
     if health not in {"unhealthy", "degraded_telemetry"}:
-        if capacity.near_cap:
+        if candidate.route == "claude" and capacity.near_cap:
             health = "near_cap"
         elif usage_status in {"cool", "warm", "hot", "near_cap"}:
-            # Usage labels are not route-health attestations. Keep the public
-            # normalizer's writer aliases; only review evaluation applies AC-01.
             observed_health = credit_lane.health_fact(record)[0]
-            if observed_health != credit_lane.HEALTHY:
-                health = None
-            elif capacity.remaining_pct is None or capacity.freshness != credit_lane.FRESH:
-                health = "healthy"
-            else:
-                health = "degraded" if usage_status in {"warm", "hot"} else "healthy"
+            health = "healthy" if observed_health == credit_lane.HEALTHY else None
 
     # Catalog validation protects the installed ladders; this independent gate
     # also protects explicit pins and custom candidates before any quality prior.
@@ -1159,7 +1152,7 @@ def _evaluate_candidate(
             capacity=capacity,
         )
     credit: dict[str, object] | None = None
-    if health == "near_cap" and inputs.pinned_candidate != candidate.name:
+    if candidate.route == "claude" and health == "near_cap" and inputs.pinned_candidate != candidate.name:
         # A near-cap lane with a usable credit balance stays eligible for an
         # allowlisted model only (#9517); every other credit state keeps the cap.
         credit = _near_cap_credit(candidate, inputs.routing_snapshot)
@@ -1459,9 +1452,25 @@ def resolve_reviewer(
     selected_rung_index: int | None = None
     # Dispatch supplies the existing budget guard's per-model decisions.
     # They only remove candidates; hard eligibility and ranking remain here.
-    capacity_exclusions = (
-        (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {}) if excluded_quota_buckets else {}
-    )
+    # Recheck legacy usage exclusions on every call. Operational exclusions
+    # remain binding even when their evidence exists only in this map.
+    capacity_exclusions = {}
+    for name, supplied_cause in (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {}).items():
+        candidate = REVIEW_CANDIDATES.get(name)
+        if candidate is None:
+            continue
+        blocked, cause = review_capacity_action(
+            candidate.route,
+            _route_record(candidate, inputs.routing_snapshot, prefer_route=True),
+            (inputs.routing_snapshot or {}).get("diagnostics"),
+            candidate.concrete_model,
+        )
+        if blocked:
+            capacity_exclusions[name] = cause
+        elif supplied_cause not in {"weekly deficit", "codexbar will_last_to_reset=False (deficit)"} and not str(
+            supplied_cause
+        ).startswith("near_cap ("):
+            capacity_exclusions[name] = supplied_cause or "operational capacity unavailable"
     pace_retention_available = False
     eligible_quota_buckets: set[str] = set()
     # Last-resort candidates follow every eligible primary, after hard gates.
@@ -1492,7 +1501,9 @@ def resolve_reviewer(
                 diagnostics = (inputs.routing_snapshot or {}).get("diagnostics")
                 capacity = review_capacity(info, diagnostics)
                 pace_retention_available |= (
-                    not capacity.near_cap and not capacity.hard_reason and not capacity_exclusions.get(candidate.name)
+                    (candidate.route != "claude" or not capacity.near_cap)
+                    and not capacity.hard_reason
+                    and not capacity_exclusions.get(candidate.name)
                 )
             capacity_reason = capacity_exclusions.get(candidate.name)
             if result.status == "eligible" and capacity_reason:

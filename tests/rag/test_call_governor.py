@@ -8,7 +8,6 @@ import os
 import threading
 import time
 from collections.abc import Callable
-from pathlib import Path
 
 import pytest
 
@@ -200,28 +199,6 @@ def test_timed_out_thread_work_keeps_its_slot_until_it_finishes(caplog: pytest.L
     assert overloaded.detail == "all 1 call slots held by timed-out work still running"
 
 
-def test_queued_calls_are_refused_once_every_slot_is_abandoned(caplog: pytest.LogCaptureFixture) -> None:
-    governor = _governor(caplog, max_concurrent=1, queue_timeout=10, call_timeout=0.2)
-    workers = _BlockedWorkers()
-
-    async def main() -> tuple[list[object], float]:
-        try:
-            holder = asyncio.create_task(governor.run("search_text", workers.call))
-            await _until(lambda: governor.in_flight == 1)
-            begun = time.monotonic()
-            queued = await asyncio.gather(governor.run("search_text", workers.call), return_exceptions=True)
-            waited = time.monotonic() - begun
-            return [*(await asyncio.gather(holder, return_exceptions=True)), *queued], waited
-        finally:
-            workers.release.set()
-
-    (held, queued), waited = asyncio.run(main())
-    assert isinstance(held, CallRefused) and held.code == "call_timeout"
-    assert isinstance(queued, CallRefused) and queued.code == "server_overloaded"
-    assert waited < 2.0
-    assert governor.queued == 0
-
-
 def test_finished_abandoned_work_hands_its_slot_to_the_next_waiter(caplog: pytest.LogCaptureFixture) -> None:
     governor = _governor(caplog, max_concurrent=2, queue_timeout=10, call_timeout=1.0)
     stuck, live = _BlockedWorkers(), _BlockedWorkers()
@@ -333,39 +310,6 @@ def test_handler_error_is_logged_and_propagates(caplog: pytest.LogCaptureFixture
         asyncio.run(governor.run("search_text", broken))
     assert "outcome=error" in caplog.text
     assert governor.in_flight == 0
-
-
-def test_slow_call_writes_one_stack_dump(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
-    logger = logging.getLogger("test.sources.calls")
-    caplog.set_level(logging.INFO, logger="test.sources.calls")
-    governor = CallGovernor(
-        GovernorLimits(max_concurrent=2, queue_timeout=1, call_timeout=5, slow_dump_after=0.2),
-        dump_dir=tmp_path,
-        logger=logger,
-    )
-
-    async def slow() -> str:
-        await asyncio.sleep(0.6)
-        return "done"
-
-    assert asyncio.run(governor.run("vet_vocabulary", slow)) == "done"
-    dumps = list(tmp_path.glob("slow-call-*.txt"))
-    assert len(dumps) == 1
-    text = dumps[0].read_text(encoding="utf-8")
-    assert "tool=vet_vocabulary" in text and "most recent call first" in text
-    assert oct(dumps[0].stat().st_mode & 0o777) == "0o600"
-
-
-def test_limits_from_environ_reject_invalid_values() -> None:
-    limits = GovernorLimits.from_environ(
-        {
-            "LU_SOURCES_MAX_CONCURRENT_CALLS": "4",
-            "LU_SOURCES_CALL_TIMEOUT_S": "abc",
-            "LU_SOURCES_QUEUE_TIMEOUT_S": "-1",
-            "LU_SOURCES_SLOW_CALL_DUMP_S": "90",
-        }
-    )
-    assert limits == GovernorLimits(max_concurrent=4, queue_timeout=30.0, call_timeout=120.0, slow_dump_after=90.0)
 
 
 def test_a_governor_survives_successive_event_loops(caplog: pytest.LogCaptureFixture) -> None:

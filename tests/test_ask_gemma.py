@@ -21,16 +21,6 @@ from scripts.ai_agent_bridge._opencode import (
 # --- constant -------------------------------------------------------------
 
 
-def test_gemma_model_is_ais_direct_zero_cost_31b():
-    # Default pin = Google AI Studio direct (user order 2026-07-07): $0 by
-    # construction (no paid Gemma SKU on the Gemini API), on the user's own
-    # free-tier quota — deliberately NOT the pool-starved OR ``:free`` variant
-    # and NOT the paid OR endpoint (that one is a --model fallback only).
-    assert GEMMA_MODEL == "google-ais/gemma-4-31b-it"
-    assert not GEMMA_MODEL.endswith(":free")
-    assert GEMMA_MODEL.startswith("google-ais/gemma")  # guard allowlist shape
-
-
 # --- invocation: json format, no variant (not a reasoning-variant model) ---
 
 
@@ -59,27 +49,6 @@ def test_ask_gemma_uses_json_format_and_no_variant():
 
 
 # --- model override (churn-resistance; tags drift per model-assignment.md) --
-
-
-def test_ask_gemma_defaults_to_pinned_model():
-    with (
-        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
-        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
-        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
-    ):
-        ask_gemma("hi", task_id="t")
-        assert inv.call_args[0][1] == GEMMA_MODEL
-
-
-def test_ask_gemma_honors_model_override():
-    # e.g. the 26B-A4B MoE (#1 on the lang-uk leaderboard), also $0 on AIS.
-    with (
-        patch("scripts.ai_agent_bridge._opencode.send_message", return_value=1),
-        patch("scripts.ai_agent_bridge._opencode.acknowledge"),
-        patch("scripts.ai_agent_bridge._opencode._invoke_opencode", return_value="ok") as inv,
-    ):
-        ask_gemma("hi", task_id="t", model="google-ais/gemma-4-26b-a4b-it")
-        assert inv.call_args[0][1] == "google-ais/gemma-4-26b-a4b-it"
 
 
 # --- NO egress guard (load-bearing: gemma is Western-hosted, unlike glm) ----

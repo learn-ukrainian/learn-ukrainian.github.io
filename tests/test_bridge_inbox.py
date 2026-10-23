@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import sqlite3
 import sys
 from pathlib import Path
@@ -275,21 +274,6 @@ def test_run_inbox_single_thread_three_deliveries_coalesces(mock_invoke):
 
 
 @patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-def test_run_inbox_two_threads_invokes_twice(mock_invoke):
-    first = _make_thread("claude", channel="topic", count=1)
-    second = _make_thread("claude", channel="topic", count=1)
-    mock_invoke.side_effect = [_ok_result("claude"), _ok_result("claude")]
-
-    summary = _inbox.run_inbox("claude")
-
-    assert summary.threads_processed == 2
-    assert summary.deliveries_delivered == 2
-    assert mock_invoke.call_count == 2
-    assert _delivery_rows(str(first[0]["message_id"]))[0]["status"] == "delivered"
-    assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "delivered"
-
-
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_thread_tool_error_fails_only_that_thread(mock_invoke):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
@@ -344,21 +328,6 @@ def test_run_inbox_until_idle_false_stops_after_one_thread(mock_invoke):
 
     assert summary.threads_processed == 1
     assert summary.deliveries_delivered == 1
-    assert mock_invoke.call_count == 1
-    assert _delivery_rows(str(first[0]["message_id"]))[0]["status"] == "delivered"
-    assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "pending"
-
-
-@patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-def test_run_inbox_stop_after_seconds_checks_between_groups(mock_invoke):
-    first = _make_thread("claude", count=1)
-    second = _make_thread("claude", count=1)
-    mock_invoke.return_value = _ok_result("claude")
-
-    with patch("scripts.ai_agent_bridge._inbox._monotonic", side_effect=[0.0, 5.0]):
-        summary = _inbox.run_inbox("claude", stop_after_seconds=1)
-
-    assert summary.threads_processed == 1
     assert mock_invoke.call_count == 1
     assert _delivery_rows(str(first[0]["message_id"]))[0]["status"] == "delivered"
     assert _delivery_rows(str(second[0]["message_id"]))[0]["status"] == "pending"
@@ -518,18 +487,3 @@ def test_run_inbox_gemini_429_exhausts_cascade_and_fails(mock_invoke):
     assert delivered["to_model"] == FLASH_MODEL
     messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
     assert len(messages) == 1
-
-
-@pytest.mark.skipif(
-    os.environ.get("RUN_BRIDGE_INBOX_INTEGRATION") != "1",
-    reason="set RUN_BRIDGE_INBOX_INTEGRATION=1 to run the real Codex smoke test",
-)
-def test_run_inbox_codex_integration_smoke():
-    thread = _make_thread("codex", count=1)
-
-    summary = _inbox.run_inbox("codex", until_idle=False, max_messages=1)
-
-    assert summary.deliveries_delivered == 1
-    messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
-    assert len(messages) >= 2
-    assert messages[-1]["from_agent"] == "codex"

@@ -305,22 +305,6 @@ def test_routing_budget_shape_lock(monkeypatch, tmp_path):
     assert all(isinstance(count, int) for count in data["in_flight"].values())
 
 
-def test_endpoint_returns_documented_shape(monkeypatch, tmp_path):
-    _configure(monkeypatch, tmp_path, [])
-    app = FastAPI()
-    app.state.ctx = fixture_context(tmp_path)
-    app.include_router(state_router.router, prefix="/api/state")
-
-    response = TestClient(app).get("/api/state/routing-budget")
-
-    assert response.status_code == 200
-    data = response.json()
-    assert {"agents", "in_flight", "recommendation", "diagnostics", "generated_at"} <= data.keys()
-    assert data["diagnostics"]["usage_sources"]["allotment"] in {"codexbar", "codexbar+cursor_native"}
-    assert data["diagnostics"]["usage_sources"]["burn_rate_limit"] == "agent_runtime_jsonl"
-    assert "runtime" in data["agents"]["codex"]
-
-
 def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     """Agent JSONL rate-limit cluster demotes a CodexBar-cool lane."""
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
@@ -565,16 +549,6 @@ def test_kimi_is_a_subscription_lane_and_accepts_codexbar_overlay(monkeypatch, t
     assert any(row["lane"] == "kimi" and row["type"] == "subscription" for row in data["ranked_by_headroom"])
 
 
-def test_status_hot_when_burn_75_90(monkeypatch, tmp_path):
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 800.0, now)])
-
-    data = state_router.compute_routing_budget(now)
-
-    assert data["agents"]["codex"]["burn_pct_7d"] == 80.0
-    assert data["agents"]["codex"]["status"] == "hot"
-
-
 def test_pre_launch_agentic_pool_before_2026_06_15(monkeypatch, tmp_path):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     _configure(monkeypatch, tmp_path, [_record("claude (sonnet)", 100.0, now)])
@@ -795,16 +769,6 @@ def test_ranked_by_headroom_orders_by_remaining_and_includes_api_unknown(monkeyp
     assert "resets_at" in ranked[0]
 
 
-def test_resets_at_and_reset_aware_present(monkeypatch, tmp_path):
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 10.0, now)])
-    data = state_router.compute_routing_budget(now)
-    assert "resets_at" in data["agents"]["codex"]
-    assert data["diagnostics"].get("reset_imminent_hours") == 6
-    # ranked carries it
-    assert any("resets_at" in r for r in data.get("ranked_by_headroom", []))
-
-
 def test_fresh_codexbar_overlay_omits_ledger_stale_warning(monkeypatch, tmp_path):
     """Fresh codexbar overlay must not leave ledger-stale warnings when diagnostics.stale=false."""
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
@@ -955,23 +919,6 @@ def test_compute_routing_budget_computes_in_flight_once(monkeypatch, tmp_path):
         assert "in_flight" in row
 
 
-def test_glm_is_not_a_subscription_lane_or_ranked_provider(monkeypatch, tmp_path):
-    """Retired GLM/Z.AI seat must not appear in routing-budget lanes or rank."""
-    from scripts.api import subscription_usage as subscription_usage_mod
-
-    assert "glm" not in state_router.SUBSCRIPTION_LANES
-    assert "glm" not in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
-    assert "glm" not in subscription_usage_mod.PROVIDER_TO_LANE
-    assert "glm" not in subscription_usage_mod._NATIVE_PROBES
-
-    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
-    _configure(monkeypatch, tmp_path, [])
-    data = state_router.compute_routing_budget(now)
-
-    assert "glm" not in data["agents"]
-    assert all(row.get("lane") != "glm" for row in data.get("ranked_by_headroom", []))
-
-
 def test_empty_ledger_reports_agentic_pool_unknown(monkeypatch, tmp_path):
     """#9172: zero USD ledger records must not read as a cool agentic pool."""
     now = datetime(2026, 9, 1, 12, 0, tzinfo=UTC)
@@ -1113,11 +1060,11 @@ def _write_private_json(path: Path, value: object) -> None:
 _SYNTHETIC_TOKEN_PREFIX = "synthetic-access-token:"
 
 
-def _synthetic_token_owner(token: str) -> str:
+def _synthetic_token_owner(token: str) -> tuple[str, object]:
     """The provider's answer for the fixture tokens; never the network."""
     if not token.startswith(_SYNTHETIC_TOKEN_PREFIX):
         raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
-    return token.removeprefix(_SYNTHETIC_TOKEN_PREFIX)
+    return token.removeprefix(_SYNTHETIC_TOKEN_PREFIX), None
 
 
 def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:

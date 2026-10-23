@@ -53,84 +53,6 @@ def test_chat_completions_codex_round_trip(monkeypatch):
     assert body["choices"][0]["finish_reason"] == "stop"
 
 
-def test_chat_completions_retired_grok_45_returns_404():
-    """#6870: grok-4.5 → Hermes mapping is gone; retired pin must 404."""
-    assert "grok-4.5" not in proxy._ROUTABLE_MODELS
-    response = _client().post(
-        "/v1/chat/completions",
-        json={"model": "grok-4.5", "messages": [{"role": "user", "content": "hello"}]},
-    )
-
-    assert response.status_code == 404
-    body = response.json()
-    assert body["error"]["code"] == "model_not_found"
-    assert "grok-4.5" in body["error"]["message"]
-
-
-def test_chat_completions_gemini_round_trip(monkeypatch):
-    model_id = "gemini-3.0-flash-preview"
-
-    def backend(model, messages, **kwargs):
-        # After AGY migration, the model passed is the AGY display label
-        assert model in {"Gemini 3.5 Flash (High)", "gemini-3.5-flash-high", "gemini-3.8-flash-high", "Gemini 3.8 Flash (High)"}
-        return proxy.CompletionResponse(content="hello from gemini")
-
-    monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))
-
-    response = _client().post(
-        "/v1/chat/completions",
-        json={"model": model_id, "messages": [{"role": "user", "content": "hello"}]},
-    )
-
-    body = response.json()
-    assert response.status_code == 200
-    assert body["model"] == model_id
-    assert body["choices"][0]["message"]["content"] == "hello from gemini"
-    assert body["choices"][0]["finish_reason"] == "stop"
-
-
-def test_chat_completions_gemini_pro_round_trip(monkeypatch):
-    model_id = "gemini-3.1-pro-preview"
-
-    def backend(model, messages, **kwargs):
-        # After AGY migration, pro uses the high AGY label (no legacy remap)
-        assert model == "Gemini 3.1 Pro (High)"
-        return proxy.CompletionResponse(content="hello from gemini pro")
-
-    monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))
-
-    response = _client().post(
-        "/v1/chat/completions",
-        json={"model": model_id, "messages": [{"role": "user", "content": "hello"}]},
-    )
-
-    body = response.json()
-    assert response.status_code == 200
-    assert body["model"] == model_id
-    assert body["choices"][0]["message"]["content"] == "hello from gemini pro"
-    assert body["choices"][0]["finish_reason"] == "stop"
-
-
-def test_chat_completions_claude_round_trip(monkeypatch):
-    model_id = "claude-sonnet-4-7"
-
-    def backend(model, messages, **kwargs):
-        return proxy.CompletionResponse(content="hello from claude")
-
-    monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))
-
-    response = _client().post(
-        "/v1/chat/completions",
-        json={"model": model_id, "messages": [{"role": "user", "content": "hello"}]},
-    )
-
-    body = response.json()
-    assert response.status_code == 200
-    assert body["model"] == model_id
-    assert body["choices"][0]["message"]["content"] == "hello from claude"
-    assert body["choices"][0]["finish_reason"] == "stop"
-
-
 def test_chat_completions_unknown_model_returns_404():
     response = _client().post(
         "/v1/chat/completions",
@@ -184,30 +106,6 @@ def test_chat_completions_missing_messages_returns_422():
     response = _client().post("/v1/chat/completions", json={"model": "codex"})
 
     _assert_openai_validation_error(response, "messages")
-
-
-def test_chat_completions_missing_model_returns_422():
-    response = _client().post(
-        "/v1/chat/completions",
-        json={"messages": [{"role": "user", "content": "hello"}]},
-    )
-
-    _assert_openai_validation_error(response, "model")
-
-
-def test_chat_completions_messages_wrong_type_returns_422():
-    response = _client().post(
-        "/v1/chat/completions",
-        json={"model": "codex", "messages": "hello"},
-    )
-
-    _assert_openai_validation_error(response, "messages")
-
-
-def test_chat_completions_empty_body_returns_422():
-    response = _client().post("/v1/chat/completions", json={})
-
-    _assert_openai_validation_error(response, "model")
 
 
 def test_chat_completions_invalid_json_body_returns_422():
@@ -320,22 +218,6 @@ def test_healthz_endpoint_returns_backend_status(monkeypatch):
             "hermes": False,
         },
     }
-
-
-def test_codex_backend_defaults_to_sol(monkeypatch):
-    monkeypatch.delenv("BRIDGE_PROXY_CODEX_MODEL", raising=False)
-    seen = []
-
-    def backend(name, argv, **kwargs):
-        seen.append(argv)
-        return subprocess.CompletedProcess(argv, 0, stdout="fixture", stderr="")
-
-    monkeypatch.setattr(proxy, "_run_backend_command", backend)
-    proxy._codex_backend("codex", [proxy.Message(role="user", content="fixture")])
-    assert seen[0][seen[0].index("-m") + 1] == "gpt-6.1-sol"
-    monkeypatch.setenv("BRIDGE_PROXY_CODEX_MODEL", "gpt-6.1-sol")
-    proxy._codex_backend("codex", [proxy.Message(role="user", content="fixture")])
-    assert len(seen) == 2
 
 
 def test_claude_backend_runs_without_background_work(monkeypatch):

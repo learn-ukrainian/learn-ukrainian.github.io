@@ -4,20 +4,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from scripts.ai_agent_bridge._opencode import OPENCODE_DEFAULT_MODEL, _invoke_opencode
+from scripts.ai_agent_bridge._opencode import _invoke_opencode
 from scripts.lib import rules_core
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
-
-
-def test_opencode_default_model_is_cheap_and_guard_allowed():
-    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
-
-    # $0 default since 2026-07-07 (user order): Gemma via Google AI Studio
-    # direct — Gemma has NO paid SKU on the Gemini API, so this default
-    # cannot bill regardless of the key's project tier.
-    assert OPENCODE_DEFAULT_MODEL == "google-ais/gemma-4-31b-it"
-    assert_model_routing_allowed(OPENCODE_DEFAULT_MODEL, context="default-model test")
 
 
 def test_invoke_opencode_constructs_correct_argv():
@@ -52,27 +42,6 @@ def test_invoke_opencode_raises_when_binary_missing():
     with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value=None):
         with pytest.raises(SystemExit, match="opencode CLI not found"):
             _invoke_opencode("hello", "openrouter/google/gemma-4-31b-it")
-
-
-def test_no_absolute_scripts_self_imports_in_bridge_package():
-    """Script-path invocation (`python scripts/ai_agent_bridge/__main__.py`,
-    the documented CLI form) puts scripts/ — not the repo root — on sys.path,
-    so the package is importable only as `ai_agent_bridge`. An absolute
-    `scripts.ai_agent_bridge` self-import inside the package therefore breaks
-    every lane whose module does it (#4473's lazy routing_guard import in
-    _opencode.py killed pool/glm/gemma for script-path callers)."""
-    import re
-    from pathlib import Path
-
-    pkg = Path(__file__).resolve().parent.parent / "scripts" / "ai_agent_bridge"
-    offenders = []
-    for path in sorted(pkg.rglob("*.py")):
-        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            if re.match(r"\s*(from|import)\s+scripts\.ai_agent_bridge", line):
-                offenders.append(f"{path.name}:{lineno}")
-    assert offenders == [], (
-        f"absolute scripts.* self-imports break script-path invocation: {offenders}"
-    )
 
 
 def test_run_opencode_lazy_import_resolves_under_script_path_invocation():

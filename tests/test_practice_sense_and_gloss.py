@@ -172,14 +172,6 @@ def test_classify_withholds_an_ordinal_whose_only_analysis_is_the_heel_noun() ->
     assert "п'ята" not in classify
 
 
-def test_classify_withholds_the_numeral_when_morphology_is_the_fish_noun_for_kilka() -> None:
-    classify = _classify_by_lemma(
-        [_entry("кілька", "numeral", "several", "B1", morphology={"pos": "іменник", "forms": _noun_forms("жін.")})]
-    )
-
-    assert "кілька" not in classify
-
-
 def test_classify_keeps_noun_gender_when_morphology_is_the_displayed_noun() -> None:
     classify = _classify_by_lemma(
         [_entry("книга", "noun", "book", "A2", morphology={"pos": "іменник", "forms": _noun_forms("жін.")})]
@@ -278,17 +270,6 @@ def test_classify_binds_noun_gender_to_the_displayed_sense() -> None:
 
     assert classify == {"замок": [classify["замок"][0]]}
     assert _set_answers(classify["замок"]) == {"gender": ["masculine"]}
-
-
-@pytest.mark.parametrize(
-    "evidence",
-    [None, VesumLemmaEvidence(), VesumLemmaEvidence(frozenset({"verb"}), {"noun": frozenset({"masculine"})})],
-)
-def test_classify_items_need_vesum_noun_evidence_for_gender(evidence: VesumLemmaEvidence | None) -> None:
-    entry = _entry("замок", "noun", "castle", "A1", morphology={"pos": "іменник", "forms": _noun_forms("чол.")})
-    lexeme = {"lemmaId": "замок", "lemma": "замок", "cefr": "A1"}
-
-    assert _build_classify_items(entry, lexeme, vesum_evidence=evidence) == []
 
 
 @pytest.mark.parametrize(
@@ -460,13 +441,6 @@ def test_english_fallback_rejects_a_bare_grammar_code_and_withholds_a_meaningles
 
     assert _build_lexeme(no_meaning, SELF_FORMS) is None
     assert _build_lexeme(grammar_code, SELF_FORMS) is None
-
-
-def test_english_gloss_clean_still_cuts_at_the_first_comma() -> None:
-    lexeme = _build_lexeme(_entry("книга", "noun", "book, volume; tome", "A2"), SELF_FORMS)
-
-    assert lexeme is not None
-    assert lexeme["glossClean"] == "book"
 
 
 def test_homoglyph_repair_touches_only_mixed_script_words() -> None:

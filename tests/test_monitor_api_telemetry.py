@@ -45,21 +45,6 @@ def _write_transcript(path: Path) -> None:
     )
 
 
-def test_rules_markdown_appends_footer_when_enabled(tmp_path, monkeypatch) -> None:
-    transcript = tmp_path / "session.jsonl"
-    _write_transcript(transcript)
-    monkeypatch.delenv("AGENT_NO_TELEMETRY_FOOTER", raising=False)
-    monkeypatch.setenv("LEARN_UKRAINIAN_TELEMETRY_FOOTER", "1")
-    monkeypatch.setenv("LEARN_UKRAINIAN_TRANSCRIPT_PATH", str(transcript))
-
-    response = TestClient(app).get("/api/rules?format=markdown")
-
-    assert response.status_code == 200
-    assert response.text.endswith("\n\n[ctx: 187K (+62K this turn), tier: base, 13K to premium, turn: 2]\n")
-    assert response.headers["X-Rules-Hash"]
-    assert "etag" not in response.headers
-
-
 def test_manifest_json_adds_structured_telemetry_when_enabled(tmp_path, monkeypatch) -> None:
     transcript = tmp_path / "session.jsonl"
     _write_transcript(transcript)

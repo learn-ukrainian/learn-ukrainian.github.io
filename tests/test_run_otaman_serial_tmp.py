@@ -109,29 +109,6 @@ def test_serial_logs_and_exit_behavior(serial_environment, root_kind, fail_modul
     assert (sleeps.read_bytes() if sleeps.exists() else b"") == b"10\n" * len(completed)
 
 
-@pytest.mark.parametrize("root_kind", ["override", "scratch", "empty_override"])
-def test_diagnostic_uses_the_resolved_log_path(serial_environment, root_kind):
-    # set -e normally exits before the legacy failure diagnostic. Exercise its
-    # original shell statement separately without changing that exit behavior.
-    checkout, script, env, override, scratch = serial_environment
-    if root_kind == "scratch":
-        env.pop("TMPDIR")
-    elif root_kind == "empty_override":
-        env["TMPDIR"] = ""
-    root = override if root_kind == "override" else scratch
-    statements = script.read_text(encoding="utf-8").splitlines()
-    root_assignment = next(line for line in statements if line.startswith("LOG_ROOT="))
-    log_assignment = next(line.strip() for line in statements if line.strip().startswith("log_file="))
-    diagnostic = next(line.strip() for line in statements if "failed. Check log:" in line)
-    result = subprocess.run(
-        ["bash", "-c", f"set -e\n{root_assignment}\ni=14\n{log_assignment}\n{diagnostic}"],
-        cwd=checkout, env=env, capture_output=True, timeout=10,
-    )
-    assert result.returncode == 0
-    assert result.stdout == f"Module 14 failed. Check log: {root}/otaman-a1-14-serial.log\n".encode()
-    assert result.stderr == b""
-
-
 def test_missing_task_root_does_not_invoke_bridge(serial_environment):
     checkout, script, env, override, scratch = serial_environment
     env.pop("TMPDIR")

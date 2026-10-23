@@ -11,7 +11,6 @@ from scripts.ingest.wiktionary_etymology_ingest import (
     lookup_key,
     parse_wiktionary_page,
 )
-from scripts.lexicon.enrich_manifest import _single_word_etymology_coverage
 
 
 def _write_dump(tmp_path: Path, pages: list[tuple[str, str, str]]) -> Path:
@@ -199,19 +198,3 @@ def test_multilingual_numbered_etymology_extracts_only_ukrainian_section() -> No
     assert "дієсл. to compute" in row["etymology_text"]
     assert "обчислити" in row["etymology_text"]
     assert "рахунком" in row["etymology_text"]
-
-
-def test_single_word_etymology_coverage_counts_words_only() -> None:
-    # Etymology is now mphdict-only (the goroh/esum/wiktionary fallback chain was
-    # removed in #5252); this guards the coverage counter, which counts single-word
-    # entries with etymology and ignores phrases and null lemmas.
-    assert _single_word_etymology_coverage(
-        {
-            "entries": [
-                {"lemma": "робота", "enrichment": {"etymology": {"text": "x"}}},
-                {"lemma": "Добрий день", "enrichment": {"etymology": {"text": "phrase"}}},
-                {"lemma": "добре"},
-                {"lemma": None, "enrichment": {"etymology": {"text": "bad"}}},
-            ]
-        }
-    ) == (1, 2)

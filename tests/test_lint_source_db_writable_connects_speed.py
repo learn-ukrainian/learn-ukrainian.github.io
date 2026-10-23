@@ -6,12 +6,9 @@ every case here runs once serially and once through a real process pool.
 
 from __future__ import annotations
 
-import ast
 import json
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-
-import pytest
 
 from scripts.hygiene import lint_source_db_writable_connects as lint
 
@@ -98,31 +95,3 @@ def test_parallel_scan_matches_serial_scan_on_planted_repo(tmp_path, monkeypatch
     assert "tests/pinned.py" not in joined
     # Disk errors and syntax errors keep their file order in both modes.
     assert unreadable == ["scripts/broken.py", "scripts/dangling.py", "tests/broken_test.py"]
-
-
-def test_small_batches_stay_in_process(tmp_path, monkeypatch):
-    (tmp_path / "scripts").mkdir()
-    (tmp_path / "scripts" / "a.py").write_text("X = 1\n")
-    monkeypatch.setattr(lint, "ProcessPoolExecutor", _SpyPool)
-    _SpyPool.started = 0
-    assert lint.find_violations(tmp_path, ()) == ([], [])
-    assert _SpyPool.started == 0
-
-
-def test_single_cpu_host_scans_in_process(tmp_path, monkeypatch):
-    _planted_repo(tmp_path, monkeypatch)
-    expected = _run(tmp_path, monkeypatch, parallel=False)
-    monkeypatch.setattr(lint, "PARALLEL_MIN_FILES", 1)
-    monkeypatch.setattr(lint.os, "cpu_count", lambda: 1)
-    _SpyPool.started = 0
-    assert lint.find_violations(tmp_path, ALLOWLIST) == expected
-    assert _SpyPool.started == 0
-
-
-@pytest.mark.parametrize("path", [Path(lint.__file__), Path(__file__)])
-def test_structural_children_match_iter_child_nodes(path):
-    markers = (ast.expr_context, ast.operator, ast.unaryop, ast.boolop, ast.cmpop)
-    tree = ast.parse(path.read_text())
-    for node in ast.walk(tree):
-        expected = tuple(child for child in ast.iter_child_nodes(node) if not isinstance(child, markers))
-        assert lint._structural_children(node) == expected

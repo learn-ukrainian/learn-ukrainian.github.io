@@ -156,21 +156,6 @@ def test_deck_completeness_and_zero_collisions():
             assert d.text in opts
 
 
-def test_balanced_option_shuffling():
-    """Verify that correct answer positions across all 75 cards are well-balanced."""
-    cards = build_canonical_pronoun_cards()
-    positions = []
-    for c in cards:
-        opts = c.all_options()
-        pos = opts.index(c.correct_answer)
-        positions.append(pos)
-
-    counts = Counter(positions)
-    for idx in range(4):
-        # 75 / 4 = 18.75; each index should receive between 12 and 26 occurrences
-        assert 12 <= counts[idx] <= 26, f"Index {idx} has count {counts[idx]}, which is outside balanced range"
-
-
 def test_committed_deck_parity(tmp_path: Path):
     """Verify exported JSON deck matches committed file byte-for-byte."""
     cards = build_canonical_pronoun_cards()

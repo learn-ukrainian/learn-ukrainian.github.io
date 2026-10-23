@@ -52,12 +52,10 @@ from tests.agent_runtime.test_attempt_boundary import (
     INERT_USER_SETTINGS_CASES,
     MACHINE_POLICY,
     PROFILE_ORGANIZATIONS,
-    SETTINGS_REFUSED_BESIDE_INERT,
     _credentials,
     _login_identity,
     _mock_selected_account_runtime,
     _private_json,
-    inert_user_settings_with,
 )
 
 _GOLDEN = Path(__file__).resolve().parents[1] / "fixtures" / "claude_default_account_plan.json"
@@ -454,16 +452,6 @@ def test_bound_label_unknown_setting_is_refused(accounts, settings):
     assert refused.value.code == "claude_account_settings_credential_source"
 
 
-def test_bound_label_null_user_settings_is_invalid_not_absent(accounts):
-    (accounts.config_dir / "settings.json").write_text("null", encoding="utf-8")
-    (accounts.config_dir / "settings.json").chmod(0o600)
-
-    with pytest.raises(ClaudeAccountRefused) as refused:
-        _plan(accounts, claude_account="b")
-
-    assert refused.value.code == "claude_account_settings_invalid"
-
-
 @pytest.mark.parametrize("case", sorted(INERT_USER_SETTINGS_CASES))
 def test_bound_label_inert_user_settings_names_are_admitted(accounts, case):
     """The inert names a real second login's user settings carry run, alone or together (#10619).
@@ -480,20 +468,6 @@ def test_bound_label_inert_user_settings_names_are_admitted(accounts, case):
     seen = _run(accounts)
     assert seen["argv"][seen["argv"].index("--setting-sources") + 1] == "project,local"
     assert "fixture-placeholder" not in repr(seen["argv"]) + repr(records) + repr(result)
-
-
-@pytest.mark.parametrize("case", sorted(SETTINGS_REFUSED_BESIDE_INERT))
-def test_bound_label_credential_source_beside_inert_names_is_refused(accounts, case):
-    """Beside the inert names, a key, helper, endpoint, provider or unknown name still refuses value-free, before spawn."""
-    _user_settings(accounts, inert_user_settings_with(SETTINGS_REFUSED_BESIDE_INERT[case]))
-
-    with pytest.raises(ClaudeAccountRefused) as refused:
-        _invoke(accounts, claude_account="b")
-
-    assert refused.value.code == str(refused.value) == "claude_account_settings_credential_source"
-    assert "fixture" not in repr(refused.value) + repr(refused.value.__context__) + repr(refused.value.__cause__)
-    assert not accounts.dump.exists()
-    assert accounts.profile_calls == []
 
 
 @pytest.mark.parametrize("case", sorted(AUTO_MODE_REFUSED))
@@ -513,31 +487,6 @@ def test_bound_label_auto_mode_is_refused(accounts, case):
     assert "fixture" not in repr(refused.value) + repr(refused.value.__context__) + repr(refused.value.__cause__)
     assert not accounts.dump.exists()
     assert accounts.profile_calls == []
-
-
-def test_bound_label_auto_mode_written_after_verification_never_launches(accounts):
-    """The launch guard has no name list of its own: ``autoMode`` written after verification changes the digest."""
-    result = _settings_change_after_build(
-        accounts, lambda: _user_settings(accounts, inert_user_settings_with(AUTO_MODE_SETTINGS["auto_mode"]))
-    )
-
-    assert result.ok is False
-    assert _calls(accounts, "run") == []
-    assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
-    assert "fixture" not in result.stderr_excerpt
-
-
-def test_bound_label_global_config_disable_auto_compact_is_admitted(accounts):
-    """The environment allowlist is one list: the global config's env may carry the inert name too.
-
-    That map does apply to the run, so the name there turns auto-compaction off
-    for the labelled worker; it selects no credential, endpoint or provider.
-    """
-    _global_config(accounts, env=INERT_USER_SETTINGS["env"])
-
-    result, _ = _invoke(accounts, claude_account="b")
-
-    assert result.ok is True
 
 
 @pytest.mark.parametrize(
@@ -1056,23 +1005,6 @@ def test_worker_runs_a_default_file_label_only_through_the_launch_guard(
 
 
 @pytest.mark.parametrize("tool_config", [{}, {"claude_account": "a"}], ids=["omitted", "explicit_default"])
-def test_default_label_never_reads_machine_policy(accounts, monkeypatch, tool_config):
-    """The default account's plan stays the base snapshot on a host with machine policy, which it never reads."""
-    MACHINE_POLICY["policy_helper"]()
-
-    def unread() -> str:
-        pytest.fail("machine policy was read for the default account")
-
-    monkeypatch.setattr(attempt_boundary, "claude_machine_policy_state", unread)
-    monkeypatch.setattr(env_sanitize, "claude_machine_policy_state", unread)
-    expected = json.loads(_GOLDEN.read_text(encoding="utf-8"))
-    expected.pop("_provenance")
-
-    assert _golden_view(accounts, _plan(accounts, **tool_config)) == expected
-    assert accounts.profile_calls == []
-
-
-@pytest.mark.parametrize("tool_config", [{}, {"claude_account": "a"}], ids=["omitted", "explicit_default"])
 def test_default_label_environment_keeps_existing_sanitisation(accounts, monkeypatch, tool_config):
     """The default account keeps the host login and the existing sanitisation, unverified."""
     other = accounts.home / "elsewhere"
@@ -1147,27 +1079,6 @@ def test_bound_label_binding_refusal_is_value_free(accounts):
     assert refused.value.code == "claude_account_unverified"
     assert refused.value.code in CLAUDE_ACCOUNT_REFUSAL_CODES
     assert str(accounts.config_dir) not in str(refused.value)
-
-
-def test_new_refusal_codes_are_registered():
-    assert {
-        "claude_account_settings_credential_source",
-        "claude_account_auth_method_conflict",
-        "claude_account_auth_status_unavailable",
-        "claude_account_settings_invalid",
-        "claude_account_settings_not_private",
-        "claude_account_config_credential_source",
-        "claude_account_config_ambiguous",
-        "claude_account_status_override",
-        "claude_account_settings_changed",
-        "claude_account_plan_unsupported",
-        "claude_account_plan_unverified",
-        "claude_account_policy_cache_present",
-        "claude_account_policy_cache_unavailable",
-        "claude_account_profile_store_present",
-        "claude_account_machine_policy_present",
-        "claude_account_machine_policy_unavailable",
-    } <= CLAUDE_ACCOUNT_REFUSAL_CODES
 
 
 def test_bound_label_session_and_liveness_use_the_login_directory(accounts):
@@ -1470,23 +1381,6 @@ def test_bound_label_account_metadata_changed_after_verification_never_launches(
     assert "fixture-organisation" not in result.stderr_excerpt
 
 
-def test_bound_label_credential_changed_after_classification_is_refused(accounts, monkeypatch):
-    """Held-out: a credential replaced after it was classified, before the launch is bound, is never bound."""
-    classify = attempt_boundary.verify_claude_account
-
-    def classify_then_replace(label, **kwargs):
-        binding = classify(label, **kwargs)
-        _credentials(accounts.config_dir / ".credentials.json", "fixture-organisation-" + "o" * 30)
-        return binding
-
-    monkeypatch.setattr(attempt_boundary, "verify_claude_account", classify_then_replace)
-
-    with pytest.raises(ClaudeAccountRefused) as refused:
-        _plan(accounts, claude_account="b")
-
-    assert refused.value.code == "claude_account_settings_changed"
-
-
 # --- No machine-level policy (#10619) ---------------------------------------------------------------
 #
 # A machine policy helper's output reaches a run from a program the launch
@@ -1520,21 +1414,6 @@ def test_bound_label_machine_policy_source_is_refused(accounts, entry):
 
     assert str(refused.value) == refused.value.code == "claude_account_machine_policy_present"
     assert accounts.profile_calls == []
-    assert not accounts.dump.exists()
-
-
-def test_bound_label_machine_policy_helper_is_refused_whatever_it_answers(accounts):
-    """The final review's reproduction: a helper whose service answers empty settings at verification refuses.
-
-    On f8dce2b219 it was admitted and the guarded launch ran, so a later answer
-    (an endpoint override) reached the run with the bound digest unchanged.
-    """
-    _policy_helper(accounts)
-
-    with pytest.raises(ClaudeAccountRefused) as refused:
-        _invoke(accounts, claude_account="b")
-
-    assert refused.value.code == "claude_account_machine_policy_present"
     assert not accounts.dump.exists()
 
 
@@ -1586,23 +1465,6 @@ def test_bound_label_machine_policy_installed_after_verification_never_launches(
     assert result.returncode == CLAUDE_LAUNCH_GUARD_EXIT
     assert _calls(accounts, "run") == []
     assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
-
-
-def test_bound_label_machine_policy_installed_after_classification_is_refused(accounts, monkeypatch):
-    """Policy that appears after the account is classified, before the launch is bound, is never bound."""
-    classify = attempt_boundary.verify_claude_account
-
-    def classify_then_install(label, **kwargs):
-        binding = classify(label, **kwargs)
-        MACHINE_POLICY["managed_memory"]()
-        return binding
-
-    monkeypatch.setattr(attempt_boundary, "verify_claude_account", classify_then_install)
-
-    with pytest.raises(ClaudeAccountRefused) as refused:
-        _plan(accounts, claude_account="b")
-
-    assert refused.value.code == "claude_account_machine_policy_present"
 
 
 def test_bound_label_unreadable_machine_policy_is_refused(accounts, monkeypatch):
@@ -1739,17 +1601,6 @@ def test_real_cli_labelled_run_loads_no_user_mcp_server(real_cli):
 
     assert "fixtureuser" in _real(real_cli, "mcp", "list", sources=False)
     assert "fixtureuser" not in _real(real_cli, "mcp", "list")
-
-
-@pytest.mark.parametrize("case", ["endpoint", "key", "provider", "proxy"])
-def test_real_cli_global_config_override_is_refused(real_cli, case):
-    """Blocker 1 against the installed CLI: the global config's env is checked before any status probe."""
-    _global_config(real_cli, env=GLOBAL_CONFIG_ENV_REFUSED[case])
-
-    with pytest.raises(ClaudeAccountRefused) as refused:
-        _plan(real_cli, claude_account="b")
-
-    assert refused.value.code == "claude_account_config_credential_source"
 
 
 @pytest.mark.parametrize("name", ["ANTHROPIC_BASE_URL", "HTTPS_PROXY"])

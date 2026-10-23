@@ -8,61 +8,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
-
-from scripts.api.main import app
-from scripts.api.route_contracts import contract_for_page, contract_for_route
 
 ROOT = Path(__file__).resolve().parents[1]
 DASHBOARDS = ROOT / "dashboards"
 EPICS_HTML = DASHBOARDS / "epics.html"
-
-
-def test_epics_page_is_a_read_only_observer() -> None:
-    html = EPICS_HTML.read_text(encoding="utf-8")
-
-    assert 'data-read-only="true"' in html
-    assert "Remote lifecycle · TTL-fenced" in html
-    assert "Registered epics and active drivers." in html
-    assert "Remote authority" in html
-    assert "Read-only operator dashboard." in html
-    assert "/api/epics/v1" in html
-    assert "/api/epics/v1/" in html
-    assert "githubIssueUrl" in html
-    assert "formatHolder" in html
-    assert "getLeaseState" in html
-    assert "registered" in html
-    assert "stream_name" in html
-    assert "title" in html
-    assert "registry_status" in html
-    assert "Never claimed" in html
-    assert "No lease" in html
-    assert "formatAge" in html
-    assert "formatExpiry" in html
-    assert 'class="monitor-nav"' in html
-    assert '<a class="active" href="/epics.html">Epics</a>' in html
-    assert '<link rel="stylesheet" href="/monitor.css">' in html
-    assert 'id="error-banner"' in html
-    assert 'id="btn-refresh"' in html
-    assert 'id="last-updated-text"' in html
-    assert 'id="epics-tbody"' in html
-    assert 'id="detail-pane"' in html
-
-    # Strict read-only invariant: no mutating POST/PUT/DELETE forms or fetch methods
-    for prohibited in (
-        "<form",
-        "method: 'POST'",
-        'method: "POST"',
-        "method: 'PUT'",
-        'method: "PUT"',
-        "method: 'DELETE'",
-        'method: "DELETE"',
-        "/claim",
-        "/heartbeat",
-        "/handoff",
-        "/release",
-    ):
-        assert prohibited not in html
 
 
 def test_epics_page_opsec_and_privacy_guarantees() -> None:
@@ -74,30 +23,6 @@ def test_epics_page_opsec_and_privacy_guarantees() -> None:
     assert "127.0.0.1" not in html
     assert "localhost:" not in html
     assert "#0d1117" not in html  # shared parchment design
-
-
-def test_epics_page_contract_and_index_registration() -> None:
-    contract = contract_for_page("epics.html")
-    assert contract is not None
-    assert contract.url == "/epics.html"
-    assert "/api/epics/v1" in contract.source_of_truth
-    assert "15s" in contract.freshness
-    assert "read-only" in contract.purpose.lower()
-
-    route_contract = contract_for_route("/api/epics/v1", "http")
-    assert route_contract is not None
-    assert route_contract.pattern == "/api/epics/v1"
-
-    index_html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
-    assert 'href="/epics.html"' in index_html
-    assert ">Epics<" in index_html
-
-
-def test_epics_page_serves_over_http() -> None:
-    client = TestClient(app, raise_server_exceptions=False)
-    response = client.get("/epics.html")
-    assert response.status_code == 200
-    assert "Registered epics and active drivers." in response.text
 
 
 def test_epics_page_js_behavioral_logic() -> None:

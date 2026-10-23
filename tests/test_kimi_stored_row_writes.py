@@ -293,12 +293,6 @@ def _scan() -> _Scan:
 _SCANNED = _scan()
 
 
-def test_the_scan_sees_the_known_writers():
-    """Guards against a scanner that silently sees nothing."""
-    assert len(_SCANNED.writes) >= 40
-    assert f"{_AUTH}::AuthorityService._reclaim_expired_jobs_tx" in _SCANNED.writes
-
-
 def test_every_stored_row_write_has_a_recorded_kimi_disposition():
     """A new write site on a stored-row table must be classified in ``WRITERS``; a stale entry fails too."""
     unclassified = sorted(

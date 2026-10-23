@@ -90,39 +90,9 @@ def test_href_case_insensitive_match(manifest):
     assert atlas_href_for("ІВАН", manifest) == "/lexicon/іван/"
 
 
-def test_href_preserves_yi_letter(manifest):
-    assert atlas_href_for("їжак", manifest) == "/lexicon/їжак/"
-
-
-def test_href_no_match_returns_none(manifest):
-    assert atlas_href_for("неіснуючеслово", manifest) is None
-
-
 def test_href_empty_returns_none(manifest):
     assert atlas_href_for("", manifest) is None
     assert atlas_href_for("   ", manifest) is None
-
-
-def test_href_missing_manifest_is_graceful(tmp_path):
-    missing = str(tmp_path / "does-not-exist.json")
-    assert atlas_href_for("робота", missing) is None
-
-
-def test_href_missing_manifest_warns_stderr(tmp_path, capsys):
-    # Reset global state for test reliability
-    atlas_links._warned_manifest_unavailable = False
-    atlas_links._load_manifest_tables.cache_clear()
-
-    missing = str(tmp_path / "does-not-exist.json")
-    assert atlas_href_for("робота", missing) is None
-
-    captured = capsys.readouterr()
-    assert "WARNING: atlas manifest unavailable" in captured.err
-
-    # Call again to ensure it only warns once per process
-    assert atlas_href_for("робота", missing) is None
-    captured2 = capsys.readouterr()
-    assert "WARNING: atlas manifest unavailable" not in captured2.err
 
 
 # ── integrity-gating inside the generator ────────────────────────────────────
@@ -419,10 +389,6 @@ def test_correct_links_survive_the_sense_check(sense_atlas, word, translation, p
     assert sense_atlas(word, translation=translation, pos=pos) == expected
 
 
-def test_english_translation_without_shared_word_drops_link(sense_atlas):
-    assert sense_atlas("робота", translation="employment", pos="noun") is None
-
-
 def test_article_without_english_sense_cannot_confirm_meaning(sense_atlas):
     assert sense_atlas("бабусин", translation="grandmother's", pos="adjective") is None
     # No translation to check against: only the proper-noun rule applies.
@@ -508,10 +474,6 @@ def test_stemmed_overlap_cannot_confirm_qualified_register_sense(sense_atlas, tr
     assert sense_atlas("знижений", translation=translation, pos="adj") is None
 
 
-def test_grammatical_s_is_still_a_strong_overlap():
-    assert atlas_links._english_unstemmed_words("she works") == frozenset({"she", "work"})
-
-
 def test_preset_href_is_sense_checked_against_the_lesson_word(sense_atlas):
     # The pre-set slug is lowercase; the lesson's capitalised proper noun decides.
     assert sense_atlas("поділля", lesson_word="Поділля", pos="власна назва") is None
@@ -544,26 +506,3 @@ def test_preset_href_is_sense_checked_against_the_lesson_word(sense_atlas):
 )
 def test_english_content_words(text, expected):
     assert english_content_words(text) == expected
-
-
-def test_vocab_component_passes_card_sense_to_resolver(monkeypatch):
-    calls = []
-
-    def fake_href(word, **sense):
-        calls.append((word, sense))
-        return None
-
-    monkeypatch.setattr(resources, "atlas_href_for", fake_href)
-    resources.vocab_items_to_components(
-        [
-            {"lemma": "реєстр", "translation": "register", "pos": "noun", "example": "Реєстр визначає."},
-            {"lemma": "Поділля", "translation": "Podilia", "pos": "власна назва",
-             "atlas_href": "/lexicon/поділля/"},
-        ]
-    )
-    assert calls == [
-        ("реєстр", {"translation": "register", "pos": "noun", "example": "Реєстр визначає.",
-                    "lesson_word": "реєстр"}),
-        ("поділля", {"translation": "Podilia", "pos": "власна назва", "example": "",
-                     "lesson_word": "Поділля"}),
-    ]

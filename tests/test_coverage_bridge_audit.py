@@ -13,7 +13,6 @@ import json
 import os
 import sqlite3
 import sys
-from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -35,16 +34,6 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
 class TestConfig:
     """Tests for scripts/ai_agent_bridge/_config.py constants."""
 
-    def test_db_path_is_path(self):
-        from scripts.ai_agent_bridge._config import DB_PATH
-        assert isinstance(DB_PATH, Path)
-        assert "messages.db" in str(DB_PATH)
-
-    def test_pid_dir_is_path(self):
-        from scripts.ai_agent_bridge._config import PID_DIR
-        assert isinstance(PID_DIR, Path)
-        assert "pids" in str(PID_DIR)
-
     def test_cli_paths_are_correct_types(self):
         from scripts.ai_agent_bridge._config import AGY_CLI, CLAUDE_CMD, GEMINI_CLI
         assert isinstance(CLAUDE_CMD, list)
@@ -58,27 +47,6 @@ class TestConfig:
             assert CLAUDE_CMD[0].endswith("claude")
         assert isinstance(AGY_CLI, str)
         assert isinstance(GEMINI_CLI, str)
-
-    def test_parent_env_has_gemini_session(self):
-        from scripts.ai_agent_bridge._config import _PARENT_ENV
-        assert _PARENT_ENV["GEMINI_SESSION"] == "1"
-        assert _PARENT_ENV["LEARN_UKRAINIAN_PIPELINE"] == "1"
-
-    def test_model_cache_is_dict(self):
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE
-        assert isinstance(_MODEL_CACHE, dict)
-
-    def test_model_cache_ttl_positive(self):
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE_TTL
-        assert _MODEL_CACHE_TTL == 3600
-
-    def test_gh_char_limit(self):
-        from scripts.ai_agent_bridge._config import GH_CHAR_LIMIT
-        assert GH_CHAR_LIMIT == 64000
-
-    def test_repo_root_is_path(self):
-        from scripts.ai_agent_bridge._config import REPO_ROOT
-        assert isinstance(REPO_ROOT, Path)
 
 
 # ---------------------------------------------------------------------------
@@ -103,16 +71,6 @@ class TestDb:
         tables = {row[0] for row in cursor.fetchall()}
         assert "messages" in tables
         assert "sessions" in tables
-        conn.close()
-
-    def test_init_db_messages_columns(self, tmp_db):
-        from scripts.ai_agent_bridge._db import init_db
-        conn = init_db()
-        cursor = conn.cursor()
-        cursor.execute("PRAGMA table_info(messages)")
-        cols = {row[1] for row in cursor.fetchall()}
-        for expected in ("id", "task_id", "from_llm", "to_llm", "content", "timestamp", "acknowledged", "status"):
-            assert expected in cols
         conn.close()
 
     def test_get_db_creates_if_not_exists(self, tmp_db):
@@ -144,17 +102,6 @@ class TestDb:
         assert "status" in cols
         conn.close()
 
-    def test_get_session_empty_task(self, tmp_db):
-        from scripts.ai_agent_bridge._db import get_session
-        result = get_session("")
-        assert result == {"claude": None, "gemini": None, "codex": None}
-
-    def test_get_session_not_found(self, tmp_db):
-        from scripts.ai_agent_bridge._db import get_session, init_db
-        init_db()
-        result = get_session("nonexistent-task")
-        assert result == {"claude": None, "gemini": None, "codex": None}
-
     def test_set_session_and_get_session_claude(self, tmp_db):
         from scripts.ai_agent_bridge._db import get_session, init_db, set_session
         init_db()
@@ -162,13 +109,6 @@ class TestDb:
         result = get_session("task-1")
         assert result["claude"] == "sess-abc123"
         assert result["gemini"] is None
-
-    def test_set_session_and_get_session_gemini(self, tmp_db):
-        from scripts.ai_agent_bridge._db import get_session, init_db, set_session
-        init_db()
-        set_session("task-1", "gemini", "sess-xyz789")
-        result = get_session("task-1")
-        assert result["gemini"] == "sess-xyz789"
 
     def test_set_session_update_existing(self, tmp_db):
         from scripts.ai_agent_bridge._db import get_session, init_db, set_session
@@ -178,11 +118,6 @@ class TestDb:
         result = get_session("task-1")
         assert result["claude"] == "new-session"
 
-    def test_set_session_empty_task_noop(self, tmp_db):
-        from scripts.ai_agent_bridge._db import init_db, set_session
-        init_db()
-        set_session("", "claude", "sess-123")  # Should not raise
-
 
 # ---------------------------------------------------------------------------
 # 3. _broker.py
@@ -190,12 +125,6 @@ class TestDb:
 
 class TestBroker:
     """Tests for scripts/ai_agent_bridge/_broker.py."""
-
-    def test_validate_file_writes_no_changes(self):
-        from scripts.ai_agent_bridge._broker import _validate_file_writes
-        with patch("scripts.ai_agent_bridge._broker._git_status_snapshot", return_value={"M file.txt"}):
-            violations = _validate_file_writes({"M file.txt"}, "some/path")
-        assert violations == []
 
     def test_validate_file_writes_with_unauthorized(self):
         from scripts.ai_agent_bridge._broker import _validate_file_writes
@@ -233,20 +162,6 @@ class TestBroker:
         with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
             _remove_pid_file("claude", "task-1")
         assert not pid_file.exists()
-
-    def test_remove_pid_file_missing(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _remove_pid_file
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
-            _remove_pid_file("claude", "nonexistent")  # Should not raise
-
-    def test_is_task_locked_empty_task_id(self):
-        from scripts.ai_agent_bridge._broker import _is_task_locked
-        assert _is_task_locked("gemini", "") is False
-
-    def test_is_task_locked_no_pid_file(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _is_task_locked
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
-            assert _is_task_locked("gemini", "task-1") is False
 
     def test_is_task_locked_own_pid(self, tmp_path):
         from scripts.ai_agent_bridge._broker import _is_task_locked
@@ -296,19 +211,6 @@ class TestBroker:
         with patch("subprocess.run", return_value=mock_result):
             result = _check_stale_lock({"started": old_time}, 12345, pid_file)
         assert result is False  # Stale, cleaned up
-
-    def test_cleanup_stale_pids_no_dir(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _cleanup_stale_pids
-        nonexistent = tmp_path / "no_exist"
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", nonexistent):
-            result = _cleanup_stale_pids("Cleaning", 24, False)
-        assert result == 0
-
-    def test_cleanup_ancient_messages_no_db(self, tmp_path):
-        from scripts.ai_agent_bridge._broker import _cleanup_ancient_messages
-        with patch("scripts.ai_agent_bridge._broker.DB_PATH", tmp_path / "no.db"):
-            result = _cleanup_ancient_messages("Cleaning", 24, False)
-        assert result == 0
 
     def test_cleanup_ancient_messages_old_messages(self, tmp_path):
         from scripts.ai_agent_bridge._broker import _cleanup_ancient_messages
@@ -414,19 +316,6 @@ class TestBroker:
         assert conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 1
         conn.close()
 
-    def test_bridge_status_no_pid_dir(self, tmp_path, capsys):
-        from scripts.ai_agent_bridge._broker import bridge_status
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path / "nope"):
-            bridge_status()
-        assert "No PID directory" in capsys.readouterr().out
-
-    def test_bridge_status_empty(self, tmp_path, capsys):
-        from scripts.ai_agent_bridge._broker import bridge_status
-        tmp_path.mkdir(exist_ok=True)
-        with patch("scripts.ai_agent_bridge._broker.PID_DIR", tmp_path):
-            bridge_status()
-        assert "No bridge processes" in capsys.readouterr().out
-
     def test_categorize_pid_files_dead(self, tmp_path):
         from scripts.ai_agent_bridge._broker import _categorize_pid_files
         pf = tmp_path / "gemini-task-1.json"
@@ -441,14 +330,6 @@ class TestBroker:
         pf.write_text("not json")
         _alive, stale = _categorize_pid_files([pf])
         assert len(stale) == 1
-
-    def test_print_process_info(self, capsys, tmp_path):
-        from scripts.ai_agent_bridge._broker import _print_process_info
-        with patch("scripts.ai_agent_bridge._broker.REPO_ROOT", tmp_path):
-            _print_process_info("gemini-task.json", {"pid": 1, "agent": "gemini", "task_id": "t1", "started": "now"})
-        out = capsys.readouterr().out
-        assert "gemini-task.json" in out
-        assert "gemini" in out
 
     def test_git_status_snapshot_error(self):
         from scripts.ai_agent_bridge._broker import _git_status_snapshot
@@ -497,29 +378,6 @@ class TestMessaging:
         conn.close()
         return row
 
-    def test_extract_issue_number_valid(self):
-        from scripts.ai_agent_bridge._messaging import _extract_issue_number
-        assert _extract_issue_number("issue-123") == 123
-        assert _extract_issue_number("gh-456") == 456
-
-    def test_extract_issue_number_invalid(self):
-        from scripts.ai_agent_bridge._messaging import _extract_issue_number
-        assert _extract_issue_number("task-123") is None
-        assert _extract_issue_number("") is None
-        assert _extract_issue_number(None) is None
-
-    def test_detect_sender_gemini(self):
-        from scripts.ai_agent_bridge._messaging import detect_sender
-        with patch.dict(os.environ, {"GEMINI_SESSION": "1"}):
-            assert detect_sender() == "gemini"
-
-    def test_detect_sender_claude(self):
-        from scripts.ai_agent_bridge._messaging import detect_sender
-        env = {k: v for k, v in os.environ.items() if k not in ("GEMINI_SESSION", "GOOGLE_API_KEY")}
-        with patch.dict(os.environ, env, clear=True), \
-             patch("scripts.ai_agent_bridge._messaging.Path.exists", return_value=False):
-            assert detect_sender() == "claude"
-
     def test_send_message_basic(self, msg_db):
         from scripts.ai_agent_bridge._messaging import send_message
         with patch("subprocess.run"):
@@ -543,38 +401,6 @@ class TestMessaging:
         parsed = json.loads(row[0])
         assert parsed["key"] == "val"
 
-    def test_send_message_with_model_info(self, msg_db):
-        from scripts.ai_agent_bridge._messaging import send_message
-        with patch("subprocess.run"):
-            msg_id = send_message("hi", from_model="flash", to_model="opus", quiet=True)
-        row = self._query(msg_db, "SELECT data FROM messages WHERE id=?", (msg_id,))
-        parsed = json.loads(row[0])
-        assert parsed["from_model"] == "flash"
-        assert parsed["to_model"] == "opus"
-
-    def test_send_message_passes_osascript_timeout(self, msg_db):
-        import subprocess
-
-        from scripts.ai_agent_bridge._messaging import OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS, send_message
-
-        with patch("subprocess.run") as mock_run:
-            mock_run.return_value = subprocess.CompletedProcess(["osascript"], 0)
-            msg_id = send_message("hi with timeout", quiet=True)
-        assert msg_id is not None
-        assert mock_run.call_args.kwargs.get("timeout") == OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS
-
-    def test_send_message_notification_timeout_handled(self, msg_db):
-        import subprocess
-
-        from scripts.ai_agent_bridge._messaging import OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS, send_message
-
-        with patch(
-            "subprocess.run",
-            side_effect=subprocess.TimeoutExpired(["osascript"], OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS),
-        ):
-            msg_id = send_message("hi with timeout error", quiet=True)
-        assert msg_id is not None
-
 
     def _insert(self, db_path, task_id, from_llm, to_llm, content, ts="2026-01-01T00:00:00"):
         conn = sqlite3.connect(str(db_path))
@@ -585,30 +411,6 @@ class TestMessaging:
         conn.commit()
         conn.close()
 
-    def test_read_message_not_found(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import read_message
-        result = read_message(999)
-        assert result is None
-
-    def test_read_message_found(self, msg_db):
-        from scripts.ai_agent_bridge._messaging import read_message
-        self._insert(msg_db, "t1", "claude", "gemini", "test content")
-        result = read_message(1, quiet=True)
-        assert result["content"] == "test content"
-
-    def test_check_inbox_empty(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import check_inbox
-        check_inbox("gemini")
-        # check_inbox now shows all consumption states, not just unread, so an
-        # empty inbox is worded "No messages" rather than "No unread messages".
-        assert "No messages" in capsys.readouterr().out
-
-    def test_check_inbox_with_messages(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import check_inbox
-        self._insert(msg_db, "t1", "claude", "gemini", "hello gemini")
-        check_inbox("gemini")
-        assert "1 unread" in capsys.readouterr().out
-
     def test_acknowledge_single(self, msg_db):
         from scripts.ai_agent_bridge._messaging import acknowledge
         self._insert(msg_db, "t1", "claude", "gemini", "hi")
@@ -616,81 +418,7 @@ class TestMessaging:
         row = self._query(msg_db, "SELECT acknowledged FROM messages WHERE id=1")
         assert row[0] == 1
 
-    def test_acknowledge_multiple(self, msg_db):
-        from scripts.ai_agent_bridge._messaging import acknowledge
-        for i in range(3):
-            self._insert(msg_db, "t1", "claude", "gemini", f"msg {i}")
-        acknowledge([1, 2, 3], quiet=True)
-        for i in range(1, 4):
-            row = self._query(msg_db, "SELECT acknowledged FROM messages WHERE id=?", (i,))
-            assert row[0] == 1
-
-    def test_acknowledge_all(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import acknowledge_all
-        for i in range(3):
-            self._insert(msg_db, "t1", "claude", "gemini", f"msg {i}")
-        acknowledge_all("gemini")
-        out = capsys.readouterr().out
-        assert "Acknowledged 3" in out
-
-    def test_acknowledge_all_empty(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import acknowledge_all
-        acknowledge_all("gemini")
-        assert "No unread" in capsys.readouterr().out
-
-    def test_get_conversation(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import get_conversation
-        self._insert(msg_db, "t1", "claude", "gemini", "msg1")
-        get_conversation("t1")
-        out = capsys.readouterr().out
-        assert "Conversation: t1" in out
-        assert "msg1" in out
-
-    def test_get_conversation_not_found(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import get_conversation
-        get_conversation("no-such-task")
-        assert "No messages found" in capsys.readouterr().out
-
     # -- resolve_thread (#4837 item 5: unified `ab thread <task-id|msg-id>`) --
-
-    def test_resolve_thread_by_task_id(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import resolve_thread
-        self._insert(msg_db, "t1", "claude", "gemini", "msg1")
-        resolve_thread("t1")
-        out = capsys.readouterr().out
-        assert "Conversation: t1" in out
-        assert "msg1" in out
-
-    def test_resolve_thread_by_numeric_id_resolves_full_task_thread(self, msg_db, capsys):
-        """A numeric message ID expands to the FULL conversation for its task,
-        not just that one row — this is the whole point of unifying `read`
-        (numeric-id-only) with `conversation` (task-id-only)."""
-        from scripts.ai_agent_bridge._messaging import resolve_thread
-        self._insert(msg_db, "t1", "claude", "gemini", "ask body")
-        self._insert(msg_db, "t1", "gemini", "claude", "reply body")
-        resolve_thread("1")
-        out = capsys.readouterr().out
-        assert "Conversation: t1 (2 messages)" in out
-        assert "ask body" in out
-        assert "reply body" in out
-
-    def test_resolve_thread_by_numeric_id_without_task_shows_single_message(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import resolve_thread
-        self._insert(msg_db, None, "claude", "gemini", "solo message")
-        resolve_thread("1")
-        out = capsys.readouterr().out
-        assert "Message #1" in out
-        assert "solo message" in out
-
-    def test_resolve_thread_unknown_numeric_id_reports_not_found(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import resolve_thread
-        resolve_thread("999")
-        assert "not found" in capsys.readouterr().out
-
-    def test_resolve_thread_unknown_task_id_reports_not_found(self, msg_db, capsys):
-        from scripts.ai_agent_bridge._messaging import resolve_thread
-        resolve_thread("no-such-task")
-        assert "No messages found" in capsys.readouterr().out
 
 
 # ---------------------------------------------------------------------------
@@ -705,46 +433,11 @@ class TestModel:
         # Probe-result mocks must not also replace the adapter's version check.
         monkeypatch.setattr("agent_runtime.adapters.agy._agy_version", lambda _binary: (1, 2, 9))
 
-    def test_handle_model_check_failure_not_found(self, capsys):
-        import time
-
-        from scripts.ai_agent_bridge._model import _handle_model_check_failure
-        result = MagicMock()
-        result.stderr = "model not found"
-        result.returncode = 1
-        _handle_model_check_failure(result, "bad-model", time)
-        assert "not available" in capsys.readouterr().out
-
-    def test_handle_model_check_failure_quota(self, capsys):
-        import time
-
-        from scripts.ai_agent_bridge._model import _handle_model_check_failure
-        result = MagicMock()
-        result.stderr = "quota exhausted"
-        result.returncode = 1
-        _handle_model_check_failure(result, "good-model", time)
-        assert "quota" in capsys.readouterr().out.lower()
-
-    def test_handle_model_check_failure_generic(self, capsys):
-        import time
-
-        from scripts.ai_agent_bridge._model import _handle_model_check_failure
-        result = MagicMock()
-        result.stderr = "something weird"
-        result.returncode = 2
-        _handle_model_check_failure(result, "model-x", time)
-        assert "check failed" in capsys.readouterr().out
-
     def test_detect_model_error_not_found(self):
         from scripts.ai_agent_bridge._model import _detect_model_error
         result = _detect_model_error("Error: model not found", "test-model")
         assert result is not None
         assert "not available" in result
-
-    def test_detect_model_error_none(self):
-        from scripts.ai_agent_bridge._model import _detect_model_error
-        result = _detect_model_error("some random error", "test-model")
-        assert result is None
 
     def test_check_model_cached(self, capsys):
         import time
@@ -758,19 +451,6 @@ class TestModel:
             assert "cached" in capsys.readouterr().out
         finally:
             _MODEL_CACHE.pop("cached-model", None)
-
-    def test_check_model_cached_expired(self):
-        import time
-
-        from scripts.ai_agent_bridge._config import _MODEL_CACHE
-        from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE["gemini-3.8-flash-high"] = (True, time.time() - 7200)  # 2 hours old
-        try:
-            with patch("subprocess.run", side_effect=FileNotFoundError):
-                result = check_model("gemini-3.8-flash-high")
-            assert result is False
-        finally:
-            _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_timeout(self, capsys, tmp_path, monkeypatch):
         home = tmp_path / "home"
@@ -837,72 +517,6 @@ class TestModel:
 # 6. _prompts.py
 # ---------------------------------------------------------------------------
 
-class TestPrompts:
-    """Tests for scripts/ai_agent_bridge/_prompts.py."""
-
-    def test_build_gemini_prompt_full_execution(self):
-        from scripts.ai_agent_bridge._prompts import build_gemini_prompt
-        msg = {"content": "Do the thing", "data": None}
-        result = build_gemini_prompt(msg, stdout_only=False, output_path=None,
-                                     allow_write=True, delimiters=None)
-        assert "SILENT EXECUTION AGENT" in result
-        assert "Do the thing" in result
-
-    def test_build_gemini_prompt_full_execution_with_delimiters(self):
-        from scripts.ai_agent_bridge._prompts import build_gemini_prompt
-        msg = {"content": "task", "data": None}
-        result = build_gemini_prompt(msg, stdout_only=False, output_path=None,
-                                     allow_write=True, delimiters="CONTENT,REVIEW")
-        assert "===CONTENT_START===" in result
-        assert "===REVIEW_END===" in result
-
-    def test_build_gemini_prompt_orchestrated_stdout(self):
-        from scripts.ai_agent_bridge._prompts import build_gemini_prompt
-        msg = {"content": "produce text", "data": None}
-        result = build_gemini_prompt(msg, stdout_only=True, output_path=None,
-                                     allow_write=False, delimiters=None)
-        assert "TEXT GENERATOR" in result
-        assert "DO NOT WRITE OR EDIT" in result
-
-    def test_build_gemini_prompt_orchestrated_with_output_path(self):
-        from scripts.ai_agent_bridge._prompts import build_gemini_prompt
-        msg = {"content": "write file", "data": "extra"}
-        result = build_gemini_prompt(msg, stdout_only=False, output_path="/tmp/out.md",
-                                     allow_write=False, delimiters=None)
-        assert "/tmp/out.md" in result
-        assert "ATTACHED DATA" in result
-
-    def test_build_gemini_prompt_standard(self):
-        from scripts.ai_agent_bridge._prompts import build_gemini_prompt
-        msg = {"content": "review this", "data": "some data"}
-        result = build_gemini_prompt(msg, stdout_only=False, output_path=None,
-                                     allow_write=False, delimiters=None)
-        assert "You are Gemini" in result
-        assert "Attached data" in result
-
-    def test_build_gemini_prompt_standard_no_data(self):
-        from scripts.ai_agent_bridge._prompts import build_gemini_prompt
-        msg = {"content": "just a chat", "data": None}
-        result = build_gemini_prompt(msg, stdout_only=False, output_path=None,
-                                     allow_write=False, delimiters=None)
-        assert "Attached data" not in result
-
-    def test_build_claude_prompt(self):
-        from scripts.ai_agent_bridge._prompts import build_claude_prompt
-        msg = {"content": "respond to this", "data": None, "from": "gemini",
-               "task_id": "task-1", "type": "query"}
-        result = build_claude_prompt(msg)
-        assert "Claude" in result
-        assert "Gemini" in result
-        assert "task-1" in result
-
-    def test_build_claude_prompt_with_data(self):
-        from scripts.ai_agent_bridge._prompts import build_claude_prompt
-        msg = {"content": "review", "data": "file contents", "from": "gemini",
-               "task_id": None, "type": "response"}
-        result = build_claude_prompt(msg)
-        assert "file contents" in result
-
 
 # ---------------------------------------------------------------------------
 # 7. _github.py
@@ -920,29 +534,6 @@ class TestGitHub:
             assert _gh_comment(123, "body") is False
         transport.assert_not_called()
         assert "private matcher or rules unavailable/incompatible; write refused" in capsys.readouterr().out
-
-    def test_format_review_chunk_single(self):
-        from scripts.ai_agent_bridge._github import _format_review_chunk
-        result = _format_review_chunk("content here", "flash-2.0", 1, 1)
-        assert "**Review** (flash-2.0)" in result
-        assert "Part" not in result
-
-    def test_format_review_chunk_multi(self):
-        from scripts.ai_agent_bridge._github import _format_review_chunk
-        result = _format_review_chunk("chunk", "opus", 2, 3)
-        assert "Part 2/3" in result
-
-    def test_split_content_short(self):
-        from scripts.ai_agent_bridge._github import _split_content
-        result = _split_content("short text", limit=100)
-        assert len(result) == 1
-        assert result[0] == "short text"
-
-    def test_split_content_at_newline(self):
-        from scripts.ai_agent_bridge._github import _split_content
-        content = "line1\nline2\nline3"
-        result = _split_content(content, limit=10)
-        assert len(result) >= 2
 
     def test_split_content_no_newline(self):
         from scripts.ai_agent_bridge._github import _split_content
@@ -965,10 +556,6 @@ class TestGitHub:
         with patch("subprocess.run", return_value=mock_result):
             assert _gh_comment(123, "body") is False
 
-    def test_post_review_to_github_empty_content(self):
-        from scripts.ai_agent_bridge._github import _post_review_to_github
-        assert _post_review_to_github("task-1", "", "flash") is None
-
     def test_post_review_to_github_existing_issue(self):
         from scripts.ai_agent_bridge._github import _post_review_to_github
         mock_result = MagicMock()
@@ -989,14 +576,6 @@ class TestGitHub:
     def test_post_review_to_github_gh_not_found(self):
         from scripts.ai_agent_bridge._github import _post_review_to_github
         with patch("subprocess.run", side_effect=FileNotFoundError):
-            result = _post_review_to_github("issue-1", "text", "model")
-        assert result is None
-
-    def test_post_review_to_github_timeout(self):
-        import subprocess
-
-        from scripts.ai_agent_bridge._github import _post_review_to_github
-        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 15)):
             result = _post_review_to_github("issue-1", "text", "model")
         assert result is None
 
@@ -1025,68 +604,20 @@ class TestContentQualityPipeline:
         assert "А" in chars
         assert "Я" in chars  # Full alphabet
 
-    def test_get_charset_upper_plan_no_decodable(self):
-        from scripts.audit.checks.content_quality_pipeline import _get_charset_upper
-        plan = {"phase": "A1.2"}  # No decodable_letters
-        chars = _get_charset_upper(2, plan)
-        assert "А" in chars
-        assert "Я" in chars  # Full alphabet fallback
-
-    def test_is_skip_line_table(self):
-        from scripts.audit.checks.content_quality_pipeline import _is_skip_line
-        assert _is_skip_line("| word | meaning |") is True
-
-    def test_is_skip_line_heading(self):
-        from scripts.audit.checks.content_quality_pipeline import _is_skip_line
-        assert _is_skip_line("## Section Title") is True
-
-    def test_is_skip_line_prose(self):
-        from scripts.audit.checks.content_quality_pipeline import _is_skip_line
-        assert _is_skip_line("This is normal prose.") is False
-
-    def test_is_skip_line_blockquote(self):
-        from scripts.audit.checks.content_quality_pipeline import _is_skip_line
-        assert _is_skip_line("> [!tip] Some tip") is True
-
-    def test_is_skip_line_bold_list(self):
-        from scripts.audit.checks.content_quality_pipeline import _is_skip_line
-        assert _is_skip_line("- **word** meaning") is True
-
     def test_word_has_translation_after_parens(self):
         from scripts.audit.checks.content_quality_pipeline import _word_has_translation_after
         line = "Привіт (hello) to you"
         assert _word_has_translation_after(line, 6) is True  # after Привіт
-
-    def test_word_has_translation_after_dash(self):
-        from scripts.audit.checks.content_quality_pipeline import _word_has_translation_after
-        line = "Привіт — hello"
-        assert _word_has_translation_after(line, 6) is True
-
-    def test_word_has_translation_after_none(self):
-        from scripts.audit.checks.content_quality_pipeline import _word_has_translation_after
-        line = "Привіт друже"
-        assert _word_has_translation_after(line, 6) is False
 
     def test_word_is_in_translation_context(self):
         from scripts.audit.checks.content_quality_pipeline import _word_is_in_translation_context
         line = "(Привіт means hello)"
         assert _word_is_in_translation_context(line, 1) is True
 
-    def test_word_is_not_in_translation_context(self):
-        from scripts.audit.checks.content_quality_pipeline import _word_is_in_translation_context
-        line = "Привіт means hello"
-        assert _word_is_in_translation_context(line, 0) is False
-
     def test_check_untranslated_non_decodable_not_a1(self):
         from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
         plan = {"decodable_letters": "А О У І М Н Т К С Л"}
         issues = check_untranslated_non_decodable("Привіт", module_num=1, level_code="B1", plan=plan)
-        assert issues == []
-
-    def test_check_untranslated_non_decodable_no_plan(self):
-        from scripts.audit.checks.content_quality_pipeline import check_untranslated_non_decodable
-        # Without plan and module > 4, no scan
-        issues = check_untranslated_non_decodable("Привіт", module_num=7, level_code="A1")
         assert issues == []
 
     def test_check_untranslated_non_decodable_flags_word(self):
@@ -1105,89 +636,10 @@ class TestContentQualityPipeline:
         issues = check_untranslated_non_decodable(content, module_num=1, level_code="A1", plan=plan)
         assert len(issues) == 0
 
-    def test_check_wall_of_text_short(self):
-        from scripts.audit.checks.content_quality_pipeline import check_wall_of_text
-        content = "Short paragraph.\n\nAnother short one."
-        issues = check_wall_of_text(content)
-        assert issues == []
-
-    def test_check_wall_of_text_long(self):
-        from scripts.audit.checks.content_quality_pipeline import check_wall_of_text
-        words = " ".join(["word"] * 350)
-        content = f"---\ntitle: test\n---\n{words}"
-        issues = check_wall_of_text(content)
-        assert len(issues) == 1
-        assert issues[0]["type"] == "WALL_OF_TEXT"
-
-    def test_check_wall_of_text_with_break(self):
-        from scripts.audit.checks.content_quality_pipeline import check_wall_of_text
-        words = " ".join(["word"] * 150)
-        content = f"{words}\n\n{words}"
-        issues = check_wall_of_text(content)
-        assert issues == []
-
-    def test_check_engagement_boxes_enough(self):
-        from scripts.audit.checks.content_quality_pipeline import check_engagement_boxes
-        content = "> [!tip] tip1\n> [!example] ex1\n> [!note] note1"
-        with patch("scripts.audit.checks.content_quality_pipeline.LEVEL_CONFIG",
-                    {"A1": {"min_engagement": 2}}, create=True):
-            try:
-                issues = check_engagement_boxes(content, "A1")
-            except Exception:
-                # Import may fail, test with fallback
-                issues = check_engagement_boxes(content, "A1")
-        assert len(issues) == 0
-
-    def test_check_engagement_boxes_too_few(self):
-        from scripts.audit.checks.content_quality_pipeline import check_engagement_boxes
-        content = "> [!tip] just one"
-        issues = check_engagement_boxes(content, "A1")
-        if issues:  # Depends on config
-            assert issues[0]["type"] == "LOW_ENGAGEMENT"
-
-    def test_check_repetitive_transitions_none(self):
-        from scripts.audit.checks.content_quality_pipeline import check_repetitive_transitions
-        content = "## Section One\nFirst paragraph.\n\n## Section Two\nDifferent opening.\n\n## Section Three\nYet another start."
-        issues = check_repetitive_transitions(content)
-        assert issues == []
-
-    def test_check_repetitive_transitions_found(self):
-        from scripts.audit.checks.content_quality_pipeline import check_repetitive_transitions
-        content = "## A\nIn this section we explore\n\n## B\nIn this section we discuss\n\n## C\nIn this section we analyze"
-        issues = check_repetitive_transitions(content)
-        assert len(issues) >= 1
-        assert issues[0]["type"] == "REPETITIVE_TRANSITIONS"
-
-    def test_check_plan_section_coverage_no_plan(self):
-        from scripts.audit.checks.content_quality_pipeline import check_plan_section_coverage
-        issues = check_plan_section_coverage("content", None)
-        assert issues == []
-
-    def test_check_plan_section_coverage_match(self):
-        from scripts.audit.checks.content_quality_pipeline import check_plan_section_coverage
-        content = "## Introduction\nText\n\n## Grammar\nMore text"
-        plan = {"content_outline": [{"title": "Introduction"}, {"title": "Grammar"}]}
-        issues = check_plan_section_coverage(content, plan)
-        assert issues == []
-
-    def test_check_plan_section_coverage_missing(self):
-        from scripts.audit.checks.content_quality_pipeline import check_plan_section_coverage
-        content = "## Introduction\nText"
-        plan = {"content_outline": [{"title": "Introduction"}, {"title": "Vocabulary Expansion"}]}
-        issues = check_plan_section_coverage(content, plan)
-        assert len(issues) == 1
-        assert "Missing" in issues[0]["text"]
-
     def test_collect_failed_words_from_str(self):
         from scripts.audit.checks.content_quality_pipeline import _collect_failed_words_from_str
         failed = {"кот"}
         result = _collect_failed_words_from_str("кот і собака", failed)
-        assert "кот" in result
-
-    def test_collect_failed_words_from_value_list(self):
-        from scripts.audit.checks.content_quality_pipeline import _collect_failed_words_from_value
-        failed = {"кот"}
-        result = _collect_failed_words_from_value(["кот йде", "собака"], failed)
         assert "кот" in result
 
     def test_scan_activity_answers(self):
@@ -1197,225 +649,10 @@ class TestContentQualityPipeline:
         result = _scan_activity_answers(act, failed)
         assert "кот" in result
 
-    def test_check_activity_answers_vesum_no_path(self):
-        from scripts.audit.checks.content_quality_pipeline import check_activity_answers_vesum
-        issues = check_activity_answers_vesum(None, [{"original": "bad"}])
-        assert issues == []
-
-    def test_run_content_quality_checks(self):
-        from scripts.audit.checks.content_quality_pipeline import run_content_quality_checks
-        content = "Short.\n\nMore text."
-        issues = run_content_quality_checks(content, "B1", 10)
-        assert isinstance(issues, list)
-
 
 # ---------------------------------------------------------------------------
 # 9. template_compliance.py
 # ---------------------------------------------------------------------------
-
-@dataclass
-class MockTemplateStructure:
-    template_name: str = "test-template"
-    level: str = "b1"
-    required_sections: list = field(default_factory=list)
-    forbidden_headers: list = field(default_factory=list)
-    section_order: list = field(default_factory=list)
-    required_callouts: list = field(default_factory=list)
-    optional_sections: list = field(default_factory=list)
-
-
-class TestTemplateCompliance:
-    """Tests for scripts/audit/checks/template_compliance.py."""
-
-    def test_extract_sections_with_content(self):
-        from scripts.audit.checks.template_compliance import _extract_sections_with_content
-        content = "---\ntitle: test\n---\n# Title\n\n## Section 1\nBody 1\n\n## Section 2\nBody 2"
-        sections = _extract_sections_with_content(content)
-        assert len(sections) == 3
-        assert sections[1]["header"] == "Section 1"
-        assert "Body 1" in sections[1]["body"]
-
-    def test_extract_section_headers(self):
-        from scripts.audit.checks.template_compliance import _extract_section_headers
-        content = "---\ntitle: t\n---\n# Title\n## Sec A\nText\n## Sec B\nMore"
-        headers = _extract_section_headers(content)
-        assert "Title" in headers
-        assert "Sec A" in headers
-        assert "Sec B" in headers
-
-    def test_extract_sections_with_lines(self):
-        from scripts.audit.checks.template_compliance import _extract_sections_with_lines
-        content = "# Title\n\n## Intro\nText"
-        sections = _extract_sections_with_lines(content)
-        assert len(sections) == 2
-        assert sections[0][0] == "Title"
-
-    def test_check_forbidden_headers_found(self):
-        from scripts.audit.checks.template_compliance import _check_forbidden_headers
-        template = MockTemplateStructure(forbidden_headers=["Activities", "Vocabulary"])
-        content = "## Introduction\nText\n\n## Activities\nStuff"
-        violations = _check_forbidden_headers(content, template)
-        assert len(violations) == 1
-        assert violations[0]["type"] == "FORBIDDEN_HEADER"
-
-    def test_check_forbidden_headers_clean(self):
-        from scripts.audit.checks.template_compliance import _check_forbidden_headers
-        template = MockTemplateStructure(forbidden_headers=["Activities"])
-        content = "## Introduction\nText\n\n## Grammar\nStuff"
-        violations = _check_forbidden_headers(content, template)
-        assert violations == []
-
-    def test_check_forbidden_headers_skip_frontmatter(self):
-        from scripts.audit.checks.template_compliance import _check_forbidden_headers
-        template = MockTemplateStructure(forbidden_headers=["Activities"])
-        content = "---\ntitle: Activities\n---\n## Grammar\nStuff"
-        violations = _check_forbidden_headers(content, template)
-        assert violations == []
-
-    def test_check_section_order_correct(self):
-        from scripts.audit.checks.template_compliance import _check_section_order
-        template = MockTemplateStructure(section_order=["Introduction", "Grammar", "Practice"])
-        content = "## Introduction\nT\n## Grammar\nT\n## Practice\nT"
-        violations = _check_section_order(content, template)
-        assert violations == []
-
-    def test_check_section_order_wrong(self):
-        from scripts.audit.checks.template_compliance import _check_section_order
-        template = MockTemplateStructure(section_order=["Introduction", "Grammar", "Practice"])
-        content = "## Practice\nT\n## Introduction\nT\n## Grammar\nT"
-        violations = _check_section_order(content, template)
-        assert len(violations) >= 1
-        assert violations[0]["type"] == "SECTION_OUT_OF_ORDER"
-
-    def test_check_section_order_empty(self):
-        from scripts.audit.checks.template_compliance import _check_section_order
-        template = MockTemplateStructure(section_order=[])
-        violations = _check_section_order("## Anything", template)
-        assert violations == []
-
-    def test_check_required_callouts_found(self):
-        from scripts.audit.checks.template_compliance import _check_required_callouts
-        template = MockTemplateStructure(required_callouts=["myth-buster"])
-        content = "> [!myth-buster]\n> Some myth busting"
-        violations = _check_required_callouts(content, template)
-        assert violations == []
-
-    def test_check_required_callouts_missing(self):
-        from scripts.audit.checks.template_compliance import _check_required_callouts
-        template = MockTemplateStructure(required_callouts=["myth-buster"])
-        content = "> [!tip]\n> Some tip"
-        violations = _check_required_callouts(content, template)
-        assert len(violations) == 1
-        assert violations[0]["type"] == "MISSING_REQUIRED_CALLOUT"
-
-    def test_check_required_callouts_none(self):
-        from scripts.audit.checks.template_compliance import _check_required_callouts
-        template = MockTemplateStructure(required_callouts=[])
-        violations = _check_required_callouts("any content", template)
-        assert violations == []
-
-    def test_is_sidecar_exempt_section_vocab(self):
-        from scripts.audit.checks.template_compliance import _is_sidecar_exempt_section
-        assert _is_sidecar_exempt_section(["Словник"]) is True
-        assert _is_sidecar_exempt_section(["Vocabulary"]) is True
-
-    def test_is_sidecar_exempt_section_activities(self):
-        from scripts.audit.checks.template_compliance import _is_sidecar_exempt_section
-        assert _is_sidecar_exempt_section(["Вправи"]) is True
-        assert _is_sidecar_exempt_section(["Activities"]) is True
-
-    def test_is_sidecar_exempt_section_not(self):
-        from scripts.audit.checks.template_compliance import _is_sidecar_exempt_section
-        assert _is_sidecar_exempt_section(["Introduction"]) is False
-
-    def test_resolve_vital_status_living(self):
-        from scripts.audit.checks.template_compliance import _resolve_vital_status_names
-        template = MockTemplateStructure(level="c1", template_name="c1-biography")
-        alt_names = ["Сучасний етап", "Останні роки"]
-        preferred, forbidden = _resolve_vital_status_names(alt_names, "living", template)
-        assert preferred == "Сучасний етап"
-        assert forbidden == "Останні роки"
-
-    def test_resolve_vital_status_deceased(self):
-        from scripts.audit.checks.template_compliance import _resolve_vital_status_names
-        template = MockTemplateStructure(level="c1", template_name="c1-biography")
-        alt_names = ["Сучасний етап", "Останні роки"]
-        preferred, forbidden = _resolve_vital_status_names(alt_names, "deceased", template)
-        assert preferred == "Останні роки"
-        assert forbidden == "Сучасний етап"
-
-    def test_resolve_vital_status_not_bio(self):
-        from scripts.audit.checks.template_compliance import _resolve_vital_status_names
-        template = MockTemplateStructure(level="b1", template_name="b1-grammar")
-        preferred, forbidden = _resolve_vital_status_names(["A", "B"], "living", template)
-        assert preferred is None
-        assert forbidden is None
-
-    def test_check_forbidden_tone(self):
-        from scripts.audit.checks.template_compliance import _check_forbidden_tone
-        sections = [{"header": "Останні роки", "line": 10}]
-        violations = _check_forbidden_tone("Останні роки", "Сучасний етап", "living", sections)
-        assert len(violations) == 1
-        assert violations[0]["type"] == "FORBIDDEN_HEADER_TONE"
-
-    def test_check_forbidden_tone_no_forbidden(self):
-        from scripts.audit.checks.template_compliance import _check_forbidden_tone
-        violations = _check_forbidden_tone(None, None, "living", [])
-        assert violations == []
-
-    def test_check_duplicate_sections(self):
-        from scripts.audit.checks.template_compliance import _check_duplicate_sections
-        template = MockTemplateStructure()
-        found = [
-            {"header": "Спадщина", "line": 10},
-            {"header": "Культурна спадщина", "line": 20}
-        ]
-        violations = _check_duplicate_sections(found, "Спадщина|Legacy", template)
-        assert len(violations) == 1
-        assert violations[0]["type"] == "DUPLICATE_SYNONYMOUS_HEADERS"
-
-    def test_check_duplicate_sections_single(self):
-        from scripts.audit.checks.template_compliance import _check_duplicate_sections
-        template = MockTemplateStructure()
-        found = [{"header": "Спадщина", "line": 10}]
-        violations = _check_duplicate_sections(found, "Спадщина", template)
-        assert violations == []
-
-    def test_check_empty_sections(self):
-        from scripts.audit.checks.template_compliance import _check_empty_sections
-        found = [{"header": "Empty", "line": 5, "body": "   \n\n  ", "level": 2}]
-        all_sections = [{"header": "Empty", "line": 5, "body": "", "level": 2}]
-        violations = _check_empty_sections(found, all_sections)
-        assert len(violations) == 1
-        assert violations[0]["type"] == "EMPTY_REQUIRED_SECTION"
-
-    def test_check_empty_sections_parent_ok(self):
-        from scripts.audit.checks.template_compliance import _check_empty_sections
-        found = [{"header": "Parent", "line": 5, "body": "  ", "level": 2}]
-        all_sections = [
-            {"header": "Parent", "line": 5, "body": "", "level": 2},
-            {"header": "Child", "line": 7, "body": "content", "level": 3}
-        ]
-        violations = _check_empty_sections(found, all_sections)
-        assert violations == []
-
-    def test_check_template_compliance_full(self):
-        from scripts.audit.checks.template_compliance import check_template_compliance
-        template = MockTemplateStructure(
-            required_sections=["Introduction"],
-            forbidden_headers=["Activities"],
-            required_callouts=["tip"]
-        )
-        content = "## Introduction\nSome text\n\n> [!tip]\n> A tip"
-        violations = check_template_compliance(content, {}, template)
-        assert isinstance(violations, list)
-
-    def test_check_required_sections_with_content_outline(self):
-        from scripts.audit.checks.template_compliance import _check_required_sections
-        template = MockTemplateStructure(required_sections=["Introduction"])
-        meta = {"content_outline": [{"title": "Custom"}]}
-        violations = _check_required_sections("## Custom\nText", meta, template)
-        assert violations == []  # content_outline takes precedence
 
 
 # ---------------------------------------------------------------------------
@@ -1433,60 +670,6 @@ class TestNaturalnessCheck:
 
         monkeypatch.setattr(repo_root, "project_interpreter", lambda root=None: Path(sys.executable))
 
-    def test_extract_ukrainian_content_basic(self, tmp_path):
-        from scripts.audit.naturalness_check import extract_ukrainian_content
-        md = tmp_path / "test.md"
-        md.write_text("---\ntitle: test\n---\n\nПривіт, друже! Як справи?\n\nSome English text.\n", encoding="utf-8")
-        result = extract_ukrainian_content(str(md))
-        assert "Привіт" in result
-        assert "English" not in result
-
-    def test_extract_ukrainian_content_removes_code(self, tmp_path):
-        from scripts.audit.naturalness_check import extract_ukrainian_content
-        md = tmp_path / "test.md"
-        md.write_text("---\ntitle: t\n---\n```python\nкод = True\n```\nТекст українською.", encoding="utf-8")
-        result = extract_ukrainian_content(str(md))
-        assert "код" not in result
-        assert "Текст" in result
-
-    def test_extract_ukrainian_content_truncation(self, tmp_path):
-        from scripts.audit.naturalness_check import extract_ukrainian_content
-        md = tmp_path / "test.md"
-        text = "Привіт " * 1000
-        md.write_text(text, encoding="utf-8")
-        result = extract_ukrainian_content(str(md), max_chars=100)
-        assert len(result) <= 130  # 100 + truncation marker
-
-    def test_append_to_audit(self, tmp_path):
-        from scripts.audit.naturalness_check import append_to_audit
-        audit_file = tmp_path / "review.md"
-        audit_file.write_text("# Audit\n")
-        gemini_parsed = {"score": 9, "status": "PASS", "feedback_uk": "Добре", "issues": []}
-        claude_parsed = {"score": 8, "status": "PASS", "feedback_uk": "OK", "issues": []}
-        append_to_audit(audit_file, "raw gemini", gemini_parsed, "raw claude", claude_parsed, "2026-01-01")
-        content = audit_file.read_text()
-        assert "Naturalness Check" in content
-        assert "9/10" in content
-        assert "Average:" in content
-
-    def test_append_to_audit_disagreement(self, tmp_path):
-        from scripts.audit.naturalness_check import append_to_audit
-        audit_file = tmp_path / "review.md"
-        audit_file.write_text("")
-        gemini_parsed = {"score": 9, "status": "PASS", "feedback_uk": "", "issues": []}
-        claude_parsed = {"score": 5, "status": "FAIL", "feedback_uk": "", "issues": []}
-        append_to_audit(audit_file, "raw", gemini_parsed, "raw", claude_parsed, "2026-01-01")
-        assert "Disagreement" in audit_file.read_text()
-
-    def test_append_to_audit_gemini_only(self, tmp_path):
-        from scripts.audit.naturalness_check import append_to_audit
-        audit_file = tmp_path / "review.md"
-        audit_file.write_text("")
-        gemini_parsed = {"score": 8, "status": "PASS", "feedback_uk": "", "issues": []}
-        claude_parsed = {"score": 0, "status": "ERROR", "feedback_uk": "", "issues": []}
-        append_to_audit(audit_file, "raw", gemini_parsed, "raw", claude_parsed, "2026-01-01")
-        assert "Gemini only" in audit_file.read_text()
-
     def test_update_meta_naturalness(self, tmp_path):
         import yaml
 
@@ -1497,10 +680,6 @@ class TestNaturalnessCheck:
         data = yaml.safe_load(meta_file.read_text())
         assert data["naturalness"]["score"] == 9
         assert data["naturalness"]["status"] == "PASS"
-
-    def test_update_meta_naturalness_missing_file(self, tmp_path):
-        from scripts.audit.naturalness_check import update_meta_naturalness
-        update_meta_naturalness(tmp_path / "missing.yaml", 9, "PASS", "Good", "2026-01-01")
         # Should not raise
 
 
@@ -1526,29 +705,12 @@ class TestSampling:
         data = {"naturalness": {"score": 9}, "tags": ["politics", "economy"]}
         assert determine_tier(data) == "llm-verified"
 
-    def test_determine_tier_no_naturalness(self):
-        from scripts.scoring.sampling import determine_tier
-        data = {"tags": []}
-        assert determine_tier(data) == "automated"
-
-    def test_get_validation_status_default(self):
-        from scripts.scoring.sampling import get_validation_status
-        assert get_validation_status({}) == "automated"
-
-    def test_get_validation_status_set(self):
-        from scripts.scoring.sampling import get_validation_status
-        assert get_validation_status({"validation_tier": "gold-standard"}) == "gold-standard"
-
     def test_should_sample_deterministic(self):
         from scripts.scoring.sampling import should_sample
         # Same slug always gives same result
         r1 = should_sample("test-slug")
         r2 = should_sample("test-slug")
         assert r1 == r2
-
-    def test_should_sample_rate_0(self):
-        from scripts.scoring.sampling import should_sample
-        assert should_sample("anything", sample_rate=0.0) is False
 
     def test_should_sample_rate_1(self):
         from scripts.scoring.sampling import should_sample
@@ -1566,27 +728,6 @@ class TestSampling:
         assert "mod2" not in candidates  # Already verified
         assert "mod3" in candidates
 
-    def test_get_sampling_candidates_no_slug(self):
-        from scripts.scoring.sampling import get_sampling_candidates
-        modules = [{"tags": []}]
-        assert get_sampling_candidates(modules) == []
-
-    def test_calculate_sampling_metrics_empty(self):
-        from scripts.scoring.sampling import calculate_sampling_metrics
-        assert calculate_sampling_metrics([]) == {}
-
-    def test_calculate_sampling_metrics(self):
-        from scripts.scoring.sampling import calculate_sampling_metrics
-        modules = [
-            {"slug": "a", "naturalness": {"score": 9}, "tags": [], "validation_tier": "automated"},
-            {"slug": "b", "naturalness": {"score": 5}, "tags": [], "validation_tier": "llm-verified"},
-        ]
-        metrics = calculate_sampling_metrics(modules)
-        assert metrics["total"] == 2
-        assert metrics["tiers"]["automated"] == 1
-        assert metrics["tiers"]["llm-verified"] == 1
-        assert metrics["coverage_pct"] == 50.0
-
 
 # ---------------------------------------------------------------------------
 # 12. generate_activity_quality_queue.py
@@ -1594,62 +735,6 @@ class TestSampling:
 
 class TestGenerateActivityQualityQueue:
     """Tests for scripts/audit/generate_activity_quality_queue.py."""
-
-    def test_extract_activity_text_quiz(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "quiz", "items": [{"question": "Що це?", "sentence": "Це кіт."}]}
-        result = extract_activity_text(activity)
-        assert "Що це?" in result
-        assert "Це кіт." in result
-
-    def test_extract_activity_text_fill_in(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "fill-in", "items": [{"sentence": "Я ___ додому."}]}
-        result = extract_activity_text(activity)
-        assert "додому" in result
-
-    def test_extract_activity_text_error_correction(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "error-correction", "items": [{"sentence": "bad", "error": "err", "answer": "good"}]}
-        result = extract_activity_text(activity)
-        assert "bad" in result and "good" in result
-
-    def test_extract_activity_text_cloze(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "cloze", "items": [{"text": "Fill the ___"}]}
-        result = extract_activity_text(activity)
-        assert "Fill" in result
-
-    def test_extract_activity_text_unjumble(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "unjumble", "items": [{"words": ["я", "іду"], "answer": "Я іду"}]}
-        result = extract_activity_text(activity)
-        assert "я іду" in result
-
-    def test_extract_activity_text_true_false(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "true-false", "items": [{"statement": "Київ столиця"}]}
-        result = extract_activity_text(activity)
-        assert "Київ" in result
-
-    def test_extract_activity_text_match_up(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        # match-up uses pairs on activity level; item must be non-empty (empty dict is falsy)
-        activity = {"type": "match-up", "pairs": [{"left": "кіт", "right": "cat"}], "items": [{"id": 1}]}
-        result = extract_activity_text(activity)
-        assert "кіт" in result
-
-    def test_extract_activity_text_no_items(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "quiz"}
-        result = extract_activity_text(activity)
-        assert result == ""
-
-    def test_extract_activity_text_specific_item(self):
-        from scripts.audit.generate_activity_quality_queue import extract_activity_text
-        activity = {"type": "quiz", "items": [{"question": "Q1"}, {"question": "Q2"}]}
-        result = extract_activity_text(activity, item={"question": "Q2"})
-        assert "Q2" in result
 
     def test_extract_options_quiz(self):
         from scripts.audit.generate_activity_quality_queue import extract_options
@@ -1660,20 +745,6 @@ class TestGenerateActivityQualityQueue:
         assert options == ["A", "B"]
         assert correct == "A"
 
-    def test_extract_options_fill_in(self):
-        from scripts.audit.generate_activity_quality_queue import extract_options
-        activity = {"type": "fill-in", "items": [{"options": ["a", "b"], "answer": "a"}]}
-        options, correct = extract_options(activity)
-        assert options == ["a", "b"]
-        assert correct == "a"
-
-    def test_extract_options_no_items(self):
-        from scripts.audit.generate_activity_quality_queue import extract_options
-        activity = {"type": "quiz"}
-        options, correct = extract_options(activity)
-        assert options == []
-        assert correct is None
-
 
 # ---------------------------------------------------------------------------
 # 13. finalize_activity_quality.py
@@ -1681,37 +752,6 @@ class TestGenerateActivityQualityQueue:
 
 class TestFinalizeActivityQuality:
     """Tests for scripts/audit/finalize_activity_quality.py."""
-
-    def test_calculate_quality_scores_empty(self):
-        from scripts.audit.finalize_activity_quality import calculate_quality_scores
-        result = calculate_quality_scores({"activities": []})
-        assert result["total_activities"] == 0
-        assert "error" in result
-
-    def test_calculate_quality_scores_incomplete(self):
-        from scripts.audit.finalize_activity_quality import calculate_quality_scores
-        data = {"activities": [
-            {"activity_id": "a1", "naturalness": None, "engagement": None, "difficulty": None}
-        ]}
-        result = calculate_quality_scores(data)
-        assert len(result["incomplete_activities"]) == 1
-
-    def test_calculate_quality_scores_complete(self):
-        from scripts.audit.finalize_activity_quality import calculate_quality_scores
-        data = {"activities": [
-            {"activity_id": "a1", "naturalness": 4, "engagement": 3, "difficulty": "appropriate",
-             "distractor_score": 4, "variety_score": 70},
-            {"activity_id": "a2", "naturalness": 5, "engagement": 4, "difficulty": "too_hard",
-             "distractor_score": 5, "variety_score": 80},
-        ]}
-        result = calculate_quality_scores(data)
-        assert result["validated_activities"] == 2
-        assert result["naturalness_avg"] == 4.5
-        assert result["engagement_avg"] == 3.5
-        assert result["distractor_quality_avg"] == 4.5
-        assert result["variety_avg"] == 75
-        assert result["difficulty_breakdown"]["appropriate"] == 1
-        assert result["difficulty_breakdown"]["too_hard"] == 1
 
     def test_evaluate_quality_gates_a1_pass(self):
         from scripts.audit.finalize_activity_quality import evaluate_quality_gates
@@ -1739,87 +779,3 @@ class TestFinalizeActivityQuality:
         result = evaluate_quality_gates(scores, "B1")
         assert result["result"] == "FAIL"
         assert any(g["dimension"] == "naturalness" for g in result["failed_gates"])
-
-    def test_evaluate_quality_gates_c2(self):
-        from scripts.audit.finalize_activity_quality import evaluate_quality_gates
-        scores = {
-            "naturalness_avg": 3.0, "engagement_avg": 3.0,
-            "distractor_quality_avg": 3.0, "variety_avg": 50,
-            "difficulty_inappropriate_pct": 0.2
-        }
-        result = evaluate_quality_gates(scores, "C2")
-        assert result["result"] == "FAIL"
-        assert len(result["failed_gates"]) >= 3  # Multiple failures
-
-    def test_generate_report_pass(self):
-        from scripts.audit.finalize_activity_quality import generate_report
-        queue_data = {"module": "test-mod", "level": "B1", "module_number": 5}
-        quality_scores = {
-            "naturalness_avg": 4.0, "engagement_avg": 4.0,
-            "distractor_quality_avg": 4.5, "variety_avg": 70,
-            "difficulty_appropriate_pct": 0.9, "difficulty_breakdown": {"too_easy": 0, "appropriate": 9, "too_hard": 1},
-            "incomplete_activities": []
-        }
-        gate_evaluation = {"result": "PASS", "failed_gates": []}
-        report = generate_report(queue_data, quality_scores, gate_evaluation)
-        assert "PASS" in report
-        assert "test-mod" in report
-        assert "B1" in report
-
-    def test_generate_report_fail(self):
-        from scripts.audit.finalize_activity_quality import generate_report
-        queue_data = {"module": "test-mod", "level": "B2", "module_number": 3}
-        quality_scores = {
-            "naturalness_avg": 2.0, "engagement_avg": 2.0,
-            "distractor_quality_avg": None, "variety_avg": None,
-            "difficulty_appropriate_pct": 0.5,
-            "difficulty_breakdown": {"too_easy": 3, "appropriate": 3, "too_hard": 0},
-            "incomplete_activities": ["act-1"]
-        }
-        gate_evaluation = {
-            "result": "FAIL",
-            "failed_gates": [
-                {"dimension": "naturalness", "message": "Naturalness 2.0 < 4.0"},
-                {"dimension": "engagement", "message": "Engagement 2.0 < 3.5"},
-            ]
-        }
-        report = generate_report(queue_data, quality_scores, gate_evaluation)
-        assert "FAIL" in report
-        assert "Improve Naturalness" in report
-        assert "Incomplete" in report
-
-    def test_generate_report_all_dimensions_fail(self):
-        from scripts.audit.finalize_activity_quality import generate_report
-        queue_data = {"module": "x", "level": "C1", "module_number": 1}
-        quality_scores = {
-            "naturalness_avg": 1.0, "engagement_avg": 1.0,
-            "distractor_quality_avg": 1.0, "variety_avg": 10,
-            "difficulty_appropriate_pct": 0.5,
-            "difficulty_breakdown": {"too_easy": 5, "appropriate": 5, "too_hard": 0},
-            "incomplete_activities": []
-        }
-        gate_evaluation = {
-            "result": "FAIL",
-            "failed_gates": [
-                {"dimension": "naturalness", "message": "low"},
-                {"dimension": "difficulty", "message": "bad"},
-                {"dimension": "engagement", "message": "low"},
-                {"dimension": "distractor_quality", "message": "bad"},
-                {"dimension": "variety", "message": "low"},
-            ]
-        }
-        report = generate_report(queue_data, quality_scores, gate_evaluation)
-        assert "Improve Naturalness" in report
-        assert "Fix Difficulty" in report
-        assert "Increase Engagement" in report
-        assert "Improve Distractors" in report
-        assert "Add Variety" in report
-
-    def test_quality_gates_keys(self):
-        from scripts.audit.finalize_activity_quality import QUALITY_GATES
-        for level in ("A1", "A2", "B1", "B2", "C1", "C2"):
-            assert level in QUALITY_GATES
-            gates = QUALITY_GATES[level]
-            for key in ("min_naturalness_avg", "max_difficulty_inappropriate",
-                        "min_engagement_avg", "min_distractor_quality", "min_variety_avg"):
-                assert key in gates

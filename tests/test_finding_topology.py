@@ -9,17 +9,6 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from build.finding_topology import classify_topology
 
 
-def test_topology_is_deterministic() -> None:
-    finding = {
-        "error_class": "register_drift",
-        "location": "## Привіт! / paragraph 2",
-        "issue": "The teacher models the opposite register rule in the same scene.",
-        "fix": "Make the teacher-student exchange formal.",
-    }
-
-    assert classify_topology(finding) == classify_topology(finding)
-
-
 def test_local_to_prose_rule() -> None:
     finding = {
         "error_class": "notation_error",

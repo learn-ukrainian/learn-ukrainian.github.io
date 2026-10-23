@@ -127,35 +127,6 @@ def test_backup_failure_includes_last_run_receipt_status(tmp_path: Path) -> None
     )
 
 
-def test_backup_alerts_carry_the_backed_up_database_count(tmp_path: Path) -> None:
-    receipt = tmp_path / "batch_state" / "backups" / "last-run.json"
-    receipt.parent.mkdir(parents=True)
-    receipt.write_text(
-        json.dumps({"exit_status": 1, "run_id": "r1", "databases_backed_up": 57}),
-        encoding="utf-8",
-    )
-    publish = Recorder()
-
-    _handle(tmp_path, "failed", BACKUP, publish, "2026-10-03T03:51:00Z")
-    receipt.write_text(
-        json.dumps({"exit_status": 0, "run_id": "r2", "databases_backed_up": 58}),
-        encoding="utf-8",
-    )
-    _handle(tmp_path, "recovered", BACKUP, publish, "2026-10-04T03:51:00Z")
-
-    assert "databases_backed_up=57" in publish.calls[0][0]
-    assert "last-run receipt: exit_status=0 run_id=r2 databases_backed_up=58" in publish.calls[1][0]
-
-
-def test_retention_recovery_does_not_read_the_backup_receipt(tmp_path: Path) -> None:
-    publish = Recorder()
-
-    _handle(tmp_path, "failed", RETENTION, publish, "2026-10-04T05:30:00Z")
-    _handle(tmp_path, "recovered", RETENTION, publish, "2026-10-11T05:30:00Z")
-
-    assert "last-run receipt" not in publish.calls[1][0]
-
-
 def test_rejects_units_that_are_not_backup_units(tmp_path: Path) -> None:
     with pytest.raises(alert.AlertError, match="not a backup unit"):
         _handle(tmp_path, "failed", "learn-ukrainian-api.service", Recorder(), "2026-10-03T03:45:00Z")

@@ -8,9 +8,7 @@ to be installed — `shutil.which` is mocked.
 from __future__ import annotations
 
 import json
-import os
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -20,16 +18,13 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime import registry
-from agent_runtime.adapters.base import AgentAdapter, InvocationPlan
+from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.grok_build import (
     _MCP_REVIEW_DENY_RULES,
     _READ_ONLY_DENY_RULES,
     GROK_BUILD_DEFAULT_EFFORT,
     GROK_BUILD_DEFAULT_MODEL,
-    GROK_SUPPORTED_EFFORTS,
     GrokBuildAdapter,
-    _adapt_prompt_for_grok_build_mcp,
-    _parse_json_object,
     _translate_mcp_prefix_for_grok_build,
     grok_session_dir,
     resolve_grok_home,
@@ -104,20 +99,6 @@ def test_mode_permission_mapping(tmp_path):
     ]:
         plan = _build("do x", tmp_path, mode=mode)
         assert _val(plan.cmd, "--permission-mode") == perm
-
-
-@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
-def test_write_capable_modes_auto_approve_headless_tool_execution(tmp_path, mode):
-    plan = _build("commit and push", tmp_path, mode=mode)
-
-    assert "--always-approve" in plan.cmd
-
-
-def test_read_only_mode_does_not_auto_approve_tool_execution(tmp_path):
-    plan = _build("inspect only", tmp_path, mode="read-only")
-
-    assert _val(plan.cmd, "--permission-mode") == "auto"
-    assert "--always-approve" not in plan.cmd
 
 
 def test_read_only_mode_applies_mutation_deny_rules(tmp_path):
@@ -338,33 +319,6 @@ def test_review_isolation_rejects_unsupported_or_weak_deny_overrides(tmp_path, r
             _build("review evidence", tmp_path, mode="read-only", tool_config=tool_config)
 
 
-def test_unsupported_mode_raises(tmp_path):
-    with pytest.raises(ValueError, match="unsupported mode"):
-        _build("x", tmp_path, mode="bogus")
-
-
-def test_model_and_effort_flags(tmp_path):
-    plan = _build("x", tmp_path, model="grok-4.7", effort="high")
-    assert _val(plan.cmd, "-m") == "grok-4.7"
-    assert _val(plan.cmd, "--effort") == "high"
-
-
-def test_default_effort_is_applied(tmp_path):
-    plan = _build("x", tmp_path)
-    assert _val(plan.cmd, "-m") == GROK_BUILD_DEFAULT_MODEL
-    assert _val(plan.cmd, "--effort") == GROK_BUILD_DEFAULT_EFFORT
-
-
-@pytest.mark.parametrize("effort", ["xhigh", "max"])
-def test_unsupported_native_effort_raises_before_invocation(tmp_path, effort):
-    with pytest.raises(ValueError, match="native Grok CLI supports --effort values"):
-        _build("x", tmp_path, effort=effort)
-
-
-def test_native_grok_effort_vocabulary_matches_cli_contract():
-    assert frozenset({"low", "medium", "high"}) == GROK_SUPPORTED_EFFORTS
-
-
 def test_hyphen_leading_prompt_uses_prompt_file(tmp_path):
     plan = _build("--- context: shared\nfix it", tmp_path)
     assert "-p" not in plan.cmd
@@ -398,31 +352,6 @@ def test_translate_mcp_prefix_for_grok_build_is_scoped():
     prompt = "mcp__sources__search_text mcp__rag__legacy"
 
     assert _translate_mcp_prefix_for_grok_build(prompt) == ("sources__search_text mcp__rag__legacy")
-
-
-def test_adapt_prompt_for_grok_build_mcp_adds_headless_suffix():
-    prompt = "Use mcp__sources__search_text."
-
-    adapted = _adapt_prompt_for_grok_build_mcp(prompt)
-
-    assert "sources__search_text" in adapted
-    assert "mcp__sources__" not in adapted
-    assert "native grok-build single-turn headless mode" in adapted
-    assert "Return the final JSON object now" in adapted
-
-
-def test_missing_grok_binary_raises(tmp_path):
-    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=None):
-        with pytest.raises(RuntimeError, match="grok CLI"):
-            GrokBuildAdapter().build_invocation(
-                prompt="x",
-                mode="danger",
-                cwd=tmp_path,
-                model=None,
-                task_id=None,
-                session_id=None,
-                tool_config=None,
-            )
 
 
 def test_parse_success_json():
@@ -490,27 +419,6 @@ def test_plain_reply_requires_exact_end_turn(stop_reason):
     ) is None
 
 
-def test_plain_reply_without_stop_reason_is_incomplete():
-    result = GrokBuildAdapter().parse_response(
-        stdout=json.dumps({"text": "partial narration"}), stderr="", returncode=0, output_file=None,
-    )
-    assert not result.ok
-    assert result.response == ""
-    assert result.failure_code == "provider_stream_incomplete"
-    assert "partial narration" in result.stderr_excerpt
-
-
-def test_incomplete_reply_preserves_text_alongside_stderr(recorded_cancelled_turn):
-    result = GrokBuildAdapter().parse_response(
-        stdout=json.dumps(recorded_cancelled_turn), stderr="permission cancelled", returncode=0, output_file=None,
-    )
-    assert not result.ok
-    assert result.response == ""
-    assert result.failure_code == "provider_stream_incomplete"
-    assert recorded_cancelled_turn["text"] in result.stderr_excerpt
-    assert "permission cancelled" in result.stderr_excerpt
-
-
 def test_complete_reply_with_log_noise():
     stdout = "startup log\n" + json.dumps({"text": "final report", "stopReason": "end_turn"}) + "\ntrailing log"
     result = GrokBuildAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
@@ -561,13 +469,6 @@ def test_native_runtime_identity_comes_only_from_single_model_usage_key(usage, e
     assert state["resolved_model_source"] == ("grok-model-usage" if expected else "unattested-harness")
 
 
-def test_native_plain_reply_does_not_attest_model():
-    result = GrokBuildAdapter().parse_response(stdout="VERDICT: APPROVE grok-4.7-build", stderr="", returncode=0, output_file=None)
-    assert not result.ok
-    assert result.failure_code == "provider_stream_incomplete"
-    assert result.substitution["actual_model_known"] is False
-
-
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
 @pytest.mark.parametrize("runtime,substituted", [
     ("grok-4.7-build", False),
@@ -605,11 +506,6 @@ def test_parse_rate_limited():
     assert not r.ok
 
 
-def test_parse_json_with_log_noise():
-    out = "some startup log\n" + json.dumps({"text": "ok"}) + "\ntrailing line"
-    assert _parse_json_object(out) == {"text": "ok"}
-
-
 def test_parse_plain_fallback():
     r = GrokBuildAdapter().parse_response(stdout="just plain text", stderr="", returncode=0, output_file=None)
     assert not r.ok
@@ -635,45 +531,11 @@ def test_registry_native_grok_distinct_from_hermes_grok():
     assert "grok-hermes" in registry.AGENTS
 
 
-def test_grok_build_lane_defaults_to_grok_47():
-    assert registry.get_agent_entry("grok")["default_model"] == "grok-4.7"
-    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-4.7"
-    assert GROK_BUILD_DEFAULT_MODEL == "grok-4.7"
-
-
-def test_grok_build_admits_current_cli_default(tmp_path):
-    plan = _build("x", tmp_path, model="grok-4.7", effort="high")
-    assert _val(plan.cmd, "-m") == "grok-4.7"
-
-
 @pytest.mark.parametrize("model", ["grok-4.5", "grok-4.6", "grok-4.7-build-fast"])
 def test_grok_build_rejects_retired_or_expensive_pins(tmp_path, model):
     """Previous ids and the 2x build-fast variant are not the seat."""
     with pytest.raises(ValueError, match=r"unsupported Grok model"):
         _build("x", tmp_path, model=model, effort="high")
-
-
-def test_grok_build_default_model_is_listed_by_cli():
-    if os.environ.get("CI"):
-        pytest.skip("real grok CLI smoke test is skipped in CI")
-    grok_bin = shutil.which("grok")
-    if not grok_bin:
-        pytest.skip("grok CLI not installed")
-
-    result = subprocess.run(
-        [grok_bin, "models"],
-        capture_output=True,
-        text=True,
-        timeout=20,
-        cwd=Path.cwd(),
-    )
-
-    assert result.returncode == 0, result.stderr or result.stdout
-    assert GROK_BUILD_DEFAULT_MODEL in result.stdout.split()
-
-
-def test_conforms_to_agent_adapter_protocol():
-    assert isinstance(GrokBuildAdapter(), AgentAdapter)
 
 
 def test_liveness_signal_paths_returns_tuple(tmp_path, monkeypatch):

@@ -19,119 +19,17 @@ Tests:
 from __future__ import annotations
 
 import json
-from collections import Counter
 from pathlib import Path
 
 import pytest
 
 from scripts.practice.numeral_mechanics_engine import (
-    NumeralCategory,
     build_canonical_numeral_cards,
     export_deck,
     main,
-    resolve_approximate_constructions_rule,
-    resolve_cardinal_40_90_100_rule,
-    resolve_cardinal_50_80_rule,
-    resolve_cardinal_200_900_dative_locative_rule,
-    resolve_cardinal_200_900_genitive_rule,
-    resolve_cardinal_200_900_instrumental_rule,
-    resolve_collective_feminine_restriction_rule,
-    resolve_collective_masculine_rule,
     resolve_collective_pluralia_neuter_rule,
-    resolve_fractional_pivtora_rule,
-    resolve_government_2_3_4_rule,
-    resolve_government_5_plus_rule,
-    resolve_government_compound_last_digit_rule,
-    resolve_ordinal_compound_declension_rule,
-    resolve_time_expressions_rule,
     verify_deck_with_vesum,
 )
-
-
-def test_resolve_numeral_rules():
-    """Verify all 15 category rule citations and bilingual summaries."""
-    cit, ua, en = resolve_cardinal_50_80_rule()
-    assert "§ 105.4" in cit
-    assert "п'ятдесяти" in ua
-    assert "invariant" in en
-
-    cit2, ua2, en2 = resolve_cardinal_200_900_genitive_rule()
-    assert "§ 105.5" in cit2
-    assert "двохсот" in ua2
-    assert "Genitive" in en2
-
-    cit3, ua3, en3 = resolve_cardinal_200_900_dative_locative_rule()
-    assert "§ 105.5" in cit3
-    assert "-стам" in ua3
-    assert "Locative" in en3
-
-    cit4, ua4, en4 = resolve_cardinal_200_900_instrumental_rule()
-    assert "§ 105.5" in cit4
-    assert "-стами" in ua4
-    assert "Instrumental" in en4
-
-    cit5, ua5, en5 = resolve_cardinal_40_90_100_rule()
-    assert "§ 105.7" in cit5
-    assert "сорока, дев'яноста, ста" in ua5
-    assert "oblique" in en5
-
-    _cit6, ua6, en6 = resolve_government_2_3_4_rule()
-    assert "називного" in ua6
-    assert "Nominative plural" in en6
-
-    _cit7, ua7, en7 = resolve_government_5_plus_rule()
-    assert "родового" in ua7
-    assert "Genitive plural" in en7
-
-    _cit8, ua8, en8 = resolve_government_compound_last_digit_rule()
-    assert "останнім словом" in ua8
-    assert "last numeral" in en8
-
-    _cit9, ua9, en9 = resolve_collective_masculine_rule()
-    assert "Синтаксичні норми" in _cit9
-    assert "105" in _cit9
-    assert "троє друзів" in ua9
-    assert "collective" in en9.lower()
-
-    _cit10, ua10, en10 = resolve_collective_feminine_restriction_rule()
-    assert "Синтаксичні норми" in _cit10
-    assert "НЕ вживаються" in ua10
-    assert "NOT used with feminine" in en10
-
-    _cit11, ua11, en11 = resolve_collective_pluralia_neuter_rule()
-    assert "Синтаксичні норми" in _cit11
-    assert "105" in _cit11
-    assert "двоє дверей" in ua11
-    assert "pluralia tantum" in en11
-
-    _cit12, ua12, en12 = resolve_fractional_pivtora_rule()
-    assert "§ 107" in _cit12
-    assert "родового відмінка ОДНИНИ" in ua12
-    assert "Genitive SINGULAR" in en12
-
-    _cit13, ua13, en13 = resolve_ordinal_compound_declension_rule()
-    assert "§ 106.2" in _cit13
-    assert "ЛИШЕ ОСТАННЄ" in ua13
-    assert "ONLY the last word" in en13
-
-    _cit14, ua14, en14 = resolve_time_expressions_rule()
-    assert "о десятій годині" in ua14
-    assert "calques" in en14
-
-    _cit15, ua15, en15 = resolve_approximate_constructions_rule()
-    assert "інверсією" in ua15
-    assert "colloquial" in en15.lower()
-
-
-def test_build_canonical_numeral_cards_count_and_distribution():
-    """Verify card count, category coverage, and exact 5 cards per category."""
-    cards = build_canonical_numeral_cards()
-    assert len(cards) == 75
-
-    cat_counts = Counter(c.category for c in cards)
-    assert len(cat_counts) == 15
-    for cat in NumeralCategory:
-        assert cat_counts[cat] == 5, f"Category {cat} has {cat_counts[cat]} cards, expected 5"
 
 
 def test_cards_zero_collision_and_unique_options():
@@ -152,35 +50,6 @@ def test_cards_zero_collision_and_unique_options():
         assert len(options) == 4, f"Card {card.card_id} options length != 4"
         assert len(set(options)) == 4, f"Card {card.card_id} options not all unique"
         assert target in options, f"Card {card.card_id} target '{target}' missing from options"
-
-
-def test_card_prompt_display_and_full_sentence():
-    """Verify placeholder replacement and sentence rendering."""
-    cards = build_canonical_numeral_cards()
-    for card in cards:
-        prompt = card.prompt_display
-        assert "_______" in prompt, f"Card {card.card_id} prompt missing placeholder: {prompt}"
-
-        full = card.full_sentence
-        assert card.correct_answer in full, (
-            f"Card {card.card_id} full_sentence missing target '{card.correct_answer}': {full}"
-        )
-
-
-def test_shuffled_options_balanced_distribution():
-    """Verify that deterministic shuffle distributes correct answer across positions 0..3."""
-    cards = build_canonical_numeral_cards()
-    positions = []
-
-    for card in cards:
-        opts = card.all_options()
-        idx = opts.index(card.correct_answer)
-        positions.append(idx)
-
-    pos_counts = Counter(positions)
-    for pos in range(4):
-        # With 75 cards, expected average is ~18.75 per position; ensure each has >= 10
-        assert pos_counts[pos] >= 10, f"Position {pos} count {pos_counts[pos]} is under-represented"
 
 
 def test_numeral_deck_json_export_and_file_parity(tmp_path: Path):

@@ -236,41 +236,6 @@ def cache_status_for_targets(
     }
 
 
-def latest_composite_match_for_target(
-    target: ReportTarget,
-    *,
-    db_path: Path,
-    gate_version: str,
-    checker_version: str,
-    reviewer_model_id: str,
-) -> tuple[str, ReportRecord | None]:
-    """Return hit/stale/miss using the full workflow cache composite."""
-
-    if not db_path.exists():
-        return "miss", None
-    clean_level = target.level.strip().lower()
-    clean_slug = target.slug.strip()
-    prompt_hash = _prompt_hash_for_target(target)
-    content_sha = llm_qg_store.content_sha_for_module(target.module_dir)
-    policy_family = policy_for_level(clean_level).family
-    record = _latest_exact_composite(
-        db_path=db_path,
-        level=clean_level,
-        slug=clean_slug,
-        content_sha=content_sha,
-        gate_version=gate_version,
-        prompt_hash=prompt_hash,
-        checker_version=checker_version,
-        level_policy_family=policy_family,
-        reviewer_model=reviewer_model_id,
-    )
-    if record is not None:
-        return "hit", record
-    latest, _errors = load_db_records(db_path)
-    stale = any(record.level == clean_level and record.slug == clean_slug for record in latest)
-    return ("stale" if stale else "miss"), None
-
-
 def _target_composite_key(
     *,
     target: ReportTarget,

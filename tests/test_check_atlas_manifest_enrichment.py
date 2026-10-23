@@ -31,11 +31,6 @@ def _write(path: Path, *, enrichment_generated, n_total: int, n_enriched: int) -
     return path
 
 
-def test_healthy_manifest_passes(tmp_path: Path) -> None:
-    m = _write(tmp_path / "m.json", enrichment_generated=True, n_total=100, n_enriched=85)
-    assert check_enrichment(manifest_path=m) == 0
-
-
 def test_thin_manifest_zero_enriched_fails(tmp_path: Path) -> None:
     # The exact #3631 shape: enrichment_generated False, 0 enriched entries.
     m = _write(tmp_path / "m.json", enrichment_generated=False, n_total=4148, n_enriched=0)

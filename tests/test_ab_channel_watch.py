@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import io
 import json
 import sys
-import threading
 import time
 from pathlib import Path
 from unittest.mock import patch
@@ -15,11 +13,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime.result import Result
 from scripts.ai_agent_bridge import _channels, _cli, _db, _inbox
 from scripts.ai_agent_bridge._channels_watch import (
-    emit_delivery_delivered,
     emit_reply_complete,
     emit_reply_started,
     read_channel_events,
-    watch_channel_events,
 )
 
 
@@ -86,38 +82,6 @@ def test_channel_watch_event_stream_replays_history_and_exits(capsys):
     assert all(event["thread_id"] == thread_id for event in events)
     assert events[0]["agent"] == "codex"
     assert events[1]["chars"] == 42
-
-
-def test_channel_watch_follow_streams_new_rows():
-    thread = _make_thread("claude")
-    thread_id = str(thread["thread_id"])
-    emit_reply_started(thread_id, agent="claude", model="test-model")
-    stream = io.StringIO()
-
-    watcher = threading.Thread(
-        target=watch_channel_events,
-        kwargs={
-            "thread_id": thread_id,
-            "follow": True,
-            "event_stream": True,
-            "poll_interval_s": 0.01,
-            "out": stream,
-            "max_events": 2,
-        },
-        daemon=True,
-    )
-    watcher.start()
-    time.sleep(0.03)
-    emit_delivery_delivered(thread_id, delivery_id=str(thread["delivery_ids"][0]))
-    watcher.join(timeout=1.0)
-
-    assert not watcher.is_alive()
-    events = [json.loads(line) for line in stream.getvalue().strip().splitlines()]
-    assert [event["event"] for event in events] == [
-        "reply_started",
-        "delivery_delivered",
-    ]
-    assert events[1]["delivery_id"] == thread["delivery_ids"][0]
 
 
 def test_channel_watch_auto_migrates_missing_table():

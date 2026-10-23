@@ -264,24 +264,6 @@ def compute_sources_manifest(
     return manifest
 
 
-def compute_sources_hash(
-    *,
-    project_root: Path,
-    curriculum_root: Path,
-    level: str,
-    slug: str,
-    writer_template_path: Path,
-) -> str:
-    manifest = compute_sources_manifest(
-        project_root=project_root,
-        curriculum_root=curriculum_root,
-        level=level,
-        slug=slug,
-        writer_template_path=writer_template_path,
-    )
-    return _sha256_bytes(_stable_json(manifest))
-
-
 def reset_module_memory(path: Path) -> bool:
     if not path.exists():
         return False

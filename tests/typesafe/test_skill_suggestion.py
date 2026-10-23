@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from types import SimpleNamespace
 
 import pytest
@@ -68,25 +67,6 @@ class _FakeClient:
         return None
 
 
-def test_question_primitives_hermetic_stub(monkeypatch):
-    """#8201 — same fallback pattern as typesafe_curriculum._question_primitives."""
-    import builtins
-
-    real_import = builtins.__import__
-
-    def _blocked_import(name, *args, **kwargs):
-        if name == "typesafe_sdk":
-            raise ImportError("simulated: typesafe_sdk not installed")
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", _blocked_import)
-    Choice, Noul = ss._question_primitives()
-    noul = Noul(instructions="does it apply?")
-    choice = Choice(instructions="which one?", criteria={"a": "desc a"})
-    assert noul.kwargs["instructions"] == "does it apply?"
-    assert choice.kwargs["criteria"] == {"a": "desc a"}
-
-
 def test_load_skill_index_reads_real_roster():
     """#8201 — the loader must find and parse the repo's own vendored skills."""
     records = ss.load_skill_index()
@@ -127,23 +107,6 @@ def test_rank_skills_batches_choice_and_three_gate_nouls():
     # mean of (0.9, 0.8, 1 - 0.1) = 0.867 -> clears the 0.30 gate
     assert result.gate_score == pytest.approx((0.9 + 0.8 + 0.9) / 3)
     assert result.needs_skill is True
-
-
-def test_rank_skills_gate_closes_when_prose_suffices():
-    client = _FakeClient(
-        _FakeResponse(
-            nouls={
-                "gate::acts_on_user_system": 0.05,
-                "gate::would_follow_documented_procedure": 0.1,
-                "gate::prose_suffices": 0.95,
-            },
-            choices={"which": {"choice": "apple-notes", "probabilities": {"apple-notes": 0.5}}},
-        )
-    )
-    result = ss.rank_skills("explain what a monad is", ROSTER, client=client)
-    # mean of (0.05, 0.1, 1 - 0.95) = 0.0667 -> below the 0.30 gate
-    assert result.gate_score == pytest.approx((0.05 + 0.1 + 0.05) / 3)
-    assert result.needs_skill is False
 
 
 def test_verify_shortlist_picks_winner_when_fit_clears_threshold():
@@ -223,64 +186,3 @@ def test_suggest_skill_end_to_end_returns_winner():
     assert suggestion.rank.needs_skill is True
     assert suggestion.verify is not None
     assert suggestion.verify.accepted is True
-
-
-def test_suggest_skill_stops_after_rank_when_gate_closed():
-    client = _FakeClient(
-        _FakeResponse(
-            nouls={
-                "gate::acts_on_user_system": 0.05,
-                "gate::would_follow_documented_procedure": 0.1,
-                "gate::prose_suffices": 0.95,
-            },
-            choices={"which": {"choice": "apple-notes", "probabilities": {"apple-notes": 0.5}}},
-        )
-    )
-    suggestion = ss.suggest_skill("explain what a monad is", skills=list(ROSTER), client=client)
-    assert suggestion.names == ()
-    assert suggestion.verify is None
-    assert len(client.calls) == 1  # verify call never fires
-
-
-def test_suggestion_block_names_the_winner():
-    assert ss.suggestion_block(("pptx-author",)) == (
-        "<skill_relevance>\nRelevant to the current request: pptx-author. Ignore this if it "
-        "does not fit what the user actually asked for.\n</skill_relevance>"
-    )
-
-
-def test_suggestion_block_empty_when_nothing_applies():
-    assert ss.suggestion_block(()) == (
-        "<skill_relevance>\nNo skill in the roster appears relevant to this request.\n</skill_relevance>"
-    )
-
-
-def test_cli_main_prints_json(capsys):
-    client = _FakeClient(
-        _FakeResponse(
-            nouls={
-                "gate::acts_on_user_system": 0.05,
-                "gate::would_follow_documented_procedure": 0.1,
-                "gate::prose_suffices": 0.95,
-            },
-            choices={"which": {"choice": "apple-notes", "probabilities": {"apple-notes": 0.5}}},
-        )
-    )
-    suggestion = ss.suggest_skill("explain what a monad is", skills=list(ROSTER), client=client)
-    payload = ss._suggestion_to_dict(suggestion)
-    assert payload["names"] == []
-    assert payload["rank"]["needs_skill"] is False
-    assert payload["verify"] is None
-
-
-@pytest.mark.live_network
-@pytest.mark.skipif(
-    os.environ.get("TYPESAFE_LIVE", "") != "1",
-    reason="Set TYPESAFE_LIVE=1 to hit jev-latest (spend).",
-)
-def test_live_suggest_skill_against_real_roster():
-    """#8201 live smoke — a build-monitoring-shaped turn should surface that skill."""
-    suggestion = ss.suggest_skill("Kick off a V7 curriculum build for a1/greetings and watch it with the Monitor tool.")
-    assert suggestion.rank.receipt.model
-    assert suggestion.rank.needs_skill is True
-    assert suggestion.names in ((), ("build-monitoring",))

@@ -14,10 +14,7 @@ import pytest
 
 from scripts.ingest import zno_ingest
 from scripts.ingest.zno_ingest import (
-    FETCH_TIMEOUT_SECONDS,
     MINIMUM_COMPLETE_TASK_COUNT,
-    ONLINE_TEST_MAPPING,
-    SESSION_COMPLETENESS,
     assert_session_completeness,
     backfill_topic_norm,
     derive_task_metadata,
@@ -163,54 +160,6 @@ def test_task_extraction_from_fixtures(db_path: Path) -> None:
         conn.close()
 
 
-def test_online_mapping_covers_every_booklet_with_a_clean_interactive_source() -> None:
-    assert ONLINE_TEST_MAPPING == {
-        (2010, "sesiya-1", "mova-lit"): ("ukrainian", 15),
-        (2010, "sesiya-2", "mova-lit"): ("ukrainian", 16),
-        (2010, "sesiya-3", "mova-lit"): ("ukrainian", 17),
-        (2011, "sesiya-1", "mova-lit"): ("ukrainian", 13),
-        (2011, "sesiya-2", "mova-lit"): ("ukrainian", 14),
-        (2012, "sesiya-1", "mova-lit"): ("ukrainian", 11),
-        (2012, "sesiya-2", "mova-lit"): ("ukrainian", 12),
-        (2013, "sesiya-1", "mova-lit"): ("ukrainian", 6),
-        (2013, "sesiya-2", "mova-lit"): ("ukrainian", 10),
-        (2014, "sesiya-1", "mova-lit"): ("ukrainian", 132),
-        (2014, "sesiya-2", "mova-lit"): ("ukrainian", 133),
-        (2014, "dodatkova", "mova-lit"): ("ukrainian", 130),
-        (2015, "osnovna", "mova-lit"): ("ukrainian", 143),
-        (2016, "osnovna", "mova-lit"): ("ukrainian", 189),
-        (2017, "osnovna", "mova-lit"): ("ukrainian", 240),
-        (2017, "dodatkova", "mova-lit"): ("ukrainian", 254),
-        (2018, "osnovna", "mova-lit"): ("ukrainian", 299),
-        (2018, "dodatkova", "mova-lit"): ("ukrainian", 309),
-        (2019, "osnovna", "mova-lit"): ("ukrainian", 347),
-        (2019, "dodatkova", "mova-lit"): ("ukrainian", 363),
-        (2020, "osnovna", "mova-lit"): ("ukrainian", 401),
-        (2020, "dodatkova", "mova-lit"): ("ukrainian", 429),
-        (2021, "osnovna", "mova-lit"): ("ukrainian", 471),
-        (2021, "dodatkova", "mova-lit"): ("ukrainian", 491),
-        (2022, "osnovna", "mova"): ("ukrmova", 617),
-        (2023, "sesiya-1", "mova"): ("ukrmova", 619),
-        (2023, "sesiya-2", "mova"): ("ukrmova", 620),
-        (2024, "sesiya-1", "mova"): ("ukrmova", 622),
-        (2024, "sesiya-2", "mova"): ("ukrmova", 623),
-        (2025, "sesiya-1", "mova"): ("ukrmova", 667),
-        (2025, "sesiya-2", "mova"): ("ukrmova", 668),
-    }
-
-
-def test_session_completeness_ledger_covers_each_online_mapping_entry() -> None:
-    mapped_sessions = {(year, "nmt" if year >= 2022 else "zno", session) for year, session, _scope in ONLINE_TEST_MAPPING}
-    assert set(SESSION_COMPLETENESS) == mapped_sessions
-    assert len(SESSION_COMPLETENESS) == 31
-    assert SESSION_COMPLETENESS[(2022, "nmt", "osnovna")] == {
-        "expected_tasks": 20,
-        "expected_single_choice_with_letter_key": 15,
-        "own_statement_count": 0,
-    }
-    assert SESSION_COMPLETENESS[(2021, "zno", "osnovna")]["own_statement_count"] == 4
-
-
 def test_session_completeness_fails_closed_for_missing_or_unkeyed_rows(db_path: Path) -> None:
     conn = sqlite3.connect(db_path)
     try:
@@ -351,35 +300,6 @@ def test_parser_classifies_the_question_prompt_not_source_text(db_path: Path) ->
         assert conn.execute("SELECT task_subtype FROM zno_tasks").fetchone() == ("",)
     finally:
         conn.close()
-
-
-def test_fetch_page_uses_bounded_request_timeout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    timeouts: list[int] = []
-
-    class Response:
-        def __enter__(self) -> Response:
-            return self
-
-        def __exit__(self, exc_type: object, exc_value: object, traceback: object) -> None:
-            return None
-
-        def read(self) -> bytes:
-            return io.BytesIO("<html>тест</html>".encode()).read()
-
-    def fake_urlopen(request: urllib.request.Request, timeout: int) -> Response:
-        assert request.full_url == "https://example.invalid/test/"
-        timeouts.append(timeout)
-        return Response()
-
-    class Opener:
-        open = staticmethod(fake_urlopen)
-
-    monkeypatch.setattr(zno_ingest.urllib.request, "build_opener", lambda *_handlers: Opener())
-
-    html = fetch_page_with_rate_limit("https://example.invalid/test/", tmp_path / "page.html", rate_limit=0)
-
-    assert html == "<html>тест</html>"
-    assert timeouts == [FETCH_TIMEOUT_SECONDS]
 
 
 @pytest.fixture

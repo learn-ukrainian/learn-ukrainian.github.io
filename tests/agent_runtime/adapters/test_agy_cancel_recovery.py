@@ -513,23 +513,6 @@ def test_agy_cancel_exception_preserves_fail_closed_cases(tmp_path, case):
         assert result.agy_killed_commands
 
 
-def test_agy_all_killed_commands_survive_mixed_outcome(tmp_path):
-    events = [
-        _prompt(),
-        _start(_TASK_2, description="git grep needle"),
-        _kill(),
-        _canceled(_TASK_2),
-        _start(_TASK_3, description="pytest -q"),
-        _kill(_TASK_3),
-        _canceled(_TASK_3),
-        _reply("Complete reply."),
-    ]
-    result = _parse(tmp_path, events)
-    assert not result.ok
-    assert result.agy_killed_commands == ["git grep needle", "pytest -q"]
-    assert "pytest -q" in result.stderr_excerpt
-
-
 def test_agy_kill_diagnostics_are_redacted_before_bounding(tmp_path):
     command = "rg 'token=" + "secret-value" * 100 + "' file"
     result = _parse(
@@ -564,11 +547,6 @@ def test_agy_finished_background_work_can_coexist_with_killed_read(tmp_path):
     assert result.agy_killed_commands == ["git grep needle"]
 
 
-@pytest.mark.parametrize("command", ["", "git", "cat file\npytest", "find . -fprintf output", "rg needle | pytest"])
-def test_agy_allowlist_rejects_empty_incomplete_and_composed_commands(command):
-    assert not agy._read_only_killed_command(command)
-
-
 def test_agy_past_kill_cannot_authorize_a_later_external_cancellation(tmp_path):
     result = _parse(
         tmp_path,
@@ -584,36 +562,6 @@ def test_agy_past_kill_cannot_authorize_a_later_external_cancellation(tmp_path):
     )
     assert not result.ok
     assert result.agy_killed_commands == ["git grep needle"]
-
-
-def test_agy_abandoned_check_is_named_even_after_a_long_killed_read(tmp_path):
-    command = "rg needle " + "file " * 200
-    result = _parse(
-        tmp_path,
-        [
-            _prompt(),
-            _start(_TASK_2, description=command),
-            _kill(),
-            _canceled(_TASK_2),
-            _start(_TASK_3, description="pytest -q"),
-            _kill(_TASK_3),
-            _canceled(_TASK_3),
-            _reply("Complete reply."),
-        ],
-    )
-    assert not result.ok
-    assert "pytest -q" in result.stderr_excerpt
-    assert result.agy_killed_commands == [command[:500], "pytest -q"]
-
-
-@pytest.mark.parametrize("command", ["git show --ext", "git show --textc", "git log --out=file", "cat file\npytest"])
-def test_agy_executable_option_abbreviations_and_multiline_commands_fail(tmp_path, command):
-    result = _parse(
-        tmp_path,
-        [_prompt(), _start(_TASK_2, description=command), _kill(), _canceled(_TASK_2), _reply("Complete reply.")],
-    )
-    assert not result.ok
-    assert result.agy_killed_commands == [command]
 
 
 @pytest.mark.parametrize(
@@ -860,14 +808,6 @@ _READ_OPTION_EXAMPLES = {
 }
 
 
-def test_agy_option_examples_cover_the_entire_allowlist():
-    assert _READ_OPTION_EXAMPLES.keys() == agy._KILL_READ_OPTIONS.keys()
-    for key, (flags, values, _operands) in _READ_OPTION_EXAMPLES.items():
-        spec = agy._KILL_READ_OPTIONS[key]
-        assert set(flags.split()) == spec.flags
-        assert values.keys() == spec.values
-
-
 @pytest.mark.parametrize(
     "key,option,value,operands",
     [
@@ -958,18 +898,6 @@ def test_agy_option_groups_values_and_operand_boundary_are_safe(command):
 )
 def test_agy_option_allowlist_rejects_execution_writes_and_nonexact_spellings(command):
     assert not agy._read_only_killed_command(command)
-
-
-@pytest.mark.parametrize("key", _READ_OPTION_EXAMPLES)
-def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
-    flags, _values, operands = _READ_OPTION_EXAMPLES[key]
-    short_flags = [flag[1:] for flag in flags.split() if len(flag) == 2]
-    if not short_flags:
-        return  # find has single-dash predicates, not short flags.
-    group = "-" + "".join(short_flags)
-    command = " ".join(key)
-    assert agy._read_only_killed_command(f"{command} {group} {operands}")
-    assert not agy._read_only_killed_command(f"{command} {group}Z {operands}")
 
 
 

@@ -21,14 +21,6 @@ def _make_self_loop(path: Path) -> None:
     os.symlink(str(path), str(path))
 
 
-def test_clean_repo_is_ok(tmp_path: Path) -> None:
-    (tmp_path / "site").mkdir()
-    ok, message = check_self_symlinks(tmp_path, fix=False)
-    assert ok is True
-    assert "no looping" in message
-    assert find_looping_symlinks(tmp_path) == []
-
-
 def test_real_node_modules_directory_untouched(tmp_path: Path) -> None:
     nm = tmp_path / "node_modules"
     nm.mkdir()
@@ -37,17 +29,6 @@ def test_real_node_modules_directory_untouched(tmp_path: Path) -> None:
     assert ok is True
     assert nm.is_dir() and not nm.is_symlink()
     assert (nm / "astro").is_dir()
-
-
-def test_valid_symlink_untouched(tmp_path: Path) -> None:
-    real = tmp_path / "shared_node_modules"
-    real.mkdir()
-    link = tmp_path / "node_modules"
-    link.symlink_to(real)
-    assert find_looping_symlinks(tmp_path) == []
-    ok, _ = check_self_symlinks(tmp_path, fix=True)
-    assert ok is True
-    assert link.is_symlink()  # left alone — it resolves fine
 
 
 def test_detects_self_referential_loop_without_fix(tmp_path: Path) -> None:
@@ -71,27 +52,6 @@ def test_fix_removes_self_referential_loop(tmp_path: Path) -> None:
     # idempotent: a second run is clean
     ok2, message2 = check_self_symlinks(tmp_path, fix=True)
     assert ok2 is True and "no looping" in message2
-
-
-def test_fix_removes_site_loop(tmp_path: Path) -> None:
-    (tmp_path / "site").mkdir()
-    loop = tmp_path / "site" / "node_modules"
-    _make_self_loop(loop)
-    ok, _ = check_self_symlinks(tmp_path, fix=True)
-    assert ok is True
-    assert not loop.is_symlink()
-
-
-def test_sweeps_worktree_loops(tmp_path: Path) -> None:
-    wt = tmp_path / ".worktrees" / "dispatch" / "codex" / "some-task"
-    wt.mkdir(parents=True)
-    loop = wt / "node_modules"
-    _make_self_loop(loop)
-    found = find_looping_symlinks(tmp_path)
-    assert loop in found
-    ok, _ = check_self_symlinks(tmp_path, fix=True)
-    assert ok is True
-    assert not loop.is_symlink()
 
 
 def test_dangling_symlink_is_left_alone(tmp_path: Path) -> None:

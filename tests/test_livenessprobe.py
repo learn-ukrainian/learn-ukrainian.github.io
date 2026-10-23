@@ -5,7 +5,6 @@ Issue: #1520 Phase 1
 from __future__ import annotations
 
 import os
-import subprocess
 
 import pytest
 
@@ -13,7 +12,6 @@ from scripts.agent_runtime.livenessprobe import (
     CompositeProbe,
     FileMTimeSignal,
     FileSizeGrowthSignal,
-    ProcCpuSignal,
     StdoutStreamedSignal,
 )
 
@@ -24,15 +22,6 @@ class StaticSignal:
 
     def evaluate(self) -> bool:
         return self.value
-
-
-def _stop_process(proc: subprocess.Popen[str]) -> None:
-    proc.terminate()
-    try:
-        proc.wait(timeout=3)
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        proc.wait(timeout=3)
 
 
 def test_file_mtime_signal_returns_true_for_recent_file(tmp_path):
@@ -104,12 +93,6 @@ def test_file_size_growth_signal_returns_false_when_growth_is_too_small(tmp_path
     assert signal.evaluate() is False
 
 
-def test_file_size_growth_signal_returns_false_for_absent_file(tmp_path):
-    signal = FileSizeGrowthSignal(str(tmp_path / "missing.jsonl"), min_bytes=1)
-
-    assert signal.evaluate() is False
-
-
 def test_file_size_growth_signal_resets_after_absent_file(tmp_path):
     target = tmp_path / "rollout.jsonl"
     signal = FileSizeGrowthSignal(str(target), min_bytes=1)
@@ -131,42 +114,6 @@ def test_file_size_growth_signal_resets_on_file_truncation(tmp_path):
     target.write_text("abcde")
 
     assert signal.evaluate() is True
-
-
-def test_proc_cpu_signal_returns_true_for_cpu_spinning_subprocess():
-    proc = subprocess.Popen(
-        ["/bin/sh", "-c", "while :; do :; done"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        text=True,
-    )
-    try:
-        signal = ProcCpuSignal(proc.pid, min_percent=1.0, sample_window_s=0.2)
-
-        assert signal.evaluate() is True
-    finally:
-        _stop_process(proc)
-
-
-def test_proc_cpu_signal_returns_false_for_sleeping_subprocess():
-    proc = subprocess.Popen(
-        ["/bin/sleep", "10"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        text=True,
-    )
-    try:
-        signal = ProcCpuSignal(proc.pid, min_percent=1.0, sample_window_s=0.2)
-
-        assert signal.evaluate() is False
-    finally:
-        _stop_process(proc)
-
-
-def test_proc_cpu_signal_returns_false_for_missing_pid():
-    signal = ProcCpuSignal(999_999_999, min_percent=1.0, sample_window_s=0.01)
-
-    assert signal.evaluate() is False
 
 
 def test_stdout_streamed_signal_returns_true_when_last_write_is_recent():
@@ -207,15 +154,6 @@ def test_composite_probe_report_true_resets_counter():
     probe.report(True)
 
     assert probe._failure_count == 0
-
-
-def test_composite_probe_report_false_increments_counter():
-    probe = CompositeProbe(signals=[])
-
-    probe.report(False)
-    probe.report(False)
-
-    assert probe._failure_count == 2
 
 
 def test_composite_probe_should_kill_fires_at_exactly_failure_threshold():

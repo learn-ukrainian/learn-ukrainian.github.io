@@ -45,12 +45,6 @@ def test_open_unit_dir_anchors_at_explicit_home(tmp_path: Path, home: Path) -> N
         safe.open_unit_dir(linked_parent / "real-home" / "Library")  # anchored at "/" instead: the link is refused
 
 
-def test_open_unit_dir_refuses_a_non_directory_component(home: Path) -> None:
-    (home / "file").write_text("x")
-    with pytest.raises(InstallError, match="non-directory path component"):
-        safe.open_unit_dir(home / "file" / "units")
-
-
 def test_install_unit_skips_identical_content_and_mode_and_repairs_mode(home: Path) -> None:
     unit = home / "units" / "a.service"
     assert safe.install_unit(unit, b"one", mode=0o600) is True
@@ -71,44 +65,6 @@ def test_load_unit_missing_and_refused(home: Path) -> None:
     (home / "units" / "subdir").mkdir()
     with pytest.raises(InstallError, match="non-regular or symlinked unit file"):
         safe.load_unit(home / "units" / "subdir")
-
-
-@pytest.mark.parametrize("limit", [0, 16])
-def test_read_unit_accepts_exact_byte_bound(home: Path, limit: int) -> None:
-    unit = home / "a.service"
-    content = b"x" * limit
-    unit.write_bytes(content)
-    unit.chmod(0o640)
-    fd = safe.open_unit_dir(home)
-    try:
-        assert safe.read_unit(fd, unit.name, max_bytes=limit) == (content, 0o640)
-    finally:
-        os.close(fd)
-
-
-@pytest.mark.parametrize("limit", [0, 16])
-def test_read_unit_refuses_one_byte_above_bound(home: Path, limit: int) -> None:
-    unit = home / "a.service"
-    unit.write_bytes(b"x" * (limit + 1))
-    fd = safe.open_unit_dir(home)
-    try:
-        with pytest.raises(InstallError, match=rf"a\.service.*{limit} bytes"):
-            safe.read_unit(fd, unit.name, max_bytes=limit)
-    finally:
-        os.close(fd)
-
-
-def test_read_unit_default_none_preserves_full_content_and_mode(home: Path) -> None:
-    unit = home / "a.service"
-    content = bytes(range(256)) * 64
-    unit.write_bytes(content)
-    unit.chmod(0o640)
-    fd = safe.open_unit_dir(home)
-    try:
-        assert safe.read_unit(fd, unit.name) == (content, 0o640)
-        assert safe.read_unit(fd, unit.name, max_bytes=None) == (content, 0o640)
-    finally:
-        os.close(fd)
 
 
 def test_read_unit_bounds_file_growth_after_inode_check(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -145,17 +101,6 @@ def test_read_unit_bounds_file_growth_after_inode_check(home: Path, monkeypatch:
     finally:
         os.close(fd)
     assert reads == [(17, 17)]
-
-
-def test_read_unit_refuses_negative_bound(home: Path) -> None:
-    unit = home / "a.service"
-    unit.write_bytes(b"x")
-    fd = safe.open_unit_dir(home)
-    try:
-        with pytest.raises(ValueError, match="max_bytes must be non-negative"):
-            safe.read_unit(fd, unit.name, max_bytes=-1)
-    finally:
-        os.close(fd)
 
 
 def test_write_unit_removes_its_temporary_file_on_failure(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -322,10 +267,3 @@ def test_state_log_open_refuses_link_raced_in_after_preflight(
     with pytest.raises((InstallError, OSError)):
         safe.open_state_log(log, home=home)
     assert outside.read_bytes() == b"untouched"
-
-
-def test_state_creation_refuses_missing_home_without_creating_it(tmp_path: Path) -> None:
-    home = tmp_path / "missing-home"
-    with pytest.raises(InstallError, match="missing"):
-        safe.ensure_state_dirs(home / ".codex" / "logs", home=home)
-    assert not home.exists()

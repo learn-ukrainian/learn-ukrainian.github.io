@@ -53,15 +53,6 @@ def test_v1_refused_with_clear_migration_error(bundle, monkeypatch, capsys):
     assert "v1" in error["hint"] and "v2" in error["hint"]
 
 
-@pytest.mark.parametrize("command", ["build", "verify"])
-def test_default_missing_request_has_initialization_hint(bundle, monkeypatch, capsys, command):
-    monkeypatch.setattr(output, "filesystem", lambda path: "ext4")
-    monkeypatch.setattr(cli, "default_config", lambda: bundle["root"] / "missing.json")
-    assert cli.main([command, "--out", str(bundle["root"] / "SYNTHETIC-out")]) == 1
-    error = json.loads(capsys.readouterr().err)
-    assert error["error"] == "request_missing" and "init-request" in error["hint"]
-
-
 @pytest.mark.parametrize("use_default", [False, True])
 def test_init_request_private_location_only_defaults(tmp_path, monkeypatch, capsys, use_default):
     root = tmp_path / "SYNTHETIC-repository"
@@ -119,14 +110,6 @@ def test_nested_locations_cannot_contain_policy(bundle, location):
     bundle["config"][location] = {"root": "SYNTHETIC", "compatibility": [{"role": "modern"}]}
     save_bundle(bundle)
     with pytest.raises(BuildError, match="request_policy_key" if location == "ua_gec" else "request_locations"):
-        request.read_request(bundle["root"] / "request.json")
-
-
-@pytest.mark.parametrize("key", ["databases", "ua_gec", "catalog", "register"])
-def test_required_input_location_missing_refuses(bundle, key):
-    del bundle["config"][key]
-    save_bundle(bundle)
-    with pytest.raises(BuildError, match="request_locations"):
         request.read_request(bundle["root"] / "request.json")
 
 

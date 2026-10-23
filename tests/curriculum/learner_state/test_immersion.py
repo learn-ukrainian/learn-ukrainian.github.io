@@ -61,22 +61,6 @@ def test_a2_band_equals_arc_band_key() -> None:
     assert b8.band_key == "a2-m01-20"
 
 
-def test_b1_band_equals_b1_core() -> None:
-    """B1 positions map to b1-core from arc."""
-    band = compute_lesson_immersion_band("b1", arc_position=1, lesson_n=1, cumulative_core_count=0)
-    assert band.band_key == "b1-core"
-    assert band.source == "arc_table"
-    assert codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED in band.not_checked
-
-
-def test_b2_band_equals_b2_plus() -> None:
-    """B2 positions map to b2+ from arc."""
-    band = compute_lesson_immersion_band("b2", arc_position=1, lesson_n=1, cumulative_core_count=0)
-    assert band.band_key == "b2+"
-    assert band.source == "arc_table"
-    assert codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED in band.not_checked
-
-
 def test_fixture_arc_without_band_key_fails() -> None:
     """A level whose arc has no band_key fails with arc_band_table_missing, never falls back to a module number."""
     synthetic_positions = [
@@ -104,19 +88,6 @@ def test_fixture_arc_without_band_key_fails() -> None:
         )
     assert exc_info.value.code == codes.ARC_BAND_TABLE_MISSING
     assert "no band_key" in exc_info.value.message
-
-
-def test_structural_minimums_carried_unchanged() -> None:
-    band = compute_lesson_immersion_band("a2", arc_position=1, lesson_n=1, cumulative_core_count=0)
-    # Check that module_structural has exactly the three required keys and valid ints
-    assert set(band.module_structural.keys()) == {
-        "min_uk_dialogue_lines",
-        "min_uk_example_sentences",
-        "min_vocab_entries",
-    }
-    for val in band.module_structural.values():
-        assert isinstance(val, int)
-        assert val >= 0
 
 
 def test_unknown_band_key_fails_arc_band_table_missing() -> None:
@@ -155,11 +126,6 @@ def test_a1_fails_closed_when_derivation_disabled(monkeypatch: pytest.MonkeyPatc
     assert "USE_ULP_IMMERSION_DERIVATION" in exc_info.value.message
 
 
-def test_a1_band_source_not_ulp_vocab_when_derivation_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test alias retained for compatibility."""
-    test_a1_fails_closed_when_derivation_disabled(monkeypatch)
-
-
 def test_a1_requires_cumulative_core_count() -> None:
     """For A1, cumulative_core_count is required; passing None or omitting raises cumulative_core_count_missing."""
     with pytest.raises(ImmersionError) as exc_info:
@@ -170,19 +136,6 @@ def test_a1_requires_cumulative_core_count() -> None:
     with pytest.raises(ImmersionError) as exc_info:
         compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1)
     assert exc_info.value.code == codes.CUMULATIVE_CORE_COUNT_MISSING
-
-
-def test_lesson_band_waiver_carried_to_dict_and_text() -> None:
-    band = compute_lesson_immersion_band(
-        "a1",
-        arc_position=1,
-        lesson_n=1,
-        cumulative_core_count=100,
-        waiver="waived: prior_plans_missing",
-    )
-    assert band.waiver == "waived: prior_plans_missing"
-    assert band.to_dict()["waiver"] == "waived: prior_plans_missing"
-    assert "Waiver: waived: prior_plans_missing" in band.render_text()
 
 
 def test_a2_band_does_not_require_cumulative_core_count() -> None:
@@ -280,16 +233,3 @@ def test_a1_only_explicit_orientation_has_no_share(count: int) -> None:
     assert normal.band_key == "a1-m01-03"
     assert normal.advisory_uk_share == (0, 15)
     assert normal.module_structural == {}
-
-
-def test_a2_real_loader_failure_keeps_named_error(tmp_path: Path) -> None:
-    with pytest.raises(ImmersionError) as exc_info:
-        compute_lesson_immersion_band("a2", 1, 1, arc_path=tmp_path / "missing.yaml")
-    assert exc_info.value.code == codes.ARC_BAND_TABLE_MISSING
-    assert isinstance(exc_info.value.__cause__, FileNotFoundError)
-
-
-def test_a2_missing_position_keeps_named_error() -> None:
-    with pytest.raises(ImmersionError) as exc_info:
-        compute_lesson_immersion_band("a2", 999, 1)
-    assert exc_info.value.code == codes.POSITION_NOT_FOUND

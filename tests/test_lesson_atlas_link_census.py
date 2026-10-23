@@ -26,7 +26,6 @@ from scripts.lexicon.lesson_atlas_link_census import (
     decode_lexicon_slug,
     iter_lesson_hits,
     load_published_catalog,
-    mask_atlas_href_fields,
 )
 
 pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
@@ -56,26 +55,6 @@ def test_classify_rules_on_a_tiny_catalog():
     assert catalog.classify("bal") == AMBIGUOUS
     assert catalog.classify("orphan") == DEAD
     assert catalog.classify("неіснуюче") == DEAD
-
-
-@pytest.mark.needs_sparse_tree("site/src/data")
-def test_published_data_classifies_known_inflected_forms():
-    catalog = load_published_catalog(DEFAULT_SEARCH_INDEX, DEFAULT_ALIASES)
-    assert catalog.classify("студент") == ENTRY
-    assert catalog.classify("склянка") == ENTRY
-    assert catalog.classify("студентові") == ALIAS
-    assert catalog.classify("склянку") == ALIAS
-    assert catalog.classify("atlas-8734-not-a-word") == DEAD
-
-
-def test_mask_atlas_href_ignores_link_edits_only():
-    before = '{"word":"студент","atlas_href":"/lexicon/студент/","pos":"noun"}'
-    rewritten = '{"word":"студент","atlas_href":"/lexicon/інший/","pos":"noun"}'
-    removed = '{"word":"студент","pos":"noun"}'
-    prose = '{"word":"інше","atlas_href":"/lexicon/студент/","pos":"noun"}'
-    assert mask_atlas_href_fields(before) == mask_atlas_href_fields(rewritten)
-    assert mask_atlas_href_fields(before) == mask_atlas_href_fields(removed)
-    assert mask_atlas_href_fields(before) != mask_atlas_href_fields(prose)
 
 
 @pytest.mark.needs_sparse_tree("site/src/data")

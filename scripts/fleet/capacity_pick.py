@@ -139,16 +139,6 @@ def will_last_to_reset(agent_info: dict[str, Any] | None) -> bool | None:
     return None
 
 
-def _is_hard_avoid(agent_info: dict[str, Any] | None, *, lane: str | None = None) -> bool:
-    """True when ``lane`` is retired, ineligible, unhealthy or needs login: no capacity source relaxes these."""
-    if lane is not None and lane.strip().lower() in RETIRED_AGENT_ALIASES:
-        return True
-    info = agent_info or {}
-    if info.get("eligible") is False or (info.get("health") or {}).get("healthy") is False:
-        return True
-    return info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN"
-
-
 def is_avoid_lane(
     agent_info: dict[str, Any] | None,
     *,
@@ -162,6 +152,12 @@ def is_avoid_lane(
     """
     if lane is not None and lane.strip().lower() in RETIRED_AGENT_ALIASES:
         return True
+    if lane == "kimi":
+        from scripts.agent_runtime.registry import AGENTS
+        from scripts.review.model_catalog import retired_model_refusal
+
+        if retired_model_refusal(AGENTS[lane]["default_model"]):
+            return True
     if facts is None:
         facts = credit_lane.routing_facts(lane or "", agent_info, model=None)
     return facts.capacity == credit_lane.CAPACITY_AVOID
@@ -295,7 +291,7 @@ def build_lane_rows(
     ``policy_error`` (plan state applies) and leaves every other lane unchanged.
     ``in_flight`` is None when no active-work observation exists.
     """
-    agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
+    agents = credit_lane.shared_usage_agents(budget.get("agents") if isinstance(budget.get("agents"), dict) else {})
     reserve = (
         reset_reserve
         if reset_reserve is not None
@@ -355,11 +351,12 @@ def build_lane_rows(
         pace_deficit = facts.uncovered is True
         # The reserve needs the owner's verified capacity (#9740), so it only ranks Codex first and
         # never lifts an AVOID.
-        avoid = (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes
+        retired_default = lane == "kimi" and is_avoid_lane(info, lane=lane, facts=facts)
+        avoid = retired_default or ((bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes)
         if avoid:
             capacity = {
                 "state": credit_lane.CAPACITY_AVOID,
-                "reason": f"retired→{retired_target}" if retired_target else facts.capacity_reason,
+                "reason": "catalog-retired default model" if retired_default else f"retired→{retired_target}" if retired_target else facts.capacity_reason,
             }
         elif retired_target is None and facts.capacity == credit_lane.CAPACITY_AVOID and credit_relaxes:
             capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": facts.capacity_reason}
@@ -661,16 +658,22 @@ def format_pick_order(pick_order: list[dict[str, Any]]) -> str:
 
 def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
     """Lanes with verified capacity; UNKNOWN (including stale/advisory) rows never qualify."""
-    return [
-        str(row["lane"])
-        for row in rows
-        if not row.get("avoid")
-        and (
+    from scripts.review.model_catalog import load_model_catalog, usage_pool_for_seat
+
+    catalog = load_model_catalog()
+    seen: set[str] = set()
+    cooler: list[str] = []
+    for row in rows:
+        lane = str(row["lane"])
+        pool = usage_pool_for_seat(lane, catalog)
+        if not row.get("avoid") and pool not in seen and (
             row.get("status") in _COOL_STATUSES
             or row.get("reset_reserve_eligible")
             or row.get("status") == credit_lane.CREDIT_BALANCE_PRESENT
-        )
-    ]
+        ):
+            cooler.append(lane)
+            seen.add(pool)
+    return cooler
 
 
 def admission_status(tasks_dir: Path | None = None) -> dict[str, Any]:

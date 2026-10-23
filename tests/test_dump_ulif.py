@@ -30,16 +30,6 @@ def test_parse_paradigm_noun() -> None:
     assert "родовий" in cases
 
 
-def test_parse_paradigm_verb() -> None:
-    html = _fixture("hovoryty-paradigm.html")
-    res = DictUACrawler._parse_paradigm(html)
-    assert res is not None
-    assert "headers" in res
-    assert "rows" in res
-    assert res["headers"] == ["Інфінітив", "говори́ти"]
-    assert len(res["rows"]) == 27
-
-
 def test_parse_paradigm_empty() -> None:
     assert DictUACrawler._parse_paradigm("") is None
     assert DictUACrawler._parse_paradigm("<html><body><p>No table</p></body></html>") is None

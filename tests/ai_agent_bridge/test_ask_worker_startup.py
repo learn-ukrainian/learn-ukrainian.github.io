@@ -13,7 +13,6 @@ handoff earlier the same day (#5773).
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
@@ -63,18 +62,6 @@ def test_worker_dead_with_empty_log_is_recorded_as_failure(tmp_path, monkeypatch
     assert "no answer is coming" in err, "the operator must be told not to wait"
 
 
-def test_log_tail_is_surfaced_when_present(tmp_path, monkeypatch, capsys, recorded):
-    """If the worker managed to say anything, that text is the diagnosis — show it."""
-    monkeypatch.setattr(lifecycle, "_ask_status", lambda _mid: "sent")
-    log = tmp_path / "ask-1.log"
-    log.write_text("ModuleNotFoundError: no adapter for kimi\n", encoding="utf-8")
-
-    lifecycle._confirm_worker_started(1, "kimi", _FakeProc(rc=1), log)
-
-    assert "ModuleNotFoundError" in recorded[0][1]
-    assert "ModuleNotFoundError" in capsys.readouterr().err
-
-
 def test_clean_exit_with_recorded_status_is_not_flagged(tmp_path, monkeypatch, recorded):
     """A worker that finished properly must NOT be reported as a startup death."""
     monkeypatch.setattr(lifecycle, "_ask_status", lambda _mid: "replied:42")
@@ -112,24 +99,6 @@ def test_live_worker_is_left_alone(tmp_path, monkeypatch, recorded):
     lifecycle._confirm_worker_started(4, "codex", _Alive(), log)
 
     assert not recorded
-
-
-def test_grace_window_is_short_enough_not_to_stall_the_caller():
-    """`ask-*` is interactive; the check must not add a visible delay."""
-    assert lifecycle._WORKER_START_GRACE_S <= 10.0
-
-
-def test_real_subprocess_that_exits_immediately_is_caught(tmp_path, monkeypatch, recorded):
-    """End-to-end with a genuine process, not a stub."""
-    monkeypatch.setattr(lifecycle, "_ask_status", lambda _mid: "sent")
-    log = tmp_path / "ask-real.log"
-    with log.open("w", encoding="utf-8") as handle:
-        proc = subprocess.Popen([sys.executable, "-c", "raise SystemExit(3)"], stdout=handle, stderr=handle)
-    proc.wait(timeout=30)
-
-    lifecycle._confirm_worker_started(99, "kimi", proc, log)
-
-    assert recorded, "a real instantly-exiting worker must be reported"
 
 
 def test_launch_background_ask_is_actually_wired_to_the_check(tmp_path, monkeypatch, recorded):

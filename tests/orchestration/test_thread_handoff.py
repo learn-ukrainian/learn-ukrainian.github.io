@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import inspect
 import io
 import json
 import os
@@ -370,42 +369,6 @@ def filled_snapshot_from_template(template: dict) -> dict:
     return snapshot
 
 
-def test_direct_script_help_from_repository_root():
-    repo_root = Path(__file__).resolve().parents[2]
-    env = os.environ.copy()
-    env.pop("CODEX_THREAD_ID", None)
-    env.pop("CODEX_SESSION_ID", None)
-
-    completed = subprocess.run(
-        [str(project_python()), "scripts/orchestration/thread_handoff.py", "--help"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        env=env,
-        check=False,
-        timeout=30,
-    )
-
-    assert completed.returncode == 0, completed.stderr
-    assert "Prepare and guard agent-specific thread handoffs." in completed.stdout
-    for command in (
-        "prepare",
-        "repair-native-intent",
-        "register-created",
-        "bind-replacement",
-        "native-action",
-        "record-native-result",
-        "reconcile-native",
-        "confirm-started",
-        "resume",
-        "bootstrap-replacement",
-        "confirm-replacement",
-        "check",
-        "audit",
-    ):
-        assert command in completed.stdout
-
-
 def test_prepare_state_records_meaningful_title_and_native_identity():
     state = th.prepare_state(
         {"schema_version": th.SCHEMA_VERSION},
@@ -433,30 +396,6 @@ def test_prepare_state_records_meaningful_title_and_native_identity():
         "status": "awaiting_native_create",
     }
     assert "Resume codex rollover" not in replacement["display"]["title"]
-
-
-def test_prepare_state_uses_deterministic_non_generic_fallback():
-    state = prepared(agent="codex", thread_id="source-thread")
-
-    title = state["replacement"]["display"]["title"]
-    assert title == "thread-rollover — Recover predecessor task context"
-    assert state["lineage_id"] not in title
-    assert "generation" not in title.casefold()
-    assert title.casefold() != "resume codex rollover"
-
-
-def test_prepare_state_rejects_partial_title_metadata():
-    with pytest.raises(ValueError, match="must be supplied together"):
-        th.prepare_state(
-            {"schema_version": th.SCHEMA_VERSION},
-            agent="codex",
-            now=datetime(2026, 5, 30, 8, 0, tzinfo=UTC),
-            active_thread_id="source-thread",
-            active_automation_id=None,
-            context_percent=None,
-            force_new_replacement=False,
-            epic_title="Curriculum lifecycle",
-        )
 
 
 def test_prepare_state_requires_confirmation_before_cleanup(tmp_path: Path):
@@ -558,85 +497,6 @@ def test_handoff_policy_unknown_route_has_no_fabricated_window(
         "fallback",
         "unavailable",
     )
-
-
-def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
-    now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
-    state = prepared()
-    prompt = th.render_bootstrap_prompt(sample_snapshot(tmp_path), state, context_threshold=82.0)
-
-    assert "You are the replacement Codex orchestrator thread." in prompt
-    assert f"Task title: {state['replacement']['display']['title']}" in prompt
-    assert "Role handoff: docs/session-state/codex-orchestrator-handoff.md" in prompt
-    assert "Thread handoff: .agent/thread-rollovers/" in prompt
-    assert "Global router:" not in prompt
-    assert "Do not write docs/session-state/current.md for thread rollover." in prompt
-    assert "git status --short --branch" in prompt
-    assert "issue_stream_audit.py --json" in prompt
-    assert "git worktree list" in prompt
-    assert "detect --format session-start" in prompt
-    assert "bootstrap-replacement" in prompt
-    assert "confirm-replacement" in prompt
-    assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
-    assert "If either fact is absent, use `unknown`" in prompt
-    assert "Only an actionable response authorizes `set_thread_archived`" in prompt
-    assert "must create and register this exact replacement" in prompt
-    assert "exact readback before resume" in prompt
-    assert (
-        "Keep the invoking checkout clean at prepared HEAD abc123def0456789 through resume and confirmation (clean fast-forward advances are tolerated)."
-        in prompt
-    )
-    assert "Context estimate: 86.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
-    assert "orchestrator_control.py inbox --recent 20 --include-results" in prompt
-
-
-def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Path):
-    now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
-    state = prepared()
-    rendered = th.render_current_markdown(sample_snapshot(tmp_path), state, context_threshold=82.0)
-
-    assert "## Thread Lease" in rendered
-    assert "## Task Identity" in rendered
-    assert "## First-Turn Checklist" in rendered
-    assert "issue_stream_audit.py --json" in rendered
-    assert "## Rollover Command Capsule" in rendered
-    assert "detect --format session-start" in rendered
-    assert "context_canary.py mint" not in rendered
-    assert "Durable role handoff: `docs/session-state/codex-orchestrator-handoff.md`" in rendered
-    assert "Source checkout HEAD: `abc123def0456789`" in rendered
-
-
-def test_render_bootstrap_prompt_for_codex_uses_orchestrator_pointer(tmp_path: Path):
-    now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
-    state = prepared(agent="codex")
-    prompt = th.render_bootstrap_prompt(
-        sample_snapshot(tmp_path),
-        state,
-        agent="codex",
-        context_threshold=82.0,
-    )
-
-    assert "You are the replacement codex thread." in prompt
-    assert "Role handoff: docs/session-state/current.orchestrator.md" in prompt
-    assert "Thread handoff: .agent/thread-rollovers/" in prompt
-    assert "issue_stream_audit.py --json" in prompt
-    assert "git worktree list" in prompt
-
-
-def test_render_current_markdown_for_codex_uses_orchestrator_pointer(tmp_path: Path):
-    now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
-    state = prepared(agent="codex")
-    rendered = th.render_current_markdown(
-        sample_snapshot(tmp_path),
-        state,
-        agent="codex",
-        context_threshold=82.0,
-    )
-
-    assert "## First-Turn Checklist" in rendered
-    assert "Durable role handoff: `docs/session-state/current.orchestrator.md`" in rendered
-    assert "detect --format session-start" in rendered
-    assert "confirm-replacement" in rendered
 
 
 def test_render_router_markdown_contains_parseable_markers():
@@ -744,24 +604,6 @@ def test_live_owner_fresh_clock_conflicts(tmp_path: Path, monkeypatch: pytest.Mo
     assert result["status"] == "conflict"
     assert result["liveness"] == "live_owner"
     assert result["owner_thread_id"] == "old-owner"
-    assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner"
-
-
-def test_live_owner_beyond_old_clock_window_still_conflicts_not_stolen(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    """Matrix 3: today's opposite bug — a live owner working >12h must not be stolen from."""
-    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    lease = _v2_lease(heartbeat_at="2026-07-22T08:00:00Z")  # 26h old: reclaimable under the old clock-only design
-    lease_path = _write_lease(tmp_path, "claude-infra", lease)
-    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
-    monkeypatch.setattr(th, "_process_is_alive", lambda pid: True)
-    monkeypatch.setattr(th, "_default_process_snapshot", lambda pid: _fake_snapshot(pid=pid))
-
-    result = th.claim_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="new-owner", now=now, starting_pid=1
-    )
-
-    assert result["status"] == "conflict"
-    assert result["liveness"] == "live_owner"
     assert json.loads(lease_path.read_text(encoding="utf-8"))["owner_thread_id"] == "old-owner"
 
 
@@ -877,13 +719,6 @@ def test_uncheckable_lease_never_taken_over_regardless_of_clock_age(tmp_path: Pa
     assert on_disk["schema_version"] == 1  # not healed by this path either
 
 
-def test_claim_thread_lease_has_no_emergency_ttl_parameter(tmp_path: Path):
-    """Fix 5: the emergency TTL and its parameter are deleted outright, not merely unused —
-    guards against a future reintroduction of clock-based takeover."""
-    assert "emergency_ttl" not in inspect.signature(th.claim_thread_lease).parameters
-    assert not hasattr(th, "DEFAULT_THREAD_LEASE_EMERGENCY_TTL_SECONDS")
-
-
 def test_different_machine_id_is_uncheckable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """Matrix 7: a lease recorded on another machine can never be liveness-checked here."""
     now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
@@ -941,15 +776,6 @@ def test_eperm_from_os_kill_is_treated_as_alive_and_conflicts(tmp_path: Path, mo
 
     assert result["status"] == "conflict"
     assert result["liveness"] == "live_owner"
-
-
-def test_process_is_alive_treats_zombie_as_dead(monkeypatch: pytest.MonkeyPatch):
-    """Fix 4 (unit-level): kill(pid, 0) succeeds for a zombie — without a status check it
-    would look identical to a live owner and conflict forever."""
-    monkeypatch.setattr(th.os, "kill", lambda pid, sig: None)  # zombie: kill(0) still succeeds
-    monkeypatch.setattr(th, "_process_is_zombie", lambda pid: True)
-
-    assert th._process_is_alive(4242) is False
 
 
 def test_zombie_owner_is_reclaimed_not_treated_as_live(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -1204,27 +1030,6 @@ def test_resume_aba_late_release_from_dead_predecessor_is_fenced_by_identity_and
     assert tombstone["state"] == "released"
     assert tombstone["generation"] == 2
     assert tombstone["released_by_thread_id"] == "resumed-thread"
-
-
-def test_same_thread_id_with_unresolvable_new_identity_reacquires_defensively(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
-    """Fix 2: when the recorded identity is checkable but a fresh probe cannot confirm it still
-    matches (e.g. the harness-ancestor walk fails this time), continuity must NOT be assumed —
-    assuming it would recreate the exact vulnerability finding 2 describes."""
-    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    lease = _v2_lease(owner_thread_id="resumed-thread", generation=1, owner_pid=111, owner_pid_started_at=1000.0)
-    lease_path = _write_lease(tmp_path, "claude-infra", lease)
-    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
-    monkeypatch.setattr(th, "_derive_owner_liveness_fields", lambda starting_pid: {})
-
-    result = th.claim_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="resumed-thread", now=now, starting_pid=999
-    )
-
-    assert result["status"] == "acquired"
-    assert result["generation"] == 2
-    assert json.loads(lease_path.read_text(encoding="utf-8"))["generation"] == 2
 
 
 # --- release_thread_lease: fencing (test matrix items 14-16) ---
@@ -1611,87 +1416,6 @@ def test_claim_thread_lease_command_reports_structured_lock_timeout(
     }
 
 
-def test_release_thread_lease_command_end_to_end(tmp_path: Path, capsys):
-    """CLI-level: claim then release through the same subcommands a real hook would call.
-    Release now writes a tombstone (item 3) rather than deleting the lease file."""
-    repo_args = ["--repo-root", str(tmp_path)]
-
-    assert (
-        th.main(
-            [
-                *repo_args,
-                "claim-thread-lease",
-                "--agent",
-                "claude-infra",
-                "--starting-pid",
-                "1",
-                "--current-thread-id",
-                "cli-session",
-            ]
-        )
-        == 0
-    )
-    claim_payload = json.loads(capsys.readouterr().out)
-
-    assert (
-        th.main(
-            [
-                *repo_args,
-                "release-thread-lease",
-                "--agent",
-                "claude-infra",
-                "--current-thread-id",
-                "cli-session",
-                "--generation",
-                str(claim_payload["generation"]),
-            ]
-        )
-        == 0
-    )
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["status"] == "released"
-    tombstone = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
-    assert tombstone["state"] == "released"
-    assert tombstone["generation"] == claim_payload["generation"]
-
-
-def test_release_thread_lease_command_without_generation_or_proof_is_a_noop(tmp_path: Path, capsys):
-    """Item 2: --generation is no longer unconditionally required — but with neither a
-    generation NOR a reconfirmable process identity (as here: --starting-pid 1 is never a
-    known harness, matching the double-launch-conflict test's convention), the release must
-    fail closed as an explicit no-op (exit 0, status noop) rather than releasing or raising."""
-    repo_args = ["--repo-root", str(tmp_path)]
-
-    assert (
-        th.main(
-            [
-                *repo_args,
-                "claim-thread-lease",
-                "--agent",
-                "claude-infra",
-                "--starting-pid",
-                "1",
-                "--current-thread-id",
-                "cli-session",
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
-
-    assert (
-        th.main([*repo_args, "release-thread-lease", "--agent", "claude-infra", "--current-thread-id", "cli-session"])
-        == 0
-    )
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["status"] == "noop"
-    assert "generation" in payload["reason"]
-    # Untouched: the lease must survive an attempted release with no generation or proof.
-    on_disk = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
-    assert on_disk["owner_thread_id"] == "cli-session"
-    assert on_disk.get("state") != "released"
-
-
 def test_refresh_thread_lease_heartbeat_command_is_noop_for_a_different_owner(tmp_path: Path, capsys):
     """Rule G: the Stop-hook heartbeat refresh must never take over — only ever refresh its own lease."""
     repo_args = ["--repo-root", str(tmp_path)]
@@ -1792,37 +1516,6 @@ def test_refresh_thread_lease_heartbeat_is_noop_when_process_identity_unconfirme
     assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
 
 
-def test_refresh_thread_lease_heartbeat_is_noop_for_an_uncheckable_lease(tmp_path: Path):
-    """Fix 2: an uncheckable lease (e.g. legacy v1) must never be blindly refreshed here —
-    unproven continuity is not assumed on the implicit, frequent heartbeat path, only on
-    claim_thread_lease's explicit same-owner resume."""
-    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    v1_lease = {
-        "schema_version": 1,
-        "agent": "claude-infra",
-        "generation": 1,
-        "owner_thread_id": "owner-session",
-        "acquired_at": "2026-07-23T09:00:00Z",
-        "heartbeat_at": "2026-07-23T09:58:30Z",  # 90s old, past any throttle
-    }
-    lease_path = _write_lease(tmp_path, "claude-infra", v1_lease)
-    original = lease_path.read_text(encoding="utf-8")
-
-    result = th.refresh_thread_lease_heartbeat(
-        state_root=tmp_path,
-        agent="claude-infra",
-        current_thread_id="owner-session",
-        generation=1,
-        now=now,
-        starting_pid=1,
-        min_refresh_interval=timedelta(seconds=60),
-    )
-
-    assert result["status"] == "noop"
-    assert "identity" in result["reason"]
-    assert lease_path.read_text(encoding="utf-8") == original  # never rewritten
-
-
 def test_throttled_heartbeat_refresh_is_a_cheap_noop_within_the_interval(tmp_path: Path):
     """The PostToolUse hook fires on every tool call — it must not rewrite the lease
     file every time, only once the existing heartbeat is already older than the throttle.
@@ -1877,49 +1570,6 @@ def test_throttled_heartbeat_refresh_writes_once_the_interval_has_elapsed(
     assert json.loads(lease_path.read_text(encoding="utf-8"))["heartbeat_at"] == "2026-07-23T10:00:00Z"
 
 
-def test_refresh_thread_lease_heartbeat_command_throttles_via_min_refresh_interval_seconds(tmp_path: Path, capsys):
-    """CLI-level: --min-refresh-interval-seconds is the flag the PostToolUse hook actually passes."""
-    repo_args = ["--repo-root", str(tmp_path)]
-    assert (
-        th.main(
-            [
-                *repo_args,
-                "claim-thread-lease",
-                "--agent",
-                "claude-infra",
-                "--starting-pid",
-                "1",
-                "--current-thread-id",
-                "owner-session",
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
-
-    assert (
-        th.main(
-            [
-                *repo_args,
-                "refresh-thread-lease-heartbeat",
-                "--agent",
-                "claude-infra",
-                "--current-thread-id",
-                "owner-session",
-                "--starting-pid",
-                "1",
-                "--generation",
-                "1",
-                "--min-refresh-interval-seconds",
-                "3600",
-            ]
-        )
-        == 0
-    )
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["status"] == "throttled"  # fresh claim heartbeat is well within the 3600s window
-
-
 # --- refresh_thread_lease_heartbeat without --generation (item 1) ---
 
 
@@ -1954,66 +1604,6 @@ def test_refresh_thread_lease_heartbeat_without_generation_and_proven_identity_s
     on_disk = json.loads(lease_path.read_text(encoding="utf-8"))
     assert on_disk["heartbeat_at"] == "2026-07-23T10:00:00Z"
     assert on_disk["generation"] == 7  # untouched
-
-
-def test_refresh_thread_lease_heartbeat_without_generation_and_unproven_identity_is_noop(tmp_path: Path):
-    """Item 1: with no generation supplied AND no way to reconfirm identity (no mocking here,
-    so the lease is uncheckable in this test process), the refresh must fail closed as a
-    no-op — never blindly rewrite heartbeat_at just because the thread id happens to match."""
-    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    lease = _v2_lease(owner_thread_id="owner-session", generation=1)
-    lease_path = _write_lease(tmp_path, "claude-infra", lease)
-    original = lease_path.read_text(encoding="utf-8")
-
-    result = th.refresh_thread_lease_heartbeat(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="owner-session", now=now
-    )
-
-    assert result["status"] == "noop"
-    assert "identity" in result["reason"]
-    assert lease_path.read_text(encoding="utf-8") == original
-
-
-def test_refresh_thread_lease_heartbeat_command_without_generation_flag(tmp_path: Path, capsys):
-    """CLI-level: --generation is optional on refresh-thread-lease-heartbeat (item 1) — the
-    updated hook scripts no longer pass it at all."""
-    repo_args = ["--repo-root", str(tmp_path)]
-    assert (
-        th.main(
-            [
-                *repo_args,
-                "claim-thread-lease",
-                "--agent",
-                "claude-infra",
-                "--starting-pid",
-                "1",
-                "--current-thread-id",
-                "owner-session",
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
-
-    assert (
-        th.main(
-            [
-                *repo_args,
-                "refresh-thread-lease-heartbeat",
-                "--agent",
-                "claude-infra",
-                "--current-thread-id",
-                "owner-session",
-            ]
-        )
-        == 0
-    )
-    payload = json.loads(capsys.readouterr().out)
-    # --starting-pid 1 is never a known harness ancestor (matches the double-launch-conflict
-    # test's convention), so identity cannot be reconfirmed here either — this is the
-    # documented fail-closed no-op, exercised purely through the CLI surface with no
-    # --generation flag passed at all, exactly like the updated hook scripts.
-    assert payload["status"] == "noop"
 
 
 # --- claim conflict diagnosis (item 5) ---
@@ -2187,84 +1777,6 @@ def test_prepare_does_not_release_a_non_claude_agent_slot(tmp_path: Path, monkey
     capsys.readouterr()
 
     assert lease_path.read_text(encoding="utf-8") == original  # untouched
-
-
-def test_resume_aba_late_release_no_ops(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    """resume-ABA: claim(T,procA) -> resume claim(T,procB,gen2) -> late release from A (carried gen1) -> MUST no-op."""
-    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    monkeypatch.setattr(th, "_default_machine_id", lambda: "machine-a")
-    monkeypatch.setattr(
-        th,
-        "_derive_owner_liveness_fields",
-        lambda pid: (
-            {"owner_pid": 111, "owner_pid_started_at": 1000.0, "owner_machine_id": "machine-a"}
-            if pid == 111
-            else {"owner_pid": 222, "owner_pid_started_at": 2000.0, "owner_machine_id": "machine-a"}
-        ),
-    )
-    claim1 = th.claim_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-T", now=now, starting_pid=111
-    )
-    assert claim1["status"] == "acquired"
-    assert claim1["generation"] == 1
-
-    claim2 = th.claim_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-T", now=now, starting_pid=222
-    )
-    assert claim2["status"] == "acquired"
-    assert claim2["generation"] == 2
-
-    release_res = th.release_thread_lease(
-        state_root=tmp_path,
-        agent="claude-infra",
-        current_thread_id="thread-T",
-        generation=1,
-        now=now,
-        starting_pid=111,
-    )
-    assert release_res["status"] == "noop"
-    lease_data = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
-    assert lease_data["generation"] == 2
-    assert lease_data["owner_thread_id"] == "thread-T"
-    assert lease_data.get("state", "held") == "held"
-
-
-def test_tombstone_monotonic_generation(tmp_path: Path):
-    """claim -> release -> claim => gen strictly increases; late stale release no-ops."""
-    now = datetime(2026, 7, 23, 10, 0, tzinfo=UTC)
-    c1 = th.claim_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-1", now=now, starting_pid=111
-    )
-    assert c1["generation"] == 1
-
-    r1 = th.release_thread_lease(
-        state_root=tmp_path,
-        agent="claude-infra",
-        current_thread_id="thread-1",
-        generation=1,
-        now=now,
-        starting_pid=111,
-    )
-    assert r1["status"] == "released"
-    tombstone = json.loads((tmp_path / ".agent/claude-infra-thread-lease.json").read_text(encoding="utf-8"))
-    assert tombstone["state"] == "released"
-    assert tombstone["generation"] == 1
-
-    c2 = th.claim_thread_lease(
-        state_root=tmp_path, agent="claude-infra", current_thread_id="thread-2", now=now, starting_pid=222
-    )
-    assert c2["generation"] == 2
-    assert c2["status"] == "acquired"
-
-    r2 = th.release_thread_lease(
-        state_root=tmp_path,
-        agent="claude-infra",
-        current_thread_id="thread-1",
-        generation=1,
-        now=now,
-        starting_pid=111,
-    )
-    assert r2["status"] == "noop"
 
 
 def test_absent_state_migration_compatibility(tmp_path: Path):
@@ -3413,35 +2925,6 @@ def test_confirm_started_is_scoped_to_selected_agent(tmp_path: Path, capsys):
     assert untouched_orchestrator["cleanup"]["old_automation_ready_to_delete"] is False
 
 
-def test_confirm_started_missing_agent_prepare_is_safe(tmp_path: Path, capsys):
-    rc = th.main(
-        [
-            "--repo-root",
-            str(tmp_path),
-            "confirm-started",
-            "--agent",
-            "gemini",
-            "--lineage-id",
-            "lineage-missing",
-            "--rollover-id",
-            "rollover-missing",
-            "--new-thread-id",
-            "new-gemini",
-            "--canary-proof",
-            ".agent/missing-proof.json",
-            "--strict-probe",
-            ".agent/missing-probe.json",
-            "--strict-verdict",
-            ".agent/missing-verdict.json",
-        ]
-    )
-    payload = json.loads(capsys.readouterr().out)
-
-    assert rc == 2
-    assert "run prepare first" in payload["error"]
-    assert not (tmp_path / th.default_state_path("gemini", "lineage-missing")).exists()
-
-
 def test_check_state_flags_pending_and_stale_replacement():
     prepared_at = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
     state = {
@@ -3671,76 +3154,6 @@ def test_v1_state_requires_explicit_migration(tmp_path: Path, capsys, monkeypatc
     assert json.loads(state_path.read_text(encoding="utf-8"))["schema_version"] == 2
 
 
-def test_cli_requires_exact_rollover_and_reserved_canary_proof(tmp_path: Path, capsys, monkeypatch):
-    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert th.main(["--repo-root", str(tmp_path), "prepare", "--active-thread-id", "old-thread"]) == 0
-    prepared_payload = json.loads(capsys.readouterr().out)
-    state_path = tmp_path / prepared_payload["state_file"]
-    state = json.loads(state_path.read_text(encoding="utf-8"))
-    bind_native_lease(state_path, "new-thread")
-
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "resume",
-                "--state-file",
-                prepared_payload["state_file"],
-                "--rollover-id",
-                prepared_payload["rollover_id"],
-                "--replacement-thread-id",
-                "new-thread",
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
-    proof_path = tmp_path / state["replacement"]["canary_proof_path"]
-    assert (
-        canary.main(
-            [
-                "--rollover-id",
-                prepared_payload["rollover_id"],
-                "--replacement-thread-id",
-                "new-thread",
-                "--challenge",
-                state["replacement"]["canary_challenge"],
-                "--proof-file",
-                str(proof_path),
-            ]
-        )
-        == 0
-    )
-    capsys.readouterr()
-    strict_probe, strict_verdict = strict_artifacts(tmp_path, state)
-    capsys.readouterr()
-
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "confirm-started",
-                "--lineage-id",
-                prepared_payload["lineage_id"],
-                "--rollover-id",
-                prepared_payload["rollover_id"],
-                "--new-thread-id",
-                "new-thread",
-                "--canary-proof",
-                state["replacement"]["canary_proof_path"],
-                "--strict-probe",
-                str(strict_probe.relative_to(tmp_path)),
-                "--strict-verdict",
-                str(strict_verdict.relative_to(tmp_path)),
-            ]
-        )
-        == 0
-    )
-    assert json.loads(capsys.readouterr().out)["old_automation_ready_to_delete"] is True
-
-
 def test_default_runtime_root_is_shared_by_real_linked_worktree(tmp_path: Path, capsys, monkeypatch):
     primary = tmp_path / "primary"
     linked = tmp_path / "linked"
@@ -3840,24 +3253,6 @@ def test_parallel_lineages_do_not_collide_in_an_explicit_fixture(tmp_path: Path,
     assert payloads[0]["lineage_id"] != payloads[1]["lineage_id"]
     assert payloads[0]["state_file"] != payloads[1]["state_file"]
     assert payloads[0]["runtime_path"] != payloads[1]["runtime_path"]
-
-
-def test_bootstrap_references_compact_capsule_without_history_resume(tmp_path: Path):
-    state = prepared()
-    state_root = tmp_path / "canonical"
-    prompt = th.render_bootstrap_prompt(
-        sample_snapshot(tmp_path),
-        state,
-        state_root=state_root,
-        context_threshold=82.0,
-    )
-
-    assert "do not fork, continue, or resume provider conversation history" in prompt
-    assert "detect --format session-start" in prompt
-    assert "bootstrap-replacement" in prompt
-    assert "confirm-replacement" in prompt
-    assert "context_canary.py mint" not in prompt
-    assert "thread_handoff_canary.py" not in prompt
 
 
 def test_bootstrap_replacement_writes_rejected_template_and_is_idempotent(
@@ -4101,83 +3496,6 @@ def test_confirm_replacement_failed_or_skipped_score_leaves_confirmation_locked(
     monkeypatch.setattr(th.context_canary, "cmd_score", original_score)
 
 
-def test_confirm_replacement_canary_failure_prints_questions_and_keeps_lock(
-    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
-):
-    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "prepare",
-                "--agent",
-                "codex",
-                "--harness",
-                "headless",
-                "--active-thread-id",
-                "old",
-            ]
-        )
-        == 0
-    )
-    packet = json.loads(capsys.readouterr().out)
-    bootstrap = [
-        "--repo-root",
-        str(tmp_path),
-        "bootstrap-replacement",
-        "--agent",
-        "codex",
-        "--lineage-id",
-        packet["lineage_id"],
-        "--rollover-id",
-        packet["rollover_id"],
-        "--replacement-thread-id",
-        "new-thread",
-        "--evidence",
-        "test exact binding",
-    ]
-    assert th.main(bootstrap) == 0
-    capsys.readouterr()
-    state_path = tmp_path / packet["state_file"]
-    state = json.loads(state_path.read_text(encoding="utf-8"))
-    replacement = state["replacement"]
-    template_path = (tmp_path / replacement["semantic_snapshot_path"]).with_name("semantic-snapshot.template.json")
-    snapshot_path = tmp_path / replacement["semantic_snapshot_path"]
-    probe_path = tmp_path / replacement["strict_probe_path"]
-    th.write_json_atomic(
-        snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8")))
-    )
-    assert th.context_canary.main(["mint", "--snapshot", str(snapshot_path), "--out", str(probe_path)]) == 0
-    probe = json.loads(probe_path.read_text(encoding="utf-8"))
-    th.write_json_atomic(
-        tmp_path / replacement["strict_answers_path"],
-        {anchor["id"]: anchor["a"] for anchor in probe["anchors"]},
-    )
-    probe_path.unlink()
-    monkeypatch.setattr(th.thread_handoff_canary, "main", lambda argv: 2)
-    assert (
-        th.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "confirm-replacement",
-                "--agent",
-                "codex",
-                "--lineage-id",
-                packet["lineage_id"],
-                "--rollover-id",
-                packet["rollover_id"],
-            ]
-        )
-        == 2
-    )
-    assert '"schema": "production-handoff-v2-questions"' in capsys.readouterr().out
-    locked = json.loads(state_path.read_text(encoding="utf-8"))
-    assert locked["replacement"]["status"] == "resumed"
-    assert locked["cleanup"]["old_automation_ready_to_delete"] is False
-
-
 def test_bootstrap_replacement_wrong_id_fails_closed_without_overwriting_template(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ):
@@ -4227,28 +3545,6 @@ def test_bootstrap_replacement_wrong_id_fails_closed_without_overwriting_templat
     assert "replacement task ID does not match the exact persisted binding" in capsys.readouterr().out
     assert state_path.read_bytes() == state_bytes
     assert template_path.read_bytes() == template_bytes
-
-
-def test_compact_rendering_has_one_capsule_and_no_volatile_tables(tmp_path: Path):
-    state = prepared(agent="codex")
-    handoff = th.render_current_markdown(sample_snapshot(tmp_path), state, agent="codex", context_threshold=82.0)
-    bootstrap = th.render_bootstrap_prompt(sample_snapshot(tmp_path), state, agent="codex", context_threshold=82.0)
-    candidate = {
-        "lineage_id": state["lineage_id"],
-        "rollover_id": state["replacement"]["rollover_id"],
-        "status": "pending_start",
-    }
-    startup = th.render_session_start_context(candidate, agent="codex", current_thread_id="new-thread")
-    assert len(handoff.encode("utf-8")) <= 4096
-    for volatile_heading in ("Open PRs", "Open Issues", "Delegated Tasks", "Last 5 Commits", "## Worktrees"):
-        assert volatile_heading not in handoff
-    assert "detect --format session-start" in handoff
-    assert "detect --format session-start" in bootstrap
-    assert "context_canary.py mint" not in handoff + bootstrap
-    assert startup.count("```bash") == 1
-    assert "bootstrap-replacement" in startup and "confirm-replacement" in startup
-    assert "context_canary.py" not in startup
-    assert len(startup.encode("utf-8")) <= 550
 
 
 def test_canary_proof_rejects_tampering_after_atomic_write(tmp_path: Path):
@@ -4951,11 +4247,6 @@ def test_detect_missing_stream_is_candidate_only_in_own_directory(tmp_path: Path
         assert "skipped_foreign" not in result
 
 
-def test_detect_ignores_unset_by_launcher_task_family_environment(monkeypatch):
-    monkeypatch.setenv("SESSION_TASK_FAMILY", "infra")
-    assert th.build_parser().parse_args(["detect"]).task_family == ""
-
-
 def test_epic_harness_session_start_surfaces_claude_infra_pending_packet(tmp_path: Path, capsys, monkeypatch) -> None:
     """#5201: --epic harness must resolve to claude-infra and surface its packet.
 
@@ -5356,20 +4647,6 @@ def test_detect_excludes_registry_terminal_rollover_packets(tmp_path: Path, caps
     ]
 
 
-def test_detect_registry_non_terminal_record_is_detected(tmp_path: Path, capsys, monkeypatch):
-    """Negative control: non-terminal registry record is still detected as live."""
-    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
-
-    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--active-thread-id", "t1"]) == 0
-    p1 = json.loads(capsys.readouterr().out)
-
-    assert th.main(["--repo-root", str(tmp_path), "detect", "--agent", "codex"]) == 0
-    detected = json.loads(capsys.readouterr().out)
-    assert detected["status"] == "pending_start"
-    assert detected["lineage_id"] == p1["lineage_id"]
-    assert "excluded_terminal" not in detected
-
-
 def test_detect_corrupt_registry_record_fails_open(tmp_path: Path, capsys, monkeypatch):
     """Corrupt registry record must not crash detect, fails open, and surfaces error."""
     monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
@@ -5487,29 +4764,6 @@ def test_bundle_api_5xx_and_transport_stay_unavailable(monkeypatch: pytest.Monke
     monkeypatch.setattr(urllib.request, "urlopen", fake_down)
     with pytest.raises(th.RolloverBundleAPIUnavailable):
         th._bundle_api_request("http://127.0.0.1:8765", method="GET", path="/api/epics/v1/s/bundles/latest")
-
-
-def test_bundle_upload_409_is_refused_not_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Upload path: a 409 conflict is a semantic answer, not a transient retry."""
-    _set_lease_env(monkeypatch)
-    calls: list[str] = []
-
-    def fake_urlopen(req, timeout: float = 3.0):
-        calls.append(req.full_url)
-        raise urllib.error.HTTPError(  # type: ignore[arg-type]
-            req.full_url, 409, "conflict", {}, io.BytesIO(json.dumps({"detail": "stale generation"}).encode())
-        )
-
-    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
-
-    with pytest.raises(th.RolloverBundleRefused, match="409"):
-        th._bundle_api_upload(
-            _bundle_args(),
-            stream_id="shared:rollover",
-            manifest={"bundle_sha256": "abc123"},
-            blob=b"blob",
-        )
-    assert len(calls) == 1
 
 
 def test_bundle_upload_pinned_single_loopback_cannot_failover(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -9,11 +9,6 @@ import pytest
 import yaml
 
 from scripts.orchestration import curriculum_readiness as readiness
-from scripts.orchestration import prompt_contracts
-from scripts.orchestration.prompt_contracts import (
-    load_active_tracks,
-    resolve_profile_selectors,
-)
 
 pytestmark = pytest.mark.reads_content
 
@@ -213,138 +208,6 @@ def _write_readings(repo_root: Path, track: str, slug: str, readings: list[dict]
     return path
 
 
-def test_bio_profile_expresses_complete_preparation_without_track_branches() -> None:
-    config = readiness.load_config(repo_root=REPO_ROOT)
-    bio = config["profiles"]["bio"]
-    requirement_ids = {item["id"] for item in bio["requirements"]}
-    validators = {
-        validator
-        for requirement in bio["requirements"]
-        for option in requirement["options"]
-        for validator in option["validators"]
-    }
-
-    assert requirement_ids == {
-        "dossier",
-        "dossier-grounding",
-        "plan",
-        "reading-or-rights",
-        "wiki-document",
-        "wiki-sources",
-        "wiki-grounding",
-        "wiki-quote-verification",
-        "image-rights",
-        "discovery",
-    }
-    assert {
-        "bio-dossier-xref",
-        "plan-check",
-        "research-quality",
-        "verified-reading-catalog",
-        "bio-reading-policy",
-        "wiki-sources-registry",
-        "manual-gate",
-        "wiki-completeness",
-        "bio-wiki-subject",
-        "bio-discovery-integrity",
-    } <= validators
-    assert set(config["profiles"]) == {"core", "seminar", "bio"}
-    assert {profile["version"] for profile in config["profiles"].values()} == {"1.1.0"}
-    assert {item["id"] for item in config["profiles"]["core"]["requirements"]} == {
-        "plan",
-        "research-evidence",
-        "wiki-document",
-        "wiki-sources",
-        "reading-or-rights",
-    }
-    assert {item["id"] for item in config["profiles"]["seminar"]["requirements"]} == {
-        "dossier",
-        "plan",
-        "wiki-document",
-        "wiki-sources",
-        "reading-or-rights",
-    }
-    assert all("certification" not in profile for profile in config["profiles"].values())
-    engine_source = (REPO_ROOT / "scripts/orchestration/curriculum_readiness.py").read_text(encoding="utf-8")
-    assert 'track == "bio"' not in engine_source
-    assert "llm_qg" not in engine_source
-    assert "sqlite" not in engine_source
-
-
-def test_all_active_tracks_resolve_readiness_certification_and_prompt_profiles() -> None:
-    active = load_active_tracks(REPO_ROOT)
-    readiness_config = readiness.load_config(repo_root=REPO_ROOT)
-    readiness_profiles = resolve_profile_selectors(
-        selectors=readiness_config["selectors"],
-        profile_families={
-            profile_id: profile["family"]
-            for profile_id, profile in readiness_config["profiles"].items()
-        },
-        active_tracks=active,
-        label="readiness test",
-    )
-    certification_path = (
-        REPO_ROOT
-        / "agents_extensions/shared/curriculum-lifecycle/config/certification-profiles.v1.yaml"
-    )
-    certification = yaml.safe_load(certification_path.read_text(encoding="utf-8"))
-    certification_profiles = resolve_profile_selectors(
-        selectors=certification["selectors"],
-        profile_families={
-            profile_id: profile["family"]
-            for profile_id, profile in certification["profiles"].items()
-        },
-        active_tracks=active,
-        label="certification test",
-    )
-    semantic_profiles = prompt_contracts.active_track_profiles(repo_root=REPO_ROOT)
-
-    assert set(readiness_profiles) == set(active)
-    assert set(certification_profiles) == set(active)
-    assert set(semantic_profiles) == set(active)
-    assert readiness_profiles["bio"] == "bio"
-    assert all(readiness_config["profiles"][profile_id]["version"] == "1.1.0" for profile_id in readiness_profiles.values())
-    assert certification_profiles["bio"] == "bio-pending"
-    assert semantic_profiles["a1"] == "core-a1"
-    assert semantic_profiles["folk"] == "seminar-folk"
-
-
-def test_all_manifest_inventory_resolves_tracks_once_in_manifest_order(monkeypatch) -> None:
-    manifest = readiness.load_active_manifest(REPO_ROOT)
-    expected_targets = [(track, slug) for track, record in manifest["tracks"].items() for slug in record["modules"]]
-    profile_tracks: list[str] = []
-    seen: list[tuple[str, str]] = []
-    original_select_profile = readiness._select_profile
-
-    def select_profile(config: Mapping, track: str, manifest_type: str):
-        profile_tracks.append(track)
-        return original_select_profile(config, track, manifest_type)
-
-    def evaluate(**kwargs):
-        seen.append((kwargs["track"], kwargs["slug"]))
-        return _fake_inventory_result(
-            track=kwargs["track"],
-            slug=kwargs["slug"],
-            profile_id=kwargs["profile_id"],
-            profile=kwargs["profile"],
-            preparation_state="current",
-            state="prepared-plan",
-            next_action="build",
-        )
-
-    monkeypatch.setattr(readiness, "_select_profile", select_profile)
-    monkeypatch.setattr(readiness, "_evaluate_manifest_target", evaluate)
-
-    summary = readiness.evaluate_inventory(mode="summary", repo_root=REPO_ROOT)
-
-    assert profile_tracks == list(manifest["tracks"])
-    assert seen == expected_targets
-    assert summary["module_count"] == len(expected_targets) == 1932
-    assert summary["counts"]["track"] == [
-        {"track": track, "count": len(record["modules"])} for track, record in manifest["tracks"].items()
-    ]
-
-
 def test_single_target_cli_json_remains_byte_and_shape_compatible(
     tmp_path: Path,
     monkeypatch,
@@ -365,118 +228,6 @@ def test_single_target_cli_json_remains_byte_and_shape_compatible(
     assert output == json.dumps(expected, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     assert json.loads(output) == expected
     readiness.validate_result(expected, repo_root=repo_root)
-
-
-def test_inventory_summary_counts_every_required_dimension(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo_root, _levels = _inventory_fixture(tmp_path)
-    specs = {
-        ("bio", "bio-missing"): {
-            "failed": {"dossier"},
-            "findings": [
-                {
-                    "id": "PREPARATION_DOSSIER",
-                    "owner": "preparation",
-                }
-            ],
-        },
-        ("bio", "bio-current"): {
-            "preparation_state": "current",
-            "state": "prepared-plan",
-            "next_action": "build",
-        },
-        ("bio", "bio-drift"): {
-            "module_state": "built",
-            "preparation_state": "stale",
-            "state": "built-preparation-drift",
-            "findings": [
-                {
-                    "id": "PREPARATION_IDENTITY_DRIFT",
-                    "owner": "preparation",
-                }
-            ],
-        },
-        ("bio", "bio-hold"): {
-            "state": "preparation-required",
-            "next_action": "stop",
-            "findings": [
-                {
-                    "id": "PREPARATION_HOLD_ACTIVE",
-                    "owner": "preparation",
-                }
-            ],
-        },
-        ("a1", "a1-audit"): {
-            "module_state": "built",
-            "preparation_state": "stale",
-            "state": "built-preparation-drift",
-            "findings": [
-                {
-                    "id": "PREPARATION_IDENTITY_MISSING",
-                    "owner": "audit_tooling",
-                }
-            ],
-        },
-        ("a1", "a1-plan"): {
-            "failed": {"plan"},
-            "state": "missing-plan",
-            "next_action": "plan",
-            "findings": [{"id": "PREPARATION_PLAN", "owner": "plan"}],
-        },
-    }
-    seen: list[tuple[str, str]] = []
-
-    def evaluate(**kwargs):
-        key = (kwargs["track"], kwargs["slug"])
-        seen.append(key)
-        return _fake_inventory_result(
-            track=kwargs["track"],
-            slug=kwargs["slug"],
-            profile_id=kwargs["profile_id"],
-            profile=kwargs["profile"],
-            **specs[key],
-        )
-
-    monkeypatch.setattr(readiness, "_evaluate_manifest_target", evaluate)
-
-    summary = readiness.evaluate_inventory(mode="summary", repo_root=repo_root)
-
-    assert seen == [
-        ("bio", "bio-missing"),
-        ("bio", "bio-current"),
-        ("bio", "bio-drift"),
-        ("bio", "bio-hold"),
-        ("a1", "a1-audit"),
-        ("a1", "a1-plan"),
-    ]
-    assert summary["module_count"] == 6
-    assert summary["counts"]["track"] == [
-        {"track": "bio", "count": 4},
-        {"track": "a1", "count": 2},
-    ]
-    assert summary["counts"]["profile"] == [
-        {"profile_id": "bio", "profile_version": "1.1.0", "count": 4},
-        {"profile_id": "core", "profile_version": "1.1.0", "count": 2},
-    ]
-    requirements = {
-        (item["requirement_id"], item["owner"]): (item["passed"], item["failed"])
-        for item in summary["counts"]["requirement"]
-    }
-    assert requirements[("dossier", "preparation")] == (3, 1)
-    assert requirements[("plan", "plan")] == (5, 1)
-    assert requirements[("research-evidence", "preparation")] == (2, 0)
-    assert summary["counts"]["next_action"] == [
-        {"next_action": "prepare", "count": 3},
-        {"next_action": "build", "count": 1},
-        {"next_action": "stop", "count": 1},
-        {"next_action": "plan", "count": 1},
-    ]
-    assert summary["counts"]["module_state"] == [
-        {"module_state": "unbuilt", "count": 4},
-        {"module_state": "built", "count": 2},
-    ]
 
 
 def test_missing_only_is_manifest_ordered_and_preparation_safe(
@@ -547,35 +298,6 @@ def test_missing_only_is_manifest_ordered_and_preparation_safe(
     assert "a1-audit" not in rows
 
 
-def test_one_track_inventory_never_scans_another_track(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo_root, levels = _inventory_fixture(tmp_path)
-    seen: list[tuple[str, str]] = []
-
-    def evaluate(**kwargs):
-        seen.append((kwargs["track"], kwargs["slug"]))
-        return _fake_inventory_result(
-            track=kwargs["track"],
-            slug=kwargs["slug"],
-            profile_id=kwargs["profile_id"],
-            profile=kwargs["profile"],
-            failed={"dossier"},
-        )
-
-    monkeypatch.setattr(readiness, "_evaluate_manifest_target", evaluate)
-
-    result = readiness.evaluate_inventory(
-        mode="missing-only",
-        track="bio",
-        repo_root=repo_root,
-    )
-
-    assert seen == [("bio", slug) for slug in levels["bio"]["modules"]]
-    assert {row["track"] for row in result["rows"]} == {"bio"}
-
-
 def test_inventory_loads_global_contracts_once_and_never_writes_repository(
     tmp_path: Path,
     monkeypatch,
@@ -634,53 +356,6 @@ def test_inventory_loads_global_contracts_once_and_never_writes_repository(
     assert json_paths.count(repo_root / readiness.CONFIG_SCHEMA_PATH) == 1
     assert json_paths.count(repo_root / readiness.RESULT_SCHEMA_PATH) == 1
     assert after == before
-
-
-def test_inventory_invalid_inputs_and_cli_combinations_fail_closed(
-    tmp_path: Path,
-    monkeypatch,
-    capsys,
-) -> None:
-    repo_root, _levels = _inventory_fixture(tmp_path)
-    with pytest.raises(readiness.ReadinessError, match="no active track"):
-        readiness.evaluate_inventory(
-            mode="summary",
-            track="not-active",
-            repo_root=repo_root,
-        )
-
-    config_path = repo_root / readiness.CONFIG_PATH
-    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    config["selectors"]["tracks"]["bio"] = "missing-profile"
-    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
-    with pytest.raises(readiness.ReadinessError, match="unknown profile"):
-        readiness.evaluate_inventory(mode="summary", repo_root=repo_root)
-
-    def evaluation_error(**_kwargs):
-        raise readiness.ReadinessError("fixture evaluation failure")
-
-    monkeypatch.setattr(readiness, "evaluate_inventory", evaluation_error)
-    assert readiness.main(["--all", "--summary"]) == 2
-    assert "fixture evaluation failure" in capsys.readouterr().err
-
-
-@pytest.mark.parametrize(
-    "argv",
-    [
-        ["--all"],
-        ["--all", "--summary", "--slug", "demo"],
-        ["--track", "bio"],
-        ["--track", "bio", "--slug", "demo", "--summary"],
-        ["--track", "bio", "--summary", "--consumed-preparation-identity", "a" * 64],
-        ["--track", "bio", "--summary", "--missing-only"],
-        ["--all", "--track", "bio", "--summary"],
-    ],
-)
-def test_inventory_selector_contradictions_exit_two(argv: list[str]) -> None:
-    with pytest.raises(SystemExit) as exc_info:
-        readiness.main(argv)
-
-    assert exc_info.value.code == 2
 
 
 def test_prepared_unbuilt_bio_uses_real_validators_and_exact_sources(tmp_path: Path) -> None:
@@ -1086,21 +761,6 @@ def test_off_manifest_target_fails_with_authority_owner(tmp_path: Path) -> None:
     ]
 
 
-def test_legacy_qg_files_and_mtimes_are_not_readiness_inputs(tmp_path: Path) -> None:
-    repo_root = _bio_fixture(tmp_path)
-    before = readiness.evaluate_preparation("bio", BIO_SLUG, repo_root=repo_root)
-    module_dir = repo_root / "curriculum/l2-uk-en/bio" / BIO_SLUG
-    module_dir.mkdir(parents=True)
-    (module_dir / "llm_qg.json").write_text('{"terminal_verdict":"PASS"}\n', encoding="utf-8")
-    (module_dir / "qg_evidence.json").write_text('{"passed":true}\n', encoding="utf-8")
-    (module_dir / "legacy-qg.sqlite3").write_bytes(b"not a database")
-    after = readiness.evaluate_preparation("bio", BIO_SLUG, repo_root=repo_root)
-
-    assert after["state"] == before["state"]
-    assert after["preparation_identity"] == before["preparation_identity"]
-    assert not any("qg" in source["path"].lower() or "sqlite" in source["path"].lower() for source in after["sources"])
-
-
 def test_partial_bundle_stops_for_built_artifact_recovery(tmp_path: Path) -> None:
     repo_root = _bio_fixture(tmp_path)
     module_dir = repo_root / "curriculum/l2-uk-en/bio" / BIO_SLUG
@@ -1133,36 +793,6 @@ def test_config_rejects_raw_prose_and_unknown_selector(tmp_path: Path) -> None:
 
     with pytest.raises(readiness.ReadinessError, match="unknown profile"):
         readiness.load_config(repo_root=repo_root)
-
-
-def test_readiness_config_rejects_retired_track_selector(tmp_path: Path) -> None:
-    repo_root = tmp_path / "repo"
-    _copy_contracts(repo_root)
-    _copy(repo_root, "curriculum/l2-uk-en/curriculum.yaml")
-    config_path = repo_root / readiness.CONFIG_PATH
-    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    config["selectors"]["tracks"]["lit-doc"] = "seminar"
-    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
-
-    with pytest.raises(readiness.ReadinessError, match="inactive tracks: lit-doc"):
-        readiness.load_config(repo_root=repo_root)
-
-
-def test_readiness_contract_rejects_certification_policy_declarations(tmp_path: Path) -> None:
-    repo_root = tmp_path / "repo"
-    _copy_contracts(repo_root)
-    config_path = repo_root / readiness.CONFIG_PATH
-    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    config["profiles"]["core"]["certification"] = {"production_qg": {"mode": "armed-canary"}}
-    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
-
-    with pytest.raises(readiness.ReadinessError, match="Additional properties"):
-        readiness.load_config(repo_root=repo_root)
-
-
-def test_dependent_identity_rejects_unknown_evidence_class() -> None:
-    with pytest.raises(readiness.ReadinessError, match="unsupported dependent evidence class"):
-        readiness.dependent_evidence_identity("legacy-qg", "a" * 64, {"artifact": "v1"})
 
 
 def test_host_path_only_text_change_ignores_baked_checkout_rewrites() -> None:

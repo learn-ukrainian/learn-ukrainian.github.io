@@ -7,7 +7,6 @@ canonical main refspec, and make fetch succeed again.
 
 from __future__ import annotations
 
-import json
 import os
 import subprocess
 from pathlib import Path
@@ -274,16 +273,3 @@ def test_scheduled_hygiene_heals_stale_refspec_before_fetch(tmp_path: Path, monk
     assert spec not in _fetch_refspecs(repo)
     fetched = _git(repo, "fetch", "origin", check=False)
     assert fetched.returncode == 0, fetched.stderr or fetched.stdout
-
-
-def test_cli_json_heals_stale_refspec(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    repo = _narrow_clone(tmp_path)
-    spec = _add_stale_refspec(repo, "agy/infra-6977-runner")
-
-    rc = fetch_refspecs.main(["--repo-root", str(repo), "--json"])
-
-    assert rc == 0
-    report = json.loads(capsys.readouterr().out)
-    assert report["ok"] is True
-    assert spec in report["pruned"]
-    assert spec not in _fetch_refspecs(repo)

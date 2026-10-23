@@ -17,7 +17,6 @@ pytest-xdist (#6838 red on an unrelated CSS change).
 from __future__ import annotations
 
 import re
-import sys
 from pathlib import Path
 
 import pytest
@@ -64,14 +63,4 @@ def test_no_noncanonical_bridge_imports_in_test_suite() -> None:
     assert not violations, (
         "Non-canonical `ai_agent_bridge` module identity found; use `scripts.ai_agent_bridge` "
         "everywhere (#6812):\n" + "\n".join(violations)
-    )
-
-
-def test_bare_bridge_identity_not_loaded() -> None:
-    """The bare identity must never occupy a second ``sys.modules`` entry."""
-    bare = sys.modules.get("ai_agent_bridge")
-    assert "ai_agent_bridge" not in sys.modules, (
-        "The bare `ai_agent_bridge` module identity is loaded alongside "
-        "`scripts.ai_agent_bridge`; module-level state would diverge (#6812). "
-        f"Loaded from: {getattr(bare, '__file__', '<unknown>')}"
     )

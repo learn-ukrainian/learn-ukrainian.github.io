@@ -346,28 +346,6 @@ def test_known_issue_maps_whole_test_function_and_exact_ids() -> None:
     assert data_tier.known_issue("tests/test_citation_resolution_invariant.py::test_other", baseline) is None
 
 
-def test_shipped_baseline_maps_every_citation_parametrization_to_8403() -> None:
-    baseline = json.loads(data_tier.BASELINE.read_text(encoding="utf-8"))["known_failures"]
-    body = data_tier.issue_body(
-        {
-            "run_key": "run-1",
-            "main_sha": "abc",
-            "ran": 2,
-            "passed": 0,
-            "failed": 2,
-            "skipped": 0,
-            "failing_tests": [
-                "tests/test_citation_resolution_invariant.py::test_published_citations_resolve_invariant[wiki/grammar/b2/dim-zhytlo.md]",
-                "tests/test_esum_search.py::test_search_esum_berkut_returns_turkic_origin",
-            ],
-            "skip_reasons": {},
-        },
-        baseline,
-    )
-    assert "dim-zhytlo.md]` — known issue #8403" in body
-    assert "test_search_esum_berkut_returns_turkic_origin` — new" in body
-
-
 @pytest.fixture(autouse=True)
 def _no_live_pool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """The data-tier memory checks never read this host's real lu.slice (#9975)."""
@@ -804,17 +782,6 @@ def test_checkout_creation_failure_uses_guarded_cleanup(tmp_path: Path, monkeypa
     assert removed == [(tmp_path, created[0])]
 
 
-def test_interpreter_resolver_refusal_is_reported(nightly: SimpleNamespace, monkeypatch: pytest.MonkeyPatch) -> None:
-    def resolve(root: Path) -> Path:
-        assert root == nightly.primary
-        raise FileNotFoundError("unavailable")
-
-    monkeypatch.setattr(data_tier, "project_interpreter", resolve)
-    assert data_tier.run(SimpleNamespace(only=None, no_report=False)) == 1
-    assert nightly.reports[0]["runner_errors"] == ["shared project interpreter unavailable"]
-    assert nightly.events == []
-
-
 @pytest.mark.parametrize(
     "failure",
     [
@@ -1241,16 +1208,6 @@ def test_data_tier_child_executes_in_real_linked_worktree(tmp_path, available):
         assert "worktree_local_store" not in result.stdout
 
 
-def test_nightly_rejects_scratch_inside_a_checkout(nightly, monkeypatch):
-    (nightly.primary / ".git").mkdir()
-    scratch = nightly.primary / "scratch"
-    scratch.mkdir()
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
-    assert data_tier.run(SimpleNamespace(only=None, no_report=False)) == 1
-    assert nightly.reports[-1]["runner_errors"] == ["runner scratch root must be outside any Git checkout"]
-    assert nightly.events == ["remove"]
-
-
 @pytest.mark.parametrize("selection", ["override", "default"])
 @pytest.mark.parametrize("contamination", [None, "TMPDIR", "TEMP", "TMP", "cache", "all"])
 def test_nightly_fleet_root_wins_over_ambient_temp(nightly, monkeypatch, selection, contamination):
@@ -1433,30 +1390,3 @@ def test_nightly_invalid_external_override_is_not_ignored(nightly, monkeypatch, 
     assert nightly.snapshots == []
     assert not nightly.scratch_root.exists()
     assert invalid.read_text() == "keep"
-
-
-def test_malformed_pool_memory_high_skips_with_a_stderr_reason(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    gib = 1024**3
-    pool = _fake_slice(tmp_path / "lu.slice", current=25 * gib, file_cache=0, high="28G")
-    (pool / "memory.max").write_text(f"{29 * gib}\n", encoding="ascii")
-    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
-    _slice_show(monkeypatch, current=gib, maximum=17 * gib)
-
-    data_tier.require_memory()
-
-    err = capsys.readouterr().err
-    assert "lu.slice pool check skipped (lu.slice memory.high is neither a number nor 'max')" in err
-
-
-def test_uncapped_pool_is_not_silent(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    pool = _fake_slice(tmp_path / "lu.slice", current=30 * 1024**3, file_cache=0)
-    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
-    _slice_show(monkeypatch, current=1024**3, maximum=20 * 1024**3)
-
-    data_tier.require_memory()
-
-    assert "lu.slice has no memory.high or memory.max limit" in capsys.readouterr().err

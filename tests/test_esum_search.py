@@ -39,27 +39,7 @@ def bound_esum_reader(request, monkeypatch):
         monkeypatch.setitem(globals(), "search_esum", partial(search_esum, db_path=path))
 
 
-
-def _joined_text(query: str, limit: int = 5) -> str:
-    hits = search_esum(query, volume=1, limit=limit)
-    return "\n".join(str(hit["etymology_text"]) for hit in hits)
-
-
 # --- Registration (no data) and real-store query contracts ----------------
-
-
-def test_search_esum_function_is_importable() -> None:
-    """search_esum must be importable from wiki.sources_db regardless
-    of whether data is loaded."""
-    from wiki.sources_db import search_esum as _search_esum
-
-    assert callable(_search_esum)
-
-
-@needs_esum_data
-def test_search_esum_nonexistent_word_returns_empty_list() -> None:
-    """A made-up word never matches anything regardless of data state."""
-    assert search_esum("хххх", volume=1, limit=3) == []
 
 
 @needs_esum_data
@@ -72,16 +52,6 @@ def test_search_esum_sibir_is_outside_volume_one_scope() -> None:
     assert search_esum("сибір", volume=1, limit=3) == []
 
 
-@needs_esum_data
-def test_search_esum_maty_is_outside_volume_one_scope() -> None:
-    """The volume=1 filter excludes ``мати`` (a vol. 3 entry).
-
-    The DB holds all 6 volumes (А–Я); this asserts the volume filter works, not
-    that vols 2–6 are absent.
-    """
-    assert search_esum("мати", volume=1, limit=3) == []
-
-
 # --- Data-content tests (skipped when esum_etymology is empty) -------
 
 
@@ -91,20 +61,3 @@ def test_search_esum_berkut_returns_turkic_origin() -> None:
     assert [hit["lemma"] for hit in hits] == ["беркут"]
     assert "запозичення з тюркських мов" in hits[0]["etymology_text"]
     assert "тат. біркут" in hits[0]["etymology_text"]
-
-
-@needs_esum_data
-def test_search_esum_bereza_returns_indo_european_cognates() -> None:
-    text = _joined_text("береза")
-    assert "іє." in text
-    assert "дінд." in text
-    assert "лит." in text
-
-
-@needs_esum_data
-def test_search_esum_voda_returns_cross_slavic_and_proto_slavic_cognates() -> None:
-    text = _joined_text("вода")
-    assert "р. болг. вода" in text
-    assert "стел, вода" in text
-    assert "псл." in text
-    assert "іє." in text

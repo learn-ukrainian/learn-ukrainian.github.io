@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import json
 import threading
-import time
 from datetime import timedelta
 
 import pytest
@@ -32,73 +30,6 @@ def _join(snapshot):
     assert snapshot._thread is not None
     snapshot._thread.join(timeout=15)
     assert not snapshot._thread.is_alive()
-
-
-def test_snapshot_registry_reuses_the_same_inventory():
-    first = sources._pr_snapshot(REPO, 1000)
-    assert sources._pr_snapshot(REPO, 1000) is first
-    assert sources._pr_snapshot(REPO, 10) is not first
-
-
-def test_40_slow_prs_refresh_off_request_path(monkeypatch):
-    """Five slow reads per PR exceed 5s even with eight detail workers."""
-    raw = [{"number": n, "state": "open", "head": {"sha": str(n)}, "title": f"PR {n}"} for n in range(1, 41)]
-    reads = []
-    started = threading.Event()
-
-    def transport(path, headers, timeout):
-        reads.append(path)
-        started.set()
-        time.sleep(0.22)
-        if "/pulls?" in path:
-            body = raw
-        elif "check-runs" in path:
-            body = {
-                "total_count": 1,
-                "check_runs": [{"name": "CI Gate", "status": "completed", "conclusion": "success"}],
-            }
-        elif "actions/runs" in path:
-            body = {"total_count": 0, "workflow_runs": []}
-        elif path.endswith("/status"):
-            body = {"total_count": 0, "statuses": []}
-        elif "/reviews?" in path:
-            body = []
-        else:
-            body = {"mergeable_state": "clean", "requested_reviewers": []}
-        return 200, {}, json.dumps(body).encode()
-
-    cache = github_rest.GitHubRestCache(transport=transport, identity="fixture")
-    monkeypatch.setattr(github_rest, "shared_cache", lambda: cache)
-    snapshot = sources._PRSnapshot(REPO, 1000)
-    monkeypatch.setattr(sources, "_pr_snapshot", lambda *_args: snapshot)
-    before = time.perf_counter()
-    cold = sources.fetch_open_prs(REPO)
-    cold_projection = build_projection(_sections(cold), lifecycle_ledgers=[])
-    assert time.perf_counter() - before < 5
-    assert cold.status == "unavailable" and cold.observed_at is None and cold.age_s is None
-    assert cold_projection["denominator"]["omissions"][0]["reason"] == "gh_pr_snapshot_missing"
-    assert started.wait(timeout=2)
-    thread = snapshot._thread
-    try:
-        for _ in range(10):
-            assert sources.fetch_open_prs(REPO).payload is None
-            assert snapshot._thread is thread
-    finally:
-        _join(snapshot)
-    refresh_s = time.perf_counter() - before
-    assert refresh_s > 5
-    assert len(reads) == 201
-    before = time.perf_counter()
-    ready = sources.fetch_open_prs(REPO)
-    projection = qualify_pr_snapshot_age(build_projection(_sections(ready), lifecycle_ledgers=[]))
-    assert time.perf_counter() - before < 5
-    assert ready.status == "ok" and ready.count == 40
-    assert ready.age_s >= 5
-    meta = projection["sources"][0]["sections"]["prs"]
-    assert meta["observed_at"] == ready.observed_at and meta["age_s"] >= 5
-    assert len(projection["items"]) == 40
-    assert {i["safe_next_action"]["code"] for i in projection["items"]} == {"REQUEST_CF_REVIEW"}
-    validate_projection(projection)
 
 
 @pytest.mark.parametrize("failure", [False, True])

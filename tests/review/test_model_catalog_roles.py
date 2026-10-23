@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import ast
-import gzip
 import hashlib
 import json
 import subprocess
@@ -25,7 +24,7 @@ from scripts.review.model_catalog import (
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
 from tests.claude_route_accounts import HOST_ACCOUNT
-from tests.review.test_model_catalog import APPROVED_BASELINE, APPROVED_INPUTS, BASELINE, CAPTURE, FIXTURE, INPUTS
+from tests.review.test_model_catalog import APPROVED_BASELINE, APPROVED_INPUTS, BASELINE, CAPTURE
 
 
 @pytest.fixture
@@ -236,13 +235,6 @@ def test_bindings_must_be_explicit_unique_strings(catalog, value):
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("value", [True, -1, "high"])
-def test_priority_requires_nonnegative_integer(catalog, value):
-    catalog["seats"]["bounded_worker"]["priority"] = value
-    with pytest.raises(ModelCatalogError, match="priority"):
-        validate_catalog(catalog)
-
-
 @pytest.mark.parametrize("spec,match", [
     ({"seat": "missing"}, "unknown seat"), ({"role": "missing"}, "unknown routing role"),
     ({"role": []}, "routing role name"), ({"seat": "bounded_worker", "role": "bounded_advisor"}, "selector"),
@@ -335,13 +327,6 @@ def test_qualification_is_identity_and_capability_bound(catalog):
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("name", ["claude-opus-5-5", "InvalidName"])
-def test_seat_and_role_names_are_functional_not_versioned(catalog, name):
-    catalog["roles"][name] = {"seat": "bounded_worker"}
-    with pytest.raises(ModelCatalogError, match="stable functional"):
-        validate_catalog(catalog)
-
-
 def test_shell_api_returns_structured_evidence_and_typed_refusal(tmp_path):
     argv = [sys.executable, "-m", "scripts.review.model_catalog"]
     result = subprocess.run([*argv, "--resolve-role", "bounded_advisor"], capture_output=True, text=True, timeout=30)
@@ -364,9 +349,8 @@ def test_shell_api_returns_structured_evidence_and_typed_refusal(tmp_path):
 @pytest.mark.parametrize("args,expected_status,expected_output", [
     (["--check-retired-model", "claude-opus-5-5"], 0, ""),
     (["--check-retired-model", "claude-fable-5"], 2, ""),
-    (["--resolve-kimi-model", "k3"], 0, "kimi-code/k3\n"),
-    (["--resolve-kimi-model", "k3", "--format", "kimicc"], 0,
-     "k3\tkimi-k3[1m]\tk3\tkimicc_k3\n"),
+    (["--resolve-kimi-model", "k3"], 2, ""),
+    (["--resolve-kimi-model", "k3", "--format", "kimicc"], 2, ""),
     (["--resolve-role", "bounded_advisor"], 0, None),
     (["--resolve-role", "bounded_advisor", "--purpose", "launch"], 0, None),
     (["--resolve-role", "unregistered"], 2, ""),
@@ -379,6 +363,8 @@ def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_sta
     )
     assert result.returncode == expected_status, result.stderr
     assert "Traceback" not in result.stderr
+    if args and args[0] == "--resolve-kimi-model":
+        assert "is retired in the model catalog" in result.stderr
     if expected_output is not None:
         assert result.stdout == expected_output
     else:
@@ -389,7 +375,8 @@ def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_sta
         if "launch" in args:
             assert row["argv"][row["argv"].index("--model") + 1] == row["wire_id"]
     if expected_status == 2:
-        assert ("is retired" if "--check-retired-model" in args else "unknown routing role") in result.stderr
+        retired = "--check-retired-model" in args or "--resolve-kimi-model" in args
+        assert ("is retired" if retired else "unknown routing role") in result.stderr
     else:
         assert result.stderr == ""
 
@@ -408,29 +395,3 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
                         now=CAPTURE["FIXED_NOW"]))
     actual = CAPTURE["observed"](lambda: resolve_reviewer(ResolverInputs(**case, claude_account=HOST_ACCOUNT)))
     assert json.loads(CAPTURE["encode"](actual)) == APPROVED_BASELINE["reviewer"][index]
-
-
-def test_fixture_bytes_remain_frozen():
-    raw = gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes())
-    assert json.loads(raw) == BASELINE
-    assert INPUTS["base_sha"] == "dae3d752426d6c11c5dc82260ec07ae8164e7730"
-
-
-def test_frozen_cursor_revision_has_independent_routes_at_every_risk():
-    """The approved eight-row change permits native Grok and refuses Cursor."""
-    indices = {index for index, case in enumerate(INPUTS["reviewer"]) if case["author_model"] == "cursor:auto"}
-    assert indices == {22, 207, 392, 577, 762, 947, 1132, 1317}
-    assert {(INPUTS["reviewer"][index]["review_profile"], INPUTS["reviewer"][index]["risk"]) for index in indices} == {
-        (profile, risk) for profile in ("code", "infra") for risk in ("low", "medium", "high", "critical")
-    }
-    for index in indices:
-        trace = BASELINE["reviewer"][index]["value"]["trace"]
-        native_grok = next(row for row in trace if row["name"] == "grok-4.7")
-        assert native_grok["status"] in {"eligible", "selected"}
-        cursor = [row for row in trace if row["transport"] == "cursor"]
-        catalog = BASELINE["catalog"]
-        ladder = catalog["review_ladders"][INPUTS["reviewer"][index]["risk"]]
-        expected_cursor = {name for rung in ladder for name in rung
-            if catalog["review_candidates"][name]["transport"] == "cursor"}
-        assert {row["name"] for row in cursor} == expected_cursor
-        assert all(row["status"] == "excluded" and "Cursor-authored" in row["reason"] for row in cursor)

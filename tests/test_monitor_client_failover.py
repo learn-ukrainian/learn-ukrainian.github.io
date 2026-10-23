@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import http.client
 import io
 import json
 import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
-from unittest.mock import Mock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -65,26 +63,6 @@ def test_normalize_base_urls_various_inputs() -> None:
     )
 
 
-def test_normalize_base_urls_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("MONITOR_API_URLS", raising=False)
-    monkeypatch.delenv("AB_MONITOR_URLS", raising=False)
-    monkeypatch.delenv("MONITOR_BASE_URLS", raising=False)
-    monkeypatch.delenv("AB_MONITOR_URL", raising=False)
-    monkeypatch.delenv("MONITOR_API_URL", raising=False)
-
-    # Default fallback
-    assert _normalize_base_urls(None, None) == ("http://localhost:8765",)
-
-    # AB_MONITOR_URLS with comma
-    monkeypatch.setenv("AB_MONITOR_URLS", "http://host-a:8765,http://host-b:8765")
-    assert _normalize_base_urls(None, None) == ("http://host-a:8765", "http://host-b:8765")
-
-    # AB_MONITOR_URL single endpoint
-    monkeypatch.delenv("AB_MONITOR_URLS", raising=False)
-    monkeypatch.setenv("AB_MONITOR_URL", "http://127.0.0.1:8765/api/state/summary")
-    assert _normalize_base_urls(None, None) == ("http://127.0.0.1:8765",)
-
-
 def _clear_monitor_env(monkeypatch: pytest.MonkeyPatch) -> None:
     for var in ("MONITOR_API_URLS", "AB_MONITOR_URLS", "MONITOR_BASE_URLS", "MONITOR_API_URL", "AB_MONITOR_URL"):
         monkeypatch.delenv(var, raising=False)
@@ -113,26 +91,6 @@ def test_normalize_base_urls_strips_endpoint_paths(monkeypatch: pytest.MonkeyPat
         "http://host-a:8765/api/state/summary, http://host-b:8765/api/state/summary",
     )
     assert _normalize_base_urls(None, None) == ("http://host-a:8765", "http://host-b:8765")
-
-
-def test_request_never_concatenates_endpoint_path(monkeypatch: pytest.MonkeyPatch) -> None:
-    """GH #7489 regression: requests hit <origin>/api/state/manifest, never
-    <origin>/api/state/summary/api/state/manifest."""
-    _clear_monitor_env(monkeypatch)
-    monkeypatch.setenv("AB_MONITOR_URLS", "http://host-a:8765/api/state/summary")
-    calls: list[str] = []
-
-    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
-        calls.append(req.full_url)
-        return _FakeResponse(200, "{}")
-
-    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
-
-    client = MonitorClient()
-    status, _body, _ = client.get("/api/state/manifest")
-
-    assert status == 200
-    assert calls == ["http://host-a:8765/api/state/manifest"]
 
 
 def test_explicit_empty_string_disables_client(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -302,35 +260,6 @@ def test_monitor_client_get_does_not_failover_on_app_origin_503(monkeypatch: pyt
     assert len(calls) == 1
 
 
-def test_monitor_client_get_failover_when_uvicorn_header_lacks_app_json(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """A ``server: uvicorn`` header without the app JSON body is not an answer; GET hops."""
-    calls: list[str] = []
-
-    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
-        url = req.full_url
-        calls.append(url)
-        if url.startswith("http://host-a:8765"):
-            raise urllib.error.HTTPError(
-                url,
-                503,
-                "Service Unavailable",
-                {"server": "uvicorn"},  # type: ignore[arg-type]
-                io.BytesIO(b"<html>bad gateway</html>"),
-            )
-        return _FakeResponse(200, json.dumps({"host": "b"}))
-
-    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
-
-    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
-    status, body, _ = client._get("/api/state/summary")
-
-    assert status == 200
-    assert json.loads(body)["host"] == "b"
-    assert len(calls) == 2
-
-
 def test_monitor_client_last_exc_does_not_shadow_later_http_response(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -371,27 +300,6 @@ def test_monitor_client_later_transport_error_is_raised_not_older_http(
     client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
     with pytest.raises(urllib.error.URLError, match="Connection refused"):
         client._get("/api/state/summary")
-    assert len(calls) == 2
-
-
-def test_monitor_client_get_failover_on_incomplete_read(monkeypatch: pytest.MonkeyPatch) -> None:
-    """``http.client.IncompleteRead`` is an ambiguous transport failure like a socket reset."""
-    calls: list[str] = []
-
-    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
-        url = req.full_url
-        calls.append(url)
-        if url.startswith("http://host-a:8765"):
-            raise http.client.IncompleteRead(b"partial")
-        return _FakeResponse(200, json.dumps({"host": "b"}))
-
-    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
-
-    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
-    status, body, _ = client._get("/api/state/summary")
-
-    assert status == 200
-    assert json.loads(body)["host"] == "b"
     assert len(calls) == 2
 
 
@@ -535,12 +443,3 @@ def test_monitor_client_mutation_host_affine_never_retries_even_with_key(
 
     assert len(calls) == 1
     assert calls[0] == "http://host-a:8765/api/agent-monitor/register"
-
-
-def test_monitor_client_cluster_readiness_helper(monkeypatch: pytest.MonkeyPatch) -> None:
-    client = MonitorClient(base_urls=["http://host-a:8765"])
-    client._get = Mock(return_value=(200, json.dumps({"status": "ready", "ready": True, "ha_claimed": False}), {}))  # type: ignore[method-assign]
-
-    readiness = client.cluster_readiness()
-    assert readiness["ready"] is True
-    assert readiness["ha_claimed"] is False

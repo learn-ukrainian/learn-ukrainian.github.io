@@ -214,20 +214,6 @@ def get_live_report(
         return row
 
 
-def list_live_reports(
-    *,
-    now_mono: float | None = None,
-    store: ReportStore | None = None,
-) -> list[StoredReport]:
-    deadline = time.monotonic() if now_mono is None else now_mono
-    target = _resolve_store(store)
-    with _STORE_LOCK:
-        stale = [host_id for host_id, row in target.items() if row.expires_at_mono <= deadline]
-        for host_id in stale:
-            del target[host_id]
-        return list(target.values())
-
-
 def compute_service_drift(
     service: dict[str, Any],
     primary: dict[str, Any],

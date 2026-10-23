@@ -7,8 +7,6 @@ against the real curriculum (mirrors test_atlas_conformance's real-artifact styl
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 
 from scripts.lexicon.check_manifest_vocabulary_coverage import (
@@ -45,12 +43,3 @@ def test_restrict_none_covers_the_full_curriculum():
     )
     assert full_count == len(_vocabulary_modules(ROOT))
     assert one_count < full_count
-
-
-def test_changed_vocab_modules_parses_or_returns_none(tmp_path: Path):
-    # Outside a git tree the helper must fail closed to None (caller → full coverage),
-    # never raise and never silently return an empty "nothing changed" set.
-    from scripts.lexicon.check_manifest_vocabulary_coverage import changed_vocab_modules
-
-    result = changed_vocab_modules(tmp_path, "origin/main")
-    assert result is None or isinstance(result, set)

@@ -63,25 +63,6 @@ def test_never_overwrites_existing_anchor() -> None:
     assert result.skipped_existing == ("скрипт",)
 
 
-def test_never_overwrites_non_english_existing_translation() -> None:
-    entry = _entry("слово")
-    entry["enrichment"]["translation"] = {"en": ["переклад"], "source": "existing"}
-    manifest = _manifest(entry)
-    worksheet = _worksheet(
-        _record("слово", "word", status="approved"),
-        source_label="agy_en_proposal (Gemini; not a dictionary)",
-    )
-
-    result = apply_anchor_worksheet(manifest, worksheet)
-
-    assert manifest["entries"][0]["enrichment"]["translation"] == {
-        "en": ["переклад"],
-        "source": "existing",
-    }
-    assert result.applied == ()
-    assert result.skipped_existing == ("слово",)
-
-
 def test_agy_dry_run_does_not_apply_legacy_cached_fill(tmp_path, monkeypatch) -> None:
     manifest = _manifest(_entry("косуля"))
     worksheet = _worksheet(

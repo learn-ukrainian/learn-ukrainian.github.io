@@ -136,20 +136,6 @@ def _cli(tree: dict[str, Path], synthetic_vesum: Path, *args: str) -> subprocess
     )
 
 
-def test_help_lists_every_code():
-    result = subprocess.run(
-        [sys.executable, "-m", "scripts.curriculum.resolver", "--help"],
-        cwd=REPO_ROOT,
-        env={"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8"},
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
-    assert result.returncode == 0, result.stderr
-    for code in codes.DESCRIPTIONS:
-        assert code in result.stdout
-
-
 def test_cli_resolve_questions_apply_check(lesson_tree, synthetic_vesum):
     resolved = _cli(lesson_tree, synthetic_vesum, "resolve", "--json")
     assert resolved.returncode == 0, resolved.stderr

@@ -265,37 +265,3 @@ def test_atlas_adapters_use_mphdict_without_the_legacy_enrichment_sources(monkey
     # re-enabled sense-split `_synonyms_slovnyk_sense_groups(` primary source.
     assert "_synonyms_slovnyk(" not in enrichment_source
     assert "_source_etymology" not in etymology_source
-
-
-def test_active_slovnyk_cache_excludes_retired_synonym_slugs() -> None:
-    # #6459: `synonyms` (СУМ synonym dictionary) is intentionally re-enabled as the
-    # primary sense-split source; only the secondary `synonyms_karavansky` stays retired.
-    assert "synonyms" in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
-    assert "synonyms_karavansky" not in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
-
-
-def test_usage_notes_family_slugs_are_looked_up_and_not_warning_only() -> None:
-    """#6460: linguistic_norm / khreshchatyk join davydov in usage_notes."""
-    assert enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS == (
-        "davydov",
-        "linguistic_norm",
-        "khreshchatyk",
-    )
-    for slug in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS:
-        assert slug in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
-    # P1 corrective dicts are a separate gated tuple, not the essay family.
-    assert "voloschak" not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS
-    assert "foreign_shtepa" not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS
-
-
-def test_usage_notes_corrective_slugs_gated_separately_and_still_warn() -> None:
-    """#6460: voloschak / foreign_shtepa full notes join usage_notes only via
-    the corrective gate; both slugs also stay on the warning-chip path."""
-    assert enrich_manifest._SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS == (
-        "voloschak",
-        "foreign_shtepa",
-    )
-    for slug in enrich_manifest._SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS:
-        assert slug in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
-        assert slug in enrich_manifest._SLOVNYK_WARNING_SLUGS
-        assert slug not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS

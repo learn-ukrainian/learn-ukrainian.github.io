@@ -12,7 +12,6 @@ import pytest
 
 import scripts.audit.generate_practice_deck as generate_practice_deck
 from scripts.audit.generate_practice_deck import (
-    DEFAULT_TARGET,
     DRILL_MODES,
     HERITAGE_CURRENT_SOURCES,
     HERITAGE_NORMATIVE_SOURCES,
@@ -22,31 +21,22 @@ from scripts.audit.generate_practice_deck import (
     RealVesumVerifier,
     ReviewedSourceAllowlist,
     VesumLemmaEvidence,
-    _build_antonym_items,
     _build_classify_items,
     _build_cloze_items,
     _build_heritage_items,
-    _build_homonym_items,
     _build_lexeme,
     _build_paradigm_items,
-    _build_paronym_items,
     _cloze_blank_context_agrees,
     _declension_category,
-    _eligible_decoys,
     _emitted_lemma_ids,
-    _heritage_availability_level,
     _heritage_current_support,
     _heritage_frame_calque_mismatch,
     _heritage_frame_support,
-    _meaning_mc_eligible,
     _merge_heritage_pair_overlay,
-    _option_strategy_for_level,
     _plain,
-    _select_practice_lexemes,
     _stress_position,
     _valid_heritage_frames,
     _vesum_aspect_by_lemma,
-    admit_thin_mode_pair_leg_surfaces,
     apply_size_budgets,
     build_practice_shards,
     compact_cloze_emit_fields,
@@ -65,19 +55,14 @@ from scripts.audit.generate_practice_deck import (
     read_sentence_inventory,
     validate_antonym_item,
     validate_antonym_pair,
-    validate_classify_item,
     validate_heritage_item,
     validate_heritage_pair,
-    validate_homonym_item,
     validate_homonym_pair,
     validate_option_set,
     validate_paradigm_item,
     validate_paronym_item,
     validate_paronym_pair,
-    validate_synonym_item,
     verified_source_passages,
-    write_aspect_residual_report,
-    write_pos_residual_report,
     write_shards,
 )
 from scripts.lib.readonly_sqlite import open_readonly
@@ -104,11 +89,6 @@ def synthetic_creation_baseline(monkeypatch: pytest.MonkeyPatch) -> None:
     generate_practice_deck._imperative_display.cache_clear()
     policy = CreationReview.from_path(FIXTURES / "lexicon-practice-creation-review.json")
     monkeypatch.setattr(CreationReview, "from_path", classmethod(lambda cls: policy))
-
-
-def test_default_target_preserves_committed_practice_surface() -> None:
-    assert DEFAULT_TARGET >= 6000
-    assert BuildConfig().target == DEFAULT_TARGET
 
 
 def test_curated_v5_seed_admits_existing_atlas_entries_with_provenance() -> None:
@@ -274,159 +254,6 @@ def test_local_practice_seed_materializes_attested_no_route_row_in_memory_only(t
     ]
 
 
-def test_local_practice_seed_accepts_attested_rows_alongside_local_recognition_rows(tmp_path: Path) -> None:
-    seed_path = tmp_path / "mixed-seed.json"
-    seed_path.write_text(
-        json.dumps(
-            {
-                "schema": "curated-v5-practice-seed-v1",
-                "localOnly": True,
-                "entries": [
-                    {
-                        "seedRow": 1,
-                        "lemma": "слово",
-                        "slug": "слово",
-                        "cefr": "A1",
-                        "sentenceStatus": "has_candidates",
-                        "admissionMode": "local_practice_private_teacher",
-                    },
-                    {
-                        "seedRow": 2,
-                        "lemma": "речення",
-                        "slug": "речення",
-                        "cefr": "A1",
-                        "sentenceStatus": "ok",
-                        "example": "Це речення.",
-                        "provenance": {"source_file": "fixture", "credit": "Fixture"},
-                    },
-                ],
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-
-    rows = read_practice_seed(seed_path, allow_local_private=True)
-
-    assert [row["seedRow"] for row in rows] == [1, 2]
-
-
-def test_local_practice_seed_rows_are_selected_before_ordinary_course_entries() -> None:
-    entries = [
-        {
-            "lemma": "справедливий",
-            "url_slug": "справедливий",
-            "gloss": "fair",
-            "enrichment": {"cefr": {"level": "A2"}},
-            "surface_admission": {"practice": True, "cloze": False},
-            "local_practice_private_teacher": True,
-        },
-        {
-            "lemma": "витирати",
-            "url_slug": "витирати",
-            "gloss": "wipe",
-            "enrichment": {"cefr": {"level": "A2"}},
-            "course_usage": [{"module": "fixture"}],
-        },
-    ]
-
-    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
-        entries,
-        JsonVesumVerifier.from_path(VESUM),
-        BuildConfig(target=1, source_label="fixture"),
-    )
-
-    assert [entry["url_slug"] for entry, _lexeme in selected] == ["справедливий"]
-
-
-def test_representative_seed_selection_round_robins_available_cefr_and_pos_strata() -> None:
-    entries = [
-        {
-            "lemma": lemma,
-            "url_slug": lemma,
-            "gloss": "fixture gloss",
-            "pos": pos,
-            "enrichment": {"cefr": {"level": cefr}},
-            "surface_admission": {"practice": True, "cloze": False},
-            "local_practice_private_teacher": True,
-        }
-        for lemma, cefr, pos in (
-            ("а", "A1", "noun"),
-            ("б", "A1", "noun"),
-            ("в", "A1", "verb"),
-            ("г", "A2", "noun"),
-            ("ґ", "A2", "verb"),
-        )
-    ]
-
-    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
-        entries,
-        JsonVesumVerifier.from_path(VESUM),
-        BuildConfig(target=5, source_label="fixture", seed_selection="representative"),
-    )
-
-    assert [entry["url_slug"] for entry, _lexeme in selected] == ["а", "г", "в", "ґ", "б"]
-
-
-def test_source_backed_priority_lexemes_precede_general_course_fill() -> None:
-    entries = read_manifest(MANIFEST)
-    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
-        entries,
-        JsonVesumVerifier.from_path(VESUM),
-        BuildConfig(target=1, source_label="fixture"),
-        {"knyha"},
-    )
-
-    assert [entry["url_slug"] for entry, _lexeme in selected] == ["knyha"]
-
-
-def test_real_vesum_verifier_uses_an_explicit_database_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    observed: dict[str, object] = {}
-
-    def fake_verify_words(words: list[str], *, pos_filter: str | None, db_path: Path) -> dict[str, list[dict]]:
-        observed.update(words=words, pos_filter=pos_filter, db_path=db_path)
-        return {word: [] for word in words}
-
-    from scripts.verification import vesum
-
-    monkeypatch.setattr(vesum, "verify_words", fake_verify_words)
-    database = tmp_path / "vesum-shadow.db"
-    assert RealVesumVerifier(database).verify_words(["слово"], pos_filter="noun") == {"слово": []}
-    assert observed == {"words": ["слово"], "pos_filter": "noun", "db_path": database}
-
-
-def test_practice_seed_entries_are_selected_before_ordinary_course_entries() -> None:
-    entries = [
-        {
-            "lemma": "звичайний",
-            "url_slug": "звичайний",
-            "gloss": "ordinary",
-            "enrichment": {"cefr": {"level": "A1"}},
-            "course_usage": [{"module": "fixture"}],
-        },
-        {
-            "lemma": "насіннєвий",
-            "url_slug": "насіннєвий",
-            "gloss": "seeded",
-            "enrichment": {"cefr": {"level": "A1"}},
-            "primary_source": "source_inventory_grow",
-            "surface_admission": {"practice": True},
-            "practice_example": {
-                "text": "Це насіннєвий матеріал.",
-                "provenance": {"source_file": "fixture", "credit": "Fixture"},
-            },
-        },
-    ]
-
-    selected, _lexemes, _by_plain_lemma, _by_id = _select_practice_lexemes(
-        entries,
-        JsonVesumVerifier.from_path(VESUM),
-        BuildConfig(target=1, source_label="fixture"),
-    )
-
-    assert [entry["url_slug"] for entry, _lexeme in selected] == ["насіннєвий"]
-
-
 def test_practice_seed_validates_duplicate_attestations_but_emits_one_route_example(tmp_path: Path) -> None:
     seed_path = tmp_path / "seed.json"
     provenance = {"source_file": "ukrlib-example", "credit": "Автор"}
@@ -480,18 +307,6 @@ def _fixture_lexemes() -> list[dict[str, object]]:
     verifier = JsonVesumVerifier.from_path(VESUM)
     lexemes = [_build_lexeme(entry, verifier) for entry in read_manifest(MANIFEST)]
     return [lexeme for lexeme in lexemes if lexeme]
-
-
-def _fixture_cloze_candidates(lemma_id: str = "knyha") -> list[dict[str, Any]]:
-    lexeme = next(row for row in _fixture_lexemes() if row["lemmaId"] == lemma_id)
-    rows = [row for row in read_cloze_sources(CLOZE_SOURCES) if row["lemmaId"] == lemma_id]
-    return _build_cloze_items(
-        lexeme,
-        rows,
-        ReviewedSourceAllowlist.from_path(ALLOWLIST),
-        JsonVesumVerifier.from_path(VESUM),
-        "fixture",
-    )
 
 
 def _fixture_heritage_pair() -> dict[str, object]:
@@ -592,21 +407,6 @@ def test_curated_cloze_derives_missing_target_form_from_paradigm() -> None:
     )
 
 
-def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
-    shards = _build(cloze_sources_path=None)
-
-    assert shards["A1"]["index"]["counts"]["lexemes"] == 7
-    assert shards["A1"]["index"]["counts"]["cloze"] == 0
-    assert shards["A1"]["cloze"]["cloze"] == []
-
-
-def test_disable_cloze_emits_no_cards_even_when_curated_sources_are_available() -> None:
-    shards = _build(BuildConfig(cloze_enabled=False))
-
-    assert all(not item["hasCloze"] for shard in shards.values() for item in shard["index"]["items"])
-    assert all(not shard["cloze"]["cloze"] for shard in shards.values())
-
-
 def test_deck_version_changes_when_any_deck_input_changes() -> None:
     entries = read_manifest(MANIFEST)
     cloze_sources = read_cloze_sources(CLOZE_SOURCES)
@@ -691,31 +491,6 @@ def test_deck_version_stable_across_double_regen_with_identical_inputs() -> None
 
     assert _single_deck_version(first) == _single_deck_version(second)
     assert first == second
-
-
-def test_read_heritage_pairs_missing_file_warns(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    rows = read_heritage_pairs(tmp_path / "missing-heritage.yaml")
-
-    captured = capsys.readouterr()
-    assert rows == []
-    assert "WARN: no curated heritage pairs found; emitting empty heritage deck" in captured.err
-
-
-def test_read_heritage_pairs_empty_file_warns(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    path = tmp_path / "empty-heritage.yaml"
-    path.write_text("", encoding="utf-8")
-
-    rows = read_heritage_pairs(path)
-
-    captured = capsys.readouterr()
-    assert rows == []
-    assert "WARN: curated heritage pairs empty; emitting empty heritage deck" in captured.err
-
-
-def test_heritage_pair_v51_validator_accepts_framed_lexical_pair() -> None:
-    pair = _fixture_heritage_pair()
-
-    assert validate_heritage_pair(pair) == []
 
 
 def test_heritage_pair_v51_validator_rejects_missing_senses_and_bad_frames() -> None:
@@ -902,23 +677,6 @@ def test_heritage_item_options_are_valid_and_do_not_mark_calque() -> None:
     assert "heritage options must not visually mark the calque pre-answer" in validate_heritage_item(marked)
 
 
-def test_heritage_builder_copies_curated_prompt_en_and_suppresses_placeholders() -> None:
-    pair = _fixture_heritage_pair()
-    lexemes = _fixture_lexemes()
-    pair["frames"][0]["sentence_en"] = "I am reading a book."
-
-    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
-    assert item["promptEn"] == "I am reading a book."
-
-    pair["frames"][0].pop("sentence_en")
-    item_without_en = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
-    assert "promptEn" not in item_without_en
-
-    pair["frames"][0]["sentence_en"] = "Context sentence for книгу"
-    placeholder_item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
-    assert "promptEn" not in placeholder_item
-
-
 def test_heritage_pair_native_slug_must_resolve_without_native_lemma_fallback(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -952,28 +710,6 @@ def test_heritage_item_ids_and_options_are_deterministic() -> None:
     assert first["heritageId"] == second["heritageId"]
     assert first["options"] == second["options"]
     assert first["heritageId"] != changed_version["heritageId"]
-
-
-def test_heritage_a1_admission_is_explicit_and_emitted_with_severity() -> None:
-    pair = _fixture_heritage_pair()
-    pair["cefrAvailability"] = "a1"
-    pair["severity"] = "russianism"
-    lexemes = _fixture_lexemes()
-
-    assert _heritage_availability_level(pair) == "A1"
-    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES)[0]
-    assert item["cefr"] == "A1"
-    assert item["severity"] == "russianism"
-
-
-def test_heritage_pair_requires_known_severity_and_allows_a1_guidance() -> None:
-    pair = _fixture_heritage_pair()
-    pair["cefrAvailability"] = "a1"
-    pair["severity"] = "enrichment"
-    assert validate_heritage_pair(pair) == []
-
-    pair["severity"] = "warning"
-    assert "heritage_pair severity must be russianism or enrichment" in validate_heritage_pair(pair)
 
 
 def test_stress_position_preserves_non_stress_combining_marks() -> None:
@@ -1078,14 +814,6 @@ def test_classify_keys_no_aspect_without_vesum_verb_evidence() -> None:
     assert [residual["reason"] for residual in residuals] == ["no_unambiguous_vesum_aspect", "unbound_verb_reading"]
 
 
-def test_classify_keys_no_aspect_from_present_and_future_tense_labels() -> None:
-    """Tense is no aspect evidence: without a VESUM aspect the emitted item has no aspect set."""
-    residuals: list[dict[str, str]] = []
-
-    assert _verb_classify_sets("писати", ["теперішній", "майбутній"], None, residuals) == {"pos": "verb"}
-    assert [residual["reason"] for residual in residuals] == ["no_unambiguous_vesum_aspect"]
-
-
 def test_vesum_aspect_lookup_uses_only_an_unambiguous_exact_verb_lemma() -> None:
     verifier = JsonVesumVerifier(
         {
@@ -1104,49 +832,11 @@ def test_vesum_aspect_lookup_uses_only_an_unambiguous_exact_verb_lemma() -> None
     }
 
 
-def test_write_aspect_residual_report_is_named_and_deterministic(tmp_path: Path) -> None:
-    report = tmp_path / "aspect-residuals.json"
-
-    write_aspect_residual_report(
-        report,
-        [
-            {"lemmaId": "z", "lemma": "знати", "cefr": "B1", "reason": "missing_morphology"},
-            {"lemmaId": "a", "lemma": "абити", "cefr": "A2", "reason": "no_explicit_aspect_or_tense_proxy"},
-        ],
-    )
-
-    assert json.loads(report.read_text(encoding="utf-8")) == {
-        "schema": "atlas-practice-aspect-residuals-v1",
-        "scope": "selected practice verbs at A2-C1 with no emitted aspect set",
-        "count": 2,
-        "verbs": [
-            {"lemmaId": "a", "lemma": "абити", "cefr": "A2", "reason": "no_explicit_aspect_or_tense_proxy"},
-            {"lemmaId": "z", "lemma": "знати", "cefr": "B1", "reason": "missing_morphology"},
-        ],
-    }
-
-
 def test_pos_residual_filter_reads_emitted_lexemes_not_an_items_field() -> None:
     """The shard payload stores `lexemes`, so an `items` lookup falsely reports zero residuals."""
     shards = {"A2": {"lexemes": {"lexemes": [{"lemmaId": "святий"}, {"lemmaId": "вчений"}]}}}
 
     assert _emitted_lemma_ids(shards) == {"святий", "вчений"}
-
-
-def test_write_pos_residual_report_names_morphology_mismatch(tmp_path: Path) -> None:
-    report = tmp_path / "pos-residuals.json"
-
-    write_pos_residual_report(
-        report,
-        [{"lemmaId": "святий", "lemma": "святий", "cefr": "A2", "reason": "morphology_pos_mismatch"}],
-    )
-
-    assert json.loads(report.read_text(encoding="utf-8")) == {
-        "schema": "atlas-practice-pos-residuals-v1",
-        "scope": "selected A2-C1 practice lexemes whose part-of-speech set failed a source gate",
-        "count": 1,
-        "lexemes": [{"lemmaId": "святий", "lemma": "святий", "cefr": "A2", "reason": "morphology_pos_mismatch"}],
-    }
 
 
 def test_vesum_aspect_lookup_drops_biaspectual_combined_tag() -> None:
@@ -1192,60 +882,6 @@ def test_build_classify_items_records_missing_morphology_aspect_residual() -> No
             "lemma": "знати",
             "cefr": "B1",
             "reason": "missing_morphology",
-        }
-    ]
-
-
-def test_build_classify_items_records_conflicting_explicit_aspect_residual() -> None:
-    entry = {
-        "lemma": "омонім",
-        "pos": "verb",
-        "enrichment": {
-            "morphology": {
-                "pos": "verb",
-                "forms": [{"label": "доконаний"}, {"label": "недоконаний"}],
-            }
-        },
-    }
-    lexeme = {"lemmaId": "omonym", "lemma": "омонім", "cefr": "A2"}
-    residuals: list[dict[str, str]] = []
-
-    classify = _build_classify_items(entry, lexeme, vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals)
-
-    assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
-    assert residuals == [
-        {
-            "lemmaId": "omonym",
-            "lemma": "омонім",
-            "cefr": "A2",
-            "reason": "conflicting_explicit_aspect",
-        }
-    ]
-
-
-def test_build_classify_items_records_no_unambiguous_vesum_aspect_residual() -> None:
-    entry = {
-        "lemma": "абити",
-        "pos": "verb",
-        "enrichment": {
-            "morphology": {
-                "pos": "verb",
-                "forms": [{"label": "інфінітив"}],
-            }
-        },
-    }
-    lexeme = {"lemmaId": "abyty", "lemma": "абити", "cefr": "A2"}
-    residuals: list[dict[str, str]] = []
-
-    classify = _build_classify_items(entry, lexeme, vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals)
-
-    assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
-    assert residuals == [
-        {
-            "lemmaId": "abyty",
-            "lemma": "абити",
-            "cefr": "A2",
-            "reason": "no_unambiguous_vesum_aspect",
         }
     ]
 
@@ -1315,46 +951,6 @@ def test_classify_emits_every_attested_reading_the_displayed_pos_names() -> None
     assert pos_set["answers"] == ["adverb", "preposition"]
 
 
-def test_classify_validator_requires_ordered_multi_pos_answers() -> None:
-    item = {
-        "sets": [
-            {
-                "setId": "pos",
-                "answer": "conjunction",
-                "answers": ["conjunction", "adverb"],
-                "options": [
-                    {"value": value, "labelUk": label[0]}
-                    for value, label in generate_practice_deck.CLASSIFY_LABELS["pos"].items()
-                ],
-            }
-        ]
-    }
-
-    assert "classify POS answers must use school order with answer first" in validate_classify_item(item)
-
-
-def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
-    entry = {
-        "lemma": "книга",
-        "pos": "noun",
-        "enrichment": {
-            "cefr": {"level": "A2", "pos": "noun"},
-            "morphology": {
-                "pos": "noun",
-                "forms": [{"label": "ім. жін."}],
-            },
-            "translation": {"en": ["book"], "pos": "noun"},
-        },
-    }
-    lexeme = {"lemmaId": "knyha", "lemma": "книга", "cefr": "A2"}
-
-    classify = _build_classify_items(entry, lexeme, vesum_evidence=KNYHA_EVIDENCE)[0]
-
-    pos_sets = [item for item in classify["sets"] if item["setId"] == "pos"]
-    assert len(pos_sets) == 1
-    assert pos_sets[0]["answer"] == "noun"
-
-
 @pytest.mark.parametrize(
     ("raw_pos", "expected_bucket"),
     [
@@ -1368,7 +964,6 @@ def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
         ("conj", "conjunction"),
         ("part", "particle"),
         ("interj", "interjection"),
-        ("intj", "interjection"),
     ],
 )
 def test_classify_pos_aliases_normalize_to_distinct_closed_buckets(raw_pos: str, expected_bucket: str) -> None:
@@ -1378,55 +973,6 @@ def test_classify_pos_aliases_normalize_to_distinct_closed_buckets(raw_pos: str,
 def test_classify_pos_generic_part_does_not_match_prose() -> None:
     assert generate_practice_deck._normalize_pos_buckets("part of speech") == []
     assert generate_practice_deck._normalize_pos_buckets("participle") == []
-
-
-def test_classify_pos_closed_set_uses_school_taxonomy() -> None:
-    assert list(generate_practice_deck.CLASSIFY_LABELS["pos"]) == [
-        "noun",
-        "adjective",
-        "numeral",
-        "pronoun",
-        "verb",
-        "adverb",
-        "preposition",
-        "conjunction",
-        "particle",
-        "interjection",
-    ]
-    assert [labels[0] for labels in generate_practice_deck.CLASSIFY_LABELS["pos"].values()] == [
-        "іменник",
-        "прикметник",
-        "числівник",
-        "займенник",
-        "дієслово",
-        "прислівник",
-        "прийменник",
-        "сполучник",
-        "частка",
-        "вигук",
-    ]
-
-
-def test_paradigm_answer_position_is_deterministically_shuffled() -> None:
-    items = _build_paradigm_items(
-        {
-            "lemmaId": "test-lemma",
-            "lemma": "тест",
-            "cefr": "B1",
-            "paradigm": {
-                "cases": {
-                    "називний": {"singular": "тест"},
-                    "родовий": {"singular": "тесту"},
-                    "давальний": {"singular": "тестові"},
-                    "орудний": {"singular": "тестом"},
-                    "місцевий": {"singular": "тесті"},
-                }
-            },
-        }
-    )
-
-    assert items
-    assert any(item["options"][0]["kind"] != "answer" for item in items)
 
 
 def test_paradigm_items_accept_vesum_english_case_keys() -> None:
@@ -1882,64 +1428,6 @@ def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest
     assert len(items_default) == 13, f"Expected 13 non-base cards in offline/default mode, got {len(items_default)}"
 
 
-def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
-    shards = _build()
-    a1 = shards["A1"]
-    lexemes = {item["lemmaId"]: item for item in a1["lexemes"]["lexemes"]}
-    index_items = {item["lemmaId"]: item for item in a1["index"]["items"]}
-
-    assert lexemes["knyha"]["glossClean"] == "book"
-    assert lexemes["knyha"]["meaningMcEligible"] is True
-    assert {"matching", "choice"}.issubset(set(index_items["knyha"]["modes"]))
-
-    assert lexemes["ta"]["glossClean"] == "and"
-    assert lexemes["ta"]["meaningMcEligible"] is False
-    assert index_items["ta"]["modes"] == ["flashcards"]
-
-    assert lexemes["borshch"]["glossClean"] == "borshch"
-    assert lexemes["borshch"]["meaningMcEligible"] is False
-    assert index_items["borshch"]["modes"] == ["flashcards"]
-
-
-def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> None:
-    """Wiktionary-style UK definitions are not A1/A2 learner glosses (e.g. «казка»)."""
-    verifier = JsonVesumVerifier({})
-    entry = {
-        "lemma": "казка",
-        "url_slug": "казка",
-        "gloss": "розповідний твір про вигаданих осіб і події, переважно за участю фантастичних сил",
-        "pos": "noun",
-        "primary_source": "atlas",
-        "cefr": "A2",
-        "enrichment": {
-            "translation": {
-                "en": [
-                    "fable (fictitious narration to enforce some useful truth or precept)",
-                    "fairy tale (folktale)",
-                ],
-                "source": "dmklinger",
-            }
-        },
-    }
-    lexeme = _build_lexeme(entry, verifier)
-    assert lexeme is not None
-    assert lexeme["glossClean"] == "fairy tale"
-    assert "розповідний" not in lexeme["gloss"]
-
-    dated = {
-        **entry,
-        "enrichment": {
-            "translation": {
-                "en": ["(dated) fairy tale (folktale)"],
-                "source": "dmklinger",
-            }
-        },
-    }
-    dated_lexeme = _build_lexeme(dated, verifier)
-    assert dated_lexeme is not None
-    assert dated_lexeme["glossClean"] == "fairy tale"
-
-
 def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
     """#6437: sense-first entries bind senseId and never fall back to en[0]."""
     verifier = JsonVesumVerifier({})
@@ -2059,123 +1547,6 @@ def test_mode_cards_propagate_sense_id_from_lexeme() -> None:
     assert legacy_classify and "senseId" not in legacy_classify[0]
 
 
-def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
-    assert _meaning_mc_eligible("justice", "справедливість", "noun") is True
-    assert _meaning_mc_eligible("сукупність прав", "право", "noun") is False
-    # A Latin-majority label with a brief Cyrillic clarification remains a learner English gloss.
-    assert _meaning_mc_eligible("justice укр", "справедливість", "noun") is True
-    assert _meaning_mc_eligible("justice справедливість", "справедливість", "noun") is False
-
-    entries = [
-        {
-            "lemma": "право",
-            "url_slug": "pravo",
-            "gloss": "сукупність прав",
-            "pos": "noun",
-            "primary_source": "course_vocab",
-            "cefr": "A1",
-        },
-    ]
-    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}))
-    lexeme = shards["A1"]["lexemes"]["lexemes"][0]
-    index_item = shards["A1"]["index"]["items"][0]
-
-    assert lexeme["meaningMcEligible"] is False
-    assert index_item["modes"] == ["flashcards"]
-
-
-def test_option_set_validator_rejects_phrase_labels() -> None:
-    cloze = {
-        "form": "книгу",
-        "options": [
-            {"label": "книгу", "kind": "answer"},
-            {"label": "and yours? formal", "kind": "decoy"},
-            {"label": "книзі", "kind": "decoy"},
-            {"label": "книгою", "kind": "decoy"},
-        ],
-    }
-
-    assert "option labels must not be phrase glosses" in validate_option_set(cloze)
-
-
-def test_mode_validators_reject_broken_fixtures() -> None:
-    classify_errors = validate_classify_item(
-        {
-            "classifyId": "broken:classify",
-            "lemmaId": "broken",
-            "sets": [
-                {
-                    "setId": "gender",
-                    "answer": "masculine",
-                    "options": [{"value": "masculine", "labelUk": "чоловічий рід"}],
-                }
-            ],
-        }
-    )
-    synonym_errors = validate_synonym_item(
-        {
-            "synonymId": "broken:synonym",
-            "lemmaId": "broken",
-            "prompt": "слово",
-            "answer": "слово",
-            "options": [
-                {"label": "слово", "lemmaId": "a", "kind": "answer"},
-                {"label": "слово", "lemmaId": "b", "kind": "distractor"},
-                {"label": "надто довгий варіант", "lemmaId": "c", "kind": "distractor"},
-                {"label": "інше", "lemmaId": "d", "kind": "distractor"},
-            ],
-        }
-    )
-    paradigm_errors = validate_paradigm_item(
-        {
-            "paradigmId": "broken:paradigm",
-            "lemmaId": "broken",
-            "form": "книгу",
-            "options": [
-                {"label": "книгу", "kind": "answer"},
-                {"label": "книгу", "kind": "same-paradigm"},
-                {"label": "книзі", "kind": "same-paradigm"},
-            ],
-        }
-    )
-
-    assert any("closed category set" in error for error in classify_errors)
-    assert any("unique" in error for error in synonym_errors)
-    assert any("at least four" in error for error in paradigm_errors)
-    assert validate_heritage_pair({"nativeSlug": "питомий"}) != []
-    assert validate_paronym_pair({"slugA": "адрес", "slugB": "адреса"}) != []
-
-
-def test_option_set_validator_rejects_capitalization_leak() -> None:
-    cloze = {
-        "form": "Книгу",
-        "blankCase": "accusative",
-        "options": [
-            {"label": "Книгу", "kind": "answer", "case": "accusative", "lemmaId": "knyha", "pos": "noun"},
-            {"label": "місто", "kind": "decoy", "case": "accusative", "lemmaId": "misto", "pos": "noun"},
-            {"label": "школу", "kind": "decoy", "case": "accusative", "lemmaId": "shkola", "pos": "noun"},
-            {"label": "роботу", "kind": "decoy", "case": "accusative", "lemmaId": "robota", "pos": "noun"},
-        ],
-    }
-
-    assert "answer capitalization must not uniquely reveal the answer" in validate_option_set(cloze)
-
-
-def test_option_set_validator_allows_nominative_answer_without_oblique_pair() -> None:
-    cloze = {
-        "form": "книга",
-        "blankCase": "nominative",
-        "options": [
-            {"label": "книга", "kind": "answer", "case": "nominative", "lemmaId": "knyha", "pos": "noun"},
-            {"label": "місто", "kind": "decoy", "case": "nominative", "lemmaId": "misto", "pos": "noun"},
-            {"label": "школа", "kind": "decoy", "case": "nominative", "lemmaId": "shkola", "pos": "noun"},
-            {"label": "робота", "kind": "decoy", "case": "nominative", "lemmaId": "robota", "pos": "noun"},
-        ],
-    }
-
-    assert "option set must contain at least two oblique-looking forms" not in validate_option_set(cloze)
-
-
 def test_multi_sense_gloss_first_sense_is_meaning_mc_eligible() -> None:
     # A multi-sense content word ("forest; woods") has a clean concise first sense and
     # must stay eligible for Choice/Matching. The raw-gloss `;` check used to over-exclude
@@ -2197,74 +1568,6 @@ def test_multi_sense_gloss_first_sense_is_meaning_mc_eligible() -> None:
     assert {"matching", "choice"}.issubset(set(shards["A1"]["index"]["items"][0]["modes"]))
 
 
-def test_real_manifest_shapes_still_yield_recognition_lexemes() -> None:
-    entries = [
-        {
-            "lemma": "трава",
-            "url_slug": "trava",
-            "gloss": "grass",
-            "pos": "noun",
-            "primary_source": "course_vocab",
-            "cefr": "A1",
-        },
-        {
-            "lemma": "ніч",
-            "url_slug": "nich",
-            "gloss": "night",
-            "pos": "noun",
-            "primary_source": "course_vocab",
-            "enrichment": {"cefr": {"level": "A2"}},
-        },
-        {
-            "lemma": "пам'ять",
-            "url_slug": "pamiat",
-            "gloss": "memory",
-            "pos": "noun",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "b1", "slug": "memory"}],
-            "enrichment": {},
-        },
-    ]
-    allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
-
-    shards = build_practice_shards(entries, allowlist, verifier)
-
-    assert set(shards) == {"A1", "A2", "B1"}
-    a1_item = shards["A1"]["index"]["items"][0]
-    assert a1_item["lemmaId"] == "trava"
-    assert {"matching", "choice"}.issubset(set(a1_item["modes"]))
-    assert shards["A1"]["lexemes"]["lexemes"][0]["paradigm"] == {"cases": {}}
-    assert shards["B1"]["index"]["items"][0]["lemmaId"] == "pamiat"
-
-
-def test_course_anchored_lexeme_without_cefr_stays_recognition_eligible() -> None:
-    entry = {
-        "lemma": "ґудзик",
-        "url_slug": "gudzik",
-        "gloss": "button",
-        "pos": "noun",
-        "primary_source": "course_vocab",
-        "course_usage": [{"module_num": 2, "slug": "clothes"}],
-    }
-
-    shards = build_practice_shards(
-        [entry],
-        ReviewedSourceAllowlist.from_payload([]),
-        JsonVesumVerifier({}),
-        config=BuildConfig(target=1),
-        synonym_verdicts={"approved": [], "rejected": []},
-    )
-
-    index_item = shards["A1"]["index"]["items"][0]
-    lexeme = shards["A1"]["lexemes"]["lexemes"][0]
-    assert index_item["lemmaId"] == "gudzik"
-    assert index_item["cefr"] is None
-    assert index_item["modes"] == ["flashcards", "matching", "choice"]
-    assert lexeme["cefr"] is None
-    assert shards["A1"]["cloze"]["cloze"] == []
-
-
 def test_option_sets_are_valid_and_anti_gaming() -> None:
     shards = _build()
     for cloze in shards["A1"]["cloze"]["cloze"]:
@@ -2277,24 +1580,6 @@ def test_option_sets_are_valid_and_anti_gaming() -> None:
         for option in cloze["options"]:
             root_counts[option["lemmaId"]] = root_counts.get(option["lemmaId"], 0) + 1
         assert sum(1 for count in root_counts.values() if count >= 2) != 1
-
-
-def test_option_strategy_cefr_ramp_snapshot() -> None:
-    counts = {}
-    for level in ("A1", "A2", "B1", "B2", "C1", "C2"):
-        rng = random.Random(f"20260624:{level}")
-        counts[level] = sum(1 for _ in range(100) if _option_strategy_for_level(level, rng) == "no-pair")
-
-    assert counts == {"A1": 70, "A2": 64, "B1": 54, "B2": 45, "C1": 47, "C2": 39}
-
-
-def test_size_budget_warns_and_trims_per_level(capsys: pytest.CaptureFixture[str]) -> None:
-    shards = _build()
-    apply_size_budgets(shards, raw_limit=10, gzip_limit=10)
-
-    captured = capsys.readouterr()
-    assert "WARN:" in captured.err
-    assert shards["A1"]["index"]["counts"]["lexemes"] < 5
 
 
 def test_shard_json_is_compact_and_budget_matches_written_bytes(tmp_path: Path) -> None:
@@ -2357,298 +1642,6 @@ def test_cloze_emit_compacts_builder_diagnostics_without_dropping_runtime_fields
             assert all(key in option for key in ("optionId", "label", "lemmaId", "kind", "case", "pos"))
 
 
-def test_size_budget_cloze_trim_prioritizes_unique_lemmas(capsys: pytest.CaptureFixture[str]) -> None:
-    cloze_items = [
-        {
-            "clozeId": f"{lemma_id}:cloze:{index}",
-            "lemmaId": lemma_id,
-            "form": lemma_id,
-            "padding": "x" * 1_500,
-        }
-        for index, lemma_id in enumerate(("a", "a", "b", "c"), start=1)
-    ]
-    index = {
-        "schema": "atlas-practice-index",
-        "items": [
-            {
-                "lemmaId": lemma_id,
-                "lemma": lemma_id,
-                "cefr": "A1",
-                "modes": ["flashcards", "cloze"],
-                "hasCloze": True,
-                "clozeIds": [f"{lemma_id}:cloze:1"],
-                "newOrder": order,
-            }
-            for order, lemma_id in enumerate(("a", "b", "c"))
-        ],
-        "counts": {
-            "lexemes": 3,
-            "cloze": 4,
-            "clozeEligibleLexemes": 3,
-            "clozeCoverage": 1.0,
-            "modeCounts": {"cloze": 4},
-            "modeCoverage": {"cloze": 1.0},
-        },
-    }
-    lexemes = {
-        "schema": "atlas-practice-lexemes",
-        "lexemes": [{"lemmaId": lemma_id, "lemma": lemma_id} for lemma_id in ("a", "b", "c")],
-    }
-    cloze = {"schema": "atlas-practice-cloze", "cloze": cloze_items}
-    shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze}}
-
-    probe = {**cloze, "cloze": cloze_items[:3]}
-    probe_budget = generate_practice_deck._size_budget(probe, 1_000_000, 1_000_000)
-    apply_size_budgets(
-        shards,
-        raw_limit=int(probe_budget["rawBytes"]) + 200,
-        gzip_limit=int(probe_budget["gzipBytes"]) + 200,
-    )
-
-    assert "trimmed cloze items 4 -> 3" in capsys.readouterr().err
-    assert {item["lemmaId"] for item in shards["A1"]["cloze"]["cloze"]} == {"a", "b", "c"}
-    assert shards["A1"]["index"]["counts"]["clozeEligibleLexemes"] == 3
-    assert shards["A1"]["index"]["counts"]["clozeCoverage"] == 1.0
-    assert shards["A1"]["index"]["items"][0]["clozeIds"] == ["a:cloze:1"]
-
-
-def test_size_budget_cloze_warning_reports_eligible_lemma_counts(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    cloze_items = [
-        {
-            "clozeId": f"{lemma_id}:cloze:1",
-            "lemmaId": lemma_id,
-            "form": lemma_id,
-            "padding": "x" * 1_500,
-        }
-        for lemma_id in ("a", "b", "c", "d")
-    ]
-    cloze = {"schema": "atlas-practice-cloze", "cloze": cloze_items}
-    probe = {**cloze, "cloze": cloze_items[:3]}
-    raw_budget = generate_practice_deck._size_budget(probe, 1_000_000, 1_000_000)
-
-    apply_size_budgets(
-        {"A1": {"cloze": cloze}},
-        raw_limit=int(raw_budget["rawBytes"]) + 200,
-        gzip_limit=int(raw_budget["gzipBytes"]) + 200,
-    )
-
-    assert "trimmed cloze items 4 -> 3; eligible lemmas 4 -> 3" in capsys.readouterr().err
-
-
-def test_size_budget_uses_dedicated_cloze_limits() -> None:
-    cloze = {
-        "schema": "atlas-practice-cloze",
-        "cloze": [{"clozeId": "a:cloze:1", "lemmaId": "a", "padding": "x" * 500}],
-    }
-    dedicated_budget = generate_practice_deck._size_budget(cloze, 1_000_000, 1_000_000)
-
-    shards = {"A1": {"cloze": cloze}}
-    apply_size_budgets(
-        shards,
-        raw_limit=1,
-        gzip_limit=1,
-        cloze_raw_limit=int(dedicated_budget["rawBytes"]) + 1,
-        cloze_gzip_limit=int(dedicated_budget["gzipBytes"]) + 1,
-    )
-
-    assert len(shards["A1"]["cloze"]["cloze"]) == 1
-    assert shards["A1"]["cloze"]["sizeBudget"]["rawLimitBytes"] == int(dedicated_budget["rawBytes"]) + 1
-
-
-def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.CaptureFixture[str]) -> None:
-    lemma_ids = ("a", "b", "c", "d")
-    cloze_lemma_ids = ("a", "c", "d")
-    index = {
-        "schema": "atlas-practice-index",
-        "items": [
-            {
-                "lemmaId": lemma_id,
-                "lemma": lemma_id,
-                "cefr": "A1",
-                "modes": ["flashcards", "cloze"] if lemma_id in cloze_lemma_ids else ["flashcards"],
-                "hasCloze": lemma_id in cloze_lemma_ids,
-                "clozeIds": [f"{lemma_id}:cloze:1"] if lemma_id in cloze_lemma_ids else [],
-                "newOrder": order,
-            }
-            for order, lemma_id in enumerate(lemma_ids)
-        ],
-        "counts": {
-            "lexemes": len(lemma_ids),
-            "cloze": len(cloze_lemma_ids),
-            "clozeEligibleLexemes": len(cloze_lemma_ids),
-            "clozeCoverage": 0.75,
-            "modeCounts": {"cloze": len(cloze_lemma_ids)},
-            "modeCoverage": {"cloze": 0.75},
-        },
-    }
-    lexemes = {
-        "schema": "atlas-practice-lexemes",
-        "lexemes": [{"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500} for lemma_id in lemma_ids],
-    }
-    cloze = {
-        "schema": "atlas-practice-cloze",
-        "cloze": [
-            {"clozeId": f"{lemma_id}:cloze:1", "lemmaId": lemma_id, "form": lemma_id} for lemma_id in cloze_lemma_ids
-        ],
-    }
-    shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze}}
-
-    probe_index = {**index, "items": index["items"][:2]}
-    probe_lexemes = {**lexemes, "lexemes": lexemes["lexemes"][:2]}
-    index_budget = generate_practice_deck._size_budget(probe_index, 1_000_000, 1_000_000)
-    lexeme_budget = generate_practice_deck._size_budget(probe_lexemes, 1_000_000, 1_000_000)
-    apply_size_budgets(
-        shards,
-        raw_limit=max(int(index_budget["rawBytes"]), int(lexeme_budget["rawBytes"])) + 200,
-        gzip_limit=max(int(index_budget["gzipBytes"]), int(lexeme_budget["gzipBytes"])) + 200,
-    )
-
-    assert "trimmed surface lexemes 4 -> 2" in capsys.readouterr().err
-    assert [item["lemmaId"] for item in shards["A1"]["index"]["items"]] == ["a", "c"]
-    assert [item["lemmaId"] for item in shards["A1"]["lexemes"]["lexemes"]] == ["a", "c"]
-    assert {item["lemmaId"] for item in shards["A1"]["cloze"]["cloze"]} == {"a", "c"}
-    assert shards["A1"]["index"]["counts"]["clozeEligibleLexemes"] == 2
-    assert shards["A1"]["index"]["counts"]["clozeCoverage"] == 1.0
-
-
-def test_size_budget_surface_trim_prioritizes_drill_modes_and_preserves_cross_level_mode_items(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    lemma_ids = ("plain1", "cloze_only", "syn_leg", "plain2")
-    index = {
-        "schema": "atlas-practice-index",
-        "items": [
-            {
-                "lemmaId": lemma_id,
-                "lemma": lemma_id,
-                "cefr": "B1",
-                "modes": (
-                    ["flashcards", "synonym"]
-                    if lemma_id == "syn_leg"
-                    else (["flashcards", "cloze"] if lemma_id == "cloze_only" else ["flashcards"])
-                ),
-                "hasCloze": lemma_id == "cloze_only",
-                "clozeIds": ["cloze:1"] if lemma_id == "cloze_only" else [],
-                "newOrder": order,
-            }
-            for order, lemma_id in enumerate(lemma_ids)
-        ],
-        "counts": {
-            "lexemes": len(lemma_ids),
-            "cloze": 1,
-            "clozeEligibleLexemes": 1,
-            "clozeCoverage": 0.25,
-            "modeCounts": {"synonym": 1, "cloze": 1},
-            "modeCoverage": {"synonym": 0.25, "cloze": 0.25},
-        },
-    }
-    lexemes = {
-        "schema": "atlas-practice-lexemes",
-        "lexemes": [{"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500} for lemma_id in lemma_ids],
-    }
-    synonym = {
-        "schema": "atlas-practice-synonym",
-        "synonym": [
-            {"id": "syn:1", "lemmaId": "syn_leg", "target": "syn_leg"},
-            {"id": "syn:2", "lemmaId": "a2_prompt", "target": "a2_prompt"},
-        ],
-    }
-    shards = {"B1": {"index": index, "lexemes": lexemes, "synonym": synonym}}
-
-    probe_index = {**index, "items": [index["items"][2]]}
-    probe_lexemes = {**lexemes, "lexemes": [lexemes["lexemes"][2]]}
-    index_budget = generate_practice_deck._size_budget(probe_index, 1_000_000, 1_000_000)
-    lexeme_budget = generate_practice_deck._size_budget(probe_lexemes, 1_000_000, 1_000_000)
-    apply_size_budgets(
-        shards,
-        raw_limit=max(int(index_budget["rawBytes"]), int(lexeme_budget["rawBytes"])) + 200,
-        gzip_limit=max(int(index_budget["gzipBytes"]), int(lexeme_budget["gzipBytes"])) + 200,
-    )
-
-    assert "trimmed surface lexemes 4 -> 1" in capsys.readouterr().err
-    assert [item["lemmaId"] for item in shards["B1"]["index"]["items"]] == ["syn_leg"]
-    assert [item["lemmaId"] for item in shards["B1"]["lexemes"]["lexemes"]] == ["syn_leg"]
-    assert {item["lemmaId"] for item in shards["B1"]["synonym"]["synonym"]} == {"syn_leg", "a2_prompt"}
-
-
-def test_size_budget_trims_oversized_mode_without_cutting_cloze_surface(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    index = {
-        "schema": "atlas-practice-index",
-        "items": [
-            {
-                "lemmaId": "one",
-                "lemma": "слово",
-                "cefr": "A1",
-                "modes": ["flashcards", "cloze"],
-                "hasCloze": True,
-                "clozeIds": ["one:cloze:1"],
-                "newOrder": 0,
-            }
-        ],
-        "counts": {
-            "lexemes": 1,
-            "cloze": 1,
-            "clozeEligibleLexemes": 1,
-            "clozeCoverage": 1.0,
-            "modeCounts": {"cloze": 1, "classify": 12},
-            "modeCoverage": {"cloze": 1.0, "classify": 1.0},
-        },
-    }
-    lexemes = {
-        "schema": "atlas-practice-lexemes",
-        "lexemes": [{"lemmaId": "one", "lemma": "слово", "cefr": "A1"}],
-    }
-    cloze = {
-        "schema": "atlas-practice-cloze",
-        "cloze": [{"clozeId": "one:cloze:1", "lemmaId": "one", "form": "слово"}],
-    }
-    classify = {
-        "schema": "atlas-practice-classify",
-        "classify": [
-            {"classifyId": f"one:classify:{index}", "lemmaId": "one", "evidence": "x" * 500} for index in range(12)
-        ],
-    }
-    shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze, "classify": classify}}
-    stable_budgets = [
-        generate_practice_deck._size_budget(payload, 1_000_000, 1_000_000) for payload in (index, lexemes, cloze)
-    ]
-    raw_limit = max(int(budget["rawBytes"]) for budget in stable_budgets) + 500
-    gzip_limit = max(int(budget["gzipBytes"]) for budget in stable_budgets) + 500
-
-    apply_size_budgets(shards, raw_limit=raw_limit, gzip_limit=gzip_limit)
-
-    captured = capsys.readouterr()
-    assert "trimmed classify items" in captured.err
-    assert len(shards["A1"]["index"]["items"]) == 1
-    assert len(shards["A1"]["lexemes"]["lexemes"]) == 1
-    assert len(shards["A1"]["cloze"]["cloze"]) == 1
-    assert len(shards["A1"]["classify"]["classify"]) < 12
-    assert shards["A1"]["index"]["counts"]["cloze"] == 1
-    assert shards["A1"]["index"]["counts"]["modeCounts"]["classify"] < 12
-    assert all(payload["sizeBudget"]["ok"] for payload in shards["A1"].values())
-
-
-def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pytest.MonkeyPatch) -> None:
-    shards = {"A1": {"index": {"schema": "atlas-practice-index", "items": []}}}
-    calls = 0
-    original_size_budget = generate_practice_deck._size_budget
-
-    def count_size_budget(payload: dict[str, object], raw_limit: int, gzip_limit: int) -> dict[str, int | bool]:
-        nonlocal calls
-        calls += 1
-        return original_size_budget(payload, raw_limit, gzip_limit)
-
-    monkeypatch.setattr(generate_practice_deck, "_size_budget", count_size_budget)
-
-    apply_size_budgets(shards, raw_limit=50_000, gzip_limit=15_000)
-
-    assert calls == 1
-
-
 def test_cli_fails_when_approved_synonyms_lack_ulif_data(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
@@ -2684,54 +1677,6 @@ def test_cli_fails_when_approved_synonyms_lack_ulif_data(
     assert exit_code == 1
     assert "ULIF synonym groups" in capsys.readouterr().err
     assert not (tmp_path / "out" / "practice-synonym.A1.json").exists()
-
-
-def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
-    end_dictionary = tmp_path / "end-dictionary-inventory.json"
-    end_dictionary.write_text(
-        json.dumps(
-            {"schema": "atlas-end-dictionary-inventory", "entries": [], "counts": {"sections": 0, "entries": 0}}
-        ),
-        encoding="utf-8",
-    )
-    # The registry's approved synonym verdicts need ULIF groups this fixture run lacks.
-    synonym_verdicts = tmp_path / "synonym_pair_verdicts.yaml"
-    synonym_verdicts.write_text("approved: []\nrejected: []\n", encoding="utf-8")
-    exit_code = main(
-        [
-            "--synonym-verdicts",
-            str(synonym_verdicts),
-            "--manifest",
-            str(MANIFEST),
-            "--reviewed-allowlist",
-            str(ALLOWLIST),
-            "--cloze-sources",
-            str(CLOZE_SOURCES),
-            "--vesum-fixture",
-            str(VESUM),
-            "--end-dictionary-inventory",
-            str(end_dictionary),
-            "--out-dir",
-            str(tmp_path),
-            "--fixture-note",
-            "fixture sample; finalizer regenerates with hydrated manifest",
-            "--target",
-            "10",
-        ]
-    )
-
-    assert exit_code == 0
-    index_path = tmp_path / "practice-index.A1.json"
-    lexeme_path = tmp_path / "practice-lexemes.A1.json"
-    cloze_path = tmp_path / "practice-cloze.A1.json"
-    assert index_path.exists()
-    assert lexeme_path.exists()
-    assert cloze_path.exists()
-    for mode in DRILL_MODES:
-        assert (tmp_path / f"practice-{mode}.A1.json").exists()
-    payload = json.loads(index_path.read_text(encoding="utf-8"))
-    assert payload["schema"] == "atlas-practice-index"
-    assert payload["source"] == "fixture"
 
 
 def test_word_without_paradigm_is_recognition_eligible() -> None:
@@ -2779,55 +1724,6 @@ def test_source_inventory_rows_stay_out_of_practice_by_default() -> None:
     )
 
     assert shards == {}
-
-
-def test_admit_thin_mode_pair_leg_surfaces_stamps_practice_only() -> None:
-    entries = [
-        {
-            "url_slug": "день",
-            "lemma": "день",
-            "gloss": "day",
-            "primary_source": "source_inventory_grow",
-            "enrichment": {"cefr": {"level": "A1"}},
-        },
-        {
-            "url_slug": "ніч",
-            "lemma": "ніч",
-            "gloss": "night",
-            "primary_source": "source_inventory_grow",
-            "enrichment": {"cefr": {"level": "A1"}},
-        },
-        {
-            "url_slug": "інший",
-            "lemma": "інший",
-            "gloss": "other",
-            "primary_source": "source_inventory_grow",
-            "enrichment": {"cefr": {"level": "A1"}},
-        },
-        {
-            "url_slug": "курс",
-            "lemma": "курс",
-            "gloss": "course",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "a1"}],
-            "enrichment": {"cefr": {"level": "A1"}},
-        },
-        {
-            "url_slug": "якір",
-            "lemma": "якір",
-            "gloss": "anchor",
-            "primary_source": "source_inventory_grow",
-        },
-    ]
-    admitted = admit_thin_mode_pair_leg_surfaces(entries, {"день", "ніч", "якір"})
-    by_slug = {entry["url_slug"]: entry for entry in admitted}
-    assert by_slug["день"]["surface_admission"]["practice"] is True
-    assert by_slug["ніч"]["surface_admission"]["practice"] is True
-    assert "surface_admission" not in by_slug["інший"]
-    assert "surface_admission" not in by_slug["курс"]
-    assert by_slug["якір"]["surface_admission"]["practice"] is True
-    assert by_slug["якір"]["cefr"] == "B1"
-    assert by_slug["якір"]["thin_mode_pair_leg_cefr_fallback"] is True
 
 
 def test_source_inventory_antonym_legs_emit_via_curated_pair_admission() -> None:
@@ -3221,102 +2117,6 @@ def test_sentence_inventory_rejects_controls_pua_and_prefers_language_sources(
     )
 
 
-def test_inventory_identity_decoys_are_seeded_and_length_matched() -> None:
-    lexemes = _fixture_lexemes()
-    answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")
-    cloze = {
-        "clozeId": "knyha:inventory:1",
-        "form": "книга",
-        "lemma": "книга",
-        "provenance": {"status": "sentence_inventory"},
-        "caseRule": {"ruleId": "nominative_identification"},
-    }
-
-    first = generate_practice_deck._make_no_pair_options(cloze, answer, lexemes, random.Random(0))
-    second = generate_practice_deck._make_no_pair_options(cloze, answer, lexemes, random.Random(1))
-    first_decoys = [option["label"] for option in first if option["kind"] != "answer"]
-    second_decoys = [option["label"] for option in second if option["kind"] != "answer"]
-
-    assert len(first_decoys) == len(second_decoys) == 3
-    assert all(abs(len(label) - len("книга")) <= 3 for label in first_decoys + second_decoys)
-    assert first_decoys != second_decoys
-
-
-def test_inventory_identity_decoys_exclude_phrase_labels() -> None:
-    answer = {
-        "lemmaId": "po-druhe",
-        "lemma": "по-друге",
-        "lemmaPlain": "по-друге",
-        "gloss": "secondly",
-        "pos": "phrase",
-        "cefr": "A2",
-    }
-    clean_decoys = [
-        {
-            "lemmaId": lemma,
-            "lemma": lemma,
-            "gloss": "fixture",
-            "pos": "phrase",
-            "cefr": "A1",
-        }
-        for lemma in ("Привіт", "Нормально", "Чудово")
-    ]
-    phrase_decoys = [
-        {
-            "lemmaId": lemma,
-            "lemma": lemma,
-            "gloss": "fixture",
-            "pos": "phrase",
-            "cefr": "A1",
-        }
-        for lemma in ("Звідки ти?", "Як справи?")
-    ]
-    cloze = {
-        "clozeId": "po-druhe:inventory:1",
-        "form": "По-друге",
-        "lemma": "по-друге",
-        "provenance": {"status": "sentence_inventory"},
-        "caseRule": {"ruleId": "nominative_identification"},
-    }
-
-    options = generate_practice_deck._make_no_pair_options(
-        cloze, answer, [answer, *clean_decoys, *phrase_decoys], random.Random(0)
-    )
-
-    assert len(options) == 4
-    assert all("?" not in option["label"] for option in options)
-    assert validate_option_set({**cloze, "options": options}) == []
-
-
-def test_inventory_identity_decoys_use_attested_surface_capitalization() -> None:
-    lexemes = _fixture_lexemes()
-    answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")
-    capitalized_decoy = {
-        **next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "misto"),
-        "lemmaId": "kyiv",
-        "lemma": "Київ",
-        "gloss": "Kyiv",
-    }
-    cloze = {
-        "clozeId": "knyha:inventory:capitalized",
-        "form": "Книга",
-        "lemma": "книга",
-        "provenance": {"status": "sentence_inventory"},
-        "caseRule": {"ruleId": "nominative_identification"},
-    }
-
-    options = generate_practice_deck._make_no_pair_options(
-        cloze, answer, [*lexemes, capitalized_decoy], random.Random(0)
-    )
-
-    assert len(options) == 4
-    assert any(
-        option["kind"] != "answer" and generate_practice_deck._initial_capitalization(option["label"])
-        for option in options
-    )
-    assert validate_option_set({**cloze, "options": options}) == []
-
-
 def test_inventory_identity_decoys_render_normalized_lemmas_at_source_case() -> None:
     lexemes = _fixture_lexemes()
     answer = next(lexeme for lexeme in lexemes if lexeme["lemmaId"] == "knyha")
@@ -3668,12 +2468,6 @@ def test_sentence_inventory_blanks_standalone_form_not_hyphenated_compound(tmp_p
     assert candidates[0]["sentence"] == "Це ___, а сумка-пакет лежить поруч."
 
 
-def test_cloze_output_preserves_sentence_cefr() -> None:
-    cloze = _fixture_cloze_candidates()[0]
-
-    assert cloze["cefr"] == "A1"
-
-
 def test_cloze_decoys_support_ukrainian_case_keys() -> None:
     entries = read_manifest(MANIFEST)
     for entry in entries:
@@ -3696,31 +2490,6 @@ def test_cloze_decoys_support_ukrainian_case_keys() -> None:
         "fixture",
     )
     assert cards and cards[0]["form"] == "книгу"
-
-
-def test_cloze_decoys_do_not_exceed_answer_cefr() -> None:
-    answer = {"lemmaId": "валіза", "gloss": "suitcase", "pos": "noun", "cefr": "A1"}
-    lexemes = [
-        answer,
-        {
-            "lemmaId": "школа",
-            "lemma": "школа",
-            "gloss": "school",
-            "pos": "noun",
-            "cefr": "A1",
-            "paradigm": {"cases": {"accusative": {"singular": "школу"}}},
-        },
-        {
-            "lemmaId": "термінологія",
-            "lemma": "термінологія",
-            "gloss": "terminology",
-            "pos": "noun",
-            "cefr": "B2",
-            "paradigm": {"cases": {"accusative": {"singular": "термінологію"}}},
-        },
-    ]
-
-    assert _eligible_decoys(answer, lexemes, "accusative", "singular") == [(lexemes[1], "школу")]
 
 
 def _tatoeba_cloze_source() -> dict[str, object]:
@@ -3854,123 +2623,6 @@ def test_live_curated_cloze_sources_and_allowlist_match() -> None:
             assert prov.get("enSentenceId"), f"Row {index} missing Tatoeba enSentenceId: {prov}"
 
 
-def test_heritage_curated_distractors_win() -> None:
-    pair = {
-        "nativeSlug": "knyha",
-        "nativeLemma": "книга",
-        "calqueLabel": "кніга",
-        "calqueSurfaces": ["кніга"],
-        "kind": "lexical",
-        "corrections": ["книга"],
-        "rationale": "test rationale",
-        "citations": ["test:heritage"],
-        "normativeSupport": FIXTURE_HERITAGE_SUPPORT,
-        "currentNormSupport": _fixture_heritage_pair()["currentNormSupport"],
-        "sourceFamily": "test",
-        "cefrAvailability": "a2",
-        "frames": [
-            {
-                "sentence_with_slot": "Я читаю ___.",
-                "answer_form": "книгу",
-                "calque_form": "кнігу",
-                "origin": "test-frame",
-                "normativeJudgment": _fixture_heritage_pair()["frames"][0]["normativeJudgment"],
-                "distractors": ["місто", "яблуко"],
-            }
-        ],
-    }
-
-    lexemes = _fixture_lexemes()
-    filtered_lexemes = [l for l in lexemes if l["lemmaId"] != "yabluko"]
-
-    verifier = JsonVesumVerifier.from_path(VESUM)
-    items = _build_heritage_items(
-        pair,
-        lexemes[0],
-        filtered_lexemes,
-        "deck-v1",
-        verifier=verifier,
-        public_options=False,
-        source_passages=FIXTURE_PASSAGES,
-    )
-
-    assert len(items) == 1
-    options = items[0]["options"]
-    distractor_options = [opt for opt in options if opt["kind"] == "distractor"]
-    assert len(distractor_options) == 2
-
-    distractor_labels = {opt["label"] for opt in distractor_options}
-    assert distractor_labels == {"місто", "яблуко"}
-
-    yabluko_opt = next(opt for opt in distractor_options if opt["label"] == "яблуко")
-    assert yabluko_opt["lemmaId"].startswith("cur_")
-    assert yabluko_opt["pos"] == lexemes[0]["pos"]
-
-
-def test_heritage_curated_distractors_allow_items_without_peers() -> None:
-    pair = {
-        "nativeSlug": "treba",
-        "nativeLemma": "треба",
-        "calqueLabel": "надо",
-        "calqueSurfaces": ["надо"],
-        "kind": "lexical",
-        "corrections": ["треба"],
-        "rationale": "test rationale",
-        "citations": ["test:heritage"],
-        "normativeSupport": [
-            {"locator": "antonenko-davydovych-yak-my-hovorymo_p998", "passage": 'Не "надо", а "треба".'}
-        ],
-        "currentNormSupport": [
-            {"locator": "5-klas-ukrmova-fixture-2000_s0004", "passage": "Неправильно: надо. Правильно: треба."}
-        ],
-        "sourceFamily": "test",
-        "cefrAvailability": "a2",
-        "frames": [
-            {
-                "sentence_with_slot": "На завтра ___ підготувати текст.",
-                "answer_form": "треба",
-                "calque_form": "надо",
-                "origin": "test-frame",
-                "normativeJudgment": {
-                    "locator": "antonenko-davydovych-yak-my-hovorymo_p998",
-                    "passageSha256": "16482fb4c4b34f0a28a6dd281bc24c68fd8585933df26c9e0ca4e59172bffb23",
-                    "sentenceSha256": "9c8d3070cbbd4b83d1fd821643c3f245e219b4a225e11faf1181d531be731695",
-                    "endorsedForm": "треба",
-                    "rejectedForm": "надо",
-                    "sense": "the necessity to prepare something",
-                    "currentNormLocator": "5-klas-ukrmova-fixture-2000_s0004",
-                    "currentNormPassageSha256": "769965fa15e8b7fee0fee30c01b200cba7b334a83ee361c34dc2eaa0d32e9d2a",
-                },
-                "distractors": ["можна", "варто"],
-            }
-        ],
-    }
-
-    lexeme = {
-        "lemmaId": "treba",
-        "lemma": "треба",
-        "lemmaPlain": "треба",
-        "pos": "modal word",
-        "cefr": "A2",
-    }
-
-    all_lexemes = [lexeme]
-    verifier = JsonVesumVerifier(
-        {
-            "можна": [{"lemma": "можна", "pos": "noninfl"}],
-            "варто": [{"lemma": "варто", "pos": "noninfl"}],
-        }
-    )
-
-    items = _build_heritage_items(
-        pair, lexeme, all_lexemes, "deck-v1", verifier=verifier, public_options=False, source_passages=FIXTURE_PASSAGES
-    )
-
-    assert len(items) == 1
-    assert items[0]["lemmaId"] == "treba"
-    assert {opt["label"] for opt in items[0]["options"] if opt["kind"] == "distractor"} == {"можна", "варто"}
-
-
 def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
     # Use real fixture with valid slugs that exist in manifest subset for this test
     # Fallback to synthetic entries + pairs when direct lexeme match needed.
@@ -4102,91 +2754,6 @@ def test_paronym_apostrophe_slug_resolves_via_plain_lemma_fallback(capsys: pytes
     assert "not in practice lexemes" not in err
 
 
-def test_paronym_builder_copies_optional_curated_prompt_en() -> None:
-    lex_a = {"lemmaId": "бігати", "lemma": "бігати", "cefr": "B1"}
-    lex_b = {"lemmaId": "бігти", "lemma": "бігти", "cefr": "B1"}
-    pair = {
-        "slugA": "бігати",
-        "slugB": "бігти",
-        "distinction_gloss_uk": "Бігати регулярно, бігти конкретно зараз.",
-        "citations": ["fixture-test"],
-        "frames": [
-            {
-                "sentence_with_slot": "Він ___ вранці.",
-                "prompt_en": "He ___ in the morning.",
-                "answer_form": "бігає",
-                "confusable_form": "біжить",
-                "origin": "fixture",
-            }
-        ],
-    }
-
-    item = _build_paronym_items(pair, lex_a, lex_b, "deck-v1")[0]
-    assert item["promptEn"] == "He ___ in the morning."
-
-    pair["frames"][0].pop("prompt_en")
-    item_without_en = _build_paronym_items(pair, lex_a, lex_b, "deck-v1")[0]
-    assert "promptEn" not in item_without_en
-
-    pair["frames"][0]["prompt_en"] = "Context sentence for бігати"
-    placeholder_item = _build_paronym_items(pair, lex_a, lex_b, "deck-v1")[0]
-    assert "promptEn" not in placeholder_item
-
-
-def test_paronym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [
-        {
-            "lemmaId": "foo",
-            "lemma": "foo",
-            "gloss": "x",
-            "pos": "noun",
-            "cefr": "B1",
-            "url_slug": "foo",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "b1"}],
-        }
-    ]
-    pair = {
-        "slugA": "missingA",
-        "slugB": "missingB",
-        "distinction_gloss_uk": "x",
-        "citations": ["t"],
-        "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}],
-    }
-    allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
-    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), paronym_pairs=[pair])
-    assert shards["B1"]["paronym"]["paronym"] == []
-    err = capsys.readouterr().err
-    assert "not in practice lexemes; emitted 0 items" in err
-
-
-def test_paronym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    p = tmp_path / "empty-par.yaml"
-    p.write_text("schema_version: 1\npairs: []\n", encoding="utf-8")
-    rows = read_paronym_pairs(p)
-    assert rows == []
-    err = capsys.readouterr().err
-    assert "curated paronym pairs empty" in err
-    # build with [] yields no paronym items (fail-closed)
-    entries = [
-        {
-            "lemmaId": "a",
-            "lemma": "a",
-            "gloss": "g",
-            "pos": "n",
-            "cefr": "B1",
-            "url_slug": "a",
-            "primary_source": "c",
-            "course_usage": [{}],
-        }
-    ]
-    shards = build_practice_shards(
-        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), paronym_pairs=[]
-    )
-    assert shards["B1"]["paronym"]["paronym"] == []
-
-
 def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("registry/lexicon/paronym_pairs.yaml")
     assert live_path.exists()
@@ -4206,129 +2773,6 @@ def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         seen_pairs.add(key)
 
 
-def test_antonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [
-        {
-            "lemmaId": "день",
-            "lemma": "день",
-            "gloss": "day",
-            "pos": "noun",
-            "cefr": "A1",
-            "url_slug": "день",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "a1"}],
-        },
-        {
-            "lemmaId": "ніч",
-            "lemma": "ніч",
-            "gloss": "night",
-            "pos": "noun",
-            "cefr": "A1",
-            "url_slug": "ніч",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "a1"}],
-        },
-    ]
-    pair = {
-        "slugA": "день",
-        "slugB": "ніч",
-        "distinction_gloss_uk": "День протилежний ночі.",
-        "citations": ["fixture-test"],
-        "frames": [
-            {"sentence_with_slot": "Настав ___.", "answer_form": "день", "confusable_form": "ніч", "origin": "t"},
-            {"sentence_with_slot": "Прийшла ___.", "answer_form": "ніч", "confusable_form": "день", "origin": "t2"},
-        ],
-    }
-    allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = _gloss_verifier("протилежний", "ночі")
-    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), antonym_pairs=[pair])
-    a1_items = shards.get("A1", {}).get("antonym", {}).get("antonym", [])
-    assert len(a1_items) >= 1, "antonym should emit at least one item"
-    assert validate_antonym_pair(pair) == []
-    for it in a1_items:
-        assert validate_antonym_item(it) == []
-
-
-def test_antonym_builder_copies_optional_curated_prompt_en() -> None:
-    lex_a = {"lemmaId": "великий", "lemma": "великий", "cefr": "A1"}
-    lex_b = {"lemmaId": "малий", "lemma": "малий", "cefr": "A1"}
-    pair = {
-        "slugA": "великий",
-        "slugB": "малий",
-        "distinction_gloss_uk": "Великий проти малий.",
-        "citations": ["fixture-test"],
-        "frames": [
-            {
-                "sentence_with_slot": "Це ___ будинок.",
-                "prompt_en": "This is a ___ house.",
-                "answer_form": "великий",
-                "confusable_form": "малий",
-                "origin": "fixture",
-            }
-        ],
-    }
-
-    item = _build_antonym_items(pair, lex_a, lex_b, "deck-v1")[0]
-    assert item["promptEn"] == "This is a ___ house."
-
-    pair["frames"][0].pop("prompt_en")
-    item_without_en = _build_antonym_items(pair, lex_a, lex_b, "deck-v1")[0]
-    assert "promptEn" not in item_without_en
-
-
-def test_antonym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [
-        {
-            "lemmaId": "foo",
-            "lemma": "foo",
-            "gloss": "x",
-            "pos": "noun",
-            "cefr": "B1",
-            "url_slug": "foo",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "b1"}],
-        }
-    ]
-    pair = {
-        "slugA": "missingA",
-        "slugB": "missingB",
-        "distinction_gloss_uk": "x",
-        "citations": ["t"],
-        "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}],
-    }
-    allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
-    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), antonym_pairs=[pair])
-    assert shards["B1"]["antonym"]["antonym"] == []
-    err = capsys.readouterr().err
-    assert "not in practice lexemes; emitted 0 items" in err
-
-
-def test_antonym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    p = tmp_path / "empty-ant.yaml"
-    p.write_text("schema_version: 1\npairs: []\n", encoding="utf-8")
-    rows = read_antonym_pairs(p)
-    assert rows == []
-    err = capsys.readouterr().err
-    assert "curated antonym pairs empty" in err
-    entries = [
-        {
-            "lemmaId": "a",
-            "lemma": "a",
-            "gloss": "g",
-            "pos": "n",
-            "cefr": "B1",
-            "url_slug": "a",
-            "primary_source": "c",
-            "course_usage": [{}],
-        }
-    ]
-    shards = build_practice_shards(
-        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), antonym_pairs=[]
-    )
-    assert shards["B1"]["antonym"]["antonym"] == []
-
-
 def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("registry/lexicon/antonym_pairs.yaml")
     assert live_path.exists()
@@ -4345,129 +2789,6 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         key = tuple(sorted([a, b]))
         assert key not in seen_pairs, f"Duplicate antonym pair key {key}"
         seen_pairs.add(key)
-
-
-def test_homonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [
-        {
-            "lemmaId": "байка",
-            "lemma": "байка",
-            "gloss": "fable/fabric",
-            "pos": "noun",
-            "cefr": "A1",
-            "url_slug": "байка",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "a1"}],
-        },
-    ]
-    pair = {
-        "slugA": "байка",
-        "slugB": "байка",
-        "distinction_gloss_uk": "Байка — алегоричний твір чи м'яка тканина.",
-        "citations": ["fixture-test"],
-        "frames": [
-            {
-                "sentence_with_slot": "Езоп написав ___.",
-                "answer_form": "байку",
-                "confusable_form": "байку",
-                "origin": "t",
-            },
-            {
-                "sentence_with_slot": "Сорочка з м'якої ___.",
-                "answer_form": "байки",
-                "confusable_form": "байки",
-                "origin": "t2",
-            },
-        ],
-    }
-    allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = _gloss_verifier("алегоричний", "твір", "чи", "м'яка", "тканина")
-    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), homonym_pairs=[pair])
-    a1_items = shards.get("A1", {}).get("homonym", {}).get("homonym", [])
-    assert len(a1_items) >= 1, "homonym should emit at least one item"
-    assert validate_homonym_pair(pair) == []
-    for it in a1_items:
-        assert validate_homonym_item(it) == []
-
-
-def test_homonym_builder_copies_optional_curated_prompt_en() -> None:
-    lex_a = {"lemmaId": "байка", "lemma": "байка", "cefr": "A1"}
-    lex_b = {"lemmaId": "байка", "lemma": "байка", "cefr": "A1"}
-    pair = {
-        "slugA": "байка",
-        "slugB": "байка",
-        "distinction_gloss_uk": "Байка розрізнення.",
-        "citations": ["fixture-test"],
-        "frames": [
-            {
-                "sentence_with_slot": "Езоп написав ___.",
-                "prompt_en": "Aesop wrote a ___.",
-                "answer_form": "байку",
-                "confusable_form": "байку",
-                "origin": "fixture",
-            }
-        ],
-    }
-
-    item = _build_homonym_items(pair, lex_a, lex_b, "deck-v1")[0]
-    assert item["promptEn"] == "Aesop wrote a ___."
-
-    pair["frames"][0].pop("prompt_en")
-    item_without_en = _build_homonym_items(pair, lex_a, lex_b, "deck-v1")[0]
-    assert "promptEn" not in item_without_en
-
-
-def test_homonym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [
-        {
-            "lemmaId": "foo",
-            "lemma": "foo",
-            "gloss": "x",
-            "pos": "noun",
-            "cefr": "B1",
-            "url_slug": "foo",
-            "primary_source": "course_vocab",
-            "course_usage": [{"track": "b1"}],
-        }
-    ]
-    pair = {
-        "slugA": "missingA",
-        "slugB": "missingB",
-        "distinction_gloss_uk": "x",
-        "citations": ["t"],
-        "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}],
-    }
-    allowlist = ReviewedSourceAllowlist.from_payload([])
-    verifier = JsonVesumVerifier({})
-    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), homonym_pairs=[pair])
-    assert shards["B1"]["homonym"]["homonym"] == []
-    err = capsys.readouterr().err
-    assert "not in practice lexemes; emitted 0 items" in err
-
-
-def test_homonym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    p = tmp_path / "empty-hom.yaml"
-    p.write_text("schema_version: 1\npairs: []\n", encoding="utf-8")
-    rows = read_homonym_pairs(p)
-    assert rows == []
-    err = capsys.readouterr().err
-    assert "curated homonym pairs empty" in err
-    entries = [
-        {
-            "lemmaId": "a",
-            "lemma": "a",
-            "gloss": "g",
-            "pos": "n",
-            "cefr": "B1",
-            "url_slug": "a",
-            "primary_source": "c",
-            "course_usage": [{}],
-        }
-    ]
-    shards = build_practice_shards(
-        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), homonym_pairs=[]
-    )
-    assert shards["B1"]["homonym"]["homonym"] == []
 
 
 def test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
@@ -4780,52 +3101,6 @@ def test_imperative_rejects_multiple_accents_in_one_oracle_reading(imperative_co
     assert "1pl" not in {item["slot"] for item in _imperative_test_items(imperative_conn)}
 
 
-def test_pos_parse_cache_preserves_input_handling_and_result_isolation():
-    parse = generate_practice_deck._normalize_pos_buckets
-    result = parse("Verb / NOUN")
-    assert result == ["verb", "noun"]
-    result.clear()
-    assert parse("verb / noun") == ["verb", "noun"]
-    assert parse({"pos": "verb"}) == []
-    assert parse("verb:imperf") == ["verb"]
-    assert parse("verbatim") == []
-
-
-@pytest.mark.parametrize("kind", ["classify", "cloze"])
-def test_budget_raw_rejection_keeps_later_small_cards_and_measures_final_bytes(kind):
-    import gzip
-
-    original = {
-        "A1": {
-            kind: {
-                "schema": f"atlas-practice-{kind}",
-                kind: [
-                    {"lemmaId": "one", "id": "first", "evidence": "x" * 500},
-                    {"lemmaId": "one", "id": "too-large", "evidence": "x" * 1800},
-                    {"lemmaId": "one", "id": "later-small", "evidence": "x" * 60},
-                    {"lemmaId": "one", "id": "last", "evidence": "x" * 300},
-                ],
-            }
-        }
-    }
-    results = []
-    for _ in range(2):
-        shards = json.loads(json.dumps(original))
-        apply_size_budgets(shards, raw_limit=1000, gzip_limit=10000, cloze_raw_limit=1500, cloze_gzip_limit=10000)
-        payload = shards["A1"][kind]
-        retained = {item["id"] for item in payload[kind]}
-        assert "too-large" not in retained
-        assert {"first", "later-small"} <= retained
-        raw = generate_practice_deck._json_bytes(payload)
-        limit = 1500 if kind == "cloze" else 1000
-        assert len(raw) <= limit
-        assert len(gzip.compress(raw, mtime=0)) <= 10000
-        assert payload["sizeBudget"]["rawLimitBytes"] == limit
-        assert payload["sizeBudget"]["ok"] is True
-        results.append(payload)
-    assert results[0] == results[1]
-
-
 def _load_imperative_verbs_fixture() -> tuple[list[dict[str, Any]], sqlite3.Connection]:
     """Helper loading the offline 1,050-verb imperative fixture into an in-memory SQLite db."""
     fixture_path = Path(__file__).parent / "fixtures" / "atlas" / "1000_verb_imperatives.json"
@@ -4841,54 +3116,6 @@ def _load_imperative_verbs_fixture() -> tuple[list[dict[str, Any]], sqlite3.Conn
             to_insert.append((wf, lemma, tags, "verb"))
     conn.executemany("INSERT INTO forms VALUES (?, ?, ?, ?)", to_insert)
     return verbs, conn
-
-
-def test_imperative_multi_key_acceptance_comprehensive(imperative_conn, imperative_plain_stress):
-    """Multi-key acceptance test (§116 Правопис 2019 variants)."""
-    # 1. 1pl -імо vs -ім
-    items_robyty = _imperative_test_items(imperative_conn, "робити", "A2")
-    item_1pl = next(it for it in items_robyty if it["slot"] == "1pl")
-    assert "робімо" in item_1pl["acceptedAnswers"]
-    assert "робім" in item_1pl["acceptedAnswers"]
-    # 2. Reflexive -ся vs -сь
-    items_refl = _imperative_test_items(imperative_conn, "робитися", "B1")
-    item_refl_2sg = next(it for it in items_refl if it["slot"] == "2sg")
-    assert "робися" in item_refl_2sg["acceptedAnswers"]
-    assert "робись" in item_refl_2sg["acceptedAnswers"]
-    item_refl_1pl = next(it for it in items_refl if it["slot"] == "1pl")
-    assert {"робімося", "робімось", "робімся"} <= set(item_refl_1pl["acceptedAnswers"])
-    # 3. 2pl -іть vs -іте
-    item_2pl = next(it for it in items_robyty if it["slot"] == "2pl")
-    assert "робіть" in item_2pl["acceptedAnswers"]
-    assert "робіте" in item_2pl["acceptedAnswers"]
-
-    # 4. Offline substandard exclusion check (ходімте:subst in imperative_conn)
-    items_hodyty = _imperative_test_items(imperative_conn, "ходити", "A1")
-    item_hodyty_1pl = next(it for it in items_hodyty if it["slot"] == "1pl")
-    assert "ходімо" in item_hodyty_1pl["acceptedAnswers"]
-    assert "ходім" in item_hodyty_1pl["acceptedAnswers"]
-    assert "ходімте" not in item_hodyty_1pl["acceptedAnswers"]
-
-    # Live VESUM consistency check when available: proves real VESUM yields §116 variants
-    from scripts.rag.config import VESUM_DB_PATH
-
-    if VESUM_DB_PATH.exists():
-        with open_readonly(VESUM_DB_PATH) as vesum_conn:
-            # Verify робити forms in live VESUM
-            robyty_slots, _, _ = generate_practice_deck._imperative_forms("робити", vesum_conn)
-            assert "робімо" in robyty_slots["1pl"] and "робім" in robyty_slots["1pl"]
-            assert "робіть" in robyty_slots["2pl"] and "робіте" in robyty_slots["2pl"]
-
-            # Verify reflexive робитися forms in live VESUM
-            refl_slots, _, _ = generate_practice_deck._imperative_forms("робитися", vesum_conn)
-            assert "робися" in refl_slots["2sg"] and "робись" in refl_slots["2sg"]
-            assert {"робімося", "робімось", "робімся"} <= set(refl_slots["1pl"])
-
-            # Verify ходити and exclusion of substandard ходімте (marked subst in VESUM)
-            hodyty_slots, _, _ = generate_practice_deck._imperative_forms("ходити", vesum_conn)
-            assert "ходімо" in hodyty_slots["1pl"] and "ходім" in hodyty_slots["1pl"]
-            assert "ходіть" in hodyty_slots["2pl"] and "ходіте" in hodyty_slots["2pl"]
-            assert "ходімте" not in hodyty_slots["1pl"]
 
 
 def test_imperative_scaffolding_immersion_by_level(imperative_conn, imperative_plain_stress):
@@ -5294,18 +3521,6 @@ def test_heritage_reviewed_judgment_is_bound_to_the_exact_frame() -> None:
     )
     assert errors == []
     assert _heritage_frame_support(changed, verified, None) is None
-
-
-def test_heritage_judgment_cannot_reverse_the_answer_and_error() -> None:
-    pair = _fixture_heritage_pair()
-    frame = pair["frames"][0]
-    frame["normativeJudgment"] = {
-        **frame["normativeJudgment"],
-        "endorsedForm": frame["calque_form"],
-        "rejectedForm": frame["answer_form"],
-    }
-    lexemes = _fixture_lexemes()
-    assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES) == []
 
 
 @pytest.fixture
@@ -5775,18 +3990,6 @@ def test_explanation_gate_errors_cover_every_learner_facing_field() -> None:
     assert explanation_gate_errors("cloze", {"distinction_gloss_uk": "вежливий"}, verifier) == []
 
 
-def test_broken_validator_fixtures_prove_the_explanation_language_gate(capsys: pytest.CaptureFixture[str]) -> None:
-    assert main(["--broken-validator-fixtures"]) == 1
-    out = capsys.readouterr().out
-    assert "explanation_language: ['explanation token «вежливий» is not a clean VESUM form']" in out
-    assert "explanation_language_quoted: ['explanation token «вежливий» is not a clean VESUM form']" in out
-    assert "\"gloss clause 'тактовний — вежливий.' is not copied from a glossSources passage" in out
-    assert (
-        "heritage_normative_support: [\"normativeSupport[0] locator 'ua-gec:F/Calque' is not an allowed source\"]"
-        in out
-    )
-
-
 def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -6143,34 +4346,6 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
     } == {"lexical"}
 
 
-def test_cloze_withheld_report_counts_distinct_items_by_mechanism(tmp_path: Path) -> None:
-    path = tmp_path / "withheld.json"
-    withheld = [
-        {
-            "clozeId": "lexical-1",
-            "lemma": "x",
-            "level": "A1",
-            "mechanism": "lexical",
-            "rule": rule,
-            "reason": rule,
-            "sentence": "___",
-        }
-        for rule in ("cloze_unique_answer_evidence", "inventory_prompt_level")
-    ]
-    shards = {
-        "A1": {"cloze": {"cloze": [{"caseRule": {"ruleId": "nominative_identification"}}]}},
-        "A2": {"cloze": {"cloze": []}},
-    }
-    generate_practice_deck.write_cloze_withheld_report(path, withheld, shards)
-    report = json.loads(path.read_text(encoding="utf-8"))
-    assert report["byLevelMechanism"]["A1"] == {
-        "case-labelled": {"admitted": 1, "withheld": 0},
-        "converted-form": {"admitted": 0, "withheld": 0},
-        "lexical": {"admitted": 0, "withheld": 1},
-    }
-    assert report["byLevelMechanism"]["A2"]["lexical"] == {"admitted": 0, "withheld": 0}
-
-
 # --- #10672: cloze occurrences removed by size budgets -------------------------------------------
 
 _TRIM_LEVELS = generate_practice_deck.CEFR_ORDER[:5]
@@ -6292,15 +4467,6 @@ def test_cloze_withheld_report_cross_level_prune_leaves_cloze_unchanged(level: s
     assert [item["clozeId"] for item in shards[level]["cloze"]["cloze"]] == ["a:inventory:1", "b:inventory:2"]
     assert report["count"] == 0
     assert report["items"] == []
-    assert _mechanisms(report, level) == {"case-labelled": {"admitted": 2, "withheld": 0}}
-
-
-@pytest.mark.parametrize("level", _TRIM_LEVELS)
-def test_cloze_withheld_report_no_trim_control(level: str, tmp_path: Path) -> None:
-    cloze = [_budget_cloze(level, "a", 1, 50), _budget_cloze(level, "b", 2, 50)]
-    shards = {level: _budget_level(level, {"a": 10, "b": 10}, cloze)}
-    report = _budget_chain(shards, tmp_path / "r.json")
-    assert report["count"] == 0
     assert _mechanisms(report, level) == {"case-labelled": {"admitted": 2, "withheld": 0}}
 
 

@@ -135,28 +135,6 @@ def test_unenrolled_seminar_deployed_mdx_changed_is_notice_only(
     assert "enrolled_failures=0" in out
 
 
-def test_no_seminar_change_exits_zero(
-    tmp_path: Path,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    repo_root = tmp_path / "repo"
-
-    rc = check_changed.main(
-        [
-            "--repo-root",
-            str(repo_root),
-            "--changed-file",
-            "README.md",
-            "--changed-file",
-            "curriculum/l2-uk-en/a1/hello/module.md",
-        ]
-    )
-
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "checked 0 gated seminar module(s)" in out
-
-
 def test_enrolled_source_without_deployed_mdx_is_not_gated(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],

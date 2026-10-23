@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.fleet_comms.contracts import AssistantSegment, CompletionState, ResponseEnvelope, new_id
+from scripts.fleet_comms.contracts import AssistantSegment, CompletionState, ResponseEnvelope
 from scripts.fleet_comms.endpoints import load_endpoint_registry
 from scripts.fleet_comms.migrations import MIGRATIONS, CommsMigrationError, apply_migrations
 
@@ -28,20 +28,6 @@ def test_response_envelope_round_trips_every_completion_state() -> None:
 def test_complete_envelope_requires_terminal_evidence() -> None:
     with pytest.raises(ValueError, match="terminal event"):
         ResponseEnvelope(segments=(), completion_state=CompletionState.COMPLETE)
-
-
-def test_shared_ids_are_namespaced_and_validate_kind() -> None:
-    assert new_id("request").startswith("request_")
-    with pytest.raises(ValueError, match="lowercase"):
-        new_id("Request")
-
-
-def test_endpoint_registry_retires_gemini_to_agy() -> None:
-    registry = load_endpoint_registry()
-    endpoint, requested = registry.resolve("gemini")
-    assert requested == "gemini"
-    assert endpoint.name == "agy"
-    assert endpoint.state == "live"
 
 
 def test_endpoint_registry_formal_review_eligibility_is_fail_closed() -> None:

@@ -106,27 +106,6 @@ def extract_vocabulary(content: str) -> set[str]:
 
     return vocab
 
-def extract_activity_content(content: str) -> dict[str, set[str]]:
-    """Extract content from activities."""
-    activities = {}
-
-    # Find activity sections (H2 level)
-    matches = re.findall(r'^##\s+([\w-]+):\s*([^\n]+)\n([\s\S]*?)(?=^#+|$)', content, re.MULTILINE)
-
-    for activity_type, title, body in matches:
-        key = f"{activity_type}:{title}"
-        words = set()
-
-        # Extract text content
-        for match in re.findall(r'[\w\u0400-\u04FF]+', body):
-            if len(match) > 2:
-                words.add(match.lower())
-
-        activities[key] = words
-
-    return activities
-
-
 def validate_cloze_components(mdx_content: str) -> list[str]:
     """
     Validate that Cloze components have properly structured blanks.

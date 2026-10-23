@@ -96,16 +96,6 @@ def _tampered_foundry_run(trial_run: Path, destination: Path, mutation: str) -> 
     return foundry_run
 
 
-def test_trial_is_no_api_reproducible_and_small(trial_run: Path) -> None:
-    receipt = _json(trial_run / "trial-receipt.json")
-    assert receipt["records"] == 8
-    assert receipt["evaluation_requests"] == 4000
-    assert receipt["network_or_api_used"] is False
-    assert receipt["model_or_training_run"] is False
-    assert (trial_run / "foundry/run-receipt.json").is_file()
-    assert (trial_run / "ua-open-weight-eval-requests.jsonl").is_file()
-
-
 def test_lapa_adapter_emits_only_unmasked_text_and_lineage(trial_run: Path, tmp_path: Path) -> None:
     output = tmp_path / "lapa"
     receipt = adoption_cli.export_lapa(foundry_run=trial_run / "foundry", output_dir=output)
@@ -246,10 +236,3 @@ def test_lang_uk_adapter_requires_upstream_result_filename(tmp_path: Path) -> No
             foundry_run=tmp_path / "foundry",
             output_dir=tmp_path / "output",
         )
-
-
-def test_public_parser_exposes_all_three_adoption_flows() -> None:
-    help_text = adoption_cli.build_parser().format_help()
-    assert "trial" in help_text
-    assert "lapa" in help_text
-    assert "lang-uk" in help_text

@@ -12,7 +12,6 @@ from scripts.practice_deck.end_dictionaries import (
     EndDictionarySection,
     build_inventory_payload,
     classify_section_title,
-    coverage_intersection_report,
     enumerate_end_dictionary_sections,
     infer_layout,
     parse_academic_gloss,
@@ -268,17 +267,6 @@ def test_inventory_payload_schema_and_cloze_policy() -> None:
     assert payload["clozePolicy"]["fakeClozeFromDefinitions"] is False
     assert payload["counts"]["sections"] == 1
     assert payload["counts"]["entries"] == 1
-
-
-def test_coverage_intersection_report_does_not_claim_cloze() -> None:
-    report = coverage_intersection_report(
-        {"A1": {"кіт", "собака", "стіл"}},
-        {"A1": {"кіт"}},
-        [{"lemmaPlain": "собака"}, {"lemmaPlain": "вікно"}],
-    )
-    assert report["levels"]["A1"]["residual"] == 2
-    assert report["levels"]["A1"]["residualInEndDictionary"] == 1
-    assert "do not unlock cloze" in report["note"]
 
 
 def test_read_end_dictionary_stress_overlay(tmp_path: Path) -> None:

@@ -194,35 +194,6 @@ def test_backfill_counts_and_null_reasons(literary_migrate_fixture: dict[str, Pa
     assert rows[3][1] is None or rows[3][1] == ""
 
 
-def test_run_migration_on_temp_fixture_prints_pragma_and_counts(literary_migrate_fixture: dict[str, Path], capsys: pytest.CaptureFixture[str]) -> None:
-    """Exercise the high-level runner + capture evidence-like output (PRAGMA, backfill counts)."""
-    db_path = literary_migrate_fixture["db_path"]
-    lit_dir = literary_migrate_fixture["lit_dir"]
-
-    import rag.migrate_add_literary_source_url as mig
-
-    old_dir = mig.LITERARY_DIR
-    mig.LITERARY_DIR = lit_dir
-    try:
-        result = run_migration(db_path, dry_run=False)
-    finally:
-        mig.LITERARY_DIR = old_dir
-
-    assert result["existed"] is True
-    assert result["added_column"] in (True, False)  # first run adds
-    assert "stats" in result
-    s = result["stats"]
-    assert s["updated"] >= 1
-    assert "pragma_after" in result
-    names = [c[1] for c in result["pragma_after"]]
-    assert "source_url" in names
-
-    # stdout from inside run_migration should have been emitted
-    out = capsys.readouterr().out
-    assert "PRAGMA table_info(literary_texts) [after ensure]" in out or "source_url column added" in out
-    assert "rows updated with source_url" in out or "updated=" in out.lower()
-
-
 def test_dry_run_does_not_backfill(literary_migrate_fixture: dict[str, Path]) -> None:
     db_path = literary_migrate_fixture["db_path"]
     lit_dir = literary_migrate_fixture["lit_dir"]

@@ -14,7 +14,6 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api.occupancy_local import (
     clear_marker,
     driver_seat_host_id,
-    foundry_marker_host_id,
     occupancy_marker_scope,
     occupants_from_markers,
     occupants_from_session_streams,
@@ -68,30 +67,6 @@ def test_driver_seat_host_id_uses_explicit_opaque_then_self_host(monkeypatch: py
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "atlas-runner")
     assert driver_seat_host_id(mapping, selected) is None
-
-
-def test_driver_seat_host_id_rejects_retired_host_job_even_when_explicit(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """``host-job`` is permanently retired: never usable even via explicit env var."""
-    mapping = {"teach-box": "host-teacher"}
-    selected = {"host-teacher": "teach-box"}
-    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
-    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-job")
-    assert driver_seat_host_id(mapping, selected) is None
-
-
-def test_foundry_marker_host_id_rejects_retired_host_job_even_when_explicit(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """``host-job`` is permanently retired: never usable even via explicit env var."""
-    mapping = {"teach-box": "host-teacher"}
-    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
-    monkeypatch.setenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", "host-job")
-    assert foundry_marker_host_id(mapping) is None
-
-    monkeypatch.setenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", "host-worker")
-    assert foundry_marker_host_id(mapping) == "host-worker"
 
 
 def test_darwin_empty_map_does_not_attach_session_stream_drivers_to_mac_operator(
@@ -505,9 +480,3 @@ def test_session_read_invalid_timestamp_cannot_attest(tmp_path, monkeypatch):
     result = read_session_streams(host_id="sample-host", mapping={}, selected={"sample-host": None}, db_path=path)
     assert result.readable is False
     assert result.occupants == []
-
-
-@pytest.mark.parametrize("value", [None, "", "invalid"])
-def test_marker_timestamp_invalidity_stays_unknown(value):
-    from scripts.api.occupancy_local import _parse_when
-    assert _parse_when(value) is None

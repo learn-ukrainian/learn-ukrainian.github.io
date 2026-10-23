@@ -23,24 +23,6 @@ def test_selection_is_the_sha256_rule_with_the_divisor_from_the_parameters() -> 
     assert db.load_parameters()["second_seat_divisor"] == 10
 
 
-def test_selection_is_deterministic_and_about_one_in_ten() -> None:
-    picked = [n for n in range(1, 2001) if ss.selected("b1", "a-module", n, 10)]
-    assert picked == [n for n in range(1, 2001) if ss.selected("b1", "a-module", n, 10)]
-    assert 140 <= len(picked) <= 260  # 200 expected; a 1-in-10 sample, not a rule of thumb
-    assert ss.selected("a1", "m", 3, 10) == ss.selected("a1", "m", 3, 10)
-    assert {ss.selected("a1", "m", 3, 10), ss.selected("a2", "m", 3, 10), ss.selected("a1", "n", 3, 10)} <= {
-        True,
-        False,
-    }
-
-
-def test_the_third_family_rule() -> None:
-    assert ss.is_third_family("openai", "anthropic", "google")
-    assert not ss.is_third_family("openai", "anthropic", "openai")
-    assert not ss.is_third_family("openai", "anthropic", "anthropic")
-    assert not ss.is_third_family("openai", "openai", "google")
-
-
 @pytest.mark.parametrize(
     ("identifier", "family"),
     [

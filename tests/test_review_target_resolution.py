@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -14,7 +15,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts.common.git_context import sanitized_git_env
 from scripts.review.target_resolution import (
     TargetResolutionError,
-    is_test_path,
     resolve_branch_target,
     resolve_commit_target,
     resolve_local_target,
@@ -54,16 +54,18 @@ def _init_repo(tmp_path: Path) -> Path:
     return repo
 
 
+def _publish_pr_branch(repo: Path, branch: str, sha: str) -> None:
+    """Serve a synthetic PR ref through real Git at the fixture's canonical URL."""
+    remote = repo.parent / f"{repo.name}-canonical.git"
+    origin = _git(repo, "config", "--get", "remote.origin.url").stdout.strip()
+    if not remote.exists():
+        _git(repo, "init", "-q", "--bare", str(remote))
+        _git(repo, "config", f"url.{remote}.insteadOf", origin)
+    _git(repo, "update-ref", f"refs/heads/{branch}", sha)
+    _git(repo, "--git-dir", str(remote), "fetch", "-q", str(repo), f"refs/heads/{branch}:refs/heads/{branch}")
+
+
 # --- is_test_path -----------------------------------------------------------
-
-
-def test_is_test_path_recognizes_common_shapes():
-    assert is_test_path("tests/test_foo.py")
-    assert is_test_path("scripts/tests/test_bar.py")
-    assert is_test_path("src/__tests__/thing.test.ts")
-    assert is_test_path("src/component.spec.tsx")
-    assert not is_test_path("scripts/build/v7_build.py")
-    assert not is_test_path("docs/best-practices/code-quality.md")
 
 
 # --- local mode --------------------------------------------------------------
@@ -78,28 +80,6 @@ def test_resolve_local_target_clean_tree(tmp_path):
     assert target.base_sha is None
     assert target.head_sha is None
     assert "nothing to review" in target.description
-
-
-def test_resolve_local_target_clean_tree_is_not_evidence_of_commit_review(tmp_path):
-    """A clean local tree must never be presented as proof a commit/PR was reviewed.
-
-    The mode field plus None SHAs are the structural guard: a report built from
-    this target can't claim it verified a specific commit/PR, because there is
-    no base/head SHA to point at.
-    """
-    repo = _init_repo(tmp_path)
-    # Commit further work — tree is clean, but real committed changes exist.
-    (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
-    _git(repo, "commit", "-aq", "-m", "v2")
-
-    target = resolve_local_target(repo)
-    assert target.clean_tree is True
-    assert target.mode == "local"
-    assert target.base_sha is None and target.head_sha is None
-    # A caller wanting proof of the v2 commit must use mode=commit explicitly.
-    committed = resolve_commit_target(repo, "HEAD")
-    assert committed.base_sha is not None and committed.head_sha is not None
-    assert "app.py" in committed.changed_paths
 
 
 def test_resolve_local_target_counts_staged_unstaged_and_untracked(tmp_path):
@@ -198,12 +178,14 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
 
     import scripts.review.target_resolution as tr
 
+    _publish_pr_branch(repo, "feature-branch", head_sha)
     payload = {
         "number": 5283,
         "baseRefName": "release/whatever",  # deliberately NOT "main"
         "baseRefOid": base_sha,
         "headRefName": "feature-branch",
         "headRefOid": head_sha,
+        "isCrossRepository": False,
     }
 
     def fake_run_gh(args, cwd, timeout=30.0):
@@ -252,12 +234,14 @@ def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeyp
 
     import scripts.review.target_resolution as tr
 
+    _publish_pr_branch(repo, "feature", head_sha)
     payload = {
         "number": 9001,
         "baseRefName": "trunk",
         "baseRefOid": base_tip_sha,
         "headRefName": "feature",
         "headRefOid": head_sha,
+        "isCrossRepository": False,
     }
 
     def fake_run_gh(args, cwd, timeout=30.0):
@@ -300,7 +284,7 @@ def test_resolve_pr_target_missing_base_name_raises(tmp_path, monkeypatch, base_
     sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
     import scripts.review.target_resolution as tr
 
-    payload = {"number": 1, "baseRefOid": sha, "headRefOid": sha, "baseRefName": base_name}
+    payload = {"number": 1, "baseRefOid": sha, "headRefOid": sha, "baseRefName": base_name, "isCrossRepository": False}
 
     def fake_run_gh(args, cwd, timeout=30.0):
         return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
@@ -325,7 +309,248 @@ def test_resolve_review_target_requires_explicit_mode_args(tmp_path):
         resolve_review_target("bogus-mode", repo)
 
 
-def test_resolve_review_target_local_dispatch(tmp_path):
-    repo = _init_repo(tmp_path)
-    target = resolve_review_target("local", repo)
-    assert target.mode == "local"
+@pytest.fixture
+def live_pr_boundary(tmp_path, monkeypatch):
+    """Real canonical Git plus fake forge metadata; every non-Git process is a tripwire."""
+    from types import SimpleNamespace
+
+    import delegate
+    from scripts.ai_agent_bridge import _agy, _cli
+    from scripts.common import github_client
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv("GIT_ALLOW_PROTOCOL", "file")
+    stale = repo.sha("HEAD")
+    live = repo.commit("codex/gpt-6.1-sol")
+    repo.publish()
+    state = SimpleNamespace(
+        repo=repo, live=live, stale=stale, author_commits=1, observe=None, forge_hook=None, before_facts=None,
+        observations=[], commands=[],
+        payload={
+            "number": 42,
+            "baseRefName": "main",
+            "baseRefOid": repo.sha("origin/main"),
+            "headRefName": "feature",
+            "headRefOid": stale,
+            "isCrossRepository": False,
+        },
+    )
+    real_run, real_popen = subprocess.run, subprocess.Popen
+
+    def git_popen(command, *args, **kwargs):
+        assert command[0] == "git", "provider or other external process reached"
+        kwargs["env"] = {**(kwargs.get("env") or os.environ), "GIT_ALLOW_PROTOCOL": "file"}
+        return real_popen(command, *args, **kwargs)
+
+    def git_only(command, *args, **kwargs):
+        state.commands.append(tuple(command))
+        assert command[0] == "git", "provider or other external process reached"
+        kwargs["env"] = {**(kwargs.get("env") or os.environ), "GIT_ALLOW_PROTOCOL": "file"}
+        proc = real_run(command, *args, **kwargs)
+        if command[:2] == ["git", "ls-remote"]:
+            assert command[-2:] == [
+                "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git", "refs/heads/feature"
+            ]
+            assert kwargs["timeout"] == 60.0
+            assert "GIT_DIR" not in kwargs["env"] and "GIT_WORK_TREE" not in kwargs["env"]
+            state.observations.append(proc)
+            if state.observe is not None:
+                return state.observe(command, proc)
+        return proc
+
+    def forge(command, *args, **kwargs):
+        if command[0] == "gh":
+            assert command[command.index("--repo") + 1] == "learn-ukrainian/learn-ukrainian.github.io"
+            if state.forge_hook is not None:
+                state.forge_hook()
+            return subprocess.CompletedProcess(command, 0, json.dumps(state.payload), "")
+        kwargs.pop("fresh", None)
+        return git_only(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", git_only)
+    monkeypatch.setattr(subprocess, "Popen", git_popen)
+    monkeypatch.setattr(github_client, "run", forge)
+    monkeypatch.setattr(recorder, "_run_json", lambda *_a, **_k: state.payload)
+    monkeypatch.setattr(_cli, "REPO_ROOT", repo.root)
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo.root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+
+    def invoke(entry):
+        if entry in {"cli", "agy"}:
+            if entry == "cli":
+                branch, head = _cli._resolve_same_repo_pr_head(42)
+            else:
+                branch, head = _agy.resolve_same_repo_pr_head(42, repo_root=str(repo.root))
+            assert branch == "feature"
+            assert _agy.list_commit_changed_paths(head, repo_root=str(repo.root)) == ["docs/a.md"]
+            # Exercise the actual fetch/recheck shared by both ask dispatches,
+            # stopping before worktree creation and every provider side effect.
+            return delegate._resolve_worktree_base_sha(
+                agent="codex", task_id="live-head-fixture", base="main", branch=branch,
+                pinned_head_sha=head, detached=True, validated_path=tmp_path / "review",
+            )
+        if entry == "target":
+            target = resolve_pr_target(repo.root, 42)
+        else:
+            args = delegate.build_parser().parse_args([
+                "dispatch", "--agent", "claude", "--model", "claude-opus-5-5",
+                "--mode", "read-only", "--task-id", "live-head-fixture", "--pr", "42",
+                "--review-mode", "red_team", "--review-risk", "critical",
+            ])
+            delegate._dispatch_review_changed_paths(args)
+            if state.before_facts is not None:
+                state.before_facts()
+            facts = delegate._dispatch_review_facts(args, ())
+            assert facts.author_models == ("gpt-6.1-sol",) * state.author_commits
+            target = args._review_target
+            assert facts.head_sha == target.head_sha
+        assert target.base_sha == repo.sha("origin/main")
+        assert target.changed_paths == ("docs/a.md",)
+        return target.head_sha
+
+    state.invoke = invoke
+    yield state
+    assert all(command[0] == "git" for command in state.commands)
+    assert not (tmp_path / "tasks").exists()
+    assert not (tmp_path / "review").exists()
+
+
+@pytest.mark.parametrize("entry", ["cli", "agy", "target", "delegate"])
+@pytest.mark.parametrize("remote_only", [False, True], ids=["local-commit", "unfetched-commit"])
+def test_stale_payload_pins_live_canonical_branch(live_pr_boundary, entry, remote_only):
+    """Stale forge metadata must not pin an older commit than the live branch (#9666)."""
+    state = live_pr_boundary
+    if remote_only:
+        state.live = state.repo.advance_remote("feature", "codex/gpt-6.1-sol")
+        state.author_commits = 2
+        with pytest.raises(subprocess.CalledProcessError):
+            state.repo.git("cat-file", "-e", state.live)
+    assert state.invoke(entry) == state.live
+    assert state.observations
+
+
+_REMOTE_REF_FAILURES = [
+    "deleted", "duplicate", "conflicting", "wrong-ref", "empty", "malformed-sha", "zero-sha",
+    "space-delimiter", "extra-text", "unicode-terminator", "missing-terminator",
+    "command-error", "timeout", "oserror", "unavailable-commit",
+]
+
+
+@pytest.mark.parametrize("entry", ["cli", "agy", "target", "delegate"])
+@pytest.mark.parametrize("failure", _REMOTE_REF_FAILURES)
+def test_untrusted_live_ref_refuses_before_provider(live_pr_boundary, entry, failure):
+    """Ambiguous, unavailable or malformed live refs cannot fall back to payload/main."""
+    state = live_pr_boundary
+    sentinel = "REMOTE_DIAGNOSTIC_MUST_STAY_PRIVATE"
+    if failure == "deleted":
+        state.repo.git("--git-dir", str(state.repo.remote), "update-ref", "-d", "refs/heads/feature")
+
+    def observe(command, proc):
+        raw = proc.stdout
+        replacements = {
+            "duplicate": raw + raw,
+            "conflicting": raw + f"{state.stale}\trefs/heads/feature\n",
+            "wrong-ref": raw.replace("refs/heads/feature", "refs/heads/main"),
+            "empty": "",
+            "malformed-sha": f"{'z' * 40}\trefs/heads/feature\n",
+            "zero-sha": f"{'0' * 40}\trefs/heads/feature\n",
+            "space-delimiter": raw.replace("\t", " "),
+            "extra-text": "unexpected diagnostic\n" + raw,
+            "unicode-terminator": raw.replace("\n", "\u2028"),
+            "missing-terminator": raw.rstrip("\n"),
+            "unavailable-commit": f"{'e' * 40}\trefs/heads/feature\n",
+        }
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(command, 60.0, stderr=sentinel)
+        if failure == "oserror":
+            raise OSError(sentinel)
+        if failure == "command-error":
+            return subprocess.CompletedProcess(command, 128, raw, sentinel)
+        return subprocess.CompletedProcess(command, proc.returncode, replacements.get(failure, raw), sentinel)
+
+    state.observe = observe
+    with pytest.raises((SystemExit, RuntimeError)) as refused:
+        state.invoke(entry)
+    assert str(refused.value)
+    assert sentinel not in str(refused.value)
+    assert state.observations
+
+
+@pytest.mark.parametrize("entry", ["cli", "agy", "target", "delegate"])
+@pytest.mark.parametrize("failure", ["foreign", "unknown-repository", "repository-changed", "unsafe-branch", "invalid-sha"])
+def test_untrusted_pr_metadata_refuses_before_provider(live_pr_boundary, entry, failure):
+    """Live observation never licenses foreign, unknown or malformed forge targets."""
+    state = live_pr_boundary
+    if failure == "foreign":
+        state.payload["isCrossRepository"] = True
+    elif failure == "unknown-repository":
+        del state.payload["isCrossRepository"]
+    elif failure == "repository-changed":
+        state.forge_hook = lambda: state.repo.git("config", "remote.origin.url", "https://github.com/foreign/repo.git")
+    elif failure == "unsafe-branch":
+        state.payload["headRefName"] = "feature~1"
+    else:
+        state.payload["headRefOid"] = "invalid"
+    with pytest.raises((SystemExit, RuntimeError)):
+        state.invoke(entry)
+    assert not state.observations
+
+
+@pytest.mark.parametrize("entry", ["cli", "agy", "target", "delegate"])
+def test_live_branch_movement_after_pinning_refuses_before_provider(live_pr_boundary, entry):
+    """A canonical ref moving after the first observation cannot replace the pin."""
+    state = live_pr_boundary
+
+    def move_after_observation(command, proc):
+        if len(state.observations) == 1:
+            state.repo.advance_remote("feature", "codex/gpt-6.1-sol")
+        return proc
+
+    state.observe = move_after_observation
+    with pytest.raises((SystemExit, RuntimeError), match=r"moved|pinned head"):
+        state.invoke(entry)
+    assert state.observations[0].stdout == f"{state.live}\trefs/heads/feature\n"
+
+
+def test_delegate_live_branch_movement_after_resolution_refuses_before_provider(live_pr_boundary):
+    """A stale payload cannot hide movement between target resolution and admission."""
+    state = live_pr_boundary
+    state.before_facts = lambda: state.repo.advance_remote("feature", "codex/gpt-6.1-sol")
+    with pytest.raises(RuntimeError, match="PR head moved"):
+        state.invoke("delegate")
+    assert len(state.observations) == 3
+
+
+@pytest.mark.parametrize("failure", ["timeout", "oserror"])
+def test_cli_forge_failure_refuses_before_observing_a_live_pin(live_pr_boundary, failure):
+    """An unavailable forge must not fall back to a branch or reach a provider."""
+    state = live_pr_boundary
+
+    def unavailable_forge():
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(["gh", "pr", "view"], 60)
+        raise OSError("forge unavailable")
+
+    state.forge_hook = unavailable_forge
+    with pytest.raises(SystemExit, match="could not resolve the PR head"):
+        state.invoke("cli")
+    assert not state.observations
+
+
+@pytest.mark.parametrize("failure", ["missing-checkout", "unrecognized-origin"])
+def test_cli_unbound_canonical_repository_refuses_before_forge(live_pr_boundary, monkeypatch, failure):
+    """A missing or unrecognized canonical repository cannot authorize a forge lookup."""
+    from scripts.ai_agent_bridge import _cli
+
+    state = live_pr_boundary
+    if failure == "missing-checkout":
+        monkeypatch.setattr(_cli, "REPO_ROOT", state.repo.root / "missing")
+    else:
+        state.repo.git("config", "remote.origin.url", "https://example.invalid/unknown.git")
+    state.forge_hook = lambda: pytest.fail("unbound repository reached forge")
+    with pytest.raises(SystemExit, match="canonical repository unavailable"):
+        state.invoke("cli")
+    assert not state.observations

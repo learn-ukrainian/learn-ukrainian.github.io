@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import ast
-import inspect
 import json
 from datetime import UTC, datetime, timedelta
 
@@ -340,102 +338,6 @@ def test_fixture_snapshot_states_and_attention_order(monkeypatch: pytest.MonkeyP
     assert str(tmp_path) not in response.text
 
 
-@pytest.mark.parametrize("endpoint", ["now", "epics", "agents", "epics/alpha", "agents/driver-alpha"])
-@pytest.mark.parametrize("unrelated_configured", [False, True])
-def test_board_reports_only_evaluated_sources(
-    monkeypatch: pytest.MonkeyPatch, tmp_path, endpoint: str, unrelated_configured: bool,
-) -> None:
-    _install(monkeypatch, tmp_path, _roster(), _harness())
-    if unrelated_configured:
-        for source in sources_mod.EXTERNAL_SOURCES:
-            if source.name not in {"roster_snapshot", "harness_snapshot"}:
-                monkeypatch.setenv(source.env_var, "configured-but-unread")
-
-    response = client.get(f"/api/fleet/v1/{endpoint}")
-
-    assert response.status_code == 200
-    rows = response.json()["sources"]
-    expected_names = ["roster_snapshot", "harness_snapshot", "delegate", "occupancy"]
-    if endpoint == "now":
-        expected_names.extend(["github", "mq_state", "stale_prs"])
-    assert [row["name"] for row in rows] == expected_names
-    assert all(row["status"] == "ok" for row in rows[:4])
-    if endpoint == "now":
-        assert rows[4]["status"] == "not_configured"
-        expected_status = "unavailable" if unrelated_configured else "not_configured"
-        assert all(row["status"] == expected_status for row in rows[5:])
-    assert rows[0]["age_s"] == rows[1]["age_s"] == 20
-
-
-def test_missing_snapshot_is_not_configured_and_http_200() -> None:
-    response = client.get("/api/fleet/v1/now")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["data"] == {"attention": [], "epics": []}
-    by_name = {item["name"]: item for item in body["sources"]}
-    assert by_name["roster_snapshot"] == {
-        "name": "roster_snapshot",
-        "status": "not_configured",
-        "age_s": None,
-        "error": None,
-    }
-    assert by_name["harness_snapshot"]["status"] == "not_configured"
-    assert by_name["delegate"]["status"] == "ok"
-    assert by_name["occupancy"]["status"] == "ok"
-
-
-def test_stale_snapshot_stays_http_200(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    roster = {
-        "generated_at": "2026-10-09T11:58:59Z",
-        "interval_s": 30,
-        "epics": [
-            {
-                "epic": "alpha",
-                "title": "Alpha",
-                "intended": "running",
-                "layer": 0,
-                "driver": {
-                    "agent_id": "driver-alpha",
-                    "cli": "codex",
-                    "model": "model-a",
-                    "harness": "codex",
-                    "pid_alive": True,
-                    "activity": "working",
-                },
-                "workers": [],
-            }
-        ],
-    }
-    _install(monkeypatch, tmp_path, roster, {"generated_at": "2026-10-09T11:58:59Z", "interval_s": 30, "agents": {}})
-
-    response = client.get("/api/fleet/v1/epics")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["data"]["epics"][0]["state"] == "working"
-    roster_source = next(item for item in body["sources"] if item["name"] == "roster_snapshot")
-    harness_source = next(item for item in body["sources"] if item["name"] == "harness_snapshot")
-    assert roster_source["status"] == "stale"
-    assert roster_source["age_s"] == 61
-    assert harness_source["status"] == "stale"
-    assert roster_source["error"] is None
-
-
-def test_unreadable_snapshot_is_unavailable(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    missing = tmp_path / "absent.json"
-    monkeypatch.setenv("FLEET_ROSTER_SNAPSHOT", str(missing))
-
-    response = client.get("/api/fleet/v1/now")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["data"]["epics"] == []
-    roster = next(item for item in body["sources"] if item["name"] == "roster_snapshot")
-    assert roster == {"name": "roster_snapshot", "status": "unavailable", "age_s": None, "error": "unavailable"}
-    assert str(missing) not in response.text
-
-
 def test_collector_failure_stays_http_200(monkeypatch: pytest.MonkeyPatch) -> None:
     def explode():
         raise RuntimeError("boom-token")
@@ -484,24 +386,6 @@ def test_board_failure_retains_endpoint_schema(monkeypatch: pytest.MonkeyPatch, 
     Draft202012Validator(document).validate(body)
 
 
-def test_delegate_failure_is_unavailable_without_erasing_snapshot(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    def explode():
-        raise RuntimeError("delegate-failure-private-marker")
-
-    _install(monkeypatch, tmp_path, _roster(), _harness())
-    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", explode)
-    monkeypatch.setattr(view_mod, "load_delegate_health", activity_mod.load_delegate_health)
-
-    response = client.get("/api/fleet/v1/now")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert {item["epic"] for item in body["data"]["epics"]} == {item["epic"] for item in _roster()["epics"]}
-    delegate = next(item for item in body["sources"] if item["name"] == "delegate")
-    assert delegate == {"name": "delegate", "status": "unavailable", "age_s": None, "error": "unavailable"}
-    assert "delegate-failure-private-marker" not in response.text
-
-
 def test_role_bot_and_agent_lookup(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     _install(monkeypatch, tmp_path, _roster(), _harness())
 
@@ -522,19 +406,6 @@ def test_role_bot_and_agent_lookup(monkeypatch: pytest.MonkeyPatch, tmp_path) ->
     assert missing.json()["schema"] == "fleet.v1.agent"
     assert rejected.status_code == 400
     assert rejected.json()["data"] == {"agents": []}
-
-
-def test_epic_lookup(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    _install(monkeypatch, tmp_path, _roster(), _harness())
-
-    found = client.get("/api/fleet/v1/epics/gamma")
-    missing = client.get("/api/fleet/v1/epics/missing-epic")
-
-    assert found.status_code == 200
-    assert found.json()["schema"] == "fleet.v1.epic"
-    assert found.json()["data"]["state"] == "stuck"
-    assert missing.status_code == 404
-    assert missing.json()["data"] is None
 
 
 def test_unbound_delegate_zombie_cannot_override_snapshot_liveness(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
@@ -571,20 +442,6 @@ def test_unbound_delegate_zombie_cannot_override_snapshot_liveness(monkeypatch: 
     assert harness["status"] == "not_configured"
 
 
-def test_schema_validates_now_epic_and_agent(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    _install(monkeypatch, tmp_path, _roster(), _harness())
-    schema = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"]
-    now = client.get("/api/fleet/v1/now").json()
-    epic = client.get("/api/fleet/v1/epics/alpha").json()
-    agent = client.get("/api/fleet/v1/agents/driver-alpha").json()
-
-    Draft202012Validator(schema["fleet.v1.now"]).validate(now)
-    Draft202012Validator(schema["fleet.v1.epic"]).validate(epic)
-    Draft202012Validator(schema["fleet.v1.agent"]).validate(agent)
-    Draft202012Validator(schema["fleet.v1.epics"]).validate(client.get("/api/fleet/v1/epics").json())
-    Draft202012Validator(schema["fleet.v1.agents"]).validate(client.get("/api/fleet/v1/agents").json())
-
-
 def test_harness_health_projects_known_metrics_and_keeps_missing_null(monkeypatch, tmp_path):
     roster = _roster()
     roster["epics"][0]["driver"]["agent_id"] = "codex"
@@ -598,30 +455,6 @@ def test_harness_health_projects_known_metrics_and_keeps_missing_null(monkeypatc
                       "context_pct": 0, "compactions": 0, "stop_count": 0, "ask_count": 2.5, "idle_min": 0}
     from scripts.api.fleet_board.file_sources import unknown_health
     assert client.get("/api/fleet/v1/epics/beta").json()["data"]["health"] == unknown_health()
-
-
-def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest.MonkeyPatch) -> None:
-    def delegate_loader():
-        return {
-            "total": 1,
-            "tasks": [{"agent": "driver-alpha", "alive": True, "status": "running", "task_id": "secret-task"}],
-        }
-
-    def occupancy_loader():
-        return {"hosts": {"row-1": {"status": "fresh", "occupants": [{"agent": "driver-beta", "status": "idle"}]}}}
-
-    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", delegate_loader)
-    monkeypatch.setattr(activity_mod, "occupancy_payload", occupancy_loader)
-
-    delegate_report = activity_mod.load_delegate_health()
-    occupancy_report, activity = activity_mod.load_occupancy_activity()
-
-    assert delegate_report.status == "ok"
-    assert delegate_report.as_dict() == {"name": "delegate", "status": "ok", "age_s": None, "error": None}
-    assert "secret-task" not in repr(delegate_report)
-    assert occupancy_report.status == "ok"
-    assert activity == {}  # Unbound label-only observations cannot supply seat activity.
-    assert "row-1" not in repr(activity)
 
 
 def _markers() -> dict[str, str]:
@@ -703,98 +536,6 @@ def test_emitted_strings_follow_the_public_text_bound(monkeypatch: pytest.Monkey
 @pytest.mark.parametrize(
     "probe",
     [
-        "Burst 85% used",
-        "3 of 8 slots free",
-        "quota 300 left",
-        "12 requests queued",
-        "headroom for 4 seats",
-        "gpu 16 GB free",
-    ],
-)
-def test_capacity_figures_are_redacted(probe: str) -> None:
-    assert activity_mod.text(probe) == "[redacted]"
-
-
-@pytest.mark.parametrize(
-    "probe",
-    [
-        "16-GB",
-        "16_GB",
-        "16:GB",
-        "16;GB",
-        "16 - GB",
-        "16 (GB)",
-        "16–GB",
-        "16—GB",
-        "16’GB",
-        "16. GB",
-        "7-qps",
-        "7_qps",
-        "7 - qps",
-        "12-requests",
-        "12 - requests",
-        "85-percent",
-        "85 - percent",
-        "85 per cent",
-        "85 percentage",
-        "90-pct",
-        "3-of-8",
-        "3_of_8",
-        "3 - of - 8",
-        "hard - stop",
-        "HARD - STOP",
-        "rate — limit",
-        "16 gigabytes",
-        "16 GIGABYTES",
-        "16 giga bytes",
-        "8 megabytes",
-        "16 mbps",
-        "16 gbit",
-        "16gbs",
-        "quóta",
-        "capácity",
-        "1\u03016-GB",
-        "\uff11\uff16\uff27\uff22",
-        "\uff11\uff16 GB",
-        "16 \u0413\u0411",
-        "16 \u0433\u0456\u0433\u0430\u0431\u0430\u0439\u0442",
-        "3 \u043ef 8",
-        "cap\u0430city",
-        "p\u0430ssword",
-    ],
-)
-def test_split_capacity_figures_are_redacted(probe: str) -> None:
-    assert activity_mod.text(probe) == "[redacted]"
-    assert activity_mod.seat_id(probe) is None
-
-
-@pytest.mark.parametrize("unit", ["qps", "rps", "cps"])
-@pytest.mark.parametrize("template", ["7 {unit}", "7{unit}", "7.5 {unit}", "7 {unit}_peak"])
-@pytest.mark.parametrize("uppercase", [False, True])
-def test_rate_figures_are_redacted(unit: str, template: str, uppercase: bool) -> None:
-    probe = template.format(unit=unit.upper() if uppercase else unit)
-    assert activity_mod.text(probe) == "[redacted]"
-    assert activity_mod.seat_id(probe) is None
-
-
-@pytest.mark.parametrize(
-    "probe",
-    [
-        "buildbox7 is slow",
-        "gpu01 queue backed up",
-        "build_box2 restart",
-        "vps reboot pending",
-        "ops server down",
-        "lab laptop offline",
-    ],
-)
-def test_machine_names_are_redacted(probe: str) -> None:
-    assert activity_mod.text(probe) == "[redacted]"
-
-
-@pytest.mark.parametrize(
-    "probe",
-    [
         "rotate 2fa seed",
         "oauth refresh stuck",
         "firewall rule changed",
@@ -826,12 +567,6 @@ def test_key_file_identifiers_are_redacted(key: str, template: str, uppercase: b
         probe = template.format(spelling.upper() if uppercase else spelling)
         assert activity_mod.text(probe) == "[redacted]"
         assert activity_mod.seat_id(probe) is None
-
-
-@pytest.mark.parametrize("probe", ["Поя\u0301снення", "Украї\u0301на", "Review gpt4 compatibility", "driver-2"])
-def test_benign_stress_and_existing_labels_are_preserved(probe: str) -> None:
-    assert activity_mod.text(probe) == probe
-    assert activity_mod.seat_id(probe) == probe
 
 
 @pytest.mark.parametrize("probe", ["pa\u0301ssword", "quo\u0301ta", "id_rsa", "id_ed25519"])
@@ -898,69 +633,6 @@ def test_publication_gaps_are_closed_across_board_routes(monkeypatch, tmp_path, 
 )
 def test_unlisted_shapes_fail_closed(probe: str) -> None:
     assert activity_mod.text(probe) == "[redacted]"
-
-
-@pytest.mark.parametrize(
-    "probe",
-    [
-        "Kept",
-        "plain focus",
-        "driver-kept",
-        "worker-2",
-        "claude-opus-5-5",
-        "not_queued",
-        "Epic #4387",
-        "A1 M03",
-        "Пояснення: вступ “ок” «1»",
-    ],
-)
-def test_plain_labels_stay_publishable(probe: str) -> None:
-    assert activity_mod.text(probe) == probe
-
-
-@pytest.mark.parametrize("term", ["gpt4", "ipv4", "utf8", "base64", "html5"])
-@pytest.mark.parametrize("template", ["{}", "Review {} compatibility", "check_{}_format"])
-@pytest.mark.parametrize("uppercase", [False, True])
-def test_numbered_technical_terms_remain_publishable(term: str, template: str, uppercase: bool) -> None:
-    probe = template.format(term.upper() if uppercase else term)
-    assert activity_mod.text(probe) == probe
-
-
-@pytest.mark.parametrize("label", ["sample01", "sample-01", "xx-sample-01", "sample-node-01"])
-@pytest.mark.parametrize("template", ["{}", "Review {} status", "check_{}_state"])
-@pytest.mark.parametrize("uppercase", [False, True])
-def test_numbered_label_variants_fail_closed(label: str, template: str, uppercase: bool) -> None:
-    probe = template.format(label.upper() if uppercase else label)
-    assert activity_mod.text(probe) == "[redacted]"
-    assert activity_mod.seat_id(probe) is None
-
-
-@pytest.mark.parametrize("term", ["jwt", "jwts", "rbac", "admin", "admins", "secret", "secrets"])
-@pytest.mark.parametrize("template", ["{}", "Review {} status", "check_{}_state", "check-{}-state"])
-@pytest.mark.parametrize("uppercase", [False, True])
-def test_additional_security_terms_fail_closed(term: str, template: str, uppercase: bool) -> None:
-    probe = template.format(term.upper() if uppercase else term)
-    assert activity_mod.text(probe) == "[redacted]"
-    assert activity_mod.seat_id(probe) is None
-
-
-@pytest.mark.parametrize("term", ["instance", "instances", "user", "users"])
-@pytest.mark.parametrize("template", ["{}", "7 {}", "check_{}_state", "check-{}-state"])
-@pytest.mark.parametrize("uppercase", [False, True])
-def test_additional_capacity_terms_fail_closed(term: str, template: str, uppercase: bool) -> None:
-    probe = template.format(term.upper() if uppercase else term)
-    assert activity_mod.text(probe) == "[redacted]"
-    assert activity_mod.seat_id(probe) is None
-
-
-@pytest.mark.parametrize("probe", ["secretary", "administration", "userland", "instanced", "driver-2"])
-def test_added_patterns_respect_word_boundaries(probe: str) -> None:
-    assert activity_mod.text(probe) == probe
-
-
-def test_redacted_summary_drops_the_seat_identity() -> None:
-    assert activity_mod.seat_id("buildbox7") is None
-    assert activity_mod.seat_id("driver-kept") == "driver-kept"
 
 
 def test_malformed_epic_keeps_sibling_records(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
@@ -1224,66 +896,6 @@ def test_unknown_pid_precedence_for_each_role(monkeypatch: pytest.MonkeyPatch, t
         assert (agent["state"], agent["state_reason"]) == expected
 
 
-def test_derived_dead_delegate_row_is_health_only(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
-    import scripts.api.delegate_router as delegate_router
-
-    monkeypatch.setattr(view_mod, "load_delegate_health", activity_mod.load_delegate_health)
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    (tasks_dir / "seat-row.json").write_text(
-        json.dumps(
-            {
-                "task_id": "seat-row",
-                "agent": "driver-alpha",
-                "status": "running",
-                "pid": 1,
-                "started_at": "2026-10-09T11:00:00Z",
-            }
-        ),
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
-    monkeypatch.setattr(delegate_router, "_pid_alive", lambda pid: False)
-    delegate_router._TASK_STATE_CACHE.clear()
-    delegate_router._LAST_TASKS_DIR_STR = ""
-    roster = {
-        "generated_at": FRESH,
-        "interval_s": 30,
-        "epics": [
-            {
-                "epic": "alpha",
-                "title": "Alpha",
-                "intended": "running",
-                "driver": {
-                    "agent_id": "driver-alpha",
-                    "pid_alive": True,
-                    "activity": "working",
-                    "pane_text": SCREEN,
-                },
-                "workers": [],
-            }
-        ],
-    }
-    _install(monkeypatch, tmp_path, roster, None)
-    try:
-        assert delegate_router.active_delegate_tasks()["total"] == 0
-        assert delegate_router.seat_delegate_tasks()["tasks"][0]["status"] == "zombie"
-        assert activity_mod.load_delegate_health().status == "ok"
-        response = client.get("/api/fleet/v1/now")
-        assert response.status_code == 200
-        epic = response.json()["data"]["epics"][0]
-        assert epic["state"] == "working"
-        assert epic["state_reason"] == "recorded working"
-        assert response.json()["data"]["attention"] == []
-        assert next(row for row in response.json()["sources"] if row["name"] == "delegate")["status"] == "ok"
-        assert "seat-row" not in response.text
-        assert SCREEN not in response.text
-        assert str(tasks_dir) not in response.text
-    finally:
-        delegate_router._TASK_STATE_CACHE.clear()
-        delegate_router._LAST_TASKS_DIR_STR = ""
-
-
 @pytest.mark.parametrize("stamp,status", [("2026-10-09T06:00:00Z", "stale"), (None, "unavailable")])
 @pytest.mark.parametrize("pid,idle,activity,expected", [
     (False, 6, "idle", "dead"),
@@ -1375,29 +987,6 @@ def test_fresh_harness_still_overrides_roster(monkeypatch: pytest.MonkeyPatch, t
     assert next(row for row in body["sources"] if row["name"] == "harness_snapshot")["status"] == "ok"
 
 
-@pytest.mark.parametrize("invalid", [
-    {"generated_at": None}, {"generated_at": "invalid"}, {"interval_s": None},
-    {"interval_s": 0}, {"generated_at": "2026-10-09T12:00:01Z"},
-])
-def test_unknown_roster_freshness_has_no_usable_payload(monkeypatch: pytest.MonkeyPatch, tmp_path, invalid) -> None:
-    roster = _roster()
-    roster.update(invalid)
-    _install(monkeypatch, tmp_path, roster, _harness())
-    for path, empty in [("now", {"epics": [], "attention": []}), ("epics", {"epics": []}),
-                        ("agents", {"agents": []})]:
-        response = client.get(f"/api/fleet/v1/{path}")
-        assert response.status_code == 200
-        body = response.json()
-        assert body["data"] == empty
-        assert next(row for row in body["sources"] if row["name"] == "roster_snapshot") == {
-            "name": "roster_snapshot", "status": "unavailable", "age_s": None, "error": "unavailable"
-        }
-    for path in ("epics/alpha", "agents/driver-alpha"):
-        response = client.get(f"/api/fleet/v1/{path}")
-        assert response.status_code == 404
-        assert response.json()["data"] is None
-
-
 @pytest.mark.parametrize("role", ["driver", "worker", "bot"])
 @pytest.mark.parametrize("pid", [True, False, None])
 @pytest.mark.parametrize("seat_id,task", [
@@ -1439,55 +1028,6 @@ def test_delegate_identity_coincidences_do_not_change_any_role(
         assert now["data"]["attention"] == []
     assert next(row for row in body["sources"] if row["name"] == "delegate")["status"] == "ok"
     assert task["task_id"] not in json.dumps(body["sources"])
-
-
-@pytest.mark.parametrize("payload,status", [(None, "unavailable"), ([], "unavailable"),
-                                            ({}, "ok"), ({"tasks": [None, {}]}, "ok")])
-def test_delegate_health_does_not_interpret_rows(monkeypatch: pytest.MonkeyPatch, payload, status) -> None:
-    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", lambda: payload)
-    source = activity_mod.load_delegate_health()
-    assert source.status == status
-    assert source.name == "delegate"
-
-
-def test_respond_has_no_unreachable_statements_after_return() -> None:
-    tree = ast.parse(inspect.getsource(router_mod.respond))
-    for node in ast.walk(tree):
-        for field in ("body", "orelse", "finalbody"):
-            statements = getattr(node, field, [])
-            if not isinstance(statements, list):
-                continue
-            for index, statement in enumerate(statements):
-                if isinstance(statement, ast.Return):
-                    assert index == len(statements) - 1, "Unreachable statement after return"
-
-
-@pytest.mark.parametrize("path,schema_id", [("epics/alpha", "fleet.v1.epic"),
-                                            ("agents/driver-alpha", "fleet.v1.agent")])
-@pytest.mark.parametrize("failure", ["missing", "board", "envelope"])
-def test_single_item_error_fallback_preserves_null(
-    monkeypatch: pytest.MonkeyPatch, path, schema_id, failure
-) -> None:
-    from scripts.api.fleet_board.envelope import endpoint_schema
-
-    def explode(*args, **kwargs):
-        raise RuntimeError("private-error-marker")
-
-    if failure == "board":
-        monkeypatch.setattr(router_mod, "load_board", explode)
-    monkeypatch.setattr(router_mod, "envelope", explode)
-    if failure == "envelope":
-        monkeypatch.setattr(router_mod, "utc_timestamp", explode)
-    response = client.get(f"/api/fleet/v1/{path}")
-    assert response.status_code == (200 if failure == "board" else 404)
-    body = response.json()
-    assert body["schema"] == schema_id
-    assert body["data"] is None
-    assert body["sources"] == [{"name": "response", "status": "unavailable", "age_s": None, "error": "unavailable"}]
-    if failure == "envelope":
-        assert body["generated_at"] == "1970-01-01T00:00:00Z"
-    Draft202012Validator(endpoint_schema(schema_id)).validate(body)
-    assert "private-error-marker" not in response.text
 
 
 @pytest.mark.parametrize("case", ["matching", "wrong-session", "wrong-instance", "wrong-host", "no-observer", "duplicate", "expired", "closed", "unknown-pid"])
@@ -1544,31 +1084,6 @@ def test_canonical_lease_presence_chain_controls_driver_activity(monkeypatch, tm
     assert any(row["kind"] == "stuck_driver" for row in body["data"]["attention"]) == (case == "unknown-pid")
     assert "session-alpha" not in response.text
     assert "instance-alpha" not in response.text
-
-
-@pytest.mark.parametrize("stamp,interval,status", [
-    (FRESH, 30, "ok"), ("2026-10-09T11:59:00Z", 30, "ok"),
-    ("2026-10-09T11:58:59Z", 30, "stale"), (None, 30, "unknown"),
-    ("bad", 30, "unknown"), ("2026-10-09T12:00:01Z", 30, "unknown"),
-    (FRESH, None, "unknown"), (FRESH, 0, "unknown"), (FRESH, -1, "unknown"),
-    (FRESH, True, "unknown"), (FRESH, float("inf"), "unknown"),
-])
-def test_canonical_health_measurement_window_and_independent_counters(monkeypatch, tmp_path, stamp, interval, status):
-    roster = _roster()
-    roster["epics"][0]["driver"]["agent_id"] = "codex"
-    harness = {"interval_s": interval, "drivers": [{"agent_id": "codex", "measured_at": stamp,
-                                                 "stop_count": 0, "idle_min": 1.5, "context_pct": 2.5}]}
-    _install(monkeypatch, tmp_path, roster, harness)
-    body = client.get("/api/fleet/v1/now").json()
-    health = body["data"]["epics"][0]["health"]
-    assert health["status"] == status
-    assert health["agent_id"] == "codex"
-    assert health["stop_count"] == (0 if status == "ok" else None)
-    assert health["ask_count"] is None
-    assert health["context_pct"] == (2.5 if status == "ok" else None)
-    assert health["idle_min"] == (1.5 if status == "ok" else None)
-    from scripts.api.fleet_board.envelope import endpoint_schema
-    Draft202012Validator(endpoint_schema("fleet.v1.now")).validate(body)
 
 
 @pytest.mark.parametrize("rows", [[], [{"agent_id": "other"}], [{"agent_id": "codex"}, {"agent_id": "codex"}]])

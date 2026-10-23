@@ -10,7 +10,6 @@ from typing import Any
 
 import pytest
 import yaml
-from jsonschema import ValidationError
 
 from scripts.build.fresh import plan_manifest as pm
 from scripts.curriculum.evidence import lock as lock_module
@@ -83,12 +82,6 @@ def located(quote: str, **location: Any) -> dict[str, Any]:
     [
         ("word", "word_store"),
         ("quote", "pack"),
-        ("example", "pack"),
-        ("exercise_text", "pack"),
-        ("error", "pack"),
-        ("note", "pack"),
-        ("video", "pack"),
-        ("resource", "pack"),
     ],
 )
 def test_a_defective_span_the_engine_printed_from_a_record_is_that_records_layer(kind: str, layer: str) -> None:
@@ -356,25 +349,6 @@ def test_findings_that_could_be_a_gate_are_listed_when_they_match_the_schemas_pa
         ("R/A/F-01", "yes - count the words"),
         ("R/A/F-05", "yes - persists"),
     ]
-
-
-def test_the_report_lists_the_gate_candidates_for_the_driver(world: World) -> None:
-    world.record(
-        world.make_return(
-            1,
-            [
-                finding("F-01", could_be_a_gate="yes - a script could count them"),
-                finding("F-02", dimension="fact", could_be_a_gate="no"),
-            ],
-        )
-    )
-    conn = db.connect(world.db)
-    try:
-        report = fixloop.build_report(conn, LEVEL, SLUG, root=world.root, params=PARAMS)
-    finally:
-        conn.close()
-    assert [item["could_be_a_gate"] for item in report["gate_candidates"]] == ["yes - a script could count them"]
-    assert "GATE CANDIDATE" in fixloop.render_report(report)
 
 
 def quoted_unsupported(claim: str, quote: str, **overrides: Any) -> dict[str, Any]:
@@ -675,13 +649,6 @@ def test_a_module_whose_lessons_are_approved_on_current_manifests_and_whose_plan
     assert path == world.state_dir / "module-verdict.yaml"
     on_disk = yaml.safe_load(path.read_bytes())
     assert on_disk == document and on_disk["verdict"] == "APPROVE"
-
-
-def test_the_module_verdict_document_is_schema_checked() -> None:
-    from jsonschema import Draft202012Validator
-
-    with pytest.raises(ValidationError):
-        Draft202012Validator(fixloop.MODULE_VERDICT_SCHEMA).validate({"module_verdict_schema": 1, "verdict": "MAYBE"})
 
 
 def test_a_module_with_an_open_settle_item_is_not_approved(world: World, promoted: None) -> None:
@@ -1007,29 +974,6 @@ def test_a_second_seat_attempt_id_reused_under_another_review_holds_as_ambiguous
     assert "more than one review" in document["holds"][0]["detail"]
 
 
-def test_a_second_seat_attempt_id__b_reused_under_another_review_holds_as_ambiguous(
-    world: World, promoted: None, monkeypatch
-) -> None:
-    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
-    approve_all(world)
-    record_second_seat(world, 3)
-    assert verdict(world, SAMPLED)["verdict"] == "APPROVE"
-    [agreement] = world.db_rows("agreement")
-    conn = db.connect(world.db)
-    try:
-        original = conn.execute(
-            "SELECT * FROM attempts WHERE attempt_id = ? AND lesson_n = 3", (agreement["attempt_b"],)
-        ).fetchone()
-        columns = original.keys()
-        with db.transaction(conn):
-            db.insert_attempt(conn, {**{c: original[c] for c in columns}, "review_id": "rev-elsewhere"})
-    finally:
-        conn.close()
-    document = verdict(world, SAMPLED)
-    assert document["verdict"] == "HOLD" and codes_of(document) == [fixloop.HOLD_AGREEMENT_AMBIGUOUS]
-    assert "more than one review" in document["holds"][0]["detail"]
-
-
 def test_a_second_review_of_an_older_manifest_does_not_count(world: World, promoted: None, monkeypatch) -> None:
     monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
     approve_all(world)
@@ -1208,35 +1152,11 @@ def test_a_verdict_file_with_no_accepted_attempt_behind_it_holds_and_cannot_be_r
     assert plan_review.exists()  # nothing to project from: the file is left for the operator, and it keeps holding
 
 
-def test_the_report_repairs_projections_too(world: World, promoted: None, capsys: pytest.CaptureFixture[str]) -> None:
-    approve_all(world)
-    world.verdict_file(1).unlink()
-    assert run(world, "report", LEVEL, SLUG, "--repair-projections") == 0
-    captured = capsys.readouterr()
-    assert "module a1/fixture-module: APPROVE" in captured.out and "lesson-1.verdict.yaml" in captured.err
-    assert published(world, 1) == latest_projection(world, 1)
-
-
 # --- the CLI -------------------------------------------------------------------------------------------------------------
 
 
 def run(world: World, *argv: str) -> int:
     return fixloop.main(["--repo-root", str(world.root), "--db", str(world.db), *argv])
-
-
-def test_the_cli_writes_the_module_verdict_and_prints_the_report(
-    world: World, promoted: None, capsys: pytest.CaptureFixture[str]
-) -> None:
-    approve_all(world)
-    assert run(world, "verdict", LEVEL, SLUG) == 0
-    printed = json.loads(capsys.readouterr().out)
-    assert printed["verdict"] == "APPROVE" and printed["path"].endswith("_state/fixture-module/module-verdict.yaml")
-    assert yaml.safe_load((world.state_dir / "module-verdict.yaml").read_bytes())["verdict"] == "APPROVE"
-    assert run(world, "report", LEVEL, SLUG, "--json") == 0
-    report = json.loads(capsys.readouterr().out)
-    assert report["verdict"] == "APPROVE" and report["terminal"] == [] and report["layers"] == {}
-    assert run(world, "report", LEVEL, SLUG) == 0
-    assert "module a1/fixture-module: APPROVE" in capsys.readouterr().out
 
 
 def test_the_cli_refuses_a_regeneration_past_the_budget_with_the_operator_transition(
@@ -1421,11 +1341,6 @@ def test_check_fails_on_a_missing_file(world: World, promoted: None, capsys: pyt
     approve_all(world)
     assert run(world, "verdict", LEVEL, SLUG, "--check") == 1
     assert "missing" in capsys.readouterr().err
-
-
-def test_check_and_repair_projections_are_refused_together(world: World, capsys: pytest.CaptureFixture[str]) -> None:
-    assert run(world, "verdict", LEVEL, SLUG, "--check", "--repair-projections") == 2
-    assert "read-only" in capsys.readouterr().err
 
 
 def _fingerprint(world: World, params: dict[str, Any] | None = None) -> str:

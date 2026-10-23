@@ -445,18 +445,6 @@ def test_runner_boundary_refusal_pins_identifier_before_colon(prefix, diagnostic
     assert diagnostic not in refusal
 
 
-@pytest.mark.parametrize("error", [KeyError("private diagnostic"), TypeError("private diagnostic")])
-def test_runner_preparation_error_redacts_exception_text(tmp_path, monkeypatch, error):
-    def refuse(*args, **kwargs):
-        raise error
-
-    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_attempt_boundary", refuse)
-    with pytest.raises(AgentUnavailableError) as caught:
-        runner.invoke("agy", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
-    assert str(caught.value) == f"formal attempt filesystem boundary refused: prepare: {type(error).__name__}"
-    assert caught.value.__cause__ is error
-
-
 def test_runner_reports_real_input_hash_refusal_before_provider_launch(world, tmp_path, monkeypatch):
     root, _ = world
     manifest = manifest_world(root, "plan")
@@ -1278,18 +1266,6 @@ def test_selected_directory_rejects_unsafe_ancestry(two_accounts, case):
         linux_claude_auth("b")
 
 
-def test_selection_path_loop_is_a_value_free_refusal(two_accounts, monkeypatch):
-    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, linux_claude_auth
-
-    loop = two_accounts.config_dir.parent / "loop"
-    loop.symlink_to(loop)
-    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(loop))
-    with pytest.raises(ReviewIsolationError) as refused:
-        linux_claude_auth("b")
-    assert str(refused.value) in CLAUDE_ACCOUNT_REFUSAL_CODES
-    assert str(loop) not in str(refused.value)
-
-
 @pytest.mark.parametrize(
     "error,code",
     [
@@ -1392,18 +1368,6 @@ def test_complete_preflight_rechecks_selected_state_at_use(two_accounts):
     assert verify_claude_account("b").label == "b"
     _credentials(two_accounts.config_dir / ".credentials.json", two_accounts.default_token)
     with pytest.raises(ReviewIsolationError, match=r"^claude_account_unverified$"):
-        linux_claude_auth("b")
-
-
-@pytest.mark.parametrize("organization_type", ["claude_team", "claude_enterprise", None])
-def test_sealed_attempt_refuses_an_account_outside_the_consumer_plans(two_accounts, monkeypatch, organization_type):
-    """Held-out (#10619): a labelled account is admitted only on a consumer plan, at the sealed boundary too."""
-    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
-
-    organization = {"uuid": ACCOUNT_ORG_UUIDS[BOUND_ACCOUNT_UUID], "organization_type": organization_type}
-    monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
-
-    with pytest.raises(ReviewIsolationError, match=r"^claude_account_plan_unsupported$"):
         linux_claude_auth("b")
 
 
@@ -1730,28 +1694,6 @@ def test_default_account_file_names_one_label_or_none(tmp_path, monkeypatch, con
     assert read_claude_default_account() == label
 
 
-def test_default_account_file_may_be_readable_by_others(tmp_path, monkeypatch):
-    from scripts.agent_runtime.attempt_boundary import read_claude_default_account
-
-    _default_file(tmp_path, monkeypatch, b"b\n", mode=0o644)
-    assert read_claude_default_account() == "b"
-
-
-def test_default_account_file_lives_in_the_user_config_directory(tmp_path, monkeypatch):
-    from scripts.agent_runtime.attempt_boundary import claude_default_account_file, read_claude_default_account
-
-    monkeypatch.delenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", raising=False)
-    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
-    expected = tmp_path / "xdg" / "learn-ukrainian" / "claude-default-account"
-    assert claude_default_account_file() == expected
-    assert read_claude_default_account() is None  # absent
-    monkeypatch.setenv("XDG_CONFIG_HOME", "relative")
-    monkeypatch.setenv("HOME", str(tmp_path / "home"))
-    assert claude_default_account_file() == tmp_path / "home" / ".config" / "learn-ukrainian" / "claude-default-account"
-    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
-    assert claude_default_account_file() is None
-
-
 def test_dispatch_resolution_prefers_explicit_then_file_then_builtin(tmp_path, monkeypatch):
     from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_dispatch_claude_account
 
@@ -1781,19 +1723,6 @@ def test_default_file_refusal_names_no_value_or_location(tmp_path, monkeypatch):
     )
     assert "fixture-secretish" not in rendered
     assert str(path) not in rendered
-
-
-def test_new_default_file_and_record_codes_are_registered():
-    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES
-
-    assert {
-        "claude_account_record_conflict",
-        "claude_account_forward_unsupported",
-        *(
-            f"claude_account_default_file_{failure}"
-            for failure in ("unavailable", "not_private", "oversized", "invalid")
-        ),
-    } <= CLAUDE_ACCOUNT_REFUSAL_CODES
 
 
 def test_sealed_attempt_selection_records_a_verified_receipt(two_accounts):

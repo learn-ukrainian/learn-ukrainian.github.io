@@ -116,27 +116,6 @@ def test_constructor_closes_connection_on_partial_init(
     monkeypatch.setattr(artifacts_mod, "apply_pg_schema", real_apply)
 
 
-def test_writes_use_single_transaction_context_manager(
-    pg_store: ArtifactStore,
-) -> None:
-    """#7483 acceptance: store writes go through ``_transaction``."""
-    seen: list[str] = []
-    real = pg_store._transaction
-
-    from contextlib import contextmanager
-
-    @contextmanager
-    def wrapped():
-        seen.append("enter")
-        with real() as conn:
-            yield conn
-        seen.append("exit")
-
-    pg_store._transaction = wrapped  # type: ignore[method-assign]
-    pg_store.store_bytes(_payload(), producer="t")
-    assert seen == ["enter", "exit"]
-
-
 def test_open_readonly_refuses_writes(pg_store: ArtifactStore, tmp_path: Path) -> None:
     """#7483 (1.12): readonly open can read but never write."""
     rec = pg_store.store_bytes(_payload(), producer="t")

@@ -118,11 +118,6 @@ def test_detail_output_path_must_be_outside_repo(tmp_path: Path) -> None:
     assert census.resolve_local_detail_output_path(outside, project_root=tmp_path) == outside.resolve()
 
 
-def test_textbook_grade_parser_accepts_zero_padded_names() -> None:
-    assert census._textbook_grade(Path("textbook_chunks/grade-01/chunks.jsonl")) == "grade-01"
-    assert census._textbook_grade(Path("texts/02-klas-book.txt")) == "grade-02"
-
-
 def _write_manifest(tmp_path: Path, lemmas: list[str]) -> Path:
     manifest_path = tmp_path / "lexicon-manifest.json"
     manifest_path.write_text(

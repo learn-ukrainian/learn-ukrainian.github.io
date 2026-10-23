@@ -65,19 +65,6 @@ def test_every_marker_or_status_consumer_has_a_fixed_handling_row():
     assert set(HANDLING.values()) == {"accept-as-approval", "display-label", "refuse", "ignore"}
 
 
-@pytest.mark.parametrize(
-    "source",
-    [
-        "from scripts.orchestration.integration_sweep import lookup_verdict as renamed",
-        "import scripts.orchestration.integration_sweep as review\nreview.lookup_verdict([], '', '')",
-        "context = 'fleet/cross-family-review'",
-        "marker = '<!-- cf-verdict v1'",
-    ],
-)
-def test_consumer_census_detects_new_references(source):
-    assert _mentions_review_contract(ast.parse(source))
-
-
 def _comment(mode="red_team", *, login="fleet"):
     from tests.orchestration.test_integration_sweep import comment
 

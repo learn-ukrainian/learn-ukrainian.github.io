@@ -317,11 +317,6 @@ def resolve_dict_slug(slug: str) -> str:
     return SLOVNYK_ME_DICT_ALIASES.get(cleaned, cleaned)
 
 
-def overlap_block_reason(slug: str) -> str | None:
-    """Return the canonical local tool when a slovnyk.me dictionary overlaps."""
-    return OVERLAP_BLOCKED_DICTS.get(resolve_dict_slug(slug))
-
-
 def query_variants(query: str) -> list[str]:
     """Return direct-entry lookup variants without using /search."""
     normalized = normalize_word(query)

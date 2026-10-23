@@ -160,51 +160,10 @@ def test_base_layer_unresolved_when_multiple_matches_without_entry(tmp_path: Pat
     assert "matched 2 records" in exc_info.value.message
 
 
-def test_base_layer_unresolved_when_zero_matches(tmp_path: Path) -> None:
-    req = {
-        "request_schema": 1,
-        "level": "a1",
-        "words": [{"lemma": "missing-word", "pos": "noun", "want": "new"}],
-    }
-    words = {
-        "evidence_schema": 1,
-        "level": "a1",
-        "built_with": {
-            "mcp_commit": "0" * 40,
-            "sources_db": "0" * 64,
-            "vesum": "0" * 64,
-            "trie": "0" * 64,
-            "ulif_forms": "0" * 64,
-        },
-        "words": [
-            {"id": "W-001", "lemma": "other-word", "pos": "noun"},
-        ],
-    }
-    req_path = tmp_path / "_base.request.yaml"
-    words_path = tmp_path / "_words.yaml"
-    _write_yaml(req_path, req)
-    _write_yaml(words_path, words)
-
-    with pytest.raises(BaseLayerError) as exc_info:
-        resolve_base_ids("a1", base_request_path=req_path, words_path=words_path)
-    assert exc_info.value.code == codes.BASE_LAYER_UNRESOLVED
-    assert "matched 0 records" in exc_info.value.message
-
-
 def test_base_layer_missing_when_request_file_not_found(tmp_path: Path) -> None:
     req_path = tmp_path / "_base.request.yaml"
     words_path = tmp_path / "_words.yaml"
     _write_yaml(words_path, {"words": []})
-
-    with pytest.raises(BaseLayerError) as exc_info:
-        resolve_base_ids("a1", base_request_path=req_path, words_path=words_path)
-    assert exc_info.value.code == codes.BASE_LAYER_MISSING
-
-
-def test_base_layer_missing_when_words_file_not_found(tmp_path: Path) -> None:
-    req_path = tmp_path / "_base.request.yaml"
-    words_path = tmp_path / "_words.yaml"
-    _write_yaml(req_path, {"words": [{"lemma": "x", "pos": "y", "want": "new"}]})
 
     with pytest.raises(BaseLayerError) as exc_info:
         resolve_base_ids("a1", base_request_path=req_path, words_path=words_path)

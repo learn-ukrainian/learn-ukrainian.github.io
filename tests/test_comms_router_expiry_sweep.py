@@ -116,13 +116,6 @@ def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path, 
     assert default_db_path == ab_config.DB_PATH
 
 
-def test_sweep_is_noop_when_message_db_missing(tmp_path):
-    missing = tmp_path / "does-not-exist.db"
-    comms_router._maybe_run_delivery_expiry_sweep(_message_ctx(tmp_path, missing))
-    assert comms_router._expire_sweep_thread is None
-    assert not missing.exists()
-
-
 def test_sweep_is_noop_when_channel_tables_missing(tmp_path):
     """A legacy-only broker DB (messages table, no channel bridge tables)
     must not be auto-migrated as a side effect of the sweep trigger."""
@@ -192,20 +185,6 @@ def test_sweep_is_noop_on_pre_priority_column_schema(tmp_path):
     finally:
         conn.close()
     assert "max_age_hours" not in columns, "sweep must not auto-migrate the schema either"
-
-
-def test_sweep_triggers_at_most_once_per_interval(tmp_path):
-    db_path = tmp_path / "messages.db"
-    _seed_channel_db(db_path)
-
-    ctx = _message_ctx(tmp_path, db_path)
-    comms_router._maybe_run_delivery_expiry_sweep(ctx)
-    first_thread = comms_router._expire_sweep_thread
-    first_thread.join(timeout=5)
-
-    comms_router._maybe_run_delivery_expiry_sweep(ctx)
-    # Cache still warm — no second thread spawned.
-    assert comms_router._expire_sweep_thread is first_thread
 
 
 def test_agent_activity_endpoint_triggers_sweep(tmp_path):

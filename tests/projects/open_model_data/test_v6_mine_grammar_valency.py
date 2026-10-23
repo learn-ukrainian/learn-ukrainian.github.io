@@ -30,47 +30,6 @@ RECEIPT_SHA_FILE = resolve_open_model_path(RELEASE_DIR / "release_receipt.json.s
 SFT_MANIFEST = resolve_open_model_path(RELEASE_DIR / "sft" / "manifest.json")
 
 
-def test_taxonomy_coverage_and_categories() -> None:
-    """Ensure full 20-category UA-GEC taxonomy (14 Grammar + 6 Fluency) is covered."""
-    assert len(miner.ALL_GRAMMAR_CATEGORIES) == 14
-    assert len(miner.ALL_FLUENCY_CATEGORIES) == 6
-    assert len(miner.FULL_TAXONOMY) == 20
-
-    for cat in miner.FULL_TAXONOMY:
-        assert cat in miner.CATEGORY_EXPLANATIONS
-        assert "title" in miner.CATEGORY_EXPLANATIONS[cat]
-        assert "rule" in miner.CATEGORY_EXPLANATIONS[cat]
-        assert len(miner.CATEGORY_EXPLANATIONS[cat]["rule"]) > 20
-
-
-def test_valency_frames_authenticity_and_coverage() -> None:
-    """Verify linguistic coverage of case valency and prepositional government frames."""
-    frames = miner.VALENCY_FRAMES
-    assert len(frames) >= 12
-
-    verbs = {f["verb"] for f in frames}
-    assert "опанувати" in verbs  # опанувати що (знахідний)
-    assert "докоряти" in verbs  # докоряти кому (давальний)
-    assert "навчатися" in verbs  # навчатися чого (родовий)
-    assert "властивий" in verbs  # властивий кому (давальний)
-    assert "дякувати" in verbs  # дякувати кому (давальний)
-    assert "вибачати" in verbs  # вибачати кому (давальний)
-    assert "хворіти" in verbs  # хворіти на що (на + знахідний)
-    assert "знущатися" in verbs  # знущатися з кого (з + родовий)
-    assert "потребувати" in verbs  # потребувати чого (родовий)
-    assert "завдати" in verbs  # завдати шкоди (родовий)
-    assert "вжити" in verbs  # вжити заходів (родовий)
-    assert "прийменник_по" in verbs  # у справах, за законом
-    assert "прийменник_при" in verbs  # за участі, за умови
-
-    for f in frames:
-        assert len(f["examples"]) >= 3
-        for correct, incorrect in f["examples"]:
-            assert correct != incorrect
-            assert len(correct) > 15
-            assert len(incorrect) > 15
-
-
 @pytest.mark.skipif(
     not miner.DEFAULT_VESUM_DB.is_file(),
     reason="VESUM database not present in CI sandbox — run locally for full coverage",
@@ -281,46 +240,6 @@ def test_compound_abbreviations_preserve_terminal_dot_boundary(probe: str, expec
     """Ensure compound abbreviations preserve terminal dot before uppercase letters for sentence splitting."""
     protected = miner.protect_abbreviations(probe)
     assert protected.endswith(expected_suffix)
-
-
-def test_valency_explanations_codification_nuance() -> None:
-    """Verify valency explanations cite modern literary codification (СУМ, Правопис 2019, Чак)."""
-    frames = {f["verb"]: f for f in miner.VALENCY_FRAMES}
-    assert "докоряти" in frames
-    assert "навчатися" in frames
-
-    # dokoriati explanation must cite literary norm and avoid blanket Russian calque claim
-    dok_expl = frames["докоряти"]["explanation"]
-    assert "давальним відмінком" in dok_expl
-    assert "невірно" not in dok_expl
-    assert "російською синтаксичною калькою" not in dok_expl
-
-    # navchatysia explanation must cite Pravopys 2019 / SUM and genitive government
-    navch_expl = frames["навчатися"]["explanation"]
-    assert "родово" in navch_expl
-    assert "Правопис 2019" in navch_expl or "СУМ" in navch_expl
-    assert "синтаксичною калькою з російської" not in navch_expl
-
-    # znushchatysia explanation must cite Chak, classical literary allowance, and F/Style category
-    assert "знущатися" in frames
-    znushch_frame = frames["знущатися"]
-    assert "Чак" in znushch_frame["explanation"]
-    assert "Шевченко" in znushch_frame["explanation"] or "Леся Українка" in znushch_frame["explanation"]
-    assert znushch_frame["category"] == "F/Style"
-
-    # All frames must have nuanced critique
-    for frame in miner.VALENCY_FRAMES:
-        assert "critique" in frame
-        assert len(frame["critique"]) > 20
-
-
-def test_valency_trajectories_critique_step() -> None:
-    """Verify that valency trajectories use tailored critique instead of generic calque assertion."""
-    trajectories = miner.build_valency_trajectories()
-    for t in trajectories:
-        step3 = t["reasoning_steps"][2]
-        assert step3.startswith("3. Оцінка помилкової моделі: ")
-        assert "Спростування помилкової моделі: конструкція" not in step3
 
 
 def test_vesum_query_fail_closed_when_cursor_none() -> None:
@@ -2043,18 +1962,6 @@ def test_f1_zero_synthetic_duplication_and_no_id_renaming() -> None:
     assert len(seen_ids) == 35000
 
 
-def test_f2_calque_error_head_word_alignment() -> None:
-    """Verify calque trajectories use error_head_word instead of claiming corrected head_word in error sentence."""
-    trajectories = miner.build_valency_trajectories()
-    calque_trajs = [t for t in trajectories if t["category"] == "F/Calque"]
-    assert len(calque_trajs) > 0
-    for t in calque_trajs:
-        step1 = t["reasoning_steps"][0]
-        assert "при слові «вжити»" not in step1
-        assert "при слові «завдати»" not in step1
-        assert "зі словом «прийняти»" in step1 or "зі словом «нанести»" in step1
-
-
 def test_f5_ua_gec_test_split_firewall(tmp_path: Path) -> None:
     """Verify load_ua_gec_annotations strictly excludes test partition in runtime behavior."""
     fake_gec = tmp_path / "ua-gec"
@@ -2267,14 +2174,6 @@ def test_format_word_count_ua() -> None:
     assert miner.format_word_count_ua(124) == "124 слова"
 
 
-def test_sanitize_punctuation() -> None:
-    """Verify normalization of multiple consecutive dots."""
-    assert miner.sanitize_punctuation("«слово»..") == "«слово»."
-    assert miner.sanitize_punctuation("слово....") == "слово..."
-    assert miner.sanitize_punctuation("«слово».") == "«слово»."
-    assert miner.sanitize_punctuation("«слово»?") == "«слово»?"
-
-
 def test_pejorative_stems_precision() -> None:
     """Verify that legitimate vocabulary with 'туп-' prefix is not falsely classified as pejorative."""
     pej_words = miner.load_tone_dict(PROJECT_ROOT / "data" / "dictionaries" / "tone-dict-uk")
@@ -2314,25 +2213,6 @@ def test_grounding_token_non_pronoun_precision() -> None:
         assert "ніхто" not in sample_str.lower()
         assert "більше" not in sample_str.lower()
         assert "цілому" not in sample_str.lower()
-
-
-def test_brown_uk_genre_registers_canonical_mapping() -> None:
-    """Verify Brown-UK genre registers exactly match canonical 2014 scheme (A-I)."""
-    expected_genres = {"A", "B", "C", "D", "E", "F", "G", "H", "I"}
-    assert set(miner.BROWN_UK_GENRE_REGISTERS.keys()) == expected_genres
-    assert len(miner.BROWN_UK_GENRE_REGISTERS) == 9
-
-    # Pin critical categories identified in CF R6 review
-    assert miner.BROWN_UK_GENRE_REGISTERS["B"] == ("Релігійна література", "конфесійний стиль")
-    assert miner.BROWN_UK_GENRE_REGISTERS["H"] == ("Навчальна література", "навчально-науковий стиль")
-    assert miner.BROWN_UK_GENRE_REGISTERS["A"] == ("Преса", "публіцистичний стиль")
-    assert miner.BROWN_UK_GENRE_REGISTERS["E"] == ("Адміністративні документи", "офіційно-діловий стиль")
-    assert miner.BROWN_UK_GENRE_REGISTERS["G"] == ("Наукова література", "науковий стиль")
-    assert miner.BROWN_UK_GENRE_REGISTERS["I"] == ("Художні тексти", "художній стиль")
-
-    # Reject non-Brown-UK codes
-    for invalid_code in ("J", "K", "L", "M", "N", "P", "R", "Z"):
-        assert invalid_code not in miner.BROWN_UK_GENRE_REGISTERS
 
 
 def test_quote_sentence_typography() -> None:

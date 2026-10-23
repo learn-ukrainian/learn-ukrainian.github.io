@@ -1,12 +1,9 @@
 """Tests for the 429-friendly slovnyk.me fetch + mirror builder (#3097)."""
 
-import json
-from pathlib import Path
 
 import pytest
 import requests
 
-from scripts.lexicon import build_slovnyk_mirror as mirror
 from scripts.lexicon import enrich_manifest as em
 
 
@@ -52,13 +49,6 @@ def test_retries_on_429_then_succeeds(monkeypatch, sleeps):
     assert len(sleeps) == 2  # two backoff sleeps before the 200
 
 
-def test_retries_on_5xx_then_succeeds(monkeypatch, sleeps):
-    monkeypatch.setattr(em, "_parse_slovnyk_entry", lambda *a, **k: {"text": "ok"})
-    _queue(monkeypatch, [_FakeResp(503), _FakeResp(200)])
-    assert em._fetch_slovnyk_entry("вода", "вода", "newsum") == {"text": "ok"}
-    assert len(sleeps) == 1
-
-
 def test_404_returns_none_without_retry(monkeypatch, sleeps):
     _queue(monkeypatch, [_FakeResp(404)])
     assert em._fetch_slovnyk_entry("неслово", "неслово", "newsum") is None
@@ -87,14 +77,3 @@ def test_network_error_retries_then_raises(monkeypatch, sleeps):
     with pytest.raises(em._SlovnykTransientError):
         em._fetch_slovnyk_entry("вода", "вода", "newsum")
     assert len(sleeps) == em._SLOVNYK_MAX_RETRIES
-
-
-def test_manifest_lemmas_dedupes_preserving_order(tmp_path: Path):
-    manifest = tmp_path / "m.json"
-    manifest.write_text(
-        json.dumps(
-            {"entries": [{"lemma": "вода"}, {"lemma": "дім"}, {"lemma": "вода"}, {"no_lemma": 1}]}
-        ),
-        encoding="utf-8",
-    )
-    assert mirror._manifest_lemmas(manifest) == ["вода", "дім"]

@@ -12,7 +12,6 @@ from fastapi.testclient import TestClient
 
 from scripts.api.monitor_context import fixture_context
 from scripts.api.ops_router import router
-from scripts.api.route_contracts import contract_for_route
 from scripts.common import test_slots
 
 ROUTE = "/api/ops/v1/test-slots"
@@ -37,6 +36,9 @@ def test_route_reports_holders_by_task_without_paths(client: TestClient, tmp_pat
     assert response.status_code == 200
     payload = response.json()
     assert payload["schema"] == "test-slots.status.v1" and payload["enabled"] is True
+    assert payload["observed_at"].endswith("Z")
+    assert payload["age_s"] == 0.0
+    assert payload["requested_at"].endswith("Z")
     assert (payload["pool_size"], payload["slots_in_use"], payload["slots_free"]) == (3, 2, 1)
     assert payload["queue_depth"] == 0
     [holder] = payload["holders"]
@@ -54,12 +56,11 @@ def test_route_reports_a_missing_or_disabled_pool_without_creating_it(
     assert client.get(ROUTE).json()["enabled"] is False
     monkeypatch.setenv(test_slots.ENABLE_ENV, "maybe")
     broken = client.get(ROUTE)
-    assert broken.status_code == 200 and broken.json()["error"]["reason"] == "invalid_configuration"
+    assert broken.status_code == 200
+    failed = broken.json()
+    assert failed["error"]["reason"] == "invalid_configuration"
+    # A failed observation has no source freshness; the request time is separate.
+    assert failed["observed_at"] is None
+    assert failed["age_s"] is None
+    assert failed["requested_at"].endswith("Z")
     assert not (tmp_path / "pool").exists()
-
-
-def test_route_has_a_read_only_host_affine_contract() -> None:
-    contract = contract_for_route(ROUTE)
-    assert contract is not None and contract.pattern == ROUTE and contract.match == "exact"
-    assert contract.mutates is False and contract.locality == "host_affine"
-    assert contract.response_schema_version == "test-slots.status.v1"

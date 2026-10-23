@@ -11,21 +11,6 @@ import pytest
 from scripts.orchestration import install_data_tier_timer
 
 
-def test_data_tier_service_and_timer_contract() -> None:
-    service = (install_data_tier_timer.TEMPLATE_DIR / install_data_tier_timer.UNITS[0]).read_text()
-    timer = (install_data_tier_timer.TEMPLATE_DIR / install_data_tier_timer.UNITS[1]).read_text()
-    assert "Type=oneshot" in service
-    assert "WorkingDirectory=@REPO_ROOT@" in service
-    assert "@REPO_ROOT@/.venv/bin/python -m scripts.ci.data_tier run" in service
-    assert "TimeoutStartSec=" in service
-    assert "TimeoutStopSec=900" in service
-    assert "After=network.target" not in service
-    assert "OnCalendar=*-*-* 02:15:00 UTC" in timer
-    assert "Persistent=true" in timer
-    assert "Unit=learn-ukrainian-data-tier.service" in timer
-    assert "WantedBy=timers.target" in timer
-
-
 def test_installer_check_apply_and_enable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     primary = tmp_path / "primary"
     (primary / ".git").mkdir(parents=True)

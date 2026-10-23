@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.agent_runtime.binary_resolve import augment_path_for_login_bins, resolve_agent_binary
+from scripts.agent_runtime.binary_resolve import resolve_agent_binary
 
 
 def _write_executable(path: Path) -> None:
@@ -33,34 +33,6 @@ def test_resolve_finds_binary_only_under_login_local_bin(tmp_path: Path, monkeyp
 
     # Mutation check: bare shutil.which on the unaugmented PATH must miss.
     assert shutil.which("cursor-agent", path=minimal_path) is None
-
-
-def test_resolve_finds_binary_only_under_login_opencode_bin(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    fake_home = tmp_path / "home"
-    opencode_bin = fake_home / ".opencode" / "bin"
-    binary = opencode_bin / "opencode"
-    _write_executable(binary)
-
-    monkeypatch.setattr(Path, "home", staticmethod(lambda: fake_home))
-    minimal_path = "/usr/bin:/bin"
-
-    resolved = resolve_agent_binary("opencode", path=minimal_path)
-    assert resolved == str(binary.resolve())
-
-
-def test_augment_path_appends_login_dirs_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    fake_home = tmp_path / "home"
-    local_bin = str(fake_home / ".local" / "bin")
-    opencode_bin = str(fake_home / ".opencode" / "bin")
-    monkeypatch.setattr(Path, "home", staticmethod(lambda: fake_home))
-
-    augmented = augment_path_for_login_bins("/usr/bin:/bin")
-    parts = augmented.split(os.pathsep)
-    assert parts[:2] == ["/usr/bin", "/bin"]
-    assert local_bin in parts
-    assert opencode_bin in parts
-    assert parts.count(local_bin) == 1
-    assert parts.count(opencode_bin) == 1
 
 
 def test_resolve_returns_none_when_binary_genuinely_absent(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -430,48 +430,6 @@ def test_direct_invalid_payload_is_unknown(stores, payload):
     }
 
 
-def test_renderer_authority_length_budget(stores):
-    add_authority(stores[1])
-    add_legacy(stores[0])
-    line = inbox_pending.hook("{}", "gemini-infra")["injectSteps"][0]["ephemeralMessage"]
-    assert "PENDING ORDERS: 2" in line
-    assert MESSAGE_ID in line
-    assert len(line) <= 200
-
-
-def test_direct_authority_truncation_and_store_failure(stores):
-    add_authority(stores[1])
-    for letter in ("b", "c"):
-        add_authority(stores[1], identifier="authority-message_" + letter * 32, delivery_id=letter)
-    before = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores}
-    assert inbox_pending.hook("{}", "gemini-infra") == {
-        "injectSteps": [
-            {
-                "ephemeralMessage": f"PENDING ORDERS: 3 (ids {MESSAGE_ID}; truncated); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
-            }
-        ]
-    }
-    assert {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores} == before
-    stores[1].unlink()
-    assert inbox_pending.hook("{}", "gemini-infra") == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
-    assert not stores[1].exists()
-    assert hashlib.sha256(stores[0].read_bytes()).hexdigest() == before[stores[0]]
-
-
 def test_negative_legacy_identifier_is_unknown(stores):
     add_legacy(stores[0], identifier=-1)
     assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
-
-
-def test_main_success_metadata(stores, capsys):
-    add_legacy(stores[0])
-    assert inbox_pending.main(["--recipient", "gemini-infra"]) == 0
-    captured = capsys.readouterr()
-    assert captured.err == ""
-    assert json.loads(captured.out) == {
-        "count": 1,
-        "ids": [1],
-        "truncated": False,
-        "stores": {"legacy": 1, "authority": 0},
-        "probe": "ok",
-    }

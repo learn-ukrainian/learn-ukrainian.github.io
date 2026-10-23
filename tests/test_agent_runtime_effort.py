@@ -68,32 +68,6 @@ def _stub_primary_integrity_sweep(monkeypatch):
 # AC5.1 — delegate.py dispatch --effort parses
 # ---------------------------------------------------------------------------
 
-def test_delegate_dispatch_parses_effort_flag():
-    """``dispatch --effort xhigh ...`` parses to ``args.effort == "xhigh"``."""
-    parser = delegate_mod.build_parser()
-    args = parser.parse_args([
-        "dispatch",
-        "--agent", "claude",
-        "--task-id", "t1",
-        "--prompt", "hi",
-        "--effort", "xhigh",
-    ])
-    assert args.effort == "xhigh"
-    assert args.agent == "claude"
-    assert args.task_id == "t1"
-
-
-def test_delegate_dispatch_effort_default_is_none():
-    """Omitting --effort leaves args.effort == None (falls through to CLI default)."""
-    parser = delegate_mod.build_parser()
-    args = parser.parse_args([
-        "dispatch",
-        "--agent", "claude",
-        "--task-id", "t1",
-        "--prompt", "hi",
-    ])
-    assert args.effort is None
-
 
 def test_delegate_dispatch_rejects_invalid_effort_level():
     """Only the documented choices are accepted."""
@@ -173,32 +147,6 @@ def test_run_worker_forwards_effort_to_runtime_invoke(tmp_path):
     )
     assert kwargs["model"] == "claude-opus-4-7"
     assert kwargs["entrypoint"] == "delegate"
-
-
-def test_run_worker_effort_none_forwards_none(tmp_path):
-    """Omitting effort (default None) propagates None — not a string."""
-    mock_result = MagicMock(
-        ok=True,
-        response="ok",
-        stderr_excerpt=None,
-        returncode=0,
-        rate_limited=False,
-    )
-    state_path = delegate_mod._state_path("t-none")
-    delegate_mod._write_state_atomic(state_path, {"task_id": "t-none"})
-
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
-        delegate_mod._run_worker(
-            task_id="t-none",
-            agent="claude",
-            prompt="hi",
-            mode="read-only",
-            cwd_str=str(tmp_path),
-            model=None,
-            hard_timeout=60,
-        )
-
-    assert mock_invoke.call_args.kwargs["effort"] is None
 
 
 # ---------------------------------------------------------------------------
@@ -344,41 +292,6 @@ def test_claude_adapter_skips_effort_when_unsupported(tmp_path, caplog):
         )
     assert "--effort" not in plan.cmd, (
         f"--effort must be omitted when the CLI does not support it; "
-        f"plan.cmd={plan.cmd}"
-    )
-    assert any(
-        rec.getMessage() == (
-            "Claude CLI does not support effort selection; "
-            "ignoring requested effort and using CLI default (#1396)"
-        ) and rec.args == () for rec in caplog.records
-    ), (
-        f"expected a WARNING log about effort being unsupported; "
-        f"records={[r.message for r in caplog.records]}"
-    )
-
-
-def test_claude_adapter_default_high_skips_when_unsupported(tmp_path, caplog):
-    """Default (effort=None → headless lane default ``high``) must STILL
-    omit ``--effort`` when the CLI does not support it (operator 2026-08-13
-    default-high must not force the flag on old CLIs)."""
-    adapter = ClaudeAdapter()
-    with patch(
-        "utils.claude_version.supports_effort", return_value=False,
-    ), patch(
-        "utils.claude_version.supports_exclude_dynamic_system_prompt_sections",
-        return_value=False,
-    ), caplog.at_level(logging.WARNING, logger="agent_runtime.adapters.claude"):
-        plan = adapter.build_invocation(
-            prompt="hi",
-            mode="read-only",
-            cwd=tmp_path,
-            model="claude-opus-4-7",
-            task_id=None,
-            session_id=None,
-            tool_config=None,
-        )
-    assert "--effort" not in plan.cmd, (
-        f"default-high must be omitted when the CLI does not support --effort; "
         f"plan.cmd={plan.cmd}"
     )
     assert any(

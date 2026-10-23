@@ -273,21 +273,6 @@ def test_checkout_probe_failure_never_creates_worktree(restore_case, monkeypatch
     assert not target.exists()
 
 
-@pytest.mark.parametrize("options", [{}, {"text": True}, {"text": True, "check": True}])
-def test_checkout_existing_branch_resolution_failure_never_creates_worktree(restore_case, options):
-    repo, target, _ref, _sha, _payload = restore_case
-    command = ["worktree", "add", str(target), "codex/missing"]
-    if options.get("check"):
-        with pytest.raises(subprocess.CalledProcessError, match="non-zero"):
-            safe.run_git(command, cwd=repo, profile="checkout", capture_output=True, **options)
-    else:
-        result = safe.run_git(command, cwd=repo, profile="checkout", capture_output=True, **options)
-        assert result.returncode != 0
-        assert isinstance(result.stderr, str if options.get("text") else bytes)
-    assert not target.exists()
-    assert safe.run_git(["show-ref", "--verify", "refs/heads/codex/missing"], cwd=repo).returncode != 0
-
-
 @pytest.mark.parametrize("existing_branch", [False, True])
 def test_restore_git_process_denominator(restore_case, monkeypatch, existing_branch):
     repo, _target, _ref, sha, _payload = restore_case

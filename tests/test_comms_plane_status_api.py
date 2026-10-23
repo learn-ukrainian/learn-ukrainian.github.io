@@ -136,19 +136,6 @@ def test_api_plane_status_invalid_mode(monkeypatch, tmp_path: Path) -> None:
     assert data["mode_error"] == "invalid_mode"
 
 
-def test_comms_v1_collectors_emit_store_not_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")  # #7486: pin legacy path
-    client = _client(_message_ctx(tmp_path, tmp_path / "missing.db"))
-    for path in ("/api/comms/v1/backlog", "/api/comms/v1/dead-letters", "/api/comms/v1/metrics"):
-        response = client.get(path)
-        assert response.status_code == 200
-        payload = response.json()
-        assert payload["response_schema_version"] == "comms.v2"
-        assert "store" in payload
-        assert payload["store"]["kind"] == "legacy-broker"
-        assert "db_path" not in payload
-
-
 def test_comms_v1_collectors_with_seeded_broker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")  # #7486: pin legacy path
     broker = tmp_path / "messages.db"

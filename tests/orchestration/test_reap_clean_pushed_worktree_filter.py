@@ -194,6 +194,7 @@ def test_cli_without_filter_keeps_existing_report(repo: Path, capsys: pytest.Cap
             "branch": "main",
             "task_status": None,
             "size_mb": None,
+            "freed_bytes": 0,
         }
     ]
     assert set(report) == {
@@ -201,6 +202,7 @@ def test_cli_without_filter_keeps_existing_report(repo: Path, capsys: pytest.Cap
         "removed",
         "skipped",
         "freed_mb",
+        "freed_bytes",
         "lock_busy",
         "refusal",
         "refs_stale",
@@ -542,6 +544,7 @@ def test_quarantine_recovery_respects_selection(
             "branch": None,
             "task_status": None,
             "size_mb": None,
+            "freed_bytes": 0,
         }
         assert b.exists() is apply
         assert holder.exists() is not apply

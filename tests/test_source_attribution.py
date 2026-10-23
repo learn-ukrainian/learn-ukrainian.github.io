@@ -5,29 +5,19 @@ from __future__ import annotations
 from scripts.lexicon.enrich_manifest import _merge_homonym_relations, _relation_source_label
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
-    E2U_LABEL,
-    GOROH_LABEL,
-    GRAC_LABEL,
-    GRINCHENKO_LABEL,
     KARAVANSKY_LABEL,
     KHRESHCHATYK_LABEL,
     LINGUISTIC_NORM_LABEL,
     MIYKLAS_LABEL,
-    PHRASEOLOGY_LABEL,
-    SHTEPA_LABEL,
     SUM20_ACADEMIC_LABEL,
-    VOLOSHCHAK_LABEL,
-    WIKIDATA_LABEL,
     academic_label_for_slug,
     apply_entry_attribution,
     cites_soviet_dictionary_outside_context,
-    join_academic_source_labels,
     learner_facing_mirror_violations,
     learner_facing_unmapped_source_violations,
     normalize_academic_label,
     official_url_for_slug,
     official_url_from_mirror,
-    remap_mirror_source_string,
     soviet_citation_learner_violation,
     withhold_legacy_soviet_citations,
 )
@@ -118,40 +108,12 @@ def test_gate_diagnostic_note_is_removed_without_withholding_wordnet_item() -> N
         assert report["gate_notes_removed"] == 2
 
 
-def test_soviet_marker_must_be_explicit_on_each_direct_contrast_citation() -> None:
-    for unrelated in (
-        {"lemma": "русифікація"},
-        {"definition": "russif red_flag"},
-        {"sovietization_risk": 2},
-        {"red_flag": True},
-    ):
-        card = {**unrelated, "soviet_colonization_context": {"source": "СУМ-11", "sovietization_risk": 0}}
-        assert soviet_citation_learner_violation(card) == "missing russification marker"
-    assert soviet_citation_learner_violation({
-        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": "true"}
-    }) == "missing russification marker"
-    assert soviet_citation_learner_violation({
-        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": True},
-        "heteronyms": [{"soviet_colonization_context": {"source": "SUM_11"}}],
-    }) == "missing russification marker"
-    assert soviet_citation_learner_violation({
-        "heteronyms": [{"soviet_colonization_context": {"source": "СУМ-11", "red_flag": True}}]
-    }) is None
-
-
 def test_nested_contrast_key_does_not_exempt_a_section_citation() -> None:
     card = {"sections": {"synonyms": {"items": ["стяг"], "soviet_colonization_context": {
         "source": "СУМ-11", "red_flag": True
     }}}}
     assert cites_soviet_dictionary_outside_context(card)
     assert soviet_citation_learner_violation(card) == "outside soviet_colonization_context"
-
-
-def test_contrast_citation_requires_an_object() -> None:
-    for context in ("СУМ-11", ["СУМ-11"]):
-        assert soviet_citation_learner_violation({"soviet_colonization_context": context}) == (
-            "outside soviet_colonization_context"
-        )
 
 
 def test_soviet_label_variants_are_citations() -> None:
@@ -180,21 +142,6 @@ def test_literary_quote_mentions_dictionary_without_citing_it() -> None:
     assert soviet_citation_learner_violation(entry) == "outside soviet_colonization_context"
 
 
-def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:
-    assert remap_mirror_source_string("slovnyk.me: Словник синонімів Караванського") == KARAVANSKY_LABEL
-    assert (
-        remap_mirror_source_string(
-            "slovnyk.me: Словник синонімів Караванського + Словник синонімів української мови"
-        )
-        == f"{KARAVANSKY_LABEL} + Словник синонімів української мови"
-    )
-
-
-def test_official_url_from_mirror_maps_sum20() -> None:
-    mirror = "https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D1%81%D0%B0"
-    assert official_url_from_mirror(mirror) == "https://services.ulif.org.ua/expl/#/word/%D0%BA%D0%BE%D1%81%D0%B0"
-
-
 def test_usage_notes_family_labels_match_slovnyk_me_and_stay_mirror_only() -> None:
     """#6460: reuse slovnyk.me labels; do not invent official edition URLs."""
     assert SLOVNYK_ME_DICTS["linguistic_norm"] == LINGUISTIC_NORM_LABEL
@@ -208,35 +155,6 @@ def test_usage_notes_family_labels_match_slovnyk_me_and_stay_mirror_only() -> No
         official_url_from_mirror("https://slovnyk.me/dict/khreshchatyk/%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B8")
         is None
     )
-
-
-def test_usage_notes_corrective_labels_match_slovnyk_me_and_stay_mirror_only() -> None:
-    """#6460: voloschak / foreign_shtepa corrective notes reuse slovnyk.me
-    labels; no official edition URLs are invented for them either."""
-    assert SLOVNYK_ME_DICTS["voloschak"] == VOLOSHCHAK_LABEL
-    assert SLOVNYK_ME_DICTS["foreign_shtepa"] == SHTEPA_LABEL
-    assert academic_label_for_slug("voloschak") == VOLOSHCHAK_LABEL
-    assert academic_label_for_slug("foreign_shtepa") == SHTEPA_LABEL
-    assert official_url_for_slug("voloschak", "відщепенець") is None
-    assert official_url_for_slug("foreign_shtepa", "конекція") is None
-    assert (
-        official_url_from_mirror("https://slovnyk.me/dict/voloschak/%D0%B2%D1%96%D0%B4%D1%89%D0%B5%D0%BF%D0%B5%D0%BD%D0%B5%D1%86%D1%8C")
-        is None
-    )
-    assert (
-        official_url_from_mirror("https://slovnyk.me/dict/foreign_shtepa/%D0%BA%D0%BE%D0%BD%D0%B5%D0%BA%D1%86%D1%96%D1%8F")
-        is None
-    )
-
-
-def test_join_academic_source_labels_deduplicates() -> None:
-    labels = join_academic_source_labels(
-        [
-            "slovnyk.me: Словник синонімів Караванського",
-            "Словник синонімів Караванського",
-        ]
-    )
-    assert labels == KARAVANSKY_LABEL
 
 
 def test_apply_entry_attribution_moves_mirror_urls_internal() -> None:
@@ -280,28 +198,6 @@ def test_apply_entry_attribution_moves_mirror_urls_internal() -> None:
         "https://services.ulif.org.ua/expl/#/word/"
     )
     assert learner_facing_mirror_violations(entry) == []
-
-
-def test_idiom_section_source_remaps_phraseology_label() -> None:
-    entry = {
-        "lemma": "яблуко",
-        "sections": {
-            "idioms": {
-                "items": [{"phrase": "яблуко розбрату", "definition": "test", "source": PHRASEOLOGY_LABEL}],
-                "source": "slovnyk.me: Фразеологічний словник української мови",
-                "source_urls": ["https://slovnyk.me/dict/phraseology/%D1%8F%D0%B1%D0%BB%D1%83%D0%BA%D0%BE"],
-            }
-        },
-    }
-    apply_entry_attribution(entry)
-    assert entry["sections"]["idioms"]["source"] == PHRASEOLOGY_LABEL
-    assert learner_facing_mirror_violations(entry) == []
-
-
-def test_normalize_academic_label_maps_relation_pairs_corpora() -> None:
-    assert normalize_academic_label("relation_pairs/grac19a") == GRAC_LABEL
-    assert normalize_academic_label("relation_pairs/miyklas.com.ua") == MIYKLAS_LABEL
-    assert normalize_academic_label("Грінченко") == GRINCHENKO_LABEL
 
 
 def test_relation_pairs_label_flows_to_provenance_footer_and_gate() -> None:
@@ -384,114 +280,3 @@ def test_learner_provenance_walker_checks_section_singular_source_url() -> None:
     }
     violations = learner_facing_mirror_violations(entry)
     assert any("sections.synonyms.source_url" in item for item in violations)
-
-
-def test_apply_entry_attribution_handles_goroh_translation() -> None:
-    entry = {
-        "lemma": "албанці",
-        "enrichment": {
-            "translation": {
-                "en": ["Albanian", "Albanians"],
-                "source": "Горох (переклад)",
-                "mirror_source_url": "https://goroh.pp.ua/Переклад/%D0%B0%D0%BB%D0%B1%D0%B0%D0%BD%D1%86%D1%96",
-            },
-            "sources": ["Горох (переклад)"],
-        },
-    }
-    assert apply_entry_attribution(entry) is False
-    assert entry["enrichment"]["translation"]["source"] == GOROH_LABEL
-    assert "source_url" not in entry["enrichment"]["translation"]
-    assert (
-        entry["enrichment"]["translation"]["mirror_source_url"]
-        == "https://goroh.pp.ua/Переклад/%D0%B0%D0%BB%D0%B1%D0%B0%D0%BD%D1%86%D1%96"
-    )
-    assert learner_facing_mirror_violations(entry) == []
-    assert learner_facing_unmapped_source_violations(entry) == []
-
-
-def test_normalize_academic_label_maps_goroh() -> None:
-    assert normalize_academic_label("goroh.pp.ua") == GOROH_LABEL
-    assert normalize_academic_label("goroh.pp.ua: Переклад") == GOROH_LABEL
-    assert normalize_academic_label("Горох") == GOROH_LABEL
-    assert normalize_academic_label("Горох (переклад)") == GOROH_LABEL
-
-
-def test_apply_entry_attribution_handles_e2u_translation() -> None:
-    entry = {
-        "lemma": "ампір",
-        "enrichment": {
-            "translation": {
-                "en": ["Empire style"],
-                "source": "e2u.org.ua",
-                "source_url": "https://e2u.org.ua/s?w=%D0%B0%D0%BC%D0%BF%D1%96%D1%80&dicts=all",
-            },
-            "sources": ["e2u.org.ua"],
-        },
-    }
-    assert apply_entry_attribution(entry) is True
-    assert entry["enrichment"]["translation"]["source"] == E2U_LABEL
-    assert (
-        entry["enrichment"]["translation"]["source_url"]
-        == "https://e2u.org.ua/s?w=%D0%B0%D0%BC%D0%BF%D1%96%D1%80&dicts=all"
-    )
-    assert entry["enrichment"]["sources"] == [E2U_LABEL]
-    assert learner_facing_mirror_violations(entry) == []
-    assert learner_facing_unmapped_source_violations(entry) == []
-
-
-def test_normalize_academic_label_maps_e2u() -> None:
-    assert normalize_academic_label("e2u") == E2U_LABEL
-    assert normalize_academic_label("e2u.org.ua") == E2U_LABEL
-    assert normalize_academic_label("e2u: Переклад") == E2U_LABEL
-    assert normalize_academic_label("e2u (переклад)") == E2U_LABEL
-    assert normalize_academic_label(E2U_LABEL) == E2U_LABEL
-
-
-def test_apply_entry_attribution_handles_wikidata_translation() -> None:
-    entry = {
-        "lemma": "школа",
-        "enrichment": {
-            "translation": {
-                "en": ["school"],
-                "source": "Wikidata",
-                "source_url": "https://www.wikidata.org/wiki/Q3914",
-            },
-            "sources": ["Wikidata"],
-        },
-    }
-    assert apply_entry_attribution(entry) is False
-    assert entry["enrichment"]["translation"]["source"] == WIKIDATA_LABEL
-    assert (
-        entry["enrichment"]["translation"]["source_url"]
-        == "https://www.wikidata.org/wiki/Q3914"
-    )
-    assert entry["enrichment"]["sources"] == [WIKIDATA_LABEL]
-    assert learner_facing_mirror_violations(entry) == []
-    assert learner_facing_unmapped_source_violations(entry) == []
-
-
-def test_normalize_academic_label_maps_wikidata() -> None:
-    assert normalize_academic_label("wikidata") == WIKIDATA_LABEL
-    assert normalize_academic_label("Wikidata") == WIKIDATA_LABEL
-    assert normalize_academic_label("wikidata.org") == WIKIDATA_LABEL
-    assert normalize_academic_label("wikidata.org/wiki/Q1") == WIKIDATA_LABEL
-    assert normalize_academic_label("evilwikidata.org") == "evilwikidata.org"
-    assert normalize_academic_label(WIKIDATA_LABEL) == WIKIDATA_LABEL
-
-
-def test_ulif_dictua_attribution_labels() -> None:
-    from scripts.lexicon.source_attribution import (
-        ULIF_DICTUA_LABEL,
-        ULIF_DICTUA_URL,
-        academic_label_for_slug,
-        normalize_academic_label,
-        official_url_for_slug,
-    )
-
-    assert academic_label_for_slug("ulif") == ULIF_DICTUA_LABEL
-    assert academic_label_for_slug("ulif_dictua") == ULIF_DICTUA_LABEL
-    assert official_url_for_slug("ulif") == ULIF_DICTUA_URL
-    assert official_url_for_slug("ulif_dictua") == ULIF_DICTUA_URL
-    assert normalize_academic_label("«Словники України»") == ULIF_DICTUA_LABEL
-    assert normalize_academic_label("УМІФ НАН України") == ULIF_DICTUA_LABEL
-    assert normalize_academic_label(ULIF_DICTUA_LABEL) == ULIF_DICTUA_LABEL

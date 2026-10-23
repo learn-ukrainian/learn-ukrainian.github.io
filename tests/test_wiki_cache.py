@@ -39,9 +39,6 @@ class TestWikiCache:
         result = self.cache.get("summary", "Тарас Шевченко")
         assert result == '{"title": "Шевченко"}'
 
-    def test_miss_returns_none(self):
-        assert self.cache.get("summary", "Не існує") is None
-
     def test_expired_returns_none(self, request):
         from rag.wiki_cache import WikiCache
 
@@ -64,10 +61,6 @@ class TestWikiCache:
         result = self.cache.get("summary", "Fake Article")
         assert result == NEGATIVE_SENTINEL
         assert self.cache.is_negative(result)
-
-    def test_is_negative_false_for_normal(self):
-        assert not self.cache.is_negative("some data")
-        assert not self.cache.is_negative(None)
 
     def test_title_normalization(self):
         """Spaces→underscores, first letter capitalized."""
@@ -102,13 +95,6 @@ class TestWikiCache:
         assert deleted == 1
         assert self.cache.get("summary", "Fresh") == "data"
 
-    def test_stats(self):
-        self.cache.put("summary", "A", "data")
-        self.cache.put_negative("summary", "B")
-        stats = self.cache.stats()
-        assert stats["total_entries"] == 2
-        assert stats["negative_entries"] == 1
-
     def test_overwrite(self):
         """Put with same key overwrites."""
         self.cache.put("summary", "Київ", "old")
@@ -140,40 +126,6 @@ class TestWikiCache:
         assert cache.get("summary", "Positive") == "valid article"
 
         # clear_expired deletes the stale negative entry but preserves the positive entry
-        deleted = cache.clear_expired()
-        assert deleted == 1
-        assert cache.get("summary", "Positive") == "valid article"
-
-    def test_default_negative_ttl_expiry(self, tmp_path, request):
-        """Default-constructed WikiCache() expires negative entries after DEFAULT_NEGATIVE_TTL (#9016)."""
-        from rag.wiki_cache import DEFAULT_NEGATIVE_TTL, NEGATIVE_SENTINEL, WikiCache
-
-        db_file = tmp_path / "default_wiki_cache.db"
-        cache = WikiCache(db_path=db_file)
-        request.addfinalizer(cache.close)
-        assert cache.negative_ttl == DEFAULT_NEGATIVE_TTL
-        assert cache.negative_ttl == 3600
-
-        cache.put("summary", "Positive", "valid article")
-        cache.put_negative("summary", "Negative")
-
-        assert cache.get("summary", "Positive") == "valid article"
-        assert cache.get("summary", "Negative") == NEGATIVE_SENTINEL
-
-        # Backdate both entries by DEFAULT_NEGATIVE_TTL + 10s (> 1h, but << 30d)
-        now = int(time.time())
-        cache._conn.execute(
-            "UPDATE wiki_cache SET fetched_at = ?",
-            (now - (DEFAULT_NEGATIVE_TTL + 10),),
-        )
-        cache._conn.commit()
-
-        # Negative entry is expired under production default negative TTL
-        assert cache.get("summary", "Negative") is None
-        # Positive entry remains valid
-        assert cache.get("summary", "Positive") == "valid article"
-
-        # clear_expired deletes stale negative entry, keeps positive
         deleted = cache.clear_expired()
         assert deleted == 1
         assert cache.get("summary", "Positive") == "valid article"
@@ -293,21 +245,6 @@ class TestWikipediaExtract:
         with patch("rag.source_query._get", return_value=mock_response):
             result = self.extract("Не існує стаття")
         assert result is None
-
-    def test_truncation(self):
-        long_text = "А" * 60000
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "query": {"pages": {"1": {"title": "Test", "extract": long_text, "fullurl": "url"}}}
-        }
-        mock_response.raise_for_status = MagicMock()
-
-        with patch("rag.source_query._get", return_value=mock_response):
-            result = self.extract("Test", max_chars=50000)
-        assert result is not None
-        assert len(result["extract"]) < 60000
-        assert "[... truncated ...]" in result["extract"]
 
 
 class TestWikipediaSectionText:

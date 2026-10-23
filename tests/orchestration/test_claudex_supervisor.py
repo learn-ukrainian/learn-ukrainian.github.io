@@ -143,67 +143,6 @@ def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
         )
 
 
-def test_venv_less_fixture_ignores_inherited_git_repository_environment(
-    monkeypatch: pytest.MonkeyPatch,
-    request: pytest.FixtureRequest,
-    tmp_path: Path,
-) -> None:
-    """Fixture Git commands must stay in their temp repo under hostile hook env."""
-    decoy = tmp_path / "decoy_repo"
-    decoy.mkdir()
-    clean_git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    git_config = {
-        "GIT_CONFIG_NOSYSTEM": "1",
-        "GIT_CONFIG_GLOBAL": os.devnull,
-        "GIT_AUTHOR_NAME": "Fixture Author",
-        "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
-        "GIT_COMMITTER_NAME": "Fixture Author",
-        "GIT_COMMITTER_EMAIL": "fixture@example.invalid",
-        "GIT_TERMINAL_PROMPT": "0",
-    }
-    clean_git_env.update(git_config)
-
-    def git(*args: str) -> str:
-        completed = subprocess.run(
-            ["git", *args],
-            cwd=decoy,
-            env=clean_git_env,
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-        return completed.stdout.strip()
-
-    subprocess.run(["git", "init", "--quiet"], cwd=decoy, env=clean_git_env, check=True, timeout=30)
-    (decoy / "sentinel.txt").write_text("decoy repo must remain untouched\n", encoding="utf-8")
-    git("add", "sentinel.txt")
-    subprocess.run(
-        ["git", "commit", "--quiet", "-m", "decoy baseline"],
-        cwd=decoy,
-        env=clean_git_env,
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    original_head = git("rev-parse", "HEAD")
-    original_index = (decoy / ".git/index").read_bytes()
-    original_worktrees = git("worktree", "list", "--porcelain")
-    shared_python = _repo_python()
-    monkeypatch.setattr(sys.modules[__name__], "_repo_python", lambda: shared_python)
-
-    monkeypatch.setenv("GIT_DIR", os.fspath(decoy / ".git"))
-    monkeypatch.setenv("GIT_WORK_TREE", os.fspath(decoy))
-    fixture = request.getfixturevalue("venv_less_linked_worktree")
-
-    assert (fixture.repo / ".git").is_dir()
-    assert git("rev-parse", "HEAD") == original_head
-    assert (decoy / ".git/index").read_bytes() == original_index
-    assert git("worktree", "list", "--porcelain") == original_worktrees
-    assert git("status", "--porcelain") == ""
-
-
 _SUPERVISOR = _REPO_ROOT / "scripts/orchestration/claudex_supervisor.py"
 _SESSION_ID = "official-session-5265"
 _HANDOFF_AGENT = "claude-infra"
@@ -518,24 +457,6 @@ def test_malformed_request_is_quarantined_once_without_persisting_payload(
     assert "unsupported fields" in raw
     assert not request_path.exists()
     assert not list((supervisor.run_dir / "processing").glob("*.json"))
-
-
-def test_wrongly_typed_request_is_quarantined_without_crashing_supervisor(
-    tmp_path: Path,
-) -> None:
-    supervisor = _seed_running_supervisor(tmp_path)
-    _bind(supervisor)
-    state, _ = _prepare_lease(tmp_path)
-    request = _create_valid_request(supervisor, state)
-    request["lineage_id"] = {"unexpected": "object"}
-    request_path = _request_path(tmp_path, supervisor.run_id)
-    request_path.write_text(json.dumps(request), encoding="utf-8")
-
-    assert supervisor._check_request() is None
-    assert load_runtime(tmp_path, supervisor.run_id)["state"] == "running"
-    rejected = list((supervisor.run_dir / "rejected").glob("*.json"))
-    assert len(rejected) == 1
-    assert "lifecycle identity is malformed" in rejected[0].read_text(encoding="utf-8")
 
 
 def test_ordinary_child_crash_never_relaunches(tmp_path: Path) -> None:

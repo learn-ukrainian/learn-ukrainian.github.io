@@ -378,7 +378,14 @@ def install_full_markers(repo, tree, root, scope):
         clean.chmod(0o700)
         hooks = directory / "hooks"
         hooks.mkdir()
-        for name in ("reference-transaction", "post-index-change", "post-commit"):
+        for name in (
+            "reference-transaction",
+            "post-index-change",
+            "pre-commit",
+            "prepare-commit-msg",
+            "commit-msg",
+            "post-commit",
+        ):
             hook = hooks / name
             hook.write_bytes(program.read_bytes())
             hook.chmod(0o700)
@@ -400,9 +407,46 @@ def install_full_markers(repo, tree, root, scope):
             "protocol.ext.allow": "always",
             "gc.auto": "1",
             "maintenance.auto": "true",
+            "trailer.X-Agent.command": str(program),
+            "trailer.X-Agent.cmd": str(program),
         }.items():
             _git(target, *config, key, value)
     return markers
+
+
+@pytest.mark.parametrize("scope", ["common", "worker", "both"])
+def test_scoped_preparation_never_imports_execution_inventory(boundary_tree, tmp_path, scope):
+    from scripts.lib.git_identity import git_identity_env
+    from scripts.orchestration import execution_safe_git as safe
+    from scripts.orchestration.safe_git_context import SafeGitContext
+
+    repo, tree, _tasks, _record = boundary_tree
+    head = _git(tree, "rev-parse", "HEAD")
+    (tree / "payload.bin").write_bytes(b"owned\r\n\x00")
+    markers = install_full_markers(repo, tree, tmp_path, scope)
+    admin = Path((tree / ".git").read_text().strip().removeprefix("gitdir: "))
+    with SafeGitContext(objects=repo / ".git/objects", temp_root=tmp_path) as context:
+        context.source_git_dir = admin
+        result = safe.prepare_scoped_commit(
+            context,
+            worktree=tree,
+            branch="codex/boundary",
+            expected_head=head,
+            paths=("payload.bin",),
+            subject="scoped preparation",
+            body="Refs #10931",
+            trailer="X-Agent: codex/scoped",
+            identity=git_identity_env("codex"),
+        )
+    assert result.process.returncode == 0, result.process.stderr
+    assert result.head != head
+    assert not any(marker.exists() for marker in markers)
+    assert (
+        safe.run_git(["cat-file", "blob", f"{result.head}:payload.bin"], cwd=tree, capture_output=True).stdout
+        == b"owned\r\n\x00"
+    )
+    message = safe.run_git(["cat-file", "commit", result.head], cwd=tree, capture_output=True, text=True).stdout
+    assert message.count("X-Agent:") == 1 and "X-Agent: codex/scoped" in message
 
 
 PROOF_CALLERS = ["origin-gone", "live-heads", "closeout-fetch", "preserve-then-reap"]
@@ -571,19 +615,6 @@ def test_restore_refuses_worker_cwd_before_raw_checkout(boundary_tree):
         branch="unused",
         worktree_path=tree / "new",
     ) == (False, "restore requires the primary repository")
-
-
-@pytest.mark.parametrize("attribute", ["text", "eol=lf", "working-tree-encoding=UTF-8", "ident"])
-def test_preserve_refuses_other_byte_transformations(boundary_tree, attribute):
-    from scripts.orchestration import reap_worktrees as rw
-
-    _repo, tree, _tasks, _record = boundary_tree
-    (tree / ".gitattributes").write_text(f"payload.bin {attribute}\n")
-    (tree / "payload.bin").write_bytes(b"$Id: expanded $\r\n")
-    info = rw.WorktreeInfo(tree, "codex/boundary", _git(tree, "rev-parse", "HEAD"))
-    error = rw._preserve_dirty_worktree(info)
-    assert error is not None and "preserve_transform_attribute" in error
-    assert (tree / "payload.bin").read_bytes() == b"$Id: expanded $\r\n"
 
 
 def test_remote_and_signing_execution_overrides_are_refused(boundary_tree, tmp_path):

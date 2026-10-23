@@ -210,26 +210,6 @@ def three_run_perf_probe() -> Callable[[Callable[[], object]], tuple[list[object
     return _measure_three_runs
 
 
-def _dashboard_endpoints() -> set[str]:
-    return {endpoint for endpoints in DASHBOARD_LOADS.values() for endpoint in endpoints}
-
-
-def test_dashboard_endpoint_budget_coverage_is_explicit():
-    missing = sorted(_dashboard_endpoints() - BUDGETS.keys())
-    assert not missing, f"dashboard endpoints missing BUDGETS entries: {missing}"
-
-
-def test_p95_of_three_perf_probe_allows_one_slow_tail(monkeypatch, three_run_perf_probe):
-    samples = iter([0.0, 0.01, 0.01, 1.21, 1.21, 1.22])
-    monkeypatch.setattr(time, "perf_counter", lambda: next(samples))
-
-    results, timings, p95_elapsed = three_run_perf_probe(lambda: "ok")
-
-    assert results == ["ok", "ok", "ok"]
-    assert max(timings) > 1.0
-    assert p95_elapsed < 0.1
-
-
 @pytest.mark.slow
 def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
     broker_db = tmp_path / "messages.db"

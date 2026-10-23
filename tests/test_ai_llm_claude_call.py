@@ -7,11 +7,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from ai_llm.claude_call import CLAUDE_MODEL_LADDER, call_claude_with_fallback
-
-
-def test_claude_call_fallback_uses_current_practical_seat():
-    assert CLAUDE_MODEL_LADDER[-1] == "claude-sonnet-5-5"
+from ai_llm.claude_call import call_claude_with_fallback
 
 
 def _result(

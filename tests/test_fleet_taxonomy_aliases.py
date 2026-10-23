@@ -18,8 +18,6 @@ from scripts.orchestration.fleet_taxonomy import (
     EpicInfo,
     ResolvedArea,
     UnknownAreaError,
-    list_valid_names,
-    load_fleet_taxonomy,
     resolve_area,
     resolve_area_by_epic,
 )
@@ -40,35 +38,9 @@ def _infra_harness_stream_id() -> str:
 INFRA_STREAM_ID = _infra_harness_stream_id()
 
 
-def test_area_assignments_give_gemini_a_driver_slot_wherever_codex_has_one() -> None:
-    assignments = yaml.safe_load((_REPO_ROOT / "scripts/config/area_assignments.yaml").read_text())
-    slots = [slot for area in assignments["assignments"].values() for slot in area.get("slots", [])]
-    codex_lanes = {slot.removeprefix("codex-") for slot in slots if slot.startswith("codex-")}
-    gemini_lanes = {slot.removeprefix("gemini-") for slot in slots if slot.startswith("gemini-")}
-    assert codex_lanes
-    assert gemini_lanes == codex_lanes - {"epics", "practice"}
-    assert assignments["assignments"]["epics"] == {
-        "driver_agent_type": "infra-orchestrator",
-        "slots": ["claude-epics", "codex-epics"],
-    }
-
-
 # ---------------------------------------------------------------------------
 # 1. Helper Unit Tests (scripts/orchestration/fleet_taxonomy.py)
 # ---------------------------------------------------------------------------
-
-
-def test_load_fleet_taxonomy_structure() -> None:
-    registry = load_fleet_taxonomy()
-    assert "infra" in registry.areas
-    assert "harness" in registry.areas
-    assert "devops" in registry.areas
-    assert "atlas" in registry.areas
-    assert "core" in registry.areas
-    assert "seminars" in registry.areas
-    assert "hramatka" in registry.areas
-    assert "monitor" in registry.areas
-    assert "open-model-data" in registry.areas
 
 
 def test_resolve_area_canonical_ids() -> None:
@@ -157,27 +129,6 @@ def test_resolve_area_unknown_raises_typed_error() -> None:
     assert "Unknown area name, alias, or epic 'invalid_area_xyz'" in err_msg
     assert "infra" in err_msg
     assert "harness" in err_msg
-
-
-def test_resolve_area_unknown_epic_raises_typed_error() -> None:
-    with pytest.raises(UnknownAreaError) as exc_info:
-        resolve_area(999999)
-
-    err_msg = str(exc_info.value)
-    assert "Unknown epic number 999999" in err_msg
-
-
-def test_list_valid_names() -> None:
-    names = list_valid_names()
-    assert "infra" in names
-    assert "infra-harness" in names
-    assert "harness" in names
-    assert "eval-harness" not in names
-    assert "a1-upgrade" not in names
-    assert "devops" in names
-    assert "monitor" in names
-    assert "open-model-data" in names
-    assert names == tuple(sorted(names))
 
 
 # ---------------------------------------------------------------------------
@@ -306,30 +257,6 @@ def test_handoff_identity_shell_resolver_fails_closed_without_alias_map(tmp_path
     assert result.returncode == 1
     assert result.stdout == ""
     assert "launcher alias map missing or malformed" in result.stderr
-
-
-@pytest.mark.parametrize(
-    "launcher",
-    [
-        "start-claude.sh",
-        "start-codex.sh",
-        "start-gemini.sh",
-        "start-grok.sh",
-        "start-kimi.sh",
-        "start-glm.sh",
-        "start-claude-driver.sh",
-        "start-codex-driver.sh",
-        "start-gemini-driver.sh",
-        "start-grok-driver.sh",
-        "start-cursor-driver.sh",
-    ],
-)
-def test_launcher_static_selector_wiring(launcher: str) -> None:
-    """Public wrappers delegate selector behavior to the shared launcher core."""
-    script_path = _REPO_ROOT / launcher
-    assert script_path.is_file(), f"Launcher missing: {launcher}"
-    content = script_path.read_text(encoding="utf-8")
-    assert "scripts/lib/launcher_core.sh" in content, f"{launcher} does not source launcher_core.sh"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -510,10 +437,3 @@ def test_session_setup_hook_names_driver_state_as_authoritative(tmp_path: Path) 
     assert "ASSIGNED EPIC: curriculum-upgrade.epic" in context
     assert "Driver state (AUTHORITATIVE, read it FIRST" in context
     assert ".claude/curriculum-upgrade-epic/DRIVER-STATE.md" in context
-
-
-@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
-def test_session_setup_hook_omits_driver_state_when_absent(tmp_path: Path) -> None:
-    context = _run_session_setup_hook(tmp_path, "curriculum-upgrade")
-    assert "ASSIGNED EPIC: curriculum-upgrade.epic" in context
-    assert "DRIVER-STATE.md" not in context

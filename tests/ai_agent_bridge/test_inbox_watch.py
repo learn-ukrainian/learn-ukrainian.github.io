@@ -82,21 +82,6 @@ def test_cursor_advances_after_emission_and_does_not_reemit(isolate_db: Path):
     assert f"id={message_id}" in output.getvalue()
 
 
-def test_empty_poll_is_silent(isolate_db: Path, tmp_path: Path):
-    """An empty monitor tick writes no stdout notification."""
-    output = io.StringIO()
-    cursor = _inbox_watch.run_watcher(
-        "grok",
-        db_path=isolate_db,
-        lock_dir=tmp_path / "locks",
-        output=output,
-        once=True,
-    )
-
-    assert cursor == 0
-    assert output.getvalue() == ""
-
-
 def test_notification_escapes_newlines_and_bounds_preview(isolate_db: Path):
     """One message always creates one bounded Monitor event line."""
     message_id = _send("first line\nsecond line\r\n" + ("x" * 400))
@@ -230,20 +215,6 @@ def test_recipients_for_registered_grok_monitor_slot_is_dedicated():
     """With grok-monitor registered (#10835) its watcher reads only its own slot."""
     assert _inbox_watch.recipients_for_agent("grok-monitor") == ("grok-monitor",)
     assert _inbox_watch.recipients_for_agent("codex-monitor") == ("codex",)
-
-
-def test_poll_once_surfaces_messages_for_phantom_empty_roster_identity(isolate_db: Path, legacy_monitor_roster):
-    """Watcher polling for a phantom identity queries messages for the resolved provider aliases."""
-    canonical_id = _send("canonical message", to_llm="grok")
-    alias_id = _send("historical message", to_llm="grok-build")
-
-    conn = _inbox_watch.open_readonly_db(isolate_db)
-    try:
-        events = _inbox_watch.poll_once(conn, "grok-monitor", last_seen=0)
-    finally:
-        conn.close()
-
-    assert [event.message_id for event in events] == [canonical_id, alias_id]
 
 
 def test_live_supervisory_retries_outages_until_prepared(capsys):

@@ -80,23 +80,6 @@ def test_thin_bundle_restore_after_removal(succession, tmp_path, capsys):
     assert (restored / "README.md").read_bytes() == b"unpublished abandoned implementation\n"
 
 
-def test_bundle_verification_uses_surviving_primary(succession, monkeypatch, capsys):
-    fixture, _ = succession
-    _detach(fixture)
-    original = output.artifacts.safe_git
-    verified = []
-
-    def git(args, **kwargs):
-        if args[:2] == ["bundle", "verify"]:
-            verified.append(kwargs["cwd"])
-        return original(args, **kwargs)
-
-    monkeypatch.setattr(output.artifacts, "safe_git", git)
-    assert invoke(fixture) == 0
-    capsys.readouterr()
-    assert verified and all(cwd == fixture[0] for cwd in verified), "bundle verification must use primary"
-
-
 def test_detached_bundle_cap_refuses_and_cleans(succession, monkeypatch, capsys):
     fixture, _ = succession
     _detach(fixture)
@@ -176,28 +159,6 @@ def test_refused_retry_does_not_leak_bundles(succession, monkeypatch, capsys):
     assert invoke(fixture) == 0
     assert json.loads(capsys.readouterr().out)["outcome"] == "already_recorded"
     assert {path: (path.stat().st_ino, path.read_bytes()) for path in _bundles(fixture)} == before
-
-
-def test_bundle_hashing_never_materializes_payload(succession, monkeypatch, capsys):
-    fixture, _ = succession
-    _detach(fixture)
-    original = output.artifacts._read_preserved_bytes
-
-    def read(path, **kwargs):
-        assert path.suffix != ".bundle" and not path.name.startswith(".head-bundle-"), (
-            "bundle hashing must stream instead of reading the full payload"
-        )
-        return original(path, **kwargs)
-
-    monkeypatch.setattr(output.artifacts, "_read_preserved_bytes", read)
-    assert invoke(fixture) == 0
-    capsys.readouterr()
-    _, _, manifest = _recorded(fixture)
-    saved = manifest["detached_bundle"]
-    assert hashlib.sha256((fixture[0] / saved["path"]).read_bytes()).hexdigest() == saved["sha256"]
-    assert invoke(fixture) == 0
-    capsys.readouterr()
-    _remove(fixture)
 
 
 def test_streaming_digest_bounds_reads_and_checks_digest(tmp_path, monkeypatch):

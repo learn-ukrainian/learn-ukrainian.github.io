@@ -16,7 +16,3 @@ def test_advisory_defaults_to_opus() -> None:
 def test_advisory_rejects_sonnet_substitution() -> None:
     with pytest.raises(ValueError, match="Do not substitute Sonnet"):
         resolve_claude_ask_model("advisory", CLAUDE_DEFAULT_ASK_MODEL)
-
-
-def test_ordinary_query_keeps_practical_default() -> None:
-    assert resolve_claude_ask_model("query", None) == CLAUDE_DEFAULT_ASK_MODEL

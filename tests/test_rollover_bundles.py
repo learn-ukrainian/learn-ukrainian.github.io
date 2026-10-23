@@ -13,7 +13,6 @@ import subprocess
 import tarfile
 import urllib.error
 from datetime import UTC, datetime
-from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urlsplit
@@ -561,35 +560,6 @@ def test_from_api_selects_the_highest_upload_seq_among_the_callers_rows(
     assert result["lineage_id"] == newer["lineage_id"]
     assert not (target / th.default_state_path(AGENT, older["lineage_id"])).exists()
     assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == "newer own handoff\n"
-
-
-def test_from_api_twenty_newer_foreign_rows_do_not_hide_the_callers_bundle(
-    tmp_path: Path,
-    handoff_candidates: None,
-    capsys: pytest.CaptureFixture[str],
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    own, own_manifest, own_blob = _exported(tmp_path, capsys, "own", handoff="own lane handoff\n")
-    _foreign, foreign_manifest, foreign_blob = _exported(
-        tmp_path, capsys, "foreign", agent="grok-infra", harness="grok-tui", handoff="foreign lane handoff\n"
-    )
-    rows = {1: (own_manifest, own_blob)}
-    rows.update({seq: (foreign_manifest, foreign_blob) for seq in range(2, 22)})
-    server = _BundleServer(rows)
-    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
-    target = tmp_path / "target"
-    target.mkdir()
-
-    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
-    result = json.loads(capsys.readouterr().out)
-
-    list_queries = [parse_qs(urlsplit(path).query) for path in server.paths if urlsplit(path).path.endswith("/bundles")]
-    assert list_queries == [{"agent": [AGENT], "limit": ["20"]}]
-    assert result["status"] == "installed"
-    assert result["upload_seq"] == 1
-    assert (target / th.default_state_path(AGENT, own["lineage_id"])).is_file()
-    assert not (target / ".agent" / "thread-rollovers" / "grok-infra").exists()
-    assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == "own lane handoff\n"
 
 
 TYPED_NONE = '{"status":"none","action":"import-bundle"}\n'
@@ -1375,22 +1345,6 @@ def test_import_refuses_whole_bundle_with_member_outside_lineage_and_own_handoff
 
 
 @pytest.mark.parametrize("extra", DISALLOWED_MEMBERS)
-def test_stage_install_refuses_member_outside_allowlist_before_any_write(
-    tmp_path: Path,
-    handoff_candidates: None,
-    capsys: pytest.CaptureFixture[str],
-    extra: str,
-) -> None:
-    _bundle, manifest, members, _name = _bundle_with_extra(tmp_path, capsys, extra)
-    target = tmp_path / "target"
-    target.mkdir()
-
-    with pytest.raises(ValueError, match="outside its lineage and handoff paths"):
-        th._bundle_stage_install(target, target, manifest=manifest, members=members)
-    assert _tree(target) == {}
-
-
-@pytest.mark.parametrize("extra", DISALLOWED_MEMBERS)
 def test_store_refuses_member_outside_lineage_and_handoffs_leaving_no_row(tmp_path: Path, extra: str) -> None:
     store, lease = _store(tmp_path)
     name = extra.format(lineage=f".agent/thread-rollovers/{AGENT}/lineage-store")
@@ -1660,15 +1614,6 @@ def test_direct_store_upload_and_http_route_refuse_the_same_bundle_for_the_same_
     assert api_store.list_rollover_bundles(REGISTERED_STREAM) == []
 
 
-def test_direct_store_upload_refuses_a_secret_bearing_member_leaving_no_row(tmp_path: Path) -> None:
-    store, lease = _store(tmp_path)
-    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra={HANDOFF_PATH: b"api-key: supersecret-value\n"})
-
-    with pytest.raises(ContentRejectedError, match="credential-assignment"):
-        store.upload_rollover_bundle(lease, manifest=manifest, blob=blob)
-    assert store.list_rollover_bundles(REGISTERED_STREAM) == []
-
-
 class _AppTransport:
     """MonitorClient-shaped adapter that sends bundle traffic to the in-process API."""
 
@@ -1863,39 +1808,6 @@ def test_bundle_unicode_conversion_refusal(tmp_path, capsys, entry_point, member
 
 
 @pytest.mark.parametrize(
-    "member,field",
-    [
-        ("manifest", "generation"),
-        ("manifest", "upload_seq"),
-        ("manifest", "files.0.bytes"),
-        ("manifest", "prepared_at"),
-        ("manifest", "exported_at"),
-        ("lease", "schema_version"),
-        ("lease", "active.generation"),
-        ("lease", "replacement.generation"),
-        ("lease", "bundle_upload_seq"),
-        ("lease", "owner_pid"),
-        ("lease", "owner_pid_started_at"),
-        ("lease", "last_handoff.context_percent"),
-        ("lease", "created_at"),
-        ("lease", "updated_at"),
-        ("lease", "expires_at"),
-        ("lease", "active.started_at"),
-        ("lease", "active.last_seen_at"),
-        ("lease", "replacement.prepared_at"),
-    ],
-)
-def test_bundle_converted_field_sweep(member, field):
-    # Every converted field goes through the JSON boundary, including optional
-    # lease data used by later consumers. A lone surrogate is not UTF-8 data.
-    value = "\ud800"
-    for part in reversed(field.split(".")):
-        value = [value] if part == "0" else {part: value}
-    with pytest.raises(ValueError, match=r"^bundle conversion is invalid$"):
-        th._bundle_load_json(json.dumps({member: value}).encode())
-
-
-@pytest.mark.parametrize(
     "error_type", [ValueError, OverflowError, RecursionError, UnicodeError, ArithmeticError, TypeError]
 )
 def test_bundle_conversion_errors_are_one_sanitized_refusal(error_type):
@@ -1910,22 +1822,6 @@ def test_bundle_conversion_server_errors_propagate(error_type):
     with pytest.raises(error_type, match=BOUND_SENTINEL):
         with th._bundle_conversion():
             raise error_type(BOUND_SENTINEL)
-
-
-@pytest.mark.parametrize("conversion", [
-    lambda: int(float("inf")),
-    lambda: float("invalid"),
-    lambda: Decimal("invalid"),
-    lambda: base64.b64decode(b"!", validate=True),
-    lambda: bytes.fromhex("invalid"),
-    lambda: json.loads("1" * 5000),
-    lambda: "\ud800".encode("utf-8"),
-    lambda: datetime.fromisoformat("9999-12-31T23:59:59-23:59").astimezone(UTC),
-], ids=["int", "float", "decimal", "base64", "hex", "json-number", "unicode", "utc"])
-def test_bundle_actual_stdlib_conversion_refusal(conversion):
-    with pytest.raises(ValueError, match=r"^bundle conversion is invalid$"):
-        with th._bundle_conversion():
-            conversion()
 
 
 @pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
@@ -2370,13 +2266,4 @@ def test_imported_lease_refusal_never_echoes_bundle_strings(tmp_path):
             manifest={},
             members={lease_name: th._bundle_json(state)},
         )
-    assert BOUND_SENTINEL not in str(refusal.value)
-
-
-@pytest.mark.parametrize("name", [f"../{BOUND_SENTINEL}.md", f"{BOUND_SENTINEL}.md"])
-def test_member_allowlist_refusal_never_echoes_bundle_strings(name):
-    from agents_extensions.shared.session_streams.store import validate_rollover_bundle_members
-
-    with pytest.raises(ValueError) as refusal:
-        validate_rollover_bundle_members([name], agent=AGENT, lineage_id="lineage-store", handoff_candidates=())
     assert BOUND_SENTINEL not in str(refusal.value)

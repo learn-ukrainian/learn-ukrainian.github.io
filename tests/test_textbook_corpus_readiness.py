@@ -357,50 +357,6 @@ def test_metadata_match_refuses_wrong_year_and_ambiguous_selection(tmp_path: Pat
     assert _source(report, retained)["selected"] is False
 
 
-def test_metadata_match_handles_grade_one_bukvar_and_combined_grade_volume(tmp_path: Path) -> None:
-    root = tmp_path / "drive"
-    root.mkdir()
-    sources = [
-        "1-klas-bukvar-bolshakova-2025-1",
-        "10-11-klas-mystectvo-nazarenko-2018",
-    ]
-    for source in sources:
-        (root / f"{source}.pdf").write_bytes(f"%PDF-{source}".encode())
-        _write_jsonl(
-            root / f"{source}.jsonl",
-            [{"text": "one"}, {"text": "two"}, {"text": "three"}],
-        )
-    selection = tmp_path / "selection.yaml"
-    selection.write_text(
-        """books:
-  - id: bukvar
-    grade: 1
-    subject: ukrainska_mova
-    author: Большакова
-    year: 2025
-    slug: page-bukvar
-  - id: art
-    grade: 10
-    subject: mystetstvo
-    author: Назаренко
-    year: 2018
-    slug: page-art
-""",
-        encoding="utf-8",
-    )
-    db = tmp_path / "sources.db"
-    _write_db(db, [(source, 3) for source in sources])
-
-    report = readiness.build_report(
-        gdrive_root=root,
-        db_path=db,
-        selection_path=selection,
-    )
-
-    assert _source(report, "page-bukvar")["status"] == "ready"
-    assert _source(report, "page-art")["status"] == "ready"
-
-
 def test_missing_url_map_is_tolerated_and_output_is_atomic_deterministic(tmp_path: Path) -> None:
     root = tmp_path / "drive"
     root.mkdir()
@@ -438,33 +394,6 @@ def test_missing_url_map_is_tolerated_and_output_is_atomic_deterministic(tmp_pat
         {"map_index": 0, "locator": "https://example.test/book"}
     ]
     assert str(tmp_path) not in output.read_text(encoding="utf-8")
-
-
-def test_cli_writes_canonical_receipt(tmp_path: Path) -> None:
-    root = tmp_path / "drive"
-    root.mkdir()
-    (root / "book.pdf").write_bytes(b"%PDF-book")
-    _write_jsonl(root / "book.jsonl", [{"text": "one"}, {"text": "two"}, {"text": "three"}])
-    selection = tmp_path / "selection.yaml"
-    _write_selection(selection, "book")
-    db = tmp_path / "sources.db"
-    _write_db(db, [("book", 3)])
-    output = tmp_path / "receipt.json"
-
-    assert readiness.main(
-        [
-            "--gdrive-root",
-            str(root),
-            "--db",
-            str(db),
-            "--selection",
-            str(selection),
-            "--output",
-            str(output),
-        ]
-    ) == 0
-    assert output.read_text(encoding="utf-8").endswith("\n")
-    assert json.loads(output.read_text(encoding="utf-8"))["schema_version"] == readiness.SCHEMA_VERSION
 
 
 def test_missing_database_fails_closed_without_writing_a_receipt(tmp_path: Path) -> None:

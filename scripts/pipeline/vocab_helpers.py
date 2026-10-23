@@ -51,14 +51,3 @@ def extract_vocab_words(vocab_hints: dict | list | None) -> list[str]:
         return words
 
     return []
-
-
-def format_vocab_for_prompt(vocab_hints: dict | list | None) -> str:
-    """Format vocabulary hints for injection into LLM prompts.
-
-    Returns a human-readable string listing vocabulary words.
-    """
-    words = extract_vocab_words(vocab_hints)
-    if not words:
-        return "(No vocabulary hints in plan)"
-    return ", ".join(words)

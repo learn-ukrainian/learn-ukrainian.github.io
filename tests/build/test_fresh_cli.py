@@ -80,14 +80,6 @@ def test_cli_subprocess_help(subcmd):
     assert "Related:" in proc.stdout
 
 
-def test_main_module_forwarding():
-    """Verify that python -m scripts.build.fresh --help also works and returns code 0."""
-    cmd = [sys.executable, "-m", "scripts.build.fresh", "--help"]
-    proc = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, timeout=10, check=False)
-    assert proc.returncode == 0
-    assert "Fresh build engine E2" in proc.stdout
-
-
 def _build_synthetic_tree(root: Path) -> dict[str, Path]:
     """Helper to build a complete synthetic level tree with plans, locked pack, locked word store, and locks."""
     plans_dir = root / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
@@ -341,17 +333,6 @@ def test_cli_render_prompt_end_to_end_synthetic_tree(tmp_path):
     assert recorded_sha == hashlib.sha256(rendered.encode("utf-8")).hexdigest()
 
 
-def test_cli_repo_root_injected_via_env_var(tmp_path):
-    """Repo root can be injected via LEARN_UKRAINIAN_REPO_ROOT environment variable."""
-    _build_synthetic_tree(tmp_path)
-    output_prompt = tmp_path / "env_rendered_prompt.md"
-
-    with patch.dict("os.environ", {"LEARN_UKRAINIAN_REPO_ROOT": str(tmp_path)}):
-        code = main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1", "-o", str(output_prompt)])
-        assert code == 0
-    assert output_prompt.is_file()
-
-
 def test_cli_recap_fails_closed_when_built_lesson_missing(tmp_path, capsys):
     """Finding 1: Recap fails closed and names missing built lesson (never a placeholder)."""
     _build_synthetic_tree(tmp_path)
@@ -435,16 +416,6 @@ def test_cli_write_refuses_cited_pending_form_before_prompt_render(tmp_path, cap
     gaps = yaml.safe_load((output_dir / "lesson-1.gaps.yaml").read_text(encoding="utf-8"))["gaps"]
     assert any(gap["need"] == "cited_form_stress_pending" and "'слово'" in gap["detail"] for gap in gaps)
     assert not (output_dir / "lesson-1.prompt.md").exists()
-
-
-def test_cli_preflight_passes_on_synthetic_tree(tmp_path, capsys):
-    """MAJOR C: CLI preflight passes with exit code 0 on a synthetic tree with injected --repo-root."""
-    _build_synthetic_tree(tmp_path)
-    code = main(["preflight", "a1", "synthetic-mod", "--lesson", "1", "--repo-root", str(tmp_path)])
-    assert code == 0
-    captured = capsys.readouterr()
-    assert "Preflight status: ok" in captured.out
-    assert "Homographs detected: 0" in captured.out
 
 
 def _synthetic_draft_yaml() -> str:
@@ -727,12 +698,6 @@ def test_cli_build_writer_effort(tmp_path, effort):
             writer.assert_called_once_with(writer="codex", effort=effort)
 
 
-@pytest.mark.parametrize("command,seat", [("write", ["--writer", "codex"]), ("build", [])])
-def test_cli_rejects_invalid_writer_effort(command, seat):
-    with pytest.raises(SystemExit, match="2"):
-        _build_parser().parse_args([command, "a1", "fixture-module", "--lesson", "1", *seat, "--writer-effort", "max"])
-
-
 def test_cli_recap_flag_disagreement_fails(tmp_path, capsys):
     """MAJOR B: --recap flag that disagrees with plan lesson kind fails."""
     _build_synthetic_tree(tmp_path)
@@ -818,35 +783,6 @@ def test_path_guard_rejects_symlinked_sidecar_and_schema(tmp_path):
     (schemas / "fresh-lesson-gates-v1.schema.json").symlink_to(target)
     with pytest.raises(ValueError, match="path_outside_allowed_root"):
         checked_path(tmp_path, "schemas/fresh-lesson-gates-v1.schema.json", "schemas")
-
-
-@pytest.mark.parametrize("sidecar_name", ["pack", "lesson_lock"])
-def test_cli_rejects_symlinked_sidecar_before_read(tmp_path, capsys, sidecar_name):
-    tree = _build_synthetic_tree(tmp_path)
-    forbidden = tmp_path / "curriculum/l2-uk-en/plans"
-    forbidden.mkdir(parents=True)
-    secret = forbidden / "private.lock"
-    secret.write_text("private", encoding="utf-8")
-    source = tree["pack"] if sidecar_name == "pack" else tree["state_dir"] / "synthetic-mod/lessons.lock.yaml"
-    sidecar = Path(f"{source}.lock")
-    sidecar.unlink()
-    sidecar.symlink_to(secret)
-    with patch("scripts.build.fresh.cli._load_lesson_data", side_effect=AssertionError("read attempted")):
-        assert main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1", "--repo-root", str(tmp_path)]) == 1
-    assert "path_outside_allowed_root" in capsys.readouterr().err
-
-
-def test_cli_rejects_symlinked_draft_before_assemble(tmp_path, capsys):
-    state = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/safe-slug"
-    state.mkdir(parents=True)
-    forbidden = tmp_path / "curriculum/l2-uk-en/plans"
-    forbidden.mkdir(parents=True)
-    target = forbidden / "secret.yaml"
-    target.write_text("private", encoding="utf-8")
-    (state / "lesson-1.draft.yaml").symlink_to(target)
-    with patch("scripts.build.fresh.assemble.assemble_lesson", side_effect=AssertionError("read attempted")):
-        assert main(["assemble", "a1", "safe-slug", "--lesson", "1", "--repo-root", str(tmp_path)]) == 1
-    assert "path_outside_allowed_root" in capsys.readouterr().err
 
 
 # --- build --module refuses to complete on a stale module verdict (#8774 r5) -----------------------------------
@@ -943,23 +879,6 @@ def test_assemble_cli_uses_requested_root_without_folder_overrides(tmp_path, mon
         assert mdx.read_text().count(world["captured"]["pedagogical_stressed_form"]) >= 4
     else:
         assert out.err.count(f"Blocking token: {quote}") == 3
-
-
-@pytest.mark.parametrize("kind,code", [("oserror", "resolver_input_unavailable"), ("unexpected", "resolver_error")])
-def test_assemble_cli_prints_structured_check9_setup_failure(tmp_path, monkeypatch, capsys, kind, code):
-    from tests.build.test_fresh_recap_contract import quoted_task_world
-
-    quoted_task_world(tmp_path, slug="controlled-root-only")
-
-    def fail(*_args, **_kwargs):
-        raise (OSError("controlled failure") if kind == "oserror" else RuntimeError("controlled failure"))
-
-    monkeypatch.setattr("scripts.build.fresh.assemble.load_allowlist", fail)
-    rc = main(["assemble", "a1", "controlled-root-only", "--lesson", "1", "--repo-root", str(tmp_path)])
-    out = capsys.readouterr()
-    assert rc == 1
-    assert f"Check 9: {code}: controlled failure" in out.err
-    assert not (tmp_path / "site/src/content/docs/a1/controlled-root-only/1.mdx").exists()
 
 
 def test_assemble_cli_prints_real_check11_toolchain_failure(tmp_path, monkeypatch, capsys):

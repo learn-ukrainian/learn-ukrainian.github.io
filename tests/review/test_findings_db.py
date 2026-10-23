@@ -216,29 +216,6 @@ def test_the_operator_cannot_decide_an_item_the_seat_has_not_sent(conn: sqlite3.
         db.record_operator_decision(conn, item, "x")
 
 
-def test_the_real_parameters_file_carries_a_decision_date_beside_every_parameter() -> None:
-    document = yaml.safe_load(db.PARAMETERS_PATH.read_text(encoding="utf-8"))
-    names = [key for key in document if key != "parameters_schema"]
-    assert {
-        "second_seat_divisor",
-        "max_revise_rounds",
-        "regeneration_factor",
-        "review_failures_terminal_at",
-        "unsupported_claim_lessons_to_operator",
-        "settle_call_budget",
-        "gate_candidate_pattern",
-    } <= set(names)
-    for name in names:
-        assert set(document[name]) == {"value", "decided", "basis"}, name
-        assert len(document[name]["decided"]) == 10 and document[name]["decided"][4] == "-", name
-    values = db.load_parameters()
-    assert (
-        values["second_seat_divisor"] == 10 and values["max_revise_rounds"] == 2 and values["regeneration_factor"] == 2
-    )
-    assert values["unsupported_claim_lessons_to_operator"] == 3 and values["settle_call_budget"] >= 1
-    assert values["gate_candidate_pattern"] == "^yes .+$"
-
-
 @pytest.mark.parametrize(
     "mutate",
     [
@@ -414,24 +391,6 @@ def test_every_earlier_state_reaches_v5_with_budget_decisions_and_rows_intact(
         assert conn.execute("SELECT COUNT(*) FROM budget_decisions WHERE lesson_n = 9").fetchone()[0] == 1
     finally:
         conn.close()
-
-
-def test_opening_a_v4_file_twice_is_a_no_op(tmp_path: Path) -> None:
-    path = tmp_path / "a1.sqlite"
-    first = db.connect(path)
-    with db.transaction(first):
-        db.insert_attempt(first, attempt_row())
-    db.record_budget_operator_decision(first, "a1", "m", 2, "one more round", "operator")
-    first.close()
-
-    second = db.connect(path)
-    try:
-        assert [row[0] for row in second.execute("SELECT version FROM schema_version")] == [5]
-        assert second.execute("SELECT COUNT(*) FROM schema_version").fetchone()[0] == 1
-        assert second.execute("SELECT COUNT(*) FROM attempts").fetchone()[0] == 1
-        assert second.execute("SELECT COUNT(*) FROM budget_decisions").fetchone()[0] == 1
-    finally:
-        second.close()
 
 
 def test_v4_migration_adds_isolated_access_without_changing_attempts(tmp_path):

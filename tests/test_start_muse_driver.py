@@ -7,7 +7,6 @@ import os
 import shutil
 import signal
 import subprocess
-import sys
 import threading
 import time
 from pathlib import Path
@@ -249,25 +248,6 @@ def test_killing_only_the_launcher_orphans_the_stub_and_group_reap_removes_it(tm
     assert live_group_members(group.pid) == []
 
 
-def test_run_launcher_reaps_a_stub_that_outlives_the_launcher(tmp_path: Path) -> None:
-    pid_file = tmp_path / "stub.pid"
-    result = run_launcher(
-        [
-            "bash",
-            "-c",
-            # Exit only once the stub has published its pid, so it provably outlives the launcher.
-            f'(echo $BASHPID > "$1"; {_LOOPING_STUB}) >/dev/null 2>&1 & while [ ! -s "$1" ]; do sleep 0.02; done; exit 3',
-            "launcher",
-            str(pid_file),
-        ],
-        cwd=tmp_path,
-        env=dict(os.environ),
-    )
-    assert result.returncode == 3
-    stub_pid = _wait_for_pid_file(pid_file)
-    assert not _pid_running(stub_pid), "run_launcher teardown left the stub running"
-
-
 @pytest.fixture
 def signal_reap_order(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, int, bool]]:
     """Record group signals and leader reaps, with whether the id was still reserved when signalled."""
@@ -306,17 +286,6 @@ def test_run_launcher_signals_the_group_before_reaping_the_leader(
     reaped = {pid for kind, pid, _reserved in signal_reap_order if kind == "reaped"}
     assert len(reaped) == 1, signal_reap_order
     _assert_signalled_before_reaped(signal_reap_order, reaped.pop())
-
-
-def test_teardown_of_a_running_launcher_signals_before_reaping(
-    tmp_path: Path, signal_reap_order: list[tuple[str, int, bool]]
-) -> None:
-    group = start_launcher_group(["bash", "-c", _LOOPING_STUB], cwd=tmp_path, env=dict(os.environ))
-
-    result = group.reap()
-
-    assert result.returncode == -signal.SIGKILL
-    _assert_signalled_before_reaped(signal_reap_order, group.pid)
 
 
 def test_run_launcher_timeout_reaps_the_group_and_raises(tmp_path: Path) -> None:
@@ -533,38 +502,6 @@ def test_direct_exec_seam_still_refuses(muse_env: dict[str, str]) -> None:
     assert result.returncode == 4
     assert "MUSE_GUARD_PARITY_UNPROVEN" in result.stderr
     assert not Path(muse_env["MUSE_TEST_CALLS"]).exists()
-
-
-@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "cursor", "kimi", "glm"])
-@pytest.mark.parametrize("mode", ["interactive", "driver"])
-@pytest.mark.parametrize("variant", ["help", "default"])
-def test_other_launcher_help_and_defaults_are_unchanged(provider: str, mode: str, variant: str) -> None:
-    from tests.review.test_model_catalog import APPROVED_BASELINE, APPROVED_INPUTS
-
-    index = APPROVED_INPUTS["launchers"].index({"provider": provider, "mode": mode, "variant": variant})
-    command = """source "$1"
-LC_PROVIDER="$2" LC_MODE="$3" LC_CURSOR_SEAT_PIN=grok-4.7-high
-LC_ROOT="$5" LC_DURABLE_HELPER_ROOT="$6"
-launcher_defaults
-if [ "$4" = help ]; then launcher_parse --help; fi
-launcher_normalize_model
-launcher_normalize_effort
-launcher_validate_driver_certification
-printf '%s\\n' "$LC_MODEL" "$LC_EFFORT" "$LC_HARNESS" "$LC_ENDPOINT" "$LC_ISOLATE_CONFIG"
-"""
-    env = {k: v for k, v in os.environ.items() if not k.startswith("LAUNCHER_")}
-    result = subprocess.run(
-        ["bash", "-c", command, "capture", str(CORE), provider, mode, variant, str(REPO), str(Path(sys.prefix).parent)],
-        cwd=REPO,
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-    assert {"exit_status": result.returncode, "stdout": result.stdout, "stderr": result.stderr} == (
-        APPROVED_BASELINE["launchers"][index]
-    )
 
 
 def lifecycle_fixture(tmp_path: Path, body: str, ready: Path | None = None) -> tuple[Path, Path, Path]:

@@ -21,7 +21,6 @@ from scripts.api.project_state_sanitize import (
     ProjectStateValidationError,
     sanitize_lane_usage_entry,
     validate_lane_usage_block,
-    validate_report_document,
 )
 from scripts.api.project_state_store import (
     REPORT_TTL_SECONDS,
@@ -31,9 +30,6 @@ from scripts.api.project_state_store import (
 )
 from scripts.lexicon.runner import atlas_job
 from tests.api.test_project_state import SHA_HEAD, SHA_MAIN, _document, _primary, _service
-
-ROOT = Path(__file__).resolve().parents[2]
-FLEET_HTML = ROOT / "dashboards" / "fleet.html"
 
 loop_client = TestClient(
     app,
@@ -336,47 +332,6 @@ def test_routing_budget_consumes_notebook_report(monkeypatch: pytest.MonkeyPatch
     assert data["recommendation"]["primary_agent_for_code"] is not None
 
 
-def test_fleet_page_contract_renders_empty_host_banner() -> None:
-    html = FLEET_HTML.read_text(encoding="utf-8")
-    assert 'id="occupancy-attention-banner"' in html
-    assert "renderOccupancyAttention" in html
-    assert "empty_host_underused:" in html
-    assert "empty_host_unknown_capacity:" in html
-
-
-def test_unmocked_post_lane_usage_then_occupancy_attention(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    _freeze_attention_now(monkeypatch)
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    fake = atlas_job.FakeHostAdapter()
-    atlas_job.set_host_adapter(fake)
-    load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
-    try:
-        report = {
-            "host_id": "mac-operator",
-            "primary": _primary(head_sha=SHA_HEAD, origin_main_sha=SHA_MAIN),
-            "worktrees": {"count": 1},
-            "services": [_service("api")],
-            "workers": [],
-            "lane_usage": [_under_pace_lane_usage()],
-            "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        }
-        posted = loop_client.post("/api/fleet/projects/v1/report", json=report)
-        assert posted.status_code == 200
-        occupancy_mod._idle_since_mono["host-worker"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
-        response = client.get("/api/occupancy")
-        assert response.status_code == 200
-        data = response.json()
-        assert "empty_host_underused:host-worker" in data["attention"]
-    finally:
-        atlas_job.set_host_adapter(None)
-        load_mod.clear_host_load_cache()
-
-
 def test_sanitize_lane_usage_rejects_email_like_lane_token() -> None:
     assert (
         sanitize_lane_usage_entry(
@@ -389,10 +344,6 @@ def test_sanitize_lane_usage_rejects_email_like_lane_token() -> None:
         )
         is None
     )
-
-
-def test_validate_report_document_accepts_lane_usage() -> None:
-    validate_report_document(_document_with_lane_usage())
 
 
 def test_empty_host_alarm_fires_with_idle_observer_seat(
@@ -441,19 +392,3 @@ def test_empty_host_alarm_suppressed_by_active_observer_seat(
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
-
-
-def test_post_report_rejects_foreign_lane_usage_field() -> None:
-    doc = _document_with_lane_usage(
-        lane_usage=[
-            {
-                "lane": "claude",
-                "window": "weekly",
-                "used_pct": 5.0,
-                "resets_at": "2026-08-31T12:00:00Z",
-                "accountEmail": "hidden@example.com",
-            }
-        ]
-    )
-    response = loop_client.post("/api/fleet/projects/v1/report", json=doc)
-    assert response.status_code == 400

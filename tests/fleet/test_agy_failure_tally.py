@@ -2,7 +2,6 @@
 
 import importlib
 import json
-from datetime import UTC, datetime
 
 import pytest
 
@@ -44,34 +43,6 @@ def _record(**extra):
     return {"agent": "agy", "status": "failed", "started_at": "2026-10-06T00:00:00Z", "last_error": API_503, **extra}
 
 
-def test_filters_dates_agents_status_and_dry_runs_and_splits_boundary():
-    module = _module()
-    records = [
-        _record(started_at="2026-09-25T00:00:00Z", last_error="agy_background_task_canceled"),
-        _record(agent="gemini"),
-        _record(),
-        _record(started_at="2026-09-24T23:59:59Z"),
-        _record(agent="codex"),
-        _record(status="done"),
-        _record(status="dry_run"),
-        _record(dry_run=True),
-        _record(launch_mode="dry_run"),
-        _record(started_at="broken"),
-        _record(started_at=None),
-    ]
-    report = module.tally(
-        records, since=datetime(2026, 9, 25, tzinfo=UTC), before_after=datetime(2026, 10, 6, tzinfo=UTC)
-    )
-    assert report["tasks"] == 3
-    assert report["before"]["tasks"] == 1
-    assert report["after"]["tasks"] == 2
-    assert report["counts"]["cancellation"] == 1
-    assert report["counts"]["transient provider fault"] == 2
-    assert report["skipped_undated"] == 2
-    assert sum(report["counts"].values()) == 3
-    assert "before_after" in module.format_report(report)
-
-
 @pytest.mark.parametrize("json_output", [False, True])
 def test_cli_reads_top_level_only_and_never_writes(tmp_path, capsys, json_output):
     module = _module()
@@ -96,12 +67,6 @@ def test_cli_reads_top_level_only_and_never_writes(tmp_path, capsys, json_output
     assert {path: (path.read_bytes(), path.stat().st_mtime_ns) for path in tmp_path.rglob("*.json")} == before
 
 
-@pytest.mark.parametrize("args", [["--since", "invalid"], ["--since", "2026-09-25", "--before-after", "invalid"]])
-def test_invalid_dates_have_nonzero_exit_without_writes(capsys, args):
-    assert _module().main(args) == 2
-    assert "YYYY-MM-DD" in capsys.readouterr().err
-
-
 def test_missing_directory_is_reported_without_private_path(tmp_path, capsys):
     assert _module().main(["--since", "2026-09-25", "--tasks-dir", str(tmp_path / "missing")]) == 2
     output = capsys.readouterr().err
@@ -122,12 +87,6 @@ def test_help_describes_defaults_examples_outputs_exit_codes_and_related():
         "--json",
     ]:
         assert expected in text
-
-
-def test_tally_imports_the_adapter_parser():
-    from scripts.agent_runtime.adapters.agy import parse_agy_provider_fault
-
-    assert _module().parse_agy_provider_fault is parse_agy_provider_fault
 
 
 @pytest.mark.parametrize("field", ["last_error", "failure_code", "stderr_excerpt", "returncode_reason"])

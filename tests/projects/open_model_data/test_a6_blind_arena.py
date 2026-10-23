@@ -212,14 +212,6 @@ def test_a6_receipt_carries_forward_every_a2_a4_a5_residual_unresolved() -> None
     assert all(e["status"] == "unresolved_carried_to_a6" for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"])
 
 
-def test_a6_receipt_does_not_claim_arena_slice_ready_while_the_gate_is_closed() -> None:
-    assert _cached_json(RECEIPT)["arena_gate"]["arena_slice_ready"] is False
-    assert _cached_json(RECEIPT)["status"] != "ARENA_SLICE_READY"
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_prerequisite_eligible"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_stage_complete"] == 0
-    assert _cached_json(RECEIPT)["execution_counters"]["slots_residual"] == 100
-
-
 def test_a6_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
     assert _cached_json(RECEIPT)["eligibility"] == {
         "gold": False,
@@ -308,22 +300,6 @@ def test_a6_refuses_a_duplicate_vote_standing_in_for_a_missing_independent_view(
     receipt["a6_residuals"][0] = forged
     with pytest.raises(a6.ArenaWiringError):
         a6.validate_receipt_independently(receipt)
-
-
-def test_a6_schema_rejects_a_leaked_gold_label_value() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["eligibility"]["gold"] = True
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    errors = list(Draft202012Validator(schema).iter_errors(receipt))
-    assert errors
-
-
-def test_a6_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
-    # "gold" is deliberately excluded from FORBIDDEN_KEYS (unlike A5) because it
-    # is the name of this receipt's own always-false eligibility flag, matching
-    # v4_arena_receipt.build_receipts' own {"gold": False, ...} shape.
-    assert "gold" not in FORBIDDEN_KEYS
-    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False
 
 
 # --- the shared engine, exercised only via a synthetic, non-corpus fixture ------

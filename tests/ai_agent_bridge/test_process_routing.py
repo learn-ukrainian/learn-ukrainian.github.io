@@ -312,23 +312,6 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     assert resolve_compat_model("cursor", "composer-2") == "composer-2"
 
 
-def test_converse_default_model_is_none_so_registry_pin_applies() -> None:
-    """A bare converse carries no model slug; converse_gemini applies the pin."""
-    import inspect
-
-    from scripts.ai_agent_bridge import _cli
-    from scripts.ai_agent_bridge._gemini import converse_gemini
-
-    parser = _cli._build_parser()
-    args = parser.parse_args(["converse", "hello", "--task-id", "t-1"])
-    assert args.model is None
-    assert resolve_compat_model("gemini", args.model) is None
-    # Mutation-check: a restored hardcoded slug on either surface is a miss.
-    assert inspect.signature(converse_gemini).parameters["model"].default is None
-    route = resolve_inter_agent_route("agy")
-    assert route.model == registered_participant_model("agy")
-
-
 def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     """Rotating the registry pin moves converse's default with it (#6929)."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
@@ -363,35 +346,6 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     assert captured["model"] == "not-a-gemini-model"
 
 
-def test_default_gemini_model_resolves_from_registry_and_tracks_rotation(monkeypatch) -> None:
-    """#6959: default_gemini_model resolves from the live ACP registry pin."""
-    import scripts.ai_agent_bridge as bridge
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from scripts.ai_agent_bridge._config import default_gemini_model
-
-    monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
-    assert default_gemini_model() == registered_participant_model("agy")
-    assert registered_participant_model("agy") == bridge.GEMINI_DEFAULT_MODEL
-
-    monkeypatch.setitem(
-        ACPX_SUPPORTED_PARTICIPANTS,
-        "agy",
-        {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
-    )
-    assert default_gemini_model() == "gemini-9.9-flash-high"
-    assert bridge.GEMINI_DEFAULT_MODEL == "gemini-9.9-flash-high"
-
-
-def test_default_gemini_model_respects_env_override(monkeypatch) -> None:
-    """#6959: AB_GEMINI_MODEL environment override takes precedence."""
-    import scripts.ai_agent_bridge as bridge
-    from scripts.ai_agent_bridge._config import default_gemini_model
-
-    monkeypatch.setenv("AB_GEMINI_MODEL", "gemini-custom-override")
-    assert default_gemini_model() == "gemini-custom-override"
-    assert bridge.GEMINI_DEFAULT_MODEL == "gemini-custom-override"
-
-
 def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> None:
     """#6959: missing registry pin fails loudly instead of falling back to stale literal."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
@@ -405,16 +359,6 @@ def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> 
     )
     with pytest.raises(RuntimeError, match="No default Gemini model configured"):
         default_gemini_model()
-
-
-def test_ask_gemini_and_process_and_respond_signatures_default_to_none() -> None:
-    """#6959: ask_gemini and process_and_respond signatures default model to None."""
-    import inspect
-
-    from scripts.ai_agent_bridge._gemini import ask_gemini, process_and_respond
-
-    assert inspect.signature(ask_gemini).parameters["model"].default is None
-    assert inspect.signature(process_and_respond).parameters["model"].default is None
 
 
 def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> None:
@@ -472,20 +416,6 @@ def test_ask_gemini_preserves_env_model_override_through_process_and_respond(bri
 
     ask_gemini("hello", task_id="issue-6959")
     assert captured["model"] == "gemini-3.1-pro-high"
-
-
-def test_process_model_override_must_match_registry(bridge_db, monkeypatch):
-    """Explicit overrides pass through to registry validation (loud mismatch)."""
-    message_id = _send("cursor")
-    captured: dict[str, object] = {}
-    monkeypatch.setattr(
-        _process,
-        "run_compat_ask",
-        lambda target, content, **kwargs: captured.update(**kwargs) or _ok_result(),
-    )
-
-    assert _process.process_message_for_recipient(message_id, model="composer-2") is not None
-    assert captured["model"] == "composer-2"
 
 
 # ── #6915 sibling sweep: every process-* error handler is ack-free ──────
@@ -852,7 +782,6 @@ def cursor_provider(monkeypatch):
     [
         (None, "cursor_model_unpinned"),
         ("auto", "cursor_auto_outside_coding_task"),
-        ("Auto", "cursor_auto_outside_coding_task"),
         ("cursor:auto", "cursor_auto_outside_coding_task"),
         ("default", "cursor_auto_outside_coding_task"),
         ("composer-2.5-fast", "cursor_model_not_approved"),

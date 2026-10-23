@@ -21,27 +21,6 @@ from scripts.validate_plan_config import get_config_target, validate_plan
 # TEST: get_config_target
 # =============================================================================
 
-class TestGetConfigTarget:
-    def test_a1_target(self):
-        target = get_config_target('a1')
-        assert isinstance(target, int)
-        assert target > 0
-
-    def test_hist_target(self):
-        target = get_config_target('hist')
-        assert isinstance(target, int)
-        assert target >= 2000
-
-    def test_bio_target(self):
-        target = get_config_target('bio')
-        assert isinstance(target, int)
-        assert target >= 2000
-
-    def test_lit_target(self):
-        target = get_config_target('lit')
-        assert isinstance(target, int)
-        assert target > 0
-
 
 # =============================================================================
 # TEST: validate_plan
@@ -123,28 +102,6 @@ class TestValidatePlan:
 
         assert not any('word_target under config' in error for error in errors)
 
-    def test_valid_reviewed_size_policy_is_track_generic(self, tmp_path):
-        plan = {
-            'module': 'test-module',
-            'level': 'B1',
-            'title': 'Test Module',
-            'objectives': ['Learn something'],
-            'word_target': 1000,
-            'content_outline': [{'section': 'Intro', 'words': 1000}],
-            'size_policy': {
-                'floor_words': 1000,
-                'recommended_range': [1000, 1200],
-                'ceiling_words': 1400,
-                'basis': 'Reviewed rebuild with bounded learning work.',
-                'saturation_evidence': 'The accepted examples and practice map are complete.',
-                'exceptional_justification': 'required_above_ceiling',
-            },
-        }
-
-        errors = validate_plan(self._write_plan(tmp_path, plan), 'b1')
-
-        assert not any('word_target under config' in error for error in errors)
-
     def test_invalid_size_policy_keeps_bio_config_floor_check(self, tmp_path):
         plan = {
             'module': 'test-module',
@@ -220,26 +177,6 @@ class TestValidatePlan:
         # Should flag missing module, level, title, objectives
         assert any('module' in e for e in errors)
         assert any('title' in e for e in errors)
-
-    def test_over_target_allowed(self, tmp_path):
-        """Plan target above config target is fine (more content is good)."""
-        config_target = get_config_target('b1')
-        plan = {
-            'module': 'test-module',
-            'level': 'B1',
-            'title': 'Test Module',
-            'objectives': ['Learn something'],
-            'word_target': config_target + 1000,
-            'content_outline': [
-                {'section': 'Intro', 'words': (config_target + 1000) // 2},
-                {'section': 'Body', 'words': config_target + 1000 - ((config_target + 1000) // 2)},
-            ],
-        }
-        path = self._write_plan(tmp_path, plan)
-        errors = validate_plan(path, 'b1')
-        # No word_target errors (over is allowed)
-        target_errors = [e for e in errors if 'word_target' in e]
-        assert len(target_errors) == 0
 
 
 if __name__ == '__main__':

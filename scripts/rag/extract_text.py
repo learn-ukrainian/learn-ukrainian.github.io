@@ -561,14 +561,6 @@ def run_apple_pdfkit_native_spatial(
     return records
 
 
-def extract_text_fast(pdf_path: Path) -> str:
-    """Extract native text as the legacy page-marked markdown string."""
-    pages = extract_native_pages(pdf_path)
-    return "\n\n".join(
-        f"## Сторінка {page['page_number']}\n\n{page['text']}" for page in pages if str(page["text"]).strip()
-    )
-
-
 def _validate_ocr_page(page: dict, *, requested_pages: set[int]) -> dict[str, object]:
     """Validate and normalize one page from the Swift JSON contract."""
     try:

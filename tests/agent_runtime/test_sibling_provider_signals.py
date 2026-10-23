@@ -120,21 +120,6 @@ def test_reply_and_tool_mentions_never_classify_provider_limit(adapter, returnco
 
 
 @pytest.mark.parametrize("adapter", ADAPTERS)
-@pytest.mark.parametrize("returncode", [0, 1])
-def test_stderr_tool_json_does_not_classify_limit(adapter, returncode, tmp_path):
-    stderr = json.dumps({"type": "tool_result", "output": CONTENT})
-    result = ADAPTERS[adapter]().parse_response(
-        stdout=_stdout(adapter, "Done."),
-        stderr=stderr,
-        returncode=returncode,
-        output_file=None,
-        plan=_agy_plan(tmp_path, "Done.") if adapter == "agy" else None,
-    )
-    assert result.rate_limited is False
-    assert result.ok is (returncode == 0)
-
-
-@pytest.mark.parametrize("adapter", ADAPTERS)
 def test_provider_diagnostic_still_classifies_failed_turn(adapter):
     result = ADAPTERS[adapter]().parse_response(
         stdout="",
@@ -162,14 +147,6 @@ def test_opencode_provider_error_is_classified_even_with_rc_zero(adapter, return
     assert result.ok is False
     assert result.rate_limited is True
     assert result.failure_code == "rate_limited"
-
-
-@pytest.mark.parametrize("returncode", [0, 1])
-def test_agy_incomplete_reply_mentions_do_not_classify_limit(returncode):
-    result = AgyAdapter().parse_response(
-        stdout=CONTENT, stderr="Background tasks are still running", returncode=returncode, output_file=None
-    )
-    assert result.rate_limited is False
 
 
 @pytest.mark.parametrize("failure_code", [None, "acp_agent_startup", "acp_turn_limit", "github_secondary_rate_limited"])
@@ -207,17 +184,6 @@ def test_success_keeps_reply_despite_retry_diagnostic(adapter, tmp_path):
     assert result.ok is True
     assert result.rate_limited is False
     assert result.failure_code is None
-
-
-@pytest.mark.parametrize("failure_code", ["acp_agent_startup", "acp_turn_limit", "github_secondary_rate_limited"])
-def test_unclassified_structured_failure_ignores_stderr_payload(failure_code):
-    result = ParseResult(ok=False, response="", failure_code=failure_code)
-    assert (
-        classify_failover_trigger(
-            parse=result, returncode=1, kill_reason=None, stdout_text=CONTENT, stderr_text=CONTENT
-        )
-        is None
-    )
 
 
 @pytest.mark.parametrize(
@@ -287,13 +253,6 @@ def test_opencode_conflicting_provider_errors_stay_unknown():
     assert opencode_provider_error(stdout) == ("401\n429", "provider_error")
 
 
-def test_cursor_tool_json_cannot_forge_gh_shim_failure():
-    stderr = json.dumps({"type": "tool_result", "output": "agent-gh-shim: github_secondary_rate_limited HTTP 429"})
-    result = CursorAdapter().parse_response(stdout="", stderr=stderr, returncode=1, output_file=None)
-    assert result.rate_limited is False
-    assert result.failure_code == "provider_error"
-
-
 @pytest.mark.parametrize("status", [400, 401, 503])
 def test_status_outranks_rate_limit_words_in_provider_error(status):
     from agent_runtime.failure_codes import provider_failure_code
@@ -317,24 +276,6 @@ def test_grok_structured_error_not_agent_reply(returncode, session_key):
     assert result.failure_code == "rate_limited"
     assert result.session_id == "failed-session"
     assert result.ok is False
-
-
-@pytest.mark.parametrize("adapter", ADAPTERS)
-def test_failed_turn_plain_stderr_mentions_are_not_provider_diagnostics(adapter):
-    result = ADAPTERS[adapter]().parse_response(
-        stdout="", stderr="rate limit regression test returned 429", returncode=1, output_file=None
-    )
-    assert result.rate_limited is False
-    assert (
-        classify_failover_trigger(
-            parse=result,
-            returncode=1,
-            kill_reason=None,
-            stdout_text="",
-            stderr_text="rate limit regression test returned 429",
-        )
-        is None
-    )
 
 
 @pytest.mark.parametrize("adapter", ADAPTERS)

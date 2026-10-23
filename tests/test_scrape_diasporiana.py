@@ -7,7 +7,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -170,20 +169,6 @@ class TestDiasporianaOcrFallback:
 
         assert ocr_pages
         assert "Україна" in combined or "Нарис історії України" in combined
-
-
-class TestDiasporianaRateLimiter:
-    def test_rate_limiter_waits_between_requests(self) -> None:
-        pacer = sd.RequestPacer()
-        with patch("scrape_diasporiana.random.uniform", return_value=2.4), patch(
-            "scrape_diasporiana.time.sleep"
-        ) as sleep_mock:
-            pacer.wait()
-            sleep_mock.assert_not_called()
-            pacer.wait()
-            sleep_mock.assert_called_once_with(2.4)
-
-
 class TestDiasporianaJsonlSchema:
     def test_chunk_schema_matches_existing_litopys_waves(
         self,

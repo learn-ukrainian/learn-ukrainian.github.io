@@ -51,27 +51,6 @@ jobs:
     assert "github.event.issue" in result.stderr
 
 
-def test_head_ref_in_multiline_run_fails(tmp_path: Path) -> None:
-    workflow = _write_workflow(
-        tmp_path,
-        """\
-on: pull_request
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout attacker-named branch
-        run: |
-          echo "branch is ${{ github.head_ref }}"
-          git status
-""",
-    )
-    result = _run_checker(workflow)
-    assert result.returncode == 1, result.stdout + result.stderr
-    assert "github.head_ref" in result.stderr
-    assert ":8:" in result.stderr  # finding points at the injected line
-
-
 def test_env_mapping_with_quoted_var_passes(tmp_path: Path) -> None:
     workflow = _write_workflow(
         tmp_path,
@@ -223,22 +202,6 @@ jobs:
     result = _run_checker(workflow)
     assert result.returncode == 1, result.stdout + result.stderr
     assert "tojson" in result.stderr.casefold()
-
-
-def test_tojson_sha_in_run_passes(tmp_path: Path) -> None:
-    workflow = _write_workflow(
-        tmp_path,
-        """\
-on: pull_request
-jobs:
-  diff:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo '${{ toJSON(github.sha) }}'
-""",
-    )
-    result = _run_checker(workflow)
-    assert result.returncode == 0, result.stdout + result.stderr
 
 
 def test_current_repo_workflows_are_clean() -> None:

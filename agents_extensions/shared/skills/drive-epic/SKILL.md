@@ -28,6 +28,11 @@ which task, and the current width are live data. Read them fresh, never from mem
 a Ukrainian word, stress or morphology fact, a gate status, a count, a worker's state)
 comes from tool output in this turn; if it does not, stop and run the tool.
 
+**Issue filing belongs to the CTO.** You do not open GitHub issues. Report findings to
+the CTO through Fleet Comms; the CTO opens, folds or drops them. Add no test file or test
+case unless the CTO approves that specific test, and never brief a worker for a reproducer,
+a regression test or repeated runs.
+
 **Evidence hygiene.** Every timestamp in reports, issue comments, receipts, and
 handoffs comes from `date -u`, never from memory or a clock guess.
 
@@ -71,7 +76,7 @@ Per turn and at session end:
 - [ ] The residual count is quoted from a tool; a residual above zero has a next
       dispatch this session (§2a).
 
-An issue is never kept open as a running log; put logs in a dedicated issue.
+An issue is never kept open as a running log; put logs in the CTO's issue.
 
 Git hygiene always holds: the primary checkout stays on `main` and is read-only; edits,
 commits, and PRs happen only in `.worktrees/dispatch/<agent>/<task>/`; every commit has an
@@ -91,9 +96,18 @@ or `read-but-not-live-consumed`, then records that consumption:
 Never use a plain `ack` for these: it also records one-shot or headless processing and is
 not delivery proof for the live driver.
 
+Record every order, in-flight task with its full run nonce, blocker, decision and
+next action as a lane tracker item throughout the cycle. Use `add`, `note`,
+`evidence` and `status`; never delete items. Done requires evidence, and dropped
+requires an operator reference. The item lifecycle is in
+[handoff](references/handoff.md#record-work-throughout-the-cycle).
+
 1. **§0 Orient.** Run the cold-start board, lean orient, the Work API projection and your
    stream's `next` list, and `.venv/bin/python -m scripts.fleet_comms plane-status`. The launcher already holds your lease; never
-   claim it. Detail and the optional §0b inbox watcher: [orient](references/orient.md).
+   claim it. Read open lane work with `lu-driver-state render --lane <lane>` and
+   `lu-driver-state check --lane <lane>`. The database is the lane's handoff;
+   `DRIVER-STATE.md` is only a pointer. Detail and the optional §0b inbox watcher:
+   [orient](references/orient.md).
 2. **§0a Inbox drain — cycle start.**
 3. **§0c / §0d Epic-specific rules.** Hramatka (#4542) and the core fresh build (#7994)
    add binding rules; read [epic-specific](references/epic-specific.md) before acting on
@@ -116,16 +130,18 @@ not delivery proof for the live driver.
    "ready" is not DoR. Use `--check-budget`, research flags, and `--owned-path`.
 9. **§5 Settle.** Arm `delegate.py wait <task-id>` (or the Monitor tool) in the same turn
    as the dispatch. State a worker's status only after `delegate.py status <task-id>` in
-   this turn, and keep its task id, status, and branch head. When the wait returns, act on
-   the result. After a terminal status, run `post_task_reap`.
+   this turn, and record its task ID, full run nonce, status, and branch head in its
+   tracker item. When the wait returns, act on the result. After a terminal status,
+   run `post_task_reap`.
 10. **§5a Inbox drain — after settle.**
 11. **§6 Cross-family review, §7 merge, §7a closeout, §7-rollout proof** — in the order of
     the Definition of done above. The mechanics (review commands, merge-queue status,
     queue kicks, red main, junit diagnosis, launcher tests, rollout authority):
     [review-merge-cleanup](references/review-merge-cleanup.md).
 12. **§8a Inbox drain — before handoff.**
-13. **§8 Handoff.** The file handoff stays authoritative; add the Entire dual-write and
-    fleet receipt:
+13. **§8 Handoff.** Reconcile the lane tracker and add one `handoff_note` item.
+    Keep `DRIVER-STATE.md` under 4 KB as a pointer with pinned provider facts and the
+    render/check instructions. Preserve the Entire dual-write and Fleet receipt:
     [handoff](references/handoff.md).
 
 Seat-specific adjustments for your model and for the seats you route to:

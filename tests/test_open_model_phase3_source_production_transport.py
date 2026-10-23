@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import json
 import sys
 from pathlib import Path
@@ -227,24 +226,6 @@ def test_prepare_is_exact_private_and_excludes_sealed_source_bodies(tmp_path: Pa
     assert all(path.stat().st_mode & 0o077 == 0 for path in root.rglob("*") if path.is_file())
 
 
-def test_author_item_keeps_full_text_once_when_source_record_duplicates_it() -> None:
-    text = "Повний нормативний текст без скорочення."
-    row = {
-        "family_id": "pravopys_2019_complete",
-        "unit_id": "unit.pravopys.fixture",
-        "unit_sha256": "1" * 64,
-        "frozen_locator": {"page": 1},
-        "frozen_locator_sha256": "2" * 64,
-        "source_text_sha256": "3" * 64,
-        "document_or_edition_identity": "edition.fixture",
-        "source_text": text,
-        "source_record": {"text": text, "page_count": 2},
-    }
-    item = transport._author_item(row)
-    assert item["source_text"] == text
-    assert item["source_record"] == {"page_count": 2}
-
-
 def test_end_to_end_assembles_three_exact_dispositions_and_textbook_rows(tmp_path: Path) -> None:
     fixture, manifest = _prepare(tmp_path)
     root = fixture["private_dir"]
@@ -417,15 +398,6 @@ def test_review_miss_requires_full_large_family_escalation(tmp_path: Path) -> No
         )
 
 
-def test_schema_and_public_receipt_are_closed(tmp_path: Path) -> None:
-    schema = json.loads(transport.DEFAULT_SCHEMA.read_text())
-    assert schema["$defs"]["publicReceipt"]["additionalProperties"] is False
-    value = copy.deepcopy(_fixture(tmp_path)["expected_totals"])
-    value["unexpected"] = 1
-    with pytest.raises(transport.SourceProductionError, match="override fields"):
-        transport._expected(value)
-
-
 def test_output_cannot_overlap_an_input(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path)
     fixture["private_dir"] = fixture["materialization_jsonl"]
@@ -509,31 +481,6 @@ def test_resumable_run_commands_pin_gemini_and_codex(tmp_path: Path) -> None:
     assert commands[-1][0] == sys.executable
 
 
-def test_production_bridge_commands_parse_without_error() -> None:
-    for cmd in [
-        [sys.executable, "scripts/ai_agent_bridge/__main__.py", "ask-codex", "--help"],
-        [sys.executable, "scripts/ai_agent_bridge/__main__.py", "ask-agy", "--help"],
-        [
-            sys.executable,
-            "scripts/ai_agent_bridge/__main__.py",
-            "ask-codex",
-            "-",
-            "--task-id",
-            "test-task",
-            "--type",
-            "review",
-            "--to-model",
-            "gpt-6.1-sol",
-            "--data",
-            "/dev/null",
-            "--no-timeout",
-            "--help",
-        ],
-    ]:
-        exit_code, _stdout, stderr = transport._subprocess_invoke(cmd, b"")
-        assert exit_code == 0, f"{cmd} failed with {stderr.decode()}"
-
-
 
 def test_opencode_prelude_extracts_one_exact_trailing_response() -> None:
     response = {"schema_version": "fixture", "reviews": []}
@@ -594,29 +541,6 @@ def test_voided_cycle001_production_cannot_run_or_ingest(tmp_path: Path) -> None
             raw_response_path=tmp_path / "must-not-be-read.raw",
             provider_invocation_receipt_path=tmp_path / "must-not-be-read.json",
         )
-
-
-def test_prompt_contract_binds_nontextbook_candidate_classes_to_empty() -> None:
-    identity = {
-        "family_id": "calque_inventory",
-        "unit_id": "unit.calque.fixture",
-        "unit_sha256": "1" * 64,
-        "locator_sha256": "2" * 64,
-        "source_text_sha256": "3" * 64,
-    }
-    packet = {
-        "packet_id": f"phase3_source_author_packet:{'4' * 64}",
-        "identity_order": [identity],
-    }
-    prompt = transport._prompt_with_response_contract(
-        b"author prompt", transport.DEFAULT_SCHEMA, "author", packet
-    )
-    assert b'"candidate_classes":{"const":[]}' in prompt
-    assert b'"unit_id":{"const":"unit.calque.fixture"}' in prompt
-    assert b'"minItems":1' in prompt and b'"maxItems":1' in prompt
-    assert b'"artifact":{"const":null}' in prompt
-    assert b'"consumer_views":{"const":[]}' in prompt
-    assert b'"disposition_code":{"const":"converted"}' in prompt
 
 
 def test_review_completion_gate_verdict_and_trailing_json_extraction() -> None:

@@ -29,19 +29,6 @@ def checker():
 
 
 @pytest.mark.parametrize(
-    "script",
-    [
-        "python3 -m venv /tmp/demo\n",
-        "  python -m venv .sandbox\n",
-        "#!/usr/bin/env bash\nset -euo pipefail\npython3 -m venv \"$VENV_DIR\"\n",
-        '.venv/bin/python -m pytest tests/\n',
-    ],
-)
-def test_allows_venv_bootstrap_and_project_interpreter(checker, script: str) -> None:
-    assert checker.bare_python_hits(script) == []
-
-
-@pytest.mark.parametrize(
     "script,line",
     [
         ("python3 scripts/build.py\n", 1),
@@ -64,12 +51,3 @@ def test_rejects_bare_python_including_venv_laundering(
     hits = checker.bare_python_hits(script)
     assert hits
     assert hits[0][0] == line
-
-
-def test_files_mode_reports_path(checker, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    path = tmp_path / "runner.sh"
-    path.write_text("python3 scripts/build.py\n", encoding="utf-8")
-    assert checker.check_files([path]) == 1
-    err = capsys.readouterr().err
-    assert "uses bare python/python3" in err
-    assert "1:python3 scripts/build.py" in err

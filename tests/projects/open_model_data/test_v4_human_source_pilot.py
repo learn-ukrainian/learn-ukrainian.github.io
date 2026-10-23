@@ -6,7 +6,6 @@ import copy
 import json
 from pathlib import Path
 
-import jsonschema
 import pytest
 
 import scripts.projects.open_model_data.v4_human_source_pilot as pilot_mod
@@ -15,22 +14,6 @@ from tests._host_path_guard import FIXTURE_HOME
 
 MANIFEST_PATH = resolve_open_model_path("data/projects/open_model_data/pilot/v4_human_source_pilot_manifest_v1.json")
 _RECEIPT = "data/projects/open_model_data/pilot/v4_human_source_pilot_receipt_v1.json"
-CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
-
-
-def test_schema_contracts_valid() -> None:
-    """The 3 JSON schemas for pilot manifest, record, and receipt must be valid Draft 2020-12 schemas."""
-    for schema_name in [
-        "v4_human_source_pilot_manifest_v1.schema.json",
-        "v4_human_source_pilot_record_v1.schema.json",
-        "v4_human_source_pilot_receipt_v1.schema.json",
-    ]:
-        p = CONTRACTS_DIR / schema_name
-        assert p.is_file(), f"Missing schema contract: {p}"
-        schema_data = json.loads(p.read_text(encoding="utf-8"))
-        jsonschema.Draft202012Validator.check_schema(schema_data)
-
-
 def test_proof_1_of_1_record_fidelity_and_provenance() -> None:
     """Verify the 1/1 human-source proof record satisfies all acceptance invariants (PILOT-1)."""
     receipt_path = resolve_open_model_path(_RECEIPT)

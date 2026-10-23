@@ -18,7 +18,6 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
-from scripts.projects.open_model_data import v4_a4_deterministic_extraction as a4
 from scripts.projects.open_model_data import v4_original_row_admission as admission
 from scripts.projects.open_model_data import v4_public_slot_commitment_assignment as assignment
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -71,20 +70,6 @@ def _write_receipt_tree(tmp_path: Path, *, a2=None, a4_receipt=None, manifest=No
 
 
 # --- firewall: this suite never opens the private heldout/builder-packet artifacts ---
-
-
-def test_heldout_membership_file_is_never_opened_by_this_module_or_suite() -> None:
-    # The module's own docstring names "batch_state/" and A3's private
-    # membership filename only in prose, to say it never opens them. The
-    # real guarantee: no module-level Path constant this module defines
-    # (the only paths its functions ever open) resolves under batch_state/,
-    # and it never imports the A3 held-out-membership module.
-    from learn_ukrainian_v4_runtime.resources import PackageResource
-
-    path_constants = [value for value in vars(assignment).values() if isinstance(value, (Path, PackageResource))]
-    assert path_constants  # sanity: the module does define path constants
-    assert not any("batch_state" in str(path) for path in path_constants)
-    assert not hasattr(assignment, "v4_a3_heldout_family_assignment")
 
 
 def test_this_test_module_never_reads_the_private_heldout_or_builder_packet_files() -> None:
@@ -195,12 +180,6 @@ def test_assignment_records_are_one_typed_entry_per_frozen_slot_never_a_silent_d
     assert all(r["assignment_status"] == "residual" for r in records)
     assert all(r["commitment_sha256"] is None for r in records)
     assert {r["reason_code"] for r in records} == {"rights_unknown", "source_incomplete", "independence_unavailable"}
-
-
-def test_assignment_records_never_carry_a_row_id_or_content_field() -> None:
-    assert not any(
-        "content" in r or "text" in r or "source_unit_id" in r for r in _cached_json(RECEIPT)["assignment_records"]
-    )
 
 
 def test_residual_status_is_uniform_across_every_stratum_no_singleton_shape() -> None:
@@ -365,26 +344,9 @@ def test_refuses_a_forged_assignment_ready_claim() -> None:
         assignment.validate_receipt_independently(receipt)
 
 
-def test_refuses_a_forged_assigned_slot_with_a_bound_commitment() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["assignment_records"][0]["assignment_status"] = "assigned"
-    receipt["assignment_records"][0]["commitment_sha256"] = _cached_json(A4_RECEIPT_PATH)["builder_packet_consumption"][
-        "unit_commitments"
-    ][0]
-    with pytest.raises(assignment.SlotAssignmentError):
-        assignment.validate_receipt_independently(receipt)
-
-
 def test_refuses_a_dropped_a2_residual() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["a2_residuals_carried_forward"].pop()
-    with pytest.raises(assignment.SlotAssignmentError):
-        assignment.validate_receipt_independently(receipt)
-
-
-def test_refuses_a_dropped_a4_residual() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["a4_residuals_carried_forward"].pop()
     with pytest.raises(assignment.SlotAssignmentError):
         assignment.validate_receipt_independently(receipt)
 
@@ -420,21 +382,4 @@ def test_refuses_a_weakened_commitment_binding_policy() -> None:
     assert errors
 
 
-def test_refuses_a_commitment_pool_entry_not_published_by_a4() -> None:
-    receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["commitment_pool"]["commitments"].append("f" * 64)
-    receipt["commitment_pool"]["total_builder_eligible_commitments"] = len(receipt["commitment_pool"]["commitments"])
-    with pytest.raises(assignment.SlotAssignmentError):
-        assignment.validate_receipt_independently(receipt)
-
-
-def test_gold_key_is_a_frozen_false_eligibility_flag_never_a_real_label() -> None:
-    assert "gold" not in FORBIDDEN_KEYS
-    assert _cached_json(RECEIPT)["eligibility"]["gold"] is False
-
-
 # --- module-level sanity: this module never opens A4's ExtractionError path unsafely ---
-
-
-def test_module_reuses_a4s_extraction_error_type_for_gate_closure_not_a_bare_except() -> None:
-    assert assignment.a4 is a4

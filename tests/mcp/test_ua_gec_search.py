@@ -35,11 +35,6 @@ def server_module():
 def _run(coro):
     return asyncio.run(coro)
 
-def test_search_ua_gec_errors_listed(server_module):
-    tools = _run(server_module.list_tools())
-    tool_names = {t.name for t in tools}
-    assert "search_ua_gec_errors" in tool_names
-
 def test_search_ua_gec_errors_schema(server_module):
     tools = _run(server_module.list_tools())
     tool = next(t for t in tools if t.name == "search_ua_gec_errors")

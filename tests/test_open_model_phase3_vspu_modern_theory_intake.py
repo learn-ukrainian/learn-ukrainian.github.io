@@ -7,7 +7,6 @@ import stat
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_vspu_modern_theory_intake as intake
 
@@ -170,12 +169,6 @@ def _build(paths: dict[str, Path]) -> dict[str, object]:
         bitstream_metadata=paths["bitstream"],
         review_result=paths["review"],
     )
-
-
-def test_contract_schema_is_valid_and_text_free() -> None:
-    schema = json.loads(intake.SCHEMA_PATH.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    assert '"source_text"' not in intake.SCHEMA_PATH.read_text(encoding="utf-8")
 
 
 def test_build_is_deterministic_and_fail_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

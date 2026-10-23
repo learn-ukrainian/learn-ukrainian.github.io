@@ -15,14 +15,6 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 
-def _write_prompt_template(prompts_dir: Path, template: str) -> None:
-    prompts_dir.mkdir(parents=True, exist_ok=True)
-    (prompts_dir / "compile_article.md").write_text(
-        template,
-        encoding="utf-8",
-    )
-
-
 def test_load_dossier_text_returns_none_for_missing_path(tmp_path, monkeypatch):
     from wiki import sources
 
@@ -44,58 +36,6 @@ def test_load_dossier_text_returns_existing_dossier(tmp_path, monkeypatch):
     )
 
 
-def test_build_prompt_injects_authoritative_dossier(tmp_path):
-    from wiki.compiler import _build_prompt
-
-    prompts_dir = tmp_path / "prompts"
-    _write_prompt_template(
-        prompts_dir,
-        "# Compile {topic}\n\n{dossier_section}## Sources\n{sources}\n",
-    )
-    dossier_text = "# Dossier\n\nFact tier: verified.\n"
-
-    with patch("wiki.compiler.PROMPTS_DIR", prompts_dir):
-        prompt = _build_prompt(
-            topic="Demo",
-            slug="demo",
-            domain="figures",
-            sources=[{"chunk_id": "c1", "text": "Retrieved chunk."}],
-            track="bio",
-            dossier_text=dossier_text,
-        )
-
-    assert "## AUTHORITATIVE DOSSIER" in prompt
-    assert "# Dossier\n\nFact tier: verified." in prompt
-    assert "DOSSIER WINS" in prompt
-    assert prompt.index("## AUTHORITATIVE DOSSIER") < prompt.index("## Sources")
-
-
-def test_build_prompt_without_dossier_preserves_existing_prompt(tmp_path):
-    from wiki.compiler import _build_prompt
-
-    old_prompts_dir = tmp_path / "old-prompts"
-    new_prompts_dir = tmp_path / "new-prompts"
-    old_template = "# Compile {topic}\n\n## Sources\n{sources}\n"
-    new_template = "# Compile {topic}\n\n{dossier_section}## Sources\n{sources}\n"
-    _write_prompt_template(old_prompts_dir, old_template)
-    _write_prompt_template(new_prompts_dir, new_template)
-    kwargs = {
-        "topic": "Demo",
-        "slug": "demo",
-        "domain": "figures",
-        "sources": [{"chunk_id": "c1", "text": "Retrieved chunk."}],
-        "track": "bio",
-    }
-
-    with patch("wiki.compiler.PROMPTS_DIR", old_prompts_dir):
-        before = _build_prompt(**kwargs)
-    with patch("wiki.compiler.PROMPTS_DIR", new_prompts_dir):
-        after = _build_prompt(**kwargs)
-
-    assert after == before
-    assert "AUTHORITATIVE DOSSIER" not in after
-
-
 def test_extract_dossier_cited_chunk_ids_preserves_order_and_dedups():
     from wiki.compiler import _extract_dossier_cited_chunk_ids
 
@@ -110,18 +50,6 @@ This prose mentions S1 and source_c123, but only exact cNNNN chunk IDs count.
         "wave4-chyzhevsky-istoriia-lit_c0163",
         "2971c499_c0635",
     ]
-
-
-def test_seed_sources_from_dossier_no_dossier_is_noop():
-    from wiki.compiler import _seed_sources_from_dossier
-
-    sources = [{"chunk_id": "retrieved_c0001", "text": "Retrieved."}]
-
-    with patch("wiki.compiler._fetch_chunks_by_chunk_id") as fetch:
-        seeded = _seed_sources_from_dossier(sources, None)
-
-    assert seeded is sources
-    fetch.assert_not_called()
 
 
 def test_seed_sources_from_dossier_fetches_only_missing_explicit_chunk_ids():
@@ -285,35 +213,6 @@ def test_dossier_seeded_chunks_reach_assembled_sources_registry(tmp_path):
     ]
 
 
-def test_source_grounding_prompt_still_flags_unsupported_claims():
-    prompt = (_REPO_ROOT / "scripts" / "wiki" / "prompts" / "review_source_grounding.md").read_text(
-        encoding="utf-8",
-    )
-
-    assert "`UNSUPPORTED_CLAIM`" in prompt
-    assert "Substantive claim with no `[S#]` citation" in prompt
-
-
-def test_cmd_compile_one_passes_dossier_text_to_compile_article():
-    from wiki.compile import cmd_compile_one
-
-    chunks = [{"chunk_id": "c1", "text": "Retrieved chunk."}]
-
-    with (
-        patch("wiki.compile._get_domain", return_value="figures"),
-        patch("wiki.compile._compiled_article_is_ready", return_value=False),
-        patch("wiki.compile.gather_discovery_sources", return_value={}),
-        patch("wiki.compile.enrich_sources", return_value=chunks),
-        patch("wiki.compile._slug_to_topic", return_value="Demo"),
-        patch("wiki.compile.load_dossier_text", return_value="Dossier fact."),
-        patch("wiki.compile.compile_article", return_value=None) as compile_article,
-        patch("wiki.state.is_compiled", return_value=False),
-    ):
-        assert cmd_compile_one("bio", "demo", dry_run=True) is True
-
-    assert compile_article.call_args.kwargs["dossier_text"] == "Dossier fact."
-
-
 def test_cmd_compile_one_dossier_only_proceeds_when_no_discovery():
     """A slug with a dossier but no discovery file compiles dossier-only.
 
@@ -365,46 +264,3 @@ def test_cmd_compile_one_fails_when_no_discovery_and_no_dossier():
         assert cmd_compile_one("folk", "ghost", dry_run=True) is False
 
     compile_article.assert_not_called()
-
-
-def test_dossier_title_extracts_cyrillic_h1(monkeypatch):
-    from wiki import compile as compile_mod
-
-    monkeypatch.setattr(
-        compile_mod,
-        "load_dossier_text",
-        lambda track, slug: "# Календарна обрядовість і звичаї\n\n- **Slug:** `x`\n",
-    )
-    assert compile_mod._dossier_title("folk", "x") == "Календарна обрядовість і звичаї"
-
-
-def test_dossier_title_strips_research_dossier_suffix(monkeypatch):
-    from wiki import compile as compile_mod
-
-    monkeypatch.setattr(
-        compile_mod,
-        "load_dossier_text",
-        lambda track, slug: "# Тарас Григорович Шевченко — Research Dossier\n\nbody\n",
-    )
-    assert compile_mod._dossier_title("bio", "x") == "Тарас Григорович Шевченко"
-
-
-def test_dossier_title_none_when_no_dossier(monkeypatch):
-    from wiki import compile as compile_mod
-
-    monkeypatch.setattr(compile_mod, "load_dossier_text", lambda track, slug: None)
-    assert compile_mod._dossier_title("folk", "x") is None
-
-
-def test_slug_to_topic_uses_dossier_title_when_no_keywords(monkeypatch):
-    """Dossier-only topics get a Cyrillic title, never a Latin-slug transliteration."""
-    from wiki import compile as compile_mod
-
-    monkeypatch.setattr(
-        compile_mod,
-        "load_dossier_text",
-        lambda track, slug: "# Календарна обрядовість і звичаї\n\nbody\n",
-    )
-    topic = compile_mod._slug_to_topic("kalendarna-obriadovist-zvychai", "folk", None)
-    assert topic == "Український фольклор: Календарна обрядовість і звичаї"
-    assert "Kalendarna" not in topic

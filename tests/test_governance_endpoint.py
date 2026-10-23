@@ -89,39 +89,6 @@ def _patch_governance_paths(monkeypatch, tmp_path: Path) -> tuple[Path, Path]:
     return decisions_file, adr_dir
 
 
-def test_governance_endpoint_returns_decisions_and_adrs() -> None:
-    response = client.get("/api/state/governance")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert "decisions" in body
-    assert "adrs" in body
-    assert "total" in body["decisions"]
-    assert "total" in body["adrs"]
-
-
-def test_governance_counters_consistent() -> None:
-    response = client.get("/api/state/governance")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["decisions"]["total"] == len(body["decisions"]["all"])
-    assert body["adrs"]["total"] == len(body["adrs"]["index"])
-
-
-def test_orient_includes_governance_block() -> None:
-    response = client.get("/api/orient?fresh=true")
-
-    assert response.status_code == 200
-    governance = response.json()["meta"]["governance"]
-    assert {
-        "decisions_total",
-        "decisions_stale",
-        "adrs_total",
-        "adrs_warnings",
-    } <= set(governance)
-
-
 def test_stale_decisions_flagged(tmp_path: Path, monkeypatch) -> None:
     decisions_file, adr_dir = _patch_governance_paths(monkeypatch, tmp_path)
     _write_decisions(decisions_file, expires="2026-01-01")

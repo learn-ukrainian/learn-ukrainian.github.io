@@ -12,7 +12,6 @@ This command never publishes Atlas or learner-surface outputs.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import os
 import re
 import sys
@@ -491,13 +490,6 @@ def _compact_occurrences(occurrences: Sequence[core.IntakeOccurrence]) -> list[c
         grouped.values(),
         key=lambda item: (item.source_id, item.locator, _lemma_key(item.form), item.explicit_gloss or ""),
     )
-
-
-def source_ref_for_path(path: Path, *, prefix: str = "ohoiko-source") -> str:
-    """Return a stable opaque locator key for a private path (local tooling only)."""
-
-    digest = hashlib.sha256(path.as_posix().encode("utf-8")).hexdigest()[:12]
-    return f"{prefix}-{digest}"
 
 
 def resolve_output_paths(

@@ -82,11 +82,6 @@ def extract_images(page):
     return images
 
 
-def bbox_center(bbox):
-    """Return center (x, y) of a bounding box."""
-    return ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
-
-
 def bbox_distance(b1, b2):
     """Minimum distance between two bounding boxes (0 if overlapping)."""
     # Horizontal gap
@@ -121,19 +116,6 @@ def match_images_to_text(images, text_blocks):
             "distance": closest_dist,
         })
     return pairs
-
-
-def render_annotated_page(page, images, text_blocks, pairs):
-    """Render the page with colored bounding boxes for images and text."""
-    # Create a copy of the page as a pixmap
-    pix = page.get_pixmap(dpi=RENDER_DPI)
-
-    # Draw on it using pymupdf Shape on the page, then re-render
-    # Actually, let's draw directly using the pixmap approach —
-    # we'll use a fresh page annotation approach
-    # Simpler: render clean page, then overlay in HTML with CSS
-
-    return pix.tobytes("png")
 
 
 def generate_html(pdf_path, page_num, page_png, images, text_blocks, pairs):

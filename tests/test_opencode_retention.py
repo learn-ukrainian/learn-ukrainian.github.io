@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
 import subprocess
 import sys
 import time
@@ -205,37 +204,3 @@ def test_opencode_retention_skips_blocked_family_but_deletes_unrelated_old_famil
         "session delete ses_unrelated_parent --pure"
     )
     assert not any("session delete ses_parent" in call or "session delete ses_old_child" in call for call in calls)
-
-
-def test_opencode_retention_deletes_children_before_parent(tmp_path: Path) -> None:
-    env, log = _environment(
-        tmp_path,
-        [
-            {"id": "ses_parent", "updated": 1, "parent": None},
-            {"id": "ses_child", "updated": 2, "parent": "ses_parent"},
-        ],
-    )
-    result = _invoke(env)
-    assert result.returncode == 0, result.stderr
-    calls = log.read_text().splitlines()
-    assert calls.index("session delete ses_child --pure") < calls.index("session delete ses_parent --pure")
-
-
-def test_opencode_retention_systemd_templates_verify(tmp_path: Path) -> None:
-    analyzer = shutil.which("systemd-analyze")
-    if analyzer is None:
-        pytest.skip("systemd-analyze unavailable")
-    source = SCRIPT.parents[2] / "packaging/systemd"
-    names = ("learn-ukrainian-opencode-retention.service", "learn-ukrainian-opencode-retention.timer")
-    for name in names:
-        rendered = (source / name).read_text(encoding="utf-8")
-        rendered = rendered.replace("@REPO_ROOT@", str(SCRIPT.parents[2])).replace("@PYTHON@", sys.executable)
-        (tmp_path / name).write_text(rendered, encoding="utf-8")
-    result = subprocess.run(
-        [analyzer, "verify", *(str(tmp_path / name) for name in names)],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=60,
-    )
-    assert result.returncode == 0, result.stderr

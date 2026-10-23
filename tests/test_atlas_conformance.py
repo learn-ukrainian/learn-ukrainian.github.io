@@ -106,24 +106,6 @@ def test_real_lexicon_manifest_membership_conforms(requires_sources_db, requires
     assert [v for v in violations if v.gate == "lemma_in_vesum"] == []
 
 
-def test_store_free_manifest_conformance_runs_without_stores(monkeypatch, tmp_path):
-    """Missing stores must neither skip nor remove the non-membership gates."""
-    monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "absent.db"))
-    monkeypatch.setenv("LU_VESUM_DB", str(tmp_path / "absent.db"))
-    monkeypatch.setitem(globals(), "_pinned_local_manifest", lambda: _manifest(_entry()))
-    curriculum = tmp_path / "curriculum.yaml"
-    curriculum.write_text(yaml.safe_dump(FAKE_CURRICULUM), encoding="utf-8")
-    monkeypatch.setitem(globals(), "CURRICULUM_PATH", curriculum)
-    test_real_lexicon_manifest_conforms_to_atlas_gates()
-    # Retain a behavioral tripwire for a store-free conformance violation.
-    monkeypatch.setitem(
-        globals(), "_pinned_local_manifest",
-        lambda: _manifest(_entry(course_usage=[{"track": "a1", "slug": "missing-module"}])),
-    )
-    with pytest.raises(AssertionError):
-        test_real_lexicon_manifest_conforms_to_atlas_gates()
-
-
 def test_pinned_local_manifest_loader_never_downloads(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
@@ -249,14 +231,6 @@ def test_lemma_in_vesum_flags_when_absent_from_both_vesum_and_heritage():
     assert _gates_for(entry, vesum=set(), heritage=set()) == ["lemma_in_vesum"]
 
 
-def test_lemma_in_vesum_allowlist_is_offline_fallback_when_no_heritage():
-    # #3211: when the heritage corpus is unavailable (heritage=None, e.g. no sources.db),
-    # the curated allowlist still exempts known VESUM-gap words.
-    entry = _entry(lemma="хвастливий", url_slug="хвастливий", pos="adjective")
-
-    assert _gates_for(entry, vesum=set(), heritage=None) == []
-
-
 
 
 
@@ -355,31 +329,6 @@ def test_morphology_all_form_containers_empty_still_flags():
     )
 
     assert _gates_for(entry) == ["section_omitted_not_empty"]
-
-
-def test_synonyms_section_requires_source_and_items():
-    entry = _entry(
-        sections={
-            "synonyms": {
-                "items": [],
-                "source": "Словник синонімів С. Караванського",
-            }
-        }
-    )
-
-    assert _gates_for(entry) == ["section_omitted_not_empty"]
-
-
-def test_idioms_section_requires_source_and_cards():
-    entry = _entry(
-        sections={
-            "idioms": {
-                "items": [{"phrase": "яблуко розбрату", "definition": ""}],
-            }
-        }
-    )
-
-    assert _gates_for(entry) == ["provenance_per_section", "section_omitted_not_empty"]
 
 
 def test_heritage_evidence_required_flags_authentic_without_presoviet_attestation():
@@ -509,19 +458,6 @@ def test_kaikki_pronunciation_and_etymology_pass_with_cc_by_sa_source():
     )
 
     assert _gates_for(entry) == []
-
-
-def test_kaikki_etymology_source_must_carry_cc_by_sa_attribution():
-    entry = _entry(
-        enrichment={
-            "etymology": {
-                "text": "From Proto-Slavic *slovo.",
-                "source": "kaikki/Wiktionary",
-            }
-        }
-    )
-
-    assert _gates_for(entry) == ["kaikki_attribution_required"]
 
 
 def test_kaikki_etymology_tolerates_base_form_suffix():

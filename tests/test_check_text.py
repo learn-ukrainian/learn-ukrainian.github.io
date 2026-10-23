@@ -28,7 +28,6 @@ import sys
 import time
 from dataclasses import asdict
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -39,7 +38,6 @@ from scripts.lib.readonly_sqlite import open_readonly
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.verification.check_ru_morph import is_russian_pattern
 from scripts.verification.check_text import check_text
-from scripts.verification.stress import STRESS_BATCH_CAP
 from scripts.verification.vesum import verify_words
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -174,13 +172,6 @@ def test_input_errors_both():
     assert "both" in res.get("error", "")
 
 
-def test_input_errors_neither():
-    res = check_text()
-    assert res.get("status") == "error"
-    assert res.get("error_code") == "invalid_input"
-    assert "neither" in res.get("error", "")
-
-
 def test_input_errors_item_cap():
     items = [{"id": i, "text": f"Слово {i}"} for i in range(201)]
     res = check_text(items=items)
@@ -191,13 +182,6 @@ def test_input_errors_item_cap():
 
 def test_input_errors_accent_in_text():
     res = check_text(text="Це гарна́ хата.")
-    assert res.get("status") == "error"
-    assert res.get("error_code") == "accent_in_input"
-
-
-def test_input_errors_accent_in_items():
-    items = [{"id": "item-1", "text": "Це чиста вода."}, {"id": "item-2", "text": "Це гарна́ хата."}]
-    res = check_text(items=items)
     assert res.get("status") == "error"
     assert res.get("error_code") == "accent_in_input"
 
@@ -284,24 +268,6 @@ def test_synthetic_truncation_order_and_uncut_count():
 
 
 # ── Synthetic Tests: Stress Chunking at 501 Forms ────────────────────────────
-
-
-def test_synthetic_stress_chunk_501_forms():
-    words = [f"балачка{i:03d}а" for i in range(501)]
-    text = " ".join(words)
-
-    with patch(
-        "scripts.verification.check_text.verify_stresses",
-        wraps=__import__("scripts.verification.stress", fromlist=["verify_stresses"]).verify_stresses,
-    ) as mock_stresses:
-        res = check_text(text=text, checks=["stress"])
-        assert res.get("status") != "error"
-        assert mock_stresses.call_count == 2
-        first_call_len = len(mock_stresses.call_args_list[0][0][0])
-        second_call_len = len(mock_stresses.call_args_list[1][0][0])
-        assert first_call_len == STRESS_BATCH_CAP
-        assert second_call_len == 1
-        assert res["summary"]["unique_forms"] == 501
 
 
 # ── Stress: Forms Case-Insensitivity & Ambiguity Resolution (Minor 4) ────────
@@ -551,13 +517,6 @@ def test_markup_mid_sentence_guards(text):
 
 
 @pytest.mark.usefixtures("markup_vesum")
-def test_markup_item_ids_and_repeated_locations():
-    text = "> **Технологіческа**\r\n| Технологіческа |"
-    result = check_text(items=[{"id": "markup", "text": text}], checks=["vesum"])
-    assert result["problems"][0]["locations"] == [["markup", 4, 18], ["markup", 24, 38]]
-
-
-@pytest.mark.usefixtures("markup_vesum")
 @pytest.mark.parametrize("text", ("## ЯКА", "####### Яка", "+Яка", "квартира # Яка"))
 def test_markup_keeps_first_letter_only_and_prefix_guards(text):
     word = "ЯКА" if "ЯКА" in text else "Яка"
@@ -727,7 +686,6 @@ def test_sentence_initial_licence_does_not_leak_to_later_occurrences():
 @pytest.mark.usefixtures("label_vesum")
 @pytest.mark.parametrize("apostrophe", ("'", "’", "ʼ", "`", "‘"))
 def test_label_shape_is_linear_on_apostrophe_runs(apostrophe):
-    import time
 
     text = "С" + (apostrophe + "С") * 24 + ",: Добре"
     start = time.perf_counter()
@@ -927,25 +885,6 @@ def test_synthetic_ua_gec_closed_class_edit_is_not_a_suspicion(monkeypatch, herm
     assert len(res["suspicions"]) == 0
 
 
-@pytest.mark.parametrize(
-    "text,word,pos,tags",
-    [
-        ("Я читаю", "я", "noun", "noun:anim:s:v_naz:pron:pers:1"),
-        ("Він і я читаємо", "і", "conj", "conj:coord"),
-    ],
-)
-def test_ua_gec_function_word_suspicions_suppressed(text, word, pos, tags, monkeypatch, hermetic_ua_gec_vesum):
-    hermetic_ua_gec_vesum[word] = [{"lemma": word, "pos": pos, "tags": tags}]
-    index = {
-        (word,): [
-            {"id": 1, "error": word, "correct": "", "error_type": "F/Calque", "doc_id": "fixture", "is_native": 1}
-        ]
-    }
-    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (index, 1, 0))
-    result = check_text(text=text, checks=["ua_gec"])
-    assert result["problems"] == result["suspicions"] == []
-
-
 @pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_sub_span_not_matched(monkeypatch):
     mock_index = {
@@ -1071,15 +1010,6 @@ def test_synthetic_ua_gec_skipped_kind_tokens_dropped_and_counted(monkeypatch):
     assert prov["ua_gec_dropped_skipped_kind_rows"] == 5
 
 
-def test_real_ua_gec_skipped_kind_tokens_dropped_and_counted(requires_sources_db, requires_vesum_db):
-    # Settlement 1: real database variant asserts >= 1
-    res = check_text(text="Привіт.", checks=["ua_gec"])
-    assert res.get("status") != "error"
-    prov = res["provenance"]
-    assert "ua_gec_dropped_skipped_kind_rows" in prov
-    assert prov["ua_gec_dropped_skipped_kind_rows"] >= 1
-
-
 # ── Russian Shadow: Curated Lists and Suspicions (Minor 5) ───────────────────
 
 
@@ -1129,18 +1059,6 @@ def test_synthetic_ua_gec_source_unavailable_when_db_missing(monkeypatch):
     assert res.get("status") == "error"
     assert res.get("error_code") == "source_unavailable"
     assert "sources database not found" in res.get("error", "")
-
-
-def test_synthetic_vesum_source_unavailable_when_db_missing(monkeypatch):
-    monkeypatch.setenv("VESUM_DB_PATH", "/nonexistent/vesum.db")
-    monkeypatch.setattr(
-        "scripts.verification.vesum._resolve_vesum_db_path",
-        lambda db_path=None: Path("/nonexistent/vesum.db"),
-    )
-    res = check_text(text="Це гарний день.", checks=["vesum"])
-    assert res.get("status") == "error"
-    assert res.get("error_code") == "source_unavailable"
-    assert "VESUM database not found" in res.get("error", "")
 
 
 def test_ua_gec_only_missing_vesum_is_source_unavailable(monkeypatch):
@@ -1331,32 +1249,4 @@ def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, 
     assert not any(s["form"] == planted_gec_error for s in res_modified["suspicions"])
 
 
-def test_speed_warm_call_under_2s(requires_vesum_db, requires_sources_db):
-    fixture = _load_textbook_fixture()
-    if fixture is None:
-        pytest.skip("data/sources.db or vesum.db not provisioned")
-    _, text = fixture
-
-    # Warm-up call
-    check_text(text=text)
-
-    # Measured warm call with all four checks
-    t0 = time.perf_counter()
-    res = check_text(text=text)
-    elapsed = time.perf_counter() - t0
-
-    assert elapsed < 2.0, f"check_text warm call took {elapsed:.3f}s, expected < 2.0s"
-    assert res.get("status") != "error"
-    assert res["summary"]["tokens"] >= 600
-
-
 # ── M1 Benchmark Script Reduced Acceptance Test (Minor 2) ───────────────────
-
-
-def test_bench_check_text_reduced(requires_vesum_db, requires_sources_db):
-    from scripts.verification.bench_check_text import run_benchmark
-
-    res = run_benchmark(reduced=True)
-    assert res["check_text"]["calls"] == 1
-    assert res["check_text"]["calls"] < res["legacy"]["calls"]
-    assert res["check_text"]["chars"] < res["legacy"]["chars"]

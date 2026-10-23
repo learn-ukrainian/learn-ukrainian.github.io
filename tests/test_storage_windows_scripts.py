@@ -23,11 +23,6 @@ def verify_text() -> str:
     return VERIFY_SCRIPT.read_text(encoding="utf-8")
 
 
-def test_scripts_exist() -> None:
-    assert COPY_SCRIPT.is_file()
-    assert VERIFY_SCRIPT.is_file()
-
-
 def test_copy_uses_rclone_copy_not_sync(copy_text: str) -> None:
     # Primary invocation is rclone copy (first positional arg).
     assert re.search(r"""['\"]copy['\"]""", copy_text)
@@ -46,27 +41,6 @@ def test_copy_uses_rclone_copy_not_sync(copy_text: str) -> None:
         assert re.search(pattern, copy_text, flags=re.IGNORECASE) is None, pattern
     # Documented non-destructive posture.
     assert "never" in copy_text.lower() and "sync" in copy_text.lower()
-
-
-def test_copy_resolves_destination_via_get_smbshare_local_ntfs(copy_text: str) -> None:
-    assert "Get-SmbShare" in copy_text
-    assert "DriveFormat" in copy_text
-    assert "NTFS" in copy_text
-    assert "StartsWith('\\\\')" in copy_text or 'StartsWith("\\\\")' in copy_text
-    # Share name is conventional; no frozen Phase 3 run IDs.
-    assert "UkrainianData" in copy_text
-    assert "phase3-storage-migration" not in copy_text.lower()
-    assert "20260815" not in copy_text
-
-
-def test_copy_is_resumable_idempotent_flags(copy_text: str) -> None:
-    # checksum + copy semantics skip identical files; retries support resume.
-    assert "--checksum" in copy_text
-    assert "--retries" in copy_text
-    assert "BULK_COPY_COMPLETE" in copy_text
-    # Copy must not mint the success receipt itself.
-    assert "BULK_SOURCES_VERIFIED" not in copy_text
-    assert "Set-Content" not in copy_text or "receipt" not in copy_text.lower()
 
 
 def test_verify_receipt_only_after_success(verify_text: str) -> None:

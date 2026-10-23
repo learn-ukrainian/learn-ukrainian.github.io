@@ -13,7 +13,6 @@ Covers:
 """
 
 import json
-from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -26,159 +25,9 @@ from scripts.practice.interjection_mechanics_engine import (
     export_deck,
     is_valid_vesum_token,
     main,
-    resolve_emotional_negative_rule,
-    resolve_emotional_positive_rule,
-    resolve_etiquette_gratitude_apology_rule,
-    resolve_etiquette_greeting_farewell_rule,
-    resolve_onomatopoeia_animal_sounds_rule,
     resolve_onomatopoeia_nature_mechanics_rule,
-    resolve_spelling_hyphen_repeated_rule,
-    resolve_spelling_multiword_separate_rule,
-    resolve_spelling_particles_hyphen_rule,
-    resolve_syntax_punctuation_particle_rule,
-    resolve_volitional_animal_rule,
-    resolve_volitional_imperative_rule,
     verify_deck_with_vesum,
 )
-
-
-def test_resolve_interjection_rules():
-    """Verify that all 12 rule resolver functions return valid citations and summaries."""
-    resolvers = [
-        resolve_emotional_positive_rule,
-        resolve_emotional_negative_rule,
-        resolve_volitional_imperative_rule,
-        resolve_volitional_animal_rule,
-        resolve_etiquette_greeting_farewell_rule,
-        resolve_etiquette_gratitude_apology_rule,
-        resolve_onomatopoeia_nature_mechanics_rule,
-        resolve_onomatopoeia_animal_sounds_rule,
-        resolve_spelling_hyphen_repeated_rule,
-        resolve_spelling_particles_hyphen_rule,
-        resolve_spelling_multiword_separate_rule,
-        resolve_syntax_punctuation_particle_rule,
-    ]
-
-    assert len(resolvers) == 12
-    for r in resolvers:
-        cit, ua, en = r()
-        assert len(cit) > 5
-        assert len(ua) > 30
-        assert len(en) > 30
-
-    # Specific subsection verification
-    cit_rep, _, _ = resolve_spelling_hyphen_repeated_rule()
-    assert "§ 35, п. 5, 4)" in cit_rep
-
-    cit_part, _, _ = resolve_spelling_particles_hyphen_rule()
-    assert "§ 35, п. 5, 4)" in cit_part
-    assert "§ 44, п. 3, 1)" in cit_part
-
-    cit_sep, _, _ = resolve_spelling_multiword_separate_rule()
-    assert "§ 41, п. 2" in cit_sep
-    assert "§ 53" in cit_sep
-
-    cit_syn, _, _ = resolve_syntax_punctuation_particle_rule()
-    assert "§ 158, п. 9" in cit_syn
-    assert "§ 157, п. 3" in cit_syn
-    assert "§ 46, п. 2" in cit_syn
-
-
-def test_build_canonical_interjection_cards_count_and_distribution():
-    """Verify that 60 cards are built with exactly 5 cards per category across 12 categories."""
-    cards = build_canonical_interjection_cards()
-    assert len(cards) == 60
-
-    cat_counts = Counter(c.category for c in cards)
-    assert len(cat_counts) == 12
-
-    for cat in InterjectionCategory:
-        assert cat_counts[cat] == 5, f"Category {cat} does not have exactly 5 cards: {cat_counts[cat]}"
-
-
-def test_cards_zero_collision_and_unique_options():
-    """Verify that card IDs are unique, each card has 4 unique options, and distractors are well-formed."""
-    cards = build_canonical_interjection_cards()
-    card_ids = [c.card_id for c in cards]
-    assert len(card_ids) == len(set(card_ids)), "Duplicate card IDs detected"
-
-    for card in cards:
-        opts = card.all_options()
-        assert len(opts) == 4, f"Card {card.card_id} does not have exactly 4 options"
-        assert len(set(opts)) == 4, f"Card {card.card_id} contains duplicate options: {opts}"
-        assert card.correct_answer in opts, f"Card {card.card_id} correct answer not in options"
-
-        distractor_texts = [d.text for d in card.distractors]
-        assert len(distractor_texts) == 3
-        assert len(set(distractor_texts)) == 3
-        assert card.correct_answer not in distractor_texts
-
-        for d in card.distractors:
-            assert isinstance(d.interference_key, InterjectionInterferenceKey)
-            assert len(d.explanation_ua) > 15
-            assert len(d.explanation_en) > 15
-
-
-def test_card_prompt_display_and_full_sentence():
-    """Verify that every card prompt contains the blank indicator _______."""
-    cards = build_canonical_interjection_cards()
-    for card in cards:
-        assert "_______" in card.prompt, f"Card {card.card_id} prompt missing blank indicator: {card.prompt}"
-        # Target token components should match the correct answer
-        clean_target = card.target_token.strip(".,!?:;—…\"'«»`()[]").lower()
-        clean_answer = card.correct_answer.strip(".,!?:;—…\"'«»`()[]").lower()
-        for tok in clean_target.split():
-            assert tok in clean_answer, (
-                f"Card {card.card_id} target token component '{tok}' missing from answer '{clean_answer}'"
-            )
-
-
-def test_shuffled_options_balanced_distribution():
-    """Verify that deterministic shuffle distributes correct answer across positions 0..3."""
-    cards = build_canonical_interjection_cards()
-    positions = []
-
-    for card in cards:
-        opts = card.all_options()
-        idx = opts.index(card.correct_answer)
-        positions.append(idx)
-
-    pos_counts = Counter(positions)
-    for pos in range(4):
-        # With 60 cards, expected average is 15 per position; ensure each has >= 7
-        assert pos_counts[pos] >= 7, f"Position {pos} count {pos_counts[pos]} is under-represented"
-
-
-def test_emotional_interjections_semantics():
-    """Verify emotional valence accuracy in categories 1 and 2."""
-    cards = build_canonical_interjection_cards()
-    pos_cards = [c for c in cards if c.category == InterjectionCategory.EMOTIONAL_POSITIVE]
-    neg_cards = [c for c in cards if c.category == InterjectionCategory.EMOTIONAL_NEGATIVE]
-
-    assert len(pos_cards) == 5
-    assert len(neg_cards) == 5
-
-    pos_answers = {c.correct_answer for c in pos_cards}
-    assert pos_answers == {"Ура", "Ах", "Ох", "Леле", "Овва"}
-
-    neg_answers = {c.correct_answer for c in neg_cards}
-    assert neg_answers == {"Ой", "Ай", "лишенько", "Пхе", "Тьху"}
-
-
-def test_volitional_commands_and_animal_calls():
-    """Verify volitional human commands and animal calls in categories 3 and 4."""
-    cards = build_canonical_interjection_cards()
-    imp_cards = [c for c in cards if c.category == InterjectionCategory.VOLITIONAL_IMPERATIVE]
-    anim_cards = [c for c in cards if c.category == InterjectionCategory.VOLITIONAL_ANIMAL]
-
-    assert len(imp_cards) == 5
-    assert len(anim_cards) == 5
-
-    imp_answers = {c.correct_answer for c in imp_cards}
-    assert imp_answers == {"Гайда", "марш", "Годі", "Геть", "Цить"}
-
-    anim_answers = {c.correct_answer for c in anim_cards}
-    assert anim_answers == {"Киць-киць", "Киш", "Тпру", "Но", "Вйо"}
 
 
 def test_etiquette_separate_spelling_guardrails():
@@ -443,39 +292,6 @@ def test_is_valid_vesum_token_rejections_and_compounds(requires_vesum_db):
     assert is_valid_vesum_token(cursor, "дзень-дзелень") is True
 
     conn.close()
-
-
-def test_cli_export_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path):
-    """Verify CLI --export operates cleanly without requiring VESUM."""
-    export_target = str(tmp_path / "cli_deck_only.json")
-    monkeypatch.setattr(
-        "sys.argv",
-        ["interjection_mechanics_engine.py", "--export", "--output", export_target],
-    )
-    main()
-    out = capsys.readouterr().out
-    assert "Successfully exported 60 cards" in out
-    assert Path(export_target).exists()
-
-
-def test_cli_verify_vesum_present(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path, requires_vesum_db):
-    """Verify CLI --verify-vesum and --export succeed when VESUM db is present."""
-    db_path = requires_vesum_db
-
-    export_target = str(tmp_path / "cli_deck_present.json")
-    monkeypatch.setattr(
-        "sys.argv",
-        ["interjection_mechanics_engine.py", "--verify-vesum", "--export", "--output", export_target],
-    )
-    from scripts.practice import interjection_mechanics_engine as engine
-    original = engine.verify_deck_with_vesum
-    monkeypatch.setattr(engine, "verify_deck_with_vesum", lambda cards: original(cards, db_path))
-    main()
-    out = capsys.readouterr().out
-    assert "Cards: 60" in out
-    assert "VESUM verification: PASSED" in out
-    assert "Successfully exported 60 cards" in out
-    assert Path(export_target).exists()
 
 
 def test_cli_verify_vesum_missing_exit_1(

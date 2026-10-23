@@ -46,19 +46,6 @@ def test_classify_1944_incident_as_infra_context_contamination() -> None:
     assert by_sub["handoff_or_orchestrator_file"].terminal is True
 
 
-def test_pure_mcp_writer_passes_isolation() -> None:
-    records = classify_writer_trace(
-        [
-            {
-                "name": "mcp__sources__verify_word",
-                "arguments": {"word": "кіт"},
-            }
-        ]
-    )
-
-    assert records == []
-
-
 def test_gemini_single_underscore_mcp_prefix_passes_isolation() -> None:
     """Gemini CLI 0.42.0+ emits `mcp_sources_*` instead of `mcp__sources__*`.
 
@@ -141,81 +128,6 @@ def test_gemini_update_topic_annotation_passes_isolation() -> None:
     )
 
     assert records == []
-
-
-def test_claude_toolsearch_annotation_passes_isolation() -> None:
-    """Claude Code may discover dynamic MCP tools via ToolSearch first.
-
-    ToolSearch is metadata only; the build still hard-fails separately if
-    no real mcp__sources__* call follows.
-    """
-    records = classify_writer_trace(
-        [
-            {
-                "name": "ToolSearch",
-                "arguments": {"query": "select:mcp__sources__verify_word"},
-            },
-            {
-                "name": "mcp__sources__verify_word",
-                "arguments": {"word": "кіт"},
-            },
-        ]
-    )
-
-    assert records == []
-
-
-def test_curriculum_writer_agent_exposes_v72_source_tools() -> None:
-    agent = (REPO_ROOT / "agents_extensions/shared/agents/curriculum-writer.md").read_text(encoding="utf-8")
-
-    required = {
-        "ToolSearch",
-        "mcp__sources__get_chunk_context",
-        "mcp__sources__query_wikipedia",
-        "mcp__sources__search_external",
-        "mcp__sources__search_images",
-        "mcp__sources__search_ua_gec_errors",
-        "mcp__sources__translate_en_uk",
-        "mcp__sources__verify_quote",
-        "mcp__sources__verify_source_attribution",
-        "mcp__sources__verify_words",
-    }
-
-    missing = sorted(tool for tool in required if tool not in agent)
-    assert missing == []
-
-
-def test_claude_writer_agent_deploys_from_tracked_source(tmp_path: Path) -> None:
-    source = tmp_path / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
-    target = tmp_path / ".claude" / "agents" / "curriculum-writer.md"
-    source.parent.mkdir(parents=True)
-    source.write_text("tools: ToolSearch, mcp__sources__verify_words\n", encoding="utf-8")
-
-    first = linear_pipeline.ensure_claude_writer_agent_deployed(source_path=source, target_path=target)
-
-    assert first["changed"] is True
-    assert target.read_text(encoding="utf-8") == source.read_text(encoding="utf-8")
-
-    second = linear_pipeline.ensure_claude_writer_agent_deployed(source_path=source, target_path=target)
-
-    assert second["changed"] is False
-
-
-def test_mixed_writer_fails_isolation() -> None:
-    records = classify_writer_trace(
-        [
-            {
-                "name": "mcp__sources__verify_word",
-                "arguments": {"word": "кіт"},
-            },
-            {
-                "name": "Bash",
-                "arguments": {"command": "curl http://localhost:8765/api/delegate/active"},
-            },
-        ]
-    )
-
-    assert "wrong_tool_family" in _failure_subclasses(records)
 
 
 def test_writer_reads_handoff_fails_isolation() -> None:

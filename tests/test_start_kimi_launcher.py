@@ -13,26 +13,32 @@ pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 def test_kimi_native_is_default_and_interactive_rejects_epic() -> None:
     interactive = run_launcher("start-kimi.sh")
     epic = run_launcher("start-kimi.sh", "--epic", "devops")
-    assert interactive.returncode == 0, interactive.stderr
-    # Catalog-resolved native id, never the bare alias (review finding, #5958 r3).
-    # Operator 2026-08-13: the omitted-model default is k3-256k.
-    assert "would exec kimi --model kimi-code/k3-256k" in interactive.stdout
+    # OO-58: the omitted-model default is the retired registry pin, refused before exec.
+    assert interactive.returncode == 2, interactive.stdout
+    assert "is retired in the model catalog" in interactive.stderr
+    assert "k3-256k" in interactive.stderr
+    assert "would exec" not in interactive.stdout
+    # Model retirement runs before the interactive --epic check.
     assert epic.returncode == 2
-    assert "interactive launchers reject --epic" in epic.stderr
+    assert "is retired in the model catalog" in epic.stderr
+    assert "would exec" not in epic.stdout
 
 
 @pytest.mark.parametrize("harness", ("claude", "native", "agy"))
 def test_kimi_rejects_harnesses_outside_native_or_claude_code(harness: str) -> None:
     result = run_launcher("start-kimi.sh", "--harness", harness)
+    # The retired default is refused before the harness allowlist (do not reorder gates).
     assert result.returncode == 2
-    assert "kimi-code|claude-code" in result.stderr
+    assert "is retired in the model catalog" in result.stderr
 
 
 @pytest.mark.rules_core_absent
 def test_kimi_native_accepts_explicit_model_and_provider_arguments() -> None:
     result = run_launcher("start-kimi.sh", "--model", "k3", "--", "--yolo")
-    assert result.returncode == 0, result.stderr
-    assert "would exec kimi --model kimi-code/k3 --yolo" in result.stdout
+    assert result.returncode == 2, result.stdout
+    assert "is retired in the model catalog" in result.stderr
+    assert "kimi-code/k3" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_kimi_native_rejects_unknown_alias_via_catalog() -> None:
@@ -55,11 +61,6 @@ def test_kimi_claude_code_requires_a_kimi_credential_in_noninteractive_dry_run(t
             "KIMI_API_KEY": "",
         },
     )
-    assert result.returncode == 3
-    assert "no Kimi API credential" in result.stderr
-
-
-def test_kimi_rejects_unknown_launcher_flag_with_usage_exit() -> None:
-    result = run_launcher("start-kimi.sh", "--not-a-real-flag")
+    # The retired default is refused before the credential check. The check stays in kimi.sh.
     assert result.returncode == 2
-    assert "run --help" in result.stderr
+    assert "is retired in the model catalog" in result.stderr
