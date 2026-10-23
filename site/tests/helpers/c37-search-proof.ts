@@ -1,8 +1,8 @@
 import { expect, type Page } from '@playwright/test';
 
 // A URL change alone is not article arrival. This predicate reads the rendered
-// current Atlas article: exactly one trusted shell, no error state, and a
-// word-title heading whose canonical headword equals the navigated slug.
+// current Atlas article: one visible trusted shell with body content, no error
+// state, and a word-title heading matching the full canonical navigated slug.
 export const foldUkrainian = (value: string): string => value.normalize('NFC')
   .replace(/[\u0300-\u036f]/g, '').toLowerCase()
   .replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '');
@@ -18,8 +18,12 @@ export async function inspectCurrentAtlasArticle(page: Page, slug: string): Prom
   const article = page.locator('[data-word-atlas]');
   const articles = await article.count();
   if (articles !== 1) return { ok: false, reason: `expected one [data-word-atlas], found ${articles}`, url };
+  if (!(await article.isVisible())) return { ok: false, reason: 'current Atlas article is not visible', url };
   const errorStates = await page.locator('[data-word-atlas-state]').count();
   if (errorStates !== 0) return { ok: false, reason: `current Atlas shell reported ${errorStates} error state(s)`, url };
+  if (await article.locator('[role="alert"]:visible, [aria-busy="true"]:visible').count()) {
+    return { ok: false, reason: 'current Atlas article reports an alert or busy state', url };
+  }
   const titles = article.locator('h1.word-title:visible');
   const titlesCount = await titles.count();
   if (titlesCount < 1) return { ok: false, reason: 'no visible current-article word title', url };
@@ -35,6 +39,12 @@ export async function inspectCurrentAtlasArticle(page: Page, slug: string): Prom
   }
   if (!(await article.locator('.word-hero').first().isVisible())) {
     return { ok: false, reason: 'word title rendered without an article hero', url, heading };
+  }
+  // Both thin entries (including form redirects) and rich/heteronym articles
+  // render their body in these existing sections; no definition is required.
+  const sections = await article.locator('.content-area .atlas-section:visible').allInnerTexts();
+  if (!sections.some(text => text.trim())) {
+    return { ok: false, reason: 'no visible current-article body content', url, heading };
   }
   return { ok: true, url, heading };
 }
