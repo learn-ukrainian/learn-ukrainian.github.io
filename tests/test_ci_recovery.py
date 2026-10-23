@@ -7,6 +7,7 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Barrier
+from unittest.mock import Mock
 
 import pytest
 
@@ -460,11 +461,38 @@ def test_ledger_unavailable_refuses(tmp_path):
         pub.recovery.consume(corrupt, "unit/public", 42, HEAD, "run-rerun", evidence())
 
 
-def test_cli_uses_the_same_allowance(setup):
-    _, transport = setup
+def test_cli_uses_the_same_allowance(setup, capsys):
+    """Wrong run selectors must stay unknown without spending the CLI recovery allowance."""
+    root, transport = setup
+    unreadable = Mock(return_value=subprocess.CompletedProcess([], 1, "private response", "private diagnostic"))
+    with pytest.raises(SystemExit) as shown:
+        pub.main(["run-rerun", "--help"], runner=unreadable)
+    assert shown.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "Actions run ID" in help_text and "not a PR number" in help_text
+    assert "/actions/runs/<RUN_ID>" in help_text and "--number 12345678901" in help_text
+    assert "only failed jobs" in help_text and "--failed" in help_text
+    assert "Outputs:" in help_text and "one PR-head recovery allowance" in help_text
+    assert "Exit codes: 0 request accepted, job results unverified" in help_text
+    assert "2 invalid input, unknown lookup, policy refusal or transport error" in help_text
+    assert "Related:" in help_text and "pr-update-branch" in help_text
+    unreadable.assert_not_called()
+
+    assert pub.main(["run-rerun", "--repo", "unit/public", "--number", "42"], runner=unreadable) == 2
+    assert capsys.readouterr().err == (
+        "RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable; Actions run lookup failed; "
+        "--number requires an Actions run ID, not a PR number\n"
+    )
+    assert unreadable.call_count == 1
+    assert unreadable.call_args.args[0] == [
+        "gh", "api", "--method", "GET", "repos/unit/public/actions/runs/42?per_page=100",
+    ]
+    assert transport.writes == []
+    assert not pub.recovery.ledger_path(root).exists()
+
     assert pub.main(["run-rerun", "--repo", "unit/public", "--number", "123"], runner=transport) == 0
     assert pub.main(["run-rerun", "--repo", "unit/public", "--number", "123"], runner=transport) == 2
-    assert len(transport.writes) == 1
+    assert transport.writes == [["gh", "run", "rerun", "123", "--repo", "unit/public", "--failed"]]
 
 
 def test_pull_request_run_uses_pr_head_not_tested_merge_sha(setup):

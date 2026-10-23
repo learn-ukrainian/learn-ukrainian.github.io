@@ -31,7 +31,8 @@ scanned. Transport paths are never published or scanned as public text.
 | `pr-create`, `pr-edit`, `pr-comment` | Title, body, labels, milestone, head/base names when present |
 | `pr-review` | Optional body; verdict is approve, comment or request-changes |
 | `pr-merge` | Subject and body, defaults included; squash is fixed |
-| `pr-update-branch`, `pr-ready`, `pr-close`, `issue-reopen`, `run-rerun` | No text; rerun always selects failed jobs |
+| `pr-update-branch`, `pr-ready`, `pr-close`, `issue-reopen` | No text; `--number` is a PR or issue number |
+| `run-rerun` | No text; `--number` is an Actions run ID; always selects failed jobs |
 | `workflow-run` | Only `ci.yml` and `deploy-pages.yml`, explicit validated ref; both have no inputs |
 | `pr-disarm`, `pr-dequeue`, `issue-link` | No text; identifiers have closed validation. `issue-link --replace-parent` moves an issue from its current parent through GitHub's typed `replaceParent` variable |
 | `release-create`, `release-edit` | Tag, title, notes, target, artifact names and UTF-8 content |
@@ -100,6 +101,33 @@ the top of a pid namespace. A publisher that outlives its command and is
 adopted by a subreaper walks up to that subreaper instead; the override is a
 cooperative agent's logged false-positive escape, and the threat model excludes
 a malicious local writer.
+
+### Rerun failed jobs in an Actions run
+
+`run-rerun --number` requires the Actions run ID from the run's
+`/actions/runs/<RUN_ID>` URL, not a PR number. Both commands below select
+the same run. Use the task's prescribed project interpreter.
+
+```sh
+.venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901
+.venv/bin/python -m scripts.publish run-rerun --repo unit/public --number 12345678901
+```
+
+The write always selects failed jobs with `--failed`. It retests the original
+pinned run, not the latest PR head. After a base-branch fix, use
+`pr-update-branch --number <PR_NUMBER>` to update the PR instead.
+
+PR recovery requires an eligible failed run, approval of the current PR head,
+and posted failure evidence. It consumes the one recovery allowance for that
+PR head, shared with re-enqueue, before sending the write. A failed run lookup
+remains `RECOVERY_LOOKUP_UNKNOWN`. Its diagnostic identifies the Actions run
+selector without inferring why the lookup failed. That failure sends no write
+and consumes no allowance.
+
+Exit 0 means the request was accepted; it does not prove that rerun jobs passed.
+Exit 1 reports a `gh` failure. Exit 2 reports invalid input, an unknown lookup,
+a policy refusal, or a transport error. Other `gh` exit codes propagate.
+`run-rerun --help` lists the selectors and recovery conditions.
 
 ## Raw gh reads and private writes
 
