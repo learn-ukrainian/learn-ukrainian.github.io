@@ -14,6 +14,7 @@ import logging
 import math
 import re
 import sqlite3
+import time
 from collections import Counter
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
@@ -44,7 +45,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_efficiency_metrics_authority,
 )
 from scripts.fleet_comms.endpoints import load_endpoint_registry
-from scripts.fleet_comms.lane_mailbox import read_inbox, recipient_filter, unknown_inbox
+from scripts.fleet_comms.lane_mailbox import READ_TIMEOUT_SECONDS, read_inbox, recipient_filter, unknown_inbox
 from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
@@ -159,6 +160,10 @@ def _read_connection(
         else:
             connection.row_factory = sqlite3.Row
             connection.execute("PRAGMA query_only = ON")
+            # Acquire the read snapshot inside the sanitized boundary. Opening
+            # SQLite alone does not detect a locked or unreadable schema.
+            connection.execute("BEGIN")
+            connection.execute("SELECT 1 FROM sqlite_master LIMIT 1").fetchone()
     except Exception as exc:
         availability = read_failure_code(exc, authority)
     try:
@@ -355,11 +360,16 @@ def _paged_query(
     transform: Callable[[sqlite3.Row], dict[str, Any]],
 ) -> dict[str, Any]:
     where_sql = f" WHERE {' AND '.join(clauses)}" if clauses else ""
+    deadline = time.monotonic() + READ_TIMEOUT_SECONDS if isinstance(filters.get("agent"), str) else None
+    if deadline is not None:
+        connection.set_progress_handler(lambda: int(time.monotonic() >= deadline), 1000)
     try:
         total_row = connection.execute(f"SELECT COUNT(*){from_sql}{where_sql}", params).fetchone()
         total = int(total_row[0]) if total_row is not None else 0
         query = f"{select_sql}{from_sql}{where_sql} ORDER BY {order_sql} LIMIT ? OFFSET ?"
         rows = connection.execute(query, [*params, limit, offset]).fetchall()
+        if deadline is not None and time.monotonic() >= deadline:
+            raise sqlite3.OperationalError("inbox_read_timeout")
     except sqlite3.Error:
         logger.warning("Fleet observer query failed")
         return _empty_collection(
@@ -369,6 +379,9 @@ def _paged_query(
             availability="db_unavailable",
             filters=filters,
         )
+    finally:
+        if deadline is not None:
+            connection.set_progress_handler(None, 0)
     result = _collection(
         key,
         [transform(row) for row in rows],

@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -159,7 +161,7 @@ def test_authority_flip_refuses_missing_required_capability(
     assert str(root) not in str(exc.value)
 
 
-def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: Path) -> None:
+def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: Path, capsys) -> None:
     db = tmp_path / "comms.sqlite3"
     conn = sqlite3.connect(str(db))
     try:
@@ -201,6 +203,78 @@ def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: 
         assert apply_migrations(conn) == MIGRATIONS[-1].version
     finally:
         conn.close()
+
+    # Historical aliases migrate atomically; terminal history and unrelated
+    # recipients retain their exact rows. Use the supported rollout CLI.
+    with AuthorityService(root=tmp_path) as service:
+        for alias in ("claude-infra", "codex-cto", "grok-devops", "codex-data", "claude-atlas"):
+            message = service.publish_message(sender="fixture", body="private migration body", recipients=("old-seat",))
+            service._conn.execute(
+                "UPDATE authority_deliveries SET recipient=? WHERE delivery_id=?", (alias, message.delivery_ids[0])
+            )
+            service._conn.commit()
+        acknowledged = service.publish_message(sender="fixture", body="acknowledged", recipients=("infra",))
+        ack_id = acknowledged.delivery_ids[0]
+        service._conn.execute("UPDATE authority_deliveries SET state='acknowledged' WHERE delivery_id=?", (ack_id,))
+        service._conn.execute(
+            "INSERT INTO authority_deliveries(delivery_id,message_id,recipient,state,created_at,updated_at) "
+            "VALUES ('ack-duplicate',?,'grok-infra','queued','2036-01-01T00:00:00Z','2036-01-01T00:00:00Z')",
+            (acknowledged.message_id,),
+        )
+        service._conn.execute(
+            "INSERT INTO authority_deliveries(delivery_id,message_id,recipient,state,created_at,updated_at) "
+            "VALUES ('queued-duplicate',?,'grok-atlas','queued','2036-01-01T00:00:00Z','2036-01-01T00:00:00Z')",
+            (message.message_id,),
+        )
+        service._conn.commit()
+        held = service.publish_message(sender="fixture", body="held", recipients=("held-seat",))
+        service._conn.execute(
+            "UPDATE authority_deliveries SET recipient='claude-devops',state='running' WHERE delivery_id=?",
+            (held.delivery_ids[0],),
+        )
+        service._conn.commit()
+        unrelated = service.publish_message(sender="fixture", body="unmapped", recipients=("pool",))
+        service._conn.commit()
+        before = [tuple(row) for row in service._conn.execute("SELECT * FROM authority_deliveries ORDER BY delivery_id")]
+        assert main(["lane-mailboxes", "--root", str(tmp_path)]) == 0
+        dry = json.loads(capsys.readouterr().out)
+        assert dry["applied"] is False and dry["content_included"] is False
+        assert set(dry["lanes"]) == {"lane:infra", "lane:epics", "lane:devops", "lane:data", "lane:atlas"}
+        assert sum(row["planned_moves"] for row in dry["lanes"].values()) == 7
+        assert sum(row["collisions"] for row in dry["lanes"].values()) == 2
+        assert dry["lanes"]["lane:devops"]["running_held"] == 1
+        assert dry["unmapped"] == {"pool": 1}
+        assert main(["lane-mailboxes", "--root", str(tmp_path), "--apply"]) == 3
+        assert json.loads(capsys.readouterr().out)["error"] == "lane_alias_running"
+        assert before == [tuple(row) for row in service._conn.execute("SELECT * FROM authority_deliveries ORDER BY delivery_id")]
+        service._conn.execute(
+            "UPDATE authority_deliveries SET state='dead_lettered' WHERE delivery_id=?", (held.delivery_ids[0],)
+        )
+        service._conn.commit()
+        protected = [
+            tuple(row) for row in service._conn.execute(
+                "SELECT * FROM authority_deliveries WHERE state IN ('acknowledged','dead_lettered') OR recipient='pool' ORDER BY delivery_id"
+            )
+        ]
+        assert main(["lane-mailboxes", "--root", str(tmp_path), "--apply"]) == 0
+        applied = json.loads(capsys.readouterr().out)
+        assert applied["moved"] == 5 and applied["dead_lettered"] == 2
+        assert all(row["moved"] == 1 for row in applied["lanes"].values())
+        assert applied["lanes"]["lane:devops"]["dead_lettered_held"] == 1
+        assert protected == [
+            tuple(row) for row in service._conn.execute(
+                "SELECT * FROM authority_deliveries WHERE delivery_id IN (?,?,?) ORDER BY delivery_id",
+                (ack_id, held.delivery_ids[0], unrelated.delivery_ids[0]),
+            )
+        ]
+        assert dict(service._conn.execute("SELECT delivery_id,reason_code FROM authority_dead_letters")) == {
+            "ack-duplicate": "lane_duplicate_of_acknowledged", "queued-duplicate": "lane_duplicate_queued"
+        }
+        assert service._conn.execute("SELECT COUNT(*) FROM lane_mailbox_moves").fetchone()[0] == 7
+        assert main(["lane-mailboxes", "--root", str(tmp_path), "--apply"]) == 0
+        repeated = json.loads(capsys.readouterr().out)
+        assert repeated["moved"] == repeated["dead_lettered"] == 0
+        assert service._conn.execute("SELECT COUNT(*) FROM lane_mailbox_moves").fetchone()[0] == 7
 
 
 def _claim_job(root: Path, worker_id: str) -> str | None:
@@ -1542,16 +1616,40 @@ def test_supervisory_terminal_requires_fenced_consumption(tmp_path: Path, finish
             service.act_on_supervisory_delivery(did, **args)
 
 
-def test_supervisory_worker_completion_during_handoff(tmp_path: Path) -> None:
+def test_supervisory_worker_completion_during_handoff(tmp_path: Path, monkeypatch) -> None:
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import LeaseHolder
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.fleet_comms.lane_mailbox import correlation_counts
+
     root = _root(tmp_path)
-    with AuthorityService(root=root) as service:
-        did = _supervisory_message(service).delivery_ids[0]
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "sessions.sqlite3"))
+    now = datetime(2036, 1, 1, tzinfo=UTC)
+    old = store.open_session(
+        stream_id="epic:6943", session_id="old-driver", lineage_id="handoff",
+        holder=LeaseHolder(agent="codex", harness="codex", instance_id="old", process_id=os.getpid()),
+        ttl_seconds=30, now=now,
+    )
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.delenv("SESSION_STREAM_TASK_ID", raising=False)
+    for key, value in {
+        "ID": old.stream_id, "SESSION_ID": old.session_id, "LEASE_ID": old.lease_id,
+        "GENERATION": old.generation, "FENCING_TOKEN": old.fencing_token, "AGENT": "codex",
+        "HARNESS": "codex", "INSTANCE_ID": "old", "PROCESS_ID": os.getpid(), "HOLDER_KIND": "process",
+    }.items():
+        monkeypatch.setenv("SESSION_STREAM_" + key, str(value))
+    with AuthorityService(root=root, session_store=store) as service:
+        did = service.enqueue_supervisory_request(
+            sender="operator", recipient="claude-infra", body="restart after handoff",
+            correlation_id="handoff-1", idempotency_key="supervisory-1",
+        ).delivery_ids[0]
         job = service.enqueue_request(recipient="worker", body="work", idempotency_key="work")
         job_lease = service.claim_next_job("job-worker", now="2036-01-01T00:00:00Z")
         lease = service.claim_next_delivery(
-            "driver", "old-driver", lease_seconds=1, now="2036-01-01T00:00:00Z"
+            "infra", "old-driver", now="2036-01-01T00:00:00Z"
         )
         assert lease is not None and job_lease is not None
+        assert lease.delivery.lease_expires_at == old.expires_at
         service.record_supervisory_consumption(
             did, worker_id="old-driver", fence_token=lease.fence_token,
             driver_generation="old", now="2036-01-01T00:00:00Z",
@@ -1560,9 +1658,25 @@ def test_supervisory_worker_completion_during_handoff(tmp_path: Path) -> None:
             job.job_id, worker_id="job-worker", fence_token=job_lease.fence_token,
             state="complete", result=b"completed during handoff", now="2036-01-01T00:00:02Z",
         )
-    with AuthorityService(root=root) as successor:
-        lease = successor.claim_next_delivery("driver", "new-driver", now="2036-01-01T00:00:03Z")
+    store.close_session(old, now=now)
+    new = store.open_session(
+        stream_id="epic:6943", session_id="new-driver", lineage_id="handoff",
+        holder=LeaseHolder(agent="grok", harness="grok", instance_id="new", process_id=os.getpid()),
+        ttl_seconds=30, now=now,
+    )
+    for key, value in {
+        "SESSION_ID": new.session_id, "LEASE_ID": new.lease_id, "GENERATION": new.generation,
+        "FENCING_TOKEN": new.fencing_token, "AGENT": "grok", "HARNESS": "grok", "INSTANCE_ID": "new",
+    }.items():
+        monkeypatch.setenv("SESSION_STREAM_" + key, str(value))
+    with AuthorityService(root=root, session_store=store) as successor:
+        predecessor_token = lease.fence_token
+        lease = successor.claim_next_delivery("grok-infra", "new-driver", now="2036-01-01T00:00:03Z")
         assert lease is not None
+        assert lease.fence_token > predecessor_token
+        assert lease.delivery.lease_expires_at == new.expires_at
+        with pytest.raises(AuthorityStaleLeaseError):
+            successor.acknowledge_delivery(did, worker_id="old-driver", fence_token=predecessor_token)
         receipt = successor.record_supervisory_consumption(
             did, worker_id="new-driver", fence_token=lease.fence_token,
             driver_generation="new", now="2036-01-01T00:00:03Z",
@@ -1574,6 +1688,91 @@ def test_supervisory_worker_completion_during_handoff(tmp_path: Path) -> None:
             acknowledgment=b"completion reconciled", now="2036-01-01T00:00:03Z",
         )
         assert successor.supervisory_delivery_status(did) == "acted_on"
+        # Refusals must precede any delivery mutation and must not recover or
+        # renew the launcher lease. Only these isolated fixture stores change.
+        before = [tuple(row) for row in successor._conn.execute("SELECT * FROM authority_deliveries")]
+        with pytest.raises(AuthorityServiceError, match="lane_claim_not_holder"):
+            successor.claim_next_delivery("infra", "second-seat", now="2036-01-01T00:00:03Z")
+        monkeypatch.setenv("SESSION_STREAM_GENERATION", str(new.generation + 1))
+        with pytest.raises(AuthorityServiceError, match="lane_claim_not_holder"):
+            successor.claim_next_delivery("infra", "new-driver", now="2036-01-01T00:00:03Z")
+        monkeypatch.setenv("SESSION_STREAM_GENERATION", str(new.generation))
+        monkeypatch.delenv("SESSION_STREAM_LEASE_ID")
+        with pytest.raises(AuthorityServiceError, match="lane_claim_not_holder"):
+            successor.claim_next_delivery("infra", "new-driver", now="2036-01-01T00:00:03Z")
+        monkeypatch.setenv("SESSION_STREAM_LEASE_ID", new.lease_id)
+        with pytest.raises(AuthorityServiceError, match="lane_claim_not_holder"):
+            successor.claim_next_delivery("infra", "new-driver", now="2036-01-01T00:00:31Z")
+        monkeypatch.setenv("SESSION_STREAM_ID", "epic:4387")
+        with pytest.raises(AuthorityServiceError, match="lane_unowned"):
+            successor.claim_next_delivery("atlas", "new-driver", now="2036-01-01T00:00:03Z")
+        monkeypatch.setenv("SESSION_STREAM_ID", new.stream_id)
+        for path in (store.database.path, successor.store.db_path):
+            with sqlite3.connect(path) as lock:
+                lock.execute("BEGIN IMMEDIATE")
+                with pytest.raises(AuthorityServiceError, match="lane_lease_authority_unavailable"):
+                    successor.claim_next_delivery("infra", "new-driver", now="2036-01-01T00:00:03Z")
+        assert before == [tuple(row) for row in successor._conn.execute("SELECT * FROM authority_deliveries")]
+        for alias in ("claude-infra", "grok-infra", "infra"):
+            message = successor.publish_message(
+                sender="fixture", body="supplied correlation", recipients=(alias,),
+                idempotency_key=alias, pr_number=10800, task_id="handoff-task",
+            )
+            assert successor.get_delivery(message.delivery_ids[0]).recipient == "lane:infra"
+            historical_payload = {
+                "sender": "fixture", "body_sha256": hashlib.sha256(b"supplied correlation").hexdigest(),
+                "channel_id": None, "recipients": [alias], "kind": "message", "conversation_id": "",
+                "thread_id": "", "in_reply_to": "", "correlation_id": "", "provenance": {},
+                "context_revisions": {}, "deadline_at": "", "imported_source": "",
+            }
+            historical_sha = hashlib.sha256(
+                json.dumps(historical_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+            assert successor._conn.execute(
+                "SELECT payload_sha256 FROM authority_idempotency WHERE namespace='message' AND idempotency_key=?",
+                (alias,),
+            ).fetchone()[0] == historical_sha
+            groups = correlation_counts(root / "comms.sqlite3")
+            assert groups["probe"] == "ok" and groups["content_included"] is False
+            assert {"pr_number": 10800, "task_id": "handoff-task", "count": 1} in groups["groups"]
+            assert successor.publish_message(
+                sender="fixture", body="supplied correlation", recipients=(alias,),
+                idempotency_key=alias, pr_number=10800, task_id="handoff-task",
+            ) == message
+            with pytest.raises(AuthorityServiceError, match="idempotency_key_payload_mismatch"):
+                successor.publish_message(
+                    sender="fixture", body="supplied correlation", recipients=(alias,),
+                    idempotency_key=alias, pr_number=10801, task_id="handoff-task",
+                )
+            claimed = successor.claim_next_delivery(alias, "new-driver", now="2036-01-01T00:00:03Z")
+            assert claimed.delivery.delivery_id == message.delivery_ids[0]
+            assert (claimed.delivery.pr_number, claimed.delivery.task_id) == (10800, "handoff-task")
+            successor.acknowledge_delivery(
+                claimed.delivery.delivery_id, worker_id="new-driver", fence_token=claimed.fence_token,
+                now="2036-01-01T00:00:04Z",
+            )
+        with pytest.raises(AuthorityServiceError, match="lane_unknown_recipient"):
+            successor.publish_message(sender="fixture", body="unknown", recipients=("lane:unknown",))
+        assert correlation_counts(root / "absent.sqlite3") == {
+            "probe": "unknown", "groups": None, "content_included": False,
+        }
+        retired = store.open_session(
+            stream_id="epic:5703", lineage_id="retired-holder",
+            holder=LeaseHolder(agent="kimi", harness="kimi", instance_id="retired", process_id=os.getpid()),
+            ttl_seconds=30, now=now,
+        )
+        for key, value in {
+            "ID": retired.stream_id, "SESSION_ID": retired.session_id, "LEASE_ID": retired.lease_id,
+            "GENERATION": retired.generation, "FENCING_TOKEN": retired.fencing_token,
+            "AGENT": "kimi", "HARNESS": "kimi", "INSTANCE_ID": "retired",
+        }.items():
+            monkeypatch.setenv("SESSION_STREAM_" + key, str(value))
+        with pytest.raises(AuthorityServiceError, match="lane_holder_admission_refused"):
+            successor.claim_next_delivery("devops", retired.session_id, now="2036-01-01T00:00:03Z")
+        successor._conn.execute("INSERT INTO lane_mailbox_aliases VALUES ('unapproved-alias','lane:infra')")
+        successor._conn.commit()
+        with pytest.raises(AuthorityServiceError, match="lane_registry_stale"):
+            successor.publish_message(sender="fixture", body="stale", recipients=("unapproved-alias",))
 
 
 def test_supervisory_unconsumed_reclaim_does_not_invent_restart(tmp_path: Path) -> None:

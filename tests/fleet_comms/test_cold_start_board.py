@@ -83,47 +83,23 @@ def _seed_legacy_broker(db: Path) -> None:
 def _seed_authority_plane(root: Path) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     plane_db = root / "comms.sqlite3"
-    conn = sqlite3.connect(plane_db)
-    conn.executescript(
-        """
-        CREATE TABLE authority_deliveries (
-          delivery_id TEXT PRIMARY KEY,
-          message_id TEXT NOT NULL,
-          recipient TEXT NOT NULL,
-          state TEXT NOT NULL,
-          deadline_at TEXT,
-          lease_owner TEXT,
-          lease_expires_at TEXT,
-          fence_token INTEGER NOT NULL DEFAULT 0,
-          attempt_count INTEGER NOT NULL DEFAULT 0,
-          acknowledgment_artifact_id TEXT,
-          terminal_sha256 TEXT,
-          created_at TEXT NOT NULL,
-          updated_at TEXT NOT NULL,
-          completed_at TEXT
-        );
-        CREATE TABLE authority_dead_letters (
-          dead_letter_id TEXT PRIMARY KEY,
-          delivery_id TEXT UNIQUE,
-          job_id TEXT UNIQUE,
-          reason_code TEXT NOT NULL,
-          created_at TEXT NOT NULL
-        );
-        INSERT INTO authority_deliveries VALUES
-          ('auth-d1','auth-m1','claude','queued',NULL,NULL,NULL,0,0,NULL,NULL,
-           '2026-08-01T12:00:00Z','2026-08-01T12:00:00Z',NULL),
-          ('auth-d2','auth-m2','claude','running',NULL,'worker',NULL,1,2,NULL,NULL,
-           '2026-08-01T12:01:00Z','2026-08-01T12:02:00Z',NULL),
-          ('auth-d3','auth-m3','codex','queued',NULL,NULL,NULL,0,0,NULL,NULL,
-           '2026-08-01T12:03:00Z','2026-08-01T12:03:00Z',NULL),
-          ('auth-d4','auth-m4','claude','acknowledged',NULL,NULL,NULL,0,1,NULL,'sha',
-           '2026-08-01T11:00:00Z','2026-08-01T11:05:00Z','2026-08-01T11:05:00Z');
-        INSERT INTO authority_dead_letters VALUES
-          ('auth-dl1','auth-d4',NULL,'attempts_exhausted','2026-08-01T11:06:00Z');
-        """
-    )
-    conn.commit()
-    conn.close()
+    from scripts.fleet_comms.migrations import apply_migrations
+    from tests.helpers.agy_inbox_fixtures import add_authority
+
+    with sqlite3.connect(plane_db) as conn:
+        apply_migrations(conn)
+    for number, (recipient, state) in enumerate((
+        ("claude", "queued"), ("claude", "running"), ("codex", "queued"),
+        ("claude", "acknowledged"), ("lane:infra", "queued"), ("grok-infra", "running"),
+    ), 1):
+        add_authority(
+            plane_db, recipient=recipient, state=state, delivery_id=f"auth-d{number}",
+            identifier=f"authority-message_{number:032x}",
+        )
+    with sqlite3.connect(plane_db) as conn:
+        conn.execute(
+            "INSERT INTO authority_dead_letters VALUES ('auth-dl1','auth-d4',NULL,'attempts_exhausted','2026-08-01T11:06:00Z')"
+        )
     return plane_db
 
 
@@ -427,10 +403,20 @@ def test_probe_inbox_authority_counts_agent(tmp_path: Path, monkeypatch) -> None
     states = {r["state"] for r in result.data["recent_deliveries"]}
     assert states == {"queued", "running"}
     assert all("body" not in r for r in result.data["recent_deliveries"])
+    db = plane_root / "comms.sqlite3"
+    before = db.read_bytes()
+    with sqlite3.connect(db) as lock:
+        lock.execute("BEGIN EXCLUSIVE")
+        unknown = _probe_inbox(root=plane_root, repo_root=tmp_path, agent="claude")
+        assert unknown.status == "degraded"
+        assert unknown.data["probe"] == "unknown"
+        assert unknown.data["inbox_pending_count"] is None
+        assert unknown.data["oldest_age_seconds"] is None
+    assert db.read_bytes() == before
 
 
 def test_probe_inbox_authority_hyphen_alias(tmp_path: Path, monkeypatch) -> None:
-    """Cheap hyphen base alias matches when exact recipient is absent."""
+    """Lane aliases include canonical and residual aliases without bare-provider mail."""
     plane_root = tmp_path / "plane"
     _seed_authority_plane(plane_root)
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "authority")
@@ -438,7 +424,10 @@ def test_probe_inbox_authority_hyphen_alias(tmp_path: Path, monkeypatch) -> None
     result = _probe_inbox(root=plane_root, repo_root=tmp_path, agent="claude-infra")
     assert result.status == "ok"
     assert result.data["inbox_pending_count"] == 2
-    assert result.data["matched_agent"] == "claude"
+    assert result.data["matched_agent"] == "claude-infra"
+    assert {row["recipient"] for row in result.data["recent_deliveries"]} == {"lane:infra", "grok-infra"}
+    assert "--recipient lane:infra" in result.data["drain_command"]
+    assert isinstance(result.data["oldest_age_seconds"], int)
 
 
 def test_probe_backlog_labels_authority_source(tmp_path: Path, monkeypatch) -> None:
@@ -449,8 +438,8 @@ def test_probe_backlog_labels_authority_source(tmp_path: Path, monkeypatch) -> N
 
     data = _probe_backlog_and_dead_letters(root=plane_root, repo_root=tmp_path)
     assert data["source"] == "authority"
-    # exclude_retired keeps non-gemini; fixture has claude×2 + codex×1 = 3
-    assert data["backlog_total"] == 3
+    # Two bare-provider messages, one worker and two Infra lane messages.
+    assert data["backlog_total"] == 5
     assert data["dead_letters_total"] == 1
     assert "claude" in data["backlog_by_agent"]
 
