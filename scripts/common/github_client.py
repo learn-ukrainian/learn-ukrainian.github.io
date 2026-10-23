@@ -3883,7 +3883,7 @@ def _queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
         if ordinary.error:
             return _result_process(["github", operation], ordinary, {}, kwargs)
         rows = ordinary.value
-        selections = " ".join(
+        selections = "__typename " + " ".join(
             f"p{r['number']}:pullRequest(number:{r['number']}){{isInMergeQueue autoMergeRequest{{enabledAt}}}}"
             for r in rows
         )
