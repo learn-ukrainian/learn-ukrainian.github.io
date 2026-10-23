@@ -101,7 +101,8 @@ describe('readable entry', () => {
       { sourceId: 'vesum', attributions: ['Рисін А., Старко В. Великий електронний словник української мови (ВЕСУМ). 2005-2026. URL: https://vesum.nlp.net.ua/ — licence CC BY-NC-SA 4.0, changes indicated.'],
         links: ['https://vesum.nlp.net.ua/'], licences: [{ name: 'terms' }] },
       { sourceId: 'ukrainian_word_stress', attributions: ['ukrainian_word_stress https://evil.invalid/x'], links: [], licences: [{ name: 'terms' }] },
-      { sourceId: 'puls', attributions: [], links: [], licences: [{ name: 'terms' }] },
+      { sourceId: 'puls', attributions: ['Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org'],
+        links: ['https://puls.peremova.org/'], licences: [{ name: 'terms' }] },
     ]);
     expect(JSON.stringify(entry.row)).toBe(before);
     expect(readableEntry(word('wc_s', 'банк', 'lexeme', c => [field(c, 'stress', 'ба́нк')]), 1).heading).toBe('ба́нк');

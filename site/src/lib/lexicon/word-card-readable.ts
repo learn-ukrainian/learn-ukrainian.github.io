@@ -70,7 +70,15 @@ function credits(fields: Assertion[]): Credit[] {
   return [...seen.values()];
 }
 
-/** Display-only credits. Raw citations and release accounting retain their provenance gaps. */
+// Exact puls_citation quote and URL from docs/sources/permissions-register.yaml at
+// 1f3117c701c9c74aaa331b40c0c4cecb249b655c, the release's pinned register
+// SHA-256 1b95f9277c83f3568f458e29873b73d44a72c25854e55e684457689d8d193678.
+const PULS_CREDIT = {
+  attribution: 'Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org',
+  href: 'https://puls.peremova.org/',
+};
+
+/** Resolve the pinned PULS pointer for display; raw citations and gap accounting stay intact. */
 export function sourceCredits(rows: readonly ReleaseRow[]): SourceCredit[] {
   const sources = new Map<string, SourceCredit>();
   for (const row of rows) for (const { citation } of row.fields) {
@@ -78,11 +86,12 @@ export function sourceCredits(rows: readonly ReleaseRow[]): SourceCredit[] {
       sourceId: citation.source_id, attributions: [], links: [], licences: [],
     };
     const gap = attributionGap(citation);
-    const attribution = gap === 'puls_reference_placeholder' ? '' : gap === 'vesum_version_placeholder' ?
+    const attribution = gap === 'puls_reference_placeholder' ? PULS_CREDIT.attribution : gap === 'vesum_version_placeholder' ?
       citation.attribution.replace(/(?:Версія\s+)?<used version>\.?\s*/g, '') : citation.source_id === 'ulif' ?
         citation.attribution.replace(/\s*\(entry reference and retrieval date per field\)/g, '') : citation.attribution;
     if (attribution && !source.attributions.includes(attribution)) source.attributions.push(attribution);
-    for (const link of attributionLinks(citation.attribution)) if (!source.links.includes(link)) source.links.push(link);
+    const links = gap === 'puls_reference_placeholder' ? [PULS_CREDIT.href] : attributionLinks(citation.attribution);
+    for (const link of links) if (!source.links.includes(link)) source.links.push(link);
     if (!source.licences.some(licence => JSON.stringify(licence) === JSON.stringify(citation.licence))) {
       source.licences.push(citation.licence);
     }

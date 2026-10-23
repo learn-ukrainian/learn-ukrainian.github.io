@@ -360,11 +360,12 @@ async function readability(page: import('@playwright/test').Page, origin: string
   page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('response', response => http.push({ url: response.url(), status: response.status(), method: response.request().method() }));
   const originals = new Set(['шапка', 'замок', 'баран', 'вряди-годи', 'різати правду-матку']);
-  // Literal legitimate notices from the frozen public source bytes. These are public regression expectations.
+  // Literal notices from the frozen public inputs and their manifest-pinned register.
+  // These are public author regression expectations, not private acceptance answers.
   const notices: Record<string, string[]> = {
     ulif: ['«Словники України online», Український мовно-інформаційний фонд НАН України, https://lcorp.ulif.org.ua/dictua/'],
     vesum: ['Рисін А., Старко В. Великий електронний словник української мови (ВЕСУМ). 2005-2026. URL: https://vesum.nlp.net.ua/ — licence CC BY-NC-SA 4.0, changes indicated.'],
-    puls: [],
+    puls: ['Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org'],
     frazeolohichnyi: ['Словник фразеологізмів української мови / уклад. В. М. Білоноженко та ін.; відп. ред. В. О. Винник. Київ: Наукова думка, 2003. ISBN 966-00-0797-3.'],
     ukrainian_word_stress: ['ULIF «Словники України» stress data, via ukrainian-word-stress / ukrainian-word-stress-dictionary (lang-uk); MIT notice for the code only.'],
   };
@@ -440,6 +441,7 @@ async function readability(page: import('@playwright/test').Page, origin: string
       expect(visibleCredits.map(c => c.source).sort()).toEqual([...new Set(suppliedSources)].sort());
       for (const credit of visibleCredits) {
         expect(credit.attributions).toEqual(notices[credit.source]);
+        if (credit.source === 'puls') expect(credit.links).toEqual(['https://puls.peremova.org/']);
         expect(new Set(credit.licences).size).toBe(credit.licences.length);
         expect(new Set(credit.links).size).toBe(credit.links.length);
         await expect(disclosure.locator(`[data-source-credit="${credit.source}"]`)).toBeVisible();
