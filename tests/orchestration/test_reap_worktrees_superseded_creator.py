@@ -79,13 +79,21 @@ def test_merged_reuse_removes_tree_and_proves_creator(merged_cohort, location):
 
 
 def test_superseded_creator_proof_survives_output_preservation(merged_cohort):
-    repo, tree, _, path, _, _, _, _, _ = merged_cohort
+    repo, tree, _, path, _, current_path, current, info, _ = merged_cohort
+    current["status"] = "needs_finalize"
+    current_path.write_text(json.dumps(current))
     source = tree / "ignored/output.txt"
     source.parent.mkdir()
     source.write_bytes(b"output from the reused checkout")
+    (tree / "README.md").write_bytes(b"current tracked bytes\n")
+    (tree / "result.bin").write_bytes(b"\x00current binary bytes\xff")
 
-    applied = next(r for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()) if r.path == str(tree))
-    assert applied.action == "removed", applied.reason
+    applied = next(
+        r
+        for r in rw.reap_worktrees(repo_root=repo, apply=True, preserve_then_reap=True, live_cwds=set())
+        if r.path == str(tree)
+    )
+    assert applied.action == "preserved_then_removed", applied.reason
     assert not tree.exists()
     receipt = applied.preserved_artifacts
     assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"output from the reused checkout"
@@ -93,6 +101,16 @@ def test_superseded_creator_proof_survives_output_preservation(merged_cohort):
     proof = json.loads(path.read_text())["worktree_reap_proof"]
     assert proof["owner"] == "boundary" and proof["run_nonce"] == "creation-nonce"
     assert proof == receipt["merged_head_proof"]
+    preservation = proof["preservation"]
+    assert proof["head_sha"] == preservation["parent_sha"] == info.head
+    assert preservation["recovery_ref"] == applied.recovery_ref
+    assert _git(repo, "rev-parse", applied.recovery_ref) == preservation["head_sha"]
+    assert _git(repo, "rev-parse", f"{applied.recovery_ref}^{{tree}}") == preservation["tree_sha"]
+    for name, expected in (("README.md", b"current tracked bytes\n"), ("result.bin", b"\x00current binary bytes\xff")):
+        retrieved = subprocess.run(
+            ["git", "show", f"{applied.recovery_ref}:{name}"], cwd=repo, capture_output=True, check=True, timeout=15
+        ).stdout
+        assert retrieved == expected
 
 
 @pytest.mark.parametrize(

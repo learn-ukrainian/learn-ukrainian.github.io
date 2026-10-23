@@ -1511,6 +1511,14 @@ def preserve_worktree_artifacts(
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
         matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+        merged_preservation = any(
+            isinstance(member.get("worktree_reap_proof"), dict) and "preservation" in member["worktree_reap_proof"]
+            for _, member in _current_reuse_records(matches, tasks_dir)
+        )
+        if merged_preservation:
+            from scripts.orchestration.reap_worktrees import _preservation_merged_creator
+
+            _preservation_merged_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
         if any("worktree_abandon" in member for _, member in matches):
             record_path, record = terminal_abandon_creator(matches, worktree, primary=primary, tasks_dir=tasks_dir)
             disposition = "abandon"
@@ -1553,12 +1561,17 @@ def preserve_worktree_artifacts(
                 disposition_members = matches
             else:
                 raise
+        if merged_preservation:
+            disposition = "merged"
+            disposition_members = matches
         members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         merged_abandon = disposition == "abandon" and "merged_pr" in record["worktree_abandon"]
         kept = any(member.get("keep_worktree") for _, member in members) and not merged_abandon
 
         files = output_files()
         if not files and not absent and not kept:
+            if disposition == "merged":
+                _preservation_merged_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
             return True, "", None
         identity = record.get("task_id")
         paths = _classified_inventory(worktree, files, record, absent=absent)

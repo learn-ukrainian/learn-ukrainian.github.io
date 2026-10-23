@@ -3566,11 +3566,32 @@ def _stale_index_lock(path: Path) -> Path | None:
     return lock
 
 
-def _preserve_dirty_worktree(info: WorktreeInfo, *, timeout: float | None = None) -> str | None:
+def _preserve_dirty_worktree(
+    info: WorktreeInfo, *, timeout: float | None = None, receipt: dict[str, Any] | None = None
+) -> str | None:
+    if receipt is not None:
+        head = _run(["git", "rev-parse", "HEAD"], cwd=info.path, timeout=timeout)
+        if (
+            head.returncode != 0
+            or head.stdout.strip() != info.head
+            or worktree_claims.checked_out_branch(info.path) != info.branch
+        ):
+            return "checkout changed before preservation"
+        before = _entries(info.path, _VOLATILE_TREE)
     branch = info.branch or "detached"
     add_proc = _run(["git", "add", "-A"], cwd=info.path, timeout=timeout)
     if add_proc.returncode != 0:
         return f"git add failed: {_format_failure(add_proc)}"
+    if receipt is not None:
+        if _entries(info.path, _VOLATILE_TREE) != before:
+            return "worktree changed during preservation staging"
+        snapshot = _run(
+            ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", info.head],
+            cwd=info.path,
+            timeout=timeout,
+        )
+        if snapshot.returncode != 0:
+            return f"cannot bind preservation tree: {_format_failure(snapshot)}"
     commit_proc = _run(
         [
             "git",
@@ -3584,7 +3605,55 @@ def _preserve_dirty_worktree(info: WorktreeInfo, *, timeout: float | None = None
     )
     if commit_proc.returncode != 0:
         return f"git commit failed: {_format_failure(commit_proc)}"
+    if receipt is not None:
+        if _entries(info.path, _VOLATILE_TREE) != before:
+            return "worktree changed during preservation commit"
+        commit = _run(["git", "rev-parse", "HEAD"], cwd=info.path, timeout=timeout)
+        if commit.returncode != 0:
+            return "cannot read preservation head"
+        head_sha = commit.stdout.strip()
+        tree = _run(["git", "rev-parse", f"{head_sha}^{{tree}}"], cwd=info.path, timeout=timeout)
+        captured = _run(
+            ["git", "diff", "--raw", "--no-abbrev", "--no-renames", info.head, head_sha],
+            cwd=info.path,
+            timeout=timeout,
+        )
+        if tree.returncode != 0 or captured.returncode != 0 or captured.stdout != snapshot.stdout:
+            return "staged snapshot changed during preservation"
+        binding = {"parent_sha": info.head, "head_sha": commit.stdout.strip(), "tree_sha": tree.stdout.strip()}
+        if not _preserved_merged_head_valid(info, binding, require_rescue=False):
+            return "checkout changed during preservation"
+        receipt.update(binding)
     return None
+
+
+def _preserved_merged_head_valid(
+    info: WorktreeInfo, preservation: dict[str, Any], *, require_rescue: bool = True
+) -> bool:
+    """Verify the exact reaper snapshot, never treat it as a merged commit."""
+    head = preservation.get("head_sha")
+    tree = preservation.get("tree_sha")
+    if (
+        preservation.get("parent_sha") != info.head
+        or not isinstance(head, str)
+        or re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", head) is None
+        or not isinstance(tree, str)
+        or re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", tree) is None
+        or worktree_claims.checked_out_branch(info.path) != info.branch
+        or _worktree_clean(info.path) is not True
+    ):
+        return False
+    identity = _run(["git", "rev-list", "--no-walk", "--format=%H%n%P%n%T", "HEAD"], cwd=info.path)
+    if identity.returncode != 0 or identity.stdout.splitlines() != [f"commit {head}", head, info.head, tree]:
+        return False
+    if require_rescue:
+        ref = preservation.get("recovery_ref")
+        if not isinstance(ref, str) or not ref.startswith("refs/reaper-rescue/"):
+            return False
+        rescued = _run(["git", "rev-parse", "--verify", ref], cwd=info.path)
+        if rescued.returncode != 0 or rescued.stdout.strip() != head:
+            return False
+    return True
 
 
 def _prune_branch(
@@ -3714,9 +3783,18 @@ def _released_reuse_claim_proven_settled(
 
 
 def _same_branch_merged_cohort(
-    info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
+    info: WorktreeInfo,
+    pr: PullRequestState | None,
+    cohort: list[tuple[Path, dict[str, Any]]],
+    *,
+    preservation: dict[str, Any] | None = None,
 ) -> bool:
     """Settle inactive same-branch rounds without requiring a done successor."""
+    expected_head = info.head
+    if preservation is not None:
+        if not _preserved_merged_head_valid(info, preservation):
+            return False
+        expected_head = preservation["head_sha"]
     if (
         not info.branch
         or not info.head
@@ -3733,7 +3811,7 @@ def _same_branch_merged_cohort(
     return bool(
         branch == info.branch
         and tip.returncode == 0
-        and tip.stdout.strip() == info.head
+        and tip.stdout.strip() == expected_head
         and len(cohort) >= 2
         and all(
             member.get("status") in _TERMINAL_DISPATCH_STATUSES
@@ -3755,6 +3833,7 @@ def _continuation_head_is_merged(
     cohort: list[tuple[Path, dict[str, Any]]],
     *,
     allow_equivalent: bool = False,
+    preservation: dict[str, Any] | None = None,
 ) -> bool:
     """Prove an exact PR head, or a detached cohort's complete earlier lineage.
 
@@ -3762,7 +3841,11 @@ def _continuation_head_is_merged(
     absent workers, and complete contained identities. Detached ancestry
     additionally requires a done successor at that checkout head. Missing
     Git objects and commit-search membership alone are never proof.
+    A validated preservation binding changes only the expected live branch tip;
+    merged ancestry still uses the original checkout head in ``info``.
     """
+    if preservation is not None and not _preserved_merged_head_valid(info, preservation):
+        return False
     if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
         return False
     if allow_equivalent and not _pr_matches_worktree_head(info, pr) and _merged_equivalent(info, pr):
@@ -3774,7 +3857,7 @@ def _continuation_head_is_merged(
     if info.branch and any(
         member.get("worktree_reused") is True and member.get("status") == "needs_finalize" for _, member in cohort
     ):
-        return _same_branch_merged_cohort(info, pr, cohort)
+        return _same_branch_merged_cohort(info, pr, cohort, preservation=preservation)
     if pr.head_sha == info.head:
         return True
     branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=info.path)
@@ -4189,11 +4272,17 @@ def _preservation_merged_creator(
     branch = worktree_claims.checked_out_branch(worktree)
     info = WorktreeInfo(worktree, branch, proof.get("head_sha"), detached=branch is None)
     pr = PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"))
+    preservation = proof.get("preservation")
+    expected_head = info.head
+    if preservation is not None:
+        if not isinstance(preservation, dict) or not _preserved_merged_head_valid(info, preservation):
+            raise ValueError("merged continuation preservation head changed")
+        expected_head = preservation["head_sha"]
     if (
         proof.get("owner") != creator.get("task_id")
         or proof.get("run_nonce") != creator.get("run_nonce")
         or head.returncode != 0
-        or head.stdout.strip() != info.head
+        or head.stdout.strip() != expected_head
         or proof.get("clean") is not True
         or _worktree_clean(worktree) is not True
         or proof.get("head_relation") != _merged_head_relation(info, pr)
@@ -4218,7 +4307,11 @@ def _preservation_merged_creator(
             for _, member in cohort
         ]
         or not _continuation_head_is_merged(
-            info, pr, cohort, allow_equivalent=proof.get("head_relation") == "patch-equivalent"
+            info,
+            pr,
+            cohort,
+            allow_equivalent=proof.get("head_relation") == "patch-equivalent",
+            preservation=preservation,
         )
     ):
         raise ValueError("merged continuation preservation proof changed")
@@ -4379,6 +4472,7 @@ def _record_merged_reuse_proof(
     *,
     tasks_dir: Path,
     allow_equivalent: bool = False,
+    preservation: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     """Record merged-head containment proof under the caller's worktree lock.
 
@@ -4405,7 +4499,9 @@ def _record_merged_reuse_proof(
             if _retention_release_present(matches):
                 return None  # Preserve #9940's explicit receipt-release path.
             raise ValueError("continuation requires a proven merged PR head containing the checkout")
-    elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
+    elif not _continuation_head_is_merged(
+        info, pr, cohort, allow_equivalent=allow_equivalent, preservation=preservation
+    ):
         if _retention_release_present(matches):
             return None  # Preserve #9940's explicit receipt-release path.
         raise ValueError("continuation requires a proven merged PR head containing the checkout")
@@ -4442,6 +4538,8 @@ def _record_merged_reuse_proof(
             for _, member in cohort
         ],
     }
+    if preservation is not None:
+        proof["preservation"] = dict(preservation)
     with contextlib.ExitStack() as stack:
         for member_path, member in sorted(matches):
             stack.enter_context(ignored_task_output.artifacts.task_state_lock(member_path))
@@ -4457,7 +4555,13 @@ def _record_merged_reuse_proof(
         if not all(_pid_proven_absent(member) for _, member in cohort):
             raise ValueError("continuation process absence changed before merged-head proof")
         head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
-        if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
+        expected_head = info.head if preservation is None else preservation.get("head_sha")
+        if (
+            head.returncode != 0
+            or head.stdout.strip() != expected_head
+            or _worktree_clean(info.path) is not True
+            or (preservation is not None and not _preserved_merged_head_valid(info, preservation))
+        ):
             raise ValueError("checkout changed before merged-head proof")
         rebound_path, rebound_creator, rebound_alternate = _resolve_merged_reuse_creator(
             matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=pr
@@ -4467,7 +4571,9 @@ def _record_merged_reuse_proof(
         if alternate:
             if not _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head):
                 raise ValueError("continuation ancestry changed before merged-head proof")
-        elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
+        elif not _continuation_head_is_merged(
+            info, pr, cohort, allow_equivalent=allow_equivalent, preservation=preservation
+        ):
             raise ValueError("continuation ancestry changed before merged-head proof")
         reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
     return proof
@@ -4795,6 +4901,7 @@ def _reap_qualified_worktree(
 
     pending_marked = False
     recovery_ref: str | None = None
+    preservation: dict[str, Any] | None = None
     dispatch_guard = contextlib.ExitStack()
     try:
         # This reservation is intentionally before the final TOCTOU checks.
@@ -4912,7 +5019,13 @@ def _reap_qualified_worktree(
                         pr=_pr_dict(pr_state),
                     )
             if dirty and not abandoning:
-                preserve_error = _preserve_dirty_worktree(info, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
+                preservation = {}
+                try:
+                    preserve_error = _preserve_dirty_worktree(
+                        info, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S, receipt=preservation
+                    )
+                except OSError as exc:
+                    preserve_error = f"cannot inventory preservation worktree: {type(exc).__name__}"
                 if preserve_error is not None:
                     return ReapResult(
                         path=str(info.path),
@@ -5223,6 +5336,8 @@ def _reap_qualified_worktree(
                     pr=_pr_dict(pr_state),
                     error=recovery_error,
                 )
+            if preservation is not None:
+                preservation["recovery_ref"] = recovery_ref
 
             # Decide branch deletion while the worktree directory still exists.
             # ``git merge-base`` cannot run with a cwd that ``worktree remove``
@@ -5256,6 +5371,7 @@ def _reap_qualified_worktree(
                     pr_state,
                     tasks_dir=task_store_paths.tasks_dir(),
                     allow_equivalent=reason.endswith("MERGED; patch-equivalent"),
+                    preservation=preservation,
                 )
             )
         except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
@@ -5289,6 +5405,29 @@ def _reap_qualified_worktree(
                     preserved_artifacts=preservation_receipt or None,
                 )
         measurement: dict[str, Any] = {}
+
+        @contextlib.contextmanager
+        def recheck_preservation(target: Path) -> Iterator[Path]:
+            # A replacement creator can hide the fresh proof from the output
+            # selector. This removal still belongs to the original cohort.
+            if merged_reuse_proof is not None and preservation is not None:
+                from scripts.fleet import ignored_task_output
+
+                try:
+                    matches = ignored_task_output.matching_worktree_records(
+                        target, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
+                    )
+                    _, creator = _preservation_merged_creator(
+                        matches, target, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
+                    )
+                    if creator.get("worktree_reap_proof") != merged_reuse_proof:
+                        raise ValueError("merged continuation proof changed before removal")
+                except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+                    raise worktree_claims.RemovalStageRefused(
+                        "merged continuation preservation changed before removal"
+                    ) from exc
+            yield target
+
         with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
             remove_error = worktree_claims.git_worktree_remove(
                 repo_root,
@@ -5298,7 +5437,7 @@ def _reap_qualified_worktree(
                 task_id=_dispatch_task_id(repo_root, info),
                 tasks_dir=task_store_paths.tasks_dir(),
                 preservation_receipt=preservation_receipt,
-                stage_removal=_measured_removal(measurement),
+                stage_removal=_measured_removal(measurement, recheck_preservation),
                 **approval,
             )
         preserved_artifacts = preservation_receipt or None
