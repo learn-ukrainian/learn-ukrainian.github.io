@@ -526,10 +526,6 @@ def get_subj_nominative_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
     return [r[0] for r in cur.fetchall() if "v_naz" in r[0]]
 
 
-def get_noun_subj_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
-    return get_subj_nominative_tags(w, cur)
-
-
 def is_modified_by_adj(prev_w: str, cur: sqlite3.Cursor) -> bool:
     cur.execute(
         "SELECT pos FROM forms_all WHERE (word_form = ? OR word_form = ?)",
@@ -1785,11 +1781,6 @@ def get_clause_agreeing_subject_indices(
         return []
 
 
-def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether the clause contains a nominative feminine or common-gender subject agreeing with words[verb_idx]."""
-    return bool(get_clause_agreeing_subject_indices(words, verb_idx, cur))
-
-
 EVENT_DURATION_NOUNS = {
     "вистава",
     "вистави",
@@ -2064,11 +2055,6 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
         except Exception:
             pass
     return obj_indices
-
-
-def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether the clause containing words[verb_idx] has an accusative direct object outside prepositional phrases."""
-    return bool(get_clause_direct_object_indices(words, verb_idx, cur))
 
 
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
