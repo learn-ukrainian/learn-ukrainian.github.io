@@ -235,10 +235,12 @@ def bound_rollup_states(
     advisory = prove_external_advisory(repo, head, names, get_json)
     if advisory is None:
         return None
-    # gh's rollup and modern checks omit workflow/app identity. Duplicate names
-    # need authoritative check runs, joined to their exact-head Actions runs.
-    if isinstance(rows, list) and _duplicate_check_names(rows) and any(
-        isinstance(row, dict) and row.get("name") and not row.get("workflowName") for row in rows
+    # gh's rollup omits workflow/app identity. Both supersession and a single
+    # advisory candidate need check runs joined to exact-head Actions runs.
+    policy = load_advisory_checks()
+    if isinstance(rows, list) and any(
+        isinstance(row, dict) and row.get("name") and not row.get("workflowName")
+        and (_duplicate_check_names(rows) or row["name"] in policy.names) for row in rows
     ):
         page = get_json(f"repos/{repo}/commits/{head}/check-runs?filter=all&per_page=100")
         if not _complete_page(page, "check_runs"):

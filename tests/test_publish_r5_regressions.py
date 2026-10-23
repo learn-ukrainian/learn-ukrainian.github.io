@@ -95,7 +95,7 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
             body = {"number": 1, "isDraft": state == "draft", "headRefOid": "a" * 40}
             if "headRefOid,statusCheckRollup" in args:
                 body["statusCheckRollup"] = [{
-                    "__typename": "CheckRun", "name": "CI Gate", "workflowName": "CI",
+                    "__typename": "CheckRun", "name": "CI Gate",
                     "status": "IN_PROGRESS" if state == "pending" else "COMPLETED",
                     "conclusion": {"red": "FAILURE", "pending": "", "unknown": "UNKNOWN"}.get(state, "SUCCESS"),
                 }]

@@ -281,6 +281,14 @@ def _keeper_comment(fake: FakeGitHub) -> str:
 
 def test_queued_with_cf_at_head_is_kept(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.check_rows.extend([
+        {"name": "Entire Gates", "head_sha": HEAD_A, "status": "completed", "conclusion": "failure",
+         "app": {"id": 2626939, "slug": "entire"}},
+        {"name": "Entire Gates", "head_sha": HEAD_A, "status": "in_progress", "conclusion": None,
+         "app": {"id": 2626939, "slug": "entire"}},
+        {"name": "Reject negated closing references", "head_sha": HEAD_A,
+         "status": "completed", "conclusion": "failure"},
+    ])
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
     path = tmp_path / "state.json"
     lines, failed = keeper.run(fake, path, apply=True)

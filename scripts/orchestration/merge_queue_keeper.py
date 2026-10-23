@@ -33,7 +33,6 @@ from scripts.opsec.prepublish import (
 from scripts.orchestration.integration_sweep import (
     COMMENTS_UNAVAILABLE,
     Verdict,
-    _check_blockers,
     classify_pr,
     lookup_verdict,
     parse_marker,
@@ -537,14 +536,9 @@ def _dependency_update(gh: GitHub, number: int) -> bool:
 def _evaluate_checks(gh: GitHub, number: int, head: str, checks: list[dict[str, Any]]) -> str:
     """:func:`_check_state`, reading the file list only when a PR has no ``Analyze`` runs but a CodeQL check."""
     state = _check_state(checks, head)
-    if state == "CodeQL-pending" and _codeql_rows(checks, head):
-        state = _check_state(checks, head, dependency_update=_dependency_update(gh, number))
-    if state != "ok":
+    if state != "CodeQL-pending" or not _codeql_rows(checks, head):
         return state
-    blockers = _check_blockers({"statusCheckRollup": project_check_runs(checks)})
-    if blockers:
-        return blockers[0].replace("CI red ", "CI-red-").replace("CI pending ", "CI-pending-").replace("CI unknown", "CI-unknown")
-    return "ok"
+    return _check_state(checks, head, dependency_update=_dependency_update(gh, number))
 
 
 def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: int, queue_enabled: bool | None) -> str:

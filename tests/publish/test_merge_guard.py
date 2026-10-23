@@ -23,16 +23,34 @@ def _advisory_fixture_workflow(monkeypatch):
 
 def merge_with_checks(stdout, returncode=0):
     def runner(args, **kwargs):
+        if args[1] == "api":
+            checks = json.loads(stdout)
+            if "/check-runs?" in args[4]:
+                body = {"total_count": len(checks), "check_runs": [
+                    {"name": row["name"], "head_sha": "a" * 40,
+                     "status": "in_progress" if row["bucket"] == "pending" else "completed",
+                     "conclusion": "" if row["bucket"] == "pending" else
+                         "failure" if row["bucket"] == "fail" else "success",
+                     "app": {"id": 15368, "slug": "github-actions"}, "check_suite": {"id": i},
+                     "details_url": f"https://github.com/unit/public/actions/runs/{i}/job/{i}"}
+                    for i, row in enumerate(checks, 1)
+                ]}
+            else:
+                i = int(args[4].rsplit("/", 1)[1])
+                body = {"id": i, "head_sha": "a" * 40, "check_suite_id": i,
+                        "workflow_id": i, "name": checks[i - 1].get("workflow")}
+            return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
         if args[2] == "view":
             meta = {"number": 1, "isDraft": False, "headRefOid": "a" * 40}
             if "headRefOid,statusCheckRollup" in args:
                 checks = json.loads(stdout)
                 meta["statusCheckRollup"] = [
-                    {"name": row["name"], "workflowName": row.get("workflow"),
+                    {"__typename": "CheckRun", "name": row["name"],
+                     "detailsUrl": f"https://github.com/unit/public/actions/runs/{i}/job/{i}",
                      "status": "IN_PROGRESS" if row["bucket"] == "pending" else "COMPLETED",
                      "conclusion": "" if row["bucket"] == "pending" else
                          "FAILURE" if row["bucket"] == "fail" else "SUCCESS"}
-                    for row in checks
+                    for i, row in enumerate(checks, 1)
                 ]
             return subprocess.CompletedProcess(args, 0, json.dumps(meta), "")
         assert args[2] == "checks"
