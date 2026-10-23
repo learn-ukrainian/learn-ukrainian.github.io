@@ -90,11 +90,6 @@ def range_mode_for_event(event_name: str) -> str:
     return "merge-base" if (event_name or "").strip() in _MERGE_BASE_EVENTS else "two-dot"
 
 
-def comparison_range(base: str, head: str = "HEAD") -> str:
-    """Legacy three-dot helper (merge-base semantics). Prefer ``resolve_git_range``."""
-    return base if "..." in base else f"{base}...{head}"
-
-
 def two_dot_range(base: str, head: str = "HEAD") -> str:
     """Linear ``base..head`` tree/range diff for push events."""
     if ".." in base:
@@ -219,25 +214,6 @@ def resolve_hydrate_entrypoints(package_json: Path | None = None) -> list[str]:
     if not isinstance(hydrate, str) or not hydrate.strip():
         raise ValueError(f"{path}: missing scripts.{HYDRATE_ROOT_SCRIPT}")
     return sorted(resolve_script_command(hydrate, {k: str(v) for k, v in scripts.items()}))
-
-
-def assert_hydrate_entrypoints_in_denominator(
-    *,
-    denominator: dict | None = None,
-    package_json: Path | None = None,
-) -> list[str]:
-    """Fail when any hydrate-resolved path escapes the denominator."""
-    data = denominator or load_denominator()
-    patterns = list(data["paths"])
-    entrypoints = resolve_hydrate_entrypoints(package_json)
-    escaped = [path for path in entrypoints if not path_in_denominator(path, patterns)]
-    if escaped:
-        raise AssertionError(
-            "hydrate entrypoints outside frontend change denominator: "
-            + ", ".join(escaped)
-            + f" (denominator version={data['version']})"
-        )
-    return entrypoints
 
 
 def decision_line(*, decision: str, version: object, changed_count: int, matched_count: int) -> str:
