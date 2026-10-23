@@ -9,8 +9,9 @@ internal-ID scan.  The pre-commit stage runs the hooks ``.pre-commit-config.yaml
 places at the ``pre-push`` stage, unchanged.
 
 No push path runs pytest: no pytest stage, pytest hook, host test slots
-or affected-test selector. CI Gate runs the full suite on every pull request
-and again in the merge queue, and remains the merge gate.
+or affected-test selector. PR CI Gate runs admission checks and pytest collection.
+The real merge-group candidate must pass the full supported suite before landing;
+nightly and opt-in manual runs also retain the full suite.
 
 The range starts at the merge-base with ``origin/main`` after a merge of newer
 main, so the scans see only the branch's own commits (#10820).
