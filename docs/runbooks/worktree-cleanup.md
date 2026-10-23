@@ -417,7 +417,7 @@ automatically.
 The dual-repo reaper and scheduler categorize all worktrees into strict canonical preservation classes:
 
 | Preservation class | Description | Default disposition |
-|---|---|---|
+| --- | --- | --- |
 | `primary` | Primary repository checkout root | Preserved |
 | `active_dispatch` | Live process CWD, active task, active worker/rollover lease, write claim, or reap reservation | Preserved |
 | `open_pr` | Worktree branch has an OPEN pull request | Preserved |
@@ -1258,6 +1258,9 @@ An unavailable fetch or process-activity probe blocks apply for that
 repository. Standard output contains the same summary as the receipt.
 
 ## Linux systemd default
+
+The collector sweeps both repository roots. Before installing the service
+template, replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@`.
 
 The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
 `--apply`, the same as macOS launchd. Its timer fires every 4 hours

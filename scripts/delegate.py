@@ -9877,7 +9877,9 @@ def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path, 
             print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
 
 
-def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_only: bool = False) -> None:
+def _provision_data_symlinks(
+    worktree_path: Path, main_repo_root: Path, *, read_only: bool = False, provision_dependencies: bool = True
+) -> None:
     """Symlink heavy local-only files into a delegated worktree.
 
     Worktrees omit gitignored DBs and Node dependency directories, but quality
@@ -9894,6 +9896,8 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
     A relative open then creates a worktree-local file that the read-only
     guard flags, and the primary stays untouched. Workers read the primary
     databases by absolute path with ``mode=ro`` or through the ``sources`` MCP.
+    Sibling read-only reuse sets ``provision_dependencies=False`` so only
+    database-link withdrawal runs, using the same inventory as provisioning.
 
     Self-link guard: if ``worktree_path`` *is* the main checkout, provisioning
     would create ``node_modules -> node_modules`` (a self-referential loop) that
@@ -9918,6 +9922,8 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
         "node_modules",
         "site/node_modules",
     ):
+        if not provision_dependencies and relative_path not in database_links:
+            continue
         source = main_repo_root / relative_path
         target = worktree_path / relative_path
         # ``source.exists()`` follows symlinks and returns False for a looping
@@ -15792,7 +15798,15 @@ def _dispatch(
                 # Still under the worktree lock: a link an earlier write-capable
                 # dispatch provisioned must not reach the worker (#9421).
                 try:
-                    _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                    checkout_repo = _git_common_dir_identity(resolved_wt)
+                    public_repo = _git_common_dir_identity(_REPO_ROOT)
+                    if checkout_repo is None or public_repo is None:
+                        raise RuntimeError("worktree repository identity unavailable for read-only reuse")
+                    # Match fresh sibling provisioning: public resources belong
+                    # only in a checkout of the public repository.
+                    _provision_data_symlinks(
+                        resolved_wt, _REPO_ROOT, read_only=True, provision_dependencies=checkout_repo == public_repo
+                    )
                 except RuntimeError as exc:
                     discard_logs()
                     print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
