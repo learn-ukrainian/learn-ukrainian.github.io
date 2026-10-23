@@ -187,8 +187,8 @@ decisions:
         rejected_because: "Live users need stable lessons; workbook enrichment can ship incrementally"
     superseded_by: dec-015
     superseded_note: >-
-      Superseded by dec-015 and the fresh A1–B2 rebuild accepted on 2026-09-21
-      in docs/epics/fresh-build-requirements.md (PR #9283). The remaining
+      Superseded by dec-015 and the fresh A1–B2 rebuild accepted by the operator
+      2026-09-21 (docs/epics/fresh-build-requirements.md header). The remaining
       A1-only gate, documented on 2026-10-16 in
       docs/epics/fresh-build-a1-v1-import.md (#10881, design PR #10882),
       requires hash-pinned repaired A1-v1 input and a single-lesson blind
