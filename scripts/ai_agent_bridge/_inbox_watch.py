@@ -399,10 +399,16 @@ def preflight_supervisory_successor() -> bool:
         if os.environ.get("LC_PROVIDER") == "claude" and entrypoint == "supervisory-preflight":
             raise ValueError("missing launcher identity")
         if Path(entrypoint).name == "start-claude-cto.sh":
-            args = json.loads(os.environ.get("LC_SUPERVISORY_ORIGINAL_ARGS_JSON", ""))
-            if not isinstance(args, list) or any(not isinstance(arg, str) or "\0" in arg for arg in args):
+            if os.environ.get("LC_SUPERVISORY_ORIGINAL_ARGS_FD") != "215":
+                raise ValueError("missing captured launcher arguments")
+            # Reopen for an independent offset: every queued restart must see
+            # the same bytes, including after a prior refusal. Never use argv
+            # or an environment string for this potentially large capture.
+            with open("/proc/self/fd/215", "rb") as capture:
+                captured = capture.read()
+            captured.decode("utf-8")
+            if not captured.endswith(b"\0"):
                 raise ValueError("invalid captured launcher arguments")
-            captured = b"".join(arg.encode() + b"\0" for arg in args)
             script = (
                 'source "$LC_ROOT/scripts/lib/launcher_core.sh"; mapfile -d "" -t LC_DRIVER_ORIGINAL_ARGS; ' + script
             )

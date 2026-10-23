@@ -372,15 +372,22 @@ session_supervisor_start_inbox_watch() {
     export LC_DRIVER_PROVIDER_COMMAND LC_DRIVER_PROVIDER_EXECUTABLE
     export LC_ROOT LC_PROVIDER LC_MODE LC_DURABLE_HELPER_ROOT
     export LC_SUPERVISORY_ENTRYPOINT="$0"
-    # Bash arrays do not survive exec. Encode the existing capture, without
-    # reconstructing or changing any launcher/provider argument.
-    unset LC_SUPERVISORY_ORIGINAL_ARGS_JSON
+    # Carry raw argv on a separate unlinked inode, like the wake above. JSON in
+    # an environment string can exceed exec's per-string limit or reject bytes.
+    # Capture failure refuses restart in preflight; it must not kill the watcher
+    # and cause the launcher to stop a live provider.
+    unset LC_SUPERVISORY_ORIGINAL_ARGS_FD
+    exec 214>&- 215<&-
     if [ "${0##*/}" = start-claude-cto.sh ]; then
-      local py
-      py="$(launcher_project_python 2>/dev/null)" || exit 1
-      LC_SUPERVISORY_ORIGINAL_ARGS_JSON="$(printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}" | "$py" -c \
-        'import json,sys; print(json.dumps(sys.stdin.buffer.read().decode().split("\0")[:-1]))')" || exit 1
-      export LC_SUPERVISORY_ORIGINAL_ARGS_JSON
+      local capture_file
+      if [ -n "${TMPDIR:-}" ] && capture_file="$(mktemp "$TMPDIR/cto-capture.XXXXXX")"; then
+        if { exec 215<"$capture_file" 214>"/proc/self/fd/215"; } 2>/dev/null \
+            && printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}" >&214; then
+          export LC_SUPERVISORY_ORIGINAL_ARGS_FD=215
+        fi
+        exec 214>&-
+        rm -f "$capture_file"
+      fi
     fi
     exec 216<&-
     exec "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent

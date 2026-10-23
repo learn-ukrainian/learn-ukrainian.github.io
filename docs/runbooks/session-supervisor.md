@@ -20,11 +20,14 @@ and lease. The launcher rechecks the bound signature before successor exec;
 source drift or a subsequent wrapper refusal fails without direct-launch
 fallback. Codex CTO and other driver successors retain their existing routes.
 
-The inbox watcher receives the launcher's entrypoint, helper metadata and exact
-captured Claude CTO arguments through its inherited environment. It passes those
-arguments over stdin to the same preflight before claiming, consuming or preparing
-a restart. Missing or malformed CTO capture refuses the restart. Unsupported
-intent leaves the delivery and live predecessor available for reconciliation.
+The inbox watcher receives the launcher's entrypoint and helper metadata through
+its inherited environment. Exact captured Claude CTO arguments travel as raw
+NUL-delimited bytes through an inherited descriptor on an unlinked file, avoiding
+environment-string size limits and encoding failures at watcher startup. It passes
+those arguments over stdin to the same preflight before claiming, consuming or
+preparing a restart. Missing, unreadable or malformed CTO capture refuses the
+restart. Unsupported intent leaves the delivery and live predecessor available
+for reconciliation.
 
 Launch a driver with an exact numeric stream and an explicit role. The command
 returns a JSON capsule in the required order: identity, pending rollover slot,

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shlex
 import shutil
@@ -276,7 +277,8 @@ launcher_load_rules_core() {
     bindir.mkdir(parents=True)
     config = tmp_path / "source policy"
     config.mkdir()
-    role = "fixture role with spaces\nsecond line"
+    role = "fixture role with spaces\nsecond line\n" + "ї" * 30000
+    assert len(role.encode()) < 131072 < len(json.dumps(role).encode())
     (config / "CTO-ROLE-PROMPT.txt").write_text(role + "\n\n")
     # This source-only template mirrors the admitted wrapper, with test-owned
     # policy inputs. Authentication and launch executables below are fakes.
@@ -373,6 +375,7 @@ echo "started; attach with: tmux attach -t cto"
     # start_inbox_watch, rather than copying the launcher's locals into a probe.
     probe = tmp_path / "watcher_probe.py"
     probe.write_text(f"""import os, sys
+from tempfile import TemporaryFile
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 sys.path[:0] = [{str(REPO)!r}, {str(REPO / "scripts")!r}]
@@ -397,10 +400,42 @@ else:
     print('WATCHER_SUPPORTED', flush=True)
 # Unknown or malformed CTO capture must never fall back to generic CLI success.
 if os.path.basename(os.environ['LC_SUPERVISORY_ENTRYPOINT']) == 'start-claude-cto.sh':
-    os.environ.pop('LC_SUPERVISORY_ORIGINAL_ARGS_JSON', None)
+    # Repeated preflight must reopen at offset zero, preserving F1 parity.
+    assert watch.preflight_supervisory_successor() == available
+    os.environ.pop('LC_SUPERVISORY_ORIGINAL_ARGS_FD', None)
     assert not watch.preflight_supervisory_successor()
-    os.environ['LC_SUPERVISORY_ORIGINAL_ARGS_JSON'] = '{{"model":"override"}}'
+    os.environ['LC_SUPERVISORY_ORIGINAL_ARGS_FD'] = '215'
+    saved = os.dup(215)
+    with TemporaryFile(dir=os.environ['TMPDIR']) as malformed:
+        malformed.write(b'\\xff\\0')
+        malformed.flush()
+        os.dup2(malformed.fileno(), 215)
+        # Invalid bytes refuse inside preflight, keeping the watcher alive and
+        # leaving the queued delivery untouched even for a supported launcher.
+        assert not watch.preflight_supervisory_successor()
+        service = Mock()
+        supervisor = Mock()
+        lease = SimpleNamespace(session_id='fixture-predecessor', stream_id='epic:10453', generation=1)
+        request = watch.SupervisoryRequest('fixture-event', lease.stream_id, 'restart', 1)
+        delivery = SimpleNamespace(delivery_id='fixture-event', state='queued')
+        with patch.object(watch, 'pending_supervisory_delivery', return_value=delivery), \\
+             patch.object(watch, 'read_supervisory_request', return_value=request):
+            assert watch.consume_supervisory_event(
+                service, supervisor, lease, restart_preflight=watch.preflight_supervisory_successor,
+            ) is None
+        service.claim_next_delivery.assert_not_called()
+        service.record_supervisory_consumption.assert_not_called()
+        supervisor.handoff_driver.assert_not_called()
+        malformed.seek(0)
+        malformed.truncate()
+        malformed.write(b'unterminated')
+        malformed.flush()
+        assert not watch.preflight_supervisory_successor()
+    os.close(215)
     assert not watch.preflight_supervisory_successor()
+    os.dup2(saved, 215)
+    os.close(saved)
+    assert watch.preflight_supervisory_successor() == available
 raise SystemExit(0 if available else 3)
 """)
     watcher = root / "scripts/ai_agent_bridge/inbox_watch.sh"
@@ -441,6 +476,8 @@ if ! session_supervisor_preflight_successor; then
   exit 3
 fi
 [ "$watcher_rc" = 0 ] || exit 89
+kill -0 "$predecessor" || exit 91
+[ "$LC_DRIVER_LEASE_CLOSED" = 0 ] || exit 92
 kill "$predecessor"
 wait "$predecessor" 2>/dev/null || true
 trap - EXIT
