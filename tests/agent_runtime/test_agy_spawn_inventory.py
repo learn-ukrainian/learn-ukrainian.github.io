@@ -95,6 +95,16 @@ SPAWN_INVENTORY = {
         "management-exempt",
         "Over-included agent-name metadata; subprocess reads Git history for trailer linting.",
     ),
+    "scripts/audit/russianism_eval.py": (
+        "ungated-residual-10442",
+        "Gemini eval subprocesses delegate to ask-agy/ACP; text-agent model-session starts remain ungated, "
+        "harness lane #10442.",
+    ),
+    "scripts/audit/russianism_judge.py": (
+        "ungated-residual-10442",
+        "Gemini judge subprocesses delegate to ask-agy/ACP; text-agent model-session starts remain ungated, "
+        "harness lane #10442.",
+    ),
     "scripts/build/fresh/writer.py": (
         "ungated-residual-10442",
         "AGY authoring delegation through subprocess wrappers; per-site session coverage remains with harness lane #10442.",

@@ -237,6 +237,56 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
 
 ## Legacy Broker Ops retirement evidence (#6106)
 
+### Caller and visibility inventory
+
+Ordinary `ask-*` commands converge on `_cli._handle_acp_compat` and
+`_acp_compat.run_compat_ask`. Fleet Comms owns the durable request and result;
+ACP carries the conversation. Successful one-shot output is returned on stdout
+and, when requested, `--output-path`. A nonzero exit, empty stdout, or stderr
+that carries the canonical `ACP substitution:` seat-hop note is not a response
+from the requested model. Callers must not recover it from legacy `messages` rows.
+
+The Claude and Codex commands return nonempty response stdout without an
+output flag. Their parsers do not accept `--stdout-only`. The AGY command
+accepts `--stdout-only`, which the audit callers retain for that family.
+
+| Caller | Response destination |
+| --- | --- |
+| `scripts/audit/russianism_eval.py`, `scripts/audit/russianism_judge.py` | ACP stdout for Claude, Codex, and AGY; a seat-substitution note fails closed; no legacy database lookup |
+| `scripts/audit/naturalness_check.py` | One-shot stdout through `ask-agy` and `ask-claude` |
+| `scripts/audit/llm_reviewer_dispatch.py`, `scripts/audit/qg_bakeoff.py` | Existing stdout/output-file contracts; formal review intent uses the separate toolful review path |
+| `scripts/pipeline/dispatch.py`, `scripts/tools/upgrade_activity_hints.py` | `ask-agy` stdout |
+| `scripts/build/build_module_direct.py`, `scripts/build/phases/plan_patch.py` | `ask-gemini` compatibility alias; stdout or explicit output file |
+| `scripts/batch/batch_research.py`, `scripts/batch/batch_fix_review.py` | `ask-gemini` compatibility alias; explicit output file or stdout |
+| `scripts/projects/open_model_data/phase3_source_production_transport.py`, `phase3_rule_author_runner.py`, `phase3_heldout_label_transport.py` | Existing packet-bound stdout/output-file contracts; owning track controls execution |
+| `scripts/batch/batch_otaman.py`, `scripts/run_otaman_serial_12_15.sh` | Historical write-workflow callers; `--allow-write` does not make an ACP conversation a toolful implementation run |
+| `scripts/ops/smoketest_bridge_stdout_only.sh` | Provider smoke entry point; source inventory does not authorize execution |
+
+An alias name is not proof of a remaining legacy provider transport. Keep healthy
+callers on their existing contracts. Historical write-workflow callers require
+the owning track's implementation dispatch before execution; do not reinterpret
+a successful conversation as completed file edits.
+
+Legacy Python provider functions, bare bridge `send`/`ack`/processing commands,
+the old MCP broker server, and `scripts/tools/agent_watcher.py` still contain
+legacy mutation paths. The channel CLI's authority-mode refusal does not prove
+those other entry points are read-only. They are not a Fleet fallback. Their
+runtime use and migration disposition remain part of the accountable driver's
+caller inventory; do not infer inactivity from HTTP route counts or retire them
+from a source search alone. This task does not authorize starting the watcher,
+enabling the old MCP server, or running retention helpers such as `bin/services`
+queue cleanup.
+
+The canonical read-only home for zombie, batch-progress, and broker-health
+diagnostics is `GET /api/fleet/operations`, rendered by `dashboards/fleet.html`.
+`scripts/api/route_contracts.py` documents both contracts. These diagnostics are
+historical projections, not authority or proof that Fleet is healthy.
+`dashboards/comms.html` and `dashboards/channels.html` retain their compatibility
+redirects; channel/thread/delivery GET projections remain available. A source
+audit or a local API test does not establish deployed browser behavior.
+
+### Observation and retirement gates
+
 Use the seat-facing facade from any repository checkout:
 
 ```bash
@@ -274,3 +324,10 @@ then writing present-tense approval such as: “I approve retiring `<slice>`
 after the observed `<N>`-day zero-use window.” A deletion PR must retain that
 approval text and the report output, and must not delete any page or route when
 the report says `eligible: false`.
+
+The zero-use window, slice removal, and present-tense approval remain separate
+acceptance criteria. A caller-only change does not complete retirement. Before
+each separately approved deletion, retain the exact route/page slice, its caller
+denominator, compatibility-test results, and the prior commit needed to restore
+it. Restore that slice through the normal reviewed change path if compatibility
+breaks. No deletion or authority change is implied by this inventory.

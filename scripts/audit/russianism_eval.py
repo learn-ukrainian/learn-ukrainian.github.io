@@ -24,10 +24,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ai_agent_bridge._db import get_db
+from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
 from scripts.audit.checks.russicism_detection import check_russicisms
+from scripts.common.repo_root import project_interpreter
 
-PYTHON, BRIDGE = Path(".venv/bin/python"), Path("scripts/ai_agent_bridge/__main__.py")
+PYTHON, BRIDGE = project_interpreter(), Path("scripts/ai_agent_bridge/__main__.py")
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
 DEFAULT_MODELS = (
     "claude-opus-5-5,claude-sonnet-5-5,"
@@ -147,13 +148,10 @@ class BridgeCaller:
         family = _family_for_model(model)
         task_id = f"{self.run_id}-{_slug(prompt.id)}-{_slug(model)}"
         base = [str(PYTHON), str(BRIDGE)]
-        if family == "claude":
-            argv = [*base, "ask-claude", prompt.prompt_text, "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--new-session"]
-            return BridgeCall(prompt.id, model, family, task_id, argv, None)
-        if family == "codex":
-            argv = [*base, "ask-codex", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--new-session"]
-            return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
-        argv = [*base, "ask-agy", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--stdout-only"]
+        target = "agy" if family == "gemini" else family
+        argv = [*base, f"ask-{target}", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model]
+        if target == "agy":
+            argv.append("--stdout-only")
         return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
 
     def __call__(self, prompt: PromptCase, model: str) -> tuple[BridgeCall, str]:
@@ -174,29 +172,14 @@ class BridgeCaller:
             ) from exc
         if result.returncode != 0:
             raise RuntimeError((result.stderr or result.stdout or f"exit {result.returncode}").strip())
-        if call.family == "gemini" and result.stdout.strip():
-            return call, result.stdout.strip()
-        response = _latest_bridge_response(call.task_id, call.family)
-        if response:
-            return call, response
-        raise RuntimeError(f"bridge completed but no response row found for task_id={call.task_id}")
-
-
-def _latest_bridge_response(task_id: str, family: str) -> str | None:
-    conn = get_db()
-    try:
-        row = conn.execute(
-            """
-            SELECT content FROM messages
-            WHERE task_id = ? AND from_llm = ? AND to_llm = ?
-              AND message_type IN ('response', 'error')
-            ORDER BY id DESC LIMIT 1
-            """,
-            (task_id, family, FROM_AGENT),
-        ).fetchone()
-    finally:
-        conn.close()
-    return str(row["content"]) if row else None
+        stdout = result.stdout.strip()
+        if not stdout:
+            raise RuntimeError(f"ACP ask completed without response stdout for task_id={call.task_id}")
+        # rc 0 with stdout is the substitute's reply when stderr carries the seat-hop note.
+        _, substitution_note = _seat_substitution_from_forward_stderr(result.stderr or "")
+        if substitution_note is not None:
+            raise RuntimeError(f"ACP seat substituted for task_id={call.task_id}: {substitution_note}")
+        return call, stdout
 
 def _issue_count(violation: dict[str, Any]) -> int:
     match = _FOUND_COUNT_RE.search(str(violation.get("issue") or ""))
@@ -333,10 +316,8 @@ def print_cost_report(rows: Sequence[EvalRow], prompts: Sequence[PromptCase], mo
 
 
 def _redacted_command(call: BridgeCall) -> str:
-    parts = list(call.argv)
-    if call.family == "claude" and "ask-claude" in parts and parts.index("ask-claude") + 1 < len(parts):
-        parts[parts.index("ask-claude") + 1] = "<prompt_text>"
-    return " ".join(parts)
+    """Return argv. Every family sends the prompt on stdin, so argv has nothing to redact."""
+    return " ".join(call.argv)
 
 
 def dry_run(prompts: Sequence[PromptCase], models: Sequence[str], max_parallel: int, caller: BridgeCaller) -> None:
