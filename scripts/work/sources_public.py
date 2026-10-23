@@ -660,12 +660,6 @@ _ISSUE_STATE_CACHE: dict[tuple[str, int], tuple[float, str | None]] = {}
 _ISSUE_STATE_CACHE_TTL_S = 300.0
 
 
-def clear_issue_state_cache() -> None:
-    """Clear cached issue lifecycles (fixture runner TTL and the shared REST ETags)."""
-    _ISSUE_STATE_CACHE.clear()
-    github_rest.shared_cache().clear()
-
-
 def fetch_issue_states_batched(
     numbers: list[int] | set[int],
     repository_id: str | None = None,
