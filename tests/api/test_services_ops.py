@@ -569,11 +569,16 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
     finally:
         if tunnel is not None:
             tunnel.terminate()
-            tunnel.wait(timeout=5)
         health.terminate()
-        health.wait(timeout=5)
-        health.stdout.close()
-        health.stderr.close()
+        try:
+            if tunnel is not None:
+                tunnel.wait(timeout=5)
+        finally:
+            try:
+                health.wait(timeout=5)
+            finally:
+                health.stdout.close()
+                health.stderr.close()
 
 
 def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> None:
