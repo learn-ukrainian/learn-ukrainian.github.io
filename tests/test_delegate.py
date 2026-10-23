@@ -12708,7 +12708,7 @@ def test_ensure_worktree_reuse_dirty_raises(tmp_tasks_dir, tmp_path, monkeypatch
 
 def test_ensure_worktree_reuse_wrong_branch_raises(tmp_tasks_dir, tmp_path, monkeypatch):
     """Fix 3 (#1476): an existing worktree on a different branch must
-    raise WorktreeBranchMismatch, with the expected remediation command
+    raise WorktreeBranchMismatch, with the common-reaper remediation
     in the message."""
     wt = tmp_path / "mismatched-worktree"
     wt.mkdir()
@@ -12725,7 +12725,10 @@ def test_ensure_worktree_reuse_wrong_branch_raises(tmp_tasks_dir, tmp_path, monk
         )
     assert "codex/some-other-branch" in str(exc_info.value)
     assert "codex/1476-mismatched" in str(exc_info.value)
-    assert "git worktree remove" in str(exc_info.value)
+    assert "scripts/orchestration/reap_worktrees.py" in str(exc_info.value)
+    assert "scripts.fleet.post_task_reap" in str(exc_info.value)
+    # #10306: dispatcher advice must never bypass the common reaper.
+    assert "git worktree remove" not in Path(delegate.__file__).read_text()
 
 
 def test_ensure_worktree_reuse_stale_base_rebases(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
@@ -12787,13 +12790,16 @@ def test_ensure_worktree_reuse_stale_base_rebase_fail_raises(tmp_tasks_dir, tmp_
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    with pytest.raises(delegate.WorktreeStaleBase, match="rebase failed"):
+    with pytest.raises(delegate.WorktreeStaleBase, match="rebase failed") as exc_info:
         delegate._ensure_worktree(
             agent="codex",
             task_id="1476-conflict-task",
             raw_path=str(wt),
             base="main",
         )
+    assert "scripts/orchestration/reap_worktrees.py" in str(exc_info.value)
+    assert "scripts.fleet.post_task_reap" in str(exc_info.value)
+    assert "git worktree remove" not in str(exc_info.value)
     # Must abort so the worktree isn't left mid-rebase.
     assert any(c[:2] == ["git", "rebase"] and "--abort" in c for c in abort_calls), "rebase must be aborted on failure"
 

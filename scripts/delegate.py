@@ -9825,8 +9825,8 @@ def _validate_existing_worktree(
     if actual_branch and actual_branch != expected_branch:
         raise WorktreeBranchMismatch(
             f"worktree at {path} is on branch {actual_branch!r}, expected "
-            f"{expected_branch!r}. Remove it and retry:\n"
-            f"    git worktree remove {path}"
+            f"{expected_branch!r}. Have the owning driver inspect cleanup with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
 
     # 2. Dirty check.
@@ -9932,8 +9932,8 @@ def _validate_existing_worktree(
             )
         raise WorktreeStaleBase(
             f"worktree at {path} is {behind} commit(s) behind {shown} "
-            f"and rebase failed. Resolve manually or remove:\n"
-            f"    git worktree remove {path}"
+            "and rebase failed. Resolve manually, or have the owning driver inspect cleanup with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
     return True
 
