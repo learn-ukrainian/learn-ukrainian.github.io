@@ -20,7 +20,8 @@ def invokes_gh(command: str) -> bool:
 
     events = scope_events(
         command, mark_redirect_unreadable=False, unreadable_marker="",
-        unparsed=[], may_match=lambda line: False,
+        # Multiline quotes do not lex per line; conservatively route possible gh calls.
+        unparsed=["gh"], may_match=lambda line: "gh" in line.replace("\\", "").replace("'", "").replace('"', ""),
     )
     try:
         lexer = (word for kind, argv in events if kind == "segment" for word in (*argv, "\n"))

@@ -729,6 +729,7 @@ def test_bridge_comment_refusal_is_rendered_and_returns_false(monkeypatch, capsy
     ],
 )
 def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys, tmp_path):
+    """Redirects and multiline quoted bodies must not bypass the publishing shim."""
     spec = importlib.util.spec_from_file_location(
         "wrapped_hook", ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py"
     )
@@ -743,25 +744,34 @@ def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys, tmp_p
     monkeypatch.setenv("PATH", str(fake_bin) + os.pathsep + os.defpath)
     monkeypatch.setenv("GH_RECORD", str(record))
     (tmp_path / "input").write_text("synthetic input")
-    for prefix in ("", "2>&1 ", ">output ", ">>output ", "2>/dev/null ", "&>output ",
-                   "<input ", "true &&>output ", "{fd}>output "):
-        redirected = command.replace("gh ", prefix + "gh ", 1)
-        before = record.read_text() if record.exists() else ""
-        oracle = subprocess.run(
-            ["bash", "--noprofile", "--norc", "-c", redirected],
-            cwd=tmp_path, capture_output=True, text=True, timeout=10,
-        )
-        assert oracle.returncode == 0, (redirected, oracle.stderr)
-        assert record.read_text() != before, redirected
-        monkeypatch.setattr(
-            sys, "stdin", __import__("io").StringIO(json.dumps({
-                "tool_name": "Bash", "tool_input": {"command": redirected},
-            }))
-        )
-        assert module.main() == 0
-        updated = json.loads(capsys.readouterr().out)["hookSpecificOutput"]["updatedInput"]["command"]
-        assert "export PATH=" in updated
-        assert updated.endswith(redirected)
+    for candidate in (
+        command,
+        'gh issue create -b "line1\nline2"',
+        "gh issue create -b 'line1\nline2'",
+        'gh pr create --body "$(cat <<\'EOF\'\nline1\nline2\nEOF\n)"',
+    ):
+        for prefix, suffix in (
+            ("", ""), ("2>&1 ", ""), (">output ", ""), (">>output ", ""),
+            ("2>/dev/null ", ""), ("&>output ", ""), ("<input ", ""),
+            ("true &&>output ", ""), ("{fd}>output ", ""), ("", " | cat"),
+        ):
+            redirected = candidate.replace("gh ", prefix + "gh ", 1) + suffix
+            before = record.read_text() if record.exists() else ""
+            oracle = subprocess.run(
+                ["bash", "--noprofile", "--norc", "-c", redirected],
+                cwd=tmp_path, capture_output=True, text=True, timeout=10,
+            )
+            assert oracle.returncode == 0, (redirected, oracle.stderr)
+            assert record.read_text() != before, redirected
+            monkeypatch.setattr(
+                sys, "stdin", __import__("io").StringIO(json.dumps({
+                    "tool_name": "Bash", "tool_input": {"command": redirected},
+                }))
+            )
+            assert module.main() == 0
+            updated = json.loads(capsys.readouterr().out)["hookSpecificOutput"]["updatedInput"]["command"]
+            assert "export PATH=" in updated
+            assert updated.endswith(redirected)
 
 
 
