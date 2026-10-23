@@ -17,9 +17,10 @@ never fine.
    metric gets a hand-read meter, and the gap is logged as a monitoring task. Grok and Cursor
    share one meter, never two pools of headroom. Keep readings in a scratch log for trends.
    Before recording an account or credential blocker from a refusal code, read that
-   account's own meter (for Claude b: `CLAUDE_CONFIG_DIR=~/.claude-b codexbar --provider
-   claude`) and its token expiry. A lapsed access token with a valid refresh token is a
-   refresh, not an operator re-login.
+   account's own meter through the account-bound probe
+   (`scripts/api/claude_account_usage.py`, OAuth source only, served by the Monitor API;
+   host paths stay in the private operations doc) and check its token expiry. A lapsed
+   access token with a valid refresh token needs a refresh, not an operator re-login.
 3. **Disk and load.** `df -h .`, `uptime`, `git worktree list | wc -l`. When disk climbs,
    run the reaper and retention tools before admitting write workers; never delete bulk
    corpus or data without a separate operator-authorized task (core.md P6).
