@@ -155,7 +155,7 @@ def _refresh_identity() -> tuple[int, int]:
 
 def _publication_current() -> bool:
     identity = getattr(_refresh_context, "identity", None)
-    return identity is None or identity[0] == _lifecycle_generation
+    return identity is not None and identity[0] == _lifecycle_generation
 
 
 def _run_owned_refresh(identity: tuple[int, int], callback: Any, *args: Any, **kwargs: Any) -> Any:
@@ -336,6 +336,12 @@ def refresh_provider_usage_data(
     25.0s) — a real CLI call, not a hang. Callers should only override this when
     they have their own measured reason to.
     """
+    return _run_owned_refresh(_refresh_identity(), _collect_provider_usage, providers, timeout_s=timeout_s) or {}
+
+
+def _collect_provider_usage(
+    providers: Iterable[str], *, timeout_s: float | None = None
+) -> dict[str, dict[str, Any]]:
     if timeout_s is None:
         timeout_s = _codexbar_refresh_timeout_s()
     unique_providers = tuple(dict.fromkeys(providers))
@@ -885,6 +891,10 @@ def _probe_api_account_live(provider: str, *, timeout_s: float | None = None) ->
 
 def refresh_api_account_data(providers: Iterable[str], *, timeout_s: float | None = None) -> dict[str, dict[str, Any]]:
     """Synchronously refresh prepaid API account snapshots for explicit callers."""
+    return _run_owned_refresh(_refresh_identity(), _collect_api_account_data, providers, timeout_s=timeout_s) or {}
+
+
+def _collect_api_account_data(providers: Iterable[str], *, timeout_s: float | None = None) -> dict[str, dict[str, Any]]:
     if timeout_s is None:
         timeout_s = _codexbar_refresh_timeout_s()
     unique_providers = tuple(dict.fromkeys(providers))
@@ -1697,6 +1707,10 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
     native CLI/OAuth. ``retrieveUserQuotaSummary`` 403'd while ``agy /usage``
     showed healthy Gemini weekly/5h remaining.
     """
+    return _run_owned_refresh(_refresh_identity(), _collect_antigravity_usage, timeout_s=timeout_s) or {}
+
+
+def _collect_antigravity_usage(*, timeout_s: float) -> dict[str, Any]:
     agy_bin = _agy_cli_bin()
     if not agy_bin:
         return _agy_finish_unparsed(

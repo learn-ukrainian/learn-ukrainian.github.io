@@ -861,7 +861,9 @@ def test_get_cursor_lane_usage_is_cache_only_on_http_path(monkeypatch):
     assert result["freshness"] == "unavailable"
     assert probe_calls == {"login": 0, "windows": 0}
 
-    codexbar_usage_mod._record_cursor_probe_result(_windows())
+    subscription_usage_mod._run_owned_refresh(
+        subscription_usage_mod._refresh_identity(), codexbar_usage_mod._record_cursor_probe_result, _windows()
+    )
     probe_calls["windows"] = 0
     cached = codexbar_usage_mod.get_cursor_lane_usage()
     assert cached["freshness"] == "fresh"
@@ -874,7 +876,9 @@ def test_cursor_state_reset_prevents_preceding_probe_leaking_into_http_read(monk
     """A preceding probe must leave neither a fresh cache nor last-good fallback."""
     monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
     probe = {"lane": "cursor", "probe_state": "healthy", "fetched_at": "2026-09-03T12:05:00Z"}
-    assert subscription_usage_mod._record_cursor_probe_result(probe) is True
+    assert subscription_usage_mod._run_owned_refresh(
+        subscription_usage_mod._refresh_identity(), subscription_usage_mod._record_cursor_probe_result, probe
+    ) is True
     assert subscription_usage_mod._cursor_last_good is not None
     if invalidate_cache:
         cache_invalidate(subscription_usage_mod.CURSOR_CACHE_KEY)
@@ -914,6 +918,21 @@ def test_failed_refresh_never_poison_last_known_good_capacity(monkeypatch):
     assert result["weekly_used_pct"] == 62.0
     assert result["failure_kind"] == "timeout"
     assert result["last_failure_at"]
+
+    # An explicit caller must not publish a success collected across stop.
+    good_before = dict(codexbar_usage_mod._last_good_data)
+    failure_before = dict(codexbar_usage_mod._last_failure_data)
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "fetch_provider_usage",
+        lambda *_args, **_kwargs: (codexbar_usage_mod.stop_periodic_refresh(join_timeout_s=0), healthy)[1],
+    )
+    assert codexbar_usage_mod.refresh_provider_usage_data([provider], timeout_s=2.0) == {}
+    assert codexbar_usage_mod._last_good_data == good_before
+    assert codexbar_usage_mod._last_failure_data == failure_before
+    assert subscription_usage_mod.cache_get_with_age(f"codexbar_usage:{provider}", ttl=720) is None
+    assert getattr(subscription_usage_mod._refresh_context, "identity", None) is None
+    assert not subscription_usage_mod._record_probe_result(provider, healthy)
 
 
 def test_malformed_or_provider_failure_is_unavailable_without_lkg(monkeypatch):
@@ -1532,7 +1551,9 @@ def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
         "status": "need_login",
         "fetched_at": "2026-09-03T12:00:00Z",
     }
-    assert codexbar_usage_mod._record_cursor_probe_result(need_login) is True
+    assert subscription_usage_mod._run_owned_refresh(
+        subscription_usage_mod._refresh_identity(), codexbar_usage_mod._record_cursor_probe_result, need_login
+    ) is True
 
     # Backdate the cached entry past the short NEED_LOGIN TTL (default 30s)
     # but well within the full healthy-probe TTL (default 600s), so only the
@@ -1553,7 +1574,9 @@ def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
         },
         "fetched_at": "2026-09-03T12:05:00Z",
     }
-    assert codexbar_usage_mod._record_cursor_probe_result(healthy) is True
+    assert subscription_usage_mod._run_owned_refresh(
+        subscription_usage_mod._refresh_identity(), codexbar_usage_mod._record_cursor_probe_result, healthy
+    ) is True
 
     replaced = codexbar_usage_mod.get_cursor_lane_usage()
     assert replaced["freshness"] == "fresh"
@@ -1574,7 +1597,9 @@ def test_cursor_need_login_within_short_ttl_still_served_fresh(monkeypatch):
         "status": "need_login",
         "fetched_at": "2026-09-03T12:00:00Z",
     }
-    assert codexbar_usage_mod._record_cursor_probe_result(need_login) is True
+    assert subscription_usage_mod._run_owned_refresh(
+        subscription_usage_mod._refresh_identity(), codexbar_usage_mod._record_cursor_probe_result, need_login
+    ) is True
 
     result = codexbar_usage_mod.get_cursor_lane_usage()
     assert result["freshness"] == "fresh"
@@ -1614,6 +1639,19 @@ def test_prepaid_failure_preserves_last_good_and_retries_quickly(monkeypatch):
     monkeypatch.setattr(mod, "_probe_api_account_live", lambda *a, **kw: good)
     assert mod.refresh_api_account_data(["deepseek"])["deepseek"]["freshness"] == "fresh"
     assert "deepseek" not in mod._api_account_last_failure
+    original = mod._api_account_last_good["deepseek"]
+    monkeypatch.setattr(
+        mod,
+        "_probe_api_account_live",
+        lambda *a, **kw: (mod.stop_periodic_refresh(join_timeout_s=0), failed)[1],
+    )
+    observed = mod.refresh_api_account_data(["deepseek"])["deepseek"]
+    assert observed["total_balance"] == 30
+    assert observed["freshness"] == "fresh"
+    assert mod._api_account_last_good["deepseek"] == original
+    assert "deepseek" not in mod._api_account_last_failure
+    assert getattr(mod._refresh_context, "identity", None) is None
+    assert not mod._record_api_account_result("deepseek", failed)
     cache_invalidate("api_account:deepseek")
 
 
@@ -1668,9 +1706,11 @@ def test_subscription_login_failure_clears_on_success(monkeypatch):
     monkeypatch.setattr(mod, "_last_failure_data", {})
     monkeypatch.setattr(mod, "_last_good_data", {})
     monkeypatch.setattr(mod, "cache_set", lambda *a: None)
-    assert not mod._record_probe_result("codex", {"error_kind": "need_login"})
+    monkeypatch.setattr(mod, "fetch_provider_usage", lambda *a, **kw: {"error_kind": "need_login"})
+    assert mod.refresh_provider_usage_data(["codex"]) == {}
     assert mod._last_failure_data["codex"]["failure_kind"] == "need_login"
-    assert mod._record_probe_result("codex", {"weekly_used_pct": 10})
+    monkeypatch.setattr(mod, "fetch_provider_usage", lambda *a, **kw: {"weekly_used_pct": 10})
+    assert mod.refresh_provider_usage_data(["codex"])["codex"]["weekly_used_pct"] == 10
     assert "codex" not in mod._last_failure_data
 
 
