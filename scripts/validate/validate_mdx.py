@@ -299,7 +299,8 @@ def main():
   .venv/bin/python scripts/validate_mdx.py l2-uk-en b1 1
 
 Outputs: Console results and MDX sections in source audit reports.
-Exit codes: 0 = validation passed; 1 = validation failed; 2 = invalid arguments.
+Exit codes: 0 = validation passed; 1 = validation failed or no modules selected;
+  2 = invalid arguments (unknown level or nonpositive module position).
 Related: scripts/generate_mdx.py --validate; issue #8973.
 ''',
     )
@@ -311,29 +312,30 @@ Related: scripts/generate_mdx.py --validate; issue #8973.
                         help='One-based module position, e.g. 1 (default: all).')
     args = parser.parse_args()
     lang_pair, target_level, target_module = args.lang_pair, args.level, args.module
+    if target_module is not None and target_module < 1:
+        parser.error('Module position must be at least 1.')
 
     print('\n🔍 MDX Validator\n')
 
     curriculum_path = CURRICULUM_DIR / lang_pair
     with (curriculum_path / 'curriculum.yaml').open(encoding='utf-8') as manifest_file:
         levels = yaml.safe_load(manifest_file).get('levels', {})
+    if target_level and target_level not in levels:
+        parser.error(f'Unknown level or track: {target_level}')
 
     total_passed = 0
     total_failed = 0
-    all_results = []
 
     for level, level_data in levels.items():
         if target_level and level != target_level:
             continue
 
         level_path = curriculum_path / level
-        if not level_path.exists():
-            continue
 
         print(f'📁 Level {level.upper()}')
 
         for module_num, manifest_slug in enumerate(level_data.get('modules', []), 1):
-            if target_module and module_num != target_module:
+            if target_module is not None and module_num != target_module:
                 continue
 
             _, slug = parse_numbered_slug(manifest_slug)
@@ -341,20 +343,18 @@ Related: scripts/generate_mdx.py --validate; issue #8973.
             md_file = level_path / f'{slug}.md'
             if not md_file.exists():
                 md_file = level_path / slug / 'module.md'
-            if not md_file.exists():
-                continue
 
             mdx_file = STARLIGHT_DOCS_DIR / level / f'{slug}.mdx'
 
             result = validate_module(md_file, mdx_file)
-            all_results.append(result)
 
             # Write MDX validation results to review file (even if clean, to clear old warnings)
-            append_mdx_errors_to_report(
-                str(md_file),
-                result.errors,
-                result.warnings
-            )
+            if md_file.exists():
+                append_mdx_errors_to_report(
+                    str(md_file),
+                    result.errors,
+                    result.warnings
+                )
 
             if result.passed:
                 total_passed += 1
@@ -375,7 +375,10 @@ Related: scripts/generate_mdx.py --validate; issue #8973.
     print(f'\n{"="*50}')
     print(f'Results: {total_passed} passed, {total_failed} failed')
 
-    if total_failed > 0:
+    if total_passed + total_failed == 0:
+        print('No modules selected for validation.')
+
+    if total_failed > 0 or total_passed == 0:
         print('\n❌ VALIDATION FAILED')
         sys.exit(1)
     else:
