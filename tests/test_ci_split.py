@@ -597,6 +597,7 @@ def test_pytest_is_skipped_only_on_admission_events() -> None:
     collection = next(step for step in jobs["checks"]["steps"] if step.get("name") == "Collect pytest for PR admission")
     assert collection["if"] == "github.event_name == 'pull_request'"
     assert "pytest tests --collect-only --strict-markers" in collection["run"]
+    assert "--override-ini addopts=-qq " in collection["run"]
     assert "norecursedirs=.* node_modules" in collection["run"]
 
 

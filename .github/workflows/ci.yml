@@ -170,9 +170,10 @@ jobs:
           --override-ini addopts=-q -m slow --strict-markers
       - name: Collect pytest for PR admission
         if: github.event_name == 'pull_request'
+        # Report per-file counts instead of potentially oversized parameter IDs.
         run: >-
           .venv/bin/python -m pytest tests --collect-only --strict-markers
-          --override-ini addopts=-q --override-ini 'norecursedirs=.* node_modules'
+          --override-ini addopts=-qq --override-ini 'norecursedirs=.* node_modules'
       - name: Verify flake quarantine admissions
         env:
           GH_TOKEN: ${{ github.token }}
