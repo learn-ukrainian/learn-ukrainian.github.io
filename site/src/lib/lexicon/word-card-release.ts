@@ -53,7 +53,7 @@ function read(path: string): Buffer {
 }
 function faithfulJson(value: unknown): boolean {
   if (value === null || typeof value === 'boolean') return true;
-  if (typeof value === 'string') return !/[\u0000\uD800-\uDFFF]/u.test(value);
+  if (typeof value === 'string') return !value.includes('\0') && !/[\uD800-\uDFFF]/u.test(value);
   if (typeof value === 'number') return Number.isFinite(value) && (!Number.isInteger(value) || Number.isSafeInteger(value));
   if (Array.isArray(value)) return value.every(faithfulJson);
   return typeof value === 'object' && Object.entries(value).every(([key, item]) =>
