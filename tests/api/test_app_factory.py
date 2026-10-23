@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import subprocess
 from contextlib import asynccontextmanager
@@ -16,7 +17,9 @@ from fastapi.exception_handlers import websocket_request_validation_exception_ha
 from fastapi.exceptions import RequestValidationError, WebSocketRequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.testclient import TestClient
+from prometheus_client import REGISTRY, generate_latest
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
 
 from scripts.api import dashboard_comms
 from scripts.api import main as api_main
@@ -29,20 +32,33 @@ pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
     app = api_main.create_app(production_context())
+    other = api_main.create_app(production_context())
 
     assert [(entry.cls, entry.args) for entry in app.user_middleware] == [
         (BaseHTTPMiddleware, ()),
         (BaseHTTPMiddleware, ()),
+        (BaseHTTPMiddleware, ()),
         (CORSMiddleware, ()),
     ]
-    assert app.user_middleware[0].kwargs["dispatch"] is opsec_path_sanitizer_middleware
-    assert app.user_middleware[1].kwargs["dispatch"] is resilience_middleware
-    assert app.user_middleware[2].kwargs == {
+    assert app.user_middleware[0].kwargs["dispatch"] is api_main.http_metrics_middleware
+    assert app.user_middleware[1].kwargs["dispatch"] is opsec_path_sanitizer_middleware
+    assert app.user_middleware[2].kwargs["dispatch"] is resilience_middleware
+    assert app.user_middleware[3].kwargs == {
         "allow_origins": ["*"],
         "allow_credentials": True,
         "allow_methods": ["*"],
         "allow_headers": ["*"],
     }
+    assert app.state.http_metrics.registry is not other.state.http_metrics.registry
+    for metrics_app in (app, other):
+        exposition = generate_latest(metrics_app.state.http_metrics.registry)
+        assert b"monitor_http_requests_total" in exposition
+        assert b"monitor_http_request_duration_seconds" in exposition
+        assert b"monitor_http_responses_5xx_total" in exposition
+    process_exposition = generate_latest(REGISTRY)
+    assert b"monitor_http_requests" not in process_exposition
+    assert b"monitor_http_request_duration_seconds" not in process_exposition
+    assert b"monitor_http_responses_5xx" not in process_exposition
 
     assert set(app.exception_handlers) == {
         api_main.StarletteHTTPException,
@@ -599,6 +615,100 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         assert "Second dispatcher log line" not in first_client.get("/api/batch/dispatcher/logs").json()["lines"]
         assert "Second dispatcher log line" in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
         assert "First dispatcher log line" not in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
+
+        health = first_client.get("/api/health")
+        assert health.status_code == 200
+        secret_segment = "metrics-probe-secret"
+        secret_query = "metrics-probe-query"
+        secret = first_client.get(f"/{secret_segment}", params={"access_token": secret_query})
+        assert 400 <= secret.status_code < 500
+
+        first_metrics = first_client.get("/metrics", params={"access_token": secret_query})
+        assert first_metrics.status_code == 200
+        assert first_metrics.headers["content-type"].startswith("text/plain")
+        first_body = first_metrics.text
+        assert "monitor_http_requests_total" in first_body
+        assert "monitor_http_request_duration_seconds" in first_body
+        assert "monitor_http_responses_5xx_total" in first_body
+        assert secret_segment not in first_body
+        assert secret_query not in first_body
+        assert "access_token" not in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/api/health",status_class="2xx"} 1.0' in first_body
+        assert 'monitor_http_requests_total{method="GET",route="/{path:path}",status_class="4xx"} 1.0' in first_body
+        assert 'route="/api/health",status_class="5xx"' not in first_body
+        assert 'monitor_http_request_duration_seconds_count{method="GET",route="/api/health"} 1.0' in first_body
+
+        def _raise_metrics_probe() -> None:
+            raise RuntimeError("metrics failure probe")
+
+        first_app.dependency_overrides[api_main.get_ctx] = _raise_metrics_probe
+        with pytest.raises(RuntimeError, match="metrics failure probe"):
+            first_client.get("/api/health")
+
+        second_scrape = first_client.get("/metrics")
+        assert second_scrape.status_code == 200
+        second_body = second_scrape.text
+        assert "metrics failure probe" not in second_body
+        assert secret_segment not in second_body
+        assert secret_query not in second_body
+        assert "access_token" not in second_body
+        assert 'monitor_http_requests_total{method="GET",route="/api/health",status_class="2xx"} 1.0' in second_body
+        assert 'monitor_http_requests_total{method="GET",route="/api/health",status_class="5xx"} 1.0' in second_body
+        assert 'monitor_http_responses_5xx_total{method="GET",route="/api/health"} 1.0' in second_body
+        assert 'monitor_http_request_duration_seconds_count{method="GET",route="/api/health"} 2.0' in second_body
+        assert 'monitor_http_request_duration_seconds_sum{method="GET",route="/api/health"} ' in second_body
+        assert 'monitor_http_request_duration_seconds_bucket{le="+Inf",method="GET",route="/api/health"} 2.0' in second_body
+        assert 'monitor_http_requests_total{method="GET",route="/metrics",status_class="2xx"} 1.0' in second_body
+
+        head = first_client.head("/metrics", params={"access_token": secret_query})
+        assert head.status_code == 200
+        assert head.headers["content-type"].startswith("text/plain")
+        posted = first_client.post("/metrics", params={"access_token": secret_query})
+        assert posted.status_code == 405
+        assert "monitor_http_requests_total" not in posted.text
+        assert secret_query not in posted.text
+        third_scrape = first_client.get("/metrics")
+        assert third_scrape.status_code == 200
+        third_body = third_scrape.text
+        assert secret_segment not in third_body
+        assert secret_query not in third_body
+        assert "access_token" not in third_body
+        assert 'monitor_http_requests_total{method="HEAD",route="/metrics",status_class="2xx"} 1.0' in third_body
+        assert 'monitor_http_requests_total{method="POST",route="/metrics"' not in third_body
+        assert 'monitor_http_requests_total{method="POST",route="/{path:path}",status_class="4xx"} 1.0' in third_body
+        assert 'monitor_http_responses_5xx_total{method="GET",route="/api/health"} 1.0' in third_body
+        assert 'monitor_http_request_duration_seconds_count{method="GET",route="/api/health"} 2.0' in third_body
+
+        route_labels = set(re.findall(r'route="([^"]*)"', second_body))
+        assert route_labels
+        assert all("?" not in route and "#" not in route and secret_segment not in route for route in route_labels)
+        method_labels = set(re.findall(r'method="([^"]*)"', second_body))
+        assert method_labels <= {"CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE", "OTHER"}
+        status_labels = set(re.findall(r'status_class="([^"]*)"', second_body))
+        assert status_labels <= {"1xx", "2xx", "3xx", "4xx", "5xx", "other"}
+
+        isolated = second_client.get("/metrics", params={"access_token": secret_query})
+        assert isolated.status_code == 200
+        assert secret_segment not in isolated.text
+        assert secret_query not in isolated.text
+        assert 'route="/api/health"' not in isolated.text
+        assert first_app.state.http_metrics.registry is not second_app.state.http_metrics.registry
+
+    bare = Request(
+        {
+            "type": "http",
+            "method": "GET",
+            "path": f"/{secret_segment}",
+            "query_string": f"access_token={secret_query}".encode(),
+            "headers": [],
+            "scheme": "http",
+        }
+    )
+    assert api_main.http_metrics_route_label(bare) == "unmatched"
+    bare.scope["route"] = type("_Route", (), {"path": f"/api/health?access_token={secret_query}"})()
+    assert api_main.http_metrics_route_label(bare) == "unmatched"
+    bare.scope["route"] = type("_Route", (), {"path": "/api/health"})()
+    assert api_main.http_metrics_route_label(bare) == "/api/health"
 
 
 def test_broker_reads_use_guarded_timed_readonly_context(tmp_path: Path) -> None:

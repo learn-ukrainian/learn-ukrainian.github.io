@@ -26,13 +26,21 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack, asynccontextmanager, suppress
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
+from prometheus_client import (
+    CONTENT_TYPE_PLAIN_0_0_4,
+    CollectorRegistry,
+    Counter,
+    Histogram,
+    generate_latest,
+)
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.requests import ClientDisconnect
 
 import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
@@ -1939,6 +1947,153 @@ async def serve_static(path: str, ctx: MonitorContext = Depends(get_ctx)):
     raise HTTPException(status_code=404)
 
 
+# One bounded label for every request that never matched a route template.
+_UNMATCHED_ROUTE = "unmatched"
+_METRICS_PATH = "/metrics"
+_ROUTE_LABEL_MAX_LENGTH = 512
+_HTTP_METHODS = frozenset({"CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"})
+_METRICS_METHODS = frozenset({"GET", "HEAD"})
+
+
+class HttpMetrics(NamedTuple):
+    """Collectors owned by one application instance."""
+
+    registry: CollectorRegistry
+    requests: Counter
+    duration: Histogram
+    responses_5xx: Counter
+
+
+def new_http_metrics() -> HttpMetrics:
+    """Build a fresh registry so repeated create_app() calls do not collide."""
+    registry = CollectorRegistry()
+    requests = Counter(
+        "monitor_http_requests",
+        "HTTP responses by method, route template, and status class.",
+        ("method", "route", "status_class"),
+        registry=registry,
+    )
+    duration = Histogram(
+        "monitor_http_request_duration_seconds",
+        "HTTP response latency in seconds.",
+        ("method", "route"),
+        registry=registry,
+    )
+    responses_5xx = Counter(
+        "monitor_http_responses_5xx",
+        "HTTP responses with status 500 or higher.",
+        ("method", "route"),
+        registry=registry,
+    )
+    return HttpMetrics(
+        registry=registry,
+        requests=requests,
+        duration=duration,
+        responses_5xx=responses_5xx,
+    )
+
+
+def _status_class_label(status_code: int) -> str:
+    hundred = status_code // 100
+    if 1 <= hundred <= 5:
+        return f"{hundred}xx"
+    return "other"
+
+
+def _method_label(method: object) -> str:
+    if isinstance(method, str) and method in _HTTP_METHODS:
+        return method
+    return "OTHER"
+
+
+def _bounded_route_template(path: object) -> str | None:
+    if not isinstance(path, str) or not path.startswith("/") or len(path) > _ROUTE_LABEL_MAX_LENGTH:
+        return None
+    if any(char in path for char in "?#\\") or any(char.isspace() for char in path):
+        return None
+    return path
+
+
+def http_metrics_route_label(request: Request) -> str:
+    """Return the matched route template, or one bounded label when nothing matched.
+
+    Only the template is copied. The raw path, query string, and request content
+    never become label values.
+    """
+    route = request.scope.get("route")
+    template = _bounded_route_template(getattr(route, "path", None))
+    if template is None:
+        return _UNMATCHED_ROUTE
+    return template
+
+
+def _record_http_metrics(
+    metrics: HttpMetrics,
+    *,
+    method: object,
+    route: str,
+    status_code: int,
+    elapsed_seconds: float,
+) -> None:
+    method_label = _method_label(method)
+    metrics.duration.labels(method=method_label, route=route).observe(elapsed_seconds)
+    metrics.requests.labels(
+        method=method_label,
+        route=route,
+        status_class=_status_class_label(status_code),
+    ).inc()
+    if status_code >= 500:
+        metrics.responses_5xx.labels(method=method_label, route=route).inc()
+
+
+async def http_metrics_middleware(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
+    """Record every finished HTTP outcome and serve GET/HEAD /metrics.
+
+    This is the outermost user middleware, so it sees the status that
+    ExceptionMiddleware and the resilience limiter return, and a scrape still
+    succeeds when that limiter is saturated. /metrics is not a registered
+    route: the response stays on the existing listener and the route
+    denominator is unchanged. The body is rendered before the scrape itself
+    is recorded. Each app owns a separate registry.
+    """
+    metrics: HttpMetrics = request.app.state.http_metrics
+    method = request.scope.get("method")
+    started = time.perf_counter()
+    if method in _METRICS_METHODS and request.scope.get("path") == _METRICS_PATH:
+        payload = generate_latest(metrics.registry)
+        response = Response(content=payload, media_type=CONTENT_TYPE_PLAIN_0_0_4)
+        _record_http_metrics(
+            metrics,
+            method=method,
+            route=_METRICS_PATH,
+            status_code=response.status_code,
+            elapsed_seconds=time.perf_counter() - started,
+        )
+        return response
+
+    try:
+        response = await call_next(request)
+    except ClientDisconnect:
+        raise
+    except Exception:
+        _record_http_metrics(
+            metrics,
+            method=method,
+            route=http_metrics_route_label(request),
+            status_code=500,
+            elapsed_seconds=time.perf_counter() - started,
+        )
+        raise
+    _record_http_metrics(
+        metrics,
+        method=method,
+        route=http_metrics_route_label(request),
+        status_code=response.status_code,
+        elapsed_seconds=time.perf_counter() - started,
+    )
+    return response
+
+
 def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     """Build a fresh Ops API app bound to one context."""
     factory_lifespan = _lifespan if lifespan is None else lifespan
@@ -1960,6 +2115,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
         lifespan=factory_lifespan,
     )
     factory_app.state.ctx = context
+    factory_app.state.http_metrics = new_http_metrics()
     factory_app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -1969,6 +2125,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     )
     factory_app.middleware("http")(resilience_middleware)
     factory_app.middleware("http")(opsec_path_sanitizer_middleware)
+    factory_app.middleware("http")(http_metrics_middleware)
     factory_app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     factory_app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
     factory_app.add_exception_handler(Exception, global_exception_handler)
