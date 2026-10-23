@@ -24,10 +24,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ai_agent_bridge._db import get_db
 from scripts.audit.checks.russicism_detection import check_russicisms
+from scripts.common.repo_root import project_interpreter
 
-PYTHON, BRIDGE = Path(".venv/bin/python"), Path("scripts/ai_agent_bridge/__main__.py")
+PYTHON, BRIDGE = project_interpreter(), Path("scripts/ai_agent_bridge/__main__.py")
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
 DEFAULT_MODELS = (
     "claude-opus-5-5,claude-sonnet-5-5,"
@@ -147,13 +147,8 @@ class BridgeCaller:
         family = _family_for_model(model)
         task_id = f"{self.run_id}-{_slug(prompt.id)}-{_slug(model)}"
         base = [str(PYTHON), str(BRIDGE)]
-        if family == "claude":
-            argv = [*base, "ask-claude", prompt.prompt_text, "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--new-session"]
-            return BridgeCall(prompt.id, model, family, task_id, argv, None)
-        if family == "codex":
-            argv = [*base, "ask-codex", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--new-session"]
-            return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
-        argv = [*base, "ask-agy", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--stdout-only"]
+        target = "agy" if family == "gemini" else family
+        argv = [*base, f"ask-{target}", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--stdout-only"]
         return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
 
     def __call__(self, prompt: PromptCase, model: str) -> tuple[BridgeCall, str]:
@@ -174,29 +169,9 @@ class BridgeCaller:
             ) from exc
         if result.returncode != 0:
             raise RuntimeError((result.stderr or result.stdout or f"exit {result.returncode}").strip())
-        if call.family == "gemini" and result.stdout.strip():
+        if result.stdout.strip():
             return call, result.stdout.strip()
-        response = _latest_bridge_response(call.task_id, call.family)
-        if response:
-            return call, response
-        raise RuntimeError(f"bridge completed but no response row found for task_id={call.task_id}")
-
-
-def _latest_bridge_response(task_id: str, family: str) -> str | None:
-    conn = get_db()
-    try:
-        row = conn.execute(
-            """
-            SELECT content FROM messages
-            WHERE task_id = ? AND from_llm = ? AND to_llm = ?
-              AND message_type IN ('response', 'error')
-            ORDER BY id DESC LIMIT 1
-            """,
-            (task_id, family, FROM_AGENT),
-        ).fetchone()
-    finally:
-        conn.close()
-    return str(row["content"]) if row else None
+        raise RuntimeError(f"ACP ask completed without response stdout for task_id={call.task_id}")
 
 def _issue_count(violation: dict[str, Any]) -> int:
     match = _FOUND_COUNT_RE.search(str(violation.get("issue") or ""))
