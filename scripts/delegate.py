@@ -13427,6 +13427,7 @@ def _record_worktree_prep_failure(
     lifecycle_carrier: Any = None,
     worktree_path: str | Path | None = None,
     worktree_reused: bool | None = None,
+    worktree_rebased: bool = False,
     worktree_branch: str | None = None,
     worktree_base_sha: str | None = None,
     worktree_base: str | None = None,
@@ -13489,7 +13490,7 @@ def _record_worktree_prep_failure(
         "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
         "worktree_base_sha": worktree_base_sha,
         "worktree_base": worktree_base,
-        "worktree_rebased": False,
+        "worktree_rebased": worktree_rebased,
         "worktree_reused": worktree_reused,
         "worktree_layout": wt_layout,
         "worktree_sparse": None,
@@ -15855,6 +15856,7 @@ def _dispatch(
                 lifecycle_carrier=lifecycle_carrier,
                 worktree_path=failed_worktree_path,
                 worktree_reused=worktree_telemetry.get("reused"),
+                worktree_rebased=bool(worktree_base_telemetry.get("rebased") or worktree_telemetry.get("rebased")),
                 worktree_branch=(
                     None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
                 ),
@@ -16049,6 +16051,7 @@ def _dispatch(
             worktree_branch=worktree_branch,
             worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
             worktree_reused=worktree_telemetry.get("reused"),
+            worktree_rebased=bool(worktree_telemetry.get("rebased")),
             worktree_base=worktree_base,
             agent_alias_note=agent_alias_note,
             output_schema_path=output_schema_path,
