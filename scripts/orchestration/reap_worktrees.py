@@ -28,6 +28,7 @@ import contextvars
 import fcntl
 import hashlib
 import json
+import logging
 import math
 import os
 import re
@@ -61,6 +62,7 @@ from scripts.common.acp_runtime_lock import (
     parse_lock_owner as parse_acp_lock_owner,
 )
 from scripts.common.safe_open import safe_open_below
+from scripts.common.session_daemons import allowed_session_daemon
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet.regenerable_output import _COPY_PROOF_RUN, copy_proof_run
@@ -6540,29 +6542,6 @@ def _proc_status(base: Path) -> dict[str, str] | None:
     return {key: value.strip() for key, _, value in (line.partition(":") for line in text.splitlines()) if value}
 
 
-def _session_infrastructure(base: Path, status: dict[str, str], uid: int, proc_root: Path) -> bool:
-    """A non-dumpable process of this user that never works inside a checkout.
-
-    Only two kinds, both identified by kernel facts rather than by what the
-    process reports about itself: the user's systemd manager and its
-    ``(sd-pam)`` helper, the only members of the manager's ``init.scope``
-    cgroup (systemd starts every unit, including dispatch workers, in a
-    cgroup of its own); and OpenSSH's per-connection ``sshd-session`` whose
-    parent is the root-owned privileged ``sshd-session``/``sshd``.
-    """
-    try:
-        cgroup = (base / "cgroup").read_text(encoding="utf-8", errors="replace").splitlines()
-    except OSError:
-        return False
-    if cgroup == [f"0::/user.slice/user-{uid}.slice/user@{uid}.service/init.scope"]:
-        return True
-    sshd = {"sshd-session", "sshd"}
-    if status.get("Name") not in sshd:
-        return False
-    parent = _proc_status(proc_root / status.get("PPid", ""))
-    return parent is not None and parent.get("Name") in sshd and parent.get("Uid", "").split()[:1] == ["0"]
-
-
 # ``PF_KTHREAD`` in the ``flags`` field (field 9) of ``/proc/<pid>/stat``.
 _PF_KTHREAD = 0x00200000
 _STAT_HEAD = re.compile(r"\d+ \(")
@@ -6619,7 +6598,11 @@ def _uninspectable_same_user(base: Path, proc_root: Path) -> bool:
     kind = _stat_kind(base)
     if kind in {"gone", "zombie", "kernel"}:
         return False
-    return kind == "unknown" or not _session_infrastructure(base, status, uid, proc_root)
+    argv0 = allowed_session_daemon(base)
+    if argv0 is not None:
+        logging.getLogger(__name__).warning("allowed_session_daemon pid=%s argv0=%r", base.name, argv0)
+        return False
+    return True
 
 
 def _proc_users_inside(

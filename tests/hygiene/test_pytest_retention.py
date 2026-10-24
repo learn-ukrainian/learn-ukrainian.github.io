@@ -982,6 +982,15 @@ def test_process_liveness_unknown_preserves_and_finished_processes_hold_nothing(
         assert report["liveness_complete"] is False and report["liveness_unreadable_processes"] == 1
         assert tmp_sweep.sweep(**args, apply=True)["pytest_retention"]["deleted_entries"] == 0
         assert run.is_dir()
+        # The same unreadable process is excused only with a readable same-uid daemon identity.
+        entry = proc / "4242"
+        uid = os.getuid()
+        (entry / "status").write_text(f"Uid:\t{uid}\t{uid}\t{uid}\t{uid}\n")
+        (entry / "cmdline").write_bytes(b"/usr/bin/ssh-agent\0-D\0")
+        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+        assert row_for(report, run)["decision"] == "deleted" and not run.exists()
+        assert report["liveness_complete"] is True and report["liveness_unreadable_processes"] == 0
+        assert report["allowed_session_daemons"] == [{"pid": 4242, "argv0": "/usr/bin/ssh-agent"}]
     else:
         assert row["decision"] == "would_delete" and report["liveness_complete"] is True
 

@@ -557,19 +557,25 @@ third time after the checkout is moved into the quarantine (below):
   process visible in `/proc` has its working directory (by path or by the
   tree's inode), root, executable, an open file or a mapped file inside it. A
   missing, failing or timed-out `fuser`, or an unlistable process table,
-  counts as in use. A live process of this user that denies inspection (it
-  made itself non-dumpable) might be using any tree, so every tree
-  is kept for the rest of the run and the pid is reported as
-  `uninspectable_process`. Zombies (state `Z` in `/proc/<pid>/stat`) and
-  kernel threads (the `PF_KTHREAD` bit in that file's `flags` field) are
+  counts as in use. A live process of this user that denies inspection might
+  be using any tree, so a currently denied, non-allowlisted process keeps
+  the candidate and its pid is reported as `uninspectable_process`. Each
+  candidate gets a fresh bounded scan. Zombies (state `Z` in
+  `/proc/<pid>/stat`) and kernel threads (the `PF_KTHREAD` bit in that file's `flags` field) are
   ignored; a pid number proves nothing, because in a PID namespace pid 2 and
   its children are ordinary processes. A process of this user whose `stat`
-  cannot be read or parsed counts as uninspectable. Also ignored is
-  the session infrastructure that is always non-dumpable, identified by kernel
-  facts: the user's systemd manager and `(sd-pam)` (the only members of
-  `user@<uid>.service/init.scope`) and OpenSSH's `sshd-session` whose parent is
-  the root-owned privileged `sshd-session` or `sshd`. Other users' processes
-  are invisible, as they are to `fuser`;
+  cannot be read or parsed counts as uninspectable. An unreadable same-uid
+  process is excused only when readable `/proc/<pid>/cmdline` has an exact
+  `argv[0]` of `/usr/bin/ssh-agent`, `/usr/bin/gpg-agent`,
+  `/usr/lib/systemd/systemd` with a separate `--user` argument, or `(sd-pam)`,
+  or an `argv[0]` beginning with `sshd-session:`. Empty or unreadable command
+  lines never qualify. The shared `scripts/common/session_daemons.py` helper
+  also serves pytest retention. The reaper journals each excused pid and
+  `argv[0]`; pytest retention records them in `allowed_session_daemons` in
+  its receipt. Readable holder evidence still preserves a candidate.
+  The command line can be spoofed by a process of the same uid, which already
+  owns the worktrees; this exception does not establish executable identity.
+  Other users' processes are invisible, as they are to `fuser`;
 - no task record in `batch_state/tasks/` whose `worktree_path` or `cwd` names
   it is `spawning` or `running`, has any other unsettled status, or has a
   worker that is live or unknown. `needs_finalize` and finished records pass
