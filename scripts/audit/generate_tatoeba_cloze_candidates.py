@@ -18,32 +18,35 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 AUDIT_DIR = PROJECT_ROOT / "scripts" / "audit"
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-if str(AUDIT_DIR) not in sys.path:
-    sys.path.insert(0, str(AUDIT_DIR))
-
-from generate_practice_deck import (
-    CASE_RULES,
-    CEFR_ORDER,
-    CEFR_RANK,
-    NUMBER_KEYS,
-    JsonVesumVerifier,
-    RealVesumVerifier,
-    VesumVerifier,
-    _case_form,
-    _cefr_level,
-    _clean_text,
-    _cloze_candidate_ok_for_level,
-    _match_cases,
-    _paradigm,
-    _plain,
-    _verify_discriminative_form,
-    _vesum_pos,
-    read_manifest,
-)
-
-from scripts.lexicon.heritage_classifier import _check_russian_shadow
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
+try:
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.audit.generate_practice_deck import (
+        CASE_RULES,
+        CEFR_ORDER,
+        CEFR_RANK,
+        NUMBER_KEYS,
+        JsonVesumVerifier,
+        RealVesumVerifier,
+        VesumVerifier,
+        _case_form,
+        _cefr_level,
+        _clean_text,
+        _cloze_candidate_ok_for_level,
+        _match_cases,
+        _paradigm,
+        _plain,
+        _verify_discriminative_form,
+        _vesum_pos,
+        read_manifest,
+    )
+    from scripts.lexicon.heritage_classifier import _check_russian_shadow
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 DEFAULT_OUT = Path("site/src/data/lexicon-practice-cloze-tatoeba-review-candidates.json")
 DEFAULT_LICENSE = "CC-BY 2.0 FR"

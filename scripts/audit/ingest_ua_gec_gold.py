@@ -33,31 +33,21 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-try:
-    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
-except ModuleNotFoundError as exc:
-    # Script execution puts the script directory on sys.path, so the
-    # top-level package is absent (exc.name == "scripts"). Any other
-    # import failure must propagate.
-    if exc.name != "scripts":
-        raise
-    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
-    if str(_scripts_dir) not in sys.path:
-        sys.path.insert(0, str(_scripts_dir))
-    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 AUDIT_DIR = Path(__file__).resolve().parent
-if str(AUDIT_DIR) not in sys.path:
-    sys.path.insert(0, str(AUDIT_DIR))
 
-import qg_schema
-from _judge_eval_lib import CYRILLIC_TOKEN_RE, UA_GEC_ANN_RE
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
+try:
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.audit import qg_schema
+    from scripts.audit._judge_eval_lib import CYRILLIC_TOKEN_RE, UA_GEC_ANN_RE
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"

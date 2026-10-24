@@ -27,73 +27,56 @@ from typing import Any, Protocol
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 AUDIT_DIR = PROJECT_ROOT / "scripts" / "audit"
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-if str(AUDIT_DIR) not in sys.path:
-    sys.path.insert(0, str(AUDIT_DIR))
-
-from lexeme_filter import (
-    SOURCE_INVENTORY_SOURCE,
-    SURFACE_CLOZE,
-    SURFACE_PRACTICE,
-    is_practice_eligible,
-    is_surface_admitted,
-    practice_ineligibility_reason,
-)
-from practice_linguistic import (
-    IDENTITY_RULE_IDS,
-    LEXICAL_INSERTION_RULE_ID,
-    check_cloze_item,
-    check_inventory_prompt_level,
-    check_stress_item,
-    check_unique_answer_evidence,
-    identity_blank_case,
-    index_from_generator_candidates,
-)
-from practice_linguistic import plain as linguistic_plain
-
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
 try:
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.audit.lexeme_filter import (
+        SOURCE_INVENTORY_SOURCE,
+        SURFACE_CLOZE,
+        SURFACE_PRACTICE,
+        is_practice_eligible,
+        is_surface_admitted,
+        practice_ineligibility_reason,
+    )
+    from scripts.audit.practice_linguistic import (
+        IDENTITY_RULE_IDS,
+        LEXICAL_INSERTION_RULE_ID,
+        check_cloze_item,
+        check_inventory_prompt_level,
+        check_stress_item,
+        check_unique_answer_evidence,
+        identity_blank_case,
+        index_from_generator_candidates,
+    )
+    from scripts.audit.practice_linguistic import plain as linguistic_plain
+    from scripts.lexicon.curated_membership import (
+        apply_membership,
+        read_membership,
+    )
     from scripts.lib.readonly_sqlite import open_readonly
-except ModuleNotFoundError as exc:
-    if exc.name != "scripts":
-        raise
-    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
-
-from scripts.lexicon.curated_membership import (
-    apply_membership,
-    read_membership,
-)
-from scripts.practice.creation_review import CreationReview, heritage_source
-from scripts.practice.ulif_synonym_groups import (
-    ULIF_SYNONYMS_SOURCE,
-    UlifSynonymDataUnavailable,
-    UlifSynonymGroups,
-)
-from scripts.practice_deck.end_dictionaries import (
-    coverage_intersection_report,
-    load_inventory,
-    read_end_dictionary_stress_overlay,
-)
-from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
-from scripts.storage.paths import REGISTRY_ROOT, artifact_path
+    from scripts.practice.creation_review import CreationReview, heritage_source
+    from scripts.practice.ulif_synonym_groups import (
+        ULIF_SYNONYMS_SOURCE,
+        UlifSynonymDataUnavailable,
+        UlifSynonymGroups,
+    )
+    from scripts.practice_deck.end_dictionaries import (
+        coverage_intersection_report,
+        load_inventory,
+        read_end_dictionary_stress_overlay,
+    )
+    from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
+    from scripts.storage.paths import REGISTRY_ROOT, artifact_path
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 
 def _load_morphological_validator() -> Any:
-    """Load ``checks/morphological_validator.py`` by FILE PATH, bypassing the
-    ``scripts.audit`` package ``__init__.py``.
-
-    Importing via the package path (``from scripts.audit.checks...``) forces
-    Python to initialize the ``scripts.audit`` package first — a large,
-    unrelated curriculum-audit import chain whose ``scripts/audit/config.py``
-    does a bare ``from config import ...`` resolved against ``sys.path[0]``.
-    When this file is imported as a top-level module by a sibling audit CLI
-    (``python scripts/audit/check_static_practice_assets.py`` puts
-    ``scripts/audit`` on ``sys.path``), that bare import self-shadows against
-    ``scripts/audit/config.py`` and crashes on a circular partial import.
-    Loading the sibling by path sidesteps the package ``__init__`` and is
-    safe under both bare-script and package import, matching the pattern in
-    ``check_node_modules_integrity._load_sibling``.
-    """
+    """Load the morphological validator without importing curriculum checks."""
     import importlib.util
 
     name = "generate_practice_deck._morphological_validator"
