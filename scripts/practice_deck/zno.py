@@ -358,7 +358,19 @@ def build_zno_shards(
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any], dict[str, Any]]:
     """Build deterministic deck payloads, summary receipt, and per-task fill residual."""
     overlay_by_id = load_markup_overlay(markup_overlay_path)
-    explanations_by_id = json.loads(explanations_path.read_text(encoding="utf-8"))["items"]
+    explanations = json.loads(explanations_path.read_text(encoding="utf-8"))
+    explanations_by_id = explanations["items"]
+    excluded_by_id: dict[str, str] = {}
+    for task_id, entry in explanations.get("withheld", {}).items():
+        if "serving" not in entry:
+            continue
+        serving = entry["serving"]
+        if serving != "excluded":
+            raise ValueError(f"{task_id}: invalid serving value {serving!r}; expected 'excluded' or absent")
+        reason = entry.get("reasonCategory")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError(f"{task_id}: invalid reasonCategory value {reason!r}; expected a non-empty string")
+        excluded_by_id[task_id] = reason
     conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:
@@ -374,6 +386,12 @@ def build_zno_shards(
             dropped_tasks: list[dict[str, str]] = []
             items: list[dict[str, Any]] = []
             for row in rows:
+                task_id = _task_id(int(row["id"]))
+                if task_id in excluded_by_id:
+                    drop_reason = excluded_by_id[task_id]
+                    dropped[drop_reason] += 1
+                    dropped_tasks.append({"znoTaskId": task_id, "reason": drop_reason})
+                    continue
                 item, reason = _item_from_row(row)
                 if item is None:
                     drop_reason = reason or "invalid_item"
@@ -430,6 +448,10 @@ def build_zno_shards(
             "schemaVersion": 1,
             "decks": deck_receipts,
             "namedResidual": _residual_counts(conn, emitted_total),
+            "servingExcluded": [
+                {"znoTaskId": task_id, "reason": reason}
+                for task_id, reason in sorted(excluded_by_id.items())
+            ],
             "topicNormUnmappedTags": _topic_norm_unmapped_tags(conn),
             "markupIntegrity": {
                 "quarantinedMissingMarkup": quarantined_markup,

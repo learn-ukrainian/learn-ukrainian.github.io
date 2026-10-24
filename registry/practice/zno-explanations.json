@@ -7578,7 +7578,9 @@
           "locator": "Орфографічний словник, стаття «ко́ри́сний», два варіанти наголосу.",
           "url": "https://slovnyk.me/dict/orthography/корисний"
         }
-      ]
+      ],
+      "serving": "excluded",
+      "reasonCategory": "key-not-unique-under-current-norms"
     }
   }
 }
