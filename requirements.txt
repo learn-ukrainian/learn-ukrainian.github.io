@@ -48,7 +48,7 @@ psycopg[binary]>=3.3  # control-plane storage seam pg authority (Phase 0b #603)
 # these were installed transitively and worked until a from-scratch venv
 # rebuild had nothing to reinstall them from; declare them directly).
 psutil>=7.2      # scripts/agent_runtime/{livenessprobe,watchdog}.py, agent_monitor_router.py
-filelock>=3.32.2   # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
+filelock>=4.2.1   # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
 rapidfuzz>=3.14.6  # .mcp/servers/sources/server.py (handle_verify_quote), scripts/build/linear_pipeline.py
 
 # Document parsing (#6830 import-scan sweep — same restore-gap class as
@@ -57,7 +57,7 @@ rapidfuzz>=3.14.6  # .mcp/servers/sources/server.py (handle_verify_quote), scrip
 # from-scratch `requirements.txt`-only install: `test_esum_abbyy_parser.py`,
 # `test_plan_latin_fix.py`, and 15 `test_open_model_phase3_*` modules).
 lxml>=6.1         # scripts/ingest/esum_abbyy_parser.py
-pypdf>=6.21.1       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py
+pypdf>=6.21.2       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py
 PyMuPDF>=1.28.2     # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
 ruamel.yaml>=0.19 # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
 
