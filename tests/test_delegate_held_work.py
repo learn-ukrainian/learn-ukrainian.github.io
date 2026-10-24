@@ -375,8 +375,10 @@ def test_worker_preamble_guides_held_work_to_reports(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate, "_resolve_primary_root_for_worktree", lambda _root: tmp_path)
     prompt = delegate._augment_prompt_with_worktree("task", tmp_path, mode="workspace-write")
     assert "[held work]" in prompt
-    assert "`batch_state/reports/`" in prompt
-    assert "cite its absolute file path" in prompt
+    assert "`$LU_TASK_EVIDENCE_DIR`" in prompt
+    assert "`batch_state/reports/`" not in prompt
+    assert "cite each file in your final response" in prompt
+    assert "Task cleanup preserves that directory with a retrieval receipt before removing the runtime lease." in prompt
 
 
 def test_structured_report_and_deliverable_citations(lease, tmp_path):
