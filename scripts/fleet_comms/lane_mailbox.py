@@ -11,6 +11,7 @@ import re
 import shlex
 import sqlite3
 import time
+from collections.abc import Callable
 from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
@@ -139,8 +140,50 @@ def unknown_inbox(recipient: str) -> dict[str, Any]:
     }
 
 
+def _stored_request_protected(conn: Any, job: Any) -> bool:
+    from scripts.fleet_comms.artifacts import ArtifactStore
+
+    database = conn.execute("PRAGMA database_list").fetchone()[2]
+    if not database:
+        raise ValueError("request_payload_unavailable")
+    with closing(ArtifactStore.open_readonly(root=Path(database).parent)) as store:
+        store.connection.execute(f"PRAGMA busy_timeout = {BUSY_TIMEOUT_MS}")
+        payload = json.loads(store.read_bytes(job["payload_artifact_id"]).decode("utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("request_payload_invalid")
+    recipients = [payload.get("recipient"), *(payload.get("participants") or ())]
+    return stored_kimi_request(
+        (name for name in recipients if name), attachments=(payload.get("metadata") or {},)
+    )
+
+
+def stored_delivery_protected(
+    conn: Any, row: Any, *, request_is_protected: Callable[[Any], bool] | None = None
+) -> bool:
+    """Use the claim guard for historical recipients, origins and request models.
+
+    Unreadable payloads raise here. Readers report UNKNOWN; mutation callers
+    keep the row protected through their existing fail-closed handling.
+    """
+    if stored_kimi_row(row["recipient"]):
+        return True
+    moved = conn.execute(
+        "SELECT old_recipient FROM lane_mailbox_moves WHERE delivery_id=?", (row["delivery_id"],)
+    ).fetchone()
+    if moved is not None and stored_kimi_row(moved["old_recipient"]):
+        return True
+    jobs = conn.execute(
+        "SELECT payload_artifact_id FROM authority_jobs WHERE job_kind='request' AND subject_id=?",
+        (str(row["message_id"]),),
+    ).fetchall()
+    return any(
+        request_is_protected(job) if request_is_protected is not None else _stored_request_protected(conn, job)
+        for job in jobs
+    )
+
+
 def read_inbox(path: Path, recipient: str, *, limit: int = 5) -> dict[str, Any]:
-    """One bounded read-only snapshot, including residual alias rows, never bodies.
+    """One bounded read-only snapshot of actionable lane/alias rows, never bodies.
 
     SQLite busy timeout bounds lock waits; the progress handler bounds query
     work. A slow completed query is UNKNOWN too, never a false empty inbox.
@@ -161,10 +204,21 @@ def read_inbox(path: Path, recipient: str, *, limit: int = 5) -> dict[str, Any]:
 
             verify_applied_migrations(conn)
             resolve_lane(conn, recipient)
+            protected: dict[str, bool] = {}
+
+            def is_protected(delivery_id: str, message_id: str, address: str) -> bool:
+                if delivery_id not in protected:
+                    protected[delivery_id] = stored_delivery_protected(
+                        conn, {"delivery_id": delivery_id, "message_id": message_id, "recipient": address}
+                    )
+                return protected[delivery_id]
+
+            conn.create_function("delivery_is_protected", 3, is_protected)
             clause, names = recipient_filter("d.recipient", recipient)
             now = datetime.now(UTC)
             where = f"""{clause} AND d.state IN ('queued', 'running')
                 AND (d.deadline_at IS NULL OR d.deadline_at > ?)
+                AND NOT delivery_is_protected(d.delivery_id, d.message_id, d.recipient)
                 AND (d.state = 'queued' OR NOT EXISTS (SELECT 1 FROM authority_idempotency i
                     WHERE i.namespace = 'supervisory-consumption:' || d.delivery_id
                       AND i.idempotency_key = CAST(d.fence_token AS TEXT)))"""
@@ -217,38 +271,19 @@ def migration_plan(conn: Any) -> tuple[dict[str, Any], list[tuple[Any, str, str 
     rows = conn.execute(
         "SELECT delivery_id, message_id, recipient, state FROM authority_deliveries ORDER BY created_at, delivery_id"
     ).fetchall()
-    # Match generic delivery-write protection, including historical moves and
-    # request-model payloads. Protected rows remain visible in all counts.
+    # Keep protected history in migration reports without selecting it for writes.
     protected_ids = set()
-    origins = dict(conn.execute("SELECT delivery_id, old_recipient FROM lane_mailbox_moves"))
-    for row in rows:
-        did = row["delivery_id"]
-        if stored_kimi_row(row["recipient"]) or (did in origins and stored_kimi_row(origins[did])):
-            protected_ids.add(did)
-            continue
-        jobs = conn.execute(
-            "SELECT payload_artifact_id FROM authority_jobs WHERE job_kind='request' AND subject_id=?",
-            (row["message_id"],),
-        ).fetchall()
-        for job in jobs:
-            try:
-                from scripts.fleet_comms.artifacts import ArtifactStore
 
-                database = conn.execute("PRAGMA database_list").fetchone()[2]
-                if not database:
-                    raise ValueError("request_payload_unavailable")
-                with closing(ArtifactStore.open_readonly(root=Path(database).parent)) as store:
-                    payload = json.loads(store.read_bytes(job["payload_artifact_id"]).decode("utf-8"))
-                if not isinstance(payload, dict):
-                    raise ValueError("request_payload_invalid")
-                recipients = [payload.get("recipient"), *(payload.get("participants") or ())]
-                if stored_kimi_request(
-                    (name for name in recipients if name), attachments=(payload.get("metadata") or {},)
-                ):
-                    protected_ids.add(did)
-            except Exception:
-                # Unreadable payloads cannot prove a row eligible for mutation.
-                protected_ids.add(did)
+    def request_is_protected(job: Any) -> bool:
+        try:
+            return _stored_request_protected(conn, job)
+        except Exception:
+            # Unreadable payloads cannot prove a row eligible for mutation.
+            return True
+
+    for row in rows:
+        if stored_delivery_protected(conn, row, request_is_protected=request_is_protected):
+            protected_ids.add(row["delivery_id"])
     groups: dict[tuple[str, str], list[Any]] = {}
     report = {
         lane: {"queued_before": 0, "planned_moves": 0, "running_held": 0, "dead_lettered_held": 0, "collisions": 0, "protected_queued": 0}
@@ -279,7 +314,7 @@ def migration_plan(conn: Any) -> tuple[dict[str, Any], list[tuple[Any, str, str 
     for (_mid, lane), group in groups.items():
         eligible = [row for row in group if row["delivery_id"] not in protected_ids]
         candidates = [row for row in eligible if row["recipient"] in ALIASES and row["state"] == "queued"]
-        acknowledged = next((row for row in eligible if row["state"] == "acknowledged"), None)
+        acknowledged = next((row for row in group if row["state"] == "acknowledged"), None)
         canonical = next((row for row in eligible if row["recipient"] == lane), None)
         survivor = acknowledged or canonical or (candidates[0] if candidates else None)
         for row in candidates:

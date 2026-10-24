@@ -11,6 +11,7 @@ import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -284,16 +285,77 @@ def test_counts_and_five_full_ids(stores):
 
 
 def test_readonly_hashes_and_no_body_or_artifacts(stores, tmp_path):
+    """Protected history cannot poison actionable counts, ages or correlations."""
     add_legacy(stores[0])
     add_authority(stores[1], state="running")
+    add_authority(
+        stores[1], recipient="kimi-infra", identifier="authority-message_" + "b" * 32,
+        delivery_id="protected-alias",
+    )
+    with AuthorityService(root=tmp_path) as service:
+        model_only = service.publish_message(sender="fixture", body=BODY_MARKER, recipients=("old-seat",))
+        moved = service.publish_message(sender="fixture", body=BODY_MARKER, recipients=("old-seat",))
+        service._conn.execute(
+            "UPDATE authority_deliveries SET recipient='codex-infra' WHERE delivery_id=?", model_only.delivery_ids
+        )
+        service._conn.execute(
+            "UPDATE authority_deliveries SET recipient='lane:infra' WHERE delivery_id=?", moved.delivery_ids
+        )
+        service._conn.execute(
+            "INSERT INTO lane_mailbox_moves VALUES (?,'kimi-infra','lane:infra','moved',NULL,'1900-01-01T00:00:00Z')",
+            moved.delivery_ids,
+        )
+        service._conn.execute(
+            "UPDATE authority_deliveries SET created_at='1900-01-01T00:00:00Z' WHERE state='queued'"
+        )
+        service._conn.commit()
+        with service._write_transaction():
+            service._enqueue_job_tx(
+                job_kind="request", subject_id=model_only.message_id,
+                payload={"recipient": "codex-infra", "metadata": {"requested_model": "kimi-code/k3"}},
+                deadline_at=None, idempotency_key="protected-model",
+            )
+            service._enqueue_job_tx(
+                job_kind="request", subject_id=MESSAGE_ID,
+                payload={"recipient": "gemini-infra"}, deadline_at=None, idempotency_key="ordinary-request",
+            )
+    # Artifact setup uses WAL; restore this fixture's original rollback mode
+    # before the existing byte/side-artifact immutability assertions.
+    with sqlite3.connect(stores[1]) as conn:
+        conn.execute("PRAGMA journal_mode=DELETE")
     before = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores}
     files = set(tmp_path.iterdir())
     for _ in range(2):
         result = checked_probe("gemini-infra")
         assert result["count"] == 2
         assert BODY_MARKER not in json.dumps(result)
+        authority = inbox_pending.probe("gemini-infra")["authority"]
+        assert authority["count"] == 1
+        assert authority["ids"] == [MESSAGE_ID]
+        assert [row["delivery_id"] for row in authority["deliveries"]] == ["delivery-1"]
+        assert authority["by_correlation"] == [{"pr_number": None, "task_id": None, "count": 1}]
+        active_age = (datetime.now(UTC) - datetime(2026, 1, 1, tzinfo=UTC)).total_seconds()
+        assert 0 <= authority["oldest_age_seconds"] <= active_age
+    from scripts.fleet_comms.artifacts import ArtifactStoreError
+
+    with patch("scripts.fleet_comms.artifacts.ArtifactStore.read_bytes", side_effect=ArtifactStoreError("unavailable")):
+        unknown = inbox_pending.probe("gemini-infra")
+        check_metadata(unknown)
+        assert unknown["probe"] == unknown["authority"]["probe"] == "unknown"
+        assert unknown["authority"]["count"] is unknown["authority"]["oldest_age_seconds"] is None
     assert {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores} == before
     assert set(tmp_path.iterdir()) == files
+    with sqlite3.connect(stores[1]) as conn:
+        history = conn.execute("SELECT * FROM authority_deliveries WHERE state='queued' ORDER BY delivery_id").fetchall()
+        conn.execute("UPDATE authority_deliveries SET state='acknowledged' WHERE delivery_id='delivery-1'")
+    drained = inbox_pending.probe("gemini-infra")["authority"]
+    assert drained["probe"] == "ok" and drained["count"] == 0
+    assert drained["oldest_age_seconds"] is None
+    assert drained["ids"] == drained["deliveries"] == drained["by_correlation"] == []
+    with sqlite3.connect(stores[1]) as conn:
+        assert conn.execute(
+            "SELECT * FROM authority_deliveries WHERE state='queued' ORDER BY delivery_id"
+        ).fetchall() == history
 
 
 @pytest.mark.parametrize("store_index", [0, 1])

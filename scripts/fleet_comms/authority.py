@@ -34,7 +34,6 @@ from scripts.agent_runtime.target_admission import (
     require_admitted,
     resolve_and_admit,
     stored_kimi_request,
-    stored_kimi_row,
 )
 from scripts.control_plane.storage import (
     Authority,
@@ -56,6 +55,7 @@ from scripts.fleet_comms.lane_mailbox import (
     lane_address,
     recipient_filter,
     resolve_lane,
+    stored_delivery_protected,
     verify_registry,
 )
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
@@ -2366,19 +2366,7 @@ class AuthorityService:
 
     def _stored_kimi_delivery(self, row: sqlite3.Row) -> bool:
         """True when a stored delivery is to a Kimi seat, or delivers a request job pinned to a Kimi model (legacy)."""
-        if stored_kimi_row(row["recipient"]):
-            return True
-        moved = self._conn.execute(
-            "SELECT old_recipient FROM lane_mailbox_moves WHERE delivery_id=?", (row["delivery_id"],)
-        ).fetchone()
-        if moved is not None and stored_kimi_row(moved["old_recipient"]):
-            return True
-        jobs = self._conn.execute(
-            """SELECT payload_artifact_id FROM authority_jobs
-               WHERE job_kind = 'request' AND subject_id = ?""",
-            (str(row["message_id"]),),
-        ).fetchall()
-        return any(self._stored_kimi_job(job) for job in jobs)
+        return stored_delivery_protected(self._conn, row, request_is_protected=self._stored_kimi_job)
 
     def _record_wake_receipt_tx(
         self,

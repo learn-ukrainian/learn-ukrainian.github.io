@@ -244,7 +244,11 @@ def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: 
         )]
         acknowledged = service.publish_message(sender="fixture", body="acknowledged", recipients=("infra",))
         ack_id = acknowledged.delivery_ids[0]
-        service._conn.execute("UPDATE authority_deliveries SET state='acknowledged' WHERE delivery_id=?", (ack_id,))
+        # A protected acknowledgement still suppresses an ordinary queued
+        # sibling; its historical recipient and all other columns stay intact.
+        service._conn.execute(
+            "UPDATE authority_deliveries SET recipient='kimi-infra',state='acknowledged' WHERE delivery_id=?", (ack_id,)
+        )
         service._conn.execute(
             "INSERT INTO authority_deliveries(delivery_id,message_id,recipient,state,created_at,updated_at) "
             "VALUES ('ack-duplicate',?,'grok-infra','queued','2036-01-01T00:00:00Z','2036-01-01T00:00:00Z')",
