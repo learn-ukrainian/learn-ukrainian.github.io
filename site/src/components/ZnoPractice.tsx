@@ -1,5 +1,5 @@
 import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from 'react';
-import { cardKey, DEFAULT_NEW_PER_SESSION, loadState, rateCard } from '../lib/lexicon/srs';
+import { cardKey, loadState, rateCard, readZnoSessionSnapshot, writeZnoSessionSnapshot, selectZnoSessionTaskIds, type ZnoSessionSnapshot } from '../lib/lexicon/srs';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import { useChromeLocale } from '../lib/i18n/useChromeLocale';
 import znoDeckMeta from '../data/practice-zno-meta.json';
@@ -147,22 +147,15 @@ export function renderMarkedText(text: string, marks: readonly ZnoCharMark[] | u
 function sessionQueue(
   items: readonly ZnoPracticeItem[],
   sessionSeed: string | number,
-  newAllowance = DEFAULT_NEW_PER_SESSION,
+  dueOnly = false,
 ): ZnoPracticeItem[] {
-  const now = Date.now();
-  const cards = loadState().cards;
-  const uniqueItems = [...new Map(items.map((item) => [item.znoTaskId, item])).values()];
-  const due = uniqueItems.filter((item) => {
-    const card = cards.get(cardKey(item.znoTaskId, 'choice'));
-    return card !== undefined && card.due <= now;
+  const byId = new Map(items.map((item) => [item.znoTaskId, item]));
+  const ids = [...byId.keys()].sort((left, right) =>
+    hashSeed(`${sessionSeed}:${left}`) - hashSeed(`${sessionSeed}:${right}`));
+  return selectZnoSessionTaskIds(ids, dueOnly).flatMap((id) => {
+    const item = byId.get(id);
+    return item ? [item] : [];
   });
-  const fresh = uniqueItems.filter((item) => !cards.has(cardKey(item.znoTaskId, 'choice')));
-  const seededOrder = (left: ZnoPracticeItem, right: ZnoPracticeItem) =>
-    hashSeed(`${sessionSeed}:${left.znoTaskId}`) - hashSeed(`${sessionSeed}:${right.znoTaskId}`);
-  due.sort((left, right) =>
-    (cards.get(cardKey(left.znoTaskId, 'choice'))?.due ?? 0)
-      - (cards.get(cardKey(right.znoTaskId, 'choice'))?.due ?? 0) || seededOrder(left, right));
-  return [...due, ...fresh.sort(seededOrder).slice(0, newAllowance)];
 }
 
 export function nextDueItem(
@@ -203,26 +196,99 @@ interface ZnoSessionState {
   answers: ReadonlyMap<string, number>;
   retryUsed: boolean;
   phase: SessionPhase;
+  repetitions: ReadonlyMap<string, number>;
 }
 
 function createSession(deck: ZnoPracticeDeck, dueOnly = false): ZnoSessionState {
-  const queue = sessionQueue(deck.items, Math.random(), dueOnly ? 0 : DEFAULT_NEW_PER_SESSION);
+  const queue = sessionQueue(deck.items, Math.random(), dueOnly);
+  const cards = loadState().cards;
   return {
     queue,
     answers: new Map(),
     retryUsed: false,
+    repetitions: new Map(queue.map((item) => [item.znoTaskId, cards.get(cardKey(item.znoTaskId, 'choice'))?.reps ?? 0])),
     phase: queue.length ? { kind: 'first', items: queue, index: 0, selectedIndex: null } : { kind: 'summary' },
   };
 }
 
-function ZnoSession({ deck, onExit, sessionControlsRef }: {
+function contentRevision(deck: ZnoPracticeDeck): string {
+  return JSON.stringify([...new Map(deck.items.map((item) => [item.znoTaskId, item])).values()]
+    .sort((left, right) => left.znoTaskId.localeCompare(right.znoTaskId)));
+}
+
+function sessionSnapshot(deck: ZnoPracticeDeck, session: ZnoSessionState): ZnoSessionSnapshot {
+  return {
+    version: 1,
+    contentRevision: contentRevision(deck),
+    queue: session.queue.map((item) => item.znoTaskId),
+    answers: [...session.answers],
+    repetitions: [...session.repetitions],
+    retryUsed: session.retryUsed,
+    phase: session.phase.kind === 'summary' ? session.phase : {
+      ...session.phase, items: session.phase.items.map((item) => item.znoTaskId),
+    },
+  };
+}
+
+function restoreSession(deck: ZnoPracticeDeck): ZnoSessionState | null {
+  const saved = readZnoSessionSnapshot(deck.deckId);
+  if (saved.kind === 'empty') return createSession(deck);
+  if (saved.kind === 'invalid' || saved.snapshot.contentRevision !== contentRevision(deck)) return null;
+  const snapshot = saved.snapshot;
+  const byId = new Map(deck.items.map((item) => [item.znoTaskId, item]));
+  const queue = snapshot.queue.flatMap((id) => {
+    const item = byId.get(id);
+    return item ? [item] : [];
+  });
+  const queueIds = new Set(snapshot.queue);
+  const answers = new Map(snapshot.answers);
+  const repetitions = new Map(snapshot.repetitions);
+  if (queue.length !== snapshot.queue.length || queueIds.size !== queue.length
+    || answers.size !== snapshot.answers.length || repetitions.size !== queue.length
+    || queue.some((item) => !repetitions.has(item.znoTaskId))
+    || snapshot.answers.some(([id, index]) => !queueIds.has(id) || index >= (byId.get(id)?.options.length ?? 0))) return null;
+  const phase = snapshot.phase;
+  if (phase.kind === 'summary') return { queue, answers, repetitions, retryUsed: snapshot.retryUsed, phase };
+  const items = phase.items.flatMap((id) => {
+    const item = byId.get(id);
+    return item ? [item] : [];
+  });
+  if (items.length !== phase.items.length || phase.index >= items.length
+    || new Set(phase.items).size !== items.length || phase.items.some((id) => !queueIds.has(id))
+    || (phase.selectedIndex !== null && phase.selectedIndex >= items[phase.index].options.length)) return null;
+  return { queue, answers, repetitions, retryUsed: snapshot.retryUsed, phase: { ...phase, items } };
+}
+
+function ZnoSessionRecovery({ deck, onExit, sessionControlsRef }: {
   deck: ZnoPracticeDeck;
+  onExit(): void;
+  sessionControlsRef?: Ref<ZnoSessionControls>;
+}) {
+  const chrome = CHROME_STRINGS[useChromeLocale()];
+  const [restored, setRestored] = useState(() => restoreSession(deck));
+  const controls = useRef<ZnoSessionControls>(null);
+  useImperativeHandle(sessionControlsRef, () => ({ endSession: () => {
+    if (controls.current) controls.current.endSession();
+    else onExit();
+  } }), [onExit]);
+  if (restored) return <ZnoSession deck={deck} initialSession={restored} onExit={onExit} sessionControlsRef={controls} />;
+  return <div>
+    <p role="alert">{chrome['zno.contentChanged']}</p>
+    <button type="button" onClick={() => setRestored(createSession(deck))}>{chrome['zno.startNewSession']}</button>
+    <button type="button" onClick={onExit}>{chrome['zno.exit']}</button>
+  </div>;
+}
+
+function ZnoSession({ deck, initialSession, onExit, sessionControlsRef }: {
+  deck: ZnoPracticeDeck;
+  initialSession: ZnoSessionState;
   onExit(): void;
   sessionControlsRef?: Ref<ZnoSessionControls>;
 }) {
   const chromeLocale = useChromeLocale();
   const chrome = CHROME_STRINGS[chromeLocale];
-  const [session, setSession] = useState(() => createSession(deck));
+  const [session, setSession] = useState(initialSession);
+  const [storageFailed, setStorageFailed] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const { queue, answers, phase } = session;
   useImperativeHandle(sessionControlsRef, () => ({
@@ -237,9 +303,26 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
   const rated = phase.kind === 'review' || selectedIndex !== null;
   const missed = queue.filter((item) => answers.has(item.znoTaskId) && answers.get(item.znoTaskId) !== item.correctIndex);
   const unanswered = queue.filter((item) => !answers.has(item.znoTaskId));
+  const cards = loadState().cards;
+  const unsavedAnswers = unanswered.some((item) =>
+    (cards.get(cardKey(item.znoTaskId, 'choice'))?.reps ?? 0) > (session.repetitions.get(item.znoTaskId) ?? 0));
   const correct = queue.length - missed.length - unanswered.length;
   const topicErrors = new Map<string, number>();
   missed.forEach((item) => topicErrors.set(item.topicTag, (topicErrors.get(item.topicTag) ?? 0) + 1));
+
+  function persist() {
+    setStorageFailed(!writeZnoSessionSnapshot(deck.deckId, sessionSnapshot(deck, session)));
+  }
+
+  useEffect(() => {
+    const saved = writeZnoSessionSnapshot(deck.deckId, sessionSnapshot(deck, session));
+    setStorageFailed(!saved);
+  }, [deck, session]);
+
+  const storageNotice = storageFailed ? <div role="alert">
+    <p>{chrome['zno.storageFailure']}</p>
+    <button type="button" onClick={persist}>{chrome['zno.retrySave']}</button>
+  </div> : unsavedAnswers ? <p role="alert">{chrome['zno.answersRecovered']}</p> : null;
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -248,8 +331,12 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
   function answer(index: number) {
     if (!currentItem || rated || phase.kind === 'summary' || phase.kind === 'review') return;
     const nextAnswers = new Map(answers);
-    if (phase.kind === 'first') {
-      rateCard(currentItem.znoTaskId, 'choice', index === currentItem.correctIndex ? 'good' : 'again');
+    if (phase.kind === 'first' && !answers.has(currentItem.znoTaskId)) {
+      // A previous SRS write can outlive a failed session write or a chunk retry.
+      const reps = loadState().cards.get(cardKey(currentItem.znoTaskId, 'choice'))?.reps ?? 0;
+      if (reps === session.repetitions.get(currentItem.znoTaskId)) {
+        rateCard(currentItem.znoTaskId, 'choice', index === currentItem.correctIndex ? 'good' : 'again');
+      }
       nextAnswers.set(currentItem.znoTaskId, index);
     }
     setSession({ ...session, answers: nextAnswers, phase: { ...phase, selectedIndex: index } });
@@ -263,7 +350,7 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
   }
 
   if (phase.kind === 'summary') {
-    const dueQueue = sessionQueue(deck.items, dayKey(), 0);
+    const dueQueue = sessionQueue(deck.items, dayKey(), true);
     const cards = loadState().cards;
     const futureDue = deck.items.flatMap((item) => {
       const card = cards.get(cardKey(item.znoTaskId, 'choice'));
@@ -272,6 +359,7 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
     const nextDue = futureDue.length ? new Date(Math.min(...futureDue)) : null;
     return (
       <div className="lexicon-session-summary" data-testid="zno-session-summary">
+        {storageNotice}
         <h2 ref={headingRef} tabIndex={-1}>{chrome['practice.sessionComplete']}</h2>
         <p>{deck.title}</p>
         <dl className="lexicon-session-summary-stats">
@@ -292,6 +380,7 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
         ) : null}
         {nextDue ? <p>{chrome['practice.nextDue']}: <time dateTime={nextDue.toISOString()}>{nextDue.toLocaleString(chromeLocale === 'uk' ? 'uk-UA' : 'en-GB')}</time></p> : null}
         <div className="lexicon-session-summary-actions">
+          {unanswered.length > 0 ? <button type="button" className="btn btn-accent" onClick={() => setSession({ ...session, phase: { kind: 'first', items: unanswered, index: 0, selectedIndex: null } })}>{chrome['zno.resumeUnanswered']}</button> : null}
           {missed.length > 0 ? <>
             <button type="button" className="btn" onClick={() => setSession({ ...session, phase: { kind: 'review', items: missed, index: 0, selectedIndex: null } })}>{chrome['zno.reviewErrors']}</button>
             {!session.retryUsed ? <button type="button" className="btn" onClick={() => setSession({ ...session, retryUsed: true, phase: { kind: 'retry', items: missed, index: 0, selectedIndex: null } })}>{chrome['zno.retryMissedOnce']}</button> : null}
@@ -308,6 +397,7 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
   const isCorrectAnswer = rated && selectedIndex === currentItem.correctIndex;
   return (
     <div className="zno-practice-item" data-testid="zno-practice-item">
+      {storageNotice}
       <h3 ref={headingRef} tabIndex={-1} className="zno-practice-title">{deck.title}</h3>
       <p role="status" data-testid="zno-session-progress">
         {phase.kind === 'first' ? chrome['practice.sessionProgress'] : phase.kind === 'retry' ? chrome['zno.retryMissedOnce'] : chrome['zno.reviewErrors']}
@@ -374,7 +464,7 @@ export default function ZnoPractice({
         <p>{chrome['zno.description']}</p>
       </> : null}
       {activeDeck ? (
-        <ZnoSession key={activeDeck.deckId} deck={activeDeck} sessionControlsRef={sessionControlsRef} onExit={() => {
+        <ZnoSessionRecovery key={activeDeck.deckId} deck={activeDeck} sessionControlsRef={sessionControlsRef} onExit={() => {
           if (controlledDeck) onBackToDecks?.();
           else setActiveDeckId(null);
         }} />

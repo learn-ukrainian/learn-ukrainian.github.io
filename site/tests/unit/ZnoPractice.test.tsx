@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { act, render, renderHook, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import ZnoPractice, { nextDueItem, type ZnoPracticeDeck, type ZnoPracticeItem, type ZnoSessionControls } from '@site/src/components/ZnoPractice';
 import { SRS_STORAGE_KEY, cardKey, loadState } from '@site/src/lib/lexicon/srs';
 import * as srs from '@site/src/lib/lexicon/srs';
+import * as zno from '@site/src/components/ZnoPractice';
+import { useZnoPracticeOverlay } from '@site/src/components/useZnoPracticeOverlay';
 
 const decks: ZnoPracticeDeck[] = [{
   deckId: 'zno-paronym', title: 'Пароніми', thinDeck: true,
@@ -20,11 +22,172 @@ describe('ZnoPractice', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     localStorage.clear();
+    srs.clearLoadedSrsState();
     document.documentElement.dataset.chromeLocale = 'en';
   });
 
   afterEach(() => {
     delete document.documentElement.dataset.chromeLocale;
+  });
+
+  test('resume after reload restores answered and unanswered items of a frozen queue', async () => {
+    const user = userEvent.setup();
+    const deck = { ...decks[0], items: Array.from({ length: 3 }, (_, index) => ({
+      ...decks[0].items[0], znoTaskId: `resume:${index}`, stem: `Resume task ${index}`,
+    })) };
+    const rate = vi.spyOn(srs, 'rateCard');
+    let view = render(<ZnoPractice deck={deck} />);
+    const firstStem = screen.getByText(/Resume task/).textContent;
+    await user.click(screen.getByRole('button', { name: 'А перша' }));
+    view.unmount();
+    srs.clearLoadedSrsState();
+    const loader = vi.spyOn(zno, 'loadZnoDeck').mockRejectedValueOnce(new Error('chunk unavailable')).mockResolvedValue(deck);
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const overlay = renderHook(() => useZnoPracticeOverlay());
+    act(() => overlay.result.current.setActiveZnoDeckId(deck.deckId));
+    await waitFor(() => expect(overlay.result.current.activeZnoDeckError).toBe(true));
+    act(() => overlay.result.current.retryActiveZnoDeck());
+    await waitFor(() => expect(overlay.result.current.activeZnoDeck).toEqual(deck));
+    expect(loader).toHaveBeenCalledTimes(2);
+    overlay.unmount();
+    view = render(<ZnoPractice deck={deck} />);
+    expect(screen.getByText(firstStem!)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'А перша' })).toBeDisabled();
+    expect(screen.getByTestId('zno-session-progress')).toHaveTextContent('1/3');
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    const secondStem = screen.getByText(/Resume task/).textContent;
+    expect(secondStem).not.toBe(firstStem);
+    await user.click(screen.getByRole('button', { name: 'End session' }));
+    view.unmount();
+    view = render(<ZnoPractice deck={deck} />);
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/3');
+    await user.click(screen.getByRole('button', { name: 'Resume unanswered items' }));
+    expect(screen.getByText(secondStem!)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    expect(rate).toHaveBeenCalledTimes(2);
+    view.unmount();
+    view = render(<ZnoPractice deck={{ ...deck, items: deck.items.map((item) => ({ ...item, options: ['changed', 'key', 'three'] })) }} />);
+    expect(screen.getByRole('alert')).toHaveTextContent('The task content has changed');
+    expect(screen.queryByTestId('zno-practice-item')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Start a new session' }));
+    expect(screen.getAllByRole('button', { name: /^[АБВ] / })).toHaveLength(3);
+    expect(rate).toHaveBeenCalledTimes(2);
+  });
+
+  test('a task shared by two topics is counted once in the queue and summary', async () => {
+    const user = userEvent.setup();
+    const shared = decks[0].items[0];
+    const topics = [decks[0], { ...decks[0], deckId: 'other-topic', items: [{ ...shared, topicTag: 'Other topic' }] }];
+    const deck = { ...decks[0], items: topics.flatMap((topic) => topic.items) };
+    let view = render(<ZnoPractice deck={deck} />);
+    expect(screen.getByTestId('zno-session-progress')).toHaveTextContent('0/1');
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    view.unmount();
+    srs.clearLoadedSrsState();
+    view = render(<ZnoPractice deck={deck} />);
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('1/1');
+    expect(loadState().reviews.filter((review) => review.lemmaId === shared.znoTaskId)).toHaveLength(1);
+    view.unmount();
+  });
+
+  test('due-only continuation serves no future card and stops at its fixed budget', async () => {
+    const user = userEvent.setup();
+    const items = Array.from({ length: 12 }, (_, index) => ({
+      ...decks[0].items[0], znoTaskId: `bounded-due:${index}`, stem: `Due task ${index}`,
+    }));
+    for (const item of items) srs.rateCard(item.znoTaskId, 'choice', 'good', Date.now() - 30 * 86_400_000);
+    srs.rateCard('bounded-future', 'choice', 'good');
+    const deck = { ...decks[0], items: [...items, items[0],
+      { ...items[0], znoTaskId: 'bounded-future', stem: 'Future task' },
+      { ...items[0], znoTaskId: 'bounded-new', stem: 'New task' },
+    ] };
+    render(<ZnoPractice deck={deck} />);
+    await user.click(screen.getByRole('button', { name: 'End session' }));
+    await user.click(screen.getByRole('button', { name: 'Continue with due items' }));
+    expect(screen.getByTestId('zno-session-progress')).toHaveTextContent('0/8');
+    for (let index = 0; index < 8; index += 1) {
+      expect(screen.queryByText('Future task')).not.toBeInTheDocument();
+      expect(screen.queryByText('New task')).not.toBeInTheDocument();
+      await user.click(screen.getByRole('button', { name: 'Б друга' }));
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+    }
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('8/8');
+    expect(screen.queryByTestId('zno-practice-item')).not.toBeInTheDocument();
+    expect(loadState().cards.get(cardKey('bounded-future', 'choice'))?.reps).toBe(1);
+    expect(loadState().cards.has(cardKey('bounded-new', 'choice'))).toBe(false);
+  });
+
+  test('storage write failure keeps the in-memory session and shows recovery without duplicate ratings', async () => {
+    const user = userEvent.setup();
+    const rate = vi.spyOn(srs, 'rateCard');
+    let view = render(<ZnoPractice deck={decks[0]} />);
+    const write = vi.spyOn(localStorage, 'setItem').mockImplementation(() => { throw new Error('QuotaExceededError'); });
+    await user.click(screen.getByRole('button', { name: 'А перша' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Keep this page open');
+    view.unmount();
+    view = render(<ZnoPractice deck={decks[0]} />);
+    expect(screen.getByRole('button', { name: 'А перша' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    await user.click(screen.getByRole('button', { name: 'Retry missed items once' }));
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    view.unmount();
+    view = render(<ZnoPractice deck={decks[0]} />);
+    expect(screen.getByRole('button', { name: 'Б друга' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/1');
+    write.mockRestore();
+    await user.click(screen.getByRole('button', { name: 'Try saving again' }));
+    view.unmount();
+    srs.clearLoadedSrsState();
+    view = render(<ZnoPractice deck={decks[0]} />);
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/1');
+    expect(rate).toHaveBeenCalledTimes(1);
+    expect(loadState().reviews.filter((review) => review.lemmaId === 'zno:7')).toHaveLength(1);
+    view.unmount();
+
+    // SRS may save while the session write fails. A true reload must not rerate.
+    localStorage.clear();
+    srs.clearLoadedSrsState();
+    rate.mockClear();
+    view = render(<ZnoPractice deck={decks[0]} />);
+    const setItem = localStorage.setItem.bind(localStorage);
+    const sessionWrite = vi.spyOn(localStorage, 'setItem').mockImplementation((key, value) => {
+      if (key.startsWith(srs.ZNO_SESSION_STORAGE_KEY)) throw new Error('QuotaExceededError');
+      setItem(key, value);
+    });
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Keep this page open');
+    view.unmount();
+    sessionWrite.mockRestore();
+    srs.clearLoadedSrsState();
+    view = render(<ZnoPractice deck={decks[0]} />);
+    expect(screen.getByRole('alert')).toHaveTextContent('Some answers could not be saved');
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('1/1');
+    expect(rate).toHaveBeenCalledTimes(1);
+    expect(loadState().reviews.filter((review) => review.lemmaId === 'zno:7')).toHaveLength(1);
+    view.unmount();
+
+    // Blocked reads use SRS's memory store and must flush ratings on recovery.
+    localStorage.clear();
+    srs.clearLoadedSrsState();
+    rate.mockClear();
+    const read = vi.spyOn(localStorage, 'getItem').mockImplementation(() => { throw new Error('SecurityError'); });
+    view = render(<ZnoPractice deck={decks[0]} />);
+    expect(screen.getByRole('alert')).toHaveTextContent('Keep this page open');
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    read.mockRestore();
+    await user.click(screen.getByRole('button', { name: 'Try saving again' }));
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    view.unmount();
+    srs.clearLoadedSrsState();
+    render(<ZnoPractice deck={decks[0]} />);
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('1/1');
+    expect(rate).toHaveBeenCalledTimes(1);
+    expect(loadState().reviews.filter((review) => review.lemmaId === 'zno:7')).toHaveLength(1);
   });
 
   test('uses Ukrainian chrome for the picker and summary labels', async () => {
