@@ -157,9 +157,9 @@ semantics and does not enforce a queued-only eligibility policy. Cancellation
 can interrupt work; cancelling a merge-group run can eject it from the queue.
 
 Exit 0 means GitHub accepted the request, not that the run reached terminal
-cancellation. Read back its actual state. Exit 1 reports a `gh` failure;
+cancellation. Read back its actual state. Exit 1 reports a GitHub API failure;
 exit 2 reports invalid input, publishing refusal or a transport error;
-exit 75 reports a rate-limit refusal. Other `gh` exit codes propagate.
+exit 75 reports a rate-limit refusal.
 Cancellation does not satisfy CI or merge gates. It neither consumes nor
 resets the one-shot allowance shared by rerun and re-enqueue recovery.
 See [GitHub's cancellation endpoint](https://docs.github.com/en/rest/actions/workflow-runs#cancel-a-workflow-run).

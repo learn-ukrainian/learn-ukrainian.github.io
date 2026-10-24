@@ -799,9 +799,8 @@ def main(argv=None, *, runner=None):
                 "  Request acceptance does not prove terminal cancellation; read back the run state.\n"
                 "  Cancellation does not satisfy CI or merge gates and does not consume or reset recovery allowances.\n"
                 "  Force cancellation is unavailable.\n"
-                "Exit codes: 0 request accepted, terminal state unverified; 1 gh failure;\n"
+                "Exit codes: 0 request accepted, terminal state unverified; 1 GitHub API failure;\n"
                 "  2 invalid input, publishing refusal or transport error; 75 rate-limit refusal.\n"
-                "  Other gh exit codes propagate.\n"
                 "Related: docs/dev/agent-public-text.md; read run; run-rerun."
             )
         if verb == "run-rerun":
