@@ -4906,6 +4906,7 @@ def _reap_qualified_worktree(
         )
 
     pending_marked = False
+    removal_started = False
     recovery_ref: str | None = None
     preservation: dict[str, Any] | None = None
     dispatch_guard = contextlib.ExitStack()
@@ -5434,6 +5435,17 @@ def _reap_qualified_worktree(
                     ) from exc
             yield target
 
+        @contextlib.contextmanager
+        def stage_removal(target: Path) -> Iterator[Path]:
+            nonlocal removal_started
+            with _measured_removal(measurement, recheck_preservation)(target) as staged:
+                try:
+                    yield staged
+                finally:
+                    # Entry can fail before destructive Git. Once its body
+                    # runs, even a stager finalizer failure follows our attempt.
+                    removal_started = True
+
         with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
             remove_error = worktree_claims.git_worktree_remove(
                 repo_root,
@@ -5443,7 +5455,7 @@ def _reap_qualified_worktree(
                 task_id=_dispatch_task_id(repo_root, info),
                 tasks_dir=task_store_paths.tasks_dir(),
                 preservation_receipt=preservation_receipt,
-                stage_removal=_measured_removal(measurement, recheck_preservation),
+                stage_removal=stage_removal,
                 **approval,
             )
         preserved_artifacts = preservation_receipt or None
@@ -5510,6 +5522,24 @@ def _reap_qualified_worktree(
             preserved_artifacts=preserved_artifacts,
             freed_bytes=freed_bytes,
         )
+    except (FileNotFoundError, NotADirectoryError):
+        if removal_started:
+            raise
+        # A competing cleanup can remove the cwd after census. A missing
+        # executable or metadata file does not prove that the target vanished.
+        try:
+            info.path.lstat()
+        except (FileNotFoundError, NotADirectoryError):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="registered worktree path is missing; run git worktree prune",
+                dirty=None,
+                pr=_pr_dict(pr_state),
+                recovery_ref=recovery_ref,
+            )
+        raise
     except subprocess.TimeoutExpired as exc:
         # A git call outlived its locked-region bound (#8748): skip, never
         # delete — the killed git leaves the tree's state unproven.
