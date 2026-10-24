@@ -2340,7 +2340,9 @@ def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, wh
             {"number": 1, "state": "closed", "title": node},
             {"number": 2, "pull_request": {}, "title": node},
             {"number": 77, "state": "open", "title": "Repair the test", "body": "",
-             where: f"Merge queue flaky test: {rendered}" if where == "title" else f"`{rendered}`".replace("_", r"\_")},
+             where: f"Merge queue flaky test: {rendered}" if where == "title" else (
+                 f"`{rendered}`".replace("_", r"\_") if rendered != node else f"Quarantine ({node})."
+             )},
         ]
         lines, failed = run(fake, path, monkeypatch)
         updates = [value for kind, value in fake.actions if kind == "issue-comment"]
@@ -2368,7 +2370,7 @@ def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, wh
 
 
 def test_flake_comment_cap_survives_lost_local_state(tmp_path, monkeypatch):
-    node = "tests/test_unit.py::test_one"
+    node = r"tests/test_unit.py::test_one\_two"
     timestamp = keeper.datetime.now(keeper.UTC).isoformat()
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {}, "failures": [
@@ -2413,7 +2415,7 @@ def test_report_shows_node_records_without_writes(tmp_path, monkeypatch):
     path.write_text(json.dumps({"queued": {}, "drops": {}, "failures": failures}))
     before = path.read_bytes()
     fake = FakeGitHub()
-    fake.issue_rows = [{"number": 77, "body": "tests/a.py::test_one"}]
+    fake.issue_rows = [{"number": 77, "body": "Quarantine tests/a.py::test_one."}]
     lines, failed = run(fake, path, monkeypatch, apply=False)
     assert not failed
     assert "flaky record: tests/a.py::test_one; PRs=41,42; runs=101,102; issue=77" in lines
@@ -2453,7 +2455,7 @@ def test_node_id_match_rejects_prefix_collision(tmp_path, monkeypatch, suffix):
     path = tmp_path / "state.json"
     fake = FakeGitHub()
     _ejected(fake, path, [], failures=[_recent("pytest", pr) | {"test": node} for pr in (41, 42)])
-    for candidate in (node + suffix, keeper.display_text(node + suffix, keeper.DISPLAY_TEST_LIMIT)):
+    for candidate in (node + suffix, f"({keeper.display_text(node + suffix, keeper.DISPLAY_TEST_LIMIT)})."):
         fake.issue_rows = [{"number": 77, "body": candidate}]
         lines, failed = run(fake, path, monkeypatch)
         assert not failed, lines

@@ -1171,25 +1171,30 @@ def run(
             # Older titles/bodies used the job display limit. Compare both
             # deterministic renderings as well as raw text, never a prefix.
             identities = {key, display_text(key), display_text(key, DISPLAY_TEST_LIMIT)}
+            identity_patterns = [re.escape(value) for value in sorted(identities)]
+            # A changed display value carries the raw-key digest. Only those
+            # values can accept Markdown escapes without conflating raw keys.
+            identity_patterns.extend(
+                "".join((r"\\?" if char in r"\`*_{}[]()#+.!>~-" else "") + re.escape(char) for char in value)
+                for value in sorted(identities - {key})
+            )
+            identity_pattern = "(?:" + "|".join(identity_patterns) + ")"
+            # A period ends a sentence unless it continues an identifier.
+            # Parentheses may wrap the whole identity, not a prefix of it.
             pattern = re.compile(
-                r"(?<![\w/.:\[\]()-])(?:" + "|".join(re.escape(value) for value in sorted(identities))
-                + r")(?![\w/.:\[\]()-])"
+                r"(?<![\w/.:\[\]()\\-])(?:" + identity_pattern + r"|\(" + identity_pattern
+                + r"\))(?![\w/:\[\]()\\-]|\.[\w/.:\[\]()\\-])"
             )
             marker = "<!-- mq-keeper-flake -->"
             matches = []
             for item in issues:
                 if "pull_request" in item or item.get("state", "open") != "open":
                     continue
-                # Markdown escaping is presentation, not part of a node ID.
-                issue_title, issue_body = (
-                    re.sub(r"\\([\\`*_{}\[\]()#+.!>~-])", r"\1", str(item.get(field) or ""))
-                    for field in ("title", "body")
-                )
+                issue_title, issue_body = (str(item.get(field) or "") for field in ("title", "body"))
                 if (
-                    issue_title in {f"Merge queue flaky test: {value}" for value in identities}
-                    or ((bool(tests) or marker in issue_body or any(
-                        issue_body.startswith(f"`{value}` failed merge_group runs on distinct PRs ")
-                        for value in identities
+                    re.fullmatch("Merge queue flaky test: " + identity_pattern, issue_title)
+                    or ((bool(tests) or marker in issue_body or re.match(
+                        "`" + identity_pattern + "` failed merge_group runs on distinct PRs ", issue_body
                     )) and (
                         pattern.search(issue_title) or pattern.search(issue_body)
                     ))
