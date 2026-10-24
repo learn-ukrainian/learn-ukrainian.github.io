@@ -74,7 +74,7 @@ from scripts.github_graphql_budget import probe_graphql_budget
 from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
-from . import preparation_state
+from . import preparation_state, state_helpers
 from .claude_account_usage import routing_budget_fields as claude_account_routing_fields
 from .codexbar_usage import (
     compute_weekly_pace_delta_pct,
@@ -2196,7 +2196,7 @@ def _aged_routing_budget(payload: object, age_s: float, *, stale: bool = True) -
 
     Within the stale threshold the recommendation stays. Past
     that threshold the snapshot must not authorize a lane. The threshold is
-    compared to source age plus time spent in this cache. Per-account Claude
+    compared to source age plus time since compute started. Per-account Claude
     rows are read live, never from the stored snapshot.
     """
     if not isinstance(payload, dict):
@@ -2259,8 +2259,8 @@ def _withdraw_routing_authorization(payload: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
-def _with_live_lane_errors(payload: object, tasks_dir: Path) -> object:
-    """Refresh displayed failure text while capacity retains its snapshot age."""
+async def _with_live_lane_errors(payload: object, tasks_dir: Path, cache_key: str) -> object:
+    """Refresh displayed failure text off-loop while retaining snapshot age."""
     if not isinstance(payload, dict) or not isinstance(payload.get("agents"), dict):
         return payload
     # Only snapshots displaying a failure need a second read. Healthy warm
@@ -2271,10 +2271,15 @@ def _with_live_lane_errors(payload: object, tasks_dir: Path) -> object:
         for info in payload["agents"].values()
     ):
         return payload
-    try:
-        health = scan_lane_health(tasks_dir)
-    except Exception as exc:
-        health = LaneHealthScan(observed=False, error=f"lane health scan failed: {type(exc).__name__}")
+    def _scan() -> LaneHealthScan:
+        try:
+            return scan_lane_health(tasks_dir)
+        except Exception as exc:
+            return LaneHealthScan(observed=False, error=f"lane health scan failed: {type(exc).__name__}")
+
+    # Error text can change in place without a directory-token change. Read
+    # it off-loop, coalescing concurrent reads without caching old excerpts.
+    health = await cache_get_or_compute_async(f"{cache_key}:lane-errors", 0.0, _scan)
     agents = {}
     for lane, info in payload["agents"].items():
         if isinstance(info, dict) and isinstance(info.get("health"), dict):
@@ -2314,6 +2319,7 @@ def _tasks_content_token(tasks_dir: Path) -> str:
 class _RoutingBudgetGeneration:
     content_token: str | None
     directory_token: str
+    started_at: float
     invalidated: threading.Event = field(default_factory=threading.Event)
 
 
@@ -2338,6 +2344,7 @@ async def routing_budget(
     tasks_dir = ctx.roots.batch_state_dir / "tasks"
 
     def _compute() -> tuple[_RoutingBudgetGeneration, dict[str, Any]]:
+        started_at = state_helpers._ttl_clock()
         directory_token = delegate_api._dir_token(tasks_dir)
         generation: list[str] = []
         value = compute_routing_budget(
@@ -2351,7 +2358,7 @@ async def routing_budget(
             batch_state_dir=ctx.roots.batch_state_dir,
             task_generation=generation,
         )
-        observed = _RoutingBudgetGeneration(generation[0] if generation else None, directory_token)
+        observed = _RoutingBudgetGeneration(generation[0] if generation else None, directory_token, started_at)
         if (
             observed.content_token is None
             or observed.content_token != _tasks_content_token(tasks_dir)
@@ -2378,14 +2385,15 @@ async def routing_budget(
             return False
 
         schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute, should_refresh=_needs_refresh)
-        return _with_live_lane_errors(
-            _aged_routing_budget(
-                value, age_s, stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
-            ),
-            tasks_dir,
+        value = await _with_live_lane_errors(value, tasks_dir, cache_key)
+        return _aged_routing_budget(
+            value, state_helpers._ttl_clock() - observed.started_at,
+            stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
         )
     observed, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
-    return _aged_routing_budget(value, 0.0, stale=observed.invalidated.is_set())
+    return _aged_routing_budget(
+        value, state_helpers._ttl_clock() - observed.started_at, stale=observed.invalidated.is_set(),
+    )
 
 
 @router.get("/github-budget")
