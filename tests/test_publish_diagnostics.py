@@ -278,6 +278,8 @@ def test_diagnostic_cli_help(capsys):
     assert exc.value.code == 0
     help_text = capsys.readouterr().out
     assert "code-scanning-alerts" in help_text and "check-annotations" in help_text
+    assert "dependabot-alerts" in help_text
+    assert "takes no selectors" in help_text and "possibly null" in help_text
     assert "either --ref or --number" in help_text
 
 

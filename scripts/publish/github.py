@@ -841,7 +841,15 @@ def main(argv=None, *, runner=None):
         "read",
         help="Named REST and GraphQL reads",
         allow_abbrev=False,
-        description="Read named GitHub resources. Diagnostic reads return JSON arrays per page; code-scanning-alerts lists open alerts for a PR (--number) or Git ref (--ref).",
+        description=(
+            "Read named GitHub resources. Diagnostic reads return JSON arrays per page; "
+            "code-scanning-alerts lists open alerts for a PR (--number) or Git ref (--ref). "
+            "dependabot-alerts reads all open alerts from the checkout's origin on github.com, "
+            "takes no selectors, and emits one complete JSON array with only number, state, package, "
+            "ecosystem, manifest, GHSA, severity, affected range and fixed version (possibly null). "
+            "It rejects withdrawn advisories and malformed responses; failures emit no alert rows. "
+            "Example: .venv/bin/python -m scripts.publish read dependabot-alerts"
+        ),
     )
     read_parser.add_argument(
         "name",
@@ -854,6 +862,7 @@ def main(argv=None, *, runner=None):
         help=(
             "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin. "
             "For code-scanning-alerts and check-annotations, admission allows only the checkout's origin repository."
+            " dependabot-alerts also requires that origin, on github.com only."
         ),
     )
     for key in ("number",):
@@ -938,6 +947,7 @@ REST_READS = {
     "checks": ("repos/{repo}/commits/{sha}/check-runs", {"sha": "sha"}),
     "code-scanning-alerts": ("repos/{repo}/code-scanning/alerts?state=open&ref={ref}", {"ref": "ref"}),
     "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
+    "dependabot-alerts": ("repos/{repo}/dependabot/alerts?state=open", {}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
     "run-artifacts": ("repos/{repo}/actions/runs/{number}/artifacts", {"number": "number"}),
@@ -971,6 +981,40 @@ DIAGNOSTIC_READS = {
     + """
         map({path: (.path | relative_path), line: .start_line,
             level: .annotation_level, message: .message})""",
+    "dependabot-alerts": _RELATIVE_PATH_JQ
+    + r"""
+        def token: type == "string" and length > 0
+            and test("^[A-Za-z0-9@][A-Za-z0-9._+:/~!-]*$")
+            and (contains("://") | not);
+        def version: type == "string" and length > 0
+            and test("^[A-Za-z0-9*<>=~^|, ._+!:/-]+$")
+            and (contains("://") | not);
+        if type != "array" then error("OPSEC: invalid Dependabot alert page") else
+        map(
+            if type != "object" then error("OPSEC: invalid Dependabot alert") else . end |
+            .security_advisory as $advisory | .security_vulnerability as $vulnerability |
+            if (.number | type == "number" and . > 0 and floor == .)
+                and .state == "open"
+                and (.dependency.package.name | token)
+                and (.dependency.package.ecosystem | token)
+                and .dependency.package == $vulnerability.package
+                and ($advisory | type == "object" and has("withdrawn_at"))
+                and $advisory.withdrawn_at == null
+                and ($advisory.ghsa_id | type == "string" and test("^GHSA-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}$"))
+                and ($vulnerability.severity | IN("low", "medium", "high", "critical"))
+                and ($vulnerability.vulnerable_version_range | version)
+                and ($vulnerability | has("first_patched_version"))
+                and ($vulnerability.first_patched_version == null
+                    or ($vulnerability.first_patched_version.identifier | version))
+            then {
+                number: .number, state: .state,
+                package: .dependency.package.name, ecosystem: .dependency.package.ecosystem,
+                manifest: (.dependency.manifest_path | relative_path),
+                ghsa: $advisory.ghsa_id, severity: $vulnerability.severity,
+                affected_version_range: $vulnerability.vulnerable_version_range,
+                fixed_version: $vulnerability.first_patched_version.identifier
+            } else error("OPSEC: invalid or withdrawn Dependabot alert") end
+        ) end""",
 }
 REST_COMPAT_READS = {'budget', 'issue-scope', 'subissues', 'subissues-next', 'default-head', 'pr-bases', 'issue-parent'}
 GQL_READS = {
@@ -1008,6 +1052,14 @@ def read(
     if dest != "unknown":
         environment["GH_HOST"] = dest.split("/", 1)[0]
     gh_repo = dest.split("/", 1)[-1]
+    if operation == "dependabot-alerts":
+        origin_env = {key: value for key, value in environment.items() if key != "GH_REPO"}
+        origin = repository(cwd, origin_env)
+        if not dest.startswith("github.com/") or origin == "unknown" or dest != origin:
+            raise gate.PublishBlocked("OPSEC: diagnostic read repository refused.")
+        if timeout is not None and (type(timeout) not in {int, float} or not 0 < timeout <= 30):
+            raise gate.PublishBlocked("OPSEC: invalid Dependabot read timeout.")
+        timeout = timeout or 30
     if operation == "issue-count":
         # One fixed aggregate read. No selectors, arbitrary queries or text leave this path.
         known = gate.catalog()
@@ -1158,6 +1210,36 @@ def read(
                 stderr=stderr,
             )
     argv += _hostname_flag(dest)
+    if operation == "dependabot-alerts":
+        # Buffer every projected page before exposing rows: a later failure must
+        # never look like a complete alert inventory. Raw responses stay in gh.
+        result = _send(
+            argv, environment=environment, runner=runner, cwd=cwd,
+            capture_output=True, text=True, check=False, timeout=timeout,
+        )
+        if result.returncode:
+            refusal = "OPSEC: API read refused; use python -m scripts.publish read <name>."
+            if (result.stderr or "").strip() == refusal:
+                raise gate.PublishBlocked(refusal)
+            raise gate.PublishBlocked("OPSEC: Dependabot read failed; no complete alert inventory.")
+        try:
+            remaining = result.stdout.strip()
+            rows, pages = [], 0
+            while remaining:
+                page, end = json.JSONDecoder().raw_decode(remaining)
+                if not isinstance(page, list):
+                    raise ValueError
+                rows.extend(page)
+                pages += 1
+                remaining = remaining[end:].lstrip()
+            if not pages:
+                raise ValueError
+        except (ValueError, TypeError, AttributeError):
+            raise gate.PublishBlocked("OPSEC: malformed Dependabot projection.") from None
+        return github_client._result_process(
+            ["github", operation], github_client.Result(value=rows), {},
+            {"capture_output": capture_output, "text": text, "stdout": stdout, "stderr": stderr, "check": check},
+        )
     return _send(
         argv,
         environment=environment,
