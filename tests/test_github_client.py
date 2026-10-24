@@ -168,6 +168,32 @@ def test_pr_comment_uses_rest_once(tmp_path):
     assert json.loads(calls[0][3]) == {"body": "example"}
 
 
+def test_run_cancel_translates_to_cancel_endpoint(tmp_path, monkeypatch):
+    """Unsupported or misrouted production cancellation must not bypass the ordinary endpoint."""
+    from scripts.publish import github as pub
+
+    store, calls = client(tmp_path, [response(None, status=202)])
+    monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
+    result = pub.publish("run-cancel", repo="o/r", number=123, capture_output=True, text=True)
+    assert result.returncode == 0
+    assert result.github_result.status == 202
+    [(method, endpoint, _headers, body)] = calls
+    assert (method, endpoint) == ("POST", "repos/o/r/actions/runs/123/cancel")
+    assert json.loads(body) == {}
+
+
+def test_run_cancel_rejects_force_before_transport(tmp_path, monkeypatch):
+    """Force cancellation must not widen the publisher's authority or send a write."""
+    from scripts.publish import github as pub
+
+    store, calls = client(tmp_path, [])
+    monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
+    with pytest.raises(SystemExit) as error:
+        pub.main(["run-cancel", "--repo", "o/r", "--number", "123", "--force"])
+    assert error.value.code == 2
+    assert calls == []
+
+
 def test_credential_cache_isolation(tmp_path):
     first, _ = client(tmp_path, [response(1, remaining=0)], env={"GH_TOKEN": "synthetic-one"})
     first.request("GET", "user")

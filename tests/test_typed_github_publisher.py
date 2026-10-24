@@ -98,10 +98,44 @@ VERBS = [
 
 
 @pytest.mark.parametrize("verb,fields", VERBS)
-def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields):
+def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, github_transport, monkeypatch):
     calls = []
-    assert pub.publish(verb, repo="unit/public", runner=spy(calls), **fields).returncode == 0
+    sender = spy(calls)
+    expected_requests = {
+        "issue-create": [("POST", "repos/unit/public/issues", {"title": "clean", "body": "clean", "labels": ["unit"]})],
+        "pr-create": [("POST", "repos/unit/public/pulls", {"title": "clean", "body": "clean", "head": "unit", "base": "main", "draft": False})],
+        "pr-edit": [
+            ("GET", "repos/unit/public/issues/1/labels", None),
+            ("PATCH", "repos/unit/public/issues/1", {"title": "clean", "labels": ["unit"]}),
+        ],
+        "issue-close": [
+            ("POST", "repos/unit/public/issues/1/comments", {"body": "clean"}),
+            ("PATCH", "repos/unit/public/issues/1", {"state": "closed"}),
+        ],
+    }
+    if verb in expected_requests:
+        from scripts.common.github_client import Response
+
+        def transport(method, endpoint, headers, body, timeout):
+            payload = [{"name": "old"}] if method == "GET" else {}
+            return Response(200, {}, json.dumps(payload).encode())
+
+        requests = github_transport(transport)
+        original_transport = pub._run_transport
+
+        def observe(command, **kwargs):
+            calls.append({"argv": command})
+            return original_transport(command, **kwargs)
+
+        monkeypatch.setattr(pub, "_run_transport", observe)
+        sender = None
+    assert pub.publish(verb, repo="unit/public", runner=sender, **fields).returncode == 0
     assert len(calls) == 1
+    if verb in expected_requests:
+        assert [
+            (method, endpoint, json.loads(body) if body is not None else None)
+            for method, endpoint, _headers, body, _timeout in requests
+        ] == expected_requests[verb]
 
 
 TEXT_CASES = [
