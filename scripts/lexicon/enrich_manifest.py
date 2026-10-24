@@ -61,6 +61,7 @@ import time
 import unicodedata
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
+from copy import deepcopy
 from dataclasses import dataclass
 from functools import lru_cache
 from html.parser import HTMLParser
@@ -114,6 +115,7 @@ from scripts.lexicon.source_attribution import (
     VTS_ACADEMIC_LABEL,
     VTS_SHORT_LABEL,
     WIKIDATA_LABEL,
+    apply_entry_attribution,
     attach_official_url,
     cites_soviet_dictionary_outside_context,
     join_academic_source_labels,
@@ -8437,10 +8439,17 @@ def enrich_entry(
     else:
         entry.pop("wiki_reference", None)
 
+    # Source blocks can belong to shared caches. Normalize the produced entry
+    # without rewriting those inputs or the generic recovery-byte writer.
+    attributed = deepcopy(entry)
+    attribution_changed = apply_entry_attribution(attributed)
+    if attribution_changed:
+        entry.clear()
+        entry.update(attributed)
     violation = soviet_citation_learner_violation(entry)
     if violation:
         raise ValueError(f"newly enriched entry {lemma!r} has an unflagged СУМ-11 citation: {violation}")
-    return bool(block or sections or pronunciation or wiki_ref or filled_anchor)
+    return bool(block or sections or pronunciation or wiki_ref or filled_anchor or attribution_changed)
 
 
 def enrich(

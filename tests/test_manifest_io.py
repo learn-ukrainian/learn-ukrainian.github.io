@@ -354,11 +354,77 @@ def test_hydrate_hardlinks_readonly_cache_and_atomic_write_replaces_link(
     assert manifest_path.stat().st_ino == cache_path.stat().st_ino
     assert manifest_path.read_bytes() == json_bytes
 
-    replacement = {"entries": [{"lemma": "заміна"}]}
+    replacement = {"entries": [{
+        "lemma": "заміна",
+        "primary_source": "slovnyk.me: Словник синонімів Караванського",
+        "sections": {"synonyms": {
+            "items": [{"text": "обмін", "source": "relation_pairs/synonym_verdicts",
+                       "source_url": "https://example.invalid/retained-origin"}],
+            "source": "slovnyk.me: Словник синонімів Караванського",
+            "source_urls": ["https://slovnyk.me/dict/synonyms_karavansky/заміна"],
+        }},
+        "enrichment": {
+            "sources": ["slovnyk.me: Українсько-англійський словник"],
+            "translation": {
+                "en": ["replacement"],
+                "source": "slovnyk.me: Українсько-англійський словник",
+                "source_url": "https://slovnyk.me/dict/ukreng/заміна",
+            },
+            "definition_cards": [{
+                "id": "sum20", "source": "СУМ-20", "definitions": ["replacement"],
+                "source_url": "https://slovnyk.me/dict/newsum/заміна",
+            }],
+            "literary_attestation": {"text": "unchanged", "source": "human author"},
+            "meaning": {"source": "relation_pairs/unknown-origin", "definitions": ["unchanged"]},
+        },
+        "soviet_colonization_context": {
+            "source": "СУМ-11", "sovietization_risk": 1, "red_flag": True,
+        },
+    }]}
+    original_bytes = _json_bytes(replacement)
     manifest_io.write_manifest(manifest_path, replacement)
+    # Recovery transport preserves original source bytes; migration is explicit.
+    assert json.loads(manifest_path.read_bytes()) == replacement
+    from scripts.lexicon.migrate_source_labels import migrate_manifest
+
+    candidate = json.loads(original_bytes)
+    assert migrate_manifest(candidate) == (1, 0)
+    manifest_io.write_manifest(manifest_path, candidate)
     assert cache_path.read_bytes() == json_bytes
     assert manifest_path.stat().st_ino != cache_path.stat().st_ino
-    assert json.loads(manifest_path.read_text(encoding="utf-8")) == replacement
+    assert _json_bytes(replacement) == original_bytes
+    written = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"][0]
+    assert written["primary_source"] == "Словник синонімів С. Караванського"
+    assert written["sections"]["synonyms"] == {
+        "items": [{"text": "обмін", "source": "relation_pairs/synonym_verdicts",
+                   "source_url": "https://example.invalid/retained-origin"}],
+        "source": "Словник синонімів С. Караванського",
+        "mirror_source_urls": ["https://slovnyk.me/dict/synonyms_karavansky/заміна"],
+    }
+    assert written["enrichment"]["sources"] == ["Українсько-англійський словник (М. Балла)"]
+    assert written["enrichment"]["translation"] == {
+        "en": ["replacement"], "source": "Українсько-англійський словник (М. Балла)",
+        "mirror_source_url": "https://slovnyk.me/dict/ukreng/заміна",
+    }
+    assert written["enrichment"]["definition_cards"][0] == {
+        "id": "sum20", "source": "Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні)",
+        "definitions": ["replacement"],
+        "source_url": "https://services.ulif.org.ua/expl/#/word/%D0%B7%D0%B0%D0%BC%D1%96%D0%BD%D0%B0",
+        "mirror_source_url": "https://slovnyk.me/dict/newsum/заміна",
+    }
+    assert written["enrichment"]["literary_attestation"] == {"text": "unchanged", "source": "human author"}
+    assert written["enrichment"]["meaning"] == {
+        "source": "relation_pairs/unknown-origin", "definitions": ["unchanged"],
+    }
+    assert written["soviet_colonization_context"] == {
+        "source": "СУМ-11", "sovietization_risk": 1, "red_flag": True,
+    }
+    from scripts.lexicon.source_attribution import learner_facing_unmapped_source_violations
+
+    assert learner_facing_unmapped_source_violations(written) == [
+        "заміна: enrichment.meaning.source='relation_pairs/unknown-origin'",
+        "заміна: sections.synonyms.items[0].source='relation_pairs/synonym_verdicts'",
+    ]
 
 
 def test_hydrate_reuses_verified_cache_without_download(
