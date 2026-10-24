@@ -157,8 +157,22 @@ def test_builder_refuses_explanation_that_disagrees_with_its_item(
     assert all(fragment in message for fragment in message_fragments)
 
 
-def test_builder_excludes_invalid_keys_without_suppressing_explanation_only_withholding(tmp_path: Path) -> None:
-    """Prevent ambiguous keys being served or explanation-only withholding hiding valid tasks."""
+@pytest.mark.parametrize(("exclusion", "error_field"), [
+    pytest.param({"serving": "excluded", "reasonCategory": "key-not-unique-under-current-norms"}, None, id="valid"),
+    *[
+        pytest.param({"serving": value, "reasonCategory": "key-not-unique-under-current-norms"}, "serving", id=f"serving-{index}")
+        for index, value in enumerate(["exclude", "served", "excluded ", "", None, False, 0, [], {}])
+    ],
+    pytest.param({"serving": "excluded"}, "reasonCategory", id="missing-reason"),
+    *[
+        pytest.param({"serving": "excluded", "reasonCategory": value}, "reasonCategory", id=f"reason-{index}")
+        for index, value in enumerate(["", " \t", None, False, 1, [], {}])
+    ],
+])
+def test_builder_excludes_invalid_keys_without_suppressing_explanation_only_withholding(
+    tmp_path: Path, exclusion: dict[str, object], error_field: str | None,
+) -> None:
+    """Prevent ambiguous keys being served, invalid exclusion states, or valid tasks being hidden."""
     database = _database(tmp_path / "sources.db")
     with sqlite3.connect(database) as connection:
         connection.execute("UPDATE zno_tasks SET topic_norm = 'lexical_norm' WHERE id = 2")
@@ -166,14 +180,19 @@ def test_builder_excludes_invalid_keys_without_suppressing_explanation_only_with
     registry.write_text(json.dumps({
         "items": {},
         "withheld": {
-            "zno:2": {
-                "serving": "excluded",
-                "reasonCategory": "key-not-unique-under-current-norms",
-                "reason": "The historical key is not unique.",
-            },
+            "zno:2": {**exclusion, "reason": "The historical key is not unique."},
             "zno:3": {"reason": "Explanation pending verification."},
         },
     }), encoding="utf-8")
+
+    if error_field is not None:
+        with pytest.raises(ValueError) as error:
+            build_zno_shards(database, explanations_path=registry)
+        message = str(error.value)
+        assert "zno:2" in message
+        assert error_field in message
+        assert repr(exclusion.get(error_field)) in message
+        return
 
     shards, residual, fill = build_zno_shards(database, explanations_path=registry)
 

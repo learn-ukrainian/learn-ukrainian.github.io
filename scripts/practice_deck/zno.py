@@ -360,11 +360,17 @@ def build_zno_shards(
     overlay_by_id = load_markup_overlay(markup_overlay_path)
     explanations = json.loads(explanations_path.read_text(encoding="utf-8"))
     explanations_by_id = explanations["items"]
-    excluded_by_id = {
-        task_id: entry["reasonCategory"]
-        for task_id, entry in explanations.get("withheld", {}).items()
-        if entry.get("serving") == "excluded"
-    }
+    excluded_by_id: dict[str, str] = {}
+    for task_id, entry in explanations.get("withheld", {}).items():
+        if "serving" not in entry:
+            continue
+        serving = entry["serving"]
+        if serving != "excluded":
+            raise ValueError(f"{task_id}: invalid serving value {serving!r}; expected 'excluded' or absent")
+        reason = entry.get("reasonCategory")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError(f"{task_id}: invalid reasonCategory value {reason!r}; expected a non-empty string")
+        excluded_by_id[task_id] = reason
     conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:
