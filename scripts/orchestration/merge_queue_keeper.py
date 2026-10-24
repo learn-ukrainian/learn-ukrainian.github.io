@@ -1171,6 +1171,10 @@ def run(
             # Older titles/bodies used the job display limit. Compare both
             # deterministic renderings as well as raw text, never a prefix.
             identities = {key, display_text(key), display_text(key, DISPLAY_TEST_LIMIT)}
+            display_suffix = rf" \\?\(id:[0-9a-f]{{{DISPLAY_ID_LENGTH}}}\\?\)"
+            # A raw key spelling another key's rendered identity is ambiguous.
+            if re.search(display_suffix + r"\Z", key):
+                identities.discard(key)
             identity_patterns = [re.escape(value) for value in sorted(identities)]
             # A changed display value carries the raw-key digest. Only those
             # values can accept Markdown escapes without conflating raw keys.
@@ -1181,9 +1185,10 @@ def run(
             identity_pattern = "(?:" + "|".join(identity_patterns) + ")"
             # A period ends a sentence unless it continues an identifier.
             # Parentheses may wrap the whole identity, not a prefix of it.
+            # Truncation and digest suffixes belong to the complete identity.
             pattern = re.compile(
                 r"(?<![\w/.:\[\]()\\-])(?:" + identity_pattern + r"|\(" + identity_pattern
-                + r"\))(?![\w/:\[\]()\\-]|\.[\w/.:\[\]()\\-])"
+                + r"\))(?![\w/:\[\]()\\…-]|\.[\w/.:\[\]()\\-]|" + display_suffix + ")"
             )
             marker = "<!-- mq-keeper-flake -->"
             matches = []
@@ -1191,7 +1196,7 @@ def run(
                 if "pull_request" in item or item.get("state", "open") != "open":
                     continue
                 issue_title, issue_body = (str(item.get(field) or "") for field in ("title", "body"))
-                if (
+                if identities and (
                     re.fullmatch("Merge queue flaky test: " + identity_pattern, issue_title)
                     or ((bool(tests) or marker in issue_body or re.match(
                         "`" + identity_pattern + "` failed merge_group runs on distinct PRs ", issue_body
