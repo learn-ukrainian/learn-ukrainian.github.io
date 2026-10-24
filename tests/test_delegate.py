@@ -12558,6 +12558,54 @@ def test_augment_read_only_prompt_omits_delivery_declaration():
     assert "DELIVERABLE:" not in text
 
 
+def test_write_preamble_prevents_completed_step_waiting_until_exit_to_publish(tmp_path, monkeypatch):
+    """A completed step must reach protected publication before more work, including on AGY."""
+    from agent_runtime.adapters import agy
+
+    home = tmp_path / "home"
+    monkeypatch.setenv("HOME", str(home))
+    register_agy_hooks(tmp_path, home=home)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *_args: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *_args: tmp_path / "agy.log")
+    prompt = delegate._augment_prompt_with_worktree("Implement the assigned change.", tmp_path, mode="workspace-write")
+    plan = agy.AgyAdapter().build_invocation(
+        prompt=prompt,
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.8-flash-high",
+        task_id="completed-step-publication",
+        session_id=None,
+        tool_config=None,
+    )
+    text = json.loads(plan.stdin_payload)["message"]["content"][0]["text"]
+
+    assert text == prompt
+    assert "After each coherent completed step, run the applicable validation. Once it passes, " in text
+    assert "commit and push that step using the instructions below before starting the next step" in text
+    assert "do not wait until exit to publish completed steps." in text
+    assert "Leave unfinished steps uncommitted." in text
+    assert "If a push is refused, retain your work, stop and report the actual blocker." in text
+    assert "Keep the final exit checks below." in text
+    assert (
+        text.index("run the applicable validation")
+        < text.index("Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).")
+        < text.index("`git push -u origin HEAD`")
+        < text.index("The push runs a pre-push gate on that exact commit")
+        < text.index("Leave `git status --porcelain` empty")
+    )
+    assert text.count("`git push -u origin HEAD`") == 1
+    assert "it runs no tests, CI runs the full suite" in text
+    assert "`validation_incomplete` means it did not finish: stop and report, never `--no-verify`." in text
+    assert "Do not merge `origin/main` into your branch unless `git merge-tree` against a freshly fetched " in text
+    assert "main reports a conflict, or the driver orders it." in text
+    assert "For scratch git repositories and probes, use `$TMPDIR`, the managed lease" in text
+    assert "Keep durable task artifacts in `$LU_TASK_EVIDENCE_DIR`; task cleanup preserves that directory." in text
+    assert "Do not open or merge PRs unless the brief says so" in text
+    assert '`DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`' in text
+    assert "This line is optional — its absence never fails the dispatch." in text
+    assert text.endswith("Implement the assigned change.")
+
+
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_augment_prompt_test_scope_for_write_modes(mode):
     """#9057: write-capable worktree dispatches name changed-file tests only."""
