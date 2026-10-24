@@ -1,7 +1,8 @@
 # Delegate terminal settlement and initiating-seat wake
 
-Status: PROPOSAL, NOT READY FOR ENABLEMENT. This document authorizes no runtime,
-process, policy, security configuration, provider execution, or lease change.
+Status: PROPOSAL, NOT IMPLEMENTATION READY, NOT READY FOR ENABLEMENT.
+This document authorizes no runtime, process, policy, security configuration,
+provider execution, or lease change.
 
 ## Outcome and review boundary
 
@@ -114,6 +115,16 @@ worker success; even that does not prove initiating-seat re-entry.
 | Post-resume observation | `RolloutReader.wake_result` observes lifecycle overlap and uncertainty. `wake_driver_once` requires `CLEAN`, exit 0, one start, and one completion before advancing its in-memory bridge cursor. OVERLAP and UNKNOWN retain watcher-owned receipts. Durable consumption still belongs to the live driver. |
 | Offline supervisory wake | Without ordinary inbox events, the watcher uses the separate generation-fenced supervisory path and existing launcher. This proposal must never fall through to that path to wake a terminal notification's offline initiator. |
 
+[`supervisory_recipient`](../../scripts/ai_agent_bridge/_inbox_watch.py#L85)
+keeps automated events outside the ordinary human/worker inbox, at
+`supervisor:<stream_id>`. The generic Fleet
+[`deliveries claim/ack`](../../scripts/fleet_comms/cli.py#L810) commands use
+kind-unaware recipient FIFO claims and fenced acknowledgment. In
+[`finish_delivery`](../../scripts/fleet_comms/authority.py#L1399), only
+`supervisory-request` requires prior supervisory consumption. A new kind would
+not acquire that protection automatically. A generic consumer could acknowledge
+it without semantic proof or exhaust its attempt budget.
+
 There is no complete source-backed edge from delegate settlement to Fleet
 publication to an ordinary authority delivery to native initiating-seat re-entry.
 The existing `emitted`, `received`, and `consumed` Fleet wake receipt states
@@ -135,7 +146,7 @@ Missing, partial, malformed, or changing input refuses wake. Its pre-send state
 uses the last lifecycle event. In particular, `start A, start B, end A` can be
 reported READY despite B remaining open.
 
-The [session-supervisor contract](../runbooks/session-supervisor.md#live-codex-inbox-readiness-10133)
+The [session-supervisor contract](../runbooks/session-supervisor.md#post-resume-overlap-detection-10217)
 explicitly documents the final-check-to-attach race and limits of `CLEAN`.
 The overlap detector cannot close that race or prove visible TUI delivery.
 The document names #10217 and owner `claude-monitor` for prevention; that is a
@@ -181,19 +192,56 @@ If any element cannot be authenticated, record `UNKNOWN_TARGET` and permit
 no automatic activation. Do not search other seats' transcripts or use the
 newest matching session. Do not infer a slot from the worker provider.
 
-Publish a single immutable Fleet message to that exact existing registered
-slot, with proposed kind `delegate-terminal-wake`. Its bounded typed body
-contains K's tuple, the verified target binding reference, the stable terminal
-core digest, terminal status, and a logical result reference. It contains no
+Propose a single immutable Fleet message bound to that exact registered slot.
+Its recipient namespace, kind, selector, and semantic-consumption contract are
+an explicit G4 decision against the existing automated queue separation above.
+There is no default publication to the slot's ordinary human/worker inbox.
+Reusing the supervisory namespace requires explicit compatibility and authority
+approval; its current parser accepts wake or restart, not terminal settlement.
+`delegate-terminal-wake` is a proposed kind, not a supported API contract.
+Publication must wait for that decision and the approved selection/consumption
+boundary, including protection from generic claim/ack consumers.
+Its bounded typed body contains K's tuple, the verified target binding reference,
+the stable terminal core digest, terminal status, and a logical result reference. It contains no
 instructions, shell text, routing override, credential, environment dump,
 absolute host path, or transcript body. Resolve a result reference through
 the existing task-record authority under the consumer's permissions.
 
 Use `AuthorityService.publish_message` and its existing idempotency key.
 Do not write a parallel bridge message, publish to the CTO channel, or use a
-`supervisory-request` that can launch or restart a provider. The proposed kind
+`supervisory-request` that can launch or restart a provider. The selected kind
 needs a reviewed parser and authority delivery selector in the existing wake
 process. It does not inherit the supervisory consume API by name alone.
+
+Before the first publication, propose capturing one immutable publication
+envelope on the existing task record, bound to the saved repository, task,
+nonce, dispatch-time target, and complete terminal core. Derive its values only
+from that persisted core and dispatch binding, including the approved G4
+routing decision recorded with the binding. Persist the envelope before any
+Fleet call. Retries read it unchanged; they never rebuild it from publication
+time, mutable routing, a successor, or rollover metadata.
+
+The pinned [`_publish_message_tx`](../../scripts/fleet_comms/authority.py#L1864)
+hashes `sender`, `body_sha256`, `channel_id`, `recipients`, `kind`,
+`conversation_id`, `thread_id`, `in_reply_to`, `correlation_id`, `provenance`,
+`context_revisions`, `deadline_at`, and `imported_source`. The captured envelope
+must fix every one of these normalized values, including explicit absent
+values, and the exact body bytes that produce `body_sha256`. Use explicit saved
+recipients with no channel-derived subscriber or revision lookup. The public
+`publish_message` interface leaves internal `thread_id` and `imported_source`
+absent; preserve those hashed defaults rather than feeding generated stored
+IDs back into a retry. Replay the same supplied arguments, including any saved
+`created_at`, although creation time is outside this hash.
+
+G4 must decide whether `deadline_at` is absent or an absolute deadline derived
+from a saved field. This proposal chooses no TTL or retention policy. Retries
+cannot extend an elapsed deadline or recapture any envelope field to avoid
+`idempotency_key_reused_with_different_payload`. Exact K plus the same envelope
+must return the existing message after a lost publication response. Mismatch
+is a retained `PUBLICATION_CONFLICT` owned by root, with no activation or new
+key. A missing or unverifiable envelope is `PUBLICATION_ENVELOPE_UNKNOWN`.
+This persisted-envelope mechanism remains a design proposal under G3/G4,
+not an implemented task-record field or publication interface.
 
 Propose a canonical terminal-core digest over repository, task, nonce, status,
 `result_sha256`, `returncode`, `returncode_reason`, `needs_finalize`, and the
@@ -206,6 +254,12 @@ enrichment cannot change the published payload or generate another wake.
 If the settled semantic core changes for the same nonce, retain
 `TERMINAL_CONFLICT` for root reconciliation.
 Do not conceal that conflict with a second key.
+One source-backed variant is the
+[`interrupt-after-terminal fallback`](../../scripts/delegate.py#L13071).
+An exception from `discard_read_only_snapshot_phases` after the checkpoint
+can enter the fallback writer and rewrite `finalize_error`. Preserve both
+core references and the original envelope; do not classify that rewrite as
+optional enrichment or recapture it for replay.
 
 ### Recovery without another queue
 
@@ -215,22 +269,27 @@ message bus. Add bounded reconciliation to the already-owned inbox wake loop:
 1. Enumerate task records for that exact target binding, including the documented
    archive and redispatch history. Verify embedded task and nonce identity,
    rather than trusting a filename. Nonterminal records produce no notification.
-2. For each complete terminal core, construct the same payload and publish K.
+2. For each complete terminal core, verify the captured envelope and publish K
+   from it only after G4 publication authority and queue protection exist.
+   If capture did not complete, hold `PUBLICATION_ENVELOPE_UNKNOWN` for G3/G4
+   recovery under the same persisted inputs; never guess or recapture on retry.
    An immediate existing-worker publication may reduce delay, but correctness
    depends on reconciliation, including provisioning and dead-worker terminals.
    Omit that optional fast path from the first implementation if unnecessary.
-3. After a crash before publication, a later pass republishes the same fact.
+3. After a crash before publication, a later pass replays the saved envelope.
    After a crash following Fleet commit but before recording its ID, replay K
-   and obtain the same message and delivery. A local publication marker is an
-   optimization only. Fleet remains the notification authority.
+   with that same envelope and obtain the same message and delivery. A local
+   publication marker is an optimization only. Fleet remains the notification
+   authority.
 4. Keep each pass bounded and schedule continuations through the existing loop.
    Require fair coverage across pages and recipients. A cursor must not skip a
    record that changes to terminal behind it; wrap and reconcile again.
    A restart must recover without trusting the previous in-memory cursor.
 
-This design requires durable recoverability until Fleet publication. The
-current JSON writer does not prove power-loss durability, and the inspected
-archive interfaces do not prove retention until a notification commits.
+This design requires durable recoverability of the core, binding, and captured
+envelope until Fleet publication. The current JSON writer does not prove
+power-loss durability, and the inspected archive interfaces do not prove
+retention until a notification commits.
 Before implementation, the storage and reaper owners must prove the existing
 retention/durability contract or obtain designated approval for the smallest
 repair in the existing writer/archive path. No retention change is authorized
@@ -277,10 +336,27 @@ The necessary kind-aware selection and consumption semantics are proposed
 extensions of Fleet authority, not a claim that the current generic
 `claim_next_delivery` already supplies them.
 
+The initiating seat may already read and apply the matching task and nonce's
+terminal result during its own turn, for example after foreground `wait` or
+`status`. Under the proposed G4 contract, it records authenticated semantic
+consumption bound to K, result/core digest, exact target, and its native turn,
+then acknowledges the matching notice as itself under the delivery fence.
+If the notice is not yet published, retain that proof and reconcile its
+acknowledgment when K appears, without starting another turn. Authentication
+and this reconciliation remain unresolved G1/G4 requirements. A wait subprocess
+exit, adapter receipt, or sender-supplied consumption claim proves none of them.
+
 When the seat is ready, claim the exact eligible delivery under the existing
 delivery fence and durably record intent before activation. The adapter must
 revalidate the binding and atomically admit an automation turn only if that
 same seat is still eligible. A check followed by `exec resume` is insufficient.
+Admission must also atomically recheck the delivery state, current fence, and
+authenticated in-turn consumption so an intervening consumption or acknowledgment
+prevents the extra turn. Verified in-turn application needs zero new turns;
+pending acknowledgment holds activation for reconciliation. A generic terminal
+acknowledgment without semantic proof is a hold, not evidence of application.
+No supported API coordinating those checks with native admission is established;
+the gap remains blocked under G2/G4.
 The wake payload cannot select a new session injection or security route.
 
 No verified native operation with those admission properties was established
@@ -325,14 +401,22 @@ task statuses or existing Fleet delivery states.
 | Condition | Proposed disposition and durable action | Execution rule |
 | --- | --- | --- |
 | Task still running; only wait timed out | `NOT_TERMINAL`; retain task observation | No Fleet terminal wake. |
-| Task `done` or another wait-terminal status | `TERMINAL_OBSERVED`; publish K with the actual status | Completion is attention, not permission to continue work. |
+| Task `done` or another wait-terminal status | `TERMINAL_OBSERVED`; capture the complete envelope and publish K only under approved G3/G4 contracts | Completion is attention, not permission to continue work. |
 | Worker cancellation or task timeout | Wake carries `cancelled` or `timeout`; include typed reason reference | Notify only. Never restart worker or undo a STOP. |
 | Operator cancels continuation or pauses stream | `CONTINUATION_CANCELLED`; preserve notification and disposition | No autonomous prompt execution until attributed release. |
-| Producer crashes after terminal write, before publish | Reconcile retained fact and publish K | No second worker. |
-| Publish response lost; duplicate terminal observer | Replay K; existing Fleet message returned | One message and one recipient delivery for the run. |
-| Optional terminal enrichment changes | Same allowlisted core and payload | No second message. |
+| Producer crashes after terminal write, before publish | Reconcile retained fact and replay the captured envelope, or hold if missing | No second worker or envelope recapture on retry. |
+| Publish response lost; duplicate terminal observer | Replay exact K and captured envelope; existing Fleet message returned | One message and one approved recipient delivery for the run. |
+| Envelope missing, partial, or cannot be authenticated after a crash | `PUBLICATION_ENVELOPE_UNKNOWN`; retain saved inputs for G3/G4 owner reconciliation | No guessed fields, recapture on retry, or activation. |
+| Same K but body, recipient, provenance, IDs, revisions, deadline, or another hashed field differs | `PUBLICATION_CONFLICT`; retain `idempotency_key_reused_with_different_payload` and both envelope references for root | No new key, rewritten envelope, or activation. |
+| Captured deadline elapses before publication or retry | `DEADLINE_ELAPSED`; retain original envelope for root and existing Fleet expiry handling | No refreshed deadline or invented TTL. |
+| Optional terminal enrichment changes | Replay unchanged core and captured envelope | No second message or changed provenance. |
 | Same nonce has different semantic terminal core | `TERMINAL_CONFLICT`; retain both evidence references | Stop automatic activation. |
+| Interrupt-after-terminal fallback rewrites `finalize_error`, including snapshot-discard failure | `TERMINAL_CONFLICT`; preserve checkpoint, rewrite, and original envelope for root | No recapture, re-key, or enrichment exception. |
 | Old nonce arrives after task-ID reuse | `STALE_RUN`; verify exact historical run | No delivery to a different run or inferred successor. |
+| Generic kind-unaware consumer acknowledges the notice without required semantic proof | `CONSUMPTION_PROOF_MISSING`; retain terminal Fleet receipt and evidence for G4 owner/root | No successful consumption claim, republish, or activation. Publication stays gated until protected. |
+| Generic consumer repeatedly claims the notice or exhausts attempts | `CONSUMER_CONTRACT_CONFLICT`; retain fences/attempts and any `dead_lettered` state for G4 owner/root | No budget reset, new key, or extra turn; publication requires queue protection. |
+| Authenticated initiating seat applies matching result in its existing turn | `ALREADY_CONSUMED_IN_TURN`; bind proof to K and acknowledge notice as itself; `IN_TURN_ACK_PENDING` until reconciled | Zero new native turns; admission atomically rechecks consumption, delivery state, and fence. |
+| Claimed in-turn consumption is forged, detached, or based only on wait exit | `SEMANTIC_PROOF_MISSING`; retain for root reconciliation | Never accept it as authenticated live consumption or bypass admission gates. |
 | Native turn open, or human interaction active | `DEFERRED_BUSY` or `DEFERRED_HUMAN`; retain queued delivery | No activation or attempt-budget churn. Revisit when eligible. |
 | Human source, missing source authority, bad rollout, or unknown busy state | `HELD_HUMAN_SOURCE` or `READINESS_UNKNOWN`; retain and expose reason | No time-based escape or claim of readiness. |
 | Slot removed, lease moved, rollover, or native binding differs | `STALE_TARGET`; retain for accountable-root reconciliation | Never retarget to current seat or launch a successor. |
@@ -382,11 +466,23 @@ observations include:
 - A terminal success and a terminal failure re-enter the intended native seat
   within the proposed bound, with one semantic consumption per K and zero
   activations in other seats.
+- A separate in-turn case lets the initiating seat read and apply the hidden
+  result through its matching foreground wait before returning to ready.
+  Verify authenticated semantic consumption and notice acknowledgment by that
+  seat, with zero extra turns. Race acknowledgment and publication against
+  admission; the atomic fence must prevent redundant activation. Forged proof
+  and wait-subprocess exit alone must fail verification.
 - BUSY and HUMAN_ACTIVE suppress every attempt, including input racing the
   final check. Readiness later delivers the retained event once. A human-source
   session never activates without the required eligibility decision.
 - Duplicate publication, checkpoint enrichment, consumer restart, and each
-  crash boundary retain the event without duplicate native execution.
+  crash boundary retain the event without duplicate native execution. Retry
+  the full saved envelope after a lost response. Changed hashed fields, elapsed
+  deadlines, missing envelopes, and interrupt-after-terminal rewrites must
+  yield their typed holds without re-keying or recapture.
+- Generic claim/ack consumers cannot consume or exhaust an automated notice
+  outside its approved contract. Any such interference must retain its typed
+  hold and block activation, even if Fleet reports acknowledgment.
 - Cancellation, wait timeout versus task timeout, stale nonce, rollover,
   unknown state, expiry, and exhausted attempts have the matrix dispositions.
 - Fairness survives a held queue head and bounded multi-message batches.
@@ -425,7 +521,10 @@ Proposed rollout sequence:
    Approval of this design must distinguish notification work from permission
    to invoke a native seat or change a gate during the current gate freeze.
 2. Implement notification and recovery in the existing allocation, with native
-   activation disabled. Migrate only newly bound runs first. Existing runs
+   activation disabled. Publication must wait for the G4 recipient/kind and
+   semantic-consumption decision, explicit authority, and verified protection
+   from generic claim/ack consumers. Do not publish to an ordinary inbox while
+   that boundary is missing. Migrate only newly bound runs first. Existing runs
    lacking an authenticated initiating binding stay `UNKNOWN_TARGET`; do not
    guess their identities or bulk-replay history.
 3. Verify publication, crash recovery, privacy, and authority selection with
@@ -459,8 +558,8 @@ waiver or a partially enabled implementation.
 | ID | Design acceptance and evidence | Runtime disposition |
 | --- | --- | --- |
 | P01 | `design_evidence`: current producer, checkpoint, nonce/initiator, registry, Fleet lifecycle, wait, ordinary inbox, and native adapter call graphs above, with source links | `UNKNOWN`: no authenticated initiator-to-native-seat binding or measured installed terminal-to-seat path. |
-| P02 | `design_evidence`: K, immutable core payload, Fleet transaction/idempotency, replay reconciliation, duplicate and crash matrix | `UNKNOWN`: durable JSON recovery and retention through publication need owner proof. |
-| P03 | `design_evidence`: queued holds, fair eventual-ready delivery, distinct human-source and activity checks, fenced intent, typed failure matrix | `UNKNOWN`: atomic human/busy admission and Codex human-source authority are unproved. |
+| P02 | `design_evidence`: K, immutable core and full captured Fleet envelope, exact replay, typed publication conflicts, duplicate and crash matrix | `UNKNOWN`: G3/G4 envelope persistence, recovery, retention, and publication authority need owner proof. |
+| P03 | `design_evidence`: queued holds, fair eventual-ready delivery, human-source/activity checks, authenticated in-turn consumption, fenced admission recheck, generic-consumer failure rows | `UNKNOWN`: atomic admission, Codex human-source authority, and G4 recipient/kind/consumption protection are unproved. |
 | P04 | `design_evidence`: independent hidden challenge, exact native target/turn/consumption evidence, full matrix denominator, falsifiable bound and stops | `NOT RUN`: native activation and held-out execution were prohibited in this task. |
 | P05 | `design_evidence`: bounded candidate source ownership, reuse, migration, rollout, rollback, privacy, failure matrix, and six-row ledger | `DESIGN ONLY`: no source, process, test, rule, plan, or live configuration changes. |
 | P06 | `design_evidence`: gates and reviewers below, root-owned judgment, exact-hash approval before runtime authoring | `PENDING DESIGNATED INPUT`: no approval inferred from proposal publication. |
@@ -472,12 +571,13 @@ claim a lease.
 | Gate | Required evidence or decision | Proposed owner/reviewer |
 | --- | --- | --- |
 | G1: Target identity | Authenticate caller slot, native thread, and launcher envelope; define stale target and rollover disposition without successor inference | Existing delegate and launcher owners; Opus 5.5 security/design critique. |
-| G2: Safe native admission | Supported atomic idle-only automation turn with human-source/activity suppression and replay-safe operation identity; current `exec resume` path is insufficient proof | Existing native adapter owner; source-located #10217 owner `claude-monitor`; qualified Opus 5.5 and Sol 6.1 input. |
-| G3: Durable recovery | Prove terminal core survives required crashes and remains available through archive/reap until Fleet commits; resolve any retention or writer repair explicitly | Existing storage and common-reaper owners; designated review of any contract change. |
-| G4: Authority consumption | Approve settlement-kind selection, hold/fairness behavior, intent reconciliation, native semantic consumption, and deadline policy inside Fleet | Existing Fleet authority owner; independent toolful Opus 5.5 critique. |
+| G2: Safe native admission | Supported atomic idle-only automation turn with human-source/activity suppression, replay-safe operation identity, and fenced recheck of delivery and in-turn consumption; current `exec resume` path is insufficient proof | Existing native adapter owner; source-located #10217 owner `claude-monitor`; qualified Opus 5.5 and Sol 6.1 input. |
+| G3: Durable recovery | Prove terminal core, dispatch binding, and immutable captured envelope survive crashes through archive/reap until Fleet commits; resolve any retention or writer repair explicitly | Existing storage and common-reaper owners; designated review of any contract change. |
+| G4: Authority consumption | Decide recipient namespace and kind against existing supervisory queue separation; approve selection and generic-consumer protection before publication, immutable envelope/deadline semantics, holds/fairness, intent reconciliation, and authenticated in-turn/native semantic consumption | Existing Fleet authority owner; independent toolful Opus 5.5 critique. |
 | G5: Native held-out observability | Prove correct initiating native seat, turn correlation, human suppression, and semantic response independently; prove the existing consumer allocation is available | Independent evaluator selected by root; no provider run in this task. |
 | G6: Approval and enablement | Exact proposal hash/head and attested authorship, designated agreement, implementation authorization, gate-freeze applicability, and separately authorized native evaluation | Root routes Opus 5.5 and Sol 6.1; operator resolves disagreement and security-config decisions. |
 
-The current disposition is DESIGN PROPOSED with G1 through G6 unresolved.
+The current disposition is DESIGN PROPOSED, NOT IMPLEMENTATION READY,
+with G1 through G6 unresolved.
 Source inspection and the authoring ledger are the evidence delivered here.
 There is no held-out activation proof, quota measurement, or enablement claim.
