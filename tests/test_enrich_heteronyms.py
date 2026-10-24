@@ -435,7 +435,9 @@ def test_batch9_lemmas_not_duplicated_from_earlier_batches():
             assert "СУМ-11" not in v["stress"]["source"], f"Found СУМ-11 in stress.source for {lemma}"
 
 
-def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
+def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(
+    monkeypatch, capsys, canonical_sum20_store,
+):
     """Separate dictionary article numbers from headword before comparing stress (#8039).
 
     Ensures that homonyms with identical stress but distinct article numbers (e.g. ТЕ́СТ 1 and ТЕ́СТ 2)
@@ -496,8 +498,66 @@ def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_hete
     assert result_diff[0]["headword"] == "ТЕ́СТ"
     assert result_diff[1]["headword"] == "ТЕСТІ́"
 
+    # Scanner classification uses actual live official rows, never the mocked
+    # modern_sum20 bundle, curated early returns, mirrors, or SUM-11 text.
+    assert len(enrich_heteronyms.CURATED_HETERONYMS) == 420
+    assert sum(map(len, enrich_heteronyms.CURATED_HETERONYMS.values())) == 841
+    with sqlite3.connect(canonical_sum20_store) as conn:
+        conn.executemany(
+            "INSERT INTO sum20_articles (wordid, normalized_lookup_key, stressed_headword, official_url, "
+            "headword, article_html, article_text, definition_text, fetched_at, content_sha256, parser_version, "
+            "quarantine_reason) VALUES (?, ?, ?, ?, '', '', '', '', 'fixture', 'fixture', ?, ?)",
+            [
+                (1, "same", "SÁME 1", "fixture:1", "fixture", ""),
+                (2, "same", "SÀME 2", "fixture:2", "fixture", ""),
+                (3, "candidate", "CÁNDIDATE 1", "fixture:3", "fixture", ""),
+                (4, "candidate", "CANDIDÁTE 2", "fixture:4", "fixture", ""),
+                (5, "candidate", "CÁNDIDATE 3", "fixture:5", "fixture", ""),
+                (6, "same", "SAMÉ", "fixture:6", "fixture", "quarantined"),
+                (7, "same", "SAMÉ", "fixture:7", "v1-official-codification", ""),
+                (8, "unlabelled", "", "fixture:8", "fixture", ""),
+                (9, "article", "ÁRTICLE", "fixture:9", "fixture", ""),
+            ],
+        )
+        conn.execute("UPDATE sum20_articles SET article_text = 'ÁRTICLE, ARTÍCLE' WHERE wordid = 9")
+        conn.execute("CREATE TABLE sum20_slovnyk_articles (lemma TEXT, text TEXT, role TEXT)")
+        conn.execute("INSERT INTO sum20_slovnyk_articles VALUES ('same', 'SÁME SAMÉ', 'mirror_candidate')")
+        conn.execute("CREATE TABLE sum11 (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES ('same', 'SÁME SAMÉ')")
+    monkeypatch.setattr(enrich_heteronyms, "ROOT", canonical_sum20_store.parent)
+    monkeypatch.setattr(enrich_heteronyms, "CURATED_HETERONYMS", {"candidate": [{}, {}], "missing": [{}, {}]})
+    monkeypatch.setattr("sys.argv", ["enrich_heteronyms.py", "--scan"])
+    assert enrich_heteronyms.main() == 0
+    scan = json.loads(capsys.readouterr().out)
+    assert scan["read_status"] == "COMPLETE"
+    assert scan["coverage_status"] == "candidate_evidence_only"
+    assert scan["parent_denominator"] == {"groups": 2, "variants": 4}
+    assert scan["live_rows"] == 7
+    assert scan["live_lookup_keys"] == {"count": 4, "keys": ["article", "candidate", "same", "unlabelled"]}
+    assert scan["candidate_groups"] == {"count": 1, "keys": ["candidate"]}
+    assert scan["candidate_groups_in_curated"] == scan["candidate_groups"]
+    assert scan["candidate_groups_outside_curated"] == {"count": 0, "keys": []}
+    assert scan["curated_groups_without_candidate_evidence"] == {"count": 1, "keys": ["missing"]}
+    assert scan["unresolved_lookup_groups"] == {"count": 0, "keys": []}
+    assert scan["unresolved_row_wordids"] == []
+    assert scan["groups"]["same"]["state"] == "no_distinct_stress_evidence"
+    assert scan["groups"]["article"]["state"] == "no_distinct_stress_evidence"
+    assert scan["rows"][0] == {
+        "wordid": 1, "normalized_lookup_key": "same", "stressed_headword": "SÁME 1",
+        "official_url": "fixture:1", "parser_version": "fixture", "lookup_groups": ["same"],
+    }
+    assert scan["source"]["custody"] == "open_sum20/read-only"
+    assert len(scan["source"]["rows_sha256"]) == 64
+    # Candidate residual is a set difference, even with more curated groups.
+    monkeypatch.setattr(enrich_heteronyms, "CURATED_HETERONYMS", {"missing": [{}, {}]})
+    assert enrich_heteronyms.scan_modern_candidates()["candidate_groups_outside_curated"] == {
+        "count": 1, "keys": ["candidate"],
+    }
 
-def test_build_heteronyms_for_lemma_preserves_all_homonyms_when_stresses_differ(monkeypatch):
+
+def test_build_heteronyms_for_lemma_preserves_all_homonyms_when_stresses_differ(
+    monkeypatch, capsys, canonical_sum20_store,
+):
     """Verify that when multiple articles share stress but at least one differs, ALL articles are preserved."""
     from scripts.lexicon import sum20_lookup
 
@@ -537,6 +597,63 @@ def test_build_heteronyms_for_lemma_preserves_all_homonyms_when_stresses_differ(
     assert result[1]["gloss"] == "Друге значення тесту"
     assert result[2]["headword"] == "ТЕСТІ́"
     assert result[2]["gloss"] == "Третє значення тесту"
+
+    # Prefix matches must expose overlapping custody rather than silently
+    # inventing a partition or double-counting these rows as candidates.
+    with sqlite3.connect(canonical_sum20_store) as conn:
+        conn.executemany(
+            "INSERT INTO sum20_articles (wordid, normalized_lookup_key, stressed_headword, official_url, "
+            "headword, article_html, article_text, definition_text, fetched_at, content_sha256, parser_version) "
+            "VALUES (?, ?, ?, ?, '', '', '', '', 'fixture', 'fixture', 'fixture')",
+            [(1, "prefix", "PRÉFIX", "fixture:1"), (2, "prefix 2", "PREFÍX 2", "fixture:2"),
+             (3, "", "", "fixture:3")],
+        )
+    monkeypatch.setattr(enrich_heteronyms, "ROOT", canonical_sum20_store.parent)
+    scan = enrich_heteronyms.scan_modern_candidates()
+    assert scan["coverage_status"] == "UNKNOWN"
+    assert scan["candidate_groups"] == {"count": 0, "keys": []}
+    assert scan["unresolved_lookup_groups"] == {"count": 2, "keys": ["prefix", "prefix 2"]}
+    assert scan["unresolved_row_wordids"] == [2, 3]
+    assert scan["rows"][1]["lookup_groups"] == ["prefix", "prefix 2"]
+    assert scan["rows"][2]["lookup_groups"] == []
+
+    monkeypatch.setattr("sys.argv", ["enrich_heteronyms.py", "--scan"])
+    # An available empty schema is a completed read with no evidence, not a
+    # dictionary-validity verdict. A missing schema or refused store is UNKNOWN.
+    with sqlite3.connect(canonical_sum20_store) as conn:
+        conn.execute("DELETE FROM sum20_articles")
+    assert enrich_heteronyms.main() == 0
+    empty = json.loads(capsys.readouterr().out)
+    assert empty["live_rows"] == 0
+    assert empty["candidate_groups"] == {"count": 0, "keys": []}
+    assert empty["curated_groups_without_candidate_evidence"]["count"] == 420
+    with sqlite3.connect(canonical_sum20_store) as conn:
+        conn.execute("ALTER TABLE sum20_articles RENAME TO unavailable_articles")
+    assert enrich_heteronyms.main() == 1
+    unknown = json.loads(capsys.readouterr().out)
+    assert unknown == {"read_status": "UNKNOWN", "coverage_status": "UNKNOWN",
+                       "reason": "sum20_articles_schema_unavailable", "owner": "official SUM-20 store custodian"}
+    monkeypatch.setenv("LU_SOURCES_DB", str(canonical_sum20_store.parent / "missing.sqlite"))
+    assert enrich_heteronyms.main() == 1
+    assert json.loads(capsys.readouterr().out)["reason"] == "store_missing"
+
+    # An SQL read failure must not become a successful empty inventory.
+    with sqlite3.connect(canonical_sum20_store) as conn:
+        conn.execute("CREATE TABLE sum20_articles (wordid, normalized_lookup_key, stressed_headword, official_url, "
+                     "parser_version, quarantine_reason)")
+        conn.execute("INSERT INTO sum20_articles VALUES (1, 'fixture', '', '', 'fixture', '')")
+    monkeypatch.setenv("LU_SOURCES_DB", str(canonical_sum20_store))
+    from scripts.lib.readonly_sqlite import open_readonly
+
+    def refused_read(**kwargs):
+        conn = open_readonly(canonical_sum20_store)
+        conn.row_factory = sqlite3.Row
+        conn.set_authorizer(lambda action, *args: sqlite3.SQLITE_DENY if action == sqlite3.SQLITE_READ else sqlite3.SQLITE_OK)
+        return conn
+
+    monkeypatch.setattr(enrich_heteronyms, "open_sum20", refused_read)
+    assert enrich_heteronyms.main() == 1
+    assert json.loads(capsys.readouterr().out)["reason"] == "sum20_articles_read_unavailable"
 
 def test_curated_heteronyms_batch_13():
     """Verify Batch 13 curated heteronyms semantics, morphology, and witnesses (#8039)."""
