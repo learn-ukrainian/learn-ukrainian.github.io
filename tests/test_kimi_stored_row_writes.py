@@ -109,7 +109,9 @@ WRITERS: dict[str, Writer] = {
     f"{_AUTH}::AuthorityService.claim_job": Writer(SKIP, "named job; refused when Kimi, then the generic reclaim"),
     f"{_AUTH}::AuthorityService._requeue_terminal_job": Writer(SKIP, "retry/redrive by id; a Kimi job is refused"),
     f"{_AUTH}::AuthorityService._reclaim_expired_jobs_tx": Writer(SKIP, "deadline expiry and stale-lease requeue"),
-    f"{_AUTH}::AuthorityService.claim_next_delivery": Writer(SKIP, "admitted recipient; Kimi-model request passed over"),
+    f"{_AUTH}::AuthorityService._claim_delivery_tx": Writer(SKIP, "stored Kimi recipient and request-model rows passed over"),
+    f"{_AUTH}::AuthorityService._requeue_lane_predecessor_tx": Writer(SKIP, "stored Kimi predecessor rows passed over"),
+    f"{_fc('lane_mailbox.py')}::apply_alias_moves": Writer(SKIP, "protected stored rows excluded before every alias write"),
     f"{_AUTH}::AuthorityService._reclaim_expired_deliveries_tx": Writer(SKIP, "delivery expiry and requeue"),
     f"{_AUTH}::AuthorityService.finish_job": Writer(KEYED, "the fenced lease holder terminalizes its own job"),
     f"{_AUTH}::AuthorityService.finish_delivery": Writer(KEYED, "the fenced lease holder terminalizes its delivery"),
@@ -151,13 +153,14 @@ WRITERS: dict[str, Writer] = {
         {
             f"{_AUTH}::AuthorityService.finish_delivery": KEYED,
             f"{_AUTH}::AuthorityService._reclaim_expired_deliveries_tx": SKIP,
+            f"{_AUTH}::AuthorityService._requeue_lane_predecessor_tx": SKIP,
         },
     ),
     f"{_AUTH}::AuthorityService._record_wake_receipt_tx": Writer(
         HELPER,
         "wake receipt",
         {
-            f"{_AUTH}::AuthorityService.claim_next_delivery": SKIP,
+            f"{_AUTH}::AuthorityService._claim_delivery_tx": SKIP,
             f"{_AUTH}::AuthorityService.record_supervisory_consumption": KEYED,
             f"{_AUTH}::AuthorityService.finish_delivery": KEYED,
             f"{_AUTH}::AuthorityService.record_wake_receipt": KEYED,

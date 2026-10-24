@@ -33,9 +33,6 @@ from ._broker import (
     bridge_status,
     broker_cleanup,
 )
-from ._claude import ask_claude, process_for_claude
-from ._cli import interactive_mode, main, process_all_claude, process_all_gemini
-from ._codex import ask_codex, process_all_codex, process_for_codex
 from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
@@ -51,14 +48,12 @@ from ._config import (
     default_gemini_model,
 )
 from ._db import get_db, get_session, init_db, set_session
-from ._gemini import ask_gemini, process_and_respond
 from ._github import (
     _format_review_chunk,
     _gh_comment,
     _post_review_to_github,
     _split_content,
 )
-from ._grok_build import ask_grok_build, process_for_grok_build
 from ._messaging import (
     _extract_issue_number,
     acknowledge,
@@ -71,7 +66,6 @@ from ._messaging import (
     send_to_codex,
     send_to_gemini,
 )
-from ._model import _detect_model_error, check_model
 from ._prompts import build_claude_prompt, build_codex_prompt, build_gemini_prompt
 
 __all__ = [
@@ -139,4 +133,22 @@ def __getattr__(name: str):
         from ._config import default_gemini_model
 
         return default_gemini_model()
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    # Metadata-only inbox callers must not load execution code.
+    match name:
+        case "ask_claude" | "process_for_claude":
+            from . import _claude as module
+        case "interactive_mode" | "main" | "process_all_claude" | "process_all_gemini":
+            from . import _cli as module
+        case "ask_codex" | "process_all_codex" | "process_for_codex":
+            from . import _codex as module
+        case "ask_gemini" | "process_and_respond":
+            from . import _gemini as module
+        case "ask_grok_build" | "process_for_grok_build":
+            from . import _grok_build as module
+        case "_detect_model_error" | "check_model":
+            from . import _model as module
+        case _:
+            raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = getattr(module, name)
+    globals()[name] = value
+    return value

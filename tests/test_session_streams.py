@@ -14,7 +14,12 @@ from typing import Any
 import pytest
 
 from agents_extensions.shared.session_streams.app_lifecycle import VerifiedAppLifecycleProof, make_receipt
-from agents_extensions.shared.session_streams.db import MigrationError, SessionStreamDatabase, load_migrations
+from agents_extensions.shared.session_streams.db import (
+    MigrationError,
+    SessionStreamDatabase,
+    SessionStreamDatabaseError,
+    load_migrations,
+)
 from agents_extensions.shared.session_streams.dual_write import ATLAS_HANDOFF_PATH, mirror_atlas_handoff
 from agents_extensions.shared.session_streams.hooks import clean_exit_hook, heartbeat_hook, lease_from_environment
 from agents_extensions.shared.session_streams.model import (
@@ -489,6 +494,14 @@ def test_migration_fingerprint_drift_fails_closed(tmp_path: Path) -> None:
 
     with pytest.raises(MigrationError, match="fingerprint mismatch"):
         SessionStreamDatabase(path).connect()
+    before = path.read_bytes()
+    with pytest.raises(MigrationError, match="fingerprint mismatch"):
+        SessionStreamDatabase(path).connect_existing_guard()
+    assert path.read_bytes() == before
+    missing = tmp_path / "missing.sqlite3"
+    with pytest.raises(SessionStreamDatabaseError, match="session store unavailable"):
+        SessionStreamDatabase(missing).connect_existing_guard()
+    assert not missing.exists()
 
 
 def test_concurrent_first_open_serializes_migration_and_session_contention(tmp_path: Path) -> None:

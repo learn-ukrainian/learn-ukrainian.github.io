@@ -94,8 +94,28 @@ def test_repeat_is_idempotent(transport):
 
 
 def test_real_authority_deduplicates_across_retries(transport, monkeypatch, tmp_path):
+    import os
+    from datetime import UTC, datetime
+
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import LeaseHolder
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
     from scripts.fleet_comms.authority import AuthorityService
 
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "sessions.sqlite3"))
+    holder = store.open_session(
+        stream_id="epic:10453", session_id="test-owner", lineage_id="postmerge",
+        holder=LeaseHolder(agent="codex", harness="codex", instance_id="fixture", process_id=os.getpid()),
+        ttl_seconds=300, now=datetime.now(UTC),
+    )
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.delenv("SESSION_STREAM_TASK_ID", raising=False)
+    for key, value in {
+        "ID": holder.stream_id, "SESSION_ID": holder.session_id, "LEASE_ID": holder.lease_id,
+        "GENERATION": holder.generation, "FENCING_TOKEN": holder.fencing_token, "AGENT": "codex",
+        "HARNESS": "codex", "INSTANCE_ID": "fixture", "PROCESS_ID": os.getpid(), "HOLDER_KIND": "process",
+    }.items():
+        monkeypatch.setenv("SESSION_STREAM_" + key, str(value))
     root = tmp_path / "plane"
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
     monkeypatch.setattr(pc, "AuthorityService", AuthorityService)
@@ -103,13 +123,13 @@ def test_real_authority_deduplicates_across_retries(transport, monkeypatch, tmp_
     transport.issue["body"] = UNOWNED + "\n" + OWNED
     transport.pr["url"] = "https://github.com/unit/public/pull/4"
     pc.run_postmerge_criteria(4, apply=True)
-    with AuthorityService(root=root) as authority:
-        delivery = authority.claim_next_delivery("claude-cto", "test-owner")
+    with AuthorityService(root=root, session_store=store) as authority:
+        delivery = authority.claim_next_delivery("claude-cto", holder.session_id)
         assert delivery is not None
         message = authority.get_message(delivery.delivery.message_id)
         assert message.kind == "supervisory-request"
         assert message.sender == "codex-devops"
-        assert authority.claim_next_delivery("claude-cto", "test-owner") is None
+        assert authority.claim_next_delivery("claude-cto", holder.session_id) is None
 
 
 def test_dry_run_has_no_side_effects(transport):

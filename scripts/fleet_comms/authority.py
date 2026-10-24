@@ -34,7 +34,6 @@ from scripts.agent_runtime.target_admission import (
     require_admitted,
     resolve_and_admit,
     stored_kimi_request,
-    stored_kimi_row,
 )
 from scripts.control_plane.storage import (
     Authority,
@@ -49,25 +48,29 @@ from scripts.fleet_comms.formal_review_jobs import (
     FormalReviewJobsError,
     FormalReviewJobService,
 )
+from scripts.fleet_comms.lane_mailbox import (
+    BUSY_TIMEOUT_MS,
+    LANE_STREAMS,
+    LaneMailboxError,
+    lane_address,
+    recipient_filter,
+    resolve_lane,
+    stored_delivery_protected,
+    verify_registry,
+)
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 from scripts.fleet_comms.review_publication import SealedVerdict, parse_sealed_verdict_payload
 
 AuthorityJobKind = Literal["request", "discussion", "formal_review"]
-AuthorityJobState = Literal[
-    "queued", "running", "complete", "failed", "expired", "dead_lettered"
-]
-AuthorityDeliveryState = Literal[
-    "queued", "running", "acknowledged", "failed", "expired", "dead_lettered"
-]
+AuthorityJobState = Literal["queued", "running", "complete", "failed", "expired", "dead_lettered"]
+AuthorityDeliveryState = Literal["queued", "running", "acknowledged", "failed", "expired", "dead_lettered"]
 
 _JOB_KINDS = frozenset({"request", "discussion", "formal_review"})
 _JOB_TERMINAL = frozenset({"complete", "failed", "expired", "dead_lettered"})
 _DELIVERY_TERMINAL = frozenset({"acknowledged", "failed", "expired", "dead_lettered"})
 _WAKE_STATES = {"emitted": 0, "received": 1, "consumed": 2}
-_AUTHORITY_SCHEMA_VERSION = 5
-_FAILURE_PHASES = frozenset(
-    {"admission", "transport", "provider", "result_parse", "postprocess"}
-)
+_AUTHORITY_SCHEMA_VERSION = 11
+_FAILURE_PHASES = frozenset({"admission", "transport", "provider", "result_parse", "postprocess"})
 _FAILURE_CODES = frozenset(
     {
         "adapter_refused",
@@ -155,7 +158,6 @@ def _admitted_subscribers(names: Iterable[str]) -> list[AdmittedTarget]:
         except KimiAdmissionRefused:
             continue
     return admitted
-
 
 
 def _safe_json_mapping(value: Mapping[str, Any] | None) -> dict[str, Any]:
@@ -252,6 +254,8 @@ class AuthorityDelivery:
     created_at: str
     updated_at: str
     completed_at: str | None
+    pr_number: int | None = None
+    task_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -317,6 +321,7 @@ class AuthorityService:
         *,
         store: ArtifactStore | None = None,
         root: Path | None = None,
+        session_store: Any = None,
     ) -> None:
         # #7482 interlock: authority tables/queries are sqlite-only in this
         # slice (BEGIN IMMEDIATE, triggers, ``?`` placeholders) and are not in
@@ -329,6 +334,7 @@ class AuthorityService:
                 "supported by component 'authority_service' in this slice "
                 "(#7482 interlock)"
             )
+        self._session_store = session_store
         self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
         self._conn = self.store.connection
@@ -553,6 +559,8 @@ class AuthorityService:
         context_revisions: Mapping[str, str] | None = None,
         deadline_at: str | None = None,
         created_at: str | None = None,
+        pr_number: int | None = None,
+        task_id: str | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityMessage:
         """Append an immutable message and atomically fan it out to subscribers.
@@ -576,6 +584,8 @@ class AuthorityService:
                 context_revisions=context_revisions,
                 deadline_at=deadline_at,
                 created_at=created_at,
+                pr_number=pr_number,
+                task_id=task_id,
                 idempotency_key=message_key,
             )
 
@@ -589,6 +599,8 @@ class AuthorityService:
         idempotency_key: str,
         deadline_at: str | None = None,
         created_at: str | None = None,
+        pr_number: int | None = None,
+        task_id: str | None = None,
     ) -> AuthorityMessage:
         """Durably enqueue one supervisory request, even while its driver is offline."""
         return self.publish_message(
@@ -600,6 +612,8 @@ class AuthorityService:
             idempotency_key=_nonempty(idempotency_key, field="idempotency_key"),
             deadline_at=deadline_at,
             created_at=created_at,
+            pr_number=pr_number,
+            task_id=task_id,
         )
 
     def get_message(self, message_id: str) -> AuthorityMessage:
@@ -662,6 +676,8 @@ class AuthorityService:
         channel: str = "requests",
         deadline_at: str | None = None,
         metadata: Mapping[str, Any] | None = None,
+        pr_number: int | None = None,
+        task_id: str | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityJob:
         """Queue an ordinary request atomically with its immutable message.
@@ -683,15 +699,20 @@ class AuthorityService:
             existing = self._find_job_by_key_tx("request", key)
             if existing is not None:
                 self._assert_job_payload(existing, payload)
+                rows = self._conn.execute(
+                    "SELECT pr_number, task_id FROM authority_deliveries WHERE message_id=?", (existing.subject_id,)
+                ).fetchall()
+                if any((row["pr_number"], row["task_id"]) != (pr_number, task_id) for row in rows):
+                    raise AuthorityServiceError("idempotency_key_payload_mismatch")
                 return existing
             provenance: dict[str, Any] = {
                 "Source": sender,
                 "Agent": recipient_name,
                 "Via": "queue",
             }
-            task_id = request_metadata.get("task_id")
-            if isinstance(task_id, str) and task_id.strip():
-                provenance["task_id"] = task_id.strip()[:160]
+            supplied_task = request_metadata.get("task_id")
+            if isinstance(supplied_task, str) and supplied_task.strip():
+                provenance["task_id"] = supplied_task.strip()[:160]
             message = self._publish_message_tx(
                 sender=sender,
                 body=body,
@@ -699,6 +720,8 @@ class AuthorityService:
                 targets=(target,),
                 kind="request",
                 provenance=provenance,
+                pr_number=pr_number,
+                task_id=task_id,
                 deadline_at=deadline_at,
                 idempotency_key=f"request-message:{key}",
             )
@@ -1210,65 +1233,173 @@ class AuthorityService:
         max_attempts: int = 3,
         now: str | None = None,
     ) -> AuthorityDeliveryLease | None:
-        """Claim one recipient delivery; a stale worker cannot later acknowledge it.
-
-        A Kimi recipient is refused before any write: Kimi is not a bridge
-        recipient. A stored delivery of a request pinned to a Kimi model
-        (legacy) is passed over unwritten (``_stored_kimi_delivery``).
-        """
+        """Claim ordinary seats as before, or guard a local driver's lane claim."""
         (target,) = _admit_recipients((recipient,), mode=BRIDGE_MODE)
         recipient_name = _nonempty(target.recipient, field="recipient")
+        try:
+            lane = resolve_lane(self._conn, recipient_name)
+        except LaneMailboxError as exc:
+            raise AuthorityServiceError(str(exc)) from exc
         worker = _nonempty(worker_id, field="worker_id")
         if lease_seconds <= 0 or max_attempts <= 0:
             raise AuthorityServiceError("lease_and_max_attempts_must_be_positive")
         now_value = self._now_string(now)
         lease_until = _iso(_parse_iso(now_value, field="now") + timedelta(seconds=lease_seconds))
+        if lane:
+            return self._claim_lane(lane, worker, lease_until, max_attempts, now_value, now_override=now)
         with self._write_transaction():
             self._reclaim_expired_deliveries_tx(now_value, max_attempts=max_attempts)
-            candidates = self._conn.execute(
-                """SELECT * FROM authority_deliveries
-                   WHERE recipient = ? AND state = 'queued'
-                     AND attempt_count < ?
-                     AND (deadline_at IS NULL OR deadline_at > ?)
-                   ORDER BY created_at ASC, delivery_id ASC""",
-                (recipient_name, max_attempts, now_value),
-            )
-            row = next((item for item in candidates if not self._stored_kimi_delivery(item)), None)
-            if row is None:
-                return None
-            token = int(row["fence_token"]) + 1
-            cursor = self._conn.execute(
-                """UPDATE authority_deliveries
-                   SET state = 'running', lease_owner = ?, lease_expires_at = ?,
-                       fence_token = ?, attempt_count = attempt_count + 1, updated_at = ?
-                   WHERE delivery_id = ? AND state = 'queued' AND fence_token = ?""",
-                (worker, lease_until, token, now_value, str(row["delivery_id"]), int(row["fence_token"])),
-            )
-            if cursor.rowcount != 1:
-                raise AuthorityStaleLeaseError("delivery_claim_raced")
+            return self._claim_delivery_tx(recipient_name, worker, lease_until, max_attempts, now_value)
+
+    def _claim_lane(
+        self,
+        lane: str,
+        worker: str,
+        lease_until: str,
+        max_attempts: int,
+        now_value: str,
+        *,
+        now_override: str | None = None,
+    ) -> AuthorityDeliveryLease | None:
+        from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+        from agents_extensions.shared.session_streams.hooks import lease_from_environment
+        from agents_extensions.shared.session_streams.store import (
+            LeaseConflictError,
+            NotFoundError,
+            SessionStreamStore,
+        )
+        from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+        from scripts.api.occupancy import parse_host_id_map
+        from scripts.api.occupancy_local import empty_map_api_host_opaque, self_host_opaque_ids
+
+        try:
+            lease = lease_from_environment()
+        except (ValueError, TypeError) as exc:
+            raise AuthorityServiceError("lane_claim_not_holder") from exc
+        if lease.stream_id != LANE_STREAMS[lane] or worker != lease.session_id:
+            raise AuthorityServiceError("lane_claim_not_holder")
+        mapping = parse_host_id_map()
+        local_hosts = self_host_opaque_ids(mapping) if mapping else {empty_map_api_host_opaque()}
+        if lease.holder.host_id is not None and lease.holder.host_id not in local_hosts:
+            raise AuthorityServiceError("lane_lease_authority_unavailable")
+        try:
+            _admit_recipients((lease.holder.agent,), mode=BRIDGE_MODE)
+        except KimiAdmissionRefused as exc:
+            raise AuthorityServiceError("lane_holder_admission_refused") from exc
+        store = self._session_store or SessionStreamStore(SessionStreamDatabase())
+        previous_timeout = int(self._conn.execute("PRAGMA busy_timeout").fetchone()[0])
+        try:
+            self._conn.execute(f"PRAGMA busy_timeout = {BUSY_TIMEOUT_MS}")
+            with store.guard_delivery_claim(lease, now=_parse_iso(now_value, field="now")) as current:
+                capped = min(
+                    _parse_iso(lease_until, field="lease_until"), _parse_iso(current["expires_at"], field="expires_at")
+                )
+                with self._write_transaction():
+                    verify_registry(self._conn)
+                    self._requeue_lane_predecessor_tx(lane, worker, now_value, max_attempts)
+                    # Lock waits and predecessor processing must not carry a
+                    # once-valid envelope beyond its database expiry.
+                    claimed_at = self._now_string(now_override)
+                    if _parse_iso(claimed_at, field="now") >= capped:
+                        raise AuthorityServiceError("lane_claim_not_holder")
+                    return self._claim_delivery_tx(lane, worker, _iso(capped), max_attempts, claimed_at)
+        except NotFoundError as exc:
+            raise AuthorityServiceError("lane_unowned") from exc
+        except LeaseConflictError as exc:
+            raise AuthorityServiceError("lane_claim_not_holder") from exc
+        except LaneMailboxError as exc:
+            raise AuthorityServiceError(str(exc)) from exc
+        except AuthorityServiceError:
+            raise
+        except Exception as exc:
+            raise AuthorityServiceError("lane_lease_authority_unavailable") from exc
+        finally:
+            self._conn.execute(f"PRAGMA busy_timeout = {previous_timeout}")
+
+    def _requeue_lane_predecessor_tx(self, lane: str, worker: str, now: str, max_attempts: int) -> None:
+        clause, names = recipient_filter("recipient", lane)
+        rows = self._conn.execute(
+            f"""SELECT * FROM authority_deliveries WHERE {clause}
+                AND state IN ('queued', 'running')
+                AND ((deadline_at IS NOT NULL AND deadline_at <= ?)
+                    OR (state='running' AND (lease_owner IS NOT ? OR COALESCE(lease_expires_at, '') <= ?)))""",
+            (*names, now, worker, now),
+        ).fetchall()
+        for row in rows:
+            if self._stored_kimi_delivery(row):
+                continue
+            did = row["delivery_id"]
+            expired = row["deadline_at"] is not None and row["deadline_at"] <= now
+            predecessor = row["state"] == "running" and row["lease_owner"] != worker
+            stale = row["state"] == "running" and (row["lease_expires_at"] or "") <= now
+            if not (expired or predecessor or stale):
+                continue
+            exhausted = row["attempt_count"] >= max_attempts and not predecessor
+            state = "expired" if expired else "dead_lettered" if exhausted else "queued"
             self._conn.execute(
-                """INSERT INTO authority_delivery_attempts(
-                    attempt_id, delivery_id, fence_token, state, started_at
-                ) VALUES (?, ?, ?, 'running', ?)""",
-                (new_id("authority-delivery-attempt"), str(row["delivery_id"]), token, now_value),
+                """UPDATE authority_deliveries SET state=?, lease_owner=NULL, lease_expires_at=NULL,
+                    fence_token=fence_token+1, updated_at=?, completed_at=? WHERE delivery_id=?""",
+                (state, now, now if state != "queued" else None, did),
             )
-            self._record_wake_receipt_tx(
-                str(row["delivery_id"]), recipient_name, token, state="received", now=now_value
+            self._conn.execute(
+                """UPDATE authority_delivery_attempts SET state='reclaimed', finished_at=?
+                    WHERE delivery_id=? AND fence_token=? AND finished_at IS NULL""",
+                (now, did, row["fence_token"]),
             )
-            claimed = self._conn.execute(
-                """SELECT d.*, m.body_artifact_id, m.content_sha256
-                   FROM authority_deliveries d
-                   JOIN comms_messages m ON m.message_id = d.message_id
-                   WHERE d.delivery_id = ?""",
-                (str(row["delivery_id"]),),
-            ).fetchone()
-            if claimed is None or claimed["body_artifact_id"] is None:
-                raise AuthorityServiceError("delivery_message_missing")
-            return AuthorityDeliveryLease(
-                delivery=self._delivery_from_row(claimed),
-                body_artifact_id=str(claimed["body_artifact_id"]),
-                content_sha256=str(claimed["content_sha256"]),
-            )
+            if state != "queued":
+                self._dead_letter_delivery_tx(did, reason_code="deadline_expired" if expired else "attempts_exhausted")
+
+    def _claim_delivery_tx(
+        self,
+        recipient_name: str,
+        worker: str,
+        lease_until: str,
+        max_attempts: int,
+        now_value: str,
+    ) -> AuthorityDeliveryLease | None:
+        clause, names = recipient_filter("recipient", recipient_name)
+        candidates = self._conn.execute(
+            f"""SELECT * FROM authority_deliveries
+               WHERE {clause} AND state = 'queued'
+                 AND (? OR attempt_count < ?)
+                 AND (deadline_at IS NULL OR deadline_at > ?)
+               ORDER BY created_at ASC, delivery_id ASC""",
+            (*names, recipient_name in LANE_STREAMS, max_attempts, now_value),
+        )
+        row = next((item for item in candidates if not self._stored_kimi_delivery(item)), None)
+        if row is None:
+            return None
+        token = int(row["fence_token"]) + 1
+        cursor = self._conn.execute(
+            """UPDATE authority_deliveries
+               SET state = 'running', lease_owner = ?, lease_expires_at = ?,
+                   fence_token = ?, attempt_count = attempt_count + 1, updated_at = ?
+               WHERE delivery_id = ? AND state = 'queued' AND fence_token = ?""",
+            (worker, lease_until, token, now_value, str(row["delivery_id"]), int(row["fence_token"])),
+        )
+        if cursor.rowcount != 1:
+            raise AuthorityStaleLeaseError("delivery_claim_raced")
+        self._conn.execute(
+            """INSERT INTO authority_delivery_attempts(
+                attempt_id, delivery_id, fence_token, state, started_at
+            ) VALUES (?, ?, ?, 'running', ?)""",
+            (new_id("authority-delivery-attempt"), str(row["delivery_id"]), token, now_value),
+        )
+        self._record_wake_receipt_tx(str(row["delivery_id"]), recipient_name, token, state="received", now=now_value)
+        claimed = self._conn.execute(
+            """SELECT d.*, m.body_artifact_id, m.content_sha256
+               FROM authority_deliveries d
+               JOIN comms_messages m ON m.message_id = d.message_id
+               WHERE d.delivery_id = ?""",
+            (str(row["delivery_id"]),),
+        ).fetchone()
+        if claimed is None or claimed["body_artifact_id"] is None:
+            raise AuthorityServiceError("delivery_message_missing")
+        return AuthorityDeliveryLease(
+            delivery=self._delivery_from_row(claimed),
+            body_artifact_id=str(claimed["body_artifact_id"]),
+            content_sha256=str(claimed["content_sha256"]),
+        )
 
     def record_supervisory_consumption(
         self,
@@ -1425,6 +1556,8 @@ class AuthorityService:
                 producer="authority-delivery-result",
             )
             if str(row["state"]) in _DELIVERY_TERMINAL:
+                if lane_address(str(row["recipient"])) and fence_token != int(row["fence_token"]):
+                    raise AuthorityStaleLeaseError("delivery_stale_fence")
                 self._assert_terminal_replay(
                     actual_state=str(row["state"]),
                     actual_sha=row["terminal_sha256"],
@@ -1462,9 +1595,7 @@ class AuthorityService:
                     fence_token,
                 ),
             )
-            self._record_wake_receipt_tx(
-                did, str(row["recipient"]), fence_token, state="consumed", now=now_value
-            )
+            self._record_wake_receipt_tx(did, str(row["recipient"]), fence_token, state="consumed", now=now_value)
             if state == "failed":
                 self._dead_letter_delivery_tx(did, reason_code="worker_failed")
             return self.get_delivery(did)
@@ -1828,6 +1959,8 @@ class AuthorityService:
         context_revisions: Mapping[str, str] | None = None,
         deadline_at: str | None = None,
         created_at: str | None = None,
+        pr_number: int | None = None,
+        task_id: str | None = None,
         idempotency_key: str,
         thread_id: str | None = None,
         message_id: str | None = None,
@@ -1835,6 +1968,10 @@ class AuthorityService:
         emit_wakes: bool = True,
         imported_delivery_state: str | None = None,
     ) -> AuthorityMessage:
+        if pr_number is not None and (type(pr_number) is not int or pr_number <= 0):
+            raise AuthorityServiceError("invalid_pr_number")
+        if task_id is not None and (not isinstance(task_id, str) or not task_id.strip() or len(task_id) > 160):
+            raise AuthorityServiceError("invalid_task_id")
         if not isinstance(body, str):
             raise AuthorityServiceError("message_body_must_be_text")
         sender_name = _nonempty(sender, field="sender")
@@ -1878,6 +2015,11 @@ class AuthorityService:
         }
         existing_id = self._check_idempotency_tx("message", key, _sha256_json(payload))
         if existing_id is not None:
+            correlations = self._conn.execute(
+                "SELECT pr_number, task_id FROM authority_deliveries WHERE message_id = ?", (existing_id,)
+            ).fetchall()
+            if any((row["pr_number"], row["task_id"]) != (pr_number, task_id) for row in correlations):
+                raise AuthorityServiceError("idempotency_key_payload_mismatch")
             return self.get_message(existing_id)
 
         mid = message_id or new_id("message")
@@ -1958,7 +2100,17 @@ class AuthorityService:
             ),
         )
         delivery_ids: list[str] = []
-        for recipient in recipients_norm:
+        # Preserve requested names in the historical fingerprint and message.
+        # Only live delivery addresses normalize, inside this transaction.
+        delivery_recipients = recipients_norm
+        if imported_source is None:
+            try:
+                delivery_recipients = tuple(
+                    dict.fromkeys(resolve_lane(self._conn, name) or name for name in recipients_norm)
+                )
+            except LaneMailboxError as exc:
+                raise AuthorityServiceError(str(exc)) from exc
+        for recipient in delivery_recipients:
             delivery_id = new_id("authority-delivery")
             delivery_state = imported_delivery_state or "queued"
             terminal_sha = _sha256_bytes(b"") if delivery_state == "acknowledged" else None
@@ -1966,8 +2118,8 @@ class AuthorityService:
             self._conn.execute(
                 """INSERT INTO authority_deliveries(
                     delivery_id, message_id, recipient, state, deadline_at, terminal_sha256,
-                    created_at, updated_at, completed_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    created_at, updated_at, completed_at, pr_number, task_id
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     delivery_id,
                     mid,
@@ -1978,13 +2130,13 @@ class AuthorityService:
                     creation,
                     creation,
                     completed_at,
+                    pr_number,
+                    task_id,
                 ),
             )
             delivery_ids.append(delivery_id)
             if emit_wakes and delivery_state == "queued":
-                self._record_wake_receipt_tx(
-                    delivery_id, recipient, 0, state="emitted", now=creation
-                )
+                self._record_wake_receipt_tx(delivery_id, recipient, 0, state="emitted", now=creation)
         self._insert_idempotency_tx("message", key, _sha256_json(payload), mid)
         return AuthorityMessage(
             message_id=mid,
@@ -2214,14 +2366,7 @@ class AuthorityService:
 
     def _stored_kimi_delivery(self, row: sqlite3.Row) -> bool:
         """True when a stored delivery is to a Kimi seat, or delivers a request job pinned to a Kimi model (legacy)."""
-        if stored_kimi_row(row["recipient"]):
-            return True
-        jobs = self._conn.execute(
-            """SELECT payload_artifact_id FROM authority_jobs
-               WHERE job_kind = 'request' AND subject_id = ?""",
-            (str(row["message_id"]),),
-        ).fetchall()
-        return any(self._stored_kimi_job(job) for job in jobs)
+        return stored_delivery_protected(self._conn, row, request_is_protected=self._stored_kimi_job)
 
     def _record_wake_receipt_tx(
         self,
@@ -2735,22 +2880,18 @@ class AuthorityService:
             state=str(row["state"]),
             deadline_at=str(row["deadline_at"]) if row["deadline_at"] is not None else None,
             lease_owner=str(row["lease_owner"]) if row["lease_owner"] is not None else None,
-            lease_expires_at=(
-                str(row["lease_expires_at"]) if row["lease_expires_at"] is not None else None
-            ),
+            lease_expires_at=(str(row["lease_expires_at"]) if row["lease_expires_at"] is not None else None),
             fence_token=int(row["fence_token"]),
             attempt_count=int(row["attempt_count"]),
             acknowledgment_artifact_id=(
-                str(row["acknowledgment_artifact_id"])
-                if row["acknowledgment_artifact_id"] is not None
-                else None
+                str(row["acknowledgment_artifact_id"]) if row["acknowledgment_artifact_id"] is not None else None
             ),
-            terminal_sha256=(
-                str(row["terminal_sha256"]) if row["terminal_sha256"] is not None else None
-            ),
+            terminal_sha256=(str(row["terminal_sha256"]) if row["terminal_sha256"] is not None else None),
             created_at=str(row["created_at"]),
             updated_at=str(row["updated_at"]),
             completed_at=str(row["completed_at"]) if row["completed_at"] is not None else None,
+            pr_number=row["pr_number"],
+            task_id=row["task_id"],
         )
 
     @staticmethod

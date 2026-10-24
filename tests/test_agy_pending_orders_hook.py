@@ -5,9 +5,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -33,7 +35,8 @@ EXPECTED_UNKNOWN_NOTICE = (
 SCRIPT = ROOT / "scripts/agy_hooks/pending_orders_inject.sh"
 
 
-def run_hook(payload="{}", *, env=None, cwd=ROOT):
+def run_hook(payload="{}", *, env=None, cwd=ROOT, count=None, authority_count=None, recipient="lane:infra"):
+    started = datetime.now(UTC)
     proc = subprocess.run(
         ["sh", str(SCRIPT)], input=payload, text=True, capture_output=True, cwd=cwd, env=env, timeout=20
     )
@@ -41,10 +44,43 @@ def run_hook(payload="{}", *, env=None, cwd=ROOT):
     assert proc.stderr == ""
     assert BODY_MARKER not in proc.stdout
     result = json.loads(proc.stdout)
+    if count is not None:
+        assert result and result != {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
     if result:
         line = result["injectSteps"][0]["ephemeralMessage"]
         assert len(line) <= 200
         assert line.isascii() and all(32 <= ord(char) < 127 for char in line)
+        if line != EXPECTED_UNKNOWN_NOTICE:
+            matched = re.fullmatch(
+                r"PENDING ORDERS: ([0-9]+|unknown); authority ([0-9]+|unknown), oldest ([0-9]+s|none|unknown); "
+                r'\.venv/bin/python -m scripts.fleet_comms deliveries (?:claim --recipient ([a-z:-]+) --worker-id "\$SESSION_STREAM_SESSION_ID"|(--help)); '
+                r"legacy ([0-9]+|unknown)(?:: ai_agent_bridge inbox --for ([a-z-]+))?",
+                line,
+            )
+            assert matched is not None
+            total, authority, oldest, address, help_flag, legacy, legacy_address = matched.groups()
+            if legacy not in {"0", "unknown"}:
+                assert help_flag == "--help"
+                assert legacy_address == (os.environ if env is None else env)["SESSION_HANDOFF_AGENT"]
+            else:
+                assert help_flag is None and legacy_address is None
+            if count is not None:
+                assert int(total) == count
+                assert int(authority) == authority_count
+                assert int(legacy) == count - authority_count
+                if help_flag is None:
+                    assert address == recipient
+            if authority == "unknown":
+                assert oldest == "unknown"
+            elif int(authority):
+                epoch = datetime(2026, 1, 1, tzinfo=UTC)
+                assert (
+                    int((started - epoch).total_seconds())
+                    <= int(oldest[:-1])
+                    <= int((datetime.now(UTC) - epoch).total_seconds())
+                )
+            else:
+                assert oldest == "none"
     return result
 
 
@@ -78,12 +114,12 @@ def test_monitor_alias_cli_and_hook_policy(stores, roster, monkeypatch, provider
         )
     before = snapshot(stores)
     metadata = run_cli(slot)
-    result = run_hook()
-    assert run_hook() == result
+    authority_metadata = metadata.pop("authority")
+    result = run_hook(count=metadata["count"], authority_count=authority_metadata["count"], recipient=slot)
     assert snapshot(stores) == before
     if roster_kind in {"empty", "missing"}:
         assert metadata == {
-            "count": 0,
+            "count": None,
             "ids": [],
             "truncated": False,
             "stores": {"legacy": None, "authority": None},
@@ -102,23 +138,20 @@ def test_monitor_alias_cli_and_hook_policy(stores, roster, monkeypatch, provider
         "stores": {"legacy": legacy_count, "authority": authority_count},
         "probe": "ok",
     }
-    if source == "legacy":
-        guidance = f"; legacy: ai_agent_bridge inbox --for {canonical}"
-    elif source == "authority":
-        guidance = "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
-    else:
-        guidance = f"; legacy: ai_agent_bridge inbox --for {canonical}; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
-    shown = ",".join(map(str, ids))
-    assert result == {"injectSteps": [{"ephemeralMessage": f"PENDING ORDERS: {len(ids)} (ids {shown}){guidance}"}]}
-    line = result["injectSteps"][0]["ephemeralMessage"]
-    assert "ack" not in line and "claim" not in line and "consume" not in line
+    assert authority_metadata["count"] == authority_count
+    assert authority_metadata["content_included"] is False
+    assert result
+    assert run_hook(count=len(ids), authority_count=authority_count, recipient=slot)
     # Durable consumption belongs to the fixture driver, never the hook.
     with sqlite3.connect(stores[0]) as conn:
         conn.execute("UPDATE messages SET consumed_by_live_driver=1")
     with sqlite3.connect(stores[1]) as conn:
         conn.execute("UPDATE authority_deliveries SET state='acknowledged'")
     after_consumption = snapshot(stores)
-    assert run_cli(slot) == {
+    metadata = run_cli(slot)
+    authority_metadata = metadata.pop("authority")
+    assert authority_metadata["content_included"] is False
+    assert metadata == {
         "count": 0,
         "ids": [],
         "truncated": False,
@@ -155,14 +188,30 @@ def test_alias_store_failure_is_unknown(stores, roster, monkeypatch, provider, s
             conn.execute("DROP TABLE messages" if store_index == 0 else "DROP TABLE authority_wake_receipts")
         before[target] = target.read_bytes()
     try:
-        assert run_cli(slot) == {
-            "count": 0,
+        metadata = run_cli(slot)
+        authority_metadata = metadata.pop("authority")
+        assert authority_metadata["count"] == (1 if store_index == 0 else None)
+        assert authority_metadata["content_included"] is False
+        assert metadata == {
+            "count": None,
             "ids": [],
             "truncated": False,
-            "stores": {"legacy": None, "authority": None},
+            "stores": {"legacy": None if store_index == 0 else 1, "authority": 1 if store_index == 0 else None},
             "probe": "unknown",
         }
-        assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+        notice = run_hook()["injectSteps"][0]["ephemeralMessage"]
+        if store_index == 0:
+            assert notice.startswith("PENDING ORDERS: unknown; authority 1, oldest ")
+            assert (
+                f'deliveries claim --recipient {slot} --worker-id "$SESSION_STREAM_SESSION_ID"; legacy unknown'
+                in notice
+            )
+        else:
+            assert notice == (
+                "PENDING ORDERS: unknown; authority unknown, oldest unknown; "
+                ".venv/bin/python -m scripts.fleet_comms deliveries --help; "
+                f"legacy 1: ai_agent_bridge inbox --for {slot}"
+            )
         if failure == "missing":
             assert not target.exists()
     finally:
@@ -190,24 +239,20 @@ def test_alias_only_supervisory_consumption_is_silent(stores, roster, monkeypatc
     )
     before = snapshot(stores)
     pending = consumed_by == "wake"
-    assert run_cli(slot) == {
+    metadata = run_cli(slot)
+    authority_metadata = metadata.pop("authority")
+    assert authority_metadata["content_included"] is False
+    assert metadata == {
         "count": 1 if pending else 0,
         "ids": [MESSAGE_ID] if pending else [],
         "truncated": False,
         "stores": {"legacy": 0, "authority": 1 if pending else 0},
         "probe": "ok",
     }
-    assert run_hook() == (
-        {
-            "injectSteps": [
-                {
-                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {MESSAGE_ID}); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
-                }
-            ]
-        }
-        if pending
-        else {}
-    )
+    if pending:
+        assert run_hook(count=1, authority_count=1, recipient=slot)
+    else:
+        assert run_hook() == {}
     assert snapshot(stores) == before
 
 
@@ -217,8 +262,11 @@ def test_unknown_or_unavailable_authority_admission(stores, roster, monkeypatch,
     add_legacy(stores[0], recipient="gemini")
     add_authority(stores[1], recipient="gemini-monitor")
     before = snapshot(stores)
-    assert run_cli(slot) == {
-        "count": 0,
+    metadata = run_cli(slot)
+    authority_metadata = metadata.pop("authority")
+    assert authority_metadata["content_included"] is False
+    assert metadata == {
+        "count": None,
         "ids": [],
         "truncated": False,
         "stores": {"legacy": None, "authority": None},
@@ -277,21 +325,29 @@ def test_denominator_matrix(stores, state, recipient, failure, monkeypatch):
     elif failure == "missing-slot":
         monkeypatch.delenv("SESSION_HANDOFF_AGENT")
     try:
-        result = run_hook(payload)
-        if failure != "none" or recipient != "gemini-infra":
+        result = run_hook(
+            payload,
+            count=1
+            if failure == "none"
+            and recipient == "gemini-infra"
+            and state in {"legacy-unread", "authority-queued", "authority-running", "replayed"}
+            else None,
+            authority_count=int(state.startswith("authority")),
+        )
+        if recipient == "gemini-infra" and failure in {"missing-store", "locked-store", "unreadable-store"}:
+            authority_count = int(state in {"authority-queued", "authority-running"})
+            line = result["injectSteps"][0]["ephemeralMessage"]
+            assert line.startswith(f"PENDING ORDERS: unknown; authority {authority_count}, oldest ")
+            assert line.endswith("; legacy unknown")
+            assert 'deliveries claim --recipient lane:infra --worker-id "$SESSION_STREAM_SESSION_ID"' in line
+        elif failure != "none" or recipient != "gemini-infra":
             assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
         elif state in {"legacy-acknowledged", "legacy-consumed", "authority-consumed", "authority-expired"}:
             assert result == {}
         else:
-            identifier = MESSAGE_ID if state.startswith("authority") else "1"
-            guidance = (
-                "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
-                if state.startswith("authority")
-                else "; legacy: ai_agent_bridge inbox --for gemini-infra"
-            )
-            assert result == {"injectSteps": [{"ephemeralMessage": f"PENDING ORDERS: 1 (ids {identifier}){guidance}"}]}
+            assert result
             if state == "replayed":
-                assert run_hook() == result
+                assert run_hook(count=1, authority_count=0)
     finally:
         if lock:
             lock.close()
@@ -307,7 +363,7 @@ def test_next_call_arrival_replay_consumption_and_hash(stores, tmp_path):
     files = set(tmp_path.iterdir())
     first = run_hook(cwd=tmp_path)
     assert "PENDING ORDERS: 2" in first["injectSteps"][0]["ephemeralMessage"]
-    assert run_hook() == first
+    assert run_hook(count=2, authority_count=1)
     assert {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores} == before
     assert set(tmp_path.iterdir()) == files
     for path in files - set(stores):
@@ -381,19 +437,22 @@ def test_maximum_ids_and_line_budget(stores):
     for identifier in range(1, 9):
         add_legacy(stores[0], identifier=identifier)
     line = run_hook()["injectSteps"][0]["ephemeralMessage"]
-    assert "ids 1,2,3,4,5; truncated" in line
+    assert "PENDING ORDERS: 8; authority 0, oldest none;" in line
+    assert "ids" not in line
     with sqlite3.connect(stores[0]) as conn:
         conn.execute("DELETE FROM messages")
     with sqlite3.connect(stores[1]) as conn:
         for number in range(8):
             conn.execute(
-                "INSERT INTO authority_deliveries(delivery_id,message_id,recipient,state,created_at,updated_at) VALUES (?,?,?,'queued','','')",
+                "INSERT INTO authority_deliveries(delivery_id,message_id,recipient,state,created_at,updated_at) VALUES (?,?,?,'queued','2026-01-01T00:00:00Z','2026-01-01T00:00:00Z')",
                 (f"delivery-{number}", f"authority-message_{number:032x}", "gemini-infra"),
             )
     line = run_hook()["injectSteps"][0]["ephemeralMessage"]
     assert "PENDING ORDERS: 8" in line
-    assert "authority-message_00000000000000000000000000000000" in line
-    assert "truncated" in line
+    assert "authority 8, oldest " in line
+    assert "--recipient lane:infra" in line
+    assert "authority-message_" not in line
+    assert len(line) <= 200
 
 
 def test_overlay_preserves_secret_guard_and_guide_names_hook(tmp_path):

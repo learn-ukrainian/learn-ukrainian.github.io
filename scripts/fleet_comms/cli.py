@@ -30,8 +30,9 @@ import os
 import sqlite3
 import sys
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from dataclasses import asdict
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -39,11 +40,11 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 try:
-    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
-    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
 
 from scripts.control_plane.health import authority_collector_payload
 from scripts.control_plane.storage import StoreId, assert_component_supported
@@ -531,6 +532,9 @@ def cmd_bottleneck_metrics(args: argparse.Namespace) -> int:
         plane_db=plane_db,
     )
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
+    from scripts.fleet_comms.lane_mailbox import correlation_counts
+
+    payload["queued_delivery_correlations"] = correlation_counts(plane_db)
     payload["tasks_store"] = batch_tasks_store(reachable=tasks_dir.is_dir())
     payload["plane_store"] = comms_plane_store(reachable=plane_db.is_file())
     if not plane_db.is_file():
@@ -807,6 +811,35 @@ def _refuse_kimi_recipients(recipients: list[str] | tuple[str, ...]) -> None:
         raise FleetCommsCliError(str(exc)) from exc
 
 
+def cmd_lane_mailboxes(args: argparse.Namespace) -> int:
+    """Explicit rollout commands; dry-run never opens a writable service."""
+    from scripts.control_plane.storage import ControlPlaneError, StoreId, assert_component_supported
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+    from scripts.fleet_comms.lane_mailbox import LaneMailboxError, apply_alias_moves, migration_plan, verify_registry
+
+    root = Path(args.root).expanduser() if args.root else default_plane_root()
+    try:
+        assert_component_supported(StoreId.FLEET_COMMS, "authority_service")
+        if args.apply:
+            with AuthorityService(root=root) as service, service._write_transaction():
+                verify_registry(service._conn)
+                payload = apply_alias_moves(service._conn, now=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"))
+        else:
+            with closing(open_readonly(root / "comms.sqlite3", timeout=0.2)) as conn:
+                conn.row_factory = sqlite3.Row
+                conn.execute("BEGIN")
+                payload, _moves = migration_plan(conn)
+                payload["applied"] = False
+        sys.stdout.write(_json_dump(payload))
+        return EXIT_OK
+    except (LaneMailboxError, AuthorityServiceError) as exc:
+        sys.stdout.write(_json_dump({"error": str(exc), "content_included": False}))
+        return EXIT_ERROR
+    except (OSError, sqlite3.Error, ControlPlaneError):
+        sys.stdout.write(_json_dump({"error": "lane_store_unavailable", "content_included": False}))
+        return EXIT_ERROR
+
+
 def cmd_deliveries(args: argparse.Namespace) -> int:
     """Expose authority delivery operations without loading message bodies."""
     from scripts.control_plane.storage import ControlPlaneError
@@ -992,6 +1025,8 @@ def cmd_channel_publish(args: argparse.Namespace) -> int:
         with AuthorityService(root=_authority_root(args)) as service:
             message = service.publish_message(
                 sender=args.sender,
+                pr_number=args.pr_number,
+                task_id=args.task_id,
                 body=_body_argument(args.body),
                 channel=args.name,
                 recipients=args.recipient or None,
@@ -1009,7 +1044,6 @@ def cmd_channel_publish(args: argparse.Namespace) -> int:
     payload["content_included"] = False
     sys.stdout.write(_json_dump(payload))
     return EXIT_OK
-
 
 
 def cmd_github_metrics(args: argparse.Namespace) -> int:
@@ -1135,6 +1169,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=True)
     _add_deliveries_parser(sub)
+    lanes = sub.add_parser(
+        "lane-mailboxes",
+        help="Plan or apply queued alias moves after coordinated v11 rollout",
+        description="Report the five installed lane mailboxes and planned queued alias moves.\nUse after draining every v10 process; never run apply while an alias delivery is running.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.fleet_comms lane-mailboxes\n  .venv/bin/python -m scripts.fleet_comms lane-mailboxes --apply\nOutputs: metadata-only JSON; default is read-only. Apply atomically moves queued rows and records duplicates as dead letters. Schema v11 installs the checked-in registry.\nExit codes: 0 = success, 2 = usage, 3 = refusal or unavailable store.\nRelated: #10800; deliveries; plane-status.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    lanes.add_argument("--root", default=None, help="Authority directory (default: configured shared plane root)")
+    lanes.add_argument(
+        "--apply",
+        action="store_true",
+        help="Apply after coordinated v10 drain and a reviewed dry-run (default: read-only)",
+    )
+    lanes.set_defaults(func=cmd_lane_mailboxes)
 
     plane = sub.add_parser(
         "plane-status",
@@ -1389,18 +1437,14 @@ def build_parser() -> argparse.ArgumentParser:
     channel_create.add_argument("--root")
     channel_create.set_defaults(func=cmd_channel_create)
 
-    channel_subscribe = channel_sub.add_parser(
-        "subscribe", help="Add durable future fan-out recipients"
-    )
+    channel_subscribe = channel_sub.add_parser("subscribe", help="Add durable future fan-out recipients")
     channel_subscribe.add_argument("name")
     channel_subscribe.add_argument("recipient", nargs="+")
     channel_subscribe.add_argument("--metadata-json")
     channel_subscribe.add_argument("--root")
     channel_subscribe.set_defaults(func=cmd_channel_subscribe)
 
-    channel_context = channel_sub.add_parser(
-        "context", help="Seal and select the current channel context revision"
-    )
+    channel_context = channel_sub.add_parser("context", help="Seal and select the current channel context revision")
     channel_context.add_argument("name")
     channel_context.add_argument("body", help="Context text or '-' for stdin")
     channel_context.add_argument("--producer", default="fleet-comms-cli")
@@ -1422,6 +1466,17 @@ def build_parser() -> argparse.ArgumentParser:
     channel_publish.add_argument("--deadline-at")
     channel_publish.add_argument("--idempotency-key", required=True)
     channel_publish.add_argument("--root")
+    channel_publish.add_argument(
+        "--pr-number",
+        type=int,
+        default=None,
+        help="Optional positive PR correlation number (default: null; never inferred)",
+    )
+    channel_publish.add_argument(
+        "--task-id",
+        default=None,
+        help="Optional task correlation identity, up to 160 characters (default: null; never inferred)",
+    )
     channel_publish.set_defaults(func=cmd_channel_publish)
 
     metrics = sub.add_parser(
@@ -1519,7 +1574,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Force broker SQLite even when plane mode is authority (source=legacy_forced)",
     )
     dead.set_defaults(func=cmd_dead_letters)
-
 
     gh_metrics = sub.add_parser(
         "github-metrics",
@@ -1631,7 +1685,6 @@ def cmd_cold_start_board(args: argparse.Namespace) -> int:
 
     sys.stdout.write(output)
     return EXIT_OK
-
 
 
 def main(argv: list[str] | None = None) -> int:

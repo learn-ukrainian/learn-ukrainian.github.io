@@ -276,6 +276,51 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     assert broker.json()["read_only"] is True
     assert reap.json() == {"read_only": True, "apply": False, "report": []}
 
+    from tests.helpers.agy_inbox_fixtures import BODY_MARKER, add_authority
+
+    db = fleet_root / "comms.sqlite3"
+    add_authority(db, recipient="lane:infra", delivery_id="lane-row")
+    add_authority(db, recipient="claude-infra", delivery_id="alias-row", identifier="authority-message_" + "b" * 32)
+    add_authority(db, recipient="codex-atlas", delivery_id="other-row", identifier="authority-message_" + "c" * 32)
+    with sqlite3.connect(db) as conn:
+        conn.execute("UPDATE authority_deliveries SET pr_number=10800,task_id='supplied-task' WHERE delivery_id='lane-row'")
+    before = db.read_bytes()
+    lane = client.get("/api/fleet/facade/backlog", params={"agent": "grok-infra"}).json()
+    assert lane["read_only"] is True and lane["probe"] == "ok"
+    assert lane["count"] == 2 and isinstance(lane["oldest_age_seconds"], int)
+    assert {row["recipient"] for row in lane["deliveries"]} == {"lane:infra", "claude-infra"}
+    assert {tuple(sorted(group.items())) for group in lane["by_correlation"]} == {
+        tuple(sorted({"pr_number": 10800, "task_id": "supplied-task", "count": 1}.items())),
+        tuple(sorted({"pr_number": None, "task_id": None, "count": 1}.items())),
+    }
+    assert "--recipient lane:infra" in lane["drain_command"]
+    assert BODY_MARKER not in json.dumps(lane) and lane["content_included"] is False
+    messages = client.get("/api/fleet/messages", params={"agent": "grok-infra"}).json()
+    assert messages["total"] == 2
+    assert BODY_MARKER not in json.dumps(messages)
+    assert db.read_bytes() == before
+    with sqlite3.connect(db) as lock:
+        lock.execute("BEGIN EXCLUSIVE")
+        unknown = client.get("/api/fleet/facade/backlog", params={"agent": "grok-infra"}).json()
+        assert unknown["probe"] == "unknown"
+        assert unknown["count"] is None and unknown["oldest_age_seconds"] is None
+        messages = client.get("/api/fleet/messages", params={"agent": "grok-infra"})
+        assert messages.status_code == 200
+        unknown_messages = messages.json()
+        assert unknown_messages["total"] is None
+        assert unknown_messages["authority_inbox"]["probe"] == "unknown"
+        assert unknown_messages["authority_inbox"]["count"] is None
+    assert db.read_bytes() == before
+    # A query that completes after its budget must also remain UNKNOWN.
+    from types import SimpleNamespace
+
+    clock = iter((0.0, 1.0))
+    monkeypatch.setattr(fleet_router, "time", SimpleNamespace(monotonic=lambda: next(clock, 1.0)))
+    slow = client.get("/api/fleet/messages", params={"agent": "grok-infra"}).json()
+    assert slow["total"] is None and slow["authority_inbox"]["probe"] == "unknown"
+    assert BODY_MARKER not in json.dumps(slow)
+    assert db.read_bytes() == before
+
 
 def test_facade_reap_report_is_dry_run_only(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[dict[str, object]] = []

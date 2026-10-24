@@ -170,7 +170,7 @@ def test_dispatch_requeues_twice_with_one_notice_to_its_initiator(
 
     with AuthorityService(root=tasks_dir / "fleet") as service:
         rows = service._conn.execute("SELECT recipient FROM authority_deliveries").fetchall()
-        assert [row[0] for row in rows] == ([] if initiator == "kimi" else [initiator])
+        assert [row[0] for row in rows] == ([] if initiator == "kimi" else ["lane:infra"])
         message = service._conn.execute("SELECT message_id FROM comms_messages").fetchone()
         if initiator == "kimi":
             assert message is None

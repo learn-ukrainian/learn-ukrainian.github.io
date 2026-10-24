@@ -6350,6 +6350,132 @@ entries:
   count: 1
   kind: documentation
   reason: Example of a historical alias recognized for refusal after executable transports are removed.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: claude-atlas
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: claude-devops
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: claude-epics
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: claude-infra
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: claude-open-model-data
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: gemini-atlas
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: gemini-devops
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: gemini-infra
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: gemini-open-model-data
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: grok-atlas
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: grok-devops
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: grok-infra
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: grok-open-model-data
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: kimi-atlas
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: kimi-devops
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/fleet_comms/lane_mailbox.py
+  scope: <module>
+  context: expression
+  id: kimi-infra
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
+- path: scripts/inbox_pending.py
+  scope: probe
+  context: expression
+  id: grok-build
+  count: 1
+  kind: non_model_label
+  reason: Historical recipient label for mailbox addressing (#10800); never selects a model.
 - path: scripts/agent_runtime/adapters/agy.py
   scope: unknown_model_suggestion
   context: expression

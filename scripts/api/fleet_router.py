@@ -14,6 +14,7 @@ import logging
 import math
 import re
 import sqlite3
+import time
 from collections import Counter
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
@@ -44,6 +45,7 @@ from scripts.fleet_comms.efficiency_metrics import (
     collect_efficiency_metrics_authority,
 )
 from scripts.fleet_comms.endpoints import load_endpoint_registry
+from scripts.fleet_comms.lane_mailbox import READ_TIMEOUT_SECONDS, read_inbox, recipient_filter, unknown_inbox
 from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
@@ -67,16 +69,12 @@ MAX_ACTIVITY_SCAN = 500
 MAX_OPERATIONS_ITEMS = 50
 AUTHORITY_HEALTH_WINDOW_HOURS = 24
 
-_ZOMBIE_TYPES = frozenset(
-    {"stale_message", "pingpong", "error_loop", "orphan_pid", "corrupt_pid"}
-)
+_ZOMBIE_TYPES = frozenset({"stale_message", "pingpong", "error_loop", "orphan_pid", "corrupt_pid"})
 _ZOMBIE_SEVERITIES = frozenset({"warning", "critical"})
 _BATCH_HEALTH = frozenset({"complete", "healthy", "stalled", "dead", "unknown"})
 _TRACK_LABEL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,39}$")
 _PROBE_ERROR = re.compile(r"^ps: [A-Za-z][A-Za-z0-9_]{0,63}(?: \d{1,6})?$")
-_SAFE_FAILURE_PHASES = frozenset(
-    {"admission", "transport", "provider", "result_parse", "postprocess"}
-)
+_SAFE_FAILURE_PHASES = frozenset({"admission", "transport", "provider", "result_parse", "postprocess"})
 _SAFE_FAILURE_CODES = frozenset(
     {
         "adapter_refused",
@@ -114,13 +112,9 @@ _SAFE_METADATA_KEYS = frozenset(
     }
 )
 _PROVENANCE_KEY_ALIASES = {"source": "Source", "agent": "Agent", "via": "Via"}
-_SECRET_ASSIGNMENT = re.compile(
-    r"(?i)\b(api[_-]?key|authorization|password|secret|token)\b(\s*[:=]\s*)([^,;\s]+)"
-)
+_SECRET_ASSIGNMENT = re.compile(r"(?i)\b(api[_-]?key|authorization|password|secret|token)\b(\s*[:=]\s*)([^,;\s]+)")
 _BEARER_TOKEN = re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]{8,}")
 _TOKEN_LITERAL = re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{16,}|sk-[A-Za-z0-9_-]{16,})\b")
-
-
 
 
 def _plane_root(ctx: MonitorContext | None = None) -> Path:
@@ -166,6 +160,10 @@ def _read_connection(
         else:
             connection.row_factory = sqlite3.Row
             connection.execute("PRAGMA query_only = ON")
+            # Acquire the read snapshot inside the sanitized boundary. Opening
+            # SQLite alone does not detect a locked or unreadable schema.
+            connection.execute("BEGIN")
+            connection.execute("SELECT 1 FROM sqlite_master LIMIT 1").fetchone()
     except Exception as exc:
         availability = read_failure_code(exc, authority)
     try:
@@ -310,18 +308,22 @@ def _collection(
     availability: str,
     filters: dict[str, Any],
 ) -> dict[str, Any]:
+    uncertain_inbox = isinstance(filters.get("agent"), str) and availability not in {"available", "empty"}
     next_offset = offset + len(items) if offset + len(items) < total else None
-    return {
+    result = {
         "read_only": True,
         "availability": availability,
         "db_exists": availability not in {"db_missing", "db_unavailable"},
         key: items,
-        "total": total,
+        "total": None if uncertain_inbox else total,
         "limit": limit,
         "offset": offset,
         "next_offset": next_offset,
         "filters": filters,
     }
+    if uncertain_inbox:
+        result["authority_inbox"] = unknown_inbox(filters["agent"])
+    return result
 
 
 def _empty_collection(
@@ -358,11 +360,16 @@ def _paged_query(
     transform: Callable[[sqlite3.Row], dict[str, Any]],
 ) -> dict[str, Any]:
     where_sql = f" WHERE {' AND '.join(clauses)}" if clauses else ""
+    deadline = time.monotonic() + READ_TIMEOUT_SECONDS if isinstance(filters.get("agent"), str) else None
+    if deadline is not None:
+        connection.set_progress_handler(lambda: int(time.monotonic() >= deadline), 1000)
     try:
         total_row = connection.execute(f"SELECT COUNT(*){from_sql}{where_sql}", params).fetchone()
         total = int(total_row[0]) if total_row is not None else 0
         query = f"{select_sql}{from_sql}{where_sql} ORDER BY {order_sql} LIMIT ? OFFSET ?"
         rows = connection.execute(query, [*params, limit, offset]).fetchall()
+        if deadline is not None and time.monotonic() >= deadline:
+            raise sqlite3.OperationalError("inbox_read_timeout")
     except sqlite3.Error:
         logger.warning("Fleet observer query failed")
         return _empty_collection(
@@ -372,7 +379,10 @@ def _paged_query(
             availability="db_unavailable",
             filters=filters,
         )
-    return _collection(
+    finally:
+        if deadline is not None:
+            connection.set_progress_handler(None, 0)
+    result = _collection(
         key,
         [transform(row) for row in rows],
         total=total,
@@ -381,6 +391,13 @@ def _paged_query(
         availability="available" if total else "empty",
         filters=filters,
     )
+    if isinstance(filters.get("agent"), str):
+        try:
+            path = Path(connection.execute("PRAGMA database_list").fetchone()[2])
+            result["authority_inbox"] = read_inbox(path, filters["agent"])
+        except (sqlite3.Error, OSError):
+            result["authority_inbox"] = unknown_inbox(filters["agent"])
+    return result
 
 
 def _safe_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
@@ -542,9 +559,12 @@ def fleet_facade_metrics(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, An
 @router.get("/facade/backlog")
 def fleet_facade_backlog(
     limit: int = Query(default=100, ge=1, le=500),
+    agent: str | None = Query(default=None),
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Return the authority-plane delivery backlog; retired endpoints stay excluded."""
+    if isinstance(agent, str):
+        return {"read_only": True, "agent": agent, **read_inbox(_plane_db_path(ctx), agent, limit=limit)}
     return _facade_backlog_payload(limit, ctx)
 
 
@@ -1305,9 +1325,7 @@ def fleet_requests(
     }
     with _read_connection(ctx) as (connection, availability):
         if connection is None:
-            return _empty_collection(
-                "requests", limit=limit, offset=offset, availability=availability, filters=filters
-            )
+            return _empty_collection("requests", limit=limit, offset=offset, availability=availability, filters=filters)
         if not _table_exists(connection, "requests"):
             return _empty_collection(
                 "requests", limit=limit, offset=offset, availability="table_missing", filters=filters
@@ -1330,7 +1348,9 @@ def fleet_requests(
             from_sql += " LEFT JOIN comms_messages AS message ON message.message_id = request.request_message_id"
         if has_messages and has_conversations:
             select_extras[2] = "conversation.source AS conversation_source"
-            from_sql += " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            from_sql += (
+                " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            )
         if has_messages and has_authority_metadata:
             select_extras[3] = "authority_meta.provenance_json AS authority_provenance_json"
             from_sql += (
@@ -1349,11 +1369,14 @@ def fleet_requests(
             elif kind != "request":
                 clauses.append("1 = 0")
         if agent is not None:
-            agent_clause = "request.requested_recipient = ? OR request.resolved_recipient = ?"
-            params.extend([agent, agent])
+            requested, names = recipient_filter("request.requested_recipient", agent)
+            resolved, _ = recipient_filter("request.resolved_recipient", agent)
+            agent_clause = f"{requested} OR {resolved}"
+            params.extend([*names, *names])
             if has_messages:
-                agent_clause += " OR message.sender = ? OR message.recipient = ?"
-                params.extend([agent, agent])
+                receiving, names = recipient_filter("message.recipient", agent)
+                agent_clause += f" OR message.sender = ? OR {receiving}"
+                params.extend([agent, *names])
             if has_messages and has_authority_metadata:
                 agent_clause += " OR json_extract(authority_meta.provenance_json, '$.Agent') = ?"
                 params.append(agent)
@@ -1363,8 +1386,7 @@ def fleet_requests(
                 source_expression = "conversation.source"
                 if has_authority_metadata:
                     source_expression = (
-                        "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                        f"{source_expression})"
+                        f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                     )
                 clauses.append(f"{source_expression} = ?")
                 params.append(source)
@@ -1389,8 +1411,7 @@ def fleet_requests(
             select_sql=(
                 "SELECT request.request_id, request.request_message_id, request.requested_recipient, "
                 "request.resolved_recipient, request.state, request.expires_at, request.completion_state, "
-                "request.invocation_spec_json, request.created_at, request.updated_at, "
-                + ", ".join(select_extras)
+                "request.invocation_spec_json, request.created_at, request.updated_at, " + ", ".join(select_extras)
             ),
             from_sql=from_sql,
             clauses=clauses,
@@ -1500,13 +1521,9 @@ def fleet_authority_jobs(
     }
     with _read_connection(ctx) as (connection, availability):
         if connection is None:
-            return _empty_collection(
-                "jobs", limit=limit, offset=offset, availability=availability, filters=filters
-            )
+            return _empty_collection("jobs", limit=limit, offset=offset, availability=availability, filters=filters)
         if not _table_exists(connection, "authority_jobs"):
-            return _empty_collection(
-                "jobs", limit=limit, offset=offset, availability="table_missing", filters=filters
-            )
+            return _empty_collection("jobs", limit=limit, offset=offset, availability="table_missing", filters=filters)
         has_messages = _table_exists(connection, "comms_messages")
         has_metadata = _table_exists(connection, "authority_message_metadata")
         has_conversations = _table_exists(connection, "conversations")
@@ -1542,9 +1559,7 @@ def fleet_authority_jobs(
                     "conversation.conversation_id = message.conversation_id OR "
                     "(job.job_kind = 'discussion' AND conversation.conversation_id = job.subject_id)"
                 )
-            from_sql += (
-                " LEFT JOIN conversations AS conversation ON " + conversation_join
-            )
+            from_sql += " LEFT JOIN conversations AS conversation ON " + conversation_join
             conversation_select = "conversation.conversation_id AS conversation_id"
             if has_messages:
                 conversation_select = (
@@ -1573,23 +1588,20 @@ def fleet_authority_jobs(
             clauses.append("job.state = ?")
             params.append(state)
         if agent is not None:
-            default_agent = (
-                "CASE WHEN job.job_kind = 'formal_review' THEN 'review-gate' "
-                "ELSE 'authority-service' END"
-            )
+            default_agent = "CASE WHEN job.job_kind = 'formal_review' THEN 'review-gate' ELSE 'authority-service' END"
             agent_expression = default_agent
             if has_messages:
                 agent_expression = f"COALESCE(message.sender, {default_agent})"
             if has_metadata and has_messages:
                 agent_expression = (
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Agent'), "
-                    f"{agent_expression})"
+                    f"COALESCE(json_extract(authority_meta.provenance_json, '$.Agent'), {agent_expression})"
                 )
             agent_clause = f"{agent_expression} = ?"
             params.append(agent)
             if has_messages:
-                agent_clause += " OR message.recipient = ?"
-                params.append(agent)
+                receiving, names = recipient_filter("message.recipient", agent)
+                agent_clause += f" OR {receiving}"
+                params.extend(names)
             clauses.append(f"({agent_clause})")
         if source is not None:
             default_source = (
@@ -1601,8 +1613,7 @@ def fleet_authority_jobs(
                 source_expression = f"COALESCE(conversation.source, {default_source})"
             if has_metadata and has_messages:
                 source_expression = (
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                    f"{source_expression})"
+                    f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                 )
             clauses.append(f"{source_expression} = ?")
             params.append(source)
@@ -1708,9 +1719,7 @@ def fleet_messages(
     }
     with _read_connection(ctx) as (connection, availability):
         if connection is None:
-            return _empty_collection(
-                "messages", limit=limit, offset=offset, availability=availability, filters=filters
-            )
+            return _empty_collection("messages", limit=limit, offset=offset, availability=availability, filters=filters)
         if not _table_exists(connection, "comms_messages"):
             return _empty_collection(
                 "messages", limit=limit, offset=offset, availability="table_missing", filters=filters
@@ -1724,7 +1733,9 @@ def fleet_messages(
         authority_provenance_select = "NULL AS authority_provenance_json"
         if has_conversations:
             source_select = "conversation.source AS conversation_source"
-            from_sql += " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            from_sql += (
+                " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            )
         if has_requests:
             request_state_select = "request.state AS request_state"
             from_sql += " LEFT JOIN requests AS request ON request.request_message_id = message.message_id"
@@ -1746,8 +1757,13 @@ def fleet_messages(
             else:
                 clauses.append("1 = 0")
         if agent is not None:
-            agent_clause = "message.sender = ? OR message.recipient = ?"
-            params.extend([agent, agent])
+            receiving, names = recipient_filter("message.recipient", agent)
+            agent_clause = f"message.sender = ? OR {receiving}"
+            params.extend([agent, *names])
+            if _table_exists(connection, "authority_deliveries"):
+                delivery_clause, delivery_names = recipient_filter("inbox_delivery.recipient", agent)
+                agent_clause += f" OR EXISTS (SELECT 1 FROM authority_deliveries inbox_delivery WHERE inbox_delivery.message_id=message.message_id AND {delivery_clause})"
+                params.extend(delivery_names)
             if has_authority_metadata:
                 agent_clause += " OR json_extract(authority_meta.provenance_json, '$.Agent') = ?"
                 params.append(agent)
@@ -1758,8 +1774,7 @@ def fleet_messages(
                 source_expression = "COALESCE(conversation.source, message.sender)"
             if has_authority_metadata:
                 source_expression = (
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                    f"{source_expression})"
+                    f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                 )
             clauses.append(f"{source_expression} = ?")
             params.append(source)
@@ -1773,12 +1788,14 @@ def fleet_messages(
             clauses=clauses,
             params=params,
         )
+        # An agent-filtered listing is an inbox reader, so it never selects bodies.
+        body_select = "'' AS body_inline" if agent is not None else "message.body_inline"
         return _paged_query(
             connection,
             key="messages",
             select_sql=(
                 "SELECT message.message_id, message.conversation_id, message.in_reply_to, message.kind, "
-                "message.sender, message.recipient, message.body_inline, message.body_artifact_id, "
+                f"message.sender, message.recipient, {body_select}, message.body_artifact_id, "
                 "message.metadata_json, message.created_at, "
                 f"{source_select}, {request_state_select}, {authority_provenance_select}"
             ),
@@ -2359,13 +2376,11 @@ def fleet_dead_letters(
                 clauses.append("COALESCE(delivery.state, job.state) = ?")
                 params.append(state)
             if agent is not None:
-                clauses.append("COALESCE(delivery.recipient, 'authority-job') = ?")
-                params.append(agent)
+                receiving, names = recipient_filter("COALESCE(delivery.recipient, 'authority-job')", agent)
+                clauses.append(receiving)
+                params.extend(names)
             if source is not None:
-                clauses.append(
-                    "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                    "'authority') = ?"
-                )
+                clauses.append("COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), 'authority') = ?")
                 params.append(source)
             _time_clauses(
                 "letter.created_at",
@@ -2424,7 +2439,9 @@ def fleet_dead_letters(
             from_sql += " LEFT JOIN comms_messages AS message ON message.message_id = request.request_message_id"
         if has_requests and has_messages and has_conversations:
             source_select = "conversation.source AS conversation_source"
-            from_sql += " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            from_sql += (
+                " LEFT JOIN conversations AS conversation ON conversation.conversation_id = message.conversation_id"
+            )
         if has_requests and has_messages and has_authority_metadata:
             authority_provenance_select = "authority_meta.provenance_json AS authority_provenance_json"
             from_sql += (
@@ -2441,8 +2458,8 @@ def fleet_dead_letters(
                 clauses.append("1 = 0")
         if agent is not None:
             if has_requests:
-                agent_clause = "request.resolved_recipient = ?"
-                params.append(agent)
+                agent_clause, names = recipient_filter("request.resolved_recipient", agent)
+                params.extend(names)
                 if has_messages and has_authority_metadata:
                     agent_clause += " OR json_extract(authority_meta.provenance_json, '$.Agent') = ?"
                     params.append(agent)
@@ -2454,8 +2471,7 @@ def fleet_dead_letters(
                 source_expression = "conversation.source"
                 if has_authority_metadata:
                     source_expression = (
-                        "COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), "
-                        f"{source_expression})"
+                        f"COALESCE(json_extract(authority_meta.provenance_json, '$.Source'), {source_expression})"
                     )
                 clauses.append(f"{source_expression} = ?")
                 params.append(source)
