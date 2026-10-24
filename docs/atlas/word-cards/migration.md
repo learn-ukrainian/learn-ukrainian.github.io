@@ -1,26 +1,39 @@
 # Word cards C0 — migration outline from today's `atlas.db` (r2; not implementation)
 
 - **Scope:** the path from the spelling-keyed `atlas.db` (manifest `0.1`, 2026-09-11) to the card store of [`schema.md`](schema.md), gated by a **small pilot inventory**, then the A1–B1 vertical slice, then an independently adjudicated golden set before full scale. Implementation is C1/C2 (#8981 pilot first); this doc only fixes the order, the mappings and the gates. Every step is parameterised by the selected pilot inventory (Astra): nothing below runs at full scale before Gate 1 passes on the pilot.
-- **Non-goals:** re-harvesting ULIF (#8400), the URL scheme (#8334 AC-02, Q10), the practice rules themselves (#8983).
+- **Approved contract:** [dec-017](../../decisions/2026-10-24-atlas-entry-identity-spelling-urls.md) and `identity.md` §0 settle the spelling hub and entry anchor direction. This document records the approved implementation order, not a public route switch.
+- **Non-goals:** re-harvesting ULIF (#8400), changing practice rules (#8983), and public cutover or certification through this documentation change.
 
 ## 1. Today's tables → card store
 
 | today (`atlas.db`, measured 2026-09-28) | becomes | note |
 | --- | --- | --- |
-| `articles` (27,128; `slug` PK = spelling; `entry_type`, `pos`, `gloss`, `cefr`, `heritage_classification`, `review_state`, `visibility`) | identity-registry entries + `card_keys` (`atlas0:slug:<slug>`), `english_gloss`/`cefr`/`heritage_status` assertions with `source_id` from the payload's `source_provenance`, `visibility` kept on the card | one article may become several cards by a `split` event (2,811 lemma articles have several checked ULIF homonyms); the article's id is kept as a `split` card (`examples/zamok-legacy-split.json`) |
+| `articles` (27,128; `slug` PK = spelling; `entry_type`, `pos`, `gloss`, `cefr`, `heritage_classification`, `review_state`, `visibility`) | lowercased spelling hubs with evidenced registry membership + `card_keys` (`atlas0:slug:<slug>`), `english_gloss`/`cefr`/`heritage_status` assertions with `source_id` from the payload's `source_provenance`, `visibility` kept on the card | an article is not itself an entry identity. Preserve existing IDs. Attach cards only through evidenced correspondence. An actual conflated-card split keeps its old ID as a successor chooser (`examples/zamok-legacy-split.json`). Unresolved spellings render exactly as today |
 | `article_provenance` (27,241; `source_family`, `source_locator`, `extraction_mode`) | `source_keys` on the card and `licence_ref` on the migrated assertions | families: `textbook` 16,251 rows, `built_vocabulary` 3,405, `content_lexicon_grow` 2,829, `ulp` 1,793, `teacher_lesson` 2,169, `ohoiko` 718, … |
 | `enrichment` (193,530; one row per `(slug, section)`, `payload_json`, `source`, `phase`) | one assertion per value inside the payload, `snapshot_id = atlas0@manifest-0.1/2026-09-11`, `extraction_version = atlas0-migration`, `extraction_confidence = medium` | sections: `heritage_status` 27,128, `morphology` 25,631 (VESUM), `literary_attestation` 24,220, `stress` 19,143, `translation` ~22,000 across 10 labels, `definition_cards` 12,468 (ВТС), `cefr` 7,903, `synonyms` ~4,400, `idioms` ~4,000, `form_notes` ~5,700, … |
-| `aliases` (28,295; `transliteration` 27,128, `canonical` 821, `inflected_form` 344) | `aliases` kept, `target_slug` → `card_id` (several targets allowed) | spelling → card disambiguation |
+| `aliases` (28,295; `transliteration` 27,128, `canonical` 821, `inflected_form` 344) | `aliases` kept; spelling targets retain hubs, evidenced entry targets carry `card_id` and anchor | preserve existing spelling and form routes without minting form lexemes |
 | `related_entries` (3,690, all `synonym`, `provenance verified/unverified`) | `links` of type `synonym` with the verdict as a curator assertion | sense-less today; attach to `unsplit` senses until mapped |
 | `article_payloads` (27,471; rendered JSON per route) | generated export (`export_runtime_shards.py` reads cards) | no longer a store |
 | `manifest_metadata` | `build_manifest` | |
-| `site/src/lib/lexicon/curated-heteronyms.ts` (420 lemmas) | overlay `split` entries + `atlas0:heteronym:<spelling>/<stressed>` keys + curator assertions (`gloss`, `short_label`) | retires the side file (#8334 in-scope item 3) |
+| `site/src/lib/lexicon/curated-heteronyms.ts` (420 lemmas) | source-checked overlay `split` entries + `atlas0:heteronym:<spelling>/<stressed>` keys + curator assertions (`gloss`, `short_label`) | retires the side file (#8334 in-scope item 3) |
 
 ## 2. Steps (pilot-parameterised; order per the design read)
 
 - **M0 Freeze and measure.** Record content hashes of every input (`schema.md` §13): the `atlas0` file sha (`fcf802bd…`), the ULIF checked-row digest (`fe9f52cb…`), the VESUM sha, the register sha (`eb286a61…`), `rules`/`normaliser` versions. Land the register entries the schema needs (ВТС, Караванський, orthographic dictionaries, ukrainian-word-stress lineage; #8979 `open_questions`) and the lineage fields (`schema.md` §9.1). Freeze the **pilot inventory** (a manifest of source keys, ~150 lexemes spanning A1–B1 with ordinary controls and negative eligibility cases) and the sealed held-out expectations (§4).
-- **M1 Identity registry bootstrap (the first `allocate` step).** One `wc_` id per existing article in `registry/atlas/identity/registry.json` (Q11, adopted: tracked `registry/`, generated stores stay under `data/`), with `atlas0:slug:<slug>` keys; MWE articles (639) as `mwe` cards; one `sr_` source-record id per source row the pilot reads, with its aliases (`schema.md` §12.1); `mint` / `source_record_mint` events. Ids are minted once, committed and reviewed, before any split; from here on the registry is a frozen build input and `build` refuses ids it does not allocate (`schema.md` §13).
-- **M2 Overlay bootstrap (before identity resolution).** Existing curation becomes overlay batches at `registry/atlas/overlay/<batch>.yaml` with author/lane/date/evidence: the 420 curated heteronyms as `split` entries + `atlas0:heteronym:<spelling>/<stressed>` keys, `related_entries` verdicts, existing CEFR overrides, known conflict resolutions. Cross-family review of the batches. (Round 1 consumed this at M3 before introducing it at M6; fixed.)
+- **M1 Identity registry allocation.** Preserve the existing registry. Extend
+  it only through evidenced correspondence, never by assuming one article
+  equals one lexeme. Allocate admitted `wc_` IDs once in
+  `registry/atlas/identity/registry.json`. Keep `atlas0:slug:<slug>` keys as
+  aliases. The 639 non-lemma articles are MWE candidates, not automatically
+  admitted cards. Allocate persistent `sr_` source-record IDs and aliases for
+  the pilot's source rows (`schema.md` §12.1). Commit and review allocation
+  before assembly. The frozen build refuses unallocated IDs (§13).
+- **M2 Overlay bootstrap (before identity resolution).** Record existing
+  curation as reviewed batches at `registry/atlas/overlay/<batch>.yaml`, with
+  author, lane, date, and evidence. The 420 curated heteronym groups supply
+  candidates and `atlas0:heteronym:<spelling>/<stressed>` keys. Record splits
+  only after source checks establish them. Keep relation verdicts, CEFR
+  overrides, and known conflict resolutions. Obtain cross-family review.
 - **M3 Re-extract, do not copy.** Assertions come from `sources.db`/`vesum.db` directly for every source we hold locally (ULIF, VESUM, PULS, `frazeolohichnyi`, Wiktionary, Грінченко, textbooks, teacher tables), each with its `source_record_key`. `atlas0` payload values are migrated only for sources we do not hold locally (kaikki, ВТС, slovnyk.me caches, Караванський) at `medium`, to be superseded when re-extracted. Correctness fixes already queued (#8729 homographs, #8715 meanings) land as extractor fixes here, not later.
 - **M4 Identity pass (pilot inventory first).** Run the matching of `identity.md` §4 over the pilot's VESUM entries × ULIF checked rows with the M2 overlay applied; allocate successors through a committed registry step, then build against the frozen registry; attach ULIF rows at their confidence and basis; preserve each source's homonym partition and fill the holding area with `unresolved` rows for ВТС units whose correspondence to ULIF is not established, under the operator decision recorded 2026-09-29 (`schema.md` §16.3 item 1). The policy decision is settled; adjudicate each uncertain correspondence in the language lane before any merge or meaning practice. Mark ambiguous spelling-keyed rows. Produce the split-candidate list (10,570 ULIF multi-homonym spellings ∪ 18,935 VESUM multi-entry lemmas ∪ 68 VESUM doublets ∪ 2,828 ULIF double-accent single tokens) for the language lane — as a list, not as full-scale work.
 - **M5 Senses.** Seed senses from the recorded seed source (`schema.md` §6); everything unaligned is `unsplit`.
@@ -29,6 +42,71 @@
 - **M8 Withdrawal, reimport and rollback rehearsal.** Planted-source test (#8980): suppress by `source`, `source_record` and `assertion_content` selector, rebuild, verify transitive invalidation through a generated assertion (`schema.md` §12.2), recomputed tombstoned public projections (the withdrawn value absent from the whole output), the report, and release retirement; load a **changed snapshot** (edited `content_sha256`, renumbered homonym, a corrected empty header) and confirm the selector still applies through the registry's correspondence, including an **ambiguous hold** where two rows match only on the weak key (both must be suppressed); change the normaliser version and confirm the content selector still matches; roll back to the previous inputs and confirm the suppression still applies (`schema.md` §12.1).
 - **M9 Redirect and split checks.** Merge two pilot cards and split one; verify consumers resolve `merged_into`/`split_into`, learner-progress fixtures transfer only on item evidence and otherwise flag reassessment (`identity.md` §7.3).
 - **M10 Gates.** Gate 1 on the pilot inventory (§3), then the independent golden-set gate (§4), then expand to the full PULS A1–B1 slice, then full scale.
+
+### Approved #8334 delivery units
+
+Unit numbers below are the 2026-10-24 delivery sequence. M0–M10 above describe
+migration mechanics, not additional PRs. Each unit needs its affected existing
+checks, exact-head cross-family review, and same-head CI. New tests need
+specific CTO authorization.
+
+- **Unit 0:** record the approved contract in these documents and dec-017.
+- **Unit 1:** extend source-backed allocation. Preserve existing IDs and account
+  for every frozen pilot input as mapped or unresolved. Keep source partitions,
+  explicit variants, and split events. Reimport must not remint retired or
+  suppressed identities. Missing source data remains unresolved, including ULIF
+  76793 `замо́к` with `forms_state: stale_source_snapshot`. Never infer identity
+  from missing forms.
+- **Unit 2:** project entries into Atlas. Keep slug-keyed hubs and card-ID-keyed
+  entries with evidenced hub membership. Account separately for the frozen
+  27,128 articles, 27,471 route payloads, and 841 curated members. Of 420 curated
+  groups, 228 occur in neither article nor route inventory. Migration grants
+  them no publication eligibility. Preserve private visibility and form routes.
+  Rebuild pinned inputs reproducibly. Rehearse rollback of the database,
+  registry, shards, and code without undoing current suppressions.
+- **Unit 3:** preserve hub navigation. Use lowercased spelling keys and
+  case-preserving entry keys. Q12 excludes proper names from the general-vocabulary
+  pilot, so `/lexicon/замок/` shows the two common nouns once resolved.
+  Keep stable `#entry-<card_id>` anchors, including singletons, and freeze old
+  fragment mappings. Browser checks cover direct loads, history, keyboard use,
+  singleton growth, splits, merges, stress corrections, and existing MWE URLs
+  in full SSG and default client-shell modes.
+- **Unit 4:** make enrichment entry-specific. Resolve source record to card to
+  sense before attachment. Hold ambiguous facts. Never select the first
+  candidate or inherit facts across entries. Retire curated fallback use only
+  after source checks and projection parity, without unauthorized file deletion.
+- **Unit 5a:** land a schema/version-bump PR for discovery and publishing.
+- **Unit 5b:** follow with per-consumer PRs for search, the daily pool, runtime
+  shards, data-source adapters, typeahead, stub builders, and publishing.
+  All Unit 5 PRs use one cache version. Refresh aliases and link catalogs with
+  that version. Unstressed search reaches the hub. Entry-specific results carry
+  the card ID and anchor. Preserve every old route, including payload-only
+  form routes, and prevent mixed-version reads.
+- **Unit 6:** preserve practice identity and history. Bind items to card, sense,
+  version, and eligibility. Keep old attempts. Transfer scheduling only with
+  evidence for one successor, otherwise reassess. Unresolved senses cannot
+  generate meaning practice. Preview permission never grants certification or
+  export permission.
+
+Before **Unit 1's acceptance check**, the CTO must recover and freeze the
+historical **50-disagreement case list** as the independent held-out set.
+This is a precondition, not a later follow-up. Recovery and freezing are not
+proved by this record. Keep its expected answers outside authoring inputs and
+replay overlays. Retain the broader golden-set obligations in §4.
+
+A spelling whose source correspondence is unresolved renders **exactly as
+today**. The 2026-10-24 census found 3,287 spellings with several checked,
+status-ok ULIF candidates and 778 with none, out of 26,489 lemma spellings.
+Those counts are candidates, not adjudicated entries. Final lexeme count stays
+UNKNOWN until adjudication. The census pins code
+`2353bda9a5ed8e8704e926dd6e09479d89072b0a` and Atlas SHA-256
+`2e8b9607989818e4fb555f769b49a0b201a0009f1d6ae377b4e63424a08d1807`.
+It is a local snapshot, not proof of deployed state.
+
+Before public switching, Atlas owns independent per-field current/candidate
+browser comparison and preservation proof. Data owns certification and full
+coverage. The existing preview remains the pilot interface. Contract approval
+does not replace those proofs or authorize public cutover.
 
 ## 3. Gate 1 — pilot inventory, then the A1–B1 vertical slice (before C1 touches the full store)
 
@@ -138,7 +216,7 @@ Round 1 supplied the expected identities as overlay `identity` entries and then 
 - **Pass criteria:** replay pool reproduced exactly; held-out identity errors = 0 on ordinary controls and ≤ the threshold the operator sets per category (recommendation: 0 wrong merges, ≤ 2 wrong splits, false abstentions ≤ 5 %); zero model-written Ukrainian; every assertion has a locator that resolves in the read-only databases; removal of any single source recomputes states as the rules say.
 
 ## 5. Ordering and dependencies
-#8979 register entries for the unregistered Atlas sources and the lineage fields → M0. `schema.md` §16.3 decision 1 (settled by the operator on 2026-09-29; uncertain cross-source correspondences remain unresolved pending language-lane adjudication) → M4/M5, decision 2 → M5; decision 3 is adopted (M1/M2 paths). #8334 full identity/URL sign-off remains outstanding → M4. #8400 harvest completion (19 rows in #9123) → M3 for ULIF fields; the pilot can start on VESUM + PULS + textbooks + teacher content without it. #8980 takedown design → M8. #8983 rules (reading `mapping_evidenced`) → Gate 1. Decision 4 (held-out lanes) → Gate 2.
+#8979 register entries for the unregistered Atlas sources and the lineage fields → M0. `schema.md` §16.3 decision 1 (settled by the operator on 2026-09-29; uncertain cross-source correspondences remain unresolved pending language-lane adjudication) → M4/M5, decision 2 → M5; decision 3 is adopted (M1/M2 paths). #8334 identity/URL direction is approved in dec-017. Unit 1 acceptance awaits the recovered and frozen 50-disagreement held-out set; the CTO owns recovery. #8400 harvest completion (19 rows in #9123) → M3 for ULIF fields; the pilot can start on VESUM + PULS + textbooks + teacher content without it. #8980 takedown design → M8. #8983 rules (reading `mapping_evidenced`) → Gate 1. Decision 4 (held-out lanes) → Gate 2.
 
 ## 6. Consumer inventory (from `git grep -l "atlas\.db"`), change needed
 
@@ -149,11 +227,27 @@ Round 1 supplied the expected identities as overlay `identity` entries and then 
 | `scripts/atlas/fill_local.py`, `scripts/lexicon/enrich_heteronyms.py`, `curated_heteronyms_batch*.py`, `sync_curated_heteronyms_ts.py`, `heritage_calque_wave.py`, `reconcile_calque_clusters.py`, `ohoiko_paired_headword_split.py`, `admit_*` | fillers become extractors that emit assertions; heteronym scripts retired into overlay |
 | `scripts/audit/generate_practice_deck.py`, `generate_daily_pool.py`, `generate_search_index.py`, `paronym_residual_audit.py`, `relation_residual_audit.py`, `scripts/practice/author_densified_pairs.py`, `scripts/practice_deck/publish.py` | read eligibility + resolutions (`mapping_evidenced`); write `derivations` with output identity and `card_version`; key items by card/sense id; learner-progress store resolves `merged_into`/`split_into` per `identity.md` §7.3 |
 | `scripts/backup-data.sh`, `scripts/benchmarks/generate_synthetic_atlas.py`, `tests/fixtures/atlas/build_runtime_shards_fixture.py` | new tables in backups and fixtures |
-| `site/src/lexicon/WordAtlasArticle.tsx` (reads `curated-heteronyms`), `scripts/deploy/auto_deploy_eligibility.py`, `tests/test_sum11_source_guard.py` | side file removed; СУМ-11 guard reads tier 0 / `russification_exposed` only |
-| tests (`tests/test_atlas_db.py`, `test_export_runtime_shards.py`, `test_generate_*`, `site/tests/unit/atlas-*.test.ts`) | fixtures on cards; add determinism, takedown/reimport/rollback, split/redirect, replay-pool and sealed held-out tests |
+| `site/src/lexicon/WordAtlasArticle.tsx` (reads `curated-heteronyms`), `scripts/deploy/auto_deploy_eligibility.py`, `tests/test_sum11_source_guard.py` | fallback use retired after source checks and projected parity; file deletion needs authorization; СУМ-11 guard reads tier 0 / `russification_exposed` only |
+| tests (`tests/test_atlas_db.py`, `test_export_runtime_shards.py`, `test_generate_*`, `site/tests/unit/atlas-*.test.ts`) | update affected existing fixtures and checks for cards, determinism, takedown/reimport/rollback, splits, redirects, replay, and held-out evaluation; new tests need specific CTO authorization |
 
 ## 7. Risks
 - Re-extraction changes shown values on live pages (e.g. `за́мок`-only stress becomes two cards); mitigated by the slice and by keeping `atlas0` as a comparison snapshot.
 - Register gaps (ВТС, Караванський, orthographic dictionaries) block `licence_ref` for ~20,000 assertions; must land in M0.
 - Unknown lineage of `ukrainian-word-stress` (18,448 stress rows) decides whether most stress fields are `verified` or `single-source`; resolve in the register before Gate 1.
 - 687 PULS A1–B1 rows are spelling-ambiguous across ULIF homonyms (`schema.md` §4); until they are mapped (guideword, overlay), those cards fail the level-band rule and the pilot's eligible set is smaller than the slice. This is by design (ambiguous evidence is not eligibility), but it must be budgeted in the language lane's overlay work.
+
+### Approved design pre-mortem (2026-10-24)
+
+- **Language-review backlog:** candidate detection may outpace adjudication.
+  Keep source partitions and explicit unresolved holds. Start with the pinned
+  pilot and existing preview. Unresolved spellings render exactly as today,
+  so review delays do not damage current public pages.
+- **Positional fragments:** `#1` and `#2` can point at another entry after a
+  reorder. Freeze existing accented, animacy-suffixed, and numeric aliases
+  before reordering. Resolve them after client mounting. Ambiguous aliases
+  open the hub chooser. New entry links use stable `#entry-<card_id>` anchors.
+- **Static redirects:** static hosting has no server redirects. The existing
+  redirect mechanism covers only spellings listed in `site/astro.config.mjs`.
+  Inventory and preserve every old route through explicit aliases and that
+  mechanism, retaining fragments. Check direct loads in full SSG and the
+  default client-shell mode before public switching.
