@@ -50,6 +50,7 @@ from scripts.practice_deck.markup_integrity import (
 DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_OUT_DIR = ROOT / "site" / "src" / "data"
 DEFAULT_MARKUP_OVERLAY = ROOT / "registry" / "practice" / "zno-markup-overlay.json"
+DEFAULT_EXPLANATIONS = ROOT / "registry" / "practice" / "zno-explanations.json"
 DEFAULT_FILL_RESIDUAL = ROOT / "batch_state" / "practice" / "zno-fill-residual.json"
 LETTER_TO_INDEX = {"А": 0, "Б": 1, "В": 2, "Г": 3, "Д": 4}
 
@@ -334,9 +335,11 @@ def build_zno_shards(
     db_path: Path,
     *,
     markup_overlay_path: Path = DEFAULT_MARKUP_OVERLAY,
+    explanations_path: Path = DEFAULT_EXPLANATIONS,
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any], dict[str, Any]]:
     """Build deterministic deck payloads, summary receipt, and per-task fill residual."""
     overlay_by_id = load_markup_overlay(markup_overlay_path)
+    explanations_by_id = json.loads(explanations_path.read_text(encoding="utf-8"))["items"]
     conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:
@@ -380,6 +383,8 @@ def build_zno_shards(
                     if drop_reason == "broken_missing_markup" and stem_requires_markup(str(row["stem"])):
                         quarantined_markup += 1
                     continue
+                if task_id in explanations_by_id:
+                    item["explanation"] = explanations_by_id[task_id]
                 items.append(item)
                 emitted_ids.add(int(row["id"]))
             emitted_total += len(items)
@@ -496,10 +501,38 @@ def write_zno_shards(shards: dict[str, dict[str, Any]], residual: dict[str, Any]
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db", type=Path, default=DEFAULT_DB)
-    parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
-    parser.add_argument("--markup-overlay", type=Path, default=DEFAULT_MARKUP_OVERLAY)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build deterministic ZNO/НМТ topic shards with source markup and registered explanations.\n"
+            "Use after corpus or registry changes; this does not ingest or repair exam content."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.practice_deck.zno
+  .venv/bin/python -m scripts.practice_deck.zno --db data/sources.db --out-dir site/src/data
+
+Outputs: practice-zno.<topic>.json, practice-zno.residual.json, and the fill residual report.
+The source database and registries are read-only inputs.
+Exit codes: 0 on success; nonzero on unreadable or malformed inputs or output failure.
+Related: registry/practice/zno-markup-overlay.json; registry/practice/zno-explanations.json.
+""",
+    )
+    parser.add_argument(
+        "--db", type=Path, default=DEFAULT_DB,
+        help="Source SQLite database (default: data/sources.db).",
+    )
+    parser.add_argument(
+        "--out-dir", type=Path, default=DEFAULT_OUT_DIR,
+        help="Destination directory for generated shards (default: site/src/data).",
+    )
+    parser.add_argument(
+        "--markup-overlay", type=Path, default=DEFAULT_MARKUP_OVERLAY,
+        help="Item-keyed source markup registry (default: registry/practice/zno-markup-overlay.json).",
+    )
+    parser.add_argument(
+        "--explanations", type=Path, default=DEFAULT_EXPLANATIONS,
+        help="Item-keyed explanation registry (default: registry/practice/zno-explanations.json).",
+    )
     parser.add_argument(
         "--fill-residual",
         type=Path,
@@ -507,7 +540,9 @@ def main(argv: list[str] | None = None) -> int:
         help="Write per-task fill residual inventory (default: batch_state/practice/zno-fill-residual.json)",
     )
     args = parser.parse_args(argv)
-    shards, residual, fill_residual = build_zno_shards(args.db, markup_overlay_path=args.markup_overlay)
+    shards, residual, fill_residual = build_zno_shards(
+        args.db, markup_overlay_path=args.markup_overlay, explanations_path=args.explanations,
+    )
     write_zno_shards(shards, residual, args.out_dir)
     write_zno_fill_residual(fill_residual, args.fill_residual)
     for key in (definition.key for definition in DECKS):
