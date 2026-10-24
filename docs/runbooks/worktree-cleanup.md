@@ -1459,14 +1459,16 @@ these files. Scheduled public summaries expose their count and total bytes.
 
 ## Worker-held runtime scratch (#10000)
 
-Keep held patches, handoffs and diagnostics in the dispatch worktree's
-`batch_state/reports/` and cite each file in the final response. If a worker
-holds a file under its runtime temporary root instead, delegate preserves
+Keep held patches, handoffs and diagnostics in `$LU_TASK_EVIDENCE_DIR`, the
+task runtime lease's `evidence/` directory, and cite each file in the final
+response. Task cleanup copies that directory to `batch_state/preserved/<task>/`
+with a retrieval receipt before removing the runtime lease. For files elsewhere
+under the runtime temporary root, delegate also preserves
 absolute file citations (including Markdown links, code spans, file URIs and
 line-number suffixes), runtime-root relative code spans or links, and
 `$TMPDIR/<file>` citations, before removing the lease.
 Task records may also declare `held_work` as a list of runtime-root relative or
-absolute file paths. Unreferenced scratch remains disposable.
+absolute file paths. Unreferenced scratch outside `evidence/` remains disposable.
 
 Both worker exit and the terminal orphan sweep copy cited regular files to
 `batch_state/preserved/<task-id>/held-<attempt>/`. The task's
