@@ -267,6 +267,12 @@ def test_matrix_schema_passed_and_consumed(profile, route, tmp_path, monkeypatch
             llm_reviewer.invoke_reviewer_with_schema(route, "fixture", profile=profile, cwd=tmp_path, invoker=runtime)
         assert not seen
         return
+    if route == "glm":
+        with pytest.raises(ValueError, match="retired in the model catalog"):
+            llm_reviewer.invoke_reviewer_with_schema(
+                route, "fixture", profile=profile, cwd=tmp_path, invoker=runtime,
+            )
+        return
     response, _ = llm_reviewer.invoke_reviewer_with_schema(
         route,
         "fixture",

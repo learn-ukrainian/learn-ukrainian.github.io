@@ -19,7 +19,7 @@ regular code/infra reviewers at every risk (operator decision 2026-10-05, #9769)
 A formal review at high or critical risk is performed only by the models
 ``review_scheduler.risk_reviewer_models`` lists; that is an
 eligibility gate, so it binds explicit pins and custom ladders too.
-``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
+Retired models are refused, including explicit reviewer pins.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
 
@@ -347,8 +347,6 @@ OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
 GROK_4_7 = REVIEW_CANDIDATES["grok-4.7"]
 GROK_4_7_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
 SONNET_5_5 = REVIEW_CANDIDATES["claude-sonnet-5-5"]
-POOL = REVIEW_CANDIDATES["pool"]
-GLM = REVIEW_CANDIDATES["glm-5.3"]
 # Medium = practical formal CF default ladder (not authority-first).
 DEFAULT_CODE_LADDER = REVIEW_LADDERS["medium"]
 CRITICAL_CODE_LADDER = REVIEW_LADDERS["critical"]
@@ -884,7 +882,7 @@ def evaluate_candidate(
 
     Exposed directly (not just via :func:`resolve_reviewer`) so domain and
     data-egress fail-closed behavior is testable per-candidate, including for
-    candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
+    candidates that are not in the default ladder (for example ``QWEN``).
     ``red_team`` relaxes authorship independence only; callers must first
     validate an explicit adversarial prompt bound to the completed review.
     The routing snapshot is read as ``inputs.claude_account`` (#10630).

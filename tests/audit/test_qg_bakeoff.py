@@ -421,7 +421,7 @@ def test_resume_skips_existing_artifact(tmp_path: Path, monkeypatch: pytest.Monk
     monkeypatch.delenv("CI", raising=False)
     monkeypatch.setenv("QG_BAKEOFF", "1")
     fixture = _fixture()
-    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    route = qg_bakeoff.bakeoff_route_for_model("gemini-3.8-flash-high")
     artifact_path = tmp_path / f"{qg_bakeoff.pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
     artifact_path.write_text(
         json.dumps(
@@ -1662,7 +1662,7 @@ def test_arm_both_runs_tooled_and_bare_cells_and_scorecard_shows_lift(
 
     runs = qg_bakeoff.run_matrix(
         [fixture],
-        ["openrouter/google/gemma-4-31b-it"],
+        ["gemini-3.8-flash-high"],
         output_dir=tmp_path,
         runner=tooled_runner,
         bare_runner=bare_runner,
@@ -1877,7 +1877,7 @@ def test_arm_bare_after_tooled_scorecard_keeps_both_arms(
             {"fact_checks": [{"claim": "True claim.", "verdict": "CONFIRMED"}]}, run_route
         )
 
-    pins = ["openrouter/google/gemma-4-31b-it"]
+    pins = ["gemini-3.8-flash-high"]
     qg_bakeoff.run_matrix([fixture], pins, output_dir=tmp_path, runner=tooled_runner, arm="tooled")
     qg_bakeoff.run_matrix([fixture], pins, output_dir=tmp_path, bare_runner=bare_runner, arm="bare")
 
@@ -2232,7 +2232,7 @@ def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
     monkeypatch.setenv("QG_BAKEOFF", "1")
 
     fixture = _fixture()
-    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    route = qg_bakeoff.bakeoff_route_for_model("gemini-3.8-flash-high")
     out_dir = tmp_path / "bakeoff-out"
     out_dir.mkdir(parents=True)
     parse = OpencodeStreamParse(
@@ -2289,7 +2289,7 @@ def test_offline_bakeoff_tooled_run_firewalls_stray_reviewer_write(
     monkeypatch.setenv("QG_BAKEOFF", "1")
 
     fixture = _fixture()
-    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    route = qg_bakeoff.bakeoff_route_for_model("gemini-3.8-flash-high")
     out_dir = tmp_path / "bakeoff-out"
     out_dir.mkdir(parents=True)
 

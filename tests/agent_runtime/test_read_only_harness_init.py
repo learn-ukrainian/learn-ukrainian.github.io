@@ -256,6 +256,12 @@ def test_missing_harness_binary_refuses_worker_without_environment_fallback(chec
     monkeypatch.setenv("FAKE_SECRET_TOKEN", "fixture-value")
     monkeypatch.setenv("LANG", "C.UTF-8")
     assert resolve_agent_binary("opencode", path=os.environ["PATH"]) is None
+    if agent == "glm":
+        with pytest.raises(ValueError, match="is retired in the model catalog"):
+            deepseek.initialize_opencode_dependencies(checkout, agent=agent, model=model)
+        rc, state, launches = _launch(checkout, agent=agent, model=model)
+        assert rc == 1 and state["status"] == "failed" and launches == []
+        return
     message = "OpenCode dependency initialization failed (opencode harness binary not found); worker not started"
     with patch.object(deepseek.subprocess, "run", wraps=deepseek.subprocess.run) as run:
         with pytest.raises(ValueError, match="opencode harness binary not found") as error:
@@ -314,12 +320,11 @@ def test_write_mode_does_not_gain_initialization(checkout, mode):
     assert (checkout.parent / "init.log").read_text() == "run\n"
 
 
-def test_glm_opencode_sibling_initializes_before_baseline(checkout):
-    """GLM uses the same OpenCode dependency install and needs the same ordering."""
-    rc, state, _ = _launch(checkout, agent="glm", model="glm-5.3-flash")
-    assert rc == 0
-    assert state["read_only_mutation_paths"] == []
-    assert (checkout.parent / "init.log").read_text() == "init\nrun\n"
+def test_glm_retirement_refuses_before_initialization_or_worker(checkout):
+    rc, state, launches = _launch(checkout, agent="glm", model="glm-5.3-flash")
+    assert rc == 1 and state["status"] == "failed"
+    assert launches == []
+    assert not (checkout.parent / "init.log").exists()
 
 
 def test_other_harness_starts_without_opencode_initialization(checkout):
@@ -341,6 +346,11 @@ def test_initialization_withholds_runtime_secrets_and_preserves_allowed_context(
 
     with patch("scripts.agent_runtime.adapters.deepseek.build_agent_env", wraps=build_agent_env) as build_env:
         rc, state, _ = _launch(checkout, agent=agent, model=model)
+    if agent == "glm":
+        assert build_env.call_args is None
+        assert rc == 1 and state["status"] == "failed"
+        assert not (checkout.parent / "init-env.json").exists()
+        return
     assert build_env.call_args.kwargs == {
         "provider": agent,
         "model": model,

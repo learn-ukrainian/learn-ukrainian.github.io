@@ -20766,7 +20766,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only defaults to an isolated detached worktree.",
     )
-    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.8-flash-high.")
     d.add_argument(
         "--claude-account",
         default=None,

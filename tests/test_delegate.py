@@ -9992,7 +9992,7 @@ def test_cursor_auto_refused_outside_a_well_defined_coding_task(overrides, dor_r
     assert refusal is not None
     assert "cursor_auto_outside_coding_task" in refusal
     assert reason in refusal
-    assert "--model grok-4.7 or --model composer-2.5" in refusal
+    assert "--model grok-4.7" in refusal
 
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
@@ -11053,7 +11053,7 @@ def test_dispatch_gemini_alias_rejects_unknown_model_before_spawn(tmp_tasks_dir,
     assert delegate._read_state(delegate._state_path("gemini-alias-unknown-model")) is None
     err = capsys.readouterr().err
     assert "Unsupported AGY model 'gemini-9.9-pro-preview'" in err
-    assert "gemini-3.8-flash-high" not in err
+    assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in err
 
 
 def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):

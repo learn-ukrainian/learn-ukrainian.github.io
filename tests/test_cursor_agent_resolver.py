@@ -100,8 +100,8 @@ def test_resolver_uses_later_cursor_agent_and_never_executes_decoy(
         tool_config=None,
     )
     probe = probe_cursor_login()
-    reply = _invoke_cursor("hello", "composer-2.5")
-    judged = calibration.call_cursor("judge this", "composer-2.5")
+    reply = _invoke_cursor("hello", "grok-4.7-high")
+    judged = calibration.call_cursor("judge this", "grok-4.7-high")
 
     cursor_path = cursor.resolve()
     assert Path(resolved) == cursor_path
@@ -142,9 +142,9 @@ def test_resolver_refuses_when_only_decoy_agent_exists(tmp_path: Path, monkeypat
             tool_config=None,
         )
     with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
-        _invoke_cursor("hello", "composer-2.5")
+        _invoke_cursor("hello", "grok-4.7-high")
     with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
-        calibration.call_cursor("judge this", "composer-2.5")
+        calibration.call_cursor("judge this", "grok-4.7-high")
     probe = probe_cursor_login()
 
     assert probe["error_kind"] == "missing_binary"

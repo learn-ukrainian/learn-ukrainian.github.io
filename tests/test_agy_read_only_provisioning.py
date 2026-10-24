@@ -35,7 +35,7 @@ from agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime import agy_hook_config as hooks
 
 HOOK = ".agents/hooks.json"
-_MODEL = "gemini-3.1-pro-high"
+_MODEL = "gemini-3.8-flash-high"
 _CODEX_MODEL = "gpt-6.1-sol"
 
 
@@ -145,10 +145,36 @@ def _launch(
     """
     model_id = _MODEL if agent == "agy" else _CODEX_MODEL
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(
-        state_path,
-        {"task_id": task_id, "cwd": str(worktree), "mode": mode, "model": model_id, "cli_version": "fixture"},
-    )
+    brief = "Read scripts/f.txt and report its first line; do not edit the tree."
+    record = {"task_id": task_id, "cwd": str(worktree), "mode": mode, "model": model_id, "cli_version": "fixture"}
+    prompt = brief
+    if agent == "agy":
+        # Current Flash requires the same sealed Sol admission as a real dispatch.
+        # Reuse the envelope fixture without stubbing the worker's admission gates.
+        from tests import test_delegate_bounded_advisory as admission
+
+        execution = {**admission._launch(mode, worktree), "agent": agent, "model_id": model_id}
+        token = admission._LEASE_IDS.set((task_id, f"{task_id}-advisor"))
+        try:
+            with patch.object(admission, "_launch", return_value=execution):
+                admitted, prompt = admission._admitted_worker(
+                    state_path.parent, repo_root=delegate._REPO_ROOT, owned=["scripts/"],
+                    mode=mode, brief=brief, worktree=worktree,
+                )
+        finally:
+            admission._LEASE_IDS.reset(token)
+        record.update(admitted)
+        envelope = record["advisory_envelope"]
+        validated = admission.bounded_advisory.load_envelope(
+            envelope["advisor_task_id"],
+            state_path=delegate._state_path(envelope["advisor_task_id"]),
+            binding_sha256=envelope[admission.bounded_advisory.BINDING_FIELD],
+            repo_root=delegate._REPO_ROOT,
+        )
+        prompt = delegate._bounded_prompt_composer(record, agent=agent, model=model_id, mode=mode)(
+            brief, validated, envelope["advisory_args"],
+        )
+    delegate._write_state_atomic(state_path, record)
     launches: list[dict] = []
 
     def provider(provider_agent, prompt, *, mode, cwd, model, task_id, tool_config, **_kwargs):
@@ -198,7 +224,7 @@ def _launch(
         rc = delegate._run_worker(
             task_id=task_id,
             agent=agent,
-            prompt="Read scripts/f.txt and report its first line; do not edit the tree.",
+            prompt=prompt,
             mode=mode,
             cwd_str=str(worktree),
             model=model_id,

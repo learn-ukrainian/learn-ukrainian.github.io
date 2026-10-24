@@ -842,8 +842,8 @@ _AGY_MODEL_BY_NORMALIZED: dict[str, str] = _build_agy_model_map()
 def unknown_model_suggestion(model: str) -> str:
     """Return safe guidance for an unknown AGY model identifier."""
     if "pro" in model.casefold():
-        return "For Gemini Pro, use `--model gemini-3.1-pro-high`."
-    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_GENERAL_MODEL_SLUGS)
+        return "Gemini Pro is retired; use `--model gemini-3.8-flash-high`."
+    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_GENERAL_MODEL_SLUGS if not retired_model_refusal(slug))
     return f"Accepted AGY model ids: {accepted_ids}."
 
 
@@ -2300,10 +2300,9 @@ def _stream_result(
 
     result: dict[str, Any] | None = None
     expected_model = plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None
-    try:
-        expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
-    except ValueError:
-        expected = None
+    # Recorded identities remain recognizable after catalog retirement. New
+    # invocations still pass resolve_model_slug's admission check.
+    expected = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(expected_model)) if expected_model is not None else None
     claude_identity = expected in _AGY_CLAUDE_SLUGS
     argon_identity = expected in _AGY_ARGON_SLUGS
     check_identity = claude_identity or argon_identity
@@ -2365,7 +2364,10 @@ def _stream_result(
                 resolved = []
                 for value in reported:
                     try:
-                        slug = AgyAdapter.resolve_model_slug(value) if isinstance(value, str) and value.strip() else None
+                        if argon_identity:
+                            slug = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(value)) if isinstance(value, str) and value.strip() else None
+                        else:
+                            slug = AgyAdapter.resolve_model_slug(value) if isinstance(value, str) and value.strip() else None
                     except ValueError:
                         slug = None
                     resolved.append(slug)

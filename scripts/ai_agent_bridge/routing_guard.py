@@ -78,6 +78,10 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
 
     ``context`` names the call site for the error message (and telemetry).
     """
+    from scripts.review.model_catalog import retired_model_refusal
+
+    if refusal := retired_model_refusal(model):
+        raise RoutingGuardError(f"{context}: {refusal}")
     if os.environ.get(_OVERRIDE_ENV) == "1":
         return
     text = str(model or "").strip()
@@ -124,8 +128,7 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
         )
     if _DEEPSEEK_RETIRED_PREFIX_RE.match(text):
         raise RoutingGuardError(
-            f"{context}: {text!r} uses the retired DeepSeek provider alias. "
-            "Use deepseek/deepseek-flash."
+            f"{context}: {text!r} uses the retired DeepSeek provider alias. Use deepseek/deepseek-flash."
         )
     direct_prefix = _DEEPSEEK_FIRST_PARTY_PREFIX_RE.match(text)
     if direct_prefix and not _DEEPSEEK_FAMILY_MODEL_RE.match(text[direct_prefix.end() :]):

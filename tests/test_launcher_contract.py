@@ -60,6 +60,8 @@ PUBLIC = (
 # Compat wrappers forward into the shared adapters; they are part of PUBLIC.
 COMPAT = ("start-kimicc.sh", "start-glmcc.sh")
 assert set(COMPAT).issubset(PUBLIC)
+
+
 def _install_claude_usage_fixture(root: Path) -> None:
     """Supply usage only in copied fixtures; production has no test bypass."""
     (root / "scripts/lib/claude_weekly_used.py").write_text("print('0')\n", encoding="utf-8")
@@ -184,8 +186,8 @@ def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
         ("start-codex.sh", "interactive launchers reject --epic"),
         ("start-gemini.sh", "interactive launchers reject --epic"),
         ("start-grok.sh", "interactive launchers reject --epic"),
-        ("start-glm.sh", "interactive launchers reject --epic"),
-        ("start-glmcc.sh", "interactive launchers reject --epic"),
+        ("start-glm.sh", "is retired in the model catalog"),
+        ("start-glmcc.sh", "is retired in the model catalog"),
         # OO-58: the retired default is refused before the interactive --epic check.
         ("start-kimi.sh", "is retired in the model catalog"),
         ("start-kimicc.sh", "is retired in the model catalog"),
@@ -205,8 +207,8 @@ def test_interactive_launchers_reject_driver_epic(name: str, message: str) -> No
         ("start-codex.sh", "interactive launchers reject --force"),
         ("start-gemini.sh", "interactive launchers reject --force"),
         ("start-grok.sh", "interactive launchers reject --force"),
-        ("start-glm.sh", "interactive launchers reject --force"),
-        ("start-glmcc.sh", "interactive launchers reject --force"),
+        ("start-glm.sh", "is retired in the model catalog"),
+        ("start-glmcc.sh", "is retired in the model catalog"),
         # OO-58: the retired default is refused before the interactive --force check.
         ("start-kimi.sh", "is retired in the model catalog"),
         ("start-kimicc.sh", "is retired in the model catalog"),
@@ -1161,13 +1163,13 @@ def test_harness_contracts_and_redacted_kimi_glm_credentials(tmp_path: Path) -> 
         "start-glmcc.sh",
         env={"HOME": str(home), "ZAI_API_KEY": glm_secret},
     )
-    assert glm.returncode == 0, glm.stderr
-    assert "credential_source=ZAI_API_KEY" in glm.stdout
+    assert glm.returncode == 2, glm.stderr
+    assert "is retired in the model catalog" in glm.stderr
     assert glm_secret not in glm.stdout + glm.stderr
 
     unsupported = run_launcher("start-glm.sh", "--harness", "native")
     assert unsupported.returncode == 2
-    assert "native is unsupported" in unsupported.stderr
+    assert "is retired in the model catalog" in unsupported.stderr
 
 
 def test_kimi_never_uses_ambient_anthropic_token(tmp_path: Path) -> None:
