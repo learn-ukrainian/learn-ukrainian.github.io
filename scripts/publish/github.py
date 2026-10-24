@@ -120,6 +120,7 @@ SCHEMAS = {
 WORKFLOWS = {
     "ci.yml": {},
     "deploy-pages.yml": {},
+    "pytest-slow-nightly.yml": {},
     "stale-branch-cleanup.yml": {},
     "coverage-ref.yml": {"sha": ("sha", True), "contexts": ("bool", False)},
 }
