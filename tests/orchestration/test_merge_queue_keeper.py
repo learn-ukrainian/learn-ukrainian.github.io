@@ -2346,7 +2346,7 @@ def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, wh
              "body": f"Quarantine {rendered}‹."},
             {"number": 77, "state": "open", "title": "Repair the test", "body": "",
              where: f"Merge queue flaky test: {rendered}" if where == "title" else (
-                 f"`{rendered}`".replace("_", r"\_")
+                 f"`{rendered}`"
              )},
         ]
         lines, failed = run(fake, path, monkeypatch)

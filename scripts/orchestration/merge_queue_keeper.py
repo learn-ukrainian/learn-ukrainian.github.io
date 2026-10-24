@@ -881,6 +881,158 @@ def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
     return {job: (sorted(numbers), sorted(tests[job])) for job, numbers in prs.items() if len(numbers) >= 2}
 
 
+def _identity_spellings(key: str) -> frozenset[str]:
+    return frozenset({key, display_text(key), display_text(key, DISPLAY_TEST_LIMIT)})
+
+
+def _markdown_references(source: str) -> tuple[list[tuple[str, bool, bool]], list[str], str | None]:
+    """Rebuild prose once, keeping non-prose barriers and real line boundaries.
+
+    Run edges carry source-boundary flags, so a barrier never supplies a line
+    ending. Code values remain literal and link labels never become prose.
+    """
+    try:
+        from markdown_it import MarkdownIt
+
+        parser = MarkdownIt("commonmark")
+        source = source.replace("\r\n", "\n").replace("\r", "\n")
+        tokens = parser.parse(source)
+        for scope in [tokens, *(token.children for token in tokens if token.children is not None)]:
+            stack = []
+            for token in scope:
+                if token.type in {"list_item_open", "blockquote_open"} and token.level + 1 >= parser.options["maxNesting"]:
+                    raise ValueError("CommonMark nesting limit reached")
+                if token.nesting == 1:
+                    stack.append((token.tag, token.markup))
+                elif token.nesting == -1 and (not stack or stack.pop() != (token.tag, token.markup)):
+                    raise ValueError("unbalanced CommonMark tokens")
+            if stack:
+                raise ValueError("unclosed CommonMark tokens")
+        source_lines = source.split("\n")
+        references = []
+        codes = []
+        legacy = None
+        for token in tokens:
+            if token.type != "inline":
+                continue
+            if token.children is None or token.map is None:
+                raise ValueError("CommonMark inline source unavailable")
+            # Block wrappers can strip heading suffixes and indentation. Keep
+            # their neighboring source syntax instead of inventing boundaries.
+            content_lines = token.content.split("\n")
+            raw_lines = source_lines[token.map[0]:token.map[1]]
+            cursor = 0
+            contexts = []
+            for line in content_lines:
+                while cursor < len(raw_lines) and line not in raw_lines[cursor]:
+                    cursor += 1
+                if cursor == len(raw_lines):
+                    raise ValueError("CommonMark source boundaries unavailable")
+                offset = raw_lines[cursor].index(line)
+                contexts.append((raw_lines[cursor][:offset], raw_lines[cursor][offset + len(line):]))
+                cursor += 1
+            stream = ""
+            prefix, suffix = contexts[0][0], contexts[-1][1]
+            at_start = not prefix or prefix[-1].isspace()
+            link_depth = 0
+            for child in token.children:
+                if child.type == "link_open":
+                    link_depth += 1
+                elif child.type == "link_close":
+                    link_depth -= 1
+                elif link_depth:
+                    continue
+                elif child.type == "text":
+                    stream += child.content
+                    continue
+                elif child.type in {"em_open", "em_close", "strong_open", "strong_close"}:
+                    stream += child.markup
+                    continue
+                elif child.type in {"softbreak", "hardbreak"}:
+                    stream += "\n"
+                    continue
+                if child.type == "code_inline" and (stream[-1].isspace() if stream else at_start):
+                    codes.append(child.content)
+                references.append((stream, at_start, False))
+                stream, at_start = "", False
+            references.append((stream, at_start, not suffix))
+            first = token.children[0] if token.children else None
+            if token.map[0] == 0 and first is not None and first.type == "code_inline" and source.startswith(first.markup):
+                closer = re.search(r"(?<!`)" + re.escape(first.markup) + r"(?!`)", source[len(first.markup):])
+                if closer and source[len(first.markup) + closer.end():].startswith(" failed merge_group runs on distinct PRs "):
+                    legacy = first.content
+        return references, codes, legacy
+    except Exception as exc:
+        raise KeeperError(f"CommonMark identity parsing failed ({type(exc).__name__})") from exc
+
+
+def _canonical_flake_issue(
+    key: str, node: bool, issues: list[dict[str, Any]], known: Mapping[str, frozenset[str]]
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Resolve without publication or state writes; ambiguity overrides reuse."""
+    identities = known[key]
+    display_suffix = rf" \\?\(id:[0-9a-f]{{{DISPLAY_ID_LENGTH}}}\\?\)"
+    if re.search(display_suffix + r"\Z", key):
+        return None, "digest-shaped raw identity"
+    if any(identities & values for other, values in known.items() if other != key):
+        return None, "raw/rendered identity collision"
+    title_patterns = [re.escape(value) for value in sorted(identities)]
+    title_patterns.extend(
+        "".join((r"\\?" if char in r"\`*_{}[]()#+.!>~-" else "") + re.escape(char) for char in value)
+        for value in sorted(identities - {key})
+    )
+    title_pattern = "(?:" + "|".join(title_patterns) + ")"
+    pattern = re.compile(
+        r"(?:\((?P<wrapped>" + "|".join(re.escape(value) for value in sorted(identities))
+        + r")\)|(?P<plain>" + "|".join(re.escape(value) for value in sorted(identities))
+        + r"))"
+    )
+    longer = {value for other, values in known.items() if other != key for value in values}
+    matches = []
+    ambiguous = False
+    for item in issues:
+        if "pull_request" in item or item.get("state", "open") != "open":
+            continue
+        title, body = (str(item.get(field) or "") for field in ("title", "body"))
+        if title.startswith("Merge queue flaky test: "):
+            matched = re.fullmatch("Merge queue flaky test: " + title_pattern, title) is not None
+        else:
+            body_references, body_codes, legacy = _markdown_references(body)
+            if not (node or "<!-- mq-keeper-flake -->" in body or legacy in identities):
+                continue
+            title_references, title_codes, _ = _markdown_references(title)
+            matched = any(code in identities for code in [*title_codes, *body_codes])
+            for stream, at_start, at_end in [*title_references, *body_references]:
+                for occurrence in pattern.finditer(stream):
+                    begin, finish = occurrence.span()
+                    if not (stream[begin - 1].isspace() if begin else at_start):
+                        continue
+                    if finish == len(stream):
+                        if not at_end:
+                            continue
+                    elif stream[finish] not in "\n.,;!?" or (
+                        stream[finish] != "\n" and not (
+                            stream[finish + 1].isspace() if finish + 1 < len(stream) else at_end
+                        )
+                    ):
+                        continue
+                    group = "wrapped" if occurrence.group("wrapped") is not None else "plain"
+                    start, end = occurrence.span(group)
+                    # Only a complete known longer spelling, at this exact
+                    # position, can invalidate a punctuation-ended reading.
+                    if any(len(value) > end - start and stream.startswith(value, start) for value in longer):
+                        ambiguous = True
+                    else:
+                        matched = True
+        if matched:
+            matches.append(item)
+    if any(type(item.get("number")) is not int or item["number"] <= 0 for item in matches):
+        raise KeeperError("matching flaky-test issue has no valid number")
+    if ambiguous:
+        return None, "known longer identity in prose"
+    return (min(matches, key=lambda item: item["number"]) if matches else None), None
+
+
 def run(
     gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
 ) -> tuple[list[str], bool]:
@@ -1140,6 +1292,17 @@ def run(
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
                 }
+    # Freeze before pruning, including singleton and old loaded records. Issue
+    # update keys and PR/head bookkeeping are never source identities.
+    known_keys = set()
+    for item in previous.get("failures", []):
+        if not isinstance(item, dict):
+            continue
+        job, test = item.get("job"), item.get("test")
+        if isinstance(job, str) and job and job not in AGGREGATE_JOBS:
+            known_keys.add(job)
+        if isinstance(test, str) and test and test not in AGGREGATE_JOBS:
+            known_keys.add(test)
     cutoff = datetime.now(UTC) - timedelta(hours=24)
     failures = [
         item for item in previous.get("failures", [])
@@ -1148,6 +1311,7 @@ def run(
     previous["failures"] = failures
     issue_updates = previous.setdefault("flake_issue_updates", {})
     flaky = _flaky_jobs(failures)
+    known = {key: _identity_spellings(key) for key in frozenset(known_keys | flaky.keys())}
     issues = None
     if flaky and budget:
         try:
@@ -1168,59 +1332,14 @@ def run(
         if tests:
             body += f" Failed test: {code_span(tests[0], DISPLAY_TEST_LIMIT)}."
         try:
-            # Older titles/bodies used the job display limit. Compare both
-            # deterministic renderings as well as raw text, never a prefix.
-            identities = {key, display_text(key), display_text(key, DISPLAY_TEST_LIMIT)}
-            display_suffix = rf" \\?\(id:[0-9a-f]{{{DISPLAY_ID_LENGTH}}}\\?\)"
-            # A raw key spelling another key's rendered identity is ambiguous.
-            if re.search(display_suffix + r"\Z", key):
-                identities.discard(key)
-            identity_patterns = [re.escape(value) for value in sorted(identities)]
-            # Changed display values carry the raw-key digest, so canonical
-            # titles can accept their Markdown escapes without conflating keys.
-            identity_patterns.extend(
-                "".join((r"\\?" if char in r"\`*_{}[]()#+.!>~-" else "") + re.escape(char) for char in value)
-                for value in sorted(identities - {key})
-            )
-            identity_pattern = "(?:" + "|".join(identity_patterns) + ")"
-            # Titles retain raw authority. In Markdown references an unchanged
-            # key may be escaped, but a literal backslash key is ambiguous there.
-            reference_identities = identities - {key} if "\\" in key else identities
-            reference_pattern = r"(?!)"
-            if reference_identities:
-                reference_pattern = "(?:" + "|".join(
-                    "".join((r"\\?" if char in r"\`*_{}[]()#+.!>~-" else "") + re.escape(char) for char in value)
-                    for value in sorted(reference_identities)
-                ) + ")"
-            # Canonical titles and code spans carry complete identities. Legacy
-            # prose references end at a line or sentence delimiter, rather than
-            # accepting any character outside an identifier boundary blacklist.
-            title_prefix = "Merge queue flaky test: "
-            pattern = re.compile(
-                r"(?<!\S)(?:`" + reference_pattern + r"`|(?:\(" + reference_pattern
-                + r"\)|" + reference_pattern + r")(?=$|[.,;!?](?=\s|$)))", re.M
-            )
             marker = "<!-- mq-keeper-flake -->"
-            matches = []
-            for item in issues:
-                if "pull_request" in item or item.get("state", "open") != "open":
-                    continue
-                issue_title, issue_body = (str(item.get(field) or "") for field in ("title", "body"))
-                if identities and (
-                    re.fullmatch(title_prefix + identity_pattern, issue_title)
-                    or (not issue_title.startswith(title_prefix) and (bool(tests) or marker in issue_body or re.match(
-                        "`" + reference_pattern + "` failed merge_group runs on distinct PRs ", issue_body
-                    )) and (
-                        pattern.search(issue_title)
-                        or pattern.search(issue_body)
-                    ))
-                ):
-                    matches.append(item)
-            if any(type(item.get("number")) is not int or item["number"] <= 0 for item in matches):
-                raise KeeperError("matching flaky-test issue has no valid number")
-            issue = min(matches, key=lambda item: item["number"]) if matches else None
+            issue, ambiguity = _canonical_flake_issue(key, bool(tests), issues, known)
             lines.append(f"flaky record: {display_text(key, DISPLAY_TEST_LIMIT)}; PRs={','.join(map(str, numbers))}; "
                          f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'none'}")
+            if ambiguity:
+                lines.append(f"CTO finding: ambiguous identity for {display_text(key, DISPLAY_TEST_LIMIT)}; "
+                             f"{display_text(ambiguity)}; automatic issue creation disabled")
+                continue
             if issue is None:
                 lines.append(f"CTO finding: no canonical open issue for {display_text(key, DISPLAY_TEST_LIMIT)}; "
                              "automatic issue creation disabled")
