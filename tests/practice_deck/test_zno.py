@@ -132,6 +132,31 @@ def test_builder_attaches_registered_explanations_without_fabricating_missing_en
     )
 
 
+@pytest.mark.parametrize(
+    ("explanation", "message_fragments"),
+    [
+        ({"correctLetter": "А", "options": {}}, ("zno:1", "'А'", "'Б'")),
+        ({"correctLetter": "Б", "options": {"Е": "Пояснення неіснуючого варіанта."}}, ("zno:1", "'Е'")),
+    ],
+)
+def test_builder_refuses_explanation_that_disagrees_with_its_item(
+    tmp_path: Path, explanation: dict, message_fragments: tuple[str, ...]
+) -> None:
+    database = _database(tmp_path / "sources.db")
+    registry = tmp_path / "explanations.json"
+    registry.write_text(json.dumps({
+        "schema": "zno-explanations", "schemaVersion": 1,
+        "items": {"zno:1": explanation},
+        "withheld": {},
+    }), encoding="utf-8")
+
+    with pytest.raises(ValueError) as excinfo:
+        build_zno_shards(database, explanations_path=registry)
+
+    message = str(excinfo.value)
+    assert all(fragment in message for fragment in message_fragments)
+
+
 def test_lexical_predicate_is_explicit_and_output_is_deterministic(tmp_path: Path) -> None:
     database = _database(tmp_path / "sources.db")
     assert "trim(t.topic_norm) = 'lexical_norm'" in LEXICAL_NORM_SQL
