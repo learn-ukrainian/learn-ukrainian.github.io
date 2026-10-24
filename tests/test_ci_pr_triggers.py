@@ -381,35 +381,48 @@ _GREEN = {
 
 
 def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
-    actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=_REPO_ROOT, text=True, timeout=30).strip()
-    base = subprocess.check_output(["git", "rev-parse", "HEAD^"], cwd=_REPO_ROOT, text=True, timeout=30).strip()
-    payload = {"repository": {"default_branch": "main"}}
-    ref = "refs/heads/main"
-    if event == "pull_request":
-        payload.update(action="opened", pull_request={"number": 7, "base": {"sha": "b" * 40}, "head": {"sha": "a" * 40}})
-        ref = "refs/pull/7/merge"
-    elif event == "merge_group":
-        ref = "refs/heads/gh-readonly-queue/main/pr-7-" + "d" * 40
-        payload.update(action="checks_requested", merge_group={"base_sha": base, "base_ref": "refs/heads/main", "head_sha": actual, "head_ref": ref})
-    elif event == "schedule":
-        payload["schedule"] = "30 3 * * *"
-    elif event == "workflow_dispatch":
-        payload["ref"] = "refs/heads/main"
-    jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
-    if event == "pull_request":
-        jobs.update({name: "skipped" for name in ("FRONTEND", "REFRESH", "PYTEST", "PYTEST_REPORT")})
-    # Existing test bodies can corrupt the real entry-point event and candidate.
-    overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_")}
-    raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
-    jobs.update(results)
-    mapping = {"SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
-    needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
+    # Candidate identity and ancestry belong to this fixture, not the source
+    # checkout, which may contain only HEAD in a real queue shard.
     with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as directory:
+        repo = Path(directory) / "candidate"
+        subprocess.run(["git", "init", "-q", str(repo)], check=True, capture_output=True, timeout=30)
+        commits = []
+        for message in ("base", "candidate"):
+            subprocess.run(
+                ["git", "-C", str(repo), "-c", "user.name=CI fixture", "-c", "user.email=ci@example.invalid",
+                 "commit", "--allow-empty", "-qm", message],
+                check=True, capture_output=True, timeout=30,
+            )
+            commits.append(subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", "HEAD"], text=True, timeout=30,
+            ).strip())
+        base, actual = commits
+        payload = {"repository": {"default_branch": "main"}}
+        ref = "refs/heads/main"
+        if event == "pull_request":
+            payload.update(action="opened", pull_request={"number": 7, "base": {"sha": "b" * 40}, "head": {"sha": "a" * 40}})
+            ref = "refs/pull/7/merge"
+        elif event == "merge_group":
+            ref = "refs/heads/gh-readonly-queue/main/pr-7-" + "d" * 40
+            payload.update(action="checks_requested", merge_group={"base_sha": base, "base_ref": "refs/heads/main", "head_sha": actual, "head_ref": ref})
+        elif event == "schedule":
+            payload["schedule"] = "30 3 * * *"
+        elif event == "workflow_dispatch":
+            payload["ref"] = "refs/heads/main"
+        jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
+        if event == "pull_request":
+            jobs.update({name: "skipped" for name in ("FRONTEND", "REFRESH", "PYTEST", "PYTEST_REPORT")})
+        # Existing test bodies can corrupt the real entry-point event and candidate.
+        overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_")}
+        raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
+        jobs.update(results)
+        mapping = {"SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
+        needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
         event_path = Path(directory) / "event.json"
         event_path.write_text(raw_payload)
         result = subprocess.run(
             ["bash", "-e", "-c", _gate_script()], cwd=_REPO_ROOT, check=False, capture_output=True, text=True,
-            env={**os.environ, "PYTHON_BIN": sys.executable, "EVENT_NAME": event, "GITHUB_EVENT_PATH": str(event_path), "GITHUB_SHA": actual, "GITHUB_REF": ref, "GITHUB_STEP_SUMMARY": str(Path(directory) / "summary"), "NEEDS_JSON": json.dumps(needs), **overrides}, timeout=30,
+            env={**os.environ, "GIT_DIR": str(repo / ".git"), "GIT_WORK_TREE": str(repo), "PYTHON_BIN": sys.executable, "EVENT_NAME": event, "GITHUB_EVENT_PATH": str(event_path), "GITHUB_SHA": actual, "GITHUB_REF": ref, "GITHUB_STEP_SUMMARY": str(Path(directory) / "summary"), "NEEDS_JSON": json.dumps(needs), **overrides}, timeout=30,
         )
         if result.returncode == 0:
             summary = (Path(directory) / "summary").read_text()
