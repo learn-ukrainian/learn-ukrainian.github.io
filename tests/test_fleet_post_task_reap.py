@@ -1326,6 +1326,32 @@ def test_acp_runtime_retain_while_task_active(hermetic_reap):
     assert acp_path.exists()
 
 
+def test_post_task_reap_default_routes_private_owner_from_registered_repository(hermetic_reap, monkeypatch, capsys):
+    """A configured private worktree must not be refused as unknown ownership."""
+    public, tasks = hermetic_reap
+    private_config = post_task_reap.worktree_claims.load_fleet_repos()["infra-private"]
+    private = public.parent / private_config.local_name
+    _init_repo(private)
+    monkeypatch.setattr(post_task_reap.worktree_claims, "public_primary_root", lambda: public)
+    task_id = "private-owner-default"
+    worktree = _add_dispatch_worktree(private, "codex", task_id)
+    _run(["git", "push", "-u", "origin", f"codex/{task_id}"], cwd=worktree)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", lambda _repo, _branch: ([], None))
+    _write_task_state(
+        tasks, task_id, "done", worktree, agent="codex", worktree_reused=False, creation_evidence=True
+    )
+
+    code = post_task_reap.main(["--task-id", task_id, "--tasks-dir", str(tasks), "--apply"])
+    report = json.loads(capsys.readouterr().out)
+
+    assert code == 0
+    assert report["errors"] == []
+    assert report["main_worktree"]["action"] == "removed", report
+    assert not worktree.exists()
+    assert str(worktree) not in _run(["git", "worktree", "list", "--porcelain"], cwd=private).stdout
+    assert public.is_dir() and private.is_dir()
+
+
 def test_cli_dry_run_default(hermetic_reap, capsys):
     repo_root, tasks_dir = hermetic_reap
     worktree = _add_dispatch_worktree(repo_root, "kimi", "cli-task")
