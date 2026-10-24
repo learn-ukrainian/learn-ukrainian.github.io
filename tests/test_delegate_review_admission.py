@@ -1284,7 +1284,7 @@ def test_9959_explicit_eligible_pick_keeps_model_and_seat(monkeypatch, flags):
 
 
 def test_9312_alias_explicit_model_uses_alias_resolved_identity(monkeypatch):
-    args = _args("--agent", "gemini", "--model", "gemini-3.1-pro-high", "--review-profile", "ukrainian")
+    args = _args("--agent", "gemini", "--model", "gemini-3.8-flash-high", "--review-profile", "ukrainian")
     (refusal, target), routing = _admit(args, monkeypatch)
     assert refusal is None
     assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
@@ -1300,10 +1300,10 @@ def test_review_alias_model_is_resolved_once_before_selection(monkeypatch):
         return real(seat, model)
 
     monkeypatch.setattr(delegate, "_resolve_substitution_model", capture)
-    args = _args("--agent", "gemini", "--model", "gemini-3.1-pro-high", "--review-profile", "ukrainian")
+    args = _args("--agent", "gemini", "--model", "gemini-3.8-flash-high", "--review-profile", "ukrainian")
     (refusal, target), _ = _admit(args, monkeypatch)
     assert refusal is None and target.recipient == "agy"
-    assert calls == [("agy", "gemini-3.1-pro-high")]
+    assert calls == [("agy", "gemini-3.8-flash-high")]
 
 
 def test_10016_budget_substitute_is_admitted_with_pace_only_deficit(monkeypatch, capsys):

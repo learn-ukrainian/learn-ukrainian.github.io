@@ -4,7 +4,6 @@ version: "1.0.0"
 title: RB6 Estate probes — VPS, service, disk, private repo, public site (read-only)
 seats:
   - grok
-  - glm-local
 parameters:
   handoff_agent: string
 stop_codes:

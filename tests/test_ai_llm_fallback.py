@@ -31,12 +31,10 @@ def test_build_gemini_ladder_keeps_flash_on_agy_only():
     ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
 
     assert [(r.cli, r.model, r.auth_mode) for r in ladder] == [
-        ("gemini-cli", PRIMARY_GEMINI_MODEL, "api"),
-        ("gemini-cli", PRIMARY_GEMINI_MODEL, "oauth"),
         ("agy-cli", AGY_GEMINI_MODEL, None),
     ]
-    assert [r.index for r in ladder] == [1, 2, 3]
-    assert all(r.total == 3 for r in ladder)
+    assert [r.index for r in ladder] == [1]
+    assert all(r.total == 1 for r in ladder)
 
 
 def test_build_gemini_ladder_without_api_key_keeps_agy_rung():
@@ -45,11 +43,10 @@ def test_build_gemini_ladder_without_api_key_keeps_agy_rung():
     )
 
     assert [(r.cli, r.model, r.auth_mode) for r in ladder] == [
-        ("gemini-cli", PRIMARY_GEMINI_MODEL, "oauth"),
         ("agy-cli", AGY_GEMINI_MODEL, None),
     ]
-    assert [r.index for r in ladder] == [1, 2]
-    assert all(r.total == 2 for r in ladder)
+    assert [r.index for r in ladder] == [1]
+    assert all(r.total == 1 for r in ladder)
 
 
 @pytest.mark.parametrize("model", [PRIMARY_GEMINI_MODEL, FLASH_GEMINI_MODEL, FINAL_GEMINI_MODEL, "custom-model"])

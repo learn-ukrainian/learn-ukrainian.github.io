@@ -17,6 +17,7 @@ import pytest
 import yaml
 
 from scripts.ci import split_tests as split
+from tests.test_ci_pr_triggers import _EVENTS, _run_gate, _simulate
 
 
 def test_invalid_weights_fail_before_assignment() -> None:
@@ -152,8 +153,10 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     jobs = _workflow_jobs()
     assert "freeze-durations" not in jobs
     refresh = jobs["refresh-pytest-durations"]
-    assert refresh["needs"] == ["reuse"]
-    assert refresh["if"] == "${{ !cancelled() }}"
+    assert "reuse" not in jobs
+    assert not refresh.get("needs")
+    full = "${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
+    assert refresh["if"] == full
     assert refresh["timeout-minutes"] == 10
     assert refresh["permissions"] == {"contents": "read", "actions": "read"}
     refresh_steps = [step.get("run", "") for step in refresh["steps"]]
@@ -165,7 +168,8 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert upload["with"]["name"] == "pytest-duration-input"
     assert upload["with"]["path"] == "ci-artifacts/pytest-file-durations.json"
     pytest_job = jobs["pytest"]
-    assert pytest_job["needs"] == ["reuse", "refresh-pytest-durations"]
+    assert pytest_job["needs"] == ["refresh-pytest-durations"]
+    assert pytest_job["if"] == full
     assert pytest_job["timeout-minutes"] == 15
     assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 17))
     assert pytest_job["permissions"] == {"contents": "read", "actions": "read"}
@@ -188,7 +192,10 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert download["env"]["REFRESH_RESULT"] == "${{ needs.refresh-pytest-durations.result }}"
     assert "GH_TOKEN" not in run_pytest["env"]
     assert pytest_job["steps"].index(download) < pytest_job["steps"].index(run_pytest)
-    report_steps = jobs["pytest-report"]["steps"]
+    report = jobs["pytest-report"]
+    assert report["needs"] == ["pytest"]
+    assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
+    report_steps = report["steps"]
     proof = next(i for i, step in enumerate(report_steps) if "scripts.ci.pytest_report" in step.get("run", ""))
     record = next(i for i, step in enumerate(report_steps) if step.get("name") == "Record pytest durations")
     assert proof < record
@@ -202,7 +209,17 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert gate["timeout-minutes"] == 5
     assert "refresh-pytest-durations" in gate["needs"]
     verdict = next(step["run"] for step in gate["steps"] if step.get("name") == "Require every job")
-    assert "refresh-pytest-durations" not in verdict
+    assert verdict == '"$PYTHON_BIN" -m scripts.ci.gate'
+    aggregation = next(step for step in gate["steps"] if step.get("name") == "Require every job")
+    assert aggregation["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
+    for event in ("merge_group", "schedule", "workflow_dispatch"):
+        results, _ = _simulate(_EVENTS[event])
+        assert all(results[name] == "success" for name in ("refresh-pytest-durations", "pytest", "pytest-report"))
+    results, _ = _simulate(_EVENTS["merge_group"], failures={"pytest"})
+    assert results["pytest-report"] == "skipped", "failed partition must not publish timing weights"
+    result = _run_gate("merge_group", REFRESH="failure")
+    assert result.returncode != 0, result.stdout
+    assert "refresh-pytest-durations: failure, expected success" in result.stdout
 
 
 def _selected_test_files() -> list[str]:

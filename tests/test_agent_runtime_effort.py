@@ -425,7 +425,7 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
 
     spy_adapter = MagicMock()
     spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
-    spy_adapter.default_model = "gemini-3.1-pro-preview"
+    spy_adapter.default_model = "gemini-fixture-native"
 
     fake_plan = MagicMock()
     fake_plan.cmd = ["/bin/true"]
@@ -442,7 +442,7 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
     from ai_llm.fallback import CallResult
     fake_call_result = CallResult(
         response_text="pong",
-        model_used="gemini-3.1-pro-preview",
+        model_used="gemini-fixture-native",
         auth_mode_used="oauth",
         elapsed_s=0.1,
     )
@@ -462,11 +462,11 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
             from ai_llm.fallback import GeminiRung
             rung_a = GeminiRung(
                 index=0, total=2,
-                model="gemini-3.1-pro-preview", auth_mode="oauth",
+                model="gemini-fixture-native", auth_mode="oauth",
             )
             rung_b = GeminiRung(
                 index=1, total=2,
-                model="gemini-3.1-flash-preview", auth_mode="api",
+                model="gemini-fixture-secondary", auth_mode="api",
             )
             # The runner's _attempt_runner internally calls adapter.build_invocation.
             # We patch _execute_invocation_plan to a no-op success so the runner
@@ -501,7 +501,7 @@ def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
             "hi",
             mode="read-only",
             cwd=tmp_path,
-            model="gemini-3.1-pro-preview",
+            model="gemini-fixture-native",
             effort="xhigh",
             entrypoint="delegate",
         )

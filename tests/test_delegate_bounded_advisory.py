@@ -866,7 +866,7 @@ def test_advisor_role_refuses_non_advisor_cursor_pins(env, capsys, model):
             task_id=_advisor_id(),
         )
     )
-    _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=_advisor_id())
+    _assert_refused(env, capsys, rc, "is retired in the model catalog" if model == "composer-2.5" else bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=_advisor_id())
 
 
 def test_advisor_must_run_read_only(env, capsys):

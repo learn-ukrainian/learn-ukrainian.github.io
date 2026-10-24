@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import csv
 import json
+import subprocess
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 import yaml
 
-from scripts.ai_agent_bridge import _claude
-from scripts.audit import russianism_eval
+from scripts.ai_agent_bridge import _claude, _cli
+from scripts.audit import russianism_eval, russianism_judge
 
 
 def _prompt_payload() -> dict:
@@ -151,6 +153,7 @@ def test_optional_gec_checker_is_included(monkeypatch, tmp_path: Path) -> None:
 
 
 def test_bridge_caller_builds_family_specific_commands() -> None:
+    """Reject unsupported caller argv, stale legacy responses, and seat-substituted stdout."""
     prompt = russianism_eval.PromptCase(
         id="p1",
         category="translation",
@@ -165,14 +168,75 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
     gemini = caller.plan(prompt, "gemini-3.1-pro-high")
 
     assert claude.argv[2] == "ask-claude"
+    assert claude.argv[claude.argv.index("ask-claude") + 1] == "-"
+    assert russianism_eval._redacted_command(claude) == " ".join(claude.argv)
+    assert "<prompt_text>" not in russianism_eval._redacted_command(claude)
+    assert "--stdout-only" not in claude.argv
     assert "--to-model" in claude.argv
     assert claude.argv[claude.argv.index("--to-model") + 1] == "claude-opus-4-7"
     assert codex.argv[2] == "ask-codex"
+    assert "--stdout-only" not in codex.argv
     assert codex.stdin == "Translate."
     assert "--to-model" in codex.argv
     assert gemini.argv[2] == "ask-agy"
     assert "--stdout-only" in gemini.argv
     assert gemini.argv[gemini.argv.index("--to-model") + 1] == "gemini-3.1-pro-high"
+
+    parser = _cli._build_parser()
+    completed = subprocess.CompletedProcess([], 0, '{"verdict":"clean","issues":[]}', "diagnostic only")
+    with patch.object(russianism_eval.subprocess, "run", return_value=completed) as invoke:
+        for planned in (claude, codex, gemini):
+            assert planned.stdin == "Translate."
+            parsed = parser.parse_args(planned.argv[2:])
+            assert parsed.command == f"ask-{'agy' if planned.family == 'gemini' else planned.family}"
+            assert parsed.content == "-"
+            assert parsed.task_id == planned.task_id
+            assert parsed.from_llm == "russianism-eval"
+            assert parsed.to_model == planned.model
+            assert getattr(parsed, "stdout_only", False) is (planned.family == "gemini")
+            call, output = caller(prompt, planned.model)
+            assert call == planned
+            assert output == '{"verdict":"clean","issues":[]}'
+            assert invoke.call_args.kwargs["input"] == "Translate."
+            assert invoke.call_args.args[0] == planned.argv
+            judged = russianism_judge.call_judge(
+                "Translate.", planned.task_id, planned.family, planned.model, "russianism-eval"
+            )
+            assert judged["verdict"] == "clean"
+            assert judged["issues"] == []
+            assert invoke.call_args.args[0][2:] == planned.argv[2:]
+            assert parser.parse_args(invoke.call_args.args[0][2:]) == parsed
+            assert invoke.call_args.kwargs["input"] == "Translate."
+
+        completed.returncode = 1
+        with pytest.raises(RuntimeError, match="diagnostic only"):
+            caller(prompt, codex.model)
+        assert russianism_judge.call_judge(
+            "Translate.", codex.task_id, codex.family, codex.model, "russianism-eval"
+        )["verdict"] == "judge_error"
+        completed.returncode = 0
+        completed.stdout = ""
+        with pytest.raises(RuntimeError, match="without response stdout"):
+            caller(prompt, codex.model)
+        assert russianism_judge.call_judge(
+            "Translate.", codex.task_id, codex.family, codex.model, "russianism-eval"
+        )["verdict"] == "judge_error"
+        completed.returncode = 0
+        completed.stdout = '{"verdict":"clean","issues":[]}\n'
+        completed.stderr = (
+            "ACP substitution: claude -> codex (reason: rate_limited); "
+            "explicit model/effort overrides dropped — the substitute's registered pins apply\n"
+            "deprecated ask-claude: ACP transport; outcome=ok\n"
+        )
+        with pytest.raises(RuntimeError, match="seat substituted"):
+            caller(prompt, claude.model)
+        substituted = russianism_judge.call_judge(
+            "Translate.", claude.task_id, claude.family, claude.model, "russianism-eval"
+        )
+        assert substituted["verdict"] == "judge_error"
+        assert "seat substituted" in substituted["note"]
+        assert "claude -> codex" in substituted["note"]
+        assert "issues" not in substituted
 
 
 def test_claude_bridge_extracts_target_model_metadata() -> None:

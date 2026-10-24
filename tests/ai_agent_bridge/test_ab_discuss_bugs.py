@@ -151,8 +151,8 @@ def test_only_registered_agy_pin_alias_resolves_and_other_gemini_fails() -> None
     pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
     assert resolve_compat_model("gemini", pin) == pin
     assert resolve_compat_model("gemini", "Gemini 3.8 Flash (High)") == pin
-    with pytest.raises(ValueError, match="registered model pin") as exc_info:
+    with pytest.raises(ValueError, match="is retired in the model catalog") as exc_info:
         resolve_compat_model("gemini", "gemini-3.1-pro-high")
-    assert "delegate.py dispatch --agent agy --model gemini-3.1-pro-high" in str(exc_info.value)
+    assert "is retired in the model catalog" in str(exc_info.value)
     # No explicit model → None, so the route resolver applies the pin itself.
     assert resolve_compat_model("gemini", None) is None

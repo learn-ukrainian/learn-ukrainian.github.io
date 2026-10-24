@@ -46,10 +46,10 @@ def test_glm_rejects_native_harness_and_missing_explicit_credential(tmp_path: Pa
         "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home")},
     )
-    assert native.returncode == 2
-    assert "native is unsupported" in native.stderr
-    assert missing.returncode == 3
-    assert "no explicit GLM credential" in missing.stderr
+    for result in (native, missing):
+        assert result.returncode == 2
+        assert "is retired in the model catalog" in result.stderr
+        assert "would exec" not in result.stdout
 
 
 def test_glm_never_uses_an_ambient_anthropic_token(tmp_path: Path) -> None:
@@ -58,33 +58,36 @@ def test_glm_never_uses_an_ambient_anthropic_token(tmp_path: Path) -> None:
         "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home"), "ANTHROPIC_AUTH_TOKEN": foreign},
     )
-    assert result.returncode == 3
-    assert "no explicit GLM credential" in result.stderr
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
     assert foreign not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("credential", ("GLMCC_AUTH_TOKEN", "ZAI_API_KEY", "ZHIPU_API_KEY", "GLM_API_KEY"))
-def test_glm_accepts_each_explicit_credential_source_without_leaking_value(credential: str, tmp_path: Path) -> None:
+def test_glm_retirement_refuses_each_credential_source_without_leaking_value(credential: str, tmp_path: Path) -> None:
     secret = f"{credential.lower()}-secret"
     result = run_launcher(
         "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, credential: secret, "HOME": str(tmp_path / "home")},
     )
-    assert result.returncode == 0, result.stderr
-    assert f"credential_source={credential}" in result.stdout
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
     assert secret not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("alias", ("glm-5.3", "glm53", "glm"))
-def test_glm_catalog_aliases_resolve_to_the_allowlisted_model(alias: str, tmp_path: Path) -> None:
+def test_glm_catalog_aliases_are_retired(alias: str, tmp_path: Path) -> None:
     result = run_launcher(
         "start-glmcc.sh",
         "--model",
         alias,
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
     )
-    assert result.returncode == 0, result.stderr
-    assert "would exec claude --model glm-5.3" in result.stdout
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_glm52_retired_alias_is_refused(tmp_path: Path) -> None:
@@ -100,7 +103,7 @@ def test_glm52_retired_alias_is_refused(tmp_path: Path) -> None:
 
 def test_glm_rejects_unknown_model_endpoint_and_isolation_value(tmp_path: Path) -> None:
     env = {**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")}
-    model = run_launcher("start-glmcc.sh", "--model", "unknown", env=env)
+    model = run_launcher("start-glmcc.sh", "--model", "gpt-6.1-sol", env=env)
     endpoint = run_launcher("start-glmcc.sh", "--endpoint", "unknown", env=env)
     isolation = run_launcher("start-glmcc.sh", env={**env, "LAUNCHER_ISOLATE_CONFIG": "2"})
     assert model.returncode == endpoint.returncode == isolation.returncode == 2
@@ -118,9 +121,9 @@ def test_glm_no_isolate_config_fails_closed_on_route_pins(tmp_path: Path) -> Non
         "--no-isolate-config",
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(home), "CLAUDE_CONFIG_DIR": ""},
     )
-    assert result.returncode == 1
-    assert "GLM refuses to launch" in result.stderr
-    assert "ANTHROPIC_BASE_URL" in result.stderr
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_glm_isolated_config_still_fails_closed_on_stale_route_pins(tmp_path: Path) -> None:
@@ -136,10 +139,9 @@ def test_glm_isolated_config_still_fails_closed_on_stale_route_pins(tmp_path: Pa
         "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(home)},
     )
-    assert result.returncode == 1
-    assert "GLM refuses to launch" in result.stderr
-    assert "ANTHROPIC_BASE_URL" in result.stderr
-    assert ".claude-glmcc/settings.json" in result.stderr
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
     assert "test-key" not in result.stdout + result.stderr
 
 
@@ -271,9 +273,7 @@ assert_claude_settings_route_clean "GLM" "{worktree}"
     assert "settings.local.json" in result.stderr
 
 
-def test_glm_clears_ambient_provider_selector_before_route(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_glm_clears_ambient_provider_selector_before_route(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Sol P2 r6: stub Claude must observe all five selectors unset."""
     home = tmp_path / "home"
     bin_dir = tmp_path / "bin"
@@ -307,18 +307,12 @@ def test_glm_clears_ambient_provider_selector_before_route(
         },
         dry_run=False,
     )
-    assert result.returncode == 0, result.stderr
-    for key in (
-        "CLAUDE_CODE_USE_BEDROCK",
-        "CLAUDE_CODE_USE_VERTEX",
-        "CLAUDE_CODE_USE_FOUNDRY",
-        "CLAUDE_CODE_USE_MANTLE",
-        "CLAUDE_CODE_USE_ANTHROPIC_AWS",
-    ):
-        assert f"{key}=unset" in result.stdout, result.stdout
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
-def test_glm_exports_trusted_profile_and_capacity_to_the_claude_adapter(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_glm_retirement_precedes_profile_export(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     bin_dir = _stub_claude(tmp_path)
     monkeypatch.setenv("PATH", f"{bin_dir}:{os.environ['PATH']}")
     result = run_launcher(
@@ -326,12 +320,9 @@ def test_glm_exports_trusted_profile_and_capacity_to_the_claude_adapter(tmp_path
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
         dry_run=False,
     )
-    assert result.returncode == 0, result.stderr
-    assert "base=https://api.z.ai/api/anthropic" in result.stdout
-    assert "model=glm-5.3" in result.stdout
-    assert "profile=glmcc_glm53" in result.stdout
-    assert "window=1048576" in result.stdout
-    assert "compact=996147" in result.stdout
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_glm_loads_owner_only_secret_file_without_leaking_value(tmp_path: Path) -> None:
@@ -347,11 +338,10 @@ def test_glm_loads_owner_only_secret_file_without_leaking_value(tmp_path: Path) 
         "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(home)},
     )
-    assert result.returncode == 0, result.stderr
-    assert "credential_source=file:~/.secret/zai.key" in result.stdout
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
     assert secret_value not in result.stdout + result.stderr
-    # File-sourced keys must not be re-exported under ZAI_* names in dry-run text.
-    assert "ZAI_API_KEY=" not in result.stdout
 
 
 def test_glm_rejects_group_readable_secret_file(tmp_path: Path) -> None:
@@ -366,8 +356,9 @@ def test_glm_rejects_group_readable_secret_file(tmp_path: Path) -> None:
         "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(home)},
     )
-    assert result.returncode == 3
-    assert "no explicit GLM credential" in result.stderr or "could not load GLM credential" in result.stderr
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
     assert "insecure-secret" not in result.stdout + result.stderr
 
 
@@ -383,19 +374,16 @@ def test_glm_env_credential_wins_over_secret_file(tmp_path: Path) -> None:
         "start-glmcc.sh",
         env={**_GLM_CREDENTIALS, "HOME": str(home), "ZAI_API_KEY": "env-secret-wins"},
     )
-    assert result.returncode == 0, result.stderr
-    assert "credential_source=ZAI_API_KEY" in result.stdout
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout
     assert "file-secret-should-lose" not in result.stdout + result.stderr
     assert "env-secret-wins" not in result.stdout + result.stderr
 
 
-def test_start_glm_sh_is_opencode_flash_headless_no_network(tmp_path: Path) -> None:
-    """#7416: start-glm.sh dry-run is OpenCode Flash, stdin closed, not prepaid."""
+def test_start_glm_sh_refuses_retired_default_without_network(tmp_path: Path) -> None:
+    """Retired GLM must refuse before building any OpenCode command."""
     result = run_launcher("start-glm.sh", env={"HOME": str(tmp_path / "home")})
-    assert result.returncode == 0, result.stderr
-    out = result.stdout
-    assert "opencode run --auto --format json -m zai-coding-plan/glm-5.3-flash" in out
-    assert "< /dev/null" in out
-    assert "openrouter" not in out.lower()
-    assert "zai/glm-5.3-flash" not in out
-    assert "would exec claude" not in out
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert "would exec" not in result.stdout

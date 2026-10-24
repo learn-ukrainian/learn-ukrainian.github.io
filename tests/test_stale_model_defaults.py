@@ -34,8 +34,10 @@ def forbidden(*args, **kwargs):
 def test_supported_pipeline_and_spot_audit_defaults_are_admitted():
     for defaults in (linear_pipeline.WRITER_DEFAULTS, linear_pipeline.REVIEWER_DEFAULTS):
         for lane, transport in (
-            ("claude-tools", "native_claude"), ("codex-tools", "native_codex"),
-            ("gemini-tools", "agy"), ("agy-tools", "agy"),
+            ("claude-tools", "native_claude"),
+            ("codex-tools", "native_codex"),
+            ("gemini-tools", "agy"),
+            ("agy-tools", "agy"),
         ):
             require_execution_model(defaults[lane]["model"], transport=transport)
     for lane, transport in (("grok-tools", "native_grok"), ("cursor-tools", "cursor")):
@@ -43,9 +45,9 @@ def test_supported_pipeline_and_spot_audit_defaults_are_admitted():
     require_execution_model(llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_MODEL_ID, transport="native_claude")
     for model in (batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL, batch_gemini_config.FLASH_LITE_MODEL):
         require_execution_model(model, transport="agy")
-    # Flash-Lite resolves to Flash: only two configured tiers, no extra capacity.
+    # All tier names resolve to subscribed Flash; no extra capacity.
     assert batch_gemini_config.FLASH_LITE_MODEL == batch_gemini_config.FLASH_MODEL
-    assert len({batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL}) == 2
+    assert {batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL} == {"gemini-3.8-flash-high"}
 
 
 @pytest.mark.parametrize("module", [code_review_benchmark, judge_calibration_matrix])

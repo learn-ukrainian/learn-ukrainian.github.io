@@ -23,10 +23,11 @@ except ImportError:
         def __str__(self) -> str:
             return str(self.value)
 
+
 from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER, scan_hramatka_lesson
 
 PRIMARY_MODEL = "gemini-3.8-flash-high"
-SECONDARY_MODEL = "gemini-3.1-pro-high"
+SECONDARY_MODEL = "gemini-3.8-flash-high"
 MAX_PROVIDER_ATTEMPTS = 4
 _PERFECT_QG_SCORE = 10.0
 

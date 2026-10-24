@@ -98,9 +98,9 @@ def test_guardrail_documents_current_agy_model_names() -> None:
     guardrail = (REPO_ROOT / "docs/guardrails/agent-fleet-tooling.md").read_text(encoding="utf-8")
 
     assert "Gemini CLI and Gemini Code Assist are unsupported" in guardrail
-    assert "Gemini 3.1 Pro (High)" in guardrail
-    assert ("Gemini 3.7 Flash" in guardrail) or ("gemini-3.7-flash" in guardrail) or ("Gemini 3.6 Flash" in guardrail) or ("gemini-3.6-flash" in guardrail) or ("Gemini 3.5 Flash (High)" in guardrail)
-    assert "gemini-3.1-pro-high" in guardrail
+    assert "gemini-3.8-flash-high" in guardrail
+    assert "Gemini Pro and Argon are retired, not subscribed" in guardrail
+    assert "gemini-3.1-pro-high" not in guardrail
 
 
 def test_active_runtime_callers_use_agy_not_retired_gemini_cli() -> None:

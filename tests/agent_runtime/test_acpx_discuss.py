@@ -125,7 +125,7 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
             correlation_id="corr-8463",
             idempotency_key="idem-8463-three",
             rounds=2,
-            participants=("claude", "cursor", "glm"),
+            participants=("claude", "cursor", "grok"),
         )
         rows = controller.conn.execute(
             "SELECT sender, recipient FROM comms_messages WHERE conversation_id = ?",
@@ -141,20 +141,20 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
         "acpx-claude-shadow",
         "acpx-cursor-shadow",
         "acpx-cursor-shadow",
-        "acpx-glm-shadow",
-        "acpx-glm-shadow",
+        "acpx-grok-shadow",
+        "acpx-grok-shadow",
     ]
     round_two = {
         agent: prompt for agent, prompt in prompts if "prior response" in prompt
     }
     assert "cursor's prior response" in round_two["acpx-claude-shadow"]
-    assert "glm's prior response" in round_two["acpx-claude-shadow"]
+    assert "grok's prior response" in round_two["acpx-claude-shadow"]
     assert "claude's prior response" in round_two["acpx-cursor-shadow"]
-    assert "glm's prior response" in round_two["acpx-cursor-shadow"]
-    assert "claude's prior response" in round_two["acpx-glm-shadow"]
-    assert "cursor's prior response" in round_two["acpx-glm-shadow"]
+    assert "grok's prior response" in round_two["acpx-cursor-shadow"]
+    assert "claude's prior response" in round_two["acpx-grok-shadow"]
+    assert "cursor's prior response" in round_two["acpx-grok-shadow"]
     edges = {(str(row[0]), str(row[1])) for row in rows}
-    seats = ("claude", "cursor", "glm")
+    seats = ("claude", "cursor", "grok")
     for seat in seats:
         assert ("root", seat) in edges
         assert (seat, "root") in edges
@@ -166,7 +166,7 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
         root=tmp_path / "plane", conversation_id=result["conversation_id"]
     )
     assert receipt["checks"]["fixed_participants"] is True
-    assert receipt["participants"] == ["claude", "cursor", "glm"]
+    assert receipt["participants"] == ["claude", "cursor", "grok"]
 
 
 def test_controller_adopts_exact_authority_reservation_without_second_conversation(
@@ -181,7 +181,7 @@ def test_controller_adopts_exact_authority_reservation_without_second_conversati
         job = service.enqueue_discussion(
             channel="acp-health",
             prompt=prompt,
-            participants=("cursor", "glm"),
+            participants=("cursor", "grok"),
             rounds=1,
             task_digest=hashlib.sha256(task_id.encode()).hexdigest(),
             correlation_id=correlation_id,
@@ -205,7 +205,7 @@ def test_controller_adopts_exact_authority_reservation_without_second_conversati
             correlation_id=correlation_id,
             idempotency_key=idempotency_key,
             rounds=1,
-            participants=("cursor", "glm"),
+            participants=("cursor", "grok"),
             source="codex",
             reserved_conversation_id=job.subject_id,
         )
@@ -234,7 +234,7 @@ def test_expired_authority_reservation_uses_existing_terminal_orphan_recovery(
         job = service.enqueue_discussion(
             channel="acp-health",
             prompt="Recover without calling providers.",
-            participants=("cursor", "glm"),
+            participants=("cursor", "grok"),
             rounds=1,
             task_digest=hashlib.sha256(b"task-6243-orphan").hexdigest(),
             correlation_id="correlation-6243-orphan",

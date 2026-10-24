@@ -449,11 +449,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "85f11b303a50dcd9aac967a500d1f85731477fac5e094cc53dec22ef5bb4af79:1",
     ),
     (
-        "scripts/ci/reuse_green_run.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "a4b24ada95971b11223fe6969f2f981509c635e03415ebcc849f4f44a5a69937:1",
-    ),
-    (
         "scripts/ci/split_tests.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:1",

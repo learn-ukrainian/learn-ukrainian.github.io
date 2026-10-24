@@ -610,7 +610,11 @@ def test_codex_usage_cli_reports_counts(capsys, tmp_path):
 @pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "gpt-6-sol", "gpt-6-astra"])
 def test_legacy_callable_rejects_old_model_before_message_creation(model):
     with patch("scripts.ai_agent_bridge._codex.send_message") as send:
-        with pytest.raises(ValueError, match=r"approved models are gpt-6-luna, gpt-6\.1-sol"):
+        expected = (
+            r"approved models are gpt-6-luna, gpt-6\.1-sol"
+            if model == "gpt-5.5" else "retired in the model catalog"
+        )
+        with pytest.raises(ValueError, match=expected):
             ask_codex("bounded fixture", from_llm="claude", to_model=model)
     send.assert_not_called()
 

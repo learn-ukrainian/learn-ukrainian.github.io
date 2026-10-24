@@ -1,12 +1,12 @@
-# Current - Codex / Grok Orchestrator Handoff (2026-07-22)
+# Historical Codex / Grok orchestrator handoff (2026-07-22)
 
 > Historical handoff: the operational directions below describe the 2026-07-22
 > session and are not current tasking. Current landing authority is
 > [rules core, P4](../../agents_extensions/shared/rules/core.md) and
 > [workflow, Merge policy](../../agents_extensions/shared/rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450):
-> independent exact-head cross-family APPROVE before PR creation, CI Gate green
-> on that same head, driver enqueue through the merge queue (never `--auto`,
-> never ask the operator to merge), confirm MERGED and complete common-reaper closeout.
+> a PR may open before approval so CI can run. Driver enqueue requires independent
+> exact-head cross-family APPROVE and CI Gate green on that same head. Never use
+> `--auto` or ask the operator to merge. Confirm MERGED and complete common-reaper closeout.
 
 Latest-Brief: docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
 
@@ -14,8 +14,9 @@ Latest-Brief: docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
 
 Orchestrator seat (Codex / Grok / Claude-infra as assigned): drive the product and
 infra queue, keep main clean, open PRs from worktrees only, require cross-family
-review before PR creation, require CI Gate green on the reviewed head, enqueue
-through the merge queue, confirm MERGED and complete common-reaper closeout.
+review and CI Gate green on the same head before driver enqueue through the merge
+queue. A PR may open before approval so CI can run. Confirm MERGED and complete
+common-reaper closeout.
 Do not babysit idle green PRs; do not leave draft limbo.
 
 Do not use `docs/session-state/current.md` as scratch space. Durable state lives in
@@ -24,9 +25,13 @@ the Latest-Brief above and this file. Thread rollover packets live under
 
 ---
 
-## NEXT SESSION — START HERE (binding)
+## Next session
 
-**Do not ask the operator what to work on.** Read the Latest-Brief and **execute**.
+Read the current assigned task and live handoff, then follow the current rules
+linked above. The Latest-Brief and cutover notes below record the 2026-07-22
+session. They do not authorize resuming cutovers, retention changes, or fan-out.
+
+## Historical next-session notes (2026-07-22)
 
 ### Primary — Fleet-comms #5512 operator cutovers (item 2)
 
@@ -46,7 +51,7 @@ Full commands and acceptance: **Latest-Brief** above.
 
 ---
 
-## Current State (session close 2026-07-22)
+## Historical state (session close 2026-07-22)
 
 Fleet-comms code/pins largely landed on main (`#5602`, `#5611`, `#5613`, PR-M/L).  
 **Operator cutovers and multi-family isolation enablement remain.**
@@ -59,14 +64,14 @@ Fleet-comms code/pins largely landed on main (`#5602`, `#5611`, `#5613`, PR-M/L)
 - Metrics / retention engine (apply default OFF): **#5584**, **#5585**
 - Isolation fan-out tickets: **#5614–#5622** (parents #5555–#5557 reopened)
 
-### Explicit non-goals for next cold-start
+### Historical non-goals for the next cold start
 
 - Do not re-litigate Sol phases 0–5 (#5484 closed)
 - Do not invent a competing fleet-comms architecture
 - Do not enable retention **apply** until ≥7 days of dry-run plans are clean
 - Do not flip formal_review_eligible on agy/kimi/grok without isolation wire + CF
 
-## Operating Rules
+## Historical operating rules
 
 - Implementation only under `.worktrees/dispatch/<agent>/<task>/`
 - Every commit: `X-Agent` trailer
@@ -75,7 +80,10 @@ Fleet-comms code/pins largely landed on main (`#5602`, `#5611`, `#5613`, PR-M/L)
 - No status/audit/review artifact dumps in code PRs
 - CF review gate = independent cross-family review (`ask-<lane> --type review`; discuss ≠ review)
 
-## Startup Checks
+## Historical startup checks
+
+This command block records the old session's startup procedure. It is not a
+current runbook.
 
 ```bash
 cd .
@@ -84,14 +92,14 @@ git status --short --branch
 git pull --ff-only origin main
 gh pr list --state open --limit 20
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
-# BINDING next targets:
+# Historical next targets, not current tasking:
 # docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
 .venv/bin/python -m scripts.fleet_comms plane-status
 .venv/bin/python scripts/hygiene/retention_engine.py plan
 ```
 
-## Next Focus (priority order)
+## Historical priorities (2026-07-22)
 
-1. **#5512 cutovers** (dual_write · retention Gate 5 · cold-start smoke) — THIS SESSION
+1. **#5512 cutovers** (dual_write · retention Gate 5 · cold-start smoke) for that session
 2. Isolation design spikes in parallel if capacity: #5614 / #5617 / #5620
 3. Only after cutovers green: other #4707 backlog / product streams
