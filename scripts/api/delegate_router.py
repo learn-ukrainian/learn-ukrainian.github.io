@@ -444,6 +444,7 @@ def _delegate_task_rows(
     *,
     repository: str | None = None,
     ctx: MonitorContext | None = None,
+    task_generation: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Load public-safe task summaries, optionally scoped to one repository.
 
@@ -467,7 +468,7 @@ def _delegate_task_rows(
     # Concurrent scans used to interleave those updates and pile SQLite writes
     # on the same file until the request timeout fired.
     with _TASK_SCAN_LOCK:
-        return _delegate_task_rows_locked(statuses, repository=repository, ctx=ctx)
+        return _delegate_task_rows_locked(statuses, repository=repository, ctx=ctx, task_generation=task_generation)
 
 
 def _delegate_task_rows_locked(
@@ -475,6 +476,7 @@ def _delegate_task_rows_locked(
     *,
     repository: str | None = None,
     ctx: MonitorContext | None = None,
+    task_generation: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
@@ -490,7 +492,15 @@ def _delegate_task_rows_locked(
 
     rows: list[dict[str, Any]] = []
     if not tasks_dir.exists():
+        if task_generation is not None:
+            task_generation.append("missing")
         return rows
+
+    # Routing's generation must describe the records this locked scan reads,
+    # including a task that disappears before the budget finishes computing.
+    newest_mtime_ns = os.stat(tasks_dir).st_mtime_ns if task_generation is not None else 0
+    task_count = 0
+    generation_observed = True
 
     is_active_query = statuses == ACTIVE_TASK_STATUSES
     include_archive = statuses is None or bool(statuses & RELEASED_TASK_STATUSES)
@@ -506,9 +516,14 @@ def _delegate_task_rows_locked(
         seen_paths.add(path_str)
 
         try:
-            mtime = os.stat(path_str).st_mtime
+            file_stat = os.stat(path_str)
+            mtime = file_stat.st_mtime
         except OSError:
+            generation_observed = False
             continue
+        if task_generation is not None:
+            task_count += 1
+            newest_mtime_ns = max(newest_mtime_ns, file_stat.st_mtime_ns)
 
         cached = _TASK_STATE_CACHE.get(path_str)
 
@@ -613,6 +628,9 @@ def _delegate_task_rows_locked(
             row["linked_issues"] = summary["linked_issues"]
         rows.append(row)
 
+    if task_generation is not None and generation_observed:
+        task_generation.append(f"{task_count}:{newest_mtime_ns}")
+
     if dirty_records:
         _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
     # Records archived (#8625) or removed since the last scan leave the cache too.
@@ -711,6 +729,7 @@ def active_delegate_tasks(
     *,
     repository: str | None = None,
     ctx: MonitorContext | None = None,
+    task_generation: list[str] | None = None,
 ) -> dict[str, Any]:
     """Return active (running/spawning) task summaries.
 
@@ -718,8 +737,12 @@ def active_delegate_tasks(
     only — the HTTP ``/active`` route remains unscoped for other Monitor consumers.
     Returned rows keep the legacy summary shape and never include repository
     attribution fields.
+    ``task_generation`` receives the count/newest-mtime token from this locked
+    scan, or stays empty when the generation cannot be observed.
     """
-    active = _delegate_task_rows(ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx)
+    active = _delegate_task_rows(
+        ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx, task_generation=task_generation,
+    )
     return {"total": len(active), "tasks": active}
 
 

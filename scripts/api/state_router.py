@@ -618,7 +618,9 @@ def _snapshot_is_stale(
     return age > threshold_s, round(age, 1)
 
 
-def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int] | None:
+def _in_flight_by_agent(
+    tasks_dir: Path | None = None, *, task_generation: list[str] | None = None,
+) -> dict[str, int] | None:
     """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir.
 
     When *tasks_dir* is set, preserve the same PID-liveness semantics as
@@ -636,7 +638,7 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int] | None:
             ctx = delegate_api.production_context()
             if ctx.roots.batch_state_dir != tasks_dir.parent:
                 ctx = ctx.with_roots(batch_state_dir=tasks_dir.parent)
-            tasks = delegate_api.active_delegate_tasks(ctx=ctx)["tasks"]
+            tasks = delegate_api.active_delegate_tasks(ctx=ctx, task_generation=task_generation)["tasks"]
         else:
             tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
@@ -1254,6 +1256,7 @@ def _compute_dispatch_routing_budget(
     project_root: Path | None = None,
     curriculum_root: Path | None = None,
     batch_state_dir: Path | None = None,
+    task_generation: list[str] | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     today = current_time.date()
@@ -1282,7 +1285,7 @@ def _compute_dispatch_routing_budget(
         logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
         health_records = LaneHealthScan(observed=False, error=f"lane health scan failed: {type(exc).__name__}")
 
-    in_flight_by_agent = _in_flight_by_agent(resolved_tasks_dir)
+    in_flight_by_agent = _in_flight_by_agent(resolved_tasks_dir, task_generation=task_generation)
     api_accounts = _build_api_accounts_payload(fresh=fresh_codexbar, health_records=health_records)
 
     # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
@@ -2070,12 +2073,15 @@ def compute_routing_budget(
     project_root: Path | None = None,
     curriculum_root: Path | None = None,
     batch_state_dir: Path | None = None,
+    task_generation: list[str] | None = None,
 ) -> dict[str, Any]:
     """Budget recommendations for native dispatch or ordinary ACP asks.
 
     ACP compatibility never changes native dispatch health. ACP requests run
     bounded version/help probes, not provider prompts, and exclude incompatible
     or unknown routes even when every participant is unavailable.
+    When supplied, ``task_generation`` receives the observed in-flight scan's
+    generation so HTTP caches can validate the counts without changing the payload.
     """
     if transport not in {"dispatch", "acp"}:
         raise ValueError("transport must be dispatch or acp")
@@ -2088,6 +2094,7 @@ def compute_routing_budget(
         project_root=project_root,
         curriculum_root=curriculum_root,
         batch_state_dir=batch_state_dir,
+        task_generation=task_generation,
     )
     budget["transport"] = transport
     # Per-account view (#10630): additive. ``agents.claude`` stays the
@@ -2303,9 +2310,9 @@ async def routing_budget(
     # newest task file off the event loop, but retain one snapshot and flight
     # across generations so worker heartbeats cannot turn warm reads cold.
     tasks_dir = ctx.roots.batch_state_dir / "tasks"
-    task_token = await asyncio.to_thread(_tasks_content_token, tasks_dir) if tasks_dir.is_dir() else "missing"
 
-    def _compute() -> tuple[str, dict[str, Any]]:
+    def _compute() -> tuple[str | None, dict[str, Any]]:
+        generation: list[str] = []
         value = compute_routing_budget(
             transport=transport,
             fresh_codexbar=False,
@@ -2315,8 +2322,9 @@ async def routing_budget(
             project_root=ctx.roots.project_root,
             curriculum_root=ctx.roots.curriculum_root,
             batch_state_dir=ctx.roots.batch_state_dir,
+            task_generation=generation,
         )
-        return task_token, value
+        return generation[0] if generation else None, value
 
     # A warm snapshot returns on the event loop. After the TTL, the last
     # snapshot is served with its real age and refreshed beside the request.
@@ -2324,12 +2332,16 @@ async def routing_budget(
     stored = cache_get_stored(cache_key)
     if stored is not None:
         (stored_token, value), age_s = stored
-        if stored_token == task_token and age_s < ROUTING_BUDGET_TTL_S:
+        task_token = await asyncio.to_thread(_tasks_content_token, tasks_dir)
+        if stored_token is not None and stored_token == task_token and age_s < ROUTING_BUDGET_TTL_S:
             return _with_live_claude_accounts(value)
         schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute)
         return _aged_routing_budget(value, age_s)
-    _token, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
-    return _with_live_claude_accounts(value)
+    scanned_token, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
+    live_token = await asyncio.to_thread(_tasks_content_token, tasks_dir)
+    if scanned_token is not None and scanned_token == live_token:
+        return _with_live_claude_accounts(value)
+    return _aged_routing_budget(value, 0.0)
 
 
 @router.get("/github-budget")

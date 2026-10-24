@@ -368,6 +368,65 @@ def test_task_rewrite_serves_warm_snapshot_while_recompute_is_blocked(monkeypatc
     asyncio.run(scenario())
 
 
+def test_task_directory_aba_during_compute_never_marks_in_compute_counts_fresh(monkeypatch, tmp_path):
+    """An added then removed newest task must not leave its counts marked fresh."""
+    _configure(monkeypatch, tmp_path, [])
+    ctx = fixture_context(tmp_path)
+    tasks = ctx.roots.batch_state_dir / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    stable = tasks / "stable.json"
+    stable.write_text('{"task_id":"stable","agent":"codex","status":"done"}', encoding="utf-8")
+    # A surviving newest file masks the directory mtime change after add/remove.
+    newest = time.time_ns() + 60_000_000_000
+    os.utime(stable, ns=(newest, newest))
+    before = state_router._tasks_content_token(tasks)
+    compute = state_router.compute_routing_budget
+
+    def compute_with_transient_task(**kwargs):
+        transient = tasks / "transient.json"
+        transient.write_text(
+            '{"task_id":"transient","agent":"codex","status":"spawning"}', encoding="utf-8",
+        )
+        os.utime(transient, ns=(newest + 1, newest + 1))
+        try:
+            value = compute(**kwargs)
+            assert value["in_flight"]["codex"] == 1
+            assert value["diagnostics"]["stale"] is False
+            return value
+        finally:
+            transient.unlink()
+            assert state_router._tasks_content_token(tasks) == before
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute_with_transient_task)
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(state_router.router, prefix="/api/state")
+
+    async def settle_refresh():
+        async with asyncio.timeout(5):
+            while state_helpers._refresh_keys:
+                await asyncio.sleep(0.01)
+
+    async def scenario():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+            cold = await client.get("/api/state/routing-budget")
+            assert cold.status_code == 200
+            try:
+                # Check the cold flight and then the completed background refresh.
+                for _ in range(2):
+                    response = await client.get("/api/state/routing-budget")
+                    assert response.status_code == 200
+                    body = response.json()
+                    assert body["in_flight"]["codex"] == 1
+                    assert body["diagnostics"]["stale"] is True
+                    await settle_refresh()
+                assert cold.json()["diagnostics"]["stale"] is True
+            finally:
+                await settle_refresh()
+
+    asyncio.run(scenario())
+
+
 def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     """Agent JSONL rate-limit cluster demotes a CodexBar-cool lane."""
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
