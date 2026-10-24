@@ -162,8 +162,9 @@ runner, and orchestrator hosts).
 
 ### 2b. Clean, Fully Pushed Worktree Reaper (`learn-ukrainian-worktree-reaper.service` + `.timer`)
 
+- **Install**: The sibling `learn-ukrainian-infra-private` checkout must exist. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template and its data-volume drop-in before installing them.
 - **Frequency**: every 30 minutes (`OnCalendar=*:00/30`, `Persistent=false`); `TimeoutStartSec=1200`.
-- **What it does**: runs `reap_worktrees --clean-pushed --apply`, which removes only `.worktrees/dispatch/<agent>/<task>/` checkouts that are clean, have no untracked files, have every commit on origin, are used by no process or live task, and were idle for 60 minutes (#10778). It never forces and never deletes branches. A oneshot unit never overlaps itself, and the reaper lock makes any other concurrent run a no-op. Its only network use is one bounded `git fetch --prune origin` and one bounded `git ls-remote --heads --tags origin` census before the run; if either fails, the run does nothing.
+- **What it does**: runs `reap_worktrees --clean-pushed --repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply` with both placeholders replaced, which removes only `.worktrees/dispatch/<agent>/<task>/` checkouts that are clean, have no untracked files, have every commit on origin, are used by no process or live task, and were idle for 60 minutes (#10778). It never forces and never deletes branches. A oneshot unit never overlaps itself, and the reaper lock makes any other concurrent run a no-op. Its only network use is one bounded `git fetch --prune origin` and one bounded `git ls-remote --heads --tags origin` census before the run; if either fails, the run does nothing.
 - **Install, verify and disable**: `docs/runbooks/worktree-cleanup.md` § "Clean, fully pushed, idle dispatch worktrees". The templates do not install or enable themselves.
 
 ### 3. Project State Reporter (`learn-ukrainian-project-state-reporter.service` + `.timer`)

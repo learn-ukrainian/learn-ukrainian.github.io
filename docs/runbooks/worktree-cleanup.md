@@ -720,10 +720,14 @@ would need isolation (another user or a mount namespace), which this mode
 does not provide.
 
 ```bash
+repo_root=$(pwd -P)
+private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
 # dry run (default): what would be removed, and why each other tree stays
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
+  --repo-root "$repo_root" --repo-root "$private_root"
 # apply (what the timer runs)
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed --apply
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
+  --repo-root "$repo_root" --repo-root "$private_root" --apply
 ```
 
 ### Timer: install and verify
@@ -736,21 +740,27 @@ second run while one is active, and `TimeoutStartSec=1200` bounds each run
 inside the cadence. Its only network use is the bounded `git fetch` and
 `git ls-remote` census above (the address-family filter allows Unix and IP
 sockets only). Install it on the dispatch host
-from the primary checkout on `main`, after the change is merged:
+from the primary checkout on `main`, after the change is merged.
+The sibling `learn-ukrainian-infra-private` checkout must exist before installation.
+Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service and drop-in:
 
 ```bash
 repo_root=$(pwd -P)
+private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
 unit_dir="$HOME/.config/systemd/user"
 mkdir -p "$unit_dir/learn-ukrainian-worktree-reaper.service.d"
-sed -e "s|@REPO_ROOT@|$repo_root|g" packaging/systemd/learn-ukrainian-worktree-reaper.service \
+sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PRIVATE_ROOT@|$private_root|g" \
+  packaging/systemd/learn-ukrainian-worktree-reaper.service \
   > "$unit_dir/learn-ukrainian-worktree-reaper.service"
 cp packaging/systemd/learn-ukrainian-worktree-reaper.timer "$unit_dir/"
-sed -e "s|@REPO_ROOT@|$repo_root|g" \
+sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PRIVATE_ROOT@|$private_root|g" \
   packaging/systemd/dropins/learn-ukrainian-worktree-reaper.service.d/data-volume.conf \
   > "$unit_dir/learn-ukrainian-worktree-reaper.service.d/data-volume.conf"
 systemd-analyze --user verify "$unit_dir/learn-ukrainian-worktree-reaper.service" \
   "$unit_dir/learn-ukrainian-worktree-reaper.timer"
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed   # review the dry run first
+# review the dry run for both roots first
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
+  --repo-root "$repo_root" --repo-root "$private_root"
 systemctl --user daemon-reload
 systemctl --user enable --now learn-ukrainian-worktree-reaper.timer
 ```
@@ -761,7 +771,8 @@ Verify:
 systemctl --user list-timers learn-ukrainian-worktree-reaper.timer
 journalctl --user -u learn-ukrainian-worktree-reaper.service -n 50
 # no clean, fully pushed dispatch worktree idle for over an hour should remain:
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
+  --repo-root "$repo_root" --repo-root "$private_root"
 ```
 
 After a timer run, the dry run reports `0 would remove`; every remaining
