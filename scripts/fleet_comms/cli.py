@@ -1642,13 +1642,8 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help(sys.stderr)
         return EXIT_USAGE
     try:
-        if hasattr(args, "root"):
-            repo_root = getattr(args, "repo_root", None)
-            validate_plane_root(
-                Path(args.root) if args.root else default_plane_root(
-                    repo_root=Path(repo_root).expanduser() if repo_root else None
-                )
-            )
+        if getattr(args, "root", None):
+            validate_plane_root(Path(args.root))
         return int(func(args))
     except FleetCommsCliError as exc:
         sys.stderr.write(str(exc) + "\n")

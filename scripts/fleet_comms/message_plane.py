@@ -571,7 +571,6 @@ def verify_authority_cutover(*, root: Path | None = None) -> None:
     one-shot, read-only admission check on the authority-transition path.  It
     never creates a database, applies migrations, or exposes target paths.
     """
-    plane_root = validate_plane_root(root if root is not None else default_plane_root())
     for component in _AUTHORITY_CUTOVER_CAPABILITIES:
         try:
             assert_component_supported(StoreId.FLEET_COMMS, component)
@@ -584,6 +583,7 @@ def verify_authority_cutover(*, root: Path | None = None) -> None:
     if resolve_authority(StoreId.FLEET_COMMS) not in {Authority.SQLITE, Authority.SHADOW}:
         raise AuthorityCutoverRefusedError(_CUTOVER_CAPABILITY_MISSING)
 
+    plane_root = validate_plane_root(root if root is not None else default_plane_root())
     db_path = plane_root / "comms.sqlite3"
     if not db_path.is_file():
         raise AuthorityCutoverRefusedError(_CUTOVER_SCHEMA_VERSION_MISMATCH)

@@ -7,6 +7,7 @@ from pathlib import Path
 
 from scripts.guardrails.worktree_containment import (
     NotAGitRepositoryError,
+    canonicalize,
     resolve_main_root,
 )
 
@@ -24,6 +25,25 @@ RETIRED_LOCAL_PLANE_MESSAGE = (
 
 class PlaneRootAnchorError(RuntimeError):
     """Raised when the plane root cannot be anchored to the primary checkout."""
+
+
+def validate_plane_root(root: Path) -> Path:
+    """Canonicalize storage roots and refuse checkout roots without writing.
+
+    Both primary checkouts and linked worktrees carry a .git entry. Refuse
+    that entry even when damaged; validation must not need a working Git
+    executable or a writable backend. Dedicated directories beneath a checkout
+    remain valid, including the default plane directory.
+    """
+    try:
+        resolved = canonicalize(root)
+        marker = resolved / ".git"
+        is_checkout = marker.exists() or marker.is_symlink()
+    except (OSError, RuntimeError):
+        raise PlaneRootAnchorError("plane_root_unresolvable") from None
+    if is_checkout:
+        raise PlaneRootAnchorError("plane_root_is_git_checkout")
+    return resolved
 
 
 def _retired_marker_present(root: Path) -> bool:
@@ -80,7 +100,7 @@ def default_plane_root(
 
     Anchoring order:
 
-    1. ``FLEET_COMMS_ROOT`` env override (explicit operator choice) — honored as-is.
+    1. ``FLEET_COMMS_ROOT`` env override, validated as a dedicated storage root.
     2. The primary checkout that owns the shared ``.git`` store, resolved from
        ``repo_root`` (default: process cwd).
 
@@ -95,7 +115,7 @@ def default_plane_root(
     try:
         env = os.environ.get(ENV_ROOT)
         if env:
-            root = Path(env).expanduser().resolve()
+            root = validate_plane_root(Path(env))
         else:
             candidate = repo_root if repo_root is not None else Path.cwd()
             try:

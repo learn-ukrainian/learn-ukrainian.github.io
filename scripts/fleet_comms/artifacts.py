@@ -41,14 +41,14 @@ from scripts.control_plane.storage import (
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
-from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, PlaneRootAnchorError, default_plane_root
+from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
+from scripts.fleet_comms.paths import validate_plane_root as validate_plane_root
 from scripts.fleet_comms.pg_schema import (
     PG_BLOB_TABLE,
     PgSchemaError,
     apply_pg_schema,
     verify_pg_schema,
 )
-from scripts.guardrails.worktree_containment import canonicalize
 
 DEFAULT_ROOT = DEFAULT_ROOT_REL
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9._@+=,-][A-Za-z0-9._@+=, -]{0,200}$")
@@ -101,25 +101,6 @@ class ArtifactRecord:
 
 class ArtifactStoreError(RuntimeError):
     """Artifact store refused an operation."""
-
-
-def validate_plane_root(root: Path) -> Path:
-    """Canonicalize storage roots and refuse checkout roots without writing.
-
-    Both primary checkouts and linked worktrees carry a .git entry. Refuse
-    that entry even when damaged; validation must not need a working Git
-    executable or a writable backend. Dedicated directories beneath a checkout
-    remain valid, including the default plane directory.
-    """
-    try:
-        resolved = canonicalize(root)
-        marker = resolved / ".git"
-        is_checkout = marker.exists() or marker.is_symlink()
-    except (OSError, RuntimeError):
-        raise PlaneRootAnchorError("plane_root_unresolvable") from None
-    if is_checkout:
-        raise PlaneRootAnchorError("plane_root_is_git_checkout")
-    return resolved
 
 
 class ArtifactStore:
