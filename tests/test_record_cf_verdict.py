@@ -16,6 +16,7 @@ import pytest
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
+from scripts.orchestration.fleet_repos import FleetRepo
 from scripts.review import record_cf_verdict as recorder
 from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.test_verdict_parser import CAPACITY_OUTLINES, FROZEN_CONTAINER_CASES, OVERLAP_QUOTE
@@ -285,6 +286,11 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     write_task(tasks)
     comments = []
     calls = {"posts": 0, "statuses": 0}
+    # These unit tests replace Git facts; integration coverage uses real catalog
+    # resolution and independent object stores in authoring_review_feasibility.
+    catalog = {**recorder.load_fleet_repos(), "unit": FleetRepo("unit", REPOSITORY, "unit", "test")}
+    monkeypatch.setattr(recorder, "load_fleet_repos", lambda: catalog)
+    monkeypatch.setattr(recorder, "resolve_review_repository", lambda root, _key, **_kwargs: root)
 
     def fake_json(args, *, input_text=None):
         from scripts.publish.github import Request
@@ -1911,7 +1917,8 @@ def test_record_fixture_dry_run_through_publication_scanner(
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     fake_json = recorder._run_json
     write_task(tasks, reply=reply, worktree_path=str(worktree))
-    monkeypatch.setattr(recorder, "_repo_root", lambda: root)
+    monkeypatch.setattr(recorder, "_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: root)
 
     def route(args, **kwargs):
         if isinstance(args, github.Request) and args.verb == "issue-comment-json":
