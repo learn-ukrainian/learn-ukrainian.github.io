@@ -25,6 +25,7 @@ from scripts.fleet.ignored_task_output import succession_streams
 from scripts.fleet_comms.authority import AuthorityService
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration.integration_sweep import GitHubAdapter, SweepError, lookup_verdict
+from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.validate_fleet_taxonomy import ASSIGNMENTS_PATH, TAXONOMY_PATH, _load_yaml
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
@@ -70,7 +71,12 @@ def abandoned(record: dict[str, Any]) -> bool:
 
 def load_records(tasks: Path, now: datetime) -> tuple[list[stale.Candidate], list[str]]:
     records, errors = [], []
-    for path in stale._iter_record_files(tasks):
+    seen = set()
+    for path in iter_task_records(tasks, include_archive=True):
+        # Hot slots win even when malformed or excluded by the lookback filter.
+        if path.name in seen:
+            continue
+        seen.add(path.name)
         try:
             record = json.loads(path.read_text())
             if not isinstance(record, dict):

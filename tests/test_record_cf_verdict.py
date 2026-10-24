@@ -1630,8 +1630,10 @@ def test_model_trailer_preserves_effort_and_context_forms(
     assert recorder.author_families(REPOSITORY, 42, tmp_path) == {expected}
 
 
-def test_archived_review_task_and_reply_are_loadable(tmp_path):
+def test_archived_review_task_and_reply_are_loadable(tmp_path, monkeypatch):
     """#8625: a review archived before its verdict was recorded can still be published."""
+    from scripts.review import record
+
     tasks = tmp_path / "tasks"
     write_task(tasks / "archive", task_id="review-old", reply="VERDICT: APPROVE")
     loaded, reply = recorder._task("review-old", tasks)
@@ -1639,6 +1641,80 @@ def test_archived_review_task_and_reply_are_loadable(tmp_path):
     # The hot record wins when both exist.
     write_task(tasks, task_id="review-old", reply="VERDICT: REQUEST_CHANGES")
     assert recorder._task("review-old", tasks)[1] == "VERDICT: REQUEST_CHANGES"
+
+    # Attempt records retain the original result path after both files move.
+    task_id = "review-attempt"
+    hot = tasks / f"{task_id}.json"
+    cold = tasks / "archive" / hot.name
+    binding = {"review_id": "review-one", "attempt_id": "attempt-one", "manifest_sha256": "a" * 64}
+    prompt_hash = "b" * 64
+    identity = {"agent": "claude", "model": "claude-opus-5-5"}
+    monkeypatch.setattr(record, "_render_prompt_sha256", lambda *args: (prompt_hash, ""))
+    for digest in (prompt_hash, "<prompt_sha256>"):
+        data = f'reviewer:\n  prompt_sha256: "{digest}"\n'.encode()
+        task = {
+            **identity,
+            "task_id": task_id,
+            "status": "done",
+            "review_attempt": binding,
+            "prompt_sha256": prompt_hash,
+            "result_file": str(hot.with_suffix(".result")),
+            "result_sha256": hashlib.sha256(data).hexdigest(),
+        }
+        hot.write_text(json.dumps(task))
+        hot.with_suffix(".result").write_bytes(data)
+        for path in (hot, cold):
+            if path == cold:
+                hot.replace(cold)
+                hot.with_suffix(".result").replace(cold.with_suffix(".result"))
+            assert record._read_dispatch_record(task_id, tasks) == (task, path)
+            assert record.resolve_reviewer_identity(task_id, tasks) == {
+                "model": "claude-opus-5-5", "harness": "claude", "family": "anthropic"
+            }
+            assert record.dispatch_prompt_sha256(task_id, tasks, **binding) == prompt_hash
+            expected = f'reviewer:\n  prompt_sha256: "{prompt_hash}"\n'.encode()
+            assert record.attested_return(
+                data, task_id=task_id, tasks_dir=tasks, manifest_path=tmp_path / "manifest",
+                root=tmp_path, **binding,
+            ) == expected
+            for changed in (
+                {"status": "running"},
+                {"result_sha256": "c" * 64},
+                {"result_file": str(tmp_path / "unrelated.result")},
+                {"review_attempt": {**binding, "attempt_id": "superseded"}},
+            ):
+                path.write_text(json.dumps({**task, **changed}))
+                with pytest.raises(record.RecordError, match=record.REVIEW_RETURN_TASK_MISMATCH):
+                    record._verify_task_return(data, task_id, tasks, **binding)
+            path.write_text(json.dumps(task))
+            path.with_suffix(".result").write_bytes(b"different bytes")
+            with pytest.raises(record.RecordError, match=record.REVIEW_RETURN_TASK_MISMATCH):
+                record._verify_task_return(data, task_id, tasks, **binding)
+            path.with_suffix(".result").write_bytes(data)
+
+    # Malformed or superseded hot records never fall through to a valid archive.
+    hot.write_text("[]")
+    with pytest.raises(record.RecordError, match=str(hot)):
+        record.resolve_reviewer_identity(task_id, tasks)
+    assert record.dispatch_prompt_sha256(task_id, tasks, **binding) is None
+    hot.write_text(json.dumps({**task, "review_attempt": {**binding, "attempt_id": "superseded"}}))
+    assert record._read_dispatch_record(task_id, tasks)[1] == hot
+    assert record.dispatch_prompt_sha256(task_id, tasks, **binding) is None
+    with pytest.raises(record.RecordError, match=record.REVIEW_RETURN_TASK_MISMATCH):
+        record._verify_task_return(data, task_id, tasks, **binding)
+    hot.unlink()
+    cold.write_text("[]")
+    with pytest.raises(record.RecordError, match=str(cold)):
+        record.resolve_reviewer_identity(task_id, tasks)
+    cold.write_text(json.dumps({**task, "model": "unlisted-model"}))
+    with pytest.raises(record.RecordError):
+        record.resolve_reviewer_identity(task_id, tasks)
+    cold.unlink()
+    with pytest.raises(record.RecordError, match="unreadable"):
+        record.resolve_reviewer_identity(task_id, tasks)
+    assert record.dispatch_prompt_sha256(task_id, tasks, **binding) is None
+    with pytest.raises(record.RecordError, match=record.REVIEW_RETURN_TASK_MISMATCH):
+        record._verify_task_return(data, task_id, tasks, **binding)
 
 
 @pytest.mark.parametrize("storage", ["missing", "hot", "archived"])
