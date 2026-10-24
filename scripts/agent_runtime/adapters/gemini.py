@@ -148,7 +148,7 @@ class GeminiAdapter:
     """Adapter for the ``gemini`` CLI (Google Gemini)."""
 
     name: str = "gemini"
-    default_model: str = "gemini-3.1-pro-high"
+    default_model: str = "gemini-3.8-flash-high"
     # Gemini has no sandbox distinction between workspace-write and danger —
     # we accept both names but treat them identically (both mean "CLI may
     # write files in cwd via --approval-mode=yolo").

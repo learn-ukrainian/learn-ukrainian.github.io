@@ -282,6 +282,14 @@ def _keeper_comment(fake: FakeGitHub) -> str:
 
 def test_queued_with_cf_at_head_is_kept(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.check_rows.extend([
+        {"name": "Entire Gates", "head_sha": HEAD_A, "status": "completed", "conclusion": "failure",
+         "app": {"id": 2626939, "slug": "entire"}},
+        {"name": "Entire Gates", "head_sha": HEAD_A, "status": "in_progress", "conclusion": None,
+         "app": {"id": 2626939, "slug": "entire"}},
+        {"name": "Reject negated closing references", "head_sha": HEAD_A,
+         "status": "completed", "conclusion": "failure"},
+    ])
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
     path = tmp_path / "state.json"
     lines, failed = keeper.run(fake, path, apply=True)
@@ -949,11 +957,24 @@ def test_red_merge_group_drop_with_green_branch_checks(
 
 
 def test_runs_preserves_timestamp_and_paginates_at_filtered_url(tmp_path, monkeypatch) -> None:
+    """Workflow reads must retain suite/head identity before cancelling older checks."""
     client = keeper.GitHub(tmp_path, "unit/public")
     urls = []
+    old = {**checks()[0], "conclusion": "cancelled", "check_suite": {"id": 1},
+           "app": {"id": 15368, "slug": "github-actions"},
+           "details_url": "https://github.com/unit/public/actions/runs/11/job/21"}
+    current = {**old, "conclusion": "success", "started_at": "2026-09-23T01:00:00Z",
+               "check_suite": {"id": 2}, "details_url": "https://github.com/unit/public/actions/runs/12/job/22"}
 
     def transport(argv, **kwargs):
         urls.append(argv)
+        if "/check-runs?" in argv[4]:
+            return subprocess.CompletedProcess(argv, 0, json.dumps({"total_count": 3,
+                "check_runs": [current, checks()[1], old]}), "")
+        if argv[4].split("?")[0].endswith(("/11", "/12")):
+            number = int(argv[4].split("?")[0].rsplit("/", 1)[1])
+            return subprocess.CompletedProcess(argv, 0, json.dumps({"id": number, "head_sha": HEAD_A,
+                "check_suite_id": number - 10, "workflow_id": 7, "name": "CI"}), "")
         pages = [{"total_count": 2, "workflow_runs": [{"id": n}]} for n in (1, 2)]
         return subprocess.CompletedProcess(argv, 0, json.dumps(pages), "")
 
@@ -963,6 +984,13 @@ def test_runs_preserves_timestamp_and_paginates_at_filtered_url(tmp_path, monkey
     assert client.runs("2026-10-10T08:12:34Z") == [{"id": 1}, {"id": 2}]
     assert "event=merge_group&created=2026-10-10T08:12:34Z.." in urls[0][4]
     assert "--paginate" in urls[0] and "--slurp" in urls[0]
+    bound = client.checks(HEAD_A)
+    assert keeper._evaluate_checks(client, 42, HEAD_A, bound) == "ok"
+    fake = FakeGitHub()
+    fake.check_rows = bound
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=False)
+    assert not failed
+    assert "state=ready reason=ready" in lines[0]
 
 
 def test_runs_splits_capped_window_without_losing_boundary_runs(tmp_path, monkeypatch) -> None:

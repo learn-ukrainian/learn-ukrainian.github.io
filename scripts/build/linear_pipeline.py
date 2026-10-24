@@ -136,10 +136,10 @@ WRITER_CHOICES = (
 )
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
-    "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
+    "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
     "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
     "grok-tools": {"model": "grok-4.7", "effort": "medium"},
-    "cursor-tools": {"model": "composer-2.5", "effort": "medium"},
+    "cursor-tools": {"model": "grok-4.7-high", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     # AGY selects the model via --model; effort remains a telemetry placeholder.
@@ -180,7 +180,7 @@ REVIEWER_CHOICES = (
 )
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
-    "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
+    "gemini-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
     "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
@@ -450,6 +450,8 @@ def ensure_claude_writer_agent_deployed(
         "path": str(target_path),
         "changed": changed,
     }
+
+
 RESOURCE_ROLES = frozenset(
     {
         "textbook",
@@ -16682,6 +16684,8 @@ def _strip_frontmatter(text: str) -> str:
 def _strip_frontmatter_and_headings(text: str) -> str:
     text = _strip_frontmatter(text)
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
+
+
 def _textbook_quote_fidelity_gate(
     module_text: str,
     level: str | None = None,

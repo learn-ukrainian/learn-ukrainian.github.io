@@ -45,8 +45,9 @@ every check passes. Read-only dispatches are exempt.
   idle dispatch worktrees, and the disk is measured again. The dispatch is
   admitted whatever the reaper did unless the disk is still at or above
   ``DISPATCH_DISK_REFUSE_USED_PERCENT`` (default 90), which refuses it. The
-  reap watermark must be strictly below the refuse watermark; otherwise reading
-  the thresholds raises :class:`DiskWatermarkConfigError`. The refusal names the
+  post-reaper reading must be known to admit. The reap watermark must be
+  strictly below the refuse watermark; otherwise reading the thresholds raises
+  :class:`DiskWatermarkConfigError`. The refusal names the
   percent used, the free GiB and the reaper outcome: trees removed and MB
   freed, the most frequent skip reasons, a busy reaper lock or the reaper's
   own refusal, or "reaper unavailable" when it cannot run. The reaper runs
@@ -62,7 +63,9 @@ every check passes. Read-only dispatches are exempt.
   above ``DISPATCH_DISK_ALERT_USED_PERCENT`` (default 75) one alert is posted
   to the epics Fleet Comms channel per :data:`DISK_ALERT_INTERVAL_S`; the
   state file lives beside the admission lock. A disk probe that fails, or an
-  alert that fails, never refuses: the reason is logged and shown.
+  alert that fails, never refuses on its own: the reason is logged and shown.
+  After a high reading triggered a reaper attempt, an unknown second probe
+  refuses until disk usage can be measured again (#10879).
 * **Slice use is reported, not enforced.** When ``lu-dispatch.slice`` is
   active, the admission line adds its current memory against ``MemoryMax``.
   An inactive or missing slice omits that clause. The floor and the caps
@@ -1294,9 +1297,11 @@ def check_disk(
     At or above ``disk_reap_used_percent`` a ``reaper`` is attempted through
     :func:`attempt_disk_reaper` (one per host, cooldown, deadline), which keeps
     its state in ``tasks_dir``, and the disk is measured again. Only a disk
-    still at or above ``disk_refuse_used_percent`` fails: the check is then
+    still at or above ``disk_refuse_used_percent``, or an unknown second probe,
+    fails: the check is then
     ``refused``, a hard stop. Between the two watermarks a dispatch is admitted
-    whatever the reaper did (#10871).
+    whatever the reaper did (#10871). An unknown post-reaper reading refuses
+    because recovery from the initial high reading has not been verified.
     """
     probe = probe_disk()
     used = probe.used_percent
@@ -1319,8 +1324,12 @@ def check_disk(
         check = DiskCheck(probe=after, before_reaper=probe, reaper=outcome)
         after_used = after.used_percent
         if after_used is None:
-            _logger.warning("dispatch admission: disk check skipped after the reaper: %s", after.skipped)
-            return check, None
+            _logger.warning("dispatch admission: disk usage unknown after the reaper: %s", after.skipped)
+            return replace(check, refused=True), (
+                f"disk usage unknown after the reaper ({after.text()}); "
+                f"last measured {used:.1f}% used, at or above the reap watermark of "
+                f"{limits.disk_reap_used_percent:g}%; {outcome.detail}; retry when disk usage is measurable"
+            )
         if after_used < limits.disk_refuse_used_percent:
             return check, None
     final = check.probe

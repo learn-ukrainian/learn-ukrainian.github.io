@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
 from agent_runtime.adapters.glm import GlmAdapter
@@ -39,13 +41,9 @@ def _build(prompt: str, tmp_path: Path, monkeypatch, **kw):
         )
 
 
-def test_default_dispatch_plan_pins_ndjson_format(tmp_path, monkeypatch):
-    plan = _build("Review this diff.", tmp_path, monkeypatch)
-
-    assert plan.cmd[1] == "run"
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "zai/glm-5.3-flash"
-    assert plan.cmd[plan.cmd.index("--format") + 1] == "json"
-    assert plan.cmd[plan.cmd.index("--variant") + 1] == "high"
+def test_retired_default_cannot_construct_dispatch_plan(tmp_path, monkeypatch):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        _build("Review this diff.", tmp_path, monkeypatch)
 
 
 def test_parse_response_extracts_last_assistant_text_from_ndjson(tmp_path):

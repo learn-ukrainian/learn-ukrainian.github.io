@@ -1883,11 +1883,15 @@ def _cursor_acp_plan(tmp_path, monkeypatch, model):
         (None, "grok-4.7-high"),
         ("grok-4.7", "grok-4.7-high"),
         ("grok-4.7-high", "grok-4.7-high"),
-        ("composer-2.5", "composer-2.5"),
+        ("composer-2.5", None),
     ],
 )
 def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent):
     """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never runs Auto."""
+    if sent is None:
+        with pytest.raises(AcpxShadowRefusalError, match="CURSOR_MODEL_NOT_APPROVED"):
+            _cursor_acp_plan(tmp_path, monkeypatch, model)
+        return
     plan = _cursor_acp_plan(tmp_path, monkeypatch, model)
     assert ("--model", sent) in zip(plan.cmd, plan.cmd[1:], strict=False)
     assert plan.cmd.count("--model") == 1

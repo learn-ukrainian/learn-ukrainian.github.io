@@ -46,6 +46,15 @@ def test_sibling_invocation_logs_constant_message(tmp_path, monkeypatch, caplog,
     adapter = adapter_type()
     if adapter_type is DeepSeekAdapter:
         monkeypatch.setattr(f"{adapter_type.__module__}._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
+    if adapter_type is GlmAdapter:
+        with pytest.raises(ValueError, match="is retired in the model catalog") as refused:
+            adapter.build_invocation(prompt="private-prompt-value", mode="workspace-write", cwd=tmp_path,
+                                     model=None, task_id="private-task-value", session_id="private-session-value",
+                                     tool_config={}, effort=secret)
+        assert secret not in str(refused.value)
+        assert environment_value not in str(refused.value)
+        assert caplog.records == []
+        return
     tool_config = {}
     effort = secret if adapter_type in (DeepSeekAdapter, GlmAdapter) else None
     with (

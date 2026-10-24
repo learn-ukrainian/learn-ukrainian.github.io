@@ -15,6 +15,9 @@ GENERIC_HELPERS = frozenset({"scripts/agent_runtime/runner.py", "scripts/lib/lau
 
 # One row per file; mixed files take the weakest applicable status.
 SPAWN_INVENTORY = {
+    "scripts/audit/run_gemini_1x17_sweep.py": (
+        "gated", "The historical sweep refuses its retired model before any session starts.",
+    ),
     "scripts/ops/host_stack_drift.py": (
         "probe-exempt",
         "Session-start drift report runs a literal AGY version probe without starting a model session.",

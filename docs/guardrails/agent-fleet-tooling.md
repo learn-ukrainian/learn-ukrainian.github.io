@@ -64,7 +64,7 @@ and one independent review are cheaper and safer.
 printf '%s\n' "<review prompt>" | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
     --task-id review-123 \
-    --to-model gemini-3.1-pro-high \
+    --to-model gemini-3.8-flash-high \
     --review
 
 scripts/delegate.py dispatch \
@@ -81,13 +81,6 @@ environment before relying on it.
 
 ## AGY Model Names
 
-Direct `agy --model` calls use display labels printed by `agy models`, for
-example:
-
-- `Gemini 3.1 Pro (High)`
-- `Gemini 3.5 Flash (High)`
-
-The project bridge and runtime may accept slugs such as
-`gemini-3.1-pro-high` and map them to AGY display labels before invoking AGY.
-Use slugs only in bridge/runtime examples, not in direct `agy --model`
-examples.
+AGY uses `gemini-3.8-flash-high`. Direct calls and bridge/runtime requests
+accept that slug. Gemini Pro and Argon are retired, not subscribed (operator
+2026-10-23); do not select them. Older Flash generations remain retired.

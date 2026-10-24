@@ -344,7 +344,7 @@ def test_uncertified_gemini_driver_refused_without_entering_scope(tmp_path: Path
     result = _run(launcher, env, LAUNCHER_MODEL=model, FAKE_BUS_FAIL="1")
     assert result.returncode == 4, result.stderr
     assert f"model '{model}' " in result.stderr
-    assert "(certified: gemini-3.1-pro-high, gemini-3.8-flash-high)." in result.stderr
+    assert "(certified: gemini-3.8-flash-high)." in result.stderr
     assert result.stdout == ""
     assert not Path(env["FAKE_STARTS"]).exists()
     assert "DRIVER_SCOPE_" not in result.stderr

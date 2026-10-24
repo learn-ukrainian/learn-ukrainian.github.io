@@ -22,7 +22,7 @@ dispatch_fallbacks:
   gemini: agy
   # PERMANENT retirement, not a hot/deficit-only shed: the z.ai GLM
   # subscription backing the glm lane is retired (key gone; operator
-  # 2026-09-03). glm-5.3 work routes to cursor or OpenRouter instead.
+  # 2026-09-03). GLM is not subscribed (operator 2026-10-23); retired model pins refuse.
   # Canonical mapping lives in agent_runtime.agent_identity.RETIRED_AGENT_ALIASES;
   # this row keeps it visible to yaml-only consumers of dispatch_fallbacks.
   glm: cursor
@@ -96,9 +96,8 @@ substitutions:
       PERMANENT, always-on (not a budget-status shed): the z.ai GLM
       subscription is retired (key gone; operator 2026-09-03). Resolves to
       `delegate.py --agent cursor` before Popen, via dispatch_fallbacks.glm
-      and agent_identity.RETIRED_AGENT_ALIASES. glm-5.3 work routes to
-      cursor or OpenRouter; do not dispatch --agent glm unless the operator
-      explicitly asks.
+      and agent_identity.RETIRED_AGENT_ALIASES. GLM is not subscribed (operator 2026-10-23); retired model pins refuse.
+      Do not dispatch GLM.
     budget_bucket: "glm quota (retired) → Cursor"
 
 # Per the 2026-10-09 resource-policy order, native Claude CLI workers are
@@ -116,7 +115,7 @@ worker_resource_policy: |
   route availability. Native Grok may do all work, including Ukrainian, under
   measurement; its Ukrainian work requires the Sources MCP, and language-lane
   admission refuses it until the native Grok harness wires that server.
-  Gemini 4 is disabled until the provider fixes its cost. Critical and
+  Gemini Pro and Argon are retired, not subscribed (operator 2026-10-23). Critical and
   security final sign-off stays Opus 5.5 or Sol 6.1 (2026-10-13 frozen eval:
   Grok approved a change with 0 of 8 known blockers).
   Writer selection follows core rules and the canonical writer policy, with no

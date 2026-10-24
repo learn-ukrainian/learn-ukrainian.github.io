@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 
 from scripts.audit import llm_reviewer_dispatch, qg_bakeoff
+from tests.test_llm_reviewer_dispatch import subscribed_reviewer_routes as subscribed_reviewer_routes
 
 # Under the unified model_families vocabulary (issue #5385) the synthetic
 # experiment pin ``openrouter/test/parity-model`` classifies as UNKNOWN and
@@ -83,7 +84,7 @@ def test_bakeoff_tooled_artifact_matches_pre_extraction_golden_hash(
     assert hashlib.sha256(artifact.artifact_path.read_bytes()).hexdigest() == PRE_EXTRACTION_ARTIFACT_SHA256
 
 
-def test_run_canary_guards_against_invalid_level_trap() -> None:
+def test_run_canary_guards_against_invalid_level_trap(subscribed_reviewer_routes) -> None:
     with pytest.raises(ValueError, match="not a valid curriculum level or seminar track level"):
         llm_reviewer_dispatch.run_canary(
             level="seminar",

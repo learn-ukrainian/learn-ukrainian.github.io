@@ -58,7 +58,7 @@ def test_dispatch_gemini_default_never_reaches_pro_on_timeout():
 
 
 def test_dispatch_gemini_explicit_pro_fails_with_supported_route():
-    with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy --model"):
+    with pytest.raises(ValueError, match=r"is retired in the model catalog"):
         dispatch_gemini("test prompt", "task-explicit-pro", model="gemini-3.1-pro-high")
 
 

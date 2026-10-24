@@ -6,19 +6,23 @@ Validates that MDX output contains all content from source MD.
 Catches content loss during MD→MDX conversion.
 
 Usage:
-    python scripts/validate_mdx.py [lang_pair] [level] [module_num]
+    .venv/bin/python scripts/validate_mdx.py [lang_pair] [level] [module_num]
 """
 
+import argparse
 import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+import yaml
 
 # Add scripts directory to path for audit imports
 SCRIPT_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
 from audit.report import append_mdx_errors_to_report
+from manifest_utils import parse_numbered_slug
 
 PROJECT_ROOT = SCRIPT_DIR.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
@@ -284,55 +288,73 @@ def validate_module(md_path: Path, mdx_path: Path) -> ValidationResult:
     )
 
 def main():
-    args = sys.argv[1:]
-    lang_pair = args[0] if args else 'l2-uk-en'
-    target_level = args[1].lower() if len(args) > 1 else None
-    target_module = int(args[2]) if len(args) > 2 else None
+    parser = argparse.ArgumentParser(
+        description=(
+            'Validate generated MDX against curriculum Markdown.\n'
+            'Use after MDX generation to detect content loss, not to generate lessons.'
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''Examples:
+  .venv/bin/python scripts/validate_mdx.py l2-uk-en b1
+  .venv/bin/python scripts/validate_mdx.py l2-uk-en b1 1
+
+Outputs: Console results and MDX sections in source audit reports.
+Exit codes: 0 = validation passed; 1 = validation failed or no modules selected;
+  2 = invalid arguments (unknown level or nonpositive module position).
+Related: scripts/generate_mdx.py --validate; issue #8973.
+''',
+    )
+    parser.add_argument('lang_pair', nargs='?', default='l2-uk-en',
+                        help='Curriculum language pair (default: l2-uk-en).')
+    parser.add_argument('level', nargs='?', type=str.lower,
+                        help='Manifest level or track, e.g. b1 (default: all).')
+    parser.add_argument('module', nargs='?', type=int,
+                        help='One-based module position, e.g. 1 (default: all).')
+    args = parser.parse_args()
+    lang_pair, target_level, target_module = args.lang_pair, args.level, args.module
+    if target_module is not None and target_module < 1:
+        parser.error('Module position must be at least 1.')
 
     print('\n🔍 MDX Validator\n')
 
     curriculum_path = CURRICULUM_DIR / lang_pair
-    levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+    with (curriculum_path / 'curriculum.yaml').open(encoding='utf-8') as manifest_file:
+        levels = yaml.safe_load(manifest_file).get('levels', {})
+    if target_level and target_level not in levels:
+        parser.error(f'Unknown level or track: {target_level}')
 
     total_passed = 0
     total_failed = 0
-    all_results = []
 
-    for level in levels:
+    for level, level_data in levels.items():
         if target_level and level != target_level:
             continue
 
         level_path = curriculum_path / level
-        if not level_path.exists():
-            continue
-
-        module_files = sorted(level_path.glob('*.md'))
-        if not module_files:
-            continue
 
         print(f'📁 Level {level.upper()}')
 
-        for md_file in module_files:
-            match = re.match(r'^(\d+)', md_file.name)
-            if not match:
+        for module_num, manifest_slug in enumerate(level_data.get('modules', []), 1):
+            if target_module is not None and module_num != target_module:
                 continue
 
-            module_num = int(match.group(1))
+            _, slug = parse_numbered_slug(manifest_slug)
+            # Match generate_mdx.core: prefer flat sources, then v7 module folders.
+            md_file = level_path / f'{slug}.md'
+            if not md_file.exists():
+                md_file = level_path / slug / 'module.md'
 
-            if target_module and module_num != target_module:
-                continue
-
-            mdx_file = STARLIGHT_DOCS_DIR / level / f'module-{str(module_num).zfill(2)}.mdx'
+            mdx_file = STARLIGHT_DOCS_DIR / level / f'{slug}.mdx'
 
             result = validate_module(md_file, mdx_file)
-            all_results.append(result)
 
             # Write MDX validation results to review file (even if clean, to clear old warnings)
-            append_mdx_errors_to_report(
-                str(md_file),
-                result.errors,
-                result.warnings
-            )
+            if md_file.exists():
+                append_mdx_errors_to_report(
+                    str(md_file),
+                    result.errors,
+                    result.warnings
+                )
 
             if result.passed:
                 total_passed += 1
@@ -353,7 +375,10 @@ def main():
     print(f'\n{"="*50}')
     print(f'Results: {total_passed} passed, {total_failed} failed')
 
-    if total_failed > 0:
+    if total_passed + total_failed == 0:
+        print('No modules selected for validation.')
+
+    if total_failed > 0 or total_passed == 0:
         print('\n❌ VALIDATION FAILED')
         sys.exit(1)
     else:

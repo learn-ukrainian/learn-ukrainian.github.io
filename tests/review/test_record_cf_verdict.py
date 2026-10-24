@@ -57,7 +57,7 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
     from scripts.opsec import prepublish as gate
 
     tasks, comments, calls, sent, tooling = scanned_recorder
-    reply = f"VERDICT: {verdict}\n{detail}\nHarmless reviewer sentence.\n- A prose bullet."
+    reply = f"VERDICT: {verdict}\n{detail}\nHarmless reviewer sentence quoting `<!-- cf-verdict`.\n- A prose bullet."
     write_task(tasks, reply=reply)
     before = {suffix: (tasks / f"review-one.{suffix}").read_bytes() for suffix in ("json", "result")}
     with pytest.raises(gate.PublishBlocked, match=f"rule={rule}"):
@@ -73,6 +73,8 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
     )
     assert sent == [body]
     assert detail not in body and "SYNTHETIC-DETAIL" not in body
+    assert "Harmless reviewer sentence" not in body and "&lt;!-- cf-verdict" not in body
+    assert body.count(recorder.MARKER_PREFIX) == 1
     gate.check_texts("github.com/owner/repo", [body], tooling=tooling, environment={})
     assert result["verdict"] == verdict
     assert sweep.parse_marker(body)["sha"] == SHA

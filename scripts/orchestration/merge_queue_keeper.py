@@ -22,6 +22,7 @@ if __package__ in (None, ""):
 
 from scripts.common.github_client import GitHubRateLimited
 from scripts.gh_merge_queue_status import extract_pr_number
+from scripts.github_check_rollup import bind_workflow_runs, group_collapsed_by_name, project_check_runs
 from scripts.opsec.prepublish import (
     PublishBlocked,
     check_texts,
@@ -263,10 +264,17 @@ class GitHub:
             not isinstance(data, dict)
             or not isinstance(data.get("total_count"), int)
             or not isinstance(data.get("check_runs"), list)
-            or data["total_count"] > len(data["check_runs"])
+            or data["total_count"] != len(data["check_runs"])
         ):
             raise KeeperError("check-runs page incomplete")
-        return data["check_runs"]
+        repo = self.repository.removeprefix("github.com/")
+        rows = bind_workflow_runs(
+            data["check_runs"], head, repo,
+            lambda number: self.json(Request("read-run", repo=self.repository, number=number)),
+        )
+        if rows is None:
+            raise KeeperError("check workflow provenance unknown")
+        return rows
 
     def files(self, number: int) -> list[dict[str, Any]]:
         """Every changed file of a PR; raises when the list may be truncated or incomplete."""
@@ -479,18 +487,18 @@ def _check_state(checks: list[dict[str, Any]], head: str, *, dependency_update: 
     (``CodeQL-pending``) unless ``dependency_update`` is set, in which case the
     completed top-level CodeQL check must be success or neutral (#9921).
     """
-    names: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in checks:
         if not isinstance(row, dict) or row.get("head_sha") != head or not isinstance(row.get("name"), str):
             return "CI-unknown"
-        names[row["name"]].append(row)
+    names, _ = group_collapsed_by_name(project_check_runs(checks))
     required = ["CI Gate", *(name for name in names if name.startswith("Analyze ("))]
     pending: str | None = "CodeQL-pending" if len(required) == 1 else None
     if pending and dependency_update:
         codeql = _codeql_rows(checks, head)
-        latest = _latest(codeql) if codeql else None
-        if latest is not None and latest.get("status") == "completed":
-            if latest.get("conclusion") not in CODEQL_PASSING:
+        latest, _ = group_collapsed_by_name(project_check_runs(codeql))
+        survivors = latest.get(CODEQL_CHECK, [])
+        if survivors and all(row.get("status") == "COMPLETED" for row in survivors):
+            if any(row.get("conclusion", "").lower() not in CODEQL_PASSING for row in survivors):
                 return f"CI-red-{CODEQL_CHECK}"
             pending = None
     for name in required:
@@ -498,12 +506,12 @@ def _check_state(checks: list[dict[str, Any]], head: str, *, dependency_update: 
         if not rows:
             pending = pending or f"CI-pending-{name}"
             continue
-        row = _latest(rows)
-        if row.get("status") != "completed":
-            pending = pending or f"CI-pending-{name}"
-            continue
-        if row.get("conclusion") != "success":
-            return f"CI-red-{name}"
+        for row in rows:
+            if row.get("status") != "COMPLETED":
+                pending = pending or f"CI-pending-{name}"
+                continue
+            if row.get("conclusion") != "SUCCESS":
+                return f"CI-red-{name}"
     return pending or "ok"
 
 
@@ -965,16 +973,7 @@ def run(
                 reason = _gate_hold(gh, number, head, drops, grants, previous, comments, login) or reason
             except KeeperError:
                 reason = "requeue-unknown"
-        rollup = [
-            {
-                "name": item.get("name"),
-                "status": str(item.get("status", "")).upper(),
-                "conclusion": str(item.get("conclusion", "")).upper(),
-                "startedAt": item.get("started_at") or item.get("created_at"),
-            }
-            for item in check_rows
-            if isinstance(item, dict)
-        ]
+        rollup = project_check_runs(check_rows)
         report = classify_pr(
             {**pr, "statusCheckRollup": rollup},
             verdict,

@@ -1102,7 +1102,7 @@ private operations docs):
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
 | `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
-| `DISPATCH_DISK_REAP_USED_PERCENT` | not a refusal: at or above this percent used (default 85, as `df` reports it) the worktree reaper runs once and the dispatch is admitted (#10871); must be below the refuse value, else reading the thresholds fails with a configuration error |
+| `DISPATCH_DISK_REAP_USED_PERCENT` | not a refusal: at or above this percent used (default 85, as `df` reports it) the worktree reaper is attempted once; a known reading below the refuse watermark admits (#10871, #10879); must be below the refuse value, else reading the thresholds fails with a configuration error |
 | `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 90) after the worktree reaper has run once (#10776, #10871); a hard stop, exit 4 |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
@@ -1119,10 +1119,24 @@ and only the worker cap applies. The pool check reads `memory.current`, `memory.
 `memory.stat` from the `lu.slice` cgroup (or `$LU_SLICE_CGROUP`) and subtracts
 `active_file`/`inactive_file`, so reclaimable page cache does not count. When those files are
 missing (CI, macOS) the check is skipped, logged, and recorded as `admission.pool_check_skipped`. `python -m scripts.fleet.capacity_pick` prints the same
-decision as its last line (JSON key `admission`). The disk check (#10776) runs the reaper (`reap_worktrees.reap_clean_pushed(dry_run=False, lock_timeout_s=5)`, #10778) only for a live dispatch's first check, never under the lock, in `--dry-run` or in `capacity_pick`; those report a full disk as a refusal with "reaper not run in this check". The reaper runs in a child process stopped after `DISPATCH_DISK_REAPER_TIMEOUT_S` (default 90 s; "reaper timed out"). One attempt runs per host at a time (`dispatch-admission-disk-reaper.lock` and `.state` beside the admission lock): a dispatch that does not get the attempt lock, or that arrives within `DISPATCH_DISK_REAPER_COOLDOWN_S` (default 600 s) of an attempt that freed nothing, does not run it and refuses with the recorded outcome ("reaper attempted N s ago: ..."). A dispatch that reuses an existing worktree skips the disk check. Paths in reaper, probe and alert details are shown as `<path>`. At or above `DISPATCH_DISK_ALERT_USED_PERCENT` (default 75) one alert goes to the epics Fleet Comms channel per 6 hours (state: `dispatch-admission-disk-alert.state` beside the lock). An unreadable disk probe or a failed alert never refuses; the reason is shown on the admission line. Write task records keep the `admission`
+decision as its last line (JSON key `admission`). The disk check (#10776) runs the reaper (`reap_worktrees.reap_clean_pushed(dry_run=False, lock_timeout_s=5)`, #10778) only for a live dispatch's first check, never under the lock, in `--dry-run` or in `capacity_pick`; those report a full disk as a refusal with "reaper not run in this check". The reaper runs in a child process stopped after `DISPATCH_DISK_REAPER_TIMEOUT_S` (default 90 s; "reaper timed out"). One attempt runs per host at a time (`dispatch-admission-disk-reaper.lock` and `.state` beside the admission lock): a dispatch that does not get the attempt lock, or that arrives within `DISPATCH_DISK_REAPER_COOLDOWN_S` (default 600 s) of an attempt that freed nothing, does not run it and reports the recorded outcome ("reaper attempted N s ago: ..."). A lock miss or cooldown admits a measured usage of at least 85% and below 90%; a reading at or above 90% refuses. A dispatch that reuses an existing worktree skips the disk check. Paths in reaper, probe and alert details are shown as `<path>`. At or above `DISPATCH_DISK_ALERT_USED_PERCENT` (default 75) one alert goes to the epics Fleet Comms channel per 6 hours (state: `dispatch-admission-disk-alert.state` beside the lock). An initially unreadable disk probe or a failed alert never refuses on its own; the reason is shown on the admission line. After a reading at or above the reap watermark, an unknown post-reaper probe is a hard refusal, including when the attempt was skipped for a lock miss or cooldown. The record retains both the initial high reading and the unknown probe reason; retry when usage can be measured again. The refusal cannot be overridden with `--force-admission`. Write task records keep the `admission`
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
 thresholds.
+
+The scheduled cleanup's disk-watermark alert and the backup alerts serialize each full
+read, publish and state-commit transaction with a stable per-state `.lock` file. State
+and `.pending` records use unique mode-0600 temporary files, atomic replacement and
+file/directory flushes. Before publishing, the pending record freezes the message,
+idempotency key and resulting state. A retry replays those exact inputs through Fleet
+Comms' durable publication idempotency and verifies the intended recipient's delivery.
+It commits the state before removing the pending record. This bounds duplicate delivery
+under the existing Fleet contract; it does not claim exactly-once execution across stores.
+An unreadable or malformed pending record prevents a new publication and requires retry
+or driver reconciliation. Do not remove pending records to clear an alert error. An I/O
+failure is recorded in the scheduled hygiene receipt and makes the run exit nonzero;
+receipt writing and the remaining hygiene reporting continue. An unknown alert disk
+probe leaves the crossing state and pending publication unchanged.
 
 **Worker isolation (#8645 part C):** the detached worker runs in the user slice
 `lu-dispatch.slice` (memory, high-water and swap limits set by the deployment) via
