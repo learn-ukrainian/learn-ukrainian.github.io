@@ -356,13 +356,17 @@ def test_single_family_branch_agrees_across_selector_and_recorder(repo, tasks, m
     task_record(tasks, "old-task", archived=True, agent="claude", model="claude-opus-5-5")
     repo.commit(OPUS, message="one")
     repo.commit("claude/hot-task", message="two")
-    repo.commit("claude/old-task", message="three")
+    repo.commit("claude/old-task\nX-Agent: claude/hot-task\nX-Agent: claude/old-task", message="three")
     repo.publish()
 
     fact = facts(repo, tasks, writer=OPUS)
 
-    assert fact.existing_families == {"anthropic"} and len(fact.commits) == 3
+    assert fact.existing_families == {"anthropic"} and fact.receipt()["commits"] == 3
+    assert len(fact.commits) == 5
     assert {commit.source for commit in fact.commits} == {"trailer-model", "task-record", "task-record-archived"}
+    assert fact.author_task_ids == {"hot-task", "old-task"}
+    assert fact.author_models == ("claude-opus-5-5",) * 3
+    assert fact.author_task_models == ("claude-opus-5-5",)
     assert selected(fact, "critical") == "openai_frontier"
     # The recorder, run independently on the same repository, accepts that reviewer ...
     receipt = record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol", review_risk="critical")
@@ -404,11 +408,14 @@ def test_mixed_family_critical_branch_has_no_reviewer_whatever_the_order_or_writ
 
 
 def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatch, tmp_path):
-    repo.commit(OPUS)
+    repo.commit(f"{OPUS}\nX-Agent: {SOL}")
     repo.commit(SOL)
     repo.publish()
     fact = facts(repo, tasks, writer=OPUS)
 
+    assert fact.existing_families == {"anthropic", "openai"}
+    assert fact.receipt()["commits"] == 2 and len(fact.commits) == 3
+    assert fact.author_models == ("gpt-6.1-sol", "claude-opus-5-5", "gpt-6.1-sol")
     assert selected(fact, "medium") == "gemini-3.8-flash-high"
     receipt = record_verdict(
         monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT
@@ -551,7 +558,7 @@ def test_recorder_refuses_a_github_listing_that_differs_from_rev_list(repo, task
     "case,reason",
     [
         ("missing-trailer", "missing explicit X-Agent"),
-        ("duplicate-trailer", "missing explicit X-Agent"),
+        ("duplicate-trailer", "3 X-Agent trailers: member 3 malformed"),
         ("repository-mismatch", "conflicts with commit trailer"),
         ("unproven-merge", "missing explicit X-Agent"),
     ],
@@ -561,7 +568,7 @@ def test_invalid_attribution_is_never_green(repo, tasks, case, reason):
     if case == "missing-trailer":
         repo.commit(None)
     elif case == "duplicate-trailer":
-        repo.commit(f"{OPUS}\nX-Agent: {SOL}")
+        repo.commit(f"{OPUS}\nX-Agent: {SOL}\nX-Agent: ")
     elif case == "repository-mismatch":
         task_record(tasks, "elsewhere", agent="codex", model="gpt-6.1-sol", repository="other/repo")
         repo.commit("codex/elsewhere")
@@ -888,9 +895,9 @@ def test_history_group_6_protected_gates_take_precedence(repo, tasks, frozen_his
 @pytest.mark.parametrize("case", ["conflicting", "after-admission", "malformed", "empty-model", "invalid-model"])
 def test_history_group_7_only_frozen_zero_trailers(repo, tasks, frozen_history, case, monkeypatch, tmp_path):
     if case == "conflicting":
-        repo.commit(f"{OPUS}\nX-Agent: {SOL}")
+        repo.commit(f"{OPUS}\nX-Agent: {SOL}\nX-Agent: codex/impl-missing-task")
         repo.publish()
-        with pytest.raises(delegate._AuthoringReviewRefused, match="missing explicit X-Agent"):
+        with pytest.raises(delegate._AuthoringReviewRefused, match="3 X-Agent trailers: member 3 unresolved"):
             history_admission(repo, tasks)
         return
     if case in {"malformed", "empty-model", "invalid-model"}:
