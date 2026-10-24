@@ -170,23 +170,13 @@ def test_every_kimicc_routable_alias_has_coding_model_id() -> None:
         resolve_kimi_model("k3", catalog)
 
 
-def test_glm_model_aliases_and_consumer_lint() -> None:
-    aliases = glm_model_aliases()
-    assert "glm-5.3" in aliases
-    assert aliases["glm-5.3"] == "glm-5.3"
-    assert "glm52" not in aliases
-    assert model_aliases()["glm52"] == "glm-5.2"  # historical identity
-    assert aliases["glm53"] == "glm-5.3"
-    assert aliases["glm"] == "glm-5.3"
-
-    model_id, routes = resolve_glm_model("glm")
-    assert model_id == "glm-5.3"
-    assert routes == {
-        "glmcc_alias": "glm-5.3",
-        "platform_model_id": "glm-5.3",
-        "coding_model_id": "glm-5.3",
-        "context_profile": "glmcc_glm53",
-    }
+def test_glm_retirement_refuses_aliases_and_keeps_historical_identity() -> None:
+    assert glm_model_aliases() == {}
+    for alias in ("glm-5.3", "glm53", "glm"):
+        assert model_aliases()[alias] == "glm-5.3"
+        with pytest.raises(ModelCatalogError, match="is retired in the model catalog"):
+            resolve_glm_model(alias)
+    assert model_aliases()["glm52"] == "glm-5.2"
     validate_glm_alias_consumers()
 
 
@@ -308,12 +298,14 @@ def test_catalog_requires_activity_roles_for_reviewers_and_the_advisor(mutate, m
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("candidate", ["claude-sonnet-5-5", "composer-2.5"])
+@pytest.mark.parametrize("candidate", ["claude-sonnet-5-5", "gemini-3.8-flash-high"])
 def test_catalog_rejects_a_high_ladder_seat_outside_risk_reviewer_models(candidate):
     """#9538: the high ladder can list only the models risk_reviewer_models.high names."""
     broken = deepcopy(load_model_catalog())
     broken["review_ladders"]["high"].append([candidate])
-    with pytest.raises(ModelCatalogError, match=r"review_ladders\.high candidate .*performed only by gpt-6\.1-sol, claude-opus-5-5"):
+    with pytest.raises(
+        ModelCatalogError, match=r"review_ladders\.high candidate .*performed only by gpt-6\.1-sol, claude-opus-5-5"
+    ):
         validate_catalog(broken)
 
 
@@ -363,7 +355,7 @@ def test_catalog_rejects_learner_content_as_a_code_closeout_profile():
 
 def test_catalog_rejects_unknown_candidate_model_reference():
     broken = deepcopy(load_model_catalog())
-    broken["review_candidates"]["pool"]["model_id"] = "missing-model"
+    broken["review_candidates"]["claude-sonnet-5-5"]["model_id"] = "missing-model"
     with pytest.raises(ModelCatalogError, match="unknown model"):
         validate_catalog(broken)
 
@@ -422,8 +414,8 @@ def test_cursor_orchestrator_auto_resolves_to_cursor_family():
     catalog = load_model_catalog()
     cursor_seat = catalog["orchestrator_seats"]["cursor"]
     assert cursor_seat["unknown_auto_family_resolution"] == "cursor_family"
-    assert cursor_seat["unknown_auto_union_families"] == ["xai", "moonshot"]
-    assert cursor_seat["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
+    assert cursor_seat["unknown_auto_union_families"] == ["xai"]
+    assert cursor_seat["auto_allowlist"] == ["grok-4.7"]
     models = catalog["models"]
     assert models["grok-4.6"]["family"] == "xai"
     assert models["composer-2.5"]["family"] == "moonshot"
@@ -437,7 +429,9 @@ def test_cursor_orchestrator_auto_resolves_to_cursor_family():
     # Reject invalid unknown_auto_family_resolution
     broken_invalid_res = deepcopy(catalog)
     broken_invalid_res["orchestrator_seats"]["cursor"]["unknown_auto_family_resolution"] = "single_family"
-    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_family_resolution must be 'cursor_family'"):
+    with pytest.raises(
+        ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_family_resolution must be 'cursor_family'"
+    ):
         validate_catalog(broken_invalid_res)
 
     # Reject missing unknown_auto_union_families
@@ -449,7 +443,10 @@ def test_cursor_orchestrator_auto_resolves_to_cursor_family():
     # Reject mismatched unknown_auto_union_families (e.g. wrong family or missing family)
     broken_mismatched_fams = deepcopy(catalog)
     broken_mismatched_fams["orchestrator_seats"]["cursor"]["unknown_auto_union_families"] = ["openai", "moonshot"]
-    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.unknown_auto_union_families must match allowlist model families"):
+    with pytest.raises(
+        ModelCatalogError,
+        match=r"orchestrator_seats\.cursor\.unknown_auto_union_families must match allowlist model families",
+    ):
         validate_catalog(broken_mismatched_fams)
 
 
@@ -462,7 +459,7 @@ def test_catalog_rejects_cursor_orchestrator_without_concrete_allowlisted_pin(mo
 
 
 def test_catalog_accepts_each_allowlisted_cursor_orchestrator_pin():
-    for model_id in ("grok-4.7", "composer-2.5"):
+    for model_id in ("grok-4.7",):
         catalog = deepcopy(load_model_catalog())
         catalog["orchestrator_seats"]["cursor"]["model_id"] = model_id
         validate_catalog(catalog)
@@ -519,10 +516,10 @@ def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str
     refusal = cursor_non_dispatch_model_refusal(model)
     assert refusal is not None
     assert f"({code})" in refusal
-    assert "pin grok-4.7 or composer-2.5" in refusal
+    assert "pin grok-4.7" in refusal
 
 
-@pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"])
+@pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high"])
 def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
     assert cursor_non_dispatch_model_refusal(model) is None
 
@@ -533,7 +530,7 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     # pin; Composer (Kimi lineage) stays non-eligible.
     broken_ep = deepcopy(load_model_catalog())
     broken_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = ["composer-2.5"]
-    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor\.models cannot pin 'composer-2\.5'"):
+    with pytest.raises(ModelCatalogError, match="references retired model"):
         validate_catalog(broken_ep)
     unpinned_ep = deepcopy(load_model_catalog())
     unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = []
@@ -587,7 +584,7 @@ def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
 
 def test_catalog_enforces_quality_floor_and_homogeneous_rungs():
     broken = deepcopy(load_model_catalog())
-    broken["review_ladders"]["medium"][0].append("pool-xs")
+    broken["review_ladders"]["medium"][0].append("claude-sonnet-5-5")
     with pytest.raises(ModelCatalogError, match="mixes quality tiers"):
         validate_catalog(broken)
 
@@ -745,9 +742,7 @@ def test_retired_model_refusal_names_id_and_replacement(model, retired_id):
     assert refusal == f"model {model!r} is retired in the model catalog ({retired_id}); use gpt-6.1-sol"
 
 
-@pytest.mark.parametrize(
-    "model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "composer-2.5", "auto"]
-)
+@pytest.mark.parametrize("model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "grok-4.7", "auto"])
 def test_retired_model_refusal_admits_non_retired_ids(model):
     assert retired_model_refusal(model) is None
 
@@ -962,11 +957,16 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
 
     monkeypatch.setattr("subprocess.run", forbidden)
     monkeypatch.setattr("subprocess.Popen", forbidden)
-    with pytest.raises(target_admission.ReviewAdmissionRefused, match="holds no review, critique or approval role"):
+    with pytest.raises(target_admission.ReviewAdmissionRefused, match="is retired in the model catalog"):
         target_admission.resolve_and_admit(
-            ("agy",), mode="read-only", model=f"gemini-4-argon-{tier}",
-            review_dispatch=True, review_profile="code", review_risk=risk,
-            review_author_model="gpt-6.1-sol", route=forbidden,
+            ("agy",),
+            mode="read-only",
+            model=f"gemini-4-argon-{tier}",
+            review_dispatch=True,
+            review_profile="code",
+            review_risk=risk,
+            review_author_model="gpt-6.1-sol",
+            route=forbidden,
             claude_account=HOST_ACCOUNT,
         )
 

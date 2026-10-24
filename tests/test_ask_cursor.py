@@ -47,13 +47,13 @@ def test_invoke_cursor_constructs_correct_argv():
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="response body", stderr="")
-            _invoke_cursor("hello", "composer-2.5")
+            _invoke_cursor("hello", "grok-4.7-high")
             argv = run_mock.call_args[0][0]
             assert argv[0] == _CURSOR_BIN
             assert "-p" in argv
             assert argv[argv.index("-p") + 1] == rules_core.with_core("hello")
             assert "--model" in argv
-            assert "composer-2.5" in argv
+            assert "grok-4.7-high" in argv
             assert "--output-format" in argv
             assert "text" in argv
             assert "--trust" in argv
@@ -65,7 +65,7 @@ def test_invoke_cursor_attaches_data_file(tmp_path):
     with patch(_RESOLVE, return_value=_CURSOR_BIN):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-            _invoke_cursor("review this", "composer-2.5", data=str(data_file))
+            _invoke_cursor("review this", "grok-4.7-high", data=str(data_file))
             argv = run_mock.call_args[0][0]
             # data should be in the prompt, not as a separate flag
             prompt_arg = argv[argv.index("-p") + 1]
@@ -77,7 +77,7 @@ def test_invoke_cursor_raises_when_binary_missing():
     with patch(_RESOLVE, side_effect=CursorAgentMissingError()):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run", side_effect=AssertionError("spawned")):
             with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
-                _invoke_cursor("hello", "composer-2.5")
+                _invoke_cursor("hello", "grok-4.7-high")
 
 
 def test_invoke_cursor_raises_on_nonzero_exit():
@@ -85,7 +85,7 @@ def test_invoke_cursor_raises_on_nonzero_exit():
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=1, stdout="", stderr="auth failed")
             with pytest.raises(SystemExit, match="cursor-agent exited 1"):
-                _invoke_cursor("hello", "composer-2.5")
+                _invoke_cursor("hello", "grok-4.7-high")
 
 def test_ask_cursor_regression_wire_normalization(monkeypatch):
     sent = []

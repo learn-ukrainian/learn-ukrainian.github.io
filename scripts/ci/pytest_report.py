@@ -16,8 +16,8 @@ Reads each shard's file list (``pytest-shard-N-files.txt``), JUnit report
   message: a marked test deselected as ``slow``, skipped for another reason,
   or passing fails one of the two comparisons.
 
-On success it writes ``--record`` (the ``ci-tested-tree`` artifact the merge
-queue reuses, scripts/ci/reuse_green_run.py): the tested tree and commit,
+On success it writes ``--record`` (the ``ci-tested-tree`` audit artifact):
+the tested tree and commit,
 ``tier: full``, the test count, and the event, PR number, run id and attempt
 that produced it.
 """

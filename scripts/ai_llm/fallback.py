@@ -8,13 +8,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-PRIMARY_GEMINI_MODEL = "gemini-3.1-pro-preview"
+PRIMARY_GEMINI_MODEL = "gemini-3.8-flash-high"
 AGY_GEMINI_MODEL = "gemini-3.8-flash-high"
 FLASH_GEMINI_MODEL = "gemini-3.8-flash-high"
 FINAL_GEMINI_MODEL = "gemini-3.8-flash-low"
 GEMINI_MODEL_LADDER = (
     PRIMARY_GEMINI_MODEL,
-    FLASH_GEMINI_MODEL,
     FINAL_GEMINI_MODEL,
 )
 GEMINI_AUTH_ENV_VARS = (
@@ -125,6 +124,10 @@ def build_gemini_ladder(
     result are renumbered to the filtered total so log lines like
     ``Rung 1/3`` stay accurate.
     """
+    from scripts.review.model_catalog import retired_model_refusal
+
+    if refusal := retired_model_refusal(preferred_model):
+        raise ValueError(refusal)
     if not allowed_auth_modes:
         raise ValueError("allowed_auth_modes must not be empty")
     if preferred_model in GEMINI_MODEL_LADDER:
@@ -137,6 +140,8 @@ def build_gemini_ladder(
     for model in model_order:
         # Flash aliases are AGY-only; never send them to the Gemini CLI.
         if model in {FLASH_GEMINI_MODEL, FINAL_GEMINI_MODEL}:
+            if include_agy and model == PRIMARY_GEMINI_MODEL:
+                rung_specs.append((AGY_GEMINI_MODEL, None, "agy-cli"))
             continue
         for auth_mode in ("api", "oauth"):
             if auth_mode not in allowed_auth_modes:

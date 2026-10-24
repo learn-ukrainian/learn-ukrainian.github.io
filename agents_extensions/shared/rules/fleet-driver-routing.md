@@ -56,7 +56,7 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 `--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
 `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
 card; `delegate.py` refuses it otherwise. The driver seat, design, consults, discussions, recon and
-unclear work pin `grok-4.7-high` or `composer-2.5`; a review runs the approved concrete model the reviewer
+unclear work pin `grok-4.7-high`; a review runs the approved concrete model the reviewer
 resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
@@ -64,7 +64,7 @@ pool has headroom. A review of a Grok author runs the reviewer resolver's non-xA
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
 through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
-**Utilize, do not trim.** Keep **Z.AI/GLM** as a first-class seat. Kimi is retired (OO-58, #11327). Live check:
+**Use active catalog seats with headroom.** Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
 `.venv/bin/python -m scripts.fleet.usage show` (per-lane remaining% + pace lines)
 + `/api/delegate/active` + disk. (`codexbar usage` is retired — do not cite it.)
@@ -84,7 +84,7 @@ subscription lane) while `usage show` / `routing-budget` shows hot / near_cap /
 deficit (visible pace, projected to run out before reset, and more than 2 points
 ahead of pace; near_cap ≥ 90% unchanged) or a thinning reserve **and** `capacity_pick`
 lists cool/idle free seats
-(Cursor, AGY, GLM, …). `--check-budget` hard-subs when
+(Cursor, AGY, …). `--check-budget` hard-subs when
 `dispatch_fallbacks` has a row (e.g. `codex → cursor`); otherwise it **refuses**
 unless `--force-agent` with a written NOTE.
 
@@ -99,11 +99,9 @@ stampede one hot lane.
 | **DeepSeek V4.1 Flash** | Latest `deepseek-v4.1-flash` coding through opencode | Direct DeepSeek API or OpenRouter with a named US provider allow-list; never private-repository content or secrets. Pro and older are retired. Review-of-record and Ukrainian work need measured evidence first. `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists. `ask-deepseek` remains consult-only for non-language work. |
 | **Kimi** | retired (OO-58, #11327) | do not dispatch; every Kimi id is refused |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
-| **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
-| **Z.AI GLM-5.3** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
 | **Claude Sonnet** | routine judgment/CF | Opus 5.5 / Sol 6.1 for hard judgment; ~1 Claude driver |
 
-**OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
+**OpenRouter:** use only active catalog routes with their data and provider restrictions.
 
 Review selection and dispatch ignore remaining weekly or five-hour usage, pace,
 near-cap state and usage headroom forecasts. Claude keeps its existing weekly-cap
@@ -112,7 +110,7 @@ still bind. An observed rate-limit cluster (`runtime.headroom_blocked`) excludes
 the lane at selection time. A run-time `rate_limited` outcome ends the review
 without an automatic fallback dispatch.
 
-**Codex writer near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / GLM
+**Codex writer near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high`
 (`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
 `resolve-reviewer` pick, which may be native or attested Cursor Grok at every risk (operator decision 2026-10-05, #9769). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
@@ -149,14 +147,12 @@ operator must confirm and refresh the count and expiry; no agent infers them fro
 
 Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a Fast variant or a previous generation. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
 
-**Cursor Models pool.** More included usage. Grok and Composer are exempt from the Teams/Enterprise token rate ($0.25 per million on third-party requests). Our pin in this pool is `grok-4.7-high` (Grok 4.7, not Fast).
+**Cursor Models pool.** More included usage. Grok is exempt from the Teams/Enterprise token rate ($0.25 per million on third-party requests). Our pin in this pool is `grok-4.7-high` (Grok 4.7, not Fast).
 
 | Model | Input | Cache read | Output | Send |
 | --- | --- | --- | --- | --- |
 | Grok 4.7 | $2 | $0.50 | $6 | `grok-4.7-high` |
 | Grok 4.7 Fast | $4 | $1 | $12 | do not send |
-| Composer 2.5 | $0.50 | $0.20 | $2.50 | `composer-2.5` (concrete pin; operator decision 2026-09-30) |
-| Composer 2.5 Fast | $3 | $0.50 | $15 | do not send |
 | Grok 4.6, Grok 4.5 | $2 | $0.50 | $6 | do not send |
 
 **Other Models pool.** Included on Pro, Pro Plus, and Ultra, then on-demand at the same API price. Start does not include this pool. It serves non-review third-party work only: no Claude model reviews through Cursor (D-129, #10464), so a reviewer who must be outside xAI comes from the reviewer resolver, not from this pool. The Claude rows below are price facts about the pool.

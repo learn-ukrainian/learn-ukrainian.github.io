@@ -6,6 +6,7 @@ Python-only — no bash. Run:
 
 Resumes from partial work in audit/2026-07-08-gemini-strict-probe/ (8 cells done).
 """
+
 from __future__ import annotations
 
 import json
@@ -220,6 +221,13 @@ def main() -> int:
         return 2
     if not PY.is_file():
         print(f"ERROR: venv python not found at {PY}", file=sys.stderr)
+        return 2
+    from scripts.review.model_catalog import ModelCatalogError, require_execution_model
+
+    try:
+        require_execution_model(MODEL, transport="agy")
+    except ModelCatalogError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     _seed_out_dir()
     errors = 0

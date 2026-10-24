@@ -3953,7 +3953,7 @@ def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config
     """Refuse the model public ``invoke`` would run, before ``_invoke_impl``.
 
     Direct ``_invoke_impl`` callers keep the same check. Omitted Kimi and Muse
-    models use their defaults; other seats are not loaded just to name one.
+    models use their defaults; other adapter defaults are admitted during planning.
     Coding-only admission still runs first.
     """
     requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None

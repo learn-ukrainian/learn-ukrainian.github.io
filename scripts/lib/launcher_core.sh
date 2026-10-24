@@ -83,10 +83,10 @@ Options:
   -h, --help                 Show this help and exit.
   --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
                              Cursor default (driver and interactive): grok-4.7-high;
-                             it also accepts composer-2.5, never Auto, a Fast variant,
+                             never Auto, a Fast variant,
                              an empty model or a forwarded --model. Gemini driver
-                             default: gemini-3.1-pro-high (gemini-3.8-flash-high is
-                             also certified); Gemini interactive default:
+                             default: gemini-3.8-flash-high (only certified id);
+                             Gemini interactive default:
                              gemini-3.8-flash-high. Claude interactive: omit to use
                              project settings (Sonnet 5.5). Grok: omit to keep
                              last TUI/session model.
@@ -391,13 +391,8 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
-      # The driver defaults to 3.1 Pro (2026-10-08 approval); interactive
-      # sessions keep the 3.8 Flash default.
-      if [ "$LC_MODE" = driver ]; then
-        LC_MODEL="${LAUNCHER_MODEL:-gemini-3.1-pro-high}"
-      else
-        LC_MODEL="${LAUNCHER_MODEL:-gemini-3.8-flash-high}"
-      fi
+      # Both modes use the subscribed Flash pin (operator 2026-10-23).
+      LC_MODEL="${LAUNCHER_MODEL:-gemini-3.8-flash-high}"
       LC_HARNESS="${LAUNCHER_HARNESS:-agy}"
       ;;
     muse)
@@ -789,7 +784,7 @@ launcher_validate_mode() {
 # id on another provider's driver, is refused before scope entry or startup.
 # A provider --model forwarded after `--` would put a second, uncertified model
 # on the agy exec line, so the Gemini driver refuses it as well.
-LC_GEMINI_DRIVER_MODELS='gemini-3.1-pro-high, gemini-3.8-flash-high'
+LC_GEMINI_DRIVER_MODELS='gemini-3.8-flash-high'
 
 launcher_refuse_uncertified_gemini_driver() {
   local arg
@@ -805,7 +800,7 @@ launcher_refuse_uncertified_gemini_driver() {
     done
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high)
+    gemini:gemini-3.8-flash-high)
       return 0
       ;;
     gemini:*)
@@ -848,7 +843,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high|grok:grok-4.7|muse:muse-wonder-full-1.0)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|grok:grok-4.7|muse:muse-wonder-full-1.0)
       return 0
       ;;
     *)
@@ -873,13 +868,13 @@ launcher_validate_cursor_pin() {
   for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
     case "$arg" in
       --model|--model=*)
-        launcher_error "the $seat takes its model from the launcher --model, not from forwarded '$arg' (pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto)."
+        launcher_error "the $seat takes its model from the launcher --model, not from forwarded '$arg' (pin $LC_CURSOR_SEAT_PIN; never Auto)."
         exit 4
         ;;
     esac
   done
   if [ -z "${LC_MODEL:-}" ]; then
-    launcher_error "the $seat requires a concrete model; an empty model runs Auto (pin $LC_CURSOR_SEAT_PIN or composer-2.5)."
+    launcher_error "the $seat requires a concrete model; an empty model runs Auto (pin $LC_CURSOR_SEAT_PIN)."
     exit 4
   fi
   local normalized
@@ -893,22 +888,21 @@ except ModelCatalogError as exc:
     print(str(exc), file=sys.stderr)
     sys.exit(4)
 ' "$LC_ROOT" "$LC_MODEL")"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
+    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN; never Auto, Fast or a previous generation."
     exit 4
   fi
   LC_MODEL="$normalized"
   if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
+    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN; never Auto, Fast or a previous generation."
     exit 4
   fi
 }
 
-# Cursor CLI model ids: bare certified pins and bracket overrides such as
-# composer-2.5[fast=false]. Auto, Fast variants and previous generations are not certified.
+# Cursor CLI pins: only Grok high is certified. Composer is retired, not subscribed.
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    composer-2.5|composer-2.5\[fast=false\]|grok-4.7-high) return 0 ;;
+    grok-4.7-high) return 0 ;;
   esac
   return 1
 }

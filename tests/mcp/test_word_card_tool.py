@@ -872,3 +872,571 @@ def test_unreadable_ledger_is_reported_not_silently_empty(tmp_path):
     result = lookup("мова", store)
 
     assert result["card_store"]["ledger"] is False and result["card_store"]["ledger_unreadable"] is True
+
+
+def _synthetic_release_row() -> dict:
+    """Literal dataset assertions, without a source-store or export-engine dependency."""
+    return {
+        "card_id": "wc_aaaaaaaaaaaa",
+        "card_version": "synthetic-card-v2",
+        "card_kind": "lexeme",
+        "status": "CANDIDATE",
+        "known_gaps": ["synthetic gap"],
+        "fields": [
+            {
+                "assertion_id": "wa_000000000000000000000001",
+                "subject": {"kind": "card", "id": "wc_aaaaaaaaaaaa"},
+                "field": "spelling",
+                "value": "мова",
+                "citation": {
+                    "source_id": "synthetic",
+                    "snapshot_id": "synthetic-snapshot-v1",
+                    "locator": "entry:1",
+                    "source_record_id": None,
+                    "source_record_key": "synthetic:1",
+                    "licence_ref": {
+                        "register_source_id": "synthetic",
+                        "register_version": 1,
+                        "appears_in": ["dataset"],
+                    },
+                    "attribution": "Synthetic attribution",
+                    "licence": {"name": "Synthetic terms", "url": None},
+                    "terms_ref": "synthetic-terms-v1",
+                },
+            }
+        ],
+    }
+
+
+@pytest.fixture
+def pinned_jsonl_release(tmp_path, monkeypatch):
+    """Use a synthetic deployed-checkout pin and real, task-local release files."""
+    import hashlib
+
+    pin_path = tmp_path / "checkout" / "site" / "src" / "data" / "pin.json"
+    pin_path.parent.mkdir(parents=True)
+    monkeypatch.setattr(word_card, "DEFAULT_PIN", pin_path)
+    root = tmp_path / "release"
+    root.mkdir()
+
+    def write(rows=None, *, dataset=None, manifest_changes=None, pin_changes=None, manifest_bytes=None):
+        rows = [_synthetic_release_row()] if rows is None else rows
+        if dataset is None:
+            dataset = ("\n".join(json.dumps(row, ensure_ascii=False) for row in rows) + "\n").encode()
+        manifest = {
+            "schema_version": "word-card-dataset.v1",
+            "release_version": "v0.0.1-synthetic",
+            "dataset_file": "word-cards.jsonl",
+            "dataset_bytes": len(dataset),
+            "dataset_sha256": hashlib.sha256(dataset).hexdigest(),
+            "card_count": len(rows),
+            "candidate_count": len(rows),
+            "certified_count": 0,
+            "field_citation_count": sum(len(row["fields"]) for row in rows),
+            "source_breakdown": {"synthetic": {"filtered_assertions": 0, "filter_reasons": {}}},
+        }
+        manifest.update(manifest_changes or {})
+        if manifest_bytes is None:
+            manifest_bytes = json.dumps(manifest, ensure_ascii=False).encode()
+        pin = {
+            "schema_version": "word-card-preview-release-pin.v1",
+            "repository": "synthetic/word-cards",
+            "release_tag": "synthetic-v1",
+            "release_version": "v0.0.1-synthetic",
+            "provenance": "producer-declared",
+            "assets": {
+                "manifest.json": {"bytes": len(manifest_bytes), "sha256": hashlib.sha256(manifest_bytes).hexdigest()},
+                "word-cards.jsonl": {"bytes": len(dataset), "sha256": hashlib.sha256(dataset).hexdigest()},
+            },
+        }
+        pin.update(pin_changes or {})
+        (root / "manifest.json").write_bytes(manifest_bytes)
+        (root / "word-cards.jsonl").write_bytes(dataset)
+        pin_path.write_text(json.dumps(pin), encoding="utf-8")
+        return root, pin_path, pin
+
+    return write
+
+
+def test_pinned_jsonl_reader_preserves_candidate_identity_values_citations_and_versions(pinned_jsonl_release):
+    """Detect lossy projection, collapsed parallel assertions, and invented resolution metadata."""
+    from copy import deepcopy
+
+    row = _synthetic_release_row()
+    row["known_gaps"] = [None, {"synthetic": [1, True, "gap"]}]
+    for number, subject, field, value in [
+        (2, {"kind": "card", "id": "wc_aaaaaaaaaaaa"}, "definition_uk", "First synthetic value"),
+        (3, {"kind": "card", "id": "wc_aaaaaaaaaaaa"}, "definition_uk", {"parallel": [None, 1.25]}),
+        (4, {"kind": "sense", "id": "ws_aaaaaaaaaaaa"}, "definition_uk", "Synthetic sense value"),
+        (5, {"kind": "link", "id": "wl_aaaaaaaaaaaaaaaaaaaaaaaa"}, "relation", {"opaque": "target"}),
+    ]:
+        assertion = deepcopy(row["fields"][0])
+        assertion.update(assertion_id=f"wa_{number:024x}", subject=subject, field=field, value=value)
+        row["fields"].append(assertion)
+    root, _, pin = pinned_jsonl_release([row])
+
+    result = lookup("мова", root)
+
+    assert (result["schema"], result["result"], result["status"]) == ("word-card-lookup.v1", "card_found", "candidate")
+    [served] = result["cards"]
+    assert (served["card_id"], served["card_kind"], served["state"]) == ("wc_aaaaaaaaaaaa", "lexeme", None)
+    assert served["identity"] == {
+        "spelling": "мова",
+        "spellings": ["мова"],
+        "stress_patterns": [],
+        "pos": None,
+        "paradigm_key": None,
+        "mwe_key": None,
+        "key_source_keys": [],
+        "confidence": None,
+        "method": None,
+        "decided_by": None,
+        "source_keys": [],
+        "notes": [],
+    }
+    assert served["version"] == {"card_version": "synthetic-card-v2", "build_id": None, "rules_version": None}
+    assert served["status"] == "candidate" and served["accepted"] is False
+    assert served["certified_for"] == []
+    assert served["certification_refusal"] == {
+        "site": "projection_missing_exact_artifact",
+        "dataset": "projection_missing_exact_artifact",
+    }
+    values = served["fields"]["definition_uk"]["values"]
+    assert [value["value"] for value in values] == ["First synthetic value", {"parallel": [None, 1.25]}]
+    assert [value["evidence_ids"] for value in values] == [
+        ["wa_000000000000000000000002"],
+        ["wa_000000000000000000000003"],
+    ]
+    assert all(value["selected"] is False and value["independence_groups"] == [] for value in values)
+    assert values[0]["citations"] == [
+        {
+            "source_id": "synthetic",
+            "snapshot_id": "synthetic-snapshot-v1",
+            "locator": "entry:1",
+            "source_record_id": None,
+            "source_record_key": "synthetic:1",
+            "licence_ref": {"register_source_id": "synthetic", "register_version": 1, "appears_in": ["dataset"]},
+            "attribution": "Synthetic attribution",
+            "licence": {"name": "Synthetic terms", "url": None},
+            "terms_ref": "synthetic-terms-v1",
+            "evidence_id": "wa_000000000000000000000002",
+            "value": "First synthetic value",
+        }
+    ]
+    assert served["fields"]["definition_uk"]["accepted"] is False
+    assert served["fields"]["definition_uk"]["gaps"] == ["resolution_not_in_projection"]
+    [sense] = served["senses"]
+    assert (sense["sense_id"], sense["order"], sense["state"], sense["sense_map"]) == (
+        "ws_aaaaaaaaaaaa",
+        None,
+        None,
+        [],
+    )
+    assert sense["fields"]["definition_uk"]["values"][0]["value"] == "Synthetic sense value"
+    assert served["links"] == []
+    assert served["gaps"] == {
+        "projection": {"disposition": "assembly_metadata_not_exported"},
+        "senses": {"disposition": "sense_metadata_not_in_projection", "sense_ids": ["ws_aaaaaaaaaaaa"]},
+        "links": {"disposition": "link_structure_not_in_projection", "links": []},
+    }
+    assert served["evidence_ids"] == [f"wa_{number:024x}" for number in (1, 2, 3, 4, 5)]
+    assert served["projection"] == {
+        "schema_version": "word-card-dataset.v1",
+        "release_version": "v0.0.1-synthetic",
+        "manifest_sha256": pin["assets"]["manifest.json"]["sha256"],
+        "dataset_sha256": pin["assets"]["word-cards.jsonl"]["sha256"],
+        "row": row,
+    }
+    assert result["card_store"] == {
+        "available": True,
+        "build_id": None,
+        "ledger": False,
+        "card_files": 0,
+        "unreadable_card_files": 0,
+        "off_store_card_files": 0,
+        "format": "dataset_jsonl",
+        "dataset_card_count": 1,
+        "release_version": "v0.0.1-synthetic",
+        "manifest_sha256": pin["assets"]["manifest.json"]["sha256"],
+        "dataset_sha256": pin["assets"]["word-cards.jsonl"]["sha256"],
+    }
+
+
+@pytest.mark.parametrize(
+    "target,path,value",
+    [
+        ("row", ("card_id",), "wc_aaaaaaaaaaaa"),
+        ("row", ("card_id",), "invalid-id"),
+        ("row", ("card_version",), " "),
+        ("row", ("extra",), True),
+        ("row", ("known_gaps",), {}),
+        ("row", ("fields",), []),
+        ("row", ("fields", 0, "assertion_id"), "wa_000000000000000000000001"),
+        ("row", ("fields", 0, "assertion_id"), "wa_000000000000000000000002\n"),
+        ("row", ("fields", 0, "subject", "id"), "wc_aaaaaaaaaaaa"),
+        ("row", ("fields", 0, "subject", "kind"), "unknown"),
+        ("row", ("fields", 0, "citation", "locator"), ""),
+        ("row", ("fields", 0, "citation", "licence_ref", "register_source_id"), "other"),
+        ("row", ("fields", 0, "citation", "licence_ref", "register_version"), 1.0),
+        ("row", ("fields", 0, "citation", "licence_ref", "register_version"), True),
+        ("manifest", ("card_count",), 1),
+        ("manifest", ("candidate_count",), True),
+        ("manifest", ("field_citation_count",), 1),
+        ("manifest", ("dataset_bytes",), 1),
+        ("manifest", ("release_version",), "other"),
+        ("manifest", ("withdrawal_notice_sha256",), "a" * 64),
+        ("manifest", ("source_breakdown",), []),
+        ("manifest", ("source_breakdown",), {" ": {}}),
+        ("manifest", ("source_breakdown",), {"synthetic": []}),
+        ("manifest", ("source_breakdown",), {"synthetic": {"filtered_assertions": -1, "filter_reasons": {}}}),
+        ("manifest", ("source_breakdown",), {"synthetic": {"filtered_assertions": 0, "filter_reasons": []}}),
+        ("manifest", ("source_breakdown",), {"synthetic": {"filtered_assertions": 0, "filter_reasons": {" ": 1}}}),
+        ("manifest", ("source_breakdown",), {"synthetic": {"filtered_assertions": 0, "filter_reasons": {"x": -1}}}),
+        ("raw", (), b'{"card_id":"wc_bbbbbbbbbbbb","card_id":"wc_bbbbbbbbbbbb"}'),
+        ("raw", (), b'{"x":NaN}'),
+        ("raw", (), b'{"x":Infinity}'),
+        ("raw", (), b'{"x":1e999}'),
+        ("raw", (), b'{"x":0.10000000000000000000001}'),
+        ("raw", (), b'{"x":"\\ud800"}'),
+        ("raw", (), b"\xff"),
+        ("raw", (), b"{broken"),
+        ("raw", (), b"null"),
+        ("raw_manifest", (), b"[]"),
+        ("raw", (), b""),
+    ],
+)
+def test_pinned_jsonl_reader_rejects_malformed_or_duplicate_release_in_full(pinned_jsonl_release, target, path, value):
+    """Detect partial-release admission, duplicate identities, and permissive JSON/schema/counter parsing."""
+    first = _synthetic_release_row()
+    second = _synthetic_release_row()
+    second["card_id"] = "wc_bbbbbbbbbbbb"
+    second["fields"][0].update(
+        assertion_id="wa_000000000000000000000002",
+        subject={"kind": "card", "id": "wc_bbbbbbbbbbbb"},
+        value="хата",
+    )
+    changes = {}
+    if target not in {"raw", "raw_manifest"}:
+        cursor = second if target == "row" else changes
+        for key in path[:-1]:
+            cursor = cursor[key]
+        cursor[path[-1]] = value
+    dataset = None
+    if target == "raw":
+        dataset = json.dumps(first, ensure_ascii=False).encode() + b"\n" + value + b"\n"
+    root, _, _ = pinned_jsonl_release(
+        [first, second],
+        dataset=dataset,
+        manifest_changes=changes,
+        manifest_bytes=value if target == "raw_manifest" else None,
+    )
+
+    result = lookup("мова", root)
+
+    assert (result["result"], result["status"], result["cards"]) == ("no_card", "no_card", [])
+    assert result["card_store"] == {"available": False, "reason": "release_invalid"}
+    assert str(root) not in json.dumps(result, ensure_ascii=False)
+
+
+@pytest.mark.parametrize(
+    "target,kind,reason",
+    [
+        ("word-cards.jsonl", "symlink", "store_unavailable"),
+        ("manifest.json", "dangling", "store_unavailable"),
+        ("pin", "symlink", "release_pin_invalid"),
+        ("word-cards.jsonl", "fifo", "store_unavailable"),
+        ("manifest.json", "directory", "store_unavailable"),
+        ("pin", "fifo", "release_pin_invalid"),
+        ("manifest.json", "missing", "store_unavailable"),
+        ("cards", "mixed", "ambiguous_store_layout"),
+        ("ledger.json", "mixed", "ambiguous_store_layout"),
+        ("build-manifest.json", "mixed", "ambiguous_store_layout"),
+        ("root", "component_escape", "store_unavailable"),
+        ("root", "component_replace", "release_changed_during_read"),
+    ],
+)
+def test_pinned_jsonl_reader_rejects_symlink_special_file_and_component_escape(
+    pinned_jsonl_release,
+    monkeypatch,
+    target,
+    kind,
+    reason,
+):
+    """Detect followed asset links, blocking special-file reads, mixed-store fallback, and component-swap escape."""
+    root, pin_path, _ = pinned_jsonl_release()
+    path = pin_path if target == "pin" else root / target
+    if kind == "mixed":
+        path.write_text("{}", encoding="utf-8")
+    elif kind.startswith("component_"):
+        original = word_card.open_directory_component
+        swapped = False
+
+        def swap_component(parent, component):
+            nonlocal swapped
+            if component == root.name and not swapped:
+                swapped = True
+                moved = root.with_name("moved-release")
+                root.rename(moved)
+                if kind == "component_escape":
+                    root.symlink_to(moved, target_is_directory=True)
+                else:
+                    root.mkdir()
+            return original(parent, component)
+
+        monkeypatch.setattr(word_card, "open_directory_component", swap_component)
+    else:
+        saved = path.read_bytes()
+        path.unlink()
+        if kind in {"symlink", "dangling"}:
+            outside = root.parent / "outside.json"
+            if kind == "symlink":
+                outside.write_bytes(saved)
+            path.symlink_to(outside)
+        elif kind == "fifo":
+            os.mkfifo(path)
+        elif kind == "directory":
+            path.mkdir()
+
+    result = lookup("мова", root)
+
+    assert result["cards"] == []
+    assert result["card_store"] == {"available": False, "reason": reason}
+    assert str(root.parent) not in json.dumps(result, ensure_ascii=False)
+    if kind.startswith("component_"):
+        assert swapped is True
+
+
+@pytest.mark.parametrize(
+    "fault,reason",
+    [
+        ("missing_pin", "release_pin_invalid"),
+        ("pin_json", "release_pin_invalid"),
+        ("pin_keys", "release_pin_invalid"),
+        ("pin_schema", "release_pin_invalid"),
+        ("pin_provenance", "release_pin_invalid"),
+        ("pin_repository", "release_pin_invalid"),
+        ("pin_tag", "release_pin_invalid"),
+        ("pin_version", "release_pin_invalid"),
+        ("pin_assets", "release_pin_invalid"),
+        ("pin_asset_shape", "release_pin_invalid"),
+        ("pin_asset_bytes", "release_pin_invalid"),
+        ("pin_asset_digest", "release_pin_invalid"),
+        ("digest", "release_integrity_mismatch"),
+        ("size", "release_integrity_mismatch"),
+        ("empty_pin", "release_pin_invalid"),
+        ("per_call", "release_integrity_mismatch"),
+        ("replace_asset", "release_changed_during_read"),
+        ("rewrite_asset", "release_changed_during_read"),
+        ("replace_pin", "release_pin_invalid"),
+        ("replace_directory", "release_changed_during_read"),
+        ("late_asset", "release_changed_during_read"),
+        ("late_layout", "release_changed_during_read"),
+    ],
+)
+def test_pinned_jsonl_reader_rejects_pin_digest_size_or_identity_replacement(
+    pinned_jsonl_release, monkeypatch, fault, reason
+):
+    """Detect stale-pin admission, cached integrity results, and inode/content/layout drift across real reads."""
+    root, pin_path, pin = pinned_jsonl_release()
+    asset = root / "word-cards.jsonl"
+    if fault == "missing_pin":
+        pin_path.unlink()
+    elif fault == "pin_json":
+        pin_path.write_text("{broken", encoding="utf-8")
+    elif fault.startswith("pin_"):
+        if fault == "pin_keys":
+            pin["extra"] = True
+        elif fault in {"pin_schema", "pin_provenance", "pin_repository", "pin_tag", "pin_version"}:
+            key, value = {
+                "pin_schema": ("schema_version", "other"),
+                "pin_provenance": ("provenance", "certified"),
+                "pin_repository": ("repository", "../escape"),
+                "pin_tag": ("release_tag", "../escape"),
+                "pin_version": ("release_version", " "),
+            }[fault]
+            pin[key] = value
+        elif fault == "pin_assets":
+            pin["assets"] = {}
+        else:
+            metadata = pin["assets"]["word-cards.jsonl"]
+            if fault == "pin_asset_shape":
+                metadata["extra"] = True
+            elif fault == "pin_asset_bytes":
+                metadata["bytes"] = True
+            else:
+                metadata["sha256"] = "G" * 64
+        pin_path.write_text(json.dumps(pin), encoding="utf-8")
+    elif fault in {"digest", "per_call"}:
+        if fault == "per_call":
+            assert lookup("мова", root)["cards"][0]["card_id"] == "wc_aaaaaaaaaaaa"
+        asset.write_bytes(asset.read_bytes().replace(b"entry:1", b"entry:2"))
+    elif fault == "size":
+        asset.write_bytes(asset.read_bytes() + b" ")
+    elif fault == "empty_pin":
+        pin_path.write_bytes(b"")
+    else:
+        original_read = os.read
+        watched = pin_path if fault == "replace_pin" else asset
+        identity = watched.stat().st_ino
+        changed = False
+
+        def read_and_change(descriptor, count):
+            nonlocal changed
+            data = original_read(descriptor, count)
+            if data and os.fstat(descriptor).st_ino == identity and not changed:
+                changed = True
+                if fault in {"replace_asset", "replace_pin"}:
+                    replacement = watched.with_name("replacement")
+                    replacement.write_bytes(watched.read_bytes())
+                    replacement.replace(watched)
+                elif fault == "rewrite_asset":
+                    watched.write_bytes(watched.read_bytes().replace(b"entry:1", b"entry:2"))
+                elif fault == "replace_directory":
+                    root.rename(root.with_name("old-release"))
+                    root.mkdir()
+                elif fault in {"late_asset", "late_layout"}:
+                    # Defer until after the descriptor's own read recheck, at response encoding.
+                    pass
+            return data
+
+        monkeypatch.setattr(os, "read", read_and_change)
+        if fault in {"late_asset", "late_layout"}:
+            original_dumps = json.dumps
+
+            def encode_and_change(value, *args, **kwargs):
+                result = original_dumps(value, *args, **kwargs)
+                if isinstance(value, dict) and value.get("schema") == "word-card-lookup.v1":
+                    if fault == "late_asset":
+                        asset.write_bytes(asset.read_bytes().replace(b"entry:1", b"entry:2"))
+                    else:
+                        (root / "ledger.json").write_text("{}", encoding="utf-8")
+                return result
+
+            monkeypatch.setattr(json, "dumps", encode_and_change)
+
+    result = lookup("хата", root)
+
+    assert (result["result"], result["cards"]) == ("no_card", [])
+    assert result["card_store"] == {"available": False, "reason": reason}
+    assert str(root.parent) not in json.dumps(result, ensure_ascii=False)
+    if fault.startswith("replace_") or fault in {"rewrite_asset", "late_asset", "late_layout"}:
+        assert changed is True
+
+
+@pytest.mark.parametrize("mode", ["empty", "unique", "homographs", "conflicting", "mwe", "proper_name", "no_vesum"])
+def test_pinned_jsonl_reader_distinguishes_empty_unique_and_ambiguous_matches(pinned_jsonl_release, mode):
+    """Detect false missing cards, first-homograph wins, broken phrase matching, and lemma/dedup precedence errors."""
+    from copy import deepcopy
+
+    row = _synthetic_release_row()
+    rows = [row]
+    query, vesum, expected, matched_by = "мови", fake_vesum, ["wc_aaaaaaaaaaaa"], "vesum_lemma"
+    if mode == "empty":
+        query, expected = "хата", []
+    elif mode == "homographs":
+        second = deepcopy(row)
+        second["card_id"] = "wc_bbbbbbbbbbbb"
+        second["fields"][0].update(
+            assertion_id="wa_000000000000000000000002",
+            subject={"kind": "card", "id": "wc_bbbbbbbbbbbb"},
+            value="Мова",
+        )
+        rows = [second, row]
+        query, expected, matched_by = "Мова", ["wc_bbbbbbbbbbbb", "wc_aaaaaaaaaaaa"], "spelling"
+    elif mode == "conflicting":
+        extra = deepcopy(row["fields"][0])
+        extra.update(assertion_id="wa_000000000000000000000002", value="мови")
+        row["fields"].extend([extra, {**deepcopy(extra), "assertion_id": "wa_000000000000000000000003"}])
+        query, matched_by = "мови", "spelling"
+    elif mode in {"mwe", "proper_name"}:
+        row["card_kind"] = mode
+        query, matched_by = ("мова слова" if mode == "mwe" else "Мова-Слова"), "spelling"
+        row["fields"][0].update(field="mwe_form" if mode == "mwe" else "spelling", value=query)
+    elif mode == "no_vesum":
+        query, matched_by = "мова", "spelling"
+
+        def vesum(_word):
+            raise OSError("synthetic unavailable VESUM")
+
+    root, _, _ = pinned_jsonl_release(rows)
+
+    result = lookup(query, root, vesum=vesum)
+
+    assert result["card_store"]["available"] is True
+    assert [card["card_id"] for card in result["cards"]] == expected
+    assert (result["result"], result["status"]) == (("card_found", "candidate") if expected else ("no_card", "no_card"))
+    assert all(card["matched_by"] == matched_by for card in result["cards"])
+    if mode == "conflicting":
+        [served] = result["cards"]
+        assert served["identity"]["spelling"] is None
+        assert served["identity"]["spellings"] == ["мова", "мови"]
+        assert served["gaps"]["identity"] == {"disposition": "conflicting_spelling_assertions"}
+    if mode == "empty":
+        assert "checked release" in result["message"]
+    if mode == "no_vesum":
+        assert result["vesum"]["available"] is False
+
+
+@pytest.mark.parametrize(
+    "mode,reason",
+    [
+        ("certified_row", "projection_missing_exact_artifact"),
+        ("certified_count", "projection_missing_exact_artifact"),
+        ("historical_source", "projection_excluded_historical_payload"),
+        ("historical_field", "projection_excluded_historical_payload"),
+        ("historical_context", "projection_excluded_historical_payload"),
+        ("candidate", None),
+    ],
+)
+def test_pinned_jsonl_reader_refuses_certification_and_preserves_legacy_authority(
+    pinned_jsonl_release,
+    request,
+    tmp_path,
+    mode,
+    reason,
+):
+    """Detect dataset-integrity promotion to certification and release refusals changing assembly authority."""
+    row = _synthetic_release_row()
+    changes = {}
+    if mode == "certified_row":
+        row["status"] = "CERTIFIED"
+    elif mode == "certified_count":
+        changes["certified_count"] = 1
+    elif mode == "historical_source":
+        citation = row["fields"][0]["citation"]
+        citation["source_id"] = citation["licence_ref"]["register_source_id"] = "sum11"
+    elif mode.startswith("historical_"):
+        row["fields"][0]["field"] = (
+            "russification_exposed" if mode == "historical_field" else "soviet_colonization_context"
+        )
+    root, _, _ = pinned_jsonl_release([row], manifest_changes=changes)
+
+    result = lookup("мова", root)
+
+    if reason:
+        assert result["cards"] == []
+        assert result["card_store"] == {"available": False, "reason": reason}
+    else:
+        [served] = result["cards"]
+        assert (served["status"], served["accepted"], served["certified_for"]) == ("candidate", False, [])
+        assert served["certification_refusal"] == {
+            "site": "projection_missing_exact_artifact",
+            "dataset": "projection_missing_exact_artifact",
+        }
+    if mode == "candidate":
+        certification = request.getfixturevalue("certification")
+        card = certification.card
+        card["key_at_creation"] = {"spelling": "мова", "pos": "noun"}
+        certification.approve(card)
+        assembly = write_store(tmp_path / "assembly", card)
+        [legacy] = lookup("мова", assembly)["cards"]
+        assert (legacy["status"], legacy["accepted"], legacy["certified_for"]) == (
+            "certified",
+            True,
+            ["site", "dataset"],
+        )
+        assert "certification_refusal" not in legacy
+        card["key_at_creation"]["pos"] = "verb"
+        write_store(assembly, card)
+        [changed] = lookup("мова", assembly)["cards"]
+        assert changed["status"] == "candidate" and changed["accepted"] is False

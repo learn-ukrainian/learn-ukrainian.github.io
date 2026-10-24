@@ -18,11 +18,9 @@ from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
     CURSOR_AUTO_UNION_FAMILY,
-    GLM,
     GROK_4_7,
     GROK_4_7_CURSOR_FALLBACK,
     OPENAI_FRONTIER,
-    POOL,
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
     SONNET_5_5,
@@ -47,6 +45,10 @@ PRACTICAL_ASTRA = replace(
     quality_tier="frontier_practical",
     model_roles=frozenset({"implementation", "investigation", "standard_review"}),
 )
+
+
+# Historical candidate supplied by a stale caller must fail retirement admission.
+GLM = replace(SONNET_5_5, name="glm-5.3", concrete_model="glm-5.3", family="zhipu", route="glm", transport="opencode")
 
 
 @pytest.mark.parametrize("candidate,author", [(OPENAI_FRONTIER, "gpt-6-luna"), (SONNET_5_5, "claude-opus-5-5")])
@@ -336,7 +338,7 @@ def test_auto_author_excludes_cursor_transport_candidates():
 
 
 # Every Cursor-transport reviewer; no Claude model reviews through Cursor (D-129, #10464).
-CURSOR_TRANSPORT_REVIEWERS = ("composer-2.5", "grok-4.7-cursor-fallback")
+CURSOR_TRANSPORT_REVIEWERS = ("grok-4.7-cursor-fallback",)
 
 
 def test_cursor_as_reviewer_excluded_against_xai_and_moonshot_authors():
@@ -491,16 +493,16 @@ def test_opus_keeps_native_claude_when_native_health_is_degraded():
     assert resolution.selected.health == "degraded"
 
 
-def test_medium_risk_uses_sonnet_and_keeps_pool_eligible():
+def test_medium_risk_uses_sonnet_and_omits_retired_pool():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", claude_account=HOST_ACCOUNT))
     assert resolution.selected.name == "claude-sonnet-5-5"
-    assert next(entry for entry in resolution.trace if entry.name == "pool").status == "excluded"
+    assert "pool" not in {entry.name for entry in resolution.trace}
 
 
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high", claude_account=HOST_ACCOUNT))
     assert resolution.policy_version == "deterministic-formal-routing.v2"
-    assert resolution.catalog_reviewed_on == "2026-09-24"
+    assert resolution.catalog_reviewed_on == "2026-10-23"
     assert resolution.resolved_risk == "high"
 
 
@@ -711,8 +713,8 @@ def test_folk_content_excludes_both_deepseek_models():
         assert "dispatch" not in result.reason
 
 
-def test_glm_data_egress_gate_is_fail_closed():
-    # Explicit pin bypasses retirement so the egress gate is still testable.
+def test_glm_retirement_cannot_be_bypassed_by_egress_policy_or_pin():
+    # Retirement applies to explicit pins and local-interactive egress alike.
     for policy in (None, "ci_automated"):
         result = evaluate_candidate(
             GLM,
@@ -720,7 +722,8 @@ def test_glm_data_egress_gate_is_fail_closed():
                 author_model="claude",
                 data_egress_policy=policy,
                 pinned_candidate=GLM.name,
-                pressure_override_reason="fixture pin for egress gate", claude_account=HOST_ACCOUNT,
+                pressure_override_reason="fixture pin for egress gate",
+                claude_account=HOST_ACCOUNT,
             ),
             author_family="anthropic",
         )
@@ -732,17 +735,24 @@ def test_glm_data_egress_gate_is_fail_closed():
             data_egress_policy="local_interactive",
             requested_role="security_review",
             pinned_candidate=GLM.name,
-            pressure_override_reason="fixture pin for egress gate", claude_account=HOST_ACCOUNT,
+            pressure_override_reason="fixture pin for egress gate",
+            claude_account=HOST_ACCOUNT,
         ),
         author_family="anthropic",
     )
-    assert eligible.status == "eligible"
+    assert eligible.status == "excluded"
+    assert "retired" in eligible.reason
 
 
 def test_required_capabilities_and_isolation_fail_closed():
     missing = evaluate_candidate(
-        POOL,
-        ResolverInputs(author_model="claude", required_capabilities=frozenset({"vesum_mcp"}), formal_review=False, claude_account=HOST_ACCOUNT),
+        GROK_4_7,
+        ResolverInputs(
+            author_model="claude",
+            required_capabilities=frozenset({"vesum_mcp"}),
+            formal_review=False,
+            claude_account=HOST_ACCOUNT,
+        ),
         author_family="anthropic",
     )
     assert missing.status == "excluded"
@@ -879,8 +889,9 @@ def test_kimi_never_receives_automatic_review_load():
     assert assigned_bytes == {"codex": 20_000, "kimi": 0}
 
 
-def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier(practical_astra):
-    weaker = REVIEW_CANDIDATES["pool-xs"]
+def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier(practical_astra, monkeypatch):
+    weaker = replace(SONNET_5_5, quality_tier="economical", model_roles=PRACTICAL_ASTRA.model_roles)
+    monkeypatch.setitem(REVIEW_CANDIDATES, weaker.name, weaker)
     resolution = resolve_reviewer(
         ResolverInputs(author_model="gemini", formal_review=False, exact_head="e" * 40, claude_account=HOST_ACCOUNT),
         ladder=((PRACTICAL_ASTRA,), (weaker,)),
@@ -893,7 +904,7 @@ def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier
                         "quota_remaining_pct": 1,
                     }
                 },
-                "pool": {
+                "claude": {
                     "scheduler": {
                         "completed_input_bytes": 0,
                         "active_reserved_input_bytes": 0,
@@ -905,9 +916,10 @@ def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier
     )
     assert resolution.selected.name == "synthetic-practical-astra"
     assert resolution.selected.quality_tier == "frontier_practical"
-    weaker_trace = next(item for item in resolution.trace if item.name == "pool-xs")
-    assert weaker_trace.status == "excluded"
-    assert "suitability" in weaker_trace.reason
+    weaker_trace = next(item for item in resolution.trace if item.name == weaker.name)
+    assert weaker_trace.status == "eligible"
+    assert weaker_trace.suitability_rank == resolution.selected.suitability_rank
+    assert weaker_trace.quality_tier == "economical"
 
 
 def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practical_astra):
@@ -974,23 +986,24 @@ def test_dispatch_capacity_uses_resolver_transport_fallback_order():
 def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     missing_reason = resolve_reviewer(
-        ResolverInputs(author_model="gemini", pinned_candidate=sonnet.name, claude_account=HOST_ACCOUNT), ladder=((PRACTICAL_ASTRA, sonnet),)
+        ResolverInputs(author_model="gemini", pinned_candidate=sonnet.name, claude_account=HOST_ACCOUNT),
+        ladder=((PRACTICAL_ASTRA, sonnet),),
     )
     assert missing_reason.selected is None
     assert "pressure_override_reason" in missing_reason.fail_closed_reason
 
-    # Composer is a Cursor model the formal endpoint does not pin (#9488).
+    # An unsubscribed model is absent even when explicitly requested.
     unsafe = resolve_reviewer(
         ResolverInputs(
             author_model="gemini",
             pinned_candidate="composer-2.5",
-            pressure_override_reason="native capacity incident", claude_account=HOST_ACCOUNT,
+            pressure_override_reason="native capacity incident",
+            claude_account=HOST_ACCOUNT,
         ),
-        ladder=((REVIEW_CANDIDATES["composer-2.5"],),),
+        ladder=((GROK_4_7,),),
     )
     assert unsafe.selected is None
-    assert "hard eligibility" in unsafe.fail_closed_reason
-    assert unsafe.trace[0].reason == "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"
+    assert "unknown explicit reviewer pin" in unsafe.fail_closed_reason
 
 
 def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
@@ -1056,7 +1069,8 @@ def test_glm_on_ladder_is_skipped_unless_explicitly_pinned():
             review_profile="infra",
             risk="medium",
             data_egress_policy="local_interactive",
-            exact_head="f" * 40, claude_account=HOST_ACCOUNT,
+            exact_head="f" * 40,
+            claude_account=HOST_ACCOUNT,
         ),
         ladder=((GLM,), (SONNET_5_5,)),
     )
@@ -1065,10 +1079,10 @@ def test_glm_on_ladder_is_skipped_unless_explicitly_pinned():
     assert resolution.selected.name == "claude-sonnet-5-5"
     glm_entry = next(entry for entry in resolution.trace if entry.name == "glm-5.3")
     assert glm_entry.status == "excluded"
-    assert glm_entry.reason == "retired→cursor"
+    assert "retired" in glm_entry.reason
 
 
-def test_explicit_glm_pin_remains_eligible_with_egress_policy():
+def test_explicit_glm_pin_is_refused_after_subscription_retirement():
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-5.6-sol",
@@ -1078,12 +1092,12 @@ def test_explicit_glm_pin_remains_eligible_with_egress_policy():
             data_egress_policy="local_interactive",
             exact_head="f" * 40,
             pinned_candidate="glm-5.3",
-            pressure_override_reason="operator-requested glm-5.3 pin", claude_account=HOST_ACCOUNT,
+            pressure_override_reason="operator-requested glm-5.3 pin",
+            claude_account=HOST_ACCOUNT,
         ),
     )
-    assert resolution.selected is not None
-    assert resolution.selected.name == "glm-5.3"
-    assert resolution.selected.family == "zhipu"
+    assert resolution.selected is None
+    assert "unknown explicit reviewer pin" in resolution.fail_closed_reason
 
 
 def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing():
@@ -1121,14 +1135,14 @@ def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
         "grok-4.7-cursor-fallback",
     ]
     if risk == "critical":
-        assert [rung[0].name for rung in ladder[4:]] == ["composer-2.5", "pool", "pool-xs"]
+        assert len(ladder) == 4
     elif risk == "high":
         assert len(ladder) == 4
         assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
     else:
         assert ladder[4][0].name == "claude-sonnet-5-5"
-        assert ladder[6][0].name == "gemini-3.8-flash-high"
-        assert ladder[7][0].name == "pool"
+        assert ladder[5][0].name == "gemini-3.8-flash-high"
+        assert len(ladder) == 6
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1337,12 +1351,12 @@ def test_resolve_reviewer_subject_seat_kimi_does_not_exclude_composer():
             author_model="codex",
             risk="medium",
             owned_paths=("site/src/app.ts",),
-            subject_seats=frozenset({"kimi"}), claude_account=HOST_ACCOUNT,
+            subject_seats=frozenset({"kimi"}),
+            claude_account=HOST_ACCOUNT,
         )
     )
     assert not [entry for entry in resolution.trace if entry.quota_bucket == "kimi"]
-    composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
-    assert "subject exclusion" not in (composer.reason or "")
+    assert "composer-2.5" not in {entry.name for entry in resolution.trace}
 
 
 def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
@@ -1350,7 +1364,8 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
         ResolverInputs(
             author_model="codex",
             risk="medium",
-            subject_seats=frozenset({"cursor"}), claude_account=HOST_ACCOUNT,
+            subject_seats=frozenset({"cursor"}),
+            claude_account=HOST_ACCOUNT,
         )
     )
     # Grok has a native and a Cursor route; no Claude model reviews through Cursor (D-129, #10464).
@@ -1358,14 +1373,12 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
     native = next(entry for entry in resolution.trace if entry.name == "claude-opus-5-5")
     grok_native = next(entry for entry in resolution.trace if entry.name == "grok-4.7")
     fallback = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
-    composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
     assert "subject exclusion" not in (native.reason or "")
     assert "subject seat cursor" not in grok_native.reason
     assert "subject family xai" in grok_native.reason
     assert fallback.status == "excluded"
     assert "subject seat cursor" in fallback.reason
-    assert composer.status == "excluded"
-    assert "subject seat cursor" in composer.reason
+    assert "composer-2.5" not in {entry.name for entry in resolution.trace}
 
 
 def test_normalize_muse_subject_seat_and_meta_family():

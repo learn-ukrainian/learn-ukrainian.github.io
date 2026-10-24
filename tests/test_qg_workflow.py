@@ -11,6 +11,7 @@ import yaml
 
 from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
 from scripts.audit.curriculum_qg_harness import CHECKER_VERSION
+from tests.test_llm_reviewer_dispatch import subscribed_reviewer_routes as subscribed_reviewer_routes
 
 pytestmark = pytest.mark.reads_content
 
@@ -1060,7 +1061,7 @@ def test_workflow_dedupes_cached_tier2_findings_by_finding_id(tmp_path: Path) ->
     qg_schema.validate_record(record)
 
 
-def test_tier2_rejects_route_name_mismatch(tmp_path: Path) -> None:
+def test_tier2_rejects_route_name_mismatch(subscribed_reviewer_routes, tmp_path: Path) -> None:
     """codex review of #4401 (Medium): route_name keys the composite cache — an
     injected reviewer answering from the WRONG route (same model/family) must
     fail identity, not poison route-keyed cache rows."""
@@ -1167,7 +1168,7 @@ def test_live_tier2_gate_downgrades_do_not_count_as_circuit_failures(tmp_path: P
     assert status["open"] is False
 
 
-def test_circuit_open_refuses_live_dispatch(tmp_path: Path) -> None:
+def test_circuit_open_refuses_live_dispatch(subscribed_reviewer_routes, tmp_path: Path) -> None:
     circuit_path = tmp_path / "circuit.json"
     _record_circuit_window(circuit_path, ["ran"] * 25 + ["provider_error"] * 5)
     seminar_dir = _write_module(
@@ -1202,7 +1203,7 @@ def test_circuit_open_refuses_live_dispatch(tmp_path: Path) -> None:
     assert calls == 0
 
 
-def test_reset_circuit_allows_live_dispatch_after_operator_clear(tmp_path: Path) -> None:
+def test_reset_circuit_allows_live_dispatch_after_operator_clear(subscribed_reviewer_routes, tmp_path: Path) -> None:
     circuit_path = tmp_path / "circuit.json"
     _record_circuit_window(circuit_path, ["ran"] * 25 + ["provider_error"] * 5)
     output = tmp_path / "reset.json"
@@ -1265,7 +1266,7 @@ def test_reset_circuit_allows_live_dispatch_after_operator_clear(tmp_path: Path)
     assert llm_qg_store.live_tier2_circuit_status(circuit_path)["open"] is False
 
 
-def test_live_batch_preflight_failure_short_circuits_before_dispatch(
+def test_live_batch_preflight_failure_short_circuits_before_dispatch(subscribed_reviewer_routes,
     tmp_path: Path,
     monkeypatch: Any,
 ) -> None:

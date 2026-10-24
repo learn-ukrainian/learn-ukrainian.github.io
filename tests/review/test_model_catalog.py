@@ -935,9 +935,9 @@ def test_budget_pin_overlay_refuses_drifted_refusal():
 
 @pytest.mark.parametrize("index,field", [(63, "refusal"), (62, "target")])
 def test_budget_pin_overlay_still_rejects_other_dispatch_changes(index, field):
-    actual = deepcopy(APPROVED_BASELINE)
+    actual = deepcopy(CURRENT_BASELINE)
     actual["dispatch"][index]["value"][field] = "unapproved change"
-    with pytest.raises(AssertionError, match="approved surface differs: dispatch"):
+    with pytest.raises(AssertionError, match="current surface differs: dispatch"):
         assert_frozen_surfaces(actual)
 
 
@@ -1179,20 +1179,37 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert {
         **inputs,
         **{
-            surface: [case for case in inputs[surface] if case in APPROVED_INPUTS[surface]]
+            surface: [case for case in inputs[surface] if case in CURRENT_INPUTS[surface]]
             for surface in ("adapters", "dispatch", "reviewer", "roles")
         },
-    } == APPROVED_INPUTS
-    assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
+    } == CURRENT_INPUTS
+    assert (
+        hashlib.sha256((output / "occurrences.json.gz").read_bytes()).hexdigest()
+        == _RETIREMENT_DATA["occurrences_sha256"]
+    )
+
+
+# The 2026-10-23 subscription retirement is a new capture. Prior approved
+# overlays remain byte-pinned historical evidence above.
+_RETIREMENT_CAPTURE = CAPACITY_FIXTURE / "routing-retirement-20261023.json.gz"
+assert (
+    hashlib.sha256(_RETIREMENT_CAPTURE.read_bytes()).hexdigest()
+    == "024471fb8b0413f52b30788aa9c6961928720ae98c1e756336cbd41838155a59"
+)
+_RETIREMENT_DATA = json.loads(gzip.decompress(_RETIREMENT_CAPTURE.read_bytes()))
+CURRENT_BASELINE = _RETIREMENT_DATA["baseline"]
+CURRENT_INPUTS = _RETIREMENT_DATA["inputs"]
+
 
 
 def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
     """Permit only the ordered worker entries and their explicit refusal receipts."""
-    expected = deepcopy(APPROVED_BASELINE)
+    expected = deepcopy(CURRENT_BASELINE)
     if inputs is None and surfaces is None:
         assert actual.keys() == BASELINE.keys()
         for surface in BASELINE:
-            assert actual[surface] == expected[surface], f"approved surface differs: {surface}"
+            assert actual[surface] == expected[surface], f"current surface differs: {surface}"
+        assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
         return
     workers = {
         "muse-wonder-full-1.0": {
@@ -1230,7 +1247,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
             approval_rows.append({**deepcopy(row), "author": model})
     approval_rows.sort(key=lambda row: row["author"])
     if inputs is not None:
-        assert inputs.keys() == APPROVED_INPUTS.keys()
+        assert inputs.keys() == CURRENT_INPUTS.keys()
         additions = {
             "adapters": [
                 {"agent": "muse", "mode": mode, "isolation": isolation}
@@ -1238,7 +1255,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
             ],
             "dispatch": [
                 {"agent": "muse", "model": model, "budget_status": status, "review_attempt": review}
-                for model in (None, "muse-wonder-full-1.0", "composer-2.5", "gpt-6-luna",
+                for model in (None, "muse-wonder-full-1.0", "gpt-6-luna",
                               "gpt-6.1-sol", "grok-4.7", "unregistered-model")
                 for status in ("cool", "near_cap") for review in (None, "frozen-review-attempt.yaml")
             ],
@@ -1253,14 +1270,14 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
             ],
             "roles": [
                 {"role": role, "purpose": "inspect", "context": {"excluded_families": ["meta"]}, "health": None}
-                for role in APPROVED_BASELINE["routing_holders"]["roles"]
+                for role in CURRENT_BASELINE["routing_holders"]["roles"]
             ],
         }
         for surface, extra_cases in additions.items():
-            reference = dict(zip(map(dispatch_key, APPROVED_INPUTS[surface]), expected[surface], strict=True))
+            reference = dict(zip(map(dispatch_key, CURRENT_INPUTS[surface]), expected[surface], strict=True))
             added = [case for case in inputs[surface] if dispatch_key(case) not in reference]
             assert sorted(map(dispatch_key, added)) == sorted(map(dispatch_key, extra_cases))
-            assert [case for case in inputs[surface] if dispatch_key(case) in reference] == APPROVED_INPUTS[surface]
+            assert [case for case in inputs[surface] if dispatch_key(case) in reference] == CURRENT_INPUTS[surface]
             rows = []
             for case in inputs[surface]:
                 key = dispatch_key(case)
@@ -1315,7 +1332,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                     else:
                         value["routing"]["requested_agent"] = "muse"
                         if case["budget_status"] == "near_cap":
-                            cooler = ", ".join(sorted(set(APPROVED_BASELINE["registry"]) - {"cursor"}))
+                            cooler = ", ".join(sorted(set(CURRENT_BASELINE["registry"]) - {"cursor"}))
                             value["refusal"] = (
                                 "ROUTING REFUSED: --agent muse is near_cap (>90% used on FRESH snapshot) and "
                                 "dispatch_fallbacks has no usable substitute. Cooler seats from budget snapshot: "
@@ -1329,7 +1346,9 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
             expected[surface] = rows
     assert actual.keys() == (BASELINE.keys() if surfaces is None else set(surfaces))
     for surface in actual:
-        assert actual[surface] == expected[surface], f"approved surface differs: {surface}"
+        assert actual[surface] == expected[surface], f"current surface differs: {surface}"
+    if surfaces is None:
+        assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
 
 
 def test_deepseek_flash_execution_requires_opencode():

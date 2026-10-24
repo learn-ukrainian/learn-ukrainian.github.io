@@ -23,8 +23,35 @@ def _advisory_fixture_workflow(monkeypatch):
 
 def merge_with_checks(stdout, returncode=0):
     def runner(args, **kwargs):
+        if args[1] == "api":
+            checks = json.loads(stdout)
+            if "/check-runs?" in args[4]:
+                body = {"total_count": len(checks), "check_runs": [
+                    {"name": row["name"], "head_sha": "a" * 40,
+                     "status": "in_progress" if row["bucket"] == "pending" else "completed",
+                     "conclusion": "" if row["bucket"] == "pending" else
+                         "failure" if row["bucket"] == "fail" else "success",
+                     "app": {"id": 15368, "slug": "github-actions"}, "check_suite": {"id": i},
+                     "details_url": f"https://github.com/unit/public/actions/runs/{i}/job/{i}"}
+                    for i, row in enumerate(checks, 1)
+                ]}
+            else:
+                i = int(args[4].rsplit("/", 1)[1])
+                body = {"id": i, "head_sha": "a" * 40, "check_suite_id": i,
+                        "workflow_id": i, "name": checks[i - 1].get("workflow")}
+            return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
         if args[2] == "view":
             meta = {"number": 1, "isDraft": False, "headRefOid": "a" * 40}
+            if "headRefOid,statusCheckRollup" in args:
+                checks = json.loads(stdout)
+                meta["statusCheckRollup"] = [
+                    {"__typename": "CheckRun", "name": row["name"],
+                     "detailsUrl": f"https://github.com/unit/public/actions/runs/{i}/job/{i}",
+                     "status": "IN_PROGRESS" if row["bucket"] == "pending" else "COMPLETED",
+                     "conclusion": "" if row["bucket"] == "pending" else
+                         "FAILURE" if row["bucket"] == "fail" else "SUCCESS"}
+                    for i, row in enumerate(checks, 1)
+                ]
             return subprocess.CompletedProcess(args, 0, json.dumps(meta), "")
         assert args[2] == "checks"
         return subprocess.CompletedProcess(args, returncode, stdout, "")
@@ -94,7 +121,7 @@ BOUND_ROLLUP = [
 ]
 
 
-def entire_runner(app, calls, *, head=HEAD, error=None, bound=None):
+def entire_runner(app, calls, *, head=HEAD, error=None, bound=None, extra_documents=None):
     def runner(args, **kwargs):
         calls.append(args)
         if args[2:5] == ["view", "1", "--json"] and args[5] == "headRefOid,statusCheckRollup":
@@ -109,6 +136,7 @@ def entire_runner(app, calls, *, head=HEAD, error=None, bound=None):
         documents = {
             STATUS: {"total_count": 0, "statuses": []},
             RUNS: {"total_count": 1, "check_runs": [{"name": "Entire Gates", "head_sha": HEAD, "app": app}]},
+            **(extra_documents or {}),
         }
         if args[:4] == ["gh", "api", "--method", "GET"] and args[4] in documents:
             return subprocess.CompletedProcess(args, 0, json.dumps(documents[args[4]]), "")
@@ -118,14 +146,44 @@ def entire_runner(app, calls, *, head=HEAD, error=None, bound=None):
 
 
 def test_oo48_publisher_proves_entire_gates_at_the_metadata_head():
+    """Distinct vendor details and canonical check URLs must preserve App proof."""
     calls = []
-    runner = entire_runner({"id": 2626939, "slug": "entire"}, calls)
+    app = {"id": 2626939, "slug": "entire"}
+    old = {"name": "Body guard", "head_sha": HEAD, "status": "completed", "conclusion": "cancelled",
+           "started_at": "2026-10-23T20:00:00Z", "check_suite": {"id": 1},
+           "app": {"id": 15368, "slug": "github-actions"},
+           "details_url": "https://github.com/unit/public/actions/runs/11/job/21"}
+    current = {**old, "conclusion": "success", "started_at": "2026-10-23T21:00:00Z",
+               "check_suite": {"id": 2}, "details_url": "https://github.com/unit/public/actions/runs/12/job/22"}
+    rest = [current, old,
+            {"name": "CI Gate", "head_sha": HEAD, "status": "completed", "conclusion": "success",
+             "details_url": "https://github.com/unit/public/runs/23"},
+            {"name": "Entire Gates", "head_sha": HEAD, "status": "in_progress", "app": app,
+             "id": 24, "html_url": "https://github.com/unit/public/runs/24",
+             "details_url": "https://entire.com/gh/unit/public/trails/7"}]
+    rollup = [{"__typename": "CheckRun", "name": row["name"], "status": row["status"].upper(),
+               "conclusion": str(row.get("conclusion") or "").upper(),
+               "detailsUrl": row.get("html_url", row["details_url"])}
+              for row in rest]
+    rollup.append({"__typename": "StatusContext", "context": "external-status", "state": "SUCCESS"})
+    endpoint = f"repos/unit/public/commits/{HEAD}/check-runs?filter=all&per_page=100"
+    documents = {STATUS: {"total_count": 1, "statuses": [{"context": "external-status", "state": "success"}]},
+                 endpoint: {"total_count": len(rest), "check_runs": rest},
+                 "repos/unit/public/actions/runs/11": {"id": 11, "head_sha": HEAD, "check_suite_id": 1,
+                                                       "workflow_id": 7, "name": "Body guard"},
+                 "repos/unit/public/actions/runs/12": {"id": 12, "head_sha": HEAD, "check_suite_id": 2,
+                                                       "workflow_id": 7, "name": "Body guard"}}
+    runner = entire_runner(app, calls, bound={"headRefOid": HEAD, "statusCheckRollup": rollup},
+                           extra_documents=documents)
     assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}, match_head=HEAD) == HEAD
     assert [call[1:6] for call in calls] == [
         ["pr", "view", "1", "--json", "number,isDraft,headRefOid"],
         ["pr", "checks", "1", "--json", "name,bucket,state,workflow"],
         ["pr", "view", "1", "--json", "headRefOid,statusCheckRollup"],
-        ["api", "--method", "GET", STATUS], ["api", "--method", "GET", RUNS]]
+        ["api", "--method", "GET", STATUS], ["api", "--method", "GET", RUNS],
+        ["api", "--method", "GET", endpoint],
+        ["api", "--method", "GET", "repos/unit/public/actions/runs/12"],
+        ["api", "--method", "GET", "repos/unit/public/actions/runs/11"]]
 
 
 @pytest.mark.parametrize("bound", [

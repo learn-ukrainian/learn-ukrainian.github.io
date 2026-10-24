@@ -137,6 +137,22 @@ def _capture_module(tmp_path: Path) -> tuple[Path, llm_reviewer_dispatch.Dispatc
     return module_dir, dispatch
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _subscribed_capture_records():
+    """Keep certification evidence tests on an active no-network identity."""
+    from dataclasses import replace
+
+    with pytest.MonkeyPatch.context() as patcher:
+        for name in ("GEMMA_SURFACE_ROUTE", "FRONTIER_OPENCODE_ROUTE"):
+            historical = getattr(llm_reviewer_dispatch, name)
+            route = replace(
+                historical, reviewer_model_id="gemini-3.8-flash-high",
+                bridge_command=(historical.bridge_command[0], "--model", "gemini-3.8-flash-high"),
+            )
+            patcher.setattr(llm_reviewer_dispatch, name, route)
+        yield
+
+
 @pytest.fixture(scope="module")
 def qg_capture(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     """Capture through the real live dispatcher with a no-network provider stub."""

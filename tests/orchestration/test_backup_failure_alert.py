@@ -358,11 +358,13 @@ def test_real_authority_failure_recovery_retry_and_idempotency(tmp_path: Path, a
 
 
 @pytest.mark.parametrize("event", ["failed", "recovered"])
-def test_real_authority_committed_publication_inspection_failure_retries_same_delivery(
+@pytest.mark.parametrize("fault", ["inspection", "state-oserror"])
+def test_real_authority_committed_publication_inspection_or_oserror_retries_same_delivery(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     authority_publisher,
     event: str,
+    fault: str,
 ) -> None:
     from scripts.fleet_comms.authority import AuthorityService
 
@@ -378,11 +380,30 @@ def test_real_authority_committed_publication_inspection_failure_retries_same_de
             return subprocess.CompletedProcess(command, 1, stdout="", stderr="unavailable")
         return run(command, **kwargs)
 
+    replace, unlink = alert.os.replace, Path.unlink
+
+    def fail_replace(source, destination):
+        if Path(destination) == path:
+            raise OSError("state commit unavailable")
+        return replace(source, destination)
+
+    def fail_unlink(target, *args, **kwargs):
+        if target == path:
+            raise OSError("state commit unavailable")
+        return unlink(target, *args, **kwargs)
+
     with monkeypatch.context() as patch:
-        patch.setattr(alert.subprocess, "run", fail_inspection)
-        with pytest.raises(alert.AlertError, match="exited 1"):
+        if fault == "inspection":
+            patch.setattr(alert.subprocess, "run", fail_inspection)
+        elif event == "failed":
+            patch.setattr(alert.os, "replace", fail_replace)
+        else:
+            patch.setattr(Path, "unlink", fail_unlink)
+        with pytest.raises(alert.AlertError if fault == "inspection" else OSError):
             _handle(tmp_path, event, BACKUP, publish, "transition-at", INVOCATION_ID="retry-1")
     assert (path.read_bytes() if path.exists() else None) == before
+    pending = path.with_name(path.name + ".pending")
+    assert pending.stat().st_mode & 0o777 == 0o600
     with AuthorityService(root=root) as service:
         committed = [
             tuple(row)
@@ -390,7 +411,10 @@ def test_real_authority_committed_publication_inspection_failure_retries_same_de
                 "SELECT delivery_id, message_id, recipient FROM authority_deliveries ORDER BY delivery_id"
             )
         ]
-    _handle(tmp_path, event, BACKUP, publish, "transition-at", INVOCATION_ID="retry-1")
+    receipt = tmp_path / alert.LAST_RUN_RECEIPT
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+    receipt.write_text(json.dumps({"status": "changed since the first publication"}))
+    _handle(tmp_path, event, BACKUP, publish, "retry-at", INVOCATION_ID="retry-2")
     with AuthorityService(root=root) as service:
         assert [
             tuple(row)
@@ -400,6 +424,9 @@ def test_real_authority_committed_publication_inspection_failure_retries_same_de
         ] == committed
     assert all(row[2] == "claude-cto" for row in committed)
     assert len(committed) == (1 if event == "failed" else 2)
+    assert not pending.exists()
+    if event == "failed":
+        assert path.stat().st_mode & 0o777 == 0o600
 
 
 @pytest.mark.parametrize("event", ["failed", "recovered"])

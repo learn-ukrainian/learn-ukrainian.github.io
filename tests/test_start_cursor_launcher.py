@@ -156,9 +156,7 @@ def test_cursor_launcher_pin_list_matches_python_admission() -> None:
     "model",
     (
         "grok-4.7",
-        "composer-2.5",
         "grok-4.7-high",
-        "composer-2.5[fast=false]",
     ),
 )
 def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
@@ -184,6 +182,8 @@ def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
         "grok-4.7[context=500k]",
         "grok-4.7[fast=false]",
         "grok-4.7-high-fast",
+        "composer-2.5",
+        "composer-2.5[fast=false]",
         "composer-2.5-fast",
         "composer-2.5[fast=true]",
         "grok-4.7[context=500k,fast=true]",
@@ -200,7 +200,7 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
         run_launcher(DRIVER, "--epic", "infra", "--model", model),
         run_launcher(DRIVER, "--epic", "infra", env={"LAUNCHER_MODEL": model}),
     ):
-        if model.partition("[")[0] in RETIRED_MODEL_IDS:
+        if model.partition("[")[0] in RETIRED_MODEL_IDS or model.startswith("composer-2.5"):
             assert result.returncode == 2, result.stdout + result.stderr
             assert "is retired in the model catalog" in result.stderr
             assert model in result.stderr
@@ -341,7 +341,7 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
     else:
         assert result.returncode == 4, result.stdout + result.stderr
         assert "cursor interactive session" in result.stderr
-        assert "grok-4.7-high or composer-2.5" in result.stderr
+        assert "grok-4.7-high" in result.stderr
         model = selection[-1] if selection else ""
         if model.startswith("grok-4.7"):
             assert "is an unattested variant" in result.stderr
@@ -357,7 +357,7 @@ def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path:
     result, argv = _run_interactive(tmp_path, env={"LAUNCHER_MODEL": model})
     assert result.returncode == 4, result.stdout + result.stderr
     assert "not certified for the cursor interactive session" in result.stderr
-    assert "grok-4.7-high or composer-2.5" in result.stderr
+    assert "grok-4.7-high" in result.stderr
     if model.startswith("grok-4.7"):
         assert "is an unattested variant" in result.stderr
         assert "CURSOR_UNATTESTED_GROK_VARIANT" in result.stderr
@@ -365,10 +365,12 @@ def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path:
         assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
     assert argv is None
 
+
 def test_cursor_rewrites_bare_grok_4_7_to_high() -> None:
     result = run_launcher(DRIVER, "--epic", "infra", "--model", "grok-4.7")
     assert result.returncode == 0, result.stderr
     assert "--model grok-4.7-high" in result.stdout
+
 
 @pytest.mark.parametrize("model", ["opus", "sonnet", "haiku", "haiku-5-5", "claude-3-5-sonnet-20241022", "claude-fable-5-1"])
 def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None:

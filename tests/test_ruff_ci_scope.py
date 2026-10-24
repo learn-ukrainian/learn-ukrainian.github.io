@@ -8,6 +8,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from tests.test_ci_pr_triggers import _EVENTS, _condition, _run_gate
+
 pytestmark = pytest.mark.repo_invariant
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -49,7 +51,7 @@ def _local_hooks() -> dict[str, dict]:
     return {hook["id"]: hook for hook in local_repos[0]["hooks"]}
 
 
-# CI Gate's pytest shards run these two on every pull request and merge group (#11315); the
+# CI Gate's full-suite shards run these two; PR admission collects tests (#11315). The
 # push gate runs no tests of its own (#11276), so a pytest hook at any stage here only adds
 # local wall time. A hook with no `stages` runs at every stage, so absence is the only pin.
 _CI_COVERED_PYTEST_GUARDS = ("repo-wide-marker-invariant", "task-store-resolver-guard")
@@ -82,11 +84,17 @@ def test_pre_commit_sparse_collection_guard_is_owned_by_required_ci() -> None:
     jobs = workflow["jobs"]
     assert "checks" in jobs["ci-gate"]["needs"], "CI Gate must require Checks"
     verdict = next(step for step in jobs["ci-gate"]["steps"] if step.get("name") == "Require every job")
-    assert "checks:CHECKS" in verdict["run"], "Checks must participate in the gate verdict"
+    assert verdict["run"] == '"$PYTHON_BIN" -m scripts.ci.gate'
+    assert verdict["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
+    result = _run_gate("pull_request", CHECKS="failure")
+    assert result.returncode != 0, "Checks must participate in the gate verdict"
+    assert "checks: failure, expected success" in result.stdout
     steps = [step for step in jobs["checks"]["steps"] if target in step.get("run", "")]
     assert len(steps) == 1, "Checks must explicitly run the existing sparse collection guard node once"
     step = steps[0]
-    assert not step.get("if"), "the sparse guard must run whenever required Checks runs"
+    assert step["if"] == "github.event_name != 'pull_request'"
+    for event, github in _EVENTS.items():
+        assert _condition(step["if"], {"github": github}) == (event not in {"opened", "synchronize", "reopened"})
     assert not step.get("continue-on-error"), "the sparse guard must block required Checks on failure"
     invocation = step["run"]
     assert ".venv/bin/python -m pytest" in invocation

@@ -50,10 +50,10 @@ for arguments in (
             runpy.run_path(str(script), run_name="__main__")
         except SystemExit as exc:
             code = 0 if exc.code in (None, 0) else exc.code
-            # OO-58: k3 is retired. The refusal still opens the catalog, so the
-            # closure measurement continues. Every other command must exit 0.
+            # Retired Kimi and GLM aliases still open the catalog; include their
+            # refusal import closures. Every active command must exit 0.
             if code != 0 and not (
-                arguments == ["--resolve-kimi-model", "k3"] and code == 2
+                arguments in (["--resolve-kimi-model", "k3"], ["--resolve-glm-model", "glm"]) and code == 2
             ):
                 raise
 # The launcher now executes the shared credential policy rather than only
