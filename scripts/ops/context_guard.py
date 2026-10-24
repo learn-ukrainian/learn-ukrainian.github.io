@@ -189,6 +189,7 @@ class Tmux:
     run: Runner = default_runner
     sleep: Callable[[float], None] = time.sleep
     clock: Callable[[], float] = time.time
+    monotonic: Callable[[], float] = time.monotonic
 
     def tmux(self, *args: str) -> subprocess.CompletedProcess[str]:
         return self.run(["tmux", *args])
@@ -299,6 +300,7 @@ class Guard:
     handoff_posted: Callable[[str, str], bool]
     local: dict[str, dict[str, Any]] = field(default_factory=dict)
     now: Callable[[], dt.datetime] = utcnow
+    _exit_poll_remaining: float = field(default=0, init=False)
 
     def setting(self, key: str) -> int:
         return self.registry.settings[key]
@@ -694,10 +696,27 @@ class Guard:
                 f"(attempt {s['quit_attempts']})"
             )
             if lane.kind == "claude":
-                for _ in range(10):
-                    self.tmux.sleep(1)
-                    if self._answer_exit_dialog(lane, self.tmux.capture(lane.target), pct, snap):
-                        break
+                while self._exit_poll_remaining > 0:
+                    started = self.tmux.monotonic()
+                    delay = 0.0
+                    try:
+                        if self.tmux.snapshot(lane.target, "claude").agent is None:
+                            break
+                        remaining = self._exit_poll_remaining - (self.tmux.monotonic() - started)
+                        if remaining <= 0:
+                            break
+                        delay = min(1, remaining)
+                        self.tmux.sleep(delay)
+                        if self.tmux.monotonic() - started >= self._exit_poll_remaining:
+                            break
+                        dialog = self.tmux.capture(lane.target)
+                        if self.tmux.monotonic() - started >= self._exit_poll_remaining:
+                            break
+                        if self._answer_exit_dialog(lane, dialog, pct, snap):
+                            break
+                    finally:
+                        # One run shares this budget, including time spent reading telemetry.
+                        self._exit_poll_remaining -= max(delay, self.tmux.monotonic() - started)
             return
         renudge_due = self._seconds_since(s.get("last_nudge")) >= self.setting("handoff_renudge_seconds")
         if not done and renudge_due and not self._human(lane):
@@ -748,6 +767,7 @@ class Guard:
         }
 
     def run(self, st: dict[str, Any], only: list[str] | None = None) -> None:
+        self._exit_poll_remaining = 10.0
         for lane in self.registry.lanes:
             if only and lane.session not in only and lane.name not in only:
                 continue
