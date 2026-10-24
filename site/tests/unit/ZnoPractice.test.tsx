@@ -18,6 +18,18 @@ const decks: ZnoPracticeDeck[] = [{
   }],
 }];
 
+const explanation = {
+  rule: 'Правило для завдання.',
+  correctLetter: 'Б',
+  correctAnswer: 'Пояснення правильної відповіді.',
+  options: { 'А': 'Пояснення помилки.', 'Б': 'Пояснення правильного варіанта.', 'В': 'Інший варіант.' },
+  sources: [
+    { id: 'pravopys', tool: 'query_pravopys', url: 'https://example.org/pravopys', locator: 'Правопис, § 1' },
+    { id: 'vesum', tool: 'verify_words', locator: 'ВЕСУМ: відповідь' },
+  ],
+};
+const explainedDeck = { ...decks[0], items: [{ ...decks[0].items[0], explanation }] };
+
 describe('ZnoPractice', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -28,6 +40,51 @@ describe('ZnoPractice', () => {
 
   afterEach(() => {
     delete document.documentElement.dataset.chromeLocale;
+  });
+
+  test('missing corrective feedback: shows the rule, correct reasoning, chosen distractor and source locators after submission and in missed review', async () => {
+    const user = userEvent.setup();
+    render(<ZnoPractice deck={explainedDeck} />);
+    expect(screen.queryByRole('region', { name: 'Why' })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'А перша' }));
+    const region = screen.getByRole('region', { name: 'Why' });
+    expect(region.parentElement).toHaveAttribute('aria-live', 'polite');
+    expect(within(region).getByText(explanation.rule)).toHaveAttribute('lang', 'uk');
+    expect(region).toHaveTextContent(explanation.correctAnswer);
+    expect(region).toHaveTextContent(explanation.options['Б']);
+    expect(region).toHaveTextContent(explanation.options['А']);
+    expect(region).not.toHaveTextContent(explanation.options['В']);
+    const disclosure = within(region).getByText('Sources');
+    disclosure.focus();
+    expect(disclosure).toHaveFocus();
+    await user.click(disclosure);
+    expect(disclosure.parentElement).toHaveAttribute('open');
+    expect(within(region).getByRole('link', { name: 'Правопис, § 1' })).toHaveAttribute('href', 'https://example.org/pravopys');
+    expect(within(region).getByText('ВЕСУМ: відповідь')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    await user.click(screen.getByRole('button', { name: 'Review errors' }));
+    expect(screen.getByRole('region', { name: 'Why' })).toHaveTextContent(explanation.options['А']);
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    await user.click(screen.getByRole('button', { name: 'Retry missed items once' }));
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    expect(screen.getByRole('region', { name: 'Why' })).toHaveTextContent(explanation.correctAnswer);
+    expect(screen.getByRole('region', { name: 'Why' })).not.toHaveTextContent(explanation.options['А']);
+  });
+
+  test('stale explanation leakage: a task without an explanation renders no explanation region before or after submission', async () => {
+    const user = userEvent.setup();
+    const view = render(<ZnoPractice deck={explainedDeck} />);
+    await user.click(screen.getByRole('button', { name: 'А перша' }));
+    expect(screen.getByRole('region', { name: 'Why' })).toHaveTextContent(explanation.rule);
+    view.rerender(<ZnoPractice deck={{ ...decks[0], deckId: 'no-explanation',
+      items: [{ ...decks[0].items[0], znoTaskId: 'no-explanation-task' }],
+    }} />);
+    expect(screen.queryByRole('region', { name: 'Why' })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'А перша' }));
+    expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('Correct answer: Б');
+    expect(screen.queryByRole('region', { name: 'Why' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Sources')).not.toBeInTheDocument();
+    expect(screen.queryByText(explanation.rule)).not.toBeInTheDocument();
   });
 
   test('completed snapshots do not trap unseen tasks after remount or a new session', async () => {

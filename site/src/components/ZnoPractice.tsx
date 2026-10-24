@@ -10,6 +10,14 @@ export interface ZnoCharMark {
   style?: 'underline' | 'bold';
 }
 
+export interface ZnoExplanation {
+  rule: string;
+  correctLetter: string;
+  correctAnswer: string;
+  options: Record<string, string>;
+  sources: { id: string; tool: string; url?: string; locator: string }[];
+}
+
 export interface ZnoPracticeItem {
   znoTaskId: string;
   znoMode: 'choice';
@@ -26,6 +34,7 @@ export interface ZnoPracticeItem {
   taskNo: number;
   topicTag: string;
   attribution: string;
+  explanation?: ZnoExplanation;
 }
 
 export interface ZnoPracticeDeck {
@@ -401,6 +410,10 @@ function ZnoSession({ deck, initialSession, onExit, sessionControlsRef }: {
   if (!currentItem) return null;
   const { instruction, passage } = splitStem(currentItem.stem);
   const isCorrectAnswer = rated && selectedIndex === currentItem.correctIndex;
+  const explanation = currentItem.explanation;
+  const correctNote = explanation?.options[explanation.correctLetter];
+  const chosenLetter = selectedIndex === null ? null : 'АБВГД'[selectedIndex];
+  const chosenNote = chosenLetter === null ? undefined : explanation?.options[chosenLetter];
   return (
     <div className="zno-practice-item" data-testid="zno-practice-item">
       {storageNotice}
@@ -442,6 +455,31 @@ function ZnoSession({ deck, initialSession, onExit, sessionControlsRef }: {
         >
           {isCorrectAnswer ? `✓ ${chrome['practice.verdict.correct']}` : `✗ ${chrome['zno.correctAnswer']}: ${currentItem.correctLetter}`}
         </p>
+      ) : null}
+      {explanation ? (
+        <div aria-live="polite" aria-atomic="true" style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+          {rated ? (
+            <section aria-label={chrome['zno.why']}>
+              <h4>{chrome['zno.why']}</h4>
+              <p lang="uk">{explanation.rule}</p>
+              <p><strong>{chrome['zno.correctAnswer']}: <span lang="uk">{explanation.correctLetter}</span></strong>{' '}
+                <span lang="uk">{explanation.correctAnswer}</span>
+              </p>
+              {correctNote && correctNote !== explanation.correctAnswer ? <p lang="uk">{correctNote}</p> : null}
+              {!isCorrectAnswer && chosenNote ? (
+                <p><strong>{chrome['zno.yourAnswer']}: <span lang="uk">{chosenLetter}</span></strong>{' '}
+                  <span lang="uk">{chosenNote}</span>
+                </p>
+              ) : null}
+              <details>
+                <summary>{chrome['zno.sources']}</summary>
+                <ul lang="uk">{explanation.sources.map((source) => (
+                  <li key={source.id}>{source.url ? <a href={source.url}>{source.locator}</a> : source.locator}</li>
+                ))}</ul>
+              </details>
+            </section>
+          ) : null}
+        </div>
       ) : null}
       <p className="zno-practice-attribution" lang="uk">{currentItem.attribution}</p>
       <div className="zno-practice-actions">
