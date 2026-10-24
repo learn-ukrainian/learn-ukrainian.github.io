@@ -69,10 +69,16 @@ def cto_wrapper_signature(wrapper: Path, root: Path, entrypoint: Path, args: lis
         source = wrapper.read_bytes()
         if not source.startswith(b"#!/usr/bin/env bash\n"):
             raise ValueError("unsupported wrapper interpreter")
+        text = source.decode("utf-8")
+        # Bash uses LF for line boundaries and space/tab for indentation.
+        # Reject other whitespace and C0/C1 controls before discarding comments
+        # or normalizing policy, so executable bytes cannot disappear in a pin.
+        if re.search(r"[\x00-\x08\x0b-\x1f\x7f-\x9f]|[^\S \t\n]", text):
+            raise ValueError("unsupported wrapper separator or control")
         normalized: list[str] = []
         policy: dict[str, str] = {}
-        for line in source.decode().splitlines():
-            line = line.strip()
+        for line in text.split("\n"):
+            line = line.strip(" \t")
             if not line or line.startswith("#"):
                 continue
             match = re.fullmatch(r"(REPO|CFG|MODEL|EFFORT|KICK)=(.*)", line)

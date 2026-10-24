@@ -16,7 +16,10 @@ source template, configured repository, model, effort, kick prompt, expanded
 role prompt and complete captured argument vector. This comparison reads source
 policy inputs, never account stores, and does not execute the wrapper. Unknown
 or custom intent refuses with `cto-wrapper-unsupported`, retaining the provider
-and lease. The launcher rechecks the bound signature before successor exec;
+and lease. The supported source grammar is UTF-8 with LF line boundaries and
+ASCII spaces or tabs around statements. Admission rejects other whitespace and
+C0/C1 controls before removing blank or comment lines, including CRLF source.
+The launcher rechecks the bound signature before successor exec;
 source drift or a subsequent wrapper refusal fails without direct-launch
 fallback. Codex CTO and other driver successors retain their existing routes.
 

@@ -369,6 +369,15 @@ echo "started; attach with: tmux attach -t cto"
             patch.chdir(root)
             if supported:
                 assert len(cto_wrapper_signature(wrapper, root, root / name, list(captured))) == 64
+                # A CR is shell data, not a line boundary before a comment.
+                # Admission must not discard executable policy suffix bytes.
+                wrapper.write_bytes(
+                    wrapper_source.replace("MODEL=claude-opus-5-5", "MODEL=claude-opus-5-5\r#$(printf altered)").encode()
+                )
+                with pytest.raises(SupervisorError, match="cto-wrapper-unsupported"):
+                    cto_wrapper_signature(wrapper, root, root / name, list(captured))
+                wrapper.write_bytes(wrapper_source.encode())
+                assert len(cto_wrapper_signature(wrapper, root, root / name, list(captured))) == 64
             else:
                 with pytest.raises(SupervisorError, match="cto-wrapper-unsupported"):
                     cto_wrapper_signature(wrapper, root, root / name, list(captured))
