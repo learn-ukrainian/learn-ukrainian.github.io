@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ZnoPractice, { nextDueItem, type ZnoPracticeDeck, type ZnoPracticeItem } from '@site/src/components/ZnoPractice';
+import { createRef } from 'react';
+import ZnoPractice, { nextDueItem, type ZnoPracticeDeck, type ZnoPracticeItem, type ZnoSessionControls } from '@site/src/components/ZnoPractice';
 import { SRS_STORAGE_KEY, cardKey, loadState } from '@site/src/lib/lexicon/srs';
+import * as srs from '@site/src/lib/lexicon/srs';
 
 const decks: ZnoPracticeDeck[] = [{
   deckId: 'zno-paronym', title: 'Пароніми', thinDeck: true,
@@ -15,13 +17,16 @@ const decks: ZnoPracticeDeck[] = [{
 }];
 
 describe('ZnoPractice', () => {
-  beforeEach(() => localStorage.clear());
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    localStorage.clear();
+  });
 
   test('shows the required thin-deck treatment and learner-facing attribution', async () => {
     const user = userEvent.setup();
     render(<ZnoPractice decks={decks} />);
     await user.click(screen.getByTestId('zno-deck-zno-paronym'));
-    expect(screen.getByText('Невелика добірка: 1 завдання.')).toBeInTheDocument();
+    expect(screen.getByText('Small collection: 1')).toBeInTheDocument();
     expect(screen.getByText('Джерело: УЦОЯО · ЗНО 2021, основна сесія · завдання №2')).toBeInTheDocument();
     expect(screen.queryByText(/osvita\.ua/)).not.toBeInTheDocument();
   });
@@ -32,7 +37,7 @@ describe('ZnoPractice', () => {
     await user.click(screen.getByTestId('zno-deck-zno-paronym'));
     const correctOption = screen.getByRole('button', { name: 'Б друга' });
     await user.click(correctOption);
-    expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('✓ Правильно');
+    expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('✓ Correct');
     expect(screen.getByTestId('zno-practice-verdict')).toHaveClass('correct');
     expect(correctOption).toHaveAttribute('data-selected', 'true');
     expect(correctOption).toHaveAttribute('data-correct', 'true');
@@ -49,7 +54,7 @@ describe('ZnoPractice', () => {
     const correctOption = screen.getByRole('button', { name: 'Б друга' });
     await user.click(wrongOption);
 
-    expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('✗ Правильна відповідь: Б');
+    expect(screen.getByTestId('zno-practice-verdict')).toHaveTextContent('✗ Correct answer: Б');
     expect(screen.getByTestId('zno-practice-verdict')).toHaveClass('wrong');
 
     expect(wrongOption).toHaveAttribute('data-selected', 'true');
@@ -110,12 +115,101 @@ describe('ZnoPractice', () => {
   test('renders a hub-controlled deck without the standalone picker and returns through its callback', async () => {
     const user = userEvent.setup();
     const onBackToDecks = vi.fn();
-    render(<ZnoPractice deck={decks[0]} onBackToDecks={onBackToDecks} />);
+    const controlsRef = createRef<ZnoSessionControls>();
+    render(<>
+      <button type="button" onClick={() => controlsRef.current?.endSession()}>Leave hub</button>
+      <ZnoPractice deck={decks[0]} onBackToDecks={onBackToDecks} sessionControlsRef={controlsRef} />
+    </>);
 
     expect(screen.queryByRole('heading', { name: 'ЗНО / НМТ' })).not.toBeInTheDocument();
     expect(screen.getByTestId('zno-practice-item')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'До колод' }));
+    await user.click(screen.getByRole('button', { name: 'Leave hub' }));
+    expect(screen.getByTestId('zno-session-summary')).toHaveTextContent('Unanswered1');
+    expect(screen.getByTestId('zno-session-unanswered')).toHaveTextContent('Оберіть відповідь.');
+    expect(onBackToDecks).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: 'Exit' }));
     expect(onBackToDecks).toHaveBeenCalledOnce();
+  });
+
+  test.each([0, 1, 3])('%i-item sessions stop explicitly instead of silently resetting', async (count) => {
+    const user = userEvent.setup();
+    const deck = {
+      ...decks[0],
+      items: Array.from({ length: count }, (_, index) => ({ ...decks[0].items[0], znoTaskId: `zno:${index}` })),
+    };
+    render(<ZnoPractice deck={deck} />);
+    for (let index = 0; index < count; index += 1) {
+      expect(screen.getByTestId('zno-session-progress')).toHaveTextContent(`${index}/${count}`);
+      await user.click(screen.getByRole('button', { name: 'Б друга' }));
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+    }
+    expect(screen.getByRole('heading', { name: 'Session complete' })).toBeInTheDocument();
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent(`${count}/${count}`);
+    expect(screen.queryByTestId('zno-practice-item')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Continue with due items' })).not.toBeInTheDocument();
+  });
+
+  test('retry preserves a literal 2/3 first-attempt score and never rates retry or review', async () => {
+    const user = userEvent.setup();
+    const rate = vi.spyOn(srs, 'rateCard');
+    const deck = {
+      ...decks[0],
+      items: Array.from({ length: 3 }, (_, index) => ({ ...decks[0].items[0], znoTaskId: `zno:${index}` })),
+    };
+    render(<ZnoPractice deck={deck} />);
+    for (const option of ['Б друга', 'Б друга', 'А перша']) {
+      await user.click(screen.getByRole('button', { name: option }));
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+    }
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('2/3');
+    expect(screen.getByTestId('zno-session-topic-errors')).toHaveTextContent('Пароніми: 1');
+    expect(rate).toHaveBeenCalledTimes(3);
+    const history = localStorage.getItem(SRS_STORAGE_KEY);
+    await user.click(screen.getByRole('button', { name: 'Review errors' }));
+    expect(screen.getByRole('button', { name: 'Б друга' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    await user.click(screen.getByRole('button', { name: 'Retry missed items once' }));
+    await user.click(screen.getByRole('button', { name: 'Б друга' }));
+    await user.click(screen.getByRole('button', { name: 'Next task' }));
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('2/3');
+    expect(screen.queryByRole('button', { name: 'Retry missed items once' })).not.toBeInTheDocument();
+    expect(rate).toHaveBeenCalledTimes(3);
+    expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe(history);
+  });
+
+  test('exhaustion never refills from duplicates or future cards and bounds new items', async () => {
+    const user = userEvent.setup();
+    srs.rateCard('future', 'choice', 'good');
+    srs.rateCard('due', 'choice', 'good', Date.now() - 30 * 86_400_000);
+    const due = { ...decks[0].items[0], znoTaskId: 'due', stem: 'Due task' };
+    const deck = {
+      ...decks[0],
+      items: [due, due, { ...due, znoTaskId: 'future', stem: 'Future task' },
+        ...Array.from({ length: 10 }, (_, index) => ({ ...due, znoTaskId: `new:${index}`, stem: `New task ${index}` }))],
+    };
+    render(<ZnoPractice deck={deck} />);
+    expect(screen.getByText('Due task')).toBeInTheDocument();
+    for (let index = 0; index < 9; index += 1) {
+      expect(screen.getByTestId('zno-session-progress')).toHaveTextContent(`${index}/9`);
+      expect(screen.queryByText('Future task')).not.toBeInTheDocument();
+      await user.click(screen.getByRole('button', { name: 'Б друга' }));
+      if (index === 0) {
+        // A card becoming due mid-session cannot change the frozen denominator.
+        const state = loadState();
+        const futureCard = state.cards.get(cardKey('future', 'choice'));
+        if (!futureCard) throw new Error('Expected the scheduled fixture card');
+        state.cards.set(cardKey('future', 'choice'), { ...futureCard, due: Date.now() - 1 });
+        srs.saveState(state);
+      }
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+    }
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('9/9');
+    expect(screen.queryByTestId('zno-practice-item')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Continue with due items' }));
+    expect(screen.getByText('Future task')).toBeInTheDocument();
+    expect(screen.getByTestId('zno-session-progress')).toHaveTextContent('0/1');
+    await user.click(screen.getByRole('button', { name: 'End session' }));
+    expect(within(screen.getByTestId('zno-session-unanswered')).getByText('Future task')).toBeInTheDocument();
   });
 
   test('nextDueItem randomizes task order across seeds and respects excludedIds', () => {

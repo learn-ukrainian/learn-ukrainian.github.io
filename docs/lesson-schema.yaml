@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 689603ab263ce8ae8db993a35e25669d6c92e0b7babbe15d39dcea468347a26e
+  components_sha256: 121d86824df11f0503e03a1c0e3f80a7825543011bcf052945ec6071f13b2a23
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -3215,6 +3215,10 @@ components:
       - name: onBackToDecks
         type: () => void
         description: onBackToDecks prop.
+        ukrainian_text: 'false'
+      - name: sessionControlsRef
+        type: Ref<ZnoSessionControls>
+        description: sessionControlsRef prop.
         ukrainian_text: 'false'
     nested_types:
       ZnoPracticeDeck:
