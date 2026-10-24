@@ -1183,12 +1183,13 @@ def run(
                 for value in sorted(identities - {key})
             )
             identity_pattern = "(?:" + "|".join(identity_patterns) + ")"
-            # A period ends a sentence unless it continues an identifier.
-            # Parentheses may wrap the whole identity, not a prefix of it.
-            # Truncation and digest suffixes belong to the complete identity.
+            # Canonical titles and code spans carry complete identities. Legacy
+            # prose references end at a line or sentence delimiter, rather than
+            # accepting any character outside an identifier boundary blacklist.
+            title_prefix = "Merge queue flaky test: "
             pattern = re.compile(
-                r"(?<![\w/.:\[\]()\\-])(?:" + identity_pattern + r"|\(" + identity_pattern
-                + r"\))(?![\w/:\[\]()\\…-]|\.[\w/.:\[\]()\\-]|" + display_suffix + ")"
+                r"(?<!\S)(?:`" + identity_pattern + r"`|(?:\(" + identity_pattern
+                + r"\)|" + identity_pattern + r")(?=$|[.,;!?](?=\s|$)))", re.M
             )
             marker = "<!-- mq-keeper-flake -->"
             matches = []
@@ -1197,11 +1198,12 @@ def run(
                     continue
                 issue_title, issue_body = (str(item.get(field) or "") for field in ("title", "body"))
                 if identities and (
-                    re.fullmatch("Merge queue flaky test: " + identity_pattern, issue_title)
+                    re.fullmatch(title_prefix + identity_pattern, issue_title)
                     or ((bool(tests) or marker in issue_body or re.match(
                         "`" + identity_pattern + "` failed merge_group runs on distinct PRs ", issue_body
                     )) and (
-                        pattern.search(issue_title) or pattern.search(issue_body)
+                        (not issue_title.startswith(title_prefix) and pattern.search(issue_title))
+                        or pattern.search(issue_body)
                     ))
                 ):
                     matches.append(item)

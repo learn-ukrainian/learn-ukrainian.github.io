@@ -2323,8 +2323,7 @@ def test_drop_comment_sanitises_failed_job_names_and_log_derived_test(
 
 @pytest.mark.parametrize("where", ["title", "body"])
 def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, where):
-    # Legacy titles used the job limit; matching must survive display escaping,
-    # truncation, a renamed canonical issue and a fresh process/local state.
+    """Complete legacy identities beat older prefix collisions and retain the daily cap."""
     for index, node in enumerate(("tests/test_unit.py::test_one",
                                   "tests/test_unit.py::test_" + "long_" * 65,
                                   "tests/test_unit.py::test_one[param]")):
@@ -2339,6 +2338,10 @@ def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, wh
         fake.issue_rows = [
             {"number": 1, "state": "closed", "title": node},
             {"number": 2, "pull_request": {}, "title": node},
+            {"number": 30, "title": f"Merge queue flaky test: {rendered} tail",
+             "body": f"`{rendered} tail`"},
+            {"number": 31, "title": f"Merge queue flaky test: {rendered}‹",
+             "body": f"Quarantine {rendered}‹."},
             {"number": 77, "state": "open", "title": "Repair the test", "body": "",
              where: f"Merge queue flaky test: {rendered}" if where == "title" else (
                  f"`{rendered}`".replace("_", r"\_") if rendered != node else f"Quarantine ({node})."
@@ -2435,6 +2438,7 @@ def test_job_fallback_ignores_unrelated_issue_body(tmp_path, monkeypatch, job):
 
 
 def test_job_fallback_accepts_keeper_marked_issue(tmp_path, monkeypatch):
+    """A keeper marker cannot bind a prefix of a longer job identity."""
     # Prior automatic creation omitted the keeper marker. Renaming that
     # canonical issue must not make its recognizable observation disappear.
     for index, body in enumerate(("Frontend\n<!-- mq-keeper-flake -->",
@@ -2442,7 +2446,11 @@ def test_job_fallback_accepts_keeper_marked_issue(tmp_path, monkeypatch):
         path = tmp_path / f"state-{index}.json"
         fake = FakeGitHub()
         _ejected(fake, path, ["Frontend"], failures=[_recent("Frontend", 41)])
-        fake.issue_rows = [{"number": 77, "title": "Renamed", "body": body}]
+        fake.issue_rows = [
+            {"number": 30, "title": "Renamed longer job",
+             "body": "Frontend build is flaky\n<!-- mq-keeper-flake -->"},
+            {"number": 77, "title": "Renamed", "body": body},
+        ]
         lines, failed = run(fake, path, monkeypatch)
         assert not failed, lines
         assert [payload[0] for kind, payload in fake.actions if kind == "issue-comment"] == [77]
