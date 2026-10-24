@@ -745,8 +745,17 @@ The sibling `learn-ukrainian-infra-private` checkout must exist before installat
 Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service and drop-in:
 
 ```bash
+(
+set -eu
 repo_root=$(pwd -P)
 private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
+if [ ! -d "$private_root" ]; then
+  printf 'Required sibling checkout is missing: %s\n' "$private_root" >&2
+  exit 1
+fi
+# review the dry run for both roots before writing units
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
+  --repo-root "$repo_root" --repo-root "$private_root"
 unit_dir="$HOME/.config/systemd/user"
 mkdir -p "$unit_dir/learn-ukrainian-worktree-reaper.service.d"
 sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PRIVATE_ROOT@|$private_root|g" \
@@ -758,16 +767,16 @@ sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PRIVATE_ROOT@|$private_root|g" \
   > "$unit_dir/learn-ukrainian-worktree-reaper.service.d/data-volume.conf"
 systemd-analyze --user verify "$unit_dir/learn-ukrainian-worktree-reaper.service" \
   "$unit_dir/learn-ukrainian-worktree-reaper.timer"
-# review the dry run for both roots first
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
-  --repo-root "$repo_root" --repo-root "$private_root"
 systemctl --user daemon-reload
 systemctl --user enable --now learn-ukrainian-worktree-reaper.timer
+)
 ```
 
 Verify:
 
 ```bash
+repo_root=$(pwd -P)
+private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
 systemctl --user list-timers learn-ukrainian-worktree-reaper.timer
 journalctl --user -u learn-ukrainian-worktree-reaper.service -n 50
 # no clean, fully pushed dispatch worktree idle for over an hour should remain:
