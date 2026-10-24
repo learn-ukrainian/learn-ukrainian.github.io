@@ -158,6 +158,31 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     assert main(["plane-status"]) == EXIT_ERROR
     assert capsys.readouterr().err == "plane_root_is_git_checkout\n"
 
+    loop = tmp_path / "loop"
+    loop.symlink_to(loop)
+    default_root = checkout / "batch_state" / "fleet-comms" / "v1"
+    default_root.parent.mkdir(parents=True)
+    default_root.symlink_to(loop)
+    before = sorted(tmp_path.rglob("*"))
+    monkeypatch.chdir(checkout)
+    for argv, handler_name in entrypoints:
+        handler = Mock(side_effect=AssertionError("unresolvable root reached command handler"))
+        with monkeypatch.context() as guard:
+            guard.setattr(f"scripts.fleet_comms.cli.{handler_name}", handler)
+            for env_root in (str(loop), None):
+                if env_root is not None:
+                    guard.setenv("FLEET_COMMS_ROOT", env_root)
+                else:
+                    guard.delenv("FLEET_COMMS_ROOT", raising=False)
+                assert main(argv) == EXIT_ERROR
+                output = capsys.readouterr()
+                assert output.out == ""
+                assert output.err == "plane_root_unresolvable\n"
+                with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_unresolvable$"):
+                    comms_cli._resolve_plane_db(SimpleNamespace(root=None))
+            handler.assert_not_called()
+    assert sorted(tmp_path.rglob("*")) == before
+
 
 def test_get_formal_review_job_helper(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = tmp_path / "plane"

@@ -69,6 +69,30 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
     connect.assert_not_called()
     assert sorted(tmp_path.rglob("*")) == before
 
+    loop = tmp_path / "loop"
+    loop.symlink_to(loop)
+    expected.parent.mkdir(parents=True)
+    expected.symlink_to(loop)
+    before = sorted(tmp_path.rglob("*"))
+    prepare = Mock(side_effect=AssertionError("unresolvable root reached mkdir/chmod"))
+    monkeypatch.setattr("scripts.fleet_comms.artifacts.cp_connect", connect)
+    monkeypatch.setattr("scripts.fleet_comms.artifacts.ArtifactStore._prepare_private_dir", prepare)
+    for env_root in (str(loop), None):
+        if env_root is not None:
+            monkeypatch.setenv("FLEET_COMMS_ROOT", env_root)
+        else:
+            monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+        monkeypatch.chdir(worktree)
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_unresolvable$"):
+            read_plane_status(repo_root=worktree)
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_unresolvable$"):
+            verify_authority_cutover()
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_unresolvable$"):
+            MessagePlane(mode="authority")
+    connect.assert_not_called()
+    prepare.assert_not_called()
+    assert sorted(tmp_path.rglob("*")) == before
+
 
 def test_default_plane_root_preserves_override_and_hard_fails_outside_git(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch

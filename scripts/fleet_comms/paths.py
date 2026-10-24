@@ -92,26 +92,29 @@ def default_plane_root(
     silent message loss. Isolated non-git callers and test fixtures must opt in
     explicitly with ``allow_non_git=True``.
     """
-    env = os.environ.get(ENV_ROOT)
-    if env:
-        root = Path(env).expanduser().resolve()
-        _refuse_retired_local_plane(root)
-        return root
-
-    candidate = repo_root if repo_root is not None else Path.cwd()
     try:
-        base = resolve_main_root(candidate)
-    except NotAGitRepositoryError as exc:
-        if not allow_non_git:
-            raise PlaneRootAnchorError(
-                f"refusing to anchor the fleet-comms plane root at {candidate}: "
-                "not inside a git repository, so the primary checkout cannot be "
-                "verified. A silent fallback here once materialized a shadow "
-                "comms DB under a garbage cwd (#6863). Set FLEET_COMMS_ROOT for an "
-                "explicit override, or pass allow_non_git=True for an isolated "
-                "non-git fixture."
-            ) from exc
-        base = candidate.resolve()
-    root = (base / DEFAULT_ROOT_REL).resolve()
-    _refuse_retired_local_plane(root)
+        env = os.environ.get(ENV_ROOT)
+        if env:
+            root = Path(env).expanduser().resolve()
+        else:
+            candidate = repo_root if repo_root is not None else Path.cwd()
+            try:
+                base = resolve_main_root(candidate)
+            except NotAGitRepositoryError as exc:
+                if not allow_non_git:
+                    raise PlaneRootAnchorError(
+                        f"refusing to anchor the fleet-comms plane root at {candidate}: "
+                        "not inside a git repository, so the primary checkout cannot be "
+                        "verified. A silent fallback here once materialized a shadow "
+                        "comms DB under a garbage cwd (#6863). Set FLEET_COMMS_ROOT for an "
+                        "explicit override, or pass allow_non_git=True for an isolated "
+                        "non-git fixture."
+                    ) from exc
+                base = candidate.resolve()
+            root = (base / DEFAULT_ROOT_REL).resolve()
+        _refuse_retired_local_plane(root)
+    except PlaneRootAnchorError:
+        raise
+    except (OSError, RuntimeError):
+        raise PlaneRootAnchorError("plane_root_unresolvable") from None
     return root

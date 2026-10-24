@@ -89,8 +89,24 @@ def test_artifact_store_uses_durable_sqlite_and_private_modes(
 
     loop = tmp_path / "loop"
     loop.symlink_to(loop)
-    with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_unresolvable$"):
-        ArtifactStore(root=loop)
+    default_root = primary / "batch_state" / "fleet-comms" / "v1"
+    default_root.parent.mkdir(parents=True)
+    default_root.symlink_to(loop)
+    before = sorted(tmp_path.rglob("*"))
+    with monkeypatch.context() as guard:
+        guard.setattr("scripts.fleet_comms.artifacts.cp_connect", connect)
+        guard.setattr(ArtifactStore, "_prepare_private_dir", prepare)
+        for selection in ({"root": loop}, {}, {"repo_root": loop}, {"repo_root": primary}):
+            if selection:
+                guard.delenv("FLEET_COMMS_ROOT", raising=False)
+            else:
+                guard.setenv("FLEET_COMMS_ROOT", str(loop))
+            for readonly in (False, True):
+                with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_unresolvable$"):
+                    ArtifactStore(**selection, readonly=readonly)
+    connect.assert_not_called()
+    prepare.assert_not_called()
+    assert sorted(tmp_path.rglob("*")) == before
 
 
 def test_artifact_store_wal_setup_retries_fast_lock_failures(monkeypatch) -> None:
