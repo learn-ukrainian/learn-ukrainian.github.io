@@ -197,8 +197,9 @@ def _authoritative_task_repository(task: dict[str, Any]) -> str | None:
     return claimed[0]
 
 
+_TaskFileFingerprint = tuple[str, int, int, int, int]
 _TASK_STATE_CACHE: dict[
-    str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
+    str, tuple[_TaskFileFingerprint, dict[str, Any], str, bool, str | None, int | None]
 ] = {}
 _LAST_TASKS_DIR_STR: str = ""
 
@@ -230,7 +231,8 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQL
                 claimed_repo TEXT,
                 run_nonce TEXT,
                 linked_issues TEXT,
-                model_accounting TEXT
+                model_accounting TEXT,
+                fingerprint TEXT
             )
             """
         )
@@ -240,6 +242,8 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQL
             conn.execute("ALTER TABLE task_cache ADD COLUMN linked_issues TEXT")
         with contextlib.suppress(sqlite3.OperationalError):
             conn.execute("ALTER TABLE task_cache ADD COLUMN model_accounting TEXT")
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("ALTER TABLE task_cache ADD COLUMN fingerprint TEXT")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_task_cache_mtime ON task_cache(mtime)")
         conn.commit()
         return conn
@@ -250,7 +254,7 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQL
 def _load_task_cache_from_db(
     tasks_dir_str: str,
     ctx: MonitorContext | None = None,
-) -> dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]]:
+) -> dict[str, tuple[_TaskFileFingerprint, dict[str, Any], str, bool, str | None, int | None]]:
     db_path = _task_cache_db_path(tasks_dir_str)
     if not db_path.exists():
         return {}
@@ -261,7 +265,7 @@ def _load_task_cache_from_db(
         cursor = conn.cursor()
         cursor.execute(
             """
-            SELECT path, mtime, task_id, status, derived_status, pid, alive,
+            SELECT path, fingerprint, task_id, status, derived_status, pid, alive,
                    started_at, duration_s, agent, model, effort, cli_version,
                    substitution, claimed_repo, run_nonce, linked_issues, model_accounting
             FROM task_cache
@@ -270,12 +274,12 @@ def _load_task_cache_from_db(
         rows = cursor.fetchall()
         conn.close()
         cache: dict[
-            str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
+            str, tuple[_TaskFileFingerprint, dict[str, Any], str, bool, str | None, int | None]
         ] = {}
         for row in rows:
             (
                 path_str,
-                mtime,
+                fingerprint_raw,
                 task_id,
                 raw_status,
                 derived_status,
@@ -294,9 +298,10 @@ def _load_task_cache_from_db(
                 model_accounting_raw,
             ) = row
             # Old cache entries must reread their task record after this upgrade.
-            if model_accounting_raw is None:
+            if model_accounting_raw is None or fingerprint_raw is None:
                 continue
             try:
+                fingerprint = tuple(json.loads(fingerprint_raw))
                 model_accounting = json.loads(model_accounting_raw)
             except (json.JSONDecodeError, TypeError):
                 continue
@@ -325,7 +330,7 @@ def _load_task_cache_from_db(
             if linked_issues is not None:
                 summary["linked_issues"] = linked_issues
             cache[path_str] = (
-                float(mtime),
+                fingerprint,
                 summary,
                 str(derived_status),
                 bool(alive_int),
@@ -349,7 +354,7 @@ def _save_task_cache_entries(
             return
         conn.executemany(
             """
-            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             records,
         )
@@ -477,9 +482,13 @@ def _delegate_task_rows(
         )
 
 
+def _task_file_fingerprint(name: str, st: os.stat_result) -> _TaskFileFingerprint:
+    return name, st.st_mtime_ns, st.st_ctime_ns, st.st_size, st.st_ino
+
+
 def _task_generation_token(newest_mtime_ns: int, files: list[tuple[str, os.stat_result]]) -> str:
     """Fingerprint every observed file, including changes hidden by another file's mtime."""
-    stamps = sorted((name, st.st_mtime_ns, st.st_ctime_ns, st.st_size, st.st_ino) for name, st in files)
+    stamps = sorted(_task_file_fingerprint(name, st) for name, st in files)
     digest = hashlib.sha256(repr(stamps).encode()).hexdigest()
     return f"{len(files)}:{newest_mtime_ns}:{digest}"
 
@@ -537,7 +546,7 @@ def _delegate_task_rows_locked(
 
         try:
             file_stat = os.stat(path_str)
-            mtime = file_stat.st_mtime
+            fingerprint = _task_file_fingerprint(path.name, file_stat)
         except OSError:
             generation_observed = False
             continue
@@ -545,11 +554,9 @@ def _delegate_task_rows_locked(
             task_files.append((path.name, file_stat))
             newest_mtime_ns = max(newest_mtime_ns, file_stat.st_mtime_ns)
 
-        # A generation includes ctime, size and inode as well as mtime. Its
-        # counts must come from the records, not an mtime-only summary.
-        cached = task_cache.get(path_str) if task_generation is None else None
+        cached = task_cache.get(path_str)
 
-        if cached is not None and cached[0] == mtime:
+        if cached is not None and cached[0] == fingerprint:
             _, summary, derived_status, alive, claimed_repo, pid = cached
             if is_active_query and derived_status not in statuses:
                 continue
@@ -589,7 +596,7 @@ def _delegate_task_rows_locked(
             if linked_issues is not None:
                 summary["linked_issues"] = linked_issues
             cached_tuple = (
-                mtime,
+                fingerprint,
                 summary,
                 derived_status,
                 alive,
@@ -605,7 +612,7 @@ def _delegate_task_rows_locked(
             dirty_records.append(
                 (
                     path_str,
-                    mtime,
+                    file_stat.st_mtime,
                     task_id,
                     raw_status,
                     derived_status,
@@ -622,6 +629,7 @@ def _delegate_task_rows_locked(
                     run_nonce,
                     json.dumps(linked_issues) if linked_issues is not None else None,
                     json.dumps(recorded_model_accounting_fields(summary)),
+                    json.dumps(fingerprint),
                 )
             )
 
