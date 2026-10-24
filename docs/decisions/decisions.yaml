@@ -418,3 +418,31 @@ decisions:
           Spends effort on a gate that is not being cut over.
     superseded_by: null
     depends_on: []
+
+  - id: dec-017
+    status: active
+    date: 2026-10-24
+    expires: 2027-01-22
+    scope: architecture
+    title: "Atlas entries use stable anchors on spelling hubs"
+    reasoning: >-
+      Keep one lowercased spelling hub with separate stable card-ID anchors.
+      Entry keys retain case and remain matching evidence. Preserve old URLs,
+      source partitions, and current rendering for unresolved correspondence.
+      Missing source forms never prove identity. Freeze the historical
+      50-disagreement held-out set before Unit 1 acceptance. Deliver Unit 5
+      as a schema/version-bump PR followed by per-consumer PRs under one cache
+      version. Contract approval does not authorize public cutover or certification.
+    evidence:
+      - "#8334; operator-approved spelling hubs and stable entry anchors"
+      - "Sol 6.1 design; Opus 5.5 APPROVE_WITH_CHANGES, 2026-10-24"
+      - "docs/decisions/2026-10-24-atlas-entry-identity-spelling-urls.md"
+    alternatives:
+      - option: "Separate opaque-ID entry routes"
+        rejected_because: >-
+          Duplicates spelling-page navigation and conflicts with the approved hub direction.
+      - option: "Use spelling or source homonym numbers as entry identity"
+        rejected_because: >-
+          Conflates entries and makes corrections or reordering change identity.
+    superseded_by: null
+    depends_on: []
