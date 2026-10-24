@@ -250,7 +250,7 @@ jobs, two reserved).
 ## Shard setup
 
 Per shard: checkout (shallow; full history on the history shard), Python
-3.12.14, then `scripts/ci/test_env.sh start` runs `npm ci` and
+3.12.15, then `scripts/ci/test_env.sh start` runs `npm ci` and
 `scripts/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked
 environment from main's exact-key uv cache; `test_env.sh wait` fails the job if

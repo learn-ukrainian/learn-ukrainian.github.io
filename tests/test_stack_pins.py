@@ -11,7 +11,7 @@ from scripts.audit.check_decisions import StackPinsError, load_stack_pins
 _VALID_ROW = """\
 pins:
   - name: python
-    pinned: "3.12.14"
+    pinned: "3.12.15"
     source: .python-version
     owner: DevOps
     review_by: "2026-11-16"

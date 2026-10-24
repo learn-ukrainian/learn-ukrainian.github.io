@@ -57,19 +57,19 @@ def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
 def _make_exact_python_checkout(root: Path, *, delegate: Path | None = None) -> None:
     python = root / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
-    script = "#!/bin/bash\nprintf 'Python 3.12.14\\n'\n"
+    script = "#!/bin/bash\nprintf 'Python 3.12.15\\n'\n"
     if delegate is not None:
         script = (
             "#!/bin/bash\n"
             "if [ \"${1:-}\" = \"--version\" ]; then\n"
-            "  printf 'Python 3.12.14\\n'\n"
+            "  printf 'Python 3.12.15\\n'\n"
             "  exit 0\n"
             "fi\n"
             f"exec {shlex.quote(os.fspath(delegate))} \"$@\"\n"
         )
     python.write_text(script, encoding="utf-8")
     python.chmod(0o755)
-    (root / ".python-version").write_text("3.12.14\n", encoding="utf-8")
+    (root / ".python-version").write_text("3.12.15\n", encoding="utf-8")
 
 
 def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:
@@ -265,7 +265,7 @@ def _start_with_root_names(
     _run(["git", "config", "user.name", "Hook Tests"], cwd=project)
     (project / ".gitignore").write_text(".venv\nscripts\n", encoding="utf-8")
     (project / ".python-version").write_text(
-        (REPO_ROOT / ".python-version").read_text(encoding="utf-8"),
+        f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}\n",
         encoding="utf-8",
     )
     (project / "README.md").write_text("hook test\n", encoding="utf-8")

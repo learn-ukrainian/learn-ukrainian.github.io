@@ -37,7 +37,7 @@ _LOWER_BOUND_OPERATORS = frozenset({">=", ">", "~=", "==", "==="})
 
 
 def _parse_minor(text: str) -> MinorVersion:
-    """``"3.12"``, ``"3.12.14"`` or ``"py312"`` -> ``(3, 12)``."""
+    """``"3.12"``, ``"3.12.15"`` or ``"py312"`` -> ``(3, 12)``."""
     text = text.strip().removeprefix("py")
     if "." not in text:
         return int(text[0]), int(text[1:])
@@ -90,10 +90,10 @@ def test_repo_declares_documented_floor_and_admits_pinned_interpreter() -> None:
 @pytest.mark.parametrize(
     ("requires_python", "pinned"),
     [
-        (">=3.12", "3.12.14"),
-        (">=3.12,<4", "3.12.14"),
-        (">= 3.12 , < 4", "3.12.14"),
-        ("<4,>=3.12.1", "3.12.14"),
+        (">=3.12", "3.12.15"),
+        (">=3.12,<4", "3.12.15"),
+        (">= 3.12 , < 4", "3.12.15"),
+        ("<4,>=3.12.1", "3.12.15"),
         # The pin may run ahead of the floor (#10742): patch-level pin, floor 3.12.
         (">=3.12", "3.14.8"),
         (">=3.12", "3.12"),
@@ -106,15 +106,15 @@ def test_accepted_specifier_shapes(requires_python: str, pinned: str) -> None:
 @pytest.mark.parametrize(
     ("requires_python", "pinned", "message"),
     [
-        # Reviewer probes: both reject the pinned 3.12.14 although ``>=3.12`` is present.
-        (">=3.12,>3.13", "3.12.14", "not the documented floor|rejected"),
-        (">=3.12,!=3.12.*", "3.12.14", "rejected"),
-        (">=3.12,<3.12.5", "3.12.14", "rejected"),
+        # Reviewer probes: both reject the pinned 3.12.15 although ``>=3.12`` is present.
+        (">=3.12,>3.13", "3.12.15", "not the documented floor|rejected"),
+        (">=3.12,!=3.12.*", "3.12.15", "rejected"),
+        (">=3.12,<3.12.5", "3.12.15", "rejected"),
         # No lower bound at all.
-        ("<4", "3.12.14", "no lower bound"),
-        ("!=3.11.*", "3.12.14", "no lower bound"),
+        ("<4", "3.12.15", "no lower bound"),
+        ("!=3.11.*", "3.12.15", "no lower bound"),
         # Lower bound is not the documented floor.
-        (">=3.11", "3.12.14", "not the documented floor"),
+        (">=3.11", "3.12.15", "not the documented floor"),
         (">=3.13", "3.14.8", "not the documented floor"),
         # Pinned interpreter below the floor.
         (">=3.12", "3.11.9", "rejected"),
@@ -134,4 +134,4 @@ def test_rejected_specifier_shapes(requires_python: str, pinned: str, message: s
 )
 def test_tool_targets_below_floor_are_rejected(ruff_target: str, mypy_target: str, message: str) -> None:
     with pytest.raises(AssertionError, match=message):
-        _check_floor_contract(">=3.12", "3.12.14", ruff_target, mypy_target)
+        _check_floor_contract(">=3.12", "3.12.15", ruff_target, mypy_target)
