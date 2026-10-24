@@ -667,6 +667,25 @@ def apply_definition_card_attribution(card: dict[str, Any], *, lemma: str = "") 
             elif key in card and key not in block:
                 del card[key]
         changed = True
+    if card_id == "vts":
+        # Card identity, not its display label, identifies legacy VTS citations.
+        # The institutional homepage is neither an edition nor a retrieval mirror.
+        homepage = "https://www.ulif.org.ua"
+        if card.get("source_url") == homepage:
+            del card["source_url"]
+            changed = True
+        raw_urls = card.get("source_urls") or []
+        if any(url == homepage or is_mirror_url(url) for url in raw_urls):
+            official, mirrors = remap_url_list([url for url in raw_urls if url != homepage])
+            if official:
+                card["source_urls"] = official
+            else:
+                card.pop("source_urls", None)
+            if mirrors:
+                card["mirror_source_urls"] = list(dict.fromkeys([
+                    *(card.get("mirror_source_urls") or []), *mirrors,
+                ]))
+            changed = True
     return changed
 
 
