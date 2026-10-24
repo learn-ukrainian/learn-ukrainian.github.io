@@ -470,10 +470,42 @@ async function readability(page: import('@playwright/test').Page, origin: string
       for (const marker of markers) {
         const markerHref = await marker.getAttribute('href');
         if (!markerHref) throw Error('Missing source marker target');
+        if (await disclosure.getAttribute('open') !== null) await summary.click();
+        await expect(disclosure).not.toHaveAttribute('open', '');
+        // Repeated page initialization must not attach another click handler.
+        await page.evaluate(() => {
+          history.replaceState(null, '', location.pathname);
+          document.dispatchEvent(new Event('astro:page-load'));
+          document.dispatchEvent(new Event('astro:page-load'));
+        });
+        await expect(marker).toHaveAttribute('data-credit-bound', 'true');
+        const beforeNavigation = marker.evaluate(node => new Promise(resolve => {
+          const root = node.closest('[data-release-page]');
+          const target = Array.from(root?.querySelectorAll('[data-source-credit]') ?? [])
+            .find(credit => `#${credit.id}` === node.getAttribute('href'));
+          const details = target?.closest('details[data-page-audit]');
+          if (!(details instanceof HTMLDetailsElement) || !root) throw Error('Missing marker disclosure');
+          const descriptor = Object.getOwnPropertyDescriptor(HTMLDetailsElement.prototype, 'open');
+          if (!descriptor?.get || !descriptor.set) throw Error('Missing native details.open accessors');
+          let openWrites = 0;
+          Object.defineProperty(details, 'open', { configurable: true,
+            get() { return descriptor.get?.call(this); },
+            set(value) { openWrites++; descriptor.set?.call(this, value); },
+          });
+          root.addEventListener('click', event => {
+            const observation = { open: details.open, hash: location.hash, prevented: event.defaultPrevented,
+              openWrites, targetId: target?.id, source: target?.getAttribute('data-source-credit') };
+            Reflect.deleteProperty(details, 'open');
+            resolve(observation);
+          }, { once: true });
+        }));
         await marker.focus(); await expect(marker).toBeFocused();
         // Let focus-driven smooth scrolling finish before activating another native scroll.
         await expect(marker).toBeInViewport(); await settleScroll();
         await page.keyboard.press('Enter');
+        const activation = await beforeNavigation;
+        expect(activation).toEqual({ open: true, hash: '', prevented: false, openWrites: 1,
+          targetId: markerHref.slice(1), source: markerHref.slice('#source-'.length) });
         await expect(disclosure).toHaveAttribute('open', '');
         expect(new URL(page.url()).hash).toBe(markerHref);
         const target = page.locator(`[id="${markerHref?.slice(1)}"]`);
@@ -504,7 +536,7 @@ async function readability(page: import('@playwright/test').Page, origin: string
           await info.attach('phone-puls-after-activation', { body: shot, contentType: 'image/png' });
         }
         navigation.push({ viewport: name, key, kind: 'source-marker', href: markerHref, interaction: ['focus', 'Enter'],
-          disclosureOpened: true, targetVisible: true, geometry, manualScrollCorrection: false, untouchedCapture, url: page.url() });
+          activation, disclosureOpened: true, targetVisible: true, geometry, manualScrollCorrection: false, untouchedCapture, url: page.url() });
       }
       await summary.focus(); await page.keyboard.press('Enter'); await expect(disclosure).not.toHaveAttribute('open', '');
       const before = await disclosure.getAttribute('open');

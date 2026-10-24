@@ -60,6 +60,23 @@ const showCandidateSearch = candidateSearchVisible(Astro.params.path ?? '');
     {page && <p class="input-line">Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code>. Producer status is not linguistic certification or switch approval.</p>}
   </main>
 </CourseLayout>
+<script>
+  function initCreditMarkers() {
+    document.querySelectorAll('[data-release-page]').forEach(root => {
+      root.querySelectorAll<HTMLAnchorElement>('a[data-credit-ref]').forEach(marker => {
+        if (marker.dataset.creditBound === 'true') return;
+        const target = Array.from(root.querySelectorAll('[data-source-credit]'))
+          .find(credit => `#${credit.id}` === marker.getAttribute('href'));
+        const details = target?.closest('details[data-page-audit]');
+        if (!(details instanceof HTMLDetailsElement)) return;
+        marker.addEventListener('click', () => { details.open = true; });
+        marker.dataset.creditBound = 'true';
+      });
+    });
+  }
+  initCreditMarkers();
+  document.addEventListener('astro:page-load', initCreditMarkers);
+</script>
 <style>
   .word-card-preview { padding: 1.5rem; }
   aside { border: 2px solid currentColor; padding: 1rem; }
