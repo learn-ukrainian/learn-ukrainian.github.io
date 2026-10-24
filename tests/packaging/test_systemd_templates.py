@@ -29,8 +29,10 @@ def test_systemd_templates_have_no_host_facts() -> None:
     for path in (
         PACKAGING / "learn-ukrainian-worktree-gc.service",
         DROPINS / "learn-ukrainian-worktree-gc.service.d/data-volume.conf",
+        PACKAGING / "learn-ukrainian-worktree-reaper.service",
+        DROPINS / "learn-ukrainian-worktree-reaper.service.d/data-volume.conf",
     ):
-        command = next(line for line in path.read_text().splitlines() if line.startswith("ExecStart=/"))
+        command = next(line for line in path.read_text().splitlines() if line.startswith("ExecStart=") and line != "ExecStart=")
         assert command.endswith("--repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply")
 
 
@@ -95,3 +97,9 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
     assert len(files) == 18
     assert all("@REPO_ROOT@" not in file.read_text(encoding="utf-8") for file in files)
     assert all("@PYTHON@" not in file.read_text(encoding="utf-8") for file in files)
+    assert all("@PRIVATE_ROOT@" not in file.read_text(encoding="utf-8") for file in files)
+    assert (
+        f"--clean-pushed --repo-root {primary_root} "
+        f"--repo-root {primary_root.parent / 'learn-ukrainian-infra-private'} --apply"
+        in (destination / "learn-ukrainian-worktree-reaper.service.d/data-volume.conf").read_text(encoding="utf-8")
+    )
