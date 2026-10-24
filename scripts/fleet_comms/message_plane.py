@@ -45,6 +45,7 @@ from scripts.control_plane.storage import (
     resolve_authority,
 )
 from scripts.control_plane.storage import connect as cp_connect
+from scripts.fleet_comms.artifacts import validate_plane_root
 from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store_descriptor
 from scripts.fleet_comms.paths import (
@@ -582,7 +583,7 @@ def verify_authority_cutover(*, root: Path | None = None) -> None:
     if resolve_authority(StoreId.FLEET_COMMS) not in {Authority.SQLITE, Authority.SHADOW}:
         raise AuthorityCutoverRefusedError(_CUTOVER_CAPABILITY_MISSING)
 
-    plane_root = Path(root) if root is not None else default_plane_root()
+    plane_root = validate_plane_root(root if root is not None else default_plane_root())
     db_path = plane_root / "comms.sqlite3"
     if not db_path.is_file():
         raise AuthorityCutoverRefusedError(_CUTOVER_SCHEMA_VERSION_MISMATCH)
@@ -762,7 +763,9 @@ def read_plane_status(
         mode = "invalid"
         mode_error = "invalid_mode"
 
-    plane_root = Path(root) if root is not None else default_plane_root(repo_root=repo_root)
+    plane_root = validate_plane_root(
+        root if root is not None else default_plane_root(repo_root=repo_root)
+    )
     db_path = plane_root / "comms.sqlite3"
     tele_path = (
         Path(telemetry_path)
