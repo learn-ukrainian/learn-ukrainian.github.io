@@ -6598,9 +6598,11 @@ def _uninspectable_same_user(base: Path, proc_root: Path) -> bool:
     kind = _stat_kind(base)
     if kind in {"gone", "zombie", "kernel"}:
         return False
-    argv0 = allowed_session_daemon(base)
-    if argv0 is not None:
-        logging.getLogger(__name__).warning("allowed_session_daemon pid=%s argv0=%r", base.name, argv0)
+    if kind == "unknown":
+        return True
+    identity = allowed_session_daemon(base)
+    if identity is not None:
+        logging.getLogger(__name__).warning("allowed_session_daemon pid=%s identity=%r", base.name, identity)
         return False
     return True
 

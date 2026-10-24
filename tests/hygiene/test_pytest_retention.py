@@ -982,15 +982,22 @@ def test_process_liveness_unknown_preserves_and_finished_processes_hold_nothing(
         assert report["liveness_complete"] is False and report["liveness_unreadable_processes"] == 1
         assert tmp_sweep.sweep(**args, apply=True)["pytest_retention"]["deleted_entries"] == 0
         assert run.is_dir()
-        # The same unreadable process is excused only with a readable same-uid daemon identity.
+        # A spoofed command line alone still blocks; kernel unit and parent facts excuse it.
         entry = proc / "4242"
         uid = os.getuid()
-        (entry / "status").write_text(f"Uid:\t{uid}\t{uid}\t{uid}\t{uid}\n")
+        (entry / "status").write_text(f"Name:\tssh-agent\nPPid:\t20\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\n")
         (entry / "cmdline").write_bytes(b"/usr/bin/ssh-agent\0-D\0")
+        assert tmp_sweep.sweep(**args, apply=True)["pytest_retention"]["deleted_entries"] == 0
+        assert run.is_dir()
+        manager = f"0::/user.slice/user-{uid}.slice/user@{uid}.service"
+        (entry / "cgroup").write_text(f"{manager}/app.slice/ssh-agent.service\n")
+        fake_process(proc, 20, "S")
+        (proc / "20" / "status").write_text(f"Name:\tsystemd\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\n")
+        (proc / "20" / "cgroup").write_text(f"{manager}/init.scope\n")
         report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
         assert row_for(report, run)["decision"] == "deleted" and not run.exists()
         assert report["liveness_complete"] is True and report["liveness_unreadable_processes"] == 0
-        assert report["allowed_session_daemons"] == [{"pid": 4242, "argv0": "/usr/bin/ssh-agent"}]
+        assert report["allowed_session_daemons"] == [{"pid": 20, "identity": "systemd"}, {"pid": 4242, "identity": "ssh-agent"}]
     else:
         assert row["decision"] == "would_delete" and report["liveness_complete"] is True
 

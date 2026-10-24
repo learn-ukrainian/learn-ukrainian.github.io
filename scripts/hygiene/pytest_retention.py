@@ -98,7 +98,7 @@ class Holders:
     ``unreadable`` counts unreadable live processes outside that allowlist
     for the privacy-safe report; ``unreadable_foreign`` and ``unreadable_root``
     split that count.
-    ``allowed_session_daemons`` records excused same-uid pid/argv[0] pairs.
+    ``allowed_session_daemons`` records excused same-uid pid/identity pairs.
     ``descriptor_errors`` counts resource failures separately from process
     visibility failures; callers report them as sweep errors.
     """
@@ -219,9 +219,9 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
                 holders.complete = False
                 holders.descriptor_errors += 1
             elif not _process_vanished(entry):
-                argv0 = allowed_session_daemon(entry)
-                if argv0 is not None:
-                    holders.allowed_session_daemons.add((pid, argv0))
+                identity = allowed_session_daemon(entry) if state is not None else None
+                if identity is not None:
+                    holders.allowed_session_daemons.add((pid, identity))
                 else:
                     # No other owner rules a holder out; the split only feeds the report.
                     holders.complete = False
@@ -762,7 +762,7 @@ def sweep_pytest_runs(
         "liveness_complete": complete, "liveness_unreadable_processes": unreadable,
         "liveness_unreadable_foreign_processes": unreadable_foreign,
         "liveness_unreadable_root_processes": unreadable_root,
-        "allowed_session_daemons": [{"pid": pid, "argv0": argv0} for pid, argv0 in sorted(allowed_daemons)],
+        "allowed_session_daemons": [{"pid": pid, "identity": identity} for pid, identity in sorted(allowed_daemons)],
         "runs": len(rows), "bytes": sum(row["bytes"] or 0 for row in rows),
         "bytes_complete": unmeasured == 0, "unmeasured_entries": unmeasured,
         "protected_bytes_complete": protected_unmeasured == 0,

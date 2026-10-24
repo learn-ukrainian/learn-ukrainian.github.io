@@ -564,17 +564,21 @@ third time after the checkout is moved into the quarantine (below):
   `/proc/<pid>/stat`) and kernel threads (the `PF_KTHREAD` bit in that file's `flags` field) are
   ignored; a pid number proves nothing, because in a PID namespace pid 2 and
   its children are ordinary processes. A process of this user whose `stat`
-  cannot be read or parsed counts as uninspectable. An unreadable same-uid
-  process is excused only when readable `/proc/<pid>/cmdline` has an exact
-  `argv[0]` of `/usr/bin/ssh-agent`, `/usr/bin/gpg-agent`,
-  `/usr/lib/systemd/systemd` with a separate `--user` argument, or `(sd-pam)`,
-  or an `argv[0]` beginning with `sshd-session:`. Empty or unreadable command
-  lines never qualify. The shared `scripts/common/session_daemons.py` helper
-  also serves pytest retention. The reaper journals each excused pid and
-  `argv[0]`; pytest retention records them in `allowed_session_daemons` in
-  its receipt. Readable holder evidence still preserves a candidate.
-  The command line can be spoofed by a process of the same uid, which already
-  owns the worktrees; this exception does not establish executable identity.
+  cannot be read or parsed counts as uninspectable. The existing kernel-fact
+  exceptions remain: members of the user's exact
+  `user@<uid>.service/init.scope` cgroup, and `sshd-session`/`sshd` with a
+  root-owned `sshd-session`/`sshd` parent. Additionally, same-uid `ssh-agent`
+  and `gpg-agent` qualify only in their exact
+  `user@<uid>.service/app.slice/ssh-agent.service` or `gpg-agent.service`
+  cgroup, with a same-uid `systemd` parent in that user's `init.scope`.
+  Missing required kernel facts fail closed. Command lines never establish
+  eligibility. The shared `scripts/common/session_daemons.py` helper also
+  serves pytest retention. The reaper journals each excused pid and kernel
+  `identity`; pytest retention records those pairs in `allowed_session_daemons`
+  in its receipt, including the deletion recheck. Readable holder evidence
+  still preserves a candidate. These checks establish unit membership and
+  ancestry, not executable attestation. A user who controls their systemd
+  units can change what those units execute.
   Other users' processes are invisible, as they are to `fuser`;
 - no task record in `batch_state/tasks/` whose `worktree_path` or `cwd` names
   it is `spawning` or `running`, has any other unsettled status, or has a
