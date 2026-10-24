@@ -1078,6 +1078,7 @@ def test_internationalized_host_names_are_rejected(body: str) -> None:
         "example.İO",
         "example.İNFO",
         "example.Aİ",
+        "example.iͅo",
         "Changed `host_vars/web01.İSTANBUL.yaml`.",
     ],
 )
