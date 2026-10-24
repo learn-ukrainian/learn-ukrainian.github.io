@@ -506,7 +506,7 @@ def _delegate_task_rows_locked(
         _LAST_TASKS_DIR_STR = tasks_dir_str
     # Inserts and evictions belong to the persistent index together. A
     # directory-only scan must not consume either update without writing it.
-    task_cache = _TASK_STATE_CACHE if persist_cache else {}
+    task_cache = _TASK_STATE_CACHE if persist_cache else _TASK_STATE_CACHE.copy()
 
     repo_predicate = _normalize_repository_predicate(repository)
 
@@ -766,8 +766,8 @@ def active_delegate_tasks(
     attribution fields.
     ``task_generation`` receives the all-file fingerprint from this locked
     scan, or stays empty when the generation cannot be observed.
-    An explicit ``tasks_dir`` reads task records directly, without building an
-    application context or touching the shared cache or persistent SQLite index.
+    An explicit ``tasks_dir`` reuses existing summaries without building an
+    application context or updating the shared cache or persistent SQLite index.
     """
     active = _delegate_task_rows(
         ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx, task_generation=task_generation, tasks_dir=tasks_dir,
