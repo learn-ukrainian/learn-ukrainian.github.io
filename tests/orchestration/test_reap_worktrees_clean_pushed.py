@@ -1089,7 +1089,8 @@ def test_systemd_service_and_timer_text() -> None:
     lines = service.splitlines()
     starts = [line for line in lines if line.startswith("ExecStart=")]
     assert starts == [
-        "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed --apply"
+        "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed "
+        "--repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply"
     ]
     assert "--force" not in service
     assert "Type=oneshot" in lines
