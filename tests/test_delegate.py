@@ -12582,6 +12582,10 @@ def test_augment_prompt_test_scope_for_write_modes(mode):
     assert "when the brief asks for full-suite proof" not in text
     assert "report the run URL instead of a local full run" not in text
     assert "Cite CI run ids" not in text
+    assert "Keep durable task artifacts in `$LU_TASK_EVIDENCE_DIR`; task cleanup preserves that directory." in text
+    assert "Keep patches, handoffs and diagnostics needed after exit in `$LU_TASK_EVIDENCE_DIR`" in text
+    assert "Task cleanup preserves that directory with a retrieval receipt" in text
+    assert "batch_state/reports/" not in text
     preamble, _, user_prompt = text.rpartition(prompt)
     assert preamble.endswith("\n")
     assert "[test scope]" in preamble
@@ -12602,6 +12606,9 @@ def test_augment_prompt_test_scope_for_read_only_and_default():
     assert "gh workflow run" not in explicit
     assert "pytest tests" not in explicit
     assert "-n auto" not in explicit
+    assert "Keep patches, handoffs and diagnostics needed after exit in `$LU_TASK_EVIDENCE_DIR`" in explicit
+    assert "Task cleanup preserves that directory with a retrieval receipt" in explicit
+    assert "batch_state/reports/" not in explicit
     preamble, _, user_prompt = explicit.rpartition(prompt)
     assert "[test scope]" in preamble
     assert user_prompt == ""

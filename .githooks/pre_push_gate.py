@@ -338,7 +338,8 @@ def reject_untracked_inputs(root: Path) -> None:
         raise GateOutcome(
             "untracked_inputs",
             f"untracked or ignored files outside the outgoing commit could change the validation run: {shown}; "
-            "commit them or remove them first",
+            "commit them or remove them first. "
+            "For agent task artifacts, use the preserved task evidence directory ($LU_TASK_EVIDENCE_DIR).",
         )
 
 

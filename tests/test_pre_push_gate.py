@@ -1310,11 +1310,17 @@ def test_an_untracked_python_overlay_is_refused_before_execution(repo: Path, ign
     _commit(repo, "green test", "tests/test_new.py")
     _write(repo, "tests/conftest.py", "def pytest_collection_modifyitems(items):\n    items.clear()\n")
 
-    result = _run_gate(repo)
+    evidence_dir = str(repo.parent / "private-evidence-sentinel")
+    result = _run_gate(repo, extra_env={"LU_TASK_EVIDENCE_DIR": evidence_dir})
 
     assert result.returncode == gate.EXIT_REFUSED
     assert _verdict(result)["reason"] == "untracked_inputs"
     assert "tests/conftest.py" in result.stderr
+    assert "commit them or remove them first" in result.stderr
+    assert (
+        "For agent task artifacts, use the preserved task evidence directory ($LU_TASK_EVIDENCE_DIR)." in result.stderr
+    )
+    assert evidence_dir not in result.stderr
     assert _receipts(repo) == []
 
 
