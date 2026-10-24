@@ -18,7 +18,8 @@ seat is not falsity.
 
 **Blinding and trust.** The prompt carries the record of the lesson and the findings, never the reviewer's model,
 family, harness or receipts, and never who planted or gold-checked the seed. The adjudicator's identity is read
-from its dispatch record (``batch_state/tasks/<task-id>.json``), not from the reply's self-report, and the reply is
+from its dispatch record (``batch_state/tasks/<task-id>.json``, falling back to the canonical archive), not from
+the reply's self-report, and the reply is
 refused when its family is the lesson writer's or the reviewer's. The record must be this adjudication's own: its
 task id is the one derived for this unit and attempt, its ``prompt_sha256`` is that of the task file rendered here,
 and delegate appended nothing caller-controlled to that prompt (``adjudication_task_mismatch`` otherwise), so an
@@ -70,6 +71,7 @@ except ModuleNotFoundError as exc:
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.orchestration.task_record_store import locate_task_record
 from scripts.review import findings_db, record, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 
@@ -533,7 +535,7 @@ def check_dispatch_binding(
             f"task {task_id!r} is not the adjudication task of {unit_id} / {attempt_id} ({expected!r})",
             TASK_MISMATCH,
         )
-    record_path = Path(tasks_dir) / f"{task_id}.json"
+    record_path = locate_task_record(Path(tasks_dir), task_id) or Path(tasks_dir) / f"{task_id}.json"
     try:
         dispatched = json.loads(record_path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
