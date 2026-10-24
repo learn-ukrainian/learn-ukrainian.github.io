@@ -2030,9 +2030,9 @@ def _scripted_gh(monkeypatch, replies: dict):
 
     def fake_run(args, **_kwargs):
         calls.append(args[1:])
-        for prefix, (code, stdout) in replies.items():
+        for prefix, (code, stdout, *stderr) in replies.items():
             if tuple(args[1 : 1 + len(prefix)]) == prefix:
-                return types.SimpleNamespace(returncode=code, stdout=stdout, stderr="")
+                return types.SimpleNamespace(returncode=code, stdout=stdout, stderr=stderr[0] if stderr else "")
         return types.SimpleNamespace(returncode=1, stdout="", stderr="unexpected")
 
     monkeypatch.setattr(guard.subprocess, "run", fake_run)
@@ -2051,9 +2051,30 @@ def _provenance_replies(head=_HEAD, runs=(_ENTIRE_RUN,), bound_head=_HEAD):
 
 
 def test_oo48_check_states_prove_at_the_judged_metadata_head(monkeypatch):
-    calls = _scripted_gh(monkeypatch, _provenance_replies())
+    """The actual legacy hook must enrich raw duplicate checks before reducing them."""
+    old = {"name": "Body guard", "head_sha": _HEAD, "status": "completed", "conclusion": "cancelled",
+           "started_at": "2026-10-23T20:00:00Z", "check_suite": {"id": 1},
+           "app": {"id": 15368, "slug": "github-actions"},
+           "details_url": "https://github.com/owner/repo/actions/runs/11/job/21"}
+    current = {**old, "conclusion": "success", "started_at": "2026-10-23T21:00:00Z",
+               "check_suite": {"id": 2}, "details_url": "https://github.com/owner/repo/actions/runs/12/job/22"}
+    rest = [current, old, {**_ENTIRE_RUN, "status": "in_progress", "conclusion": "",
+                           "details_url": "https://github.com/owner/repo/runs/24"}]
+    rollup = [{"__typename": "CheckRun", "name": row["name"], "status": row["status"].upper(),
+               "conclusion": str(row.get("conclusion") or "").upper(), "detailsUrl": row["details_url"]}
+              for row in rest]
+    replies = _provenance_replies()
+    replies[("pr", "checks")] = (1, "", _GH_246_CHECKS_JSON_GAP)
+    replies[_BOUND] = (0, json.dumps({"headRefOid": _HEAD, "statusCheckRollup": rollup}))
+    replies[("api", "--method", "GET", f"repos/owner/repo/commits/{_HEAD}/check-runs?filter=all&per_page=100")] = (
+        0, json.dumps({"total_count": len(rest), "check_runs": rest}))
+    replies[("api", "--method", "GET", "repos/owner/repo/actions/runs/12")] = (
+        0, json.dumps({"id": 12, "head_sha": _HEAD, "check_suite_id": 2, "workflow_id": 7, "name": "Body guard"}))
+    replies[("api", "--method", "GET", "repos/owner/repo/actions/runs/11")] = (
+        0, json.dumps({"id": 11, "head_sha": _HEAD, "check_suite_id": 1, "workflow_id": 7, "name": "Body guard"}))
+    calls = _scripted_gh(monkeypatch, replies)
     assert guard._check_states("5", None, None, lambda: _META) == ([], [])
-    assert [call[:2] for call in calls] == [["pr", "checks"], ["pr", "view"], ["api", "--method"], ["api", "--method"]]
+    assert [call[:2] for call in calls] == [["pr", "checks"], ["pr", "view"], *[["api", "--method"]] * 5]
     assert tuple(calls[1]) == _BOUND
 
 
