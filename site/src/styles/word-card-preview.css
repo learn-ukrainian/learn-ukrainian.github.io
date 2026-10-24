@@ -1,5 +1,6 @@
 /* Readable grouped word-card preview (lexicon-v2). Inherits site colours; no reduced-contrast text. */
 .word-card-preview h1[lang='uk'] { font-size: 2rem; margin: .5rem 0 .25rem; overflow-wrap: anywhere; }
+.wc-artifact-version { margin: 0; font-size: .8rem; }
 .wc-page-meta { margin: 0 0 1rem; font-size: .95rem; }
 .wc-entry { border-top: 2px solid currentColor; padding: .75rem 0 1rem; }
 .wc-entry h2 { font-size: 1.6rem; margin: 0; overflow-wrap: anywhere; }
@@ -12,6 +13,12 @@
 .wc-facts dd { grid-column: 2; margin: 0; overflow-wrap: anywhere; }
 .wc-facts [data-fact-value] { font-size: 1.1rem; }
 .wc-credits { font-size: .85rem; white-space: normal; }
+.wc-credits a:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+.wc-source-list { padding-left: 1.25rem; }
+/* Match Atlas index anchor clearance for the sticky CourseLayout header. */
+.wc-source-list > li { margin: 1rem 0; scroll-margin-top: 4rem; }
+.wc-source-list h4, .wc-source-list p { margin: .35rem 0; }
+.wc-binding dd { margin-left: 1rem; overflow-wrap: anywhere; }
 .wc-note { font-style: italic; }
 .wc-senses { margin: .25rem 0; padding-left: 1.5rem; }
 .wc-paradigm h4 { font-size: 1rem; margin: .75rem 0 .25rem; }
@@ -31,7 +38,7 @@
 /* C37 reuses the Atlas control row; candidate pages must not add a second sticky overlay. */
 .word-card-preview .word-switch { position: static; }
 @media (max-width: 40rem) {
-  .wc-facts { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .wc-facts { grid-template-columns: minmax(0, 1fr); gap: 0; line-height: 1.4; }
   .wc-facts dt, .wc-facts dd { grid-column: 1; }
   .wc-facts dd { margin-bottom: .35rem; }
   .word-card-preview h1[lang='uk'] { font-size: 1.75rem; }

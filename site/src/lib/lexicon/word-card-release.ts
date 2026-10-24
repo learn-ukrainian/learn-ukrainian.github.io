@@ -18,7 +18,7 @@ const manifestSchema = z.object({
   dataset_file: z.enum(['word-cards.json', 'word-cards.jsonl']), dataset_sha256: digest,
   dataset_bytes: count, card_count: count, certified_count: count,
   candidate_count: count, field_citation_count: count,
-  source_breakdown: z.record(nonempty, z.object({ filtered_assertions: count, filter_reasons: z.record(nonempty, count) })).optional(),
+  source_breakdown: z.record(nonempty, z.object({ filtered_assertions: count, filter_reasons: z.record(nonempty, count) }).catchall(json)).optional(),
   withdrawal_notice_sha256: digest.optional(),
 });
 const citationSchema = z.object({
@@ -53,7 +53,7 @@ function read(path: string): Buffer {
 }
 function faithfulJson(value: unknown): boolean {
   if (value === null || typeof value === 'boolean') return true;
-  if (typeof value === 'string') return !/[\u0000\uD800-\uDFFF]/u.test(value);
+  if (typeof value === 'string') return !value.includes('\0') && !/[\uD800-\uDFFF]/u.test(value);
   if (typeof value === 'number') return Number.isFinite(value) && (!Number.isInteger(value) || Number.isSafeInteger(value));
   if (Array.isArray(value)) return value.every(faithfulJson);
   return typeof value === 'object' && Object.entries(value).every(([key, item]) =>
