@@ -452,6 +452,16 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
+    "muse": {
+        "adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter",
+        "default_model": "muse-wonder-full-1.0",
+        "default_effort": "high",
+        "cost_tier": "unknown",
+        "capabilities": frozenset({"code_writing"}),
+        "cli_available": True,
+        "bridge_spawnable": False,
+        "resume_policy": "never",
+    },
 }
 
 

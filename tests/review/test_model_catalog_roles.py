@@ -27,6 +27,7 @@ from scripts.review.role_resolution import expanded_legacy_view
 from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.review.test_model_catalog import (
     CAPTURE,
+    assert_frozen_surfaces,
 )
 from tests.review.test_model_catalog import (
     CURRENT_BASELINE as APPROVED_BASELINE,
@@ -48,13 +49,13 @@ def test_v1_without_extension_and_v11_with_extension_are_accepted(catalog):
     assert validate_catalog(deepcopy(BASELINE["catalog"])) == BASELINE["catalog"]
     catalog["schema_version"] = "model-catalog.v1.1"
     assert validate_catalog(catalog)["schema_version"] == "model-catalog.v1.1"
-    assert expanded_legacy_view(catalog) == APPROVED_BASELINE["catalog"]
+    assert_frozen_surfaces({"catalog": expanded_legacy_view(catalog)}, surfaces=("catalog",))
 
 
 def test_expansion_is_independent_and_does_not_mutate_catalog(catalog):
     before = deepcopy(catalog)
     expanded = expanded_legacy_view(catalog)
-    assert expanded == APPROVED_BASELINE["catalog"]
+    assert_frozen_surfaces({"catalog": expanded}, surfaces=("catalog",))
     expanded["models"]["gpt-6.1-sol"]["roles"].clear()
     assert catalog == before
     assert expanded_legacy_view(BASELINE["catalog"]) == BASELINE["catalog"]
