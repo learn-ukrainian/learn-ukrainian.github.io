@@ -613,7 +613,10 @@ def _retrieve_retained_reuse(
         }
         reason = "would retrieve retained reuse output; creator must release retention before reap"
         if apply:
-            with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
+            with worktree_claims.worktree_lock(
+                worktree,
+                lock_dir=worktree_claims.repository_lock_dir(worktree_claims.control_plane_root(repo_root)),
+            ):
                 current = ignored_task_output.matching_worktree_records(
                     worktree, tasks_dir, repo_root=repo_root, publish_cache=False
                 )
@@ -1093,7 +1096,10 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
         if state.get("status") == "needs_finalize":
             ignored_task_output.reused_worktree_creator(before, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
             finalized = _finalized_reuse_proof(worktree, before, repo_root=repo_root)
-        with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
+        with worktree_claims.worktree_lock(
+            worktree,
+            lock_dir=worktree_claims.repository_lock_dir(worktree_claims.control_plane_root(repo_root)),
+        ):
             matches = ignored_task_output.matching_worktree_records(
                 worktree,
                 tasks_dir,
