@@ -5435,7 +5435,17 @@ def _reap_qualified_worktree(
                     ) from exc
             yield target
 
-        removal_started = True
+        @contextlib.contextmanager
+        def stage_removal(target: Path) -> Iterator[Path]:
+            nonlocal removal_started
+            with _measured_removal(measurement, recheck_preservation)(target) as staged:
+                try:
+                    yield staged
+                finally:
+                    # Entry can fail before destructive Git. Once its body
+                    # runs, even a stager finalizer failure follows our attempt.
+                    removal_started = True
+
         with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
             remove_error = worktree_claims.git_worktree_remove(
                 repo_root,
@@ -5445,7 +5455,7 @@ def _reap_qualified_worktree(
                 task_id=_dispatch_task_id(repo_root, info),
                 tasks_dir=task_store_paths.tasks_dir(),
                 preservation_receipt=preservation_receipt,
-                stage_removal=_measured_removal(measurement, recheck_preservation),
+                stage_removal=stage_removal,
                 **approval,
             )
         preserved_artifacts = preservation_receipt or None
