@@ -30,6 +30,57 @@ describe('ZnoPractice', () => {
     delete document.documentElement.dataset.chromeLocale;
   });
 
+  test('completed snapshots do not trap unseen tasks after remount or a new session', async () => {
+    const user = userEvent.setup();
+    const deck = { ...decks[0], items: Array.from({ length: 15 }, (_, index) => ({
+      ...decks[0].items[0], znoTaskId: `finished:${index}`, stem: `Unseen task ${index}`,
+    })) };
+    let view = render(<ZnoPractice deck={deck} />);
+    for (let index = 0; index < 8; index += 1) {
+      expect(screen.getByTestId('zno-session-progress')).toHaveTextContent(`${index}/8`);
+      await user.click(screen.getByRole('button', { name: 'Б друга' }));
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+    }
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('8/8');
+    const history = localStorage.getItem(SRS_STORAGE_KEY);
+    const answeredIds = new Set(loadState().reviews.map((review) => review.lemmaId));
+    const unseen = deck.items.filter((item) => !answeredIds.has(item.znoTaskId));
+    expect(unseen).toHaveLength(7);
+    view.unmount();
+    srs.clearLoadedSrsState();
+    view = render(<ZnoPractice deck={deck} />);
+    expect(screen.getByTestId('zno-session-progress')).toHaveTextContent('0/7');
+    for (let index = 0; index < 7; index += 1) {
+      const item = unseen.find((item) => screen.queryByText(item.stem));
+      expect(item).toBeDefined();
+      await user.click(screen.getByRole('button', { name: 'Б друга' }));
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+    }
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('7/7');
+    expect(loadState().reviews).toHaveLength(15);
+    await user.click(screen.getByRole('button', { name: 'Start a new session' }));
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/0');
+    expect(loadState().reviews).toHaveLength(15);
+    view.unmount();
+
+    // The summary action also reaches the seven unseen cards without a remount.
+    localStorage.clear();
+    srs.clearLoadedSrsState();
+    if (!history) throw new Error('Expected the first session to persist its reviews');
+    localStorage.setItem(SRS_STORAGE_KEY, history);
+    document.documentElement.dataset.chromeLocale = 'uk';
+    view = render(<ZnoPractice deck={deck} />);
+    await user.click(screen.getByRole('button', { name: 'Завершити сесію' }));
+    await user.click(screen.getByRole('button', { name: 'Почати нову сесію' }));
+    expect(screen.getByTestId('zno-session-progress')).toHaveTextContent('0/7');
+    expect(unseen.some((item) => screen.queryByText(item.stem))).toBe(true);
+    expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe(history);
+    const saved = srs.readZnoSessionSnapshot(deck.deckId);
+    if (saved.kind !== 'saved') throw new Error('Expected a fresh session snapshot');
+    expect(saved.snapshot.contentRevision.length).toBeLessThan(32);
+    view.unmount();
+  });
+
   test('resume after reload restores answered and unanswered items of a frozen queue', async () => {
     const user = userEvent.setup();
     const deck = { ...decks[0], items: Array.from({ length: 3 }, (_, index) => ({
@@ -83,10 +134,11 @@ describe('ZnoPractice', () => {
     expect(screen.getByTestId('zno-session-progress')).toHaveTextContent('0/1');
     await user.click(screen.getByRole('button', { name: 'Б друга' }));
     await user.click(screen.getByRole('button', { name: 'Next task' }));
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('1/1');
     view.unmount();
     srs.clearLoadedSrsState();
     view = render(<ZnoPractice deck={deck} />);
-    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('1/1');
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/0');
     expect(loadState().reviews.filter((review) => review.lemmaId === shared.znoTaskId)).toHaveLength(1);
     view.unmount();
   });
@@ -141,7 +193,7 @@ describe('ZnoPractice', () => {
     view.unmount();
     srs.clearLoadedSrsState();
     view = render(<ZnoPractice deck={decks[0]} />);
-    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/1');
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/0');
     expect(rate).toHaveBeenCalledTimes(1);
     expect(loadState().reviews.filter((review) => review.lemmaId === 'zno:7')).toHaveLength(1);
     view.unmount();
@@ -185,7 +237,7 @@ describe('ZnoPractice', () => {
     view.unmount();
     srs.clearLoadedSrsState();
     render(<ZnoPractice deck={decks[0]} />);
-    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('1/1');
+    expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/0');
     expect(rate).toHaveBeenCalledTimes(1);
     expect(loadState().reviews.filter((review) => review.lemmaId === 'zno:7')).toHaveLength(1);
   });

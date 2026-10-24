@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from 'react';
+import { useEffect, useImperativeHandle, useMemo, useRef, useState, type ReactNode, type Ref } from 'react';
 import { cardKey, loadState, rateCard, readZnoSessionSnapshot, writeZnoSessionSnapshot, selectZnoSessionTaskIds, type ZnoSessionSnapshot } from '../lib/lexicon/srs';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import { useChromeLocale } from '../lib/i18n/useChromeLocale';
@@ -212,14 +212,15 @@ function createSession(deck: ZnoPracticeDeck, dueOnly = false): ZnoSessionState 
 }
 
 function contentRevision(deck: ZnoPracticeDeck): string {
-  return JSON.stringify([...new Map(deck.items.map((item) => [item.znoTaskId, item])).values()]
+  const content = JSON.stringify([...new Map(deck.items.map((item) => [item.znoTaskId, item])).values()]
     .sort((left, right) => left.znoTaskId.localeCompare(right.znoTaskId)));
+  return `fnv1a:${hashSeed(content).toString(16).padStart(8, '0')}`;
 }
 
-function sessionSnapshot(deck: ZnoPracticeDeck, session: ZnoSessionState): ZnoSessionSnapshot {
+function sessionSnapshot(revision: string, session: ZnoSessionState): ZnoSessionSnapshot {
   return {
     version: 1,
-    contentRevision: contentRevision(deck),
+    contentRevision: revision,
     queue: session.queue.map((item) => item.znoTaskId),
     answers: [...session.answers],
     repetitions: [...session.repetitions],
@@ -248,7 +249,10 @@ function restoreSession(deck: ZnoPracticeDeck): ZnoSessionState | null {
     || queue.some((item) => !repetitions.has(item.znoTaskId))
     || snapshot.answers.some(([id, index]) => !queueIds.has(id) || index >= (byId.get(id)?.options.length ?? 0))) return null;
   const phase = snapshot.phase;
-  if (phase.kind === 'summary') return { queue, answers, repetitions, retryUsed: snapshot.retryUsed, phase };
+  if (phase.kind === 'summary') {
+    if (answers.size === queue.length) return createSession(deck);
+    return { queue, answers, repetitions, retryUsed: snapshot.retryUsed, phase };
+  }
   const items = phase.items.flatMap((id) => {
     const item = byId.get(id);
     return item ? [item] : [];
@@ -287,6 +291,7 @@ function ZnoSession({ deck, initialSession, onExit, sessionControlsRef }: {
 }) {
   const chromeLocale = useChromeLocale();
   const chrome = CHROME_STRINGS[chromeLocale];
+  const revision = useMemo(() => contentRevision(deck), [deck]);
   const [session, setSession] = useState(initialSession);
   const [storageFailed, setStorageFailed] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -311,13 +316,13 @@ function ZnoSession({ deck, initialSession, onExit, sessionControlsRef }: {
   missed.forEach((item) => topicErrors.set(item.topicTag, (topicErrors.get(item.topicTag) ?? 0) + 1));
 
   function persist() {
-    setStorageFailed(!writeZnoSessionSnapshot(deck.deckId, sessionSnapshot(deck, session)));
+    setStorageFailed(!writeZnoSessionSnapshot(deck.deckId, sessionSnapshot(revision, session)));
   }
 
   useEffect(() => {
-    const saved = writeZnoSessionSnapshot(deck.deckId, sessionSnapshot(deck, session));
+    const saved = writeZnoSessionSnapshot(deck.deckId, sessionSnapshot(revision, session));
     setStorageFailed(!saved);
-  }, [deck, session]);
+  }, [deck, revision, session]);
 
   const storageNotice = storageFailed ? <div role="alert">
     <p>{chrome['zno.storageFailure']}</p>
@@ -386,6 +391,7 @@ function ZnoSession({ deck, initialSession, onExit, sessionControlsRef }: {
             {!session.retryUsed ? <button type="button" className="btn" onClick={() => setSession({ ...session, retryUsed: true, phase: { kind: 'retry', items: missed, index: 0, selectedIndex: null } })}>{chrome['zno.retryMissedOnce']}</button> : null}
           </> : null}
           {dueQueue.length > 0 ? <button type="button" className="btn btn-accent" onClick={() => setSession(createSession(deck, true))}>{chrome['zno.continueDue']}</button> : null}
+          <button type="button" className="btn" onClick={() => setSession(createSession(deck))}>{chrome['zno.startNewSession']}</button>
           <button type="button" className="btn" onClick={onExit}>{chrome['zno.exit']}</button>
         </div>
       </div>
