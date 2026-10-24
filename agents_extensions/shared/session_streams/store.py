@@ -170,12 +170,14 @@ def _idna_label(label: str) -> str:
     """
     if label.isascii():
         return label.lower()
-    label = _COMBINING_DIACRITICS_RE.sub("", unicodedata.normalize("NFC", label))
+    normalized = unicodedata.normalize("NFC", label)
     try:
-        # Nameprep uses full case folding; codec mappings differ across Python releases.
-        return label.casefold().encode("idna").decode("ascii").lower()
+        # Nameprep uses full case folding, which maps İ (U+0130) to "i" + U+0307;
+        # strip combining marks after folding so a dotted capital I cannot hide
+        # an ASCII suffix. Codec mappings differ across Python releases.
+        return _COMBINING_DIACRITICS_RE.sub("", normalized.casefold()).encode("idna").decode("ascii").lower()
     except UnicodeError:
-        return label
+        return _COMBINING_DIACRITICS_RE.sub("", normalized)
 
 
 def load_public_suffix_labels(path: Path, *, sha256: str = PUBLIC_SUFFIX_LIST_SHA256) -> frozenset[str]:

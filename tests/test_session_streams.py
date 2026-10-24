@@ -1073,6 +1073,20 @@ def test_internationalized_host_names_are_rejected(body: str) -> None:
 
 
 @pytest.mark.parametrize(
+    "body",
+    [
+        "example.İO",
+        "example.İNFO",
+        "example.Aİ",
+        "Changed `host_vars/web01.İSTANBUL.yaml`.",
+    ],
+)
+def test_dotted_capital_i_suffix_labels_are_rejected(body: str) -> None:
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        validate_entry_body(body)
+
+
+@pytest.mark.parametrize(
     ("separator", "template"),
     product(
         ("。", "．", "｡"),
