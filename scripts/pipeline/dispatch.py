@@ -16,9 +16,11 @@ from pathlib import Path
 
 try:
     from agent_runtime.adapters.claude import run_headless_claude
+    from common.http_status import has_http_status
     from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 except ModuleNotFoundError:
     from scripts.agent_runtime.adapters.claude import run_headless_claude
+    from scripts.common.http_status import has_http_status
     from scripts.utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 # Late imports to avoid circular dependencies
@@ -104,7 +106,6 @@ _RATE_LIMIT_PATTERNS = [
     "RESOURCE_EXHAUSTED",
     "rate limit",
     "quota exceeded",
-    "429",
 ]
 
 # Transient network error signatures (TLS drops, socket resets)
@@ -142,7 +143,7 @@ def _effective_agy_route(model: str | None) -> tuple[str, str | None]:
 def _is_rate_limited(output: str) -> bool:
     """Check if dispatch failed due to rate limiting or auth exhaustion."""
     lower = output.lower()
-    return any(p.lower() in lower for p in _RATE_LIMIT_PATTERNS)
+    return has_http_status(output, (429,)) or any(p.lower() in lower for p in _RATE_LIMIT_PATTERNS)
 
 
 def _is_transient_error(output: str) -> bool:

@@ -8,6 +8,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
+try:
+    from common.http_status import has_http_status
+except ModuleNotFoundError:
+    from scripts.common.http_status import has_http_status
+
 PRIMARY_GEMINI_MODEL = "gemini-3.8-flash-high"
 AGY_GEMINI_MODEL = "gemini-3.8-flash-high"
 FLASH_GEMINI_MODEL = "gemini-3.8-flash-high"
@@ -36,8 +41,7 @@ GEMINI_AUTH_ENV_VARS = (
 #: ``resource_exhausted`` is the GRPC status name for 429; Gemini sometimes
 #: prints it instead of a numeric 429 code.
 _RATE_LIMIT_MARKERS = (
-    # HTTP / GRPC status codes (numeric + name forms)
-    "429",
+    # GRPC status name; numeric HTTP status is matched separately.
     "resource_exhausted",
     # Explicit quota / rate-limit phrases from Gemini CLI stderr
     "quota",
@@ -292,7 +296,7 @@ def resolve_allowed_auth_modes(
 def is_gemini_rate_limited(stderr_text: str | None) -> bool:
     """Return True when stderr matches the Gemini quota/rate-limit policy."""
     haystack = (stderr_text or "").lower()
-    return any(marker in haystack for marker in _RATE_LIMIT_MARKERS)
+    return has_http_status(haystack, (429,)) or any(marker in haystack for marker in _RATE_LIMIT_MARKERS)
 
 
 def visible_sleep(seconds: int, reason: str, *, logger: Callable[[str], None] | None = None) -> None:

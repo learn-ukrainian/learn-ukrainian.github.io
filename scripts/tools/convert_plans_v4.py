@@ -45,6 +45,8 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.common.http_status import has_http_status
+
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
 TEMPLATES_PATH = PROJECT_ROOT / "docs" / "l2-uk-en" / "v4-seminar-section-templates.yaml"
 
@@ -211,7 +213,7 @@ def call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
                 continue
 
             if proc.returncode != 0:
-                if "429" in stderr or "quota" in stderr.lower() or "rate" in stderr.lower():
+                if has_http_status(stderr, (429,)) or "quota" in stderr.lower() or "rate" in stderr.lower():
                     delay = 60 * (attempt + 1)
                     print(f"    ⏳ Rate limited, waiting {delay}s")
                     time.sleep(delay)

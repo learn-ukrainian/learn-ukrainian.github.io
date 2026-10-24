@@ -10,6 +10,7 @@ from agent_runtime.adapters.agy import (
     _normalize_model,
 )
 from agent_runtime.adapters.kimi import KimiAdapter, resolve_kimi_model
+from common.http_status import has_http_status
 
 from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, AGY_CLI
 
@@ -140,7 +141,7 @@ def _handle_model_check_failure(result, model: str, _time):
     stderr = result.stderr or ""
     if "not found" in stderr.lower() or "not available" in stderr.lower() or "invalid model" in stderr.lower():
         print(f"❌ Model '{model}' is not available on this account.")
-    elif "exhausted" in stderr.lower() or "429" in stderr or "quota" in stderr.lower():
+    elif "exhausted" in stderr.lower() or has_http_status(stderr, (429,)) or "quota" in stderr.lower():
         print(f"⚠️  Model '{model}' exists but quota is exhausted.")
     else:
         print(f"⚠️  Model '{model}' check failed (exit {result.returncode}): {stderr[:200]}")
