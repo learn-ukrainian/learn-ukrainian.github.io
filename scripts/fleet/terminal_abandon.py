@@ -58,18 +58,18 @@ def _activity(
     successor: bool = False,
     merged: bool = False,
 ) -> None:
+    info = rw.WorktreeInfo(tree, claims.checked_out_branch(tree), head)
     try:
-        active = rw._active_task_ids()
+        active, probe_error = rw._resolve_activity_probe(primary, info, rw._read_active_task_probe())
         cwds = rw._live_cwd_paths(primary)
     except Exception:
         raise Refusal("ACTIVITY_UNKNOWN", "live task or process activity probe unavailable") from None
-    if not isinstance(active, set) or cwds is None:
+    if probe_error is not None or not isinstance(active, set) or cwds is None:
         raise Refusal("ACTIVITY_UNKNOWN", "live task or process activity probe unavailable")
     if any(member.get("task_id") in active for _, member in matches):
         raise Refusal("LIVE_OR_WANTED", "a bound task is active")
     if any(not output.abandon_task_is_terminal(member, successor=successor, merged=merged) for _, member in matches):
         raise Refusal("LIVE_OR_WANTED", "bound task status, PID, lease or retention does not permit abandonment")
-    info = rw.WorktreeInfo(tree, claims.checked_out_branch(tree), head)
     if rw._activity_reason(repo_root=primary, info=info, active_ids=active, live_cwds=cwds) is not None:
         raise Refusal("LIVE_OR_WANTED", "tree has live process, review, rollover, ownership or reap activity")
 

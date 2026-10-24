@@ -12022,12 +12022,13 @@ def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeyp
 
 @pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
 @pytest.mark.parametrize("holder", ["settled", "live_pid", "live_cwd", "missing_record", "complete"])
-def test_branch_holder_monitor_outage_preserves_release_guards(monkeypatch, tmp_tasks_dir, failure, holder):
+def test_branch_holder_monitor_outage_preserves_release_guards(tmp_path, monkeypatch, tmp_tasks_dir, failure, holder):
     import urllib.request
 
     from scripts.orchestration import reap_worktrees
 
-    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "legacy"
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    occupied = tmp_path / ".worktrees" / "dispatch" / "codex" / "legacy"
     state = {"task_id": "legacy", "status": "done", "pid": os.getpid() if holder == "live_pid" else None}
     if holder != "missing_record":
         delegate._write_state_atomic(delegate._state_path("legacy"), state)
@@ -12049,14 +12050,8 @@ def test_branch_holder_monitor_outage_preserves_release_guards(monkeypatch, tmp_
         complete=holder == "complete",
     )
 
-    if holder == "settled":
-        assert reason is None
-    elif holder == "live_pid":
-        assert reason == "live task PID for task-id=legacy"
-    elif holder == "live_cwd":
-        assert reason == f"live process cwd={occupied / 'scripts'}"
-    else:
-        assert reason == "active-task probe unavailable"
+    # This legacy record has no checkout binding, so transport fallback refuses.
+    assert reason == "active-task probe unavailable"
     if holder not in {"complete", "missing_record"}:
         diagnostic = (tmp_tasks_dir / "legacy.diag").read_text()
         assert "active_task_probe_" in diagnostic
@@ -15980,7 +15975,9 @@ def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, 
     assert worktree.exists()
 
 
-@pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
+@pytest.mark.parametrize(
+    "failure", [ValueError("invalid response"), urllib.error.HTTPError("monitor", 504, "timeout", {}, None)]
+)
 @pytest.mark.parametrize("apply", [False, True])
 def test_rescue_monitor_outage_skips_without_error(tmp_path, monkeypatch, tmp_tasks_dir, capsys, failure, apply):
     import urllib.request
@@ -16008,6 +16005,70 @@ def test_rescue_monitor_outage_skips_without_error(tmp_path, monkeypatch, tmp_ta
     assert type(failure).__name__ in diagnostic
     assert state_path.read_bytes() == original_state
     assert (worktree / "artifact.txt").read_bytes() == original_artifact
+
+
+@pytest.mark.parametrize("live_pid", [False, True])
+def test_rescue_probe_timeout_falls_back_but_preserves_live_worker(tmp_path, monkeypatch, tmp_tasks_dir, live_pid):
+    """A transport outage must neither strand terminal work nor rescue a live worker."""
+    import urllib.request
+    from unittest.mock import Mock
+
+    from scripts.orchestration import reap_worktrees as rw
+
+    real_probe = rw._active_task_ids
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "primary/batch_state/tasks"))
+    _primary, worktree, origin, path = _rescue_checkout(tmp_path, monkeypatch)
+    if live_pid:
+        state = delegate._read_state(path)
+        state["pid"] = os.getpid()
+        delegate._write_state_atomic(path, state)
+    calls = []
+    pauses = []
+
+    def timeout(*_args, **kwargs):
+        calls.append(kwargs["timeout"])
+        raise TimeoutError("deadline")
+
+    monkeypatch.setattr(urllib.request, "urlopen", timeout)
+    monkeypatch.setattr(rw, "_active_task_ids", real_probe)
+    monkeypatch.setattr(rw, "time", Mock(wraps=rw.time, sleep=pauses.append))
+    result = delegate._rescue_task(path, apply=True)
+    if live_pid:
+        assert result["action"] == "skipped" and result["reason"] == "task process alive"
+        assert delegate._read_state(path).get("rescue_ref") is None
+        assert calls == []
+    else:
+        assert result["action"] == "rescued", result
+        assert calls == [3, 3] and pauses == [0.2]
+        preserved = subprocess.run(
+            ["git", "--git-dir", str(origin), "show", f"{result['rescue_ref']}:artifact.txt"],
+            check=True, capture_output=True, timeout=30,
+        ).stdout
+        assert preserved == b"work to preserve\n"
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("live_pid", [False, True])
+def test_abandon_holder_probe_timeout_falls_back_but_preserves_live_worker(
+    tmp_path, monkeypatch, tmp_tasks_dir, live_pid,
+):
+    """Review abandonment must resolve transport failures without releasing live work."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "primary/batch_state/tasks"))
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch)
+    state = delegate._read_state(path)
+    if live_pid:
+        state["pid"] = os.getpid()
+        delegate._write_state_atomic(path, state)
+
+    def timeout():
+        raise rw._ActiveTaskProbeFailure("active_task_probe_timeout: TimeoutError", fallback_allowed=True)
+
+    monkeypatch.setattr(rw, "_active_task_ids", timeout)
+    reason = delegate._branch_holder_activity_reason(worktree, task_id=state["task_id"], task_state=state)
+    assert reason == ("active-task probe unavailable" if live_pid else None)
+    assert worktree.exists()
 
 
 def test_settle_zombie_with_unpushed_commit_is_rescue_candidate(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
