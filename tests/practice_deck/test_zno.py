@@ -99,6 +99,39 @@ def test_builder_keeps_ukrainian_item_text_maps_letter_and_reports_drops(tmp_pat
     assert fill_residual["deckDrops"]["stress"][0]["reason"] == "invalid_options"
 
 
+def test_builder_attaches_registered_explanations_without_fabricating_missing_entries(tmp_path: Path) -> None:
+    """Prevent missing, cross-item or invented explanations, including shared deck appearances."""
+    database = _database(tmp_path / "sources.db")
+    with sqlite3.connect(database) as connection:
+        connection.execute("UPDATE zno_tasks SET topic_norm = 'lexical_norm' WHERE id = 2")
+    explanation = {
+        "rule": "Добирайте слово за змістом.",
+        "correctLetter": "Д",
+        "correctAnswer": "Пояснення правильного варіанта.",
+        "options": {"А": "Пояснення іншого варіанта."},
+        "sources": [{"tool": "mcp__sources__verify_words", "arguments": {"words": ["слово"]}}],
+    }
+    registry = tmp_path / "explanations.json"
+    registry.write_text(json.dumps({
+        "schema": "zno-explanations", "schemaVersion": 1,
+        "items": {"zno:2": explanation},
+        "withheld": {"zno:3": {"reason": "Потребує перевірки."}},
+    }), encoding="utf-8")
+
+    shards, _, _ = build_zno_shards(database, explanations_path=registry)
+
+    for deck in ("paronym", "lexical-norm"):
+        registered = next(item for item in shards[deck]["items"] if item["znoTaskId"] == "zno:2")
+        assert registered["explanation"] == explanation
+    unregistered = next(item for item in shards["lexical-norm"]["items"] if item["znoTaskId"] == "zno:3")
+    assert "explanation" not in unregistered
+    assert all(
+        "explanation" not in item
+        for shard in shards.values() for item in shard["items"]
+        if item["znoTaskId"] != "zno:2"
+    )
+
+
 def test_lexical_predicate_is_explicit_and_output_is_deterministic(tmp_path: Path) -> None:
     database = _database(tmp_path / "sources.db")
     assert "trim(t.topic_norm) = 'lexical_norm'" in LEXICAL_NORM_SQL
