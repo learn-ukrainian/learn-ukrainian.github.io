@@ -379,14 +379,50 @@ session_supervisor_start_inbox_watch() {
     unset LC_SUPERVISORY_ORIGINAL_ARGS_FD
     exec 214>&- 215<&-
     if [ "${0##*/}" = start-claude-cto.sh ]; then
-      local capture_file
-      if capture_file="$(mktemp)"; then
-        if { exec 215<"$capture_file" 214>"/proc/self/fd/215"; } 2>/dev/null \
-            && printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}" >&214; then
-          export LC_SUPERVISORY_ORIGINAL_ARGS_FD=215
-        fi
-        exec 214>&-
-        rm -f "$capture_file"
+      local capture_python
+      if capture_python="$(launcher_project_python 2>/dev/null)"; then
+        # Use the existing scratch owner only while creating the anonymous
+        # capture. Exec preserves the watcher's PID and notification parent;
+        # the private argv stream avoids exec's per-string environment limit.
+        exec 214< <(printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}")
+        exec 216<&-
+        exec "$capture_python" -c '
+import os
+import sys
+sys.path.insert(0, sys.argv[1])
+scratch = None
+try:
+    with os.fdopen(214, "rb") as original:
+        raw = original.read()
+    if os.waitpid(int(sys.argv[4]), 0)[1] != 0:
+        raise ValueError("argument stream failed")
+    import tempfile
+    from scripts.common.task_scratch import allocate
+    scratch = allocate("cto-argument-capture")
+    try:
+        with tempfile.TemporaryFile(dir=scratch.payload_dir) as capture:
+            capture.write(raw)
+            capture.flush()
+            reader = os.open(f"/proc/self/fd/{capture.fileno()}", os.O_RDONLY)
+        try:
+            os.dup2(reader, 215, inheritable=True)
+        finally:
+            if reader != 215:
+                os.close(reader)
+    finally:
+        scratch.remove()
+        scratch = None
+    os.environ["LC_SUPERVISORY_ORIGINAL_ARGS_FD"] = "215"
+except Exception:
+    # Capture/setup refusal leaves the watcher alive to refuse before claim.
+    if scratch is not None:
+        scratch.preserve()
+    try:
+        os.close(215)
+    except OSError:
+        pass
+os.execv(sys.argv[2], [sys.argv[2], sys.argv[3], "--live-supervisory", "--notify-parent"])
+' "$LC_ROOT" "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" "$!"
       fi
     fi
     exec 216<&-
