@@ -126,7 +126,9 @@ and consumes no allowance.
 
 Exit 0 means the request was accepted; it does not prove that rerun jobs passed.
 Exit 1 reports a `gh` failure. Exit 2 reports invalid input, an unknown lookup,
-a policy refusal, or a transport error. Other `gh` exit codes propagate.
+a policy refusal, or a transport error. The project GitHub client returns 75
+for a rate-limit refusal during run lookup, before any write. Other `gh` exit
+codes propagate.
 `run-rerun --help` lists the selectors and recovery conditions.
 
 ## Raw gh reads and private writes

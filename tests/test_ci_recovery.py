@@ -475,6 +475,11 @@ def test_cli_uses_the_same_allowance(setup, capsys):
     assert "Outputs:" in help_text and "one PR-head recovery allowance" in help_text
     assert "Exit codes: 0 request accepted, job results unverified" in help_text
     assert "2 invalid input, unknown lookup, policy refusal or transport error" in help_text
+    assert (
+        "The project GitHub client returns 75 for a rate-limit refusal during run lookup, before any write."
+        in help_text
+    )
+    assert "Other gh exit codes propagate." in help_text
     assert "Related:" in help_text and "pr-update-branch" in help_text
     unreadable.assert_not_called()
 

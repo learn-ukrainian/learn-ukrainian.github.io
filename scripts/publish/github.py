@@ -771,7 +771,9 @@ def main(argv=None, *, runner=None):
                 "  It consumes the one PR-head recovery allowance shared with re-enqueue before sending the write.\n"
                 "  A failed run lookup stays RECOVERY_LOOKUP_UNKNOWN, sends no write and consumes no allowance.\n"
                 "Exit codes: 0 request accepted, job results unverified; 1 gh failure;\n"
-                "  2 invalid input, unknown lookup, policy refusal or transport error. Other gh exit codes propagate.\n"
+                "  2 invalid input, unknown lookup, policy refusal or transport error.\n"
+                "  The project GitHub client returns 75 for a rate-limit refusal during run lookup, before any write.\n"
+                "  Other gh exit codes propagate.\n"
                 "Related: docs/dev/agent-public-text.md; read run; pr-update-branch."
             )
         for key, kind in schema.items():
