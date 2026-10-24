@@ -13,6 +13,9 @@ file only points there and adds what the CTO seat learned on top.
 ## Reviews
 
 Seat, run and record every code or infra review with the `local-code-review` skill, which owns reviewer resolution.
+Load that skill before seating a review; a copied dispatch command skips its steps. After the
+reviewer exits, publish the verdict with `scripts/review/record_cf_verdict.py`. A review
+dispatch alone publishes nothing, and the merge-queue keeper waits for the published verdict.
 
 ## Reap before re-dispatch
 

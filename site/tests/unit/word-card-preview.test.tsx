@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import schema from '../../../schemas/word-card-v1.schema.json';
-import WordCardPreview from '../../src/lexicon/WordCardPreview';
+import WordCardPreview, { candidateSearchVisible } from '../../src/lexicon/WordCardPreview';
 import { compareCurrent, fieldStates, pairCurrent, previewCard } from '../../src/lib/lexicon/word-card-preview';
 import { hash, loadCases, previewInputs, record, revisionCases, relationCases } from '../fixtures/word-card-preview/inputs';
 import snapshot from '../fixtures/word-card-preview/current';
@@ -34,7 +34,7 @@ describe('source-bound preview mechanics', () => {
     for (const group of ['forms', 'stress', 'senses', 'examples', 'citations']) expect(screen.getByRole('region', { name: group })).toBeVisible();
     expect(screen.getByText('EXAMPLE_RAW')).toBeVisible();
     expect(card.fields.find(f => f.group === 'stress')?.raw).toEqual(['CONTROL_RAW']);
-    expect(card.fields.every(f => f.raw.every(v => !/[^\x00-\x7f]/.test(JSON.stringify(v))))).toBe(true);
+    expect(card.fields.every(f => f.raw.every(v => [...JSON.stringify(v)].every(ch => ch.charCodeAt(0) < 0x80)))).toBe(true);
     cleanup();
   });
   it('displays exact raw strings, keeps source citations and escapes untrusted text', () => {
@@ -210,18 +210,27 @@ describe('source-bound preview mechanics', () => {
   });
 });
 
+describe('candidate route C37 search', () => {
+  it('puts the existing search only on word and card candidate routes', () => {
+    expect(candidateSearchVisible('release')).toBe(false);
+    expect(candidateSearchVisible('compare/release')).toBe(false);
+    for (const route of ['word/замок', 'compare/word/замок', 'release/wc_0123456789ab', 'compare/release/wc_0123456789ab'])
+      expect(candidateSearchVisible(route), route).toBe(true);
+  });
+});
+
 describe('readable grouped release pages', () => {
   const pin = { release_version: 'v-test', provenance: 'producer-declared', dataset_sha256: 'a'.repeat(64), manifest_sha256: 'b'.repeat(64) } as const;
   let n = 0;
   const f = (card: string, field: string, value: ReleaseRow['fields'][number]['value'], source = 'ulif', subject: ReleaseRow['fields'][number]['subject'] = { kind: 'card', id: card }) => ({
     assertion_id: `wa_${String(n++).padStart(24, '0')}`, subject, field, value, citation: { source_id: source, snapshot_id: 's', locator: 'l',
       licence_ref: { register_source_id: source, register_version: 1 }, licence: { name: 't' }, terms_ref: 'r',
-      attribution: source === 'ulif' ? 'ULIF https://lcorp.ulif.org.ua/dictua/' : source === 'vesum' ? 'VESUM <used version> https://vesum.nlp.net.ua/' : 'javascript:alert(1) https://evil.invalid/' } });
+      attribution: source === 'ulif' ? 'ULIF https://lcorp.ulif.org.ua/dictua/' : source === 'vesum' ? 'VESUM <used version> https://vesum.nlp.net.ua/' : source === 'puls' ? 'PULS citation above.' : 'javascript:alert(1) https://evil.invalid/' } });
   const rows: ReleaseRow[] = [
     { card_id: 'wc_p', card_kind: 'proper_name', card_version: 'v1', status: 'CANDIDATE', known_gaps: [], fields: [f('wc_p', 'spelling', 'Замок'),
       f('wc_p', 'sense_label', 'село', 'ulif', { kind: 'sense', id: 'ws_p' })] },
     { card_id: 'wc_a', card_kind: 'lexeme', card_version: 'v1', status: 'CANDIDATE', known_gaps: ['<b>gap</b>'], fields: [f('wc_a', 'spelling', 'замок'),
-      f('wc_a', 'stress', 'замо́к'), f('wc_a', 'stress', '<script>globalThis.x=1</script>', 'evil'), f('wc_a', 'pos', 'noun', 'vesum')] },
+      f('wc_a', 'stress', 'замо́к'), f('wc_a', 'stress', '<script>globalThis.x=1</script>', 'evil'), f('wc_a', 'pos', 'noun', 'vesum'), f('wc_a', 'cefr', 'A1', 'puls')] },
     { card_id: 'wc_b', card_kind: 'lexeme', card_version: 'v1', status: 'CANDIDATE', known_gaps: [], fields: [f('wc_b', 'spelling', 'замок'), f('wc_b', 'stress', 'за́мок'),
       f('wc_b', 'paradigm', { slot: 'v_naz.s', forms: ['за́мок'] }), f('wc_b', 'paradigm', { slot: 'v_naz.p', forms: ['за́мки'] }), f('wc_b', 'paradigm', { slot: 'inf', forms: ['x'] }),
       f('wc_b', 'paradigm', { slot: 'v_rod.s', forms: ['за́мку'] }), f('wc_b', 'paradigm', { slot: 'zz', forms: ['?'] }), f('wc_b', 'definition_uk', 'будівля')] },
@@ -246,8 +255,20 @@ describe('readable grouped release pages', () => {
     expect(html).not.toContain('<script>');
     expect(html).toContain('&lt;script&gt;globalThis.x=1&lt;/script&gt;');
     expect(Array.from(dom.querySelectorAll('[data-credit-link]')).map(l => l.getAttribute('href'))).toEqual(expect.arrayContaining(['https://lcorp.ulif.org.ua/dictua/', 'https://vesum.nlp.net.ua/']));
-    expect(Array.from(dom.querySelectorAll('a')).map(l => l.getAttribute('href') ?? '').filter(h => !/^https:\/\/(lcorp\.ulif\.org\.ua|vesum\.nlp\.net\.ua|github\.com\/learn-ukrainian)\//.test(h))).toEqual([]);
-    expect(a?.querySelector('[data-credit-gap="vesum_version_placeholder"]')).not.toBeNull();
+    expect(Array.from(dom.querySelectorAll('a')).map(l => l.getAttribute('href') ?? '').filter(h => !h.startsWith('#source-') && !h.startsWith('/lexicon-v2/release/') && !/^https:\/\/(lcorp\.ulif\.org\.ua|vesum\.nlp\.net\.ua|puls\.peremova\.org|github\.com\/learn-ukrainian)\//.test(h))).toEqual([]);
+    expect(dom.querySelector('[data-credit-gap]')).toBeNull();
+    expect(html).not.toContain('&lt;used version&gt;');
+    expect(dom.querySelector('[data-page-audit]')?.hasAttribute('open')).toBe(false);
+    expect(Array.from(dom.querySelectorAll('[data-source-credit]')).map(e => e.getAttribute('data-source-credit'))).toEqual(['ulif', 'evil', 'vesum', 'puls']);
+    expect(Array.from(dom.querySelectorAll('[data-source-credit="puls"] [data-credit-attribution]')).map(p => p.textContent)).toEqual([
+      'Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org',
+    ]);
+    expect(dom.querySelector('[data-source-credit="puls"] [data-credit-link]')?.getAttribute('href')).toBe('https://puls.peremova.org/');
+    expect(dom.querySelector('[data-source-credit="puls"] [data-credit-licence]')?.textContent).toBe('Licence: {"name":"t"}');
+    expect(dom.textContent).not.toContain('PULS citation above.');
+    expect(Array.from(dom.querySelectorAll('[data-credit-ref]')).every(link => dom.querySelector(link.getAttribute('href') ?? '') !== null)).toBe(true);
+    expect(dom.querySelectorAll('[data-source-credit="ulif"] [data-credit-attribution]')).toHaveLength(1);
+    expect(dom.querySelector('[data-local-artifact-version]')?.textContent).toContain('v0.1.1');
     expect(dom.querySelector('[aria-label="Field comparison"]')).toBeNull();
   });
   it('keeps every raw assertion, citation and report action in collapsed audit details', () => {
@@ -258,6 +279,23 @@ describe('readable grouped release pages', () => {
       expect(audit?.hasAttribute('open')).toBe(false);
       expect(Array.from(audit?.querySelectorAll('[data-release-assertion]') ?? []).map(e => e.getAttribute('data-release-assertion'))).toEqual(entry.row.fields.map(x => x.assertion_id));
       expect(audit?.querySelectorAll('[data-report-action]')).toHaveLength(entry.row.fields.length);
+      expect(audit?.querySelector('[data-release-citation], [data-source-attribution], [data-attribution-gap]')).toBeNull();
+      const raw = view(renderToStaticMarkup(<WordCardPreview card={{ kind: 'release-card', row: entry.row, pin }} current={null} compare />));
+      for (const field of entry.row.fields) {
+        const learner = audit?.querySelector(`[data-release-assertion="${field.assertion_id}"]`);
+        const original = raw.querySelector(`[data-release-assertion="${field.assertion_id}"]`);
+        const rawLink = learner?.querySelector('[data-raw-diagnostic]')?.getAttribute('href');
+        expect(rawLink).toBe(`/lexicon-v2/release/${entry.row.card_id}/#${original?.id}`);
+        expect(learner?.querySelector('[data-raw-value]')?.textContent).toBe(original?.querySelector('[data-raw-value]')?.textContent);
+        expect(learner?.querySelector('[data-assertion-source]')?.textContent).toBe(field.citation.source_id);
+        expect(learner?.querySelector('[data-assertion-snapshot]')?.textContent).toBe(field.citation.snapshot_id);
+        expect(learner?.querySelector('[data-assertion-locator]')?.textContent).toBe(field.citation.locator);
+        expect(learner?.querySelector('[data-report-action]')?.getAttribute('href')).toBe(original?.querySelector('[data-report-action]')?.getAttribute('href'));
+        expect(JSON.parse(original?.querySelector('[data-release-citation]')?.textContent ?? '')).toEqual(field.citation);
+        expect(original?.querySelector('[data-source-attribution]')?.textContent).toBe(field.citation.attribution);
+        if (field.citation.source_id === 'vesum') expect(original?.querySelector('[data-attribution-gap]')?.getAttribute('data-attribution-gap')).toBe('vesum_version_placeholder');
+        if (field.citation.source_id === 'puls') expect(original?.querySelector('[data-attribution-gap]')?.getAttribute('data-attribution-gap')).toBe('puls_reference_placeholder');
+      }
     }
     expect(Array.from(dom.querySelectorAll('pre')).filter(pre => !pre.closest('details'))).toEqual([]);
     expect(dom.querySelector('[aria-label="Field comparison"]')?.textContent).toContain('Unresolved pairing');

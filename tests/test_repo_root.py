@@ -328,7 +328,7 @@ def test_project_interpreter_accepts_hosted_python3_12(tmp_path, monkeypatch):
     """A versioned interpreter outside any checkout ``.venv/bin`` is the CI fallback."""
     checkout = tmp_path / "checkout"
     checkout.mkdir()
-    hosted = tmp_path / "hostedtoolcache" / "Python" / "3.12.14" / "x64" / "bin" / "python3.12"
+    hosted = tmp_path / "hostedtoolcache" / "Python" / "3.12.15" / "x64" / "bin" / "python3.12"
     hosted.parent.mkdir(parents=True)
     hosted.write_text("", encoding="utf-8")
     alias = tmp_path / "hosted-alias"

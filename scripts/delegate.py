@@ -252,6 +252,7 @@ from scripts.orchestration.dead_worker_state import (
     worker_liveness,
     write_state_unlocked,
 )
+from scripts.orchestration.fleet_repos import FleetRepo, load_fleet_repos, resolve_fleet_repo
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
@@ -2538,6 +2539,9 @@ def _ensure_sibling_repo_worktree(
     run_nonce: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_branch: str | None = None,
+    pinned_head_sha: str | None = None,
+    repository: str | None = None,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
@@ -2545,9 +2549,20 @@ def _ensure_sibling_repo_worktree(
     ``_fetch_base``) stay on :data:`_REPO_ROOT`. Sibling repos get a narrow
     fetch + ``git worktree add`` path so private product/infra trees are not
     forced through public monorepo provisioning (#672 P2.1). ``validated_path``,
-    when given, is used as is and never resolved again (#8775).
+    when given, is used as is and never resolved again (#8775). Direct branch
+    reviews fetch and verify the admitted pin, then detach at that exact commit.
     """
+    if review_branch:
+        error = _validated_path_changed_error("--repo", Path(repo_root))
+        if error:
+            raise ValueError(error)
     root = Path(repo_root).resolve()
+    if review_branch:
+        from scripts.review.target_resolution import TargetResolutionError, live_canonical_branch_head
+
+        review_branch = _validate_branch_reuse_name(review_branch, repo_root=root)
+        if not detached or not repository or not re.fullmatch(r"[0-9a-f]{40}", pinned_head_sha or ""):
+            raise ValueError("sibling branch review requires a detached worktree and a concrete repository/head pin")
     if validated_path is not None:
         worktree_path = validated_path
     elif raw_path is None:
@@ -2556,11 +2571,23 @@ def _ensure_sibling_repo_worktree(
         path = Path(raw_path).expanduser()
         if not path.is_absolute():
             path = root / path
+        if review_branch:
+            error = _caller_path_control_char_error("--worktree", str(path))
+            error = error or _validated_path_changed_error("--worktree", path)
+            if error:
+                raise ValueError(error)
         worktree_path = path.resolve()
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
         raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
+    if review_branch:
+        # Apply the existing path guards to automatic sibling snapshots too.
+        anchor = root / ".worktrees" / "dispatch" / agent
+        error = _caller_path_control_char_error("--worktree", str(worktree_path))
+        error = error or _validated_path_changed_error("--worktree", worktree_path)
+        if error or worktree_path == anchor or not worktree_path.is_relative_to(anchor):
+            raise ValueError(error or "sibling review worktree must be inside the dispatching agent's subtree")
     worktree_branch = None if detached else _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -2588,14 +2615,20 @@ def _ensure_sibling_repo_worktree(
         raise ValueError(
             f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
         )
-    branch_name = _base_branch_name(base)
+    branch_name = review_branch or _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
+    if review_branch:
+        try:
+            remote_sha = live_canonical_branch_head(root, review_branch, repository=repository)
+        except TargetResolutionError as exc:
+            raise RuntimeError(str(exc)) from exc
+        _refuse_if_gate_head_moved(remote_sha, pinned_head_sha)
     try:
         fetch_proc = subprocess.run(
             [
                 "git",
                 "fetch",
-                "origin",
+                f"https://github.com/{repository}.git" if review_branch else "origin",
                 f"+refs/heads/{branch_name}:refs/remotes/origin/{branch_name}",
             ],
             cwd=root,
@@ -2610,12 +2643,16 @@ def _ensure_sibling_repo_worktree(
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
-    if _resolve_sha(root, origin_ref) is None:
+    fetched_sha = _resolve_sha(root, origin_ref)
+    if fetched_sha is None:
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
+    if review_branch:
+        _refuse_if_gate_head_moved(fetched_sha, pinned_head_sha)
+    checkout_ref = pinned_head_sha if review_branch else origin_ref
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
     add_command = ["git", "worktree", "add"]
     if detached:
-        add_command.extend(["--detach", str(worktree_path), origin_ref])
+        add_command.extend(["--detach", str(worktree_path), checkout_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), origin_ref])
     _add_reserved_worktree(
@@ -2629,6 +2666,8 @@ def _ensure_sibling_repo_worktree(
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
+    if review_branch:
+        _refuse_if_gate_head_moved(actual_sha, pinned_head_sha)
     telemetry["base_sha"] = actual_sha
     return worktree_path, worktree_branch, telemetry
 
@@ -3958,12 +3997,12 @@ def _fetch_base(base: str) -> bool:
     return True
 
 
-def _validate_branch_reuse_name(branch: str) -> str:
+def _validate_branch_reuse_name(branch: str, *, repo_root: Path | None = None) -> str:
     """Reject unsafe or ambiguous ``--branch`` values before attaching a worktree."""
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
     try:
-        normalized = validate_plain_branch_name(branch, repo_root=_REPO_ROOT)
+        normalized = validate_plain_branch_name(branch, repo_root=repo_root if repo_root is not None else _REPO_ROOT)
     except UnsafeBranchNameError as exc:
         raise ValueError(
             "--branch must be a local branch name without origin/, github/, or refs/ "
@@ -4293,8 +4332,9 @@ def _branch_holder_activity_reason(
     holders whose task state has already been removed.  That is safe only when
     both of the reaper's independent liveness probes are available and empty:
     the active-dispatch API rules out an attached task and ``lsof`` rules out a
-    process still using the checkout.  Probe failure is a refusal, not evidence
-    of inactivity.
+    process still using the checkout. For attributed terminal holders, the
+    reaper's local-record fallback can resolve a Monitor transport failure.
+    Other probe failures remain refusals.
     """
     candidate_task_ids = [task_id] if task_id is not None else _task_status_candidates_for_worktree(path)
     if not candidate_task_ids:
@@ -4308,7 +4348,23 @@ def _branch_holder_activity_reason(
         from scripts.orchestration import reap_worktrees
 
         try:
-            active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+            if complete:
+                active_ids = _branch_holder_active_task_ids()
+            else:
+                probe = reap_worktrees._read_active_task_probe()
+                active_ids, probe_error = reap_worktrees._resolve_activity_probe(
+                    reap_worktrees.primary_checkout_root(path),
+                    reap_worktrees.WorktreeInfo(path, None, None),
+                    probe,
+                )
+                if probe_error is not None or active_ids is None:
+                    if isinstance(probe, reap_worktrees._ActiveTaskProbeFailure):
+                        _record_diagnostic(
+                            candidate_task_ids[0],
+                            _TypedCause("activity probe unavailable", diagnostic=probe_error or probe.reason),
+                            source="branch_hand_off",
+                        )
+                    return "active-task probe unavailable"
         except reap_worktrees._ActiveTaskProbeFailure as exc:
             _record_diagnostic(
                 candidate_task_ids[0],
@@ -6817,7 +6873,10 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "worktree active",
         "worktree already removed",
         "worktree branch differs from task record",
-        "worktree ownership unknown or reused",
+        "worktree group has nonterminal task",
+        "worktree group records disagree on branch",
+        "worktree task inventory unavailable",
+        "worktree dirty",
         "unpushed work - needs rescue",
         "unpushed state unknown - needs rescue",
         "rescued",
@@ -7424,7 +7483,9 @@ def _worktree_diff_read(
     return diff_proc.stdout, None
 
 
-def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+def _auto_finalize_additions_deletions(
+    worktree: Path, *, task_id: str | None = None
+) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
     """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
 
     Renames are not detected: git pairs a move only above a similarity
@@ -7434,7 +7495,7 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
     # The move inventory stages intent-to-add entries too. Its disposable
     # index must not execute the source's hooks or configured filters.
     try:
-        with _finalize_execution_context(worktree, prepare=True) as context:
+        with _finalize_execution_context(worktree, prepare=True, task_id=task_id) as context:
             source = context.source_git_dir
             head = context.read_source_ref(source, "HEAD")
             if head.returncode:
@@ -8288,7 +8349,7 @@ def _build_worker_env(
 
 @contextlib.contextmanager
 def _finalize_execution_context(
-    worktree: Path, *, prepare: bool = False, task_id: str | None = None
+    worktree: Path, *, prepare: bool = False, task_id: str | None = None, validated_driver_base: str | None = None
 ) -> Iterator[SafeGitContext]:
     """Use registered objects, the driver's base and its pinned destination.
 
@@ -8298,22 +8359,27 @@ def _finalize_execution_context(
     """
     step = "source_registration"
     try:
-        repo = _rescue_repo(worktree)
+        repo = _rescue_repo(worktree, task_id=task_id)
         step = "execution_context"
         manager = SafeGitContext(
             objects=repo.git_dir / "objects",
             temp_root=Path(tempfile.gettempdir()),
-            origin=CANONICAL_ORIGIN,
+            origin=_rescue_canonical_push_url(repo),
+            repository=repo.repository,
             borrow_objects=prepare,
         )
         with manager as context:
             context.source_git_dir = repo.admin_dir
-            step = "driver_ref"
-            driver = context.read_source_ref(_REPO_ROOT / ".git", "HEAD")
-            if driver.returncode:
-                _publication_diagnostic(task_id, step, driver)
-                raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
-            context.driver_base = driver.stdout.strip()
+            context.task_id = task_id
+            if validated_driver_base is None:
+                step = "driver_ref"
+                driver = context.read_source_ref(repo.git_dir, "HEAD")
+                if driver.returncode:
+                    _publication_diagnostic(task_id, step, driver)
+                    raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
+                context.driver_base = driver.stdout.strip()
+            else:
+                context.driver_base = validated_driver_base
             step = "project_interpreter"
             context.interpreter = project_interpreter(_REPO_ROOT)
             step = "context_body"
@@ -8508,7 +8574,7 @@ def _finalize_opsec_scan(context: SafeGitContext, *, branch: str, head: str, rem
 
 
 @contextlib.contextmanager
-def _rescue_identity() -> Iterator[str]:
+def _rescue_identity(repository: str = "learn-ukrainian/learn-ukrainian.github.io") -> Iterator[str]:
     """The rescue publication token; an App installation token is revoked on exit."""
     from scripts.agent_runtime.agent_github_identity import (
         RescueIdentityError,
@@ -8519,7 +8585,7 @@ def _rescue_identity() -> Iterator[str]:
     alternative = "Publish through the normal pre-push push from the worktree."
     try:
         identity = resolve_agent_github_identity(
-            repository="learn-ukrainian/learn-ukrainian.github.io",
+            repository=repository,
             rescue=True,
         )
     except RescueIdentityError as exc:
@@ -8544,11 +8610,13 @@ def _rescue_identity() -> Iterator[str]:
 
 
 @contextlib.contextmanager
-def _finalize_transport_credentials() -> Iterator[list[tuple[str, str]]]:
+def _finalize_transport_credentials(
+    *, origin: str = CANONICAL_ORIGIN, repository: str = "learn-ukrainian/learn-ukrainian.github.io"
+) -> Iterator[list[tuple[str, str]]]:
     """Git configuration entries that authorize the push to the canonical destination, and nothing else."""
-    with _rescue_identity() as token:
+    with _rescue_identity(repository) as token:
         header = base64.b64encode(f"x-access-token:{token}".encode()).decode()
-        yield [(f"http.{CANONICAL_ORIGIN}.extraHeader", f"Authorization: Basic {header}")]
+        yield [(f"http.{origin}.extraHeader", f"Authorization: Basic {header}")]
 
 
 @contextlib.contextmanager
@@ -8564,8 +8632,13 @@ def _finalize_transport_context(
     for the checks, and every tree and blob from the copy validation used;
     each fetch re-hashes what it receives.
     """
-    with _finalize_execution_context(worktree) as transport:
-        # The base the checks and validation used, even if the driver checkout moved since.
+    with _finalize_execution_context(
+        worktree, task_id=getattr(validation, "task_id", None), validated_driver_base=validation.driver_base,
+    ) as transport:
+        if transport.origin != validation.origin or transport.repository != validation.repository:
+            raise SnapshotRefusal("auto_finalize_remote_unverified")
+        # Publication must use the registered driver base the checks validated,
+        # even when that repository has advanced during validation.
         transport.driver_base = validation.driver_base
         transport.isolate_objects(base=base, head=head)
         transport.receive_publication(head=head, base=base, objects=validation.git_dir / "objects")
@@ -8591,13 +8664,13 @@ def _finalize_transport_push(
     hooks = transport.root / "transport-hooks"
     hooks.mkdir()
     scheme = "file" if transport.local_remote else "https"
-    with _finalize_transport_credentials() as entries:
+    with _finalize_transport_credentials(origin=transport.origin, repository=transport.repository) as entries:
         settings = [
             ("core.hooksPath", str(hooks)),
             ("protocol.allow", "never"),
             (f"protocol.{scheme}.allow", "always"),
             ("http.proxy", ""),
-            (f"http.{CANONICAL_ORIGIN}.proxy", ""),
+            (f"http.{transport.origin}.proxy", ""),
             *entries,
         ]
         env = {**transport.env, "GIT_CONFIG_COUNT": str(len(settings))}
@@ -8637,6 +8710,7 @@ def _push_auto_finalize_branch(
     expected_head: str | None = None,
     owned_paths: object = None,
     base_sha: str | None = None,
+    task_id: str | None = None,
 ) -> None:
     """Scan, validate and publish in a driver-configured repo; borrow only objects.
 
@@ -8654,7 +8728,7 @@ def _push_auto_finalize_branch(
     # Only the publication itself is a push; a timeout in a check before it is not.
     pushing = False
     try:
-        with _finalize_execution_context(worktree) as context:
+        with _finalize_execution_context(worktree, task_id=task_id) as context:
             if context.run("check-ref-format", f"refs/heads/{branch}").returncode:
                 raise SnapshotRefusal("auto_finalize_unsafe_branch")
             head = _finalize_source_head(context, branch)
@@ -8835,7 +8909,7 @@ def _auto_finalize_dirty_worktree(
         return _result(ok=False, error="auto_finalize_committed_scope_unknown")
     if owned and all_changed:
         try:
-            with _finalize_execution_context(worktree) as context:
+            with _finalize_execution_context(worktree, task_id=task_id) as context:
                 context.isolate_objects(base=base_sha or context.driver_base, head=intended_head)
                 _finalize_history(context, head=intended_head, base=base_sha or context.driver_base, owned=owned)
         except SnapshotRefusal as exc:
@@ -8852,7 +8926,8 @@ def _auto_finalize_dirty_worktree(
             return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
         try:
             _push_auto_finalize_branch(
-                worktree, resolved_branch, expected_head=intended_head, owned_paths=owned, base_sha=base_sha
+                worktree, resolved_branch, expected_head=intended_head, owned_paths=owned, base_sha=base_sha,
+                task_id=task_id,
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             error = _publish_cause(
@@ -8872,7 +8947,7 @@ def _auto_finalize_dirty_worktree(
     if owned is None:
         skipped = all_changed
         return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
-    added_deleted = _auto_finalize_additions_deletions(worktree)
+    added_deleted = _auto_finalize_additions_deletions(worktree, task_id=task_id)
     if added_deleted is None:
         return _result(ok=False, error="move detection failed; nothing committed")
     moves = tuple(sorted(_cross_boundary_moves(*added_deleted, owned)))
@@ -8900,7 +8975,7 @@ def _auto_finalize_dirty_worktree(
     from scripts.orchestration.execution_safe_git import prepare_scoped_commit
 
     try:
-        with _finalize_execution_context(worktree, prepare=True) as context:
+        with _finalize_execution_context(worktree, prepare=True, task_id=task_id) as context:
             if _finalize_source_head(context, resolved_branch) != intended_head:
                 return _failed(_TypedCause("auto_finalize_head_moved"))
             try:
@@ -8925,7 +9000,8 @@ def _auto_finalize_dirty_worktree(
         if not commit_sha or _resolve_sha(worktree, f"{commit_sha}^") != intended_head:
             return _failed(_TypedCause("auto_finalize_head_moved"), commit_sha=commit_sha)
         _push_auto_finalize_branch(
-            worktree, resolved_branch, expected_head=commit_sha, owned_paths=owned, base_sha=base_sha
+            worktree, resolved_branch, expected_head=commit_sha, owned_paths=owned, base_sha=base_sha,
+            task_id=task_id,
         )
     except SnapshotRefusal as exc:
         code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
@@ -8986,24 +9062,27 @@ class _RescueRepo:
     worktree: Path
     git_dir: Path
     admin_dir: Path
+    repository: FleetRepo
+    root: Path
 
     @property
     def head_ref(self) -> str:
         return f"worktrees/{self.admin_dir.name}/HEAD"
 
 
-def _rescue_canonical_push_url() -> str:
+def _rescue_canonical_push_url(repo: _RescueRepo) -> str:
     """Driver-side destination; source repository configuration is not authority."""
-    return CANONICAL_ORIGIN
+    return f"https://github.com/{repo.repository.github}.git"
 
 
 @contextlib.contextmanager
 def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
     with (
-        _rescue_identity() as token,
+        _rescue_identity(repo.repository.github) as token,
         SafeGitContext(
             objects=repo.git_dir / "objects",
-            origin=_rescue_canonical_push_url(),
+            origin=_rescue_canonical_push_url(repo),
+            repository=repo.repository,
             token=token,
             temp_root=Path(tempfile.gettempdir()),
         ) as context,
@@ -9011,31 +9090,105 @@ def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
         yield context
 
 
-def _rescue_repo(worktree: Path) -> _RescueRepo:
+def _finalize_repository(
+    worktree: Path, *, task_id: str | None = None, state: Mapping[str, Any] | None = None
+) -> tuple[FleetRepo, Path]:
+    """Bind the recorded checkout and seat to the driver's repository allowlist.
+
+    Unstamped legacy public worktrees retain their existing admission. A
+    sibling requires its repository identity in the path-bound task record;
+    worker config, URLs and environment overrides cannot select a repository.
+    """
+    refusal = SnapshotRefusal("rescue_worktree_unregistered")
+    if not worktree.is_absolute() or _caller_path_control_char_error("worktree", str(worktree)):
+        raise refusal
+    for path in (worktree, *worktree.parents):
+        if path.is_symlink():
+            raise refusal
+    if worktree.resolve() != worktree:
+        raise refusal
+    catalog = load_fleet_repos()
+    candidates = [
+        resolve_fleet_repo(key, primary_root=_REPO_ROOT, repos=catalog, require_checkout=False) for key in catalog
+    ]
+    matches = [(repo, root) for repo, root in candidates if worktree.is_relative_to(root / ".worktrees/dispatch")]
+    if len(matches) != 1:
+        raise refusal
+    repo, root = matches[0]
+    expected_root = _REPO_ROOT if repo.default else _REPO_ROOT.parent / repo.local_name
+    if expected_root != root:
+        raise refusal
+    if root.is_symlink() or (root / ".git").is_symlink() or not (root / ".git").is_dir():
+        raise refusal
+    if state is None:
+        if task_id is not None:
+            state = _read_state(_state_path_no_create(task_id))
+        else:
+            matches = []
+            for state_file in tasks_dir().glob("*.json"):
+                candidate = _read_state(state_file)
+                if isinstance(candidate, dict) and (candidate.get("worktree_path") or candidate.get("cwd")) == str(worktree):
+                    matches.append(candidate)
+            if len(matches) > 1:
+                raise refusal
+            state = matches[0] if matches else None
+    if state is None:
+        if not repo.default:
+            raise refusal
+        return repo, root
+    claims = _state_repository_claims(dict(state))
+    if (claims and claims != [repo.github]) or (not repo.default and not claims):
+        raise refusal
+    agent = state.get("agent")
+    recorded = state.get("worktree_path") or state.get("cwd")
+    if (
+        not isinstance(agent, str)
+        or not isinstance(recorded, str)
+        or recorded != str(worktree)
+        or not isinstance(state.get("task_id"), str)
+        or (task_id is not None and state["task_id"] != task_id)
+    ):
+        raise refusal
+    # A public dispatch may select a different provider after its requested
+    # seat's explicit worktree was admitted. Its recorded path and linked Git
+    # registration remain the source binding; the selected provider is not
+    # authority for that path's dispatch seat.
+    if not repo.default:
+        validated, error = _validate_explicit_worktree(recorded, agent=agent, repo_root=root)
+        if error or validated != worktree:
+            raise refusal
+    return repo, root
+
+
+def _rescue_repo(worktree: Path, *, task_id: str | None = None, state: Mapping[str, Any] | None = None) -> _RescueRepo:
     """``worktree`` as a :class:`_RescueRepo`, read from the files git keeps, without running git in it."""
     from scripts.agent_runtime import kimi_boundary
 
+    repository, root = _finalize_repository(worktree, task_id=task_id, state=state)
     admin = kimi_boundary.worktree_git_dir(worktree)
     try:
         if admin is None:
             raise FileNotFoundError(".git")
-        admin = admin.resolve(strict=True)
+        if (
+            _caller_path_control_char_error("git directory", str(admin))
+            or admin.is_symlink()
+            or admin.resolve(strict=True) != admin
+        ):
+            raise ValueError("aliased git directory")
+        if any((admin / name).is_symlink() for name in ("commondir", "gitdir")) or (worktree / ".git").is_symlink():
+            raise ValueError("aliased registration")
         git_dir = (admin / (admin / "commondir").read_text(encoding="utf-8").strip()).resolve(strict=True)
         registered = Path((admin / "gitdir").read_text(encoding="utf-8").strip()).resolve()
     except (OSError, ValueError) as exc:
         raise _RescueFailure(
             "the worktree's git directory cannot be read", _exception_cause("rescue_worktree_unregistered", exc)
         ) from exc
-    if (
-        git_dir != (_REPO_ROOT / ".git").resolve()
-        or admin.parent != git_dir / "worktrees"
-        or registered != (worktree / ".git").resolve()
-    ):
+    if git_dir != root / ".git" or admin.parent != git_dir / "worktrees" or registered != (worktree / ".git").resolve():
         raise _RescueFailure(
             "the worktree is not a linked worktree of the main repository",
             _TypedCause("rescue_worktree_unregistered"),
         )
-    return _RescueRepo(worktree, git_dir, admin)
+    return _RescueRepo(worktree, git_dir, admin, repository, root)
 
 
 def _rescue_head(repo: _RescueRepo, context: SafeGitContext) -> tuple[str, str] | None:
@@ -9170,6 +9323,19 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
     return _public_row(_rescue_task_row(state_path, apply=apply), state_path, source="rescue")
 
 
+def _rescue_record_order(item: tuple[Path, dict[str, Any]]) -> tuple[float, str]:
+    """Order fix rounds by dispatch time, falling back to legacy record metadata."""
+    path, state = item
+    timestamp = state.get("started_at") or state.get("finished_at")
+    try:
+        started = datetime.fromisoformat(str(timestamp).replace("Z", "+00:00"))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        return started.timestamp(), path.name
+    except (ValueError, OverflowError):
+        return path.stat().st_mtime, path.name
+
+
 def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     """Preserve one terminal task on origin; never remove its worktree here.
 
@@ -9180,16 +9346,17 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     state = _read_state(state_path)
     task_id = state.get("task_id") if state else None
     row: dict[str, Any] = {"task_id": task_id, "action": "skipped"}
-    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES | worktree_claims.RELEASED_TASK_STATUSES:
         row["reason"] = "task is not terminal non-success"
         return row
     raw_worktree = state.get("worktree_path")
     if not isinstance(raw_worktree, str):
         row["reason"] = "no recorded worktree"
         return row
-    worktree = Path(raw_worktree).resolve()
-    dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
-    if not worktree.is_relative_to(dispatch_root):
+    worktree = Path(raw_worktree)
+    try:
+        _, root = _finalize_repository(worktree, task_id=task_id, state=state)
+    except (OSError, RuntimeError, ValueError):
         row["reason"] = "not a registered dispatch worktree"
         return row
     # A reaped or hand-removed worktree has nothing left to preserve. Before
@@ -9201,46 +9368,73 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     if not (worktree / ".git").exists():
         row["reason"] = "not a registered dispatch worktree"
         return row
-    if state.get("worktree_reused") is not False:
-        row["reason"] = "worktree ownership unknown or reused"
-        return row
-    lease = state.get("lease")
-    if (isinstance(lease, dict) and lease.get("state") == "active") or state.get("lease_state") == "active":
-        row["reason"] = "task lease active"
-        return row
     try:
+        from scripts.fleet.ignored_task_output import matching_worktree_records
         from scripts.orchestration import reap_worktrees
 
         with worktree_lock(worktree) if apply else contextlib.nullcontext():
-            current = _read_state(state_path)
-            if current != state:
+            try:
+                group = [
+                    (path, _hydrate_read_only_checkout_snapshots(record))
+                    for path, record in matching_worktree_records(
+                        worktree, tasks_dir(), repo_root=root, publish_cache=False
+                    )
+                ]
+            except (OSError, ValueError):
+                row["reason"] = "worktree task inventory unavailable"
+                return row
+            if (state_path, state) not in group:
                 row["reason"] = "task state changed"
                 return row
-            if reap_worktrees._task_pid_alive(state):
-                row["reason"] = "task process alive"
+            require_clean = len(group) > 1 or state.get("worktree_reused") is not False
+            state_path, state = max(group, key=_rescue_record_order)
+            task_id = state["task_id"]
+            row["task_id"] = task_id
+            for _, member in group:
+                if member.get("status") not in reap_worktrees._TERMINAL_DISPATCH_STATUSES:
+                    row["reason"] = "worktree group has nonterminal task"
+                    return row
+                lease = member.get("lease")
+                if (isinstance(lease, dict) and lease.get("state") == "active") or member.get(
+                    "lease_state"
+                ) == "active":
+                    row["reason"] = "task lease active"
+                    return row
+                if reap_worktrees._task_pid_alive(member):
+                    row["reason"] = "task process alive"
+                    return row
+            if any(member.get("worktree_branch") != state.get("worktree_branch") for _, member in group):
+                row["reason"] = "worktree group records disagree on branch"
                 return row
-            try:
-                active_ids = reap_worktrees._active_task_ids()
-            except reap_worktrees._ActiveTaskProbeFailure as exc:
+            probe = reap_worktrees._read_active_task_probe()
+            active_ids, probe_error = reap_worktrees._resolve_activity_probe(
+                root, reap_worktrees.WorktreeInfo(worktree, None, None), probe
+            )
+            if active_ids is None and probe_error is None and isinstance(probe, reap_worktrees._ActiveTaskProbeFailure):
+                probe_error = probe.reason
+            if probe_error is not None:
                 diagnostic = _record_diagnostic(
                     task_id,
-                    _exception_cause("activity probe unavailable", exc),
+                    _TypedCause("activity probe unavailable", diagnostic=probe_error),
                     source="rescue",
                     field="reason",
                 )
                 if diagnostic:
                     row["diagnostic"] = diagnostic
-                active_ids = None
-            live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
+            live_cwds = reap_worktrees._live_cwd_paths(root)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"
                 return row
-            if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
+            if any(member.get("task_id") in active_ids for _, member in group) or any(
+                cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds
+            ):
                 row["reason"] = "worktree active"
                 return row
-            repo = _rescue_repo(worktree)
+            repo = _rescue_repo(worktree, task_id=task_id, state=state)
             with _rescue_execution_context(repo) as context:
-                return _rescue_in_context(repo, context, state, state_path, row, apply=apply)
+                return _rescue_in_context(
+                    repo, context, state, state_path, row, apply=apply, require_clean=require_clean
+                )
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         cause = (
             _TypedCause(exc.code) if isinstance(exc, SnapshotRefusal) else _exception_cause("rescue_step_failed", exc)
@@ -9263,6 +9457,7 @@ def _rescue_in_context(
     row: dict[str, Any],
     *,
     apply: bool,
+    require_clean: bool = False,
 ) -> dict[str, Any]:
     from scripts.agent_runtime import kimi_boundary
 
@@ -9276,15 +9471,28 @@ def _rescue_in_context(
     recorded_branch = state.get("worktree_branch")
     agent = str(state.get("agent") or "agent")
     branch = f"rescue/{agent}/{_x_agent_task_id(agent, str(task_id))}"
-    if current_branch not in {recorded_branch, branch}:
+    if current_branch != recorded_branch and (require_clean or current_branch != branch):
         row["reason"] = "worktree branch differs from task record"
         return row
+    if require_clean:
+        from scripts.orchestration import reap_worktrees
+
+        dirty = _worktree_is_dirty(worktree)
+        if dirty is not False:
+            row["reason"] = "worktree dirty" if dirty else "changed files unavailable"
+            return row
+        if reap_worktrees._is_head_reachable_from_remote(worktree, head):
+            row["reason"] = "no provable unpushed work"
+            return row
     tree = context.capture(
         worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude"
     )
     changed = tuple(
         path for path in context.checked("diff-tree", "-r", "-z", "--name-only", head, tree).split("\0") if path
     )
+    if require_clean and changed:
+        row["reason"] = "worktree dirty"
+        return row
     large = []
     for name in changed:
         try:
@@ -9409,6 +9617,7 @@ def cmd_rescue(args: argparse.Namespace) -> int:
         return 2
 
     rows: list[dict[str, Any]] = []
+    seen_worktrees: set[Path] = set()
     now = datetime.now(UTC)
     for path in paths:
         state = _read_state(path)
@@ -9432,6 +9641,16 @@ def cmd_rescue(args: argparse.Namespace) -> int:
                 continue
             if age_hours < min_age_hours:
                 continue
+        raw_worktree = state.get("worktree_path") if state else None
+        if isinstance(raw_worktree, str):
+            try:
+                worktree = worktree_claims.resolve_claim_path(raw_worktree, repo_root=_REPO_ROOT)
+            except (OSError, RuntimeError, ValueError):
+                pass  # Let the rescue registration guard report invalid paths.
+            else:
+                if worktree in seen_worktrees:
+                    continue
+                seen_worktrees.add(worktree)
         rows.append(_rescue_task(path, apply=bool(args.apply or not args.all_stale)))
     # Every row leaves through the public-reason sink (#9878).
     rows = [_public_row(row, None, source="rescue") for row in rows]
@@ -9691,8 +9910,8 @@ def _validate_existing_worktree(
     if actual_branch and actual_branch != expected_branch:
         raise WorktreeBranchMismatch(
             f"worktree at {path} is on branch {actual_branch!r}, expected "
-            f"{expected_branch!r}. Remove it and retry:\n"
-            f"    git worktree remove {path}"
+            f"{expected_branch!r}. Have the owning driver inspect cleanup with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
 
     # 2. Dirty check.
@@ -9713,7 +9932,9 @@ def _validate_existing_worktree(
         raise WorktreeDirty(
             f"worktree at {path} has uncommitted changes "
             f"(first {len(first_files)}): {first_files}. "
-            f"Commit, stash, or remove the worktree before reuse."
+            "Commit or stash the changes before reuse, or have the owning driver inspect cleanup "
+            "with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
 
     # 3. Stale-base check. Refresh origin/{base} first. Single-remote hosts
@@ -9798,8 +10019,8 @@ def _validate_existing_worktree(
             )
         raise WorktreeStaleBase(
             f"worktree at {path} is {behind} commit(s) behind {shown} "
-            f"and rebase failed. Resolve manually or remove:\n"
-            f"    git worktree remove {path}"
+            "and rebase failed. Resolve manually, or have the owning driver inspect cleanup with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
     return True
 
@@ -10592,6 +10813,7 @@ def _resolve_worktree_base_sha(
     review_dependencies: Sequence[tuple[str, Path]] = (),
     continuation_head_sha: str | None = None,
     continuation_remote_sha: str | None = None,
+    telemetry: dict[str, Any] | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -10602,6 +10824,8 @@ def _resolve_worktree_base_sha(
     used as is and never resolved again (#8775, :func:`_helper_worktree_path`).
     ``rebase_onto`` pins a reused worktree's auto-rebase to the commit
     authoring-review admission checked (#9739 A7).
+    ``telemetry`` retains the actual rebase result for the dispatch receipt;
+    provisioning with the resolved SHA must not repeat that validation.
     """
     worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
@@ -10611,7 +10835,7 @@ def _resolve_worktree_base_sha(
     if worktree_path.exists():
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
-        _validate_existing_worktree(
+        rebased = _validate_existing_worktree(
             path=worktree_path,
             expected_branch=requested_branch or _derive_worktree_branch(agent, task_id),
             base=requested_branch or base,
@@ -10645,6 +10869,8 @@ def _resolve_worktree_base_sha(
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
         _refuse_if_gate_head_moved(resolved, pinned_head_sha)
+        if telemetry is not None:
+            telemetry["rebased"] = rebased
         return resolved
 
     if requested_branch:
@@ -11072,6 +11298,11 @@ def _augment_prompt_with_worktree(
     elif mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
+            "After each coherent completed step, run the applicable validation. Once it passes, "
+            "commit and push that step using the instructions below before starting the next step; "
+            "do not wait until exit to publish completed steps.\n"
+            "Leave unfinished steps uncommitted. If a push is refused, retain your work, "
+            "stop and report the actual blocker. Keep the final exit checks below.\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
             "The push runs a pre-push gate on that exact commit (the pre-commit pre-push stage with the OPSEC "
@@ -11080,9 +11311,9 @@ def _augment_prompt_with_worktree(
             "Do not merge `origin/main` into your branch unless `git merge-tree` against a freshly fetched "
             "main reports a conflict, or the driver orders it.\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
-            "Keep scratch git repositories and probes outside `batch_state/reports/` "
-            "(use `$TMPDIR`, the managed lease, never a literal system temp path); "
-            "`batch_state/` is reserved for report files and logs.\n"
+            "For scratch git repositories and probes, use `$TMPDIR`, the managed lease, "
+            "never a literal system temp path.\n"
+            "Keep durable task artifacts in `$LU_TASK_EVIDENCE_DIR`; task cleanup preserves that directory.\n"
             "Do not open or merge PRs unless the brief says so; "
             "report the pushed head SHA and clean status.\n"
             "\n[optional delivery signal]\n"
@@ -11157,10 +11388,10 @@ def _augment_prompt_with_worktree(
         "cwd is a worktree.\n"
         f"{sparse_note}{test_scope}{delivery_note}{db_note}\n"
         "[held work]\n"
-        "Keep patches, handoffs and diagnostics needed after exit in this worktree's "
-        "`batch_state/reports/`, and cite each file in your final response. "
-        "Runtime scratch is deleted at exit; if held work remains there, cite its absolute "
-        "file path or `$TMPDIR/<file>` in the final response so it is preserved. "
+        "Keep patches, handoffs and diagnostics needed after exit in `$LU_TASK_EVIDENCE_DIR`, "
+        "this task's `evidence/` directory outside the worktree, and cite each file in your final response. "
+        "Task cleanup preserves that directory with a retrieval receipt before removing the runtime lease. "
+        "Runtime scratch elsewhere is deleted at exit. "
         "Cite regular files, not directories or symlinks; automatic preservation has a 256 MiB cap.\n\n"
         f"{prompt}"
     )
@@ -13286,6 +13517,7 @@ def _record_worktree_prep_failure(
     lifecycle_carrier: Any = None,
     worktree_path: str | Path | None = None,
     worktree_reused: bool | None = None,
+    worktree_rebased: bool = False,
     worktree_branch: str | None = None,
     worktree_base_sha: str | None = None,
     worktree_base: str | None = None,
@@ -13348,7 +13580,7 @@ def _record_worktree_prep_failure(
         "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
         "worktree_base_sha": worktree_base_sha,
         "worktree_base": worktree_base,
-        "worktree_rebased": False,
+        "worktree_rebased": worktree_rebased,
         "worktree_reused": worktree_reused,
         "worktree_layout": wt_layout,
         "worktree_sparse": None,
@@ -13532,9 +13764,13 @@ def _registered_stream_epics() -> frozenset[int]:
 
 
 def _run_dor_preflight(
-    prompt: str, allow_reason: str | None, *, dispatch_repo: str
+    prompt: str, allow_reason: str | None, *, dispatch_repo: str,
+    lifecycle_carrier: dict[str, Any] | None = None,
 ) -> tuple[str | None, dict[str, Any] | None]:
-    """Check each issue named by an implementation brief before dispatch side effects.
+    """Check the bound task card, or visible issues in an unbound implementation brief.
+
+    A lifecycle carrier already validated at the dispatch boundary selects its single task issue.
+    Prompt citations cannot add cards or replace that target.
 
     A registered stream epic of this repository is linked context, not a task card (#9276): it is recorded
     as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
@@ -13548,17 +13784,30 @@ def _run_dor_preflight(
     from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE, AdmissionState, admission_state
 
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
-    for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
-        repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+    if lifecycle_carrier is not None:
+        identity = lifecycle_carrier["identity"]
+        repo = identity["repository"]
         if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
             repo = _CANONICAL_GITHUB_REPO
-        number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
-        distinct.setdefault((repo.casefold(), number), (repo, number))
-    candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
+        candidates = [(repo, identity["github_issue_number"])]
+    else:
+        for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
+            repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
+            if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold():
+                repo = _CANONICAL_GITHUB_REPO
+            number = int(match.group("url_number") or match.group("short_number") or match.group("number"))
+            distinct.setdefault((repo.casefold(), number), (repo, number))
+        candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
     if not candidates:
         return None, None
     epic_numbers = _registered_stream_epics()
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
+    if lifecycle_carrier is not None:
+        declared_epic = (repo, identity["stream_epic"])
+        if (
+            declared_epic in candidates or (repo == _CANONICAL_GITHUB_REPO and declared_epic[1] in epic_numbers)
+        ) and declared_epic not in epics:
+            epics.append(declared_epic)
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
     unknown: dict[str, str] = {}
@@ -13633,6 +13882,8 @@ def _run_dor_preflight(
             ), None
         stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
+        if lifecycle_carrier is not None:
+            return "❌ DoR refused: the declared lifecycle issue is not a task card", None
         return None, None
     verdict = AdmissionState.WARN if warnings else AdmissionState.UNKNOWN if unknown else AdmissionState.PASS
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings, "dor": verdict.value}
@@ -14398,8 +14649,28 @@ def _dispatch(
             print("❌ --allow-dor-warn requires a non-empty reason", file=sys.stderr)
             return 2
     dor_record: dict[str, Any] | None = None
+    lifecycle_file = getattr(args, "lifecycle_file", None)
+    try:
+        lifecycle_carrier, lifecycle_prompt = (
+            _load_task_lifecycle_carrier(lifecycle_file) if lifecycle_file else (None, "")
+        )
+        if lifecycle_carrier is not None and args.mode in {"workspace-write", "danger"}:
+            from scripts.orchestration.task_identity import _github_url
+
+            identity = lifecycle_carrier["identity"]
+            for url_key, number_key in (
+                ("github_issue_url", "github_issue_number"), ("stream_epic_url", "stream_epic"),
+            ):
+                if identity[url_key] != _github_url(identity["repository"], "issues", identity[number_key]):
+                    raise ValueError(f"{url_key} does not match the repository and exact number")
+    except (OSError, ValueError) as exc:
+        print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
+        return 2
     if early_prompt is not None and args.mode in {"workspace-write", "danger"}:
-        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason, dispatch_repo=fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(
+            early_prompt, dor_reason, dispatch_repo=fleet_repo.github,
+            **({"lifecycle_carrier": lifecycle_carrier} if lifecycle_carrier is not None else {}),
+        )
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
@@ -14600,13 +14871,20 @@ def _dispatch(
 
     # #672 P2.1: allowlisted --repo retargets worktree creation to a sibling
     # checkout. Control-plane task state stays on the public primary.
-    if not fleet_repo.default and requested_branch:
+    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
+    sibling_branch_review = not fleet_repo.default and direct_branch_review and args.mode == "read-only"
+    if not fleet_repo.default and requested_branch and not sibling_branch_review:
         print(
             "❌ --branch attach on sibling --repo is not supported in P2.1; "
             "use --repo with bare --worktree for a fresh branch, or the manual --cwd flow.",
             file=sys.stderr,
         )
         return 2
+    if sibling_branch_review:
+        error = _validated_path_changed_error("--repo", _REPO_ROOT.parent / fleet_repo.local_name)
+        if error:
+            print(error, file=sys.stderr)
+            return 2
     # Explicit primary-root callers need the same isolation as the default
     # read-only flow (#10025). Keep their dispatch working without snapshotting
     # other drivers' local edits in that shared checkout.
@@ -14616,7 +14894,6 @@ def _dispatch(
         validated_cwd = None
     # Direct verdict reviews snapshot the admitted branch without touching its
     # author. Ordinary continuation and attempt-owned inputs keep branch reuse.
-    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
     detached_read_only = args.mode == "read-only" and not args.cwd and (direct_branch_review or not worktree_arg)
     if detached_read_only:
         worktree_arg = worktree_arg or "auto"
@@ -14846,7 +15123,10 @@ def _dispatch(
         return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
-        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, dispatch_repo=fleet_repo.github)
+        dor_error, dor_record = _run_dor_preflight(
+            prompt, dor_reason, dispatch_repo=fleet_repo.github,
+            **({"lifecycle_carrier": lifecycle_carrier} if lifecycle_carrier is not None else {}),
+        )
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
@@ -14873,11 +15153,13 @@ def _dispatch(
     for code in review_brief_warnings:
         print(_review_brief_warning_line(code), file=sys.stderr)
 
-    try:
-        lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(getattr(args, "lifecycle_file", None))
-    except (OSError, ValueError) as exc:
-        print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
-        return 2
+    if not lifecycle_file:
+        # Preserve the unbound path's existing hook order; a supplied snapshot is never reloaded.
+        try:
+            lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(None)
+        except (OSError, ValueError) as exc:
+            print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
+            return 2
     # Kinds of the blocks delegate adds around the caller's prompt, in the order they appear in the final prompt (the
     # worktree block leads it, the lifecycle and research blocks follow it); recorded so a consumer can tell which
     # instructions the worker saw beyond the source prompt.
@@ -15096,6 +15378,7 @@ def _dispatch(
 
     # Resolve the immutable worktree base once before ownership admission.
     resolved_worktree_base_sha: str | None = None
+    worktree_base_telemetry: dict[str, Any] = {}
     resolved_worktree_raw: str | None = None
     rebase_onto: str | None = None
     if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
@@ -15166,6 +15449,7 @@ def _dispatch(
                     allow_rebase=allow_rebase,
                     rebase_onto=rebase_onto,
                     review_dependencies=review_dependencies,
+                    telemetry=worktree_base_telemetry,
                     continuation_head_sha=(
                         authoring_admission.head_sha
                         if authoring_admission is not None and authoring_admission.record.get("local_continuation")
@@ -15323,7 +15607,7 @@ def _dispatch(
             # base or creating a worktree. Both can spawn git subprocesses.
             try:
                 if requested_branch:
-                    _validate_branch_reuse_name(requested_branch)
+                    _validate_branch_reuse_name(requested_branch, repo_root=target_repo_root)
                 changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
                 if changed_error:
                     raise ValueError(changed_error.removeprefix("❌ "))
@@ -15391,7 +15675,8 @@ def _dispatch(
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
-                    dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)
+                    (dry_run_worktree if dry_run_worktree and dry_run_worktree.exists() else None)
+                    or validated_cwd or target_repo_root
                 ),
                 "initiator": attribution.initiator,
                 "attribution_source": attribution.source,
@@ -15607,6 +15892,9 @@ def _dispatch(
                     review_dependencies=review_dependencies,
                     read_only=args.mode == "read-only",
                 )
+                worktree_telemetry["rebased"] = bool(
+                    worktree_base_telemetry.get("rebased") or worktree_telemetry.get("rebased")
+                )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
                     repo_root=target_repo_root,
@@ -15617,6 +15905,9 @@ def _dispatch(
                     base=worktree_base,
                     run_nonce=run_nonce,
                     detached=detached_read_only,
+                    review_branch=requested_branch if sibling_branch_review else None,
+                    pinned_head_sha=getattr(args, "pinned_head", None),
+                    repository=fleet_repo.github,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
@@ -15655,6 +15946,7 @@ def _dispatch(
                 lifecycle_carrier=lifecycle_carrier,
                 worktree_path=failed_worktree_path,
                 worktree_reused=worktree_telemetry.get("reused"),
+                worktree_rebased=bool(worktree_base_telemetry.get("rebased") or worktree_telemetry.get("rebased")),
                 worktree_branch=(
                     None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
                 ),
@@ -15849,6 +16141,7 @@ def _dispatch(
             worktree_branch=worktree_branch,
             worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
             worktree_reused=worktree_telemetry.get("reused"),
+            worktree_rebased=bool(worktree_telemetry.get("rebased")),
             worktree_base=worktree_base,
             agent_alias_note=agent_alias_note,
             output_schema_path=output_schema_path,
@@ -20576,7 +20869,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only defaults to an isolated detached worktree.",
     )
-    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.8-flash-high.")
     d.add_argument(
         "--claude-account",
         default=None,

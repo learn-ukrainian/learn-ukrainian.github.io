@@ -288,7 +288,6 @@ ESUM_LABEL = (
 )
 GRINCHYSHYN_LABEL = "Словник паронімів української мови (Д. Г. Гринчишин, О. А. Сербенська, 1986)"
 UKRMOVA_LABEL = "довідник «Укр-мова» (корпусні пари)"
-SYNONYM_VERDICTS_LABEL = "редакторські вердикти синонімів"
 ORTHOGRAPHY_LABEL = "Орфографічний словник української мови"
 HOLOSKEVYCH_LABEL = "Правописний словник Голоскевича (1929)"
 ORTHOEPY_LABEL = "Орфоепічний словник української мови"
@@ -302,7 +301,6 @@ UNMAPPED_SOURCE_PATTERN = re.compile(r"relation_pairs/", re.IGNORECASE)
 
 SUM20_OFFICIAL_HOME = "https://sum20ua.com"
 ULIF_EXPL_HOME = "https://services.ulif.org.ua/expl"
-ULIF_HOME = "https://www.ulif.org.ua"
 ULIF_DICTUA_URL = "https://lcorp.ulif.org.ua/dictua"
 ULIF_DICTUA_LABEL = "«Словники України» (Український мовно-інформаційний фонд НАН України)"
 
@@ -379,7 +377,6 @@ KNOWN_ACADEMIC_LABELS = frozenset(
         ESUM_LABEL,
         GRINCHYSHYN_LABEL,
         UKRMOVA_LABEL,
-        SYNONYM_VERDICTS_LABEL,
         ORTHOGRAPHY_LABEL,
         HOLOSKEVYCH_LABEL,
         ORTHOEPY_LABEL,
@@ -433,8 +430,6 @@ def official_url_for_slug(slug: str, word: str = "") -> str | None:
         return SUM20_OFFICIAL_HOME
     if slug in {"ulif", "ulif_dictua"}:
         return ULIF_DICTUA_URL
-    if slug == "vts":
-        return ULIF_HOME
     return None
 
 
@@ -463,18 +458,14 @@ def _relation_pairs_corpus_key(label: str) -> str | None:
 
 
 def _map_relation_pairs_corpus(corpus_key: str) -> str | None:
-    lowered = corpus_key.casefold()
-    if lowered.startswith("grac"):
-        return GRAC_LABEL
-    if "miyklas" in lowered:
-        return MIYKLAS_LABEL
-    if "grinchyshyn" in lowered:
-        return GRINCHYSHYN_LABEL
-    if "ukr-mova" in lowered:
-        return UKRMOVA_LABEL
-    if "synonym_verdicts" in lowered:
-        return SYNONYM_VERDICTS_LABEL
-    return None
+    # Only existing source identities qualify. Processing/LLM approval carriers
+    # such as synonym_verdicts do not establish the underlying human source.
+    return {
+        "grac": GRAC_LABEL,
+        "miyklas.com.ua": MIYKLAS_LABEL,
+        "grinchyshyn-1986": GRINCHYSHYN_LABEL,
+        "ukr-mova.in.ua": UKRMOVA_LABEL,
+    }.get(corpus_key.casefold())
 
 
 def _remap_relation_pairs_label(label: str) -> str:
@@ -517,11 +508,17 @@ def normalize_academic_label(label: str) -> str:
     if folded == "wikidata" or head == "wikidata.org":
         return WIKIDATA_LABEL
     if cleaned.casefold().startswith(RELATION_PAIRS_PREFIX):
-        return _remap_relation_pairs_label(cleaned)
+        mapped = _remap_relation_pairs_label(cleaned)
+        return mapped if mapped != cleaned else label.strip()
     if cleaned in LEGACY_LABEL_ALIASES:
         return LEGACY_LABEL_ALIASES[cleaned]
     if cleaned in KNOWN_ACADEMIC_LABELS:
         return cleaned
+    if cleaned != label.strip():
+        # A mirror prefix alone does not identify the underlying dictionary.
+        if any(cleaned.startswith(f"{known} (base form ") for known in KNOWN_ACADEMIC_LABELS | LEGACY_LABEL_ALIASES.keys()):
+            return cleaned
+        return label.strip()
     return cleaned
 
 
@@ -637,20 +634,7 @@ def apply_section_attribution(section: dict[str, Any]) -> bool:
     for item in section.get("items", []):
         if not isinstance(item, dict):
             continue
-        item_source = str(item.get("source") or "")
-        item_remapped = normalize_academic_label(item_source)
-        if item_remapped != item_source:
-            item["source"] = item_remapped
-            changed = True
-        item_url = str(item.get("source_url") or "")
-        if is_mirror_url(item_url):
-            block = dict(item)
-            attach_official_url(block, mirror_url=item_url)
-            for key in ("source_url", "mirror_source_url"):
-                if key in block:
-                    item[key] = block[key]
-                elif key in item:
-                    del item[key]
+        if apply_section_attribution(item):
             changed = True
     return changed
 
@@ -714,6 +698,12 @@ def apply_translation_attribution(translation: dict[str, Any], *, lemma: str = "
 
 def apply_entry_attribution(entry: dict[str, Any]) -> bool:
     changed = False
+    primary_source = entry.get("primary_source")
+    if isinstance(primary_source, str):
+        remapped = remap_mirror_source_string(primary_source)
+        if remapped != primary_source:
+            entry["primary_source"] = remapped
+            changed = True
     lemma = str(entry.get("lemma") or "")
     enrichment = entry.get("enrichment")
     if isinstance(enrichment, dict):

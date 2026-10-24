@@ -1061,22 +1061,22 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
 
 
-# Re-pinned for #11449: review scores omit quota freshness, pace and headroom.
+# Re-pinned for #11536: retired seats no longer appear in resolver candidates.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "7cf5d041ac9c9670025ebc23c7908516eae7ad41a9a616f0b66b8c7ee0ae15b1"),
-        ("claude-opus-5-5", "low", "ordinary.py", "d9ca28da9d5c1901c07451d34c27c4de1b5a2884c72c8ebeeb304965b9a90b59"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "86e6a8ed48f0ec5c755ff6d8dec30f7f078a39ad349110a0e9a99f521923b5fd"),
+        ("claude-opus-5-5", "low", "ordinary.py", "769d0986d406da6935db6c0d607fb58b9bc607dc3f7a2ff06bfac32bd684787c"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "251d11d36da069f762a6b1319fbfd624e0e2148e15987e6098162efd0bdc35b5",
+            "1e48f88f0ddfc76128a0b62fccaf1ebf24e4f652994b422a398f0fd799439e36",
         ),
     ],
 )
 @pytest.mark.parametrize("mode", [(), ("--review-mode", "cross_family")])
-def test_default_resolver_output_matches_pre_10437_golden(tmp_path, author, risk, path, digest, mode):
+def test_default_resolver_output_matches_retirement_golden(tmp_path, author, risk, path, digest, mode):
     import hashlib
 
     result = _run_cli(

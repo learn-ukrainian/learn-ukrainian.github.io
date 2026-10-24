@@ -44,6 +44,10 @@ def raw_catalog():
 )
 def test_one_holder_edit_moves_all_consumer_references(seat, new_id):
     raw = raw_catalog()
+    if seat not in raw["seats"]:
+        with pytest.raises(ModelCatalogError, match="exactly one"):
+            resolve_routing_reference({"role": "legacy_reviewers", "seat": seat}, raw)
+        return
     old_id = raw["seats"][seat]["model_id"]
     replacement = deepcopy(raw["models"][old_id])
     replacement["aliases"] = []
@@ -165,7 +169,7 @@ def test_catalog_file_path_role_validation_is_clean_exit_two(tmp_path, bad, entr
 
 
 def test_legacy_allowlist_cannot_expand_from_injected_cursor_candidates():
-    from tests.review.test_model_catalog import APPROVED_BASELINE
+    from tests.review.test_model_catalog import CURRENT_BASELINE as APPROVED_BASELINE
 
     catalog = deepcopy(APPROVED_BASELINE["catalog"])
     new_id = "grok-99"
@@ -262,6 +266,6 @@ def test_shared_cursor_author_policy_preserves_main_family_separation(family, ro
 
 def test_legacy_adapter_expands_raw_authored_references():
     from scripts.review.role_resolution import expanded_legacy_view
-    from tests.review.test_model_catalog import APPROVED_BASELINE
+    from tests.review.test_model_catalog import CURRENT_BASELINE as APPROVED_BASELINE
 
     assert expanded_legacy_view(raw_catalog()) == APPROVED_BASELINE["catalog"]

@@ -22,8 +22,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
-from scripts.orchestration import job_host_exec
+from scripts.orchestration import fleet_repos, job_host_exec
+from scripts.orchestration.fleet_repos import FleetRepo
 from scripts.review import record_cf_verdict as recorder
+from scripts.review import target_resolution
 from scripts.review.model_catalog import ModelCatalogError
 from tests.claude_route_accounts import HOST_ACCOUNT
 
@@ -251,9 +253,12 @@ def record_verdict(
     record_kwargs = review.pop("_record_kwargs", {})
     statuses = review.pop("_statuses", None)
     task_id = review.pop("_task_id", "review")
+    caller = review.pop("_caller", repo.root)
+    cli = review.pop("_cli", False)
+    reply = review.pop("_reply", "Checked.\n\nVERDICT: APPROVE\n")
     base, head = repo.sha("origin/main"), repo.sha("feature")
-    review_root = tmp_path / "review-tasks"
-    review_root.mkdir(exist_ok=True)
+    review_root = caller / "batch_state" / "tasks" if cli else tmp_path / "review-tasks"
+    review_root.mkdir(parents=True, exist_ok=True)
     fields = {
         "repository": REPOSITORY,
         "worktree_branch": "feature",
@@ -265,7 +270,7 @@ def record_verdict(
         **review,
     }
     (review_root / f"{task_id}.json").write_text(json.dumps(fields), encoding="utf-8")
-    (review_root / f"{task_id}.result").write_text("Checked.\n\nVERDICT: APPROVE\n", encoding="utf-8")
+    (review_root / f"{task_id}.result").write_text(reply, encoding="utf-8")
     # Author provenance lives with the dispatch task records.
     for source in tmp_path.joinpath("tasks").rglob("*.json"):
         target = review_root / source.relative_to(tmp_path / "tasks")
@@ -299,13 +304,15 @@ def record_verdict(
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)
     monkeypatch.setattr(recorder, "_pages", lambda request: listing or github_listing(repo, base, head))
-    monkeypatch.setattr(recorder, "_repo_root", lambda: repo.root)
+    monkeypatch.setattr(recorder, "_repo_root", lambda: caller)
     monkeypatch.setattr(recorder.GitHubAdapter, "identity", lambda self: "fleet")
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments))
     monkeypatch.setattr(
         recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs) if statuses is not None else None
     )
-    monkeypatch.chdir(repo.root)
+    monkeypatch.chdir(caller)
+    if cli:
+        return recorder.main(["--task-id", task_id, "--pr", "42"])
     return recorder.record(task_id, pr_number=42, task_root=review_root, lock_root=tmp_path / "locks", **record_kwargs)
 
 
@@ -351,22 +358,55 @@ def test_unknown_author_cannot_record_an_unknown_reviewer_verdict(repo, tasks, m
 # --- 1. single-family eligible -------------------------------------------------------------------
 
 
-def test_single_family_branch_agrees_across_selector_and_recorder(repo, tasks, monkeypatch, tmp_path):
+def test_single_family_branch_agrees_across_selector_and_recorder(repo, tasks, monkeypatch, tmp_path, capsys):
+    """Full history and provenance must survive selection of a different Git object store."""
     task_record(tasks, "hot-task", agent="claude", model="claude-opus-5-5")
     task_record(tasks, "old-task", archived=True, agent="claude", model="claude-opus-5-5")
     repo.commit(OPUS, message="one")
     repo.commit("claude/hot-task", message="two")
-    repo.commit("claude/old-task", message="three")
+    repo.commit("claude/old-task\nX-Agent: claude/hot-task\nX-Agent: claude/old-task", message="three")
     repo.publish()
 
     fact = facts(repo, tasks, writer=OPUS)
 
-    assert fact.existing_families == {"anthropic"} and len(fact.commits) == 3
+    assert fact.existing_families == {"anthropic"} and fact.receipt()["commits"] == 3
+    assert len(fact.commits) == 5
     assert {commit.source for commit in fact.commits} == {"trailer-model", "task-record", "task-record-archived"}
+    assert fact.author_task_ids == {"hot-task", "old-task"}
+    assert fact.author_models == ("claude-opus-5-5",) * 3
+    assert fact.author_task_models == ("claude-opus-5-5",)
     assert selected(fact, "critical") == "openai_frontier"
-    # The recorder, run independently on the same repository, accepts that reviewer ...
-    receipt = record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol", review_risk="critical")
+    provenance = tmp_path / "public"
+    provenance.mkdir()
+    _run_git("init", "-q", "-b", "trunk", cwd=provenance)
+    _run_git("remote", "add", "origin", "https://github.com/owner/public.git", cwd=provenance)
+    catalog = {
+        "public": FleetRepo("public", "owner/public", "public", "test", True),
+        "target": FleetRepo("target", REPOSITORY, repo.root.name, "test"),
+    }
+    monkeypatch.setattr(recorder, "load_fleet_repos", lambda: catalog)
+    monkeypatch.setattr(target_resolution, "load_fleet_repos", lambda: catalog)
+    monkeypatch.setattr(fleet_repos, "load_fleet_repos", lambda: catalog)
+    posted = []
+    # The CLI reads canonical provenance while Git history and citations use the target.
+    assert record_verdict(
+        monkeypatch,
+        tmp_path,
+        repo,
+        agent="codex",
+        model="gpt-6.1-sol",
+        review_risk="critical",
+        comments=posted,
+        _caller=provenance,
+        _cli=True,
+        _reply=f"Checked `{repo.root}/docs/a.md`.\n\nVERDICT: APPROVE\n",
+    ) == 0
+    receipt = json.loads(capsys.readouterr().out)
     assert receipt["verdict"] == "APPROVED" and receipt["head"] == repo.sha("feature")
+    assert len(list((provenance / "batch_state" / "locks").glob("*.lock"))) == 1
+    assert not (repo.root / "batch_state").exists()
+    assert str(repo.root) not in posted[0]["body"] and str(provenance) not in posted[0]["body"]
+    assert "docs/a.md" in posted[0]["body"]
     # ... and refuses an author-family one.
     with pytest.raises(recorder.RecordError, match="equals an author family"):
         record_verdict(monkeypatch, tmp_path, repo, agent="claude", model="claude-opus-5-5")
@@ -404,11 +444,14 @@ def test_mixed_family_critical_branch_has_no_reviewer_whatever_the_order_or_writ
 
 
 def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatch, tmp_path):
-    repo.commit(OPUS)
+    repo.commit(f"{OPUS}\nX-Agent: {SOL}")
     repo.commit(SOL)
     repo.publish()
     fact = facts(repo, tasks, writer=OPUS)
 
+    assert fact.existing_families == {"anthropic", "openai"}
+    assert fact.receipt()["commits"] == 2 and len(fact.commits) == 3
+    assert fact.author_models == ("gpt-6.1-sol", "claude-opus-5-5", "gpt-6.1-sol")
     assert selected(fact, "medium") == "gemini-3.8-flash-high"
     receipt = record_verdict(
         monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT
@@ -551,7 +594,7 @@ def test_recorder_refuses_a_github_listing_that_differs_from_rev_list(repo, task
     "case,reason",
     [
         ("missing-trailer", "missing explicit X-Agent"),
-        ("duplicate-trailer", "missing explicit X-Agent"),
+        ("duplicate-trailer", "3 X-Agent trailers: member 3 malformed"),
         ("repository-mismatch", "conflicts with commit trailer"),
         ("unproven-merge", "missing explicit X-Agent"),
     ],
@@ -561,7 +604,7 @@ def test_invalid_attribution_is_never_green(repo, tasks, case, reason):
     if case == "missing-trailer":
         repo.commit(None)
     elif case == "duplicate-trailer":
-        repo.commit(f"{OPUS}\nX-Agent: {SOL}")
+        repo.commit(f"{OPUS}\nX-Agent: {SOL}\nX-Agent: ")
     elif case == "repository-mismatch":
         task_record(tasks, "elsewhere", agent="codex", model="gpt-6.1-sol", repository="other/repo")
         repo.commit("codex/elsewhere")
@@ -888,9 +931,9 @@ def test_history_group_6_protected_gates_take_precedence(repo, tasks, frozen_his
 @pytest.mark.parametrize("case", ["conflicting", "after-admission", "malformed", "empty-model", "invalid-model"])
 def test_history_group_7_only_frozen_zero_trailers(repo, tasks, frozen_history, case, monkeypatch, tmp_path):
     if case == "conflicting":
-        repo.commit(f"{OPUS}\nX-Agent: {SOL}")
+        repo.commit(f"{OPUS}\nX-Agent: {SOL}\nX-Agent: codex/impl-missing-task")
         repo.publish()
-        with pytest.raises(delegate._AuthoringReviewRefused, match="missing explicit X-Agent"):
+        with pytest.raises(delegate._AuthoringReviewRefused, match="3 X-Agent trailers: member 3 unresolved"):
             history_admission(repo, tasks)
         return
     if case in {"malformed", "empty-model", "invalid-model"}:

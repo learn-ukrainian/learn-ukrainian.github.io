@@ -18,7 +18,7 @@ _PINS = _REPO_ROOT / "scripts" / "config" / "stack_pins.yaml"
 _ONE_ROW = """\
 pins:
   - name: python
-    pinned: "3.12.14"
+    pinned: "3.12.15"
     source: .python-version
     owner: DevOps
     review_by: "2026-11-16"
@@ -40,7 +40,7 @@ def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
     body = report.render_body(report.build_report(_PINS, lambda _name: "9.8.7"))
     rows = _table(body)
 
-    assert rows["python"] == ["python", "3.12.14", "9.8.7", "withheld"]
+    assert rows["python"] == ["python", "3.12.15", "9.8.7", "withheld"]
     assert rows["node"] == ["node", "22", "9.8.7", "withheld"]
     assert rows["postgresql"][1] == "16"
     assert rows["entire"] == ["entire", "0.8.42", "9.8.7", "withheld"]
@@ -78,7 +78,7 @@ _PUBLICATION_CANARIES = (
 @pytest.mark.parametrize("field", ["name", "pinned", "latest", "source"])
 @pytest.mark.parametrize("value", _PUBLICATION_CANARIES)
 def test_unpublished_cells_are_withheld(field: str, value: str) -> None:
-    row = {"name": "python", "pinned": "3.12.14", "latest": "9.8.7", "source": "1.2.3"}
+    row = {"name": "python", "pinned": "3.12.15", "latest": "9.8.7", "source": "1.2.3"}
     row[field] = value
     body = report.render_body({"rows": [row]})
     assert value not in body
@@ -163,7 +163,7 @@ def test_collector_writes_a_local_report_and_does_not_publish(tmp_path: Path, mo
     assert report.main(["render", "--report", str(destination), "--body-out", str(body_out)]) == 0
     saved = json.loads(destination.read_text(encoding="utf-8"))
     by_name = {row["name"]: row for row in saved["rows"]}
-    assert by_name["python"]["pinned"] == "3.12.14"
+    assert by_name["python"]["pinned"] == "3.12.15"
     assert by_name["python"]["latest"] == "9.8.7"
     assert "9.8.7" in body_out.read_text(encoding="utf-8")
     source = Path(report.__file__).read_text(encoding="utf-8")
@@ -188,7 +188,7 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
     ["1.2.3-PUBLICATIONCANARY", "1.2.3+PUBLICATIONCANARY", "1.2.3 PUBLICATION_CANARY", "v1.2.3"],
 )
 def test_version_prefix_with_extra_text_is_withheld(field: str, value: str) -> None:
-    row = {"name": "python", "pinned": "3.12.14", "latest": "9.8.7", "source": "1.2.3"}
+    row = {"name": "python", "pinned": "3.12.15", "latest": "9.8.7", "source": "1.2.3"}
     row[field] = value
     body = report.render_body({"rows": [row]})
     assert value not in body

@@ -19,24 +19,27 @@ from typing import Any
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 AUDIT_DIR = Path(__file__).resolve().parent
-if str(AUDIT_DIR) not in sys.path:
-    sys.path.insert(0, str(AUDIT_DIR))
-
-from content_surface_gates import scan_module_surface
-from llm_qg_canaries import evaluate_canaries
-from llm_qg_store import (
-    EVIDENCE_SCHEMA_VERSION,
-    SUPPORTED_EVIDENCE_GATE_VERSIONS,
-    current_llm_qg_for_module,
-    evidence_record_is_current_for_module,
-    latest_llm_qg,
-    llm_qg_file_is_current_for_module,
-)
-
-from scripts.api.config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
+try:
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.api.config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
+    from scripts.audit.content_surface_gates import scan_module_surface
+    from scripts.audit.llm_qg_canaries import evaluate_canaries
+    from scripts.audit.llm_qg_store import (
+        EVIDENCE_SCHEMA_VERSION,
+        SUPPORTED_EVIDENCE_GATE_VERSIONS,
+        current_llm_qg_for_module,
+        evidence_record_is_current_for_module,
+        latest_llm_qg,
+        llm_qg_file_is_current_for_module,
+    )
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 _CURRENT_LLM_STATUSES = {"current_db", "current_file_only"}

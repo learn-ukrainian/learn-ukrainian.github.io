@@ -44,7 +44,7 @@ def test_exclusion_integration(tmp_path):
     assert "plans/lit/thematic.yaml" in exclusions
 
 
-def test_sanity_gap_detection(tmp_path, monkeypatch):
+def test_sanity_gap_detection(tmp_path, monkeypatch, capsys):
     """
     Test 1: Sanity test: script SHOULD report Тичина as a gap since bio doesn't exist.
     """
@@ -59,24 +59,16 @@ def test_sanity_gap_detection(tmp_path, monkeypatch):
     audit_dir = tmp_path / 'docs' / 'audits'
     audit_dir.mkdir(parents=True)
 
-    def mock_resolve(*args, **kwargs):
-        class MockPath:
-            @property
-            def parent(self):
-                class Parent1:
-                    @property
-                    def parent(self):
-                        class Parent2:
-                            @property
-                            def parent(self):
-                                return tmp_path
-                        return Parent2()
-                return Parent1()
-        return MockPath()
+    monkeypatch.setattr(
+        "scripts.audit.bio_lit_cross_reference.__file__",
+        str(tmp_path / 'scripts' / 'audit' / 'bio_lit_cross_reference.py'),
+    )
 
-    monkeypatch.setattr("scripts.audit.bio_lit_cross_reference.Path.resolve", mock_resolve)
-
-    try:
+    with pytest.raises(SystemExit) as exc_info:
         main()
-    except SystemExit as e:
-        assert e.code == 1
+    assert exc_info.value.code == 1
+    output = capsys.readouterr().out
+    assert "Found 1 gaps (LIT plans missing BIO or exclusions):" in output
+    assert "plans/lit/tychyna-clarinets.yaml -> Missing bio candidate: tychyna.yaml" in output
+    report = (audit_dir / 'bio-lit-cross-reference-gaps.md').read_text(encoding='utf-8')
+    assert "| plans/lit/tychyna-clarinets.yaml | tychyna.yaml | |" in report

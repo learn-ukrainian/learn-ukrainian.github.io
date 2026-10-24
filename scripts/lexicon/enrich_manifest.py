@@ -61,6 +61,7 @@ import time
 import unicodedata
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
+from copy import deepcopy
 from dataclasses import dataclass
 from functools import lru_cache
 from html.parser import HTMLParser
@@ -114,6 +115,7 @@ from scripts.lexicon.source_attribution import (
     VTS_ACADEMIC_LABEL,
     VTS_SHORT_LABEL,
     WIKIDATA_LABEL,
+    apply_entry_attribution,
     attach_official_url,
     cites_soviet_dictionary_outside_context,
     join_academic_source_labels,
@@ -2099,19 +2101,6 @@ def _clean_synonym_candidate(candidate: str, lemma: str) -> str | None:
     return term
 
 
-def _slovnyk_synonym_group_head(row: dict[str, Any], lemma: str) -> str:
-    body = _synonym_body(
-        str(row.get("text") or ""),
-        lemma,
-        str(row.get("word") or ""),
-        str(row.get("dictionary_slug") or ""),
-    )
-    first = re.split(r"[,;(]", body, maxsplit=1)[0]
-    first = _SYNONYM_LABEL_RE.sub(" ", _strip_stress(first))
-    first = re.sub(r"\s+", " ", first).strip(' \t\r\n.,;:!?/\\[]{}«»"“”<>').casefold()
-    return first
-
-
 def _is_safe_slovnyk_synonym(
     lemma: str,
     candidate: str,
@@ -3721,10 +3710,6 @@ def _get_heritage_pairs_data() -> tuple[dict[str, dict[str, Any]], dict[str, lis
     return _HERITAGE_PAIRS_DATA_CACHE
 
 
-def _get_heritage_pairs_rationale_uk() -> dict[str, str]:
-    return _get_heritage_pairs_data()[2]
-
-
 def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
     """Curated §6 calque card from exact dataset lookups only."""
     by_calque, _, rationale_uk_map = _get_heritage_pairs_data()
@@ -4126,22 +4111,6 @@ def _add_candidate(
     if _candidate_allowed(lemma, term) and term not in seen:
         seen.add(term)
         out.append(term)
-
-
-def _synonyms_from_wiktionary(conn: SQLiteConnection, lemma: str, out: list[str], seen: set[str]) -> None:
-    for variant in _split_lemma_variants(lemma):
-        row = conn.execute(
-            "SELECT synonyms FROM wiktionary WHERE word = ? LIMIT 1",
-            (variant,),
-        ).fetchone()
-        if not row:
-            continue
-        try:
-            synonyms = json.loads(row[0] or "[]")
-        except (TypeError, ValueError):
-            continue
-        for candidate in synonyms:
-            _add_candidate(out, seen, lemma, str(candidate))
 
 
 def _synonyms_from_balla(conn: SQLiteConnection, lemma: str, out: list[str], seen: set[str]) -> None:
@@ -5874,25 +5843,6 @@ def _direct_etymology_base_candidates(word: str) -> list[str]:
     if key.endswith("ити") and len(key) > 5:
         candidates.append(key[:-3])
     return candidates
-
-
-def _derivational_etymology_candidates(lemma: str) -> list[str]:
-    word = _lookup_key(_base_lemma(lemma))
-    if not word or _has_whitespace(word) or word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
-        return []
-    out: list[str] = []
-    seen: set[str] = {word}
-    queue: list[tuple[str, int]] = [(word, 0)]
-    while queue:
-        current, depth = queue.pop(0)
-        if depth >= 2:
-            continue
-        for candidate in _direct_etymology_base_candidates(current):
-            before = len(out)
-            _append_unique_candidate(out, seen, candidate, word)
-            if len(out) > before:
-                queue.append((_lookup_key(candidate), depth + 1))
-    return out
 
 
 def _has_whitespace(value: str) -> bool:
@@ -8489,10 +8439,17 @@ def enrich_entry(
     else:
         entry.pop("wiki_reference", None)
 
+    # Source blocks can belong to shared caches. Normalize the produced entry
+    # without rewriting those inputs or the generic recovery-byte writer.
+    attributed = deepcopy(entry)
+    attribution_changed = apply_entry_attribution(attributed)
+    if attribution_changed:
+        entry.clear()
+        entry.update(attributed)
     violation = soviet_citation_learner_violation(entry)
     if violation:
         raise ValueError(f"newly enriched entry {lemma!r} has an unflagged СУМ-11 citation: {violation}")
-    return bool(block or sections or pronunciation or wiki_ref or filled_anchor)
+    return bool(block or sections or pronunciation or wiki_ref or filled_anchor or attribution_changed)
 
 
 def enrich(

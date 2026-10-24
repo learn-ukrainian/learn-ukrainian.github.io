@@ -8,9 +8,10 @@ explicit committed range, with the per-commit OPSEC scan and the learner-surface
 internal-ID scan.  The pre-commit stage runs the hooks ``.pre-commit-config.yaml``
 places at the ``pre-push`` stage, unchanged.
 
-The gate runs no tests of its own (#11276): no pytest stage, no host test slots
-and no affected-test selector.  CI Gate runs the full suite on every pull request
-and again in the merge queue, and remains the merge gate.
+No push path runs pytest: no pytest stage, pytest hook, host test slots
+or affected-test selector. PR CI Gate runs admission checks and pytest collection.
+The real merge-group candidate must pass the full supported suite before landing;
+nightly and opt-in manual runs also retain the full suite.
 
 The range starts at the merge-base with ``origin/main`` after a merge of newer
 main, so the scans see only the branch's own commits (#10820).
@@ -61,8 +62,8 @@ CGROUP_ROOT = Path("/sys/fs/cgroup")
 # is never green.
 STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
-# What a run depends on beyond the bound tree; a receipt binds each. ``pytest`` is the version the
-# configuration's pytest-based ``pre-push`` hooks run under.
+# A receipt binds these tool fingerprints. The retained ``pytest`` fingerprint reads installed
+# package metadata only; it neither imports pytest nor executes tests during a push.
 TOOL_NAMES = ("gate_source", "launcher", "pre_commit_config", "python", "pytest", "pre_commit")
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 # One predecessor's admission allowance. Gate version 11 held admission through its run budget, a host
@@ -170,6 +171,61 @@ def parse_updates(text: str) -> list[Update]:
             raise GateOutcome("invalid_ref_updates", f"could not read a valid ref update from Git: {line!r}")
         updates.append(Update(*fields))
     return updates
+
+
+def entire_destination(remote: list[str]) -> str:
+    """Classify the protected origin; KNOWN_NONPUBLIC does not assert private visibility.
+
+    Mirror the pure grammar in scripts.opsec.git_push.destination and prepublish.normalize_repository
+    without importing mutable project code before validation. Only canonical GitHub two-segment paths
+    can select an exemption here; all other destinations are UNKNOWN.
+    """
+    if len(remote) != 2:
+        return "UNKNOWN"
+    value = remote[1].strip()
+    colon, slash = value.find(":"), value.find("/")
+    if not value or colon < 0 or 0 <= slash < colon:
+        return "UNKNOWN"
+    match = re.fullmatch(r"(?:https?|ssh|git|git\+ssh|ssh\+git)://(?:[^@/]+@)?([^/:@]+)(?::\d*)?/(.+)", value, re.I)
+    if match is None and "://" not in value:
+        match = re.fullmatch(r"(?:[^@/]+@)?([^/:@]+):([^:].*)", value)
+    if match is None:
+        return "UNKNOWN"
+    host, path = match.groups()
+    path = path.strip("/")
+    if len(path.split("/")) != 2:
+        return "UNKNOWN"
+    identity = f"{host}/{path}".strip()
+    if not identity.isascii():
+        return "UNKNOWN"
+    identity = identity.lower().removesuffix(".git")
+    if identity.endswith(".git"):
+        return "UNKNOWN"
+    host, owner, repository = identity.split("/")
+    if host != "github.com" or not all(re.fullmatch(r"[A-Za-z0-9_.-]+", part) for part in (owner, repository)):
+        return "UNKNOWN"
+    return "PUBLIC" if identity == "github.com/learn-ukrainian/learn-ukrainian.github.io" else "KNOWN_NONPUBLIC"
+
+
+def refuse_public_entire_refs(updates: list[Update], remote: list[str]) -> None:
+    """Inspect every destination before tags, deletions, admission or receipts can bypass refusal."""
+    classes = sorted(
+        {
+            prefix + "*"
+            for update in updates
+            for prefix in ("refs/heads/entire/", "refs/tags/entire/")
+            if update.remote_ref.startswith(prefix)
+        }
+    )
+    if not classes:
+        return
+    destination = entire_destination(remote)
+    if destination == "KNOWN_NONPUBLIC":
+        return
+    detail = f"Entire destination ref classes: {', '.join(classes)}. "
+    if destination == "PUBLIC":
+        raise GateOutcome("public_entire_ref", detail + "Public origin updates are refused.")
+    raise GateOutcome("entire_destination_unknown", detail + "Destination is unknown; Entire updates are refused.")
 
 
 def main_merge_base(update: Update, root: Path) -> tuple[str | None, str | None]:
@@ -282,7 +338,8 @@ def reject_untracked_inputs(root: Path) -> None:
         raise GateOutcome(
             "untracked_inputs",
             f"untracked or ignored files outside the outgoing commit could change the validation run: {shown}; "
-            "commit them or remove them first",
+            "commit them or remove them first. "
+            "For agent task artifacts, use the preserved task evidence directory ($LU_TASK_EVIDENCE_DIR).",
         )
 
 
@@ -1693,9 +1750,11 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     with catch_interruptions():
         try:
             event = new_event()
+            parsed_updates = parse_updates(text)
+            refuse_public_entire_refs(parsed_updates, arguments.remote)
             concurrent_run_limit()
             updates = [
-                u for u in parse_updates(text) if u.local_sha != ZERO_SHA and not u.remote_ref.startswith("refs/tags/")
+                u for u in parsed_updates if u.local_sha != ZERO_SHA and not u.remote_ref.startswith("refs/tags/")
             ]
             if len({u.local_sha for u in updates}) > 1:
                 raise GateOutcome(

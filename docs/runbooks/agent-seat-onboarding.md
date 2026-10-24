@@ -859,6 +859,17 @@ review as CF. Keep the resulting operational evidence private.
 
 ## Reviewer-seat transport recovery
 
+Direct read-only code reviews can target a registered sibling repository with
+`delegate.py dispatch --repo <key> --pr <number>` or
+`--repo <key> --branch <branch> --pinned-head <full-sha>`, together with the
+required review profile, author model and risk flags. Dispatch resolves the
+repository through the fleet registry and creates a detached snapshot inside
+the reviewer's dispatch subtree. The fetched branch and live canonical head
+must match the admitted SHA. The author checkout stays untouched; a moved head,
+foreign repository or unsafe worktree path refuses launch. This attach path is
+for direct read-only reviews; it does not change write continuation or formal
+attempt worktree custody.
+
 Dead reviewer seats must fail with an actionable error — never mid-review
 with a bare "not found on PATH" (#6805). The `ask-*` compatibility shim runs
 a PATH-only preflight

@@ -30,7 +30,12 @@ def resolve_model_selection(
             f"{lane}: --to-model ({to_model}) conflicts with deprecated --model ({model}); "
             "provide one model value or make them identical"
         )
-    return to_model or model or default
+    from scripts.review.model_catalog import retired_model_refusal
+
+    selected = to_model or model or default
+    if refusal := retired_model_refusal(selected):
+        raise ValueError(f"{lane}: {refusal}")
+    return selected
 
 
 def request_metadata(message: Mapping[str, Any]) -> dict[str, Any]:

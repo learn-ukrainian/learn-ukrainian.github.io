@@ -1515,8 +1515,9 @@ def disk_watermark_alert_report(state_dir: Path) -> dict[str, Any]:
     """Run the once-per-crossing cto alert; a failure is reported as an error, never raised (#10871)."""
     try:
         return {"detail": disk_watermark_alert.check_and_alert(state_dir, PROJECT_ROOT), "errors": 0}
-    except (ValueError, backup_failure_alert.AlertError) as exc:
-        return {"detail": f"disk watermark alert failed: {exc}", "errors": 1}
+    except (ValueError, backup_failure_alert.AlertError, OSError) as exc:
+        detail = "state I/O failed; retry retains the publication identity" if isinstance(exc, OSError) else str(exc)
+        return {"detail": f"disk watermark alert failed: {detail}", "errors": 1}
 
 
 @github_client.timer

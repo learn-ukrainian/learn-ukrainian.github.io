@@ -52,7 +52,7 @@ pins:
     review_by: "2026-11-16"
     note: version input of astral-sh/setup-uv. The action SHA is Dependabot's.
   - name: python
-    pinned: "3.12.14"
+    pinned: "3.12.15"
     source: .python-version
     owner: DevOps
     review_by: "2026-11-16"
@@ -109,13 +109,11 @@ pins:
     pinned: >-
       gpt-6.1-sol, gpt-6-luna, claude-opus-5-5,
       claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high,
-      gemini-3.1-pro-high, grok-4.7, glm-5.3, deepseek-v4.1-flash,
-      poolside/laguna-s-2.1, poolside/laguna-xs-2.1, poolside/laguna-m.1,
-      composer-2.5, google-ais/gemma-4-31b-it, glm-5.3-flash
+      grok-4.7, deepseek-v4.1-flash
     source: scripts/config/model_catalog.yaml
     owner: Infra
     review_by: "2026-11-16"
-    note: schema_version model-catalog.v1, reviewed_on 2026-09-24. Current default pins omit parked Fable 5.1 (explicit pin only) and retired Kimi ids (OO-58, #11327). Admitted ids are the models map in that file.
+    note: schema_version model-catalog.v1, reviewed_on 2026-10-23. Current default pins omit parked Fable 5.1 (explicit pin only) and retired Kimi ids (OO-58, #11327). Only active models with admitted transports may route. Unsubscribed models are retired (operator 2026-10-23).
   - name: ci-literals
     pinned: ubuntu-latest
     source: .github/workflows/ci.yml

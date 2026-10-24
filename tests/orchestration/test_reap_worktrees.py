@@ -1418,7 +1418,7 @@ def test_active_probe_failure_releases_settled_delegation_holder(tmp_path, monke
     monkeypatch.setattr(delegate, "_record_diagnostic", lambda *args, **kwargs: diagnostics.append(args))
     reason = delegate._branch_holder_activity_reason(worktree, task_id=record["task_id"], task_state=record)
     assert reason is None
-    assert "active_task_probe_timeout" in diagnostics[0][1].diagnostic
+    assert diagnostics == []
 
 
 @pytest.mark.parametrize("layout", ["dispatch", "legacy"])
@@ -2601,8 +2601,10 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Containment is the PR head itself or an ancestor of it, including branch prune."""
+    """Reap merged heads, continue past pre-Git absence and expose post-attempt errors."""
     repo = init_repo(tmp_path)
+    vanished = add_worktree(repo, "codex/aaa-vanished")
+    vanished_head = git(vanished, "rev-parse", "HEAD")
     exact = add_worktree(repo, "codex/exact-head")
     exact_head = git(exact, "rev-parse", "HEAD")
     ancestor = add_worktree(repo, "codex/ancestor-head")
@@ -2613,10 +2615,33 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     patch_gh(
         monkeypatch,
         {
+            "codex/aaa-vanished": [{"number": 30, "state": "MERGED", "headRefOid": vanished_head}],
             "codex/exact-head": [{"number": 31, "state": "MERGED", "headRefOid": exact_head}],
             "codex/ancestor-head": [{"number": 32, "state": "MERGED", "headRefOid": ancestor_pr_head}],
         },
     )
+    real_run = rw._run
+    real_remove = worktree_claims.git_worktree_remove
+    removal_targets: list[Path] = []
+    disappeared = False
+
+    def vanish_before_head(args: list[str], *, cwd: Path, **kwargs: Any):
+        nonlocal disappeared
+        if cwd == vanished and args == ["git", "rev-parse", "HEAD"] and rw._LOCKED_REGION_DEADLINE.get() is not None:
+            assert not disappeared
+            assert exact.exists() and ancestor.exists()
+            # Another legitimate remover wins after qualification, immediately
+            # before the real Git call must start in this now-missing cwd.
+            git(repo, "worktree", "remove", str(vanished))
+            disappeared = True
+        return real_run(args, cwd=cwd, **kwargs)
+
+    def record_remove(repo_root: Path, target: Path, **kwargs: Any):
+        removal_targets.append(target)
+        return real_remove(repo_root, target, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", vanish_before_head)
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", record_remove)
 
     results = rw.reap_worktrees(
         repo_root=repo,
@@ -2627,6 +2652,19 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
 
     exact_result = result_for(results, exact)
     ancestor_result = result_for(results, ancestor)
+    vanished_result = result_for(results, vanished)
+    assert disappeared
+    assert vanished_result.action == "skipped"
+    assert vanished_result.reason == "registered worktree path is missing; run git worktree prune"
+    assert vanished_result.dirty is None
+    assert vanished_result.error is None
+    assert vanished_result.freed_bytes == 0
+    assert vanished_result.recovery_ref is None
+    assert vanished_result.preserved_artifacts is None
+    assert vanished_result.branch_pruned is False
+    assert not reaper_lifecycle.is_reap_pending(repo, vanished)
+    assert removal_targets == [ancestor, exact]
+    assert git(repo, "rev-parse", "refs/heads/codex/aaa-vanished") == vanished_head
     assert exact_result.action == "removed"
     assert exact_result.reason == "PR #31 MERGED"
     assert exact_result.branch_pruned is True
@@ -2635,6 +2673,151 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     assert ancestor_result.branch_pruned is True
     assert not exact.exists()
     assert not ancestor.exists()
+
+    from unittest.mock import Mock
+
+    from scripts.fleet import ignored_task_output
+
+    real_preserve = ignored_task_output.preserve_worktree_artifacts
+    real_safe_git = worktree_claims.safe_git
+    real_measured = rw._measured_removal
+    pre_removal_failures: list[str] = []
+    for error_type in (FileNotFoundError, NotADirectoryError):
+        pre_branch = f"codex/pre-removal-{error_type.__name__}"
+        before_stage = add_worktree(
+            repo, pre_branch, path=repo / ".worktrees" / error_type.__name__ / "target"
+        )
+        before_head = git(before_stage, "rev-parse", "HEAD")
+        later_branch = f"codex/zzz-later-{error_type.__name__}"
+        later = add_worktree(repo, later_branch)
+        later_head = git(later, "rev-parse", "HEAD")
+        patch_gh(monkeypatch, {
+            pre_branch: [{"number": 34, "state": "MERGED", "headRefOid": before_head}],
+            later_branch: [{"number": 35, "state": "MERGED", "headRefOid": later_head}],
+        })
+        own_git_removals: list[Path] = []
+        observed_errors: list[type[OSError]] = []
+        def preserve_then_vanish(
+            target: Path, *, before_stage=before_stage, later=later, error_type=error_type, **kwargs: Any
+        ):
+            outcome = real_preserve(target, **kwargs)
+            if target == before_stage:
+                assert outcome[0] is True
+                assert later.exists()
+                git(repo, "worktree", "remove", str(target))
+                if error_type is NotADirectoryError:
+                    # The target is absent through a non-directory ancestor.
+                    target.parent.rmdir()
+                    target.parent.write_text("ancestor replaced after cleanup\n")
+            return outcome
+
+        def observe_stage(measurement, stage=contextlib.nullcontext, *, observed_errors=observed_errors):
+            measured = real_measured(measurement, stage)
+
+            @contextlib.contextmanager
+            def enter(target: Path):
+                try:
+                    with measured(target) as staged:
+                        yield staged
+                except (FileNotFoundError, NotADirectoryError) as exc:
+                    observed_errors.append(type(exc))
+                    raise
+
+            return enter
+
+        def record_destructive_git(args, *, own_git_removals=own_git_removals, **kwargs: Any):
+            if args[:2] == ["worktree", "remove"]:
+                own_git_removals.append(Path(args[-1]))
+            return real_safe_git(args, **kwargs)
+
+        with monkeypatch.context() as pre_removal:
+            pre_removal.setattr(ignored_task_output, "preserve_worktree_artifacts", preserve_then_vanish)
+            pre_removal.setattr(rw, "_measured_removal", observe_stage)
+            pre_removal.setattr(worktree_claims, "safe_git", record_destructive_git)
+            try:
+                results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), prune_merged_branches=True)
+            except (FileNotFoundError, NotADirectoryError) as exc:
+                assert type(exc) is error_type
+                assert observed_errors == [error_type]
+                pre_removal_failures.append(f"{error_type.__name__}: {type(exc).__name__}: {exc}")
+                continue
+        before_result = result_for(results, before_stage)
+        assert observed_errors == [error_type]
+        assert before_result.action == "skipped"
+        assert before_result.reason == "registered worktree path is missing; run git worktree prune"
+        assert before_result.dirty is None
+        assert before_result.error is None
+        assert before_result.freed_bytes == 0
+        assert before_result.branch_pruned is False
+        assert before_result.recovery_ref is not None
+        assert git(repo, "rev-parse", before_result.recovery_ref) == before_head
+        assert before_result.preserved_artifacts is None
+        assert not reaper_lifecycle.is_reap_pending(repo, before_stage)
+        assert git(repo, "rev-parse", f"refs/heads/{pre_branch}") == before_head
+        assert own_git_removals == [later]
+        assert result_for(results, later).action == "removed"
+        assert result_for(results, later).branch_pruned is True
+        assert not later.exists()
+
+    assert not pre_removal_failures, "\n".join(pre_removal_failures)
+
+    real_copy_proof = rw.copy_proof_run
+    for error_type in (FileNotFoundError, NotADirectoryError):
+        branch = f"codex/post-removal-{error_type.__name__}"
+        removed = add_worktree(repo, branch)
+        head = git(removed, "rev-parse", "HEAD")
+        patch_gh(monkeypatch, {branch: [{"number": 33, "state": "MERGED", "headRefOid": head}]})
+        failure = error_type("cap recording failed after own removal")
+        with monkeypatch.context() as post_removal:
+            post_removal.setattr(reaper_lifecycle, "record_reap_for_cap", Mock(side_effect=failure))
+            with pytest.raises(error_type, match="cap recording failed after own removal") as raised:
+                rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), prune_merged_branches=True)
+        assert raised.value is failure
+        assert removal_targets[-1] == removed
+        assert not removed.exists()
+        assert rw._run(["git", "rev-parse", "--verify", f"refs/heads/{branch}"], cwd=repo).returncode != 0
+        assert not reaper_lifecycle.is_reap_pending(repo, removed)
+
+        for error_site in ("stager-exit", "branch-prune", "copy-proof-exit"):
+            branch = f"codex/post-removal-{error_site}-{error_type.__name__}"
+            removed = add_worktree(repo, branch)
+            head = git(removed, "rev-parse", "HEAD")
+            patch_gh(monkeypatch, {branch: [{"number": 36, "state": "MERGED", "headRefOid": head}]})
+            failure = error_type(f"{error_site} failed after own removal")
+
+            def fail_stager_exit(measurement, stage=contextlib.nullcontext, *, failure=failure):
+                measured = real_measured(measurement, stage)
+
+                @contextlib.contextmanager
+                def exit_after_removal(target: Path):
+                    with measured(target) as staged:
+                        yield staged
+                    assert not target.exists()
+                    raise failure
+
+                return exit_after_removal
+
+            @contextlib.contextmanager
+            def fail_copy_proof_exit(*, removed=removed, failure=failure, **kwargs: Any):
+                with real_copy_proof(**kwargs) as proof:
+                    yield proof
+                assert not removed.exists()
+                raise failure
+
+            with monkeypatch.context() as post_removal:
+                if error_site == "stager-exit":
+                    post_removal.setattr(rw, "_measured_removal", fail_stager_exit)
+                elif error_site == "branch-prune":
+                    post_removal.setattr(rw, "_prune_branch", Mock(side_effect=failure))
+                else:
+                    post_removal.setattr(rw, "copy_proof_run", fail_copy_proof_exit)
+                with pytest.raises(error_type, match=f"{error_site} failed after own removal") as raised:
+                    rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), prune_merged_branches=True)
+            assert raised.value is failure
+            assert removal_targets[-1] == removed
+            assert not removed.exists()
+            assert git(repo, "rev-parse", f"refs/heads/{branch}") == head
+            assert not reaper_lifecycle.is_reap_pending(repo, removed)
 
 
 def test_abandoned_main_dispatch_reaps_when_origin_gone_and_old(

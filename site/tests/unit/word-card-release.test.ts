@@ -166,6 +166,16 @@ describe('pinned producer release boundary', () => {
       terms_ref: 'docs/sources/permissions-register.yaml#sources/ulif/terms',
     });
     expect(result.pin).toEqual(name === 'base' ? pins.jsonl : pins.json);
+    expect(result.filteredAssertions).toEqual({
+      ulif: {
+        filtered_assertions: 0, filter_reasons: {}, filtered_source_rows: 0,
+        included_assertions: 4, included_source_rows: 2, mixed_source_rows: 0,
+      },
+      vesum: {
+        filtered_assertions: 0, filter_reasons: {}, filtered_source_rows: 0,
+        included_assertions: 2, included_source_rows: 1, mixed_source_rows: 0,
+      },
+    });
   });
   it.each([
     ['absent', 'Release not configured'], ['missing', 'Missing artifact'],

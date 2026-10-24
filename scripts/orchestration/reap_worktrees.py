@@ -28,6 +28,7 @@ import contextvars
 import fcntl
 import hashlib
 import json
+import logging
 import math
 import os
 import re
@@ -61,6 +62,7 @@ from scripts.common.acp_runtime_lock import (
     parse_lock_owner as parse_acp_lock_owner,
 )
 from scripts.common.safe_open import safe_open_below
+from scripts.common.session_daemons import allowed_session_daemon
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet.regenerable_output import _COPY_PROOF_RUN, copy_proof_run
@@ -2631,30 +2633,34 @@ class _ActiveTaskProbeFailure(RuntimeError):
 
 
 def _active_task_ids() -> set[str] | None:
-    try:
-        import urllib.request
+    import urllib.request
 
-        with urllib.request.urlopen("http://127.0.0.1:8765/api/delegate/active", timeout=3) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            if not isinstance(data, dict) or not isinstance(data.get("tasks"), list):
-                raise ValueError("activity response must contain a tasks list")
-            tasks = data["tasks"]
-            if any(not isinstance(t, dict) or not isinstance(t.get("task_id"), str) or not t["task_id"] for t in tasks):
-                raise ValueError("activity response contains an invalid task identity")
-            return {t["task_id"] for t in tasks}
-    except Exception as exc:
-        transport = isinstance(exc, TimeoutError | ConnectionError) or (
-            isinstance(exc, URLError) and not isinstance(exc, HTTPError)
-        )
-        code = "timeout" if isinstance(exc, TimeoutError) else "transport_error" if transport else "invalid_response"
-        raise _ActiveTaskProbeFailure(
-            reason=f"active-task probe unavailable [active_task_probe_{code}]: {type(exc).__name__}: {exc}",
-            fallback_allowed=transport,
-        ) from exc
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen("http://127.0.0.1:8765/api/delegate/active", timeout=3) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                if not isinstance(data, dict) or not isinstance(data.get("tasks"), list):
+                    raise ValueError("activity response must contain a tasks list")
+                tasks = data["tasks"]
+                if any(not isinstance(t, dict) or not isinstance(t.get("task_id"), str) or not t["task_id"] for t in tasks):
+                    raise ValueError("activity response contains an invalid task identity")
+                return {t["task_id"] for t in tasks}
+        except Exception as exc:
+            transport = isinstance(exc, TimeoutError | ConnectionError) or (
+                isinstance(exc, URLError) and not isinstance(exc, HTTPError)
+            )
+            if transport and attempt == 0:
+                time.sleep(0.2)
+                continue
+            code = "timeout" if isinstance(exc, TimeoutError) else "transport_error" if transport else "invalid_response"
+            raise _ActiveTaskProbeFailure(
+                reason=f"active-task probe unavailable [active_task_probe_{code}]: {type(exc).__name__}: {exc}",
+                fallback_allowed=transport,
+            ) from exc
 
 
 def _read_active_task_probe() -> set[str] | _ActiveTaskProbeFailure | None:
-    """Keep typed failures for the reaper; delegate callers handle them as unknown."""
+    """Keep typed failures for callers to resolve against the attributed checkout."""
     try:
         return _active_task_ids()
     except _ActiveTaskProbeFailure as exc:
@@ -4900,6 +4906,7 @@ def _reap_qualified_worktree(
         )
 
     pending_marked = False
+    removal_started = False
     recovery_ref: str | None = None
     preservation: dict[str, Any] | None = None
     dispatch_guard = contextlib.ExitStack()
@@ -5428,6 +5435,20 @@ def _reap_qualified_worktree(
                     ) from exc
             yield target
 
+        @contextlib.contextmanager
+        def stage_removal(target: Path) -> Iterator[Path]:
+            nonlocal removal_started
+            with _measured_removal(measurement, recheck_preservation)(target) as staged:
+                # An open root descriptor can outlive a competing removal,
+                # leaving a successful walk of an already detached directory.
+                target.lstat()
+                try:
+                    yield staged
+                finally:
+                    # Entry can fail before destructive Git. Once its body
+                    # runs, even a stager finalizer failure follows our attempt.
+                    removal_started = True
+
         with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
             remove_error = worktree_claims.git_worktree_remove(
                 repo_root,
@@ -5437,12 +5458,16 @@ def _reap_qualified_worktree(
                 task_id=_dispatch_task_id(repo_root, info),
                 tasks_dir=task_store_paths.tasks_dir(),
                 preservation_receipt=preservation_receipt,
-                stage_removal=_measured_removal(measurement, recheck_preservation),
+                stage_removal=stage_removal,
                 **approval,
             )
         preserved_artifacts = preservation_receipt or None
         freed_bytes = _freed_bytes(measurement, preserved_artifacts)
         if remove_error is not None:
+            if not removal_started:
+                # Preservation and staging translate entry failures into
+                # refusals. Classify actual absence before reporting one.
+                target.lstat()
             preservation_failed = remove_error.startswith("artifact preservation failed:")
             return ReapResult(
                 path=str(info.path),
@@ -5504,6 +5529,24 @@ def _reap_qualified_worktree(
             preserved_artifacts=preserved_artifacts,
             freed_bytes=freed_bytes,
         )
+    except (FileNotFoundError, NotADirectoryError):
+        if removal_started:
+            raise
+        # A competing cleanup can remove the cwd after census. A missing
+        # executable or metadata file does not prove that the target vanished.
+        try:
+            info.path.lstat()
+        except (FileNotFoundError, NotADirectoryError):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="registered worktree path is missing; run git worktree prune",
+                dirty=None,
+                pr=_pr_dict(pr_state),
+                recovery_ref=recovery_ref,
+            )
+        raise
     except subprocess.TimeoutExpired as exc:
         # A git call outlived its locked-region bound (#8748): skip, never
         # delete — the killed git leaves the tree's state unproven.
@@ -6540,29 +6583,6 @@ def _proc_status(base: Path) -> dict[str, str] | None:
     return {key: value.strip() for key, _, value in (line.partition(":") for line in text.splitlines()) if value}
 
 
-def _session_infrastructure(base: Path, status: dict[str, str], uid: int, proc_root: Path) -> bool:
-    """A non-dumpable process of this user that never works inside a checkout.
-
-    Only two kinds, both identified by kernel facts rather than by what the
-    process reports about itself: the user's systemd manager and its
-    ``(sd-pam)`` helper, the only members of the manager's ``init.scope``
-    cgroup (systemd starts every unit, including dispatch workers, in a
-    cgroup of its own); and OpenSSH's per-connection ``sshd-session`` whose
-    parent is the root-owned privileged ``sshd-session``/``sshd``.
-    """
-    try:
-        cgroup = (base / "cgroup").read_text(encoding="utf-8", errors="replace").splitlines()
-    except OSError:
-        return False
-    if cgroup == [f"0::/user.slice/user-{uid}.slice/user@{uid}.service/init.scope"]:
-        return True
-    sshd = {"sshd-session", "sshd"}
-    if status.get("Name") not in sshd:
-        return False
-    parent = _proc_status(proc_root / status.get("PPid", ""))
-    return parent is not None and parent.get("Name") in sshd and parent.get("Uid", "").split()[:1] == ["0"]
-
-
 # ``PF_KTHREAD`` in the ``flags`` field (field 9) of ``/proc/<pid>/stat``.
 _PF_KTHREAD = 0x00200000
 _STAT_HEAD = re.compile(r"\d+ \(")
@@ -6619,7 +6639,13 @@ def _uninspectable_same_user(base: Path, proc_root: Path) -> bool:
     kind = _stat_kind(base)
     if kind in {"gone", "zombie", "kernel"}:
         return False
-    return kind == "unknown" or not _session_infrastructure(base, status, uid, proc_root)
+    if kind == "unknown":
+        return True
+    identity = allowed_session_daemon(base)
+    if identity is not None:
+        logging.getLogger(__name__).warning("allowed_session_daemon pid=%s identity=%r", base.name, identity)
+        return False
+    return True
 
 
 def _proc_users_inside(

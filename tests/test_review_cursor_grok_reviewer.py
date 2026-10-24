@@ -182,12 +182,16 @@ def _pr_review_facts(families):
 
 
 def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthropic"}), **extra):
+    from tests.test_authoring_review_feasibility import REPOSITORY, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    monkeypatch.setattr(recorder, "_repo_root", lambda: repo.root)
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     task = {
-        "repository": "owner/repo",
-        "worktree_branch": "claude/42",
-        "worktree_base_sha": "a" * 40,
+        "repository": REPOSITORY,
+        "worktree_branch": "feature",
+        "worktree_base_sha": repo.sha("HEAD"),
         "agent": "cursor",
         "model": resolved_model,
         "resolved_model": resolved_model,
@@ -218,7 +222,7 @@ def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthr
         if isinstance(args, Request) and args.verb == "read-comment":
             return comments[-1]
         if args[:3] == ["gh", "pr", "view"]:
-            return {"number": 42, "headRefOid": "a" * 40, "headRefName": "claude/42", "state": "OPEN"}
+            return {"number": 42, "headRefOid": task["worktree_base_sha"], "headRefName": task["worktree_branch"], "state": "OPEN"}
         raise AssertionError(args)
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)

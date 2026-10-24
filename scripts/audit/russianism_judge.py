@@ -72,6 +72,7 @@ except ModuleNotFoundError as exc:
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.common.repo_root import project_interpreter
 
@@ -177,106 +178,45 @@ Otherwise output JSON with this exact shape:
 Output ONLY the JSON object — no commentary, no markdown fences, no preamble."""
 
 
-def _bridge_db_conn():
-    """Connect to the agent-bridge messages DB (for claude/codex response capture)."""
-    from scripts.ai_agent_bridge._db import get_db  # type: ignore
-
-    return get_db()
-
-
-def _latest_bridge_response(task_id: str, family: str, from_agent: str) -> str | None:
-    """Fetch the latest response row for ``task_id`` from the bridge DB.
-
-    Mirrors :func:`scripts.audit.russianism_eval._latest_bridge_response`.
-    Used when the bridge does not stream stdout (claude / codex families).
-    """
-    conn = _bridge_db_conn()
-    try:
-        row = conn.execute(
-            """
-            SELECT content FROM messages
-            WHERE task_id = ? AND from_llm = ? AND to_llm = ?
-              AND message_type IN ('response', 'error')
-            ORDER BY id DESC LIMIT 1
-            """,
-            (task_id, family, from_agent),
-        ).fetchone()
-    finally:
-        conn.close()
-    if row is None:
-        return None
-    try:
-        return str(row["content"])
-    except (TypeError, IndexError):
-        return str(row[0])
-
-
 def call_judge(prompt: str, task_id: str, family: str, model: str, from_agent: str) -> dict:
-    """Dispatch the judge prompt to the named bridge family. Return parsed verdict.
-
-    Response-capture pattern is family-specific:
-
-      * gemini — supports ``--stdout-only``; capture stdout directly.
-      * codex / claude — no stdout passthrough; read from bridge DB after
-        subprocess exit.
-    """
-    t0 = time.time()
-    base = [str(VENV_PY), str(BRIDGE)]
-    proc: subprocess.CompletedProcess[str]
-    raw: str | None
-    if family == "gemini":
-        argv = [
-            *base, "ask-gemini", "-",
-            "--task-id", task_id,
-            "--from", from_agent,
-            "--model", model,
-            "--stdout-only",
-            "--skip-model-check",
-            "--no-github",
-        ]
-        proc = subprocess.run(
-            argv, cwd=str(PROJECT_ROOT), input=prompt,
-            capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,
-        )
-        raw = proc.stdout.strip() if proc.stdout.strip() else _latest_bridge_response(task_id, "gemini", from_agent)
-    elif family == "codex":
-        argv = [
-            *base, "ask-codex", "-",
-            "--task-id", task_id,
-            "--from", from_agent,
-            "--to-model", model,
-            "--new-session",
-        ]
-        proc = subprocess.run(
-            argv, cwd=str(PROJECT_ROOT), input=prompt,
-            capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,
-        )
-        raw = _latest_bridge_response(task_id, "codex", from_agent)
-    elif family == "claude":
-        # ask-claude takes content as positional, not stdin.
-        argv = [
-            *base, "ask-claude", prompt,
-            "--task-id", task_id,
-            "--from", from_agent,
-            "--to-model", model,
-            "--new-session",
-        ]
-        proc = subprocess.run(
-            argv, cwd=str(PROJECT_ROOT),
-            capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,
-        )
-        raw = _latest_bridge_response(task_id, "claude", from_agent)
-    else:
+    """Parse a successful one-shot ACP response without reading legacy broker rows."""
+    if family not in {"gemini", "codex", "claude"}:
         raise ValueError(f"unknown judge family {family!r} — expected one of: gemini, codex, claude")
+    t0 = time.time()
+    target = "agy" if family == "gemini" else family
+    argv = [
+        str(VENV_PY), str(BRIDGE), f"ask-{target}", "-",
+        "--task-id", task_id,
+        "--from", from_agent,
+        "--to-model", model,
+    ]
+    if target == "agy":
+        argv.append("--stdout-only")
+    proc = subprocess.run(
+        argv, cwd=str(PROJECT_ROOT), input=prompt,
+        capture_output=True, text=True, timeout=JUDGE_TIMEOUT_S,
+    )
+    raw = proc.stdout.strip()
     duration = time.time() - t0
 
-    if raw is None or not raw.strip():
+    if proc.returncode != 0 or not raw:
         return {
             "verdict": "judge_error",
             "raw": (proc.stdout or "")[:500],
             "stderr": (proc.stderr or "")[:500],
             "duration_s": duration,
-            "note": "no bridge response and no stdout",
+            "note": "ACP ask failed" if proc.returncode != 0 else "ACP ask returned no response stdout",
+        }
+
+    # rc 0 with stdout is the substitute's reply when stderr carries the seat-hop note.
+    _, substitution_note = _seat_substitution_from_forward_stderr(proc.stderr or "")
+    if substitution_note is not None:
+        return {
+            "verdict": "judge_error",
+            "raw": raw[:500],
+            "stderr": (proc.stderr or "")[:500],
+            "duration_s": duration,
+            "note": f"seat substituted: {substitution_note}",
         }
 
     # The judge prompt asks for raw JSON; in practice some judges wrap it

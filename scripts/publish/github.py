@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 from urllib.parse import quote
 
@@ -119,6 +120,7 @@ SCHEMAS = {
 WORKFLOWS = {
     "ci.yml": {},
     "deploy-pages.yml": {},
+    "pytest-slow-nightly.yml": {},
     "stale-branch-cleanup.yml": {},
     "coverage-ref.yml": {"sha": ("sha", True), "contexts": ("bool", False)},
 }
@@ -341,7 +343,34 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     from scripts.orchestration.integration_sweep import lookup_verdict
 
     def fetch(name, **selectors):
+        unknown = "RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable"
+        if verb == "run-rerun" and name == "run":
+            unknown += "; Actions run lookup failed; --number requires an Actions run ID, not a PR number"
         try:
+            if name == "queue-candidate":
+                listing = fetch("run-artifacts", **selectors)
+                artifacts = listing["artifacts"]
+                if type(listing["total_count"]) is not int or listing["total_count"] != len(artifacts):
+                    raise ValueError("partial artifact listing")
+                matches = [row for row in artifacts if row.get("name") == "ci-queue-candidate"]
+                if len(matches) != 1:
+                    raise ValueError("missing or ambiguous queue candidate artifact")
+                artifact = matches[0]
+                if (artifact.get("expired") is not False or type(artifact.get("id")) is not int
+                        or type(artifact.get("size_in_bytes")) is not int
+                        or not 0 < artifact["size_in_bytes"] <= 65536):
+                    raise ValueError("queue candidate artifact unavailable")
+                with tempfile.TemporaryFile(dir=ensure_scratch_root()) as archive_file:
+                    read("artifact-archive", repo=dest, number=artifact["id"], cwd=cwd, env=environment,
+                         runner=runner, stdout=archive_file, check=True, timeout=30)
+                    if archive_file.tell() > 65536:
+                        raise ValueError("queue candidate archive too large")
+                    archive_file.seek(0)
+                    with zipfile.ZipFile(archive_file) as archive:
+                        members = archive.infolist()
+                        if len(members) != 1 or members[0].filename != "queue-candidate.json" or members[0].file_size > 16384:
+                            raise ValueError("queue candidate archive malformed")
+                        return json.loads(archive.read(members[0]))
             result = read(
                 name,
                 repo=dest,
@@ -370,9 +399,9 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
             refusal = github_client.refusal_of(exc, injected=runner is not None)
             if refusal is not None:
                 raise refusal from None
-            raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
+            raise gate.PublishBlocked(unknown) from None
         except Exception:
-            raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
+            raise gate.PublishBlocked(unknown) from None
 
     if verb == "run-rerun":
         run = fetch("run", number=fields["number"])
@@ -466,6 +495,8 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     }
     if not failed_ids or failed_ids != set(evidence["job_ids"]):
         raise gate.PublishBlocked("RECOVERY_EVIDENCE_MISMATCH: every failing job must be diagnosed")
+    if failed_run.get("event") == "merge_group":
+        recovery.require_queue_diff(evidence, failed_run, fetch)
     current = fetch("pull", number=number)
     if current.get("state") != "open" or current.get("head", {}).get("sha") != head:
         raise gate.PublishBlocked("RECOVERY_HEAD_MOVED: PR changed during preflight")
@@ -753,8 +784,39 @@ def main(argv=None, *, runner=None):
     verbs = parser.add_subparsers(dest="verb", required=True)
     for verb, (_, schema) in SCHEMAS.items():
         sub = verbs.add_parser(verb, help=f"Publish {verb} with scanned fields", allow_abbrev=False)
+        if verb == "run-rerun":
+            sub.description = (
+                "Rerun only failed jobs in an existing GitHub Actions run.\n"
+                "Use an Actions run ID, not a PR number. After a base-branch fix, use pr-update-branch instead."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                "  .venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901\n"
+                "  .venv/bin/python -m scripts.publish run-rerun --repo unit/public --number 12345678901\n"
+                "Outputs: requests a GitHub rerun with --failed on the original pinned run, not the latest PR head.\n"
+                "  PR recovery requires an eligible failed run, current-head approval and posted failure evidence.\n"
+                "  It consumes the one PR-head recovery allowance shared with re-enqueue before sending the write.\n"
+                "  An unclassified run lookup failure stays RECOVERY_LOOKUP_UNKNOWN, sends no write and consumes no allowance.\n"
+                "Exit codes: 0 request accepted, job results unverified; 1 gh failure;\n"
+                "  2 invalid input, unknown lookup, policy refusal or transport error.\n"
+                "  The project GitHub client returns 75 for a rate-limit refusal at either stage:\n"
+                "    During any preflight lookup: no rerun request; no allowance consumed.\n"
+                "    At the rerun request: PR recovery has already consumed its allowance; no refund.\n"
+                "    A later retry for that PR head exits 2 with RECOVERY_ALLOWANCE_SPENT.\n"
+                "  Other gh exit codes propagate.\n"
+                "Related: docs/dev/agent-public-text.md; read run; pr-update-branch."
+            )
         for key, kind in schema.items():
             kwargs = {"default": argparse.SUPPRESS, "help": f"{key.replace('_', ' ')} ({kind}); omitted by default"}
+            if verb == "run-rerun":
+                kwargs["help"] = {
+                    "repo": "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin",
+                    "number": (
+                        "Required Actions run ID from /actions/runs/<RUN_ID> (e.g. 12345678901), "
+                        "not a PR number; no default"
+                    ),
+                }[key]
             if kind == "bool":
                 kwargs["action"] = argparse.BooleanOptionalAction
             elif kind in {"texts", "assets"}:
@@ -801,12 +863,14 @@ def main(argv=None, *, runner=None):
             default=argparse.SUPPRESS,
             help="Positive issue, PR, run or check-run ID; omitted by default",
         )
-    for key in ("sha", "start", "end", "branch", "cursor", "ref"):
+    for key in ("sha", "base", "head", "start", "end", "branch", "cursor", "ref"):
         read_parser.add_argument(
             "--" + key,
             default=argparse.SUPPRESS,
             help=(
-                "Git ref for code-scanning-alerts (e.g. refs/heads/main); use either --ref or --number"
+                f"{key.capitalize()} commit SHA for compare (40 hexadecimal characters); omitted by default"
+                if key in {"base", "head"}
+                else "Git ref for code-scanning-alerts (e.g. refs/heads/main); use either --ref or --number"
                 if key == "ref"
                 else f"{key} selector; omitted by default"
             ),
@@ -867,6 +931,7 @@ REST_READS = {
     "reviews": ("repos/{repo}/pulls/{number}/reviews", {"number": "number"}),
     "commits": ("repos/{repo}/pulls/{number}/commits", {"number": "number"}),
     "commit": ("repos/{repo}/commits/{sha}", {"sha": "sha"}),
+    "compare": ("repos/{repo}/compare/{base}...{head}", {"base": "sha", "head": "sha"}),
     "pull": ("repos/{repo}/pulls/{number}", {"number": "number"}),
     "pr-files": ("repos/{repo}/pulls/{number}/files", {"number": "number"}),
     "comment": ("repos/{repo}/issues/comments/{number}", {"number": "number"}),
@@ -875,6 +940,8 @@ REST_READS = {
     "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
+    "run-artifacts": ("repos/{repo}/actions/runs/{number}/artifacts", {"number": "number"}),
+    "artifact-archive": ("repos/{repo}/actions/artifacts/{number}/zip", {"number": "number"}),
     "issues": ("repos/{repo}/issues?state=open", {}),
     "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "timestamp", "end": "timestamp"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),

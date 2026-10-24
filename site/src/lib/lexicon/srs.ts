@@ -17,12 +17,15 @@ import {
 } from './review-event-backfill';
 import { loadReviewEventLog, recordCardReviewEvent, type ReviewEventPresentation } from './review-events';
 import { PRACTICE_LEVELS } from './runtime-contract';
+import { z } from 'astro/zod';
 
 export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
 export const SRS_SETTINGS_KEY = 'lu-lexicon-srs-settings';
 export const SRS_BACKUP_KEY = 'lu-lexicon-srs.backup';
 export const PRACTICE_NEW_CARDS_KEY = 'lu-practice-newcards';
 export const PRACTICE_SESSION_STORAGE_KEY = 'lu-practice-session';
+export const ZNO_SESSION_STORAGE_KEY = 'lu-zno-session:';
+export const ZNO_DUE_SESSION_BUDGET = 8;
 export const DAILY_PRACTICE_DECK_KEY = 'lu-daily-practice-deck';
 /**
  * Daily practice set size (owner #5502).
@@ -2974,6 +2977,75 @@ export function previewRatingIntervals(
 
 function isPracticeModeFilter(value: unknown): value is PracticeModeFilter {
   return value === 'mixed' || isPracticeMode(value);
+}
+
+const znoSessionSchema = z.object({
+  version: z.literal(1),
+  contentRevision: z.string(),
+  queue: z.array(z.string()),
+  answers: z.array(z.tuple([z.string(), z.number().int().nonnegative()])),
+  repetitions: z.array(z.tuple([z.string(), z.number().int().nonnegative()])),
+  retryUsed: z.boolean(),
+  phase: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('summary') }),
+    ...(['first', 'retry', 'review'] as const).map((kind) => z.object({
+      kind: z.literal(kind),
+      items: z.array(z.string()).nonempty(),
+      index: z.number().int().nonnegative(),
+      selectedIndex: z.number().int().nonnegative().nullable(),
+    })),
+  ]),
+});
+
+export type ZnoSessionSnapshot = z.infer<typeof znoSessionSchema>;
+
+/** Frozen unique due IDs followed by bounded new IDs; future cards never qualify. */
+export function selectZnoSessionTaskIds(
+  taskIds: readonly string[],
+  dueOnly = false,
+): string[] {
+  const cards = loadState().cards;
+  const ids = [...new Set(taskIds)];
+  const due = ids.filter((id) => {
+    const card = cards.get(cardKey(id, 'choice'));
+    return card !== undefined && card.due <= Date.now();
+  }).sort((left, right) =>
+    (cards.get(cardKey(left, 'choice'))?.due ?? 0) - (cards.get(cardKey(right, 'choice'))?.due ?? 0));
+  if (dueOnly) return due.slice(0, ZNO_DUE_SESSION_BUDGET);
+  return [...due, ...ids.filter((id) => !cards.has(cardKey(id, 'choice'))).slice(0, DEFAULT_NEW_PER_SESSION)];
+}
+
+export function readZnoSessionSnapshot(deckId: string):
+  | { kind: 'empty' }
+  | { kind: 'invalid' }
+  | { kind: 'saved'; snapshot: ZnoSessionSnapshot } {
+  const key = ZNO_SESSION_STORAGE_KEY + deckId;
+  try {
+    const storage = resolveStorage();
+    const raw = memoryStorage.getItem(key) ?? storage.getItem(key);
+    if (!raw) return { kind: 'empty' };
+    const parsed = znoSessionSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? { kind: 'saved', snapshot: parsed.data } : { kind: 'invalid' };
+  } catch {
+    return { kind: 'invalid' };
+  }
+}
+
+/** Retain the newest snapshot in memory on failure, including an overlay remount. */
+export function writeZnoSessionSnapshot(deckId: string, snapshot: ZnoSessionSnapshot): boolean {
+  const key = ZNO_SESSION_STORAGE_KEY + deckId;
+  const raw = JSON.stringify(snapshot);
+  const storage = resolveStorage();
+  try {
+    storage.setItem(key, raw);
+    if (storage === memoryStorage) return false;
+    memoryStorage.removeItem(key);
+    return !activeState || (!activeState.flags.storageWriteFailed && activeStorage !== memoryStorage)
+      || persistWithQuotaRecovery(activeState, storage, Date.now()).ok;
+  } catch {
+    memoryStorage.setItem(key, raw);
+    return false;
+  }
 }
 
 function parsePracticeSessionSnapshot(value: unknown): PracticeSessionSnapshot | null {

@@ -59,7 +59,9 @@ def _publish_pr_branch(repo: Path, branch: str, sha: str) -> None:
     remote = repo.parent / f"{repo.name}-canonical.git"
     origin = _git(repo, "config", "--get", "remote.origin.url").stdout.strip()
     if not remote.exists():
-        _git(repo, "init", "-q", "--bare", str(remote))
+        # Both repositories live under the same fixture parent. Borrow its
+        # objects, including any alternates, rather than copying full history.
+        _git(repo, "clone", "-q", "--bare", "--shared", str(repo), str(remote))
         _git(repo, "config", f"url.{remote}.insteadOf", origin)
     _git(repo, "update-ref", f"refs/heads/{branch}", sha)
     _git(repo, "--git-dir", str(remote), "fetch", "-q", str(repo), f"refs/heads/{branch}:refs/heads/{branch}")
@@ -171,6 +173,10 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
     repo = _init_repo(tmp_path)
     _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
     base_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _publish_pr_branch(repo, "feature-branch", base_sha)
+    assert _git(repo, "ls-remote", "origin", "refs/heads/feature-branch").stdout == (
+        f"{base_sha}\trefs/heads/feature-branch\n"
+    )
     (repo / "pr_change.py").write_text("value = 1\n", encoding="utf-8")
     _git(repo, "add", "pr_change.py")
     _git(repo, "commit", "-q", "-m", "pr change")
@@ -179,6 +185,9 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
     import scripts.review.target_resolution as tr
 
     _publish_pr_branch(repo, "feature-branch", head_sha)
+    assert _git(repo, "ls-remote", "origin", "refs/heads/feature-branch").stdout == (
+        f"{head_sha}\trefs/heads/feature-branch\n"
+    )
     payload = {
         "number": 5283,
         "baseRefName": "release/whatever",  # deliberately NOT "main"

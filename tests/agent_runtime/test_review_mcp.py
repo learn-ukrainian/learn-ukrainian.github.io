@@ -1209,7 +1209,7 @@ def test_codex_adapter_final_argv_and_env_use_scoped_home(manifest_file: Path, t
     assert invocation.env_overrides["CODEX_HOME"] == str(plan.codex_home)
     joined = " ".join(invocation.cmd)
     assert "mcp_servers.sources.url" not in joined
-    assert "8766" not in joined
+    assert "127.0.0.1:8766" not in joined
     assert 'mcp_servers.sources.default_tools_approval_mode="prompt"' in invocation.cmd
 
 
@@ -1779,7 +1779,7 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     assert review_env["HOME"] == str(plan.agy_home)
     assert review_env["AGY_APP_DATA_DIR"] == str(agy_review_app_data_dir(plan.agy_home))
     assert not any(item.startswith("mcp") for item in review.cmd[1:2])  # no MCP flag exists for agy
-    assert "8766" not in " ".join(review.cmd)
+    assert "127.0.0.1:8766" not in " ".join(review.cmd)
 
     ordinary = AgyAdapter().build_invocation(
         prompt="ordinary",

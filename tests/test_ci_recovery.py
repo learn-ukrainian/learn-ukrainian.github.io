@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import io
 import json
 import subprocess
+import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Barrier
+from unittest.mock import Mock
 
 import pytest
 
@@ -28,6 +31,7 @@ def evidence(head=HEAD):
         "run_id": 123,
         "job_ids": [456],
         "tested_sha": TESTED,
+        "queue_group_diff": {"base_sha": "d" * 40, "head_sha": TESTED, "paths": ["scripts/earlier-pr.py", "scripts/this-pr.py"]},
         "failure_evidence": "Job log confirms runner checkout failure",
         "unrelated_to_diff": "Failure precedes execution of changed code",
     }
@@ -61,6 +65,9 @@ class Transport:
         self.moved = False
         self.pull_reads = 0
         self.writes = []
+        self.compare_rows = {"base_commit": {"sha": "d" * 40}, "merge_base_commit": {"sha": "d" * 40}, "status": "ahead", "files": [{"filename": "scripts/earlier-pr.py"}, {"filename": "scripts/this-pr.py"}]}
+        self.candidate_record = {"base_sha": "d" * 40, "head_sha": TESTED, "head_ref": "refs/heads/gh-readonly-queue/main/pr-42-" + "e" * 40, "run_id": 123, "run_attempt": 1}
+
 
     def __call__(self, argv, **kwargs):
         if argv[1:3] == ["pr", "view"]:
@@ -175,12 +182,22 @@ class Transport:
                     "conclusion": self.conclusion,
                     "head_sha": TESTED,
                     "event": self.event,
-                    "head_branch": "gh-readonly-queue/main/pr-42-abcdef",
+                    "head_branch": "gh-readonly-queue/main/pr-42-" + "e" * 40,
                     "run_attempt": self.attempt,
                     "pull_requests": self.associations
                     if self.associations is not None
                     else ([] if self.event == "merge_group" else [{"number": 42, "head": {"sha": self.head}}]),
                 }
+            elif endpoint.endswith("/actions/runs/123/artifacts"):
+                data = {"total_count": 1, "artifacts": [{"name": "ci-queue-candidate", "id": 77, "expired": False, "size_in_bytes": 1024}]}
+            elif endpoint.endswith("/actions/artifacts/77/zip"):
+                with io.BytesIO() as buffer:
+                    with zipfile.ZipFile(buffer, "w") as archive:
+                        archive.writestr("queue-candidate.json", json.dumps(self.candidate_record))
+                    kwargs["stdout"].write(buffer.getvalue())
+                return subprocess.CompletedProcess(argv, 0, "", "")
+            elif "/compare/" in endpoint:
+                data = self.compare_rows
             elif endpoint.endswith("/pulls/42"):
                 self.pull_reads += 1
                 data = {"state": "open", "head": {"sha": NEW_HEAD if self.moved and self.pull_reads > 1 else self.head}}
@@ -347,6 +364,33 @@ def test_partial_evidence_refuses(setup, field):
     with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
         recover(setup, "run-rerun")
     assert transport.writes == []
+    # Queue recovery must also prove the complete candidate diff, regardless
+    # of which legacy evidence field this existing case exercises.
+    transport.proof = evidence()
+    original = json.loads(json.dumps(transport.proof["queue_group_diff"]))
+    for bad in (None, {}, {**original, "paths": ["scripts/this-pr.py"]}, {**original, "base_sha": "f" * 40}, {**original, "head_sha": HEAD}):
+        transport.proof["queue_group_diff"] = bad
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_QUEUE_DIFF_UNKNOWN"):
+            recover(setup, "direct")
+        assert transport.writes == []
+    transport.proof["queue_group_diff"] = original
+    for bad in ({}, {**transport.compare_rows, "files": [{"filename": "scripts/this-pr.py"}] * 300}, {**transport.compare_rows, "status": "diverged"}):
+        saved = transport.compare_rows
+        transport.compare_rows = bad
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_QUEUE_DIFF_UNKNOWN"):
+            recover(setup, "direct")
+        assert transport.writes == []
+        transport.compare_rows = saved
+    # A moved main cannot narrow the original event's group delta. Missing
+    # original-base proof and candidate/run mismatches must remain blockers.
+    saved_record = dict(transport.candidate_record)
+    for bad in ({}, {**saved_record, "base_sha": "f" * 40}, {**saved_record, "head_sha": HEAD}, {**saved_record, "run_id": 124}, {**saved_record, "run_attempt": 2}):
+        transport.candidate_record = bad
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_QUEUE_DIFF_UNKNOWN"):
+            recover(setup, "direct")
+        assert transport.writes == []
+    transport.candidate_record = saved_record
+
 
 
 @pytest.mark.parametrize("action", ["run-rerun", "direct"])
@@ -460,11 +504,48 @@ def test_ledger_unavailable_refuses(tmp_path):
         pub.recovery.consume(corrupt, "unit/public", 42, HEAD, "run-rerun", evidence())
 
 
-def test_cli_uses_the_same_allowance(setup):
-    _, transport = setup
+def test_cli_uses_the_same_allowance(setup, capsys):
+    """Wrong run selectors must stay unknown without spending the CLI recovery allowance."""
+    root, transport = setup
+    unreadable = Mock(return_value=subprocess.CompletedProcess([], 1, "private response", "private diagnostic"))
+    with pytest.raises(SystemExit) as shown:
+        pub.main(["run-rerun", "--help"], runner=unreadable)
+    assert shown.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "Actions run ID" in help_text and "not a PR number" in help_text
+    assert "/actions/runs/<RUN_ID>" in help_text and "--number 12345678901" in help_text
+    assert "only failed jobs" in help_text and "--failed" in help_text
+    assert "Outputs:" in help_text and "one PR-head recovery allowance" in help_text
+    assert "Exit codes: 0 request accepted, job results unverified" in help_text
+    assert "2 invalid input, unknown lookup, policy refusal or transport error" in help_text
+    assert all(
+        text in help_text
+        for text in (
+            "The project GitHub client returns 75 for a rate-limit refusal at either stage:",
+            "During any preflight lookup: no rerun request; no allowance consumed.",
+            "At the rerun request: PR recovery has already consumed its allowance; no refund.",
+            "A later retry for that PR head exits 2 with RECOVERY_ALLOWANCE_SPENT.",
+        )
+    )
+    assert "Other gh exit codes propagate." in help_text
+    assert "Related:" in help_text and "pr-update-branch" in help_text
+    unreadable.assert_not_called()
+
+    assert pub.main(["run-rerun", "--repo", "unit/public", "--number", "42"], runner=unreadable) == 2
+    assert capsys.readouterr().err == (
+        "RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable; Actions run lookup failed; "
+        "--number requires an Actions run ID, not a PR number\n"
+    )
+    assert unreadable.call_count == 1
+    assert unreadable.call_args.args[0] == [
+        "gh", "api", "--method", "GET", "repos/unit/public/actions/runs/42?per_page=100",
+    ]
+    assert transport.writes == []
+    assert not pub.recovery.ledger_path(root).exists()
+
     assert pub.main(["run-rerun", "--repo", "unit/public", "--number", "123"], runner=transport) == 0
     assert pub.main(["run-rerun", "--repo", "unit/public", "--number", "123"], runner=transport) == 2
-    assert len(transport.writes) == 1
+    assert transport.writes == [["gh", "run", "rerun", "123", "--repo", "unit/public", "--failed"]]
 
 
 def test_pull_request_run_uses_pr_head_not_tested_merge_sha(setup):

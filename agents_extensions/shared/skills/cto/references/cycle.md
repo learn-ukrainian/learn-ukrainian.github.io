@@ -16,9 +16,19 @@ never fine.
    each Claude pool, Codex, Grok and Cursor, AGY and any other catalog pool. A pool with no
    metric gets a hand-read meter, and the gap is logged as a monitoring task. Grok and Cursor
    share one meter, never two pools of headroom. Keep readings in a scratch log for trends.
+   Before recording an account or credential blocker from a refusal code, check whether
+   the account's access token has merely expired while its refresh token remains. Then the
+   blocker is a token refresh, done through the supported refresh path in the private
+   operations doc, not an operator re-login.
 3. **Disk and load.** `df -h .`, `uptime`, `git worktree list | wc -l`. When disk climbs,
    run the reaper and retention tools before admitting write workers; never delete bulk
    corpus or data without a separate operator-authorized task (core.md P6).
+   **Lane machinery.** Read the latest tick result of the host driver keeper and its lane
+   wake. They are host-local code, not in this repository; their units and log location
+   belong in the private operations doc. A tick must report no errors and must list
+   every running lane pane. An error, or no lane panes, means no lane gets nudged; fix it
+   this cycle. After a hand edit of a keeper config, check one tick right away (one
+   unknown key in the lane-pause file once made every lane count as paused for 7.5 hours).
 4. **Open PRs**, from the scorecard metrics when present, in every repository the fleet
    lands in, with `number`, `headRefOid`, `mergeable`, `mergeStateStatus`, `isDraft`,
    `reviewDecision`. Per PR: a review of record at the current `headRefOid` (verdict,

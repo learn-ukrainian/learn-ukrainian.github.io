@@ -58,7 +58,7 @@ def test_proven_output_over_real_cap_is_reaped(hermetic_reap, name):
     with source.open("wb") as stream:
         stream.truncate(output.MAX_PRESERVED_BYTES + 1)
     if name.startswith(".venv/"):
-        put(tree, ".venv/pyvenv.cfg", b"home = toolchain\nversion = 3.12.14\n")
+        put(tree, ".venv/pyvenv.cfg", b"home = toolchain\nversion = 3.12.15\n")
     if name.startswith(("data/", ".cache/", "screenshots/")):
         copy = put(repo, name)
         with copy.open("wb") as stream:

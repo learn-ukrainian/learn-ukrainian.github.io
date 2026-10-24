@@ -5,16 +5,8 @@ _glm_opencode_flash() {
 }
 
 launcher_adapter_validate() {
-  if _glm_opencode_flash; then
-    case "$LC_HARNESS" in
-      opencode|claude-code) ;;
-      native) launcher_error 'GLM supports only --harness claude-code; native is unsupported.'; exit 2 ;;
-      *) launcher_error 'Flash OpenCode path rejects this harness; native is unsupported.'; exit 2 ;;
-    esac
-    return 0
-  fi
-  [ "$LC_HARNESS" = claude-code ] || { launcher_error 'GLM supports only --harness claude-code; native is unsupported.'; exit 2; }
-  case "$LC_ENDPOINT" in coding|platform) ;; *) launcher_error 'GLM endpoint must be coding or platform.'; exit 2 ;; esac
+  launcher_error 'GLM is retired, not subscribed (operator decision 2026-10-23).'
+  exit 2
 }
 
 launcher_adapter_preflight() {

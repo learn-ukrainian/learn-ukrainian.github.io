@@ -800,7 +800,7 @@ def test_cursor_gemini_model_review_is_refused_including_after_substitution(
             "--agent",
             "cursor",
             "--model",
-            "gemini-3.1-pro",
+            "gemini-3.8-flash-high",
             "--task-id",
             "cursor-gemini-review",
             "--prompt",

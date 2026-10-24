@@ -27,17 +27,20 @@ DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_MAX_POC_THIN_PAGES = 900
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-from audit_atlas_thin_enriched import (
-    has_learner_english_anchor,
-    old_gate_enriched,
-)
-
-from scripts.lexicon.manifest_io import load_manifest
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
+try:
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    from scripts.audit.audit_atlas_thin_enriched import (
+        has_learner_english_anchor,
+        old_gate_enriched,
+    )
+    from scripts.lexicon.manifest_io import load_manifest
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 RICH_SECTION_ORDER = (
     "meaning",

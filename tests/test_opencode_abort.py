@@ -80,7 +80,7 @@ def test_run_opencode_attaches_standing_notice_when_agent_chat():
     with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
         with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout='{"type":"text","part":{"text":"hi"}}', stderr="")
-            _run_opencode("hello", "google-ais/gemma-4-31b-it", agent="chat")
+            _run_opencode("hello", "deepseek/deepseek-v4.1-flash", agent="chat")
             argv = run_mock.call_args[0][0]
             assert "--agent" in argv
             assert "chat" in argv
@@ -102,7 +102,7 @@ def test_opencode_permission_abort_fails_ask_loud_and_writes_sidecar(
         with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout=permission_rejected_ndjson, stderr="")
             with pytest.raises(SystemExit, match=r"\[Bridge Error\] opencode turn aborted"):
-                ask_opencode("Run a script", "t-5932", from_llm="claude")
+                ask_opencode("Run a script", "t-5932", from_llm="claude", model="deepseek/deepseek-v4.1-flash")
 
     conn = get_db()
     cursor = conn.cursor()

@@ -557,19 +557,29 @@ third time after the checkout is moved into the quarantine (below):
   process visible in `/proc` has its working directory (by path or by the
   tree's inode), root, executable, an open file or a mapped file inside it. A
   missing, failing or timed-out `fuser`, or an unlistable process table,
-  counts as in use. A live process of this user that denies inspection (it
-  made itself non-dumpable) might be using any tree, so every tree
-  is kept for the rest of the run and the pid is reported as
-  `uninspectable_process`. Zombies (state `Z` in `/proc/<pid>/stat`) and
-  kernel threads (the `PF_KTHREAD` bit in that file's `flags` field) are
+  counts as in use. A live process of this user that denies inspection might
+  be using any tree, so a currently denied, non-allowlisted process keeps
+  the candidate and its pid is reported as `uninspectable_process`. Each
+  candidate gets a fresh bounded scan. Zombies (state `Z` in
+  `/proc/<pid>/stat`) and kernel threads (the `PF_KTHREAD` bit in that file's `flags` field) are
   ignored; a pid number proves nothing, because in a PID namespace pid 2 and
   its children are ordinary processes. A process of this user whose `stat`
-  cannot be read or parsed counts as uninspectable. Also ignored is
-  the session infrastructure that is always non-dumpable, identified by kernel
-  facts: the user's systemd manager and `(sd-pam)` (the only members of
-  `user@<uid>.service/init.scope`) and OpenSSH's `sshd-session` whose parent is
-  the root-owned privileged `sshd-session` or `sshd`. Other users' processes
-  are invisible, as they are to `fuser`;
+  cannot be read or parsed counts as uninspectable. The existing kernel-fact
+  exceptions remain: members of the user's exact
+  `user@<uid>.service/init.scope` cgroup, and `sshd-session`/`sshd` with a
+  root-owned `sshd-session`/`sshd` parent. Additionally, same-uid `ssh-agent`
+  and `gpg-agent` qualify only in their exact
+  `user@<uid>.service/app.slice/ssh-agent.service` or `gpg-agent.service`
+  cgroup, with a same-uid `systemd` parent in that user's `init.scope`.
+  Missing required kernel facts fail closed. Command lines never establish
+  eligibility. The shared `scripts/common/session_daemons.py` helper also
+  serves pytest retention. The reaper journals each excused pid and kernel
+  `identity`; pytest retention records those pairs in `allowed_session_daemons`
+  in its receipt, including the deletion recheck. Readable holder evidence
+  still preserves a candidate. These checks establish unit membership and
+  ancestry, not executable attestation. A user who controls their systemd
+  units can change what those units execute.
+  Other users' processes are invisible, as they are to `fuser`;
 - no task record in `batch_state/tasks/` whose `worktree_path` or `cwd` names
   it is `spawning` or `running`, has any other unsettled status, or has a
   worker that is live or unknown. `needs_finalize` and finished records pass
@@ -1449,14 +1459,16 @@ these files. Scheduled public summaries expose their count and total bytes.
 
 ## Worker-held runtime scratch (#10000)
 
-Keep held patches, handoffs and diagnostics in the dispatch worktree's
-`batch_state/reports/` and cite each file in the final response. If a worker
-holds a file under its runtime temporary root instead, delegate preserves
+Keep held patches, handoffs and diagnostics in `$LU_TASK_EVIDENCE_DIR`, the
+task runtime lease's `evidence/` directory, and cite each file in the final
+response. Task cleanup copies that directory to `batch_state/preserved/<task>/`
+with a retrieval receipt before removing the runtime lease. For files elsewhere
+under the runtime temporary root, delegate also preserves
 absolute file citations (including Markdown links, code spans, file URIs and
 line-number suffixes), runtime-root relative code spans or links, and
 `$TMPDIR/<file>` citations, before removing the lease.
 Task records may also declare `held_work` as a list of runtime-root relative or
-absolute file paths. Unreferenced scratch remains disposable.
+absolute file paths. Unreferenced scratch outside `evidence/` remains disposable.
 
 Both worker exit and the terminal orphan sweep copy cited regular files to
 `batch_state/preserved/<task-id>/held-<attempt>/`. The task's

@@ -47,6 +47,7 @@ from scripts.opsec.prepublish import (
     publication_boundary,
     publication_cli,
 )
+from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     REJECTED,
@@ -84,7 +85,7 @@ from scripts.review.reviewer_resolver import (
 from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
-from scripts.review.target_resolution import TargetResolutionError
+from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import recognized_verdicts
 
 NORMALIZED = {
@@ -303,7 +304,7 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path
 
 @dataclass(frozen=True)
 class CommitAttribution:
-    """One branch commit and the author family its provenance proves.
+    """One author contribution to a branch commit, with its proven family.
 
     ``family`` is None only for a Git-proven clean base merge, which authors nothing.
     """
@@ -388,7 +389,14 @@ def _attribute_commit(
         return CommitAttribution(commit_sha, VERIFIED_APP_BOT, VERIFIED_APP_BOT, authorship=VERIFIED_APP_BOT)
     if len(trailers) != 1 or "/" not in trailers[0]:
         raise RecordError("author model unknown: missing explicit X-Agent model trailer")
-    harness, model = trailers[0].split("/", 1)
+    return _attribute_trailer(commit_sha, trailers[0], repository=repository, task_root=task_root)
+
+
+def _attribute_trailer(commit_sha: str | None, trailer: str, *, repository: str, task_root: Path) -> CommitAttribution:
+    """Resolve one trailer using the existing task/model provenance bindings."""
+    if "/" not in trailer:
+        raise RecordError("author model unknown: missing explicit X-Agent model trailer")
+    harness, model = trailer.split("/", 1)
     if not harness or not model:
         raise RecordError("author model unknown")
     # Task provenance wins over family tokens embedded in the trailer's task id.
@@ -472,10 +480,51 @@ def _attribute_commit(
     )
 
 
+def _attribute_commit_authors(
+    entry: dict[str, Any],
+    *,
+    repository: str,
+    task_root: Path,
+    base_sha: Callable[[], str],
+    checkout: Path | None = None,
+    unknown_history: Iterable[str] = (),
+    app_bot_login: Callable[[str], str | None] | None = None,
+) -> tuple[CommitAttribution, ...]:
+    """Resolve every declared writer atomically; keep legacy zero/one admission."""
+    message = (entry.get("commit") or {}).get("message")
+    declared = re.findall(r"(?m)^X-Agent:[^\r\n]*", message) if isinstance(message, str) else []
+    if len(declared) <= 1:
+        return (
+            _attribute_commit(
+                entry,
+                repository=repository,
+                task_root=task_root,
+                base_sha=base_sha,
+                checkout=checkout,
+                unknown_history=unknown_history,
+                app_bot_login=app_bot_login,
+            ),
+        )
+    authors = []
+    for index, line in enumerate(declared, 1):
+        prefix = f"author model unknown: {len(declared)} X-Agent trailers: member {index}"
+        match = re.fullmatch(r"X-Agent:[^\S\r\n]*(\S+)[^\S\r\n]*", line)
+        if match is None or "/" not in match[1]:
+            raise RecordError(f"{prefix} malformed")
+        try:
+            author = _attribute_trailer(entry.get("sha"), match[1], repository=repository, task_root=task_root)
+        except RecordError as exc:
+            raise RecordError(f"{prefix}: {exc}") from exc
+        if author.family in UNRESOLVED_AUTHOR_FAMILIES or not author.author_models:
+            raise RecordError(f"{prefix} unresolved; refusing all authors")
+        authors.append(author)
+    return tuple(authors)
+
+
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
     """Resolve a PR's GitHub-listed commits, including Unknown author families.
 
-    A compatibility reader over :func:`_attribute_commit`. The recorder itself
+    A compatibility reader over :func:`_attribute_commit_authors`. The recorder itself
     uses :func:`pr_review_facts`, which also binds the listing to the local
     ``git rev-list`` enumeration.
     """
@@ -495,15 +544,14 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
 
     families = set()
     for entry in commits:
-        family = _attribute_commit(
+        authors = _attribute_commit_authors(
             entry,
             repository=repository,
             task_root=task_root,
             base_sha=base_sha,
             app_bot_login=listing_app_bot_login(commits, repository),
-        ).family
-        if family is not None:
-            families.add(family)
+        )
+        families.update(author.family for author in authors if author.family is not None)
     if not families:
         raise RecordError("PR has no attributed author commits")
     return families
@@ -590,23 +638,28 @@ class BranchReviewFacts:
 
     @property
     def author_models(self) -> tuple[str | None, ...]:
-        """Every committed author model; an unattributed commit adds None."""
+        """Author models per unique commit; an unattributed commit adds None."""
         return tuple(
             model
-            for commit in self.commits
-            # A clean merge authors nothing; a verified app bot has no model.
-            if commit.source not in {"clean-base-merge", VERIFIED_APP_BOT}
-            for model in (commit.author_models or (None,))
+            for _sha, model in dict.fromkeys(
+                (commit.sha, model)
+                for commit in self.commits
+                # A clean merge authors nothing; a verified app bot has no model.
+                if commit.source not in {"clean-base-merge", VERIFIED_APP_BOT}
+                for model in (commit.author_models or (None,))
+            )
         )
 
     @property
     def author_task_models(self) -> tuple[str, ...]:
         """The head commit's task-record author models."""
         return tuple(
-            model
-            for commit in self.commits
-            if commit.sha == self.head_sha and commit.source in {"task-record", "task-record-archived"}
-            for model in commit.author_models
+            dict.fromkeys(
+                model
+                for commit in self.commits
+                if commit.sha == self.head_sha and commit.source in {"task-record", "task-record-archived"}
+                for model in commit.author_models
+            )
         )
 
     def resolver_inputs(
@@ -639,7 +692,7 @@ class BranchReviewFacts:
             "repository": self.repository,
             "base_tip_sha": self.base_tip_sha,
             "head_sha": self.head_sha,
-            "commits": len(self.commits),
+            "commits": len({commit.sha for commit in self.commits}),
             "existing_families": sorted(self.existing_families),
             "incoming_writer": self.incoming_writer,
             "incoming_family": self.incoming_family,
@@ -804,8 +857,8 @@ def collect_branch_review_facts(
     app_bot_login = app_bot_login or partial(live_app_bot_login, repository)
     for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
         try:
-            commits.append(
-                _attribute_commit(
+            commits.extend(
+                _attribute_commit_authors(
                     entry,
                     repository=repository,
                     task_root=task_root,
@@ -1067,7 +1120,7 @@ def pr_review_facts(
     )
     refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
     github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
-    if sorted(github_own) != sorted(commit.sha or "" for commit in facts.commits):
+    if sorted(github_own) != sorted({commit.sha or "" for commit in facts.commits}):
         raise RecordError("PR commit set differs from the local base..head enumeration; fetch and retry")
     return facts
 
@@ -1261,6 +1314,7 @@ def build_comment(
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
     if review_mode not in {"cross_family", "red_team"}:
         raise RecordError("unsupported review mode")
+    reply = reply.replace(MARKER_PREFIX, "&lt;" + MARKER_PREFIX[1:])
     if MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
     mode_field = " review_mode=red_team" if review_mode == "red_team" else ""
@@ -1295,12 +1349,7 @@ def build_comment(
         f"Task id: {task_id}\n\n"
     )
     if withheld_findings is not None:
-        return (
-            prefix
-            + f"Withheld findings: {withheld_findings}\n"
-            + "Findings are held privately.\n\n"
-            + marker
-        )
+        return prefix + f"Withheld findings: {withheld_findings}\n" + "Findings are held privately.\n\n" + marker
     prefix += "<details><summary>Reviewer's reply</summary>\n\n"
     suffix = f"\n\n</details>\n\n{marker}"
     available = MAX_COMMENT_BYTES - len((prefix + suffix).encode())
@@ -1705,13 +1754,22 @@ def record(
     number = pr.get("number")
     if not isinstance(number, int) or number < 1:
         raise RecordError("PR number unavailable")
+    # Task records and SHA locks stay in the provenance checkout. Git facts
+    # and citations belong to the task's registered target repository.
+    try:
+        repo_keys = [key for key, repo in load_fleet_repos().items() if repo.github.casefold() == repository.casefold()]
+        if len(repo_keys) != 1:
+            raise RecordError("review repository is not uniquely registered")
+        review_root = resolve_review_repository(root or _repo_root(), repo_keys[0], mode="pr")
+    except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
+        raise RecordError("review repository checkout unavailable") from None
     unknown_history = (
         admitted_unknown_history(
             repository=repository,
             branch=branch,
             head_sha=sha,
             task_root=task_root,
-            repo_root=root or _repo_root(),
+            repo_root=review_root,
         )
         if review_mode == "red_team"
         else ()
@@ -1721,7 +1779,7 @@ def record(
         number,
         head_sha=sha,
         task_root=task_root,
-        repo_root=root or _repo_root(),
+        repo_root=review_root,
         subject_seats=_task_flag_values(task, "review_subject_seats"),
         subject_families=_task_flag_values(task, "review_subject_families"),
         unknown_history=unknown_history,
@@ -1756,7 +1814,7 @@ def record(
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
-    reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
+    reply = repository_relative_reply(reply, task=task, primary_root=review_root)
     comment_fields = dict(
         sha=sha,
         task_id=task_id,

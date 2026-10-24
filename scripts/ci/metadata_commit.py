@@ -1,9 +1,7 @@
 """A commit that carries only another commit's metadata, for a metadata-only secret scan.
 
-When the merge queue reuses a pull_request run's file-content secret scan
-(scripts/ci/reuse_green_run.py), the queue commit's own metadata (message,
-author, committer) is still new: the queue writes PR-derived text into the
-message. TruffleHog's git source scans each commit's metadata and its diff.
+The queue commit's metadata (message, author, committer) includes new
+PR-derived text. TruffleHog's git source scans each commit's metadata and its diff.
 This writes a commit with the same author, committer and message as
 ``--commit``, its first parent as the only parent and that parent's tree, so
 the diff is empty and scanning ``parent..<new commit>`` scans the metadata

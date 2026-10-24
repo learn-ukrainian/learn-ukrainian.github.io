@@ -55,10 +55,7 @@ def test_cursor_attested_composer_author_refuses_same_family_review():
     assert resolve_author_family(inputs.author_model) == "moonshot"
     assert "kimi-k3" not in REVIEW_CANDIDATES
 
-    for name in ("composer-2.5",):
-        result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        assert result.status == "excluded", (name, result.status)
-        assert "same family" in result.reason
+    assert "composer-2.5" not in REVIEW_CANDIDATES
 
     resolution = resolve_reviewer(inputs)
     assert resolution.fail_closed_reason is None

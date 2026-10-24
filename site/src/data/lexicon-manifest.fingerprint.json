@@ -183,7 +183,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "6da436fbe3963586a66302d14e189ae2abdf9487aaf632d78335ee96af41b9e9"
+        "sha256": "cb1cd99c2f7bac2b3bea8295fd7bc3633e6fbb1bbd6d3074b798e1f14848af45"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -243,7 +243,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "b5017beb1934eb0980360096cce54d6ab66303c27cf7360f30d3d5ff1ec1857c"
+        "sha256": "50620c6bb42400ebf3e85350f9520ef3ebbedf304e9456028dbc758c41c57927"
       },
       {
         "path": "scripts/lexicon/import_ohoiko_vocab.py",
@@ -255,7 +255,7 @@
       },
       {
         "path": "scripts/lexicon/lesson_atlas_link_census.py",
-        "sha256": "b2fdc119c76050a6badfb09b187a708109430438633859b0979eda6774ff3cb5"
+        "sha256": "5e63f45b3993f53afd9ca1e66ba94b07cb9cf4da27c87067105459c8228e0681"
       },
       {
         "path": "scripts/lexicon/load_relation_candidates.py",
@@ -307,7 +307,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_atlas_intake.py",
-        "sha256": "9c113b40d71a607823e406e377c5b0aa163c11dd8fa53b939f741effc9408b1d"
+        "sha256": "b63c202d4a9559c3ced00bd7900818a59e0d5b84e696acec79ba3dc83eb5a277"
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
@@ -331,7 +331,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "204656e7a92bbab6f2e295c636ff2fbc733e97e41a1976b03d4be8080ac11b75"
+        "sha256": "573fe69f25df2ae81a85187483cd5dc4de54f83cf294a14535dc043234a1bd91"
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
@@ -375,7 +375,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "11085fea25ff7feff0737c638626384009cea8145dcad2ba995436750a08c463"
+        "sha256": "5999b60f0f5e743c172173b002bf637a8c13e7e96101fb8ece7dc51f8c4c6774"
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",

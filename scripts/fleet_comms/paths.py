@@ -7,6 +7,7 @@ from pathlib import Path
 
 from scripts.guardrails.worktree_containment import (
     NotAGitRepositoryError,
+    canonicalize,
     resolve_main_root,
 )
 
@@ -24,6 +25,25 @@ RETIRED_LOCAL_PLANE_MESSAGE = (
 
 class PlaneRootAnchorError(RuntimeError):
     """Raised when the plane root cannot be anchored to the primary checkout."""
+
+
+def validate_plane_root(root: Path) -> Path:
+    """Canonicalize storage roots and refuse checkout roots without writing.
+
+    Both primary checkouts and linked worktrees carry a .git entry. Refuse
+    that entry even when damaged; validation must not need a working Git
+    executable or a writable backend. Dedicated directories beneath a checkout
+    remain valid, including the default plane directory.
+    """
+    try:
+        resolved = canonicalize(root)
+        marker = resolved / ".git"
+        is_checkout = marker.exists() or marker.is_symlink()
+    except (OSError, RuntimeError):
+        raise PlaneRootAnchorError("plane_root_unresolvable") from None
+    if is_checkout:
+        raise PlaneRootAnchorError("plane_root_is_git_checkout")
+    return resolved
 
 
 def _retired_marker_present(root: Path) -> bool:
@@ -80,7 +100,7 @@ def default_plane_root(
 
     Anchoring order:
 
-    1. ``FLEET_COMMS_ROOT`` env override (explicit operator choice) — honored as-is.
+    1. ``FLEET_COMMS_ROOT`` env override, validated as a dedicated storage root.
     2. The primary checkout that owns the shared ``.git`` store, resolved from
        ``repo_root`` (default: process cwd).
 
@@ -92,26 +112,29 @@ def default_plane_root(
     silent message loss. Isolated non-git callers and test fixtures must opt in
     explicitly with ``allow_non_git=True``.
     """
-    env = os.environ.get(ENV_ROOT)
-    if env:
-        root = Path(env).expanduser().resolve()
-        _refuse_retired_local_plane(root)
-        return root
-
-    candidate = repo_root if repo_root is not None else Path.cwd()
     try:
-        base = resolve_main_root(candidate)
-    except NotAGitRepositoryError as exc:
-        if not allow_non_git:
-            raise PlaneRootAnchorError(
-                f"refusing to anchor the fleet-comms plane root at {candidate}: "
-                "not inside a git repository, so the primary checkout cannot be "
-                "verified. A silent fallback here once materialized a shadow "
-                "comms DB under a garbage cwd (#6863). Set FLEET_COMMS_ROOT for an "
-                "explicit override, or pass allow_non_git=True for an isolated "
-                "non-git fixture."
-            ) from exc
-        base = candidate.resolve()
-    root = (base / DEFAULT_ROOT_REL).resolve()
-    _refuse_retired_local_plane(root)
+        env = os.environ.get(ENV_ROOT)
+        if env:
+            root = validate_plane_root(Path(env))
+        else:
+            candidate = repo_root if repo_root is not None else Path.cwd()
+            try:
+                base = resolve_main_root(candidate)
+            except NotAGitRepositoryError as exc:
+                if not allow_non_git:
+                    raise PlaneRootAnchorError(
+                        f"refusing to anchor the fleet-comms plane root at {candidate}: "
+                        "not inside a git repository, so the primary checkout cannot be "
+                        "verified. A silent fallback here once materialized a shadow "
+                        "comms DB under a garbage cwd (#6863). Set FLEET_COMMS_ROOT for an "
+                        "explicit override, or pass allow_non_git=True for an isolated "
+                        "non-git fixture."
+                    ) from exc
+                base = candidate.resolve()
+            root = validate_plane_root(base / DEFAULT_ROOT_REL)
+        _refuse_retired_local_plane(root)
+    except PlaneRootAnchorError:
+        raise
+    except (OSError, RuntimeError):
+        raise PlaneRootAnchorError("plane_root_unresolvable") from None
     return root

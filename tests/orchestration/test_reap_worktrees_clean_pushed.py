@@ -22,6 +22,7 @@ from typing import Any
 
 import pytest
 
+from scripts.hygiene import pytest_retention
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims
 
@@ -1608,6 +1609,115 @@ def test_session_infrastructure_and_dead_or_foreign_processes_are_not_uninspecta
     assert {base.name: _REAL_UNINSPECTABLE(base, proc) for base in cases} == {
         base.name: expected for base, expected in cases.items()
     }
+    # Main's kernel-fact exceptions work without any cmdline file.
+    for pid, identity in ((20, "systemd"), (21, "(sd-pam)"), (22, "sshd-session")):
+        assert pytest_retention.allowed_session_daemon(proc / str(pid)) == identity
+    # Neither a forged argv[0] nor a similarly named cgroup is sufficient.
+    for argv in (
+        b"/usr/bin/ssh-agent\0-D\0", b"/usr/bin/gpg-agent\0--daemon\0",
+        b"/usr/lib/systemd/systemd\0--user\0", b"(sd-pam)\0", b"sshd-session: session\0", b"",
+    ):
+        (proc / "30" / "cmdline").write_bytes(argv)
+        assert _REAL_UNINSPECTABLE(proc / "30", proc)
+        assert pytest_retention.allowed_session_daemon(proc / "30") is None
+    for pid, name in ((40, "ssh-agent"), (41, "gpg-agent")):
+        unit = manager.replace("init.scope", f"app.slice/{name}.service")
+        base = fake_process(proc, pid, name=name, ppid=20, uids=uid, cgroup=unit)
+        assert not _REAL_UNINSPECTABLE(base, proc)
+        assert pytest_retention.allowed_session_daemon(base) == name
+        for cgroup in (unit + "/child", unit + "-extra", unit.replace(f"user@{uid}", f"user@{uid + 1}")):
+            (base / "cgroup").write_text(f"0::{cgroup}\n")
+            assert _REAL_UNINSPECTABLE(base, proc)
+            assert pytest_retention.allowed_session_daemon(base) is None
+        (base / "cgroup").write_text(f"0::{unit}\n")
+        original = (base / "status").read_text()
+        for status in (
+            original.replace("PPid:\t20", "PPid:\t30"),  # wrong parent
+            original.replace("PPid:\t20", "PPid:\t99"),  # missing parent
+            original.replace(f"Uid:\t{uid}\t{uid}\t{uid}", f"Uid:\t{uid}\t{uid + 1}\t{uid}"),
+        ):
+            (base / "status").write_text(status)
+            assert pytest_retention.allowed_session_daemon(base) is None
+        (base / "status").write_text(original)
+        parent_status = (proc / "20" / "status").read_text()
+        for status in (
+            parent_status.replace("Name:\tsystemd", "Name:\tworker"),
+            parent_status.replace(f"Uid:\t{uid}\t{uid}\t{uid}", f"Uid:\t{uid + 1}\t{uid + 1}\t{uid + 1}"),
+        ):
+            (proc / "20" / "status").write_text(status)
+            assert _REAL_UNINSPECTABLE(base, proc)
+        (proc / "20" / "status").write_text(parent_status)
+        (proc / "20" / "cgroup").write_text(f"0::{unit}\n")
+        assert _REAL_UNINSPECTABLE(base, proc)
+        (proc / "20" / "cgroup").write_text(f"0::{manager}\n")
+        # Missing kernel facts fail closed, even with a convincing command line.
+        (base / "cmdline").write_bytes(f"/usr/bin/{name}\0".encode())
+        (base / "cgroup").unlink()
+        assert _REAL_UNINSPECTABLE(base, proc)
+        assert pytest_retention.allowed_session_daemon(base) is None
+    # Unknown stat remains a blocker even for otherwise recognised infrastructure.
+    (proc / "20" / "stat").write_text("malformed")
+    assert _REAL_UNINSPECTABLE(proc / "20", proc)
+
+
+def test_unit_cgroup_agent_does_not_block_removal(
+    repo: Path, free_fuser: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Defect class: a hidden session daemon prevented removal of every idle checkout."""
+    worktree = dispatch_tree(repo)
+    proc = tmp_path / "fake-proc"
+    uid = os.getuid()
+    manager = f"/user.slice/user-{uid}.slice/user@{uid}.service/init.scope"
+    parent = fake_process(proc, 20, name="systemd", ppid=1, uids=uid, cgroup=manager)
+    # Pytest retention also audits the unreadable manager using the shared helper.
+    daemon = fake_process(proc, 4242, name="ssh-agent", ppid=20, uids=uid,
+                          cgroup=manager.replace("init.scope", "app.slice/ssh-agent.service"))
+    assert parent.is_dir()
+    (daemon / "cmdline").write_bytes(b"/usr/bin/ssh-agent\0-D\0")
+    real_readlink = os.readlink
+
+    def denied_cwd(path, *args, **kwargs):
+        if Path(path) == daemon / "cwd":
+            raise PermissionError(13, "non-dumpable")
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "readlink", denied_cwd)
+    _UNINSPECTABLE_IN_SCOPE.add(4242)
+    scan = rw._proc_users_inside
+    monkeypatch.setattr(rw, "_proc_users_inside", lambda root, **kw: scan(root, **{**kw, "proc_root": proc}))
+    monkeypatch.setattr(pytest_retention, "PROC_ROOT", proc)
+    holders = pytest_retention.holder_snapshot()
+    assert holders.complete and holders.allowed_session_daemons == {(20, "systemd"), (4242, "ssh-agent")}
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    assert outcome_for(report, worktree, repo).action == "removed"
+    assert not worktree.exists() and report.uninspectable == ()
+    assert "allowed_session_daemon pid=4242 identity='ssh-agent'" in caplog.text
+
+
+def test_spoofed_agent_argv0_outside_unit_still_blocks_removal(
+    repo: Path, free_fuser: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Data-loss class: an argv[0] spoof outside the agent unit must not excuse a hidden holder."""
+    worktree = dispatch_tree(repo)
+    proc = tmp_path / "fake-proc"
+    holder = fake_process(proc, 4242, name="worker", ppid=1, uids=os.getuid())
+    (holder / "cmdline").write_bytes(b"/usr/bin/ssh-agent\0-D\0")
+    real_readlink = os.readlink
+
+    def denied_cwd(path, *args, **kwargs):
+        if Path(path) == holder / "cwd":
+            raise PermissionError(13, "non-dumpable")
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "readlink", denied_cwd)
+    _UNINSPECTABLE_IN_SCOPE.add(4242)
+    scan = rw._proc_users_inside
+    monkeypatch.setattr(rw, "_proc_users_inside", lambda root, **kw: scan(root, **{**kw, "proc_root": proc}))
+    monkeypatch.setattr(pytest_retention, "PROC_ROOT", proc)
+    holders = pytest_retention.holder_snapshot()
+    assert not holders.complete and holders.unreadable == 1 and not holders.allowed_session_daemons
+    assert _refusal(repo, worktree) == "uninspectable_process 4242: a process of this user cannot be inspected"
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="/proc is Linux")

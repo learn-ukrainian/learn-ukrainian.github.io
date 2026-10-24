@@ -150,6 +150,9 @@ def test_usage_notes_family_labels_match_slovnyk_me_and_stay_mirror_only() -> No
     assert academic_label_for_slug("khreshchatyk") == KHRESHCHATYK_LABEL
     assert official_url_for_slug("linguistic_norm", "що") is None
     assert official_url_for_slug("khreshchatyk", "казати") is None
+    # The registered VTS mirror has no established official electronic edition.
+    assert official_url_for_slug("vts", "коса") is None
+    assert official_url_from_mirror("https://slovnyk.me/dict/vts/коса") is None
     assert official_url_from_mirror("https://slovnyk.me/dict/linguistic_norm/%D1%89%D0%BE") is None
     assert (
         official_url_from_mirror("https://slovnyk.me/dict/khreshchatyk/%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B8")
@@ -157,12 +160,18 @@ def test_usage_notes_family_labels_match_slovnyk_me_and_stay_mirror_only() -> No
     )
 
 
-def test_apply_entry_attribution_moves_mirror_urls_internal() -> None:
+def test_apply_entry_attribution_moves_mirror_urls_internal(monkeypatch) -> None:
     entry = {
         "lemma": "коса",
+        "primary_source": "slovnyk.me: Словник синонімів Караванського",
         "sections": {
             "synonyms": {
-                "items": ["жнива"],
+                "items": ["жнива", {
+                    "text": "плетениця",
+                    "source": "slovnyk.me: Словник синонімів Караванського + relation_pairs/miyklas.com.ua",
+                    "source_url": "https://slovnyk.me/dict/synonyms_karavansky/коса",
+                    "source_urls": ["https://slovnyk.me/dict/synonyms/коса"],
+                }],
                 "source": "slovnyk.me: Словник синонімів Караванського",
                 "source_urls": ["https://slovnyk.me/dict/synonyms_karavansky/%D0%BA%D0%BE%D1%81%D0%B0"],
             }
@@ -180,12 +189,25 @@ def test_apply_entry_attribution_moves_mirror_urls_internal() -> None:
                     "source_pill": "СУМ-20",
                     "definitions": ["test"],
                     "source_url": "https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D1%81%D0%B0",
-                }
+                },
+                {
+                    "id": "vts",
+                    "source": "ВТС",
+                    "definitions": ["unchanged"],
+                    "source_url": "https://slovnyk.me/dict/vts/коса",
+                },
             ],
         },
     }
 
     assert apply_entry_attribution(entry) is True
+    assert entry["primary_source"] == "Словник синонімів С. Караванського"
+    assert entry["sections"]["synonyms"]["items"] == ["жнива", {
+        "text": "плетениця",
+        "source": "Словник синонімів С. Караванського + навчальні матеріали МійКлас (корпусні пари)",
+        "mirror_source_url": "https://slovnyk.me/dict/synonyms_karavansky/коса",
+        "mirror_source_urls": ["https://slovnyk.me/dict/synonyms/коса"],
+    }]
     assert entry["sections"]["synonyms"]["source"] == KARAVANSKY_LABEL
     assert "source_urls" not in entry["sections"]["synonyms"]
     assert entry["sections"]["synonyms"]["mirror_source_urls"] == [
@@ -197,7 +219,55 @@ def test_apply_entry_attribution_moves_mirror_urls_internal() -> None:
     assert entry["enrichment"]["definition_cards"][0]["source_url"].startswith(
         "https://services.ulif.org.ua/expl/#/word/"
     )
+    assert entry["enrichment"]["definition_cards"][1] == {
+        "id": "vts",
+        "source": "Великий тлумачний словник сучасної української мови",
+        "definitions": ["unchanged"],
+        "mirror_source_url": "https://slovnyk.me/dict/vts/коса",
+    }
     assert learner_facing_mirror_violations(entry) == []
+    assert learner_facing_unmapped_source_violations(entry) == []
+    assert apply_entry_attribution(entry) is False
+
+    from copy import deepcopy
+
+    from tests.test_lexicon_enrich_manifest import _run_synonyms_gate
+
+    source_block = {
+        "items": ["обмін"],
+        "source": "slovnyk.me: Словник синонімів Караванського + relation_pairs/synonym_verdicts",
+        "source_urls": ["https://slovnyk.me/dict/synonyms_karavansky/ключ"],
+    }
+    original_block = deepcopy(source_block)
+    produced = _run_synonyms_gate(
+        monkeypatch, offline=False, cache={"lookups": {}},
+        new_synonyms=source_block, existing_synonyms={},
+    )
+    assert source_block == original_block
+    assert produced["sections"]["synonyms"] == {
+        "items": ["обмін"],
+        "source": "Словник синонімів С. Караванського + relation_pairs/synonym_verdicts",
+        "mirror_source_urls": ["https://slovnyk.me/dict/synonyms_karavansky/ключ"],
+    }
+    assert learner_facing_unmapped_source_violations(produced) == [
+        "ключ: sections.synonyms.source='Словник синонімів С. Караванського + relation_pairs/synonym_verdicts'",
+    ]
+    import sqlite3
+
+    from scripts.lexicon import enrich_manifest
+
+    shared_cards = [{"id": "vts", "source": "ВТС", "definitions": ["unchanged"]}]
+    monkeypatch.setattr(enrich_manifest, "_definition_cards", lambda *a, **k: shared_cards)
+    with sqlite3.connect(":memory:") as conn:
+        enrich_manifest.enrich_entry(
+            produced, conn, {}, pointer_synonym_relations=[], pointer_antonym_relations=[],
+            pointer_homonym_relations=[], pointer_paronym_relations=[],
+        )
+    assert shared_cards == [{"id": "vts", "source": "ВТС", "definitions": ["unchanged"]}]
+    assert produced["enrichment"]["definition_cards"] == [{
+        "id": "vts", "source": "Великий тлумачний словник сучасної української мови",
+        "definitions": ["unchanged"],
+    }]
 
 
 def test_relation_pairs_label_flows_to_provenance_footer_and_gate() -> None:
@@ -237,6 +307,38 @@ def test_unmapped_relation_pairs_fail_closed_in_conformance_gate() -> None:
     assert len(violations) == 2
     assert all("relation_pairs/uk.wikipedia" in item for item in violations)
 
+    # Approval carriers and source-name lookalikes must not acquire authority.
+    for source in (
+        "relation_pairs/synonym_verdicts",
+        "relation_pairs/grac-synonym_verdicts",
+        "relation_pairs/miyklas.com.ua-unverified",
+        "relation_pairs/not-grinchyshyn-1986",
+        "relation_pairs/ukr-mova.in.ua-unverified",
+        "slovnyk.me: relation_pairs/synonym_verdicts",
+    ):
+        assert normalize_academic_label(source) == source
+        relation["source"] = source
+        label = _relation_source_label(relation, "ключ")
+        assert label == f"{source}: corpus relation pair → ключ"
+        entry = {
+            "lemma": "ключ",
+            "primary_source": source,
+            "enrichment": {"sources": [source]},
+            "sections": {"synonyms": {
+                "source": f"slovnyk.me: Словник синонімів Караванського + {label}",
+                "items": [{"word": "засіб", "source": source, "source_url": "https://example.invalid/raw"}],
+            }},
+        }
+        assert apply_entry_attribution(entry)
+        assert entry["primary_source"] == source
+        assert entry["enrichment"]["sources"] == [source]
+        assert entry["sections"]["synonyms"] == {
+            "source": f"Словник синонімів С. Караванського + {label}",
+            "items": [{"word": "засіб", "source": source, "source_url": "https://example.invalid/raw"}],
+        }
+        assert len(learner_facing_unmapped_source_violations(entry)) == 4
+        assert apply_entry_attribution(entry) is False
+
 
 def test_learner_provenance_walker_checks_literary_attestation_and_enrichment_blocks() -> None:
     entry = {
@@ -260,6 +362,7 @@ def test_bare_mirror_prefix_label_stays_visible_to_gates() -> None:
     # must NOT normalize to an empty learner-facing label — the mirror string stays
     # put so learner_facing_mirror_violations fires instead of shipping a blank.
     assert normalize_academic_label("slovnyk.me: ") == "slovnyk.me:"
+    assert normalize_academic_label("slovnyk.me: unknown dictionary") == "slovnyk.me: unknown dictionary"
     entry = {"lemma": "тест", "sections": {"synonyms": {"source": "slovnyk.me: "}}}
     apply_entry_attribution(entry)
     assert learner_facing_mirror_violations(entry)
