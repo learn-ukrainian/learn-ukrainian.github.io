@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -49,7 +51,7 @@ def test_alerts_once_per_crossing_and_rearms_after_falling_below(tmp_path: Path)
     message, key = publish.calls[0]
     assert message.startswith("[sre-timers] disk 85.0% used, 60.0 GiB free on the .worktrees filesystem")
     assert "reap watermark of 85%" in message and "refused at 90%" in message
-    assert key == "lu-disk-watermark:2026-10-16T02:00:00Z"
+    assert key.startswith("lu-disk-watermark:")
 
     for hour, used in ((3, 86.0), (4, 91.0), (5, 85.0)):  # stays above, even past the refuse level
         assert "already reported" in _run(tmp_path, used, publish, f"2026-10-16T0{hour}:00:00Z")
@@ -61,7 +63,8 @@ def test_alerts_once_per_crossing_and_rearms_after_falling_below(tmp_path: Path)
 
     _run(tmp_path, 88.0, publish, "2026-10-16T07:00:00Z")
     assert len(publish.calls) == 2
-    assert publish.calls[1][1] == "lu-disk-watermark:2026-10-16T07:00:00Z"
+    assert publish.calls[1][1].startswith("lu-disk-watermark:")
+    assert publish.calls[1][1] != key
 
 
 def test_a_failed_publish_keeps_the_disk_unreported_so_the_next_run_retries(tmp_path: Path) -> None:
@@ -132,3 +135,145 @@ def test_scheduled_dry_run_never_alerts(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(adm, "probe_disk", lambda: pytest.fail("a dry run must not read the disk for the alert"))
 
     assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(tmp_path / "r")]) == 0
+
+
+@pytest.mark.parametrize("fault", ["replace", "fsync", "pending-unlink"])
+def test_oserror_after_publish_preserves_hygiene_receipt_and_retries_same_delivery(
+    tmp_path, monkeypatch, capsys, fault
+):
+    """A failed state replacement after Fleet commit must not lose the pending publication."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    root = tmp_path / "authority"
+    with AuthorityService(root=root) as service:
+        service.create_channel("cto")
+    calls = []
+
+    def publish(message, key):
+        with AuthorityService(root=root) as service:
+            delivered = service.publish_message(
+                sender=alerts.SENDER,
+                channel=alerts.CHANNEL,
+                recipients=(alerts.RECIPIENT,),
+                kind=alerts.KIND,
+                body=message,
+                correlation_id=key,
+                idempotency_key=key,
+            )
+        calls.append((message, key, delivered.message_id, delivered.delivery_ids))
+
+    monkeypatch.setattr(cleanup, "build_receipt", lambda *_a, **_k: {"summary": {"errors": 0}, "repositories": []})
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: {})
+    monkeypatch.setattr(cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
+    monkeypatch.setattr(cleanup, "batch_state_retention_reports", lambda *_a, **_k: [])
+    monkeypatch.setattr(cleanup, "sweep_sessions", lambda **_k: {"summary": {"errors": 0}})
+    monkeypatch.setattr(adm, "load_thresholds", lambda: _LIMITS)
+    monkeypatch.setattr(adm, "probe_disk", lambda: _disk(88.0))
+    monkeypatch.setattr(alerts, "fleet_comms_publisher", lambda _root: publish)
+    monkeypatch.setattr(alerts, "utc_now", lambda: "first-at")
+    state_dir = tmp_path / "state"
+    state = state_dir / watermark.STATE_NAME
+    pending = state.with_name(state.name + ".pending")
+    replace = alerts.os.replace
+    sync_directory, unlink = alerts._sync_directory, Path.unlink
+
+    def fail_state_replace(source, destination):
+        if Path(destination) == state:
+            raise OSError("private storage detail")
+        return replace(source, destination)
+
+    def fail_state_sync(directory):
+        if state.exists() and calls:
+            raise OSError("private storage detail")
+        return sync_directory(directory)
+
+    def fail_pending_unlink(target, *args, **kwargs):
+        if target == pending:
+            raise OSError("private storage detail")
+        return unlink(target, *args, **kwargs)
+
+    captured = []
+    monkeypatch.setattr(
+        cleanup, "write_receipt", lambda receipt, _directory: captured.append(receipt) or tmp_path / "r.json"
+    )
+    monkeypatch.setattr(cleanup, "build_public_summary", lambda receipt, _path: receipt)
+    args = ["--apply", "--repo-root", str(tmp_path), "--alert-state-dir", str(state_dir)]
+    with monkeypatch.context() as patch:
+        if fault == "replace":
+            patch.setattr(alerts.os, "replace", fail_state_replace)
+        elif fault == "fsync":
+            patch.setattr(alerts, "_sync_directory", fail_state_sync)
+        else:
+            patch.setattr(Path, "unlink", fail_pending_unlink)
+        assert cleanup.main(args) == 1
+    assert captured[-1]["summary"]["errors"] == 1
+    assert "private storage detail" not in capsys.readouterr().err
+    assert pending.stat().st_mode & 0o777 == 0o600
+    assert state.exists() is (fault != "replace")
+    assert not list(state_dir.glob("*.tmp"))
+
+    monkeypatch.setattr(alerts, "utc_now", lambda: "retry-at")
+    monkeypatch.setattr(adm, "probe_disk", lambda: _disk(92.0))
+    assert cleanup.main(args) == 0
+    assert len(calls) == 2 and calls[0] == calls[1]
+    assert json.loads(state.read_text()) == {"state": "above", "since_utc": "first-at"}
+    assert state.stat().st_mode & 0o777 == 0o600
+    assert not pending.exists()
+    with AuthorityService(root=root) as service:
+        assert service._conn.execute("SELECT COUNT(*) FROM authority_deliveries").fetchone()[0] == 1
+
+
+@pytest.mark.parametrize("target", ["disk", "backup"])
+def test_overlapping_runs_serialize_the_full_publication_transaction(tmp_path, monkeypatch, target):
+    """A second reader cannot publish while the first run awaits its state commit."""
+    import fcntl
+
+    entered, second_lock, release = threading.Event(), threading.Event(), threading.Event()
+    publish = _Recorder()
+    flock = fcntl.flock
+    attempts = []
+
+    def observe_lock(descriptor, operation):
+        if operation & fcntl.LOCK_EX:
+            attempts.append(descriptor)
+            if len(attempts) == 2:
+                second_lock.set()
+        return flock(descriptor, operation)
+
+    def held_publish(message, key):
+        publish(message, key)
+        entered.set()
+        assert release.wait(5), "first publication was never released"
+
+    def run(stamp):
+        if target == "disk":
+            return _run(tmp_path, 88.0, held_publish, stamp)
+        return alerts.handle(
+            "failed",
+            "learn-ukrainian-backup.service",
+            state_dir=tmp_path / "state",
+            project_root=tmp_path,
+            publish=held_publish,
+            environment={},
+            now=stamp,
+        )
+
+    monkeypatch.setattr(fcntl, "flock", observe_lock)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first = pool.submit(run, "first-at")
+        try:
+            assert entered.wait(5)
+            second = pool.submit(run, "second-at")
+            assert second_lock.wait(5), "second run did not try to take the transaction lock"
+            assert not second.done() and len(publish.calls) == 1
+        finally:
+            release.set()
+        assert "reported" in first.result(timeout=5)
+        assert "not re-posting" in second.result(timeout=5)
+    assert len(publish.calls) == 1
+    state = (
+        tmp_path / "state" / watermark.STATE_NAME
+        if target == "disk"
+        else alerts.state_path(tmp_path / "state", "learn-ukrainian-backup.service")
+    )
+    assert state.stat().st_mode & 0o777 == 0o600

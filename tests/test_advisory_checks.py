@@ -68,6 +68,11 @@ def test_required_jobs_never_advisory_even_with_continue_on_error(ci_file, requi
         gate["steps"] = []
     ci_file(jobs)
     assert advisory.load_advisory_checks().names == frozenset()
+    gate["steps"] = [{"env": {"NEEDS_JSON": "${{ toJSON(needs) }}"}}]
+    ci_file(jobs)
+    policy = advisory.load_advisory_checks()
+    assert policy.reason is None
+    assert policy.names == frozenset()
 
 
 @pytest.mark.parametrize("value", [False, "true", "${{ matrix.experimental }}", None])
@@ -122,7 +127,7 @@ def test_duplicate_blocking_name_cannot_become_advisory(ci_file):
 @pytest.mark.parametrize("change", [
     lambda jobs: jobs.pop("ci-gate"),
     lambda jobs: jobs["ci-gate"].update({"needs": 4}),
-    lambda jobs: jobs["ci-gate"]["steps"].append({"run": "echo '${{ toJSON(needs) }}'"}),
+    lambda jobs: jobs["ci-gate"]["steps"].append({"run": "echo '${{ toJSON(needs.build) }}'"}),
     lambda jobs: jobs["build"].update({"needs": "missing"}),
     lambda jobs: jobs["shadow"].update({"name": "${{ github.ref }}"}),
     lambda jobs: jobs["shadow"].update({"strategy": {"matrix": "${{ fromJSON(needs.build.outputs.matrix) }}"}}),

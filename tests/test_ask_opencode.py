@@ -14,12 +14,12 @@ def test_invoke_opencode_constructs_correct_argv():
     with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
         with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="response", stderr="")
-            _invoke_opencode("hello", "openrouter/google/gemma-4-31b-it")
+            _invoke_opencode("hello", "deepseek/deepseek-v4.1-flash")
             argv = run_mock.call_args[0][0]
             assert argv[0] == "/fake/opencode"
             assert argv[1] == "run"
             assert "--model" in argv
-            assert "openrouter/google/gemma-4-31b-it" in argv
+            assert "deepseek/deepseek-v4.1-flash" in argv
             assert argv[-1] == rules_core.with_core("hello")
 
 
@@ -29,7 +29,7 @@ def test_invoke_opencode_attaches_file(tmp_path):
     with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value="/fake/opencode"):
         with patch("scripts.ai_agent_bridge._opencode.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
-            _invoke_opencode("review", "openrouter/google/gemma-4-31b-it", data=str(data_file))
+            _invoke_opencode("review", "deepseek/deepseek-v4.1-flash", data=str(data_file))
             argv = run_mock.call_args[0][0]
             assert "--file" in argv
             # file path is in argv right after --file
@@ -41,7 +41,7 @@ def test_invoke_opencode_attaches_file(tmp_path):
 def test_invoke_opencode_raises_when_binary_missing():
     with patch("scripts.ai_agent_bridge._opencode.shutil.which", return_value=None):
         with pytest.raises(SystemExit, match="opencode CLI not found"):
-            _invoke_opencode("hello", "openrouter/google/gemma-4-31b-it")
+            _invoke_opencode("hello", "deepseek/deepseek-v4.1-flash")
 
 
 def test_run_opencode_lazy_import_resolves_under_script_path_invocation():
@@ -63,7 +63,7 @@ def test_run_opencode_lazy_import_resolves_under_script_path_invocation():
         "import shutil\n"
         "shutil.which = lambda _n: None\n"
         "try:\n"
-        "    _opencode._run_opencode('hi', 'openrouter/google/gemma-4-31b-it')\n"
+        "    _opencode._run_opencode('hi', 'deepseek/deepseek-v4.1-flash')\n"
         "except SystemExit:\n"
         "    print('LAZY-IMPORT-OK')\n"
     )
@@ -74,9 +74,7 @@ def test_run_opencode_lazy_import_resolves_under_script_path_invocation():
         cwd=str(repo_root / "tests"),  # anywhere that is NOT the repo root
         timeout=60,
     )
-    assert "LAZY-IMPORT-OK" in result.stdout, (
-        f"stdout={result.stdout!r} stderr={result.stderr[-800:]!r}"
-    )
+    assert "LAZY-IMPORT-OK" in result.stdout, f"stdout={result.stdout!r} stderr={result.stderr[-800:]!r}"
 
 
 def test_strip_gemma_thought_keeps_answer_after_block():

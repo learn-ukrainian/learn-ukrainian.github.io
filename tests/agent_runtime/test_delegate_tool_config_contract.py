@@ -113,6 +113,7 @@ _KEY_PLACEHOLDERS: dict[str, object] = {
 # Failures that are fixture preconditions, not key rejection. Any other
 # exception fails the contract, including ones that omit "unsupported tool_config".
 _EXPECTED_PRECONDITIONS: dict[str, tuple[str, str]] = {
+    "GlmAdapter": ("retired in the model catalog", "GLM is retired before planning"),
     "KimiAdapter": (
         "KIMI CODING-ONLY",
         "Kimi: web, UI and backend coding only — the read-only/review contract is refused before planning",

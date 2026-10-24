@@ -274,6 +274,19 @@ def _checkout(tmp_path: Path) -> tuple[Path, dict[str, str]]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    # Recording adapters below model the retained wrapper ABI, independent of
+    # production retirement. Real GLM launch refusal remains covered separately.
+    import yaml
+
+    from scripts.review.model_catalog import validate_catalog
+
+    catalog_path = root / "scripts/config/model_catalog.yaml"
+    catalog = yaml.safe_load(catalog_path.read_text())
+    for identity in ("glm-5.3", "glm-5.3-flash"):
+        catalog["models"][identity]["lifecycle"] = "active"
+        catalog["models"][identity]["transports"] = ["opencode"]
+    validate_catalog(catalog)
+    catalog_path.write_text(yaml.safe_dump(catalog))
     copy_slot_registry(root)
     # The real helper with only its kernel cgroup read redirected.
     env = scope_sandbox(root, tmp_path)

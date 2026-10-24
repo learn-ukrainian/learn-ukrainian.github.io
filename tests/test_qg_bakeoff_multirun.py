@@ -9,7 +9,7 @@ import pytest
 
 from scripts.audit import llm_reviewer_dispatch, qg_bakeoff
 
-PIN = "openrouter/google/gemma-4-31b-it"
+PIN = "gemini-3.8-flash-high"
 
 
 def _fixture(slug: str = "vesnianky") -> qg_bakeoff.BakeoffFixture:
@@ -171,14 +171,14 @@ def test_multirun_matrix_resume_retry_and_narrower_runs_leave_r3(
     assert [run.artifact["run_index"] for run in runs] == [1, 2, 3]
     names = sorted(path.name for path in tmp_path.glob("*.json"))
     assert names == [
-        "openrouter-google-gemma-4-31b-it__vesnianky.json",
-        "openrouter-google-gemma-4-31b-it__vesnianky__r2.json",
-        "openrouter-google-gemma-4-31b-it__vesnianky__r3.json",
+        "gemini-3-8-flash-high__vesnianky.json",
+        "gemini-3-8-flash-high__vesnianky__r2.json",
+        "gemini-3-8-flash-high__vesnianky__r3.json",
     ]
     assert calls == [
-        "qg-bakeoff-openrouter-google-gemma-4-31b-it-vesnianky",
-        "qg-bakeoff-openrouter-google-gemma-4-31b-it-vesnianky-r2",
-        "qg-bakeoff-openrouter-google-gemma-4-31b-it-vesnianky-r3",
+        "qg-bakeoff-gemini-3-8-flash-high-vesnianky",
+        "qg-bakeoff-gemini-3-8-flash-high-vesnianky-r2",
+        "qg-bakeoff-gemini-3-8-flash-high-vesnianky-r3",
     ]
 
     calls.clear()
@@ -186,7 +186,7 @@ def test_multirun_matrix_resume_retry_and_narrower_runs_leave_r3(
     assert all(run.skipped for run in resumed)
     assert calls == []
 
-    r2_path = tmp_path / "openrouter-google-gemma-4-31b-it__vesnianky__r2.json"
+    r2_path = tmp_path / "gemini-3-8-flash-high__vesnianky__r2.json"
     r2 = json.loads(r2_path.read_text(encoding="utf-8"))
     r2["status"] = "error"
     _write_artifact(r2_path, r2)
@@ -199,15 +199,15 @@ def test_multirun_matrix_resume_retry_and_narrower_runs_leave_r3(
         retry_failures=True,
         runs=3,
     )
-    assert calls == ["qg-bakeoff-openrouter-google-gemma-4-31b-it-vesnianky-r2"]
+    assert calls == ["qg-bakeoff-gemini-3-8-flash-high-vesnianky-r2"]
 
-    r3_path = tmp_path / "openrouter-google-gemma-4-31b-it__vesnianky__r3.json"
+    r3_path = tmp_path / "gemini-3-8-flash-high__vesnianky__r3.json"
     r3_before = r3_path.read_text(encoding="utf-8")
     calls.clear()
     qg_bakeoff.run_matrix([fixture], [PIN], output_dir=tmp_path, runner=runner, force=True, runs=2)
     assert calls == [
-        "qg-bakeoff-openrouter-google-gemma-4-31b-it-vesnianky",
-        "qg-bakeoff-openrouter-google-gemma-4-31b-it-vesnianky-r2",
+        "qg-bakeoff-gemini-3-8-flash-high-vesnianky",
+        "qg-bakeoff-gemini-3-8-flash-high-vesnianky-r2",
     ]
     assert r3_path.read_text(encoding="utf-8") == r3_before
 
@@ -220,13 +220,13 @@ def test_cell_artifact_path_round_trips_all_arms_and_mismatch_fails(tmp_path: Pa
 
     assert qg_bakeoff.default_output_dir(date(2026, 7, 6), multi_run=True).name == "2026-07-06-qg-bakeoff-multirun"
     assert qg_bakeoff._cell_artifact_path(tmp_path, route, fixture, qg_bakeoff.TOOLED_ARM).name == (
-        "openrouter-google-gemma-4-31b-it__vesnianky.json"
+        "gemini-3-8-flash-high__vesnianky.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, route, fixture, qg_bakeoff.TOOLED_ARM, 2).name == (
-        "openrouter-google-gemma-4-31b-it__vesnianky__r2.json"
+        "gemini-3-8-flash-high__vesnianky__r2.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, route, fixture, qg_bakeoff.BARE_ARM, 3).name == (
-        "openrouter-google-gemma-4-31b-it__vesnianky__bare__opencode__r3.json"
+        "gemini-3-8-flash-high__vesnianky__bare__opencode__r3.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, direct, fixture, qg_bakeoff.TOOLED_ARM).name == (
         "deepseek-deepseek-flash__vesnianky.json"

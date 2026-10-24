@@ -434,12 +434,13 @@ def route_for_review(
     """Return the allowed reviewer route for this content type."""
 
     if escalation:
-        return CLAUDE_SPOT_AUDIT_ROUTE
-    if policy_family == "seminar" or contested_gold_suppressed or factual_sensitive:
-        # Grounded (tooled) opencode route — not the ungrounded agy route (#2156
-        # D0). FRONTIER_FACTUAL_ROUTE stays defined for fallback/reference.
-        return FRONTIER_OPENCODE_ROUTE
-    return GEMMA_SURFACE_ROUTE
+        route = CLAUDE_SPOT_AUDIT_ROUTE
+    elif policy_family == "seminar" or contested_gold_suppressed or factual_sensitive:
+        route = FRONTIER_OPENCODE_ROUTE
+    else:
+        route = GEMMA_SURFACE_ROUTE
+    assert_route_allowed(route)
+    return route
 
 
 def assert_mcp_required_for_policy(*, policy_family: str, route: ReviewerRoute) -> None:
@@ -453,7 +454,7 @@ def assert_mcp_required_for_policy(*, policy_family: str, route: ReviewerRoute) 
 
 
 def assert_route_allowed(route: ReviewerRoute) -> None:
-    """Hard-ban DeepSeek/Hermes automated reviewer routes."""
+    """Refuse retired models and DeepSeek/Hermes automated reviewer routes."""
 
     haystack = " ".join(
         [route.route_name, route.reviewer_model_id, route.reviewer_family, *route.bridge_command]
@@ -461,6 +462,10 @@ def assert_route_allowed(route: ReviewerRoute) -> None:
     lowered = haystack.lower()
     if normalize_family(haystack) == "deepseek" or "hermes" in lowered:
         raise ReviewerRouteError("DeepSeek/Hermes reviewer routes are forbidden")
+    from scripts.review.model_catalog import retired_model_refusal
+
+    if refusal := retired_model_refusal(route.reviewer_model_id):
+        raise ReviewerRouteError(refusal)
 
 
 def resolve_author_lineage(

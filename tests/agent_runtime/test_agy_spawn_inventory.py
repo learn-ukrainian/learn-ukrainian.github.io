@@ -15,6 +15,9 @@ GENERIC_HELPERS = frozenset({"scripts/agent_runtime/runner.py", "scripts/lib/lau
 
 # One row per file; mixed files take the weakest applicable status.
 SPAWN_INVENTORY = {
+    "scripts/audit/run_gemini_1x17_sweep.py": (
+        "gated", "The historical sweep refuses its retired model before any session starts.",
+    ),
     "scripts/ops/host_stack_drift.py": (
         "probe-exempt",
         "Session-start drift report runs a literal AGY version probe without starting a model session.",
@@ -94,6 +97,16 @@ SPAWN_INVENTORY = {
     "scripts/audit/lint_agent_trailer.py": (
         "management-exempt",
         "Over-included agent-name metadata; subprocess reads Git history for trailer linting.",
+    ),
+    "scripts/audit/russianism_eval.py": (
+        "ungated-residual-10442",
+        "Gemini eval subprocesses delegate to ask-agy/ACP; text-agent model-session starts remain ungated, "
+        "harness lane #10442.",
+    ),
+    "scripts/audit/russianism_judge.py": (
+        "ungated-residual-10442",
+        "Gemini judge subprocesses delegate to ask-agy/ACP; text-agent model-session starts remain ungated, "
+        "harness lane #10442.",
     ),
     "scripts/build/fresh/writer.py": (
         "ungated-residual-10442",

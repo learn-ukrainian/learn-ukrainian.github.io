@@ -21,15 +21,16 @@ from typing import Any
 
 from batch_gemini_config import FLASH_MODEL, PRO_MODEL
 
-# Gemini capacity cascade: Pro → Flash. When a 429 /
+# Gemini capacity cascade: Pro → Flash. The retired Pro alias now names Flash,
+# so equal aliases produce no fallback edge. When a 429 /
 # capacity error comes back for one model, we retry the same prompt on
 # the next-smaller one before giving up. See #1231 / #1234 for the
 # original cascade design. This mapping is authoritative for
 # ``_invoke_gemini_thread_with_fallback`` — edit both sides if you
 # extend the cascade.
-_GEMINI_CAPACITY_CASCADE: dict[str, str] = {
-    PRO_MODEL: FLASH_MODEL,
-}
+_GEMINI_CAPACITY_CASCADE: dict[str, str] = (
+    {PRO_MODEL: FLASH_MODEL} if PRO_MODEL != FLASH_MODEL else {}
+)
 
 
 def _uses_gemini_capacity_cascade(model: str) -> bool:

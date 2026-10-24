@@ -24,16 +24,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.ai_agent_bridge._db import get_db
+from scripts.ai_agent_bridge._job_host_forward import _seat_substitution_from_forward_stderr
 from scripts.audit.checks.russicism_detection import check_russicisms
+from scripts.common.repo_root import project_interpreter
 
-PYTHON, BRIDGE = Path(".venv/bin/python"), Path("scripts/ai_agent_bridge/__main__.py")
+PYTHON, BRIDGE = project_interpreter(), Path("scripts/ai_agent_bridge/__main__.py")
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
-DEFAULT_MODELS = (
-    "claude-opus-5-5,claude-sonnet-5-5,"
-    "gpt-6.1-sol,gpt-6-luna,gemini-3.1-pro-high,"
-    "gemini-3.8-flash-high"
-)
+DEFAULT_MODELS = "claude-opus-5-5,claude-sonnet-5-5,gpt-6.1-sol,gpt-6-luna,gemini-3.8-flash-high"
 FROM_AGENT = "russianism-eval"
 _FOUND_COUNT_RE, _WORD_RE = re.compile(r"Found\s+(\d+)\s+Russicism", re.IGNORECASE), re.compile(r"[\w'’-]+", re.UNICODE)
 
@@ -46,6 +43,7 @@ class PromptCase:
     expected_calque_categories: list[str]
     notes: str
 
+
 @dataclass(frozen=True, slots=True)
 class BridgeCall:
     prompt_id: str
@@ -54,6 +52,7 @@ class BridgeCall:
     task_id: str
     argv: list[str]
     stdin: str | None
+
 
 @dataclass(slots=True)
 class EvalRow:
@@ -83,6 +82,7 @@ def _load_optional_gec_checker() -> Callable[[str], list[dict[str, Any]]] | None
 
 CHECK_UA_GEC_CALQUES = _load_optional_gec_checker()
 
+
 def _parse_models(raw: str) -> list[str]:
     models = [part.strip() for part in raw.split(",") if part.strip()]
     deduped = list(dict.fromkeys(models))
@@ -90,11 +90,13 @@ def _parse_models(raw: str) -> list[str]:
         raise ValueError("--models must name at least one model")
     return deduped
 
+
 def _require_str(row: dict[str, Any], key: str, idx: int) -> str:
     value = row.get(key)
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"prompt #{idx} field {key!r} must be a non-empty string")
     return value.strip()
+
 
 def load_prompts(path: Path) -> list[PromptCase]:
     payload = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -124,6 +126,7 @@ def load_prompts(path: Path) -> list[PromptCase]:
         )
     return prompts
 
+
 def _family_for_model(model: str) -> str:
     if model.startswith("claude-"):
         return "claude"
@@ -132,6 +135,7 @@ def _family_for_model(model: str) -> str:
     if model.startswith(("gpt-", "o", "codex-")):
         return "codex"
     raise ValueError(f"cannot infer bridge family for model {model!r}")
+
 
 def _slug(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]+", "-", value).strip("-")[:80]
@@ -147,13 +151,10 @@ class BridgeCaller:
         family = _family_for_model(model)
         task_id = f"{self.run_id}-{_slug(prompt.id)}-{_slug(model)}"
         base = [str(PYTHON), str(BRIDGE)]
-        if family == "claude":
-            argv = [*base, "ask-claude", prompt.prompt_text, "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--new-session"]
-            return BridgeCall(prompt.id, model, family, task_id, argv, None)
-        if family == "codex":
-            argv = [*base, "ask-codex", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--new-session"]
-            return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
-        argv = [*base, "ask-agy", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--stdout-only"]
+        target = "agy" if family == "gemini" else family
+        argv = [*base, f"ask-{target}", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model]
+        if target == "agy":
+            argv.append("--stdout-only")
         return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
 
     def __call__(self, prompt: PromptCase, model: str) -> tuple[BridgeCall, str]:
@@ -174,33 +175,20 @@ class BridgeCaller:
             ) from exc
         if result.returncode != 0:
             raise RuntimeError((result.stderr or result.stdout or f"exit {result.returncode}").strip())
-        if call.family == "gemini" and result.stdout.strip():
-            return call, result.stdout.strip()
-        response = _latest_bridge_response(call.task_id, call.family)
-        if response:
-            return call, response
-        raise RuntimeError(f"bridge completed but no response row found for task_id={call.task_id}")
+        stdout = result.stdout.strip()
+        if not stdout:
+            raise RuntimeError(f"ACP ask completed without response stdout for task_id={call.task_id}")
+        # rc 0 with stdout is the substitute's reply when stderr carries the seat-hop note.
+        _, substitution_note = _seat_substitution_from_forward_stderr(result.stderr or "")
+        if substitution_note is not None:
+            raise RuntimeError(f"ACP seat substituted for task_id={call.task_id}: {substitution_note}")
+        return call, stdout
 
-
-def _latest_bridge_response(task_id: str, family: str) -> str | None:
-    conn = get_db()
-    try:
-        row = conn.execute(
-            """
-            SELECT content FROM messages
-            WHERE task_id = ? AND from_llm = ? AND to_llm = ?
-              AND message_type IN ('response', 'error')
-            ORDER BY id DESC LIMIT 1
-            """,
-            (task_id, family, FROM_AGENT),
-        ).fetchone()
-    finally:
-        conn.close()
-    return str(row["content"]) if row else None
 
 def _issue_count(violation: dict[str, Any]) -> int:
     match = _FOUND_COUNT_RE.search(str(violation.get("issue") or ""))
     return int(match.group(1)) if match else 1
+
 
 def _rate(count: int, words: int) -> float:
     return round(count * 100 / (words or 1), 3)
@@ -218,6 +206,7 @@ def score_output(prompt: PromptCase, model: str, family: str, task_id: str, outp
         prompt.id, prompt.category, model, family, task_id, "ok", output, "", words, russ_count, gec_count,
         _rate(russ_count, words), _rate(russ_count + gec_count, words), findings
     )
+
 
 def error_row(prompt: PromptCase, model: str, family: str, task_id: str, error: str) -> EvalRow:
     return EvalRow(prompt.id, prompt.category, model, family, task_id, "error", "", error, 0, 0, 0, 0.0, 0.0, [])
@@ -242,6 +231,7 @@ def _model_summaries(rows: Sequence[EvalRow]) -> dict[str, dict[str, Any]]:
         }
     return summaries
 
+
 def write_outputs(out_dir: Path, prompts_path: Path, rows: Sequence[EvalRow], models: Sequence[str]) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "outputs.jsonl").write_text(
@@ -264,6 +254,7 @@ def write_outputs(out_dir: Path, prompts_path: Path, rows: Sequence[EvalRow], mo
     }
     (out_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (out_dir / "REPORT.md").write_text(render_report(summary, rows), encoding="utf-8")
+
 
 def render_report(summary: dict[str, Any], rows: Sequence[EvalRow]) -> str:
     leaderboard = sorted(
@@ -333,10 +324,8 @@ def print_cost_report(rows: Sequence[EvalRow], prompts: Sequence[PromptCase], mo
 
 
 def _redacted_command(call: BridgeCall) -> str:
-    parts = list(call.argv)
-    if call.family == "claude" and "ask-claude" in parts and parts.index("ask-claude") + 1 < len(parts):
-        parts[parts.index("ask-claude") + 1] = "<prompt_text>"
-    return " ".join(parts)
+    """Return argv. Every family sends the prompt on stdin, so argv has nothing to redact."""
+    return " ".join(call.argv)
 
 
 def dry_run(prompts: Sequence[PromptCase], models: Sequence[str], max_parallel: int, caller: BridgeCaller) -> None:

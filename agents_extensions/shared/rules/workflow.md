@@ -211,7 +211,12 @@ be opened before approval so CI exists; merge still needs both gates below.
    with reviewer model/family/harness provenance. GitHub rejects API approval reviews
    from the shared bot identity when it also authored the PR; do not use
    `gh pr review --approve` for this publication. The comment records independent
-   cross-family review, not self-approval. Require **CI Gate green** on that **same** head.
+   cross-family review, not self-approval. Require **PR admission CI Gate green**
+   on that **same** head. It retains file-content secret scanning, the large-file
+   guard, attribution, lint, dependency-audit scoping and pytest collection;
+   it does not run full pytest. The real merge-group candidate must pass the
+   full supported suite and partition audits in the required **CI Gate** before
+   landing. Nightly and opt-in `workflow_dispatch` runs also retain the full suite.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
 voids both approval and CI; re-establish both on the new head. Automated merge pipelines cannot replace review gates; enqueue
@@ -570,7 +575,14 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    path without operator approval. Repairs to existing gates are permitted. A gate
    is removed or relaxed only with a demonstrated replacement or an approved
    removal; zero catches alone are not enough for a security gate.
-   **Test placement:** pre-push runs no tests; CI Gate runs the full suite.
+   **Test placement:** pre-push runs no tests. PR CI Gate runs admission checks and
+   pytest collection without full pytest execution. Merge-group CI Gate requires
+   the full supported suite on the real queue candidate. Nightly and opt-in
+   manual runs also run the full suite.
+   Operator approval under the gate freeze, 2026-10-23.
+   Queue failure recovery must diagnose the whole group's original event base-to-candidate
+   diff, including renamed paths, before attributing a failure to a service.
+   A single PR diff or matching failed jobs does not establish that diagnosis.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining

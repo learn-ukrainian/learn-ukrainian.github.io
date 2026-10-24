@@ -17,6 +17,24 @@ pytestmark = pytest.mark.reads_content
 _DISPATCH = "scripts.audit.llm_reviewer_dispatch"
 
 
+@pytest.fixture
+def subscribed_reviewer_routes(monkeypatch):
+    """Use an active identity for hermetic transport/controller checks.
+
+    Provider calls remain substituted by each test. These records do not add
+    production roles or qualify another model against the historical prices.
+    Retirement tests exercise the real default records without this fixture.
+    """
+    for name in ("GEMMA_SURFACE_ROUTE", "FRONTIER_OPENCODE_ROUTE"):
+        historical = getattr(llm_reviewer_dispatch, name)
+        model = "gemini-3.8-flash-high"
+        route = replace(
+            historical, reviewer_model_id=model,
+            bridge_command=(historical.bridge_command[0], "--model", model),
+        )
+        monkeypatch.setattr(llm_reviewer_dispatch, name, route)
+
+
 def _write_module(
     tmp_path: Path,
     *,
@@ -161,25 +179,17 @@ def _fact_response(
     )
 
 
-def test_routing_b1_surface_uses_gemma_and_seminar_uses_tooled_opencode() -> None:
-    b1_route = llm_reviewer_dispatch.route_for_review(policy_family="b1_plus")
-    seminar_route = llm_reviewer_dispatch.route_for_review(policy_family="seminar")
-    factual_route = llm_reviewer_dispatch.route_for_review(policy_family="b1_plus", factual_sensitive=True)
-
-    assert b1_route.bridge_command[0] == "ask-gemma"
-    assert b1_route.reviewer_model_id == "openrouter/google/gemma-4-31b-it"
-    assert b1_route.requires_mcp is False
-    # #2156: seminar/factual now flows through the tooled opencode route, not agy.
-    assert seminar_route is llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
-    assert seminar_route.route_name == "opencode_frontier"
-    assert seminar_route.bridge_command[:2] == ("ask-opencode", "--model")
-    assert seminar_route.requires_mcp is True
-    assert factual_route is llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
-    # The old agy route stays defined for fallback/reference (not returned).
-    assert llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE.reviewer_model_id == "gemini-3.1-pro-high"
+def test_routing_refuses_retired_defaults_and_preserves_explicit_claude_escalation() -> None:
+    for arguments in (
+        {"policy_family": "b1_plus"}, {"policy_family": "seminar"},
+        {"policy_family": "b1_plus", "factual_sensitive": True},
+    ):
+        with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError, match="retired in the model catalog"):
+            llm_reviewer_dispatch.route_for_review(**arguments)
+    assert llm_reviewer_dispatch.route_for_review(policy_family="b1_plus", escalation=True) is llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_ROUTE
 
 
-def test_self_review_hard_fails() -> None:
+def test_self_review_hard_fails(subscribed_reviewer_routes, ) -> None:
     route = llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE
     lineage = llm_reviewer_dispatch.AuthorLineage(family="google", source="test")
 
@@ -198,7 +208,8 @@ def test_deepseek_routes_are_excluded() -> None:
         output_usd_per_mtok=0.0,
     )
 
-    llm_reviewer_dispatch.assert_route_allowed(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE)
+    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError, match="retired in the model catalog"):
+        llm_reviewer_dispatch.assert_route_allowed(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE)
 
     with pytest.raises(
         llm_reviewer_dispatch.ReviewerRouteError,
@@ -258,7 +269,7 @@ def test_dispatch_result_metadata_carries_supplied_certification_provenance() ->
     assert meta["cross_family_validated"] is True
 
 
-def test_invoke_bridge_route_opencode_populates_tool_fields() -> None:
+def test_invoke_bridge_route_opencode_populates_tool_fields(subscribed_reviewer_routes, ) -> None:
     route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
     parse = OpencodeStreamParse(
         text='{"findings": []}',
@@ -285,7 +296,7 @@ def test_invoke_bridge_route_opencode_populates_tool_fields() -> None:
     assert result.tools_used == ("sources_query_wikipedia", "sources_search_heritage")
 
 
-def test_invoke_opencode_reviewer_persists_module_review(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_invoke_opencode_reviewer_persists_module_review(subscribed_reviewer_routes, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = tmp_path / "repo"
     monkeypatch.setattr(llm_reviewer_dispatch, "PROJECT_ROOT", repo)
     route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
@@ -310,7 +321,7 @@ def test_invoke_opencode_reviewer_persists_module_review(tmp_path: Path, monkeyp
     assert review_path.read_text(encoding="utf-8") == '{"findings": []}'
 
 
-def test_invoke_opencode_reviewer_no_module_persistence_skips_curriculum_write(
+def test_invoke_opencode_reviewer_no_module_persistence_skips_curriculum_write(subscribed_reviewer_routes,
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo = tmp_path / "repo"
@@ -337,7 +348,7 @@ def test_invoke_opencode_reviewer_no_module_persistence_skips_curriculum_write(
     assert not list(curriculum_root.rglob("review-review.md"))
 
 
-def test_invoke_opencode_reviewer_runs_transport_outside_repo(
+def test_invoke_opencode_reviewer_runs_transport_outside_repo(subscribed_reviewer_routes,
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """#4642 (second leak path): the reviewer is a tool-using model with default
@@ -390,7 +401,7 @@ def test_invoke_opencode_reviewer_runs_transport_outside_repo(
     assert not (repo / "curriculum" / "l2-uk-en" / "folk" / "status").exists()
 
 
-def test_frontier_opencode_fails_fast_when_mcp_endpoint_down() -> None:
+def test_frontier_opencode_fails_fast_when_mcp_endpoint_down(subscribed_reviewer_routes, ) -> None:
     route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
     config = {"mcp": {"sources": {"enabled": True, "url": llm_reviewer_dispatch.SOURCES_MCP_URL}}}
     with (
@@ -403,7 +414,7 @@ def test_frontier_opencode_fails_fast_when_mcp_endpoint_down() -> None:
     invoke.assert_not_called()
 
 
-def test_frontier_opencode_fails_fast_when_mcp_not_configured() -> None:
+def test_frontier_opencode_fails_fast_when_mcp_not_configured(subscribed_reviewer_routes, ) -> None:
     route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
     with (
         patch(f"{_DISPATCH}._load_opencode_config", return_value={"mcp": {}}),
@@ -415,7 +426,7 @@ def test_frontier_opencode_fails_fast_when_mcp_not_configured() -> None:
     invoke.assert_not_called()
 
 
-def test_gemma_surface_route_does_not_require_mcp() -> None:
+def test_gemma_surface_route_does_not_require_mcp(subscribed_reviewer_routes, ) -> None:
     # Surface/register review is prompt-only per design D1 — must run even when
     # the sources MCP is unconfigured/unreachable.
     route = llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE
@@ -814,7 +825,7 @@ def test_loads_jsonc_strips_comments_and_trailing_commas() -> None:
     assert cfg["mcp"]["sources"]["enabled"] is True
 
 
-def test_live_single_call_requires_exact_canary(tmp_path: Path) -> None:
+def test_live_single_call_requires_exact_canary(subscribed_reviewer_routes, tmp_path: Path) -> None:
     module_dir = _write_module(tmp_path)
     calls = 0
 
@@ -879,7 +890,7 @@ def test_live_seminar_route_hard_fails_if_mcp_not_required(
     assert calls == 0
 
 
-def test_missing_canary_aborts_remaining_records(tmp_path: Path) -> None:
+def test_missing_canary_aborts_remaining_records(subscribed_reviewer_routes, tmp_path: Path) -> None:
     first = _write_module(tmp_path, slug="first")
     second = _write_module(tmp_path, slug="second")
     calls = 0
@@ -909,7 +920,7 @@ def test_missing_canary_aborts_remaining_records(tmp_path: Path) -> None:
     assert calls == 0
 
 
-def test_live_cli_requires_max_cost_usd(tmp_path: Path) -> None:
+def test_live_cli_requires_max_cost_usd(subscribed_reviewer_routes, tmp_path: Path) -> None:
     module_dir = _write_module(tmp_path)
     canary = _canary_artifact(tmp_path)
     output = tmp_path / "out.json"
@@ -936,7 +947,7 @@ def test_live_cli_requires_max_cost_usd(tmp_path: Path) -> None:
     assert not output.exists()
 
 
-def test_abort_gate_emits_incomplete_records_after_parse_failure(tmp_path: Path) -> None:
+def test_abort_gate_emits_incomplete_records_after_parse_failure(subscribed_reviewer_routes, tmp_path: Path) -> None:
     first = _write_module(tmp_path, slug="first")
     second = _write_module(tmp_path, slug="second")
     canary = _canary_artifact(tmp_path)
@@ -964,7 +975,7 @@ def test_abort_gate_emits_incomplete_records_after_parse_failure(tmp_path: Path)
     assert calls == ["first"]
 
 
-def test_cost_overrun_gate_fails_closed(tmp_path: Path) -> None:
+def test_cost_overrun_gate_fails_closed(subscribed_reviewer_routes, tmp_path: Path) -> None:
     module_dir = _write_module(tmp_path)
     canary = _canary_artifact(tmp_path)
 
@@ -988,7 +999,7 @@ def test_cost_overrun_gate_fails_closed(tmp_path: Path) -> None:
     assert record["completion_status"] == "INCOMPLETE"
 
 
-def test_dry_run_gateable_artifact_shape(tmp_path: Path) -> None:
+def test_dry_run_gateable_artifact_shape(subscribed_reviewer_routes, tmp_path: Path) -> None:
     first = _write_module(tmp_path, slug="one")
     second = _write_module(tmp_path, slug="two")
     output = tmp_path / "dry-run.json"

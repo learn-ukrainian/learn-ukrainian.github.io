@@ -31,6 +31,7 @@ Refs: PR #2006 (russianism_judge harness), `scripts/audit/grok_judge_calibration
 (parent pattern), 2026-05-19 user direction "Fire Russianism judge probe NOW"
 (closes the first qwen empirical signal request on matrix §8.10 #2).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -97,6 +98,9 @@ def call_qwen(prompt: str, model: str) -> dict:
     ``~/.hermes/config.yaml`` automatically; we don't touch the key
     directly.
     """
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model(model, transport="hermes")
     t0 = time.time()
     try:
         proc = subprocess.run(
@@ -134,9 +138,7 @@ def call_qwen(prompt: str, model: str) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--model",
         default="qwen/qwen3.6-plus",
@@ -155,6 +157,12 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    from scripts.review.model_catalog import ModelCatalogError, require_execution_model
+
+    try:
+        require_execution_model(args.model, transport="hermes")
+    except ModelCatalogError as exc:
+        parser.error(str(exc))
     cases = pull_calibration_cases()
     print(f"Loaded {len(cases)} calibration cases from {PR_2006_REF}:{CALIBRATION_BLOB}")
 
@@ -192,10 +200,10 @@ def main() -> int:
     agg = aggregate(scores)
     print("")
     print(f"Aggregate over {agg['n']} cases:")
-    print(f"  case_accuracy: {agg['case_accuracy']*100:.1f}%")
-    print(f"  precision:     {agg['precision']*100:.1f}%")
-    print(f"  recall:        {agg['recall']*100:.1f}%")
-    print(f"  F1:            {agg['f1']*100:.1f}%")
+    print(f"  case_accuracy: {agg['case_accuracy'] * 100:.1f}%")
+    print(f"  precision:     {agg['precision'] * 100:.1f}%")
+    print(f"  recall:        {agg['recall'] * 100:.1f}%")
+    print(f"  F1:            {agg['f1'] * 100:.1f}%")
 
     leaderboard_row = {
         "judge": args.model,
@@ -207,9 +215,7 @@ def main() -> int:
         "case_accuracy": agg["case_accuracy"],
         "tested_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
-    leaderboard_path.write_text(
-        json.dumps(leaderboard_row, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    leaderboard_path.write_text(json.dumps(leaderboard_row, indent=2, ensure_ascii=False), encoding="utf-8")
     report_path.write_text(
         render_grok_report(model=args.model, agg=agg, judgments_path=judgments_path),
         encoding="utf-8",

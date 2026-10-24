@@ -42,56 +42,32 @@ def _build(prompt: str, tmp_path: Path, **kw):
         )
 
 
-def test_glm_adapter_basic_argv_construction(tmp_path):
-    plan = _build("Analyze code architecture", tmp_path, mode="read-only")
-    assert plan.cmd[0] == FAKE_OPENCODE
-    assert plan.cmd[1] == "run"
-    assert plan.cmd[2] == "--model"
-    assert plan.cmd[3] == "zai/glm-5.3-flash"
-    assert "--auto" not in plan.cmd
-    assert plan.cmd[-2] == "--"
-    assert plan.cmd[-1] == "Analyze code architecture"
-    assert plan.cwd == tmp_path
-    assert plan.env_overrides.get("OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX") == "131072"
+def test_glm_adapter_default_is_refused_after_retirement(tmp_path):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        _build("Analyze code architecture", tmp_path, mode="read-only")
 
 
-def test_glm_adapter_mode_mapping(tmp_path):
-    # read-only: no --auto flag
-    ro_plan = _build("test prompt", tmp_path, mode="read-only")
-    assert "--auto" not in ro_plan.cmd
-
-    # workspace-write: --auto flag included
-    ww_plan = _build("test prompt", tmp_path, mode="workspace-write")
-    assert "--auto" in ww_plan.cmd
-
-    # danger: --auto flag included
-    danger_plan = _build("test prompt", tmp_path, mode="danger")
-    assert "--auto" in danger_plan.cmd
-
-    # unsupported mode raises ValueError
+def test_glm_retirement_binds_every_execution_mode(tmp_path):
+    for mode in ("read-only", "workspace-write", "danger"):
+        with pytest.raises(ValueError, match="is retired in the model catalog"):
+            _build("test prompt", tmp_path, mode=mode)
     with pytest.raises(ValueError, match="unsupported mode"):
         _build("test prompt", tmp_path, mode="invalid_mode")
 
 
-def test_glm_adapter_model_override_and_effort(tmp_path):
-    plan = _build("Refactor module", tmp_path, model="glm-5.3", effort="high")
-    assert plan.cmd[3] == "zai-coding-plan/glm-5.3"
-    assert "--variant" in plan.cmd
-    variant_idx = plan.cmd.index("--variant")
-    assert plan.cmd[variant_idx + 1] == "high"
+def test_glm_retirement_cannot_be_bypassed_by_model_override_or_effort(tmp_path):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        _build("Refactor module", tmp_path, model="glm-5.3", effort="high")
 
 
-def test_glm_adapter_refuses_openrouter_route(tmp_path):
-    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
-
-    with pytest.raises(RoutingGuardError, match="routes GLM through OpenRouter"):
+def test_glm_adapter_refuses_retired_openrouter_route(tmp_path):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
         _build("Refactor module", tmp_path, model="openrouter/z-ai/glm-5.3-flash")
 
 
-def test_glm_adapter_omitted_effort_defaults_to_variant_high(tmp_path):
-    """Operator 2026-08-13: omitted effort → --variant high."""
-    plan = _build("Analyze code", tmp_path)
-    assert plan.cmd[plan.cmd.index("--variant") + 1] == "high"
+def test_glm_retirement_applies_when_effort_is_omitted(tmp_path):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        _build("Analyze code", tmp_path)
 
 
 def test_glm_adapter_ci_refusal_guard(tmp_path, monkeypatch):
@@ -153,49 +129,17 @@ def test_glm_adapter_parse_response_rate_limit():
     assert result.rate_limited is True
 
 
-def test_glm_runner_execution_with_fake_opencode_binary(tmp_path, monkeypatch):
-    fake_bin = tmp_path / "bin" / "opencode"
-    fake_bin.parent.mkdir(parents=True, exist_ok=True)
-    fake_bin.write_text("#!/bin/sh\necho 'GLM Output: Verified'\nexit 0\n")
-    fake_bin.chmod(0o755)
-
-    monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
-
-    res = invoke(
-        "glm",
-        "Explain quantum state",
-        mode="read-only",
-        cwd=tmp_path,
-        entrypoint="runtime",
-    )
-
-    assert res.ok is True
-    assert "GLM Output: Verified" in res.response
-    assert res.returncode == 0
+def test_glm_runner_refuses_retired_default_before_subprocess(tmp_path, monkeypatch):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        invoke("glm", "Analyze code", mode="read-only", cwd=tmp_path, entrypoint="runtime")
 
 
-def test_glm_runner_execution_failure_path(tmp_path, monkeypatch):
-    fake_bin = tmp_path / "bin" / "opencode"
-    fake_bin.parent.mkdir(parents=True, exist_ok=True)
-    fake_bin.write_text("#!/bin/sh\necho 'Fatal error in opencode' >&2\nexit 2\n")
-    fake_bin.chmod(0o755)
-
-    monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
-
-    res = invoke(
-        "glm",
-        "Test failure path",
-        mode="read-only",
-        cwd=tmp_path,
-        entrypoint="runtime",
-    )
-
-    assert res.ok is False
-    assert res.returncode == 2
-    assert "Fatal error in opencode" in res.stderr_excerpt
+def test_glm_runner_refuses_retired_explicit_pin_before_subprocess(tmp_path, monkeypatch):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
+        invoke("glm", "Analyze code", model="glm-5.3", mode="read-only", cwd=tmp_path, entrypoint="runtime")
 
 
-def test_glm_delegate_worker_state_lifecycle_success(tmp_path, monkeypatch):
+def test_glm_delegate_worker_records_retired_pin_as_failed(tmp_path, monkeypatch, capsys):
     fake_bin = tmp_path / "bin" / "opencode"
     fake_bin.parent.mkdir(parents=True, exist_ok=True)
     fake_bin.write_text("#!/bin/sh\necho 'Completed task analysis'\nexit 0\n")
@@ -230,16 +174,17 @@ def test_glm_delegate_worker_state_lifecycle_success(tmp_path, monkeypatch):
         silence_timeout=60,
     )
 
-    assert rc == 0
+    assert rc == 1
     state = delegate._read_state(state_path)
     assert state is not None
-    assert state["status"] == "done"
-    assert state["returncode"] == 0
+    assert state["status"] == "failed"
+    assert state["returncode"] is None
     assert state["agent"] == "glm"
-    assert Path(state["result_file"]).read_text() == "Completed task analysis"
+    assert state["last_error"] == "adapter_rejected, ValueError"
+    assert "is retired in the model catalog" in capsys.readouterr().err
 
 
-def test_glm_delegate_worker_state_lifecycle_failure(tmp_path, monkeypatch):
+def test_glm_delegate_worker_retirement_has_no_provider_returncode(tmp_path, monkeypatch, capsys):
     fake_bin = tmp_path / "bin" / "opencode"
     fake_bin.parent.mkdir(parents=True, exist_ok=True)
     fake_bin.write_text(
@@ -281,6 +226,7 @@ def test_glm_delegate_worker_state_lifecycle_failure(tmp_path, monkeypatch):
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["status"] == "failed"
-    assert state["returncode"] == 1
+    assert state["returncode"] is None
     assert state["agent"] == "glm"
-    assert "CLI internal error" in (state.get("stderr_excerpt") or state.get("last_error") or "")
+    assert state["last_error"] == "adapter_rejected, ValueError"
+    assert "is retired in the model catalog" in capsys.readouterr().err
