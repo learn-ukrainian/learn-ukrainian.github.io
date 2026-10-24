@@ -10728,6 +10728,7 @@ def _resolve_worktree_base_sha(
     review_dependencies: Sequence[tuple[str, Path]] = (),
     continuation_head_sha: str | None = None,
     continuation_remote_sha: str | None = None,
+    telemetry: dict[str, Any] | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -10738,6 +10739,8 @@ def _resolve_worktree_base_sha(
     used as is and never resolved again (#8775, :func:`_helper_worktree_path`).
     ``rebase_onto`` pins a reused worktree's auto-rebase to the commit
     authoring-review admission checked (#9739 A7).
+    ``telemetry`` retains the actual rebase result for the dispatch receipt;
+    provisioning with the resolved SHA must not repeat that validation.
     """
     worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
@@ -10747,7 +10750,7 @@ def _resolve_worktree_base_sha(
     if worktree_path.exists():
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
-        _validate_existing_worktree(
+        rebased = _validate_existing_worktree(
             path=worktree_path,
             expected_branch=requested_branch or _derive_worktree_branch(agent, task_id),
             base=requested_branch or base,
@@ -10781,6 +10784,8 @@ def _resolve_worktree_base_sha(
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
         _refuse_if_gate_head_moved(resolved, pinned_head_sha)
+        if telemetry is not None:
+            telemetry["rebased"] = rebased
         return resolved
 
     if requested_branch:
@@ -15282,6 +15287,7 @@ def _dispatch(
 
     # Resolve the immutable worktree base once before ownership admission.
     resolved_worktree_base_sha: str | None = None
+    worktree_base_telemetry: dict[str, Any] = {}
     resolved_worktree_raw: str | None = None
     rebase_onto: str | None = None
     if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
@@ -15352,6 +15358,7 @@ def _dispatch(
                     allow_rebase=allow_rebase,
                     rebase_onto=rebase_onto,
                     review_dependencies=review_dependencies,
+                    telemetry=worktree_base_telemetry,
                     continuation_head_sha=(
                         authoring_admission.head_sha
                         if authoring_admission is not None and authoring_admission.record.get("local_continuation")
@@ -15793,6 +15800,9 @@ def _dispatch(
                     run_nonce=run_nonce,
                     review_dependencies=review_dependencies,
                     read_only=args.mode == "read-only",
+                )
+                worktree_telemetry["rebased"] = bool(
+                    worktree_base_telemetry.get("rebased") or worktree_telemetry.get("rebased")
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(

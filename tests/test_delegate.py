@@ -10209,6 +10209,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     assert (admission["creation_base"], admission["creation_sha"]) == ("main", _STUB_ORIGIN_SHA)
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
     assert add_cmd[-1] == _STUB_ORIGIN_SHA, f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
+    assert delegate._read_state(delegate._state_path("origin-base-smoke"))["worktree_rebased"] is False
 
 
 def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
@@ -11118,6 +11119,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     assert state["worktree_path"] == str(worktree.resolve())
     assert state["cwd"] == str(worktree.resolve())
     assert state["worktree_reused"] is True
+    assert state["worktree_rebased"] is False
 
 
 def test_branch_reuse_creates_worktree_from_existing_remote_branch(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -11601,6 +11603,7 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
     assert state["status"] == ("dry_run" if dry_run else "spawning")
     if not dry_run:
         assert state["pid"] == proc.pid
+        assert state["worktree_rebased"] is False
 
     monkeypatch.setattr(delegate.subprocess, "run", real_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", real_popen)
@@ -19354,7 +19357,7 @@ def _rendered_attempt_prompt(checkout: Path, prompt_file: Path, *, input_root: P
 def test_review_attempt_reuse_never_rebases_admitted_input(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys, upstream_change, entrypoint, review_attempt
 ):
-    """#9426 AC-01: real reuse refuses stale reviews, while ordinary reuse still rebases."""
+    """#9426 AC-01: refuse stale reviews and retain real ordinary-rebase telemetry."""
     main, target = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
@@ -19450,6 +19453,11 @@ def test_review_attempt_reuse_never_rebases_admitted_input(
             assert state["status"] == "failed"
             assert "automatic rebasing is disabled" in state["stderr_excerpt"]
             assert state["last_error"] == "worktree_preparation_failed"
+        else:
+            state = delegate._read_state(delegate._state_path("task-1"))
+            assert state["worktree_rebased"] is True
+            assert state["worktree_reused"] is True
+            assert state["worktree_base_sha"] == upstream_sha == delegate._resolve_sha(target)
 
 
 @pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
