@@ -10209,6 +10209,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     assert (admission["creation_base"], admission["creation_sha"]) == ("main", _STUB_ORIGIN_SHA)
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
     assert add_cmd[-1] == _STUB_ORIGIN_SHA, f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
+    assert delegate._read_state(delegate._state_path("origin-base-smoke"))["worktree_rebased"] is False
 
 
 def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
@@ -11118,6 +11119,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     assert state["worktree_path"] == str(worktree.resolve())
     assert state["cwd"] == str(worktree.resolve())
     assert state["worktree_reused"] is True
+    assert state["worktree_rebased"] is False
 
 
 def test_branch_reuse_creates_worktree_from_existing_remote_branch(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -11601,6 +11603,7 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
     assert state["status"] == ("dry_run" if dry_run else "spawning")
     if not dry_run:
         assert state["pid"] == proc.pid
+        assert state["worktree_rebased"] is False
 
     monkeypatch.setattr(delegate.subprocess, "run", real_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", real_popen)
@@ -16805,34 +16808,44 @@ def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_task
 
 
 def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path, monkeypatch, tmp_tasks_dir):
-    """#8610: a relative ``--worktree`` is recorded as the resolved absolute path on prep failure too."""
-    _init_git_repo_for_test(tmp_path, monkeypatch)
-    _fetch_fixture_origin_main(tmp_path)
-    _tmp_dispatch_repo_root(tmp_path, monkeypatch)
-    monkeypatch.setattr(delegate, "_resolve_dirty_primary_checkout_error", lambda *, mode: None)
-    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
-
-    def fail_ensure(**_kwargs):
-        raise ValueError("simulated worktree preparation failure")
-
-    monkeypatch.setattr(delegate, "_ensure_worktree", fail_ensure)
+    """#8610/#11551: a late refusal retains the absolute path and the real completed rebase fact."""
+    _sanitize_git_env_for_test(monkeypatch)
+    main, worktree = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", main)
+    monkeypatch.chdir(main)
+    before = delegate._resolve_sha(worktree)
+    (main / "advance.txt").write_text("fixture-only upstream\n", encoding="utf-8")
+    subprocess.run(["git", "add", "advance.txt"], cwd=main, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-qm", "fixture-only upstream"], cwd=main, check=True, capture_output=True, timeout=30
+    )
+    _add_local_bare_origin(main)
+    upstream = delegate._resolve_sha(main)
+    delegate._mark_review_attempt_worktree(worktree, "fixture-only-prior-review")
     args = _write_args(
-        agent="agy",
-        # #9275: agy without a Ukrainian classification is the bounded fallback.
-        research_task_family="ukrainian-authoring",
-        owned_path=list(_UKRAINIAN_OWNED_PATHS),
-        task_id="task-8610-relative",
+        agent="codex",
+        task_id="task-1",
         branch=None,
-        worktree=".worktrees/dispatch/agy/task-8610-relative/",
-        mode="workspace-write",
+        worktree=".worktrees/dispatch/codex/task-1/",
+        mode="read-only",
+        prompt="Read the fixture file.",
+        full_checkout=True,
     )
 
-    assert delegate.cmd_dispatch(args) == 1
+    with patch.object(delegate.dispatch_isolation, "spawn_detached_worker") as spawn:
+        assert delegate.cmd_dispatch(args) == 1
+    spawn.assert_not_called()
 
-    state = json.loads(delegate._state_path("task-8610-relative").read_text(encoding="utf-8"))
+    state = json.loads(delegate._state_path("task-1").read_text(encoding="utf-8"))
     assert state["status"] == "failed"
-    expected = (Path(delegate._REPO_ROOT) / ".worktrees/dispatch/agy/task-8610-relative").resolve()
-    assert state["worktree_path"] == str(expected)
+    assert state["worktree_path"] == str(worktree.resolve())
+    assert state["returncode_reason"] == "worktree preparation failed"
+    assert "reuse refused" in state["stderr_excerpt"]
+    assert state["worktree_rebased"] is True
+    assert state["worktree_base_sha"] == state["final_branch_head_commit"] == upstream
+    assert delegate._resolve_sha(worktree) == upstream != before
+    assert (worktree / "advance.txt").read_bytes() == b"fixture-only upstream\n"
 
 
 def test_active_legacy_claim_through_symlink_alias_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -19354,7 +19367,7 @@ def _rendered_attempt_prompt(checkout: Path, prompt_file: Path, *, input_root: P
 def test_review_attempt_reuse_never_rebases_admitted_input(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys, upstream_change, entrypoint, review_attempt
 ):
-    """#9426 AC-01: real reuse refuses stale reviews, while ordinary reuse still rebases."""
+    """#9426 AC-01: refuse stale reviews and retain real ordinary-rebase telemetry."""
     main, target = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
@@ -19450,6 +19463,11 @@ def test_review_attempt_reuse_never_rebases_admitted_input(
             assert state["status"] == "failed"
             assert "automatic rebasing is disabled" in state["stderr_excerpt"]
             assert state["last_error"] == "worktree_preparation_failed"
+        else:
+            state = delegate._read_state(delegate._state_path("task-1"))
+            assert state["worktree_rebased"] is True
+            assert state["worktree_reused"] is True
+            assert state["worktree_base_sha"] == upstream_sha == delegate._resolve_sha(target)
 
 
 @pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
