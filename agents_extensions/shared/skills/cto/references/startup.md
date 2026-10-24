@@ -19,8 +19,9 @@ If not launched this way, do not drive: write the handoff, record a
 
 ## 2. Read the handoff and the mistakes ledger
 
-Read the pinned provider facts in `.claude/epics-epic/DRIVER-STATE.md`, then run
-`lu-driver-state render --lane cto` for open items and `lu-driver-state check --lane cto`.
+FIRST run `lu-driver-state render --lane cto` for open items and
+`lu-driver-state check --lane cto`. The database is the CTO state.
+Then read `.claude/epics-epic/DRIVER-STATE.md`, which holds only pinned provider facts.
 Treat `UNOWNED`, `STALE` and `OVERDUE` findings as a worklist. Read the program and plan
 first: the `operator_order` item and its child `goal` items. Use `lu-driver-state show <id>`
 for their full history and links, then read standing orders, the latest `handoff_note`,
