@@ -4332,8 +4332,9 @@ def _branch_holder_activity_reason(
     holders whose task state has already been removed.  That is safe only when
     both of the reaper's independent liveness probes are available and empty:
     the active-dispatch API rules out an attached task and ``lsof`` rules out a
-    process still using the checkout.  Probe failure is a refusal, not evidence
-    of inactivity.
+    process still using the checkout. For attributed terminal holders, the
+    reaper's local-record fallback can resolve a Monitor transport failure.
+    Other probe failures remain refusals.
     """
     candidate_task_ids = [task_id] if task_id is not None else _task_status_candidates_for_worktree(path)
     if not candidate_task_ids:
@@ -4347,7 +4348,23 @@ def _branch_holder_activity_reason(
         from scripts.orchestration import reap_worktrees
 
         try:
-            active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+            if complete:
+                active_ids = _branch_holder_active_task_ids()
+            else:
+                probe = reap_worktrees._read_active_task_probe()
+                active_ids, probe_error = reap_worktrees._resolve_activity_probe(
+                    reap_worktrees.primary_checkout_root(path),
+                    reap_worktrees.WorktreeInfo(path, None, None),
+                    probe,
+                )
+                if probe_error is not None or active_ids is None:
+                    if isinstance(probe, reap_worktrees._ActiveTaskProbeFailure):
+                        _record_diagnostic(
+                            candidate_task_ids[0],
+                            _TypedCause("activity probe unavailable", diagnostic=probe_error or probe.reason),
+                            source="branch_hand_off",
+                        )
+                    return "active-task probe unavailable"
         except reap_worktrees._ActiveTaskProbeFailure as exc:
             _record_diagnostic(
                 candidate_task_ids[0],
@@ -9353,18 +9370,21 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if reap_worktrees._task_pid_alive(state):
                 row["reason"] = "task process alive"
                 return row
-            try:
-                active_ids = reap_worktrees._active_task_ids()
-            except reap_worktrees._ActiveTaskProbeFailure as exc:
+            probe = reap_worktrees._read_active_task_probe()
+            active_ids, probe_error = reap_worktrees._resolve_activity_probe(
+                root, reap_worktrees.WorktreeInfo(worktree, None, None), probe
+            )
+            if active_ids is None and probe_error is None and isinstance(probe, reap_worktrees._ActiveTaskProbeFailure):
+                probe_error = probe.reason
+            if probe_error is not None:
                 diagnostic = _record_diagnostic(
                     task_id,
-                    _exception_cause("activity probe unavailable", exc),
+                    _TypedCause("activity probe unavailable", diagnostic=probe_error),
                     source="rescue",
                     field="reason",
                 )
                 if diagnostic:
                     row["diagnostic"] = diagnostic
-                active_ids = None
             live_cwds = reap_worktrees._live_cwd_paths(root)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"

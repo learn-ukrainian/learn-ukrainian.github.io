@@ -1418,7 +1418,7 @@ def test_active_probe_failure_releases_settled_delegation_holder(tmp_path, monke
     monkeypatch.setattr(delegate, "_record_diagnostic", lambda *args, **kwargs: diagnostics.append(args))
     reason = delegate._branch_holder_activity_reason(worktree, task_id=record["task_id"], task_state=record)
     assert reason is None
-    assert "active_task_probe_timeout" in diagnostics[0][1].diagnostic
+    assert diagnostics == []
 
 
 @pytest.mark.parametrize("layout", ["dispatch", "legacy"])

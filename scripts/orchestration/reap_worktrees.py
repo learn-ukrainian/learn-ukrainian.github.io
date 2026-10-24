@@ -2633,30 +2633,34 @@ class _ActiveTaskProbeFailure(RuntimeError):
 
 
 def _active_task_ids() -> set[str] | None:
-    try:
-        import urllib.request
+    import urllib.request
 
-        with urllib.request.urlopen("http://127.0.0.1:8765/api/delegate/active", timeout=3) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            if not isinstance(data, dict) or not isinstance(data.get("tasks"), list):
-                raise ValueError("activity response must contain a tasks list")
-            tasks = data["tasks"]
-            if any(not isinstance(t, dict) or not isinstance(t.get("task_id"), str) or not t["task_id"] for t in tasks):
-                raise ValueError("activity response contains an invalid task identity")
-            return {t["task_id"] for t in tasks}
-    except Exception as exc:
-        transport = isinstance(exc, TimeoutError | ConnectionError) or (
-            isinstance(exc, URLError) and not isinstance(exc, HTTPError)
-        )
-        code = "timeout" if isinstance(exc, TimeoutError) else "transport_error" if transport else "invalid_response"
-        raise _ActiveTaskProbeFailure(
-            reason=f"active-task probe unavailable [active_task_probe_{code}]: {type(exc).__name__}: {exc}",
-            fallback_allowed=transport,
-        ) from exc
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen("http://127.0.0.1:8765/api/delegate/active", timeout=3) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                if not isinstance(data, dict) or not isinstance(data.get("tasks"), list):
+                    raise ValueError("activity response must contain a tasks list")
+                tasks = data["tasks"]
+                if any(not isinstance(t, dict) or not isinstance(t.get("task_id"), str) or not t["task_id"] for t in tasks):
+                    raise ValueError("activity response contains an invalid task identity")
+                return {t["task_id"] for t in tasks}
+        except Exception as exc:
+            transport = isinstance(exc, TimeoutError | ConnectionError) or (
+                isinstance(exc, URLError) and not isinstance(exc, HTTPError)
+            )
+            if transport and attempt == 0:
+                time.sleep(0.2)
+                continue
+            code = "timeout" if isinstance(exc, TimeoutError) else "transport_error" if transport else "invalid_response"
+            raise _ActiveTaskProbeFailure(
+                reason=f"active-task probe unavailable [active_task_probe_{code}]: {type(exc).__name__}: {exc}",
+                fallback_allowed=transport,
+            ) from exc
 
 
 def _read_active_task_probe() -> set[str] | _ActiveTaskProbeFailure | None:
-    """Keep typed failures for the reaper; delegate callers handle them as unknown."""
+    """Keep typed failures for callers to resolve against the attributed checkout."""
     try:
         return _active_task_ids()
     except _ActiveTaskProbeFailure as exc:
