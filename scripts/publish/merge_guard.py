@@ -256,10 +256,18 @@ def bound_rollup_states(
         for row in rows:
             if not isinstance(row, dict):
                 return None
-            if row.get("__typename") == "CheckRun" and not any(
-                run.get("name") == row.get("name") and run.get("details_url") == row.get("detailsUrl")
-                and row.get("detailsUrl") for run in runs
-            ):
+            if row.get("__typename") != "CheckRun":
+                continue
+            details = row.get("detailsUrl")
+            # The GitHub adapter projects html_url as detailsUrl. Accept that
+            # representation only when its canonical URL binds the REST ID.
+            matches = [run for run in runs if run.get("name") == row.get("name") and details and (
+                run.get("details_url") == details or (
+                    type(run.get("id")) is int and run["id"] > 0
+                    and details == run.get("html_url") == f"https://github.com/{repo}/runs/{run['id']}"
+                )
+            )]
+            if len(matches) != 1:
                 return None
         rows = project_check_runs(runs) + [row for row in rows if row.get("__typename") != "CheckRun"]
         if external_advisory_names(rows) != names:
