@@ -6,12 +6,14 @@ import gzip
 import json
 import re
 import zipfile
+from html import escape
 from pathlib import Path
 
 import pytest
 
 from scripts.deploy.vendor_atlas_tree import (
     TREE_MANIFEST_REL,
+    AdvertisementParityError,
     VendorError,
     build_archive_from_tree,
     sha256_hex,
@@ -53,6 +55,27 @@ def _replace_runtime_shard(version_root: Path, family: str, shard_id: str, rows:
         "encoding": "gzip",
     }
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+
+def _built_advertisements(dist: Path, slugs: list[str], *, practice: list[str] | None = None) -> None:
+    """Existing built-artifact contracts, without a database or network."""
+    rows = [{"s": slug, "l": slug} for slug in slugs]
+    blob = json.dumps(rows).encode()
+    _write(dist / "lexicon/browse/Unit.json", blob)
+    meta = {
+        "schema": "atlas-browse-meta", "schemaVersion": 1, "total": len(rows),
+        "letterCounts": {"Unit": len(rows)}, "browseShardCount": 1,
+        "browseShards": {"Unit": {"path": "/lexicon/browse/Unit.json", "count": len(rows),
+                                  "bytes": len(blob), "sha256": sha256_hex(blob)}},
+    }
+    _write(dist / "lexicon/browse/index.html",
+           f'<section data-atlas-index data-browse-meta="{escape(json.dumps(meta))}" '
+           f'data-flagged-rows="{escape(json.dumps(rows))}"></section>')
+    _write(dist / "lexicon/daily-pool.json", json.dumps([{"slug": slug} for slug in slugs]))
+    _write(dist / "api/lexicon/daily-pool.json", json.dumps([{"slug": slug} for slug in slugs]))
+    if practice is not None:
+        _write(dist / "lexicon/practice-lexemes.A1.json",
+               json.dumps({"lexemes": [{"lemmaId": slug} for slug in practice]}))
 
 
 def _mini_generation(root: Path, data_version: str, *, payload: bytes) -> None:
@@ -249,6 +272,7 @@ def test_happy_path_vendors_current_and_prior(tmp_path: Path) -> None:
     archive, digest = _archive_for(tree_root, tmp_path)
     dist = tmp_path / "dist"
     metrics_path = tmp_path / "metrics.json"
+    _built_advertisements(dist, ["unit-article"], practice=[])
 
     # Capture original bytes of a versioned shard for R10 byte-preservation.
     original_shard = (
@@ -260,6 +284,7 @@ def test_happy_path_vendors_current_and_prior(tmp_path: Path) -> None:
         sha256=digest,
         archive_path=archive,
         metrics_path=metrics_path,
+        advertised_links_dir=dist / "lexicon",
     )
 
     assert metrics.skipped is False
@@ -727,8 +752,49 @@ def test_vendoring_replaces_equal_count_different_search_set_from_exact_pin(tmp_
     _write(dist / "lexicon/search-aliases.json", '[{"a":"Old alias","s":"advertised-only"}]')
 
     _write(dist / "lexicon/search/obsolete.json", '[{"s":"advertised-only"}]')
-    metrics = vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+    _built_advertisements(dist, ["runtime-only", "advertised-only", "missing-two"],
+                          practice=["advertised-only"])
+    daily_paths = (dist / "lexicon/daily-pool.json", dist / "api/lexicon/daily-pool.json")
+    unlinked = {"slug": "unlinked-missing", "hasAtlasEntry": False}
+    for path in daily_paths:
+        _write(path, json.dumps([*json.loads(path.read_bytes()), unlinked]))
+    before = {p.relative_to(dist): p.read_bytes() for p in dist.rglob("*") if p.is_file()}
+    with pytest.raises(AdvertisementParityError) as caught:
+        vendor_atlas_tree(dist, sha256=digest, archive_path=archive,
+                          advertised_links_dir=dist / "lexicon")
+    assert caught.value.missing == ("advertised-only", "missing-two")
+    assert "browse/Unit.json=2" in str(caught.value)
+    assert "browse-flagged=2" in str(caught.value)
+    assert "daily-pool.json=2" in str(caught.value)
+    assert "api/daily-pool.json=2" in str(caught.value)
+    assert "practice-lexemes.A1.json=1" in str(caught.value)
+    assert not (dist / "atlas").exists()
+    assert {p.relative_to(dist): p.read_bytes() for p in dist.rglob("*") if p.is_file()} == before
+    assert json.loads((dist / "lexicon/search-index.json").read_bytes()) == [{"s": "advertised-only"}]
+    # A supported form route may be advertised; alias text remains a search key.
+    _built_advertisements(dist, ["runtime-only", "separate-form"], practice=["runtime-only"])
+    for path in daily_paths:
+        original = path.read_bytes()
+        for value in (0, None, "", True):
+            _write(path, json.dumps([unlinked, {"slug": "linked-missing", "hasAtlasEntry": value},
+                                     {"slug": "runtime-only"}]))
+            with pytest.raises(AdvertisementParityError) as caught:
+                vendor_atlas_tree(dist, sha256=digest, archive_path=archive,
+                                  advertised_links_dir=dist / "lexicon")
+            assert caught.value.missing == ("linked-missing",)
+            assert not (dist / "atlas").exists()
+        _write(path, json.dumps([{"hasAtlasEntry": False}]))
+        with pytest.raises(VendorError, match="must list rows carrying 'slug'"):
+            vendor_atlas_tree(dist, sha256=digest, archive_path=archive,
+                              advertised_links_dir=dist / "lexicon")
+        _write(path, original)
+    for path in daily_paths:
+        _write(path, json.dumps([*json.loads(path.read_bytes()), unlinked]))
+    daily_bytes = {path: path.read_bytes() for path in daily_paths}
+    metrics = vendor_atlas_tree(dist, sha256=digest, archive_path=archive,
+                                advertised_links_dir=dist / "lexicon")
 
+    assert all(path.read_bytes() == blob for path, blob in daily_bytes.items())
     assert not (dist / "lexicon/search/obsolete.json").exists()
     rows = json.loads((dist / "lexicon/search-index.json").read_bytes())
     assert rows == [article]
@@ -769,7 +835,11 @@ def test_release_asset_entrypoint_projects_search_and_emits_pin_receipt(
 
     monkeypatch.setattr(vendor, "download_release_asset", download)
     dist = tmp_path / "dist"
-    metrics = vendor.vendor_atlas_tree(dist, sha256=digest, asset_id="42", repo="fixture/runtime")
+    _built_advertisements(dist, [], practice=[])
+    metrics_path = tmp_path / "entrypoint-metrics.json"
+    assert vendor.main([str(dist), "--sha256", digest, "--asset-id", "42",
+                        "--repo", "fixture/runtime", "--metrics-out", str(metrics_path)]) == 0
+    metrics = vendor.VendorMetrics(**json.loads(metrics_path.read_bytes()))
     rows = json.loads((dist / "lexicon/search-index.json").read_bytes())
     assert [row["s"] for row in rows] == ["unit-article"]
     assert metrics.archive_sha256 == digest

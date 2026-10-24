@@ -6,7 +6,9 @@ mutable tag name), verifies archive checksum + internal packaging manifest, enfo
 generation retention (CURRENT + PRIOR version dirs), applies scale gates, then
 byte-preserves the tree into ``<dist>/atlas/``. Public article search, aliases,
 and typeahead shards are then projected from that same verified immutable pin;
-entry/search set drift aborts before installation.
+entry/search set drift aborts before installation. The Pages entrypoint also
+checks independent browse, daily and practice advertisements against CURRENT
+before installing either the runtime or its search projection.
 
 Feature flag: when ``ATLAS_TREE_ASSET_ID`` / ``ATLAS_TREE_SHA256`` are unset (and no
 ``--archive`` is supplied), the script logs a skip message and exits 0 so deploys
@@ -42,6 +44,7 @@ import zipfile
 import zlib
 from collections.abc import Iterator, Mapping
 from dataclasses import asdict, dataclass, field
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
@@ -731,6 +734,153 @@ def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[
         raise VendorError(f"pinned runtime search unreadable: {exc}") from exc
 
 
+
+class AdvertisementParityError(VendorError):
+    """Built advertisements contain links absent from the selected runtime."""
+
+    def __init__(self, message: str, missing: tuple[str, ...] = ()) -> None:
+        super().__init__(message)
+        self.missing = missing
+
+
+def _read_advertisement(path: Path) -> Any:
+    try:
+        return json.loads(path.read_bytes())
+    except (OSError, UnicodeError, ValueError) as exc:
+        raise VendorError(f"advertised artifact {path.name} unreadable: {exc}") from exc
+
+
+def _advertised_rows(doc: Any, key: str, name: str) -> set[str]:
+    if not isinstance(doc, list) or any(
+        not isinstance(row, dict) or not isinstance(row.get(key), str) or not row[key]
+        for row in doc
+    ):
+        raise VendorError(f"advertised artifact {name} must list rows carrying {key!r}")
+    return {row[key] for row in doc}
+
+
+def _advertised_daily_rows(doc: Any, name: str) -> set[str]:
+    _advertised_rows(doc, "slug", name)
+    # daily-card and PracticeDailyDeck suppress links only for explicit false.
+    return {row["slug"] for row in doc if row.get("hasAtlasEntry") is not False}
+
+
+class _BrowseAdvertisements(HTMLParser):
+    """Read the same embedded browse metadata and flagged rows as the browser."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.scopes: list[tuple[Any, Any]] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        if "data-atlas-index" in attributes:
+            try:
+                self.scopes.append((json.loads(attributes["data-browse-meta"]),
+                                    json.loads(attributes["data-flagged-rows"])))
+            except (KeyError, TypeError, ValueError) as exc:
+                raise VendorError("advertised browse metadata unreadable") from exc
+
+
+def collect_advertised_slugs(lexicon_dir: Path) -> dict[str, set[str]]:
+    """Collect independent built advertisements; search is replaced from the pin.
+
+    Browse metadata advertises shard URLs/counts, not word slugs. Check those
+    bindings and its embedded flagged rows, including a genuinely empty browse.
+    Practice remains optional because its artifact is separately pinned.
+    """
+    advertised = {"daily-pool.json": _advertised_daily_rows(
+        _read_advertisement(lexicon_dir / "daily-pool.json"), "daily-pool.json"
+    )}
+    for directory, prefix in ((lexicon_dir, ""), (lexicon_dir.parent / "api/lexicon", "api/")):
+        for path in sorted(directory.glob("practice-lexemes.*.json")):
+            doc = _read_advertisement(path)
+            advertised[prefix + path.name] = _advertised_rows(
+                doc.get("lexemes") if isinstance(doc, dict) else None, "lemmaId", prefix + path.name
+            )
+    api_daily = lexicon_dir.parent / "api/lexicon/daily-pool.json"
+    if api_daily.exists():
+        advertised["api/daily-pool.json"] = _advertised_daily_rows(
+            _read_advertisement(api_daily), "api/daily-pool.json"
+        )
+    parser = _BrowseAdvertisements()
+    try:
+        parser.feed((lexicon_dir / "browse/index.html").read_text(encoding="utf-8"))
+    except (OSError, UnicodeError) as exc:
+        raise VendorError(f"advertised browse page unreadable: {exc}") from exc
+    if not parser.scopes:
+        raise VendorError("advertised browse metadata missing")
+    browse: dict[str, tuple[bytes, int]] = {}
+    for path in sorted(lexicon_dir.glob("browse/*.json")):
+        blob = path.read_bytes()
+        rows = _read_advertisement(path)
+        advertised[f"browse/{path.name}"] = _advertised_rows(rows, "s", path.name)
+        browse[f"/lexicon/browse/{path.name}"] = (blob, len(rows))
+    for meta, flagged in parser.scopes:
+        advertised.setdefault("browse-flagged", set()).update(
+            _advertised_rows(flagged, "s", "browse-flagged")
+        )
+        try:
+            if meta["schema"] != "atlas-browse-meta" or meta["schemaVersion"] != 1:
+                raise VendorError("advertised browse metadata identity mismatch")
+            descriptors = meta["browseShards"]
+            if not isinstance(descriptors, dict):
+                raise VendorError("advertised browseShards must be an object")
+            expected: set[str] = set()
+            for letter, descriptor in descriptors.items():
+                url = f"/lexicon/browse/{letter}.json"
+                if descriptor["path"] != url or url not in browse:
+                    raise VendorError("advertised browse shard missing or mismatched")
+                expected.add(url)
+                blob, count = browse[url]
+                if (descriptor["count"] != count or descriptor["bytes"] != len(blob)
+                        or descriptor["sha256"] != sha256_hex(blob)
+                        or meta["letterCounts"][letter] != count):
+                    raise VendorError("advertised browse shard metadata mismatch")
+            if (expected != set(browse) or meta["browseShardCount"] != len(browse)
+                    or meta["total"] != sum(count for _, count in browse.values())
+                    or any(count != (browse.get(f"/lexicon/browse/{letter}.json", (b"", 0))[1])
+                           for letter, count in meta["letterCounts"].items())):
+                raise VendorError("advertised browse metadata scope mismatch")
+        except (KeyError, TypeError, AttributeError) as exc:
+            raise VendorError("advertised browse metadata malformed") from exc
+    return advertised
+
+
+def verify_advertised_links_resolve(
+    extract_root: Path, lexicon_dir: Path,
+    articles: list[dict[str, Any]], aliases: list[dict[str, Any]],
+) -> None:
+    """Restore the full advertisement invariant before installing any output.
+
+    Search/index/shards and alias targets use the already verified projection
+    that will replace those endpoints. Independent advertisements must resolve
+    in CURRENT, never merely in PRIOR. Alias text is not a route.
+    """
+    current = _read_advertisement(extract_root / CURRENT_REL)
+    version_root = extract_root / VERSIONS_REL / _pointed_version_dir(
+        current["manifestUrl"], current["dataVersion"]
+    )
+    manifest = _read_advertisement(version_root / "manifest.json")
+    routes = {row["slug"] for rows in _runtime_shard_records(
+        version_root, manifest["entries"], schema="atlas-entry-shard", data_version=current["dataVersion"]
+    ) for row in rows}
+    advertised = collect_advertised_slugs(lexicon_dir)
+    advertised["search-index"] = {row["s"] for row in articles}
+    advertised["search-aliases"] = {row["s"] for row in aliases}
+    union = set().union(*advertised.values())
+    missing = tuple(sorted(union - routes))
+    if missing:
+        by_artifact = ", ".join(f"{name}={len(slugs - routes)}" for name, slugs in sorted(advertised.items())
+                                if slugs - routes)
+        raise AdvertisementParityError(
+            f"{len(missing)} of {len(union)} advertised Atlas slugs do not resolve in the pinned "
+            f"runtime ({len(routes)} routes; per artifact: {by_artifact}); "
+            "unresolvable advertised slugs:\n" + "\n".join(missing), missing,
+        )
+    print(f"advertisement parity: {len(union)} advertised slugs resolve in {len(routes)} runtime routes")
+
+
 def install_pinned_search(dist: Path, articles: list[dict[str, Any]], aliases: list[dict[str, Any]]) -> None:
     """Replace built public search endpoints using the existing shard contract."""
     index = dist / "lexicon/search-index.json"
@@ -807,11 +957,14 @@ def vendor_atlas_tree(
     token: str | None = None,
     metrics_path: Path | None = None,
     thresholds: Mapping[str, int] | None = None,
+    advertised_links_dir: Path | None = None,
 ) -> VendorMetrics:
     """Download (or load), verify, and install the atlas tree into ``dist``.
 
     Raises :class:`VendorError` on any integrity / retention / scale failure.
     When no pin is configured, returns a skipped metrics object (exit 0 path).
+    The Pages entrypoint supplies advertised_links_dir; library callers without
+    a built site retain their runtime-only verification round-trip.
     """
     started = time.perf_counter()
     asset_id = (asset_id if asset_id is not None else os.environ.get("ATLAS_TREE_ASSET_ID") or "").strip() or None
@@ -873,6 +1026,8 @@ def vendor_atlas_tree(
             thresholds=thr,
         )
         articles, aliases, search_parity = build_pinned_search(extract_root)
+        if advertised_links_dir is not None:
+            verify_advertised_links_resolve(extract_root, advertised_links_dir, articles, aliases)
         dist.mkdir(parents=True, exist_ok=True)
         install_atlas_tree(extract_root, dist)
         install_pinned_search(dist, articles, aliases)
@@ -993,6 +1148,7 @@ def main(argv: list[str] | None = None) -> int:
             archive_path=args.archive,
             repo=args.repo,
             metrics_path=metrics_path,
+            advertised_links_dir=args.dist / "lexicon",
         )
     except VendorError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
