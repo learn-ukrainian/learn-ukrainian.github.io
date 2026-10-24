@@ -6873,7 +6873,10 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "worktree active",
         "worktree already removed",
         "worktree branch differs from task record",
-        "worktree ownership unknown or reused",
+        "worktree group has nonterminal task",
+        "worktree group records disagree on branch",
+        "worktree task inventory unavailable",
+        "worktree dirty",
         "unpushed work - needs rescue",
         "unpushed state unknown - needs rescue",
         "rescued",
@@ -9320,6 +9323,19 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
     return _public_row(_rescue_task_row(state_path, apply=apply), state_path, source="rescue")
 
 
+def _rescue_record_order(item: tuple[Path, dict[str, Any]]) -> tuple[float, str]:
+    """Order fix rounds by dispatch time, falling back to legacy record metadata."""
+    path, state = item
+    timestamp = state.get("started_at") or state.get("finished_at")
+    try:
+        started = datetime.fromisoformat(str(timestamp).replace("Z", "+00:00"))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        return started.timestamp(), path.name
+    except (ValueError, OverflowError):
+        return path.stat().st_mtime, path.name
+
+
 def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     """Preserve one terminal task on origin; never remove its worktree here.
 
@@ -9330,7 +9346,7 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     state = _read_state(state_path)
     task_id = state.get("task_id") if state else None
     row: dict[str, Any] = {"task_id": task_id, "action": "skipped"}
-    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES | worktree_claims.RELEASED_TASK_STATUSES:
         row["reason"] = "task is not terminal non-success"
         return row
     raw_worktree = state.get("worktree_path")
@@ -9352,23 +9368,43 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     if not (worktree / ".git").exists():
         row["reason"] = "not a registered dispatch worktree"
         return row
-    if state.get("worktree_reused") is not False:
-        row["reason"] = "worktree ownership unknown or reused"
-        return row
-    lease = state.get("lease")
-    if (isinstance(lease, dict) and lease.get("state") == "active") or state.get("lease_state") == "active":
-        row["reason"] = "task lease active"
-        return row
     try:
+        from scripts.fleet.ignored_task_output import matching_worktree_records
         from scripts.orchestration import reap_worktrees
 
         with worktree_lock(worktree) if apply else contextlib.nullcontext():
-            current = _read_state(state_path)
-            if current != state:
+            try:
+                group = [
+                    (path, _hydrate_read_only_checkout_snapshots(record))
+                    for path, record in matching_worktree_records(
+                        worktree, tasks_dir(), repo_root=root, publish_cache=False
+                    )
+                ]
+            except (OSError, ValueError):
+                row["reason"] = "worktree task inventory unavailable"
+                return row
+            if (state_path, state) not in group:
                 row["reason"] = "task state changed"
                 return row
-            if reap_worktrees._task_pid_alive(state):
-                row["reason"] = "task process alive"
+            require_clean = len(group) > 1 or state.get("worktree_reused") is not False
+            state_path, state = max(group, key=_rescue_record_order)
+            task_id = state["task_id"]
+            row["task_id"] = task_id
+            for _, member in group:
+                if member.get("status") not in reap_worktrees._TERMINAL_DISPATCH_STATUSES:
+                    row["reason"] = "worktree group has nonterminal task"
+                    return row
+                lease = member.get("lease")
+                if (isinstance(lease, dict) and lease.get("state") == "active") or member.get(
+                    "lease_state"
+                ) == "active":
+                    row["reason"] = "task lease active"
+                    return row
+                if reap_worktrees._task_pid_alive(member):
+                    row["reason"] = "task process alive"
+                    return row
+            if any(member.get("worktree_branch") != state.get("worktree_branch") for _, member in group):
+                row["reason"] = "worktree group records disagree on branch"
                 return row
             probe = reap_worktrees._read_active_task_probe()
             active_ids, probe_error = reap_worktrees._resolve_activity_probe(
@@ -9389,12 +9425,16 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"
                 return row
-            if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
+            if any(member.get("task_id") in active_ids for _, member in group) or any(
+                cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds
+            ):
                 row["reason"] = "worktree active"
                 return row
             repo = _rescue_repo(worktree, task_id=task_id, state=state)
             with _rescue_execution_context(repo) as context:
-                return _rescue_in_context(repo, context, state, state_path, row, apply=apply)
+                return _rescue_in_context(
+                    repo, context, state, state_path, row, apply=apply, require_clean=require_clean
+                )
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         cause = (
             _TypedCause(exc.code) if isinstance(exc, SnapshotRefusal) else _exception_cause("rescue_step_failed", exc)
@@ -9417,6 +9457,7 @@ def _rescue_in_context(
     row: dict[str, Any],
     *,
     apply: bool,
+    require_clean: bool = False,
 ) -> dict[str, Any]:
     from scripts.agent_runtime import kimi_boundary
 
@@ -9430,15 +9471,28 @@ def _rescue_in_context(
     recorded_branch = state.get("worktree_branch")
     agent = str(state.get("agent") or "agent")
     branch = f"rescue/{agent}/{_x_agent_task_id(agent, str(task_id))}"
-    if current_branch not in {recorded_branch, branch}:
+    if current_branch != recorded_branch and (require_clean or current_branch != branch):
         row["reason"] = "worktree branch differs from task record"
         return row
+    if require_clean:
+        from scripts.orchestration import reap_worktrees
+
+        dirty = _worktree_is_dirty(worktree)
+        if dirty is not False:
+            row["reason"] = "worktree dirty" if dirty else "changed files unavailable"
+            return row
+        if reap_worktrees._is_head_reachable_from_remote(worktree, head):
+            row["reason"] = "no provable unpushed work"
+            return row
     tree = context.capture(
         worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude"
     )
     changed = tuple(
         path for path in context.checked("diff-tree", "-r", "-z", "--name-only", head, tree).split("\0") if path
     )
+    if require_clean and changed:
+        row["reason"] = "worktree dirty"
+        return row
     large = []
     for name in changed:
         try:
@@ -9563,6 +9617,7 @@ def cmd_rescue(args: argparse.Namespace) -> int:
         return 2
 
     rows: list[dict[str, Any]] = []
+    seen_worktrees: set[Path] = set()
     now = datetime.now(UTC)
     for path in paths:
         state = _read_state(path)
@@ -9586,6 +9641,16 @@ def cmd_rescue(args: argparse.Namespace) -> int:
                 continue
             if age_hours < min_age_hours:
                 continue
+        raw_worktree = state.get("worktree_path") if state else None
+        if isinstance(raw_worktree, str):
+            try:
+                worktree = worktree_claims.resolve_claim_path(raw_worktree, repo_root=_REPO_ROOT)
+            except (OSError, RuntimeError, ValueError):
+                pass  # Let the rescue registration guard report invalid paths.
+            else:
+                if worktree in seen_worktrees:
+                    continue
+                seen_worktrees.add(worktree)
         rows.append(_rescue_task(path, apply=bool(args.apply or not args.all_stale)))
     # Every row leaves through the public-reason sink (#9878).
     rows = [_public_row(row, None, source="rescue") for row in rows]
