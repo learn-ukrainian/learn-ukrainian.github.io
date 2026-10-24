@@ -380,7 +380,7 @@ session_supervisor_start_inbox_watch() {
     exec 214>&- 215<&-
     if [ "${0##*/}" = start-claude-cto.sh ]; then
       local capture_file
-      if [ -n "${TMPDIR:-}" ] && capture_file="$(mktemp "$TMPDIR/cto-capture.XXXXXX")"; then
+      if capture_file="$(mktemp)"; then
         if { exec 215<"$capture_file" 214>"/proc/self/fd/215"; } 2>/dev/null \
             && printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}" >&214; then
           export LC_SUPERVISORY_ORIGINAL_ARGS_FD=215

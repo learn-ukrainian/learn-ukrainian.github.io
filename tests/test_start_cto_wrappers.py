@@ -406,7 +406,7 @@ if os.path.basename(os.environ['LC_SUPERVISORY_ENTRYPOINT']) == 'start-claude-ct
     assert not watch.preflight_supervisory_successor()
     os.environ['LC_SUPERVISORY_ORIGINAL_ARGS_FD'] = '215'
     saved = os.dup(215)
-    with TemporaryFile(dir=os.environ['TMPDIR']) as malformed:
+    with TemporaryFile() as malformed:
         malformed.write(b'\\xff\\0')
         malformed.flush()
         os.dup2(malformed.fileno(), 215)
@@ -485,6 +485,8 @@ if session_supervisor_exec_successor; then exit 93; fi
 LC_DRIVER_LEASE_CLOSED=1
 session_supervisor_exec_successor
 """
+    launcher_env = dict(os.environ)
+    launcher_env.pop("TMPDIR", None)
     result = subprocess.run(
         [
             "bash",
@@ -497,7 +499,7 @@ session_supervisor_exec_successor
             *captured,
         ],
         cwd=root,
-        env={**os.environ, "LAUNCHER_DRY_RUN": "1", "HOME": str(home), "PATH": f"{bindir}{os.pathsep}{os.defpath}"},
+        env={**launcher_env, "LAUNCHER_DRY_RUN": "1", "HOME": str(home), "PATH": f"{bindir}{os.pathsep}{os.defpath}"},
         capture_output=True,
         text=True,
         timeout=30,
