@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import gzip
 import json
+import os
 import re
 import zipfile
 from html import escape
@@ -268,11 +269,17 @@ def test_vendor_preserves_public_gloss_and_sourced_gerund_backlink(
 
 
 def test_happy_path_vendors_current_and_prior(tmp_path: Path) -> None:
+    """Ordinary HTML tags must not hide the browse metadata or prevent installation."""
     tree_root = _build_two_gen_tree(tmp_path)
     archive, digest = _archive_for(tree_root, tmp_path)
     dist = tmp_path / "dist"
     metrics_path = tmp_path / "metrics.json"
     _built_advertisements(dist, ["unit-article"], practice=[])
+    browse_page = dist / "lexicon/browse/index.html"
+    browse_page.write_text(
+        "<html><body><h1>Browse</h1>" + browse_page.read_text() + "</body></html>",
+        encoding="utf-8",
+    )
 
     # Capture original bytes of a versioned shard for R10 byte-preservation.
     original_shard = (
@@ -862,10 +869,17 @@ def test_release_asset_entrypoint_projects_search_and_emits_pin_receipt(
         "alias-targets-form",
         "duplicate-alias",
         "unknown-kind",
+        "browse-missing-scope",
+        "browse-invalid-json",
+        "browse-schema-mismatch",
+        "browse-shards-not-object",
+        "browse-shard-path-mismatch",
+        "browse-scope-count-mismatch",
+        "browse-missing-field",
     ],
 )
 def test_incoherent_pin_is_rejected_before_dist_mutation(tmp_path: Path, defect: str) -> None:
-    """Bad membership, duplicates and aliases cannot be hidden by matching totals."""
+    """Bad membership, duplicates, aliases or malformed browse metadata must preserve dist."""
     tree = _build_two_gen_tree(tmp_path)
     version = tree / "atlas/versions/v-current"
     row = {"s": "unit-article", "l": "Unit", "g": None, "r": "Unit", "t": "lemma"}
@@ -887,16 +901,130 @@ def test_incoherent_pin_is_rejected_before_dist_mutation(tmp_path: Path, defect:
     elif defect == "duplicate-alias":
         alias = {"a": "Alias", "s": "unit-article", "h": "Unit", "k": "variant"}
         _replace_runtime_shard(version, "aliases", "alias", [alias, alias])
-    else:
+    elif defect == "unknown-kind":
         _replace_runtime_shard(version, "entries", "p00-0", [{"slug": "unit-article", "kind": "unknown"}])
     archive, digest = _archive_for(tree, tmp_path)
     dist = tmp_path / "dist"
     _write(dist / "atlas/sentinel", "old runtime")
     _write(dist / "lexicon/search-index.json", "old search")
-    with pytest.raises(VendorError):
-        vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+    expected_error = None
+    if defect.startswith("browse-"):
+        _built_advertisements(dist, ["unit-article"], practice=[])
+        identity = {"schema": "atlas-browse-meta", "schemaVersion": 1}
+        malformed, expected_error = {
+            "browse-missing-scope": (None, "advertised browse metadata missing"),
+            "browse-invalid-json": ("{", "advertised browse metadata unreadable"),
+            "browse-schema-mismatch": (
+                {"schema": "other", "schemaVersion": 1}, "advertised browse metadata identity mismatch",
+            ),
+            "browse-shards-not-object": (
+                {**identity, "browseShards": []}, "advertised browseShards must be an object",
+            ),
+            "browse-shard-path-mismatch": (
+                {**identity, "browseShards": {"Unit": {"path": "/lexicon/browse/Other.json"}}},
+                "advertised browse shard missing or mismatched",
+            ),
+            "browse-scope-count-mismatch": (
+                {**identity, "browseShards": {}}, "advertised browse metadata scope mismatch",
+            ),
+            "browse-missing-field": ({}, "advertised browse metadata malformed"),
+        }[defect]
+        metadata = malformed if isinstance(malformed, str) else json.dumps(malformed)
+        html = "<html><body><h1>Browse</h1></body></html>" if malformed is None else (
+            f'<section data-atlas-index data-browse-meta="{escape(metadata)}" '
+            'data-flagged-rows="[]"></section>'
+        )
+        _write(dist / "lexicon/browse/index.html", html)
+    before = {p.relative_to(dist): p.read_bytes() for p in dist.rglob("*") if p.is_file()}
+    metrics_path = tmp_path / "refusal-metrics.json"
+    with pytest.raises(VendorError, match=expected_error):
+        vendor_atlas_tree(
+            dist, sha256=digest, archive_path=archive, metrics_path=metrics_path,
+            advertised_links_dir=dist / "lexicon" if defect.startswith("browse-") else None,
+        )
     assert (dist / "atlas/sentinel").read_text() == "old runtime"
     assert (dist / "lexicon/search-index.json").read_text() == "old search"
+    assert {p.relative_to(dist): p.read_bytes() for p in dist.rglob("*") if p.is_file()} == before
+    assert not metrics_path.exists()
+
+
+@pytest.mark.parametrize("pin_case", [
+    "environment-archive",
+    "environment-asset",
+    "explicit-pin-overrides-environment",
+    "unconfigured-pin",
+    "incomplete-pin",
+    "unreadable-environment-archive",
+    "mismatched-environment-digest",
+])
+def test_vendor_environment_pin_paths_preserve_dist_contract(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pin_case: str,
+) -> None:
+    """Wrong pin selection or dist mutation on skipped/refused pins must fail this public CLI contract."""
+    from scripts.deploy import vendor_atlas_tree as vendor
+
+    for name in tuple(os.environ):
+        if name.startswith("ATLAS_TREE_"):
+            monkeypatch.delenv(name)
+    tree = _build_two_gen_tree(tmp_path)
+    archive, digest = _archive_for(tree, tmp_path)
+    pinned = {p.relative_to(tree): p.read_bytes() for p in tree.rglob("*") if p.is_file()}
+    dist = tmp_path / "dist"
+    _built_advertisements(dist, ["unit-article"], practice=[])
+    _write(dist / "atlas/sentinel", "old runtime")
+    _write(dist / "lexicon/search-index.json", "old search")
+    before = {p.relative_to(dist): p.read_bytes() for p in dist.rglob("*") if p.is_file()}
+    metrics_path = tmp_path / "environment-metrics.json"
+    monkeypatch.setenv("ATLAS_TREE_METRICS_PATH", f" {metrics_path} ")
+    argv = [str(dist)]
+
+    def download(asset_id: str, *, repo: str, token: str | None) -> bytes:
+        assert pin_case == "environment-asset"
+        assert asset_id == "42"
+        assert repo == "fixture/runtime"
+        assert token is None
+        return archive.read_bytes()
+
+    monkeypatch.setattr(vendor, "download_release_asset", download)
+    if pin_case == "explicit-pin-overrides-environment":
+        monkeypatch.setenv("ATLAS_TREE_ARCHIVE_PATH", str(tmp_path / "wrong-archive.zip"))
+        monkeypatch.setenv("ATLAS_TREE_SHA256", "0" * 64)
+        monkeypatch.setenv("ATLAS_TREE_ASSET_ID", "7")
+        argv.extend(["--archive", str(archive), "--sha256", digest, "--asset-id", "42"])
+    elif pin_case == "environment-asset":
+        monkeypatch.setenv("ATLAS_TREE_ASSET_ID", " 42 ")
+        monkeypatch.setenv("ATLAS_TREE_SHA256", f" {digest} ")
+        monkeypatch.setenv("ATLAS_TREE_REPO", "fixture/runtime")
+    elif pin_case != "unconfigured-pin":
+        selected = tmp_path / "missing-archive.zip" if pin_case == "unreadable-environment-archive" else archive
+        monkeypatch.setenv("ATLAS_TREE_ARCHIVE_PATH", f" {selected} ")
+        if pin_case != "incomplete-pin":
+            monkeypatch.setenv("ATLAS_TREE_SHA256", "0" * 64 if pin_case == "mismatched-environment-digest" else digest)
+
+    if pin_case in {"unreadable-environment-archive", "mismatched-environment-digest"}:
+        assert vendor.main(argv) == 1
+        assert {p.relative_to(dist): p.read_bytes() for p in dist.rglob("*") if p.is_file()} == before
+        assert not metrics_path.exists()
+    else:
+        assert vendor.main(argv) == 0
+        metrics = json.loads(metrics_path.read_bytes())
+        if pin_case in {"unconfigured-pin", "incomplete-pin"}:
+            assert metrics["skipped"] is True
+            assert metrics["archive_bytes"] == 0
+            assert metrics["data_version"] == ""
+            assert {p.relative_to(dist): p.read_bytes() for p in dist.rglob("*") if p.is_file()} == before
+        else:
+            assert metrics["skipped"] is False
+            assert metrics["data_version"] == "v-current"
+            assert metrics["archive_sha256"] == digest
+            assert metrics["asset_id"] == (None if pin_case == "environment-archive" else "42")
+            assert not (dist / "atlas/sentinel").exists()
+            for rel, blob in pinned.items():
+                assert (dist / rel).read_bytes() == blob
+            for endpoint in ("lexicon/search-index.json", "api/lexicon/search-index.json"):
+                assert json.loads((dist / endpoint).read_bytes()) == [
+                    {"s": "unit-article", "l": "Unit article", "g": "Unmodified gloss", "r": "Unit", "t": "lemma"},
+                ]
 
 
 @pytest.mark.parametrize(
