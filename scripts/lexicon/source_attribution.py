@@ -667,6 +667,15 @@ def apply_definition_card_attribution(card: dict[str, Any], *, lemma: str = "") 
             elif key in card and key not in block:
                 del card[key]
         changed = True
+    elif (
+        card_id == "vts"
+        and source in {VTS_SHORT_LABEL, VTS_ACADEMIC_LABEL}
+        and mirror_url == "https://www.ulif.org.ua"
+    ):
+        # Legacy VTS cards used the institutional homepage as an edition URL.
+        # It is neither an established VTS citation nor a retrieval mirror.
+        del card["source_url"]
+        changed = True
     return changed
 
 

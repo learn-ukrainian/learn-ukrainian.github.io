@@ -231,6 +231,40 @@ def test_apply_entry_attribution_moves_mirror_urls_internal(monkeypatch) -> None
 
     from copy import deepcopy
 
+    legacy_card = {
+        "id": "vts",
+        "source": "Великий тлумачний словник сучасної української мови",
+        "source_pill": "ВТС",
+        "definitions": ["unchanged"],
+        "source_url": "https://www.ulif.org.ua",
+        "mirror_source_url": "https://slovnyk.me/dict/vts/коса",
+    }
+    raw_card = deepcopy(legacy_card)
+    legacy_entry = {"lemma": "коса", "enrichment": {"definition_cards": [legacy_card]}}
+    assert apply_entry_attribution(legacy_entry) is True
+    assert legacy_card == {key: value for key, value in raw_card.items() if key != "source_url"}
+    assert raw_card["source_url"] == "https://www.ulif.org.ua"
+    assert apply_entry_attribution(legacy_entry) is False
+    legacy_card.pop("mirror_source_url")
+    legacy_card.update(source="ВТС", source_url="https://www.ulif.org.ua")
+    assert apply_entry_attribution(legacy_entry) is True
+    assert legacy_card == {
+        "id": "vts", "source": "Великий тлумачний словник сучасної української мови",
+        "source_pill": "ВТС", "definitions": ["unchanged"],
+    }
+    assert apply_entry_attribution(legacy_entry) is False
+
+    # Other identities and URLs must not be caught by a domain-wide filter.
+    for card in (
+        {**raw_card, "id": "sum20", "source": SUM20_ACADEMIC_LABEL},
+        {**raw_card, "source": "Культура слова"},
+        {**raw_card, "source_url": "https://services.ulif.org.ua/expl/#/word/коса"},
+        {**raw_card, "source_url": "https://www.ulif.org.ua/entry"},
+    ):
+        original_card = deepcopy(card)
+        assert apply_entry_attribution({"enrichment": {"definition_cards": [card]}}) is False
+        assert card == original_card
+
     from tests.test_lexicon_enrich_manifest import _run_synonyms_gate
 
     source_block = {
