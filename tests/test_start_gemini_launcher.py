@@ -13,15 +13,14 @@ from tests.test_launcher_contract import run_launcher
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
-CERTIFIED = "certified: gemini-3.1-pro-high, gemini-3.8-flash-high"
+CERTIFIED = "certified: gemini-3.8-flash-high"
 
 
 @pytest.mark.rules_core_absent
 @pytest.mark.parametrize(
     ("arguments", "model"),
     (
-        ((), "gemini-3.1-pro-high"),
-        (("--model", "gemini-3.1-pro-high"), "gemini-3.1-pro-high"),
+        ((), "gemini-3.8-flash-high"),
         (("--model", "gemini-3.8-flash-high"), "gemini-3.8-flash-high"),
     ),
 )

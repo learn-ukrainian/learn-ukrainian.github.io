@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-09-24
+reviewed_on: 2026-10-23
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -56,8 +56,7 @@ policy:
       Kimi models are retired (OO-58, #11327, 2026-10-21; unused since
       2026-10-13, reconfirmed 2026-10-18 and 2026-10-21). Dispatch refuses
       every Kimi id. Historical workers used the native `kimi` CLI only;
-      OpenRouter was never a Kimi worker bus. OpenRouter remains mainly
-      Pool + Gemma access.
+      OpenRouter was never a Kimi worker bus. Pool and Gemma are retired, not subscribed (operator 2026-10-23).
     - >-
       Kimi seats are not a usable lane (OO-58, #11327). Historical limit, kept
       as record: web, UI and backend coding only, no Ukrainian-language content,
@@ -87,11 +86,10 @@ policy:
       gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.7/4.6 ≥B, NOT C
       (keep frontier_practical; do not demote). Retired Kimi historical scorecard:
       strong root-cause / densest useful CI nits. AGY gemini-3.7-flash-high = fast
-      scoped CF. GLM-5.3 = ships-heavier, LOCAL-ONLY (zai-coding-plan; never
-      OpenRouter). Codex/Sol = careful/small, thorough/heavy advisory — not a
+      scoped CF. Historical GLM-5.3 = ships-heavier; GLM is now retired, not subscribed. Codex/Sol = careful/small, thorough/heavy advisory — not a
       speed winner. Evidence: AGY #7137, Kimi #7143, Codex/Sol #7142, Grok #7133,
-      GLM #7144 (also addresses #7121 fetch refspecs). OpenRouter remains mainly
-      Pool+Gemma. Gemini and GLM subscribed seats never use OpenRouter.
+      GLM #7144 (also addresses #7121 fetch refspecs). Pool, Gemma and GLM are retired, not subscribed (operator 2026-10-23).
+      Gemini uses AGY, never OpenRouter.
       Kimi is retired and is not a seat.
 
 # Canonical sealed formal-review transports. Resolver policy consumes these
@@ -178,18 +176,6 @@ review_scheduler:
       sealed_executable: agent_runtime.runner:invoke_inter_agent
       quota_bucket: codex
       credential_bucket: codex
-      quota_limit: 1
-      credential_limit: 1
-      capacity_weight: 1.0
-    glm:
-      formal_review_eligible: true
-      models: [{role: legacy_reviewers, seat: local_reviewer}]
-      participant: glm
-      adapter_transport: acp
-      catalog_transport: opencode
-      sealed_executable: agent_runtime.runner:invoke_inter_agent
-      quota_bucket: glm
-      credential_bucket: glm
       quota_limit: 1
       credential_limit: 1
       capacity_weight: 1.0
@@ -281,22 +267,7 @@ review_scheduler:
       quota_limit: 1
       credential_limit: 1
       capacity_weight: 1.0
-    pool:
-      formal_review_eligible: false
-      formal_review_exclusion_reason: ACP participant does not yet pin and attest the concrete Laguna model
-      participant: pool
-      adapter_transport: acp
-      catalog_transport: opencode
-      sealed_executable: agent_runtime.runner:invoke_inter_agent
-      quota_bucket: pool
-      credential_bucket: pool
-      quota_limit: 1
-      credential_limit: 1
-      capacity_weight: 1.0
-
-# Bounded execution routing after a frontier advisory pass. This is deliberately
-# separate from review_ladders: it selects an implementation/investigation lane,
-# not a formal reviewer or a release authority.
+# Bounded execution routes implementation/investigation, never review authority.
 execution_routing:
   sol_advised_bounded:
     advisor:
@@ -665,28 +636,20 @@ models:
   gemini-4-argon-high:
     family: google
     tier: frontier_practical
-    lifecycle: hold
+    lifecycle: retired
     aliases: [gemini-4-argon-medium, gemini-4-argon-low]
     # Direct listed AGY slugs. Not a base name plus an effort suffix.
-    # Schema has no trial lifecycle or trial role id (lifecycles: active, fallback,
-    # hold, retired). hold plus the existing explicit_bakeoff_only role keeps this
-    # out of review, consult, critical, security and advisor admission.
+    # Historical trial metadata. Retirement bars all execution.
     roles: [explicit_bakeoff_only]
-    transports: [agy]
+    transports: []
     strengths: [listed_agy_selector]
     weaknesses:
       - supervised_trial_not_advisor_quality
       - not_admitted_for_critical_security_or_advisor
       - provider_listing_is_not_qualification
-    notes: >-
-      Supervised trial. `agy models` on 2026-10-13 lists gemini-4-argon-high,
-      gemini-4-argon-medium and gemini-4-argon-low as separate selectors and does
-      not list Gemini 3.1 Pro. The adapter passes each listed slug through unchanged.
-      This entry does not add a review candidate, ladder rung, critical_review,
-      security_review or advisor role. A provider listing is availability only.
-      Broader qualification stays with DevOps #9619.
     sources:
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   gemini-3.7-flash-high:
     family: google
     tier: frontier_practical
@@ -718,14 +681,15 @@ models:
   gemini-3.1-pro-high:
     family: google
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
     aliases: [gemini-3.1-pro-preview, gemini-3.1-pro]
     roles: [architecture_support, factual_review, multimodal_analysis]
-    transports: [agy]
+    transports: []
     strengths: [complex_reasoning, deep_single_shot, multimodal_long_context]
     weaknesses: [higher_latency_and_cost_than_3_7_flash, not_default_agentic_workhorse, operator_2026_09_22_outperformed_by_3_8_flash_high]
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   gemini-3.5-flash-high:
     family: google
     tier: strong_efficient
@@ -895,36 +859,30 @@ models:
     sources:
       - https://moonshotai.github.io/kimi-code/en/guides/getting-started.html
   glm-5.3:
-    routing_wire_ids:
-      opencode: zai-coding-plan/glm-5.3
     family: zhipu
     tier: frontier_practical
-    lifecycle: active
-    # Operator 2026-08-14: dramatically improved vs 5.2; default fleet GLM.
+    lifecycle: retired
+    # Historical GLM route metadata; retirement bars execution.
     # Native reasoning_effort: low | high | max (thinking cannot be disabled).
-    # Fleet default = high; advisory / hard escalation = max.
-    aliases: [glm53, glm]
+    # Historical efforts: high by default, max for advisory work.
+    aliases: [glm53, glm, zai-coding-plan/glm-5.3]
     glm_routes:
       glmcc_alias: glm-5.3
       platform_model_id: glm-5.3
       coding_model_id: glm-5.3
       context_profile: glmcc_glm53
     roles: [long_context_review, security_review, complex_debugging, advisory]
-    transports: [opencode, glmcc]
+    transports: []
     strengths: [long_horizon_coding, one_million_context, frontier_coding, effort_low_high_max, token_efficient]
     weaknesses: [china_data_egress, local_interactive_only, quota_multiplier, thinking_cannot_disable, never_openrouter]
-    notes: >-
-      Wave 1 SCORECARD 2026-08-23: CF #7144 pass with nits; solid root-cause;
-      ships-heavier. LOCAL zai-coding-plan only — never OpenRouter. Also
-      addressed impl track #7121 (fetch refspecs).
     sources:
       - https://z.ai/blog/glm-5.3
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   glm-5.2:
     family: zhipu
     tier: frontier_practical
     lifecycle: retired
-    replaced_by: glm-5.3
-    # Historical route metadata only; new work uses GLM-5.3.
+    # Historical route metadata only; all GLM models are retired.
     aliases: [glm52]
     glm_routes:
       glmcc_alias: glm-5.2
@@ -991,69 +949,68 @@ models:
   # API (poolside inference): poolside/laguna-s-2.1 · poolside/laguna-xs-2.1
   # opencode native path often: poolside/poolside/<id>
   poolside/laguna-s-2.1:
-    routing_wire_ids:
-      opencode: poolside/poolside/laguna-s-2.1
     family: poolside
     tier: frontier_practical
-    lifecycle: active
-    aliases: [laguna-s-2.1, pool, laguna-s, Laguna-S-2.1]
+    lifecycle: retired
+    aliases: [laguna-s-2.1, pool, laguna-s, Laguna-S-2.1, poolside/poolside/laguna-s-2.1]
     roles: [routine_review, high_volume_dissent, web_fact_check, free_lane_code_review]
-    transports: [opencode]
+    transports: []
     strengths: [free_current_subscription, second_gen_laguna_s, coding_specialization, review_volume]
     weaknesses: [not_sole_critical_gate, opencode_catalog_may_lag_native_slug]
     sources:
       - https://poolside.ai/models
       - https://poolside.ai/blog/introducing-laguna-s-2-1
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   poolside/laguna-xs-2.1:
-    routing_wire_ids:
-      opencode: poolside/poolside/laguna-xs-2.1
     family: poolside
     tier: strong_efficient
-    lifecycle: active
-    aliases: [laguna-xs-2.1, laguna-xs, Laguna-XS-2.1]
+    lifecycle: retired
+    aliases: [laguna-xs-2.1, laguna-xs, Laguna-XS-2.1, poolside/poolside/laguna-xs-2.1]
     roles: [rapid_agentic_iteration, cheap_volume_review, web_fact_check]
-    transports: [opencode]
+    transports: []
     strengths: [second_gen_laguna_xs, speed, free_subscription_path]
     weaknesses: [not_sole_critical_gate, lighter_than_s_2_1]
     sources:
       - https://poolside.ai/models
       - https://poolside.ai/blog/introducing-laguna-xs-2-1
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   poolside/laguna-m.1:
     family: poolside
     tier: strong_efficient
-    lifecycle: fallback
+    lifecycle: retired
     aliases: [laguna-m.1, laguna-m1, Laguna-M.1]
     roles: [compatibility_only, prior_gen_pool]
-    transports: [opencode]
+    transports: []
     strengths: [free_subscription_back_compat]
     weaknesses: [superseded_by_laguna_s_2_1_and_xs_2_1, not_sole_critical_gate]
     sources:
       - https://poolside.ai/assets/laguna/laguna-m1-xs2-technical-report.pdf
       - https://poolside.ai/models
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   composer-2.5:
-    routing_wire_ids:
-      cursor: composer-2.5
     family: moonshot
     lab: cursor
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
     roles: [long_running_coding, implementation, strong_review]
-    transports: [cursor]
+    transports: []
     strengths: [sustained_agentic_work, complex_instruction_following, effort_calibration]
     weaknesses: [not_independent_from_kimi_lineage, cursor_only]
     sources:
       - https://cursor.com/blog/composer-2-5
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   google-ais/gemma-4-31b-it:
     family: google
     tier: specialist
-    lifecycle: active
+    lifecycle: retired
     aliases: [gemma-4-31b-it, gemma]
     roles: [surface_review, source_constrained_drafting]
-    transports: [opencode]
+    transports: []
     strengths: [low_cost, surface_language_checks]
     weaknesses: [not_sole_factual_or_critical_reviewer]
     sources:
       - https://ai.google.dev/gemma/docs/core
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   gpt-oss-120b:
     family: openai
     tier: specialist
@@ -1069,33 +1026,28 @@ models:
   qwen/qwen3.6-plus:
     family: qwen
     tier: specialist
-    lifecycle: hold
+    lifecycle: retired
     roles: [explicit_bakeoff_only]
-    transports: [hermes]
+    transports: []
     strengths: [coding_and_reasoning]
     weaknesses: [excluded_from_automatic_routing_pending_fresh_evidence]
     sources:
       - https://github.com/QwenLM/Qwen3.6
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   glm-5.3-flash:
     family: zhipu
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
     aliases: [ox-alpha, 0x-alpha, stealth/ox-alpha, openrouter/stealth/ox-alpha, glm53-flash]
     roles: [implementation, hard_implement, long_running_coding]
-    transports: [opencode]
+    transports: []
     strengths: [long_horizon_coding, one_million_context, frontier_coding, token_efficient]
     weaknesses: [china_data_egress, local_interactive_only, never_openrouter, not_language_lane]
-    notes: >-
-      Revealed 2026-08-26 as GLM-5.3-Flash (formerly OpenRouter stealth ox-alpha). OpenCode
-      invocation `zai/glm-5.3-flash` via explicit `--agent glm` only (z.ai retired 2026-09-03;
-      default routing is `--agent cursor`). LOCAL-ONLY China egress; Z.AI API prepaid
-      (provider `zai`), not Coding Plan. Stealth slug retired. NOT a review_candidate.
-      NOT on review ladders. NOT formal_review_eligible (same-family zhipu).
-      Coding Plan `glm-5.3` remains explicit `--model glm-5.3` for security/coherence.
     sources:
       - https://openrouter.ai/z-ai/glm-5.3-flash
       - https://z.ai/blog
       - https://huggingface.co/zai-org/GLM-5.3-Flash
+    retirement_reason: "Operator decision 2026-10-23: not subscribed; never route or select."
   claude-sonnet-4.6-thinking:
     family: anthropic
     tier: compatibility
@@ -1125,12 +1077,8 @@ review_candidates:
   openai_frontier: {role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: candidate}
   grok-4.7: {role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: candidate}
   grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
-  glm-5.3: {role: legacy_reviewers, seat: local_reviewer, route_name: native, field: candidate}
   claude-opus-5-5: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: candidate}
   claude-sonnet-5-5: {role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: candidate}
-  composer-2.5: {role: legacy_reviewers, seat: cursor_coder, route_name: native, field: candidate}
-  pool: {role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: candidate}
-  pool-xs: {role: legacy_reviewers, seat: light_reviewer, route_name: native, field: candidate}
   gemini-3.8-flash-high: {role: legacy_reviewers, seat: google_bounded, route_name: native, field: candidate}
 
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
@@ -1195,14 +1143,12 @@ orchestrator_seats:
     escalate_when: n/a_same_sku
     note: >-
       Google-family seat; Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High
-      outperforms 3.1 Pro; Pro only when explicitly requested). Gemini may drive epics (2026-10-08
-      approval): start-gemini-driver.sh certifies gemini-3.1-pro-high (driver default) and
-      gemini-3.8-flash-high, and refuses every other Gemini model id. The 2026-10-08 approval also
+      outperforms 3.1 Pro). Gemini may drive epics (2026-10-08 approval):
+      start-gemini-driver.sh defaults to gemini-3.8-flash-high and refuses every other Gemini id. The 2026-10-08 approval also
       admits Gemini as a formal reviewer of low-risk and medium-risk code, and of Ukrainian work with
-      the Sources MCP; high-risk and critical review stay with Opus 5.5 or Sol 6.1 until Gemini 4
-      passes docs/runbooks/agy-authority-qualification.md. Security-path code reviews remain excluded.
+      the Sources MCP; high-risk and critical review stay with Opus 5.5 or Sol 6.1 under the current qualification policy. Security-path code reviews remain excluded.
       Native AGY review dispatches run directly in the exact-head worktree. Design input and designated approval stay
-      with Opus 5.5 and Sol 6.1. Gemini 4 is re-evaluated at general availability.
+      with Opus 5.5 and Sol 6.1. Gemini Pro and Argon are retired, not subscribed (operator 2026-10-23).
   cursor:
     model_id: {role: legacy_reviewers, seat: xai_reviewer}
     effort: high
@@ -1211,20 +1157,17 @@ orchestrator_seats:
     escalate_when: deep_single_shot_or_architecture
     auto_allowlist:
       - {role: legacy_reviewers, seat: xai_reviewer}
-      - {role: legacy_reviewers, seat: cursor_coder}
     auto_scope: write_implementation_dispatch_with_green_dor
     attestation_rule: driver_of_record_requires_attested_resolved_model
     unknown_auto_family_resolution: cursor_family
     unknown_auto_union_families:
       - xai
-      - moonshot
     note: >-
       Cursor orchestrator seat (parent #6952, #6955). The seat runs the concrete pin
       grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin.
       Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task
       (auto_scope: a write-capable dispatch typed --research-role implementation, with owned
-      paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI],
-      composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract). The driver
+      paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI]; refresh under the catalog ~30-day contract). The driver
       seat, review, design, consults, discussions and recon never run Auto.
       Cursor Auto selectors use the Cursor author family (#9951), even when the
       runtime reports a concrete model. Reviewers from other families can review
@@ -1257,26 +1200,6 @@ formal_cf_defaults:
     family_models:
       - {role: legacy_reviewers, seat: anthropic_practical}
       - {role: anthropic_authority_reviewer}
-  glm:
-    model_id: {role: legacy_reviewers, seat: local_reviewer}
-    effort: high
-    # Native efforts: low | high | max. Default high; advisory/escalation max
-    # (operator 2026-08-14 — GLM-5.3 dramatically improved).
-    escalate_model_id: {role: legacy_reviewers, seat: local_reviewer}
-    escalate_effort: max
-    family_models:
-      - {role: legacy_reviewers, seat: local_reviewer}
-  pool:
-    # Laguna S 2.1 — gen-2 strongest (not m.1; not xs)
-    model_id: {role: legacy_reviewers, seat: volume_reviewer}
-    effort: high
-    family_models:
-      - {role: legacy_reviewers, seat: volume_reviewer}  # gen-2 default (S)
-      - {role: legacy_reviewers, seat: light_reviewer}  # gen-2 light (XS)
-      - poolside/laguna-m.1     # gen-1 fallback only
-  pool_xs:
-    model_id: {role: legacy_reviewers, seat: light_reviewer}
-    effort: high
   grok:
     model_id: {role: legacy_reviewers, seat: xai_reviewer}
     effort: high
@@ -1293,8 +1216,7 @@ review_ladders:
   # Operator decision 2026-10-05 (#9769): Opus, native Grok, then Cursor Grok.
   # Both Grok transports require runtime attestation and exclude xAI authors.
   # No Claude model reviews through Cursor (D-129, #10464).
-  # Composer and Pool lack critical_review; critical lists them to record exclusion.
-  # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
+  # Unsubscribed models have no review candidates. Fable holds no review role (#9583).
   # Grok reviews security code statically: CI is its execution proof and the
   # review requests no execution (core.md P2; D-129, #10464).
   critical:
@@ -1302,9 +1224,6 @@ review_ladders:
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:
@@ -1318,10 +1237,7 @@ review_ladders:
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
@@ -1346,7 +1262,7 @@ budget_substitution_models:
     gpt-6-luna: {role: bounded_recon}
   cursor:
     grok-4.7: {role: legacy_reviewers, seat: xai_reviewer}
-    composer-2.5: {role: legacy_reviewers, seat: cursor_coder}
+
 
 # #9302 role references resolve to the v1 consumer view until PR 4.
 # Legacy consumers retain schema_version v1 and every existing field. Wire identities belong to models, never predecessor seats.
@@ -1412,27 +1328,6 @@ seats:
         - infra
         capabilities:
         - code_review
-  local_reviewer:
-    model_id: glm-5.3
-    bindings:
-    - legacy_review_candidate
-    priority: 40
-    decision_reference: scripts/config/model_catalog.yaml#review_candidates
-    routes:
-      native:
-        legacy_name: glm-5.3
-        effort: high
-        route: glm
-        transport: opencode
-        invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-glm
-        review_profiles:
-        - code
-        - infra
-        capabilities:
-        - code_review
-        - isolation
-        - sealed_evidence
-        requires_data_egress_policy: local_interactive
   anthropic_authority:
     model_id: claude-opus-5-5
     bindings:
@@ -1474,60 +1369,6 @@ seats:
         - code_review
         - isolation
         - sealed_evidence
-  cursor_coder:
-    model_id: composer-2.5
-    bindings:
-    - legacy_review_candidate
-    priority: 80
-    decision_reference: scripts/config/model_catalog.yaml#review_candidates
-    routes:
-      native:
-        legacy_name: composer-2.5
-        effort: high
-        route: cursor
-        transport: cursor
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model {wire_id}
-        review_profiles:
-        - code
-        - infra
-        capabilities:
-        - code_review
-  volume_reviewer:
-    model_id: poolside/laguna-s-2.1
-    bindings:
-    - legacy_review_candidate
-    priority: 90
-    decision_reference: scripts/config/model_catalog.yaml#review_candidates
-    routes:
-      native:
-        legacy_name: pool
-        effort: high
-        route: pool
-        transport: opencode
-        invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
-        review_profiles:
-        - code
-        - infra
-        capabilities:
-        - code_review
-  light_reviewer:
-    model_id: poolside/laguna-xs-2.1
-    bindings:
-    - legacy_review_candidate
-    priority: 100
-    decision_reference: scripts/config/model_catalog.yaml#review_candidates
-    routes:
-      native:
-        legacy_name: pool-xs
-        effort: high
-        route: pool
-        transport: opencode
-        invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model {wire_id}
-        review_profiles:
-        - code
-        - infra
-        capabilities:
-        - code_review
   mechanical_worker:
     model_id: claude-haiku-5-5
     bindings: [mechanical_work]
@@ -1612,8 +1453,6 @@ roles:
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
     - anthropic_practical/native
-    - volume_reviewer/native
-    - light_reviewer/native
     - google_bounded/native
     cardinality: many
     risk: low
@@ -1624,8 +1463,6 @@ roles:
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
     - anthropic_practical/native
-    - volume_reviewer/native
-    - light_reviewer/native
     - google_bounded/native
     cardinality: many
     risk: medium

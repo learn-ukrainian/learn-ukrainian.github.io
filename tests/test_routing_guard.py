@@ -21,6 +21,15 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
 @pytest.mark.parametrize(
     "model",
     [
+        "openrouter/google/gemma-4-31b-it",  # google/ but NOT gemini — no subscription lane
+        "google-ais/gemma-4-31b-it",  # $0 default lane (Gemma has no paid SKU)
+        "GOOGLE-AIS/GEMMA-4-31B-IT",
+        "deepseek/deepseek-v4-pro",
+        "gemini-3.1-pro-high",  # agy NATIVE lane (no openrouter/ prefix) is the subscription path
+        "zai/glm-5.3-flash",
+        "glm-5.3-flash",
+        "zai-coding-plan/glm-5.3",
+        "google-ais/gemma-4-26b-a4b-it",
         "qwen/qwen3.6-plus",
         "openrouter/qwen/qwen3.7-max",
         "qwen3-max",
@@ -89,41 +98,26 @@ def test_forbidden_models_refused(model: str) -> None:
 
 
 def test_ox_alpha_message_points_to_cursor_not_glm() -> None:
-    with pytest.raises(RoutingGuardError, match="--agent cursor") as excinfo:
+    with pytest.raises(RoutingGuardError, match="is retired") as excinfo:
         assert_model_routing_allowed("ox-alpha", context="test")
     msg = str(excinfo.value)
     assert "--agent glm" not in msg
     assert "z.ai" in msg.lower() or "retired" in msg.lower()
-    assert "LU_ROUTING_GUARD_OVERRIDE=1" in msg
+    assert "use an active catalog model" in msg
 
 
-def test_openrouter_glm_message_points_to_cursor_not_glm() -> None:
-    with pytest.raises(RoutingGuardError, match="--agent cursor") as excinfo:
+def test_openrouter_glm_retirement_cannot_be_overridden(monkeypatch) -> None:
+    monkeypatch.setenv("LU_ROUTING_GUARD_OVERRIDE", "1")
+    with pytest.raises(RoutingGuardError, match="is retired in the model catalog"):
         assert_model_routing_allowed("openrouter/z-ai/glm-5.3-flash", context="test")
-    msg = str(excinfo.value)
-    assert "`delegate.py dispatch --agent glm`" not in msg
-    assert "do not dispatch `--agent glm`" in msg
-    assert "OpenRouter glm only" in msg
-    assert "LU_ROUTING_GUARD_OVERRIDE=1" in msg
-    assert "zai/glm-5.3-flash via" not in msg
-    assert "FIRST-PARTY z.ai" not in msg
 
 
 @pytest.mark.parametrize(
     "model",
     [
-        "openrouter/google/gemma-4-31b-it",  # google/ but NOT gemini — no subscription lane
-        "google-ais/gemma-4-31b-it",  # $0 default lane (Gemma has no paid SKU)
-        "google-ais/gemma-4-26b-a4b-it",
-        "GOOGLE-AIS/GEMMA-4-31B-IT",
         "deepseek/deepseek-flash",
-        "deepseek/deepseek-v4-pro",
-        "gemini-3.1-pro-high",  # agy NATIVE lane (no openrouter/ prefix) is the subscription path
         "claude-opus-4.8",  # native Anthropic lane
         "gpt-5.5",  # native codex lane
-        "zai/glm-5.3-flash",
-        "glm-5.3-flash",
-        "zai-coding-plan/glm-5.3",
         None,
         "",
     ],
@@ -134,10 +128,10 @@ def test_allowed_models_pass(model: str | None) -> None:
 
 def test_deepseek_guard_messages_name_live_provider() -> None:
     with pytest.raises(RoutingGuardError, match="Use deepseek/<model>"):
-        assert_model_routing_allowed("openrouter/deepseek/deepseek-v4-flash", context="test")
+        assert_model_routing_allowed("openrouter/deepseek/deepseek-v4.1-flash", context="test")
     with pytest.raises(RoutingGuardError, match="deepseek/ accepts ONLY"):
         assert_model_routing_allowed("deepseek/gpt-5.5", context="test")
-    with pytest.raises(RoutingGuardError, match="deepseek/deepseek-flash"):
+    with pytest.raises(RoutingGuardError, match="is retired"):
         assert_model_routing_allowed("deepseek-direct/deepseek-v4-flash", context="test")
 
 
@@ -148,7 +142,7 @@ def test_qwen_agent_refused_and_override_env_allows(monkeypatch: pytest.MonkeyPa
 
     monkeypatch.setenv("LU_ROUTING_GUARD_OVERRIDE", "1")
     assert_agent_routing_allowed("qwen", context="test")
-    assert_model_routing_allowed("openrouter/anthropic/claude-sonnet-5", context="test")
+    assert_model_routing_allowed("openrouter/anthropic/claude-sonnet-5-5", context="test")
 
 
 def test_opencode_transport_is_wired() -> None:
@@ -183,9 +177,9 @@ def test_hermes_transport_is_wired_and_default_model_allowed(monkeypatch: pytest
         raise AssertionError("send_message must not run for a refused model")
 
     monkeypatch.setattr(_hermes, "send_message", _boom)
-    with pytest.raises(RoutingGuardError):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
         _hermes.ask_hermes("hi", task_id="t", model="qwen/qwen3.6-plus")
-    with pytest.raises(RoutingGuardError):
+    with pytest.raises(ValueError, match="is retired in the model catalog"):
         _hermes.ask_hermes("hi", task_id="t", model="openrouter/anthropic/claude-sonnet-5")
     # The shipped default must itself be guard-allowed, or every bare
     # ask-hermes would error out.

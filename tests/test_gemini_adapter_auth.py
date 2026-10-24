@@ -463,28 +463,21 @@ class TestLadderAuthModeFiltering:
 
     def test_ladder_oauth_only_keeps_agy_rung(self) -> None:
         ladder = build_gemini_ladder(allowed_auth_modes=("oauth",))
-        assert len(ladder) == 2
-        gemini_rungs = [r for r in ladder if r.cli == "gemini-cli"]
-        assert all(r.auth_mode == "oauth" for r in gemini_rungs)
-        assert ladder[1].cli == "agy-cli"
-        # Rung indices renumber to filtered total so log "Rung 1/2" is honest
-        assert [r.index for r in ladder] == [1, 2]
-        assert all(r.total == 2 for r in ladder)
+        assert [(r.model, r.cli, r.auth_mode) for r in ladder] == [
+            ("gemini-3.8-flash-high", "agy-cli", None),
+        ]
+        assert [(r.index, r.total) for r in ladder] == [(1, 1)]
 
-    def test_ladder_api_only_has_primary_rung(self) -> None:
-        ladder = build_gemini_ladder(allowed_auth_modes=("api",))
-        assert len(ladder) == 1
-        assert all(r.auth_mode == "api" for r in ladder)
+    def test_ladder_api_only_has_no_subscribed_route(self) -> None:
+        # The subscribed Flash route is AGY-only; native API has no eligible rung.
+        assert build_gemini_ladder(allowed_auth_modes=("api",)) == []
 
-    def test_ladder_both_has_three_rungs_with_agy_after_pro(self) -> None:
+    def test_ladder_both_has_only_subscribed_agy_flash(self) -> None:
         ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
-        assert len(ladder) == 3
-        # API-first ordering preserves the "fast-path first" intent
-        assert ladder[0].auth_mode == "api"
-        assert ladder[1].auth_mode == "oauth"
-        assert ladder[0].model == ladder[1].model
-        assert ladder[2].cli == "agy-cli"
-        assert ladder[2].auth_mode is None
+        assert [(r.model, r.cli, r.auth_mode) for r in ladder] == [
+            ("gemini-3.8-flash-high", "agy-cli", None),
+        ]
+        assert [(r.index, r.total) for r in ladder] == [(1, 1)]
 
     def test_empty_allowed_modes_rejected(self) -> None:
         import pytest
@@ -585,7 +578,7 @@ class TestRateLimitClassification:
         # With no env override and no cooldown, ladder includes both modes.
         result = run_gemini_fallback_ladder(
             task_name="test-no-capacity",
-            preferred_model="gemini-3.1-pro-preview",
+            preferred_model="gemini-fixture-native",
             max_retries=3,
             attempt_runner=runner,
             logger=lambda _msg: None,  # silence output in tests

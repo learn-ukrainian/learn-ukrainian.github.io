@@ -41,7 +41,6 @@ READ_CALLERS = [
     ("agents_extensions/shared/skills/track-completion/scripts/track_completion.py", ["api", "repos/{owner}/{repo}/actions/runs/1"]),
     ("agents_extensions/shared/skills/track-completion/scripts/track_completion.py", ["api", "repos/{owner}/{repo}/compare/" + "a" * 40 + "..." + "b" * 40]),
     ("scripts/deploy/vendor_atlas_tree.py", ["api", "repos/unit/public/releases/assets/1", "-H", "Accept: application/octet-stream"]),
-    ("scripts/ci/reuse_green_run.py", ["api", "repos/unit/public/pulls/1", "--jq", ".head.sha"]),
     ("scripts/ci/cache_hygiene.py", ["api", "repos/unit/public/actions/caches?per_page=100&page=1"]),
     ("scripts/ci/ci_timings.py", ["api", "repos/unit/public/actions/runs/1/jobs?per_page=100&page=1"]),
 ]
@@ -93,6 +92,12 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
         if args[1:3] == ["pr", "view"]:
             reads.append(args)
             body = {"number": 1, "isDraft": state == "draft", "headRefOid": "a" * 40}
+            if "headRefOid,statusCheckRollup" in args:
+                body["statusCheckRollup"] = [{
+                    "__typename": "CheckRun", "name": "CI Gate",
+                    "status": "IN_PROGRESS" if state == "pending" else "COMPLETED",
+                    "conclusion": {"red": "FAILURE", "pending": "", "unknown": "UNKNOWN"}.get(state, "SUCCESS"),
+                }]
         elif args[1:3] == ["pr", "checks"]:
             reads.append(args)
             body = [{"name": "CI Gate", "bucket": {"red": "fail", "pending": "pending", "unknown": "unrecognised"}.get(state, "pass")}]
@@ -112,8 +117,8 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
         with pytest.raises(gate.PublishBlocked):
             pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={})
         assert writes == []
-    # Ready merges also read GitHub's default squash text before the write.
-    assert len(reads) == (3 if state == "ready" else 2)
+    # Read the head-bound checks; ready merges also read the default squash text.
+    assert len(reads) == (4 if state == "ready" else 3)
 
 
 def test_worker_merge_guard_and_changed_head_refuse_before_write():

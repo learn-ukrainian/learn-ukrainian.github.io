@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import json
 import subprocess
+from dataclasses import replace
 
 import pytest
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.review.closeout_cli import main
 from scripts.review.reviewer_resolver import (
-    GLM,
     GROK_4_7,
     REVIEW_CANDIDATES,
     ResolverInputs,
@@ -84,11 +84,7 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     assert [item["name"] for item in xai] == ["grok-4.7", "grok-4.7-cursor-fallback"]
     assert xai[0]["status"] == "excluded"
     assert "Ukrainian-content language-lanes exclusion" in xai[0]["reason"]
-    composer = next(item for item in payload["trace"] if item["name"] == "composer-2.5")
-    assert composer["status"] == "excluded"
-    assert composer["reason"] == (
-        "Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini"
-    )
+    assert "composer-2.5" not in {item["name"] for item in payload["trace"]}
 
 
 @pytest.mark.parametrize(
@@ -116,32 +112,38 @@ def test_content_code_review_uses_only_cross_family_claude_or_gpt(author, expect
 
 
 def test_non_language_candidates_and_explicit_pin_are_excluded():
-    inputs = ResolverInputs(author_model="codex", changed_paths=("curriculum/A1/lesson.mdx",), claude_account=HOST_ACCOUNT)
+    inputs = ResolverInputs(
+        author_model="codex", changed_paths=("curriculum/A1/lesson.mdx",), claude_account=HOST_ACCOUNT
+    )
     # Kimi is no longer a review candidate at all (web, UI and backend coding only).
     assert "kimi-k3" not in REVIEW_CANDIDATES
     # DeepSeek is excluded from every review, not just language review.
     assert "deepseek-v4.1-flash" not in REVIEW_CANDIDATES
     for candidate in (
         GROK_4_7,
-        GLM,
-        REVIEW_CANDIDATES["composer-2.5"],
+        replace(GROK_4_7, name="glm-5.3", concrete_model="glm-5.3", family="zhipu"),
+        replace(GROK_4_7, name="composer-2.5", concrete_model="composer-2.5", family="moonshot"),
     ):
         result = evaluate_candidate(candidate, inputs)
         assert result.status == "excluded", candidate.name
-        assert "Ukrainian-content language-lanes exclusion" in result.reason
+        assert ("Ukrainian-content language-lanes exclusion" if candidate is GROK_4_7 else "retired") in result.reason
     pinned = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             changed_paths=("curriculum/A1/lesson.mdx",),
             pinned_candidate="grok-4.7",
-            pressure_override_reason="test pin", claude_account=HOST_ACCOUNT,
+            pressure_override_reason="test pin",
+            claude_account=HOST_ACCOUNT,
         )
     )
     assert pinned.selected is None
     assert pinned.fail_closed_reason
     deepseek_pin = resolve_reviewer(
         ResolverInputs(
-            author_model="codex", pinned_candidate="deepseek-v4.1-flash", pressure_override_reason="test pin", claude_account=HOST_ACCOUNT
+            author_model="codex",
+            pinned_candidate="deepseek-v4.1-flash",
+            pressure_override_reason="test pin",
+            claude_account=HOST_ACCOUNT,
         )
     )
     assert deepseek_pin.selected is None

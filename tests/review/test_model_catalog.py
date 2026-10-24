@@ -853,9 +853,9 @@ def test_budget_pin_overlay_refuses_drifted_refusal():
 
 @pytest.mark.parametrize("index,field", [(63, "refusal"), (62, "target")])
 def test_budget_pin_overlay_still_rejects_other_dispatch_changes(index, field):
-    actual = deepcopy(APPROVED_BASELINE)
+    actual = deepcopy(CURRENT_BASELINE)
     actual["dispatch"][index]["value"][field] = "unapproved change"
-    with pytest.raises(AssertionError, match="approved surface differs: dispatch"):
+    with pytest.raises(AssertionError, match="current surface differs: dispatch"):
         assert_frozen_surfaces(actual)
 
 
@@ -1093,14 +1093,29 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     assert_frozen_surfaces(actual)
-    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
-    assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
+    assert json.loads((output / "inputs.json").read_bytes()) == CURRENT_INPUTS
+    assert (
+        hashlib.sha256((output / "occurrences.json.gz").read_bytes()).hexdigest()
+        == _RETIREMENT_DATA["occurrences_sha256"]
+    )
+
+
+# The 2026-10-23 subscription retirement is a new capture. Prior approved
+# overlays remain byte-pinned historical evidence above.
+_RETIREMENT_CAPTURE = CAPACITY_FIXTURE / "routing-retirement-20261023.json.gz"
+assert (
+    hashlib.sha256(_RETIREMENT_CAPTURE.read_bytes()).hexdigest()
+    == "024471fb8b0413f52b30788aa9c6961928720ae98c1e756336cbd41838155a59"
+)
+_RETIREMENT_DATA = json.loads(gzip.decompress(_RETIREMENT_CAPTURE.read_bytes()))
+CURRENT_BASELINE = _RETIREMENT_DATA["baseline"]
+CURRENT_INPUTS = _RETIREMENT_DATA["inputs"]
 
 
 def assert_frozen_surfaces(actual):
     assert actual.keys() == BASELINE.keys()
     for surface in BASELINE:
-        assert actual[surface] == APPROVED_BASELINE[surface], f"approved surface differs: {surface}"
+        assert actual[surface] == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
 
 

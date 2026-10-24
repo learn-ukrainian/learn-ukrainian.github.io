@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 from urllib.parse import quote
 
@@ -342,6 +343,30 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
 
     def fetch(name, **selectors):
         try:
+            if name == "queue-candidate":
+                listing = fetch("run-artifacts", **selectors)
+                artifacts = listing["artifacts"]
+                if type(listing["total_count"]) is not int or listing["total_count"] != len(artifacts):
+                    raise ValueError("partial artifact listing")
+                matches = [row for row in artifacts if row.get("name") == "ci-queue-candidate"]
+                if len(matches) != 1:
+                    raise ValueError("missing or ambiguous queue candidate artifact")
+                artifact = matches[0]
+                if (artifact.get("expired") is not False or type(artifact.get("id")) is not int
+                        or type(artifact.get("size_in_bytes")) is not int
+                        or not 0 < artifact["size_in_bytes"] <= 65536):
+                    raise ValueError("queue candidate artifact unavailable")
+                with tempfile.TemporaryFile(dir=ensure_scratch_root()) as archive_file:
+                    read("artifact-archive", repo=dest, number=artifact["id"], cwd=cwd, env=environment,
+                         runner=runner, stdout=archive_file, check=True, timeout=30)
+                    if archive_file.tell() > 65536:
+                        raise ValueError("queue candidate archive too large")
+                    archive_file.seek(0)
+                    with zipfile.ZipFile(archive_file) as archive:
+                        members = archive.infolist()
+                        if len(members) != 1 or members[0].filename != "queue-candidate.json" or members[0].file_size > 16384:
+                            raise ValueError("queue candidate archive malformed")
+                        return json.loads(archive.read(members[0]))
             result = read(
                 name,
                 repo=dest,
@@ -466,6 +491,8 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     }
     if not failed_ids or failed_ids != set(evidence["job_ids"]):
         raise gate.PublishBlocked("RECOVERY_EVIDENCE_MISMATCH: every failing job must be diagnosed")
+    if failed_run.get("event") == "merge_group":
+        recovery.require_queue_diff(evidence, failed_run, fetch)
     current = fetch("pull", number=number)
     if current.get("state") != "open" or current.get("head", {}).get("sha") != head:
         raise gate.PublishBlocked("RECOVERY_HEAD_MOVED: PR changed during preflight")
@@ -867,6 +894,7 @@ REST_READS = {
     "reviews": ("repos/{repo}/pulls/{number}/reviews", {"number": "number"}),
     "commits": ("repos/{repo}/pulls/{number}/commits", {"number": "number"}),
     "commit": ("repos/{repo}/commits/{sha}", {"sha": "sha"}),
+    "compare": ("repos/{repo}/compare/{base}...{head}", {"base": "sha", "head": "sha"}),
     "pull": ("repos/{repo}/pulls/{number}", {"number": "number"}),
     "pr-files": ("repos/{repo}/pulls/{number}/files", {"number": "number"}),
     "comment": ("repos/{repo}/issues/comments/{number}", {"number": "number"}),
@@ -875,6 +903,8 @@ REST_READS = {
     "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
+    "run-artifacts": ("repos/{repo}/actions/runs/{number}/artifacts", {"number": "number"}),
+    "artifact-archive": ("repos/{repo}/actions/artifacts/{number}/zip", {"number": "number"}),
     "issues": ("repos/{repo}/issues?state=open", {}),
     "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "timestamp", "end": "timestamp"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),

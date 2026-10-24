@@ -9825,8 +9825,8 @@ def _validate_existing_worktree(
     if actual_branch and actual_branch != expected_branch:
         raise WorktreeBranchMismatch(
             f"worktree at {path} is on branch {actual_branch!r}, expected "
-            f"{expected_branch!r}. Remove it and retry:\n"
-            f"    git worktree remove {path}"
+            f"{expected_branch!r}. Have the owning driver inspect cleanup with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
 
     # 2. Dirty check.
@@ -9847,7 +9847,9 @@ def _validate_existing_worktree(
         raise WorktreeDirty(
             f"worktree at {path} has uncommitted changes "
             f"(first {len(first_files)}): {first_files}. "
-            f"Commit, stash, or remove the worktree before reuse."
+            "Commit or stash the changes before reuse, or have the owning driver inspect cleanup "
+            "with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
 
     # 3. Stale-base check. Refresh origin/{base} first. Single-remote hosts
@@ -9932,8 +9934,8 @@ def _validate_existing_worktree(
             )
         raise WorktreeStaleBase(
             f"worktree at {path} is {behind} commit(s) behind {shown} "
-            f"and rebase failed. Resolve manually or remove:\n"
-            f"    git worktree remove {path}"
+            "and rebase failed. Resolve manually, or have the owning driver inspect cleanup with the common reaper "
+            "(scripts/orchestration/reap_worktrees.py or scripts.fleet.post_task_reap) before retrying."
         )
     return True
 
@@ -20764,7 +20766,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only defaults to an isolated detached worktree.",
     )
-    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.8-flash-high.")
     d.add_argument(
         "--claude-account",
         default=None,

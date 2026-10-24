@@ -379,36 +379,23 @@ def test_run_inbox_max_messages_soft_cap_first_thread(mock_invoke):
 
 @patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_429_falls_back_pro_to_flash_and_persists_model(mock_invoke):
+    """Retired Pro's alias equals Flash and must not create a self-retry cycle."""
+    assert PRO_MODEL == FLASH_MODEL
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])
     _set_delivery_model(message_id, PRO_MODEL)
-    mock_invoke.side_effect = [
-        _ok_result(
-            "gemini",
-            model=PRO_MODEL,
-            ok=False,
-            response="",
-            stderr_excerpt="HTTP 429 Too Many Requests",
-            returncode=1,
-        ),
-        _ok_result("gemini", model=FLASH_MODEL, response="bridge reply"),
-    ]
-
-    summary = _inbox.run_inbox("gemini")
-
-    assert summary.deliveries_delivered == 1
-    assert mock_invoke.call_count == 2
-    assert mock_invoke.call_args_list[0].kwargs["model"] == PRO_MODEL
-    assert mock_invoke.call_args_list[1].kwargs["model"] == FLASH_MODEL
-    delivered = _channels.deliveries_for_message(message_id)[0]
-    assert delivered["status"] == "delivered"
-    assert delivered["to_model"] == FLASH_MODEL
-    messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
-    assert messages[-1]["from_agent"] == "gemini"
-    assert messages[-1]["from_model"] == FLASH_MODEL
-    assert messages[-1]["body"].startswith(
-        f"[model={FLASH_MODEL}, pro-capacity-unavailable]"
+    mock_invoke.return_value = _ok_result(
+        "gemini", model=FLASH_MODEL, ok=False, response="",
+        stderr_excerpt="HTTP 429 Too Many Requests", returncode=1,
     )
+    summary = _inbox.run_inbox("gemini")
+    assert summary.deliveries_failed == 1
+    mock_invoke.assert_called_once()
+    assert mock_invoke.call_args.kwargs["model"] == FLASH_MODEL
+    delivered = _channels.deliveries_for_message(message_id)[0]
+    assert delivered["status"] == "failed"
+    assert delivered["to_model"] == FLASH_MODEL
+    assert len(_channels.read("topic", thread_id=str(thread[0]["thread_id"]))) == 1
 
 
 @patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
@@ -481,7 +468,7 @@ def test_run_inbox_gemini_429_exhausts_cascade_and_fails(mock_invoke):
     summary = _inbox.run_inbox("gemini")
 
     assert summary.deliveries_failed == 1
-    assert mock_invoke.call_count == 2
+    assert mock_invoke.call_count == 1
     delivered = _channels.deliveries_for_message(message_id)[0]
     assert delivered["status"] == "failed"
     assert delivered["to_model"] == FLASH_MODEL

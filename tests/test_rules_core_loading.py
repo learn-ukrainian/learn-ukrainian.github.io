@@ -327,6 +327,11 @@ def _carrier(argv: list[str], carrier: str) -> str:
     ("row", "name", "args", "env_kind", "carrier", "seat"), LAUNCHER_ROWS, ids=[row[0] for row in LAUNCHER_ROWS]
 )
 def test_launcher_row_carries_the_core(row, name, args, env_kind, carrier, seat, tmp_path: Path, core_root) -> None:
+    if row in {"glm-opencode", "glmcc"}:
+        result, argv = _launch(core_root, name, args, tmp_path, env_kind, expect_launch=False)
+        assert result.returncode == 2 and "is retired in the model catalog" in result.stderr
+        assert argv == []
+        return
     result, argv = _launch(core_root, name, args, tmp_path, env_kind)
     text = _carrier(argv, carrier)
     _assert_core(text, seat, row)
@@ -345,7 +350,7 @@ def test_launcher_seat_env_makes_an_interactive_seat_content(tmp_path: Path, cor
 
 def test_gemini_driver_core_leads_the_drive_epic_binding(tmp_path: Path, core_root: Path) -> None:
     _, argv = _launch(core_root, "start-gemini-driver.sh", ("--epic", "infra"), tmp_path, None)
-    assert argv[:3] == ["agy", "--model", "gemini-3.1-pro-high"]
+    assert argv[:3] == ["agy", "--model", "gemini-3.8-flash-high"]
     assert argv.count("-i") == 1
     prompt = argv[argv.index("-i") + 1]
     assert prompt.startswith(rules_core.core_block("core") + "\n\n")
@@ -450,6 +455,11 @@ def test_launcher_without_the_core_refuses_before_any_side_effect(
     row, name, args, env_kind, carrier, seat, tmp_path: Path, absent_root: Path
 ) -> None:
     result, _ = _launch(absent_root, name, args, tmp_path, env_kind, expect_launch=False)
+    if row in {"glm-opencode", "glmcc"}:
+        assert result.returncode == 2 and "is retired in the model catalog" in result.stderr
+        assert "would exec" not in result.stdout
+        assert "would deploy agent extensions" not in result.stdout
+        return
     assert result.returncode == 1, (result.stdout, result.stderr)
     assert "refusing to launch" in result.stderr
     assert "agents_extensions/shared/rules/core.md" in result.stderr
@@ -652,7 +662,20 @@ def test_worker_row_carries_the_core(
         home = tmp_path / "agy-home"
         register_agy_hooks(tmp_path, home=home)
         tool_config = {**(tool_config or {}), "agy_home_override": str(home)}
-    plan = getattr(importlib.import_module(module), cls)().build_invocation(
+    worker = getattr(importlib.import_module(module), cls)()
+    if row == "glm":
+        with pytest.raises(ValueError, match="is retired in the model catalog"):
+            worker.build_invocation(
+                prompt=prompt,
+                mode=mode,
+                cwd=tmp_path,
+                model=None,
+                task_id="rules-core",
+                session_id=None,
+                tool_config=tool_config,
+            )
+        return
+    plan = worker.build_invocation(
         prompt=prompt,
         mode=mode,
         cwd=tmp_path,
@@ -821,11 +844,11 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
     monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
     monkeypatch.setattr(_opencode.shutil, "which", lambda name: f"/stub/{name}")
     with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
-        _cursor._invoke_cursor("hello", "composer-2.5")
+        _cursor._invoke_cursor("hello", "grok-4.7-high")
     with pytest.raises(SystemExit, match=r"ask-hermes: refused: .*core\.md"):
-        _hermes._invoke_hermes("hello", "laguna-s-2.1")
+        _hermes._invoke_hermes("hello", "deepseek-v4.1-flash")
     with pytest.raises(SystemExit, match=r"ask-opencode: refused: .*core\.md"):
-        _opencode._run_opencode("hello", "laguna-s-2.1")
+        _opencode._run_opencode("hello", "deepseek/deepseek-v4.1-flash")
 
 
 # --------------------------------------------------------------------------- public entries, before any write

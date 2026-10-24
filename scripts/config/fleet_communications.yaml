@@ -21,9 +21,9 @@ formal_review_eligibility_source: scripts/config/model_catalog.yaml#review_sched
 # fail-closed; Kimi is never a reviewer (web, UI and backend coding only).
 #
 # Formal CF model+effort pins (model_catalog formal_cf_defaults; review-pr removed in #8520):
-#   codex → gpt-6.1-sol @ high · claude → claude-sonnet-5-5 @ high · glm → glm-5.3 @ high (advisory max)
+#   codex → gpt-6.1-sol @ high · claude → claude-sonnet-5-5 @ high
 #   claude formal pins also: claude-opus-5-5
-#   pool volume → Laguna S 2.1 (laguna-s-2.1); also XS 2.1 / M.1 in catalog
+#   GLM, Pool/Laguna, Composer, Gemma and Qwen are retired, not subscribed (2026-10-23).
 #   grok → daily driver and regular code/infra reviewer at every risk with runtime
 #     attestation, native CLI or Cursor (operator decision 2026-10-05, #9769)
 #   agy → gemini-3.8-flash-high @ high (catalog seat for bounded work and Ukrainian content review;
@@ -135,14 +135,4 @@ endpoints:
     retry_class: none
     concurrency_limit: 0
     formal_review_eligible: false
-    model_family_resolver: canonical-reviewer-resolver
-  - name: glm-local
-    aliases: [glm-local, glm]
-    state: live
-    transports: [acp]
-    completion_evidence: [terminal_event, authority_receipt, sealed_verdict]
-    default_ttl_seconds: 3600
-    retry_class: standard
-    concurrency_limit: 1
-    formal_review_eligible: true
     model_family_resolver: canonical-reviewer-resolver

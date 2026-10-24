@@ -148,32 +148,21 @@ class TestDispatchAgent:
     def test_gemini_dispatch_exhausts_agy_without_flash_cli(
         self, mock_invoke, _mock_pace, tmp_path,
     ):
-        """AGY-only Flash ids never become Gemini CLI fallback rungs."""
+        """The subscribed Flash route exhausts once through AGY, never native CLI."""
         from agent_runtime.errors import RateLimitedError
 
-        mock_invoke.side_effect = [
-            RateLimitedError("gemini", "gemini-3.1-pro-preview", "429 quota"),
-            RateLimitedError("agy", "gemini-3.8-flash-high", "agy 429"),
-        ]
-
+        mock_invoke.side_effect = RateLimitedError("agy", "gemini-3.8-flash-high", "agy 429")
         ok, raw = dispatch_agent(
             "test prompt", agent="gemini-tools", phase="write",
-            orch_dir=tmp_path, timeout=300, model="gemini-3.1-pro-preview",
+            orch_dir=tmp_path, timeout=300, model="gemini-3.8-flash-high",
             mcp_tools=True, sleep_fn=lambda _s, _r: None,
         )
-
         assert ok is False
         assert raw == "__RATE_LIMITED__"
-        assert mock_invoke.call_count == 2
-        first_call, second_call = mock_invoke.call_args_list
-        assert first_call.args[0] == "gemini"
-        assert first_call.kwargs["model"] == "gemini-3.1-pro-preview"
-        assert first_call.kwargs["tool_config"] == {
-            "mcp_server_names": ["sources"], "auth_mode": "subscription",
-        }
-        assert second_call.args[0] == "agy"
-        assert second_call.kwargs["model"] == "gemini-3.8-flash-high"
-        assert second_call.kwargs["tool_config"] is None
+        mock_invoke.assert_called_once()
+        assert mock_invoke.call_args.args[0] == "agy"
+        assert mock_invoke.call_args.kwargs["model"] == "gemini-3.8-flash-high"
+        assert mock_invoke.call_args.kwargs["tool_config"] is None
 
 
     @patch("agent_runtime.runner.invoke")
@@ -359,7 +348,7 @@ class TestDispatchAgent:
             phase="rewrite-block-01",
             orch_dir=tmp_path,
             timeout=420,
-            model="gemini-3.1-pro-preview",
+            model="gemini-fixture-native",
             mcp_tools=True,
             cascade_per_call_max_s=120,
             sleep_fn=lambda s, r: recorded_sleeps.append((s, r)),

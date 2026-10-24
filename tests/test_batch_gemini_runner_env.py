@@ -132,6 +132,8 @@ def _invoke_with_captured_env(
     ), patch(
         "agent_runtime.adapters.gemini.Path.home", return_value=tmp_path,
     ), patch(
+        "scripts.agent_runtime.adapters.gemini.GeminiAdapter.default_model", "gemini-fixture-native",
+    ), patch(
         "batch_gemini_runner.execution._log_api_usage",
     ):
         result = call_gemini(_make_prompt_file(tmp_path), "bio", slug="demo", phase=2, retry=0)

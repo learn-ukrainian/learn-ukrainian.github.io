@@ -51,15 +51,20 @@ def test_cursor_adapter_does_not_disguise_unexpected_pin_errors(adapter, tmp_pat
             prompt="review",
             mode="read-only",
             cwd=tmp_path,
-            model="composer-2.5",
+            model="grok-4.7-high",
             task_id="pin-error",
             session_id=None,
             tool_config=None,
         )
 
 
-@pytest.mark.parametrize(("model", "wire"), [("composer-2.5", "composer-2.5"), ("grok-4.7", "grok-4.7-high")])
+@pytest.mark.parametrize(("model", "wire"), [("composer-2.5", None), ("grok-4.7", "grok-4.7-high")])
 def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model, wire):
+    if wire is None:
+        with pytest.raises(ValueError, match="CURSOR_MODEL_NOT_APPROVED"):
+            adapter.build_invocation(prompt="review", mode="read-only", cwd=tmp_path, model=model,
+                                     task_id="retired-model", session_id=None, tool_config=None)
+        return
     plan = adapter.build_invocation(
         prompt="review",
         mode="read-only",
@@ -88,7 +93,7 @@ def test_cursor_adapter_refuses_auto_without_delegate_admission(
 ):
     """#9274: Auto runs only a write dispatch delegate admitted as a well-defined coding task."""
     monkeypatch.setattr(adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("Auto reached workspace setup"))
-    with pytest.raises(ValueError, match=r"cursor_auto_outside_coding_task.*grok-4\.7 or composer-2\.5"):
+    with pytest.raises(ValueError, match=r"cursor_auto_outside_coding_task.*grok-4\.7"):
         adapter.build_invocation(
             prompt="implement",
             mode=mode,
@@ -190,7 +195,7 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path):
         prompt="Fix bug",
         mode="workspace-write",
         cwd=tmp_path,
-        model="composer-2.5[fast=false]",
+        model="grok-4.7-high",
         task_id="task-123",
         session_id=None,
         tool_config={
@@ -211,7 +216,7 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path):
     assert "--sandbox" in plan.cmd
     assert "enabled" in plan.cmd
     assert "--model" in plan.cmd
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "composer-2.5[fast=false]"
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7-high"
     assert "--yolo" not in plan.cmd
 
 

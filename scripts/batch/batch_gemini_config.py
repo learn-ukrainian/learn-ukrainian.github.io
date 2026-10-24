@@ -41,11 +41,11 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
-# Model Tiering — Gemini (Pro and Flash; Flash-Lite is a compatibility alias)
-PRO_MODEL = "gemini-3.1-pro-preview"                 # Deep reasoning: writing, content, review
+# Gemini uses the subscribed Flash pin; tier names remain compatibility aliases.
+PRO_MODEL = "gemini-3.8-flash-high"  # Pro is retired, not subscribed (2026-10-23)
 FLASH_MODEL = "gemini-3.8-flash-high"               # Default AGY Flash tier
 FLASH_LITE_MODEL = FLASH_MODEL                       # Same AGY route; no separate capacity tier
-GEMINI_REVIEW_MODEL = PRO_MODEL                      # Review needs Pro for strict schema + linguistic analysis
+GEMINI_REVIEW_MODEL = PRO_MODEL  # Same subscribed Flash route
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
 
 # Timeouts (seconds) — the hard_timeout ceiling for LLM-dispatch steps.

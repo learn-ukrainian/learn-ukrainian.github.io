@@ -9,7 +9,6 @@ version: "0.5.0"
 title: RB4 Red-CI triage — receipt-bound signature, currency, and non-rerun routing
 seats:
   - grok
-  - glm-local
 parameters:
   pr_number: integer
   triage_facts_receipt: string

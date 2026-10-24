@@ -1,8 +1,7 @@
 """Pin how ci.yml reacts to each event and how CI Gate decides (#8505).
 
 Safety invariant under test: no event path may make the required "CI Gate"
-check green or skipped without every required job running (or, in the merge
-queue only, a recorded reuse of a green full run of the same tree).
+check green or skipped without every job required by the event tier running.
 
 - ci.yml fires on opened/synchronize/reopened only, never `edited` or
   `labeled`. The negated-closing-reference body guard lives in
@@ -19,10 +18,13 @@ evaluate the real YAML against every event shape instead of grepping it.
 
 from __future__ import annotations
 
+import json
 import math
 import os
 import re
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -264,13 +266,13 @@ _EVENTS = {
 
 
 def _simulate(
-    github: dict[str, Any], *, reuse: str = "false", failures: set[str] | None = None
+    github: dict[str, Any], *, failures: set[str] | None = None
 ) -> tuple[dict[str, str], dict[str, str]]:
     """Return (job id -> success|skipped, job id -> evaluated check name) for ci.yml.
 
     Follows GitHub's rule: a job whose `if` has no status function carries an
     implicit success() and is skipped when any `needs` job did not succeed.
-    Every job that runs is assumed to succeed; the reuse job outputs `reuse`.
+    Every job that runs is assumed to succeed unless a failure is injected.
     """
     results: dict[str, str] = {}
     names: dict[str, str] = {}
@@ -283,7 +285,7 @@ def _simulate(
             "needs": {
                 need: {
                     "result": results[need],
-                    "outputs": {"reuse": reuse} if need == "reuse" and results[need] == "success" else {},
+                    "outputs": {},
                 }
                 for need in needs
             },
@@ -312,17 +314,17 @@ def test_ci_triggers_on_code_events_only() -> None:
 def test_every_event_runs_every_job(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
     skipped = {job for job, result in results.items() if result != "success"}
-    # The reuse check and the queue commit's metadata scan exist only in the merge queue.
-    assert skipped == (set() if event == "merge_group" else {"reuse", "queue-metadata-scan"})
+    expected = set() if event == "merge_group" else {"queue-metadata-scan"}
+    if event in {"opened", "synchronize", "reopened"}:
+        expected |= {"frontend", "refresh-pytest-durations", "pytest", "pytest-report"}
+    assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
 
 
-def test_merge_queue_reuse_skips_every_reused_job() -> None:
-    results, _ = _simulate(_EVENTS["merge_group"], reuse="true")
-    reused = {"secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"}
-    assert {job for job, result in results.items() if result != "success"} == reused
-    # The queue commit's message, author and committer are scanned even on reuse.
-    assert results["queue-metadata-scan"] == "success"
+def test_merge_queue_always_executes_full_suite() -> None:
+    results, _ = _simulate(_EVENTS["merge_group"])
+    assert all(result == "success" for result in results.values())
+    assert "reuse" not in results
 
 
 def test_pr_runs_share_one_group_per_pr_number() -> None:
@@ -365,7 +367,7 @@ def test_ci_gate_runs_after_cancel() -> None:
     condition = str(_ci_gate_job()["if"])
     assert condition == "always()"
     assert _condition(condition, {"github": _EVENTS["synchronize"], "needs": {}}) is True
-    assert "required job was cancelled" in _gate_script()
+    assert "required job was cancelled" in (_REPO_ROOT / "scripts/ci/gate.py").read_text()
 
 
 _GREEN = {
@@ -379,45 +381,70 @@ _GREEN = {
 
 
 def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
-    metadata_scan = "success" if event == "merge_group" else "skipped"
-    env = {
-        "EVENT_NAME": event,
-        "REUSE_JOB": "skipped",
-        "REUSE": "",
-        "REUSED_RUN": "",
-        "METADATA_SCAN": metadata_scan,
-        **_GREEN,
-        **results,
-    }
-    return subprocess.run(
-        ["bash", "-e", "-c", _gate_script()],
-        check=False,
-        capture_output=True,
-        text=True,
-        env={**os.environ, "GITHUB_SERVER_URL": "https://github.com", "GITHUB_REPOSITORY": "o/r", **env},
-        timeout=30,
-    )
+    # Candidate identity and ancestry belong to this fixture, not the source
+    # checkout, which may contain only HEAD in a real queue shard.
+    with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as directory:
+        repo = Path(directory) / "candidate"
+        subprocess.run(["git", "init", "-q", str(repo)], check=True, capture_output=True, timeout=30)
+        commits = []
+        for message in ("base", "candidate"):
+            subprocess.run(
+                ["git", "-C", str(repo), "-c", "user.name=CI fixture", "-c", "user.email=ci@example.invalid",
+                 "commit", "--allow-empty", "-qm", message],
+                check=True, capture_output=True, timeout=30,
+            )
+            commits.append(subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", "HEAD"], text=True, timeout=30,
+            ).strip())
+        base, actual = commits
+        payload = {"repository": {"default_branch": "main"}}
+        ref = "refs/heads/main"
+        if event == "pull_request":
+            payload.update(action="opened", pull_request={"number": 7, "base": {"sha": "b" * 40}, "head": {"sha": "a" * 40}})
+            ref = "refs/pull/7/merge"
+        elif event == "merge_group":
+            ref = "refs/heads/gh-readonly-queue/main/pr-7-" + "d" * 40
+            payload.update(action="checks_requested", merge_group={"base_sha": base, "base_ref": "refs/heads/main", "head_sha": actual, "head_ref": ref})
+        elif event == "schedule":
+            payload["schedule"] = "30 3 * * *"
+        elif event == "workflow_dispatch":
+            payload["ref"] = "refs/heads/main"
+        jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
+        if event == "pull_request":
+            jobs.update({name: "skipped" for name in ("FRONTEND", "REFRESH", "PYTEST", "PYTEST_REPORT")})
+        # Existing test bodies can corrupt the real entry-point event and candidate.
+        overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_")}
+        raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
+        jobs.update(results)
+        mapping = {"SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
+        needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
+        event_path = Path(directory) / "event.json"
+        event_path.write_text(raw_payload)
+        result = subprocess.run(
+            ["bash", "-e", "-c", _gate_script()], cwd=_REPO_ROOT, check=False, capture_output=True, text=True,
+            env={**os.environ, "GIT_DIR": str(repo / ".git"), "GIT_WORK_TREE": str(repo), "PYTHON_BIN": sys.executable, "EVENT_NAME": event, "GITHUB_EVENT_PATH": str(event_path), "GITHUB_SHA": actual, "GITHUB_REF": ref, "GITHUB_STEP_SUMMARY": str(Path(directory) / "summary"), "NEEDS_JSON": json.dumps(needs), **overrides}, timeout=30,
+        )
+        if result.returncode == 0:
+            summary = (Path(directory) / "summary").read_text()
+            assert ("full pytest was not run" in summary) == (event == "pull_request")
+        return result
+
 
 
 def test_gate_passes_a_green_pull_request_run() -> None:
     result = _run_gate("pull_request")
     assert result.returncode == 0, result.stdout
     assert "CI Gate green" in result.stdout
+    assert "full pytest was not run" in result.stdout
 
 
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"PYTEST": "failure"},
-        {"PYTEST": "skipped"},
-        {"PYTEST_REPORT": "skipped"},
-        {"CHECKS": "cancelled"},
-        {"SECRET_SCAN": ""},
-        {"FRONTEND": "skipped"},
-        {"DEPENDENCY_AUDIT": "failure"},
-        {"DEPENDENCY_AUDIT": "skipped"},
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1"},  # reuse outside the queue
-        {"METADATA_SCAN": "success"},  # a queue-only job outside the queue
+        {"PYTEST": "failure"}, {"PYTEST": "success"}, {"PYTEST_REPORT": "success"},
+        {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""}, {"FRONTEND": "success"},
+        {"DEPENDENCY_AUDIT": "failure"}, {"DEPENDENCY_AUDIT": "skipped"},
+        {"REFRESH": "success"}, {"METADATA_SCAN": "success"},
     ],
 )
 def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]) -> None:
@@ -425,31 +452,30 @@ def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]
     assert result.returncode != 0, result.stdout
 
 
-_REUSED = {name: "skipped" for name in _GREEN}
-
-
-def test_gate_accepts_merge_queue_reuse_with_a_run_id() -> None:
-    result = _run_gate("merge_group", REUSE_JOB="success", REUSE="true", REUSED_RUN="123", **_REUSED)
-    assert result.returncode == 0, result.stdout
-    for job in ("secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"):
-        assert f"{job} reused from run 123" in result.stdout
+def test_gate_requires_real_event_and_candidate_identity() -> None:
+    for event in ("pull_request", "merge_group", "schedule", "workflow_dispatch"):
+        assert _run_gate(event).returncode == 0
+        for key in ("SECRET_SCAN", "CHECKS", "DEPENDENCY_AUDIT", "PYTEST", "PYTEST_REPORT", "REFRESH", "FRONTEND"):
+            assert _run_gate(event, **{key: "unknown"}).returncode != 0
+        for corruption in ({"GITHUB_EVENT_JSON": "{}"}, {"GITHUB_EVENT_JSON": "{"}, {"GITHUB_SHA": "f" * 40}, {"GITHUB_REF": "refs/heads/wrong\n$(false)"}):
+            result = _run_gate(event, **corruption)
+            assert result.returncode != 0, (event, corruption, result.stdout)
+    # GitHub's primary webhook fixture uses a fully qualified dispatch ref;
+    # API branch names normalize to the same candidate, never another tier.
+    for ref in ("main", "refs/heads/main"):
+        payload = {"repository": {"default_branch": "main"}, "ref": ref, "inputs": None}
+        assert _run_gate("workflow_dispatch", GITHUB_EVENT_JSON=json.dumps(payload)).returncode == 0
+    for event in ("", "push", "pull_request_target", "unknown", "merge_group\n$(false)"):
+        assert _run_gate(event).returncode != 0
 
 
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "", **_REUSED},
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "PYTEST": "success"},
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "CHECKS": "failure"},
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "SECRET_SCAN": "cancelled"},
-        {"REUSE_JOB": "success", "REUSE": "false", **_REUSED},
-        {"REUSE_JOB": "success", "REUSE": "false", "PYTEST": "skipped", "PYTEST_REPORT": "skipped"},
-        {"REUSE_JOB": "failure", "REUSE": "", "PYTEST": "success"},
-        {"REUSE_JOB": "cancelled", "REUSE": ""},
-        {"REUSE_JOB": "skipped"},
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "METADATA_SCAN": "skipped"},
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "METADATA_SCAN": "failure"},
-        {"REUSE_JOB": "success", "REUSE": "false", "METADATA_SCAN": "cancelled"},
+        {"PYTEST": "skipped"}, {"PYTEST_REPORT": "skipped"}, {"CHECKS": "failure"},
+        {"SECRET_SCAN": "cancelled"}, {"FRONTEND": "skipped"}, {"PYTEST": ""},
+        {"REFRESH": "failure"}, {"REFRESH": "cancelled"}, {"REFRESH": "skipped"},
+        {"METADATA_SCAN": "skipped"}, {"METADATA_SCAN": "failure"}, {"METADATA_SCAN": "cancelled"},
     ],
 )
 def test_gate_fails_closed_in_the_merge_queue(overrides: dict[str, str]) -> None:
@@ -458,7 +484,7 @@ def test_gate_fails_closed_in_the_merge_queue(overrides: dict[str, str]) -> None
 
 
 def test_gate_passes_a_full_merge_queue_run() -> None:
-    result = _run_gate("merge_group", REUSE_JOB="success", REUSE="false")
+    result = _run_gate("merge_group")
     assert result.returncode == 0, result.stdout
 
 
@@ -479,11 +505,11 @@ def test_ci_gate_guard_step_order_and_event_conditions() -> None:
     aggregation_idx = step_names.index("Require every job")
     assert guard_idx < aggregation_idx
 
-    # All steps preceding the aggregation step must be guarded for pull_request and merge_group only
+    # Checkout/setup run for every event so the parser can verify the actual candidate.
     guard_steps = steps[:aggregation_idx]
     assert len(guard_steps) == 3
 
-    for step in guard_steps:
+    for step in guard_steps[2:]:
         cond = step.get("if")
         assert cond is not None, f"Step {step.get('name')} missing condition"
         # Test against all defined events
@@ -495,6 +521,7 @@ def test_ci_gate_guard_step_order_and_event_conditions() -> None:
         assert _condition(cond, {"github": _EVENTS["workflow_dispatch"]}) is False
 
     # Check checkout step configuration and expression bindings
+    assert all("if" not in step for step in guard_steps[:2])
     checkout_step = steps[0]
     assert checkout_step.get("uses", "").startswith("actions/checkout@")
     assert checkout_step["with"]["fetch-depth"] == 0
