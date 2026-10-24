@@ -2051,17 +2051,19 @@ def _provenance_replies(head=_HEAD, runs=(_ENTIRE_RUN,), bound_head=_HEAD):
 
 
 def test_oo48_check_states_prove_at_the_judged_metadata_head(monkeypatch):
-    """The actual legacy hook must enrich raw duplicate checks before reducing them."""
+    """The legacy hook must bind canonical check URLs distinct from vendor details."""
     old = {"name": "Body guard", "head_sha": _HEAD, "status": "completed", "conclusion": "cancelled",
            "started_at": "2026-10-23T20:00:00Z", "check_suite": {"id": 1},
            "app": {"id": 15368, "slug": "github-actions"},
            "details_url": "https://github.com/owner/repo/actions/runs/11/job/21"}
     current = {**old, "conclusion": "success", "started_at": "2026-10-23T21:00:00Z",
                "check_suite": {"id": 2}, "details_url": "https://github.com/owner/repo/actions/runs/12/job/22"}
-    rest = [current, old, {**_ENTIRE_RUN, "status": "in_progress", "conclusion": "",
-                           "details_url": "https://github.com/owner/repo/runs/24"}]
+    rest = [current, old, {**_ENTIRE_RUN, "status": "in_progress", "conclusion": "", "id": 24,
+                           "html_url": "https://github.com/owner/repo/runs/24",
+                           "details_url": "https://entire.com/gh/owner/repo/trails/7"}]
     rollup = [{"__typename": "CheckRun", "name": row["name"], "status": row["status"].upper(),
-               "conclusion": str(row.get("conclusion") or "").upper(), "detailsUrl": row["details_url"]}
+               "conclusion": str(row.get("conclusion") or "").upper(),
+               "detailsUrl": row.get("html_url", row["details_url"])}
               for row in rest]
     replies = _provenance_replies()
     replies[("pr", "checks")] = (1, "", _GH_246_CHECKS_JSON_GAP)

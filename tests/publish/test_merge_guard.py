@@ -146,7 +146,7 @@ def entire_runner(app, calls, *, head=HEAD, error=None, bound=None, extra_docume
 
 
 def test_oo48_publisher_proves_entire_gates_at_the_metadata_head():
-    """Superseded Actions cancellations must preserve the external app proof gate."""
+    """Distinct vendor details and canonical check URLs must preserve App proof."""
     calls = []
     app = {"id": 2626939, "slug": "entire"}
     old = {"name": "Body guard", "head_sha": HEAD, "status": "completed", "conclusion": "cancelled",
@@ -159,9 +159,11 @@ def test_oo48_publisher_proves_entire_gates_at_the_metadata_head():
             {"name": "CI Gate", "head_sha": HEAD, "status": "completed", "conclusion": "success",
              "details_url": "https://github.com/unit/public/runs/23"},
             {"name": "Entire Gates", "head_sha": HEAD, "status": "in_progress", "app": app,
-             "details_url": "https://github.com/unit/public/runs/24"}]
+             "id": 24, "html_url": "https://github.com/unit/public/runs/24",
+             "details_url": "https://entire.com/gh/unit/public/trails/7"}]
     rollup = [{"__typename": "CheckRun", "name": row["name"], "status": row["status"].upper(),
-               "conclusion": str(row.get("conclusion") or "").upper(), "detailsUrl": row["details_url"]}
+               "conclusion": str(row.get("conclusion") or "").upper(),
+               "detailsUrl": row.get("html_url", row["details_url"])}
               for row in rest]
     endpoint = f"repos/unit/public/commits/{HEAD}/check-runs?filter=all&per_page=100"
     documents = {endpoint: {"total_count": len(rest), "check_runs": rest},
