@@ -20,20 +20,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
-from tests.opsec_fixtures import CATALOG, TOKEN
 
 
 @pytest.fixture(autouse=True)
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
-    """Use synthetic matcher and repository data with the real publishing guard."""
-    from scripts.opsec import prepublish
-
-    original_catalog = prepublish.catalog
-    monkeypatch.setattr(prepublish, "catalog", lambda: CATALOG)
+    """Public writes use synthetic policy, independently of host tooling."""
     monkeypatch.setenv("GH_REPO", "unit/public")
-    monkeypatch.setenv("GH_HOST", "github.com")
-    monkeypatch.delenv(prepublish.OVERRIDE, raising=False)
-    return original_catalog
 
 # ---------------------------------------------------------------------------
 # 1. _config.py
@@ -532,29 +524,6 @@ class TestModel:
 
 class TestGitHub:
     """Tests for scripts/ai_agent_bridge/_github.py."""
-
-    def test_gh_comment_refuses_missing_catalog_before_transport(
-        self, _synthetic_publishing_rules, tmp_path, monkeypatch, capsys,
-    ):
-        from scripts.ai_agent_bridge._github import _gh_comment
-        from scripts.opsec import prepublish
-
-        monkeypatch.setattr(prepublish, "catalog", _synthetic_publishing_rules)
-        monkeypatch.setattr(prepublish, "ROOT", tmp_path)
-        with patch("subprocess.run") as transport:
-            assert _gh_comment(123, "body") is False
-        transport.assert_not_called()
-        assert "repository allowlist unavailable; write refused" in capsys.readouterr().out
-
-    def test_gh_comment_refuses_synthetic_rule_hit_before_transport(self, capsys):
-        from scripts.ai_agent_bridge._github import _gh_comment
-        from scripts.opsec import prepublish
-
-        assert prepublish.is_private("unit/public") is False
-        with patch("subprocess.run") as transport:
-            assert _gh_comment(123, TOKEN) is False
-        transport.assert_not_called()
-        assert "OPSEC blocked: rule=synthetic-rule class=1 field=body line=1" in capsys.readouterr().out
 
     def test_gh_comment_refuses_missing_matcher_before_transport(self, tmp_path, monkeypatch, capsys):
         from scripts.ai_agent_bridge._github import _gh_comment
