@@ -5439,6 +5439,9 @@ def _reap_qualified_worktree(
         def stage_removal(target: Path) -> Iterator[Path]:
             nonlocal removal_started
             with _measured_removal(measurement, recheck_preservation)(target) as staged:
+                # An open root descriptor can outlive a competing removal,
+                # leaving a successful walk of an already detached directory.
+                target.lstat()
                 try:
                     yield staged
                 finally:
@@ -5461,6 +5464,10 @@ def _reap_qualified_worktree(
         preserved_artifacts = preservation_receipt or None
         freed_bytes = _freed_bytes(measurement, preserved_artifacts)
         if remove_error is not None:
+            if not removal_started:
+                # Preservation and staging translate entry failures into
+                # refusals. Classify actual absence before reporting one.
+                target.lstat()
             preservation_failed = remove_error.startswith("artifact preservation failed:")
             return ReapResult(
                 path=str(info.path),

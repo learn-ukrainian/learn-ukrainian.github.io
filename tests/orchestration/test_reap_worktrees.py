@@ -2601,7 +2601,7 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Pre-removal absence must allow continuation; post-own-removal errors must propagate."""
+    """Reap merged heads, continue past pre-Git absence and expose post-attempt errors."""
     repo = init_repo(tmp_path)
     vanished = add_worktree(repo, "codex/aaa-vanished")
     vanished_head = git(vanished, "rev-parse", "HEAD")
@@ -2749,6 +2749,8 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
         assert before_result.error is None
         assert before_result.freed_bytes == 0
         assert before_result.branch_pruned is False
+        assert before_result.recovery_ref is not None
+        assert git(repo, "rev-parse", before_result.recovery_ref) == before_head
         assert before_result.preserved_artifacts is None
         assert not reaper_lifecycle.is_reap_pending(repo, before_stage)
         assert git(repo, "rev-parse", f"refs/heads/{pre_branch}") == before_head
