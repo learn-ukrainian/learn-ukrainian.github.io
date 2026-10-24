@@ -124,7 +124,7 @@ def _configure(
     )
     monkeypatch.setattr(
         state_router.delegate_api,
-        "list_delegate_tasks",
+        "active_delegate_tasks",
         lambda **_kwargs: {"tasks": []},
     )
 

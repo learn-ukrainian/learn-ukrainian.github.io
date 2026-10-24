@@ -37,6 +37,7 @@ import os
 import re
 import threading
 from collections.abc import Mapping
+from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
@@ -136,7 +137,6 @@ from .state_helpers import (
     cache_get_stored,
     cache_get_with_age,
     cache_invalidate,
-    cache_retain,
     cache_set,
     ctx_scoped_ttl_key,
     detect_pipeline_version,
@@ -619,7 +619,9 @@ def _snapshot_is_stale(
     return age > threshold_s, round(age, 1)
 
 
-def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int] | None:
+def _in_flight_by_agent(
+    tasks_dir: Path | None = None, *, task_generation: list[str] | None = None,
+) -> dict[str, int] | None:
     """Count active delegate tasks, optionally scoped to a MonitorContext tasks dir.
 
     When *tasks_dir* is set, preserve the same PID-liveness semantics as
@@ -630,25 +632,18 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int] | None:
     in_flight = {agent: 0 for agent in (*AGENT_NAMES, "deepseek")}
     try:
         if tasks_dir is not None:
-            if not tasks_dir.is_dir():
+            # The indexed collector treats a missing directory as empty. Check
+            # observability first so an unreadable plane remains unknown here.
+            try:
+                with os.scandir(tasks_dir):
+                    pass
+            except FileNotFoundError:
+                if task_generation is not None:
+                    task_generation.append("missing")
                 return None
-            for path in tasks_dir.glob("*.json"):
-                if path.name.endswith(".snapshots.json"):
-                    continue
-                try:
-                    payload = json.loads(path.read_text(encoding="utf-8"))
-                except (OSError, json.JSONDecodeError):
-                    continue
-                if not isinstance(payload, dict):
-                    continue
-                status, _alive = delegate_api._derived_task_status(payload)
-                if status not in {"running", "spawning"}:
-                    continue
-                agent = normalize_seat(str(payload.get("agent") or ""))
-                if agent:
-                    in_flight[agent] = in_flight.get(agent, 0) + 1
-            return in_flight
-        tasks = delegate_api.active_delegate_tasks()["tasks"]
+            tasks = delegate_api.active_delegate_tasks(tasks_dir=tasks_dir, task_generation=task_generation)["tasks"]
+        else:
+            tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
         return None
     for task in tasks:
@@ -1264,6 +1259,7 @@ def _compute_dispatch_routing_budget(
     project_root: Path | None = None,
     curriculum_root: Path | None = None,
     batch_state_dir: Path | None = None,
+    task_generation: list[str] | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     today = current_time.date()
@@ -1292,7 +1288,7 @@ def _compute_dispatch_routing_budget(
         logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
         health_records = LaneHealthScan(observed=False, error=f"lane health scan failed: {type(exc).__name__}")
 
-    in_flight_by_agent = _in_flight_by_agent(resolved_tasks_dir)
+    in_flight_by_agent = _in_flight_by_agent(resolved_tasks_dir, task_generation=task_generation)
     api_accounts = _build_api_accounts_payload(fresh=fresh_codexbar, health_records=health_records)
 
     # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
@@ -2080,12 +2076,15 @@ def compute_routing_budget(
     project_root: Path | None = None,
     curriculum_root: Path | None = None,
     batch_state_dir: Path | None = None,
+    task_generation: list[str] | None = None,
 ) -> dict[str, Any]:
     """Budget recommendations for native dispatch or ordinary ACP asks.
 
     ACP compatibility never changes native dispatch health. ACP requests run
     bounded version/help probes, not provider prompts, and exclude incompatible
     or unknown routes even when every participant is unavailable.
+    When supplied, ``task_generation`` receives the observed in-flight scan's
+    generation so HTTP caches can validate the counts without changing the payload.
     """
     if transport not in {"dispatch", "acp"}:
         raise ValueError("transport must be dispatch or acp")
@@ -2098,6 +2097,7 @@ def compute_routing_budget(
         project_root=project_root,
         curriculum_root=curriculum_root,
         batch_state_dir=batch_state_dir,
+        task_generation=task_generation,
     )
     budget["transport"] = transport
     # Per-account view (#10630): additive. ``agents.claude`` stays the
@@ -2191,21 +2191,10 @@ def compute_routing_budget(
     return budget
 
 
-def _with_live_claude_accounts(payload: object) -> object:
-    """A served copy whose per-account Claude rows are aged now (#10630).
-
-    Those rows carry their own freshness, so a stored snapshot never freezes
-    them; the stored payload itself is not modified.
-    """
-    if not isinstance(payload, dict):
-        return payload
-    return {**payload, **claude_account_routing_fields()}
-
-
-def _aged_routing_budget(payload: object, age_s: float) -> object:
+def _aged_routing_budget(payload: object, age_s: float, *, stale: bool = True) -> object:
     """Publish the real age of a stored routing snapshot without adding keys.
 
-    Within the stale threshold the recommendation stays, marked stale. Past
+    Within the stale threshold the recommendation stays. Past
     that threshold the snapshot must not authorize a lane. The threshold is
     compared to source age plus time spent in this cache. Per-account Claude
     rows are read live, never from the stored snapshot.
@@ -2224,7 +2213,7 @@ def _aged_routing_budget(payload: object, age_s: float) -> object:
         extra = float(prior) if isinstance(prior, (int, float)) else 0.0
         reported_age = extra + age_s
         diagnostics["data_age_s"] = round(reported_age, 1)
-        diagnostics["stale"] = True
+        diagnostics["stale"] = bool(diagnostics.get("stale")) or stale or reported_age > threshold
         served["diagnostics"] = diagnostics
     if reported_age <= threshold:
         return served
@@ -2270,27 +2259,62 @@ def _withdraw_routing_authorization(payload: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def _with_live_lane_errors(payload: object, tasks_dir: Path) -> object:
+    """Refresh displayed failure text while capacity retains its snapshot age."""
+    if not isinstance(payload, dict) or not isinstance(payload.get("agents"), dict):
+        return payload
+    # Only snapshots displaying a failure need a second read. Healthy warm
+    # reads retain the cheap cache path; new failures arrive with the refresh.
+    if not any(
+        isinstance(info, dict) and isinstance(info.get("health"), dict)
+        and (info["health"].get("last_error") or info["health"].get("error"))
+        for info in payload["agents"].values()
+    ):
+        return payload
+    try:
+        health = scan_lane_health(tasks_dir)
+    except Exception as exc:
+        health = LaneHealthScan(observed=False, error=f"lane health scan failed: {type(exc).__name__}")
+    agents = {}
+    for lane, info in payload["agents"].items():
+        if isinstance(info, dict) and isinstance(info.get("health"), dict):
+            latest = health.health_for(lane)
+            fields = {key: latest[key] for key in ("last_error", "error") if key in latest}
+            previous = {key: value for key, value in info["health"].items() if key not in {"last_error", "error"}}
+            info = {**info, "health": {**previous, **fields}}
+        agents[lane] = info
+    return {**payload, "agents": agents}
+
+
 # ==================== ENDPOINTS ====================
 
 
 def _tasks_content_token(tasks_dir: Path) -> str:
-    """Generation for task JSON files: count plus the newest mtime."""
+    """Generation for every task JSON file, matching the locked task scan."""
     try:
         directory = os.stat(tasks_dir)
     except OSError:
         return "missing"
     newest = directory.st_mtime_ns
-    count = 0
+    files = []
     try:
         with os.scandir(tasks_dir) as entries:
             for entry in entries:
                 if not entry.name.endswith(".json"):
                     continue
-                count += 1
-                newest = max(newest, entry.stat(follow_symlinks=False).st_mtime_ns)
+                file_stat = entry.stat()
+                files.append((entry.name, file_stat))
+                newest = max(newest, file_stat.st_mtime_ns)
     except OSError:
         return f"unreadable:{directory.st_mtime_ns}"
-    return f"{count}:{newest}"
+    return delegate_api._task_generation_token(newest, files)
+
+
+@dataclass
+class _RoutingBudgetGeneration:
+    content_token: str | None
+    directory_token: str
+    invalidated: threading.Event = field(default_factory=threading.Event)
 
 
 @router.get("/routing-budget")
@@ -2308,35 +2332,60 @@ async def routing_budget(
     """
     if fresh_codexbar:
         trigger_background_refresh()
-    prefix = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
-    # In-place task rewrites do not change the directory mtime. Stamp the
-    # newest task file so a new excerpt is not served from the previous snapshot.
-    cache_key = f"{prefix}:{_tasks_content_token(ctx.roots.batch_state_dir / 'tasks')}"
-    cache_retain(f"{prefix}:", cache_key)
+    cache_key = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
+    # Directory checks are cheap enough for warm reads. All-file validation
+    # runs beside the request to detect in-place rewrites without pool waits.
+    tasks_dir = ctx.roots.batch_state_dir / "tasks"
 
-    def _compute() -> dict[str, Any]:
-        return compute_routing_budget(
+    def _compute() -> tuple[_RoutingBudgetGeneration, dict[str, Any]]:
+        directory_token = delegate_api._dir_token(tasks_dir)
+        generation: list[str] = []
+        value = compute_routing_budget(
             transport=transport,
             fresh_codexbar=False,
             refresh_requested=fresh_codexbar,
             budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
-            tasks_dir=ctx.roots.batch_state_dir / "tasks",
+            tasks_dir=tasks_dir,
             project_root=ctx.roots.project_root,
             curriculum_root=ctx.roots.curriculum_root,
             batch_state_dir=ctx.roots.batch_state_dir,
+            task_generation=generation,
         )
+        observed = _RoutingBudgetGeneration(generation[0] if generation else None, directory_token)
+        if (
+            observed.content_token is None
+            or observed.content_token != _tasks_content_token(tasks_dir)
+            or directory_token != delegate_api._dir_token(tasks_dir)
+        ):
+            observed.invalidated.set()
+        return observed, value
 
     # A warm snapshot returns on the event loop. After the TTL, the last
     # snapshot is served with its real age and refreshed beside the request.
     # Past the stale threshold it no longer authorizes a lane.
     stored = cache_get_stored(cache_key)
     if stored is not None:
-        value, age_s = stored
-        if age_s < ROUTING_BUDGET_TTL_S:
-            return _with_live_claude_accounts(value)
-        schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute)
-        return _aged_routing_budget(value, age_s)
-    return _with_live_claude_accounts(await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute))
+        (observed, value), age_s = stored
+        if observed.directory_token != delegate_api._dir_token(tasks_dir):
+            observed.invalidated.set()
+
+        def _needs_refresh() -> bool:
+            if age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set():
+                return True
+            if observed.content_token != _tasks_content_token(tasks_dir):
+                observed.invalidated.set()
+                return True
+            return False
+
+        schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute, should_refresh=_needs_refresh)
+        return _with_live_lane_errors(
+            _aged_routing_budget(
+                value, age_s, stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
+            ),
+            tasks_dir,
+        )
+    observed, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
+    return _aged_routing_budget(value, 0.0, stale=observed.invalidated.is_set())
 
 
 @router.get("/github-budget")
