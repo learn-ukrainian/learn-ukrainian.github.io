@@ -12,12 +12,14 @@ from scripts.lexicon.source_attribution import (
     SUM20_ACADEMIC_LABEL,
     academic_label_for_slug,
     apply_entry_attribution,
+    attach_official_url,
     cites_soviet_dictionary_outside_context,
     learner_facing_mirror_violations,
     learner_facing_unmapped_source_violations,
     normalize_academic_label,
     official_url_for_slug,
     official_url_from_mirror,
+    remap_url_list,
     soviet_citation_learner_violation,
     withhold_legacy_soviet_citations,
 )
@@ -257,13 +259,63 @@ def test_apply_entry_attribution_moves_mirror_urls_internal(monkeypatch) -> None
     # Other identities and URLs must not be caught by a domain-wide filter.
     for card in (
         {**raw_card, "id": "sum20", "source": SUM20_ACADEMIC_LABEL},
-        {**raw_card, "source": "Культура слова"},
+        {**raw_card, "id": "other", "source": "ВТС"},
+        {**raw_card, "id": "vts-other"},
         {**raw_card, "source_url": "https://services.ulif.org.ua/expl/#/word/коса"},
         {**raw_card, "source_url": "https://www.ulif.org.ua/entry"},
     ):
         original_card = deepcopy(card)
         assert apply_entry_attribution({"enrichment": {"definition_cards": [card]}}) is False
         assert card == original_card
+
+    # Exact VTS identity removes the unsupported citation regardless of label.
+    for source in ("Культура слова", "", "ВТС: протилежне → звузити", "СУМ-20 + ВТС"):
+        card = {**raw_card, "source": source}
+        original_card = deepcopy(card)
+        wrapped = {"enrichment": {"definition_cards": [card]}}
+        assert apply_entry_attribution(wrapped) is True
+        assert card == {key: value for key, value in original_card.items() if key != "source_url"}
+        assert apply_entry_attribution(wrapped) is False
+
+    genuine_urls = [
+        "https://services.ulif.org.ua/expl/#/word/коса",
+        "https://lcorp.ulif.org.ua/dictua",
+        "https://www.ulif.org.ua/entry",
+    ]
+    mirror = "https://slovnyk.me/dict/vts/коса"
+    for urls in (["https://www.ulif.org.ua"], ["https://www.ulif.org.ua", mirror, *genuine_urls]):
+        card = {**raw_card, "source_urls": urls, "mirror_source_urls": [mirror]}
+        wrapped = {"enrichment": {"definition_cards": [card]}}
+        assert apply_entry_attribution(wrapped) is True
+        expected = {key: value for key, value in raw_card.items() if key != "source_url"}
+        expected["mirror_source_urls"] = [mirror]
+        if len(urls) > 1:
+            expected["source_urls"] = genuine_urls
+        assert card == expected
+        assert apply_entry_attribution(wrapped) is False
+
+    mirror_card = {"id": "vts", "source_urls": [mirror]}
+    wrapped = {"enrichment": {"definition_cards": [mirror_card]}}
+    assert apply_entry_attribution(wrapped) is True
+    assert mirror_card == {
+        "id": "vts", "mirror_source_urls": [mirror],
+    }
+    assert apply_entry_attribution(wrapped) is False
+    attach_official_url(legacy_card, mirror_url=mirror, slug="vts")
+    assert legacy_card["mirror_source_url"] == mirror
+    assert "source_url" not in legacy_card
+    assert remap_url_list([mirror, *genuine_urls]) == (genuine_urls, [mirror])
+
+    # Prose labels without a VTS card identity cannot establish URL provenance.
+    for source in ("ВТС", "ВТС: протилежне → звузити", "СУМ-20 + ВТС"):
+        section = {"source": source, "source_url": "https://www.ulif.org.ua",
+                   "source_urls": ["https://www.ulif.org.ua", *genuine_urls]}
+        for name in ("synonyms", "antonyms", "homonyms", "paronyms"):
+            wrapped = {"sections": {name: deepcopy(section)}}
+            apply_entry_attribution(wrapped)
+            assert wrapped["sections"][name]["source_url"] == section["source_url"]
+            assert wrapped["sections"][name]["source_urls"] == section["source_urls"]
+            assert apply_entry_attribution(wrapped) is False
 
     from tests.test_lexicon_enrich_manifest import _run_synonyms_gate
 
