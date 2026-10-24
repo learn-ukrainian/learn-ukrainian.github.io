@@ -61,6 +61,7 @@ SCHEMAS = {
     "pr-close": ({"number"}, {**COMMON, "number": "number"}),
     "issue-reopen": ({"number"}, {**COMMON, "number": "number"}),
     "run-rerun": ({"number"}, {**COMMON, "number": "number"}),
+    "run-cancel": ({"number"}, {**COMMON, "number": "number"}),
     "workflow-run": (
         {"workflow", "ref"},
         {**COMMON, "workflow": "workflow", "ref": "ref", "inputs": "workflow_inputs"},
@@ -669,7 +670,7 @@ def publish(
             option("subject")
             option("match_head", "--match-head-commit")
             body_file("body")
-        elif verb in {"pr-update-branch", "pr-ready", "pr-close", "issue-reopen"}:
+        elif verb in {"pr-update-branch", "pr-ready", "pr-close", "issue-reopen", "run-cancel"}:
             pass
         elif verb == "run-rerun":
             argv.append("--failed")
@@ -784,6 +785,25 @@ def main(argv=None, *, runner=None):
     verbs = parser.add_subparsers(dest="verb", required=True)
     for verb, (_, schema) in SCHEMAS.items():
         sub = verbs.add_parser(verb, help=f"Publish {verb} with scanned fields", allow_abbrev=False)
+        if verb == "run-cancel":
+            sub.description = (
+                "Request ordinary cancellation of one GitHub Actions workflow run.\n"
+                "Use only for an explicitly authorized run after checking its identity and current state."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                "  .venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901\n"
+                "  .venv/bin/python -m scripts.publish run-cancel --repo unit/public --number 12345678901\n"
+                "Outputs: requests ordinary cancellation; can interrupt work and eject a merge-group run from the queue.\n"
+                "  Request acceptance does not prove terminal cancellation; read back the run state.\n"
+                "  Cancellation does not satisfy CI or merge gates and does not consume or reset recovery allowances.\n"
+                "  Force cancellation is unavailable.\n"
+                "Exit codes: 0 request accepted, terminal state unverified; 1 gh failure;\n"
+                "  2 invalid input, publishing refusal or transport error; 75 rate-limit refusal.\n"
+                "  Other gh exit codes propagate.\n"
+                "Related: docs/dev/agent-public-text.md; read run; run-rerun."
+            )
         if verb == "run-rerun":
             sub.description = (
                 "Rerun only failed jobs in an existing GitHub Actions run.\n"
@@ -809,7 +829,7 @@ def main(argv=None, *, runner=None):
             )
         for key, kind in schema.items():
             kwargs = {"default": argparse.SUPPRESS, "help": f"{key.replace('_', ' ')} ({kind}); omitted by default"}
-            if verb == "run-rerun":
+            if verb in {"run-rerun", "run-cancel"}:
                 kwargs["help"] = {
                     "repo": "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin",
                     "number": (

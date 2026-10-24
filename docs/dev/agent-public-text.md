@@ -33,6 +33,7 @@ scanned. Transport paths are never published or scanned as public text.
 | `pr-merge` | Subject and body, defaults included; squash is fixed |
 | `pr-update-branch`, `pr-ready`, `pr-close`, `issue-reopen` | No text; `--number` is a PR or issue number |
 | `run-rerun` | No text; `--number` is an Actions run ID; always selects failed jobs |
+| `run-cancel` | No text; `--number` is an Actions workflow run ID; requests ordinary cancellation |
 | `workflow-run` | Only `ci.yml` and `deploy-pages.yml`, explicit validated ref; both have no inputs |
 | `pr-disarm`, `pr-dequeue`, `issue-link` | No text; identifiers have closed validation. `issue-link --replace-parent` moves an issue from its current parent through GitHub's typed `replaceParent` variable |
 | `release-create`, `release-edit` | Tag, title, notes, target, artifact names and UTF-8 content |
@@ -136,6 +137,32 @@ for a rate-limit refusal at either stage:
 
 Other `gh` exit codes propagate.
 `run-rerun --help` lists the selectors and recovery conditions.
+
+### Cancel an explicitly authorized Actions run
+
+`run-cancel --number` takes a positive workflow run ID from
+`/actions/runs/<RUN_ID>`, not a PR number. Check the run's identity and current
+state and obtain explicit authorization before cancelling it. Use the task's
+prescribed project interpreter.
+
+```sh
+.venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901
+.venv/bin/python -m scripts.publish run-cancel --repo unit/public --number 12345678901
+```
+
+The publisher sends an ordinary cancellation request to
+`POST repos/{owner}/{repo}/actions/runs/{run_id}/cancel`. Force cancellation
+and extra fields are unavailable. This uses GitHub's ordinary cancellation
+semantics and does not enforce a queued-only eligibility policy. Cancellation
+can interrupt work; cancelling a merge-group run can eject it from the queue.
+
+Exit 0 means GitHub accepted the request, not that the run reached terminal
+cancellation. Read back its actual state. Exit 1 reports a `gh` failure;
+exit 2 reports invalid input, publishing refusal or a transport error;
+exit 75 reports a rate-limit refusal. Other `gh` exit codes propagate.
+Cancellation does not satisfy CI or merge gates. It neither consumes nor
+resets the one-shot allowance shared by rerun and re-enqueue recovery.
+See [GitHub's cancellation endpoint](https://docs.github.com/en/rest/actions/workflow-runs#cancel-a-workflow-run).
 
 ## Raw gh reads and private writes
 
