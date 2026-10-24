@@ -20,8 +20,12 @@ from tests.ops._fake_tmux import BOOT, FakePane, FakeTmux
 REPO = Path(__file__).resolve().parents[2]
 START = dt.datetime(2026, 10, 16, 12, 0, tzinfo=dt.UTC)
 ECHO = (
-    "> HANDOFF NOW (CTO automated, 2026-10-16T12:00:00Z): your context is 70%. Finish the current step only, "
-    "post 'HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md' to Fleet Comms recipient epics, then stop."
+    "> HANDOFF NOW (CTO automated, 2026-10-16T12:00:00Z): your context is 70% (hand off at 70%). "
+    "Finish the current step only, write the top of .claude/infra-epic/DRIVER-STATE.md "
+    "(in-flight workers with task ids, waits with nonces, PRs, holds, orders and their status, next actions), "
+    "stop every background task you started (background Bash tasks and Monitor streams), "
+    "post 'HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md' to Fleet Comms recipient epics, then stop. "
+    "The guard exits and relaunches your seat; running workers keep running and the fresh session adopts them."
 )
 
 
@@ -142,6 +146,7 @@ def test_handoff_done_counts_only_standalone_response_lines(text: str, count: in
 def test_prompt_echo_does_not_end_the_session(tmp_path: Path) -> None:
     h = Harness(tmp_path, **{"infra-muse": claude_pane(70)})
     h.tick()
+    assert h.fake.typed("infra-muse") == [ECHO.removeprefix("> ")]
     h.pane("infra-muse").text = claude_text(71, ECHO)
     h.advance(5)
     h.tick()
@@ -225,7 +230,10 @@ def test_lane_in_handoff_is_listed_for_keepalive_suppression(tmp_path: Path) -> 
     cg.save_state(state_dir / "state.json", h.state)
     result = subprocess.run(
         [sys.executable, str(REPO / "scripts/ops/context_guard.py"), "handoff-sessions", "--state-dir", str(state_dir)],
-        capture_output=True, text=True, check=True, timeout=60,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
     )
     assert json.loads(result.stdout) == ["devops-muse"]
 
@@ -290,7 +298,7 @@ def test_exited_codex_lane_is_respawned_with_shims_first(tmp_path: Path) -> None
     assert respawn[respawn.index("-c") + 1] == str(tmp_path / "repo")
     path = respawn[respawn.index("-e") + 1]
     assert path.startswith(f"PATH={tmp_path / 'repo' / 'scripts/agent_runtime/shims'}:")
-    command = respawn[respawn.index("bash"):]
+    command = respawn[respawn.index("bash") :]
     assert command[:4] == ["bash", "-c", PANE_SCRIPT, "lane-launch"]
     assert command[4:7] == ["./start-codex-driver.sh", "--epic", "open-model-data"]
     assert ["tmux", "clear-history", "-t", "=open-model-data:"] in h.fake.calls
@@ -347,7 +355,11 @@ def test_comms_reader_counts_only_standalone_posts_from_the_lane(tmp_path: Path)
             [
                 ("codex-devops", "2026-10-16T12:05:00Z", "will post HANDOFF-DONE soon"),
                 ("claude-infra", "2026-10-16T11:00:00Z", "HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md"),
-                ("claude-devops", "2026-10-16T12:06:00Z", "status\nHANDOFF-DONE devops .claude/devops-epic/DRIVER-STATE.md"),
+                (
+                    "claude-devops",
+                    "2026-10-16T12:06:00Z",
+                    "status\nHANDOFF-DONE devops .claude/devops-epic/DRIVER-STATE.md",
+                ),
             ],
         )
     logs: list[str] = []
@@ -395,13 +407,89 @@ def test_stuck_handoff_alerts_epics_once_without_killing(tmp_path: Path) -> None
     assert "/exit" not in h.fake.typed("infra-muse")
 
 
-def test_exit_dialog_is_answered_with_exit_and_stop_tasks(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"cto": claude_pane(70)})
-    h.tick("cto")
-    h.pane("cto").text = claude_text(71, "1. Exit and stop tasks", "2. Move to background and exit")
+@pytest.mark.parametrize(
+    ("scenario", "sessions"),
+    [
+        ("next-tick", ("cto",)),
+        ("same-tick", ("cto",)),
+        ("delayed-dialog", ("cto",)),
+        ("no-dialog", ("cto",)),
+        ("no-dialog", ("infra-muse", "cto")),
+        ("slow-capture", ("infra-muse", "cto")),
+        ("agent-gone", ("cto",)),
+        ("human-active", ("cto",)),
+        ("client-unknown", ("cto",)),
+        ("agent-replaced", ("cto",)),
+        ("snapshot-unknown", ("cto",)),
+        ("capture-unknown", ("cto",)),
+    ],
+)
+def test_exit_dialog_is_answered_with_exit_and_stop_tasks(
+    tmp_path: Path, scenario: str, sessions: tuple[str, ...]
+) -> None:
+    """Defect class: exit polling multiplies lane delays, waits after exit or bypasses a safety guard."""
+    h = Harness(tmp_path, **{session: claude_pane(70) for session in sessions})
+    h.tick(*sessions)
+    dialog = claude_text(71, "1. Exit and stop tasks", "2. Move to background and exit")
+    waits: list[float] = []
+    elapsed = 0.0
+    h.guard.tmux.monotonic = lambda: elapsed
+    if scenario != "next-tick":
+        for session in sessions:
+            h.pane(session).text = claude_text(71, "⏺ HANDOFF-DONE cto .claude/epics-epic/DRIVER-STATE.md")
+
+        def wait(seconds: float) -> None:
+            nonlocal elapsed
+            waits.append(seconds)
+            elapsed += seconds
+
+        h.guard.tmux.sleep = wait
+
+        def show_dialog() -> None:
+            h.pane("cto").text = dialog
+            if scenario == "human-active":
+                h.fake.clients = [("cto", int(h.moment.timestamp()))]
+            elif scenario == "client-unknown":
+                h.fake.override["list-clients"] = subprocess.CompletedProcess([], 1, "", "clients unavailable")
+            elif scenario == "agent-replaced":
+                h.pane("cto").agent_pid = "201"
+            elif scenario == "snapshot-unknown":
+                h.fake.override["ps"] = subprocess.CompletedProcess([], 1, "", "ps unavailable")
+            elif scenario == "capture-unknown":
+                h.fake.override["capture-pane"] = subprocess.CompletedProcess([], 1, "", "capture unavailable")
+
+        if scenario == "slow-capture":
+
+            def slow_capture() -> None:
+                nonlocal elapsed
+                elapsed += 10
+                h.pane(sessions[0]).text = dialog
+
+            before_call(h.guard.tmux, "capture-pane", slow_capture, nth=2)
+        elif scenario == "agent-gone":
+            before_call(h.guard.tmux, "ps", lambda: setattr(h.pane("cto"), "agent", None), nth=3)
+        elif scenario != "no-dialog":
+            before_call(h.guard.tmux, "capture-pane", show_dialog, nth=4 if scenario == "delayed-dialog" else 2)
+    else:
+        h.pane("cto").text = dialog
     h.advance(5)
-    h.tick("cto")
-    assert h.fake.typed("cto")[-1] == "1"
+    h.tick(*sessions)
+    answered = scenario in {"next-tick", "same-tick", "delayed-dialog"}
+    expected = [] if scenario == "next-tick" else ["/exit"]
+    for session in sessions:
+        assert h.fake.typed(session)[1:] == [*expected, *(["1"] if answered else [])]
+    if answered:
+        assert h.logs[-1] == "cto handoff ctx_pct=71: exit dialog -> chose Exit and stop tasks"
+    if scenario != "next-tick":
+        # Each command submission sleeps once; only the additional polling shares ten seconds.
+        poll_wait = sum(waits) - len(sessions) - int(answered)
+        assert 0 <= poll_wait <= 10
+        if scenario == "agent-gone":
+            assert poll_wait == 0
+        elif scenario == "slow-capture":
+            assert poll_wait == 1
+            h.tick(*sessions)
+            assert h.fake.typed(sessions[0])[-1] == "1"  # budget spent: answer on the next tick
 
 
 # ---- unknown telemetry never acts (review of 69264fbb, #10814) ---------------------

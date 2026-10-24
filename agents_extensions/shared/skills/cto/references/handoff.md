@@ -14,7 +14,10 @@ wake timers die with this session; the next one re-arms them from the tracker ha
 5. Prepare the rollover with the `thread-rollover` skill. Add one `handoff_note` item with
    `lu-driver-state add --lane cto --kind handoff_note`, an owner and a done condition.
    Include the details below in its statement and cite the work item IDs it names.
-6. Write the durable brief (core.md P7) and drain the inbox one last time.
+6. List every background Bash task and Monitor stream you started, then use `TaskStop`
+   on each before posting HANDOFF-DONE. A running task makes the TUI ask before exit.
+   Delegate workers are separate processes and keep running.
+7. Write the durable brief (core.md P7) and drain the inbox one last time.
 
 The `handoff_note` contains:
 
