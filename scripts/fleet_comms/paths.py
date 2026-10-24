@@ -131,7 +131,7 @@ def default_plane_root(
                         "non-git fixture."
                     ) from exc
                 base = candidate.resolve()
-            root = (base / DEFAULT_ROOT_REL).resolve()
+            root = validate_plane_root(base / DEFAULT_ROOT_REL)
         _refuse_retired_local_plane(root)
     except PlaneRootAnchorError:
         raise

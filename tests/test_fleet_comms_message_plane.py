@@ -69,6 +69,21 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
     connect.assert_not_called()
     assert sorted(tmp_path.rglob("*")) == before
 
+    default_primary = tmp_path / "default-primary"
+    (default_primary / ".git").mkdir(parents=True)
+    computed_default = default_primary / "batch_state" / "fleet-comms" / "v1"
+    computed_default.parent.mkdir(parents=True)
+    computed_default.symlink_to(alias, target_is_directory=True)
+    before = sorted(tmp_path.rglob("*"))
+    retired = Mock(side_effect=AssertionError("checkout default reached retired-marker lookup"))
+    with monkeypatch.context() as guard:
+        guard.setattr("scripts.fleet_comms.paths._refuse_retired_local_plane", retired)
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+            default_plane_root(repo_root=default_primary)
+    retired.assert_not_called()
+    connect.assert_not_called()
+    assert sorted(tmp_path.rglob("*")) == before
+
     loop = tmp_path / "loop"
     loop.symlink_to(loop)
     expected.parent.mkdir(parents=True)
