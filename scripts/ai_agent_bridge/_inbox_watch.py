@@ -390,21 +390,44 @@ def wake_driver_once(
 
 
 def preflight_supervisory_successor() -> bool:
-    """Reuse the launcher's CLI resolution before spending a delivery attempt."""
+    """Check the same captured launcher request before spending a delivery attempt."""
     helper = Path(__file__).resolve().parents[1] / "lib/session_supervisor.sh"
     try:
+        entrypoint = os.environ.get("LC_SUPERVISORY_ENTRYPOINT", "supervisory-preflight")
+        script = 'source "$1"; session_supervisor_preflight_successor'
+        captured = b""
+        if os.environ.get("LC_PROVIDER") == "claude" and entrypoint == "supervisory-preflight":
+            raise ValueError("missing launcher identity")
+        if Path(entrypoint).name == "start-claude-cto.sh":
+            if os.environ.get("LC_SUPERVISORY_ORIGINAL_ARGS_FD") != "215":
+                raise ValueError("missing captured launcher arguments")
+            # Reopen for an independent offset: every queued restart must see
+            # the same bytes, including after a prior refusal. Never use argv
+            # or an environment string for this potentially large capture.
+            with open("/proc/self/fd/215", "rb") as capture:
+                captured = capture.read()
+            captured.decode("utf-8")
+            if not captured.endswith(b"\0"):
+                raise ValueError("invalid captured launcher arguments")
+            script = (
+                'source "$LC_ROOT/scripts/lib/launcher_core.sh"; mapfile -d "" -t LC_DRIVER_ORIGINAL_ARGS; ' + script
+            )
         result = subprocess.run(
-            ["bash", "-c", 'source "$1"; session_supervisor_preflight_successor',
-             "supervisory-preflight", str(helper)],
-            check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30,
+            ["bash", "-c", script, entrypoint, str(helper)],
+            input=captured,
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=30,
         )
         available = result.returncode == 0
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, ValueError, UnicodeError, subprocess.TimeoutExpired):
         available = False
     if not available:
         print(
-            "inbox watcher: provider-cli-unavailable; restart retained for retry",
-            file=sys.stderr, flush=True,
+            "inbox watcher: successor preflight refused; restart retained for retry",
+            file=sys.stderr,
+            flush=True,
         )
     return available
 
