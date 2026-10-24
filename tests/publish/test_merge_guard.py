@@ -165,8 +165,10 @@ def test_oo48_publisher_proves_entire_gates_at_the_metadata_head():
                "conclusion": str(row.get("conclusion") or "").upper(),
                "detailsUrl": row.get("html_url", row["details_url"])}
               for row in rest]
+    rollup.append({"__typename": "StatusContext", "context": "external-status", "state": "SUCCESS"})
     endpoint = f"repos/unit/public/commits/{HEAD}/check-runs?filter=all&per_page=100"
-    documents = {endpoint: {"total_count": len(rest), "check_runs": rest},
+    documents = {STATUS: {"total_count": 1, "statuses": [{"context": "external-status", "state": "success"}]},
+                 endpoint: {"total_count": len(rest), "check_runs": rest},
                  "repos/unit/public/actions/runs/11": {"id": 11, "head_sha": HEAD, "check_suite_id": 1,
                                                        "workflow_id": 7, "name": "Body guard"},
                  "repos/unit/public/actions/runs/12": {"id": 12, "head_sha": HEAD, "check_suite_id": 2,

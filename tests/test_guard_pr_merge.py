@@ -2065,9 +2065,12 @@ def test_oo48_check_states_prove_at_the_judged_metadata_head(monkeypatch):
                "conclusion": str(row.get("conclusion") or "").upper(),
                "detailsUrl": row.get("html_url", row["details_url"])}
               for row in rest]
+    rollup.append({"__typename": "StatusContext", "context": "external-status", "state": "SUCCESS"})
     replies = _provenance_replies()
     replies[("pr", "checks")] = (1, "", _GH_246_CHECKS_JSON_GAP)
     replies[_BOUND] = (0, json.dumps({"headRefOid": _HEAD, "statusCheckRollup": rollup}))
+    replies[("api", "--method", "GET", f"repos/owner/repo/commits/{_HEAD}/status?per_page=100")] = (
+        0, json.dumps({"total_count": 1, "statuses": [{"context": "external-status", "state": "success"}]}))
     replies[("api", "--method", "GET", f"repos/owner/repo/commits/{_HEAD}/check-runs?filter=all&per_page=100")] = (
         0, json.dumps({"total_count": len(rest), "check_runs": rest}))
     replies[("api", "--method", "GET", "repos/owner/repo/actions/runs/12")] = (
