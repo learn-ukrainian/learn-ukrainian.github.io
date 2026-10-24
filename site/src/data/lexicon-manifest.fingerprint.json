@@ -179,7 +179,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
-        "sha256": "7b2f924cb7aa198ec17aaf138acab92f81e97ac250e137e83a86ae5cd40dc655"
+        "sha256": "13e8d785902465b47a18fd617f6baef949f356b3eb8a6e4ce56e92d43a54f64a"
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",

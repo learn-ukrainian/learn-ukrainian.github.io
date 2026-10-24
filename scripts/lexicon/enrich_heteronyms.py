@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Enrich and disambiguate heteronyms/homographs in the Word Atlas (#8022).
 
-Identifies lemmas with multiple phonemic stress patterns and distinct lexical
-senses in academic authorities (СУМ-11, УМІФ, СУМ-20, VESUM), extracts their
-distinct stress, paradigm, gloss, CEFR level, synonyms, and heritage classification,
-and attaches a structured ``heteronyms`` array to the Atlas entry.
+Maintains curated Atlas heteronyms and scans live official СУМ-20 rows for
+distinct stressed-headword candidates. Candidate evidence needs independent
+semantic adjudication. СУМ-11 parsing is retained for historical context only;
+it supplies no modern meaning, existence, stress, or coverage authority.
 
 Usage:
     .venv/bin/python scripts/lexicon/enrich_heteronyms.py --lemma город
@@ -15,11 +15,13 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
 import sqlite3
 import sys
+from contextlib import closing
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -27,8 +29,6 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-
-from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 try:
     from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
@@ -60,6 +60,8 @@ except ModuleNotFoundError:
     from curated_heteronyms_batch13 import CURATED_HETERONYMS_BATCH_13
 
 from scripts.lexicon.manifest_io import write_manifest
+from scripts.lexicon.sum20_store import Sum20StoreError, open_sum20
+from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup, sum20_live_article_where
 
 
 @lru_cache(maxsize=1)
@@ -719,13 +721,119 @@ def apply_heteronyms(
     return updated_counts
 
 
+def scan_modern_candidates() -> dict[str, Any]:
+    """Account for live official rows under the existing prefix lookup contract.
+
+    Multiple matching groups remain unresolved. No row, curated gloss, mirror,
+    or historical parser can adjudicate a modern lexical distinction here.
+    """
+    with closing(open_sum20(repository_root=ROOT)) as conn:
+        conn.execute("BEGIN")
+        columns = [str(row[1]) for row in conn.execute("PRAGMA table_info(sum20_articles)")]
+        required = {"wordid", "normalized_lookup_key", "stressed_headword", "official_url", "parser_version"}
+        if not required.issubset(columns):
+            raise Sum20StoreError("sum20_articles_schema_unavailable")
+        rows = [dict(row) for row in conn.execute(
+            "SELECT wordid, normalized_lookup_key, stressed_headword, official_url, parser_version "
+            f"FROM sum20_articles WHERE {live_article_predicate(columns)} ORDER BY wordid"
+        )]
+        curated = {normalize_sum20_lookup(key) for key in CURATED_HETERONYMS}
+        keys = sorted(curated | {row["normalized_lookup_key"] for row in rows if row["normalized_lookup_key"]})
+        members = {}
+        owners: dict[int, list[str]] = {row["wordid"]: [] for row in rows}
+        where = sum20_live_article_where(columns, prefix=True)
+        for key in keys:
+            wordids = [row[0] for row in conn.execute(
+                f"SELECT wordid FROM sum20_articles WHERE {where} ORDER BY wordid", (key, f"{key} %")
+            )]
+            members[key] = wordids
+            for wordid in wordids:
+                owners[wordid].append(key)
+
+    by_id = {row["wordid"]: row for row in rows}
+    unresolved_rows = {wordid for wordid, groups in owners.items() if len(groups) != 1}
+    groups = {}
+    candidates = set()
+    unresolved_groups = set()
+    for key, wordids in members.items():
+        stresses = sorted({
+            _clean_stressed_headword(by_id[wordid]["stressed_headword"])
+            for wordid in wordids if by_id[wordid]["stressed_headword"]
+        } - {""})
+        if unresolved_rows.intersection(wordids):
+            state = "UNKNOWN_LOOKUP_OVERLAP"
+            unresolved_groups.add(key)
+        elif len(stresses) >= 2:
+            state = "candidate_evidence"
+            candidates.add(key)
+        else:
+            state = "no_distinct_stress_evidence" if wordids else "no_live_rows"
+        groups[key] = {"state": state, "wordids": wordids, "distinct_clean_stressed_headwords": stresses}
+
+    def exact_set(values: set[str]) -> dict[str, Any]:
+        return {"count": len(values), "keys": sorted(values)}
+
+    return {
+        "read_status": "COMPLETE",
+        "coverage_status": "UNKNOWN" if unresolved_rows else "candidate_evidence_only",
+        "source": {
+            "table": "sum20_articles", "role": "official", "custody": "open_sum20/read-only",
+            "live_predicate": live_article_predicate(columns),
+            "rows_sha256": hashlib.sha256(json.dumps(rows, ensure_ascii=False, sort_keys=True).encode()).hexdigest(),
+        },
+        "interpretation": (
+            "Distinct stressed headwords are candidate evidence, not independent semantic adjudication. "
+            "No live rows or no distinct stress evidence does not establish word invalidity. "
+            "Curated membership is not modern verification; parent coverage remains unresolved."
+        ),
+        "parent_denominator": {"groups": len(CURATED_HETERONYMS),
+                               "variants": sum(len(items) for items in CURATED_HETERONYMS.values())},
+        "live_rows": len(rows),
+        "live_lookup_keys": exact_set({row["normalized_lookup_key"] for row in rows if row["normalized_lookup_key"]}),
+        "candidate_groups": exact_set(candidates),
+        "candidate_groups_in_curated": exact_set(candidates & curated),
+        "candidate_groups_outside_curated": exact_set(candidates - curated),
+        "curated_groups_without_candidate_evidence": exact_set(curated - candidates),
+        "unresolved_lookup_groups": exact_set(unresolved_groups),
+        "unresolved_row_wordids": sorted(unresolved_rows),
+        "rows": [{**row, "lookup_groups": owners[row["wordid"]]} for row in rows],
+        "groups": groups,
+    }
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Enrich and disambiguate heteronyms in Word Atlas")
-    parser.add_argument("--lemma", help="Single lemma to inspect or enrich")
-    parser.add_argument("--scan", action="store_true", help="Scan sources.db for all candidate heteronyms")
-    parser.add_argument("--apply", action="store_true", help="Apply heteronym updates to atlas.db and manifest")
-    parser.add_argument("--db", help="Path to atlas.db")
-    parser.add_argument("--manifest", help="Path to lexicon-manifest.json")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Inspect curated Atlas heteronyms or enumerate live official SUM-20 candidates.\n"
+            "Use --scan for read-only evidence inventory, not semantic verification or parent closeout."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/lexicon/enrich_heteronyms.py --scan
+  .venv/bin/python scripts/lexicon/enrich_heteronyms.py --lemma город
+  .venv/bin/python scripts/lexicon/enrich_heteronyms.py --apply
+
+Outputs:
+  --scan prints JSON candidate sets, raw row locators, input digest and unresolved
+  coverage. It reads only live official sum20_articles through open_sum20, never
+  mirrors or SUM-11. Unavailable stores/schema print typed UNKNOWN, not empty coverage.
+  --lemma prints existing curated/modern lookup results. --apply writes Atlas DB
+  and manifest updates using the existing maintenance behavior. Priority: apply,
+  lemma, scan. No mode prints help. Scanning never writes data.
+Exit codes:
+  0: completed validated scan read (unresolved evidence is labelled), lemma/apply
+     completed, or help displayed.
+  1: scan store/schema unavailable (UNKNOWN); maintenance errors also fail.
+  2: invalid command-line arguments.
+Related:
+  scripts/lexicon/sum20_lookup.py; scripts/lexicon/sum20_store.py; #8964.
+""",
+    )
+    parser.add_argument("--lemma", help="Inspect one lemma, e.g. город; default: none")
+    parser.add_argument("--scan", action="store_true", help="Read live official SUM-20 candidate evidence; default: off")
+    parser.add_argument("--apply", action="store_true", help="Update Atlas DB and manifest from curated entries; default: off")
+    parser.add_argument("--db", help="Atlas DB path for --apply, e.g. atlas.db; default: resolved Atlas DB")
+    parser.add_argument("--manifest", help="Manifest path for --apply, e.g. lexicon-manifest.json; default: resolved manifest")
     args = parser.parse_args()
 
     if args.apply:
@@ -742,35 +850,14 @@ def main() -> int:
         return 0
 
     if args.scan:
-        sources_db = _resolve_sources_db()
-        print(f"Scanning {sources_db}...")
-        conn = _shared_open_readonly(Path(sources_db).resolve())
-        cur = conn.cursor()
-        rows = cur.execute("SELECT word, definition FROM sum11").fetchall()
-        heteronym_count = 0
-        for w, defn in rows:
-            if w in SUM11_OCR_PSEUDO_HETERONYMS:
-                continue
-            parsed = parse_sum11_heteronyms(w, defn)
-            if len(parsed) < 2:
-                continue
-            # Multiple СУМ-11 headwords are only true heteronyms if their
-            # stress positions actually differ -- 45 entries (e.g. ВІДВО́ЗИТИ,
-            # ВІ́ХА, ДЕРЖА́ВА) repeat the identical stressed head across
-            # senses, which makes them homonyms, not heteronyms.
-            unique_stresses = {p["head"].replace("̀", "́") for p in parsed}
-            if len(unique_stresses) < 2:
-                continue
-            heteronym_count += 1
-            if heteronym_count <= 20:
-                heads = [p["head"] for p in parsed]
-                print(f"  {w}: {', '.join(heads)}")
-        conn.close()
-        curated_count = len(CURATED_HETERONYMS)
-        residual = heteronym_count - curated_count
-        print(f"Total heteronyms detected: {heteronym_count}")
-        print(f"Curated in SSOT: {curated_count}")
-        print(f"Remaining scan residual: {residual}")
+        try:
+            report = scan_modern_candidates()
+        except (Sum20StoreError, sqlite3.Error) as error:
+            reason = error.reason if isinstance(error, Sum20StoreError) else "sum20_articles_read_unavailable"
+            print(json.dumps({"read_status": "UNKNOWN", "coverage_status": "UNKNOWN", "reason": reason,
+                              "owner": "official SUM-20 store custodian"}))
+            return 1
+        print(json.dumps(report, indent=2, ensure_ascii=False))
         return 0
 
     parser.print_help()
