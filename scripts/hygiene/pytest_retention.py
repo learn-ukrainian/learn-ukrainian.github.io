@@ -12,7 +12,8 @@ preserves), records the same kernel boot id, and the recorded pid is absent or n
 reports a different start time (the number was reused). The lease lock must
 also be acquired exclusively, so a live writer is never raced.
 
-Any live process that cannot be fully read leaves the snapshot incomplete,
+Any live process that cannot be fully read, except an allowlisted same-uid
+session daemon, leaves the snapshot incomplete,
 whatever its owner, and holder evidence read before the failure still counts.
 An incomplete snapshot preserves every run, except that a lease whose owner
 is provably dead on this boot takes the bounded quarantine rename and
@@ -50,6 +51,7 @@ from typing import Any
 from scripts.common import task_scratch as ownership
 from scripts.common.pytest_scratch import NAMESPACE, RUNS_DIRNAME
 from scripts.common.scratch import ScratchScanRootError, scratch_scan_roots
+from scripts.common.session_daemons import allowed_session_daemon
 from scripts.hygiene import tmp_sweep as sweep
 from scripts.hygiene.tmp_sweep_ledger import Ledger
 from scripts.orchestration.tmp_leak_sweep import _process_state, _process_vanished
@@ -89,12 +91,14 @@ class Holders:
     paths their relative spellings name from the process cwd; ``texts``
     keeps the raw blobs so an absolute path embedded anywhere in a value
     still counts.
-    ``complete`` is False when any live process could not be fully read; the
-    paths read before the failure are still kept. Only a lease that proves
-    the owner dead bypasses an incomplete snapshot and falls back to the
-    bounded quarantine/recheck path.
-    ``unreadable`` counts every unreadable live process for the privacy-safe
-    report; ``unreadable_foreign`` and ``unreadable_root`` split that count.
+    ``complete`` is False when a live process could not be fully read and is
+    not an allowlisted same-uid daemon. Paths read before the failure are
+    still kept. Only a lease that proves the owner dead bypasses an incomplete
+    snapshot and falls back to the bounded quarantine/recheck path.
+    ``unreadable`` counts unreadable live processes outside that allowlist
+    for the privacy-safe report; ``unreadable_foreign`` and ``unreadable_root``
+    split that count.
+    ``allowed_session_daemons`` records excused same-uid pid/identity pairs.
     ``descriptor_errors`` counts resource failures separately from process
     visibility failures; callers report them as sweep errors.
     """
@@ -107,6 +111,7 @@ class Holders:
     unreadable_foreign: int = 0
     unreadable_root: int = 0
     descriptor_errors: int = 0
+    allowed_session_daemons: set[tuple[int, str]] = field(default_factory=set)
 
     def holding(self, paths: Iterable[Path]) -> tuple[list[int], list[str]]:
         """PIDs and channels that reach any of ``paths`` or a path below it."""
@@ -167,9 +172,10 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
     descriptors in ``own_fds``: the sweep's own inspection handles (a held
     run lock) are not external holders, while its working directory,
     arguments, environment and every other descriptor still count. Zombies
-    and processes that exit during the scan hold nothing; any other read
-    failure leaves the snapshot incomplete, and what was read before it
-    still names a holder.
+    and processes that exit during the scan hold nothing. An unreadable
+    allowlisted same-uid daemon is recorded without making the snapshot
+    incomplete. Every other read failure leaves the snapshot incomplete,
+    and what was read before it still names a holder.
     """
     holders = Holders()
     try:
@@ -213,14 +219,18 @@ def holder_snapshot(own_fds: frozenset[int] = frozenset()) -> Holders:
                 holders.complete = False
                 holders.descriptor_errors += 1
             elif not _process_vanished(entry):
-                # No owner rules a holder out; the split only feeds the report.
-                holders.complete = False
-                holders.unreadable += 1
-                uid = _process_uid(entry)
-                if uid == 0:
-                    holders.unreadable_root += 1
-                elif uid is not None and uid != os.geteuid():
-                    holders.unreadable_foreign += 1
+                identity = allowed_session_daemon(entry) if state is not None else None
+                if identity is not None:
+                    holders.allowed_session_daemons.add((pid, identity))
+                else:
+                    # No other owner rules a holder out; the split only feeds the report.
+                    holders.complete = False
+                    holders.unreadable += 1
+                    uid = _process_uid(entry)
+                    if uid == 0:
+                        holders.unreadable_root += 1
+                    elif uid is not None and uid != os.geteuid():
+                        holders.unreadable_foreign += 1
         # Evidence read before a failure still names a holder.
         holders.paths.extend((p, channel, target.removesuffix(" (deleted)")) for p, channel, target in found)
         for p, channel, blob in texts:
@@ -554,6 +564,7 @@ def _delete(
         scan_holders.unreadable_foreign = max(scan_holders.unreadable_foreign, holders.unreadable_foreign)
         scan_holders.unreadable_root = max(scan_holders.unreadable_root, holders.unreadable_root)
         scan_holders.descriptor_errors += holders.descriptor_errors
+        scan_holders.allowed_session_daemons.update(holders.allowed_session_daemons)
         errors += holders.descriptor_errors
         for candidate in held:
             reason = _recheck(candidate, quarantine, holders)
@@ -679,6 +690,7 @@ def sweep_pytest_runs(
     unreadable = 0
     unreadable_foreign = 0
     unreadable_root = 0
+    allowed_daemons: set[tuple[int, str]] = set()
     complete = True
     try:
         roots = set(scratch_scan_roots())
@@ -709,6 +721,7 @@ def sweep_pytest_runs(
                 unreadable = max(unreadable, holders.unreadable)
                 unreadable_foreign = max(unreadable_foreign, holders.unreadable_foreign)
                 unreadable_root = max(unreadable_root, holders.unreadable_root)
+                allowed_daemons.update(holders.allowed_session_daemons)
         except FileNotFoundError:
             continue
         except (OSError, ValueError) as error:
@@ -749,6 +762,7 @@ def sweep_pytest_runs(
         "liveness_complete": complete, "liveness_unreadable_processes": unreadable,
         "liveness_unreadable_foreign_processes": unreadable_foreign,
         "liveness_unreadable_root_processes": unreadable_root,
+        "allowed_session_daemons": [{"pid": pid, "identity": identity} for pid, identity in sorted(allowed_daemons)],
         "runs": len(rows), "bytes": sum(row["bytes"] or 0 for row in rows),
         "bytes_complete": unmeasured == 0, "unmeasured_entries": unmeasured,
         "protected_bytes_complete": protected_unmeasured == 0,
