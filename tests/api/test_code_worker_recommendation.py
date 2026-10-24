@@ -154,7 +154,7 @@ def test_producer_passes_observed_load_to_shared_order(monkeypatch, tmp_path, lo
     from tests.api.test_routing_budget import _configure_base
 
     budget_path = _configure_base(monkeypatch, tmp_path)
-    monkeypatch.setattr(state_router, "_in_flight_by_agent", lambda *_a: loads)
+    monkeypatch.setattr(state_router, "_in_flight_by_agent", lambda *_a, task_generation=None: loads)
     monkeypatch.setattr(state_router, "summarize_fleet_burn", lambda *_a, **_kw: {"windows": {}})
     monkeypatch.setattr(
         state_router, "get_provider_usage_data",

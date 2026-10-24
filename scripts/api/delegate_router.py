@@ -100,9 +100,11 @@ def _task_state_path(task_id: str, ctx: MonitorContext | None = None, *, archive
     return fullpath
 
 
-def _read_task_state(path: str, ctx: MonitorContext | None = None) -> dict[str, Any] | None:
+def _read_task_state(
+    path: str, ctx: MonitorContext | None = None, *, tasks_dir: Path | None = None,
+) -> dict[str, Any] | None:
     """Read task JSON only after a local containment check (CodeQL sink guard)."""
-    root = _tasks_root(ctx)
+    root = os.path.realpath(tasks_dir) if tasks_dir is not None else _tasks_root(ctx)
     fullpath = os.path.realpath(path)
     if not fullpath.startswith(root + os.sep):
         return None
@@ -446,6 +448,7 @@ def _delegate_task_rows(
     repository: str | None = None,
     ctx: MonitorContext | None = None,
     task_generation: list[str] | None = None,
+    tasks_dir: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Load public-safe task summaries, optionally scoped to one repository.
 
@@ -469,7 +472,9 @@ def _delegate_task_rows(
     # Concurrent scans used to interleave those updates and pile SQLite writes
     # on the same file until the request timeout fired.
     with _TASK_SCAN_LOCK:
-        return _delegate_task_rows_locked(statuses, repository=repository, ctx=ctx, task_generation=task_generation)
+        return _delegate_task_rows_locked(
+            statuses, repository=repository, ctx=ctx, task_generation=task_generation, tasks_dir=tasks_dir,
+        )
 
 
 def _task_generation_token(newest_mtime_ns: int, files: list[tuple[str, os.stat_result]]) -> str:
@@ -485,15 +490,20 @@ def _delegate_task_rows_locked(
     repository: str | None = None,
     ctx: MonitorContext | None = None,
     task_generation: list[str] | None = None,
+    tasks_dir: Path | None = None,
 ) -> list[dict[str, Any]]:
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
-    resolved = resolve_context(ctx)
-    tasks_dir = _tasks_dir(resolved)
+    # Directory-only consumers must not build unrelated app stores or write
+    # the SQLite index into the task records they are observing.
+    persist_cache = tasks_dir is None
+    resolved = resolve_context(ctx) if persist_cache else ctx
+    tasks_dir = _tasks_dir(resolved) if tasks_dir is None else tasks_dir
     tasks_dir_str = str(tasks_dir)
     if tasks_dir_str != _LAST_TASKS_DIR_STR:
         _TASK_STATE_CACHE.clear()
-        _TASK_STATE_CACHE.update(_load_task_cache_from_db(tasks_dir_str, resolved))
+        if persist_cache:
+            _TASK_STATE_CACHE.update(_load_task_cache_from_db(tasks_dir_str, resolved))
         _LAST_TASKS_DIR_STR = tasks_dir_str
 
     repo_predicate = _normalize_repository_predicate(repository)
@@ -544,7 +554,10 @@ def _delegate_task_rows_locked(
                 if not alive:
                     derived_status = "zombie"
         else:
-            task = _read_task_state(path_str, resolved)
+            task = (
+                _read_task_state(path_str, resolved)
+                if persist_cache else _read_task_state(path_str, resolved, tasks_dir=tasks_dir)
+            )
             if task is None:
                 continue
             derived_status, alive = _derived_task_status(task)
@@ -639,7 +652,7 @@ def _delegate_task_rows_locked(
     if task_generation is not None and generation_observed:
         task_generation.append(_task_generation_token(newest_mtime_ns, task_files))
 
-    if dirty_records:
+    if dirty_records and persist_cache:
         _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
     # Records archived (#8625) or removed since the last scan leave the cache too.
     # Only directories this query scanned are judged, so a hot-only query never
@@ -650,7 +663,8 @@ def _delegate_task_rows_locked(
     if vanished:
         for path in vanished:
             del _TASK_STATE_CACHE[path]
-        _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
+        if persist_cache:
+            _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
 
     rows.sort(
         key=lambda item: _parse_iso_datetime(item.get("started_at"))
@@ -738,6 +752,7 @@ def active_delegate_tasks(
     repository: str | None = None,
     ctx: MonitorContext | None = None,
     task_generation: list[str] | None = None,
+    tasks_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Return active (running/spawning) task summaries.
 
@@ -747,9 +762,11 @@ def active_delegate_tasks(
     attribution fields.
     ``task_generation`` receives the all-file fingerprint from this locked
     scan, or stays empty when the generation cannot be observed.
+    An explicit ``tasks_dir`` uses only the in-process cache, without building
+    an application context or reading or writing the persistent SQLite index.
     """
     active = _delegate_task_rows(
-        ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx, task_generation=task_generation,
+        ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx, task_generation=task_generation, tasks_dir=tasks_dir,
     )
     return {"total": len(active), "tasks": active}
 

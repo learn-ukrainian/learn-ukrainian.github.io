@@ -634,12 +634,14 @@ def _in_flight_by_agent(
         if tasks_dir is not None:
             # The indexed collector treats a missing directory as empty. Check
             # observability first so an unreadable plane remains unknown here.
-            with os.scandir(tasks_dir):
-                pass
-            ctx = delegate_api.production_context()
-            if ctx.roots.batch_state_dir != tasks_dir.parent:
-                ctx = ctx.with_roots(batch_state_dir=tasks_dir.parent)
-            tasks = delegate_api.active_delegate_tasks(ctx=ctx, task_generation=task_generation)["tasks"]
+            try:
+                with os.scandir(tasks_dir):
+                    pass
+            except FileNotFoundError:
+                if task_generation is not None:
+                    task_generation.append("missing")
+                return None
+            tasks = delegate_api.active_delegate_tasks(tasks_dir=tasks_dir, task_generation=task_generation)["tasks"]
         else:
             tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
@@ -2257,6 +2259,33 @@ def _withdraw_routing_authorization(payload: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def _with_live_lane_errors(payload: object, tasks_dir: Path) -> object:
+    """Refresh displayed failure text while capacity retains its snapshot age."""
+    if not isinstance(payload, dict) or not isinstance(payload.get("agents"), dict):
+        return payload
+    # Only snapshots displaying a failure need a second read. Healthy warm
+    # reads retain the cheap cache path; new failures arrive with the refresh.
+    if not any(
+        isinstance(info, dict) and isinstance(info.get("health"), dict)
+        and (info["health"].get("last_error") or info["health"].get("error"))
+        for info in payload["agents"].values()
+    ):
+        return payload
+    try:
+        health = scan_lane_health(tasks_dir)
+    except Exception as exc:
+        health = LaneHealthScan(observed=False, error=f"lane health scan failed: {type(exc).__name__}")
+    agents = {}
+    for lane, info in payload["agents"].items():
+        if isinstance(info, dict) and isinstance(info.get("health"), dict):
+            latest = health.health_for(lane)
+            fields = {key: latest[key] for key in ("last_error", "error") if key in latest}
+            previous = {key: value for key, value in info["health"].items() if key not in {"last_error", "error"}}
+            info = {**info, "health": {**previous, **fields}}
+        agents[lane] = info
+    return {**payload, "agents": agents}
+
+
 # ==================== ENDPOINTS ====================
 
 
@@ -2349,8 +2378,11 @@ async def routing_budget(
             return False
 
         schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute, should_refresh=_needs_refresh)
-        return _aged_routing_budget(
-            value, age_s, stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
+        return _with_live_lane_errors(
+            _aged_routing_budget(
+                value, age_s, stale=age_s >= ROUTING_BUDGET_TTL_S or observed.invalidated.is_set(),
+            ),
+            tasks_dir,
         )
     observed, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
     return _aged_routing_budget(value, 0.0, stale=observed.invalidated.is_set())
