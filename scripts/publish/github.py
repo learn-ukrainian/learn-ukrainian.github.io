@@ -1055,7 +1055,7 @@ def read(
     if operation == "dependabot-alerts":
         origin_env = {key: value for key, value in environment.items() if key != "GH_REPO"}
         origin = repository(cwd, origin_env)
-        if not dest.startswith("github.com/") or origin == "unknown" or dest != origin:
+        if dest.split("/", 1)[0] != "github.com" or origin == "unknown" or dest != origin:
             raise gate.PublishBlocked("OPSEC: diagnostic read repository refused.")
         if timeout is not None and (type(timeout) not in {int, float} or not 0 < timeout <= 30):
             raise gate.PublishBlocked("OPSEC: invalid Dependabot read timeout.")
