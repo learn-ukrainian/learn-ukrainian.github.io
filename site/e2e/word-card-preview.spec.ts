@@ -376,6 +376,15 @@ async function readability(page: import('@playwright/test').Page, origin: string
     await new Promise<void>(done => requestAnimationFrame(() => requestAnimationFrame(() => done())));
     return document.fonts.status;
   });
+  const settleScroll = async () => page.evaluate(() => new Promise<void>(done => {
+    let previous = scrollY, stable = 0;
+    const frame = () => {
+      stable = scrollY === previous ? stable + 1 : 0;
+      previous = scrollY;
+      if (stable >= 5) done(); else requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }));
   const noPlaceholders = async () => {
     const content = await page.locator('[data-release-page]').evaluate(node => node.textContent + Array.from(node.querySelectorAll('*'))
       .flatMap(e => Array.from(e.attributes).map(a => a.value)).join(' '));
@@ -418,21 +427,16 @@ async function readability(page: import('@playwright/test').Page, origin: string
       if (key === 'шапка') markers.push(page.locator('[data-credit-ref][href="#source-puls"]').first());
       for (const marker of markers) {
         const markerHref = await marker.getAttribute('href');
-        await marker.focus(); await expect(marker).toBeFocused(); await page.keyboard.press('Enter');
+        await marker.focus(); await expect(marker).toBeFocused();
+        // Let focus-driven smooth scrolling finish before activating another native scroll.
+        await expect(marker).toBeInViewport(); await settleScroll();
+        await page.keyboard.press('Enter');
         await expect(disclosure).toHaveAttribute('open', '');
         expect(new URL(page.url()).hash).toBe(markerHref);
         const target = page.locator(`[id="${markerHref?.slice(1)}"]`);
         await expect(target).toBeVisible(); await expect(target).toBeInViewport();
         // Let native anchor scrolling settle without correcting its position.
-        await page.evaluate(() => new Promise<void>(done => {
-          let previous = scrollY, stable = 0;
-          const frame = () => {
-            stable = scrollY === previous ? stable + 1 : 0;
-            previous = scrollY;
-            if (stable >= 5) done(); else requestAnimationFrame(frame);
-          };
-          requestAnimationFrame(frame);
-        }));
+        await settleScroll();
         const geometry = await target.evaluate(node => {
           const rect = (element: Element | null) => {
             if (!element) throw Error('Missing source credit/header geometry');
