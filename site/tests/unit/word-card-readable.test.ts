@@ -96,13 +96,12 @@ describe('readable entry', () => {
       ['ulif', 'https://lcorp.ulif.org.ua/dictua/', null], ['vesum', 'https://vesum.nlp.net.ua/', 'vesum_version_placeholder']]);
     expect(entry.facts.find(g => g.field === 'cefr')?.facts[0]?.credits[0]?.gap).toBe('puls_reference_placeholder');
     const before = JSON.stringify(entry.row);
-    expect(sourceCredits([entry.row, entry.row])).toEqual([
+    expect(sourceCredits([entry.row, entry.row], undefined)).toEqual([
       { sourceId: 'ulif', attributions: [ULIF], links: ['https://lcorp.ulif.org.ua/dictua/'], licences: [{ name: 'terms' }] },
       { sourceId: 'vesum', attributions: ['Рисін А., Старко В. Великий електронний словник української мови (ВЕСУМ). 2005-2026. URL: https://vesum.nlp.net.ua/ — licence CC BY-NC-SA 4.0, changes indicated.'],
         links: ['https://vesum.nlp.net.ua/'], licences: [{ name: 'terms' }] },
       { sourceId: 'ukrainian_word_stress', attributions: ['ukrainian_word_stress https://evil.invalid/x'], links: [], licences: [{ name: 'terms' }] },
-      { sourceId: 'puls', attributions: ['Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org'],
-        links: ['https://puls.peremova.org/'], licences: [{ name: 'terms' }] },
+      { sourceId: 'puls', attributions: ['PULS citation above.'], links: [], licences: [{ name: 'terms' }] },
     ]);
     expect(JSON.stringify(entry.row)).toBe(before);
     expect(readableEntry(word('wc_s', 'банк', 'lexeme', c => [field(c, 'stress', 'ба́нк')]), 1).heading).toBe('ба́нк');
@@ -180,7 +179,34 @@ describe.runIf(process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH)('actual release v0
   const release = loaded?.kind === 'release' ? loaded : { rows: [] as ReleaseRow[] };
   const { pages, dispositions } = groupReleasePages(release.rows);
   const entries = pages.flatMap(p => p.entries);
-  it('loads the pinned bytes', () => expect(loaded?.kind).toBe('release'));
+  it('loads the pinned bytes and refuses historical PULS credit for unmatched provenance', () => {
+    expect(loaded?.kind).toBe('release');
+    if (loaded?.kind !== 'release') throw Error('Missing actual release');
+    const puls = sourceCredits(loaded.rows, loaded.pin).find(c => c.sourceId === 'puls');
+    expect(puls).toEqual({ sourceId: 'puls',
+      attributions: ['Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org'],
+      links: ['https://puls.peremova.org/'],
+      licences: [{ name: 'CC BY-NC-SA 4.0', spdx: 'CC-BY-NC-SA-4.0', verbatim_quote: 'puls_data_licence' }] });
+    const unresolved = { ...puls, attributions: ['PULS citation above.'], links: [] };
+    for (const pin of [undefined, { ...loaded.pin, release_version: 'v0.2.0' },
+      { ...loaded.pin, manifest_sha256: '0'.repeat(64) }, { ...loaded.pin, dataset_sha256: '0'.repeat(64) },
+      { ...loaded.pin, provenance: 'synthetic-fixture' as const }]) {
+      expect(sourceCredits(loaded.rows, pin).find(c => c.sourceId === 'puls')).toEqual(unresolved);
+    }
+    const row = loaded.rows.find(r => r.fields.some(f => f.citation.source_id === 'puls'));
+    if (!row) throw Error('Missing PULS row');
+    const before = JSON.stringify(row);
+    for (const mismatch of [{ licence_ref: { register_source_id: 'puls', register_version: 3 } },
+      { licence_ref: { register_source_id: 'ulif', register_version: 2 } },
+      { terms_ref: 'docs/sources/permissions-register.yaml#sources/ulif/terms' }]) {
+      const changed = { ...row, fields: row.fields.map(f => f.citation.source_id === 'puls' ?
+        { ...f, citation: { ...f.citation, ...mismatch } } : f) };
+      expect(sourceCredits([changed], loaded.pin).find(c => c.sourceId === 'puls')).toEqual(unresolved);
+      expect(changed.fields.filter(f => f.citation.source_id === 'puls').map(f => attributionGap(f.citation)))
+        .toEqual(['puls_reference_placeholder']);
+    }
+    expect(JSON.stringify(row)).toBe(before);
+  });
   it('matches every one of the 150 frozen row dispositions and the 134/148 learner denominators', () => {
     expect([release.rows.length, release.rows.reduce((n, r) => n + r.fields.length, 0), FROZEN_PAGES.length]).toEqual([150, 2978, 136]);
     const expected = new Map(FROZEN_PAGES.flatMap(line => { const [key = '', ids = ''] = line.split('=');

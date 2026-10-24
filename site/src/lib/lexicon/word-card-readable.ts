@@ -73,24 +73,32 @@ function credits(fields: Assertion[]): Credit[] {
 // Exact puls_citation quote and URL from docs/sources/permissions-register.yaml at
 // 1f3117c701c9c74aaa331b40c0c4cecb249b655c, the release's pinned register
 // SHA-256 1b95f9277c83f3568f458e29873b73d44a72c25854e55e684457689d8d193678.
+// The authenticated pilot manifest below contains that permissions_register_sha256.
+// A different manifest or dataset needs its own verified binding before substitution.
 const PULS_CREDIT = {
   attribution: 'Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org',
   href: 'https://puls.peremova.org/',
 };
 
 /** Resolve the pinned PULS pointer for display; raw citations and gap accounting stay intact. */
-export function sourceCredits(rows: readonly ReleaseRow[]): SourceCredit[] {
+export function sourceCredits(rows: readonly ReleaseRow[], pin: LoadedRelease['pin'] | undefined): SourceCredit[] {
+  const pinnedPulsRegister = pin?.provenance === 'producer-declared' && pin.release_version === 'v0.1.0-pilot' &&
+    pin.manifest_sha256 === 'ca182bf5829f3ed4daa80c2394eb87e28879c3f1dc5088eef689f495b97e4f75' &&
+    pin.dataset_sha256 === '45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6';
   const sources = new Map<string, SourceCredit>();
   for (const row of rows) for (const { citation } of row.fields) {
     const source: SourceCredit = sources.get(citation.source_id) ?? {
       sourceId: citation.source_id, attributions: [], links: [], licences: [],
     };
     const gap = attributionGap(citation);
-    const attribution = gap === 'puls_reference_placeholder' ? PULS_CREDIT.attribution : gap === 'vesum_version_placeholder' ?
+    const resolvedPuls = pinnedPulsRegister && gap === 'puls_reference_placeholder' &&
+      citation.licence_ref.register_source_id === 'puls' && citation.licence_ref.register_version === 2 &&
+      citation.terms_ref === 'docs/sources/permissions-register.yaml#sources/puls/terms';
+    const attribution = resolvedPuls ? PULS_CREDIT.attribution : gap === 'vesum_version_placeholder' ?
       citation.attribution.replace(/(?:Версія\s+)?<used version>\.?\s*/g, '') : citation.source_id === 'ulif' ?
         citation.attribution.replace(/\s*\(entry reference and retrieval date per field\)/g, '') : citation.attribution;
     if (attribution && !source.attributions.includes(attribution)) source.attributions.push(attribution);
-    const links = gap === 'puls_reference_placeholder' ? [PULS_CREDIT.href] : attributionLinks(citation.attribution);
+    const links = resolvedPuls ? [PULS_CREDIT.href] : attributionLinks(citation.attribution);
     for (const link of links) if (!source.links.includes(link)) source.links.push(link);
     if (!source.licences.some(licence => JSON.stringify(licence) === JSON.stringify(citation.licence))) {
       source.licences.push(citation.licence);

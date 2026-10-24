@@ -52,9 +52,9 @@ function Credits({ credits }: { credits: Credit[] }) {
     <span key={sourceId}>{i > 0 && ', '}<a data-credit-ref href={`#${sourceTarget(sourceId)}`}>{sourceId}</a></span>)}</span>;
 }
 
-function PageCredits({ rows }: Pick<LoadedRelease, 'rows'>) {
+function PageCredits({ rows, pin }: Pick<LoadedRelease, 'rows' | 'pin'>) {
   return <section aria-label="Source credits"><h3>Source credits</h3>
-    <ul className="wc-source-list">{sourceCredits(rows).map(source => <li id={sourceTarget(source.sourceId)} key={source.sourceId} data-source-credit={source.sourceId}>
+    <ul className="wc-source-list">{sourceCredits(rows, pin).map(source => <li id={sourceTarget(source.sourceId)} key={source.sourceId} data-source-credit={source.sourceId}>
       <h4>{source.sourceId}</h4>
       {source.attributions.map(text => <p data-credit-attribution key={text}>{text}</p>)}
       {source.links.map(url => <p key={url}><a data-credit-link href={url}>{url}</a></p>)}
@@ -184,7 +184,7 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
     </section>}
     <details className="wc-audit" data-page-audit><summary>Sources and audit details for this page</summary>
       <p>{card.pin.provenance === 'synthetic-fixture' ? 'Synthetic fixture. No linguistic or publication approval.' : 'Producer-declared status. No publication approval is implied.'}</p>
-      <PageCredits rows={card.page.entries.map(e => e.row)} />
+      <PageCredits rows={card.page.entries.map(e => e.row)} pin={card.pin} />
       <p>Dataset SHA-256: {card.pin.dataset_sha256}. Manifest SHA-256: {card.pin.manifest_sha256}.</p>
       <p>Entries share this page because their spelling matches when lowercased. Common entries come first in release order; proper-name entries follow. Each entry keeps its own facts and citations.</p>
       <Accounting rows={card.page.entries.map(e => e.row)} scope="this page" learner />
