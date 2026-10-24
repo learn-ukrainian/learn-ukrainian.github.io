@@ -543,7 +543,6 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | codex | true |
   | cursor | true |
   | gemini | false |
-  | glm-local | false |
   | grok | true |
   | kimi | false |
   <!-- fleet-roster-projection:end formal_review_eligible -->
