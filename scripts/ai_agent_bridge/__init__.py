@@ -17,7 +17,6 @@ All public functions are re-exported here for backward compatibility.
 """
 
 import sys
-from importlib import import_module
 from pathlib import Path
 
 _SCRIPTS_DIR = str(Path(__file__).resolve().parent.parent)
@@ -68,25 +67,6 @@ from ._messaging import (
     send_to_gemini,
 )
 from ._prompts import build_claude_prompt, build_codex_prompt, build_gemini_prompt
-
-# Metadata-only inbox callers need the canonical aliases, not execution code.
-_EXECUTION_EXPORTS = {
-    "ask_claude": "_claude",
-    "process_for_claude": "_claude",
-    "interactive_mode": "_cli",
-    "main": "_cli",
-    "process_all_claude": "_cli",
-    "process_all_gemini": "_cli",
-    "ask_codex": "_codex",
-    "process_all_codex": "_codex",
-    "process_for_codex": "_codex",
-    "ask_gemini": "_gemini",
-    "process_and_respond": "_gemini",
-    "ask_grok_build": "_grok_build",
-    "process_for_grok_build": "_grok_build",
-    "_detect_model_error": "_model",
-    "check_model": "_model",
-}
 
 __all__ = [
     "AGY_CLI",
@@ -153,8 +133,22 @@ def __getattr__(name: str):
         from ._config import default_gemini_model
 
         return default_gemini_model()
-    if module := _EXECUTION_EXPORTS.get(name):
-        value = getattr(import_module(f".{module}", __name__), name)
-        globals()[name] = value
-        return value
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    # Metadata-only inbox callers must not load execution code.
+    match name:
+        case "ask_claude" | "process_for_claude":
+            from . import _claude as module
+        case "interactive_mode" | "main" | "process_all_claude" | "process_all_gemini":
+            from . import _cli as module
+        case "ask_codex" | "process_all_codex" | "process_for_codex":
+            from . import _codex as module
+        case "ask_gemini" | "process_and_respond":
+            from . import _gemini as module
+        case "ask_grok_build" | "process_for_grok_build":
+            from . import _grok_build as module
+        case "_detect_model_error" | "check_model":
+            from . import _model as module
+        case _:
+            raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = getattr(module, name)
+    globals()[name] = value
+    return value

@@ -352,8 +352,8 @@ def test_inbox_hook_proven_zero_never_starts_bridge(tmp_path: Path, stores) -> N
     direct = subprocess.run(
         [sys.executable, "-c",
          "import sys; from scripts.inbox_pending import main; "
-         "assert not any('ai_agent_bridge.' + name in module "
-         "for module in sys.modules "
+         "assert 'ai_agent_bridge' not in sys.modules; "
+         "assert not any('scripts.ai_agent_bridge.' + name in sys.modules "
          "for name in ('_cli', '_claude', '_codex', '_gemini', '_grok_build', '_model')); "
          "raise SystemExit(main(['--native-hook', '--recipient', 'lane:infra']))"],
         text=True, capture_output=True, check=False, env=env, cwd=REPO_ROOT, timeout=5,
