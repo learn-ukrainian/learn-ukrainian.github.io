@@ -261,11 +261,11 @@ describe('readable grouped release pages', () => {
     expect(dom.querySelector('[data-page-audit]')?.hasAttribute('open')).toBe(false);
     expect(Array.from(dom.querySelectorAll('[data-source-credit]')).map(e => e.getAttribute('data-source-credit'))).toEqual(['ulif', 'evil', 'vesum', 'puls']);
     expect(Array.from(dom.querySelectorAll('[data-source-credit="puls"] [data-credit-attribution]')).map(p => p.textContent)).toEqual([
-      'Просимо посилатися на ПУЛЬС: Профіль української лексики (ПУЛЬС) / О. Синчак, В. Старко, М. Бурак, М. Свистун та ін. Львів: Школа української мови та культури УКУ, 2026. — puls.peremova.org',
+      'PULS citation above.',
     ]);
-    expect(dom.querySelector('[data-source-credit="puls"] [data-credit-link]')?.getAttribute('href')).toBe('https://puls.peremova.org/');
+    expect(dom.querySelector('[data-source-credit="puls"] [data-credit-link]')).toBeNull();
     expect(dom.querySelector('[data-source-credit="puls"] [data-credit-licence]')?.textContent).toBe('Licence: {"name":"t"}');
-    expect(dom.textContent).not.toContain('PULS citation above.');
+    expect(dom.textContent).not.toContain('Просимо посилатися на ПУЛЬС:');
     expect(Array.from(dom.querySelectorAll('[data-credit-ref]')).every(link => dom.querySelector(link.getAttribute('href') ?? '') !== null)).toBe(true);
     expect(dom.querySelectorAll('[data-source-credit="ulif"] [data-credit-attribution]')).toHaveLength(1);
     expect(dom.querySelector('[data-local-artifact-version]')?.textContent).toContain('v0.1.1');
