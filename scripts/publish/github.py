@@ -961,7 +961,7 @@ REST_READS = {
 # gh applies --jq to each page; diagnostic reads emit one JSON array per page.
 _RELATIVE_PATH_JQ = r"""def relative_path:
     if type == "string" and length > 0
-       and (test("(^/|[\\\\:\\x00-\\x1f\\x7f]|(^|/)\\.\\.?(/|$)|//)") | not)
+       and (test("(^/|[\\\\:\\p{Cc}\\p{Cf}\\p{Zl}\\p{Zp}]|(^|/)\\.\\.?(/|$)|//)") | not)
     then . else error("OPSEC: diagnostic file path is not repository-relative") end;
 """
 DIAGNOSTIC_READS = {
