@@ -16,6 +16,8 @@ from tests.test_continuation_worktree_reap import same_branch_pending_cohort as 
 from tests.test_reused_worktree_retention import cohort as cohort
 from tests.test_reused_worktree_retention import save
 
+_REAL_ACTIVE_TASK_IDS = rw._active_task_ids
+
 
 @pytest.fixture
 def writer_fixture(abandon_cohort, monkeypatch):
@@ -69,6 +71,49 @@ def test_written_record_passes_both_existing_readers(writer_fixture, capsys):
     manifest_bytes = (repo / preservation["path"]).read_bytes()
     assert hashlib.sha256(manifest_bytes).hexdigest() == preservation["sha256"]
     assert json.loads(manifest_bytes)["schema"] == "terminal-abandon-preservation.v1"
+
+
+@pytest.mark.parametrize("live_pid", [False, True])
+def test_probe_timeout_allows_terminal_abandon_but_preserves_live_worker(writer_fixture, monkeypatch, capsys, live_pid):
+    """A transport outage must not block settled abandonment or hide a live cohort PID."""
+    import urllib.request
+    from unittest.mock import Mock
+
+    _repo, tree, tasks, creator, successor, _bundle, _head = writer_fixture
+    original = [dict(record) for record in (creator, successor)]
+    if live_pid:
+        successor["pid"] = os.getpid()
+        save(tasks, successor)
+    else:
+        for record in (creator, successor):
+            record.pop("pid", None)
+            save(tasks, record)
+    calls = []
+    pauses = []
+
+    def timeout(*_args, **kwargs):
+        calls.append(kwargs["timeout"])
+        raise TimeoutError("deadline")
+
+    monkeypatch.setattr(urllib.request, "urlopen", timeout)
+    monkeypatch.setattr(rw, "_active_task_ids", _REAL_ACTIVE_TASK_IDS)
+    monkeypatch.setattr(rw, "time", Mock(wraps=rw.time, sleep=pauses.append))
+    # Missing PIDs satisfy the transport fallback, but the independent abandon
+    # guard still requires a recorded PID proven dead, even with Monitor up.
+    assert invoke(writer_fixture) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert result["code"] == "LIVE_OR_WANTED"
+    assert "worktree_abandon" not in json.loads((tasks / "boundary.json").read_text())
+    if not live_pid:
+        for record in original:
+            save(tasks, record)
+        assert invoke(writer_fixture) == 0
+        result = json.loads(capsys.readouterr().out)
+        assert result["outcome"] == "recorded"
+        assert json.loads((tasks / "boundary.json").read_text())["worktree_abandon"]["schema"] == "terminal-abandon.v1"
+    assert calls and calls == [3] * len(calls)
+    assert len(calls) == 2 * len(pauses) and set(pauses) == {0.2}
+    assert tree.exists()
 
 
 @pytest.mark.parametrize(

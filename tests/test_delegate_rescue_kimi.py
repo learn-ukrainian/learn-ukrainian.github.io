@@ -320,8 +320,13 @@ def test_rescue_retains_source_without_calling_worktree_removal(kimi_rescue, mon
 
     result = delegate._rescue_task(state_path, apply=True)
 
-    assert result["action"] == "rescued", result
-    assert _remote_heads(origin)[RESCUE_REF] == result["head"]
+    if condition == "claim":
+        assert result["action"] == "skipped", result
+        assert result["reason"] == "worktree group has nonterminal task"
+        assert RESCUE_REF not in _remote_heads(origin)
+    else:
+        assert result["action"] == "rescued", result
+        assert _remote_heads(origin)[RESCUE_REF] == result["head"]
     assert worktree.is_dir() and (worktree / ".git").is_file()
     assert _worker_snapshot(worktree) == before
     assert _registered_worktrees(worktree) == registered

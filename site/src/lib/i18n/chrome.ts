@@ -269,6 +269,21 @@ const en = {
   'wotd.loadError': "Couldn't load today's pick.",
 
   // Practice dashboard (K3 redesign)
+  'zno.firstAttemptScore': 'First-attempt score',
+  'zno.unanswered': 'Unanswered',
+  'zno.errorsByTopic': 'Errors by topic',
+  'zno.reviewErrors': 'Review errors',
+  'zno.retryMissedOnce': 'Retry missed items once',
+  'zno.continueDue': 'Continue with due items',
+  'zno.exit': 'Exit',
+  'zno.nextTask': 'Next task',
+  'zno.endSession': 'End session',
+  'zno.backToSummary': 'Back to summary',
+  'zno.correctAnswer': 'Correct answer',
+  'zno.smallCollection': 'Small collection',
+  'zno.practiceLabel': 'ZNO and NMT practice',
+  'zno.description': 'Official Ukrainian exam tasks for spaced practice.',
+
   'practice.title': 'Practice',
   'practice.heroTitle': 'Practice Ukrainian',
   'practice.heroSubtitle': 'Daily set',
@@ -674,6 +689,21 @@ const uk: Record<ChromeKey, string> = {
   'wotd.loadError': 'Не вдалося завантажити добірку.',
 
   // Practice dashboard (K3 redesign)
+  'zno.firstAttemptScore': 'Результат перших спроб',
+  'zno.unanswered': 'Без відповіді',
+  'zno.errorsByTopic': 'Помилки за темами',
+  'zno.reviewErrors': 'Переглянути помилки',
+  'zno.retryMissedOnce': 'Повторити помилки один раз',
+  'zno.continueDue': 'Продовжити заплановане повторення',
+  'zno.exit': 'Вийти',
+  'zno.nextTask': 'Наступне завдання',
+  'zno.endSession': 'Завершити сесію',
+  'zno.backToSummary': 'До підсумку',
+  'zno.correctAnswer': 'Правильна відповідь',
+  'zno.smallCollection': 'Невелика добірка',
+  'zno.practiceLabel': 'Практика ЗНО та НМТ',
+  'zno.description': 'Офіційні завдання з української мови для інтервального повторення.',
+
   'practice.title': 'Практика',
   'practice.heroTitle': 'Практикуйте українську',
   'practice.heroSubtitle': 'Щоденний набір',

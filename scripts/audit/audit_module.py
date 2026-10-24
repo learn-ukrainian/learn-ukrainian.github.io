@@ -19,7 +19,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     # `audit` is the scripts/audit package. The repository root alone cannot find it.
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from audit import audit_module
+from scripts.audit import audit_module
 
 
 def auto_fix_ipa(file_path: str) -> tuple[int, list[str]]:

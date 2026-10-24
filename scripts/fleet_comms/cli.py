@@ -49,6 +49,7 @@ except ModuleNotFoundError as exc:
 from scripts.control_plane.health import authority_collector_payload
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
+from scripts.fleet_comms.artifacts import validate_plane_root
 from scripts.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
     collect_dead_letters_authority,
@@ -479,7 +480,7 @@ def _resolve_message_db(args: argparse.Namespace) -> Path:
 
 def _resolve_plane_db(args: argparse.Namespace) -> Path:
     root = Path(args.root).expanduser() if getattr(args, "root", None) else default_plane_root()
-    return root / "comms.sqlite3"
+    return validate_plane_root(root) / "comms.sqlite3"
 
 
 def _force_legacy(args: argparse.Namespace) -> bool:
@@ -522,8 +523,7 @@ def cmd_metrics(args: argparse.Namespace) -> int:
 def cmd_bottleneck_metrics(args: argparse.Namespace) -> int:
     """Per-stream lifecycle bottlenecks from task, plane, and GitHub metadata."""
     tasks_dir = Path(args.tasks_dir).expanduser()
-    plane_root = Path(args.root).expanduser() if args.root else default_plane_root()
-    plane_db = plane_root / "comms.sqlite3"
+    plane_db = _resolve_plane_db(args)
     # Always call the collector: it is fail-open per source and refuses to
     # sqlite3.connect-create a missing plane DB (is_file guard inside). Skipping
     # here would drop valid dispatch metrics when plane is uninit (Claude CF r4).
@@ -626,7 +626,7 @@ def cmd_dead_letters(args: argparse.Namespace) -> int:
 
 
 def _open_plane_db_ro(root: Path) -> SQLiteConnection:
-    db_path = root / "comms.sqlite3"
+    db_path = validate_plane_root(root) / "comms.sqlite3"
     if not db_path.is_file():
         raise FleetCommsCliError(f"plane DB not found: {db_path}")
     assert_component_supported(StoreId.FLEET_COMMS, "comms_cli")  # #7482
@@ -1695,6 +1695,8 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help(sys.stderr)
         return EXIT_USAGE
     try:
+        if getattr(args, "root", None):
+            validate_plane_root(Path(args.root))
         return int(func(args))
     except FleetCommsCliError as exc:
         sys.stderr.write(str(exc) + "\n")

@@ -4332,8 +4332,9 @@ def _branch_holder_activity_reason(
     holders whose task state has already been removed.  That is safe only when
     both of the reaper's independent liveness probes are available and empty:
     the active-dispatch API rules out an attached task and ``lsof`` rules out a
-    process still using the checkout.  Probe failure is a refusal, not evidence
-    of inactivity.
+    process still using the checkout. For attributed terminal holders, the
+    reaper's local-record fallback can resolve a Monitor transport failure.
+    Other probe failures remain refusals.
     """
     candidate_task_ids = [task_id] if task_id is not None else _task_status_candidates_for_worktree(path)
     if not candidate_task_ids:
@@ -4347,7 +4348,23 @@ def _branch_holder_activity_reason(
         from scripts.orchestration import reap_worktrees
 
         try:
-            active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+            if complete:
+                active_ids = _branch_holder_active_task_ids()
+            else:
+                probe = reap_worktrees._read_active_task_probe()
+                active_ids, probe_error = reap_worktrees._resolve_activity_probe(
+                    reap_worktrees.primary_checkout_root(path),
+                    reap_worktrees.WorktreeInfo(path, None, None),
+                    probe,
+                )
+                if probe_error is not None or active_ids is None:
+                    if isinstance(probe, reap_worktrees._ActiveTaskProbeFailure):
+                        _record_diagnostic(
+                            candidate_task_ids[0],
+                            _TypedCause("activity probe unavailable", diagnostic=probe_error or probe.reason),
+                            source="branch_hand_off",
+                        )
+                    return "active-task probe unavailable"
         except reap_worktrees._ActiveTaskProbeFailure as exc:
             _record_diagnostic(
                 candidate_task_ids[0],
@@ -6856,7 +6873,10 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "worktree active",
         "worktree already removed",
         "worktree branch differs from task record",
-        "worktree ownership unknown or reused",
+        "worktree group has nonterminal task",
+        "worktree group records disagree on branch",
+        "worktree task inventory unavailable",
+        "worktree dirty",
         "unpushed work - needs rescue",
         "unpushed state unknown - needs rescue",
         "rescued",
@@ -9303,6 +9323,19 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
     return _public_row(_rescue_task_row(state_path, apply=apply), state_path, source="rescue")
 
 
+def _rescue_record_order(item: tuple[Path, dict[str, Any]]) -> tuple[float, str]:
+    """Order fix rounds by dispatch time, falling back to legacy record metadata."""
+    path, state = item
+    timestamp = state.get("started_at") or state.get("finished_at")
+    try:
+        started = datetime.fromisoformat(str(timestamp).replace("Z", "+00:00"))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        return started.timestamp(), path.name
+    except (ValueError, OverflowError):
+        return path.stat().st_mtime, path.name
+
+
 def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     """Preserve one terminal task on origin; never remove its worktree here.
 
@@ -9313,7 +9346,7 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     state = _read_state(state_path)
     task_id = state.get("task_id") if state else None
     row: dict[str, Any] = {"task_id": task_id, "action": "skipped"}
-    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES | worktree_claims.RELEASED_TASK_STATUSES:
         row["reason"] = "task is not terminal non-success"
         return row
     raw_worktree = state.get("worktree_path")
@@ -9335,46 +9368,73 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     if not (worktree / ".git").exists():
         row["reason"] = "not a registered dispatch worktree"
         return row
-    if state.get("worktree_reused") is not False:
-        row["reason"] = "worktree ownership unknown or reused"
-        return row
-    lease = state.get("lease")
-    if (isinstance(lease, dict) and lease.get("state") == "active") or state.get("lease_state") == "active":
-        row["reason"] = "task lease active"
-        return row
     try:
+        from scripts.fleet.ignored_task_output import matching_worktree_records
         from scripts.orchestration import reap_worktrees
 
         with worktree_lock(worktree) if apply else contextlib.nullcontext():
-            current = _read_state(state_path)
-            if current != state:
+            try:
+                group = [
+                    (path, _hydrate_read_only_checkout_snapshots(record))
+                    for path, record in matching_worktree_records(
+                        worktree, tasks_dir(), repo_root=root, publish_cache=False
+                    )
+                ]
+            except (OSError, ValueError):
+                row["reason"] = "worktree task inventory unavailable"
+                return row
+            if (state_path, state) not in group:
                 row["reason"] = "task state changed"
                 return row
-            if reap_worktrees._task_pid_alive(state):
-                row["reason"] = "task process alive"
+            require_clean = len(group) > 1 or state.get("worktree_reused") is not False
+            state_path, state = max(group, key=_rescue_record_order)
+            task_id = state["task_id"]
+            row["task_id"] = task_id
+            for _, member in group:
+                if member.get("status") not in reap_worktrees._TERMINAL_DISPATCH_STATUSES:
+                    row["reason"] = "worktree group has nonterminal task"
+                    return row
+                lease = member.get("lease")
+                if (isinstance(lease, dict) and lease.get("state") == "active") or member.get(
+                    "lease_state"
+                ) == "active":
+                    row["reason"] = "task lease active"
+                    return row
+                if reap_worktrees._task_pid_alive(member):
+                    row["reason"] = "task process alive"
+                    return row
+            if any(member.get("worktree_branch") != state.get("worktree_branch") for _, member in group):
+                row["reason"] = "worktree group records disagree on branch"
                 return row
-            try:
-                active_ids = reap_worktrees._active_task_ids()
-            except reap_worktrees._ActiveTaskProbeFailure as exc:
+            probe = reap_worktrees._read_active_task_probe()
+            active_ids, probe_error = reap_worktrees._resolve_activity_probe(
+                root, reap_worktrees.WorktreeInfo(worktree, None, None), probe
+            )
+            if active_ids is None and probe_error is None and isinstance(probe, reap_worktrees._ActiveTaskProbeFailure):
+                probe_error = probe.reason
+            if probe_error is not None:
                 diagnostic = _record_diagnostic(
                     task_id,
-                    _exception_cause("activity probe unavailable", exc),
+                    _TypedCause("activity probe unavailable", diagnostic=probe_error),
                     source="rescue",
                     field="reason",
                 )
                 if diagnostic:
                     row["diagnostic"] = diagnostic
-                active_ids = None
             live_cwds = reap_worktrees._live_cwd_paths(root)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"
                 return row
-            if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
+            if any(member.get("task_id") in active_ids for _, member in group) or any(
+                cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds
+            ):
                 row["reason"] = "worktree active"
                 return row
             repo = _rescue_repo(worktree, task_id=task_id, state=state)
             with _rescue_execution_context(repo) as context:
-                return _rescue_in_context(repo, context, state, state_path, row, apply=apply)
+                return _rescue_in_context(
+                    repo, context, state, state_path, row, apply=apply, require_clean=require_clean
+                )
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         cause = (
             _TypedCause(exc.code) if isinstance(exc, SnapshotRefusal) else _exception_cause("rescue_step_failed", exc)
@@ -9397,6 +9457,7 @@ def _rescue_in_context(
     row: dict[str, Any],
     *,
     apply: bool,
+    require_clean: bool = False,
 ) -> dict[str, Any]:
     from scripts.agent_runtime import kimi_boundary
 
@@ -9410,15 +9471,28 @@ def _rescue_in_context(
     recorded_branch = state.get("worktree_branch")
     agent = str(state.get("agent") or "agent")
     branch = f"rescue/{agent}/{_x_agent_task_id(agent, str(task_id))}"
-    if current_branch not in {recorded_branch, branch}:
+    if current_branch != recorded_branch and (require_clean or current_branch != branch):
         row["reason"] = "worktree branch differs from task record"
         return row
+    if require_clean:
+        from scripts.orchestration import reap_worktrees
+
+        dirty = _worktree_is_dirty(worktree)
+        if dirty is not False:
+            row["reason"] = "worktree dirty" if dirty else "changed files unavailable"
+            return row
+        if reap_worktrees._is_head_reachable_from_remote(worktree, head):
+            row["reason"] = "no provable unpushed work"
+            return row
     tree = context.capture(
         worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude"
     )
     changed = tuple(
         path for path in context.checked("diff-tree", "-r", "-z", "--name-only", head, tree).split("\0") if path
     )
+    if require_clean and changed:
+        row["reason"] = "worktree dirty"
+        return row
     large = []
     for name in changed:
         try:
@@ -9543,6 +9617,7 @@ def cmd_rescue(args: argparse.Namespace) -> int:
         return 2
 
     rows: list[dict[str, Any]] = []
+    seen_worktrees: set[Path] = set()
     now = datetime.now(UTC)
     for path in paths:
         state = _read_state(path)
@@ -9566,6 +9641,16 @@ def cmd_rescue(args: argparse.Namespace) -> int:
                 continue
             if age_hours < min_age_hours:
                 continue
+        raw_worktree = state.get("worktree_path") if state else None
+        if isinstance(raw_worktree, str):
+            try:
+                worktree = worktree_claims.resolve_claim_path(raw_worktree, repo_root=_REPO_ROOT)
+            except (OSError, RuntimeError, ValueError):
+                pass  # Let the rescue registration guard report invalid paths.
+            else:
+                if worktree in seen_worktrees:
+                    continue
+                seen_worktrees.add(worktree)
         rows.append(_rescue_task(path, apply=bool(args.apply or not args.all_stale)))
     # Every row leaves through the public-reason sink (#9878).
     rows = [_public_row(row, None, source="rescue") for row in rows]
@@ -10728,6 +10813,7 @@ def _resolve_worktree_base_sha(
     review_dependencies: Sequence[tuple[str, Path]] = (),
     continuation_head_sha: str | None = None,
     continuation_remote_sha: str | None = None,
+    telemetry: dict[str, Any] | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -10738,6 +10824,8 @@ def _resolve_worktree_base_sha(
     used as is and never resolved again (#8775, :func:`_helper_worktree_path`).
     ``rebase_onto`` pins a reused worktree's auto-rebase to the commit
     authoring-review admission checked (#9739 A7).
+    ``telemetry`` retains the actual rebase result for the dispatch receipt;
+    provisioning with the resolved SHA must not repeat that validation.
     """
     worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
@@ -10747,7 +10835,7 @@ def _resolve_worktree_base_sha(
     if worktree_path.exists():
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
-        _validate_existing_worktree(
+        rebased = _validate_existing_worktree(
             path=worktree_path,
             expected_branch=requested_branch or _derive_worktree_branch(agent, task_id),
             base=requested_branch or base,
@@ -10781,6 +10869,8 @@ def _resolve_worktree_base_sha(
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
         _refuse_if_gate_head_moved(resolved, pinned_head_sha)
+        if telemetry is not None:
+            telemetry["rebased"] = rebased
         return resolved
 
     if requested_branch:
@@ -11216,9 +11306,9 @@ def _augment_prompt_with_worktree(
             "Do not merge `origin/main` into your branch unless `git merge-tree` against a freshly fetched "
             "main reports a conflict, or the driver orders it.\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
-            "Keep scratch git repositories and probes outside `batch_state/reports/` "
-            "(use `$TMPDIR`, the managed lease, never a literal system temp path); "
-            "`batch_state/` is reserved for report files and logs.\n"
+            "For scratch git repositories and probes, use `$TMPDIR`, the managed lease, "
+            "never a literal system temp path.\n"
+            "Keep durable task artifacts in `$LU_TASK_EVIDENCE_DIR`; task cleanup preserves that directory.\n"
             "Do not open or merge PRs unless the brief says so; "
             "report the pushed head SHA and clean status.\n"
             "\n[optional delivery signal]\n"
@@ -11293,10 +11383,10 @@ def _augment_prompt_with_worktree(
         "cwd is a worktree.\n"
         f"{sparse_note}{test_scope}{delivery_note}{db_note}\n"
         "[held work]\n"
-        "Keep patches, handoffs and diagnostics needed after exit in this worktree's "
-        "`batch_state/reports/`, and cite each file in your final response. "
-        "Runtime scratch is deleted at exit; if held work remains there, cite its absolute "
-        "file path or `$TMPDIR/<file>` in the final response so it is preserved. "
+        "Keep patches, handoffs and diagnostics needed after exit in `$LU_TASK_EVIDENCE_DIR`, "
+        "this task's `evidence/` directory outside the worktree, and cite each file in your final response. "
+        "Task cleanup preserves that directory with a retrieval receipt before removing the runtime lease. "
+        "Runtime scratch elsewhere is deleted at exit. "
         "Cite regular files, not directories or symlinks; automatic preservation has a 256 MiB cap.\n\n"
         f"{prompt}"
     )
@@ -13422,6 +13512,7 @@ def _record_worktree_prep_failure(
     lifecycle_carrier: Any = None,
     worktree_path: str | Path | None = None,
     worktree_reused: bool | None = None,
+    worktree_rebased: bool = False,
     worktree_branch: str | None = None,
     worktree_base_sha: str | None = None,
     worktree_base: str | None = None,
@@ -13484,7 +13575,7 @@ def _record_worktree_prep_failure(
         "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
         "worktree_base_sha": worktree_base_sha,
         "worktree_base": worktree_base,
-        "worktree_rebased": False,
+        "worktree_rebased": worktree_rebased,
         "worktree_reused": worktree_reused,
         "worktree_layout": wt_layout,
         "worktree_sparse": None,
@@ -15282,6 +15373,7 @@ def _dispatch(
 
     # Resolve the immutable worktree base once before ownership admission.
     resolved_worktree_base_sha: str | None = None
+    worktree_base_telemetry: dict[str, Any] = {}
     resolved_worktree_raw: str | None = None
     rebase_onto: str | None = None
     if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
@@ -15352,6 +15444,7 @@ def _dispatch(
                     allow_rebase=allow_rebase,
                     rebase_onto=rebase_onto,
                     review_dependencies=review_dependencies,
+                    telemetry=worktree_base_telemetry,
                     continuation_head_sha=(
                         authoring_admission.head_sha
                         if authoring_admission is not None and authoring_admission.record.get("local_continuation")
@@ -15794,6 +15887,9 @@ def _dispatch(
                     review_dependencies=review_dependencies,
                     read_only=args.mode == "read-only",
                 )
+                worktree_telemetry["rebased"] = bool(
+                    worktree_base_telemetry.get("rebased") or worktree_telemetry.get("rebased")
+                )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
                     repo_root=target_repo_root,
@@ -15845,6 +15941,7 @@ def _dispatch(
                 lifecycle_carrier=lifecycle_carrier,
                 worktree_path=failed_worktree_path,
                 worktree_reused=worktree_telemetry.get("reused"),
+                worktree_rebased=bool(worktree_base_telemetry.get("rebased") or worktree_telemetry.get("rebased")),
                 worktree_branch=(
                     None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
                 ),
@@ -16039,6 +16136,7 @@ def _dispatch(
             worktree_branch=worktree_branch,
             worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
             worktree_reused=worktree_telemetry.get("reused"),
+            worktree_rebased=bool(worktree_telemetry.get("rebased")),
             worktree_base=worktree_base,
             agent_alias_note=agent_alias_note,
             output_schema_path=output_schema_path,

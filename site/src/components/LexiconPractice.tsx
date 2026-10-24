@@ -130,7 +130,7 @@ import {
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 import TeacherDeckPractice from './practice/TeacherDeckPractice';
 import { loadTeacherDeck } from '../lib/lexicon/teacher-deck';
-import ZnoPractice, { ZNO_PRACTICE_DECK_META } from './ZnoPractice';
+import ZnoPractice, { ZNO_PRACTICE_DECK_META, type ZnoSessionControls } from './ZnoPractice';
 import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
 import ErrorCorrectionPractice from './ErrorCorrectionPractice';
 import { useErrorCorrectionPracticeOverlay } from './useErrorCorrectionPracticeOverlay';
@@ -2664,6 +2664,7 @@ function LexiconPracticeIsland({
     activeZnoDeckError,
     retryActiveZnoDeck,
   } = useZnoPracticeOverlay();
+  const znoSessionControlsRef = useRef<ZnoSessionControls>(null);
   const [hoveredCultureDeck, setHoveredCultureDeck] = useState(false);
   const {
     activeCulturePractice,
@@ -5306,7 +5307,7 @@ function LexiconPracticeIsland({
       {activeZnoDeck && (
         <div className="lexicon-practice-stage-shell" data-testid="practice-zno-session">
           <div className="lexicon-practice-stage-bar">
-            <button type="button" className="stage-back" onClick={() => setActiveZnoDeckId(null)}>
+            <button type="button" className="stage-back" onClick={() => znoSessionControlsRef.current?.endSession()}>
               <PracticeChromeLabel k="practice.home" />
             </button>
             <h2>ЗНО / НМТ · {activeZnoDeck.title}</h2>
@@ -5315,7 +5316,7 @@ function LexiconPracticeIsland({
             </span>
           </div>
           <div className="lexicon-practice-stage" tabIndex={-1}>
-            <ZnoPractice deck={activeZnoDeck} onBackToDecks={() => setActiveZnoDeckId(null)} />
+            <ZnoPractice deck={activeZnoDeck} sessionControlsRef={znoSessionControlsRef} onBackToDecks={() => setActiveZnoDeckId(null)} />
           </div>
         </div>
       )}

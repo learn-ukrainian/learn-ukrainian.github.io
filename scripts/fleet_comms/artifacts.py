@@ -42,6 +42,7 @@ from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
 from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
+from scripts.fleet_comms.paths import validate_plane_root as validate_plane_root
 from scripts.fleet_comms.pg_schema import (
     PG_BLOB_TABLE,
     PgSchemaError,
@@ -112,8 +113,8 @@ class ArtifactStore:
         repo_root: Path | None = None,
         readonly: bool = False,
     ) -> None:
-        self.root = (
-            Path(root).resolve()
+        self.root = validate_plane_root(
+            root
             if root is not None
             else default_plane_root(repo_root=repo_root)
         )

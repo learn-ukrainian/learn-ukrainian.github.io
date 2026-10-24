@@ -307,7 +307,8 @@ def test_warm_routing_budget_does_not_wait_on_the_worker_pool(tmp_path: Path, mo
     """A cached read finishes while every default-executor worker is still blocked."""
     calls = {"n": 0}
 
-    def slow(**_kwargs):
+    def slow(**kwargs):
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
         calls["n"] += 1
         return {"generated_at": "2026-01-01T00:00:00Z", "marker": calls["n"]}
 
@@ -358,6 +359,54 @@ def test_warm_routing_budget_does_not_wait_on_the_worker_pool(tmp_path: Path, mo
     assert calls["n"] == 1
 
 
+def test_token_matched_warm_hit_finishes_before_saturated_default_executor_is_released(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Task generation validation must not queue a warm read behind unrelated work."""
+    calls = []
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: 1000.0)
+
+    def compute(**kwargs):
+        calls.append(1)
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
+        return _routing_snapshot(0)
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = _mount(tmp_path, state_router.router, "/api/state")
+
+    async def scenario():
+        loop = asyncio.get_running_loop()
+        loop.set_default_executor(concurrent.futures.ThreadPoolExecutor(max_workers=1))
+        entered = threading.Event()
+        release = threading.Event()
+
+        def blocker():
+            entered.set()
+            release.wait()
+
+        async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            first = await client.get("/api/state/routing-budget")
+            assert first.json()["diagnostics"]["stale"] is False
+            blocked = loop.run_in_executor(None, blocker)
+            request = None
+            try:
+                await _until(entered.is_set, "executor blocker did not start")
+                request = asyncio.create_task(client.get("/api/state/routing-budget"))
+                await _until(request.done, "token-matched warm read waited on the saturated default executor")
+                assert request.result().status_code == 200
+                assert request.result().json()["diagnostics"]["stale"] is False
+                assert request.result().json()["recommendation"]["primary_agent_for_code"] == "codex"
+                assert not blocked.done()
+                assert len(calls) == 1
+            finally:
+                release.set()
+                await blocked
+                if request is not None:
+                    await request
+
+    asyncio.run(scenario())
+
+
 def test_stale_routing_budget_returns_while_refresh_runs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A stale snapshot is served while its scheduled refresh is still blocked."""
     clock = {"t": 1_000.0}
@@ -367,7 +416,8 @@ def test_stale_routing_budget_returns_while_refresh_runs(tmp_path: Path, monkeyp
     refresh_finished = threading.Event()
     monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
 
-    def slow(**_kwargs):
+    def slow(**kwargs):
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
         calls["n"] += 1
         if calls["n"] > 1:
             refresh_entered.set()
@@ -414,7 +464,8 @@ def test_expired_routing_budget_reports_age_and_withdraws_authorization(
     calls = {"n": 0}
     monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
 
-    def compute(**_kwargs):
+    def compute(**kwargs):
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
         calls["n"] += 1
         if calls["n"] > 1:
             raise RuntimeError("refresh failed")
@@ -483,7 +534,8 @@ def test_cumulative_source_age_withdraws_routing_authorization(tmp_path: Path, m
     calls = {"n": 0}
     monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
 
-    def compute(**_kwargs):
+    def compute(**kwargs):
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
         calls["n"] += 1
         if calls["n"] > 1:
             raise RuntimeError("refresh failed")
@@ -517,7 +569,8 @@ def test_cumulative_source_age_under_threshold_keeps_authorization(
     clock = {"t": 1_000.0}
     monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
 
-    def compute(**_kwargs):
+    def compute(**kwargs):
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
         return _routing_snapshot(800)
 
     monkeypatch.setattr(state_router, "compute_routing_budget", compute)

@@ -300,14 +300,11 @@ def _read_card(cards: LocalTarget, name: str) -> Any:
     return _read_checked(LocalTarget(resolved, cards.device))
 
 
-@lru_cache(maxsize=4)
-def _spelling_index(
-    cards: LocalTarget, _mtime_ns: int, _file_count: int
-) -> tuple[dict[str, tuple[str, ...]], int, int]:
-    """Map folded spellings to card files. The key changes when files are added or removed."""
+def _spelling_index(cards: LocalTarget, names: list[str]) -> tuple[dict[str, tuple[str, ...]], int, int]:
+    """Rebuild from current card contents; directory metadata misses in-place rewrites."""
     index: dict[str, list[str]] = defaultdict(list)
     unreadable = off_store = 0
-    for name in _card_names(cards):
+    for name in names:
         try:
             spelling = _dict(_dict(_read_card(cards, name)).get("key_at_creation")).get("spelling")
         except _OffStore:
@@ -331,9 +328,9 @@ def _card_names(cards: LocalTarget) -> list[str]:
 
 def _store_index(store: CardStore) -> tuple[dict[str, tuple[str, ...]], int, int, int]:
     """The spelling index with its unreadable and off-store counts. A directory read failure raises OSError."""
-    file_count = len(_card_names(store.cards))
-    index, unreadable, off_store = _spelling_index(store.cards, store.cards.path.stat().st_mtime_ns, file_count)
-    return index, unreadable, off_store, file_count
+    names = _card_names(store.cards)
+    index, unreadable, off_store = _spelling_index(store.cards, names)
+    return index, unreadable, off_store, len(names)
 
 
 @lru_cache(maxsize=2)

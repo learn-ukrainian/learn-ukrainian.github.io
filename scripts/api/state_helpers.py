@@ -386,12 +386,15 @@ async def cache_get_or_compute_async(  # noqa: UP047 — ruff pyflakes lacks PEP
     return await asyncio.shield(asyncio.wrap_future(fut))
 
 
-def schedule_cache_refresh(key: str, ttl: float, compute: Callable[[], object]) -> None:
-    """Recompute one key on a daemon thread. Overlapping kicks share one flight."""
+def schedule_cache_refresh(
+    key: str, ttl: float, compute: Callable[[], object], *, should_refresh: Callable[[], bool] | None = None,
+) -> None:
+    """Check and recompute off-loop, sharing one flight without renewing unchanged data."""
 
     def _run() -> None:
         try:
-            cache_get_or_compute(key, ttl, compute, force=True)
+            if should_refresh is None or should_refresh():
+                cache_get_or_compute(key, ttl, compute, force=True)
         except Exception:
             _cache_log.debug("background cache refresh failed", exc_info=True)
         finally:

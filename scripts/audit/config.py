@@ -8,9 +8,6 @@ and activity requirements for each CEFR level.
 import sys as _sys
 from pathlib import Path
 
-from common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
-from level_config import base_level
-
 # File entrypoints may expose only scripts/ or put audit/ first on sys.path.
 # Add the repository root so the qualified import resolves the one shared
 # policy module without consulting a shadowable top-level ``config`` name.
@@ -19,6 +16,8 @@ if str(_PROJECT_ROOT) not in _sys.path:
     _sys.path.insert(0, str(_PROJECT_ROOT))
 
 from scripts import config as _shared_config
+from scripts.common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
+from scripts.level_config import base_level
 
 shared_get_immersion_range = _shared_config.get_immersion_range
 

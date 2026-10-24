@@ -2,19 +2,22 @@
 
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import json
 import os
+import threading
 import time
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
+import httpx
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.analytics.cost_report import CostRecord
-from scripts.api import claude_account_usage, state_router
+from scripts.api import claude_account_usage, state_helpers, state_router
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet import reset_reserve
 
@@ -303,6 +306,162 @@ def test_routing_budget_shape_lock(monkeypatch, tmp_path):
     assert isinstance(data["ranked_by_headroom"], list)
     assert isinstance(data["in_flight"], dict)
     assert all(isinstance(count, int) for count in data["in_flight"].values())
+
+
+def test_token_matched_warm_hit_withdraws_when_cumulative_age_exceeds_bound(monkeypatch, tmp_path):
+    """A within-TTL cache hit must not authorize a source older than 900 seconds."""
+    _configure(monkeypatch, tmp_path, [])
+    ctx = fixture_context(tmp_path)
+    clock = {"t": 1000.0}
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+    calls = []
+
+    def compute(**kwargs):
+        calls.append(1)
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
+        return {
+            "agents": {"codex": {"eligible": True, "status": "cool"}},
+            "recommendation": {"primary_agent_for_code": "codex", "warnings": []},
+            "diagnostics": {"data_age_s": 890, "stale": False, "stale_threshold_s": 900},
+            "ranked_by_headroom": [{"lane": "codex"}],
+        }
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(state_router.router, prefix="/api/state")
+    with TestClient(app) as client:
+        first = client.get("/api/state/routing-budget").json()
+        assert first["diagnostics"]["stale"] is False
+        assert first["recommendation"]["primary_agent_for_code"] == "codex"
+        clock["t"] += 14
+        body = client.get("/api/state/routing-budget").json()
+    assert body["diagnostics"] == {"data_age_s": 904.0, "stale": True, "stale_threshold_s": 900}
+    assert body["recommendation"]["primary_agent_for_code"] is None
+    assert body["agents"]["codex"]["eligible"] is False
+    assert body["ranked_by_headroom"] == []
+    assert first["diagnostics"]["data_age_s"] == 890
+    assert len(calls) == 1
+
+
+def test_task_rewrite_serves_warm_snapshot_while_recompute_is_blocked(monkeypatch, tmp_path):
+    """Task generation churn must not force a cold blocking routing request."""
+    ctx = fixture_context(tmp_path)
+    tasks = ctx.roots.batch_state_dir / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    task = tasks / "worker.json"
+    task.write_text('{"status":"spawning"}', encoding="utf-8")
+    directory_mtime = tasks.stat().st_mtime_ns
+    clock = {"t": 1000.0}
+    calls = []
+    entered = threading.Event()
+    release = threading.Event()
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+
+    def compute(**kwargs):
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
+        calls.append(1)
+        if len(calls) > 1:
+            entered.set()
+            assert release.wait(timeout=5), "refresh was not released"
+        return {
+            "generated_at": "fixture-snapshot",
+            "in_flight": {"codex": len(calls)},
+            "diagnostics": {"data_age_s": 10, "stale": False, "stale_threshold_s": 900},
+        }
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(state_router.router, prefix="/api/state")
+
+    async def scenario():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+            first = await client.get("/api/state/routing-budget")
+            assert first.status_code == 200
+            clock["t"] += 2
+            old_mtime = task.stat().st_mtime_ns
+            task.write_text('{"status":"running"}', encoding="utf-8")
+            os.utime(task, ns=(old_mtime + 1_000_000, old_mtime + 1_000_000))
+            assert tasks.stat().st_mtime_ns == directory_mtime
+            try:
+                warm = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=3)
+                assert warm.status_code == 200
+                assert warm.json()["generated_at"] == first.json()["generated_at"]
+                assert warm.json()["in_flight"] == {"codex": 1}
+                assert await asyncio.to_thread(entered.wait, 3), "no refresh scheduled"
+                again = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=3)
+                assert again.json()["in_flight"] == {"codex": 1}
+                assert again.json()["diagnostics"] == {
+                    "data_age_s": 12.0, "stale": True, "stale_threshold_s": 900,
+                }
+                assert len(calls) == 2
+            finally:
+                release.set()
+                async with asyncio.timeout(5):
+                    while state_helpers._refresh_keys:
+                        await asyncio.sleep(0.01)
+
+    asyncio.run(scenario())
+
+
+def test_task_directory_aba_during_compute_never_marks_in_compute_counts_fresh(monkeypatch, tmp_path):
+    """An added then removed newest task must not leave its counts marked fresh."""
+    _configure(monkeypatch, tmp_path, [])
+    ctx = fixture_context(tmp_path)
+    tasks = ctx.roots.batch_state_dir / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    stable = tasks / "stable.json"
+    stable.write_text('{"task_id":"stable","agent":"codex","status":"done"}', encoding="utf-8")
+    # A surviving newest file masks the directory mtime change after add/remove.
+    newest = time.time_ns() + 60_000_000_000
+    os.utime(stable, ns=(newest, newest))
+    before = state_router._tasks_content_token(tasks)
+    compute = state_router.compute_routing_budget
+
+    def compute_with_transient_task(**kwargs):
+        transient = tasks / "transient.json"
+        transient.write_text(
+            '{"task_id":"transient","agent":"codex","status":"spawning"}', encoding="utf-8",
+        )
+        os.utime(transient, ns=(newest + 1, newest + 1))
+        try:
+            value = compute(**kwargs)
+            assert value["in_flight"]["codex"] == 1
+            assert value["diagnostics"]["stale"] is False
+            return value
+        finally:
+            transient.unlink()
+            assert state_router._tasks_content_token(tasks) == before
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute_with_transient_task)
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(state_router.router, prefix="/api/state")
+
+    async def settle_refresh():
+        async with asyncio.timeout(5):
+            while state_helpers._refresh_keys:
+                await asyncio.sleep(0.01)
+
+    async def scenario():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+            cold = await client.get("/api/state/routing-budget")
+            assert cold.status_code == 200
+            try:
+                # Check the cold flight and then the completed background refresh.
+                for _ in range(2):
+                    response = await client.get("/api/state/routing-budget")
+                    assert response.status_code == 200
+                    body = response.json()
+                    assert body["in_flight"]["codex"] == 1
+                    assert body["diagnostics"]["stale"] is True
+                    await settle_refresh()
+                assert cold.json()["diagnostics"]["stale"] is True
+            finally:
+                await settle_refresh()
+
+    asyncio.run(scenario())
 
 
 def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
@@ -1235,6 +1394,7 @@ def test_withdrawn_snapshot_clears_the_account_preference():
 
 # Fails on b62a4a3243: a warm routing snapshot served the account rows frozen at compute time.
 def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: 1000.0)
     _configure(monkeypatch, tmp_path, [])
     _populate_accounts(monkeypatch, tmp_path)
     client = _routing_client(tmp_path)
@@ -1255,6 +1415,7 @@ def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
 # Fails on e75cb7e113: a warm routing snapshot kept serving b's row ``ok`` and
 # preferred after b's binding was removed.
 def test_warm_snapshot_withholds_a_row_whose_binding_was_removed(monkeypatch, tmp_path):
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: 1000.0)
     _configure(monkeypatch, tmp_path, [])
     _populate_accounts(monkeypatch, tmp_path)
     client = _routing_client(tmp_path)

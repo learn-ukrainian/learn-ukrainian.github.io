@@ -87,10 +87,10 @@ def test_dispatch_claude_phase_runs_without_background_work(monkeypatch, tmp_pat
     from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_ENV, HEADLESS_BACKGROUND_TOOL_DENIES
     from scripts.pipeline import dispatch as dispatch_module
 
-    seen = {}
+    calls = []
 
     def fake_run(cmd, **kwargs):
-        seen.update(cmd=cmd, env=kwargs["env"])
+        calls.append((cmd, kwargs))
         return subprocess.CompletedProcess(cmd, 0, stdout="===CONTENT_START===\nx\n===CONTENT_END===", stderr="")
 
     monkeypatch.setenv("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", "0")
@@ -99,9 +99,11 @@ def test_dispatch_claude_phase_runs_without_background_work(monkeypatch, tmp_pat
     prompt_file = tmp_path / "phase.md"
     prompt_file.write_text("write the content", encoding="utf-8")
 
-    ok, _ = dispatch_module.dispatch_claude_phase(prompt_file, "B content")
+    ok, output = dispatch_module.dispatch_claude_phase(prompt_file, "B content")
 
     assert ok
-    cmd = seen["cmd"]
+    assert output == "===CONTENT_START===\nx\n===CONTENT_END==="
+    # Heartbeat or other callbacks can also reach the shared subprocess module.
+    (cmd, kwargs), = [call for call in calls if call[1].get("input") == "write the content"]
     assert cmd[cmd.index("--disallowedTools") + 1].split(",") == list(HEADLESS_BACKGROUND_TOOL_DENIES)
-    assert seen["env"].items() >= HEADLESS_BACKGROUND_ENV.items()
+    assert kwargs["env"].items() >= HEADLESS_BACKGROUND_ENV.items()

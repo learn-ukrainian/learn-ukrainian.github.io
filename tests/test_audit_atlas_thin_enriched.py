@@ -1,3 +1,7 @@
+import json
+import subprocess
+import sys
+
 from scripts.audit.audit_atlas_thin_enriched import (
     has_learner_english_anchor,
     summarize_manifest,
@@ -7,6 +11,29 @@ from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 
 
 def test_has_learner_english_anchor_accepts_supported_anchor_shapes() -> None:
+    imported = subprocess.run(
+        [sys.executable, "-c", """
+import importlib
+import json
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path.cwd() / "scripts"))
+config = importlib.import_module("config")
+before = list(sys.path)
+origin = config.__spec__.origin
+importlib.import_module("scripts.audit.audit_atlas_thin_enriched")
+print(json.dumps({"path_unchanged": sys.path == before,
+                  "same_config": sys.modules["config"] is config,
+                  "same_origin": config.__spec__.origin == origin}))
+"""],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert json.loads(imported.stdout) == {
+        "path_unchanged": True, "same_config": True, "same_origin": True,
+    }
     assert has_learner_english_anchor({"gloss": "wow"})
     assert has_learner_english_anchor({"enrichment": {"translation": {"en": ["stir"]}}})
     assert has_learner_english_anchor(

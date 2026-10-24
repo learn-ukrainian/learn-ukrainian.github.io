@@ -9,6 +9,29 @@ or recover its own lease.
 
 ## Launcher contract
 
+Claude CTO supervisory successors enter the existing `lu-start-cto --here`
+wrapper and use its saved selection. Before stopping the predecessor, the
+launcher requires an executable wrapper and statically verifies its supported
+source template, configured repository, model, effort, kick prompt, expanded
+role prompt and complete captured argument vector. This comparison reads source
+policy inputs, never account stores, and does not execute the wrapper. Unknown
+or custom intent refuses with `cto-wrapper-unsupported`, retaining the provider
+and lease. The supported source grammar is UTF-8 with LF line boundaries and
+ASCII spaces or tabs around statements. Admission rejects other whitespace and
+C0/C1 controls before removing blank or comment lines, including CRLF source.
+The launcher rechecks the bound signature before successor exec;
+source drift or a subsequent wrapper refusal fails without direct-launch
+fallback. Codex CTO and other driver successors retain their existing routes.
+
+The inbox watcher receives the launcher's entrypoint and helper metadata through
+its inherited environment. Exact captured Claude CTO arguments travel as raw
+NUL-delimited bytes through an inherited descriptor on an unlinked file, avoiding
+environment-string size limits and encoding failures at watcher startup. It passes
+those arguments over stdin to the same preflight before claiming, consuming or
+preparing a restart. Missing, unreadable or malformed CTO capture refuses the
+restart. Unsupported intent leaves the delivery and live predecessor available
+for reconciliation.
+
 Launch a driver with an exact numeric stream and an explicit role. The command
 returns a JSON capsule in the required order: identity, pending rollover slot,
 digest watermark, dual-write handoff status, then diagnostics.

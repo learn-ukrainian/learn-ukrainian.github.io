@@ -1,9 +1,70 @@
-# Word cards C0 — identity contract (#8334, r3 revised per the design panel)
+# Word cards C0: entry identity and spelling URL contract (#8334)
 
-- **Decides (once approved):** what an Atlas entry *is*. A card is a lexeme, an MWE or a proper name, never a spelling. Spelling, stress, POS and source homonym numbers are attributes and matching evidence.
+- **Contract:** what an Atlas entry *is*. A card is a lexeme, an MWE or a proper name, never a spelling. Spelling, stress, POS and source homonym numbers are attributes and matching evidence.
 - **Companion docs:** [`schema.md`](schema.md) (card and assertion shape, states), [`worked-examples.md`](worked-examples.md), [`migration.md`](migration.md).
-- **Status:** r3 2026-09-28, author Claude (Fable 5.1). Round 1: Astra (design) REVISE — split semantics, MWE key and progress handling reworked in §7 and §9; Gemini (language lane, via AGY) APPROVE — every measured split, stress and homonym reading confirmed against `sources.db`/`vesum.db`/`atlas.db` with the `sources` MCP tools, and the classification of the 78 Atlas-vs-ULIF stress differences as mostly identity artefacts confirmed. Round 2 (Astra REVISE): §8 reconciled with `schema.md` §6 (automatic sense alignment needs one unit on **both** sides), §9 MWE normalisation reconciled with `schema.md` §7.1, and §7.4 re-harvest now goes through persistent source-record identities. The ULIF/ВТС count-divergence policy was settled by the operator on 2026-09-29: preserve each source partition, leave uncertain correspondence unresolved, and do not merge or practice meanings until adjudication ([#8978](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8978#issuecomment-5885371075); see `schema.md` §16.3). This decision does not grant the full identity/URL sign-off; #8334 remains open. Other decisions remain in `schema.md` §16.3. No stress or meaning judgment below is the author's: every Ukrainian form is quoted from `data/sources.db`, `data/vesum.db` or `data/atlas.db` (read-only, 2026-09-28; §12).
-- **Not in this doc:** the URL scheme (#8334 AC-02, open question) and the consumer inventory (in `migration.md` §6).
+- **Status:** r3 2026-09-28, author Claude (Fable 5.1). Round 1: Astra (design) REVISE — split semantics, MWE key and progress handling reworked in §7 and §9; Gemini (language lane, via AGY) APPROVE — every measured split, stress and homonym reading confirmed against `sources.db`/`vesum.db`/`atlas.db` with the `sources` MCP tools, and the classification of the 78 Atlas-vs-ULIF stress differences as mostly identity artefacts confirmed. Round 2 (Astra REVISE): §8 reconciled with `schema.md` §6 (automatic sense alignment needs one unit on **both** sides), §9 MWE normalisation reconciled with `schema.md` §7.1, and §7.4 re-harvest now goes through persistent source-record identities. The ULIF/ВТС count-divergence policy was settled by the operator on 2026-09-29: preserve each source partition, leave uncertain correspondence unresolved, and do not merge or practice meanings until adjudication ([#8978](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8978#issuecomment-5885371075); see `schema.md` §16.3). This historical review did not grant full identity/URL sign-off. The approved 2026-10-24 contract is in §0; implementation and acceptance remain under #8334. Other decisions remain in `schema.md` §16.3. No stress or meaning judgment below is the author's: every Ukrainian form is quoted from `data/sources.db`, `data/vesum.db` or `data/atlas.db` (read-only, 2026-09-28; §12).
+- **Approval:** [dec-017](../../decisions/2026-10-24-atlas-entry-identity-spelling-urls.md) records the operator direction, Sol 6.1 design, and Opus 5.5 approval with five required changes.
+- **Consumer inventory:** `migration.md` §6.
+
+## 0. Approved identity and URL contract (2026-10-24)
+
+This section settles the identity and URL direction. Earlier measurements below
+remain dated evidence, not proof of current source completeness or publication.
+
+### Stable entries on spelling hubs
+
+The existing registry is the sole allocator. Preserve every existing `card_id`.
+A card uses `wc_` plus 12 Crockford-base32 characters, allocated once and never
+reused. Senses keep `ws_` IDs. Lexemes, MWEs, and proper names share the card
+namespace. Display homonym numbers do not identify cards.
+
+The descriptive entry key keeps case. It comprises the NFC lemma, attested
+stress-pattern set, POS, paradigm, and source-qualified homonym partition.
+It is matching evidence, not a primary key or an ID hash. Correcting spelling,
+stress, or source numbering never remints a card.
+
+The hub key is the lowercased, unstressed spelling. Keep existing slugs and
+base-path handling at `/lexicon/<unstressed-spelling>/`. Each entry has a
+`#entry-<card_id>` anchor, including a singleton. Adding an independently
+established entry preserves the first entry's ID and anchor. Separate sections
+own their facts and senses. Polysemy uses senses. Verified stress doublets,
+such as `по́милка` and `поми́лка`, stay variants on one card.
+
+ULIF records 76791 `За́мок`, 76792 `за́мок`, and 76793 `замо́к` describe separate
+entries. The proper name keeps its case and identity. Its section follows Q12:
+proper names are excluded from the general-vocabulary pilot. Under this contract,
+`/lexicon/замок/` shows the two common nouns once their correspondence is resolved.
+A missing paradigm is not permission to merge them.
+
+### Correspondence and existing URLs
+
+Keep VESUM entry and paradigm identities, ULIF persistent source-record IDs and
+source-local `homonym_index`, СУМ-20 `wordid`, and dictionary/edition-qualified
+ВТС numbered headwords. Namespace slovnyk records by constituent dictionary.
+Preserve conflicting source partitions. Spelling equality and source numbering
+never prove correspondence. Curated heteronyms are migration candidates, not
+independent authorities. Do not copy a merged article's facts into each successor.
+
+A spelling whose source correspondence is unresolved renders exactly as today.
+The 2026-10-24 design census found 3,287 lemma spellings with several ULIF
+candidates and 778 with none. Candidate counts do not establish identity.
+Missing source data stays unresolved. For example, ULIF 76793 `замо́к` has
+`forms_state: stale_source_snapshot` and no harvested forms. That gap never
+counts as evidence that entries are identical, and cannot justify a match.
+The holding area in §6 serves candidate inspection without replacing the
+current public rendering of an unresolved spelling.
+
+Freeze accented, animacy-suffixed, and positional fragment aliases before any
+reorder. Resolve them after client mounting. An ambiguous alias opens the hub
+chooser. Preserve old spelling and inflected-form URLs through aliases and the
+existing redirect mechanism, retaining fragments. Form routes do not mint lexemes.
+Merge redirects follow registry lineage. A conflated-card split keeps the old
+ID and anchor as a chooser for all successors, never an arbitrary child.
+A stress correction changes neither the hub nor the entry anchor.
+
+Implementation order, the held-out precondition, and route risks are in
+[`migration.md` §2](migration.md#2-steps-pilot-parameterised-order-per-the-design-read)
+and §7. Recording this contract does not switch public routes or certify cards.
 
 ## 1. Operational definitions
 
@@ -41,7 +102,7 @@ Attributes can change without changing the id: a 2019-orthography respelling, a 
 - **kaikki/Wiktionary, ukrainian-word-stress**: spelling-keyed stress (Atlas `enrichment.stress`: 18,448 + 695 rows); one form per spelling, so a homograph pair gets one of its stresses only (`замок` → `за́мок`).
 - **PULS**: spelling-keyed CEFR (`замок` A2, `ключ` A2, `помилка` A2, `писати` A1, `написати` A1).
 - **atlas0** (`articles.slug`): one article per spelling; 2,811 lemma articles have a spelling with more than one checked ULIF homonym; 877 have no checked ULIF entry at all.
-- **Curated heteronyms** (`site/src/lib/lexicon/curated-heteronyms.ts`, 420 lemmas, hand-curated): `замок` → `за́мок` "castle, fortress, palace" and `замо́к` "lock (door lock, padlock)". These become `atlas0:heteronym:<spelling>/<stressed>` source keys and overlay `split` entries (`migration.md` M6).
+- **Curated heteronyms** (`site/src/lib/lexicon/curated-heteronyms.ts`, 420 lemmas, hand-curated): `замок` → `за́мок` "castle, fortress, palace" and `замо́к` "lock (door lock, padlock)". These supply `atlas0:heteronym:<spelling>/<stressed>` candidate keys. Overlay `split` entries require source checks (`migration.md` Unit 4).
 
 ## 3. Namespaced source homonym numbers
 
@@ -105,12 +166,12 @@ Spelling equality is a precondition of step 1, never sufficient by itself. Every
 
 ## 6. Unresolved and uncertain matches
 
-- A ULIF row (or any source unit) that cannot be attached at `high`/`medium` is kept in a **holding area** keyed by `(source_id, locator)` and by spelling, with `mapping.confidence = unresolved`. It appears on the disambiguation page as "unattached evidence" (thin cards are never hidden), never in practice, never in the dataset's card projection.
+- In candidate inspection, a ULIF row (or any source unit) that cannot be attached at `high`/`medium` is kept in a **holding area** keyed by `(source_id, locator)` and by spelling, with `mapping.confidence = unresolved`. Candidate inspection shows it as "unattached evidence", never in practice or the dataset's card projection. An unresolved spelling keeps its current public rendering under §0.
 - A card with `identity.confidence = unresolved` is created only for the VESUM denominator (every VESUM entry gets a card) when the ULIF side is ambiguous; its ULIF-derived fields stay in the holding area.
 - `low` mappings (e.g. VESUM's unsplit doublet on a split card) are retained as evidence and do not vote (`schema.md` §8).
 - Detection at scale is code (this section); the decision on ambiguous candidates is a language lane, recorded as an overlay `identity` entry.
 
-Expected volume from today's numbers: 10,570 ULIF spellings with several homonyms, 18,935 VESUM lemmas with several entries, 2,811 existing Atlas lemma articles whose spelling has several checked ULIF homonyms; these are the split candidates for the golden set (`migration.md` §5).
+Historical candidate volume from the 2026-09-28 measurements: 10,570 ULIF spellings with several homonyms, 18,935 VESUM lemmas with several entries, 2,811 existing Atlas lemma articles whose spelling has several checked ULIF homonyms; these are the split candidates for the golden set (`migration.md` §5).
 
 ## 7. Splits, merges, redirects and what consumers do with them
 

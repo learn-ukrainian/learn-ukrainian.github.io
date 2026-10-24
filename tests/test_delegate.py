@@ -10209,6 +10209,7 @@ def test_dispatch_origin_prefixed_base_resolves_remote_ref_to_immutable_sha(
     assert (admission["creation_base"], admission["creation_sha"]) == ("main", _STUB_ORIGIN_SHA)
     add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
     assert add_cmd[-1] == _STUB_ORIGIN_SHA, f"worktree must use the resolved SHA, got base={add_cmd[-1]!r}"
+    assert delegate._read_state(delegate._state_path("origin-base-smoke"))["worktree_rebased"] is False
 
 
 def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
@@ -11118,6 +11119,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     assert state["worktree_path"] == str(worktree.resolve())
     assert state["cwd"] == str(worktree.resolve())
     assert state["worktree_reused"] is True
+    assert state["worktree_rebased"] is False
 
 
 def test_branch_reuse_creates_worktree_from_existing_remote_branch(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -11601,6 +11603,7 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
     assert state["status"] == ("dry_run" if dry_run else "spawning")
     if not dry_run:
         assert state["pid"] == proc.pid
+        assert state["worktree_rebased"] is False
 
     monkeypatch.setattr(delegate.subprocess, "run", real_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", real_popen)
@@ -12022,13 +12025,21 @@ def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeyp
 
 @pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
 @pytest.mark.parametrize("holder", ["settled", "live_pid", "live_cwd", "missing_record", "complete"])
-def test_branch_holder_monitor_outage_preserves_release_guards(monkeypatch, tmp_tasks_dir, failure, holder):
+def test_branch_holder_monitor_outage_preserves_release_guards(tmp_path, monkeypatch, tmp_tasks_dir, failure, holder):
     import urllib.request
 
     from scripts.orchestration import reap_worktrees
 
-    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "legacy"
-    state = {"task_id": "legacy", "status": "done", "pid": os.getpid() if holder == "live_pid" else None}
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    tasks = tmp_path / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(reap_worktrees, "primary_checkout_root", lambda _path: tmp_path)
+    occupied = tmp_path / ".worktrees" / "dispatch" / "codex" / "legacy"
+    state = {
+        "task_id": "legacy", "status": "done", "worktree_path": str(occupied),
+        "pid": os.getpid() if holder == "live_pid" else None,
+    }
     if holder != "missing_record":
         delegate._write_state_atomic(delegate._state_path("legacy"), state)
 
@@ -12051,18 +12062,18 @@ def test_branch_holder_monitor_outage_preserves_release_guards(monkeypatch, tmp_
 
     if holder == "settled":
         assert reason is None
-    elif holder == "live_pid":
-        assert reason == "live task PID for task-id=legacy"
     elif holder == "live_cwd":
         assert reason == f"live process cwd={occupied / 'scripts'}"
     else:
         assert reason == "active-task probe unavailable"
-    if holder not in {"complete", "missing_record"}:
-        diagnostic = (tmp_tasks_dir / "legacy.diag").read_text()
+    if holder == "live_pid":
+        diagnostic = (tasks / "legacy.diag").read_text()
         assert "active_task_probe_" in diagnostic
         assert type(failure).__name__ in diagnostic
+    else:
+        assert not (tasks / "legacy.diag").exists()
     if holder == "missing_record":
-        assert not (tmp_tasks_dir / "legacy.json").exists()
+        assert not (tasks / "legacy.json").exists()
 
 
 def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -12571,6 +12582,10 @@ def test_augment_prompt_test_scope_for_write_modes(mode):
     assert "when the brief asks for full-suite proof" not in text
     assert "report the run URL instead of a local full run" not in text
     assert "Cite CI run ids" not in text
+    assert "Keep durable task artifacts in `$LU_TASK_EVIDENCE_DIR`; task cleanup preserves that directory." in text
+    assert "Keep patches, handoffs and diagnostics needed after exit in `$LU_TASK_EVIDENCE_DIR`" in text
+    assert "Task cleanup preserves that directory with a retrieval receipt" in text
+    assert "batch_state/reports/" not in text
     preamble, _, user_prompt = text.rpartition(prompt)
     assert preamble.endswith("\n")
     assert "[test scope]" in preamble
@@ -12591,6 +12606,9 @@ def test_augment_prompt_test_scope_for_read_only_and_default():
     assert "gh workflow run" not in explicit
     assert "pytest tests" not in explicit
     assert "-n auto" not in explicit
+    assert "Keep patches, handoffs and diagnostics needed after exit in `$LU_TASK_EVIDENCE_DIR`" in explicit
+    assert "Task cleanup preserves that directory with a retrieval receipt" in explicit
+    assert "batch_state/reports/" not in explicit
     preamble, _, user_prompt = explicit.rpartition(prompt)
     assert "[test scope]" in preamble
     assert user_prompt == ""
@@ -15557,6 +15575,76 @@ def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True, repo_key: str
     return primary, worktree, origin, state_path
 
 
+def _rescue_reused_group_checkout(tmp_path, monkeypatch):
+    primary, worktree, origin, old_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    old = delegate._read_state(old_path)
+    old["started_at"] = "2020-01-01T00:00:00Z"
+    delegate._write_state_atomic(old_path, old)
+    latest_path = delegate._state_path("rescue-zfix")
+    latest = dict(old, task_id="rescue-zfix", worktree_reused=True, started_at="2020-01-02T00:00:00Z")
+    delegate._write_state_atomic(latest_path, latest)
+    return primary, worktree, origin, old_path, latest_path
+
+
+def test_rescue_reused_group_unpushed_work_rescued_once_under_latest_id(
+    tmp_path, monkeypatch, tmp_tasks_dir, capsys
+):
+    """Reused fix rounds must publish one rescue owned by the latest record."""
+    _primary, worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    old = delegate._read_state(old_path)
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="0h", apply=True)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["rescued"] == 1, report
+    assert [row["task_id"] for row in report["tasks"]] == ["rescue-zfix"], report
+    assert delegate._read_state(old_path) == old
+    latest = delegate._read_state(latest_path)
+    assert latest["rescue_ref"] == "rescue/cursor/rescue-zfix"
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == (
+        "refs/heads/rescue/cursor/rescue-zfix\n"
+    )
+    assert _git_out(origin, "show", "rescue/cursor/rescue-zfix:artifact.txt") == "committed work\n"
+    assert worktree.exists()
+
+
+def test_rescue_reused_group_head_on_main_does_not_push(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
+    """A merged reused group must remain available to the reaper without a rescue push."""
+    _primary, worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    before = [delegate._read_state(path) for path in (old_path, latest_path)]
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="0h", apply=True)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["tasks"] == [
+        {"task_id": "rescue-zfix", "action": "skipped", "reason": "no provable unpushed work"}
+    ], report
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == ""
+    assert [delegate._read_state(path) for path in (old_path, latest_path)] == before
+
+
+def test_rescue_reused_group_live_record_refused(tmp_path, monkeypatch, tmp_tasks_dir):
+    """A live earlier round must prevent rescue of a terminal latest round."""
+    _primary, _worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    old = delegate._read_state(old_path)
+    delegate._write_state_atomic(old_path, dict(old, pid=os.getpid()))
+    row = delegate._rescue_task(latest_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "task process alive", row
+    delegate._write_state_atomic(old_path, dict(old, status="running"))
+    row = delegate._rescue_task(latest_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "worktree group has nonterminal task", row
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == ""
+
+
+def test_rescue_reused_group_branch_disagreement_refused(tmp_path, monkeypatch, tmp_tasks_dir):
+    """Conflicting branch ownership must not be hidden by the latest task's branch."""
+    _primary, _worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    old = delegate._read_state(old_path)
+    delegate._write_state_atomic(old_path, dict(old, worktree_branch="cursor/other-round"))
+    row = delegate._rescue_task(latest_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "worktree group records disagree on branch", row
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == ""
+
+
 @pytest.mark.parametrize("dirty", [True, False])
 def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tasks_dir, dirty):
     for repo_key in (None, "infra-private"):
@@ -15692,7 +15780,7 @@ def test_rescue_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
     for attempt in range(2):
         row = delegate._rescue_task(path, apply=True)
         current = json.loads(path.read_text())
-        if case in {"unknown", "late"}:
+        if case == "late":
             assert row["action"] == "skipped" and row["reason"]
             assert hashlib.sha256(path.read_bytes()).hexdigest() == before[0]
         else:
@@ -15980,7 +16068,9 @@ def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, 
     assert worktree.exists()
 
 
-@pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
+@pytest.mark.parametrize(
+    "failure", [ValueError("invalid response"), urllib.error.HTTPError("monitor", 504, "timeout", {}, None)]
+)
 @pytest.mark.parametrize("apply", [False, True])
 def test_rescue_monitor_outage_skips_without_error(tmp_path, monkeypatch, tmp_tasks_dir, capsys, failure, apply):
     import urllib.request
@@ -16008,6 +16098,69 @@ def test_rescue_monitor_outage_skips_without_error(tmp_path, monkeypatch, tmp_ta
     assert type(failure).__name__ in diagnostic
     assert state_path.read_bytes() == original_state
     assert (worktree / "artifact.txt").read_bytes() == original_artifact
+
+
+@pytest.mark.parametrize("live_pid", [False, True])
+def test_rescue_probe_timeout_falls_back_but_preserves_live_worker(tmp_path, monkeypatch, tmp_tasks_dir, live_pid):
+    """A transport outage must neither strand terminal work nor rescue a live worker."""
+    import urllib.request
+    from unittest.mock import Mock
+
+    from scripts.orchestration import reap_worktrees as rw
+
+    real_probe = rw._active_task_ids
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "primary/batch_state/tasks"))
+    _primary, worktree, origin, path = _rescue_checkout(tmp_path, monkeypatch)
+    if live_pid:
+        state = delegate._read_state(path)
+        state["pid"] = os.getpid()
+        delegate._write_state_atomic(path, state)
+    calls = []
+    pauses = []
+
+    def timeout(*_args, **kwargs):
+        calls.append(kwargs["timeout"])
+        raise TimeoutError("deadline")
+
+    monkeypatch.setattr(urllib.request, "urlopen", timeout)
+    monkeypatch.setattr(rw, "_active_task_ids", real_probe)
+    monkeypatch.setattr(rw, "time", Mock(wraps=rw.time, sleep=pauses.append))
+    result = delegate._rescue_task(path, apply=True)
+    if live_pid:
+        assert result["action"] == "skipped" and result["reason"] == "task process alive"
+        assert delegate._read_state(path).get("rescue_ref") is None
+        assert calls == []
+    else:
+        assert result["action"] == "rescued", result
+        assert calls == [3, 3] and pauses == [0.2]
+        preserved = subprocess.run(
+            ["git", "--git-dir", str(origin), "show", f"{result['rescue_ref']}:artifact.txt"],
+            check=True, capture_output=True, timeout=30,
+        ).stdout
+        assert preserved == b"work to preserve\n"
+    assert worktree.exists()
+
+
+def test_branch_holder_missing_task_state_uses_bound_terminal_record_on_probe_timeout(
+    tmp_path, monkeypatch, tmp_tasks_dir,
+):
+    """A missing caller state must not strand a bound terminal holder during a transport outage."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "primary/batch_state/tasks"))
+    _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch)
+    state = delegate._read_state(path)
+    state["status"] = "done"
+    delegate._write_state_atomic(path, state)
+
+    def timeout():
+        raise rw._ActiveTaskProbeFailure("active_task_probe_timeout: TimeoutError", fallback_allowed=True)
+
+    monkeypatch.setattr(rw, "_active_task_ids", timeout)
+    reason = delegate._branch_holder_activity_reason(worktree, task_id=state["task_id"], task_state=None)
+    assert reason is None
+    assert not delegate._diagnostic_path(state["task_id"]).exists()
+    assert worktree.exists()
 
 
 def test_settle_zombie_with_unpushed_commit_is_rescue_candidate(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
@@ -16805,34 +16958,44 @@ def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_task
 
 
 def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path, monkeypatch, tmp_tasks_dir):
-    """#8610: a relative ``--worktree`` is recorded as the resolved absolute path on prep failure too."""
-    _init_git_repo_for_test(tmp_path, monkeypatch)
-    _fetch_fixture_origin_main(tmp_path)
-    _tmp_dispatch_repo_root(tmp_path, monkeypatch)
-    monkeypatch.setattr(delegate, "_resolve_dirty_primary_checkout_error", lambda *, mode: None)
-    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
-
-    def fail_ensure(**_kwargs):
-        raise ValueError("simulated worktree preparation failure")
-
-    monkeypatch.setattr(delegate, "_ensure_worktree", fail_ensure)
+    """#8610/#11551: a late refusal retains the absolute path and the real completed rebase fact."""
+    _sanitize_git_env_for_test(monkeypatch)
+    main, worktree = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", main)
+    monkeypatch.chdir(main)
+    before = delegate._resolve_sha(worktree)
+    (main / "advance.txt").write_text("fixture-only upstream\n", encoding="utf-8")
+    subprocess.run(["git", "add", "advance.txt"], cwd=main, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-qm", "fixture-only upstream"], cwd=main, check=True, capture_output=True, timeout=30
+    )
+    _add_local_bare_origin(main)
+    upstream = delegate._resolve_sha(main)
+    delegate._mark_review_attempt_worktree(worktree, "fixture-only-prior-review")
     args = _write_args(
-        agent="agy",
-        # #9275: agy without a Ukrainian classification is the bounded fallback.
-        research_task_family="ukrainian-authoring",
-        owned_path=list(_UKRAINIAN_OWNED_PATHS),
-        task_id="task-8610-relative",
+        agent="codex",
+        task_id="task-1",
         branch=None,
-        worktree=".worktrees/dispatch/agy/task-8610-relative/",
-        mode="workspace-write",
+        worktree=".worktrees/dispatch/codex/task-1/",
+        mode="read-only",
+        prompt="Read the fixture file.",
+        full_checkout=True,
     )
 
-    assert delegate.cmd_dispatch(args) == 1
+    with patch.object(delegate.dispatch_isolation, "spawn_detached_worker") as spawn:
+        assert delegate.cmd_dispatch(args) == 1
+    spawn.assert_not_called()
 
-    state = json.loads(delegate._state_path("task-8610-relative").read_text(encoding="utf-8"))
+    state = json.loads(delegate._state_path("task-1").read_text(encoding="utf-8"))
     assert state["status"] == "failed"
-    expected = (Path(delegate._REPO_ROOT) / ".worktrees/dispatch/agy/task-8610-relative").resolve()
-    assert state["worktree_path"] == str(expected)
+    assert state["worktree_path"] == str(worktree.resolve())
+    assert state["returncode_reason"] == "worktree preparation failed"
+    assert "reuse refused" in state["stderr_excerpt"]
+    assert state["worktree_rebased"] is True
+    assert state["worktree_base_sha"] == state["final_branch_head_commit"] == upstream
+    assert delegate._resolve_sha(worktree) == upstream != before
+    assert (worktree / "advance.txt").read_bytes() == b"fixture-only upstream\n"
 
 
 def test_active_legacy_claim_through_symlink_alias_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -19354,7 +19517,7 @@ def _rendered_attempt_prompt(checkout: Path, prompt_file: Path, *, input_root: P
 def test_review_attempt_reuse_never_rebases_admitted_input(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys, upstream_change, entrypoint, review_attempt
 ):
-    """#9426 AC-01: real reuse refuses stale reviews, while ordinary reuse still rebases."""
+    """#9426 AC-01: refuse stale reviews and retain real ordinary-rebase telemetry."""
     main, target = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
@@ -19450,6 +19613,11 @@ def test_review_attempt_reuse_never_rebases_admitted_input(
             assert state["status"] == "failed"
             assert "automatic rebasing is disabled" in state["stderr_excerpt"]
             assert state["last_error"] == "worktree_preparation_failed"
+        else:
+            state = delegate._read_state(delegate._state_path("task-1"))
+            assert state["worktree_rebased"] is True
+            assert state["worktree_reused"] is True
+            assert state["worktree_base_sha"] == upstream_sha == delegate._resolve_sha(target)
 
 
 @pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
