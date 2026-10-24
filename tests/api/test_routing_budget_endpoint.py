@@ -308,6 +308,42 @@ def test_routing_budget_shape_lock(monkeypatch, tmp_path):
     assert all(isinstance(count, int) for count in data["in_flight"].values())
 
 
+def test_token_matched_warm_hit_withdraws_when_cumulative_age_exceeds_bound(monkeypatch, tmp_path):
+    """A within-TTL cache hit must not authorize a source older than 900 seconds."""
+    _configure(monkeypatch, tmp_path, [])
+    ctx = fixture_context(tmp_path)
+    clock = {"t": 1000.0}
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+    calls = []
+
+    def compute(**kwargs):
+        calls.append(1)
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
+        return {
+            "agents": {"codex": {"eligible": True, "status": "cool"}},
+            "recommendation": {"primary_agent_for_code": "codex", "warnings": []},
+            "diagnostics": {"data_age_s": 890, "stale": False, "stale_threshold_s": 900},
+            "ranked_by_headroom": [{"lane": "codex"}],
+        }
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(state_router.router, prefix="/api/state")
+    with TestClient(app) as client:
+        first = client.get("/api/state/routing-budget").json()
+        assert first["diagnostics"]["stale"] is False
+        assert first["recommendation"]["primary_agent_for_code"] == "codex"
+        clock["t"] += 14
+        body = client.get("/api/state/routing-budget").json()
+    assert body["diagnostics"] == {"data_age_s": 904.0, "stale": True, "stale_threshold_s": 900}
+    assert body["recommendation"]["primary_agent_for_code"] is None
+    assert body["agents"]["codex"]["eligible"] is False
+    assert body["ranked_by_headroom"] == []
+    assert first["diagnostics"]["data_age_s"] == 890
+    assert len(calls) == 1
+
+
 def test_task_rewrite_serves_warm_snapshot_while_recompute_is_blocked(monkeypatch, tmp_path):
     """Task generation churn must not force a cold blocking routing request."""
     ctx = fixture_context(tmp_path)
@@ -322,7 +358,8 @@ def test_task_rewrite_serves_warm_snapshot_while_recompute_is_blocked(monkeypatc
     release = threading.Event()
     monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
 
-    def compute(**_kwargs):
+    def compute(**kwargs):
+        kwargs["task_generation"].append(state_router._tasks_content_token(kwargs["tasks_dir"]))
         calls.append(1)
         if len(calls) > 1:
             entered.set()
@@ -352,12 +389,12 @@ def test_task_rewrite_serves_warm_snapshot_while_recompute_is_blocked(monkeypatc
                 assert warm.status_code == 200
                 assert warm.json()["generated_at"] == first.json()["generated_at"]
                 assert warm.json()["in_flight"] == {"codex": 1}
-                assert warm.json()["diagnostics"] == {
-                    "data_age_s": 12.0, "stale": True, "stale_threshold_s": 900,
-                }
                 assert await asyncio.to_thread(entered.wait, 3), "no refresh scheduled"
                 again = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=3)
                 assert again.json()["in_flight"] == {"codex": 1}
+                assert again.json()["diagnostics"] == {
+                    "data_age_s": 12.0, "stale": True, "stale_threshold_s": 900,
+                }
                 assert len(calls) == 2
             finally:
                 release.set()
@@ -1357,6 +1394,7 @@ def test_withdrawn_snapshot_clears_the_account_preference():
 
 # Fails on b62a4a3243: a warm routing snapshot served the account rows frozen at compute time.
 def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: 1000.0)
     _configure(monkeypatch, tmp_path, [])
     _populate_accounts(monkeypatch, tmp_path)
     client = _routing_client(tmp_path)
@@ -1377,6 +1415,7 @@ def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
 # Fails on e75cb7e113: a warm routing snapshot kept serving b's row ``ok`` and
 # preferred after b's binding was removed.
 def test_warm_snapshot_withholds_a_row_whose_binding_was_removed(monkeypatch, tmp_path):
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: 1000.0)
     _configure(monkeypatch, tmp_path, [])
     _populate_accounts(monkeypatch, tmp_path)
     client = _routing_client(tmp_path)

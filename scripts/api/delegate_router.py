@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import hashlib
 import json
 import os
 import sqlite3
@@ -471,6 +472,13 @@ def _delegate_task_rows(
         return _delegate_task_rows_locked(statuses, repository=repository, ctx=ctx, task_generation=task_generation)
 
 
+def _task_generation_token(newest_mtime_ns: int, files: list[tuple[str, os.stat_result]]) -> str:
+    """Fingerprint every observed file, including changes hidden by another file's mtime."""
+    stamps = sorted((name, st.st_mtime_ns, st.st_ctime_ns, st.st_size, st.st_ino) for name, st in files)
+    digest = hashlib.sha256(repr(stamps).encode()).hexdigest()
+    return f"{len(files)}:{newest_mtime_ns}:{digest}"
+
+
 def _delegate_task_rows_locked(
     statuses: set[str] | None = None,
     *,
@@ -499,7 +507,7 @@ def _delegate_task_rows_locked(
     # Routing's generation must describe the records this locked scan reads,
     # including a task that disappears before the budget finishes computing.
     newest_mtime_ns = os.stat(tasks_dir).st_mtime_ns if task_generation is not None else 0
-    task_count = 0
+    task_files: list[tuple[str, os.stat_result]] = []
     generation_observed = True
 
     is_active_query = statuses == ACTIVE_TASK_STATUSES
@@ -522,7 +530,7 @@ def _delegate_task_rows_locked(
             generation_observed = False
             continue
         if task_generation is not None:
-            task_count += 1
+            task_files.append((path.name, file_stat))
             newest_mtime_ns = max(newest_mtime_ns, file_stat.st_mtime_ns)
 
         cached = _TASK_STATE_CACHE.get(path_str)
@@ -629,7 +637,7 @@ def _delegate_task_rows_locked(
         rows.append(row)
 
     if task_generation is not None and generation_observed:
-        task_generation.append(f"{task_count}:{newest_mtime_ns}")
+        task_generation.append(_task_generation_token(newest_mtime_ns, task_files))
 
     if dirty_records:
         _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
@@ -737,7 +745,7 @@ def active_delegate_tasks(
     only — the HTTP ``/active`` route remains unscoped for other Monitor consumers.
     Returned rows keep the legacy summary shape and never include repository
     attribution fields.
-    ``task_generation`` receives the count/newest-mtime token from this locked
+    ``task_generation`` receives the all-file fingerprint from this locked
     scan, or stays empty when the generation cannot be observed.
     """
     active = _delegate_task_rows(
