@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
 import os
 import shutil
@@ -8,6 +10,7 @@ import tempfile
 import time
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -1661,21 +1664,39 @@ def test_origin_branch_deleted_by_someone_else_is_already_absent_not_an_error(tm
     assert row["error"] is None
 
 
-def _rescue_result(tmp_path: Path, monkeypatch, returncode: int, tasks: list[dict]) -> dict:
+def _rescue_result(
+    tmp_path: Path,
+    monkeypatch,
+    returncode: int,
+    tasks: list[dict],
+    *,
+    outcome=None,
+    apply: bool = True,
+    script_present: bool = True,
+    activity_available: bool = True,
+) -> dict:
     repo = _repo(tmp_path)
     script = repo / "scripts" / "delegate.py"
     script.parent.mkdir()
-    script.write_text("# fixture\n", encoding="utf-8")
+    if script_present:
+        script.write_text("# fixture\n", encoding="utf-8")
     original_run = subprocess.run
 
     def capture_run(command, **kwargs):
         if isinstance(command, list) and str(script) in command:
+            assert command[-4:] == ["rescue", "--all-stale", "--older-than", "6h"]
+            assert "--apply" not in command
+            assert kwargs["timeout"] == 600
+            if isinstance(outcome, Exception):
+                raise outcome
+            if outcome is not None:
+                return outcome
             return subprocess.CompletedProcess(command, returncode, json.dumps({"summary": {}, "tasks": tasks}), "")
         return original_run(command, **kwargs)
 
     monkeypatch.setattr(cleanup.subprocess, "run", capture_run)
     monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set() if activity_available else None)
     monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
@@ -1684,7 +1705,7 @@ def _rescue_result(tmp_path: Path, monkeypatch, returncode: int, tasks: list[dic
     monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
     monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0})
-    return cleanup._repo_result(repo, apply=True)
+    return cleanup._repo_result(repo, apply=apply)
 
 
 def test_rescue_blocked_only_by_missing_identity_is_a_hard_warning(tmp_path: Path, monkeypatch) -> None:
@@ -1716,3 +1737,156 @@ def test_other_rescue_failures_still_fail_the_run(tmp_path: Path, monkeypatch, t
     result = _rescue_result(tmp_path, monkeypatch, 1, tasks)
 
     assert "terminal rescue reported errors" in result["errors"]
+
+
+@pytest.mark.parametrize(
+    ("case", "failure_class", "returncode", "exit_code"),
+    [
+        ("launch", "launch_failure", None, 1),
+        ("timeout", "deadline_expired", None, 1),
+        ("json", "invalid_output", 0, 1),
+        ("nonzero_json", "invalid_output", 9, 1),
+        ("success", "none", 0, 0),
+        ("child", "child_reported_failure", 7, 1),
+        ("identity", "child_reported_failure", 1, 0),
+    ],
+)
+def test_rescue_boundary_keeps_failure_evidence_private_and_preserves_exit_status(
+    tmp_path: Path, monkeypatch, capsys, case: str, failure_class: str, returncode: int | None, exit_code: int
+) -> None:
+    """Diagnostic loss and child-output disclosure must both fail this regression."""
+    private = "synthetic-private-rescue-canary"
+    stdout = json.dumps({"summary": {"candidate": 2, "detail": private}, "tasks": []}).encode()
+    stderr = (private + "\x1b[31m\r\n").encode() + b"\xff"
+    if case == "launch":
+        outcome = OSError(2, private, private)
+        expected_stdout = expected_stderr = None
+    elif case == "timeout":
+        outcome = subprocess.TimeoutExpired([private], 600, output=stdout, stderr=stderr)
+        expected_stdout, expected_stderr = stdout, stderr
+    else:
+        if case in {"json", "nonzero_json"}:
+            stdout = ("{" + private).encode()
+        elif case in {"child", "identity"}:
+            code = "rescue_identity_unavailable" if case == "identity" else "rescue_step_failed"
+            stdout = json.dumps({"summary": {}, "tasks": [{"action": "error", "failure_code": code}]}).encode()
+        outcome = subprocess.CompletedProcess([private], returncode, stdout, stderr)
+        expected_stdout, expected_stderr = stdout, stderr
+    ticks = iter([100.0, 102.75])
+    monkeypatch.setattr(cleanup, "time", SimpleNamespace(monotonic=lambda: next(ticks)), raising=False)
+
+    result = _rescue_result(tmp_path, monkeypatch, 0, [], outcome=outcome)
+
+    diagnostic = result["rescue_diagnostic"]
+    assert diagnostic["failure_class"] == failure_class
+    assert diagnostic["elapsed_seconds"] == 2.75
+    assert diagnostic["returncode"] == returncode
+    for name, expected in [("stdout", expected_stdout), ("stderr", expected_stderr)]:
+        evidence = diagnostic["evidence"][name]
+        if expected is None:
+            assert evidence == {"available": False}
+        else:
+            assert base64.b64decode(evidence["base64"]) == expected
+            assert evidence["sha256"] == hashlib.sha256(expected).hexdigest()
+    if case == "identity":
+        assert result["rescue_identity_unavailable"] == 1
+        assert cleanup.rescue_warning_lines({"repositories": [result]})
+    if case == "success":
+        assert result["rescue"]["summary"]["candidate"] == 2
+
+    receipt = cleanup.build_receipt([], apply=True, observed_at="2026-10-21T00:00:00Z")
+    receipt["repositories"] = [result]
+    receipt["summary"]["errors"] = len(result["errors"])
+    monkeypatch.setattr(cleanup, "build_receipt", lambda *_args, **_kwargs: receipt)
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: {})
+    monkeypatch.setattr(cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
+    monkeypatch.setattr(cleanup, "batch_state_retention_reports", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "sweep_sessions", lambda **_kwargs: {"summary": {"errors": 0}})
+    receipt_dir = tmp_path / "private-receipts"
+    assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(receipt_dir)]) == exit_code
+    captured = capsys.readouterr()
+    public = json.loads(captured.out)
+    public_diagnostic = public["repositories"]["repo"]["rescue_diagnostic"]
+    assert public_diagnostic["failure_class"] == failure_class
+    assert public_diagnostic["elapsed_seconds"] == 2.75
+    assert public_diagnostic["returncode"] == returncode
+    assert private not in captured.out + captured.err
+    assert str(tmp_path) not in captured.out + captured.err
+    assert "base64" not in captured.out
+    assert "terminal rescue" not in captured.out
+    receipt_file = receipt_dir / public["receipt_id"]
+    assert receipt_file.is_file() and not receipt_file.is_symlink()
+    assert receipt_file.stat().st_mode & 0o777 == 0o600
+    assert receipt_dir.stat().st_mode & 0o777 == 0o700
+    stored = json.loads(receipt_file.read_bytes())["repositories"][0]["rescue_diagnostic"]
+    assert stored == diagnostic
+    for name, evidence in stored["evidence"].items():
+        if evidence["available"]:
+            assert hashlib.sha256(base64.b64decode(evidence["base64"])).hexdigest() == evidence["sha256"]
+            assert public_diagnostic["evidence"][name]["sha256"] == evidence["sha256"]
+
+
+@pytest.mark.parametrize("value", [None, b"", b"\xff\x00private", "private-\u0434\ud800", b"a" * 20000])
+def test_rescue_evidence_bounds_custody_and_hashes_retained_bytes(value) -> None:
+    """Oversized and undecodable diagnostics must remain bounded and byte-retrievable."""
+    evidence = cleanup._rescue_evidence(value)
+    if value is None:
+        assert evidence == {"available": False}
+        return
+    content = value.encode("utf-8", errors="surrogatepass") if isinstance(value, str) else value
+    expected = content[:16384]
+    assert base64.b64decode(evidence["base64"]) == expected
+    assert evidence["bytes"] == len(content)
+    assert evidence["retained_bytes"] == len(expected)
+    assert evidence["truncated"] is (len(content) > 16384)
+    assert evidence["sha256"] == hashlib.sha256(expected).hexdigest()
+    assert evidence["observed_sha256"] == hashlib.sha256(content).hexdigest()
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        b"null",
+        b"[]",
+        b"42",
+        b'"synthetic-private-canary"',
+        b"\xff",
+        b'{"summary":[]}',
+        b'{"summary":{"candidate":"synthetic-private-canary"}}',
+        b'{"summary":{"candidate":true}}',
+        b'{"summary":{"candidate":-1}}',
+        b'{"summary":{"candidate":1.5}}',
+        b'{"tasks":"synthetic-private-canary"}',
+        b'{"tasks":[1]}',
+        b"[" * 10000 + b"]" * 10000,
+    ],
+)
+def test_rescue_invalid_output_cannot_crash_or_publish_child_data(tmp_path: Path, monkeypatch, stdout: bytes) -> None:
+    """Valid JSON with an invalid shape must fail closed just like malformed JSON."""
+    outcome = subprocess.CompletedProcess([], -15, stdout, b"synthetic-private-canary")
+    result = _rescue_result(tmp_path, monkeypatch, 0, [], outcome=outcome)
+    assert result["errors"] == ["terminal rescue unavailable (invalid_output)"]
+    assert result["rescue"] is None
+    assert result["rescue_diagnostic"]["failure_class"] == "invalid_output"
+    assert result["rescue_diagnostic"]["returncode"] == -15
+    assert "synthetic-private-canary" not in json.dumps(cleanup.build_public_summary({"repositories": [result]}))
+
+
+@pytest.mark.parametrize("mode", ["dry_run", "disabled", "missing_script", "unknown_activity"])
+def test_rescue_diagnostics_do_not_bypass_existing_invocation_guards(tmp_path: Path, monkeypatch, mode: str) -> None:
+    if mode == "disabled":
+        monkeypatch.setenv("LU_REAPER_DISABLED", "1")
+    result = _rescue_result(
+        tmp_path,
+        monkeypatch,
+        0,
+        [],
+        outcome=AssertionError("rescue must not run"),
+        apply=mode != "dry_run",
+        script_present=mode != "missing_script",
+        activity_available=mode != "unknown_activity",
+    )
+    assert "rescue_diagnostic" not in result
+    assert result["rescue"] is None
+    if mode == "unknown_activity":
+        assert result["errors"] == ["process-CWD activity probe unavailable; apply skipped"]

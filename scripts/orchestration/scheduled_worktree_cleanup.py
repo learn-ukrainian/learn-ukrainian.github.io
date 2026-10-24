@@ -16,6 +16,7 @@ Orphaned ``.worktrees/**`` directories are reported but never deleted.
 from __future__ import annotations
 
 import argparse
+import base64
 import fcntl
 import hashlib
 import json
@@ -25,6 +26,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -470,6 +472,40 @@ def _delete_origin_branch(
 # available to the timer. The worktree is left in place, so this is reported
 # as a hard warning instead of failing the unit on every run.
 RESCUE_IDENTITY_UNAVAILABLE = "rescue_identity_unavailable"
+RESCUE_DIAGNOSTIC_LIMIT = 16 * 1024
+
+
+def _rescue_evidence(value: bytes | str | None) -> dict[str, Any]:
+    """Keep an exact bounded prefix in the private receipt, including binary output."""
+    content = value.encode("utf-8", errors="surrogatepass") if isinstance(value, str) else value
+    if content is None:
+        return {"available": False}
+    retained = content[:RESCUE_DIAGNOSTIC_LIMIT]
+    return {
+        "available": True,
+        "bytes": len(content),
+        "retained_bytes": len(retained),
+        "truncated": len(retained) < len(content),
+        "sha256": hashlib.sha256(retained).hexdigest(),
+        "observed_sha256": hashlib.sha256(content).hexdigest(),
+        "base64": base64.b64encode(retained).decode("ascii"),
+    }
+
+
+def _parse_rescue_output(output: bytes | str) -> dict[str, Any]:
+    payload = json.loads(output)
+    if not isinstance(payload, dict):
+        raise ValueError("invalid terminal rescue payload")
+    summary, tasks = payload.get("summary"), payload.get("tasks")
+    if summary is not None:
+        if not isinstance(summary, dict):
+            raise ValueError("invalid terminal rescue summary")
+        candidate = summary.get("candidate", 0)
+        if type(candidate) is not int or candidate < 0:
+            raise ValueError("invalid terminal rescue candidate count")
+    if tasks is not None and (not isinstance(tasks, list) or any(not isinstance(row, dict) for row in tasks)):
+        raise ValueError("invalid terminal rescue tasks")
+    return {"summary": summary, "tasks": tasks}
 
 
 def _split_rescue_errors(tasks: Any) -> tuple[int, int]:
@@ -1080,26 +1116,56 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     # driver-invoked rescue may commit or push their work.
     delegate_script = repo_root / "scripts" / "delegate.py"
     if apply and delegate_script.is_file() and os.environ.get("LU_REAPER_DISABLED") != "1":
+        started = time.monotonic()
+        stdout = stderr = exception = None
+        returncode = None
+        failure_class = "none"
         try:
-            rescue_proc = subprocess.run(
-                [sys.executable, str(delegate_script), "rescue", "--all-stale", "--older-than", "6h"],
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    str(repo_root / "scripts" / "delegate.py"),
+                    "rescue",
+                    "--all-stale",
+                    "--older-than",
+                    "6h",
+                ],
                 cwd=repo_root,
                 capture_output=True,
-                text=True,
                 check=False,
                 timeout=600,
                 env=reap_worktrees.sanitized_git_env(),
             )
-            payload = json.loads(rescue_proc.stdout)
-            result["rescue"] = {"summary": payload.get("summary"), "tasks": payload.get("tasks")}
-            if rescue_proc.returncode != 0:
+            stdout, stderr, returncode = proc.stdout, proc.stderr, proc.returncode
+            payload = _parse_rescue_output(stdout)
+            result["rescue"] = payload
+            if returncode != 0:
+                failure_class = "child_reported_failure"
                 blocked, other = _split_rescue_errors(payload.get("tasks"))
                 if blocked:
                     result["rescue_identity_unavailable"] = blocked
                 if other or not blocked:
                     result["errors"].append("terminal rescue reported errors")
-        except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
-            result["errors"].append("terminal rescue unavailable")
+        except subprocess.TimeoutExpired as exc:
+            failure_class = "deadline_expired"
+            stdout, stderr, exception = exc.output, exc.stderr, str(exc)
+        except OSError as exc:
+            failure_class, exception = "launch_failure", str(exc)
+        except (ValueError, RecursionError) as exc:
+            failure_class, exception = "invalid_output", str(exc)
+        elapsed = time.monotonic() - started
+        if failure_class in {"launch_failure", "deadline_expired", "invalid_output"}:
+            result["errors"].append(f"terminal rescue unavailable ({failure_class})")
+        result["rescue_diagnostic"] = {
+            "failure_class": failure_class,
+            "elapsed_seconds": elapsed,
+            "returncode": returncode,
+            "evidence": {
+                "stdout": _rescue_evidence(stdout),
+                "stderr": _rescue_evidence(stderr),
+                "exception": _rescue_evidence(exception),
+            },
+        }
 
     try:
         rows = reap_worktrees.reap_worktrees(
@@ -1433,6 +1499,17 @@ def build_public_summary(
                 + sum(1 for row in repo_dict.get("origin_branches", []) if row.get("action") == "deleted")
             ),
         }
+        diagnostic = repo_dict.get("rescue_diagnostic")
+        if diagnostic is not None:
+            repos_summary[repo_name]["rescue_diagnostic"] = {
+                "failure_class": diagnostic["failure_class"],
+                "elapsed_seconds": diagnostic["elapsed_seconds"],
+                "returncode": diagnostic["returncode"],
+                "evidence": {
+                    name: {key: value for key, value in evidence.items() if key != "base64"}
+                    for name, evidence in diagnostic["evidence"].items()
+                },
+            }
 
     public_payload: dict[str, Any] = {
         "schema_version": receipt.get("schema_version", SCHEMA_VERSION),
