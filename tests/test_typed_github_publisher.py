@@ -794,6 +794,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
     calls = []
     payloads = []
     comments = []
+    real_run = subprocess.run
 
     def transport(args, **kwargs):
         if args[:3] == ["gh", "release", "view"]:
@@ -801,6 +802,8 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
         if args[:3] == ["gh", "repo", "view"]:
             return subprocess.CompletedProcess(args, 0, '{"defaultBranchRef":{"name":"trunk"}}', "")
         if args[0] == "git":
+            if consumer == "verdict":
+                return real_run(args, **kwargs)
             return subprocess.CompletedProcess(args, 0, "https://github.com/unit/public.git", "")
         calls.append(args)
         if "--input" in args:
@@ -843,6 +846,18 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             importlib.import_module("scripts.verify_review")._post_summary(1, {"final_disposition": TOKEN})
         elif consumer == "verdict":
             module = importlib.import_module("scripts.review.record_cf_verdict")
+            from scripts.orchestration.fleet_repos import FleetRepo
+            from scripts.review import target_resolution
+
+            real_run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True, timeout=30)
+            real_run(
+                ["git", "remote", "add", "origin", "https://github.com/unit/public.git"],
+                cwd=tmp_path, check=True, capture_output=True, timeout=30,
+            )
+            repos = {"unit": FleetRepo("unit", "unit/public", tmp_path.name, "test", True)}
+            monkeypatch.setattr(module, "load_fleet_repos", lambda: repos)
+            monkeypatch.setattr(target_resolution, "load_fleet_repos", lambda: repos)
+            monkeypatch.setattr(module, "_repo_root", lambda: tmp_path)
             # Exercise publication blocking independently of path rewriting.
             monkeypatch.setattr(module, "absolute_path_spans", lambda text: [])
             task = {

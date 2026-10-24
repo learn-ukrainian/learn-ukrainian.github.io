@@ -47,6 +47,7 @@ from scripts.opsec.prepublish import (
     publication_boundary,
     publication_cli,
 )
+from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     REJECTED,
@@ -84,7 +85,7 @@ from scripts.review.reviewer_resolver import (
 from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
-from scripts.review.target_resolution import TargetResolutionError
+from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import recognized_verdicts
 
 NORMALIZED = {
@@ -1753,13 +1754,22 @@ def record(
     number = pr.get("number")
     if not isinstance(number, int) or number < 1:
         raise RecordError("PR number unavailable")
+    # Task records and SHA locks stay in the provenance checkout. Git facts
+    # and citations belong to the task's registered target repository.
+    try:
+        repo_keys = [key for key, repo in load_fleet_repos().items() if repo.github.casefold() == repository.casefold()]
+        if len(repo_keys) != 1:
+            raise RecordError("review repository is not uniquely registered")
+        review_root = resolve_review_repository(root or _repo_root(), repo_keys[0], mode="pr")
+    except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
+        raise RecordError("review repository checkout unavailable") from None
     unknown_history = (
         admitted_unknown_history(
             repository=repository,
             branch=branch,
             head_sha=sha,
             task_root=task_root,
-            repo_root=root or _repo_root(),
+            repo_root=review_root,
         )
         if review_mode == "red_team"
         else ()
@@ -1769,7 +1779,7 @@ def record(
         number,
         head_sha=sha,
         task_root=task_root,
-        repo_root=root or _repo_root(),
+        repo_root=review_root,
         subject_seats=_task_flag_values(task, "review_subject_seats"),
         subject_families=_task_flag_values(task, "review_subject_families"),
         unknown_history=unknown_history,
@@ -1804,7 +1814,7 @@ def record(
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
-    reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
+    reply = repository_relative_reply(reply, task=task, primary_root=review_root)
     comment_fields = dict(
         sha=sha,
         task_id=task_id,
