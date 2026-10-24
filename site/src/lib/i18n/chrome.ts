@@ -270,6 +270,12 @@ const en = {
 
   // Practice dashboard (K3 redesign)
   'zno.firstAttemptScore': 'First-attempt score',
+  'zno.resumeUnanswered': 'Resume unanswered items',
+  'zno.storageFailure': 'Progress is kept on this page, but could not be saved. Keep this page open and try saving again before leaving.',
+  'zno.retrySave': 'Try saving again',
+  'zno.answersRecovered': 'Some answers could not be saved. Complete the unanswered items; their saved reviews will not be recorded again.',
+  'zno.contentChanged': 'The task content has changed or the saved session could not be read. Your scheduled reviews are kept. Start a new session to use the current tasks.',
+  'zno.startNewSession': 'Start a new session',
   'zno.unanswered': 'Unanswered',
   'zno.errorsByTopic': 'Errors by topic',
   'zno.reviewErrors': 'Review errors',
@@ -690,6 +696,12 @@ const uk: Record<ChromeKey, string> = {
 
   // Practice dashboard (K3 redesign)
   'zno.firstAttemptScore': 'Результат перших спроб',
+  'zno.resumeUnanswered': 'Продовжити завдання без відповіді',
+  'zno.storageFailure': 'Прогрес є на цій сторінці, але зберегти його не вдалося. Залиште сторінку відкритою та спробуйте зберегти ще раз перед виходом.',
+  'zno.retrySave': 'Спробувати зберегти ще раз',
+  'zno.answersRecovered': 'Деякі відповіді не вдалося зберегти. Виконайте завдання без відповіді; збережені повторення не буде записано ще раз.',
+  'zno.contentChanged': 'Зміст завдань змінився або збережену сесію не вдалося прочитати. Заплановані повторення збережено. Почніть нову сесію з поточними завданнями.',
+  'zno.startNewSession': 'Почати нову сесію',
   'zno.unanswered': 'Без відповіді',
   'zno.errorsByTopic': 'Помилки за темами',
   'zno.reviewErrors': 'Переглянути помилки',
