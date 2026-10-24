@@ -301,6 +301,41 @@ def test_in_flight_excludes_zombie_running_tasks(tmp_path: Path, monkeypatch) ->
     assert counts["codex"] == 1
 
 
+def test_in_flight_uses_index_without_rereading_terminal_records(tmp_path: Path, monkeypatch) -> None:
+    """Repeated full JSON scans must not replace indexed counts or revive zombies."""
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    records = {
+        "live": {"agent": "codex", "status": "running", "pid": 12345},
+        "dead": {"agent": "codex", "status": "running", "pid": 12346},
+        "spawn": {"agent": "grok-build", "status": "spawning"},
+        "terminal": {"agent": "codex", "status": "done"},
+    }
+    for name, record in records.items():
+        (tasks / f"{name}.json").write_text(json.dumps({"task_id": name, **record}), encoding="utf-8")
+    monkeypatch.setattr(state_router.delegate_api, "_pid_alive", lambda pid: pid == 12345)
+    ctx = state_router.delegate_api.production_context().with_roots(batch_state_dir=tmp_path)
+    assert state_router.delegate_api.active_delegate_tasks(ctx=ctx)["total"] == 2
+
+    read_text = Path.read_text
+    read_task = state_router.delegate_api._read_task_state
+
+    def guarded_read_text(path, *args, **kwargs):
+        assert path != tasks / "terminal.json", "terminal JSON was reparsed"
+        return read_text(path, *args, **kwargs)
+
+    def guarded_read_task(path, *args, **kwargs):
+        assert Path(path) != tasks / "terminal.json", "terminal JSON was reparsed"
+        return read_task(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", guarded_read_text)
+    monkeypatch.setattr(state_router.delegate_api, "_read_task_state", guarded_read_task)
+    counts = state_router._in_flight_by_agent(tasks)
+    assert counts is not None
+    assert {agent: count for agent, count in counts.items() if count} == {"codex": 1, "grok": 1}
+    assert state_router._in_flight_by_agent(tmp_path / "missing") is None
+
+
 def test_prepaid_thresholds_currency_and_account_cap(monkeypatch, tmp_path):
     path = tmp_path / "budgets.yaml"
     path.write_text("deepseek:\n  near_cap_usd: 10\n  warm_usd: 40\nopenrouter:\n  near_cap_usd: 10\n  warm_usd: 40\n")

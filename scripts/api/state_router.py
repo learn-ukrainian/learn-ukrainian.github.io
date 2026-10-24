@@ -136,7 +136,6 @@ from .state_helpers import (
     cache_get_stored,
     cache_get_with_age,
     cache_invalidate,
-    cache_retain,
     cache_set,
     ctx_scoped_ttl_key,
     detect_pipeline_version,
@@ -630,25 +629,16 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int] | None:
     in_flight = {agent: 0 for agent in (*AGENT_NAMES, "deepseek")}
     try:
         if tasks_dir is not None:
-            if not tasks_dir.is_dir():
-                return None
-            for path in tasks_dir.glob("*.json"):
-                if path.name.endswith(".snapshots.json"):
-                    continue
-                try:
-                    payload = json.loads(path.read_text(encoding="utf-8"))
-                except (OSError, json.JSONDecodeError):
-                    continue
-                if not isinstance(payload, dict):
-                    continue
-                status, _alive = delegate_api._derived_task_status(payload)
-                if status not in {"running", "spawning"}:
-                    continue
-                agent = normalize_seat(str(payload.get("agent") or ""))
-                if agent:
-                    in_flight[agent] = in_flight.get(agent, 0) + 1
-            return in_flight
-        tasks = delegate_api.active_delegate_tasks()["tasks"]
+            # The indexed collector treats a missing directory as empty. Check
+            # observability first so an unreadable plane remains unknown here.
+            with os.scandir(tasks_dir):
+                pass
+            ctx = delegate_api.production_context()
+            if ctx.roots.batch_state_dir != tasks_dir.parent:
+                ctx = ctx.with_roots(batch_state_dir=tasks_dir.parent)
+            tasks = delegate_api.active_delegate_tasks(ctx=ctx)["tasks"]
+        else:
+            tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
         return None
     for task in tasks:
@@ -2308,35 +2298,38 @@ async def routing_budget(
     """
     if fresh_codexbar:
         trigger_background_refresh()
-    prefix = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
+    cache_key = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
     # In-place task rewrites do not change the directory mtime. Stamp the
-    # newest task file so a new excerpt is not served from the previous snapshot.
-    cache_key = f"{prefix}:{_tasks_content_token(ctx.roots.batch_state_dir / 'tasks')}"
-    cache_retain(f"{prefix}:", cache_key)
+    # newest task file off the event loop, but retain one snapshot and flight
+    # across generations so worker heartbeats cannot turn warm reads cold.
+    tasks_dir = ctx.roots.batch_state_dir / "tasks"
+    task_token = await asyncio.to_thread(_tasks_content_token, tasks_dir) if tasks_dir.is_dir() else "missing"
 
-    def _compute() -> dict[str, Any]:
-        return compute_routing_budget(
+    def _compute() -> tuple[str, dict[str, Any]]:
+        value = compute_routing_budget(
             transport=transport,
             fresh_codexbar=False,
             refresh_requested=fresh_codexbar,
             budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
-            tasks_dir=ctx.roots.batch_state_dir / "tasks",
+            tasks_dir=tasks_dir,
             project_root=ctx.roots.project_root,
             curriculum_root=ctx.roots.curriculum_root,
             batch_state_dir=ctx.roots.batch_state_dir,
         )
+        return task_token, value
 
     # A warm snapshot returns on the event loop. After the TTL, the last
     # snapshot is served with its real age and refreshed beside the request.
     # Past the stale threshold it no longer authorizes a lane.
     stored = cache_get_stored(cache_key)
     if stored is not None:
-        value, age_s = stored
-        if age_s < ROUTING_BUDGET_TTL_S:
+        (stored_token, value), age_s = stored
+        if stored_token == task_token and age_s < ROUTING_BUDGET_TTL_S:
             return _with_live_claude_accounts(value)
         schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute)
         return _aged_routing_budget(value, age_s)
-    return _with_live_claude_accounts(await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute))
+    _token, value = await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
+    return _with_live_claude_accounts(value)
 
 
 @router.get("/github-budget")

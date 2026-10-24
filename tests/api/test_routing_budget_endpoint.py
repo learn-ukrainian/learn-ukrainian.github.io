@@ -2,19 +2,22 @@
 
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import json
 import os
+import threading
 import time
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
+import httpx
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.analytics.cost_report import CostRecord
-from scripts.api import claude_account_usage, state_router
+from scripts.api import claude_account_usage, state_helpers, state_router
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet import reset_reserve
 
@@ -303,6 +306,66 @@ def test_routing_budget_shape_lock(monkeypatch, tmp_path):
     assert isinstance(data["ranked_by_headroom"], list)
     assert isinstance(data["in_flight"], dict)
     assert all(isinstance(count, int) for count in data["in_flight"].values())
+
+
+def test_task_rewrite_serves_warm_snapshot_while_recompute_is_blocked(monkeypatch, tmp_path):
+    """Task generation churn must not force a cold blocking routing request."""
+    ctx = fixture_context(tmp_path)
+    tasks = ctx.roots.batch_state_dir / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    task = tasks / "worker.json"
+    task.write_text('{"status":"spawning"}', encoding="utf-8")
+    directory_mtime = tasks.stat().st_mtime_ns
+    clock = {"t": 1000.0}
+    calls = []
+    entered = threading.Event()
+    release = threading.Event()
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+
+    def compute(**_kwargs):
+        calls.append(1)
+        if len(calls) > 1:
+            entered.set()
+            assert release.wait(timeout=5), "refresh was not released"
+        return {
+            "generated_at": "fixture-snapshot",
+            "in_flight": {"codex": len(calls)},
+            "diagnostics": {"data_age_s": 10, "stale": False, "stale_threshold_s": 900},
+        }
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(state_router.router, prefix="/api/state")
+
+    async def scenario():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+            first = await client.get("/api/state/routing-budget")
+            assert first.status_code == 200
+            clock["t"] += 2
+            old_mtime = task.stat().st_mtime_ns
+            task.write_text('{"status":"running"}', encoding="utf-8")
+            os.utime(task, ns=(old_mtime + 1_000_000, old_mtime + 1_000_000))
+            assert tasks.stat().st_mtime_ns == directory_mtime
+            try:
+                warm = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=3)
+                assert warm.status_code == 200
+                assert warm.json()["generated_at"] == first.json()["generated_at"]
+                assert warm.json()["in_flight"] == {"codex": 1}
+                assert warm.json()["diagnostics"] == {
+                    "data_age_s": 12.0, "stale": True, "stale_threshold_s": 900,
+                }
+                assert await asyncio.to_thread(entered.wait, 3), "no refresh scheduled"
+                again = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=3)
+                assert again.json()["in_flight"] == {"codex": 1}
+                assert len(calls) == 2
+            finally:
+                release.set()
+                async with asyncio.timeout(5):
+                    while state_helpers._refresh_keys:
+                        await asyncio.sleep(0.01)
+
+    asyncio.run(scenario())
 
 
 def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
