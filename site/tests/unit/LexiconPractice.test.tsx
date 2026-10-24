@@ -7259,7 +7259,10 @@ describe('LexiconPractice', () => {
       expect(screen.getByText(/Джерело: УЦОЯО/)).toBeInTheDocument();
       expect(screen.queryByTestId('practice-dashboard-hero')).not.toBeInTheDocument();
 
-      await user.click(screen.getByRole('button', { name: 'До колод' }));
+      await user.click(screen.getByRole('button', { name: 'End session' }));
+      expect(screen.getByTestId('zno-session-summary')).toBeInTheDocument();
+      expect(screen.getByTestId('zno-session-score')).toHaveTextContent('0/8');
+      await user.click(screen.getByRole('button', { name: 'Exit' }));
       expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
       expect(screen.getByTestId('practice-mode-count-zno-stress')).toHaveTextContent(String(znoStressDeck.items.length));
     });
