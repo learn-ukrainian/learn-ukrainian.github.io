@@ -157,6 +157,40 @@ def test_builder_refuses_explanation_that_disagrees_with_its_item(
     assert all(fragment in message for fragment in message_fragments)
 
 
+def test_builder_excludes_invalid_keys_without_suppressing_explanation_only_withholding(tmp_path: Path) -> None:
+    """Prevent ambiguous keys being served or explanation-only withholding hiding valid tasks."""
+    database = _database(tmp_path / "sources.db")
+    with sqlite3.connect(database) as connection:
+        connection.execute("UPDATE zno_tasks SET topic_norm = 'lexical_norm' WHERE id = 2")
+    registry = tmp_path / "explanations.json"
+    registry.write_text(json.dumps({
+        "items": {},
+        "withheld": {
+            "zno:2": {
+                "serving": "excluded",
+                "reasonCategory": "key-not-unique-under-current-norms",
+                "reason": "The historical key is not unique.",
+            },
+            "zno:3": {"reason": "Explanation pending verification."},
+        },
+    }), encoding="utf-8")
+
+    shards, residual, fill = build_zno_shards(database, explanations_path=registry)
+
+    assert all(item["znoTaskId"] != "zno:2" for shard in shards.values() for item in shard["items"])
+    assert shards["paronym"]["items"] == []
+    assert [item["znoTaskId"] for item in shards["lexical-norm"]["items"]] == ["zno:3"]
+    assert "explanation" not in shards["lexical-norm"]["items"][0]
+    excluded = {"znoTaskId": "zno:2", "reason": "key-not-unique-under-current-norms"}
+    assert residual["servingExcluded"] == [excluded]
+    for deck in ("paronym", "lexical-norm"):
+        assert residual["decks"][deck]["dropped"] == {"key-not-unique-under-current-norms": 1}
+        assert fill["deckDrops"][deck] == [excluded]
+    assert [entry for entry in fill["blocked"] if entry["znoTaskId"] == "zno:2"] == [
+        {"deck": "paronym", **excluded}, {"deck": "lexical-norm", **excluded},
+    ]
+
+
 def test_lexical_predicate_is_explicit_and_output_is_deterministic(tmp_path: Path) -> None:
     database = _database(tmp_path / "sources.db")
     assert "trim(t.topic_norm) = 'lexical_norm'" in LEXICAL_NORM_SQL
