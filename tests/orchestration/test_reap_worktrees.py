@@ -2601,7 +2601,7 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A vanished candidate must not abort subsequent exact/ancestor removal and branch prune."""
+    """Pre-removal absence must allow continuation; post-own-removal errors must propagate."""
     repo = init_repo(tmp_path)
     vanished = add_worktree(repo, "codex/aaa-vanished")
     vanished_head = git(vanished, "rev-parse", "HEAD")
@@ -2673,6 +2673,24 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     assert ancestor_result.branch_pruned is True
     assert not exact.exists()
     assert not ancestor.exists()
+
+    from unittest.mock import Mock
+
+    for error_type in (FileNotFoundError, NotADirectoryError):
+        branch = f"codex/post-removal-{error_type.__name__}"
+        removed = add_worktree(repo, branch)
+        head = git(removed, "rev-parse", "HEAD")
+        patch_gh(monkeypatch, {branch: [{"number": 33, "state": "MERGED", "headRefOid": head}]})
+        failure = error_type("cap recording failed after own removal")
+        with monkeypatch.context() as post_removal:
+            post_removal.setattr(reaper_lifecycle, "record_reap_for_cap", Mock(side_effect=failure))
+            with pytest.raises(error_type, match="cap recording failed after own removal") as raised:
+                rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), prune_merged_branches=True)
+        assert raised.value is failure
+        assert removal_targets[-1] == removed
+        assert not removed.exists()
+        assert rw._run(["git", "rev-parse", "--verify", f"refs/heads/{branch}"], cwd=repo).returncode != 0
+        assert not reaper_lifecycle.is_reap_pending(repo, removed)
 
 
 def test_abandoned_main_dispatch_reaps_when_origin_gone_and_old(

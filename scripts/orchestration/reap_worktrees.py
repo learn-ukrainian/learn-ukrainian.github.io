@@ -4906,6 +4906,7 @@ def _reap_qualified_worktree(
         )
 
     pending_marked = False
+    removal_started = False
     recovery_ref: str | None = None
     preservation: dict[str, Any] | None = None
     dispatch_guard = contextlib.ExitStack()
@@ -5434,6 +5435,7 @@ def _reap_qualified_worktree(
                     ) from exc
             yield target
 
+        removal_started = True
         with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
             remove_error = worktree_claims.git_worktree_remove(
                 repo_root,
@@ -5511,6 +5513,8 @@ def _reap_qualified_worktree(
             freed_bytes=freed_bytes,
         )
     except (FileNotFoundError, NotADirectoryError):
+        if removal_started:
+            raise
         # A competing cleanup can remove the cwd after census. A missing
         # executable or metadata file does not prove that the target vanished.
         try:
