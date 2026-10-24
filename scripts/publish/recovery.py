@@ -6,6 +6,7 @@ import json
 import re
 import sqlite3
 import subprocess
+from collections.abc import Callable
 from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
@@ -15,6 +16,53 @@ from scripts.opsec.prepublish import PublishBlocked
 MARKER = re.compile(r"<!-- ci-recovery-evidence\s+(\{.*?\})\s*-->", re.S)
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 NON_CI_REMOVAL_REASONS = {"manual", "merge_conflict", "behind", "MANUAL", "MERGE_CONFLICT", "BEHIND"}
+
+
+def require_queue_diff(evidence: dict, run: dict, fetch: Callable[..., dict]) -> None:
+    """Bind a service-failure diagnosis to every path in the failed queue candidate.
+
+    Read the event's original base from its same-run artifact, then compare
+    those immutable SHAs. This includes earlier PRs in a grouped candidate
+    without inferring group membership from the leading PR in a ref name.
+    GitHub limits comparison files to 300, so a saturated response is unknown.
+    Matching failed-job names never establish that changes are unrelated.
+    """
+    try:
+        match = re.fullmatch(r"gh-readonly-queue/(main)/pr-[1-9][0-9]*-[0-9a-f]{40}", run["head_branch"])
+        head = run["head_sha"]
+        if not match or not SHA.fullmatch(head) or evidence["tested_sha"] != head:
+            raise ValueError
+        record = fetch("queue-candidate", number=evidence["run_id"])
+        if (record["head_sha"] != head or record["head_ref"] != "refs/heads/" + run["head_branch"]
+                or record["run_id"] != evidence["run_id"] or record["run_attempt"] != run["run_attempt"]):
+            raise ValueError
+        base = record["base_sha"]
+        if not SHA.fullmatch(base) or base == head:
+            raise ValueError
+        diff = fetch("compare", base=base, head=head)
+        files = diff["files"]
+        if (diff["base_commit"]["sha"] != base or diff["merge_base_commit"]["sha"] != base
+                or diff["status"] != "ahead" or not isinstance(files, list) or len(files) >= 300):
+            raise ValueError
+        paths = set()
+        for row in files:
+            for key in ("filename", "previous_filename"):
+                if key not in row and key == "previous_filename":
+                    continue
+                name = row[key]
+                if (not isinstance(name, str) or not name or name.startswith("/")
+                        or any(part in {"", ".", ".."} for part in name.split("/"))
+                        or any(ord(c) < 32 for c in name) or "\\" in name):
+                    raise ValueError
+                paths.add(name)
+        proof = evidence["queue_group_diff"]
+        if (proof["base_sha"] != base or proof["head_sha"] != head
+                or proof["paths"] != sorted(paths)):
+            raise ValueError
+    except (KeyError, TypeError, ValueError, AttributeError):
+        raise PublishBlocked(
+            "RECOVERY_QUEUE_DIFF_UNKNOWN: diagnose the complete queue-group base/head diff, including renamed paths"
+        ) from None
 
 
 def ledger_path(cwd: Path) -> Path:

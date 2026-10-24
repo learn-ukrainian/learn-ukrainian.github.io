@@ -56,6 +56,10 @@ def _required_jobs(jobs: dict) -> set[str]:
     body = yaml.safe_dump({key: value for key, value in gate.items() if key != "needs"})
     required = set(_RESULT.findall(body))
     for expression in _EXPRESSION.findall(body):
+        if expression.strip() == "toJSON(needs)":
+            # The gate passes every dependency result to its parser.
+            required.update(gate_needs)
+            continue
         if "needs" in expression and not re.fullmatch(
             r"\s*needs\.[\w-]+\.(?:result|outputs\.[\w-]+)\s*", expression
         ):

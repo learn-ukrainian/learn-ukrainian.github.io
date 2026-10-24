@@ -70,6 +70,7 @@ def recovery_comment(head: str = HEAD_A) -> dict[str, Any]:
         "run_id": 123,
         "job_ids": [456],
         "tested_sha": "c" * 40,
+        "queue_group_diff": {"base_sha": "d" * 40, "head_sha": "c" * 40, "paths": ["scripts/earlier-pr.py", "scripts/this-pr.py"]},
         "failure_evidence": "Runner outage in linked job log",
         "unrelated_to_diff": "Runner failed before checkout",
     }
@@ -1803,7 +1804,7 @@ def test_queue_wide_failure_holds_a_spent_allowance(tmp_path, monkeypatch, apply
     assert recovery.first_attempt(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A) == prior
     if apply:
         comment = next(body for action, body in fake.actions if action == "comment")
-        assert "any re-enqueue uses this head's shared recovery allowance" in comment
+        assert "whole queue-group diff and uses this head's shared recovery allowance" in comment
         assert "not counted against this head" not in comment
 
 
