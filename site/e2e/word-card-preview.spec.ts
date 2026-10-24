@@ -385,6 +385,42 @@ async function readability(page: import('@playwright/test').Page, origin: string
     };
     requestAnimationFrame(frame);
   }));
+  const measureCredit = async (credit: Locator) => credit.evaluate(node => {
+    const rect = (element: Element | null) => {
+      if (!element) throw Error('Missing source credit/header geometry');
+      const box = element.getBoundingClientRect();
+      return { top: box.top, bottom: box.bottom, left: box.left, right: box.right };
+    };
+    const box = rect(node), header = rect(document.querySelector('.lu-header'));
+    const inViewport = (box: ReturnType<typeof rect>) => box.bottom > header.bottom && box.top < innerHeight && box.right > 0 && box.left < innerWidth;
+    return { sourceId: node.getAttribute('data-source-credit'), targetId: node.id, hash: location.hash,
+      url: location.href, disclosureOpen: node.closest('details')?.hasAttribute('open'),
+      scrollX, scrollY, viewport: { width: innerWidth, height: innerHeight }, box, header,
+      heading: rect(node.querySelector('h4')),
+      bibliography: Array.from(node.querySelectorAll('[data-credit-attribution], [data-credit-link]')).map(rect),
+      inViewport: inViewport(box), firstCreditInViewport: inViewport(rect(node.closest('details')?.querySelector('[data-source-credit]') ?? null)) };
+  });
+  const captureCredit = async (credit: Locator, markerHref: string) => {
+    await settleScroll();
+    const before = await measureCredit(credit);
+    expect(before.hash).toBe(markerHref);
+    expect(`#${before.targetId}`).toBe(markerHref);
+    expect(markerHref).toBe(`#source-${before.sourceId}`);
+    expect(before.disclosureOpen).toBe(true);
+    expect(before.inViewport).toBe(true);
+    expect(before.heading.top).toBeGreaterThanOrEqual(before.header.bottom);
+    expect(before.heading.bottom).toBeLessThanOrEqual(before.viewport.height);
+    if (markerHref === '#source-puls') for (const block of before.bibliography) {
+      expect(block.top).toBeGreaterThanOrEqual(before.header.bottom);
+      expect(block.bottom).toBeLessThanOrEqual(before.viewport.height);
+    }
+    const startedAt = new Date().toISOString();
+    const image = await page.screenshot();
+    const finishedAt = new Date().toISOString();
+    const after = await measureCredit(credit);
+    expect(after).toEqual(before);
+    return { image, measurement: { before, after, startedAt, finishedAt } };
+  };
   const noPlaceholders = async () => {
     const content = await page.locator('[data-release-page]').evaluate(node => node.textContent + Array.from(node.querySelectorAll('*'))
       .flatMap(e => Array.from(e.attributes).map(a => a.value)).join(' '));
@@ -409,6 +445,7 @@ async function readability(page: import('@playwright/test').Page, origin: string
       await expect(page.locator('details[open]')).toHaveCount(0);
       const fonts = await ready();
       await page.evaluate(() => window.scrollTo(0, 0));
+      await settleScroll();
       const first = page.locator('[data-entry]').first();
       for (const target of [page.locator('h1'), first.locator('h2'), first.locator('[data-entry-label]'), first.locator(':scope > .wc-facts dd').last()]) await expect(target).toBeInViewport();
       await expect(page.locator('pre:visible')).toHaveCount(0);
@@ -418,7 +455,12 @@ async function readability(page: import('@playwright/test').Page, origin: string
       await expect(page.locator('[data-fact] dd:not([data-sources-differ]) [data-credits]')).toHaveCount(facts);
       expect(await page.locator('[data-credit-ref]').evaluateAll(nodes => nodes.every(link => document.getElementById((link.getAttribute('href') || '').slice(1))))).toBe(true);
       const closed = await serious();
+      await settleScroll();
+      const initialViewport = await page.evaluate(() => ({ url: location.href, scrollX, scrollY, width: innerWidth, height: innerHeight }));
+      const initialStartedAt = new Date().toISOString();
       const shot = await page.screenshot();
+      const initialFinishedAt = new Date().toISOString();
+      expect(await page.evaluate(() => ({ url: location.href, scrollX, scrollY, width: innerWidth, height: innerHeight }))).toEqual(initialViewport);
       const initialPath = join(screens, `${name}-${key}.png`);
       writeFileSync(initialPath, shot);
       await info.attach(`${name}-${key}`, { body: shot, contentType: 'image/png' });
@@ -427,6 +469,7 @@ async function readability(page: import('@playwright/test').Page, origin: string
       if (key === 'шапка') markers.push(page.locator('[data-credit-ref][href="#source-puls"]').first());
       for (const marker of markers) {
         const markerHref = await marker.getAttribute('href');
+        if (!markerHref) throw Error('Missing source marker target');
         await marker.focus(); await expect(marker).toBeFocused();
         // Let focus-driven smooth scrolling finish before activating another native scroll.
         await expect(marker).toBeInViewport(); await settleScroll();
@@ -454,10 +497,10 @@ async function readability(page: import('@playwright/test').Page, origin: string
         }
         let untouchedCapture;
         if (name === 'phone' && markerHref === '#source-puls') {
-          const shot = await page.screenshot();
+          const { image: shot, measurement } = await captureCredit(target, markerHref);
           const path = join(screens, 'phone-puls-after-activation.png');
           writeFileSync(path, shot);
-          untouchedCapture = { path, sha256: sha(shot) };
+          untouchedCapture = { path, sha256: sha(shot), measurement };
           await info.attach('phone-puls-after-activation', { body: shot, contentType: 'image/png' });
         }
         navigation.push({ viewport: name, key, kind: 'source-marker', href: markerHref, interaction: ['focus', 'Enter'],
@@ -488,29 +531,43 @@ async function readability(page: import('@playwright/test').Page, origin: string
         expect(new Set(credit.links).size).toBe(credit.links.length);
         await expect(disclosure.locator(`[data-source-credit="${credit.source}"]`)).toBeVisible();
       }
-      const creditBody = credits.first();
-      await creditBody.scrollIntoViewIfNeeded(); await expect(creditBody).toBeInViewport();
+      // Re-activate the same marker after exercising the disclosure controls.
+      const selectedMarker = markers[markers.length - 1];
+      const markerHref = await selectedMarker.getAttribute('href');
+      if (!markerHref) throw Error('Missing selected source marker target');
+      await selectedMarker.focus(); await expect(selectedMarker).toBeFocused();
+      await expect(selectedMarker).toBeInViewport(); await settleScroll();
+      await page.keyboard.press('Enter');
+      const creditBody = disclosure.locator(`[id="${markerHref.slice(1)}"][data-source-credit]`);
+      await expect(creditBody).toBeVisible(); await expect(creditBody).toBeInViewport();
       const sourceId = await creditBody.getAttribute('data-source-credit');
       if (!sourceId) throw Error('Missing selected source credit identity');
       const selectedCredit = {
         sourceId, locator: `details[data-page-audit][open] [data-source-credit="${sourceId}"]`,
         text: await creditBody.innerText(), hrefs: await creditBody.locator('a').evaluateAll(nodes => nodes.map(node => node.getAttribute('href'))),
       };
+      expect(markerHref).toBe(`#source-${sourceId}`);
+      expect(new URL(page.url()).hash).toBe(markerHref);
       expect(await page.locator(selectedCredit.locator).count()).toBe(1);
       for (const notice of notices[sourceId] ?? []) expect(selectedCredit.text).toContain(notice);
       await noPlaceholders(); await noOverflow();
       expect(await ready()).toBe('loaded');
       const creditsOpenedAxe = await serious();
-      const openedShot = await page.screenshot(), openedPath = join(screens, `${name}-${key}-credits-opened.png`);
+      const { image: openedShot, measurement } = await captureCredit(creditBody, markerHref);
+      const openedPath = join(screens, `${name}-${key}-credits-opened.png`);
       if (originals.has(key)) {
         expect(sha(openedShot)).not.toBe(sha(shot));
         writeFileSync(openedPath, openedShot);
         await info.attach(`${name}-${key}-credits-opened`, { body: openedShot, contentType: 'image/png' });
         captures.push({ key, route, sourceHead: process.env.ATLAS_WORD_CARD_SOURCE_HEAD, htmlHash, viewport, control: 'details[data-page-audit] > summary',
-          url: page.url(), selectedCredit, selectedCreditVisible: await creditBody.isVisible(),
+          url: measurement.before.url, activatedMarker: { href: markerHref, sourceId, interaction: ['focus', 'Enter'] },
+          selectedCredit, selectedCreditVisible: await creditBody.isVisible(), measurement,
           focused, interaction: name === 'phone' ? ['focus', 'Enter', 'click-close', 'click-reopen'] : ['focus', 'Enter'],
-          before, after: await disclosure.getAttribute('open'), fonts, visibleCredits, firstCreditInViewport: true,
-          initial: { path: initialPath, sha256: sha(shot) }, creditsOpened: { path: openedPath, sha256: sha(openedShot) },
+          before, after: await disclosure.getAttribute('open'), fonts, visibleCredits,
+          firstCreditInViewport: measurement.before.firstCreditInViewport,
+          initialMeasurement: { viewport: initialViewport, startedAt: initialStartedAt, finishedAt: initialFinishedAt },
+          initial: { path: initialPath, sha256: sha(shot) },
+          creditsOpened: { path: openedPath, sha256: sha(openedShot) },
           pageErrors: [...errors], failedRequests: [...failedRequests], axeSeriousClosed: closed, axeSeriousCreditsOpened: creditsOpenedAxe });
       }
       await summary.scrollIntoViewIfNeeded(); await summary.focus(); await expect(summary).toBeFocused();
