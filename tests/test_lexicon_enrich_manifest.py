@@ -4838,7 +4838,13 @@ rejected:
     coffeehouse = _merge_synonym_relations(None, relations["кав'ярня"]["synonym"])
     assert cafe is not None and cafe["items"] == ["кав'ярня"]
     assert coffeehouse is not None and coffeehouse["items"] == ["кафе"]
-    assert "редакторські вердикти синонімів" in cafe["source"]
+    assert cafe["source"] == "relation_pairs/synonym_verdicts: corpus relation pair → кав'ярня"
+    assert coffeehouse["source"] == "relation_pairs/synonym_verdicts: corpus relation pair → кафе"
+    from scripts.lexicon.source_attribution import learner_facing_unmapped_source_violations
+
+    assert learner_facing_unmapped_source_violations({"lemma": "кафе", "sections": {"synonyms": cafe}}) == [
+        'кафе: sections.synonyms.source="relation_pairs/synonym_verdicts: corpus relation pair → кав\'ярня"',
+    ]
     assert relations["крамниця"]["synonym"][0]["item"] == "магазин"
     assert "крамниці" not in relations
 
