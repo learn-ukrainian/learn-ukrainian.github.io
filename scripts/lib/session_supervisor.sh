@@ -384,7 +384,11 @@ session_supervisor_start_inbox_watch() {
         # Use the existing scratch owner only while creating the anonymous
         # capture. Exec preserves the watcher's PID and notification parent;
         # the private argv stream avoids exec's per-string environment limit.
-        exec 214< <(printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}")
+        exec 214< <(
+          if [ "${#LC_DRIVER_ORIGINAL_ARGS[@]}" -gt 0 ]; then
+            printf '%s\0' "${LC_DRIVER_ORIGINAL_ARGS[@]}"
+          fi
+        )
         exec 216<&-
         exec "$capture_python" -c '
 import os
@@ -394,8 +398,14 @@ scratch = None
 try:
     with os.fdopen(214, "rb") as original:
         raw = original.read()
-    if os.waitpid(int(sys.argv[4]), 0)[1] != 0:
-        raise ValueError("argument stream failed")
+    try:
+        os.waitpid(int(sys.argv[5]), 0)
+    except ChildProcessError:
+        pass  # Bash already reaped the producer before exec.
+    # Bash may reap printf before exec. Check the complete stream itself:
+    # every original argument has one NUL, including an empty argument.
+    if raw.count(b"\0") != int(sys.argv[4]) or (raw and not raw.endswith(b"\0")):
+        raise ValueError("argument stream incomplete")
     import tempfile
     from scripts.common.task_scratch import allocate
     scratch = allocate("cto-argument-capture")
@@ -413,8 +423,9 @@ try:
         scratch.remove()
         scratch = None
     os.environ["LC_SUPERVISORY_ORIGINAL_ARGS_FD"] = "215"
-except Exception:
+except Exception as exc:
     # Capture/setup refusal leaves the watcher alive to refuse before claim.
+    print(f"inbox watcher: argument capture failed ({type(exc).__name__}); restart retained for retry", file=sys.stderr, flush=True)
     if scratch is not None:
         scratch.preserve()
     try:
@@ -422,7 +433,7 @@ except Exception:
     except OSError:
         pass
 os.execv(sys.argv[2], [sys.argv[2], sys.argv[3], "--live-supervisory", "--notify-parent"])
-' "$LC_ROOT" "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" "$!"
+' "$LC_ROOT" "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" "${#LC_DRIVER_ORIGINAL_ARGS[@]}" "$!"
       fi
     fi
     exec 216<&-

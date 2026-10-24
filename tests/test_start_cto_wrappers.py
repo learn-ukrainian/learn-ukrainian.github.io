@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shlex
@@ -374,13 +375,16 @@ echo "started; attach with: tmux attach -t cto"
     # Exercise the actual watcher preflight with the metadata transported by
     # start_inbox_watch, rather than copying the launcher's locals into a probe.
     probe = tmp_path / "watcher_probe.py"
-    probe.write_text(f"""import fcntl, os, stat, sys
+    probe.write_text(f"""import fcntl, hashlib, os, stat, sys
 from tempfile import TemporaryFile
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 sys.path[:0] = [{str(REPO)!r}, {str(REPO / "scripts")!r}]
 from scripts.ai_agent_bridge import _inbox_watch as watch
 assert os.getppid() == int(os.environ['FIXTURE_WATCHER_PARENT'])
+assert os.getpid() == int(os.environ['FIXTURE_WATCHER_PID'])
+with open(f'/proc/self/task/{{os.getpid()}}/children') as children:
+    assert not children.read().strip()
 available = watch.preflight_supervisory_successor()
 if not available:
     service = Mock()
@@ -409,6 +413,9 @@ if os.path.basename(os.environ['LC_SUPERVISORY_ENTRYPOINT']) == 'start-claude-ct
     assert stat.S_ISREG(os.fstat(215).st_mode)
     assert os.fstat(215).st_nlink == 0
     assert fcntl.fcntl(215, fcntl.F_GETFL) & os.O_ACCMODE == os.O_RDONLY
+    raw = os.pread(215, os.fstat(215).st_size, 0)
+    assert hashlib.sha256(raw).hexdigest() == os.environ['FIXTURE_ARGV_SHA256']
+    assert raw.count(b'\\0') == int(os.environ['FIXTURE_ARGV_COUNT'])
     saved = os.dup(215)
     with TemporaryFile() as malformed:
         malformed.write(b'\\xff\\0')
@@ -446,7 +453,7 @@ raise SystemExit(0 if available else 3)
     watcher.parent.mkdir(parents=True, exist_ok=True)
     watcher.write_text(f"#!/usr/bin/env bash\nexec {shlex.quote(sys.executable)} {shlex.quote(str(probe))}\n")
     watcher.chmod(0o755)
-    script = """set -euo pipefail
+    script = r"""set -euo pipefail
 source "$1"
 LC_ROOT="$2"
 LC_PROVIDER="$3"
@@ -466,7 +473,18 @@ LC_DRIVER_ORIGINAL_ARGS=("$@")
 sleep 30 & predecessor=$!
 trap 'kill "$predecessor" 2>/dev/null || true; wait "$predecessor" 2>/dev/null || true' EXIT
 export FIXTURE_WATCHER_PARENT=$BASHPID
+# Reap the small producer before exec, reproducing Bash's pre-exec race
+# deterministically. The large payload partition must drain in Python first.
+set -T
+trap 'if [[ $BASH_COMMAND == exec\ \"\$capture_python\"* || $BASH_COMMAND == exec\ \"\$watcher\"* ]]; then
+  export FIXTURE_WATCHER_PID=$BASHPID
+  if [[ $BASH_COMMAND == exec\ \"\$capture_python\"* && $FIXTURE_REAP_CAPTURE = 1 ]]; then
+    wait "$!"
+    printf "CAPTURE_PRODUCER_REAPED\\n" >&2
+  fi
+fi' DEBUG
 session_supervisor_start_inbox_watch
+trap - DEBUG
 watcher_rc=0
 wait "$LC_SUPERVISORY_WATCH_PID" || watcher_rc=$?
 cat <&216
@@ -499,6 +517,16 @@ session_supervisor_exec_successor
         else:
             capture_tmpdir.mkdir()
             launcher_env["TMPDIR"] = str(capture_tmpdir)
+        if supported:
+            # Keep the huge UTF-8 input with TMPDIR set; use a small supported
+            # vector for the deterministic pre-exec reap with TMPDIR unset.
+            partition_role = role if capture_tmpdir is not None else ""
+            (config / "CTO-ROLE-PROMPT.txt").write_text(partition_role + "\n\n")
+            captured = (*generated[:-1], partition_role)
+        raw = b"".join(arg.encode() + b"\0" for arg in captured)
+        launcher_env["FIXTURE_ARGV_SHA256"] = hashlib.sha256(raw).hexdigest()
+        launcher_env["FIXTURE_ARGV_COUNT"] = str(len(captured))
+        launcher_env["FIXTURE_REAP_CAPTURE"] = "1" if capture_tmpdir is None else "0"
         result = subprocess.run(
             [
                 "bash",
@@ -511,11 +539,18 @@ session_supervisor_exec_successor
                 *captured,
             ],
             cwd=root,
-            env={**launcher_env, "LAUNCHER_DRY_RUN": "1", "HOME": str(home), "PATH": f"{bindir}{os.pathsep}{os.defpath}"},
+            env={
+                **launcher_env,
+                "LAUNCHER_DRY_RUN": "1",
+                "HOME": str(home),
+                "PATH": f"{bindir}{os.pathsep}{os.defpath}",
+            },
             capture_output=True,
             text=True,
             timeout=30,
         )
+        if name == WRAPPERS[0] and capture_tmpdir is None:
+            assert "CAPTURE_PRODUCER_REAPED\n" in result.stderr
         if name == WRAPPERS[0] and not supported:
             assert result.returncode == 3, result.stdout + result.stderr
             assert "cto-wrapper-unsupported" in result.stderr
