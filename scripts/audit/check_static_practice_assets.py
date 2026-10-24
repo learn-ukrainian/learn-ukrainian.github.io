@@ -19,67 +19,61 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 AUDIT_DIR = PROJECT_ROOT / "scripts" / "audit"
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-if str(AUDIT_DIR) not in sys.path:
-    sys.path.insert(0, str(AUDIT_DIR))
-
-from daily_cefr import CEFR_LEVELS
-from generate_practice_deck import (
-    THIN_WARN_THRESHOLDS,
-    UNKNOWN_CEFR_TRANSPORT_LEVEL,
-    validate_classify_item,
-    validate_classify_session_cap,
-    validate_heritage_item,
-    validate_imperative_item,
-    validate_paradigm_item,
-    validate_synonym_item,
-    validate_synonym_option_sets,
-)
-from practice_linguistic import (
-    LINGUISTIC_GATE_VERSION,
-    audit_practice_payloads,
-    build_cloze_source_index,
-    format_findings,
-    index_from_generator_candidates,
-)
-
-from scripts.practice_deck.io import (
-    DEFAULT_POINTER,
-    PracticeDeckHydrationError,
-    _pointer_file_map,
-    _validate_pointer,
-)
-
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
+try:
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.audit.daily_cefr import CEFR_LEVELS
+    from scripts.audit.generate_practice_deck import (
+        THIN_WARN_THRESHOLDS,
+        UNKNOWN_CEFR_TRANSPORT_LEVEL,
+        validate_classify_item,
+        validate_classify_session_cap,
+        validate_heritage_item,
+        validate_imperative_item,
+        validate_paradigm_item,
+        validate_synonym_item,
+        validate_synonym_option_sets,
+    )
+    from scripts.audit.practice_linguistic import (
+        LINGUISTIC_GATE_VERSION,
+        audit_practice_payloads,
+        build_cloze_source_index,
+        format_findings,
+        index_from_generator_candidates,
+    )
+    from scripts.practice_deck.io import (
+        DEFAULT_POINTER,
+        PracticeDeckHydrationError,
+        _pointer_file_map,
+        _validate_pointer,
+    )
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 @contextmanager
 def _audit_dir_off_sys_path() -> Iterator[None]:
-    """Import ``scripts.audit`` without this directory shadowing ``scripts/config.py``.
-
-    ``python scripts/audit/check_static_practice_assets.py`` puts ``scripts/audit``
-    on ``sys.path``. ``scripts.audit.config`` then satisfies ``import config`` and
-    loops. The sibling imports above still need that entry; the package imports
-    inside ``check_assets`` must not see it.
-    """
+    """Load runtime package dependencies without the CLI directory shadowing config."""
     audit_dir = AUDIT_DIR.resolve()
-    removed: list[tuple[int, str]] = []
-    for idx, entry in enumerate(sys.path):
-        if not entry:
-            continue
-        try:
-            if Path(entry).resolve() == audit_dir:
-                removed.append((idx, entry))
-        except (OSError, ValueError):
-            continue
-
-    for idx, _ in reversed(removed):
-        del sys.path[idx]
-
+    import_path = sys.path[:]
     try:
+        for idx in range(len(sys.path) - 1, -1, -1):
+            entry = sys.path[idx]
+            if not entry:
+                continue
+            try:
+                if Path(entry).resolve() == audit_dir:
+                    del sys.path[idx]
+            except (OSError, ValueError):
+                continue
+        if str(PROJECT_ROOT) not in sys.path:
+            sys.path.insert(0, str(PROJECT_ROOT))
         yield
     finally:
-        for idx, entry in removed:
-            sys.path.insert(min(idx, len(sys.path)), entry)
+        sys.path[:] = import_path
 
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
