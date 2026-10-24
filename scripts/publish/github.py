@@ -863,12 +863,14 @@ def main(argv=None, *, runner=None):
             default=argparse.SUPPRESS,
             help="Positive issue, PR, run or check-run ID; omitted by default",
         )
-    for key in ("sha", "start", "end", "branch", "cursor", "ref"):
+    for key in ("sha", "base", "head", "start", "end", "branch", "cursor", "ref"):
         read_parser.add_argument(
             "--" + key,
             default=argparse.SUPPRESS,
             help=(
-                "Git ref for code-scanning-alerts (e.g. refs/heads/main); use either --ref or --number"
+                f"{key.capitalize()} commit SHA for compare (40 hexadecimal characters); omitted by default"
+                if key in {"base", "head"}
+                else "Git ref for code-scanning-alerts (e.g. refs/heads/main); use either --ref or --number"
                 if key == "ref"
                 else f"{key} selector; omitted by default"
             ),
