@@ -380,6 +380,8 @@ async function readability(page: import('@playwright/test').Page, origin: string
     const content = await page.locator('[data-release-page]').evaluate(node => node.textContent + Array.from(node.querySelectorAll('*'))
       .flatMap(e => Array.from(e.attributes).map(a => a.value)).join(' '));
     expect(content).not.toMatch(/PULS citation above\.|<used version>|entry reference and retrieval date per field|puls_reference_placeholder|vesum_version_placeholder|attribution incomplete/);
+    expect(await page.locator('[data-release-page] [data-credit-gap], [data-release-page] [data-attribution-gap]')
+      .evaluateAll(nodes => nodes.filter(node => !node.closest('details')).length)).toBe(0);
   };
   const noOverflow = async () => expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   for (const [name, viewport] of [['desktop', { width: 1280, height: 800 }], ['phone', { width: 390, height: 844 }]] as const) {
@@ -484,6 +486,14 @@ async function readability(page: import('@playwright/test').Page, origin: string
       }
       const creditBody = credits.first();
       await creditBody.scrollIntoViewIfNeeded(); await expect(creditBody).toBeInViewport();
+      const sourceId = await creditBody.getAttribute('data-source-credit');
+      if (!sourceId) throw Error('Missing selected source credit identity');
+      const selectedCredit = {
+        sourceId, locator: `details[data-page-audit][open] [data-source-credit="${sourceId}"]`,
+        text: await creditBody.innerText(), hrefs: await creditBody.locator('a').evaluateAll(nodes => nodes.map(node => node.getAttribute('href'))),
+      };
+      expect(await page.locator(selectedCredit.locator).count()).toBe(1);
+      for (const notice of notices[sourceId] ?? []) expect(selectedCredit.text).toContain(notice);
       await noPlaceholders(); await noOverflow();
       expect(await ready()).toBe('loaded');
       const creditsOpenedAxe = await serious();
@@ -493,6 +503,7 @@ async function readability(page: import('@playwright/test').Page, origin: string
         writeFileSync(openedPath, openedShot);
         await info.attach(`${name}-${key}-credits-opened`, { body: openedShot, contentType: 'image/png' });
         captures.push({ key, route, sourceHead: process.env.ATLAS_WORD_CARD_SOURCE_HEAD, htmlHash, viewport, control: 'details[data-page-audit] > summary',
+          url: page.url(), selectedCredit, selectedCreditVisible: await creditBody.isVisible(),
           focused, interaction: name === 'phone' ? ['focus', 'Enter', 'click-close', 'click-reopen'] : ['focus', 'Enter'],
           before, after: await disclosure.getAttribute('open'), fonts, visibleCredits, firstCreditInViewport: true,
           initial: { path: initialPath, sha256: sha(shot) }, creditsOpened: { path: openedPath, sha256: sha(openedShot) },
