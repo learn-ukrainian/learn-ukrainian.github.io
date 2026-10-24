@@ -439,11 +439,16 @@ def _probe_version(prefix: tuple[str, ...]) -> str | None:
     """
     probe_cwd = _VERSION_PROBE_CWD.get() or tempfile.gettempdir()
     # Version checks must not update the Muse executable pinned by its adapter.
-    probe_env = (
-        {"env": {**os.environ, "MUSE_NO_AUTO_UPDATE": "1"}}
-        if prefix and Path(prefix[0]).name == "muse"
-        else {}
-    )
+    probe_env = {}
+    if prefix and Path(prefix[0]).name == "muse":
+        from .adapters.muse import require_muse_execution_model
+        from .env_sanitize import build_probe_env
+
+        try:
+            require_muse_execution_model(None)
+        except (OSError, ValueError):
+            return None
+        probe_env = {"env": build_probe_env(provider="muse", overrides={"MUSE_NO_AUTO_UPDATE": "1"})}
     try:
         proc = _ORIGINAL_SUBPROCESS_POPEN(
             [*prefix, "--version"],
@@ -630,6 +635,13 @@ def resolve_dispatch_start_telemetry(
         _warn_unknown("effort", agent_name, "no explicit override or readable default")
         effort = _UNKNOWN
 
+    if agent_name == "muse":
+        from .adapters.muse import require_muse_execution_model
+
+        try:
+            require_muse_execution_model(requested_model)
+        except (OSError, ValueError):
+            probe_cli_version = False
     cli_version = _resolve_cli_version(agent_name) if probe_cli_version else _UNKNOWN
     if not cli_version:
         _warn_unknown("cli_version", agent_name, "version probe failed")

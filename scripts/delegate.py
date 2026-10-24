@@ -17287,7 +17287,7 @@ def _muse_dispatch_refusal(args: argparse.Namespace) -> str | None:
     agent, model = getattr(args, "agent", None), getattr(args, "model", None)
     if agent != "muse" and not str(model or "").startswith("muse-"):
         return None
-    from scripts.agent_runtime.adapters.muse import resolve_muse_model
+    from scripts.agent_runtime.adapters.muse import require_muse_execution_model, resolve_muse_model
 
     if agent != "muse":
         return "muse_native_worker_route_required"
@@ -17307,6 +17307,10 @@ def _muse_dispatch_refusal(args: argparse.Namespace) -> str | None:
         return "muse_worker_mode_refused"
     if any(getattr(args, key, None) for key in ("provider", "harness", "output_schema", "strict_mcp_config")):
         return "muse_worker_configuration_refused"
+    try:
+        require_muse_execution_model(model)
+    except (OSError, ValueError):
+        return "muse_execution_not_admitted"
     return None
 
 

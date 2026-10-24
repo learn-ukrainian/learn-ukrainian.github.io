@@ -424,6 +424,27 @@ def _looks_sensitive_value(value: str) -> bool:
     return bool(_SENSITIVE_VALUE_RE.search(value))
 
 
+def build_probe_env(*, provider: str, overrides: Mapping[str, str] | None = None) -> dict[str, str]:
+    """Use the child sanitizer's non-secret allowlists without resolving credentials.
+
+    Version probes need process context only. They must not read a stored
+    GitHub identity or copy credential-bearing Git configuration.
+    """
+    raw = {**os.environ, **(overrides or {})}
+    return {
+        name: value for name, value in raw.items()
+        if not _looks_sensitive_name(name)
+        and name not in {"LU_OPSEC_OVERRIDE", "LU_DRIVER_STATE_FILE"}
+        and (
+            _is_safe_value_name(name)
+            or (
+                (_is_safe_name(name) or _is_provider_safe_name(name, provider))
+                and not _looks_sensitive_value(value)
+            )
+        )
+    }
+
+
 # #8645 part B: delegate.py exports PYTEST_PLUGINS so a worker that copies CI's
 # `--override-ini addopts=-v` still loads the xdist cap. The agent CLI env is
 # rebuilt here, so the variable must be re-applied — but only the known plugin,

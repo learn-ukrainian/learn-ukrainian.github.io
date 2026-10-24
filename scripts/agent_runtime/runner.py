@@ -3720,6 +3720,7 @@ def _invoke_impl(
         effective_model = resolve_kimicc_dispatch_model(model)
     else:
         effective_model = model or adapter.default_model
+    allow_runner_failover = allow_runner_failover and agent_name != "muse"
     failover_chain = load_failover_chain(agent_name, effective_model=effective_model) if allow_runner_failover else None
     if allow_direct_only and failover_chain is not None:
         raise AgentUnavailableError(f"Direct-only agent {agent_name!r} may not use runner failover")
@@ -3951,12 +3952,16 @@ def _invoke_impl(
 def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config: dict | None) -> None:
     """Refuse the model public ``invoke`` would run, before ``_invoke_impl``.
 
-    Direct ``_invoke_impl`` callers keep the same check. An omitted model is
-    filled only for Kimi, so other seats are not loaded just to name a default.
+    Direct ``_invoke_impl`` callers keep the same check. Omitted Kimi and Muse
+    models use their defaults; other seats are not loaded just to name one.
     Coding-only admission still runs first.
     """
     requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
-    if agent_name == "kimi" and requested_harness == "kimicc":
+    if agent_name == "muse":
+        from .adapters.muse import MuseAdapter
+
+        effective_model = model or MuseAdapter.default_model
+    elif agent_name == "kimi" and requested_harness == "kimicc":
         from .adapters.kimicc import resolve_kimicc_dispatch_model
 
         effective_model = resolve_kimicc_dispatch_model(model)
@@ -3979,6 +3984,10 @@ def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config
     refusal = retired_model_refusal(effective_model)
     if refusal:
         raise ValueError(f"Agent {agent_name!r}: {refusal}")
+    if agent_name == "muse":
+        from .adapters.muse import require_muse_execution_model
+
+        require_muse_execution_model(effective_model)
 
 
 def invoke(
@@ -4000,6 +4009,7 @@ def invoke(
     effort: str | None = None,
     initiator: str | None = None,
     v4_authorization_id: str | None = None,
+    allow_runner_failover: bool = True,
 ) -> Result:
     """Invoke an agent CLI, provisioning trail isolation before any spawn.
 
@@ -4064,7 +4074,9 @@ def invoke(
             event_sink=event_sink,
             effort=effort,
             v4_authorization_id=v4_authorization_id,
-            allow_runner_failover=attempt is None
+            allow_runner_failover=allow_runner_failover
+            and agent_name != "muse"
+            and attempt is None
             and not bool(tool_config and (tool_config.get("review_id") or tool_config.get("attempt_id"))),
         )
     except BaseException as exc:

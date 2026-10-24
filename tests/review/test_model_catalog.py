@@ -741,7 +741,7 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
             "dispatch", "--agent", "muse", "--model", model, "--task-id", "worker-contract",
             "--prompt", "fixture", "--mode", "read-only",
         ])
-        assert delegate._muse_dispatch_refusal(args) is None
+        assert delegate._muse_dispatch_refusal(args) == "muse_execution_not_admitted"
         args.research_role = "driver"
         assert delegate._muse_dispatch_refusal(args) == "muse_ordinary_worker_only"
         args.research_role = None
@@ -766,7 +766,13 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
     process.returncode = 0
     process.communicate.return_value = ("Muse Code 1.4.11 (1.4.11-R6667.1)", "")
     with (
-        patch.dict(os.environ, {"MUSE_NO_AUTO_UPDATE": "0"}, clear=True),
+        patch.dict(os.environ, {
+            "MUSE_NO_AUTO_UPDATE": "0", "GH_TOKEN": "sentinel-parent",
+            "OPENAI_API_KEY": "sentinel-parent", "SSH_AUTH_SOCK": "/fixture/socket",
+            "LD_PRELOAD": "/fixture/inject.so", "LU_PROBE_TOKEN": "sentinel-parent",
+        }, clear=True),
+        patch("scripts.agent_runtime.adapters.muse.require_muse_execution_model"),
+        patch("scripts.agent_runtime.agent_github_identity.resolve_agent_github_identity") as identity,
         patch.object(telemetry, "_ORIGINAL_SUBPROCESS_POPEN", return_value=process) as spawn,
     ):
         resolved = telemetry.resolve_dispatch_start_telemetry(
@@ -775,6 +781,7 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
         assert (resolved.model, resolved.effort, resolved.cli_version) == ("muse-wonder-full-1.0", "high", "1.4.11")
         assert spawn.call_args.args[0] == ["muse", "--version"]
         assert spawn.call_args.kwargs["env"] == {"MUSE_NO_AUTO_UPDATE": "1"}
+        identity.assert_not_called()
         process.returncode = 1
         assert telemetry.resolve_dispatch_start_telemetry(
             agent_name="muse", requested_model=None, requested_effort=None
