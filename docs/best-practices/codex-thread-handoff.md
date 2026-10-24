@@ -334,6 +334,26 @@ the order key but differ in content, import refuses ("bundle order ties but
 content differs; refusing to choose a copy") and SessionStart continues
 without it. Safe reconciliation of such ties is tracked in #9789.
 
+## Codex driver lane restart (70%)
+
+Codex driver lanes started in tmux with `start-codex-driver.sh` restart fresh
+at 70% context. The host driver keeper asks the lane to write its handoff into
+the lane goal file, `.claude/<lane>-epic/DRIVER-STATE.md`.
+The keeper waits for a `HANDOFF-DONE` line containing the request's token.
+It also checks that the handoff file was written after the request.
+Only then does it end the CLI and relaunch the lane's own
+`start-codex-driver.sh` in the same pane.
+The keeper acts only if no human has typed in that tmux session in the last
+120 seconds.
+
+This follows the Claude tier above (650k / 700k / 750k) in using a handoff
+and fresh session before the context limit. Native compaction remains a
+fallback only.
+
+[Anthropic's session-management guide](https://claude.com/resources/articles/using-claude-code-session-management-and-1m-context)
+describes how quality degrades as context fills and compaction near the limit
+can drop details. Start fresh between distinct units of work.
+
 ## Safety Checks
 
 Check the lease at any time:
