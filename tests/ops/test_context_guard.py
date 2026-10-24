@@ -225,7 +225,10 @@ def test_lane_in_handoff_is_listed_for_keepalive_suppression(tmp_path: Path) -> 
     cg.save_state(state_dir / "state.json", h.state)
     result = subprocess.run(
         [sys.executable, str(REPO / "scripts/ops/context_guard.py"), "handoff-sessions", "--state-dir", str(state_dir)],
-        capture_output=True, text=True, check=True, timeout=60,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
     )
     assert json.loads(result.stdout) == ["devops-muse"]
 
@@ -290,7 +293,7 @@ def test_exited_codex_lane_is_respawned_with_shims_first(tmp_path: Path) -> None
     assert respawn[respawn.index("-c") + 1] == str(tmp_path / "repo")
     path = respawn[respawn.index("-e") + 1]
     assert path.startswith(f"PATH={tmp_path / 'repo' / 'scripts/agent_runtime/shims'}:")
-    command = respawn[respawn.index("bash"):]
+    command = respawn[respawn.index("bash") :]
     assert command[:4] == ["bash", "-c", PANE_SCRIPT, "lane-launch"]
     assert command[4:7] == ["./start-codex-driver.sh", "--epic", "open-model-data"]
     assert ["tmux", "clear-history", "-t", "=open-model-data:"] in h.fake.calls
@@ -347,7 +350,11 @@ def test_comms_reader_counts_only_standalone_posts_from_the_lane(tmp_path: Path)
             [
                 ("codex-devops", "2026-10-16T12:05:00Z", "will post HANDOFF-DONE soon"),
                 ("claude-infra", "2026-10-16T11:00:00Z", "HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md"),
-                ("claude-devops", "2026-10-16T12:06:00Z", "status\nHANDOFF-DONE devops .claude/devops-epic/DRIVER-STATE.md"),
+                (
+                    "claude-devops",
+                    "2026-10-16T12:06:00Z",
+                    "status\nHANDOFF-DONE devops .claude/devops-epic/DRIVER-STATE.md",
+                ),
             ],
         )
     logs: list[str] = []
@@ -395,13 +402,56 @@ def test_stuck_handoff_alerts_epics_once_without_killing(tmp_path: Path) -> None
     assert "/exit" not in h.fake.typed("infra-muse")
 
 
-def test_exit_dialog_is_answered_with_exit_and_stop_tasks(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "scenario",
+    [
+        "next-tick",
+        "same-tick",
+        "delayed-dialog",
+        "no-dialog",
+        "human-active",
+        "client-unknown",
+        "agent-replaced",
+        "snapshot-unknown",
+        "capture-unknown",
+    ],
+)
+def test_exit_dialog_is_answered_with_exit_and_stop_tasks(tmp_path: Path, scenario: str) -> None:
+    """Defect class: an exit confirmation waits another tick or bypasses a safety guard."""
     h = Harness(tmp_path, **{"cto": claude_pane(70)})
     h.tick("cto")
-    h.pane("cto").text = claude_text(71, "1. Exit and stop tasks", "2. Move to background and exit")
+    dialog = claude_text(71, "1. Exit and stop tasks", "2. Move to background and exit")
+    waits: list[float] = []
+    if scenario != "next-tick":
+        h.pane("cto").text = claude_text(71, "⏺ HANDOFF-DONE cto .claude/epics-epic/DRIVER-STATE.md")
+        h.guard.tmux.sleep = waits.append
+
+        def show_dialog() -> None:
+            h.pane("cto").text = dialog
+            if scenario == "human-active":
+                h.fake.clients = [("cto", int(h.moment.timestamp()))]
+            elif scenario == "client-unknown":
+                h.fake.override["list-clients"] = subprocess.CompletedProcess([], 1, "", "clients unavailable")
+            elif scenario == "agent-replaced":
+                h.pane("cto").agent_pid = "201"
+            elif scenario == "snapshot-unknown":
+                h.fake.override["ps"] = subprocess.CompletedProcess([], 1, "", "ps unavailable")
+            elif scenario == "capture-unknown":
+                h.fake.override["capture-pane"] = subprocess.CompletedProcess([], 1, "", "capture unavailable")
+
+        if scenario != "no-dialog":
+            before_call(h.guard.tmux, "capture-pane", show_dialog, nth=4 if scenario == "delayed-dialog" else 2)
+    else:
+        h.pane("cto").text = dialog
     h.advance(5)
     h.tick("cto")
-    assert h.fake.typed("cto")[-1] == "1"
+    answered = scenario in {"next-tick", "same-tick", "delayed-dialog"}
+    expected = [] if scenario == "next-tick" else ["/exit"]
+    assert h.fake.typed("cto")[1:] == [*expected, *(["1"] if answered else [])]
+    if answered:
+        assert h.logs[-1] == "cto handoff ctx_pct=71: exit dialog -> chose Exit and stop tasks"
+    if scenario != "next-tick":
+        assert 0 < sum(waits) <= 20
 
 
 # ---- unknown telemetry never acts (review of 69264fbb, #10814) ---------------------

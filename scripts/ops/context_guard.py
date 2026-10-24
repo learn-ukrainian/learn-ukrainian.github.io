@@ -18,9 +18,12 @@ handoff
     a Codex lane's handoff with the launcher's own anchor selector
     (:func:`scripts.session_canary.grok_lane.check_handoff_anchors`) and only
     then types ``/exit`` (Claude) or ``/quit`` (Codex), retrying it every
-    ``quit_retry_seconds``. A failing check sends the lane back with the missing
-    sections and counts instead of exiting; the check is bounded and alerts
-    ``epics`` once per distinct failure. A check error or a missing handoff fails
+    ``quit_retry_seconds``. After Claude's ``/exit``, it re-captures the pane for
+    up to 10 seconds in the same tick and answers an exit dialog with
+    "Exit and stop tasks", with the same human and snapshot guards; the next
+    tick's dialog check remains the fallback. A failing anchor check sends the
+    lane back with the missing sections and counts instead of exiting; the check
+    is bounded and alerts ``epics`` once per distinct failure. A check error or a missing handoff fails
     open, with one alert, so the guard can never wedge a lane. When the agent and
     its launcher have exited, the pane is respawned with the lane's launcher
     (fresh session; it reads its goal file). The guard never kills a driver; it
@@ -303,10 +306,15 @@ class Guard:
     # ---- helpers -------------------------------------------------------
     def _prompt(self, lane: Lane, reason: str, reminder: int) -> str:
         again = f"reminder {reminder}, " if reminder > 1 else ""
+        stop_tasks = (
+            "stop every background task you started (background Bash tasks and Monitor streams), "
+            if lane.kind == "claude"
+            else ""
+        )
         return (
             f"HANDOFF NOW ({again}CTO automated, {iso(self.now())}): {reason} Finish the current step only, "
             f"write the top of {lane.goal} (in-flight workers with task ids, waits with nonces, PRs, holds, "
-            f"orders and their status, next actions), post 'HANDOFF-DONE {lane.name} {lane.goal}' to Fleet "
+            f"orders and their status, next actions), {stop_tasks}post 'HANDOFF-DONE {lane.name} {lane.goal}' to Fleet "
             "Comms recipient epics, then stop. The guard exits and relaunches your seat; running workers keep "
             "running and the fresh session adopts them."
         )
@@ -618,6 +626,18 @@ class Guard:
             return CLAUDE_BUSY_RE.search(tail) is None
         return "Ready" in tail and "Working" not in tail
 
+    def _answer_exit_dialog(self, lane: Lane, text: str, pct: int | None, snap: PaneSnapshot) -> bool:
+        """Handle a visible Claude exit dialog, deferring if either guard refuses."""
+        tail = "\n".join(text.splitlines()[-8:])
+        if lane.kind != "claude" or not any(marker in tail for marker in EXIT_DIALOG):
+            return False
+        # "Move to background" keeps a lease-holding fork alive; always "Exit and stop tasks".
+        # Delegate workers are separate tasks and keep running.
+        if not self._human(lane) and self._unchanged(lane, snap, "the exit-dialog answer", pct):
+            self.tmux.type_into(lane.target, "1")
+            self.log(f"{lane.name} handoff ctx_pct={pct}: exit dialog -> chose Exit and stop tasks")
+        return True
+
     def _handoff(
         self, lane: Lane, st: dict[str, Any], s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot
     ) -> None:
@@ -650,13 +670,7 @@ class Guard:
         if s.get("anchor_blocked"):
             self.log(f"{lane.name} handoff ctx_pct={pct}: handoff cannot meet the anchor check; pane left as is")
             return
-        tail = "\n".join(text.splitlines()[-8:])
-        if lane.kind == "claude" and any(marker in tail for marker in EXIT_DIALOG):
-            # "Move to background" keeps a lease-holding fork alive; always "Exit and stop tasks".
-            # Delegate workers are separate tasks and keep running.
-            if not self._human(lane) and self._unchanged(lane, snap, "the exit-dialog answer", pct):
-                self.tmux.type_into(lane.target, "1")
-                self.log(f"{lane.name} handoff ctx_pct={pct}: exit dialog -> chose Exit and stop tasks")
+        if self._answer_exit_dialog(lane, text, pct, snap):
             return
         pane_done = self._pane_done(s, done_lines(text), snap)
         floor = s.get("done_floor") or s["since"]
@@ -679,6 +693,11 @@ class Guard:
                 f"{lane.name} handoff ctx_pct={pct}: HANDOFF-DONE seen, pane idle -> {command} sent "
                 f"(attempt {s['quit_attempts']})"
             )
+            if lane.kind == "claude":
+                for _ in range(10):
+                    self.tmux.sleep(1)
+                    if self._answer_exit_dialog(lane, self.tmux.capture(lane.target), pct, snap):
+                        break
             return
         renudge_due = self._seconds_since(s.get("last_nudge")) >= self.setting("handoff_renudge_seconds")
         if not done and renudge_due and not self._human(lane):
