@@ -1,11 +1,18 @@
 # CI Gate
 
-`.github/workflows/ci.yml` is one small workflow (ci-v3, 2026-09-30). `CI Gate`
-is the only required GitHub check. Every `pull_request`, `merge_group`,
-`schedule` (03:30 UTC on `main`) and `workflow_dispatch` run executes the same
-jobs and the full non-slow pytest suite. There are no path tiers, test areas,
-import-graph selection or labels: a change cannot pick which tests it runs.
-Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
+`.github/workflows/ci.yml` emits the required `CI Gate` context in two tiers.
+PR events run admission checks: file-content secret scanning, the large-file
+guard, attribution, lint and content contracts, dependency-audit scoping, and
+`pytest --collect-only`. Its summary states plainly that full pytest was not run.
+No changed-file test selector chooses a guessed subset.
+
+Every `merge_group` candidate runs the full supported non-slow pytest suite,
+frontend toolchain tests, the sparse collection guard and partition audits.
+Required full green queue CI gates landing. Nightly `schedule` runs at 03:30 UTC
+on `main` and opt-in `workflow_dispatch` runs also execute the full suite.
+Other slow tests retain `pytest-slow-nightly.yml`.
+
+Operator approval under the gate freeze, 2026-10-23.
 
 The advisory Hygiene workflow keeps a separate slim environment. Its focused
 agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
@@ -30,12 +37,11 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 
 | Job | What it does |
 | --- | --- |
-| Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
-| Queue commit metadata scan | `merge_group` only, reuse or not. TruffleHog over the queue commit's message, author and committer (below). |
-| Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. Skipped only on a recorded merge-queue reuse. |
-| Checks | `scripts/ci/checks.sh`: every lint and content-contract gate; runs all, fails if any failed. Skipped only on a recorded merge-queue reuse. |
-| Frontend | Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. Skipped only on a recorded merge-queue reuse. |
-| pytest (1..N) | The full `not atlas_release and not slow` suite, split over N static shards. Skipped only on a recorded merge-queue reuse. |
+| Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
+| Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
+| Checks | PR pytest collection or the full-tier sparse collection guard, then `scripts/ci/checks.sh` for every lint and content-contract gate; fails if any failed. |
+| Frontend | Full tier only. Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
+| pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
 | pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run. |
 | CI Gate | `if: always()`; fails on any job result other than the expected one. |
 
@@ -57,7 +63,7 @@ that chose *which* tests or checks a change ran is gone.
 | TruffleHog, event-aware range (`secret_scan_scope.py`) | Secret scan | Secret scan (unchanged) |
 | OPSEC public identifiers (`lint_opsec_leaks.py`) | Secret scan | Secret scan (unchanged) |
 | Internal IDs (`check_no_internal_ids.py`) | Secret scan | Secret scan (unchanged) |
-| Read-only token (`permissions: contents: read`) | workflow | workflow; `reuse` adds `actions`/`pull-requests: read` |
+| Read-only token (`permissions: contents: read`) | workflow | workflow; pytest duration refresh adds `actions: read` |
 | Credential-free checkout (`persist-credentials: false`) | every checkout | every checkout (tested) |
 | SHA-pinned actions | every `uses:` | every `uses:` (tested; actionlint + zizmor) |
 | Ruff lint (`ruff check scripts/ tests/ agents_extensions/ dashboards/`) | Fast checks, not docs-only | checks.sh, every run. `ruff format --check` stays off (~2,050 files differ). |
@@ -74,7 +80,7 @@ that chose *which* tests or checks a change ran is gone.
 | BIO preparation capsules and holds | Contracts (inline Python) | checks.sh → `scripts/ci/bio_preparation_gate.py` |
 | Frontend build, generated-artifact drift (directly after the build), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order); one hydrate and one recorded build, reused only after verification (below) |
 | Frontend change denominator incl. backend hydrate inputs | Changes (`classify_changes`) | Frontend scope step (`frontend_change_scope.py`); completeness kept by `tests/test_frontend_denominator_invariant.py` |
-| Full non-slow pytest, strict markers, `--timeout=120` | pytest shards (full/selected/docs/content tiers) | pytest shards, full suite on every event |
+| Full non-slow pytest, strict markers, `--timeout=120` | pytest shards (full/selected/docs/content tiers) | pytest shards, full suite on merge-group, nightly and opt-in manual events |
 | Postgres tests must not skip (`pg_skip_guard.py`) | per shard | per shard |
 | needs_artifact collected set == `registry/artifacts/needs-artifact-expected.txt` | Needs artifact audit (separate `--collect-only`) | pytest report, from each shard's collected list (tests/conftest.py writes it before `-m` deselects) |
 | needs_artifact skip set == the same expected set | Needs artifact audit (separate run) | pytest report, from the shards' JUnit |
@@ -83,7 +89,8 @@ that chose *which* tests or checks a change ran is gone.
 | Queue commit metadata (message, author, committer) scanned for secrets | Secret scan, every queue run | Secret scan on a full queue run; Queue commit metadata scan on every queue run |
 | TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
-| Slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
+| Sparse collection guard (`tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent`) | pre-push hook and `pytest-slow-nightly.yml` | Required Checks job runs the unchanged node explicitly with `--override-ini addopts=-q -m slow --strict-markers`; nightly coverage remains. |
+| Other slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
 
 The needs_artifact audit makes two independent comparisons with the expected
 list. The collected set comes from collection, before `-m` deselects anything:
@@ -110,66 +117,39 @@ test files this change deleted or rewrote.
 
 ## CI Gate
 
-CI Gate needs every other job and checks each result:
+`scripts/ci/gate.py` parses the event JSON and checks the checkout against
+`GITHUB_SHA`, the event ref, action and candidate identity. Unknown events,
+missing metadata, incorrect refs and malformed proof fail closed.
 
-- Reuse check and Queue commit metadata scan: `skipped` outside the merge
-  queue, `success` inside it (the metadata scan also on a reuse).
-- Secret scan, Checks, Frontend, pytest and pytest report: `success`, except in
-  a merge-queue run whose Reuse check reported `reuse=true` with a run id; then
-  all five must be `skipped`, and the gate logs the reused run for each.
+The gate requires Secret scan, Checks and Dependency audit to succeed on every
+event. Frontend, duration refresh, pytest and pytest report must succeed on the
+full tier and be skipped on PR admission. Queue commit metadata scanning must
+succeed on merge-group events and be skipped elsewhere. Every other result,
+including cancellation or unknown status, blocks the gate. `always()` ensures
+it reports after failed or cancelled dependencies.
 
-`cancelled`, a missing result or any other value fails the gate. The gate runs
-under `always()` because GitHub treats a skipped required check as passing.
-`tests/test_ci_pr_triggers.py` executes the gate script against every case.
+Queue runs never reuse PR results. The tested-tree artifact remains an audit
+record of the candidate and its partition results.
 
-## Merge queue: reuse of an identical tree
+The queue metadata job publishes `ci-queue-candidate`, binding the event's original
+base and candidate to the workflow run and attempt. For recovery, compare these
+immutable SHAs, then inspect that complete base-to-head diff against the failing tests, code,
+fixtures, dependencies, configuration and workflow. This includes every grouped
+change without guessing membership. Include `queue_group_diff` with `base_sha`,
+`head_sha` and the sorted `paths` list in the existing recovery evidence comment.
+Include old and new names for renames. The publisher verifies this against the
+same-run artifact and GitHub comparison before mutation; missing, inconsistent or capped file lists
+block recovery. Matching failed jobs across PRs alone cannot prove a service
+failure. The existing one-attempt allowance and green-head/review gates remain.
 
-A `merge_group` commit whose tree equals the tree a `pull_request` run of the
-queued PR already tested in full holds the same code; running the same jobs
-again cannot learn anything. `scripts/ci/reuse_green_run.py`:
-
-1. computes `git rev-parse <merge_group.head_sha>^{tree}`;
-2. reads the queued PR number from the queue ref, then the PR's head SHA, and
-   the pytest shard matrix from the queue commit's `ci.yml`;
-3. lists successful `pull_request` runs of `ci.yml` for that head SHA;
-4. reuses the first run that proves all of:
-   - the run: `pull_request`, `ci.yml`, completed `success`, for the PR's
-     current head, in its first and only attempt;
-   - its `ci-tested-tree` record (written by `pytest report` only after every
-     shard passed and the report's checks held): `tier: full`, the queued PR's
-     number, this run's id and attempt 1, more than zero tests, a commit SHA;
-   - that commit, read from GitHub's API rather than the record: a merge whose
-     parents include the PR head (the pull_request merge commit) and whose tree
-     is the queue commit's tree; the record names the same tree;
-   - the run's attempt-1 jobs: exactly Secret scan, Checks, Frontend,
-     `pytest (1..N)`, pytest report and CI Gate, each once and `success`; the
-     two queue-only jobs `skipped`; nothing else.
-
-Anything else runs every job: a different tree (main moved, or several PRs in
-one group), no record (older runs, expired artifacts), another PR's record, a
-zero-test or non-full record, a re-run, a job that is missing, duplicated,
-unexpected or not `success`, or any lookup error. The decision, the reused run
-and every reused job's id are in the Reuse check's job summary; CI Gate's log
-names the reused run for each skipped job. A reused queue run is the Reuse
-check, the Queue commit metadata scan and CI Gate.
-
-Reusing Secret scan and Checks is sound for the file contents they read: the
-scanned diff and the checked tree. With an identical tree, every line the queue
-commit adds over `main` was either added by the PR's commits, which the PR run
-scanned, or already on `main`. The diff-scoped checks see the same diff,
-because an identical tree in practice means `main` has not moved.
-
-The queue commit's own metadata is new: the queue writes PR-derived text into
-its message, and TruffleHog scans each commit's message, author and committer
-as well as its diff. The Queue commit metadata scan therefore runs on every
-queue run. `scripts/ci/metadata_commit.py` writes a commit with the queue
-commit's author, committer and message, its first parent as the only parent
-and that parent's tree, and TruffleHog scans `parent..that commit`: an empty
-diff, so the scan reads the metadata alone.
-
-Because the pull_request run already executes every job, reuse applies
-whenever `main` has not moved between the PR's last green run and its queue
-entry.
+Before switching, the driver must consume the independent measurement author's
+frozen last-50 baseline and declaration. The denominator is the next 50
+consecutive non-draft PRs with exclusions declared beforehand. Report median
+open-to-merged against the 20-minute target and p90, plus baseline comparisons
+for defect ejections, red-main incidents, review rounds and queue-CI p90.
+If PR-caused ejections exceed 10% of enqueues or an attributable main break
+occurs, revert this change with one clean PR. Source transmission is not
+measurement proof; the driver owns the declaration dependency and observation.
 
 ## Frontend: one hydrate, one recorded build (#9718)
 
@@ -421,11 +401,10 @@ Inputs are `full_pr_runner_minutes`, `full_queue_runner_minutes`,
 time and adds expected queue execution and every supplied overhead. Both baseline
 and candidate use `(1 - reuse_probability) * full_queue_runner_minutes`.
 Runner-minutes and elapsed waits are separate, and projection is not a measured
-saving. The shadow job is explicitly reuse-neutral in `REUSE_NEUTRAL_JOBS`;
-`lost_reuse_runner_minutes` is zero, including full selection. The existing
+saving. The historical shadow cost model retains `lost_reuse_runner_minutes` as
+zero; PR-run reuse is retired. The existing
 `projected_cost_after_lost_reuse` receipt key is retained for reader compatibility.
-The driver must measure combined PR/queue cost before decision A; all other
-reuse eligibility checks remain unchanged.
+The driver must measure combined PR/queue cost before decision A; the retired reuse path cannot supply current proof.
 
 CI recovery uses one durable Git-common-directory `ci-recovery.sqlite3` record per
 repository/PR/head on each host for both failed-job reruns and keeper/direct

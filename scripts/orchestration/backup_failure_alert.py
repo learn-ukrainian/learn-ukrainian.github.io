@@ -12,6 +12,9 @@ the unit as failed only after checking its bound delivery; later failures stay
 quiet until a successful run posts one recovery report and clears the record.
 A publish that fails leaves the record unchanged so the next run retries, and
 exits non-zero so the alert unit itself shows as failed in systemd.
+Each transition saves its exact publication inputs in a private pending record
+before sending. A state I/O failure retries that same Fleet idempotency key.
+The full transition holds a stable per-unit lock, including delivery checks.
 Legacy failed records without verified delivery require driver reconciliation
 before either suppression or recovery; they are never silently trusted.
 """
@@ -19,14 +22,18 @@ before either suppression or recovery; they are never silently trusted.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
 import subprocess
 import sys
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
+from uuid import uuid4
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_STATE_DIR = Path("batch_state") / "backups" / "alerts"
@@ -69,11 +76,86 @@ def read_state(path: Path) -> dict[str, str]:
     return data if isinstance(data, dict) else {}
 
 
-def write_state(path: Path, state: dict[str, str]) -> None:
+def _sync_directory(path: Path) -> None:
+    descriptor = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def write_state(path: Path, state: dict[str, Any]) -> None:
+    """Replace private state only after flushing a unique mode-0600 sibling."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
-    temporary.write_text(json.dumps(state, sort_keys=True) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            os.fchmod(handle.fileno(), 0o600)
+            handle.write(json.dumps(state, sort_keys=True) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        _sync_directory(path.parent)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def clear_state(path: Path) -> None:
+    path.unlink(missing_ok=True)
+    _sync_directory(path.parent)
+
+
+@contextmanager
+def state_lock(path: Path) -> Iterator[None]:
+    """Hold a stable sibling inode across read, publication and state commit."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(path.with_name(path.name + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
+    with os.fdopen(descriptor, "a") as handle:
+        os.fchmod(handle.fileno(), 0o600)
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def finish_pending(path: Path, publish: Publisher) -> None:
+    """Replay the frozen payload through Fleet idempotency under ``state_lock``.
+
+    A failed state commit leaves the pending record intact. Never treat an
+    unreadable pending record as absent: it may describe a committed delivery.
+    """
+    pending_path = path.with_name(path.name + ".pending")
+    try:
+        pending = json.loads(pending_path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return
+    except ValueError as error:
+        raise AlertError("pending alert is invalid; driver reconciliation required") from error
+    if (
+        not isinstance(pending, dict)
+        or not isinstance(pending.get("message"), str)
+        or not isinstance(pending.get("key"), str)
+        or not pending["key"]
+        or "state" not in pending
+        or (pending["state"] is not None and not isinstance(pending["state"], dict))
+    ):
+        raise AlertError("pending alert is invalid; driver reconciliation required")
+    # Also flush a pending record recovered after a failed directory fsync.
+    _sync_directory(path.parent)
+    publish(pending["message"], pending["key"])
+    if pending["state"] is None:
+        clear_state(path)
+    else:
+        write_state(path, pending["state"])
+    clear_state(pending_path)
+
+
+def publish_transition(path: Path, publish: Publisher, message: str, key: str, state: dict[str, str] | None) -> None:
+    """Persist retry inputs before sending; caller holds ``state_lock``."""
+    write_state(path.with_name(path.name + ".pending"), {"message": message, "key": key, "state": state})
+    finish_pending(path, publish)
 
 
 def receipt_summary(project_root: Path) -> str:
@@ -210,6 +292,14 @@ def handle(
     if unit not in ALLOWED_UNITS:
         raise AlertError(f"unit is not a backup unit: {unit}")
     path = state_path(state_dir, unit)
+    with state_lock(path):
+        finish_pending(path, publish)
+        return _handle_locked(event, unit, path, project_root, publish, environment, now)
+
+
+def _handle_locked(
+    event: str, unit: str, path: Path, project_root: Path, publish: Publisher, environment: Mapping[str, str], now: str
+) -> str:
     state = read_state(path)
     if state.get("state") == "failed" and state.get("delivery_recipient") != RECIPIENT:
         raise AlertError("legacy failed state has no verified recipient; driver delivery reconciliation required")
@@ -217,9 +307,11 @@ def handle(
     if event == "failed":
         if state.get("state") == "failed":
             return f"{unit}: already reported failing since {state.get('since_utc', 'unknown')}; not re-posting"
-        publish(failure_message(unit, now, environment, project_root), f"lu-backup-alert:{unit}:failed:{invocation}")
-        write_state(
+        publish_transition(
             path,
+            publish,
+            failure_message(unit, now, environment, project_root),
+            f"lu-backup-alert:{unit}:failed:{invocation}",
             {
                 "state": "failed",
                 "since_utc": now,
@@ -231,11 +323,13 @@ def handle(
     if event == "recovered":
         if state.get("state") != "failed":
             return f"{unit}: healthy, nothing to report"
-        publish(
+        publish_transition(
+            path,
+            publish,
             recovery_message(unit, now, state.get("since_utc", ""), project_root),
             f"lu-backup-alert:{unit}:recovered:{invocation}",
+            None,
         )
-        path.unlink(missing_ok=True)
         return f"{unit}: recovery reported to the {CHANNEL} channel"
     raise AlertError(f"unknown event: {event}")
 
@@ -270,8 +364,9 @@ def main(argv: list[str] | None = None, publish: Publisher | None = None) -> int
                 now=utc_now(),
             )
         )
-    except AlertError as error:
-        print(f"backup-alert: {error}", file=sys.stderr)
+    except (AlertError, OSError) as error:
+        detail = "alert state I/O failed; retry required" if isinstance(error, OSError) else str(error)
+        print(f"backup-alert: {detail}", file=sys.stderr)
         return 1
     return 0
 

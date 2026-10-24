@@ -1305,6 +1305,11 @@ def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: 
             "LC_RULES_CORE='' LC_EFFORT='' LC_FORWARD_ARGS=()\n"
         ),
     )
+    if provider == "glm":
+        assert proc.returncode != 0
+        assert "GLM is retired" in proc.stderr
+        assert not proc.stdout
+        return
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout.splitlines()[-1]) == [
         "ANTHROPIC_AUTH_TOKEN",

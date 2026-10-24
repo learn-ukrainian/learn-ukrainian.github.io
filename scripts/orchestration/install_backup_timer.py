@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Install the Learn Ukrainian backup systemd user units (preview by default).
+"""Install legacy backup units with both retired timers disabled (preview by default).
 
 Renders the learn-ukrainian-backup{,-retention}.{service,timer} templates and
 the learn-ukrainian-backup-alert@.service failure-alert template (started by
 the two services' OnFailure=) from packaging/systemd/ with @REPO_ROOT@
 replaced by the primary checkout, verifies
 them with systemd-analyze when available, and previews the result. Nothing is
-written unless --apply is given; --enable (with --apply) also enables and
-starts the two timers. A symlinked unit file, or a symlink anywhere from the
-home directory down to the unit directory, is refused in both modes, and units
-are replaced by rename within the directory.
+written unless --apply is given, which reloads systemd and disables and stops
+both timers. Use this for unit maintenance, never to schedule backups:
+--enable is refused before any write or systemctl action. A symlinked unit file,
+or a symlink anywhere from the home directory down to the unit directory, is
+refused in both modes, and units are replaced by rename within the directory.
 """
 
 from __future__ import annotations
@@ -115,11 +116,13 @@ def preview(rendered: dict[str, str], unit_dir: Path) -> int:
             print("\n".join(diff))
         else:
             print(text, end="")
-    print("Preview only. Re-run with --apply to write these units.")
+    print("Preview only. Re-run with --apply to write these units and disable both retired timers.")
     return 0
 
 
 def apply(rendered: dict[str, str], unit_dir: Path, enable: bool) -> int:
+    if enable:
+        raise InstallError("legacy backup and retention timers are retired; enabling is refused")
     dir_fd = open_unit_dir(unit_dir, create=True)
     if dir_fd is None:
         raise InstallError("unit directory vanished during installation")
@@ -137,18 +140,28 @@ def apply(rendered: dict[str, str], unit_dir: Path, enable: bool) -> int:
     if reload.returncode != 0:
         raise InstallError(f"systemctl --user daemon-reload failed: {reload.stderr.strip()}")
     print(f"wrote {len(changed)} unit(s) to {unit_dir}; daemon reloaded")
-    if enable:
-        result = systemctl_user("enable", "--now", *TIMER_NAMES)
-        if result.returncode != 0:
-            raise InstallError(f"systemctl --user enable failed: {result.stderr.strip()}")
-        print(f"enabled and started: {', '.join(TIMER_NAMES)}")
-    else:
-        print(f"next step: systemctl --user enable --now {' '.join(TIMER_NAMES)}")
+    result = systemctl_user("disable", "--now", *TIMER_NAMES)
+    if result.returncode != 0:
+        raise InstallError(f"systemctl --user disable failed: {result.stderr.strip()}")
+    print(f"disabled and stopped retired timers: {', '.join(TIMER_NAMES)}")
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary
+  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary --apply
+
+Outputs: preview only by default; --apply writes owner-only unit files, reloads
+systemd, and disables and stops both retired timers. No backup data is removed.
+Exit codes: 0 on success; 1 on installation failure or a refused enable request;
+2 on invalid arguments.
+Related: packaging/systemd/; docs/runbooks/data-backup.md.
+""",
+    )
     parser.add_argument(
         "--repo-root",
         type=Path,
@@ -164,19 +177,21 @@ def build_parser() -> argparse.ArgumentParser:
             "(default: ~/.config/systemd/user)"
         ),
     )
-    parser.add_argument("--apply", action="store_true", help="write the units and reload systemd")
+    parser.add_argument(
+        "--apply", action="store_true", help="write units, reload systemd, disable and stop timers (default: preview)"
+    )
     parser.add_argument(
         "--enable",
         action="store_true",
-        help="with --apply, also enable and start the timers",
+        help="refused: both legacy timers are retired (default: false)",
     )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.enable and not args.apply:
-        raise InstallError("--enable only makes sense together with --apply")
+    if args.enable:
+        raise InstallError("legacy backup and retention timers are retired; --enable is refused")
     repo_root = args.repo_root.expanduser().resolve()
     if not (repo_root / ".git").is_dir():
         raise InstallError(f"repository root must be the primary checkout: {repo_root}")

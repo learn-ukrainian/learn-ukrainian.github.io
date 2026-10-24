@@ -38,16 +38,17 @@ Those are the gate's checks. Before them it refuses a dirty tracked tree and unt
 that could change what the hooks import (`untracked_inputs`, below). The pre-commit stage runs every
 hook `.pre-commit-config.yaml` places at the `pre-push` stage, unchanged, including the secret scans.
 
-**The gate runs no tests of its own (#11276).** It has no pytest stage, takes no host test slots and
-runs no affected-test selector. One pytest-based guard hook remains at the `pre-push` stage, inside the
-pre-commit stage: `sparse-collection-guard`, whose test is marked `slow`, so no CI shard runs
-it and only the advisory nightly slow run would otherwise. The other two (#11315),
-`repo-wide-marker-invariant` and `task-store-resolver-guard`, were removed from `.pre-commit-config.yaml`
-(they added pytest time to every push): CI Gate's pytest shards run `tests/test_repo_wide_marker_invariant.py` (shard 9) and
-`tests/test_conftest_task_store_guard.py` (shard 16) on every pull request and in the merge queue, and
-`tests/test_ruff_ci_scope.py` pins their absence. Shard numbers follow the committed duration weights and
-can move; the shards partition all of `tests`. CI Gate runs the full suite on every pull request and again
-in the merge queue, and remains the merge gate; the nightly slow run stays advisory.
+**No push path runs pytest.** The gate has no pytest stage, takes no host test slots and
+runs no affected-test selector. No explicit or implicit `pre-push` hook invokes pytest.
+CI Gate's required Checks job runs the unchanged
+`tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent`
+node with `--override-ini addopts=-q -m slow --strict-markers`. Its `slow` marker excludes it
+from ordinary pytest shards, so this explicit step preserves required verification.
+CI Gate's pytest shards still run `tests/test_repo_wide_marker_invariant.py` and
+`tests/test_conftest_task_store_guard.py`. `tests/test_ruff_ci_scope.py` pins the removed hooks'
+absence and the sparse guard's required CI ownership. These checks run on pull requests and
+merge groups, subject to the existing identical-tree green-run reuse policy.
+The nightly slow run stays advisory.
 A green pre-push is never evidence that the suite passes. Run the tests your change touches yourself
 before pushing, as the rules require.
 
@@ -57,9 +58,13 @@ before pushing, as the rules require.
 | --- | --- | --- |
 | green | 0 | Push proceeds; a receipt is written. |
 | `pre_commit_failed` | 1 | Push refused; the failing hook names are listed (`lint-opsec-leaks` for the per-commit OPSEC scan, `check-no-internal-ids` for the internal-ID scan). |
+| `public_entire_ref`, `entire_destination_unknown` | 1 | An Entire head or tag aimed at the public origin, or at a destination this gate cannot identify. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change what the hooks import, but not the receipt. Commit or remove them. |
 | `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout` and `timeout_under_load` (a stage reached its bound; see Bounds), `receipt_unwritable`, `validation_error` (an I/O failure), `scope_setup_unavailable` (the scoped executor was never set up or is already closed; no check ran). The branch is preserved; return to the driver. Never retry blindly. |
+
+This check covers pushes that go through the tracked pre-push hook; Entire's own checkpoint sync does not use this hook and stays guarded by the capture-guard route checks.
+Deleting an existing public Entire ref is refused here too; that removal is operator-owned and uses the documented `--no-verify` bypass or the forge, outside this outcome.
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 After a plan is built, every `validation_incomplete` detail ends with the range it scanned (#10820), for
@@ -184,8 +189,10 @@ the same Git-common authority. It adds no stream lease or external coordination 
 `<git-common-dir>/lu-pre-push-gate/receipts/<head>-<base>.json` lets a retry of the same commit skip the
 run. It is bound to the commit, tree, base and its fallback reason, the gate version and `tools`
 (digests of the gate, launcher and pre-commit configuration; the interpreter, pytest and pre-commit
-versions, pytest being what the configuration's remaining pytest-based `pre-push` hook runs under), and carries a
+versions), and carries a
 `seal`, the SHA-256 of its key, outcome and time. It expires after one hour.
+The retained pytest fingerprint reads installed package metadata only. It does not import pytest
+or execute tests. The preceding stamp guard reads existing success stamps; it does not run pytest.
 
 Reuse requires every field (#11207): exactly the key, outcome, time and seal; a seal that matches; and
 a key equal, field for field with no extra ones, to the one the gate would write for the current plan.

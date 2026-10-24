@@ -42,6 +42,16 @@ DEFAULT_COUNTS = {family: seats + (["gemini-3.8-flash-high"] if family != "googl
                   for family, seats in DEFAULT_COUNTS.items()}
 
 
+def retired_candidate(name):
+    model, family, route = {
+        "glm-5.3": ("glm-5.3", "zhipu", "glm"),
+        "composer-2.5": ("composer-2.5", "moonshot", "cursor"),
+        "pool": ("poolside/laguna-s-2.1", "poolside", "pool"),
+        "pool-xs": ("poolside/laguna-xs-2.1", "poolside", "pool"),
+    }[name]
+    return replace(REVIEW_CANDIDATES["openai_frontier"], name=name, concrete_model=model, family=family, route=route)
+
+
 def _findings(captured):
     return [json.loads(line) for line in captured.err.splitlines() if line.startswith("{")]
 
@@ -111,11 +121,8 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
     assert results["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
     assert results["openai"] == [NATIVE_GROK, GROK, "claude-opus-5-5"]
     assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier", NATIVE_GROK, GROK}
-    assert exclusions["anthropic"]["glm-5.3"] == "retired→cursor"
-    assert exclusions["anthropic"]["composer-2.5"] == "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"
+    assert not {"glm-5.3", "composer-2.5", "pool", "pool-xs"} & set(exclusions["anthropic"])
     assert not {NATIVE_GROK, GROK}.intersection(exclusions["anthropic"])
-    for name in ("pool", "pool-xs"):
-        assert exclusions["anthropic"][name] == "ACP participant does not yet pin and attest the concrete Laguna model"
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
@@ -162,30 +169,20 @@ def test_composer_and_pool_exclusions_are_resolver_gates(risk, snapshot):
         author_model="claude", risk=risk, routing_snapshot=snapshot, data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT
     )
     resolution = resolve_reviewer(inputs)
-    expected_reasons = {
-        "composer-2.5": "sealed endpoint 'cursor' is not pinned for model 'composer-2.5'",
-        "pool": "ACP participant does not yet pin and attest the concrete Laguna model",
-        "pool-xs": "ACP participant does not yet pin and attest the concrete Laguna model",
-    }
-    for name, reason in expected_reasons.items():
-        evaluation = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        assert evaluation.status == "excluded"
-        assert evaluation.reason == excluded["anthropic"][name] == reason
-        if risk == "high":
-            # High's ladder contains Sol, Opus and Grok; these seats are never attempted.
-            assert name not in {entry.name for entry in resolution.trace}
-        else:
-            trace = next(entry for entry in resolution.trace if entry.name == name)
-            assert trace.status == "excluded"
-            assert trace.reason == reason
+    for name in ("composer-2.5", "pool", "pool-xs"):
+        assert name not in REVIEW_CANDIDATES
+        evaluation = evaluate_candidate(retired_candidate(name), inputs)
+        assert evaluation.status == "excluded" and "retired" in evaluation.reason
+        assert name not in excluded["anthropic"]
+        assert name not in {entry.name for entry in resolution.trace}
         assert name not in eligible["anthropic"]
 
 
 def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, capsys):
     # Deliberately put the pin-only seat on the ladder to isolate the route gate.
-    monkeypatch.setitem(REVIEW_LADDERS, "medium", (*REVIEW_LADDERS["medium"], (REVIEW_CANDIDATES["glm-5.3"],)))
+    monkeypatch.setitem(REVIEW_LADDERS, "medium", (*REVIEW_LADDERS["medium"], (retired_candidate("glm-5.3"),)))
     pinned = evaluate_candidate(
-        REVIEW_CANDIDATES["glm-5.3"],
+        retired_candidate("glm-5.3"),
         ResolverInputs(
             author_model="claude",
             pinned_candidate="glm-5.3",
@@ -193,7 +190,8 @@ def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, 
             routing_snapshot={"glm": "healthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
-    assert pinned.status == "eligible"
+    assert pinned.status == "excluded"
+    assert "retired" in pinned.reason
     results = check_bench_health(routing_snapshot={"glm": "healthy"})
     assert all("glm-5.3" not in seats for seats in results.values())
     assert results["anthropic"] == DEFAULT_COUNTS["anthropic"]
@@ -205,7 +203,7 @@ def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, 
         )
         == 1
     )
-    assert _findings(capsys.readouterr())[0]["excluded_seats"]["glm-5.3"] == "retired→cursor"
+    assert "glm-5.3" not in _findings(capsys.readouterr())[0]["excluded_seats"]
 
 
 @pytest.mark.parametrize("policy", [None, "ci"])
@@ -224,7 +222,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     assert all("openai_frontier" not in seats for seats in results.values())
     assert results["anthropic"] == [NATIVE_GROK, GROK, "gemini-3.8-flash-high"]
     pinned = evaluate_candidate(
-        REVIEW_CANDIDATES["glm-5.3"],
+        retired_candidate("glm-5.3"),
         ResolverInputs(
             author_model="claude",
             pinned_candidate="glm-5.3",
@@ -232,7 +230,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
         ),
     )
     assert pinned.status == "excluded"
-    assert "data-egress policy fail-closed" in pinned.reason
+    assert "retired" in pinned.reason
 
 
 @pytest.mark.parametrize(

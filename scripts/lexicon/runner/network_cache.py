@@ -31,7 +31,6 @@ from scripts.lexicon.runner.contracts import (
 from scripts.lexicon.runner.sources_guard import (
     apply_network_connection_guards,
     assert_not_sources_db,
-    guard_network_worker,
 )
 
 # Active-computation lease for in-flight fetches (transport itself holds no lease).
@@ -802,14 +801,3 @@ class NetworkCache:
                 (event,),
             ).fetchall()
         return [dict(r) for r in rows]
-
-
-def open_network_cache(path: Path, **kwargs: Any) -> NetworkCache:
-    """Open a network cache under the network-worker sources.db guard."""
-    with guard_network_worker():
-        # Refuse accidental sources.db path (URI/inode-aware) before connect.
-        assert_not_sources_db(path)
-        cache = NetworkCache(path, **kwargs)
-        cache.open()
-        return cache
-

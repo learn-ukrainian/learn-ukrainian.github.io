@@ -291,22 +291,42 @@ describe("WordAtlasClientShell React mount", () => {
     expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/пошкоджен/i);
   });
 
-  test("network fail → retry recovers", async () => {
+  test("network fail → retry shows pending loading until the held response completes, then recovers", async () => {
+    // Hold every request issued after the user clicks retry, so the pending
+    // state is observed deterministically instead of racing an immediate fetch
+    // (an immediate response lets the recovered article, with its own status
+    // regions, replace the loading marker before the click promise settles).
+    const fixtureFetch = fixtureFetchImpl({ failOnceUrls: /current\.json$/ });
+    let retryClicked = false;
+    let releaseRetry!: () => void;
+    const retryHeld = new Promise<void>((resolveHeld) => {
+      releaseRetry = resolveHeld;
+    });
+    const fetchImpl = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (retryClicked) await retryHeld;
+      return fixtureFetch(input, init);
+    }) as typeof fetch;
     const user = userEvent.setup();
     render404BootDocument();
     render(
       createElement(WordAtlasClientShell, {
         pathname: "/lexicon/прапор/",
         assetBaseUrl: "/atlas",
-        fetchImpl: fixtureFetchImpl({ failOnceUrls: /current\.json$/ }),
+        fetchImpl,
       }),
     );
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveAttribute("data-word-atlas-state", "network_error");
     });
     expect(document.querySelectorAll('[data-word-atlas-state="loading"]')).toHaveLength(0);
+    retryClicked = true;
     await user.click(screen.getByRole("button", { name: /Спробувати знову/i }));
+    // Pending: exactly one loading status, no alert, no recovered article.
     expect(screen.getByRole("status")).toHaveAttribute("data-word-atlas-state", "loading");
+    expect(document.querySelectorAll("[data-word-atlas-state]")).toHaveLength(1);
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(document.querySelector("[data-word-atlas]")).toBeNull();
+    releaseRetry();
     await waitFor(() => {
       expect(document.querySelector("[data-word-atlas]")).toBeTruthy();
     });

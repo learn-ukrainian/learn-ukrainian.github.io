@@ -38,7 +38,7 @@ unset GEMINI_API_KEY GOOGLE_API_KEY
 if ! printf '%s\n' "$PROMPT" | timeout 180 \
         .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
             --task-id "$TASK_ID" \
-            --to-model gemini-3.1-pro-high \
+            --to-model gemini-3.8-flash-high \
             --stdout-only \
             --from claude \
         > "$OUT_FILE" 2> "$ERR_FILE"; then

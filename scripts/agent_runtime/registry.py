@@ -131,7 +131,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "gemini": {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
-        "default_model": "gemini-3.1-pro-high",
+        "default_model": "gemini-3.8-flash-high",
         "cost_tier": "low",
         "capabilities": frozenset(
             {
@@ -386,7 +386,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "acpx-pool-shadow": {
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxPoolShadowAdapter",
-        "default_model": None,
+        "default_model": "poolside/laguna-s-2.1",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,

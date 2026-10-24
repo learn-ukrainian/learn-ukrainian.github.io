@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 
 from scripts.audit import llm_qg_store, llm_reviewer_dispatch, qg_shadow_run, qg_workflow
+from tests.test_llm_reviewer_dispatch import subscribed_reviewer_routes as subscribed_reviewer_routes
 
 
 def _module(tmp_path: Path) -> Path:
@@ -548,7 +549,7 @@ def test_shadow_driver_partial_judge_args_raises_value_error(tmp_path: Path) -> 
         )
 
 
-def test_shadow_driver_surfaces_skip_reason(tmp_path: Path) -> None:
+def test_shadow_driver_surfaces_skip_reason(subscribed_reviewer_routes, tmp_path: Path) -> None:
     module_dir = _module(tmp_path)
 
     with pytest.raises(ValueError) as excinfo:
@@ -566,4 +567,3 @@ def test_shadow_driver_surfaces_skip_reason(tmp_path: Path) -> None:
         )
     assert "skipped_canary_required" in str(excinfo.value)
     assert "exact_canary_required" in str(excinfo.value)
-

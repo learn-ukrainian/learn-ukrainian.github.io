@@ -1,12 +1,18 @@
 # Data Backup and Recovery
 
+The legacy backup and retention timers are retired and must remain disabled.
+The active offsite job owns scheduled capture; its secondary copy covers the
+same completed snapshots. Consult the private operations runbook for current
+operating procedures. The restic commands below remain available for manual
+maintenance and recovery.
+
 `scripts/backup-data.sh` creates encrypted, versioned restic snapshots of the
 project's recovery-critical local state through an rclone remote. It does not
 write through the cloud provider's desktop sync mount, overwrite the previous backup,
 or restore directly over live project data. Snapshot pruning exists only as
-the operator-approved weekly `retention` command described below.
+the explicit manual `retention` command described below.
 
-The nightly reads one allowlist, `scripts/config/backup-allowlist.json`, and
+The backup command reads one allowlist, `scripts/config/backup-allowlist.json`, and
 backs up every kept path in one run. On Linux a clean run writes a bounded
 number of restic snapshots that does not grow by one per database: one base
 snapshot, `ceil(N / K)` database-batch snapshots, and two receipt snapshots
@@ -204,8 +210,8 @@ restic rclone path with that final directory name.
   loses a snapshot it references, and a partial newer run can never displace
   one: runs newer than the newest completed run are always kept. `prune` runs
   as a separate explicit step. Other snapshot families in the same repository
-  are never selected. It is a preview unless `--execute` is supplied and is
-  scheduled weekly, not on every backup.
+  are never selected. It is a preview unless `--execute` is supplied and remains
+  an explicit manual operation; neither legacy timer may schedule it.
 - Restic commits snapshots atomically. A failed upload does not replace an
   earlier recovery point. On Linux, a run is published in two phases. The
   receipt is first uploaded as a pending `lu-part-receipt` snapshot with a
@@ -240,14 +246,15 @@ SQLite documents why its [online backup API produces a consistent snapshot][sqli
 
 **Tracked:** [#6093](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6093) — *do not close until proven fixed.*
 
-The scheduled backup job (`learn-ukrainian-backup` → `~/.local/bin/learn-ukrainian-backup`) requires
+Manual use of the legacy backup command requires
 an operator-configured OAuth client and periodic authorization refresh:
 
 - Config lives outside git (`~/.secrets/learn-ukrainian-backup.env` via `LU_BACKUP_ENV_FILE`, dedicated rclone config).
 - Do **not** put client secrets, tokens, or password files in the repo, issues, or receipts.
 - Procedure: configure dedicated OAuth credentials,
   then re-auth the remote and prove `backup-data.sh doctor`, one `backup --execute`,
-  `snapshots`, `verify`, and a green scheduled run (acceptance on #6093).
+  `snapshots`, and `verify`. Historical acceptance requirements remain on #6093;
+  do not re-enable the retired timers to satisfy them.
 
 Until #6093 is closed, treat this as a **time-bounded operational prerequisite**, not noise.
 
@@ -513,45 +520,30 @@ directories are not backed up even though `batch_state/tasks` is kept.
 Run `doctor` after changing any source symlink. A new external or broken
 symlink is a hard failure rather than a silent omission or recursive copy.
 
-## Scheduling
+## Retired timers and unit maintenance
 
-On the data host, the systemd **user** units in `packaging/systemd/`
-(`learn-ukrainian-backup.service` + `.timer`, and
-`learn-ukrainian-backup-retention.service` + `.timer`) run the backup daily at
-03:30 UTC (`Persistent=true`, 15-minute randomized delay) and the
-operator-approved retention policy weekly. Install them from the primary
-checkout (preview by default; writes only with `--apply`):
+Both `learn-ukrainian-backup.timer` and
+`learn-ukrainian-backup-retention.timer` must remain disabled. Do not schedule
+the legacy wrapper through another scheduler. Current capture and secondary-copy
+procedures live in the private operations runbook.
+
+The installer preserves the service, timer and failure-alert unit files for
+manual maintenance. Preview is read-only. Applying the preview writes owner-only
+units, reloads the user manager, then disables and stops both timers with
+`systemctl --user disable --now`. A failed reload or disable action fails the
+installation. `--enable` is refused, including with `--apply`, before any write
+or systemctl action. Direct Python `apply(..., enable=True)` is also refused.
+No repository, snapshot or source data is deleted.
+
+After deployment is separately authorized, run from the primary checkout:
 
 ```bash
 .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD"
-.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply --enable
+.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply
 ```
 
-The units configure `LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env` (as defined in `packaging/systemd/learn-ukrainian-backup.service`), which the wrapper validates (regular file, mode 0600, safe permissions) and sources.
-Validation errors name the variable and condition without its value. The
-scheduled wrapper replaces either configured repository value, its remote
-path, and the password-file path in backup and retention output
-before sending it to the journal. `scripts/orchestration/run_scheduled_backup.sh`
-writes `batch_state/backups/last-run.json` after an attempted backup (UTC
-start/end, exit status, restic run id, snapshot count, bytes added). A failed
-run exits non-zero, and so does a failed log capture or a failed
-`last-run.json` write, so `systemctl --user list-timers` and
-`journalctl --user -u learn-ukrainian-backup.service` show it; there is no
-separate alerting system.
-Before each scheduled run's preflight, the wrapper removes the previous receipt;
-an early failure therefore leaves no receipt. If systemd times out or kills the
-wrapper before this point, `last-run.json` may still show the previous run; use
-its timestamp together with the unit status. The user manager has no reliable
-network-ready target, so a boot catch-up may fail visibly before network access
-is available. Existing snapshots remain available; the next scheduled backup
-or retention run retries at its usual daily or weekly interval.
-
-Elsewhere, the script remains suitable for launchd or cron after the one-time
-environment is available to that process. `backup --execute` returns nonzero
-for missing critical roots, unsafe symlinks, uncovered untracked files,
-corrupt SQLite databases, failed uploads, or failed repository checks. Send
-stdout and stderr to an operator-controlled log outside the repository and
-alert on every nonzero exit.
-
-Schedule retention only through the weekly `retention` command above; do not
-add ad-hoc `restic forget` or prune invocations.
+The legacy wrapper and `batch_state/backups/last-run.json` remain available for
+manual diagnostics. That receipt describes a legacy run, not current offsite
+coverage. Stopping a timer does not cancel an already-running service.
+Keep manual backup, verification, restore and retention operations explicit;
+do not add ad-hoc `restic forget` or prune invocations.

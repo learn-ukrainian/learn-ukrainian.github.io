@@ -122,8 +122,8 @@ mutation parameters. The test and its parameter helpers have identical ASTs to
      `test_source_clis_entrypoint.py`, `test_grammar_lexical_schemas.py` and
      `test_contract_reference_sync.py`.
    - Thirteen single tests are kept:
-     - two that are run by node id, by a kept test and by the `sparse-collection-guard`
-       pre-push hook;
+     - two that are run by node id, by a kept test and by the required Checks job
+       in `.github/workflows/ci.yml`;
      - one named as resume evidence in the curriculum-lifecycle pilot matrix;
      - one holding a sqlite reference that `scripts/hygiene/sqlite_reference_allowlist.json`
        counts;
@@ -309,7 +309,7 @@ deletions (16%).
 | recheck-sample | `test_secret_redaction.py::test_conftest_redacts_warning_source_line` | only test of secret redaction on a warning's source line; the kept test has the secret only in the message |
 | doc-cited-enforcement | `test_source_clis_entrypoint.py` | agents_extensions/shared/rules/workflow.md names this file as the test that enforces it; deleting it would leave that claim false, and this PR edits no rules or contracts |
 | tooling-reference | `test_source_db_write_guard.py::test_unrelated_audit_events_pass` | scripts/hygiene/store_access_baseline.json records this test's store access; the source-db lint fails on a baseline row whose test is gone |
-| tooling-reference | `test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent` | the pre-push hook sparse-collection-guard in .pre-commit-config.yaml runs this test by node id |
+| tooling-reference | `test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent` | the required Checks job in .github/workflows/ci.yml runs this unchanged test by node id |
 | tooling-reference | `test_ua_eval_model_runner.py` | the ua_eval v0.1.1 release freeze (scripts/projects/ua_eval_harness/verify_release_freeze_v011.py) pins this file's sha256 |
 | tooling-reference | `test_ua_eval_public_v011.py` | the ua_eval v0.1.1 release freeze (scripts/projects/ua_eval_harness/verify_release_freeze_v011.py) pins this file's sha256 |
 | recheck-sample | `test_wiki_enrichment.py::TestSourceBudgeting::test_limits_background_sources_before_primary` | only test of the background-source caps in _cap_source_chunks |

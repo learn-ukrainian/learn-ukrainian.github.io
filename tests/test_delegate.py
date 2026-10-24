@@ -92,7 +92,7 @@ def isolated_finalization_context(tmp_path, monkeypatch, synthetic_opsec):
     public = _PinnedRemotePublicHead()
 
     @contextlib.contextmanager
-    def no_credentials():
+    def no_credentials(**_kwargs):
         yield []
 
     @contextlib.contextmanager
@@ -1557,12 +1557,17 @@ def test_registered_stream_epics_unreadable_registry_exempts_nothing(monkeypatch
 
 
 def test_dor_preflight_stream_epic_plus_task_checks_only_the_task(monkeypatch):
-    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
-    error, record = delegate._run_dor_preflight("Issue: #9251 ... Stream epic #6943.", None, dispatch_repo=_LOCAL)
+    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943), (_LOCAL, 9252)})
+    carrier = {"identity": {"repository": _LOCAL, "github_issue_number": 9251, "stream_epic": 6943}}
+    error, record = delegate._run_dor_preflight(
+        "Issue: #9251 ... Stream epic #6943. Evidence: #9252.", None,
+        dispatch_repo=_LOCAL, lifecycle_carrier=carrier,
+    )
     assert error is None
     assert record == {"issues": [9251], "warnings": {}, "dor": "PASS", "stream_epic": [6943]}
     assert _checked_issues(calls) == [[_LOCAL, "9251"]]
     assert not [call for call in calls if call[-1].endswith("/issues/6943")]
+    assert not [call for call in calls if call[-1].endswith("/issues/9252")]
 
 
 def test_dor_preflight_stream_epic_plus_failing_task_still_fails(monkeypatch):
@@ -9987,7 +9992,7 @@ def test_cursor_auto_refused_outside_a_well_defined_coding_task(overrides, dor_r
     assert refusal is not None
     assert "cursor_auto_outside_coding_task" in refusal
     assert reason in refusal
-    assert "--model grok-4.7 or --model composer-2.5" in refusal
+    assert "--model grok-4.7" in refusal
 
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
@@ -11048,7 +11053,7 @@ def test_dispatch_gemini_alias_rejects_unknown_model_before_spawn(tmp_tasks_dir,
     assert delegate._read_state(delegate._state_path("gemini-alias-unknown-model")) is None
     err = capsys.readouterr().err
     assert "Unsupported AGY model 'gemini-9.9-pro-preview'" in err
-    assert "gemini-3.8-flash-high" not in err
+    assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in err
 
 
 def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -11549,6 +11554,7 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
     monkeypatch,
     dry_run,
 ):
+    real_run, real_popen = subprocess.run, subprocess.Popen
     worktree = _tmp_dispatch_repo_root(tmp_path, monkeypatch) / ".worktrees/dispatch/claude/pinned-branch"
     worktree.mkdir(parents=True)
     branch = "claude/pinned-branch"
@@ -11596,6 +11602,101 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
     if not dry_run:
         assert state["pid"] == proc.pid
 
+    monkeypatch.setattr(delegate.subprocess, "run", real_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", real_popen)
+    # Exercise the same pin contract through registered sibling review dispatch.
+    from dataclasses import replace
+
+    from scripts.ai_agent_bridge import _agy
+    from scripts.orchestration import fleet_repos
+    from scripts.review import target_resolution
+    from tests.test_authoring_review_feasibility import SOL, mini_repo
+
+    sibling_space = tmp_path / "sibling-space"
+    sibling_space.mkdir()
+    repo = mini_repo(sibling_space, monkeypatch)
+    primary, _ = _init_repo_with_worktree(sibling_space)
+    repository = "learn-ukrainian/learn-ukrainian-infra-private"
+    url = f"https://github.com/{repository}.git"
+    repo.git("remote", "set-url", "origin", url)
+    repo.git("config", f"url.{repo.remote}.insteadOf", url)
+    repo.commit(SOL, path="src/app.py", text="reviewed = True\n")
+    pinned = repo.publish()
+    branch = "feature"
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary)
+    catalog = fleet_repos.load_fleet_repos()
+    catalog["infra-private"] = replace(catalog["infra-private"], local_name=repo.root.name)
+    monkeypatch.setattr(fleet_repos, "load_fleet_repos", lambda: catalog)
+    _patch_worker_popen(monkeypatch)
+    real_run = subprocess.run
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["gh", "pr", "view"]:
+            assert cmd[cmd.index("--repo") + 1] == repository
+            return subprocess.CompletedProcess(cmd, 0, json.dumps({
+                "number": 1051, "headRefName": branch, "headRefOid": pinned,
+                "baseRefName": "main", "baseRefOid": repo.sha("origin/main"),
+                "isCrossRepository": False,
+            }), "")
+        return real_run(cmd, **kwargs)
+
+    monkeypatch.setattr(target_resolution, "_run_gh", lambda args, cwd, **kw: fake_run(["gh", *args], cwd=cwd, **kw))
+    monkeypatch.setattr(_agy, "_run_changed_path_command", lambda cmd, **kw: fake_run(cmd, **kw).stdout)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--model", "claude-opus-5-5",
+        "--task-id", "sibling-pinned-branch", "--prompt", "Review the pinned code.\n# Dispositions\n",
+        "--mode", "read-only", "--repo", "infra-private",
+        "--require-review-verdict", "--review-profile", "code",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical",
+        *(["--pr", "1051"] if dry_run else ["--branch", branch, "--pinned-head", pinned]),
+    ])
+    args.dry_run = dry_run
+    author_before = repo.snapshot()
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path("sibling-pinned-branch"))
+    assert state is not None
+    assert state["pinned_head"] == pinned
+    assert state["repository"] == repository
+    assert state["review_author_model"] == "gpt-6.1-sol"
+    assert state["review_risk"] == "critical"
+    assert state["review_branch"] == branch
+    assert state["status"] == ("dry_run" if dry_run else "spawning")
+    worktree = Path(state["worktree_path"])
+    assert worktree == repo.root / ".worktrees/dispatch/claude/sibling-pinned-branch"
+    author_after = repo.snapshot()
+    assert author_after[0] == author_before[0]
+    assert author_after[2:] == author_before[2:]
+    if dry_run:
+        assert not worktree.exists()
+        assert state["worktree_base_sha"] is None
+    else:
+        assert state["worktree_base_sha"] == pinned
+        assert delegate._resolve_sha(worktree) == pinned
+        assert delegate._current_branch(worktree) == "HEAD"
+        assert delegate._resolve_verified_worktree_path(worktree) == worktree
+        assert state["pid"] == _GuardFakeProc().pid
+
+    refused = repo.root / ".worktrees/dispatch/claude/moved-head"
+    attach = dict(repo_root=repo.root, agent="claude", task_id="moved-head", raw_path=str(refused),
+                  detached=True, review_branch=branch, repository=repository)
+    with pytest.raises(ValueError, match="concrete repository/head pin"):
+        delegate._ensure_sibling_repo_worktree(**attach)
+    with pytest.raises(RuntimeError, match="differs from the pinned head"):
+        delegate._ensure_sibling_repo_worktree(**attach, pinned_head_sha="f" * 40)
+    assert not refused.exists()
+    with monkeypatch.context() as moved:
+        moved.setattr(target_resolution, "live_canonical_branch_head", lambda *a, **kw: "f" * 40)
+        with pytest.raises(RuntimeError, match="differs from the pinned head"):
+            delegate._ensure_sibling_repo_worktree(**attach, pinned_head_sha=pinned)
+    assert not refused.exists()
+    foreign = "https://github.com/unit/foreign.git"
+    repo.git("remote", "set-url", "origin", foreign)
+    repo.git("config", f"url.{repo.remote}.insteadOf", foreign)
+    with pytest.raises(RuntimeError, match="canonical review repository mismatch"):
+        delegate._ensure_sibling_repo_worktree(**attach, pinned_head_sha=pinned)
+    assert not refused.exists()
+
 
 def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
     calls: list[list[str]] = []
@@ -11612,6 +11713,11 @@ def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkey
             task_id="unsafe",
             raw_path=str(tmp_path / "unsafe"),
             branch="main",
+        )
+    with pytest.raises(ValueError, match="protected"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=tmp_path, agent="cursor", task_id="unsafe", raw_path=str(tmp_path / "unsafe"),
+            detached=True, review_branch="main", pinned_head_sha="a" * 40, repository="unit/repo",
         )
     assert calls == []
 
@@ -12591,18 +12697,25 @@ def test_ensure_worktree_reuse_dirty_raises(tmp_tasks_dir, tmp_path, monkeypatch
     )
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    with pytest.raises(delegate.WorktreeDirty, match="uncommitted"):
+    with pytest.raises(delegate.WorktreeDirty, match="uncommitted") as exc_info:
         delegate._ensure_worktree(
             agent="codex",
             task_id="1476-dirty-task",
             raw_path=str(wt),
             base="main",
         )
+    message = str(exc_info.value)
+    assert "Commit or stash the changes before reuse" in message
+    assert "owning driver" in message
+    assert "scripts/orchestration/reap_worktrees.py" in message
+    assert "scripts.fleet.post_task_reap" in message
+    assert "remove the worktree" not in message
+    assert "git worktree remove" not in message
 
 
 def test_ensure_worktree_reuse_wrong_branch_raises(tmp_tasks_dir, tmp_path, monkeypatch):
     """Fix 3 (#1476): an existing worktree on a different branch must
-    raise WorktreeBranchMismatch, with the expected remediation command
+    raise WorktreeBranchMismatch, with the common-reaper remediation
     in the message."""
     wt = tmp_path / "mismatched-worktree"
     wt.mkdir()
@@ -12619,7 +12732,10 @@ def test_ensure_worktree_reuse_wrong_branch_raises(tmp_tasks_dir, tmp_path, monk
         )
     assert "codex/some-other-branch" in str(exc_info.value)
     assert "codex/1476-mismatched" in str(exc_info.value)
-    assert "git worktree remove" in str(exc_info.value)
+    assert "scripts/orchestration/reap_worktrees.py" in str(exc_info.value)
+    assert "scripts.fleet.post_task_reap" in str(exc_info.value)
+    # #10306: dispatcher advice must never bypass the common reaper.
+    assert "git worktree remove" not in Path(delegate.__file__).read_text()
 
 
 def test_ensure_worktree_reuse_stale_base_rebases(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
@@ -12681,13 +12797,16 @@ def test_ensure_worktree_reuse_stale_base_rebase_fail_raises(tmp_tasks_dir, tmp_
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
-    with pytest.raises(delegate.WorktreeStaleBase, match="rebase failed"):
+    with pytest.raises(delegate.WorktreeStaleBase, match="rebase failed") as exc_info:
         delegate._ensure_worktree(
             agent="codex",
             task_id="1476-conflict-task",
             raw_path=str(wt),
             base="main",
         )
+    assert "scripts/orchestration/reap_worktrees.py" in str(exc_info.value)
+    assert "scripts.fleet.post_task_reap" in str(exc_info.value)
+    assert "git worktree remove" not in str(exc_info.value)
     # Must abort so the worktree isn't left mid-rebase.
     assert any(c[:2] == ["git", "rebase"] and "--abort" in c for c in abort_calls), "rebase must be aborted on failure"
 
@@ -13362,6 +13481,11 @@ def test_dispatch_refuses_a_control_character_in_a_caller_path(
         f"--{flag} refused: the path contains control or format character {code} at offset {len(str(dispatch_wt))}"
     ) in err
     assert _INJECTION not in err
+    with pytest.raises(ValueError, match="control or format character"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=main, agent="codex", task_id="path-ctrl", raw_path=raw, detached=True,
+            review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
 
 
 @pytest.mark.parametrize(
@@ -13471,6 +13595,18 @@ def test_dispatch_refuses_an_explicit_worktree_under_a_symlinked_anchor(
     )
 
     assert f"--worktree refused: {str(anchor)!r} is a symlink" in err
+    with pytest.raises(ValueError, match="symlink"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=main, agent="codex", task_id="path-anchor",
+            raw_path=str(main / ".worktrees/dispatch/codex/task-1"), detached=True,
+            review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
+
+    with pytest.raises(ValueError, match="symlink"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=anchor, agent="codex", task_id="path-anchor", raw_path=str(anchor / "task-1"),
+            detached=True, review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
 
 
 def test_dispatch_refuses_an_explicit_worktree_when_the_agent_directory_is_missing(
@@ -13752,6 +13888,12 @@ def test_cross_repo_guard_refuses_worktree_from_sibling(tmp_path, monkeypatch):
     assert str(sibling) in err
     assert "--worktree" in err
     assert "primary checkout" in err
+
+    with pytest.raises(ValueError, match="outside target repo"):
+        delegate._ensure_sibling_repo_worktree(
+            repo_root=primary, agent="codex", task_id="wrong-repo", raw_path=str(sibling),
+            detached=True, review_branch="feature", pinned_head_sha="a" * 40, repository="unit/repo",
+        )
 
 
 def test_cross_repo_guard_allows_explicit_repo_target(tmp_path, monkeypatch):
@@ -15286,9 +15428,11 @@ def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_
     assert tmp_path.exists()
 
 
-def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
+def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str, repo_key: str | None = None):
     """Primary plus one linked dispatch worktree on its own branch."""
-    primary = tmp_path / "primary"
+    from scripts.orchestration.fleet_repos import load_fleet_repos
+
+    primary = tmp_path / (load_fleet_repos()[repo_key].local_name if repo_key else "primary")
     primary.mkdir()
     _init_git_repo_for_test(primary, monkeypatch)
     subprocess.run(
@@ -15299,6 +15443,13 @@ def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
         timeout=30,
     )
     (primary / "README").write_text("base\n", encoding="utf-8")
+    if repo_key:
+        hooks = primary / ".githooks"
+        hooks.mkdir()
+        (hooks / "pre-push").write_text("#!/bin/sh\nexit 0\n")
+        (hooks / "pre-push").chmod(0o755)
+        (hooks / "pre_push_gate.py").write_text("ADMISSION_MAX_WAIT_S = 1\nADMISSION_WAIT_S = 1\n")
+        subprocess.run(["git", "add", ".githooks"], cwd=primary, check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "add", "README"], cwd=primary, check=True, capture_output=True, timeout=30)
     subprocess.run(
         ["git", "commit", "-m", "base"],
@@ -15321,11 +15472,15 @@ def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
     return primary.resolve(), worktree.resolve(), branch
 
 
-def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
+_REGISTERED_FINALIZE_CONTEXT = delegate._finalize_execution_context
+_REGISTERED_RESCUE_CONTEXT = delegate._rescue_execution_context
+
+
+def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True, repo_key: str | None = None):
     from scripts.orchestration import reap_worktrees
     from scripts.orchestration.safe_git_context import SafeGitContext
 
-    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="rescue-test")
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="rescue-test", repo_key=repo_key)
     origin = tmp_path / "origin.git"
     subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, timeout=30)
     subprocess.run(
@@ -15362,29 +15517,83 @@ def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
             "worktree_reused": False,
         },
     )
+    if repo_key:
+        from scripts.orchestration.fleet_repos import load_fleet_repos
+
+        repository = load_fleet_repos()[repo_key]
+        public = tmp_path / "primary"
+        public.mkdir()
+        _init_git_repo_for_test(public, monkeypatch)
+        (public / "public.txt").write_text("unrelated public history\n")
+        _git_out(public, "add", "public.txt")
+        _git_out(public, "commit", "-m", "public base")
+        monkeypatch.setattr(delegate, "_REPO_ROOT", public)
+        state = delegate._read_state(state_path)
+        state["repository"] = repository.github
+        delegate._write_state_atomic(state_path, state)
+
+        def registered_context(**kwargs):
+            # Validate the production catalog destination before injecting the
+            # fixture's local transport. Source configuration supplies neither.
+            assert kwargs["origin"] == f"https://github.com/{repository.github}.git"
+            assert kwargs["repository"] == repository
+            context = SafeGitContext(**kwargs)
+            context.origin = str(origin)
+            context.local_remote = True
+            return context
+
+        monkeypatch.setattr(delegate, "SafeGitContext", registered_context)
+        monkeypatch.setattr(delegate, "_finalize_execution_context", _REGISTERED_FINALIZE_CONTEXT)
+        monkeypatch.setattr(delegate, "_rescue_execution_context", _REGISTERED_RESCUE_CONTEXT)
+        monkeypatch.setattr(delegate, "project_interpreter", lambda _root: Path(sys.executable))
+        import contextlib
+
+        @contextlib.contextmanager
+        def identity(selected):
+            assert selected == repository.github
+            yield "synthetic-fixture-identity"
+
+        monkeypatch.setattr(delegate, "_rescue_identity", identity)
     return primary, worktree, origin, state_path
 
 
 @pytest.mark.parametrize("dirty", [True, False])
 def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tasks_dir, dirty):
-    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=dirty)
-    result = delegate._rescue_task(state_path, apply=True)
-    assert result["action"] == "rescued", result
-    state = delegate._read_state(state_path)
-    assert state["rescue_ref"] == "rescue/cursor/rescue-test"
-    assert state["rescue_head_commit"] == result["head"]
-    remote = subprocess.run(
-        ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    ).stdout
-    assert remote.startswith(result["head"])
-    assert worktree.exists()
-    if not dirty:
-        repeated = delegate._rescue_task(state_path, apply=True)
-        assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
+    for repo_key in (None, "infra-private"):
+        fixture = tmp_path / (repo_key or "public")
+        fixture.mkdir()
+        _primary, worktree, origin, state_path = _rescue_checkout(
+            fixture, monkeypatch, dirty=dirty, repo_key=repo_key
+        )
+        original = delegate._read_state(state_path)
+        if repo_key is None:
+            substituted = dict(original, agent="claude")
+            delegate._write_state_atomic(state_path, substituted)
+            assert delegate._rescue_repo(worktree, task_id=original["task_id"]).root == _primary
+            assert delegate._count_unpushed_commits(
+                worktree, original["worktree_branch"], task_id=original["task_id"],
+            ) == (1 if dirty else 2)  # No remote branch: the count includes the fixture's base commit.
+            assert delegate._rescue_repo(worktree, task_id=original["task_id"], state=dict(
+                substituted, worktree_path=None, cwd=str(worktree),
+            )).root == _primary
+            delegate._write_state_atomic(state_path, original)
+        result = delegate._rescue_task(state_path, apply=True)
+        assert result["action"] == "rescued", result
+        state = delegate._read_state(state_path)
+        assert state["rescue_ref"] == "rescue/cursor/rescue-test"
+        assert state["rescue_head_commit"] == result["head"]
+        remote = subprocess.run(
+            ["git", "ls-remote", "--heads", str(origin), "rescue/cursor/rescue-test"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        ).stdout
+        assert remote.startswith(result["head"])
+        assert worktree.exists()
+        if not dirty:
+            repeated = delegate._rescue_task(state_path, apply=True)
+            assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
 
 
 @pytest.mark.parametrize("status", ["failed", "cancelled", "rate_limited", "needs_finalize"])
@@ -15857,14 +16066,22 @@ def test_rescue_commit_failure_types_the_cause_and_keeps_stderr_local(tmp_path, 
 
 
 def test_rescue_branch_namespacing_prevents_agent_collision(tmp_path, monkeypatch, tmp_tasks_dir):
-    _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=True)
+    primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=True)
     state = delegate._read_state(state_path)
 
     state["agent"] = "codex"
+    codex_tree = worktree.parent.parent / "codex" / worktree.name
+    codex_tree.parent.mkdir()
+    _git_out(primary, "worktree", "move", str(worktree), str(codex_tree))
+    state["worktree_path"] = str(codex_tree)
     delegate._write_state_atomic(state_path, state)
     result_codex = delegate._rescue_task(state_path, apply=False)
 
     state["agent"] = "claude"
+    claude_tree = codex_tree.parent.parent / "claude" / codex_tree.name
+    claude_tree.parent.mkdir()
+    _git_out(primary, "worktree", "move", str(codex_tree), str(claude_tree))
+    state["worktree_path"] = str(claude_tree)
     delegate._write_state_atomic(state_path, state)
     result_claude = delegate._rescue_task(state_path, apply=False)
 
@@ -24466,8 +24683,10 @@ def test_accounting_projection_on_pre_spawn_failure(tmp_tasks_dir, monkeypatch, 
     assert record["model"] == "legacy-accounting-label"
     assert {key: record[key] for key in (
         "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
-    )} == {"requested_selector": model, "observed_model": None, "identity_state": "unknown",
-          "observed_model_source": None, "observed_model_provenance": None}
+    )} == {
+        "requested_selector": model, "observed_model": None, "identity_state": "unknown",
+        "observed_model_source": None, "observed_model_provenance": None,
+    }
 
 
 @pytest.mark.parametrize("identity_fields", [{}, {"identity_state": None}])

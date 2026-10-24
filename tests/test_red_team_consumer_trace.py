@@ -30,6 +30,7 @@ HANDLING = {
     "scripts/review/record_cf_verdict.py": "accept-as-approval",
     "scripts/fleet_comms/cli.py": "ignore",
     "scripts/fleet_comms/efficiency_metrics.py": "ignore",
+    "scripts/ci/pr20_measurement.py": "ignore",
     "scripts/entire_context/resolvers.py": "ignore",
 }
 

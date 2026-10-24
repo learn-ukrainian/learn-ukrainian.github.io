@@ -10,7 +10,6 @@ version: "2.3.0"
 title: RB3 PR lifecycle — receipt-bound review, gate, arm, and hygiene
 seats:
   - grok
-  - glm-local
 parameters:
   pr_number: integer
   reviewer_seat: string

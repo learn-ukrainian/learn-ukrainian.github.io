@@ -477,16 +477,19 @@ def test_a_failing_disk_probe_admits_and_logs_the_reason(tmp_path, host, caplog)
     assert decision.to_record()["disk_check_skipped"].startswith("disk usage unreadable")
 
 
-def test_a_probe_that_fails_after_the_reaper_admits(tmp_path, host):
-    host["readings"] = [_disk(95.0)]
+@pytest.mark.parametrize("used", [85.0, 89.0, 95.0])
+def test_unknown_probe_after_high_reading_refuses_without_claiming_recovery(tmp_path, host, used):
+    host["readings"] = [_disk(used)]
     reaper = _Reaper(frees_to=adm.DiskProbe(skipped="disk usage unreadable: OSError: gone"), host=host)
 
     decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper)
 
-    assert decision.admitted
-    assert "disk check skipped (disk usage unreadable: OSError: gone) [reaper removed 3 worktree(s), 95.0% before]" in (
-        decision.summary()
-    )
+    assert not decision.admitted and decision.disk_refused
+    assert decision.disk.probe.used_percent is None
+    assert decision.disk.before_reaper.used_percent == used
+    assert "disk usage unknown after the reaper" in decision.failures[0]
+    assert "disk usage unreadable: OSError: gone" in decision.summary()
+    assert decision.to_record()["disk_check_skipped"] == "disk usage unreadable: OSError: gone"
 
 
 def test_read_disk_uses_df_percent_and_reports_unreadable_statvfs(tmp_path):

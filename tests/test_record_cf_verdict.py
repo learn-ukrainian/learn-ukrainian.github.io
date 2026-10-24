@@ -414,9 +414,15 @@ def test_red_team_cross_seat_author_task_refused_before_publication(
         (tasks / "archive").mkdir()
         for suffix in ("json", "result"):
             (tasks / f"review-one.{suffix}").rename(tasks / "archive" / f"review-one.{suffix}")
-    facts = replace(
-        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", author_id),)
+    write_task(tasks, task_id=author_id, model="gpt-6.1-sol")
+    authors = recorder._attribute_commit_authors(
+        {"sha": SHA, "commit": {"message": f"work\n\nX-Agent: codex/gpt-6-luna\nX-Agent: codex/{author_id}"}},
+        repository=REPOSITORY,
+        task_root=tasks,
+        base_sha=lambda: OTHER,
     )
+    assert authors[1].task_id == author_id
+    facts = replace(facts_for({"openai"}), commits=authors)
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
         recorder.record(
@@ -892,8 +898,12 @@ def test_mixed_and_unknown_author_families_are_retained(monkeypatch, tmp_path):
     def commit(trailer):
         return {"commit": {"message": f"work\n\nX-Agent: {trailer}"}}
 
+    write_task(tasks, task_id="author-one", model="gpt-6.1-sol")
+    write_task(tasks / "archive", task_id="author-two", model="gemini-3.8-flash-high", agent="agy")
     monkeypatch.setattr(
-        recorder, "_pages", lambda args: [commit("codex/gpt-6.1-sol"), commit("agy/gemini-3.8-flash-high")]
+        recorder,
+        "_pages",
+        lambda args: [commit("codex/author-one\nX-Agent: agy/author-two"), commit("agy/gemini-3.8-flash-high")],
     )
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai", "google"}
     monkeypatch.setattr(recorder, "_pages", lambda args: [commit("cursor/task-without-record")])
@@ -1947,6 +1957,7 @@ def test_record_fixture_dry_run_through_publication_scanner(
 
 
 def test_comment_truncation_retains_marker():
+    reply = ("é`<!-- cf-verdict` " * 5_000) + "尾"
     body = recorder.build_comment(
         sha=SHA,
         task_id="review-one",
@@ -1954,10 +1965,15 @@ def test_comment_truncation_retains_marker():
         verdict="APPROVED",
         model="gpt-6.1-sol",
         family="openai",
-        reply="x" * 70_000,
+        reply=reply,
     )
     assert len(body.encode()) <= recorder.MAX_COMMENT_BYTES
     assert "[Review reply truncated" in body
+    assert body.encode().decode("utf-8") == body
+    assert "é`&lt;!-- cf-verdict` " in body
+    assert body.count(recorder.MARKER_PREFIX) == 1
+    assert body.splitlines()[-1].startswith(recorder.MARKER_PREFIX)
+    assert recorder.MARKER_PREFIX not in body.split("</details>", 1)[0]
     assert recorder.parse_marker(body)["task"] == "review-one"
 
 
@@ -2440,14 +2456,14 @@ def test_red_team_recorded_and_resolved_model_refused_before_publication(
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
     records = tasks / "archive" if archived else tasks
     write_task(records, task_id="author-one", agent="codex", model=f"{author_model}[1m]")
-    attribution = recorder._attribute_commit(
-        {"sha": SHA, "commit": {"message": "change\n\nX-Agent: codex/author-one"}},
+    authors = recorder._attribute_commit_authors(
+        {"sha": SHA, "commit": {"message": "change\n\nX-Agent: claude/claude-opus-5-5\nX-Agent: codex/author-one"}},
         repository=REPOSITORY,
         task_root=tasks,
         base_sha=lambda: OTHER,
     )
-    assert attribution.author_models == (f"{author_model}[1m]",)
-    facts = replace(facts_for({attribution.family}), commits=(attribution,))
+    assert authors[1].author_models == (f"{author_model}[1m]",)
+    facts = replace(facts_for({author.family for author in authors}), commits=authors)
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     prompt = red_team_task(
         tasks,

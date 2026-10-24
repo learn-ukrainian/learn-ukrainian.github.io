@@ -312,8 +312,10 @@ elif [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
   # them under the caller's global options (--exec-path, -C) and environment
   # (GIT_EXEC_PATH). Anything else (an alias, a git-<name> program elsewhere on
   # PATH, a typo Git could autocorrect) is refused before Git runs.
-  _opsec_commands="$("$real_git" "${_opsec_globals[@]}" --list-cmds=builtins,main)" || {
-    echo "OPSEC: could not list Git's commands, so '$_opsec_command' was not run." >&2
+  # Configuration diagnostics can contain private filenames or terminal controls.
+  # Only discovery is quiet; the requested command retains its own diagnostics.
+  _opsec_commands="$("$real_git" "${_opsec_globals[@]}" --list-cmds=builtins,main 2>/dev/null)" || {
+    echo "OPSEC: could not list Git's commands, so the command was not run." >&2
     exit 2
   }
   if [[ "$_opsec_command" == *$'\n'* || $'\n'"$_opsec_commands"$'\n' != *$'\n'"$_opsec_command"$'\n'* ]]; then

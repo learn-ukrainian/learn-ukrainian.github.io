@@ -431,7 +431,11 @@ def test_resolve_inter_agent_route_refuses_cursor_auto(model: str) -> None:
 
 @pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
 def test_resolve_inter_agent_route_admits_cursor_concrete_pins(model: str) -> None:
-    assert runner.resolve_inter_agent_route("cursor", model=model).model == model
+    if model == "composer-2.5":
+        with pytest.raises(runner.InterAgentTransportError, match="refuses non-active model"):
+            runner.resolve_inter_agent_route("cursor", model=model)
+    else:
+        assert runner.resolve_inter_agent_route("cursor", model=model).model == model
 
 
 @pytest.mark.parametrize("seat", ["acpx-kimi-shadow", "acpx-kimicc-shadow"])

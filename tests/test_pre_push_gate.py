@@ -148,11 +148,16 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 def _run_gate(
-    repo: Path, *, remote_sha: str | None = None, extra_env: dict[str, str] | None = None
+    repo: Path,
+    *,
+    remote_sha: str | None = None,
+    extra_env: dict[str, str] | None = None,
+    remote: tuple[str, str] = ("origin", "unused"),
+    remote_ref: str = "refs/heads/feature",
 ) -> subprocess.CompletedProcess[str]:
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     base = remote_sha or ZERO_SHA
-    update = f"refs/heads/feature {head} refs/heads/feature {base}\n"
+    update = f"refs/heads/feature {head} {remote_ref} {base}\n"
     return subprocess.run(
         [
             str(PYTHON),
@@ -161,8 +166,7 @@ def _run_gate(
             str(repo / "scripts/pre_commit/project_python.sh"),
             "--config",
             str(repo / ".pre-commit-config.yaml"),
-            "origin",
-            "unused",
+            *remote,
         ],
         capture_output=True,
         check=False,
@@ -285,7 +289,7 @@ def _bind_local_finalization(repo: Path, tmp_path: Path, monkeypatch: pytest.Mon
                     shutil.copytree(measurements, repo / ".git/lu-pre-push-gate", dirs_exist_ok=True)
 
     @contextlib.contextmanager
-    def no_credentials():
+    def no_credentials(**_kwargs):
         yield []
 
     monkeypatch.setattr(delegate, "_finalize_execution_context", execution)
@@ -361,7 +365,8 @@ def test_finalization_context_resolves_the_interpreter_without_a_local_venv(repo
     """Reject sys.executable bypasses and worktree roots in the shared interpreter resolver."""
     from scripts import delegate
 
-    linked = repo.parent / "linked"
+    linked = repo / ".worktrees/dispatch/codex/linked"
+    linked.parent.mkdir(parents=True)
     _git(repo, "worktree", "add", "-b", "linked", str(linked))
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
     sentinel = repo.parent / "sentinel-python"
@@ -481,7 +486,11 @@ def test_a_clean_range_is_accepted_and_leaves_a_receipt(repo: Path, monkeypatch:
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
 
-    result = _run_gate(repo)
+    result = _run_gate(
+        repo,
+        remote=("origin", "git@github.com:checkpoint-fixture-owner/checkpoint-fixture.git"),
+        remote_ref="refs/heads/entire/checkpoints/v1",
+    )
 
     assert result.returncode == 0, result.stderr
     assert len(_receipts(repo)) == 1
@@ -1113,6 +1122,42 @@ def test_pushing_a_commit_that_is_not_checked_out_is_refused(repo: Path) -> None
     )
 
     assert _verdict(result)["reason"] == "tree_mismatch"
+
+
+def test_public_entire_checkpoint_head_cannot_escape_pre_push_gate(repo: Path) -> None:
+    """Refuse a public checkpoint destination before concurrency, object lookup or receipt reuse (AC-03)."""
+    updates = (
+        f"refs/heads/feature {'2' * 40} refs/heads/feature {ZERO_SHA}\n"
+        f"HEAD {'1' * 40} refs/heads/entire/checkpoints/v1 {ZERO_SHA}\n"
+        f"(delete) {ZERO_SHA} refs/tags/entire/checkpoints/v1 {'3' * 40}\n"
+    )
+    launcher, config = _hook_inputs(repo)
+    result = subprocess.run(
+        [
+            str(PYTHON),
+            str(repo / ".githooks/pre_push_gate.py"),
+            "--launcher",
+            launcher,
+            "--config",
+            config,
+            "private",
+            "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git",
+        ],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        input=updates,
+        text=True,
+        timeout=60,
+        env=_env({gate.MAX_CONCURRENT_RUNS_ENV: "invalid"}),
+    )
+
+    assert result.returncode == 1, result.stderr
+    assert _verdict(result) == {"outcome": "refused", "reason": "public_entire_ref", "failing": []}
+    assert (
+        "Entire destination ref classes: refs/heads/entire/*, refs/tags/entire/*. Public origin updates are refused."
+        in result.stderr
+    )
 
 
 def test_deletes_and_tag_pushes_are_not_validated(repo: Path) -> None:

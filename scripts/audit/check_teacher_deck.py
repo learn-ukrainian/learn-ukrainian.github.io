@@ -1144,10 +1144,15 @@ def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
     deck = _load(deck_dir / DECK_FILE, report)
     cloze = _load(deck_dir / CLOZE_FILE, report)
     frozen = _load(deck_dir / FROZEN_FILE, report)
-    coverage = _load(deck_dir / COVERAGE_FILE, Report())
     summary: dict[str, Any] = {}
     if manifest is None or deck is None or cloze is None or frozen is None:
         return report, summary
+    coverage_path = deck_dir / COVERAGE_FILE
+    coverage_referenced = any(
+        row.get("path") == COVERAGE_FILE for row in (_manifest_records(manifest, Report()) or [])
+    )
+    coverage_report = Report() if coverage_referenced else report
+    coverage = _load(coverage_path, coverage_report) if coverage_path.exists() else None
     if (deck.get("schema"), deck.get("schemaVersion")) != DECK_SCHEMA:
         report.fail("deck schema/version mismatch")
     if (cloze.get("schema"), cloze.get("schemaVersion")) != CLOZE_SCHEMA:

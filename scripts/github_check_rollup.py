@@ -1,7 +1,8 @@
 """Collapse a GitHub status-check rollup to the latest run of each check.
 
-Check-run identity is ``(workflowName, name)``. A non-Actions app with no
-workflow (``appSlug``) uses ``(appSlug, name)``. A status context is
+Check-run identity includes the head, app, workflow ID and check name when
+REST provenance is available, or the workflow name for existing projections.
+A non-Actions app with no workflow uses its app identity. A status context is
 ``context``. A partial identity is kept in full: dropping it would hide a
 real failure when two workflows share a job name.
 
@@ -12,20 +13,79 @@ workflows that reuse a job name.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
+from urllib.parse import urlsplit
+
+
+def project_check_runs(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Preserve REST check provenance when building a status-check rollup."""
+    projected = []
+    for row in rows:
+        app = row["app"] if isinstance(row.get("app"), dict) else {}
+        projected.append({
+            **row, "__typename": "CheckRun", "status": str(row.get("status") or "").upper(),
+            "conclusion": str(row.get("conclusion") or "").upper(),
+            "startedAt": row.get("started_at"), "completedAt": row.get("completed_at"),
+            "appSlug": app.get("slug"), "appId": app.get("id"),
+        })
+    return projected
+
+
+def bind_workflow_runs(
+    rows: list[dict[str, Any]], head: str, repo: str, get_run: Callable[[int], object]
+) -> list[dict[str, Any]] | None:
+    """Attach workflow identity through exact-head, exact-suite Actions run reads.
+
+    A details URL is only a locator. The fetched run must bind its ID, suite
+    and head to the check before its workflow can identify a supersession.
+    Missing identity stays partial; failed or conflicting proof is unknown.
+    """
+    cache = {}
+    bound = []
+    for row in rows:
+        if not isinstance(row, dict) or row.get("head_sha") != head:
+            return None
+        item = dict(row)
+        app = row.get("app")
+        if not isinstance(app, dict):
+            app = {}
+        if app.get("id") == 15368 and app.get("slug") == "github-actions":
+            url = urlsplit(str(row.get("details_url") or ""))
+            prefix = f"/{repo}/actions/runs/"
+            suffix = url.path.removeprefix(prefix).split("/")
+            if url.netloc == "github.com" and url.path.startswith(prefix) and suffix[0].isdigit():
+                run_id = int(suffix[0])
+                if run_id not in cache:
+                    cache[run_id] = get_run(run_id)
+                run = cache[run_id]
+                suite = row.get("check_suite")
+                if (not isinstance(run, dict) or run.get("id") != run_id
+                        or run.get("head_sha") != head or not isinstance(suite, dict)
+                        or type(suite.get("id")) is not int or run.get("check_suite_id") != suite["id"]
+                        or type(run.get("workflow_id")) is not int or run["workflow_id"] <= 0):
+                    return None
+                item["workflowId"] = run["workflow_id"]
+                item["workflowName"] = run.get("name")
+        bound.append(item)
+    return bound
 
 
 def rollup_identity(entry: dict[str, Any]) -> tuple[str, ...] | None:
     """Stable identity, or ``None`` when the row must not be collapsed."""
     name = entry.get("name")
     if isinstance(name, str) and name.strip():
+        app = entry.get("appSlug")
+        head = str(entry.get("head_sha") or "")
+        workflow_id = entry.get("workflowId")
+        if type(workflow_id) is int and workflow_id > 0:
+            return ("check", head, str(app or ""), str(entry.get("appId") or ""), str(workflow_id), name.strip())
         workflow = entry.get("workflowName")
         if isinstance(workflow, str) and workflow.strip():
-            return ("check", workflow.strip(), name.strip())
-        app = entry.get("appSlug")
-        if isinstance(app, str) and app.strip():
-            return ("check", app.strip(), name.strip())
+            return ("check", head, str(app or ""), str(entry.get("appId") or ""), "workflow", workflow.strip(), name.strip())
+        if isinstance(app, str) and app.strip() and app != "github-actions":
+            return ("check", head, "app", app.strip(), str(entry.get("appId") or ""), name.strip())
         return None
     context = entry.get("context")
     if isinstance(context, str) and context.strip():

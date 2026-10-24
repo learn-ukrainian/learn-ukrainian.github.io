@@ -46,5 +46,5 @@ def test_call_cursor_runs_a_concrete_pin(monkeypatch):
     monkeypatch.setattr(calibration.subprocess, "run", lambda argv, **_k: captured.append(argv) or _Proc())
     monkeypatch.setattr(calibration, "parse_json_verdict", lambda stdout, duration_s: {"verdict": "clean"})
 
-    assert calibration.call_cursor("judge this", "composer-2.5") == {"verdict": "clean"}
-    assert captured[0][captured[0].index("--model") + 1] == "composer-2.5"
+    assert calibration.call_cursor("judge this", "grok-4.7-high") == {"verdict": "clean"}
+    assert captured[0][captured[0].index("--model") + 1] == "grok-4.7-high"

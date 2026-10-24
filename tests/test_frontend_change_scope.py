@@ -275,8 +275,12 @@ def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
     jobs = workflow["jobs"]
     assert "frontend-e2e" not in jobs
     frontend = jobs["frontend"]
-    # Skipped only when the merge queue reuses a green full run of the identical tree.
-    assert frontend["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
+    # Full-tier events run frontend; PR admission leaves it to the merge candidate.
+    assert frontend["if"] == (
+        "${{ !cancelled() && (github.event_name == 'merge_group' || "
+        "github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
+    )
+    assert "reuse" not in frontend.get("needs", [])
     assert "frontend" in jobs["ci-gate"]["needs"]
     steps = frontend["steps"]
     scope_index = next(index for index, step in enumerate(steps) if step.get("id") == "scope")

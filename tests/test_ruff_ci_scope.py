@@ -8,6 +8,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from tests.test_ci_pr_triggers import _EVENTS, _condition, _run_gate
+
 pytestmark = pytest.mark.repo_invariant
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -49,7 +51,7 @@ def _local_hooks() -> dict[str, dict]:
     return {hook["id"]: hook for hook in local_repos[0]["hooks"]}
 
 
-# CI Gate's pytest shards run these two on every pull request and merge group (#11315); the
+# CI Gate's full-suite shards run these two; PR admission collects tests (#11315). The
 # push gate runs no tests of its own (#11276), so a pytest hook at any stage here only adds
 # local wall time. A hook with no `stages` runs at every stage, so absence is the only pin.
 _CI_COVERED_PYTEST_GUARDS = ("repo-wide-marker-invariant", "task-store-resolver-guard")
@@ -71,13 +73,30 @@ def test_pre_commit_pytest_guards_covered_by_ci_are_absent() -> None:
     assert not stray, f"hooks {stray} run a CI-covered guard test under another id (#11315)"
 
 
-def test_pre_commit_sparse_collection_guard_stays_at_pre_push() -> None:
-    """The sparse guard's test is `slow`, which no CI shard runs, so it must stay at pre-push (#11315)."""
-    hook = _local_hooks().get("sparse-collection-guard")
-    assert hook is not None, "sparse-collection-guard is missing; no CI shard runs its test (marked slow) (#11315)"
-    assert hook.get("stages") == ["pre-push"], "sparse-collection-guard stages mismatch"
-    assert hook.get("pass_filenames") is False, "sparse-collection-guard pass_filenames must be False"
-    assert hook.get("files") == r"^tests/.*\.py$", "sparse-collection-guard files filter mismatch"
+def test_pre_commit_sparse_collection_guard_is_owned_by_required_ci() -> None:
+    """Reject pytest returning to push hooks or the slow sparse guard losing required CI ownership."""
+    hooks = _local_hooks()
+    assert "sparse-collection-guard" not in hooks, "sparse collection belongs in required CI, not push hooks"
     target = "tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent"
-    assert target in hook.get("entry", ""), f"sparse-collection-guard entry must reference {target}"
-    assert "--override-ini addopts=-q" in hook.get("entry", ""), "sparse-collection-guard entry must override addopts"
+    stray = [hook_id for hook_id, hook in hooks.items() if "pytest" in hook.get("entry", "")]
+    assert not stray, f"pytest hooks {stray} must not run during a push, including through implicit stages"
+    workflow = yaml.safe_load((_REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    jobs = workflow["jobs"]
+    assert "checks" in jobs["ci-gate"]["needs"], "CI Gate must require Checks"
+    verdict = next(step for step in jobs["ci-gate"]["steps"] if step.get("name") == "Require every job")
+    assert verdict["run"] == '"$PYTHON_BIN" -m scripts.ci.gate'
+    assert verdict["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
+    result = _run_gate("pull_request", CHECKS="failure")
+    assert result.returncode != 0, "Checks must participate in the gate verdict"
+    assert "checks: failure, expected success" in result.stdout
+    steps = [step for step in jobs["checks"]["steps"] if target in step.get("run", "")]
+    assert len(steps) == 1, "Checks must explicitly run the existing sparse collection guard node once"
+    step = steps[0]
+    assert step["if"] == "github.event_name != 'pull_request'"
+    for event, github in _EVENTS.items():
+        assert _condition(step["if"], {"github": github}) == (event not in {"opened", "synchronize", "reopened"})
+    assert not step.get("continue-on-error"), "the sparse guard must block required Checks on failure"
+    invocation = step["run"]
+    assert ".venv/bin/python -m pytest" in invocation
+    assert "--override-ini addopts=-q" in invocation, "the sparse guard must override pytest defaults"
+    assert "-m slow" in invocation, "the slow sparse guard must not inherit the shard's marker exclusion"

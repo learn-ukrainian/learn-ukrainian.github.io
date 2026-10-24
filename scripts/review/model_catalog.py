@@ -101,7 +101,7 @@ CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested
 CURSOR_AUTO_EXPECTED_RESOLUTION: str = "cursor_family"
 # Fixed v1-only compatibility policy; role-bearing catalogs derive these pins.
 # Retired with the legacy catalog interface in #9302 PR 4.
-CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7", "composer-2.5")
+CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7",)
 # Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
 # task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
 CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
@@ -110,7 +110,7 @@ CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
 CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
 CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
 # Wire pins shared with the launcher contract; its test rejects any drift.
-CURSOR_APPROVED_WIRE_PINS = frozenset({"grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"})
+CURSOR_APPROVED_WIRE_PINS = frozenset({"grok-4.7-high"})
 # Families never pinned as formal reviewers on the Cursor endpoint (#9488):
 # Composer shares the Kimi lineage (never a reviewer), Gemini never reviews
 # code, DeepSeek is excluded, and the decision admits non-Anthropic models only.
@@ -1039,7 +1039,6 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
     return model_id
 
 
-
 def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = None) -> str | None:
     """Apply Cursor harness model rules: Grok pinning, Claude refusal, and explicit allowlist."""
     if not model:
@@ -1096,8 +1095,7 @@ def _cursor_role_pins(catalog: dict[str, Any]) -> tuple[str, ...]:
     from scripts.review.role_resolution import resolve_routing_reference
 
     return tuple(
-        resolve_routing_reference({"role": "legacy_reviewers", "seat": seat}, catalog)
-        for seat in ("xai_reviewer", "cursor_coder")
+        resolve_routing_reference({"role": "legacy_reviewers", "seat": seat}, catalog) for seat in ("xai_reviewer",)
     )
 
 
@@ -1402,6 +1400,8 @@ def glm_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
 def resolve_glm_model(model: str, catalog: dict[str, Any] | None = None) -> tuple[str, dict[str, str]]:
     """Resolve one GLM input alias to native and GLMCC route metadata."""
     source = catalog or load_model_catalog()
+    if refusal := retired_model_refusal(model, source):
+        raise ModelCatalogError(refusal)
     aliases = glm_model_aliases(source)
     try:
         model_id = aliases[model]
