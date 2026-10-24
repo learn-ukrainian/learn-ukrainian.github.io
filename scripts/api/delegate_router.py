@@ -543,7 +543,9 @@ def _delegate_task_rows_locked(
             task_files.append((path.name, file_stat))
             newest_mtime_ns = max(newest_mtime_ns, file_stat.st_mtime_ns)
 
-        cached = _TASK_STATE_CACHE.get(path_str)
+        # A generation includes ctime, size and inode as well as mtime. Its
+        # counts must come from the records, not an mtime-only summary.
+        cached = _TASK_STATE_CACHE.get(path_str) if task_generation is None else None
 
         if cached is not None and cached[0] == mtime:
             _, summary, derived_status, alive, claimed_repo, pid = cached
