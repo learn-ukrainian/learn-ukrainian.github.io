@@ -23,12 +23,12 @@ never fine.
 3. **Disk and load.** `df -h .`, `uptime`, `git worktree list | wc -l`. When disk climbs,
    run the reaper and retention tools before admitting write workers; never delete bulk
    corpus or data without a separate operator-authorized task (core.md P6).
-   **Lane machinery.** Read the latest lane-wake and driver-keeper tick result in the
-   journal (`journalctl --user -u lu-lane-wake.service`, `-u lu-driver-keeper.service`).
-   Each must show `"errors": []` and every running lane under `panes`. Any error, or an
-   empty `panes` list, means no lane gets nudged; fix it this cycle. A keeper config that
-   the CTO edits by hand gets one tick checked right after the edit (one unknown key in
-   the lane-pause file once paused every lane for 7.5 hours).
+   **Lane machinery.** Read the latest tick result of the host driver keeper and its lane
+   wake. They are host-local code, not in this repository; their units and log location
+   belong in the private operations doc. A tick must report no errors and must list
+   every running lane pane. An error, or no lane panes, means no lane gets nudged; fix it
+   this cycle. After a hand edit of a keeper config, check one tick right away (one
+   unknown key in the lane-pause file once made every lane count as paused for 7.5 hours).
 4. **Open PRs**, from the scorecard metrics when present, in every repository the fleet
    lands in, with `number`, `headRefOid`, `mergeable`, `mergeStateStatus`, `isDraft`,
    `reviewDecision`. Per PR: a review of record at the current `headRefOid` (verdict,
