@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -13,8 +14,11 @@ from scripts.fleet_comms.message_plane import (
     MessagePlane,
     default_plane_root,
     invocation_digest,
+    read_plane_status,
     resolve_plane_mode,
+    verify_authority_cutover,
 )
+from scripts.fleet_comms.paths import PlaneRootAnchorError
 
 
 def test_resolve_plane_mode_env_unset_uses_configured_default(
@@ -46,6 +50,24 @@ def test_default_plane_root_anchors_linked_worktree_to_primary(
     expected = primary / "batch_state" / "fleet-comms" / "v1"
     assert default_plane_root(repo_root=primary) == expected
     assert default_plane_root(repo_root=worktree) == expected
+
+    # A dedicated default directory is valid; the checkout itself is never storage.
+    assert read_plane_status(repo_root=worktree)["read_only"] is True
+    assert not expected.exists()
+    alias = tmp_path / "checkout-alias"
+    alias.symlink_to(worktree, target_is_directory=True)
+    before = sorted(tmp_path.rglob("*"))
+    connect = Mock(side_effect=AssertionError("checkout root reached a connection"))
+    monkeypatch.setattr("scripts.fleet_comms.message_plane.cp_connect", connect)
+    for candidate in (primary, worktree, alias):
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+            read_plane_status(root=candidate)
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+            verify_authority_cutover(root=candidate)
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+            MessagePlane(mode="authority", root=candidate)
+    connect.assert_not_called()
+    assert sorted(tmp_path.rglob("*")) == before
 
 
 def test_default_plane_root_preserves_override_and_hard_fails_outside_git(

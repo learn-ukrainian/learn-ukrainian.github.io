@@ -7,6 +7,7 @@ import json
 import sqlite3
 import stat
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -17,6 +18,7 @@ from scripts.fleet_comms.adapter_conformance import (
 )
 from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
 from scripts.fleet_comms.contracts import CompletionState
+from scripts.fleet_comms.paths import PlaneRootAnchorError
 from scripts.fleet_comms.request_executor import RequestExecutor
 
 # ── PR-C: artifact store ────────────────────────────────────────────────────
@@ -34,7 +36,10 @@ def test_artifact_store_round_trip_and_dedup(tmp_path: Path) -> None:
         assert b.sha256 == a.sha256
 
 
-def test_artifact_store_uses_durable_sqlite_and_private_modes(tmp_path: Path) -> None:
+def test_artifact_store_uses_durable_sqlite_and_private_modes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Private storage must never initialize or connect at a checkout root."""
     root = tmp_path / "fresh" / "fleet-comms" / "v1"
     with ArtifactStore(root=root) as store:
         store.store_text("private conversation", producer="test")
@@ -57,6 +62,35 @@ def test_artifact_store_uses_durable_sqlite_and_private_modes(tmp_path: Path) ->
                 ).fetchone()[0] == 1
             finally:
                 store.connection.rollback()
+
+    primary = tmp_path / "primary"
+    (primary / ".git").mkdir(parents=True)
+    linked = tmp_path / "linked"
+    linked.mkdir()
+    (linked / ".git").write_text("gitdir: ../primary/.git/worktrees/linked\n")
+    alias = tmp_path / "alias"
+    alias.symlink_to(linked, target_is_directory=True)
+    before = sorted(tmp_path.rglob("*"))
+    connect = Mock(side_effect=AssertionError("checkout root reached backend"))
+    prepare = Mock(side_effect=AssertionError("checkout root reached mkdir/chmod"))
+    with monkeypatch.context() as guard:
+        guard.setattr("scripts.fleet_comms.artifacts.cp_connect", connect)
+        guard.setattr(ArtifactStore, "_prepare_private_dir", prepare)
+        for candidate in (primary, linked, alias, primary / "absent" / ".."):
+            for readonly in (False, True):
+                with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+                    ArtifactStore(root=candidate, readonly=readonly)
+        guard.setenv("FLEET_COMMS_ROOT", str(alias))
+        with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+            ArtifactStore()
+    connect.assert_not_called()
+    prepare.assert_not_called()
+    assert sorted(tmp_path.rglob("*")) == before
+
+    loop = tmp_path / "loop"
+    loop.symlink_to(loop)
+    with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_unresolvable$"):
+        ArtifactStore(root=loop)
 
 
 def test_artifact_store_wal_setup_retries_fast_lock_failures(monkeypatch) -> None:

@@ -2,23 +2,28 @@
 
 from __future__ import annotations
 
+import argparse
 import io
 import json
 import os
 import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
+from scripts.fleet_comms import cli as comms_cli
 from scripts.fleet_comms.cli import (
     EXIT_ERROR,
     EXIT_NOT_FOUND,
     EXIT_OK,
+    build_parser,
     get_formal_review_job,
     main,
 )
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
+from scripts.fleet_comms.paths import PlaneRootAnchorError
 
 
 def _seed_plane_db(root: Path) -> Path:
@@ -88,6 +93,7 @@ def test_plane_status_cli_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, 
 
 
 def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    """Every --root entrypoint refuses a checkout before invoking its handler."""
     monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
     monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
     root = tmp_path / "custom-root"
@@ -101,8 +107,59 @@ def test_plane_status_cli_root_flag(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     assert data["store"]["kind"] == "comms-plane"
     assert "plane_root" not in data
 
+    checkout = tmp_path / "checkout"
+    (checkout / ".git").mkdir(parents=True)
+    before = sorted(checkout.rglob("*"))
+    pending = [((), build_parser())]
+    entrypoints = []
+    while pending:
+        command, parser = pending.pop()
+        for action in parser._actions:
+            if isinstance(action, argparse._SubParsersAction):
+                pending.extend(((*command, name), child) for name, child in action.choices.items())
+        if not any("--root" in action.option_strings for action in parser._actions):
+            continue
+        argv = list(command)
+        required = [action for action in parser._actions if action.required]
+        for group in parser._mutually_exclusive_groups:
+            if group.required:
+                required.append(group._group_actions[0])
+        for action in required:
+            if action.option_strings:
+                argv.append(action.option_strings[0])
+            argv.append("1" if action.type is int else "fixture")
+        entrypoints.append((argv, parser.get_default("func").__name__))
+    assert len(entrypoints) == 25
+    for argv, handler_name in entrypoints:
+        handler = Mock(side_effect=AssertionError("unsafe root reached command handler"))
+        with monkeypatch.context() as guard:
+            guard.setattr(f"scripts.fleet_comms.cli.{handler_name}", handler)
+            assert main([*argv, "--root", str(checkout)]) == EXIT_ERROR
+        output = capsys.readouterr()
+        assert output.out == ""
+        assert output.err == "plane_root_is_git_checkout\n"
+        handler.assert_not_called()
+    assert sorted(checkout.rglob("*")) == before
 
-def test_get_formal_review_job_helper(tmp_path: Path) -> None:
+    boundary_args = SimpleNamespace(root=str(checkout), tasks_dir=str(tmp_path / "uncreated"))
+    with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+        comms_cli._resolve_plane_db(boundary_args)
+    with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+        comms_cli.cmd_bottleneck_metrics(boundary_args)
+    assert not (tmp_path / "uncreated").exists()
+    assert comms_cli._resolve_plane_db(SimpleNamespace(root=str(root))) == root / "comms.sqlite3"
+
+    alias = tmp_path / "checkout-alias"
+    alias.symlink_to(checkout, target_is_directory=True)
+    monkeypatch.chdir(tmp_path)
+    assert main(["plane-status", "--root", "checkout-alias/absent/.."]) == EXIT_ERROR
+    assert capsys.readouterr().err == "plane_root_is_git_checkout\n"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(alias))
+    assert main(["plane-status"]) == EXIT_ERROR
+    assert capsys.readouterr().err == "plane_root_is_git_checkout\n"
+
+
+def test_get_formal_review_job_helper(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = tmp_path / "plane"
     _seed_plane_db(root)
     job = get_formal_review_job("rev-abc", root=root)
@@ -111,6 +168,16 @@ def test_get_formal_review_job_helper(tmp_path: Path) -> None:
     assert job["gate_kind"] == "cross-family-review"
     assert len(job["attempts"]) == 1
     assert job["attempts"][0]["review_attempt_id"] == "att-1"
+
+    # Even an existing DB at a checkout root must be refused before opening it.
+    (root / ".git").mkdir()
+    before = (root / "comms.sqlite3").read_bytes()
+    connect = Mock(side_effect=AssertionError("checkout root reached a connection"))
+    monkeypatch.setattr("scripts.fleet_comms.cli.cp_connect", connect)
+    with pytest.raises(PlaneRootAnchorError, match=r"^plane_root_is_git_checkout$"):
+        get_formal_review_job("rev-abc", root=root)
+    connect.assert_not_called()
+    assert (root / "comms.sqlite3").read_bytes() == before
 
 
 def test_formal_job_get_cli(tmp_path: Path, capsys) -> None:
