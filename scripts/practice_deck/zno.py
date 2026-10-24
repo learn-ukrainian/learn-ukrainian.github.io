@@ -289,6 +289,25 @@ def _task_id(task_id: int) -> str:
     return f"zno:{task_id}"
 
 
+def _validate_explanation(item: dict[str, Any], explanation: dict[str, Any]) -> None:
+    """Refuse a registered explanation that does not describe this item."""
+    task_id = str(item["znoTaskId"])
+    explanation_letter = explanation.get("correctLetter")
+    item_letter = str(item["correctLetter"])
+    if explanation_letter != item_letter:
+        raise ValueError(
+            f"ZNO explanation {task_id} has correctLetter {explanation_letter!r} "
+            f"but the item has correctLetter {item_letter!r}"
+        )
+    answer_letters = list(LETTER_TO_INDEX)[: len(item["options"])]
+    unknown_letters = sorted(set(explanation.get("options") or {}) - set(answer_letters))
+    if unknown_letters:
+        raise ValueError(
+            f"ZNO explanation {task_id} describes option letters {unknown_letters!r} "
+            f"outside the item's answer letters {answer_letters!r}"
+        )
+
+
 def _topic_norm_unmapped_tags(conn: SQLiteConnection) -> list[dict[str, object]]:
     """Expose tagged rows which remain outside the deterministic normalizer."""
     rows = conn.execute(
@@ -384,7 +403,9 @@ def build_zno_shards(
                         quarantined_markup += 1
                     continue
                 if task_id in explanations_by_id:
-                    item["explanation"] = explanations_by_id[task_id]
+                    explanation = explanations_by_id[task_id]
+                    _validate_explanation(item, explanation)
+                    item["explanation"] = explanation
                 items.append(item)
                 emitted_ids.add(int(row["id"]))
             emitted_total += len(items)
