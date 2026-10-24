@@ -1176,20 +1176,29 @@ def run(
             if re.search(display_suffix + r"\Z", key):
                 identities.discard(key)
             identity_patterns = [re.escape(value) for value in sorted(identities)]
-            # A changed display value carries the raw-key digest. Only those
-            # values can accept Markdown escapes without conflating raw keys.
+            # Changed display values carry the raw-key digest, so canonical
+            # titles can accept their Markdown escapes without conflating keys.
             identity_patterns.extend(
                 "".join((r"\\?" if char in r"\`*_{}[]()#+.!>~-" else "") + re.escape(char) for char in value)
                 for value in sorted(identities - {key})
             )
             identity_pattern = "(?:" + "|".join(identity_patterns) + ")"
+            # Titles retain raw authority. In Markdown references an unchanged
+            # key may be escaped, but a literal backslash key is ambiguous there.
+            reference_identities = identities - {key} if "\\" in key else identities
+            reference_pattern = r"(?!)"
+            if reference_identities:
+                reference_pattern = "(?:" + "|".join(
+                    "".join((r"\\?" if char in r"\`*_{}[]()#+.!>~-" else "") + re.escape(char) for char in value)
+                    for value in sorted(reference_identities)
+                ) + ")"
             # Canonical titles and code spans carry complete identities. Legacy
             # prose references end at a line or sentence delimiter, rather than
             # accepting any character outside an identifier boundary blacklist.
             title_prefix = "Merge queue flaky test: "
             pattern = re.compile(
-                r"(?<!\S)(?:`" + identity_pattern + r"`|(?:\(" + identity_pattern
-                + r"\)|" + identity_pattern + r")(?=$|[.,;!?](?=\s|$)))", re.M
+                r"(?<!\S)(?:`" + reference_pattern + r"`|(?:\(" + reference_pattern
+                + r"\)|" + reference_pattern + r")(?=$|[.,;!?](?=\s|$)))", re.M
             )
             marker = "<!-- mq-keeper-flake -->"
             matches = []
@@ -1199,10 +1208,10 @@ def run(
                 issue_title, issue_body = (str(item.get(field) or "") for field in ("title", "body"))
                 if identities and (
                     re.fullmatch(title_prefix + identity_pattern, issue_title)
-                    or ((bool(tests) or marker in issue_body or re.match(
-                        "`" + identity_pattern + "` failed merge_group runs on distinct PRs ", issue_body
+                    or (not issue_title.startswith(title_prefix) and (bool(tests) or marker in issue_body or re.match(
+                        "`" + reference_pattern + "` failed merge_group runs on distinct PRs ", issue_body
                     )) and (
-                        (not issue_title.startswith(title_prefix) and pattern.search(issue_title))
+                        pattern.search(issue_title)
                         or pattern.search(issue_body)
                     ))
                 ):

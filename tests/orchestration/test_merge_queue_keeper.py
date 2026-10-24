@@ -2338,13 +2338,15 @@ def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, wh
         fake.issue_rows = [
             {"number": 1, "state": "closed", "title": node},
             {"number": 2, "pull_request": {}, "title": node},
+            {"number": 29, "title": "Merge queue flaky test: " + node.replace("_", r"\_"),
+             "body": f"`{node}`"},
             {"number": 30, "title": f"Merge queue flaky test: {rendered} tail",
              "body": f"`{rendered} tail`"},
             {"number": 31, "title": f"Merge queue flaky test: {rendered}‹",
              "body": f"Quarantine {rendered}‹."},
             {"number": 77, "state": "open", "title": "Repair the test", "body": "",
              where: f"Merge queue flaky test: {rendered}" if where == "title" else (
-                 f"`{rendered}`".replace("_", r"\_") if rendered != node else f"Quarantine ({node})."
+                 f"`{rendered}`".replace("_", r"\_")
              )},
         ]
         lines, failed = run(fake, path, monkeypatch)
@@ -2353,6 +2355,9 @@ def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, wh
         assert len(updates) == 1 and updates[0][0] == 77
         assert "#41, #42" in updates[0][1] and "101, 102" in updates[0][1]
         assert "issue" not in mutations(fake)
+        assert not any("CTO finding:" in line for line in lines)
+        if where == "body":
+            fake.issue_rows[-1]["body"] = "Quarantine (" + rendered.replace("_", r"\_") + ")."
         run(fake, path, monkeypatch)
         assert len([kind for kind, _ in fake.actions if kind == "issue-comment"]) == 1
         state = json.loads(path.read_text())
@@ -2380,7 +2385,7 @@ def test_flake_comment_cap_survives_lost_local_state(tmp_path, monkeypatch):
         {"job": "pytest", "test": node, "pr": pr, "at": timestamp} for pr in (41, 42)
     ]}))
     fake = FakeGitHub()
-    fake.issue_rows = [{"number": 77, "body": node}]
+    fake.issue_rows = [{"number": 77, "title": f"Merge queue flaky test: {node}", "body": node}]
     fake.comments_rows.append({"body": "<!-- mq-keeper-flake -->", "user": {"login": "driver"},
                                "created_at": keeper.datetime.now(keeper.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")})
     run(fake, path, monkeypatch)
