@@ -12,16 +12,17 @@ Concretely, this means:
 
 1. **Educational purpose only.** Every source we touch is touched for the purpose of teaching Ukrainian as a foreign language to English speakers (and adjacent learner groups), with decolonized pedagogy as a stated goal.
 2. **No revenue, ever.** No ads, no sponsorships, no premium tier, no Patreon, no merch, no licensing-out. If the project ever needs hosting funds, those will be raised transparently and never tied to gating content.
-3. **Good-faith application of fair use.** Where third-party material is used as RAG retrieval context for LLM generation (textbooks, dictionaries, style guides), the use is internal-context-only — never republished verbatim. Fair-use boundaries (≤200 chars per quotation, transformative use, attribution) are documented per source category below.
-4. **Honest-mistake clause.** If a specific quotation, translation, or derivative work in this repository turns out to exceed the bounds we believed applied, that was an unintentional mistake — not an attempt to extract value from someone else's work. Open an issue or contact the maintainer and the offending content will be removed, paraphrased, or attributed within 7 days. The maintainer is reachable through the GitHub repository.
+3. **Recorded source use.** The [source register](docs/sources/permissions-register.md#operator-decisions-binding) records the project's source-use decisions. Current content stays on the site and in exports under `d1_content_stays`. Decisions `o1_verbatim_use` and `o3_textbooks_used` allow verbatim use of in-copyright sources, including school and university textbooks, under the maintainer's IP responsibility. These decisions do not grant a new licence to the underlying works. Keep a register entry for each source, a source locator for each quotation, attribution, and licence notices on released files. The register records provenance and takedown information; it is not a publication gate.
+4. **Honest-mistake clause.** If a specific quotation, translation, or derivative work in this repository turns out to exceed the bounds we believed applied, that was an unintentional mistake — not an attempt to extract value from someone else's work. Open a GitHub issue naming the source and the content, and the offending content will be removed, paraphrased, or attributed within 7 days. The maintainer is reachable through the GitHub repository.
 5. **Source-of-truth tracking.** Every dictionary, textbook, blog, video, and primary text we ingest is listed in this document with our understood license tier. If we add a new source, this file gets updated in the same PR. The historical record is preserved in git so the path of how each source landed in the project is auditable.
 6. **License tiers, in plain language:**
    - **Public domain** (Shevchenko, Franko, Ukrainka, pre-1924 chronicles, Грінченко 1907, etc.) — quotable in full, attribution courtesy not requirement.
-   - **Free with attribution** (Wikipedia CC BY-SA, Dobra Forma CC, VESUM open-source, free-to-view YouTube transcripts under fair-use educational frame) — usable, MUST cite.
-   - **Fair use** (modern Ukrainian school textbooks, copyrighted dictionaries used as linguistic verification tooling) — internal RAG context only; ≤200-char direct quotations; transformative pedagogical use; never republished verbatim.
-   - **All rights reserved** (commercial paid materials such as the Ukrainian Lessons Podcast paid membership, Anna Ohoiko premium PDFs, Анна-Ohoiko-authored books) — STUDY only by the maintainer for personal language reference, never copied into the repository, notes kept outside the repo (`~/.claude/projects/.../memory/` or gitignored `private-notes/`).
+   - **Free with attribution** (Wikipedia CC BY-SA, Dobra Forma CC, free-to-view YouTube transcripts under fair-use educational frame) — usable, MUST cite.
+   - **VESUM data** — CC BY-NC-SA 4.0. Cite the authors and the version used, and indicate changes. Its software is GPL-3.0-or-later.
+   - **In-copyright sources** (textbooks and dictionaries) — use follows the recorded decisions and the source-specific quotation and attribution requirements below.
+   - **Anna Ohoiko / ULP** — all rights reserved. The `ulp_private` register entry records the permitted dictionary use and attributed quotations described below. Prose, transcripts, flashcards, and audio remain private references.
 
-If you are a rights-holder of any source referenced in this document and believe our use exceeds the boundaries we describe, please open a GitHub issue or contact the maintainer directly. The intent is to teach Ukrainian; nothing in this project is intentionally adverse to source authors.
+If you are a rights-holder of any source referenced in this document and believe our use exceeds the boundaries we describe, please open a GitHub issue naming the source and the content. The intent is to teach Ukrainian; nothing in this project is intentionally adverse to source authors.
 
 ---
 
@@ -44,7 +45,7 @@ It does NOT cover:
 - `starlight/src/components/**` — React component code (MIT, see `LICENSE`)
 - `data/sources.db` and anything under `data/` — third-party source material under the licenses of the original authors (see "Third-party source material" below)
 - `docs/references/private/` — copyrighted materials for the maintainer's personal verification only, NEVER redistributed
-- `docs/resources/ukrainianlessons/**` — Ukrainian Lessons Podcast (ULP) commercial reference material, license-restricted, NEVER copy or redistribute
+- `docs/resources/ukrainianlessons/**` — Ukrainian Lessons Podcast (ULP) material under its own terms and recorded consent. See the ULP entry below.
 
 ---
 
@@ -85,7 +86,7 @@ The project maintains a SQLite FTS5 index at `data/sources.db` containing ~23,00
 
 **Fair use boundaries** (applied during wiki compilation and module authoring):
 
-1. **Internal retrieval only.** Full textbook chunks are used as context for LLM generation and are never copied verbatim into module content. The wiki compilation prompts explicitly require the writer to synthesize information across sources and cite chunks by ID, not quote them at length.
+1. **Retrieval and cited source records.** Textbook chunks support generation and the source-record use approved in `o1_verbatim_use` and `o3_textbooks_used`. The wiki compilation prompts explicitly require the writer to synthesize information across sources and cite chunks by ID, not quote them at length.
 2. **Maximum 200 characters per direct quotation.** Any direct quotation from a textbook that exceeds ~200 characters is a copyright compliance violation and must be paraphrased. Longer quotes are permitted only from public-domain works (chronicles, legal documents, etc. — see the "Primary sources" category below).
 3. **Transformative use.** Our modules are pedagogically different from the source textbooks — same grammar topic, different presentation, different examples, different audience (English-speaking L2 learners). The transformation is substantive, not cosmetic.
 4. **Educational non-profit use.** The curriculum is distributed free-of-charge with no ads, subscriptions, or paywalls.
@@ -112,23 +113,23 @@ Wikipedia is NEVER cited as the primary source for historical dates, names, or e
 
 ### External blogs, podcasts, and YouTube
 
-- **ukrainianlessons.com** (Ukrainian Lessons Podcast, Anna Ohoiko) — **commercial, all rights reserved.** We may reference their free blog articles as external resources (link out only) but NEVER copy content from the paid ULP membership. The relationship is understood by the ULP author; see `docs/resources/external_resources.yaml` for the referenced URL set.
+- **ukrainianlessons.com** (Ukrainian Lessons Podcast, Anna Ohoiko) — **commercial, all rights reserved.** Free blog articles remain external resource links. The authoritative [`ulp_private` register entry](docs/sources/permissions-register.yaml) records the 2026-10-20 consent. Dictionary parts of Oho! A1, 1000 words, 500 verbs, and ULP lesson-note vocabulary zones may feed the database and word cards. Public learner pages may quote example sentences and glosses with visible attribution, `Anna Ohoiko, <book title>`, linked to her work where possible. Mark quotation boundaries and retain each source locator. Prose, transcripts, flashcards, and audio remain private references. See `docs/resources/external_resources.yaml` for the referenced URL set.
 - **Реальна Історія (Akím Galímov), imtgsh, Istoria-Movy, Speak Ukrainian, Red Purple Ukrainian** — YouTube channels with free-to-view content. Subtitle transcripts are used internally for wiki compilation as context, not republished. Links to the original videos appear in module Ресурси tabs for learners.
 - **Dobra Forma (opentext.ku.edu)** — Creative Commons licensed by the University of Kansas. We reference the URLs; derivative teaching material is separately attributed.
-- **Горох (goroh.pp.ua), e2u (e2u.org.ua), Wikidata (wikidata.org), VESUM** — linguistic dictionaries and structured knowledge bases, freely available for educational use. Never redistributed in bulk; used only as query services.
+- **Горох (goroh.pp.ua), e2u (e2u.org.ua), Wikidata (wikidata.org), VESUM** — linguistic dictionaries and structured knowledge bases, freely available for educational use. Source-derived fields follow the recorded uses and citations in the [source register](docs/sources/permissions-register.md).
 
 ### Dictionaries
 
-The following dictionaries are ingested as SQLite FTS5 indices for internal linguistic verification only. They are NOT republished:
+The following dictionaries support linguistic verification and cited source-derived fields. The [source register](docs/sources/permissions-register.md) records their uses in word cards, the site, and exports. Its machine-readable YAML is authoritative.
 
 | Dictionary | License / Source | Use |
-|---|---|---|
-| **СУМ-11** | Public domain (Угода, Академія наук УРСР 1970-1980). ⚠️ Soviet-era ideologically framed for ~5.6% of entries (#1659 sovietization scan; risk-flagged at row level so reviewers can paraphrase or substitute). | Definitions (with sovietization-aware paraphrasing) |
+| --- | --- | --- |
+| **СУМ-11** | In copyright. See the `sum11` source-register entry. ⚠️ Soviet-era ideologically framed for ~5.6% of entries (#1659 sovietization scan; risk-flagged at row level so reviewers can paraphrase or substitute). | Sovietization evidence only; pair quotations with the modern norm |
 | **Грінченко 1907** | Public domain (100+ years old). Tool prefix renamed to `search_grinchenko_1907` (#1679) for accuracy — this is a historical Ukrainian dictionary, not an etymology dictionary. | Pre-Soviet attestation, historical forms |
-| **ЕСУМ vol 1 (А-Г)** | Academic dictionary, Інститут мовознавства НАН України. PoC scope = vol 1 only (PR #1672, 2026-05-04); vols 2-6 tracked in #1662. Used as RAG retrieval index for etymological context; not redistributed. | Etymology lookup |
-| **slovnyk.me — SUM mirror** (`/dict/sum/`, `/dict/newsum/`, `/dict/linguistic_norm/`) | Per-query fair-use lookup against the public web mirror. Adopted 2026-05-05 as the modern definitional baseline replacement for the discontinued/incomplete СУМ-20 ingestion plan (#1667 superseded). Bulk redistribution NOT performed; queries cached locally for verifier reuse only. | Modern definitional baseline |
-| **VESUM** | [MIT-ish, morphological database](https://github.com/brown-uk/dict_uk) | Lemma verification, POS tagging |
-| **Балла EN→UK** | Historical work (copyright expired) | Translation assistance |
+| **ЕСУМ vol 1 (А-Г)** | Academic dictionary, Інститут мовознавства НАН України. PoC scope = vol 1 only (PR #1672, 2026-05-04); vols 2-6 tracked in #1662. In copyright. Cited etymology fields follow the `esum` register entry. | Etymology lookup |
+| **slovnyk.me — SUM mirror** (`/dict/sum/`, `/dict/newsum/`, `/dict/linguistic_norm/`) | The `slovnyk_me` and `vts_busel_slovnyk_me` register entries record the mirror terms and underlying dictionary rights separately. Cited fields follow those entries and `d1_content_stays`. | Modern definitional baseline |
+| **VESUM** | [CC BY-NC-SA 4.0 dictionary data; GPL-3.0-or-later software](https://github.com/brown-uk/dict_uk) | Lemma verification, POS tagging |
+| **Балла EN→UK** | All rights reserved. See the `balla` source-register entry. | Translation assistance |
 | **Антоненко-Давидович «Як ми говоримо»** | Copyrighted (Антоненко-Давидович estate). Used under fair-use for linguistic verification; individual style-rule citations in module content are limited to <200 chars. Currently 279 entries indexed of ~600+ in source; full-text ingestion of the 169-page text tracked in #1663 (open PDF at Internet Archive identifier `hovorymo1970` confirmed live 2026-05-05). | Calque / Russianism detection |
 | **Гринчишин/Сербенська «Словник паронімів української мови» (1986 NBU scan)** | License says "use is for навчальною та науковою некомерційною метою" (educational and scientific non-commercial use). Aligns with project posture. Ingestion via NBU PDF OCR pending (#1666). | Paronym pair verification |
 | **Karavansky «Російсько-український словник складної лексики» (r2u digital edition)** | r2u.org.ua/dicts/karavansky web edition; no API or bulk dump available. Per-query fair-use lookup planned (#1664); not yet ingested. | RU→UK complex lexicon |
@@ -136,7 +137,7 @@ The following dictionaries are ingested as SQLite FTS5 indices for internal ling
 | **Фразеологічний словник** | Copyrighted. Same fair-use boundaries as textbooks. | Idiom verification |
 | **Правопис 2019** | Public (Академія наук України) | Orthography rules |
 | **Ukrajinet WordNet** | 122K synsets; auto-translated from Open English WordNet per upstream README. ⚠️ Quality concern documented (#1657 Tier 3 audit). | Synonym lookup (with caveats) |
-| **English Wiktionary via Kaikki.org / wiktextract** | English Wiktionary extract, **CC BY-SA 3.0**. Preprocessed from the local Kaikki Ukrainian JSONL extract into a compact per-lemma lookup; Atlas pages that use it render the attribution line "Pronunciation / etymology from English Wiktionary, CC BY-SA 3.0." | IPA pronunciation and final-fallback etymology |
+| **English Wiktionary via Kaikki.org / wiktextract** | English Wiktionary extract, **CC BY-SA 4.0** and GFDL. Preprocessed from the local Kaikki Ukrainian JSONL extract into a compact per-lemma lookup; Atlas pages that use it must show the attribution line "Pronunciation / etymology from English Wiktionary, CC BY-SA 4.0." | IPA pronunciation and final-fallback etymology |
 | **e2u.org.ua** | Aggregator © r2u.org.ua (compilers Rysin, Starko et al.; constituent works: Гороть 2011/2016, Андрусишин–Крет 1955, scientific UK↔EN, …). Non-commercial educational use. | Per-query UK→EN lookup + short learner gloss + attribution. No bulk dump, no GitHub ingest. |
 | **Wikidata** | CC0 (Wikimedia Foundation) | Per-query UK→EN lookup for Word Atlas translation fallback. No bulk dump, no GitHub ingest. |
 
@@ -164,6 +165,6 @@ For modified derivative works:
 
 ## Questions
 
-Licensing questions go to issues on GitHub or the maintainer directly. The above is a best-effort plain-language summary of the legal position — it is not legal advice. If you need formal permissions or have commercial redistribution questions beyond the standard CC BY-SA 4.0 terms, open an issue and we'll figure it out.
+Licensing questions and takedown requests go to GitHub issues. The above is a best-effort plain-language summary of the legal position — it is not legal advice. If you need formal permissions or have commercial redistribution questions beyond the standard CC BY-SA 4.0 terms, open an issue and we'll figure it out.
 
 Last updated: 2026-08-25 — added Wikidata (CC0, Wikimedia Foundation) for Word Atlas English translation lookup fallback (#4387). Predecessor: 2026-08-24 — added e2u.org.ua (Rysin, Starko et al.) for Word Atlas English translation lookup fallback (#4387). Predecessor: 2026-06-12 — added English Wiktionary via Kaikki.org / wiktextract (CC BY-SA 3.0) for Word Atlas IPA pronunciation and final-fallback etymology. Predecessor: 2026-05-05 — added good-faith / non-profit-posture section (user-requested defensive documentation), expanded dictionary inventory (ЕСУМ vol 1, slovnyk.me as СУМ-20 supersession, Гринчишин/Сербенська paronyms, Karavansky r2u, Holovashchuk pending, Ukrajinet caveat), noted СУМ-11 sovietization risk + Грінченко rename. Predecessor: 2026-04-11 (#1092).
