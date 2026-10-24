@@ -25,14 +25,18 @@ from uuid import uuid4
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 AUDIT_DIR = Path(__file__).resolve().parent
-if str(AUDIT_DIR) not in sys.path:
-    sys.path.insert(0, str(AUDIT_DIR))
-
-from content_surface_gates import policy_for_level, scan_module_surface
-from llm_qg_store import CONTENT_FILES, content_sha_for_module
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
+try:
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.audit.content_surface_gates import policy_for_level, scan_module_surface
+    from scripts.audit.llm_qg_store import CONTENT_FILES, content_sha_for_module
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 FIXTURE_SCHEMA_VERSION = "curriculum_ua_qg_fixtures.v1"
 EVIDENCE_SCHEMA_VERSION = "curriculum_ua_qg_evidence.v1"
@@ -43,18 +47,18 @@ RULE_SETS = (RULE_SET_CURRICULUM, RULE_SET_HRAMATKA)
 
 
 def _hramatka_rules():
-    """Lazy-load the separate hramatka rule module (never merge with PHRASE_RULES).
-
-    Always resolve via ``scripts.audit.hramatka_qg_rules`` so test monkeypatches
-    and path overrides apply to the same module object as direct imports.
-    Falls back to a sibling import only when the package path is unavailable
-    (CLI invoked with ``scripts/audit`` alone on ``sys.path``).
-    """
+    """Load the separate hramatka rules using their package monkeypatch identity."""
+    import_path = sys.path[:]
     try:
+        if str(PROJECT_ROOT) not in sys.path:
+            sys.path.insert(0, str(PROJECT_ROOT))
         from scripts.audit import hramatka_qg_rules as mod
-    except ImportError:  # pragma: no cover - CLI path with AUDIT_DIR only
-        import hramatka_qg_rules as mod  # type: ignore
-    return mod
+
+        return mod
+    finally:
+        sys.path[:] = import_path
+
+
 DIMENSION_ORDER = (
     "surface_leakage",
     "level_policy",

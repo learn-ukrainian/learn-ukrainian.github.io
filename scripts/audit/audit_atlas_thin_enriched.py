@@ -19,10 +19,16 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
-from scripts.lexicon.manifest_io import load_manifest
+# Direct-file entrypoints need the root while loading package dependencies.
+# Restore the literal caller path, including changes made by legacy dependencies.
+_import_path = sys.path[:]
+try:
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    from scripts.lexicon.manifest_io import load_manifest
+finally:
+    sys.path[:] = _import_path
+    del _import_path
 
 # Keep this helper local so Contracts CI (slim venv, no requests) can import this
 # module without loading enrich_manifest → slovnyk_me → requests.

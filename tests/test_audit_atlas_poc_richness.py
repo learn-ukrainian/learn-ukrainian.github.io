@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 
 from scripts.audit.audit_atlas_poc_richness import (
     audit_manifest,
@@ -40,6 +41,35 @@ def _entry(**overrides: object) -> dict:
 
 
 def test_audit_cli_enforces_explicit_max_counts(tmp_path) -> None:
+    # Import the helper cold, including package setup, before checking its CLI.
+    imported = subprocess.run(
+        [sys.executable, "-c", """
+import importlib
+import importlib.util
+import json
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path.cwd() / "scripts"))
+assert "config" not in sys.modules
+assert "scripts.audit" not in sys.modules
+before = {"path": list(sys.path), "config": importlib.util.find_spec("config").origin}
+helper = importlib.import_module("scripts.audit.audit_atlas_poc_richness")
+after = {"path": list(sys.path), "config": importlib.util.find_spec("config").origin}
+sibling = importlib.import_module("scripts.audit.audit_atlas_thin_enriched")
+print(json.dumps({"before": before, "after": after,
+                  "package_sibling": helper.old_gate_enriched is sibling.old_gate_enriched,
+                  "bare_sibling": "audit_atlas_thin_enriched" in sys.modules}))
+"""],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    observed = json.loads(imported.stdout)
+    assert observed["after"] == observed["before"]
+    assert observed["package_sibling"]
+    assert not observed["bare_sibling"]
+
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(
         json.dumps(
