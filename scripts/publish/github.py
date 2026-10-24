@@ -343,6 +343,9 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     from scripts.orchestration.integration_sweep import lookup_verdict
 
     def fetch(name, **selectors):
+        unknown = "RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable"
+        if verb == "run-rerun" and name == "run":
+            unknown += "; Actions run lookup failed; --number requires an Actions run ID, not a PR number"
         try:
             if name == "queue-candidate":
                 listing = fetch("run-artifacts", **selectors)
@@ -396,9 +399,9 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
             refusal = github_client.refusal_of(exc, injected=runner is not None)
             if refusal is not None:
                 raise refusal from None
-            raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
+            raise gate.PublishBlocked(unknown) from None
         except Exception:
-            raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
+            raise gate.PublishBlocked(unknown) from None
 
     if verb == "run-rerun":
         run = fetch("run", number=fields["number"])
@@ -781,8 +784,39 @@ def main(argv=None, *, runner=None):
     verbs = parser.add_subparsers(dest="verb", required=True)
     for verb, (_, schema) in SCHEMAS.items():
         sub = verbs.add_parser(verb, help=f"Publish {verb} with scanned fields", allow_abbrev=False)
+        if verb == "run-rerun":
+            sub.description = (
+                "Rerun only failed jobs in an existing GitHub Actions run.\n"
+                "Use an Actions run ID, not a PR number. After a base-branch fix, use pr-update-branch instead."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                "  .venv/bin/python -m scripts.publish read run --repo unit/public --number 12345678901\n"
+                "  .venv/bin/python -m scripts.publish run-rerun --repo unit/public --number 12345678901\n"
+                "Outputs: requests a GitHub rerun with --failed on the original pinned run, not the latest PR head.\n"
+                "  PR recovery requires an eligible failed run, current-head approval and posted failure evidence.\n"
+                "  It consumes the one PR-head recovery allowance shared with re-enqueue before sending the write.\n"
+                "  An unclassified run lookup failure stays RECOVERY_LOOKUP_UNKNOWN, sends no write and consumes no allowance.\n"
+                "Exit codes: 0 request accepted, job results unverified; 1 gh failure;\n"
+                "  2 invalid input, unknown lookup, policy refusal or transport error.\n"
+                "  The project GitHub client returns 75 for a rate-limit refusal at either stage:\n"
+                "    During any preflight lookup: no rerun request; no allowance consumed.\n"
+                "    At the rerun request: PR recovery has already consumed its allowance; no refund.\n"
+                "    A later retry for that PR head exits 2 with RECOVERY_ALLOWANCE_SPENT.\n"
+                "  Other gh exit codes propagate.\n"
+                "Related: docs/dev/agent-public-text.md; read run; pr-update-branch."
+            )
         for key, kind in schema.items():
             kwargs = {"default": argparse.SUPPRESS, "help": f"{key.replace('_', ' ')} ({kind}); omitted by default"}
+            if verb == "run-rerun":
+                kwargs["help"] = {
+                    "repo": "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin",
+                    "number": (
+                        "Required Actions run ID from /actions/runs/<RUN_ID> (e.g. 12345678901), "
+                        "not a PR number; no default"
+                    ),
+                }[key]
             if kind == "bool":
                 kwargs["action"] = argparse.BooleanOptionalAction
             elif kind in {"texts", "assets"}:
