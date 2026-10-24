@@ -343,11 +343,26 @@ def test_stamp_pytest_hook_scoped_to_bash_matcher() -> None:
 
 
 def test_inbox_hook_proven_zero_never_starts_bridge(tmp_path: Path, stores) -> None:
-    add_legacy(stores[0], recipient="codex", acknowledged=1, consumed=1)
+    """A valid empty lane stays proven zero without importing bridge execution."""
+    add_legacy(stores[0], recipient="lane:infra", acknowledged=1, consumed=1)
     add_legacy(stores[0], recipient="claude", identifier=2)
     before = snapshot(stores)
     env = _hook_env(stores)
-    env["LEARN_UK_HOOK_RECIPIENT"] = "codex"
+    env["LEARN_UK_HOOK_RECIPIENT"] = "lane:infra"
+    direct = subprocess.run(
+        [sys.executable, "-c",
+         "import sys; from scripts.inbox_pending import main; "
+         "assert not any('ai_agent_bridge.' + name in module "
+         "for module in sys.modules "
+         "for name in ('_cli', '_claude', '_codex', '_gemini', '_grok_build', '_model')); "
+         "raise SystemExit(main(['--native-hook', '--recipient', 'lane:infra']))"],
+        text=True, capture_output=True, check=False, env=env, cwd=REPO_ROOT, timeout=5,
+    )
+    assert direct.returncode == 0, direct.stderr
+    assert direct.stderr == ""
+    assert "AUTHORITY INBOX: 0; oldest none; legacy 0;" in json.loads(direct.stdout)[
+        "hookSpecificOutput"
+    ]["additionalContext"]
     completed = subprocess.run(
         ["bash", str(INBOX_HOOK)], input="{}", text=True, capture_output=True,
         check=False, env=env, timeout=5,
@@ -364,6 +379,7 @@ def test_inbox_hook_proven_zero_never_starts_bridge(tmp_path: Path, stores) -> N
     assert not (tmp_path / ".agent" / "runtime").exists()
     assert "AUTHORITY INBOX: 0; oldest none; legacy 0;" in context
     assert "unknown" not in context and "inbox --for" not in context
+    assert "deliveries claim --recipient lane:infra " in context
     assert "scripts.ai_agent_bridge" not in INBOX_HOOK.read_text()
 
 

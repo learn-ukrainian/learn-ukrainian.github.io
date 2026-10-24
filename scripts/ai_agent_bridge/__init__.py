@@ -17,6 +17,7 @@ All public functions are re-exported here for backward compatibility.
 """
 
 import sys
+from importlib import import_module
 from pathlib import Path
 
 _SCRIPTS_DIR = str(Path(__file__).resolve().parent.parent)
@@ -33,9 +34,6 @@ from ._broker import (
     bridge_status,
     broker_cleanup,
 )
-from ._claude import ask_claude, process_for_claude
-from ._cli import interactive_mode, main, process_all_claude, process_all_gemini
-from ._codex import ask_codex, process_all_codex, process_for_codex
 from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
@@ -51,14 +49,12 @@ from ._config import (
     default_gemini_model,
 )
 from ._db import get_db, get_session, init_db, set_session
-from ._gemini import ask_gemini, process_and_respond
 from ._github import (
     _format_review_chunk,
     _gh_comment,
     _post_review_to_github,
     _split_content,
 )
-from ._grok_build import ask_grok_build, process_for_grok_build
 from ._messaging import (
     _extract_issue_number,
     acknowledge,
@@ -71,8 +67,26 @@ from ._messaging import (
     send_to_codex,
     send_to_gemini,
 )
-from ._model import _detect_model_error, check_model
 from ._prompts import build_claude_prompt, build_codex_prompt, build_gemini_prompt
+
+# Metadata-only inbox callers need the canonical aliases, not execution code.
+_EXECUTION_EXPORTS = {
+    "ask_claude": "_claude",
+    "process_for_claude": "_claude",
+    "interactive_mode": "_cli",
+    "main": "_cli",
+    "process_all_claude": "_cli",
+    "process_all_gemini": "_cli",
+    "ask_codex": "_codex",
+    "process_all_codex": "_codex",
+    "process_for_codex": "_codex",
+    "ask_gemini": "_gemini",
+    "process_and_respond": "_gemini",
+    "ask_grok_build": "_grok_build",
+    "process_for_grok_build": "_grok_build",
+    "_detect_model_error": "_model",
+    "check_model": "_model",
+}
 
 __all__ = [
     "AGY_CLI",
@@ -139,4 +153,8 @@ def __getattr__(name: str):
         from ._config import default_gemini_model
 
         return default_gemini_model()
+    if module := _EXECUTION_EXPORTS.get(name):
+        value = getattr(import_module(f".{module}", __name__), name)
+        globals()[name] = value
+        return value
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
