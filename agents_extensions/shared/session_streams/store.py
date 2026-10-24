@@ -172,7 +172,8 @@ def _idna_label(label: str) -> str:
         return label.lower()
     label = _COMBINING_DIACRITICS_RE.sub("", unicodedata.normalize("NFC", label))
     try:
-        return label.encode("idna").decode("ascii").lower()
+        # Nameprep uses full case folding; codec mappings differ across Python releases.
+        return label.casefold().encode("idna").decode("ascii").lower()
     except UnicodeError:
         return label
 
