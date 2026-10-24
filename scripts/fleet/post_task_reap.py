@@ -953,13 +953,13 @@ def post_task_reap(
     task_id: str,
     *,
     tasks_dir: Path | None = None,
-    repo_root: Path = ROOT,
+    repo_root: Path | None = None,
     apply: bool = False,
     include_acp_runtime: bool = True,
     release_retention: bool = False,
     no_lifecycle_observation: str | None = None,
 ) -> dict[str, Any]:
-    """Return a reap report for ``task_id``; delete only when ``apply`` is True."""
+    """Report or reap a task in its configured owning repository unless a root is explicit."""
     tasks_dir = tasks_dir or default_tasks_dir()
     state = _load_task_state(tasks_dir, task_id)
     if state is None:
@@ -982,6 +982,17 @@ def post_task_reap(
             "errors": ["retention release requires an existing task state"] if release_retention else [],
             "needs_attention": [],
         }
+
+    if repo_root is None:
+        repo_root = ROOT
+        bound_path = _worktree_path_from_state(state, repo_root=ROOT)
+        if bound_path is not None:
+            with contextlib.suppress(OSError, ValueError, RuntimeError):
+                owner = worktree_claims.owning_repo_root(bound_path, default=ROOT)
+                # Git metadata identifies the owner; only configured siblings
+                # sharing the public control plane may change the default.
+                if owner != ROOT and worktree_claims.control_plane_root(owner).resolve() == ROOT.resolve():
+                    repo_root = owner
 
     with _copy_proof_for_post_task(repo_root=repo_root, tasks_dir=tasks_dir):
         if release_retention:
@@ -1228,8 +1239,8 @@ Related: #9934; scripts/orchestration/reap_worktrees.py; docs/runbooks/worktree-
     parser.add_argument(
         "--repo-root",
         type=Path,
-        default=ROOT,
-        help="Repository root (primary checkout)",
+        default=None,
+        help="Repository primary checkout (default: task's configured owning repository)",
     )
     parser.add_argument(
         "--include-acp-runtime",
