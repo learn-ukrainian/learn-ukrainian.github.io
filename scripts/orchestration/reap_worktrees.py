@@ -2657,7 +2657,6 @@ def _active_task_ids() -> set[str] | None:
                 reason=f"active-task probe unavailable [active_task_probe_{code}]: {type(exc).__name__}: {exc}",
                 fallback_allowed=transport,
             ) from exc
-    return None
 
 
 def _read_active_task_probe() -> set[str] | _ActiveTaskProbeFailure | None:

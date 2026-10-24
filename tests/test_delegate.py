@@ -12028,8 +12028,15 @@ def test_branch_holder_monitor_outage_preserves_release_guards(tmp_path, monkeyp
     from scripts.orchestration import reap_worktrees
 
     monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    tasks = tmp_path / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(reap_worktrees, "primary_checkout_root", lambda _path: tmp_path)
     occupied = tmp_path / ".worktrees" / "dispatch" / "codex" / "legacy"
-    state = {"task_id": "legacy", "status": "done", "pid": os.getpid() if holder == "live_pid" else None}
+    state = {
+        "task_id": "legacy", "status": "done", "worktree_path": str(occupied),
+        "pid": os.getpid() if holder == "live_pid" else None,
+    }
     if holder != "missing_record":
         delegate._write_state_atomic(delegate._state_path("legacy"), state)
 
@@ -12050,14 +12057,20 @@ def test_branch_holder_monitor_outage_preserves_release_guards(tmp_path, monkeyp
         complete=holder == "complete",
     )
 
-    # This legacy record has no checkout binding, so transport fallback refuses.
-    assert reason == "active-task probe unavailable"
-    if holder not in {"complete", "missing_record"}:
-        diagnostic = (tmp_tasks_dir / "legacy.diag").read_text()
+    if holder == "settled":
+        assert reason is None
+    elif holder == "live_cwd":
+        assert reason == f"live process cwd={occupied / 'scripts'}"
+    else:
+        assert reason == "active-task probe unavailable"
+    if holder == "live_pid":
+        diagnostic = (tasks / "legacy.diag").read_text()
         assert "active_task_probe_" in diagnostic
         assert type(failure).__name__ in diagnostic
+    else:
+        assert not (tasks / "legacy.diag").exists()
     if holder == "missing_record":
-        assert not (tmp_tasks_dir / "legacy.json").exists()
+        assert not (tasks / "legacy.json").exists()
 
 
 def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -16048,26 +16061,25 @@ def test_rescue_probe_timeout_falls_back_but_preserves_live_worker(tmp_path, mon
     assert worktree.exists()
 
 
-@pytest.mark.parametrize("live_pid", [False, True])
-def test_abandon_holder_probe_timeout_falls_back_but_preserves_live_worker(
-    tmp_path, monkeypatch, tmp_tasks_dir, live_pid,
+def test_branch_holder_missing_task_state_uses_bound_terminal_record_on_probe_timeout(
+    tmp_path, monkeypatch, tmp_tasks_dir,
 ):
-    """Review abandonment must resolve transport failures without releasing live work."""
+    """A missing caller state must not strand a bound terminal holder during a transport outage."""
     from scripts.orchestration import reap_worktrees as rw
 
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "primary/batch_state/tasks"))
     _primary, worktree, _origin, path = _rescue_checkout(tmp_path, monkeypatch)
     state = delegate._read_state(path)
-    if live_pid:
-        state["pid"] = os.getpid()
-        delegate._write_state_atomic(path, state)
+    state["status"] = "done"
+    delegate._write_state_atomic(path, state)
 
     def timeout():
         raise rw._ActiveTaskProbeFailure("active_task_probe_timeout: TimeoutError", fallback_allowed=True)
 
     monkeypatch.setattr(rw, "_active_task_ids", timeout)
-    reason = delegate._branch_holder_activity_reason(worktree, task_id=state["task_id"], task_state=state)
-    assert reason == ("active-task probe unavailable" if live_pid else None)
+    reason = delegate._branch_holder_activity_reason(worktree, task_id=state["task_id"], task_state=None)
+    assert reason is None
+    assert not delegate._diagnostic_path(state["task_id"]).exists()
     assert worktree.exists()
 
 
