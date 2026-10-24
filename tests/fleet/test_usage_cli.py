@@ -262,6 +262,50 @@ def test_show_does_not_claim_cool_without_allotment_meters():
     assert "agent login" in text
     assert "CURSOR_API_KEY alone" in text
 
+    # Embedded status digits must not add an Anthropic tip to unknown quota.
+    claude = {
+        "status": "unknown",
+        "remaining_pct": None,
+        "codexbar": {"freshness": "unavailable", "failure_kind": "fetch_error"},
+    }
+    budget["agents"]["claude"] = claude
+    budget["agents"]["gemini"] = {"status": "unknown", "last_failure_code": 429}
+    tip = (
+        "  tip: Anthropic rate-limited the usage probe (429). Wait and retry "
+        "`usage show --fresh`; interactive/agentic caps above are ledger/LKG when burn is unknown."
+    )
+    for code in (
+        "a1429bcdef012345",
+        "0123456789abcdef0123456789abcdef0123456789abcdef0123429abcdefabc",
+        "0.429",
+        "429.5",
+        "v1.429.2",
+        "error429text",
+    ):
+        claude["codexbar"]["last_failure_code"] = code
+        text = usage.format_human(budget)
+        assert "tip: Anthropic" not in text
+        assert f"claude | unknown | unknown | unavailable | unknown | fetch_error/{code}\n" in text
+        assert "CURSOR_API_KEY alone" in text
+        assert "tip: Gemini/AGY quota comes from" in text
+
+    for code in (429, "HTTP 429", "status 429", "429", "RaTe_LiMiT"):
+        claude["codexbar"]["last_failure_code"] = code
+        text = usage.format_human(budget)
+        assert text.count(tip) == 1
+        assert f"claude | unknown | unknown | unavailable | unknown | fetch_error/{code}\n" in text
+
+    # The top-level failure still overrides a native 429; the keyword is independent.
+    claude["codexbar"]["last_failure_code"] = 429
+    claude["last_failure_code"] = "HTTP 503"
+    text = usage.format_human(budget)
+    assert "tip: Anthropic" not in text
+    assert "fetch_error/HTTP 503\n" in text
+    claude["failure_kind"] = "RaTe_LiMiT"
+    limited = usage.format_human(budget)
+    assert limited.count(tip) == 1
+    assert limited.replace("RaTe_LiMiT/HTTP 503", "fetch_error/HTTP 503").replace(tip + "\n", "") == text
+
 
 def test_qa_passes_when_allotments_usable(budget, monkeypatch, capsys):
     monkeypatch.setenv("DELEGATE_MONITOR_API", "http://fixture.invalid:8765/")
