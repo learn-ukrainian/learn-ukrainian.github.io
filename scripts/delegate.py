@@ -11298,6 +11298,11 @@ def _augment_prompt_with_worktree(
     elif mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
+            "After each coherent completed step, run the applicable validation. Once it passes, "
+            "commit and push that step using the instructions below before starting the next step; "
+            "do not wait until exit to publish completed steps.\n"
+            "Leave unfinished steps uncommitted. If a push is refused, retain your work, "
+            "stop and report the actual blocker. Keep the final exit checks below.\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
             "The push runs a pre-push gate on that exact commit (the pre-commit pre-push stage with the OPSEC "
