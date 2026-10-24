@@ -94,6 +94,7 @@ import yaml
 
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.orchestration.task_record_store import locate_task_record, relocated_result_file, task_record_path
 from scripts.review import findings_db, fixloop, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate.validate import ReviewReturnError, extract_review_yaml, validate_review
@@ -155,25 +156,24 @@ class Outcome:
 # --- identity ---------------------------------------------------------------------------
 
 
-def _read_dispatch_record(task_id: str, tasks_dir: Path) -> Any:
-    """Read one safe dispatch identity record; callers derive metadata from the same bytes."""
+def _read_dispatch_record(task_id: str, tasks_dir: Path) -> tuple[Any, Path]:
+    """Read one safe dispatch identity record and return its actual provenance path."""
     if not TOKEN_RE.fullmatch(task_id):
         raise RecordError(f"task id {task_id!r} is not a task token")
-    path = Path(tasks_dir) / f"{task_id}.json"
+    path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
     try:
         task = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise RecordError(
             f"the dispatch record {path} is unreadable ({error}); the reviewer's identity is unknown"
         ) from error
-    return task
+    return task, path
 
 
 def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
     """The reviewer's model, harness and family from the dispatch record; unknown identities refuse."""
-    return identity_from_record(
-        _read_dispatch_record(task_id, tasks_dir), task_id, record_path=Path(tasks_dir) / f"{task_id}.json"
-    )
+    task, path = _read_dispatch_record(task_id, tasks_dir)
+    return identity_from_record(task, task_id, record_path=path)
 
 
 #: The return templates print ``prompt_sha256: "<prompt_sha256>"`` for the seat, but a prompt cannot contain its own
@@ -195,8 +195,9 @@ def dispatch_prompt_sha256(
     block (written by ``delegate.py`` at dispatch; an attempt id is never reused, #8517), so the record of another
     seat, or a record without that block, supplies nothing.
     """
+    path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
     try:
-        task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_text(encoding="utf-8"))
+        task = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
     if not isinstance(task, dict):
@@ -281,8 +282,9 @@ def _verify_task_return(
     data: bytes, task_id: str, tasks_dir: Path, *, review_id: str, attempt_id: str, manifest_sha256: str
 ) -> None:
     """Match the raw return to the parent-saved result and its terminal dispatch hash."""
+    path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
     try:
-        task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
+        task = json.loads(path.read_bytes())
         bound = {"review_id": review_id, "attempt_id": attempt_id, "manifest_sha256": manifest_sha256}
         saved_path = Path(tasks_dir) / f"{task_id}.result"
         matched = (
@@ -291,7 +293,7 @@ def _verify_task_return(
             and isinstance(task.get("result_file"), str)
             and Path(task["result_file"]).resolve() == saved_path.resolve()
             and task.get("result_sha256") == hashlib.sha256(data).hexdigest()
-            and saved_path.read_bytes() == data
+            and Path(relocated_result_file(path, str(saved_path))).read_bytes() == data
         )
     except (OSError, ValueError, TypeError, AttributeError):
         matched = False
@@ -327,7 +329,8 @@ def attested_return(
     if not _carries_placeholder(extracted):
         # Older custom returns with a real hash retain their validator path. A
         # formal attempt cannot bypass the task binding by supplying a real hash.
-        task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
+        path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
+        task = json.loads(path.read_bytes())
         if isinstance(task, dict) and task.get("review_attempt") is not None:
             _verify_task_return(
                 data, task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
@@ -352,7 +355,8 @@ def attested_return(
     _verify_task_return(
         data, task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
     )
-    task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
+    path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)
+    task = json.loads(path.read_bytes())
     rendered, why = _render_prompt_sha256(
         manifest_path, root, review_id, attempt_id, task.get("review_access", "isolated")
     )
@@ -589,8 +593,8 @@ def record_return(
     review_id, attempt_id = ids["review_id"], ids["attempt_id"]
 
     tasks_root = Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
-    task_record = _read_dispatch_record(task_id, tasks_root)
-    identity = identity_from_record(task_record, task_id)
+    task_record, task_record_file = _read_dispatch_record(task_id, tasks_root)
+    identity = identity_from_record(task_record, task_id, record_path=task_record_file)
     identity["access"] = task_record.get("review_access", "isolated")
     if failure is None:
         data = attested_return(
