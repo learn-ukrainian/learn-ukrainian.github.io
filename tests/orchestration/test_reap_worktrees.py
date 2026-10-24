@@ -2601,8 +2601,10 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Containment is the PR head itself or an ancestor of it, including branch prune."""
+    """A vanished candidate must not abort subsequent exact/ancestor removal and branch prune."""
     repo = init_repo(tmp_path)
+    vanished = add_worktree(repo, "codex/aaa-vanished")
+    vanished_head = git(vanished, "rev-parse", "HEAD")
     exact = add_worktree(repo, "codex/exact-head")
     exact_head = git(exact, "rev-parse", "HEAD")
     ancestor = add_worktree(repo, "codex/ancestor-head")
@@ -2613,10 +2615,33 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
     patch_gh(
         monkeypatch,
         {
+            "codex/aaa-vanished": [{"number": 30, "state": "MERGED", "headRefOid": vanished_head}],
             "codex/exact-head": [{"number": 31, "state": "MERGED", "headRefOid": exact_head}],
             "codex/ancestor-head": [{"number": 32, "state": "MERGED", "headRefOid": ancestor_pr_head}],
         },
     )
+    real_run = rw._run
+    real_remove = worktree_claims.git_worktree_remove
+    removal_targets: list[Path] = []
+    disappeared = False
+
+    def vanish_before_head(args: list[str], *, cwd: Path, **kwargs: Any):
+        nonlocal disappeared
+        if cwd == vanished and args == ["git", "rev-parse", "HEAD"] and rw._LOCKED_REGION_DEADLINE.get() is not None:
+            assert not disappeared
+            assert exact.exists() and ancestor.exists()
+            # Another legitimate remover wins after qualification, immediately
+            # before the real Git call must start in this now-missing cwd.
+            git(repo, "worktree", "remove", str(vanished))
+            disappeared = True
+        return real_run(args, cwd=cwd, **kwargs)
+
+    def record_remove(repo_root: Path, target: Path, **kwargs: Any):
+        removal_targets.append(target)
+        return real_remove(repo_root, target, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", vanish_before_head)
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", record_remove)
 
     results = rw.reap_worktrees(
         repo_root=repo,
@@ -2627,6 +2652,19 @@ def test_merged_pr_ancestor_and_exact_head_are_removed(
 
     exact_result = result_for(results, exact)
     ancestor_result = result_for(results, ancestor)
+    vanished_result = result_for(results, vanished)
+    assert disappeared
+    assert vanished_result.action == "skipped"
+    assert vanished_result.reason == "registered worktree path is missing; run git worktree prune"
+    assert vanished_result.dirty is None
+    assert vanished_result.error is None
+    assert vanished_result.freed_bytes == 0
+    assert vanished_result.recovery_ref is None
+    assert vanished_result.preserved_artifacts is None
+    assert vanished_result.branch_pruned is False
+    assert not reaper_lifecycle.is_reap_pending(repo, vanished)
+    assert removal_targets == [ancestor, exact]
+    assert git(repo, "rev-parse", "refs/heads/codex/aaa-vanished") == vanished_head
     assert exact_result.action == "removed"
     assert exact_result.reason == "PR #31 MERGED"
     assert exact_result.branch_pruned is True

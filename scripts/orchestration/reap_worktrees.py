@@ -5510,6 +5510,22 @@ def _reap_qualified_worktree(
             preserved_artifacts=preserved_artifacts,
             freed_bytes=freed_bytes,
         )
+    except (FileNotFoundError, NotADirectoryError):
+        # A competing cleanup can remove the cwd after census. A missing
+        # executable or metadata file does not prove that the target vanished.
+        try:
+            info.path.lstat()
+        except (FileNotFoundError, NotADirectoryError):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="registered worktree path is missing; run git worktree prune",
+                dirty=None,
+                pr=_pr_dict(pr_state),
+                recovery_ref=recovery_ref,
+            )
+        raise
     except subprocess.TimeoutExpired as exc:
         # A git call outlived its locked-region bound (#8748): skip, never
         # delete — the killed git leaves the tree's state unproven.
