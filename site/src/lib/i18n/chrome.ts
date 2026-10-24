@@ -689,7 +689,7 @@ const uk: Record<ChromeKey, string> = {
   'wotd.loadError': 'Не вдалося завантажити добірку.',
 
   // Practice dashboard (K3 redesign)
-  'zno.firstAttemptScore': 'Рахунок перших спроб',
+  'zno.firstAttemptScore': 'Результат перших спроб',
   'zno.unanswered': 'Без відповіді',
   'zno.errorsByTopic': 'Помилки за темами',
   'zno.reviewErrors': 'Переглянути помилки',

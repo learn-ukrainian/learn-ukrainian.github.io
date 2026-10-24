@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
@@ -20,6 +20,50 @@ describe('ZnoPractice', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     localStorage.clear();
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  afterEach(() => {
+    delete document.documentElement.dataset.chromeLocale;
+  });
+
+  test('uses Ukrainian chrome for the picker and summary labels', async () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
+    const user = userEvent.setup();
+    render(<ZnoPractice decks={decks} />);
+    expect(screen.getByRole('region', { name: 'Практика ЗНО та НМТ' })).toBeInTheDocument();
+    expect(screen.getByText('Невелика добірка', { exact: false })).toBeInTheDocument();
+    await user.click(screen.getByTestId('zno-deck-zno-paronym'));
+    await user.click(screen.getByRole('button', { name: 'А перша' }));
+    await user.click(screen.getByRole('button', { name: 'Наступне завдання' }));
+
+    const summary = within(screen.getByTestId('zno-session-summary'));
+    expect(summary.getByRole('heading', { name: 'Сесію завершено' })).toBeInTheDocument();
+    expect(summary.getByText('Результат перших спроб')).toBeInTheDocument();
+    expect(summary.getByText('Без відповіді')).toBeInTheDocument();
+    expect(summary.getByRole('heading', { name: 'Помилки за темами' })).toBeInTheDocument();
+    expect(summary.getByRole('button', { name: 'Переглянути помилки' })).toBeInTheDocument();
+    expect(summary.getByRole('button', { name: 'Повторити помилки один раз' })).toBeInTheDocument();
+    expect(summary.getByRole('button', { name: 'Вийти' })).toBeInTheDocument();
+    const nextDue = screen.getByTestId('zno-session-summary').querySelector('time');
+    expect(nextDue).not.toBeNull();
+    expect(nextDue).toHaveTextContent(new Date(nextDue!.dateTime).toLocaleString('uk-UA'));
+  });
+
+  test('Home exits when the session summary is already showing', async () => {
+    const user = userEvent.setup();
+    const onBackToDecks = vi.fn();
+    const controlsRef = createRef<ZnoSessionControls>();
+    render(<>
+      <button type="button" onClick={() => controlsRef.current?.endSession()}>Home</button>
+      <ZnoPractice deck={decks[0]} onBackToDecks={onBackToDecks} sessionControlsRef={controlsRef} />
+    </>);
+
+    await user.click(screen.getByRole('button', { name: 'Home' }));
+    expect(screen.getByTestId('zno-session-summary')).toBeInTheDocument();
+    expect(onBackToDecks).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: 'Home' }));
+    expect(onBackToDecks).toHaveBeenCalledOnce();
   });
 
   test('shows the required thin-deck treatment and learner-facing attribution', async () => {

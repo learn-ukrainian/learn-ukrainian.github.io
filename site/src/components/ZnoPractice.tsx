@@ -1,6 +1,7 @@
 import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from 'react';
 import { cardKey, DEFAULT_NEW_PER_SESSION, loadState, rateCard } from '../lib/lexicon/srs';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
+import { useChromeLocale } from '../lib/i18n/useChromeLocale';
 import znoDeckMeta from '../data/practice-zno-meta.json';
 
 export interface ZnoCharMark {
@@ -204,8 +205,6 @@ interface ZnoSessionState {
   phase: SessionPhase;
 }
 
-const chrome = CHROME_STRINGS.en;
-
 function createSession(deck: ZnoPracticeDeck, dueOnly = false): ZnoSessionState {
   const queue = sessionQueue(deck.items, Math.random(), dueOnly ? 0 : DEFAULT_NEW_PER_SESSION);
   return {
@@ -221,12 +220,17 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
   onExit(): void;
   sessionControlsRef?: Ref<ZnoSessionControls>;
 }) {
+  const chromeLocale = useChromeLocale();
+  const chrome = CHROME_STRINGS[chromeLocale];
   const [session, setSession] = useState(() => createSession(deck));
   const headingRef = useRef<HTMLHeadingElement>(null);
   const { queue, answers, phase } = session;
   useImperativeHandle(sessionControlsRef, () => ({
-    endSession: () => setSession((current) => ({ ...current, phase: { kind: 'summary' } })),
-  }), []);
+    endSession: () => {
+      if (phase.kind === 'summary') onExit();
+      else setSession((current) => ({ ...current, phase: { kind: 'summary' } }));
+    },
+  }), [phase.kind, onExit]);
   const currentItem = phase.kind === 'summary' ? null : phase.items[phase.index];
   const selectedIndex = phase.kind === 'summary' ? null
     : phase.kind === 'review' && currentItem ? answers.get(currentItem.znoTaskId) ?? null : phase.selectedIndex;
@@ -286,7 +290,7 @@ function ZnoSession({ deck, onExit, sessionControlsRef }: {
             <ul>{[...topicErrors].map(([topic, count]) => <li key={topic}><span lang="uk">{topic}</span>: {count}</li>)}</ul>
           </section>
         ) : null}
-        {nextDue ? <p>{chrome['practice.nextDue']}: <time dateTime={nextDue.toISOString()}>{nextDue.toLocaleString('en-GB')}</time></p> : null}
+        {nextDue ? <p>{chrome['practice.nextDue']}: <time dateTime={nextDue.toISOString()}>{nextDue.toLocaleString(chromeLocale === 'uk' ? 'uk-UA' : 'en-GB')}</time></p> : null}
         <div className="lexicon-session-summary-actions">
           {missed.length > 0 ? <>
             <button type="button" className="btn" onClick={() => setSession({ ...session, phase: { kind: 'review', items: missed, index: 0, selectedIndex: null } })}>{chrome['zno.reviewErrors']}</button>
@@ -360,6 +364,7 @@ export default function ZnoPractice({
   onBackToDecks,
   sessionControlsRef,
 }: ZnoPracticeProps) {
+  const chrome = CHROME_STRINGS[useChromeLocale()];
   const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
   const activeDeck = controlledDeck ?? decks.find((deck) => deck.deckId === activeDeckId) ?? null;
   return (
