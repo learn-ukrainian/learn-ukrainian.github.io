@@ -500,11 +500,13 @@ def _delegate_task_rows_locked(
     resolved = resolve_context(ctx) if persist_cache else ctx
     tasks_dir = _tasks_dir(resolved) if tasks_dir is None else tasks_dir
     tasks_dir_str = str(tasks_dir)
-    if tasks_dir_str != _LAST_TASKS_DIR_STR:
+    if persist_cache and tasks_dir_str != _LAST_TASKS_DIR_STR:
         _TASK_STATE_CACHE.clear()
-        if persist_cache:
-            _TASK_STATE_CACHE.update(_load_task_cache_from_db(tasks_dir_str, resolved))
+        _TASK_STATE_CACHE.update(_load_task_cache_from_db(tasks_dir_str, resolved))
         _LAST_TASKS_DIR_STR = tasks_dir_str
+    # Inserts and evictions belong to the persistent index together. A
+    # directory-only scan must not consume either update without writing it.
+    task_cache = _TASK_STATE_CACHE if persist_cache else {}
 
     repo_predicate = _normalize_repository_predicate(repository)
 
@@ -545,7 +547,7 @@ def _delegate_task_rows_locked(
 
         # A generation includes ctime, size and inode as well as mtime. Its
         # counts must come from the records, not an mtime-only summary.
-        cached = _TASK_STATE_CACHE.get(path_str) if task_generation is None else None
+        cached = task_cache.get(path_str) if task_generation is None else None
 
         if cached is not None and cached[0] == mtime:
             _, summary, derived_status, alive, claimed_repo, pid = cached
@@ -594,7 +596,7 @@ def _delegate_task_rows_locked(
                 claimed_repo,
                 pid_int,
             )
-            _TASK_STATE_CACHE[path_str] = cached_tuple
+            task_cache[path_str] = cached_tuple
             subst_str = (
                 json.dumps(subst)
                 if isinstance(subst, dict)
@@ -660,11 +662,11 @@ def _delegate_task_rows_locked(
     # Only directories this query scanned are judged, so a hot-only query never
     # evicts the archive entries an all-history query cached.
     vanished = [
-        path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs
+        path for path in task_cache if path not in seen_paths and os.path.dirname(path) in scanned_dirs
     ]
     if vanished:
         for path in vanished:
-            del _TASK_STATE_CACHE[path]
+            del task_cache[path]
         if persist_cache:
             _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
 
@@ -764,8 +766,8 @@ def active_delegate_tasks(
     attribution fields.
     ``task_generation`` receives the all-file fingerprint from this locked
     scan, or stays empty when the generation cannot be observed.
-    An explicit ``tasks_dir`` uses only the in-process cache, without building
-    an application context or reading or writing the persistent SQLite index.
+    An explicit ``tasks_dir`` reads task records directly, without building an
+    application context or touching the shared cache or persistent SQLite index.
     """
     active = _delegate_task_rows(
         ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx, task_generation=task_generation, tasks_dir=tasks_dir,

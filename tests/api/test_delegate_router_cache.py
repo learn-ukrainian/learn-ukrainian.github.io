@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 
 from scripts.api import delegate_router, state_router
+from scripts.api.monitor_context import fixture_context
 
 
 def test_restored_mtime_does_not_label_stale_in_flight_counts_with_fresh_generation(tmp_path, monkeypatch):
@@ -32,3 +34,32 @@ def test_restored_mtime_does_not_label_stale_in_flight_counts_with_fresh_generat
     assert refreshed_generation == [state_router._tasks_content_token(tasks_dir)]
     assert refreshed_generation != first_generation
     assert refreshed["codex"] == 0
+
+
+def test_db_skipping_scan_does_not_suppress_persistence_or_vanished_row_deletion(tmp_path, monkeypatch):
+    """Directory-only scans must not poison a later scan's SQLite updates."""
+    monkeypatch.setattr(delegate_router, "_TASK_STATE_CACHE", {})
+    monkeypatch.setattr(delegate_router, "_LAST_TASKS_DIR_STR", "")
+    ctx = fixture_context(tmp_path)
+    tasks_dir = ctx.roots.batch_state_dir / "tasks"
+    tasks_dir.mkdir(parents=True)
+    vanished = tasks_dir / "vanished.json"
+    vanished.write_text(json.dumps({"task_id": "vanished", "status": "done"}))
+    assert delegate_router.list_delegate_tasks(ctx=ctx)["total"] == 1
+    db_path = tasks_dir / ".task_cache.sqlite3"
+    with sqlite3.connect(db_path.as_uri() + "?mode=ro", uri=True) as db:
+        assert db.execute("SELECT task_id FROM task_cache").fetchall() == [("vanished",)]
+
+    vanished.unlink()
+    added = tasks_dir / "added.json"
+    added.write_text(json.dumps({"task_id": "added", "status": "done"}))
+    assert [row["task_id"] for row in delegate_router._delegate_task_rows(tasks_dir=tasks_dir)] == ["added"]
+    # The directory-only scan must leave the persistent index untouched.
+    with sqlite3.connect(db_path.as_uri() + "?mode=ro", uri=True) as db:
+        assert db.execute("SELECT task_id FROM task_cache").fetchall() == [("vanished",)]
+
+    assert delegate_router.list_delegate_tasks(ctx=ctx)["tasks"][0]["task_id"] == "added"
+    with sqlite3.connect(db_path.as_uri() + "?mode=ro", uri=True) as db:
+        assert db.execute("SELECT task_id, status FROM task_cache ORDER BY task_id").fetchall() == [
+            ("added", "done"),
+        ]
