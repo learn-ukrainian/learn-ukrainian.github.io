@@ -15568,6 +15568,76 @@ def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True, repo_key: str
     return primary, worktree, origin, state_path
 
 
+def _rescue_reused_group_checkout(tmp_path, monkeypatch):
+    primary, worktree, origin, old_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    old = delegate._read_state(old_path)
+    old["started_at"] = "2020-01-01T00:00:00Z"
+    delegate._write_state_atomic(old_path, old)
+    latest_path = delegate._state_path("rescue-zfix")
+    latest = dict(old, task_id="rescue-zfix", worktree_reused=True, started_at="2020-01-02T00:00:00Z")
+    delegate._write_state_atomic(latest_path, latest)
+    return primary, worktree, origin, old_path, latest_path
+
+
+def test_rescue_reused_group_unpushed_work_rescued_once_under_latest_id(
+    tmp_path, monkeypatch, tmp_tasks_dir, capsys
+):
+    """Reused fix rounds must publish one rescue owned by the latest record."""
+    _primary, worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    old = delegate._read_state(old_path)
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="0h", apply=True)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["rescued"] == 1, report
+    assert [row["task_id"] for row in report["tasks"]] == ["rescue-zfix"], report
+    assert delegate._read_state(old_path) == old
+    latest = delegate._read_state(latest_path)
+    assert latest["rescue_ref"] == "rescue/cursor/rescue-zfix"
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == (
+        "refs/heads/rescue/cursor/rescue-zfix\n"
+    )
+    assert _git_out(origin, "show", "rescue/cursor/rescue-zfix:artifact.txt") == "committed work\n"
+    assert worktree.exists()
+
+
+def test_rescue_reused_group_head_on_main_does_not_push(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
+    """A merged reused group must remain available to the reaper without a rescue push."""
+    _primary, worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    before = [delegate._read_state(path) for path in (old_path, latest_path)]
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="0h", apply=True)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["tasks"] == [
+        {"task_id": "rescue-zfix", "action": "skipped", "reason": "no provable unpushed work"}
+    ], report
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == ""
+    assert [delegate._read_state(path) for path in (old_path, latest_path)] == before
+
+
+def test_rescue_reused_group_live_record_refused(tmp_path, monkeypatch, tmp_tasks_dir):
+    """A live earlier round must prevent rescue of a terminal latest round."""
+    _primary, _worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    old = delegate._read_state(old_path)
+    delegate._write_state_atomic(old_path, dict(old, pid=os.getpid()))
+    row = delegate._rescue_task(latest_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "task process alive", row
+    delegate._write_state_atomic(old_path, dict(old, status="running"))
+    row = delegate._rescue_task(latest_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "worktree group has nonterminal task", row
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == ""
+
+
+def test_rescue_reused_group_branch_disagreement_refused(tmp_path, monkeypatch, tmp_tasks_dir):
+    """Conflicting branch ownership must not be hidden by the latest task's branch."""
+    _primary, _worktree, origin, old_path, latest_path = _rescue_reused_group_checkout(tmp_path, monkeypatch)
+    old = delegate._read_state(old_path)
+    delegate._write_state_atomic(old_path, dict(old, worktree_branch="cursor/other-round"))
+    row = delegate._rescue_task(latest_path, apply=True)
+    assert row["action"] == "skipped" and row["reason"] == "worktree group records disagree on branch", row
+    assert _git_out(origin, "for-each-ref", "--format=%(refname)", "refs/heads/rescue/") == ""
+
+
 @pytest.mark.parametrize("dirty", [True, False])
 def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tasks_dir, dirty):
     for repo_key in (None, "infra-private"):
@@ -15703,7 +15773,7 @@ def test_rescue_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
     for attempt in range(2):
         row = delegate._rescue_task(path, apply=True)
         current = json.loads(path.read_text())
-        if case in {"unknown", "late"}:
+        if case == "late":
             assert row["action"] == "skipped" and row["reason"]
             assert hashlib.sha256(path.read_bytes()).hexdigest() == before[0]
         else:
