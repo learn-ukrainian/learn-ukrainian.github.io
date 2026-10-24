@@ -2,7 +2,7 @@
 
 Workflow job and check names, failed-test identifiers and GitHub error text are
 controlled by whoever can push a workflow. These tests drive the real
-``keeper.run`` through the real ``GitHub.comment`` / ``GitHub.create_issue``
+``keeper.run`` through the real ``GitHub.comment`` / ``GitHub.issue_comment``
 methods and the typed publisher; only read observations and the final ``gh``
 transport are injected, and assertions inspect the exact bytes that would be
 published.
@@ -392,9 +392,14 @@ def test_flaky_issue_title_and_body_stay_inert(tmp_path: Path, transport: Transp
     ejected(subject, path, [job], failures=[{"job": job, "pr": 7, "at": "2999-01-01T00:00:00+00:00", "test": test}])
     subject.job_rows[0]["id"] = 456
     subject.failed_tests = lambda job_id: [test]
+    title = f"Merge queue flaky test: {keeper.display_text(test, keeper.DISPLAY_TEST_LIMIT)}"
+    subject.issue_rows = [{"number": 77, "title": title}]
     lines, failed = keeper.run(subject, path, apply=True)
     assert not failed, lines
-    [(title, body)] = transport.issues()
+    assert transport.issues() == []
+    [(verb, _, body)] = [row for row in transport.sent if row[0] == "issue comment"]
+    assert verb == "issue comment"
+    body = body.removesuffix("\n\n<!-- mq-keeper-flake -->")
     for field in (title, body):
         assert not any(token in field for token in ("<", ">", "](", "![", "```", "\n", "\r", *LOOKALIKE_AT)), field
         assert "://" not in field
@@ -403,17 +408,19 @@ def test_flaky_issue_title_and_body_stay_inert(tmp_path: Path, transport: Transp
     assert title == f"Merge queue flaky test: {keeper.display_text(test, keeper.DISPLAY_TEST_LIMIT)}" and len(title) < 256
     assert {item["job"] for item in json.loads(path.read_text())["failures"]} == {job}  # raw name kept
     keeper.run(subject, path, apply=True)
-    assert len(transport.issues()) == 1
+    assert transport.issues() == []
+    assert len([row for row in transport.sent if row[0] == "issue comment"]) == 1
 
 
 def test_plain_flaky_issue_is_unchanged(tmp_path: Path, transport: Transport) -> None:
     subject = Subject(tmp_path)
     path = tmp_path / "state.json"
     ejected(subject, path, ["pytest (3)"], failures=[{"job": "pytest (3)", "pr": 7, "at": "2999-01-01T00:00:00+00:00"}])
-    keeper.run(subject, path, apply=True)
-    assert transport.issues() == [
-        (
-            "Merge queue flaky test: pytest (3)",
-            "`pytest (3)` failed merge_group runs on distinct PRs #7, #42 within 24 hours. Run IDs: 321.",
-        )
+    subject.issue_rows = [{"number": 77, "title": "Merge queue flaky test: pytest (3)"}]
+    lines, failed = keeper.run(subject, path, apply=True)
+    assert not failed, lines
+    assert transport.issues() == []
+    assert [body for verb, _, body in transport.sent if verb == "issue comment"] == [
+        "`pytest (3)` failed merge_group runs on distinct PRs #7, #42 within 24 hours. Run IDs: 321."
+        "\n\n<!-- mq-keeper-flake -->"
     ]

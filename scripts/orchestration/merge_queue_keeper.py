@@ -439,11 +439,7 @@ class GitHub:
         return self.paged(Request("read-issues", repo=self.repository))
 
     def create_issue(self, title: str, body: str) -> int:
-        result = self.call(Request("issue-create", repo=self.repository, title=title, body=body, labels=["infra"]))
-        match = re.search(r"/issues/([1-9][0-9]*)\s*$", result)
-        if not match:
-            raise KeeperError("created flaky-test issue returned no issue number")
-        return int(match[1])
+        raise KeeperError("automatic flaky-test issue creation is disabled; report finding to CTO")
 
 
 def _hold(row: Mapping[str, Any]) -> bool | None:
@@ -1162,7 +1158,6 @@ def run(
     for key, (numbers, tests) in sorted(flaky.items()):
         if not budget or issues is None:
             continue
-        title = f"Merge queue flaky test: {display_text(key, DISPLAY_TEST_LIMIT)}"
         matching = [item for item in failures if (item.get("test") or item.get("job")) == key]
         run_ids = sorted({item["run_id"] for item in matching if type(item.get("run_id")) is int})
         body = (
@@ -1173,40 +1168,57 @@ def run(
         if tests:
             body += f" Failed test: {code_span(tests[0], DISPLAY_TEST_LIMIT)}."
         try:
-            pattern = re.compile(r"(?<![\w/.:\[\]-])" + re.escape(key) + r"(?![\w/:\[\]-])")
+            # Older titles/bodies used the job display limit. Compare both
+            # deterministic renderings as well as raw text, never a prefix.
+            identities = {key, display_text(key), display_text(key, DISPLAY_TEST_LIMIT)}
+            pattern = re.compile(
+                r"(?<![\w/.:\[\]()-])(?:" + "|".join(re.escape(value) for value in sorted(identities))
+                + r")(?![\w/.:\[\]()-])"
+            )
             marker = "<!-- mq-keeper-flake -->"
-            matches = [item for item in issues if "pull_request" not in item and (
-                item.get("title") == title
-                or ((bool(tests) or marker in str(item.get("body", ""))) and (
-                    pattern.search(str(item.get("title", ""))) or pattern.search(str(item.get("body", "")))
-                ))
-            )]
-            issue = min(matches, key=lambda item: item.get("number", 0)) if matches else None
+            matches = []
+            for item in issues:
+                if "pull_request" in item or item.get("state", "open") != "open":
+                    continue
+                # Markdown escaping is presentation, not part of a node ID.
+                issue_title, issue_body = (
+                    re.sub(r"\\([\\`*_{}\[\]()#+.!>~-])", r"\1", str(item.get(field) or ""))
+                    for field in ("title", "body")
+                )
+                if (
+                    issue_title in {f"Merge queue flaky test: {value}" for value in identities}
+                    or ((bool(tests) or marker in issue_body or any(
+                        issue_body.startswith(f"`{value}` failed merge_group runs on distinct PRs ")
+                        for value in identities
+                    )) and (
+                        pattern.search(issue_title) or pattern.search(issue_body)
+                    ))
+                ):
+                    matches.append(item)
+            if any(type(item.get("number")) is not int or item["number"] <= 0 for item in matches):
+                raise KeeperError("matching flaky-test issue has no valid number")
+            issue = min(matches, key=lambda item: item["number"]) if matches else None
             lines.append(f"flaky record: {display_text(key, DISPLAY_TEST_LIMIT)}; PRs={','.join(map(str, numbers))}; "
-                         f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'new'}")
+                         f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'none'}")
+            if issue is None:
+                lines.append(f"CTO finding: no canonical open issue for {display_text(key, DISPLAY_TEST_LIMIT)}; "
+                             "automatic issue creation disabled")
+                continue
             if not apply:
                 continue
-            if issue is None:
-                issue_number = gh.create_issue(title, body)
-                if type(issue_number) is not int:
-                    raise KeeperError("created flaky-test issue has no number")
+            issue_number = issue.get("number")
+            if type(issue_number) is not int:
+                raise KeeperError("matching flaky-test issue has no number")
+            comments = gh.comments(issue_number)
+            recent = any(
+                marker in str(comment.get("body", ""))
+                and (comment.get("user") or {}).get("login") == login
+                and str(comment.get("created_at", "")) >= cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+                for comment in comments
+            )
+            if not recent and issue_updates.get(str(issue_number), "") < cutoff.isoformat():
+                gh.issue_comment(issue_number, body + "\n\n" + marker)
                 issue_updates[str(issue_number)] = observed
-                issues.append({"number": issue_number, "title": title, "body": body})
-            else:
-                issue_number = issue.get("number")
-                if type(issue_number) is not int:
-                    raise KeeperError("matching flaky-test issue has no number")
-                marker = "<!-- mq-keeper-flake -->"
-                comments = gh.comments(issue_number)
-                recent = any(
-                    marker in str(comment.get("body", ""))
-                    and (comment.get("user") or {}).get("login") == login
-                    and str(comment.get("created_at", "")) >= cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
-                    for comment in comments
-                )
-                if not recent and issue_updates.get(str(issue_number), "") < cutoff.isoformat():
-                    gh.issue_comment(issue_number, body + "\n\n" + marker)
-                    issue_updates[str(issue_number)] = observed
         except KeeperError as exc:
             failed = True
             lines.append(f"flaky-test issue FAILED: {exc}")
