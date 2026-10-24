@@ -508,53 +508,6 @@ def _parse_rescue_output(output: bytes | str) -> dict[str, Any]:
     return {"summary": summary, "tasks": tasks}
 
 
-def _report_terminal_rescue(repo_root: Path, result: dict[str, Any]) -> None:
-    """Classify the subprocess boundary; raw evidence stays inside the private receipt."""
-    started = time.monotonic()
-    stdout = stderr = exception = None
-    returncode = None
-    failure_class = "none"
-    try:
-        proc = subprocess.run(
-            [sys.executable, str(repo_root / "scripts" / "delegate.py"), "rescue", "--all-stale", "--older-than", "6h"],
-            cwd=repo_root,
-            capture_output=True,
-            check=False,
-            timeout=600,
-            env=reap_worktrees.sanitized_git_env(),
-        )
-        stdout, stderr, returncode = proc.stdout, proc.stderr, proc.returncode
-        payload = _parse_rescue_output(stdout)
-        result["rescue"] = payload
-        if returncode != 0:
-            failure_class = "child_reported_failure"
-            blocked, other = _split_rescue_errors(payload.get("tasks"))
-            if blocked:
-                result["rescue_identity_unavailable"] = blocked
-            if other or not blocked:
-                result["errors"].append("terminal rescue reported errors")
-    except subprocess.TimeoutExpired as exc:
-        failure_class = "deadline_expired"
-        stdout, stderr, exception = exc.output, exc.stderr, str(exc)
-    except OSError as exc:
-        failure_class, exception = "launch_failure", str(exc)
-    except (ValueError, RecursionError) as exc:
-        failure_class, exception = "invalid_output", str(exc)
-    elapsed = time.monotonic() - started
-    if failure_class in {"launch_failure", "deadline_expired", "invalid_output"}:
-        result["errors"].append(f"terminal rescue unavailable ({failure_class})")
-    result["rescue_diagnostic"] = {
-        "failure_class": failure_class,
-        "elapsed_seconds": elapsed,
-        "returncode": returncode,
-        "evidence": {
-            "stdout": _rescue_evidence(stdout),
-            "stderr": _rescue_evidence(stderr),
-            "exception": _rescue_evidence(exception),
-        },
-    }
-
-
 def _split_rescue_errors(tasks: Any) -> tuple[int, int]:
     """Count rescue error rows as ``(identity unavailable, any other cause)``."""
     blocked = other = 0
@@ -1163,7 +1116,56 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     # driver-invoked rescue may commit or push their work.
     delegate_script = repo_root / "scripts" / "delegate.py"
     if apply and delegate_script.is_file() and os.environ.get("LU_REAPER_DISABLED") != "1":
-        _report_terminal_rescue(repo_root, result)
+        started = time.monotonic()
+        stdout = stderr = exception = None
+        returncode = None
+        failure_class = "none"
+        try:
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    str(repo_root / "scripts" / "delegate.py"),
+                    "rescue",
+                    "--all-stale",
+                    "--older-than",
+                    "6h",
+                ],
+                cwd=repo_root,
+                capture_output=True,
+                check=False,
+                timeout=600,
+                env=reap_worktrees.sanitized_git_env(),
+            )
+            stdout, stderr, returncode = proc.stdout, proc.stderr, proc.returncode
+            payload = _parse_rescue_output(stdout)
+            result["rescue"] = payload
+            if returncode != 0:
+                failure_class = "child_reported_failure"
+                blocked, other = _split_rescue_errors(payload.get("tasks"))
+                if blocked:
+                    result["rescue_identity_unavailable"] = blocked
+                if other or not blocked:
+                    result["errors"].append("terminal rescue reported errors")
+        except subprocess.TimeoutExpired as exc:
+            failure_class = "deadline_expired"
+            stdout, stderr, exception = exc.output, exc.stderr, str(exc)
+        except OSError as exc:
+            failure_class, exception = "launch_failure", str(exc)
+        except (ValueError, RecursionError) as exc:
+            failure_class, exception = "invalid_output", str(exc)
+        elapsed = time.monotonic() - started
+        if failure_class in {"launch_failure", "deadline_expired", "invalid_output"}:
+            result["errors"].append(f"terminal rescue unavailable ({failure_class})")
+        result["rescue_diagnostic"] = {
+            "failure_class": failure_class,
+            "elapsed_seconds": elapsed,
+            "returncode": returncode,
+            "evidence": {
+                "stdout": _rescue_evidence(stdout),
+                "stderr": _rescue_evidence(stderr),
+                "exception": _rescue_evidence(exception),
+            },
+        }
 
     try:
         rows = reap_worktrees.reap_worktrees(
