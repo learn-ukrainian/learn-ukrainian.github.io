@@ -110,6 +110,22 @@ the companion. Its `receipt_ref` and SHA-256 identify the same evidence in each
 mirror; a task mirror is not another consumption event. Runtime session/run IDs
 remain distinct from provider session/run IDs.
 
+The producer stores the validated, locally computed CLI and prompt SHA-256
+digests as immutable bytes. Its JSON projection represents `cli_sha256`,
+`prompt_sha256` and `receipt_sha256` as arrays of exactly 32 integers in
+the range 0 through 255, in digest byte order. For any of these fields,
+`bytes(value).hex()` reconstructs the full hexadecimal digest. This is the
+lossless byte representation of a [hashlib digest](https://docs.python.org/3/library/hashlib.html#hashlib.hash.digest).
+It contains no source bytes, prompt text or provider secret.
+
+`receipt_sha256` hashes the UTF-8 encoding of
+`json.dumps(fields, sort_keys=True, separators=(",", ":"))`, with Python's
+default `ensure_ascii=True`. Here `fields` is the projected companion without
+`receipt_ref` and `receipt_sha256`, including both launch digest arrays.
+The launch digests come only from the trusted invocation plan after validation;
+provider strings cannot supply them. String fields still pass through normal
+sink redaction. The usage and task writers remain unchanged.
+
 The normal delegate checkout and deliverable guards still decide task success.
 A later guard failure preserves the private result answer and the validated
 usage companion while leaving the task failed. Malformed or incomplete streams

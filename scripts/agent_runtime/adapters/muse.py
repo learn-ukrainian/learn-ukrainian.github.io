@@ -112,8 +112,8 @@ class MuseRunEvidence:
     requested_selector: str
     usage_model: str
     cli_version: str
-    cli_sha256: str
-    prompt_sha256: str
+    cli_sha256: bytes
+    prompt_sha256: bytes
     declared_mode: str
     declared_profile: str
     declared_toolset: tuple[str, ...]
@@ -136,9 +136,13 @@ class MuseRunEvidence:
         """Return a body-free receipt shared by usage and task mirrors."""
         fields = asdict(self)
         fields["declared_toolset"] = list(self.declared_toolset)
-        digest = hashlib.sha256(json.dumps(fields, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        # Only the validated, locally computed launch digests use byte arrays.
+        # All string fields retain the existing sinks' normal sanitization.
+        fields["cli_sha256"] = list(self.cli_sha256)
+        fields["prompt_sha256"] = list(self.prompt_sha256)
+        digest = hashlib.sha256(json.dumps(fields, sort_keys=True, separators=(",", ":")).encode()).digest()
         return {**fields, "receipt_ref": f"muse-run:{self.provider_session_id}:{self.provider_run_id}",
-                "receipt_sha256": digest}
+                "receipt_sha256": list(digest)}
 
 
 @dataclass(frozen=True)
@@ -507,8 +511,8 @@ class MuseAdapter:
             evidence = MuseRunEvidence(
                 task_id=task_id, run_nonce=nonce, provider_session_id=session, provider_run_id=command,
                 requested_selector=plan.metadata["model"], usage_model=counters["model"],
-                cli_version=plan.metadata["cli_version"], cli_sha256=plan.metadata["cli_sha256"],
-                prompt_sha256=plan.metadata["prompt_sha256"], declared_mode=mode,
+                cli_version=plan.metadata["cli_version"], cli_sha256=bytes.fromhex(plan.metadata["cli_sha256"]),
+                prompt_sha256=bytes.fromhex(plan.metadata["prompt_sha256"]), declared_mode=mode,
                 declared_profile=_PROFILES[mode], declared_toolset=_TOOLS[mode],
                 input_tokens=input_tokens, output_tokens=output_tokens,
                 cached_tokens=counters["cached_tokens"], reasoning_tokens=counters["reasoning_tokens"],

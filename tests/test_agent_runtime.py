@@ -4150,6 +4150,8 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
 @pytest.mark.parametrize("model", ["muse-wonder-full-1.0", "muse-spark-1.3"])
 def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
     """M01: completed answers retain bound usage without promoting backend identity."""
+    import hashlib
+
     from scripts.agent_runtime.adapters.muse import MuseAdapter
 
     plan, records = _muse_stream_fixture(tmp_path, model)
@@ -4177,10 +4179,22 @@ def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
     assert companion["observed_model"] is None
     assert companion["identity_state"] == "unknown"
     assert companion["effective_permissions"] == "unknown"
+    assert companion["cli_sha256"] == [170] * 32
+    assert companion["prompt_sha256"] == [187] * 32
+    assert bytes(companion["cli_sha256"]).hex() == plan.metadata["cli_sha256"]
+    assert bytes(companion["prompt_sha256"]).hex() == plan.metadata["prompt_sha256"]
+    fields = {key: value for key, value in companion.items() if key not in {"receipt_ref", "receipt_sha256"}}
+    assert bytes(companion["receipt_sha256"]) == hashlib.sha256(
+        json.dumps(fields, sort_keys=True, separators=(",", ":")).encode(),
+    ).digest()
+    assert companion["receipt_ref"] == (
+        "muse-run:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222"
+    )
 
 
 def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch):
     """M06: real parsing and usage persistence must not lose a completed run's accounting."""
+    import hashlib
     import io
     from unittest.mock import MagicMock
 
@@ -4238,6 +4252,14 @@ def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch
     assert companion["observed_model"] is durable["observed_model"] is None
     assert companion["identity_state"] == durable["identity_state"] == "unknown"
     assert companion["effective_permissions"] == "unknown"
+    assert companion["cli_sha256"] == [170] * 32
+    assert companion["prompt_sha256"] == [187] * 32
+    assert bytes(companion["cli_sha256"]).hex() == plan.metadata["cli_sha256"]
+    assert bytes(companion["prompt_sha256"]).hex() == plan.metadata["prompt_sha256"]
+    fields = {key: value for key, value in companion.items() if key not in {"receipt_ref", "receipt_sha256"}}
+    assert bytes(companion["receipt_sha256"]) == hashlib.sha256(
+        json.dumps(fields, sort_keys=True, separators=(",", ":")).encode(),
+    ).digest()
 
 
 @pytest.mark.parametrize("case", [
