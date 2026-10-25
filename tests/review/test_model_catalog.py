@@ -739,12 +739,14 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
         assert activity_role_refusal(model, "consult", load_model_catalog()) is not None
         args = delegate.build_parser().parse_args([
             "dispatch", "--agent", "muse", "--model", model, "--task-id", "worker-contract",
-            "--prompt", "fixture", "--mode", "read-only",
+            "--prompt", "fixture", "--mode", "read-only", "--research-role", "investigation",
         ])
-        assert delegate._muse_dispatch_refusal(args) == "muse_execution_not_admitted"
+        assert delegate._muse_dispatch_refusal(args) == (
+            None if model == "muse-wonder-full-1.0" else "muse_execution_not_admitted"
+        )
         args.research_role = "driver"
         assert delegate._muse_dispatch_refusal(args) == "muse_ordinary_worker_only"
-        args.research_role = None
+        args.research_role = "investigation"
         args.model = "gpt-6.1-sol"
         assert delegate._muse_dispatch_refusal(args) == "muse_worker_model_refused"
         plan = InvocationPlan(
@@ -1213,7 +1215,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
         return
     workers = {
         "muse-wonder-full-1.0": {
-            "family": "meta", "tier": "compatibility", "lifecycle": "hold",
+            "family": "meta", "tier": "compatibility", "lifecycle": "active",
             "roles": ["coding"], "transports": ["native_muse"],
             "strengths": ["explicit_native_worker"],
             "weaknesses": ["worker_qualification_pending", "no_review_or_driver_authority"],

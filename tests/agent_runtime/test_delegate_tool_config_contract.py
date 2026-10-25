@@ -115,10 +115,6 @@ _KEY_PLACEHOLDERS: dict[str, object] = {
 # exception fails the contract, including ones that omit "unsupported tool_config".
 _EXPECTED_PRECONDITIONS: dict[str, tuple[str, str]] = {
     "GlmAdapter": ("retired in the model catalog", "GLM is retired before planning"),
-    "MuseAdapter": (
-        "model 'muse-wonder-full-1.0' is not admitted for execution",
-        "Muse ordinary workers remain on catalog hold before native planning",
-    ),
     "KimiAdapter": (
         "KIMI CODING-ONLY",
         "Kimi: web, UI and backend coding only — the read-only/review contract is refused before planning",
@@ -231,7 +227,9 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
             "review_profile", "strict_mcp_config",
         ):
             tool_config.pop(key, None)
-        tool_config.update(muse_worker=True, run_nonce="0123456789abcdef", muse_tmp_root=str(lease))
+        tool_config.update(
+            muse_worker=True, muse_role="investigation", run_nonce="0123456789abcdef", muse_tmp_root=str(lease)
+        )
     if adapter_cls.__name__ == "AgyAdapter":
         # AGY grants are now checked before its CLI probe. Supply a real scoped
         # home and an admitted tool instead of the generic synthetic payload.
