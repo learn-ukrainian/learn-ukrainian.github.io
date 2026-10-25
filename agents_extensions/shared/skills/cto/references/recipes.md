@@ -10,12 +10,43 @@ file only points there and adds what the CTO seat learned on top.
 - The merge-queue keeper usually enqueues on its own; check its log before enqueueing by
   hand.
 
+## Publish orders
+
+Write every message body with a quoted heredoc `<<'EOF'`. For new orders, put `@UTC@`
+in the body and use this scratch helper, with the prescribed interpreter and registered slot:
+
+```bash
+cat > "$TMPDIR/order.txt" <<'EOF'
+@UTC@ <order body>
+EOF
+publish_order() {
+  local body="$1" recipient="$2" idempotency_key="$3"
+  shift 3
+  sed "s/@UTC@/$(date -u +%Y-%m-%dT%H:%M:%SZ)/g" "$body" |
+    "$PROJECT_PYTHON" -m scripts.fleet_comms channel publish cto - \
+      --sender "$LU_INBOX_WORKER" --source cto --recipient "$recipient" \
+      --idempotency-key "$idempotency_key" "$@"
+}
+publish_order "$TMPDIR/order.txt" "<registered-slot>" "<unique-order-key>"
+```
+
+Preserve required message references per `docs/runbooks/driver-seat-cli-move.md` § 5.
+
+## CI recovery
+
+Before a rerun, identify the first failing step and its terminal error. Verify that passing
+comparison runs executed that step. Compare failed paths with the full applicable diff;
+follow `docs/runbooks/ci-gate.md` for the one evidenced recovery attempt.
+
 ## Reviews
 
 Seat, run and record every code or infra review with the `local-code-review` skill, which owns reviewer resolution.
 Load that skill before seating a review; a copied dispatch command skips its steps. After the
 reviewer exits, publish the verdict with `scripts/review/record_cf_verdict.py`. A review
 dispatch alone publishes nothing, and the merge-queue keeper waits for the published verdict.
+Name allowed read tools per harness: Codex uses read-only shell; Cursor/Grok uses tracked-file
+reads. Read attestation from the task JSON's top-level `resolved_model_known`, `resolved_model`
+and `resolved_model_source`; never grep nested status output for these fields.
 
 ## Test grants
 
@@ -41,7 +72,12 @@ Record each new in-flight task with `lu-driver-state add --lane cto --kind infli
 owner and done condition. Attach its task ID with `link <id> task <task-id>` and record the
 FULL run nonce with `note <id> <text>` so the tracker handoff can re-arm its wait.
 
-Repeated dispatches belong in a scratch Python script that builds each
+Run every dispatch through the scratch table helper. It builds each
 `delegate.py dispatch` argv from a table and logs stdout and stderr per task; grep the log
-for `run_nonce=`, `SUBSTITUTE` and `queued behind`. An `--owned-path` overlapping a live
-worker's waits for its release; give exact file paths so unrelated jobs do not serialize.
+for `run_nonce=`, `SUBSTITUTE` and `queued behind`. Record the actual substituted identity.
+Use exact owned file paths; never claim a shared subtree for an optional edit.
+Briefs state expected eligible PR lines and files; require a one-line size justification
+above the `workflow.md` small-batch threshold, including data files.
+Limit worker-local checks to Ruff and explicitly named test files for the changed module,
+under a 10-minute timeout. Never expand to all importers. PR CI Gate runs admission checks
+and pytest collection; the merge-group CI Gate runs the full suite.
