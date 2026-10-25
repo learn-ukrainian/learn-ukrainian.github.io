@@ -1048,6 +1048,34 @@ def _build_parser() -> argparse.ArgumentParser:
         ask_agy_parser,
         ask_hermes_parser,
         ask_opencode_parser,
+        ask_deepseek_parser,
+        ask_pool_parser,
+        ask_glm_parser,
+        ask_gemma_parser,
+        ask_cursor_parser,
+        ask_grok_build_parser,
+        ask_kimi_parser,
+    ):
+        ask_parser.add_argument(
+            "--subject-seat",
+            action="append",
+            metavar="SEAT",
+            help="Seat governed by the reviewed change (repeatable; reviews only). Default: none. Example: codex.",
+        )
+        ask_parser.add_argument(
+            "--subject-family",
+            action="append",
+            metavar="FAMILY",
+            help="Family governed by the reviewed change (repeatable; reviews only). Default: none. Example: openai.",
+        )
+
+    for ask_parser in (
+        ask_claude_parser,
+        ask_codex_parser,
+        ask_gemini_parser,
+        ask_agy_parser,
+        ask_hermes_parser,
+        ask_opencode_parser,
         ask_pool_parser,
         ask_glm_parser,
         ask_gemma_parser,
@@ -1720,6 +1748,11 @@ def _handle_acp_compat(args, target: str) -> None:
         content = _review_target_content(target_desc, content, sha=resolved_head_sha)
         review = True
 
+    subject_seats = getattr(args, "subject_seat", None)
+    subject_families = getattr(args, "subject_family", None)
+    if not review and (subject_seats or subject_families):
+        raise SystemExit("--subject-seat/--subject-family require review intent (--review, --type review, --pr or --branch)")
+
     from ._agy import is_gemini_family_model
 
     if review and (target in {"agy", "gemini"} or is_gemini_family_model(model)):
@@ -1765,6 +1798,8 @@ def _handle_acp_compat(args, target: str) -> None:
             pinned_head=resolved_head_sha,
             pr_number=int(pr_number) if pr_number is not None else None,
             review_profile=getattr(args, "review_profile", None),
+            subject_seats=subject_seats,
+            subject_families=subject_families,
         )
         return
 
@@ -1831,6 +1866,8 @@ def _dispatch_headless_review(
     pinned_head: str | None = None,
     pr_number: int | None = None,
     review_profile: str | None = None,
+    subject_seats: list[str] | None = None,
+    subject_families: list[str] | None = None,
 ) -> None:
     """Run a review-intent ask-* through the headless native-CLI dispatch path.
 
@@ -1863,6 +1900,8 @@ def _dispatch_headless_review(
             branch=branch,
             review_profile=review_profile,
             pinned_head=pinned_head,
+            subject_seats=subject_seats,
+            subject_families=subject_families,
         )
     except ReviewAdmissionRefused as exc:
         raise SystemExit(str(exc)) from exc
