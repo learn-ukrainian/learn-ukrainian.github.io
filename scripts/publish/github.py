@@ -7,9 +7,11 @@ There is no argv, arbitrary endpoint, GraphQL document or payload passthrough.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 import tempfile
@@ -19,6 +21,7 @@ from urllib.parse import quote
 
 from scripts.common import github_client
 from scripts.common.scratch import ensure_scratch_root
+from scripts.guardrails.worktree_containment import NotAGitRepositoryError, resolve_main_root_without_git
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
@@ -860,7 +863,15 @@ def main(argv=None, *, runner=None):
         "read",
         help="Named REST and GraphQL reads",
         allow_abbrev=False,
-        description="Read named GitHub resources. Diagnostic reads return JSON arrays per page; code-scanning-alerts lists open alerts for a PR (--number) or Git ref (--ref).",
+        description=(
+            "Read named GitHub resources. Diagnostic reads return JSON arrays per page; "
+            "code-scanning-alerts lists open alerts for a PR (--number) or Git ref (--ref). "
+            "dependabot-alerts reads all open alerts from the physical checkout's approved origin on github.com, "
+            "takes no selectors, and emits one complete JSON array with only number, state, package, "
+            "ecosystem, manifest, GHSA, severity, affected range and fixed version (possibly null). "
+            "It rejects withdrawn advisories and malformed responses; failures emit no alert rows. "
+            "Example: .venv/bin/python -m scripts.publish read dependabot-alerts"
+        ),
     )
     read_parser.add_argument(
         "name",
@@ -873,6 +884,8 @@ def main(argv=None, *, runner=None):
         help=(
             "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin. "
             "For code-scanning-alerts and check-annotations, admission allows only the checkout's origin repository."
+            " dependabot-alerts requires a physically proved catalog checkout and its origin on github.com; "
+            "repository labels only confirm that identity, and inherited Git overrides cannot select it."
         ),
     )
     for key in ("number",):
@@ -957,6 +970,7 @@ REST_READS = {
     "checks": ("repos/{repo}/commits/{sha}/check-runs", {"sha": "sha"}),
     "code-scanning-alerts": ("repos/{repo}/code-scanning/alerts?state=open&ref={ref}", {"ref": "ref"}),
     "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
+    "dependabot-alerts": ("repos/{repo}/dependabot/alerts?state=open", {}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
     "run-artifacts": ("repos/{repo}/actions/runs/{number}/artifacts", {"number": "number"}),
@@ -970,7 +984,7 @@ REST_READS = {
 # gh applies --jq to each page; diagnostic reads emit one JSON array per page.
 _RELATIVE_PATH_JQ = r"""def relative_path:
     if type == "string" and length > 0
-       and (test("(^/|[\\\\:\\x00-\\x1f\\x7f]|(^|/)\\.\\.?(/|$)|//)") | not)
+       and (test("(^/|[\\\\:\\p{Cc}\\p{Cf}\\p{Zl}\\p{Zp}]|(^|/)\\.\\.?(/|$)|//)") | not)
     then . else error("OPSEC: diagnostic file path is not repository-relative") end;
 """
 DIAGNOSTIC_READS = {
@@ -990,6 +1004,40 @@ DIAGNOSTIC_READS = {
     + """
         map({path: (.path | relative_path), line: .start_line,
             level: .annotation_level, message: .message})""",
+    "dependabot-alerts": _RELATIVE_PATH_JQ
+    + r"""
+        def token: type == "string" and length > 0
+            and test("^[A-Za-z0-9@][A-Za-z0-9._+:/~!-]*$")
+            and (contains("://") | not);
+        def version: type == "string" and length > 0
+            and test("^[A-Za-z0-9*<>=~^|, ._+!:/-]+$")
+            and (contains("://") | not);
+        if type != "array" then error("OPSEC: invalid Dependabot alert page") else
+        map(
+            if type != "object" then error("OPSEC: invalid Dependabot alert") else . end |
+            .security_advisory as $advisory | .security_vulnerability as $vulnerability |
+            if (.number | type == "number" and . > 0 and floor == .)
+                and .state == "open"
+                and (.dependency.package.name | token)
+                and (.dependency.package.ecosystem | token)
+                and .dependency.package == $vulnerability.package
+                and ($advisory | type == "object" and has("withdrawn_at"))
+                and $advisory.withdrawn_at == null
+                and ($advisory.ghsa_id | type == "string" and test("^GHSA-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}$"))
+                and ($vulnerability.severity | IN("low", "medium", "high", "critical"))
+                and ($vulnerability.vulnerable_version_range | version)
+                and ($vulnerability | has("first_patched_version"))
+                and ($vulnerability.first_patched_version == null
+                    or ($vulnerability.first_patched_version.identifier | version))
+            then {
+                number: .number, state: .state,
+                package: .dependency.package.name, ecosystem: .dependency.package.ecosystem,
+                manifest: (.dependency.manifest_path | relative_path),
+                ghsa: $advisory.ghsa_id, severity: $vulnerability.severity,
+                affected_version_range: $vulnerability.vulnerable_version_range,
+                fixed_version: $vulnerability.first_patched_version.identifier
+            } else error("OPSEC: invalid or withdrawn Dependabot alert") end
+        ) end""",
 }
 REST_COMPAT_READS = {'budget', 'issue-scope', 'subissues', 'subissues-next', 'default-head', 'pr-bases', 'issue-parent'}
 GQL_READS = {
@@ -999,6 +1047,84 @@ GQL_READS = {
     "membership": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}",
     "squash-text": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid viewerMergeHeadlineText(mergeType:SQUASH) viewerMergeBodyText(mergeType:SQUASH) mergeQueueEntry{headCommit{oid message}}}}}",
 }
+
+
+def _dependabot_repository(cwd, environment, explicit):
+    """Bind the nearest physical checkout to the existing repository catalog.
+
+    Git links prove checkout membership; catalog locations supply authority.
+    The local origin is only a consistency check, never an authority source.
+    Return an identity snapshot to recheck before sending and exposing rows.
+    """
+    try:
+        if ".." in Path(cwd).parts:
+            raise ValueError
+        folder = Path(os.path.abspath(cwd))
+        paths = {folder, *folder.parents}
+        if any(not stat.S_ISDIR(path.lstat().st_mode) for path in paths):
+            raise ValueError
+        checkout = next(path for path in (folder, *folder.parents) if os.path.lexists(path / ".git"))
+        primary = resolve_main_root_without_git(checkout)
+        public = resolve_main_root_without_git(gate.ROOT)
+        matches = [row for row in gate.catalog().values() if public.parent / row["local_name"] == primary]
+        if len(matches) != 1:
+            raise ValueError
+        destination = gate.normalize_repository(matches[0]["github"])
+        if destination.split("/", 1)[0] != "github.com":
+            raise ValueError
+        if environment.get("GH_HOST", "github.com") != "github.com":
+            raise ValueError
+        for selected in (explicit, environment.get("GH_REPO")):
+            if selected is not None and gate.normalize_repository(selected) != destination:
+                raise ValueError
+        common = primary / ".git"
+        metadata = {checkout / ".git", common / "config"}
+        if (checkout / ".git").is_file():
+            fd = os.open(checkout / ".git", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            with os.fdopen(fd, "rb") as handle:
+                if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                    raise ValueError
+                link = handle.read(65537)
+            if len(link) > 65536:
+                raise ValueError
+            gitdir = link.decode().strip().removeprefix("gitdir:").strip()
+            gitdir = Path(os.path.abspath(checkout / gitdir))
+            paths.update((gitdir, *gitdir.parents))
+            metadata.update((gitdir / "gitdir", gitdir / "commondir"))
+        paths.update((common, *common.parents))
+        snapshot = []
+        for path in sorted(paths | metadata):
+            info = path.lstat()
+            identity = (str(path), info.st_dev, info.st_ino)
+            if stat.S_ISDIR(info.st_mode):
+                snapshot.append(identity)
+            elif path in metadata and stat.S_ISREG(info.st_mode) and info.st_size <= 1048576:
+                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                with os.fdopen(fd, "rb") as handle:
+                    opened = os.fstat(handle.fileno())
+                    if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != identity[1:]:
+                        raise ValueError
+                    raw = handle.read(1048577)
+                if len(raw) > 1048576:
+                    raise ValueError
+                snapshot.append((*identity, info.st_mtime_ns, info.st_ctime_ns, hashlib.sha256(raw).hexdigest()))
+            else:
+                raise ValueError
+
+        def origin_reader(_argv, **_kwargs):
+            # Read only the physical repository's own config. Includes, global
+            # config, URL rewrites and inherited GIT_CONFIG_* cannot select it.
+            return subprocess.run(
+                ["git", "config", "--file", str(common / "config"), "--no-includes",
+                 "--get-all", "remote.origin.url"],
+                cwd=folder, env=environment, capture_output=True, text=True, check=False, timeout=5,
+            )
+
+        if repository(folder, {}, reader=origin_reader) != destination:
+            raise ValueError
+        return destination, tuple(snapshot)
+    except (OSError, ValueError, StopIteration, KeyError, TypeError, NotAGitRepositoryError):
+        raise gate.PublishBlocked("DEPENDABOT_REPOSITORY_REFUSED: physical checkout identity unproved.") from None
 
 
 def read(
@@ -1021,12 +1147,23 @@ def read(
     """Specific API reads with fixed GET endpoints or internally built query documents."""
     environment = _validated_environment(env)
     cwd = Path(cwd or Path.cwd())
-    dest = "unknown" if operation == "budget" else repository(cwd, environment, repo)
+    if operation == "dependabot-alerts":
+        # All inherited Git state is untrusted, including config injection.
+        environment = {key: value for key, value in environment.items() if not key.startswith("GIT_")}
+        environment.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull)
+        dest, physical_identity = _dependabot_repository(cwd, environment, repo)
+        environment.pop("GH_REPO", None)
+    else:
+        dest = "unknown" if operation == "budget" else repository(cwd, environment, repo)
     if dest == "unknown" and operation not in {"identity", "budget", "merge-facts"}:
         raise gate.PublishBlocked("OPSEC: read repository unresolved.")
     if dest != "unknown":
         environment["GH_HOST"] = dest.split("/", 1)[0]
     gh_repo = dest.split("/", 1)[-1]
+    if operation == "dependabot-alerts":
+        if timeout is not None and (type(timeout) not in {int, float} or not 0 < timeout <= 30):
+            raise gate.PublishBlocked("OPSEC: invalid Dependabot read timeout.")
+        timeout = timeout or 30
     if operation == "issue-count":
         # One fixed aggregate read. No selectors, arbitrary queries or text leave this path.
         known = gate.catalog()
@@ -1177,6 +1314,54 @@ def read(
                 stderr=stderr,
             )
     argv += _hostname_flag(dest)
+    if operation == "dependabot-alerts":
+        # Buffer every projected page before exposing rows: a later failure must
+        # never look like a complete alert inventory. Raw responses stay in gh.
+        if _dependabot_repository(cwd, environment, repo) != (dest, physical_identity):
+            raise gate.PublishBlocked("DEPENDABOT_IDENTITY_CHANGED: physical checkout changed during read.")
+        try:
+            directory_fd = os.open(cwd, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        except OSError:
+            raise gate.PublishBlocked("DEPENDABOT_REPOSITORY_REFUSED: physical checkout pin unavailable.") from None
+        try:
+            pinned = Path(f"/proc/self/fd/{directory_fd}")
+            opened = os.fstat(directory_fd)
+            expected = next(item for item in physical_identity if item[0] == os.path.abspath(cwd))
+            if (opened.st_dev, opened.st_ino) != expected[1:] or not pinned.is_dir():
+                raise gate.PublishBlocked("DEPENDABOT_IDENTITY_CHANGED: physical checkout pin unproved.")
+            # The child changes directory through this open handle before exec;
+            # renaming or replacing the caller's pathname cannot redirect it.
+            result = _send(
+                argv, environment=environment, runner=runner, cwd=pinned,
+                capture_output=True, text=True, check=False, timeout=timeout,
+            )
+        finally:
+            os.close(directory_fd)
+        if _dependabot_repository(cwd, environment, repo) != (dest, physical_identity):
+            raise gate.PublishBlocked("DEPENDABOT_IDENTITY_CHANGED: physical checkout changed during read.")
+        if result.returncode:
+            refusal = "OPSEC: API read refused; use python -m scripts.publish read <name>."
+            if (result.stderr or "").strip() == refusal:
+                raise gate.PublishBlocked(refusal)
+            raise gate.PublishBlocked("OPSEC: Dependabot read failed; no complete alert inventory.")
+        try:
+            remaining = result.stdout.strip()
+            rows, pages = [], 0
+            while remaining:
+                page, end = json.JSONDecoder().raw_decode(remaining)
+                if not isinstance(page, list):
+                    raise ValueError
+                rows.extend(page)
+                pages += 1
+                remaining = remaining[end:].lstrip()
+            if not pages:
+                raise ValueError
+        except (ValueError, TypeError, AttributeError):
+            raise gate.PublishBlocked("OPSEC: malformed Dependabot projection.") from None
+        return github_client._result_process(
+            ["github", operation], github_client.Result(value=rows), {},
+            {"capture_output": capture_output, "text": text, "stdout": stdout, "stderr": stderr, "check": check},
+        )
     return _send(
         argv,
         environment=environment,
