@@ -10,6 +10,53 @@ def read_api(*args):
     return admit(["api", *args], cwd=".", environment={})
 
 
+def test_pr_revert_mutation_cannot_be_forwarded_as_a_native_read():
+    for args in [["1"], ["1", "--title", "fixture", "--body", "fixture"], ["--repo=unit/public", "1"]]:
+        with pytest.raises(PublishBlocked, match="typed publisher"):
+            admit(["pr", "revert", *args], cwd=".", environment={"GH_REPO": "unit/public"})
+    for args in [["pr", "view", "revert"], ["pr", "list", "--search", "revert"], ["release", "view", "revert"]]:
+        result = admit(args, cwd=".", environment={"GH_REPO": "unit/public"})
+        assert result.argv == args and not result.write
+
+
+def test_nested_mutations_behind_flags_cannot_be_forwarded_as_native_reads():
+    mutations = [
+        ["deploy-key", "add", "synthetic-key-file"],
+        ["deploy-key", "delete", "1"],
+        ["autolink", "create", "FIXTURE-", "https://example.invalid/<num>"],
+        ["autolink", "new", "FIXTURE-", "https://example.invalid/<num>"],
+        ["autolink", "delete", "1"],
+    ]
+    selectors = [
+        [], ["--repo", "unit/public"], ["--repo=unit/public"],
+        ["-R", "unit/public"], ["-Runit/public"], ["-R=unit/public"],
+        ["--help=false", "-R", "unit/public"], ["-h=false", "--repo=unit/public"],
+        ["--repo", "add", "--repo=unit/public"],
+    ]
+    for group, action, *operands in mutations:
+        for selector in selectors:
+            for args in [
+                ["repo", group, *selector, action, *operands],
+                ["repo", group, action, *selector, *operands],
+            ]:
+                with pytest.raises(PublishBlocked, match="typed publisher"):
+                    admit(args, cwd=".", environment={"GH_REPO": "unit/public"})
+    # Native command lookup also accepts value-taking child flags before the action.
+    with pytest.raises(PublishBlocked, match="typed publisher"):
+        admit(["repo", "deploy-key", "--title", "fixture", "add", "synthetic-key-file"], cwd=".", environment={})
+    reads = [
+        ["repo", "deploy-key", "--repo", "add", "list"],
+        ["repo", "deploy-key", "-Rdelete", "list"],
+        ["repo", "deploy-key", "list", "--json", "id", "--jq", "add"],
+        ["repo", "autolink", "--repo=unit/public", "view", "delete"],
+        ["repo", "autolink", "list", "--json", "id", "--template", "create"],
+        ["pr", "list", "--hostname", "example.invalid", "--limit", "invalid"],
+    ]
+    for args in reads:
+        result = admit(args, cwd=".", environment={"GH_REPO": "unit/public"})
+        assert result.argv == args and not result.write
+
+
 @pytest.mark.parametrize("flag", ["-H", "--header"])
 @pytest.mark.parametrize(
     "header",

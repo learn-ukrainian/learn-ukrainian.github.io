@@ -394,13 +394,31 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
             "add", "archive", "cancel", "clone", "close", "comment", "create", "delete",
             "develop", "disable", "edit", "enable", "fork", "import", "install", "link", "lock",
             "merge", "pin", "publish", "ready", "remove", "rename", "reopen", "rerun",
-            "review", "run", "set", "sync", "transfer", "unarchive", "uninstall",
+            "revert", "review", "run", "set", "sync", "transfer", "unarchive", "uninstall",
             "unlink", "unlock", "unpin", "update", "update-branch", "upload",
         }
+        nested_action = None
+        if key in {("repo", "autolink"), ("repo", "deploy-key"), ("repo", "custom-property"), ("issue", "type")}:
+            # Cobra finds the first non-flag command, skipping option values.
+            # These parent commands inherit only the boolean help flag; other
+            # separate long/single-short options consume the following value.
+            index = start + 2
+            while index < len(argv):
+                token = argv[index]
+                if token == "--":
+                    break
+                if token and not token.startswith("-"):
+                    nested_action = token
+                    break
+                takes_value = (
+                    "=" not in token and token not in {"--help", "-h"}
+                    and (token.startswith("--") or (token.startswith("-") and len(token) == 2))
+                )
+                index += 2 if takes_value else 1
         if (len(key) != 2 or key[0] not in groups or key[1].startswith("-")
                 or key[1] in write_actions or key[1].rsplit("-", 1)[-1] in write_actions
-                or (key in {("repo", "autolink"), ("repo", "deploy-key"), ("repo", "custom-property"), ("issue", "type")}
-                    and len(argv) > start + 2 and argv[start + 2] in write_actions)
+                or nested_action in write_actions
+                or (key == ("repo", "autolink") and nested_action == "new")
                 or (key[0] == "auth" and (key[1] != "status" or any(
                     arg.startswith("--show-token") or (arg.startswith("-") and not arg.startswith("--") and "t" in arg)
                     for arg in argv[start + 2 :]
