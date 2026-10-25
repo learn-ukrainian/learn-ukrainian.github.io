@@ -311,6 +311,15 @@
           ],
           "mapping_evidenced": true,
           "independence_groups_evidenced": 1
+        },
+        {
+          "value_norm": "castle, fortress, palace",
+          "assertion_ids": [
+            "wa_dc9aade56998dd5f330df31d"
+          ],
+          "independence_groups": [],
+          "mapping_evidenced": false,
+          "independence_groups_evidenced": 0
         }
       ],
       "independence_groups_agreeing": 1,
@@ -1263,6 +1272,6 @@
         }
       }
     },
-    "card_version": "cv_2d1b96ac6eef9f9b5e71f2ea"
+    "card_version": "cv_a446d0026e6d3c315398af3c"
   }
 }

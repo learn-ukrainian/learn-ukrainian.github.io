@@ -26,7 +26,6 @@ if __package__ in (None, ""):
 from scripts.atlas import word_card_foundation as foundation
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
-from scripts.storage.topology import resolve_store
 
 ROOT = Path.cwd()
 MANIFEST = ROOT / "registry/atlas/pilot/pilot-v1.json"
@@ -414,11 +413,11 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
     foundation.manifest_check(manifest, MANIFEST)
     loaded_registry = foundation.load(REGISTRY)
     registry = source_expansion_projection(loaded_registry, manifest)
+    source_expanded = registry != loaded_registry
     # The existing allocation is never regenerated: --apply only creates a pilot allocation where none exists.
     assert not (apply and any(e["created_in_build"] == BUILD_PREFIX + manifest["manifest_sha256"]
                               for e in registry["entries"])), \
         "The pilot allocation exists; --apply would replace its identities. Use --append-holding for holding senses"
-    assert registry == loaded_registry or not (apply or append), "Source-expanded registries are verified read-only"
     before = git_registry(BASELINE)
     foundation.allocation_check(manifest, registry)
     records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
@@ -447,8 +446,10 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
             "evidence": foundation.canonical(evidence).decode()})
 
     with ExitStack() as stack:
-        sources = foundation.readonly(stack, sources_db or resolve_store("sources").path)
-        vesum = foundation.readonly(stack, vesum_db or resolve_store("vesum").path)
+        from scripts.atlas.word_card_assembly import store_path
+
+        sources = foundation.readonly(stack, store_path("sources", sources_db))
+        vesum = foundation.readonly(stack, store_path("vesum", vesum_db))
         source_rows_checked = 0
         for record in records.values():
             if record.get("database", "sources") != "sources":
@@ -574,6 +575,7 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
         sense_count = sum(len(m["senses"]) for m in mapping)
         assert len(pilot_events) == 150 + sense_count
         if apply or appended:
+            assert not source_expanded, "Source-expanded registries are verified read-only"
             require_writable(REGISTRY)
             foundation.write(REGISTRY, registry)
         assert foundation.load(REGISTRY) == (registry if apply or appended else loaded_registry)

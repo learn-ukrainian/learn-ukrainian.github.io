@@ -21,10 +21,17 @@ from tests.test_word_card_assembly import SYNTHETIC_ALLOCATION_DIGEST, build_wor
 
 @pytest.fixture
 def frozen():
-    return (
-        foundation.load(rehearsal.ROOT / "registry/atlas/pilot/pilot-v1.json"),
-        foundation.load(rehearsal.ROOT / "registry/atlas/identity/registry.json"),
-    )
+    manifest = foundation.load(rehearsal.ROOT / "registry/atlas/pilot/pilot-v1.json")
+    expanded = foundation.load(rehearsal.ROOT / "registry/atlas/identity/registry.json")
+    return manifest, allocator.source_expansion_projection(expanded, manifest)
+
+
+@pytest.fixture
+def frozen_paths(frozen, tmp_path):
+    manifest, registry = tmp_path / "manifest.json", tmp_path / "registry.json"
+    foundation.write(manifest, frozen[0])
+    foundation.write(registry, frozen[1])
+    return ["--manifest", str(manifest), "--registry", str(registry)]
 
 
 @pytest.fixture
@@ -48,6 +55,10 @@ def synthetic(tmp_path, monkeypatch):
 def test_committed_w1a_inputs_have_fixed_pins_and_inventory(frozen):
     manifest, registry = frozen
     rehearsal.check_frozen_inputs(manifest, registry)
+    expanded = foundation.load(rehearsal.ROOT / "registry/atlas/identity/registry.json")
+    # Preserve W1a's exact pin; expanded source observations do not renew that historical proof.
+    with pytest.raises(foundation.Refusal, match="Registry differs from frozen W1a baseline"):
+        rehearsal.check_frozen_inputs(manifest, expanded)
     entries, _ = assembly.pilot_allocation(manifest, registry)
     assert len(entries) == 150
     assert len({entry["card_id"] for entry in entries.values()}) == 150
@@ -205,23 +216,23 @@ def test_cli_writes_receipt_and_returns_check_status(synthetic, tmp_path, monkey
         assert report["passed"] is (not failed)
 
 
-def test_cli_rejects_tracked_output_before_loading_sources(frozen, monkeypatch, capsys):
+def test_cli_rejects_tracked_output_before_loading_sources(frozen_paths, monkeypatch, capsys):
     def forbidden_load(*args, **kwargs):
         pytest.fail("sources opened for refused output")
 
     monkeypatch.setattr(assembly, "load_inputs", forbidden_load)
-    assert rehearsal.main(["--output", str(rehearsal.ROOT / "scripts")]) == 1
+    assert rehearsal.main([*frozen_paths, "--output", str(rehearsal.ROOT / "scripts")]) == 1
     assert "Output must be outside the repository or in an ignored tree" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("store", ["sources", "vesum", "atlas"])
-def test_cli_refuses_relative_database_paths_before_loading(store, monkeypatch, capsys, tmp_path):
+def test_cli_refuses_relative_database_paths_before_loading(store, frozen_paths, monkeypatch, capsys, tmp_path):
     def forbidden_load(*args, **kwargs):
         pytest.fail("sources opened with a relative database path")
 
     monkeypatch.setattr(assembly, "load_inputs", forbidden_load)
     output = tmp_path / "uncreated-output"
-    assert rehearsal.main([f"--{store}-db", "data/relative.sqlite", "--output", str(output)]) == 1
+    assert rehearsal.main([*frozen_paths, f"--{store}-db", "data/relative.sqlite", "--output", str(output)]) == 1
     assert capsys.readouterr().err == "REFUSED: Source database paths must be absolute\n"
     assert not output.exists()
 

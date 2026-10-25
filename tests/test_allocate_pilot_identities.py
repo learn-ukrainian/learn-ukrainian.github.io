@@ -191,15 +191,19 @@ def host_stores():
 
 @pytest.mark.skipif(not host_stores() or not all(p.exists() for p in host_stores()), reason="held sources are host-only")
 def test_host_verify_and_append_are_no_ops_on_the_committed_registry(monkeypatch, capsys):
-    """The committed v3 registry verifies, and a further append finds every obligation met (idempotent)."""
+    """The source-expanded registry verifies; another append finds every holding obligation met."""
     monkeypatch.chdir(ROOT)
     sources, vesum = host_stores()
     path = ROOT / "registry/atlas/identity/registry.json"
     before = path.read_bytes()
+    expanded = foundation.load(path)
+    manifest = foundation.load(allocator.MANIFEST)
+    projection = allocator.source_expansion_projection(expanded, manifest)
+    assert expanded["registry_version"] == 4 and projection["registry_version"] == 3
     for append in (False, True):
-        allocator.run(False, append, sources, vesum)
+        allocator.run(False, append, sources if append else None, vesum if append else None)
         report = json.loads(capsys.readouterr().out)
-        assert (report["registry_version"], report["holding_senses"], report["holding_appended_now"]) == (3, 3, 0)
+        assert (report["registry_version"], report["holding_senses"], report["holding_appended_now"]) == (4, 3, 0)
         assert report["holding_obligations"] == 3 and report["holding_obligations_unmet"] == 0
         assert report["allocated_pilot_senses"] == 155 and report["pilot_units"] == 150
     assert path.read_bytes() == before

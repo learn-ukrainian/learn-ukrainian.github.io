@@ -257,7 +257,17 @@
         {
           "value_norm": "lock (door lock, padlock)",
           "assertion_ids": [
-            "wa_7c892f423fa19f342bfee208",
+            "wa_7c892f423fa19f342bfee208"
+          ],
+          "independence_groups": [
+            "G-PROJECT"
+          ],
+          "mapping_evidenced": true,
+          "independence_groups_evidenced": 1
+        },
+        {
+          "value_norm": "lock, locks",
+          "assertion_ids": [
             "wa_dcd597c8b17459058d7b7e74"
           ],
           "independence_groups": [
@@ -1066,6 +1076,6 @@
         }
       }
     },
-    "card_version": "cv_46df5c0d61a8e3b63911735c"
+    "card_version": "cv_133e6da58713185d5f8d6e84"
   }
 }

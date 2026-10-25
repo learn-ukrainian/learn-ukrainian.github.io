@@ -1,6 +1,7 @@
 """Compare pilot card payloads and ingestion projections with direct WP3 extraction.
 
-Real cards are rebuilt host-only and pinned to the committed Batch 1 receipt.
+Real cards are rebuilt host-only; the historical Batch 1 receipt stays invalidated
+when the same frozen units produce changed card payloads.
 Synthetic mutation tests run in CI without the private source stores. A successful
 ingestion round trip does not prove that an unrepresented operation is on cards.
 Set LU_9821_EQUIVALENCE_RECEIPT to write the content-free host verification receipt.
@@ -90,10 +91,17 @@ def pilot():
         inputs = assembly.load_inputs(batch.ROOT / batch.PILOT, batch.ROOT / batch.REGISTRY,
                                       batch.ROOT / batch.REGISTER, *stores, stack, scratch)
         result, report, receipt = batch.assemble(inputs)
-        assert receipt == foundation.load(batch.ROOT / batch.RECEIPT), "Rebuilt pilot differs from Batch 1"
+        historical = foundation.load(batch.ROOT / batch.RECEIPT)
+        assert receipt["pilot_manifest_sha256"] == historical["pilot_manifest_sha256"]
+        assert receipt["status"] == historical["status"] == "mechanics_only_uncertified"
+        old_cards = {c["card_id"]: c for c in historical["cards"]}
+        assert {c["card_id"] for c in receipt["cards"]} == set(old_cards)
+        assert all(c["content_sha256"] != old_cards[c["card_id"]]["content_sha256"] for c in receipt["cards"])
+        assert receipt["cards_sha256"] != historical["cards_sha256"]
+        assert receipt["build_id"] != historical["build_id"]
         assert report["passed"]
         assert len(result["cards"]) == receipt["card_count"] == 150
-        assert receipt["locator_count"] == 2822
+        assert receipt["locator_count"] > historical["locator_count"] == 2822
         with SnapshotReader({STORE: scratch / "pilot-wp3-extract.sqlite"}) as reader:
             ctx = ComponentContext(reader, {})
             yield inputs, result, receipt, ctx
@@ -158,7 +166,7 @@ def test_pilot_card_payloads_match_direct_extraction(pilot):
     assert {key for key in seen if key[0] in c3_relations.COUNTS} == expected_relations
     assert expected_relations, "No accepted relations reached the pilot cards"
     # This receipt distinguishes ingestion equivalence from actual card coverage.
-    # SUM20 is intentionally held by the current assembler, never counted as proof.
+    # This loop measures WP3 operations, not the separately attached modern articles.
     ingestion = Counter((u.candidate.operation, u.candidate.outcome) for u in inputs.wp3_units)
     coverage = {op: {"projected_card_records": projected[op],
                      "ingested_units": sum(n for (operation, _), n in ingestion.items() if operation == op),

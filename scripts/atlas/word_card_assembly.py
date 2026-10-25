@@ -1545,7 +1545,7 @@ def store_path(name: str, explicit: Path | None) -> Path:
         return explicit
     if name == "atlas":
         return main_checkout_root(Path(__file__).resolve().parents[2]) / "data" / "atlas.db"
-    binding = resolve_store(name)
+    binding = resolve_store(name, main_checkout_root(Path(__file__).resolve().parents[2]))
     if isinstance(binding, StoreRefusal):
         raise AssemblyError(f"The {name} store is unavailable ({binding.reason})")
     return binding.path

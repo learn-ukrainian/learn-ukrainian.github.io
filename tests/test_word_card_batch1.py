@@ -249,5 +249,12 @@ def test_real_150_card_batch_with_readonly_sources(host_output):
         assert report["determinism"]["passed"] is True
         assert_receipt(result, receipt)
         committed = foundation.load(batch.ROOT / batch.RECEIPT)
-        # Later source versions require an explicit receipt rebuild.
-        assert receipt == committed
+        # The retained Batch 1 receipt binds the historical payload, not these expanded cards.
+        assert receipt["status"] == committed["status"] == "mechanics_only_uncertified"
+        assert receipt["pilot_manifest_sha256"] == committed["pilot_manifest_sha256"]
+        old_cards = {c["card_id"]: c for c in committed["cards"]}
+        assert {c["card_id"] for c in receipt["cards"]} == set(old_cards)
+        assert all(c["content_sha256"] != old_cards[c["card_id"]]["content_sha256"] for c in receipt["cards"])
+        assert receipt["cards_sha256"] != committed["cards_sha256"]
+        assert receipt["build_id"] != committed["build_id"]
+        assert foundation.load(batch.ROOT / batch.RECEIPT) == committed
