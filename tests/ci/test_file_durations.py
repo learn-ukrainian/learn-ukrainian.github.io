@@ -171,7 +171,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert pytest_job["needs"] == ["refresh-pytest-durations"]
     assert pytest_job["if"] == full
     assert pytest_job["timeout-minutes"] == 15
-    assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 17))
+    assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 25))
     assert pytest_job["permissions"] == {"contents": "read", "actions": "read"}
     download = next(step for step in pytest_job["steps"] if step.get("name") == "Download pytest duration snapshot")
     assert "pytest-duration-input" in download["run"]
