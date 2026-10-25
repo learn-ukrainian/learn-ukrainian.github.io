@@ -169,27 +169,19 @@ See [GitHub's cancellation endpoint](https://docs.github.com/en/rest/actions/wor
 The launcher shim remains first on PATH. The Claude hook only installs that
 routing; it does not classify payloads or scan shell literals.
 
-Raw reads require the entire argv to match `READ_GRAMMARS` in
-`scripts/opsec/gh_snapshot.py`: exact group/verb, known flags with fixed arity,
-and bounded positional operands. Unknown flags, aliases, extensions, commands,
-extra operands and raw GraphQL are refused. REST `gh api` is admitted only with
-an implicit GET or GET in every method flag, no field/input flags, and a path
-in the closed read-endpoint allowlist. Pagination and read formatting flags
-are supported. `gh auth status -t` and `--show-token` are always refused.
-Exact `gh version` and `gh --version` are also allowed; neither accepts extra operands.
+Raw reads use native gh arguments and errors. The publisher no longer maintains
+read endpoint, verb or flag grammars. That inventory blocked ruleset and merge-queue
+API reads; the wrapper also hid useful `gh run watch` errors. The shim forwards
+read arguments unchanged to native gh, with no wrapper deadline for run watch.
 
-| Group | Allowed read verbs |
-| --- | --- |
-| `pr` | view, list, status, checks, diff |
-| `issue` | view, list, status |
-| `run` | view, list, watch, download |
-| `workflow` | view, list |
-| `repo` | view, list |
-| `release` | view, list, download |
-| `auth` | status |
-| `gist` | view, list |
-| `label` | list |
-| `search` | prs |
+Public mutations still use the typed, scanned publisher. Raw write grammars and
+the verified private-repository exception remain. API classification reuses the
+shared client's native gh semantics: fields or `--input` imply POST unless a
+method overrides it; a GraphQL POST is read-only only when its selected operation
+is a query. GET, HEAD and OPTIONS do not publish text. Raw file/stdin uploads,
+credential or method-override headers, token display and external hosts retain
+their exposure controls. Aliases and extensions remain outside the raw boundary.
+`gh pr checkout <N>` still requires a real dispatch worktree.
 
 Specific API reads also have a shell interface,
 `python -m scripts.publish read <name> --repo <owner/repo> ...`.
@@ -205,7 +197,7 @@ selectors, never documents or endpoints.
 A raw write is admitted only under a known write grammar to an allowlisted
 private repository. The private REST exception requires a complete repository
 endpoint under a known resource, rejects encoded or traversing paths, and uses
-the last explicit hostname. GraphQL remains unavailable through the raw shim. The last explicit repository selector wins over `GH_REPO`
+the last explicit hostname. GraphQL mutations remain unavailable through the raw shim. The last explicit repository selector wins over `GH_REPO`
 and the local origin; a resource URL selects its actual repository. Other
 hosts and unresolved destinations receive no private exemption. Gists have no
 repository exemption. Forwarded private writes explicitly pin `--repo` to the proven destination.
@@ -467,7 +459,7 @@ message is scanned as part of the message.
 
 Historical dispatch briefs, session records and autopsies retain their original
 commands as evidence. For current execution, replace their raw writes with the
-typed verbs above and their GraphQL reads with named read operations.
+typed verbs above. Named reads remain conveniences alongside native gh reads.
 
 Payload transport follows the [GitHub CLI merge manual](https://cli.github.com/manual/gh_pr_merge),
 [comment manual](https://cli.github.com/manual/gh_issue_comment) and

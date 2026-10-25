@@ -14,10 +14,37 @@ from pathlib import Path
 import pytest
 
 from scripts.opsec import prepublish as gate
-from scripts.opsec.gh_snapshot import READ_GRAMMARS, admit
+from scripts.opsec.gh_snapshot import admit
 from scripts.publish import github as pub
 from tests.common.github_cache_isolation import isolate_github_client_cache
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN
+
+READ_COMMANDS = [
+    ['ruleset', 'list', '--repo', 'unit/public'],
+    ['api', 'repos/unit/public/rulesets'],
+    ['api', 'repos/unit/public/merge-queue/entries'],
+    ['run', 'watch', '1', '--compact', '--exit-status'],
+    ['api', 'graphql', '-f', 'query=query($name:String!){repository(owner:"unit",name:$name){name}}', '-f', 'name=public'],
+    ['issue', 'view', '1'],
+    ['issue', 'list'],
+    ['issue', 'status'],
+    ['run', 'view'],
+    ['run', 'list'],
+    ['run', 'watch', '1'],
+    ['run', 'download'],
+    ['workflow', 'list'],
+    ['workflow', 'view'],
+    ['repo', 'view'],
+    ['repo', 'list'],
+    ['release', 'view'],
+    ['release', 'list'],
+    ['release', 'download'],
+    ['auth', 'status'],
+    ['gist', 'view', '1'],
+    ['gist', 'list'],
+    ['label', 'list'],
+    ['search', 'prs', '1'],
+]
 
 
 @pytest.fixture(autouse=True)
@@ -313,7 +340,7 @@ def test_round3_api_endpoint_hiding_is_refused(flag):
     "args",
     [
         ["api", "--method", "GET", "-X", "POST", "repos/unit/public/issues?title=" + TOKEN],
-        ["api", "graphql", "-f", "query={viewer{login}}"],
+        ["api", "graphql", "-f", "query=mutation{deleteIssue(input:{issueId:fixture}){clientMutationId}}"],
         ["alias", "list"],
         ["extension", "exec", "unit"],
         ["unit-alias", "view"],
@@ -328,18 +355,15 @@ def test_api_alias_extension_nonrepo_and_implicit_stdin_refused(args):
         )
 
 
-@pytest.mark.parametrize("key,grammar", list(READ_GRAMMARS.items()))
-def test_every_read_grammar_accepts_minimal_and_known_flags_only(key, grammar, tmp_path):
-    low, _high, flags = grammar
-    args = [*key, *(str(i + 1) for i in range(low))]
+@pytest.mark.parametrize("args", READ_COMMANDS)
+def test_native_reads_preserve_original_arguments(args, tmp_path):
     calls = []
     gate.checked_run(["gh", *args], cwd=tmp_path, env={}, runner=spy(calls))
-    assert len(calls) == 1
-    for flag, arity in flags.items():
-        admit([*args, flag, *(["unit"] if arity else [])], cwd=tmp_path, environment={})
+    assert [call["argv"] for call in calls] == [["gh", *args]]
+    assert admit(args, cwd=tmp_path, environment={}).argv == args
 
 
-@pytest.mark.parametrize("key,grammar", list(READ_GRAMMARS.items()))
+@pytest.mark.parametrize("args", READ_COMMANDS)
 @pytest.mark.parametrize(
     "extra",
     [
@@ -351,11 +375,14 @@ def test_every_read_grammar_accepts_minimal_and_known_flags_only(key, grammar, t
         ["--", "create"],
     ],
 )
-def test_strict_read_grammar_rejects_unknown_missing_and_extra(key, grammar, extra, tmp_path):
-    args = [*key, *(["1"] * grammar[0]), *extra]
-    # --json is unknown or requires a value in every grammar.
-    with pytest.raises(gate.PublishBlocked):
-        gate.checked_run(["gh", *args], cwd=tmp_path, env={}, runner=lambda *a, **k: pytest.fail("send"))
+def test_read_argument_errors_belong_to_native_gh(args, extra, tmp_path):
+    calls = []
+    if args[0] == "api" and extra in [["--unknown"], ["--body", TOKEN], ["--json"], ["--web=true"]]:
+        with pytest.raises(gate.PublishBlocked):
+            admit([*args, *extra], cwd=tmp_path, environment={})
+    else:
+        gate.checked_run(["gh", *args, *extra], cwd=tmp_path, env={}, runner=spy(calls))
+        assert [call["argv"] for call in calls] == [["gh", *args, *extra]]
 
 
 @pytest.mark.parametrize(
@@ -1026,18 +1053,22 @@ def test_raw_rest_private_exemption_requires_actual_endpoint_host(host, allowed)
 
 
 @pytest.mark.parametrize(
-    "args,expected", [(["pr", "list"], 0), (["issue", "comment", "1", "--body", TOKEN], 2), (["api", "graphql"], 2)]
+    "args,expected", [(["run", "watch", "1", "--compact"], 7), (["issue", "comment", "1", "--body", TOKEN], 2), (["api", "graphql", "-f", "query=mutation{deleteIssue(input:{issueId:fixture}){clientMutationId}}"], 2)]
 )
 def test_raw_entry_main_exact_admission(args, expected, tmp_path, monkeypatch, capsys):
     from scripts.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
-    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
+    executable.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > "' + str(tmp_path / "argv") + '"\nprintf "native gh error\\n" >&2\nexit 7\n')
     executable.chmod(0o755)
     monkeypatch.setattr(sys, "argv", ["entry", str(executable), str(ROOT / "scripts/agent_runtime/shims/gh"), *args])
     monkeypatch.setenv("GH_REPO", "unit/public")
     assert gh_entry.main() == expected
-    assert TOKEN not in capsys.readouterr().err
+    stderr = capsys.readouterr().err
+    assert TOKEN not in stderr
+    if expected == 7:
+        assert stderr == "native gh error\n"
+        assert (tmp_path / "argv").read_text().splitlines() == args
 
 
 def test_raw_entry_masks_unexpected_failure(tmp_path, monkeypatch, capsys):
