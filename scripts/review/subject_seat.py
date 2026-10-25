@@ -58,6 +58,8 @@ _HOOK_SEATS: dict[str, str] = {
 
 _AMBIGUOUS_PATHS = frozenset(
     {
+        # Muse adapter changes retain the explicit subject requirement.
+        "scripts/agent_runtime/adapters/muse.py",
         "agents_extensions/shared/hooks/guard-reviewer-publish.py",
     }
 )

@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Literal
 from uuid import UUID, uuid4
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.guardrails.worktree_containment import _require_real_directories, is_dispatch_worktree
 
 from ..env_sanitize import _is_provider_safe_name, build_probe_env
@@ -373,7 +374,7 @@ class MuseAdapter:
             usage = terminal = workspace = None
             sequences: dict[tuple[str, str], int] = {}
             ids: set[str] = set()
-            for line in stdout.splitlines():
+            for line in jsonl_lines(stdout.removesuffix("\n")):
                 if terminal is not None:
                     raise ValueError("muse_event_after_terminal")
                 record = json.loads(line, object_pairs_hook=_unique_object)

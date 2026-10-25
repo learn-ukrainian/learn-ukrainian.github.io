@@ -6385,3 +6385,52 @@ entries:
   count: 1
   kind: adapter_identity
   reason: Catalog retirement/refusal identity or subscribed default, operator decision 2026-10-23; no additional routing permission.
+- path: scripts/agent_runtime/adapters/muse.py
+  scope: <module>
+  context: expression
+  id: muse-spark-1.3
+  count: 1
+  kind: migration_debt
+  reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/muse.py
+  scope: <module>
+  context: expression
+  id: muse-wonder-full-1.0
+  count: 1
+  kind: migration_debt
+  reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/muse.py
+  scope: MuseAdapter
+  context: expression
+  id: muse-wonder-full-1.0
+  count: 1
+  kind: migration_debt
+  reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  context: expression
+  id: muse-wonder-full-1.0
+  count: 1
+  kind: migration_debt
+  reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
+- path: scripts/delegate.py
+  scope: _muse_dispatch_refusal
+  context: expression
+  id: muse-wonder-full-1.0
+  count: 2
+  kind: migration_debt
+  reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
+- path: scripts/delegate.py
+  scope: _run_worker
+  context: expression
+  id: muse-wonder-full-1.0
+  count: 1
+  kind: migration_debt
+  reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/muse_lane.py
+  scope: <module>
+  context: expression
+  id: muse-wonder-full-1.0
+  count: 1
+  kind: migration_debt
+  reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
