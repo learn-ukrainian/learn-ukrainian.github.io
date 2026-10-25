@@ -114,14 +114,14 @@ def test_recorded_base_ahead_of_driver_main_is_not_charged_to_worker(publication
     assert marker.read_text() == "checked"
 
 
-def publish(publication, *, owned_paths=None, task_id="security-finalize"):
+def publish(publication, *, owned_paths=None, task_id="security-finalize", base_branch="main"):
     worktree, _origin, base, _marker = publication
     return delegate._auto_finalize_dirty_worktree(
         worktree=worktree,
         task_id=task_id,
         agent="codex",
         branch="codex/finalize",
-        base_branch="main",
+        base_branch=base_branch,
         base_sha=base,
         owned_paths=["artifact.txt"] if owned_paths is None else owned_paths,
     )
@@ -132,7 +132,7 @@ def refs(origin):
 
 
 def test_publication_without_destination_boundary_refuses_before_history_receive(publication, monkeypatch, tmp_path):
-    """An unavailable public head on a new branch must not widen to full-history snapshots."""
+    """A missing destination base on a new branch must not widen to full-history snapshots."""
     worktree, origin, base, marker = publication
     head = write_commit(worktree)
     monkeypatch.setattr(delegate, "_finalize_public_repository", lambda: None)
@@ -159,7 +159,7 @@ def test_publication_without_destination_boundary_refuses_before_history_receive
     monkeypatch.setattr(SafeGitContext, "prepare_lfs", lfs)
     monkeypatch.setattr(delegate, "_finalize_transport_credentials", credential_boundary)
     before = refs(origin)
-    result = publish(publication)
+    result = publish(publication, base_branch="absent-destination-base")
     assert not result.ok, result.error
     assert "auto_finalize_remote_unverified" in result.error
     assert not any("--no-filter" in options for options in received)

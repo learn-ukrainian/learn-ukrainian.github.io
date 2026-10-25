@@ -8738,6 +8738,7 @@ def _push_auto_finalize_branch(
     owned_paths: object = None,
     base_sha: str | None = None,
     task_id: str | None = None,
+    base_branch: str = "main",
 ) -> None:
     """Scan, validate and publish in a driver-configured repo; borrow only objects.
 
@@ -8758,6 +8759,8 @@ def _push_auto_finalize_branch(
         with _finalize_execution_context(worktree, task_id=task_id) as context:
             if context.run("check-ref-format", f"refs/heads/{branch}").returncode:
                 raise SnapshotRefusal("auto_finalize_unsafe_branch")
+            if context.run("check-ref-format", f"refs/heads/{base_branch}").returncode:
+                raise SnapshotRefusal("auto_finalize_unsafe_branch")
             head = _finalize_source_head(context, branch)
             if expected_head is not None and head != expected_head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
@@ -8773,11 +8776,15 @@ def _push_auto_finalize_branch(
             # Before any worker code runs: the exact id the push sends.
             _finalize_opsec_scan(context, branch=branch, head=head, remote=remote)
             exclusions = [remote] if remote else []
-            public_head = getattr(context, "public_head", None)
-            if public_head:
-                # Public history outside this head's ancestry cannot be sent.
-                # All merge bases retain the exact exclusion even in a crisscross graph.
-                common = context.run("merge-base", "--all", head, public_head)
+            destination_base = _finalize_remote_head(context, base_branch)
+            if destination_base:
+                if context.run("cat-file", "-e", f"{destination_base}^{{commit}}").returncode:
+                    context.fetch_remote_commits(f"refs/heads/{base_branch}", head, context.driver_base)
+                if context.run("cat-file", "-e", f"{destination_base}^{{commit}}").returncode:
+                    raise SnapshotRefusal("auto_finalize_remote_unverified")
+                # Only destination-advertised ancestry proves what it already holds.
+                # The OPSEC scan's public history does not establish possession here.
+                common = context.run("merge-base", "--all", head, destination_base)
                 if common.returncode not in {0, 1}:
                     raise SnapshotRefusal("auto_finalize_fsck_failed")
                 exclusions.extend(common.stdout.split())
@@ -8967,7 +8974,7 @@ def _auto_finalize_dirty_worktree(
         try:
             _push_auto_finalize_branch(
                 worktree, resolved_branch, expected_head=intended_head, owned_paths=owned, base_sha=base_sha,
-                task_id=task_id,
+                task_id=task_id, base_branch=_base_branch_name(base_branch),
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             error = _publish_cause(
@@ -9041,7 +9048,7 @@ def _auto_finalize_dirty_worktree(
             return _failed(_TypedCause("auto_finalize_head_moved"), commit_sha=commit_sha)
         _push_auto_finalize_branch(
             worktree, resolved_branch, expected_head=commit_sha, owned_paths=owned, base_sha=base_sha,
-            task_id=task_id,
+            task_id=task_id, base_branch=_base_branch_name(base_branch),
         )
     except SnapshotRefusal as exc:
         code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
