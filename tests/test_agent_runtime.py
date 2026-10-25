@@ -4147,6 +4147,99 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
     return plan, records
 
 
+@pytest.mark.parametrize("model", ["muse-wonder-full-1.0", "muse-spark-1.3"])
+def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
+    """M01: completed answers retain bound usage without promoting backend identity."""
+    from scripts.agent_runtime.adapters.muse import MuseAdapter
+
+    plan, records = _muse_stream_fixture(tmp_path, model)
+    result = MuseAdapter().parse_response(
+        stdout="\n".join(json.dumps(record) for record in records),
+        stderr="", returncode=0, output_file=None, plan=plan,
+    )
+
+    assert result.ok is True
+    assert result.response == "READY\n"
+    assert result.tokens == 120
+    assert result.session_id == "11111111-1111-4111-8111-111111111111"
+    companion = result.muse_run.projection()
+    assert companion["task_id"] == "muse-interface"
+    assert companion["run_nonce"] == "0123456789abcdef"
+    assert companion["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
+    assert companion["provider_run_id"] == "22222222-2222-4222-8222-222222222222"
+    assert companion["requested_selector"] == model
+    assert companion["usage_model"] == model
+    assert companion["input_tokens"] == 100
+    assert companion["output_tokens"] == 20
+    assert companion["cached_tokens"] == 30
+    assert companion["reasoning_tokens"] == 5
+    assert companion["total_tokens"] == 120
+    assert companion["observed_model"] is None
+    assert companion["identity_state"] == "unknown"
+    assert companion["effective_permissions"] == "unknown"
+
+
+def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch):
+    """M06: real parsing and usage persistence must not lose a completed run's accounting."""
+    import io
+    from unittest.mock import MagicMock
+
+    from agent_runtime import runner, usage
+    from agent_runtime.adapters import muse as runtime_muse
+    from scripts.agent_runtime.adapters.muse import MuseAdapter
+
+    plan, records = _muse_stream_fixture(tmp_path)
+    adapter = MuseAdapter()
+    # Planning/admission are synthetic inputs, not qualified cap or permission evidence.
+    monkeypatch.setattr(runtime_muse, "require_muse_execution_model", lambda model: model)
+    monkeypatch.setattr(adapter, "build_invocation", MagicMock(return_value=plan))
+    monkeypatch.setattr(runner, "_load_adapter", MagicMock(return_value=adapter))
+    monkeypatch.setattr(runner, "_resolve_plan_telemetry", MagicMock(return_value=SimpleNamespace(
+        model="muse-wonder-full-1.0", effort="high", cli_version=plan.metadata["cli_version"],
+    )))
+    proc = MagicMock()
+    proc.stdout = io.StringIO("\n".join(json.dumps(record) for record in records) + "\n")
+    proc.stderr = io.StringIO("")
+    proc.poll.return_value = proc.wait.return_value = proc.returncode = 0
+    monkeypatch.setattr(runner, "_spawn_subprocess", MagicMock(return_value=(proc, None, None)))
+    store = tmp_path / "private-usage"
+    store.mkdir(mode=0o700)
+    monkeypatch.setattr(usage, "_usage_dir", lambda: store)
+
+    result = runner.invoke(
+        "muse", "fixture", mode="read-only", cwd=tmp_path,
+        model="muse-wonder-full-1.0", task_id="muse-interface", effort="high",
+        tool_config={"run_nonce": "0123456789abcdef"},
+    )
+
+    assert result.ok is True
+    assert result.response == "READY\n"
+    assert result.session_id == "11111111-1111-4111-8111-111111111111"
+    files = list(store.glob("usage_muse-runtime_*.jsonl"))
+    assert len(files) == 1
+    lines = files[0].read_text().splitlines()
+    assert len(lines) == 1
+    durable = json.loads(lines[0])
+    assert durable == result.usage_record
+    assert durable["outcome"] == "ok"
+    assert durable["tokens"] == 120
+    assert durable["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
+    companion = durable["muse_run"]
+    assert companion["task_id"] == "muse-interface"
+    assert companion["run_nonce"] == "0123456789abcdef"
+    assert companion["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
+    assert companion["provider_run_id"] == "22222222-2222-4222-8222-222222222222"
+    assert companion["requested_selector"] == companion["usage_model"] == "muse-wonder-full-1.0"
+    assert companion["input_tokens"] == 100
+    assert companion["output_tokens"] == 20
+    assert companion["cached_tokens"] == 30
+    assert companion["reasoning_tokens"] == 5
+    assert companion["total_tokens"] == 120
+    assert companion["observed_model"] is durable["observed_model"] is None
+    assert companion["identity_state"] == durable["identity_state"] == "unknown"
+    assert companion["effective_permissions"] == "unknown"
+
+
 @pytest.mark.parametrize("case", [
     "foreign-session", "wrong-command-run", "duplicate-usage", "duplicate-json-member",
     "wrong-model", "boolean-counter", "negative-counter", "child-usage", "cached-above-input",
