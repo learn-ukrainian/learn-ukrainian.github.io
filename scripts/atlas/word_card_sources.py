@@ -488,7 +488,7 @@ def partition_lexically_ambiguous(partition: dict, spelling: str) -> bool:
     return len(markers) > 1 or len(positions) > 1
 
 
-def partition_claims(partition: dict) -> list[tuple[str, object, str]]:
+def partition_claims(partition: dict, *, held: list[dict] | None = None) -> list[tuple[str, object, str]]:
     """Typed, additive values plus the verbatim source record, without sense minting.
 
     The provenance field is retained alongside extracted fields so even unmapped
@@ -497,8 +497,7 @@ def partition_claims(partition: dict) -> list[tuple[str, object, str]]:
     """
     claims = [("source_records", {"source_label": partition["source_label"],
                                   "record": partition["record"]}, "record")]
-    names = {"meaning": "definition_uk", "definition_cards": "definition_uk", "gloss": "english_gloss",
-             "translation": "english_gloss", "literary_attestation": "examples", "lemma": "spelling",
+    names = {"literary_attestation": "examples", "lemma": "spelling",
              "pronunciation": "pronunciation", "morphology": "morphology", "etymology": "etymology",
              "stress": "stress", "cefr": "cefr", "examples": "examples", "synonyms": "synonyms",
              "antonyms": "antonyms", "definition_uk": "definition_uk", "kaikki": "kaikki",
@@ -511,7 +510,30 @@ def partition_claims(partition: dict) -> list[tuple[str, object, str]]:
         if key in {"enrichment", "sections", "atlas_metadata"} and isinstance(value, dict):
             values.extend((name, item, origin + "/" + name) for name, item in value.items())
             continue
+        if key == "definition_cards" and isinstance(value, list):
+            # Each child carries its own source label. The compilation remains
+            # tier 3 even when a child names an authoritative dictionary.
+            values.extend(("meaning", item, origin + f"/{index}") for index, item in enumerate(value))
+            continue
         field = names.get(key)
+        reason = "source_language_unspecified"
+        if key == "meaning":
+            label = value.get("source", "") if isinstance(value, dict) else ""
+            source = source_label_id(label) if label else partition["source_id"]
+            if source == "kaikki":
+                field = "english_gloss"
+            elif source in {"wiktionary", "vts_busel_slovnyk_me", "sum20"} or label in {
+                "Великий тлумачний словник сучасної української мови", "СУМ-20",
+                "Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні)",
+            }:
+                field = "definition_uk"
+            else:
+                reason = "source_language_or_definition_facet_unspecified"
+        elif key == "translation" and isinstance(value, dict) and value.get("en"):
+            field = "english_gloss"
+        if (field is None and key in {"meaning", "definition_cards", "gloss", "translation"}
+                and value and held is not None):
+            held.append({"source_field": origin, "reason": reason})
         if field is None or value is None or value == "":
             continue
         if field == "stress" and isinstance(value, dict):

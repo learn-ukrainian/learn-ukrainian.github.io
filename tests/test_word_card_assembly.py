@@ -432,9 +432,11 @@ def test_relation_groups_align_only_to_one_active_sense_and_one_unit(result):
         sense["sense_map"]
     second = card_of(result, "альфа", nth=1)
     assert second["senses"][0]["fields"]["synonyms"]["state"] == "single-source"
-    # Nothing is ever asserted on the card subject for a sense-level field.
+    # Sense fields stay sense-bound except the own-record MWE article partition.
     for card in result["cards"].values():
-        assert not [a for a in card["assertions"] if a["subject"]["kind"] == "card" and a["field"] in wa.SENSE_FIELDS]
+        assert not [a for a in card["assertions"] if a["subject"]["kind"] == "card" and a["field"] in wa.SENSE_FIELDS
+                    and not (card["card_kind"] == "mwe" and a["field"] == "definition_uk"
+                             and a["source_id"] == "frazeolohichnyi")]
 
 
 def test_unaligned_groups_wait_whole_on_the_unsplit_sense(result):
@@ -512,6 +514,14 @@ def test_same_record_phraseology_attaches_definition_and_example(result):
     assert [v["value_norm"] for v in sense["fields"]["examples"]["values"]] == ["цитата першої фрази (автор один)"]
     # ULIF and the aggregator share a lineage: never two groups.
     assert card["fields"]["mwe_form"]["values"][0]["independence_groups"] == ["G-ULIF"]
+    # The source article is also retained literally on the card, without a sense allocation.
+    own = assertions(card, "definition_uk", source_id="frazeolohichnyi")
+    assert [a["value"] for a in own] == [
+        "пер[']ш[/']а фраза. Означення першої фрази. Цитата першої фрази (Автор Один)."]
+    assert own[0]["subject"] == {"kind": "card", "id": card["card_id"]}
+    record, = assertions(card, "source_records", source_id="frazeolohichnyi")
+    assert record["value"]["source_label"] == "Фразеологічний словник"
+    assert record["value"]["record"]["definition"] == own[0]["value"]
 
 
 def test_same_form_with_a_different_record_is_held_not_merged(result):
@@ -519,6 +529,8 @@ def test_same_form_with_a_different_record_is_held_not_merged(result):
     held = [h for h in result["ledger"].cards[card["card_id"]]["held"] if h["kind"] == "ulif_phraseology"]
     assert held and held[0]["reason"] == "same_form_different_record"
     assert not card["senses"][0]["fields"]
+    assert [a["value"] for a in assertions(card, "definition_uk", source_id="frazeolohichnyi")] == [
+        "друга фраза. Зовсім інший текст (Автор Три)."]
 
 
 def test_unmatched_phraseology_is_accounted(result):

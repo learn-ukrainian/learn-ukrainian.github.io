@@ -67,6 +67,20 @@ IPA, etymology and forms populate the corresponding fields with the original CC 
 Embedded Atlas `sections` and `enrichment` values also populate their named fields; unextracted metadata
 remains in the cited source record.
 
+The frozen phrase-dictionary anchor also supplies its exact unsplit body as a card-level
+`definition_uk` source partition. Its `source_records` value retains the complete row and dictionary
+label. The verifier binds each field to that card's own anchor, literal value, snapshot and persistent
+source record. Embedded quotations remain unsegmented unless separately extracted from a bound ULIF
+record. This adds no sense or cross-source sense alignment.
+
+Legacy language facets follow the payload's explicit source contract. Kaikki English Wiktionary
+meanings use `english_gloss`; Ukrainian Wiktionary, ВТС and СУМ-20 meanings use `definition_uk`.
+Each embedded definition card keeps its source label and compilation tier. Translation payloads with
+an explicit `en` value use `english_gloss`. Generic Atlas `gloss` strings have no language tag and
+remain in `source_records`, with a named `source_language_unspecified` ledger hold. Unsupported
+meaning facets also remain raw with `source_language_or_definition_facet_unspecified`. Neither
+retention nor a script-based guess establishes a typed definition or English gloss.
+
 The source expansion appends only initial source observations with content aliases and random `sr_`
 IDs under `pilot-source-expansion-11627@sha256:<frozen manifest hash>`. It adds no card or sense mints.
 Verification checks the original allocation digest independently of that extension, and checks each

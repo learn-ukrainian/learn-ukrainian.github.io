@@ -843,7 +843,8 @@ def attach_source_partitions(inputs: Inputs, unit: dict, entry: dict, builder: B
         confidence = "unresolved" if match["method"] == "unresolved" or ambiguous else "medium"
         reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
         record = bound_source_record(inputs.registry, part)
-        for index, (field, value, origin) in enumerate(src.partition_claims(part)):
+        held_facets = []
+        for index, (field, value, origin) in enumerate(src.partition_claims(part, held=held_facets)):
             norm = (value if field == "cefr" else src.norm_v1(value)) if isinstance(value, str) else \
                 foundation.canonical(value).decode()
             assertion = builder.add("card", entry["card_id"], field, value, norm,
@@ -857,6 +858,10 @@ def attach_source_partitions(inputs: Inputs, unit: dict, entry: dict, builder: B
                             locator=part["locator"], content_sha256=part["content_sha256"])
             ledger.field(entry["card_id"], field, "held" if confidence == "unresolved" else "asserted",
                          reason if confidence == "unresolved" else None)
+        for held in held_facets:
+            ledger.hold(entry["card_id"], "language_facet", held["reason"],
+                        source_field=held["source_field"], source_id=part["source_id"],
+                        locator=part["locator"], content_sha256=part["content_sha256"])
     if parts:
         ledger.cards[entry["card_id"]]["fields"]["source_records"]["availability"] = {
             **inputs.sources.availability,
@@ -940,8 +945,16 @@ def assemble_mwe(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, idiom_
     ledger.field(card_id, "mwe_form", "asserted")
     sense = entry["senses"][0]
     body = strip_aggregator_markup(raw["definition"])
-    ledger.hold(card_id, "definition_uk", "entry_body_unsegmented", locator=f"{anchor['locator']} [definition]",
-                detail="heading, label, numbered senses and quotations are one text; no reviewed segmenter")
+    # The whole own-record body is a card-level source partition, not a sense.
+    b.add("card", card_id, "definition_uk", raw["definition"], src.norm_v1(raw["definition"]),
+          "frazeolohichnyi", anchor["snapshot_id"], f"{anchor['locator']} [definition]",
+          src.EXTRACTION["frazeolohichnyi"], "high", record=srec)
+    record_value = {"source_label": "Фразеологічний словник", "record": raw}
+    b.add("card", card_id, "source_records", record_value, foundation.canonical(record_value).decode(),
+          "frazeolohichnyi", anchor["snapshot_id"], f"{anchor['locator']} [record]",
+          src.EXTRACTION["frazeolohichnyi"], "high", record=srec)
+    ledger.field(card_id, "definition_uk", "asserted", source_partition="whole own-record body; no sense alignment")
+    ledger.field(card_id, "source_records", "asserted")
     # ULIF phraseology of the pilot entries that is the same dictionary record (identity.md §9).
     wanted = normalize_mwe_form(form)
     matched = 0
@@ -980,7 +993,6 @@ def assemble_mwe(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, idiom_
         ledger.field(card_id, "definition_uk", "asserted", matched_ulif_records=matched)
         ledger.field(card_id, "examples", "asserted")
     else:
-        ledger.field(card_id, "definition_uk", "held", "entry_body_unsegmented; no same-record ULIF phraseology")
         ledger.field(card_id, "examples", "held", "quotations are inside the unsegmented entry body")
     for name, reason in NOT_IN_FROZEN_INPUTS.items():
         if name in MWE_FIELDS:
@@ -1216,6 +1228,9 @@ def proposition(assertion: dict, normalise) -> str:
     field, value = assertion["field"], assertion["value"]
     if field == "paradigm":
         return value["slot"] + "=" + "|".join(sorted({normalise(src.unstressed(f)) for f in value["forms"]}))
+    if isinstance(value, (dict, list)) and (field == "source_records"
+            or assertion["extraction_version"] == "pilot-source-partition-v1"):
+        return normalise(foundation.canonical(value).decode())
     if isinstance(value, dict) and "members" in value:
         return normalise(value["members"])
     if isinstance(value, list):
@@ -1229,7 +1244,8 @@ def selector_proposition(value_norm: str, assertion: dict, normalise) -> str:
     if assertion["field"] == "paradigm":
         slot, _, forms = value_norm.partition("=")
         return slot + "=" + "|".join(sorted({normalise(f) for f in forms.split("|")}))
-    if isinstance(assertion["value"], list):
+    if (isinstance(assertion["value"], list)
+            and assertion["extraction_version"] != "pilot-source-partition-v1"):
         return "|".join(sorted({normalise(v) for v in value_norm.split("|")}))
     return normalise(value_norm)
 

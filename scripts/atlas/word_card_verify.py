@@ -126,7 +126,15 @@ class Resolver:
             row = self.row("frazeolohichnyi", int(kind[-1]))
             if row is None:
                 return "row_missing"
-            return None if src.nfc(wa.aggregator_form(row["word"])) == src.nfc(value) else "value_mismatch"
+            checks = {
+                ("mwe_form", "word"): (src.nfc(wa.aggregator_form(row["word"])),
+                                       src.norm_v1(wa.aggregator_form(row["word"]))),
+                ("definition_uk", "definition"): (row["definition"], src.norm_v1(row["definition"])),
+                ("source_records", "record"): (
+                    {"source_label": "Фразеологічний словник", "record": row},
+                    foundation.canonical({"source_label": "Фразеологічний словник", "record": row}).decode()),
+            }
+            return None if checks.get((a["field"], part)) == (value, a["value_norm"]) else "value_mismatch"
         if head.startswith("atlas0:enrichment:"):
             record = self.inputs.records.get(head)
             if record is None:
@@ -379,8 +387,16 @@ def source_routes(inputs: wa.Inputs, unit: dict, entry: dict, assertion: dict) -
                 for index, (name, _value, _origin) in enumerate(src.partition_claims(part)) if name == field]
     anchor = inputs.records[unit["anchor_locator"]]
     own = [inputs.records[k] for k in unit["source_record_keys"]]
-    if source in {"puls", "ukrainian_word_stress", "frazeolohichnyi"}:
-        permitted = {"puls": "cefr", "ukrainian_word_stress": "stress", "frazeolohichnyi": "mwe_form"}
+    if source == "frazeolohichnyi":
+        part = {"mwe_form": "word", "definition_uk": "definition", "source_records": "record"}.get(field)
+        if (unit["entry_type"] != "mwe_candidate" or part is None
+                or anchor["source_id"] != source
+                or assertion["subject"] != {"kind": "card", "id": entry["card_id"]}
+                or assertion["extraction_version"] != src.EXTRACTION["frazeolohichnyi"]):
+            return []
+        return [(f"{anchor['locator']} [{part}]", anchor["locator"], anchor["snapshot_id"])]
+    if source in {"puls", "ukrainian_word_stress"}:
+        permitted = {"puls": "cefr", "ukrainian_word_stress": "stress"}
         return [(r["locator"], r["locator"], r["snapshot_id"]) for r in own
                 if r["source_id"] == source and field == permitted[source]
                 and (source != "puls" or wa.puls_matches_identity(
@@ -485,7 +501,8 @@ def intended_matches(selector: dict, inventory: dict, records: dict) -> set[str]
             if (a["source_id"], a["field"]) != (selector["source_id"], selector["field"]) or \
                     src.nfc(spelling) != src.nfc(selector["subject_spelling"]):
                 continue
-            structured = isinstance(a["value"], list)
+            structured = (isinstance(a["value"], list)
+                          and a["extraction_version"] != "pilot-source-partition-v1")
             if "value_norm" not in selector or _stored_proposition(
                     a["field"], selector["value_norm"], structured, normalise) == _stored_proposition(
                     a["field"], a["value_norm"], structured, normalise):

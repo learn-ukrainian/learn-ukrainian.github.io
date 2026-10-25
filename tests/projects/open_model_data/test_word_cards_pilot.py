@@ -43,7 +43,7 @@ def synthetic(tmp_path, monkeypatch):
     inputs.hashes["frozen_rows_verified"] = 12
     monkeypatch.setattr(rehearsal, "MANIFEST_SHA256", foundation.digest(inputs.manifest))
     monkeypatch.setattr(rehearsal, "REGISTRY_SHA256", foundation.digest(inputs.registry))
-    monkeypatch.setattr(rehearsal, "DENOMINATOR", {"cards": 9, "locators": 83, "source_rows": 12})
+    monkeypatch.setattr(rehearsal, "DENOMINATOR", {"cards": 9, "locators": 87, "source_rows": 12})
     try:
         yield inputs
     finally:
@@ -94,8 +94,8 @@ def test_runner_verifies_locators_identities_and_all_withdrawals_deterministical
     second = rehearsal.run_rehearsal(synthetic)
     assert first == second
     assert first["passed"] is True
-    assert first["observed"] == {"cards": 9, "locators": 83, "source_rows": 12}
-    assert first["verification"]["locators"] == {"passed": True, "checked": 83, "errors": {}}
+    assert first["observed"] == {"cards": 9, "locators": 87, "source_rows": 12}
+    assert first["verification"]["locators"] == {"passed": True, "checked": 87, "errors": {}}
     assert first["verification"]["identity_binding"]["passed"] is True
     assert first["verification"]["source_records"]["passed"] is True
     assert first["verification"]["determinism"]["passed"] is True
