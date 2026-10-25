@@ -466,6 +466,8 @@ def build_ask_review_dispatch_command(
     branch: str | None = None,
     review_profile: str | None = None,
     pinned_head: str | None = None,
+    subject_seats: list[str] | None = None,
+    subject_families: list[str] | None = None,
 ) -> list[str]:
     """Headless dispatch command for one review-intent ask-*.
 
@@ -507,6 +509,10 @@ def build_ask_review_dispatch_command(
         cmd.extend(["--pinned-head", pinned_head])
     if review_profile:
         cmd.extend(["--review-profile", review_profile])
+    for seat in subject_seats or ():
+        cmd.extend(["--subject-seat", seat])
+    for family in subject_families or ():
+        cmd.extend(["--subject-family", family])
     if model:
         cmd += ["--model", model]
     if effort:
@@ -577,6 +583,8 @@ def run_ask_review_dispatch(
     branch: str | None = None,
     review_profile: str | None = None,
     pinned_head: str | None = None,
+    subject_seats: list[str] | None = None,
+    subject_families: list[str] | None = None,
 ) -> dict[str, Any]:
     """Dispatch one review-intent ask-* to the headless native CLI and block for it.
 
@@ -615,6 +623,8 @@ def run_ask_review_dispatch(
             branch=branch,
             review_profile=review_profile,
             pinned_head=pinned_head,
+            subject_seats=subject_seats,
+            subject_families=subject_families,
         )
         try:
             dispatch_proc = subprocess.run(

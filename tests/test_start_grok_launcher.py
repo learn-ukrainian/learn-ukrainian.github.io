@@ -76,7 +76,8 @@ def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str, tmp_p
     assert argv[3:-2] == [arg.encode() for arg in provider_args]
     assert argv[-2] == b"--"
     prompt = argv[-1].decode()
-    binding_start = "Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting."
+    lane = "devops" if selector == "infra.devops" else selector
+    binding_start = f"First run lu-driver-state render --lane {lane}, then lu-driver-state check --lane {lane}."
     assert prompt.count(binding_start) == 1
     assert prompt.startswith(" ".join(prompts) + ("\n\n" if prompts else "") + binding_start)
     assert "do not claim, renew, or reopen the lease" in prompt

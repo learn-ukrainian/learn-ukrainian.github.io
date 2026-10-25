@@ -260,6 +260,20 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
     assert "would probe" in sustained.stdout
     assert sustained.stdout.index("would claim lease") < sustained.stdout.index("would mint and bootstrap")
     assert sustained.stdout.index("would mint and bootstrap") < sustained.stdout.index("would bind drive-epic")
+    prompt = shlex.split(sustained.stdout.split("would exec ", 1)[1])[-1]
+    assert prompt.startswith(
+        "First run lu-driver-state render --lane devops, then lu-driver-state check --lane devops."
+    )
+    assert "newest full-content DB handoff_note as authority" in prompt
+    assert "exactly one full-content DB handoff_note" in prompt
+    assert "rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads" in prompt
+    assert "the next three actions" in prompt
+    assert "A temporary path or markdown content cannot substitute" in prompt
+    assert "pointer holds only pinned provider/stream facts and DB render instructions" in prompt
+    assert "under 4 KiB and do not update it when a goal lands" in prompt
+    assert "goals and next step live in .claude/" not in prompt
+    assert "after the fourth compaction and before the eighth" in prompt
+    assert "native automatic compaction remains enabled" in prompt
 
     governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", env={"SESSION_EPIC": "foreign"})
     assert governor.returncode == 0, governor.stderr
@@ -281,6 +295,11 @@ def test_codex_launchers_pin_roles_and_preserve_explicit_effort(launcher, args, 
     assert result.returncode == 0, result.stderr
     assert f"--model {model}" in result.stdout
     assert f"model_reasoning_effort={effort}" in result.stdout
+    if "--epic" in args:
+        prompt = shlex.split(result.stdout.split("would exec ", 1)[1])[-1]
+        assert prompt.startswith(
+            "First run lu-driver-state render --lane devops, then lu-driver-state check --lane devops."
+        )
 
 
 # The fail-open pre-lease rollover import is not under test in the sandboxed

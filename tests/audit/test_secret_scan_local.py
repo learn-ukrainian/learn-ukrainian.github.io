@@ -483,6 +483,15 @@ def test_real_trufflehog_finding_is_counted_without_printing_it(
     assert body not in captured.out + captured.err
     assert "fixture.pem" not in captured.out + captured.err
     assert body in _report_path(captured.out, temp_root).read_text(encoding="utf-8")
+    report = _report_path(captured.out, temp_root)
+    assert ssl.main(["--repo", str(repo), "locate", str(report)]) == ssl.EXIT_CLEAN
+    located = capfd.readouterr()
+    assert located.out == "fixture.pem\t1\tPrivateKey\n"
+    assert located.err == (
+        "findings: 1\nlocated: 1\nrefused history: 0\nrefused source: 0\n"
+        "refused path: 0\nrefused line: 0\nlocation view complete\n"
+    )
+    assert body not in located.out + located.err
 
 
 # --- Output location: a fresh private directory under the system temp root -----------------
@@ -876,7 +885,7 @@ MALFORMED_LINES = [
 ]
 
 
-REPORT_ENTRIES = ["tree", "show-keys", "count"]
+REPORT_ENTRIES = ["tree", "show-keys", "count", "locate"]
 
 
 def _entry_argv(entry: str, repo: Path, report: Path) -> list[str]:
@@ -884,6 +893,7 @@ def _entry_argv(entry: str, repo: Path, report: Path) -> list[str]:
         "tree": ["--repo", str(repo), "tree"],
         "show-keys": ["show-keys", str(report)],
         "count": ["count", str(report), "--path", "a/"],
+        "locate": ["--repo", str(repo), "locate", str(report)],
     }[entry]
 
 

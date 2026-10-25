@@ -108,7 +108,14 @@ requires an operator reference. The item lifecycle is in
    `lu-driver-state check --lane <lane>`. The database is the lane's handoff;
    `DRIVER-STATE.md` is only a pointer. Detail and the optional §0b inbox watcher:
    [orient](references/orient.md).
-2. **§0a Inbox drain — cycle start.**
+2. **§0a Inbox drain — cycle start.** A CTO demand (an URGENT delivery order or a
+   blocker-report request) outranks all other lane work. Answer within its deadline, by
+   default 10 minutes, with one line per named deliverable:
+   state | exact blocker | who fixes it | next step | ETA. Then work the named
+   deliverables and their blockers first, until they land or the CTO releases them. Fix
+   any blocker you can fix; name the owner of any you cannot. Other ready work may fill
+   only the worker slots the demanded deliverables cannot use. Report again on every
+   change.
 3. **§0c / §0d Epic-specific rules.** Hramatka (#4542) and the core fresh build (#7994)
    add binding rules; read [epic-specific](references/epic-specific.md) before acting on
    those epics.

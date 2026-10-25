@@ -34,8 +34,13 @@ never fine.
    belong in the private operations doc. A tick must report no errors and must list
    every running lane pane. An error, or no lane panes, means no lane gets nudged; fix it
    this cycle. After a keeper config edit, verify one tick before nudging lanes.
-   Read the keeper's per-CLI context flow: Codex compacts natively; Claude waits for the
-   keeper's tokened handoff prompt. Never order Codex to stop for a Claude rollover.
+   Read the keeper's per-CLI context flow: Claude waits for the keeper's tokened handoff
+   prompt. Codex compacts natively, but a Codex driver hands off to a fresh session after
+   its 4th compaction and before its 8th (operator 2026-10-25). Count each live Codex
+   driver thread's compactions from its rollout file under `$CODEX_HOME/sessions`
+   (`"type":"compacted"` events). At 4 or more, order the handoff that cycle; at 7, restart
+   the lane yourself once it shows HANDOFF-DONE. When you record a new lane rule, measure
+   every lane against it in the same cycle and name the control that will enforce it.
 4. **Open PRs**, from the scorecard metrics when present, in every repository the fleet
    lands in, with `number`, `headRefOid`, `mergeable`, `mergeStateStatus`, `isDraft`,
    `reviewDecision`. Per PR: a review of record at the current `headRefOid` (verdict,
@@ -70,3 +75,21 @@ never fine.
    in the ledger ([learning](learning.md)).
    Before restarting a lane or ordering an item, check its latest state and linked PR or
    issue state. Honor stops; send stale-open items with merged PRs to the tracker owner.
+9. **Chase delivery.** Lanes deliver; the CTO does not take over their work. For each
+   priority deliverable, the owning lane reports one line every cycle:
+   state | exact blocker | who fixes it | next step | ETA. Treat any of these as
+   foot-dragging: no report by the deadline, a passed ETA, the same blocker in two
+   cycles, unexplained inactivity, or other work displacing the priority deliverable or
+   its blockers. An authorized hold (drive-epic §2c), an operator stop, and other ready
+   work in worker slots the deliverable cannot use are not foot-dragging.
+   Escalate one step per cycle until the result lands:
+   1. Demand: a Fleet order marked URGENT with a 10-minute report deadline, plus a
+      keeper nudge if the pane is idle.
+   2. Focus order: name the missed deadline or ETA, and order the lane to work only the
+      deliverable and its blockers until it lands. Other ready work may fill only the
+      worker slots the deliverable cannot use.
+   3. Unblock: the CTO removes the blocker itself (a decision, a test grant, a missing
+      review seat, or rerouting the blocker to another lane). It then reports the facts
+      to the operator, including the lane's missed deadlines.
+   Record each demand and each report in the deliverable's tracker item. A blocker the
+   lane can fix itself is not a wait: order the fix.

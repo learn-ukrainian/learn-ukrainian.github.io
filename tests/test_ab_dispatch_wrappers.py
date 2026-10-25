@@ -416,6 +416,8 @@ def test_ask_non_kimi_review_argv_omits_kimicc_harness():
     assert "--harness" not in command
     assert command[command.index("--agent") + 1] == "claude"
     assert command[command.index("--mode") + 1] == "read-only"
+    assert "--subject-seat" not in command
+    assert "--subject-family" not in command
 
 
 def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
@@ -445,9 +447,12 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
     assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
     assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
     assert "--branch" not in calls[0][0]
+    assert "--subject-seat" not in calls[0][0]
+    assert "--subject-family" not in calls[0][0]
 
 
 def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
+    """Keep the author branch and repeated subject exclusions on the native dispatch."""
     result_file = tmp_path / "result.md"
     result_file.write_text("VERDICT: APPROVE\n", encoding="utf-8")
     calls = []
@@ -471,9 +476,20 @@ def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
         "review this",
         task_id="review-1",
         branch="agy/impl-8419-stall-clock",
+        subject_seats=["codex", "cursor"],
+        subject_families=["openai", "xai", "openai"],
     )
     dispatch = calls[0]
     assert dispatch[dispatch.index("--branch") + 1] == "agy/impl-8419-stall-clock"
+    assert [dispatch[i + 1] for i, arg in enumerate(dispatch) if arg == "--subject-seat"] == ["codex", "cursor"]
+    assert [dispatch[i + 1] for i, arg in enumerate(dispatch) if arg == "--subject-family"] == ["openai", "xai", "openai"]
+    from scripts import delegate
+
+    args = delegate.build_parser().parse_args(dispatch[2:])
+    assert delegate._authoring_review_state_fields(args, None) == {
+        "review_subject_seats": ["codex", "cursor"],
+        "review_subject_families": ["openai", "xai", "openai"],
+    }
 
 
 def test_run_ask_review_dispatch_without_verdict_fails_with_reason(monkeypatch, tmp_path):

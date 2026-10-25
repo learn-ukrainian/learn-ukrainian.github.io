@@ -3,8 +3,9 @@
 TruffleHog is installed locally and is on every agent's `PATH` as
 `trufflehog`. CI already scans every pushed range (see
 [`ci-gate.md`](ci-gate.md)); this runbook covers the local scan an agent runs
-itself, through one wrapper that keeps it offline and prints nothing taken from a
-finding. Issue #9416.
+itself, through one wrapper that keeps it offline. Scans and summary commands
+print closed-set names and counts. `locate` is the explicit private-console
+exception for validated current-tree locations. Issue #9416.
 
 ## When to run it
 
@@ -24,6 +25,7 @@ changes.
 .venv/bin/python scripts/audit/secret_scan_local.py history
 .venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"
 .venv/bin/python scripts/audit/secret_scan_local.py count "$REPORT" --path uv.lock --path tests/fixtures/
+.venv/bin/python scripts/audit/secret_scan_local.py --repo "$REPO" locate "$REPORT"
 .venv/bin/python scripts/audit/secret_scan_local.py --help
 ```
 
@@ -36,6 +38,7 @@ From a dispatch worktree, use the primary checkout's interpreter (see
 | `history` | Every commit on every ref of the configured public remote (default `origin`) | Clones a full bare mirror into a new temporary directory under the temp directory, scans it with `trufflehog git file://<mirror> --bare`, then removes the directory, also on SIGINT, SIGTERM or SIGHUP. A failed removal is exit 2. |
 | `show-keys REPORT` | An existing report | Prints only the report's top-level key names and the count of findings per detector. Runs nothing. |
 | `count REPORT [--path P]... [--detector NAME]` | An existing report | Prints only how many findings (of one detector, if given) lie in the given paths, outside them, and without a file location. A path ending in `/` is a directory. The paths and the name are never printed. Runs nothing. |
+| `locate REPORT --repo REPO` | An existing tree report and an explicit repository boundary | Private console only. Validates the entire report before printing `path<TAB>line<TAB>detector` on stdout. Prints fixed summary counts on stderr. Uses the current tree, never commit lookup or history objects. Runs no scanner. |
 
 Why a mirror: agent checkouts are blobless partial clones. `trufflehog git`
 cannot fetch the missing objects from a partial clone, and a `file://` URL to a
@@ -88,26 +91,49 @@ operator decision first.
   no option to choose another location. The temp directory is decided from the
   path alone, so the run is refused before anything at all is written when it is
   inside the repository or its primary checkout.
-- The console never shows anything taken from a finding: no path, commit, line
-  or value. It shows the report's generated file name, the number of files
+- Scans and summary commands never show finding paths, commits, lines or
+  values. They show the report's generated file name, the number of files
   scanned (`tree`), the total, and a count per detector. Detector names come
   from TruffleHog's own detector list compiled into the wrapper; any other name
   is counted as `other`. Every error is a fixed message.
+- `locate` is the one explicit private-console location exception. It requires
+  `--repo`, before or after `locate`, with no default. Set `REPO` to the tree
+  that produced the report. Each output path must exactly match a canonical
+  `tree_candidates` member of that tree. Paths are never normalized into a
+  match. Absolute paths, traversal, symlinks, tabs, controls, format and bidi
+  characters, and multiline injection are refused. Lines must be integers,
+  excluding booleans, between 1 and the current file's line count. Detector
+  names use the same closed set, with unknown strings mapped to `other`.
+  Only `Filesystem` sources are supported. Every `Git` record is a counted
+  history refusal, without reading commits. Other sources are counted source
+  refusals. Duplicate JSON keys and ambiguous sources are malformed reports.
+- For structurally valid reports, `locate` prints `findings`, `located`,
+  `refused history`, `refused source`, `refused path`, and `refused line` counts
+  on stderr. Located plus the refusal counts equals the `show-keys` total.
+  A refusal withholds **all** location stdout and ends with
+  `location view refused; no locations emitted`. Here `located` counts valid
+  locations withheld from output too. Malformed or unreadable reports produce
+  a fixed diagnostic without claiming a complete summary. Success ends with
+  `location view complete`, meaning every finding has a validated location,
+  not that a candidate is a credential, a false positive, or remediated.
 - Never paste the report, the log, any field of a finding or a screenshot of
   them into a PR, issue, comment, commit, chat or transcript. Public text
   quotes only counts and outcomes.
 - Delete the report directory when triage is finished.
 
-Exit codes: `0` no findings (`show-keys`, `count`: report summarized), `1`
+Exit codes: `0` no findings (`show-keys`, `count`: report summarized;
+`locate`: every finding located, including an empty report), `1`
 findings, `2` refusal, missing binary, git or TruffleHog error, timeout,
-unexpected report structure, or mirror removal failure, `129`/`143` terminated
+unexpected report structure, any `locate` refusal, or mirror removal failure, `129`/`143` terminated
 by SIGHUP/SIGTERM (any temporary mirror is removed first). A missing binary
 prints a typed message pointing here.
 
 ## Triage
 
-Agents read a report **only** through the wrapper's `show-keys` and `count`
-subcommands, which print fixed text, closed-set names and integers. Never run
+Agents read a report **only** through the wrapper's `show-keys`, `count` and
+`locate` subcommands. `show-keys` and `count` print fixed text, closed-set names
+and integers. `locate` adds only the private-console location exception above.
+It does not authorize ad-hoc source-line or raw-report reads. Never run
 `jq`, `cat`, `grep`, `head`, `less`, a Python one-liner or any other ad-hoc
 command over a report or its log: a finding can carry a secret in any field,
 including a key name or a field of an unexpected type, and an agent's console is
@@ -139,6 +165,16 @@ closed-output subcommand to the wrapper, with tests, in a reviewed PR.
    hashes): propose a `.trufflehogignore` entry in a reviewed PR. For a single
    line, an inline `trufflehog:ignore` comment is the narrower fix. Never widen
    the exclusions to silence a real credential.
+   If counts do not identify the current-tree locations needed for triage,
+   use the explicit private-console view:
+
+   ```bash
+   .venv/bin/python scripts/audit/secret_scan_local.py --repo "$REPO" locate "$REPORT"
+   ```
+
+   Expect only tab-separated path, line and detector fields on stdout. A
+   refusal exits 2 with no location stdout. Return the fixed counts and refusal
+   class for a reviewed correction. There is no ad-hoc reader fallback.
 4. Anything the counts do not settle is a possible real credential: stop. Do
    not try it, do not verify it, do not remove it in a quick commit (history
    keeps it). Tell the operator through the private channel that a report needs

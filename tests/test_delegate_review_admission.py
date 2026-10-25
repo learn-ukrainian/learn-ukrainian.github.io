@@ -1389,12 +1389,11 @@ def test_requested_reviewer_is_also_subject_excluded_before_budget(monkeypatch):
 @pytest.mark.parametrize(
     "subject",
     [
-        ("--owned-path", "scripts/agent_runtime/adapters/base.py"),
         ("--subject-seat", "unknown-seat"),
         ("--subject-family", "unknown-family"),
     ],
 )
-def test_review_subject_ambiguity_or_invalid_identity_refuses_before_budget(monkeypatch, subject):
+def test_review_invalid_subject_identity_refuses_before_budget(monkeypatch, subject):
     def fail():
         pytest.fail("invalid subject must refuse before budget probe")
 
@@ -3161,7 +3160,7 @@ def test_dispatch_review_mode_help_preserves_legacy_usage_golden():
     dispatch = subcommands.choices["dispatch"]
     assert "--review-mode {cross_family,red_team}" in dispatch.format_help()
     assert hashlib.sha256(dispatch.format_usage().encode()).hexdigest() == (
-        "8632e66974cd969a5b1a7f6b727fab15931126810b77052e97142eb8e2916f2b"
+        "8d567f9f09945c2db1f5a709a6e6ea1017ce86a9c677d98f16709da9424affe8"
     )
 
 

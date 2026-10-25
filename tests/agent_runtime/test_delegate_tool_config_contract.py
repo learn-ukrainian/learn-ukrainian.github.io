@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 import importlib
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -137,6 +138,7 @@ _CLI_STUBS = (
     "grok",
     "hermes",
     "kimi",
+    "muse",
     "npx",
     "opencode",
 )
@@ -146,6 +148,7 @@ _CLI_STUBS = (
 # agy must report a version at or above the background-wait floor (#8502).
 _CLI_STUB_BODIES: dict[str, str] = {
     "agy": 'if [ "$1" = "--version" ]; then echo "agy 1.2.9"; fi\nexit 0\n',
+    "muse": 'if [ "$1" = "--version" ]; then echo "muse fixture"; fi\nexit 0\n',
 }
 
 
@@ -185,6 +188,10 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
     lease.mkdir(parents=True)
     checkout = tmp_path / "checkout"
     checkout.mkdir()
+    if adapter_cls.__name__ == "MuseAdapter":
+        subprocess.run(["git", "init", str(checkout)], check=True, capture_output=True, timeout=30)
+        checkout = checkout / ".worktrees" / "dispatch" / "muse" / "tool-config-contract"
+        checkout.mkdir(parents=True)
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     _install_cli_stubs(tmp_path, monkeypatch)
     if adapter_cls.__name__ == "DeepSeekAdapter":
@@ -213,6 +220,18 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
         tool_config.pop("reviewer_tools")
     if adapter_cls.__name__ == "KimiAdapter":
         tool_config["harness"] = "kimicc"
+    if adapter_cls.__name__ == "MuseAdapter":
+        # Ordinary Muse workers receive the read-only lease and task binding.
+        # Review-only keys are never sent to this worker-only adapter.
+        for key in (
+            "agy_home_override", "allowed_tools", "attempt_id", "codex_home_override",
+            "mcp_config_path", "mcp_server_names", "review_id", "review_ledger_path",
+            "review_profile", "strict_mcp_config",
+        ):
+            tool_config.pop(key, None)
+        tool_config.update(
+            muse_worker=True, muse_role="investigation", run_nonce="0123456789abcdef", muse_tmp_root=str(lease)
+        )
     if adapter_cls.__name__ == "AgyAdapter":
         # AGY grants are now checked before its CLI probe. Supply a real scoped
         # home and an admitted tool instead of the generic synthetic payload.

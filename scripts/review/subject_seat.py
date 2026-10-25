@@ -3,9 +3,8 @@
 A change that governs a seat (its adapter, or that seat's reviewer hooks)
 must not be formally reviewed by that seat. Callers name the seat or family
 directly, or pass owned paths. Unambiguous adapter and hook paths infer one
-seat. A path that belongs to more than one seat, or to a shared adapter
-surface, is ambiguous: inference stops and the caller must pass
-``--subject-seat`` or ``--subject-family``. Guessing a seat is refused.
+seat. Shared or ambiguous paths leave the subject unknown without discarding
+explicit subjects or subjects inferred from other paths.
 
 Omitting seats, families, and owned paths is not an inference. Selection
 stays on the ordinary author-family ladder.
@@ -44,7 +43,7 @@ _SUBJECT_ALIASES: dict[str, str] = {
 }
 
 # Reviewer-hook paths that govern exactly one seat. Shared hooks are listed
-# separately so inference fails closed instead of picking one consumer.
+# separately so inference leaves them unknown instead of picking one consumer.
 _HOOK_SEATS: dict[str, str] = {
     "scripts/agent_runtime/grok_hook_bridge.py": "grok",
     "scripts/hooks/apply_grok_hook_profile.py": "grok",
@@ -301,13 +300,9 @@ def prepare_subject_exclusion(
 ) -> SubjectExclusion:
     """Resolve explicit seats/families plus unambiguous owned paths.
 
-    An ambiguous owned path fails closed when the caller did not also pass an
-    explicit seat or family. Explicit input is the required argument from the
-    stop policy; inference does not add a guessed seat for that path.
+    Missing or ambiguous subjects remain unknown. Known subjects and their
+    evidence still apply; explicit malformed metadata remains an error.
     """
-    explicit_requested = any(str(seat).strip() for seat in subject_seats) or any(
-        str(family).strip() for family in subject_families
-    )
     try:
         seats = {normalize_subject_seat(seat) for seat in subject_seats}
         families = {normalize_subject_family(family) for family in subject_families}
@@ -315,26 +310,12 @@ def prepare_subject_exclusion(
         return SubjectExclusion(frozenset(), frozenset(), (), str(exc))
 
     evidence: list[str] = []
-    ambiguous: list[str] = []
     for raw_path in owned_paths:
         classification = classify_owned_path(raw_path)
         rel = normalize_owned_path(raw_path)
         if classification.kind == "seat":
             seats.update(classification.seats)
             evidence.append(rel)
-        elif classification.kind == "ambiguous":
-            ambiguous.append(f"{rel} ({classification.detail})")
-    if ambiguous and not explicit_requested:
-        joined = "; ".join(sorted(ambiguous))
-        return SubjectExclusion(
-            frozenset(),
-            frozenset(),
-            (),
-            (
-                f"ambiguous subject-seat inference for {joined} — "
-                "pass --subject-seat or --subject-family; refusing to guess"
-            ),
-        )
     return SubjectExclusion(frozenset(seats), frozenset(families), tuple(sorted(set(evidence))))
 
 
