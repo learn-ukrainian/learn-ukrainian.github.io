@@ -86,6 +86,26 @@ Template for bug reports:
 
 ---
 
+## Closing an issue
+
+An issue closes in exactly one of four ways. Each requires one closing comment.
+
+- **Completed:** Verify every acceptance criterion and give the evidence. Use close reason `completed`.
+- **Duplicate:** Name the kept issue with `Duplicate of #N` and move any extra scope or evidence there. Use close reason `not planned`.
+- **Obsolete:** Give evidence that the subject no longer exists or applies, such as a merged PR, removed file, retired seat, or closed epic. Use close reason `not planned`.
+- **Not planned:** State why the work will not be done and whether the operator or CTO decided. Use close reason `not planned`.
+
+Only the CTO closes as duplicate, obsolete, or not planned. Lanes propose these closures through Fleet Comms.
+Never abandon or half-close. For partly done work, move the rest to a named issue before closing completed for the done part.
+
+For example, the CTO closes a duplicate with:
+
+```bash
+.venv/bin/python -m scripts.publish issue-close --number N --reason "not planned" --comment "Duplicate of #M ..."
+```
+
+---
+
 ## Commit ↔ Issue Linking
 
 Always reference issues in commits:
