@@ -271,7 +271,8 @@ export function buildPreview(root: string, config: Control): string {
   const configPath = join(root, 'astro.config.mjs');
   writeFileSync(configPath, `import base from ${JSON.stringify(pathToFileURL(join(site, 'astro.config.mjs')).href)};
 export default {...base, root:${JSON.stringify(root)}, srcDir:${JSON.stringify(src)}, outDir:${JSON.stringify(out)},
-publicDir:${JSON.stringify(join(root, 'public'))}, cacheDir:${JSON.stringify(join(root, 'cache'))}};\n`);
+publicDir:${JSON.stringify(join(root, 'public'))}, cacheDir:${JSON.stringify(join(root, 'cache'))},
+vite:{...base.vite, cacheDir:${JSON.stringify(join(root, 'vite-cache'))}}};\n`);
   try {
     const log = execFileSync(join(site, 'node_modules/.bin/astro'), ['build', '--root', root, '--config', 'astro.config.mjs'], {
       cwd: root, encoding: 'utf8', timeout: 120_000, env: { ...process.env, ATLAS_WORD_CARD_PREVIEW: config.enabled ? '1' : '0',
