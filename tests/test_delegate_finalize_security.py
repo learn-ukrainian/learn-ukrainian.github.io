@@ -131,6 +131,48 @@ def refs(origin):
     return _git_out(origin, "for-each-ref", "--format=%(refname) %(objectname)")
 
 
+def test_publication_without_destination_boundary_refuses_before_history_receive(publication, monkeypatch, tmp_path):
+    """An unavailable public head on a new branch must not widen to full-history snapshots."""
+    worktree, origin, base, marker = publication
+    head = write_commit(worktree)
+    monkeypatch.setattr(delegate, "_finalize_public_repository", lambda: None)
+    received = []
+    scanned = []
+    credentials = []
+    receive = SafeGitContext._receive
+    prepare_lfs = SafeGitContext.prepare_lfs
+
+    def receive_objects(context, oids, *options):
+        received.append(options)
+        return receive(context, oids, *options)
+
+    def lfs(context, **kwargs):
+        scanned.append(kwargs)
+        return prepare_lfs(context, **kwargs)
+
+    @contextlib.contextmanager
+    def credential_boundary(**kwargs):
+        credentials.append(kwargs)
+        yield []
+
+    monkeypatch.setattr(SafeGitContext, "_receive", receive_objects)
+    monkeypatch.setattr(SafeGitContext, "prepare_lfs", lfs)
+    monkeypatch.setattr(delegate, "_finalize_transport_credentials", credential_boundary)
+    before = refs(origin)
+    result = publish(publication)
+    assert not result.ok, result.error
+    assert "auto_finalize_remote_unverified" in result.error
+    assert not any("--no-filter" in options for options in received)
+    assert scanned == [] and credentials == []
+    assert refs(origin) == before and not marker.exists()
+    assert _git_out(worktree, "rev-parse", "HEAD").strip() == head
+    allocated = sum(path.lstat().st_blocks * 512 for path in tmp_path.rglob("*"))
+    assert allocated < 20 * 1024 * 1024
+    print(json.dumps({"recorded_base": base, "head": head, "received_options": received,
+                      "lfs_scans": len(scanned), "credentials": len(credentials),
+                      "allocated_after_refusal": allocated, "cause": result.error}))
+
+
 def git_input(worktree, *args, data):
     return subprocess.run(
         ["git", *args],
@@ -428,6 +470,20 @@ def test_worker_transport_configuration_never_selects_the_destination(publicatio
     if key == "lfs.customtransfer.hostile.path":
         _git_out(worktree, "config", "lfs.standalonetransferagent", "hostile")
     if lfs_case:
+        prepare_lfs = SafeGitContext.prepare_lfs
+        snapshots = []
+
+        def verified_lfs(context, **kwargs):
+            before = context.checked("count-objects", "-v")
+            objects = prepare_lfs(context, **kwargs)
+            after = context.checked("count-objects", "-v")
+            assert after == before, "LFS preparation duplicated received Git objects"
+            allocated = sum(path.lstat().st_blocks * 512 for path in tmp_path.rglob("*"))
+            assert allocated < 20 * 1024 * 1024
+            snapshots.append({"before": before, "after": after, "whole_fixture_allocated_live": allocated})
+            return objects
+
+        monkeypatch.setattr(SafeGitContext, "prepare_lfs", verified_lfs)
         @contextlib.contextmanager
         def credentials(**_kwargs):
             yield [(f"http.{origin}.extraHeader", "Authorization: Basic SENTINEL-LFS-TRANSPORT")]
@@ -447,6 +503,8 @@ def test_worker_transport_configuration_never_selects_the_destination(publicatio
     assert refs(unintended) == "" and not ran.exists()
     assert marker.read_text() == "checked"
     if lfs_case:
+        assert len(snapshots) == 1
+        print(json.dumps({"input": key, "lfs_snapshots": snapshots}))
         assert (origin / "lfs/objects" / oid[:2] / oid[2:4] / oid).read_bytes() == payload
         assert not any(path.is_file() for path in (unintended / "lfs").rglob("*"))
         assert "SENTINEL-LFS-TRANSPORT" not in (worktree / ".git/config").read_text()
@@ -1850,6 +1908,17 @@ def test_pre_fix_base_lfs_publication_and_corrupt_object_refusal(publication, tm
     pushes = []
     allocated_samples = []
     real_run = delegate.subprocess.run
+    prepare_lfs = SafeGitContext.prepare_lfs
+    snapshots = []
+
+    def verified_lfs(context, **kwargs):
+        before = context.checked("count-objects", "-v")
+        try:
+            return prepare_lfs(context, **kwargs)
+        finally:
+            after = context.checked("count-objects", "-v")
+            assert after == before, "LFS preparation duplicated received Git objects"
+            snapshots.append({"before": before, "after": after})
 
     @contextlib.contextmanager
     def credential_boundary(**kwargs):
@@ -1871,10 +1940,12 @@ def test_pre_fix_base_lfs_publication_and_corrupt_object_refusal(publication, tm
 
     monkeypatch.setattr(delegate, "_finalize_transport_credentials", credential_boundary)
     monkeypatch.setattr(delegate.subprocess, "run", run)
+    monkeypatch.setattr(SafeGitContext, "prepare_lfs", verified_lfs)
     before = refs(origin)
     result = publish((worktree, origin, base, _marker))
     if corrupt:
         assert not result.ok, "corrupt LFS object was published"
+        assert "auto_finalize_fsck_failed" in result.error, result.error
         assert refs(origin) == before
         assert credentials == [] and pushes == []
     else:
@@ -1885,7 +1956,9 @@ def test_pre_fix_base_lfs_publication_and_corrupt_object_refusal(publication, tm
         assert len(credentials) == 1 and len(pushes) == 1
     allocated = sum(path.stat().st_blocks * 512 for path in tmp_path.rglob("*") if path.is_file() and not path.is_symlink())
     assert allocated < 20 * 1024 * 1024
+    assert len(snapshots) == 1
     print(json.dumps({"fixture_live_allocated_max_sample": max(allocated_samples),
+                      "lfs_snapshots": snapshots,
                       "fixture_allocated_bytes_after_transport_cleanup": allocated, "recorded_base": base,
                       "driver_base": driver, "head": head, "source_sha256": digests, "corrupt": corrupt,
                       "git_lfs_selected_pointer": selected.stdout.strip()}))

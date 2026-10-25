@@ -353,6 +353,10 @@ class SafeGitContext:
         ancestors need their trees for the outgoing-object walk.
         ``objects``, when given, is a store that already holds them all.
         """
+        if exclusions == ():
+            # An unavailable destination boundary must not turn the outgoing
+            # range into the source's entire history.
+            raise SnapshotRefusal("auto_finalize_remote_unverified")
         if self._source is None:
             raise SnapshotRefusal("auto_finalize_validation_unavailable")
         if objects is not None:
@@ -430,7 +434,8 @@ class SafeGitContext:
         All reads and verification finish before the transport obtains a token.
         """
         commits = self.checked("rev-list", head, "--not", *exclusions).split()
-        self._receive(self._root_trees(commits), "--no-filter")
+        # receive_publication already rehashed these snapshots. Prove their
+        # closure here without fetching and storing them a second time.
         self._require_closure(commits)
         objects = self.checked("rev-list", "--objects", "--no-object-names", head, "--not", *exclusions)
         sizes = self.checked("cat-file", "--batch-check=%(objectname) %(objecttype) %(objectsize)", stdin=objects + "\n") if objects else ""

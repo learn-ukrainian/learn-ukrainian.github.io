@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import subprocess
 from pathlib import Path
@@ -34,6 +36,57 @@ def source(tmp_path):
 def context(source, tmp_path, **kwargs):
     repo, remote, _head = source
     return SafeGitContext(objects=repo / ".git/objects", temp_root=tmp_path, origin=str(remote), local_remote=True, **kwargs)
+
+
+def test_lfs_preparation_does_not_duplicate_received_snapshot(source, tmp_path, monkeypatch):
+    """LFS preparation must not refetch an unchanged incompressible snapshot already rehashed."""
+    repo, _remote, _base = source
+    payload = os.urandom(2 * 1024 * 1024)
+    (repo / "unchanged.bin").write_bytes(payload)
+    git(repo, "add", "unchanged.bin")
+    git(repo, "commit", "-m", "unchanged bounded snapshot")
+    base = git(repo, "rev-parse", "HEAD")
+    content = b"verified outgoing LFS bytes\n"
+    oid = hashlib.sha256(content).hexdigest()
+    obj = repo / ".git/lfs/objects" / oid[:2] / oid[2:4] / oid
+    obj.parent.mkdir(parents=True)
+    obj.write_bytes(content)
+    (repo / "artifact.txt").write_text(
+        f"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize {len(content)}\n"
+    )
+    git(repo, "add", "artifact.txt")
+    git(repo, "commit", "-m", "outgoing pointer")
+    head = git(repo, "rev-parse", "HEAD")
+    with context(source, tmp_path, borrow_objects=False) as safe:
+        safe.source_git_dir = repo / ".git"
+        safe.driver_base = base
+        safe.isolate_objects(base=base, head=head)
+        safe.receive_publication(head=head, base=base, exclusions=(base,))
+        before = safe.checked("count-objects", "-v")
+        before_files = {str(path.relative_to(safe.objects)): (path.stat().st_size, path.stat().st_blocks)
+                        for path in safe.objects.rglob("*") if path.is_file()}
+        receives = []
+        receive = safe._receive
+
+        def received(oids, *options):
+            receives.append(options)
+            return receive(oids, *options)
+
+        monkeypatch.setattr(safe, "_receive", received)
+        assert safe.prepare_lfs(head=head, exclusions=(base,)) == (oid,)
+        after = safe.checked("count-objects", "-v")
+        after_files = {str(path.relative_to(safe.objects)): (path.stat().st_size, path.stat().st_blocks)
+                       for path in safe.objects.rglob("*") if path.is_file()}
+        allocated = sum(path.lstat().st_blocks * 512 for path in tmp_path.rglob("*"))
+        print(json.dumps({"before": before, "after": after, "receives": receives,
+                          "whole_fixture_allocated_live": allocated,
+                          "unchanged_blob_bytes": len(payload)}))
+        assert receives == [], "LFS preparation performed a second snapshot receive"
+        assert before_files == after_files and before == after
+        assert allocated < 20 * 1024 * 1024
+        safe._require_closure([base, head])
+        assert safe.run("show", f"{head}:unchanged.bin", binary=True).stdout == payload
+        assert (safe.git_dir / "lfs/objects" / oid[:2] / oid[2:4] / oid).read_bytes() == content
 
 
 def plant_programs(repo, root, *, scope="--local", monkeypatch=None):
