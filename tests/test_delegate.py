@@ -24706,3 +24706,46 @@ def test_terminal_dispatch_event_defaults_missing_identity_to_unknown(monkeypatc
     assert event["identity_state"] == "unknown"
     assert event["requested_selector"] is None
     assert event["observed_model"] is None
+
+
+@pytest.mark.parametrize("model,role,mode,expected", [
+    ("muse-wonder-full-1.0", "implementation", "workspace-write", None),
+    ("muse-wonder-full-1.0", "investigation", "read-only", None),
+    ("muse-wonder-full-1.0", None, "read-only", "muse_worker_role_mode_refused"),
+    ("muse-wonder-full-1.0", "investigation", "workspace-write", "muse_worker_role_mode_refused"),
+    ("muse-spark-1.3", "implementation", "workspace-write", "muse_worker_role_mode_refused"),
+])
+def test_muse_role_mode_admission_blocks_unclassified_execution(tmp_path, monkeypatch, model, role, mode, expected):
+    """M03: only the approved author/write and diagnosis/read map can reach planning."""
+    from scripts.agent_runtime.adapters import muse
+
+    monkeypatch.setattr(muse, "require_muse_execution_model", lambda model: model)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "muse", "--model", model, "--task-id", "muse-interface",
+        "--prompt", "fixture", "--mode", mode,
+    ])
+    args.research_role = role
+    assert delegate._muse_dispatch_refusal(args) == expected
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees" / "dispatch" / "codex" / "muse-interface"
+    workspace.mkdir(parents=True)
+    planned = []
+
+    def plan(**kwargs):
+        planned.append(kwargs)
+        return InvocationPlan(cmd=["fixture-muse"], cwd=kwargs["workspace"])
+
+    adapter = muse.MuseAdapter()
+    monkeypatch.setattr(adapter, "_plan", plan)
+    kwargs = dict(prompt="fixture", mode=mode, cwd=workspace, model=model,
+                  task_id="muse-interface", session_id=None, effort="high",
+                  tool_config={"muse_worker": True, "muse_role": role, "run_nonce": "0123456789abcdef"})
+    if expected is None:
+        invocation = adapter.build_invocation(**kwargs)
+        assert invocation.cwd == workspace
+        assert planned[0]["mode"] == mode
+        assert planned[0]["model"] == "muse-wonder-full-1.0"
+    else:
+        with pytest.raises(ValueError, match=f"^{expected}$"):
+            adapter.build_invocation(**kwargs)
+        assert planned == []

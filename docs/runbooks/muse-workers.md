@@ -6,6 +6,10 @@ They have no automatic routing seat or fallback mapping. Their catalog hold
 records pending qualification and closes executable admission. Delegate, direct
 runner calls and adapter planning apply the existing catalog execution gate
 before a native process or version probe. No hold or role is changed here.
+After catalog admission, only Wonder-Full's `implementation` role with
+`workspace-write`, or `investigation` role with `read-only`, passes worker
+classification. Missing roles, other combinations and Spark execution refuse.
+Spark stream parsing remains available for qualification without admission.
 
 ## Permission and transport contracts
 
@@ -60,6 +64,13 @@ with auto-update disabled when that build changes. The [native settings and
 launch contract](https://dev.meta.ai/docs/muse-code/configuration) describes
 per-run overrides. The [permission contract](https://dev.meta.ai/docs/muse-code/permissions)
 distinguishes profiles, approvals and filesystem enforcement.
+The adapter's source pin is 1.4.11. Qualification of the installed 1.4.13 build
+remains pending. Version/default drift refuses planning rather than changing
+the pin or approval settings. Even a matching build cannot execute while the
+supported whole-task token cap is unqualified: live planning refuses with
+`muse_supported_token_cap_unknown` before creating a prompt file. Preview
+planning does not establish this capability. Step limits, prompt size,
+context-token counts, deadlines and post-hoc consumption are not that cap.
 
 ## Interpret completion evidence
 
@@ -76,14 +87,35 @@ success. Human stderr and model/tool prose cannot supply usage or a terminal.
 Usage must name the requested model, contain positive total token usage, count
 every call as completed and exclude child usage. Input plus output gives the
 normalized token total. Cached tokens are part of input; reasoning tokens are
-part of output. The [provider token contract](https://dev.meta.ai/docs/token-counting)
-defines those subsets. Native usage model labels describe CLI accounting;
+part of output in the validated CLI usage contract. The
+[provider token-counting documentation](https://dev.meta.ai/docs/token-counting)
+describes preflight context counts, not proof of these CLI generation fields.
+Native usage model labels describe CLI accounting;
 they do not independently attest a provider model version. Tool-call telemetry
 remains unknown until its native event contract is qualified. Effective
-permission and backend-model attestation are also unknown: neither the launch
-profile nor the usage model label supplies them. A structurally complete stream
-therefore still returns `ok=False` with `muse_runtime_attestation_unknown`.
-Unknown fields or asserted MSP-style attestations cannot clear this refusal.
+permission and backend-model attestation remain unknown: neither the launch
+profile nor the usage model label supplies them. A fully validated stream
+returns `ok=True`, its exact terminal answer, provider session and input-plus-output
+tokens. This is usable transport completion, not semantic correctness or native
+qualification. Unknown events and asserted MSP-style attestations still refuse.
+
+One immutable typed `MuseRunEvidence` companion supplies the `muse_run`
+projection in the existing usage record, `Result.usage_record` and task record.
+It binds the trusted task/nonce to native session/run IDs, CLI version and
+binary digest, prompt digest, workspace match, declared mode/profile/toolset
+and validated counters. It records the requested selector separately from the
+CLI usage model. `observed_model` stays null, `identity_state` and
+`effective_permissions` stay `unknown`. No raw workspace or answer appears in
+the companion. Its `receipt_ref` and SHA-256 identify the same evidence in each
+mirror; a task mirror is not another consumption event. Runtime session/run IDs
+remain distinct from provider session/run IDs.
+
+The normal delegate checkout and deliverable guards still decide task success.
+A later guard failure preserves the private result answer and the validated
+usage companion while leaving the task failed. Malformed or incomplete streams
+have unknown usage and no companion. The existing usage writer is best-effort;
+qualification must read back the matching durable bytes rather than infer
+persistence from a returned dictionary.
 
 Transport completion does not prove the answer. Qualification requires one
 separately authorized read-only task to read a public tracked fixture pinned by
@@ -98,6 +130,13 @@ Offline echo runs prove CLI parsing and event shape only. Echo's absent model
 identity and zero usage must be refused as model-task evidence. They do not
 prove native tool denials, malicious tool-output containment, managed-policy or
 plugin precedence, credential-file isolation, or a real Meta completion.
+Provider-origin model identity needs an independently qualified native witness
+bound to the same invocation/session/run and task/nonce. Effective permissions
+need exact-build evidence for policy/defaults, tool denials, workspace and private
+scratch boundaries, credential files, and configuration/plugin precedence.
+Requested argv, a clean checkout and a correct answer establish none of these
+missing predicates. `muse-wonder-1.0` remains unavailable; both registered model
+holds remain. No fallback or eligibility expansion follows from this interface.
 
 Before a paid probe, the accountable driver must obtain exact-head independent
 critical review, confirm the child environment and runtime telemetry integration,
@@ -106,5 +145,6 @@ fixture proof, CI, queue landing and common cleanup. A source push satisfies
 only the author milestone. The original genuine read-only task remains 0/1.
 Full integration coverage of at least 80%, effective native security, critical
 cross-family delta review, current-head CI, merge-queue CI, confirmed merge and
-common cleanup remain root-owned until independently proven. The recorded
-failed CI run still requires diagnosis; a local pass cannot replace it.
+common cleanup remain root-owned until independently proven. The denominator
+remains five original acceptance criteria, two model routes, two dry-run
+receipts and one genuine read-only task. Source verification cannot close it.

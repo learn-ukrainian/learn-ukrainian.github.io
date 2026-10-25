@@ -14,8 +14,9 @@ import re
 import shutil
 import subprocess
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Literal
 from uuid import UUID, uuid4
 
 from scripts.guardrails.worktree_containment import _require_real_directories, is_dispatch_worktree
@@ -101,9 +102,50 @@ def _counter(value: object) -> int:
 
 
 @dataclass(frozen=True)
+class MuseRunEvidence:
+    """Validated CLI accounting, never backend or effective-policy attestation."""
+
+    task_id: str
+    run_nonce: str
+    provider_session_id: str
+    provider_run_id: str
+    requested_selector: str
+    usage_model: str
+    cli_version: str
+    cli_sha256: str
+    prompt_sha256: str
+    declared_mode: str
+    declared_profile: str
+    declared_toolset: tuple[str, ...]
+    input_tokens: int
+    output_tokens: int
+    cached_tokens: int
+    reasoning_tokens: int
+    calls: int
+    completed_calls: int
+    total_tokens: int
+    workspace_matches: Literal[True] = True
+    children_included: Literal[False] = False
+    failed_calls: Literal[0] = 0
+    cancelled_calls: Literal[0] = 0
+    effective_permissions: Literal["unknown"] = "unknown"
+    observed_model: None = None
+    identity_state: Literal["unknown"] = "unknown"
+
+    def projection(self) -> dict:
+        """Return a body-free receipt shared by usage and task mirrors."""
+        fields = asdict(self)
+        fields["declared_toolset"] = list(self.declared_toolset)
+        digest = hashlib.sha256(json.dumps(fields, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        return {**fields, "receipt_ref": f"muse-run:{self.provider_session_id}:{self.provider_run_id}",
+                "receipt_sha256": digest}
+
+
+@dataclass(frozen=True)
 class MuseParseResult(ParseResult):
     # Native task events have not been qualified as tool-call telemetry.
     tool_calls_total: int | None = None
+    muse_run: MuseRunEvidence | None = None
 
 
 class MuseAdapter:
@@ -136,8 +178,13 @@ class MuseAdapter:
             raise ValueError("muse_delegate_worker_required")
         if not _is_provider_safe_name("MUSE_NO_AUTO_UPDATE", "muse"):
             raise ValueError("muse_child_environment_not_admitted")
-        if set(config) - {"muse_worker", "run_nonce", "muse_tmp_root", "read_only_tmp_root"}:
+        if set(config) - {"muse_worker", "muse_role", "run_nonce", "muse_tmp_root", "read_only_tmp_root"}:
             raise ValueError("muse_worker_configuration_refused")
+        require_muse_execution_model(model)
+        if model != self.default_model or (config.get("muse_role"), mode) not in {
+            ("implementation", "workspace-write"), ("investigation", "read-only"),
+        }:
+            raise ValueError("muse_worker_role_mode_refused")
         nonce = config.get("run_nonce")
         workspace = _workspace(cwd, nonce)
         return self._plan(
@@ -215,6 +262,10 @@ class MuseAdapter:
         ).stdout.strip()
         if not re.fullmatch(r"Muse Code 1\.4\.11 \(1\.4\.11-R6667\.1\)", version):
             raise ValueError("muse_cli_compatibility_unknown")
+        if not preview:
+            # No qualified whole-task cap exists in the inspected exec contract.
+            # Step limits and reported consumption cannot enforce that bound.
+            raise ValueError("muse_supported_token_cap_unknown")
         provider_session = str(uuid4())
         prompt_path = str(scratch / f"muse-prompt-{provider_session}.txt")
         fd = os.open(prompt_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
@@ -443,13 +494,29 @@ class MuseAdapter:
             response = terminal["text"]
             if not isinstance(response, str) or not response.strip() or input_tokens + output_tokens < 1:
                 raise ValueError("muse_evidence_incomplete")
-            # Exec's accounting model label and launch argv do not attest the
-            # effective permission profile or backend identity. The supported
-            # exec evidence has no qualified binding for either. Do not invent
-            # MSP fields or a caller-supplied attestation to manufacture success.
+            task_id, nonce = plan.metadata["task_id"], plan.metadata["run_nonce"]
+            if (
+                not isinstance(task_id, str) or not 0 < len(task_id) <= 100
+                or not isinstance(nonce, str) or re.fullmatch(r"[0-9a-f]{16}", nonce) is None
+                or not isinstance(plan.metadata["cli_version"], str)
+                or not 0 < len(plan.metadata["cli_version"]) <= 128
+                or any(re.fullmatch(r"[0-9a-f]{64}", plan.metadata[key]) is None
+                       for key in ("cli_sha256", "prompt_sha256"))
+            ):
+                raise ValueError("muse_launch_binding_invalid")
+            evidence = MuseRunEvidence(
+                task_id=task_id, run_nonce=nonce, provider_session_id=session, provider_run_id=command,
+                requested_selector=plan.metadata["model"], usage_model=counters["model"],
+                cli_version=plan.metadata["cli_version"], cli_sha256=plan.metadata["cli_sha256"],
+                prompt_sha256=plan.metadata["prompt_sha256"], declared_mode=mode,
+                declared_profile=_PROFILES[mode], declared_toolset=_TOOLS[mode],
+                input_tokens=input_tokens, output_tokens=output_tokens,
+                cached_tokens=counters["cached_tokens"], reasoning_tokens=counters["reasoning_tokens"],
+                calls=calls, completed_calls=usage["completed_calls"], total_tokens=input_tokens + output_tokens,
+            )
             return MuseParseResult(
-                ok=False, response="", failure_code="provider_stream_incomplete",
-                stderr_excerpt="muse_runtime_attestation_unknown", provider_error_text="",
+                ok=True, response=response, session_id=session,
+                tokens=input_tokens + output_tokens, muse_run=evidence,
             )
         except (ValueError, TypeError, KeyError, AttributeError):
             return MuseParseResult(

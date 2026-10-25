@@ -4096,3 +4096,155 @@ def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, m
         runner.invoke("agy", "Implement.", **kwargs)
     assert caught.value.model_identity is None
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
+    """Native envelope shared only by the granted Muse protocol cases."""
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    session = "11111111-1111-4111-8111-111111111111"
+    command = "22222222-2222-4222-8222-222222222222"
+    task = "33333333-3333-4333-8333-333333333333"
+    plan = InvocationPlan(cmd=["fixture-muse"], cwd=tmp_path, metadata={
+        "task_id": "muse-interface", "run_nonce": "0123456789abcdef",
+        "provider_session_id": session, "model": model, "workspace": str(tmp_path),
+        "mode": "read-only", "permission_profile": ":read-only", "toolset": ["read_file"],
+        "cli_version": "Muse Code 1.4.11 (1.4.11-R6667.1)",
+        "cli_sha256": "a" * 64, "prompt_sha256": "b" * 64, "preview": False,
+    })
+    records = []
+
+    def event(kind, payload, stream="session"):
+        number = len(records) + 1
+        records.append({
+            "schema_version": 1, "payload_schema_version": 1,
+            "id": f"00000000-0000-4000-8000-{number:012d}",
+            "stream": {"kind": stream, "id": session},
+            "sequence": 1 + sum(r["stream"]["kind"] == stream for r in records),
+            "causation_id": command, "payload_type": kind,
+            "payload": {"command_id": command, "run_stream": {"kind": "run", "id": command}, **payload},
+        })
+
+    event("runtime.command.accepted", {"kind": "command_accepted", "command_kind": "turn.submit"})
+    event("session.run.linked", {})
+    event("session.workspace_branch.observed", {
+        "record": {"command_id": command, "workspace_root": str(tmp_path)},
+    })
+    event("run.lifecycle.started", {})
+    event("task.stream.linked", {"task_id": task, "task_stream": {"kind": "task", "id": task}})
+    for stage in ("proposed", "accepted", "scheduled", "side_effect_intent", "started", "completed"):
+        event(f"task.lifecycle.{stage}", {
+            "task_id": task, "task_stream": {"kind": "task", "id": task},
+            "event": {"task_id": task, "kind": stage},
+        })
+    event("run.usage", {
+        "kind": "run_usage", "children_included": False, "failed_calls": 0, "cancelled_calls": 0,
+        "calls": 1, "completed_calls": 1,
+        "models": [{"model": model, "calls": 1, "input_tokens": 100, "output_tokens": 20,
+                    "cached_tokens": 30, "reasoning_tokens": 5}],
+    }, "exec.usage")
+    event("run.terminal.completed", {"kind": "run_terminal", "terminal": "completed", "text": "READY\n"})
+    return plan, records
+
+
+@pytest.mark.parametrize("case", [
+    "foreign-session", "wrong-command-run", "duplicate-usage", "duplicate-json-member",
+    "wrong-model", "boolean-counter", "negative-counter", "child-usage", "cached-above-input",
+    "missing-usage", "missing-completed-terminal",
+])
+def test_muse_untrusted_usage_cannot_enter_consumption(tmp_path, case):
+    """M02: foreign, duplicated or incomplete accounting must remain unknown."""
+    from scripts.agent_runtime.adapters.muse import MuseAdapter
+
+    plan, records = _muse_stream_fixture(tmp_path)
+    usage = records[-2]["payload"]
+    if case == "foreign-session":
+        records[-1]["stream"]["id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "wrong-command-run":
+        usage["run_stream"]["id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "duplicate-usage":
+        import copy
+        duplicate = copy.deepcopy(records[-2])
+        duplicate["id"] = "44444444-4444-4444-8444-444444444444"
+        duplicate["sequence"] = 2
+        records.insert(-1, duplicate)
+    elif case == "wrong-model":
+        usage["models"][0]["model"] = "unrequested-model"
+    elif case == "boolean-counter":
+        usage["models"][0]["input_tokens"] = True
+    elif case == "negative-counter":
+        usage["models"][0]["input_tokens"] = -1
+    elif case == "child-usage":
+        usage["children_included"] = True
+    elif case == "cached-above-input":
+        usage["models"][0]["cached_tokens"] = 101
+    elif case == "missing-usage":
+        records.pop(-2)
+    elif case == "missing-completed-terminal":
+        records.pop()
+    stdout = "\n".join(json.dumps(r) for r in records)
+    if case == "duplicate-json-member":
+        stdout = stdout.replace('"input_tokens": 100', '"input_tokens": 100, "input_tokens": 100')
+    result = MuseAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    assert result.ok is False
+    assert result.tokens is None
+    assert result.muse_run is None
+    assert result.response == ""
+    assert result.failure_code == "provider_stream_incomplete"
+
+
+def _muse_planning_fixture(tmp_path, monkeypatch, version):
+    from scripts.agent_runtime.adapters import muse
+
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees" / "dispatch" / "codex" / "muse-interface"
+    workspace.mkdir(parents=True)
+    scratch = tmp_path / "private-scratch"
+    scratch.mkdir()
+    binary = tmp_path / "fixture-muse"
+    binary.write_text("fixture only\n")
+    monkeypatch.setattr(muse, "require_muse_execution_model", lambda model: model)
+    monkeypatch.setattr(muse, "validate_read_only_tmp_root", lambda *a, **kw: scratch)
+    monkeypatch.setattr(muse.shutil, "which", lambda name: str(binary))
+    probes = []
+
+    def probe(cmd, **kwargs):
+        probes.append(cmd)
+        assert cmd == [str(binary), "--version"]
+        return SimpleNamespace(stdout=version)
+
+    monkeypatch.setattr(muse, "subprocess", SimpleNamespace(run=probe))
+    return muse.MuseAdapter(), workspace, scratch, probes
+
+
+def test_muse_missing_supported_token_cap_prevents_invocation(tmp_path, monkeypatch):
+    """M04: an absent whole-task cap must refuse before prompt or model execution."""
+    adapter, workspace, scratch, probes = _muse_planning_fixture(
+        tmp_path, monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
+    )
+    with pytest.raises(ValueError, match=r"^muse_supported_token_cap_unknown$"):
+        adapter.build_invocation(
+            prompt="fixture", mode="workspace-write", cwd=workspace, model="muse-wonder-full-1.0",
+            task_id="muse-interface", session_id=None, effort="high",
+            tool_config={"muse_worker": True, "muse_role": "implementation",
+                         "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
+        )
+    assert len(probes) == 1
+    assert list(scratch.iterdir()) == []
+
+
+@pytest.mark.parametrize("mode,role", [("read-only", "investigation"), ("workspace-write", "implementation")])
+def test_muse_unqualified_cli_approval_defaults_prevent_planning(tmp_path, monkeypatch, mode, role):
+    """M05: unqualified CLI/default drift must refuse without writing a prompt."""
+    adapter, workspace, scratch, probes = _muse_planning_fixture(
+        tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
+    )
+    with pytest.raises(ValueError, match=r"^muse_cli_compatibility_unknown$"):
+        adapter.build_invocation(
+            prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
+            task_id="muse-interface", session_id=None, effort="high",
+            tool_config={"muse_worker": True, "muse_role": role,
+                         "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
+        )
+    assert len(probes) == 1
+    assert list(scratch.iterdir()) == []

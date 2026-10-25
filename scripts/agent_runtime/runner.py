@@ -76,6 +76,7 @@ from scripts.agent_runtime.adapters.acpx import (
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
 from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result, agy_model_state
+from scripts.agent_runtime.adapters.muse import MuseRunEvidence
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
@@ -1143,6 +1144,7 @@ def _build_usage_record(
     agy_attempt_count: int = 1,
     agy_retry_reason: str | None = None,
     agy_telemetry: AgyTelemetry | None = None,
+    muse_run: MuseRunEvidence | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Adapters may omit retry metadata; reject untyped values before using or serializing them.
@@ -1211,6 +1213,13 @@ def _build_usage_record(
         requested_selector=_REQUESTED_SELECTOR.get(), identity=model_identity,
         task_id=task_id, run_nonce=_INVOCATION_NONCE.get(),
     ))
+    if (
+        agent == "muse" and not privacy_limited and isinstance(muse_run, MuseRunEvidence)
+        and muse_run.task_id == task_id and muse_run.run_nonce == _INVOCATION_NONCE.get()
+        and muse_run.requested_selector == model
+    ):
+        record["provider_session_id"] = muse_run.provider_session_id
+        record["muse_run"] = muse_run.projection()
     safe_substitution = _safe_substitution_record(substitution)
     if safe_substitution is not None:
         record["substitution"] = safe_substitution
@@ -3904,6 +3913,7 @@ def _invoke_impl(
         agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
         agy_retry_reason=getattr(parse, "agy_retry_reason", None),
         agy_telemetry=getattr(parse, "agy_telemetry", None),
+        muse_run=getattr(parse, "muse_run", None),
     )
     write_record(record)
 

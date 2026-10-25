@@ -12167,7 +12167,8 @@ def _run_worker(
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
             if agent == "muse":
-                tool_config.update(muse_worker=True, run_nonce=effective_nonce, muse_tmp_root=runtime_tmp_root)
+                tool_config.update(muse_worker=True, muse_role=state.get("research_role"),
+                                   run_nonce=effective_nonce, muse_tmp_root=runtime_tmp_root)
             if agent == "agy" and "claude" in (agy_requested_model or "").casefold():
                 tool_config.update(run_nonce=effective_nonce, owned_paths=state.get("owned_paths") or [])
                 tool_config["risk"] = state.get("review_risk")
@@ -13196,6 +13197,14 @@ def _run_worker(
         )
 
     usage_record = getattr(result, "usage_record", None)
+    if agent == "muse" and isinstance(usage_record, dict):
+        muse_run = usage_record.get("muse_run")
+        if (
+            isinstance(muse_run, dict) and muse_run.get("task_id") == task_id
+            and muse_run.get("run_nonce") == effective_nonce
+            and muse_run.get("requested_selector") == model
+        ):
+            final_state["muse_run"] = muse_run
     result_substitution = getattr(result, "substitution", None)
     if result_substitution is not None:
         substitution = result_substitution
@@ -17313,6 +17322,10 @@ def _muse_dispatch_refusal(args: argparse.Namespace) -> str | None:
         require_muse_execution_model(model)
     except (OSError, ValueError):
         return "muse_execution_not_admitted"
+    if (model or "muse-wonder-full-1.0") != "muse-wonder-full-1.0" or (
+        getattr(args, "research_role", None), getattr(args, "mode", "read-only")
+    ) not in {("implementation", "workspace-write"), ("investigation", "read-only")}:
+        return "muse_worker_role_mode_refused"
     return None
 
 
