@@ -467,6 +467,32 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     return path, number, head, action, evidence
 
 
+def reconcile_enqueue_cleanup(*, cwd, repository, number, head, queue_probe):
+    """Return the separate durable common receipt; never change publication status."""
+    from scripts.fleet.post_task_reap import reap_enqueued_worktrees
+
+    try:
+        try:
+            current = queue_probe()
+        except Exception:
+            current = {}
+        branch = current.get("headRefName") or ""
+        receipt = reap_enqueued_worktrees(
+            repo_root=Path(cwd), repository=repository, number=number, head=head,
+            branch=branch, queue_probe=queue_probe,
+        )
+    except Exception as exc:
+        # No removal can precede the common intent receipt. An unavailable
+        # receipt is explicit and cannot be interpreted as cleanup completion.
+        receipt = {"schema": "enqueue-cleanup.v1", "state": "retained", "removed": 0,
+                   "retained": 1, "receipt": "unavailable", "rows": [{
+                       "action": "retained", "reason": f"cleanup unavailable ({type(exc).__name__})",
+                       "owner": "infra lane", "next_condition": "restore common receipt storage and reconcile cleanup"}]}
+    print(f"enqueue-cleanup removed={receipt['removed']} retained={receipt['retained']} receipt={receipt['receipt']}",
+          file=sys.stderr)
+    return receipt
+
+
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -532,6 +558,21 @@ def publish(
                 raise refusal
             return result
 
+        def queue_probe():
+            result = readiness_runner(
+                ["gh", "pr", "view", str(fields["number"]), "--repo", gh_repo,
+                 "--json", "number,state,headRefName,headRefOid,isCrossRepository,isInMergeQueue"],
+                cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=15,
+            )
+            if result.returncode:
+                raise ValueError("queue state unavailable")
+            current = json.loads(result.stdout)
+            if not isinstance(current, dict):
+                raise ValueError("queue state unavailable")
+            return current
+
+        recovery_queue = False
+        already_queued = False
         if verb == "pr-merge":
             from scripts.publish.merge_guard import ensure_merge_ready
 
@@ -547,6 +588,17 @@ def publish(
             # Omitted fields are sent explicitly so the scanned text is the sent text;
             # a merge queue ignores explicit text, so its defaults are scanned too.
             default = _squash_text(gh_repo, fields, dest, temp, readiness_runner, cwd, environment)
+            recovery_queue = default["queue"]
+            if recovery_queue:
+                try:
+                    before = queue_probe()
+                    if before.get("headRefOid") != fields["match_head"]:
+                        raise ValueError("head changed")
+                    if type(before.get("isInMergeQueue")) is not bool:
+                        raise ValueError("membership unknown")
+                    already_queued = before["isInMergeQueue"]
+                except Exception:
+                    raise gate.PublishBlocked("QUEUE_STATE_UNKNOWN: enqueue refused before publication") from None
             for key in ("subject", "body"):
                 if key not in fields:
                     fields[key] = default[key]
@@ -713,7 +765,7 @@ def publish(
             if reservation:
                 path, number, head, action, evidence = reservation
                 recovery.consume(path, dest, number, head, action, evidence)
-        return _send(
+        result = subprocess.CompletedProcess(argv, 0, "" if text else b"", "" if text else b"") if already_queued else _send(
             argv,
             environment=environment,
             runner=runner,
@@ -725,6 +777,12 @@ def publish(
             stdout=stdout,
             stderr=stderr,
         )
+        if verb == "pr-merge" and recovery_queue and result.returncode == 0:
+            result.enqueue_cleanup = reconcile_enqueue_cleanup(
+                cwd=cwd, repository=gh_repo, number=fields["number"], head=fields["match_head"],
+                queue_probe=queue_probe,
+            )
+        return result
 
 
 class PublisherParser(argparse.ArgumentParser):

@@ -6970,3 +6970,65 @@ def test_namespace_unknown_worker_is_not_gone():
     }
     assert rw._task_pid_alive(record) is True
     assert rw._pid_proven_absent(record) is False
+
+
+def test_enqueued_open_pr_keeps_all_existing_activity_and_preservation_guards(tmp_path, monkeypatch, record_property):
+    """The queue exception must not delete dirty, live, retained or newly changed output."""
+    from scripts.fleet import pr_identity
+    from tests.orchestration.test_reap_worktrees_clean_pushed import fake_fuser, wrap_moves, write_task
+
+    fake_fuser(tmp_path, monkeypatch, "exit 1")
+    monkeypatch.setattr(rw, "_uninspectable_same_user", lambda *_args: False)
+    monkeypatch.setattr(pr_identity, "resolve_repo_slug", lambda _root: "unit/public")
+    for case in ("dirty", "unpushed", "keep", "live", "changed-output"):
+        repo = init_repo(tmp_path, case)
+        tree = add_worktree(repo, "codex/queued", path=repo / ".worktrees/dispatch/codex/queued")
+        git(repo, "push", "-u", "origin", "codex/queued")
+        head = git(tree, "rev-parse", "HEAD")
+        write_task(repo, "queued", tree, status="done", keep_worktree=case == "keep")
+        current = {"number": 7, "state": "OPEN", "isInMergeQueue": True, "headRefName": "codex/queued",
+                   "headRefOid": head, "isCrossRepository": False}
+        holder = None
+        if case == "dirty":
+            (tree / "README.md").write_text("owner's uncommitted work")
+        elif case == "unpushed":
+            (tree / "README.md").write_text("owner's unique work")
+            git(tree, "commit", "-am", "unpublished")
+        elif case == "live":
+            holder = subprocess.Popen(["sleep", "60"], cwd=tree)
+        else:
+            (tree / "batch_state").mkdir()
+            (tree / "batch_state" / "proof.txt").write_text("initial output")
+        try:
+            with monkeypatch.context() as patch:
+                if case == "changed-output":
+                    wrap_moves(patch, after=lambda staged: (staged / "batch_state" / "proof.txt").write_text("changed after retrieval"))
+                report = post_task_reap.reap_enqueued_worktrees(
+                    repo_root=repo, repository="unit/public", number=7, head=head,
+                    branch="codex/queued", queue_probe=lambda current=current: current,
+                )
+            record_property(case, json.dumps(report, sort_keys=True))
+            assert tree.exists() and report["removed"] == 0 and report["retained"] > 0, report
+            reasons = " ".join(row["reason"] for row in report["rows"])
+            assert {"dirty": "dirty", "unpushed": "head", "keep": "keep", "live": "in use",
+                    "changed-output": "content changed"}[case] in reasons.lower(), reasons
+            assert (repo / report["receipt"]).is_file()
+        finally:
+            if holder is not None:
+                holder.terminate()
+                holder.wait(timeout=5)
+
+
+def test_clean_pushed_inactive_worktree_is_reapable_without_merged_pr(tmp_path, monkeypatch, record_property):
+    """Clean pushed inactive trees must not be retained for PR state or a sixty minute delay."""
+    from tests.orchestration.test_reap_worktrees_clean_pushed import fake_fuser, write_task
+
+    fake_fuser(tmp_path, monkeypatch, "exit 1")
+    monkeypatch.setattr(rw, "_uninspectable_same_user", lambda *_args: False)
+    repo = init_repo(tmp_path)
+    tree = add_worktree(repo, "codex/pushed", path=repo / ".worktrees/dispatch/codex/pushed")
+    write_task(repo, "pushed", tree, status="done", finished_at=datetime.now(UTC).isoformat())
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False, target_paths=[tree])
+    record_property("generic-pushed", json.dumps(report.as_dict(), sort_keys=True))
+    assert len(report.removed) == 1 and report.removed[0].action == "removed", report
+    assert not tree.exists()

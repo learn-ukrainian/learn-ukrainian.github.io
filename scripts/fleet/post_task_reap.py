@@ -1055,6 +1055,119 @@ def post_task_reap(
     }
 
 
+def reap_enqueued_worktrees(*, repo_root: Path, repository: str, number: int, head: str,
+                            branch: str, queue_probe) -> dict[str, Any]:
+    """Reconcile one exact enqueued PR through the common clean-pushed remover.
+
+    The caller supplies a fresh read, never enqueue authority. Candidate identity
+    comes from the owning repository, actual branch and canonical creator/cohort.
+    Every refusal remains a durable row with custody and a next condition.
+    """
+    import secrets
+
+    primary = reap_worktrees.primary_checkout_root(repo_root.resolve())
+    control = worktree_claims.control_plane_root(primary)
+    tasks = control / "batch_state" / "tasks"
+    receipt = {
+        "schema": "enqueue-cleanup.v1", "repository": repository, "pr": number,
+        "head": head, "branch": branch, "rows": [], "removed": 0, "retained": 0,
+    }
+    directory = control / "batch_state" / "enqueue-cleanup"
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / f"{number}-{head}-{secrets.token_hex(8)}.json"
+    receipt["receipt"] = target.relative_to(control).as_posix()
+
+    def retain(reason, *, path=None, owner="infra lane"):
+        return {"path": path, "action": "retained", "reason": reason, "owner": owner,
+                "next_condition": "resolve the recorded refusal and reconcile this exact queued head"}
+
+    def guard(info, tree, census):
+        try:
+            current = queue_probe()
+            if not (
+                current.get("number") == number and current.get("state") == "OPEN"
+                and current.get("isInMergeQueue") is True
+                and current.get("isCrossRepository") is False
+                and current.get("headRefOid") == head and current.get("headRefName") == branch
+            ):
+                return "queue or approved head changed or unknown"
+            if pr_identity.resolve_repo_slug(primary) != repository:
+                return "owning repository changed or unknown"
+            if dict(census.branches).get(branch) != head:
+                return "remote PR branch/head publication changed or unknown"
+            if info.branch != branch or worktree_claims.checked_out_branch(tree) != branch or info.head != head:
+                return "local branch/head does not match enqueued PR"
+        except Exception:
+            return "queue proof unavailable"
+        return None
+
+    # Journal an intent before any removal so a partial run is discoverable.
+    def save():
+        temporary = target.with_suffix(".tmp")
+        with temporary.open("w", encoding="utf-8") as handle:
+            json.dump(receipt, handle, sort_keys=True)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, target)
+        reap_worktrees._fsync_directory(directory)
+
+    receipt["state"] = "pending"
+    receipt["rows"] = [retain("cleanup incomplete; reconcile common removal journal before retrying")]
+    receipt["retained"] = 1
+    save()
+    receipt["rows"] = []
+    try:
+        current = queue_probe()
+        if not (isinstance(branch, str) and branch and current.get("number") == number
+                and current.get("state") == "OPEN" and current.get("isInMergeQueue") is True
+                and current.get("isCrossRepository") is False and current.get("headRefName") == branch
+                and current.get("headRefOid") == head):
+            receipt["rows"].append(retain("queue or approved head changed or unknown"))
+        elif pr_identity.resolve_repo_slug(primary) != repository:
+            receipt["rows"].append(retain("owning repository mismatch or unknown"))
+        else:
+            targets = []
+            for info in reap_worktrees.list_git_worktrees(primary):
+                records = ignored_task_output.matching_worktree_records(
+                    info.path, tasks, repo_root=primary, publish_cache=False
+                )
+                if info.branch == branch or any(record.get("worktree_branch") == branch for _, record in records):
+                    if any(record.get("repository") not in (None, repository) for _, record in records):
+                        receipt["rows"].append(retain("task repository binding conflicts",
+                            path=reap_worktrees._display_path(info.path, primary)))
+                    else:
+                        targets.append(info.path)
+            report = reap_worktrees.reap_clean_pushed(
+                repo_root=primary, dry_run=False, target_paths=targets, enqueue_guard=guard
+            )
+            receipt["common_report"] = report.as_dict()
+            for row in (*report.removed, *report.skipped):
+                if row.reason == "not_selected":
+                    continue
+                item = dict(row.__dict__)
+                if row.action == "removed" and row.branch:
+                    error = reap_worktrees._prune_branch(primary, row.branch, expected_head=row.head)
+                    if error:
+                        receipt["rows"].append(retain("local branch retained after tree removal",
+                            path=row.branch))
+                if row.action != "removed":
+                    item.update(owner="infra lane", next_condition="resolve the common reaper refusal before retrying cleanup")
+                receipt["rows"].append(item)
+            if report.refusal:
+                receipt["rows"].append(retain(report.refusal))
+    except Exception as exc:
+        receipt["rows"].append(retain(f"common cleanup failed ({type(exc).__name__})"))
+    receipt["removed"] = sum(row["action"] == "removed" for row in receipt["rows"])
+    receipt["retained"] = sum(row["action"] != "removed" for row in receipt["rows"])
+    receipt["state"] = "retained" if receipt["retained"] else "complete"
+    try:
+        save()
+    except OSError:
+        # The durable pending receipt keeps custody explicit if final storage fails.
+        return json.loads(target.read_text(encoding="utf-8"))
+    return json.loads(target.read_text(encoding="utf-8"))
+
+
 def _finalized_reuse_proof(
     worktree: Path, matches: list[tuple[Path, dict[str, Any]]], *, repo_root: Path
 ) -> dict[str, Any] | None:

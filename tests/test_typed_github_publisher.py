@@ -1288,3 +1288,65 @@ def test_keeper_issue_search_includes_unlabelled_open_issues():
     result = pub.read("issues", repo="unit/public", paginate=True, slurp=True, runner=send, env={})
     assert json.loads(result.stdout) == [[{"number": 11208, "body": "tests/test_unit.py::test_one"}]]
     assert calls == [["gh", "api", "--method", "GET", "repos/unit/public/issues?state=open&per_page=100", "--paginate", "--slurp"]]
+
+
+def test_enqueue_cleanup_failure_preserves_successful_enqueue_receipt(synthetic_opsec, tmp_path, monkeypatch, capsys, record_property):
+    """Cleanup partial failure must not hide enqueue success or send a duplicate enqueue."""
+    from scripts.fleet import post_task_reap
+    from tests.test_ci_recovery import HEAD, Transport
+    from tests.test_fleet_post_task_reap import _init_repo
+
+    for case in ("partial", "moved", "failed", "unknown", "already-queued"):
+        root = tmp_path / case
+        _init_repo(root)
+        sender = Transport()
+        sender.removed = False
+        sender.queued = case == "already-queued"
+        reads = []
+
+        def transport(argv, sender=sender, case=case, **kwargs):
+            if argv[1:3] == ["pr", "view"] and sender.writes and case == "moved":
+                sender.head = "b" * 40
+            if argv[1:3] == ["pr", "merge"]:
+                if case == "unknown":
+                    sender.failure = True
+                elif case == "failed":
+                    sender.writes.append(argv)
+                    return subprocess.CompletedProcess(argv, 1, "raw refusal", "raw error")
+            result = sender(argv, **kwargs)
+            if argv[1:3] == ["pr", "merge"]:
+                result.stdout, result.stderr = "raw enqueue success", "raw transport note"
+            return result
+
+        def broken_cleanup(reads=reads, **kwargs):
+            reads.append(kwargs)
+            raise OSError("synthetic cleanup partial failure")
+
+        with monkeypatch.context() as patch:
+            patch.setattr(post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "unit/public")
+            patch.setattr(post_task_reap.reap_worktrees, "reap_clean_pushed", broken_cleanup)
+            if case == "unknown":
+                with pytest.raises(subprocess.TimeoutExpired):
+                    pub.publish("pr-merge", repo="unit/public", number=42, match_head=HEAD,
+                                cwd=root, runner=transport)
+                assert len(sender.writes) == 1 and not reads
+                assert not (root / "batch_state/enqueue-cleanup").exists()
+                continue
+            result = pub.publish("pr-merge", repo="unit/public", number=42, match_head=HEAD,
+                                 cwd=root, runner=transport)
+        if case == "failed":
+            assert result.returncode == 1 and result.stdout == "raw refusal" and not reads
+            assert not hasattr(result, "enqueue_cleanup")
+            continue
+        assert result.returncode == 0
+        assert len(sender.writes) == (0 if case == "already-queued" else 1)
+        if case != "already-queued":
+            assert (result.stdout, result.stderr) == ("raw enqueue success", "raw transport note")
+        receipt = result.enqueue_cleanup
+        record_property(case, json.dumps(receipt, sort_keys=True))
+        assert receipt["retained"] == 1 and receipt["state"] == "retained"
+        assert json.loads((root / receipt["receipt"]).read_text()) == receipt
+        assert all(row.get("owner") and row.get("next_condition") for row in receipt["rows"])
+        assert (not reads) if case == "moved" else len(reads) == 1
+        summary = capsys.readouterr().err
+        assert f"enqueue-cleanup removed=0 retained=1 receipt={receipt['receipt']}" in summary

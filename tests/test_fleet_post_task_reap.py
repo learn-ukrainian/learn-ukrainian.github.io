@@ -1594,3 +1594,59 @@ def test_10303_post_task_reap_uses_complete_preservation_path(request, monkeypat
     assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
     state = json.loads((tasks / "boundary.json").read_text())
     assert state["status"] == creator["status"] and state["run_nonce"] == creator["run_nonce"]
+
+
+def test_enqueued_exact_head_reaps_only_bound_pushed_terminal_worktree(tmp_path, monkeypatch, record_property):
+    """Queued exact bindings must reap; wrong identity or unknown provenance must retain."""
+    from scripts.fleet import ignored_task_output
+    from tests.orchestration.test_reap_worktrees_clean_pushed import fake_fuser, write_task
+
+    rw = post_task_reap.reap_worktrees
+    fake_fuser(tmp_path, monkeypatch, "exit 1")
+    monkeypatch.setattr(rw, "_uninspectable_same_user", lambda *_args: False)
+    monkeypatch.setattr(post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "unit/public")
+    for case in ("wrong-repo", "wrong-branch", "wrong-head", "remote-moved", "nonqueued", "missing-creator", "success"):
+        repo = tmp_path / case
+        _init_repo(repo)
+        (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.cache/\n")
+        _run(["git", "add", ".gitignore"], cwd=repo)
+        _run(["git", "commit", "-m", "ignore fixture output"], cwd=repo)
+        _run(["git", "push", "origin", "main"], cwd=repo)
+        tree = _add_dispatch_worktree(repo, "codex", "queued")
+        sibling = _add_dispatch_worktree(repo, "codex", "collision")
+        branch = "codex/queued"
+        _run(["git", "push", "-u", "origin", branch], cwd=repo)
+        head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+        record_path = write_task(repo, "queued", tree, status="done", repository="unit/public")
+        assert ignored_task_output.record_created_worktree(json.loads(record_path.read_text()))
+        if case == "remote-moved":
+            _run(["git", "commit", "--allow-empty", "-m", "remote branch moved"], cwd=repo)
+            _run(["git", "push", "origin", "main:refs/heads/codex/queued"], cwd=repo)
+        if case == "wrong-branch":
+            _run(["git", "switch", "-c", "codex/moved"], cwd=tree)
+        if case == "missing-creator":
+            record = json.loads(record_path.read_text())
+            record.pop("ignored_output_baseline")
+            record_path.write_text(json.dumps(record))
+        (tree / ".cache").mkdir()
+        (tree / ".cache" / "result.txt").write_text("retrievable before removal")
+        current = {"number": 23, "state": "OPEN", "isInMergeQueue": case != "nonqueued",
+                   "headRefName": branch, "headRefOid": "f" * 40 if case == "wrong-head" else head,
+                   "isCrossRepository": False}
+        receipt = post_task_reap.reap_enqueued_worktrees(
+            repo_root=repo, repository="other/repo" if case == "wrong-repo" else "unit/public",
+            number=23, head=head, branch=branch, queue_probe=lambda current=current: current,
+        )
+        record_property(case, json.dumps(receipt, sort_keys=True))
+        assert json.loads((repo / receipt["receipt"]).read_text()) == receipt
+        assert sibling.exists(), "equal SHA must never select an unrelated branch"
+        if case == "success":
+            assert receipt["removed"] == 1 and receipt["retained"] == 0, receipt
+            assert not tree.exists()
+            saved = next(row["preserved_artifacts"] for row in receipt["rows"] if row["action"] == "removed")
+            assert saved["retrieval_proof_sha256"]
+            assert (repo / saved["location"] / ".cache" / "result.txt").read_text() == "retrievable before removal"
+            assert _run(["git", "ls-remote", "--heads", "origin", branch], cwd=repo).stdout.strip()
+        else:
+            assert tree.exists() and receipt["retained"] > 0, receipt
+            assert all(row.get("owner") and row.get("next_condition") for row in receipt["rows"])

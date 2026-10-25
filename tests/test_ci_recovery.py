@@ -65,13 +65,16 @@ class Transport:
         self.moved = False
         self.pull_reads = 0
         self.writes = []
+        self.queued = False
         self.compare_rows = {"base_commit": {"sha": "d" * 40}, "merge_base_commit": {"sha": "d" * 40}, "status": "ahead", "files": [{"filename": "scripts/earlier-pr.py"}, {"filename": "scripts/this-pr.py"}]}
         self.candidate_record = {"base_sha": "d" * 40, "head_sha": TESTED, "head_ref": "refs/heads/gh-readonly-queue/main/pr-42-" + "e" * 40, "run_id": 123, "run_attempt": 1}
 
 
     def __call__(self, argv, **kwargs):
         if argv[1:3] == ["pr", "view"]:
-            data = {"number": 42, "isDraft": False, "headRefOid": self.head}
+            data = {"number": 42, "isDraft": False, "headRefOid": self.head,
+                    "headRefName": "codex/fixture", "state": "OPEN", "isCrossRepository": False,
+                    "isInMergeQueue": self.queued}
         elif argv[1:3] == ["pr", "checks"]:
             data = []
         elif argv[1:5] == ["api", "--method", "POST", "graphql"]:
@@ -209,6 +212,8 @@ class Transport:
             self.writes.append(argv)
             if self.failure:
                 raise subprocess.TimeoutExpired(argv, 60)
+            if argv[1:3] == ["pr", "merge"]:
+                self.queued = True
             return subprocess.CompletedProcess(argv, 0, "", "")
         return subprocess.CompletedProcess(argv, 0, json.dumps(data), "")
 
@@ -227,6 +232,8 @@ def setup(tmp_path, monkeypatch, synthetic_opsec):
 
 def recover(setup, action, *, recovery=False):
     root, transport = setup
+    # These recovery attempts model a fresh ejection, not an already-queued PR.
+    transport.queued = False
     if action == "run-rerun":
         return pub.publish(action, number=123, repo="unit/public", cwd=root, env={}, runner=transport)
     if action in {"keeper", "keeper-initial"}:

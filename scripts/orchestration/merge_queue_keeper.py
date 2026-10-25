@@ -181,6 +181,9 @@ class GitHub:
             raise GitHubRateLimited(observation.reset_at)
         if result.returncode:
             raise KeeperError((result.stderr or result.stdout or "GitHub request failed").strip()[:500])
+        cleanup = getattr(result, "enqueue_cleanup", None)
+        if cleanup is not None:
+            print(f"enqueue-cleanup removed={cleanup['removed']} retained={cleanup['retained']} receipt={cleanup['receipt']}", file=sys.stderr)
         return result.stdout
 
     def json(self, *args: str) -> Any:
@@ -1220,6 +1223,9 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         if revoke == "needs-CF":
                             previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
+                elif reason == "ready" and queued is True:
+                    gh.enqueue(number, head)
+                    lines.append(f"#{number} queued cleanup reconciled; read enqueue-cleanup receipt")
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":

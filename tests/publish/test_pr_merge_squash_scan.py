@@ -24,10 +24,14 @@ def catalog(monkeypatch):
 def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=HEAD):
     """Answer readiness and squash-text reads; record only the merge write."""
 
+    queued = False
+
     def send(args, **kwargs):
+        nonlocal queued
         if args[:3] == ["gh", "pr", "view"]:
             return subprocess.CompletedProcess(
-                args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD}), ""
+                args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD, "state": "OPEN",
+                                    "isInMergeQueue": queued, "isCrossRepository": False, "headRefName": "codex/fixture"}), ""
             )
         if args[:3] == ["gh", "pr", "checks"]:
             return subprocess.CompletedProcess(args, 0, "[]", "")
@@ -41,6 +45,7 @@ def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=
             }
             return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
         assert args[:3] == ["gh", "pr", "merge"]
+        queued = True
         calls.append({"argv": args, "body": Path(args[args.index("--body-file") + 1]).read_text()})
         return subprocess.CompletedProcess(args, 0, "", "")
 
