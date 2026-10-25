@@ -1487,6 +1487,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "hermes_qwen.py": "qwen",
         "kimi.py": "kimi",
         "kimicc.py": "kimi",
+        "muse.py": None,
     }
     adapter_dir = repo / "scripts/agent_runtime/adapters"
     found = sorted(path.name for path in adapter_dir.glob("*.py"))

@@ -76,6 +76,7 @@ from scripts.agent_runtime.adapters.acpx import (
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
 from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result, agy_model_state
+from scripts.agent_runtime.adapters.muse import MuseRunEvidence
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
@@ -1143,6 +1144,7 @@ def _build_usage_record(
     agy_attempt_count: int = 1,
     agy_retry_reason: str | None = None,
     agy_telemetry: AgyTelemetry | None = None,
+    muse_run: MuseRunEvidence | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Adapters may omit retry metadata; reject untyped values before using or serializing them.
@@ -1211,6 +1213,13 @@ def _build_usage_record(
         requested_selector=_REQUESTED_SELECTOR.get(), identity=model_identity,
         task_id=task_id, run_nonce=_INVOCATION_NONCE.get(),
     ))
+    if (
+        agent == "muse" and not privacy_limited and isinstance(muse_run, MuseRunEvidence)
+        and muse_run.task_id == task_id and muse_run.run_nonce == _INVOCATION_NONCE.get()
+        and muse_run.requested_selector == model
+    ):
+        record["provider_session_id"] = muse_run.provider_session_id
+        record["muse_run"] = muse_run.projection()
     safe_substitution = _safe_substitution_record(substitution)
     if safe_substitution is not None:
         record["substitution"] = safe_substitution
@@ -3720,6 +3729,7 @@ def _invoke_impl(
         effective_model = resolve_kimicc_dispatch_model(model)
     else:
         effective_model = model or adapter.default_model
+    allow_runner_failover = allow_runner_failover and agent_name != "muse"
     failover_chain = load_failover_chain(agent_name, effective_model=effective_model) if allow_runner_failover else None
     if allow_direct_only and failover_chain is not None:
         raise AgentUnavailableError(f"Direct-only agent {agent_name!r} may not use runner failover")
@@ -3903,6 +3913,7 @@ def _invoke_impl(
         agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
         agy_retry_reason=getattr(parse, "agy_retry_reason", None),
         agy_telemetry=getattr(parse, "agy_telemetry", None),
+        muse_run=getattr(parse, "muse_run", None),
     )
     write_record(record)
 
@@ -3951,12 +3962,16 @@ def _invoke_impl(
 def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config: dict | None) -> None:
     """Refuse the model public ``invoke`` would run, before ``_invoke_impl``.
 
-    Direct ``_invoke_impl`` callers keep the same check. An omitted model is
-    filled only for Kimi; adapter defaults are admitted during planning.
+    Direct ``_invoke_impl`` callers keep the same check. Omitted Kimi and Muse
+    models use their defaults; other adapter defaults are admitted during planning.
     Coding-only admission still runs first.
     """
     requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
-    if agent_name == "kimi" and requested_harness == "kimicc":
+    if agent_name == "muse":
+        from .adapters.muse import MuseAdapter
+
+        effective_model = model or MuseAdapter.default_model
+    elif agent_name == "kimi" and requested_harness == "kimicc":
         from .adapters.kimicc import resolve_kimicc_dispatch_model
 
         effective_model = resolve_kimicc_dispatch_model(model)
@@ -3979,6 +3994,10 @@ def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config
     refusal = retired_model_refusal(effective_model)
     if refusal:
         raise ValueError(f"Agent {agent_name!r}: {refusal}")
+    if agent_name == "muse":
+        from .adapters.muse import require_muse_execution_model
+
+        require_muse_execution_model(effective_model)
 
 
 def invoke(
@@ -4000,6 +4019,7 @@ def invoke(
     effort: str | None = None,
     initiator: str | None = None,
     v4_authorization_id: str | None = None,
+    allow_runner_failover: bool = True,
 ) -> Result:
     """Invoke an agent CLI, provisioning trail isolation before any spawn.
 
@@ -4064,7 +4084,9 @@ def invoke(
             event_sink=event_sink,
             effort=effort,
             v4_authorization_id=v4_authorization_id,
-            allow_runner_failover=attempt is None
+            allow_runner_failover=allow_runner_failover
+            and agent_name != "muse"
+            and attempt is None
             and not bool(tool_config and (tool_config.get("review_id") or tool_config.get("attempt_id"))),
         )
     except BaseException as exc:

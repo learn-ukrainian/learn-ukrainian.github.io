@@ -24922,3 +24922,112 @@ def test_terminal_dispatch_event_defaults_missing_identity_to_unknown(monkeypatc
     assert event["identity_state"] == "unknown"
     assert event["requested_selector"] is None
     assert event["observed_model"] is None
+
+
+@pytest.mark.parametrize("model,role,mode,expected", [
+    ("muse-wonder-full-1.0", "implementation", "workspace-write", None),
+    ("muse-wonder-full-1.0", "investigation", "read-only", None),
+    ("muse-wonder-full-1.0", None, "read-only", "muse_worker_role_mode_refused"),
+    ("muse-wonder-full-1.0", "investigation", "workspace-write", "muse_worker_role_mode_refused"),
+    ("muse-spark-1.3", "implementation", "workspace-write", "muse_worker_role_mode_refused"),
+])
+def test_muse_role_mode_admission_blocks_unclassified_execution(tmp_path, monkeypatch, model, role, mode, expected):
+    """M03: only the approved author/write and diagnosis/read map can reach planning."""
+    from scripts.agent_runtime.adapters import muse
+
+    monkeypatch.setattr(muse, "require_muse_execution_model", lambda model: model)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "muse", "--model", model, "--task-id", "muse-interface",
+        "--prompt", "fixture", "--mode", mode,
+    ])
+    args.research_role = role
+    assert delegate._muse_dispatch_refusal(args) == expected
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees" / "dispatch" / "codex" / "muse-interface"
+    workspace.mkdir(parents=True)
+    planned = []
+
+    def plan(**kwargs):
+        planned.append(kwargs)
+        return InvocationPlan(cmd=["fixture-muse"], cwd=kwargs["workspace"])
+
+    adapter = muse.MuseAdapter()
+    monkeypatch.setattr(adapter, "_plan", plan)
+    kwargs = dict(prompt="fixture", mode=mode, cwd=workspace, model=model,
+                  task_id="muse-interface", session_id=None, effort="high",
+                  tool_config={"muse_worker": True, "muse_role": role, "run_nonce": "0123456789abcdef"})
+    if expected is None:
+        invocation = adapter.build_invocation(**kwargs)
+        assert invocation.cwd == workspace
+        assert planned[0]["mode"] == mode
+        assert planned[0]["model"] == "muse-wonder-full-1.0"
+    else:
+        with pytest.raises(ValueError, match=f"^{expected}$"):
+            adapter.build_invocation(**kwargs)
+        assert planned == []
+
+
+def test_muse_failed_task_retains_accounting_companion(tmp_tasks_dir, tmp_path, monkeypatch):
+    """M07: a read-only mutation fails the task without dropping validated native usage."""
+    from agent_runtime import runner
+    from scripts.agent_runtime.adapters import muse
+    from tests.test_agent_runtime import _muse_stream_fixture
+
+    checkout = (tmp_path / ".worktrees/dispatch/codex/muse-interface").resolve()
+    checkout.mkdir(parents=True)
+    _seed_read_only_checkout_fixture(checkout, monkeypatch)
+    plan, records = _muse_stream_fixture(checkout)
+    parsed = muse.MuseAdapter().parse_response(
+        stdout="\n".join(json.dumps(record) for record in records),
+        stderr="", returncode=0, output_file=None, plan=plan,
+    )
+    assert parsed.ok is True
+    assert parsed.tokens == 120
+    nonce_token = runner._INVOCATION_NONCE.set("0123456789abcdef")
+    selector_token = runner._REQUESTED_SELECTOR.set("muse-wonder-full-1.0")
+    try:
+        usage = runner._build_usage_record(
+            agent="muse", entrypoint="delegate", model="muse-wonder-full-1.0",
+            mode="read-only", task_id="muse-interface", cwd=checkout, session_id=None,
+            duration_s=0.1, input_chars=7, output_chars=len(parsed.response),
+            returncode=0, outcome="ok", rate_limited=False, stalled=False,
+            stderr_excerpt=None, tokens=parsed.tokens, muse_run=parsed.muse_run,
+        )
+    finally:
+        runner._REQUESTED_SELECTOR.reset(selector_token)
+        runner._INVOCATION_NONCE.reset(nonce_token)
+    result = Result(
+        ok=True, agent="muse", model="muse-wonder-full-1.0", mode="read-only",
+        response=parsed.response, stderr_excerpt=None, duration_s=0.1,
+        session_id=parsed.session_id, rate_limited=False, stalled=False, returncode=0,
+        usage_record=usage,
+    )
+    state_path = delegate._state_path("muse-interface")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "muse-interface", "agent": "muse", "model": "muse-wonder-full-1.0",
+        "mode": "read-only", "cwd": str(checkout), "run_nonce": "0123456789abcdef",
+        "research_role": "investigation", "cli_version": plan.metadata["cli_version"],
+    })
+    monkeypatch.setattr(muse, "require_muse_execution_model", lambda model: model)
+
+    def successful_runtime_with_mutation(*args, **kwargs):
+        (checkout / "tracked.txt").write_text("task authored edit\n", encoding="utf-8")
+        return result
+
+    with patch("agent_runtime.runner.invoke", side_effect=successful_runtime_with_mutation):
+        rc = delegate._run_worker(
+            task_id="muse-interface", agent="muse", prompt="fixture", mode="read-only",
+            cwd_str=str(checkout), model="muse-wonder-full-1.0", hard_timeout=60,
+            run_nonce="0123456789abcdef",
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == ["tracked.txt"]
+    _assert_mutation_reported(state, "tracked.txt")
+    assert state_path.with_suffix(".result").read_text() == "READY\n"
+    assert state["muse_run"] == parsed.muse_run.projection() == usage["muse_run"]
+    assert state["muse_run"]["total_tokens"] == 120
+    assert state["muse_run"]["observed_model"] is None
+    assert state["muse_run"]["identity_state"] == "unknown"

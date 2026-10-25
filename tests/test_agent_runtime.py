@@ -4096,3 +4096,371 @@ def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, m
         runner.invoke("agy", "Implement.", **kwargs)
     assert caught.value.model_identity is None
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
+    """Native envelope shared only by the granted Muse protocol cases."""
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    session = "11111111-1111-4111-8111-111111111111"
+    command = "22222222-2222-4222-8222-222222222222"
+    task = "33333333-3333-4333-8333-333333333333"
+    plan = InvocationPlan(cmd=["fixture-muse"], cwd=tmp_path, metadata={
+        "task_id": "muse-interface", "run_nonce": "0123456789abcdef",
+        "provider_session_id": session, "model": model, "workspace": str(tmp_path),
+        "mode": "read-only", "permission_profile": ":read-only", "toolset": ["read_file"],
+        "cli_version": "Muse Code 1.4.11 (1.4.11-R6667.1)",
+        "cli_sha256": "a" * 64, "prompt_sha256": "b" * 64, "preview": False,
+    })
+    records = []
+
+    def event(kind, payload, stream="session"):
+        number = len(records) + 1
+        records.append({
+            "schema_version": 1, "payload_schema_version": 1,
+            "id": f"00000000-0000-4000-8000-{number:012d}",
+            "stream": {"kind": stream, "id": session},
+            "sequence": 1 + sum(r["stream"]["kind"] == stream for r in records),
+            "causation_id": command, "payload_type": kind,
+            "payload": {"command_id": command, "run_stream": {"kind": "run", "id": command}, **payload},
+        })
+
+    event("runtime.command.accepted", {"kind": "command_accepted", "command_kind": "turn.submit"})
+    event("session.run.linked", {})
+    event("session.workspace_branch.observed", {
+        "record": {"command_id": command, "workspace_root": str(tmp_path)},
+    })
+    event("run.lifecycle.started", {})
+    event("task.stream.linked", {"task_id": task, "task_stream": {"kind": "task", "id": task}})
+    for stage in ("proposed", "accepted", "scheduled", "side_effect_intent", "started", "completed"):
+        event(f"task.lifecycle.{stage}", {
+            "task_id": task, "task_stream": {"kind": "task", "id": task},
+            "event": {"task_id": task, "kind": stage},
+        })
+    event("run.usage", {
+        "kind": "run_usage", "children_included": False, "failed_calls": 0, "cancelled_calls": 0,
+        "calls": 1, "completed_calls": 1,
+        "models": [{"model": model, "calls": 1, "input_tokens": 100, "output_tokens": 20,
+                    "cached_tokens": 30, "reasoning_tokens": 5}],
+    }, "exec.usage")
+    event("run.terminal.completed", {"kind": "run_terminal", "terminal": "completed", "text": "READY\n"})
+    return plan, records
+
+
+@pytest.mark.parametrize("model", ["muse-wonder-full-1.0", "muse-spark-1.3"])
+def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
+    """M01: completed answers retain bound usage without promoting backend identity."""
+    import hashlib
+
+    from scripts.agent_runtime.adapters.muse import MuseAdapter
+
+    plan, records = _muse_stream_fixture(tmp_path, model)
+    result = MuseAdapter().parse_response(
+        stdout="\n".join(json.dumps(record) for record in records),
+        stderr="", returncode=0, output_file=None, plan=plan,
+    )
+
+    assert result.ok is True
+    assert result.response == "READY\n"
+    assert result.tokens == 120
+    assert result.session_id == "11111111-1111-4111-8111-111111111111"
+    companion = result.muse_run.projection()
+    assert companion["task_id"] == "muse-interface"
+    assert companion["run_nonce"] == "0123456789abcdef"
+    assert companion["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
+    assert companion["provider_run_id"] == "22222222-2222-4222-8222-222222222222"
+    assert companion["requested_selector"] == model
+    assert companion["usage_model"] == model
+    assert companion["input_tokens"] == 100
+    assert companion["output_tokens"] == 20
+    assert companion["cached_tokens"] == 30
+    assert companion["reasoning_tokens"] == 5
+    assert companion["total_tokens"] == 120
+    assert companion["observed_model"] is None
+    assert companion["identity_state"] == "unknown"
+    assert companion["effective_permissions"] == "unknown"
+    assert companion["cli_sha256"] == [170] * 32
+    assert companion["prompt_sha256"] == [187] * 32
+    assert bytes(companion["cli_sha256"]).hex() == plan.metadata["cli_sha256"]
+    assert bytes(companion["prompt_sha256"]).hex() == plan.metadata["prompt_sha256"]
+    fields = {key: value for key, value in companion.items() if key not in {"receipt_ref", "receipt_sha256"}}
+    assert bytes(companion["receipt_sha256"]) == hashlib.sha256(
+        json.dumps(fields, sort_keys=True, separators=(",", ":")).encode(),
+    ).digest()
+    assert companion["receipt_ref"] == (
+        "muse-run:11111111-1111-4111-8111-111111111111:22222222-2222-4222-8222-222222222222"
+    )
+
+
+def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch):
+    """M06: real parsing and usage persistence must not lose a completed run's accounting."""
+    import hashlib
+    import io
+    from unittest.mock import MagicMock
+
+    from agent_runtime import runner, usage
+    from agent_runtime.adapters import muse as runtime_muse
+    from scripts.agent_runtime.adapters.muse import MuseAdapter
+
+    plan, records = _muse_stream_fixture(tmp_path)
+    adapter = MuseAdapter()
+    # Planning/admission are synthetic inputs, not qualified cap or permission evidence.
+    monkeypatch.setattr(runtime_muse, "require_muse_execution_model", lambda model: model)
+    monkeypatch.setattr(adapter, "build_invocation", MagicMock(return_value=plan))
+    monkeypatch.setattr(runner, "_load_adapter", MagicMock(return_value=adapter))
+    monkeypatch.setattr(runner, "_resolve_plan_telemetry", MagicMock(return_value=SimpleNamespace(
+        model="muse-wonder-full-1.0", effort="high", cli_version=plan.metadata["cli_version"],
+    )))
+    proc = MagicMock()
+    proc.stdout = io.StringIO("\n".join(json.dumps(record) for record in records) + "\n")
+    proc.stderr = io.StringIO("")
+    proc.poll.return_value = proc.wait.return_value = proc.returncode = 0
+    monkeypatch.setattr(runner, "_spawn_subprocess", MagicMock(return_value=(proc, None, None)))
+    store = tmp_path / "private-usage"
+    store.mkdir(mode=0o700)
+    monkeypatch.setattr(usage, "_usage_dir", lambda: store)
+
+    result = runner.invoke(
+        "muse", "fixture", mode="read-only", cwd=tmp_path,
+        model="muse-wonder-full-1.0", task_id="muse-interface", effort="high",
+        tool_config={"run_nonce": "0123456789abcdef"},
+    )
+
+    assert result.ok is True
+    assert result.response == "READY\n"
+    assert result.session_id == "11111111-1111-4111-8111-111111111111"
+    files = list(store.glob("usage_muse-runtime_*.jsonl"))
+    assert len(files) == 1
+    lines = files[0].read_text().splitlines()
+    assert len(lines) == 1
+    durable = json.loads(lines[0])
+    assert durable == result.usage_record
+    assert durable["outcome"] == "ok"
+    assert durable["tokens"] == 120
+    assert durable["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
+    companion = durable["muse_run"]
+    assert companion["task_id"] == "muse-interface"
+    assert companion["run_nonce"] == "0123456789abcdef"
+    assert companion["provider_session_id"] == "11111111-1111-4111-8111-111111111111"
+    assert companion["provider_run_id"] == "22222222-2222-4222-8222-222222222222"
+    assert companion["requested_selector"] == companion["usage_model"] == "muse-wonder-full-1.0"
+    assert companion["input_tokens"] == 100
+    assert companion["output_tokens"] == 20
+    assert companion["cached_tokens"] == 30
+    assert companion["reasoning_tokens"] == 5
+    assert companion["total_tokens"] == 120
+    assert companion["observed_model"] is durable["observed_model"] is None
+    assert companion["identity_state"] == durable["identity_state"] == "unknown"
+    assert companion["effective_permissions"] == "unknown"
+    assert companion["cli_sha256"] == [170] * 32
+    assert companion["prompt_sha256"] == [187] * 32
+    assert bytes(companion["cli_sha256"]).hex() == plan.metadata["cli_sha256"]
+    assert bytes(companion["prompt_sha256"]).hex() == plan.metadata["prompt_sha256"]
+    fields = {key: value for key, value in companion.items() if key not in {"receipt_ref", "receipt_sha256"}}
+    assert bytes(companion["receipt_sha256"]) == hashlib.sha256(
+        json.dumps(fields, sort_keys=True, separators=(",", ":")).encode(),
+    ).digest()
+
+
+@pytest.mark.parametrize("case", [
+    "foreign-session", "wrong-command-run", "duplicate-usage", "duplicate-json-member",
+    "wrong-model", "boolean-counter", "negative-counter", "child-usage", "cached-above-input",
+    "missing-usage", "missing-completed-terminal",
+    "failed-process", "oversized-stream", "wrong-permission-plan", "event-after-terminal",
+    "unknown-envelope-schema", "duplicate-event", "out-of-order-sequence", "wrong-command-kind",
+    "foreign-causation", "usage-on-session-stream", "duplicate-run-link", "foreign-link-run",
+    "unlinked-run", "duplicate-run-start", "foreign-task-stream", "duplicate-task-link",
+    "foreign-task-event", "out-of-order-task", "wrong-workspace-record-command", "failed-terminal",
+])
+def test_muse_untrusted_usage_cannot_enter_consumption(tmp_path, case):
+    """M02: foreign, duplicated or incomplete accounting must remain unknown."""
+    from scripts.agent_runtime.adapters.muse import MuseAdapter
+
+    plan, records = _muse_stream_fixture(tmp_path)
+    usage = records[-2]["payload"]
+    if case == "foreign-session":
+        records[-1]["stream"]["id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "wrong-command-run":
+        usage["run_stream"]["id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "duplicate-usage":
+        import copy
+        duplicate = copy.deepcopy(records[-2])
+        duplicate["id"] = "44444444-4444-4444-8444-444444444444"
+        duplicate["sequence"] = 2
+        records.insert(-1, duplicate)
+    elif case == "wrong-model":
+        usage["models"][0]["model"] = "unrequested-model"
+    elif case == "boolean-counter":
+        usage["models"][0]["input_tokens"] = True
+    elif case == "negative-counter":
+        usage["models"][0]["input_tokens"] = -1
+    elif case == "child-usage":
+        usage["children_included"] = True
+    elif case == "cached-above-input":
+        usage["models"][0]["cached_tokens"] = 101
+    elif case == "missing-usage":
+        records.pop(-2)
+    elif case == "missing-completed-terminal":
+        records.pop()
+    elif case == "wrong-permission-plan":
+        plan.metadata["permission_profile"] = ":ask-me"
+    elif case == "event-after-terminal":
+        records.append(records[0])
+    elif case == "unknown-envelope-schema":
+        records[0]["payload_schema_version"] = 2
+    elif case == "duplicate-event":
+        records[1]["id"] = records[0]["id"]
+    elif case == "out-of-order-sequence":
+        records[1]["sequence"] = 3
+    elif case == "wrong-command-kind":
+        records[0]["payload"]["command_kind"] = "session.resume"
+    elif case == "foreign-causation":
+        records[1]["causation_id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "usage-on-session-stream":
+        records[-2]["stream"] = dict(records[-3]["stream"])
+        records[-2]["sequence"] = records[-3]["sequence"] + 1
+    elif case == "duplicate-run-link":
+        records[2]["payload_type"] = "session.run.linked"
+    elif case == "foreign-link-run":
+        records[1]["payload"]["run_stream"]["id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "unlinked-run":
+        records[1]["payload_type"] = "turn.input.user"
+    elif case == "duplicate-run-start":
+        records[4]["payload_type"] = "run.lifecycle.started"
+    elif case == "foreign-task-stream":
+        records[4]["payload"]["task_stream"]["id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "duplicate-task-link":
+        records[5]["payload_type"] = "task.stream.linked"
+    elif case == "foreign-task-event":
+        records[5]["payload"]["event"]["task_id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "out-of-order-task":
+        records[5]["payload_type"] = "task.lifecycle.accepted"
+        records[5]["payload"]["event"]["kind"] = "accepted"
+    elif case == "wrong-workspace-record-command":
+        records[2]["payload"]["record"]["command_id"] = "44444444-4444-4444-8444-444444444444"
+    elif case == "failed-terminal":
+        records[-1]["payload_type"] = "run.terminal.failed"
+        records[-1]["payload"]["terminal"] = "failed"
+    stdout = "\n".join(json.dumps(r) for r in records)
+    if case == "duplicate-json-member":
+        stdout = stdout.replace('"input_tokens": 100', '"input_tokens": 100, "input_tokens": 100')
+    if case == "oversized-stream":
+        stdout = " " * (16 * 1024 * 1024 + 1)
+    result = MuseAdapter().parse_response(
+        stdout=stdout, stderr="", returncode=1 if case == "failed-process" else 0,
+        output_file=None, plan=plan,
+    )
+    assert result.ok is False
+    assert result.tokens is None
+    assert result.muse_run is None
+    assert result.response == ""
+    assert result.failure_code == "provider_stream_incomplete"
+    if case == "unknown-envelope-schema":
+        assert result.stderr_excerpt == "muse_event_schema_unknown: cli_version=" + plan.metadata["cli_version"]
+
+
+def _muse_planning_fixture(tmp_path, monkeypatch, version):
+    from scripts.agent_runtime.adapters import muse
+
+    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
+    workspace = tmp_path / ".worktrees" / "dispatch" / "codex" / "muse-interface"
+    workspace.mkdir(parents=True)
+    scratch = tmp_path / "private-scratch"
+    scratch.mkdir()
+    binary = tmp_path / "fixture-muse"
+    binary.write_text("fixture only\n")
+    monkeypatch.setattr(muse, "require_muse_execution_model", lambda model: model)
+    monkeypatch.setattr(muse, "validate_read_only_tmp_root", lambda *a, **kw: scratch)
+    monkeypatch.setattr(muse.shutil, "which", lambda name: str(binary))
+    probes = []
+
+    def probe(cmd, **kwargs):
+        probes.append(cmd)
+        assert cmd == [str(binary), "--version"]
+        return SimpleNamespace(stdout=version)
+
+    monkeypatch.setattr(muse, "subprocess", SimpleNamespace(run=probe))
+    return muse.MuseAdapter(), workspace, scratch, probes
+
+
+def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
+    """M04: losing step/time bounds or durable usage must not silently unbound a task."""
+    import io
+    from unittest.mock import MagicMock
+
+    from agent_runtime import runner, usage
+    from scripts.agent_runtime.adapters import muse
+
+    adapter, workspace, scratch, probes = _muse_planning_fixture(
+        tmp_path, monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
+    )
+    fixture_plan, records = _muse_stream_fixture(workspace)
+    monkeypatch.setattr(muse, "uuid4", lambda: fixture_plan.metadata["provider_session_id"])
+    monkeypatch.setattr(runner, "_load_adapter", MagicMock(return_value=adapter))
+    proc = MagicMock()
+    proc.stdout = io.StringIO("\n".join(json.dumps(record) for record in records) + "\n")
+    proc.stderr = io.StringIO("")
+    proc.poll.return_value = proc.wait.return_value = proc.returncode = 0
+    monkeypatch.setattr(runner, "_spawn_subprocess", MagicMock(return_value=(proc, None, None)))
+    execute = MagicMock(wraps=runner._execute_invocation_plan)
+    monkeypatch.setattr(runner, "_execute_invocation_plan", execute)
+    store = tmp_path / "private-usage"
+    store.mkdir(mode=0o700)
+    monkeypatch.setattr(usage, "_usage_dir", lambda: store)
+
+    result = runner.invoke(
+        "muse", "fixture", mode="workspace-write", cwd=workspace, model="muse-wonder-full-1.0",
+        task_id="muse-interface", effort="high", hard_timeout=45,
+        tool_config={"muse_worker": True, "muse_role": "implementation",
+                     "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch),
+                     "max_model_steps": 8, "max_tool_output_bytes": 8192},
+    )
+    plan = execute.call_args.kwargs["plan"]
+    assert execute.call_args.kwargs["hard_timeout"] == 45
+    assert result.ok is True
+    assert result.response == "READY\n"
+    assert result.usage_record["tokens"] == 120
+    files = list(store.glob("usage_muse-runtime_*.jsonl"))
+    assert len(files) == 1
+    durable = json.loads(files[0].read_text())
+    assert durable == result.usage_record
+    assert durable["muse_run"]["total_tokens"] == 120
+    assert durable["muse_run"]["declared_mode"] == "workspace-write"
+    assert len(probes) == 1
+    assert plan.cmd[plan.cmd.index("--max-model-steps") + 1] == "8"
+    assert plan.cmd[plan.cmd.index("--max-tool-output-bytes") + 1] == "8192"
+    assert plan.metadata["max_model_steps"] == 8
+    assert plan.metadata["max_tool_output_bytes"] == 8192
+    assert Path(plan.cmd[-1]).read_text() == "fixture"
+
+
+@pytest.mark.parametrize("mode,role", [("read-only", "investigation"), ("workspace-write", "implementation")])
+def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch, mode, role):
+    """M05: CLI changes must preserve explicit profiles and confinement without a version pin."""
+    adapter, workspace, scratch, probes = _muse_planning_fixture(
+        tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
+    )
+    plan = adapter.build_invocation(
+        prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
+        task_id="muse-interface", session_id=None, effort="high",
+        tool_config={"muse_worker": True, "muse_role": role,
+                     "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
+    )
+    assert len(probes) == 1
+    assert plan.metadata["cli_version"] == "Muse Code 1.4.12 (1.4.12-R6668.1)"
+    assert plan.cmd[plan.cmd.index("--permission-profile") + 1] == (
+        ":read-only" if mode == "read-only" else ":ask-me"
+    )
+    assert ("--disable-write" in plan.cmd) is (mode == "read-only")
+    assert plan.cmd[plan.cmd.index("--workspace") + 1] == str(workspace)
+    assert plan.cmd[plan.cmd.index("--worktree") + 1] == "off"
+    assert plan.cmd[plan.cmd.index("--contributor-mode") + 1] == "off"
+    assert plan.cmd[plan.cmd.index("--config") + 1] == (
+        'run.toolset=["read_file"]' if mode == "read-only"
+        else 'run.toolset=["read_file", "write_file", "edit_file"]'
+    )
+    assert {"--disable-shell", "--disable-web-tools", "--disable-reminders",
+            "--disable-request-user-input", "--no-foreign-personal-context"} <= set(plan.cmd)
+    assert plan.env_overrides == {"MUSE_NO_AUTO_UPDATE": "1"}
+    assert "GH_TOKEN" in plan.env_unsets
+    assert Path(plan.cmd[-1]).read_text() == "fixture"

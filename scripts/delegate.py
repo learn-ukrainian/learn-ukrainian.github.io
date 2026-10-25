@@ -305,6 +305,7 @@ _DISPATCH_AGENT_CHOICES = (
     "agy",
     "cursor",
     "glm",
+    "muse",  # explicit native file-tool worker only; no review or driver admission
 )
 # "native" is accepted for explicit task-state attribution but is
 # observability-only: KimiAdapter treats it identically to an omitted flag
@@ -12140,6 +12141,15 @@ def _run_worker(
     # Capture identity from the worker side, before provider execution.
     # /proc/self/stat can supply the host PID even when getpid() is local.
     state = _read_state(state_path) or {}
+    if agent == "muse" and (
+        _muse_dispatch_refusal(argparse.Namespace(**state))
+        or require_review_verdict or review_id or review_manifest
+        or state.get("agent") != agent or state.get("model") != (model or "muse-wonder-full-1.0")
+        or state.get("mode") != mode or state.get("run_nonce") != run_nonce
+        or not run_nonce or Path(state.get("cwd", "")).resolve() != Path(cwd_str).resolve()
+    ):
+        print("❌ muse_worker_task_binding_refused", file=sys.stderr)
+        return 1
     state["worker_identity"] = capture_worker_identity(os.getpid(), self_process=True)
     state["pid"] = state["worker_identity"]["pid"]
     state["status"] = "running"
@@ -12298,6 +12308,9 @@ def _run_worker(
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if agent == "muse":
+                tool_config.update(muse_worker=True, muse_role=state.get("research_role"),
+                                   run_nonce=effective_nonce, muse_tmp_root=runtime_tmp_root)
             if agent == "agy" and "claude" in (agy_requested_model or "").casefold():
                 tool_config.update(run_nonce=effective_nonce, owned_paths=state.get("owned_paths") or [])
                 tool_config["risk"] = state.get("review_risk")
@@ -12484,6 +12497,7 @@ def _run_worker(
                 stdout_silence_timeout=stdout_silence_timeout,
                 initial_response_timeout=initial_probe,
                 effort=effort,
+                **({"allow_runner_failover": False} if agent == "muse" else {}),
             )
             runtime_identity = getattr(result, "model_identity", None)
             ok_outcome = result.ok
@@ -13325,6 +13339,14 @@ def _run_worker(
         )
 
     usage_record = getattr(result, "usage_record", None)
+    if agent == "muse" and isinstance(usage_record, dict):
+        muse_run = usage_record.get("muse_run")
+        if (
+            isinstance(muse_run, dict) and muse_run.get("task_id") == task_id
+            and muse_run.get("run_nonce") == effective_nonce
+            and muse_run.get("requested_selector") == model
+        ):
+            final_state["muse_run"] = muse_run
     result_substitution = getattr(result, "substitution", None)
     if result_substitution is not None:
         substitution = result_substitution
@@ -14261,6 +14283,9 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    if refusal := _muse_dispatch_refusal(args):
+        print(f"❌ {refusal}", file=sys.stderr)
+        return 2
     red_team_prompt_sha256 = None
     if getattr(args, "review_mode", "cross_family") == "red_team":
         try:
@@ -15761,6 +15786,22 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
+            if dispatch_agent == "muse":
+                from scripts.agent_runtime.adapters.muse import MuseAdapter
+
+                # Preview the same parser-ready argv as execution. No model
+                # process is started; the prompt transport stays in the lease.
+                preview = MuseAdapter().preview_invocation(
+                    prompt=prompt, mode=args.mode,
+                    cwd=dry_run_worktree or Path(args.cwd or target_repo_root),
+                    model=args.model, effort=getattr(args, "effort", None),
+                    task_id=task_id, run_nonce=run_nonce, scratch_root=str(runtime_tmp_root),
+                )
+                dry_run_state["invocation"] = {
+                    "argv": preview.cmd, "cwd": str(preview.cwd), "mode": args.mode,
+                    "metadata": preview.metadata, "executed": False,
+                }
+                print(json.dumps({"invocation": dry_run_state["invocation"]}), file=sys.stderr)
             if mechanical_task := _mechanical_task_scope(args, admitted=True):
                 dry_run_state["mechanical_task"] = mechanical_task
             if routing.budget_diagnostics:
@@ -17411,6 +17452,42 @@ def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
         or bool(getattr(args, "review_risk", None))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review"
     )
+
+
+def _muse_dispatch_refusal(args: argparse.Namespace) -> str | None:
+    """The ordered Muse routes are ordinary delegate workers only."""
+    agent, model = getattr(args, "agent", None), getattr(args, "model", None)
+    if agent != "muse" and not str(model or "").startswith("muse-"):
+        return None
+    from scripts.agent_runtime.adapters.muse import require_muse_execution_model, resolve_muse_model
+
+    if agent != "muse":
+        return "muse_native_worker_route_required"
+    try:
+        resolve_muse_model(model)
+    except ValueError as exc:
+        return str(exc)
+    if (
+        _dispatch_is_review_typed(args)
+        or _dispatch_is_language_lane(args)
+        or getattr(args, "advisory_task", None)
+        or getattr(args, "advisory_role", None)
+        or getattr(args, "research_role", None) in {"review", "advisory", "driver", "orchestration"}
+    ):
+        return "muse_ordinary_worker_only"
+    if getattr(args, "mode", "read-only") not in {"read-only", "workspace-write"}:
+        return "muse_worker_mode_refused"
+    if any(getattr(args, key, None) for key in ("provider", "harness", "output_schema", "strict_mcp_config")):
+        return "muse_worker_configuration_refused"
+    try:
+        require_muse_execution_model(model)
+    except (OSError, ValueError):
+        return "muse_execution_not_admitted"
+    if (model or "muse-wonder-full-1.0") != "muse-wonder-full-1.0" or (
+        getattr(args, "research_role", None), getattr(args, "mode", "read-only")
+    ) not in {("implementation", "workspace-write"), ("investigation", "read-only")}:
+        return "muse_worker_role_mode_refused"
+    return None
 
 
 def _cursor_auto_refusal(
@@ -20850,7 +20927,7 @@ def build_parser() -> argparse.ArgumentParser:
         # while the routing guard rejects it at dispatch is a UX trap. The
         # guard still catches programmatic Namespace bypass.
         help="Agent to run for the task: codex, gemini (retired CLI — permanent "
-        "alias to agy, do not install gemini), claude, grok "
+        "alias to agy, do not install gemini), claude, muse (ordinary native file-tool worker only), grok "
         "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi "
         "(web, UI and backend coding only: workspace-write in site UI, scripts/ and tests/; "
         "Ukrainian-language content, reviews, consults, design and rules are refused).",

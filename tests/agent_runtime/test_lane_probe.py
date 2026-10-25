@@ -147,11 +147,11 @@ def test_disabled_lane_is_reported_as_skipped(monkeypatch, tmp_path):
 def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch, tmp_path):
     areas = yaml.safe_load(Path("scripts/config/area_assignments.yaml").read_text())["assignments"]
     slots = {slot for area in areas.values() for slot in area["slots"]}
-    launcher_only = {"muse-devops", "muse-monitor"}
-    assert {slot for slot in slots if slot.split("-", 1)[0] not in lane_probe.AGENTS} == launcher_only
+    assert "muse" in lane_probe.AGENTS
+    assert {slot for slot in slots if slot.split("-", 1)[0] not in lane_probe.AGENTS} == set()
     for slot in slots:
         provider = slot.split("-", 1)[0]
-        assert lane_probe.resolve_handoff_agent(slot) == (slot if slot in launcher_only else provider)
+        assert lane_probe.resolve_handoff_agent(slot) == provider
     for provider in lane_probe.AGENTS:
         if "-" not in provider:
             for area, assignment in areas.items():
@@ -206,6 +206,10 @@ def test_legacy_monitor_cli_probes_its_runtime_provider(monkeypatch, tmp_path, c
     ],
 )
 def test_launcher_only_and_unknown_slots_fail_closed(monkeypatch, tmp_path, capsys, selection, identity, reason):
+    # Simulate a registered launcher whose runtime adapter is unavailable.
+    assert "muse" in lane_probe.AGENTS
+    monkeypatch.delitem(lane_probe.AGENTS, "muse")
+
     def unexpected(*_args, **_kwargs):
         pytest.fail("an unavailable runtime must not load an adapter or execute a version probe")
 

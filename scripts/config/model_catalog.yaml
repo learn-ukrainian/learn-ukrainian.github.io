@@ -319,6 +319,26 @@ execution_routing:
       independent_cross_family_review_required: true
 
 models:
+  muse-wonder-full-1.0:
+    family: meta
+    tier: compatibility
+    lifecycle: active
+    roles: [coding]
+    transports: [native_muse]
+    strengths: [explicit_native_worker]
+    weaknesses: [worker_qualification_pending, no_review_or_driver_authority]
+    notes: Explicit delegate worker only. No automatic routing or fallback.
+    sources: [https://dev.meta.ai/docs/muse-code]
+  muse-spark-1.3:
+    family: meta
+    tier: compatibility
+    lifecycle: hold
+    roles: [coding]
+    transports: [native_muse]
+    strengths: [explicit_native_worker]
+    weaknesses: [worker_qualification_pending, no_review_or_approval_authority]
+    notes: Explicit delegate worker only. Spark cannot approve or review.
+    sources: [https://dev.meta.ai/docs/muse-code]
   gpt-6.1-sol:
     routing_wire_ids:
       native_codex: gpt-6.1-sol
