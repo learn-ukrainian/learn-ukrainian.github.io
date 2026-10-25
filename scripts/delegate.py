@@ -12054,6 +12054,48 @@ def _run_worker(
     to show up correctly in ``ps`` and systemd-style supervisors if
     we ever wrap this in one.
     """
+    # Muse binding precedes generic admission, whose refusal may settle state.
+    # Decide and settle from one locked record belonging to this active attempt.
+    muse_state = None
+    if agent == "muse":
+        state_path = _state_path_no_create(task_id)
+        with task_state_lock(state_path):
+            current = _read_state_json(state_path) or {}
+            active_attempt = (
+                current.get("task_id") == task_id and bool(run_nonce)
+                and current.get("run_nonce") == run_nonce
+                and current.get("status") in {"spawning", "running"}
+            )
+            workspace = current.get("cwd")
+            refused = not active_attempt or (
+                current.get("agent") != agent
+                or current.get("model") != (model or "muse-wonder-full-1.0")
+                or current.get("mode") != mode
+                or not isinstance(current.get("research_role"), str)
+                or not isinstance(workspace, str) or not workspace
+                or Path(workspace).resolve() != Path(cwd_str).resolve()
+                or _muse_dispatch_refusal(argparse.Namespace(**current))
+                or require_review_verdict or review_id is not None or review_manifest is not None
+                or current.get("review_id") is not None or current.get("review_manifest") is not None
+            )
+            if refused:
+                if active_attempt:
+                    current.update(
+                        status="failed",
+                        finished_at=datetime.now(UTC).isoformat(),
+                        returncode=1,
+                        exit_code=1,
+                        returncode_reason="muse_worker_task_binding_refused",
+                        last_error="muse_worker_task_binding_refused",
+                        stderr_excerpt="muse_worker_task_binding_refused",
+                    )
+                    _write_record_unlocked(state_path, current)
+            else:
+                muse_state = current
+        if refused:
+            print("❌ muse_worker_task_binding_refused", file=sys.stderr)
+            return 1
+
     # The worker is a second entry point: a worker argv built by hand or a
     # stale parent must not invoke a Kimi seat outside web, UI and backend
     # coding. It reads the task's owned paths in the tree it is about to run
@@ -12141,33 +12183,7 @@ def _run_worker(
 
     # Capture identity from the worker side, before provider execution.
     # /proc/self/stat can supply the host PID even when getpid() is local.
-    state = _read_state(state_path) or {}
-    if agent == "muse" and (
-        _muse_dispatch_refusal(argparse.Namespace(**state))
-        or require_review_verdict or review_id or review_manifest
-        or state.get("agent") != agent or state.get("model") != (model or "muse-wonder-full-1.0")
-        or state.get("mode") != mode or state.get("run_nonce") != run_nonce
-        or not run_nonce or Path(state.get("cwd", "")).resolve() != Path(cwd_str).resolve()
-    ):
-        # A stale/foreign worker must not settle another attempt's record.
-        with task_state_lock(state_path):
-            current = _read_state_json(state_path) or {}
-            if (
-                current.get("task_id") == task_id and run_nonce and current.get("run_nonce") == run_nonce
-                and current.get("status") in {"spawning", "running"}
-            ):
-                current.update(
-                    status="failed",
-                    finished_at=datetime.now(UTC).isoformat(),
-                    returncode=1,
-                    exit_code=1,
-                    returncode_reason="muse_worker_task_binding_refused",
-                    last_error="muse_worker_task_binding_refused",
-                    stderr_excerpt="muse_worker_task_binding_refused",
-                )
-                _write_record_unlocked(state_path, current)
-        print("❌ muse_worker_task_binding_refused", file=sys.stderr)
-        return 1
+    state = muse_state if muse_state is not None else _read_state(state_path) or {}
     state["worker_identity"] = capture_worker_identity(os.getpid(), self_process=True)
     state["pid"] = state["worker_identity"]["pid"]
     state["status"] = "running"

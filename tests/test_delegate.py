@@ -24955,8 +24955,8 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
             assert delegate.cmd_dispatch(args) == 2
             spawn.assert_not_called()
             assert not delegate._state_path("muse-interface").exists()
-        # Dispatch supplies the persisted state for worker replay. The adapter
-        # checks below retain both role/mode contracts.
+        # Initial write admission awaits the independent Muse family mapping.
+        # Use a real read-only dispatch, then exercise each accepted replay pair.
         args.model = "muse-wonder-full-1.0"
         args.mode = "read-only"
         args.research_role = "investigation"
@@ -24967,6 +24967,11 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
     assert state["research_role"] == args.research_role
     assert state["dispatch_args_sha256"] == args_hash
     workspace = Path(state["cwd"])
+    if expected is None:
+        args.mode = mode
+        args.research_role = role
+        state.update(mode=mode, research_role=role)
+        delegate._write_state_atomic(state_path, state)
     if expected is not None:
         # Corrupt only a real dispatch record to exercise worker replay.
         state.update(model=model, mode=mode, research_role=role)
@@ -24978,6 +24983,7 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
         assert delegate._run_worker(
             task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
             cwd_str=str(workspace), model=args.model, hard_timeout=60, run_nonce="foreign-nonce",
+            require_review_verdict=True,
         ) == 1
         invoke.assert_not_called()
         assert state_path.read_bytes() == record_bytes
@@ -24994,29 +25000,68 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
             ) == 1
         invoke.assert_called_once()
         launch = invoke.call_args.kwargs
-        assert launch["tool_config"]["muse_role"] == "investigation"
+        assert launch["tool_config"]["muse_role"] == role
         assert launch["tool_config"]["run_nonce"] == state["run_nonce"]
-        assert launch["mode"] == "read-only"
+        assert launch["mode"] == mode
         assert launch["model"] == model
         assert Path(launch["cwd"]) == workspace
-        assert delegate._read_state(state_path)["status"] == "failed"
-    # Review typing and invalid persisted role/model bindings must stop
-    # before runtime invocation and leave an honest attention state.
+        completed = delegate._read_state(state_path)
+        # The synthetic write replay has no remote publication proof.
+        assert completed["status"] == ("needs_finalize" if mode == "workspace-write" else "failed")
+        if mode == "workspace-write":
+            assert completed["finalize_error"] == "finalize_remote_unknown"
+        # A settled attempt stays byte-for-byte unchanged even on review replay.
+        record_bytes = state_path.read_bytes()
+        with patch("agent_runtime.runner.invoke") as invoke:
+            assert delegate._run_worker(
+                task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
+                cwd_str=str(workspace), model=args.model, hard_timeout=60, run_nonce=state["run_nonce"],
+                require_review_verdict=True,
+            ) == 1
+            invoke.assert_not_called()
+        assert state_path.read_bytes() == record_bytes
+        # Restore the fixture's active attempt to check review refusal itself.
+        delegate._write_state_atomic(state_path, state)
+    # Active review typing and invalid persisted bindings stop before runtime.
     with patch("agent_runtime.runner.invoke") as invoke:
         assert delegate._run_worker(
             task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
             cwd_str=str(workspace), model=args.model, hard_timeout=60, run_nonce=state["run_nonce"],
-            require_review_verdict=expected is None,
+            require_review_verdict=expected is None and mode == "read-only",
+            review_id="fixture-review" if expected is None and mode == "workspace-write" else None,
         ) == 1
         invoke.assert_not_called()
     refused = delegate._read_state(state_path)
     assert refused["status"] == "failed"
-    assert refused["last_error"] == (
-        "review_admission_refused" if expected is None else "muse_worker_task_binding_refused"
-    )
+    assert refused["last_error"] == "muse_worker_task_binding_refused"
     assert refused["finished_at"] and refused["status"] != "done"
-    if expected is not None:
-        assert refused["returncode"] == refused["exit_code"] == 1
+    assert refused["returncode"] == refused["exit_code"] == 1
+    record_bytes = state_path.read_bytes()
+    with (
+        patch("agent_runtime.runner.invoke") as invoke,
+        patch("delegate._read_state", side_effect=AssertionError("Muse binding must read the locked current record")),
+    ):
+        assert delegate._run_worker(
+            task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
+            cwd_str=str(workspace), model=args.model, hard_timeout=60, run_nonce=state["run_nonce"],
+            review_id="fixture-review",
+        ) == 1
+        invoke.assert_not_called()
+    assert state_path.read_bytes() == record_bytes
+    # A malformed workspace in an otherwise valid active record is terminal.
+    state.update(model=args.model, mode=args.mode, research_role=args.research_role, cwd=None)
+    delegate._write_state_atomic(state_path, state)
+    with patch("agent_runtime.runner.invoke") as invoke:
+        assert delegate._run_worker(
+            task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
+            cwd_str=str(workspace), model=args.model, hard_timeout=60, run_nonce=state["run_nonce"],
+        ) == 1
+        invoke.assert_not_called()
+    refused = delegate._read_state(state_path)
+    assert refused["status"] == "failed"
+    assert refused["last_error"] == "muse_worker_task_binding_refused"
+    assert refused["returncode"] == refused["exit_code"] == 1
+    assert refused["finished_at"]
     planned = []
 
     def plan(**kwargs):
@@ -25076,7 +25121,7 @@ def test_muse_failed_task_retains_accounting_companion(tmp_tasks_dir, tmp_path, 
     )
     state_path = delegate._state_path("muse-interface")
     delegate._write_state_atomic(state_path, {
-        "task_id": "muse-interface", "agent": "muse", "model": "muse-wonder-full-1.0",
+        "task_id": "muse-interface", "status": "spawning", "agent": "muse", "model": "muse-wonder-full-1.0",
         "mode": "read-only", "cwd": str(checkout), "run_nonce": "0123456789abcdef",
         "research_role": "investigation", "cli_version": plan.metadata["cli_version"],
     })
