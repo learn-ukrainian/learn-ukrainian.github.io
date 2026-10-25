@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 
@@ -18,7 +19,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     text, chunks, usage, reason = None, [], None, None
     error = f"opencode exited with code {returncode}" if returncode else None
-    for line in stdout.splitlines():
+    for line in jsonl_lines(stdout):
         try:
             event = json.loads(line)
         except ValueError:
