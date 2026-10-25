@@ -944,6 +944,13 @@ def test_verify_passes_and_catches_a_forged_locator(inputs, result):
     bad = verify.verify(inputs, forged, again)
     assert bad["passed"] is False
     assert bad["assertion_identity"]["passed"] is False or bad["locators"]["passed"] is False
+    # A correct value cannot authenticate a forged PULS identity mapping.
+    forged = copy.deepcopy(result)
+    card = card_of(forged, "бета")
+    target = assertions(card, "cefr", source_id="puls")[0]
+    target["mapping"] = {"confidence": "high", "basis": "entry"}
+    bad = verify.verify(inputs, forged)
+    assert bad["passed"] is False and bad["locators"]["passed"] is False
 
 
 def test_verify_rejects_a_relation_unit_moved_to_the_card(inputs, result):

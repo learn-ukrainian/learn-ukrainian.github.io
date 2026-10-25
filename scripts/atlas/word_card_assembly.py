@@ -52,6 +52,7 @@ from scripts.common.repo_root import main_checkout_root
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
+from scripts.lexicon.promote_teacher_lesson_intake import _POS_MAP
 
 ASSEMBLER_VERSION = "pilot-assembly-v7"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
@@ -569,6 +570,67 @@ def puls_matches_identity(row: dict, spelling: str, proper: bool, ulif_label: st
     return source_proper == proper and (not proper or word == spelling)
 
 
+def source_pos_contradicts(position: str, ulif_label: str, coarse_pos: str) -> bool:
+    """Compare recognized source labels using the existing ULIF and Atlas POS vocabularies."""
+    source_head = label_part_of_speech(position)
+    target_head = label_part_of_speech(ulif_label)
+    if source_head and source_head == target_head:
+        return False
+    source_coarse = label_pos(position)
+    if source_coarse:
+        return source_coarse != coarse_pos
+    source_school = _POS_MAP.get(position.split(":")[0])
+    if source_school == "pronoun":
+        return target_head != "займенник"
+    if source_school:
+        return source_school != _POS_MAP.get(coarse_pos, coarse_pos)
+    return bool(source_head and target_head and source_head != target_head)
+
+
+def puls_mapping(row: dict, spelling: str, proper: bool, label: str, pos: str,
+                 ambiguous: bool = False) -> dict:
+    """The same identity and POS checks for a direct PULS row and its retained copy."""
+    if not puls_matches_identity(row, spelling, proper, label):
+        confidence, note = "unresolved", "proper_common_identity_mismatch"
+    elif not proper and source_pos_contradicts(row["pos"], label, pos):
+        confidence, note = "unresolved", f"PULS part of speech {row['pos']} differs from the ULIF label"
+    else:
+        confidence = "medium"
+        note = f"guideword present: {row['guideword']}" if row["guideword"] else "spelling-keyed PULS row"
+    return mapping(confidence, "sense" if proper else "spelling", ambiguous=ambiguous, note=note)
+
+
+def partition_mapping(part: dict, parts: list[dict], entry: dict, label: str,
+                      unresolved: bool, ulif_ambiguous: bool) -> dict:
+    """Replay source-owned POS and PULS scope before allowing a spelling partition to vote."""
+    key = entry["key_at_creation"]
+    spelling = src.unstressed(key["spelling"]).lower()
+    ambiguous = ulif_ambiguous or src.partition_lexically_ambiguous(part, spelling)
+    reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
+    if entry["card_kind"] == "mwe":
+        return mapping("unresolved" if unresolved or ambiguous else "medium", "spelling", ambiguous=ambiguous,
+                       note=reason if unresolved or ambiguous else "single source partition; no sense alignment")
+    raw = part["record"]
+    payload = json.loads(raw["payload_json"]) if "payload_json" in raw else raw.get("article", raw)
+    positions = payload.get("pos") if isinstance(payload, dict) else None
+    article = next((p["record"] for p in parts if p["locator"].startswith("atlas0:articles:")), {})
+    # An enrichment with its own POS keeps that scope. Unlabelled copies retain
+    # their containing Atlas article's scope rather than borrowing this card's.
+    if not positions and part["locator"].startswith("atlas0:enrichment:"):
+        positions = article.get("pos")
+    positions = positions if isinstance(positions, list) else [positions] if positions else []
+    if any(source_pos_contradicts(position, label, key["pos"]) for position in positions):
+        unresolved, reason = True, "source_part_of_speech_mismatch"
+    if part["source_id"] == "puls":
+        row = {"word": payload.get("word", article.get("lemma", key["spelling"])),
+               "pos": payload.get("pos", ""), "guideword": payload.get("guideword", "")}
+        scoped = puls_mapping(row, key["spelling"], entry["card_kind"] == "proper_name", label, key["pos"])
+        if scoped["confidence"] == "unresolved":
+            unresolved, reason = True, scoped["note"]
+    return mapping("unresolved" if unresolved or ambiguous else "medium", "spelling", ambiguous=ambiguous,
+                   note=reason if unresolved or ambiguous else "single source partition; no sense alignment")
+
+
 def vesum_spelling_rows(sources: src.PilotSources, spelling: str, pos: str, proper: bool) -> list[dict]:
     """Read the same-class lemma, trying lowercase for capitalized common lexemes."""
     rows = [r for r in sources.vesum_forms(spelling)
@@ -782,15 +844,9 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
             ledger.hold(card_id, "cefr", "proper_common_identity_mismatch", locator=rec["locator"],
                         source_record_id=inputs.record_ids[("puls", rec["locator"])]["source_record_id"])
             continue
-        puls_pos, label_head = row["pos"].split()[0], label_part_of_speech(raw["grammatical_label"])
-        guide = f"guideword present: {row['guideword']}" if row["guideword"] else None
-        if not proper and label_head and puls_pos != label_head:
-            conf, note = "unresolved", f"PULS part of speech {row['pos']} differs from the ULIF label"
-        else:
-            conf, note = "medium", guide or "spelling-keyed PULS row"
         b.add("card", card_id, "cefr", row["level"], row["level"], "puls", rec["snapshot_id"],
               f"{rec['locator']} [level]", src.EXTRACTION["puls"], "high",
-              mapping=mapping(conf, "sense" if proper else "spelling", ambiguous=ambiguous, note=note),
+              mapping=puls_mapping(row, spelling, proper, raw["grammatical_label"], pos, ambiguous),
               record=inputs.record_ids[("puls", rec["locator"])])
     asserted_cefr = any(a["field"] == "cefr" for a in b.assertions.values())
     ledger.field(card_id, "cefr", "asserted" if asserted_cefr else ("held" if puls_keys else "source_absent"),
@@ -838,10 +894,10 @@ def attach_source_partitions(inputs: Inputs, unit: dict, entry: dict, builder: B
     spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
     parts = inputs.sources.source_partitions(spelling, unit["atlas_slug"])
     ulif_ambiguous = unit["entry_type"] == "lexeme_candidate" and len(inputs.sources.homonyms(spelling)) > 1
+    label = inputs.records[unit["anchor_locator"]]["raw_row"].get("grammatical_label", "")
     for part in parts:
-        ambiguous = ulif_ambiguous or src.partition_lexically_ambiguous(part, spelling)
-        confidence = "unresolved" if match["method"] == "unresolved" or ambiguous else "medium"
-        reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
+        scoped = partition_mapping(part, parts, entry, label, match["method"] == "unresolved", ulif_ambiguous)
+        confidence, reason = scoped["confidence"], scoped["note"]
         record = bound_source_record(inputs.registry, part)
         held_facets = []
         for index, (field, value, origin) in enumerate(src.partition_claims(part, held=held_facets)):
@@ -850,8 +906,7 @@ def attach_source_partitions(inputs: Inputs, unit: dict, entry: dict, builder: B
             assertion = builder.add("card", entry["card_id"], field, value, norm,
                 part["source_id"], part["snapshot_id"], part["locator"] + f" [claim:{index}]",
                 "pilot-source-partition-v1", "medium", record=record,
-                mapping=mapping(confidence, "spelling", ambiguous=ambiguous,
-                                note=reason if confidence == "unresolved" else "single source partition; no sense alignment"))
+                mapping=scoped)
             builder.assertions[assertion]["producer"]["name"] = part["source_label"] + " / " + origin
             if confidence == "unresolved":
                 ledger.hold(entry["card_id"], field, reason, source_id=part["source_id"],

@@ -64,6 +64,7 @@ class Resolver:
                     claims[part["locator"] + f" [claim:{index}]"] = (part, field, value, origin)
             self.partitions[entry["card_id"]] = claims
         self.partition_mapping = {}
+        self.puls_mapping = {}
         for unit in inputs.units:
             entry = inputs.entry_by_unit[unit["unit_key"]]
             spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
@@ -72,12 +73,22 @@ class Resolver:
             unresolved = lexeme and matched_vesum_entry(inputs, unit) is None
             self.partition_mapping[entry["card_id"]] = {}
             parts = {claim[0]["locator"]: claim[0] for claim in self.partitions[entry["card_id"]].values()}
+            label = inputs.records[unit["anchor_locator"]]["raw_row"].get("grammatical_label", "")
             for locator, part in parts.items():
-                ambiguous = ulif_ambiguous or src.partition_lexically_ambiguous(part, spelling)
-                reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
-                self.partition_mapping[entry["card_id"]][locator] = wa.mapping(
-                    "unresolved" if unresolved or ambiguous else "medium", "spelling", ambiguous=ambiguous,
-                    note=reason if unresolved or ambiguous else "single source partition; no sense alignment")
+                self.partition_mapping[entry["card_id"]][locator] = wa.partition_mapping(
+                    part, list(parts.values()), entry, label, unresolved, ulif_ambiguous)
+            if lexeme:
+                proper = entry["card_kind"] == "proper_name"
+                ambiguous = sum(
+                    e["card_kind"] == "proper_name" and e["key_at_creation"]["spelling"] == entry["key_at_creation"]["spelling"]
+                    if proper else src.unstressed(e["key_at_creation"]["spelling"]).lower() == spelling
+                    for e in inputs.entry_by_unit.values()) > 1
+                for key in unit["source_record_keys"]:
+                    rec = inputs.records[key]
+                    if rec["source_id"] == "puls":
+                        self.puls_mapping[entry["card_id"], rec["locator"]] = wa.puls_mapping(
+                            rec["raw_row"], entry["key_at_creation"]["spelling"], proper,
+                            label, entry["key_at_creation"]["pos"], ambiguous)
 
     def row(self, table: str, row_id: int):
         out = self.sources.sources.execute(f'SELECT * FROM "{table}" WHERE id=?', (row_id,)).fetchone()
@@ -121,7 +132,8 @@ class Resolver:
             return self.vesum_value(a, int(kind[-1]), part, card["key_at_creation"]["spelling"])
         if head.startswith("puls:puls_cefr:id:"):
             row = self.row("puls_cefr", int(kind[-1]))
-            return None if row and row["level"] == value else "value_mismatch"
+            expected = self.puls_mapping.get((card["card_id"], head))
+            return None if row and row["level"] == value and expected == a.get("mapping") else "value_mismatch"
         if head.startswith("frazeolohichnyi:frazeolohichnyi:id:"):
             row = self.row("frazeolohichnyi", int(kind[-1]))
             if row is None:

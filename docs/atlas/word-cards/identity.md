@@ -178,6 +178,14 @@ assertions with the named reason. This never changes the identity matcher or pro
 meaning to a known homonym. Available unambiguous source values use the existing field resolver;
 parallel texts remain separate and genuine scalar disagreements retain both witnesses. Atlas compilations
 with no established independent lineage remain attributed compilations, not additional dictionary votes.
+Spelling-level partitions also retain a non-voting mapping when their explicit POS contradicts the
+card's ULIF label or source-backed coarse POS. Existing Atlas/VESUM label synonyms remain compatible;
+an unrecognized label supplies no POS decision. An Atlas enrichment without its own POS retains the
+containing article's POS scope. An enrichment with its own label is checked in that scope. PULS copies
+use the same proper/common identity predicate and POS comparison as direct PULS rows. Every derived
+field of a held partition, including CEFR and meanings, stays non-voting; the full raw record, IDs and
+attribution remain. Verification replays these mappings from the held sources and rejects a supplied
+mapping that promotes a contradictory partition or direct PULS row.
 
 ## 5. The cases, with measured examples
 
