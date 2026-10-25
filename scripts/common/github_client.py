@@ -2426,74 +2426,13 @@ def _write_command(client, kind, action, options, positional, *, timeout, input=
                 if matched is None:
                     return Result(error="github_milestone_not_found")
                 payload["milestone"] = matched
+    elif kind == "run" and action == "cancel":
+        endpoint, method = f"{root}/actions/runs/{number}/cancel", "POST"
     elif kind == "run" and action == "rerun":
         endpoint, method = (
             f"{root}/actions/runs/{number}/rerun" + ("-failed-jobs" if "--failed" in options else ""),
             "POST",
         )
-    elif kind == "workflow" and action == "run":
-        endpoint, method = f"{root}/actions/workflows/{quote(number, safe='')}/dispatches", "POST"
-    elif kind == "gist" and action == "create":
-        endpoint, method = "gists", "POST"
-        payload["public"] = "--public" in options
-        payload["files"] = {Path(path).name: {"content": Path(path).read_text()} for path in positional}
-    elif kind == "release" and action in {"create", "edit", "upload"}:
-        tag, *assets = positional
-        if action == "create":
-            payload = {
-                "tag_name": tag,
-                "name": payload.pop("title", tag),
-                "body": Path(_opt(options, "--notes-file")).read_text() if "--notes-file" in options else "",
-                "target_commitish": _opt(options, "--target"),
-            }
-            payload = {k: v for k, v in payload.items() if v is not None}
-            for flag in ("draft", "prerelease"):
-                if "--" + flag in options:
-                    payload[flag] = _opt(options, "--" + flag) in {True, "true"}
-            result = client.request("POST", f"{root}/releases", payload=payload, timeout=timeout, fresh=True)
-        else:
-            result = client.request("GET", f"{root}/releases/tags/{quote(tag, safe='')}", timeout=timeout, fresh=True)
-        if result.error:
-            return result
-        release = result.value
-        if action == "edit":
-            payload = {"name": payload["title"]} if "title" in payload else {}
-            if "--notes-file" in options:
-                payload["body"] = Path(_opt(options, "--notes-file")).read_text()
-            for flag in ("draft", "prerelease"):
-                if "--" + flag in options:
-                    payload[flag] = _opt(options, "--" + flag) in {True, "true"}
-            return client.request(
-                "PATCH", f"{root}/releases/{release['id']}", payload=payload, timeout=timeout, fresh=True
-            )
-        for asset in assets:
-            name = Path(asset).name
-            if "--clobber" in options:
-                for existing in release.get("assets", []):
-                    if existing.get("name") == name:
-                        removed = client.request(
-                            "DELETE", f"{root}/releases/assets/{existing['id']}", timeout=timeout, fresh=True
-                        )
-                        if removed.error:
-                            return removed
-            upload = release["upload_url"].split("{", 1)[0] + "?" + urlencode({"name": name})
-            result = client.request(
-                "POST",
-                upload,
-                payload=Path(asset).read_bytes(),
-                headers={"Content-Type": "application/octet-stream"},
-                timeout=timeout,
-                fresh=True,
-            )
-            if result.error:
-                return result
-        return result
-    elif kind == "label" and action in {"create", "edit"}:
-        endpoint, method = (
-            f"{root}/labels" + ("/" + quote(number, safe="") if action == "edit" else ""),
-            "POST" if action == "create" else "PATCH",
-        )
-        payload["name"] = payload.get("name", number)
     else:
         return Result(error="github_unsupported_command")
     return client.request(method, endpoint, payload=payload, timeout=timeout, fresh=True)
@@ -2620,6 +2559,7 @@ def _translation_options(args):
     shapes[("pr", "ready")] = (repo, None, 1, 1)
     shapes[("pr", "update-branch")] = (repo, None, 1, 1)
     shapes[("run", "rerun")] = (repo | {"--failed"}, None, 1, 1)
+    shapes[("run", "cancel")] = (repo, None, 1, 1)
     if len(args) < 3:
         return None
     api = args[1] == "api"

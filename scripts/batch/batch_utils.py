@@ -13,6 +13,11 @@ import random
 from datetime import UTC, datetime
 from pathlib import Path
 
+try:
+    from common.http_status import has_http_status
+except ModuleNotFoundError:
+    from scripts.common.http_status import has_http_status
+
 log = logging.getLogger("batch")
 
 
@@ -192,10 +197,10 @@ class ErrorCategory(enum.Enum):
 
 
 _QUOTA_KEYWORDS = ("quota", "resource_exhausted", "rate limit", "capacity", "rate_limit")
-_TRANSIENT_KEYWORDS = ("timeout", "unavailable", "502", "503", "504", "connection reset",
+_TRANSIENT_KEYWORDS = ("timeout", "unavailable", "connection reset",
                        "connection refused", "temporary", "try again")
 _PERMANENT_KEYWORDS = ("invalid", "malformed", "not found", "permission denied",
-                       "authentication", "401", "403")
+                       "authentication")
 
 
 def classify_error(
@@ -220,15 +225,15 @@ def classify_error(
         return ErrorCategory.TRANSIENT
 
     # Check for quota keywords (including "429")
-    if "429" in stderr or any(kw in lower for kw in _QUOTA_KEYWORDS):
+    if has_http_status(stderr, (429,)) or any(kw in lower for kw in _QUOTA_KEYWORDS):
         return ErrorCategory.QUOTA
 
     # Check for permanent errors
-    if any(kw in lower for kw in _PERMANENT_KEYWORDS):
+    if has_http_status(stderr, (401, 403)) or any(kw in lower for kw in _PERMANENT_KEYWORDS):
         return ErrorCategory.PERMANENT
 
     # Check for transient errors
-    if any(kw in lower for kw in _TRANSIENT_KEYWORDS):
+    if has_http_status(stderr, (502, 503, 504)) or any(kw in lower for kw in _TRANSIENT_KEYWORDS):
         return ErrorCategory.TRANSIENT
 
     return ErrorCategory.UNKNOWN

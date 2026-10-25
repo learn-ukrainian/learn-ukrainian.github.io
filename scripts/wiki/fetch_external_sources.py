@@ -47,6 +47,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
+from common.http_status import has_http_status
 from common.repo_root import project_interpreter
 
 CACHE_DIR = PROJECT_ROOT / "data" / "external_articles"
@@ -702,7 +703,7 @@ def _download_subtitle_text(
                         return text
                     break
 
-                is_429 = "429" in (result.stderr or "")
+                is_429 = has_http_status(result.stderr or "", (429,))
                 if is_429 and use_tor and attempt < MAX_429_RETRIES:
                     print(f"    🚫 429 on {lang} (attempt {attempt + 1}/{MAX_429_RETRIES})")
                     _tor_new_circuit()

@@ -187,10 +187,12 @@ def render_injection(text: str, path: Path) -> str:
     if BLOCKER_POLICY_TITLE not in headings:
         text = text.rstrip() + "\n\n" + BLOCKER_POLICY
     message = (
-        "PINNED DRIVER STATE (re-injected every model call; authoritative over any "
-        "compacted summary). You are the driver for the epic below. Re-orient from it "
-        "before acting; update the file when a goal lands. Full file: "
-        f"{path.name} under .claude/; CLI: `.venv/bin/python -m scripts.driver_state whoami|goals`.\n\n" + text.strip()
+        "PINNED DRIVER STATE (pinned facts only; re-injected every model call). "
+        "Task state, goals, decisions and handoffs live in the driver-state database: "
+        "run `lu-driver-state render --lane <lane>` and `lu-driver-state check --lane <lane>` "
+        "first and record every goal, decision and handoff there "
+        "(`lu-driver-state add|note|status`), never in this file. Full file: "
+        f"{path.name} under .claude/.\n\n" + text.strip()
     )
     if len(message) > MAX_ENVELOPE_CHARS:
         raise ValueError(

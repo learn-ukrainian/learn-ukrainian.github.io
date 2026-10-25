@@ -25,6 +25,8 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+from scripts.common.http_status import has_http_status
+
 RAW_ESUM = ROOT / "data/raw/esum"
 JP2_STAGING = RAW_ESUM / "jp2-staging"
 OCR_DIR = RAW_ESUM / "gemini-ocr"
@@ -62,7 +64,7 @@ DAILY_QUOTA_RE = re.compile(
 )
 RPM_RE = re.compile(r"RequestsPerMinute|60s", re.IGNORECASE)
 TRANSIENT_RE = re.compile(
-    r"HTTP\s*5\d\d|(?:^|\D)5\d\d(?:\D|$)|network timeout|timed out|UNAVAILABLE|INTERNAL"
+    r"network timeout|timed out|UNAVAILABLE|INTERNAL"
     r"|ECONNRESET|ETIMEDOUT"
     # Gemini free-tier server-side capacity issues (observed 2026-05-15 run #7+#8):
     # The composite router emits "No capacity available for model X" when all
@@ -77,7 +79,7 @@ TRANSIENT_RE = re.compile(
     # 429 / RESOURCE_EXHAUSTED when NOT daily (DAILY_QUOTA_RE catches the
     # multi-hour-reset case first). Account-level burst rate-limit recovers
     # within seconds; backoff is enough.
-    r"|\b429\b|RESOURCE_EXHAUSTED(?!.*daily)|\brate[- ]?limit",
+    r"|RESOURCE_EXHAUSTED(?!.*daily)|\brate[- ]?limit",
     re.IGNORECASE,
 )
 IMAGE_REFUSAL_RE = re.compile(
@@ -537,7 +539,7 @@ def classify_error(stderr_text: str, stdout_text: str) -> str:
         return "daily_quota"
     if RPM_RE.search(combined):
         return "rpm"
-    if TRANSIENT_RE.search(combined):
+    if has_http_status(combined, (429, *range(500, 600))) or TRANSIENT_RE.search(combined):
         return "transient"
     return "error"
 

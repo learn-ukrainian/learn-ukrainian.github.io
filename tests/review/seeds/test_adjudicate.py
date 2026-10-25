@@ -11,6 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+from unittest.mock import Mock
 
 import pytest
 import yaml
@@ -496,14 +497,23 @@ def test_planted_blocking_is_read_from_the_findings_severity_not_asserted(seeded
 
 def test_the_adjudicator_must_be_known_and_independent(seeded: Case) -> None:
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    (seeded.env.tasks / f"{seeded.task_id}.json").unlink()
+    hot = seeded.env.tasks / f"{seeded.task_id}.json"
+    cold = seeded.env.tasks / "archive" / hot.name
+    cold.parent.mkdir()
+    hot.unlink()
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]  # no dispatch record at all: nothing binds a task to this
     seeded.dispatch("cursor", "auto")
+    assert code_of(seeded, good) == [adj.ADJUDICATOR_UNKNOWN]
+    hot.replace(cold)
     assert code_of(seeded, good) == [adj.ADJUDICATOR_UNKNOWN]
     # the writer's family (anthropic) and the reviewer's family (openai) may not adjudicate, whatever the reply claims
     seeded.dispatch("claude", "claude-sonnet-5")
     assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_WRITER]
+    hot.replace(cold)
+    assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_WRITER]
     seeded.dispatch("codex", "gpt-6.1-sol")
+    assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_REVIEWER]
+    hot.replace(cold)
     assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_REVIEWER]
 
 
@@ -655,6 +665,42 @@ def test_the_canonical_record_is_accepted(seeded: Case) -> None:
     """A record whose ``dispatch_args_sha256`` matches every parsed dispatch argument is accepted outright."""
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     seeded.dispatch("agy", "gemini-3.1-pro-preview")
+    hot = seeded.env.tasks / f"{seeded.task_id}.json"
+    cold = seeded.env.tasks / "archive" / hot.name
+    cold.parent.mkdir()
+    canonical = hot.read_bytes()
+    binding = (seeded.unit_id, seeded.review_id, seeded.attempt_id, seeded.task_id, seeded.env.tasks, seeded.env.root)
+    identity = {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
+    assert adj.check_dispatch_binding(*binding) == identity
+    hot.rename(cold)
+    assert cold.read_bytes() == canonical
+    assert adj.check_dispatch_binding(*binding) == identity
+    assert code_of(seeded, good, task_id=f"../{seeded.task_id}") == [adj.TASK_MISMATCH]
+    for path in (hot, cold):
+        # A malformed or superseding hot record must never fall through to the valid archive.
+        for payload in (b"{", b"[]", b'{"task_id":"another-task"}'):
+            path.write_bytes(payload)
+            assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+        path.write_bytes(canonical)
+        dispatched = json.loads(canonical)
+        for field, value in (
+            ("prompt_sha256", "0" * 64),
+            ("effective_prompt_sha256", "0" * 64),
+            ("dispatch_args_sha256", "0" * 64),
+            ("prompt_blocks", ["worktree", "lifecycle"]),
+            ("cwd", "caller-chosen"),
+            ("worktree_path", None),
+            ("worktree_branch", "caller-branch"),
+            ("read_only_primary_cwd", False),
+            ("mode", "workspace-write"),
+        ):
+            path.write_text(json.dumps({**dispatched, field: value}), encoding="utf-8")
+            assert code_of(seeded, good) == [adj.TASK_MISMATCH], field
+        path.write_bytes(canonical)
+        assert adj.check_dispatch_binding(*binding) == identity
+        path.unlink()
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    cold.write_bytes(canonical)
     assert seeded.record(good)["new"] is True
 
 
@@ -700,8 +746,11 @@ def test_replacing_the_record_between_the_check_and_the_identity_read_does_not_c
     replaced on disk between those two reads swapped a checked google record for an openai one and the openai
     identity was trusted anyway.
     """
-    path = seeded.env.tasks / f"{seeded.task_id}.json"
-    checked = json.loads(path.read_text(encoding="utf-8"))
+    hot = seeded.env.tasks / f"{seeded.task_id}.json"
+    cold = seeded.env.tasks / "archive" / hot.name
+    cold.parent.mkdir()
+    path = hot
+    checked = json.loads(hot.read_text(encoding="utf-8"))
     assert checked["agent"] == "agy"  # google: the family Case.__init__ dispatched and that passed every check
     replaced = {**checked, "agent": "codex", "model": "gpt-6.1-sol"}  # openai: the reviewer's own family
     real_read_text = Path.read_text
@@ -715,10 +764,19 @@ def test_replacing_the_record_between_the_check_and_the_identity_read_does_not_c
         return real_read_text(self, *args, **kwargs)
 
     monkeypatch.setattr(Path, "read_text", flaky_read_text)
-    identity = adj.check_dispatch_binding(
-        seeded.unit_id, seeded.review_id, seeded.attempt_id, seeded.task_id, seeded.env.tasks, seeded.env.root
-    )
-    assert identity["family"] == "google", "identity must bind to the record that passed the checks, not a later swap"
+    identity_reader = Mock(wraps=adj.record.identity_from_record)
+    monkeypatch.setattr(adj.record, "identity_from_record", identity_reader)
+    for path in (hot, cold):
+        if path == cold:
+            hot.rename(cold)
+        calls["n"] = 0
+        identity_reader.reset_mock()
+        identity = adj.check_dispatch_binding(
+            seeded.unit_id, seeded.review_id, seeded.attempt_id, seeded.task_id, seeded.env.tasks, seeded.env.root
+        )
+        assert identity == {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
+        assert calls["n"] == 1, "the selected record must be read once"
+        identity_reader.assert_called_once_with(checked, seeded.task_id, record_path=path)
 
 
 # --- clean lessons ------------------------------------------------------------------------------------------------------

@@ -10,7 +10,7 @@ Environment=PYTHONUNBUFFERED=1
 # or live task and were idle for 60 minutes; never forces, never deletes
 # branches. A oneshot unit never runs twice at once, and the reaper lock makes
 # any other concurrent run a no-op. Set LU_REAPER_DISABLED=1 to stop removals.
-ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed --apply
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed --repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply
 # Bounded well inside the 30-minute cadence.
 TimeoutStartSec=1200
 TimeoutStopSec=120

@@ -132,14 +132,35 @@ def test_worker_merge_guard_and_changed_head_refuse_before_write():
     ("pr-close", {"number": 1}, ["pr", "close", "1"]),
     ("issue-reopen", {"number": 1}, ["issue", "reopen", "1"]),
     ("run-rerun", {"number": 123}, ["run", "rerun", "123"]),
+    ("run-cancel", {"number": 123}, ["run", "cancel", "123"]),
     ("workflow-run", {"workflow": "ci.yml", "ref": "unit", "inputs": {}}, ["workflow", "run", "ci.yml"]),
 ])
-def test_no_text_driver_operations(verb, fields, expected, monkeypatch, tmp_path, synthetic_opsec):
+def test_no_text_driver_operations(verb, fields, expected, monkeypatch, tmp_path, synthetic_opsec, github_transport):
     calls = []
     def spy(args, **kwargs):
         calls.append(args)
         return subprocess.CompletedProcess(args, 0, "", "")
     sender = spy
+    expected_requests = {
+        "pr-update-branch": [("PUT", "repos/unit/public/pulls/1/update-branch", {})],
+        "pr-close": [("PATCH", "repos/unit/public/pulls/1", {"state": "closed"})],
+        "issue-reopen": [("PATCH", "repos/unit/public/issues/1", {"state": "open"})],
+    }
+    if verb in expected_requests:
+        from scripts.common.github_client import Response
+
+        def transport(method, endpoint, headers, body, timeout):
+            return Response(200, {}, b"{}")
+
+        requests = github_transport(transport)
+        original_transport = pub._run_transport
+
+        def observe(command, **kwargs):
+            calls.append(command)
+            return original_transport(command, **kwargs)
+
+        monkeypatch.setattr(pub, "_run_transport", observe)
+        sender = None
     if verb == "run-rerun":
         from tests.test_ci_recovery import Transport
         sender = Transport()
@@ -153,6 +174,11 @@ def test_no_text_driver_operations(verb, fields, expected, monkeypatch, tmp_path
     with pytest.raises(gate.PublishBlocked):
         pub.publish(verb, repo="unit/public", body="arbitrary", runner=spy, **fields)
     assert len(calls) == 1
+    if verb in expected_requests:
+        assert [
+            (method, endpoint, json.loads(body) if body is not None else None)
+            for method, endpoint, _headers, body, _timeout in requests
+        ] == expected_requests[verb]
 
 
 @pytest.mark.parametrize("fields", [

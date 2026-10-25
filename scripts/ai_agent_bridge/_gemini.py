@@ -22,6 +22,7 @@ from agent_runtime.errors import (
 )
 from agent_runtime.runner import invoke as runtime_invoke
 from batch_gemini_config import PRO_MODEL
+from common.http_status import has_http_status
 from common.repo_root import project_interpreter
 from secret_redactor import redact_text
 
@@ -584,7 +585,7 @@ def _handle_gemini_error(stderr, model, attempt, max_retries, base_delay):
         print("💡 To switch accounts: run 'gemini auth login'")
         return "stop"
 
-    if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
+    if "exhausted your capacity" in stderr or has_http_status(stderr, (429,)) or "quota" in stderr.lower():
         delay = base_delay * (2**attempt)
         if attempt < max_retries - 1:
             print(f"\n⏳ Rate limited (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
@@ -623,7 +624,7 @@ def _is_gemini_429_error(stderr: str) -> bool:
     """Detect Gemini 429/capacity errors that must fail without model remapping."""
     lowered = stderr.lower()
     return (
-        "429" in stderr
+        has_http_status(stderr, (429,))
         or "too many requests" in lowered
         or "rate limit" in lowered
         or "rate_limit" in lowered

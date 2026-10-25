@@ -140,3 +140,39 @@ class TestClassifyError:
 
     def test_unknown_error(self):
         assert classify_error(1, "Something weird happened") == ErrorCategory.UNKNOWN
+
+
+@pytest.mark.parametrize("message,expected", [
+    ("HTTP429", ErrorCategory.QUOTA),
+    ("status:401", ErrorCategory.PERMANENT),
+    ("HTTP403", ErrorCategory.PERMANENT),
+    ("Error 502", ErrorCategory.TRANSIENT),
+    ("503", ErrorCategory.TRANSIENT),
+    ("HTTP504", ErrorCategory.TRANSIENT),
+    ("HTTP500", ErrorCategory.UNKNOWN),
+    ("HTTP599", ErrorCategory.UNKNOWN),
+    ("0.503", ErrorCategory.UNKNOWN),
+    ("v1.429", ErrorCategory.UNKNOWN),
+    ("QUOTA HTTP401 timeout", ErrorCategory.QUOTA),
+    ("HTTP403 timeout", ErrorCategory.PERMANENT),
+    ("authentication HTTP503", ErrorCategory.PERMANENT),
+    ("CAPACITY", ErrorCategory.QUOTA),
+    ("rate_limit", ErrorCategory.QUOTA),
+    ("RESOURCE_EXHAUSTED", ErrorCategory.QUOTA),
+    ("rate limit", ErrorCategory.QUOTA),
+    ("INVALID", ErrorCategory.PERMANENT),
+    ("malformed", ErrorCategory.PERMANENT),
+    ("not found", ErrorCategory.PERMANENT),
+    ("permission denied", ErrorCategory.PERMANENT),
+    ("unavailable", ErrorCategory.TRANSIENT),
+    ("connection reset", ErrorCategory.TRANSIENT),
+    ("connection refused", ErrorCategory.TRANSIENT),
+    ("temporary", ErrorCategory.TRANSIENT),
+    ("try again", ErrorCategory.TRANSIENT),
+])
+def test_status_and_original_keyword_precedence(message, expected):
+    assert classify_error(1, message) == expected
+
+
+def test_timeout_precedes_quota_and_permanent_status():
+    assert classify_error(-1, "HTTP429 HTTP403") == ErrorCategory.TRANSIENT

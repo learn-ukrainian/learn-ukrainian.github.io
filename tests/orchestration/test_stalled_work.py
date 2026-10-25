@@ -134,6 +134,21 @@ def test_unpushed_commit_is_returned_to_dispatch_owner(host, status):
         }
     ]
     assert path.read_bytes() == before
+    archive = host.tasks / "archive"
+    archive.mkdir()
+    cold = archive / path.name
+    cold.write_bytes(before)
+    assert host.scan() == report  # A duplicate slot must not duplicate the task.
+    path.unlink()
+    assert host.scan() == report
+    for days in (3, 13):
+        record = json.loads(before)
+        record["finished_at"] = (NOW - timedelta(days=days)).isoformat()
+        cold.write_text(json.dumps(record))
+        historical = host.scan()
+        assert historical["errors"] == []
+        assert historical["terminal_records"] == len(historical["rows"]) == 1
+        assert historical["rows"][0]["age_hours"] == days * 24
 
 
 def test_detached_worktree_commit_is_detected(host):
@@ -194,7 +209,11 @@ def test_exclusions(host, case):
         changes["worktree_abandon"] = {"schema": "terminal-abandon.v1", "disposition": "ABANDON"}
     elif case == "review":
         changes["review"] = True
-    host.record(**changes)
+    path = host.record(**changes)
+    assert host.scan()["rows"] == []
+    archive = host.tasks / "archive"
+    archive.mkdir()
+    path.rename(archive / path.name)
     assert host.scan()["rows"] == []
 
 
@@ -289,6 +308,11 @@ def test_rejection_exclusions(host, case):
     elif case == "recent_repair":
         host.record("repair", status="failed", finished_at=(NOW - timedelta(minutes=5)).isoformat())
     assert host.scan()["rows"] == []
+    archive = host.tasks / "archive"
+    archive.mkdir()
+    for path in host.tasks.glob("*.json"):
+        path.rename(archive / path.name)
+    assert host.scan()["rows"] == []
 
 
 def test_unowned_pr_goes_to_cto(host):
@@ -365,7 +389,16 @@ def test_keeper_post_step_failure_does_not_fail_the_keeper_unit():
 
 
 def test_malformed_record_is_visible(host):
-    (host.tasks / "broken.json").write_text("{")
+    path = host.record("broken")
+    archive = host.tasks / "archive"
+    archive.mkdir()
+    cold = archive / path.name
+    cold.write_bytes(path.read_bytes())
+    path.write_text("{")
+    assert host.scan()["errors"] == ["task record broken.json: JSONDecodeError"]
+    assert mod.load_records(host.tasks, NOW)[0] == []
+    cold.write_text("{")
+    path.unlink()
     assert host.scan()["errors"] == ["task record broken.json: JSONDecodeError"]
 
 
