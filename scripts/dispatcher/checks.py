@@ -1,12 +1,10 @@
 """The dispatcher's three input, independence and resource checks."""
 
-import re
 import shutil
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote
 
 import yaml
-from markdown_it.helpers import parseLinkDestination
 
 from scripts.dispatcher import git
 from scripts.dispatcher.types import TaskSpec
@@ -14,71 +12,25 @@ from scripts.dispatcher.types import TaskSpec
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
 
 
-def _reference_paths(text: str):
-    # Keep prose/quoted paths as well as CommonMark destinations, including incomplete links.
-    tokens = re.findall(r"""["'`]([^"'`\n]+)["'`]|([^\s<>"'`]+)""", text)
-    references = [
-        ((quoted or bare).split("=", 1)[-1].strip("()[]{}").rstrip(".,;:!?"), False) for quoted, bare in tokens
-    ]
-    for match in re.finditer(r"\]\(\s*|\]:[ \t]*", text):
-        destination = parseLinkDestination(text, match.end(), len(text))
-        if not destination.ok:
-            if text[match.end() : match.end() + 1] == ")":
-                continue  # CommonMark permits an empty inline destination.
-            raise ValueError("private path check cannot parse a file reference")
-        references.append((destination.str, True))
-    for reference, encoded in references:
-        original = reference
-        if original:
-            yield Path(original).expanduser()
-        try:
-            while (parts := urlsplit(reference)).scheme:
-                if parts.scheme == "file":
-                    if parts.netloc.lower() not in {"", "localhost"} or not parts.path:
-                        raise ValueError("unsupported file URI")
-                    reference, encoded = parts.path, True
-                    break
-                if parts.netloc:
-                    reference = ""  # A non-file URL with an authority is not a local path.
-                    break
-                reference = reference.split(":", 1)[1]  # source:path and other labels.
-            else:
-                if encoded:
-                    reference = parts._replace(query="", fragment="").geturl()
-            if encoded:
-                if re.search(r"%(?![0-9a-fA-F]{2})", reference):
-                    raise ValueError("malformed URI escape")
-                reference = unquote(reference, errors="strict")
-            if "\0" in reference:
-                raise ValueError("invalid path")
-        except ValueError:
-            raise ValueError("private path check cannot parse a file reference") from None
-        if reference and reference != original:
-            yield Path(reference).expanduser()
-
-
 def check_private_input(spec: TaskSpec, repo_key: str) -> None:
     if spec.agent not in {"muse", "opencode", "hermes"}:
         return
     repos = yaml.safe_load(git.CONFIG.read_text())["repos"]
-    private = [
-        git.resolve_repo(key)[0]
-        for key, item in repos.items()
-        if item.get("private", False) or "private" in item.get("role", "")
-    ]
-    if git.resolve_repo(repo_key)[0] in private:
+    private = {
+        key: item for key, item in repos.items() if item.get("private", False) or "private" in item.get("role", "")
+    }
+    roots = [git.resolve_repo(key)[0] for key in private]
+    if git.resolve_repo(repo_key)[0] in roots:
         raise ValueError("private input is not permitted for this agent")
     origin = spec.options.get("prompt_file")
-    if origin and origin != "-" and any(Path(origin).resolve().is_relative_to(root) for root in private):
+    if origin and origin != "-" and any(Path(origin).resolve().is_relative_to(root) for root in roots):
         raise ValueError("private prompt file is not permitted for this agent")
-    text = spec.prompt_file.read_text()
-    bases = (spec.worktree, spec.prompt_file.parent, Path.cwd())
-    if origin and origin != "-":
-        bases = (*bases, Path(origin).resolve().parent)
-    for path in _reference_paths(text):
-        candidates = [path] if path.is_absolute() else [base / path for base in bases]
-        if any(candidate.resolve().is_relative_to(root) for candidate in candidates for root in private):
-            raise ValueError("private path input is not permitted for this agent")
+    # The content contract is lexical: decode once, then compare without changing provider input.
+    text = unquote(spec.prompt_file.read_text()).casefold()
+    identifiers = [str(root) for root in roots]
+    identifiers.extend(item.get(field, "") for item in private.values() for field in ("local_name", "github"))
+    if any(identifier.casefold() in text for identifier in identifiers if identifier):
+        raise ValueError("private path input is not permitted for this agent")
 
 
 def check_review_family(author_model: str | None, reviewer_model: str) -> None:

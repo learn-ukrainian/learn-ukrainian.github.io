@@ -3,7 +3,6 @@
 import fcntl
 import os
 import subprocess
-import unicodedata
 from pathlib import Path
 
 import yaml
@@ -38,15 +37,8 @@ def resolve_repo(key: str | None = None) -> tuple[Path, dict]:
 def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, worktree=None):
     branch = f"{agent}/{task_id}"
     parent = repo / ".worktrees" / "dispatch" / agent
-    for supplied in (cwd, worktree):
-        if supplied is not None and any(
-            unicodedata.category(c) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for c in str(supplied)
-        ):
-            raise ValueError("worktree path contains control, format or separator characters")
     path = Path(cwd or worktree or parent / task_id).absolute()
     resolved = path.resolve()
-    if any(unicodedata.category(c) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for c in str(resolved)):
-        raise ValueError("worktree path contains control, format or separator characters")
     if not resolved.is_relative_to(parent.resolve()) or any(p.is_symlink() for p in (path, *path.parents)):
         raise ValueError("worktree must be inside the agent's dispatch directory without symlinks")
     if cwd:

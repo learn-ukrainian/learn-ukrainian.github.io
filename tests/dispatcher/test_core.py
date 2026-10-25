@@ -339,37 +339,186 @@ def spec(tmp_path):
 
 
 @pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
-def test_private_repo_and_symlink_paths_are_refused(spec, tmp_path, monkeypatch, agent):
+@pytest.mark.parametrize("classification", [{"role": "private-product"}, {"role": "product", "private": True}])
+def test_private_repo_and_prompt_file_origin_are_refused(spec, private_repos, agent):
+    private, alias = private_repos
+    spec = dataclasses.replace(spec, agent=agent)
+    with pytest.raises(ValueError, match="private input"):
+        checks.check_private_input(spec, "private")
+    for origin in (private / "secret.txt", alias / "secret.txt"):
+        with pytest.raises(ValueError, match="private prompt file"):
+            checks.check_private_input(dataclasses.replace(spec, options={"prompt_file": str(origin)}), "public")
+
+
+@pytest.fixture
+def classification():
+    return {"role": "private-product"}
+
+
+@pytest.fixture
+def private_repos(tmp_path, monkeypatch, classification):
     config = tmp_path / "repos.yaml"
     config.write_text(
         yaml.safe_dump(
             {
                 "repos": {
                     "public": {"default": True, "local_name": "public", "role": "public-monorepo"},
-                    "private": {"local_name": "private", "role": "private-product"},
+                    "private": {
+                        "local_name": "vault-data",
+                        "github": "ExampleOrg/SealedNotes",
+                        **classification,
+                    },
                 }
             }
         )
     )
     monkeypatch.setattr(git, "CONFIG", config)
     monkeypatch.setattr(git, "ROOT", tmp_path / "public")
-    private = tmp_path / "private"
+    private = tmp_path / "vault-data"
     private.mkdir()
     alias = tmp_path / "alias"
     alias.symlink_to(private, target_is_directory=True)
+    return private, alias
+
+
+@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize(
+    "prompt",
+    [
+        pytest.param('Read "{private}/a=b.txt".', id="quoted-equals-private-path"),
+        pytest.param("Read ({private}/a=b.txt).", id="parenthesized-equals-private-path"),
+        pytest.param("Read file://{private}/secret.txt?v=1", id="file-uri-query-equals"),
+        pytest.param("Read source:{encoded}", id="encoded-source-private-path"),
+    ],
+)
+def test_private_path_equals_and_encoded_source_bypasses_are_refused(spec, private_repos, agent, prompt):
+    """Old tokenizer lost the private path after '=' or left source: escapes undecoded."""
+    private, _ = private_repos
+    prompt = prompt.format(private=private, encoded=str(private / "secret.txt").replace("/", "%2F"))
     spec = dataclasses.replace(spec, agent=agent)
-    with pytest.raises(ValueError, match="private input"):
-        checks.check_private_input(spec, "private")
-    for reference in (
-        str(private / "secret.txt"),
+    spec.prompt_file.write_text(prompt)
+    with pytest.raises(ValueError, match="private path"):
+        checks.check_private_input(spec, "public")
+    assert spec.prompt_file.read_text() == prompt
+
+
+@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize(
+    "prompt",
+    [
+        pytest.param("Discuss VAULT-DATA notes.", id="plain-directory"),
+        pytest.param("Discuss EXAMPLEORG/SEALEDNOTES.", id="plain-slug"),
+        pytest.param("Read file://{private}/secret.txt", id="file-uri-private-root"),
+        pytest.param("Read file:///ExampleOrg/SealedNotes/secret.txt", id="file-uri-slug"),
+        pytest.param("Discuss %56AULT%2dDATA notes.", id="once-encoded-directory"),
+        pytest.param("Discuss %45XAMPLEORG%2f%53EALEDNOTES.", id="once-encoded-slug"),
+        pytest.param("Read {encoded}", id="once-encoded-path"),
+        pytest.param("Read --input={private}/secret.txt", id="option-private-path"),
+    ],
+)
+def test_private_identifier_substring_contract(spec, private_repos, agent, prompt):
+    """CTO policy replaces path tokenization with conservative identifier substrings."""
+    private, _ = private_repos
+    prompt = prompt.format(private=private, encoded=str(private / "secret.txt").replace("/", "%2F"))
+    spec = dataclasses.replace(spec, agent=agent)
+    spec.prompt_file.write_text(prompt)
+    with pytest.raises(ValueError, match="private path"):
+        checks.check_private_input(spec, "public")
+    assert spec.prompt_file.read_text() == prompt
+
+
+@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize("prompt", ["[notes](100%.md)", "Read file:///public/100%.md"])
+def test_public_literal_percent_is_not_a_malformed_escape_refusal(spec, private_repos, agent, prompt):
+    """Old tokenizer incorrectly refused public100percent CommonMark and file URI inputs."""
+    spec = dataclasses.replace(spec, agent=agent)
+    spec.prompt_file.write_text(prompt)
+    checks.check_private_input(spec, "public")
+    assert spec.prompt_file.read_text() == prompt
+
+
+@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+@pytest.mark.parametrize(
+    "prompt",
+    [
         "./alias/secret.txt",
         "'alias/a file.txt'",
         "--input=alias/secret.txt",
-    ):
-        spec.prompt_file.write_text(f"Read {reference}.")
-        with pytest.raises(ValueError, match="private path"):
-            checks.check_private_input(spec, "public")
-    checks.check_private_input(dataclasses.replace(spec, agent="codex"), "private")
+        "%2556AULT%252dDATA",
+        "https://example.invalid/guide?q=100%25",
+        "Public input with 100% progress, %GG, and an unfinished [link](",
+    ],
+)
+def test_lexical_contract_allows_aliases_double_encoding_and_public_text(spec, private_repos, agent, prompt):
+    """Approved policy change: old alias refusals now pass; no alias resolution or recursive decoding."""
+    spec = dataclasses.replace(spec, agent=agent, options={"prompt_file": "-"})
+    spec.prompt_file.write_text(prompt)
+    checks.check_private_input(spec, "public")
+    assert spec.prompt_file.read_text() == prompt
+
+
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy"])
+def test_private_input_policy_leaves_other_providers_unchanged(spec, private_repos, agent):
+    private, _ = private_repos
+    spec = dataclasses.replace(spec, agent=agent, options={"prompt_file": str(private / "brief.txt")})
+    spec.prompt_file.write_text("Read ExampleOrg/SealedNotes with 100% progress.")
+    checks.check_private_input(spec, "private")
+
+
+@pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
+def test_empty_private_identifiers_do_not_refuse_all_public_prompts(spec, tmp_path, monkeypatch, agent):
+    config = tmp_path / "repos.yaml"
+    config.write_text(
+        yaml.safe_dump(
+            {
+                "repos": {
+                    "private": {"default": True, "local_name": "", "github": "", "private": True},
+                    "public": {"local_name": "public"},
+                }
+            }
+        )
+    )
+    monkeypatch.setattr(git, "CONFIG", config)
+    root = tmp_path / "protected-root"
+    monkeypatch.setattr(git, "ROOT", root)
+    spec = dataclasses.replace(spec, agent=agent)
+    checks.check_private_input(spec, "public")
+    spec.prompt_file.write_text(f"Read {root}/secret.txt")
+    with pytest.raises(ValueError, match="private path"):
+        checks.check_private_input(spec, "public")
+
+
+@pytest.mark.parametrize("character", ["\n", "\u202e", "\u2028"])
+def test_worktree_path_contract_defers_unicode_characters_to_git(sandbox, character):
+    """Approved policy change: remove extra Unicode refusal while retaining dispatch containment."""
+    path = sandbox.repo / ".worktrees/dispatch/codex" / f"name{character}part"
+    planned, branch, sha = git.worktree_plan(sandbox.repo, "codex", "path-policy", "main", worktree=path)
+    assert planned == path
+    assert branch == "codex/path-policy"
+    assert sha == run_git(sandbox.repo, "rev-parse", "main")
+
+
+def test_worktree_plan_retains_containment_symlinks_repo_identity_and_git_failures(sandbox):
+    parent = sandbox.repo / ".worktrees/dispatch/codex"
+    parent.mkdir(parents=True)
+    alias = parent / "alias"
+    alias.symlink_to(parent, target_is_directory=True)
+    for path in (sandbox.repo / "outside", alias / "child"):
+        with pytest.raises(ValueError, match="dispatch directory without symlinks"):
+            git.worktree_plan(sandbox.repo, "codex", "safe-path", "main", worktree=path)
+    with pytest.raises(subprocess.CalledProcessError):
+        git.worktree_plan(sandbox.repo, "codex", "missing-cwd", "main", cwd=parent / "missing")
+    path = parent / "existing"
+    sha = run_git(sandbox.repo, "rev-parse", "main")
+    git.create_worktree(sandbox.repo, path, "codex/existing", sha)
+    assert git.worktree_plan(sandbox.repo, "codex", "existing", "main", cwd=path) == (path, "codex/existing", sha)
+    with pytest.raises(ValueError, match="existing dispatch worktree root"):
+        git.worktree_plan(sandbox.repo, "codex", "nested", "main", cwd=path / "scripts")
+    foreign = parent / "foreign"
+    foreign.mkdir()
+    run_git(foreign, "init", "-b", "main")
+    with pytest.raises(ValueError, match="different repository"):
+        git.worktree_plan(sandbox.repo, "codex", "foreign", "main", cwd=foreign)
 
 
 def test_review_family_uses_model_family_not_harness_and_refuses_unknown():
