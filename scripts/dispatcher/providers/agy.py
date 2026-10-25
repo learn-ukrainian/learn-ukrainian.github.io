@@ -2,6 +2,7 @@
 
 import json
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 
@@ -19,7 +20,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     result, error = {}, None
-    for line in stdout.splitlines():
+    for line in jsonl_lines(stdout):
         if not line.strip():
             continue
         try:
