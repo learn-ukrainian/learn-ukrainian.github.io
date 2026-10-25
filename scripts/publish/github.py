@@ -1051,7 +1051,7 @@ def _dependabot_repository(cwd, environment, explicit):
         if len(matches) != 1:
             raise ValueError
         destination = gate.normalize_repository(matches[0]["github"])
-        if not destination.startswith("github.com/"):
+        if destination.split("/", 1)[0] != "github.com":
             raise ValueError
         if environment.get("GH_HOST", "github.com") != "github.com":
             raise ValueError
