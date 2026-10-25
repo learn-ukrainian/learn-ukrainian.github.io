@@ -48,11 +48,12 @@ from scripts.atlas.allocate_pilot_identities import (
 )
 from scripts.atlas.word_card_resolver import CONF_ORDER, _project, _recompute, aid, card_version
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.repo_root import main_checkout_root
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 
-ASSEMBLER_VERSION = "pilot-assembly-v5"
+ASSEMBLER_VERSION = "pilot-assembly-v6"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
 # source CEFR evidence alone never expands this set.
 LEARNER_PROPER_NAME_ALLOWLIST = frozenset({"ЮНЕСКО"})
@@ -315,7 +316,8 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
         need(observed == [record["raw_row"]] and foundation.digest(observed[0]) == record["content_sha256"],
              "Source row drift against the frozen literal row; re-admit the source version")
         drift += 1
-    sources = src.PilotSources(sources_conn, vesum_conn, raw_conn)
+    sources = src.PilotSources(sources_conn, vesum_conn, raw_conn,
+                               modern_root=main_checkout_root(Path(__file__).resolve().parents[2]))
     entry_ids = sorted(r["raw_row"]["id"] for r in manifest["selection"]["source_records"]
                        if r["table"] == "ulif_dictua_entries")
     extract = scratch / "pilot-wp3-extract.sqlite"
@@ -537,6 +539,8 @@ def class_homonyms(inputs: Inputs, raw: dict, unit: dict, proper: bool) -> dict[
         if head or forms is None or row["id"] == entry_id:
             homonyms[row["id"]] = {"head": head, "row": row, "aspect": parse_aspect(row["grammatical_label"]),
                                    "paradigm": src.ulif_paradigm(forms) if forms is not None else None}
+            if forms is not None:
+                homonyms[row["id"]]["paradigm"]["pronoun"] = row["grammatical_label"].startswith("займенник")
     return homonyms
 
 
@@ -720,6 +724,11 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
         ledger.hold(card_id, "paradigm", "forms_entry_failed", detail=failed)
     else:
         forms_snapshot = "ulif-forms@sha256:" + foundation.digest(sources.forms(entry_id))
+        for row in paradigm.get("related", []):
+            ledger.hold(card_id, "related_verb_form", "outside_main_verb_slots", source="ulif",
+                        locator=f"ulif:ulif_forms:id:{row['id']}", snapshot_id=forms_snapshot,
+                        content_sha256=foundation.digest(row), record=row,
+                        source_record_id=forms_record["source_record_id"])
         for slot, item in sorted(paradigm["slots"].items()):
             name = src.slot_name(slot)
             if item["withheld"]:
@@ -804,15 +813,32 @@ def senses(inputs: Inputs, b: Builder, unit, entry, anchor, srec, ledger):
     ledger.field(card_id, "sense_label", "asserted" if labelled else "source_absent",
                  reason=None if labelled else "ULIF entry has no sense gloss; one unsplit sense",
                  senses=len(entry["senses"]))
-    spelling = entry["key_at_creation"]["spelling"].lower()
-    articles = [a for a in inputs.sources.sum20_articles() if src.unstressed(a["headword"]).lower() == spelling]
-    if articles:
-        ledger.field(card_id, "definition_uk", "held", "sum20_article_present_not_aligned",
-                     articles=[a["wordid"] for a in articles],
-                     quarantined=[a["wordid"] for a in articles if a["quarantine_reason"]])
+    spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
+    modern = inputs.sources.modern_meanings(spelling)
+    partitions = []
+    for source_id, source in modern.items():
+        for record in source["records"]:
+            content = foundation.digest(record)
+            locator = record.get("url") or record.get("source_url") or f"{source_id}:article:{record.get('id')}"
+            snapshot = f"{source_id}@sha256:{content}"
+            partition = {"source_id": source_id, "locator": locator, "snapshot_id": snapshot,
+                         "content_sha256": content, "record": record,
+                         "binding": {"unit_key": unit["unit_key"], "card_id": card_id, "status": "held",
+                                     "reason": "modern_source_correspondence_not_allocated"}}
+            partitions.append(partition)
+            # No source record or sense correspondence for modern articles exists in the frozen allocation.
+            # Keep whole source partitions, including their homonym labels and every sense, for adjudication.
+            ledger.hold(card_id, "definition_uk", "modern_source_correspondence_not_allocated", **partition)
+    statuses = {key: {k: v for k, v in value.items() if k != "records"} for key, value in modern.items()}
+    if partitions:
+        ledger.field(card_id, "definition_uk", "held", "modern_source_correspondence_not_allocated",
+                     sources=statuses, partitions=len(partitions))
+    elif any(source["status"] == "unavailable" for source in modern.values()):
+        ledger.field(card_id, "definition_uk", "held", "modern_source_unavailable", sources=statuses)
     else:
         ledger.field(card_id, "definition_uk", "source_absent",
-                     "no СУМ-20 article for the lexeme in the held crawl; ВТС is not admitted (plan §6.1)")
+                     "no article in the bound local modern readers; dictionary-wide absence is unknown",
+                     sources=statuses)
 
 
 def relations(inputs: Inputs, b: Builder, unit, entry, srec, ledger):

@@ -127,6 +127,14 @@ Inputs per candidate: VESUM entry (lemma, pos, tags, stripped form set, comment 
 
 1. **Candidate set** = VESUM entries with `lemma = normalized_query` (case-sensitive: `Замок` ≠ `замок`) × ULIF checked entries with that `normalized_query`, filtered by **POS compatibility** (`noun` ↔ `іменник…`/`множинний іменник`/`прізвище`/`власна назва`; `verb` ↔ `дієслово …`; `adj` ↔ `прикметник…`/`дієприкметник`; `adv` ↔ `прислівник`; `advp` ↔ `дієприслівник`; proper names only with proper names).
 2. **Paradigm signature**: the set of (case/number/person, stripped form) from ULIF rows compared with VESUM's form set for the same slots. `equal`, `subset` (ULIF gives fewer slots), `differs` (any slot with a different form: `замка` vs `замку`).
+   Whole form sets must be equal inside each shared slot. Tagged and untagged extra forms remain differences;
+   intersection, containment and variant filtering never establish correspondence. ULIF `adjp`, `advp` and
+   `impers` rows are separate related-form evidence, retained with their rows and locators in the holding ledger,
+   rather than bare tense slots of the main verb. They do not allocate or merge related lexemes.
+   VESUM personal-pronoun person tags describe the pronoun, not an inflectional person slot. For a ULIF pronoun table
+   containing case-only slots, supply an implicit number only when a personal-pronoun VESUM entry prints
+   exactly one number across all its case slots. Every form remains in its original set. Thus `я` can have
+   corresponding case slots while `до мене` and `мя` still prevent identity resolution.
 3. **Stress**: compare the ULIF stressed lemma with VESUM's comment stress when present (`за́мок (будівля)`); when VESUM has no stress (most entries: only 1,090 comments carry one), stress can only separate ULIF candidates from each other.
 4. **Aspect** for verbs: VESUM `perf`/`imperf` must equal ULIF `доконаного`/`недоконаного`; biaspectual (`недоконаного і доконаного`) matches either.
 5. **Decision** (`identity.method`, `identity.confidence`):
@@ -143,6 +151,20 @@ Inputs per candidate: VESUM entry (lemma, pos, tags, stripped form set, comment 
 | overlay `identity` entry | `overlay`, confidence as stated by the lane |
 
 Spelling equality is a precondition of step 1, never sufficient by itself. Every match records its `mapping.basis` (`entry`, `paradigm`, `stress`, `sense`, `overlay`, `curator`, `spelling`); a spelling-keyed row (PULS, kaikki, ukrainian-word-stress, GRAC estimates) on a spelling with more than one card is `ambiguous` unless stress or sense evidence picks the card, and ambiguous rows never feed eligibility (`schema.md` §9.5).
+
+The source-backed controls for `яскравіший` and `баран` already have corresponding comparative and animate
+accusative slots. Their remaining extra forms stay incompatible. These controls do not demonstrate
+old-fail/new-pass repairs of those two classes.
+
+Modern meanings never participate in identity matching. The pilot reads local articles through
+`scripts.lexicon.sum20_store.resolve_sum20_articles`, including its normalized staging lookup, and the existing
+version-gated read-only VTS cache contract. Each returned article keeps its full source partition, source senses,
+content digest, snapshot and locator. A local miss does not prove dictionary-wide absence. An unavailable
+reader stays explicit. The frozen pilot registry currently has no SUM-20 or VTS source-record correspondence or
+allocated sense mapping. Available articles therefore remain in the holding ledger with
+`modern_source_correspondence_not_allocated`, bound as candidates to the existing pilot unit and card.
+They do not become sense assertions, guessed homonym joins or new identities. Attaching them requires
+source-record and sense correspondence under the existing allocation contract, outside this repair's scope.
 
 ## 5. The cases, with measured examples
 

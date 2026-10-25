@@ -19,7 +19,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from scripts.atlas import word_card_foundation as foundation
-from scripts.lexicon import ulif_raw_cache
+from scripts.lexicon import sum20_store, ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
 from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.wiki.sources_db import compute_ulif_entry_fingerprint
@@ -131,7 +131,8 @@ class PilotSources:
     so the build identity covers candidate and absence evidence, not only the frozen anchor rows.
     """
 
-    def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection, raw_cache: SQLiteConnection):
+    def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection, raw_cache: SQLiteConnection,
+                 modern_root: Path | None = None):
         self.sources = sources
         self.vesum = vesum
         self.raw_cache = raw_cache
@@ -140,7 +141,8 @@ class PilotSources:
         self._forms: dict[int, dict] = {}
         self._homonyms: dict[str, list[dict]] = {}
         self._vesum: dict[str, list[dict]] = {}
-        self._sum20: list[dict] | None = None
+        self.modern_root = modern_root
+        self._meanings: dict[str, dict] = {}
         self.consumed: dict[str, str] = {}
 
     def begin(self) -> None:
@@ -274,15 +276,36 @@ class PilotSources:
         self._use(f"vesum_forms:{lemma}", rows)
         return rows
 
-    def sum20_articles(self) -> list[dict]:
-        """Held СУМ-20 articles (crawl paused: a small sample). Headwords only; no definition text is read here."""
-        if self._sum20 is None:
-            rows = self.sources.execute(
-                "SELECT id, wordid, headword, stressed_headword, quarantine_reason FROM sum20_articles ORDER BY id"
-            )
-            self._sum20 = [row_dict(r) for r in rows]
-        self._use("sum20_articles", self._sum20)
-        return self._sum20
+    def modern_meanings(self, lemma: str) -> dict:
+        """Read admitted local articles, preserving whole source partitions for correspondence review.
+
+        A synthetic/injected source without a modern-store binding reads only its injected official table.
+        Production uses the canonical SUM-20 resolver, including its normalized staging lookup, and the
+        version-gated generic VTS cache reader. Neither reader fetches or writes. An explicit cached miss
+        is local absence; a missing current cache is unavailable. Neither proves dictionary-wide absence.
+        """
+        if lemma not in self._meanings:
+            sources = {}
+            try:
+                articles = (sum20_store.lookup_sum20_cached(lemma, self.sources) if self.modern_root is None else
+                            sum20_store.resolve_sum20_articles(lemma, repository_root=self.modern_root))
+                sources["sum20"] = {"status": "present" if articles else "local_absent", "records": articles}
+            except sum20_store.Sum20StoreError as error:
+                sources["sum20"] = {"status": "unavailable", "reason": error.reason, "records": []}
+            sources["vts_busel_slovnyk_me"] = {"status": "not_bound", "records": []}
+            if self.modern_root is not None:
+                from scripts.lexicon.enrich_manifest import _cache_lookup, _read_cached_slovnyk_rows
+
+                cache = _read_cached_slovnyk_rows(lemma)
+                row = _cache_lookup(cache, "vts")
+                status = "present" if row else ("local_absent" if "vts" in cache.get("lookups", {}) else "unavailable")
+                sources["vts_busel_slovnyk_me"] = {"status": status, "records": [row] if row else []}
+                if status == "unavailable":
+                    sources["vts_busel_slovnyk_me"]["reason"] = "no_current_cached_lookup"
+            self._meanings[lemma] = sources
+        result = self._meanings[lemma]
+        self._use(f"modern_meanings:{lemma}", result)
+        return result
 
     def vesum_canonical_sha(self) -> str:
         row = self.vesum.execute(
@@ -295,6 +318,8 @@ class PilotSources:
 
 def ulif_slot(tags: list[str]) -> tuple[str, ...] | None:
     """Slot key of a ULIF form row, or None when the row is not a grammatical slot."""
+    if {"adjp", "advp", "impers"}.intersection(tags):
+        return None
     tokens = [t for t in tags if t in SLOT_VOCABULARY]
     return slot_key(tokens) if tokens else None
 
@@ -317,12 +342,15 @@ def ulif_paradigm(forms: list[dict]) -> dict:
     REVIEW_BUILD.md §5); withheld slots keep their reason codes and rows as evidence, never as accepted forms.
     """
     slots: dict[tuple[str, ...], dict] = {}
+    related = []
     for row in forms:
         if row["is_lemma"]:
             continue
         tags = json.loads(row["grammatical_tags"])
         slot = ulif_slot(tags)
         if slot is None:
+            if {"adjp", "advp", "impers"}.intersection(tags):
+                related.append(row)
             continue
         item = slots.setdefault(slot, {"forms": [], "stressed": [], "rows": [], "withheld": [], "uncertain": []})
         plain = unstressed(row["form_unstressed"] or row["form_stressed"])
@@ -348,11 +376,14 @@ def ulif_paradigm(forms: list[dict]) -> dict:
         item["uncertain"].sort()
     # A slot with no certain form takes no part in comparison or acceptance; its rows stay as withheld evidence.
     return {"slots": {slot: item for slot, item in slots.items() if item["forms"]},
-            "uncertain_only": {slot: item for slot, item in slots.items() if not item["forms"]}}
+            "uncertain_only": {slot: item for slot, item in slots.items() if not item["forms"]},
+            "related": related}
 
 
 def vesum_slot(tokens: list[str], keep_gender: bool) -> tuple[str, ...] | None:
     chosen = [t for t in tokens if t in SLOT_VOCABULARY]
+    if {"pron", "pers"} <= set(tokens):
+        chosen = [t for t in chosen if t not in PERSONS]
     if not chosen:
         return None
     # VESUM leaves the singular implicit (`noun:inanim:m:v_naz`, `verb:imperf:past:m`).
@@ -398,7 +429,10 @@ def vesum_paradigm(rows: list[dict], keep_gender: bool) -> dict[int, dict]:
             if ACUTE in token and unstressed(token) == row["lemma"]:
                 entry["stress"].add(nfc(token))
     for entry in entries.values():
-        entry["aspect"] = vesum_aspect_of(entry.pop("tags"))
+        tags = entry.pop("tags")
+        entry["personal_pronoun"] = entry["pos"] == "noun" and all(
+            {"pron", "pers"} <= set(tag.split(":")) for tag in tags)
+        entry["aspect"] = vesum_aspect_of(tags)
     return entries
 
 
@@ -414,6 +448,14 @@ def compare_paradigms(ulif: dict | None, vesum: dict) -> dict:
         return {"relation": "unknown", "slots": {}}
     u = {slot: set(item["forms"]) for slot, item in ulif["slots"].items()}
     v = {slot: set(item["forms"]) for slot, item in vesum["slots"].items()}
+    # A one-column personal-pronoun table leaves number implicit. Supply it only when every
+    # VESUM case slot explicitly agrees on one number; preserve the complete form sets.
+    numbers = {token for slot in v for token in slot if token in {"s", "p"}}
+    if (ulif.get("pronoun") and vesum.get("personal_pronoun") and len(numbers) == 1
+            and u and all(len(slot) == 1 and slot[0] in CASES for slot in u)
+            and all(any(case in slot for case in CASES) and numbers.intersection(slot) for slot in v)):
+        number = next(iter(numbers))
+        u = {slot_key([*slot, number]): forms for slot, forms in u.items()}
     detail = {}
     for slot in sorted(set(u) | set(v)):
         if slot not in v:

@@ -1,8 +1,8 @@
 """Source-side rules of pilot word-card assembly: stress readings, paradigm slots, identity matching, and the
 authentication of derived ULIF forms against the held raw page.
 
-Synthetic rows and pages only: placeholder Cyrillic tokens with combining acute and real grammatical-label terms,
-so no dictionary content is committed. Raw pages are minimal ULIF-shaped HTML parsed by the existing parser.
+Most cases use placeholder rows and minimal ULIF-shaped HTML parsed by the existing parser. The four
+#11627 cases retain complete visible primary-source paradigms, with source IDs and snapshot receipts.
 """
 
 import hashlib
@@ -456,3 +456,307 @@ INSERT INTO sum20_articles VALUES (1,'x');
 @pytest.mark.parametrize("value,expected", [("Fóo", "Fóo"), ("é", "é")])
 def test_nfc_is_idempotent_for_combining_marks(value, expected):
     assert src.nfc(src.nfc(value)) == src.nfc(expected)
+
+
+# --- #11627: exactly four granted primary-source cases ---
+
+
+def test_verb_derived_slot_contamination_keeps_related_forms_separate():
+    """ULIF derived rows must not become main-verb tense slots; visible variants still block identity."""
+    # ULIF 258655; authenticated page cefc47dd1d1edba008612f181b28328da90cb84a5fa96fee2b799993939c3900.
+    u258655 = src.ulif_paradigm([
+        ulif_row(4542925, 258655, ['verb', 'imperf'], 'читати', 'чита́ти', is_lemma=1),
+        ulif_row(4542926, 258655, ['inf'], 'читати', 'чита́ти'),
+        ulif_row(4542927, 258655, ['impr', 'p', '1'], 'читаймо', 'чита́ймо'),
+        ulif_row(4542928, 258655, ['impr', 's', '2'], 'читай', 'чита́й'),
+        ulif_row(4542929, 258655, ['impr', 'p', '2'], 'читайте', 'чита́йте'),
+        ulif_row(4542930, 258655, ['futr', 's', '1'], 'читатиму', 'чита́тиму'),
+        ulif_row(4542931, 258655, ['futr', 'p', '1'], 'читатимемо', 'чита́тимемо'),
+        ulif_row(4542932, 258655, ['futr', 'p', '1'], 'читатимем', 'чита́тимем'),
+        ulif_row(4542933, 258655, ['futr', 's', '2'], 'читатимеш', 'чита́тимеш'),
+        ulif_row(4542934, 258655, ['futr', 'p', '2'], 'читатимете', 'чита́тимете'),
+        ulif_row(4542935, 258655, ['futr', 's', '3'], 'читатиме', 'чита́тиме'),
+        ulif_row(4542936, 258655, ['futr', 'p', '3'], 'читатимуть', 'чита́тимуть'),
+        ulif_row(4542937, 258655, ['pres', 's', '1'], 'читаю', 'чита́ю'),
+        ulif_row(4542938, 258655, ['pres', 'p', '1'], 'читаємо', 'чита́ємо'),
+        ulif_row(4542939, 258655, ['pres', 'p', '1'], 'читаєм', 'чита́єм'),
+        ulif_row(4542940, 258655, ['pres', 's', '2'], 'читаєш', 'чита́єш'),
+        ulif_row(4542941, 258655, ['pres', 'p', '2'], 'читаєте', 'чита́єте'),
+        ulif_row(4542942, 258655, ['pres', 's', '3'], 'читає', 'чита́є'),
+        ulif_row(4542943, 258655, ['pres', 'p', '3'], 'читають', 'чита́ють'),
+        ulif_row(4542944, 258655, ['pres', 'advp'], 'читаючи', 'чита́ючи'),
+        ulif_row(4542945, 258655, ['past', 'm', 's'], 'читав', 'чита́в'),
+        ulif_row(4542946, 258655, ['past', 'p'], 'читали', 'чита́ли'),
+        ulif_row(4542947, 258655, ['past', 'f', 's'], 'читала', 'чита́ла'),
+        ulif_row(4542948, 258655, ['past', 'n', 's'], 'читало', 'чита́ло'),
+        ulif_row(4542949, 258655, ['past', 'adjp', 'pasv'], 'читаний', 'чи́таний'),
+        ulif_row(4542950, 258655, ['past', 'impers'], 'читано', 'чи́тано'),
+        ulif_row(4542951, 258655, ['past', 'advp'], 'читавши', 'чита́вши'),
+    ])
+    # Complete visible VESUM rows; canonical snapshot 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680.
+    v = src.vesum_paradigm([
+        vesum_row(6561736, 420694, 'читати', 'читати', 'verb:imperf:inf', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561737, 420694, 'читати', 'читать', 'verb:imperf:inf:short', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561738, 420694, 'читати', 'читай', 'verb:imperf:impr:s:2', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561739, 420694, 'читати', 'читаймо', 'verb:imperf:impr:p:1', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561740, 420694, 'читати', 'читайте', 'verb:imperf:impr:p:2', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561741, 420694, 'читати', 'читаю', 'verb:imperf:pres:s:1', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561742, 420694, 'читати', 'читаєш', 'verb:imperf:pres:s:2', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561743, 420694, 'читати', 'читає', 'verb:imperf:pres:s:3', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561744, 420694, 'читати', 'чита', 'verb:imperf:pres:s:3:short', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561745, 420694, 'читати', 'читаємо', 'verb:imperf:pres:p:1', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561747, 420694, 'читати', 'читаєте', 'verb:imperf:pres:p:2', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561748, 420694, 'читати', 'читають', 'verb:imperf:pres:p:3', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561749, 420694, 'читати', 'читатиму', 'verb:imperf:futr:s:1', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561750, 420694, 'читати', 'читатимеш', 'verb:imperf:futr:s:2', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561751, 420694, 'читати', 'читатиме', 'verb:imperf:futr:s:3', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561752, 420694, 'читати', 'читатимем', 'verb:imperf:futr:p:1', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561753, 420694, 'читати', 'читатимемо', 'verb:imperf:futr:p:1', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561754, 420694, 'читати', 'читатимете', 'verb:imperf:futr:p:2', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561755, 420694, 'читати', 'читатимуть', 'verb:imperf:futr:p:3', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561756, 420694, 'читати', 'читав', 'verb:imperf:past:m', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561757, 420694, 'читати', 'читала', 'verb:imperf:past:f', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561758, 420694, 'читати', 'читало', 'verb:imperf:past:n', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561759, 420694, 'читати', 'читали', 'verb:imperf:past:p', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+        vesum_row(6561760, 420694, 'читати', 'читано', 'verb:imperf:impers', 'rv_zna:rv_oru:rv_dav', pos='verb'),
+    ], keep_gender=True)
+    assert ('pres',) not in u258655['slots'] and ('past',) not in u258655['slots']
+    assert {row['id'] for row in u258655['related']} == {4542944, 4542949, 4542950, 4542951}
+    assert {row['form_unstressed'] for row in u258655['related']} == {'читаючи', 'читаний', 'читано', 'читавши'}
+    compared = src.compare_paradigms(u258655, v[420694])
+    assert 'ulif_only_slot' not in compared['slots'].values()
+    assert compared['relation'] == 'differs'
+    assert compared['slots'][('inf',)] == 'differs'
+    assert compared['slots'][('pres', 'p', '1')] == 'differs'
+
+
+def test_comparative_degree_control_preserves_complete_variant_sets():
+    """The captured comparative already shares slots; its long variants remain incompatible."""
+    # ULIF 268912; authenticated page e655c4bde46c2f2682cec18297071637b02baf58da1cc4dc31a464aea0936c7d.
+    u268912 = src.ulif_paradigm([
+        ulif_row(4735647, 268912, [], 'яскравіший', 'яскра́віший', is_lemma=1, unmapped_labels='["прикметник, вищий ступінь"]'),
+        ulif_row(4735648, 268912, ['v_naz', 's', 'm'], 'яскравіший', 'яскра́віший'),
+        ulif_row(4735649, 268912, ['v_naz', 's', 'f'], 'яскравіша', 'яскра́віша'),
+        ulif_row(4735650, 268912, ['v_naz', 's', 'n'], 'яскравіше', 'яскра́віше'),
+        ulif_row(4735651, 268912, ['v_naz', 'p'], 'яскравіші', 'яскра́віші'),
+        ulif_row(4735652, 268912, ['v_rod', 's', 'm'], 'яскравішого', 'яскра́вішого'),
+        ulif_row(4735653, 268912, ['v_rod', 's', 'f'], 'яскравішої', 'яскра́вішої'),
+        ulif_row(4735654, 268912, ['v_rod', 's', 'n'], 'яскравішого', 'яскра́вішого'),
+        ulif_row(4735655, 268912, ['v_rod', 'p'], 'яскравіших', 'яскра́віших'),
+        ulif_row(4735656, 268912, ['v_dav', 's', 'm'], 'яскравішому', 'яскра́вішому'),
+        ulif_row(4735657, 268912, ['v_dav', 's', 'f'], 'яскравішій', 'яскра́вішій'),
+        ulif_row(4735658, 268912, ['v_dav', 's', 'n'], 'яскравішому', 'яскра́вішому'),
+        ulif_row(4735659, 268912, ['v_dav', 'p'], 'яскравішим', 'яскра́вішим'),
+        ulif_row(4735660, 268912, ['v_zna', 's', 'm'], 'яскравіший', 'яскра́віший'),
+        ulif_row(4735661, 268912, ['v_zna', 's', 'm'], 'яскравішого', 'яскра́вішого'),
+        ulif_row(4735662, 268912, ['v_zna', 's', 'f'], 'яскравішу', 'яскра́вішу'),
+        ulif_row(4735663, 268912, ['v_zna', 's', 'n'], 'яскравіше', 'яскра́віше'),
+        ulif_row(4735664, 268912, ['v_zna', 'p'], 'яскравіші', 'яскра́віші'),
+        ulif_row(4735665, 268912, ['v_zna', 'p'], 'яскравіших', 'яскра́віших'),
+        ulif_row(4735666, 268912, ['v_oru', 's', 'm'], 'яскравішим', 'яскра́вішим'),
+        ulif_row(4735667, 268912, ['v_oru', 's', 'f'], 'яскравішою', 'яскра́вішою'),
+        ulif_row(4735668, 268912, ['v_oru', 's', 'n'], 'яскравішим', 'яскра́вішим'),
+        ulif_row(4735669, 268912, ['v_oru', 'p'], 'яскравішими', 'яскра́вішими'),
+        ulif_row(4735670, 268912, ['v_mis', 's', 'm'], 'яскравішому', 'яскра́вішому', preposition='на/у'),
+        ulif_row(4735671, 268912, ['v_mis', 's', 'm'], 'яскравішім', 'яскра́вішім', preposition='на/у'),
+        ulif_row(4735672, 268912, ['v_mis', 's', 'f'], 'яскравішій', 'яскра́вішій', preposition='на/у'),
+        ulif_row(4735673, 268912, ['v_mis', 's', 'n'], 'яскравішому', 'яскра́вішому', preposition='на/у'),
+        ulif_row(4735674, 268912, ['v_mis', 's', 'n'], 'яскравішім', 'яскра́вішім', preposition='на/у'),
+        ulif_row(4735675, 268912, ['v_mis', 'p'], 'яскравіших', 'яскра́віших', preposition='на/у'),
+    ])
+    # Complete visible VESUM rows; canonical snapshot 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680.
+    v = src.vesum_paradigm([
+        vesum_row(6964175, 442056, 'яскравіший', 'яскравіший', 'adj:m:v_naz:compc', None, pos='adj'),
+        vesum_row(6964176, 442056, 'яскравіший', 'яскравішого', 'adj:m:v_rod:compc', None, pos='adj'),
+        vesum_row(6964177, 442056, 'яскравіший', 'яскравішому', 'adj:m:v_dav:compc', None, pos='adj'),
+        vesum_row(6964178, 442056, 'яскравіший', 'яскравішого', 'adj:m:v_zna:ranim:compc', None, pos='adj'),
+        vesum_row(6964179, 442056, 'яскравіший', 'яскравіший', 'adj:m:v_zna:rinanim:compc', None, pos='adj'),
+        vesum_row(6964180, 442056, 'яскравіший', 'яскравішим', 'adj:m:v_oru:compc', None, pos='adj'),
+        vesum_row(6964181, 442056, 'яскравіший', 'яскравішім', 'adj:m:v_mis:compc', None, pos='adj'),
+        vesum_row(6964182, 442056, 'яскравіший', 'яскравішому', 'adj:m:v_mis:compc', None, pos='adj'),
+        vesum_row(6964183, 442056, 'яскравіший', 'яскравіший', 'adj:m:v_kly:compc', None, pos='adj'),
+        vesum_row(6964184, 442056, 'яскравіший', 'яскравіша', 'adj:f:v_naz:compc', None, pos='adj'),
+        vesum_row(6964185, 442056, 'яскравіший', 'яскравішая', 'adj:f:v_naz:compc:long', None, pos='adj'),
+        vesum_row(6964186, 442056, 'яскравіший', 'яскравішої', 'adj:f:v_rod:compc', None, pos='adj'),
+        vesum_row(6964187, 442056, 'яскравіший', 'яскравішій', 'adj:f:v_dav:compc', None, pos='adj'),
+        vesum_row(6964188, 442056, 'яскравіший', 'яскравішу', 'adj:f:v_zna:compc', None, pos='adj'),
+        vesum_row(6964189, 442056, 'яскравіший', 'яскравішую', 'adj:f:v_zna:compc:long', None, pos='adj'),
+        vesum_row(6964190, 442056, 'яскравіший', 'яскравішою', 'adj:f:v_oru:compc', None, pos='adj'),
+        vesum_row(6964191, 442056, 'яскравіший', 'яскравішій', 'adj:f:v_mis:compc', None, pos='adj'),
+        vesum_row(6964192, 442056, 'яскравіший', 'яскравіша', 'adj:f:v_kly:compc', None, pos='adj'),
+        vesum_row(6964193, 442056, 'яскравіший', 'яскравішая', 'adj:f:v_kly:compc:long', None, pos='adj'),
+        vesum_row(6964194, 442056, 'яскравіший', 'яскравіше', 'adj:n:v_naz:compc', None, pos='adj'),
+        vesum_row(6964195, 442056, 'яскравіший', 'яскравішеє', 'adj:n:v_naz:compc:long', None, pos='adj'),
+        vesum_row(6964196, 442056, 'яскравіший', 'яскравішого', 'adj:n:v_rod:compc', None, pos='adj'),
+        vesum_row(6964197, 442056, 'яскравіший', 'яскравішому', 'adj:n:v_dav:compc', None, pos='adj'),
+        vesum_row(6964198, 442056, 'яскравіший', 'яскравіше', 'adj:n:v_zna:compc', None, pos='adj'),
+        vesum_row(6964199, 442056, 'яскравіший', 'яскравішеє', 'adj:n:v_zna:compc:long', None, pos='adj'),
+        vesum_row(6964200, 442056, 'яскравіший', 'яскравішим', 'adj:n:v_oru:compc', None, pos='adj'),
+        vesum_row(6964201, 442056, 'яскравіший', 'яскравішім', 'adj:n:v_mis:compc', None, pos='adj'),
+        vesum_row(6964202, 442056, 'яскравіший', 'яскравішому', 'adj:n:v_mis:compc', None, pos='adj'),
+        vesum_row(6964203, 442056, 'яскравіший', 'яскравіше', 'adj:n:v_kly:compc', None, pos='adj'),
+        vesum_row(6964204, 442056, 'яскравіший', 'яскравішеє', 'adj:n:v_kly:compc:long', None, pos='adj'),
+        vesum_row(6964205, 442056, 'яскравіший', 'яскравіші', 'adj:p:v_naz:compc', None, pos='adj'),
+        vesum_row(6964206, 442056, 'яскравіший', 'яскравішії', 'adj:p:v_naz:compc:long', None, pos='adj'),
+        vesum_row(6964207, 442056, 'яскравіший', 'яскравіших', 'adj:p:v_rod:compc', None, pos='adj'),
+        vesum_row(6964208, 442056, 'яскравіший', 'яскравішим', 'adj:p:v_dav:compc', None, pos='adj'),
+        vesum_row(6964209, 442056, 'яскравіший', 'яскравіших', 'adj:p:v_zna:ranim:compc', None, pos='adj'),
+        vesum_row(6964210, 442056, 'яскравіший', 'яскравіші', 'adj:p:v_zna:rinanim:compc', None, pos='adj'),
+        vesum_row(6964211, 442056, 'яскравіший', 'яскравішії', 'adj:p:v_zna:rinanim:compc:long', None, pos='adj'),
+        vesum_row(6964212, 442056, 'яскравіший', 'яскравішими', 'adj:p:v_oru:compc', None, pos='adj'),
+        vesum_row(6964213, 442056, 'яскравіший', 'яскравіших', 'adj:p:v_mis:compc', None, pos='adj'),
+        vesum_row(6964214, 442056, 'яскравіший', 'яскравіші', 'adj:p:v_kly:compc', None, pos='adj'),
+        vesum_row(6964215, 442056, 'яскравіший', 'яскравішії', 'adj:p:v_kly:compc:long', None, pos='adj'),
+    ], keep_gender=True)
+    assert ('v_naz', 's', 'm') in u268912['slots'] and ('v_naz', 's', 'm') in v[442056]['slots']
+    compared = src.compare_paradigms(u268912, v[442056])
+    assert compared['slots'][('v_naz', 's', 'm')] == 'equal'
+    assert compared['slots'][('v_naz', 's', 'f')] == 'differs'
+    assert compared['relation'] == 'differs'
+    assert v[442056]['slots'][('v_naz', 's', 'f')]['forms'] == {'яскравіша', 'яскравішая'}
+
+
+def test_personal_pronoun_person_is_not_a_case_slot_dimension():
+    """Person and an implicit single number must correspond without erasing archaic or bound forms."""
+    # ULIF 247362; authenticated page 79fd8538128cffffacf5851d81a7c7814e3a5a2c93071ca4b95d18333d505e9c.
+    u247362 = src.ulif_paradigm([
+        ulif_row(4351970, 247362, [], 'я', 'я', is_lemma=1, unmapped_labels='["займенник"]'),
+        ulif_row(4351971, 247362, ['v_naz'], 'я', 'я'),
+        ulif_row(4351972, 247362, ['v_rod'], 'мене', 'мене́'),
+        ulif_row(4351973, 247362, ['v_rod'], 'до мене', 'до ме́не'),
+        ulif_row(4351974, 247362, ['v_dav'], 'мені', 'мені́'),
+        ulif_row(4351975, 247362, ['v_zna'], 'мене', 'мене́'),
+        ulif_row(4351976, 247362, ['v_oru'], 'мною', 'мно́ю'),
+        ulif_row(4351977, 247362, ['v_mis'], 'мені', 'мені́', preposition='на/у'),
+    ])
+    # Complete visible VESUM rows; canonical snapshot 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680.
+    v = src.vesum_paradigm([
+        vesum_row(6863508, 436573, 'я', 'я', 'noun:anim:s:v_naz:pron:pers:1', None, pos='noun'),
+        vesum_row(6863509, 436573, 'я', 'мене', 'noun:anim:s:v_rod:pron:pers:1', None, pos='noun'),
+        vesum_row(6863510, 436573, 'я', 'мя', 'noun:anim:s:v_rod:pron:pers:1:arch', None, pos='noun'),
+        vesum_row(6863511, 436573, 'я', 'мені', 'noun:anim:s:v_dav:pron:pers:1', None, pos='noun'),
+        vesum_row(6863512, 436573, 'я', 'мене', 'noun:anim:s:v_zna:pron:pers:1', None, pos='noun'),
+        vesum_row(6863513, 436573, 'я', 'мя', 'noun:anim:s:v_zna:pron:pers:1:arch', None, pos='noun'),
+        vesum_row(6863514, 436573, 'я', 'мною', 'noun:anim:s:v_oru:pron:pers:1', None, pos='noun'),
+        vesum_row(6863515, 436573, 'я', 'мені', 'noun:anim:s:v_mis:pron:pers:1', None, pos='noun'),
+    ], keep_gender=False)
+    u247362['pronoun'] = True  # the checked ULIF label is займенник
+    assert all('1' not in slot for slot in v[436573]['slots'])
+    compared = src.compare_paradigms(u247362, v[436573])
+    assert compared['slots'][('v_naz', 's')] == 'equal'
+    assert 'ulif_only_slot' not in compared['slots'].values()
+    assert compared['relation'] == 'differs'
+    assert compared['slots'][('v_rod', 's')] == 'differs'
+    assert compared['slots'][('v_zna', 's')] == 'differs'
+    assert u247362['slots'][('v_rod',)]['forms'] == ['до мене', 'мене']
+    assert v[436573]['slots'][('v_rod', 's')]['forms'] == {'мене', 'мя'}
+
+
+def test_animate_noun_control_keeps_inanimate_homonym_incompatible():
+    """Animacy already differs in the accusative; an extra locative still blocks the animate match."""
+    # ULIF 22123; authenticated page faf408c1729b80c6341fb98b50738cb6078214b4f9398974caa62b401c24c269.
+    u22123 = src.ulif_paradigm([
+        ulif_row(241241, 22123, [], 'баран', 'бара́н', is_lemma=1, unmapped_labels='["іменник чоловічого роду, істота"]'),
+        ulif_row(241242, 22123, ['v_naz', 's'], 'баран', 'бара́н'),
+        ulif_row(241243, 22123, ['v_naz', 'p'], 'барани', 'барани́'),
+        ulif_row(241244, 22123, ['v_rod', 's'], 'барана', 'барана́'),
+        ulif_row(241245, 22123, ['v_rod', 'p'], 'баранів', 'барані́в'),
+        ulif_row(241246, 22123, ['v_dav', 's'], 'баранові', 'барано́ві'),
+        ulif_row(241247, 22123, ['v_dav', 's'], 'барану', 'барану́'),
+        ulif_row(241248, 22123, ['v_dav', 'p'], 'баранам', 'барана́м'),
+        ulif_row(241249, 22123, ['v_zna', 's'], 'барана', 'барана́'),
+        ulif_row(241250, 22123, ['v_zna', 'p'], 'барани', 'барани́'),
+        ulif_row(241251, 22123, ['v_zna', 'p'], 'баранів', 'барані́в'),
+        ulif_row(241252, 22123, ['v_oru', 's'], 'бараном', 'барано́м'),
+        ulif_row(241253, 22123, ['v_oru', 'p'], 'баранами', 'барана́ми'),
+        ulif_row(241254, 22123, ['v_mis', 's'], 'баранові', 'барано́ві', preposition='на/у'),
+        ulif_row(241255, 22123, ['v_mis', 's'], 'барані', 'барані́', preposition='на/у'),
+        ulif_row(241256, 22123, ['v_mis', 'p'], 'баранах', 'барана́х', preposition='на/у'),
+        ulif_row(241257, 22123, ['v_kly', 's'], 'баране', 'бара́не'),
+        ulif_row(241258, 22123, ['v_kly', 'p'], 'барани', 'барани́'),
+    ])
+    # ULIF 22124; authenticated page 4183d30b8d48d31e26c59c34acbf183a3668eef8943b0b4759c93b5145c82c27.
+    u22124 = src.ulif_paradigm([
+        ulif_row(241259, 22124, [], 'баран', 'бара́н', is_lemma=1, unmapped_labels='["іменник чоловічого роду, істота"]'),
+        ulif_row(241260, 22124, ['v_naz', 's'], 'баран', 'бара́н'),
+        ulif_row(241261, 22124, ['v_naz', 'p'], 'барани', 'барани́'),
+        ulif_row(241262, 22124, ['v_rod', 's'], 'барана', 'барана́'),
+        ulif_row(241263, 22124, ['v_rod', 'p'], 'баранів', 'барані́в'),
+        ulif_row(241264, 22124, ['v_dav', 's'], 'баранові', 'барано́ві'),
+        ulif_row(241265, 22124, ['v_dav', 's'], 'барану', 'барану́'),
+        ulif_row(241266, 22124, ['v_dav', 'p'], 'баранам', 'барана́м'),
+        ulif_row(241267, 22124, ['v_zna', 's'], 'барана', 'барана́'),
+        ulif_row(241268, 22124, ['v_zna', 'p'], 'баранів', 'барані́в'),
+        ulif_row(241269, 22124, ['v_oru', 's'], 'бараном', 'барано́м'),
+        ulif_row(241270, 22124, ['v_oru', 'p'], 'баранами', 'барана́ми'),
+        ulif_row(241271, 22124, ['v_mis', 's'], 'баранові', 'барано́ві', preposition='на/у'),
+        ulif_row(241272, 22124, ['v_mis', 's'], 'барані', 'барані́', preposition='на/у'),
+        ulif_row(241273, 22124, ['v_mis', 'p'], 'баранах', 'барана́х', preposition='на/у'),
+        ulif_row(241274, 22124, ['v_kly', 's'], 'баране', 'бара́не'),
+        ulif_row(241275, 22124, ['v_kly', 'p'], 'барани', 'барани́'),
+    ])
+    # ULIF 22125; authenticated page d0cec30c83c0505c51144f459c0222db80df644913a8c7e8f6d59877f4026673.
+    u22125 = src.ulif_paradigm([
+        ulif_row(241276, 22125, ['noun', 'm'], 'баран', 'бара́н', is_lemma=1),
+        ulif_row(241277, 22125, ['v_naz', 's'], 'баран', 'бара́н'),
+        ulif_row(241278, 22125, ['v_naz', 'p'], 'барани', 'барани́'),
+        ulif_row(241279, 22125, ['v_rod', 's'], 'барана', 'барана́'),
+        ulif_row(241280, 22125, ['v_rod', 'p'], 'баранів', 'барані́в'),
+        ulif_row(241281, 22125, ['v_dav', 's'], 'барану', 'барану́'),
+        ulif_row(241282, 22125, ['v_dav', 's'], 'баранові', 'барано́ві'),
+        ulif_row(241283, 22125, ['v_dav', 'p'], 'баранам', 'барана́м'),
+        ulif_row(241284, 22125, ['v_zna', 's'], 'баран', 'бара́н'),
+        ulif_row(241285, 22125, ['v_zna', 'p'], 'барани', 'барани́'),
+        ulif_row(241286, 22125, ['v_oru', 's'], 'бараном', 'барано́м'),
+        ulif_row(241287, 22125, ['v_oru', 'p'], 'баранами', 'барана́ми'),
+        ulif_row(241288, 22125, ['v_mis', 's'], 'барані', 'барані́', preposition='на/у'),
+        ulif_row(241289, 22125, ['v_mis', 'p'], 'баранах', 'барана́х', preposition='на/у'),
+        ulif_row(241290, 22125, ['v_kly', 's'], 'баране', 'бара́не', marked_asterisk=1),
+        ulif_row(241291, 22125, ['v_kly', 'p'], 'барани', 'барани́', marked_asterisk=1),
+    ])
+    # Complete visible VESUM rows; canonical snapshot 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680.
+    v = src.vesum_paradigm([
+        vesum_row(293437, 17249, 'баран', 'баран', 'noun:anim:m:v_naz', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293438, 17249, 'баран', 'барана', 'noun:anim:m:v_rod', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293439, 17249, 'баран', 'баранові', 'noun:anim:m:v_dav', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293440, 17249, 'баран', 'барану', 'noun:anim:m:v_dav', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293441, 17249, 'баран', 'барана', 'noun:anim:m:v_zna', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293442, 17249, 'баран', 'бараном', 'noun:anim:m:v_oru', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293443, 17249, 'баран', 'барані', 'noun:anim:m:v_mis', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293444, 17249, 'баран', 'баранові', 'noun:anim:m:v_mis', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293445, 17249, 'баран', 'барану', 'noun:anim:m:v_mis', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293446, 17249, 'баран', 'баране', 'noun:anim:m:v_kly', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293447, 17249, 'баран', 'барани', 'noun:anim:p:v_naz', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293448, 17249, 'баран', 'баранів', 'noun:anim:p:v_rod', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293449, 17249, 'баран', 'баранам', 'noun:anim:p:v_dav', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293450, 17249, 'баран', 'барани', 'noun:anim:p:v_zna', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293451, 17249, 'баран', 'баранів', 'noun:anim:p:v_zna', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293452, 17249, 'баран', 'баранами', 'noun:anim:p:v_oru', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293453, 17249, 'баран', 'баранах', 'noun:anim:p:v_mis', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293454, 17249, 'баран', 'барани', 'noun:anim:p:v_kly', ':xp1 xv2 самець вівці, про нерозумну людину', pos='noun'),
+        vesum_row(293455, 17250, 'баран', 'баран', 'noun:inanim:m:v_naz', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293456, 17250, 'баран', 'барана', 'noun:inanim:m:v_rod', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293457, 17250, 'баран', 'баранові', 'noun:inanim:m:v_dav', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293458, 17250, 'баран', 'барану', 'noun:inanim:m:v_dav', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293459, 17250, 'баран', 'баран', 'noun:inanim:m:v_zna', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293460, 17250, 'баран', 'бараном', 'noun:inanim:m:v_oru', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293461, 17250, 'баран', 'барані', 'noun:inanim:m:v_mis', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293462, 17250, 'баран', 'баранові', 'noun:inanim:m:v_mis', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293463, 17250, 'баран', 'барану', 'noun:inanim:m:v_mis', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293464, 17250, 'баран', 'баране', 'noun:inanim:m:v_kly', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293465, 17250, 'баран', 'барани', 'noun:inanim:p:v_naz', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293466, 17250, 'баран', 'баранів', 'noun:inanim:p:v_rod', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293467, 17250, 'баран', 'баранам', 'noun:inanim:p:v_dav', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293468, 17250, 'баран', 'барани', 'noun:inanim:p:v_zna', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293469, 17250, 'баран', 'баранами', 'noun:inanim:p:v_oru', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293470, 17250, 'баран', 'баранах', 'noun:inanim:p:v_mis', ':xp2 гребінь замету', pos='noun'),
+        vesum_row(293471, 17250, 'баран', 'барани', 'noun:inanim:p:v_kly', ':xp2 гребінь замету', pos='noun'),
+    ], keep_gender=False)
+    animate = src.compare_paradigms(u22123, v[17249])
+    inanimate = src.compare_paradigms(u22123, v[17250])
+    assert animate['slots'][('v_zna', 's')] == 'equal'
+    assert inanimate['slots'][('v_zna', 's')] == 'differs'
+    assert animate['slots'][('v_mis', 's')] == 'differs'
+    assert animate['relation'] == inanimate['relation'] == 'differs'
+    assert src.compare_paradigms(u22124, v[17250])['slots'][('v_zna', 's')] == 'differs'
+    assert src.compare_paradigms(u22125, v[17249])['slots'][('v_zna', 's')] == 'differs'
