@@ -75,3 +75,19 @@ never fine.
    in the ledger ([learning](learning.md)).
    Before restarting a lane or ordering an item, check its latest state and linked PR or
    issue state. Honor stops; send stale-open items with merged PRs to the tracker owner.
+9. **Chase delivery.** Lanes deliver; the CTO does not take over their work. For each
+   priority deliverable, the owning lane reports one line every cycle:
+   state | exact blocker | who fixes it | next step | ETA. Treat any of these as
+   foot-dragging: no report by the deadline, a passed ETA, the same blocker in two
+   cycles, an idle lane, or a lane on other work while a priority deliverable is open.
+   Escalate one step per cycle until the result lands:
+   1. Demand: a Fleet order marked URGENT with a 10-minute report deadline, plus a
+      keeper nudge if the pane is idle.
+   2. Focus order: name the missed deadline or ETA, and order the lane to work only the
+      deliverable and its blockers until it lands. Other ready work may fill only the
+      worker slots the deliverable cannot use.
+   3. Unblock: the CTO removes the blocker itself (a decision, a test grant, a missing
+      review seat, or rerouting the blocker to another lane). It then reports the facts
+      to the operator, including the lane's missed deadlines.
+   Record each demand and each report in the deliverable's tracker item. A blocker the
+   lane can fix itself is not a wait: order the fix.
