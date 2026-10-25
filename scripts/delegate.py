@@ -2865,6 +2865,7 @@ _AUTO_FINALIZE_NOTHING_OWNED_REASON = "no_changes_under_owned_paths"
 _AUTO_FINALIZE_NO_OWNED_PATHS_REASON = "no_owned_paths_declared"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 _REVIEW_UNSUPPORTED_VERDICT_REASON = "review_unsupported_verdict_token"
+_REVIEW_INVALID_FINDINGS_JSON_REASON = "review_invalid_findings_json"
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -3121,6 +3122,46 @@ def parse_review_verdict(response: str) -> str | None:
     """Return the final recognized verdict token, preserving dispatch policy."""
     verdicts = recognized_verdicts(response)
     return verdicts[-1] if verdicts else None
+
+
+def _review_findings_verdict(response: str) -> str | None:
+    """Return the publisher verdict of a strict ``code-review-findings.v1`` reply, or None.
+
+    The entire reply must be one JSON object (``parse_reviewer_json``: no prose,
+    fence or nested-object extraction) that passes the strict schema
+    (``validate_reviewer_payload``) before the publisher's canonical resolver
+    maps it, so extra root fields fail rather than being projected away (C-2034).
+    """
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
+    from scripts.review.review_contract import ContractError, parse_reviewer_json, validate_reviewer_payload
+
+    try:
+        payload = validate_reviewer_payload(parse_reviewer_json(response))
+        return resolve_verdict_and_evidence(payload)[0]
+    except (ContractError, ReviewPublicationError):
+        return None
+
+
+def _review_findings_json_mode(record: Mapping[str, Any], response: str) -> bool:
+    """Whether this review reply is judged by the strict findings contract, not a verdict line.
+
+    A review whose prompt the ask wrapper composed with the findings contract
+    (``review_findings_required``) always uses it, so prompt and gate agree.
+    Otherwise Ukrainian reviews keep the verdict line, and any other review uses
+    the contract only when its whole reply is one JSON object declaring that
+    schema version, the publisher's own discriminator. Such a reply can never
+    carry a verdict line; other JSON keeps the verdict-line requirement.
+    """
+    from scripts.review.review_contract import SCHEMA_VERSION, ContractError, parse_reviewer_json
+
+    if record.get("review_findings_required"):
+        return True
+    if is_ukrainian_review(record):
+        return False
+    try:
+        return parse_reviewer_json(response).get("schema_version") == SCHEMA_VERSION
+    except ContractError:
+        return False
 
 
 def _review_verdict_failure_reason(response: str) -> str | None:
@@ -6966,6 +7007,7 @@ def public_causes() -> frozenset[str]:
         _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON,
         _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON,
         _REVIEW_UNSUPPORTED_VERDICT_REASON,
+        _REVIEW_INVALID_FINDINGS_JSON_REASON,
         _AUTO_FINALIZE_NOTHING_OWNED_REASON,
         _AUTO_FINALIZE_NO_OWNED_PATHS_REASON,
         COMPLETION_GATE_RESPONSE_UNAVAILABLE,
@@ -8039,6 +8081,12 @@ def run_completion_gate(
         )
         return CompletionGateResult(gate, reason, reason or "", status=_NO_DELIVERABLE_STATUS)
     if gate == COMPLETION_GATE_REVIEW_VERDICT:
+        if _review_findings_json_mode(record, response or ""):
+            # C-2034: one strict findings object settles the review; no verdict line applies.
+            reason = (
+                None if _review_findings_verdict(response or "") is not None else _REVIEW_INVALID_FINDINGS_JSON_REASON
+            )
+            return CompletionGateResult(gate, reason, reason or "")
         reason = _review_verdict_failure_reason(response or "")
         if reason == _REVIEW_UNSUPPORTED_VERDICT_REASON:
             token = unsupported_verdict_tokens(response or "")[-1]

@@ -105,6 +105,18 @@ def _clean_payload() -> dict:
     }
 
 
+def _review_completion_failures(raw: str) -> tuple[str | None, str | None]:
+    """Dispatch review-completion failure for one reply: opted-in code review, then default lane."""
+    from scripts import delegate
+
+    def gate(record: dict) -> str | None:
+        return delegate.run_completion_gate(
+            delegate.COMPLETION_GATE_REVIEW_VERDICT, record, response=raw, commits_ahead=None, worktree=None
+        ).failure
+
+    return gate({"review_findings_required": True}), gate({})
+
+
 def _finding(
     *,
     fid: str = "F001",
@@ -321,21 +333,32 @@ def test_symlink_escape_rejected(tmp_path):
 
 
 def test_schema_rejects_unknown_fields_and_bad_enums():
+    from scripts.review.record_cf_verdict import RecordError, _review_verdict_and_count
+
+    invalid = "review_invalid_findings_json"
     payload = _clean_payload()
     payload["extra"] = True
     with pytest.raises(ContractError, match="schema_violation"):
         validate_reviewer_payload(payload)
+    # The whole object is validated, so an extra root field cannot be projected away.
+    assert _review_completion_failures(json.dumps(payload)) == (invalid, invalid)
 
     payload = _clean_payload()
     payload["findings"] = [_finding(priority="P9")]
     with pytest.raises(ContractError, match="schema_violation"):
         validate_reviewer_payload(payload)
+    assert _review_completion_failures(json.dumps(payload)) == (invalid, invalid)
+    with pytest.raises(RecordError, match="structured review"):
+        _review_verdict_and_count(json.dumps(payload))
 
     payload = _clean_payload()
     payload["findings"] = [_finding()]
     payload["findings"][0]["confidence"] = 1.5
     with pytest.raises(ContractError, match="schema_violation"):
         validate_reviewer_payload(payload)
+    assert _review_completion_failures(json.dumps(payload)) == (invalid, invalid)
+    with pytest.raises(RecordError, match="structured review"):
+        _review_verdict_and_count(json.dumps(payload))
 
 
 def test_legacy_finding_text_fails_closed():
@@ -345,8 +368,15 @@ def test_legacy_finding_text_fails_closed():
 
 
 def test_non_json_chatter_fails_closed():
+    from scripts.review.record_cf_verdict import RecordError, _review_verdict_and_count
+
+    chatter = 'Here is my review:\n{"schema_version": "x"}\nThanks!'
     with pytest.raises(ContractError, match="non_json"):
-        parse_reviewer_json('Here is my review:\n{"schema_version": "x"}\nThanks!')
+        parse_reviewer_json(chatter)
+    # Neither the opted-in findings contract nor the legacy verdict line admits chatter.
+    assert _review_completion_failures(chatter) == ("review_invalid_findings_json", "review_missing_verdict_line")
+    with pytest.raises(RecordError, match="VERDICT"):
+        _review_verdict_and_count(chatter)
 
 
 def test_empty_input_is_incomplete():
@@ -407,6 +437,11 @@ def test_local_clean_review_exit_zero(tmp_path):
     result = verify_review(raw, _ctx(repo, target, raw))
     assert result.exit_code == EXIT_CLEAN
     assert result.final_disposition == "clean"
+    from scripts.review.record_cf_verdict import _review_verdict_and_count
+
+    # The same reply completes the dispatch and publishes APPROVED.
+    assert _review_completion_failures(raw) == (None, None)
+    assert _review_verdict_and_count(raw) == ("APPROVED", 0)
 
 
 def test_commit_target_quote_and_line_checks(tmp_path):
@@ -711,6 +746,11 @@ def test_uncertain_without_findings_is_incomplete(tmp_path):
     raw = json.dumps(payload)
     result = verify_review(raw, _ctx(repo, target, raw))
     assert result.exit_code == EXIT_INCOMPLETE
+    from scripts.review.record_cf_verdict import _review_verdict_and_count
+
+    # A structurally valid uncertain reply completes as BLOCKED; no receipt above.
+    assert _review_completion_failures(raw) == (None, None)
+    assert _review_verdict_and_count(raw) == ("BLOCKED", 0)
 
 
 def test_receipt_includes_required_envelope_fields(tmp_path):

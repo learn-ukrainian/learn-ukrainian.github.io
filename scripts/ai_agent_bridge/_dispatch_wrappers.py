@@ -532,16 +532,18 @@ _REVIEW_VERDICT_OUTPUT = (
 
 _NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract
 
-In your first completed reply, include a plain, unfenced verdict line using
-the label VERDICT, a colon, then APPROVE, REQUEST_CHANGES, or BLOCKED, as warranted
-by your independent judgment. Also include one native JSON object, unfenced, conforming to
-schemas/code-review-findings.v1.schema.json (schema_version: code-review-findings.v1).
-Read that schema: overall requires correctness, explanation, confidence; each
-finding requires id, title, body, priority, confidence, category, location,
-verbatim, why_wrong, smallest_fix, sources. Do not add fields or wrap the object
-in another object. Retain every material and nonblocking finding, including
-nonblocking findings with an approving verdict; choose judgment and confidence
-independently.
+Review completion requires your entire first completed reply to be exactly one
+JSON object conforming to schemas/code-review-findings.v1.schema.json
+(schema_version: code-review-findings.v1): no verdict line, prose, Markdown or
+code fence before or after it. Read that schema: overall requires correctness,
+explanation, confidence; each finding requires id, title, body, priority,
+confidence, category, location, verbatim, why_wrong, smallest_fix, sources. Do
+not add fields or wrap the object in another object. The existing publisher
+derives the gate verdict from the object: correct with no findings is APPROVED,
+any finding or incorrect is CHANGES_REQUESTED, and uncertain is BLOCKED. A
+review that lacks a capability its brief requires (shell, diff access, hashing)
+is uncertain; name the missing capability in the explanation. Retain every
+material and nonblocking finding; choose judgment and confidence independently.
 
 For each finding, use a repository-relative location.path and complete literal
 source lines from the exact reviewed target in verbatim, including all leading
@@ -601,9 +603,15 @@ def run_ask_review_dispatch(
     timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
-        prompt = _REVIEW_VERDICT_OUTPUT + "\n\n" + content
-        if review_profile in {"code", "infra"} or re.search(r"\bcode-review-findings\.v1\b", content):
-            prompt += "\n\n" + _NATIVE_CODE_REVIEW_OUTPUT
+        # C-2034: an opted-in code/infra review completes on the findings JSON alone,
+        # so it never also receives the verdict-line requirement. Ukrainian keeps it.
+        findings_json = review_profile != "ukrainian" and (
+            review_profile in {"code", "infra"} or bool(re.search(r"\bcode-review-findings\.v1\b", content))
+        )
+        if findings_json:
+            prompt = content + "\n\n" + _NATIVE_CODE_REVIEW_OUTPUT
+        else:
+            prompt = _REVIEW_VERDICT_OUTPUT + "\n\n" + content
         if data:
             prompt += "\n\n--- attached inert text ---\n" + data
         prompt_path.write_text(prompt, encoding="utf-8")
@@ -681,7 +689,13 @@ def run_ask_review_dispatch(
         # #9275: success is judged by the shared completion-gate definition for the
         # read-only, verdict-required dispatch this wrapper launched: the verdict
         # gate is the only one that applies, and it runs on the read-back response.
-        review_record = {**state, "mode": "read-only", "require_review_verdict": True}
+        # An opted-in code/infra review completes only on strict findings JSON (C-2034).
+        review_record = {
+            **state,
+            "mode": "read-only",
+            "require_review_verdict": True,
+            "review_findings_required": findings_json,
+        }
         gate_failure = _delegate.first_completion_gate_failure(
             review_record, response=response, commits_ahead=None, worktree=None
         )

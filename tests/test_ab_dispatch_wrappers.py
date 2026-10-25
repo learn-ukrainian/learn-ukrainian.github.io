@@ -84,13 +84,16 @@ def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp
     content = "Return code-review-findings.v1 JSON."
 
     def echo_guidance(prompt):
-        guidance = prompt[len(wrappers._REVIEW_VERDICT_OUTPUT) + 2 + len(content) :]
+        assert prompt == content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT
+        guidance = prompt[len(content) + 2 :]
         assert recognized_verdicts(guidance) == []
         response = (f"VERDICT: {verdict}\n" if verdict else "") + "Contract noted:\n" + guidance
         assert delegate.parse_review_verdict(response) == verdict
+        # An opted-in review completes only on findings JSON; a line verdict cannot stand in.
+        assert delegate._review_findings_verdict(response) is None
         return response
 
-    _capture_native_review(monkeypatch, tmp_path, content, None, echo_guidance, ok=verdict is not None)
+    _capture_native_review(monkeypatch, tmp_path, content, None, echo_guidance, ok=False)
 
 
 @pytest.fixture
@@ -135,7 +138,8 @@ def native_exact_target(tmp_path):
 @pytest.mark.parametrize("profile", ["code", "infra", None])
 def test_native_first_reply_exact_target_evidence_controls(monkeypatch, tmp_path, native_exact_target, profile):
     from scripts.review.evidence import changed_lines_map, verify_finding_evidence
-    from scripts.review.review_contract import validate_reviewer_payload
+    from scripts.review.record_cf_verdict import _review_verdict_and_count
+    from scripts.review.review_contract import parse_reviewer_json, validate_reviewer_payload
     from scripts.review.verdict_parser import recognized_verdicts
 
     repo, target, quote = native_exact_target
@@ -160,16 +164,19 @@ def test_native_first_reply_exact_target_evidence_controls(monkeypatch, tmp_path
         "overall": {"correctness": "correct", "explanation": "Only nonblocking concerns.", "confidence": 0.9},
         "findings": [finding, missing],
     }
-    response = "VERDICT: APPROVE\n" + json.dumps(payload)
+    response = json.dumps(payload)
     content = "Review the exact target.\n"
     if profile is None:
         content += "Return code-review-findings.v1 JSON.\n"
     prompt = _capture_native_review(monkeypatch, tmp_path, content, profile, response, head=target.head_sha)
     assert "complete literal" in prompt
-    assert recognized_verdicts(response) == ["APPROVE"]
-    returned = json.loads(response.split("\n", 1)[1])
+    assert wrappers._REVIEW_VERDICT_OUTPUT not in prompt  # No competing verdict-line requirement.
+    assert recognized_verdicts(response) == []
+    returned = parse_reviewer_json(response)  # The whole returned bytes, unrewritten.
     validate_reviewer_payload(returned)
     assert returned == payload  # Findings and both confidence levels preserved.
+    # The same object settles the publisher through its canonical resolver.
+    assert _review_verdict_and_count(response) == ("CHANGES_REQUESTED", 2)
     changed = changed_lines_map(repo, target)
     assert changed == {"service.py": {2, 3, 4}}
 
