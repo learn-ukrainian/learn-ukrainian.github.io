@@ -4122,8 +4122,9 @@ def _run_successful_worker_for_deliverable_test(
     tmp_path,
     monkeypatch,
     require_review_verdict: bool = False,
+    record: dict | None = None,
 ):
-    """Run a clean successful worker with controllable delivery signals."""
+    """Run a clean successful worker with controllable delivery signals and dispatch-persisted ``record`` fields."""
     worktree = tmp_path / "worktree"
     worktree.mkdir()
     _init_git_repo_for_test(worktree, monkeypatch)
@@ -4134,6 +4135,7 @@ def _run_successful_worker_for_deliverable_test(
             "task_id": task_id,
             "worktree_path": str(worktree),
             "worktree_base": "main",
+            **(record or {}),
         },
     )
     mock_result = type(
@@ -4541,11 +4543,17 @@ def test_run_worker_review_with_verdict_stays_done(
     monkeypatch,
     verdict,
 ):
-    """Every verdict token the live review parsers accept completes as done."""
+    """Every verdict token the live review parsers accept completes as done.
+
+    Defect class (C-2034): a provider-chosen verdict line downgrading a caller-required
+    findings-JSON review. The same reply on the code-profile record a wrapper review
+    dispatch persists must settle failed at native completion, never done.
+    """
+    response = f"Findings: none, evidence cited at scripts/foo.py:1.\nVERDICT: {verdict}\n"
     rc, state = _run_successful_worker_for_deliverable_test(
         task_id=f"review-verdict-{verdict.lower().replace('_', '-')}",
         mode="read-only",
-        response=f"Findings: none, evidence cited at scripts/foo.py:1.\nVERDICT: {verdict}\n",
+        response=response,
         commits_ahead=None,
         tmp_path=tmp_path,
         monkeypatch=monkeypatch,
@@ -4555,6 +4563,22 @@ def test_run_worker_review_with_verdict_stays_done(
     assert rc == 0
     assert state["status"] == "done"
     assert state["no_deliverable_reason"] is None
+
+    (tmp_path / "code-profile").mkdir()
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id=f"review-findings-{verdict.lower().replace('_', '-')}",
+        mode="read-only",
+        response=response,
+        commits_ahead=None,
+        tmp_path=tmp_path / "code-profile",
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+        record={"review_profile": "code"},
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["review_verdict_failure"] == "review_invalid_findings_json"
 
 
 @pytest.mark.parametrize(

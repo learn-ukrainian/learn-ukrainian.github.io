@@ -466,6 +466,7 @@ def build_ask_review_dispatch_command(
     branch: str | None = None,
     review_profile: str | None = None,
     pinned_head: str | None = None,
+    review_findings: bool = False,
 ) -> list[str]:
     """Headless dispatch command for one review-intent ask-*.
 
@@ -479,6 +480,9 @@ def build_ask_review_dispatch_command(
 
     ``target`` is the ``AdmittedTarget`` ``resolve_and_admit`` produced for
     the review seat; the command carries its seat and model.
+
+    ``review_findings`` carries this caller's findings-JSON decision into the
+    task record before the worker runs, so native settlement enforces it too.
     """
     from agent_runtime.target_admission import require_admitted
 
@@ -501,6 +505,8 @@ def build_ask_review_dispatch_command(
         str(prompt_file),
         "--require-review-verdict",
     ]
+    if review_findings:
+        cmd.append("--require-review-findings")
     if branch:
         cmd.extend(["--branch", branch])
     if pinned_head:
@@ -623,6 +629,7 @@ def run_ask_review_dispatch(
             branch=branch,
             review_profile=review_profile,
             pinned_head=pinned_head,
+            review_findings=findings_json,
         )
         try:
             dispatch_proc = subprocess.run(
@@ -689,7 +696,8 @@ def run_ask_review_dispatch(
         # #9275: success is judged by the shared completion-gate definition for the
         # read-only, verdict-required dispatch this wrapper launched: the verdict
         # gate is the only one that applies, and it runs on the read-back response.
-        # An opted-in code/infra review completes only on strict findings JSON (C-2034).
+        # An opted-in code/infra review completes only on strict findings JSON (C-2034);
+        # the dispatch persisted the same decision, so the native worker settled by it too.
         review_record = {
             **state,
             "mode": "read-only",

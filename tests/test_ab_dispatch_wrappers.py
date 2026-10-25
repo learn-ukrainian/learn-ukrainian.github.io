@@ -40,6 +40,8 @@ def _capture_native_review(
             result.write_text(reply, encoding="utf-8")
             assert _option(command, "--mode") == "read-only"
             assert "--require-review-verdict" in command
+            # The caller's findings-JSON decision is persisted before the worker runs (C-2034).
+            assert "--require-review-findings" in command
             assert kwargs["cwd"] == wrappers.REPO_ROOT
             if profile:
                 assert _option(command, "--review-profile") == profile
@@ -449,6 +451,7 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
     assert state["status"] == "done"
     assert state["response"] == "Reviewed the diff.\nVERDICT: APPROVED\n"
     assert "--require-review-verdict" in calls[0][0]
+    assert "--require-review-findings" not in calls[0][0]  # A legacy verdict-line review.
     assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
     assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
     assert "--branch" not in calls[0][0]

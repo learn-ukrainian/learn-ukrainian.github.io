@@ -70,6 +70,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "returncode": int | null,
         "returncode_reason": str | null,
         "require_review_verdict": bool,  # opt-in bridge review completion gate
+        "review_findings_required": bool,  # caller-required code-review-findings.v1 reply (C-2034)
         "pinned_head": str | null,  # exact --branch/--pr head required before dispatch
         "review_author_model": str | null,  # trusted author identity for code review resolution
         "review_risk": str | null,  # code review resolver risk; budget substitution needs author + risk
@@ -357,6 +358,7 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
         and not (key == "authoring_review_plan" and value == "cross_family")
         and not (key == "claude_account" and value in (None, "a"))
         and not (key == "verify_command" and value is None)
+        and not (key == "require_review_findings" and value is False)
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -380,6 +382,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         and not (key == "authoring_review_plan" and value == "cross_family")
         and not (key == "claude_account" and value in (None, "a"))
         and not (key == "verify_command" and value is None)
+        and not (key == "require_review_findings" and value is False)
     }
 
 
@@ -3146,7 +3149,12 @@ def _review_findings_json_mode(record: Mapping[str, Any], response: str) -> bool
     """Whether this review reply is judged by the strict findings contract, not a verdict line.
 
     A review whose prompt the ask wrapper composed with the findings contract
-    (``review_findings_required``) always uses it, so prompt and gate agree.
+    always uses it, so prompt and gate agree. The decision is trusted caller
+    metadata persisted in the task record before the worker runs, never the
+    reply's syntax (C-2034): ``--require-review-findings`` persists
+    ``review_findings_required``, and a ``code`` or ``infra`` review profile
+    (for which the wrapper always composes the contract) implies it, so native
+    settlement and every recovery path read the same decision.
     Otherwise Ukrainian reviews keep the verdict line, and any other review uses
     the contract only when its whole reply is one JSON object declaring that
     schema version, the publisher's own discriminator. Such a reply can never
@@ -3154,7 +3162,7 @@ def _review_findings_json_mode(record: Mapping[str, Any], response: str) -> bool
     """
     from scripts.review.review_contract import SCHEMA_VERSION, ContractError, parse_reviewer_json
 
-    if record.get("review_findings_required"):
+    if record.get("review_findings_required") or record.get("review_profile") in {"code", "infra"}:
         return True
     if is_ukrainian_review(record):
         return False
@@ -8037,8 +8045,9 @@ def applicable_completion_gates(record: Mapping[str, Any]) -> tuple[str, ...]:
     An exit scan that did not rule out live background jobs (``leftovers_scan``
     other than clear) leaves the run unconfirmed; delivery binds every
     write-capable dispatch; the review verdict binds an opted-in review
-    (``require_review_verdict``); a write-capable bounded worker has its envelope
-    ceilings checked, else a content exemption its changed paths.
+    (``require_review_verdict``, or a persisted ``review_findings_required``);
+    a write-capable bounded worker has its envelope ceilings checked, else a
+    content exemption its changed paths.
     """
     write = record.get("mode") in _WRITE_CAPABLE_MODES
     gates: list[str] = []
@@ -8046,7 +8055,7 @@ def applicable_completion_gates(record: Mapping[str, Any]) -> tuple[str, ...]:
         gates.append(COMPLETION_GATE_BACKGROUND_LEFTOVERS)
     if write:
         gates.append(COMPLETION_GATE_DELIVERY)
-    if record.get("require_review_verdict"):
+    if record.get("require_review_verdict") or record.get("review_findings_required"):
         gates.append(COMPLETION_GATE_REVIEW_VERDICT)
     if write and isinstance(record.get("advisory_envelope"), dict):
         gates.append(COMPLETION_GATE_ADVISORY_CEILING)
@@ -16333,6 +16342,7 @@ def _dispatch(
             "cli_version": start_telemetry.cli_version,
             "allow_merge": bool(getattr(args, "allow_merge", False)),
             "require_review_verdict": bool(getattr(args, "require_review_verdict", False)),
+            "review_findings_required": bool(getattr(args, "require_review_findings", False)),
             "mode": args.mode,
             "cwd": cwd,
             "worktree_path": str(worktree_path) if worktree_path else None,
@@ -21117,6 +21127,18 @@ def build_parser() -> argparse.ArgumentParser:
             "On agy/gemini this also requires --review-profile code or ukrainian. "
             "Native AGY code review requires low or medium risk and resolver admission; "
             "Ukrainian review targets must be Ukrainian-content diffs."
+        ),
+    )
+    d.add_argument(
+        "--require-review-findings",
+        action="store_true",
+        help=(
+            "Review-typed dispatch whose caller composed the code-review-findings.v1 "
+            "contract: the task record persists this before the worker runs, and the "
+            "run settles done only when the whole reply is one schema-valid findings "
+            "object; prose, verdict lines, fences or invalid JSON fail closed "
+            "(review_invalid_findings_json). Set by the ask-* review wrapper for "
+            "code/infra and explicit-schema reviews (C-2034)."
         ),
     )
     d.add_argument(
