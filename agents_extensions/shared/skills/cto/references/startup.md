@@ -52,9 +52,9 @@ its watcher (`docs/runbooks/session-supervisor.md`).
 ## 5. Skip lane-driver items
 
 The SessionStart banner and launch prompt for the epics lane also print lane-driver items.
-They do not bind this seat: loading `drive-epic` as the entry point, the `driver_blockers`
-delta and record posting, `.claude/epics-epic/CLAUDE-DRIVER-HANDOFF.md` as lane source of
-truth (the CTO driver-state database is), and rollover candidates other than the named one.
+They do not bind this seat: loading `drive-epic` as the entry point,
+`.claude/epics-epic/CLAUDE-DRIVER-HANDOFF.md` as lane source of truth
+(the CTO driver-state database is), and rollover candidates other than the named one.
 
 ## 6. Re-arm and cycle
 

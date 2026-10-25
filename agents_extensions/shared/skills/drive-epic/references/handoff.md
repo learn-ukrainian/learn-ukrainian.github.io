@@ -26,8 +26,8 @@ replace unfinished items with a new session summary. Use
 the done condition. A `dropped` status requires an operator reference in its reason.
 Cite item IDs in cycle reports so unfinished work stays visible.
 
-Tracker blocker items preserve lane continuity. Keep the separate `driver_blockers`
-delta/record procedure unchanged.
+Tracker blocker items preserve lane continuity. Report blockers through Fleet Comms,
+which remains the durable message authority.
 
 ### Reconcile and hand off
 

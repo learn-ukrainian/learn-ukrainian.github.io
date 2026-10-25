@@ -629,21 +629,7 @@ def test_driver_state_banner_carries_complete_blocker_rule(tmp_path: Path) -> No
         check=True,
         timeout=20,
     )
-    for fragment in (
-        "complete: true",
-        "scripts.driver_blockers delta --epic infra --current blockers.json",
-        "scripts.driver_blockers record --epic infra --current blockers.json",
-        "--receipt receipt.json --body-file posted.md --expect-generation N",
-        "post each item that is not UNCHANGED",
-        "exact case-sensitive standalone token RESOLVED <id>",
-        "on its own non-active line (no other fields or prose)",
-        "if delta fails or the baseline is unknown, post everything currently blocking",
-        "typed source-uncertainty blocker",
-        "Fallback reporting cannot certify coverage",
-        "Preserve the baseline",
-        "Keep other ready work moving",
-        "exhaustive coverage including explicit unknown attention",
-        "current reporting custody only",
-        "UNCHANGED means unchanged attention, not zero blockers",
-    ):
-        assert fragment in result.stdout
+    assert "Driver state (AUTHORITATIVE" in result.stdout
+    assert ".claude/infra-epic/DRIVER-STATE.md" in result.stdout
+    assert "scripts.driver_blockers" not in result.stdout
+    assert "--expect-generation" not in result.stdout

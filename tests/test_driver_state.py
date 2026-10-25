@@ -119,6 +119,9 @@ def test_whoami_redacts_state_path(state, capsys, missing):
     assert driver_state.cmd_whoami(path) == (1 if missing else 0)
     out = capsys.readouterr().out
     assert "state: (configured)" in out
+    assert "blocker-policy:" not in out
+    assert "Blocker baseline:" not in out
+    assert "scripts.driver_blockers" not in out
     assert str(path.parent) not in out
     assert path.name not in out
     if missing:
@@ -725,7 +728,7 @@ def test_whole_state_keeps_appended_goals(state, tmp_path, length):
     "prefix",
     [
         "",
-        "The CTO blocker delta policy is mentioned in prose.\n",
+        "## CTO blocker delta policy\nRetired ledger commands.\n\n",
         "## CTO blocker delta policy extra\n",
         "### CTO blocker delta policy\n",
         "```markdown\n## CTO blocker delta policy\n```\n",
@@ -736,18 +739,13 @@ def test_whole_state_keeps_appended_goals(state, tmp_path, length):
     ],
 )
 def test_blocker_policy_requires_exact_real_heading(state, prefix):
-    message = driver_state.render_injection(prefix + "Current goals remain intact.", state)
-    assert message.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
+    message = driver_state.render_injection(prefix + "## Current goals\nCurrent goals remain intact.", state)
     assert "Current goals remain intact." in message
-    assert "scripts.driver_blockers delta" in message
-    assert "scripts.driver_blockers record" in message
-    assert "post ordinary reports to epics" in message
-    assert "--reporting-target cto only for explicit operator escalation" in message
-    assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
-    assert "typed source-uncertainty blocker" in message
-    assert "Fallback reporting cannot certify coverage" in message
-    assert "Preserve the baseline" in message
-    assert "Keep other ready work moving" in message
+    assert "scripts.driver_blockers" not in message
+    assert "Retired ledger commands." not in message
+    assert "blocker-policy:" not in message
+    assert "lu-driver-state render" in message
+    assert "lu-driver-state check" in message
 
 
 @pytest.mark.parametrize(
