@@ -72,3 +72,7 @@ pages, and public assets. This is local engine/browser proof, not a full site
 build or actual Data-release integration. CI retains the full build obligation;
 the driver retains independent held-out review, landing, merged proof, and
 cleanup. Actual Data v0.1 integration remains Data+Atlas-owned.
+
+Each scratch root links the installed `node_modules` for packages but keeps its own
+regenerable caches: `cache/` for Astro and `vite-cache/` for Vite. Vite's default
+(`node_modules/.vite`) would otherwise rewrite the shared dependency cache on every build.
