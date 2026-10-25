@@ -24993,7 +24993,43 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
             stderr_excerpt="fixture refusal", duration_s=0.1, session_id=None,
             rate_limited=False, stalled=False, returncode=1,
         )
-        with patch("agent_runtime.runner.invoke", return_value=result) as invoke:
+        # An allowed admission must not let a stale worker overwrite changed custody
+        # or bindings. Mutate the real record during admission, not before entry.
+        for change in (
+            {"task_id": "replacement-task"}, {"run_nonce": "replacement-nonce"},
+            {"status": "failed"}, {"status": "needs_finalize"}, {"status": "done"},
+            {"agent": "codex"}, {"model": "muse-spark-1.3"},
+            {"mode": "workspace-write" if mode == "read-only" else "read-only"},
+            {"research_role": "implementation" if role == "investigation" else "investigation"},
+            {"research_role": None}, {"cwd": None}, {"cwd": str(workspace.parent)},
+            {"require_review_verdict": True}, {"review_id": "changed-review"},
+            {"review_manifest": "changed-manifest"}, {"review": True}, {"type": "review"},
+            {"pr": 1}, {"review_attempt": "changed-attempt"}, {"review_profile": "code"},
+            {"review_author_model": "changed-author"}, {"review_risk": "critical"},
+            {"advisory_task": "changed-advisor"},
+        ):
+            delegate._write_state_atomic(state_path, state)
+            changed_bytes = (json.dumps({**state, **change}, indent=1) + "\n").encode()
+            with (
+                patch("delegate._advisory_worker_refusal", side_effect=lambda *a, changed_bytes=changed_bytes, **kw: (
+                    state_path.write_bytes(changed_bytes), None,
+                )[1]) as admission,
+                patch("agent_runtime.runner.invoke", return_value=result) as invoke,
+            ):
+                assert delegate._run_worker(
+                    task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
+                    cwd_str=str(workspace), model=model, hard_timeout=60, run_nonce=state["run_nonce"],
+                ) == 1
+                admission.assert_called_once()
+                invoke.assert_not_called()
+            assert state_path.read_bytes() == changed_bytes, change
+        delegate._write_state_atomic(state_path, state)
+        # Legitimate admission metadata must also survive the fresh running write.
+        with (
+            patch("delegate._advisory_worker_refusal", side_effect=lambda *a, **kw:
+                  delegate._write_state_atomic(state_path, {**state, "admission_note": "keep-current"})),
+            patch("agent_runtime.runner.invoke", return_value=result) as invoke,
+        ):
             assert delegate._run_worker(
                 task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
                 cwd_str=str(workspace), model=model, hard_timeout=60, run_nonce=state["run_nonce"],
@@ -25006,6 +25042,7 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
         assert launch["model"] == model
         assert Path(launch["cwd"]) == workspace
         completed = delegate._read_state(state_path)
+        assert completed["admission_note"] == "keep-current"
         # The synthetic write replay has no remote publication proof.
         assert completed["status"] == ("needs_finalize" if mode == "workspace-write" else "failed")
         if mode == "workspace-write":
