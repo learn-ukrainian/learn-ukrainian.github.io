@@ -543,6 +543,8 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
         return check_state
     if row.get("mergeStateStatus") in {"DIRTY", "UNKNOWN"} or not isinstance(row.get("mergeStateStatus"), str):
         return "merge-state-unknown" if row.get("mergeStateStatus") != "DIRTY" else "merge-conflict"
+    if drops >= 3:
+        return "third-drop"
     return "ready"
 
 
@@ -699,12 +701,13 @@ def _flush_pending_comments(
 def _comment_once(
     gh: GitHub, number: int, head: str, reason: str, comments: list[dict[str, Any]], login: str, detail: str = ""
 ) -> None:
-    """Post why ``head`` was not queued, once per head and reason; ``detail`` is already display-safe."""
+    """Post a hold reason or prior removal diagnosis once; ``detail`` is already display-safe."""
     marker = MARKER.format(head=marker_value(head), reason=marker_value(reason))
     if any(marker in str(row.get("body", "")) and (row.get("user") or {}).get("login") == login for row in comments):
         return
     shown = display_text(reason, DISPLAY_REASON_LIMIT)
-    gh.comment(number, f"Merge queue keeper: #{number} was not queued because {shown}.{detail}\n\n{marker}")
+    message = "was previously removed from the queue" if reason == "queue-drop" else f"was not queued because {shown}"
+    gh.comment(number, f"Merge queue keeper: #{number} {message}.{detail}\n\n{marker}")
     comments.append({"body": marker, "user": {"login": login}})
 
 

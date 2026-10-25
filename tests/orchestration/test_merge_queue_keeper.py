@@ -310,7 +310,7 @@ def test_armed_without_cf_stays_held(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("permission", [None, "absent", "deny", "grant"])
-def test_approval_after_needs_cf_removal_obeys_requeue_permission(tmp_path: Path, permission: str | None) -> None:
+def test_approval_after_needs_cf_removal_requeues_without_permission(tmp_path: Path, permission: str | None) -> None:
     path = tmp_path / "state.json"
     queued = FakeGitHub(pr(isInMergeQueue=True))
     queued.comments_rows = []
@@ -713,8 +713,10 @@ def test_third_drop_stops_and_comments(tmp_path: Path, monkeypatch: pytest.Monke
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 3}}))
     lines, failed = run(fake, path, monkeypatch)
-    assert not failed and "reason=ready" in lines[0]
-    assert mutations(fake) == ["enqueue"]
+    assert not failed and "reason=third-drop" in lines[0]
+    assert mutations(fake) == ["comment"]
+    assert "was not queued because third-drop." in _keeper_comment(fake)
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 3
 
 
 def test_comment_once_per_reason(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -893,6 +895,9 @@ def test_red_merge_group_drop_with_green_branch_checks(
     assert "enqueue" in mutations(fake)
     assert "reason=ready" in lines[0]
     assert comments and "failing jobs: `pytest`" in comments[0]
+    assert "#42 enqueued" in lines
+    assert "was previously removed from the queue." in comments[0]
+    assert all("was not queued" not in body for body in comments)
 
 
 
@@ -1434,20 +1439,23 @@ def _dropped_state(path: Path, **extra: Any) -> None:
 
 @pytest.mark.parametrize("apply", [False, True])
 @pytest.mark.parametrize("drops", [1, 2])
-def test_without_gate_a_dropped_head_is_held(tmp_path, monkeypatch, apply, drops):
+def test_first_two_drops_admit_approved_green_head_without_recovery(tmp_path, monkeypatch, apply, drops):
     path = tmp_path / "state.json"
     _dropped_state(path, drops={f"42:{HEAD_A}": drops})
     fake = FakeGitHub()
+    fake.comments_rows = [fake.comments_rows[0]]  # Current-head approval without a recovery receipt.
     lines, failed = run(fake, path, monkeypatch, apply=apply)
     assert not failed and "reason=ready" in lines[0]
     assert ("enqueue" in mutations(fake)) is apply
+    assert "comment" not in mutations(fake)
+    assert not recovery.ledger_path(fake.root).exists()
 
 
 @pytest.mark.parametrize(
     "decisions,raw",
     [({}, None), (None, None), (None, "{not json"), (None, json.dumps({"version": 2, "requeue": {}}))],
 )
-def test_gate_holds_a_dropped_head_without_a_grant(tmp_path, monkeypatch, decisions, raw):
+def test_obsolete_gate_without_grant_does_not_block_enqueue(tmp_path, monkeypatch, decisions, raw):
     path = tmp_path / "state.json"
     _dropped_state(path)
     fake = FakeGitHub()
@@ -1460,7 +1468,7 @@ def test_gate_holds_a_dropped_head_without_a_grant(tmp_path, monkeypatch, decisi
 
 @pytest.mark.parametrize("drops", [0, 1, 2])
 @pytest.mark.parametrize("configured", [False, True])
-def test_used_grant_holds_even_without_another_recorded_drop(tmp_path, monkeypatch, drops, configured):
+def test_obsolete_used_grant_does_not_block_enqueue(tmp_path, monkeypatch, drops, configured):
     path = tmp_path / "state.json"
     _dropped_state(path, drops={f"42:{HEAD_A}": drops}, requeued={f"42:{HEAD_A}": "used"})
     fake = FakeGitHub()
@@ -1472,7 +1480,7 @@ def test_used_grant_holds_even_without_another_recorded_drop(tmp_path, monkeypat
 @pytest.mark.parametrize("diagnosis", ["KeeperError", "empty-timeline"])
 @pytest.mark.parametrize("granted", [False, True])
 @pytest.mark.parametrize("apply", [False, True])
-def test_undiagnosed_removal_holds_unchanged_head(tmp_path, monkeypatch, diagnosis, granted, apply):
+def test_undiagnosed_removal_does_not_block_approved_green_head(tmp_path, monkeypatch, diagnosis, granted, apply):
     path = tmp_path / "state.json"
     _dropped_state(path, undiagnosed={f"42:{HEAD_A}": "2026-09-23T00:00:00Z"})
     fake = FakeGitHub()
@@ -1492,7 +1500,7 @@ def test_undiagnosed_old_head_does_not_hold_new_head(tmp_path: Path, monkeypatch
     assert mutations(fake) == ["enqueue"]
 
 
-def test_gate_denial_holds_and_comments_once(tmp_path, monkeypatch):
+def test_obsolete_gate_denial_does_not_block_or_comment(tmp_path, monkeypatch):
     path = tmp_path / "state.json"
     _dropped_state(path)
     fake = FakeGitHub()
@@ -1501,7 +1509,7 @@ def test_gate_denial_holds_and_comments_once(tmp_path, monkeypatch):
     assert mutations(fake) == ["enqueue"]
 
 
-def test_gate_grant_for_another_head_does_not_apply(tmp_path, monkeypatch):
+def test_obsolete_other_head_grant_does_not_block_enqueue(tmp_path, monkeypatch):
     path = tmp_path / "state.json"
     _dropped_state(path)
     fake = FakeGitHub()
@@ -1643,7 +1651,7 @@ def _recent(job: str, pr_number: int) -> dict[str, Any]:
 
 @pytest.mark.parametrize("apply", [False, True])
 @pytest.mark.parametrize("spent", ["run-rerun", "re-enqueue", "legacy"])
-def test_queue_wide_failure_holds_a_spent_allowance(tmp_path, monkeypatch, apply, spent):
+def test_obsolete_spent_allowance_does_not_block_enqueue_or_read_ledger(tmp_path, monkeypatch, apply, spent):
     path = tmp_path / "state.json"
     fake = FakeGitHub()
     recovery.ledger_path(fake.root).write_text("unreadable")
@@ -1656,7 +1664,7 @@ def test_queue_wide_failure_holds_a_spent_allowance(tmp_path, monkeypatch, apply
 
 @pytest.mark.parametrize("apply", [False, True])
 @pytest.mark.parametrize("saved_pass", [False, True])
-def test_queue_wide_failure_holds_without_posted_recovery_evidence(tmp_path, monkeypatch, apply, saved_pass):
+def test_enqueue_needs_no_posted_recovery_evidence_or_shared_pass(tmp_path, monkeypatch, apply, saved_pass):
     path = tmp_path / "state.json"
     fake = FakeGitHub()
     fake.comments_rows = [fake.comments_rows[0]]
@@ -1687,7 +1695,7 @@ def test_aggregate_job_alone_never_attributes(tmp_path: Path, monkeypatch: pytes
     assert "enqueue" in mutations(fake) and "reason=ready" in lines[0]
 
 
-def test_every_failing_job_must_be_shared(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_unshared_failing_job_does_not_block_approved_green_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     path = tmp_path / "state.json"
     fake = FakeGitHub()
     _ejected(fake, path, ["pytest (9)", "pytest (2)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
@@ -1695,7 +1703,7 @@ def test_every_failing_job_must_be_shared(tmp_path: Path, monkeypatch: pytest.Mo
     assert "enqueue" in mutations(fake) and "reason=ready" in lines[0]
 
 
-def test_shared_failure_requeues_are_capped_per_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_obsolete_shared_requeue_count_does_not_block_enqueue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     path = tmp_path / "state.json"
     fake = FakeGitHub()
     cap = 3
@@ -1737,7 +1745,7 @@ def test_per_head_state_cleanup_preserves_only_open_prs(tmp_path: Path, name: st
     assert json.loads(path.read_text()).get(name, {}) == ({open_key: value} if name not in {"requeued", "shared_pass", "shared_requeues"} else {})
 
 
-def test_shared_rerun_record_holds_keeper_recovery(tmp_path, monkeypatch):
+def test_shared_rerun_record_does_not_block_keeper_enqueue(tmp_path, monkeypatch):
     fake = FakeGitHub()
     evidence = recovery.evidence_from_comments(fake.comments_rows, 42, HEAD_A, authenticated_login="driver")
     recovery.consume(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A, "run-rerun", evidence)
@@ -1748,7 +1756,7 @@ def test_shared_rerun_record_holds_keeper_recovery(tmp_path, monkeypatch):
     assert recovery.first_attempt(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A)["action"] == "run-rerun"
 
 
-def test_shared_record_unknown_holds_keeper_recovery(tmp_path, monkeypatch):
+def test_unavailable_recovery_record_does_not_block_keeper_enqueue(tmp_path, monkeypatch):
     def unavailable(*args):
         raise gate.PublishBlocked("RECOVERY_RECORD_UNAVAILABLE")
     monkeypatch.setattr(recovery, "first_attempt", unavailable)
@@ -1811,7 +1819,7 @@ def test_publisher_allows_new_head_after_unbound_or_revoked_removal(tmp_path, mo
     assert recovery.first_attempt(recovery.ledger_path(fresh.root), fresh.repository, 42, HEAD_B) is None
 
 
-def test_publisher_requires_recovery_for_unobserved_current_head_removal(tmp_path, monkeypatch):
+def test_unobserved_current_head_removal_needs_no_recovery_evidence(tmp_path, monkeypatch):
     fake = FakeGitHub()
     fake.events = [{"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A}, "created_at": "2026-09-23T00:00:01Z"}]
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
@@ -1820,7 +1828,7 @@ def test_publisher_requires_recovery_for_unobserved_current_head_removal(tmp_pat
     assert "enqueue" in mutations(fake)
 
 
-def test_publisher_removal_read_failure_refuses_initial_keeper_enqueue(tmp_path, monkeypatch):
+def test_removal_read_failure_does_not_block_initial_keeper_enqueue(tmp_path, monkeypatch):
     fake = FakeGitHub()
     fake.removal_read_failure = True
     _lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
