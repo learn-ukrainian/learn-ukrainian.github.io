@@ -1,4 +1,4 @@
-"""Native Muse workers. Driver and review admission are deliberately separate.
+"""Native Muse command construction and run-scoped JSONL accounting.
 
 The exec JSONL envelope is not the MSP notification schema. Only the native
 run terminal and its run-scoped usage can establish transport completion.
@@ -20,21 +20,27 @@ from typing import Literal
 from uuid import UUID, uuid4
 
 from scripts.common.jsonl import jsonl_lines
-from scripts.guardrails.worktree_containment import _require_real_directories, is_dispatch_worktree
+from scripts.guardrails.worktree_containment import (
+    _require_real_directories,
+    is_dispatch_worktree,
+    resolve_main_root,
+)
+from scripts.orchestration.fleet_repos import load_fleet_repos
 
 from ..env_sanitize import _is_provider_safe_name, build_probe_env
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
 from .base import InvocationPlan
 
-MUSE_MODELS = frozenset({"muse-wonder-full-1.0", "muse-spark-1.3"})
+MUSE_MODELS = frozenset({"muse-wonder-full-1.0", "muse-wonder-1.0", "muse-spark-1.3"})
 _EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
 _MAX_JSONL_BYTES = 16 * 1024 * 1024
 _TOOLS = {
     "read-only": ("read_file",),
     "workspace-write": ("read_file", "write_file", "edit_file"),
+    "danger": ("read_file", "write_file", "edit_file"),
 }
-_PROFILES = {"read-only": ":read-only", "workspace-write": ":ask-me"}
+_PROFILES = {"read-only": ":read-only", "workspace-write": ":ask-me", "danger": ":ask-me"}
 _PASSIVE_EVENTS = frozenset(
     {
         "runtime.command.accepted",
@@ -125,6 +131,7 @@ class MuseRunEvidence:
     calls: int
     completed_calls: int
     total_tokens: int
+    contributor_mode: str = "off"
     workspace_matches: Literal[True] = True
     children_included: Literal[False] = False
     failed_calls: Literal[0] = 0
@@ -175,24 +182,8 @@ class MuseAdapter:
     ) -> InvocationPlan:
         model = resolve_muse_model(model)
         config = tool_config or {}
-        if mode not in self.supported_modes:
-            raise ValueError("muse_worker_mode_refused")
-        if effort is not None and effort not in _EFFORTS:
-            raise ValueError("muse_worker_effort_refused")
-        if session_id or config.get("muse_worker") is not True or not task_id:
-            raise ValueError("muse_delegate_worker_required")
         if not _is_provider_safe_name("MUSE_NO_AUTO_UPDATE", "muse"):
             raise ValueError("muse_child_environment_not_admitted")
-        if set(config) - {
-            "muse_worker", "muse_role", "run_nonce", "muse_tmp_root", "read_only_tmp_root",
-            "max_model_steps", "max_tool_output_bytes",
-        }:
-            raise ValueError("muse_worker_configuration_refused")
-        require_muse_execution_model(model)
-        if model != self.default_model or (config.get("muse_role"), mode) not in {
-            ("implementation", "workspace-write"), ("investigation", "read-only"),
-        }:
-            raise ValueError("muse_worker_role_mode_refused")
         nonce = config.get("run_nonce")
         workspace = _workspace(cwd, nonce)
         return self._plan(
@@ -206,6 +197,8 @@ class MuseAdapter:
             effort=effort,
             max_model_steps=config.get("max_model_steps"),
             max_tool_output_bytes=config.get("max_tool_output_bytes"),
+            contributor_mode=config.get("muse_contributor_mode", "off"),
+            public_task=config.get("muse_public_task"),
         )
 
     def preview_invocation(
@@ -219,6 +212,8 @@ class MuseAdapter:
         run_nonce: str,
         scratch_root: str,
         effort: str | None,
+        contributor_mode: str = "off",
+        public_task: str | None = None,
     ) -> InvocationPlan:
         """Plan a not-yet-created worktree without granting execution admission."""
         return self._plan(
@@ -231,6 +226,8 @@ class MuseAdapter:
             scratch_root=scratch_root,
             effort=effort,
             preview=True,
+            contributor_mode=contributor_mode,
+            public_task=public_task,
         )
 
     def _plan(
@@ -247,11 +244,23 @@ class MuseAdapter:
         preview: bool = False,
         max_model_steps: object = None,
         max_tool_output_bytes: object = None,
+        contributor_mode: str = "off",
+        public_task: str | None = None,
     ) -> InvocationPlan:
         if mode not in self.supported_modes or (effort is not None and effort not in _EFFORTS):
             raise ValueError("muse_worker_mode_or_effort_refused")
         if not task_id:
             raise ValueError("muse_delegate_worker_required")
+        # The caller classifies prompt/data content. Refuse the known private
+        # repository scopes without claiming to certify arbitrary input as public.
+        root = resolve_main_root(workspace if not preview else Path(__file__))
+        if any(repo.role.startswith("private-") and root.name == repo.local_name
+               for repo in load_fleet_repos().values()):
+            raise ValueError("muse_private_input_refused")
+        if contributor_mode not in {"off", "on"} or (
+            contributor_mode == "on" and public_task not in {"test", "probe", "canary", "qualification"}
+        ):
+            raise ValueError("muse_public_contributor_task_required")
         if max_model_steps is not None and (type(max_model_steps) is not int or max_model_steps < 1):
             raise ValueError("muse_model_step_budget_invalid")
         if max_tool_output_bytes is not None and (
@@ -295,7 +304,7 @@ class MuseAdapter:
             "--reasoning-effort",
             effort or self.default_effort,
             "--contributor-mode",
-            "off",
+            contributor_mode,
             "--session-id",
             provider_session,
             "--workspace",
@@ -339,6 +348,8 @@ class MuseAdapter:
                 "preview": preview,
                 "max_model_steps": max_model_steps,
                 "max_tool_output_bytes": max_tool_output_bytes,
+                "contributor_mode": contributor_mode,
+                "public_task": public_task,
             },
         )
 
@@ -360,6 +371,9 @@ class MuseAdapter:
             if len(stdout.encode("utf-8")) > _MAX_JSONL_BYTES:
                 raise ValueError("muse_stream_too_large")
             mode = plan.metadata["mode"]
+            contributor_mode = plan.cmd[plan.cmd.index("--contributor-mode") + 1]
+            if contributor_mode not in {"off", "on"} or contributor_mode != plan.metadata["contributor_mode"]:
+                raise ValueError("muse_contributor_invocation_invalid")
             if (
                 mode not in _TOOLS
                 or plan.metadata["permission_profile"] != _PROFILES[mode]
@@ -534,12 +548,13 @@ class MuseAdapter:
                 input_tokens=input_tokens, output_tokens=output_tokens,
                 cached_tokens=counters["cached_tokens"], reasoning_tokens=counters["reasoning_tokens"],
                 calls=calls, completed_calls=usage["completed_calls"], total_tokens=input_tokens + output_tokens,
+                contributor_mode=contributor_mode,
             )
             return MuseParseResult(
                 ok=True, response=response, session_id=session,
                 tokens=input_tokens + output_tokens, muse_run=evidence,
             )
-        except (ValueError, TypeError, KeyError, AttributeError) as exc:
+        except (ValueError, TypeError, KeyError, AttributeError, IndexError) as exc:
             return MuseParseResult(
                 ok=False,
                 response="",

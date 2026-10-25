@@ -80,6 +80,7 @@ from scripts.agent_runtime.adapters.muse import MuseRunEvidence
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
+from scripts.secret_redactor import redact_value
 
 from .accounting import model_accounting_fields
 from .adapters.base import AgentAdapter
@@ -1145,6 +1146,7 @@ def _build_usage_record(
     agy_retry_reason: str | None = None,
     agy_telemetry: AgyTelemetry | None = None,
     muse_run: MuseRunEvidence | None = None,
+    muse_contributor_mode: str | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Adapters may omit retry metadata; reject untyped values before using or serializing them.
@@ -1247,6 +1249,11 @@ def _build_usage_record(
             record["agy_killed_commands"] = kept
     if isinstance(agy_telemetry, AgyTelemetry) and not privacy_limited:
         record.update(agy_telemetry.task_fields())
+    if agent == "muse":
+        record["muse_contributor_mode"] = muse_contributor_mode
+        # Expose the same privacy-safe record that the durable sink writes,
+        # after the adapter has validated the raw workspace and run bindings.
+        return redact_value(record)
     return record
 
 
@@ -3914,6 +3921,7 @@ def _invoke_impl(
         agy_retry_reason=getattr(parse, "agy_retry_reason", None),
         agy_telemetry=getattr(parse, "agy_telemetry", None),
         muse_run=getattr(parse, "muse_run", None),
+        muse_contributor_mode=(plan.metadata.get("contributor_mode") if agent_name == "muse" else None),
     )
     write_record(record)
 
@@ -3994,10 +4002,6 @@ def _refuse_retired_launch_model(agent_name: str, model: str | None, tool_config
     refusal = retired_model_refusal(effective_model)
     if refusal:
         raise ValueError(f"Agent {agent_name!r}: {refusal}")
-    if agent_name == "muse":
-        from .adapters.muse import require_muse_execution_model
-
-        require_muse_execution_model(effective_model)
 
 
 def invoke(

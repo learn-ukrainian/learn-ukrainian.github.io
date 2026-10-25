@@ -741,11 +741,9 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
             "dispatch", "--agent", "muse", "--model", model, "--task-id", "worker-contract",
             "--prompt", "fixture", "--mode", "read-only", "--research-role", "investigation",
         ])
-        assert delegate._muse_dispatch_refusal(args) == (
-            None if model == "muse-wonder-full-1.0" else "muse_execution_not_admitted"
-        )
+        assert delegate._muse_dispatch_refusal(args) is None
         args.research_role = "driver"
-        assert delegate._muse_dispatch_refusal(args) == "muse_ordinary_worker_only"
+        assert delegate._muse_dispatch_refusal(args) is None
         args.research_role = "investigation"
         args.model = "gpt-6.1-sol"
         assert delegate._muse_dispatch_refusal(args) == "muse_worker_model_refused"
@@ -1223,13 +1221,17 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
             "sources": ["https://dev.meta.ai/docs/muse-code"],
         },
         "muse-spark-1.3": {
-            "family": "meta", "tier": "compatibility", "lifecycle": "hold",
+            "family": "meta", "tier": "compatibility", "lifecycle": "active",
             "roles": ["coding"], "transports": ["native_muse"],
             "strengths": ["explicit_native_worker"],
             "weaknesses": ["worker_qualification_pending", "no_review_or_approval_authority"],
             "notes": "Explicit delegate worker only. Spark cannot approve or review.",
             "sources": ["https://dev.meta.ai/docs/muse-code"],
         },
+    }
+    workers["muse-wonder-1.0"] = {
+        **workers["muse-spark-1.3"],
+        "notes": "Explicit delegate worker only. Wonder cannot approve or review.",
     }
     assert not workers.keys() & expected["catalog"]["models"].keys()
     expected["catalog"]["models"].update(workers)
@@ -1291,11 +1293,30 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                         ).replace(
                             "cursor,glm}", "cursor,glm,muse}"
                         ).replace("cursor, glm)", "cursor, glm, muse)")
+                        if receipt.get("exception") == "SystemExit":
+                            old_usage = (
+                                '                            [--mode {read-only,workspace-write,danger}] [--model MODEL] [--claude-account LABEL]\n'
+                                '                            [--provider {openrouter}] [--effort {low,medium,high,xhigh,max}] [--repo KEY] [--cwd CWD]\n'
+                                '                            [--worktree [WORKTREE]] [--pr PR] [--pinned-head SHA] [--branch EXISTING] [--keep-worktree]\n'
+                                '                            [--finalize-open-pr] [--require-review-verdict] [--review-profile {code,infra,ukrainian}]\n'
+                                '                            [--review-author-model MODEL] [--review-risk {low,medium,high,critical}]\n'
+                            )
+                            new_usage = (
+                                '                            [--mode {read-only,workspace-write,danger}] [--model MODEL]\n'
+                                '                            [--muse-contributor-mode {off,on}] [--muse-public-task {test,probe,canary,qualification}]\n'
+                                '                            [--claude-account LABEL] [--provider {openrouter}] [--effort {low,medium,high,xhigh,max}]\n'
+                                '                            [--repo KEY] [--cwd CWD] [--worktree [WORKTREE]] [--pr PR] [--pinned-head SHA]\n'
+                                '                            [--branch EXISTING] [--keep-worktree] [--finalize-open-pr] [--require-review-verdict]\n'
+                                '                            [--review-profile {code,infra,ukrainian}] [--review-author-model MODEL]\n'
+                                '                            [--review-risk {low,medium,high,critical}]\n'
+                            )
+                            assert receipt["stderr"].count(old_usage) == 1
+                            receipt["stderr"] = receipt["stderr"].replace(old_usage, new_usage)
                         refusal = receipt.get("value", {}).get("refusal")
                         if refusal and "Cooler seats from budget snapshot:" in refusal:
                             receipt["value"]["refusal"] = refusal.replace("kimi, qwen.", "kimi, muse, qwen.")
                 elif surface == "adapters":
-                    receipt = {"exit_status": 1, "exception": "ValueError", "error": "muse_delegate_worker_required",
+                    receipt = {"exit_status": 1, "exception": "ValueError", "error": "muse_worker_nonce_required",
                                "stdout": "", "stderr": ""}
                 elif surface == "reviewer":
                     template_case = {k: v for k, v in case.items() if k not in {"subject_families", "author_family"}}

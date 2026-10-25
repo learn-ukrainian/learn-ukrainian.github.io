@@ -4105,12 +4105,13 @@ def _muse_stream_fixture(tmp_path, model="muse-wonder-full-1.0"):
     session = "11111111-1111-4111-8111-111111111111"
     command = "22222222-2222-4222-8222-222222222222"
     task = "33333333-3333-4333-8333-333333333333"
-    plan = InvocationPlan(cmd=["fixture-muse"], cwd=tmp_path, metadata={
+    plan = InvocationPlan(cmd=["fixture-muse", "--contributor-mode", "off"], cwd=tmp_path, metadata={
         "task_id": "muse-interface", "run_nonce": "0123456789abcdef",
         "provider_session_id": session, "model": model, "workspace": str(tmp_path),
         "mode": "read-only", "permission_profile": ":read-only", "toolset": ["read_file"],
         "cli_version": "Muse Code 1.4.11 (1.4.11-R6667.1)",
         "cli_sha256": "a" * 64, "prompt_sha256": "b" * 64, "preview": False,
+        "contributor_mode": "off",
     })
     records = []
 
@@ -4179,6 +4180,7 @@ def test_muse_complete_stream_preserves_bound_token_accounting(tmp_path, model):
     assert companion["observed_model"] is None
     assert companion["identity_state"] == "unknown"
     assert companion["effective_permissions"] == "unknown"
+    assert companion["contributor_mode"] == "off"
     assert companion["cli_sha256"] == [170] * 32
     assert companion["prompt_sha256"] == [187] * 32
     assert bytes(companion["cli_sha256"]).hex() == plan.metadata["cli_sha256"]
@@ -4252,6 +4254,7 @@ def test_muse_runner_success_keeps_usage_in_durable_record(tmp_path, monkeypatch
     assert companion["observed_model"] is durable["observed_model"] is None
     assert companion["identity_state"] == durable["identity_state"] == "unknown"
     assert companion["effective_permissions"] == "unknown"
+    assert companion["contributor_mode"] == "off"
     assert companion["cli_sha256"] == [170] * 32
     assert companion["prompt_sha256"] == [187] * 32
     assert bytes(companion["cli_sha256"]).hex() == plan.metadata["cli_sha256"]
@@ -4384,15 +4387,16 @@ def _muse_planning_fixture(tmp_path, monkeypatch, version):
 
 
 def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
-    """M04: losing step/time bounds or durable usage must not silently unbound a task."""
+    """M04: preserve task bounds and whole durable usage equality through real redaction."""
     import io
     from unittest.mock import MagicMock
 
     from agent_runtime import runner, usage
     from scripts.agent_runtime.adapters import muse
+    from scripts.secret_redactor import REDACTION
 
     adapter, workspace, scratch, probes = _muse_planning_fixture(
-        tmp_path, monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
+        tmp_path / f"password={TOKEN}", monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
     )
     fixture_plan, records = _muse_stream_fixture(workspace)
     monkeypatch.setattr(muse, "uuid4", lambda: fixture_plan.metadata["provider_session_id"])
@@ -4409,9 +4413,9 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     monkeypatch.setattr(usage, "_usage_dir", lambda: store)
 
     result = runner.invoke(
-        "muse", "fixture", mode="workspace-write", cwd=workspace, model="muse-wonder-full-1.0",
+        "muse", "fixture", mode="read-only", cwd=workspace, model=None,
         task_id="muse-interface", effort="high", hard_timeout=45,
-        tool_config={"muse_worker": True, "muse_role": "implementation",
+        tool_config={"muse_contributor_mode": "on", "muse_public_task": "qualification",
                      "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch),
                      "max_model_steps": 8, "max_tool_output_bytes": 8192},
     )
@@ -4424,8 +4428,15 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     assert len(files) == 1
     durable = json.loads(files[0].read_text())
     assert durable == result.usage_record
+    assert f"password={REDACTION}" in durable["cwd"]
+    assert str(workspace) not in json.dumps(durable)
+    assert TOKEN not in json.dumps(result.usage_record)
+    assert usage.redact_value(result.usage_record) == result.usage_record
+    assert len(files[0].read_bytes()) <= 4096
+    assert plan.cwd == workspace
+    assert records[2]["payload"]["record"]["workspace_root"] == str(workspace)
     assert durable["muse_run"]["total_tokens"] == 120
-    assert durable["muse_run"]["declared_mode"] == "workspace-write"
+    assert durable["muse_run"]["declared_mode"] == "read-only"
     assert len(probes) == 1
     assert plan.cmd[plan.cmd.index("--max-model-steps") + 1] == "8"
     assert plan.cmd[plan.cmd.index("--max-tool-output-bytes") + 1] == "8192"
@@ -4433,18 +4444,22 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     assert plan.metadata["max_tool_output_bytes"] == 8192
     assert Path(plan.cmd[-1]).read_text() == "fixture"
 
+    assert plan.cmd[plan.cmd.index("--contributor-mode") + 1] == "on"
+    assert durable["muse_contributor_mode"] == durable["muse_run"]["contributor_mode"] == "on"
+
 
 @pytest.mark.parametrize("mode,role", [("read-only", "investigation"), ("workspace-write", "implementation")])
 def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch, mode, role):
     """M05: CLI changes must preserve explicit profiles and confinement without a version pin."""
+    from scripts.agent_runtime.adapters import muse
+
     adapter, workspace, scratch, probes = _muse_planning_fixture(
         tmp_path, monkeypatch, "Muse Code 1.4.12 (1.4.12-R6668.1)",
     )
     plan = adapter.build_invocation(
         prompt="fixture", mode=mode, cwd=workspace, model="muse-wonder-full-1.0",
         task_id="muse-interface", session_id=None, effort="high",
-        tool_config={"muse_worker": True, "muse_role": role,
-                     "run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
+        tool_config={"run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
     )
     assert len(probes) == 1
     assert plan.metadata["cli_version"] == "Muse Code 1.4.12 (1.4.12-R6668.1)"
@@ -4464,3 +4479,21 @@ def test_muse_installed_cli_preserves_explicit_permissions(tmp_path, monkeypatch
     assert plan.env_overrides == {"MUSE_NO_AUTO_UPDATE": "1"}
     assert "GH_TOKEN" in plan.env_unsets
     assert Path(plan.cmd[-1]).read_text() == "fixture"
+
+    with monkeypatch.context() as private_scope:
+        private_root = next(repo.local_name for repo in muse.load_fleet_repos().values()
+                            if repo.role.startswith("private-"))
+        private_scope.setattr(muse, "resolve_main_root", lambda path: workspace / private_root)
+        with pytest.raises(ValueError, match="muse_private_input_refused"):
+            adapter.build_invocation(
+                prompt="fixture", mode=mode, cwd=workspace, model=None,
+                task_id="muse-interface", session_id=None,
+                tool_config={"run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch)},
+            )
+    with pytest.raises(ValueError, match="muse_public_contributor_task_required"):
+        adapter.build_invocation(
+            prompt="fixture", mode=mode, cwd=workspace, model=None,
+            task_id="muse-interface", session_id=None,
+            tool_config={"run_nonce": "0123456789abcdef", "muse_tmp_root": str(scratch),
+                         "muse_contributor_mode": "on"},
+        )
