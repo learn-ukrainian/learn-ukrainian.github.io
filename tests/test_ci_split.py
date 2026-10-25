@@ -662,7 +662,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
 
     guards = [
         'tests/test_delegate_review_admission.py', 'tests/review/test_routing_consumers.py',
-        'tests/test_model_catalog_literals_guard.py', 'tests/agent_runtime/test_lane_probe.py',
+        'tests/agent_runtime/test_lane_probe.py',
         'tests/common/test_jsonl_splitlines_guard.py', 'tests/test_review_reviewer_resolver.py',
     ]
     assert (_REPO_ROOT / affected.GUARDS).read_text().splitlines() == guards
@@ -696,7 +696,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert selected['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
     assert selected['deferred_files'] == []
     assert selected['deleted_test_files'] == ['tests/test_deleted.py', 'tests/test_old.py']
-    assert selected['estimate_seconds'] == 68
+    assert selected['estimate_seconds'] == 67
     payload = {'action': 'opened', 'repository': {'default_branch': 'fixture-base'},
                'pull_request': {'number': 7, 'base': {'sha': base}, 'head': {'sha': head}}}
     event = tmp_path / 'event.json'
@@ -708,7 +708,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     monkeypatch.setattr(sys, 'argv', ['pr-affected'])
     assert affected.main() == 0
     record = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
-    assert record['candidate'] == candidate and record['reported_cases'] == 8
+    assert record['candidate'] == candidate and record['reported_cases'] == 7
     assert record['skipped_cases'] == 0 and record['failed_cases'] == 0
     assert 'full pytest was not run' in (tmp_path / 'summary').read_text()
     assert 'deferred test-case count: UNKNOWN' in (tmp_path / 'summary').read_text()
