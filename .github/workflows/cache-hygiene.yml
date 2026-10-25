@@ -20,7 +20,9 @@ name: Cache hygiene
 #
 # A pull request that changes this workflow or one of its sparse inputs checks
 # out the same paths and imports the script (runpy, run_name not_main). That
-# job does not list or delete caches. Deletion stays on main.
+# job does not list or delete caches. Deletion stays on main. The import check
+# has its own concurrency group per pull request. Schedule and workflow_dispatch
+# stay on cache-hygiene, so neither can replace the other's pending run.
 
 on:
   schedule:
@@ -44,7 +46,10 @@ on:
 permissions: {}
 
 concurrency:
-  group: cache-hygiene
+  # Same shape as the other pull_request workflows, with the non-PR side fixed
+  # as cache-hygiene instead of a unique run id. cancel-in-progress stays false
+  # so an in-progress prune is not cancelled.
+  group: ${{ github.event_name == 'pull_request' && format('cache-hygiene-{0}-{1}', github.event_name, github.event.pull_request.number) || 'cache-hygiene' }}
   cancel-in-progress: false
 
 jobs:
