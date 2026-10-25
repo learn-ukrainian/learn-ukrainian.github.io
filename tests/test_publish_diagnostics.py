@@ -279,7 +279,7 @@ def test_diagnostic_cli_help(capsys):
     help_text = capsys.readouterr().out
     assert "code-scanning-alerts" in help_text and "check-annotations" in help_text
     assert "dependabot-alerts" in help_text
-    assert "takes no selectors" in help_text and "possibly null" in help_text
+    assert "takes no selectors" in help_text and "possibly null" in help_text and "physical checkout" in " ".join(help_text.split())
     assert "either --ref or --number" in help_text
 
 
@@ -294,3 +294,4 @@ def test_diagnostic_cli_repo_help_describes_origin_admission(operation, capsys):
         "For code-scanning-alerts and check-annotations, admission allows only the checkout's origin repository."
         in help_text
     )
+    assert "inherited Git overrides cannot select it" in help_text
