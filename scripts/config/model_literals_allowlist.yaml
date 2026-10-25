@@ -6421,7 +6421,7 @@ entries:
   kind: migration_debt
   reason: 'Exact Muse selector inventory for #11537; #9302 consumer migration owned by infra.'
 - path: scripts/delegate.py
-  scope: _run_worker
+  scope: _run_worker.muse_binding_refused
   context: expression
   id: muse-wonder-full-1.0
   count: 1
