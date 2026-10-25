@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import select
 import shutil
 import socket
 import subprocess
@@ -503,23 +504,12 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
     (private_root / ".venv" / "bin" / "python").symlink_to(VENV_PYTHON)
     env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
 
-    port = find_free_port()
-    script_path = tmp_path / "services.sh"
-    script_path.write_text(
-        SERVICES_SH.read_text(encoding="utf-8").replace("8769", str(port)),
-        encoding="utf-8",
-    )
-    script_path.chmod(0o755)
-
-    _copy_data_volume_guard(script_path)
-
     health = subprocess.Popen(
         [
-            str(VENV_PYTHON),
+            sys.executable,
             "-c",
             (
                 "from http.server import BaseHTTPRequestHandler, HTTPServer\n"
-                f"port = {port}\n"
                 "class H(BaseHTTPRequestHandler):\n"
                 "    def do_GET(self):\n"
                 "        body = b'ok'\n"
@@ -530,24 +520,39 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
                 "        self.wfile.write(body)\n"
                 "    def log_message(self, *args):\n"
                 "        return\n"
-                "HTTPServer(('127.0.0.1', port), H).serve_forever()\n"
+                "server = HTTPServer(('127.0.0.1', 0), H)\n"
+                "print(server.server_address[1], flush=True)\n"
+                "server.serve_forever()\n"
             ),
-        ]
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
     )
     reap_process_on_exit(health)
-
-    ssh_shim = tmp_path / "ssh"
-    ssh_shim.write_text("#!/bin/sh\nwhile true; do sleep 30; done\n", encoding="utf-8")
-    ssh_shim.chmod(0o755)
-    tunnel = subprocess.Popen([str(ssh_shim), "-N", "job-tunnel"])
-    reap_process_on_exit(tunnel)
-    set_pids([tunnel.pid])
+    tunnel = None
     try:
-        deadline = time.monotonic() + 60
-        while time.monotonic() < deadline:
-            if not is_port_free(port):
-                break
-            time.sleep(0.05)
+        assert select.select([health.stdout], [], [], 5)[0], "Health server readiness timed out"
+        ready = health.stdout.readline().strip()
+        if not ready:
+            _, errors = health.communicate(timeout=5)
+            pytest.fail(f"Health server exited before readiness: {errors}")
+        port = int(ready)
+        assert health.poll() is None, "Health server exited after binding"
+        script_path = tmp_path / "services.sh"
+        script_path.write_text(
+            SERVICES_SH.read_text(encoding="utf-8").replace("8769", str(port)),
+            encoding="utf-8",
+        )
+        script_path.chmod(0o755)
+        _copy_data_volume_guard(script_path)
+
+        ssh_shim = tmp_path / "ssh"
+        ssh_shim.write_text("#!/bin/sh\nwhile true; do sleep 30; done\n", encoding="utf-8")
+        ssh_shim.chmod(0o755)
+        tunnel = subprocess.Popen([str(ssh_shim), "-N", "job-tunnel"])
+        reap_process_on_exit(tunnel)
+        set_pids([tunnel.pid])
         result = subprocess.run(
             ["bash", str(script_path), "status", "work"],
             capture_output=True,
@@ -562,10 +567,18 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
         assert "blocked" not in result.stdout
         assert "foreign_listener" not in result.stdout
     finally:
-        tunnel.terminate()
+        if tunnel is not None:
+            tunnel.terminate()
         health.terminate()
-        tunnel.wait(timeout=5)
-        health.wait(timeout=5)
+        try:
+            if tunnel is not None:
+                tunnel.wait(timeout=5)
+        finally:
+            try:
+                health.wait(timeout=5)
+            finally:
+                health.stdout.close()
+                health.stderr.close()
 
 
 def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> None:
