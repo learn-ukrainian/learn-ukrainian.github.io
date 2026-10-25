@@ -79,7 +79,9 @@ never fine.
    priority deliverable, the owning lane reports one line every cycle:
    state | exact blocker | who fixes it | next step | ETA. Treat any of these as
    foot-dragging: no report by the deadline, a passed ETA, the same blocker in two
-   cycles, an idle lane, or a lane on other work while a priority deliverable is open.
+   cycles, unexplained inactivity, or other work displacing the priority deliverable or
+   its blockers. An authorized hold (drive-epic §2c), an operator stop, and other ready
+   work in worker slots the deliverable cannot use are not foot-dragging.
    Escalate one step per cycle until the result lands:
    1. Demand: a Fleet order marked URGENT with a 10-minute report deadline, plus a
       keeper nudge if the pane is idle.
