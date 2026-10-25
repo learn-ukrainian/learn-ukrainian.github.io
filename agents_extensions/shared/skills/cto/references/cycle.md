@@ -34,8 +34,13 @@ never fine.
    belong in the private operations doc. A tick must report no errors and must list
    every running lane pane. An error, or no lane panes, means no lane gets nudged; fix it
    this cycle. After a keeper config edit, verify one tick before nudging lanes.
-   Read the keeper's per-CLI context flow: Codex compacts natively; Claude waits for the
-   keeper's tokened handoff prompt. Never order Codex to stop for a Claude rollover.
+   Read the keeper's per-CLI context flow: Claude waits for the keeper's tokened handoff
+   prompt. Codex compacts natively, but a Codex driver hands off to a fresh session after
+   its 4th compaction and before its 8th (operator 2026-10-25). Count each live Codex
+   driver thread's compactions from its rollout file under `~/.codex/sessions`
+   (`"type":"compacted"` events). At 4 or more, order the handoff that cycle; at 7, restart
+   the lane yourself once it shows HANDOFF-DONE. When you record a new lane rule, measure
+   every lane against it in the same cycle and name the control that will enforce it.
 4. **Open PRs**, from the scorecard metrics when present, in every repository the fleet
    lands in, with `number`, `headRefOid`, `mergeable`, `mergeStateStatus`, `isDraft`,
    `reviewDecision`. Per PR: a review of record at the current `headRefOid` (verdict,
