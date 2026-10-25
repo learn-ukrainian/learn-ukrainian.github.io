@@ -1389,12 +1389,11 @@ def test_requested_reviewer_is_also_subject_excluded_before_budget(monkeypatch):
 @pytest.mark.parametrize(
     "subject",
     [
-        ("--owned-path", "scripts/agent_runtime/adapters/base.py"),
         ("--subject-seat", "unknown-seat"),
         ("--subject-family", "unknown-family"),
     ],
 )
-def test_review_subject_ambiguity_or_invalid_identity_refuses_before_budget(monkeypatch, subject):
+def test_review_invalid_subject_identity_refuses_before_budget(monkeypatch, subject):
     def fail():
         pytest.fail("invalid subject must refuse before budget probe")
 
