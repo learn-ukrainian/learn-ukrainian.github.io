@@ -6765,6 +6765,7 @@ TYPED_CAUSE_CODES = frozenset(
         "kimi_worktree_mismatch",
         "review_admission_refused",
         "mechanical_admission_refused",
+        "muse_worker_task_binding_refused",
         "boundary_remove_failed",
         "boundary_install_failed",
         # The worker's own outcome.
@@ -12148,6 +12149,23 @@ def _run_worker(
         or state.get("mode") != mode or state.get("run_nonce") != run_nonce
         or not run_nonce or Path(state.get("cwd", "")).resolve() != Path(cwd_str).resolve()
     ):
+        # A stale/foreign worker must not settle another attempt's record.
+        with task_state_lock(state_path):
+            current = _read_state_json(state_path) or {}
+            if (
+                current.get("task_id") == task_id and run_nonce and current.get("run_nonce") == run_nonce
+                and current.get("status") in {"spawning", "running"}
+            ):
+                current.update(
+                    status="failed",
+                    finished_at=datetime.now(UTC).isoformat(),
+                    returncode=1,
+                    exit_code=1,
+                    returncode_reason="muse_worker_task_binding_refused",
+                    last_error="muse_worker_task_binding_refused",
+                    stderr_excerpt="muse_worker_task_binding_refused",
+                )
+                _write_record_unlocked(state_path, current)
         print("❌ muse_worker_task_binding_refused", file=sys.stderr)
         return 1
     state["worker_identity"] = capture_worker_identity(os.getpid(), self_process=True)
@@ -16371,6 +16389,9 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if dispatch_agent == "muse":
+            # Replay worker admission with the exact role accepted from the caller.
+            initial_state["research_role"] = getattr(args, "research_role", None)
         if routing.budget_diagnostics:
             initial_state["routing_facts"] = routing.budget_diagnostics
         if review_brief_warnings:

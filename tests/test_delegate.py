@@ -24931,8 +24931,10 @@ def test_terminal_dispatch_event_defaults_missing_identity_to_unknown(monkeypatc
     ("muse-wonder-full-1.0", "investigation", "workspace-write", "muse_worker_role_mode_refused"),
     ("muse-spark-1.3", "implementation", "workspace-write", "muse_worker_role_mode_refused"),
 ])
-def test_muse_role_mode_admission_blocks_unclassified_execution(tmp_path, monkeypatch, model, role, mode, expected):
-    """M03: only the approved author/write and diagnosis/read map can reach planning."""
+def test_muse_role_mode_admission_blocks_unclassified_execution(
+    tmp_tasks_dir, isolated_dispatch_repo, monkeypatch, model, role, mode, expected,
+):
+    """M03: persisted caller roles survive admission; unclassified workers cannot run."""
     from scripts.agent_runtime.adapters import muse
 
     monkeypatch.setattr(muse, "require_muse_execution_model", lambda model: model)
@@ -24942,9 +24944,79 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(tmp_path, monkey
     ])
     args.research_role = role
     assert delegate._muse_dispatch_refusal(args) == expected
-    subprocess.run(["git", "init", str(tmp_path)], check=True, capture_output=True, timeout=30)
-    workspace = tmp_path / ".worktrees" / "dispatch" / "codex" / "muse-interface"
-    workspace.mkdir(parents=True)
+    args.worktree = "auto"
+    args.keep_worktree = True
+    telemetry = InvocationTelemetry(model="muse-wonder-full-1.0", effort="high", cli_version="fixture")
+    with (
+        patch("agent_runtime.telemetry.resolve_dispatch_start_telemetry", return_value=telemetry),
+        patch("delegate.subprocess.Popen", return_value=MagicMock(pid=12345)) as spawn,
+    ):
+        if expected is not None:
+            assert delegate.cmd_dispatch(args) == 2
+            spawn.assert_not_called()
+            assert not delegate._state_path("muse-interface").exists()
+        # Dispatch supplies the persisted state for worker replay. The adapter
+        # checks below retain both role/mode contracts.
+        args.model = "muse-wonder-full-1.0"
+        args.mode = "read-only"
+        args.research_role = "investigation"
+        args_hash = delegate.dispatch_args_sha256(args)
+        assert delegate.cmd_dispatch(args) == 0
+    state_path = delegate._state_path("muse-interface")
+    state = delegate._read_state(state_path)
+    assert state["research_role"] == args.research_role
+    assert state["dispatch_args_sha256"] == args_hash
+    workspace = Path(state["cwd"])
+    if expected is not None:
+        # Corrupt only a real dispatch record to exercise worker replay.
+        state.update(model=model, mode=mode, research_role=role)
+        if role is None:
+            del state["research_role"]
+        delegate._write_state_atomic(state_path, state)
+    with patch("agent_runtime.runner.invoke") as invoke:
+        record_bytes = state_path.read_bytes()
+        assert delegate._run_worker(
+            task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
+            cwd_str=str(workspace), model=args.model, hard_timeout=60, run_nonce="foreign-nonce",
+        ) == 1
+        invoke.assert_not_called()
+        assert state_path.read_bytes() == record_bytes
+    if expected is None:
+        result = Result(
+            ok=False, agent="muse", model=model, mode=args.mode, response="",
+            stderr_excerpt="fixture refusal", duration_s=0.1, session_id=None,
+            rate_limited=False, stalled=False, returncode=1,
+        )
+        with patch("agent_runtime.runner.invoke", return_value=result) as invoke:
+            assert delegate._run_worker(
+                task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
+                cwd_str=str(workspace), model=model, hard_timeout=60, run_nonce=state["run_nonce"],
+            ) == 1
+        invoke.assert_called_once()
+        launch = invoke.call_args.kwargs
+        assert launch["tool_config"]["muse_role"] == "investigation"
+        assert launch["tool_config"]["run_nonce"] == state["run_nonce"]
+        assert launch["mode"] == "read-only"
+        assert launch["model"] == model
+        assert Path(launch["cwd"]) == workspace
+        assert delegate._read_state(state_path)["status"] == "failed"
+    # Review typing and invalid persisted role/model bindings must stop
+    # before runtime invocation and leave an honest attention state.
+    with patch("agent_runtime.runner.invoke") as invoke:
+        assert delegate._run_worker(
+            task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
+            cwd_str=str(workspace), model=args.model, hard_timeout=60, run_nonce=state["run_nonce"],
+            require_review_verdict=expected is None,
+        ) == 1
+        invoke.assert_not_called()
+    refused = delegate._read_state(state_path)
+    assert refused["status"] == "failed"
+    assert refused["last_error"] == (
+        "review_admission_refused" if expected is None else "muse_worker_task_binding_refused"
+    )
+    assert refused["finished_at"] and refused["status"] != "done"
+    if expected is not None:
+        assert refused["returncode"] == refused["exit_code"] == 1
     planned = []
 
     def plan(**kwargs):
