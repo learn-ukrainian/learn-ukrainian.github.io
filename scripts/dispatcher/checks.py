@@ -3,13 +3,58 @@
 import re
 import shutil
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 import yaml
+from markdown_it.helpers import parseLinkDestination
 
 from scripts.dispatcher import git
 from scripts.dispatcher.types import TaskSpec
 
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
+
+
+def _reference_paths(text: str):
+    # Keep prose/quoted paths as well as CommonMark destinations, including incomplete links.
+    tokens = re.findall(r"""["'`]([^"'`\n]+)["'`]|([^\s<>"'`]+)""", text)
+    references = [
+        ((quoted or bare).split("=", 1)[-1].strip("()[]{}").rstrip(".,;:!?"), False) for quoted, bare in tokens
+    ]
+    for match in re.finditer(r"\]\(\s*|\]:[ \t]*", text):
+        destination = parseLinkDestination(text, match.end(), len(text))
+        if not destination.ok:
+            if text[match.end() : match.end() + 1] == ")":
+                continue  # CommonMark permits an empty inline destination.
+            raise ValueError("private path check cannot parse a file reference")
+        references.append((destination.str, True))
+    for reference, encoded in references:
+        original = reference
+        if original:
+            yield Path(original).expanduser()
+        try:
+            while (parts := urlsplit(reference)).scheme:
+                if parts.scheme == "file":
+                    if parts.netloc.lower() not in {"", "localhost"} or not parts.path:
+                        raise ValueError("unsupported file URI")
+                    reference, encoded = parts.path, True
+                    break
+                if parts.netloc:
+                    reference = ""  # A non-file URL with an authority is not a local path.
+                    break
+                reference = reference.split(":", 1)[1]  # source:path and other labels.
+            else:
+                if encoded:
+                    reference = parts._replace(query="", fragment="").geturl()
+            if encoded:
+                if re.search(r"%(?![0-9a-fA-F]{2})", reference):
+                    raise ValueError("malformed URI escape")
+                reference = unquote(reference, errors="strict")
+            if "\0" in reference:
+                raise ValueError("invalid path")
+        except ValueError:
+            raise ValueError("private path check cannot parse a file reference") from None
+        if reference and reference != original:
+            yield Path(reference).expanduser()
 
 
 def check_private_input(spec: TaskSpec, repo_key: str) -> None:
@@ -27,14 +72,10 @@ def check_private_input(spec: TaskSpec, repo_key: str) -> None:
     if origin and origin != "-" and any(Path(origin).resolve().is_relative_to(root) for root in private):
         raise ValueError("private prompt file is not permitted for this agent")
     text = spec.prompt_file.read_text()
-    # Quotes preserve spaces; ordinary prose paths are delimited by whitespace or punctuation.
-    tokens = re.findall(r"""["'`]([^"'`\n]+)["'`]|([^\s<>"'`]+)""", text)
     bases = (spec.worktree, spec.prompt_file.parent, Path.cwd())
     if origin and origin != "-":
         bases = (*bases, Path(origin).resolve().parent)
-    for quoted, bare in tokens:
-        token = (quoted or bare).split("=", 1)[-1].strip("()[]{}").rstrip(".,;:!?")
-        path = Path(token).expanduser()
+    for path in _reference_paths(text):
         candidates = [path] if path.is_absolute() else [base / path for base in bases]
         if any(candidate.resolve().is_relative_to(root) for candidate in candidates for root in private):
             raise ValueError("private path input is not permitted for this agent")
