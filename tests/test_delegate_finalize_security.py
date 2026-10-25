@@ -6,6 +6,10 @@ import ast
 import contextlib
 import hashlib
 import inspect
+import json
+import os
+import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -392,9 +396,13 @@ def test_receivepack_cannot_redirect_a_write(publication, tmp_path):
         ("http.proxy", "http://invalid.invalid:1"),
         ("include.path", "INCLUDE"),
         ("includeIf.gitdir:*/.path", "INCLUDE"),
+        ("lfs.url", "ALTERNATE"),
+        ("lfs.pushurl", "ALTERNATE"),
+        ("lfs.customtransfer.hostile.path", "PROGRAM"),
+        (".lfsconfig", "ALTERNATE"),
     ],
 )
-def test_worker_transport_configuration_never_selects_the_destination(publication, tmp_path, key, value):
+def test_worker_transport_configuration_never_selects_the_destination(publication, tmp_path, monkeypatch, key, value):
     worktree, origin, _base, marker = publication
     head = write_commit(worktree)
     unintended = tmp_path / "unintended.git"
@@ -412,12 +420,36 @@ def test_worker_transport_configuration_never_selects_the_destination(publicatio
         .replace("PROGRAM", str(program))
         .replace("INCLUDE", str(include))
     )
-    _git_out(worktree, "config", key, value)
-    result = publish(publication)
+    lfs_case = key.startswith("lfs.") or key == ".lfsconfig"
+    if key == ".lfsconfig":
+        head = write_commit(worktree, ".lfsconfig", f"[lfs]\n url = {value}\n")
+    else:
+        _git_out(worktree, "config", key, value)
+    if key == "lfs.customtransfer.hostile.path":
+        _git_out(worktree, "config", "lfs.standalonetransferagent", "hostile")
+    if lfs_case:
+        @contextlib.contextmanager
+        def credentials(**_kwargs):
+            yield [(f"http.{origin}.extraHeader", "Authorization: Basic SENTINEL-LFS-TRANSPORT")]
+
+        monkeypatch.setattr(delegate, "_finalize_transport_credentials", credentials)
+        payload = b"authentic unfiltered LFS fixture\n"
+        oid = hashlib.sha256(payload).hexdigest()
+        obj = worktree / ".git/lfs/objects" / oid[:2] / oid[2:4] / oid
+        obj.parent.mkdir(parents=True)
+        obj.write_bytes(payload)
+        head = write_commit(worktree, content=(
+            f"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize {len(payload)}\n"
+        ))
+    result = publish(publication, owned_paths=["artifact.txt", ".lfsconfig"] if lfs_case else None)
     assert result.ok, result.error
     assert "refs/heads/codex/finalize " + head in refs(origin)
     assert refs(unintended) == "" and not ran.exists()
     assert marker.read_text() == "checked"
+    if lfs_case:
+        assert (origin / "lfs/objects" / oid[:2] / oid[2:4] / oid).read_bytes() == payload
+        assert not any(path.is_file() for path in (unintended / "lfs").rglob("*"))
+        assert "SENTINEL-LFS-TRANSPORT" not in (worktree / ".git/config").read_text()
 
 
 @pytest.mark.parametrize(
@@ -1751,3 +1783,109 @@ def test_flagged_push_consumes_the_override_before_a_later_flagged_pr(publicatio
     assert not result.ok and result.error == "auto_finalize_publish_blocked"
     assert "override already consumed" in read_diagnostics()
     assert len(override_log()) == 1
+
+
+@pytest.mark.parametrize("corrupt", [False, True], ids=["valid", "corrupt"])
+def test_pre_fix_base_lfs_publication_and_corrupt_object_refusal(publication, tmp_path, monkeypatch, corrupt):
+    """Old-base hooks demand LFS auth; corrupt bytes must never reach credentials or a ref update."""
+    import yaml
+
+    worktree, origin, _, _marker = publication
+    root = Path(__file__).resolve().parents[1]
+    # Borrow the unchanged trusted prefix instead of duplicating its legacy
+    # temp fallback as a new producer. The digest pins every historical byte.
+    old_hook = re.split(
+        r"\n(?:# Git always supplies|require_git_lfs)",
+        (root / ".githooks/pre-push").read_text(), maxsplit=1,
+    )[0] + '\nrequire_git_lfs\ngit lfs pre-push "$@" <"$updates_file"\n'
+    assert hashlib.sha256(old_hook.encode()).hexdigest() == "ceb55868c567f7100552446812a549927f31b6130a628484463741390b53b49b"
+    digests = {}
+    for path in (root / ".githooks").iterdir():
+        if path.is_file():
+            target = worktree / ".githooks" / path.name
+            shutil.copy2(path, target)
+            digests[str(path.relative_to(root))] = hashlib.sha256(path.read_bytes()).hexdigest()
+    (worktree / ".githooks/pre-push").write_text(old_hook)
+    for name in (
+        "scripts/pre_commit/project_python.sh", "scripts/common/test_slots.py",
+        "scripts/audit/lint_opsec_leaks.py", "scripts/audit/check_no_internal_ids.py",
+    ):
+        target = worktree / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(root / name, target)
+        digests[name] = hashlib.sha256(target.read_bytes()).hexdigest()
+    actual = yaml.safe_load((root / ".pre-commit-config.yaml").read_text())
+    hooks = [hook for repo in actual["repos"] for hook in repo.get("hooks", [])
+             if hook["id"] in {"lint-opsec-leaks", "check-no-internal-ids"}]
+    assert len(hooks) == 2
+    (worktree / ".pre-commit-config.yaml").write_text(yaml.safe_dump({"repos": [{"repo": "local", "hooks": hooks}]}))
+    _git_out(worktree, "add", ".")
+    _git_out(worktree, "commit", "-m", "pre-fix trusted hook chain")
+    base = _git_out(worktree, "rev-parse", "HEAD").strip()
+    _git_out(worktree, "checkout", "-b", "driver-chain")
+    shutil.copy2(root / ".githooks/pre-push", worktree / ".githooks/pre-push")
+    _git_out(worktree, "add", ".githooks/pre-push")
+    _git_out(worktree, "commit", "--allow-empty", "-m", "current trusted driver chain")
+    driver = _git_out(worktree, "rev-parse", "HEAD").strip()
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    _git_out(worktree, "checkout", "codex/finalize")
+    assert _git_out(worktree, "rev-parse", "HEAD").strip() == base
+    payload = b"authentic pre-fix unfiltered pointer payload\n"
+    oid = hashlib.sha256(payload).hexdigest()
+    obj = worktree / ".git/lfs/objects" / oid[:2] / oid[2:4] / oid
+    obj.parent.mkdir(parents=True)
+    obj.write_bytes(b"x" * len(payload) if corrupt else payload)
+    head = write_commit(worktree, content=(
+        f"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize {len(payload)}\n"
+    ))
+    assert _git_out(worktree, "check-attr", "filter", "--", "artifact.txt").strip() == "artifact.txt: filter: unspecified"
+    selected = subprocess.run(
+        [shutil.which("git-lfs", path=os.defpath), "ls-files", "--all", "--long"],
+        cwd=worktree, env={"PATH": os.defpath, "HOME": str(tmp_path),
+                           "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull},
+        capture_output=True, text=True, check=True, timeout=30,
+    )
+    assert any(row.startswith(oid + " ") and row.endswith(" artifact.txt") for row in selected.stdout.splitlines())
+    credentials = []
+    pushes = []
+    allocated_samples = []
+    real_run = delegate.subprocess.run
+
+    @contextlib.contextmanager
+    def credential_boundary(**kwargs):
+        credentials.append(kwargs)
+        assert obj.read_bytes() == payload, "corruption reached the credential boundary"
+        yield []
+
+    def run(args, **kwargs):
+        if Path(args[0]).name == "git" and list(args[1:2]) == ["push"]:
+            remote_object = origin / "lfs/objects" / oid[:2] / oid[2:4] / oid
+            assert remote_object.read_bytes() == payload, "Git ref attempted before LFS upload"
+            pushes.append(args)
+        result = real_run(args, **kwargs)
+        allocated = sum(path.stat().st_blocks * 512 for path in tmp_path.rglob("*")
+                        if path.is_file() and not path.is_symlink())
+        assert allocated < 20 * 1024 * 1024
+        allocated_samples.append(allocated)
+        return result
+
+    monkeypatch.setattr(delegate, "_finalize_transport_credentials", credential_boundary)
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    before = refs(origin)
+    result = publish((worktree, origin, base, _marker))
+    if corrupt:
+        assert not result.ok, "corrupt LFS object was published"
+        assert refs(origin) == before
+        assert credentials == [] and pushes == []
+    else:
+        assert result.ok, result.error
+        assert "refs/heads/codex/finalize " + head in refs(origin)
+        assert _git_out(origin, "show", f"{head}:artifact.txt") == (worktree / "artifact.txt").read_text()
+        assert (origin / "lfs/objects" / oid[:2] / oid[2:4] / oid).read_bytes() == payload
+        assert len(credentials) == 1 and len(pushes) == 1
+    allocated = sum(path.stat().st_blocks * 512 for path in tmp_path.rglob("*") if path.is_file() and not path.is_symlink())
+    assert allocated < 20 * 1024 * 1024
+    print(json.dumps({"fixture_live_allocated_max_sample": max(allocated_samples),
+                      "fixture_allocated_bytes_after_transport_cleanup": allocated, "recorded_base": base,
+                      "driver_base": driver, "head": head, "source_sha256": digests, "corrupt": corrupt,
+                      "git_lfs_selected_pointer": selected.stdout.strip()}))

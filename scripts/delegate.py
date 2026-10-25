@@ -8532,6 +8532,8 @@ class _FinalizePublicHead:
         if public and self.context.run("cat-file", "-e", f"{public}^{{commit}}").returncode:
             with contextlib.suppress(SnapshotRefusal, subprocess.TimeoutExpired):
                 self.context.fetch_remote_commits("refs/heads/main", self.context.driver_base, self.head)
+        if public and not self.context.run("cat-file", "-e", f"{public}^{{commit}}").returncode:
+            self.context.public_head = public
         return public
 
 
@@ -8641,7 +8643,11 @@ def _finalize_transport_context(
         # even when that repository has advanced during validation.
         transport.driver_base = validation.driver_base
         transport.isolate_objects(base=base, head=head)
-        transport.receive_publication(head=head, base=base, objects=validation.git_dir / "objects")
+        transport.publication_exclusions = getattr(validation, "publication_exclusions", None)
+        transport.receive_publication(
+            head=head, base=base, objects=validation.git_dir / "objects",
+            exclusions=transport.publication_exclusions,
+        )
         yield transport
 
 
@@ -8655,8 +8661,9 @@ def _finalize_transport_push(
     This push runs no hook, so nothing the worker wrote executes while the
     credential exists. It names the pinned URL and one non-force refspec,
     sends no tags, and pins the proxy and protocol keys over whatever its
-    repository holds. The credential is passed in this one process's
+    repository holds. The credential is passed in the transport processes'
     environment, never written to configuration or put on a command line.
+    Verified LFS objects must upload successfully before the Git ref can move.
     Its bound is the publication's, as when the push itself ran the hook.
     """
     from scripts.orchestration.safe_git_context import GIT
@@ -8664,6 +8671,13 @@ def _finalize_transport_push(
     hooks = transport.root / "transport-hooks"
     hooks.mkdir()
     scheme = "file" if transport.local_remote else "https"
+    objects = transport.prepare_lfs(
+        head=head, exclusions=transport.publication_exclusions or (),
+    )
+    endpoint = Path(transport.origin).as_uri() if transport.local_remote else transport.origin + "/info/lfs"
+    lfs = shutil.which("git-lfs", path=os.defpath)
+    if objects and not lfs:
+        raise SnapshotRefusal("auto_finalize_validation_unavailable")
     with _finalize_transport_credentials(origin=transport.origin, repository=transport.repository) as entries:
         settings = [
             ("core.hooksPath", str(hooks)),
@@ -8671,12 +8685,25 @@ def _finalize_transport_push(
             (f"protocol.{scheme}.allow", "always"),
             ("http.proxy", ""),
             (f"http.{transport.origin}.proxy", ""),
+            ("credential.helper", ""),
+            ("credential.interactive", "false"),
+            ("core.askPass", "/usr/bin/false"),
+            ("lfs.url", endpoint),
+            ("lfs.pushurl", endpoint),
             *entries,
         ]
         env = {**transport.env, "GIT_CONFIG_COUNT": str(len(settings))}
         for index, (key, value) in enumerate(settings):
             env[f"GIT_CONFIG_KEY_{index}"] = key
             env[f"GIT_CONFIG_VALUE_{index}"] = value
+        if objects:
+            uploaded = subprocess.run(
+                [lfs, "push", "--object-id", "origin", "--stdin"],
+                cwd=transport.root, env=env, input="\n".join(objects) + "\n",
+                capture_output=True, text=True, check=False, timeout=timeout,
+            )
+            if uploaded.returncode:
+                raise _TypedFailure("LFS upload refused", _remote_git_cause("auto_finalize_push_failed", uploaded))
         return subprocess.run(
             [
                 GIT,
@@ -8745,17 +8772,30 @@ def _push_auto_finalize_branch(
                 raise SnapshotRefusal("auto_finalize_remote_unverified")
             # Before any worker code runs: the exact id the push sends.
             _finalize_opsec_scan(context, branch=branch, head=head, remote=remote)
-            context.prepare_validation(head=head, branch=branch, base=base, interpreter=context.interpreter)
+            exclusions = [remote] if remote else []
+            public_head = getattr(context, "public_head", None)
+            if public_head:
+                # Public history outside this head's ancestry cannot be sent.
+                # All merge bases retain the exact exclusion even in a crisscross graph.
+                common = context.run("merge-base", "--all", head, public_head)
+                if common.returncode not in {0, 1}:
+                    raise SnapshotRefusal("auto_finalize_fsck_failed")
+                exclusions.extend(common.stdout.split())
+            context.publication_exclusions = tuple(sorted(set(exclusions)))
+            context.prepare_validation(
+                head=head, branch=branch, base=base, interpreter=context.interpreter,
+                exclusions=context.publication_exclusions,
+            )
             if _finalize_source_head(context, branch) != head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
-            # The base commit's hook chain, with the update line Git would
+            # The validated driver's hook chain, with the update line Git would
             # give it, in the credential-free context. It runs for an
             # unchanged retry too, for which Git itself would skip pre-push.
             timeout = _auto_finalize_push_timeout_s(context.root / "trusted/.githooks/pre_push_gate.py")
             pushing = True
             hook = context.root / "trusted/.githooks/pre-push"
             proc = subprocess.run(
-                [str(hook), "origin", context.origin],
+                [str(hook)],
                 cwd=context.checkout,
                 env=context.env,
                 input=f"refs/heads/{branch} {head} refs/heads/{branch} {remote or '0' * 40}\n",

@@ -63,6 +63,7 @@ class SafeGitContext:
             raise SnapshotRefusal("rescue_push_url_unavailable")
         self.repository = selected.github
         self.objects = objects.resolve(strict=True)
+        self.lfs_objects = self.objects.parent / "lfs/objects"
         self.temp_root = temp_root
         self.origin = origin
         self.token = token
@@ -83,6 +84,7 @@ class SafeGitContext:
             self.env = {
                 "PATH": os.defpath,
                 "HOME": str(home),
+                "TMPDIR": str(self.root),
                 "LC_ALL": "C",
                 "GIT_CONFIG_NOSYSTEM": "1",
                 "GIT_CONFIG_GLOBAL": os.devnull,
@@ -341,12 +343,14 @@ class SafeGitContext:
         if proc.returncode:
             raise SnapshotRefusal("rescue_input_unreadable")
 
-    def receive_publication(self, *, head: str, base: str, objects: Path | None = None) -> None:
-        """Receive every object of ``base``, ``head`` and the commits between them, re-hashed.
+    def receive_publication(
+        self, *, head: str, base: str, objects: Path | None = None, exclusions: tuple[str, ...] | None = None,
+    ) -> None:
+        """Receive the validation and packing snapshots, re-hashed.
 
-        The checkout needs the whole tip, the trusted hooks need the base,
-        and a push needs every object of the commits the destination may
-        lack. Their union is about one snapshot plus the changed objects.
+        Preserve the original preparation range and add the outgoing range.
+        Packing may also read a previous remote tip as a delta base. Excluded
+        ancestors need their trees for the outgoing-object walk.
         ``objects``, when given, is a store that already holds them all.
         """
         if self._source is None:
@@ -354,20 +358,28 @@ class SafeGitContext:
         if objects is not None:
             self._serve(objects)
         driver = getattr(self, "driver_base", base)
+        # Keep the original preparation range: Git's packer can read an old
+        # branch-tip blob as a delta base even when that tip is already remote.
         scoped = self.checked("rev-list", head, "--not", base, driver).split()
+        if exclusions is not None:
+            scoped.extend(self.checked("rev-list", head, "--not", *exclusions).split())
         commits = sorted({base, head, *scoped})
         self._receive(self._root_trees(commits), "--no-filter")
         self._require_closure(commits)
+        if exclusions is not None:
+            self.receive_trees(set(exclusions) - set(commits))
 
-    def prepare_validation(self, *, head: str, branch: str, base: str, interpreter: Path) -> None:
-        """Materialize an isolated checkout with the base commit's trusted hook chain.
+    def prepare_validation(
+        self, *, head: str, branch: str, base: str, interpreter: Path, exclusions: tuple[str, ...] | None = None,
+    ) -> None:
+        """Materialize an isolated checkout with the validated driver's trusted hook chain.
 
         Subprocesses which clear GIT_* still discover only our configuration,
         refs and objects. No worker hook, config or tracking ref is imported.
         Code run in the checkout can write this repository, so it is never
         the one a credentialed push reads.
         """
-        self.receive_publication(head=head, base=base)
+        self.receive_publication(head=head, base=base, exclusions=exclusions)
         checkout = self.root / "checkout"
         checkout.mkdir()
         self.checked("config", "core.bare", "false")
@@ -387,7 +399,10 @@ class SafeGitContext:
         trusted = self.root / "trusted"
         hooks = trusted / ".githooks"
         hooks.mkdir(parents=True)
-        paths = self.checked("ls-tree", "-r", "-z", base, "--", ".githooks", "scripts/common/test_slots.py")
+        driver = getattr(self, "driver_base", base)
+        self.receive_trees([driver])
+        paths = self.checked("ls-tree", "-r", "-z", driver, "--", ".githooks", "scripts/common/test_slots.py")
+        self._receive([row.split("\t", 1)[0].split()[2] for row in paths.split("\0") if row])
         for row in paths.split("\0"):
             if not row:
                 continue
@@ -406,6 +421,78 @@ class SafeGitContext:
             raise SnapshotRefusal("auto_finalize_validation_unavailable")
         self.checked("config", "core.hooksPath", str(hooks))
         self.checkout = checkout
+
+    def prepare_lfs(self, *, head: str, exclusions: tuple[str, ...]) -> tuple[str, ...]:
+        """Select outgoing pointers from re-hashed trees and seal their verified local bytes.
+
+        Only refs proved at the pinned destination exclude history. Neither
+        worker LFS configuration nor the validation checkout selects storage.
+        All reads and verification finish before the transport obtains a token.
+        """
+        commits = self.checked("rev-list", head, "--not", *exclusions).split()
+        self._receive(self._root_trees(commits), "--no-filter")
+        self._require_closure(commits)
+        objects = self.checked("rev-list", "--objects", "--no-object-names", head, "--not", *exclusions)
+        sizes = self.checked("cat-file", "--batch-check=%(objectname) %(objecttype) %(objectsize)", stdin=objects + "\n") if objects else ""
+        lfs = shutil.which("git-lfs", path=os.defpath)
+        if not lfs:
+            raise SnapshotRefusal("auto_finalize_validation_unavailable")
+        pointers = {}
+        for row in sizes.splitlines():
+            blob, kind, size = row.split()
+            if kind != "blob" or int(size) >= 1024:
+                continue
+            data = self.run("cat-file", "blob", blob, binary=True)
+            if data.returncode:
+                raise SnapshotRefusal("auto_finalize_fsck_failed")
+            # Git LFS treats an empty blob as an empty file, with no upload.
+            if not data.stdout:
+                continue
+            recognized = subprocess.run(
+                [lfs, "pointer", "--check", "--no-strict", "--stdin"],
+                cwd=self.root, env=self.env, input=data.stdout,
+                capture_output=True, check=False, timeout=60,
+            )
+            if recognized.returncode == 1 and not data.stdout.startswith(b"version https://git-lfs.github.com/spec/"):
+                continue
+            if recognized.returncode:
+                raise SnapshotRefusal("auto_finalize_fsck_failed")
+            # A native-recognized representation we cannot verify must refuse,
+            # rather than silently drop an ordinary push's LFS obligation.
+            pointer = re.fullmatch(
+                rb"version https://git-lfs.github.com/spec/v1\noid sha256:([0-9a-f]{64})\nsize (0|[1-9][0-9]*)\n",
+                data.stdout,
+            )
+            if pointer is None:
+                raise SnapshotRefusal("auto_finalize_fsck_failed")
+            oid, length = pointer[1].decode(), int(pointer[2])
+            if oid in pointers and pointers[oid] != length:
+                raise SnapshotRefusal("auto_finalize_fsck_failed")
+            pointers[oid] = length
+        for oid, length in pointers.items():
+            source = self.lfs_objects / oid[:2] / oid[2:4] / oid
+            destination = self.git_dir / "lfs/objects" / oid[:2] / oid[2:4] / oid
+            try:
+                if any(path.is_symlink() for path in (source, *source.parents)):
+                    raise SnapshotRefusal("auto_finalize_fsck_failed")
+                fd = os.open(source, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                with os.fdopen(fd, "rb") as incoming:
+                    info = os.fstat(incoming.fileno())
+                    if not stat.S_ISREG(info.st_mode) or info.st_size != length:
+                        raise SnapshotRefusal("auto_finalize_fsck_failed")
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    with destination.open("xb") as outgoing:
+                        digest = hashlib.sha256()
+                        copied = 0
+                        while chunk := incoming.read(1024 * 1024):
+                            copied += len(chunk)
+                            digest.update(chunk)
+                            outgoing.write(chunk)
+                    if copied != length or digest.hexdigest() != oid:
+                        raise SnapshotRefusal("auto_finalize_fsck_failed")
+            except OSError as exc:
+                raise SnapshotRefusal("auto_finalize_fsck_failed") from exc
+        return tuple(sorted(pointers))
 
     def read_source_ref(self, source: Path, ref: str, *, symbolic: bool = False) -> subprocess.CompletedProcess[str]:
         """Plumbing-only read of source refs: no worktree, network, hooks or index."""
