@@ -1,9 +1,13 @@
 """AGY headless user-event envelope and terminal result extraction."""
 
 import json
+import re
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+
+_BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background task\(s\)")
+_PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
@@ -20,29 +24,38 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     result, error = {}, None
+    terminal_seen = False
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
         try:
             event = json.loads(line)
         except ValueError:
-            error = "agy: invalid JSON stream"
+            error = error or "agy: invalid JSON stream"
             continue
         if not isinstance(event, dict):
-            error = "agy: invalid event"
+            error = error or "agy: invalid event"
         elif event.get("event") == "result":
+            if terminal_seen:
+                error = error or "agy: duplicate terminal result"
+                continue
+            terminal_seen = True
             terminal = event.get("result")
             if not isinstance(terminal, dict):
-                error = "agy: invalid terminal result"
+                error = error or "agy: invalid terminal result"
                 continue
             result = terminal
             if result.get("status") != "SUCCESS" or result.get("error"):
-                error = "agy: terminal result unsuccessful"
+                error = error or "agy: terminal result unsuccessful"
         elif event.get("event") == "error":
-            error = "agy: terminal error"
+            error = error or "agy: terminal error"
     text = result.get("response")
     text = text if isinstance(text, str) and text.strip() else None
     usage = result.get("usage")
+    if _PRINT_TIMEOUT_PARTIAL_RE.search(stderr) or any(
+        int(match["count"]) > 0 for match in _BACKGROUND_TERMINATED_RE.finditer(stderr)
+    ):
+        error = error or "agy: incomplete run"
     if returncode:
         error = f"agy: exited with status {returncode}"
     return ParsedResult(

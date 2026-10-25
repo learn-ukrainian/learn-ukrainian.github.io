@@ -175,8 +175,12 @@ def test_missing_usage_remains_none_and_information_does_not_change_success(prov
             event["result"].pop("usage", None)
         if event.get("type") == "event_msg":
             event["payload"]["info"].pop("total_token_usage")
+    metadata = {"type": "future_info", "event": "future_info", "message": "new metadata"}
+    if provider == "codex":
+        events.insert(-1, metadata)
+    else:
+        events.append(metadata)
     stdout = "\n".join(json.dumps(event) for event in events)
-    stdout += '\n{"type":"future_info","event":"future_info","message":"new metadata"}\n'
     assert load(provider).parse(stdout, "", 0, "Finished.") == ParsedResult("Finished.", None, None)
 
 
@@ -206,3 +210,109 @@ def test_codex_turn_usage_is_read_without_token_event():
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
         "Finished.", {"input_tokens": 4, "output_tokens": 2}, None
     )
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_codex_error_notice_can_retry_before_successful_completion(separator):
+    """codex-error-notice: retry notices must not poison a completed turn or split Unicode JSONL."""
+    notice = json.dumps({"type": "error", "message": f"Retry{separator}notice"}, ensure_ascii=False)
+    stdout = notice + "\n" + SUCCESS["codex"] + " \t\r\n"
+    assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, None
+    )
+
+
+@pytest.mark.parametrize(
+    ("prefix", "returncode", "final_text", "error"),
+    [
+        ("{broken\n", 0, "Finished.", "codex: invalid JSON stream"),
+        ("[]\n", 0, "Finished.", "codex: invalid event"),
+        (ERROR["codex"] + "\n", 0, "Finished.", "codex: terminal error"),
+        (UNKNOWN["codex"] + "\n", 0, "Finished.", "codex: unknown terminal outcome"),
+        ("", 9, "Finished.", "codex: exited with status 9"),
+        ("", 0, None, "codex: missing completion or final text"),
+    ],
+)
+def test_codex_error_notice_cannot_clear_failure_evidence(prefix, returncode, final_text, error):
+    """codex-error-notice: a retried notice cannot cure malformed, terminal, exit or final-file failures."""
+    stdout = prefix + '{"type":"error","message":"Retrying"}\n' + SUCCESS["codex"]
+    assert load("codex").parse(stdout, "", returncode, final_text).error == error
+    assert load("codex").parse('{"type":"error"}\n', "", 0, "Finished.").error == (
+        "codex: missing completion or final text"
+    )
+
+
+@pytest.mark.parametrize(
+    ("later", "error"),
+    [
+        ('{"type":"turn.completed","usage":{"input_tokens":99}}', "codex: event after terminal outcome"),
+        ('{"type":"turn.started"}', "codex: event after terminal outcome"),
+        ('{"type":"future_info"}', "codex: event after terminal outcome"),
+        ('{"type":"error","message":"Retrying"}', "codex: event after terminal outcome"),
+        (ERROR["codex"], "codex: event after terminal outcome"),
+        (UNKNOWN["codex"], "codex: event after terminal outcome"),
+        (
+            '{"type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":99}}}}',
+            "codex: event after terminal outcome",
+        ),
+        ("{broken", "codex: invalid JSON stream"),
+        ("[]", "codex: invalid event"),
+    ],
+)
+def test_codex_terminal_not_last_rejected_without_overwriting_completion_usage(later, error):
+    """codex-terminal-not-last: any nonblank record after a terminal invalidates this invocation."""
+    stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}\n'
+    assert load("codex").parse(stdout + later + "\n", "", 0, "Finished.") == ParsedResult(
+        "Finished.", {"input_tokens": 4, "output_tokens": 2}, error
+    )
+
+
+@pytest.mark.parametrize(
+    ("stderr", "error"),
+    [
+        ("print timeout after 120m with turn in progress", "agy: incomplete run"),
+        ("terminating 1 background task(s)", "agy: incomplete run"),
+        ("terminating 0 background task(s)\nterminating 2 background task(s)", "agy: incomplete run"),
+        ("terminating 0 background task(s)", None),
+        ("root agent idle; waiting up to 1m for 1 background task(s)", None),
+    ],
+)
+def test_agy_partial_stderr_rejects_incomplete_runs_with_safe_reason(stderr, error):
+    """agy-partial-stderr: native incomplete signals override SUCCESS without exposing stderr."""
+    stderr = "private diagnostic\n" + stderr + "\nprivate diagnostic"
+    assert load("agy").parse(SUCCESS["agy"], stderr, 0, None) == ParsedResult(
+        "Finished.", {"input_tokens": 7, "output_tokens": 3}, error
+    )
+    if error:
+        assert load("agy").parse(SUCCESS["agy"], stderr, 9, None).error == "agy: exited with status 9"
+        assert load("agy").parse("{broken\n" + SUCCESS["agy"], stderr, 0, None).error == "agy: invalid JSON stream"
+
+
+@pytest.mark.parametrize(
+    ("first", "second", "expected"),
+    [
+        (
+            SUCCESS["agy"],
+            '{"event":"result","result":{"status":"SUCCESS","response":"Replacement.","usage":{"input_tokens":99}}}',
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+        ),
+        (
+            ERROR["agy"],
+            SUCCESS["agy"],
+            ParsedResult("Finished.", None, "agy: terminal result unsuccessful"),
+        ),
+        (
+            '{"event":"result","result":null}',
+            SUCCESS["agy"],
+            ParsedResult(None, None, "agy: invalid terminal result"),
+        ),
+        (
+            SUCCESS["agy"],
+            '{"event":"result","result":[]}',
+            ParsedResult("Finished.", {"input_tokens": 7, "output_tokens": 3}, "agy: duplicate terminal result"),
+        ),
+    ],
+)
+def test_agy_duplicate_terminal_cannot_replace_first_result_or_clear_failure(first, second, expected):
+    """agy-duplicate-terminal: accept neither a second answer nor recovery after a malformed terminal."""
+    assert load("agy").parse(first + "\n" + second + "\n", "", 0, None) == expected

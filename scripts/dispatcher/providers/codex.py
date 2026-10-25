@@ -16,26 +16,34 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     usage, error, completed = None, None, False
+    terminal_seen = False
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
         try:
             event = json.loads(line)
         except ValueError:
-            error = "codex: invalid JSON stream"
+            error = error or "codex: invalid JSON stream"
             continue
         if not isinstance(event, dict):
-            error = "codex: invalid event"
+            error = error or "codex: invalid event"
+            continue
+        if terminal_seen:
+            error = error or "codex: event after terminal outcome"
             continue
         kind = event.get("type", "")
         if kind == "turn.completed":
+            terminal_seen = True
             completed = True
             if isinstance(event.get("usage"), dict):
                 usage = event["usage"]
-        elif kind in ("turn.failed", "error"):
-            error = "codex: terminal error"
+            continue
+        elif kind == "turn.failed":
+            terminal_seen = True
+            error = error or "codex: terminal error"
         elif isinstance(kind, str) and kind.startswith("turn.") and kind != "turn.started":
-            error = "codex: unknown terminal outcome"
+            terminal_seen = True
+            error = error or "codex: unknown terminal outcome"
         payload = event.get("payload", event)
         if isinstance(payload, dict) and payload.get("type") == "token_count":
             info = payload.get("info")
