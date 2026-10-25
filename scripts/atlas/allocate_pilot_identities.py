@@ -412,14 +412,13 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
     assert not (apply and append), "--apply and --append-holding are separate registry steps"
     manifest = foundation.load(MANIFEST)
     foundation.manifest_check(manifest, MANIFEST)
-    registry = foundation.load(REGISTRY)
-    original = source_expansion_projection(registry, manifest)
-    assert original == registry or not (apply or append), "Source-expanded registries are verified read-only"
-    registry = original
+    loaded_registry = foundation.load(REGISTRY)
+    registry = source_expansion_projection(loaded_registry, manifest)
     # The existing allocation is never regenerated: --apply only creates a pilot allocation where none exists.
     assert not (apply and any(e["created_in_build"] == BUILD_PREFIX + manifest["manifest_sha256"]
                               for e in registry["entries"])), \
         "The pilot allocation exists; --apply would replace its identities. Use --append-holding for holding senses"
+    assert registry == loaded_registry or not (apply or append), "Source-expanded registries are verified read-only"
     before = git_registry(BASELINE)
     foundation.allocation_check(manifest, registry)
     records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
@@ -577,9 +576,10 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
         if apply or appended:
             require_writable(REGISTRY)
             foundation.write(REGISTRY, registry)
-        assert foundation.load(REGISTRY) == registry
+        assert foundation.load(REGISTRY) == (registry if apply or appended else loaded_registry)
         report = {"baseline_sha": BASELINE, "manifest_sha256": manifest["manifest_sha256"],
-            "registry_file_sha256": foundation.file_digest(REGISTRY), "registry_version": registry["registry_version"],
+            "registry_file_sha256": foundation.file_digest(REGISTRY),
+            "registry_version": (registry if apply or appended else loaded_registry)["registry_version"],
             "pilot_units": 150, "allocated_pilot_cards": 150,
             "pilot_card_kinds": dict(Counter(m["card_kind"] for m in mapping)),
             "allocated_pilot_senses": sense_count, "holding_senses": holding, "holding_appended_now": appended,

@@ -17,6 +17,7 @@ import sqlite3
 import unicodedata
 from collections import defaultdict
 from contextlib import closing
+from os import environ
 from pathlib import Path
 
 from scripts.atlas import word_card_foundation as foundation
@@ -409,20 +410,28 @@ class PilotSources:
                                                            (raw["id"],)).fetchone()
                             raw["cognate_forms_record"] = row_dict(cognates) if cognates else None
                         add(source, f"sources:{table}:id:{raw['_rowid']}", raw, {field: raw})
-                from scripts.lexicon.enrich_manifest import _kaikki_row, _load_kaikki_lookup
-                from scripts.storage.paths import MissingArtifactError
+                from scripts.lexicon.enrich_manifest import KAIKKI_SOURCE, _kaikki_row, _load_kaikki_lookup
+                from scripts.storage.paths import MissingArtifactError, artifact_path
 
                 if self._kaikki is None:
                     try:
-                        self._kaikki = _load_kaikki_lookup()
+                        path = (None if environ.get("LEXICON_KAIKKI_SIDE_DB", "").strip() else
+                                artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json",
+                                              repo=self.modern_root))
+                        self._kaikki = _load_kaikki_lookup(path)
                         self.availability["kaikki_lookup"] = {"status": "available"}
                     except MissingArtifactError:
                         self._kaikki = {}
                         self.availability["kaikki_lookup"] = {"status": "unavailable", "reason": "missing_artifact"}
                 raw = _kaikki_row(self._kaikki, lemma)
                 if raw:
-                    add("kaikki", "kaikki:lookup:" + lemma, raw, {"kaikki": raw},
-                        "kaikki/Wiktionary; original extract attribution retained; CC BY-SA")
+                    values = {"kaikki": raw}
+                    for source_key, field in (("glosses", "english_gloss"), ("ipa", "pronunciation"),
+                                              ("etymology_text", "etymology"), ("forms", "morphology")):
+                        if raw.get(source_key):
+                            values[field] = raw[source_key]
+                    add("kaikki", "kaikki:lookup:" + lemma, raw, values,
+                        KAIKKI_SOURCE)
             self._partitions[key] = records
         records = self._partitions[key]
         self._use(f"source_partitions:{lemma}:{slug}", records)
@@ -457,11 +466,12 @@ def partition_claims(partition: dict) -> list[tuple[str, object, str]]:
              "antonyms": "antonyms", "definition_uk": "definition_uk", "kaikki": "kaikki",
              "heritage_status": "heritage_status", "frequency": "frequency", "sources": "sources",
              "idioms": "idioms", "proverbs": "proverbs", "form_notes": "form_notes",
-             "wiki_reference": "wiki_reference"}
-    values = list(partition["values"].items())
-    for key, value in values:
-        if key == "enrichment" and isinstance(value, dict):
-            values.extend(value.items())
+             "wiki_reference": "wiki_reference", "ipa": "pronunciation", "english_gloss": "english_gloss",
+             "primary_source": "sources", "source_provenance": "sources"}
+    values = [(key, value, key) for key, value in partition["values"].items()]
+    for key, value, origin in values:
+        if key in {"enrichment", "sections", "atlas_metadata"} and isinstance(value, dict):
+            values.extend((name, item, origin + "/" + name) for name, item in value.items())
             continue
         field = names.get(key)
         if field is None or value is None or value == "":
@@ -471,7 +481,7 @@ def partition_claims(partition: dict) -> list[tuple[str, object, str]]:
         elif field == "cefr" and isinstance(value, dict):
             value = value.get("level")
         if value is not None and value != "":
-            claims.append((field, value, key))
+            claims.append((field, value, origin))
     def structured(node, path):
         if isinstance(node, dict):
             for key, value in node.items():

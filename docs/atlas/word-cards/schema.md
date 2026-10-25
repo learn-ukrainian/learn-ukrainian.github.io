@@ -62,6 +62,10 @@ rules remain unchanged. A card-level dictionary article is a source partition, n
 `source_records` preserves the full input record and original source label, including fields that have
 no lexical extractor. SUM-20 structure is retained as source-parser evidence, without fabricated
 segmentation or cross-source sense alignment. Existing card and sense identities are conserved.
+The compact Kaikki lookup is verified through the primary checkout's artifact adapter. Its glosses,
+IPA, etymology and forms populate the corresponding fields with the original CC BY-SA 3.0 attribution.
+Embedded Atlas `sections` and `enrichment` values also populate their named fields; unextracted metadata
+remains in the cited source record.
 
 The source expansion appends only initial source observations with content aliases and random `sr_`
 IDs under `pilot-source-expansion-11627@sha256:<frozen manifest hash>`. It adds no card or sense mints.
