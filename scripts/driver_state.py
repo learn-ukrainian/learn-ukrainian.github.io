@@ -27,9 +27,10 @@ it is re-injected before every model call and survives any compaction. The
 hook rejects an oversized rendered envelope visibly, without clipping goals.
 
 ``agy-stop-hook`` implements the AGY ``Stop`` contract. A driver must not end a
-turn on a question or a plan, with fewer of its own workers running than the
-private ``LU_DRIVER_MIN_WORKERS`` target, or with nothing armed to wake it.
-An absent or invalid target is unknown and cannot force a worker-count continuation. In those cases it returns
+turn on a question or a plan, or with fewer of its own workers running than the
+private ``LU_DRIVER_MIN_WORKERS`` target.
+An absent or invalid target is unknown and cannot force a worker-count continuation.
+When continuation is required, it returns
 ``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
 reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
@@ -170,15 +171,22 @@ def render_injection(text: str, path: Path) -> str:
     if POLICY_TITLE.lower() not in text.lower():
         text = text.rstrip() + "\n\n" + POLICY
     tokens = MarkdownIt().parse(text)
-    lines = text.splitlines(keepends=True)
+    # Match the parser's CR/LF line maps without splitting Unicode separators
+    # or changing the original line endings in retained pinned state.
+    lines = re.split(r"(?<=\n)|(?<=\r)(?!\n)", text)
     headings = [
-        (token.map[0], tokens[index + 1].content)
+        (token.map[0], tokens[index + 1].content, token)
         for index, token in enumerate(tokens)
-        if token.type == "heading_open" and token.level == 0
+        if token.type == "heading_open" and token.level == 0 and token.tag in {"h1", "h2"}
     ]
     for index in range(len(headings) - 1, -1, -1):
-        start, title = headings[index]
-        if title != "CTO blocker delta policy":
+        start, title, token = headings[index]
+        if (
+            title != "CTO blocker delta policy"
+            or token.tag != "h2"
+            or token.markup != "##"
+            or not lines[start].startswith("##")
+        ):
             continue
         end = headings[index + 1][0] if index + 1 < len(headings) else len(lines)
         del lines[start:end]

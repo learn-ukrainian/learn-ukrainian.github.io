@@ -729,20 +729,41 @@ def test_whole_state_keeps_appended_goals(state, tmp_path, length):
     [
         "",
         "## CTO blocker delta policy\nRetired ledger commands.\n\n",
-        "## CTO blocker delta policy extra\n",
-        "### CTO blocker delta policy\n",
-        "```markdown\n## CTO blocker delta policy\n```\n",
-        "> ## CTO blocker delta policy\n",
-        "  ## CTO blocker delta policy\n",
-        "<!--\n## CTO blocker delta policy\n-->\n",
-        "CTO blocker delta policy\n-----------------------\n",
+        "## CTO blocker delta policy extra\nLookalike recovery note.\n\n"
+        "CTO blocker delta policy\nPinned non-heading note.\n\n",
+        "### CTO blocker delta policy\nLookalike recovery note.\n\n"
+        "#### CTO blocker delta policy\nPinned h4 note.\n\n"
+        "##### CTO blocker delta policy\nPinned h5 note.\n\n"
+        "###### CTO blocker delta policy\nPinned h6 note.\n\n"
+        "# CTO blocker delta policy\nPinned h1 note.\n\n",
+        "```markdown\n## CTO blocker delta policy\nLookalike recovery note.\n```\n\n",
+        "> ## CTO blocker delta policy\n> Lookalike recovery note.\n\n",
+        "  ## CTO blocker delta policy\n  Lookalike recovery note.\n\n"
+        "    ## CTO blocker delta policy\n    Pinned indented code note.\n\n",
+        "<!--\n## CTO blocker delta policy\nLookalike recovery note.\n-->\n\n",
+        "CTO blocker delta policy\n-----------------------\nLookalike recovery note.\n\n",
     ],
 )
 def test_blocker_policy_requires_exact_real_heading(state, prefix):
-    message = driver_state.render_injection(prefix + "## Current goals\nCurrent goals remain intact.", state)
-    assert "Current goals remain intact." in message
+    before = "## Recovery\nPinned recovery\u0085note\u2028before\u2029retirement.\n\n"
+    retired = (
+        "## CTO blocker delta policy\nRetired ledger commands.\n\n"
+        "### Retired details\nRetired subheading body.\n\n"
+    )
+    after = (
+        "# Recovery after retirement\nPinned recovery after retirement.\n\n"
+        "## Current goals\nCurrent goals\u2028remain\u2029intact\u0085."
+    )
+    message = driver_state.render_injection(before + prefix + retired + after, state)
+    assert before in message
+    assert after in message
+    if "Lookalike recovery note." in prefix:
+        assert prefix in message
+    assert "\n## CTO blocker delta policy\n" not in message.replace(prefix, "", 1)
     assert "scripts.driver_blockers" not in message
     assert "Retired ledger commands." not in message
+    assert "Retired subheading body." not in message
+    assert "### Retired details" not in message
     assert "blocker-policy:" not in message
     assert "lu-driver-state render" in message
     assert "lu-driver-state check" in message
