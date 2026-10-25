@@ -180,9 +180,12 @@ parallel texts remain separate and genuine scalar disagreements retain both witn
 with no established independent lineage remain attributed compilations, not additional dictionary votes.
 Spelling-level partitions also retain a non-voting mapping when their explicit POS contradicts the
 card's ULIF label or source-backed coarse POS. Existing Atlas/VESUM label synonyms remain compatible;
-an unrecognized label supplies no POS decision. An Atlas enrichment without its own POS retains the
-containing article's POS scope. An enrichment with its own label is checked in that scope. PULS copies
-use the same proper/common identity predicate and POS comparison as direct PULS rows. Every derived
+an unrecognized partition label supplies no POS decision. Every Atlas enrichment is constrained by both
+its own POS and its containing article's POS. A contradiction in either scope holds the enrichment.
+Direct PULS rows retain their source-specific gate: for a common card with a recognized ULIF POS head,
+the first word of the PULS POS label must equal that head. An unrecognized or different PULS head is held,
+even when a coarse POS matches. PULS copies must pass this same gate and the partition scope checks;
+the existing proper/common identity predicate also applies to both direct rows and copies. Every derived
 field of a held partition, including CEFR and meanings, stays non-voting; the full raw record, IDs and
 attribution remain. Verification replays these mappings from the held sources and rejects a supplied
 mapping that promotes a contradictory partition or direct PULS row.

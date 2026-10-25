@@ -88,7 +88,7 @@ class Resolver:
                     if rec["source_id"] == "puls":
                         self.puls_mapping[entry["card_id"], rec["locator"]] = wa.puls_mapping(
                             rec["raw_row"], entry["key_at_creation"]["spelling"], proper,
-                            label, entry["key_at_creation"]["pos"], ambiguous)
+                            label, ambiguous)
 
     def row(self, table: str, row_id: int):
         out = self.sources.sources.execute(f'SELECT * FROM "{table}" WHERE id=?', (row_id,)).fetchone()

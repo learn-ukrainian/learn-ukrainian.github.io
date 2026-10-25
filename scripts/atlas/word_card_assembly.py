@@ -587,12 +587,13 @@ def source_pos_contradicts(position: str, ulif_label: str, coarse_pos: str) -> b
     return bool(source_head and target_head and source_head != target_head)
 
 
-def puls_mapping(row: dict, spelling: str, proper: bool, label: str, pos: str,
+def puls_mapping(row: dict, spelling: str, proper: bool, label: str,
                  ambiguous: bool = False) -> dict:
-    """The same identity and POS checks for a direct PULS row and its retained copy."""
+    """Preserve the direct PULS identity and POS-head decision for rows and copies."""
+    puls_pos, label_head = next(iter(row["pos"].split()), ""), label_part_of_speech(label)
     if not puls_matches_identity(row, spelling, proper, label):
         confidence, note = "unresolved", "proper_common_identity_mismatch"
-    elif not proper and source_pos_contradicts(row["pos"], label, pos):
+    elif not proper and label_head and puls_pos != label_head:
         confidence, note = "unresolved", f"PULS part of speech {row['pos']} differs from the ULIF label"
     else:
         confidence = "medium"
@@ -614,17 +615,18 @@ def partition_mapping(part: dict, parts: list[dict], entry: dict, label: str,
     payload = json.loads(raw["payload_json"]) if "payload_json" in raw else raw.get("article", raw)
     positions = payload.get("pos") if isinstance(payload, dict) else None
     article = next((p["record"] for p in parts if p["locator"].startswith("atlas0:articles:")), {})
-    # An enrichment with its own POS keeps that scope. Unlabelled copies retain
-    # their containing Atlas article's scope rather than borrowing this card's.
-    if not positions and part["locator"].startswith("atlas0:enrichment:"):
-        positions = article.get("pos")
     positions = positions if isinstance(positions, list) else [positions] if positions else []
+    # Both source scopes constrain an enrichment; its own label cannot override
+    # a contradictory containing article.
+    if part["locator"].startswith("atlas0:enrichment:"):
+        article_pos = article.get("pos")
+        positions = positions + (article_pos if isinstance(article_pos, list) else [article_pos] if article_pos else [])
     if any(source_pos_contradicts(position, label, key["pos"]) for position in positions):
         unresolved, reason = True, "source_part_of_speech_mismatch"
     if part["source_id"] == "puls":
         row = {"word": payload.get("word", article.get("lemma", key["spelling"])),
                "pos": payload.get("pos", ""), "guideword": payload.get("guideword", "")}
-        scoped = puls_mapping(row, key["spelling"], entry["card_kind"] == "proper_name", label, key["pos"])
+        scoped = puls_mapping(row, key["spelling"], entry["card_kind"] == "proper_name", label)
         if scoped["confidence"] == "unresolved":
             unresolved, reason = True, scoped["note"]
     return mapping("unresolved" if unresolved or ambiguous else "medium", "spelling", ambiguous=ambiguous,
@@ -846,7 +848,7 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
             continue
         b.add("card", card_id, "cefr", row["level"], row["level"], "puls", rec["snapshot_id"],
               f"{rec['locator']} [level]", src.EXTRACTION["puls"], "high",
-              mapping=puls_mapping(row, spelling, proper, raw["grammatical_label"], pos, ambiguous),
+              mapping=puls_mapping(row, spelling, proper, raw["grammatical_label"], ambiguous),
               record=inputs.record_ids[("puls", rec["locator"])])
     asserted_cefr = any(a["field"] == "cefr" for a in b.assertions.values())
     ledger.field(card_id, "cefr", "asserted" if asserted_cefr else ("held" if puls_keys else "source_absent"),
