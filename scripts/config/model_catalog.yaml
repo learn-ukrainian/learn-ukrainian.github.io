@@ -322,7 +322,7 @@ models:
   muse-wonder-full-1.0:
     family: meta
     tier: compatibility
-    lifecycle: hold
+    lifecycle: active
     roles: [coding]
     transports: [native_muse]
     strengths: [explicit_native_worker]

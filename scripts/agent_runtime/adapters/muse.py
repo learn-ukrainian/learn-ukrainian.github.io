@@ -182,7 +182,10 @@ class MuseAdapter:
             raise ValueError("muse_delegate_worker_required")
         if not _is_provider_safe_name("MUSE_NO_AUTO_UPDATE", "muse"):
             raise ValueError("muse_child_environment_not_admitted")
-        if set(config) - {"muse_worker", "muse_role", "run_nonce", "muse_tmp_root", "read_only_tmp_root"}:
+        if set(config) - {
+            "muse_worker", "muse_role", "run_nonce", "muse_tmp_root", "read_only_tmp_root",
+            "max_model_steps", "max_tool_output_bytes",
+        }:
             raise ValueError("muse_worker_configuration_refused")
         require_muse_execution_model(model)
         if model != self.default_model or (config.get("muse_role"), mode) not in {
@@ -200,6 +203,8 @@ class MuseAdapter:
             nonce=nonce,
             scratch_root=config.get("muse_tmp_root"),
             effort=effort,
+            max_model_steps=config.get("max_model_steps"),
+            max_tool_output_bytes=config.get("max_tool_output_bytes"),
         )
 
     def preview_invocation(
@@ -239,11 +244,20 @@ class MuseAdapter:
         scratch_root: object,
         effort: str | None,
         preview: bool = False,
+        max_model_steps: object = None,
+        max_tool_output_bytes: object = None,
     ) -> InvocationPlan:
         if mode not in self.supported_modes or (effort is not None and effort not in _EFFORTS):
             raise ValueError("muse_worker_mode_or_effort_refused")
         if not task_id:
             raise ValueError("muse_delegate_worker_required")
+        if max_model_steps is not None and (type(max_model_steps) is not int or max_model_steps < 1):
+            raise ValueError("muse_model_step_budget_invalid")
+        if max_tool_output_bytes is not None and (
+            type(max_tool_output_bytes) is not int
+            or (max_tool_output_bytes != 0 and max_tool_output_bytes < 9)
+        ):
+            raise ValueError("muse_tool_output_budget_invalid")
         require_muse_execution_model(model)
         # Use the existing lease validator for both modes' private transport.
         scratch = validate_read_only_tmp_root(
@@ -264,12 +278,6 @@ class MuseAdapter:
             timeout=10,
             check=True,
         ).stdout.strip()
-        if not re.fullmatch(r"Muse Code 1\.4\.11 \(1\.4\.11-R6667\.1\)", version):
-            raise ValueError("muse_cli_compatibility_unknown")
-        if not preview:
-            # No qualified whole-task cap exists in the inspected exec contract.
-            # Step limits and reported consumption cannot enforce that bound.
-            raise ValueError("muse_supported_token_cap_unknown")
         provider_session = str(uuid4())
         prompt_path = str(scratch / f"muse-prompt-{provider_session}.txt")
         fd = os.open(prompt_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
@@ -305,6 +313,10 @@ class MuseAdapter:
         ]
         if mode == "read-only":
             cmd.append("--disable-write")
+        if max_model_steps is not None:
+            cmd.extend(["--max-model-steps", str(max_model_steps)])
+        if max_tool_output_bytes is not None:
+            cmd.extend(["--max-tool-output-bytes", str(max_tool_output_bytes)])
         cmd.extend(["--prompt-file", prompt_path])
         return InvocationPlan(
             cmd=cmd,
@@ -324,6 +336,8 @@ class MuseAdapter:
                 "permission_profile": _PROFILES[mode],
                 "toolset": list(_TOOLS[mode]),
                 "preview": preview,
+                "max_model_steps": max_model_steps,
+                "max_tool_output_bytes": max_tool_output_bytes,
             },
         )
 
@@ -370,7 +384,9 @@ class MuseAdapter:
                     or type(record.get("payload_schema_version")) is not int
                     or record["payload_schema_version"] != 1
                 ):
-                    raise ValueError("muse_event_schema_unknown")
+                    raise ValueError(
+                        f"muse_event_schema_unknown: cli_version={plan.metadata.get('cli_version', 'unknown')[:128]}"
+                    )
                 event_id = record["id"]
                 UUID(event_id)
                 if event_id in ids:
@@ -522,12 +538,13 @@ class MuseAdapter:
                 ok=True, response=response, session_id=session,
                 tokens=input_tokens + output_tokens, muse_run=evidence,
             )
-        except (ValueError, TypeError, KeyError, AttributeError):
+        except (ValueError, TypeError, KeyError, AttributeError) as exc:
             return MuseParseResult(
                 ok=False,
                 response="",
                 failure_code="provider_stream_incomplete",
-                stderr_excerpt="muse_worker_evidence_incomplete",
+                stderr_excerpt=(str(exc) if str(exc).startswith("muse_event_schema_unknown:")
+                                else "muse_worker_evidence_incomplete"),
                 provider_error_text="",
             )
 

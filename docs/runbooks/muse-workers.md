@@ -2,10 +2,11 @@
 
 The `muse` adapter selects `muse-wonder-full-1.0` or `muse-spark-1.3` explicitly.
 Both are worker models. Neither has a review, approval, advisory or driver role.
-They have no automatic routing seat or fallback mapping. Their catalog hold
-records pending qualification and closes executable admission. Delegate, direct
-runner calls and adapter planning apply the existing catalog execution gate
-before a native process or version probe. No hold or role is changed here.
+They have no automatic routing seat or fallback mapping. Wonder-Full is active
+for explicit delegate workers; Spark remains on hold. Delegate, direct runner
+calls and adapter planning apply the existing catalog execution gate before a
+native process or version probe. Activation does not certify native permissions,
+contributor/write behavior, formal review or driver use.
 After catalog admission, only Wonder-Full's `implementation` role with
 `workspace-write`, or `investigation` role with `read-only`, passes worker
 classification. Missing roles, other combinations and Spark execution refuse.
@@ -40,10 +41,10 @@ execution. Muse calls disable runner fallback. No launcher guard is changed;
 ## Inspect an invocation
 
 Use an existing dispatch worktree or the default planned detached worktree.
-While the catalog hold is present, dispatch and dry-run refuse with
-`muse_execution_not_admitted` before any native process or probe. The following
-command documents the preview interface for qualification after root admission;
-it does not authorize lifting the hold or running a canary.
+Spark dispatch and dry-run refuse with `muse_execution_not_admitted` before any
+native process or probe. The following command documents Wonder-Full's preview
+interface. A real qualification task still needs the accountable driver's
+separate authorization and held-out evidence.
 
 ```bash
 .venv/bin/python scripts/delegate.py dispatch \
@@ -58,19 +59,28 @@ validator. Native version probes use the shared sanitizer's non-secret
 allowlists, without resolving GitHub credentials or copying Git configuration.
 These environment checks do not establish credential-file isolation.
 
-CLI compatibility is pinned in the adapter to the inspected build. Reinspect
-`muse --version`, `muse exec --help` and both `muse model-profile show` results
-with auto-update disabled when that build changes. The [native settings and
+The adapter accepts the installed Muse CLI without an exact version or version
+range. It records the observed `muse --version` string and the resolved binary's
+SHA-256 in the invocation plan and validated task companion. Compatibility is
+checked through the native envelope's `schema_version`, `payload_schema_version`,
+events, model, session, run, workspace and permission bindings. Unknown schemas
+fail closed with `muse_event_schema_unknown` and the observed CLI version.
+Inspect `muse exec --help` with auto-update disabled for supported controls.
+The [native settings and
 launch contract](https://dev.meta.ai/docs/muse-code/configuration) describes
 per-run overrides. The [permission contract](https://dev.meta.ai/docs/muse-code/permissions)
 distinguishes profiles, approvals and filesystem enforcement.
-The adapter's source pin is 1.4.11. Qualification of the installed 1.4.13 build
-remains pending. Version/default drift refuses planning rather than changing
-the pin or approval settings. Even a matching build cannot execute while the
-supported whole-task token cap is unqualified: live planning refuses with
-`muse_supported_token_cap_unknown` before creating a prompt file. Preview
-planning does not establish this capability. Step limits, prompt size,
-context-token counts, deadlines and post-hoc consumption are not that cap.
+The shared runner enforces the existing delegate timeout. A task budget may
+supply `max_model_steps` and `max_tool_output_bytes` through `tool_config`; the
+adapter passes them as `--max-model-steps` and `--max-tool-output-bytes`.
+Steps must be positive integers. Tool-output bytes must be zero or an integer
+of at least nine, as documented by CLI help. Absent values retain native CLI
+defaults; the adapter does not invent budget values. Delegate's worker config
+must carry any per-task values to planning. These controls accompany workspace
+confinement, declared permission profiles and the sanitized environment.
+Steps, tool-output bytes and timeouts are not generation-token caps. An
+aggregate-generation-token cap is not an execution prerequisite. Actual
+consumption comes from the validated stream and the existing durable writer.
 
 ## Interpret completion evidence
 
@@ -151,15 +161,16 @@ bound to the same invocation/session/run and task/nonce. Effective permissions
 need exact-build evidence for policy/defaults, tool denials, workspace and private
 scratch boundaries, credential files, and configuration/plugin precedence.
 Requested argv, a clean checkout and a correct answer establish none of these
-missing predicates. `muse-wonder-1.0` remains unavailable; both registered model
-holds remain. No fallback or eligibility expansion follows from this interface.
+missing predicates. `muse-wonder-1.0` remains unavailable; Spark remains on hold.
+Wonder-Full activation permits explicit workers only, with no automatic routing,
+fallback, formal-review or driver eligibility.
 
 Before a paid probe, the accountable driver must obtain exact-head independent
 critical review, confirm the child environment and runtime telemetry integration,
 and resolve these security boundaries. The driver owns admission, the semantic
 fixture proof, CI, queue landing and common cleanup. A source push satisfies
 only the author milestone. The original genuine read-only task remains 0/1.
-Full integration coverage of at least 80%, effective native security, critical
+Changed critical patch coverage of at least 80%, effective native security, critical
 cross-family delta review, current-head CI, merge-queue CI, confirmed merge and
 common cleanup remain root-owned until independently proven. The denominator
 remains five original acceptance criteria, two model routes, two dry-run
