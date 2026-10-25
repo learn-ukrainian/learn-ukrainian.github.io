@@ -87,7 +87,8 @@ class Resolver:
             if expected is None:
                 return "partition_outside_subject"
             part, field, value, origin = expected
-            norm = src.norm_v1(value) if isinstance(value, str) else foundation.canonical(value).decode()
+            norm = (value if field == "cefr" else src.norm_v1(value)) if isinstance(value, str) else \
+                foundation.canonical(value).decode()
             return None if (a["source_id"], a["snapshot_id"], a["field"], a["value"], a["value_norm"],
                             a["subject"], a.get("mapping"), a["producer"]["name"]) == (
                                 part["source_id"], part["snapshot_id"], field, value, norm,

@@ -843,7 +843,8 @@ def attach_source_partitions(inputs: Inputs, unit: dict, entry: dict, builder: B
     for part in parts:
         record = bound_source_record(inputs.registry, part)
         for index, (field, value, origin) in enumerate(src.partition_claims(part)):
-            norm = src.norm_v1(value) if isinstance(value, str) else foundation.canonical(value).decode()
+            norm = (value if field == "cefr" else src.norm_v1(value)) if isinstance(value, str) else \
+                foundation.canonical(value).decode()
             assertion = builder.add("card", entry["card_id"], field, value, norm,
                 part["source_id"], part["snapshot_id"], part["locator"] + f" [claim:{index}]",
                 "pilot-source-partition-v1", "medium", record=record,
@@ -1572,6 +1573,8 @@ def main(argv=None) -> int:
                                  if store == "sources" else f"{store} database (default: the primary store)")
     args = parser.parse_args(argv)
     try:
+        if args.operation == "build":
+            require_host_only([args.output])
         suppressions = load_suppressions(args.suppressions)
         with ExitStack() as stack:
             scratch = Path(stack.enter_context(
