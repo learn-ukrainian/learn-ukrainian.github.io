@@ -52,7 +52,7 @@ const hash = (bytes: string | Buffer) => createHash('sha256').update(bytes).dige
 beforeAll(() => {
   if (!process.env.ATLAS_LIVE_EXPORT_ROOT) {
     execFileSync(process.env.PYTHON || resolve('../.venv/bin/python'), [
-      '-m', 'pytest', '-q', 'tests/test_atlas_live_producer_release.py::test_generate_live_packages',
+      '-m', 'pytest', '-q', 'tests/test_atlas_live_producer_release.py::test_current_producer_through_reader',
       '--basetemp', join(scratch, 'pytest'),
     ], { cwd: resolve('..'), timeout: 90_000,
       env: { ...process.env, ATLAS_LIVE_EXPORT_ROOT: packages } });
