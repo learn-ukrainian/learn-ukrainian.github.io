@@ -48,9 +48,26 @@ def scope(**overrides):
 def test_catalog_role_admits_typed_work(family):
     result = resolve_role(family, purpose="inspect")
     assert result.candidates[0].model_id == HAIKU
-    admission.refuse_mechanical_task((result.candidates[0].model_id,), **scope(task_family=family))
-    (target,) = resolve_and_admit(("claude",), model=HAIKU, **scope(task_family=family), claude_account=HOST_ACCOUNT)
+    inputs = scope(task_family=family)
+    if family == "readonly_recon":
+        inputs.update(task_role="recon", paths=("Ж.txt",), research_track="l2-uk-en/a1",
+                      trees=(Tree({"Ж.txt": "Ж".encode()}),))
+    admission.refuse_mechanical_task((result.candidates[0].model_id,), **inputs)
+    (target,) = resolve_and_admit(("claude",), model=HAIKU, **inputs, claude_account=HOST_ACCOUNT)
     assert target.model == HAIKU
+    if family == "readonly_recon":
+        import delegate
+
+        args = delegate.build_parser().parse_args([
+            "dispatch", "--agent", "claude", "--model", HAIKU, "--task-id", "haiku-test",
+            "--prompt", "Inspect the declared file as opaque text", "--mode", "read-only",
+            "--research-task-family", family, "--research-role", "recon",
+            "--research-track", inputs["research_track"], "--owned-path", "Ж.txt"])
+        assert delegate._dispatch_is_language_lane(args) is False
+        refusal, target = delegate._admit_dispatch_target(args, agent="claude", trees=inputs["trees"])
+        assert refusal is None and target.model == HAIKU
+        persisted = delegate._mechanical_task_scope(args, admitted=True)
+        assert persisted["language_lane"] is False and persisted["paths"] == ["Ж.txt"]
 
 
 def test_routine_fallback_and_recon_peer_preserve_envelope_routes():
@@ -343,10 +360,16 @@ def test_luna_free_form_roles_do_not_authorize_excluded_activity_classes(role):
 def test_luna_direct_readonly_scope_rechecks_content(family, role):
     admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
         task_family=family, task_role=role, driver_brief=True))
-    with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+    if family == "readonly_recon":
         admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
             task_family=family, task_role=role, driver_brief=True,
-            trees=(Tree({"safe.txt": "Україна".encode()}),)))
+            paths=("Ж.txt",), research_track="l2-uk-en/a1",
+            trees=(Tree({"Ж.txt": "Ж".encode()}),)))
+    else:
+        with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+            admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
+                task_family=family, task_role=role, driver_brief=True,
+                trees=(Tree({"safe.txt": "Україна".encode()}),)))
 
 
 @pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])

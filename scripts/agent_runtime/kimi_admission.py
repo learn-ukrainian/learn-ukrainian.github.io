@@ -411,12 +411,12 @@ def _has_disallowed_control(text: str) -> bool:
     return False
 
 
-def content_problem(data: bytes | None) -> str | None:
+def content_problem(data: bytes | None, *, allow_cyrillic: bool = False) -> str | None:
     """Why ``data`` is not admissible Kimi content, or None when it is.
 
     Admissible content is UTF-8 text with no control characters other than
-    tab, LF and CR, and no Cyrillic character. None (no file content) is not
-    admissible either.
+    tab, LF and CR, and, by default, no Cyrillic character. Qualified opaque
+    recon may allow Cyrillic. None (no file content) is not admissible either.
     """
     if data is None:
         return "no file content"
@@ -426,7 +426,7 @@ def content_problem(data: bytes | None) -> str | None:
         return "not UTF-8"
     if _has_disallowed_control(text):
         return "control characters"
-    if CYRILLIC.search(text):
+    if not allow_cyrillic and CYRILLIC.search(text):
         return _CYRILLIC_TEXT
     return None
 

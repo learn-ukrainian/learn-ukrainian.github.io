@@ -2714,8 +2714,17 @@ def test_driver_brief_refusal_matrix(env, capsys, agent, model, flag, value, sco
 ])
 @pytest.mark.parametrize("scope", _BRIEF_SCOPES)
 def test_driver_brief_cannot_admit_excluded_activities(env, capsys, agent, model, extra, scope):
-    assert _dispatch(_driver_argv(agent, model, *extra, scope=scope)) == 2
-    assert env.spawned == [] and _worker_record(env.tasks) is None
+    if scope == ("readonly_recon", "recon", "read-only") and extra == ["--research-track", "l2-uk-en/a1"]:
+        assert _dispatch(_driver_argv(agent, model, *extra, scope=scope)) == 0, capsys.readouterr().err
+        record = _worker_record(env.tasks)
+        assert record["driver_brief"]["prompt_sha256"] == hashlib.sha256(b"Map the parser flags.").hexdigest()
+        assert record["mechanical_task"]["track"] == "l2-uk-en/a1"
+        assert record["mechanical_task"]["language_lane"] is False
+        assert len(env.spawned) == 1
+        assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+    else:
+        assert _dispatch(_driver_argv(agent, model, *extra, scope=scope)) == 2
+        assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
@@ -2819,8 +2828,11 @@ def test_driver_brief_rechecks_content_and_core(env, capsys, monkeypatch, tmp_pa
         def missing(*args, **kwargs):
             raise delegate.rules_core.RulesCoreMissing("core unavailable")
         monkeypatch.setattr(delegate.rules_core, "require_core", missing)
-    with pytest.raises(bounded_advisory.AdvisoryRefused):
-        _verify_driver_record(env, agent, model)
+    if scope == ("readonly_recon", "recon", "read-only") and problem == "cyrillic":
+        assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+    else:
+        with pytest.raises(bounded_advisory.AdvisoryRefused):
+            _verify_driver_record(env, agent, model)
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)

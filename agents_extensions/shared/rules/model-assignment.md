@@ -916,6 +916,11 @@ high for broader autonomous integration. The #10919 driver-brief exception admit
 `bounded_implementation` with role `implementation` (`workspace-write` only, never `danger`).
 All three require a nonempty exact-hashed brief, explicit `--owned-path`, `--verify-command`,
 current core instructions and recorded caller provenance; worker replay rechecks those bindings.
+Catalog-qualified `readonly_recon` with role `recon` in `read-only` mode may inspect valid UTF-8
+Cyrillic as opaque text, including permitted Cyrillic filenames and curriculum/wiki scope.
+Alphabet, directory names and research-track metadata alone do not make that recon language work.
+Explicit language work, language judgments, review, design, driver roles, writes, security paths,
+invalid UTF-8 and disallowed C0/C1 controls remain excluded; existing path and egress guards bind.
 Caller attribution is not driver authentication. Luna explicit envelopes retain their mode rules,
 non-security code containing Cyrillic and free-form research roles such as diagnosis, quality
 and investigation. Haiku bounded implementation is `workspace-write` only through either route.

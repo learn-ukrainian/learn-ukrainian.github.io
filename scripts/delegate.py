@@ -17341,7 +17341,7 @@ def _require_ukrainian_model_family(args: argparse.Namespace, model: str | None,
         raise _DispatchRouteRefused(
             "UKRAINIAN_MODEL_REFUSED: content task language is missing or unknown; use --language-lane"
         )
-    if not (content_task or _dispatch_is_language_lane(args)):
+    if not (content_task or _dispatch_is_language_lane(args, model=model)):
         return
     if model is None and not resolved:
         agent = str(getattr(args, "agent", "") or "").strip().lower()
@@ -17353,17 +17353,28 @@ def _require_ukrainian_model_family(args: argparse.Namespace, model: str | None,
         )
 
 
-def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
+def _dispatch_is_language_lane(args: argparse.Namespace, *, model: str | None = None) -> bool:
     """True when the dispatch is Ukrainian language work.
 
     Signals: ``--language-lane``, ``--review-profile ukrainian``, a ``l2-uk*``
     research track, or an owned path under ``curriculum/``. Other lanes must
     not receive that work directly or through budget substitution (#8449).
+    Catalog-qualified opaque read-only recon does not infer language work
+    from track or path metadata; explicit language and review signals bind.
     """
     if bool(getattr(args, "language_lane", False)):
         return True
     if getattr(args, "review_profile", None) == "ukrainian":
         return True
+    from scripts.agent_runtime.mechanical_admission import is_opaque_readonly_recon
+
+    if not _dispatch_is_review_typed(args) and is_opaque_readonly_recon(
+        (model or getattr(args, "model", None),),
+        mode=getattr(args, "mode", None),
+        task_family=getattr(args, "research_task_family", None),
+        task_role=getattr(args, "research_role", None),
+    ):
+        return False
     track = str(getattr(args, "research_track", "") or "").strip().lower()
     if track.startswith("l2-uk"):
         return True
