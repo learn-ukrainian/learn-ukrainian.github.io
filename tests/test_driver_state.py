@@ -50,6 +50,20 @@ def test_init_private_new_epic_directory_preserves_existing_mode(tmp_path, monke
     finally:
         os.umask(old_umask)
     assert stat.S_IMODE(directory.stat().st_mode) == (0o750 if existing else 0o700)
+    pointer = (directory / "DRIVER-STATE.md").read_text(encoding="utf-8")
+    assert len(pointer.encode("utf-8")) < 4096
+    assert "lu-driver-state render --lane infra" in pointer
+    assert "lu-driver-state check --lane infra" in pointer
+    assert "newest full-content DB `handoff_note` as authority" in pointer
+    assert "exactly one full-content DB `handoff_note`" in pointer
+    assert "rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads" in pointer
+    assert "the next three actions" in pointer
+    assert "Do not update it when a goal lands" in pointer
+    assert "## Current goals" not in pointer
+    assert "## Next step" not in pointer
+    assert "Update Goals/Next" not in pointer
+    assert "Stream: infra" in pointer
+    assert "the launcher owns the lease" in pointer
 
 
 @pytest.fixture
