@@ -36,11 +36,11 @@ Practices used:
 - Use the [CI recovery recipe](recipes.md#ci-recovery) before the single rerun.
 - For review scope and repeated findings, apply the canonical
   [review stopping rule](../../drive-epic/references/review-merge-cleanup.md#review-stopping-rule).
-- Apply OO-99 as one pacing rule, retaining earlier orders: pace = (remaining percent +
-  unexpired credits in percentage points) / hours to reset. Read every pool hourly;
-  compare observed burn with pace, targeting within 30 percent. Change the mix by at most
-  one step per lane per hour. Use the [cycle's scarcity check](cycle.md) before restrictions;
-  fill authorized targets with eligible reserve-pool work instead of waiting for reset.
+- Apply OO-99 through the binding [native usage pace/reserve rule](../../../rules/model-assignment.md).
+  Read each pool's CodexBar pace line, used minus expected. A pool is short only when
+  it will not last to reset; reset credits cover a deficit. Use capacity before reset,
+  restricting only when a pool runs out before reset. Use Claude account a, then b.
+  Fill authorized targets with eligible reserve-pool work instead of waiting for reset.
 - Before seating a review, confirm that seat and path can satisfy the landing gate.
 - When an external tool changed, read its changelog and run one canary first.
 - Audit drift: installed tooling against merged source; a gap is a deploy task or reviewed

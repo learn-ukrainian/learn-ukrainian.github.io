@@ -16,12 +16,12 @@ never fine.
    each Claude pool, Codex, Grok and Cursor, AGY and any other catalog pool. A pool with no
    metric gets a hand-read meter, and the gap is logged as a monitoring task. Grok and Cursor
    share one meter, never two pools of headroom. Keep readings in a scratch log for trends.
-   Read each pool's CodexBar pace line: remaining percent, hours to reset and burn rate.
+   Read each pool's CodexBar pace line: used minus expected and whether it will last to reset.
    Restrict routing for scarcity only when projected exhaustion precedes reset
    ([OO-99 pacing](decisions.md#tactical-layer-per-cycle)). Unknown pace is not scarcity.
-   Total Opus task-hours per lane over the last 12 hours. Flag hours above 130 percent of
-   the lane's planned hours, or unauthorized use. Missing plans are UNKNOWN; reconcile
-   with pool pace before changing routing.
+   Read Opus task-hours per lane over the last 12 hours from task records. Flag a lane
+   when the Claude pool's pace line shows it running out before reset, or for unauthorized
+   use. Apply the same scarcity rule before changing routing.
    Before recording an account or credential blocker from a refusal code, check whether
    the account's access token has merely expired while its refresh token remains. Then the
    blocker is a token refresh, done through the supported refresh path in the private

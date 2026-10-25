@@ -20,13 +20,14 @@ cat > "$TMPDIR/order.txt" <<'EOF'
 @UTC@ <order body>
 EOF
 publish_order() {
-  local body="$1" recipient="$2"
-  shift 2
+  local body="$1" recipient="$2" idempotency_key="$3"
+  shift 3
   sed "s/@UTC@/$(date -u +%Y-%m-%dT%H:%M:%SZ)/g" "$body" |
     "$PROJECT_PYTHON" -m scripts.fleet_comms channel publish cto - \
-      --sender "$LU_INBOX_WORKER" --recipient "$recipient" "$@"
+      --sender "$LU_INBOX_WORKER" --source cto --recipient "$recipient" \
+      --idempotency-key "$idempotency_key" "$@"
 }
-publish_order "$TMPDIR/order.txt" "<registered-slot>"
+publish_order "$TMPDIR/order.txt" "<registered-slot>" "<unique-order-key>"
 ```
 
 Preserve required message references per `docs/runbooks/driver-seat-cli-move.md` § 5.
@@ -78,4 +79,5 @@ Use exact owned file paths; never claim a shared subtree for an optional edit.
 Briefs state expected eligible PR lines and files; require a one-line size justification
 above the `workflow.md` small-batch threshold, including data files.
 Limit worker-local checks to Ruff and explicitly named test files for the changed module,
-under a 10-minute timeout. Never expand to all importers; CI Gate runs the suite.
+under a 10-minute timeout. Never expand to all importers. PR CI Gate runs admission checks
+and pytest collection; the merge-group CI Gate runs the full suite.
