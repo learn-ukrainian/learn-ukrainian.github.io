@@ -25,6 +25,24 @@ class MechanicalAdmissionRefused(ValueError):
     """A mechanical-only model was requested outside its catalog authority."""
 
 
+def is_opaque_readonly_recon(
+    models: Iterable[str | None], *, mode: str, task_family: str | None, task_role: str | None,
+) -> bool:
+    """Recognize catalog-qualified opaque recon independently of alphabet or track."""
+    if (mode, task_family, task_role) != ("read-only", "readonly_recon", "recon"):
+        return False
+    catalog = load_model_catalog()
+    preferred = bounded_execution_policy(catalog).bounded_worker_model_id
+    identities = tuple(canonical_model_id(model, catalog) for model in models)
+    return bool(identities) and all(
+        identity is not None
+        and catalog["models"][identity]["lifecycle"] == "active"
+        and "readonly_recon" in catalog["models"][identity]["roles"]
+        and (identity == preferred or "mechanical_only" in catalog["models"][identity]["roles"])
+        for identity in identities
+    )
+
+
 def refuse_mechanical_task(
     models: Iterable[str | None], *, mode: str, task_family: str | None = None,
     task_role: str | None = None, paths: Iterable[str] = (), review: bool = False,
@@ -38,8 +56,9 @@ def refuse_mechanical_task(
 
     Unclassified work is refused. Classification and recon are read-only; routine
     mechanical writes require narrow ownership. Mechanical seats and direct briefs
-    require plain UTF-8 without Cyrillic. Existing Luna envelopes may own ordinary
-    code containing Cyrillic; security and Ukrainian content paths stay excluded.
+    require plain UTF-8 without Cyrillic, except catalog-qualified opaque read-only
+    recon. Existing Luna envelopes may own ordinary code containing Cyrillic;
+    security and explicit Ukrainian language work stay excluded.
     Identity and eligible task families come from catalog roles, never model ids.
     """
     pins = tuple(model for model in models if model)
@@ -50,7 +69,7 @@ def refuse_mechanical_task(
     identities = {canonical_model_id(pin, catalog) for pin in pins}
     constrained = [catalog["models"][identity] for identity in identities if identity and (
         "mechanical_only" in catalog["models"][identity]["roles"]
-        or (identity == preferred and (driver_brief or task_family == "bounded_implementation"))
+        or (identity == preferred and (driver_brief or task_family in {"bounded_implementation", "readonly_recon"}))
     )]
     # Explicit-envelope research roles are free-form. Keep their historical
     # vocabulary while refusing excluded activities and their class siblings.
@@ -61,6 +80,7 @@ def refuse_mechanical_task(
         raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: bounded workers cannot take driver, design, advisory or review roles")
     if not constrained:
         return
+    opaque_recon = is_opaque_readonly_recon(pins, mode=mode, task_family=task_family, task_role=task_role)
 
     def refuse(reason: str) -> None:
         raise MechanicalAdmissionRefused(f"MECHANICAL_TASK_REFUSED: {reason} (#9996)")
@@ -70,7 +90,7 @@ def refuse_mechanical_task(
     families = MECHANICAL_FAMILIES | {"bounded_implementation"}
     if task_family not in families or any(task_family not in model["roles"] for model in constrained):
         refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification, readonly_recon or bounded_implementation")
-    typed_role = driver_brief or any("mechanical_only" in model["roles"] for model in constrained)
+    typed_role = opaque_recon or driver_brief or any("mechanical_only" in model["roles"] for model in constrained)
     if typed_role and task_role not in {None, "implementation", "recon", "classification", "triage"}:
         refuse("driver, design, advisory, approval and content roles are excluded")
     bounded = task_family == "bounded_implementation"
@@ -91,10 +111,11 @@ def refuse_mechanical_task(
         refuse("owned paths must be repository-relative without traversal")
     if is_security_sensitive_change((), owned):
         refuse("security-sensitive owned paths are excluded")
-    if language_lane or (research_track or "").casefold().startswith("l2-uk"):
+    if language_lane or (not opaque_recon and (research_track or "").casefold().startswith("l2-uk")):
         refuse("Ukrainian authoring, review and content are excluded")
-    if any((typed_role and CYRILLIC.search(path)) or set(PurePosixPath(path).parts) & {"curriculum", "wiki"} for path in owned):
+    if not opaque_recon and any((typed_role and CYRILLIC.search(path)) or set(PurePosixPath(path).parts) & {"curriculum", "wiki"} for path in owned):
         refuse("Ukrainian content paths are excluded")
+    content_requirement = "plain UTF-8 without disallowed controls" if opaque_recon else "plain UTF-8 without Cyrillic"
     stage = "task prompt"
     try:
         if typed_role and task_prompt:
@@ -103,11 +124,11 @@ def refuse_mechanical_task(
             # The canonical core contains Ukrainian normative examples and is
             # carried by every seat. Exempt only its exact canonical bytes.
             task_text = task_prompt.replace(core_block("core"), "")
-            if content_problem(task_text.encode("utf-8")):
-                refuse("task prompt must be plain UTF-8 without Cyrillic")
+            if content_problem(task_text.encode("utf-8"), allow_cyrillic=opaque_recon):
+                refuse(f"task prompt must be {content_requirement}")
         stage = "prompt file"
-        if typed_role and prompt_file and content_problem(Path(prompt_file).read_bytes()):
-            refuse("task input must be plain UTF-8 without Cyrillic")
+        if typed_role and prompt_file and content_problem(Path(prompt_file).read_bytes(), allow_cyrillic=opaque_recon):
+            refuse(f"task input must be {content_requirement}")
         stage = "tree resolution"
         resolved = trees() if callable(trees) else trees
         if not resolved:
@@ -117,10 +138,15 @@ def refuse_mechanical_task(
             for path in owned:
                 _, files = tree.owned_files(path)
                 for name, data in files.items():
-                    if is_security_sensitive_change((name,)) or set(PurePosixPath(name).parts) & {"curriculum", "wiki"}:
+                    if is_security_sensitive_change((name,)) or (
+                        not opaque_recon and set(PurePosixPath(name).parts) & {"curriculum", "wiki"}
+                    ):
                         refuse("owned scope contains security-sensitive or Ukrainian content paths")
-                    if typed_role and (CYRILLIC.search(name) or content_problem(data)):
-                        refuse("owned content must be plain UTF-8 without Cyrillic")
+                    if typed_role and (
+                        (not opaque_recon and CYRILLIC.search(name))
+                        or content_problem(data, allow_cyrillic=opaque_recon)
+                    ):
+                        refuse(f"owned content must be {content_requirement}")
     except MechanicalAdmissionRefused:
         raise
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
