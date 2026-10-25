@@ -290,11 +290,15 @@ def resolve(assertions: list[dict], field: str, subject_id: str, overlay: dict |
     voting = [a for a in active if a["tier"] in (1, 2)]
     if not voting:
         first = sorted(active, key=lambda a: a["assertion_id"])[0]
-        entry = _value_entry(first["value_norm"], active)
+        by_value: dict[str, list[dict]] = {}
+        for a in active:
+            by_value.setdefault(a["value_norm"], []).append(a)
+        values = [_value_entry(vn, xs) for vn, xs in sorted(by_value.items())]
+        entry = next(v for v in values if first["assertion_id"] in v["assertion_ids"])
         return {
             "state": "unverified",
             "selected": first["assertion_id"],
-            "values": [entry],
+            "values": values,
             "independence_groups_agreeing": 0,
             "mapping_evidenced": entry["mapping_evidenced"],
             "independence_groups_evidenced": 0,
@@ -308,6 +312,18 @@ def resolve(assertions: list[dict], field: str, subject_id: str, overlay: dict |
         res = _resolve_scalar(voting, overlay)
     if "mapping_evidenced" not in res:
         res.update(_evidence_of(res))
+    # Source-labelled parallel display includes lower-tier material. Selection and
+    # every voting/evidence count above still come only from tiers 1 and 2.
+    displayed = {v["value_norm"]: v for v in res["values"]}
+    for a in active:
+        if a["tier"] in (1, 2):
+            continue
+        vn = a["value_norm"]
+        if vn not in displayed:
+            displayed[vn] = {"value_norm": vn, "assertion_ids": [], "independence_groups": [],
+                             "mapping_evidenced": False, "independence_groups_evidenced": 0}
+            res["values"].append(displayed[vn])
+        displayed[vn]["assertion_ids"] = sorted(set(displayed[vn]["assertion_ids"]) | {a["assertion_id"]})
     res.update(base)
     return res
 

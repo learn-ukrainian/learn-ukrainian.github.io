@@ -61,3 +61,24 @@ def test_unresolved_sense_evidence_is_retained_and_never_votes():
     synonyms = card["senses"][0]["fields"]["synonyms"]
     assert synonyms["state"] == "unverified" and synonyms["selected"] is None
     assert synonyms["non_voting"] == [{"assertion_id": held["assertion_id"], "reason": "mapping unresolved"}]
+    # Display every source-labelled value without lending tier-3 material a vote.
+    modern = assertion("ulif", "G-ULIF", 1, "definition_uk", "source article")
+    legacy = assertion("atlas0", "G-PROJECT", 3, "definition_uk", "legacy article")
+    duplicate = assertion("atlas0", "G-PROJECT", 3, "definition_uk", "source article")
+    original = resolver.resolve([modern], "definition_uk", "wc_x")
+    projected = resolver.resolve([modern, legacy, duplicate], "definition_uk", "wc_x")
+    assert projected["selected"] == original["selected"] == modern["assertion_id"]
+    assert projected["state"] == original["state"] == "single-source"
+    assert projected["independence_groups_agreeing"] == 1
+    by_value = {v["value_norm"]: v for v in projected["values"]}
+    assert set(by_value) == {"source article", "legacy article"}
+    assert by_value["source article"]["assertion_ids"] == sorted(
+        [modern["assertion_id"], duplicate["assertion_id"]])
+    assert by_value["source article"]["independence_groups"] == ["G-ULIF"]
+    assert by_value["legacy article"]["assertion_ids"] == [legacy["assertion_id"]]
+    assert by_value["legacy article"]["mapping_evidenced"] is False
+    only_legacy = resolver.resolve([legacy, duplicate], "definition_uk", "wc_x")
+    assert only_legacy["state"] == "unverified"
+    assert {v["value_norm"]: v["assertion_ids"] for v in only_legacy["values"]} == {
+        "source article": [duplicate["assertion_id"]], "legacy article": [legacy["assertion_id"]]}
+    assert only_legacy["independence_groups_agreeing"] == 0
