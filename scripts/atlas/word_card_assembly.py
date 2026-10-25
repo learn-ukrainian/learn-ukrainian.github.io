@@ -837,10 +837,11 @@ def attach_source_partitions(inputs: Inputs, unit: dict, entry: dict, builder: B
     """
     spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
     parts = inputs.sources.source_partitions(spelling, unit["atlas_slug"])
-    ambiguous = unit["entry_type"] == "lexeme_candidate" and len(inputs.sources.homonyms(spelling)) > 1
-    confidence = "unresolved" if match["method"] == "unresolved" or ambiguous else "medium"
-    reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
+    ulif_ambiguous = unit["entry_type"] == "lexeme_candidate" and len(inputs.sources.homonyms(spelling)) > 1
     for part in parts:
+        ambiguous = ulif_ambiguous or src.partition_lexically_ambiguous(part, spelling)
+        confidence = "unresolved" if match["method"] == "unresolved" or ambiguous else "medium"
+        reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
         record = bound_source_record(inputs.registry, part)
         for index, (field, value, origin) in enumerate(src.partition_claims(part)):
             norm = (value if field == "cefr" else src.norm_v1(value)) if isinstance(value, str) else \

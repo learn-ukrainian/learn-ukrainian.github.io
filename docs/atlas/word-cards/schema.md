@@ -186,6 +186,9 @@ Corroboration counts **lineages**, not labels. Provisional table; the merged reg
 | `G-GRAC` | `grac`, `ubertext_freq` | 2 | frequency |
 | `G-KARAVANSKY` | Караванський synonyms (via slovnyk.me) | 2 | separate dictionary; needs its own register entry |
 | `G-VTS?` | ВТС (`definition_cards`) | 2 | lineage vs СУМ-11 unknown; `?` = does not corroborate until recorded |
+| `G-ESUM?` | `esum`, `goroh` | 1 (`esum`), 2 (`goroh`) | unresolved lineage; neither corroborates another source |
+| `G-WIKI?` | `dmklinger` | 2 | unresolved lineage; never corroborates |
+| `G-E2U?` | `r2u_e2u` | 2 | unresolved lineage; never corroborates |
 | `G-ULIF` (tier 2) | `ukrainian_word_stress` | 2 | the register (2026-10-06) records the data as ULIF-derived: one lineage with ULIF, so it never corroborates ULIF and a disagreement with ULIF is a `conflict` (pilot finding F4) |
 | `G-GRINCHENKO` | `grinchenko` | 2 | 1907; attests heritage, never modern stress or meaning |
 | `G-TEACHER` | `teacher_materials`, `ulp_private` | 3 | never promoted by review (Q5, adopted): a sanctioned independent language reviewer may *approve an assertion for a specified use* (`review.status = reviewed` + `approved_for: [modes]`), keeping its lineage and tier |
@@ -194,6 +197,8 @@ Corroboration counts **lineages**, not labels. Provisional table; the merged reg
 
 ### 9.2 Identity confidence
 Per card (`identity.confidence`) and per assertion (`mapping.confidence` + `basis` + `ambiguous`): `high`, `medium`, `low`, `unresolved`; rules in `identity.md` §4–§5. `unresolved` cards exist (thin, honest) but no practice item may depend on them. A confidence label on shared morphology never certifies meaning alignment (Q7, adopted): **meaning practice requires reviewed `high` identity for the specific card and sense** and evidenced supporting assertions; `medium` cards (dictionary-division splits such as `ключ`) are excluded from meaning modes until a language-lane overlay `identity` entry raises them.
+
+Spelling-level pilot partitions also preserve the source's own lexical divisions. A partition containing several numbered homonym headwords, VTS Roman-numbered lexical headings, or several Kaikki parts of speech is retained with unresolved mapping and a `source_homonym_correspondence_unresolved` hold. Other partitions are evaluated separately. Numbered article senses alone do not establish lexical ambiguity.
 
 ### 9.3 Extraction confidence
 Per assertion (§4). `quality.extraction_confidence_min` summarises the card.

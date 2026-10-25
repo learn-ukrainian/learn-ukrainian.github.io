@@ -68,12 +68,16 @@ class Resolver:
             entry = inputs.entry_by_unit[unit["unit_key"]]
             spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
             lexeme = unit["entry_type"] == "lexeme_candidate"
-            ambiguous = lexeme and len(self.sources.homonyms(spelling)) > 1
+            ulif_ambiguous = lexeme and len(self.sources.homonyms(spelling)) > 1
             unresolved = lexeme and matched_vesum_entry(inputs, unit) is None
-            reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
-            self.partition_mapping[entry["card_id"]] = wa.mapping(
-                "unresolved" if unresolved or ambiguous else "medium", "spelling", ambiguous=ambiguous,
-                note=reason if unresolved or ambiguous else "single source partition; no sense alignment")
+            self.partition_mapping[entry["card_id"]] = {}
+            parts = {claim[0]["locator"]: claim[0] for claim in self.partitions[entry["card_id"]].values()}
+            for locator, part in parts.items():
+                ambiguous = ulif_ambiguous or src.partition_lexically_ambiguous(part, spelling)
+                reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
+                self.partition_mapping[entry["card_id"]][locator] = wa.mapping(
+                    "unresolved" if unresolved or ambiguous else "medium", "spelling", ambiguous=ambiguous,
+                    note=reason if unresolved or ambiguous else "single source partition; no sense alignment")
 
     def row(self, table: str, row_id: int):
         out = self.sources.sources.execute(f'SELECT * FROM "{table}" WHERE id=?', (row_id,)).fetchone()
@@ -92,7 +96,8 @@ class Resolver:
             return None if (a["source_id"], a["snapshot_id"], a["field"], a["value"], a["value_norm"],
                             a["subject"], a.get("mapping"), a["producer"]["name"]) == (
                                 part["source_id"], part["snapshot_id"], field, value, norm,
-                                {"kind": "card", "id": card["card_id"]}, self.partition_mapping[card["card_id"]],
+                                {"kind": "card", "id": card["card_id"]},
+                                self.partition_mapping[card["card_id"]][part["locator"]],
                                 part["source_label"] + " / " + origin) else "value_mismatch"
         match = LOCATOR.match(locator)
         if not match:

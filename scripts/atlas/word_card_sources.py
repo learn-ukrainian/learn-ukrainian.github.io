@@ -450,6 +450,44 @@ def source_label_id(label: str) -> str:
     return "course_authored"
 
 
+def partition_lexically_ambiguous(partition: dict, spelling: str) -> bool:
+    """Recognize source-owned lexical divisions, never numbered article senses.
+
+    SUM-20 prints superscript homonym numbers on repeated headwords. VTS uses
+    Roman-numbered paragraph headings. The compact Kaikki reader retains a POS
+    list when its lookup row combines entries. None establishes correspondence
+    to the card merely because ULIF has a single homonym.
+    """
+    head = re.escape(unstressed(spelling).upper())
+    heading = re.compile(r"(?<!\w)" + head + r"([¹²³⁴⁵⁶⁷⁸⁹⁰]+),")
+    markers = set()
+    positions = set()
+
+    def visit(node):
+        if isinstance(node, dict):
+            if partition["source_id"] == "kaikki" and isinstance(node.get("pos"), list):
+                positions.update(node["pos"])
+            for key, value in node.items():
+                # These columns retain structured source headings as JSON text.
+                if key in {"paragraphs_json", "payload_json"} and isinstance(value, str):
+                    value = json.loads(value)
+                if key in {"paragraphs", "paragraphs_json"} and partition["source_id"] == "vts_busel_slovnyk_me":
+                    for paragraph in value:
+                        match = re.match(r"^([IVX]+)\s", paragraph["text"])
+                        if paragraph.get("strong") and match:
+                            markers.add("vts:" + match[1])
+                else:
+                    visit(value)
+        elif isinstance(node, list):
+            for value in node:
+                visit(value)
+        elif isinstance(node, str):
+            markers.update(heading.findall(unstressed(node)))
+
+    visit(partition["record"])
+    return len(markers) > 1 or len(positions) > 1
+
+
 def partition_claims(partition: dict) -> list[tuple[str, object, str]]:
     """Typed, additive values plus the verbatim source record, without sense minting.
 
