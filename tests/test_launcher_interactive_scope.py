@@ -436,7 +436,9 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
         # Caller arguments, then the drive-epic binding (a lane agent may lead).
         forward = _argv(env)
         assert forward[-1 - len(TRICKY) : -1] == list(TRICKY)
-        assert forward[-1].startswith("Load agents_extensions/shared/skills/drive-epic/SKILL.md")
+        assert forward[-1].startswith(
+            f"First run lu-driver-state render --lane {label}, then lu-driver-state check --lane {label}."
+        )
     else:
         assert not [name for name in names if name.startswith(("lease-", "rollover-", "canary", "publish"))]
         assert _argv(env) == _expected_forward(wrapper)

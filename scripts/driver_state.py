@@ -1,9 +1,9 @@
-"""Pinned per-epic driver state: who am I, what epic, which goals.
+"""Pinned per-epic driver facts and a pointer to authoritative database state.
 
 Long-running driver sessions lose their launch prompt when the harness
-compacts context: the epic binding and the current goals lived only in the
-first user turn. This module keeps them in a small local state file that the
-harness re-reads on every model call, so compaction cannot drop them.
+compacts context. This module keeps the epic binding in a small local pointer
+that the harness re-reads on every model call. Goals, tasks, decisions and full
+handoff notes live in the driver-state database, not in the pointer.
 
 State file: ``<repo>/.claude/<epic>-epic/DRIVER-STATE.md`` (gitignored local
 state, next to the epic's driver handoffs). The launcher exports
@@ -11,8 +11,8 @@ state, next to the epic's driver handoffs). The launcher exports
 
 Commands::
 
-    .venv/bin/python -m scripts.driver_state whoami     # epic, seat, model, next step
-    .venv/bin/python -m scripts.driver_state goals      # full pinned state
+    .venv/bin/python -m scripts.driver_state whoami     # epic, seat, legacy summaries
+    .venv/bin/python -m scripts.driver_state goals      # full pinned pointer
     .venv/bin/python -m scripts.driver_state path [--epic E]
     .venv/bin/python -m scripts.driver_state packet --epic E [--recipient SLOT]
     .venv/bin/python -m scripts.driver_state init --epic E [--force]
@@ -96,16 +96,18 @@ MAX_ENVELOPE_CHARS = MAX_INJECT_CHARS + len(POLICY) + len(BLOCKER_POLICY) + 600
 
 TEMPLATE = """# Driver state: {epic}
 
-<!-- Pinned driver state. Re-injected before every model call (AGY hook).
-     Keep it short (under ~4 KB). Update Goals/Next as work lands. -->
+<!-- Pinned facts pointer. Re-injected before every model call (AGY hook).
+     Keep this file under 4 KiB. Do not update it when a goal lands. -->
 
 ## Epic
 - Stream: {epic}
 - Seat: driver (one per stream; the launcher owns the lease)
-- Handoff: .claude/{epic}-epic/ (read the newest driver handoff on cold start)
 
-## Current goals (bounded, each with a definition of done)
-1. <goal> — DONE WHEN: <observable, tool-checkable condition>
+## Database authority
+- First run `lu-driver-state render --lane {epic}`, then `lu-driver-state check --lane {epic}` on startup and after compaction or doubt.
+- Read the newest full-content DB `handoff_note` as authority for goals, tasks, decisions and handoff state.
+- For each handoff, write exactly one full-content DB `handoff_note` with rollover/lineage IDs, full live task IDs/run nonces, open order message IDs, PR heads and the next three actions. A temporary path or markdown content cannot substitute.
+- Keep only pinned provider/stream facts and render instructions here; record mutable state in the database.
 
 ## Hard rules
 - Never self-merge; landing order is cross-family review at the exact head, then CI Gate, then the merge queue.
@@ -113,8 +115,6 @@ TEMPLATE = """# Driver state: {epic}
 
 {policy}
 {blocker_policy}
-## Next step
-- <single next action>
 """
 
 

@@ -3,6 +3,30 @@
 This runbook covers replacement-thread rollover when a Codex, Claude, Gemini,
 or orchestrator heartbeat thread approaches the auto-compaction zone.
 
+## Current launcher handoff startup
+
+For every launcher-generated epic kick, first run `lu-driver-state render --lane <lane>`,
+then `lu-driver-state check --lane <lane>`. Use the concrete lane resolved by the
+launcher. Repeat these commands after compaction or doubt. Read the newest
+full-content DB `handoff_note` as authority for goals, tasks, decisions and handoff
+state before acting on supplemental file handoffs.
+
+For each handoff, write exactly one full-content DB `handoff_note`. Include
+rollover and lineage IDs, full live task IDs and run nonces, open order message
+IDs, PR heads and the next three actions. A temporary path or markdown content
+cannot substitute for that note.
+
+Keep `.claude/<lane>-epic/DRIVER-STATE.md` under 4 KiB. It contains only pinned
+provider and stream facts and DB render instructions. Do not store goals,
+next steps or task state there, or update it when a goal lands.
+`scripts.driver_state whoami` remains an identity diagnostic, not a substitute
+for DB render/check.
+
+For native Codex, hand off after the fourth compaction and before the eighth.
+Keep native automatic compaction enabled. The `native_codex` profile leaves
+`auto_compact_capacity_tokens` null because native Codex owns the trigger.
+The historical rollover procedures below do not change this current policy.
+
 ## Verified Capabilities
 
 Verified locally through 2026-07-15:
