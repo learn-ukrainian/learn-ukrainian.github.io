@@ -416,7 +416,8 @@ def test_plain_flaky_issue_is_unchanged(tmp_path: Path, transport: Transport) ->
     subject = Subject(tmp_path)
     path = tmp_path / "state.json"
     ejected(subject, path, ["pytest (3)"], failures=[{"job": "pytest (3)", "pr": 7, "at": "2999-01-01T00:00:00+00:00"}])
-    subject.issue_rows = [{"number": 77, "title": "Merge queue flaky test: pytest (3)"}]
+    subject.issue_rows = [{"number": 77, "title": "Renamed",
+                           "body": "Quarantine pytest (3).  \n\n<!-- mq-keeper-flake -->"}]
     lines, failed = keeper.run(subject, path, apply=True)
     assert not failed, lines
     assert transport.issues() == []

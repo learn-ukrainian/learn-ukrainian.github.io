@@ -2357,7 +2357,7 @@ def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, wh
         assert "issue" not in mutations(fake)
         assert not any("CTO finding:" in line for line in lines)
         if where == "body":
-            fake.issue_rows[-1]["body"] = "Quarantine (" + rendered.replace("_", r"\_") + ")."
+            fake.issue_rows[-1]["body"] = "Quarantine (" + rendered.replace("_", r"\_") + ").  \n\nRetry later."
         run(fake, path, monkeypatch)
         assert len([kind for kind, _ in fake.actions if kind == "issue-comment"]) == 1
         state = json.loads(path.read_text())
@@ -2443,9 +2443,9 @@ def test_job_fallback_ignores_unrelated_issue_body(tmp_path, monkeypatch, job):
 
 
 def test_job_fallback_accepts_keeper_marked_issue(tmp_path, monkeypatch):
-    """A keeper marker cannot bind a prefix of a longer job identity."""
-    # Prior automatic creation omitted the keeper marker. Renaming that
-    # canonical issue must not make its recognizable observation disappear.
+    """A state-only containing identity vetoes reuse, even with an exact-title alternative."""
+    # Both a marker and the legacy opener remain subject to a saved longer
+    # identity, including when another issue has an exact canonical title.
     for index, body in enumerate(("Frontend\n<!-- mq-keeper-flake -->",
                                   "`Frontend` failed merge_group runs on distinct PRs #41, #42 within 24 hours. Run IDs: 101.")):
         path = tmp_path / f"state-{index}.json"
@@ -2453,12 +2453,20 @@ def test_job_fallback_accepts_keeper_marked_issue(tmp_path, monkeypatch):
         _ejected(fake, path, ["Frontend"], failures=[_recent("Frontend", 41)])
         fake.issue_rows = [
             {"number": 30, "title": "Renamed longer job",
-             "body": "Frontend build is flaky\n<!-- mq-keeper-flake -->"},
+             "body": "*Build*  Frontend, workers.\n<!-- mq-keeper-flake -->"},
             {"number": 77, "title": "Renamed", "body": body},
         ]
+        state = json.loads(path.read_text())
+        state["failures"].append({"job": "Build Frontend, workers", "pr": 9, "at": "2000-01-01T00:00:00+00:00"})
+        path.write_text(json.dumps(state))
+        if index == 0:
+            fake.issue_rows[-1]["title"] = "Merge queue flaky test: Frontend"
         lines, failed = run(fake, path, monkeypatch)
         assert not failed, lines
-        assert [payload[0] for kind, payload in fake.actions if kind == "issue-comment"] == [77]
+        assert not any(kind == "issue-comment" for kind, _ in fake.actions)
+        assert any("CTO finding: ambiguous identity for Frontend" in line for line in lines)
+        assert not any("no canonical open issue for Frontend" in line for line in lines)
+        assert json.loads(path.read_text())["flake_issue_updates"] == {}
         assert _issue_titles(fake) == []
 
 

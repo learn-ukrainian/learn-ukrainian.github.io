@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import fcntl
 import hashlib
+import heapq
 import json
 import os
 import re
@@ -13,6 +14,7 @@ import sys
 import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -885,7 +887,15 @@ def _identity_spellings(key: str) -> frozenset[str]:
     return frozenset({key, display_text(key), display_text(key, DISPLAY_TEST_LIMIT)})
 
 
-def _markdown_references(source: str) -> tuple[list[tuple[str, bool, bool]], list[str], str | None]:
+@dataclass(frozen=True)
+class _ProseRun:
+    text: str
+    at_start: bool
+    at_end: bool
+    emphasis: frozenset[int]
+
+
+def _markdown_references(source: str) -> tuple[list[_ProseRun], list[str], str | None]:
     """Rebuild prose once, keeping non-prose barriers and real line boundaries.
 
     Run edges carry source-boundary flags, so a barrier never supplies a line
@@ -932,6 +942,7 @@ def _markdown_references(source: str) -> tuple[list[tuple[str, bool, bool]], lis
                 contexts.append((raw_lines[cursor][:offset], raw_lines[cursor][offset + len(line):]))
                 cursor += 1
             stream = ""
+            emphasis: set[int] = set()
             prefix, suffix = contexts[0][0], contexts[-1][1]
             at_start = not prefix or prefix[-1].isspace()
             link_depth = 0
@@ -946,6 +957,7 @@ def _markdown_references(source: str) -> tuple[list[tuple[str, bool, bool]], lis
                     stream += child.content
                     continue
                 elif child.type in {"em_open", "em_close", "strong_open", "strong_close"}:
+                    emphasis.update(range(len(stream), len(stream) + len(child.markup)))
                     stream += child.markup
                     continue
                 elif child.type in {"softbreak", "hardbreak"}:
@@ -953,9 +965,10 @@ def _markdown_references(source: str) -> tuple[list[tuple[str, bool, bool]], lis
                     continue
                 if child.type == "code_inline" and (stream[-1].isspace() if stream else at_start):
                     codes.append(child.content)
-                references.append((stream, at_start, False))
+                references.append(_ProseRun(stream, at_start, False, frozenset(emphasis)))
                 stream, at_start = "", False
-            references.append((stream, at_start, not suffix))
+                emphasis = set()
+            references.append(_ProseRun(stream, at_start, not suffix or suffix.isspace(), frozenset(emphasis)))
             first = token.children[0] if token.children else None
             if token.map[0] == 0 and first is not None and first.type == "code_inline" and source.startswith(first.markup):
                 closer = re.search(r"(?<!`)" + re.escape(first.markup) + r"(?!`)", source[len(first.markup):])
@@ -964,6 +977,103 @@ def _markdown_references(source: str) -> tuple[list[tuple[str, bool, bool]], lis
         return references, codes, legacy
     except Exception as exc:
         raise KeeperError(f"CommonMark identity parsing failed ({type(exc).__name__})") from exc
+
+
+def _reference_eligible(prose: _ProseRun, start: int, end: int) -> bool:
+    """Check literal content, allowing one balanced pair outside its span."""
+    text = prose.text
+    boundaries = [(start, end)]
+    if start and end < len(text) and text[start - 1] == "(" and text[end] == ")":
+        boundaries.append((start - 1, end + 1))
+    for begin, finish in boundaries:
+        if not (text[begin - 1].isspace() if begin else prose.at_start):
+            continue
+        if finish == len(text):
+            if prose.at_end:
+                return True
+        elif text[finish] == "\n" or (text[finish] in ".,;!?" and (
+            text[finish + 1].isspace() if finish + 1 < len(text) else prose.at_end
+        )):
+            return True
+    return False
+
+
+def _whitespace_view(text: str) -> tuple[str, list[tuple[int, int]]]:
+    """Collapse maximal whitespace runs, retaining their complete intervals."""
+    chars: list[str] = []
+    positions: list[tuple[int, int]] = []
+    for index, char in enumerate(text):
+        if char.isspace():
+            if chars and chars[-1] == " ":
+                positions[-1] = (positions[-1][0], index + 1)
+                continue
+            char = " "
+        chars.append(char)
+        positions.append((index, index + 1))
+    return "".join(chars), positions
+
+
+def _spelling_occurrences(
+    text: str, known: Mapping[str, frozenset[str]], positions: list[tuple[int, int]],
+) -> list[tuple[int, int, str]]:
+    occurrences = []
+    for owner, spellings in known.items():
+        for spelling in spellings:
+            if not spelling:
+                continue
+            offset = text.find(spelling)
+            while offset != -1:
+                occurrences.append((positions[offset][0], positions[offset + len(spelling) - 1][1], owner))
+                offset = text.find(spelling, offset + 1)
+    return occurrences
+
+
+def _prose_identities(
+    prose: _ProseRun, known: Mapping[str, frozenset[str]],
+) -> tuple[set[str], set[str]]:
+    """Literal eligibility plus conflict-only W/E interval sweeps.
+
+    Every spelling and overlapping occurrence retains its raw owner. Active
+    intervals all intersect the current interval; each pair is visited once.
+    """
+    literal = _spelling_occurrences(prose.text, known, [(i, i + 1) for i in range(len(prose.text))])
+    eligible = {(start, end, owner) for start, end, owner in literal if _reference_eligible(prose, start, end)}
+    whitespace, positions = _whitespace_view(prose.text)
+    normalized = {owner: frozenset(_whitespace_view(value)[0] for value in values)
+                  for owner, values in known.items()}
+    without_emphasis = [(char, span) for char, span in zip(whitespace, positions, strict=True)
+                        if span[0] not in prose.emphasis]
+    # Keep literal candidate spans even when a collapsed whitespace interval
+    # covers more source characters than that candidate's own spelling.
+    views = [literal, literal + _spelling_occurrences(whitespace, normalized, positions),
+             literal + _spelling_occurrences("".join(char for char, _ in without_emphasis), normalized,
+                                             [span for _, span in without_emphasis])]
+    contested: set[str] = set()
+    for occurrences in views:
+        active: dict[int, tuple[int, int, str]] = {}
+        endings: list[tuple[int, int]] = []
+        for index, current in enumerate(sorted(set(occurrences))):
+            start, end, owner = current
+            while endings and endings[0][0] <= start:
+                _, expired = heapq.heappop(endings)
+                del active[expired]
+            for other in active.values():
+                left, right, other_owner = other
+                if owner == other_owner:
+                    continue
+                if left <= start and end <= right and right - left > end - start:
+                    if current in eligible:
+                        contested.add(owner)
+                elif start <= left and right <= end and end - start > right - left:
+                    if other in eligible:
+                        contested.add(other_owner)
+                elif (left < start < right < end or start < left < end < right) and (
+                    current in eligible and other in eligible
+                ):
+                    contested.update((owner, other_owner))
+            active[index] = current
+            heapq.heappush(endings, (end, index))
+    return {owner for _, _, owner in eligible}, contested
 
 
 def _canonical_flake_issue(
@@ -982,12 +1092,6 @@ def _canonical_flake_issue(
         for value in sorted(identities - {key})
     )
     title_pattern = "(?:" + "|".join(title_patterns) + ")"
-    pattern = re.compile(
-        r"(?:\((?P<wrapped>" + "|".join(re.escape(value) for value in sorted(identities))
-        + r")\)|(?P<plain>" + "|".join(re.escape(value) for value in sorted(identities))
-        + r"))"
-    )
-    longer = {value for other, values in known.items() if other != key for value in values}
     matches = []
     ambiguous = False
     for item in issues:
@@ -1002,28 +1106,10 @@ def _canonical_flake_issue(
                 continue
             title_references, title_codes, _ = _markdown_references(title)
             matched = any(code in identities for code in [*title_codes, *body_codes])
-            for stream, at_start, at_end in [*title_references, *body_references]:
-                for occurrence in pattern.finditer(stream):
-                    begin, finish = occurrence.span()
-                    if not (stream[begin - 1].isspace() if begin else at_start):
-                        continue
-                    if finish == len(stream):
-                        if not at_end:
-                            continue
-                    elif stream[finish] not in "\n.,;!?" or (
-                        stream[finish] != "\n" and not (
-                            stream[finish + 1].isspace() if finish + 1 < len(stream) else at_end
-                        )
-                    ):
-                        continue
-                    group = "wrapped" if occurrence.group("wrapped") is not None else "plain"
-                    start, end = occurrence.span(group)
-                    # Only a complete known longer spelling, at this exact
-                    # position, can invalidate a punctuation-ended reading.
-                    if any(len(value) > end - start and stream.startswith(value, start) for value in longer):
-                        ambiguous = True
-                    else:
-                        matched = True
+            for prose in [*title_references, *body_references]:
+                eligible, contested = _prose_identities(prose, known)
+                matched |= key in eligible
+                ambiguous |= key in contested
         if matched:
             matches.append(item)
     if any(type(item.get("number")) is not int or item["number"] <= 0 for item in matches):
