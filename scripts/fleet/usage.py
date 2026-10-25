@@ -21,6 +21,7 @@ from typing import Any
 if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.http_status import has_http_status
 from scripts.fleet import credit_lane
 from scripts.fleet.prepaid_status import api_lane_status_from_account
 
@@ -420,7 +421,7 @@ def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
             "(writes ~/.config/cursor/auth.json). CURSOR_API_KEY alone is enough for "
             "dispatch, not for allotment percentages."
         )
-    if lane == "claude" and ("429" in fail or "rate_limit" in fail.lower()):
+    if lane == "claude" and (has_http_status(fail, {429}) or "rate_limit" in fail.lower()):
         tips.append(
             "  tip: Anthropic rate-limited the usage probe (429). Wait and retry "
             "`usage show --fresh`; interactive/agentic caps above are ledger/LKG when burn is unknown."
