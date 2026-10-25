@@ -165,7 +165,7 @@ def test_push_uncertainty_never_reports_success(checkout, monkeypatch, failure):
         nonlocal seen
         if args[1:2] == ["push"] and failure == "timeout":
             raise subprocess.TimeoutExpired(args, 1)
-        if args[1:3] == ["ls-remote", "--refs"]:
+        if args[1:3] == ["ls-remote", "--refs"] and args[-1] == "refs/heads/codex/finalize":
             seen += 1
             if failure == "unknown_remote":
                 return subprocess.CompletedProcess(args, 128, b"", b"network unavailable")
@@ -353,6 +353,8 @@ def test_prepublication_movement_or_unknown_query_refuses_before_push(checkout, 
 
     def query(context, branch):
         result = real_query(context, branch)
+        if branch != "codex/finalize":
+            return result
         if uncertainty == "unknown_query":
             raise delegate.SnapshotRefusal("auto_finalize_remote_unknown")
         if uncertainty == "head":

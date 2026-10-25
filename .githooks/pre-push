@@ -17,5 +17,9 @@ run_project_python "$hook_dir/check-pytest-stamp.py" "$@" <"$updates_file"
 # its own (#11276): CI runs the full suite and remains the merge gate.
 run_project_python "$hook_dir/pre_push_gate.py" \
   --launcher "$project_python" --config "$source_root/.pre-commit-config.yaml" "$@" <"$updates_file"
-require_git_lfs
-git lfs pre-push "$@" <"$updates_file"
+# Git always supplies the remote name and URL. Only the driver's direct,
+# argument-free validation call separates these checks from network transport.
+if [[ $# -ne 0 ]]; then
+  require_git_lfs
+  git lfs pre-push "$@" <"$updates_file"
+fi

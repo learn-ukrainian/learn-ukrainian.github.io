@@ -8532,6 +8532,8 @@ class _FinalizePublicHead:
         if public and self.context.run("cat-file", "-e", f"{public}^{{commit}}").returncode:
             with contextlib.suppress(SnapshotRefusal, subprocess.TimeoutExpired):
                 self.context.fetch_remote_commits("refs/heads/main", self.context.driver_base, self.head)
+        if public and not self.context.run("cat-file", "-e", f"{public}^{{commit}}").returncode:
+            self.context.public_head = public
         return public
 
 
@@ -8641,7 +8643,11 @@ def _finalize_transport_context(
         # even when that repository has advanced during validation.
         transport.driver_base = validation.driver_base
         transport.isolate_objects(base=base, head=head)
-        transport.receive_publication(head=head, base=base, objects=validation.git_dir / "objects")
+        transport.publication_exclusions = getattr(validation, "publication_exclusions", None)
+        transport.receive_publication(
+            head=head, base=base, objects=validation.git_dir / "objects",
+            exclusions=transport.publication_exclusions,
+        )
         yield transport
 
 
@@ -8655,8 +8661,9 @@ def _finalize_transport_push(
     This push runs no hook, so nothing the worker wrote executes while the
     credential exists. It names the pinned URL and one non-force refspec,
     sends no tags, and pins the proxy and protocol keys over whatever its
-    repository holds. The credential is passed in this one process's
+    repository holds. The credential is passed in the transport processes'
     environment, never written to configuration or put on a command line.
+    Verified LFS objects must upload successfully before the Git ref can move.
     Its bound is the publication's, as when the push itself ran the hook.
     """
     from scripts.orchestration.safe_git_context import GIT
@@ -8664,6 +8671,13 @@ def _finalize_transport_push(
     hooks = transport.root / "transport-hooks"
     hooks.mkdir()
     scheme = "file" if transport.local_remote else "https"
+    objects = transport.prepare_lfs(
+        head=head, exclusions=transport.publication_exclusions or (),
+    )
+    endpoint = Path(transport.origin).as_uri() if transport.local_remote else transport.origin + "/info/lfs"
+    lfs = shutil.which("git-lfs", path=os.defpath)
+    if objects and not lfs:
+        raise SnapshotRefusal("auto_finalize_validation_unavailable")
     with _finalize_transport_credentials(origin=transport.origin, repository=transport.repository) as entries:
         settings = [
             ("core.hooksPath", str(hooks)),
@@ -8671,12 +8685,25 @@ def _finalize_transport_push(
             (f"protocol.{scheme}.allow", "always"),
             ("http.proxy", ""),
             (f"http.{transport.origin}.proxy", ""),
+            ("credential.helper", ""),
+            ("credential.interactive", "false"),
+            ("core.askPass", "/usr/bin/false"),
+            ("lfs.url", endpoint),
+            ("lfs.pushurl", endpoint),
             *entries,
         ]
         env = {**transport.env, "GIT_CONFIG_COUNT": str(len(settings))}
         for index, (key, value) in enumerate(settings):
             env[f"GIT_CONFIG_KEY_{index}"] = key
             env[f"GIT_CONFIG_VALUE_{index}"] = value
+        if objects:
+            uploaded = subprocess.run(
+                [lfs, "push", "--object-id", "origin", "--stdin"],
+                cwd=transport.root, env=env, input="\n".join(objects) + "\n",
+                capture_output=True, text=True, check=False, timeout=timeout,
+            )
+            if uploaded.returncode:
+                raise _TypedFailure("LFS upload refused", _remote_git_cause("auto_finalize_push_failed", uploaded))
         return subprocess.run(
             [
                 GIT,
@@ -8711,6 +8738,7 @@ def _push_auto_finalize_branch(
     owned_paths: object = None,
     base_sha: str | None = None,
     task_id: str | None = None,
+    base_branch: str = "main",
 ) -> None:
     """Scan, validate and publish in a driver-configured repo; borrow only objects.
 
@@ -8731,6 +8759,8 @@ def _push_auto_finalize_branch(
         with _finalize_execution_context(worktree, task_id=task_id) as context:
             if context.run("check-ref-format", f"refs/heads/{branch}").returncode:
                 raise SnapshotRefusal("auto_finalize_unsafe_branch")
+            if context.run("check-ref-format", f"refs/heads/{base_branch}").returncode:
+                raise SnapshotRefusal("auto_finalize_unsafe_branch")
             head = _finalize_source_head(context, branch)
             if expected_head is not None and head != expected_head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
@@ -8745,17 +8775,34 @@ def _push_auto_finalize_branch(
                 raise SnapshotRefusal("auto_finalize_remote_unverified")
             # Before any worker code runs: the exact id the push sends.
             _finalize_opsec_scan(context, branch=branch, head=head, remote=remote)
-            context.prepare_validation(head=head, branch=branch, base=base, interpreter=context.interpreter)
+            exclusions = [remote] if remote else []
+            destination_base = _finalize_remote_head(context, base_branch)
+            if destination_base:
+                if context.run("cat-file", "-e", f"{destination_base}^{{commit}}").returncode:
+                    context.fetch_remote_commits(f"refs/heads/{base_branch}", head, context.driver_base)
+                if context.run("cat-file", "-e", f"{destination_base}^{{commit}}").returncode:
+                    raise SnapshotRefusal("auto_finalize_remote_unverified")
+                # Only destination-advertised ancestry proves what it already holds.
+                # The OPSEC scan's public history does not establish possession here.
+                common = context.run("merge-base", "--all", head, destination_base)
+                if common.returncode not in {0, 1}:
+                    raise SnapshotRefusal("auto_finalize_fsck_failed")
+                exclusions.extend(common.stdout.split())
+            context.publication_exclusions = tuple(sorted(set(exclusions)))
+            context.prepare_validation(
+                head=head, branch=branch, base=base, interpreter=context.interpreter,
+                exclusions=context.publication_exclusions,
+            )
             if _finalize_source_head(context, branch) != head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
-            # The base commit's hook chain, with the update line Git would
+            # The validated driver's hook chain, with the update line Git would
             # give it, in the credential-free context. It runs for an
             # unchanged retry too, for which Git itself would skip pre-push.
             timeout = _auto_finalize_push_timeout_s(context.root / "trusted/.githooks/pre_push_gate.py")
             pushing = True
             hook = context.root / "trusted/.githooks/pre-push"
             proc = subprocess.run(
-                [str(hook), "origin", context.origin],
+                [str(hook)],
                 cwd=context.checkout,
                 env=context.env,
                 input=f"refs/heads/{branch} {head} refs/heads/{branch} {remote or '0' * 40}\n",
@@ -8927,7 +8974,7 @@ def _auto_finalize_dirty_worktree(
         try:
             _push_auto_finalize_branch(
                 worktree, resolved_branch, expected_head=intended_head, owned_paths=owned, base_sha=base_sha,
-                task_id=task_id,
+                task_id=task_id, base_branch=_base_branch_name(base_branch),
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             error = _publish_cause(
@@ -9001,7 +9048,7 @@ def _auto_finalize_dirty_worktree(
             return _failed(_TypedCause("auto_finalize_head_moved"), commit_sha=commit_sha)
         _push_auto_finalize_branch(
             worktree, resolved_branch, expected_head=commit_sha, owned_paths=owned, base_sha=base_sha,
-            task_id=task_id,
+            task_id=task_id, base_branch=_base_branch_name(base_branch),
         )
     except SnapshotRefusal as exc:
         code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
