@@ -13,6 +13,13 @@ not import that module. Python NFKC-normalises identifiers, so non-ASCII sources
 are also tested after NFKC normalisation. Import *syntax* is never inspected
 by the prefilter: ``if x: import subprocess``, ``a = 1; import subprocess`` and
 ``import \\`` line continuations are all parsed. The AST walk stays the authority.
+
+Wildcard imports bind the bounded callables and ``Popen`` as bare aliases.
+``Popen`` remains outside the call-site timeout check because its constructor
+does not accept ``timeout=``. As with explicit imports, aliases found anywhere
+in the AST apply module-wide, including function-local wildcard imports that
+``ast.parse`` accepts but Python compilation rejects. Each local name retains
+all imported meanings, so wildcard and explicit imports cannot erase one another.
 """
 
 from __future__ import annotations
@@ -80,7 +87,7 @@ class TimeoutLessCall(NamedTuple):
 
 
 class _SubprocessCallVisitor(ast.NodeVisitor):
-    def __init__(self, aliases: dict[str, str | None]) -> None:
+    def __init__(self, aliases: dict[str, set[str | None]]) -> None:
         self._aliases = aliases
         self._scope_stack: list[str] = []
         self.hits: list[TimeoutLessCall] = []
@@ -101,20 +108,19 @@ class _SubprocessCallVisitor(ast.NodeVisitor):
         self._scope_stack.pop()
 
     def visit_Call(self, node: ast.Call) -> None:
-        name: str | None = None
+        attrs: set[str] = set()
         if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
             base = node.func.value.id
-            if base in self._aliases and self._aliases[base] is None and node.func.attr in BOUNDED_FUNCS:
-                name = f"subprocess.{node.func.attr}"
-        elif isinstance(node.func, ast.Name) and node.func.id in self._aliases:
-            attr = self._aliases[node.func.id]
-            if attr in BOUNDED_FUNCS:
-                name = f"subprocess.{attr}"
-        if name is not None:
+            if None in self._aliases.get(base, ()) and node.func.attr in BOUNDED_FUNCS:
+                attrs.add(node.func.attr)
+        elif isinstance(node.func, ast.Name):
+            attrs.update(BOUNDED_FUNCS.intersection(self._aliases.get(node.func.id, ())))
+        if attrs:
             kwargs = {kw.arg for kw in node.keywords if kw.arg}
             if "timeout" not in kwargs:
                 qualname = ".".join(self._scope_stack) if self._scope_stack else "<module>"
-                self.hits.append(TimeoutLessCall(node.lineno, name, qualname, call_shape_hash(node)))
+                for attr in sorted(attrs):
+                    self.hits.append(TimeoutLessCall(node.lineno, f"subprocess.{attr}", qualname, call_shape_hash(node)))
         self.generic_visit(node)
 
 
@@ -165,16 +171,20 @@ def format_stale_line(key: str, *, allowed_count: int, actual_count: int) -> str
     return f"{key} (allowlist has {allowed_count}, actual violations {actual_count})"
 
 
-def _collect_aliases(tree: ast.AST) -> dict[str, str | None]:
-    aliases: dict[str, str | None] = {}
+def _collect_aliases(tree: ast.AST) -> dict[str, set[str | None]]:
+    aliases: dict[str, set[str | None]] = defaultdict(set)
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom) and node.module == "subprocess":
             for alias in node.names:
-                aliases[alias.asname or alias.name] = alias.name
+                if alias.name == "*":
+                    for name in BOUNDED_FUNCS | {"Popen"}:
+                        aliases[name].add(name)
+                else:
+                    aliases[alias.asname or alias.name].add(alias.name)
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name == "subprocess":
-                    aliases[alias.asname or "subprocess"] = None
+                    aliases[alias.asname or "subprocess"].add(None)
     return aliases
 
 

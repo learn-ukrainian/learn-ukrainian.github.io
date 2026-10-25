@@ -161,13 +161,51 @@ def test_cached_findings_refresh_after_edit_and_cannot_be_mutated(tmp_path: Path
     assert changed[0].shape_hash != expected[0].shape_hash
 
 
-def test_cached_findings_preserve_syntax_errors_and_path_identity(tmp_path: Path) -> None:
+@pytest.mark.parametrize(("collision_source", "expected_name"), [
+    (
+        'import subprocess as Popen\nPopen.call(["echo"])\nfrom subprocess import *\n',
+        "subprocess.call",
+    ),
+    (
+        'from subprocess import call as Popen\nPopen(["echo"])\nfrom subprocess import *\n',
+        "subprocess.call",
+    ),
+    (
+        'from subprocess import *\nrun(["echo"])\n\ndef hide():\n'
+        '    from subprocess import getoutput as run\n',
+        "subprocess.run",
+    ),
+], ids=["defect-module-alias", "defect-callable-alias", "defect-local-import"])
+def test_cached_findings_preserve_syntax_errors_and_path_identity(
+    tmp_path: Path, collision_source: str, expected_name: str
+) -> None:
+    """Wildcard imports must not hide unbounded calls or suppress syntax errors."""
     good = tmp_path / "good.py"
     broken = tmp_path / "broken.py"
-    source = "import subprocess\nsubprocess.call(['same'])\n"
+    source = (
+        "from subprocess import *\n"
+        "run(['same'])\ncheck_output(['same'])\ncall(['same'])\ncheck_call(['same'])\n"
+        "run(['safe'], timeout=30)\ncheck_output(['safe'], timeout=30)\n"
+        "call(['safe'], timeout=30)\ncheck_call(['safe'], timeout=30)\n"
+        "Popen(['same'])\n"
+    )
     good.write_text(source, encoding="utf-8")
     broken.write_text(source, encoding="utf-8")
-    assert timeout_less_calls(good) == timeout_less_calls(broken)
+    hits = timeout_less_calls_from_source(source)
+    assert [(hit.lineno, hit.name, hit.qualname) for hit in hits] == [
+        (2, "subprocess.run", "<module>"),
+        (3, "subprocess.check_output", "<module>"),
+        (4, "subprocess.call", "<module>"),
+        (5, "subprocess.check_call", "<module>"),
+    ]
+    assert timeout_less_calls(good) == timeout_less_calls(broken) == hits
+    good.write_text(collision_source, encoding="utf-8")
+    collision_hits = timeout_less_calls_from_source(collision_source)
+    assert [(hit.lineno, hit.name, hit.qualname) for hit in collision_hits] == [
+        (2, expected_name, "<module>"),
+    ]
+    assert timeout_less_calls(good) == collision_hits
+    assert guard._collect_aliases(ast.parse(source))["Popen"] == {"Popen"}
     broken.write_text("import subprocess\nsubprocess.call(\n", encoding="utf-8")
     with pytest.raises(SyntaxError) as exc:
         timeout_less_calls(broken)
@@ -257,6 +295,7 @@ def test_prefilter_skips_ast_parsing_for_irrelevant_sources(
 
 
 def test_prefilter_preserves_candidate_syntax_errors(tmp_path: Path) -> None:
+    """Keep parse errors visible and scan local wildcard ASTs rejected by compile."""
     source = "import subprocess\nsubprocess.run(\n"
     path = tmp_path / "broken.py"
     path.write_text(source, encoding="utf-8")
@@ -265,6 +304,14 @@ def test_prefilter_preserves_candidate_syntax_errors(tmp_path: Path) -> None:
     with pytest.raises(SyntaxError) as from_path:
         timeout_less_calls(path)
     assert from_source.value.filename == from_path.value.filename == str(path)
+
+    local_wildcard = "def helper():\n    from subprocess import *\n    run(['echo'])\n"
+    with pytest.raises(SyntaxError, match=r"import \* only allowed at module level"):
+        compile(local_wildcard, str(path), "exec")
+    path.write_text(local_wildcard, encoding="utf-8")
+    hits = timeout_less_calls_from_source(local_wildcard)
+    assert [(hit.lineno, hit.name, hit.qualname) for hit in hits] == [(3, "subprocess.run", "helper")]
+    assert timeout_less_calls(path) == hits
 
 
 @pytest.mark.parametrize("raw", [b"# invalid UTF-8: \xff\n", b"import subprocess\n# \xff\n"])
