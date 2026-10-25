@@ -4,7 +4,28 @@
 PR events run admission checks: file-content secret scanning, the large-file
 guard, attribution, lint and content contracts, dependency-audit scoping, and
 `pytest --collect-only`. Its summary states plainly that full pytest was not run.
-No changed-file test selector chooses a guessed subset.
+The parallel required `pr-affected` job executes literal changed existing
+`tests/**/test_*.py` files plus every path in `scripts/ci/pr-affected-guards.txt`.
+It uses the original PR merge candidate and base, NUL-delimited Git paths,
+rename destinations and tracked regular files. Deleted files are reported.
+Unsafe paths, missing guards and symlinks fail closed. No import graph or
+component inventory chooses tests.
+
+The job has a ten-minute timeout and targets under five minutes on hosted
+runners. The committed serial file-duration sum plus 60 seconds for setup and
+collection is the conservative estimate. If it exceeds 600 seconds, a selected
+file lacks timing data, or pytest infrastructure changes, all guards still run
+and changed files outside the guards defer to merge-group pytest. Infrastructure
+includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
+CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
+record the candidate, requested files, deferred files and reason, recorded
+estimate, reported cases, skips and failures. Deferred test-case counts stay
+UNKNOWN because the deferred files were not collected by this job. Requested
+files are not a claim that every assertion ran. Normal pytest configuration,
+markers, quarantine and governor apply. Hosted duration and the independent
+30-day original-failed-head replay remain driver-owned proof requirements.
+The initial list includes all six runtime/catalog/global suites from the
+original failed group; later PR changes cannot establish old coverage.
 
 Every `merge_group` candidate runs the full supported non-slow pytest suite,
 frontend toolchain tests, the sparse collection guard and partition audits.
@@ -40,6 +61,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection or the full-tier sparse collection guard, then `scripts/ci/checks.sh` for every lint and content-contract gate; fails if any failed. |
+| PR changed tests and guards | PRs execute changed test files and all explicit guards; full tiers exit without duplicate execution. |
 | Frontend | Full tier only. Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
 | pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run. |
@@ -121,7 +143,7 @@ test files this change deleted or rewrote.
 `GITHUB_SHA`, the event ref, action and candidate identity. Unknown events,
 missing metadata, incorrect refs and malformed proof fail closed.
 
-The gate requires Secret scan, Checks and Dependency audit to succeed on every
+The gate requires Secret scan, Checks, Dependency audit and PR changed tests and guards to succeed on every
 event. Frontend, duration refresh, pytest and pytest report must succeed on the
 full tier and be skipped on PR admission. Queue commit metadata scanning must
 succeed on merge-group events and be skipped elsewhere. Every other result,

@@ -373,6 +373,7 @@ def test_ci_gate_runs_after_cancel() -> None:
 _GREEN = {
     "SECRET_SCAN": "success",
     "CHECKS": "success",
+    "PR_AFFECTED": "success",
     "FRONTEND": "success",
     "DEPENDENCY_AUDIT": "success",
     "PYTEST": "success",
@@ -413,10 +414,10 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
         if event == "pull_request":
             jobs.update({name: "skipped" for name in ("FRONTEND", "REFRESH", "PYTEST", "PYTEST_REPORT")})
         # Existing test bodies can corrupt the real entry-point event and candidate.
-        overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_")}
+        overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
         jobs.update(results)
-        mapping = {"SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
+        mapping = {"PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
         needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
         event_path = Path(directory) / "event.json"
         event_path.write_text(raw_payload)
@@ -597,3 +598,28 @@ def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
         assert "continue-on-error" not in step or not step["continue-on-error"], (
             f"Step {step.get('name')!r} must not have continue-on-error"
         )
+
+def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
+    """Missing or non-success changed-test proof must never admit a PR."""
+    job = _load('ci.yml')['jobs']['pr-affected']
+    assert job['timeout-minutes'] == 10
+    assert 'needs' not in job
+    assert 'continue-on-error' not in job
+    assert 'pr-affected' in _ci_gate_job()['needs']
+    step = next(s for s in job['steps'] if s.get('name') == 'Run changed test files and guards')
+    assert '.venv/bin/python -m scripts.ci.pr_affected_tests' in step['run']
+    assert '"$EVENT_NAME" = pull_request' in step['run']
+    for status in ('failure', 'skipped', 'cancelled', '', 'unknown'):
+        result = _run_gate('pull_request', PR_AFFECTED=status)
+        assert result.returncode == 1, result.stdout
+    result = _run_gate('pull_request', PR_AFFECTED='success')
+    assert result.returncode == 0
+    assert 'full pytest was not run' in result.stdout
+    # An absent dependency is distinct from a present dependency with no result.
+    from scripts.ci.gate import COMMON
+    assert 'pr-affected' in COMMON
+    needs = {name: {'result': 'success'} for name in COMMON - {'pr-affected'}}
+    needs.update({name: {'result': 'skipped'} for name in ('queue-metadata-scan', 'frontend', 'refresh-pytest-durations', 'pytest', 'pytest-report')})
+    assert _run_gate('pull_request', NEEDS_JSON=json.dumps(needs)).returncode == 1
+    result = _run_gate('pull_request', UNEXPECTED='success')
+    assert result.returncode == 1

@@ -10,13 +10,14 @@ from __future__ import annotations
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from unittest.mock import patch
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.ai_agent_bridge import _channels, _cli, _db
+from scripts.ai_agent_bridge import _acp_compat, _channels, _cli, _db, _dispatch_wrappers
 
 
 @pytest.fixture(autouse=True)
@@ -111,15 +112,48 @@ def test_p_broadcast_excludes_dead_lane(capsys, monkeypatch):
     assert delivered_agents == {"claude", "codex"}
 
 
-def test_post_review_flag_implies_action_required_priority():
+def test_post_review_flag_implies_action_required_priority(monkeypatch):
+    """Review intent retains its priority and explicit native subject bindings."""
     _channels.create_channel("shared")
     rc = _run_cli(["post", "shared", "please review this", "--to", "claude", "--review", "--no-snapshot"])
     assert rc == 0
     msgs = _channels.read("shared", tail=1)
     assert msgs[0]["priority"] == "action_required"
 
+    native_review = Mock(return_value={"ok": True, "status": "done", "response": "VERDICT: APPROVE"})
+    acp_ask = Mock(side_effect=AssertionError("review intent reached ACP"))
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", native_review)
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", acp_ask)
+    parser = _cli._build_parser()
+    for command in (
+        "ask-claude", "ask-codex", "ask-gemini", "ask-agy", "ask-hermes", "ask-opencode",
+        "ask-deepseek", "ask-pool", "ask-glm", "ask-gemma", "ask-cursor", "ask-grok",
+        "ask-grok-build", "ask-kimi",
+    ):
+        args = parser.parse_args([
+            command, "review this", "--task-id", "review-subjects", "--type", "review",
+            "--subject-seat", "codex", "--subject-seat", "cursor",
+            "--subject-family", "openai", "--subject-family", "xai", "--subject-family", "openai",
+        ])
+        assert args.subject_seat == ["codex", "cursor"]
+        assert args.subject_family == ["openai", "xai", "openai"]
+        # Refused/retired seats remain parser-compatible; their admission gates stay in force.
+        if command in {"ask-gemini", "ask-agy"}:
+            args.review_profile = "ukrainian"
+        if command in {"ask-claude", "ask-codex", "ask-gemini", "ask-agy", "ask-cursor", "ask-grok", "ask-grok-build"}:
+            _cli._handle_acp_compat(args, command.removeprefix("ask-"))
+            assert native_review.call_args.kwargs["subject_seats"] == ["codex", "cursor"]
+            assert native_review.call_args.kwargs["subject_families"] == ["openai", "xai", "openai"]
 
-def test_post_explicit_priority_overrides_review_flag():
+    args = parser.parse_args(["ask-claude", "review this", "--task-id", "review-no-subjects", "--review"])
+    _cli._handle_ask_claude(args)
+    assert native_review.call_args.kwargs["subject_seats"] is None
+    assert native_review.call_args.kwargs["subject_families"] is None
+    acp_ask.assert_not_called()
+
+
+def test_post_explicit_priority_overrides_review_flag(monkeypatch):
+    """Explicit post priority wins; ordinary asks reject review-only subject fields."""
     _channels.create_channel("shared")
     rc = _run_cli(
         ["post", "shared", "fyi + review text", "--to", "claude", "--review", "--priority", "fyi", "--no-snapshot"]
@@ -127,6 +161,30 @@ def test_post_explicit_priority_overrides_review_flag():
     assert rc == 0
     msgs = _channels.read("shared", tail=1)
     assert msgs[0]["priority"] == "fyi"
+
+    native_review = Mock(side_effect=AssertionError("ordinary ask reached native dispatch"))
+    acp_ask = Mock(return_value=SimpleNamespace(ok=True))
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", native_review)
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", acp_ask)
+    parser = _cli._build_parser()
+    args = parser.parse_args(["ask-claude", "ordinary question", "--task-id", "ordinary", "--from", "codex"])
+    _cli._handle_ask_claude(args)
+    acp_ask.assert_called_once()
+    assert acp_ask.call_args.kwargs["review"] is False
+    acp_ask.reset_mock()
+
+    args = parser.parse_args([
+        "ask-claude", "ordinary question", "--task-id", "ordinary", "--subject-seat", "codex",
+    ])
+    with pytest.raises(SystemExit, match="--subject-seat/--subject-family require review intent"):
+        _cli._handle_ask_claude(args)
+    args = parser.parse_args([
+        "ask-claude", "ordinary question", "--task-id", "ordinary", "--subject-family", "openai",
+    ])
+    with pytest.raises(SystemExit, match="--subject-seat/--subject-family require review intent"):
+        _cli._handle_ask_claude(args)
+    acp_ask.assert_not_called()
+    native_review.assert_not_called()
 
 
 # ── Item 4: delivery TTL/auto-expire + cleanup automation ──────────────

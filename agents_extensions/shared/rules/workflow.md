@@ -213,7 +213,8 @@ be opened before approval so CI exists; merge still needs both gates below.
    `gh pr review --approve` for this publication. The comment records independent
    cross-family review, not self-approval. Require **PR admission CI Gate green**
    on that **same** head. It retains file-content secret scanning, the large-file
-   guard, attribution, lint, dependency-audit scoping and pytest collection;
+   guard, attribution, lint, dependency-audit scoping, pytest collection and
+   required bounded changed-test files plus explicit guards;
    it does not run full pytest. The real merge-group candidate must pass the
    full supported suite and partition audits in the required **CI Gate** before
    landing. Nightly and opt-in `workflow_dispatch` runs also retain the full suite.
@@ -576,7 +577,8 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    is removed or relaxed only with a demonstrated replacement or an approved
    removal; zero catches alone are not enough for a security gate.
    **Test placement:** pre-push runs no tests. PR CI Gate runs admission checks and
-   pytest collection without full pytest execution. Merge-group CI Gate requires
+   pytest collection and bounded changed-test files plus explicit guards without
+   full pytest execution. Merge-group CI Gate requires
    the full supported suite on the real queue candidate. Nightly and opt-in
    manual runs also run the full suite.
    Operator approval under the gate freeze, 2026-10-23.
