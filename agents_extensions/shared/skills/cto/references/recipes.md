@@ -17,6 +17,19 @@ Load that skill before seating a review; a copied dispatch command skips its ste
 reviewer exits, publish the verdict with `scripts/review/record_cf_verdict.py`. A review
 dispatch alone publishes nothing, and the merge-queue keeper waits for the published verdict.
 
+## Test grants
+
+A grant names each approved test function and its file, the defect class in the test name or
+docstring (`docs/best-practices/test-quality.md`), and that no other tests are added.
+Classify each granted case before the grant is sent:
+- Defect case: reproduces a defect in the code being changed. It must fail on the unfixed code
+  and pass after the fix.
+- Control case: guards an invariant the change could break on a path the change touches. It
+  passes before and after, must exercise the changed path, and names the defect class it would
+  catch.
+The PR body lists which cases are defect cases and which are controls, with the before and
+after result of each. Never require a control case to fail before the fix.
+
 ## Reap before re-dispatch
 
 A finished task holds its worktree and branch lease, so reap it before dispatching the same
