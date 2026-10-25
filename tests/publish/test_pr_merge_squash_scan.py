@@ -29,13 +29,18 @@ def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=
     def send(args, **kwargs):
         nonlocal queued
         if args[:3] == ["gh", "pr", "view"]:
+            assert "isInMergeQueue" not in args[args.index("--json") + 1].split(",")
             return subprocess.CompletedProcess(
                 args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD, "state": "OPEN",
-                                    "isInMergeQueue": queued, "isCrossRepository": False, "headRefName": "codex/fixture"}), ""
+                                    "baseRefName": "main", "isCrossRepository": False, "headRefName": "codex/fixture"}), ""
             )
         if args[:3] == ["gh", "pr", "checks"]:
             return subprocess.CompletedProcess(args, 0, "[]", "")
         if args[:5] == ["gh", "api", "--method", "POST", "graphql"]:
+            if "mergeQueueEntry" in Path(args[6]).read_text():
+                pull = {"number": 1, "state": "OPEN", "headRefOid": HEAD,
+                        "headRefName": "codex/fixture", "isInMergeQueue": queued}
+                return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
             assert "viewerMergeBodyText(mergeType:SQUASH)" in Path(args[6]).read_text()
             pull = {
                 "headRefOid": head,

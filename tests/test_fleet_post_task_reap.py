@@ -1650,3 +1650,31 @@ def test_enqueued_exact_head_reaps_only_bound_pushed_terminal_worktree(tmp_path,
         else:
             assert tree.exists() and receipt["retained"] > 0, receipt
             assert all(row.get("owner") and row.get("next_condition") for row in receipt["rows"])
+
+    # A reset before worktree creation leaves unique history only in the shared branch reflog.
+    repo = tmp_path / "shared-history"
+    _init_repo(repo)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.cache/\n")
+    _run(["git", "add", ".gitignore"], cwd=repo)
+    _run(["git", "commit", "-m", "ignore fixture output"], cwd=repo)
+    _run(["git", "push", "origin", "main"], cwd=repo)
+    base = _run(["git", "rev-parse", "HEAD"], cwd=repo).stdout.strip()
+    _run(["git", "branch", branch], cwd=repo)
+    obj = _run(["git", "rev-parse", "HEAD^{tree}"], cwd=repo).stdout.strip()
+    unique = _run(["git", "commit-tree", obj, "-p", base, "-m", "unpublished round"], cwd=repo).stdout.strip()
+    _run(["git", "update-ref", f"refs/heads/{branch}", unique], cwd=repo)
+    _run(["git", "update-ref", f"refs/heads/{branch}", base], cwd=repo)
+    tree = repo / ".worktrees/dispatch/codex/queued"
+    tree.parent.mkdir(parents=True)
+    _run(["git", "worktree", "add", str(tree), branch], cwd=repo)
+    _run(["git", "push", "-u", "origin", branch], cwd=repo)
+    write_task(repo, "queued", tree, status="done", repository="unit/public")
+    current = {"number": 23, "state": "OPEN", "isInMergeQueue": True,
+               "headRefName": branch, "headRefOid": base, "isCrossRepository": False}
+    receipt = post_task_reap.reap_enqueued_worktrees(
+        repo_root=repo, repository="unit/public", number=23, head=base, branch=branch,
+        queue_probe=lambda: current,
+    )
+    assert receipt["removed"] == 0 and receipt["retained"] > 0 and tree.exists(), receipt
+    assert unique in _run(["git", "log", "-g", "--all", "--format=%H"], cwd=repo).stdout
+    assert any("unpublished_reflog_commit" in row["reason"] for row in receipt["rows"])

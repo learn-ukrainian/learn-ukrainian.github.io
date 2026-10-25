@@ -1296,6 +1296,24 @@ def test_enqueue_cleanup_failure_preserves_successful_enqueue_receipt(synthetic_
     from tests.test_ci_recovery import HEAD, Transport
     from tests.test_fleet_post_task_reap import _init_repo
 
+    # Exercise the production closed read encoder and client, not an invented gh PR field.
+    from tests.test_github_client import client, response
+
+    row = {"number": 42, "state": "open", "head": {"sha": HEAD, "ref": "codex/fixture"},
+           "base": {"ref": "main"}, "labels": []}
+    store, calls = client(tmp_path / "typed-client", [response(row), response({"data": {"repository": {
+        "pullRequest": {"isInMergeQueue": True, "mergeQueueEntry": {"headCommit": {"oid": "c" * 40}}}
+    }}})])
+    with monkeypatch.context() as patch:
+        patch.setattr(pub.github_client, "GitHubClient", lambda **_kwargs: store)
+        actual = pub.read("queue-status", repo="unit/public", number=42, branch="main",
+                          capture_output=True, text=True)
+    assert actual.returncode == 0, actual.stderr
+    pull = json.loads(actual.stdout)["data"]["repository"]["pullRequest"]
+    assert pull["headRefOid"] == HEAD and pull["isInMergeQueue"] is True
+    assert pull["mergeQueueEntry"]["headCommit"]["oid"] != pull["headRefOid"]
+    assert [call[1].split("?")[0] for call in calls] == ["repos/unit/public/pulls/42", "graphql"]
+
     for case in ("partial", "moved", "failed", "unknown", "already-queued"):
         root = tmp_path / case
         _init_repo(root)

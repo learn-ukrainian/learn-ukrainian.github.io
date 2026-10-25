@@ -7031,6 +7031,40 @@ def _reflog_refusal(path: Path, census: _OriginCensus) -> str | None:
     by every checkout and survives removal.
     """
     named, failure = _private_history(path)
+    return _history_refusal(path, census, named, failure)
+
+
+def _branch_reflog_refusal(path: Path, branch: str, census: _OriginCensus) -> str | None:
+    """Prove the shared branch reflog before pruning deletes its last recovery trail."""
+    if _run(["git", "check-ref-format", f"refs/heads/{branch}"], cwd=path).returncode:
+        return "shared branch reflog identity unknown"
+    probe = _run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir", "--show-object-format"],
+        cwd=path, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+    )
+    parts = (probe.stdout or "").splitlines()
+    if probe.returncode or len(parts) != 2 or parts[1] not in {"sha1", "sha256"}:
+        return "shared branch reflog location unknown"
+    common = Path(parts[0])
+    relative = f"logs/refs/heads/{branch}"
+    file = common / relative
+    if not common.is_absolute() or any(parent.is_symlink() for parent in (file, *file.parents)):
+        return "shared branch reflog location unsafe"
+    if (common / "reftable").exists():
+        return "shared branch reflog storage unknown"
+    raw, failure = _read_bounded_regular(file, _HEAD_REFLOG_MAX_BYTES, label="shared branch reflog")
+    named = []
+    width = 40 if parts[1] == "sha1" else 64
+    for line in (raw or b"").decode("utf-8", errors="replace").splitlines():
+        fields = line.split(" ", 2)
+        if len(fields) != 3 or not all(_is_oid(oid, width) for oid in fields[:2]):
+            failure = "shared branch reflog unparseable"
+            break
+        named.extend(oid for oid in fields[:2] if oid != "0" * width)
+    return _history_refusal(path, census, list(dict.fromkeys(named)), failure)
+
+
+def _history_refusal(path: Path, census: _OriginCensus, named: list[str], failure: str | None) -> str | None:
     if failure:
         return f"{UNPUBLISHED_REFLOG_COMMIT}: recovery history unknown ({failure})"
     if not named:

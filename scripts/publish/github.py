@@ -559,17 +559,28 @@ def publish(
             return result
 
         def queue_probe():
-            result = readiness_runner(
+            identity = readiness_runner(
                 ["gh", "pr", "view", str(fields["number"]), "--repo", gh_repo,
-                 "--json", "number,state,headRefName,headRefOid,isCrossRepository,isInMergeQueue"],
+                 "--json", "headRefOid,isCrossRepository,baseRefName"],
                 cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=15,
             )
-            if result.returncode:
+            if identity.returncode:
+                raise ValueError("queue identity unavailable")
+            identity = json.loads(identity.stdout)
+            result = read(
+                "queue-status", repo=gh_repo, number=fields["number"], branch=identity["baseRefName"],
+                runner=readiness_runner if runner is not None else None,
+                cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=15,
+            )
+            observation = getattr(result, "github_result", None)
+            refusal = github_client.refusal_of(result, injected=runner is not None)
+            if result.returncode or refusal is not None or (observation is not None and observation.stale):
                 raise ValueError("queue state unavailable")
-            current = json.loads(result.stdout)
-            if not isinstance(current, dict):
-                raise ValueError("queue state unavailable")
-            return current
+            document = json.loads(result.stdout)
+            current = document["data"]["repository"]["pullRequest"]
+            if document.get("errors") or not isinstance(current, dict) or current.get("headRefOid") != identity["headRefOid"]:
+                raise ValueError("queue state unavailable or head changed")
+            return {**current, "isCrossRepository": identity["isCrossRepository"]}
 
         recovery_queue = False
         already_queued = False

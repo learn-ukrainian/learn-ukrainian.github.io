@@ -72,14 +72,20 @@ class Transport:
 
     def __call__(self, argv, **kwargs):
         if argv[1:3] == ["pr", "view"]:
+            assert "isInMergeQueue" not in argv[argv.index("--json") + 1].split(",")
             data = {"number": 42, "isDraft": False, "headRefOid": self.head,
                     "headRefName": "codex/fixture", "state": "OPEN", "isCrossRepository": False,
-                    "isInMergeQueue": self.queued}
+                    "baseRefName": "main"}
         elif argv[1:3] == ["pr", "checks"]:
             data = []
         elif argv[1:5] == ["api", "--method", "POST", "graphql"]:
             payload = json.loads(Path(argv[6]).read_text())
             query = payload["query"]
+            if "mergeQueueEntry" in query:
+                data = {"number": 42, "state": "OPEN", "headRefOid": self.head,
+                        "headRefName": "codex/fixture", "isInMergeQueue": self.queued,
+                        "mergeQueueEntry": {"headCommit": {"oid": TESTED}}}
+                return subprocess.CompletedProcess(argv, 0, json.dumps({"data": {"repository": {"pullRequest": data}}}), "")
             if "timelineItems" in query:
                 self.removal_reads.append(payload)
                 if self.removal_failure:

@@ -1081,7 +1081,11 @@ def reap_enqueued_worktrees(*, repo_root: Path, repository: str, number: int, he
         return {"path": path, "action": "retained", "reason": reason, "owner": owner,
                 "next_condition": "resolve the recorded refusal and reconcile this exact queued head"}
 
+    last_census = None
+
     def guard(info, tree, census):
+        nonlocal last_census
+        last_census = census
         try:
             current = queue_probe()
             if not (
@@ -1097,9 +1101,9 @@ def reap_enqueued_worktrees(*, repo_root: Path, repository: str, number: int, he
                 return "remote PR branch/head publication changed or unknown"
             if info.branch != branch or worktree_claims.checked_out_branch(tree) != branch or info.head != head:
                 return "local branch/head does not match enqueued PR"
+            return reap_worktrees._branch_reflog_refusal(tree, branch, census)
         except Exception:
             return "queue proof unavailable"
-        return None
 
     # Journal an intent before any removal so a partial run is discoverable.
     def save():
@@ -1146,9 +1150,12 @@ def reap_enqueued_worktrees(*, repo_root: Path, repository: str, number: int, he
                     continue
                 item = dict(row.__dict__)
                 if row.action == "removed" and row.branch:
-                    error = reap_worktrees._prune_branch(primary, row.branch, expected_head=row.head)
+                    error = (reap_worktrees._branch_reflog_refusal(primary, row.branch, last_census)
+                             if last_census is not None else "branch publication proof unavailable")
+                    if error is None:
+                        error = reap_worktrees._prune_branch(primary, row.branch, expected_head=row.head)
                     if error:
-                        receipt["rows"].append(retain("local branch retained after tree removal",
+                        receipt["rows"].append(retain(f"local branch retained after tree removal: {error}",
                             path=row.branch))
                 if row.action != "removed":
                     item.update(owner="infra lane", next_condition="resolve the common reaper refusal before retrying cleanup")
@@ -1164,7 +1171,10 @@ def reap_enqueued_worktrees(*, repo_root: Path, repository: str, number: int, he
         save()
     except OSError:
         # The durable pending receipt keeps custody explicit if final storage fails.
-        return json.loads(target.read_text(encoding="utf-8"))
+        receipt["state"] = "pending"
+        receipt["rows"].append(retain("final receipt publication failed; reconcile common removal journal"))
+        receipt["retained"] += 1
+        return receipt
     return json.loads(target.read_text(encoding="utf-8"))
 
 
