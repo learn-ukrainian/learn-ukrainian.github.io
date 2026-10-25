@@ -1142,7 +1142,8 @@ def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
     else:
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "gemini-3.8-flash-high"
-        assert len(ladder) == 6
+        assert ladder[6][0].name == "muse"
+        assert len(ladder) == 7
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1384,6 +1385,48 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
 def test_normalize_muse_subject_seat_and_meta_family():
     assert normalize_subject_seat("muse") == "muse"
     assert normalize_subject_family("meta") == "meta"
+    candidate = REVIEW_CANDIDATES["muse"]
+    assert (candidate.concrete_model, candidate.family, candidate.route, candidate.transport) == (
+        "muse-wonder-full-1.0", "meta", "muse", "native_muse",
+    )
+    assert candidate.model_roles == frozenset({"coding", "standard_review"})
+    assert candidate.capabilities == frozenset({"code_review"})
+    assert not candidate.formal_review_eligible
+    assert candidate.requires_data_egress_policy == "public_only"
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol", data_egress_policy="public_only", claude_account=HOST_ACCOUNT,
+    )
+    formal = evaluate_candidate(candidate, inputs)
+    assert formal.status == "excluded"
+    assert formal.reason == "formal-review transport is not eligible for a sealed cross-family gate"
+    advisory = replace(inputs, formal_review=False)
+    assert evaluate_candidate(candidate, advisory).status == "eligible"
+    for risk in ("low", "medium", "high", "critical"):
+        assert (candidate in {c for rung in REVIEW_LADDERS[risk] for c in rung}) == (risk in {"low", "medium"})
+    for role in ("critical_review", "security_review"):
+        assert evaluate_candidate(candidate, replace(advisory, requested_role=role)).status == "excluded"
+    for author in ("openai", "anthropic", "google", "xai"):
+        assert evaluate_candidate(candidate, replace(advisory, author_families=frozenset({author}))).status == "eligible"
+    meta_author = evaluate_candidate(candidate, replace(advisory, author_families=frozenset({"meta"})))
+    assert meta_author.status == "excluded"
+    assert "same family as author (meta)" in meta_author.reason
+    for changes in (
+        {"subject_seats": frozenset({"muse"})}, {"subject_families": frozenset({"meta"})},
+        {"language_lane": True}, {"data_egress_policy": "private_repo"}, {"review_profile": "infra"},
+        {"isolation_required": True}, {"required_capabilities": frozenset({"sealed_evidence"})},
+        {"changed_paths": ("scripts/hooks/admission.py",)},
+    ):
+        assert evaluate_candidate(candidate, replace(advisory, **changes)).status == "excluded"
+    from scripts.review.model_catalog import load_model_catalog
+
+    catalog = load_model_catalog()
+    full = catalog["models"]["muse-wonder-full-1.0"]
+    assert "no_review_or_driver_authority" not in full["weaknesses"]
+    assert "no_driver_authority" in full["weaknesses"]
+    assert catalog["models"]["muse-spark-1.3"]["lifecycle"] == "hold"
+    assert catalog["models"]["muse-spark-1.3"]["roles"] == ["coding"]
+    assert not any(row["model_id"].startswith("muse-") for row in catalog["orchestrator_seats"].values())
+    assert "muse" not in catalog["budget_substitution_models"]
 
 
 @pytest.mark.parametrize(
