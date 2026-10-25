@@ -17,11 +17,29 @@ name: Cache hygiene
 # uv cache on lock changes with read-only permissions; this one needs
 # `actions: write` on its own schedule. No workflow_run trigger: default
 # setup has no workflow to name, and zizmor flags workflow_run triggers.
+#
+# A pull request that changes this workflow or one of its sparse inputs checks
+# out the same paths and imports the script (runpy, run_name not_main). That
+# job does not list or delete caches. Deletion stays on main.
 
 on:
   schedule:
     - cron: '17 */2 * * *'
   workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/cache-hygiene.yml
+      - scripts/ci/cache_hygiene.py
+      - scripts/__init__.py
+      - scripts/common/__init__.py
+      - scripts/common/github_client.py
+      - scripts/common/http_status.py
+      - scripts/common/scratch.py
+      - scripts/opsec/__init__.py
+      - scripts/opsec/gh_snapshot.py
+      - scripts/opsec/prepublish.py
+      - requirements-lock.txt
+      - '.python-version'
 
 permissions: {}
 
@@ -49,6 +67,7 @@ jobs:
             scripts/__init__.py
             scripts/common/__init__.py
             scripts/common/github_client.py
+            scripts/common/http_status.py
             scripts/common/scratch.py
             scripts/opsec/__init__.py
             scripts/opsec/gh_snapshot.py
@@ -64,3 +83,34 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         run: python3 scripts/ci/cache_hygiene.py --repo "${REPO}" --lock-file requirements-lock.txt --apply
+
+  import-check:
+    name: Import cache hygiene
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/ci/cache_hygiene.py
+            scripts/__init__.py
+            scripts/common/__init__.py
+            scripts/common/github_client.py
+            scripts/common/http_status.py
+            scripts/common/scratch.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
+            requirements-lock.txt
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Import cache hygiene without running it
+        run: python3 -c "import runpy; runpy.run_path('scripts/ci/cache_hygiene.py', run_name='not_main')"
