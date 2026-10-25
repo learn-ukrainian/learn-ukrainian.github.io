@@ -154,6 +154,10 @@ def test_registry_writes_are_refused_in_the_primary_checkout():
 def test_committed_registry_is_the_reviewed_allocation_plus_three_holding_senses():
     registry = foundation.load(ROOT / "registry/atlas/identity/registry.json")
     manifest = foundation.load(ROOT / "registry/atlas/pilot/pilot-v1.json")
+    expanded = registry
+    registry = allocator.source_expansion_projection(expanded, manifest)
+    assert registry["entries"] == expanded["entries"]
+    assert len(expanded["source_records"]) > len(registry["source_records"])
     allocation = allocator.reviewed_allocation(registry, manifest)  # proved by the pinned v2 content digest
     holding_build = allocator.HOLDING_BUILD_PREFIX + manifest["manifest_sha256"]
     assert registry["registry_version"] == allocation["registry_version"] + 1 == 3
@@ -277,6 +281,9 @@ IDENTITY_TAMPERS = [
 def test_r3f1_identity_anchor_is_derived_from_the_committed_allocation():
     """Anchor derivation, separate from the mutations: the design projection of the committed registry, by hand."""
     registry, manifest = committed()
+    expanded = registry
+    registry = allocator.source_expansion_projection(expanded, manifest)
+    assert registry["entries"] == expanded["entries"]
     frozen = sorted({r["snapshot_id"] for r in manifest["selection"]["source_records"]})
     projection = {"frozen_snapshots": frozen, "entries": registry["entries"], "events": registry["events"],
                   "source_records": [{
@@ -288,7 +295,7 @@ def test_r3f1_identity_anchor_is_derived_from_the_committed_allocation():
     # Part one of its trust: the reviewed v2 allocation inside it, unchanged.
     assert foundation.digest(allocator.reviewed_allocation(registry, manifest)) == allocator.PILOT_ALLOCATION_DIGEST
     # The assembler's own binding of the committed allocation: 150 units, 155 seed + 3 holding senses.
-    entry_by_unit, sense_events = wa.pilot_allocation(manifest, registry)
+    entry_by_unit, sense_events = wa.pilot_allocation(manifest, expanded)
     assert len(entry_by_unit) == 150 and len(sense_events) == 158
 
 
