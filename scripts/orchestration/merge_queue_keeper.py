@@ -1045,11 +1045,19 @@ def _prose_identities(
                         if span[0] not in prose.emphasis]
     # Keep literal candidate spans even when a collapsed whitespace interval
     # covers more source characters than that candidate's own spelling.
-    views = [literal, literal + _spelling_occurrences(whitespace, normalized, positions),
-             literal + _spelling_occurrences("".join(char for char, _ in without_emphasis), normalized,
-                                             [span for _, span in without_emphasis])]
+    views = [(literal, eligible)]
+    for text, spans in ((whitespace, positions),
+                        ("".join(char for char, _ in without_emphasis), [span for _, span in without_emphasis])):
+        view = _ProseRun(text, prose.at_start, prose.at_end, frozenset())
+        occurrences = _spelling_occurrences(text, normalized, [(i, i + 1) for i in range(len(text))])
+        mapped = [(spans[start][0], spans[end - 1][1], owner) for start, end, owner in occurrences]
+        crossing_eligible = {
+            (spans[start][0], spans[end - 1][1], owner) for start, end, owner in occurrences
+            if _reference_eligible(view, start, end)
+        }
+        views.append((literal + mapped, eligible | crossing_eligible))
     contested: set[str] = set()
-    for occurrences in views:
+    for occurrences, crossing_eligible in views:
         active: dict[int, tuple[int, int, str]] = {}
         endings: list[tuple[int, int]] = []
         for index, current in enumerate(sorted(set(occurrences))):
@@ -1068,9 +1076,9 @@ def _prose_identities(
                     if other in eligible:
                         contested.add(other_owner)
                 elif (left < start < right < end or start < left < end < right) and (
-                    current in eligible and other in eligible
+                    current in crossing_eligible and other in crossing_eligible
                 ):
-                    contested.update((owner, other_owner))
+                    contested.update(item[2] for item in (current, other) if item in eligible)
             active[index] = current
             heapq.heappush(endings, (end, index))
     return {owner for _, _, owner in eligible}, contested

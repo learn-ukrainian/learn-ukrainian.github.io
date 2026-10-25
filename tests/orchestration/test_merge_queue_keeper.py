@@ -2443,20 +2443,25 @@ def test_job_fallback_ignores_unrelated_issue_body(tmp_path, monkeypatch, job):
 
 
 def test_job_fallback_accepts_keeper_marked_issue(tmp_path, monkeypatch):
-    """A state-only containing identity vetoes reuse, even with an exact-title alternative."""
-    # Both a marker and the legacy opener remain subject to a saved longer
-    # identity, including when another issue has an exact canonical title.
+    """Reuse marker/legacy references, unless a saved containing identity vetoes them."""
     for index, body in enumerate(("Frontend\n<!-- mq-keeper-flake -->",
                                   "`Frontend` failed merge_group runs on distinct PRs #41, #42 within 24 hours. Run IDs: 101.")):
         path = tmp_path / f"state-{index}.json"
         fake = FakeGitHub()
         _ejected(fake, path, ["Frontend"], failures=[_recent("Frontend", 41)])
-        fake.issue_rows = [
-            {"number": 30, "title": "Renamed longer job",
-             "body": "*Build*  Frontend, workers.\n<!-- mq-keeper-flake -->"},
-            {"number": 77, "title": "Renamed", "body": body},
-        ]
+        fake.issue_rows = [{"number": 77, "title": "Renamed", "body": body}]
         state = json.loads(path.read_text())
+        lines, failed = run(fake, path, monkeypatch)
+        assert not failed, lines
+        assert [payload[0] for kind, payload in fake.actions if kind == "issue-comment"] == [77]
+        assert json.loads(path.read_text())["flake_issue_updates"]["77"]
+        assert not any("CTO finding:" in line for line in lines)
+        assert _issue_titles(fake) == []
+        fake.actions.clear()
+        # A saved longer identity must still veto both positive references,
+        # including when another issue has an exact canonical title.
+        fake.issue_rows.insert(0, {"number": 30, "title": "Renamed longer job",
+                                   "body": "*Build*  Frontend, workers.\n<!-- mq-keeper-flake -->"})
         state["failures"].append({"job": "Build Frontend, workers", "pr": 9, "at": "2000-01-01T00:00:00+00:00"})
         path.write_text(json.dumps(state))
         if index == 0:
