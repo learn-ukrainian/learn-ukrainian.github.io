@@ -12359,7 +12359,8 @@ def _run_worker(
             if agent == "agy" and "claude" in (agy_requested_model or "").casefold():
                 tool_config.update(run_nonce=effective_nonce, owned_paths=state.get("owned_paths") or [])
                 tool_config["risk"] = state.get("review_risk")
-            if state.get("mechanical_task"):
+            # Muse accepts execution options only; classification stays in task state.
+            if agent != "muse" and state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if agent == "claude" and CLAUDE_ACCOUNT_KEY in state:
                 # The label the task record carries. The Claude adapter (or a

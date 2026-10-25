@@ -24934,10 +24934,18 @@ def test_terminal_dispatch_event_defaults_missing_identity_to_unknown(monkeypatc
 def test_muse_role_mode_admission_blocks_unclassified_execution(
     tmp_tasks_dir, isolated_dispatch_repo, monkeypatch, model, role, mode, expected,
 ):
-    """M03: persisted caller roles survive admission; unclassified workers cannot run."""
+    """M03: classified workers reach strict Muse configuration; invalid bindings cannot run."""
     from scripts.agent_runtime.adapters import muse
 
     monkeypatch.setattr(muse, "require_muse_execution_model", lambda model: model)
+    planned = []
+
+    def plan(**kwargs):
+        planned.append(kwargs)
+        return InvocationPlan(cmd=["fixture-muse"], cwd=kwargs["workspace"])
+
+    adapter = muse.MuseAdapter()
+    monkeypatch.setattr(adapter, "_plan", plan)
     args = delegate.build_parser().parse_args([
         "dispatch", "--agent", "muse", "--model", model, "--task-id", "muse-interface",
         "--prompt", "fixture", "--mode", mode,
@@ -24960,17 +24968,22 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
         args.model = "muse-wonder-full-1.0"
         args.mode = "read-only"
         args.research_role = "investigation"
+        args.research_task_family = "readonly_recon"
+        args.research_track = "infra"
+        args.research_owned_path = ["scripts/delegate.py"]
         args_hash = delegate.dispatch_args_sha256(args)
         assert delegate.cmd_dispatch(args) == 0
     state_path = delegate._state_path("muse-interface")
     state = delegate._read_state(state_path)
     assert state["research_role"] == args.research_role
     assert state["dispatch_args_sha256"] == args_hash
+    assert state["mechanical_task"] == delegate._mechanical_task_scope(args)
     workspace = Path(state["cwd"])
     if expected is None:
         args.mode = mode
         args.research_role = role
-        state.update(mode=mode, research_role=role)
+        args.research_task_family = "bounded_implementation" if mode == "workspace-write" else "readonly_recon"
+        state.update(mode=mode, research_role=role, mechanical_task=delegate._mechanical_task_scope(args))
         delegate._write_state_atomic(state_path, state)
     if expected is not None:
         # Corrupt only a real dispatch record to exercise worker replay.
@@ -25028,21 +25041,34 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
         with (
             patch("delegate._advisory_worker_refusal", side_effect=lambda *a, **kw:
                   delegate._write_state_atomic(state_path, {**state, "admission_note": "keep-current"})),
-            patch("agent_runtime.runner.invoke", return_value=result) as invoke,
+            patch("agent_runtime.runner.invoke", side_effect=lambda *a, **kw: (
+                adapter.build_invocation(**{key: kw[key] for key in (
+                    "mode", "cwd", "model", "task_id", "session_id", "tool_config", "effort",
+                )}, prompt=a[1]), result,
+            )[1]) as invoke,
         ):
             assert delegate._run_worker(
                 task_id="muse-interface", agent="muse", prompt="fixture", mode=args.mode,
                 cwd_str=str(workspace), model=model, hard_timeout=60, run_nonce=state["run_nonce"],
+                runtime_tmp_root=state["runtime_tmp_root"],
             ) == 1
         invoke.assert_called_once()
         launch = invoke.call_args.kwargs
         assert launch["tool_config"]["muse_role"] == role
         assert launch["tool_config"]["run_nonce"] == state["run_nonce"]
+        assert launch["tool_config"] == {
+            "muse_worker": True, "muse_role": role, "run_nonce": state["run_nonce"],
+            "muse_tmp_root": state["runtime_tmp_root"],
+            **({"read_only_tmp_root": state["runtime_tmp_root"]} if mode == "read-only" else {}),
+        }
+        assert len(planned) == 1
+        assert planned[0]["scratch_root"] == state["runtime_tmp_root"]
         assert launch["mode"] == mode
         assert launch["model"] == model
         assert Path(launch["cwd"]) == workspace
         completed = delegate._read_state(state_path)
         assert completed["admission_note"] == "keep-current"
+        assert completed["mechanical_task"] == state["mechanical_task"]
         # The synthetic write replay has no remote publication proof.
         assert completed["status"] == ("needs_finalize" if mode == "workspace-write" else "failed")
         if mode == "workspace-write":
@@ -25099,14 +25125,7 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
     assert refused["last_error"] == "muse_worker_task_binding_refused"
     assert refused["returncode"] == refused["exit_code"] == 1
     assert refused["finished_at"]
-    planned = []
-
-    def plan(**kwargs):
-        planned.append(kwargs)
-        return InvocationPlan(cmd=["fixture-muse"], cwd=kwargs["workspace"])
-
-    adapter = muse.MuseAdapter()
-    monkeypatch.setattr(adapter, "_plan", plan)
+    planned.clear()
     kwargs = dict(prompt="fixture", mode=mode, cwd=workspace, model=model,
                   task_id="muse-interface", session_id=None, effort="high",
                   tool_config={"muse_worker": True, "muse_role": role, "run_nonce": "0123456789abcdef"})
@@ -25115,6 +25134,19 @@ def test_muse_role_mode_admission_blocks_unclassified_execution(
         assert invocation.cwd == workspace
         assert planned[0]["mode"] == mode
         assert planned[0]["model"] == "muse-wonder-full-1.0"
+        with pytest.raises(ValueError, match=r"^muse_worker_configuration_refused$"):
+            adapter.build_invocation(**{**kwargs, "tool_config": {**kwargs["tool_config"], "unknown": True}})
+        assert len(planned) == 1
+        # Other agents still receive the same durable classification metadata.
+        delegate._write_state_atomic(state_path, {**state, "agent": "codex", "model": "gpt-6.1-sol"})
+        with patch("agent_runtime.runner.invoke", return_value=result) as invoke:
+            delegate._run_worker(
+                task_id="muse-interface", agent="codex", prompt="fixture", mode=mode,
+                cwd_str=str(workspace), model="gpt-6.1-sol", hard_timeout=60,
+                run_nonce=state["run_nonce"],
+            )
+        assert invoke.call_args.kwargs["tool_config"]["mechanical_task"] == state["mechanical_task"]
+        assert delegate._read_state(state_path)["mechanical_task"] == state["mechanical_task"]
     else:
         with pytest.raises(ValueError, match=f"^{expected}$"):
             adapter.build_invocation(**kwargs)
