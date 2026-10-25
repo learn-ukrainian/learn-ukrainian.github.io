@@ -37,7 +37,7 @@ never fine.
    Read the keeper's per-CLI context flow: Claude waits for the keeper's tokened handoff
    prompt. Codex compacts natively, but a Codex driver hands off to a fresh session after
    its 4th compaction and before its 8th (operator 2026-10-25). Count each live Codex
-   driver thread's compactions from its rollout file under `~/.codex/sessions`
+   driver thread's compactions from its rollout file under `$CODEX_HOME/sessions`
    (`"type":"compacted"` events). At 4 or more, order the handoff that cycle; at 7, restart
    the lane yourself once it shows HANDOFF-DONE. When you record a new lane rule, measure
    every lane against it in the same cycle and name the control that will enforce it.
