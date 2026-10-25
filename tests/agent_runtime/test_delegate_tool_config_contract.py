@@ -138,6 +138,7 @@ _CLI_STUBS = (
     "grok",
     "hermes",
     "kimi",
+    "muse",
     "npx",
     "opencode",
 )
@@ -147,6 +148,7 @@ _CLI_STUBS = (
 # agy must report a version at or above the background-wait floor (#8502).
 _CLI_STUB_BODIES: dict[str, str] = {
     "agy": 'if [ "$1" = "--version" ]; then echo "agy 1.2.9"; fi\nexit 0\n',
+    "muse": 'if [ "$1" = "--version" ]; then echo "muse fixture"; fi\nexit 0\n',
 }
 
 
