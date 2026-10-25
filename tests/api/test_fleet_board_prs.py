@@ -162,7 +162,6 @@ def _mq(**kwargs: object) -> prs_mod.MqSnapshot:
     return prs_mod.MqSnapshot(
         usable=kwargs.pop("usable", True),  # type: ignore[arg-type]
         keeper=kwargs.pop("keeper", {"queued": {}, "drops": {}}),  # type: ignore[arg-type]
-        grants=kwargs.pop("grants", {}),  # type: ignore[arg-type]
         since=kwargs.pop("since", {}),  # type: ignore[arg-type]
     )
 
@@ -274,38 +273,33 @@ def test_under_the_threshold_reports_minutes_without_the_flag() -> None:
     assert rows[0]["ready_since"] == "2026-10-09T09:01:00Z"
 
 
-def test_flake_deny_holds_and_a_grant_is_reported() -> None:
+def test_dropped_heads_are_not_held_by_obsolete_recovery_state() -> None:
     key = f"42:{SHA}"
     denied = _rows(
         _pull(),
         keeper={"queued": {}, "drops": {key: 1}},
-        grants={key: {"decision": "deny", "at": "2026-10-09T09:00:00Z"}},
         since={key: "2026-10-09T08:00:00Z"},
     )
     assert denied[0]["mq"] == "dropped"
-    assert denied[0]["keeper"] == {"hold": True, "reason": "requeue-denied"}
-    assert denied[0]["flake_grant"] == {"decision": "deny", "used": False, "at": "2026-10-09T09:00:00Z"}
-    assert denied[0]["stale_green"] is False
+    assert denied[0]["keeper"] == {"hold": False, "reason": None}
+    assert denied[0]["flake_grant"] is None
+    assert denied[0]["stale_green"] is True
 
     granted = _rows(
         _pull(),
         keeper={"queued": {}, "drops": {key: 1}, "requeued": {}},
-        grants={key: {"decision": "grant"}},
     )
     assert granted[0]["keeper"] == {"hold": False, "reason": None}
-    assert granted[0]["flake_grant"] == {"decision": "grant", "used": False, "at": None}
+    assert granted[0]["flake_grant"] is None
     assert granted[0]["mq"] == "dropped"
 
     spent = _rows(
         _pull(),
         keeper={"queued": {}, "drops": {key: 2}, "requeued": {key: "2026-10-09T09:30:00Z"}},
-        grants={key: {"decision": "grant"}},
     )
-    assert spent[0]["keeper"]["reason"] == (
-        "RECOVERY_ALLOWANCE_SPENT: first=re-enqueue (legacy) at=2026-10-09T09:30:00Z run=unknown"
-    )
-    assert spent[0]["flake_grant"]["used"] is True
-    assert spent[0]["flake_grant"]["at"] == "2026-10-09T09:30:00Z"
+    assert spent[0]["keeper"] == {"hold": False, "reason": None}
+    assert spent[0]["flake_grant"] is None
+    assert spent[0]["mq"] == "dropped"
 
 
 def test_ci_gate_is_separate_from_a_red_analyze_check() -> None:
@@ -519,7 +513,7 @@ def _write_state(
         )
 
 
-def test_state_dir_supplies_the_gate_and_the_ready_time(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_state_dir_ignores_obsolete_gate_and_supplies_ready_time(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     key = f"42:{SHA}"
     moment = prs_mod.utc_now()
     since = (moment - timedelta(minutes=90)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -535,9 +529,9 @@ def test_state_dir_supplies_the_gate_and_the_ready_time(tmp_path, monkeypatch: p
     monkeypatch.setattr(prs_mod, "load_github_view", lambda repo, **_kwargs: _view(_pull()))
 
     rows, sources, _events = prs_mod.collect_pipeline()
-    assert rows[0]["keeper"]["reason"] == "requeue-denied"
-    assert rows[0]["flake_grant"]["decision"] == "deny"
-    assert rows[0]["stale_green"] is False
+    assert rows[0]["keeper"] == {"hold": False, "reason": None}
+    assert rows[0]["flake_grant"] is None
+    assert rows[0]["stale_green"] is True
     assert sources[0].status == "ok"
     assert sources[1].status == "ok"
     assert tmp_path.name not in json.dumps(rows)

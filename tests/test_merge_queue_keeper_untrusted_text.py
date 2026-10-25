@@ -50,6 +50,19 @@ class Transport:
             return subprocess.CompletedProcess(argv, 0, "https://github.com/unit/public/issues/1\n", "")
         if verb == ["run", "view"]:
             return subprocess.CompletedProcess(argv, 0, self.log, "")
+        # Recovery-free admission now reaches the existing merge preflight.
+        if verb == ["pr", "view"]:
+            return subprocess.CompletedProcess(argv, 0, json.dumps({"number": 42, "isDraft": False, "headRefOid": HEAD}), "")
+        if verb == ["pr", "checks"]:
+            return subprocess.CompletedProcess(argv, 0, "[]", "")
+        if verb == ["api", "--method"] and "graphql" in argv:
+            return subprocess.CompletedProcess(argv, 0, json.dumps({"data": {"repository": {"pullRequest": {
+                "headRefOid": HEAD, "isMergeQueueEnabled": True, "isInMergeQueue": True,
+                "viewerMergeHeadlineText": "A change", "viewerMergeBodyText": "A change",
+            }}}}), "")
+        if verb == ["pr", "merge"]:
+            self.sent.append(("pr merge", "", ""))
+            return subprocess.CompletedProcess(argv, 0, "", "")
         raise AssertionError(f"unexpected gh operation: {verb}")
 
     def comments(self) -> list[str]:

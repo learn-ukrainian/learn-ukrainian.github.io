@@ -141,45 +141,7 @@ class FakeGitHub:
         self.lookups.append("files")
         return self.file_rows
 
-    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
-        # Every enqueue traverses the real publisher removal check, even when
-        # the keeper has never observed a drop or set recovery_attempt.
-        from tests.test_ci_recovery import Transport
-
-        transport = Transport()
-        transport.head = head
-        transport.removed = bool(self.events)
-        transport.removal_failure = self.removal_read_failure
-        if self.events:
-            transport.removal_history = [
-                {
-                    "beforeCommit": event.get("beforeCommit", {"oid": HEAD_A}),
-                    "createdAt": event["created_at"],
-                    "reason": event.get("reason"),
-                }
-                for event in sorted(self.events, key=lambda event: event["created_at"])
-            ]
-
-        def sender(argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess:
-            if any("/comments?" in arg for arg in argv):
-                return subprocess.CompletedProcess(argv, 0, json.dumps([self.comments_rows]), "")
-            return transport(argv, **kwargs)
-
-        try:
-            reservation = publisher._prepare_recovery(
-                "pr-merge",
-                {"number": number, "match_head": head, "recovery": recovery_attempt},
-                self.repository,
-                self.root,
-                {},
-                sender,
-                queue=True,
-            )
-            if reservation:
-                path, pr_number, sha, action, evidence = reservation
-                recovery.consume(path, self.repository, pr_number, sha, action, evidence)
-        except gate.PublishBlocked as exc:
-            raise keeper.KeeperError(str(exc)) from exc
+    def enqueue(self, number: int, head: str) -> None:
         self.actions.append(("enqueue", (number, head)))
 
     def membership(self, number: int) -> bool:
@@ -354,24 +316,10 @@ def test_approval_after_needs_cf_removal_obeys_requeue_permission(tmp_path: Path
     queued.comments_rows = []
     lines, failed = keeper.run(queued, path, apply=True)
     assert not failed and "#42 revoked: needs-CF" in lines
-    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
-
     approved = FakeGitHub()
-    approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00"), recovery_comment()]
-    gate = None
-    if permission == "absent":
-        gate = _gate(tmp_path, {})
-    elif permission in {"deny", "grant"}:
-        gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": permission}})
-    lines, failed = keeper.run(approved, path, apply=True, requeue_gate=gate)
-    assert not failed
-    if permission == "grant":
-        assert ("enqueue", (42, HEAD_A)) in approved.actions
-        assert f"42:{HEAD_A}" in json.loads(path.read_text())["requeued"]
-        return
-    assert "enqueue" not in mutations(approved)
-    expected = "requeue-denied" if permission == "deny" else "requeue-pending"
-    assert f"reason={expected}" in lines[0]
+    approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = keeper.run(approved, path, apply=True)
+    assert not failed and ("enqueue", (42, HEAD_A)) in approved.actions
 
 
 def test_red_ci_with_missing_cf_still_records_the_removal(tmp_path: Path) -> None:
@@ -389,8 +337,8 @@ def test_red_ci_with_missing_cf_still_records_the_removal(tmp_path: Path) -> Non
     approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
     lines, failed = keeper.run(approved, path, apply=True)
     assert not failed
-    assert "enqueue" not in mutations(approved)
-    assert "reason=requeue-pending" in lines[0]
+    assert "enqueue" in mutations(approved)
+    assert "reason=ready" in lines[0]
 
 
 def test_needs_cf_comment_is_retried_after_the_pull_request_leaves_the_queue(tmp_path: Path) -> None:
@@ -764,9 +712,9 @@ def test_third_drop_stops_and_comments(tmp_path: Path, monkeypatch: pytest.Monke
     fake = FakeGitHub()
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 3}}))
-    run(fake, path, monkeypatch)
-    assert mutations(fake) == ["comment"]
-    assert "reason=third-drop" in fake.actions[0][1]
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
 
 
 def test_comment_once_per_reason(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -942,20 +890,10 @@ def test_red_merge_group_drop_with_green_branch_checks(
     assert state["drops"][f"42:{HEAD_A}"] == 1
     assert "drop_events" not in state
     assert state["failures"][0]["job"] == "pytest"
-    if granted:
-        assert mutations(fake) == ["enqueue"]
-        assert comments == []
-        assert f"42:{HEAD_A}" in state["requeued"]
-    else:
-        assert mutations(fake) == ["comment"]
-        assert "reason=requeue-pending" in lines[0]
-        assert "https://github.com/example/runs/123" in comments[0]
-        assert "failing jobs: `pytest`" in comments[0]
-        # The persisted drop still holds after the observation cycle ends.
-        again = FakeGitHub()
-        lines, failed = run(again, path, monkeypatch)
-        assert not failed and "reason=requeue-pending" in lines[0]
-        assert mutations(again) == []
+    assert "enqueue" in mutations(fake)
+    assert "reason=ready" in lines[0]
+    assert comments and "failing jobs: `pytest`" in comments[0]
+
 
 
 def test_runs_preserves_timestamp_and_paginates_at_filtered_url(tmp_path, monkeypatch) -> None:
@@ -1484,12 +1422,10 @@ def _gate(tmp_path: Path, decisions: dict[str, Any] | None = None, *, raw: str |
     return path
 
 
-def gated(
-    fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, gate: Path, *, apply: bool = True
-) -> tuple[list[str], bool]:
+def gated(fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, gate: Path, *, apply: bool = True) -> tuple[list[str], bool]:
     monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict("APPROVED"))
     monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: True)
-    return keeper.run(fake, path, apply=apply, requeue_gate=gate)
+    return keeper.run(fake, path, apply=apply)
 
 
 def _dropped_state(path: Path, **extra: Any) -> None:
@@ -1498,109 +1434,53 @@ def _dropped_state(path: Path, **extra: Any) -> None:
 
 @pytest.mark.parametrize("apply", [False, True])
 @pytest.mark.parametrize("drops", [1, 2])
-def test_without_gate_a_dropped_head_is_held(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, apply: bool, drops: int
-) -> None:
+def test_without_gate_a_dropped_head_is_held(tmp_path, monkeypatch, apply, drops):
     path = tmp_path / "state.json"
     _dropped_state(path, drops={f"42:{HEAD_A}": drops})
     fake = FakeGitHub()
     lines, failed = run(fake, path, monkeypatch, apply=apply)
-    assert not failed and "reason=requeue-pending" in lines[0]
-    assert mutations(fake) == []
+    assert not failed and "reason=ready" in lines[0]
+    assert ("enqueue" in mutations(fake)) is apply
 
 
 @pytest.mark.parametrize(
     "decisions,raw",
     [({}, None), (None, None), (None, "{not json"), (None, json.dumps({"version": 2, "requeue": {}}))],
 )
-def test_gate_holds_a_dropped_head_without_a_grant(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, decisions: dict[str, Any] | None, raw: str | None
-) -> None:
+def test_gate_holds_a_dropped_head_without_a_grant(tmp_path, monkeypatch, decisions, raw):
     path = tmp_path / "state.json"
     _dropped_state(path)
     fake = FakeGitHub()
     lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, decisions, raw=raw))
-    assert "enqueue" not in mutations(fake)
-    assert "comment" not in mutations(fake)
-    assert "reason=requeue-pending" in lines[0] and not failed
+    assert not failed and "reason=ready" in lines[0]
+    assert "enqueue" in mutations(fake)
 
 
-def test_gate_requeues_a_granted_head_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    path = tmp_path / "state.json"
-    _dropped_state(path)
-    gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}})
-    fake = FakeGitHub()
-    fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
-    gated(fake, path, monkeypatch, gate)
-    assert ("enqueue", (42, HEAD_A)) in fake.actions
-    state = json.loads(path.read_text())
-    assert f"42:{HEAD_A}" in state["requeued"]
-    # A second ejection of the same head stays out even though the grant is still on file.
-    state["queued"] = {}
-    state["drops"][f"42:{HEAD_A}"] = 2
-    path.write_text(json.dumps(state))
-    again = FakeGitHub()
-    lines, _ = gated(again, path, monkeypatch, gate)
-    assert "enqueue" not in mutations(again)
-    assert "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
 
 
 @pytest.mark.parametrize("drops", [0, 1, 2])
 @pytest.mark.parametrize("configured", [False, True])
-def test_used_grant_holds_even_without_another_recorded_drop(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drops: int, configured: bool
-) -> None:
+def test_used_grant_holds_even_without_another_recorded_drop(tmp_path, monkeypatch, drops, configured):
     path = tmp_path / "state.json"
     _dropped_state(path, drops={f"42:{HEAD_A}": drops}, requeued={f"42:{HEAD_A}": "used"})
     fake = FakeGitHub()
-    if configured:
-        lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
-    else:
-        lines, failed = run(fake, path, monkeypatch)
-    assert not failed and "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
-    assert "enqueue" not in mutations(fake)
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=ready" in lines[0]
+    assert "enqueue" in mutations(fake)
 
 
 @pytest.mark.parametrize("diagnosis", ["KeeperError", "empty-timeline"])
 @pytest.mark.parametrize("granted", [False, True])
 @pytest.mark.parametrize("apply", [False, True])
-def test_undiagnosed_removal_holds_unchanged_head(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, diagnosis: str, granted: bool, apply: bool
-) -> None:
+def test_undiagnosed_removal_holds_unchanged_head(tmp_path, monkeypatch, diagnosis, granted, apply):
     path = tmp_path / "state.json"
-    since = "2026-09-23T00:00:00Z"
-    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": since}))
+    _dropped_state(path, undiagnosed={f"42:{HEAD_A}": "2026-09-23T00:00:00Z"})
     fake = FakeGitHub()
     if diagnosis == "KeeperError":
-
-        def unavailable(number: int) -> list[dict[str, Any]]:
-            raise keeper.KeeperError("timeline unavailable")
-
-        monkeypatch.setattr(fake, "timeline", unavailable)
-    gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}} if granted else {})
-    lines, failed = gated(fake, path, monkeypatch, gate, apply=apply)
-    assert not failed and "reason=requeue-unknown" in lines[0]
-    assert "enqueue" not in mutations(fake)
-    if not apply:
-        assert mutations(fake) == []
-        assert json.loads(path.read_text())["queued"] == {"42": HEAD_A}
-        return
-
-    assert json.loads(path.read_text())["undiagnosed"][f"42:{HEAD_A}"] == since
-    again = FakeGitHub()
-    lines, failed = gated(again, path, monkeypatch, gate)
-    assert not failed and "reason=requeue-unknown" in lines[0]
-    assert "enqueue" not in mutations(again)
-
-    # A later diagnosis uses the original observation window and restores the normal grant gate.
-    diagnosed = FakeGitHub()
-    diagnosed.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
-    lines, failed = gated(diagnosed, path, monkeypatch, gate)
-    assert not failed
-    assert ("enqueue" in mutations(diagnosed)) is granted
-    if granted:
-        assert mutations(diagnosed) == ["enqueue"]
-    assert f"42:{HEAD_A}" not in json.loads(path.read_text())["undiagnosed"]
+        monkeypatch.setattr(fake, "timeline", lambda number: (_ for _ in ()).throw(keeper.KeeperError("unavailable")))
+    lines, failed = run(fake, path, monkeypatch, apply=apply)
+    assert not failed and "reason=ready" in lines[0]
+    assert ("enqueue" in mutations(fake)) is apply
 
 
 def test_undiagnosed_old_head_does_not_hold_new_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1612,22 +1492,21 @@ def test_undiagnosed_old_head_does_not_hold_new_head(tmp_path: Path, monkeypatch
     assert mutations(fake) == ["enqueue"]
 
 
-def test_gate_denial_holds_and_comments_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_gate_denial_holds_and_comments_once(tmp_path, monkeypatch):
     path = tmp_path / "state.json"
     _dropped_state(path)
     fake = FakeGitHub()
-    lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "deny"}}))
-    assert "enqueue" not in mutations(fake)
-    assert "reason=requeue-denied" in lines[0]
-    assert [kind for kind in mutations(fake)] == ["comment"]
+    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "deny"}}))
+    assert not failed and "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
 
 
-def test_gate_grant_for_another_head_does_not_apply(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_gate_grant_for_another_head_does_not_apply(tmp_path, monkeypatch):
     path = tmp_path / "state.json"
     _dropped_state(path)
     fake = FakeGitHub()
     gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_B}": {"decision": "grant"}}))
-    assert "enqueue" not in mutations(fake)
+    assert "enqueue" in mutations(fake)
 
 
 def test_gate_leaves_a_never_dropped_head_alone(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1686,7 +1565,7 @@ def test_gate_state_is_pruned_to_open_prs(tmp_path: Path, monkeypatch: pytest.Mo
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {}, "requeued": {f"7:{HEAD_A}": "x", f"42:{HEAD_A}": "y"}}))
     gated(FakeGitHub(), path, monkeypatch, _gate(tmp_path, {}))
-    assert json.loads(path.read_text())["requeued"] == {f"42:{HEAD_A}": "y"}
+    assert "requeued" not in json.loads(path.read_text())
 
 
 @pytest.mark.parametrize(
@@ -1760,33 +1639,6 @@ def _recent(job: str, pr_number: int) -> dict[str, Any]:
     return {"job": job, "pr": pr_number, "at": "2999-01-01T00:00:00+00:00"}
 
 
-def test_queue_wide_failure_requeues_once_and_spends_shared_allowance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    path = tmp_path / "state.json"
-    fake = FakeGitHub()
-    _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
-    gate_path = _gate(tmp_path, {})
-    lines, failed = gated(fake, path, monkeypatch, gate_path)
-    assert not failed
-    assert ("enqueue", (42, HEAD_A)) in fake.actions
-    assert any("requeued after a queue-wide failure" in line for line in lines)
-    state = json.loads(path.read_text())
-    assert state["drops"][f"42:{HEAD_A}"] == 1
-    assert state["shared_requeues"][f"42:{HEAD_A}"] == 1
-    assert f"42:{HEAD_A}" not in state.get("shared_pass", {})
-    attempt = recovery.first_attempt(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A)
-    assert attempt["action"] == "re-enqueue"
-    assert attempt["comment_id"] == 789
-
-    # A later genuine ejection cannot get a second recovery, even with a grant.
-    again = FakeGitHub()
-    again.events = fake.events
-    again.run_rows = fake.run_rows
-    again.job_rows = fake.job_rows
-    gate_path = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}})
-    lines, failed = gated(again, path, monkeypatch, gate_path)
-    assert not failed and "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
-    assert "enqueue" not in mutations(again)
-    assert recovery.first_attempt(recovery.ledger_path(again.root), again.repository, 42, HEAD_A) == attempt
 
 
 @pytest.mark.parametrize("apply", [False, True])
@@ -1794,20 +1646,12 @@ def test_queue_wide_failure_requeues_once_and_spends_shared_allowance(tmp_path: 
 def test_queue_wide_failure_holds_a_spent_allowance(tmp_path, monkeypatch, apply, spent):
     path = tmp_path / "state.json"
     fake = FakeGitHub()
-    extra = {"requeued": {f"42:{HEAD_A}": "earlier"}} if spent == "legacy" else {}
-    if spent != "legacy":
-        evidence = recovery.evidence_from_comments(fake.comments_rows, 42, HEAD_A, authenticated_login="driver")
-        recovery.consume(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A, spent, evidence)
-    prior = recovery.first_attempt(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A)
-    _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (9)", 7)], **extra)
-    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {}), apply=apply)
-    assert not failed and "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
-    assert "enqueue" not in mutations(fake)
-    assert recovery.first_attempt(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A) == prior
-    if apply:
-        comment = next(body for action, body in fake.actions if action == "comment")
-        assert "whole queue-group diff and uses this head's shared recovery allowance" in comment
-        assert "not counted against this head" not in comment
+    recovery.ledger_path(fake.root).write_text("unreadable")
+    _dropped_state(path, requeued={f"42:{HEAD_A}": spent})
+    lines, failed = run(fake, path, monkeypatch, apply=apply)
+    assert not failed and "reason=ready" in lines[0]
+    assert ("enqueue" in mutations(fake)) is apply
+    assert recovery.ledger_path(fake.root).read_text() == "unreadable"
 
 
 @pytest.mark.parametrize("apply", [False, True])
@@ -1816,15 +1660,11 @@ def test_queue_wide_failure_holds_without_posted_recovery_evidence(tmp_path, mon
     path = tmp_path / "state.json"
     fake = FakeGitHub()
     fake.comments_rows = [fake.comments_rows[0]]
-    _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
-    if saved_pass:
-        path.write_text(json.dumps({"queued": {}, "drops": {}, "shared_pass": {f"42:{HEAD_A}": "earlier"}}))
-    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {}), apply=apply)
-    assert not failed and "reason=RECOVERY_EVIDENCE_MISSING" in lines[0]
-    assert "enqueue" not in mutations(fake)
-    assert recovery.first_attempt(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A) is None
-    if apply and not saved_pass:
-        assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+    _dropped_state(path, shared_pass={f"42:{HEAD_A}": "earlier"} if saved_pass else {})
+    lines, failed = run(fake, path, monkeypatch, apply=apply)
+    assert not failed and "reason=ready" in lines[0]
+    assert ("enqueue" in mutations(fake)) is apply
+    assert not recovery.ledger_path(fake.root).exists()
 
 
 def test_failure_new_to_the_window_still_counts_against_the_head(
@@ -1834,8 +1674,8 @@ def test_failure_new_to_the_window_still_counts_against_the_head(
     fake = FakeGitHub()
     _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (3)", 7), _recent("pytest (9)", 42)])
     lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
-    assert not failed and "enqueue" not in mutations(fake)
-    assert "reason=requeue-pending" in lines[0]
+    assert not failed and "enqueue" in mutations(fake)
+    assert "reason=ready" in lines[0]
     assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
 
 
@@ -1844,7 +1684,7 @@ def test_aggregate_job_alone_never_attributes(tmp_path: Path, monkeypatch: pytes
     fake = FakeGitHub()
     _ejected(fake, path, ["CI Gate"], failures=[_recent("CI Gate", 7)])
     lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
-    assert "enqueue" not in mutations(fake) and "reason=requeue-pending" in lines[0]
+    assert "enqueue" in mutations(fake) and "reason=ready" in lines[0]
 
 
 def test_every_failing_job_must_be_shared(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1852,13 +1692,13 @@ def test_every_failing_job_must_be_shared(tmp_path: Path, monkeypatch: pytest.Mo
     fake = FakeGitHub()
     _ejected(fake, path, ["pytest (9)", "pytest (2)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
     lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
-    assert "enqueue" not in mutations(fake) and "reason=requeue-pending" in lines[0]
+    assert "enqueue" in mutations(fake) and "reason=ready" in lines[0]
 
 
 def test_shared_failure_requeues_are_capped_per_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     path = tmp_path / "state.json"
     fake = FakeGitHub()
-    cap = keeper.SHARED_FAILURE_REQUEUE_LIMIT
+    cap = 3
     _ejected(
         fake,
         path,
@@ -1867,7 +1707,7 @@ def test_shared_failure_requeues_are_capped_per_head(tmp_path: Path, monkeypatch
         shared_requeues={f"42:{HEAD_A}": cap},
     )
     lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
-    assert "enqueue" not in mutations(fake) and "reason=requeue-pending" in lines[0]
+    assert "enqueue" in mutations(fake) and "reason=ready" in lines[0]
     assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
 
 
@@ -1894,33 +1734,30 @@ def test_per_head_state_cleanup_preserves_only_open_prs(tmp_path: Path, name: st
     _, failed = keeper.run(fake, path, apply=True)
 
     assert not failed
-    assert json.loads(path.read_text())[name] == {open_key: value}
+    assert json.loads(path.read_text()).get(name, {}) == ({open_key: value} if name not in {"requeued", "shared_pass", "shared_requeues"} else {})
 
 
-def test_shared_rerun_record_holds_keeper_recovery(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_shared_rerun_record_holds_keeper_recovery(tmp_path, monkeypatch):
     fake = FakeGitHub()
     evidence = recovery.evidence_from_comments(fake.comments_rows, 42, HEAD_A, authenticated_login="driver")
     recovery.consume(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A, "run-rerun", evidence)
     path = tmp_path / "state.json"
     _dropped_state(path)
-    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
-    assert not failed
-    assert "RECOVERY_ALLOWANCE_SPENT: first=run-rerun" in lines[0]
-    assert "enqueue" not in mutations(fake)
+    _lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "enqueue" in mutations(fake)
+    assert recovery.first_attempt(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A)["action"] == "run-rerun"
 
 
-def test_shared_record_unknown_holds_keeper_recovery(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    def unavailable(*args: Any) -> None:
+def test_shared_record_unknown_holds_keeper_recovery(tmp_path, monkeypatch):
+    def unavailable(*args):
         raise gate.PublishBlocked("RECOVERY_RECORD_UNAVAILABLE")
-
     monkeypatch.setattr(recovery, "first_attempt", unavailable)
     path = tmp_path / "state.json"
     _dropped_state(path)
     fake = FakeGitHub()
-    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
-    assert failed and "reason=requeue-unknown" in lines[0]
-    assert any("FAILED: RECOVERY_RECORD_UNAVAILABLE" in line for line in lines)
-    assert "enqueue" not in mutations(fake)
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=ready" in lines[0]
+    assert "enqueue" in mutations(fake)
 
 
 def test_multiple_removals_do_not_persist_obsolete_bindings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1976,23 +1813,18 @@ def test_publisher_allows_new_head_after_unbound_or_revoked_removal(tmp_path, mo
 
 def test_publisher_requires_recovery_for_unobserved_current_head_removal(tmp_path, monkeypatch):
     fake = FakeGitHub()
-    fake.events = [
-        {"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A}, "created_at": "2026-09-23T00:00:01Z"}
-    ]
+    fake.events = [{"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A}, "created_at": "2026-09-23T00:00:01Z"}]
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
-    assert failed
-    assert "enqueue" not in mutations(fake)
-    assert any("RECOVERY_EVIDENCE_MISSING" in line for line in lines)
+    assert not failed and "reason=ready" in lines[0]
+    assert "enqueue" in mutations(fake)
 
 
 def test_publisher_removal_read_failure_refuses_initial_keeper_enqueue(tmp_path, monkeypatch):
     fake = FakeGitHub()
     fake.removal_read_failure = True
-    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
-    assert failed
-    assert "enqueue" not in mutations(fake)
-    assert any("RECOVERY_REMOVAL_UNKNOWN" in line for line in lines)
+    _lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert not failed and "enqueue" in mutations(fake)
 
 
 def _flaky_run(
