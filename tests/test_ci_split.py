@@ -657,7 +657,7 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
 def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Refuse stale target/head proof, dirty inputs and hostile paths; run literal candidate tests."""
+    """Use immutable merge parents despite stale metadata; reject wrong heads and dirty sources."""
     from scripts.ci import pr_affected_tests as affected
 
     guards = [
@@ -699,6 +699,8 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     _git(repo, 'checkout', '-q', 'fixture-base')
     _git(repo, *ident, 'merge', '--no-ff', '-qm', 'candidate', 'pr')
     candidate = _git(repo, 'rev-parse', 'HEAD')
+    advanced_target = _git(repo, *ident, 'commit-tree', f'{base}^{{tree}}', '-p', base, '-m', 'later target')
+    _git(repo, 'update-ref', 'refs/remotes/origin/fixture-base', advanced_target)
     monkeypatch.chdir(repo)
     selected = affected.plan(base, candidate)
     assert selected['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
@@ -729,36 +731,57 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert 'deferred test-case count: UNKNOWN' in (tmp_path / 'summary').read_text()
     assert affected.main() == 1  # stale report cannot masquerade as this execution
     monkeypatch.setenv('GITHUB_SHA', base)
-    assert affected.main() == 1
+    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+                         capture_output=True, text=True, timeout=60)
+    assert cli.returncode == 1
+    assert 'stage=event_identity' in cli.stderr
+    assert 'ValueError: checked-out candidate does not match GITHUB_SHA' in cli.stderr
+    print(cli.stderr)
     monkeypatch.setenv('GITHUB_SHA', candidate)
     payload['pull_request']['head']['sha'] = base
     event.write_text(json.dumps(payload))
-    assert affected.main() == 1
+    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+                         capture_output=True, text=True, timeout=60)
+    assert cli.returncode == 1
+    assert 'stage=merge_parents' in cli.stderr
+    assert 'ValueError: PR merge candidate must have two parents and match event head' in cli.stderr
+    print(cli.stderr)
 
     payload['pull_request']['head']['sha'] = head
     event.write_text(json.dumps(payload))
-    _git(repo, 'update-ref', 'refs/remotes/origin/fixture-base', event_base)
-    assert affected.main() == 1  # stale checkout target cannot prove the candidate base
-    _git(repo, 'update-ref', 'refs/remotes/origin/fixture-base', head)
-    assert affected.main() == 1  # moved checkout target also refuses
+    _git(repo, 'checkout', '-q', 'pr')
+    (repo / '.github/workflows').mkdir(parents=True)
+    (repo / '.github/workflows/ci.yml').write_text('name: changed workflow\n')
+    _git(repo, 'add', '.github/workflows/ci.yml')
+    _git(repo, *ident, 'commit', '-qm', 'workflow change')
+    workflow_head = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'checkout', '-qB', 'workflow-candidate', base)
+    _git(repo, *ident, 'merge', '--no-ff', '-qm', 'workflow merge', 'pr')
+    workflow_candidate = _git(repo, 'rev-parse', 'HEAD')
+    payload['pull_request']['head']['sha'] = workflow_head
+    event.write_text(json.dumps(payload))
+    monkeypatch.setenv('GITHUB_SHA', workflow_candidate)
+    # The candidate needs no mutable local target ref or untracked-file gate.
     _git(repo, 'update-ref', '-d', 'refs/remotes/origin/fixture-base')
-    assert affected.main() == 1  # missing target never falls back to a payload or parent
-    _git(repo, 'update-ref', 'refs/remotes/origin/fixture-base', base)
-    payload['pull_request']['base']['sha'] = head
-    event.write_text(json.dumps(payload))
-    assert affected.main() == 1  # valid SHA on the PR branch is not trusted target history
-    payload['pull_request']['base']['sha'] = event_base
-    payload['pull_request']['base']['ref'] = 'untrusted-target'
-    event.write_text(json.dumps(payload))
-    assert affected.main() == 1
-    payload['pull_request']['base']['ref'] = 'fixture-base'
-    event.write_text(json.dumps(payload))
+    (repo / 'untracked-note.txt').write_text('unrelated runner output\n')
+    (repo / 'ci-artifacts/pr-affected.xml').unlink()
+    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+                         capture_output=True, text=True, timeout=60)
+    assert cli.returncode == 0, cli.stdout + cli.stderr
+    print(cli.stdout)
+    workflow = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
+    assert workflow['candidate'] == workflow_candidate and workflow['base'] == base
+    assert workflow['event_base'] == event_base
+    assert workflow['run_files'] == sorted(guards) and workflow['reported_cases'] == 6
+    assert workflow['deferred_files'] == ['tests/test_new.py', 'tests/test_space name.py']
+    assert workflow['reason'] == 'pytest infrastructure changed'
+    assert workflow['execution_status'] == 'completed' and workflow['exit_code'] == 0
+    assert workflow['failed_cases'] == 0 and workflow['skipped_cases'] == 0
+    assert workflow['deferred_case_count'] is None
+    (repo / 'untracked-note.txt').unlink()
     (repo / guards[0]).write_text('# dirty selected source\n')
     assert affected.main() == 1
     _git(repo, 'restore', guards[0])
-    (repo / 'tests/conftest.py').write_text('# untracked pytest input\n')
-    assert affected.main() == 1
-    (repo / 'tests/conftest.py').unlink()
     _git(repo, 'checkout', '-q', 'pr')
     (repo / 'tests/conftest.py').write_text('# infrastructure defers changed test files\n')
     (repo / guards[0]).write_text('def test_exact_candidate():\n    assert False, "candidate defect"\n')

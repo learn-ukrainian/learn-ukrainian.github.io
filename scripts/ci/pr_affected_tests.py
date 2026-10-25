@@ -123,7 +123,7 @@ def main() -> int:
         "Use in CI admission; this never replaces full merge-group pytest.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
-        "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF, GITHUB_BASE_REF.\n"
+        "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
         "Outputs: ci-artifacts/pr-affected.json, pr-affected.xml and GITHUB_STEP_SUMMARY.\n"
         "Exit codes: 0 required execution passed; 1 invalid proof or failed execution; 2 invalid arguments.\n"
         "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
@@ -137,27 +137,16 @@ def main() -> int:
         if tier != "admission":
             print("Full tier: required full-suite jobs provide pytest proof.")
             return 0
-        stage, reason = "base_identity", "target_branch_mismatch"
         pr = payload["pull_request"]
-        base_ref = os.environ["GITHUB_BASE_REF"]
-        if not base_ref or base_ref != pr["base"]["ref"]:
-            raise ValueError("PR target branch does not match GITHUB_BASE_REF")
-        stage, reason = "target_ref", "invalid_target_ref"
-        git("check-ref-format", f"refs/heads/{base_ref}")
-        # checkout's fetch-depth: 0 fetches target branches as origin/* and pins
-        # the PR merge ref to GITHUB_SHA. PR base.sha can describe an older target.
-        stage, reason = "target_commit", "missing_checkout_target"
-        base = git("rev-parse", "--verify", f"refs/remotes/origin/{base_ref}^{{commit}}").decode().strip()
-        stage, reason = "event_base_history", "event_base_outside_target_history"
-        git("merge-base", "--is-ancestor", pr["base"]["sha"], base)
-        head = pr["head"]["sha"]
-        stage, reason = "merge_parents", "unexpected_target_or_head"
-        if git("show", "-s", "--format=%P", actual).decode().split() != [base, head]:
-            raise ValueError("PR merge candidate parents do not match fetched target and event head")
+        # GitHub checkout pins the event's test merge. Its first parent is the
+        # tested base, even when event metadata or fetched branches have moved.
+        stage, reason = "merge_parents", "unexpected_merge_or_head"
+        parents = git("show", "-s", "--format=%P", actual).decode().split()
+        if len(parents) != 2 or parents[1] != pr["head"]["sha"]:
+            raise ValueError("PR merge candidate must have two parents and match event head")
+        base = parents[0]
         stage, reason = "clean_checkout", "dirty_checkout"
         subprocess.run(["git", "diff", "--quiet", actual, "--"], check=True, capture_output=True, timeout=30)
-        if git("ls-files", "--others", "--exclude-standard", "-z"):
-            raise ValueError("untracked checkout inputs")
         stage, reason = "test_plan", "invalid_paths_tests_or_durations"
         record = plan(base, actual)
         record["event_base"] = pr["base"]["sha"]
@@ -224,7 +213,8 @@ def main() -> int:
                 stream.write(summary)
         return int(result.returncode != 0 or not cases)
     except (KeyError, TypeError, ValueError, OSError, UnicodeError, ET.ParseError, subprocess.SubprocessError) as exc:
-        print(f"::error::PR affected proof incomplete: stage={stage}; reason={reason}; error={type(exc).__name__}", file=sys.stderr)
+        detail = f": {exc}" if type(exc) is ValueError else ""
+        print(f"::error::PR affected proof incomplete: stage={stage}; reason={reason}; error={type(exc).__name__}{detail}", file=sys.stderr)
         return 1
 
 

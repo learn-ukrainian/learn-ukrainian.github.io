@@ -6,8 +6,15 @@ guard, attribution, lint and content contracts, dependency-audit scoping, and
 `pytest --collect-only`. Its summary states plainly that full pytest was not run.
 The parallel required `pr-affected` job executes literal changed existing
 `tests/**/test_*.py` files plus every path in `scripts/ci/pr-affected-guards.txt`.
-It uses the original PR merge candidate and base, NUL-delimited Git paths,
-rename destinations and tracked regular files. Deleted files are reported.
+It verifies the checked-out candidate against `GITHUB_SHA` and the event's PR
+merge ref. The candidate must have two Git parents and its second parent must
+match the event's PR head. Its first parent supplies the actual tested base for
+the diff. Event base metadata can be stale, and fetched target refs can advance;
+neither replaces that immutable parent. No fetched-target, event-base ancestry,
+`GITHUB_BASE_REF` or untracked-file admission check is required. Tracked source
+changes still fail the checkout-integrity check.
+The diff uses NUL-delimited Git paths, rename destinations and tracked regular
+files. Deleted files are reported.
 Unsafe paths, missing guards and symlinks fail closed. No import graph or
 component inventory chooses tests.
 
@@ -20,8 +27,11 @@ includes conftest, pytest configuration, dependency locks, the CI workflow, CI P
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded
 estimate, reported cases, skips and failures. Deferred test-case counts stay
-UNKNOWN because the deferred files were not collected by this job. Requested
-files are not a claim that every assertion ran. Normal pytest configuration,
+UNKNOWN because the deferred files were not collected by this job. Workflow
+changes use this same deferral path and still execute all six guards. Invalid
+proof reports its stage and exception class; fixed `ValueError` messages also
+identify the specific failure without printing event payloads or environment.
+Requested files are not a claim that every assertion ran. Normal pytest configuration,
 markers, quarantine and governor apply. Hosted duration and the independent
 30-day original-failed-head replay remain driver-owned proof requirements.
 The initial list includes all six runtime/catalog/global suites from the
