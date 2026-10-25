@@ -78,7 +78,10 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
     """Detect marker/option/file-split drift that would silently measure a smaller suite."""
     baseline = CI["jobs"]["pytest"]
     measured = WORKFLOW["jobs"]["pytest"]
-    assert measured["strategy"] == baseline["strategy"]
+    # CI uses 24 shards; diagnostic coverage retains 16. Both partition the
+    # same full suite with their own strategy.job-total, checked below.
+    assert baseline["strategy"] == {"fail-fast": False, "matrix": {"shard": list(range(1, 25))}}
+    assert measured["strategy"] == {"fail-fast": False, "matrix": {"shard": list(range(1, 17))}}
     before = step(baseline, "Run pytest")["run"]
     after = step(measured, "Run CI pytest suite with branch coverage")["run"]
     assert (
