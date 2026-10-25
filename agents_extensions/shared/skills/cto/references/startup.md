@@ -28,6 +28,8 @@ for their full history and links, then read standing orders, the latest `handoff
 in-flight work, blockers and the mistakes ledger (every open entry and the last ten closed
 ones, [learning](learning.md)). The database is the seat's handoff; the markdown file is
 only a pointer ([handoff](handoff.md)).
+Before restarting a lane or ordering an item, read its last state and linked PR or issue.
+Honor shutdown orders; send stale-open items whose PRs merged to the tracker owner.
 
 ## 3. Resume exactly the named rollover
 

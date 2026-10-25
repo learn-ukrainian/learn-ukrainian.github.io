@@ -1,7 +1,9 @@
 # Handoff
 
-Hand off at about 65 percent context or session end; never `/compact`. Watchers, waits and
-wake timers die with this session; the next one re-arms them from the tracker handoff.
+Keep working until the keeper's handoff prompt; reply `HANDOFF-DONE` with its exact token.
+Claude uses that handoff; Codex compacts natively. Never stop early for a context percentage
+or ask the operator to restart. Watchers, waits and wake timers die with the session;
+the next one re-arms them from the tracker handoff.
 
 1. Run a last [cycle](cycle.md) so every number is current.
 2. Timestamp with `date -u +%Y-%m-%dT%H:%MZ`; never type a time.
@@ -30,9 +32,8 @@ The `handoff_note` contains:
   and repeats by ledger item ID. A repeat of a verified correction names its next control step.
 - Parked item IDs, locations, state and condition to resume, or none.
 - The next three actions by item ID.
-- Startup: host CTO launcher `lu-start-cto [a|b] [--here]` naming the account, exact lineage
-  and rollover IDs to resume with `thread-rollover`, and the scratch helper path.
-  Never print or suggest the repository launcher script; it skips account selection.
+- Startup: record the keeper's launcher argv, exact lineage and rollover IDs to resume
+  with `thread-rollover`, and the scratch helper path. The keeper restarts the seat.
 - Watcher IDs and what each watched, so the next session can re-arm them.
 
 Copy each worker's `run_nonce` whole: `delegate.py wait --run-nonce` compares it exactly, so a
