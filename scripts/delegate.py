@@ -6765,6 +6765,7 @@ TYPED_CAUSE_CODES = frozenset(
         "kimi_worktree_mismatch",
         "review_admission_refused",
         "mechanical_admission_refused",
+        "muse_worker_task_binding_refused",
         "boundary_remove_failed",
         "boundary_install_failed",
         # The worker's own outcome.
@@ -12053,6 +12054,50 @@ def _run_worker(
     to show up correctly in ``ps`` and systemd-style supervisors if
     we ever wrap this in one.
     """
+    # Muse binding precedes generic admission, whose refusal may settle state.
+    # Decide and settle from one locked record belonging to this active attempt.
+    if agent == "muse":
+        def muse_binding_refused(current: dict[str, Any]) -> bool:
+            workspace = current.get("cwd")
+            return bool(
+                current.get("task_id") != task_id or not run_nonce
+                or current.get("run_nonce") != run_nonce
+                or current.get("status") not in {"spawning", "running"}
+                or current.get("agent") != agent
+                or current.get("model") != (model or "muse-wonder-full-1.0")
+                or current.get("mode") != mode
+                or not isinstance(current.get("research_role"), str)
+                or not isinstance(workspace, str) or not workspace
+                or Path(workspace).resolve() != Path(cwd_str).resolve()
+                or _muse_dispatch_refusal(argparse.Namespace(**current))
+                or require_review_verdict or review_id is not None or review_manifest is not None
+                or current.get("review_id") is not None or current.get("review_manifest") is not None
+            )
+
+        state_path = _state_path_no_create(task_id)
+        with task_state_lock(state_path):
+            current = _read_state_json(state_path) or {}
+            active_attempt = (
+                current.get("task_id") == task_id and bool(run_nonce)
+                and current.get("run_nonce") == run_nonce
+                and current.get("status") in {"spawning", "running"}
+            )
+            refused = muse_binding_refused(current)
+            if refused and active_attempt:
+                current.update(
+                    status="failed",
+                    finished_at=datetime.now(UTC).isoformat(),
+                    returncode=1,
+                    exit_code=1,
+                    returncode_reason="muse_worker_task_binding_refused",
+                    last_error="muse_worker_task_binding_refused",
+                    stderr_excerpt="muse_worker_task_binding_refused",
+                )
+                _write_record_unlocked(state_path, current)
+        if refused:
+            print("❌ muse_worker_task_binding_refused", file=sys.stderr)
+            return 1
+
     # The worker is a second entry point: a worker argv built by hand or a
     # stale parent must not invoke a Kimi seat outside web, UI and backend
     # coding. It reads the task's owned paths in the tree it is about to run
@@ -12140,51 +12185,51 @@ def _run_worker(
 
     # Capture identity from the worker side, before provider execution.
     # /proc/self/stat can supply the host PID even when getpid() is local.
-    state = _read_state(state_path) or {}
-    if agent == "muse" and (
-        _muse_dispatch_refusal(argparse.Namespace(**state))
-        or require_review_verdict or review_id or review_manifest
-        or state.get("agent") != agent or state.get("model") != (model or "muse-wonder-full-1.0")
-        or state.get("mode") != mode or state.get("run_nonce") != run_nonce
-        or not run_nonce or Path(state.get("cwd", "")).resolve() != Path(cwd_str).resolve()
-    ):
-        print("❌ muse_worker_task_binding_refused", file=sys.stderr)
-        return 1
-    state["worker_identity"] = capture_worker_identity(os.getpid(), self_process=True)
-    state["pid"] = state["worker_identity"]["pid"]
-    state["status"] = "running"
-    state["max_budget_usd"] = max_budget_usd
-    effective_nonce = run_nonce or os.environ.get("LU_RUNTIME_RUN_NONCE")
-    if effective_nonce:
-        state["run_nonce"] = effective_nonce
-    if "cli_version" not in state:
-        start_telemetry = resolve_dispatch_start_telemetry(
-            agent_name=agent,
-            requested_model=model,
-            requested_effort=effort,
-            harness=harness,
-            probe_cli_version=not (review_manifest and review_access == "full"),
-        )
-        state.setdefault("model", start_telemetry.model)
-        state.setdefault("effort", start_telemetry.effort)
-        state.setdefault("cli_version", start_telemetry.cli_version)
-    state.update(model_accounting_fields(requested_selector=model))
-    agy_requested_model = model
-    if agent == "agy":
-        from scripts.agent_runtime.adapters.agy import AgyAdapter
+    # Admission may outlive this attempt. Recheck custody and bindings under
+    # the same lock that protects the transition, without settling a changed record.
+    with task_state_lock(state_path) if agent == "muse" else contextlib.nullcontext():
+        state = (_read_state_json(state_path) if agent == "muse" else _read_state(state_path)) or {}
+        if agent == "muse" and muse_binding_refused(state):
+            print("❌ muse_worker_task_binding_refused", file=sys.stderr)
+            return 1
+        state["worker_identity"] = capture_worker_identity(os.getpid(), self_process=True)
+        state["pid"] = state["worker_identity"]["pid"]
+        state["status"] = "running"
+        state["max_budget_usd"] = max_budget_usd
+        effective_nonce = run_nonce or os.environ.get("LU_RUNTIME_RUN_NONCE")
+        if effective_nonce:
+            state["run_nonce"] = effective_nonce
+        if "cli_version" not in state:
+            start_telemetry = resolve_dispatch_start_telemetry(
+                agent_name=agent,
+                requested_model=model,
+                requested_effort=effort,
+                harness=harness,
+                probe_cli_version=not (review_manifest and review_access == "full"),
+            )
+            state.setdefault("model", start_telemetry.model)
+            state.setdefault("effort", start_telemetry.effort)
+            state.setdefault("cli_version", start_telemetry.cli_version)
+        state.update(model_accounting_fields(requested_selector=model))
+        agy_requested_model = model
+        if agent == "agy":
+            from scripts.agent_runtime.adapters.agy import AgyAdapter
 
-        agy_requested_model = model or state.get("model") or AgyAdapter.default_model
-        agy_start_state = _agy_model_state(
-            agent=agent,
-            model=agy_requested_model,
-            identity=None,
-            task_id=task_id,
-            run_nonce=effective_nonce,
-        )
-        state.update(agy_start_state)
-        if agy_start_state:
-            state["substitution"] = None
-    _write_state_atomic(state_path, state)
+            agy_requested_model = model or state.get("model") or AgyAdapter.default_model
+            agy_start_state = _agy_model_state(
+                agent=agent,
+                model=agy_requested_model,
+                identity=None,
+                task_id=task_id,
+                run_nonce=effective_nonce,
+            )
+            state.update(agy_start_state)
+            if agy_start_state:
+                state["substitution"] = None
+        if agent == "muse":
+            _write_record_unlocked(state_path, _detach_read_only_checkout_snapshots(state))
+        else:
+            _write_state_atomic(state_path, state)
 
     cwd = Path(cwd_str)
     read_only_checkout_pre: dict[str, str] | None = None
@@ -16371,6 +16416,9 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if dispatch_agent == "muse":
+            # Replay worker admission with the exact role accepted from the caller.
+            initial_state["research_role"] = getattr(args, "research_role", None)
         if routing.budget_diagnostics:
             initial_state["routing_facts"] = routing.budget_diagnostics
         if review_brief_warnings:
