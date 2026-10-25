@@ -161,7 +161,24 @@ def test_cached_findings_refresh_after_edit_and_cannot_be_mutated(tmp_path: Path
     assert changed[0].shape_hash != expected[0].shape_hash
 
 
-def test_cached_findings_preserve_syntax_errors_and_path_identity(tmp_path: Path) -> None:
+@pytest.mark.parametrize(("collision_source", "expected_name"), [
+    (
+        'import subprocess as Popen\nPopen.call(["echo"])\nfrom subprocess import *\n',
+        "subprocess.call",
+    ),
+    (
+        'from subprocess import call as Popen\nPopen(["echo"])\nfrom subprocess import *\n',
+        "subprocess.call",
+    ),
+    (
+        'from subprocess import *\nrun(["echo"])\n\ndef hide():\n'
+        '    from subprocess import getoutput as run\n',
+        "subprocess.run",
+    ),
+], ids=["defect-module-alias", "defect-callable-alias", "defect-local-import"])
+def test_cached_findings_preserve_syntax_errors_and_path_identity(
+    tmp_path: Path, collision_source: str, expected_name: str
+) -> None:
     """Wildcard imports must not hide unbounded calls or suppress syntax errors."""
     good = tmp_path / "good.py"
     broken = tmp_path / "broken.py"
@@ -182,7 +199,13 @@ def test_cached_findings_preserve_syntax_errors_and_path_identity(tmp_path: Path
         (5, "subprocess.check_call", "<module>"),
     ]
     assert timeout_less_calls(good) == timeout_less_calls(broken) == hits
-    assert guard._collect_aliases(ast.parse(source))["Popen"] == "Popen"
+    good.write_text(collision_source, encoding="utf-8")
+    collision_hits = timeout_less_calls_from_source(collision_source)
+    assert [(hit.lineno, hit.name, hit.qualname) for hit in collision_hits] == [
+        (2, expected_name, "<module>"),
+    ]
+    assert timeout_less_calls(good) == collision_hits
+    assert guard._collect_aliases(ast.parse(source))["Popen"] == {"Popen"}
     broken.write_text("import subprocess\nsubprocess.call(\n", encoding="utf-8")
     with pytest.raises(SyntaxError) as exc:
         timeout_less_calls(broken)
