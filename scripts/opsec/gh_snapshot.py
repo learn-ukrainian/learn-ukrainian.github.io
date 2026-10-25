@@ -10,7 +10,7 @@ import re
 import subprocess
 from dataclasses import dataclass
 
-from scripts.opsec.prepublish import PublishBlocked, internal_environment, is_private, normalize_repository
+from scripts.opsec.prepublish import PublishBlocked, check_texts, internal_environment, is_private, normalize_repository
 
 # Write grammars retain their closed fields and private-destination proof.
 REPO = {"--repo": True, "-R": True}
@@ -293,6 +293,10 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         host_class, path = github_client._canonical_endpoint(call.endpoint, host)
         if host_class == "rejected":
             raise PublishBlocked("OPSEC: external or malformed API host refused.")
+        # Preview values become Accept header content even when -p consumes a
+        # following apparent field flag. Keep the existing no-exposure scan.
+        if call.flags.get("preview"):
+            check_texts("unknown", call.flags["preview"], environment=environment)
         for value in call.flags.get("header", []):
             name, separator, _ = value.partition(":")
             if (not separator or name.lower() not in READ_HEADERS
