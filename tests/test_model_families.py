@@ -80,15 +80,46 @@ _UNKNOWN_TOKENS = (
 
 
 def test_canonical_normalize_family_maps_every_recognized_token() -> None:
+    from scripts.review.record_cf_verdict import incoming_writer_family
+    from scripts.review.reviewer_resolver import resolve_author_family, resolve_family
+
     for token, expected in _TOKEN_TO_FAMILY.items():
         assert model_families.normalize_family(token).value == expected, token
+    # Missing declared Meta selectors must not orphan writer provenance.
+    for token in (
+        "meta",
+        "muse-wonder-full-1.0",
+        "MUSE-WONDER-FULL-1.0",
+        "muse:muse-wonder-full-1.0",
+        "[muse-wonder-full-1.0]",
+        "agy:muse-wonder-full-1.0",
+        " META ",
+    ):
+        assert model_families.normalize_family(token) is model_families.Family.META, token
+        assert model_families.normalize_lineage_family({"model": token}) is model_families.Family.META, token
+        assert llm_reviewer_dispatch.normalize_family(token) == "meta", token
+        assert layerb_shadow.normalize_lineage_family(token) == "meta", token
+        assert resolve_family(token) == "meta", token
+        assert resolve_author_family(token) == "meta", token
+    assert incoming_writer_family("muse", "muse-wonder-full-1.0") == "meta"
 
 
 def test_canonical_normalize_family_unknown_is_first_class() -> None:
+    from scripts.review.record_cf_verdict import BranchFactsError, incoming_writer_family
+    from scripts.review.reviewer_resolver import resolve_author_family, resolve_family
+
     for token in _UNKNOWN_TOKENS:
         assert model_families.normalize_family(token) is model_families.Family.UNKNOWN, token
     assert model_families.normalize_family("") is model_families.Family.UNKNOWN
     assert model_families.normalize_family(None) is model_families.Family.UNKNOWN
+    for token in ("muse", "muse-spark-1.3", "muse-wonder-full", "muse-wonder-full-2.0", "muse:mystery-model"):
+        assert model_families.normalize_family(token) is model_families.Family.UNKNOWN, token
+        assert resolve_family(token) == "unknown", token
+        assert resolve_author_family(token) == "unknown", token
+        with pytest.raises(BranchFactsError, match="incoming writer family unknown"):
+            incoming_writer_family("muse", token)
+    with pytest.raises(BranchFactsError, match="incoming writer family unknown"):
+        incoming_writer_family("muse", None)
 
 
 def test_canonical_word_boundary_prevents_false_matches() -> None:
@@ -98,6 +129,15 @@ def test_canonical_word_boundary_prevents_false_matches() -> None:
     assert model_families.normalize_family("openrouter") is model_families.Family.UNKNOWN
     assert model_families.normalize_family("gravity") is model_families.Family.UNKNOWN
     assert model_families.normalize_family("anti") is model_families.Family.UNKNOWN
+    for token in (
+        "xmeta",
+        "metaphor",
+        "metax",
+        "xmuse-wonder-full-1.0",
+        "muse-wonder-full-1.0x",
+        "muse-wonder-full-1.01",
+    ):
+        assert model_families.normalize_family(token) is model_families.Family.UNKNOWN, token
 
 
 def test_canonical_lineage_prefers_pin_over_cursor_seat() -> None:
@@ -116,10 +156,20 @@ def test_canonical_lineage_prefers_pin_over_cursor_seat() -> None:
 
 
 def test_canonical_lineage_ambiguous_concrete_signals_fail_closed() -> None:
+    from scripts.review.reviewer_resolver import resolve_author_family
+
     assert (
         model_families.normalize_lineage_family({"family": "google", "pin": "openrouter/deepseek/deepseek-v4-pro"})
         is model_families.Family.UNKNOWN
     )
+    assert model_families.normalize_lineage_family({"family": "meta", "pin": "muse-wonder-full-1.0"}) is (
+        model_families.Family.META
+    )
+    assert model_families.normalize_lineage_family({"family": "google", "pin": "muse-wonder-full-1.0"}) is (
+        model_families.Family.UNKNOWN
+    )
+    assert resolve_author_family("muse-wonder-full-1.0", "meta") == "meta"
+    assert resolve_author_family("muse-wonder-full-1.0", "google") == "conflict"
 
 
 @pytest.mark.parametrize("token", sorted(_TOKEN_TO_FAMILY))
@@ -161,6 +211,9 @@ def test_unknown_writer_refuses_on_live_path_with_lineage_error() -> None:
 
 
 def test_self_review_still_blocks_when_families_match() -> None:
+    from scripts.review.reviewer_resolver import ResolverInputs, ReviewerCandidate, evaluate_candidate
+    from tests.claude_route_accounts import HOST_ACCOUNT
+
     # Behavior preservation: equal families still raise ReviewerSelfReviewError.
     lineage = llm_reviewer_dispatch.AuthorLineage(family="google", source="test")
     with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError):
@@ -170,6 +223,26 @@ def test_self_review_still_blocks_when_families_match() -> None:
             bridge_command=("ask-agy", "--model", "gemini-3.8-flash-high"),
         )
         llm_reviewer_dispatch.validate_cross_family(route, lineage)
+    meta_route = replace(route, reviewer_model_id="muse-wonder-full-1.0", reviewer_family="meta", bridge_command=())
+    with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError, match="author_family=meta"):
+        llm_reviewer_dispatch.validate_cross_family(
+            meta_route, llm_reviewer_dispatch.AuthorLineage(family="meta", source="test")
+        )
+    # A classified selector does not grant the separate formal transport capability.
+    candidate = ReviewerCandidate(
+        name="muse",
+        family="meta",
+        concrete_model="muse-wonder-full-1.0",
+        route="muse",
+        transport="native_muse",
+        invocation="",
+        quality_tier="compatibility",
+    )
+    refusal = evaluate_candidate(
+        candidate, ResolverInputs(author_model="gpt-6.1-sol", risk="medium", claude_account=HOST_ACCOUNT)
+    )
+    assert refusal.status == "excluded"
+    assert refusal.reason == "formal-review transport is not eligible for a sealed cross-family gate"
 
 
 # Cursor's runtime reports display names, not slugs (a recorded dispatch carries

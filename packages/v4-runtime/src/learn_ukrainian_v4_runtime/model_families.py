@@ -102,6 +102,7 @@ _FAMILY_TOKEN_RULES: tuple[tuple[tuple[str, ...], Family], ...] = (
     (("glm", "zhipu"), Family.ZHIPU),
     (("poolside", "laguna", "pool"), Family.POOLSIDE),
     (("qwen",), Family.QWEN),
+    (("meta", "muse-wonder-full-1.0"), Family.META),
     (("agy", "antigravity"), Family.GOOGLE),
 )
 
