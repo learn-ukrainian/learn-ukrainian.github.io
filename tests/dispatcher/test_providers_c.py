@@ -56,6 +56,7 @@ def run_stub(invocation, spec):
         cwd=spec.worktree,
         capture_output=True,
         check=True,
+        timeout=30,
     )
     assert invocation.stdin is None
     assert invocation.final_file is None
