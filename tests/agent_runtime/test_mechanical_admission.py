@@ -51,7 +51,7 @@ def test_catalog_role_admits_typed_work(family):
     inputs = scope(task_family=family)
     if family == "readonly_recon":
         inputs.update(task_role="recon", paths=("Ж.txt",), research_track="l2-uk-en/a1",
-                      trees=(Tree({"Ж.txt": "Україна".encode()}),))
+                      trees=(Tree({"Ж.txt": "Ж".encode()}),))
     admission.refuse_mechanical_task((result.candidates[0].model_id,), **inputs)
     (target,) = resolve_and_admit(("claude",), model=HAIKU, **inputs, claude_account=HOST_ACCOUNT)
     assert target.model == HAIKU
@@ -364,7 +364,7 @@ def test_luna_direct_readonly_scope_rechecks_content(family, role):
         admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
             task_family=family, task_role=role, driver_brief=True,
             paths=("Ж.txt",), research_track="l2-uk-en/a1",
-            trees=(Tree({"Ж.txt": "Україна".encode()}),)))
+            trees=(Tree({"Ж.txt": "Ж".encode()}),)))
     else:
         with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
             admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
