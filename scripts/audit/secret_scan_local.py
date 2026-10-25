@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline local TruffleHog scan whose console output carries no finding-derived text.
+"""Offline local TruffleHog scan with closed output and an explicit private location view.
 
 Runbook: docs/runbooks/secret-scanning.md (#9416).
 
@@ -13,14 +13,17 @@ Safety properties, each covered by tests/audit/test_secret_scan_local.py:
 
 * verification is never enabled: ``--no-verification`` is always passed and any
   verification-style option on the wrapper's command line is refused;
-* the console carries no finding-derived text: totals, a count per detector name
+* scans and summary commands carry no finding-derived text: totals, a count per detector name
   from the closed set ``KNOWN_DETECTORS`` (any other name is counted as
   ``other``), exit codes and fixed messages. No path, commit, line, key value or
   placeholder is printed. ``show-keys`` prints a report's top-level keys from the
   closed set ``REPORT_KEYS`` and the same per-detector counts, nothing else;
   ``count`` prints only fixed labels and integers for the user's own path and
   detector hypotheses, never echoing them; a field of an unexpected type is a
-  fixed diagnostic;
+  fixed diagnostic. The explicit ``locate --repo`` exception prints only exact
+  current-tree candidate paths, validated integer lines and closed-set detectors
+  to a private console, after validating the entire report. Refusals print no
+  locations. Public reporting remains counts only;
 * the full report (raw secret values) and TruffleHog's log are created
   exclusively, 0600, in a new 0700 directory under the temp root; only the
   generated file name is printed. The temp root is decided by path logic alone
@@ -49,6 +52,7 @@ import signal
 import stat
 import subprocess
 import sys
+import unicodedata
 import urllib.parse
 from collections import Counter
 from collections.abc import Iterable, Iterator, Sequence
@@ -552,14 +556,24 @@ def _detector_name(record: object, number: int) -> str:
     return record["DetectorName"]
 
 
-def _records(fh: TextIO) -> Iterator[tuple[int, dict, str]]:
+def _unique_object(pairs: list[tuple[str, object]]) -> dict:
+    """Refuse duplicate JSON keys without echoing any key or value."""
+    result: dict = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError
+        result[key] = value
+    return result
+
+
+def _records(fh: TextIO, *, unique_keys: bool = False) -> Iterator[tuple[int, dict, str]]:
     """Line number, record and detector name of each well-formed finding; errors are typed."""
     try:
         for number, raw_line in enumerate(fh, start=1):
             if not raw_line.strip():
                 continue
             try:
-                record = json.loads(raw_line)
+                record = json.loads(raw_line, object_pairs_hook=_unique_object if unique_keys else None)
             except (ValueError, RecursionError) as exc:
                 # Never echo the line: it may hold a secret.
                 raise ScanError(f"unparseable JSON at report line {number}") from exc
@@ -662,8 +676,8 @@ def build_parser() -> argparse.ArgumentParser:
         prog="secret_scan_local.py",
         description=(
             "Run the locally installed TruffleHog offline (no verification) over the working tree or\n"
-            "the full public history. The console shows only totals and a count per detector name;\n"
-            "nothing taken from a finding (no path, commit or line) is ever printed.\n"
+            "the full public history. Scan output shows only totals and closed-set detector counts.\n"
+            "locate is the explicit private-console exception for validated current-tree locations.\n"
             "Use before a PR that changes credential, identity, transport or hook code and after a\n"
             "suspected leak. Not a CI replacement (CI scans every pushed range) and never verified mode."
         ),
@@ -673,6 +687,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/audit/secret_scan_local.py history\n"
             '  .venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"\n'
             '  .venv/bin/python scripts/audit/secret_scan_local.py count "$REPORT" --path uv.lock --path tests/fixtures/\n'
+            '  .venv/bin/python scripts/audit/secret_scan_local.py --repo "$REPO" locate "$REPORT"\n'
             "\n"
             "Fixed TruffleHog flags: " + " ".join(SAFE_FLAGS) + "\n"
             "  plus --exclude-paths=.trufflehogignore when the file exists.\n"
@@ -683,10 +698,16 @@ def build_parser() -> argparse.ArgumentParser:
             "  temp directory (TMPDIR, TEMP or TMP, else /tmp). Only the generated report file name is\n"
             '  printed; find it with: find "${TMPDIR:-/tmp}" -maxdepth 2 -name <name>.\n'
             "  Never paste either file, and never read it with jq, cat, grep or similar: use\n"
-            "  show-keys and count.\n"
+            "  show-keys and count, or locate for the explicit private-console location view.\n"
             "  stdout: totals and per-detector counts; detector names outside TruffleHog's known set\n"
             "  are counted as 'other'. show-keys prints only a report's top-level key names and\n"
             "  per-detector counts. count prints only integers for the given paths and detector.\n"
+            "  locate requires explicit --repo. Only Filesystem records with exact tree_candidates\n"
+            "  paths and integer lines within each file are supported. stdout: path<TAB>line<TAB>detector.\n"
+            "  Unknown detector strings map to 'other'. stderr: fixed counts and completion status.\n"
+            "  Git/history and other sources are refused without commit lookup. Any refusal leaves\n"
+            "  stdout empty. Malformed reports produce a fixed diagnostic, never a partial view.\n"
+            "  Never publish locations or read source lines or raw reports through ad-hoc tools.\n"
             "  history: a temporary bare mirror under the temp directory, removed afterwards (also\n"
             "  on SIGINT, SIGTERM, SIGHUP); only a plain https:// remote without credentials.\n"
             "  The run is refused, before anything is written, when the temp directory is inside\n"
@@ -694,9 +715,10 @@ def build_parser() -> argparse.ArgumentParser:
             "\n"
             "Exit codes:\n"
             "  0  no findings (tree, history); report summarized (show-keys, count)\n"
+            "     locate: every finding located, including an empty report\n"
             "  1  findings (triage per the runbook)\n"
             "  2  refusal, missing trufflehog, git or TruffleHog error, timeout, usage error,\n"
-            "     unexpected report structure, mirror removal failure\n"
+            "     unexpected report structure, mirror removal failure, any locate refusal\n"
             "  129, 143  terminated by SIGHUP or SIGTERM (any temporary mirror removed)\n"
             "\n"
             "Related: docs/runbooks/secret-scanning.md, .github/workflows/ci.yml (Secret scan),\n"
@@ -707,8 +729,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--repo",
         type=Path,
-        default=PROJECT_ROOT,
-        help="Git work tree to scan or whose remote to mirror (default: this script's checkout).",
+        default=None,
+        help="Git work tree (default for scans: this script's checkout; explicit value required for locate).",
     )
     parser.add_argument(
         "--timeout-seconds",
@@ -716,7 +738,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_TIMEOUT_SECONDS,
         help=f"Limit per clone or TruffleHog call, in seconds (default: {DEFAULT_TIMEOUT_SECONDS}).",
     )
-    sub = parser.add_subparsers(dest="mode", required=True, metavar="{tree,history,show-keys,count}")
+    sub = parser.add_subparsers(dest="mode", required=True, metavar="{tree,history,show-keys,count,locate}")
     sub.add_parser(
         "tree",
         help="Scan tracked and untracked-not-ignored files of the work tree "
@@ -748,6 +770,26 @@ def build_parser() -> argparse.ArgumentParser:
         help="Repository-relative file, or directory ending in '/', to test as noise (repeatable).",
     )
     count.add_argument("--detector", help="Count only findings of this exact detector name.")
+    locate = sub.add_parser(
+        "locate",
+        help="Private console only: validated current-tree locations, requiring explicit --repo.",
+        description=(
+            "Print path<TAB>line<TAB>detector only after validating every finding. Requires explicit --repo. "
+            "Only exact current-tree Filesystem paths and integer lines within each file are accepted. "
+            "Unknown detector strings map to other. Git/history, unsupported sources, unsafe paths and invalid "
+            "lines are counted refusals. Fixed summary on stderr. Exit 0: all located; exit 2: no locations "
+            "emitted after any refusal or malformed report. Private console only; public reports remain counts "
+            "only. This does not authorize ad-hoc source-line or raw-report reads."
+        ),
+        epilog='Example: secret_scan_local.py locate "$REPORT" --repo "$REPO"',
+    )
+    locate.add_argument("report", type=Path, help="A JSON Lines report from an offline tree scan.")
+    locate.add_argument(
+        "--repo",
+        type=Path,
+        default=argparse.SUPPRESS,
+        help="Explicit Git work tree boundary, e.g. . (required here or before locate; no default).",
+    )
     return parser
 
 
@@ -779,6 +821,65 @@ def _count(report: Path, paths: Sequence[str], detector: str | None) -> int:
     return EXIT_CLEAN
 
 
+def _locate(report: Path, repo: Path) -> int:
+    """Validate all findings before emitting authoritative current-tree locations."""
+    repo = work_tree_top(repo)
+    members = {member: member for member in tree_candidates(repo)}
+    locations: list[str] = []
+    counts: Counter[str] = Counter()
+    line_counts: dict[str, int] = {}
+    with _open_report(report) as fh:
+        for _number, record, detector in _records(fh, unique_keys=True):
+            counts["findings"] += 1
+            ((source, location),) = record["SourceMetadata"]["Data"].items()
+            if source == "Git":
+                counts["refused history"] += 1
+                continue
+            if source != "Filesystem":
+                counts["refused source"] += 1
+                continue
+            file = location.get("file")
+            if (
+                not isinstance(file, str)
+                or any(part in {"", ".", ".."} for part in file.split("/"))
+                or "\\" in file
+                or re.match(r"^[A-Za-z]:", file)
+                or any(unicodedata.category(char).startswith("C") or char in "\u2028\u2029" for char in file)
+                or file not in members
+            ):
+                counts["refused path"] += 1
+                continue
+            # Use the actual member, never a normalized or reconstructed finding path.
+            member = members[file]
+            line = location.get("line")
+            if type(line) is not int or line < 1:
+                counts["refused line"] += 1
+                continue
+            if member not in line_counts:
+                try:
+                    with (repo / member).open("rb") as source_file:
+                        line_counts[member] = sum(1 for _ in source_file)
+                except OSError:
+                    counts["refused path"] += 1
+                    continue
+            if line > line_counts[member]:
+                counts["refused line"] += 1
+                continue
+            name = detector if detector in KNOWN_DETECTORS else OTHER_DETECTOR
+            locations.append(f"{member}\t{line}\t{name}")
+            counts["located"] += 1
+    complete = counts["findings"] == counts["located"]
+    for label in ("findings", "located", "refused history", "refused source", "refused path", "refused line"):
+        print(f"{label}: {counts[label]}", file=sys.stderr)
+    if not complete:
+        print("location view refused; no locations emitted", file=sys.stderr)
+        return EXIT_ERROR
+    print("location view complete", file=sys.stderr)
+    for location_line in locations:
+        print(location_line)
+    return EXIT_CLEAN
+
+
 @contextlib.contextmanager
 def _termination_raises() -> Iterator[None]:
     """Turn SIGTERM and SIGHUP into Terminated for the duration, then restore the handlers."""
@@ -795,7 +896,7 @@ def _termination_raises() -> Iterator[None]:
 
 
 def _scan(args: argparse.Namespace, binary: str) -> int:
-    repo = work_tree_top(args.repo)
+    repo = work_tree_top(args.repo if args.repo is not None else PROJECT_ROOT)
     # Refusals come before any output file exists.
     root = temp_root(protected_roots(repo))
     url = configured_remote_url(repo, args.remote) if args.mode == "history" else ""
@@ -840,6 +941,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _show_keys(args.report)
         if args.mode == "count":
             return _count(args.report, args.path, args.detector)
+        if args.mode == "locate":
+            if args.repo is None:
+                raise ScanError("locate requires an explicit --repo")
+            return _locate(args.report, args.repo)
         binary = shutil.which(TRUFFLEHOG)
         if binary is None:
             print(
