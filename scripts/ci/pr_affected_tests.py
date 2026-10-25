@@ -123,12 +123,13 @@ def main() -> int:
         "Use in CI admission; this never replaces full merge-group pytest.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
-        "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
+        "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF, GITHUB_BASE_REF.\n"
         "Outputs: ci-artifacts/pr-affected.json, pr-affected.xml and GITHUB_STEP_SUMMARY.\n"
         "Exit codes: 0 required execution passed; 1 invalid proof or failed execution; 2 invalid arguments.\n"
         "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
     )
     parser.parse_args()
+    stage, reason = "event_identity", "invalid_event_or_candidate"
     try:
         actual = git("rev-parse", "HEAD").decode().strip()
         payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
@@ -136,16 +137,40 @@ def main() -> int:
         if tier != "admission":
             print("Full tier: required full-suite jobs provide pytest proof.")
             return 0
-        base, head = payload["pull_request"]["base"]["sha"], payload["pull_request"]["head"]["sha"]
+        stage, reason = "base_identity", "target_branch_mismatch"
+        pr = payload["pull_request"]
+        base_ref = os.environ["GITHUB_BASE_REF"]
+        if not base_ref or base_ref != pr["base"]["ref"]:
+            raise ValueError("PR target branch does not match GITHUB_BASE_REF")
+        stage, reason = "target_ref", "invalid_target_ref"
+        git("check-ref-format", f"refs/heads/{base_ref}")
+        # checkout's fetch-depth: 0 fetches target branches as origin/* and pins
+        # the PR merge ref to GITHUB_SHA. PR base.sha can describe an older target.
+        stage, reason = "target_commit", "missing_checkout_target"
+        base = git("rev-parse", "--verify", f"refs/remotes/origin/{base_ref}^{{commit}}").decode().strip()
+        stage, reason = "event_base_history", "event_base_outside_target_history"
+        git("merge-base", "--is-ancestor", pr["base"]["sha"], base)
+        head = pr["head"]["sha"]
+        stage, reason = "merge_parents", "unexpected_target_or_head"
         if git("show", "-s", "--format=%P", actual).decode().split() != [base, head]:
-            raise ValueError("PR merge candidate parents do not match event base and head")
+            raise ValueError("PR merge candidate parents do not match fetched target and event head")
+        stage, reason = "clean_checkout", "dirty_checkout"
         subprocess.run(["git", "diff", "--quiet", actual, "--"], check=True, capture_output=True, timeout=30)
+        if git("ls-files", "--others", "--exclude-standard", "-z"):
+            raise ValueError("untracked checkout inputs")
+        stage, reason = "test_plan", "invalid_paths_tests_or_durations"
         record = plan(base, actual)
+        record["event_base"] = pr["base"]["sha"]
+        stage, reason = "fresh_report", "stale_or_unwritable_report"
         output = Path("ci-artifacts")
         output.mkdir(exist_ok=True)
         junit = output / "pr-affected.xml"
         if junit.exists():
             raise ValueError("stale PR pytest report")
+        record.update(exit_code=None, reported_cases=None, skipped_cases=None, failed_cases=None,
+                      deferred_case_count=None, execution_status="incomplete")
+        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        stage, reason = "pytest_execution", "execution_incomplete"
         result = subprocess.run(
             [
                 sys.executable,
@@ -166,14 +191,19 @@ def main() -> int:
             check=False,
             timeout=480,
         )
-        cases = list(ET.parse(junit).getroot().iter("testcase")) if junit.is_file() else []
+        stage, reason = "pytest_report", "missing_or_invalid_junit"
+        record["exit_code"] = result.returncode
+        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        cases = list(ET.parse(junit).getroot().iter("testcase"))
         record.update(
             exit_code=result.returncode,
             reported_cases=len(cases),
             skipped_cases=sum(c.find("skipped") is not None for c in cases),
             failed_cases=sum(c.find("failure") is not None or c.find("error") is not None for c in cases),
             deferred_case_count=None,
+            execution_status="completed",
         )
+        stage, reason = "proof_output", "proof_output_incomplete"
         (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         summary = (
             "PR admission: full pytest was not run.\n"
@@ -194,7 +224,7 @@ def main() -> int:
                 stream.write(summary)
         return int(result.returncode != 0 or not cases)
     except (KeyError, TypeError, ValueError, OSError, UnicodeError, ET.ParseError, subprocess.SubprocessError) as exc:
-        print(f"::error::PR affected proof incomplete: {type(exc).__name__}", file=sys.stderr)
+        print(f"::error::PR affected proof incomplete: stage={stage}; reason={reason}; error={type(exc).__name__}", file=sys.stderr)
         return 1
 
 
