@@ -1,0 +1,54 @@
+"""Cursor print-mode execution and assistant stream extraction."""
+
+import json
+
+from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+
+
+def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    argv = ["cursor-agent", "-p", "--model", spec.model, "--output-format", "stream-json", "--trust"]
+    argv += ["--workspace", str(spec.worktree)]
+    argv += ["--mode", "ask"] if spec.mode == "read-only" else ["--approve-mcps", "--sandbox", "disabled", "--force"]
+    return Invocation(argv, spec.prompt_file.read_bytes(), env, None)
+
+
+def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
+    parts, result, error = [""], {}, None
+    for line in stdout.splitlines():
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except ValueError:
+            error = "cursor: invalid JSON stream"
+            continue
+        if not isinstance(event, dict):
+            error = "cursor: invalid event"
+            continue
+        if event.get("type") == "result":
+            result = event
+            if event.get("is_error") or event.get("subtype") != "success":
+                error = "cursor: terminal result unsuccessful"
+        elif event.get("type") == "error":
+            error = "cursor: terminal error"
+        elif event.get("type") == "text" and isinstance(event.get("content"), str):
+            parts[-1] += event["content"]
+        elif event.get("role") == "assistant" or event.get("type") == "assistant":
+            content = event.get("message", event)
+            content = content.get("content") if isinstance(content, dict) else None
+            if isinstance(content, list):
+                content = "".join(
+                    p["text"]
+                    for p in content
+                    if isinstance(p, dict) and p.get("type") == "text" and isinstance(p.get("text"), str)
+                )
+            if isinstance(content, str) and content.strip():
+                parts.extend([content, ""])
+    text = result.get("result")
+    if not isinstance(text, str) or not text.strip():
+        text = "\n\n".join(p.strip() for p in parts if p.strip()) or None
+    usage = result.get("usage")
+    usage = usage if isinstance(usage, dict) else None
+    if returncode:
+        error = f"cursor: exited with status {returncode}"
+    return ParsedResult(text, usage, error or (None if result and text else "cursor: missing result"))

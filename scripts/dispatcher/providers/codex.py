@@ -1,0 +1,49 @@
+"""Codex exec flags and JSONL output, extracted from the existing adapter."""
+
+import json
+
+from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+
+
+def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    argv = ["codex", "exec", "--json", "-C", str(spec.worktree), "-m", spec.model, "-o", str(spec.final_file)]
+    if spec.effort is not None:
+        argv += ["-c", f"model_reasoning_effort={spec.effort}"]
+    argv += ["-s", spec.mode]
+    return Invocation(argv, spec.prompt_file.read_bytes(), env, spec.final_file)
+
+
+def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
+    usage, error, completed = None, None, False
+    for line in stdout.splitlines():
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except ValueError:
+            error = "codex: invalid JSON stream"
+            continue
+        if not isinstance(event, dict):
+            error = "codex: invalid event"
+            continue
+        kind = event.get("type", "")
+        if kind == "turn.completed":
+            completed = True
+            if isinstance(event.get("usage"), dict):
+                usage = event["usage"]
+        elif kind in ("turn.failed", "error"):
+            error = "codex: terminal error"
+        elif isinstance(kind, str) and kind.startswith("turn.") and kind != "turn.started":
+            error = "codex: unknown terminal outcome"
+        payload = event.get("payload", event)
+        if isinstance(payload, dict) and payload.get("type") == "token_count":
+            info = payload.get("info")
+            tokens = info.get("total_token_usage") if isinstance(info, dict) else None
+            if isinstance(tokens, dict):
+                usage = tokens
+    text = final_text if isinstance(final_text, str) and final_text.strip() else None
+    if returncode:
+        error = f"codex: exited with status {returncode}"
+    return ParsedResult(
+        text, usage, error or (None if completed and text else "codex: missing completion or final text")
+    )
