@@ -4384,15 +4384,16 @@ def _muse_planning_fixture(tmp_path, monkeypatch, version):
 
 
 def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
-    """M04: losing step/time bounds or durable usage must not silently unbound a task."""
+    """M04: preserve task bounds and whole durable usage equality through real redaction."""
     import io
     from unittest.mock import MagicMock
 
     from agent_runtime import runner, usage
     from scripts.agent_runtime.adapters import muse
+    from scripts.secret_redactor import REDACTION
 
     adapter, workspace, scratch, probes = _muse_planning_fixture(
-        tmp_path, monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
+        tmp_path / f"password={TOKEN}", monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
     )
     fixture_plan, records = _muse_stream_fixture(workspace)
     monkeypatch.setattr(muse, "uuid4", lambda: fixture_plan.metadata["provider_session_id"])
@@ -4424,6 +4425,13 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     assert len(files) == 1
     durable = json.loads(files[0].read_text())
     assert durable == result.usage_record
+    assert f"password={REDACTION}" in durable["cwd"]
+    assert str(workspace) not in json.dumps(durable)
+    assert TOKEN not in json.dumps(result.usage_record)
+    assert usage.redact_value(result.usage_record) == result.usage_record
+    assert len(files[0].read_bytes()) <= 4096
+    assert plan.cwd == workspace
+    assert records[2]["payload"]["record"]["workspace_root"] == str(workspace)
     assert durable["muse_run"]["total_tokens"] == 120
     assert durable["muse_run"]["declared_mode"] == "workspace-write"
     assert len(probes) == 1

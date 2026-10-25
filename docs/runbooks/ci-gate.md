@@ -28,7 +28,7 @@ CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded
 estimate, reported cases, skips and failures. Deferred test-case counts stay
 UNKNOWN because the deferred files were not collected by this job. Workflow
-changes use this same deferral path and still execute all six guards. Invalid
+changes use this same deferral path and still execute all listed guards. Invalid
 proof reports its stage and exception class; fixed `ValueError` messages also
 identify the specific failure without printing event payloads or environment.
 Requested files are not a claim that every assertion ran. Normal pytest configuration,

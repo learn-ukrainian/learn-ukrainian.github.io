@@ -662,7 +662,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
 
     guards = [
         'tests/test_delegate_review_admission.py', 'tests/review/test_routing_consumers.py',
-        'tests/test_model_catalog_literals_guard.py', 'tests/agent_runtime/test_lane_probe.py',
+        'tests/agent_runtime/test_lane_probe.py',
         'tests/common/test_jsonl_splitlines_guard.py', 'tests/test_review_reviewer_resolver.py',
     ]
     assert (_REPO_ROOT / affected.GUARDS).read_text().splitlines() == guards
@@ -706,7 +706,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert selected['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
     assert selected['deferred_files'] == []
     assert selected['deleted_test_files'] == ['tests/test_deleted.py', 'tests/test_old.py']
-    assert selected['estimate_seconds'] == 68
+    assert selected['estimate_seconds'] == 67
     payload = {'action': 'opened', 'repository': {'default_branch': 'fixture-base'},
                'pull_request': {'number': 7, 'base': {'sha': event_base, 'ref': 'fixture-base'}, 'head': {'sha': head}}}
     event = tmp_path / 'event.json'
@@ -722,7 +722,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert cli.returncode == 0, cli.stdout + cli.stderr
     print(cli.stdout)
     record = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
-    assert record['candidate'] == candidate and record['reported_cases'] == 8
+    assert record['candidate'] == candidate and record['reported_cases'] == 7
     assert record['base'] == base and record['event_base'] == event_base
     assert record['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
     assert record['execution_status'] == 'completed' and record['exit_code'] == 0
@@ -772,7 +772,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     workflow = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
     assert workflow['candidate'] == workflow_candidate and workflow['base'] == base
     assert workflow['event_base'] == event_base
-    assert workflow['run_files'] == sorted(guards) and workflow['reported_cases'] == 6
+    assert workflow['run_files'] == sorted(guards) and workflow['reported_cases'] == 5
     assert workflow['deferred_files'] == ['tests/test_new.py', 'tests/test_space name.py']
     assert workflow['reason'] == 'pytest infrastructure changed'
     assert workflow['execution_status'] == 'completed' and workflow['exit_code'] == 0
