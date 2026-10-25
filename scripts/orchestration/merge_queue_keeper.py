@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import fcntl
 import hashlib
+import heapq
 import json
 import os
 import re
@@ -13,6 +14,7 @@ import sys
 import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -439,11 +441,7 @@ class GitHub:
         return self.paged(Request("read-issues", repo=self.repository))
 
     def create_issue(self, title: str, body: str) -> int:
-        result = self.call(Request("issue-create", repo=self.repository, title=title, body=body, labels=["infra"]))
-        match = re.search(r"/issues/([1-9][0-9]*)\s*$", result)
-        if not match:
-            raise KeeperError("created flaky-test issue returned no issue number")
-        return int(match[1])
+        raise KeeperError("automatic flaky-test issue creation is disabled; report finding to CTO")
 
 
 def _hold(row: Mapping[str, Any]) -> bool | None:
@@ -885,6 +883,250 @@ def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
     return {job: (sorted(numbers), sorted(tests[job])) for job, numbers in prs.items() if len(numbers) >= 2}
 
 
+def _identity_spellings(key: str) -> frozenset[str]:
+    return frozenset({key, display_text(key), display_text(key, DISPLAY_TEST_LIMIT)})
+
+
+@dataclass(frozen=True)
+class _ProseRun:
+    text: str
+    at_start: bool
+    at_end: bool
+    emphasis: frozenset[int]
+
+
+def _markdown_references(source: str) -> tuple[list[_ProseRun], list[str], str | None]:
+    """Rebuild prose once, keeping non-prose barriers and real line boundaries.
+
+    Run edges carry source-boundary flags, so a barrier never supplies a line
+    ending. Code values remain literal and link labels never become prose.
+    """
+    try:
+        from markdown_it import MarkdownIt
+
+        parser = MarkdownIt("commonmark")
+        source = source.replace("\r\n", "\n").replace("\r", "\n")
+        tokens = parser.parse(source)
+        for scope in [tokens, *(token.children for token in tokens if token.children is not None)]:
+            stack = []
+            for token in scope:
+                if token.type in {"list_item_open", "blockquote_open"} and token.level + 1 >= parser.options["maxNesting"]:
+                    raise ValueError("CommonMark nesting limit reached")
+                if token.nesting == 1:
+                    stack.append((token.tag, token.markup))
+                elif token.nesting == -1 and (not stack or stack.pop() != (token.tag, token.markup)):
+                    raise ValueError("unbalanced CommonMark tokens")
+            if stack:
+                raise ValueError("unclosed CommonMark tokens")
+        source_lines = source.split("\n")
+        references = []
+        codes = []
+        legacy = None
+        for token in tokens:
+            if token.type != "inline":
+                continue
+            if token.children is None or token.map is None:
+                raise ValueError("CommonMark inline source unavailable")
+            # Block wrappers can strip heading suffixes and indentation. Keep
+            # their neighboring source syntax instead of inventing boundaries.
+            content_lines = token.content.split("\n")
+            raw_lines = source_lines[token.map[0]:token.map[1]]
+            cursor = 0
+            contexts = []
+            for line in content_lines:
+                while cursor < len(raw_lines) and line not in raw_lines[cursor]:
+                    cursor += 1
+                if cursor == len(raw_lines):
+                    raise ValueError("CommonMark source boundaries unavailable")
+                offset = raw_lines[cursor].index(line)
+                contexts.append((raw_lines[cursor][:offset], raw_lines[cursor][offset + len(line):]))
+                cursor += 1
+            stream = ""
+            emphasis: set[int] = set()
+            prefix, suffix = contexts[0][0], contexts[-1][1]
+            at_start = not prefix or prefix[-1].isspace()
+            link_depth = 0
+            for child in token.children:
+                if child.type == "link_open":
+                    link_depth += 1
+                elif child.type == "link_close":
+                    link_depth -= 1
+                elif link_depth:
+                    continue
+                elif child.type == "text":
+                    stream += child.content
+                    continue
+                elif child.type in {"em_open", "em_close", "strong_open", "strong_close"}:
+                    emphasis.update(range(len(stream), len(stream) + len(child.markup)))
+                    stream += child.markup
+                    continue
+                elif child.type in {"softbreak", "hardbreak"}:
+                    stream += "\n"
+                    continue
+                if child.type == "code_inline" and (stream[-1].isspace() if stream else at_start):
+                    codes.append(child.content)
+                references.append(_ProseRun(stream, at_start, False, frozenset(emphasis)))
+                stream, at_start = "", False
+                emphasis = set()
+            references.append(_ProseRun(stream, at_start, not suffix or suffix.isspace(), frozenset(emphasis)))
+            first = token.children[0] if token.children else None
+            if token.map[0] == 0 and first is not None and first.type == "code_inline" and source.startswith(first.markup):
+                closer = re.search(r"(?<!`)" + re.escape(first.markup) + r"(?!`)", source[len(first.markup):])
+                if closer and source[len(first.markup) + closer.end():].startswith(" failed merge_group runs on distinct PRs "):
+                    legacy = first.content
+        return references, codes, legacy
+    except Exception as exc:
+        raise KeeperError(f"CommonMark identity parsing failed ({type(exc).__name__})") from exc
+
+
+def _reference_eligible(prose: _ProseRun, start: int, end: int) -> bool:
+    """Check literal content, allowing one balanced pair outside its span."""
+    text = prose.text
+    boundaries = [(start, end)]
+    if start and end < len(text) and text[start - 1] == "(" and text[end] == ")":
+        boundaries.append((start - 1, end + 1))
+    for begin, finish in boundaries:
+        if not (text[begin - 1].isspace() if begin else prose.at_start):
+            continue
+        if finish == len(text):
+            if prose.at_end:
+                return True
+        elif text[finish] == "\n" or (text[finish] in ".,;!?" and (
+            text[finish + 1].isspace() if finish + 1 < len(text) else prose.at_end
+        )):
+            return True
+    return False
+
+
+def _whitespace_view(text: str) -> tuple[str, list[tuple[int, int]]]:
+    """Collapse maximal whitespace runs, retaining their complete intervals."""
+    chars: list[str] = []
+    positions: list[tuple[int, int]] = []
+    for index, char in enumerate(text):
+        if char.isspace():
+            if chars and chars[-1] == " ":
+                positions[-1] = (positions[-1][0], index + 1)
+                continue
+            char = " "
+        chars.append(char)
+        positions.append((index, index + 1))
+    return "".join(chars), positions
+
+
+def _spelling_occurrences(
+    text: str, known: Mapping[str, frozenset[str]], positions: list[tuple[int, int]],
+) -> list[tuple[int, int, str]]:
+    occurrences = []
+    for owner, spellings in known.items():
+        for spelling in spellings:
+            if not spelling:
+                continue
+            offset = text.find(spelling)
+            while offset != -1:
+                occurrences.append((positions[offset][0], positions[offset + len(spelling) - 1][1], owner))
+                offset = text.find(spelling, offset + 1)
+    return occurrences
+
+
+def _prose_identities(
+    prose: _ProseRun, known: Mapping[str, frozenset[str]],
+) -> tuple[set[str], set[str]]:
+    """Literal eligibility plus conflict-only W/E interval sweeps.
+
+    Every spelling and overlapping occurrence retains its raw owner. Active
+    intervals all intersect the current interval; each pair is visited once.
+    """
+    literal = _spelling_occurrences(prose.text, known, [(i, i + 1) for i in range(len(prose.text))])
+    eligible = {(start, end, owner) for start, end, owner in literal if _reference_eligible(prose, start, end)}
+    whitespace, positions = _whitespace_view(prose.text)
+    normalized = {owner: frozenset(_whitespace_view(value)[0] for value in values)
+                  for owner, values in known.items()}
+    without_emphasis = [(char, span) for char, span in zip(whitespace, positions, strict=True)
+                        if span[0] not in prose.emphasis]
+    # Keep literal candidate spans even when a collapsed whitespace interval
+    # covers more source characters than that candidate's own spelling.
+    views = [(literal, eligible)]
+    for text, spans in ((whitespace, positions),
+                        ("".join(char for char, _ in without_emphasis), [span for _, span in without_emphasis])):
+        view = _ProseRun(text, prose.at_start, prose.at_end, frozenset())
+        occurrences = _spelling_occurrences(text, normalized, [(i, i + 1) for i in range(len(text))])
+        mapped = [(spans[start][0], spans[end - 1][1], owner) for start, end, owner in occurrences]
+        crossing_eligible = {
+            (spans[start][0], spans[end - 1][1], owner) for start, end, owner in occurrences
+            if _reference_eligible(view, start, end)
+        }
+        views.append((literal + mapped, eligible | crossing_eligible))
+    contested: set[str] = set()
+    for occurrences, crossing_eligible in views:
+        active: dict[int, tuple[int, int, str]] = {}
+        endings: list[tuple[int, int]] = []
+        for index, current in enumerate(sorted(set(occurrences))):
+            start, end, owner = current
+            while endings and endings[0][0] <= start:
+                _, expired = heapq.heappop(endings)
+                del active[expired]
+            for other in active.values():
+                left, right, other_owner = other
+                if owner == other_owner:
+                    continue
+                if left <= start and end <= right and right - left > end - start:
+                    if current in eligible:
+                        contested.add(owner)
+                elif start <= left and right <= end and end - start > right - left:
+                    if other in eligible:
+                        contested.add(other_owner)
+                elif (left < start < right < end or start < left < end < right) and (
+                    current in crossing_eligible and other in crossing_eligible
+                ):
+                    contested.update(item[2] for item in (current, other) if item in eligible)
+            active[index] = current
+            heapq.heappush(endings, (end, index))
+    return {owner for _, _, owner in eligible}, contested
+
+
+def _canonical_flake_issue(
+    key: str, node: bool, issues: list[dict[str, Any]], known: Mapping[str, frozenset[str]]
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Resolve without publication or state writes; ambiguity overrides reuse."""
+    identities = known[key]
+    display_suffix = rf" \\?\(id:[0-9a-f]{{{DISPLAY_ID_LENGTH}}}\\?\)"
+    if re.search(display_suffix + r"\Z", key):
+        return None, "digest-shaped raw identity"
+    if any(identities & values for other, values in known.items() if other != key):
+        return None, "raw/rendered identity collision"
+    title_patterns = [re.escape(value) for value in sorted(identities)]
+    title_patterns.extend(
+        "".join((r"\\?" if char in r"\`*_{}[]()#+.!>~-" else "") + re.escape(char) for char in value)
+        for value in sorted(identities - {key})
+    )
+    title_pattern = "(?:" + "|".join(title_patterns) + ")"
+    matches = []
+    ambiguous = False
+    for item in issues:
+        if "pull_request" in item or item.get("state", "open") != "open":
+            continue
+        title, body = (str(item.get(field) or "") for field in ("title", "body"))
+        if title.startswith("Merge queue flaky test: "):
+            matched = re.fullmatch("Merge queue flaky test: " + title_pattern, title) is not None
+        else:
+            body_references, body_codes, legacy = _markdown_references(body)
+            if not (node or "<!-- mq-keeper-flake -->" in body or legacy in identities):
+                continue
+            title_references, title_codes, _ = _markdown_references(title)
+            matched = any(code in identities for code in [*title_codes, *body_codes])
+            for prose in [*title_references, *body_references]:
+                eligible, contested = _prose_identities(prose, known)
+                matched |= key in eligible
+                ambiguous |= key in contested
+        if matched:
+            matches.append(item)
+    if any(type(item.get("number")) is not int or item["number"] <= 0 for item in matches):
+        raise KeeperError("matching flaky-test issue has no valid number")
+    if ambiguous:
+        return None, "known longer identity in prose"
+    return (min(matches, key=lambda item: item["number"]) if matches else None), None
+
+
 def run(
     gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
 ) -> tuple[list[str], bool]:
@@ -1144,6 +1386,17 @@ def run(
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
                 }
+    # Freeze before pruning, including singleton and old loaded records. Issue
+    # update keys and PR/head bookkeeping are never source identities.
+    known_keys = set()
+    for item in previous.get("failures", []):
+        if not isinstance(item, dict):
+            continue
+        job, test = item.get("job"), item.get("test")
+        if isinstance(job, str) and job and job not in AGGREGATE_JOBS:
+            known_keys.add(job)
+        if isinstance(test, str) and test and test not in AGGREGATE_JOBS:
+            known_keys.add(test)
     cutoff = datetime.now(UTC) - timedelta(hours=24)
     failures = [
         item for item in previous.get("failures", [])
@@ -1152,6 +1405,7 @@ def run(
     previous["failures"] = failures
     issue_updates = previous.setdefault("flake_issue_updates", {})
     flaky = _flaky_jobs(failures)
+    known = {key: _identity_spellings(key) for key in frozenset(known_keys | flaky.keys())}
     issues = None
     if flaky and budget:
         try:
@@ -1162,7 +1416,6 @@ def run(
     for key, (numbers, tests) in sorted(flaky.items()):
         if not budget or issues is None:
             continue
-        title = f"Merge queue flaky test: {display_text(key, DISPLAY_TEST_LIMIT)}"
         matching = [item for item in failures if (item.get("test") or item.get("job")) == key]
         run_ids = sorted({item["run_id"] for item in matching if type(item.get("run_id")) is int})
         body = (
@@ -1173,40 +1426,33 @@ def run(
         if tests:
             body += f" Failed test: {code_span(tests[0], DISPLAY_TEST_LIMIT)}."
         try:
-            pattern = re.compile(r"(?<![\w/.:\[\]-])" + re.escape(key) + r"(?![\w/:\[\]-])")
             marker = "<!-- mq-keeper-flake -->"
-            matches = [item for item in issues if "pull_request" not in item and (
-                item.get("title") == title
-                or ((bool(tests) or marker in str(item.get("body", ""))) and (
-                    pattern.search(str(item.get("title", ""))) or pattern.search(str(item.get("body", "")))
-                ))
-            )]
-            issue = min(matches, key=lambda item: item.get("number", 0)) if matches else None
+            issue, ambiguity = _canonical_flake_issue(key, bool(tests), issues, known)
             lines.append(f"flaky record: {display_text(key, DISPLAY_TEST_LIMIT)}; PRs={','.join(map(str, numbers))}; "
-                         f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'new'}")
-            if not apply:
+                         f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'none'}")
+            if ambiguity:
+                lines.append(f"CTO finding: ambiguous identity for {display_text(key, DISPLAY_TEST_LIMIT)}; "
+                             f"{display_text(ambiguity)}; automatic issue creation disabled")
                 continue
             if issue is None:
-                issue_number = gh.create_issue(title, body)
-                if type(issue_number) is not int:
-                    raise KeeperError("created flaky-test issue has no number")
+                lines.append(f"CTO finding: no canonical open issue for {display_text(key, DISPLAY_TEST_LIMIT)}; "
+                             "automatic issue creation disabled")
+                continue
+            if not apply:
+                continue
+            issue_number = issue.get("number")
+            if type(issue_number) is not int:
+                raise KeeperError("matching flaky-test issue has no number")
+            comments = gh.comments(issue_number)
+            recent = any(
+                marker in str(comment.get("body", ""))
+                and (comment.get("user") or {}).get("login") == login
+                and str(comment.get("created_at", "")) >= cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+                for comment in comments
+            )
+            if not recent and issue_updates.get(str(issue_number), "") < cutoff.isoformat():
+                gh.issue_comment(issue_number, body + "\n\n" + marker)
                 issue_updates[str(issue_number)] = observed
-                issues.append({"number": issue_number, "title": title, "body": body})
-            else:
-                issue_number = issue.get("number")
-                if type(issue_number) is not int:
-                    raise KeeperError("matching flaky-test issue has no number")
-                marker = "<!-- mq-keeper-flake -->"
-                comments = gh.comments(issue_number)
-                recent = any(
-                    marker in str(comment.get("body", ""))
-                    and (comment.get("user") or {}).get("login") == login
-                    and str(comment.get("created_at", "")) >= cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
-                    for comment in comments
-                )
-                if not recent and issue_updates.get(str(issue_number), "") < cutoff.isoformat():
-                    gh.issue_comment(issue_number, body + "\n\n" + marker)
-                    issue_updates[str(issue_number)] = observed
         except KeeperError as exc:
             failed = True
             lines.append(f"flaky-test issue FAILED: {exc}")
