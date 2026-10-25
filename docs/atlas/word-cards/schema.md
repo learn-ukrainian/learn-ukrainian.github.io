@@ -54,6 +54,22 @@ Rules:
 
 ## 4. Assertions
 
+The #11627 pilot expansion also carries card-level source partitions for `definition_uk`, `examples`,
+`register`, `synonyms` and `antonyms`, plus `etymology`, `pronunciation`, `morphology`, `kaikki`,
+`sources`, `idioms`, `proverbs`, `form_notes`, `wiki_reference` and `source_records`.
+These additional collections use the text comparison class. The original scalar and keyed comparison
+rules remain unchanged. A card-level dictionary article is a source partition, not one allocated sense.
+`source_records` preserves the full input record and original source label, including fields that have
+no lexical extractor. SUM-20 structure is retained as source-parser evidence, without fabricated
+segmentation or cross-source sense alignment. Existing card and sense identities are conserved.
+
+The source expansion appends only initial source observations with content aliases and random `sr_`
+IDs under `pilot-source-expansion-11627@sha256:<frozen manifest hash>`. It adds no card or sense mints.
+Verification checks the original allocation digest independently of that extension, and checks each
+extension's source, locator, snapshot, content and subject against the held reader output. Atlas
+migrations keep their original source labels. Unknown compilation lineage does not corroborate a
+dictionary; Kaikki/Wiktionary attribution remains attached to its retained record.
+
 An assertion is one (subject, field, value) claim by one source at one locator. It is the unit of citation, of suppression and of dependency tracking. JSON shape: `$defs/assertion` in the schema.
 
 | property | meaning |

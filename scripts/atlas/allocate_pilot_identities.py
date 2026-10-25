@@ -44,6 +44,74 @@ IDENTITY_REFUSAL = "Pilot allocation differs from frozen creation/mint evidence"
 BUILD_PREFIX = "pilot-identity-allocation-9402@sha256:"
 HOLDING_BUILD_PREFIX = "pilot-holding-sense-allocation-8981@sha256:"
 HOLDING_BASIS = "holding sense for source units that cannot be aligned to one active sense (schema.md §6)"
+SOURCE_BUILD_PREFIX = "pilot-source-expansion-11627@sha256:"
+
+
+def source_expansion_projection(registry, manifest):
+    """Remove only appended source mints, preserving the original identity digest.
+
+    The ordered expansion uses the existing random sr_ allocator, initial direct
+    observation and content aliases. It never allocates a card or a sense.
+    """
+    build = SOURCE_BUILD_PREFIX + manifest["manifest_sha256"]
+    events = [e for e in registry["events"] if e["build_id"] == build]
+    ids = set()
+    for event in events:
+        foundation.require(event["kind"] == "source_record_mint" and len(event.get("to", [])) == 1,
+                           IDENTITY_REFUSAL)
+        identity = event["to"][0]
+        matches = [r for r in registry["source_records"] if r["source_record_id"] == identity]
+        foundation.require(len(matches) == 1 and identity not in ids, IDENTITY_REFUSAL)
+        record = matches[0]
+        foundation.require(len(record["correspondence"]) == 1, IDENTITY_REFUSAL)
+        observation = record["correspondence"][0]
+        foundation.require(observation["status"] == "unique" and observation["locator"] == event["evidence"]
+                           and record["aliases"] == [{"kind": "content", "key": record["source_id"] + ":content:" +
+                               observation["snapshot_id"].split("@sha256:")[-1],
+                               "snapshot_id": observation["snapshot_id"]}], IDENTITY_REFUSAL)
+        ids.add(identity)
+    return {**registry, "events": [e for e in registry["events"] if e["build_id"] != build],
+            "source_records": [r for r in registry["source_records"] if r["source_record_id"] not in ids],
+            "registry_version": registry["registry_version"] - bool(ids)}
+
+
+def append_source_records(registry, manifest, partitions):
+    """Append source observations with the foundation's original mint/provenance format."""
+    identity_allocation_check(registry, manifest)
+    occupied = {e["card_id"] for e in registry["entries"]} | {
+        r["source_record_id"] for r in registry["source_records"]} | {
+        s["sense_id"] for e in registry["entries"] for s in e["senses"]}
+    added = 0
+    had_expansion = any(e["build_id"] == SOURCE_BUILD_PREFIX + manifest["manifest_sha256"] for e in registry["events"])
+    for part in sorted(partitions, key=lambda p: (p["source_id"], p["locator"], p["snapshot_id"])):
+        matches = [r for r in registry["source_records"] if r["source_id"] == part["source_id"] and any(
+            c["snapshot_id"] == part["snapshot_id"] and c.get("locator") == part["locator"]
+            for c in r["correspondence"])]
+        if matches:
+            foundation.require(len(matches) == 1, IDENTITY_REFUSAL)
+            continue
+        foundation.require(not any(r["source_id"] == part["source_id"] and any(
+            c.get("locator") == part["locator"] for c in r["correspondence"])
+            for r in registry["source_records"]),
+            "Changed source snapshot requires source-record correspondence; no new identity allocated")
+        identity = "sr_" + "".join(secrets.choice(foundation.ALPHABET) for _ in range(12))
+        foundation.require(identity not in occupied, IDENTITY_REFUSAL)
+        occupied.add(identity)
+        registry["source_records"].append({"source_record_id": identity, "source_id": part["source_id"],
+            "aliases": [{"kind": "content", "key": part["source_id"] + ":content:" + part["content_sha256"],
+                         "snapshot_id": part["snapshot_id"]}], "correspondence": [{
+                "snapshot_id": part["snapshot_id"], "status": "unique", "locator": part["locator"],
+                "matched_by": "direct observation in initial snapshot"}]})
+        number = max(int(e["event_id"][3:]) for e in registry["events"]) + 1
+        registry["events"].append({"event_id": f"ie_{number:04d}", "kind": "source_record_mint",
+            "build_id": SOURCE_BUILD_PREFIX + manifest["manifest_sha256"], "to": [identity],
+            "evidence": part["locator"]})
+        added += 1
+    if added and not had_expansion:
+        registry["registry_version"] += 1
+    identity_allocation_check(registry, manifest)
+    foundation.registry_check(registry)
+    return added
 
 
 def normalized(text):
@@ -273,6 +341,7 @@ def identity_allocation_check(registry, manifest):
     refusals only: an optimised interpreter enforces this check too.
     """
     try:
+        registry = source_expansion_projection(registry, manifest)
         frozen = sorted({r["snapshot_id"] for r in manifest["selection"]["source_records"]})
         snapshots = set(frozen)
         projection = {
@@ -344,6 +413,9 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
     manifest = foundation.load(MANIFEST)
     foundation.manifest_check(manifest, MANIFEST)
     registry = foundation.load(REGISTRY)
+    original = source_expansion_projection(registry, manifest)
+    assert original == registry or not (apply or append), "Source-expanded registries are verified read-only"
+    registry = original
     # The existing allocation is never regenerated: --apply only creates a pilot allocation where none exists.
     assert not (apply and any(e["created_in_build"] == BUILD_PREFIX + manifest["manifest_sha256"]
                               for e in registry["entries"])), \

@@ -393,7 +393,22 @@
         "english_gloss",
         "spelling_variants",
         "mwe_form",
-        "mwe_frame"
+        "mwe_frame",
+        "definition_uk",
+        "examples",
+        "synonyms",
+        "antonyms",
+        "etymology",
+        "pronunciation",
+        "morphology",
+        "kaikki",
+        "source_records",
+        "sources",
+        "idioms",
+        "proverbs",
+        "form_notes",
+        "wiki_reference",
+        "register"
       ]
     },
     "sense_field_name": {

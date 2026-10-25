@@ -55,6 +55,16 @@ TEXT_FIELDS = {
     "spelling_variants",
     "register",
     "mwe_frame",
+    "etymology",
+    "pronunciation",
+    "morphology",
+    "kaikki",
+    "source_records",
+    "sources",
+    "idioms",
+    "proverbs",
+    "form_notes",
+    "wiki_reference",
 }
 CONF_ORDER = ["high", "medium", "low"]
 STATE_RANK = {"verified": 0, "variant": 1, "single-source": 2, "unverified": 3, "conflict": 4, "suppressed": 5}

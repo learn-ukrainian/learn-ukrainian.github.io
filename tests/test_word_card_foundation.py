@@ -711,6 +711,23 @@ def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     output = json.loads(result.stdout)
     assert output["counts"] == dict(units=150, source_records=272, atlas_articles=114, legacy_alias_rows=140)
     registry = json.loads(paths[1].read_bytes())
+    from scripts.atlas.allocate_pilot_identities import append_source_records, source_expansion_projection
+
+    expanded = registry
+    registry = source_expansion_projection(expanded, manifest)
+    assert expanded["entries"] == registry["entries"]
+    assert expanded["source_records"][:272] == registry["source_records"]
+    assert expanded["events"][:694] == registry["events"]
+    assert len(expanded["source_records"]) == 272 + 1846
+    assert all(e["kind"] == "source_record_mint" for e in expanded["events"][694:])
+    observations = [{"source_id": record["source_id"], "locator": record["correspondence"][0]["locator"],
+                     "snapshot_id": record["correspondence"][0]["snapshot_id"],
+                     "content_sha256": record["aliases"][0]["key"].rsplit(":", 1)[1]}
+                    for record in expanded["source_records"][272:]]
+    replay = json.loads(json.dumps(registry))
+    assert append_source_records(replay, manifest, observations) == 1846
+    assert source_expansion_projection(replay, manifest) == registry
+    assert append_source_records(replay, manifest, observations) == 0
     # v3 = the reviewed v2 allocation plus three appended holding-sense mints (#8981, append-only).
     assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 694]
     assert registry["registry_version"] == 3
@@ -719,7 +736,7 @@ def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
                     events=registry["events"][:386])) == \
         "a349127ec24789b2bf180cf6edf7a4056e9025f1c2801e4232a11446be3dc5e1"
     assert len(output["unresolved_card_mappings"]) == 22 and output["heldout_isolation"] == "unverified"
-    assert output["foreign_build_events"] == 308  # Allocation and holding epochs; not bootstrap mint evidence.
+    assert output["foreign_build_events"] == 308 + 1846  # Original epochs plus source-only expansion.
     member, held = tmp_path / "membership.json", json.loads(paths[0].read_bytes())["selection"]["source_records"][0]
     save(member, dict(heldout=[held["locator"]], replay=[]))  # No committed owner carries an adjudication marker.
     assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),

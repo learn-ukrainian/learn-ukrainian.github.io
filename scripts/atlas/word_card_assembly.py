@@ -53,7 +53,7 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 
-ASSEMBLER_VERSION = "pilot-assembly-v6"
+ASSEMBLER_VERSION = "pilot-assembly-v7"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
 # source CEFR evidence alone never expands this set.
 LEARNER_PROPER_NAME_ALLOWLIST = frozenset({"ЮНЕСКО"})
@@ -66,6 +66,15 @@ LINEAGE = {
     "vesum": ("G-VESUM", 1),
     "puls": ("G-PULS", 2),
     "ukrainian_word_stress": ("G-ULIF", 2),
+    "sum20": ("G-ULIF", 1),
+    "vts_busel_slovnyk_me": ("G-VTS?", 2),
+    "esum": ("G-ESUM?", 1),
+    "goroh": ("G-ESUM?", 2),
+    "wiktionary": ("G-WIKI", 2),
+    "kaikki": ("G-WIKI", 2),
+    "dmklinger": ("G-WIKI?", 2),
+    "r2u_e2u": ("G-E2U?", 2),
+    "course_authored": ("G-PROJECT", 3),
 }
 GENDER_WORDS = {"чоловічого": "m", "жіночого": "f", "середнього": "n"}
 # ULIF label lead words that name a PULS part of speech (PULS prints «іменник», «дієслово (недок.)», «числівник»).
@@ -317,7 +326,8 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
              "Source row drift against the frozen literal row; re-admit the source version")
         drift += 1
     sources = src.PilotSources(sources_conn, vesum_conn, raw_conn,
-                               modern_root=main_checkout_root(Path(__file__).resolve().parents[2]))
+                               modern_root=main_checkout_root(Path(__file__).resolve().parents[2]), atlas=atlas_conn,
+                               frozen_records=manifest["selection"]["source_records"])
     entry_ids = sorted(r["raw_row"]["id"] for r in manifest["selection"]["source_records"]
                        if r["table"] == "ulif_dictua_entries")
     extract = scratch / "pilot-wp3-extract.sqlite"
@@ -330,7 +340,8 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
         "atlas_file": sha_of_file(atlas_db),
         "registry_file": sha_of_file(registry_path),
         "register_entries": foundation.register_entries_digest(
-            register, sorted({r["source_id"] for r in manifest["selection"]["source_records"]})),
+            register, sorted({r["source_id"] for r in manifest["selection"]["source_records"]}
+                             | (set(LINEAGE) & {r["id"] for r in register["sources"]}))),
         "manifest": manifest["manifest_sha256"],
         "frozen_rows_verified": drift,
         "extract_rows": extracted["tables"],
@@ -813,32 +824,42 @@ def senses(inputs: Inputs, b: Builder, unit, entry, anchor, srec, ledger):
     ledger.field(card_id, "sense_label", "asserted" if labelled else "source_absent",
                  reason=None if labelled else "ULIF entry has no sense gloss; one unsplit sense",
                  senses=len(entry["senses"]))
+    ledger.field(card_id, "definition_uk", "source_absent", "no bound source partition yet")
+
+
+def attach_source_partitions(inputs: Inputs, unit: dict, entry: dict, builder: Builder, match: dict,
+                             ledger: Ledger) -> None:
+    """Add source-local article fields, retaining every raw witness and its labels.
+
+    This does not change a card/sense identity or claim sense equivalence. An
+    unresolved identity retains non-voting assertions; spelling-level material
+    spanning several checked homonyms stays explicitly ambiguous.
+    """
     spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
-    modern = inputs.sources.modern_meanings(spelling)
-    partitions = []
-    for source_id, source in modern.items():
-        for record in source["records"]:
-            content = foundation.digest(record)
-            locator = record.get("url") or record.get("source_url") or f"{source_id}:article:{record.get('id')}"
-            snapshot = f"{source_id}@sha256:{content}"
-            partition = {"source_id": source_id, "locator": locator, "snapshot_id": snapshot,
-                         "content_sha256": content, "record": record,
-                         "binding": {"unit_key": unit["unit_key"], "card_id": card_id, "status": "held",
-                                     "reason": "modern_source_correspondence_not_allocated"}}
-            partitions.append(partition)
-            # No source record or sense correspondence for modern articles exists in the frozen allocation.
-            # Keep whole source partitions, including their homonym labels and every sense, for adjudication.
-            ledger.hold(card_id, "definition_uk", "modern_source_correspondence_not_allocated", **partition)
-    statuses = {key: {k: v for k, v in value.items() if k != "records"} for key, value in modern.items()}
-    if partitions:
-        ledger.field(card_id, "definition_uk", "held", "modern_source_correspondence_not_allocated",
-                     sources=statuses, partitions=len(partitions))
-    elif any(source["status"] == "unavailable" for source in modern.values()):
-        ledger.field(card_id, "definition_uk", "held", "modern_source_unavailable", sources=statuses)
-    else:
-        ledger.field(card_id, "definition_uk", "source_absent",
-                     "no article in the bound local modern readers; dictionary-wide absence is unknown",
-                     sources=statuses)
+    parts = inputs.sources.source_partitions(spelling, unit["atlas_slug"])
+    ambiguous = unit["entry_type"] == "lexeme_candidate" and len(inputs.sources.homonyms(spelling)) > 1
+    confidence = "unresolved" if match["method"] == "unresolved" or ambiguous else "medium"
+    reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
+    for part in parts:
+        record = bound_source_record(inputs.registry, part)
+        for index, (field, value, origin) in enumerate(src.partition_claims(part)):
+            norm = src.norm_v1(value) if isinstance(value, str) else foundation.canonical(value).decode()
+            assertion = builder.add("card", entry["card_id"], field, value, norm,
+                part["source_id"], part["snapshot_id"], part["locator"] + f" [claim:{index}]",
+                "pilot-source-partition-v1", "medium", record=record,
+                mapping=mapping(confidence, "spelling", ambiguous=ambiguous,
+                                note=reason if confidence == "unresolved" else "single source partition; no sense alignment"))
+            builder.assertions[assertion]["producer"]["name"] = part["source_label"] + " / " + origin
+            if confidence == "unresolved":
+                ledger.hold(entry["card_id"], field, reason, source_id=part["source_id"],
+                            locator=part["locator"], content_sha256=part["content_sha256"])
+            ledger.field(entry["card_id"], field, "held" if confidence == "unresolved" else "asserted",
+                         reason if confidence == "unresolved" else None)
+    if parts:
+        ledger.cards[entry["card_id"]]["fields"]["source_records"]["availability"] = {
+            **inputs.sources.availability,
+            **{source: {k: v for k, v in record.items() if k != "records"}
+               for source, record in inputs.sources.modern_meanings(spelling).items()}}
 
 
 def relations(inputs: Inputs, b: Builder, unit, entry, srec, ledger):
@@ -1137,7 +1158,8 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
                   "register": {"ref": "docs/sources/permissions-register.yaml referenced entries",
                                "version": f"schema_version {inputs.register_version}",
                                "content_sha256": h["register_entries"],
-                               "note": "digest of the pinned referenced entries; the file may grow after the freeze"}},
+                               "note": "original frozen entries are pinned; expansion entries and their legal refs "
+                                       "are included in this build's digest"}},
         },
         "card_version": "cv_" + "0" * 24,
     }
@@ -1316,6 +1338,7 @@ def build(inputs: Inputs, suppressions: dict | None = None) -> dict:
             match = mwe_identity()
         else:
             builder, match = assemble_lexeme(inputs, unit, entry, ledger, spelling_count, match_cache)
+        attach_source_partitions(inputs, unit, entry, builder, match, ledger)
         account_remaining_fields(ledger, entry["card_id"], entry["card_kind"])
         cards[entry["card_id"]] = card_json(inputs, entry, builder, match)
     attach_unmatched_phraseology(inputs, ledger, cards)
@@ -1362,7 +1385,8 @@ def accounting(result: dict) -> dict:
         for name in names:
             c.update(per_field.get(name, {}))
         requirement[rid] = dict(sorted(c.items()))
-    relation = [a for c in cards.values() for a in c["assertions"] if a["field"] in RELATION_FIELDS]
+    relation = [a for c in cards.values() for a in c["assertions"] if a["field"] in RELATION_FIELDS
+                and a["source_id"] == "ulif"]
     return {
         "cards": len(cards),
         "card_kinds": dict(Counter(c["card_kind"] for c in cards.values())),

@@ -54,6 +54,26 @@ class Resolver:
     def __init__(self, inputs: wa.Inputs):
         self.inputs = inputs
         self.sources = inputs.sources
+        self.partitions = {}
+        for unit in inputs.units:
+            entry = inputs.entry_by_unit[unit["unit_key"]]
+            claims = {}
+            spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
+            for part in self.sources.source_partitions(spelling, unit["atlas_slug"]):
+                for index, (field, value, origin) in enumerate(src.partition_claims(part)):
+                    claims[part["locator"] + f" [claim:{index}]"] = (part, field, value, origin)
+            self.partitions[entry["card_id"]] = claims
+        self.partition_mapping = {}
+        for unit in inputs.units:
+            entry = inputs.entry_by_unit[unit["unit_key"]]
+            spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
+            lexeme = unit["entry_type"] == "lexeme_candidate"
+            ambiguous = lexeme and len(self.sources.homonyms(spelling)) > 1
+            unresolved = lexeme and matched_vesum_entry(inputs, unit) is None
+            reason = "source_homonym_correspondence_unresolved" if ambiguous else "unresolved_identity"
+            self.partition_mapping[entry["card_id"]] = wa.mapping(
+                "unresolved" if unresolved or ambiguous else "medium", "spelling", ambiguous=ambiguous,
+                note=reason if unresolved or ambiguous else "single source partition; no sense alignment")
 
     def row(self, table: str, row_id: int):
         out = self.sources.sources.execute(f'SELECT * FROM "{table}" WHERE id=?', (row_id,)).fetchone()
@@ -62,6 +82,17 @@ class Resolver:
     def check(self, card: dict, a: dict) -> str | None:
         """None when the locator resolves and carries the value; otherwise a closed reason code."""
         locator = a["locator"]
+        if a["extraction_version"] == "pilot-source-partition-v1":
+            expected = self.partitions[card["card_id"]].get(locator)
+            if expected is None:
+                return "partition_outside_subject"
+            part, field, value, origin = expected
+            norm = src.norm_v1(value) if isinstance(value, str) else foundation.canonical(value).decode()
+            return None if (a["source_id"], a["snapshot_id"], a["field"], a["value"], a["value_norm"],
+                            a["subject"], a.get("mapping"), a["producer"]["name"]) == (
+                                part["source_id"], part["snapshot_id"], field, value, norm,
+                                {"kind": "card", "id": card["card_id"]}, self.partition_mapping[card["card_id"]],
+                                part["source_label"] + " / " + origin) else "value_mismatch"
         match = LOCATOR.match(locator)
         if not match:
             return "locator_grammar"
@@ -332,6 +363,14 @@ def source_routes(inputs: wa.Inputs, unit: dict, entry: dict, assertion: dict) -
     VESUM is supplemental evidence with no persistent record in this allocation.
     """
     source, field = assertion["source_id"], assertion["field"]
+    if assertion.get("extraction_version") == "pilot-source-partition-v1":
+        if assertion["subject"] != {"kind": "card", "id": entry["card_id"]}:
+            return []
+        spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
+        return [(part["locator"] + f" [claim:{index}]", part["locator"], part["snapshot_id"])
+                for part in inputs.sources.source_partitions(spelling, unit["atlas_slug"])
+                if part["source_id"] == source
+                for index, (name, _value, _origin) in enumerate(src.partition_claims(part)) if name == field]
     anchor = inputs.records[unit["anchor_locator"]]
     own = [inputs.records[k] for k in unit["source_record_keys"]]
     if source in {"puls", "ukrainian_word_stress", "frazeolohichnyi"}:
@@ -528,7 +567,7 @@ def public_tombstones(card: dict) -> list[str]:
     for a in suppressed.values():
         if a["locator"] in text:
             problems.append("withdrawn_locator_in_public")
-        if a["field"] in wa.RELATION_FIELDS and any(
+        if a["field"] in wa.RELATION_FIELDS and a["source_id"] == "ulif" and any(
                 f"ulif:section:{re.search(r'id:(\d+)', a['locator']).group(1)}" == u["source_sense_key"]
                 and not u["mapped_by"].startswith("registry:") for s in public["senses"] for u in s["sense_map"]):
             problems.append("withdrawn_unit_in_sense_map")
@@ -586,6 +625,13 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
             c["snapshot_id"] == record["snapshot_id"] and c.get("locator") == record["locator"]
             and c["status"] == "unique" for c in sr["correspondence"])]
         binding[record["locator"]] = (owners[0]["source_record_id"], record["snapshot_id"]) if len(owners) == 1 else None
+    frozen = {bound[0] for bound in binding.values() if bound}
+    for unit in inputs.units:
+        entry = inputs.entry_by_unit[unit["unit_key"]]
+        spelling = src.unstressed(entry["key_at_creation"]["spelling"]).lower()
+        for part in inputs.sources.source_partitions(spelling, unit["atlas_slug"]):
+            record = wa.bound_source_record(inputs.registry, part)
+            binding[part["locator"]] = (record["source_record_id"], part["snapshot_id"])
     id_errors, register_errors, lineage_errors, sr_errors, forbidden = Counter(), Counter(), Counter(), Counter(), 0
     cited_records, record_bindings = set(), {}
     unit_of = {inputs.entry_by_unit[u["unit_key"]]["card_id"]: u for u in inputs.units}
@@ -602,7 +648,7 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
             register_errors["version"] += a["licence_ref"]["register_version"] != inputs.register_version
             group, tier = wa.LINEAGE[a["source_id"]]
             lineage_errors["lineage"] += (a["independence_group"], a["tier"]) != (group, tier)
-            if a["source_id"] == "vesum":
+            if a["source_id"] == "vesum" and a["extraction_version"] != "pilot-source-partition-v1":
                 sr_errors["locator_outside_subject"] += not a["locator"].startswith("vesum:entry:") or (
                     a["subject"] != {"kind": "card", "id": card["card_id"]}) or card["card_kind"] == "mwe"
                 sr_errors["snapshot_binding"] += a["snapshot_id"] != "vesum@" + inputs.hashes["vesum_canonical"][:16]
@@ -635,7 +681,7 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
     report["assertion_identity"] = {"passed": not any(id_errors.values()), "errors": dict(id_errors)}
     report["register_lineage"] = {"passed": not any(register_errors.values()) and not any(lineage_errors.values()),
                                   "errors": {**register_errors, **lineage_errors}}
-    frozen = {bound[0] for bound in binding.values() if bound}
+    all_bound = {bound[0] for bound in binding.values() if bound}
     sr_errors["unbound_frozen_row"] += sum(bound is None for bound in binding.values())
     # A frozen record no assertion cites must be accounted for by a ledger hold naming it (refused evidence), and a
     # hold may name only a frozen record of the card's own allocated unit.
@@ -647,9 +693,11 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
             if h.get("source_record_id"):
                 held.add(h["source_record_id"])
                 sr_errors["held_unbound"] += h["source_record_id"] not in own
-    report["source_records"] = {"passed": not any(sr_errors.values()) and frozen <= cited_records | held
+    report["source_records"] = {"passed": not any(sr_errors.values()) and all_bound <= cited_records | held
                                 and not forbidden,
                                 "frozen": len(frozen), "cited": len(frozen & cited_records),
+                                "supplemental": len(all_bound - frozen),
+                                "supplemental_cited": len((all_bound - frozen) & cited_records),
                                 "held": len((frozen - cited_records) & held),
                                 "errors": dict(sr_errors), "sum11_outside_russification": forbidden}
 

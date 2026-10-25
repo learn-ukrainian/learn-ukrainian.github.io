@@ -160,11 +160,24 @@ Modern meanings never participate in identity matching. The pilot reads local ar
 `scripts.lexicon.sum20_store.resolve_sum20_articles`, including its normalized staging lookup, and the existing
 version-gated read-only VTS cache contract. Each returned article keeps its full source partition, source senses,
 content digest, snapshot and locator. A local miss does not prove dictionary-wide absence. An unavailable
-reader stays explicit. The frozen pilot registry currently has no SUM-20 or VTS source-record correspondence or
-allocated sense mapping. Available articles therefore remain in the holding ledger with
-`modern_source_correspondence_not_allocated`, bound as candidates to the existing pilot unit and card.
-They do not become sense assertions, guessed homonym joins or new identities. Attaching them requires
-source-record and sense correspondence under the existing allocation contract, outside this repair's scope.
+reader stays explicit. The #11627 source expansion appends persistent source records using the existing
+random `sr_` allocation, content aliases and direct initial-snapshot observations. Original input slots,
+card and sense IDs, creation keys and mint evidence remain frozen. The original allocation digest is
+checked after removing only the validated source-mint extension; the verifier also checks each extension
+against the actual source record for its particular input.
+
+Articles are retained as card-level source partitions, without manufacturing a card sense or asserting
+cross-source sense equivalence. Structured SUM-20 parser units, their labels, examples and sub-senses
+remain verbatim and unadjudicated. Unsegmented bodies remain articles. Existing Atlas payloads and every
+enrichment row retain their complete original records, labels and attribution in `source_records` assertions,
+alongside extracted fields. ЕСУМ, Горох and Wiktionary etymology use `etymology`; Kaikki keeps its original
+CC BY-SA attribution. Missing local Kaikki artifacts stay unavailable; assembly does not hydrate them.
+
+An unresolved identity or a spelling-level article spanning checked homonyms retains non-voting
+assertions with the named reason. This never changes the identity matcher or promotes an ambiguous
+meaning to a known homonym. Available unambiguous source values use the existing field resolver;
+parallel texts remain separate and genuine scalar disagreements retain both witnesses. Atlas compilations
+with no established independent lineage remain attributed compilations, not additional dictionary votes.
 
 ## 5. The cases, with measured examples
 

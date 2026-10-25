@@ -16,6 +16,7 @@ import re
 import sqlite3
 import unicodedata
 from collections import defaultdict
+from contextlib import closing
 from pathlib import Path
 
 from scripts.atlas import word_card_foundation as foundation
@@ -132,7 +133,7 @@ class PilotSources:
     """
 
     def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection, raw_cache: SQLiteConnection,
-                 modern_root: Path | None = None):
+                 modern_root: Path | None = None, atlas: SQLiteConnection | None = None, frozen_records=()):
         self.sources = sources
         self.vesum = vesum
         self.raw_cache = raw_cache
@@ -142,6 +143,11 @@ class PilotSources:
         self._homonyms: dict[str, list[dict]] = {}
         self._vesum: dict[str, list[dict]] = {}
         self.modern_root = modern_root
+        self.atlas = atlas
+        self.frozen_records = {(r["source_id"], r["locator"]): r for r in frozen_records}
+        self._partitions: dict[tuple[str, str | None], list[dict]] = {}
+        self._kaikki = None
+        self.availability: dict[str, dict] = {}
         self._meanings: dict[str, dict] = {}
         self.consumed: dict[str, str] = {}
 
@@ -312,6 +318,175 @@ class PilotSources:
             "SELECT value FROM vesum_build_metadata WHERE key='canonical_jsonl_sha256'"
         ).fetchone()
         return row[0]
+
+    def source_partitions(self, lemma: str, slug: str | None) -> list[dict]:
+        """All held pilot values, with source-local fields and no inferred sense boundaries.
+
+        Queries are per input. The SUM-20 adapter owns its normalized-title index; no
+        other corpus is scanned. Optional stores stay absent in injected fixtures.
+        Atlas compilations retain their original labels and raw payloads: they do
+        not become independent witnesses for the dictionaries they copied.
+        """
+        key = (lemma, slug)
+        # Replay dependency reads even when the assembled partitions are cached.
+        self.modern_meanings(lemma)
+        if key not in self._partitions:
+            records = []
+
+            def add(source, locator, raw, values, label=None):
+                digest = foundation.digest(raw)
+                frozen = self.frozen_records.get((source, locator))
+                snapshot = (frozen["snapshot_id"] if frozen and frozen["content_sha256"] == digest
+                            else f"{source}@sha256:{digest}")
+                records.append({"source_id": source, "locator": locator, "record": raw,
+                                "content_sha256": digest, "snapshot_id": snapshot,
+                                "values": values, "source_label": label or source})
+
+            if self.atlas is not None and slug:
+                self.atlas.row_factory = sqlite3.Row
+                for table in ("articles", "article_payloads", "enrichment"):
+                    for row in self.atlas.execute(f'SELECT * FROM "{table}" WHERE slug=? ORDER BY rowid', (slug,)):
+                        raw = row_dict(row)
+                        payload = json.loads(raw["payload_json"]) if "payload_json" in raw else raw
+                        locator = f"atlas0:{table}:{slug}"
+                        if table == "enrichment":
+                            locator += "/" + raw["section"]
+                            values = {raw["section"]: payload}
+                        elif table == "article_payloads":
+                            # Keep the complete entry, including metadata and embedded
+                            # sections that can differ from the enrichment side table.
+                            values = dict(payload)
+                        else:
+                            values = {"atlas_metadata": raw}
+                        label = raw.get("source") or "Atlas compilation"
+                        add(source_label_id(label), locator, raw, values, label)
+            for source, evidence in self.modern_meanings(lemma).items():
+                for raw in evidence["records"]:
+                    locator = raw.get("url") or raw.get("source_url") or f"{source}:article:{raw.get('id')}"
+                    add(source, locator, raw, {"definition_uk": raw})
+
+            if self.modern_root is not None:
+                official = [r for r in self.modern_meanings(lemma)["sum20"]["records"] if r.get("id") is not None]
+                if official:
+                    with closing(sum20_store.open_sum20(repository_root=self.modern_root)) as store:
+                        for article in official:
+                            raw = {"article": row_dict(store.execute("SELECT * FROM sum20_articles WHERE id=?",
+                                                                     (article["id"],)).fetchone())}
+                            for table in ("sum20_senses", "sum20_citations"):
+                                raw[table] = [row_dict(r) for r in store.execute(
+                                    f'SELECT * FROM "{table}" WHERE article_id=? ORDER BY id', (article["id"],))]
+                            add("sum20", f"sum20:structured:id:{article['id']}", raw, {"definition_uk": raw})
+                # Reuse the adapter's exact normalized lookup, then read the complete
+                # selected mirror row. The older compact adapter drops senses_json,
+                # examples and register labels; none may be lost from the card.
+                path = self.modern_root / "data" / "sum20_slovnyk_staging.db"
+                if path.is_file():
+                    with closing(sum20_store.open_sources(path, repository_root=self.modern_root)) as mirror:
+                        signature = tuple((p.stat().st_ino, p.stat().st_size, p.stat().st_mtime_ns,
+                                           p.stat().st_ctime_ns) if p.exists() else None
+                                          for p in (path, Path(str(path) + "-wal")))
+                        candidates = sum20_store._mirror_index(path, signature).get(
+                            sum20_store.normalize_sum20_lookup(lemma), [])
+                        for url in sorted({candidate[1] for candidate in candidates}):
+                            row = mirror.execute("SELECT * FROM sum20_slovnyk_articles WHERE url=?", (url,)).fetchone()
+                            raw = row_dict(row)
+                            add("sum20", "sum20:mirror:" + url, raw, {"definition_uk": {
+                                "article_text": raw["text"], "senses": json.loads(raw.get("senses_json") or "[]"),
+                                "segmentation": "unadjudicated_source_parser_units", "source_record": raw}})
+                for table, column, source, field in (
+                    ("esum_etymology_meta", "lemma", "esum", "etymology"),
+                    ("goroh_etymology", "requested_lemma", "goroh", "etymology"),
+                    ("wiktionary_etymology", "requested_lemma", "wiktionary", "etymology"),
+                    ("wiktionary", "word", "wiktionary", "definition_uk"),
+                ):
+                    if not self.sources.execute("SELECT 1 FROM sqlite_master WHERE name=?", (table,)).fetchone():
+                        continue
+                    for row in self.sources.execute(f'SELECT rowid AS _rowid, * FROM "{table}" WHERE "{column}"=? '
+                                                    'ORDER BY rowid', (lemma,)):
+                        raw = row_dict(row)
+                        if table == "esum_etymology_meta":
+                            cognates = self.sources.execute("SELECT * FROM esum_cognate_forms WHERE entry_id=?",
+                                                           (raw["id"],)).fetchone()
+                            raw["cognate_forms_record"] = row_dict(cognates) if cognates else None
+                        add(source, f"sources:{table}:id:{raw['_rowid']}", raw, {field: raw})
+                from scripts.lexicon.enrich_manifest import _kaikki_row, _load_kaikki_lookup
+                from scripts.storage.paths import MissingArtifactError
+
+                if self._kaikki is None:
+                    try:
+                        self._kaikki = _load_kaikki_lookup()
+                        self.availability["kaikki_lookup"] = {"status": "available"}
+                    except MissingArtifactError:
+                        self._kaikki = {}
+                        self.availability["kaikki_lookup"] = {"status": "unavailable", "reason": "missing_artifact"}
+                raw = _kaikki_row(self._kaikki, lemma)
+                if raw:
+                    add("kaikki", "kaikki:lookup:" + lemma, raw, {"kaikki": raw},
+                        "kaikki/Wiktionary; original extract attribution retained; CC BY-SA")
+            self._partitions[key] = records
+        records = self._partitions[key]
+        self._use(f"source_partitions:{lemma}:{slug}", records)
+        self._use("source_availability", self.availability)
+        return records
+
+
+def source_label_id(label: str) -> str:
+    """Registered source of an existing Atlas label; mixed compilations remain compilations."""
+    for text, source in (("kaikki/", "kaikki"), ("Вікісловник", "wiktionary"), ("VESUM", "vesum"),
+                         ("PULS", "puls"), ("ukrainian-word-stress", "ukrainian_word_stress"),
+                         ("dmklinger", "dmklinger"), ("ЕСУМ", "esum"), ("Горох", "goroh"),
+                         ("e2u", "r2u_e2u"), ("ВТС", "vts_busel_slovnyk_me")):
+        if label.startswith(text) and " + " not in label:
+            return source
+    return "course_authored"
+
+
+def partition_claims(partition: dict) -> list[tuple[str, object, str]]:
+    """Typed, additive values plus the verbatim source record, without sense minting.
+
+    The provenance field is retained alongside extracted fields so even unmapped
+    Atlas metadata and source-parser structure remain inspectable. A dictionary
+    article is a card-level source partition, never one invented card sense.
+    """
+    claims = [("source_records", {"source_label": partition["source_label"],
+                                  "record": partition["record"]}, "record")]
+    names = {"meaning": "definition_uk", "definition_cards": "definition_uk", "gloss": "english_gloss",
+             "translation": "english_gloss", "literary_attestation": "examples", "lemma": "spelling",
+             "pronunciation": "pronunciation", "morphology": "morphology", "etymology": "etymology",
+             "stress": "stress", "cefr": "cefr", "examples": "examples", "synonyms": "synonyms",
+             "antonyms": "antonyms", "definition_uk": "definition_uk", "kaikki": "kaikki",
+             "heritage_status": "heritage_status", "frequency": "frequency", "sources": "sources",
+             "idioms": "idioms", "proverbs": "proverbs", "form_notes": "form_notes",
+             "wiki_reference": "wiki_reference"}
+    values = list(partition["values"].items())
+    for key, value in values:
+        if key == "enrichment" and isinstance(value, dict):
+            values.extend(value.items())
+            continue
+        field = names.get(key)
+        if field is None or value is None or value == "":
+            continue
+        if field == "stress" and isinstance(value, dict):
+            value = value.get("form")
+        elif field == "cefr" and isinstance(value, dict):
+            value = value.get("level")
+        if value is not None and value != "":
+            claims.append((field, value, key))
+    def structured(node, path):
+        if isinstance(node, dict):
+            for key, value in node.items():
+                location = path + "/" + key
+                if key in {"examples", "sum20_citations", "register_labels", "labels"} and value:
+                    field = "register" if key in {"register_labels", "labels"} else "examples"
+                    claims.append((field, {"source_unit_path": location, "value": value}, location))
+                elif key != "source_record":
+                    structured(value, location)
+        elif isinstance(node, list):
+            for index, value in enumerate(node):
+                structured(value, path + f"/{index}")
+    if partition["source_id"] == "sum20":
+        structured(partition["values"], "")
+    return claims
 
 
 # --- ULIF paradigm model --------------------------------------------------------------------------
