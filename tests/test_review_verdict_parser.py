@@ -238,6 +238,8 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
     fence = "```verdict\nAPPROVE\n```"
     for mixed in (response + "\n" + fence, fence + "\n" + response + "\nNotes.",
                   'Quoted "code-review-findings.v1".\n' + fence,
+                  'Quoted "code-review-findings.v1".\n' + fence.replace("verdict", "Verdict"),
+                  "```text\n" + raw.replace("code-review-findings.v1", r"code-review-findings.\u00761") + "\n```\n" + fence,
                   response.replace("code-review-findings.v1", r"code-review-findings.\u00761") + "\n" + fence):
         with pytest.raises(RecordError, match="reply carries both a findings payload and a verdict block"):
             normalize_verdict(mixed)

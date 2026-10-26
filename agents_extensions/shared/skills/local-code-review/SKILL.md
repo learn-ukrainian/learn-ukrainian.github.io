@@ -79,7 +79,7 @@ alongside the scope breakers.
 ## Output
 
 Reply with EITHER only the native JSON object, unfenced, with no other
-`code-review-findings.v1` text, OR a verdict block; never both. Include exactly
+`code-review-findings.v1` text, OR a verdict block; never both. For a verdict, include exactly
 one column-0 ` ```verdict ` block, closed by column-0 ` ``` `. Its body must be
 one line, `VERDICT: <TOKEN>` or `<TOKEN>`, using `APPROVE`, `APPROVED`,
 `REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Any schema marker or findings
