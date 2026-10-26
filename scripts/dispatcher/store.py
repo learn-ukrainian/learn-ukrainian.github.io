@@ -34,8 +34,7 @@ def review_binding(metadata: dict) -> ReviewAttempt | None:
     if not any(metadata.get(name) is not None for name in (*names, "review_access")):
         return None
     if metadata.get("mode") != "read-only" or metadata.get("cwd"):
-        # A fresh per-task sparse worktree provides no-reuse isolation. V2 never
-        # reaps/rebases branch holders during creation, so dependency guards are unnecessary here.
+        # Runtime no-reuse enforcement remains gated on the isolation port.
         raise ValueError("review attempt requires --mode read-only and a fresh worktree (no --cwd)")
     if not all(metadata.get(name) for name in names):
         raise ValueError("--review-id, --attempt-id and --review-attempt must be used together")
@@ -44,14 +43,16 @@ def review_binding(metadata: dict) -> ReviewAttempt | None:
     for name in names[:2]:
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", metadata[name]):
             raise ValueError("invalid review or attempt id")
-    manifest = metadata["review_attempt"]
-    sha = manifest.lower() if re.fullmatch(r"[0-9a-fA-F]{64}", manifest) else digest(Path(manifest).read_bytes())
+    manifest = Path(metadata["review_attempt"])
+    if not manifest.is_file():
+        raise ValueError("--review-attempt must name a manifest file")
+    sha = digest(manifest.read_bytes())
     return ReviewAttempt(review_id=metadata["review_id"], attempt_id=metadata["attempt_id"], manifest_sha256=sha)
 
 
-def check_review_attempt(binding: ReviewAttempt) -> None:
+def check_review_attempt(binding: ReviewAttempt, *, claim=False) -> None:
     """Any legacy receipt artifact or hot/archived binding spends the review/attempt pair."""
-    for record in list_tasks(include_archive=True):
+    for record in list_tasks(include_archive=True, strict=True):
         bound = record.get("review_attempt")
         if isinstance(bound, dict) and all(bound.get(key) == binding[key] for key in ("review_id", "attempt_id")):
             raise ValueError("review attempt already spent")
@@ -62,9 +63,20 @@ def check_review_attempt(binding: ReviewAttempt) -> None:
         path = root / (binding["attempt_id"] + suffix)
         if path.exists() or path.is_symlink():
             raise ValueError("review attempt already spent")
+    if claim:
+        from scripts.agent_runtime.review_mcp import _create_file, _open_attempt_dir
+
+        fd = _open_attempt_dir(root, create=True)
+        try:
+            # Same O_EXCL ledger as legacy: keep it even if later launch steps fail.
+            _create_file(binding["attempt_id"] + ".jsonl", fd, b"")
+        except FileExistsError:
+            raise ValueError("review attempt already spent") from None
+        finally:
+            os.close(fd)
 
 
-def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) -> dict:
+def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict, *, binding: ReviewAttempt | None = None) -> dict:
     record = dict(pid=None, process_start=None, finished_at=None, duration_s=None, returncode=None)
     record.update(result_sha256=None, usage=None, head_sha=None, remote_head_sha=None, commits_ahead=None)
     record.update(worktree_dirty_on_exit=None, error=None)
@@ -90,7 +102,7 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
         record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
         record["pinned_head"] = metadata.get("pinned_head") or sha
     record.update(prompt_file=str(spec.prompt_file), prompt_sha256=digest(spec.prompt_file.read_bytes()))
-    if binding := review_binding(metadata):
+    if binding:
         record.update(review_attempt=binding, review_access=metadata.get("review_access") or "isolated")
     record.update(
         result_file=str(spec.final_file), push_state="unknown", research_owned_paths=metadata["research_owned_path"]
@@ -154,7 +166,7 @@ def replace(record: dict, path: Path | None = None) -> None:
     _write(path or record_path(record["task_id"]), record)
 
 
-def list_tasks(status: str | None = None, include_archive=False) -> list[dict]:
+def list_tasks(status: str | None = None, include_archive=False, *, strict=False) -> list[dict]:
     root = tasks_dir()
     paths = (
         iter_task_records(root, include_archive=include_archive)
@@ -169,10 +181,14 @@ def list_tasks(status: str | None = None, include_archive=False) -> list[dict]:
     for path in paths:
         try:
             record = json.loads(path.read_text())
+            if not isinstance(record, dict):
+                raise ValueError("invalid task record")
             if status is None or record.get("status") == status:
                 if relocated_result_file:
                     record["result_file"] = relocated_result_file(path, record.get("result_file"))
                 records.append(record)
         except (OSError, ValueError):
+            if strict:
+                raise ValueError("unreadable task record; review attempt reuse cannot be excluded") from None
             continue
     return records
