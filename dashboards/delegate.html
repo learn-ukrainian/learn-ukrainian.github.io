@@ -127,7 +127,7 @@ const API_TIMEOUT_MS = 5000;
 function escapeHtml(value) {
   const node = document.createElement('span');
   node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
+  return node.innerHTML.replaceAll("'", '&#39;').replaceAll('"', '&quot;');
 }
 
 function formatTs(value) {
@@ -262,7 +262,7 @@ function renderActive(tasks, finishedToday) {
         <div class="k">started</div><div>${formatTs(task.started_at)}</div>
         <div class="k">elapsed</div><div>${formatElapsed(task.age_s)}</div>
       </div>
-      <button class="btn" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))}, ${JSON.stringify(task.run_nonce ?? null)})'>View detail</button>
+      <button class="btn" onclick='openDetail(${escapeHtml(JSON.stringify(String(task.task_id || '')))}, ${escapeHtml(JSON.stringify(task.run_nonce ?? null))})'>View detail</button>
     </div>
   `).join('')}</div>`;
 }
@@ -275,7 +275,7 @@ function renderCompleted(tasks) {
   }
   document.getElementById('completed-content').innerHTML = `<table>
     <thead><tr><th>task_id</th><th>agent</th><th>status</th><th>duration</th><th>finished_at</th></tr></thead>
-    <tbody>${tasks.map(task => `<tr class="task-row" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))}, ${JSON.stringify(task.run_nonce ?? null)})'>
+    <tbody>${tasks.map(task => `<tr class="task-row" onclick='openDetail(${escapeHtml(JSON.stringify(String(task.task_id || '')))}, ${escapeHtml(JSON.stringify(task.run_nonce ?? null))})'>
       <td class="mono">${escapeHtml(task.task_id || '—')}</td>
       <td>${escapeHtml(task.agent || '—')}</td>
       <td><span class="pill ${statusClass(task.status)}">${escapeHtml(task.status || 'unknown')}</span></td>

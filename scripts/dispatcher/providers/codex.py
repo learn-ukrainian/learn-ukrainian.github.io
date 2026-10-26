@@ -8,6 +8,11 @@ from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["codex", "exec", "--json", "-C", str(spec.worktree), "-m", spec.model, "-o", str(spec.final_file)]
+    if spec.options.get("output_schema_path") is not None:
+        from scripts.dispatcher.output_schema import load
+
+        load(spec.options)
+        argv += ["--output-schema", spec.options["output_schema_path"]]
     if spec.effort is not None:
         argv += ["-c", f"model_reasoning_effort={spec.effort}"]
     if spec.mode == "read-only":

@@ -266,28 +266,6 @@ def test_shared_cursor_author_policy_preserves_main_family_separation(family, ro
 
 def test_legacy_adapter_expands_raw_authored_references():
     from scripts.review.role_resolution import expanded_legacy_view
-    from tests.review.test_model_catalog import CURRENT_BASELINE as APPROVED_BASELINE
+    from tests.review.test_model_catalog import assert_frozen_surfaces
 
-    expected = deepcopy(APPROVED_BASELINE["catalog"])
-    # #11537: only Full is active; Spark remains held and neither gains review authority.
-    workers = {
-        "muse-wonder-full-1.0": {
-            "family": "meta", "tier": "compatibility", "lifecycle": "active",
-            "roles": ["coding"], "transports": ["native_muse"],
-            "strengths": ["explicit_native_worker"],
-            "weaknesses": ["worker_qualification_pending", "no_review_or_driver_authority"],
-            "notes": "Explicit delegate worker only. No automatic routing or fallback.",
-            "sources": ["https://dev.meta.ai/docs/muse-code"],
-        },
-        "muse-spark-1.3": {
-            "family": "meta", "tier": "compatibility", "lifecycle": "hold",
-            "roles": ["coding"], "transports": ["native_muse"],
-            "strengths": ["explicit_native_worker"],
-            "weaknesses": ["worker_qualification_pending", "no_review_or_approval_authority"],
-            "notes": "Explicit delegate worker only. Spark cannot approve or review.",
-            "sources": ["https://dev.meta.ai/docs/muse-code"],
-        },
-    }
-    assert not workers.keys() & expected["models"].keys()
-    expected["models"].update(workers)
-    assert expanded_legacy_view(raw_catalog()) == expected
+    assert_frozen_surfaces({"catalog": expanded_legacy_view(raw_catalog())}, surfaces=("catalog",))

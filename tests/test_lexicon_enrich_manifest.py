@@ -1915,6 +1915,67 @@ def test_curated_calque_lexicalised_safe_lemma_returns_none() -> None:
     assert _curated_calque("блискучий", "блискучий") is None
 
 
+@pytest.mark.parametrize("status_code", [200, 403])
+def test_fetch_slovnyk_entry_sends_public_contact(monkeypatch, status_code) -> None:
+    class FakeResponse:
+        text = '<section id="dictionary-acticle"><article><h1>sample</h1><p>Dictionary fixture.</p></article></section>'
+
+    response = FakeResponse()
+    response.status_code = status_code
+    calls = []
+
+    def fake_get(url, **kwargs):
+        calls.append((url, kwargs))
+        return response
+
+    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "0")
+    monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", fake_get)
+
+    if status_code == 403:
+        with pytest.raises(_SlovnykTransientError):
+            enrich_manifest_module._fetch_slovnyk_entry("sample", "sample", "vts")
+    else:
+        row = enrich_manifest_module._fetch_slovnyk_entry("sample", "sample", "vts")
+        assert row["word"] == "sample"
+        assert "Dictionary fixture." in row["text"]
+        assert row["source_url"] == "https://slovnyk.me/dict/vts/sample"
+
+    assert calls == [("https://slovnyk.me/dict/vts/sample", {
+        "timeout": 20,
+        "headers": {"User-Agent": "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985; +https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"},
+        "allow_redirects": False,
+    })]
+
+
+@pytest.mark.parametrize("status_code", [200, 403])
+def test_fetch_grac_frequency_batch_sends_public_contact(monkeypatch, status_code) -> None:
+    class FakeResponse:
+        def raise_for_status(self):
+            if status_code == 403:
+                raise enrich_manifest_module.requests.HTTPError("403 Forbidden")
+
+        def json(self):
+            return {"Items": [{"str": "sample", "frq": 12, "relfreq": 0.5}]}
+
+    calls = []
+
+    def fake_get(url, **kwargs):
+        calls.append((url, kwargs))
+        return FakeResponse()
+
+    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "0")
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", fake_get)
+    result = enrich_manifest_module._fetch_grac_frequency_batch(["sample"])
+    assert result == {"sample": None if status_code == 403 else {"word": "sample", "freq": 12, "rel_freq": 0.5}}
+    assert len(calls) == 1
+    assert calls[0][0] == enrich_manifest_module._GRAC_WORDLIST_URL
+    assert calls[0][1]["headers"] == {
+        "User-Agent": "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985; +https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+    }
+    assert calls[0][1]["timeout"] == 30
+
+
 def test_fetch_slovnyk_entry_raises_transient_for_5xx(monkeypatch) -> None:
     class FakeResponse:
         status_code = 503

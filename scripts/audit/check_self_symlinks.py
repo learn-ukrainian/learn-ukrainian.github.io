@@ -13,8 +13,8 @@ looks like "Astro is broken" when Astro is fine. See the autopsy at
 ``docs/bug-autopsies/node-modules-eloop-symlink.md``.
 
 The loop is never committed (``node_modules`` is gitignored) so CI cannot catch
-it — only a local canary can. ``scripts/delegate.py`` then *propagates* the bad
-root symlink into every dispatch worktree, multiplying it. This canary removes
+it — only a local canary can. Sharing the bad root symlink with dispatch
+worktrees propagates the loop. This canary removes
 the loop wherever it finds it so no session inherits a broken build.
 
 It removes ONLY symlinks whose resolution raises ``ELOOP`` (self-referential or

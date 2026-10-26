@@ -6,8 +6,56 @@ import json
 import os
 import sqlite3
 
+import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
 from scripts.api import delegate_router, state_router
 from scripts.api.monitor_context import fixture_context
+
+
+@pytest.mark.parametrize("pid", ["unknown", "²", 2**64, -1, True, {}])
+def test_mixed_records_survive_http_and_worker_collection(tmp_path, monkeypatch, pid):
+    """Malformed PIDs must not crash mixed-version listings or worker scans."""
+    from scripts.api.fleet_workers_collect import collect_delegate_workers
+
+    monkeypatch.setattr(delegate_router, "_TASK_STATE_CACHE", {})
+    monkeypatch.setattr(delegate_router, "_LAST_TASKS_DIR_STR", "")
+    ctx = fixture_context(tmp_path)
+    tasks = ctx.roots.batch_state_dir / "tasks"
+    (tasks / "archive").mkdir(parents=True)
+    records = {
+        "archive/legacy": {"task_id": "legacy", "status": "done", "duration_s": 5},
+        "v2": {"task_id": "v2", "schema_version": 2, "status": "done", "run_nonce": "run-two",
+               "push_state": "unpushed", "worktree_dirty_on_exit": True},
+        "active": {"task_id": "active", "schema_version": 2, "status": "running", "agent": "codex", "pid": pid},
+        "legacy-active": {"task_id": "legacy-active", "status": "spawning", "agent": "codex"},
+        "future": {"schema_version": 99, "unknown_field": {"new": True}},
+    }
+    for name, record in records.items():
+        (tasks / f"{name}.json").write_text(json.dumps(record))
+    app = FastAPI()
+    app.include_router(delegate_router.router, prefix="/api/delegate")
+    app.dependency_overrides[delegate_router.get_ctx] = lambda: ctx
+    with TestClient(app) as client:
+        response = client.get("/api/delegate/tasks")
+        assert response.status_code == 200
+        rows = {row["task_id"]: row for row in response.json()["tasks"]}
+        assert set(rows) == {"legacy", "v2", "active", "legacy-active", "future"}
+        assert rows["legacy"]["duration_s"] == 5
+        assert rows["v2"]["push_state"] == "unpushed"
+        assert rows["v2"]["worktree_dirty_on_exit"] is True
+        assert rows["future"]["status"] == ""
+        assert client.get("/api/delegate/tasks/v2?run_nonce=stale").status_code == 409
+        detail = client.get("/api/delegate/tasks/v2?run_nonce=run-two")
+        assert detail.status_code == 200
+        assert detail.json()["task"]["schema_version"] == 2
+        assert client.get("/api/delegate/tasks/legacy").json()["task"]["status"] == "done"
+    assert [(worker.row.id, worker.row.state) for worker in collect_delegate_workers(tasks)] == [
+        ("active", "zombie"), ("legacy-active", "starting"),
+    ]
+    for name, record in records.items():
+        assert json.loads((tasks / f"{name}.json").read_text()) == record
 
 
 def test_restored_mtime_does_not_label_stale_in_flight_counts_with_fresh_generation(tmp_path, monkeypatch):

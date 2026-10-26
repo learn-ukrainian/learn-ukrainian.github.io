@@ -1061,12 +1061,12 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
 
 
-# Re-pinned for #11536: retired seats no longer appear in resolver candidates.
+# Re-pinned for #11705 after stdout comparison: only the excluded Muse trace is added.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "86e6a8ed48f0ec5c755ff6d8dec30f7f078a39ad349110a0e9a99f521923b5fd"),
-        ("claude-opus-5-5", "low", "ordinary.py", "769d0986d406da6935db6c0d607fb58b9bc607dc3f7a2ff06bfac32bd684787c"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "fa9920a15f2972acbe5a29d4b8dc6d90849a106a54e4e68f2ea4330e8f517b5a"),
+        ("claude-opus-5-5", "low", "ordinary.py", "acfacc78717d010a8e2e42e65a4ac5394f3365dc1a94ad3864d8efab996844b3"),
         (
             "gpt-6.1-sol",
             "low",

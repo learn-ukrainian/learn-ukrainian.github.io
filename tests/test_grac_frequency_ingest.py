@@ -61,6 +61,10 @@ def test_pagination_both_attributes_and_provenance(tmp_path):
         ('lemma', None), ('lemma', 20), ('lemma', 19), ('word', None)]
     assert all(p['wlpage'] == 1 and p['wlnums'] == 'frq' and p['wlsort'] == 'frq' for p in params)
     assert all(kw['headers']['User-Agent'] == crawler.USER_AGENT for _, kw in transport.calls)
+    assert all(kw['headers']['User-Agent'] == (
+        'learn-ukrainian-grac-frequency/1.0 (noncommercial educational; resumable wordlist snapshot; '
+        '+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)'
+    ) for _, kw in transport.calls)
     assert read(db, 'SELECT attr,last_completed_page,complete FROM checkpoint ORDER BY attr') == [
         ('lemma', 3, 1), ('word', 1, 1)]
     provenance = read(db, 'SELECT corpus,api_version,manatee_version,min_freq,page_size,retrieved_at,item_count FROM provenance')
@@ -81,6 +85,10 @@ def test_resume_after_interruption(tmp_path):
     _, resumed = run(db, [page(('b', 10), last=True)], attrs=['lemma'])
     assert resumed.calls[0][1]['params']['wlpage'] == 1
     assert resumed.calls[0][1]['params']['wlmaxfreq'] == 19
+    assert resumed.calls[0][1]['headers']['User-Agent'] == (
+        'learn-ukrainian-grac-frequency/1.0 (noncommercial educational; resumable wordlist snapshot; '
+        '+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)'
+    )
     assert read(db, 'SELECT str FROM items ORDER BY str') == [('a',), ('b',)]
 
 
