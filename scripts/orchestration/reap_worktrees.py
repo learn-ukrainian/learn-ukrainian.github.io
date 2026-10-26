@@ -7349,7 +7349,15 @@ def _clean_pushed_refusal(
     refusal = _git_refusal(tree, info.head, ctx.census)
     if refusal:
         return refusal, claims
-    if _unpublished(tree, [info.head], replace(ctx.census, tips=tuple(oid for _branch, oid in ctx.census.branches))):
+    try:
+        branch_unpublished = _unpublished(
+            tree, [info.head], replace(ctx.census, tips=tuple(oid for _branch, oid in ctx.census.branches))
+        )
+    except subprocess.TimeoutExpired:
+        return "origin-branch reachability check timed out", claims
+    except RuntimeError:
+        return "origin-branch reachability check failed", claims
+    if branch_unpublished:
         return "HEAD not reachable from a verified origin branch", claims
     for claim in claims:
         try:
