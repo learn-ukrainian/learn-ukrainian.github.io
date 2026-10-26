@@ -618,7 +618,7 @@ def register_channel_commands(subparsers: Any) -> None:
         help="Multi-agent discussion with round limit (B.4)",
         description=(
             "Multi-agent discussion with round limit (B.4). "
-            "Discussion is analysis-only. Use delegate.py dispatch for execution."
+            "Discussion is analysis-only. Use scripts/dispatch.py dispatch for execution."
         ),
     )
     discuss_parser.add_argument("channel", help="Channel name")
@@ -2202,7 +2202,7 @@ def _handle_discuss(args) -> int:
                 f"{violation_marker}\n\n"
                 f"`ab discuss` round {round_idx} changed the git working tree. "
                 "Discussion rounds are analysis-only; filesystem writes must go "
-                "through an explicit execution path such as `delegate.py dispatch`.\n\n"
+                "through an explicit execution path such as `scripts/dispatch.py dispatch`.\n\n"
                 "Current `git status --short`:\n\n"
                 "```text\n"
                 f"{status_text}\n"

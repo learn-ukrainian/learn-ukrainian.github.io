@@ -194,7 +194,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  0: Writer finished, reply validated against draft schema, state files saved\n"
             "  1: Preflight failure, dispatch error, or draft schema validation failure (check 1)\n\n"
             "Related:\n"
-            "  scripts/delegate.py, writer contract #8431 r3 §1, §7"
+            "  scripts/dispatch.py, writer contract #8431 r3 §1, §7"
         ),
     )
     p_write.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")

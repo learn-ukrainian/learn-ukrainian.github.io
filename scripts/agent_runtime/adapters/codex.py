@@ -909,7 +909,7 @@ class CodexAdapter:
         (see watchdog.py::should_kill). The mtime poller still runs to
         populate WatchdogState.last_activity for observability — so
         getting the paths RIGHT still matters for future diagnostic
-        logging and for the async delegate.py work, even though a
+        logging and for the async dispatch work, even though a
         missed signal no longer kills the process.
 
         Codex CLI 0.118.0 storage layout (verified empirically):
