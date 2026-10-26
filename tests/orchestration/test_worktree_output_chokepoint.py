@@ -463,12 +463,13 @@ def test_existing_owner_release_after_inventory_allows_removal(boundary_tree, mo
     released = json.loads((tasks / "boundary.json").read_text())
     assert released["keep_worktree"] is False
     assert released["preserved_artifacts"]["retention_release"]["owner"] == "boundary"
-    result = boundary_remove(boundary, boundary_tree, monkeypatch)
-    assert result["action"] == "removed" and not tree.exists(), result
     assert (
-        result["preserved_artifacts"]["retention_release"]["retrieval_proof_sha256"]
+        released["preserved_artifacts"]["retention_release"]["retrieval_proof_sha256"]
         == receipt["retrieval_proof_sha256"]
     )
+    result = boundary_remove(boundary, boundary_tree, monkeypatch)
+    assert result["action"] == "removed" and not tree.exists(), result
+    assert_recorded(repo, result["preserved_artifacts"], "ignored/corpus.yaml", b"retrieved corpus bytes")
 
 
 @pytest.mark.parametrize("caller", CALLERS)
@@ -530,6 +531,16 @@ def test_post_task_release_cli_requires_owner_and_valid_inventory_receipt(bounda
     argv = ["--task-id", "boundary", "--tasks-dir", str(tasks), "--repo-root", str(repo), "--release-retention"]
     if failure != "dry_run":
         argv += ["--apply"]
+    release_receipts = []
+    original_release = post_task_reap._release_retention
+
+    def release_and_observe(*args, **kwargs):
+        refusal = original_release(*args, **kwargs)
+        if refusal is None:
+            release_receipts.append(json.loads((tasks / "boundary.json").read_text())["preserved_artifacts"])
+        return refusal
+
+    monkeypatch.setattr(post_task_reap, "_release_retention", release_and_observe)
     code = post_task_reap.main(argv)
     report = json.loads(capsys.readouterr().out)
     state = json.loads((tasks / "boundary.json").read_text())
@@ -537,9 +548,10 @@ def test_post_task_release_cli_requires_owner_and_valid_inventory_receipt(bounda
         assert code == 0 and report["main_worktree"]["action"] == "removed", report
         assert not tree.exists() and state["keep_worktree"] is False
         assert (
-            state["preserved_artifacts"]["retention_release"]["retrieval_proof_sha256"]
+            release_receipts[0]["retention_release"]["retrieval_proof_sha256"]
             == receipt["retrieval_proof_sha256"]
         )
+        assert release_receipts[0]["retention_release"]["owner"] == "boundary"
         assert_recorded(
             repo,
             state["preserved_artifacts"],
@@ -550,6 +562,7 @@ def test_post_task_release_cli_requires_owner_and_valid_inventory_receipt(bounda
         assert code == 1 and report["main_worktree"]["action"] == "retained"
         assert tree.exists() and state["keep_worktree"] is True
         assert "retention_release" not in state["preserved_artifacts"]
+        assert release_receipts == []
 
 
 @pytest.mark.parametrize("untrusted", ["reused", "wrong_nonce", "wrong_inode", "malformed"])
@@ -719,13 +732,23 @@ def test_release_retention_cli_matches_record_path_spellings(boundary_tree, monk
         "--release-retention",
         "--apply",
     ]
+    release_receipts = []
+    original_release = post_task_reap._release_retention
+
+    def release_and_observe(*args, **kwargs):
+        refusal = original_release(*args, **kwargs)
+        if refusal is None:
+            release_receipts.append(json.loads(path.read_text())["preserved_artifacts"])
+        return refusal
+
+    monkeypatch.setattr(post_task_reap, "_release_retention", release_and_observe)
     assert post_task_reap.main(argv) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["main_worktree"]["action"] == "removed", report
     assert not tree.exists()
     saved = json.loads(path.read_text())
     assert saved["keep_worktree"] is False
-    release = saved["preserved_artifacts"]["retention_release"]
+    release = release_receipts[0]["retention_release"]
     assert release["owner"] == "boundary"
     assert release["retrieval_proof_sha256"] == receipt["retrieval_proof_sha256"]
     assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]

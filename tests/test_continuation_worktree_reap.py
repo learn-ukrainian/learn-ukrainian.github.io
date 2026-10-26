@@ -434,12 +434,13 @@ def test_explicit_receipt_release_keeps_existing_nonmerge_reap_path(cohort, monk
     retrieved = reap.post_task_reap("boundary", tasks_dir=tasks, repo_root=repo, apply=True)
     assert retrieved["main_worktree"]["preserved_artifacts"]["retrieval_proof_sha256"]
     assert reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
+    released = json.loads((tasks / "boundary.json").read_text())
+    assert released["preserved_artifacts"]["retention_release"]["owner"] == "boundary"
     monkeypatch.setattr(reap.reap_worktrees, "_query_pr_states", lambda *_args: ([], None))
     monkeypatch.setattr(reap.reap_worktrees, "_query_prs_by_head_sha", lambda *_args: ([], None))
     row = next(r for r in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=True) if r.path == str(tree))
     assert row.action == "removed", row
     receipt = row.preserved_artifacts
-    assert receipt["retention_release"]["owner"] == "boundary"
     _assert_record_only(repo, receipt)
 
 

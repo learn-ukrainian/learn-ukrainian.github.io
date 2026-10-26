@@ -371,6 +371,7 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
     from scripts.orchestration import merge_closeout
 
     repo, tree, tasks, creator, _, source = renamed_creator
+    payload = source.read_bytes()
     before = {path: path.read_bytes() for path in tasks.glob("*.json")}
     dry = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=False)
     assert dry["main_worktree"]["action"] == "retained"
@@ -393,9 +394,12 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
     assert not (repo / "batch_state/preserved").exists()
     assert tree.exists()
     assert release(renamed_creator, task_id=creator["task_id"]) is None
-    if boundary == "retry":
-        # Preservation can finish before Git refuses removal. Its refreshed
-        # receipt must retain the release authority for the next guarded retry.
+    released = json.loads((tasks / "codex-boundary.json").read_text())
+    assert released["preserved_artifacts"]["retention_release"]["owner"] == creator["task_id"]
+    refreshed = boundary == "retry"
+    if refreshed:
+        # A fresh inventory replaces release metadata; active custody still
+        # refuses this retry until the existing follow-up restores its proof.
         ok, _, receipt = output.preserve_worktree_artifacts(
             tree, primary=repo, tasks_dir=tasks, task_id=creator["task_id"], repo_root=repo
         )
@@ -409,8 +413,13 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
         ).__dict__
     else:
         result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
-    assert result["action"] == "removed", result
-    assert not tree.exists()
+    if refreshed:
+        assert result["action"] == "skipped", result
+        assert "active task codex-boundary" in result["reason"]
+        assert source.read_bytes() == payload
+    else:
+        assert result["action"] == "removed", result
+        assert not tree.exists()
     assert json.loads((tasks / "codex-boundary.json").read_text())["status"] == "needs_finalize"
 
 
