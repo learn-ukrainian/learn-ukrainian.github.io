@@ -106,29 +106,20 @@ def _enforce_delivery(record: dict) -> None:
         from scripts.secret_redactor import redact_text
 
         try:
-            worktree = Path(record["worktree_path"])
-            base = record.get("worktree_base_ref", "origin/main")
-            if base.startswith("refs/remotes/origin/"):
-                base = base.removeprefix("refs/remotes/")
-            if base.startswith("origin/"):
-                branch = base.removeprefix("origin/")
-                git._git(worktree, "fetch", "--no-tags", "--no-write-fetch-head", "origin",
-                         f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
-            else:
-                raise ValueError("ownership verification requires a refreshable origin base ref")
-            base_sha = git._git(worktree, "rev-parse", "--verify", "--end-of-options", f"{base}^{{commit}}")
-            merge_base = git._git(worktree, "merge-base", record["head_sha"], base_sha)
-            revision_range = (record["head_sha"], "--not", merge_base, record["worktree_base_sha"])
-            version = tuple(int(part) for part in git._git(worktree, "version").split()[2].split(".")[:2])
-            remerge = version >= (2, 36)
-            # Remerge diffs isolate edits made during a merge from clean upstream changes.
-            # Older Git and octopus merges cannot prove the absence of resolution edits.
-            paths = git._git(
-                worktree, "log", "--format=", "--name-only", "-z", "-r", "--no-renames", "--root",
-                "--remerge-diff" if remerge else "--cc", *revision_range, strip=False,
-            ).split("\0")
-            if git._git(worktree, "rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
-                raise ValueError("merge resolution paths cannot be verified")
+            with git.ownership_git(record) as run:
+                base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
+                merge_base = run("merge-base", record["head_sha"], base_sha)
+                revision_range = (record["head_sha"], "--not", merge_base, record["worktree_base_sha"])
+                version = tuple(int(part) for part in run("version").split()[2].split(".")[:2])
+                remerge = version >= (2, 36)
+                # Remerge diffs isolate edits made during a merge from clean upstream changes.
+                # Older Git and octopus merges cannot prove the absence of resolution edits.
+                paths = run(
+                    "log", "--format=", "--name-only", "-z", "-r", "--no-renames", "--root",
+                    "--remerge-diff" if remerge else "--cc", *revision_range, strip=False,
+                ).split("\0")
+                if run("rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
+                    raise ValueError("merge resolution paths cannot be verified")
             outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
             if outside:
                 cause = "outside_owned_paths: " + ", ".join(
@@ -136,7 +127,7 @@ def _enforce_delivery(record: dict) -> None:
                 )
                 if len(cause) > 1024:
                     cause = cause[:1009] + "... (truncated)"
-        except (OSError, ValueError, TypeError, IndexError, subprocess.SubprocessError):
+        except (OSError, ValueError, TypeError, IndexError, KeyError, subprocess.SubprocessError):
             cause = "owned_paths_verification_failed"
     if cause is None:
         if record["worktree_dirty_on_exit"] is not False:

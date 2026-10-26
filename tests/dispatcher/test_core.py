@@ -590,8 +590,8 @@ def test_scope_checks_each_own_commit(sandbox, delivery_settle, history, monkeyp
     result = settle()
     if history == "rename-in":
         # Force rename detection before the guard's explicit --no-renames override.
-        original = git._git
-        monkeypatch.setattr(git, "_git", lambda path, command, *args, **kw:
+        original = git._verification_git
+        monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
                             original(path, command, *(("-M",) if command == "log" else ()), *args, **kw))
         result["status"] = "done"
         worker._enforce_delivery(result)
@@ -605,12 +605,12 @@ def test_scope_verification_failure_only_rejects_success(delivery_settle, monkey
     record, settle = delivery_settle
     record = settle("pushed")
     record.update(status=status, error="original cause")
-    original = git._git
+    original = git._verification_git
     def broken(path, *args, **kwargs):
         if args[0] == command:
             raise subprocess.CalledProcessError(1, ["git", command])
         return original(path, *args, **kwargs)
-    monkeypatch.setattr(git, "_git", broken)
+    monkeypatch.setattr(git, "_verification_git", broken)
     worker._enforce_delivery(record)
     assert record["status"] == ("no_deliverable" if status == "done" else status)
     assert record["error"] == ("owned_paths_verification_failed" if status == "done" else "original cause")
@@ -659,8 +659,8 @@ def test_merge_resolution_and_root_paths_cannot_escape_scope(sandbox, delivery_s
     result = settle("pushed")
     assert result["status"] == ("done" if history == "clean" else "no_deliverable")
     assert result["error"] == (None if history == "clean" else "outside_owned_paths: outside.txt")
-    original = git._git
-    monkeypatch.setattr(git, "_git", lambda path, command, *args, **kw:
+    original = git._verification_git
+    monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
                         "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
     result.update(status="done", error=None)
     worker._enforce_delivery(result)
@@ -685,8 +685,8 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
                                             "--owned-path", "delivered.txt", *flags))
     assert result["worktree_base_sha"] == starting_head
     assert (result["status"], result["error"]) == ("done", None)
-    original = git._git
-    monkeypatch.setattr(git, "_git", lambda path, command, *args, **kw:
+    original = git._verification_git
+    monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
                         "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
     worker._enforce_delivery(result)
     assert (result["status"], result["error"]) == ("done", None)
@@ -695,8 +695,8 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")
-    original = git._git
-    monkeypatch.setattr(git, "_git", lambda path, command, *args, **kw:
+    original = git._verification_git
+    monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
                         "\0".join(f"outside-{n:04d}.txt" for n in range(200)) if command == "log"
                         else original(path, command, *args, **kw))
     worker._enforce_delivery(record)
@@ -705,6 +705,81 @@ def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, mon
     assert len(record["error"]) <= 1024
     assert record["error"].endswith("... (truncated)")
     record.update(status="done", worktree_base_ref="main")
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+
+
+@pytest.mark.parametrize("attack", ["alias-shell", "alias-empty", "replace", "origin", "insteadOf", "pushInsteadOf"])
+def test_worker_git_state_cannot_hide_outside_commit(sandbox, delivery_settle, attack):
+    """Worker aliases, replacements and remote rewrites cannot certify owned delivery."""
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    (tree / "outside.txt").write_text("outside scope\n")
+    run_git(tree, "add", "outside.txt")
+    run_git(tree, "commit", "-m", "outside scope")
+    record = settle("pushed")
+    assert record["error"] == "outside_owned_paths: outside.txt"
+    if attack.startswith("alias"):
+        run_git(tree, "config", "alias.log", "!true" if attack == "alias-shell" else "log -n 0")
+    elif attack == "replace":
+        clean_tree = run_git(tree, "rev-parse", f"{record['worktree_base_sha']}^{{tree}}")
+        replacement = run_git(tree, "commit-tree", clean_tree, "-p", record["worktree_base_sha"], "-m", "clean")
+        run_git(tree, "replace", record["head_sha"], replacement)
+        assert run_git(tree, "log", "-1", "--format=", "--name-only") == ""
+    else:
+        fake = sandbox.repo.parent / "forged.git"
+        run_git(tree, "clone", "--bare", str(tree), str(fake))
+        run_git(fake, "update-ref", "refs/heads/release", record["head_sha"])
+        if attack == "origin":
+            run_git(tree, "remote", "set-url", "origin", str(fake))
+        else:
+            run_git(tree, "config", f"url.{fake}.{attack}", str(sandbox.remote))
+    record.update(status="done", error=None)
+    worker._enforce_delivery(record)
+    expected = "outside_owned_paths: outside.txt" if attack == "replace" else "owned_paths_verification_failed"
+    assert (record["status"], record["error"]) == ("no_deliverable", expected)
+
+
+def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandbox, delivery_settle, monkeypatch):
+    """Local/worktree includes and injected process config cannot alter the private walk."""
+    record, settle = delivery_settle
+    record = settle("pushed")
+    tree = Path(record["cwd"])
+    included = sandbox.repo.parent / "included.config"
+    included.write_text("[worker]\n included = untrusted\n")
+    for scope in ("--local", "--worktree"):
+        run_git(tree, "config", scope, "worker.marker", "untrusted")
+        run_git(tree, "config", scope, "include.path", str(included))
+    global_config = sandbox.repo.parent / "global.config"
+    global_config.write_text("[worker]\n global = untrusted\n[alias]\n log = !true\n")
+    for key, value in {
+        "GIT_CONFIG_GLOBAL": str(global_config), "GIT_CONFIG_SYSTEM": str(global_config),
+        "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "alias.log", "GIT_CONFIG_VALUE_0": "!true",
+        "GIT_CONFIG_PARAMETERS": "'alias.log=log -n 0'", "GIT_DIR": str(sandbox.remote),
+        "GIT_CONFIG": str(global_config), "GIT_REPLACE_REF_BASE": "refs/heads/",
+    }.items():
+        monkeypatch.setenv(key, value)
+    with git.ownership_git(record) as run:
+        config = run("config", "--list", "--includes")
+        assert "worker." not in config
+        assert "alias." not in config
+        assert run("rev-parse", "refs/heads/delivery") == record["head_sha"]
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("done", None)
+
+
+@pytest.mark.parametrize("missing", ["worktree_remote_url", "git-binary", "scratch", "remote-tip"])
+def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch, missing):
+    record, settle = delivery_settle
+    record = settle("pushed")
+    if missing == "git-binary":
+        monkeypatch.setattr(git, "GIT_BINARY", None)
+    elif missing == "scratch":
+        monkeypatch.delenv("TMPDIR")
+    elif missing == "remote-tip":
+        record["head_sha"] = "0" * 40
+    else:
+        record.pop(missing)
     worker._enforce_delivery(record)
     assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
 

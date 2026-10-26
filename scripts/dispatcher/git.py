@@ -2,7 +2,10 @@
 
 import fcntl
 import os
+import shutil
 import subprocess
+import tempfile
+from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
 
@@ -20,6 +23,61 @@ SPARSE_EXCLUDE_DEFAULT = frozenset({
     "registry/projects", "registry/lexicon/source-inventory",
     "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
 })
+GIT_BINARY = shutil.which("git", path=os.defpath)
+
+
+def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path | None = None) -> str:
+    """Use the system Git with no inherited Git configuration or process redirects."""
+    if not GIT_BINARY:
+        raise ValueError("system Git unavailable")
+    env = {key: os.environ[key] for key in ("HOME", "SSH_AUTH_SOCK") if key in os.environ}
+    env.update(PATH=os.defpath, GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_SYSTEM=os.devnull,
+               GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0", LC_ALL="C")
+    output = subprocess.run(
+        [GIT_BINARY, "--no-replace-objects", "-c", "core.alternateRefsCommand=",
+         "-c", f"core.hooksPath={os.devnull}", "-c", "protocol.ext.allow=never",
+         *([f"--git-dir={git_dir}"] if git_dir else []), "-C", str(path), *args],
+        capture_output=True, text=True, check=True, timeout=30, env=env,
+    ).stdout
+    return output.strip() if strip else output
+
+
+def verification_origin(path: Path) -> str:
+    entries = [entry.partition("\n") for entry in
+               _verification_git(path, "config", "--null", "--includes", "--list", strip=False).split("\0") if entry]
+    if any(key.startswith("alias.") or (key.startswith("url.") and
+           key.endswith((".insteadof", ".pushinsteadof"))) for key, _, _ in entries):
+        raise ValueError("worker Git aliases or URL rewrites cannot be verified")
+    urls = [value for key, _, value in entries if key == "remote.origin.url"]
+    if len(urls) != 1 or not urls[0] or urls[0].startswith("-"):
+        raise ValueError("ownership verification requires one origin URL")
+    return urls[0]
+
+
+@contextmanager
+def ownership_git(record: dict):
+    """Walk trusted remote objects in a private config/ref namespace.
+
+    -c include.path= does not remove existing include/includeIf entries. A fresh
+    bare Git directory instead excludes both worker config and config.worktree,
+    their includes, grafts and replacement refs. Objects and refs come only from
+    the remote URL recorded before provider execution. No local objects are reused.
+    """
+    remote = record["worktree_remote_url"]
+    if verification_origin(Path(record["worktree_path"])) != remote:
+        raise ValueError("origin URL changed since dispatch")
+    base = record["worktree_base_ref"].removeprefix("refs/remotes/")
+    if not base.startswith("origin/"):
+        raise ValueError("ownership verification requires an origin base")
+    with tempfile.TemporaryDirectory(prefix="dispatch-ownership-", dir=os.environ["TMPDIR"]) as directory:
+        run = partial(_verification_git, Path(directory), git_dir=Path(directory))
+        run("init", "--bare", "--template=")
+        run("fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
+            f"+refs/heads/{base.removeprefix('origin/')}:refs/heads/base",
+            f"+refs/heads/{record['worktree_branch']}:refs/heads/delivery")
+        if run("rev-parse", "--verify", "refs/heads/delivery^{commit}") != record["head_sha"]:
+            raise ValueError("remote delivery tip does not match snapshot")
+        yield run
 
 
 def sparse_excludes(includes=()) -> list[str]:

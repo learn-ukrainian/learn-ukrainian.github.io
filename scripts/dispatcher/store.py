@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
@@ -33,6 +34,11 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     record.update(worktree_dirty_on_exit=None, error=None)
     record["owned_paths"] = list(metadata.get("owned_path") or [])
     record["worktree_base_ref"] = metadata.get("base") or "origin/main"
+    from scripts.dispatcher.git import verification_origin
+    try:
+        record["worktree_remote_url"] = verification_origin(spec.worktree)
+    except (OSError, ValueError, subprocess.SubprocessError):
+        record["worktree_remote_url"] = None
     fields = ("task_id", "agent", "provider", "model", "effort", "mode", "claude_account")
     record.update({name: getattr(spec, name) for name in fields})
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
