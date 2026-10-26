@@ -170,6 +170,18 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         assert invocation.env["CLAUDE_CONFIG_DIR"] == env["CLAUDE_CONFIG_DIR"]
 
 
+@pytest.mark.parametrize("mode", ["danger", "", "WORKSPACE-WRITE", None, False, 0])
+def test_unknown_codex_mode_never_receives_sandbox_bypass(tmp_path, mode):
+    prompt = tmp_path / "prompt.txt"
+    prompt.write_text("private prompt must not be echoed")
+    spec = TaskSpec("unknown-mode", "codex", "explicit-model", None, mode, tmp_path, prompt, tmp_path / "final.txt")
+    invocation = None
+    with pytest.raises(ValueError) as exc:
+        invocation = load("codex").build(spec, {"PRIVATE_ENV": "must not be echoed"})
+    assert str(exc.value) == f"codex: unsupported mode {mode!r}"
+    assert invocation is None
+
+
 @pytest.mark.parametrize("provider", SUCCESS)
 @pytest.mark.parametrize("failure", ["nonzero", "terminal_error", "unknown_terminal", "missing_terminal", "malformed"])
 def test_failure_cannot_become_success_from_final_prose(provider, failure):

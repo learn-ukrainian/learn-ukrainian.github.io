@@ -10,7 +10,12 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["codex", "exec", "--json", "-C", str(spec.worktree), "-m", spec.model, "-o", str(spec.final_file)]
     if spec.effort is not None:
         argv += ["-c", f"model_reasoning_effort={spec.effort}"]
-    argv += ["-s", "read-only"] if spec.mode == "read-only" else ["--dangerously-bypass-approvals-and-sandbox"]
+    if spec.mode == "read-only":
+        argv += ["-s", "read-only"]
+    elif spec.mode == "workspace-write":
+        argv += ["--dangerously-bypass-approvals-and-sandbox"]
+    else:
+        raise ValueError(f"codex: unsupported mode {spec.mode!r}")
     return Invocation(argv, spec.prompt_file.read_bytes(), env, spec.final_file)
 
 
