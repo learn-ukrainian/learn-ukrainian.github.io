@@ -7,7 +7,7 @@ decides who a request reaches — the explicit recipients and model, the models
 and recipients its ``data`` attachments carry, legacy compat command names,
 the ACP route registry's adapter agent and model pin, retired-CLI aliases,
 role slots resolved to their live holder, quota substitution, and a launch
-route (``delegate.py``'s budget substitution) — and runs the Kimi gate
+route (the legacy budget substitution) — and runs the Kimi gate
 (``kimi_admission.refuse_kimi_if_disallowed``) twice: on the original request
 before any resolution step reads state or has an effect, and on the final
 seats and models together with the original request, raising

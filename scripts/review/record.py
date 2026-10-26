@@ -178,7 +178,7 @@ def resolve_reviewer_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
 
 #: The return templates print ``prompt_sha256: "<prompt_sha256>"`` for the seat, but a prompt cannot contain its own
 #: hash (#9022). The value the field records is the sha256 of the **rendered review prompt** — the file the prompt
-#: check verifies byte for byte and the dispatch was given (``delegate.py`` ``prompt_sha256``, taken before the runtime
+#: check verifies byte for byte and the dispatch was given (the record's ``prompt_sha256``, taken before the runtime
 #: appends its own blocks). The recorder attests it only when that dispatch hash equals a fresh render of this
 #: attempt's manifest with this attempt's ids, so a wrong or stale task record can never supply it.
 PROMPT_SHA_PLACEHOLDER = "<prompt_sha256>"
@@ -192,7 +192,7 @@ def dispatch_prompt_sha256(
     """The sha256 of the prompt a dispatch was given, only from the task bound to this review attempt.
 
     The dispatch record must name this ``review_id``, ``attempt_id`` and manifest hash in its ``review_attempt``
-    block (written by ``delegate.py`` at dispatch; an attempt id is never reused, #8517), so the record of another
+    block (written by legacy dispatch; an attempt id is never reused, #8517), so the record of another
     seat, or a record without that block, supplies nothing.
     """
     path = locate_task_record(Path(tasks_dir), task_id) or task_record_path(Path(tasks_dir), task_id)

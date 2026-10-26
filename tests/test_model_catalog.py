@@ -554,7 +554,7 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
         "model_id": "auto",
         "route": "cursor",
         "transport": "cursor",
-        "invocation": ".venv/bin/python scripts/delegate.py dispatch --agent cursor",
+        "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent cursor",
         "review_profiles": ["code", "infra"],
         "capabilities": ["code_review"],
     }
@@ -567,7 +567,7 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
         "model_id": "auto",
         "route": "grok",
         "transport": "native_grok",
-        "invocation": ".venv/bin/python scripts/delegate.py dispatch --agent grok",
+        "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent grok",
         "review_profiles": ["code", "infra"],
         "capabilities": ["code_review"],
     }
@@ -771,16 +771,16 @@ def test_catalog_identity_resolves_longest_id_and_preserves_retirement(model, ca
 @pytest.mark.parametrize("model", ["claude-fable-5", "claude-sonnet-5-5", "unknown-model"])
 def test_reviewer_invocation_cannot_hide_a_retired_pin_behind_active_metadata(flag, model):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["claude-opus-5-5"]["invocation"] = "delegate.py " + flag.format(model)
+    catalog["review_candidates"]["claude-opus-5-5"]["invocation"] = "dispatch.py " + flag.format(model)
     with pytest.raises(ModelCatalogError, match="invocation model does not match"):
         validate_catalog(catalog)
 
 
 @pytest.mark.parametrize("invocation", [
-    "delegate.py --model claude-opus-5-5 --to-model=claude-fable-5",
-    "delegate.py -m claude-fable-5 --model=claude-opus-5-5",
-    "delegate.py --model",
-    "delegate.py --model=",
+    "dispatch.py --model claude-opus-5-5 --to-model=claude-fable-5",
+    "dispatch.py -m claude-fable-5 --model=claude-opus-5-5",
+    "dispatch.py --model",
+    "dispatch.py --model=",
 ])
 def test_reviewer_invocation_checks_every_model_token(invocation):
     catalog = deepcopy(load_model_catalog())
@@ -792,16 +792,16 @@ def test_reviewer_invocation_checks_every_model_token(invocation):
 @pytest.mark.parametrize("flag", ["--model '{}'", "--model={}", "-m {}", "--to-model {}", "--to-model={}"])
 def test_reviewer_invocation_accepts_matching_catalog_aliases(flag):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["claude-opus-5-5"]["invocation"] = "delegate.py " + flag.format(
+    catalog["review_candidates"]["claude-opus-5-5"]["invocation"] = "dispatch.py " + flag.format(
         "claude-opus-5-5-high"
     )
     validate_catalog(catalog)
 
 
 @pytest.mark.parametrize("prefix", [
-    ".venv/bin/python -m scripts.delegate dispatch",
-    ".venv/bin/python -u -m scripts.delegate dispatch",
-    ".venv/bin/python scripts/delegate.py dispatch",
+    ".venv/bin/python -m scripts.dispatcher.cli dispatch",
+    ".venv/bin/python -u -m scripts.dispatcher.cli dispatch",
+    ".venv/bin/python scripts/dispatch.py dispatch",
 ])
 @pytest.mark.parametrize("flag", ["--model", "-m"])
 @pytest.mark.parametrize("model", ["claude-opus-5-5", "claude-fable-5"])
@@ -819,7 +819,7 @@ def test_python_module_selection_is_not_a_model_pin(prefix, flag, model):
 
 def test_reviewer_invocation_rejects_malformed_shell_quoting():
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["claude-opus-5-5"]["invocation"] = "delegate.py --model 'claude-opus-5-5"
+    catalog["review_candidates"]["claude-opus-5-5"]["invocation"] = "dispatch.py --model 'claude-opus-5-5"
     with pytest.raises(ModelCatalogError, match="invocation is malformed"):
         validate_catalog(catalog)
 

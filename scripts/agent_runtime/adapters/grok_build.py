@@ -361,8 +361,7 @@ def _write_guard_agent_definition() -> str:
 def validate_grok_effort(effort: str | None) -> str | None:
     """Return a native Grok effort after enforcing its CLI vocabulary.
 
-    ``delegate.py`` calls this before it creates a worker. Keeping the same
-    check here protects direct runtime callers and prevents a malformed
+    This check protects direct runtime callers and prevents a malformed
     environment default from reaching the native CLI.
     """
     if effort is None:

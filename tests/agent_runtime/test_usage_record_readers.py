@@ -13,10 +13,9 @@ from scripts.agent_runtime import acpx_pilot, runner, usage
 from scripts.ai_agent_bridge import _cli, _codex
 from scripts.analytics import cost_report
 from scripts.audit import qg_bakeoff
-from scripts.maintenance import reclassify_dispatch_status as reclassify
 
 MODEL = "gpt-6.1-sol"
-READERS = ("codex-report", "pilot", "cost", "reclassify")
+READERS = ("codex-report", "pilot", "cost")
 CORRUPT_LINES = (
     b'\xff\n',
     b'{"task_id":"bad-\xff"}\n',
@@ -75,7 +74,6 @@ def _read(reader, root, counts=None):
         return acpx_pilot._has_executed_digest(root, "target", **kwargs)
     if reader == "cost":
         return cost_report.count_runtime_calls(days=7, usage_dir=root, **kwargs)
-    return reclassify._load_usage_by_task_id(root, **kwargs)
 
 
 def _assert_rows(reader, result, first, last=None):
@@ -85,8 +83,6 @@ def _assert_rows(reader, result, first, last=None):
         assert result is bool(last)
     elif reader == "cost":
         assert result == (2 if last else 1)
-    else:
-        assert result == {"task-10070": last or first}
 
 
 @pytest.mark.parametrize("reader", READERS)

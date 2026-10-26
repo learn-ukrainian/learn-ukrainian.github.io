@@ -1575,6 +1575,9 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
 
     for seats in adapter_subject_index().values():
         assert seats <= KNOWN_SUBJECT_SEATS
+    assert classify_owned_path("scripts/dispatcher/providers/opencode.py").seats == frozenset({"deepseek"})
+    hermes = classify_owned_path("scripts/dispatcher/providers/hermes.py")
+    assert hermes.kind == "ambiguous" and hermes.seats == frozenset({"deepseek", "grok", "qwen"})
 
 
 _AUTHOR_MODELS = {

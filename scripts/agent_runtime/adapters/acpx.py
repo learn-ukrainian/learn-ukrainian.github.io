@@ -2707,7 +2707,7 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
     # `ask-hermes` alias) on the acpx-deepseek-shadow ACP seat; direct
     # one-shot review/research runs `opencode run --model
     # deepseek/deepseek-flash --variant high`; tool-heavy work goes
-    # to `delegate.py dispatch --agent deepseek`.
+    # to `scripts/dispatch.py dispatch --agent deepseek --model deepseek/deepseek-flash`.
     "hermes": (
         "Remediation: Hermes was permanently removed from this host "
         "(operator order 2026-08-16) — do not reinstall. The DeepSeek seat "
@@ -2715,7 +2715,7 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
         "use `ask-deepseek` (or the `ask-hermes` alias), direct one-shot "
         "review/research runs `opencode run --model "
         "deepseek/deepseek-flash --variant high`, and tool-heavy "
-        "work goes to `delegate.py dispatch --agent deepseek`. See "
+        "work goes to `scripts/dispatch.py dispatch --agent deepseek --model deepseek/deepseek-flash`. See "
         "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport "
         "recovery'."
     ),
@@ -3731,7 +3731,7 @@ class AcpxCursorShadowAdapter(_AcpxDiscussionAdapter):
         sealed_review_mcp_config: str | None = None,
     ) -> dict[str, str]:
         overrides = super()._env_overrides(sealed_review_mcp_config=sealed_review_mcp_config)
-        if not os.environ.get("CURSOR_API_KEY"):
+        if not os.environ.get("CURSOR_API_KEY", "").strip():
             file_key = _load_cursor_api_key_from_env_file()
             if file_key:
                 overrides["CURSOR_API_KEY"] = file_key

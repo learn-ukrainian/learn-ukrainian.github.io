@@ -9,7 +9,12 @@ from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["cursor-agent", "-p", "--model", spec.model, "--output-format", "stream-json", "--trust"]
     argv += ["--workspace", str(spec.worktree)]
-    argv += ["--mode", "ask"] if spec.mode == "read-only" else ["--approve-mcps", "--sandbox", "disabled", "--force"]
+    if spec.mode == "read-only":
+        argv += ["--mode", "ask"]
+    elif spec.mode == "workspace-write":
+        argv += ["--approve-mcps", "--sandbox", "disabled", "--force"]
+    else:
+        raise ValueError(f"cursor: unsupported mode {spec.mode!r}")
     return Invocation(argv, spec.prompt_file.read_bytes(), env, None)
 
 

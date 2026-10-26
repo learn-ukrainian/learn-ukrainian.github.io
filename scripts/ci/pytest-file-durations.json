@@ -1578,7 +1578,6 @@
   "tests/test_reap_agent_mirrors.py": 1.024,
   "tests/test_reattribute_ukrlib.py": 0.396,
   "tests/test_rebuild_teacher_curated_seed.py": 0.816,
-  "tests/test_reclassify_dispatch_status.py": 1.622,
   "tests/test_reconcile_calque_clusters.py": 0.97,
   "tests/test_reconcile_sweep.py": 4.806,
   "tests/test_record_cf_verdict.py": 64.26,

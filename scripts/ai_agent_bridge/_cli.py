@@ -1012,7 +1012,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_kimi_parser = subparsers.add_parser(
         "ask-kimi",
         help="Refused: Kimi: web, UI and backend coding only — no Ukrainian-language content, "
-        "no reviews, consults, design or rules (use delegate.py dispatch --agent kimi --mode workspace-write)",
+        "no reviews, consults, design or rules",
     )
     ask_kimi_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_kimi_parser.add_argument("--task-id", required=True, help="Task ID")
@@ -1169,7 +1169,7 @@ def _build_parser() -> argparse.ArgumentParser:
     dispatch_fix_parser.add_argument(
         "task_id",
         metavar="issue-or-task-id",
-        help="GitHub issue number or stable task ID to use for delegate.py --task-id.",
+        help="GitHub issue number or stable task ID to use for the dispatch --task-id.",
     )
     dispatch_fix_parser.add_argument(
         "--brief-file",
@@ -1178,7 +1178,7 @@ def _build_parser() -> argparse.ArgumentParser:
     dispatch_fix_parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Write the prompt/state preview and print the delegate.py command without dispatching.",
+        help="Write the prompt/state preview and print the dispatch command without dispatching.",
     )
 
     review_deep_parser = subparsers.add_parser(
@@ -1212,7 +1212,7 @@ def _build_parser() -> argparse.ArgumentParser:
     review_deep_parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Write the prompt/state preview and print the delegate.py command without dispatching.",
+        help="Write the prompt/state preview and print the dispatch command without dispatching.",
     )
 
     # check-model
@@ -1778,7 +1778,7 @@ def _handle_acp_compat(args, target: str) -> None:
         # to the headless native-CLI dispatch path, never run_compat_ask.
         print(
             f"ask-{target}: review intent routes to headless dispatch "
-            "(`delegate.py dispatch --agent ... --worktree --mode read-only`), not ACP.",
+            "with native tools in an isolated read-only worktree.",
             file=sys.stderr,
         )
         _dispatch_headless_review(

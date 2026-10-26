@@ -8,6 +8,7 @@ dedupe and re-arming.
 
 from __future__ import annotations
 
+import errno
 import json
 import logging
 import re
@@ -203,9 +204,143 @@ def _alert_body(*, stream_epic: str, span: str, age_s: float, threshold_s: int) 
     )
 
 
+# Closed vocabulary for legacy v1 finalization reasons. Keep this reader independent
+# of dispatch writers and adapters, including when their legacy modules are retired.
+# fmt: off
+_PUBLIC_CAUSES = frozenset(
+    {
+        "ADVISORY_BINDING_MISMATCH", "ADVISORY_ENVELOPE_CHANGED", "ADVISORY_ENVELOPE_INCOMPLETE",
+        "ADVISORY_ENVELOPE_MISSING", "ADVISORY_FLAG_CONFLICT", "ADVISORY_OWNED_PATHS_INVALID",
+        "ADVISORY_OWNED_PATHS_MISMATCH", "ADVISORY_RESULT_UNREADABLE", "ADVISORY_ROLE_REFUSED",
+        "ADVISORY_SEAL_MISMATCH", "ADVISORY_SEAL_MISSING", "ADVISORY_TASK_NOT_DONE", "ADVISORY_TASK_NOT_FOUND",
+        "ADVISORY_TASK_WRONG_MODEL", "ADVISORY_TASK_WRONG_ROLE", "BOUNDED_ADMISSION_INVALID",
+        "BOUNDED_ADMISSION_MISSING", "BOUNDED_DRIVER_BRIEF_REFUSED", "BOUNDED_ENVELOPE_REQUIRED",
+        "BOUNDED_EXECUTION_MISMATCH", "HEAD unavailable", "acp_adapter_incompatible", "acp_adapter_missing",
+        "acp_agent_disconnected", "acp_agent_startup", "acp_auth_required", "acp_permission_denied",
+        "acp_permission_unavailable", "acp_review_evidence_invalid", "acp_review_evidence_too_large",
+        "acp_session_create_timeout", "acp_turn_limit", "activity probe unavailable", "adapter_refused",
+        "adapter_rejected", "advisory_ceiling_exceeded", "advisory_ceiling_unmeasured",
+        "advisory_exempt_changes_unmeasured", "advisory_exempt_code_change", "agy_background_task_abandoned",
+        "agy_background_task_canceled", "agy_background_task_unconfirmed", "agy_headless_permission_denied",
+        "agy_model_identity_unverified", "agy_print_timeout_partial", "agy_transcript_unbound",
+        "agy_transcript_unreadable", "ahead count unavailable", "already rescued at HEAD",
+        "auto_finalize_add_failed", "auto_finalize_changes_remaining", "auto_finalize_changes_unknown",
+        "auto_finalize_commit_failed", "auto_finalize_committed_scope_unknown",
+        "auto_finalize_committed_scope_unowned", "auto_finalize_copy_timeout", "auto_finalize_dirty_unknown",
+        "auto_finalize_failed", "auto_finalize_fsck_failed", "auto_finalize_head_moved",
+        "auto_finalize_invalid_tree_path", "auto_finalize_object_hardening_violation",
+        "auto_finalize_opsec_blocked", "auto_finalize_pr_failed", "auto_finalize_preparation_refused",
+        "auto_finalize_publish_blocked", "auto_finalize_push_failed", "auto_finalize_push_unexpected_ref",
+        "auto_finalize_remote_unknown", "auto_finalize_remote_unverified", "auto_finalize_reset_failed",
+        "auto_finalize_scope_check_timeout", "auto_finalize_unconfirmed", "auto_finalize_unsafe_branch",
+        "auto_finalize_validation_changed", "auto_finalize_validation_unavailable", "background_jobs_alive_at_exit",
+        "boundary_install_failed", "boundary_remove_failed", "changed files unavailable", "changes_parse_failed",
+        "changes_unreadable", "claude_account_ambient_conflict", "claude_account_auth_method_conflict",
+        "claude_account_auth_status_unavailable", "claude_account_binding_invalid",
+        "claude_account_binding_is_default", "claude_account_binding_missing", "claude_account_binding_not_private",
+        "claude_account_binding_oversized", "claude_account_binding_unavailable", "claude_account_config_ambiguous",
+        "claude_account_config_credential_source", "claude_account_config_dir_missing",
+        "claude_account_config_dir_not_private", "claude_account_config_dir_unavailable",
+        "claude_account_config_invalid", "claude_account_config_not_private", "claude_account_config_oversized",
+        "claude_account_config_unavailable", "claude_account_credentials_expired",
+        "claude_account_credentials_invalid", "claude_account_credentials_missing",
+        "claude_account_credentials_not_private", "claude_account_credentials_oversized",
+        "claude_account_credentials_unavailable", "claude_account_default_file_invalid",
+        "claude_account_default_file_not_private", "claude_account_default_file_oversized",
+        "claude_account_default_file_unavailable", "claude_account_default_has_no_binding",
+        "claude_account_forward_unsupported", "claude_account_identity_unavailable",
+        "claude_account_machine_policy_present", "claude_account_machine_policy_unavailable",
+        "claude_account_plan_unsupported", "claude_account_plan_unverified", "claude_account_platform_unsupported",
+        "claude_account_policy_cache_present", "claude_account_policy_cache_unavailable",
+        "claude_account_profile_store_present", "claude_account_record_conflict", "claude_account_route_unsealed",
+        "claude_account_seat_unsupported", "claude_account_settings_changed",
+        "claude_account_settings_credential_source", "claude_account_settings_invalid",
+        "claude_account_settings_not_private", "claude_account_settings_oversized",
+        "claude_account_settings_unavailable", "claude_account_status_override", "claude_account_unknown",
+        "claude_account_unverified", "clean disposable residue", "clean-tree", "commit_count_unknown",
+        "completion_gate_response_unavailable", "could not clean disposable residue", "cwd_unpinned",
+        "diff_command_failed", "dispatch_fallback_refused", "dispatch_isolation_failed", "dispatch_not_started",
+        "disposable residue removed", "file_unreadable", "files exceed 5 MB", "finalize_delivery_pending",
+        "finalize_failed", "finalize_remote_unknown", "finalize_skipped_paths", "finalize_unpushed",
+        "forward_configuration_failed", "github_auth_required", "github_secondary_rate_limited",
+        "interrupted before the completion gates ran", "interrupted_during_finalize", "invalid finished_at",
+        "invalid_delivery_declaration", "junk_only_worktree_changes", "kimi_admission_refused",
+        "kimi_content_refused", "kimi_worktree_mismatch", "leftovers_scan_unknown", "mechanical_admission_refused",
+        "merge_base_unresolved", "move detection failed; nothing committed", "muse_worker_task_binding_refused",
+        "no finished_at", "no provable unpushed work", "no recorded worktree", "no_changes_under_owned_paths",
+        "no_commits_no_changes", "no_owned_paths_declared", "not a git worktree",
+        "not a registered dispatch worktree", "permission_cancelled", "primary_tree_write", "protocol_output_limit",
+        "provider_auth", "provider_error", "provider_overloaded", "provider_policy_refusal",
+        "provider_stream_incomplete", "provider_unavailable", "rate_limited", "read_only_checkout_mutation",
+        "read_only_checkout_snapshot_failed", "recovery_requires_rerun", "remote_unreachable",
+        "rescue remote branch already exists at another head", "rescue_commit_failed", "rescue_embedded_repository",
+        "rescue_filtered_path", "rescue_identity_unavailable", "rescue_input_changed", "rescue_input_unreadable",
+        "rescue_new_gitlink", "rescue_push_failed", "rescue_push_url_unavailable", "rescue_remote_unverified",
+        "rescue_step_failed", "rescue_tree_unavailable", "rescue_worktree_unregistered", "rescued",
+        "result_invalid", "review_admission_refused", "review_missing_verdict_line",
+        "review_unsupported_verdict_token", "review_worker_nonzero_exit", "review_worker_not_started",
+        "review_worker_reported_failure", "review_worker_returncode_missing", "runtime_returncode_missing",
+        "task attempt changed after rescue push; recovery ref preserved", "task is not terminal non-success",
+        "task lease active", "task process alive", "task state changed", "task_records_snapshot_failed",
+        "temp_index_failed", "timeout", "transport_error", "unclassified_error", "unknown",
+        "unpushed state unknown - needs rescue", "unpushed work - needs rescue", "unreadable task state",
+        "worker_cancelled", "worker_failed", "worker_process_dead", "worker_rate_limited", "worker_runtime_error",
+        "worker_spawn_failed", "worker_timed_out", "worker_unexpected_error", "worktree active",
+        "worktree already removed", "worktree branch differs from task record", "worktree dirty",
+        "worktree group has nonterminal task", "worktree group records disagree on branch",
+        "worktree task inventory unavailable", "worktree_missing_at_settle", "worktree_preparation_failed",
+    }
+)
+_PUBLIC_GIT_SUBCOMMANDS = frozenset(
+    {
+        "add", "am", "apply", "archive", "branch", "cat-file", "check-attr", "check-ignore", "check-ref-format",
+        "checkout", "cherry-pick", "clean", "clone", "commit", "commit-tree", "config", "count-objects", "describe",
+        "diff", "diff-files", "diff-index", "diff-tree", "fetch", "for-each-ref", "fsck", "gc", "hash-object",
+        "init", "log", "ls-files", "ls-remote", "ls-tree", "merge", "merge-base", "mktree", "mv", "notes",
+        "pack-refs", "prune", "pull", "push", "read-tree", "rebase", "reflog", "remote", "repack", "reset",
+        "restore", "rev-list", "rev-parse", "rm", "show", "show-ref", "sparse-checkout", "stash", "status",
+        "submodule", "switch", "symbolic-ref", "tag", "update-index", "update-ref", "var", "verify-commit",
+        "worktree", "write-tree",
+    }
+)
+# fmt: on
+_PUBLIC_ERROR_CLASS_RE = re.compile(
+    r"[A-Z][A-Za-z0-9]{0,63}(?:Error|Exception|Exit|Interrupt|Expired|Refused|Unreadable|Blocked|Iteration|Warning)"
+)
+_PUBLIC_ERRNO_NAMES = frozenset(errno.errorcode.values())
+_PUBLIC_INT_PARAM_RE = re.compile(r"(?:exit -?|count )\d{1,9}")
+
+
+def _is_public_error(text: str) -> bool:
+    """An exception class, optionally with its errno name: ``OSError EACCES``."""
+    error_class, _, errno_name = text.partition(" ")
+    return bool(_PUBLIC_ERROR_CLASS_RE.fullmatch(error_class)) and (not errno_name or errno_name in _PUBLIC_ERRNO_NAMES)
+
+
+def _is_public_param(text: str) -> bool:
+    """One fixed parameter: ``git <known subcommand>``, ``exit <n>``, ``count <n>``, or ``<ErrorClass>[ <ERRNO>]``."""
+    if text.startswith("git "):
+        return text[4:] in _PUBLIC_GIT_SUBCOMMANDS
+    return bool(_PUBLIC_INT_PARAM_RE.fullmatch(text)) or _is_public_error(text)
+
+
+def _is_public_item(text: str) -> bool:
+    """A registered cause, alone or followed by fixed parameters (``cause, git push, exit 1``)."""
+    if text in _PUBLIC_CAUSES:
+        return True
+    cause, *params = text.split(", ")
+    return cause in _PUBLIC_CAUSES and bool(params) and all(_is_public_param(param) for param in params)
+
+
+def is_public_cause(value: object) -> bool:
+    """Whether ``value`` may be published as it is: registered causes with fixed parameters, joined by ``; ``."""
+    if not isinstance(value, str) or not value or len(value) > 512:
+        return False
+    return value in _PUBLIC_CAUSES or all(_is_public_item(item) for item in value.split("; "))
+
+
 def _scan_finalization_attention(*, task_root: Path, now: datetime) -> tuple[int, tuple[dict[str, str], ...]]:
     """Post once per aged task/run through the checkpoint's durable broker."""
-    from scripts.delegate import is_public_cause
     from scripts.driver_blockers import finalization_age
 
     if not task_root.is_dir():
