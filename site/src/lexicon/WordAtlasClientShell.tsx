@@ -8,7 +8,7 @@
  * Do not edit WordAtlasArticle internals here — mount as-is.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import WordAtlasArticle from "./WordAtlasArticle";
 import { bindAtlasTypeaheads } from "../lib/lexicon/atlas-typeahead";
 import {
@@ -351,7 +351,7 @@ export default function WordAtlasClientShell({
     });
   }, [state, resolvedBase]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!state || state.status !== "ready") return;
     const cleanupSearch = bindAtlasTypeaheads(articleHostRef.current);
     const cleanupEty = bindEtymologyHandlers(articleHostRef.current);

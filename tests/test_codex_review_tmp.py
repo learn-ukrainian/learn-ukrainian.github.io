@@ -42,10 +42,18 @@ def test_review_gh_shim_uses_client_with_review_lease(tmp_path, args, gh_shim_sa
     )
     backend.chmod(0o755)
     root, shim, _tooling = gh_shim_sandbox
-    env = {**os.environ, "TMPDIR": str(tmp_path / "missing"), "AGENT_REAL_GH": str(backend), "AGENT_NO_MERGE": "1"}
+    # Match the sandbox fixture's system Git so its discovery reaches the client probe.
+    env = {
+        **os.environ,
+        "PATH": os.defpath,
+        "TMPDIR": str(tmp_path / "missing"),
+        "AGENT_REAL_GH": str(backend),
+        "AGENT_NO_MERGE": "1",
+    }
     before = subprocess.run([str(shim), *args], env=env, cwd=root, capture_output=True, text=True, timeout=30)
     assert before.returncode != 0
     assert before.returncode == 1
+    assert before.stderr == "missing scratch lease\n"
 
     plan = review_plan(checkout, lease)
     after = subprocess.run(
@@ -186,7 +194,10 @@ def test_review_gh_shim_read_only_with_readonly_cache(tmp_path, gh_shim_sandbox)
         os.chmod(ro_cache, 0o700)
 
 
-def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypatch, capsys):
+@pytest.mark.parametrize("stage", ["resolution", "admission", "transport"])
+def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypatch, capsys, stage):
+    """Unresolved admission and native read errors must not be labelled publishing failures."""
+    from scripts.common import github_client
     from scripts.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
@@ -201,10 +212,18 @@ def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypat
     def broken(*a, **k):
         raise RuntimeError("simulated read failure")
 
-    monkeypatch.setattr(gh_entry, "admit", broken)
+    if stage == "resolution":
+        monkeypatch.setattr(gh_entry, "real_gh", broken)
+    elif stage == "admission":
+        monkeypatch.setattr(gh_entry, "admit", broken)
+    else:
+        monkeypatch.setattr(github_client, "run", broken)
     assert gh_entry.main() == 2
     err = capsys.readouterr().err
-    assert "OPSEC: read command failed; verify repository and flags." in err
+    if stage == "transport":
+        assert "OPSEC: read command failed; verify repository and flags." in err
+    else:
+        assert "OPSEC: command admission failed; verify repository and flags." in err
     assert "OPSEC: publishing input unresolved" not in err
 
 

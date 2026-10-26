@@ -283,6 +283,25 @@ and the task record. Label it `review_mode=red_team` in the PR comment,
 the commit status text and the task record; never call or count it
 cross-family.
 
+### Enqueue cleanup
+
+After a successful enqueue, the shared publisher immediately runs the common
+reaper for clean pushed terminal worktrees bound to that repository, PR head
+branch, exact approved head and canonical creator/cohort. It rechecks current
+queue membership and head, activity, publication and output retrieval before
+removal. Missing or conflicting proof retains the tree with an owner and next
+condition. Already-queued unchanged heads reconcile cleanup without another
+enqueue. Failed or unknown publication never authorizes cleanup.
+
+Publication and cleanup have separate results. Known enqueue success keeps its
+return code and raw transport output. Read the durable common receipt named by
+`enqueue-cleanup removed=<count> retained=<count> receipt=<relative-path>` on
+stderr. Retained, pending or unavailable cleanup blocks full delivery; it does
+not authorize another enqueue. The keeper uses the same publisher path.
+A repair starts in a fresh managed worktree from the pushed branch.
+Local branch removal uses supported safe cleanup only after its tree is gone
+and publication is proven. Remote branches remain until `MERGED`.
+
 ### Post-merge cleanup — the single landing and cleanup recipe
 
 After the queue lands the PR, confirm `MERGED` and the actual merge SHA. Wait

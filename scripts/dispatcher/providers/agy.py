@@ -13,7 +13,12 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
     argv += ["--model", spec.model]
-    argv += ["--sandbox"] if spec.mode == "read-only" else ["--dangerously-skip-permissions"]
+    if spec.mode == "read-only":
+        argv += ["--sandbox"]
+    elif spec.mode == "workspace-write":
+        argv += ["--dangerously-skip-permissions"]
+    else:
+        raise ValueError(f"agy: unsupported mode {spec.mode!r}")
     argv += ["--print-timeout", "120m", "--log-file", str(spec.final_file.with_suffix(".log"))]
     if spec.mode == "read-only":
         argv += ["--add-dir", str(spec.worktree)]

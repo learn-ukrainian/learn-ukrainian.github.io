@@ -57,14 +57,14 @@ _SAFE_NAME_ALLOWLIST = {
     "AGENT_NO_MERGE",
     "HOME",
     "LANG",
-    # Dispatch-worker identity markers (#7827): delegate.py exports these into
-    # every worker environment; the SessionStart gate reads them to skip the
+    # Dispatch-worker identity markers (#7827): the SessionStart gate reads
+    # them from the worker environment to skip the
     # per-agent thread lease. Values are a task id and an agent lane name —
     # process-control metadata, never credentials.
     "LEARN_UKRAINIAN_DISPATCH_AGENT",
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
     "LOGNAME",
-    # Tool cache directories delegate.py points at the task's scratch lease
+    # Tool cache directories inside the task's scratch lease
     # (#10777), so caches leave the worktree. Directory paths, never
     # credentials.
     "MYPY_CACHE_DIR",
@@ -445,7 +445,7 @@ def build_probe_env(*, provider: str, overrides: Mapping[str, str] | None = None
     }
 
 
-# #8645 part B: delegate.py exports PYTEST_PLUGINS so a worker that copies CI's
+# #8645 part B: preserve PYTEST_PLUGINS so a worker that copies CI's
 # `--override-ini addopts=-v` still loads the xdist cap. The agent CLI env is
 # rebuilt here, so the variable must be re-applied — but only the known plugin,
 # and only inside a dispatch. Any other comma-separated entry is dropped.

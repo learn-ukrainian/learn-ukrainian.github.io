@@ -451,6 +451,7 @@ def test_delegate_run_id_matches_sha256_nonce(tmp_path: Path) -> None:
         json.dumps(
             {
                 "task_id": "nonce-task",
+                "schema_version": 2,
                 "agent": "cursor",
                 "status": "running",
                 "pid": os.getpid(),
@@ -463,6 +464,8 @@ def test_delegate_run_id_matches_sha256_nonce(tmp_path: Path) -> None:
     rows = collect_mod.collect_delegate_workers(tasks, now=now)
     assert len(rows) == 1
     assert rows[0].row.run_id == expected_run_id
+    assert rows[0].row.harness is None
+    assert rows[0].row.epic is None
 
 
 def test_monotonic_ingest_rejects_stale_report(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -566,13 +569,14 @@ def test_delegate_adapter_liveness_matrix(tmp_path: Path) -> None:
         ),
         (
             "live.json",
-            {"task_id": "live-1", "agent": "cursor", "status": "running", "pid": 1, "started_at": now.isoformat()},
+            {"task_id": "live-1", "schema_version": 2, "agent": "cursor", "status": "running", "pid": 1, "started_at": now.isoformat()},
             "live",
         ),
         (
             "zombie.json",
             {
                 "task_id": "zombie-1",
+                "schema_version": 2,
                 "agent": "cursor",
                 "status": "running",
                 "pid": 999999,

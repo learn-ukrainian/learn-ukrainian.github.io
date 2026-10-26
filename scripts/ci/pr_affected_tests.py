@@ -120,7 +120,7 @@ def plan(base: str, candidate: str) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run changed test files and fixed guards for a PR candidate.\n"
-        "Use in CI admission; this never replaces full merge-group pytest.",
+        "Use alongside required full PR and merge-group pytest.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
@@ -133,8 +133,9 @@ def main() -> int:
     try:
         actual = git("rev-parse", "HEAD").decode().strip()
         payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
-        tier = event_tier(os.environ["EVENT_NAME"], payload, os.environ["GITHUB_SHA"], os.environ["GITHUB_REF"], actual)
-        if tier != "admission":
+        event = os.environ["EVENT_NAME"]
+        event_tier(event, payload, os.environ["GITHUB_SHA"], os.environ["GITHUB_REF"], actual)
+        if event != "pull_request":
             print("Full tier: required full-suite jobs provide pytest proof.")
             return 0
         pr = payload["pull_request"]
@@ -195,7 +196,7 @@ def main() -> int:
         stage, reason = "proof_output", "proof_output_incomplete"
         (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         summary = (
-            "PR admission: full pytest was not run.\n"
+            "PR changed-test and guard proof. Full pytest is required in the parallel shard jobs.\n"
             f"Candidate: {actual}\nRequested files ({len(record['run_files'])}): "
             + ", ".join(record["run_files"])
             + "\n"
@@ -205,7 +206,7 @@ def main() -> int:
             + "\n"
             + f"Reason: {record['reason'] or 'none'}; deferred test-case count: UNKNOWN.\n"
             + f"Recorded estimate seconds: {record['estimate_seconds']}; unknown duration files: {len(record['unknown_duration_files'])}.\n"
-            + f"Deleted test files: {len(record['deleted_test_files'])}. Full merge-group pytest remains required.\n"
+            + f"Deleted test files: {len(record['deleted_test_files'])}. Full PR and merge-group pytest remain required.\n"
         )
         print(summary)
         if os.environ.get("GITHUB_STEP_SUMMARY"):

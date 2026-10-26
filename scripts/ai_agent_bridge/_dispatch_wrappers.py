@@ -1,7 +1,8 @@
-"""Hardcoded delegate.py wrapper commands for recurring agent dispatches."""
+"""Bridge wrapper commands for recurring agent dispatches."""
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -178,7 +179,7 @@ def brief_owned_paths(text: str) -> tuple[str, ...]:
 
     Paths are the backticked tokens of that section, or the lines of a fenced
     block in it, including repository-root files. Absolute paths, ``..``
-    segments and bare words are dropped; ``delegate.py`` validates the rest.
+    segments and bare words are dropped before dispatch.
     """
     match = _OWNED_PATHS_HEADING.search(text)
     if match is None:
@@ -276,7 +277,7 @@ def _serialize_files(files: Any) -> str:
 def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path:
     """Pointer-only PR review prompt (Sol fleet-comms Phase 2).
 
-    Never embed full PR body or diff — worker/delegate pulls evidence under
+    Never embed full PR body or diff — the reviewer pulls evidence under
     read-only mode. Exact-head cross-family review through ``ask-<lane> --type review``
     (headless dispatch) replaced the removed ``review-pr``.
     """
@@ -352,7 +353,8 @@ def _write_review_deep_path_prompt(target: str, prompt_directory: Path) -> Path:
 
 def _review_task_id(target: str) -> str:
     timestamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
-    return f"review-{_safe_path_component(target)}-{timestamp}"
+    digest = hashlib.sha256(target.encode("utf-8")).hexdigest()[:8]
+    return f"review-{_safe_path_component(target)[:80]}-{digest}-{timestamp}"
 
 
 def _review_prompt_file(target: str, prompt_directory: Path) -> Path:
@@ -362,9 +364,11 @@ def _review_prompt_file(target: str, prompt_directory: Path) -> Path:
 
 
 def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> list[str]:
-    return [
+    # Local paths may include uncommitted files that a new worktree cannot reproduce.
+    pr_target = _is_pr_number(target)
+    command = [
         PYTHON,
-        "scripts/delegate.py",
+        "scripts/dispatch.py" if pr_target else "scripts/delegate.py",
         "dispatch",
         "--agent",
         "claude",
@@ -379,6 +383,10 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> li
         "--prompt-file",
         str(prompt_file),
     ]
+    if pr_target:
+        head = _run_text_command(["git", "rev-parse", "HEAD"]).strip()
+        command.extend(["--full-checkout", "--pinned-head", head])
+    return command
 
 
 def _write_dry_run_state(task_id: str, command: list[str], prompt_file: Path) -> None:

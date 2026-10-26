@@ -1019,7 +1019,9 @@ def collect_stream_bottleneck_metrics(
             if started is None:
                 errors.append(_dispatch_error("invalid_started_at"))
                 continue
-            finished_raw = record.get("finished_at")
+            # An active status is never a settled dispatch, even if an old or
+            # partially written record carries a finish timestamp.
+            finished_raw = None if record.get("status") in ("running", "spawning") else record.get("finished_at")
             finished = _parse_timestamp(finished_raw)
             if finished_raw not in (None, "") and finished is None:
                 errors.append(_dispatch_error("invalid_finished_at"))

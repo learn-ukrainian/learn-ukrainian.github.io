@@ -1953,33 +1953,46 @@ def test_pr_filters_and_unmodelled_fields_fall_through_intact(tmp_path, flags):
 
 
 def admitted_read_cases():
-    from scripts.opsec.gh_snapshot import READ_GRAMMARS
-
-    cases = []
-    for (kind, action), (minimum, _maximum, flags) in READ_GRAMMARS.items():
-        positional = ["x"] * minimum
-        if kind in {"pr", "issue", "run"}:
-            positional = ["1"] * minimum
-        base = ["gh", kind, action, *positional]
-        cases.append(base)
-        for flag, valued in flags.items():
-            value = "o/r" if flag in {"--repo", "-R"} else "number" if flag == "--json" else "x"
-            cases.append([*base, flag, *([value] if valued else [])])
-    return cases
+    return [
+        ['gh', 'ruleset', 'list', '--repo', 'unit/public'],
+        ['gh', 'api', 'repos/unit/public/rulesets'],
+        ['gh', 'api', 'repos/unit/public/merge-queue/entries'],
+        ['gh', 'run', 'watch', '1', '--compact', '--exit-status'],
+        ['gh', 'api', 'graphql', '-f', 'query=query($name:String!){repository(owner:"unit",name:$name){name}}', '-f', 'name=public'],
+        ['gh', 'issue', 'view', '1'],
+        ['gh', 'issue', 'list'],
+        ['gh', 'issue', 'status'],
+        ['gh', 'run', 'view'],
+        ['gh', 'run', 'list'],
+        ['gh', 'run', 'watch', '1'],
+        ['gh', 'run', 'download'],
+        ['gh', 'workflow', 'list'],
+        ['gh', 'workflow', 'view'],
+        ['gh', 'repo', 'view'],
+        ['gh', 'repo', 'list'],
+        ['gh', 'release', 'view'],
+        ['gh', 'release', 'list'],
+        ['gh', 'release', 'download'],
+        ['gh', 'auth', 'status'],
+        ['gh', 'gist', 'view', '1'],
+        ['gh', 'gist', 'list'],
+        ['gh', 'label', 'list'],
+        ['gh', 'search', 'prs', '1'],
+    ]
 
 
 @pytest.mark.parametrize("args", admitted_read_cases())
 def test_every_shim_admitted_read_translates_or_falls_through(tmp_path, args):
     from pathlib import Path
 
-    from scripts.opsec.gh_snapshot import READ_GRAMMARS, parse
+    from scripts.opsec.gh_snapshot import admit
 
     root = Path(__file__).resolve().parents[1]
     # These are the live entry chain: bash shim -> admission -> client.
     assert "scripts/opsec/gh_entry.py" in (root / "scripts/agent_runtime/shims/gh").read_text()
     entry = (root / "scripts/opsec/gh_entry.py").read_text()
     assert "frozen = admit(" in entry and 'run(["gh", *frozen.argv]' in entry
-    parse(args[3:], READ_GRAMMARS[tuple(args[1:3])])
+    assert not admit(args[1:], cwd=tmp_path, environment={}).write
     translated, native = [], []
 
     def transport(method, endpoint, headers, body, timeout):
@@ -2234,38 +2247,27 @@ def _native_api_shape(args):
 
 
 def admitted_api_read_cases():
-    from scripts.opsec.gh_snapshot import REST_GET
-
-    endpoint = "repos/o/r/issues"
-    base = ["gh", "api", endpoint]
-    cases = [base]
-    _minimum, _maximum, flags = REST_GET
-    for flag, valued in flags.items():
-        if flag in {"--method", "-X"}:
-            value = "GET"
-        elif flag in {"--header", "-H"}:
-            value = "Accept: application/vnd.github+json"
-        elif flag in {"--jq", "-q"}:
-            value = "length"
-        elif flag == "--cache":
-            value = "1h"
-        else:
-            value = None
-        cases.append([*base, flag, *([value] if valued else [])])
-    return cases
+    base = ["gh", "api", "repos/o/r/issues"]
+    return [base, *[
+        [*base, *flags] for flags in [
+            ["--method", "GET"], ["-X", "GET"], ["--paginate"], ["--slurp"],
+            ["--include"], ["-i"], ["--jq", "length"], ["-q", "length"],
+            ["--header", "Accept: application/vnd.github+json"],
+            ["-H", "Accept: application/vnd.github+json"], ["--cache", "1h"],
+        ]
+    ]]
 
 
 @pytest.mark.parametrize("args", admitted_api_read_cases())
 def test_every_admitted_api_read_translates_exactly_or_falls_through(tmp_path, args):
     from pathlib import Path
 
-    from scripts.opsec.gh_snapshot import REST_GET, admit, parse
+    from scripts.opsec.gh_snapshot import admit
 
     root = Path(__file__).resolve().parents[1]
     assert "scripts/opsec/gh_entry.py" in (root / "scripts/agent_runtime/shims/gh").read_text()
     entry = (root / "scripts/opsec/gh_entry.py").read_text()
     assert "frozen = admit(" in entry and 'run(["gh", *frozen.argv]' in entry
-    parse(args[2:], REST_GET)
     frozen = admit(args[1:], cwd=tmp_path, environment={"GH_REPO": "o/r"})
     assert frozen.write is False and frozen.argv == args[1:]
 

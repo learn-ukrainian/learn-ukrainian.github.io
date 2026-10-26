@@ -103,6 +103,12 @@ def write_task(root: Path, *, task_id="review-one", reply="VERDICT: APPROVE", **
         ("VERDICT: REQUEST_CHANGES", "CHANGES_REQUESTED"),
         ("VERDICT: CHANGES_REQUESTED", "CHANGES_REQUESTED"),
         ("VERDICT: BLOCKED", "BLOCKED"),
+        (
+            '```json\n{"schema_version":"code-review-findings.v1",'
+            '"overall":{"correctness":"correct","explanation":"Reviewed the diff.","confidence":0.9},'
+            '"findings":[]}\n```\n\n`VERDICT: APPROVE` for `0123456789abcdef`',
+            "APPROVED",
+        ),
     ],
 )
 def test_token_normalization(reply, expected):

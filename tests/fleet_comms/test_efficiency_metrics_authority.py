@@ -508,6 +508,14 @@ def test_bottleneck_metadata_uses_authority_dialect(authority_db, tmp_path):
     writer.commit()
     tasks = tmp_path / "tasks"
     tasks.mkdir()
+    (tasks / "legacy.json").write_text(json.dumps({
+        "task_id": "legacy", "status": "done", "stream_epic": 4707, "task_family": "metrics",
+        "started_at": "2026-08-01T11:00:00Z", "finished_at": "2026-08-01T11:02:00Z",
+    }))
+    (tasks / "active.json").write_text(json.dumps({
+        "task_id": "active", "schema_version": 2, "status": "running",
+        "started_at": "2026-08-01T11:00:00Z", "finished_at": "2026-08-01T11:02:00Z",
+    }))
     payload = collect_stream_bottleneck_metrics(
         tasks_dir=tasks, plane_db=plane_db, now=datetime(2026, 8, 1, 12, tzinfo=UTC),
         github_lookup=lambda **kwargs: (None, "lookup failed"),
@@ -515,6 +523,11 @@ def test_bottleneck_metadata_uses_authority_dialect(authority_db, tmp_path):
     assert payload["by_stream_epic"]["4707"]["formal_cf_publication"]["duration_s"] == {
         "min": 300.0, "max": 300.0, "avg": 300.0,
     }
+    assert payload["by_stream_epic"]["4707"]["dispatch"]["duration_s"]["avg"] == 120.0
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["raw"] == {
+        "event_count": 1, "duration_count": 0, "unfinished_count": 1,
+    }
+    assert payload["unclassified"]["by_task_family"]["dispatch"]["backlog_age_s"] == 3600.0
     assert payload["source_errors"] == [{
         "source": "github", "error_kind": "pr_lookup_failed", "pr_number": 1,
         "store": {"kind": "comms-plane", "reachable": True},

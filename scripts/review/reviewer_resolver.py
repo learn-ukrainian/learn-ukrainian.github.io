@@ -989,14 +989,10 @@ def _evaluate_candidate(
             capacity=capacity,
         )
     if inputs.subject_seats or inputs.subject_families:
-        # The Grok model governs both admitted transports (#9769).
-        subject_families = inputs.subject_families
-        if "cursor" in inputs.subject_seats:
-            subject_families = frozenset((*subject_families, "xai"))
         subject_reason = subject_exclusion_reason(
             candidate,
             seats=inputs.subject_seats,
-            families=subject_families,
+            families=inputs.subject_families,
             evidence=inputs.subject_evidence,
         )
         if subject_reason:

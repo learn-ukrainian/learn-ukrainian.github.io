@@ -31,8 +31,13 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.effort is not None:
         argv += ["--effort", spec.effort]
     argv += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk"]
-    argv += ["--allowedTools", _READ_TOOLS if spec.mode == "read-only" else _WRITE_TOOLS]
-    denies = f"{_READ_DENIES},{_BACKGROUND_DENIES}" if spec.mode == "read-only" else _BACKGROUND_DENIES
+    if spec.mode == "read-only":
+        allowed_tools, denies = _READ_TOOLS, f"{_READ_DENIES},{_BACKGROUND_DENIES}"
+    elif spec.mode == "workspace-write":
+        allowed_tools, denies = _WRITE_TOOLS, _BACKGROUND_DENIES
+    else:
+        raise ValueError(f"claude: unsupported mode {spec.mode!r}")
+    argv += ["--allowedTools", allowed_tools]
     argv += ["--disallowedTools", denies]
     return Invocation(argv, spec.prompt_file.read_bytes(), {**env, **_BACKGROUND_ENV}, None)
 

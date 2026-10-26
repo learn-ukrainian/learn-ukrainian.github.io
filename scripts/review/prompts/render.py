@@ -690,7 +690,7 @@ def main(argv: list[str] | None = None) -> int:
             "Outputs: prompt text (stdout by default); --output writes the prompt, .sha256 and .files_read.json, "
             "including the attempt-bound render record.\n"
             "Exit codes: 0 rendered; 1 refused; 2 invalid arguments.\n"
-            "Related: scripts.review.prompts.check; scripts/delegate.py --review-attempt; "
+            "Related: scripts.review.prompts.check; "
             "docs/runbooks/formal-review-attempt-isolation.md; #9012 #9242."
         ),
     )

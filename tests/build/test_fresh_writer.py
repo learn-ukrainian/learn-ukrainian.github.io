@@ -124,10 +124,11 @@ def test_terminal_writer_collision_retries_then_reuses_done(
                         "agent": "codex",
                         "model": "gpt-6.1-sol",
                         "effort": "high",
+                        "run_nonce": "n1",
                     }
                 )
             )
-            return subprocess.CompletedProcess(cmd, 0, "", "")
+            return subprocess.CompletedProcess(cmd, 0, f"{task_id}\nn1\n", "")
         return subprocess.CompletedProcess(cmd, 0, record_path.read_text(), "")
 
     monkeypatch.setattr(subprocess, "run", delegate)
@@ -483,10 +484,20 @@ def test_retry_prompt_contains_engine_feedback_and_seals_actual_bytes(tmp_path, 
         result_file.write_bytes(yaml.safe_dump(draft).encode())
 
     result = dispatch_writer(
-        writer="codex", model="gpt-6.1-sol", level="a1", slug="sample", lesson_n=1,
-        prompt_file=prompt, prompt_sha256=base_sha, inputs=inputs, output_dir=output,
-        preflight_result=passing_preflight, fake_seat=fake, repo_root=tmp_path,
-        plan_activity_types=types, attempt=2,
+        writer="codex",
+        model="gpt-6.1-sol",
+        level="a1",
+        slug="sample",
+        lesson_n=1,
+        prompt_file=prompt,
+        prompt_sha256=base_sha,
+        inputs=inputs,
+        output_dir=output,
+        preflight_result=passing_preflight,
+        fake_seat=fake,
+        repo_root=tmp_path,
+        plan_activity_types=types,
+        attempt=2,
     )
     task_id, actual = received[0]
     effective_sha = hashlib.sha256(actual).hexdigest()
@@ -525,7 +536,7 @@ def test_new_inputs_after_done_attempt_get_fresh_task_id(tmp_path, a1_valid_fixt
     ledger = tmp_path / "lesson-1.regeneration.yaml"
 
     def refusing_seat(task_id, prompt_file, result_file):
-        # Mirror delegate.py: a task ID that already has a result is never reused.
+        # Mirror dispatch.py: a task ID that already has a result is never reused.
         if result_file.exists():
             raise WriterCallError(f"task_id {task_id!r} is already done")
         result_file.write_text(yaml.safe_dump(draft, allow_unicode=True), encoding="utf-8")
@@ -597,7 +608,7 @@ def test_writer_inputs_must_be_complete(tmp_path, passing_preflight, key):
 
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
 def test_real_dispatch_path_with_fake_delegate(tmp_path, a1_valid_fixture, passing_preflight, effort):
-    """Finding 7 & MAJOR D: Test real dispatch path through fake delegate.py writing to a different root, verifying wait JSON parsing."""
+    """Finding 7 & MAJOR D: Test real dispatch path through fake dispatch.py writing to a different root, verifying wait JSON parsing."""
     draft, types = a1_valid_fixture
     raw_yaml = yaml.safe_dump(draft, allow_unicode=True)
 
@@ -607,10 +618,11 @@ def test_real_dispatch_path_with_fake_delegate(tmp_path, a1_valid_fixture, passi
     other_root.mkdir()
 
     calls_log = tmp_path / "delegate_calls.jsonl"
-    fake_delegate_script = tmp_path / "fake_delegate.py"
+    fake_delegate_script = tmp_path / "fake_dispatch.py"
 
     fake_delegate_script.write_text(
         f"""
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -627,7 +639,8 @@ if cmd == "dispatch":
     task_id = argv[argv.index("--task-id") + 1]
     task_state = other_root / f"batch_state/tasks/{{task_id}}.json"
     task_state.parent.mkdir(parents=True, exist_ok=True)
-    task_state.write_text(json.dumps({{"task_id": task_id, "status": "running", "model": "test-delegate-model"}}), encoding="utf-8")
+    task_state.write_text(json.dumps({{"task_id": task_id, "status": "running", "model": "test-delegate-model", "prompt_sha256": hashlib.sha256(Path(argv[argv.index("--prompt-file") + 1]).read_bytes()).hexdigest()}}), encoding="utf-8")
+    print(task_id); print("n1")
     sys.exit(0)
 
 elif cmd == "wait":
@@ -641,7 +654,12 @@ elif cmd == "wait":
         "task_id": task_id,
         "status": "done",
         "result_file": str(result_file),
-        "resolved_model": "gpt-6.1-sol",
+        "schema_version": 2,
+        "agent": "codex",
+        "model": "gpt-6.1-sol",
+        "run_nonce": "n1",
+        "prompt_sha256": json.loads((other_root / f"batch_state/tasks/{{task_id}}.json").read_text())["prompt_sha256"],
+        "result_sha256": hashlib.sha256(result_file.read_bytes()).hexdigest(),
         "effort": "high",
     }}
     print(json.dumps(state, indent=2))
@@ -662,8 +680,8 @@ sys.exit(1)
         slug="delegate-test",
         lesson_n=3,
         prompt_file=prompt_file,
-        prompt_sha256="c" * 64,
-        inputs=_inputs("c" * 64),
+        prompt_sha256=hashlib.sha256(prompt_file.read_bytes()).hexdigest(),
+        inputs=_inputs(hashlib.sha256(prompt_file.read_bytes()).hexdigest()),
         output_dir=output_dir,
         preflight_result=passing_preflight,
         attempt=1,
@@ -679,7 +697,7 @@ sys.exit(1)
     assert res["effort"] == "high"
     assert yaml.safe_load(res["writer_meta_file"].read_text())["effort"] == "high"
 
-    task_id = writer_task_id("a1", "delegate-test", 3, 1, effort, _inputs("c" * 64))
+    task_id = writer_task_id("a1", "delegate-test", 3, 1, effort, _inputs(res["prompt_sha256"]))
     assert res["task_id"] == task_id
 
     # MAJOR D: Verify that caller_root was NOT used for reading results
@@ -712,6 +730,7 @@ sys.exit(1)
     assert wait_argv[0] == "wait"
     assert wait_argv[1] == task_id
     assert "--timeout" in wait_argv
+    assert wait_argv[wait_argv.index("--run-nonce") + 1] == "n1"
 
 
 def test_real_dispatch_path_wait_failure(tmp_path, a1_valid_fixture, passing_preflight):
@@ -722,6 +741,7 @@ def test_real_dispatch_path_wait_failure(tmp_path, a1_valid_fixture, passing_pre
 import sys
 cmd = sys.argv[1] if len(sys.argv) > 1 else ""
 if cmd == "dispatch":
+    print(sys.argv[sys.argv.index("--task-id") + 1]); print("n1")
     sys.exit(0)
 elif cmd == "wait":
     sys.exit(1)
@@ -733,7 +753,7 @@ sys.exit(1)
     prompt_file = tmp_path / "prompt.md"
     prompt_file.write_text("Test prompt", encoding="utf-8")
 
-    with pytest.raises(WriterCallError, match=r"delegate\.py wait failed"):
+    with pytest.raises(WriterCallError, match=r"dispatch\.py wait failed"):
         dispatch_writer(
             writer="codex",
             level="a1",
@@ -760,13 +780,14 @@ sys.exit(1)
     ],
 )
 def test_real_dispatch_path_malformed_status_fails(tmp_path, passing_preflight, wait_stdout, expected_err):
-    """MAJOR D: A malformed status or missing result_file from delegate.py wait fails loudly."""
+    """MAJOR D: A malformed status or missing result_file from dispatch.py wait fails loudly."""
     fake_delegate = tmp_path / f"fake_delegate_{abs(hash(wait_stdout))}.py"
     fake_delegate.write_text(
         f"""
 import sys
 cmd = sys.argv[1] if len(sys.argv) > 1 else ""
 if cmd == "dispatch":
+    print(sys.argv[sys.argv.index("--task-id") + 1]); print("n1")
     sys.exit(0)
 elif cmd == "wait":
     print({wait_stdout!r})
