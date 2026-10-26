@@ -47,11 +47,19 @@ component.
 
 ### Inactive pytest scratch
 
-Operator retention decision for #11297. The sweep looks only inside the two
-managed pytest namespaces, `pytest-runs/runs` and the legacy
+Operator retention decisions for #11297 and C-2447. The sweep looks only inside
+the two managed pytest namespaces, `pytest-runs/runs` and the legacy
 `pytest-runs/task-scratch`, below the existing scratch scan roots. It honors
-`LU_SCRATCH_SCAN_ROOT`. A run folder there is deleted outright when both of
-these hold:
+`LU_SCRATCH_SCAN_ROOT`. Ordinary self-contained fixture `.git` directories are
+disposable only when the existing lease and exclusive lock prove this run's
+owner dead on this boot. Linked worktrees, external Git directories, Git
+symlinks, alternate object stores and unfamiliar Git configuration remain
+protected as `git_metadata`. General temporary directories and older ledger
+entries retain Git preservation, including `purge_problem` and its default
+`tree_facts` check; their quarantine timing and purge eligibility are unchanged.
+The existing pytest inflow settings remain `tmp_path_retention_policy = "failed"`
+and `tmp_path_retention_count = 1`. A run folder there is deleted outright when
+both of these hold:
 
 - Its newest change anywhere inside is more than two hours old. A change is a
   write or an inode change, so a folder whose files were extracted recently
