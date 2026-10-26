@@ -98,7 +98,16 @@ def _spec(record: dict, options: dict) -> TaskSpec:
 
 
 def _reap_settled(record: dict, path: Path) -> None:
-    if record["worktree_dirty_on_exit"] is not False or record["push_state"] != (
+    # The sole caller persists terminal status before this call, so no retry is needed.
+    if record.get("status") not in {
+        "done", "failed", "timeout", "rate_limited", "cancelled", "crashed",
+        "dry_run", "needs_finalize", "no_deliverable",
+    }:
+        record["reap_note"] = f"common reaper skipped: task status is not terminal ({record.get('status')})"
+        with contextlib.suppress(OSError):
+            store.replace(record, path)
+        return
+    if record.get("worktree_dirty_on_exit") is not False or record.get("push_state") != (
         "not_applicable" if record["mode"] == "read-only" else "pushed"
     ):
         return
