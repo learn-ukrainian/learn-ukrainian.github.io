@@ -98,7 +98,7 @@ def _spec(record: dict, options: dict) -> TaskSpec:
 
 
 def _enforce_delivery(record: dict) -> None:
-    if record["mode"] == "read-only":
+    if record["mode"] == "read-only" or record["status"] != "done":
         return
     cause = None
     if owned := record.get("owned_paths"):
@@ -106,18 +106,31 @@ def _enforce_delivery(record: dict) -> None:
         from scripts.secret_redactor import redact_text
 
         try:
-            paths = git._git(
-                Path(record["worktree_path"]), "diff", "--name-only", "--no-renames", "-z",
-                record["worktree_base_sha"], record["head_sha"], strip=False,
-            ).split("\0")
-            outside = [path for path in paths if path and not path_is_owned(path, owned)]
+            worktree = Path(record["worktree_path"])
+            base = record.get("worktree_base_ref", "origin/main")
+            if base.startswith("refs/remotes/origin/"):
+                base = base.removeprefix("refs/remotes/")
+            if base.startswith("origin/"):
+                branch = base.removeprefix("origin/")
+                git._git(worktree, "fetch", "--no-tags", "--no-write-fetch-head", "origin",
+                         f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
+            base_sha = git._git(worktree, "rev-parse", "--verify", "--end-of-options", f"{base}^{{commit}}")
+            merge_base = git._git(worktree, "merge-base", record["head_sha"], base_sha)
+            commits = git._git(worktree, "rev-list", "--no-merges", f"{merge_base}..{record['head_sha']}")
+            paths = set()
+            for commit in commits.splitlines():
+                paths.update(git._git(
+                    worktree, "diff-tree", "--no-commit-id", "--name-only", "-r", "--no-renames", "-m", "-z",
+                    commit, strip=False,
+                ).split("\0"))
+            outside = sorted(path for path in paths if path and not path_is_owned(path, owned))
             if outside:
                 cause = "outside_owned_paths: " + ", ".join(
                     sanitize_for_display(redact_text(path)) for path in outside
                 )
         except (OSError, ValueError, TypeError, subprocess.SubprocessError):
             cause = "owned_paths_verification_failed"
-    if cause is None and record["status"] == "done":
+    if cause is None:
         if record["worktree_dirty_on_exit"] is not False:
             cause = "worktree_dirty_or_unknown"
         elif record["commits_ahead"] is None or record["commits_ahead"] == 0:
