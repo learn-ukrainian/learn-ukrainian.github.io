@@ -124,6 +124,7 @@ SPAWN_INVENTORY = {
         "management-exempt",
         "Over-included agent token; direct subprocesses manage dispatch/Git tooling, while AGY plans use the guarded runtime.",
     ),
+    "scripts/dispatcher/cli.py": ("ungated-residual-10442", "CLI hands AGY sessions to worker.start without a guard."),
     "scripts/deploy_prompts.sh": (
         "management-exempt",
         "Over-included extension path ending in /agy; deploys configuration rather than starting a model session.",
