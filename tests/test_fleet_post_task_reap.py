@@ -165,6 +165,95 @@ def test_s3_post_task_reap_preserves_tar_member_with_restored_old_mtime(hermetic
     assert (location / ".cache/dl/recent.txt").read_bytes() == b"recent"
 
 
+@pytest.fixture
+def pushed_open_pr(hermetic_reap, monkeypatch):
+    repo, _ = hermetic_reap
+    tasks = repo / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    tree = _add_dispatch_worktree(repo, "codex", "open-author")
+    _run(["git", "push", "-u", "origin", "codex/open-author"], cwd=tree)
+    _write_task_state(tasks, "open-author", "done", tree, agent="codex",
+                      worktree_reused=False, creation_evidence=True)
+    record = tasks / "open-author.json"
+    state = json.loads(record.read_text())
+    state.update(mode="workspace-write", push_state="pushed", worktree_dirty_on_exit=False,
+                 worktree_branch="codex/open-author",
+                 finished_at=datetime.now(UTC).isoformat())
+    record.write_text(json.dumps(state))
+    rw = post_task_reap.reap_worktrees
+    monkeypatch.setattr(rw, "_query_pr_states", lambda *_args: ([rw.PullRequestState(42, "OPEN")], None))
+    monkeypatch.setattr(post_task_reap.pr_identity, "probe_open_pr_for_branch", lambda **_kw: (True, None))
+    monkeypatch.setattr(rw, "_process_refusal", lambda *_args: None)
+    monkeypatch.setattr(rw, "_uninspectable_same_user", lambda *_args: False)
+    return repo, tree, tasks, record
+
+
+def _reap_open_author(fixture):
+    repo, _, tasks, _ = fixture
+    return post_task_reap.post_task_reap(
+        "open-author", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False,
+    )["main_worktree"]
+
+
+def test_settled_pushed_clean_tree_with_open_pr_is_reaped(pushed_open_pr):
+    repo, tree, _, _ = pushed_open_pr
+    before = _run(["git", "ls-remote", "--heads", "origin", "codex/open-author"], cwd=repo).stdout
+    row = _reap_open_author(pushed_open_pr)
+    assert row["action"] == "removed", row
+    assert not tree.exists()
+    assert _run(["git", "ls-remote", "--heads", "origin", "codex/open-author"], cwd=repo).stdout == before
+    assert _run(["git", "rev-parse", "refs/heads/codex/open-author"], cwd=repo).stdout.strip()
+
+
+def test_tree_with_unpushed_commit_is_kept_even_when_pr_is_open(pushed_open_pr):
+    _, tree, _, _ = pushed_open_pr
+    (tree / "README.md").write_text("unpushed\n")
+    _run(["git", "commit", "-am", "unpushed"], cwd=tree)
+    assert _reap_open_author(pushed_open_pr)["action"] != "removed"
+    assert (tree / "README.md").read_text() == "unpushed\n"
+
+
+def test_tree_with_different_remote_head_is_kept_even_when_pr_is_open(pushed_open_pr):
+    repo, tree, _, _ = pushed_open_pr
+    (repo / "README.md").write_text("remote advanced\n")
+    _run(["git", "commit", "-am", "remote advanced"], cwd=repo)
+    _run(["git", "push", "origin", "HEAD:refs/heads/codex/open-author"], cwd=repo)
+    row = _reap_open_author(pushed_open_pr)
+    assert row["action"] == "skipped", row
+    assert row["reason"] == "HEAD differs from branch remote head"
+    assert tree.exists()
+
+
+@pytest.mark.parametrize("name", ["README.md", "untracked.txt"])
+def test_dirty_tree_kept(pushed_open_pr, name):
+    _, tree, _, _ = pushed_open_pr
+    (tree / name).write_text("unique work\n")
+    assert _reap_open_author(pushed_open_pr)["action"] == "retained"
+    assert (tree / name).read_text() == "unique work\n"
+
+
+def test_running_review_checkout_of_an_open_pr_kept(pushed_open_pr):
+    _, tree, tasks, _ = pushed_open_pr
+    (tasks / "review.json").write_text(json.dumps({
+        "task_id": "review", "status": "running", "mode": "read-only",
+        "worktree_path": str(tree), "pinned_head": _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip(),
+    }))
+    assert _reap_open_author(pushed_open_pr)["action"] != "removed"
+    assert tree.exists()
+
+
+@pytest.mark.parametrize("updates", [
+    {"push_state": "unknown"}, {"worktree_dirty_on_exit": None},
+    {"status": "running"}, {"pid": os.getpid()},
+])
+def test_unproven_or_live_open_pr_tree_kept(pushed_open_pr, updates):
+    _, tree, _, record = pushed_open_pr
+    record.write_text(json.dumps(json.loads(record.read_text()) | updates))
+    assert _reap_open_author(pushed_open_pr)["action"] != "removed"
+    assert tree.exists()
+
+
 def _safe_label(task_id: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "-", task_id).strip("-._")[:32]
 
@@ -619,14 +708,14 @@ def test_settled_read_only_review_checkout_is_reaped_while_its_reviewed_pr_is_op
 
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger", None])
-def test_write_mode_author_tree_with_an_open_pr_is_still_retained(open_review_checkout, mode):
+def test_unproven_author_tree_with_an_open_pr_is_still_retained(open_review_checkout, mode):
     repo, tasks, tree, task_id, record = open_review_checkout
     state = json.loads(record.read_text())
     state.update(mode=mode, push_state="pushed")
     record.write_text(json.dumps(state))
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     assert report["main_worktree"]["action"] in {"retained", "skipped"}, report
-    assert report["main_worktree"]["reason"] == "open PR #11683"
+    assert report["main_worktree"]["reason"] == "canonical creator binding unavailable"
     assert tree.exists()
 
 
