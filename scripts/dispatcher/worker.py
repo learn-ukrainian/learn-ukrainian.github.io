@@ -97,6 +97,37 @@ def _spec(record: dict, options: dict) -> TaskSpec:
     )
 
 
+def _enforce_delivery(record: dict) -> None:
+    if record["mode"] == "read-only":
+        return
+    cause = None
+    if owned := record.get("owned_paths"):
+        from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
+        from scripts.secret_redactor import redact_text
+
+        try:
+            paths = git._git(
+                Path(record["worktree_path"]), "diff", "--name-only", "--no-renames", "-z",
+                record["worktree_base_sha"], record["head_sha"], strip=False,
+            ).split("\0")
+            outside = [path for path in paths if path and not path_is_owned(path, owned)]
+            if outside:
+                cause = "outside_owned_paths: " + ", ".join(
+                    sanitize_for_display(redact_text(path)) for path in outside
+                )
+        except (OSError, ValueError, TypeError, subprocess.SubprocessError):
+            cause = "owned_paths_verification_failed"
+    if cause is None and record["status"] == "done":
+        if record["worktree_dirty_on_exit"] is not False:
+            cause = "worktree_dirty_or_unknown"
+        elif record["commits_ahead"] is None or record["commits_ahead"] == 0:
+            cause = "no_commits_or_unknown"
+        elif record["push_state"] != "pushed":
+            cause = "work_not_pushed_or_unknown"
+    if cause:
+        record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
+
+
 def _reap_settled(record: dict, path: Path) -> None:
     if record["worktree_dirty_on_exit"] is not False or record["push_state"] != (
         "not_applicable" if record["mode"] == "read-only" else "pushed"
@@ -214,6 +245,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
         )
         record.update(git.snapshot_delivery(spec, record["worktree_base_sha"], record["worktree_branch"]))
+        _enforce_delivery(record)
         if spec.agent == "cursor":
             record.update(
                 resolved_model=resolved_model if resolved_model is not None else "unknown",

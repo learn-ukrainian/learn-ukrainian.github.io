@@ -29,15 +29,16 @@ def sparse_excludes(includes=()) -> list[str]:
     return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
 
 
-def _git(path: Path, *args: str, isolate: bool = False) -> str:
-    return subprocess.run(
+def _git(path: Path, *args: str, isolate: bool = False, strip: bool = True) -> str:
+    output = subprocess.run(
         ["git", "-C", str(path), *args],
         capture_output=True,
         text=True,
         check=True,
         timeout=30,
         env={**(sanitized_git_env() if isolate else os.environ), "GIT_TERMINAL_PROMPT": "0"},
-    ).stdout.strip()
+    ).stdout
+    return output.strip() if strip else output
 
 
 def resolve_repo(key: str | None = None) -> tuple[Path, dict]:

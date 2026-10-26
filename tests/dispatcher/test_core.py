@@ -47,7 +47,9 @@ def sandbox(tmp_path):
     with resolver.open("a") as stream:
         stream.write(f"\n\ndef project_interpreter(root=None):\n    return Path({sys.executable!r})\n")
     shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
-    (repo / "scripts/__init__.py").touch()
+    (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
+    (repo / "scripts/fleet").mkdir()
+    (repo / "scripts/fleet/__init__.py").touch()
     config = repo / "scripts/config"
     config.mkdir()
     (config / "fleet_repos.yaml").write_text(
@@ -120,7 +122,7 @@ def await_file(path):
 
 def stub_common_reaper(box):
     fleet = box.repo / "scripts/fleet"
-    fleet.mkdir()
+    fleet.mkdir(exist_ok=True)
     (fleet / "post_task_reap.py").write_text('''import json, os, sys
 from pathlib import Path
 from scripts.dispatcher.worker import _identity
@@ -239,7 +241,7 @@ def test_settled_clean_read_only_task_worktree_is_reaped_through_the_common_reap
 def test_dirty_or_unpushed_worktree_is_never_reaped(sandbox, mode, model):
     stub_common_reaper(sandbox)
     task = sandbox.dispatch(model, "--mode", mode)
-    record = sandbox.settle(task)
+    record = sandbox.settle(task, expected=0 if mode == "read-only" else 1)
     deadline = time.monotonic() + 5
     while worker._identity(record["pid"]):
         assert time.monotonic() < deadline
@@ -341,7 +343,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
         "--branch",
         "review-source",
     )
-    record = sandbox.settle(dispatched.stdout.splitlines())
+    record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if mode == "read-only" else 1)
     known = len(models) == 1
     assert record["schema_version"] == 2
     assert record["model"] == "requested-model-is-not-proof"
@@ -447,7 +449,7 @@ def test_concurrent_dispatches_use_distinct_records(sandbox):
     ],
 )
 def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push_state, ahead, dirty):
-    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"))
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"), expected=0 if model == "pushed" else 1)
     assert record["push_state"] == push_state
     assert record["commits_ahead"] == ahead
     assert record["worktree_dirty_on_exit"] is dirty
@@ -476,6 +478,41 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
             git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"])["push_state"]
             == "unknown"
         )
+
+
+@pytest.mark.parametrize("model,mode,owned,state,cause", [
+    ("pushed", "workspace-write", ["other/"], "no_deliverable", "outside_owned_paths: delivered.txt"),
+    ("pushed", "workspace-write", ["delivered.txt"], "done", None),
+    ("pushed-nested", "workspace-write", ["src/*.txt"], "done", None),
+    ("pushed", "workspace-write", ["delivered"], "no_deliverable", "outside_owned_paths: delivered.txt"),
+    ("pushed-nested", "workspace-write", ["src/"], "done", None),
+    ("pushed", "workspace-write", [], "done", None),
+    ("dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
+    ("pushed-dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
+    ("unpushed", "workspace-write", [], "no_deliverable", "work_not_pushed_or_unknown"),
+    ("echo", "workspace-write", [], "no_deliverable", "no_commits_or_unknown"),
+    ("echo", "read-only", ["other/"], "done", None),
+    ("dirty", "read-only", ["other/"], "done", None),
+    ("pushed", "read-only", ["other/"], "done", None),
+])
+def test_settle_rejects_out_of_scope_or_unpublished_write_delivery(sandbox, model, mode, owned, state, cause):
+    """A provider's successful response cannot hide scope violations or undelivered work."""
+    flags = [flag for path in owned for flag in ("--owned-path", path)]
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", mode, *flags), expected=0 if state == "done" else 1)
+    assert record["status"] == state
+    assert record["owned_paths"] == owned
+    assert record["research_owned_paths"] == []
+    assert record["error"] == cause
+    assert record.get("no_deliverable_reason") == cause
+    assert record["returncode"] == 0
+    assert Path(record["result_file"]).read_text() == "literal final response"
+
+
+def test_v2_record_without_owned_paths_remains_readable(sandbox):
+    record = sandbox.settle(sandbox.dispatch())
+    record.pop("owned_paths", None)
+    (sandbox.tasks / f"{record['task_id']}.json").write_text(json.dumps(record))
+    assert json.loads(sandbox.cli("status", record["task_id"]).stdout)["status"] == "done"
 
 
 @pytest.mark.parametrize("remote_available", [True, False])
@@ -507,7 +544,7 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
 
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     task = sandbox.dispatch("unpushed", "--mode", "workspace-write")
-    first = sandbox.settle(task)
+    first = sandbox.settle(task, expected=1)
     result = sandbox.cli(
         "dispatch",
         "--agent",
