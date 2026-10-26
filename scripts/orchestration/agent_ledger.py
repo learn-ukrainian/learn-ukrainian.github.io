@@ -2,8 +2,8 @@
 
 This module stores runtime coordination state under ``batch_state/`` so
 parallel workers can report task state without editing shared markdown
-handoff files. It is intentionally small and local-first: delegate.py still
-owns process lifecycle, while this ledger owns task metadata, ownership, and
+handoff files. It is intentionally small and local-first: ``scripts/dispatch.py``
+owns new task process lifecycles, while this ledger owns task metadata, ownership, and
 events needed by the orchestrator.
 """
 

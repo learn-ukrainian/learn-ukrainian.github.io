@@ -1,6 +1,6 @@
 # Credit-period lane policy (#9518) — canonical source of truth.
 # Read by scripts/fleet/credit_lane.py for scripts/fleet/capacity_pick.py (router)
-# and delegate.py dispatch admission. Neither consumes credits or resets.
+# and legacy dispatch admission. Neither consumes credits or resets.
 #
 # A configured lane reads `credit_balance_present` only while its plan allowance
 # is at or below `near_cap_remaining_pct`, the routing-budget record carries a

@@ -1,6 +1,6 @@
 """The rules core every agent seat loads, read from the local checkout.
 
-One loader for every seat: launchers (``scripts/lib/rules_core.sh``), ``delegate.py``
+One loader for every seat: launchers (``scripts/lib/rules_core.sh``), legacy dispatch
 workers and review dispatches, ACP asks and discussion legs
 (``agent_runtime.runner.invoke_inter_agent``), the legacy bridge prompt builders,
 and ``GET /api/rules?scope=...``. Everything here is offline: files come from the
