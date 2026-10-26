@@ -118,6 +118,163 @@ def await_file(path):
     return path.read_text()
 
 
+def stub_common_reaper(box):
+    fleet = box.repo / "scripts/fleet"
+    fleet.mkdir()
+    (fleet / "post_task_reap.py").write_text('''import json, os, sys
+from pathlib import Path
+from scripts.dispatcher.worker import _identity
+tasks = Path(os.environ["LU_TASKS_DIR"])
+task_id = sys.argv[2]
+record = json.loads((tasks / (task_id + ".json")).read_text())
+with (tasks / (task_id + ".reap-calls")).open("a") as calls:
+    calls.write("called\\n")
+receipt = dict(argv=sys.argv[1:], cwd=os.getcwd(), record=record, alive=_identity(record["pid"]))
+target = tasks / (task_id + ".reaped")
+target.with_suffix(".tmp").write_text(json.dumps(receipt))
+target.with_suffix(".tmp").replace(target)
+print(json.dumps({"main_worktree": {"action": "retained"}}))
+sys.exit(1 if (tasks / "reap-fail").exists() else 0)
+''')
+
+
+@pytest.mark.parametrize("flags,restored", [
+    ([], set()), (["--full-checkout"], {"curriculum", "site/src/data"}),
+    (["--sparse-include", "/curriculum/"], {"curriculum"}),
+    (["--sparse-include", "curriculum", "--sparse-include", "site/src/data"], {"curriculum", "site/src/data"}),
+])
+def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_worktrees(sandbox, flags, restored):
+    excluded = {
+        "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
+        "registry/projects", "registry/lexicon/source-inventory",
+        "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
+    }
+    for directory in excluded | {"site/src/components", "registry/lexicon/kept"}:
+        path = sandbox.repo / directory / "fixture.txt"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("tracked fixture")
+    (sandbox.repo / "data/kept.txt").write_text("parent file")
+    run_git(sandbox.repo, "add", ".")
+    run_git(sandbox.repo, "commit", "-m", "heavy fixture trees")
+    run_git(sandbox.repo, "push", "origin", "main")
+    sibling = sandbox.repo.parent / "sibling"
+    run_git(sandbox.repo, "worktree", "add", "-b", "sibling", str(sibling))
+    untracked = sandbox.repo / "curriculum/untracked.txt"
+    untracked.write_text("uncommitted primary file")
+    record = sandbox.settle(sandbox.dispatch("echo", *flags))
+    worktree = Path(record["cwd"])
+    for directory in excluded:
+        assert (worktree / directory / "fixture.txt").exists() == ("--full-checkout" in flags or directory in restored)
+    assert (worktree / "site/src/components/fixture.txt").exists()
+    assert (worktree / "registry/lexicon/kept/fixture.txt").exists()
+    assert (worktree / "data/kept.txt").exists()
+    assert run_git(worktree, "status", "--porcelain") == ""
+    assert untracked.read_text() == "uncommitted primary file"
+    for checkout in (sandbox.repo, sibling):
+        assert (checkout / "curriculum/fixture.txt").read_text() == "tracked fixture"
+        config = run_git(checkout, "config", "--show-origin", "--list")
+        assert "core.sparsecheckout=true" not in config.lower()
+    assert run_git(sandbox.repo, "config", "--local", "--get", "extensions.worktreeConfig") == "true"
+    if "--full-checkout" not in flags:
+        origin = run_git(worktree, "config", "--show-origin", "--get", "core.sparseCheckout")
+        assert origin.endswith("/config.worktree\ttrue")
+
+
+@pytest.mark.parametrize("redirected", [False, True])
+def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redirects(sandbox, monkeypatch, redirected):
+    tracked = sandbox.repo / "curriculum/tracked.txt"
+    tracked.parent.mkdir()
+    tracked.write_text("tracked primary file")
+    run_git(sandbox.repo, "add", "curriculum")
+    run_git(sandbox.repo, "commit", "-m", "excluded tree")
+    untracked = tracked.with_name("untracked.txt")
+    untracked.write_text("untracked primary file")
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    path = sandbox.repo / ".worktrees/dispatch/sol/redirects"
+    if redirected:
+        for key, value in {
+            "GIT_DIR": sandbox.repo / ".git", "GIT_WORK_TREE": sandbox.repo,
+            "GIT_COMMON_DIR": sandbox.repo / ".git", "GIT_INDEX_FILE": sandbox.repo / ".git/index",
+        }.items():
+            monkeypatch.setenv(key, str(value))
+    git.create_worktree(sandbox.repo, path, "sol/redirects", sha)
+    if redirected:
+        for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE"):
+            monkeypatch.delenv(key)
+    assert tracked.read_text() == "tracked primary file"
+    assert untracked.read_text() == "untracked primary file"
+    assert not (path / "curriculum").exists()
+    primary = subprocess.run(
+        ["git", "-C", str(sandbox.repo), "config", "--show-origin", "--get", "core.sparseCheckout"],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert (primary.returncode, primary.stdout) == (1, "")
+    assert run_git(path, "config", "--show-origin", "--get", "core.sparseCheckout").endswith("/config.worktree\ttrue")
+    assert run_git(sandbox.repo, "diff", "--cached") == ""
+
+
+@pytest.mark.parametrize("model,state", [
+    ("echo", "done"), ("fail", "failed"), ("crash", "crashed"), ("blocked", "timeout"), ("tree", "cancelled"),
+    ("pushed", "done"),
+])
+def test_settled_clean_read_only_task_worktree_is_reaped_through_the_common_reaper(sandbox, model, state):
+    stub_common_reaper(sandbox)
+    task = sandbox.dispatch(model, "--hard-timeout", "0.2" if state == "timeout" else "0",
+                            "--mode", "workspace-write" if model == "pushed" else "read-only")
+    if state == "cancelled":
+        await_file(sandbox.tasks / f"{task[0]}.grandchild")
+        sandbox.cli("cancel", task[0], "--run-nonce", task[1])
+    sandbox.settle(task, expected=0 if state == "done" else 1)
+    receipt = json.loads(await_file(sandbox.tasks / f"{task[0]}.reaped"))
+    assert receipt["record"]["status"] == state
+    assert receipt["record"]["worktree_dirty_on_exit"] is False
+    assert receipt["record"]["push_state"] == ("pushed" if model == "pushed" else "not_applicable")
+    assert receipt["argv"] == ["--task-id", task[0], "--apply", "--tasks-dir", str(sandbox.tasks)]
+    assert receipt["cwd"] == str(sandbox.repo)
+    assert receipt["alive"] is None
+    assert (sandbox.tasks / f"{task[0]}.reap-calls").read_text() == "called\n"
+
+
+@pytest.mark.parametrize("mode,model", [("read-only", "dirty"), ("workspace-write", "dirty"), ("workspace-write", "unpushed")])
+def test_dirty_or_unpushed_worktree_is_never_reaped(sandbox, mode, model):
+    stub_common_reaper(sandbox)
+    task = sandbox.dispatch(model, "--mode", mode)
+    record = sandbox.settle(task)
+    deadline = time.monotonic() + 5
+    while worker._identity(record["pid"]):
+        assert time.monotonic() < deadline
+        time.sleep(0.02)
+    assert not (sandbox.tasks / f"{task[0]}.reap-calls").exists()
+    assert (Path(record["cwd"]) / "delivered.txt").read_text() == "literal delivered value\n"
+
+
+@pytest.mark.parametrize("dirty,push", [(None, "pushed"), (False, "unknown"), (False, "unpushed")])
+def test_unknown_or_unpushed_delivery_never_starts_a_reaper(tmp_path, monkeypatch, dirty, push):
+    def forbidden():
+        pytest.fail("ineligible delivery forked a reaper")
+    monkeypatch.setattr(worker.os, "fork", forbidden)
+    worker._reap_settled(dict(worktree_dirty_on_exit=dirty, push_state=push, mode="workspace-write"), tmp_path / "task.json")
+
+
+def test_reaper_failure_does_not_change_task_status(sandbox):
+    stub_common_reaper(sandbox)
+    sandbox.tasks.mkdir()
+    (sandbox.tasks / "reap-fail").touch()
+    task = sandbox.dispatch()
+    record = sandbox.settle(task)
+    assert record["status"] == "done"
+    path = sandbox.tasks / f"{task[0]}.json"
+    deadline = time.monotonic() + 5
+    while "reap_note" not in record:
+        assert time.monotonic() < deadline
+        time.sleep(0.02)
+        record = json.loads(path.read_text())
+    assert record["status"] == "done"
+    assert record["returncode"] == 0
+    assert record["reap_note"] == "common reaper failed"
+    assert Path(record["cwd"]).is_dir()
+
+
 def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cancel(sandbox):
     task = sandbox.dispatch("blocked")
     pid = int(await_file(sandbox.tasks / f"{task[0]}.started"))
@@ -391,6 +548,8 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox):
     assert run_git(sandbox.repo, "branch", "--list") == before
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--force-new", expected=2)
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--prompt-file", "y", expected=2)
+    for include in ("../curriculum", "site/src", "unknown", ""):
+        sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--sparse-include", include, expected=2)
     for branch in ("unsafe..branch", "origin/feature", "refs/heads/feature", "bad:name", ""):
         sandbox.cli(
             "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x",

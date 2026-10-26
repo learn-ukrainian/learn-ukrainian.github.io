@@ -91,6 +91,15 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--pr", type=int, help="Reviewed PR number, e.g. 42 (default: none; use --branch for identity)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument(
+        "--full-checkout", action="store_true",
+        help="Materialize the full Git working tree instead of excluding heavy trees (default: off)",
+    )
+    dispatch.add_argument(
+        "--sparse-include", action="append", default=[], metavar="DIR",
+        help="Keep a default-excluded tree; repeatable (default: none). Example: --sparse-include curriculum. "
+        "Excluded: " + ", ".join(sorted(git.SPARSE_EXCLUDE_DEFAULT)),
+    )
+    dispatch.add_argument(
         "--hard-timeout", type=float, default=7200, help="Deadline seconds; 0 disables (default: 7200)"
     )
     for flag in ("owned-path", "research-owned-path"):
@@ -110,6 +119,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _dispatch(args) -> int:
+    git.sparse_excludes(args.sparse_include)
     if (args.prompt is None) == (args.prompt_file is None):
         raise ValueError("provide exactly one of --prompt or --prompt-file")
     source = args.prompt if args.prompt is not None else args.prompt_file
@@ -159,7 +169,7 @@ def _dispatch(args) -> int:
         print(json.dumps(dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path)), indent=2))
         return 0
     if not args.cwd:
-        git.create_worktree(repo, worktree, branch, sha)
+        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
     record = store.new_record(spec, info, branch, sha, vars(args))
     if agent == "muse":
         record["contributor_mode"] = spec.options.get("contributor_mode", "off")
