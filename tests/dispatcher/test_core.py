@@ -393,6 +393,8 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
 def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, text, model, required, error):
     """Defect classes: false completion, failure promotion, result corruption and opt-in leakage."""
     # Use the production shared parser and its dependencies in the disposable CLI repo.
+    stub_common_reaper(sandbox)
+    (sandbox.repo / "scripts/fleet/__init__.py").touch()
     (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     dispatched = sandbox.cli(
         "dispatch", "--agent", "sol", "--model", model, "--prompt", text,
