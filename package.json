@@ -109,7 +109,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.5.2",
     "js-yaml": "^4.3.2",
-    "markdownlint-cli2": "^0.20.0",
+    "markdownlint-cli2": "^0.23.3",
     "prettier": "^3.9.10",
     "puppeteer": "^25.13.0",
     "ts-jest": "^29.4.6",
