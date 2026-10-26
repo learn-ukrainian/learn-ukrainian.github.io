@@ -7,6 +7,7 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
@@ -787,21 +788,23 @@ def test_flaky_issue_requires_two_distinct_prs(tmp_path: Path, monkeypatch: pyte
     assert any("CTO finding:" in line for line in run(fake, path, monkeypatch)[0])
 
 
-def test_report_does_not_write_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_report_does_not_write_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
     fake = FakeGitHub()
     path = tmp_path / "state.json"
     run(fake, path, monkeypatch, apply=False)
     assert not path.exists()
     assert mutations(fake) == []
+    assert capsys.readouterr().err == ""
 
 
-def test_lock_overlap_exits_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_lock_overlap_exits_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
     lock_path = tmp_path / "batch_state/locks/merge_queue_keeper.lock"
     lock_path.parent.mkdir(parents=True)
     with lock_path.open("a+") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         monkeypatch.setattr(keeper, "GitHub", lambda *args: pytest.fail("network used under lock overlap"))
         assert keeper.main(["--apply", "--repo-root", str(tmp_path)]) == 0
+    assert capsys.readouterr().err == ""
 
 
 def test_missing_membership_field_never_enqueues(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1611,7 +1614,7 @@ def test_throttled_uses_the_last_observed_run(tmp_path: Path) -> None:
         assert keeper._throttled(path, 0, now) is False
 
 
-def test_slow_mode_skips_apply_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_slow_mode_skips_apply_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
     from datetime import UTC, datetime
 
     state = tmp_path / "batch_state/merge_queue_keeper.json"
@@ -1622,6 +1625,7 @@ def test_slow_mode_skips_apply_without_network(tmp_path: Path, monkeypatch: pyte
     monkeypatch.setenv("MQ_KEEPER_SLOW_FLAG", str(flag))
     monkeypatch.setattr(keeper, "GitHub", lambda *args: pytest.fail("network used in slow mode"))
     assert keeper.main(["--apply", "--repo-root", str(tmp_path)]) == 0
+    assert capsys.readouterr().err == ""
 
 
 def test_keeper_timer_runs_every_minute() -> None:
@@ -2408,3 +2412,171 @@ def test_create_issue_returns_new_issue_number(tmp_path, monkeypatch):
     monkeypatch.setattr(client, "call", lambda *args: pytest.fail("automatic issue creation reached transport"))
     with pytest.raises(keeper.KeeperError, match="report finding to CTO"):
         client.create_issue("title", "body")
+
+
+def test_stage_records_surround_real_github_request(tmp_path, monkeypatch, capsys):
+    client = keeper.GitHub(tmp_path, "unit/public")
+    fake = FakeGitHub()
+    monkeypatch.setattr(client, "identity", fake.identity)
+    # Stop after the global stages; the branch list still uses GitHub.call.
+    snapshot = {"prs": [], "queues": {}, "remaining": 3000, "cost": 10}
+    monkeypatch.setattr(client, "snapshot", lambda branches: snapshot)
+    seen = []
+
+    def transport(request, **kwargs):
+        before = capsys.readouterr().err.splitlines()
+        assert len(before) == 1
+        assert before[0].startswith("mq-keeper-stage event=start pr=- head=- stage=branch-list t=")
+        seen.extend(before)
+        return subprocess.CompletedProcess([], 0, '[{"baseRefName":"main"}]', "")
+
+    monkeypatch.setattr(keeper, "request_run", transport)
+    assert keeper.run(client, tmp_path / "state.json", apply=True) == ([], False)
+    after = capsys.readouterr().err.splitlines()
+    assert after[0].startswith("mq-keeper-stage event=done pr=- head=- stage=branch-list t=")
+    assert after[0].endswith(" outcome=ok")
+    assert len(seen + after) == 10  # five global stages, no PRs
+
+
+@pytest.mark.parametrize("stage", ["branch-list", "pr-evidence", "fresh-read", "fresh-comments", "fresh-checks"])
+def test_stage_records_preserve_real_github_keeper_error(tmp_path, monkeypatch, capsys, stage):
+    client = keeper.GitHub(tmp_path, "unit/public")
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    for name in ("branch_names", "snapshot", "identity", "comments", "checks", "current", "files", "squash_blocked", "comment"):
+        if name != {"branch-list": "branch_names", "pr-evidence": "comments", "fresh-read": "current",
+                    "fresh-comments": "comments", "fresh-checks": "checks"}[stage]:
+            monkeypatch.setattr(client, name, getattr(fake, name))
+    error = keeper.KeeperError("private diagnostic must stay out of records")
+    caught = []
+    real_verdict = keeper.Verdict
+
+    def verdict(*args, **kwargs):
+        if sys.exception() is not None:
+            caught.append(sys.exception())
+        return real_verdict(*args, **kwargs)
+
+    monkeypatch.setattr(keeper, "Verdict", verdict)
+    calls = 0
+    seen = []
+
+    def transport(request, **kwargs):
+        nonlocal calls
+        calls += 1
+        if stage in {"fresh-comments", "fresh-checks"} and calls == 1:
+            data = [fake.comments_rows] if stage == "fresh-comments" else {
+                "total_count": len(fake.check_rows), "check_runs": fake.check_rows,
+            }
+            return subprocess.CompletedProcess([], 0, json.dumps(data), "")
+        records = capsys.readouterr().err
+        seen.append(records)
+        current_stage = "fresh-comments" if stage == "pr-evidence" and calls > 1 else stage
+        assert f"stage={current_stage} " in records
+        assert records.splitlines()[-1].startswith("mq-keeper-stage event=start ")
+        raise error
+
+    monkeypatch.setattr(keeper, "request_run", transport)
+    if stage == "branch-list":
+        with pytest.raises(keeper.KeeperError) as raised:
+            keeper.run(client, tmp_path / "state.json", apply=True)
+        assert raised.value is error
+    else:
+        lines, failed = keeper.run(client, tmp_path / "state.json", apply=True)
+        assert not failed
+        expected = {"pr-evidence": "fresh-evidence-unknown", "fresh-read": "fresh-read-unknown",
+                    "fresh-comments": "fresh-evidence-unknown", "fresh-checks": "CI-unknown"}[stage]
+        assert f"#42 held: {expected}" in lines
+        if stage in {"pr-evidence", "fresh-comments"}:
+            assert caught and all(item is error for item in caught)
+    records = "".join([*seen, capsys.readouterr().err])
+    assert f"stage={stage} " in records
+    assert "outcome=keeper-error" in records
+    assert str(error) not in records
+
+
+@pytest.mark.parametrize("method", ["branch_names", "comments"])
+def test_stage_records_preserve_real_github_rate_limit(tmp_path, monkeypatch, capsys, method):
+    client = keeper.GitHub(tmp_path, "unit/public")
+    fake = FakeGitHub()
+    for name in ("branch_names", "snapshot", "identity"):
+        if name != method:
+            monkeypatch.setattr(client, name, getattr(fake, name))
+    error = keeper.GitHubRateLimited(None)
+
+    def transport(request, **kwargs):
+        assert capsys.readouterr().err.splitlines()[-1].startswith("mq-keeper-stage event=start ")
+        raise error
+
+    monkeypatch.setattr(keeper, "request_run", transport)
+    with pytest.raises(keeper.GitHubRateLimited) as raised:
+        keeper.run(client, tmp_path / "state.json", apply=True)
+    assert raised.value is error
+    assert "outcome=rate-limited" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("write_error", [OSError, ValueError])
+@pytest.mark.parametrize("failure_at", ["write", "flush"])
+@pytest.mark.parametrize("operation_error", [None, keeper.KeeperError, keeper.GitHubRateLimited, RuntimeError])
+def test_broken_stage_stderr_preserves_results_and_exceptions(
+    tmp_path, monkeypatch, write_error, failure_at, operation_error,
+):
+    class BrokenStderr:
+        def write(self, text):
+            if failure_at == "write":
+                raise write_error("closed diagnostic output")
+
+        def flush(self):
+            raise write_error("closed diagnostic output")
+
+    fake = FakeGitHub()
+    error = operation_error(None) if operation_error else None
+    monkeypatch.setattr(keeper.sys, "stderr", BrokenStderr())
+    if error is not None:
+        def branch_names():
+            raise error
+        monkeypatch.setattr(fake, "branch_names", branch_names)
+        with pytest.raises(operation_error) as raised:
+            keeper.run(fake, tmp_path / "state.json", apply=True)
+        assert raised.value is error
+    else:
+        lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+        assert not failed
+        assert "#42 enqueued" in lines
+        assert json.loads((tmp_path / "state.json").read_text())["queued"] == {"42": HEAD_A}
+
+
+@pytest.mark.parametrize("count", [0, 1, 5])
+def test_stage_record_count_is_bounded_per_pr(tmp_path, monkeypatch, capsys, count):
+    fake = FakeGitHub()
+    snapshot = fake.snapshot({"main"})
+    snapshot["prs"] = [pr(number=number, isInMergeQueue=True) for number in range(1, count + 1)]
+    monkeypatch.setattr(fake, "snapshot", lambda branches: snapshot)
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed, lines
+    records = capsys.readouterr().err.splitlines()
+    assert 10 <= len(records) <= 2 * (5 + 13 * count)
+    starts = [line.replace("event=start", "event=done").split(" t=")[0]
+              for line in records if "event=start " in line]
+    dones = [line.split(" t=")[0] for line in records if "event=done " in line]
+    assert starts == dones
+    assert len(starts) == len(set(starts))
+
+
+@pytest.mark.parametrize("queued", [False, True])
+def test_stage_records_leave_return_and_saved_state_identical(tmp_path, monkeypatch, capsys, queued):
+    class FrozenDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return cls(2026, 10, 26, tzinfo=UTC)
+
+    monkeypatch.setattr(keeper, "datetime", FrozenDatetime)
+    recorded_fake = FakeGitHub(pr(isInMergeQueue=queued))
+    recorded_path = tmp_path / "recorded.json"
+    recorded_result = keeper.run(recorded_fake, recorded_path, apply=True)
+    assert capsys.readouterr().err
+    monkeypatch.setattr(keeper._StageRecords, "emit", lambda *args, **kwargs: None)
+    silent_fake = FakeGitHub(pr(isInMergeQueue=queued))
+    silent_path = tmp_path / "silent.json"
+    assert keeper.run(silent_fake, silent_path, apply=True) == recorded_result
+    assert silent_path.read_bytes() == recorded_path.read_bytes()
+    assert silent_fake.actions == recorded_fake.actions
+    assert capsys.readouterr().err == ""

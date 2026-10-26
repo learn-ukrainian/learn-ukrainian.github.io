@@ -454,3 +454,53 @@ def test_plain_flaky_issue_is_unchanged(tmp_path: Path, transport: Transport) ->
         "`pytest (3)` failed merge_group runs on distinct PRs #7, #42 within 24 hours. Run IDs: 321."
         "\n\n<!-- mq-keeper-flake -->"
     ]
+
+
+STAGE_FIELDS = (
+    r" pr=(?:[1-9][0-9]*|-) head=(?:[0-9a-f]{12}|-) "
+    r"stage=(?:branch-list|snapshot|identity|pr-evidence|drop-detail|gate-hold|fresh-read|"
+    r"fresh-comments|fresh-checks|fresh-gate-hold|squash-text|revoke|enqueue|membership|"
+    r"comment-flush|comment-once|flake-issues|save) t=[0-9]+\.[0-9]{6}"
+)
+STAGE_LINE = re.compile(
+    r"mq-keeper-stage event=(?:start" + STAGE_FIELDS + r"|done" + STAGE_FIELDS
+    + r" duration=[0-9]+\.[0-9]{6} outcome=(?:ok|keeper-error|rate-limited|publish-blocked|"
+    r"other:[A-Za-z_][A-Za-z0-9_]{0,63}))\Z"
+)
+
+
+@pytest.mark.parametrize("payload", ["planted-secret-value", *HOSTILE_NAMES.values()])
+def test_stage_records_exclude_untrusted_fields(tmp_path, transport, capsys, payload):
+    subject, path = drop_with_check(tmp_path, payload, "completed")
+    subject.row["title"] = payload
+    subject.comment_rows.append({"body": payload, "user": {"login": payload}})
+
+    def timeline(number):
+        raise keeper.KeeperError(payload)
+
+    subject.timeline = timeline
+    keeper.run(subject, path, apply=True)
+    records = capsys.readouterr().err.splitlines()
+    assert records
+    assert all(STAGE_LINE.fullmatch(line) for line in records)
+    assert payload not in "\n".join(records)
+    assert any(f"pr=42 head={HEAD[:12]} stage=drop-detail " in line for line in records)
+    assert any(line.endswith("outcome=keeper-error") for line in records)
+
+
+@pytest.mark.parametrize("error_type,outcome", [(keeper.PublishBlocked, "publish-blocked"), (ValueError, "other:ValueError")])
+def test_stage_records_classify_without_exception_text(tmp_path, transport, monkeypatch, capsys, error_type, outcome):
+    subject = Subject(tmp_path)
+    error = error_type("planted-secret-value\n" + REPRODUCER)
+
+    def snapshot(branches):
+        raise error
+
+    monkeypatch.setattr(subject, "snapshot", snapshot)
+    with pytest.raises(error_type) as raised:
+        keeper.run(subject, tmp_path / "state.json", apply=True)
+    assert raised.value is error
+    records = capsys.readouterr().err.splitlines()
+    assert records and all(STAGE_LINE.fullmatch(line) for line in records)
+    assert records[-1].endswith(f"outcome={outcome}")
+    assert "planted-secret-value" not in "\n".join(records)

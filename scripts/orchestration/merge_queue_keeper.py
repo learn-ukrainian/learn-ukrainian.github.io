@@ -13,11 +13,13 @@ import subprocess
 import sys
 import unicodedata
 from collections import defaultdict
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from time import monotonic
+from typing import Any, Literal
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -152,6 +154,60 @@ def marker_value(raw: str) -> str:
 
 class KeeperError(RuntimeError):
     """A GitHub response or mutation was incomplete or failed."""
+
+
+StageName = Literal[
+    "branch-list", "snapshot", "identity", "pr-evidence", "drop-detail", "gate-hold",
+    "fresh-read", "fresh-comments", "fresh-checks", "fresh-gate-hold", "squash-text",
+    "revoke", "enqueue", "membership", "comment-flush", "comment-once", "flake-issues", "save",
+]
+
+
+class _StageRecords:
+    """Bounded stderr pairs for existing apply stages; never include operation text."""
+
+    def __init__(self, enabled: bool) -> None:
+        self.enabled = enabled
+        self.started = monotonic() if enabled else 0.0
+
+    def emit(
+        self, event: Literal["start", "done"], stage: StageName, number: int | None, head: str | None,
+        started: float, outcome: str = "ok",
+    ) -> None:
+        try:
+            now = monotonic()
+            pr = str(number) if type(number) is int and number > 0 else "-"
+            sha = head[:12] if isinstance(head, str) and SHA.fullmatch(head) else "-"
+            record = f"mq-keeper-stage event={event} pr={pr} head={sha} stage={stage} t={now - self.started:.6f}"
+            if event == "done":
+                record += f" duration={now - started:.6f} outcome={outcome}"
+            print(record, file=sys.stderr, flush=True)
+        except (OSError, ValueError):
+            pass  # A closed stderr must not replace the operation's result or exception.
+
+    @contextmanager
+    def __call__(self, stage: StageName, number: int | None = None, head: str | None = None) -> Iterator[None]:
+        if not self.enabled:
+            yield
+            return
+        started = monotonic()
+        self.emit("start", stage, number, head, started)
+        outcome = "ok"
+        try:
+            yield
+        except BaseException as exc:
+            if isinstance(exc, KeeperError):
+                outcome = "keeper-error"
+            elif isinstance(exc, GitHubRateLimited):
+                outcome = "rate-limited"
+            elif isinstance(exc, PublishBlocked):
+                outcome = "publish-blocked"
+            else:
+                name = type(exc).__name__
+                outcome = "other:" + (name if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,63}", name) else "BaseException")
+            raise
+        finally:
+            self.emit("done", stage, number, head, started, outcome)
 
 
 def _auto_merge_armed(row: Mapping[str, Any]) -> bool:
@@ -1033,8 +1089,11 @@ def _canonical_flake_issue(
 
 
 def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str], bool]:
-    branches = gh.branch_names()
-    snap = gh.snapshot(branches)
+    stages = _StageRecords(apply)
+    with stages("branch-list"):
+        branches = gh.branch_names()
+    with stages("snapshot"):
+        snap = gh.snapshot(branches)
     lines: list[str] = []
     failed = False
     estimated_remaining = snap["remaining"]
@@ -1046,7 +1105,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
     previous = _load(state_path)
     queued_now: dict[str, str] = {}
     approved_now: dict[str, str] = {}
-    login = gh.identity()
+    with stages("identity"):
+        login = gh.identity()
     observed = datetime.now(UTC).isoformat()
     open_numbers = {str(pr.get("number")) for pr in snap["prs"]}
     for pr in snap["prs"]:
@@ -1063,10 +1123,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         queue_enabled = snap["queues"].get(pr.get("baseRefName"))
         comment_safe = True
         try:
-            comments = gh.comments(number)
-            verdict = lookup_verdict(comments, head, login)
-            check_rows = gh.checks(head)
-            checks = _evaluate_checks(gh, number, head, check_rows)
+            with stages("pr-evidence", number, head):
+                comments = gh.comments(number)
+                verdict = lookup_verdict(comments, head, login)
+                check_rows = gh.checks(head)
+                checks = _evaluate_checks(gh, number, head, check_rows)
         except KeeperError:
             comments, checks, check_rows = [], "CI-unknown", []
             verdict = Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
@@ -1090,7 +1151,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         prior_drop_key = f"{number}:{dropped_head}"
         if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs, failed_tests, failed_run = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
+                with stages("drop-detail", number, head):
+                    detail, failed_jobs, failed_tests, failed_run = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
@@ -1103,7 +1165,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
         if reason == "ready" and queued is not True and not armed:
             try:
-                reason = _gate_hold(gh, number, head, previous) or reason
+                with stages("gate-hold", number, head):
+                    reason = _gate_hold(gh, number, head, previous) or reason
             except KeeperError:
                 reason = "requeue-unknown"
         rollup = project_check_runs(check_rows)
@@ -1136,7 +1199,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             current_checks = "CI-unknown"
             verdict_lookup_ok = False
             try:
-                current = gh.current(number)
+                with stages("fresh-read", number, head):
+                    current = gh.current(number)
             except KeeperError:
                 current = {}
             current_head = current.get("headRefOid")
@@ -1156,8 +1220,9 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 )
             else:
                 try:
-                    current_comments = gh.comments(number)
-                    current_verdict = lookup_verdict(current_comments, head, login)
+                    with stages("fresh-comments", number, head):
+                        current_comments = gh.comments(number)
+                        current_verdict = lookup_verdict(current_comments, head, login)
                 except KeeperError:
                     current_comments, current_verdict = [], Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
                     comment_safe = False
@@ -1172,7 +1237,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         approved_before = True
                         approved_now[key] = head
                 try:
-                    current_checks = _evaluate_checks(gh, number, head, gh.checks(head))
+                    with stages("fresh-checks", number, head):
+                        current_checks = _evaluate_checks(gh, number, head, gh.checks(head))
                 except KeeperError:
                     current_checks = "CI-unknown"
                 reason = (
@@ -1181,7 +1247,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     else "fresh-evidence-unknown"
                 )
                 if reason == "ready" and queued is not True and not armed:
-                    reason = _gate_hold(gh, number, head, previous) or reason
+                    with stages("fresh-gate-hold", number, head):
+                        reason = _gate_hold(gh, number, head, previous) or reason
             if queued is True or armed:
                 fresh = bool(
                     current
@@ -1202,16 +1269,18 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     else None
                 )
                 if revoke is None and fresh and queued is True:
-                    blocked = gh.squash_blocked(number, head)
+                    with stages("squash-text", number, head):
+                        blocked = gh.squash_blocked(number, head)
                     if blocked:
                         revoke = "squash-text-blocked"
                     elif blocked is None:
                         lines.append(f"#{number} squash text unverified")
                 if revoke is not None:
-                    if queued is True:
-                        gh.dequeue(node_id)
-                    else:
-                        gh.disarm(number)
+                    with stages("revoke", number, head):
+                        if queued is True:
+                            gh.dequeue(node_id)
+                        else:
+                            gh.disarm(number)
                     lines.append(f"#{number} revoked: {revoke}" + _cf_unknown_detail(revoke, current_verdict))
                     if queued is True:
                         queued_now.pop(key, None)
@@ -1224,32 +1293,38 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                             previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
                 elif reason == "ready" and queued is True:
-                    gh.enqueue(number, head)
+                    with stages("enqueue", number, head):
+                        gh.enqueue(number, head)
                     lines.append(f"#{number} queued cleanup reconciled; read enqueue-cleanup receipt")
                     estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":
-                gh.enqueue(number, head)
-                if not gh.membership(number):
-                    after_enqueue = gh.current(number)
-                    if _auto_merge_armed(after_enqueue):
-                        lines.append(f"#{number} armed")
+                with stages("enqueue", number, head):
+                    gh.enqueue(number, head)
+                with stages("membership", number, head):
+                    if not gh.membership(number):
+                        after_enqueue = gh.current(number)
+                        if _auto_merge_armed(after_enqueue):
+                            lines.append(f"#{number} armed")
+                        else:
+                            raise KeeperError("enqueue returned success without queue membership or armed auto-merge")
                     else:
-                        raise KeeperError("enqueue returned success without queue membership or armed auto-merge")
-                else:
-                    queued_now[key] = head
-                    lines.append(f"#{number} enqueued")
+                        queued_now[key] = head
+                        lines.append(f"#{number} enqueued")
                 estimated_remaining -= 30
-            _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
+            with stages("comment-flush", number, head):
+                _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
                 and comment_safe
                 and (_ever_approved(comments, login) or dropped)
             ):
-                _comment_once(gh, number, head, reason, comments, login, detail)
+                with stages("comment-once", number, head):
+                    _comment_once(gh, number, head, reason, comments, login, detail)
             elif dropped and dropped_head == head and detail and comment_safe:
-                _comment_once(gh, number, head, "queue-drop", comments, login, detail)
+                with stages("comment-once", number, head):
+                    _comment_once(gh, number, head, "queue-drop", comments, login, detail)
             for job in failed_jobs:
                 if job in AGGREGATE_JOBS:
                     continue  # The aggregate gate fails whenever any job fails; it is never a flaky test.
@@ -1293,58 +1368,60 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
     issue_updates = previous.setdefault("flake_issue_updates", {})
     flaky = _flaky_jobs(failures)
     known = {key: _identity_spellings(key) for key in frozenset(known_keys | flaky.keys())}
-    issues = None
-    if flaky and budget:
-        try:
-            issues = list(gh.issues(""))
-        except KeeperError as exc:
-            failed = True
-            lines.append(f"flaky-test issue listing FAILED: {exc}")
-    for key, (numbers, tests) in sorted(flaky.items()):
-        if not budget or issues is None:
-            continue
-        matching = [item for item in failures if (item.get("test") or item.get("job")) == key]
-        run_ids = sorted({item["run_id"] for item in matching if type(item.get("run_id")) is int})
-        body = (
-            f"{code_span(key, DISPLAY_TEST_LIMIT)} failed merge_group runs on distinct PRs "
-            f"{', '.join(f'#{n}' for n in numbers)} within 24 hours."
-            f" Run IDs: {', '.join(map(str, run_ids)) or 'unknown (legacy record)'}."
-        )
-        if tests:
-            body += f" Failed test: {code_span(tests[0], DISPLAY_TEST_LIMIT)}."
-        try:
-            marker = "<!-- mq-keeper-flake -->"
-            issue, ambiguity = _canonical_flake_issue(key, bool(tests), issues, known)
-            lines.append(f"flaky record: {display_text(key, DISPLAY_TEST_LIMIT)}; PRs={','.join(map(str, numbers))}; "
-                         f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'none'}")
-            if ambiguity:
-                lines.append(f"CTO finding: ambiguous identity for {display_text(key, DISPLAY_TEST_LIMIT)}; "
-                             f"{display_text(ambiguity)}; automatic issue creation disabled")
+    with stages("flake-issues"):
+        issues = None
+        if flaky and budget:
+            try:
+                issues = list(gh.issues(""))
+            except KeeperError as exc:
+                failed = True
+                lines.append(f"flaky-test issue listing FAILED: {exc}")
+        for key, (numbers, tests) in sorted(flaky.items()):
+            if not budget or issues is None:
                 continue
-            if issue is None:
-                lines.append(f"CTO finding: no canonical open issue for {display_text(key, DISPLAY_TEST_LIMIT)}; "
-                             "automatic issue creation disabled")
-                continue
-            if not apply:
-                continue
-            issue_number = issue.get("number")
-            if type(issue_number) is not int:
-                raise KeeperError("matching flaky-test issue has no number")
-            comments = gh.comments(issue_number)
-            recent = any(
-                marker in str(comment.get("body", ""))
-                and (comment.get("user") or {}).get("login") == login
-                and str(comment.get("created_at", "")) >= cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
-                for comment in comments
+            matching = [item for item in failures if (item.get("test") or item.get("job")) == key]
+            run_ids = sorted({item["run_id"] for item in matching if type(item.get("run_id")) is int})
+            body = (
+                f"{code_span(key, DISPLAY_TEST_LIMIT)} failed merge_group runs on distinct PRs "
+                f"{', '.join(f'#{n}' for n in numbers)} within 24 hours."
+                f" Run IDs: {', '.join(map(str, run_ids)) or 'unknown (legacy record)'}."
             )
-            if not recent and issue_updates.get(str(issue_number), "") < cutoff.isoformat():
-                gh.issue_comment(issue_number, body + "\n\n" + marker)
-                issue_updates[str(issue_number)] = observed
-        except KeeperError as exc:
-            failed = True
-            lines.append(f"flaky-test issue FAILED: {exc}")
+            if tests:
+                body += f" Failed test: {code_span(tests[0], DISPLAY_TEST_LIMIT)}."
+            try:
+                marker = "<!-- mq-keeper-flake -->"
+                issue, ambiguity = _canonical_flake_issue(key, bool(tests), issues, known)
+                lines.append(f"flaky record: {display_text(key, DISPLAY_TEST_LIMIT)}; PRs={','.join(map(str, numbers))}; "
+                             f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'none'}")
+                if ambiguity:
+                    lines.append(f"CTO finding: ambiguous identity for {display_text(key, DISPLAY_TEST_LIMIT)}; "
+                                 f"{display_text(ambiguity)}; automatic issue creation disabled")
+                    continue
+                if issue is None:
+                    lines.append(f"CTO finding: no canonical open issue for {display_text(key, DISPLAY_TEST_LIMIT)}; "
+                                 "automatic issue creation disabled")
+                    continue
+                if not apply:
+                    continue
+                issue_number = issue.get("number")
+                if type(issue_number) is not int:
+                    raise KeeperError("matching flaky-test issue has no number")
+                comments = gh.comments(issue_number)
+                recent = any(
+                    marker in str(comment.get("body", ""))
+                    and (comment.get("user") or {}).get("login") == login
+                    and str(comment.get("created_at", "")) >= cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+                    for comment in comments
+                )
+                if not recent and issue_updates.get(str(issue_number), "") < cutoff.isoformat():
+                    gh.issue_comment(issue_number, body + "\n\n" + marker)
+                    issue_updates[str(issue_number)] = observed
+            except KeeperError as exc:
+                failed = True
+                lines.append(f"flaky-test issue FAILED: {exc}")
     if apply:
-        _save(state_path, previous)
+        with stages("save"):
+            _save(state_path, previous)
     return lines, failed
 
 
