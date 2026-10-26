@@ -1120,7 +1120,7 @@ def review_attempt_tool_config(
         elif mode == "read-only":
             tool_config["reviewer_tools"] = True
     if plan.harness == "agy":
-        tool_config["review_profile"] = review_profile
+        tool_config["review_profile"] = review_profile or "code"
         tool_config["review_ledger_path"] = str(review_ledger_path(plan.config_path))
     if plan.harness in {"codex", "agy"} and review_access != "full":
         home_path, verify_launch = (

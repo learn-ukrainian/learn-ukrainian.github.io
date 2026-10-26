@@ -78,7 +78,8 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 @pytest.mark.parametrize("harness", ["claude", "codex", "agy"])
 @pytest.mark.parametrize("access", ["isolated", "full"])
-def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_path, harness, access):
+@pytest.mark.parametrize("profile", ["code", "", "ukrainian"])
+def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_path, harness, access, profile):
     """Catch dropped grants, binding keys or scoped homes in the reusable builder."""
     plan = prepare_review_attempt(
         "rev-config",
@@ -107,7 +108,7 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
         else:
             expected["reviewer_tools"] = True
     if harness == "agy":
-        expected.update(review_profile="code", review_ledger_path=str(plan.ledger_path))
+        expected.update(review_profile=profile or "code", review_ledger_path=str(plan.ledger_path))
     if harness in {"codex", "agy"} and access == "isolated":
         expected[f"{harness}_home_override"] = str(getattr(plan, f"{harness}_home"))
     with (
@@ -126,6 +127,7 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
             model="fixture-model",
             effort="high",
             review_access=access,
+            review_profile=profile,
         )
         assert result == expected
         for name, gate in (("codex", codex_gate), ("agy", agy_gate)):
