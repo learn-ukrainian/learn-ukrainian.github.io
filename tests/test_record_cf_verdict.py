@@ -19,7 +19,7 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.orchestration.fleet_repos import FleetRepo
 from scripts.review import record_cf_verdict as recorder
 from tests.claude_route_accounts import HOST_ACCOUNT
-from tests.test_verdict_parser import CAPACITY_OUTLINES, FROZEN_CONTAINER_CASES, OVERLAP_QUOTE
+from tests.test_verdict_parser import CAPACITY_OUTLINES, FROZEN_CONTAINER_CASES
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -88,7 +88,7 @@ def task(**updates):
     return data
 
 
-def write_task(root: Path, *, task_id="review-one", reply="VERDICT: APPROVE", **updates):
+def write_task(root: Path, *, task_id="review-one", reply="```verdict\nVERDICT: APPROVE\n```", **updates):
     root.mkdir(parents=True, exist_ok=True)
     (root / task_id).parent.mkdir(parents=True, exist_ok=True)
     (root / f"{task_id}.json").write_text(json.dumps(task(**updates)))
@@ -98,11 +98,11 @@ def write_task(root: Path, *, task_id="review-one", reply="VERDICT: APPROVE", **
 @pytest.mark.parametrize(
     "reply,expected",
     [
-        ("VERDICT: APPROVE", "APPROVED"),
-        ("VERDICT: APPROVED", "APPROVED"),
-        ("VERDICT: REQUEST_CHANGES", "CHANGES_REQUESTED"),
-        ("VERDICT: CHANGES_REQUESTED", "CHANGES_REQUESTED"),
-        ("VERDICT: BLOCKED", "BLOCKED"),
+        ("```verdict\nVERDICT: APPROVE\n```", "APPROVED"),
+        ("```verdict\nVERDICT: APPROVED\n```", "APPROVED"),
+        ("```verdict\nVERDICT: REQUEST_CHANGES\n```", "CHANGES_REQUESTED"),
+        ("```verdict\nVERDICT: CHANGES_REQUESTED\n```", "CHANGES_REQUESTED"),
+        ("```verdict\nVERDICT: BLOCKED\n```", "BLOCKED"),
         (
             '```json\n{"schema_version":"code-review-findings.v1",'
             '"overall":{"correctness":"correct","explanation":"Reviewed the diff.","confidence":0.9},'
@@ -119,31 +119,10 @@ def test_token_normalization(reply, expected):
 @pytest.mark.parametrize("case,reply,expected", FROZEN_CONTAINER_CASES, ids=[c[0] for c in FROZEN_CONTAINER_CASES])
 def test_container_visibility_reaches_recorder_before_any_forge_effect(tmp_path, monkeypatch, case, reply, expected, newline):
     response = reply.replace("\n", newline)
-    normalized = {"BLOCKED": "BLOCKED", "REQUEST_CHANGES": "CHANGES_REQUESTED"}
-    observed = []
-    original = recorder._review_verdict_and_count
-
-    def observe(text):
-        result = original(text)
-        observed.append(result)
-        return result
-
-    def stop_before_forge(*_args):
-        raise recorder.RecordError("synthetic stop before forge")
-
-    monkeypatch.setattr(recorder, "_review_verdict_and_count", observe)
-    monkeypatch.setattr(recorder, "_pr", stop_before_forge)
+    monkeypatch.setattr(recorder, "_pr", lambda *_a: pytest.fail("free-text review must precede forge access"))
     write_task(tmp_path / "tasks", reply=response)
-    if expected:
-        assert recorder.normalize_verdict(response) == normalized[expected[0]]
-        reason = "synthetic stop before forge"
-    else:
-        with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
-            recorder.normalize_verdict(response)
-        reason = "missing or ambiguous"
-    with pytest.raises(recorder.RecordError, match=reason):
+    with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
         recorder.record("review-one", task_root=tmp_path / "tasks", lock_root=tmp_path / "locks")
-    assert observed == ([(normalized[expected[0]], "unknown")] if expected else [])
 
 
 def test_recorder_parser_failure_precedes_forge_effects(tmp_path, monkeypatch):
@@ -172,39 +151,11 @@ def test_capacity_failure_precedes_recorder_forge_effects(tmp_path, monkeypatch,
         recorder.record("review-one", task_root=tmp_path / "tasks", lock_root=tmp_path / "locks")
 
 
-@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
-@pytest.mark.parametrize("reply,expected", [
-    (OVERLAP_QUOTE, None),
-    (OVERLAP_QUOTE + "\nVERDICT: BLOCKED\n", "BLOCKED"),
-    (OVERLAP_QUOTE.replace("> para\nVERDICT", "> para\n\nVERDICT"), "APPROVED"),
-    ("- " * 9 + "x\n\n```\nVERDICT: APPROVE\n```\n", None),
-    ("- " * 9 + "x\n\n```\nVERDICT: APPROVE\n```\n\nVERDICT: APPROVE\n", "APPROVED"),
-])
-def test_overlap_and_supported_depth_recorder_controls(tmp_path, monkeypatch, newline, reply, expected):
-    response = reply.replace("\n", newline)
-    effects = []
-
-    def stop_before_forge(*_args):
-        effects.append("forge boundary")
-        raise recorder.RecordError("synthetic stop before forge")
-
-    monkeypatch.setattr(recorder, "_pr", stop_before_forge)
-    write_task(tmp_path / "tasks", reply=response)
-    if expected:
-        assert recorder.normalize_verdict(response) == expected
-    else:
-        with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
-            recorder.normalize_verdict(response)
-    with pytest.raises(recorder.RecordError, match="synthetic stop before forge" if expected else "missing or ambiguous"):
-        recorder.record("review-one", task_root=tmp_path / "tasks", lock_root=tmp_path / "locks")
-    assert effects == (["forge boundary"] if expected else [])
-
-
 def test_full_nested_task_id_is_safe_and_loadable(tmp_path):
     write_task(tmp_path, task_id="codex/review-one")
     loaded, reply = recorder._task("codex/review-one", tmp_path)
     assert loaded["status"] == "done"
-    assert reply == "VERDICT: APPROVE"
+    assert reply == "```verdict\nVERDICT: APPROVE\n```"
     with pytest.raises(recorder.RecordError, match="invalid task id"):
         recorder._task("codex/../review-one", tmp_path)
 
@@ -494,10 +445,10 @@ def test_red_team_outside_rejection_publication_guard(monkeypatch, tmp_path, ver
                 sha=head,
                 task_id="prior-review",
                 started="2026-09-23T11:00:00.000001+00:00",
-                verdict=recorder.normalize_verdict(f"VERDICT: {verdict}"),
+                verdict=recorder.normalize_verdict(f"```verdict\nVERDICT: {verdict}\n```"),
                 model="claude-opus-5-5",
                 family="anthropic",
-                reply=f"VERDICT: {verdict}",
+                reply=f"```verdict\nVERDICT: {verdict}\n```",
                 review_mode=prior_mode,
             )
         }
@@ -852,7 +803,7 @@ def test_flagged_comment_withholds_prose_despite_override(monkeypatch, tmp_path,
     monkeypatch.setattr(gate, "primary_root", lambda cwd=None: tmp_path)
     monkeypatch.setenv("LU_OPSEC_OVERRIDE", "synthetic false positive")
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
-    write_task(tasks, reply="VERDICT: APPROVE\n" + TOKEN)
+    write_task(tasks, reply="```verdict\nVERDICT: APPROVE\n```\n" + TOKEN)
     sent = []
 
     def transport(argv, **kwargs):
@@ -895,7 +846,7 @@ def test_concurrent_recorders_for_same_sha_serialize(monkeypatch, tmp_path):
 def test_two_tasks_on_one_sha_each_get_a_comment(monkeypatch, tmp_path):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     write_task(
-        tasks, task_id="review-two", reply="VERDICT: CHANGES_REQUESTED", started_at="2026-09-23T12:00:01.000001+00:00"
+        tasks, task_id="review-two", reply="```verdict\nVERDICT: CHANGES_REQUESTED\n```", started_at="2026-09-23T12:00:01.000001+00:00"
     )
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     recorder.record("review-two", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
@@ -1641,12 +1592,12 @@ def test_archived_review_task_and_reply_are_loadable(tmp_path, monkeypatch):
     from scripts.review import record
 
     tasks = tmp_path / "tasks"
-    write_task(tasks / "archive", task_id="review-old", reply="VERDICT: APPROVE")
+    write_task(tasks / "archive", task_id="review-old", reply="```verdict\nVERDICT: APPROVE\n```")
     loaded, reply = recorder._task("review-old", tasks)
-    assert (loaded["status"], reply) == ("done", "VERDICT: APPROVE")
+    assert (loaded["status"], reply) == ("done", "```verdict\nVERDICT: APPROVE\n```")
     # The hot record wins when both exist.
-    write_task(tasks, task_id="review-old", reply="VERDICT: REQUEST_CHANGES")
-    assert recorder._task("review-old", tasks)[1] == "VERDICT: REQUEST_CHANGES"
+    write_task(tasks, task_id="review-old", reply="```verdict\nVERDICT: REQUEST_CHANGES\n```")
+    assert recorder._task("review-old", tasks)[1] == "```verdict\nVERDICT: REQUEST_CHANGES\n```"
 
     # Attempt records retain the original result path after both files move.
     task_id = "review-attempt"
@@ -1962,20 +1913,20 @@ def test_repository_relative_reply_keeps_symlink_escapes(monkeypatch, tmp_path, 
     "reply,refused",
     [
         (
-            "VERDICT: APPROVE\n`/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py:12`\n"
+            "```verdict\nVERDICT: APPROVE\n```\n`/checkout/.worktrees/dispatch/cursor/review/scripts/unit.py:12`\n"
             "```\n/checkout/tests/test_unit.py:3\n```",
             False,
         ),
-        ("VERDICT: APPROVE", False),
-        ("VERDICT: APPROVE\n/checkout/scripts/unit.py /outside/private.py:12", True),
-        ("VERDICT: APPROVE\n/checkout-other/private.py", True),
-        ("VERDICT: APPROVE\n/checkout/../private.py", True),
-        ("VERDICT: APPROVE\n/checkout/\uff0e\uff0e/private.py", True),
-        ("VERDICT: APPROVE\n/checkout/.\u200b./private.py", True),
-        ("VERDICT: APPROVE\n/checkout/a.py\uff0fsrv\uff0fdata\uff0fx", True),
-        ("VERDICT: APPROVE\n/checkout/scripts/unit.py\nSENTINEL-HOST-TOKEN", True),
+        ("```verdict\nVERDICT: APPROVE\n```", False),
+        ("```verdict\nVERDICT: APPROVE\n```\n/checkout/scripts/unit.py /outside/private.py:12", True),
+        ("```verdict\nVERDICT: APPROVE\n```\n/checkout-other/private.py", True),
+        ("```verdict\nVERDICT: APPROVE\n```\n/checkout/../private.py", True),
+        ("```verdict\nVERDICT: APPROVE\n```\n/checkout/\uff0e\uff0e/private.py", True),
+        ("```verdict\nVERDICT: APPROVE\n```\n/checkout/.\u200b./private.py", True),
+        ("```verdict\nVERDICT: APPROVE\n```\n/checkout/a.py\uff0fsrv\uff0fdata\uff0fx", True),
+        ("```verdict\nVERDICT: APPROVE\n```\n/checkout/scripts/unit.py\nSENTINEL-HOST-TOKEN", True),
         *[
-            (f"VERDICT: APPROVE\n/checkout/scripts/unit.py{separator}/outside/x", True)
+            (f"```verdict\nVERDICT: APPROVE\n```\n/checkout/scripts/unit.py{separator}/outside/x", True)
             for separator in "|=\\*;&<>\"'()[]{}"
         ],
     ],
@@ -2336,12 +2287,12 @@ def test_recorder_reads_review_subjects_and_risk_from_the_review_task(monkeypatc
 
 
 @pytest.mark.parametrize("reply", ["**VERDICT: APPROVE**", "## **VERDICT**: **APPROVE**"])
-def test_markdown_approval_records_on_actual_boundary(monkeypatch, tmp_path, reply):
+def test_free_text_markdown_approval_refuses_before_publication(monkeypatch, tmp_path, reply):
     tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
     write_task(tasks, reply=reply)
-    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert result["verdict"] == "APPROVED"
-    assert calls == {"posts": 1, "statuses": 1}
+    with pytest.raises(recorder.RecordError, match="code-review-findings"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("reply", ["```\nVERDICT: APPROVE\n```", "    VERDICT: APPROVE", "\tVERDICT: APPROVE"])
@@ -2354,7 +2305,7 @@ def test_code_example_refuses_publication(monkeypatch, tmp_path, reply):
 
 
 def test_fenced_change_request_does_not_contaminate_real_approval():
-    assert recorder.normalize_verdict("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE") == "APPROVED"
+    assert recorder.normalize_verdict("```\nVERDICT: REQUEST_CHANGES\n```\n```verdict\nAPPROVE\n```") == "APPROVED"
 
 
 def test_non_commonmark_indentation_refuses_before_publication(monkeypatch, tmp_path):
@@ -2486,7 +2437,7 @@ def test_status_description_labels_red_team_and_preserves_default(monkeypatch, t
         kwargs["red_team_prompt"] = red_team_task(tasks, tmp_path)
     write_task(
         tasks,
-        reply=f"VERDICT: {verdict}",
+        reply=f"```verdict\nVERDICT: {verdict}\n```",
         **(
             {
                 "review_mode": mode,

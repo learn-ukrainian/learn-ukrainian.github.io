@@ -3,8 +3,29 @@
 > **Canonical contract (v1):** versioned JSON schema
 > `schemas/code-review-findings.v1.schema.json`, validated by
 > `scripts/verify_review.py`. Legacy loose `FINDING:` text is **removed** as a
-> dual source of truth (issue #5284). Reviewers must emit **only** schema-valid
+> dual source of truth (issue #5284). Finding payloads must contain **only** schema-valid
 > JSON — no prose wrapper, no markdown fences around the payload.
+
+## CF recording format
+
+`record_cf_verdict` accepts canonical `code-review-findings.v1` JSON OR a reply
+that ends with exactly one `verdict` code block:
+
+````markdown
+```verdict
+VERDICT: APPROVE
+```
+````
+
+Both fences must start at column 0 and match the example exactly. LF and CRLF
+are accepted. Strip surrounding body whitespace, then require one line:
+`VERDICT: <TOKEN>` or `<TOKEN>`. Tokens are `APPROVE`, `APPROVED`,
+`REQUEST_CHANGES`, `CHANGES_REQUESTED`, and `BLOCKED`, with that exact case.
+Only exact top-level fences count. Zero or multiple verdict fences, nested or
+unterminated blocks, and invalid bodies are refused. Quoted, indented, and
+differently labelled lookalikes do not count. Prose outside the block is ignored.
+Free-text verdict lines cannot be recorded. Re-run legacy captures in the new
+format; there is no compatibility flag. Canonical JSON findings validation is unchanged.
 
 ## Evidence requirement — NON-NEGOTIABLE
 

@@ -20,9 +20,9 @@ _local_repo_root = Path(__file__).resolve().parents[2]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.ai_agent_bridge._review_safety import REVIEW_VERDICT_FORMAT
 from scripts.common import github_client
 from scripts.common.repo_root import resolve_repo_root
-from scripts.review.verdict_parser import ACCEPTED_VERDICT_TOKENS
 
 if TYPE_CHECKING:
     from agent_runtime.target_admission import AdmittedTarget
@@ -300,8 +300,7 @@ def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path
         f"### Changed files (names only — pull the diff yourself)\n\n{files}\n\n"
         "Do **not** ask the operator to paste the diff. Use `gh pr diff` / sealed "
         "snapshot in the read-only dispatch worktree.\n\n"
-        "End with exactly one line: `VERDICT: APPROVED` or "
-        "`VERDICT: CHANGES_REQUESTED` or `VERDICT: BLOCKED`.\n"
+        f"{REVIEW_VERDICT_FORMAT}\n"
     )
     assert_content_size(prompt, limit=MAX_REVIEW_REQUEST_BYTES, label="review_deep_prompt")
     prompt_path = prompt_directory / f"review-deep-pr-{_safe_path_component(pr_number)}.md"
@@ -342,8 +341,7 @@ def _write_review_deep_path_prompt(target: str, prompt_directory: Path) -> Path:
         f"## Path target\n\n`{resolved}`\n\n"
         f"### Paths (names only — open files in the read-only worktree)\n\n{listing}\n\n"
         "Do not request bulk paste of file contents into the prompt.\n\n"
-        "End with exactly one line: `VERDICT: APPROVED` or "
-        "`VERDICT: CHANGES_REQUESTED` or `VERDICT: BLOCKED`.\n"
+        f"{REVIEW_VERDICT_FORMAT}\n"
     )
     assert_content_size(prompt, limit=MAX_REVIEW_REQUEST_BYTES, label="review_deep_prompt")
     prompt_path = prompt_directory / f"review-deep-path-{_safe_path_component(target)}.md"
@@ -535,20 +533,15 @@ def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
 
 _REVIEW_VERDICT_OUTPUT = (
-    "Review completion requires your own plain, unfenced verdict line: "
-    "the label VERDICT, a colon, then one accepted token. "
-    f"Accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}. "
     # #10665: proportional verdicts; INCONCLUSIVE maps onto the existing BLOCKED token.
-    "An approval may carry tracked non-blocking follow-ups. A review that lacks a capability "
+    REVIEW_VERDICT_FORMAT + "An approval may carry tracked non-blocking follow-ups. A review that lacks a capability "
     "its brief requires (shell, diff access, hashing, sources tools) is inconclusive: give the "
     "BLOCKED token and name the missing capability."
 )
 
 _NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract
 
-In your first completed reply, include a plain, unfenced verdict line using
-the label VERDICT, a colon, then APPROVE, REQUEST_CHANGES, or BLOCKED, as warranted
-by your independent judgment. Also include one native JSON object, unfenced, conforming to
+In your first completed reply, include one native JSON object, unfenced, conforming to
 schemas/code-review-findings.v1.schema.json (schema_version: code-review-findings.v1).
 Read that schema: overall requires correctness, explanation, confidence; each
 finding requires id, title, body, priority, confidence, category, location,

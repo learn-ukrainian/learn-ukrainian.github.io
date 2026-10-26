@@ -23049,9 +23049,9 @@ def test_creation_inventory_failure_retains_new_tree_without_spawning(tmp_tasks_
 @pytest.mark.parametrize(
     "reply,dispatch_verdict,recorded",
     [
-        ("**VERDICT: APPROVE**", "APPROVE", "APPROVED"),
-        ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", "APPROVED"),
-        ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", "APPROVED"),
+        ("**VERDICT: APPROVE**", "APPROVE", None),
+        ("VERDICT: APPROVE\nVERDICT: APPROVED", "APPROVED", None),
+        ("```\nVERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE", "APPROVE", None),
         ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "REQUEST_CHANGES", None),
         ("```\nVERDICT: APPROVE\n```", None, None),
     ],

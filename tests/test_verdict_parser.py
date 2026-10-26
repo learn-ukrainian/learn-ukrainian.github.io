@@ -188,16 +188,16 @@ def test_commonmark_indented_top_level_fence_allows_unindented_data(fence, inden
 @pytest.mark.parametrize(
     "text,expected_verdicts",
     [
-        ("1. Old example:\n   ```py\n   x = 1\n2. Fix #8886.\n3. New example:\n   ```\n", ["APPROVE"]),
-        ("- Old example:\n  ~~~py\n  x = 1\n- Fix #8886.\n- New example:\n  ~~~\n", ["APPROVE"]),
+        ("1. Old example:\n   ```py\n   x = 1\n2. Fix #8886.\n3. New example:\n   ```\n", []),
+        ("- Old example:\n  ~~~py\n  x = 1\n- Fix #8886.\n- New example:\n  ~~~\n", []),
         ("- Old example:\n\n  ```py\n  x = 1\nFix #8886.\n  ```\n", ["APPROVE"]),
-        ("1. Old example:\n\n   ```py\n   x = 1\n\n2. Fix #8886.\n\n3. New example:\n   ```\n", ["APPROVE"]),
+        ("1. Old example:\n\n   ```py\n   x = 1\n\n2. Fix #8886.\n\n3. New example:\n   ```\n", []),
         ("- Old example:\n  ```py\n  Fix #8886.\n  ```\n", []),
     ],
 )
 def test_commonmark_container_fences_stay_visible_to_safety_consumers(text, expected_verdicts):
     assert _without_code_fences(text, keep_unclosed=True) == text
-    # #10153: a sibling list verdict is outside the implicitly terminated fence.
+    # #10153: only a verdict outside the implicitly terminated fence is visible.
     assert recognized_verdicts(text.replace("Fix #8886.", "VERDICT: APPROVE")) == expected_verdicts
 
 

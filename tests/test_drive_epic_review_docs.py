@@ -202,7 +202,7 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
         "started_at": "2026-10-08T00:00:00+00:00",
     }
     task_path.write_text(json.dumps(task), encoding="utf-8")
-    (task_root / "review-fixture.result").write_text("VERDICT: APPROVE\n", encoding="utf-8")
+    (task_root / "review-fixture.result").write_text("```verdict\nVERDICT: APPROVE\n```\n", encoding="utf-8")
     # The existing producer regression runs cmd_dispatch --dry-run and checks
     # its actual two-line task-id/run-nonce stdout against the persisted record.
     review_task, review_nonce = "review-fixture", NONCE

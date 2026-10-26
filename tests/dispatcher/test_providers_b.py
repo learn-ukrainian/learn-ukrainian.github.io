@@ -11,7 +11,6 @@ import pytest
 from scripts.dispatcher.providers import load
 from scripts.dispatcher.types import ParsedResult, TaskSpec
 from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-from scripts.review.verdict_parser import recognized_verdicts
 
 # Small recorded event shapes from the old adapters' stream contracts.
 SUCCESS = {
@@ -253,102 +252,23 @@ def test_cursor_message_content_does_not_lose_assistant_text(content):
     assert load("cursor").parse(stdout, "", 0, None).text == "Finished."
 
 
-@pytest.mark.parametrize("verdict", ["**VERDICT: APPROVE**", "VERDICT: APPROVE"])
-def test_cursor_assistant_messages_preserve_verdict_boundary_over_result(verdict):
-    # Trimmed from atlas-1538-query-ua-cf-grok.result; no private content retained.
-    preamble = "using tracked-file reads only."
-    glued = preamble + verdict
-    events = [{"type": "assistant", "message": {"role": "assistant", "content": [
-        {"type": "text", "text": text}]}} for text in (preamble, verdict)]
-    events.append({"type": "result", "subtype": "success", "is_error": False, "result": glued})
-    assert recognized_verdicts(glued) == []
-    parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
-    assert (parsed.text, parsed.error) == (preamble + "\n" + verdict, None)
-    assert recognized_verdicts(parsed.text) == ["APPROVE"]
-    assert normalize_verdict(parsed.text) == "APPROVED"
-
-
-@pytest.mark.parametrize("nested", [False, True])
-@pytest.mark.parametrize("trailing", ["", " "])
-@pytest.mark.parametrize("parts,expected", [
-    (["- **VERDICT**: **APPROVE**", "or **REQUEST_CHANGES** per the rubric"], []),
-    (["VERDICT: APPROVE\n\nVERDICT: REQUEST_CHANGES (one blocker below)"], []),
-    (["**VERDICT: APPROVE**\n*VERDICT: BLOCKED.* Findings follow."], []),
-    (["*VERDICT: BLOCKED.* Findings follow."], []),
-    (["VERDICT: APPROVE\nor REQUEST_CHANGES per the rubric"], []),
-    (["VERDICT: APPROVE\n    or REQUEST_CHANGES per the rubric"], []),
-    (["**VERDICT**: **APPROVE**\nor **REQUEST_CHANGES**"], []),
-    (["VERDICT: APPROVE", "or REQUEST_CHANGES per the rubric"], []),
-    (["VERDICT: APPROVE", " or REQUEST_CHANGES per the rubric"], []),
-    (["Review\n\nChecked head.\n- **VERDICT**: **`APPROVE`**\n\n" + "Finding.\n" * 74], ["APPROVE"]),
-    (["VERDICT: APPROVE\nFindings follow."], ["APPROVE"]),
-])
-def test_cursor_split_rubric_cannot_create_false_approval(nested, trailing, parts, expected):
-    parts = [parts[0] + trailing, *parts[1:]]
-    events = [{"type": "assistant", **({"message": {"content": [{"type": "text", "text": p}]}}
-              if nested else {"content": p})} for p in parts]
-    events.append({"type": "result", "subtype": "success", "result": "".join(parts)})
-    parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
-    assert parsed.error is None
-    assert recognized_verdicts(parsed.text) == expected
-    assert parsed.text == "\n".join(p.rstrip() for p in parts)
-    if expected:
-        assert normalize_verdict(parsed.text) == "APPROVED"
-    else:
-        with pytest.raises(RecordError, match="missing or ambiguous"):
-            normalize_verdict(parsed.text)
-
-
-@pytest.mark.parametrize("event_type", ["assistant", "text"])
-@pytest.mark.parametrize("indent", ["    ", "\t"])
-def test_cursor_leading_indented_example_cannot_create_false_approval(event_type, indent):
-    example = indent + "VERDICT: APPROVE"
-    events = [
-        {"type": event_type, "content": example + "  \n"},
-        {"type": "assistant", "content": "  \n"},
-        {"type": "assistant", "content": "\nFindings follow.  \n"},
-        {"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"},
-    ]
-    parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
-    assert parsed.text == example + "  \n\nFindings follow."
-    assert parsed.error is None
-    assert recognized_verdicts(parsed.text) == []
-    with pytest.raises(RecordError, match="missing or ambiguous"):
-        normalize_verdict(parsed.text)
-
-
 @pytest.mark.parametrize("event_type", ["assistant", "text"])
 @pytest.mark.parametrize("parts,expected", [
-    (["VERDICT: APPROVE", "\nor REQUEST_CHANGES per the rubric"], []),
-    (["VERDICT: APPROVE", " \nor REQUEST_CHANGES per the rubric"], []),
-    (["VERDICT: APPROVE", "\r\nor REQUEST_CHANGES per the rubric"], []),
-    (["VERDICT: APPROVE\n", "or REQUEST_CHANGES per the rubric"], []),
-    (["VERDICT: APPROVE\r\n", "or REQUEST_CHANGES per the rubric"], []),
-    *[(["VERDICT: APPROVE", gap + label], []) for gap in ("\n", "\n\n") for label in (
-        "Verdict: Changes requested", "Verdict: changes requested", "VERDICT: REQUEST CHANGES",
-        "VERDICT: REQUEST-CHANGES", "VERDICT: REQUEST\u2011CHANGES", "VERDICT: REQUEST\u2013CHANGES",
-        "VERDICT: REJECT", "VERDICT: ~~APPROVE~~ REQUEST_CHANGES", "Verdict: Approve with nits",
-        "\u200bVERDICT: REQUEST_CHANGES", "\ufeffVERDICT: REQUEST_CHANGES", "\u202eVERDICT: REQUEST_CHANGES",
-        "- **\u200bVerdict**: Changes requested", "ＶＥＲＤＩＣＴ： REQUEST CHANGES",
-    )],
-    (["VERDICT: APPROVE", "\nабоREQUEST_CHANGES"], []),
-    (["VERDICT: APPROVE", "\n\nVERDICT: APPROVED"], []),
-    (["VERDICT: APPROVE", "\n\n- VERDICT: REQUEST_CHANGES\n  Finding."], []),
-    (["VERDICT: APPROVE", "\nVERDICT: APPROVE"], ["APPROVE", "APPROVE"]),
-    (["Review\n\nChecked head.\n- **VERDICT**: **`APPROVE`**\n\n" + "Finding.\n" * 74], ["APPROVE"]),
+    (["Review.", "```verdict\nVERDICT: APPROVE", "```"], "Review.\n```verdict\nVERDICT: APPROVE\n```"),
+    (["```verdict\nREQUEST_CHANGES\n", "```"], "```verdict\nREQUEST_CHANGES\n```"),
+    (["```verdict\r\nAPPROVE", "\r\n```"], "```verdict\r\nAPPROVE\r\n```"),
+    (["A", " \nB"], "A\n \nB"), (["A \n", "B"], "A \nB"),
+    (["    ```verdict\nAPPROVE", "```"], "    ```verdict\nAPPROVE\n```"),
 ])
-def test_cursor_event_line_endings_and_malformed_labels_cannot_false_approve(event_type, parts, expected):
-    events = [{"type": "assistant", "content": parts[0]}]
-    events.extend({"type": event_type, "content": p} for p in parts[1:])
-    events.append({"type": "result", "subtype": "success", "result": "".join(parts)})
+def test_cursor_event_join_preserves_fence_lines_and_indentation(event_type, parts, expected):
+    events = [{"type": event_type, "content": part} for part in parts]
+    events.append({"type": "result", "subtype": "success", "result": "glued fallback"})
     parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
-    assert parsed.error is None
-    assert recognized_verdicts(parsed.text) == expected
-    assert recognized_verdicts("".join(parts)) == expected
-    if expected:
-        assert normalize_verdict(parsed.text) == "APPROVED"
+    assert (parsed.text, parsed.error) == (expected, None)
+    if expected.startswith(("Review.", "```verdict")):
+        assert normalize_verdict(parsed.text) == ("CHANGES_REQUESTED" if "REQUEST_CHANGES" in expected else "APPROVED")
     else:
-        with pytest.raises(RecordError, match="missing or ambiguous"):
+        with pytest.raises(RecordError, match="code-review-findings"):
             normalize_verdict(parsed.text)
 
 

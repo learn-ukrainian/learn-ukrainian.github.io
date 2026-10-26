@@ -250,8 +250,17 @@ def test_structured_fence_exact_token_acceptance(newline, body, expected):
     assert normalize_verdict(reply) == expected
 
 
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
 @pytest.mark.parametrize("reply", [
     "VERDICT: APPROVE", "**VERDICT: APPROVE**", "## VERDICT: APPROVE",
+    *[prefix + line for prefix in ("", "- ", "* ", "+ ", "1. ", "1) ", "   - ") for line in (
+        "VERDICT: APPROVE or REQUEST_CHANGES per the rubric",
+        "**VERDICT**: **APPROVE** or **REQUEST_CHANGES**",
+        "VERDICT: APPROVE with caveats", "**VERDICT: APPROVE.** Both issues are fixed.",
+        "**VERDICT: APPROVE** (three non-blocking findings below)",
+        "**VERDICT APPROVE** — reviewed exact head …",
+    )],
+    "VERDICT: APPROVE\n\nVERDICT: APPROVED", "VERDICT: APPROVE\nVERDICT: APPROVE",
     "- VERDICT: APPROVE\n  or REQUEST_CHANGES per the rubric",
     "- VERDICT: APPROVE\n\n  or REQUEST_CHANGES per the rubric",
     "VERDICT: APPROVE\nor REQUEST_CHANGES per the rubric",
@@ -266,9 +275,9 @@ def test_structured_fence_exact_token_acceptance(newline, body, expected):
         "- **\u200bVerdict**: Changes requested", "ＶＥＲＤＩＣＴ： REQUEST CHANGES", "абоREQUEST_CHANGES",
     )],
 ])
-def test_free_prose_false_approval_corpus_has_no_structured_verdict(reply):
+def test_free_prose_false_approval_corpus_has_no_structured_verdict(reply, newline):
     with pytest.raises(RecordError, match=r"code-review-findings\.v1 JSON or exactly one.*verdict"):
-        normalize_verdict(reply)
+        normalize_verdict(reply.replace("\n", newline))
 
 
 @pytest.mark.parametrize("reply", [

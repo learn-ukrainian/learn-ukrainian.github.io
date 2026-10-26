@@ -193,8 +193,12 @@ read-only dispatch (#8703, above).
    corrected behaviour; a code fix is a suggestion. APPROVE with tracked follow-ups is allowed.
    A delta-review brief asks the reviewer to probe every fallback or fail-open path changed
    by the fix diff and check listed fixes, interactions and weakened tests at the new exact
-   head. A missing required capability is INCONCLUSIVE: the verdict line uses `BLOCKED` and
+   head. A missing required capability is INCONCLUSIVE: the structured verdict uses `BLOCKED` and
    names the capability; it still blocks.
+   The reply must contain canonical `code-review-findings.v1` JSON OR end with exactly
+   one column-0 ` ```verdict ` block closed by column-0 ` ``` `. Its body must be
+   one `VERDICT: <TOKEN>` or `<TOKEN>` line using `APPROVE`, `APPROVED`,
+   `REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Free-text verdicts are refused.
 6. **Breakers** — the review stopping rule above and `local-code-review` checklist
    Step 6 apply, even when the outstanding-finding count shrinks.
 

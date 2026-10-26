@@ -269,8 +269,8 @@ the fix's interactions includes weakened or deleted tests in that diff. A new
 blocker must satisfy the canonical review stopping rule, including its security
 FAIL exception; other findings are tracked follow-ups with owners.
 A reviewer that lacks a capability the brief requires (shell, diff access,
-hashing, the `sources` tools) returns INCONCLUSIVE: the verdict line uses the
-`BLOCKED` token and names the missing capability. INCONCLUSIVE still blocks
+hashing, the `sources` tools) returns INCONCLUSIVE: the structured verdict uses
+`BLOCKED` and the reply names the missing capability. INCONCLUSIVE still blocks
 landing and is never reported as changes requested against the diff.
 
 **Exact-head CI is execution evidence.** Exact-head CI is valid execution

@@ -19,7 +19,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
-    parts, result, error = [""], {}, None
+    parts, result, error = [], {}, None
     models = set()
     for line in jsonl_lines(stdout):
         if not line.strip():
@@ -43,7 +43,7 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         elif event.get("type") == "error":
             error = "cursor: terminal error"
         elif event.get("type") == "text" and isinstance(event.get("content"), str):
-            parts[-1] += event["content"]
+            parts.append(event["content"])
         elif event.get("role") == "assistant" or event.get("type") == "assistant":
             content = event.get("message", event)
             content = content.get("content") if isinstance(content, dict) else None
@@ -54,7 +54,7 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
                     if isinstance(p, dict) and p.get("type") == "text" and isinstance(p.get("text"), str)
                 )
             if isinstance(content, str) and content.strip():
-                parts.extend([content, ""])
+                parts.append(content)
     text = ""
     for part in parts:
         if not part.strip():
