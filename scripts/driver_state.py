@@ -27,9 +27,10 @@ it is re-injected before every model call and survives any compaction. The
 hook rejects an oversized rendered envelope visibly, without clipping goals.
 
 ``agy-stop-hook`` implements the AGY ``Stop`` contract. A driver must not end a
-turn on a question or a plan, with fewer of its own workers running than the
-private ``LU_DRIVER_MIN_WORKERS`` target, or with nothing armed to wake it.
-An absent or invalid target is unknown and cannot force a worker-count continuation. In those cases it returns
+turn on a question or a plan, or with fewer of its own workers running than the
+private ``LU_DRIVER_MIN_WORKERS`` target.
+An absent or invalid target is unknown and cannot force a worker-count continuation.
+When continuation is required, it returns
 ``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
 reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
@@ -61,14 +62,13 @@ from markdown_it import MarkdownIt
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from scripts.common.epic_selector import validate_epic
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 from scripts.common.task_store_paths import tasks_dir
-from scripts.driver_blockers import LEDGER_NAME, USAGE_RULE, show_summary, validate_epic
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
-MAX_INJECT_CHARS = 6000
 MIN_WORKERS_ENV = "LU_DRIVER_MIN_WORKERS"
 MAX_CONSECUTIVE_CONTINUES = 4
 # Counter values need only a few digits. Bound storage reads, including lock
@@ -88,11 +88,8 @@ POLICY = f"""## {POLICY_TITLE}
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
 - End every turn with the privately configured worker target met and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
 """
-BLOCKER_POLICY_TITLE = "CTO blocker delta policy"
-BLOCKER_POLICY = f"## {BLOCKER_POLICY_TITLE}\n{USAGE_RULE}\n"
-# Preserve the former total envelope budget (state, policy and wrapper), but
-# apply it to the complete rendered message rather than truncating the state.
-MAX_ENVELOPE_CHARS = MAX_INJECT_CHARS + len(POLICY) + len(BLOCKER_POLICY) + 600
+# Keep the existing envelope limit after removing the retired posting protocol.
+MAX_ENVELOPE_CHARS = 9_381
 
 TEMPLATE = """# Driver state: {epic}
 
@@ -114,7 +111,6 @@ TEMPLATE = """# Driver state: {epic}
 - No secrets or deployment details in the public repo.
 
 {policy}
-{blocker_policy}
 """
 
 
@@ -175,17 +171,26 @@ def render_injection(text: str, path: Path) -> str:
     if POLICY_TITLE.lower() not in text.lower():
         text = text.rstrip() + "\n\n" + POLICY
     tokens = MarkdownIt().parse(text)
-    lines = text.splitlines()
-    headings = {
-        tokens[index + 1].content
+    # Match the parser's CR/LF line maps without splitting Unicode separators
+    # or changing the original line endings in retained pinned state.
+    lines = re.split(r"(?<=\n)|(?<=\r)(?!\n)", text)
+    headings = [
+        (token.map[0], tokens[index + 1].content, token)
         for index, token in enumerate(tokens)
-        if token.type == "heading_open"
-        and token.markup == "##"
-        and token.level == 0
-        and lines[token.map[0]].startswith("## ")
-    }
-    if BLOCKER_POLICY_TITLE not in headings:
-        text = text.rstrip() + "\n\n" + BLOCKER_POLICY
+        if token.type == "heading_open" and token.level == 0 and token.tag in {"h1", "h2"}
+    ]
+    for index in range(len(headings) - 1, -1, -1):
+        start, title, token = headings[index]
+        if (
+            title != "CTO blocker delta policy"
+            or token.tag != "h2"
+            or token.markup != "##"
+            or not lines[start].startswith("##")
+        ):
+            continue
+        end = headings[index + 1][0] if index + 1 < len(headings) else len(lines)
+        del lines[start:end]
+    text = "".join(lines)
     message = (
         "PINNED DRIVER STATE (pinned facts only; re-injected every model call). "
         "Task state, goals, decisions and handoffs live in the driver-state database: "
@@ -599,10 +604,6 @@ def cmd_whoami(path: Path | None) -> int:
         print("state: (no LU_DRIVER_STATE_FILE / SESSION_EPIC; not a driver session)")
         return 1
     print("state: (configured)")
-    print(show_summary(path.parent / LEDGER_NAME, epic))
-    from scripts.driver_blockers import USAGE_RULE
-
-    print(f"blocker-policy: {USAGE_RULE}")
     if not path.is_file():
         print("state file missing; create it with: init --epic <epic>")
         return 1
@@ -635,7 +636,7 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
 """,
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("whoami", help="Print epic, seat, goals, next step and CTO blocker baseline summary.")
+    sub.add_parser("whoami", help="Print epic, seat, goals and next step.")
     sub.add_parser("goals", help="Print the full pinned state file.")
     p_path = sub.add_parser("path", help="Print the state file path.")
     p_path.add_argument("--epic", help="Epic selector, for example infra (default: launcher environment).")
@@ -707,7 +708,7 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
             print(f"exists: {path} (use --force to overwrite)", file=sys.stderr)
             return 1
         path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-        path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY, blocker_policy=BLOCKER_POLICY), encoding="utf-8")
+        path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY), encoding="utf-8")
         print(path)
         return 0
     return 2

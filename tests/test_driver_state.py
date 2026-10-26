@@ -119,6 +119,9 @@ def test_whoami_redacts_state_path(state, capsys, missing):
     assert driver_state.cmd_whoami(path) == (1 if missing else 0)
     out = capsys.readouterr().out
     assert "state: (configured)" in out
+    assert "blocker-policy:" not in out
+    assert "Blocker baseline:" not in out
+    assert "scripts.driver_blockers" not in out
     assert str(path.parent) not in out
     assert path.name not in out
     if missing:
@@ -725,29 +728,45 @@ def test_whole_state_keeps_appended_goals(state, tmp_path, length):
     "prefix",
     [
         "",
-        "The CTO blocker delta policy is mentioned in prose.\n",
-        "## CTO blocker delta policy extra\n",
-        "### CTO blocker delta policy\n",
-        "```markdown\n## CTO blocker delta policy\n```\n",
-        "> ## CTO blocker delta policy\n",
-        "  ## CTO blocker delta policy\n",
-        "<!--\n## CTO blocker delta policy\n-->\n",
-        "CTO blocker delta policy\n-----------------------\n",
+        "## CTO blocker delta policy\nRetired ledger commands.\n\n",
+        "## CTO blocker delta policy extra\nLookalike recovery note.\n\n"
+        "CTO blocker delta policy\nPinned non-heading note.\n\n",
+        "### CTO blocker delta policy\nLookalike recovery note.\n\n"
+        "#### CTO blocker delta policy\nPinned h4 note.\n\n"
+        "##### CTO blocker delta policy\nPinned h5 note.\n\n"
+        "###### CTO blocker delta policy\nPinned h6 note.\n\n"
+        "# CTO blocker delta policy\nPinned h1 note.\n\n",
+        "```markdown\n## CTO blocker delta policy\nLookalike recovery note.\n```\n\n",
+        "> ## CTO blocker delta policy\n> Lookalike recovery note.\n\n",
+        "  ## CTO blocker delta policy\n  Lookalike recovery note.\n\n"
+        "    ## CTO blocker delta policy\n    Pinned indented code note.\n\n",
+        "<!--\n## CTO blocker delta policy\nLookalike recovery note.\n-->\n\n",
+        "CTO blocker delta policy\n-----------------------\nLookalike recovery note.\n\n",
     ],
 )
 def test_blocker_policy_requires_exact_real_heading(state, prefix):
-    message = driver_state.render_injection(prefix + "Current goals remain intact.", state)
-    assert message.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
-    assert "Current goals remain intact." in message
-    assert "scripts.driver_blockers delta" in message
-    assert "scripts.driver_blockers record" in message
-    assert "post ordinary reports to epics" in message
-    assert "--reporting-target cto only for explicit operator escalation" in message
-    assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
-    assert "typed source-uncertainty blocker" in message
-    assert "Fallback reporting cannot certify coverage" in message
-    assert "Preserve the baseline" in message
-    assert "Keep other ready work moving" in message
+    before = "## Recovery\nPinned recovery\u0085note\u2028before\u2029retirement.\n\n"
+    retired = (
+        "## CTO blocker delta policy\nRetired ledger commands.\n\n"
+        "### Retired details\nRetired subheading body.\n\n"
+    )
+    after = (
+        "# Recovery after retirement\nPinned recovery after retirement.\n\n"
+        "## Current goals\nCurrent goals\u2028remain\u2029intact\u0085."
+    )
+    message = driver_state.render_injection(before + prefix + retired + after, state)
+    assert before in message
+    assert after in message
+    if "Lookalike recovery note." in prefix:
+        assert prefix in message
+    assert "\n## CTO blocker delta policy\n" not in message.replace(prefix, "", 1)
+    assert "scripts.driver_blockers" not in message
+    assert "Retired ledger commands." not in message
+    assert "Retired subheading body." not in message
+    assert "### Retired details" not in message
+    assert "blocker-policy:" not in message
+    assert "lu-driver-state render" in message
+    assert "lu-driver-state check" in message
 
 
 @pytest.mark.parametrize(

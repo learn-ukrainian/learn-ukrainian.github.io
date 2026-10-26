@@ -11,7 +11,7 @@ fi
 
 # A delegate.py dispatch worker inherits its dispatcher's environment, so a
 # worker launched from a driver shell carries that driver's SESSION_EPIC (#10455).
-# Driver-only replay (Codex hydration, epic blocker delta) belongs to the
+# Driver-only replay (Codex hydration) belongs to the
 # launcher-bound driver alone; drop the inherited epic so every branch below
 # treats the worker as an ordinary non-driver session.
 if [ -n "${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]; then
@@ -82,8 +82,7 @@ if [ -n "${GROK_AGENT:-}" ] || [ "${SESSION_HANDOFF_AGENT:-}" = "grok" ] \
   - Epic=${SESSION_EPIC:-none}"
   if [ -n "${SESSION_EPIC:-}" ]; then
     _grok_ctx="${_grok_ctx}
-  - Continue from file handoff / fleet-comms for epic ${SESSION_EPIC}; do not re-scan curriculum state.
-  - Epic blocker delta: Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta). if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority. Complete means exhaustive coverage including explicit unknown attention, not proven historical attribution. Generated rows retain current reporting custody only until positive exact-run status or other-stream proof; unsafe or lost source blocks recording and preserves its baseline. UNCHANGED means unchanged attention, not zero blockers. Measure actual observation, post, indented ledger and diagnostics bytes before posting; stop on overflow."
+  - Continue from file handoff / fleet-comms for epic ${SESSION_EPIC}; do not re-scan curriculum state."
   fi
   emit_context "$_grok_ctx"
   exit 0
@@ -143,26 +142,21 @@ source "$1" && launcher_selector_stream "$2"
           -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" --stream "$HYDRATION_STREAM" 2>&1) \
           || HYDRATION_RC=$?
       fi
-      DELTA_RULE="Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta). if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority. Complete means exhaustive coverage including explicit unknown attention, not proven historical attribution. Generated rows retain current reporting custody only until positive exact-run status or other-stream proof; unsafe or lost source blocks recording and preserves its baseline. UNCHANGED means unchanged attention, not zero blockers. Measure actual observation, post, indented ledger and diagnostics bytes before posting; stop on overflow."
       if [ "$HYDRATION_RC" -eq 0 ]; then
         # The lane goal file is the operator-maintained state; a stream boundary
         # can lag behind it, so the goal file wins when the two disagree.
         GOAL_REL=".claude/${SESSION_EPIC}-epic/DRIVER-STATE.md"
-        DELTA_RULE="Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta). if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority. Complete means exhaustive coverage including explicit unknown attention, not proven historical attribution. Generated rows retain current reporting custody only until positive exact-run status or other-stream proof; unsafe or lost source blocks recording and preserves its baseline. UNCHANGED means unchanged attention, not zero blockers. Measure actual observation, post, indented ledger and diagnostics bytes before posting; stop on overflow."
         if [ -f "$PROJECT_DIR/$GOAL_REL" ]; then
           BOUNDARY_RULE="Lane goal file: $GOAL_REL. It outranks the capsule's next_drive_boundary: where they conflict, follow the goal file and record a corrected next_action in the stream. Native Codex still owns compaction."
         else
           BOUNDARY_RULE="Native Codex still owns compaction; continue only from the capsule's next_drive_boundary."
         fi
-        BOUNDARY_RULE="$BOUNDARY_RULE $DELTA_RULE"
         CONTEXT="CODEX FLEET-DRIVER HYDRATION
-$DELTA_RULE
 $HYDRATION
 Shadow diary: $DIARY_REL
 $BOUNDARY_RULE"
       else
         CONTEXT="CODEX FLEET-DRIVER HYDRATION BLOCKED
-$DELTA_RULE
 ${HYDRATION:-Hydration helper unavailable.}
 Shadow diary: $DIARY_REL
 Do not select the next queue action until the stream lease or diary is repaired."
@@ -222,10 +216,5 @@ KEY REMINDERS:
   - Pre-commit: ruff + /simplify + cross-family code review (non-Gemini seat)
   - Read audit/ and review/ files before fixing modules
   - MEMORY: \$HOME/.claude/projects/$CLAUDE_PROJECT_KEY/memory/MEMORY.md"
-if [ -n "${SESSION_EPIC:-}" ]; then
-  CONTEXT="$CONTEXT
-  - Epic blocker delta: Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta). if delta fails or the baseline is unknown, post everything currently blocking. Include all known owned blockers. On exhausted transient observation or unknown source coverage, include an explicit typed source-uncertainty blocker and report that generated coverage is unverified. The collector permits only one fresh re-observation within its budget; do not retry publication or loop commands. Fallback reporting cannot certify coverage, establish RESOLVED items or replace the baseline. Record only after complete stable source and all receipt, body and generation gates pass. Preserve the baseline and any successful post's receipt/body on failure. Keep other ready work moving. Escalate only recovery that requires operator authority. Complete means exhaustive coverage including explicit unknown attention, not proven historical attribution. Generated rows retain current reporting custody only until positive exact-run status or other-stream proof; unsafe or lost source blocks recording and preserves its baseline. UNCHANGED means unchanged attention, not zero blockers. Measure actual observation, post, indented ledger and diagnostics bytes before posting; stop on overflow."
-fi
-
 emit_context "CONTEXT RESTORED AFTER COMPACTION:$CONTEXT"
 exit 0
