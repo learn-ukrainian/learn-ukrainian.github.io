@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -352,7 +353,8 @@ def _write_review_deep_path_prompt(target: str, prompt_directory: Path) -> Path:
 
 def _review_task_id(target: str) -> str:
     timestamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
-    return f"review-{_safe_path_component(target)}-{timestamp}"
+    digest = hashlib.sha256(target.encode("utf-8")).hexdigest()[:8]
+    return f"review-{_safe_path_component(target)[:80]}-{digest}-{timestamp}"
 
 
 def _review_prompt_file(target: str, prompt_directory: Path) -> Path:
@@ -362,9 +364,11 @@ def _review_prompt_file(target: str, prompt_directory: Path) -> Path:
 
 
 def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> list[str]:
-    return [
+    # Local paths may include uncommitted files that a new worktree cannot reproduce.
+    pr_target = _is_pr_number(target)
+    command = [
         PYTHON,
-        "scripts/dispatch.py",
+        "scripts/dispatch.py" if pr_target else "scripts/delegate.py",
         "dispatch",
         "--agent",
         "claude",
@@ -379,6 +383,10 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> li
         "--prompt-file",
         str(prompt_file),
     ]
+    if pr_target:
+        head = _run_text_command(["git", "rev-parse", "HEAD"]).strip()
+        command.extend(["--full-checkout", "--pinned-head", head])
+    return command
 
 
 def _write_dry_run_state(task_id: str, command: list[str], prompt_file: Path) -> None:
@@ -521,7 +529,7 @@ def build_ask_review_dispatch_command(
 
 
 def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
-    return [PYTHON, "scripts/dispatch.py", "wait", task_id, "--timeout", str(timeout)]
+    return [PYTHON, "scripts/delegate.py", "wait", task_id, "--timeout", str(timeout)]
 
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
@@ -590,7 +598,7 @@ def run_ask_review_dispatch(
 
     Fires `delegate.py dispatch --agent <agent> --worktree --mode read-only`
     (a real TUI agent with tools in an isolated worktree), then
-    `scripts/dispatch.py wait` to block for the terminal state. Returns the terminal
+    `delegate.py wait` to block for the terminal state. Returns the terminal
     state dict plus the read-back ``response`` text and a normalized ``ok``.
     Raises ``RuntimeError`` if dispatch itself could not be started or the
     wait output could not be parsed — callers turn that into a hard failure,
@@ -657,14 +665,14 @@ def run_ask_review_dispatch(
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(
-                f"scripts/dispatch.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
+                f"delegate.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
                 f"Command: {' '.join(wait_command)}"
             ) from exc
         try:
             state = json.loads(wait_proc.stdout or "{}")
         except json.JSONDecodeError as exc:
             raise RuntimeError(
-                f"scripts/dispatch.py wait produced non-JSON output (rc={wait_proc.returncode}): "
+                f"delegate.py wait produced non-JSON output (rc={wait_proc.returncode}): "
                 f"stdout={wait_proc.stdout!r} stderr={wait_proc.stderr!r}"
             ) from exc
 

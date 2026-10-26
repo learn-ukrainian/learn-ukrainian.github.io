@@ -1873,7 +1873,7 @@ def _dispatch_headless_review(
 
     `delegate.py dispatch --agent <target> --worktree --mode read-only` spawns
     a real TUI agent with tools (gh, fs, pytest) in an isolated worktree, then
-    `scripts/dispatch.py wait` blocks for the terminal result — this is the reviewer
+    `delegate.py wait` blocks for the terminal result — this is the reviewer
     seat other headless reviews already use. Never falls back to ACP.
     """
     from agent_runtime.target_admission import ReviewAdmissionRefused
