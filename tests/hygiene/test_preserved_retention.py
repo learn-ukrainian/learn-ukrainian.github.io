@@ -17,6 +17,7 @@ def batch(tmp_path):
     root = tmp_path / "batch_state"
     (root / "preserved").mkdir(parents=True)
     (root / "tasks").mkdir()
+    (root / "preserved-keep.txt").write_text("")
     return root
 
 
@@ -42,7 +43,10 @@ def invoke(batch, *, apply=True, **options):
     if apply:
         args.append("--apply")
     for key, value in options.items():
-        args.extend(["--" + key.replace("_", "-"), str(value)])
+        if value is True:
+            args.append("--" + key.replace("_", "-"))
+        elif value is not False:
+            args.extend(["--" + key.replace("_", "-"), str(value)])
     code = retention.main(args)
     files = sorted((batch / "reports").glob("*.jsonl"))
     rows = [json.loads(line) for line in files[-1].read_text().splitlines()] if files else []
@@ -391,8 +395,8 @@ def test_cli_help_documents_defaults_outputs_and_exit_codes(capsys):
     with pytest.raises(SystemExit) as exc:
         retention.main(["--help"])
     assert exc.value.code == 0
-    text = capsys.readouterr().out
-    assert all(term in text for term in ("DRY-RUN", "Outputs:", "Exit codes:", "--apply", "preserved-keep.txt"))
+    text = " ".join(capsys.readouterr().out.split())
+    assert all(term in text for term in ("DRY-RUN", "Outputs:", "Exit codes:", "--apply", "preserved-keep.txt", "--allow-empty-keep-list", "Explicit paths must be readable", "--apply refuses it unless"))
 
 
 def held_task(batch, **fields):
@@ -499,7 +503,7 @@ def test_pushed_write_task_releases_only_proven_merged_or_closed_pr(batch, monke
     monkeypatch.setattr(retention.subprocess, "run", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 1))
     monkeypatch.setattr(retention.pr_identity, "resolve_repo_slug", lambda root: "owner/repo")
     monkeypatch.setattr(retention.pr_identity, "probe_open_pr_for_branch", lambda **kw: (None, "unavailable") if state == "unavailable" else (state == "OPEN", None))
-    row = {"number": 1, "state": state, "headRefName": "task-branch", "isCrossRepository": False}
+    row = {"number": 1, "state": state, "headRefName": "task-branch", "headRefOid": "a" * 40, "isCrossRepository": False}
     if state == "wrong_branch":
         row.update(state="MERGED", headRefName="other")
     if state == "fork":
@@ -564,3 +568,86 @@ def test_write_held_bundle_with_unsafe_push_dirty_or_head_record_is_kept(batch, 
     code, rows = invoke(batch)
     assert code == 0 and entry.exists()
     assert rows[0]["result"] == "skipped:held"
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("allow", [False, True])
+def test_explicit_missing_keep_list_refuses_even_with_empty_override(batch, apply, allow, capsys):
+    entries = [make_entry(batch, "first"), make_entry(batch, "second")]
+    code, rows = invoke(batch, apply=apply, keep_list=batch / "typo.txt", allow_empty_keep_list=allow)
+    assert code == 1
+    assert all(entry.exists() for entry in entries)
+    assert [row["result"] for row in rows] == ["skipped:keep_list_unreadable"] * 2
+    assert "explicit path is absent" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("allow", [False, True])
+def test_missing_default_keep_list_requires_apply_opt_in(batch, apply, allow, capsys):
+    entry = make_entry(batch)
+    (batch / "preserved-keep.txt").unlink()
+    code, rows = invoke(batch, apply=apply, allow_empty_keep_list=allow)
+    refused = apply and not allow
+    assert code == int(refused)
+    assert entry.exists() is not (apply and allow)
+    assert rows[0]["result"] == ("skipped:keep_list_unreadable" if refused else "deleted" if apply else "skipped:dry_run")
+    if refused:
+        assert "default path is absent; --apply requires --allow-empty-keep-list" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("change", ["new_bundle", "manifest_replaced", "manifest_modified"])
+def test_changed_child_set_or_manifest_during_landing_probe_prevents_deletion(batch, monkeypatch, change):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+    manifest = entry / "held-example.manifest.json"
+
+    def landing_probe(*args):
+        if change == "new_bundle":
+            (entry / "held-new").mkdir()
+            (entry / "held-new" / "work.txt").write_text("unclassified work")
+        elif change == "manifest_replaced":
+            replacement = entry / "replacement"
+            replacement.write_bytes(manifest.read_bytes())
+            os.utime(replacement, ns=(manifest.stat().st_atime_ns, manifest.stat().st_mtime_ns))
+            replacement.replace(manifest)
+        else:
+            before = manifest.stat()
+            os.utime(manifest, ns=(before.st_atime_ns, before.st_mtime_ns + 1_000_000))
+        return "pushed_merged"
+
+    monkeypatch.setattr(retention, "landed_reason", landing_probe)
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert (entry / "held-example" / "report.txt").read_text() == "evidence\n"
+    assert rows[0]["result"] == "skipped:changed_during_scan"
+    assert "reason" not in rows[0]
+    if change == "new_bundle":
+        assert (entry / "held-new" / "work.txt").read_text() == "unclassified work"
+
+
+@pytest.mark.parametrize("state", ["MERGED", "CLOSED"])
+@pytest.mark.parametrize("pr_head", [None, "b" * 40])
+def test_merged_or_closed_pr_with_missing_or_different_head_keeps_held_bundle(batch, monkeypatch, state, pr_head):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+    monkeypatch.setattr(retention.subprocess, "run", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 1))
+    monkeypatch.setattr(retention.pr_identity, "resolve_repo_slug", lambda root: "owner/repo")
+    monkeypatch.setattr(retention.pr_identity, "probe_open_pr_for_branch", lambda **kw: (False, None))
+    row = {"number": 1, "state": state, "headRefName": "task-branch", "isCrossRepository": False}
+    if pr_head is not None:
+        row["headRefOid"] = pr_head
+    monkeypatch.setattr(retention.pr_identity, "_run_gh", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 0, json.dumps([row])))
+    retention.landed_reason.cache_clear()
+    try:
+        code, rows = invoke(batch)
+        assert code == 0 and entry.exists()
+        assert rows[0]["result"] == "skipped:held"
+        assert "reason" not in rows[0]
+    finally:
+        retention.landed_reason.cache_clear()
+
+
+def test_write_task_with_not_applicable_push_state_cannot_use_read_only_release(batch):
+    entry = held_task(batch, mode="workspace-write", push_state="not_applicable")
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:held"
+    assert "reason" not in rows[0]

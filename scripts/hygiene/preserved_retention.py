@@ -37,14 +37,14 @@ def landed_reason(head: str, branch: str) -> str | None:
         opened, error = pr_identity.probe_open_pr_for_branch(repo_root=repo_root, repo=repo, branch=branch)
         if opened is not False or error:
             return None
-        result = pr_identity._run_gh(["gh", "pr", "list", "--repo", repo, "--head", branch, "--state", "all", "--json", "number,state,headRefName,isCrossRepository"], cwd=repo_root, timeout=30)
+        result = pr_identity._run_gh(["gh", "pr", "list", "--repo", repo, "--head", branch, "--state", "all", "--json", "number,state,headRefName,headRefOid,isCrossRepository"], cwd=repo_root, timeout=30)
         if result.returncode != 0:
             return None
         rows = json.loads(result.stdout)
         if not isinstance(rows, list) or not rows:
             return None
         for row in rows:
-            if not isinstance(row, dict) or type(row.get("number")) is not int or row["number"] <= 0 or row.get("headRefName") != branch or row.get("isCrossRepository") is not False or row.get("state") not in {"MERGED", "CLOSED"}:
+            if not isinstance(row, dict) or type(row.get("number")) is not int or row["number"] <= 0 or row.get("headRefName") != branch or row.get("headRefOid") != head or row.get("isCrossRepository") is not False or row.get("state") not in {"MERGED", "CLOSED"}:
                 return None
         return "pushed_merged" if any(row["state"] == "MERGED" for row in rows) else "pushed_closed"
     except (OSError, ValueError, subprocess.TimeoutExpired):
@@ -186,13 +186,28 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime, release_cutoff: 
     return released
 
 
-def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> int:
+def child_set(fd: int) -> tuple:
+    """Bind classification to child names and manifest identities and timestamps."""
+    children = []
+    for name in sorted(os.listdir(fd)):
+        identity = None
+        if name.endswith(".manifest.json"):
+            info = os.stat(name, dir_fd=fd, follow_symlinks=False)
+            identity = (info.st_dev, info.st_ino, info.st_mtime_ns)
+        children.append((name, identity))
+    return tuple(children)
+
+
+def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = False, allow_empty_keep_list: bool = False) -> int:
     root = directory(batch / "preserved")
     try:
         try:
-            keep = set(read_text(keep_list).splitlines())
+            keep = set(read_text(keep_list or batch / "preserved-keep.txt").splitlines())
         except FileNotFoundError:
-            keep = set()
+            keep = set() if keep_list is None and (not apply or allow_empty_keep_list) else None
+            if keep is None:
+                detail = "explicit path is absent" if keep_list is not None else "default path is absent; --apply requires --allow-empty-keep-list"
+                print(f"keep-list unreadable: {detail}", file=sys.stderr)
         except (OSError, ValueError, ComponentOpenError, UnicodeError):
             keep = None
         parent = directory(reports.parent)
@@ -221,6 +236,7 @@ def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> 
                     else:
                         child = open_directory_component(root, name)
                         try:
+                            classified = child_set(child)
                             size, unsafe = measure(child)
                             reason = "symlink_or_special" if unsafe else None
                             reason = reason or ("keep_list_unreadable" if keep is None else "keep_list" if name in keep else None)
@@ -231,8 +247,15 @@ def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> 
                         released, reason = reason, None
                     result = f"skipped:{reason}" if reason else released or "skipped:dry_run"
                     if not reason and apply:
-                        _remove_invocation_dir(root, name, namespace=batch / "preserved", expected_dev=info.st_dev, expected_ino=info.st_ino)
-                        result = "deleted"
+                        child = open_directory_component(root, name)
+                        try:
+                            if child_set(child) != classified:
+                                result, released = "skipped:changed_during_scan", None
+                            else:
+                                _remove_invocation_dir(root, name, namespace=batch / "preserved", expected_dev=info.st_dev, expected_ino=info.st_ino)
+                                result = "deleted"
+                        finally:
+                            os.close(child)
                 except (OSError, ContainmentError) as exc:
                     result = f"error:{getattr(exc, 'errno', None) or errno.EIO}"
                 except (ValueError, TypeError, KeyError, ComponentOpenError):
@@ -252,16 +275,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Delete direct preserved task entries with verified times older than 3 days.\nUse for evidence retention; unknown times and live tasks are kept. Default: DRY-RUN.\nOrdinary manifests need old ISO 8601 preservation times; held/pinned entries need terminal task identity, old finished_at and read-only or pushed/landed proof.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.preserved_retention\n  .venv/bin/python -m scripts.hygiene.preserved_retention --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nOnly --apply deletes; Git ancestry checks are local and PR probes are read-only. Receipts include lstat bytes and typed release reasons.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Unknown provenance is kept; RELEASE_AGE_DAYS configures held/pin age (default 3 days).",
+        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.preserved_retention\n  .venv/bin/python -m scripts.hygiene.preserved_retention --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nMissing explicit keep-lists refuse all deletion. An absent default is empty only in dry-run; --apply refuses it unless --allow-empty-keep-list is passed.\nOnly --apply deletes; Git ancestry checks are local and PR probes are read-only. Receipts include lstat bytes and typed release reasons.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Unknown provenance is kept; RELEASE_AGE_DAYS configures held/pin age (default 3 days).",
     )
     parser.add_argument("--batch-root", type=Path, help="State root (default: primary checkout batch_state; example fixture/batch_state).")
-    parser.add_argument("--keep-list", type=Path, help="Plain entry names, one per line; absent = empty (default: batch_state/preserved-keep.txt).")
+    parser.add_argument("--keep-list", type=Path, help="Plain entry names, one per line (example keep.txt; default: batch_state/preserved-keep.txt). Explicit paths must be readable. An absent default is empty in dry-run; apply requires --allow-empty-keep-list.")
     parser.add_argument("--reports-dir", type=Path, help="Receipt directory (default: batch_state/reports; example worktree/batch_state/reports).")
     parser.add_argument("--apply", action="store_true", help="Delete eligible entries (default: dry-run, receipts only).")
+    parser.add_argument("--allow-empty-keep-list", action="store_true", help="Allow --apply with an absent DEFAULT keep-list (default: off; example --apply --allow-empty-keep-list). Explicit missing or unreadable paths still refuse deletion.")
     args = parser.parse_args(argv)
     batch = (args.batch_root or default_batch_root()).absolute()
     try:
-        return run(batch, args.keep_list or batch / "preserved-keep.txt", args.reports_dir or batch / "reports", apply=args.apply)
+        return run(batch, args.keep_list, args.reports_dir or batch / "reports", apply=args.apply, allow_empty_keep_list=args.allow_empty_keep_list)
     except (OSError, ValueError, ComponentOpenError) as exc:
         print(f"preserved-retention: {type(exc).__name__}", file=sys.stderr)
         return 1 if isinstance(exc, OSError) else 2
