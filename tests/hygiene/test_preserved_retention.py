@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import errno
+import hashlib
 import json
 import os
 from datetime import UTC, datetime, timedelta
@@ -212,7 +213,7 @@ def test_latest_manifest_controls_whole_entry_age(batch):
 @pytest.mark.parametrize("released", [False, True])
 def test_unresolved_held_bundle_requires_explicit_manifest_release(batch, released):
     fields = {"retention_disposition": "released"} if released else {}
-    entry = make_entry(batch, bundle="held-example", **fields)
+    entry = make_entry(batch, bundle="held-example", schema="runtime-held-work.v1", **fields)
     code, rows = invoke(batch)
     assert code == 0
     assert entry.exists() is not released
@@ -258,20 +259,74 @@ def test_partial_deletion_containment_failure_is_an_error(batch, monkeypatch):
     assert rows[0]["result"] == "error:5"
 
 
-@pytest.mark.parametrize("nonce", ["run-one", "other-run"])
-def test_released_task_pin_must_match_manifest_run(batch, nonce):
+@pytest.mark.parametrize("defect", [None, "flag_only", "no_proof", "no_release", "nonce", "task_nonce", "release_nonce", "owner", "digest", "manifest_digest", "location", "paths", "bytes", "schema", "other_bundle"])
+def test_released_task_pin_must_match_manifest_run(batch, defect):
     entry = make_entry(batch, retention_disposition="retained")
+    manifest = entry / "evidence-example.manifest.json"
+    record = json.loads(manifest.read_text())
+    file_hash = hashlib.sha256(b"evidence\n").hexdigest()
+    digest = hashlib.sha256(json.dumps([("report.txt", 9, file_hash)]).encode()).hexdigest()
+    record.update(
+        schema="worktree-preserved-artifacts.v1", content_sha256=digest,
+        retrieval_proof_sha256=digest,
+        paths=[{"path": "report.txt", "size": 9, "sha256": file_hash}],
+    )
+    manifest.write_text(json.dumps(record))
+    pin = dict(record, retention_disposition="released", retention_release={
+        "owner": entry.name, "run_nonce": "run-one", "retrieval_proof_sha256": digest,
+    })
+    if defect == "flag_only":
+        pin = {"retention_disposition": "released", "run_nonce": "run-one"}
+    elif defect == "no_proof":
+        del pin["retrieval_proof_sha256"]
+    elif defect == "no_release":
+        del pin["retention_release"]
+    elif defect == "nonce":
+        pin["run_nonce"] = "other-run"
+    elif defect in {"release_nonce", "owner", "digest"}:
+        key = {"release_nonce": "run_nonce", "owner": "owner", "digest": "retrieval_proof_sha256"}[defect]
+        pin["retention_release"][key] = "mismatch"
+    elif defect == "manifest_digest":
+        record["retrieval_proof_sha256"] = "b" * 64
+        manifest.write_text(json.dumps(record))
+    elif defect == "location":
+        pin["location"] = "batch_state/preserved/other/evidence-example"
+    elif defect == "paths":
+        pin["paths"] = []
+    elif defect == "bytes":
+        (entry / "evidence-example" / "report.txt").write_text("changed\n")
+    elif defect in {"schema", "other_bundle"}:
+        if defect == "schema":
+            record["schema"] = "unknown.v1"
+        else:
+            other = make_entry(batch, name="other-task")
+            record["location"] = f"batch_state/preserved/{other.name}/evidence-example"
+        pin.update({key: record[key] for key in ("schema", "location")})
+        manifest.write_text(json.dumps(record))
     task = {
         "task_id": entry.name,
         "status": "done",
-        "run_nonce": "run-one",
-        "preserved_artifacts": {"retention_disposition": "released", "run_nonce": nonce},
+        "run_nonce": "other-run" if defect == "task_nonce" else "run-one",
+        "preserved_artifacts": pin,
     }
     (batch / "tasks" / f"{entry.name}.json").write_text(json.dumps(task))
     code, rows = invoke(batch)
     assert code == 0
-    assert entry.exists() is (nonce != "run-one")
-    assert rows[0]["result"] == ("deleted" if nonce == "run-one" else "skipped:pin")
+    assert entry.exists() is (defect is not None)
+    assert rows[0]["result"] == ("deleted" if defect is None else "skipped:pin")
+
+
+def test_released_flag_without_retrieval_proof_can_only_use_strict_release(batch):
+    entry = held_task(batch, preserved_artifacts={"retention_disposition": "released", "run_nonce": "run-one"})
+    manifest = entry / "held-example.manifest.json"
+    record = json.loads(manifest.read_text())
+    record.update(retention_disposition="retained", schema="runtime-evidence.v1")
+    manifest.rename(entry / "evidence.manifest.json")
+    (entry / "evidence.manifest.json").write_text(json.dumps(record))
+    (entry / "held-example").rename(entry / "evidence")
+    code, rows = invoke(batch)
+    assert code == 0 and not entry.exists()
+    assert rows[0]["reason"] == "released:read_only"
 
 
 def archive_task(batch, entry):
@@ -405,7 +460,7 @@ def held_task(batch, **fields):
         "task_id": entry.name, "status": "done", "run_nonce": "run-one",
         "mode": "read-only", "push_state": "not_applicable",
         "finished_at": (datetime.now(UTC) - timedelta(days=4)).isoformat(),
-        "worktree_dirty_on_exit": False, **fields,
+        "worktree_dirty_on_exit": False, "commits_ahead": 0, **fields,
     }
     (batch / "tasks" / f"{entry.name}.json").write_text(json.dumps(task))
     return entry
@@ -462,6 +517,40 @@ def test_missing_push_state_held_bundle_is_kept(batch):
     assert rows[0]["result"] == "skipped:held"
 
 
+@pytest.mark.parametrize("field,value", [
+    ("commits_ahead", 1), ("commits_ahead", None), ("commits_ahead", "0"),
+    ("commits_ahead", False), ("commits_ahead", "missing"),
+    ("worktree_dirty_on_exit", "missing"), ("worktree_dirty_on_exit", None),
+    ("worktree_dirty_on_exit", 0),
+])
+def test_read_only_release_requires_zero_commits_and_explicit_clean_flag(batch, field, value):
+    entry = held_task(batch)
+    path = batch / "tasks" / f"{entry.name}.json"
+    task = json.loads(path.read_text())
+    if value == "missing":
+        del task[field]
+    else:
+        task[field] = value
+    path.write_text(json.dumps(task))
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:held"
+    assert "reason" not in rows[0]
+
+
+@pytest.mark.parametrize("disposition", [None, "released"])
+def test_unknown_held_schema_is_unresolved_even_with_release_proof(batch, disposition):
+    entry = held_task(batch)
+    manifest = entry / "held-example.manifest.json"
+    record = json.loads(manifest.read_text())
+    record.update(schema="runtime-held-work.v99", retention_disposition=disposition,
+                  preserved_at=(datetime.now(UTC) - timedelta(days=4)).isoformat())
+    manifest.write_text(json.dumps(record))
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:held"
+
+
 @pytest.mark.parametrize("contents", [None, "invalid"])
 def test_absent_or_unreadable_bound_task_never_releases_held_bundle(batch, contents):
     entry = held_task(batch)
@@ -496,9 +585,10 @@ def test_symlinked_held_bundle_is_kept_without_following_target(batch, tmp_path)
     assert rows[0]["result"] == "skipped:symlink_or_special"
 
 
+@pytest.mark.parametrize("branch_field", ["branch", "worktree_branch"])
 @pytest.mark.parametrize("state", ["MERGED", "CLOSED", "OPEN", "unavailable", "absent", "malformed", "wrong_branch", "fork"])
-def test_pushed_write_task_releases_only_proven_merged_or_closed_pr(batch, monkeypatch, state):
-    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+def test_pushed_write_task_releases_only_proven_merged_or_closed_pr(batch, monkeypatch, state, branch_field):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, **{branch_field: "task-branch"})
     retention.landed_reason.cache_clear()
     monkeypatch.setattr(retention.subprocess, "run", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 1))
     monkeypatch.setattr(retention.pr_identity, "resolve_repo_slug", lambda root: "owner/repo")

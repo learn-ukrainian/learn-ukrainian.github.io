@@ -19,7 +19,7 @@ if __package__ in (None, ""):
 
 from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
 from scripts.common.task_scratch import ContainmentError, _remove_invocation_dir, fd_mount_id
-from scripts.fleet import pr_identity
+from scripts.fleet import ignored_task_output, pr_identity
 from scripts.fleet.post_task_reap import _TERMINAL_STATUSES
 from scripts.hygiene.batch_state_retention import default_batch_root
 
@@ -51,6 +51,10 @@ def landed_reason(head: str, branch: str) -> str | None:
         return None
 
 
+def delivery_is_clean(task: dict) -> bool:
+    return task.get("worktree_dirty_on_exit") is False
+
+
 def release_reason(task: dict, cutoff: datetime) -> str | None:
     if task.get("status") not in {"done", "failed", "timeout", "crashed", "cancelled", "no_deliverable"}:
         return None
@@ -59,15 +63,38 @@ def release_reason(task: dict, cutoff: datetime) -> str | None:
         finished = datetime.fromisoformat(stamp) if isinstance(stamp, str) else None
     except ValueError:
         return None
-    if finished is None or finished.tzinfo is None or finished >= cutoff or task.get("worktree_dirty_on_exit"):
+    if finished is None or finished.tzinfo is None or finished >= cutoff or not delivery_is_clean(task):
         return None
     if task.get("mode") == "read-only" and task.get("push_state") == "not_applicable":
-        return "released:read_only"
-    head, branch = task.get("head_sha"), task.get("branch")
-    if task.get("push_state") != "pushed" or task.get("worktree_dirty_on_exit") is not False or not isinstance(head, str) or len(head) != 40 or any(c not in "0123456789abcdefABCDEF" for c in head) or head != task.get("remote_head_sha") or not isinstance(branch, str) or not branch:
+        return "released:read_only" if type(task.get("commits_ahead")) is int and task["commits_ahead"] == 0 else None
+    head, branch = task.get("head_sha"), task.get("branch") or task.get("worktree_branch")
+    if task.get("push_state") != "pushed" or not isinstance(head, str) or len(head) != 40 or any(c not in "0123456789abcdefABCDEF" for c in head) or head != task.get("remote_head_sha") or not isinstance(branch, str) or not branch:
         return None
     reason = landed_reason(head, branch)
     return f"released:{reason}" if reason else None
+
+
+def manifest_release_proven(task: dict, pin: dict, record: dict, batch: Path, child: str) -> bool:
+    """Accept the release writer's proof only for this manifest's verified bytes."""
+    release = pin.get("retention_release")
+    if pin.get("retention_disposition") != "released" or not isinstance(release, dict):
+        return False
+    nonce, digest = task.get("run_nonce"), pin.get("retrieval_proof_sha256")
+    if not isinstance(nonce, str) or not nonce or not isinstance(digest, str) or not digest:
+        return False
+    if pin.get("task_id") != task["task_id"] or pin.get("run_nonce") != nonce:
+        return False
+    if record.get("schema") != ignored_task_output.PRESERVED_ARTIFACTS_SCHEMA or record.get("location") != f"batch_state/preserved/{task['task_id']}/{child}":
+        return False
+    if release.get("owner") != task["task_id"] or release.get("run_nonce") != nonce or release.get("retrieval_proof_sha256") != digest:
+        return False
+    fields = ("schema", "task_id", "run_nonce", "location", "content_sha256", "paths", "retrieval_proof_sha256")
+    if any(pin.get(key) != record.get(key) for key in fields):
+        return False
+    try:
+        return ignored_task_output.verify_retrieval(batch.parent, record) == digest
+    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
+        return False
 
 
 def directory(path: Path) -> int:
@@ -160,9 +187,12 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime, release_cutoff: 
     for child in children:
         if child not in records and not child.endswith(".manifest.json"):
             return "missing_manifest"
-        if child.startswith("held-") and child in records and records[child].get("retention_disposition") != "released":
-            held.add(child)
-    retained = {child for child, record in records.items() if record.get("retention_disposition") == "retained" and not (pin.get("retention_disposition") == "released" and pin.get("run_nonce") == record.get("run_nonce"))}
+        if child.startswith("held-") and child in records:
+            if records[child].get("schema") != "runtime-held-work.v1":
+                return "held"
+            if records[child].get("retention_disposition") != "released":
+                held.add(child)
+    retained = {child for child, record in records.items() if record.get("retention_disposition") == "retained" and not manifest_release_proven(task, pin, record, batch, child)}
     released = None
     if pinned or held or retained:
         released = release_reason(task, release_cutoff)
@@ -170,8 +200,6 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime, release_cutoff: 
             return "pin" if pinned else "held" if held else "pin"
         if any(not isinstance(task.get("run_nonce"), str) or not task["run_nonce"] or record.get("run_nonce") != task["run_nonce"] for record in records.values()):
             return "manifest_identity"
-        if any(records[child].get("schema") != "runtime-held-work.v1" for child in held):
-            return "held"
     for child, record in records.items():
         if released and (pinned or child in held or child in retained):
             continue
