@@ -221,7 +221,10 @@ def test_main_dispatch_preserves_session_initiator(tmp_path: Path, monkeypatch: 
 
 
 @pytest.mark.parametrize("entrypoint", ["scripts/dispatch.py", "scripts/delegate.py", "/local/scripts/delegate.py"])
-def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entrypoint) -> None:
+@pytest.mark.parametrize("prompt_flag", ["--prompt-file", "--prompt"])
+def test_main_dispatch_copies_local_prompt_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entrypoint, prompt_flag
+):
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
@@ -251,8 +254,8 @@ def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pyt
             "codex",
             "--task-id",
             "cf",
-            "--prompt-file",
-            str(prompt),
+            prompt_flag,
+            str(prompt) if prompt_flag == "--prompt-file" else prompt.read_text(),
             "--lifecycle-file",
             str(lifecycle),
             "--run-nonce",
@@ -264,9 +267,10 @@ def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pyt
     script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
     assert str(prompt) not in recorded
     assert "keep curriculum/l2-uk-en in the worktree" not in recorded
-    assert "--prompt-file" in script
-    assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
-    assert "$LU_DISPATCH_PROMPT_0" in script
+    assert prompt_flag in script
+    if prompt_flag == "--prompt-file":
+        assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
+        assert "$LU_DISPATCH_PROMPT_0" in script
     assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
     assert f"export {jh.ENV_RUNTIME_INITIATOR}=cursor" in script
     assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script

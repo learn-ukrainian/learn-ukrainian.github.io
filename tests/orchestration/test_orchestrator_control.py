@@ -277,12 +277,12 @@ def test_recent_inbox_declares_hot_only_history(tmp_path: Path, capsys):
 
 
 @pytest.mark.parametrize("seat,provider", [("gemini", "agy"), ("grok", "cursor"), ("deepseek", "opencode")])
-@pytest.mark.parametrize("base", ["main", "origin/main", "topic/repair"])
+@pytest.mark.parametrize("base", ["main", "origin/main", "topic/repair", ""])
 def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, capsys, monkeypatch, seat, provider, base):
     prompt = tmp_path / "brief.md"
     prompt.write_text("Scoped task.", encoding="utf-8")
     options = shlex.split(
-        f"dispatch --run-id parity --task-id worker --agent {seat} --model exact-model --base {base} "
+        f"dispatch --run-id parity --task-id worker --agent {seat} --model exact-model --base {shlex.quote(base)} "
         "--effort high --mode workspace-write --worktree --full-checkout --sparse-include curriculum "
         "--owned-path scripts/one.py --silence-timeout 0 --initial-response-timeout 0 --dry-run"
     )
@@ -334,9 +334,15 @@ def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, cap
         ["--lifecycle-file", "ledger.json"],
         ["--authoring-review-risk", "medium"],
         ["--mode", "danger"],
+        *(["--agent", seat] for seat in ("grok-build", "grok-hermes", "qwen", "kimi")),
     ],
 )
 def test_v2_gaps_are_forwarded_for_explicit_refusal(tmp_path: Path, option):
+    if option[0] == "--agent":
+        with pytest.raises(SystemExit) as exc:
+            oc.build_parser().parse_args(["dispatch", "--run-id", "gaps", "--task-id", "worker", *option])
+        assert exc.value.code == 2
+        return
     args = oc.build_parser().parse_args(
         [
             "dispatch",

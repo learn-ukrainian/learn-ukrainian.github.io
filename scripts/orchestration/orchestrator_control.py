@@ -566,11 +566,10 @@ def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[
         command.append("--full-checkout")
     for name in getattr(args, "sparse_include", None) or []:
         command.extend(["--sparse-include", str(name)])
-    if args.base:
-        base = args.base
-        if not base.startswith(("origin/", "refs/")) and not re.fullmatch(r"[0-9a-fA-F]{40,64}", base):
-            base = f"origin/{base}"
-        command.extend(["--base", base])
+    base = args.base or "origin/main"
+    if not base.startswith(("origin/", "refs/")) and not re.fullmatch(r"[0-9a-fA-F]{40,64}", base):
+        base = f"origin/{base}"
+    command.extend(["--base", base])
     if args.hard_timeout is not None:
         command.extend(["--hard-timeout", str(args.hard_timeout)])
     if args.silence_timeout not in (None, 0):
