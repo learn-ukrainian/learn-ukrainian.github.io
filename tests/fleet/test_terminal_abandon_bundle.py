@@ -127,9 +127,22 @@ def test_fresh_bundle_removed_on_every_publication_refusal(succession, monkeypat
 
         monkeypatch.setattr(writer.os, "replace", replace)
     elif failure == "output_publish":
-        monkeypatch.setattr(output, "publish_abandon_output", refuse)
+        monkeypatch.setattr(
+            output, "publish_abandon_output", lambda *a, **kw: pytest.fail("record-only output has no archive to publish")
+        )
     else:
         monkeypatch.setattr(writer.artifacts.reaper_lifecycle, "_atomic_write", refuse)
+    if failure == "output_publish":
+        assert invoke(fixture) == 0
+        capsys.readouterr()
+        assert tree.exists()
+        record = json.loads((tasks / "boundary.json").read_bytes())
+        assert record["worktree_abandon"]["disposition"] == "ABANDON"
+        assert len(_bundles(fixture)) == 1
+        assert not (fixture[0] / "batch_state/preserved").exists()
+        assert not list(fixture[5].parent.glob(".head-bundle-*"))
+        assert len(list(fixture[5].parent.glob("terminal-abandon-*.json"))) == 1
+        return
     assert invoke(fixture) == 2
     capsys.readouterr()
     assert tree.exists()
