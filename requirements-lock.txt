@@ -147,7 +147,7 @@ propcache==0.5.2
 protobuf==7.36.2
 psutil==7.2.2
 psycopg==3.3.4
-psycopg-binary==3.3.4
+psycopg-binary==3.3.6
 ptyprocess==0.7.0
 pure-eval==0.2.3
 pyahocorasick==2.3.1
