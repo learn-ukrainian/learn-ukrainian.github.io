@@ -279,6 +279,17 @@ def test_v2_liveness_uses_supervisor_identity(proc, monkeypatch, identity, expec
     ) is expected
 
 
+def test_v2_null_process_start_does_not_keep_dead_pid_alive(proc, monkeypatch):
+    from scripts.dispatcher import worker
+
+    monkeypatch.setattr(worker, "_identity", lambda _pid: None)
+    (proc / "123" / "stat").write_text("unreadable identity")
+    record = {"schema_version": 2, "pid": 123, "process_start": None}
+    assert d.worker_liveness({**record, "pid": 999_999_998}) is False
+    assert d.worker_liveness(record) is True
+    assert d.worker_liveness({**record, "pid": None}) is None
+
+
 def test_v2_marker_rechecks_schema_under_lock(proc, tmp_path, monkeypatch):
     import json
     from contextlib import contextmanager

@@ -119,11 +119,11 @@ def worker_liveness(
         return None
     namespace = _pid_namespace()
     view = _proc_pid_namespace()
-    if record.get("schema_version") == 2 and "process_start" in record:
+    expected = record.get("process_start")
+    if record.get("schema_version") == 2 and isinstance(expected, str):
         from scripts.dispatcher.worker import _identity
 
-        expected = record["process_start"]
-        if not isinstance(expected, str) or namespace != INITIAL_PID_NAMESPACE or view != namespace:
+        if namespace != INITIAL_PID_NAMESPACE or view != namespace:
             return None
         actual = _identity(pid)
         if actual is not None:
