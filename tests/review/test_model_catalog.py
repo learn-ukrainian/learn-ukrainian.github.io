@@ -735,8 +735,10 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
         )
 
     for model in ("muse-wonder-full-1.0", "muse-spark-1.3"):
-        assert activity_role_refusal(model, "review", load_model_catalog()) is not None
-        assert activity_role_refusal(model, "consult", load_model_catalog()) is not None
+        for activity in ("review", "consult"):
+            assert (activity_role_refusal(model, activity, load_model_catalog()) is None) == (
+                model == "muse-wonder-full-1.0"
+            )
         args = delegate.build_parser().parse_args([
             "dispatch", "--agent", "muse", "--model", model, "--task-id", "worker-contract",
             "--prompt", "fixture", "--mode", "read-only", "--research-role", "investigation",
@@ -1202,10 +1204,80 @@ _RETIREMENT_DATA = json.loads(gzip.decompress(_RETIREMENT_CAPTURE.read_bytes()))
 CURRENT_BASELINE = _RETIREMENT_DATA["baseline"]
 CURRENT_INPUTS = _RETIREMENT_DATA["inputs"]
 
+MUSE_REVIEW_CANDIDATE = {
+    "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
+    "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
+    "review_profiles": ["code"], "capabilities": ["code_review"],
+    "requires_data_egress_policy": "public_only",
+}
+MUSE_REVIEW_ROLES = {"legacy_reviewers", "code_review_low", "code_review_medium"}
+
+
+def approved_muse_review_receipt(receipt, case):
+    """Append only the ordered, still-unqualified Meta review seat to a frozen trace."""
+    receipt = deepcopy(receipt)
+    value = receipt.get("value", {})
+    if not value.get("trace") or (value["resolved_risk"] not in {"low", "medium"} and case.get("pinned_candidate") != "muse"):
+        return receipt
+    reason = "formal-review transport is not eligible for a sealed cross-family gate"
+    if not case.get("formal_review", True):
+        reason = (
+            "review profile exclusion: muse supports ['code'], got 'infra'"
+            if case["review_profile"] == "infra" else
+            "data-egress policy fail-closed: muse requires data_egress_policy='public_only', "
+            f"got {case.get('data_egress_policy')!r} (requires --data-egress-policy public_only)"
+        )
+    if case["author_model"] == "muse-wonder-full-1.0" or case.get("author_family") == "meta":
+        reason = "same family as author (meta) — cross-family review requires a different family"
+    if "meta" in case.get("subject_families", []):
+        reason = "subject exclusion: muse cannot review a change that governs its own boundary (subject family meta)"
+    if "muse" in case.get("subject_seats", []):
+        reason = "subject exclusion: muse cannot review a change that governs its own boundary (subject seat muse)"
+    capacity = next(row["capacity"] for row in value["trace"] if row["route"] == "grok")
+    value["trace"].append({
+        "name": "muse", "concrete_model": "muse-wonder-full-1.0", "family": "meta",
+        "route": "muse", "transport": "native_muse", "invocation": MUSE_REVIEW_CANDIDATE["invocation"],
+        "quality_tier": "economical", "requires_silence_timeout": False,
+        "status": "excluded", "reason": reason, "health": None, "capacity": deepcopy(capacity),
+        "suitability_rank": None, "selection_score": None, "credit": None,
+    })
+    return receipt
+
+
+def approved_muse_role_receipt(receipt, case):
+    """Extend the frozen role envelope without granting runtime qualification."""
+    receipt = deepcopy(receipt)
+    if case["role"] not in MUSE_REVIEW_ROLES or "value" not in receipt:
+        return receipt
+    context = case["context"]
+    exclusions = []
+    if "meta" in context.get("excluded_families", []):
+        exclusions.append("subject_family_excluded")
+    if set(context.get("required_capabilities", [])) - {"code_review"}:
+        exclusions.append("required_capability_missing")
+    if context.get("isolation_required"):
+        exclusions.append("isolation_required")
+    if context.get("pinned_model") not in {None, "muse-wonder-full-1.0"}:
+        exclusions.append("explicit_pin_mismatch")
+    if context.get("data_egress_policy") != "public_only":
+        exclusions.append("data_egress_policy_required")
+    if case["role"] != "legacy_reviewers":
+        exclusions.append("formal_endpoint_not_eligible")
+    receipt["value"]["candidates"].append({
+        "seat": "meta_reviewer", "route_name": "native", "model_id": "muse-wonder-full-1.0",
+        "family": "meta", "route": "muse", "transport": "native_muse", "wire_id": "muse-wonder-full-1.0",
+        "effort": "high", "argv": MUSE_REVIEW_CANDIDATE["invocation"].split(), "legacy_label": "muse",
+        "decision_reference": "agents_extensions/shared/rules/model-assignment.md", "qualification_reference": None,
+        "health": "unknown", "health_rank": 0, "health_provenance": {
+            "snapshot_supplied": case.get("health") is not None, "normalized_key": None, "diagnostic": "HEALTH_UNKNOWN",
+        }, "exclusion_reasons": exclusions,
+    })
+    return receipt
+
 
 
 def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
-    """Permit only the ordered worker entries and their explicit refusal receipts."""
+    """Permit only the ordered Muse worker/review entries and exact refusal receipts."""
     expected = deepcopy(CURRENT_BASELINE)
     if inputs is None and surfaces is None:
         assert actual.keys() == BASELINE.keys()
@@ -1215,11 +1287,13 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
         return
     workers = {
         "muse-wonder-full-1.0": {
-            "family": "meta", "tier": "compatibility", "lifecycle": "active",
-            "roles": ["coding"], "transports": ["native_muse"],
+            "family": "meta", "tier": "economical", "lifecycle": "active",
+            "roles": ["coding", "standard_review"], "transports": ["native_muse"],
             "strengths": ["explicit_native_worker"],
-            "weaknesses": ["worker_qualification_pending", "no_review_or_driver_authority"],
-            "notes": "Explicit delegate worker only. No automatic routing or fallback.",
+            "weaknesses": ["worker_qualification_pending", "review_qualification_pending", "no_driver_authority"],
+            "notes": "Explicit native coding and low/medium code-review seat under measurement. "
+                     "No driver, automatic fallback, Ukrainian, private-repository or security-final authority. "
+                     "Catalog eligibility does not attest provider-origin identity or effective permissions.",
             "sources": ["https://dev.meta.ai/docs/muse-code"],
         },
         "muse-spark-1.3": {
@@ -1233,6 +1307,18 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
     }
     assert not workers.keys() & expected["catalog"]["models"].keys()
     expected["catalog"]["models"].update(workers)
+    expected["catalog"]["review_candidates"]["muse"] = deepcopy(MUSE_REVIEW_CANDIDATE)
+    for risk in ("low", "medium"):
+        expected["catalog"]["review_ladders"][risk].append(["muse"])
+    holders = expected["routing_holders"]
+    holders["seats"]["meta_reviewer"] = {
+        "model_id": "muse-wonder-full-1.0", "wire_ids": {"native": "muse-wonder-full-1.0"},
+    }
+    for role in MUSE_REVIEW_ROLES:
+        holders["roles"][role].append({
+            "seat": "meta_reviewer", "route_name": "native", "model_id": "muse-wonder-full-1.0",
+            "wire_id": "muse-wonder-full-1.0",
+        })
     expected["registry"]["muse"] = {
         "adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter",
         "default_model": "muse-wonder-full-1.0", "default_effort": "high",
@@ -1268,11 +1354,17 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                     *({"author_model": model, "risk": risk, "review_profile": profile} for model in workers),
                     {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "author_family": "meta"},
                     {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "subject_families": ["meta"]},
+                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "subject_seats": ["muse"]},
+                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "pinned_candidate": "muse"},
+                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile,
+                     "pinned_candidate": "muse", "pressure_override_reason": "frozen-input"},
                 )
             ],
             "roles": [
-                {"role": role, "purpose": "inspect", "context": {"excluded_families": ["meta"]}, "health": None}
+                {"role": role, "purpose": "inspect", "context": context, "health": None}
                 for role in CURRENT_BASELINE["routing_holders"]["roles"]
+                for context in ({"excluded_families": ["meta"]}, {"excluded_seats": ["muse"]},
+                                {"pinned_model": "muse-wonder-full-1.0"})
             ],
         }
         for surface, extra_cases in additions.items():
@@ -1298,10 +1390,9 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                     receipt = {"exit_status": 1, "exception": "ValueError", "error": "muse_delegate_worker_required",
                                "stdout": "", "stderr": ""}
                 elif surface == "reviewer":
-                    template_case = {k: v for k, v in case.items() if k not in {"subject_families", "author_family"}}
+                    template_case = {k: v for k, v in case.items()
+                                     if k not in {"subject_families", "author_family", "subject_seats", "pinned_candidate", "pressure_override_reason"}}
                     if case["author_model"] == "muse-wonder-full-1.0":
-                        # Full has known Meta identity. Like DeepSeek, its family
-                        # has no reviewer candidate, so every receipt field agrees.
                         template_case["author_model"] = "deepseek-v4.1-flash"
                     elif case["author_model"] in workers:
                         template_case["author_model"] = "unknown"
@@ -1317,6 +1408,19 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                         receipt["value"]["fail_closed_reason"] = reason.replace(
                             "author_family='anthropic'", "author_family='meta'"
                         )
+                    elif case.get("pinned_candidate"):
+                        value = receipt["value"]
+                        value["selected"] = None
+                        for row in value["trace"]:
+                            if row["status"] == "selected":
+                                row["status"] = "eligible"
+                        value["fail_closed_reason"] = (
+                            "explicit reviewer pin 'muse' failed a hard eligibility gate"
+                            if case.get("pressure_override_reason") else
+                            "explicit reviewer pin requires a non-empty pressure_override_reason"
+                        )
+                        if not case.get("pressure_override_reason"):
+                            value["trace"], value["advisory"] = [], []
                 elif surface == "roles":
                     receipt = deepcopy(reference[dispatch_key({**case, "context": {}})])
                 else:
@@ -1324,13 +1428,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                     value = {"argv": None, "target": None, "refusal": None,
                              "routing": {"alias_note": None, "requested_agent": None, "substitution": None}}
                     if case["review_attempt"]:
-                        if model == "muse-wonder-full-1.0":
-                            value["refusal"] = (
-                                "REVIEW_ROUTE_REFUSED: model 'muse-wonder-full-1.0' (muse-wonder-full-1.0) holds no "
-                                "review, critique or approval role in the model catalog (roles: coding; "
-                                "review_scheduler.activity_roles.review, #9583)"
-                            )
-                        elif model == "gpt-6-luna":
+                        if model == "gpt-6-luna":
                             peer = {**case, "agent": "codex"}
                             value = deepcopy(reference[dispatch_key(peer)]["value"])
                         else:
@@ -1348,8 +1446,18 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                             value["argv"] = ["--agent", "muse", *(["--model", model] if model else [])]
                             value["target"] = {"model": model, "reason": "explicit", "recipient": "muse"}
                     receipt = {"exit_status": 0, "stdout": "", "stderr": "", "value": value}
+                if surface == "reviewer":
+                    receipt = approved_muse_review_receipt(receipt, case)
+                elif surface == "roles":
+                    if case.get("context", {}).get("pinned_model") == "muse-wonder-full-1.0":
+                        for row in receipt["value"]["candidates"]:
+                            row["exclusion_reasons"].append("explicit_pin_mismatch")
+                    receipt = approved_muse_role_receipt(receipt, case)
                 rows.append(receipt)
             expected[surface] = rows
+    else:
+        for surface, overlay in (("reviewer", approved_muse_review_receipt), ("roles", approved_muse_role_receipt)):
+            expected[surface] = [overlay(row, case) for row, case in zip(expected[surface], CURRENT_INPUTS[surface], strict=True)]
     assert actual.keys() == (BASELINE.keys() if surfaces is None else set(surfaces))
     for surface in actual:
         assert actual[surface] == expected[surface], f"current surface differs: {surface}"
