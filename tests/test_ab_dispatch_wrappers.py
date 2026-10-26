@@ -204,103 +204,13 @@ def _patch_state_dir(monkeypatch, tmp_path: Path) -> Path:
     return state_dir
 
 
-def test_dispatch_fix_with_explicit_brief_file_appends_checklist_and_dispatches(monkeypatch, tmp_path):
-    monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
-    brief = tmp_path / "brief.md"
-    # A fix brief scopes its write dispatch through its own Owned paths section (#9739).
-    brief.write_text(
-        "# Fix this\n\nExisting acceptance criteria.\n\n## Owned paths\n\n- `scripts/ai_agent_bridge/_cli.py`\n",
-        encoding="utf-8",
-    )
-    calls = []
-    captured_prompt: dict[str, str | Path] = {}
-
-    def fake_run(command, **kwargs):
-        calls.append((command, kwargs))
-        prompt_path = Path(_option(command, "--prompt-file"))
-        captured_prompt["path"] = prompt_path
-        captured_prompt["text"] = prompt_path.read_text(encoding="utf-8")
-        return subprocess.CompletedProcess(command, 0)
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-
-    rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1741", brief_file=str(brief), dry_run=False))
-
-    assert rc == 0
-    command = calls[0][0]
-    assert command[:3] == [".venv/bin/python", "scripts/delegate.py", "dispatch"]
-    assert _option(command, "--agent") == "codex"
-    assert _option(command, "--mode") == "danger"
-    assert "--worktree" in command
-    assert _option(command, "--base") == "origin/main"
-    assert _option(command, "--task-id") == "1741"
-    assert "--force-new" in command
-    assert _option(command, "--effort") == "high"
-    assert _option(command, "--owned-path") == "scripts/ai_agent_bridge/_cli.py"
-    assert "Existing acceptance criteria." in str(captured_prompt["text"])
-    assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in str(captured_prompt["text"])
-    assert not Path(captured_prompt["path"]).exists()
-
-
-@pytest.mark.parametrize(
-    ("owned", "expected"),
-    [
-        ("- `start-codex-driver.sh`\n", ["start-codex-driver.sh"]),
-        ("`pyproject.toml` and `Makefile`\n", ["pyproject.toml", "Makefile"]),
-        ("- `scripts/a.py`\n- `.gitignore`\n- `pyproject.toml`\n", ["scripts/a.py", ".gitignore", "pyproject.toml"]),
-        ("`pyproject.toml`, not a `word`, `--flag`, `..` or `.`\n", ["pyproject.toml"]),
-    ],
-    ids=["root-file-only", "root-files-with-and-without-a-dot", "mixed-scope", "words-are-not-paths"],
-)
-def test_dispatch_fix_keeps_repository_root_files_in_its_scope(monkeypatch, tmp_path, owned, expected):
-    """#9739: a root-level owned file (valid for delegate) is part of the derived scope, never silently dropped."""
-    monkeypatch.setattr(wrappers, "REPO_ROOT", tmp_path)
-    (tmp_path / "Makefile").write_text("all:\n", encoding="utf-8")
-    brief = tmp_path / "brief.md"
-    brief.write_text(f"# Fix\n\n## Owned paths\n\n{owned}\n## Verify\n`tests/x.py`\n", encoding="utf-8")
-
-    command = wrappers.build_dispatch_fix_command("9739", brief)
-
-    assert [command[i + 1] for i, item in enumerate(command) if item == "--owned-path"] == expected
-
-
-def test_dispatch_fix_with_auto_brief_uses_issue_body_and_dry_run_state(monkeypatch, tmp_path):
-    state_dir = _patch_state_dir(monkeypatch, tmp_path)
-    lease_root = tmp_path / "learn-ukrainian" / "task-1701"
-    lease_root.mkdir(parents=True)
-    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
-
-    def fake_run(command, **kwargs):
-        assert command == ["gh", "issue", "view", "1701", "--json", "title,body"]
-        payload = {
-            "title": "Security issue",
-            "body": "Acceptance criteria from issue.\n\n## Owned paths\n\n- `scripts/ai_agent_bridge/_cli.py`\n",
-        }
-        return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload))
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-
-    rc = wrappers.handle_dispatch_fix(argparse.Namespace(task_id="1701", brief_file=None, dry_run=True))
-
-    assert rc == 0
-    state = json.loads((state_dir / "1701.json").read_text(encoding="utf-8"))
-    command = state["command"]
-    assert state["status"] == "dry-run"
-    assert state["agent"] == "codex"
-    assert state["mode"] == "danger"
-    assert state["model"] is None
-    assert state["effort"] == "high"
-    assert _option(command, "--task-id") == "1701"
-    assert _option(command, "--owned-path") == "scripts/ai_agent_bridge/_cli.py"
-    assert "--force-new" in command
-    prompt_path = Path(state["prompt_file"])
-    assert prompt_path.parent == lease_root
-    prompt = prompt_path.read_text(encoding="utf-8")
-    assert "Security issue" in prompt
-    assert "Acceptance criteria from issue." in prompt
-    assert wrappers.MANDATORY_COMMIT_PUSH_PR_CHECKLIST in prompt
+def test_retired_dispatch_fix_is_not_registered(capsys):
+    parser = _cli._build_parser()
+    assert "dispatch-fix" not in parser.format_help()
+    with pytest.raises(SystemExit) as exc:
+        parser.parse_args(["dispatch-fix", "123"])
+    assert exc.value.code == 2
+    assert "invalid choice" in capsys.readouterr().err
 
 
 def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatch, tmp_path):
@@ -360,42 +270,24 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     assert "diff --git" not in prompt
 
 
-def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch, tmp_path):
-    monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
-    target = tmp_path / "target.py"
-    target.write_text("def broken():\n    return missing_name\n", encoding="utf-8")
-    calls = []
-    captured_prompt: dict[str, str | Path] = {}
+@pytest.mark.parametrize("target_kind", ["file", "directory", "missing"])
+def test_retired_local_review_refuses_before_running_commands(monkeypatch, tmp_path, capsys, target_kind):
+    target = tmp_path / "target"
+    if target_kind == "file":
+        target.write_text("uncommitted content", encoding="utf-8")
+    elif target_kind == "directory":
+        target.mkdir()
 
-    def fake_run(command, **kwargs):
-        calls.append((command, kwargs))
-        prompt_path = Path(_option(command, "--prompt-file"))
-        captured_prompt["path"] = prompt_path
-        captured_prompt["text"] = prompt_path.read_text(encoding="utf-8")
-        return subprocess.CompletedProcess(command, 0)
+    def unexpected(*args, **kwargs):
+        pytest.fail("retired local review must not run a command")
 
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-
+    monkeypatch.setattr(wrappers.subprocess, "run", unexpected)
+    monkeypatch.setattr(wrappers.github_client, "run", unexpected)
     rc = wrappers.handle_review_deep(argparse.Namespace(target=str(target), effort="high", dry_run=False))
-
-    assert rc == 0
-    command = calls[0][0]
-    assert command[:3] == [".venv/bin/python", "scripts/delegate.py", "dispatch"]
-    assert "--pinned-head" not in command
-    assert _option(command, "--agent") == "claude"
-    assert _option(command, "--mode") == "read-only"
-    assert _option(command, "--model") == "claude-opus-5-5"
-    assert _option(command, "--effort") == "high"
-    assert _option(command, "--task-id").startswith("review-")
-    text = str(captured_prompt["text"])
-    assert wrappers.REVIEW_DEEP_INSTRUCTIONS in text
-    assert "READ-ONLY REVIEW CONTRACT" in text
-    assert "target.py" in text
-    # Pointer-only: file *names*, not full source paste
-    assert "def broken()" not in text
-    assert "missing_name" not in text
-    assert not Path(captured_prompt["path"]).exists()
+    assert rc == 2
+    assert "--cwd <dispatch-worktree>" in capsys.readouterr().err
+    with pytest.raises(ValueError, match="local-path review is retired"):
+        wrappers.build_review_deep_command(str(target), tmp_path / "prompt.md", "high")
 
 
 def _admitted_reviewer(agent: str, model: str | None = None):
