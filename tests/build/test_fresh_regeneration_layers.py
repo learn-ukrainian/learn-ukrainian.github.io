@@ -6,6 +6,7 @@ import hashlib
 import json
 import subprocess
 from functools import partial
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -278,15 +279,21 @@ def test_fresh_state_rerun_reuses_done_attempts_without_paid_dispatch(context, m
             result = tasks / f"{task_id}.result"
             result.write_bytes(lock.yaml_bytes(context.draft))
             record = {
+                "schema_version": 2,
+                "task_id": task_id,
+                "run_nonce": "n1",
                 "status": "done",
                 "agent": "codex",
                 "model": "gpt-6.1-sol",
                 "effort": "high",
                 "result_file": str(result),
+                "prompt_sha256": hashlib.sha256(Path(cmd[cmd.index("--prompt-file") + 1]).read_bytes()).hexdigest(),
+                "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
             }
             (tasks / f"{task_id}.json").write_text(json.dumps(record))
-            return subprocess.CompletedProcess(cmd, 0, stdout="", stderr="")
+            return subprocess.CompletedProcess(cmd, 0, stdout=f"{task_id}\nn1\n", stderr="")
         assert cmd[2] == "wait"
+        assert cmd[cmd.index("--run-nonce") + 1] == "n1"
         waits.append(cmd[3])
         return subprocess.CompletedProcess(cmd, 0, stdout=(tasks / f"{cmd[3]}.json").read_text(), stderr="")
 
