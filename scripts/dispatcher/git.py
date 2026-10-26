@@ -84,8 +84,12 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
 
 
 def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
+    from scripts.common.git_context import validate_plain_branch_name
+
     delivery = dict(
-        head_sha=None, remote_head_sha=None, push_state="unknown", commits_ahead=None, worktree_dirty_on_exit=None
+        head_sha=None, remote_head_sha=None, remote_ref=None, publish_branch=spec.options.get("branch"),
+        push_state="unknown", push_state_reason="observation_failed", commits_ahead=None,
+        worktree_dirty_on_exit=None,
     )
     try:
         delivery.update(
@@ -95,12 +99,24 @@ def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
         )
         if spec.mode == "read-only":
             delivery["push_state"] = "not_applicable"
+            delivery["push_state_reason"] = "read_only"
         else:
-            remote = _git(spec.worktree, "ls-remote", "--heads", "origin", f"refs/heads/{branch}")
-            delivery["remote_head_sha"] = remote.split()[0] if remote else None
+            branches = [branch]
+            if delivery["publish_branch"] is not None:
+                branches.append(validate_plain_branch_name(delivery["publish_branch"], repo_root=spec.worktree))
+            refs = list(dict.fromkeys(f"refs/heads/{name}" for name in branches))
+            remote = _git(spec.worktree, "ls-remote", "--heads", "origin", *refs)
+            heads = {ref: sha for sha, ref in (line.split() for line in remote.splitlines()) if ref in refs}
+            matched = next((ref for ref in refs if heads.get(ref) == delivery["head_sha"]), None)
+            delivery["remote_ref"] = matched
+            delivery["remote_head_sha"] = heads[matched] if matched else next(iter(heads.values()), None)
             delivery["push_state"] = "pushed" if delivery["remote_head_sha"] == delivery["head_sha"] else "unpushed"
+            delivery["push_state_reason"] = (
+                "remote_head_matches" if matched else "remote_head_differs" if heads else "remote_branch_missing"
+            )
     except (OSError, ValueError, subprocess.SubprocessError):
         pass
     if spec.mode != "read-only" and delivery["worktree_dirty_on_exit"]:
         delivery["push_state"] = "unpushed"
+        delivery["push_state_reason"] = "dirty_worktree"
     return delivery

@@ -499,10 +499,61 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
     assert git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"]) == {
         "head_sha": record["head_sha"],
         "remote_head_sha": record["head_sha"] if remote_available else None,
+        "remote_ref": f"refs/heads/{record['worktree_branch']}" if remote_available else None,
+        "publish_branch": None,
         "push_state": "unpushed",
+        "push_state_reason": "dirty_worktree",
         "commits_ahead": 1,
         "worktree_dirty_on_exit": True,
     }
+
+
+@pytest.mark.parametrize(
+    ("target", "commits", "dirty", "expected", "reason"),
+    [
+        ("pinned", 1, False, "pushed", "remote_head_matches"),
+        ("own", 1, False, "pushed", "remote_head_matches"),
+        ("unrelated", 1, False, "unpushed", "remote_head_differs"),
+        ("pinned", 1, True, "unpushed", "dirty_worktree"),
+        (None, 0, False, "unpushed", "remote_head_differs"),
+        ("pinned", 0, False, "pushed", "remote_head_matches"),
+    ],
+)
+def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target, commits, dirty, expected, reason):
+    pinned = "codex/existing-pr"
+    run_git(sandbox.repo, "branch", pinned, "main")
+    run_git(sandbox.repo, "push", "origin", pinned)
+    task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
+    record_path = sandbox.tasks / f"{task[0]}.json"
+    record = json.loads(record_path.read_text())
+    await_file(Path(record["prompt_file"]).with_suffix(".started"))
+    worktree = Path(record["worktree_path"])
+    branch = record["worktree_branch"]
+    if commits:
+        (worktree / "fix.txt").write_text("fix round\n")
+        run_git(worktree, "add", "fix.txt")
+        run_git(worktree, "commit", "-m", "fix round")
+    remote_branch = {"pinned": pinned, "own": branch, "unrelated": "codex/unrelated"}.get(target)
+    if remote_branch:
+        run_git(worktree, "push", "origin", f"HEAD:refs/heads/{remote_branch}")
+    if dirty:
+        (worktree / "uncommitted.txt").write_text("still local\n")
+    Path(record["prompt_file"]).with_suffix(".release").touch()
+    observed = sandbox.settle(task)
+    head = run_git(worktree, "rev-parse", "HEAD")
+    matched = remote_branch if target in {"pinned", "own"} else None
+    assert observed["push_state"] == expected
+    assert observed["push_state_reason"] == reason
+    assert observed["publish_branch"] == pinned
+    assert observed["remote_ref"] == (f"refs/heads/{matched}" if matched else None)
+    assert observed["head_sha"] == head
+    assert observed["commits_ahead"] == commits
+    assert observed["worktree_dirty_on_exit"] is dirty
+    if matched:
+        assert observed["remote_head_sha"] == head
+        assert run_git(sandbox.remote, "rev-parse", f"refs/heads/{matched}") == head
+    else:
+        assert observed["remote_head_sha"] == record["worktree_base_sha"]
 
 
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
