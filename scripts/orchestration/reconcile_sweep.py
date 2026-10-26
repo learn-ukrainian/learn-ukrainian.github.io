@@ -36,7 +36,7 @@ from scripts.guardrails.delegate_ownership import (
     default_ledger_path,
 )
 from scripts.orchestration import dispatch_admission, dispatch_settle
-from scripts.orchestration.dead_worker_state import worker_liveness
+from scripts.orchestration.dead_worker_state import process_is_zombie, worker_liveness
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -51,6 +51,7 @@ class ReconcileSweepReport:
     stale_claims: list[str]
     live_tasks: list[str]
     unparseable_tasks: list[str] = field(default_factory=list)
+    unknown_tasks: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -63,6 +64,8 @@ class ReconcileSweepReport:
         )
         if self.unparseable_tasks:
             summary += f" unparseable_tasks={len(self.unparseable_tasks)}"
+        if self.unknown_tasks:
+            summary += f" unknown_tasks={len(self.unknown_tasks)}"
         return summary
 
 
@@ -75,6 +78,26 @@ def _parse_pid(raw_pid: Any) -> int | None:
         val = int(raw_pid.strip())
         if val > 0:
             return val
+    return None
+
+
+def _v2_worker_liveness(state: dict[str, Any], pid: int) -> bool | None:
+    # Match dead_worker_state.worker_liveness's unknown-safe contract until
+    # its v2 process_start support from #11708 is merged.
+    recorded = state.get("process_start")
+    if not isinstance(recorded, str) or not recorded:
+        return None
+    identity = worker._identity(pid)
+    if identity is not None:
+        return identity == recorded
+    if process_is_zombie(pid):
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except OSError:
+        return None
     return None
 
 
@@ -167,6 +190,7 @@ def _run_reconcile_sweep(
     zombie_tasks: list[str] = []
     live_tasks: list[str] = []
     unparseable_tasks: list[str] = []
+    unknown_tasks: list[str] = []
     task_files = sorted(tdir.glob("*.json")) if tdir.is_dir() else []
     scanned_tasks = len(task_files)
 
@@ -189,12 +213,15 @@ def _run_reconcile_sweep(
                 pid = _parse_pid(raw_pid)
                 if state.get("schema_version") == 2:
                     if raw_pid is None:
-                        live_tasks.append(task_id)
+                        unknown_tasks.append(task_id)
                         continue
                     if pid is None:
                         unparseable_tasks.append(task_id)
                         continue
-                    pid_alive = worker._identity(pid) == state.get("process_start")
+                    pid_alive = _v2_worker_liveness(state, pid)
+                    if pid_alive is None:
+                        unknown_tasks.append(task_id)
+                        continue
                 elif (
                     pid is None
                     and raw_pid is None
@@ -238,6 +265,7 @@ def _run_reconcile_sweep(
         stale_claims=stale_claims,
         live_tasks=live_tasks,
         unparseable_tasks=unparseable_tasks,
+        unknown_tasks=unknown_tasks,
     )
 
 
