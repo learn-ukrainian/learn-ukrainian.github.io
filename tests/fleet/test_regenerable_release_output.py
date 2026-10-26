@@ -16,6 +16,18 @@ from scripts.fleet import regenerable_output as patterns
 from tests import test_fleet_post_task_reap as reap_fixtures
 from tests.orchestration import test_worktree_artifacts as fixtures
 
+
+def _assert_record_only(receipt):
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+
+
+def _assert_entry(receipt, name, payload):
+    entry = next(item for item in receipt["paths"] if item["path"] == str(name))
+    assert entry == {"path": str(name), "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
+
+
 checkout = fixtures.checkout
 hermetic_reap = reap_fixtures.hermetic_reap
 MANIFEST = "site/src/data/lexicon-manifest.json"
@@ -118,7 +130,7 @@ def pinned_checkout(checkout):
 
 
 @pytest.mark.parametrize("capped", [False, True])
-def test_never_uploaded_pointer_preserves_only_copy(checkout, monkeypatch, capped):
+def test_never_uploaded_pointer_remains_in_record_only_inventory(checkout, monkeypatch, capped):
     payload, _ = pinned_checkout(checkout)
     repo, primary, _ = checkout
     monkeypatch.setattr(
@@ -129,13 +141,16 @@ def test_never_uploaded_pointer_preserves_only_copy(checkout, monkeypatch, cappe
     tracked = set(output.artifacts._git_paths(repo, "--cached"))
     assert not patterns.is_regenerable_ignored_path(MANIFEST, worktree=repo, tracked=tracked)
     ok, reason, receipt = fixtures.guard(checkout)
-    assert ok is not capped
-    assert {entry["path"] for entry in receipt["paths"]} == {MANIFEST, PRACTICE}
+    assert ok and not reason
+    _assert_record_only(receipt)
+    assert receipt["count"] == 2
     if capped:
-        assert "exceeds preservation cap" in reason
-        assert (repo / MANIFEST).read_bytes() == payload
+        assert receipt["paths_truncated"] is True and receipt["paths"] == []
     else:
-        assert (primary / receipt["location"] / MANIFEST).read_bytes() == payload
+        assert {entry["path"] for entry in receipt["paths"]} == {MANIFEST, PRACTICE}
+        _assert_entry(receipt, MANIFEST, payload)
+    assert not (primary / "batch_state/preserved").exists()
+    assert (repo / MANIFEST).read_bytes() == payload
 
 
 def test_reviewer_unuploaded_pointer_manifest_requires_preservation(checkout, monkeypatch):
@@ -148,7 +163,9 @@ def test_reviewer_unuploaded_pointer_manifest_requires_preservation(checkout, mo
     monkeypatch.setattr(github_client, "run", lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, '{"assets":[]}'))
     ok, reason, receipt = fixtures.guard(checkout)
     assert ok and not reason and receipt is not None
-    assert (checkout[1] / receipt["location"] / MANIFEST).read_bytes() == payload
+    _assert_record_only(receipt)
+    _assert_entry(receipt, MANIFEST, payload)
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("change", ["digest", "digestless", "size", "url", "state", "duplicate", "shape"])
@@ -237,10 +254,15 @@ def test_kept_gzip_requires_safe_matching_bytes(checkout, monkeypatch, stem, nam
     if state == "valid":
         ok, reason, receipt = fixtures.guard(checkout)
         assert ok and not reason
-        assert (primary / receipt["location"] / kept).read_bytes() == gz.read_bytes()
+        _assert_record_only(receipt)
+        _assert_entry(receipt, kept, gz.read_bytes())
         monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-        ok, reason, _ = fixtures.guard(checkout)
-        assert not ok and "exceeds preservation cap" in reason
+        ok, reason, bounded = fixtures.guard(checkout)
+        assert ok and not reason
+        _assert_record_only(bounded)
+        assert bounded["count"] == receipt["count"] and bounded["bytes"] == receipt["bytes"]
+        assert bounded["paths_truncated"] is True and bounded["paths"] == []
+        assert not (primary / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("total_bytes", [760_367_968, 788_933_556])
@@ -330,17 +352,21 @@ def test_mixed_pinned_release_preserves_only_unique_output(checkout):
     ok, reason, receipt = fixtures.guard(checkout)
     assert ok and not reason
     assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
-    assert (checkout[1] / receipt["location"] / "ignored/answer.txt").read_bytes() == b"unique answer"
+    _assert_record_only(receipt)
+    _assert_entry(receipt, "ignored/answer.txt", b"unique answer")
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
-def test_database_provenance_remains_a_cap_refusal(checkout):
+def test_database_provenance_is_record_only_without_a_payload_cap_refusal(checkout):
     pinned_checkout(checkout)
     database = fixtures.artifact(checkout, "data/atlas.db", b"")
     with database.open("wb") as stream:
         stream.truncate(462_831_616)
     ok, reason, receipt = fixtures.guard(checkout)
-    assert not ok and "exceeds preservation cap" in reason
+    assert ok and not reason
+    _assert_record_only(receipt)
     assert receipt["bytes"] == 462_831_616
+    assert not (checkout[1] / "batch_state/preserved").exists()
     assert [entry["path"] for entry in receipt["paths"]] == ["data/atlas.db"]
     assert database.exists()
 
@@ -490,8 +516,10 @@ def test_build_file_symlink_is_preserved_without_reading_target(checkout):
     assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
     ok, reason, receipt = fixtures.guard(checkout)
     assert ok and not reason
-    assert receipt["paths"][0]["type"] == "symlink"
-    assert b"only outside copy" not in (primary / receipt["location"] / name).read_bytes()
+    _assert_record_only(receipt)
+    assert receipt["inventory_error"] == "inventory_incomplete"
+    assert receipt["count"] == 0 and receipt["paths"] == []
+    assert not (primary / "batch_state/preserved").exists()
     assert outside.read_bytes() == b"only outside copy"
 
 

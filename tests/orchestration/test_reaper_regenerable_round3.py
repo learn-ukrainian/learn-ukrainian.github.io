@@ -1,5 +1,6 @@
 """Reproduce descriptor exhaustion, unsafe copy roots and repeated receipt scans."""
 
+import hashlib
 import json
 import os
 import signal
@@ -15,6 +16,17 @@ from scripts.orchestration import reap_worktrees as rw
 from tests.fleet.test_reaper_regenerable_cap import hermetic_base as hermetic_base
 from tests.fleet.test_reaper_regenerable_cap import hermetic_reap as hermetic_reap
 from tests.fleet.test_reaper_regenerable_cap import prepare, put, reap
+
+
+def _assert_record_only(primary, receipt):
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+
+
+def _assert_entry(receipt, name, payload):
+    entry = next(item for item in receipt["paths"] if item["path"] == str(name))
+    assert entry == {"path": str(name), "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
 
 
 def test_killed_measurement_pins_use_existing_managed_recovery(tmp_path):
@@ -220,7 +232,7 @@ def test_copy_receipt_publication_failure_retains_tree(hermetic_reap, monkeypatc
 
 
 @pytest.mark.parametrize("evidence_size", [12, 129])
-def test_prior_preservation_locator_survives_new_receipt(hermetic_reap, monkeypatch, evidence_size):
+def test_prior_record_only_inventory_is_replaced_without_creating_an_archive(hermetic_reap, monkeypatch, evidence_size):
     repo, tasks, tree = prepare(hermetic_reap)
     put(tree, "screenshots/first.png", b"earlier evidence")
     ok, reason, earlier = output.preserve_worktree_artifacts(
@@ -230,13 +242,16 @@ def test_prior_preservation_locator_survives_new_receipt(hermetic_reap, monkeypa
     put(tree, ".cache/new-evidence.txt", b"n" * evidence_size)
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 64)
     row = reap(repo, tasks)
-    assert row["action"] == ("removed" if evidence_size <= 64 else "skipped"), row
-    assert tree.exists() is (evidence_size > 64)
+    assert row["action"] == "removed" and not tree.exists(), row
     record = json.loads((tasks / "proof-cap.json").read_text())
-    assert earlier["location"] in {
-        entry["location"] for entry in record["preserved_artifacts"]["external_copies"]
-    }
-    assert (repo / earlier["location"] / "screenshots/first.png").read_bytes() == b"earlier evidence"
+    receipt = record["preserved_artifacts"]
+    _assert_record_only(repo, receipt)
+    _assert_entry(earlier, "screenshots/first.png", b"earlier evidence")
+    assert receipt["count"] == 2
+    assert receipt["bytes"] == evidence_size + len(b"earlier evidence")
+    assert receipt["paths_truncated"] is True and receipt["paths"] == []
+    assert "external_copies" not in receipt
+    assert not (repo / "batch_state/preserved").exists()
 
 
 def test_primary_proof_cannot_follow_symlink_to_ignored_file(hermetic_reap):

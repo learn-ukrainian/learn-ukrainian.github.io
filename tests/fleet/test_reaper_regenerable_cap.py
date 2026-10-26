@@ -1,5 +1,6 @@
 """Real-worktree cap and proof regressions for #11387."""
 
+import hashlib
 import json
 import os
 
@@ -8,6 +9,18 @@ import pytest
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import regenerable_output as classifier
 from tests import test_fleet_post_task_reap as fixtures
+
+
+def _assert_record_only(primary, receipt):
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+
+
+def _assert_entry(receipt, name, payload):
+    entry = next(item for item in receipt["paths"] if item["path"] == str(name))
+    assert entry == {"path": str(name), "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
+
 
 hermetic_base = fixtures.hermetic_reap
 
@@ -72,8 +85,8 @@ def test_proven_output_over_real_cap_is_reaped(hermetic_reap, name):
 
 @pytest.mark.parametrize("name", ["data/atlas.db", ".cache/arbitrary.bin", ".venv/lib/package.py"])
 @pytest.mark.parametrize("proof", ["absent", "different", "symlink"])
-def test_unproven_names_stay_capped(hermetic_reap, monkeypatch, name, proof):
-    """A name, a different copy, or a symlink cannot authorize evidence loss."""
+def test_unproven_names_get_record_only_receipts(hermetic_reap, monkeypatch, name, proof):
+    """Copy-proof exclusions stay strict while residue cleanup records metadata."""
     repo, tasks, tree = prepare(hermetic_reap)
     put(tree, name, b"only-copy" * 32)
     if proof != "absent":
@@ -84,9 +97,12 @@ def test_unproven_names_stay_capped(hermetic_reap, monkeypatch, name, proof):
             external.symlink_to(outside)
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 16)
     row = reap(repo, tasks)
-    assert row["action"] == "skipped" and tree.exists(), row
-    assert "exceeds preservation cap" in row["reason"]
-    assert (tree / name).read_bytes() == b"only-copy" * 32
+    assert row["action"] == "removed" and not tree.exists(), row
+    receipt = row["preserved_artifacts"]
+    _assert_record_only(repo, receipt)
+    assert receipt["count"] == 1 and receipt["bytes"] == len(b"only-copy" * 32)
+    assert receipt["paths_truncated"] is True and receipt["paths"] == []
+    assert not (repo / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("evidence_size", [16, 33])
@@ -98,12 +114,11 @@ def test_mixed_output_preserves_evidence_and_excludes_only_proven_bytes(hermetic
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 32)
     row = reap(repo, tasks)
     receipt = row["preserved_artifacts"]
-    assert [entry["path"] for entry in receipt["paths"]] == [".cache/evidence.txt"], row
-    if evidence_size > 32:
-        assert row["action"] == "skipped" and tree.exists()
-    else:
-        assert row["action"] == "removed" and not tree.exists(), row
-        assert (repo / receipt["location"] / ".cache/evidence.txt").read_bytes() == b"e" * evidence_size
+    assert row["action"] == "removed" and not tree.exists(), row
+    _assert_record_only(repo, receipt)
+    assert receipt["count"] == 1 and receipt["bytes"] == evidence_size
+    assert receipt["paths_truncated"] is True and receipt["paths"] == []
+    assert not (repo / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("kind", ["symlink", "fifo", "ancestor"])
@@ -151,7 +166,7 @@ def test_changed_identity_during_copy_hash_cannot_lend_proof(hermetic_reap, monk
 
 
 @pytest.mark.parametrize("kind", ["symlink", "fifo"])
-def test_public_reaper_retains_unproven_links_and_special_entries(hermetic_reap, monkeypatch, kind):
+def test_public_reaper_records_unproven_links_and_special_entries_without_following(hermetic_reap, monkeypatch, kind):
     repo, tasks, tree = prepare(hermetic_reap)
     source = tree / ".cache/unsafe"
     source.parent.mkdir()
@@ -162,8 +177,17 @@ def test_public_reaper_retains_unproven_links_and_special_entries(hermetic_reap,
         os.mkfifo(source)
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
     row = reap(repo, tasks)
-    assert row["action"] in {"skipped", "error"} and tree.exists(), row
-    assert os.path.lexists(source)
+    if kind == "fifo":
+        assert row["action"] in {"skipped", "error"} and tree.exists(), row
+        assert os.path.lexists(source)
+        assert outside.read_bytes() == b"untouched"
+        return
+    assert row["action"] == "removed" and not tree.exists(), row
+    receipt = row["preserved_artifacts"]
+    _assert_record_only(repo, receipt)
+    assert receipt["inventory_error"] in {"inventory_failed", "inventory_incomplete"}
+    assert receipt["count"] == 0
+    assert not (repo / "batch_state/preserved").exists()
     assert outside.read_bytes() == b"untouched"
 
 
@@ -187,7 +211,7 @@ def test_environment_proof_refuses_unrebuildable_or_external_files(hermetic_reap
     )
 
 
-def test_recorded_archive_is_verified_before_exclusion(hermetic_reap, monkeypatch):
+def test_record_only_receipt_cannot_lend_byte_copy_proof(hermetic_reap, monkeypatch):
     repo, tasks, tree = prepare(hermetic_reap)
     put(tree, "screenshots/page.png", b"archived screenshot" * 30)
     ok, reason, receipt = output.preserve_worktree_artifacts(
@@ -195,14 +219,13 @@ def test_recorded_archive_is_verified_before_exclusion(hermetic_reap, monkeypatc
     )
     assert ok, reason
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    # Use the actual bound canonical receipt, rather than a filename assertion.
     record = json.loads((tasks / "proof-cap.json").read_text())
-    assert record["preserved_artifacts"]["location"] == receipt["location"]
-    with classifier.copy_proof_run(primary=repo, tasks=tasks):
-        assert output._ignored_output_files(tree, repo, record) == []
-    (repo / receipt["location"] / "screenshots/page.png").write_bytes(b"wrong archive")
+    assert record["preserved_artifacts"] == receipt
+    _assert_record_only(repo, receipt)
+    _assert_entry(receipt, "screenshots/page.png", b"archived screenshot" * 30)
     with classifier.copy_proof_run(primary=repo, tasks=tasks):
         assert output._ignored_output_files(tree, repo, record) == ["screenshots/page.png"]
+    assert not (repo / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("name", [".venv/lib/only.db", "node_modules/pkg/only.db", "site/dist/only.db"])
@@ -212,5 +235,8 @@ def test_environment_and_build_proof_cannot_discard_database_content(hermetic_re
     put(tree, name, b"only database" * 50)
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 32)
     row = reap(repo, tasks)
-    assert row["action"] == "skipped" and tree.exists(), row
-    assert "exceeds preservation cap" in row["reason"]
+    assert row["action"] == "removed" and not tree.exists(), row
+    receipt = row["preserved_artifacts"]
+    _assert_record_only(repo, receipt)
+    assert receipt["count"] == 1 and receipt["bytes"] == len(b"only database" * 50)
+    assert receipt["paths_truncated"] is True and receipt["paths"] == []

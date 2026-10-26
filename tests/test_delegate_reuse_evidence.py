@@ -1,14 +1,13 @@
-"""#11342: worktree reuse never silently deletes a terminal task's ignored evidence.
+"""Worktree reuse requires a terminal task's receipt before disposing ignored residue.
 
-Root cause: dispatch preparation applies a cone sparse-checkout to a reused
-worktree, and ``git sparse-checkout set`` removes untracked/ignored directories
-inside a tracked cone directory. Reuse is now refused while a released task's
-ignored output has no retrieval receipt, so the evidence survives until the
-owner preserves it.
+C-2481 changes new receipts to metadata snapshots with no retrievable byte copy.
+Legacy archive receipts still require verified retrieval, and a terminal task
+with no receipt still retains its ignored output before sparse-checkout reuse.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -101,7 +100,7 @@ def test_reuse_refuses_and_keeps_unretrieved_terminal_evidence(worktree):
     assert (wt / "batch_state/cto/publish/review-1/evidence.md").read_text() == "evidence\n"
 
 
-def test_reuse_allows_terminal_evidence_after_a_verified_receipt(worktree):
+def test_reuse_allows_terminal_evidence_after_a_record_only_receipt(worktree):
     repo, wt, tasks = worktree
     (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
     ok, reason, receipt = output.preserve_worktree_artifacts(
@@ -109,6 +108,16 @@ def test_reuse_allows_terminal_evidence_after_a_verified_receipt(worktree):
     )
     assert ok, reason
     assert receipt is not None and receipt["schema"] == output.PRESERVED_ARTIFACTS_SCHEMA
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["paths"] == [
+        {
+            "path": "batch_state/cto/publish/review-1/evidence.md",
+            "size": 9,
+            "sha256": hashlib.sha256(b"evidence\n").hexdigest(),
+        }
+    ]
+    assert "location" not in receipt
+    assert not (repo / "batch_state/preserved").exists()
 
     _path, _branch, telemetry = _reuse(wt)
 
@@ -135,24 +144,26 @@ def test_reuse_refuses_a_forged_receipt_and_keeps_the_evidence(worktree):
     assert (wt / "batch_state/cto/publish/review-1/evidence.md").read_text() == "evidence\n"
 
 
-def test_reuse_refuses_a_stale_receipt_after_the_source_changed(worktree):
-    """The old receipt covers the old bytes; the new bytes were never retrieved."""
+def test_reuse_allows_source_changes_after_a_record_only_snapshot(worktree):
+    """A record-only snapshot authorizes disposal without claiming later bytes were archived."""
     repo, wt, tasks = worktree
     source = wt / "batch_state/cto/publish/review-1/evidence.md"
     (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
-    ok, reason, _receipt = output.preserve_worktree_artifacts(
+    ok, reason, receipt = output.preserve_worktree_artifacts(
         wt, primary=repo, task_id="previous-review", tasks_dir=tasks, repo_root=repo
     )
     assert ok, reason
     source.write_text("new unique evidence, after successful retrieval\n")
 
-    with pytest.raises(RuntimeError, match="worktree_reuse_evidence_unverified"):
-        _reuse(wt)
+    _path, _branch, telemetry = _reuse(wt)
 
-    assert source.read_text() == "new unique evidence, after successful retrieval\n"
+    assert telemetry["reused"] is True
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["paths"][0]["sha256"] == hashlib.sha256(b"evidence\n").hexdigest()
+    assert not (repo / "batch_state/preserved").exists()
 
 
-def test_reuse_refuses_a_receipt_location_outside_the_task_preserved_root(worktree):
+def test_reuse_refuses_a_legacy_receipt_location_outside_the_task_preserved_root(worktree):
     """A receipt that points at another task's copy is not this task's retrieval."""
     repo, wt, tasks = worktree
     (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
@@ -161,9 +172,8 @@ def test_reuse_refuses_a_receipt_location_outside_the_task_preserved_root(worktr
     )
     assert ok, reason
     other = dict(receipt)
-    other["location"] = receipt["location"].replace(
-        "batch_state/preserved/previous-review/", "batch_state/preserved/another-task/"
-    )
+    other.pop("mode")  # Existing archive receipts still enforce their task-local location.
+    other["location"] = "batch_state/preserved/another-task/archive"
     (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt, receipt=other)))
 
     with pytest.raises(RuntimeError, match="worktree_reuse_evidence_unverified"):

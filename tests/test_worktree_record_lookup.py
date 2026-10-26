@@ -480,8 +480,9 @@ def test_preservation_decides_publication_from_actual_ownership(
         tree, primary=public, task_id="match", tasks_dir=tasks, repo_root=public
     )
     if tree_owner == "unknown":
-        assert outcome[0] is False
-        assert "artifact preservation failed:" in outcome[1]
+        assert outcome[:2] == (True, "")
+        assert outcome[2]["mode"] == "record-only"
+        assert outcome[2]["inventory_error"] == "inventory_failed"
     else:
         assert outcome == (True, "", None)
     assert output._identity_cache_path(tasks).exists() is publishes

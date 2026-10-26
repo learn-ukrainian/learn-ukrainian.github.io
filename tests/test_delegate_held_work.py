@@ -1,9 +1,9 @@
-"""Runtime held patches survive finalize and orphan reaping (#10000 AC-01)."""
+"""Runtime cleanup records residue metadata without archiving bytes (C-2481)."""
 
 from __future__ import annotations
 
 import errno
-import json
+import hashlib
 import os
 from pathlib import Path
 from types import SimpleNamespace
@@ -43,13 +43,13 @@ def lease(tmp_path, monkeypatch):
     return root, namespace, record
 
 
-def _retrieve(primary: Path, record: dict) -> tuple[Path, dict]:
+def _recorded_entries(primary: Path, record: dict) -> tuple[dict, dict]:
     receipt = record["preserved_held_work"]
-    location = primary / receipt["location"]
-    manifest = json.loads(location.with_suffix(".manifest.json").read_text())
-    assert manifest == receipt
-    assert output.verify_retrieval(primary, manifest) == receipt["retrieval_proof_sha256"]
-    return location, manifest
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert not (primary / "batch_state/preserved").exists()
+    return {entry["path"]: entry for entry in receipt["paths"]}, receipt
 
 
 @pytest.mark.parametrize("failed", [False, True])
@@ -85,13 +85,13 @@ def test_worker_finalization_preserves_response_before_runtime_tmp_reap(lease, t
     assert saved["tmp_reap_error"] is None
     assert not root.exists()
     assert Path(saved["result_file"]).read_text() == response
-    location, manifest = _retrieve(tmp_path, saved)
+    entries, manifest = _recorded_entries(tmp_path, saved)
     assert manifest["count"] == 2
-    assert (location / "readers.patch").read_bytes() == b"held patch\n"
-    assert (location / "handoff.md").read_text() == "handoff\n"
-    assert not (location / "disposable").exists()
+    assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held patch\n").hexdigest()
+    assert entries["handoff.md"]["sha256"] == hashlib.sha256(b"handoff\n").hexdigest()
+    assert "disposable" not in entries
     assert delegate._sweep_runtime_tmp_orphans()["leases_reaped"] == 0
-    _retrieve(tmp_path, saved)
+    _recorded_entries(tmp_path, saved)
 
 
 @pytest.mark.parametrize("legacy", [False, True])
@@ -110,8 +110,8 @@ def test_orphan_sweep_preserves_saved_result_and_metadata(lease, tmp_path, legac
     assert result["errors"] == 0
     assert not root.exists()
     saved = delegate._read_state(delegate._state_path(record["task_id"]))
-    location, _ = _retrieve(tmp_path, saved)
-    assert (location / "readers.patch").read_text() == "held\n"
+    entries, _ = _recorded_entries(tmp_path, saved)
+    assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held\n").hexdigest()
 
 
 def test_unreferenced_files_reaped_without_preservation(lease, tmp_path):
@@ -145,8 +145,8 @@ def test_citation_formats_and_empty_file(lease, tmp_path, citation):
     (root / "sub/held patch.txt").touch()
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=citation.format(root=root))
     assert result["tmp_reap_error"] is None
-    location, _ = _retrieve(tmp_path, record)
-    assert (location / "sub/held patch.txt").read_bytes() == b""
+    entries, _ = _recorded_entries(tmp_path, record)
+    assert entries["sub/held patch.txt"]["sha256"] == hashlib.sha256(b"").hexdigest()
 
 
 @pytest.mark.parametrize(
@@ -155,24 +155,22 @@ def test_citation_formats_and_empty_file(lease, tmp_path, citation):
         "The worker's patch is `{root}/readers.patch`; it isn't committed.",
         "It isn't committed: {root}/readers.patch. I couldn't finish.",
         "The worker's patch is '{root}/readers.patch'; it couldn't be pushed.",
-        '"The worker\'s patch is {root}/readers.patch and isn\'t committed."',
+        "\"The worker's patch is {root}/readers.patch and isn't committed.\"",
         "'The worker's patch is $TMPDIR/readers.patch and couldn't be pushed.'",
-        '`The worker\'s patch is "{root}/readers.patch" and isn\'t committed.`',
+        "`The worker's patch is \"{root}/readers.patch\" and isn't committed.`",
         '"Held ${{TMPDIR}}/readers.patch and couldn\'t finish."',
         '"{root}/readers.patch couldn\'t be pushed."',
     ],
 )
-def test_apostrophe_prose_preserves_cited_patch(lease, tmp_path, response):
+def test_apostrophe_prose_records_cited_patch(lease, tmp_path, response):
     root, namespace, record = lease
     (root / "readers.patch").write_text("held patch")
-    result = delegate._reap_runtime_tmp_lease(
-        root, namespace, task_record=record, response=response.format(root=root)
-    )
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=response.format(root=root))
     assert result["tmp_reap_error"] is None
     assert not root.exists()
-    location, manifest = _retrieve(tmp_path, record)
+    entries, manifest = _recorded_entries(tmp_path, record)
     assert manifest["count"] == 1
-    assert (location / "readers.patch").read_text() == "held patch"
+    assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held patch").hexdigest()
 
 
 @pytest.mark.parametrize("citation", ["'readers.patch\"", '"readers.patch`', "`readers.patch'"])
@@ -190,7 +188,7 @@ def test_quote_delimiters_must_match(lease, citation):
     ],
     ids=["english", "ukrainian"],
 )
-def test_long_quoted_prose_preserves_real_citation_and_allows_cleanup(lease, tmp_path, quote, passage):
+def test_long_quoted_prose_records_real_citation_and_allows_cleanup(lease, tmp_path, quote, passage):
     root, namespace, record = lease
     assert len(passage.encode("utf-8")) > 300
     (root / "readers.patch").write_text("held patch")
@@ -199,9 +197,9 @@ def test_long_quoted_prose_preserves_real_citation_and_allows_cleanup(lease, tmp
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=response)
     assert result["tmp_reap_error"] is None
     assert not root.exists()
-    location, manifest = _retrieve(tmp_path, record)
+    entries, manifest = _recorded_entries(tmp_path, record)
     assert manifest["count"] == 1
-    assert (location / "readers.patch").read_text() == "held patch"
+    assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held patch").hexdigest()
 
 
 @pytest.mark.parametrize(
@@ -220,7 +218,7 @@ def test_citation_component_limit_uses_utf8_bytes(lease, segment, parent):
 @pytest.mark.parametrize("stage", ["parent", "leaf"])
 @pytest.mark.parametrize("error_number", [errno.ENAMETOOLONG, errno.EACCES])
 @pytest.mark.parametrize("declared", [False, True])
-def test_candidate_open_errors_only_skip_undeclared_long_names(
+def test_candidate_open_errors_are_receipted_without_blocking_disposal(
     lease, tmp_path, monkeypatch, stage, error_number, declared
 ):
     root, namespace, record = lease
@@ -228,30 +226,23 @@ def test_candidate_open_errors_only_skip_undeclared_long_names(
     candidate = "prose/patch" if stage == "parent" else "prose"
     if declared:
         record["held_work"] = [candidate]
-    original = held.artifacts._open_parent if stage == "parent" else held.open_leaf_descriptor
+    original = output.os.open
 
-    def fail_candidate(fd, name):
-        if name == (("prose",) if stage == "parent" else "prose"):
+    def fail_candidate(name, *args, **kwargs):
+        if name == "prose":
             raise OSError(error_number, "fixture open error")
-        return original(fd, name)
+        return original(name, *args, **kwargs)
 
-    if stage == "parent":
-        monkeypatch.setattr(held.artifacts, "_open_parent", fail_candidate)
-    else:
-        monkeypatch.setattr(held, "open_leaf_descriptor", fail_candidate)
+    monkeypatch.setattr(output.os, "open", fail_candidate)
     result = delegate._reap_runtime_tmp_lease(
         root, namespace, task_record=record, response=f"`{candidate}` `readers.patch`"
     )
-    if declared or error_number != errno.ENAMETOOLONG:
-        assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
-        assert root.exists()
-        assert (root / "readers.patch").read_text() == "held patch"
-    else:
-        assert result["tmp_reap_error"] is None
-        assert not root.exists()
-        location, manifest = _retrieve(tmp_path, record)
-        assert manifest["count"] == 1
-        assert (location / "readers.patch").read_text() == "held patch"
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    entries, receipt = _recorded_entries(tmp_path, record)
+    assert receipt["inventory_error"] == "inventory_incomplete"
+    assert receipt["count"] == 1
+    assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held patch").hexdigest()
 
 
 @pytest.mark.parametrize("with_patch", [False, True])
@@ -280,20 +271,22 @@ def test_harmless_report_paths_allow_cleanup(lease, tmp_path, with_patch, struct
     assert not root.exists()
     assert outside.read_text() == "must not copy"
     if with_patch:
-        location, manifest = _retrieve(tmp_path, record)
+        entries, manifest = _recorded_entries(tmp_path, record)
         assert manifest["count"] == 1
-        assert (location / "readers.patch").read_text() == "held patch"
+        assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held patch").hexdigest()
     else:
         assert not (tmp_path / "batch_state/preserved").exists()
 
 
-def test_explicit_directory_declaration_refuses_cleanup(lease):
+def test_explicit_directory_declaration_records_incomplete_inventory(lease):
     root, namespace, record = lease
     (root / "sub").mkdir()
     record["held_work"] = ["sub"]
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response="")
-    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
-    assert root.exists()
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    assert record["preserved_held_work"]["inventory_error"] == "inventory_incomplete"
+    assert record["preserved_held_work"]["copied_bytes"] == 0
 
 
 @pytest.mark.parametrize("declaration", ["readers.patch", "absolute"])
@@ -303,12 +296,12 @@ def test_explicit_held_work_declarations(lease, tmp_path, declaration):
     record["held_work"] = [str(root / "readers.patch") if declaration == "absolute" else declaration]
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response="")
     assert result["tmp_reap_error"] is None
-    location, _ = _retrieve(tmp_path, record)
-    assert (location / "readers.patch").read_text() == "held"
+    entries, _ = _recorded_entries(tmp_path, record)
+    assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held").hexdigest()
 
 
 @pytest.mark.parametrize("attack", ["leaf", "parent", "traversal", "prefix"])
-def test_held_work_refuses_symlinks_and_boundary_attacks(lease, tmp_path, attack):
+def test_held_work_records_boundary_attacks_without_reading_outside(lease, tmp_path, attack):
     root, namespace, record = lease
     outside = tmp_path / "outside"
     outside.mkdir()
@@ -326,15 +319,18 @@ def test_held_work_refuses_symlinks_and_boundary_attacks(lease, tmp_path, attack
         record["held_work"] = [str(root) + "-other/private.patch"]
         response = ""
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=response)
-    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
-    assert result["tmp_bytes_freed"] == 0
-    assert root.exists()
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    assert record["preserved_held_work"]["inventory_error"] == (
+        "inventory_incomplete" if attack in {"leaf", "parent"} else "inventory_failed"
+    )
+    assert record["preserved_held_work"]["count"] == 0
     assert (outside / "private.patch").read_text() == "must not copy"
     assert not (tmp_path / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("failure", ["copy", "manifest", "metadata", "cap", "unreadable_result"])
-def test_preservation_failure_refuses_cleanup_and_orphan_retry(lease, tmp_path, monkeypatch, failure):
+def test_only_task_state_failures_refuse_cleanup_and_orphan_retry(lease, tmp_path, monkeypatch, failure):
     root, namespace, record = lease
     (root / "readers.patch").write_text("held")
     response = f"`{root}/readers.patch`"
@@ -347,7 +343,7 @@ def test_preservation_failure_refuses_cleanup_and_orphan_retry(lease, tmp_path, 
         raise OSError("fixture failure")
 
     if failure == "copy":
-        monkeypatch.setattr(held.artifacts, "_copy_verified", fail)
+        monkeypatch.setattr(output.artifacts, "_copy_verified", fail)
     elif failure == "manifest":
         real_open = Path.open
 
@@ -362,13 +358,25 @@ def test_preservation_failure_refuses_cleanup_and_orphan_retry(lease, tmp_path, 
     else:
         result_file.unlink()
     result = delegate._reap_runtime_tmp_lease(root, namespace)
-    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
-    assert result["tmp_bytes_freed"] == 0
-    assert (root / "readers.patch").read_text() == "held"
-    swept = delegate._sweep_runtime_tmp_orphans()
-    assert swept["leases_reaped"] == 0
-    assert swept["errors"] == 1
-    assert swept["error_details"][0][2] == held.HeldWorkPreservationError.code
+    if failure in {"metadata", "unreadable_result"}:
+        assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
+        assert result["tmp_bytes_freed"] == 0
+        assert (root / "readers.patch").read_text() == "held"
+        swept = delegate._sweep_runtime_tmp_orphans()
+        assert swept["leases_reaped"] == 0
+        assert swept["errors"] == 1
+        assert swept["error_details"][0][2] == held.HeldWorkPreservationError.code
+    else:
+        assert result["tmp_reap_error"] is None
+        assert not root.exists()
+        saved = delegate._read_state(delegate._state_path(record["task_id"]))
+        entries, receipt = _recorded_entries(tmp_path, saved)
+        assert receipt["count"] == 1 and receipt["bytes"] == 4
+        if failure == "cap":
+            assert receipt["paths_truncated"] and entries == {}
+        else:
+            assert entries["readers.patch"]["sha256"] == hashlib.sha256(b"held").hexdigest()
+        assert delegate._sweep_runtime_tmp_orphans()["errors"] == 0
 
 
 def test_worker_preamble_guides_held_work_to_reports(tmp_path, monkeypatch):
@@ -389,7 +397,7 @@ def test_structured_report_and_deliverable_citations(lease, tmp_path):
     record["deliverable"] = [f"{root}/patch.txt"]
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response="")
     assert result["tmp_reap_error"] is None
-    _, manifest = _retrieve(tmp_path, record)
+    _, manifest = _recorded_entries(tmp_path, record)
     assert [entry["path"] for entry in manifest["paths"]] == ["patch.txt", "report.txt"]
 
 
@@ -414,12 +422,16 @@ def test_structured_report_and_deliverable_citations(lease, tmp_path):
         ["a" * 256 + "/patch"],
     ],
 )
-def test_invalid_or_missing_declaration_refuses_cleanup(lease, declaration):
+def test_invalid_or_missing_declaration_records_inventory_error(lease, declaration):
     root, namespace, record = lease
     record["held_work"] = declaration
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response="")
-    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
-    assert root.exists()
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    receipt = record["preserved_held_work"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["count"] == 0
+    assert receipt["inventory_error"] in {"inventory_incomplete", "inventory_failed"}
 
 
 def test_missing_prose_citations_and_outside_paths_are_not_copied(lease, tmp_path):
@@ -437,15 +449,16 @@ def test_missing_prose_citations_and_outside_paths_are_not_copied(lease, tmp_pat
     assert (tmp_path / "outside.patch").read_text() == "outside"
 
 
-def test_destination_symlink_refuses_cleanup_without_writing_outside(lease, tmp_path):
+def test_record_only_cleanup_does_not_write_through_destination_symlink(lease, tmp_path):
     root, namespace, record = lease
     (root / "patch").write_text("held")
     outside = tmp_path / "outside"
     outside.mkdir()
     (tmp_path / "batch_state").symlink_to(outside, target_is_directory=True)
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=f"`{root}/patch`")
-    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
-    assert root.exists()
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    assert record["preserved_held_work"]["mode"] == "record-only"
     assert list(outside.iterdir()) == []
 
 
@@ -461,22 +474,25 @@ def test_changed_task_attempt_refuses_receipt_publication_and_cleanup(lease):
     assert "preserved_held_work" not in delegate._read_state(path)
 
 
-def test_copy_mutation_refuses_cleanup(lease, monkeypatch):
+def test_source_mutation_after_inventory_allows_record_only_disposal(lease, monkeypatch):
     root, namespace, record = lease
     (root / "patch").write_text("held")
-    original_copy = held.artifacts._copy_verified
+    original = output.record_only_receipt
 
-    def mutate_after_copy(*args, **kwargs):
-        original_copy(*args, **kwargs)
+    def mutate_after_inventory(*args, **kwargs):
+        receipt = original(*args, **kwargs)
         (root / "patch").write_text("new content")
+        return receipt
 
-    monkeypatch.setattr(held.artifacts, "_copy_verified", mutate_after_copy)
+    monkeypatch.setattr(output, "record_only_receipt", mutate_after_inventory)
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=f"`{root}/patch`")
-    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
-    assert root.exists()
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    assert record["preserved_held_work"]["mode"] == "record-only"
+    assert record["preserved_held_work"]["copied_bytes"] == 0
 
 
-def test_supported_evidence_directory_is_preserved_before_lease_reap(lease, tmp_path):
+def test_supported_evidence_directory_is_recorded_before_lease_reap(lease, tmp_path):
     root, namespace, record = lease
     (root / "evidence" / "screenshots").mkdir(parents=True)
     (root / "evidence" / "publish-review.md").write_text("report\n")
@@ -486,37 +502,41 @@ def test_supported_evidence_directory_is_preserved_before_lease_reap(lease, tmp_
     assert not root.exists()
     saved = delegate._read_state(delegate._state_path(record["task_id"]))
     receipt = saved["preserved_evidence"]
-    assert receipt["schema"] == held.EVIDENCE_SCHEMA
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
     assert receipt["task_id"] == record["task_id"]
     assert receipt["run_nonce"] == record["run_nonce"]
     assert receipt["count"] == 2
-    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
-    location = tmp_path / receipt["location"]
-    assert (location / "publish-review.md").read_text() == "report\n"
-    assert (location / "screenshots" / "card.png").read_bytes() == b"png"
+    assert "location" not in receipt
+    assert not (tmp_path / "batch_state/preserved").exists()
+    entries = {entry["path"]: entry for entry in receipt["paths"]}
+    assert entries["publish-review.md"]["sha256"] == hashlib.sha256(b"report\n").hexdigest()
+    assert entries["screenshots/card.png"]["sha256"] == hashlib.sha256(b"png").hexdigest()
 
 
-def test_evidence_over_cap_refuses_reap_and_keeps_the_lease(lease, monkeypatch):
+def test_evidence_over_cap_records_totals_and_allows_disposal(lease, monkeypatch):
     root, namespace, record = lease
     (root / "evidence").mkdir()
     (root / "evidence" / "archive.tar.gz").write_bytes(b"x" * 64)
     monkeypatch.setattr(held.output, "MAX_PRESERVED_BYTES", 8)
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
-    assert result["tmp_reap_error"] == held.EvidenceLimitExceeded.code
-    assert root.exists()
-    assert (root / "evidence" / "archive.tar.gz").read_bytes() == b"x" * 64
-    assert "preserved_evidence" not in delegate._read_state(delegate._state_path(record["task_id"]))
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    receipt = delegate._read_state(delegate._state_path(record["task_id"]))["preserved_evidence"]
+    assert receipt["count"] == 1 and receipt["bytes"] == 64
+    assert receipt["paths"] == [] and receipt["paths_truncated"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
 
 
-def test_linked_evidence_refuses_reap_without_following_the_link(lease, tmp_path):
+def test_linked_evidence_records_error_without_following_the_link(lease, tmp_path):
     root, namespace, record = lease
     (root / "evidence").mkdir()
     outside = tmp_path / "outside.txt"
     outside.write_text("secret")
     (root / "evidence" / "link.txt").symlink_to(outside)
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
-    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
-    assert root.exists()
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    assert record["preserved_evidence"]["inventory_error"] == "inventory_failed"
     assert outside.read_text() == "secret"
 
 
@@ -591,27 +611,29 @@ def test_evidence_prompt_block_is_identical_for_different_lease_paths(tmp_path):
     assert delegate._evidence_prompt_block() in first
 
 
-def _one_shot_copy_hook(monkeypatch, action):
-    """Run ``action`` once after the first verified evidence copy, deterministically."""
-    original = held.artifacts._copy_verified
+def _one_shot_inventory_hook(monkeypatch, action):
+    """Run ``action`` once immediately before the record-only inventory is read."""
+    original = output.record_only_receipt
     state = {"fired": False}
 
-    def copy_then_action(*args, **kwargs):
-        original(*args, **kwargs)
+    def inventory_then_action(*args, **kwargs):
         if not state["fired"]:
             state["fired"] = True
             action()
+        return original(*args, **kwargs)
 
-    monkeypatch.setattr(held.artifacts, "_copy_verified", copy_then_action)
+    monkeypatch.setattr(output, "record_only_receipt", inventory_then_action)
     return state
 
 
-def test_evidence_added_during_the_copy_is_preserved(lease, tmp_path, monkeypatch):
-    """A file created while evidence is copied must reach the receipt, not vanish with the lease."""
+def test_evidence_added_after_enumeration_is_disposed_without_copying(lease, tmp_path, monkeypatch):
+    """Late residue is disposed without promising a retrievable archive."""
     root, namespace, record = lease
     (root / "evidence").mkdir()
     (root / "evidence" / "report.md").write_text("first report")
-    _one_shot_copy_hook(monkeypatch, lambda: (root / "evidence" / "late-report.md").write_text("late unique evidence"))
+    _one_shot_inventory_hook(
+        monkeypatch, lambda: (root / "evidence" / "late-report.md").write_text("late unique evidence")
+    )
 
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
 
@@ -619,20 +641,21 @@ def test_evidence_added_during_the_copy_is_preserved(lease, tmp_path, monkeypatc
     assert not root.exists()
     saved = delegate._read_state(delegate._state_path(record["task_id"]))
     receipt = saved["preserved_evidence"]
-    assert [entry["path"] for entry in receipt["paths"]] == ["late-report.md", "report.md"]
-    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
-    location = tmp_path / receipt["location"]
-    assert (location / "report.md").read_text() == "first report"
-    assert (location / "late-report.md").read_text() == "late unique evidence"
+    assert [entry["path"] for entry in receipt["paths"]] == ["report.md"]
+    assert "location" not in receipt
+    assert not (tmp_path / "batch_state/preserved").exists()
+    entries = {entry["path"]: entry for entry in receipt["paths"]}
+    assert entries["report.md"]["sha256"] == hashlib.sha256(b"first report").hexdigest()
+    assert "late-report.md" not in entries
 
 
-def test_evidence_changed_during_the_copy_is_copied_again(lease, tmp_path, monkeypatch):
-    """The receipt must describe the bytes at the final enumeration, not an older copy."""
+def test_evidence_changed_before_hashing_records_current_digest(lease, tmp_path, monkeypatch):
+    """The inventory hashes the file after enumeration without copying it."""
     root, namespace, record = lease
     (root / "evidence").mkdir()
     evidence = root / "evidence" / "report.md"
     evidence.write_text("first copy")
-    _one_shot_copy_hook(monkeypatch, lambda: evidence.write_text("rewritten during copy"))
+    _one_shot_inventory_hook(monkeypatch, lambda: evidence.write_text("rewritten during copy"))
 
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
 
@@ -640,12 +663,13 @@ def test_evidence_changed_during_the_copy_is_copied_again(lease, tmp_path, monke
     assert not root.exists()
     saved = delegate._read_state(delegate._state_path(record["task_id"]))
     receipt = saved["preserved_evidence"]
-    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
-    assert (tmp_path / receipt["location"] / "report.md").read_text() == "rewritten during copy"
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["paths"][0]["sha256"] == hashlib.sha256(b"rewritten during copy").hexdigest()
+    assert not (tmp_path / "batch_state/preserved").exists()
 
 
-def test_evidence_written_after_the_receipt_refuses_before_deletion(lease, monkeypatch):
-    """The pre-deletion recheck keeps a lease when a file appears after preservation returns."""
+def test_evidence_written_after_snapshot_allows_record_only_disposal(lease, monkeypatch):
+    """Record-only receipts authorize disposal of late task residue."""
     root, namespace, record = lease
     (root / "evidence").mkdir()
     (root / "evidence" / "report.md").write_text("report\n")
@@ -659,32 +683,33 @@ def test_evidence_written_after_the_receipt_refuses_before_deletion(lease, monke
     monkeypatch.setattr(held, "preserve_evidence", preserve_then_write_again)
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
 
-    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
-    assert result["tmp_bytes_freed"] == 0
-    assert root.exists()
-    assert (root / "evidence" / "after-receipt.md").read_text() == "written after the final enumeration"
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    assert [entry["path"] for entry in record["preserved_evidence"]["paths"]] == ["report.md"]
+    assert record["preserved_evidence"]["copied_bytes"] == 0
 
 
-def test_evidence_that_never_settles_refuses_and_keeps_the_lease(lease, tmp_path, monkeypatch):
-    """Bounded retries, then a typed refusal: an unstable source is never partially receipted."""
+def test_repeated_evidence_changes_do_not_require_archive_retries(lease, tmp_path, monkeypatch):
     root, namespace, record = lease
     (root / "evidence").mkdir()
     evidence = root / "evidence" / "report.md"
     evidence.write_text("0")
-    original = held.artifacts._copy_verified
+    original = output.record_only_receipt
     counter = {"n": 0}
 
-    def flip_every_copy(*args, **kwargs):
-        original(*args, **kwargs)
+    def flip_after_inventory(*args, **kwargs):
+        receipt = original(*args, **kwargs)
         counter["n"] += 1
         evidence.write_text(f"attempt-{counter['n']}")
+        return receipt
 
-    monkeypatch.setattr(held.artifacts, "_copy_verified", flip_every_copy)
+    monkeypatch.setattr(output, "record_only_receipt", flip_after_inventory)
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record)
 
-    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
-    assert result["tmp_bytes_freed"] == 0
-    assert root.exists()
-    assert evidence.read_text() == f"attempt-{counter['n']}"
-    assert "preserved_evidence" not in delegate._read_state(delegate._state_path(record["task_id"]))
-    assert not any((tmp_path / "batch_state/preserved").glob("**/evidence-*"))
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    receipt = record["preserved_evidence"]
+    assert receipt["paths"][0]["sha256"] == hashlib.sha256(b"0").hexdigest()
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert counter["n"] == 2
+    assert not (tmp_path / "batch_state/preserved").exists()

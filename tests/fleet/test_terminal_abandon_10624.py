@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-import tarfile
 
 import pytest
 
@@ -18,6 +17,18 @@ from tests.test_continuation_worktree_reap import abandon_cohort as abandon_coho
 from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
 from tests.test_reused_worktree_retention import cohort as cohort
 from tests.test_reused_worktree_retention import save
+
+
+def _assert_record_only(repo, receipt):
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert not (repo / "batch_state/preserved").exists()
+
+
+def _assert_entry(receipt, name, payload):
+    entry = next(item for item in receipt["paths"] if item["path"] == str(name))
+    assert entry == {"path": str(name), "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
 
 
 def _remove(fixture):
@@ -184,22 +195,21 @@ def test_merged_proof_changes_before_publication_refuses(succession, monkeypatch
     assert "worktree_abandon" not in json.loads((tasks / "boundary.json").read_bytes())
 
 
-def test_output_tar_is_independently_retrievable(succession, capsys):
+def test_output_receipt_records_regular_metadata_without_archive(succession, capsys):
     fixture, _ = succession
     repo, tree, *_ = fixture
     (tree / "ignored/link").symlink_to("missing-target")
     assert invoke(fixture) == 0
     capsys.readouterr()
     _, _, manifest = _recorded(fixture)
-    archive = manifest["output"]["archive"]
-    payload = (repo / archive["path"]).read_bytes()
-    assert hashlib.sha256(payload).hexdigest() == archive["sha256"]
+    receipt = manifest["output"]
+    _assert_record_only(repo, receipt)
+    assert "archive" not in receipt
+    assert receipt["inventory_error"] == "inventory_incomplete"
+    _assert_entry(receipt, "untracked.txt", b"untracked unique bytes")
+    _assert_entry(receipt, "ignored/output.txt", b"current output")
     _remove(fixture)
-    with tarfile.open(repo / archive["path"], "r:") as saved:
-        assert saved.extractfile("untracked.txt").read() == b"untracked unique bytes"
-        assert saved.extractfile("ignored/output.txt").read() == b"current output"
-        assert saved.extractfile("ignored/link").read() == b"symlink\nmissing-target"
-    assert output.verify_retrieval(repo, manifest["output"]) == manifest["output"]["content_sha256"]
+    _assert_record_only(repo, receipt)
 
 
 def test_sparse_absent_index_entries_do_not_refuse_output_archive(succession, capsys):
@@ -212,10 +222,10 @@ def test_sparse_absent_index_entries_do_not_refuse_output_archive(succession, ca
     _, _, manifest = _recorded(fixture)
     assert [entry["path"] for entry in manifest["output"]["paths"]] == ["ignored/output.txt", "untracked.txt"]
     _remove(fixture)
-    assert output.verify_retrieval(repo, manifest["output"]) == manifest["output"]["content_sha256"]
+    _assert_record_only(repo, manifest["output"])
 
 
-def test_sparse_path_materialized_after_capture_refuses(succession, monkeypatch, capsys):
+def test_sparse_path_materialized_after_capture_records_current_metadata(succession, monkeypatch, capsys):
     fixture, _ = succession
     _, tree, *_ = fixture
     _git(tree, "update-index", "--skip-worktree", "README.md")
@@ -230,8 +240,9 @@ def test_sparse_path_materialized_after_capture_refuses(succession, monkeypatch,
         return set()
 
     monkeypatch.setattr(rw, "_active_task_ids", active)
-    assert invoke(fixture) == 2
-    assert json.loads(capsys.readouterr().out)["code"] == "PRESERVATION_INVALID"
+    assert invoke(fixture) == 0
+    assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
+    _assert_record_only(fixture[0], _recorded(fixture)[2]["output"])
 
 
 def test_source_pr_opened_during_preservation_refuses(succession, monkeypatch, capsys):
@@ -250,16 +261,18 @@ def test_source_pr_opened_during_preservation_refuses(succession, monkeypatch, c
     assert "worktree_abandon" not in json.loads((tasks / "boundary.json").read_bytes())
 
 
-def test_output_over_cap_names_limit(succession, monkeypatch, capsys):
+def test_output_over_cap_records_bounded_metadata(succession, monkeypatch, capsys):
     fixture, _ = succession
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    assert invoke(fixture) == 2
-    result = json.loads(capsys.readouterr().out)
-    assert result["code"] == "PRESERVATION_LIMIT"
-    assert "1 bytes" in result["reason"]
+    assert invoke(fixture) == 0
+    assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
+    receipt = _recorded(fixture)[2]["output"]
+    _assert_record_only(fixture[0], receipt)
+    assert receipt["paths_truncated"] is True and receipt["paths"] == []
+    assert receipt["count"] == 2 and receipt["bytes"] == len(b"current outputuntracked unique bytes")
 
 
-def test_output_at_cap_succeeds_and_archive_corruption_refuses(succession, monkeypatch, capsys):
+def test_output_at_cap_succeeds_and_manifest_corruption_refuses(succession, monkeypatch, capsys):
     fixture, _ = succession
     repo, tree, _, creator, *_ = fixture
     size = sum(entry["size"] for entry in output._abandon_output_inventory(tree, primary=repo, record=creator))
@@ -267,9 +280,11 @@ def test_output_at_cap_succeeds_and_archive_corruption_refuses(succession, monke
     assert invoke(fixture) == 0
     capsys.readouterr()
     _, _, manifest = _recorded(fixture)
-    archive = repo / manifest["output"]["archive"]["path"]
-    archive.write_bytes(b"corrupt archive")
-    _refused_removal(fixture, "not retrievable")
+    receipt = _recorded(fixture)[1]
+    _assert_record_only(repo, manifest["output"])
+    preserved = repo / receipt["preservation"]["path"]
+    preserved.write_bytes(preserved.read_bytes() + b" ")
+    _refused_removal(fixture, "digest invalid")
 
 
 def _archived_creator(fixture):

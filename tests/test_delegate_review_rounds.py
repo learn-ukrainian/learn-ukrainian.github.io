@@ -14,6 +14,7 @@ covered in ``tests/test_delegate.py``.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -28,7 +29,7 @@ from scripts.orchestration import reap_worktrees, worktree_artifacts, worktree_c
 
 @pytest.mark.parametrize("caller", ["superseded-review", "stale-holder"])
 @pytest.mark.parametrize("record_exists", [True, False, "redispatched"])
-def test_cleanup_requires_canonical_attribution_and_verified_retrieval(
+def test_cleanup_requires_canonical_attribution_before_record_only_disposal(
     tmp_path, monkeypatch, capsys, caller, record_exists
 ):
     from tests.orchestration.test_worktree_claims_cli import _linked, _primary
@@ -66,7 +67,7 @@ def test_cleanup_requires_canonical_attribution_and_verified_retrieval(
         assert released == [] and worktree.exists()
         assert source.read_bytes() == b"review output"
         assert not (primary / "batch_state/preserved" / task_id).exists()
-        assert "missing canonical task attribution; refusing worktree removal" in diagnostic
+        assert "ownership or task-state guard failed" in diagnostic
         if record_exists == "redispatched":
             assert json.loads(record_path.read_text()) == record
         else:
@@ -75,13 +76,12 @@ def test_cleanup_requires_canonical_attribution_and_verified_retrieval(
     assert released == [worktree] and not worktree.exists()
     receipt = json.loads(record_path.read_text())["preserved_artifacts"]
     assert receipt["count"] == 1 and receipt["bytes"] == len(b"review output")
-    location = primary / receipt["location"]
-    assert location.parent.name == task_id
-    assert (location / ".cache/out/answer.txt").read_bytes() == b"review output"
-    from scripts.fleet import ignored_task_output
-
-    assert ignored_task_output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
-    assert receipt["retrieval_proof_sha256"] in diagnostic
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["paths"] == [
+        {"path": ".cache/out/answer.txt", "size": 13, "sha256": hashlib.sha256(b"review output").hexdigest()}
+    ]
+    assert "location" not in receipt
+    assert not (primary / "batch_state/preserved").exists()
 
 
 @pytest.fixture(autouse=True)

@@ -49,8 +49,12 @@ def test_family_cleanup_interrupted_work_preserves_bytes(interrupted_checkout, s
             assert receipt["owner"] == "interrupted" and receipt["next_condition"]
             assert receipt["retention_disposition"] == "retained"
             assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
-            copied = repo / receipt["location"] / ".cache/output.bin"
-            assert hashes([copied]) == (before[2],)
+            assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+            assert "location" not in receipt
+            assert receipt["paths"] == [{
+                "path": ".cache/output.bin", "size": output.stat().st_size, "sha256": before[2],
+            }]
+            assert not (repo / "batch_state/preserved").exists()
 
 
 from scripts.orchestration.task_family import codex_state, executor, git_safety

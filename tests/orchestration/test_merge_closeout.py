@@ -370,7 +370,7 @@ def test_apply_reaps_matched_worktree_by_branch_and_deletes_branches(
 
 
 @pytest.mark.parametrize("failure", [None, "cap", "copy"])
-def test_merge_closeout_preserves_unnamed_ignored_output_without_task_record(tmp_path, monkeypatch, failure):
+def test_merge_closeout_retains_unattributed_output_before_inventory(tmp_path, monkeypatch, failure):
     from scripts.fleet import ignored_task_output as output
 
     repo = init_repo(tmp_path)
@@ -408,7 +408,7 @@ def test_merge_closeout_preserves_unnamed_ignored_output_without_task_record(tmp
     assert source.read_bytes() == b"transcription proof"
     assert result.reap_results[0]["action"] == "skipped"
     receipt = result.reap_results[0]["preserved_artifacts"]
-    assert receipt["count"] == 1 and receipt["bytes"] == len(b"transcription proof")
+    assert not {"task_id", "run_nonce", "paths", "count", "bytes", "location"}.intersection(receipt)
     assert receipt["retention_disposition"] == "retained"
     assert receipt["owner"] == "infra lane" and receipt["next_condition"]
     assert "missing canonical task attribution" in result.reap_results[0]["reason"]
@@ -1020,7 +1020,10 @@ def test_merge_closeout_keeps_unattributed_worktree_when_unrelated_file_sits_bes
     assert result.reap_results[0]["action"] == "skipped"
     assert "missing canonical task attribution" in result.reap_results[0]["reason"]
     receipt = result.reap_results[0]["preserved_artifacts"]
-    assert [entry["path"] for entry in receipt["paths"]] == [".cache/transcriptions/page.txt"]
+    assert receipt["owner"] == "infra lane" and receipt["retention_disposition"] == "retained"
+    assert not {"task_id", "run_nonce", "paths", "count", "bytes", "location"}.intersection(receipt)
+    assert (worktree / ".cache/transcriptions/page.txt").read_bytes() == b"unrelated task output"
+    assert not (repo / "batch_state/preserved").exists()
     assert (worktree / "batch_state/issue_stream_audit_refresh.json").exists()
 
 

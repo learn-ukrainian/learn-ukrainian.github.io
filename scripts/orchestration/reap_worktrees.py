@@ -298,14 +298,15 @@ def _measured_removal(
 
 
 def _freed_bytes(measurement: dict[str, Any], preserved: dict[str, Any] | None) -> int | None:
-    """Exclude every preserved original from the verified unlinked inventory.
+    """Exclude archived bytes from the verified unlinked inventory.
 
     ``None`` means the inventory could not be measured, which never blocks
     removal or counts as zero.
     """
     if measurement.get("unmeasured"):
         return None
-    kept = {entry["path"] for entry in (preserved or {}).get("paths", [])}
+    archived = preserved if preserved and preserved.get("mode") != "record-only" else {}
+    kept = {entry["path"] for entry in archived.get("paths", [])}
     unlinked = measurement.get("unlinked", {})
     kept_ids = {entry[:2] for name, entry in unlinked.items() if name in kept}
     # Multiple removed names can share one inode. Count its bytes once, and
@@ -3779,7 +3780,7 @@ def _released_reuse_claim_proven_settled(
         release = receipt["retention_release"]
         finalized = release["finalized_by"]
         if (
-            receipt.get("retention_disposition") not in {"released", "retrieved"}
+            receipt.get("retention_disposition") not in {"released", "retrieved", "record-only"}
             or receipt.get("owner") != record["task_id"]
             or receipt.get("task_id") != record["task_id"]
             or receipt.get("run_nonce") != record["run_nonce"]

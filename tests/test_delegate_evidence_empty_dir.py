@@ -1,4 +1,4 @@
-"""#11342: late evidence must survive both runtime-lease deletion paths."""
+"""C-2481: attributed runtime leases use metadata snapshots for disposal."""
 
 from __future__ import annotations
 
@@ -7,11 +7,10 @@ import os
 import pytest
 
 from scripts import delegate
-from scripts.fleet import ignored_task_output as output
 from scripts.fleet import runtime_held_work as held
 from tests.test_delegate_held_work import (  # noqa: F401 -- shared hermetic lease fixtures
     _isolate_delegate_import_path,
-    _one_shot_copy_hook,
+    _one_shot_inventory_hook,
     _stub_node_modules_integrity_sweep,
     _stub_primary_integrity_sweep,
     _stub_venv_integrity_sweep,
@@ -38,8 +37,10 @@ def _cleanup(root, namespace, record, cleanup):
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])
 @pytest.mark.parametrize("initial", ["empty", "absent", "nonempty"])
 @pytest.mark.parametrize("late_name", ["late.md", ".late.md"])
-def test_late_file_refuses_deletion_and_retry_preserves_it(lease, tmp_path, monkeypatch, cleanup, initial, late_name):
-    """A cached empty/absent inventory or a new dotfile cannot authorize deletion."""
+def test_late_file_after_snapshot_allows_record_only_disposal(
+    lease, tmp_path, monkeypatch, cleanup, initial, late_name
+):
+    """A metadata snapshot does not promise retrieval of later residue bytes."""
     root, namespace, record = lease
     evidence = root / "evidence"
     if initial != "absent":
@@ -57,22 +58,20 @@ def test_late_file_refuses_deletion_and_retry_preserves_it(lease, tmp_path, monk
     monkeypatch.setattr(held, "preserve_evidence", preserve_then_add)
     error, freed = _cleanup(root, namespace, record, cleanup)
 
-    assert error == held.EvidencePreservationError.code
-    assert freed == 0
-    assert (evidence / late_name).read_text() == "late unique evidence"
-    monkeypatch.setattr(held, "preserve_evidence", original)
-    error, _freed = _cleanup(root, namespace, record, cleanup)
     assert error is None
+    assert freed > 0
     assert not root.exists()
     saved = delegate._read_state(delegate._state_path(record["task_id"]))
     receipt = saved["preserved_evidence"]
-    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
-    assert (tmp_path / receipt["location"] / late_name).read_text() == "late unique evidence"
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert [entry["path"] for entry in receipt["paths"]] == (["first.md"] if initial == "nonempty" else [])
+    assert "location" not in receipt
+    assert not (tmp_path / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])
-def test_same_count_replacement_after_receipt_refuses_deletion(lease, monkeypatch, cleanup):
-    """Matching file counts cannot hide replacement by a different filename."""
+def test_same_count_replacement_after_snapshot_allows_disposal(lease, monkeypatch, cleanup):
+    """A record-only receipt retains the earlier filename without copying either version."""
     root, namespace, record = lease
     evidence = root / "evidence"
     evidence.mkdir()
@@ -87,14 +86,17 @@ def test_same_count_replacement_after_receipt_refuses_deletion(lease, monkeypatc
     monkeypatch.setattr(held, "preserve_evidence", preserve_then_replace)
     error, freed = _cleanup(root, namespace, record, cleanup)
 
-    assert error == held.EvidencePreservationError.code
-    assert freed == 0
-    assert (evidence / "replacement.md").read_text() == "identical bytes"
+    assert error is None
+    assert freed > 0
+    assert not root.exists()
+    receipt = delegate._read_state(delegate._state_path(record["task_id"]))["preserved_evidence"]
+    assert [entry["path"] for entry in receipt["paths"]] == ["first.md"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
 
 
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])
-def test_file_added_during_size_accounting_refuses_deletion(lease, monkeypatch, cleanup):
-    """The final recheck must follow size accounting, which also traverses the lease."""
+def test_file_added_during_size_accounting_allows_record_only_disposal(lease, monkeypatch, cleanup):
+    """Accounting-time residue does not regrow the preserved byte archive."""
     root, namespace, record = lease
     evidence = root / "evidence"
     evidence.mkdir()
@@ -108,13 +110,16 @@ def test_file_added_during_size_accounting_refuses_deletion(lease, monkeypatch, 
     monkeypatch.setattr(delegate, "_runtime_tmp_lease_bytes", count_then_add)
     error, freed = _cleanup(root, namespace, record, cleanup)
 
-    assert error == held.EvidencePreservationError.code
-    assert freed == 0
-    assert (evidence / "late.md").read_text() == "created during size accounting"
+    assert error is None
+    assert freed > 0
+    assert not root.exists()
+    receipt = delegate._read_state(delegate._state_path(record["task_id"]))["preserved_evidence"]
+    assert receipt["paths"] == []
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
 
 
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])
-def test_unchanged_empty_directory_gets_verified_receipt_and_reaps(lease, tmp_path, cleanup):
+def test_unchanged_empty_directory_gets_record_only_receipt_and_reaps(lease, tmp_path, cleanup):
     """Empty evidence must not permanently retain an otherwise removable lease."""
     root, namespace, record = lease
     (root / "evidence").mkdir()
@@ -127,12 +132,13 @@ def test_unchanged_empty_directory_gets_verified_receipt_and_reaps(lease, tmp_pa
     assert receipt["paths"] == []
     assert receipt["count"] == 0
     assert receipt["bytes"] == 0
-    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert not (tmp_path / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])
-def test_empty_subdirectory_added_after_receipt_refuses_deletion(lease, monkeypatch, cleanup):
-    """Even a new directory entry invalidates the initial empty inventory."""
+def test_empty_subdirectory_after_snapshot_allows_disposal(lease, monkeypatch, cleanup):
+    """An attributed empty directory needs no retrievable byte copy."""
     root, namespace, record = lease
     evidence = root / "evidence"
     evidence.mkdir()
@@ -146,19 +152,21 @@ def test_empty_subdirectory_added_after_receipt_refuses_deletion(lease, monkeypa
     monkeypatch.setattr(held, "preserve_evidence", preserve_then_add_directory)
     error, freed = _cleanup(root, namespace, record, cleanup)
 
-    assert error == held.EvidencePreservationError.code
-    assert freed == 0
-    assert (evidence / ".late").is_dir()
+    assert error is None
+    assert freed > 0
+    assert not root.exists()
+    receipt = delegate._read_state(delegate._state_path(record["task_id"]))["preserved_evidence"]
+    assert receipt["paths"] == [] and receipt["copied_bytes"] == 0
 
 
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])
-def test_new_file_during_nonempty_copy_is_retrieved(lease, tmp_path, monkeypatch, cleanup):
-    """A late copy-time file must reach the receipt on both cleanup paths."""
+def test_new_file_after_enumeration_does_not_regrow_an_archive(lease, tmp_path, monkeypatch, cleanup):
+    """Both cleanup paths retain the inventory snapshot and copy no residue."""
     root, namespace, record = lease
     evidence = root / "evidence"
     (evidence / "nested").mkdir(parents=True)
     (evidence / "first.md").write_text("first evidence")
-    hook = _one_shot_copy_hook(monkeypatch, lambda: (evidence / ".late.md").write_text("late evidence"))
+    hook = _one_shot_inventory_hook(monkeypatch, lambda: (evidence / ".late.md").write_text("late evidence"))
 
     error, _freed = _cleanup(root, namespace, record, cleanup)
 
@@ -166,13 +174,11 @@ def test_new_file_during_nonempty_copy_is_retrieved(lease, tmp_path, monkeypatch
     assert error is None
     assert not root.exists()
     receipt = delegate._read_state(delegate._state_path(record["task_id"]))["preserved_evidence"]
-    assert [entry["path"] for entry in receipt["paths"]] == [".late.md", "first.md"]
-    assert receipt["directories"] == ["nested"]
-    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
-    location = tmp_path / receipt["location"]
-    assert (location / ".late.md").read_text() == "late evidence"
-    assert (location / "first.md").read_text() == "first evidence"
-    assert (location / "nested").is_dir()
+    assert [entry["path"] for entry in receipt["paths"]] == ["first.md"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert not (tmp_path / "batch_state/preserved").exists()
+    assert receipt["paths"][0]["size"] == len(b"first evidence")
+    assert "location" not in receipt
 
 
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])

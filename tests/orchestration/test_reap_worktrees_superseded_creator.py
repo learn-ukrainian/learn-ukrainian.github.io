@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import json
 import subprocess
 
@@ -96,7 +97,10 @@ def test_superseded_creator_proof_survives_output_preservation(merged_cohort):
     assert applied.action == "preserved_then_removed", applied.reason
     assert not tree.exists()
     receipt = applied.preserved_artifacts
-    assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"output from the reused checkout"
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    entry = next(entry for entry in receipt["paths"] if entry["path"] == "ignored/output.txt")
+    assert entry["sha256"] == hashlib.sha256(b"output from the reused checkout").hexdigest()
+    assert not (repo / "batch_state/preserved").exists()
     assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
     proof = json.loads(path.read_text())["worktree_reap_proof"]
     assert proof["owner"] == "boundary" and proof["run_nonce"] == "creation-nonce"

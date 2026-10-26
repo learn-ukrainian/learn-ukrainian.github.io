@@ -1556,7 +1556,7 @@ def preserve_worktree_artifacts(
         inventory_error = None
         try:
             files = output_files()
-        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+        except (OSError, RuntimeError, subprocess.SubprocessError):
             files, inventory_error = [], "inventory_failed"
         if not files and not absent and not kept and inventory_error is None:
             if disposition == "merged":
@@ -1580,7 +1580,7 @@ def preserve_worktree_artifacts(
         )
         metadata.update(record_only_receipt(worktree, files, record, error=inventory_error))
         metadata.update(retention_disposition="record-only", next_condition="none")
-        metadata["manifest_path"] = record_path.relative_to(primary).as_posix()
+        metadata["manifest_path"] = Path(os.path.relpath(record_path, primary)).as_posix()
         metadata["content_sha256"] = metadata["retrieval_proof_sha256"] = metadata["inventory_sha256"]
         # Recheck intent under the task writer lock. A concurrent record update
         # cannot have its keep flag overwritten by this gate's earlier snapshot.
@@ -1610,6 +1610,9 @@ def preserve_worktree_artifacts(
                         "next_condition": "existing owner releases retention after proven retrieval via post_task_reap --release-retention",
                     }
                 )
+            prior_release = current.get("preserved_artifacts", {}).get("retention_release")
+            if prior_release:
+                metadata["retention_release"] = prior_release
             if metadata["retention_disposition"] != "retained":
                 metadata["next_condition"] = "none"
             current["preserved_artifacts"] = metadata
@@ -1628,5 +1631,23 @@ def preserve_worktree_artifacts(
         if metadata["retention_disposition"] == "retained":
             return False, "artifact preservation failed: keep_worktree intent set; refusing worktree removal", metadata
         return True, "", metadata
-    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
-        return False, "record-only disposal refused: ownership or task-state guard failed", metadata
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+        metadata["retention_disposition"] = "retained"
+        detail = str(exc).replace(str(worktree), "<worktree>").replace(str(primary), "<primary>")
+        detail = re.sub(r"/(?:home|Users)/[^\s'\"]+", "<private-path>", detail)
+        reason = (
+            f"artifact preservation failed: record-only disposal refused: ownership or task-state guard failed: "
+            f"{detail}; refusing worktree removal"
+        )
+        if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree, repo_root=repo_root):
+            task_record["artifact_preservation_error"] = reason
+        if record_path is not None:
+            with contextlib.suppress(OSError, ValueError):
+                _update_bound_task_record(
+                    record_path,
+                    worktree,
+                    {"artifact_preservation_error": reason, "preserved_artifacts": metadata},
+                    repo_root=repo_root,
+                    expected_record=record,
+                )
+        return False, reason, metadata

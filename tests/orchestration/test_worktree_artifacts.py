@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -13,6 +14,17 @@ import pytest
 from scripts.fleet import ignored_task_output as output
 from scripts.orchestration import worktree_artifacts as wa
 from tests import _worktree_artifact_links as links
+
+
+def _assert_record_only(checkout, receipt):
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+
+
+def _assert_entry(receipt, name, payload):
+    entry = next(item for item in receipt["paths"] if item["path"] == str(name))
+    assert entry == {"path": str(name), "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
 
 
 @pytest.fixture
@@ -96,10 +108,9 @@ def test_preserved_bytes_record_and_idempotency(checkout):
     ok, reason, metadata = guard(checkout, record=record)
     assert ok and not reason
     assert metadata["count"] == 1
-    location = checkout[1] / metadata["location"]
-    copy = location / "batch_state/sub/report.bin"
-    assert copy.read_bytes() == source.read_bytes()
-    assert wa._fingerprint(copy, root=location) == wa._fingerprint(source, root=checkout[0])
+    _assert_record_only(checkout, metadata)
+    _assert_entry(metadata, "batch_state/sub/report.bin", source.read_bytes())
+    assert not (checkout[1] / "batch_state/preserved").exists()
     saved = json.loads((checkout[2] / "artifact-task.json").read_text())
     assert saved["preserved_artifacts"] == record["preserved_artifacts"] == metadata
     assert guard(checkout)[0]  # Repeated guard retains verified existing bytes.
@@ -118,9 +129,9 @@ def test_empty_ignored_file_is_preserved_with_identity(checkout):
     ok, reason, receipt = guard(checkout)
     assert ok and not reason
     assert receipt["count"] == 1 and receipt["bytes"] == 0
-    location = checkout[1] / receipt["location"]
-    assert (location / "batch_state/sub/report.bin").read_bytes() == b""
-    assert not (location / "batch_state/__pycache__").exists()
+    _assert_record_only(checkout, receipt)
+    _assert_entry(receipt, "batch_state/sub/report.bin", b"")
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("task_id", [None, "../escape", "..", "bad/id"])
@@ -133,7 +144,7 @@ def test_missing_or_unsafe_identity_blocks_copy(checkout, task_id):
 
 
 @pytest.mark.parametrize("failure", ["copy", "corruption", "record"])
-def test_failed_copy_verification_or_record_blocks_removal(checkout, monkeypatch, failure):
+def test_record_only_cleanup_does_not_require_copy_verification_or_publication(checkout, monkeypatch, failure):
     source = artifact(checkout)
     bound_record(checkout, {"status": "done"})
     if failure == "copy":
@@ -152,8 +163,11 @@ def test_failed_copy_verification_or_record_blocks_removal(checkout, monkeypatch
             raise OSError("record denied")
 
         monkeypatch.setattr(wa.reaper_lifecycle, "_atomic_write", fail_record)
-    ok, reason, _ = guard(checkout)
-    assert not ok and "artifact preservation failed" in reason
+    ok, reason, receipt = guard(checkout)
+    assert ok and not reason
+    _assert_record_only(checkout, receipt)
+    _assert_entry(receipt, "batch_state/sub/report.bin", b"proof\x00\xff")
+    assert receipt.get("receipt_publication_error", False) is (failure == "record")
     assert source.read_bytes() == b"proof\x00\xff"
     assert not list((checkout[1] / "batch_state/preserved").rglob(".preserve-*"))
 
@@ -167,16 +181,19 @@ def test_different_existing_copy_is_never_overwritten(checkout):
     assert ok and not reason
     assert destination.read_bytes() == b"previous evidence"
     receipt = json.loads((checkout[2] / "artifact-task.json").read_text())["preserved_artifacts"]
-    assert (checkout[1] / receipt["location"] / "batch_state/sub/report.bin").read_bytes() == b"proof\x00\xff"
+    _assert_record_only(checkout, receipt)
+    _assert_entry(receipt, "batch_state/sub/report.bin", b"proof\x00\xff")
 
 
-def test_preservation_root_symlink_blocks_copy(checkout):
+def test_record_only_receipt_does_not_write_through_preservation_root_symlink(checkout):
     source = artifact(checkout)
     elsewhere = checkout[1] / "elsewhere"
     elsewhere.mkdir()
     (checkout[1] / "batch_state/preserved").symlink_to(elsewhere, target_is_directory=True)
-    ok, reason, _ = guard(checkout)
-    assert not ok and ("symlink" in reason or "retrieval location" in reason)
+    ok, reason, receipt = guard(checkout)
+    assert ok and not reason
+    _assert_record_only(checkout, receipt)
+    _assert_entry(receipt, "batch_state/sub/report.bin", b"proof\x00\xff")
     assert not any(entry.is_file() for entry in elsewhere.rglob("*"))
     assert source.read_bytes() == b"proof\x00\xff"
 
@@ -189,12 +206,10 @@ def test_source_symlink_is_preserved_as_link_record(checkout):
     source.symlink_to(external)
     ok, reason, metadata = guard(checkout)
     assert ok and not reason, reason
-    entry = metadata["paths"][0]
-    assert entry["type"] == "symlink" and entry["target"] == str(external)
-    copied = checkout[1] / metadata["location"] / entry["path"]
-    assert copied.is_file() and not copied.is_symlink()
-    assert copied.read_bytes() != b"external bytes"
-    assert os.fsencode(str(external)) in copied.read_bytes()
+    _assert_record_only(checkout, metadata)
+    assert metadata["paths"] == [] and metadata["count"] == 0
+    assert metadata["inventory_error"] == "inventory_incomplete"
+    assert not (checkout[1] / "batch_state/preserved").exists()
     assert external.read_bytes() == b"external bytes"
 
 
@@ -345,27 +360,25 @@ def test_ancestor_swap_after_inventory_does_not_publish_outside_bytes(checkout, 
     (outside / "sub").mkdir(parents=True)
     outside_file = outside / "sub" / "report.bin"
     outside_file.write_bytes(_OUTSIDE_SECRET)
-    real_resolve = Path.resolve
+    original = output.record_only_receipt
     swapped = False
 
-    def swapping_resolve(self: Path, *args: object, **kwargs: object) -> Path:
+    def swapping_receipt(*args, **kwargs):
         nonlocal swapped
-        resolved = real_resolve(self, *args, **kwargs)
-        if not swapped and self == source:
+        if not swapped:
             swapped = True
             batch = checkout[0] / "batch_state"
             os.rename(batch, tmp_path / "real-batch")
             batch.symlink_to(outside, target_is_directory=True)
-        return resolved
+        return original(*args, **kwargs)
 
-    monkeypatch.setattr(Path, "resolve", swapping_resolve)
-    ok, reason, _metadata = guard(checkout)
-
-    preserved = checkout[1] / "batch_state" / "preserved"
-    assert swapped
-    assert _preserved_outside_bytes(preserved) == []
-    assert not ok
-    assert "symlink" in reason
+    monkeypatch.setattr(output, "record_only_receipt", swapping_receipt)
+    ok, reason, metadata = guard(checkout)
+    assert swapped and ok and not reason
+    _assert_record_only(checkout, metadata)
+    assert metadata["inventory_error"] == "inventory_incomplete"
+    assert metadata["paths"] == []
+    assert not (checkout[1] / "batch_state/preserved").exists()
     assert outside_file.read_bytes() == _OUTSIDE_SECRET
     assert (tmp_path / "real-batch" / "sub" / "report.bin").read_bytes() == b"proof\x00\xff"
 
@@ -406,11 +419,10 @@ def test_primary_task_sidecar_is_not_copied(checkout):
     source.symlink_to(shared)
     ok, reason, metadata = guard(checkout)
     assert ok and not reason, reason
-    entry = metadata["paths"][0]
-    assert entry["type"] == "symlink" and entry["target"] == str(shared)
-    copied = checkout[1] / metadata["location"] / entry["path"]
-    assert copied.is_file() and not copied.is_symlink()
-    assert b"already durable" not in copied.read_bytes()
+    _assert_record_only(checkout, metadata)
+    assert metadata["paths"] == [] and metadata["count"] == 0
+    assert metadata["inventory_error"] == "inventory_incomplete"
+    assert not (checkout[1] / "batch_state/preserved").exists()
     assert shared.read_bytes() == b"already durable"
 
 
@@ -429,7 +441,8 @@ def test_named_ignored_artifact_outside_batch_state_preserved(checkout, referenc
     ok, _reason, metadata = guard(checkout, record={"response": f"Capture {reference}."})
     assert ok
     assert metadata["count"] == 1
-    assert ((checkout[1] / metadata["location"]) / "ignored/a report.txt").read_bytes() == source.read_bytes()
+    _assert_record_only(checkout, metadata)
+    _assert_entry(metadata, "ignored/a report.txt", source.read_bytes())
 
 
 def test_result_sidecar_is_read_and_tracked_named_files_are_safe(checkout):
@@ -438,19 +451,23 @@ def test_result_sidecar_is_read_and_tracked_named_files_are_safe(checkout):
     source = artifact(checkout, "ignored/note.txt")
     ok, _reason, metadata = guard(checkout, record={"result_file": str(sidecar)})
     assert ok
-    assert ((checkout[1] / metadata["location"]) / "ignored/note.txt").read_bytes() == source.read_bytes()
+    _assert_record_only(checkout, metadata)
+    _assert_entry(metadata, "ignored/note.txt", source.read_bytes())
     source.unlink()
     assert guard(checkout, record={"result_file": str(sidecar)})[0]
 
 
-def test_unreadable_inventory_retains_artifact(checkout, monkeypatch):
+def test_unreadable_inventory_records_failure_without_blocking_disposal(checkout, monkeypatch):
     source = artifact(checkout)
 
     def fail_inventory(*_args):
         raise subprocess.CalledProcessError(128, "git ls-files")
 
     monkeypatch.setattr(wa, "_git_paths", fail_inventory)
-    assert not guard(checkout)[0]
+    ok, reason, receipt = guard(checkout)
+    assert ok and not reason
+    _assert_record_only(checkout, receipt)
+    assert receipt["inventory_error"] == "inventory_failed"
     assert source.exists()
 
 
@@ -468,7 +485,8 @@ def test_batch_state_symlink_cannot_hide_local_artifacts(checkout):
     ok, reason, _ = guard(checkout)
     assert ok and not reason
     receipt = json.loads((checkout[2] / "artifact-task.json").read_text())["preserved_artifacts"]
-    assert (checkout[1] / receipt["location"] / "ignored/hidden.txt").read_bytes() == source.read_bytes()
+    _assert_record_only(checkout, receipt)
+    _assert_entry(receipt, "ignored/hidden.txt", source.read_bytes())
     assert source.exists()
 
 
@@ -478,11 +496,10 @@ def test_batch_state_link_loop_is_preserved_without_resolving(checkout):
     (checkout[0] / "batch_state/loop").symlink_to("loop")
     ok, reason, metadata = guard(checkout)
     assert ok and not reason, reason
-    entry = metadata["paths"][0]
-    assert entry == {**entry, "path": "batch_state/loop", "type": "symlink", "target": "loop"}
-    copied = checkout[1] / metadata["location"] / "batch_state/loop"
-    assert copied.is_file() and not copied.is_symlink()
-    assert copied.read_bytes() == b"symlink\nloop"
+    _assert_record_only(checkout, metadata)
+    assert metadata["inventory_error"] == "inventory_incomplete"
+    assert metadata["count"] == 0 and metadata["paths"] == []
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize(
@@ -505,12 +522,12 @@ def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, r
     assert ok is not refused
     if refused:
         assert metadata["retention_disposition"] == "retained"
+        assert links.REFUSAL in reason
     else:
-        assert ok and metadata["count"] == 1
-        assert metadata["paths"][0]["type"] == "symlink"
-        assert metadata["paths"][0]["path"] == "ignored/dir"
-        assert metadata["paths"][0]["target"] == "sub"
-    assert (links.REFUSAL in reason) is refused
+        _assert_record_only(checkout, metadata)
+        assert metadata["count"] == 0 and metadata["paths"] == []
+        assert metadata["inventory_error"] == "inventory_incomplete"
+    assert not (checkout[1] / "batch_state/preserved").exists()
     assert outside.read_bytes() == b"lives outside the checkout"
 
 
@@ -522,8 +539,9 @@ def test_named_directory_or_cache_does_not_block(checkout, reference):
     ok, reason, metadata = guard(checkout, record={"response": f"Worked in `{reference}`."})
     assert ok and not reason
     assert metadata["count"] == 1
-    assert (checkout[1] / metadata["location"] / "ignored/report.txt").read_bytes() == b"proof\x00\xff"
-    assert not (checkout[1] / metadata["location"] / ".pytest_cache/cache.txt").exists()
+    _assert_record_only(checkout, metadata)
+    _assert_entry(metadata, "ignored/report.txt", b"proof\x00\xff")
+    assert not (checkout[1] / "batch_state/preserved").exists()
     assert cache.exists()
 
 
@@ -531,16 +549,16 @@ def test_record_changed_during_copy_keeps_other_writers_fields(checkout, monkeyp
     artifact(checkout)
     path = checkout[2] / "artifact-task.json"
     initial = bound_record(checkout, {"status": "done", "response": "original"})
-    write = wa._write_verified_bytes
+    receipt_writer = output.record_only_receipt
 
-    def concurrent_writer(payload, destination):
+    def concurrent_writer(*args, **kwargs):
         from scripts.orchestration.dead_worker_state import task_state_lock
 
         with task_state_lock(path):
             path.write_text(json.dumps({**initial, "status": "failed", "response": "new", "other_writer": True}))
-        return write(payload, destination)
+        return receipt_writer(*args, **kwargs)
 
-    monkeypatch.setattr(wa, "_write_verified_bytes", concurrent_writer)
+    monkeypatch.setattr(output, "record_only_receipt", concurrent_writer)
     assert guard(checkout, record={"stale_field": "do not merge"})[0]
     saved = json.loads(path.read_text())
     assert saved["status"] == "failed"
@@ -574,26 +592,21 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
         assert not ok and links.REFUSALS[scenario] in reason
         assert links.REFUSALS[scenario] in saved["artifact_preservation_error"]
         assert "\x00" not in reason and "x" * 300 not in reason
-    elif scenario == "outbound_batch_state":
-        assert ok and not reason and metadata["count"] == 1
-        entry = metadata["paths"][0]
-        assert entry["type"] == "symlink" and entry["path"] == "ignored/link" and entry["target"] == str(target)
-        copied = primary / metadata["location"] / "ignored/link"
-        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
-        assert saved["preserved_artifacts"] == metadata
-    elif preserved is None:
-        assert (ok, reason, metadata) == (True, "", None)
         assert not (primary / "batch_state/preserved").exists()
-        assert "artifact_preservation_error" not in saved
+        return
+    assert ok and not reason
+    assert "artifact_preservation_error" not in saved
+    assert not (primary / "batch_state/preserved").exists()
+    if preserved is not None:
+        _assert_record_only(checkout, metadata)
+        _assert_entry(metadata, preserved, links.PAYLOAD)
+        assert metadata["inventory_error"] == "inventory_incomplete"
+        assert metadata["count"] == 1
+    elif scenario == "outbound_batch_state":
+        _assert_record_only(checkout, metadata)
+        assert metadata["inventory_error"] in {"inventory_failed", "inventory_incomplete"}
     else:
-        link_path, link_target = links.IGNORED_LINK[scenario]
-        assert ok and not reason and metadata["count"] == 2
-        copied_root = checkout[1] / metadata["location"]
-        assert (copied_root / preserved).read_bytes() == links.PAYLOAD
-        entry = next(item for item in metadata["paths"] if item["path"] == link_path)
-        assert entry["type"] == "symlink" and entry["target"] == link_target
-        assert (copied_root / link_path).is_file() and not (copied_root / link_path).is_symlink()
-        assert saved["preserved_artifacts"] == metadata
+        assert metadata is None
 
 
 def test_record_update_waits_for_the_shared_writer_lock(checkout):
@@ -664,10 +677,10 @@ def test_ignored_artifact_directory_of_regular_files(checkout):
     ok, reason, metadata = guard(checkout)
     assert ok and not reason
     assert metadata["count"] == 2
-    location = checkout[1] / metadata["location"]
-    assert (location / "batch_state/reports/probe/report1.json").read_bytes() == f1.read_bytes()
-    assert (location / "batch_state/reports/probe/report2.json").read_bytes() == f2.read_bytes()
-    assert not (location / "batch_state/reports/probe/__pycache__").exists()
+    _assert_record_only(checkout, metadata)
+    _assert_entry(metadata, "batch_state/reports/probe/report1.json", f1.read_bytes())
+    _assert_entry(metadata, "batch_state/reports/probe/report2.json", f2.read_bytes())
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 def test_ignored_artifact_nested_repo_no_unpushed_commits(checkout, tmp_path):

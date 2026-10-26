@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 from pathlib import Path
 
 import pytest
 
 from scripts import delegate
-from scripts.fleet import ignored_task_output as output
 from scripts.fleet import runtime_held_work as held
 from tests.test_delegate_evidence_empty_dir import _cleanup
 from tests.test_delegate_held_work import (  # noqa: F401 -- shared hermetic lease fixtures
@@ -144,7 +144,7 @@ def test_recovered_original_record_allows_receipted_cleanup(lease, tmp_path, cle
     assert error == held.EvidencePreservationError.code
     assert freed == 0
     retrieved = held.preserve_evidence(root, primary=tmp_path, record=record)
-    assert output.verify_retrieval(tmp_path, retrieved) == retrieved["retrieval_proof_sha256"]
+    assert retrieved["mode"] == "record-only" and retrieved["copied_bytes"] == 0
     assert (evidence / "report.md").read_text() == "retrievable report"
     delegate._write_state_atomic(delegate._state_path(record["task_id"]), record)
 
@@ -153,8 +153,12 @@ def test_recovered_original_record_allows_receipted_cleanup(lease, tmp_path, cle
     assert error is None
     assert not root.exists()
     receipt = delegate._read_state(delegate._state_path(record["task_id"]))["preserved_evidence"]
-    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
-    assert (tmp_path / receipt["location"] / "report.md").read_text() == "retrievable report"
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["paths"] == [
+        {"path": "report.md", "size": 18, "sha256": hashlib.sha256(b"retrievable report").hexdigest()}
+    ]
+    assert "location" not in receipt
+    assert not (tmp_path / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("cleanup", ["direct", "orphan"])

@@ -1,6 +1,7 @@
 """Creator ownership and fail-closed cohort release for #9934."""
 
 import contextlib
+import hashlib
 import json
 import os
 
@@ -143,27 +144,31 @@ def test_release_all_successors_under_locks_and_atomic_writes(cohort, monkeypatc
 
 
 @pytest.mark.parametrize(
-    "failure", ["missing_receipt", "changed_bytes", "corrupt_copy", "wrong_nonce", "successor_owner", "dry_run"]
+    "failure", ["missing_receipt", "changed_bytes", "corrupt_digest", "wrong_nonce", "successor_owner", "dry_run"]
 )
-def test_release_requires_creator_and_current_retrieval(cohort, failure):
-    repo, _, tasks, _, _, source = cohort
-    receipt = retrieve(cohort)
+def test_release_requires_creator_and_valid_inventory_receipt(cohort, failure):
+    _, _, tasks, _, _, source = cohort
+    retrieve(cohort)
     owner = json.loads((tasks / "boundary.json").read_text())
     if failure == "missing_receipt":
         owner.pop("preserved_artifacts")
     elif failure == "changed_bytes":
         source.write_bytes(b"changed output")
-    elif failure == "corrupt_copy":
-        (repo / receipt["location"] / "ignored/output.txt").write_bytes(b"bad")
+    elif failure == "corrupt_digest":
+        owner["preserved_artifacts"]["inventory_sha256"] = "invalid"
     elif failure == "wrong_nonce":
         owner["run_nonce"] = "changed-run"
     save(tasks, owner)
     before = {p: p.read_bytes() for p in tasks.glob("*.json")}
-    assert (
-        release(cohort, task_id="successor" if failure == "successor_owner" else "boundary", apply=failure != "dry_run")
-        is not None
+    result = release(
+        cohort, task_id="successor" if failure == "successor_owner" else "boundary", apply=failure != "dry_run"
     )
-    assert {p: p.read_bytes() for p in before} == before
+    if failure == "changed_bytes":
+        assert result is None
+        assert json.loads((tasks / "boundary.json").read_text())["keep_worktree"] is False
+    else:
+        assert result is not None
+        assert {p: p.read_bytes() for p in before} == before
 
 
 @pytest.mark.parametrize(
@@ -377,7 +382,15 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
     receipt = retrieved["main_worktree"]["preserved_artifacts"]
     assert receipt["owner"] == creator["task_id"]
     assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-    assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == source.read_bytes()
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["paths"] == [
+        {
+            "path": "ignored/output.txt",
+            "size": len(source.read_bytes()),
+            "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        }
+    ]
+    assert not (repo / "batch_state/preserved").exists()
     assert tree.exists()
     assert release(renamed_creator, task_id=creator["task_id"]) is None
     if boundary == "retry":
@@ -386,7 +399,7 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
         ok, _, receipt = output.preserve_worktree_artifacts(
             tree, primary=repo, tasks_dir=tasks, task_id=creator["task_id"], repo_root=repo
         )
-        assert ok and receipt["retention_disposition"] == "retrieved"
+        assert ok and receipt["retention_disposition"] == "record-only"
         boundary = "post-task"
     if boundary == "post-task":
         result = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)["main_worktree"]

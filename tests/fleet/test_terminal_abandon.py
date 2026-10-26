@@ -16,6 +16,19 @@ from tests.test_continuation_worktree_reap import same_branch_pending_cohort as 
 from tests.test_reused_worktree_retention import cohort as cohort
 from tests.test_reused_worktree_retention import save
 
+
+def _assert_record_only(repo, receipt):
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert not (repo / "batch_state/preserved").exists()
+
+
+def _assert_entry(receipt, name, payload):
+    entry = next(item for item in receipt["paths"] if item["path"] == str(name))
+    assert entry == {"path": str(name), "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
+
+
 _REAL_ACTIVE_TASK_IDS = rw._active_task_ids
 
 
@@ -419,10 +432,9 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
         "preservation_sha256": receipt["preservation"]["sha256"],
     }
     located = manifest["output"]
-    assert output.verify_retrieval(repo, located) == located["content_sha256"]
-    copy = repo / located["location"]
-    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
-    assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
+    _assert_record_only(repo, located)
+    _assert_entry(located, "ignored/output.txt", b"current output")
+    _assert_entry(located, "untracked.txt", b"untracked unique bytes")
 
 
 def test_successor_preservation_restores_and_reaper_removes(succession, tmp_path, capsys):
@@ -454,15 +466,14 @@ def test_successor_preservation_restores_and_reaper_removes(succession, tmp_path
         )
         if r.path == str(tree)
     )
-    assert row.action == "preserved_then_removed", row
+    assert row.action == "removed", row
     assert not tree.exists()
-    # The removal gate reused the successor's verified copy, which outlives the tree.
-    assert row.preserved_artifacts["location"] == manifest["output"]["location"]
     assert row.preserved_artifacts["abandon_proof"]["succession"] == receipt["succession"]
-    copy = repo / manifest["output"]["location"]
-    assert output.verify_retrieval(repo, manifest["output"]) == manifest["output"]["content_sha256"]
-    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
-    assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
+    _assert_record_only(repo, row.preserved_artifacts)
+    _assert_record_only(repo, manifest["output"])
+    for located in (row.preserved_artifacts, manifest["output"]):
+        _assert_entry(located, "ignored/output.txt", b"current output")
+        _assert_entry(located, "untracked.txt", b"untracked unique bytes")
 
 
 def _defect(failure, fixture, monitor, monkeypatch, tmp_path):
@@ -611,6 +622,11 @@ def test_successor_inputs_changed_between_check_and_publish_refuse(succession, m
         monkeypatch.setattr(rw, "_active_task_ids", active)
         expected = "PRESERVATION_INVALID"
     before = _files(repo)
+    if change == "output":
+        assert invoke(fixture) == 0
+        assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
+        _assert_record_only(repo, _recorded(fixture)[2]["output"])
+        return
     assert invoke(fixture) == 2
     assert json.loads(capsys.readouterr().out)["code"] == expected
     assert _files(repo) == before and not _preserved_files(repo)
@@ -618,19 +634,20 @@ def test_successor_inputs_changed_between_check_and_publish_refuse(succession, m
     assert "worktree_abandon" not in json.loads((fixture[2] / "boundary.json").read_bytes())
 
 
-@pytest.mark.parametrize("drift", ["map_entry", "output_copy", "branch", "tree", "preservation_digest"])
+@pytest.mark.parametrize("drift", ["map_entry", "output_manifest", "branch", "tree", "preservation_digest"])
 def test_successor_record_is_revalidated_at_removal(succession, monkeypatch, tmp_path, capsys, drift):
     fixture, _ = succession
     repo, tree, tasks, *_ = fixture
     assert invoke(fixture) == 0
     capsys.readouterr()
-    record, receipt, manifest = _recorded(fixture)
+    record, receipt, _manifest = _recorded(fixture)
     if drift == "map_entry":
         changed = tmp_path / "map.yaml"
         changed.write_text(output.SUCCESSION_MAP.read_text().replace("      - claude-monitor   # retired\n", ""))
         monkeypatch.setattr(output, "SUCCESSION_MAP", changed)
-    elif drift == "output_copy":
-        (repo / manifest["output"]["location"] / "untracked.txt").write_bytes(b"tampered copy")
+    elif drift == "output_manifest":
+        path = repo / receipt["preservation"]["path"]
+        path.write_bytes(path.read_bytes() + b" ")
     else:
         field, value = {
             "branch": ("branch", "codex/other"),
@@ -640,7 +657,7 @@ def test_successor_record_is_revalidated_at_removal(succession, monkeypatch, tmp
         receipt["succession"][field] = value
         save(tasks, record)
     matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
-    with pytest.raises(ValueError, match="succession"):
+    with pytest.raises(ValueError, match=r"succession|digest"):
         output.terminal_abandon_creator(matches, tree, primary=repo, tasks_dir=tasks)
     row = next(
         r
@@ -711,15 +728,24 @@ def test_successor_mapping_bytes_rechecked_at_removal(succession, monkeypatch, t
     _refused_removal(fixture, "MAPPING_CHANGED")
 
 
-def test_successor_current_output_rechecked_at_removal(succession, capsys):
+def test_successor_record_only_output_change_allows_removal(succession, capsys):
     fixture, _ = succession
     repo, tree, *_ = fixture
     assert invoke(fixture) == 0
     capsys.readouterr()
     before = _preserved_files(repo)
     (tree / "untracked.txt").write_bytes(b"changed after publication")
-    _refused_removal(fixture, "OUTPUT_CHANGED")
-    assert (tree / "untracked.txt").read_bytes() == b"changed after publication"
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
+        )
+        if r.path == str(tree)
+    )
+    assert row.action in {"removed", "preserved_then_removed"}, row
+    assert not tree.exists()
+    _assert_record_only(repo, row.preserved_artifacts)
+    _assert_entry(row.preserved_artifacts, "untracked.txt", b"changed after publication")
     assert _preserved_files(repo) == before
 
 

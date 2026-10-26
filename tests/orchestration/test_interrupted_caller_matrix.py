@@ -301,9 +301,12 @@ def test_interrupted_caller_preserves_bytes_on_repeated_call(interrupted_checkou
         assert current == state
         assert hashes([result]) == (before[1],)
         if receipt:
-            assert hashes([repo / receipt["location"] / ".cache/output.bin"]) == (before[2],)
+            assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+            assert receipt["paths"] == [{"path": ".cache/output.bin", "size": 16, "sha256": before[2]}]
             assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
             assert receipt["owner"] == "interrupted" and receipt["next_condition"]
+            assert "location" not in receipt
+            assert not (repo / "batch_state/preserved").exists()
         else:
             assert hashes([record]) == (before[0],)
         if tree.exists():

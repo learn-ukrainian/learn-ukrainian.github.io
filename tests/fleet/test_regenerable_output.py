@@ -10,6 +10,13 @@ from scripts.fleet import regenerable_output as patterns
 from tests import test_fleet_post_task_reap as reap_fixtures
 from tests.orchestration import test_worktree_artifacts as fixtures
 
+
+def _assert_record_only(receipt):
+    assert receipt["mode"] == "record-only"
+    assert receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+
+
 checkout = fixtures.checkout
 hermetic_reap = reap_fixtures.hermetic_reap
 
@@ -101,7 +108,7 @@ def test_build_output_skips_preservation_and_cap(checkout, monkeypatch, name):
         "site/src/data/example.db",
     ],
 )
-def test_unlisted_ignored_output_still_blocks(checkout, monkeypatch, name):
+def test_unlisted_ignored_output_gets_bounded_record_only_receipt(checkout, monkeypatch, name):
     repo, primary, _ = checkout
     ignore_site(repo)
     path = fixtures.artifact(checkout, name, b"unique output" * 100)
@@ -109,13 +116,16 @@ def test_unlisted_ignored_output_still_blocks(checkout, monkeypatch, name):
     assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
     assert output._ignored_output_files(repo, primary, {}) == [name]
     ok, reason, receipt = fixtures.guard(checkout)
-    assert not ok and "exceeds preservation cap" in reason
+    assert ok and not reason
+    _assert_record_only(receipt)
     assert receipt["count"] == 1 and receipt["bytes"] == path.stat().st_size
+    assert receipt["paths_truncated"] is True and receipt["paths"] == []
+    assert not (primary / "batch_state/preserved").exists()
     assert path.exists()
 
 
 @pytest.mark.parametrize("name", UNPUBLISHED_SITE_OUTPUTS)
-def test_unpublished_site_output_is_preserved_byte_for_byte(checkout, monkeypatch, name):
+def test_unpublished_site_output_records_count_and_size_without_copying_bytes(checkout, monkeypatch, name):
     repo, primary, _ = checkout
     ignore_site(repo)
     payload = b'{"entries": ["unpublished"]}'
@@ -124,8 +134,9 @@ def test_unpublished_site_output_is_preserved_byte_for_byte(checkout, monkeypatc
     ok, reason, receipt = fixtures.guard(checkout)
     assert ok and not reason
     assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
-    assert [entry["path"] for entry in receipt["paths"]] == [name]
-    assert (primary / receipt["location"] / name).read_bytes() == payload
+    _assert_record_only(receipt)
+    assert receipt["paths_truncated"] is True and receipt["paths"] == []
+    assert not (primary / "batch_state/preserved").exists()
     assert path.read_bytes() == payload
 
 
@@ -231,12 +242,13 @@ def test_common_reaper_removes_only_regenerable_build_output(hermetic_reap, monk
         "site-build-10061", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
     )
     row = report["main_worktree"]
+    assert row["action"] == "removed" and not tree.exists(), report
     if remaining:
-        assert row["action"] == "skipped" and tree.exists(), report
-        assert "exceeds preservation cap" in row["reason"]
-        assert [entry["path"] for entry in row["preserved_artifacts"]["paths"]] == [remaining]
+        receipt = row["preserved_artifacts"]
+        _assert_record_only(receipt)
+        assert receipt["count"] == 1 and receipt["bytes"] == 64
+        assert receipt["paths_truncated"] is True and receipt["paths"] == []
     else:
-        assert row["action"] == "removed" and not tree.exists(), report
         assert not row.get("preserved_artifacts")
     assert not (repo / "batch_state/preserved").exists()
 

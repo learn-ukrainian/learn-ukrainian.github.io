@@ -999,7 +999,7 @@ def test_locked_worktree_refuses(repo: Path, free_fuser: Path) -> None:
     assert _refusal(repo, worktree) == "git worktree is locked"
 
 
-def test_ignored_output_over_the_preservation_cap_is_retained(repo: Path, free_fuser: Path) -> None:
+def test_ignored_output_over_the_old_payload_cap_is_recorded_without_copying(repo: Path, free_fuser: Path) -> None:
     worktree = dispatch_tree(repo)
     (worktree / "out").mkdir()
     with (worktree / "out" / "big.bin").open("wb") as handle:
@@ -1009,13 +1009,16 @@ def test_ignored_output_over_the_preservation_cap_is_retained(repo: Path, free_f
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
 
     outcome = outcome_for(report, worktree, repo)
-    assert outcome.action == "skipped", outcome
-    assert outcome.reason == (
-        "artifact preservation failed: ignored output exceeds preservation cap "
-        "(314572800 > 268435456 bytes); refusing worktree removal"
-    )
-    assert (worktree / "out" / "big.bin").exists()
-    assert abandon_log(repo) == []
+    assert outcome.action == "removed", outcome
+    assert not worktree.exists()
+    receipt = outcome.preserved_artifacts
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert receipt["count"] == 1 and receipt["bytes"] == 300 * 1024 * 1024
+    assert [entry["path"] for entry in receipt["paths"]] == ["out/big.bin"]
+    assert not (repo / "batch_state/preserved").exists()
+    assert outcome.freed_bytes >= 300 * 1024 * 1024
+    assert len(abandon_log(repo)) == 1
 
 
 def test_recheck_under_the_lock_refuses_a_tree_that_changed(
