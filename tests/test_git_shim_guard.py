@@ -414,3 +414,14 @@ def test_reentry_markers_are_not_exported_to_containment_helper(shim_fixture, tm
             extra_env={"AGENT_GIT_SHIM_PYTHON": str(helper), **markers},
         )
         assert result.returncode == 0, result.stderr
+
+
+def test_failed_push_common_dir_probe_preserves_opsec_refusal(shim_fixture, tmp_path):
+    """A failed Git lookup must retain the push refusal rather than exit silently at exec."""
+    detached_shim = tmp_path / "detached" / "scripts" / "agent_runtime" / "shims" / "git"
+    detached_shim.parent.mkdir(parents=True)
+    shutil.copy2(SHIM_SOURCE, detached_shim)
+    result = _run_shim({**shim_fixture, "shim": detached_shim}, "push", "origin", "feature")
+    assert (result.returncode, result.stdout, result.stderr) == (
+        2, "", "OPSEC: push scanner hooks unavailable; push refused.\n",
+    )

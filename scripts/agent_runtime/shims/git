@@ -104,7 +104,7 @@ _blocks_branch_switch() {
   local shim_main_root="$shim_repo"
   if [[ -n "$real_git_bin" && -x "$real_git_bin" ]]; then
     local shim_common_dir
-    shim_common_dir="$(_exec_git "$real_git_bin" -C "$shim_repo" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    shim_common_dir="$(_exec_git "$real_git_bin" -C "$shim_repo" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" || shim_common_dir=""
     if [[ -n "$shim_common_dir" ]]; then
       shim_main_root="$(dirname "$shim_common_dir")"
     fi
@@ -522,7 +522,7 @@ if [[ "$_opsec_push" == 1 ]]; then
   if [[ ! -x "$_opsec_python" ]]; then
     # A linked worktree has no interpreter of its own: use the main checkout's.
     _opsec_common="$(_exec_git env -u GIT_DIR -u GIT_COMMON_DIR -u GIT_WORK_TREE "$real_git" -C "$_opsec_root" \
-      rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+      rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" || _opsec_common=""
     _opsec_python="${_opsec_common:+$(dirname "$_opsec_common")/.venv/bin/python}"
   fi
   for _opsec_hook in pre-push reference-transaction chain; do
