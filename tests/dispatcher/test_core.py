@@ -155,6 +155,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r})\n")
     executable.chmod(0o755)
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
     run_git(sandbox.repo, "branch", "review-source")
     dispatched = sandbox.cli(
         "dispatch",
