@@ -323,17 +323,30 @@ def test_orchestrator_control_cmd_dispatch_timeout(tmp_path: Path, capsys: pytes
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout='{"status": "running"}\n')
 
-    with patch("subprocess.run", side_effect=fake_run):
+    with patch.object(oc, "run_git") as fetch, patch("subprocess.run", side_effect=fake_run):
         rc = oc.cmd_dispatch(args)
         assert rc == 0
 
+    fetch.assert_called_once_with(
+        ["fetch", "origin", "refs/heads/main:refs/remotes/origin/main"],
+        cwd=tmp_path,
+        profile="remote",
+        timeout=30,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
     assert len(calls) == 1
+    assert calls[0]["cmd"][:3] == [oc.PYTHON, "scripts/dispatch.py", "dispatch"]
     assert calls[0]["timeout"] == oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS
     capsys.readouterr()
 
-    with patch(
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(["python", "delegate.py"], oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS),
+    with (
+        patch.object(oc, "run_git"),
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(calls[0]["cmd"], oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS),
+        ),
     ):
         rc = oc.cmd_dispatch(args)
         assert rc == 124
@@ -341,6 +354,7 @@ def test_orchestrator_control_cmd_dispatch_timeout(tmp_path: Path, capsys: pytes
         assert out["error"] == "worker dispatch timed out"
         assert out["returncode"] == 124
         assert "timed out after 180.0s" in out["stderr"]
+        assert out["command"] == calls[0]["cmd"]
 
 
 # ---------------------------------------------------------------------------
