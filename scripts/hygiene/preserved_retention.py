@@ -4,6 +4,7 @@ import argparse
 import contextlib
 import errno
 import json
+import math
 import os
 import stat
 import subprocess
@@ -232,8 +233,51 @@ def child_set(fd: int) -> tuple:
     return tuple(children)
 
 
-def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = False, allow_empty_keep_list: bool = False) -> int:
-    root = directory(batch / "preserved")
+def newest_content(fd: int) -> float:
+    """Newest content or directory mtime; never follow a link or cross a mount."""
+    newest = os.fstat(fd).st_mtime
+    for name in os.listdir(fd):
+        info = os.stat(name, dir_fd=fd, follow_symlinks=False)
+        newest = max(newest, info.st_mtime)
+        if stat.S_ISDIR(info.st_mode):
+            child = open_directory_component(fd, name)
+            try:
+                if fd_mount_id(child) is None or fd_mount_id(child) != fd_mount_id(fd):
+                    raise ValueError("mount_boundary")
+                newest = max(newest, newest_content(child))
+            finally:
+                os.close(child)
+    return newest
+
+
+def expire_leaf(root: int, name: str, info: os.stat_result, batch: Path, keep_list: Path | None,
+                keep: set[str] | None, cutoff: float, *, apply: bool, allow_empty: bool) -> str:
+    """Expire a direct file or link by lstat age, without opening its target."""
+    if keep is None or name in keep:
+        return "skipped:keep_list"
+    if info.st_mtime >= cutoff:
+        return "skipped:recent_content"
+    if not apply:
+        return "skipped:dry_run"
+    try:
+        current_keep = keep_names(keep_list or batch / "preserved-keep.txt")
+    except FileNotFoundError:
+        if keep_list is not None or not allow_empty:
+            raise
+        current_keep = set()
+    current = os.stat(name, dir_fd=root, follow_symlinks=False)
+    if name in current_keep or current != info or current.st_uid != os.geteuid():
+        return "skipped:changed_before_removal"
+    os.unlink(name, dir_fd=root)
+    return "deleted"
+
+
+def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = False, allow_empty_keep_list: bool = False, expire_older_than_hours: float | None = None) -> int:
+    try:
+        root = directory(batch / "preserved")
+    except FileNotFoundError:
+        print(json.dumps({"mode": "apply" if apply else "dry-run", "counts": {}, "bytes": {}}))
+        return 0
     try:
         try:
             keep = keep_names(keep_list or batch / "preserved-keep.txt")
@@ -257,6 +301,7 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
         finally:
             os.close(report_fd)
         counts, sizes = Counter(), Counter()
+        expiry_cutoff = time.time() - (expire_older_than_hours or 0) * 3600
         cutoff = datetime.now(UTC) - timedelta(days=3)
         release_cutoff = datetime.now(UTC) - timedelta(days=RELEASE_AGE_DAYS)
         with os.fdopen(receipt_fd, "w", encoding="utf-8") as receipt:
@@ -265,6 +310,15 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
                 try:
                     info = os.stat(name, dir_fd=root, follow_symlinks=False)
                     size = info.st_size
+                    if expire_older_than_hours is not None and not stat.S_ISDIR(info.st_mode):
+                        result = expire_leaf(root, name, info, batch, keep_list, keep, expiry_cutoff,
+                                             apply=apply, allow_empty=allow_empty_keep_list)
+                        receipt.write(json.dumps({"name": name, "bytes": size, "result": result}) + "\n")
+                        receipt.flush()
+                        os.fsync(receipt.fileno())
+                        counts[result] += 1
+                        sizes[result] += size
+                        continue
                     if not stat.S_ISDIR(info.st_mode):
                         reason = "symlink" if stat.S_ISLNK(info.st_mode) else "not_directory"
                     else:
@@ -272,12 +326,15 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
                         try:
                             classified = child_set(child)
                             size, unsafe = measure(child)
-                            reason = "symlink_or_special" if unsafe else None
+                            reason = "symlink_or_special" if unsafe and expire_older_than_hours is None else None
                             reason = reason or ("keep_list_unreadable" if keep is None else "keep_list" if name in keep else None)
                             task_before = None
                             with contextlib.suppress(OSError, ValueError, ComponentOpenError):
                                 task_before = task_record(batch, name)
-                            reason = reason or eligible(child, name, batch, cutoff, release_cutoff)
+                            if expire_older_than_hours is not None:
+                                reason = reason or ("recent_content" if newest_content(child) >= expiry_cutoff else None)
+                            else:
+                                reason = reason or eligible(child, name, batch, cutoff, release_cutoff)
                         finally:
                             os.close(child)
                     if reason and reason.startswith("released:"):
@@ -290,7 +347,7 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
                                 result, released = "skipped:changed_during_scan", None
                             else:
                                 try:
-                                    current_task = task_record(batch, name)
+                                    current_task = task_record(batch, name) if expire_older_than_hours is None else task_before
                                     try:
                                         current_keep = keep_names(keep_list or batch / "preserved-keep.txt")
                                     except FileNotFoundError:
@@ -298,6 +355,8 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
                                             raise
                                         current_keep = set()
                                     changed = current_task != task_before or name in current_keep
+                                    if expire_older_than_hours is not None:
+                                        changed |= newest_content(child) >= expiry_cutoff
                                 except (OSError, ValueError, ComponentOpenError):
                                     changed = True
                                 if changed:
@@ -331,12 +390,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--batch-root", type=Path, help="State root (default: primary checkout batch_state; example fixture/batch_state).")
     parser.add_argument("--keep-list", type=Path, help="Plain entry names, one per line (example keep.txt; default: batch_state/preserved-keep.txt). Explicit paths must be readable. An absent default is empty in dry-run; apply requires --allow-empty-keep-list.")
     parser.add_argument("--reports-dir", type=Path, help="Receipt directory (default: batch_state/reports; example worktree/batch_state/reports).")
+    parser.add_argument("--expire-older-than-hours", type=float,
+                        help="C-2481 backstop: expire direct directories by newest content age, bypassing held/pin proofs (default: off; daily timer: 24). Keep-list still binds; no links followed.")
     parser.add_argument("--apply", action="store_true", help="Delete eligible entries (default: dry-run, receipts only).")
     parser.add_argument("--allow-empty-keep-list", action="store_true", help="Allow --apply with an absent DEFAULT keep-list (default: off; example --apply --allow-empty-keep-list). Explicit missing or unreadable paths still refuse deletion.")
     args = parser.parse_args(argv)
+    if args.expire_older_than_hours is not None and (not math.isfinite(args.expire_older_than_hours) or args.expire_older_than_hours <= 0):
+        parser.error("--expire-older-than-hours must be finite and positive")
     batch = (args.batch_root or default_batch_root()).absolute()
     try:
-        return run(batch, args.keep_list, args.reports_dir or batch / "reports", apply=args.apply, allow_empty_keep_list=args.allow_empty_keep_list)
+        return run(batch, args.keep_list, args.reports_dir or batch / "reports", apply=args.apply, allow_empty_keep_list=args.allow_empty_keep_list, expire_older_than_hours=args.expire_older_than_hours)
     except (OSError, ValueError, ComponentOpenError) as exc:
         print(f"preserved-retention: {type(exc).__name__}", file=sys.stderr)
         return 1 if isinstance(exc, OSError) else 2
