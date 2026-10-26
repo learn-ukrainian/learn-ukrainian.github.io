@@ -670,8 +670,12 @@ def _verify_succession(
     except Refusal as exc:
         raise SuccessionRefusal(exc.code, str(exc)) from None
     located = manifest.get("output")
-    if not isinstance(located, dict) or located.get("schema") != "terminal-abandon-output.v1":
+    if not isinstance(located, dict) or (
+        located.get("schema") != "terminal-abandon-output.v1" and located.get("mode") != "record-only"
+    ):
         raise ValueError("terminal-abandon succession output preservation missing")
+    if located.get("mode") == "record-only" and any(located.get(key) != creator.get(key) for key in ("task_id", "run_nonce")):
+        raise ValueError("terminal-abandon record-only receipt identity mismatch")
     try:
         verify_retrieval(primary, located)
     except (OSError, ValueError, KeyError, TypeError, RuntimeError):
@@ -1132,6 +1136,8 @@ def retrieval_receipt_problem(
     """
     receipt = record.get("preserved_artifacts")
     if isinstance(receipt, Mapping) and receipt.get("mode") == "record-only":
+        if record.get("keep_worktree") or receipt.get("retention_disposition") == "retained":
+            return "explicit worktree retention"
         return None
     if not isinstance(receipt, Mapping):
         return "no retrieval receipt"

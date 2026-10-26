@@ -40,22 +40,23 @@ def test_failed_residue_inventory_never_retains_worktree(checkout, monkeypatch):
 
 
 @pytest.mark.parametrize("writer", ["evidence", "held", "abandon"])
-def test_no_per_task_preserve_write_exceeds_10_mib(tmp_path, writer):
-    root = tmp_path / "lease"
+def test_no_per_task_preserve_write_exceeds_10_mib(checkout, writer):
+    root, primary, _tasks = checkout
     (root / "evidence").mkdir(parents=True)
     (root / "evidence/large.bin").write_bytes(b"x" * (10 * 1024 * 1024 + 1))
     record = {"task_id": "test", "held_work": ["evidence/large.bin"]}
     if writer == "evidence":
-        receipt = runtime_held_work.preserve_evidence(root, primary=tmp_path, record=record)
+        receipt = runtime_held_work.preserve_evidence(root, primary=primary, record=record)
         assert runtime_held_work.evidence_matches_receipt(root, receipt)
     elif writer == "held":
-        receipt = runtime_held_work.preserve(root, primary=tmp_path, record=record, response="")
+        receipt = runtime_held_work.preserve(root, primary=primary, record=record, response="")
     else:
-        receipt, created = output.capture_abandon_output(root, primary=tmp_path, record=record)
+        receipt, created = output.capture_abandon_output(root, primary=primary, record=record)
         assert created is None
     assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert receipt["count"] == 1 and receipt["bytes"] == 10 * 1024 * 1024 + 1
     assert len(json.dumps(receipt).encode()) < 10 * 1024 * 1024
-    assert not (tmp_path / "batch_state/preserved").exists()
+    assert not (primary / "batch_state/preserved").exists()
 
 
 def test_reaper_removes_a_worktree_whose_residue_is_untracked(interrupted_reap):
@@ -66,6 +67,7 @@ def test_reaper_removes_a_worktree_whose_residue_is_untracked(interrupted_reap):
     state["keep_worktree"] = True
     record.write_text(json.dumps(state))
     assert not output.preserve_worktree_artifacts(tree, primary=repo, task_id="interrupted", tasks_dir=tasks)[0]
+    assert output.retrieval_receipt_problem(tree, repo, json.loads(record.read_text()), ["leftover.bin"])
     assert post_task_reap._release_retention("interrupted", tasks_dir=tasks, repo_root=repo, apply=True) is None
     log = tasks / "interrupted.log"
     log.write_text("small task log")
