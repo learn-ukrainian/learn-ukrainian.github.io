@@ -10,6 +10,8 @@ import pytest
 
 from scripts.dispatcher.providers import load
 from scripts.dispatcher.types import ParsedResult, TaskSpec
+from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+from scripts.review.verdict_parser import recognized_verdicts
 
 # Small recorded event shapes from the old adapters' stream contracts.
 SUCCESS = {
@@ -253,18 +255,11 @@ def test_cursor_message_content_does_not_lose_assistant_text(content):
 
 @pytest.mark.parametrize("verdict", ["**VERDICT: APPROVE**", "VERDICT: APPROVE"])
 def test_cursor_assistant_messages_preserve_verdict_boundary_over_result(verdict):
-    """Cursor's separator-free terminal result must not hide a standalone approval."""
-    from scripts.review.record_cf_verdict import normalize_verdict
-    from scripts.review.verdict_parser import recognized_verdicts
-
     # Trimmed from atlas-1538-query-ua-cf-grok.result; no private content retained.
     preamble = "using tracked-file reads only."
     glued = preamble + verdict
-    events = []
-    for text in (preamble, verdict):
-        events.append({"type": "assistant", "message": {"role": "assistant", "content": [
-            {"type": "text", "text": text},
-        ]}})
+    events = [{"type": "assistant", "message": {"role": "assistant", "content": [
+        {"type": "text", "text": text}]}} for text in (preamble, verdict)]
     events.append({"type": "result", "subtype": "success", "is_error": False, "result": glued})
     assert recognized_verdicts(glued) == []
     parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
@@ -276,8 +271,6 @@ def test_cursor_assistant_messages_preserve_verdict_boundary_over_result(verdict
 @pytest.mark.parametrize("nested", [False, True])
 @pytest.mark.parametrize("trailing", ["", " "])
 def test_cursor_split_rubric_cannot_create_false_approval(nested, trailing):
-    from scripts.review.verdict_parser import recognized_verdicts
-
     parts = ["- **VERDICT**: **APPROVE**" + trailing, "or **REQUEST_CHANGES** per the rubric"]
     events = [{"type": "assistant", **({"message": {"content": [{"type": "text", "text": p}]}}
               if nested else {"content": p})} for p in parts]
@@ -291,9 +284,6 @@ def test_cursor_split_rubric_cannot_create_false_approval(nested, trailing):
 @pytest.mark.parametrize("event_type", ["assistant", "text"])
 @pytest.mark.parametrize("indent", ["    ", "\t"])
 def test_cursor_leading_indented_example_cannot_create_false_approval(event_type, indent):
-    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-    from scripts.review.verdict_parser import recognized_verdicts
-
     example = indent + "VERDICT: APPROVE"
     events = [
         {"type": event_type, "content": example + "  \n"},
@@ -311,7 +301,6 @@ def test_cursor_leading_indented_example_cannot_create_false_approval(event_type
 
 @pytest.mark.parametrize("content", [None, [], "", "  ", [{"type": "tool_use", "text": "ignored"}]])
 def test_cursor_result_fallback_when_no_assistant_text(content):
-    """Assistant precedence must not discard result-only replies or treat tool blocks as prose."""
     events = [
         {"type": "assistant", "message": {"content": content}},
         {"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"},

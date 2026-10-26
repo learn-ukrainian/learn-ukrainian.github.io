@@ -6,6 +6,7 @@ import json
 
 import pytest
 
+from scripts.review.record_cf_verdict import RecordError, normalize_verdict
 from scripts.review.verdict_parser import recognized_verdicts
 from tests.test_verdict_parser import CAPACITY_OUTLINES, FROZEN_CONTAINER_CASES, OVERLAP_QUOTE
 
@@ -145,9 +146,6 @@ def test_recognized_lines_preserve_tokens_and_order(reply, expected):
 ])
 @pytest.mark.parametrize("indent", ["", "   "])
 def test_list_item_verdict_reaches_recorder(prefix, template, indent):
-    """List-prefix rejection must not hide real approvals, including the AGY shape."""
-    from scripts.review.record_cf_verdict import normalize_verdict
-
     reply = indent + prefix + template
     assert recognized_verdicts(reply) == ["APPROVE"]
     assert normalize_verdict(reply) == "APPROVED"
@@ -166,18 +164,12 @@ def test_list_item_verdict_reaches_recorder(prefix, template, indent):
     "using tracked-file reads only.**VERDICT: APPROVE**",
 ])
 def test_list_support_does_not_admit_prose_quotes_or_code(reply):
-    """Prefix relaxation must not turn examples or glued Cursor prose into approvals."""
-    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-
     assert recognized_verdicts(reply) == []
     with pytest.raises(RecordError, match="missing or ambiguous"):
         normalize_verdict(reply)
 
 
 def test_conflicting_list_verdicts_remain_ambiguous():
-    """Recognizing a list approval must not hide a conflicting rejection."""
-    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-
     reply = "- **VERDICT**: **`APPROVE`**\n1) VERDICT: REQUEST_CHANGES"
     assert recognized_verdicts(reply) == ["APPROVE", "REQUEST_CHANGES"]
     with pytest.raises(RecordError, match="missing or ambiguous"):
@@ -192,8 +184,6 @@ def test_conflicting_list_verdicts_remain_ambiguous():
     "\n  or REQUEST_CHANGES per the rubric", "\tor REQUEST_CHANGES per the rubric",
 ])
 def test_list_item_continuation_cannot_create_false_approval(newline, prefix, verdict, continuation):
-    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-
     indent = len(prefix) - len(prefix.lstrip(" "))
     reply = (prefix + verdict + "\n" + continuation.replace("  ", " " * (indent + 2))).replace("\n", newline)
     assert recognized_verdicts(reply) == []
@@ -208,8 +198,6 @@ def test_list_item_continuation_cannot_create_false_approval(newline, prefix, ve
     "```\nexample\n```", "> Quoted finding", "VERDICT: APPROVE",
 ])
 def test_separate_blocks_after_list_verdict_preserve_approval(newline, following):
-    from scripts.review.record_cf_verdict import normalize_verdict
-
     reply = ("- **VERDICT**: **`APPROVE`**\n" + following).replace("\n", newline)
     assert normalize_verdict(reply) == "APPROVED"
 
@@ -240,9 +228,6 @@ def test_removed_example_preserves_list_continuation_source_lines(newline, examp
     "**VERDICT APPROVE** — reviewed exact head …",
 ])
 def test_trailing_rubric_or_prose_cannot_be_recorded_as_approval(prefix, line):
-    """A quoted rubric or qualified verdict must never become a false approval."""
-    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-
     reply = prefix + line
     assert recognized_verdicts(reply) == []
     with pytest.raises(RecordError, match="missing or ambiguous"):
