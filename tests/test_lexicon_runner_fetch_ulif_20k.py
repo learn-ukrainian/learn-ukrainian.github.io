@@ -5,6 +5,8 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
@@ -13,6 +15,41 @@ from tests._host_path_guard import assert_no_host_paths
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "fetch_ulif_20k.py"
+
+
+def test_default_requests_include_project_identity_and_public_contact(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Reject missing collector contact on actual outgoing session requests (#8999)."""
+    from scripts.lexicon.runner import fetch_ulif_20k
+
+    outgoing = []
+    response = SimpleNamespace(status_code=200)
+    fake_session = SimpleNamespace(headers={"User-Agent": "python-requests/fake"})
+
+    def request(method, url, **kwargs):
+        outgoing.append((method, url, dict(fake_session.headers), kwargs))
+        return response
+
+    fake_session.request = request
+    session_factory = Mock(return_value=fake_session)
+    requests_loader = Mock(return_value=SimpleNamespace(Session=session_factory, RequestException=RuntimeError))
+    monkeypatch.setattr(fetch_ulif_20k, "_requests", requests_loader)
+
+    client = fetch_ulif_20k.DictUAClient(delay_seconds=0, timeout_seconds=17)
+    requests_loader.assert_not_called()
+    assert client._request("GET") is response
+    assert client._request("POST", data={"lookup": "fixture"}) is response
+    session_factory.assert_called_once_with()
+
+    expected_headers = {
+        "User-Agent": (
+            "learn-ukrainian-atlas/1.0 (noncommercial educational ULIF per-lemma fetch; issue #5230; "
+            "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+        )
+    }
+    assert outgoing == [
+        ("GET", "https://lcorp.ulif.org.ua/dictua/", expected_headers, {"timeout": 17}),
+        ("POST", "https://lcorp.ulif.org.ua/dictua/", expected_headers, {"timeout": 17, "data": {"lookup": "fixture"}}),
+    ]
 
 
 def test_source_has_no_baked_home_defaults() -> None:
