@@ -515,7 +515,7 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
         ("pinned", 1, False, "pushed", "remote_head_matches", True),
         ("own", 1, False, "pushed", "remote_head_matches", False),
         ("unrelated", 1, False, "unpushed", "remote_head_differs", False),
-        ("prefix", 1, False, "unpushed", "remote_head_differs", False),
+        ("prefix", 1, False, "unpushed", "remote_branch_missing", False),
         ("pinned", 1, True, "unpushed", "dirty_worktree", False),
         (None, 0, False, "unpushed", "remote_branch_missing", False),
         ("pinned", 0, False, "pushed", "remote_head_matches", False),
@@ -525,7 +525,7 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
     """Prefix tricks and supervisor crashes cannot falsify pinned-branch delivery evidence."""
     pinned = "codex/existing-pr"
     run_git(sandbox.repo, "branch", pinned, "main")
-    if target is not None:
+    if target not in {None, "prefix"}:
         run_git(sandbox.repo, "push", "origin", pinned)
     task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
     record_path = sandbox.tasks / f"{task[0]}.json"
@@ -570,7 +570,7 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
         assert observed["remote_head_sha"] == head
         assert run_git(sandbox.remote, "rev-parse", f"refs/heads/{matched}") == head
     else:
-        assert observed["remote_head_sha"] == (record["worktree_base_sha"] if target else None)
+        assert observed["remote_head_sha"] == (record["worktree_base_sha"] if target not in {None, "prefix"} else None)
 
 
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
