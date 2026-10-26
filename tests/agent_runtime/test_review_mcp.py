@@ -83,15 +83,8 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
     """Catch incomplete gate inputs, mutable results, or dropped legacy grants."""
     base = {"read_only_tmp_root": str(tmp_path), "run_nonce": "nonce", "owned_paths": [], "risk": "critical"}
     plan = prepare_review_attempt(
-        "rev-config",
-        "att-config",
-        manifest_file,
-        harness,
-        receipts_root=tmp_path / "receipts",
-        review_access=access,
+        "rev-config", "att-config", manifest_file, harness, receipts_root=tmp_path / "receipts", review_access=access
     )
-    # Pinned from delegate._run_worker's inline builder; no standalone legacy
-    # builder can be imported without running the worker and its admission loop.
     expected = {
         **base,
         "mcp_config_path": str(plan.config_path),
@@ -148,6 +141,8 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
                     task_id="config-test",
                     tool_config=expected,
                 )
+                gate.call_args.kwargs["tool_config"]["risk"] = "low"
+                assert result["risk"] == "critical"
             else:
                 gate.assert_not_called()
 
@@ -225,22 +220,14 @@ def test_tool_config_refuses_reserved_base_key_collision(manifest_file, tmp_path
 def test_tool_config_propagates_effective_mcp_refusal(manifest_file, tmp_path, harness):
     """Never return launch options when the original effective-config gate refuses."""
     plan = prepare_review_attempt(
-        "rev-config",
-        "att-config",
-        manifest_file,
-        harness,
-        receipts_root=tmp_path / "receipts",
+        "rev-config", "att-config", manifest_file, harness, receipts_root=tmp_path / "receipts"
     )
     with (
         patch.object(review_mcp_module, f"verify_{harness}_review_launch", side_effect=ValueError("extra MCP server")),
         pytest.raises(ValueError, match="extra MCP server"),
     ):
         review_mcp_module.review_attempt_tool_config(
-            plan,
-            manifest_path=manifest_file,
-            input_root=tmp_path,
-            cwd=tmp_path,
-            task_id="config-test",
+            plan, manifest_path=manifest_file, input_root=tmp_path, cwd=tmp_path, task_id="config-test"
         )
 
 
