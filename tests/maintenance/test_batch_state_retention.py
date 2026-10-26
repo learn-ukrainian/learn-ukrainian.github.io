@@ -15,12 +15,64 @@ from pathlib import Path
 import pytest
 
 from scripts import delegate
+from scripts.maintenance import batch_state_retention as retention
 from scripts.maintenance.batch_state_retention import DEFAULT_ONE_OFF_MIN_BYTES, plan_retention
 from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import scheduled_worktree_cleanup, stale_task_records
 from scripts.orchestration.scheduled_worktree_cleanup import batch_state_retention_reports
 
 NOW = datetime(2026, 9, 25, 12, 0, tzinfo=UTC)
+
+
+def test_retention_loads_without_legacy_dispatcher() -> None:
+    code = """
+import importlib.abc
+import sys
+class RefuseLegacy(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname in {'delegate', 'scripts.delegate', 'scripts.orchestration.stale_task_records'}:
+            raise AssertionError(f'legacy dependency: {fullname}')
+sys.meta_path.insert(0, RefuseLegacy())
+from scripts.maintenance.batch_state_retention import read_only_snapshot_digest
+assert read_only_snapshot_digest(None, {})['pre']['entries'] == 0
+"""
+    result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=False, timeout=30)
+    assert result.returncode == 0, result.stderr
+
+
+def test_snapshot_digest_preserves_canonical_bytes() -> None:
+    assert retention.read_only_snapshot_digest(None, {}) == {
+        "pre": {"sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a", "entries": 0},
+        "post": {"sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a", "entries": 0},
+    }
+    assert retention.read_only_snapshot_digest({"a.txt": " M"}, {"b.txt": "??"}) == {
+        "pre": {"sha256": "ea911a282a1c72b28c1c3cdcf15a1d55888caaaab924e194ec1a8f97775e1e8c", "entries": 1},
+        "post": {"sha256": "681bcaef1742eae0239b147abe4bc18c6944df0f7c607bd6cdd7ec8c1ee3287d", "entries": 1},
+    }
+
+
+@pytest.mark.parametrize("record", [{"worktree_path": "checkout"}, {"cwd": "checkout"}, {}])
+def test_retention_contends_on_the_shared_worktree_lock(tmp_path: Path, record: dict, monkeypatch) -> None:
+    checkout = tmp_path / "checkout"
+    record = {key: str(checkout) for key in record}
+    target = retention._record_lock_target(record, tmp_path / "task.json")
+    lock_dir = tmp_path / "locks"
+    monkeypatch.setattr(retention.worktree_claims, "repository_lock_dir", lambda _root: lock_dir)
+    with retention.worktree_claims.worktree_lock(target, lock_dir=lock_dir):
+        with pytest.raises(retention.worktree_claims.WorktreeLockReentry):
+            with retention.worktree_lock(target, timeout_s=0):
+                pytest.fail("retention acquired a lock held by another record writer")
+
+
+def test_retention_record_age_and_primary_checkout_fallback(tmp_path: Path) -> None:
+    (tmp_path / ".git").mkdir()
+    path = tmp_path / "task.json"
+    assert retention._record_lock_target({"cwd": str(tmp_path)}, path) == str(path)
+    mtime = int((NOW - timedelta(days=3)).timestamp() * 1e9)
+    for finished in (None, "bad", " "):
+        assert retention._record_age_days({"finished_at": finished}, mtime, NOW) == 3
+    for finished in ("2026-09-23T12:00:00Z", "2026-09-23T12:00:00"):
+        assert retention._record_age_days({"finished_at": finished}, mtime, NOW) == 2
 
 
 @pytest.fixture(autouse=True)
