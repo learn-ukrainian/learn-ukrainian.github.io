@@ -1,50 +1,23 @@
-"""Dispatch read-only evaluation tasks through ``scripts/delegate.py``.
+"""Dispatch evaluation prompts verbatim through ``scripts/dispatch.py``.
 
-Going through the delegate keeps every answer attributable: the task record
-holds the launched agent and model, any substitution, and the result digest.
-Tests substitute a fake that implements the same ``Dispatcher`` protocol.
-
-Executed conditions. Only the preamble may differ between paired arms. The
-harness renders the rules core into every prompt and dispatches read-only
-with a fixed ``--cwd`` and ``--rules-seat core``. The only research flag is
-``--research-task-family``, taken from the task kind (review and judge:
-``ukrainian-review``; writing: ``ukrainian-authoring``) for every seat. That
-classifies the task, so a Ukrainian review or writing dispatch is not refused
-as a bounded fallback. ``--worktree``, ``--lifecycle-file``, ``--advisory-task``
-and the pointer-selecting research flags are not passed: those pointers are
-resolved per dispatch from a changing registry. Delegate still wraps the
-prompt: a primary checkout is refused before dispatch because delegate would
-redirect every task to a different automatic checkout, invalidating the paired
-frame. Pass one existing isolated worktree as ``--worker-cwd``. When ``--cwd``
-lies in a registered worktree it adds its worktree
-block (whose sparse-checkout note depends on paths the prompt names) and then
-the rules core again in front of it. Delegate also appends its supported
-evidence-directory block (#11342), which is deliberately path-free: the real
-``evidence/`` path is task-specific, so interpolating it would change
-``suffix_sha256`` per task and break both exact-prompt verification and the
-paired frame. The worker reads it from ``$LU_TASK_EVIDENCE_DIR`` instead, and
-the block itself is constant across tasks. ``DelegateComposer`` computes that
-composition with delegate's own functions, without spawning anything, so every
-task has an expected effective prompt hash, prompt blocks, cwd and worktree
-path. ``condition_problems`` accepts a task record only when it matches, and
-refuses one whose ``research`` field is set, so a live registry that attaches
-pointers because the family flag is present cannot add context to an accepted
-answer. The run freezes the frame around the prompt (see ``composition_frame``)
-and the argument hashes (see ``dispatch_args_frame``) and refuses a plan whose
-arms would be framed differently or whose arguments differ from the freeze.
+V2 records attest submitted bytes, not legacy prompt wrappers. Acceptance checks
+those stored bytes, task identity and result digest against the frozen paired
+frame. Caller arguments remain frozen in the existing evaluation manifest;
+v2 records do not attest them. Legacy records retain their wrapper and
+argument-attestation checks.
 """
 
 from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
+from scripts.common.repo_root import main_checkout_root
 from scripts.lib.rules_core import RulesCoreError
 
 from .common import Seat, sha256_bytes, sha256_text
@@ -78,8 +51,12 @@ TASK_FAMILIES = {
     "writing": "ukrainian-authoring",
     "judge": "ukrainian-review",
 }
-# Task-record fields that define what the worker ran under, besides the seat and the prompt.
+# Record evidence and explicitly caller-derived fingerprints, besides the seat and prompt.
 CONDITION_FIELDS = (
+    "schema_version",
+    "prompt_sha256",
+    "stored_prompt_sha256",
+    "research_task_family",
     "effective_prompt_sha256",
     "prompt_blocks",
     "dispatch_args_sha256",
@@ -96,7 +73,17 @@ CONDITION_FIELDS = (
 # The parts of a composition that do not depend on the prompt: equal across a frozen plan's tasks.
 FRAME_FIELDS = ("cwd", "worktree_path", "prompt_blocks", "prefix_sha256", "suffix_sha256")
 # Of the condition fields, the ones paired arms must share (the rest are per task by construction).
-PAIRED_FIELDS = tuple(f for f in CONDITION_FIELDS if f not in {"effective_prompt_sha256", "dispatch_args_sha256"})
+PAIRED_FIELDS = tuple(
+    f
+    for f in CONDITION_FIELDS
+    if f
+    not in {
+        "effective_prompt_sha256",
+        "dispatch_args_sha256",
+        "prompt_sha256",
+        "stored_prompt_sha256",
+    }
+)
 # Instruction and tool-configuration files a seat reads from its working directory.
 WORKSPACE_FILES = (
     "AGENTS.md",
@@ -133,6 +120,8 @@ class TaskOutcome:
             return f"launched agent {self.agent!r} is not {seat.agent!r}"
         if self.model != seat.model:
             return f"launched model {self.model!r} is not {seat.model!r}"
+        if self.conditions.get("schema_version") == 2 and self.conditions.get("effort") != seat.effort:
+            return "launched effort differs from the planned effort"
         if self.substitution:
             return f"route was substituted: {self.substitution!r}"
         return None
@@ -160,7 +149,11 @@ def task_family(kind: str) -> str:
 
 def frame(composition: dict[str, Any]) -> dict[str, Any]:
     """The prompt-independent part of an expected composition."""
-    return {key: composition.get(key) for key in FRAME_FIELDS}
+    shared = {key: composition.get(key) for key in FRAME_FIELDS}
+    if composition.get("schema_version") == 2:
+        shared.update(cwd=None, worktree_path=None)
+        shared.update({key: composition[key] for key in ("schema_version", "dispatch_root", "worker_head")})
+    return shared
 
 
 def _same_path(recorded: Any, expected: str | None) -> bool:
@@ -172,6 +165,24 @@ def _same_path(recorded: Any, expected: str | None) -> bool:
 def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], args_sha256: str) -> list[str]:
     """Why the recorded conditions are not the expected composition of the rendered prompt (empty when they are)."""
     problems = []
+    if conditions.get("schema_version") == 2:
+        if expected.get("schema_version") != 2:
+            problems.append("v2 task cannot satisfy a legacy composition")
+        for key in ("prompt_sha256", "stored_prompt_sha256"):
+            if conditions.get(key) != expected["effective_prompt_sha256"]:
+                problems.append(f"{key} differs from the exact submitted prompt")
+        # V2 has no engine argument attestation. The caller's manifest checks
+        # its frozen arguments; the record proves the applied prompt and frame.
+        for key in ("cwd", "worktree_path"):
+            if not _same_path(conditions.get(key), expected[key]):
+                problems.append(f"worker {key} differs from the frozen frame")
+        if conditions.get("mode") != READ_ONLY:
+            problems.append("mode is not read-only")
+        if conditions.get("research") is not None:
+            problems.append("research context was injected")
+        if conditions.get("prompt_blocks") or conditions.get("effective_prompt_sha256"):
+            problems.append("v2 task reports unsupported legacy prompt composition")
+        return problems
     if conditions.get("effective_prompt_sha256") != expected["effective_prompt_sha256"]:
         problems.append(
             f"worker received effective prompt {conditions.get('effective_prompt_sha256')!r}, "
@@ -197,7 +208,9 @@ def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], 
     return problems
 
 
-def composition_of(composed: str, prompt: str, *, cwd: str, worktree_path: str | None, blocks: list[str]) -> dict:
+def composition_of(
+    composed: str, prompt: str, *, cwd: str | None, worktree_path: str | None, blocks: list[str]
+) -> dict:
     """An expected composition: the record fields delegate would write and the frame around ``prompt``."""
     at = composed.find(prompt)
     if at < 0:
@@ -307,7 +320,7 @@ class Dispatcher(Protocol):
         """Start the task; returns the run nonce."""
 
     def expected_args_sha256(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> str:
-        """The ``dispatch_args_sha256`` the task record must carry for the dispatch this dispatcher builds."""
+        """Fingerprint of the caller invocation frozen by the evaluation manifest."""
 
     def compose(self, prompt: str) -> dict[str, Any]:
         """The expected composition of ``prompt`` (see ``composition_of``); raises ``DispatchError``."""
@@ -320,7 +333,7 @@ class Dispatcher(Protocol):
 
 
 class DelegateDispatcher:
-    """Real dispatcher: ``delegate.py dispatch`` + ``wait`` + ``status`` (read-only mode)."""
+    """Evaluation dispatcher, retaining the public constructor used by the CLI and injected fakes."""
 
     def __init__(
         self,
@@ -332,12 +345,13 @@ class DelegateDispatcher:
         review_profile: str | None = None,
     ) -> None:
         self.python = python
-        self.delegate = delegate
+        canonical = Path(__file__).resolve().parents[2] / "delegate.py"
+        self.delegate = canonical.with_name("dispatch.py") if delegate.resolve() == canonical else delegate
         self.cwd = cwd
         self.hard_timeout = hard_timeout
         self.review_profile = review_profile
         self.wait_timeout = hard_timeout + WAIT_MARGIN
-        self._composer: DelegateComposer | None = None
+        self.legacy_resume = False
 
     def _run(self, *args: str, timeout: int = CONTROL_TIMEOUT) -> subprocess.CompletedProcess[str]:
         """Run one delegate subcommand; a timeout is a DispatchError (pending markers survive for resume)."""
@@ -350,41 +364,81 @@ class DelegateDispatcher:
                 f"delegate {args[0]} {args[1] if len(args) > 1 else ''} timed out after {timeout}s"
             ) from exc
 
-    def _dispatch_args(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> list[str]:
+    def _dispatch_args(
+        self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, legacy: bool = False
+    ) -> list[str]:
         args = ["dispatch", "--agent", seat.agent, "--model", seat.model, "--task-id", task_id]
         args += ["--prompt-file", str(prompt_path), "--mode", READ_ONLY, "--language-lane"]
-        args += ["--cwd", str(self.cwd), "--rules-seat", RULES_SEAT, "--hard-timeout", str(self.hard_timeout)]
+        if legacy:
+            args += ["--cwd", str(self.cwd), "--rules-seat", RULES_SEAT]
+        else:
+            head = _git(self.cwd, "rev-parse", "HEAD")
+            if not head:
+                raise DispatchError("cannot pin the worker commit")
+            args += ["ukrainian", "--pinned-head", head.strip()]
+        args += ["--hard-timeout", str(self.hard_timeout)]
         args += ["--research-task-family", task_family(kind)]
         if seat.effort:
             args += ["--effort", seat.effort]
         if self.review_profile and kind == "review":
-            # A target-less review: --require-review-verdict types it as a review for delegate's AGY tool-config path.
-            args += ["--review-profile", self.review_profile, "--require-review-verdict"]
+            args += ["--review-profile", self.review_profile]
+            if legacy:
+                args += ["--require-review-verdict"]
         return args
 
-    def expected_args_sha256(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> str:
-        """Hash the arguments as delegate's own parser reads them (``--force-new`` is excluded by delegate)."""
-        delegate = _delegate_module(self.delegate)
-        parsed = delegate.build_parser().parse_args(self._dispatch_args(task_id, seat, kind, prompt_path))
-        return delegate.dispatch_args_sha256(parsed)
+    def expected_args_sha256(
+        self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, legacy: bool = False
+    ) -> str:
+        """Schema-specific argument fingerprint for the frozen evaluation."""
+        if legacy or self.legacy_resume:
+            from scripts import delegate
+
+            args = delegate.build_parser().parse_args(
+                self._dispatch_args(task_id, seat, kind, prompt_path, legacy=True)
+            )
+            return delegate.dispatch_args_sha256(args)
+        return sha256_text(json.dumps(self._dispatch_args(task_id, seat, kind, prompt_path), ensure_ascii=False))
+
+    def legacy_inputs(self, task_id: str, seat: Seat, kind: str, path: Path, prompt: str) -> tuple[dict, str]:
+        from scripts import delegate
+
+        return (
+            DelegateComposer(delegate, self.cwd).compose(prompt),
+            self.expected_args_sha256(task_id, seat, kind, path, legacy=True),
+        )
 
     def compose(self, prompt: str) -> dict[str, Any]:
-        if self._composer is None:
-            self._composer = DelegateComposer(_delegate_module(self.delegate), self.cwd)
-        return self._composer.compose(prompt)
+        if self.legacy_resume:
+            from scripts import delegate
+
+            return DelegateComposer(delegate, self.cwd).compose(prompt)
+        cwd = self.cwd.resolve()
+        if not (cwd / ".git").is_file() or _git(cwd, "rev-parse", "--show-toplevel") != f"{cwd}\n":
+            raise DispatchError("pass an existing isolated Git worktree root with --worker-cwd")
+        return {
+            "schema_version": 2,
+            "dispatch_root": str(main_checkout_root(cwd) / ".worktrees" / "dispatch"),
+            "worker_head": (_git(cwd, "rev-parse", "HEAD") or "").strip(),
+            **composition_of(prompt, prompt, cwd=None, worktree_path=None, blocks=[]),
+        }
 
     def known(self, task_id: str) -> bool:
         return self._run("status", task_id).returncode == 0
 
     def dispatch(self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, force_new: bool) -> str | None:
+        if self.legacy_resume:
+            raise DispatchError("legacy evaluations support resume only; use a new run tag for new tasks")
         args = self._dispatch_args(task_id, seat, kind, prompt_path)
         if force_new:
-            args.append("--force-new")
+            raise DispatchError("v2 refuses task-id replacement; start a new evaluation run tag")
         proc = self._run(*args, timeout=SPAWN_TIMEOUT)
         if proc.returncode != 0:
             raise DispatchError(f"delegate dispatch {task_id} exited {proc.returncode}: {proc.stderr.strip()[-800:]}")
-        lines = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
-        return lines[-1] if len(lines) >= 2 else None
+        lines = proc.stdout.splitlines()
+        if len(lines) != 2 or lines[0] != task_id or not lines[1].strip():
+            raise DispatchError("dispatch did not return the task id and run nonce")
+        nonce = lines[1].strip()
+        return nonce
 
     def _existing_record(self, task_id: str) -> dict[str, Any] | None:
         """The task record, or None when delegate reports that none exists.
@@ -395,66 +449,38 @@ class DelegateDispatcher:
             proc = self._run("status", task_id)
         except DispatchError as exc:
             raise DispatchError(f"preflight {task_id} refused: {exc} Nothing was archived.") from exc
-        text = proc.stdout.strip()
+        if proc.returncode != 0 and proc.stderr.strip() == "dispatcher: task not found":
+            return None
         try:
-            state = json.loads(text) if text else None
+            state = json.loads(proc.stdout)
         except ValueError as exc:
-            raise DispatchError(
-                f"preflight {task_id} refused: delegate status output is unreadable ({exc}). Nothing was archived."
-            ) from exc
-        if not isinstance(state, dict):
-            raise DispatchError(
-                f"preflight {task_id} refused: delegate status output is unreadable. Nothing was archived."
-            )
-        if proc.returncode != 0:
-            error = state.get("error")
-            if isinstance(error, str) and "no state file" in error:
-                return None
-            detail = error if isinstance(error, str) else text[-400:]
-            raise DispatchError(
-                f"preflight {task_id} refused: delegate status is unreadable ({detail}). Nothing was archived."
-            )
+            raise DispatchError("preflight refused: status output is unreadable. Nothing was archived.") from exc
+        if not isinstance(state, dict) or proc.returncode != 0:
+            raise DispatchError("preflight refused: status output is unreadable. Nothing was archived.")
         return state
 
     def preflight(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> None:
-        """Validate the dispatch with ``--dry-run``.
-
-        A dry run leaves a terminal ``dry_run`` record, and that record does not
-        store ``dispatch_args_sha256`` (delegate returns before the hash is
-        written). ``--force-new`` is passed only when ``status`` shows that record
-        exists, is a terminal ``dry_run``, and was written by this caller, so a
-        repeated dry run can replace it. Delegate excludes ``--force-new`` from the
-        argument hash and would otherwise archive any terminal record this caller
-        owns, including a real ``done``. When no record exists, the dry run omits
-        ``--force-new``. Any other state (a real ``done``, ``running``, another
-        owner, or unreadable status) refuses this preflight before dispatch, so
-        nothing is archived. A real dispatch omits ``--force-new`` and still
-        refuses to reuse an existing task id.
-        """
+        """V2 dry-run creates nothing and never archives an existing record."""
         record = self._existing_record(task_id)
-        args = [*self._dispatch_args(task_id, seat, kind, prompt_path), "--dry-run"]
         if record is not None:
-            status = record.get("status")
-            initiator = record.get("initiator")
-            caller = caller_initiator()
-            owned_dry_run = status == "dry_run" and initiator not in (None, "unknown") and initiator == caller
-            if not owned_dry_run:
-                raise DispatchError(
-                    f"preflight {task_id} refused: record status {status!r} initiator {initiator!r} "
-                    f"is not this caller's ({caller!r}) terminal dry_run. Nothing was archived."
-                )
-            args.append("--force-new")
-        proc = self._run(*args, timeout=SPAWN_TIMEOUT)
+            raise DispatchError(
+                f"preflight {task_id} refused: record status {record.get('status')!r} "
+                f"initiator {record.get('initiator')!r} already exists. Nothing was archived."
+            )
+        proc = self._run(*self._dispatch_args(task_id, seat, kind, prompt_path), "--dry-run", timeout=SPAWN_TIMEOUT)
         if proc.returncode != 0:
-            raise DispatchError(f"delegate dry-run {task_id} exited {proc.returncode}: {proc.stderr.strip()[-800:]}")
+            raise DispatchError(f"dispatcher dry-run {task_id} exited {proc.returncode}: {proc.stderr.strip()[-800:]}")
 
-    def _status(self, task_id: str) -> dict[str, Any]:
-        proc = self._run("status", task_id)
+    def _status(self, task_id: str, run_nonce: str | None = None) -> dict[str, Any]:
+        args = ["status", task_id]
+        if run_nonce:
+            args += ["--run-nonce", run_nonce]
+        proc = self._run(*args)
         try:
             state = json.loads(proc.stdout)
         except ValueError as exc:
             raise DispatchError(f"delegate status {task_id}: unreadable output ({exc})") from exc
-        if proc.returncode != 0 or not isinstance(state, dict) or "error" in state:
+        if proc.returncode != 0 or not isinstance(state, dict) or state.get("error"):
             raise DispatchError(f"delegate status {task_id}: {proc.stdout.strip()[-400:]}")
         return state
 
@@ -464,16 +490,32 @@ class DelegateDispatcher:
             args += ["--run-nonce", run_nonce]
         # The exit code reflects the task status; the record read below is authoritative.
         self._run(*args, timeout=self.wait_timeout + CONTROL_TIMEOUT)
-        state = self._status(task_id)
+        state = self._status(task_id, run_nonce)
+        if run_nonce and state.get("run_nonce") != run_nonce:
+            raise DispatchError("task returned a stale run nonce")
+        if state.get("schema_version") == 2 and (not run_nonce or state.get("task_id") != task_id):
+            raise DispatchError("v2 task is missing expected task identity or nonce")
         status = str(state.get("status") or "unknown")
         if status not in TERMINAL_STATUSES:
             raise DispatchError(f"task {task_id} is still {status!r} after wait")
         response, digest = None, state.get("result_sha256")
         result_file = state.get("result_file")
         if result_file and Path(result_file).is_file():
-            response = Path(result_file).read_text(encoding="utf-8")
-            if digest and sha256_text(response) != digest:
+            result_bytes = Path(result_file).read_bytes()
+            response = result_bytes.decode("utf-8")
+            if digest and sha256_bytes(result_bytes) != digest:
                 raise DispatchError(f"task {task_id}: result file does not match its recorded digest")
+        conditions = {key: state.get(key) for key in CONDITION_FIELDS}
+        if status == "done" and (not response or not response.strip()):
+            raise DispatchError("task has no nonempty result")
+        if state.get("schema_version") == 2:
+            if status == "done" and not digest:
+                raise DispatchError("v2 task has no digest-bound result")
+            if state.get("prompt_file"):
+                try:
+                    conditions["stored_prompt_sha256"] = sha256_bytes(Path(state["prompt_file"]).read_bytes())
+                except OSError as exc:
+                    raise DispatchError("cannot read stored v2 prompt bytes") from exc
         detail = {key: state.get(key) for key in ("duration_s", "returncode", "last_error")}
         return TaskOutcome(
             task_id=task_id,
@@ -486,15 +528,5 @@ class DelegateDispatcher:
             run_nonce=state.get("run_nonce"),
             prompt_sha256=state.get("prompt_sha256"),
             detail=detail,
-            conditions={key: state.get(key) for key in CONDITION_FIELDS},
+            conditions=conditions,
         )
-
-
-def _delegate_module(delegate_path: Path) -> Any:
-    """Import the delegate lazily on the ``sys.path`` it needs (as ``scripts/review/seeds/adjudicate.py`` does)."""
-    scripts_dir = str(delegate_path.resolve().parent)
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from scripts import delegate
-
-    return delegate

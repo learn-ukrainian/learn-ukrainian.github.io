@@ -55,7 +55,16 @@ from .common import (
     write_private_text,
 )
 from .dataset import EvalSet, Variant, protocol_shortfalls
-from .dispatch import PAIRED_FIELDS, Dispatcher, DispatchError, TaskOutcome, condition_problems, frame
+from .dispatch import (
+    PAIRED_FIELDS,
+    DelegateDispatcher,
+    Dispatcher,
+    DispatchError,
+    TaskOutcome,
+    condition_problems,
+    frame,
+    workspace_fingerprint,
+)
 from .prompts import (
     build_prompt,
     review_gate_marker_sha256,
@@ -563,6 +572,9 @@ class Executor:
     def _expected(self, task: TaskSpec) -> dict[str, Any]:
         """Delegate's composition of the task's prompt; refused when it departs from the frozen frame."""
         expected = self.dispatcher.compose(task.prompt)
+        if expected.get("schema_version") == 2:
+            path = str(Path(expected["dispatch_root"]) / task.seat.agent / task.task_id)
+            expected.update(cwd=path, worktree_path=path)
         if self.frame is not None and frame(expected) != self.frame:
             fields = ", ".join(sorted(key for key in self.frame if self.frame[key] != expected.get(key)))
             raise DispatchError(f"delegate would frame the prompt differently from the frozen plan ({fields})")
@@ -575,7 +587,14 @@ class Executor:
         workspace: dict[str, Any] | None,
         expected: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        workspace_after = self.workspace()
+        if outcome.conditions.get("schema_version") != 2 and isinstance(self.dispatcher, DelegateDispatcher):
+            expected, args_hash = self.dispatcher.legacy_inputs(
+                task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id), task.prompt
+            )
+        else:
+            args_hash = self.dispatcher.expected_args_sha256(
+                task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id)
+            )
         problems = []
         if expected is None:  # no pending marker: recompute (the task is refused below anyway)
             try:
@@ -586,10 +605,15 @@ class Executor:
             problems += condition_problems(
                 outcome.conditions,
                 expected=expected,
-                args_sha256=self.dispatcher.expected_args_sha256(
-                    task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id)
-                ),
+                args_sha256=args_hash,
             )
+        workspace_after = (
+            workspace_fingerprint(Path(expected["cwd"]))
+            if expected and expected.get("schema_version") == 2
+            else self.workspace()
+        )
+        if expected and expected.get("schema_version") == 2 and workspace_after["head"] != expected["worker_head"]:
+            problems.append("worker commit differs from the pinned frame")
         if workspace is None:
             problems.append("worker checkout at dispatch is unknown (no pending marker)")
         elif workspace != workspace_after:
@@ -658,6 +682,8 @@ class Executor:
                 nonce = self.dispatcher.dispatch(
                     task.task_id, task.seat, task.kind, path, force_new=existing is not None
                 )
+                if expected.get("schema_version") == 2:
+                    workspace = workspace_fingerprint(Path(expected["cwd"]))
                 write_private_json(
                     pending,
                     {
@@ -738,7 +764,12 @@ def pair_problem(
     results: ResultsDir, plan: dict[str, Any], label: str, base: dict[str, Any], cand: dict[str, Any]
 ) -> str | None:
     """Why two accepted arms of one cell differ in anything but the preamble (None when they do not)."""
-    differing = [f for f in PAIRED_FIELDS if base["conditions"].get(f) != cand["conditions"].get(f)]
+    per_task = (
+        {"cwd", "worktree_path"} if all(raw["conditions"].get("schema_version") == 2 for raw in (base, cand)) else set()
+    )
+    differing = [
+        f for f in PAIRED_FIELDS if f not in per_task and base["conditions"].get(f) != cand["conditions"].get(f)
+    ]
     for key in ("agent", "model"):
         if base.get(key) != cand.get(key):
             differing.append(key)
