@@ -28,7 +28,7 @@ import threading
 import time
 from collections.abc import Callable, Iterable, Sequence
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -55,7 +55,16 @@ from .common import (
     write_private_text,
 )
 from .dataset import EvalSet, Variant, protocol_shortfalls
-from .dispatch import PAIRED_FIELDS, Dispatcher, DispatchError, TaskOutcome, condition_problems, frame
+from .dispatch import (
+    PAIRED_FIELDS,
+    DelegateDispatcher,
+    Dispatcher,
+    DispatchError,
+    TaskOutcome,
+    condition_problems,
+    frame,
+    workspace_fingerprint,
+)
 from .prompts import (
     build_prompt,
     review_gate_marker_sha256,
@@ -504,7 +513,22 @@ def _pending_path(results: ResultsDir, task_id: str) -> Path:
 
 def load_raw(results: ResultsDir, task_id: str) -> dict[str, Any] | None:
     path = raw_path(results, task_id)
-    return read_json(path) if path.is_file() else None
+    raw = read_json(path) if path.is_file() else None
+    if raw and raw.get("conditions", {}).get("schema_version") == 2:
+        latest, _ = _latest_attempt(results, task_id)
+        path = raw_path(results, latest)
+        return read_json(path) if path.is_file() else None
+    return raw
+
+
+def _latest_attempt(results: ResultsDir, task_id: str) -> tuple[str, int]:
+    """Locate the last consecutive retry, retaining each attempt's evidence and pending marker."""
+    latest, attempt = task_id, 0
+    while True:
+        candidate = f"{task_id}-attempt-{attempt + 1}"
+        if not raw_path(results, candidate).is_file() and not _pending_path(results, candidate).is_file():
+            return latest, attempt
+        latest, attempt = candidate, attempt + 1
 
 
 @dataclass
@@ -563,6 +587,9 @@ class Executor:
     def _expected(self, task: TaskSpec) -> dict[str, Any]:
         """Delegate's composition of the task's prompt; refused when it departs from the frozen frame."""
         expected = self.dispatcher.compose(task.prompt)
+        if expected.get("schema_version") == 2:
+            path = str(Path(expected["dispatch_root"]) / task.seat.agent / task.task_id)
+            expected.update(cwd=path, worktree_path=path)
         if self.frame is not None and frame(expected) != self.frame:
             fields = ", ".join(sorted(key for key in self.frame if self.frame[key] != expected.get(key)))
             raise DispatchError(f"delegate would frame the prompt differently from the frozen plan ({fields})")
@@ -575,7 +602,14 @@ class Executor:
         workspace: dict[str, Any] | None,
         expected: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        workspace_after = self.workspace()
+        if outcome.conditions.get("schema_version") != 2 and isinstance(self.dispatcher, DelegateDispatcher):
+            expected, args_hash = self.dispatcher.legacy_inputs(
+                task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id), task.prompt
+            )
+        else:
+            args_hash = self.dispatcher.expected_args_sha256(
+                task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id)
+            )
         problems = []
         if expected is None:  # no pending marker: recompute (the task is refused below anyway)
             try:
@@ -586,10 +620,15 @@ class Executor:
             problems += condition_problems(
                 outcome.conditions,
                 expected=expected,
-                args_sha256=self.dispatcher.expected_args_sha256(
-                    task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id)
-                ),
+                args_sha256=args_hash,
             )
+        workspace_after = (
+            workspace_fingerprint(Path(expected["cwd"]))
+            if expected and expected.get("schema_version") == 2
+            else self.workspace()
+        )
+        if expected and expected.get("schema_version") == 2 and workspace_after["head"] != expected["worker_head"]:
+            problems.append("worker commit differs from the pinned frame")
         if workspace is None:
             problems.append("worker checkout at dispatch is unknown (no pending marker)")
         elif workspace != workspace_after:
@@ -626,6 +665,11 @@ class Executor:
         return raw
 
     def _execute(self, task: TaskSpec, summary: RunSummary) -> None:
+        base_id, attempt = task.task_id, 0
+        v2 = isinstance(self.dispatcher, DelegateDispatcher) and not self.dispatcher.legacy_resume
+        if v2:
+            latest, attempt = _latest_attempt(self.results, base_id)
+            task = replace(task, task_id=latest)
         existing = load_raw(self.results, task.task_id)
         if existing is not None and existing.get("prompt_sha256") != task.prompt_sha256:
             raise HarnessError(f"{task.task_id}: stored prompt hash differs from the re-planned prompt")
@@ -636,6 +680,9 @@ class Executor:
                 else:
                     summary.failed.append(task.task_id)
             return
+        if v2 and existing is not None:
+            task = replace(task, task_id=f"{base_id}-attempt-{attempt + 1}")
+            existing = None
         pending = _pending_path(self.results, task.task_id)
         nonce: str | None = None
         workspace: dict[str, Any] | None = None
@@ -658,6 +705,8 @@ class Executor:
                 nonce = self.dispatcher.dispatch(
                     task.task_id, task.seat, task.kind, path, force_new=existing is not None
                 )
+                if expected.get("schema_version") == 2:
+                    workspace = workspace_fingerprint(Path(expected["cwd"]))
                 write_private_json(
                     pending,
                     {
@@ -738,7 +787,12 @@ def pair_problem(
     results: ResultsDir, plan: dict[str, Any], label: str, base: dict[str, Any], cand: dict[str, Any]
 ) -> str | None:
     """Why two accepted arms of one cell differ in anything but the preamble (None when they do not)."""
-    differing = [f for f in PAIRED_FIELDS if base["conditions"].get(f) != cand["conditions"].get(f)]
+    per_task = (
+        {"cwd", "worktree_path"} if all(raw["conditions"].get("schema_version") == 2 for raw in (base, cand)) else set()
+    )
+    differing = [
+        f for f in PAIRED_FIELDS if f not in per_task and base["conditions"].get(f) != cand["conditions"].get(f)
+    ]
     for key in ("agent", "model"):
         if base.get(key) != cand.get(key):
             differing.append(key)

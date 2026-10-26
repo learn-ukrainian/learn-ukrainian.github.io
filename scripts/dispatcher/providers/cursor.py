@@ -15,6 +15,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     parts, result, error = [""], {}, None
+    models = set()
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -26,7 +27,11 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         if not isinstance(event, dict):
             error = "cursor: invalid event"
             continue
-        if event.get("type") == "result":
+        if event.get("type") == "system" and event.get("subtype") == "init":
+            model = event.get("model")
+            if isinstance(model, str) and model.strip():
+                models.add(model)
+        elif event.get("type") == "result":
             result = event
             if event.get("is_error") or event.get("subtype") != "success":
                 error = "cursor: terminal result unsuccessful"
@@ -52,4 +57,9 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
     usage = usage if isinstance(usage, dict) else None
     if returncode:
         error = f"cursor: exited with status {returncode}"
-    return ParsedResult(text, usage, error or (None if result and text else "cursor: missing result"))
+    return ParsedResult(
+        text,
+        usage,
+        error or (None if result and text else "cursor: missing result"),
+        next(iter(models)) if len(models) == 1 else None,
+    )

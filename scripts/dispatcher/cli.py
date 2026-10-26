@@ -8,6 +8,7 @@ import sys
 import uuid
 from pathlib import Path
 
+from scripts.common.git_context import validate_plain_branch_name
 from scripts.dispatcher import checks, git, providers, store, worker
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
@@ -36,7 +37,19 @@ def build_parser() -> argparse.ArgumentParser:
         "Related: docs/design/dispatch-v2.md (C-2188).",
     )
     subs = parser.add_subparsers(dest="command", required=True)
-    dispatch = subs.add_parser("dispatch", help="Start a detached task; print task ID and nonce")
+    dispatch = subs.add_parser(
+        "dispatch",
+        help="Start a detached task; print task ID and nonce",
+        description="Start a detached provider task.\nUse --dry-run to inspect its command without creating task files.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 "
+        "--prompt 'Explain X' --contributor-mode on --dry-run\n"
+        "Outputs: task ID and nonce; task JSON, prompt, result, logs and dispatch worktree.\n"
+        "  Muse task JSON records the effective contributor_mode. --dry-run prints a plan and creates nothing.\n"
+        "Exit codes: 0 task started or plan printed, 2 invalid/refused request.\n"
+        "Related: docs/design/dispatch-v2.md.",
+    )
     for flag, default, help_text in (
         ("agent", None, "Provider or alias, e.g. sol (required)"),
         ("model", None, "Exact provider model, e.g. gpt-6.1-sol (required)"),
@@ -64,13 +77,28 @@ def build_parser() -> argparse.ArgumentParser:
     ):
         dispatch.add_argument(f"--{flag}", default=default, required=flag in {"agent", "model"}, help=help_text)
     dispatch.add_argument(
+        "--contributor-mode",
+        choices=("on", "off"),
+        help="Muse contributor mode, on or off; Muse only (default: omitted, provider default off)",
+    )
+    dispatch.add_argument(
         "--mode",
         choices=("read-only", "workspace-write"),
         default="read-only",
         help="Mode (default: read-only)",
     )
     dispatch.add_argument("--worktree", nargs="?", const="", help="Dispatch path (default: automatic)")
+    dispatch.add_argument("--pr", type=int, help="Reviewed PR number, e.g. 42 (default: none; use --branch for identity)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
+    dispatch.add_argument(
+        "--full-checkout", action="store_true",
+        help="Materialize the full Git working tree instead of excluding heavy trees (default: off)",
+    )
+    dispatch.add_argument(
+        "--sparse-include", action="append", default=[], metavar="DIR",
+        help="Keep a default-excluded tree; repeatable (default: none). Example: --sparse-include curriculum. "
+        "Excluded: " + ", ".join(sorted(git.SPARSE_EXCLUDE_DEFAULT)),
+    )
     dispatch.add_argument(
         "--hard-timeout", type=float, default=7200, help="Deadline seconds; 0 disables (default: 7200)"
     )
@@ -91,6 +119,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _dispatch(args) -> int:
+    git.sparse_excludes(args.sparse_include)
     if (args.prompt is None) == (args.prompt_file is None):
         raise ValueError("provide exactly one of --prompt or --prompt-file")
     source = args.prompt if args.prompt is not None else args.prompt_file
@@ -103,6 +132,8 @@ def _dispatch(args) -> int:
     agent = ALIASES.get(args.agent, args.agent)
     if agent not in providers.PROVIDERS or args.claude_account not in {None, "a", "b"}:
         raise ValueError("unknown agent or Claude account")
+    if args.contributor_mode is not None and agent != "muse":
+        raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     task_id = args.task_id or uuid.uuid4().hex
@@ -110,6 +141,8 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
+    if args.mode == "read-only" and args.branch is not None:
+        args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
     )
@@ -136,8 +169,10 @@ def _dispatch(args) -> int:
         print(json.dumps(dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path)), indent=2))
         return 0
     if not args.cwd:
-        git.create_worktree(repo, worktree, branch, sha)
+        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
     record = store.new_record(spec, info, branch, sha, vars(args))
+    if agent == "muse":
+        record["contributor_mode"] = spec.options.get("contributor_mode", "off")
     worker.start(spec, record, prompt, args.hard_timeout)
     print(task_id, record["run_nonce"], sep="\n")
     return 0

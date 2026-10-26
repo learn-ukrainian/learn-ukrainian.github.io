@@ -8,6 +8,7 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
+from scripts.common.git_context import validate_plain_branch_name
 from scripts.common.task_store_paths import tasks_dir
 
 try:
@@ -39,6 +40,9 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     record.update(
         worktree_branch=branch, worktree_path=str(spec.worktree), cwd=str(spec.worktree), worktree_base_sha=sha
     )
+    if spec.mode == "read-only" and metadata.get("branch") is not None:
+        record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
+        record["pinned_head"] = metadata.get("pinned_head") or sha
     record.update(prompt_file=str(spec.prompt_file), prompt_sha256=digest(spec.prompt_file.read_bytes()))
     record.update(
         result_file=str(spec.final_file), push_state="unknown", research_owned_paths=metadata["research_owned_path"]

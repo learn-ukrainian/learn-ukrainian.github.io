@@ -100,7 +100,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     if provider == "codex":
         if effort:
             expected += ["-c", "model_reasoning_effort=high"]
-        expected += ["-s", mode]
+        expected += ["-s", "read-only"] if mode == "read-only" else ["--dangerously-bypass-approvals-and-sandbox"]
     elif provider == "claude":
         if effort:
             expected += ["--effort", "high"]
@@ -168,6 +168,18 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         env["CLAUDE_CONFIG_DIR"] = str(tmp_path / "selected-account-b")
         invocation = load(provider).build(replace(spec, claude_account="b"), env)
         assert invocation.env["CLAUDE_CONFIG_DIR"] == env["CLAUDE_CONFIG_DIR"]
+
+
+@pytest.mark.parametrize("mode", ["danger", "", "WORKSPACE-WRITE", None, False, 0])
+def test_unknown_codex_mode_never_receives_sandbox_bypass(tmp_path, mode):
+    prompt = tmp_path / "prompt.txt"
+    prompt.write_text("private prompt must not be echoed")
+    spec = TaskSpec("unknown-mode", "codex", "explicit-model", None, mode, tmp_path, prompt, tmp_path / "final.txt")
+    invocation = None
+    with pytest.raises(ValueError) as exc:
+        invocation = load("codex").build(spec, {"PRIVATE_ENV": "must not be echoed"})
+    assert str(exc.value) == f"codex: unsupported mode {mode!r}"
+    assert invocation is None
 
 
 @pytest.mark.parametrize("provider", SUCCESS)

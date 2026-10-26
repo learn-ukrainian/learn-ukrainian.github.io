@@ -12,6 +12,13 @@ from scripts.dispatcher.types import TaskSpec
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
 
 
+def _handle_private_input(spec: TaskSpec, message: str) -> None:
+    if spec.agent == "muse":
+        spec.options["contributor_mode"] = "off"
+    else:
+        raise ValueError(message)
+
+
 def check_private_input(spec: TaskSpec, repo_key: str) -> None:
     if spec.agent not in {"muse", "opencode", "hermes"}:
         return
@@ -21,16 +28,16 @@ def check_private_input(spec: TaskSpec, repo_key: str) -> None:
     }
     roots = [git.resolve_repo(key)[0] for key in private]
     if git.resolve_repo(repo_key)[0] in roots:
-        raise ValueError("private input is not permitted for this agent")
+        return _handle_private_input(spec, "private input is not permitted for this agent")
     origin = spec.options.get("prompt_file")
     if origin and origin != "-" and any(Path(origin).resolve().is_relative_to(root) for root in roots):
-        raise ValueError("private prompt file is not permitted for this agent")
+        return _handle_private_input(spec, "private prompt file is not permitted for this agent")
     # The content contract is lexical: decode once, then compare without changing provider input.
     text = unquote(spec.prompt_file.read_text()).casefold()
     identifiers = [str(root) for root in roots]
     identifiers.extend(item.get(field, "") for item in private.values() for field in ("local_name", "github"))
     if any(identifier.casefold() in text for identifier in identifiers if identifier):
-        raise ValueError("private path input is not permitted for this agent")
+        _handle_private_input(spec, "private path input is not permitted for this agent")
 
 
 def check_review_family(author_model: str | None, reviewer_model: str) -> None:
