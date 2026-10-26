@@ -274,7 +274,7 @@ def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypa
 
     monkeypatch.setattr(full, "catalog", lambda: CATALOG)
     head = "a" * 40
-    run = {"id": 91, "workflow_id": 7, "path": ".github/workflows/ci.yml", "name": "CI",
+    run = {"id": 91, "workflow_id": 7, "path": ".github/workflows/ci.yml", "name": "Approved PR #1 head " + head,
            "event": "workflow_dispatch", "head_sha": head, "repository": {"full_name": "unit/public"},
            "display_title": "Approved PR #1 head " + head, "status": "completed", "conclusion": "success",
            "check_suite_id": 81}
@@ -350,8 +350,17 @@ def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypa
     if fault in {"none", "rerun"}:
         assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}) == head
     else:
-        with pytest.raises(PublishBlocked, match=r"approved-head full CI|reviewed head changed"):
+        state = {"absent": "absent", "queued": "pending", "failed": "failed", "cancelled": "failed"}.get(fault, "unknown")
+        reason = "reviewed head changed" if fault == "moved" else "approved-head full CI " + state
+        with pytest.raises(PublishBlocked, match=reason):
             ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    if fault == "title":
+        # A matching display title cannot authenticate a malformed or forged run name.
+        run["display_title"] = full.title(1, head)
+        for name in ("CI", "Approved PR #2 head " + head, "", None):
+            run["name"] = name
+            with pytest.raises(PublishBlocked, match="approved-head full CI unknown"):
+                ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
     # The same admission-only response in unrelated repositories retains its old contract.
     views = 0
     assert ensure_merge_ready("unit/other", 1, runner=runner, cwd=".", environment={}) == head

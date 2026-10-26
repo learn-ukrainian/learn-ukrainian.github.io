@@ -55,8 +55,10 @@ def _inspect(repo: str, number: int, head: str, get_json) -> Proof:
     for run in page['workflow_runs']:
         if not isinstance(run, dict):
             return Proof('unknown')
+        # GitHub's run-name supplies both fields; workflow metadata keeps 'CI'.
         if (run.get('head_sha') != head or run.get('workflow_id') != workflow['id']
-                or run.get('path') != '.github/workflows/ci.yml' or run.get('name') != 'CI'
+                or run.get('path') != '.github/workflows/ci.yml'
+                or not isinstance(run.get('name'), str) or run['name'] != run.get('display_title')
                 or run.get('event') != 'workflow_dispatch'
                 or not isinstance(run.get('repository'), dict) or run['repository'].get('full_name', '').lower() != repo):
             return Proof('unknown')

@@ -662,7 +662,7 @@ def test_keeper_full_ci_reads_latest_checks_from_matched_suite(tmp_path, monkeyp
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
     calls = []
     run_row = {"id": 91, "check_suite_id": 81, "run_attempt": 2, "workflow_id": 7,
-               "path": ".github/workflows/ci.yml", "name": "CI", "event": "workflow_dispatch",
+               "path": ".github/workflows/ci.yml", "name": f"Approved PR #42 head {HEAD_A}", "event": "workflow_dispatch",
                "head_sha": HEAD_A, "repository": {"full_name": "unit/public"},
                "display_title": full.title(42, HEAD_A), "status": "completed", "conclusion": "success"}
 
