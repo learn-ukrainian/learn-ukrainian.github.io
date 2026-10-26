@@ -89,6 +89,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument("--worktree", nargs="?", const="", help="Dispatch path (default: automatic)")
     dispatch.add_argument("--pr", type=int, help="Reviewed PR number, e.g. 42 (default: none; use --branch for identity)")
+    for flag in ("subject-seat", "subject-family"):
+        dispatch.add_argument(f"--{flag}", action="append", default=[],
+                              help="Excluded review subject, e.g. grok or xai (repeatable; default: none)")
+    dispatch.add_argument("--require-review-verdict", action="store_true", default=None,
+                          help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument(
         "--full-checkout", action="store_true",
@@ -119,6 +124,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _dispatch(args) -> int:
+    if args.require_review_verdict and args.mode != "read-only":
+        raise ValueError("--require-review-verdict requires --mode read-only")
     git.sparse_excludes(args.sparse_include)
     if (args.prompt is None) == (args.prompt_file is None):
         raise ValueError("provide exactly one of --prompt or --prompt-file")
@@ -163,6 +170,16 @@ def _dispatch(args) -> int:
     )
     checks.check_private_input(spec, info["key"])
     checks.check_review_family(args.review_author_model, args.model)
+    if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
+        exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
+                                                args.owned_path, review=any((args.review_profile, args.language_lane,
+                                                args.review_author_model, args.risk, args.review_mode, args.pr,
+                                                args.require_review_verdict, args.subject_seat, args.subject_family)))
+        args.subject_seat, args.subject_family = sorted(exclusion.seats), sorted(exclusion.families)
+        if (exclusion.seats or exclusion.families) and (
+            (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
+        ):
+            raise ValueError("protected subject scope needs a code-profile review without --language-lane")
     checks.check_resources((worktree, path.parent))
     if args.dry_run:
         invocation = providers.load(agent).build(spec, child_env(spec))
