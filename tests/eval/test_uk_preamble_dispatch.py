@@ -33,6 +33,7 @@ from scripts.eval.uk_preamble.runner import (
     Executor,
     TaskSpec,
     composition_frame,
+    load_raw,
     prompt_path,
     raw_path,
     render,
@@ -475,6 +476,83 @@ class SimulatedDelegate(DelegateDispatcher):
         with redirect_stdout(out), redirect_stderr(err):
             code = cli.main(list(args))
         return subprocess.CompletedProcess(args, code, out.getvalue(), err.getvalue())
+
+
+@pytest.mark.parametrize("status", ["failed", "timeout", "crashed", "cancelled"])
+def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fresh_id(
+    linked_worktree, outside_dir, monkeypatch, status
+):
+    from scripts.dispatcher import git, store, worker
+
+    tasks_dir = outside_dir / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
+    monkeypatch.setattr(
+        git, "resolve_repo", lambda key: (linked_worktree.parents[3], {"key": "public", "github": "example/public"})
+    )
+    started = []
+
+    def finish(spec, record, prompt, hard_timeout):
+        store.create(record, prompt)
+        started.append(spec.task_id)
+        if len(started) <= 2:
+            record.update(status=status, error="provider failure evidence")
+        else:
+            spec.final_file.write_text('{"items": []}')
+            record.update(status="done", result_sha256=sha256_text('{"items": []}'))
+        store.replace(record)
+
+    monkeypatch.setattr(worker, "start", finish)
+    dispatcher = SimulatedDelegate(linked_worktree)
+    task = TaskSpec("retry-seat", SEATS["gpt-6.1-sol"], "review", "none", 1, ("W1",), PROMPT)
+    results = ResultsDir(outside_dir / "results")
+    executor = Executor(
+        dispatcher, results, worker_cwd=linked_worktree, workspace=workspace_probe(linked_worktree), spawn_interval=0
+    )
+    first = executor.run([task])
+    raw = load_raw(results, task.task_id)
+    assert first.failed == [task.task_id] and first.not_run == []
+    assert raw["status"] == status and raw["accepted"] is False
+    assert raw["detail"]["error"] == "provider failure evidence"
+    original = (tasks_dir / f"{task.task_id}.json").read_bytes()
+    original_raw = raw_path(results, task.task_id).read_bytes()
+    assert executor.run([task]).failed == [task.task_id]
+    executor.retry_failed = True
+    second = executor.run([task])
+    assert second.failed == ["retry-seat-attempt-1"] and second.not_run == []
+    previous = (tasks_dir / "retry-seat-attempt-1.json").read_bytes()
+    wait = dispatcher.wait
+
+    def interrupted_wait(*args):
+        raise DispatchError("collection interrupted")
+
+    monkeypatch.setattr(dispatcher, "wait", interrupted_wait)
+    assert executor.run([task]).not_run == ["retry-seat-attempt-2"]
+    monkeypatch.setattr(dispatcher, "wait", wait)
+    third = executor.run([task])
+    assert third.accepted == 1 and third.complete
+    assert started == ["retry-seat", "retry-seat-attempt-1", "retry-seat-attempt-2"]
+    accepted = load_raw(results, task.task_id)
+    assert accepted["task_id"] == "retry-seat-attempt-2" and accepted["accepted"] is True
+    assert accepted["identity_problem"] is None and accepted["condition_problem"] is None
+    assert len({read_json(tasks_dir / f"{tid}.json")["run_nonce"] for tid in started}) == 3
+    assert (tasks_dir / f"{task.task_id}.json").read_bytes() == original
+    assert raw_path(results, task.task_id).read_bytes() == original_raw
+    assert (tasks_dir / "retry-seat-attempt-1.json").read_bytes() == previous
+    assert executor.run([task]).skipped_accepted == 1
+
+
+@pytest.mark.parametrize(
+    "schema,status", [(None, "done"), (None, "failed"), (None, "running"), (2, "done"), (2, "running")]
+)
+def test_done_with_error_is_refused_and_legacy_error_behavior_is_unchanged(fake, schema, status):
+    dispatcher, prompt, state = fake
+    nonce = dispatcher.dispatch("error-seat", SEATS["gpt-6.1-sol"], "review", prompt, force_new=False)
+    path = state / "error-seat.json"
+    record = json.loads(path.read_text())
+    record.update(schema_version=schema, status=status, error="provider error")
+    path.write_text(json.dumps(record))
+    with pytest.raises(DispatchError, match="provider error"):
+        dispatcher.wait("error-seat", nonce)
 
 
 def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(

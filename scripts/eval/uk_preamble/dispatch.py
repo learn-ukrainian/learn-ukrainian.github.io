@@ -480,7 +480,12 @@ class DelegateDispatcher:
             state = json.loads(proc.stdout)
         except ValueError as exc:
             raise DispatchError(f"delegate status {task_id}: unreadable output ({exc})") from exc
-        if proc.returncode != 0 or not isinstance(state, dict) or state.get("error"):
+        failed_v2 = (
+            isinstance(state, dict)
+            and state.get("schema_version") == 2
+            and state.get("status") in {"failed", "timeout", "crashed", "cancelled"}
+        )
+        if proc.returncode != 0 or not isinstance(state, dict) or (state.get("error") and not failed_v2):
             raise DispatchError(f"delegate status {task_id}: {proc.stdout.strip()[-400:]}")
         return state
 
@@ -517,6 +522,8 @@ class DelegateDispatcher:
                 except OSError as exc:
                     raise DispatchError("cannot read stored v2 prompt bytes") from exc
         detail = {key: state.get(key) for key in ("duration_s", "returncode", "last_error")}
+        if state.get("schema_version") == 2:
+            detail["error"] = state.get("error")
         return TaskOutcome(
             task_id=task_id,
             status=status,

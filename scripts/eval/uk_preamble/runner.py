@@ -28,7 +28,7 @@ import threading
 import time
 from collections.abc import Callable, Iterable, Sequence
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -513,7 +513,22 @@ def _pending_path(results: ResultsDir, task_id: str) -> Path:
 
 def load_raw(results: ResultsDir, task_id: str) -> dict[str, Any] | None:
     path = raw_path(results, task_id)
-    return read_json(path) if path.is_file() else None
+    raw = read_json(path) if path.is_file() else None
+    if raw and raw.get("conditions", {}).get("schema_version") == 2:
+        latest, _ = _latest_attempt(results, task_id)
+        path = raw_path(results, latest)
+        return read_json(path) if path.is_file() else None
+    return raw
+
+
+def _latest_attempt(results: ResultsDir, task_id: str) -> tuple[str, int]:
+    """Locate the last consecutive retry, retaining each attempt's evidence and pending marker."""
+    latest, attempt = task_id, 0
+    while True:
+        candidate = f"{task_id}-attempt-{attempt + 1}"
+        if not raw_path(results, candidate).is_file() and not _pending_path(results, candidate).is_file():
+            return latest, attempt
+        latest, attempt = candidate, attempt + 1
 
 
 @dataclass
@@ -650,6 +665,11 @@ class Executor:
         return raw
 
     def _execute(self, task: TaskSpec, summary: RunSummary) -> None:
+        base_id, attempt = task.task_id, 0
+        v2 = isinstance(self.dispatcher, DelegateDispatcher) and not self.dispatcher.legacy_resume
+        if v2:
+            latest, attempt = _latest_attempt(self.results, base_id)
+            task = replace(task, task_id=latest)
         existing = load_raw(self.results, task.task_id)
         if existing is not None and existing.get("prompt_sha256") != task.prompt_sha256:
             raise HarnessError(f"{task.task_id}: stored prompt hash differs from the re-planned prompt")
@@ -660,6 +680,9 @@ class Executor:
                 else:
                     summary.failed.append(task.task_id)
             return
+        if v2 and existing is not None:
+            task = replace(task, task_id=f"{base_id}-attempt-{attempt + 1}")
+            existing = None
         pending = _pending_path(self.results, task.task_id)
         nonce: str | None = None
         workspace: dict[str, Any] | None = None
