@@ -197,7 +197,14 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redi
             "GIT_COMMON_DIR": sandbox.repo / ".git", "GIT_INDEX_FILE": sandbox.repo / ".git/index",
         }.items():
             monkeypatch.setenv(key, str(value))
-    git.create_worktree(sandbox.repo, path, "sol/redirects", sha)
+    with monkeypatch.context() as injected:
+        injected.setenv("GIT_CONFIG_PARAMETERS", "'core.sparseCheckout=false'")
+        injected.setenv("GIT_CONFIG_COUNT", "2")
+        injected.setenv("GIT_CONFIG_KEY_0", "core.worktree")
+        injected.setenv("GIT_CONFIG_VALUE_0", str(sandbox.repo))
+        injected.setenv("GIT_CONFIG_KEY_1", "core.hooksPath")
+        injected.setenv("GIT_CONFIG_VALUE_1", str(sandbox.repo / "missing-hooks"))
+        git.create_worktree(sandbox.repo, path, "sol/redirects", sha)
     if redirected:
         for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE"):
             monkeypatch.delenv(key)

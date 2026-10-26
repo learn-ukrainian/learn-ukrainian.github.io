@@ -19,12 +19,14 @@ GIT_REDIRECT_ENV_KEYS = (
 )
 
 
-def sanitized_git_env() -> dict[str, str]:
-    """Strip repository redirects and inline config injection from Git's environment.
+def sanitized_git_env(*, strip_config_injection: bool = False) -> dict[str, str]:
+    """Strip repository redirects, preserving runtime defensive config by default.
 
-    Preserve config-file selection for callers relying on user identity,
-    safe.directory or credential helpers in global/system configuration.
+    Worktree creation may opt in to stripping inline config injection.
+    Config-file selection is preserved in both modes.
     """
+    if not strip_config_injection:
+        return {key: value for key, value in os.environ.items() if key not in GIT_REDIRECT_ENV_KEYS}
     return {
         key: value
         for key, value in os.environ.items()
