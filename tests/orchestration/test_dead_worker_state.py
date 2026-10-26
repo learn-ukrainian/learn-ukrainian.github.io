@@ -9,8 +9,8 @@ import pytest
 from scripts.orchestration import dead_worker_state as d
 
 
-def _stat(pid, start):
-    return f"{pid} (worker (with spaces)) " + " ".join(["S"] + ["0"] * 18 + [str(start)])
+def _stat(pid, start, state="S"):
+    return f"{pid} (worker (with spaces)) " + " ".join([state] + ["0"] * 18 + [str(start)])
 
 
 @pytest.fixture
@@ -50,6 +50,31 @@ def test_unreadable_start_time_is_unknown(proc, bad_stat):
 def test_pid_reuse_is_dead(proc):
     (proc / "123" / "stat").write_text(_stat(123, 101))
     assert d.worker_liveness(_record()) is False
+
+
+@pytest.mark.parametrize("identity", [True, False])
+@pytest.mark.parametrize("state,alive", [("Z", False), ("S", True), ("R", True)])
+def test_zombie_supervisor_does_not_keep_a_clean_settled_tree(proc, identity, state, alive):
+    (proc / "123" / "stat").write_text(_stat(123, 100, state))
+    record = _record() if identity else {"pid": 123}
+    assert d.worker_liveness(record, pid_alive=lambda _pid: True) is alive
+
+
+@pytest.mark.parametrize("identity", [True, False])
+@pytest.mark.parametrize("entry", [PermissionError(), FileNotFoundError(), UnicodeError(), "broken"])
+def test_zombie_supervisor_unreadable_stat_fails_closed(proc, monkeypatch, identity, entry):
+    from pathlib import Path
+
+    read_text = Path.read_text
+    def read_stat(path, *args, **kwargs):
+        if path == proc / "123" / "stat":
+            if isinstance(entry, Exception):
+                raise entry
+            return entry
+        return read_text(path, *args, **kwargs)
+    monkeypatch.setattr(Path, "read_text", read_stat)
+    record = _record() if identity else {"pid": 123}
+    assert d.worker_liveness(record, pid_alive=lambda _pid: True) is (None if identity else True)
 
 
 @pytest.mark.parametrize("identity_case,gone", [("foreign", False), ("reused", True), ("alive", False), ("invalid", False)])

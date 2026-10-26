@@ -315,8 +315,6 @@ def test_every_event_runs_every_job(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
     skipped = {job for job, result in results.items() if result != "success"}
     expected = set() if event == "merge_group" else {"queue-metadata-scan"}
-    if event in {"opened", "synchronize", "reopened"}:
-        expected |= {"frontend", "refresh-pytest-durations", "pytest", "pytest-report"}
     assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
 
@@ -411,8 +409,6 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
         elif event == "workflow_dispatch":
             payload["ref"] = "refs/heads/main"
         jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
-        if event == "pull_request":
-            jobs.update({name: "skipped" for name in ("FRONTEND", "REFRESH", "PYTEST", "PYTEST_REPORT")})
         # Existing test bodies can corrupt the real entry-point event and candidate.
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
@@ -427,7 +423,7 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
         )
         if result.returncode == 0:
             summary = (Path(directory) / "summary").read_text()
-            assert ("full pytest was not run" in summary) == (event == "pull_request")
+            assert "Full supported pytest suite and partition audits are required." in summary
         return result
 
 
@@ -436,16 +432,17 @@ def test_gate_passes_a_green_pull_request_run() -> None:
     result = _run_gate("pull_request")
     assert result.returncode == 0, result.stdout
     assert "CI Gate green" in result.stdout
-    assert "full pytest was not run" in result.stdout
+    assert "Full supported pytest suite and partition audits are required." in result.stdout
 
 
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"PYTEST": "failure"}, {"PYTEST": "success"}, {"PYTEST_REPORT": "success"},
-        {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""}, {"FRONTEND": "success"},
-        {"DEPENDENCY_AUDIT": "failure"}, {"DEPENDENCY_AUDIT": "skipped"},
-        {"REFRESH": "success"}, {"METADATA_SCAN": "success"},
+        {"PYTEST": "failure"}, {"PYTEST": "skipped"}, {"PYTEST": "cancelled"},
+        {"PYTEST_REPORT": "skipped"}, {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""},
+        {"FRONTEND": "skipped"}, {"DEPENDENCY_AUDIT": "failure"},
+        {"DEPENDENCY_AUDIT": "skipped"}, {"REFRESH": "skipped"},
+        {"METADATA_SCAN": "success"}, {"NEEDS_JSON": "{}"},
     ],
 )
 def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]) -> None:
@@ -616,7 +613,7 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
         assert result.returncode == 1, result.stdout
     result = _run_gate('pull_request', PR_AFFECTED='success')
     assert result.returncode == 0
-    assert 'full pytest was not run' in result.stdout
+    assert 'Full supported pytest suite and partition audits are required.' in result.stdout
     # An absent dependency is distinct from a present dependency with no result.
     from scripts.ci.gate import COMMON
     assert 'pr-affected' in COMMON

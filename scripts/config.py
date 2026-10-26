@@ -40,7 +40,7 @@ DELEGATE_WORKTREE_ADD_STALL_S = 60.0
 DELEGATE_WORKTREE_ADD_MAX_S = 900.0
 
 # Dispatch admission (#8645 part A; scripts/orchestration/dispatch_admission.py).
-# `delegate.py dispatch` refuses a new write-capable worker (workspace-write,
+# Legacy dispatch admission refuses a new write-capable worker (workspace-write,
 # danger) when any check fails; read-only dispatches are exempt. An environment
 # variable with the same name overrides each default; `--force-admission
 # "<reason>"` overrides one dispatch and records the reason in its task record.

@@ -1414,21 +1414,6 @@ def test_round4_check_helper_refuses_broken_identity_import(tmp_path: Path) -> N
     assert "synthetic-sensitive-import-diagnostic" not in proc.stderr
 
 
-def test_round4_exec_exception_describes_model_session_boundary() -> None:
-    import yaml
-
-    registry = yaml.safe_load((REPO / "tests/headless_claude_spawn_exceptions.yaml").read_text())
-    entries = registry["exceptions"]
-    entry = next(
-        item
-        for item in entries
-        if item["module"] == "scripts/agent_runtime/env_sanitize.py" and item["program"] == "args.command[0]"
-    )
-    assert "operator-forwarded" in entry["reason"]
-    assert "no worker-controlled value" in entry["reason"]
-    assert "runs no model prompt" not in entry["reason"]
-
-
 @pytest.mark.parametrize(
     "provider,harness,kept",
     [

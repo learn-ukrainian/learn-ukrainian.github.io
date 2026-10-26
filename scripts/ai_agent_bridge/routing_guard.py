@@ -92,7 +92,7 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             f"{context}: {text!r} is the retired OpenRouter stealth ox-alpha pin "
             "(delisted 2026-08-26). z.ai GLM subscription is retired "
             "(operator 2026-09-03). Default Flash/code workhorse: "
-            "`delegate.py dispatch --agent cursor`. OpenRouter glm only with "
+            "`scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high`. OpenRouter glm only with "
             f"explicit operator ask + {_OVERRIDE_ENV}=1."
         )
     if _QWEN_RE.search(text):
@@ -123,7 +123,7 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             f"{context}: {text!r} routes GLM through OpenRouter. "
             "z.ai GLM subscription is retired (operator 2026-09-03); do not "
             "dispatch `--agent glm`. Default Flash/code workhorse: "
-            "`delegate.py dispatch --agent cursor`. OpenRouter glm only with "
+            "`scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high`. OpenRouter glm only with "
             f"explicit operator ask + {_OVERRIDE_ENV}=1."
         )
     if _DEEPSEEK_RETIRED_PREFIX_RE.match(text):

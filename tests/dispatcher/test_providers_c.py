@@ -10,7 +10,7 @@ from dataclasses import replace
 
 import pytest
 
-from scripts.dispatcher.providers import hermes, load, muse, opencode
+from scripts.dispatcher.providers import cursor, hermes, load, muse, opencode
 from scripts.dispatcher.types import TaskSpec
 
 MODELS = ("muse-spark-1.3", "muse-wonder-1.0", "muse-wonder-full-1.0")
@@ -71,7 +71,7 @@ def run_stub(invocation, spec):
 @pytest.mark.parametrize("model", MODELS)
 @pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
 @pytest.mark.parametrize("effort", (None, "high"))
-@pytest.mark.parametrize("contributor", (None, "on"))
+@pytest.mark.parametrize("contributor", (None, "on", "off"))
 def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
     options = {} if contributor is None else {"contributor_mode": contributor}
     spec = replace(spec, model=model, mode=mode, effort=effort, options=options)
@@ -125,6 +125,28 @@ def test_hermes_has_no_default_model(spec):
 
 def stream(*events):
     return "\n".join(json.dumps(event) for event in events)
+
+
+@pytest.mark.parametrize(
+    "models,expected",
+    [
+        ([], None),
+        ([None, "", "  ", 42, [], {}], None),
+        (["Grok 4.7 256K High"], "Grok 4.7 256K High"),
+        ([" Grok 4.7 256K High "], " Grok 4.7 256K High "),
+        (["Grok 4.7 256K High", None, "Grok 4.7 256K High"], "Grok 4.7 256K High"),
+        (["Grok 4.7 256K High", "different", "Grok 4.7 256K High"], None),
+    ],
+)
+def test_cursor_never_attests_a_model_the_init_events_did_not_report(models, expected):
+    events = [{"type": "system", "subtype": "init", "model": model} for model in models]
+    events += [
+        {"type": "system", "subtype": "other", "model": "forged"},
+        {"type": "assistant", "model": "forged", "content": "model: forged"},
+        {"type": "result", "subtype": "success", "model": "forged", "result": "model: forged"},
+    ]
+    parsed = cursor.parse(stream(*events), "model: forged", 0, "model: forged")
+    assert (parsed.text, parsed.error, parsed.resolved_model) == ("model: forged", None, expected)
 
 
 def muse_event(kind, **payload):

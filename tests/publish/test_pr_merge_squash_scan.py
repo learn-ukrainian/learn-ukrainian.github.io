@@ -24,14 +24,23 @@ def catalog(monkeypatch):
 def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=HEAD):
     """Answer readiness and squash-text reads; record only the merge write."""
 
+    queued = False
+
     def send(args, **kwargs):
+        nonlocal queued
         if args[:3] == ["gh", "pr", "view"]:
+            assert "isInMergeQueue" not in args[args.index("--json") + 1].split(",")
             return subprocess.CompletedProcess(
-                args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD}), ""
+                args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD, "state": "OPEN",
+                                    "baseRefName": "main", "isCrossRepository": False, "headRefName": "codex/fixture"}), ""
             )
         if args[:3] == ["gh", "pr", "checks"]:
             return subprocess.CompletedProcess(args, 0, "[]", "")
         if args[:5] == ["gh", "api", "--method", "POST", "graphql"]:
+            if "mergeQueueEntry" in Path(args[6]).read_text():
+                pull = {"number": 1, "state": "OPEN", "headRefOid": HEAD,
+                        "headRefName": "codex/fixture", "isInMergeQueue": queued}
+                return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
             assert "viewerMergeBodyText(mergeType:SQUASH)" in Path(args[6]).read_text()
             pull = {
                 "headRefOid": head,
@@ -41,6 +50,7 @@ def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=
             }
             return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
         assert args[:3] == ["gh", "pr", "merge"]
+        queued = True
         calls.append({"argv": args, "body": Path(args[args.index("--body-file") + 1]).read_text()})
         return subprocess.CompletedProcess(args, 0, "", "")
 

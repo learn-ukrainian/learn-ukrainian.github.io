@@ -142,6 +142,9 @@ class FakeGitHub:
         return self.file_rows
 
     def enqueue(self, number: int, head: str) -> None:
+        if self.row.get("isInMergeQueue") is True:
+            self.actions.append(("cleanup", (number, head)))
+            return
         self.actions.append(("enqueue", (number, head)))
 
     def membership(self, number: int) -> bool:
@@ -194,7 +197,7 @@ def run(
 
 
 def mutations(fake: FakeGitHub) -> list[str]:
-    return [kind for kind, _ in fake.actions if kind != "squash-read"]
+    return [kind for kind, _ in fake.actions if kind not in {"squash-read", "cleanup"}]
 
 
 def recorded(verdict: str, started: str, head: str = HEAD_A, *, review_mode: str = "cross_family") -> dict[str, Any]:
@@ -257,6 +260,7 @@ def test_queued_with_cf_at_head_is_kept(tmp_path: Path) -> None:
     lines, failed = keeper.run(fake, path, apply=True)
     assert not failed
     assert mutations(fake) == []
+    assert ("cleanup", (42, HEAD_A)) in fake.actions
     assert "reason=ready" in lines[0]
     assert not any("revoked" in line for line in lines)
     assert json.loads(path.read_text())["queued"]["42"] == HEAD_A
@@ -501,6 +505,7 @@ def test_queued_approval_then_unknown_marker_revokes(tmp_path: Path) -> None:
     path = tmp_path / "state.json"
     keeper.run(fake, path, apply=True)
     assert mutations(fake) == []
+    assert ("cleanup", (42, HEAD_A)) in fake.actions
     fake.comments_rows[0]["updated_at"] = "2026-09-23T13:00:01Z"
     keeper.run(fake, path, apply=True)
     assert ("dequeue", "PR_node_42") in fake.actions

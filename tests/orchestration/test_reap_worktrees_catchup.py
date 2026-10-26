@@ -235,15 +235,15 @@ def test_failed_tracked_activity_listing_is_unknown(repo: Path, monkeypatch: pyt
     assert rw._tree_mtime_sources(tree, repo / ".git") == ([], None, "tracked-file activity unavailable")
 
 
-def test_recent_terminal_time_keeps_tree_despite_old_record_mtime(repo: Path, free_fuser: Path) -> None:
+def test_recent_terminal_time_does_not_reintroduce_idle_gate(repo: Path, free_fuser: Path) -> None:
     tree = helpers.dispatch_tree(repo)
     record = helpers.write_task(repo, "task-a", tree, finished_at=datetime.now(UTC).isoformat())
     helpers.age([record])
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
     outcome = helpers.outcome_for(report, tree, repo)
-    assert outcome.action == "skipped"
-    assert outcome.reason == "last activity 0 min ago (< 60 min)"
-    assert tree.is_dir()
+    assert outcome.action == "removed"
+    assert outcome.reason == rw.CLEAN_PUSHED_REASON
+    assert not tree.exists()
 
 
 def test_inspection_index_rewrite_does_not_change_eligibility(repo: Path, free_fuser: Path) -> None:
@@ -261,7 +261,7 @@ def test_inspection_index_rewrite_does_not_change_eligibility(repo: Path, free_f
     assert helpers.outcome_for(after, tree, repo).action == "removed"
 
 
-def test_undoing_observed_staged_only_edit_is_recent_activity(repo: Path, free_fuser: Path) -> None:
+def test_undoing_observed_staged_only_edit_does_not_reintroduce_idle_gate(repo: Path, free_fuser: Path) -> None:
     tree = helpers.dispatch_tree(repo)
     # Stage an existing blob from another tracked path, without writing the
     # working file or HEAD. Resetting this edit changes only semantic index data.
@@ -273,9 +273,9 @@ def test_undoing_observed_staged_only_edit_is_recent_activity(repo: Path, free_f
     assert helpers.git(tree, "status", "--porcelain") == ""
     clean = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
     outcome = helpers.outcome_for(clean, tree, repo)
-    assert outcome.action == "skipped"
-    assert outcome.reason == "last activity 0 min ago (< 60 min)"
-    assert tree.is_dir()
+    assert outcome.action == "removed"
+    assert outcome.reason == rw.CLEAN_PUSHED_REASON
+    assert not tree.exists()
 
 
 def test_inspection_preserves_dry_run_apply_set(repo: Path, free_fuser: Path) -> None:
@@ -288,6 +288,7 @@ def test_inspection_preserves_dry_run_apply_set(repo: Path, free_fuser: Path) ->
     helpers.age_tree(unpushed, repo, "unpushed")
     active = helpers.dispatch_tree(repo, "active", status="running")
     recent = helpers.dispatch_tree(repo, "recent")
+    eligible.add(recent)
     # A write restored the original bytes. It is clean but genuinely recent.
     original = (recent / "README.md").read_bytes()
     (recent / "README.md").write_bytes(original)
@@ -303,6 +304,42 @@ def test_inspection_preserves_dry_run_apply_set(repo: Path, free_fuser: Path) ->
     after = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
     assert {item.path for item in after.removed} == expected
     assert all(not tree.exists() for tree in eligible)
-    assert all(tree.is_dir() for tree in (dirty, unpushed, active, recent))
+    assert all(tree.is_dir() for tree in (dirty, unpushed, active))
     assert (dirty / "README.md").read_text() == "uncommitted\n"
     assert {item["path"] for item in helpers.abandon_log(repo)} == expected
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("failure", ["failed", "timeout"])
+def test_origin_branch_probe_failure_retains_tree_with_truthful_refusal(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch, apply: bool, failure: str
+) -> None:
+    """A failed branch-only publication probe must refuse cleanup without aborting the report."""
+    tree = helpers.dispatch_tree(repo)
+    # A tag makes the full publication census distinct from its branch-only view.
+    tagged = helpers.git(
+        repo, "commit-tree", helpers.git(repo, "rev-parse", "HEAD^{tree}"),
+        "-p", helpers.git(repo, "rev-parse", "HEAD"), "-m", "tag-only history",
+    )
+    helpers.git(repo, "tag", "published-tag", tagged)
+    helpers.git(repo, "push", "origin", "published-tag")
+    real_unpublished = rw._unpublished
+    probes = []
+
+    def unavailable(path, revisions, census):
+        if len(census.tips) == 1:
+            probes.append(path)
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired(["git", "rev-list"], 15)
+            raise RuntimeError("rev-list failed")
+        return real_unpublished(path, revisions, census)
+
+    monkeypatch.setattr(rw, "_unpublished", unavailable)
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=not apply, target_paths=[tree])
+    outcome = helpers.outcome_for(report, tree, repo)
+    assert probes == [tree]
+    assert outcome.action == "skipped"
+    assert outcome.reason == "origin-branch reachability check " + ("timed out" if failure == "timeout" else "failed")
+    assert not report.removed
+    assert tree.is_dir()
+    assert helpers.abandon_log(repo) == []

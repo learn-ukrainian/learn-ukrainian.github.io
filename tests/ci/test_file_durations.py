@@ -155,7 +155,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     refresh = jobs["refresh-pytest-durations"]
     assert "reuse" not in jobs
     assert not refresh.get("needs")
-    full = "${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
+    full = "${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
     assert refresh["if"] == full
     assert refresh["timeout-minutes"] == 10
     assert refresh["permissions"] == {"contents": "read", "actions": "read"}
@@ -212,7 +212,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert verdict == '"$PYTHON_BIN" -m scripts.ci.gate'
     aggregation = next(step for step in gate["steps"] if step.get("name") == "Require every job")
     assert aggregation["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
-    for event in ("merge_group", "schedule", "workflow_dispatch"):
+    for event in ("opened", "synchronize", "reopened", "merge_group", "schedule", "workflow_dispatch"):
         results, _ = _simulate(_EVENTS[event])
         assert all(results[name] == "success" for name in ("refresh-pytest-durations", "pytest", "pytest-report"))
     results, _ = _simulate(_EVENTS["merge_group"], failures={"pytest"})

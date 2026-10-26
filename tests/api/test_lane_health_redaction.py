@@ -49,7 +49,11 @@ def _write_task(tasks_dir: Path, task_id: str, agent: str, started_at: datetime,
         "started_at": started_at.isoformat().replace("+00:00", "Z"),
         "stderr_excerpt": stderr_excerpt,
     }
-    (tasks_dir / f"{task_id}.json").write_text(json.dumps(data), encoding="utf-8")
+    # Routing refreshes read beside requests; publish complete records like the
+    # dispatcher so they cannot observe a truncated fixture during a rewrite.
+    staged = tasks_dir / f"{task_id}.tmp"
+    staged.write_text(json.dumps(data), encoding="utf-8")
+    staged.replace(tasks_dir / f"{task_id}.json")
 
 
 @pytest.mark.parametrize(

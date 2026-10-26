@@ -72,7 +72,7 @@ Outputs (all under --results, owner-only files; never commit them):
   convert-set writes one owner-only set file (--output, also refused inside a Git work tree) and prints a
   JSON report: counts per error type and protection kind, validation problems by item id and rule (never
   text), Protocol v2 shortfalls, and the SHA-256 of the input and the output.
-  Dispatches create delegate task records under batch_state/tasks/.
+  Dispatches create task records under batch_state/tasks/.
 
 Exit codes:
   0 success (run: every planned task accepted; convert-set: the converted set is valid);
@@ -81,7 +81,7 @@ Exit codes:
   (convert-set: an unmappable source line is refused and nothing is written).
 
 Related:
-  Protocol v2 on issue #9623; docs/evaluations/uk-preamble.md; scripts/delegate.py.
+  Protocol v2 on issue #9623; docs/evaluations/uk-preamble.md; scripts/dispatch.py.
 """
 
 
@@ -94,13 +94,15 @@ def _default_python() -> str:
 
 
 def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
-    return DelegateDispatcher(
+    dispatcher = DelegateDispatcher(
         python=args.python or _default_python(),
-        delegate=REPO_ROOT / "scripts" / "delegate.py",
+        delegate=REPO_ROOT / "scripts" / "dispatch.py",
         cwd=worker_cwd,
         hard_timeout=args.hard_timeout,
         review_profile=getattr(args, "review_profile", None),
     )
+    dispatcher.legacy_resume = getattr(args, "legacy_resume", False)
+    return dispatcher
 
 
 def make_workspace(worker_cwd: Path) -> Callable[[], dict[str, Any]]:
@@ -170,7 +172,7 @@ def _add_dispatch_args(sub: argparse.ArgumentParser) -> None:
     sub.add_argument(
         "--python",
         default=None,
-        help="Interpreter used to call scripts/delegate.py. Default: the shared project interpreter.",
+        help="Interpreter used to call scripts/dispatch.py. Default: the shared project interpreter.",
     )
 
 
@@ -189,7 +191,7 @@ def build_parser() -> argparse.ArgumentParser:
     run = commands.add_parser(
         "run",
         help="Dispatch every seat x variant x repeat task (resumable)",
-        description="Dispatch read-only review and writing tasks through scripts/delegate.py; resume safely.",
+        description="Dispatch read-only review and writing tasks through scripts/dispatch.py; resume safely.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=EPILOG,
     )
@@ -223,15 +225,15 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--dry-run",
         action="store_true",
-        help="Write prompts and validate every dispatch with delegate --dry-run; spawn nothing.",
+        help="Write prompts and validate every dispatch with scripts/dispatch.py --dry-run; spawn nothing.",
     )
     run.add_argument(
         "--worker-cwd",
         type=Path,
         default=None,
-        help="Working directory (delegate --cwd) of every task, frozen in the manifest; its commit and "
-        "instruction files are fingerprinted per task. Must resolve inside an existing registered isolated Git "
-        "worktree. Default: this checkout; primary and unregistered checkouts are refused before dispatch.",
+        help="Source checkout whose commit is pinned for dispatcher-created per-task worktrees. "
+        "Frozen in the manifest; each task's actual worktree is fingerprinted separately. "
+        "Default: this checkout; primary and unregistered checkouts are refused before dispatch.",
     )
     run.add_argument(
         "--seat",
@@ -250,9 +252,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--review-profile",
         choices=("ukrainian",),
         default=None,
-        help="Dispatch review tasks as Ukrainian reviews (delegate --review-profile ukrainian "
-        "--require-review-verdict), so delegate's Ukrainian-review AGY permission profile applies; "
-        "review prompts then end with a VERDICT marker line. Writing tasks are unchanged. "
+        help="Label review tasks with --review-profile ukrainian; "
+        "review prompts then end with a VERDICT marker line. "
+        "The dispatcher accepts the label without enforcing a verdict or permission profile. "
+        "Writing tasks are unchanged. "
         "Frozen in the manifest; a resume with another value is refused. Default: off.",
     )
     _add_dispatch_args(run)
@@ -355,6 +358,9 @@ def _cmd_run(args: argparse.Namespace) -> int:
     if plan["protocol_shortfalls"] and not args.smoke:
         raise HarnessError("plan below Protocol v2: " + "; ".join(plan["protocol_shortfalls"]) + " (--smoke to test)")
     tasks = plan_candidate_tasks(eval_set, variants, plan, block)
+    args.legacy_resume = results.path("manifest.json").is_file() and bool(
+        load_manifest(results)["frozen"]["composition"]["prompt_blocks"]
+    )
     dispatcher = make_dispatcher(args, worker_cwd)
     plan["composition"] = composition_frame(dispatcher, tasks)
     plan["dispatch_args_sha256"] = dispatch_args_frame(dispatcher, tasks, results)
@@ -409,6 +415,7 @@ def _cmd_score(args: argparse.Namespace) -> int:
     results = ResultsDir(args.results)
     manifest = load_manifest(results)
     plan = manifest["frozen"]
+    args.legacy_resume = bool(plan["composition"]["prompt_blocks"])
     eval_set = _set_for(args, manifest)
     slots = candidate_slots(plan)
     exit_code = 0

@@ -467,6 +467,32 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     return path, number, head, action, evidence
 
 
+def reconcile_enqueue_cleanup(*, cwd, repository, number, head, queue_probe):
+    """Return the separate durable common receipt; never change publication status."""
+    from scripts.fleet.post_task_reap import reap_enqueued_worktrees
+
+    try:
+        try:
+            current = queue_probe()
+        except Exception:
+            current = {}
+        branch = current.get("headRefName") or ""
+        receipt = reap_enqueued_worktrees(
+            repo_root=Path(cwd), repository=repository, number=number, head=head,
+            branch=branch, queue_probe=queue_probe,
+        )
+    except Exception as exc:
+        # No removal can precede the common intent receipt. An unavailable
+        # receipt is explicit and cannot be interpreted as cleanup completion.
+        receipt = {"schema": "enqueue-cleanup.v1", "state": "retained", "removed": 0,
+                   "retained": 1, "receipt": "unavailable", "rows": [{
+                       "action": "retained", "reason": f"cleanup unavailable ({type(exc).__name__})",
+                       "owner": "infra lane", "next_condition": "restore common receipt storage and reconcile cleanup"}]}
+    print(f"enqueue-cleanup removed={receipt['removed']} retained={receipt['retained']} receipt={receipt['receipt']}",
+          file=sys.stderr)
+    return receipt
+
+
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -532,6 +558,32 @@ def publish(
                 raise refusal
             return result
 
+        def queue_probe():
+            identity = readiness_runner(
+                ["gh", "pr", "view", str(fields["number"]), "--repo", gh_repo,
+                 "--json", "headRefOid,isCrossRepository,baseRefName"],
+                cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=15,
+            )
+            if identity.returncode:
+                raise ValueError("queue identity unavailable")
+            identity = json.loads(identity.stdout)
+            result = read(
+                "queue-status", repo=gh_repo, number=fields["number"], branch=identity["baseRefName"],
+                runner=readiness_runner if runner is not None else None,
+                cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=15,
+            )
+            observation = getattr(result, "github_result", None)
+            refusal = github_client.refusal_of(result, injected=runner is not None)
+            if result.returncode or refusal is not None or (observation is not None and observation.stale):
+                raise ValueError("queue state unavailable")
+            document = json.loads(result.stdout)
+            current = document["data"]["repository"]["pullRequest"]
+            if document.get("errors") or not isinstance(current, dict) or current.get("headRefOid") != identity["headRefOid"]:
+                raise ValueError("queue state unavailable or head changed")
+            return {**current, "isCrossRepository": identity["isCrossRepository"]}
+
+        recovery_queue = False
+        already_queued = False
         if verb == "pr-merge":
             from scripts.publish.merge_guard import ensure_merge_ready
 
@@ -547,6 +599,17 @@ def publish(
             # Omitted fields are sent explicitly so the scanned text is the sent text;
             # a merge queue ignores explicit text, so its defaults are scanned too.
             default = _squash_text(gh_repo, fields, dest, temp, readiness_runner, cwd, environment)
+            recovery_queue = default["queue"]
+            if recovery_queue:
+                try:
+                    before = queue_probe()
+                    if before.get("headRefOid") != fields["match_head"]:
+                        raise ValueError("head changed")
+                    if type(before.get("isInMergeQueue")) is not bool:
+                        raise ValueError("membership unknown")
+                    already_queued = before["isInMergeQueue"]
+                except Exception:
+                    raise gate.PublishBlocked("QUEUE_STATE_UNKNOWN: enqueue refused before publication") from None
             for key in ("subject", "body"):
                 if key not in fields:
                     fields[key] = default[key]
@@ -713,7 +776,7 @@ def publish(
             if reservation:
                 path, number, head, action, evidence = reservation
                 recovery.consume(path, dest, number, head, action, evidence)
-        return _send(
+        result = subprocess.CompletedProcess(argv, 0, "" if text else b"", "" if text else b"") if already_queued else _send(
             argv,
             environment=environment,
             runner=runner,
@@ -725,6 +788,12 @@ def publish(
             stdout=stdout,
             stderr=stderr,
         )
+        if verb == "pr-merge" and recovery_queue and result.returncode == 0:
+            result.enqueue_cleanup = reconcile_enqueue_cleanup(
+                cwd=cwd, repository=gh_repo, number=fields["number"], head=fields["match_head"],
+                queue_probe=queue_probe,
+            )
+        return result
 
 
 class PublisherParser(argparse.ArgumentParser):
@@ -736,7 +805,7 @@ class PublisherParser(argparse.ArgumentParser):
 
 def main(argv=None, *, runner=None):
     parser = PublisherParser(
-        description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh is reserved for allowlisted reads.",
+        description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh reads use native CLI arguments.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md\n  .venv/bin/python -m scripts.publish read code-scanning-alerts --number 9781\n  .venv/bin/python -m scripts.publish read check-annotations --number 112001533549\nOutputs: GitHub mutation for write verbs; JSON on stdout for reads; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297; #9792",
         allow_abbrev=False,
@@ -900,7 +969,7 @@ class Request:
 
 
 def request_run(request, *, runner=None, input=None, **kwargs):
-    """Adapt typed requests; raw argv is admitted only by the raw read guard."""
+    """Adapt typed requests; raw argv retains the write and exposure controls."""
     if not isinstance(request, Request):
         return gate.checked_run(request, runner=runner, input=input, **kwargs)
     if input is not None:

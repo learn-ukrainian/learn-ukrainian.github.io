@@ -12,7 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from scripts import delegate, driver_state
+from scripts import driver_state
+from scripts.ai_agent_bridge.monitor_client import MonitorClient
 from scripts.common import task_store_paths
 
 REPO = Path(__file__).resolve().parents[1]
@@ -301,14 +302,15 @@ def _workers(root, seat, n, status="running"):
 def live_monitor(monkeypatch):
     """Replace only the live Monitor transport; never contact another lane."""
 
-    def fetch(task_id, *, run_nonce=None):
+    def get(_client, path, **_kwargs):
+        task_id = path.split("/")[-1].split("?")[0]
         record = driver_state.tasks_dir() / f"{task_id}.json"
         if not record.is_file():
-            return None
+            return 404, "", {}
         task = json.loads(record.read_text(encoding="utf-8"))
-        return {"task": task, "alive": True}
+        return 200, json.dumps({"task": task, "alive": True}), {}
 
-    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
+    monkeypatch.setattr(MonitorClient, "get", get)
 
 
 @pytest.fixture
@@ -772,7 +774,7 @@ def test_blocker_policy_requires_exact_real_heading(state, prefix):
 @pytest.mark.parametrize(
     "text",
     [
-        "armed a background delegate.py wait. I will now wait for the reviewer verdict.",
+        "armed a background scripts/dispatch.py wait. I will now wait for the reviewer verdict.",
         "Work verified.\n\n> Should I dispatch?",
         "Work verified.\n\n> quoted review:\nShould I dispatch?",  # CommonMark lazy quote continuation
         "Work verified.\n\n```text\nShould I dispatch?\n## Next steps\n- fix it\n```",
@@ -894,11 +896,11 @@ def test_clean_stop_resets_counter(driver, state):
 )
 def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
-    original = delegate._fetch_monitor_task
+    original = driver_state._fetch_monitor_task
 
     def fetch(task_id, *, run_nonce=None):
         if fault == "unavailable":
-            raise delegate.MonitorApiUnavailable("synthetic outage")
+            raise OSError("synthetic outage")
         if fault == "unexpected-error":
             raise RuntimeError("synthetic Monitor failure")
         if fault == "missing":
@@ -914,7 +916,7 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
             out["task"].pop("status")
         return out
 
-    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
+    monkeypatch.setattr(driver_state, "_fetch_monitor_task", fetch)
     record = driver_state.tasks_dir() / "t0.json"
     if fault == "bad-json":
         record.write_text("invalid")
@@ -935,12 +937,12 @@ def test_worker_import_failure_keeps_floor_unknown(driver, state, monkeypatch, e
     _workers(driver, "gemini-infra", 0)
     original = builtins.__import__
 
-    def fail_delegate(name, *args, **kwargs):
-        if name == "scripts.delegate":
-            raise error("synthetic delegate import failure")
+    def fail_store(name, *args, **kwargs):
+        if name == "scripts.dispatcher":
+            raise error("synthetic dispatcher import failure")
         return original(name, *args, **kwargs)
 
-    monkeypatch.setattr(builtins, "__import__", fail_delegate)
+    monkeypatch.setattr(builtins, "__import__", fail_store)
     assert driver_state.running_workers("gemini-infra") is None
     transcript = _transcript(driver, "Work verified.")
     out = _stop(driver, transcript)
@@ -957,7 +959,7 @@ def test_worker_import_failure_keeps_floor_unknown(driver, state, monkeypatch, e
 @pytest.mark.parametrize("all_dead", [False, True])
 def test_dead_running_workers_are_skipped(driver, monkeypatch, all_dead):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
-    original = delegate._fetch_monitor_task
+    original = driver_state._fetch_monitor_task
 
     def fetch(task_id, *, run_nonce=None):
         out = original(task_id, run_nonce=run_nonce)
@@ -965,7 +967,7 @@ def test_dead_running_workers_are_skipped(driver, monkeypatch, all_dead):
             out["alive"] = False
         return out
 
-    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
+    monkeypatch.setattr(driver_state, "_fetch_monitor_task", fetch)
     expected = 0 if all_dead else SYNTHETIC_WORKER_TARGET - 1
     assert driver_state.running_workers("gemini-infra") == expected
     out = _stop(driver, _transcript(driver, "Work verified."))
@@ -1314,3 +1316,100 @@ def test_gate_failure_refuses_symlinked_receipt(driver, state, monkeypatch, caps
     assert "DRIVER-GATE-FAILED" in out["reason"]
     assert json.loads(capsys.readouterr().err)["code"] == "continuation_counter_unavailable"
     assert target.read_text() == "untouched"
+
+
+@pytest.mark.parametrize("status", ["running", "spawning"])
+@pytest.mark.parametrize("identity, expected", [("boot:42", 3), ("boot:99", 2), (None, 2)])
+def test_mixed_schema_worker_count_is_read_only(driver, monkeypatch, identity, expected, status):
+    from scripts.dispatcher import worker
+
+    _workers(driver, "gemini-infra", 3, status=status)
+    for index, pid in [(1, 123), (2, 124)]:
+        path = driver_state.tasks_dir() / f"t{index}.json"
+        task = json.loads(path.read_text())
+        task.update(schema_version=2, pid=pid, process_start="boot:42")
+        path.write_text(json.dumps(task))
+    before = {p: p.read_bytes() for p in driver_state.tasks_dir().glob("*.json")}
+    monkeypatch.setattr(worker, "_identity", lambda pid: identity if pid == 123 else "boot:42")
+    assert driver_state.running_workers("gemini-infra") == expected
+    assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("fields", [
+    {"pid": None}, {"pid": True}, {"pid": -1}, {"process_start": None},
+    {"process_start": ""}, {"schema_version": 3},
+])
+def test_unknown_supervisor_identity_keeps_worker_count_unknown(driver, monkeypatch, fields):
+    _workers(driver, "gemini-infra", 1)
+    path = driver_state.tasks_dir() / "t0.json"
+    task = json.loads(path.read_text())
+    task.update(schema_version=2, pid=123, process_start="boot:42")
+    task.update(fields)
+    path.write_text(json.dumps(task))
+    assert driver_state.running_workers("gemini-infra") is None
+
+
+@pytest.mark.parametrize("status", ["done", "failed", "crashed", "needs_finalize", "no_deliverable"])
+def test_legacy_terminal_monitor_response_is_not_counted(driver, monkeypatch, status):
+    _workers(driver, "gemini-infra", 1)
+    task = json.loads((driver_state.tasks_dir() / "t0.json").read_text())
+    task["status"] = status
+    monkeypatch.setattr(MonitorClient, "get", lambda *a, **k: (200, json.dumps({"task": task}), {}))
+    assert driver_state.running_workers("gemini-infra") == 0
+
+
+@pytest.mark.parametrize("status, body", [(404, ""), (409, ""), (503, ""), (200, "invalid")])
+def test_legacy_monitor_failure_keeps_count_unknown(driver, monkeypatch, status, body):
+    _workers(driver, "gemini-infra", 1)
+    monkeypatch.setattr(MonitorClient, "get", lambda *a, **k: (status, body, {}))
+    assert driver_state.running_workers("gemini-infra") is None
+
+
+def test_legacy_monitor_request_binds_nonce_and_preserves_endpoint_override(driver, monkeypatch):
+    _workers(driver, "gemini-infra", 1)
+    monkeypatch.setenv("DELEGATE_MONITOR_API", "http://monitor.invalid")
+    calls = []
+    original = MonitorClient.get
+
+    def get(client, path):
+        calls.append((client.base_url, client.timeout_s, path))
+        return original(client, path)
+
+    monkeypatch.setattr(MonitorClient, "get", get)
+    assert driver_state.running_workers("gemini-infra") == 1
+    assert calls == [("http://monitor.invalid", 2, "/api/delegate/tasks/t0?run_nonce=nonce-0")]
+
+
+def test_worker_count_needs_no_legacy_runtime_import(driver, monkeypatch):
+    import builtins
+
+    _workers(driver, "gemini-infra", 1)
+    original = builtins.__import__
+
+    def importing(name, *args, **kwargs):
+        if name in {"delegate", "scripts.delegate"}:
+            raise AssertionError("retired runtime imported")
+        return original(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", importing)
+    assert driver_state.running_workers("gemini-infra") == 1
+
+
+def test_v2_worker_count_bypasses_monitor_and_keeps_archive_read_only(driver, monkeypatch):
+    from scripts.dispatcher import store, worker
+
+    _workers(driver, "gemini-infra", 1)
+    path = driver_state.tasks_dir() / "t0.json"
+    task = json.loads(path.read_text())
+    task.update(schema_version=2, pid=123, process_start="boot:42")
+    path.write_text(json.dumps(task))
+    archive = path.parent / "archive"
+    archive.mkdir()
+    legacy = archive / "old.json"
+    legacy.write_text(json.dumps({"task_id": "old", "schema_version": 1, "status": "done"}))
+    before = {p: p.read_bytes() for p in (path, legacy)}
+    monkeypatch.setattr(worker, "_identity", lambda pid: "boot:42")
+    monkeypatch.setattr(MonitorClient, "get", lambda *a, **k: pytest.fail("v2 contacted Monitor"))
+    assert driver_state.running_workers("gemini-infra") == 1
+    assert store.read("old")["status"] == "done"
+    assert {p: p.read_bytes() for p in before} == before

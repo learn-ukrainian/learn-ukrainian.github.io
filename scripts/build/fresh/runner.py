@@ -78,6 +78,7 @@ from scripts.build.fresh.manifest import unlink_current, write_manifest, write_m
 from scripts.build.fresh.path_guard import checked_existing_path, public_diagnostic
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.build.fresh.writer import strip_markdown_fence
+from scripts.common.jsonl import jsonl_lines
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.tags import to_oracle
 from scripts.curriculum.learner_state import codes as learner_codes
@@ -1305,7 +1306,9 @@ def check_7_deterministic(
     if stream.failures:
         first = stream.failures[0]
         layer = (
-            "engine" if first["code"] == codes.LETTER_OUTSIDE_STATE else "pack"
+            "engine"
+            if first["code"] == codes.LETTER_OUTSIDE_STATE
+            else "pack"
             if first["code"] in {codes.UNKNOWN_WORD_ID, codes.PENDING_STRESS}
             else "writer"
         )
@@ -1366,7 +1369,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     lock.atomic_write(prompt, instruction.encode("utf-8") + lock.yaml_bytes(batch))
     cmd = [
         sys.executable,
-        str(repo_root / "scripts" / "delegate.py"),
+        str(repo_root / "scripts" / "dispatch.py"),
         "dispatch",
         "--agent",
         agent,
@@ -1392,8 +1395,23 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     sent = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=False)
     if sent.returncode:
         raise RuntimeError(f"question dispatch failed: {sent.stderr.strip()}")
+    lines = jsonl_lines(sent.stdout)
+    if lines[-1] == "":
+        lines.pop()
+    if len(lines) != 2 or lines[0] != task_id or not lines[1].strip():
+        raise RuntimeError("question dispatch did not return the task id and run nonce")
+    nonce = lines[1].strip()
     done = subprocess.run(
-        [sys.executable, str(repo_root / "scripts" / "delegate.py"), "wait", task_id, "--timeout", "1800"],
+        [
+            sys.executable,
+            str(repo_root / "scripts" / "dispatch.py"),
+            "wait",
+            task_id,
+            "--run-nonce",
+            nonce,
+            "--timeout",
+            "1800",
+        ],
         capture_output=True,
         text=True,
         timeout=1830,
@@ -1404,7 +1422,20 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     result = json.loads(done.stdout)
     if result.get("status") != "done" or not result.get("result_file"):
         raise RuntimeError("question dispatch did not finish with an answer file")
-    return yaml.safe_load(strip_markdown_fence(Path(result["result_file"]).read_text(encoding="utf-8")))
+    if result.get("task_id") != task_id or result.get("run_nonce") != nonce:
+        raise RuntimeError("question wait returned a different task or stale nonce")
+    if result.get("agent") != agent or result.get("model") != model:
+        raise RuntimeError("question task has missing or conflicting model evidence")
+    answer_bytes = Path(result["result_file"]).read_bytes()
+    if result.get("schema_version") == 2 and (
+        result.get("prompt_sha256") != hashlib.sha256(prompt.read_bytes()).hexdigest()
+        or result.get("result_sha256") != hashlib.sha256(answer_bytes).hexdigest()
+    ):
+        raise RuntimeError("question task prompt or result digest mismatch")
+    answers = yaml.safe_load(strip_markdown_fence(answer_bytes.decode("utf-8")))
+    if not isinstance(answers, dict) or not isinstance(answers.get("answers"), list):
+        raise RuntimeError("question result is missing its answers list")
+    return answers
 
 
 def _printable_form_draft(
@@ -1580,7 +1611,9 @@ def run_lesson(
             if sources is None:
                 sources = source_session.enter_context(Sources())
             stream = resolve(
-                expanded_obj, selected_allowlist, sources,
+                expanded_obj,
+                selected_allowlist,
+                sources,
                 source_quote_units=plan_quote_units(
                     expanded_obj, assembled.artifacts["provenance"], draft, lesson, pack
                 ),
@@ -1790,7 +1823,10 @@ def run_lesson(
         )
         path = getattr(err, "path", None) or (err.filename if isinstance(err, OSError) and err.filename else reason)
         write_manifest_error(
-            state_dir, n, reason, public_diagnostic(str(path), repo_root),
+            state_dir,
+            n,
+            reason,
+            public_diagnostic(str(path), repo_root),
             datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         )
         bad = failure(12, reason, "engine")

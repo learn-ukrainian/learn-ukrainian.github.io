@@ -574,15 +574,29 @@ def test_read_only_constrained_resolution_prompt_contract(
     answer_file = tmp_path / "answers.yaml"
     answer_file.write_text("answers: []\n", encoding="utf-8")
     prompts = []
+    record = {
+        "schema_version": 2,
+        "run_nonce": "n1",
+        "status": "done",
+        "agent": "codex",
+        "model": "fixture",
+        "result_file": str(answer_file),
+        "result_sha256": hashlib.sha256(answer_file.read_bytes()).hexdigest(),
+    }
 
     def fake_run(cmd, **kwargs):
         if "dispatch" in cmd:
             assert cmd[cmd.index("--mode") + 1] == "read-only"
-            prompts.append(Path(cmd[cmd.index("--prompt-file") + 1]).read_text(encoding="utf-8"))
-            output = ""
+            prompt = Path(cmd[cmd.index("--prompt-file") + 1])
+            prompts.append(prompt.read_text(encoding="utf-8"))
+            record["task_id"] = cmd[cmd.index("--task-id") + 1]
+            record["prompt_sha256"] = hashlib.sha256(prompt.read_bytes()).hexdigest()
+            output = f"{record['task_id']}\nn1\n"
         else:
             assert "wait" in cmd
-            output = json.dumps({"status": "done", "result_file": str(answer_file)})
+            assert cmd[3] == record["task_id"]
+            assert cmd[cmd.index("--run-nonce") + 1] == record["run_nonce"]
+            output = json.dumps(record)
         return subprocess.CompletedProcess(cmd, 0, stdout=output, stderr="")
 
     monkeypatch.setattr(runner.subprocess, "run", fake_run)

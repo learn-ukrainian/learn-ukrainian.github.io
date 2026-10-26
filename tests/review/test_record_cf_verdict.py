@@ -255,6 +255,7 @@ def test_edited_skeleton_cannot_reconcile(scanned_recorder, tmp_path):
 
 
 @pytest.mark.parametrize("identity", [
+    {"schema_version": 2, "worktree_branch": "claude/private-review", "review_branch": "codex/42", "pinned_head": SHA},
     {"worktree_branch": None, "review_branch": "codex/42", "pinned_head": SHA},
     {},  # Legacy attached record has no review_branch field.
     {"review_branch": "codex/42"},
@@ -274,6 +275,8 @@ def test_branch_identity_binds_supported_record(monkeypatch, tmp_path, identity)
 
 
 @pytest.mark.parametrize("identity,reason", [
+    ({"schema_version": 2}, "not branch-pinned"),
+    ({"schema_version": 2, "review_branch": None}, "not branch-pinned"),
     ({"worktree_branch": None}, "not branch-pinned"),
     ({"review_branch": "other/branch"}, "conflicting"),
     ({"worktree_branch": None, "review_branch": ""}, "invalid"),
@@ -299,9 +302,13 @@ def test_bad_branch_identity_refuses_before_network(monkeypatch, tmp_path, ident
     ({"branch": "other/branch"}, "branch does not match"),
     ({"head": "b" * 40}, "head moved"),
 ])
-def test_detached_review_refuses_wrong_pr_identity(monkeypatch, tmp_path, pr, reason):
+@pytest.mark.parametrize("checkout", [
+    {"worktree_branch": None},
+    {"schema_version": 2, "worktree_branch": "claude/private-review"},
+])
+def test_detached_review_refuses_wrong_pr_identity(monkeypatch, tmp_path, pr, reason, checkout):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, **pr)
-    write_task(tasks, worktree_branch=None, review_branch="codex/42")
+    write_task(tasks, review_branch="codex/42", **checkout)
     with pytest.raises(recorder.RecordError, match=reason):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert not comments

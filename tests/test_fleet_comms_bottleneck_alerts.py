@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import builtins
 import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -226,7 +227,37 @@ def test_alert_state_and_messages_never_contain_collector_prompt_or_body(tmp_pat
 
 
 @pytest.mark.parametrize("minutes,expected", [(29, 0), (30, 0), (31, 1)])
-def test_aged_finalization_posts_once_to_cto_at_checkpoint(tmp_path, monkeypatch, minutes, expected, record_property):
+@pytest.mark.parametrize(
+    "reason,published",
+    [
+        ("auto_finalize_push_failed", "auto_finalize_push_failed"),
+        ("auto_finalize_push_failed, git push, exit 1", "auto_finalize_push_failed, git push, exit 1"),
+        ("worker_failed, count 2, OSError EACCES", "worker_failed, count 2, OSError EACCES"),
+        ("worker_failed; provider_auth", "worker_failed; provider_auth"),
+        ("no recorded worktree", "no recorded worktree"),
+        ("ADVISORY_SEAL_MISMATCH", "ADVISORY_SEAL_MISMATCH"),
+        ("agy_transcript_unbound", "agy_transcript_unbound"),
+        ("claude_account_binding_oversized", "claude_account_binding_oversized"),
+        ("worker_failed, git invented", "finalize_delivery_pending"),
+        ("worker_failed, OSError PRIVATE", "finalize_delivery_pending"),
+        ("worker_failed; private failure payload", "finalize_delivery_pending"),
+        ("unknown_private_code", "finalize_delivery_pending"),
+        ("worker_failed" + " " * 512, "finalize_delivery_pending"),
+        (None, "finalize_delivery_pending"),
+        ({"private": "failure payload"}, "finalize_delivery_pending"),
+    ],
+)
+def test_aged_finalization_posts_once_to_cto_at_checkpoint(
+    tmp_path, monkeypatch, minutes, expected, record_property, reason, published
+):
+    original_import = builtins.__import__
+
+    def without_legacy_dispatch(name, globals=None, locals=None, fromlist=(), level=0):
+        if name in {"delegate", "scripts.delegate"} or (name == "scripts" and "delegate" in fromlist):
+            raise AssertionError("alert reader must work without the legacy dispatcher")
+        return original_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", without_legacy_dispatch)
     monkeypatch.setenv("LU_NEEDS_FINALIZE_MAX_AGE_MINUTES", "30")
     tasks = tmp_path / "tasks"
     tasks.mkdir()
@@ -236,7 +267,7 @@ def test_aged_finalization_posts_once_to_cto_at_checkpoint(tmp_path, monkeypatch
         "status": "needs_finalize",
         "initiator": "claude-infra",
         "finished_at": (NOW - timedelta(minutes=minutes)).isoformat(),
-        "finalize_error": "auto_finalize_push_failed",
+        "finalize_error": reason,
     }
     (tasks / "task.json").write_text(json.dumps(record))
     for offset in (0, 301, 3600):
@@ -252,6 +283,7 @@ def test_aged_finalization_posts_once_to_cto_at_checkpoint(tmp_path, monkeypatch
     if expected:
         assert "task=isolated-finalize" in messages[0]["body"]
         assert "owner=claude-infra" in messages[0]["body"]
+        assert f"; reason={published}; owner=" in messages[0]["body"]
         record_property("isolated_cto_message_id", messages[0]["message_id"])
 
 

@@ -13,7 +13,8 @@ task record and no change for 2 h, and a registered checkout under
 
 ``--clean-pushed`` (#10778) is a separate, narrower mode: it removes only
 dispatch checkouts that are clean, have every commit on origin, are used by
-no process or live task and were idle for 60 minutes (:func:`reap_clean_pushed`).
+no process or live task, with canonical creator custody and HEAD reachable
+from a current verified origin branch (:func:`reap_clean_pushed`).
 
 Suggested backstop:
 
@@ -3035,6 +3036,21 @@ def _review_checkout_gate(
     return _is_head_reachable_from_remote(info.path, info.head)
 
 
+def _read_only_checkout(repo_root: Path, info: WorktreeInfo) -> bool:
+    """Prove that every task bound to this checkout disclaims pushed work."""
+    from scripts.fleet import ignored_task_output
+
+    try:
+        matches = ignored_task_output.matching_worktree_records(
+            info.path, task_store_paths.tasks_dir(), repo_root=control_plane_root(repo_root), publish_cache=False
+        )
+    except (OSError, ValueError, RuntimeError):
+        return False
+    return bool(matches) and all(
+        record.get("mode") == "read-only" and record.get("push_state") == "not_applicable" for _, record in matches
+    )
+
+
 def _review_pr_context(
     repo_root: Path,
     info: WorktreeInfo,
@@ -3046,18 +3062,19 @@ def _review_pr_context(
     """
     all_states: list[PullRequestState] = []
     errors: list[str] = []
+    read_only = _read_only_checkout(repo_root, info)
     for cand_branch in _candidate_branches_for_worktree(repo_root, info):
         states, err = _query_pr_states(repo_root, cand_branch)
         if err:
             errors.append(err)
-        all_states.extend(states)
+        all_states.extend(pr for pr in states if not read_only or cand_branch == info.branch or pr.state != "OPEN")
 
     review_number = _worktree_review_pr_number(repo_root, info)
     if review_number is not None:
         review_states, review_err = _query_pr_by_number(repo_root, review_number)
         if review_err and not _is_not_a_pull_request_error(review_err):
             errors.append(review_err)
-        all_states.extend(review_states)
+        all_states.extend(pr for pr in review_states if not read_only or pr.state != "OPEN")
 
     # Follow-up CI branches carry a different branch name than the PR head they
     # fix. Find the MERGED PR that introduced the worktree HEAD by SHA, but only
@@ -3069,6 +3086,11 @@ def _review_pr_context(
         commit_prs, sha_error = _query_prs_by_head_sha(repo_root, info.head)
         if sha_error:
             errors.append(sha_error)
+        # Sharing a reviewed commit does not make a disposable read-only
+        # checkout the PR's author tree. Only its own checkout branch can
+        # bind it to an OPEN PR; write-capable and unknown tasks stay guarded.
+        if read_only:
+            commit_prs = [pr for pr in commit_prs if pr.state != "OPEN"]
         all_states.extend(commit_prs)
     return all_states, commit_prs, review_number, errors
 
@@ -6044,7 +6066,7 @@ def reap_success_worktree(
     return res
 
 
-# Clean, fully pushed, idle dispatch worktrees (#10778).
+# Clean, fully pushed, inactive dispatch worktrees (#10778).
 #
 # A finished dispatch checkout with no changes, no untracked files and every
 # commit on origin holds nothing that Git does not already keep, yet the
@@ -6054,8 +6076,7 @@ def reap_success_worktree(
 # ``remove_unclaimed_worktree`` runs its own claim scan, the ignored-output
 # preservation gate and a non-force ``git worktree remove``.
 
-CLEAN_PUSHED_MIN_IDLE_S = 3600.0
-CLEAN_PUSHED_REASON = "clean, no untracked files, all commits on origin, no process or live task, idle >= 60 min"
+CLEAN_PUSHED_REASON = "clean, fully published on origin, canonical creator, no process or live task"
 DEFAULT_CLEAN_PUSHED_ACTOR = "worktree-reaper (clean-pushed)"
 ABANDON_LOG_RELATIVE = Path("batch_state") / "worktree-abandon-log.jsonl"
 _FUSER = "fuser"
@@ -6100,6 +6121,7 @@ class CleanPushedOutcome:
     task_status: str | None = None
     size_mb: int | None = None
     freed_bytes: int | None = 0
+    preserved_artifacts: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -6835,6 +6857,7 @@ class _OriginCensus:
     tips: tuple[str, ...]
     missing: int
     refs: int
+    branches: tuple[tuple[str, str], ...] = ()
 
 
 def _origin_census(primary: Path) -> tuple[_OriginCensus | None, str | None]:
@@ -6883,7 +6906,9 @@ def _origin_census(primary: Path) -> tuple[_OriginCensus | None, str | None]:
         return None, "advertised objects could not be looked up locally"
     tips = tuple(oid for oid, kind in rows if kind == "commit")
     missing = sum(1 for _oid, kind in rows if kind == "missing")
-    return _OriginCensus(tips=tips, missing=missing, refs=len(advertised)), None
+    return _OriginCensus(tips=tips, missing=missing, refs=len(advertised),
+                         branches=tuple((ref.removeprefix("refs/heads/"), oid) for ref, oid in advertised.items()
+                                        if ref.startswith("refs/heads/") and oid in tips)), None
 
 
 def _unpublished(path: Path, revisions: list[str], census: _OriginCensus) -> bool:
@@ -7027,6 +7052,40 @@ def _reflog_refusal(path: Path, census: _OriginCensus) -> str | None:
     by every checkout and survives removal.
     """
     named, failure = _private_history(path)
+    return _history_refusal(path, census, named, failure)
+
+
+def _branch_reflog_refusal(path: Path, branch: str, census: _OriginCensus) -> str | None:
+    """Prove the shared branch reflog before pruning deletes its last recovery trail."""
+    if _run(["git", "check-ref-format", f"refs/heads/{branch}"], cwd=path).returncode:
+        return "shared branch reflog identity unknown"
+    probe = _run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir", "--show-object-format"],
+        cwd=path, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+    )
+    parts = (probe.stdout or "").splitlines()
+    if probe.returncode or len(parts) != 2 or parts[1] not in {"sha1", "sha256"}:
+        return "shared branch reflog location unknown"
+    common = Path(parts[0])
+    relative = f"logs/refs/heads/{branch}"
+    file = common / relative
+    if not common.is_absolute() or any(parent.is_symlink() for parent in (file, *file.parents)):
+        return "shared branch reflog location unsafe"
+    if (common / "reftable").exists():
+        return "shared branch reflog storage unknown"
+    raw, failure = _read_bounded_regular(file, _HEAD_REFLOG_MAX_BYTES, label="shared branch reflog")
+    named = []
+    width = 40 if parts[1] == "sha1" else 64
+    for line in (raw or b"").decode("utf-8", errors="replace").splitlines():
+        fields = line.split(" ", 2)
+        if len(fields) != 3 or not all(_is_oid(oid, width) for oid in fields[:2]):
+            failure = "shared branch reflog unparseable"
+            break
+        named.extend(oid for oid in fields[:2] if oid != "0" * width)
+    return _history_refusal(path, census, list(dict.fromkeys(named)), failure)
+
+
+def _history_refusal(path: Path, census: _OriginCensus, named: list[str], failure: str | None) -> str | None:
     if failure:
         return f"{UNPUBLISHED_REFLOG_COMMIT}: recovery history unknown ({failure})"
     if not named:
@@ -7150,6 +7209,9 @@ class _CleanPushedContext:
     now: float | None = None
     uninspectable: set[int] = field(default_factory=set)
     remember_reflog: bool = False
+    enqueue_guard: Callable[[WorktreeInfo, Path, _OriginCensus], str | None] | None = None
+    creator_bindings: dict[Path, str] = field(default_factory=dict)
+    creator_records: dict[Path, list[_TaskClaim]] = field(default_factory=dict)
 
 
 def _location_refusal(info: WorktreeInfo, ctx: _CleanPushedContext, tree: Path) -> str | None:
@@ -7217,6 +7279,56 @@ def _clean_pushed_refusal(
         refusal = _task_claim_refusal(claim.name, claim.record)
         if refusal:
             return refusal, claims
+    from scripts.fleet import ignored_task_output
+
+    try:
+        if tree == path:
+            matches = ignored_task_output.matching_worktree_records(
+                path, ctx.tasks_dir, repo_root=ctx.primary, publish_cache=False
+            )
+        else:
+            current, why = _reread_claims(ctx.creator_records.get(path, []), path.resolve(), ctx.primary)
+            if why:
+                return why, claims
+            matches = [(claim.path, claim.record) for claim in current]
+        for record_path, record in matches:
+            refusal = _task_claim_refusal(record_path.name, record)
+            if refusal:
+                return refusal, claims
+        binding = json.dumps([
+            (str(record_path), {key: record.get(key) for key in (
+                "task_id", "run_nonce", "worktree_path", "cwd", "worktree_branch",
+                "worktree_reused", "ignored_output_baseline",
+            )}) for record_path, record in matches
+        ], sort_keys=True)
+        if tree == path:
+            _, creator = ignored_task_output.reused_worktree_creator(
+                matches, path, repo_root=ctx.primary, tasks_dir=ctx.tasks_dir
+            )
+            baseline = creator["ignored_output_baseline"]
+            identity = tree.stat()
+            if (
+                baseline.get("schema") != "ignored-baseline.v1"
+                or baseline.get("task_id") != creator.get("task_id")
+                or not creator.get("run_nonce")
+                or baseline.get("run_nonce") != creator["run_nonce"]
+                or baseline.get("directory_identity") != [identity.st_dev, identity.st_ino]
+            ):
+                return "canonical creator directory identity mismatch", claims
+            if path in ctx.creator_bindings and ctx.creator_bindings[path] != binding:
+                return "canonical creator binding changed during removal", claims
+            ctx.creator_bindings[path] = binding
+            ctx.creator_records[path] = [_TaskClaim(p.name, p, record) for p, record in matches]
+        elif ctx.creator_bindings.get(path) != binding:
+            return "canonical creator binding changed during removal", claims
+        if info.branch is not None and worktree_claims.checked_out_branch(tree) != info.branch:
+            return "worktree branch changed during removal", claims
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+        return "canonical creator binding unavailable", claims
+    if ctx.enqueue_guard is not None:
+        refusal = ctx.enqueue_guard(info, tree, ctx.census)
+        if refusal:
+            return refusal, claims
     sources, git_dir, refusal = _tree_mtime_sources(tree, ctx.common_git_dir)
     if refusal or git_dir is None:
         return refusal or "activity unknown", claims
@@ -7258,6 +7370,16 @@ def _clean_pushed_refusal(
     refusal = _git_refusal(tree, info.head, ctx.census)
     if refusal:
         return refusal, claims
+    try:
+        branch_unpublished = _unpublished(
+            tree, [info.head], replace(ctx.census, tips=tuple(oid for _branch, oid in ctx.census.branches))
+        )
+    except subprocess.TimeoutExpired:
+        return "origin-branch reachability check timed out", claims
+    except RuntimeError:
+        return "origin-branch reachability check failed", claims
+    if branch_unpublished:
+        return "HEAD not reachable from a verified origin branch", claims
     for claim in claims:
         try:
             terminal = datetime.fromisoformat(claim.record["finished_at"].replace("Z", "+00:00"))
@@ -7271,12 +7393,6 @@ def _clean_pushed_refusal(
     idle_s = now - newest
     if not math.isfinite(idle_s):
         return "activity unknown", claims
-    try:
-        idle_min = int(idle_s // 60)
-    except (OverflowError, ValueError):
-        return "activity unknown", claims
-    if idle_s < CLEAN_PUSHED_MIN_IDLE_S:
-        return f"last activity {max(0, idle_min)} min ago (< 60 min)", claims
     return _process_refusal(tree, ctx.uninspectable), claims
 
 
@@ -7802,8 +7918,9 @@ def reap_clean_pushed(
     actor: str = DEFAULT_CLEAN_PUSHED_ACTOR,
     lock_timeout_s: float | None = None,
     target_paths: Sequence[Path] | None = None,
+    enqueue_guard: Callable[[WorktreeInfo, Path, _OriginCensus], str | None] | None = None,
 ) -> CleanPushedReport:
-    """Remove clean, fully pushed, idle dispatch worktrees; dry run by default (#10778).
+    """Remove clean, fully pushed, inactive dispatch worktrees; dry run by default (#10778).
 
     First ``git fetch --prune origin`` refreshes local objects and
     ``git ls-remote --heads --tags origin`` takes the census that alone
@@ -7826,8 +7943,10 @@ def reap_clean_pushed(
     index changes, task terminal timestamps, the
     newest committer timestamp in a bounded ``logs/HEAD`` (not that file's
     mtime, and not only its last line), the time that file's bytes last
-    changed after a prior observation is more
-    than 60 minutes ago. A missing or unusable reflog is activity unknown.
+    changed after a prior observation are inspectable. Canonical creator/cohort
+    custody and HEAD reachability from a verified remote branch are required;
+    PR state and elapsed idle time do not grant or prevent eligibility.
+    A missing or unusable reflog is activity unknown.
     A missing reflog watch is first sight, so entry times still decide. An
     unreadable, non-regular, oversized, malformed, or wrongly typed watch, or
     a lock that cannot be opened or is still held after a bounded wait, is
@@ -7894,6 +8013,7 @@ def reap_clean_pushed(
             index=_build_task_index(tasks_dir, primary),
             census=census,
             remember_reflog=not dry_run,
+            enqueue_guard=enqueue_guard,
         )
         # Recovery can restore checkouts or clear records. Scope those effects
         # to selected original paths, just like the general reaper's recovery.
@@ -8011,7 +8131,8 @@ def reap_clean_pushed(
                             measurement, _quarantine_stager(primary, info.path, guards, taken)
                         ),
                     )
-                outcome = replace(outcome, freed_bytes=_freed_bytes(measurement, removal.preserved_artifacts))
+                outcome = replace(outcome, freed_bytes=_freed_bytes(measurement, removal.preserved_artifacts),
+                                  preserved_artifacts=removal.preserved_artifacts)
                 if removal.action != "removed":
                     detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason
                     if detail.startswith(worktree_claims.REMOVAL_STAGE_REFUSED):
@@ -8332,7 +8453,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Only remove dispatch worktrees that are clean, have no untracked files, have every commit "
-            "on origin, are used by no process or live task, and were idle for 60 minutes (#10778). "
+            "on origin, have canonical creator custody and HEAD on a verified origin branch, and are used by no process or live task (#10778). "
             "Dry run unless --apply; never forces; never deletes branches."
         ),
     )
