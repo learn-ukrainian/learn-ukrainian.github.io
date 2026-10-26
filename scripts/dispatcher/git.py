@@ -1,11 +1,14 @@
 """Worktree creation and observational Git delivery reporting."""
 
+import errno
 import fcntl
+import logging
 import os
 import re
 import shutil
+import stat
 import subprocess
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager, suppress
 from functools import partial
 from pathlib import Path
 
@@ -14,7 +17,9 @@ import yaml
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import allocate
+from scripts.dispatcher.environment import npm_shim_dir
 from scripts.dispatcher.types import TaskSpec
+from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
@@ -162,6 +167,44 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         else:
             run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
         run_git(path, "reset", "--hard", sha)
+        provision_links(repo, path)
+
+
+def provision_links(repo: Path, worktree: Path) -> None:
+    """Provision only real primary targets; atomic symlink creation never replaces entries."""
+    repo = repo.absolute()
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    node_links = ("node_modules", "site/node_modules")
+    if npm_shim_dir() is None:
+        logging.getLogger(__name__).warning("Skipping node_modules and site/node_modules: npm/npx guard unavailable")
+        node_links = ()
+    database_links = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
+    for relative in (*database_links, *node_links):
+        parts = Path(relative).parts
+        with ExitStack() as stack:
+            def open_directory(name, parent=None):
+                fd = os.open(name, flags, dir_fd=parent)
+                stack.callback(os.close, fd)
+                return fd
+
+            try:
+                source = open_directory(repo)
+                for part in parts[:-1]:
+                    source = open_directory(part, source)
+                target = os.stat(parts[-1], dir_fd=source, follow_symlinks=False)
+                if not (stat.S_ISREG(target.st_mode) or stat.S_ISDIR(target.st_mode)):
+                    logging.getLogger(__name__).warning("Skipping link %s: source is not a real file or directory", relative)
+                    continue
+                destination = open_directory(worktree)
+                for part in parts[:-1]:
+                    with suppress(FileExistsError):
+                        os.mkdir(part, dir_fd=destination)
+                    destination = open_directory(part, destination)
+                os.symlink(repo / relative, parts[-1], dir_fd=destination)
+            except OSError as exc:
+                if exc.errno not in (errno.ENOENT, errno.ENOTDIR, errno.ELOOP, errno.EEXIST):
+                    raise
+                logging.getLogger(__name__).warning("Skipping link %s: %s", relative, errno.errorcode[exc.errno])
 
 
 def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
