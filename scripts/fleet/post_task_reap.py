@@ -1362,9 +1362,14 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
                     return refusal
                 primary = worktree_claims.control_plane_root(repo_root)
                 digest = ignored_task_output.verify_retrieval(primary, receipt)
-                files = ignored_task_output._ignored_output_files(worktree, primary, record)
-                if digest != receipt["retrieval_proof_sha256"] or digest != ignored_task_output._content_digest(
-                    worktree, files
+                files = (
+                    ignored_task_output._ignored_output_files(worktree, primary, record)
+                    if receipt.get("mode") != "record-only"
+                    else []
+                )
+                if digest != receipt["retrieval_proof_sha256"] or (
+                    receipt.get("mode") != "record-only"
+                    and digest != ignored_task_output._content_digest(worktree, files)
                 ):
                     return "retention release requires retrieval of the current output bytes"
                 release = {"owner": task_id, "run_nonce": record["run_nonce"], "retrieval_proof_sha256": digest}

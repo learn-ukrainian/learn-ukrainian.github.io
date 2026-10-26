@@ -24,26 +24,10 @@ class HeldWorkPreservationError(ValueError):
 
 EVIDENCE_DIRNAME = "evidence"
 EVIDENCE_SCHEMA = "runtime-evidence.v1"
-# A concurrent writer may add or change a file while the copy is in progress.
-# Re-enumerate and copy again from scratch; a source that never settles is a
-# typed refusal (the lease survives), never a partial receipt.
-EVIDENCE_PRESERVATION_ATTEMPTS = 3
-
-
-class _EvidenceSourceChanged(Exception):
-    """The evidence directory changed between copy and verification; copy again."""
-
-
 class EvidencePreservationError(ValueError):
     """Evidence under the runtime lease could not be preserved; keep the lease."""
 
     code = "runtime_evidence_preservation_failed"
-
-
-class EvidenceLimitExceeded(EvidencePreservationError):
-    """The evidence directory exceeds the retention cap; refusal is typed, not deletion."""
-
-    code = "runtime_evidence_over_cap"
 
 
 def _strings(value: Any) -> list[str]:
