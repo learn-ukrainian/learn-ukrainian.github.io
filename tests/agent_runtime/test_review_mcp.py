@@ -81,12 +81,17 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 @pytest.mark.parametrize("profile", ["code", "", "ukrainian"])
 def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_path, harness, access, profile):
     """Catch incomplete gate inputs, mutable results, or dropped legacy grants."""
-    base = {"read_only_tmp_root": str(tmp_path), "run_nonce": "nonce", "owned_paths": [], "risk": "critical"}
+    base = {
+        "read_only_tmp_root": str(tmp_path), "run_nonce": "nonce", "owned_paths": [], "risk": "critical",
+        "disable_features": ["plugins"], "metadata": {"enabled": ["sources"]},
+    }
     plan = prepare_review_attempt(
         "rev-config", "att-config", manifest_file, harness, receipts_root=tmp_path / "receipts", review_access=access
     )
     expected = {
         **base,
+        "disable_features": ["plugins"],
+        "metadata": {"enabled": ["sources"]},
         "mcp_config_path": str(plan.config_path),
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
@@ -113,8 +118,7 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
             review_mcp_module, "verify_review_attempt_paths", side_effect=AssertionError("runtime owns check")
         ),
     ):
-        result = review_mcp_module.review_attempt_tool_config(
-            plan,
+        options = dict(
             manifest_path=manifest_file,
             input_root=tmp_path,
             cwd=tmp_path,
@@ -125,11 +129,11 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
             review_profile=profile,
             base_tool_config=base,
         )
+        result = review_mcp_module.review_attempt_tool_config(plan, **options)
         assert result == expected
         with pytest.raises(TypeError):
             result["review_access"] = "full"
-        base["risk"] = "low"
-        assert result["risk"] == "critical"
+        checked = []
         for name, gate in (("codex", codex_gate), ("agy", agy_gate)):
             if harness == name and access == "isolated":
                 gate.assert_called_once_with(
@@ -141,10 +145,24 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
                     task_id="config-test",
                     tool_config=expected,
                 )
-                gate.call_args.kwargs["tool_config"]["risk"] = "low"
-                assert result["risk"] == "critical"
+                checked.append(gate.call_args.kwargs["tool_config"])
+                second = review_mcp_module.review_attempt_tool_config(plan, **options)
+                checked.append(gate.call_args.kwargs["tool_config"])
+                for config in checked:
+                    assert config["disable_features"] is not base["disable_features"]
+                    assert config["metadata"] is not base["metadata"]
             else:
                 gate.assert_not_called()
+        base["risk"] = "low"
+        base["disable_features"].remove("plugins")
+        base["metadata"].clear()
+        assert result == expected
+        if checked:
+            assert second == checked[0] == checked[1] == expected
+            checked[0]["risk"] = "low"
+            checked[0]["disable_features"].clear()
+            checked[0]["metadata"]["enabled"].clear()
+            assert result == second == checked[1] == expected
 
 
 @pytest.mark.parametrize(
@@ -182,23 +200,10 @@ def test_tool_config_refuses_invalid_or_missing_attempt_binding(manifest_file, t
 @pytest.mark.parametrize(
     "key",
     [
-        "mcp_config_path",
-        "strict_mcp_config",
-        "mcp_server_names",
-        "review_id",
-        "attempt_id",
-        "review_manifest",
-        "review_input_root",
-        "review_access",
-        "review_cwd",
-        "allowed_tools",
-        "reviewer_tools",
-        "codex_home_override",
-        "agy_home_override",
-        "claude_home_override",
-        "mcp_servers",
-        "review_profile",
-        "review_ledger_path",
+        "mcp_config_path", "strict_mcp_config", "mcp_server_names", "review_id", "attempt_id",
+        "review_manifest", "review_input_root", "review_access", "review_cwd", "allowed_tools",
+        "reviewer_tools", "codex_home_override", "agy_home_override", "claude_home_override",
+        "mcp_servers", "review_profile", "review_ledger_path",
     ],
 )
 def test_tool_config_refuses_reserved_base_key_collision(manifest_file, tmp_path, key):

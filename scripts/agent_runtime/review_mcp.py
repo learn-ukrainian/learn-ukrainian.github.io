@@ -82,6 +82,7 @@ Note: Ledger creation and sidecar management will be consolidated once R1
 from __future__ import annotations
 
 import contextlib
+import copy
 import errno
 import hashlib
 import json
@@ -1090,10 +1091,10 @@ def review_attempt_tool_config(
 ) -> Mapping[str, Any]:
     """Build a bound attempt's launch options, preserving delegate's MCP gates.
 
-    The runner owns the filesystem boundary and verifies attempt paths again
-    before launch. This builder has no callers until dispatch v2 wires it in.
-    Pass every worker option, including AGY's run_nonce, owned_paths and risk,
-    in base_tool_config so the gate checks the complete launch configuration.
+    Pass every worker option in base_tool_config so the gate checks the full launch.
+    The base, gate input and result have independent nested copies. Preserve list/dict
+    types for adapters; the runner must treat nested values as read-only after admission.
+    The top level is frozen. The runner owns the boundary and pre-launch path checks.
     """
     if plan.harness not in SUPPORTED_HARNESSES:
         raise ValueError("review attempt refused: unsupported harness")
@@ -1107,22 +1108,11 @@ def review_attempt_tool_config(
     if review_access not in {"isolated", "full"}:
         raise ValueError("review attempt refused: invalid review_access")
 
-    tool_config = dict(base_tool_config or {})
+    tool_config = copy.deepcopy(dict(base_tool_config or {}))
     reserved = {
-        "mcp_config_path",
-        "strict_mcp_config",
-        "mcp_server_names",
-        "review_id",
-        "attempt_id",
-        "review_manifest",
-        "review_input_root",
-        "review_access",
-        "review_cwd",
-        "allowed_tools",
-        "reviewer_tools",
-        "mcp_servers",
-        "review_profile",
-        "review_ledger_path",
+        "mcp_config_path", "strict_mcp_config", "mcp_server_names", "review_id", "attempt_id",
+        "review_manifest", "review_input_root", "review_access", "review_cwd", "allowed_tools",
+        "reviewer_tools", "mcp_servers", "review_profile", "review_ledger_path",
     }
     if any(key in reserved or key.endswith("_home_override") for key in tool_config):
         raise ValueError("review attempt refused: reserved tool_config key")
@@ -1163,7 +1153,7 @@ def review_attempt_tool_config(
             task_id=task_id,
             tool_config=tool_config,
         )
-    return MappingProxyType(dict(tool_config))
+    return MappingProxyType(copy.deepcopy(tool_config))
 
 
 def _config_flags(argv: Sequence[str]) -> list[str]:
