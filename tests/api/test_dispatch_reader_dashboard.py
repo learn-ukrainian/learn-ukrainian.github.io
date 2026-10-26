@@ -1,15 +1,41 @@
 """Exercise the dashboard's actual script against mixed task records."""
 
 import json
-import re
 import subprocess
+from html.parser import HTMLParser
 from pathlib import Path
+
+
+def _extract_inline_scripts(page: str) -> list[str]:
+    class ScriptParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.scripts: list[list[str]] = []
+            self.in_script = False
+
+        def handle_starttag(self, tag, attrs):
+            if tag == "script":
+                self.scripts.append([])
+                self.in_script = True
+
+        def handle_data(self, data):
+            if self.in_script:
+                self.scripts[-1].append(data)
+
+        def handle_endtag(self, tag):
+            if tag == "script":
+                self.in_script = False
+
+    parser = ScriptParser()
+    parser.feed(page)
+    parser.close()
+    return ["".join(parts) for parts in parser.scripts]
 
 
 def test_dashboard_renders_versions_and_preserves_quoted_run_identity():
     """A quoted nonce must not split an HTML handler or lose run identity."""
     page = Path("dashboards/delegate.html").read_text()
-    scripts = re.findall(r"<script\b[^>]*>(.*?)</script\s*>", page, re.S | re.I)
+    scripts = _extract_inline_scripts(page)
     assert len(scripts) == 1
     script = scripts[0]
     probe = r"""
