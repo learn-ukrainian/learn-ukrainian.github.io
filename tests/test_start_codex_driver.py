@@ -431,7 +431,7 @@ def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
         timeout=30,
     )
     assert result.returncode == 2
-    assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
+    assert "approved models are gpt-6-luna, gpt-6.1-sol, gpt-6.1-terra" in result.stderr
 
 
 @pytest.mark.parametrize("harness", ["codex", "claude-code"])

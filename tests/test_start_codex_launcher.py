@@ -33,7 +33,7 @@ def test_codex_hermes_opt_in_uses_provider_label_separately_from_model(tmp_path)
 def test_codex_hermes_rejects_provider_label_as_model() -> None:
     result = run_launcher("start-codex.sh", "--harness", "hermes", "--model", "openai-codex")
     assert result.returncode == 2
-    assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
+    assert "approved models are gpt-6-luna, gpt-6.1-sol, gpt-6.1-terra" in result.stderr
 
 
 def test_codex_hermes_cannot_start_astra_driver_or_governor() -> None:

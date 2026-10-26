@@ -7,9 +7,9 @@ export GIT_OPTIONAL_LOCKS=0
 
 launcher_adapter_validate() {
   case "$LC_MODEL" in
-    gpt-6.1-sol|gpt-6-luna) ;;
+    gpt-6-luna|gpt-6.1-sol|gpt-6.1-terra) ;;
     *)
-      launcher_error "Codex model $LC_MODEL rejected; approved models are gpt-6-luna, gpt-6.1-sol."
+      launcher_error "Codex model $LC_MODEL rejected; approved models are gpt-6-luna, gpt-6.1-sol, gpt-6.1-terra."
       exit 2
       ;;
   esac

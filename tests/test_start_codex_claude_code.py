@@ -101,4 +101,4 @@ def test_direct_codex_proxy_configuration_rejects_old_pin_without_exports():
         text=True, capture_output=True, check=False, timeout=10,
     )
     assert result.returncode == 2
-    assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
+    assert "approved models are gpt-6-luna, gpt-6.1-sol, gpt-6.1-terra" in result.stderr
