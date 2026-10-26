@@ -139,7 +139,7 @@ def _serialize_files(files: Any) -> str:
     return "\n".join(lines)
 
 
-def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path:
+def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path, *, pr: dict | None = None) -> Path:
     """Pointer-only PR review prompt (Sol fleet-comms Phase 2).
 
     Never embed full PR body or diff — the reviewer pulls evidence under
@@ -152,7 +152,8 @@ def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path
         prepend_read_only_contract,
     )
 
-    pr = _run_json_command(["gh", "pr", "view", pr_number, "--json", "title,files,url,headRefOid"])
+    if pr is None:
+        pr = _run_json_command(["gh", "pr", "view", pr_number, "--json", "title,files,url,headRefOid"])
     title = str(pr.get("title") or "").strip()
     url = str(pr.get("url") or f"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/{pr_number}")
     head = str(pr.get("headRefOid") or "").strip()
@@ -180,9 +181,19 @@ def _review_task_id(target: str) -> str:
     return f"review-{_safe_path_component(target)[:80]}-{digest}-{timestamp}"
 
 
-def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> list[str]:
+def build_review_deep_command(target: str, prompt_file: Path, effort: str, *, pr: dict | None = None) -> list[str]:
     if not _is_pr_number(target):
         raise ValueError("review-deep requires a PR number; local-path review is retired")
+    from scripts.common.git_context import validate_plain_branch_name
+
+    if pr is None:
+        pr = _run_json_command(["gh", "pr", "view", target.lstrip("#"), "--json", "headRefName,headRefOid"])
+    if not isinstance(pr, dict):
+        raise ValueError("review-deep could not load PR metadata")
+    branch, head = pr.get("headRefName"), pr.get("headRefOid")
+    if not isinstance(branch, str) or not isinstance(head, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", head):
+        raise ValueError("review-deep requires the PR head ref and full head SHA")
+    branch = validate_plain_branch_name(branch, repo_root=REPO_ROOT)
     command = [
         PYTHON,
         "scripts/dispatch.py",
@@ -200,8 +211,7 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> li
         "--prompt-file",
         str(prompt_file),
     ]
-    head = _run_text_command(["git", "rev-parse", "HEAD"]).strip()
-    command.extend(["--full-checkout", "--pinned-head", head])
+    command.extend(["--full-checkout", "--branch", branch, "--pinned-head", head])
     return command
 
 
@@ -260,8 +270,17 @@ def handle_review_deep(args: Any) -> int:
         )
         return 2
     with _prompt_directory() as prompt_directory:
-        prompt_file = _write_review_deep_pr_prompt(args.target.lstrip("#"), prompt_directory)
-        command = build_review_deep_command(args.target, prompt_file, args.effort)
+        try:
+            pr = _run_json_command([
+                "gh", "pr", "view", args.target.lstrip("#"), "--json", "title,files,url,headRefName,headRefOid",
+            ])
+            if not isinstance(pr, dict):
+                raise ValueError("review-deep could not load PR metadata")
+            prompt_file = _write_review_deep_pr_prompt(args.target.lstrip("#"), prompt_directory, pr=pr)
+            command = build_review_deep_command(args.target, prompt_file, args.effort, pr=pr)
+        except (OSError, ValueError, subprocess.SubprocessError):
+            print("review-deep: could not load a valid PR head ref and SHA; review not dispatched.", file=sys.stderr)
+            return 2
         return _run_dispatch(command, args.dry_run, prompt_file)
 
 

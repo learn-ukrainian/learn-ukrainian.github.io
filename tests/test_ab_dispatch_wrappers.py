@@ -220,11 +220,12 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease_root))
 
     def fake_run(command, **kwargs):
-        if command == ["gh", "pr", "view", "1740", "--json", "title,files,url,headRefOid"]:
+        if command == ["gh", "pr", "view", "1740", "--json", "title,files,url,headRefName,headRefOid"]:
             payload = {
                 "title": "Wrapper PR",
                 "url": "https://example.com/pull/1740",
-                "headRefOid": "deadbeef",
+                "headRefOid": "deadbeef" * 5,
+                "headRefName": "codex/pr-under-review",
                 "files": [{"path": "scripts/ai_agent_bridge/_cli.py", "additions": 10, "deletions": 2}],
             }
             return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload))
@@ -256,18 +257,47 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
         "claude", "claude-opus-5-5", "read-only", "xhigh",
     )
     assert parsed.full_checkout is True
-    assert parsed.pinned_head == "a" * 40
+    assert parsed.pinned_head == "deadbeef" * 5
+    assert parsed.branch == "codex/pr-under-review"
     assert parsed.cwd is None
     prompt_path = Path(state["prompt_file"])
+    from scripts.dispatcher.store import new_record
+    from scripts.dispatcher.types import TaskSpec
+
+    spec = TaskSpec(
+        parsed.task_id, parsed.agent, parsed.model, parsed.effort, parsed.mode,
+        tmp_path, prompt_path, tmp_path / "result.md",
+    )
+    record = new_record(spec, {"key": "test", "github": "test/repo"}, "claude/review", parsed.pinned_head, vars(parsed))
+    assert record["review_branch"] == "codex/pr-under-review"
+    assert record["pinned_head"] == record["worktree_base_sha"] == "deadbeef" * 5
+    assert parsed.review_author_model is parsed.review_profile is parsed.risk is None
     assert prompt_path.parent == lease_root
     prompt = prompt_path.read_text(encoding="utf-8")
     assert wrappers.REVIEW_DEEP_INSTRUCTIONS in prompt
     assert "READ-ONLY REVIEW CONTRACT" in prompt
-    assert "deadbeef" in prompt
+    assert "deadbeef" * 5 in prompt
     assert "scripts/ai_agent_bridge/_cli.py" in prompt
     # Pointer-only: no embedded PR body or unified diff
     assert "Review this behavior." not in prompt
     assert "diff --git" not in prompt
+
+
+@pytest.mark.parametrize("pr", [
+    {}, [], {"headRefName": "codex/pr"}, {"headRefOid": "b" * 40},
+    {"headRefName": "", "headRefOid": "b" * 40},
+    {"headRefName": "codex/pr", "headRefOid": "bad-sha"}, None,
+])
+def test_review_deep_missing_pr_head_fails_closed(monkeypatch, capsys, pr):
+    def load(command):
+        if pr is None:
+            raise subprocess.CalledProcessError(1, command)
+        return pr
+
+    monkeypatch.setattr(wrappers, "_run_json_command", load)
+    monkeypatch.setattr(wrappers, "_run_dispatch", lambda *args: pytest.fail("must not dispatch"))
+    assert wrappers.handle_review_deep(argparse.Namespace(target="1740", effort="high", dry_run=True)) == 2
+    assert "could not load a valid PR head ref and SHA" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("target_kind", ["file", "directory", "missing"])
