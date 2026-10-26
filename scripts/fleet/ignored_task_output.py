@@ -1423,7 +1423,7 @@ def record_only_receipt(
                 root_fd = artifacts._open_trusted_root(root)
                 held.callback(os.close, root_fd)
                 parts = artifacts._relative_parts(root / name, root)
-                parent_fd, owned = artifacts._open_parent(root_fd, parts[:-1])
+                parent_fd, owned = artifacts._walk_parent(root_fd, parts[:-1])
                 if owned:
                     held.callback(os.close, parent_fd)
                 fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)
