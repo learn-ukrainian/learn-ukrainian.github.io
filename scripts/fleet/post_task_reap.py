@@ -232,7 +232,7 @@ def _git_worktree_lock_reason(path: Path, repo_root: Path) -> str | None:
 
 
 def _pid_alive(pid: int) -> bool | None:
-    """Return True if ``pid`` is alive, False if dead, None if probe failed.
+    """Return True if ``pid`` is alive, False if dead/zombie, None if probe failed.
 
     Fail-closed callers must treat ``None`` as 'retain'.
     """
@@ -246,6 +246,12 @@ def _pid_alive(pid: int) -> bool | None:
         return True
     except OSError:
         return None
+    try:
+        # comm may contain spaces and parentheses; state follows the final ')'.
+        fields = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8").rsplit(")", 1)[1].split()
+        return fields[0] != "Z"
+    except (OSError, UnicodeError, IndexError):
+        pass
     return True
 
 

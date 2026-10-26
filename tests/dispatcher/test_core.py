@@ -256,6 +256,19 @@ def test_unknown_or_unpushed_delivery_never_starts_a_reaper(tmp_path, monkeypatc
     worker._reap_settled(dict(worktree_dirty_on_exit=dirty, push_state=push, mode="workspace-write"), tmp_path / "task.json")
 
 
+def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatch):
+    identity = worker._identity(os.getpid())
+    record = dict(schema_version=2, status="running", pid=os.getpid(), process_start=identity)
+    identities = iter([identity, f"{identity}-reused"])
+    monkeypatch.setattr(worker.store, "read", lambda *_args: record)
+    monkeypatch.setattr(worker, "_identity", lambda _pid: next(identities))
+    send_signal = Mock()
+    monkeypatch.setattr(worker.signal, "pidfd_send_signal", send_signal)
+    with pytest.raises(ValueError, match="supervisor identity changed; cancellation refused"):
+        worker.cancel("reused-supervisor")
+    send_signal.assert_not_called()
+
+
 def test_reaper_failure_does_not_change_task_status(sandbox):
     stub_common_reaper(sandbox)
     sandbox.tasks.mkdir()
