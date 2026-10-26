@@ -10,12 +10,68 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY, CursorAdapter
+from scripts.agent_runtime.adapters.cursor import (
+    CURSOR_AUTO_ADMITTED_KEY,
+    CursorAdapter,
+    _load_cursor_api_key_from_env_file,
+)
 
 
 @pytest.fixture
 def adapter():
     return CursorAdapter()
+
+
+@pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
+@pytest.mark.parametrize("file_key", [None, "stub-file-key"])
+def test_cursor_adapter_missing_or_blank_process_key_falls_back_to_file(
+    adapter, tmp_path, monkeypatch, process_key, file_key
+):
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
+    key_file = tmp_path / "api.key.env"
+    key_file.write_text(f"CURSOR_API_KEY={file_key or ''}\n", encoding="utf-8")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._cursor_api_key_env_path", lambda: key_file)
+
+    plan = adapter.build_invocation(
+        prompt="Review",
+        mode="read-only",
+        cwd=tmp_path,
+        model="grok-4.7-high",
+        task_id="stub-key-fallback",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.env_overrides == {
+        "LU_ENTIRE_CAPTURE_OWNER": "fleet",
+        **({"CURSOR_API_KEY": file_key} if file_key else {}),
+    }
+
+
+def test_cursor_key_file_corrupt_invalid_utf8_returns_no_key_without_raising(tmp_path, capsys):
+    key_file = tmp_path / "api.key.env"
+    key_file.write_bytes(b"CURSOR_API_KEY=stub-\xff-key\n")
+
+    assert _load_cursor_api_key_from_env_file(key_file) is None
+    assert capsys.readouterr() == ("", "")
+
+
+@pytest.mark.parametrize("operation", ["is_file", "read_text"])
+def test_cursor_key_file_unreadable_permission_error_returns_no_key_without_raising(
+    tmp_path, monkeypatch, capsys, operation
+):
+    key_file = tmp_path / "api.key.env"
+    key_file.write_text("CURSOR_API_KEY=stub-file-key\n", encoding="utf-8")
+
+    def deny(*args, **kwargs):
+        raise PermissionError("stub-file-key must not appear in output")
+
+    monkeypatch.setattr(Path, operation, deny)
+    assert _load_cursor_api_key_from_env_file(key_file) is None
+    assert capsys.readouterr() == ("", "")
 
 
 @pytest.mark.parametrize(

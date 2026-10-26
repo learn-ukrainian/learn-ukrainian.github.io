@@ -22,9 +22,10 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
     if spec.provider == "openrouter" and spec.agent == "opencode":
         names = (*_CONTEXT, "OPENROUTER_API_KEY")
     env = {name: os.environ[name] for name in names if name in os.environ}
-    if spec.agent == "cursor" and "CURSOR_API_KEY" not in env:
+    if spec.agent == "cursor" and not env.get("CURSOR_API_KEY", "").strip():
         from scripts.agent_runtime.adapters.cursor import _load_cursor_api_key_from_env_file
 
+        env.pop("CURSOR_API_KEY", None)
         file_key = _load_cursor_api_key_from_env_file()
         if file_key:
             env["CURSOR_API_KEY"] = file_key

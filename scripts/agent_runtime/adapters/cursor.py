@@ -289,7 +289,7 @@ class CursorAdapter:
             cmd.extend(["--force", "--sandbox", "disabled"])
 
         env_overrides: dict[str, str] = {"LU_ENTIRE_CAPTURE_OWNER": "fleet"}
-        if "CURSOR_API_KEY" not in os.environ:
+        if not os.environ.get("CURSOR_API_KEY", "").strip():
             file_key = _load_cursor_api_key_from_env_file()
             if file_key:
                 env_overrides["CURSOR_API_KEY"] = file_key
@@ -837,11 +837,11 @@ def _load_cursor_api_key_from_env_file(path: Path | None = None) -> str | None:
     Never logs or prints the key value.
     """
     key_file = path if path is not None else _cursor_api_key_env_path()
-    if not key_file.is_file():
-        return None
     try:
+        if not key_file.is_file():
+            return None
         content = key_file.read_text(encoding="utf-8")
-    except OSError:
+    except (OSError, UnicodeDecodeError):
         return None
 
     for raw_line in content.splitlines():
