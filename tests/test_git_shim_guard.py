@@ -316,3 +316,112 @@ def test_discovery_suppression_preserves_legitimate_downstream_stderr(discovery_
     result = _run_shim(fx, *args, extra_env=env)
     assert (result.returncode, result.stdout, result.stderr) == (128, "", "fatal: Needed a single revision\n")
     assert fx["marker"].read_text() == "downstream\n"
+
+
+REENTRY_REFUSAL = "error: git shim re-entry refused (recursion limit).\n"
+
+
+@pytest.mark.parametrize("selection", ["explicit", "original-path"])
+@pytest.mark.parametrize("command", ["--version", "status"])
+@pytest.mark.parametrize("invoke", ["exec git", "git"])
+def test_wrapper_reentry_is_bounded_with_hard_timeout(shim_fixture, tmp_path, selection, command, invoke):
+    """Both exec loops and child-spawning wrappers must stop, including discovery probes."""
+    fx = shim_fixture
+    wrapper_dir = tmp_path / "bin"
+    wrapper_dir.mkdir()
+    wrapper = wrapper_dir / "git"
+    calls = tmp_path / "wrapper-calls"
+    wrapper.write_text(
+        '#!/bin/sh\n'
+        'printf "%s:%s\\n" "$LU_GIT_SHIM_ACTIVE" "$LU_GIT_SHIM_DEPTH" >> "$UNIT_CALLS"\n'
+        f'{invoke} "$@"\n'
+    )
+    wrapper.chmod(0o755)
+    env = {
+        "HOME": str(tmp_path),
+        "PATH": f"{fx['shim'].parent}:{wrapper_dir}:/usr/bin:/bin",
+        "AGENT_ORIGINAL_PATH": f"{wrapper_dir}:/usr/bin:/bin",
+        "UNIT_CALLS": str(calls),
+    }
+    if selection == "explicit":
+        env["AGENT_REAL_GIT"] = str(wrapper)
+    result = subprocess.run(
+        ["timeout", "--kill-after=1s", "3s", str(fx["shim"]), command],
+        cwd=fx["workdir"], env=env, capture_output=True, text=True, timeout=5, check=False,
+    )
+    # Discovery intentionally hides child diagnostics; the final exec preserves them.
+    assert (result.returncode, result.stderr) == (
+        (126, REENTRY_REFUSAL) if command == "--version" else (2, DISCOVERY_REFUSAL)
+    )
+    assert result.stdout == ""
+    assert calls.read_text().splitlines() == [f"1:{depth}" for depth in range(1, 9)]
+
+
+@pytest.mark.parametrize("depth", [None, "", "0", "8", "999999999999999999999", "1+1", "01"])
+def test_reentry_marker_without_valid_depth_fails_closed(shim_fixture, depth):
+    """Missing, malformed and exhausted inherited depths must refuse before any helper runs."""
+    env = {"LU_GIT_SHIM_ACTIVE": "1"}
+    if depth is not None:
+        env["LU_GIT_SHIM_DEPTH"] = depth
+    result = _run_shim(shim_fixture, "checkout", "some-branch", extra_env=env)
+    assert (result.returncode, result.stdout, result.stderr) == (126, "", REENTRY_REFUSAL)
+    assert not shim_fixture["log"].exists()
+
+
+def test_real_git_hook_can_invoke_git_through_shim(shim_fixture, tmp_path):
+    """A real pre-commit hook must retain nested Git access despite the inherited marker."""
+    fx = shim_fixture
+    hook_output = tmp_path / "hook-output"
+    push_output = tmp_path / "push-output"
+    hook = fx["workdir"] / ".git" / "hooks" / "pre-commit"
+    hook.write_text(
+        '#!/bin/sh\nset -eu\n'
+        'test "$LU_GIT_SHIM_ACTIVE:$LU_GIT_SHIM_DEPTH" = "1:1"\n'
+        'PATH="${UNIT_SHIM%/*}:$PATH"; export PATH\n'
+        'test "$(command -v git)" = "$UNIT_SHIM"\n'
+        'git rev-parse --is-inside-work-tree > "$UNIT_HOOK_OUT"\n'
+        'if git push origin main > "$UNIT_PUSH_OUT" 2>&1; then exit 93; fi\n'
+    )
+    hook.chmod(0o755)
+    result = _run_shim(
+        fx, "-c", "user.name=Shim Test", "-c", "user.email=shim@example.com",
+        "commit", "--allow-empty", "-m", "Nested hook Git",
+        extra_env={
+            "PATH": f"{fx['shim'].parent}:/usr/bin:/bin",
+            "UNIT_SHIM": str(fx["shim"]), "UNIT_HOOK_OUT": str(hook_output),
+            "UNIT_PUSH_OUT": str(push_output),
+            "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": "/dev/null",
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    assert hook_output.read_text() == "true\n"
+    assert "cannot push directly to main" in push_output.read_text()
+
+
+def test_reentry_markers_are_not_exported_to_containment_helper(shim_fixture, tmp_path):
+    """A non-Git shim helper must receive neither new nor inherited recursion markers."""
+    helper = tmp_path / "guard-python"
+    helper.write_text(
+        '#!/bin/sh\n'
+        'test "${LU_GIT_SHIM_ACTIVE+set}" != set || exit 91\n'
+        'test "${LU_GIT_SHIM_DEPTH+set}" != set || exit 92\n'
+        'printf "GUARD_ALLOW\\n"\n'
+    )
+    helper.chmod(0o755)
+    for markers in ({}, {"LU_GIT_SHIM_ACTIVE": "1", "LU_GIT_SHIM_DEPTH": "1"}):
+        result = _run_shim(
+            shim_fixture, "checkout", "--orphan", "fresh",
+            extra_env={"AGENT_GIT_SHIM_PYTHON": str(helper), **markers},
+        )
+        assert result.returncode == 0, result.stderr
+
+
+def test_failed_push_common_dir_probe_preserves_opsec_refusal(shim_fixture, tmp_path):
+    """A failed Git lookup must retain the push refusal rather than exit silently at exec."""
+    detached_shim = tmp_path / "detached" / "scripts" / "agent_runtime" / "shims" / "git"
+    detached_shim.parent.mkdir(parents=True)
+    shutil.copy2(SHIM_SOURCE, detached_shim)
+    result = _run_shim({**shim_fixture, "shim": detached_shim}, "push", "origin", "feature")
+    assert (result.returncode, result.stdout, result.stderr) == (
+        2, "", "OPSEC: push scanner hooks unavailable; push refused.\n",
+    )
