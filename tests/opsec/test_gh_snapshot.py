@@ -345,10 +345,15 @@ def test_out_of_pattern_diagnostic_paths_reach_gh(suffix):
 
 @pytest.mark.parametrize("suffix", DIAGNOSTIC_PATHS)
 @pytest.mark.parametrize(
-    "prefix", ["repos/other/public/", "repos/unit/other/", "https://other.invalid/repos/unit/public/"]
+    "prefix,refused",
+    [
+        ("repos/other/public/", False),
+        ("repos/unit/other/", False),
+        ("https://other.invalid/repos/unit/public/", True),
+    ],
 )
-def test_diagnostic_other_repository_or_host_is_refused(suffix, prefix):
-    if prefix.startswith("https://other.invalid"):
+def test_diagnostic_other_repository_or_host_is_refused(suffix, prefix, refused):
+    if refused:
         with pytest.raises(PublishBlocked):
             admit(["api", prefix + suffix], cwd=".", environment={}, reader=origin_reader)
     else:
