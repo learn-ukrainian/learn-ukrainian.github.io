@@ -415,6 +415,7 @@ def _build_remote_dispatch_script(
     remote_repo: str,
     payloads: list[tuple[str, str, bytes]],
     extra_exports: list[str],
+    entrypoint: str = "scripts/dispatch.py",
 ) -> bytes:
     """Build the SSH-stdin bash program for a forwarded dispatch.
 
@@ -462,7 +463,7 @@ def _build_remote_dispatch_script(
         )
     lines.append(
         build_remote_command(
-            [".venv/bin/python", "scripts/dispatch.py", *argv],
+            [".venv/bin/python", entrypoint, *argv],
             remote_repo=remote_repo,
             extra_exports=extra_exports,
         )
@@ -494,7 +495,7 @@ def forward_dispatch(
     initiator_source: str | None = None,
     run_nonce: str | None = None,
 ) -> int:
-    """SSH a notebook ``scripts/dispatch.py dispatch`` onto the chosen VPS and spawn there.
+    """SSH a dispatch onto the chosen VPS using the entry point supplied in argv[0].
 
     Remote spawn retains the legacy local-spawn environment for callers that
     still inspect it. Dispatch v2 does not forward itself. Initiator identity is
@@ -546,6 +547,7 @@ def forward_dispatch(
         remote_repo=repo,
         extra_exports=extra_exports,
         payloads=payloads,
+        entrypoint=argv[0],
     )
     try:
         completed = subprocess.run(
