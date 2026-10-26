@@ -194,8 +194,10 @@ def test_examples_and_invalid_tokens_are_not_formal_verdicts(reply):
     ("correct", "P2", "REQUEST_CHANGES"),
     ("correct", "P3", "REQUEST_CHANGES"),
 ])
-@pytest.mark.parametrize("wrapper", ["{}", "Review result:\n\n```json\n{}\n```"])
-def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expected, wrapper):
+@pytest.mark.parametrize("wrapper,recordable", [
+    ("{}", True), ("Review result:\n\n```json\n{}\n```", True), ("{}\n```python\nexample()\n```", False),
+])
+def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expected, wrapper, recordable):
     """Fenced findings must not approve findings or misclassify uncertainty."""
     from scripts import delegate
     from scripts.review.record_cf_verdict import _review_verdict_and_count, normalize_verdict
@@ -223,7 +225,11 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
     canonical = {
         "APPROVE": "APPROVED", "REQUEST_CHANGES": "CHANGES_REQUESTED", "BLOCKED": "BLOCKED",
     }[expected]
-    assert normalize_verdict(response) == canonical
+    if recordable:
+        assert normalize_verdict(response) == canonical
+    else:
+        with pytest.raises(RecordError, match="missing or ambiguous"):
+            normalize_verdict(response)
     raw = json.dumps(payload)
     assert _review_verdict_and_count(raw)[0] == _review_verdict_and_count(f"```json\n{raw}\n```")[0] == canonical
 

@@ -115,7 +115,7 @@ def test_token_normalization(reply, expected):
     assert recorder.normalize_verdict(reply) == expected
 
 
-@pytest.mark.parametrize("label", ["json", ""])
+@pytest.mark.parametrize("label", [None, "json", ""])
 @pytest.mark.parametrize("token", ["REQUEST_CHANGES", "APPROVE"])
 def test_findings_payload_cannot_override_verdict_fence(tmp_path, monkeypatch, label, token):
     payload = json.dumps({
@@ -123,7 +123,8 @@ def test_findings_payload_cannot_override_verdict_fence(tmp_path, monkeypatch, l
         "overall": {"correctness": "correct", "explanation": "Reviewed the diff.", "confidence": 0.9},
         "findings": [],
     })
-    reply = f"Review.\n```{label}\n{payload}\n```\n```verdict\n{token}\n```"
+    json_reply = payload if label is None else f"Review.\n```{label}\n{payload}\n```"
+    reply = f"{json_reply}\n```verdict\n{token}\n```"
     for reader in (recorder.normalize_verdict, recorder._review_verdict_and_count):
         with pytest.raises(recorder.RecordError, match="reply carries both a findings payload and a verdict block"):
             reader(reply)

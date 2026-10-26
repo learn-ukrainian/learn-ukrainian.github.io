@@ -120,6 +120,7 @@ def normalize_verdict(reply: str) -> str:
     if findings and _verdict_fences(reply):
         raise RecordError("reply carries both a findings payload and a verdict block")
     if findings:
+        findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, strip_fences=False)}
         if len(findings) == 1:
             return findings.pop()
     else:

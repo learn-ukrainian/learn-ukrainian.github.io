@@ -239,15 +239,15 @@ def recognized_verdicts(response: str) -> list[str]:
     return verdicts + ([token] if token else [])
 
 
-def _findings_json_verdicts(response: str) -> list[str]:
+def _findings_json_verdicts(response: str, *, strip_fences: bool = True) -> list[str]:
     """Read whole JSON replies and top-level JSON blocks, never quoted examples."""
     from markdown_it import MarkdownIt
 
     from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
     from scripts.review.review_contract import ContractError, validate_reviewer_payload
 
-    _without_code_fences(response, keep_unclosed=False)  # Enforce visibility capacity before accepting JSON.
-    candidates = [response]
+    visible = _without_code_fences(response, keep_unclosed=False)
+    candidates = [visible if strip_fences else response]
     candidates.extend(
         token.content
         for token in MarkdownIt("commonmark").parse(response)
