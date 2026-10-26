@@ -77,8 +77,13 @@ def measure(fd: int) -> tuple[int, bool]:
 
 def eligible(fd: int, name: str, batch: Path, cutoff: datetime) -> str | None:
     """Unknown provenance and unresolved retention always keep the entire entry."""
+    archived = False
     try:
-        task = json.loads(read_text(batch / "tasks" / f"{name}.json"))
+        try:
+            task = json.loads(read_text(batch / "tasks" / f"{name}.json"))
+        except FileNotFoundError:
+            task = json.loads(read_text(batch / "tasks" / "archive" / f"{name}.json"))
+            archived = True
     except (OSError, ValueError, ComponentOpenError):
         return "task_unreadable"
     if not isinstance(task, dict) or task.get("task_id") != name or task.get("status") not in _TERMINAL_STATUSES:
@@ -97,6 +102,8 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime) -> str | None:
         except (OSError, ValueError):
             return "manifest_unreadable"
         if not isinstance(record, dict) or record.get("task_id") != name:
+            return "manifest_identity"
+        if archived and (not isinstance(task.get("run_nonce"), str) or not task["run_nonce"] or record.get("run_nonce") != task["run_nonce"]):
             return "manifest_identity"
         records[manifest.removesuffix(".manifest.json")] = record
     for child in children:

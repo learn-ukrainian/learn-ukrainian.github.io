@@ -33,7 +33,7 @@ def make_entry(batch, name="old-task", *, days=4, status="done", bundle="evidenc
         **fields,
     }
     (entry / f"{bundle}.manifest.json").write_text(json.dumps(manifest))
-    (batch / "tasks" / f"{name}.json").write_text(json.dumps({"task_id": name, "status": status}))
+    (batch / "tasks" / f"{name}.json").write_text(json.dumps({"task_id": name, "status": status, "run_nonce": "run-one"}))
     return entry
 
 
@@ -270,16 +270,113 @@ def test_released_task_pin_must_match_manifest_run(batch, nonce):
     assert rows[0]["result"] == ("deleted" if nonce == "run-one" else "skipped:pin")
 
 
-def test_archived_record_cannot_override_missing_required_hot_task_record(batch):
-    entry = make_entry(batch)
+def archive_task(batch, entry):
     hot = batch / "tasks" / f"{entry.name}.json"
     archive = batch / "tasks" / "archive"
     archive.mkdir()
-    hot.rename(archive / hot.name)
+    return hot.rename(archive / hot.name)
+
+
+@pytest.mark.parametrize("apply", [False, True])
+def test_archive_only_terminal_task_makes_old_preserved_entry_eligible_read_only(batch, apply):
+    entry = make_entry(batch)
+    archived = archive_task(batch, entry)
+    before = archived.read_bytes(), archived.stat().st_mtime_ns
+    code, rows = invoke(batch, apply=apply)
+    assert code == 0
+    assert entry.exists() is not apply
+    assert rows[0]["result"] == ("deleted" if apply else "skipped:dry_run")
+    assert (archived.read_bytes(), archived.stat().st_mtime_ns) == before
+
+
+@pytest.mark.parametrize("status", ["running", "spawning", "unknown", None])
+def test_archive_only_nonterminal_task_keeps_preserved_entry(batch, status):
+    entry = make_entry(batch, status=status)
+    archive_task(batch, entry)
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists()
+    assert rows[0]["result"] == "skipped:task_state"
+
+
+@pytest.mark.parametrize("contents", ["bad-json", "[]", '{"task_id":"other","status":"done","run_nonce":"run-one"}'])
+def test_archive_only_invalid_or_identity_mismatched_task_keeps_preserved_entry(batch, contents):
+    entry = make_entry(batch)
+    archived = archive_task(batch, entry)
+    archived.write_text(contents)
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists()
+    assert rows[0]["result"] == ("skipped:task_unreadable" if contents == "bad-json" else "skipped:task_state")
+    assert archived.read_text() == contents
+
+
+def test_archive_only_unreadable_task_keeps_preserved_entry(batch, monkeypatch):
+    entry = make_entry(batch)
+    archived = archive_task(batch, entry)
+    original = retention.read_text
+
+    def deny_archive(path):
+        if path == archived:
+            raise PermissionError(errno.EACCES, "denied")
+        return original(path)
+
+    monkeypatch.setattr(retention, "read_text", deny_archive)
     code, rows = invoke(batch)
     assert code == 0
     assert entry.exists()
     assert rows[0]["result"] == "skipped:task_unreadable"
+
+
+@pytest.mark.parametrize("nonce", ["other-run", None, ""])
+def test_archive_only_nonce_mismatched_or_unknown_task_keeps_preserved_entry(batch, nonce):
+    entry = make_entry(batch)
+    archived = archive_task(batch, entry)
+    archived.write_text(json.dumps({"task_id": entry.name, "status": "done", "run_nonce": nonce}))
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists()
+    assert rows[0]["result"] == "skipped:manifest_identity"
+
+
+@pytest.mark.parametrize("hot_status,archive_status", [("running", "done"), ("done", "running")])
+def test_hot_task_record_wins_over_archived_task(batch, hot_status, archive_status):
+    entry = make_entry(batch, status=archive_status)
+    archived = archive_task(batch, entry)
+    before = archived.read_bytes()
+    (batch / "tasks" / f"{entry.name}.json").write_text(json.dumps({"task_id": entry.name, "status": hot_status}))
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists() is (hot_status != "done")
+    assert rows[0]["result"] == ("deleted" if hot_status == "done" else "skipped:task_state")
+    assert archived.read_bytes() == before
+
+
+@pytest.mark.parametrize("contents", ["bad-json", "[]", '{"task_id":"other","status":"done"}'])
+def test_invalid_hot_task_never_falls_back_to_terminal_archive(batch, contents):
+    entry = make_entry(batch)
+    archive_task(batch, entry)
+    (batch / "tasks" / f"{entry.name}.json").write_text(contents)
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists()
+    assert rows[0]["result"].startswith("skipped:task_")
+
+
+@pytest.mark.parametrize("kind", ["directory", "record"])
+def test_symlinked_archive_path_is_refused(batch, tmp_path, kind):
+    entry = make_entry(batch)
+    archived = archive_task(batch, entry)
+    target = tmp_path / "target"
+    source = archived.parent if kind == "directory" else archived
+    source.rename(target)
+    source.symlink_to(target, target_is_directory=kind == "directory")
+    before = (target / archived.name if kind == "directory" else target).read_bytes()
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists()
+    assert rows[0]["result"] == "skipped:task_unreadable"
+    assert (target / archived.name if kind == "directory" else target).read_bytes() == before
 
 
 def test_symlinked_state_ancestor_refuses_configuration(batch, tmp_path):
