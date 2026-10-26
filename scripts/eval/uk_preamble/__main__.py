@@ -96,7 +96,7 @@ def _default_python() -> str:
 def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
     dispatcher = DelegateDispatcher(
         python=args.python or _default_python(),
-        delegate=REPO_ROOT / "scripts" / "dispatch.py",
+        dispatch_script=REPO_ROOT / "scripts" / "dispatch.py",
         cwd=worker_cwd,
         hard_timeout=args.hard_timeout,
         review_profile=getattr(args, "review_profile", None),
@@ -252,7 +252,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--review-profile",
         choices=("ukrainian",),
         default=None,
-        help="Label review tasks with --review-profile ukrainian; "
+        help="Label review tasks with scripts/dispatch.py --review-profile ukrainian; "
         "review prompts then end with a VERDICT marker line. "
         "The dispatcher accepts the label without enforcing a verdict or permission profile. "
         "Writing tasks are unchanged. "

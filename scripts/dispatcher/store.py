@@ -35,6 +35,9 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     record.update({name: getattr(spec, name) for name in fields})
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
     record.update({name: metadata.get(name) for name in metadata_fields})
+    for name in ("output_schema_path", "output_schema_sha256", "review_write_root"):
+        if name in spec.options:
+            record[name] = spec.options[name]
     for source, target in (
         ("risk", "review_risk"), ("review_profile", "review_profile"),
         ("review_author_model", "review_author_model"), ("review_mode", "review_mode"),
@@ -52,6 +55,8 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     if spec.mode == "read-only" and metadata.get("branch") is not None:
         record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
         record["pinned_head"] = metadata.get("pinned_head") or sha
+    elif spec.mode == "workspace-write" and metadata.get("branch") is not None:
+        record["publish_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
     record.update(prompt_file=str(spec.prompt_file), prompt_sha256=digest(spec.prompt_file.read_bytes()))
     record.update(
         result_file=str(spec.final_file), push_state="unknown", research_owned_paths=metadata["research_owned_path"]
