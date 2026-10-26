@@ -1,6 +1,7 @@
 """Construct a provider environment without inherited infrastructure credentials."""
 
 import os
+import sys
 from pathlib import Path
 
 from scripts.dispatcher.types import TaskSpec
@@ -15,6 +16,21 @@ _AUTH = {
     "opencode": ("DEEPSEEK_API_KEY",),
     "hermes": ("OPENROUTER_API_KEY",),
 }
+_NPM_SHIMS = Path(__file__).resolve().parent / "npm_shims"
+
+
+def npm_shim_dir() -> Path | None:
+    """Share only the npm/npx protection, without importing the legacy runner."""
+    runtime = Path(__file__).resolve().parents[1] / "agent_runtime"
+    executables = [
+        Path(sys.executable), *(_NPM_SHIMS / name for name in ("npm", "npx")),
+        *(runtime / "shims" / name for name in ("npm", "npx")),
+    ]
+    guard = runtime / "npm_guard.py"
+    if (all(os.access(path, os.X_OK) and path.is_file() for path in executables)
+            and os.access(guard, os.R_OK) and guard.is_file()):
+        return _NPM_SHIMS
+    return None
 
 
 def child_env(spec: TaskSpec) -> dict[str, str]:
@@ -32,4 +48,15 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
     if spec.agent == "claude" and spec.claude_account:
         suffix = "" if spec.claude_account == "a" else "-b"
         env["CLAUDE_CONFIG_DIR"] = str(Path(env.get("HOME", str(Path.home()))) / f".claude{suffix}")
+    shims = npm_shim_dir()
+    if shims is not None:
+        original_path = os.pathsep.join(
+            entry for entry in env.get("PATH", os.defpath).split(os.pathsep) if Path(entry).resolve() != shims
+        )
+        env.update(
+            PATH=f"{shims}{os.pathsep}{original_path}", AGENT_ORIGINAL_PATH=original_path,
+            AGENT_GIT_SHIM_PYTHON=sys.executable,
+        )
+    elif any((spec.worktree / name).is_symlink() for name in ("node_modules", "site/node_modules")):
+        raise ValueError("npm/npx guard unavailable for shared node_modules links")
     return env

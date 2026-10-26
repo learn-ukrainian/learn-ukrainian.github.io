@@ -1,12 +1,16 @@
 """Dispatch dependencies must be present without overwriting or escaping either checkout."""
 
 import errno
+import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
-from scripts.dispatcher import git
+from scripts.dispatcher import environment, git
+from scripts.dispatcher.types import TaskSpec
 from scripts.orchestration.worktree_artifacts import is_disposable_path
 
 LINKS = ("data/sources.db", "data/vesum.db", "node_modules", "site/node_modules")
@@ -131,3 +135,70 @@ def test_unexpected_io_failure_is_reported(layout, monkeypatch):
     monkeypatch.setattr(git.os, "symlink", denied)
     with pytest.raises(PermissionError):
         git.provision_links(primary, worktree)
+
+
+@pytest.mark.parametrize("relative", ["node_modules", "site/node_modules"])
+@pytest.mark.parametrize("tool,args", [("npm", ["install"]), ("npx", ["npm", "install"])])
+def test_child_env_refuses_shared_install_without_changing_git_gh(layout, monkeypatch, relative, tool, args):
+    """Dispatch PATH must guard shared installs without enabling legacy git/gh policies."""
+    primary, worktree = layout
+    git.provision_links(primary, worktree)
+    target = primary / relative / "sentinel"
+    target.write_text("keep")
+    binaries = worktree.parent / "bin"
+    binaries.mkdir()
+    for name in ("npm", "npx"):
+        binary = binaries / name
+        binary.write_text(
+            '#!/bin/sh\ncase "$*" in *install*) printf corrupted > node_modules/sentinel;; *) echo real-tool;; esac\n'
+        )
+        binary.chmod(0o755)
+    original_path = os.pathsep.join(
+        [str(binaries), *(entry for entry in os.get_exec_path() if not entry.endswith("/scripts/agent_runtime/shims"))]
+    )
+    monkeypatch.setenv("PATH", original_path)
+    spec = TaskSpec("fixture", "codex", "stub", None, "workspace-write", worktree, worktree / "prompt", worktree / "final")
+    env = environment.child_env(spec)
+    result = subprocess.run(
+        [tool, *args], cwd=worktree / Path(relative).parent, env=env, capture_output=True, text=True, timeout=10
+    )
+    assert result.returncode == 1, result.stderr
+    assert "shim refused" in result.stderr
+    assert target.read_text() == "keep"
+    assert sorted(path.name for path in target.parent.iterdir()) == ["sentinel"]
+    shim_dir = Path(env["PATH"].split(os.pathsep)[0])
+    assert sorted(path.name for path in shim_dir.iterdir()) == ["npm", "npx"]
+    for name in ("git", "gh"):
+        real = shutil.which(name, path=original_path)
+        assert real is not None
+        assert shutil.which(name, path=env["PATH"]) == real
+    monkeypatch.setenv("PATH", env["PATH"])
+    repeated = environment.child_env(spec)
+    passthrough = subprocess.run(
+        [tool, "--version"], cwd=worktree, env=repeated, capture_output=True, text=True, timeout=10
+    )
+    assert passthrough.returncode == 0, passthrough.stderr
+    assert passthrough.stdout == "real-tool\n"
+
+
+@pytest.mark.parametrize("missing", ["directory", "npm", "npx", "npm_guard.py", "interpreter"])
+def test_unavailable_guard_skips_shared_install_links_only(layout, monkeypatch, caplog, missing):
+    """Missing npm/npx protection must not expose the primary install to children."""
+    primary, worktree = layout
+    if missing == "directory":
+        monkeypatch.setattr(environment, "_NPM_SHIMS", worktree / "missing-shims")
+    else:
+        runtime = Path(environment.__file__).resolve().parents[1] / "agent_runtime"
+        unavailable = Path(sys.executable) if missing == "interpreter" else runtime / (
+            f"shims/{missing}" if missing in ("npm", "npx") else missing
+        )
+        access = os.access
+        monkeypatch.setattr(os, "access", lambda path, mode: path != unavailable and access(path, mode))
+    git.provision_links(primary, worktree)
+    for relative in LINKS:
+        assert (worktree / relative).is_symlink() == relative.endswith(".db")
+    assert "npm/npx guard unavailable" in caplog.text
+    (worktree / "node_modules").symlink_to(primary / "node_modules")
+    spec = TaskSpec("fixture", "codex", "stub", None, "workspace-write", worktree, worktree / "prompt", worktree / "final")
+    with pytest.raises(ValueError, match="npm/npx guard unavailable"):
+        environment.child_env(spec)

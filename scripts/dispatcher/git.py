@@ -2,6 +2,7 @@
 
 import errno
 import fcntl
+import logging
 import os
 import stat
 import subprocess
@@ -13,6 +14,7 @@ import yaml
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import resolve_repo_root
+from scripts.dispatcher.environment import npm_shim_dir
 from scripts.dispatcher.types import TaskSpec
 
 ROOT = resolve_repo_root(Path(__file__), 2)
@@ -91,7 +93,11 @@ def provision_links(repo: Path, worktree: Path) -> None:
     """Provision only real primary targets; atomic symlink creation never replaces entries."""
     repo = repo.absolute()
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    for relative in ("data/sources.db", "data/vesum.db", "node_modules", "site/node_modules"):
+    node_links = ("node_modules", "site/node_modules")
+    if npm_shim_dir() is None:
+        logging.getLogger(__name__).warning("Skipping node_modules and site/node_modules: npm/npx guard unavailable")
+        node_links = ()
+    for relative in ("data/sources.db", "data/vesum.db", *node_links):
         parts = Path(relative).parts
         with ExitStack() as stack:
             def open_directory(name, parent=None):
@@ -105,6 +111,7 @@ def provision_links(repo: Path, worktree: Path) -> None:
                     source = open_directory(part, source)
                 target = os.stat(parts[-1], dir_fd=source, follow_symlinks=False)
                 if not (stat.S_ISREG(target.st_mode) or stat.S_ISDIR(target.st_mode)):
+                    logging.getLogger(__name__).warning("Skipping link %s: source is not a real file or directory", relative)
                     continue
                 destination = open_directory(worktree)
                 for part in parts[:-1]:
@@ -115,6 +122,7 @@ def provision_links(repo: Path, worktree: Path) -> None:
             except OSError as exc:
                 if exc.errno not in (errno.ENOENT, errno.ENOTDIR, errno.ELOOP, errno.EEXIST):
                     raise
+                logging.getLogger(__name__).warning("Skipping link %s: %s", relative, errno.errorcode[exc.errno])
 
 
 def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
