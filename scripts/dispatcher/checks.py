@@ -1,4 +1,4 @@
-"""The dispatcher's three input, independence and resource checks."""
+"""Dispatch input, review independence and resource admission checks."""
 
 import shutil
 from pathlib import Path
@@ -40,9 +40,7 @@ def check_private_input(spec: TaskSpec, repo_key: str) -> None:
         _handle_private_input(spec, "private path input is not permitted for this agent")
 
 
-def check_review_family(author_model: str | None, reviewer_model: str) -> None:
-    if author_model is None:
-        return
+def _model_families() -> dict[str, str | None]:
     models = yaml.safe_load(CATALOG.read_text())["models"]
     families = {}
     for name, item in models.items():
@@ -53,9 +51,36 @@ def check_review_family(author_model: str | None, reviewer_model: str) -> None:
             *item.get("runtime_model_ids", []),
         ]:
             families[identifier] = item.get("family")
+    return families
+
+
+def check_review_family(author_model: str | None, reviewer_model: str) -> None:
+    if author_model is None:
+        return
+    families = _model_families()
     author, reviewer = families.get(author_model), families.get(reviewer_model)
     if not author or not reviewer or author == reviewer:
         raise ValueError("review independence requires two known, different model families")
+
+
+def check_review_subjects(agent, model, seats, families, owned_paths):
+    from types import SimpleNamespace
+
+    from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
+
+    exclusion = prepare_subject_exclusion(subject_seats=frozenset(seats), subject_families=frozenset(families),
+                                          owned_paths=tuple(owned_paths))
+    if exclusion.fail_closed_reason:
+        raise ValueError(exclusion.fail_closed_reason)
+    family = _model_families().get(model)
+    if (exclusion.seats or exclusion.families) and not family:
+        raise ValueError("subject exclusion requires a known reviewer model family")
+    candidate = SimpleNamespace(name=agent, family=family or "", concrete_model=model, route=agent, transport=agent)
+    reason = subject_exclusion_reason(candidate, seats=exclusion.seats, families=exclusion.families,
+                                      evidence=exclusion.evidence)
+    if reason:
+        raise ValueError(reason)
+    return exclusion
 
 
 def check_resources(paths) -> None:

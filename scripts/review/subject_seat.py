@@ -66,6 +66,7 @@ _AMBIGUOUS_PREFIXES = (
 )
 
 _ADAPTER_PREFIX = "scripts/agent_runtime/adapters/"
+_PROVIDER_PREFIX = "scripts/dispatcher/providers/"
 
 # Adapter modules the registry does not name but that serve exactly one seat:
 # ``kimicc.py`` is the Kimi Claude Code harness, and ``codex_events.py`` parses
@@ -202,7 +203,7 @@ def normalize_owned_path(path: str) -> str:
     while text.startswith("./"):
         text = text[2:]
     text = text.rstrip("/")
-    for marker in (_ADAPTER_PREFIX, "scripts/agent_runtime/", "scripts/hooks/", "agents_extensions/"):
+    for marker in (_ADAPTER_PREFIX, _PROVIDER_PREFIX, "scripts/agent_runtime/", "scripts/hooks/", "agents_extensions/"):
         index = text.find(marker)
         if index >= 0:
             return text[index:]
@@ -237,6 +238,10 @@ def adapter_subject_index() -> Mapping[str, frozenset[str]]:
         by_file.setdefault(rel, set()).add(canonical_subject_seat(name))
     for filename, seat in _ADAPTER_COMPANION_SEATS.items():
         by_file.setdefault(f"{_ADAPTER_PREFIX}{filename}", set()).add(seat)
+    from scripts.dispatcher.providers import PROVIDERS
+
+    for provider in PROVIDERS:
+        by_file[f"{_PROVIDER_PREFIX}{provider}.py"] = {canonical_subject_seat(provider)}
     return {path: frozenset(seats) for path, seats in by_file.items()}
 
 
@@ -255,7 +260,7 @@ def classify_owned_path(path: str) -> OwnedPathClassification:
     )
     if rel in _AMBIGUOUS_PATHS or ambiguous_prefix:
         return OwnedPathClassification("ambiguous", frozenset(), "shared reviewer-hook surface")
-    if rel.startswith(_ADAPTER_PREFIX) and rel.endswith(".py"):
+    if rel.startswith((_ADAPTER_PREFIX, _PROVIDER_PREFIX)) and rel.endswith(".py"):
         seats = adapter_subject_index().get(rel)
         if seats is None or len(seats) != 1 or not seats <= KNOWN_SUBJECT_SEATS:
             listed = ", ".join(sorted(seats)) if seats else "shared adapter surface"
