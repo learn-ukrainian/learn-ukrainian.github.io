@@ -1325,7 +1325,7 @@ seats:
         effort: high
         route: codex
         transport: native_codex
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --model {wire_id} --effort high
         review_profiles:
         - code
         - infra
@@ -1365,7 +1365,7 @@ seats:
         transport_fallback_for: grok-4.7
         route: cursor
         transport: cursor
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model {wire_id}
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1384,7 +1384,7 @@ seats:
         effort: high
         route: claude
         transport: native_claude
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id}
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent claude --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1404,7 +1404,7 @@ seats:
         effort: high
         route: claude
         transport: native_claude
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id}
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent claude --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1422,7 +1422,7 @@ seats:
         route: claude
         transport: native_claude
         effort: high
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent claude --model {wire_id} --effort high
   bounded_worker:
     model_id: gpt-6-luna
     bindings:
