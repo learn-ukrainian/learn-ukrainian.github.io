@@ -392,8 +392,6 @@ def running_workers(initiator: str) -> int | None:
                 if type(pid) is not int or pid <= 0 or not isinstance(expected, str) or not expected:
                     return None
                 actual = _identity(pid)
-                if actual is None:
-                    return None
                 count += actual == expected
                 continue
             if data.get("schema_version", 1) != 1:

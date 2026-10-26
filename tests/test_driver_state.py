@@ -1318,17 +1318,19 @@ def test_gate_failure_refuses_symlinked_receipt(driver, state, monkeypatch, caps
     assert target.read_text() == "untouched"
 
 
-@pytest.mark.parametrize("identity, expected", [("boot:42", 2), ("boot:99", 1), (None, None)])
-def test_mixed_schema_worker_count_is_read_only(driver, monkeypatch, identity, expected):
+@pytest.mark.parametrize("status", ["running", "spawning"])
+@pytest.mark.parametrize("identity, expected", [("boot:42", 3), ("boot:99", 2), (None, 2)])
+def test_mixed_schema_worker_count_is_read_only(driver, monkeypatch, identity, expected, status):
     from scripts.dispatcher import worker
 
-    _workers(driver, "gemini-infra", 2)
-    path = driver_state.tasks_dir() / "t1.json"
-    task = json.loads(path.read_text())
-    task.update(schema_version=2, pid=123, process_start="boot:42")
-    path.write_text(json.dumps(task))
+    _workers(driver, "gemini-infra", 3, status=status)
+    for index, pid in [(1, 123), (2, 124)]:
+        path = driver_state.tasks_dir() / f"t{index}.json"
+        task = json.loads(path.read_text())
+        task.update(schema_version=2, pid=pid, process_start="boot:42")
+        path.write_text(json.dumps(task))
     before = {p: p.read_bytes() for p in driver_state.tasks_dir().glob("*.json")}
-    monkeypatch.setattr(worker, "_identity", lambda pid: identity)
+    monkeypatch.setattr(worker, "_identity", lambda pid: identity if pid == 123 else "boot:42")
     assert driver_state.running_workers("gemini-infra") == expected
     assert {p: p.read_bytes() for p in before} == before
 
