@@ -41,7 +41,7 @@ def _observe(record: dict) -> dict:
         record["duration_s"] = (
             datetime.fromisoformat(record["finished_at"]) - datetime.fromisoformat(record["started_at"])
         ).total_seconds()
-        record.update(git.snapshot_delivery(_spec(record, {}), record["worktree_base_sha"], record["worktree_branch"]))
+        record.update(git.snapshot_delivery(_spec(record, {}), record))
         store.replace(record)
     return record
 
@@ -213,7 +213,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             duration_s=round(time.monotonic() - started, 3),
             result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
         )
-        record.update(git.snapshot_delivery(spec, record["worktree_base_sha"], record["worktree_branch"]))
+        record.update(git.snapshot_delivery(spec, record))
         if spec.agent == "cursor":
             record.update(
                 resolved_model=resolved_model if resolved_model is not None else "unknown",

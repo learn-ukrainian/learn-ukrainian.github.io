@@ -83,27 +83,25 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         run_git(path, "reset", "--hard", sha)
 
 
-def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
-    from scripts.common.git_context import validate_plain_branch_name
-
+def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
     delivery = dict(
-        head_sha=None, remote_head_sha=None, remote_ref=None, publish_branch=spec.options.get("branch"),
+        head_sha=None, remote_head_sha=None, remote_ref=None, publish_branch=record.get("publish_branch"),
         push_state="unknown", push_state_reason="observation_failed", commits_ahead=None,
         worktree_dirty_on_exit=None,
     )
     try:
         delivery.update(
             head_sha=_git(spec.worktree, "rev-parse", "HEAD"),
-            commits_ahead=int(_git(spec.worktree, "rev-list", "--count", f"{base_sha}..HEAD")),
+            commits_ahead=int(_git(spec.worktree, "rev-list", "--count", f"{record['worktree_base_sha']}..HEAD")),
             worktree_dirty_on_exit=bool(_git(spec.worktree, "status", "--porcelain")),
         )
         if spec.mode == "read-only":
             delivery["push_state"] = "not_applicable"
             delivery["push_state_reason"] = "read_only"
         else:
-            branches = [branch]
+            branches = [record["worktree_branch"]]
             if delivery["publish_branch"] is not None:
-                branches.append(validate_plain_branch_name(delivery["publish_branch"], repo_root=spec.worktree))
+                branches.append(delivery["publish_branch"])
             refs = list(dict.fromkeys(f"refs/heads/{name}" for name in branches))
             remote = _git(spec.worktree, "ls-remote", "--heads", "origin", *refs)
             heads = {ref: sha for sha, ref in (line.split() for line in remote.splitlines()) if ref in refs}

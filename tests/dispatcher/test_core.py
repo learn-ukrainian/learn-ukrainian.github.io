@@ -469,11 +469,11 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
             Path(record["prompt_file"]),
             Path(record["result_file"]),
         )
-        observed = git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"])
+        observed = git.snapshot_delivery(probe, record)
         assert observed["push_state"] == "unpushed"
         run_git(probe.worktree, "remote", "set-url", "origin", str(sandbox.tasks / "missing-remote"))
         assert (
-            git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"])["push_state"]
+            git.snapshot_delivery(probe, record)["push_state"]
             == "unknown"
         )
 
@@ -496,7 +496,7 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
         Path(record["prompt_file"]),
         Path(record["result_file"]),
     )
-    assert git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"]) == {
+    assert git.snapshot_delivery(probe, record) == {
         "head_sha": record["head_sha"],
         "remote_head_sha": record["head_sha"] if remote_available else None,
         "remote_ref": f"refs/heads/{record['worktree_branch']}" if remote_available else None,
@@ -509,17 +509,20 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
 
 
 @pytest.mark.parametrize(
-    ("target", "commits", "dirty", "expected", "reason"),
+    ("target", "commits", "dirty", "expected", "reason", "crash"),
     [
-        ("pinned", 1, False, "pushed", "remote_head_matches"),
-        ("own", 1, False, "pushed", "remote_head_matches"),
-        ("unrelated", 1, False, "unpushed", "remote_head_differs"),
-        ("pinned", 1, True, "unpushed", "dirty_worktree"),
-        (None, 0, False, "unpushed", "remote_branch_missing"),
-        ("pinned", 0, False, "pushed", "remote_head_matches"),
+        ("pinned", 1, False, "pushed", "remote_head_matches", False),
+        ("pinned", 1, False, "pushed", "remote_head_matches", True),
+        ("own", 1, False, "pushed", "remote_head_matches", False),
+        ("unrelated", 1, False, "unpushed", "remote_head_differs", False),
+        ("prefix", 1, False, "unpushed", "remote_head_differs", False),
+        ("pinned", 1, True, "unpushed", "dirty_worktree", False),
+        (None, 0, False, "unpushed", "remote_branch_missing", False),
+        ("pinned", 0, False, "pushed", "remote_head_matches", False),
     ],
 )
-def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target, commits, dirty, expected, reason):
+def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target, commits, dirty, expected, reason, crash):
+    """Prefix tricks and supervisor crashes cannot falsify pinned-branch delivery evidence."""
     pinned = "codex/existing-pr"
     run_git(sandbox.repo, "branch", pinned, "main")
     if target is not None:
@@ -527,26 +530,39 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
     task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
     record_path = sandbox.tasks / f"{task[0]}.json"
     record = json.loads(record_path.read_text())
-    await_file(Path(record["prompt_file"]).with_suffix(".started"))
+    assert record["publish_branch"] == pinned
+    child = int(await_file(Path(record["prompt_file"]).with_suffix(".started")))
     worktree = Path(record["worktree_path"])
     branch = record["worktree_branch"]
     if commits:
         (worktree / "fix.txt").write_text("fix round\n")
         run_git(worktree, "add", "fix.txt")
         run_git(worktree, "commit", "-m", "fix round")
-    remote_branch = {"pinned": pinned, "own": branch, "unrelated": "codex/unrelated"}.get(target)
+    remote_branch = {
+        "pinned": pinned, "own": branch, "unrelated": "codex/unrelated", "prefix": f"x/refs/heads/{pinned}",
+    }.get(target)
     if remote_branch:
         run_git(worktree, "push", "origin", f"HEAD:refs/heads/{remote_branch}")
     if dirty:
         (worktree / "uncommitted.txt").write_text("still local\n")
-    Path(record["prompt_file"]).with_suffix(".release").touch()
-    observed = sandbox.settle(task)
+    if crash:
+        before_crash = git.snapshot_delivery(worker._spec(record, {}), record)
+        assert before_crash["push_state"] == "pushed"
+        assert before_crash["remote_ref"] == f"refs/heads/{pinned}"
+        os.kill(record["pid"], signal.SIGKILL)
+        os.killpg(child, signal.SIGKILL)
+    else:
+        Path(record["prompt_file"]).with_suffix(".release").touch()
+    observed = sandbox.settle(task, expected=1 if crash else 0)
+    assert observed["status"] == ("crashed" if crash else "done")
     head = run_git(worktree, "rev-parse", "HEAD")
     matched = remote_branch if target in {"pinned", "own"} else None
     assert observed["push_state"] == expected
     assert observed["push_state_reason"] == reason
     assert observed["publish_branch"] == pinned
     assert observed["remote_ref"] == (f"refs/heads/{matched}" if matched else None)
+    if crash:
+        assert observed["remote_ref"] == before_crash["remote_ref"]
     assert observed["head_sha"] == head
     assert observed["commits_ahead"] == commits
     assert observed["worktree_dirty_on_exit"] is dirty
@@ -603,7 +619,8 @@ def test_selected_sibling_repo_keeps_records_in_shared_store(sandbox):
     assert run_git(private, "branch", "--show-current") == "main"
 
 
-def test_dry_run_and_invalid_flags_create_nothing(sandbox):
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_dry_run_and_invalid_flags_create_nothing(sandbox, mode):
     before = run_git(sandbox.repo, "branch", "--list")
     result = sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "preview", "--dry-run")
     plan = json.loads(result.stdout)
@@ -618,7 +635,8 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox):
     for branch in ("unsafe..branch", "origin/feature", "refs/heads/feature", "bad:name", ""):
         sandbox.cli(
             "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x",
-            "--branch", branch, "--pinned-head", run_git(sandbox.repo, "rev-parse", "HEAD"), expected=2,
+            "--mode", mode, "--branch", branch,
+            "--pinned-head", run_git(sandbox.repo, "rev-parse", "HEAD"), expected=2,
         )
     assert run_git(sandbox.repo, "branch", "--list") == before
     assert not sandbox.tasks.exists()
