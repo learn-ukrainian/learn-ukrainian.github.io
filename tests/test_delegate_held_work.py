@@ -466,6 +466,11 @@ def test_changed_task_attempt_refuses_receipt_publication_and_cleanup(lease):
     root, namespace, record = lease
     (root / "patch").write_text("held")
     path = delegate._state_path(record["task_id"])
+    wrong_root = {**record, "runtime_tmp_root": str(root / "different-lease")}
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=wrong_root, response=f"`{root}/patch`")
+    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
+    assert (root / "patch").read_text() == "held"
+    assert "preserved_held_work" not in delegate._read_state(path)
     replacement = {**record, "run_nonce": "replacement"}
     delegate._write_state_atomic(path, replacement)
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=f"`{root}/patch`")

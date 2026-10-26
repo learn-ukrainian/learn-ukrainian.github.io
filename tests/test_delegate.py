@@ -16480,7 +16480,7 @@ def test_settle_preserves_ignored_artifacts_before_removal(
     if copy_fails:
 
         def fail_copy(_source, _destination):
-            raise OSError("injected copy failure")
+            pytest.fail("record-only disposal must not call the retired byte-copy writer")
 
         monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
 
@@ -16489,23 +16489,19 @@ def test_settle_preserves_ignored_artifacts_before_removal(
     )
 
     state = delegate._read_state(delegate._state_path(task_id))
-    if copy_fails:
-        assert out["action"] == "skipped"
-        assert "injected copy failure" in out["reason"]
-        assert "injected copy failure" in state["artifact_preservation_error"]
-        assert artifact.read_bytes() == payload
-    else:
-        assert out["action"] == "removed", out
-        assert not worktree.exists()
-        location = primary / state["preserved_artifacts"]["location"]
-        assert (location / artifact_name).read_bytes() == payload
-        receipt = state["preserved_artifacts"]
-        assert receipt == record["preserved_artifacts"]
-        assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
-        assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
-        assert receipt["paths"][0]["sha256"] == hashlib.sha256(payload).hexdigest()
-        assert receipt["paths"][0]["class"] == "unknown_baseline"
-        assert str(primary) not in json.dumps(receipt)
+    assert out["action"] == "removed", out
+    assert not worktree.exists()
+    receipt = state["preserved_artifacts"]
+    assert receipt == record["preserved_artifacts"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert not (primary / "batch_state/preserved").exists()
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+    assert receipt["paths"] == [{
+        "path": artifact_name, "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest(),
+    }]
+    assert str(primary) not in json.dumps(receipt)
     assert _branch_ref_present(primary, branch)
 
 
@@ -16533,7 +16529,13 @@ def test_settle_final_state_keeps_preservation_receipt(tmp_tasks_dir, tmp_path, 
     )
     assert state["worktree_reap"]["action"] == "removed", state["worktree_reap"]
     assert state["preserved_artifacts"]["count"] == 1
-    assert (primary / state["preserved_artifacts"]["location"]).parent == primary / "batch_state/preserved/reap-receipt"
+    receipt = state["preserved_artifacts"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert receipt["paths"] == [{
+        "path": "batch_state/report.txt", "size": len(b"evidence"), "sha256": hashlib.sha256(b"evidence").hexdigest(),
+    }]
+    assert not (primary / "batch_state/preserved").exists()
     assert not worktree.exists()
 
 
@@ -16565,17 +16567,19 @@ def test_settle_preserves_pre_start_output_and_enforces_cap(tmp_tasks_dir, tmp_p
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
     )
 
+    assert result["action"] == "removed" and not worktree.exists()
+    receipt = delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert receipt["count"] == 2 and receipt["bytes"] == len(b"pre-existingtask output")
+    assert not (primary / "batch_state/preserved").exists()
     if over_cap:
-        assert result["action"] == "skipped" and "preservation cap" in result["reason"]
-        assert recent.read_bytes() == b"task output" and old.exists()
-        assert not (primary / "batch_state/preserved" / task_id).exists()
+        assert receipt["paths_truncated"] and receipt["paths"] == []
     else:
-        assert result["action"] == "removed" and not worktree.exists()
-        receipt = delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]
-        assert receipt["count"] == 2 and receipt["bytes"] == len(b"pre-existingtask output")
-        location = primary / receipt["location"]
-        assert (location / ".cache/recent.txt").read_bytes() == b"task output"
-        assert (location / ".cache/old.txt").read_bytes() == b"pre-existing"
+        assert receipt["paths"] == [
+            {"path": name, "size": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+            for name, data in [(".cache/old.txt", b"pre-existing"), (".cache/recent.txt", b"task output")]
+        ]
 
 
 def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -22613,9 +22617,14 @@ def test_settle_result_named_file_scope(tmp_tasks_dir, tmp_path, monkeypatch, re
     )
     assert result["action"] == "removed", result
     assert not worktree.exists()
-    location = primary / record["preserved_artifacts"]["location"]
-    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
-    assert not (location / ".pytest_cache/cache.txt").exists()
+    receipt = record["preserved_artifacts"]
+    assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+    assert "location" not in receipt
+    assert receipt["paths"] == [{
+        "path": "ignored/report.txt", "size": len(b"named evidence"),
+        "sha256": hashlib.sha256(b"named evidence").hexdigest(),
+    }]
+    assert not (primary / "batch_state/preserved").exists()
     assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
 
 
@@ -22641,9 +22650,7 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     state = delegate._read_state(delegate._state_path(task_id))
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = primary / Path(
-        state.get("preserved_artifacts", {}).get("location", primary / "batch_state/preserved" / task_id)
-    )
+    assert not (primary / "batch_state/preserved").exists()
     if scenario in links.REFUSALS:
         assert result["action"] == "skipped" and links.REFUSALS[scenario] in result["reason"], result
         assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
@@ -22652,20 +22659,21 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     assert result["action"] == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
-    if scenario == "outbound_batch_state":
-        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
-        assert entry["path"] == "ignored/link" and entry["target"] == str(target)
-        copied = location / entry["path"]
-        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
-        assert state["preserved_artifacts"]["count"] == 1
-    elif preserved is None:
-        assert not location.exists()
+    receipt = state.get("preserved_artifacts")
+    if preserved is not None:
+        assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+        assert "location" not in receipt
+        assert receipt["paths"] == [{
+            "path": preserved, "size": len(links.PAYLOAD), "sha256": hashlib.sha256(links.PAYLOAD).hexdigest(),
+        }]
+        assert receipt["inventory_error"] == "inventory_incomplete"
+        assert receipt["count"] == 1
+    elif scenario == "outbound_batch_state":
+        assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+        assert receipt["inventory_error"] in {"inventory_failed", "inventory_incomplete"}
+        assert receipt["count"] == 0 and receipt["paths"] == []
     else:
-        link_path, link_target = links.IGNORED_LINK[scenario]
-        assert (location / preserved).read_bytes() == links.PAYLOAD
-        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
-        assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
-        assert state["preserved_artifacts"]["count"] == 2
+        assert receipt is None
 
 
 def test_full_review_default_requires_full_checkout_before_provisioning(
