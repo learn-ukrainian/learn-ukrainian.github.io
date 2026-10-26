@@ -35,6 +35,15 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     record.update({name: getattr(spec, name) for name in fields})
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
     record.update({name: metadata.get(name) for name in metadata_fields})
+    for source, target in (
+        ("risk", "review_risk"), ("review_profile", "review_profile"),
+        ("review_author_model", "review_author_model"), ("review_mode", "review_mode"),
+        ("language_lane", "language_lane"), ("pr", "pr"),
+        ("subject_seat", "review_subject_seats"), ("subject_family", "review_subject_families"),
+        ("require_review_verdict", "require_review_verdict"),
+    ):
+        if metadata.get(source) is not None and metadata[source] != []:
+            record[target] = metadata[source]
     record.update(schema_version=2, run_nonce=uuid.uuid4().hex, status="spawning", started_at=now())
     record.update(repo=repository["key"], repository_id=repository["github"], repository=repository["github"])
     record.update(

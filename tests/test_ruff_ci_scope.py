@@ -92,9 +92,9 @@ def test_pre_commit_sparse_collection_guard_is_owned_by_required_ci() -> None:
     steps = [step for step in jobs["checks"]["steps"] if target in step.get("run", "")]
     assert len(steps) == 1, "Checks must explicitly run the existing sparse collection guard node once"
     step = steps[0]
-    assert step["if"] == "github.event_name != 'pull_request'"
+    assert "if" not in step, "the sparse collection guard must run unconditionally, including on PRs"
     for event, github in _EVENTS.items():
-        assert _condition(step["if"], {"github": github}) == (event not in {"opened", "synchronize", "reopened"})
+        assert _condition(step.get("if", "success()"), {"github": github}), event
     assert not step.get("continue-on-error"), "the sparse guard must block required Checks on failure"
     invocation = step["run"]
     assert ".venv/bin/python -m pytest" in invocation

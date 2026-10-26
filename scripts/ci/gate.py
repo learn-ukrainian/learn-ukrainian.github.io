@@ -1,4 +1,4 @@
-"""Require truthful PR admission or full-suite results for the checked-out candidate."""
+"""Require full-suite results for the checked-out candidate."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def event_tier(event: str, payload: dict, sha: str, ref: str, actual: str) -> st
                 or type(number) is not int or number < 1 or ref != f"refs/pull/{number}/merge"
                 or not SHA.fullmatch(pr["base"]["sha"]) or not SHA.fullmatch(pr["head"]["sha"])):
             raise ValueError("invalid pull_request identity")
-        return "admission"
+        return "full"
     if event == "merge_group":
         group = payload["merge_group"]
         queue_ref = rf"refs/heads/gh-readonly-queue/{re.escape(default)}/pr-[1-9][0-9]*-[0-9a-f]{{40}}"
@@ -106,8 +106,7 @@ def main() -> int:
                 if value == "cancelled":
                     print(f"::error::required job was cancelled: {name}")
                 failed = True
-        summary = ("PR admission: full pytest was not run. Full green merge-group CI is required before landing."
-                   if tier == "admission" else "Full supported pytest suite and partition audits are required.")
+        summary = "Full supported pytest suite and partition audits are required."
         print(summary)
         if os.environ.get("GITHUB_STEP_SUMMARY"):
             with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as stream:
