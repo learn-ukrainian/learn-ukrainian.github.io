@@ -23,6 +23,43 @@ from scripts.review.target_resolution import (
 )
 
 
+@pytest.mark.parametrize("key", [
+    "GIT_CONFIG_PARAMETERS", "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0",
+    "GIT_CONFIG_KEY_19", "GIT_CONFIG_VALUE_19", "GIT_CONFIG_KEY_orphan", "GIT_CONFIG_VALUE_orphan",
+])
+def test_config_injection_variables_never_reach_isolated_git_calls(monkeypatch, key):
+    kept = {
+        "PATH": "/example/bin", "HOME": "/example/home", "GIT_TERMINAL_PROMPT": "0",
+        "GIT_SSH_COMMAND": "ssh -o BatchMode=yes", "GIT_CONFIG_GLOBAL": "/example/global",
+        "GIT_CONFIG_SYSTEM": "/example/system", "GIT_CONFIG_NOSYSTEM": "1",
+    }
+    for name, value in kept.items():
+        monkeypatch.setenv(name, value)
+    monkeypatch.setenv(key, "injected")
+    before = dict(os.environ)
+
+    env = sanitized_git_env()
+
+    assert key not in env
+    assert {name: env[name] for name in kept} == kept
+    assert dict(os.environ) == before
+
+
+def test_config_injection_variables_cannot_override_user_identity(monkeypatch, tmp_path):
+    config = tmp_path / "global.gitconfig"
+    config.write_text("[user]\n\tname = Expected Identity\n", encoding="utf-8")
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(config))
+    monkeypatch.setenv("GIT_CONFIG_PARAMETERS", "'user.name=Injected Identity'")
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "user.name")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", "Injected Identity")
+
+    _git(tmp_path, "init", "-q")
+    result = _git(tmp_path, "config", "--get", "user.name")
+
+    assert result.stdout.strip() == "Expected Identity"
+
+
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     # sanitized_git_env() strips GIT_DIR/GIT_WORK_TREE/etc — without it, running
     # this suite from inside a `git commit` pre-commit hook leaks the OUTER
