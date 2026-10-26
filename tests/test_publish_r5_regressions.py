@@ -25,7 +25,7 @@ def catalog(monkeypatch):
 # The actual REST/search argv families from every refused caller in the review,
 # plus the fresh inventory. GET fields in reap_worktrees are now query parameters.
 READ_CALLERS = [
-    ("scripts/delegate.py", ["api", "repos/unit/public/issues/1"]),
+    ("scripts/dispatch.py", ["api", "repos/unit/public/issues/1"]),
     ("scripts/build/cf_preflight.py", ["api", "repos/{owner}/{repo}/issues/1/comments", "--paginate"]),
     ("scripts/build/cf_preflight.py", ["api", "repos/unit/public/pulls/1/reviews", "--paginate"]),
     ("scripts/orchestration/reap_worktrees.py", ["api", "repos/unit/public/pulls?head=unit%3Abranch&state=all&per_page=100", "-X", "GET", "--paginate", "--slurp"]),

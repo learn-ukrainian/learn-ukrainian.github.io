@@ -58,8 +58,8 @@ def test_isolate_dispatch_task_store_is_not_the_live_dir(
     import scripts.api.config as api_config
     import scripts.api.delegate_router as delegate_router
     import scripts.api.main as api_main
-    import scripts.delegate as delegate_mod
     from scripts.common.task_store_paths import tasks_dir
+    from scripts.dispatcher import store
 
     assert _isolate_dispatch_task_store != _REAL_TASKS_DIR
     assert _isolate_dispatch_task_store.name == "tasks"
@@ -69,7 +69,7 @@ def test_isolate_dispatch_task_store_is_not_the_live_dir(
     assert _isolate_dispatch_task_store.parent == api_main.app.state.ctx.roots.batch_state_dir
     assert delegate_router._tasks_dir(api_main.app.state.ctx) == _isolate_dispatch_task_store
     assert delegate_router._tasks_dir(None) == _isolate_dispatch_task_store
-    assert _REAL_TASKS_DIR not in delegate_mod._state_path("t-isolated").parents
+    assert _REAL_TASKS_DIR not in store.record_path("t-isolated").parents
     fast_fail = tasks_dir().parent / "preflight_fast_fail.jsonl"
     assert _REAL_TASKS_DIR.parent not in fast_fail.resolve().parents
 
@@ -142,7 +142,7 @@ def test_task_store_consumers_use_call_time_resolver() -> None:
     assert not found, f"replace module-level task-store paths with tasks_dir(): {sorted(found)}"
 
     consumers = (
-        ("scripts/delegate.py", "tasks_dir"),
+        ("scripts/dispatcher/store.py", "tasks_dir"),
         ("scripts/fleet/post_task_reap.py", "default_tasks_dir"),
         ("scripts/fleet/hramatka_hygiene_check.py", "default_tasks_dir"),
         ("scripts/fleet/capacity_pick.py", "default_tasks_dir"),
