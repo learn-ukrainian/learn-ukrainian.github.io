@@ -80,6 +80,7 @@ from scripts.agent_runtime.adapters.muse import MuseRunEvidence
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
+from scripts.secret_redactor import redact_value
 
 from .accounting import model_accounting_fields
 from .adapters.base import AgentAdapter
@@ -1247,6 +1248,10 @@ def _build_usage_record(
             record["agy_killed_commands"] = kept
     if isinstance(agy_telemetry, AgyTelemetry) and not privacy_limited:
         record.update(agy_telemetry.task_fields())
+    if agent == "muse":
+        # Expose the same privacy-safe record that the durable sink writes,
+        # after the adapter has validated the raw workspace and run bindings.
+        return redact_value(record)
     return record
 
 

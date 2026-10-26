@@ -35,6 +35,7 @@ from scripts.review.subject_seat import (
     candidate_matches_subject_seat,
     normalize_subject_family,
     normalize_subject_seat,
+    prepare_subject_exclusion,
 )
 from tests.claude_route_accounts import HOST_ACCOUNT
 
@@ -1317,7 +1318,12 @@ def test_resolve_reviewer_without_subject_information_matches_empty_subject_fiel
         assert plain == empty, kwargs
 
 
-def test_resolve_reviewer_ambiguous_adapter_path_requires_explicit_subject():
+def test_resolve_reviewer_ambiguous_adapter_defaults_without_guessing_subject():
+    shared = "scripts/agent_runtime/adapters/acpx.py"
+    unknown = prepare_subject_exclusion(owned_paths=(shared,))
+    assert unknown.seats == unknown.families == frozenset()
+    assert unknown.evidence == ()
+    assert unknown.fail_closed_reason is None
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -1325,12 +1331,19 @@ def test_resolve_reviewer_ambiguous_adapter_path_requires_explicit_subject():
             owned_paths=("scripts/agent_runtime/adapters/acpx.py",), claude_account=HOST_ACCOUNT,
         )
     )
-    assert resolution.selected is None
-    assert resolution.trace == ()
-    assert resolution.fail_closed_reason is not None
-    assert "ambiguous subject-seat inference" in resolution.fail_closed_reason
-    assert "acpx.py" in resolution.fail_closed_reason
-    assert "--subject-seat" in resolution.fail_closed_reason
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.family != "openai"
+    assert resolution.resolved_risk == "critical"
+    assert resolution == resolve_reviewer(ResolverInputs(author_model="codex", risk="critical", claude_account=HOST_ACCOUNT))
+
+    known = prepare_subject_exclusion(
+        owned_paths=(shared, "scripts/agent_runtime/adapters/grok_build.py"),
+    )
+    assert known.seats == {"grok"}
+    assert known.families == frozenset()
+    assert known.evidence == ("scripts/agent_runtime/adapters/grok_build.py",)
+    assert known.fail_closed_reason is None
 
     explicit = resolve_reviewer(
         ResolverInputs(
@@ -1416,21 +1429,27 @@ def test_muse_subject_matcher(changes, expected):
     assert candidate_matches_subject_seat(candidate, "muse") is expected
 
 
-def test_muse_ambiguous_adapter_requires_explicit_subject():
+def test_muse_adapter_infers_registry_subject_without_explicit_metadata():
     inputs = ResolverInputs(
         author_model="codex",
         risk="high",
         owned_paths=("scripts/agent_runtime/adapters/muse.py",),
         claude_account=HOST_ACCOUNT,
     )
-    ambiguous = resolve_reviewer(inputs)
-    assert ambiguous.selected is None
-    assert ambiguous.trace == ()
-    assert "ambiguous subject-seat inference" in ambiguous.fail_closed_reason
+    subject = prepare_subject_exclusion(owned_paths=inputs.owned_paths)
+    assert subject.seats == {"muse"}
+    assert subject.families == frozenset()
+    assert subject.evidence == inputs.owned_paths
+    inferred = resolve_reviewer(inputs)
+    assert inferred.fail_closed_reason is None
+    assert inferred.selected is not None
+    assert inferred.selected.family != "openai"
+    assert not candidate_matches_subject_seat(inferred.selected, "muse")
 
     explicit = resolve_reviewer(replace(inputs, subject_seats=frozenset({"muse"})))
     assert explicit.fail_closed_reason is None
     assert explicit.selected is not None
+    assert inferred == explicit
 
 
 def test_resolve_reviewer_unknown_subject_seat_and_family_fail_closed():
@@ -1487,7 +1506,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "hermes_qwen.py": "qwen",
         "kimi.py": "kimi",
         "kimicc.py": "kimi",
-        "muse.py": None,
+        "muse.py": "muse",
     }
     adapter_dir = repo / "scripts/agent_runtime/adapters"
     found = sorted(path.name for path in adapter_dir.glob("*.py"))

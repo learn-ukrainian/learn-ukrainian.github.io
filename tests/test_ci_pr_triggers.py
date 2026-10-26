@@ -606,6 +606,8 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert 'needs' not in job
     assert 'continue-on-error' not in job
     assert 'pr-affected' in _ci_gate_job()['needs']
+    checkout = next(s for s in job['steps'] if str(s.get('uses', '')).startswith('actions/checkout@'))
+    assert checkout['with'] == {'persist-credentials': False, 'fetch-depth': 0}
     step = next(s for s in job['steps'] if s.get('name') == 'Run changed test files and guards')
     assert '.venv/bin/python -m scripts.ci.pr_affected_tests' in step['run']
     assert '"$EVENT_NAME" = pull_request' in step['run']

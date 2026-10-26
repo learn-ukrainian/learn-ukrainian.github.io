@@ -823,7 +823,8 @@ def collect_branch_review_facts(
     ``incoming_agent``/``incoming_model`` name the writer about to be
     dispatched, after any substitution. Scope is the literal diff against the
     merge-base (both rename sides and deletions) plus ``owned_paths``, with the
-    subject seats ``prepare_subject_exclusion`` derives from it. A fresh branch
+    known subject seats ``prepare_subject_exclusion`` derives from it; shared
+    or missing subject metadata remains unknown. A fresh branch
     passes ``head_sha == base_tip_sha``. Admission may exclude commits reachable
     from a frozen main/rebase tip with ``authorship_exclude_sha`` (#9988); this
     never narrows the diff or protected scope against the original base.
