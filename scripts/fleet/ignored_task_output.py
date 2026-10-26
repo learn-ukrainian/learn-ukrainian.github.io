@@ -31,8 +31,7 @@ from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration.preparation_evidence import UniqueKeyLoader
 from scripts.orchestration.task_record_store import task_record_path
 
-# Bound automatic disk duplication. Larger outputs require owner disposition;
-# the complete source checkout survives rather than receiving a partial copy.
+# Hard ceiling for remaining preservation writes; residue itself is record-only.
 MAX_PRESERVED_BYTES = 10 * 1024 * 1024
 # A detached bundle gets the same ceiling as the existing output payload budget.
 # It is a separate artifact; neither budget permits a partial preservation.
@@ -1237,8 +1236,10 @@ def _ignored_output_files(
     ignored = set(names)
     tracked = set(artifacts._git_paths(worktree, "--cached"))
     release_pins = committed_release_pins(worktree, tracked)
-    # C-2481 records both residue classes, including with a populated index.
-    names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
+    if not tracked:
+        # --no-checkout leaves an empty index and no on-disk .gitignore.
+        # Unignored scratch can be task output too; inventory both classes.
+        names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
     files: set[str] = set()
     for name in names:
         relative = Path(name)
@@ -1482,6 +1483,7 @@ def preserve_worktree_artifacts(
 
     def output_files() -> list[str]:
         names = _ignored_output_files(worktree, primary, record, absent=absent)
+        names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
         if disposition == "abandon":
             names += _abandon_candidates(worktree, absent=absent)
         for name in extra_files or []:
@@ -1562,7 +1564,7 @@ def preserve_worktree_artifacts(
                 "count": len(files),
                 "bytes": sum(entry["size"] for entry in paths),
                 "paths": paths,
-                "absent_paths": absent,
+                "absent_count": len(absent),
             }
         )
         if (
@@ -1610,9 +1612,6 @@ def preserve_worktree_artifacts(
                         "next_condition": "existing owner releases retention after proven retrieval via post_task_reap --release-retention",
                     }
                 )
-            prior_release = current.get("preserved_artifacts", {}).get("retention_release")
-            if prior_release:
-                metadata["retention_release"] = prior_release
             if metadata["retention_disposition"] != "retained":
                 metadata["next_condition"] = "none"
             current["preserved_artifacts"] = metadata

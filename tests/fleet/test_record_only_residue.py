@@ -69,3 +69,13 @@ def test_reaper_removes_a_worktree_whose_residue_is_untracked(interrupted_reap):
     assert receipt["mode"] == "record-only"
     assert "leftover.bin" in {entry["path"] for entry in receipt["paths"]}
     assert not (repo / "batch_state/preserved").exists()
+
+
+def test_receipt_inventory_cannot_grow_past_the_per_task_write_cap(tmp_path, monkeypatch):
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 4096)
+    names = [f"residue-{n}" for n in range(100)]
+    for name in names:
+        (tmp_path / name).write_bytes(b"x")
+    receipt = output.record_only_receipt(tmp_path, names, {"task_id": "test"})
+    assert receipt["count"] == 100 and receipt["bytes"] == 100
+    assert receipt["paths_truncated"] and len(json.dumps(receipt).encode()) < 4096
