@@ -716,6 +716,39 @@ def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, mon
     assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
 
 
+def test_prior_worker_origin_poisoning_refuses_dispatch_and_fails_closed(sandbox):
+    """Shared config poisoned before dispatch cannot certify a forged empty range."""
+    earlier = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    fake = sandbox.repo.parent / "forged.git"
+    tree = Path(earlier["cwd"])
+    run_git(tree, "clone", "--bare", str(sandbox.remote), str(fake))
+    run_git(tree, "remote", "set-url", "origin", str(fake))
+    result = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "pushed", "--prompt", "deliver",
+        "--task-id", "poisoned", "--mode", "workspace-write", "--owned-path", "delivered.txt", expected=2,
+    )
+    assert "origin must match the registered canonical repository URL" in result.stderr
+    assert not (sandbox.tasks / "poisoned.json").exists()
+    assert not (sandbox.tasks / "poisoned.started").exists()
+    # Read-only admission still records missing trust; even a later write settle fails closed.
+    record = sandbox.settle(sandbox.dispatch())
+    assert record["worktree_remote_url"] is None
+    tree = Path(record["cwd"])
+    for name in ("outside.txt", "delivered.txt"):
+        (tree / name).write_text("forged delivery\n")
+    run_git(tree, "add", "outside.txt", "delivered.txt")
+    run_git(tree, "commit", "-m", "forged delivery")
+    run_git(tree, "push", "origin", "HEAD", "HEAD:main")
+    record.update(
+        mode="workspace-write", owned_paths=["delivered.txt"], head_sha=run_git(tree, "rev-parse", "HEAD"),
+        push_state="pushed", commits_ahead=1, worktree_dirty_on_exit=False,
+    )
+    assert run_git(fake, "rev-parse", "main") == record["head_sha"]
+    assert run_git(sandbox.remote, "rev-parse", "main") == record["worktree_base_sha"]
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+
+
 @pytest.mark.parametrize("attack", ["alias-shell", "alias-empty", "replace", "origin", "insteadOf", "pushInsteadOf"])
 def test_worker_git_state_cannot_hide_outside_commit(sandbox, delivery_settle, attack):
     """Worker aliases, replacements and remote rewrites cannot certify owned delivery."""
