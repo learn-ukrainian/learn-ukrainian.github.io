@@ -34,9 +34,10 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     record.update(worktree_dirty_on_exit=None, error=None)
     record["owned_paths"] = list(metadata.get("owned_path") or [])
     record["worktree_base_ref"] = metadata.get("base") or "origin/main"
-    from scripts.dispatcher.git import verification_origin
+    from scripts.dispatcher.git import canonical_origins, verification_origin
     try:
-        record["worktree_remote_url"] = verification_origin(spec.worktree)
+        origin = verification_origin(spec.worktree)
+        record["worktree_remote_url"] = origin if origin in canonical_origins(repository) else None
     except (OSError, ValueError, subprocess.SubprocessError):
         record["worktree_remote_url"] = None
     fields = ("task_id", "agent", "provider", "model", "effort", "mode", "claude_account")

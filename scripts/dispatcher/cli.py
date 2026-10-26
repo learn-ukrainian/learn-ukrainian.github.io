@@ -188,6 +188,8 @@ def _dispatch(args) -> int:
     if not args.cwd:
         git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
     record = store.new_record(spec, info, branch, sha, vars(args))
+    if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
+        raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
     if agent == "muse":
         record["contributor_mode"] = spec.options.get("contributor_mode", "off")
     worker.start(spec, record, prompt, args.hard_timeout)

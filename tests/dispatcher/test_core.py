@@ -36,6 +36,7 @@ def run_git(repo, *args):
 @pytest.fixture
 def sandbox(tmp_path):
     repo, tasks = tmp_path / "public", tmp_path / "tasks"
+    remote = tmp_path / "remote.git"
     repo.mkdir()
     run_git(repo, "init", "-b", "main")
     run_git(repo, "config", "user.email", "stub@example.invalid")
@@ -59,7 +60,8 @@ def sandbox(tmp_path):
                     "public": {
                         "default": True,
                         "local_name": "public",
-                        "github": "example/public",
+                        "github": str(remote),
+                        "transport": "file",
                         "role": "public-monorepo",
                     },
                     "private": {"local_name": "private", "github": "example/private", "role": "private-product"},
@@ -71,7 +73,6 @@ def sandbox(tmp_path):
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
-    remote = tmp_path / "remote.git"
     run_git(repo, "init", "--bare", str(remote))
     run_git(repo, "remote", "add", "origin", str(remote))
     run_git(repo, "push", "-u", "origin", "main")

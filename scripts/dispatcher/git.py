@@ -2,6 +2,7 @@
 
 import fcntl
 import os
+import re
 import shutil
 import subprocess
 from contextlib import contextmanager
@@ -40,6 +41,21 @@ def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path 
         capture_output=True, text=True, check=True, timeout=30, env=env,
     ).stdout
     return output.strip() if strip else output
+
+
+def canonical_origins(repository: dict) -> tuple[str, ...]:
+    """Derive exact destinations from the registry, never shared Git config."""
+    github = repository["github"]
+    transport = repository.get("transport", "ssh")
+    if transport == "file" and Path(github).is_absolute():
+        return (github,)
+    if not re.fullmatch(r"[A-Za-z0-9_-][A-Za-z0-9_.-]*/[A-Za-z0-9_-][A-Za-z0-9_.-]*", github):
+        raise ValueError("invalid registered repository identity")
+    if transport == "https":
+        return (f"https://github.com/{github}.git", f"https://github.com/{github}")
+    if transport == "ssh":
+        return (f"git@github.com:{github}.git", f"ssh://git@github.com/{github}.git")
+    raise ValueError("unsupported registered transport")
 
 
 def verification_origin(path: Path) -> str:
