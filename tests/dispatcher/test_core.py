@@ -142,7 +142,7 @@ sys.exit(1 if (tasks / "reap-fail").exists() else 0)
     (["--sparse-include", "/curriculum/"], {"curriculum"}),
     (["--sparse-include", "curriculum", "--sparse-include", "site/src/data"], {"curriculum", "site/src/data"}),
 ])
-def test_dispatch_worktree_is_sparse_by_default(sandbox, flags, restored):
+def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_worktrees(sandbox, flags, restored):
     excluded = {
         "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
         "registry/projects", "registry/lexicon/source-inventory",
@@ -156,6 +156,10 @@ def test_dispatch_worktree_is_sparse_by_default(sandbox, flags, restored):
     run_git(sandbox.repo, "add", ".")
     run_git(sandbox.repo, "commit", "-m", "heavy fixture trees")
     run_git(sandbox.repo, "push", "origin", "main")
+    sibling = sandbox.repo.parent / "sibling"
+    run_git(sandbox.repo, "worktree", "add", "-b", "sibling", str(sibling))
+    untracked = sandbox.repo / "curriculum/untracked.txt"
+    untracked.write_text("uncommitted primary file")
     record = sandbox.settle(sandbox.dispatch("echo", *flags))
     worktree = Path(record["cwd"])
     for directory in excluded:
@@ -164,6 +168,48 @@ def test_dispatch_worktree_is_sparse_by_default(sandbox, flags, restored):
     assert (worktree / "registry/lexicon/kept/fixture.txt").exists()
     assert (worktree / "data/kept.txt").exists()
     assert run_git(worktree, "status", "--porcelain") == ""
+    assert untracked.read_text() == "uncommitted primary file"
+    for checkout in (sandbox.repo, sibling):
+        assert (checkout / "curriculum/fixture.txt").read_text() == "tracked fixture"
+        config = run_git(checkout, "config", "--show-origin", "--list")
+        assert "core.sparsecheckout=true" not in config.lower()
+    assert run_git(sandbox.repo, "config", "--local", "--get", "extensions.worktreeConfig") == "true"
+    if "--full-checkout" not in flags:
+        origin = run_git(worktree, "config", "--show-origin", "--get", "core.sparseCheckout")
+        assert origin.endswith("/config.worktree\ttrue")
+
+
+@pytest.mark.parametrize("redirected", [False, True])
+def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redirects(sandbox, monkeypatch, redirected):
+    tracked = sandbox.repo / "curriculum/tracked.txt"
+    tracked.parent.mkdir()
+    tracked.write_text("tracked primary file")
+    run_git(sandbox.repo, "add", "curriculum")
+    run_git(sandbox.repo, "commit", "-m", "excluded tree")
+    untracked = tracked.with_name("untracked.txt")
+    untracked.write_text("untracked primary file")
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    path = sandbox.repo / ".worktrees/dispatch/sol/redirects"
+    if redirected:
+        for key, value in {
+            "GIT_DIR": sandbox.repo / ".git", "GIT_WORK_TREE": sandbox.repo,
+            "GIT_COMMON_DIR": sandbox.repo / ".git", "GIT_INDEX_FILE": sandbox.repo / ".git/index",
+        }.items():
+            monkeypatch.setenv(key, str(value))
+    git.create_worktree(sandbox.repo, path, "sol/redirects", sha)
+    if redirected:
+        for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE"):
+            monkeypatch.delenv(key)
+    assert tracked.read_text() == "tracked primary file"
+    assert untracked.read_text() == "untracked primary file"
+    assert not (path / "curriculum").exists()
+    primary = subprocess.run(
+        ["git", "-C", str(sandbox.repo), "config", "--show-origin", "--get", "core.sparseCheckout"],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert (primary.returncode, primary.stdout) == (1, "")
+    assert run_git(path, "config", "--show-origin", "--get", "core.sparseCheckout").endswith("/config.worktree\ttrue")
+    assert run_git(sandbox.repo, "diff", "--cached") == ""
 
 
 @pytest.mark.parametrize("model,state", [

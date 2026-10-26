@@ -3,10 +3,12 @@
 import fcntl
 import os
 import subprocess
+from functools import partial
 from pathlib import Path
 
 import yaml
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import resolve_repo_root
 from scripts.dispatcher.types import TaskSpec
 
@@ -27,14 +29,14 @@ def sparse_excludes(includes=()) -> list[str]:
     return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
 
 
-def _git(path: Path, *args: str) -> str:
+def _git(path: Path, *args: str, isolate: bool = False) -> str:
     return subprocess.run(
         ["git", "-C", str(path), *args],
         capture_output=True,
         text=True,
         check=True,
         timeout=30,
-        env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+        env={**(sanitized_git_env() if isolate else os.environ), "GIT_TERMINAL_PROMPT": "0"},
     ).stdout.strip()
 
 
@@ -66,17 +68,19 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
 
 def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=()) -> None:
     excluded = sparse_excludes(sparse_include)
+    run_git = partial(_git, isolate=True)
     path.parent.mkdir(parents=True, exist_ok=True)
-    # Git's sparse-checkout setup writes shared repository config even for a fresh tree.
+    # Serialize config enablement and keep sparse settings local to the new worktree.
     fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
     with os.fdopen(fd, "rb") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        _git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
+        run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
+        run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
         if full_checkout:
-            _git(path, "sparse-checkout", "disable")
+            run_git(path, "sparse-checkout", "disable")
         else:
-            _git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
-        _git(path, "reset", "--hard", sha)
+            run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
+        run_git(path, "reset", "--hard", sha)
 
 
 def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
