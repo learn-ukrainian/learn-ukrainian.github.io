@@ -3731,7 +3731,7 @@ class AcpxCursorShadowAdapter(_AcpxDiscussionAdapter):
         sealed_review_mcp_config: str | None = None,
     ) -> dict[str, str]:
         overrides = super()._env_overrides(sealed_review_mcp_config=sealed_review_mcp_config)
-        if not os.environ.get("CURSOR_API_KEY"):
+        if not os.environ.get("CURSOR_API_KEY", "").strip():
             file_key = _load_cursor_api_key_from_env_file()
             if file_key:
                 overrides["CURSOR_API_KEY"] = file_key
