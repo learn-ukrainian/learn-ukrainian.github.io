@@ -321,7 +321,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     binary_dir.mkdir()
     executable = binary_dir / "cursor-agent"
     events = [{"type": "system", "subtype": "init", "model": model} for model in models]
-    events.append({"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"})
+    events.append({"type": "result", "subtype": "success", "result": "```verdict\nVERDICT: APPROVE\n```\n"})
     stdout = "\n".join(json.dumps(event) for event in events)
     executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r})\n")
     executable.chmod(0o755)

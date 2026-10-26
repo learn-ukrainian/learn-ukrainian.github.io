@@ -122,7 +122,7 @@ def test_dispatched_detached_review_binds_verdict_without_touching_author(
     record.update(status="done", resolved_model="grok-4.7-build", resolved_model_known=True,
                   resolved_model_source="grok-model-usage")
     path.write_text(json.dumps(record))
-    path.with_suffix(".result").write_text("VERDICT: APPROVE")
+    path.with_suffix(".result").write_text("```verdict\nVERDICT: APPROVE\n```\n")
     real_json = recorder._run_json
     _, comments, calls = setup_record(monkeypatch, tmp_path, head=head, branch="feature", families={"openai"})
     fake_json = recorder._run_json
@@ -151,7 +151,7 @@ def test_dispatched_detached_review_binds_verdict_without_touching_author(
         rules = json.loads((synthetic_opsec / "rules.json").read_text())
         rules.update(synthetic_rules(rule=policy["class6_block_ids"][0], level=6, pattern=TOKEN))
         (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
-        path.with_suffix(".result").write_text(f"VERDICT: APPROVE\n{TOKEN}\nHarmless reviewer prose.")
+        path.with_suffix(".result").write_text(f"```verdict\nVERDICT: APPROVE\n```\n{TOKEN}\nHarmless reviewer prose.")
 
     record_before = path.read_bytes()
     result_before = path.with_suffix(".result").read_bytes()

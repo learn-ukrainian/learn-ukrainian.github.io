@@ -255,7 +255,7 @@ def record_verdict(
     task_id = review.pop("_task_id", "review")
     caller = review.pop("_caller", repo.root)
     cli = review.pop("_cli", False)
-    reply = review.pop("_reply", "Checked.\n\nVERDICT: APPROVE\n")
+    reply = review.pop("_reply", "Checked.\n\n```verdict\nVERDICT: APPROVE\n```\n")
     base, head = repo.sha("origin/main"), repo.sha("feature")
     review_root = caller / "batch_state" / "tasks" if cli else tmp_path / "review-tasks"
     review_root.mkdir(parents=True, exist_ok=True)
@@ -399,7 +399,7 @@ def test_single_family_branch_agrees_across_selector_and_recorder(repo, tasks, m
         comments=posted,
         _caller=provenance,
         _cli=True,
-        _reply=f"Checked `{repo.root}/docs/a.md`.\n\nVERDICT: APPROVE\n",
+        _reply=f"Checked `{repo.root}/docs/a.md`.\n\n```verdict\nVERDICT: APPROVE\n```\n",
     ) == 0
     receipt = json.loads(capsys.readouterr().out)
     assert receipt["verdict"] == "APPROVED" and receipt["head"] == repo.sha("feature")

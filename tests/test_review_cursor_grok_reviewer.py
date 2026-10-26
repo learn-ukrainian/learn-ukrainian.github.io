@@ -202,7 +202,7 @@ def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthr
         **extra,
     }
     (tasks / "review-one.json").write_text(json.dumps(task))
-    (tasks / "review-one.result").write_text("VERDICT: APPROVE")
+    (tasks / "review-one.result").write_text("```verdict\nVERDICT: APPROVE\n```\n")
     comments: list[dict] = []
 
     def fake_json(args, *, input_text=None):

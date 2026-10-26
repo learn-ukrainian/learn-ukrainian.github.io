@@ -931,7 +931,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
                 "started_at": "2026-01-01T00:00:00+00:00",
             }
             monkeypatch.setattr(
-                module, "_task", lambda *a: (task, "VERDICT: APPROVE\n" + TOKEN + "\nHarmless reviewer prose.")
+                module, "_task", lambda *a: (task, "```verdict\nVERDICT: APPROVE\n```\n" + TOKEN + "\nHarmless reviewer prose.")
             )
             monkeypatch.setattr(module, "_pr", lambda *a: {"number": 1, "headRefName": "unit", "headRefOid": "a" * 40})
             # The recorder's complete-authorship entry point (#9739): an Anthropic-authored PR.
