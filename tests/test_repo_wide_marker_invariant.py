@@ -106,7 +106,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
-    "tests/agent_runtime/test_agy_spawn_inventory.py::test_every_agy_start_has_a_current_inventory_row",
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
@@ -128,10 +127,6 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
     "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
     "tests/test_entire_capture_guard.py::test_canary_evidence_bundle_carries_no_local_absolute_paths",
-    "tests/test_headless_claude_background_controls.py::test_every_spawn_in_a_claude_referencing_module_is_a_wrapper_or_a_reviewed_exception",
-    "tests/test_headless_claude_background_controls.py::test_exceptions_are_live_categorised_and_justified",
-    "tests/test_headless_claude_background_controls.py::test_shell_launchers_are_proven_by_a_runner_test",
-    "tests/test_headless_claude_background_controls.py::test_wrapper_spawns_and_known_callers_are_wired",
     "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
