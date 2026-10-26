@@ -324,7 +324,7 @@ models:
     # Minimum admitted code-review tier; runtime qualification remains pending.
     tier: economical
     lifecycle: active
-    roles: [coding, standard_review]
+    roles: [coding, standard_review, routine_review]
     routing_wire_ids: {native_muse: muse-wonder-full-1.0}
     transports: [native_muse]
     strengths: [explicit_native_worker]
@@ -1304,6 +1304,7 @@ seats:
     routes:
       native:
         legacy_name: muse
+        suitability_roles: [routine_review]
         route: muse
         transport: native_muse
         effort: high

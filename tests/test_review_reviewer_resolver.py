@@ -1399,11 +1399,8 @@ def test_normalize_muse_subject_seat_and_meta_family():
     assert normalize_subject_seat("muse") == "muse"
     assert normalize_subject_family("meta") == "meta"
     candidate = REVIEW_CANDIDATES["muse"]
-    assert (candidate.concrete_model, candidate.family, candidate.route, candidate.transport) == (
-        "muse-wonder-full-1.0", "meta", "muse", "native_muse",
-    )
-    assert candidate.model_roles == frozenset({"coding", "standard_review"})
-    assert candidate.capabilities == frozenset({"code_review"})
+    assert candidate.model_roles == frozenset({"coding", "standard_review", "routine_review"})
+    assert candidate.suitability_roles == frozenset({"routine_review"})
     assert not candidate.formal_review_eligible
     assert candidate.requires_data_egress_policy == "public_only"
     inputs = ResolverInputs(
@@ -1417,7 +1414,9 @@ def test_normalize_muse_subject_seat_and_meta_family():
     for risk in ("low", "medium", "high", "critical"):
         assert (candidate in {c for rung in REVIEW_LADDERS[risk] for c in rung}) == (risk in {"low", "medium"})
     for risk in ("high", "critical"):
-        assert evaluate_candidate(candidate, replace(inputs, risk=risk)).status == "excluded"
+        assert evaluate_candidate(candidate, replace(advisory, risk=risk)).status == "excluded"
+        pinned = replace(advisory, risk=risk, pinned_candidate="muse", pressure_override_reason="fixture")
+        assert resolve_reviewer(pinned).selected is None
     for role in ("critical_review", "security_review"):
         assert evaluate_candidate(candidate, replace(advisory, requested_role=role)).status == "excluded"
     meta_author = evaluate_candidate(candidate, replace(advisory, author_families=frozenset({"meta"})))

@@ -1207,7 +1207,7 @@ CURRENT_INPUTS = _RETIREMENT_DATA["inputs"]
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
-    "review_profiles": ["code"], "capabilities": ["code_review"],
+    "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
     "requires_data_egress_policy": "public_only",
 }
 MUSE_REVIEW_ROLES = {"legacy_reviewers", "code_review_low", "code_review_medium"}
@@ -1288,7 +1288,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
     workers = {
         "muse-wonder-full-1.0": {
             "family": "meta", "tier": "economical", "lifecycle": "active",
-            "roles": ["coding", "standard_review"], "transports": ["native_muse"],
+            "roles": ["coding", "standard_review", "routine_review"], "transports": ["native_muse"],
             "strengths": ["explicit_native_worker"],
             "weaknesses": ["worker_qualification_pending", "review_qualification_pending", "no_driver_authority"],
             "notes": "Explicit native coding and low/medium code-review seat under measurement. "
