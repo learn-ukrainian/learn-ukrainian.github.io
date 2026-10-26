@@ -103,6 +103,13 @@ def test_compute_lane_health_carries_newest_error_text(tmp_path):
         now - timedelta(minutes=5),
         stderr_excerpt='\x1b[91mError:\x1b[0m {"name": "UnknownError", "ref": "err_new"}',
     )
+    newest_path = tmp_path / "ds-2.json"
+    newest = json.loads(newest_path.read_text())
+    newest.update(schema_version=2, error=newest.pop("stderr_excerpt"))
+    newest_path.write_text(json.dumps(newest))
+    archive = tmp_path / "archive"
+    archive.mkdir()
+    (tmp_path / "ds-1.json").rename(archive / "ds-1.json")
 
     health = compute_lane_health(tmp_path, now=now)
     record = health["deepseek"]

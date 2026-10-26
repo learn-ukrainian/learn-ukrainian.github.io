@@ -374,6 +374,10 @@ def test_endpoint_redacts_review_shapes_in_each_served_field(monkeypatch, tmp_pa
     now = datetime.now(UTC)
     for index, minutes in enumerate((30, 10)):
         _write_task(tasks_dir, f"c-{index}", "claude", now - timedelta(minutes=minutes), excerpt)
+    newest_path = tasks_dir / "c-1.json"
+    newest = json.loads(newest_path.read_text())
+    newest.update(schema_version=2, error=newest.pop("stderr_excerpt"))
+    newest_path.write_text(json.dumps(newest))
     diag = tasks_dir / "c-1.diag"
     diag.write_text(excerpt, encoding="utf-8")
     files_before = {path: path.read_bytes() for path in tasks_dir.iterdir()}
