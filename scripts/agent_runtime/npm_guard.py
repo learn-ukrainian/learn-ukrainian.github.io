@@ -1,7 +1,7 @@
 """Refuse npm/npx calls that could rewrite a node_modules shared through a symlink (#9460).
 
-Dispatch worktrees receive the primary checkout's ``node_modules`` and
-``site/node_modules`` as symlinks (``delegate._provision_data_symlinks``).
+Worktrees may share the primary checkout's ``node_modules`` and
+``site/node_modules`` through symlinks.
 ``npm ci`` deletes its target folder first, so running it in a worktree empties
 the primary's real folder through the link. The ``npm`` shim (``npx`` links to
 it) runs this module before handing over to the real binary:
@@ -49,9 +49,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-# The node_modules entries ``scripts/delegate.py::_provision_data_symlinks``
-# links into every dispatch worktree. Duplicated because the guard cannot import
-# delegate; test_npm_shim fails when the two lists diverge.
+# The node_modules entries protected against writes through shared symlinks.
 PROTECTED_PATHS = ("node_modules", "site/node_modules")
 
 # npm prints its version or the command usage and exits before running anything.

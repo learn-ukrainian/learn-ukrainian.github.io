@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Execute at its original path so npx finds its regular-file npm sibling.
+exec "$(dirname -- "${BASH_SOURCE[0]}")/../../agent_runtime/shims/npx" "$@"

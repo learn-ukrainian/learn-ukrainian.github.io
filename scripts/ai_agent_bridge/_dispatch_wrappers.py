@@ -1,7 +1,8 @@
-"""Hardcoded delegate.py wrapper commands for recurring agent dispatches."""
+"""Bridge wrapper commands for recurring agent dispatches."""
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -28,20 +29,6 @@ if TYPE_CHECKING:
 
 REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 PYTHON = ".venv/bin/python"
-
-MANDATORY_COMMIT_PUSH_PR_CHECKLIST = """## MANDATORY checklist — do NOT skip these (the dispatch will be marked failed if you do)
-
-1. `git add` your work (specific files, not `git add -A`)
-2. `git commit -m "..."` — commit hooks will run ruff + targeted pytest
-3. `git push -u origin <branch-name>`
-4. `gh pr create --title "..." --body "..."` — return the URL in your final response
-5. Worktree at `.worktrees/dispatch/codex/<task-id>/`. NEVER branch in the main checkout.
-6. Put transient artifacts in `$LU_RUNTIME_TMP_ROOT` or the task worktree; never leave
-   evidence copies or model caches in bare `/tmp`. Explicitly clean any named temporary
-   path outside those locations before finishing.
-
-If you finish writing code but skip steps 2-4, the work is lost. Don't make that mistake.
-"""
 
 REVIEW_DEEP_INSTRUCTIONS = (
     "Adversarial review. Find logical bugs, security issues, contradictions, "
@@ -132,127 +119,6 @@ def _prompt_directory() -> Iterator[Path]:
         yield Path(directory)
 
 
-def _write_dispatch_fix_auto_brief(task_id: str, prompt_directory: Path) -> Path:
-    issue = _run_json_command(["gh", "issue", "view", task_id, "--json", "title,body"])
-    title = str(issue.get("title") or "").strip()
-    body = str(issue.get("body") or "").strip()
-    prompt = (
-        f"# Dispatch fix: {task_id}\n\n"
-        f"## GitHub issue {task_id}: {title}\n\n"
-        f"{body}\n\n"
-        f"{MANDATORY_COMMIT_PUSH_PR_CHECKLIST}"
-    )
-    brief_path = prompt_directory / f"dispatch-fix-{_safe_path_component(task_id)}.md"
-    brief_path.write_text(prompt, encoding="utf-8")
-    return brief_path
-
-
-def _dispatch_fix_prompt_file(
-    task_id: str,
-    brief_file: str | None,
-    prompt_directory: Path,
-) -> Path:
-    if brief_file:
-        path = Path(brief_file).expanduser()
-        prompt = path.read_text(encoding="utf-8")
-        if MANDATORY_COMMIT_PUSH_PR_CHECKLIST not in prompt:
-            prompt = f"{prompt.rstrip()}\n\n{MANDATORY_COMMIT_PUSH_PR_CHECKLIST}"
-        brief_path = prompt_directory / f"dispatch-fix-{_safe_path_component(task_id)}.md"
-        brief_path.write_text(prompt, encoding="utf-8")
-        return brief_path
-    return _write_dispatch_fix_auto_brief(task_id, prompt_directory)
-
-
-_OWNED_PATHS_HEADING = re.compile(r"(?im)^(#{1,6})\s*owned paths\b[^\n]*$")
-_ANY_HEADING = re.compile(r"(?m)^(#{1,6})\s")
-_BRIEF_PATH = re.compile(r"[\w.*/-]+")
-_BRIEF_RISK = re.compile(r"(?im)^\W*risk\W*:\W*(low|medium|high|critical)\b")
-
-
-class DispatchFixScopeError(ValueError):
-    """A fix brief names no owned paths, so its write dispatch would be unscoped (#9739)."""
-
-
-def brief_owned_paths(text: str) -> tuple[str, ...]:
-    """Repo-relative paths listed under the brief's ``Owned paths`` heading.
-
-    Paths are the backticked tokens of that section, or the lines of a fenced
-    block in it, including repository-root files. Absolute paths, ``..``
-    segments and bare words are dropped; ``delegate.py`` validates the rest.
-    """
-    match = _OWNED_PATHS_HEADING.search(text)
-    if match is None:
-        return ()
-    level = len(match.group(1))
-    end = len(text)
-    for heading in _ANY_HEADING.finditer(text, match.end()):
-        if len(heading.group(1)) <= level:
-            end = heading.start()
-            break
-    section = text[match.end() : end]
-    tokens = re.findall(r"`([^`\n]+)`", section.replace("```", "\n"))
-    for block in re.findall(r"```[^\n]*\n(.*?)```", section, flags=re.S):
-        tokens.extend(line.strip() for line in block.splitlines())
-    paths = [token for token in (raw.strip() for raw in tokens) if _is_brief_owned_path(token)]
-    return tuple(dict.fromkeys(paths))
-
-
-def _is_brief_owned_path(token: str) -> bool:
-    """Whether a backticked token is a repo-relative path rather than a word.
-
-    A token with a ``/`` is a path. A token without one is a repository-root
-    file (``pyproject.toml``, ``start-codex-driver.sh``, ``.gitignore``) when it
-    has a name with a dot, or names a file at the repository root
-    (``Makefile``); a bare word such as ``codex`` is not a path.
-    """
-    if not _BRIEF_PATH.fullmatch(token) or token.startswith(("/", "-")) or ".." in token.split("/"):
-        return False
-    if "/" in token:
-        return True
-    return ("." in token and token.strip(".") != "") or (REPO_ROOT / token).is_file()
-
-
-def build_dispatch_fix_command(task_id: str, prompt_file: Path) -> list[str]:
-    """The write dispatch for a fix brief, scoped by the brief's own ``Owned paths`` (#9739).
-
-    Raises ``DispatchFixScopeError`` when the brief names none; a single
-    ``Risk: <level>`` line becomes ``--authoring-review-risk``.
-    """
-    text = prompt_file.read_text(encoding="utf-8")
-    owned = brief_owned_paths(text)
-    if not owned:
-        raise DispatchFixScopeError(
-            f"dispatch-fix refused for {task_id}: the brief has no '## Owned paths' section listing "
-            "repo-relative paths, so the write dispatch would be unscoped. Add one (or pass --brief-file "
-            "with it) and retry."
-        )
-    command = [
-        PYTHON,
-        "scripts/delegate.py",
-        "dispatch",
-        "--agent",
-        "codex",
-        "--mode",
-        "danger",
-        "--worktree",
-        "--base",
-        "origin/main",
-        "--task-id",
-        task_id,
-        "--force-new",
-        "--effort",
-        "high",
-        "--prompt-file",
-        str(prompt_file),
-    ]
-    for path in owned:
-        command.extend(["--owned-path", path])
-    risks = {risk.casefold() for risk in _BRIEF_RISK.findall(text)}
-    if len(risks) == 1:
-        command.extend(["--authoring-review-risk", risks.pop()])
-    return command
-
-
 def _serialize_files(files: Any) -> str:
     if not files:
         return "(none)"
@@ -273,10 +139,10 @@ def _serialize_files(files: Any) -> str:
     return "\n".join(lines)
 
 
-def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path:
+def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path, *, pr: dict | None = None) -> Path:
     """Pointer-only PR review prompt (Sol fleet-comms Phase 2).
 
-    Never embed full PR body or diff — worker/delegate pulls evidence under
+    Never embed full PR body or diff — the reviewer pulls evidence under
     read-only mode. Exact-head cross-family review through ``ask-<lane> --type review``
     (headless dispatch) replaced the removed ``review-pr``.
     """
@@ -286,7 +152,8 @@ def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path
         prepend_read_only_contract,
     )
 
-    pr = _run_json_command(["gh", "pr", "view", pr_number, "--json", "title,files,url,headRefOid"])
+    if pr is None:
+        pr = _run_json_command(["gh", "pr", "view", pr_number, "--json", "title,files,url,headRefOid"])
     title = str(pr.get("title") or "").strip()
     url = str(pr.get("url") or f"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/{pr_number}")
     head = str(pr.get("headRefOid") or "").strip()
@@ -308,63 +175,28 @@ def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path
     return prompt_path
 
 
-def _list_review_path_names(target: Path, *, max_files: int = 80) -> str:
-    """List paths only — never dump full file contents into the prompt."""
-    if target.is_file():
-        return f"- {target.name}"
-    lines: list[str] = []
-    for path in sorted(p for p in target.rglob("*") if p.is_file()):
-        relative_path = path.relative_to(target)
-        if ".git" in relative_path.parts or "__pycache__" in relative_path.parts:
-            continue
-        lines.append(f"- {relative_path}")
-        if len(lines) >= max_files:
-            lines.append(f"- … truncated after {max_files} paths")
-            break
-    return "\n".join(lines) if lines else "(no files)"
-
-
-def _write_review_deep_path_prompt(target: str, prompt_directory: Path) -> Path:
-    from ._review_safety import (
-        MAX_REVIEW_REQUEST_BYTES,
-        assert_content_size,
-        prepend_read_only_contract,
-    )
-
-    path = Path(target).expanduser()
-    if not path.exists():
-        raise SystemExit(f"review-deep target is not a PR number or existing path: {target}")
-    resolved = path.resolve()
-    listing = _list_review_path_names(resolved)
-    prompt = prepend_read_only_contract(
-        f"{REVIEW_DEEP_INSTRUCTIONS}\n\n"
-        f"## Path target\n\n`{resolved}`\n\n"
-        f"### Paths (names only — open files in the read-only worktree)\n\n{listing}\n\n"
-        "Do not request bulk paste of file contents into the prompt.\n\n"
-        "End with exactly one line: `VERDICT: APPROVED` or "
-        "`VERDICT: CHANGES_REQUESTED` or `VERDICT: BLOCKED`.\n"
-    )
-    assert_content_size(prompt, limit=MAX_REVIEW_REQUEST_BYTES, label="review_deep_prompt")
-    prompt_path = prompt_directory / f"review-deep-path-{_safe_path_component(target)}.md"
-    prompt_path.write_text(prompt, encoding="utf-8")
-    return prompt_path
-
-
 def _review_task_id(target: str) -> str:
     timestamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
-    return f"review-{_safe_path_component(target)}-{timestamp}"
+    digest = hashlib.sha256(target.encode("utf-8")).hexdigest()[:8]
+    return f"review-{_safe_path_component(target)[:80]}-{digest}-{timestamp}"
 
 
-def _review_prompt_file(target: str, prompt_directory: Path) -> Path:
-    if _is_pr_number(target):
-        return _write_review_deep_pr_prompt(target.lstrip("#"), prompt_directory)
-    return _write_review_deep_path_prompt(target, prompt_directory)
+def build_review_deep_command(target: str, prompt_file: Path, effort: str, *, pr: dict | None = None) -> list[str]:
+    if not _is_pr_number(target):
+        raise ValueError("review-deep requires a PR number; local-path review is retired")
+    from scripts.common.git_context import validate_plain_branch_name
 
-
-def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> list[str]:
-    return [
+    if pr is None:
+        pr = _run_json_command(["gh", "pr", "view", target.lstrip("#"), "--json", "headRefName,headRefOid"])
+    if not isinstance(pr, dict):
+        raise ValueError("review-deep could not load PR metadata")
+    branch, head = pr.get("headRefName"), pr.get("headRefOid")
+    if not isinstance(branch, str) or not isinstance(head, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", head):
+        raise ValueError("review-deep requires the PR head ref and full head SHA")
+    branch = validate_plain_branch_name(branch, repo_root=REPO_ROOT)
+    command = [
         PYTHON,
-        "scripts/delegate.py",
+        "scripts/dispatch.py",
         "dispatch",
         "--agent",
         "claude",
@@ -379,6 +211,8 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> li
         "--prompt-file",
         str(prompt_file),
     ]
+    command.extend(["--full-checkout", "--branch", branch, "--pinned-head", head])
+    return command
 
 
 def _write_dry_run_state(task_id: str, command: list[str], prompt_file: Path) -> None:
@@ -415,7 +249,7 @@ def _run_dispatch(
         print(f"State file: {_task_state_path(task_id)}")
         return 0
     try:
-        proc = subprocess.run(command, cwd=REPO_ROOT, timeout=timeout)
+        proc = github_client.run(command, cwd=REPO_ROOT, timeout=timeout)
         return int(proc.returncode)
     except subprocess.TimeoutExpired:
         print(
@@ -425,25 +259,28 @@ def _run_dispatch(
         return 1
 
 
-def handle_dispatch_fix(args: Any) -> int:
-    with _prompt_directory() as prompt_directory:
-        prompt_file = _dispatch_fix_prompt_file(
-            args.task_id,
-            args.brief_file,
-            prompt_directory,
-        )
-        try:
-            command = build_dispatch_fix_command(args.task_id, prompt_file)
-        except DispatchFixScopeError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-        return _run_dispatch(command, args.dry_run, prompt_file)
-
-
 def handle_review_deep(args: Any) -> int:
+    if not _is_pr_number(args.target):
+        print(
+            "review-deep local-path review is retired. Use scripts/dispatch.py dispatch "
+            "--agent <agent> --model <model> --mode read-only --cwd <dispatch-worktree> "
+            "--prompt-file <brief> for a live checkout, then scripts/dispatch.py wait <task-id>. "
+            "Publish formal verdicts with scripts.review.record_cf_verdict.",
+            file=sys.stderr,
+        )
+        return 2
     with _prompt_directory() as prompt_directory:
-        prompt_file = _review_prompt_file(args.target, prompt_directory)
-        command = build_review_deep_command(args.target, prompt_file, args.effort)
+        try:
+            pr = _run_json_command([
+                "gh", "pr", "view", args.target.lstrip("#"), "--json", "title,files,url,headRefName,headRefOid",
+            ])
+            if not isinstance(pr, dict):
+                raise ValueError("review-deep could not load PR metadata")
+            prompt_file = _write_review_deep_pr_prompt(args.target.lstrip("#"), prompt_directory, pr=pr)
+            command = build_review_deep_command(args.target, prompt_file, args.effort, pr=pr)
+        except (OSError, ValueError, subprocess.SubprocessError):
+            print("review-deep: could not load a valid PR head ref and SHA; review not dispatched.", file=sys.stderr)
+            return 2
         return _run_dispatch(command, args.dry_run, prompt_file)
 
 

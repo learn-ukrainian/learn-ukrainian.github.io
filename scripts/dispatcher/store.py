@@ -35,6 +35,18 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     record.update({name: getattr(spec, name) for name in fields})
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
     record.update({name: metadata.get(name) for name in metadata_fields})
+    for name in ("output_schema_path", "output_schema_sha256", "review_write_root"):
+        if name in spec.options:
+            record[name] = spec.options[name]
+    for source, target in (
+        ("risk", "review_risk"), ("review_profile", "review_profile"),
+        ("review_author_model", "review_author_model"), ("review_mode", "review_mode"),
+        ("language_lane", "language_lane"), ("pr", "pr"),
+        ("subject_seat", "review_subject_seats"), ("subject_family", "review_subject_families"),
+        ("require_review_verdict", "require_review_verdict"),
+    ):
+        if metadata.get(source) is not None and metadata[source] != []:
+            record[target] = metadata[source]
     record.update(schema_version=2, run_nonce=uuid.uuid4().hex, status="spawning", started_at=now())
     record.update(repo=repository["key"], repository_id=repository["github"], repository=repository["github"])
     record.update(
@@ -43,6 +55,8 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     if spec.mode == "read-only" and metadata.get("branch") is not None:
         record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
         record["pinned_head"] = metadata.get("pinned_head") or sha
+    elif spec.mode == "workspace-write" and metadata.get("branch") is not None:
+        record["publish_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
     record.update(prompt_file=str(spec.prompt_file), prompt_sha256=digest(spec.prompt_file.read_bytes()))
     record.update(
         result_file=str(spec.final_file), push_state="unknown", research_owned_paths=metadata["research_owned_path"]

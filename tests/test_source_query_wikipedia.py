@@ -55,6 +55,28 @@ def test_is_disambiguation_summary() -> None:
     })
 
 
+@pytest.mark.parametrize("operation", ["search", "entities"])
+def test_wikidata_outgoing_headers_preserve_service_identity(monkeypatch, operation):
+    import scripts.rag.source_query as sq
+
+    outgoing_headers = []
+
+    def fake_send(self, request, **kwargs):
+        outgoing_headers.append(dict(request.headers))
+        return DummyResponse(200, data={"search": [{"id": "Q1"}], "entities": {"Q1": {"id": "Q1"}}})
+
+    monkeypatch.setattr(requests.Session, "send", fake_send)
+    if operation == "search":
+        assert sq.wikidata_search_entities("fixture") == [{"id": "Q1"}]
+    else:
+        assert sq.wikidata_get_entities(["Q1"]) == {"Q1": {"id": "Q1"}}
+    assert outgoing_headers == [{
+        **sq._SESSION.headers,
+        "User-Agent": "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma)",
+        "Accept": "application/json",
+    }]
+
+
 def test_wikipedia_summary_lowercase_403_falls_back_to_capitalized_200(monkeypatch: pytest.MonkeyPatch) -> None:
     recorded_calls: list[tuple[str, dict]] = []
 

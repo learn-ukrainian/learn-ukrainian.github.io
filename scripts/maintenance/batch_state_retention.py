@@ -13,13 +13,14 @@ import argparse
 import contextlib
 import errno
 import fcntl
+import hashlib
 import json
 import os
 import re
 import secrets
 import stat
 import sys
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -30,12 +31,7 @@ for _path in (REPO_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from scripts import delegate
-from scripts.orchestration.stale_task_records import (
-    DEFAULT_LOCK_TIMEOUT_S,
-    _record_age_days,
-    _record_lock_target,
-)
+from scripts.orchestration import worktree_claims
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, WorktreeLockError
 
@@ -44,7 +40,11 @@ DEFAULT_BATCH_STATE = REPO_ROOT / "batch_state"
 # forensic value after a day. Seven days reclaimed nothing: the dirs are younger.
 DEFAULT_MIN_AGE_DAYS = 1.0
 DEFAULT_ONE_OFF_MIN_BYTES = 100 * 1024 * 1024
-_SNAPSHOT_SUFFIX = delegate._READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX
+DEFAULT_LOCK_TIMEOUT_S = 5.0
+_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX = ".snapshots"
+_READ_ONLY_SNAPSHOT_DIGEST_NAME = "digest.json"
+_READ_ONLY_SNAPSHOT_RETENTION_DIGEST = "digest"
+_SNAPSHOT_SUFFIX = _READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX
 # Only these directory globs may be rewritten. Everything else under batch_state
 # is measured and left alone.
 _ALLOWLISTED_SNAPSHOT_PARENTS = ("", ARCHIVE_DIR_NAME)
@@ -57,6 +57,59 @@ _READ_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC
 # ``_temp_name`` is ``.{name}.{pid}.{16 hex}.tmp``. Only that shape is ours.
 _OWN_TEMP_RE = re.compile(r"^\..+\.[0-9]+\.[0-9a-f]{16}\.tmp\Z")
 _OWN_TEMP_MAX_AGE_S = 60 * 60
+
+
+def _canonical_snapshot_bytes(snapshot: dict[str, str] | None) -> bytes:
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return json.dumps(payload, separators=(",", ":")).encode("utf-8")
+
+
+def _snapshot_digest_phase(snapshot: dict[str, str] | None) -> dict[str, Any]:
+    raw = _canonical_snapshot_bytes(snapshot)
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return {"sha256": hashlib.sha256(raw).hexdigest(), "entries": len(payload)}
+
+
+def read_only_snapshot_digest(
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> dict[str, Any]:
+    """Content digest of the two canonical checkout snapshots."""
+    return {"pre": _snapshot_digest_phase(pre), "post": _snapshot_digest_phase(post)}
+
+
+def worktree_lock(path: Path | str, timeout_s: float | None = None) -> contextlib.AbstractContextManager[None]:
+    """Use the shared repository lock also held by dispatch and record movers."""
+    return worktree_claims.worktree_lock(
+        path, lock_dir=worktree_claims.repository_lock_dir(REPO_ROOT), timeout_s=timeout_s,
+    )
+
+
+def _parse_ts(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None else parsed.replace(tzinfo=UTC)
+
+
+def _record_age_days(record: dict[str, Any], mtime_ns: int, now: datetime) -> float:
+    finished = _parse_ts(record.get("finished_at"))
+    if finished is None:
+        finished = datetime.fromtimestamp(mtime_ns / 1e9, UTC)
+    return (now - finished).total_seconds() / 86400.0
+
+
+def _record_lock_target(record: Mapping[str, Any], record_path: Path) -> str:
+    raw = record.get("worktree_path")
+    if isinstance(raw, str) and raw.strip():
+        return raw
+    cwd = record.get("cwd")
+    if isinstance(cwd, str) and cwd.strip() and not (Path(cwd) / ".git").is_dir():
+        return cwd
+    return str(record_path)
 
 
 def _component(name: str) -> bool:
@@ -407,7 +460,7 @@ def _record_name_for(snapshot_name: str) -> str | None:
 
 
 def _digest_bytes(pre: dict[str, str], post: dict[str, str]) -> bytes:
-    return json.dumps(delegate.read_only_snapshot_digest(pre, post), separators=(",", ":")).encode("utf-8")
+    return json.dumps(read_only_snapshot_digest(pre, post), separators=(",", ":")).encode("utf-8")
 
 
 def _apply_one(
@@ -449,7 +502,7 @@ def _apply_one(
     """
     try:
         with (
-            delegate.worktree_lock(_record_lock_target(observed, logical_record), timeout_s=DEFAULT_LOCK_TIMEOUT_S),
+            worktree_lock(_record_lock_target(observed, logical_record), timeout_s=DEFAULT_LOCK_TIMEOUT_S),
             _task_record_lock(parent_fd, record_name),
         ):
             if not _is_regular(parent_fd, record_name):
@@ -472,14 +525,14 @@ def _apply_one(
                 if phases is None:
                     return None
                 pre, post = phases
-                _write_bytes_at(snap_fd, delegate._READ_ONLY_SNAPSHOT_DIGEST_NAME, _digest_bytes(pre, post))
+                _write_bytes_at(snap_fd, _READ_ONLY_SNAPSHOT_DIGEST_NAME, _digest_bytes(pre, post))
                 if crash_after == "digest":
                     raise RuntimeError("crash after digest")
                 if on_after_digest is not None:
                     on_after_digest()
                 if not _hot_pair(parent_fd, record_name, snapshot_name, snap_fd):
                     return None
-                current["read_only_snapshot_retention"] = delegate._READ_ONLY_SNAPSHOT_RETENTION_DIGEST
+                current["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_DIGEST
                 _write_bytes_at(
                     parent_fd,
                     record_name,
@@ -736,7 +789,7 @@ def _parser() -> argparse.ArgumentParser:
             "  2  the path is not a directory named batch_state\n"
             "\n"
             "Related:\n"
-            "  scripts/delegate.py read-only snapshot sidecars (#7203, #8783)\n"
+            "  Legacy read-only snapshot sidecars (#7203, #8783)\n"
             "  scripts/orchestration/stale_task_records.py archive (moves sidecars, does not shrink them)\n"
         ),
     )
