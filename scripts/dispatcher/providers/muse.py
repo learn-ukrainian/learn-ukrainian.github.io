@@ -18,6 +18,7 @@ from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["muse", "exec", "--json", "--model", spec.model]
     argv += ["--workspace", str(spec.worktree), "--worktree", "off", "--prompt-file", str(spec.prompt_file)]
+    # The admission check forces this option off for every private input class.
     argv += ["--contributor-mode", spec.options.get("contributor_mode", "off")]
     if spec.effort:
         argv += ["--reasoning-effort", spec.effort]

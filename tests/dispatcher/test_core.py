@@ -19,6 +19,7 @@ import yaml
 from scripts.dispatcher import checks, git, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
+from scripts.dispatcher.providers import muse
 from scripts.dispatcher.types import TaskSpec
 from scripts.review.record_cf_verdict import _review_branch
 
@@ -471,16 +472,27 @@ def spec(tmp_path):
     return TaskSpec("task", "muse", "model", None, "read-only", tmp_path, prompt, tmp_path / "task.result")
 
 
+def assert_private_input_policy(spec, repo_key, error):
+    if spec.agent == "muse":
+        spec = dataclasses.replace(spec, options={**spec.options, "contributor_mode": "on"})
+        checks.check_private_input(spec, repo_key)
+        argv = muse.build(spec, {}).argv
+        assert argv[argv.index("--contributor-mode") + 1] == "off"
+    else:
+        with pytest.raises(ValueError, match=error):
+            checks.check_private_input(spec, repo_key)
+
+
 @pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
 @pytest.mark.parametrize("classification", [{"role": "private-product"}, {"role": "product", "private": True}])
-def test_private_repo_and_prompt_file_origin_are_refused(spec, private_repos, agent):
+def test_private_repo_and_prompt_origin_cannot_bypass_private_policy(spec, private_repos, agent):
     private, alias = private_repos
     spec = dataclasses.replace(spec, agent=agent)
-    with pytest.raises(ValueError, match="private input"):
-        checks.check_private_input(spec, "private")
+    assert_private_input_policy(spec, "private", "private input")
     for origin in (private / "secret.txt", alias / "secret.txt"):
-        with pytest.raises(ValueError, match="private prompt file"):
-            checks.check_private_input(dataclasses.replace(spec, options={"prompt_file": str(origin)}), "public")
+        assert_private_input_policy(
+            dataclasses.replace(spec, options={"prompt_file": str(origin)}), "public", "private prompt file"
+        )
 
 
 @pytest.fixture
@@ -514,6 +526,38 @@ def private_repos(tmp_path, monkeypatch, classification):
     return private, alias
 
 
+@pytest.mark.parametrize("classification", [{"role": "private-product"}, {"role": "product", "private": True}])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("source", ["repo", "prompt-origin", "symlink-origin", "owned-path", "encoded-identifier"])
+def test_private_muse_never_receives_contributor_on(spec, private_repos, mode, source):
+    private, alias = private_repos
+    options = {"contributor_mode": "on", "unrelated": "preserved"}
+    if source in {"prompt-origin", "symlink-origin"}:
+        root = private if source == "prompt-origin" else alias
+        options["prompt_file"] = str(root / "brief.txt")
+    elif source == "owned-path":
+        spec.prompt_file.write_text(f"Owned paths: {private}/notes.md")
+    elif source == "encoded-identifier":
+        spec.prompt_file.write_text("Owned paths: %56AULT%2dDATA/notes.md")
+    expected_options = {**options, "contributor_mode": "off"}
+    spec = dataclasses.replace(spec, mode=mode, options=options)
+    before = spec.prompt_file.read_bytes()
+
+    checks.check_private_input(spec, "private" if source == "repo" else "public")
+
+    argv = muse.build(spec, {}).argv
+    assert argv[argv.index("--contributor-mode") + 1] == "off"
+    assert spec.options == expected_options
+    assert spec.prompt_file.read_bytes() == before
+
+
+def test_public_muse_contributor_on_is_preserved(spec, private_repos):
+    spec = dataclasses.replace(spec, options={"contributor_mode": "on"})
+    checks.check_private_input(spec, "public")
+    argv = muse.build(spec, {}).argv
+    assert argv[argv.index("--contributor-mode") + 1] == "on"
+
+
 @pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
 @pytest.mark.parametrize(
     "prompt",
@@ -524,14 +568,13 @@ def private_repos(tmp_path, monkeypatch, classification):
         pytest.param("Read source:{encoded}", id="encoded-source-private-path"),
     ],
 )
-def test_private_path_equals_and_encoded_source_bypasses_are_refused(spec, private_repos, agent, prompt):
+def test_private_path_equals_and_encoded_source_cannot_bypass_private_policy(spec, private_repos, agent, prompt):
     """Old tokenizer lost the private path after '=' or left source: escapes undecoded."""
     private, _ = private_repos
     prompt = prompt.format(private=private, encoded=str(private / "secret.txt").replace("/", "%2F"))
     spec = dataclasses.replace(spec, agent=agent)
     spec.prompt_file.write_text(prompt)
-    with pytest.raises(ValueError, match="private path"):
-        checks.check_private_input(spec, "public")
+    assert_private_input_policy(spec, "public", "private path")
     assert spec.prompt_file.read_text() == prompt
 
 
@@ -555,8 +598,7 @@ def test_private_identifier_substring_contract(spec, private_repos, agent, promp
     prompt = prompt.format(private=private, encoded=str(private / "secret.txt").replace("/", "%2F"))
     spec = dataclasses.replace(spec, agent=agent)
     spec.prompt_file.write_text(prompt)
-    with pytest.raises(ValueError, match="private path"):
-        checks.check_private_input(spec, "public")
+    assert_private_input_policy(spec, "public", "private path")
     assert spec.prompt_file.read_text() == prompt
 
 
@@ -617,8 +659,7 @@ def test_empty_private_identifiers_do_not_refuse_all_public_prompts(spec, tmp_pa
     spec = dataclasses.replace(spec, agent=agent)
     checks.check_private_input(spec, "public")
     spec.prompt_file.write_text(f"Read {root}/secret.txt")
-    with pytest.raises(ValueError, match="private path"):
-        checks.check_private_input(spec, "public")
+    assert_private_input_policy(spec, "public", "private path")
 
 
 @pytest.mark.parametrize("character", ["\n", "\u202e", "\u2028"])
