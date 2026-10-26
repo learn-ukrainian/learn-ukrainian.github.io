@@ -152,7 +152,7 @@ def test_inbox_json_reports_missing_recorded_task(tmp_path: Path, capsys):
     assert payload["tasks"][0]["status"] == "missing"
 
 
-def test_dispatch_dry_run_builds_delegate_command(tmp_path: Path, capsys):
+def test_dispatch_dry_run_builds_dispatch_command(tmp_path: Path, capsys):
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Do the worker task.", encoding="utf-8")
 
@@ -185,7 +185,7 @@ def test_dispatch_dry_run_builds_delegate_command(tmp_path: Path, capsys):
     command = payload["command"]
 
     assert rc == 0
-    assert command[:3] == [".venv/bin/python", "scripts/delegate.py", "dispatch"]
+    assert command[:3] == [".venv/bin/python", "scripts/dispatch.py", "dispatch"]
     assert _option(command, "--agent") == "codex"
     assert _option(command, "--task-id") == "worker-3"
     assert _option(command, "--mode") == "danger"

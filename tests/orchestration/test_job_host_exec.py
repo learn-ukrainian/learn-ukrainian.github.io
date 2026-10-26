@@ -176,7 +176,7 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setenv(jh.ENV_TEACHER_HOST, "teacher-alias")
     monkeypatch.setenv(jh.ENV_TEACHER_REPO, "/remote/repo")
     rc = jh.main(
-        ["--host-id", "host-teacher", "--", ".venv/bin/python", "scripts/delegate.py", "dispatch"]
+        ["--host-id", "host-teacher", "--", ".venv/bin/python", "scripts/dispatch.py", "dispatch"]
     )
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
@@ -185,7 +185,7 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     assert "teacher-alias" in recorded
     assert "bash -s" in recorded
     assert "cd /remote/repo" in script
-    assert "scripts/delegate.py" in script
+    assert "scripts/dispatch.py" in script
     assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
 
 
@@ -214,7 +214,7 @@ def test_main_dispatch_preserves_session_initiator(
             "host-job",
             "--",
             ".venv/bin/python",
-            "scripts/delegate.py",
+            "scripts/dispatch.py",
             "dispatch",
             "--agent",
             "codex",
@@ -256,7 +256,7 @@ def test_main_dispatch_copies_local_prompt_file(
             "host-job",
             "--",
             ".venv/bin/python",
-            "scripts/delegate.py",
+            "scripts/dispatch.py",
             "dispatch",
             "--agent",
             "codex",
@@ -312,7 +312,7 @@ def test_forward_dispatch_inlines_prompt_file(
     rc = jh.forward_dispatch(
         host_id="host-job",
         argv=[
-            "scripts/delegate.py",
+            "scripts/dispatch.py",
             "dispatch",
             "--agent",
             "codex",
@@ -359,7 +359,7 @@ def test_forward_dispatch_rewrites_prompt_dash(
     rc = jh.forward_dispatch(
         host_id="host-job",
         argv=[
-            "scripts/delegate.py",
+            "scripts/dispatch.py",
             "dispatch",
             "--agent",
             "codex",
@@ -402,7 +402,7 @@ def test_forward_dispatch_copies_lifecycle_file(
     rc = jh.forward_dispatch(
         host_id="host-job",
         argv=[
-            "scripts/delegate.py",
+            "scripts/dispatch.py",
             "dispatch",
             "--agent",
             "codex",
@@ -431,7 +431,7 @@ def test_forward_dispatch_rejects_notebook_cwd(
         jh.forward_dispatch(
             host_id="host-job",
             argv=[
-                "scripts/delegate.py",
+                "scripts/dispatch.py",
                 "dispatch",
                 "--agent",
                 "codex",
@@ -466,7 +466,7 @@ def test_forward_dispatch_strips_notebook_worktree_path(
     rc = jh.forward_dispatch(
         host_id="host-job",
         argv=[
-            "scripts/delegate.py",
+            "scripts/dispatch.py",
             "dispatch",
             "--agent",
             "codex",
@@ -494,7 +494,7 @@ def test_forward_dispatch_missing_ssh_is_transport_error(
     with pytest.raises(jh.SshTransportError):
         jh.forward_dispatch(
             host_id="host-job",
-            argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
+            argv=["scripts/dispatch.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
         )
 
 
@@ -521,10 +521,10 @@ def test_remote_payload_script_cleans_private_files_on_exit_failure_and_signal(
     remote_python = tmp_path / ".venv" / "bin" / "python"
     remote_python.parent.mkdir(parents=True)
     remote_python.symlink_to(sys.executable)
-    remote_delegate = tmp_path / "scripts" / "delegate.py"
-    remote_delegate.parent.mkdir()
+    remote_dispatch = tmp_path / "scripts" / "dispatch.py"
+    remote_dispatch.parent.mkdir()
     observed_path = tmp_path / "payload-path"
-    remote_delegate.write_text(
+    remote_dispatch.write_text(
         "import os\n"
         "import signal\n"
         "import stat\n"
@@ -586,7 +586,7 @@ def test_main_missing_ssh_dispatch_returns_255(
             "host-job",
             "--",
             ".venv/bin/python",
-            "scripts/delegate.py",
+            "scripts/dispatch.py",
             "dispatch",
             "--agent",
             "codex",
@@ -618,7 +618,7 @@ def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
     rc = jh.forward_dispatch(
         host_id="host-job",
-        argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
+        argv=["scripts/dispatch.py", "dispatch", "--agent", "codex", "--task-id", "cf"],
         run_nonce="nonce-fwd-9876",
     )
     assert rc == 0
@@ -634,7 +634,7 @@ def test_job_host_exec_main_refusal_names_both_recovery_paths(
     """#7230: job_host_exec.py CLI prints the refusal naming recovery paths and exits rc 2 on config error."""
     monkeypatch.delenv(jh.ENV_HOST, raising=False)
     monkeypatch.delenv(jh.ENV_HOST_FALLBACK, raising=False)
-    rc = jh.main(["--host-id", "host-job", "--", "scripts/delegate.py", "dispatch", "--task-id", "t-1"])
+    rc = jh.main(["--host-id", "host-job", "--", "scripts/dispatch.py", "dispatch", "--task-id", "t-1"])
     assert rc == 2
     captured = capsys.readouterr()
     assert "❌ VPS forward configuration refusal for host-job:" in captured.err

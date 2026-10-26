@@ -6,9 +6,9 @@ occupancy hosts are the worker pool: agent CLIs and long Python jobs run
 on either box. The job host also holds Monitor and fleet-comms. The
 teacher host also holds the teacher product. Workers stay out of teacher
 product data trees. Occupancy headroom decides who takes the next job.
-Notebook ``delegate.py dispatch`` is the fallback only when
-**every** VPS worker host is unavailable or full. This helper never prints
-host aliases, IPs, or occupancy env.
+The CLI forwards dispatch v2 payload files over SSH. Placement and fallback
+helpers remain for legacy callers; dispatch v2 does not use that policy.
+This helper never prints host aliases, IPs, or occupancy env.
 
 SSH aliases and remote checkout paths stay in operator env (not git):
 
@@ -16,7 +16,7 @@ SSH aliases and remote checkout paths stay in operator env (not git):
 - ``LU_JOB_DISPATCH_HOST`` / ``ATLAS_RUNNER_HOST`` — job-host (required)
 - ``LU_TEACHER_DISPATCH_HOST`` — teacher-host (required for teacher host_id)
 - ``LU_JOB_REPO`` / ``LU_TEACHER_REPO`` — absolute remote checkouts (required)
-- ``LU_ALLOW_NOTEBOOK_DISPATCH`` — set to 1 to bypass VPS forwarding and force local spawn
+- ``LU_ALLOW_NOTEBOOK_DISPATCH`` — legacy placement helpers only, not this SSH CLI
 
 Remote PATH always includes ``$HOME/.local/bin`` and ``$HOME/.opencode/bin``.
 """
@@ -281,7 +281,7 @@ def decide_dispatch_placement(
     repo_root: Path | None = None,
     occupancy: Any = _MISSING,
 ) -> tuple[Placement, PlacementReason, str | None]:
-    """Where a notebook ``delegate.py dispatch`` may spawn.
+    """Choose notebook or VPS placement for callers of the legacy placement policy.
 
     ``vps`` means refuse Darwin spawn and name the opaque occupancy host.
     ``notebook`` is allowed when the retire marker is absent, the operator
@@ -468,7 +468,7 @@ def _build_remote_dispatch_script(
         )
     lines.append(
         build_remote_command(
-            [".venv/bin/python", "scripts/delegate.py", *argv],
+            [".venv/bin/python", "scripts/dispatch.py", *argv],
             remote_repo=remote_repo,
             extra_exports=extra_exports,
         )
@@ -500,10 +500,10 @@ def forward_dispatch(
     initiator_source: str | None = None,
     run_nonce: str | None = None,
 ) -> int:
-    """SSH a notebook ``delegate.py dispatch`` onto the chosen VPS and spawn there.
+    """SSH a notebook ``scripts/dispatch.py dispatch`` onto the chosen VPS and spawn there.
 
-    Remote spawn sets ``LU_ALLOW_NOTEBOOK_DISPATCH=1`` so the worker checkout
-    does not try to forward again. Session-derived initiator identity is
+    Remote spawn retains the legacy local-spawn environment for callers that
+    still inspect it. Dispatch v2 does not forward itself. Initiator identity is
     exported so the remote worker does not record ``unknown``.
     """
     if len(argv) < 2:
@@ -581,10 +581,10 @@ def build_ssh_argv(host: str, remote_command: str) -> list[str]:
     ]
 
 
-def _delegate_dispatch_argv(remote_argv: list[str]) -> list[str] | None:
-    """Return ``[scripts/delegate.py, dispatch, ...]`` when this is a dispatch."""
+def _dispatch_argv(remote_argv: list[str]) -> list[str] | None:
+    """Return ``[scripts/dispatch.py, dispatch, ...]`` when this is a dispatch."""
     try:
-        idx = remote_argv.index("scripts/delegate.py")
+        idx = remote_argv.index("scripts/dispatch.py")
     except ValueError:
         return None
     rest = remote_argv[idx:]
@@ -604,21 +604,21 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/orchestration/job_host_exec.py -- "
-            ".venv/bin/python scripts/delegate.py dispatch --agent codex "
-            "--task-id review-123 --prompt-file brief.md --mode read-only\n"
+            ".venv/bin/python scripts/dispatch.py dispatch --agent codex "
+            "--model gpt-6.1-sol --task-id review-123 --prompt-file brief.md --mode read-only\n"
             "  .venv/bin/python scripts/orchestration/job_host_exec.py "
             "--host-id host-job -- .venv/bin/python -m pytest tests/orchestration/test_job_host_exec.py\n\n"
             "Outputs:\n"
             "  Runs the remote command in the occupancy checkout. Dispatch argv "
             "is rewritten so notebook --prompt-file/--lifecycle-file/--output-schema "
-            "bodies land in remote /tmp and LU_ALLOW_NOTEBOOK_DISPATCH=1 prevents "
-            "a second forward hop.\n\n"
+            "bodies land in remote /tmp. Legacy-only flags (including --lifecycle-file "
+            "and --run-nonce) are forwarded unchanged and refused by v2.\n\n"
             "Environment Variables & Precedence:\n"
             "  LU_JOB_DISPATCH_HOST / ATLAS_RUNNER_HOST — SSH alias for host-job (required for job-host forward)\n"
             "  LU_JOB_REPO — absolute remote checkout path for host-job\n"
             "  LU_TEACHER_DISPATCH_HOST / LU_DISPATCH_SSH — SSH alias for host-teacher / opaque host map\n"
             "  LU_TEACHER_REPO — absolute remote checkout path for host-teacher\n"
-            "  LU_ALLOW_NOTEBOOK_DISPATCH — set to 1 to bypass VPS forward and force local notebook spawn\n\n"
+            "  LU_ALLOW_NOTEBOOK_DISPATCH — legacy placement helpers only; does not bypass this SSH CLI\n\n"
             "Exit codes:\n"
             "  0 on successful remote completion; 2 on CLI misuse, missing host, "
             "or notebook payload errors; 255 on SSH transport failure "
@@ -626,7 +626,7 @@ def build_parser() -> argparse.ArgumentParser:
             "remote command.\n\n"
             "Related:\n"
             "  Occupancy: GET /api/occupancy\n"
-            "  Dispatch: scripts/delegate.py\n"
+            "  Dispatch: scripts/dispatch.py\n"
             "  Issue: #7062, #7230\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -660,7 +660,7 @@ def main(argv: list[str] | None = None) -> int:
             if capacity != "available" or not host_id:
                 print(f"error: no VPS worker host available ({capacity})", file=sys.stderr)
                 return 2
-        dispatch_argv = _delegate_dispatch_argv(remote_argv)
+        dispatch_argv = _dispatch_argv(remote_argv)
         if dispatch_argv is not None:
             from scripts.agent_runtime.attribution import resolve_invocation_attribution
 

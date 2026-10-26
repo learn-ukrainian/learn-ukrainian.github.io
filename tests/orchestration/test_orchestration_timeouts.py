@@ -177,7 +177,7 @@ def test_job_host_exec_forward_dispatch_timeout(monkeypatch: pytest.MonkeyPatch)
     with patch("subprocess.run", side_effect=fake_run):
         rc = jhe.forward_dispatch(
             host_id="host-job",
-            argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
+            argv=["scripts/dispatch.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
         )
         assert rc == 0
 
@@ -191,7 +191,7 @@ def test_job_host_exec_forward_dispatch_timeout(monkeypatch: pytest.MonkeyPatch)
         with pytest.raises(jhe.SshTransportError, match=r"SSH transport timed out after 300\.0s"):
             jhe.forward_dispatch(
                 host_id="host-job",
-                argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
+                argv=["scripts/dispatch.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
             )
 
 
@@ -329,20 +329,20 @@ def test_orchestrator_control_cmd_dispatch_timeout(
         assert rc == 0
 
     assert len(calls) == 1
-    assert calls[0]["timeout"] == oc.DEFAULT_DELEGATE_TIMEOUT_SECONDS
+    assert calls[0]["timeout"] == oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS
     capsys.readouterr()
 
     with patch(
 
         "subprocess.run",
         side_effect=subprocess.TimeoutExpired(
-            ["python", "delegate.py"], oc.DEFAULT_DELEGATE_TIMEOUT_SECONDS
+            ["python", "delegate.py"], oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS
         ),
     ):
         rc = oc.cmd_dispatch(args)
         assert rc == 124
         out = json.loads(capsys.readouterr().out)
-        assert out["error"] == "delegate dispatch timed out"
+        assert out["error"] == "worker dispatch timed out"
         assert out["returncode"] == 124
         assert "timed out after 180.0s" in out["stderr"]
 

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """Orchestrator control plane for delegated worker runs.
 
-This script deliberately sits above ``delegate.py`` instead of replacing it:
-``delegate.py`` owns process lifecycle and worktree setup, while this helper
-owns the durable operator view the orchestrator needs across thread rollovers.
+``scripts/dispatch.py`` owns new worker launches and worktree setup. This
+helper owns the durable operator view across thread rollovers. Legacy-only
+launch options are forwarded unchanged and refused by the v2 parser until
+parity exists; they are never silently dropped.
 It records which delegate task ids belong to an orchestration run and renders a
 compact inbox from ``batch_state/tasks`` so a fresh thread can resume without
 rediscovering raw state files by hand.
@@ -35,7 +36,7 @@ from scripts.orchestration.task_record_store import (
 
 SCHEMA_VERSION = 1
 PYTHON = ".venv/bin/python"
-DEFAULT_DELEGATE_TIMEOUT_SECONDS = 180.0
+DEFAULT_DISPATCH_TIMEOUT_SECONDS = 180.0
 TASK_STATUS_ATTENTION = {
     "cancelled",
     "crashed",
@@ -533,10 +534,10 @@ def resolve_prompt_file(repo_root: Path, args: argparse.Namespace) -> Path:
     return path
 
 
-def build_delegate_command(args: argparse.Namespace, prompt_file: Path) -> list[str]:
+def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[str]:
     command = [
         PYTHON,
-        "scripts/delegate.py",
+        "scripts/dispatch.py",
         "dispatch",
         "--agent",
         args.agent,
@@ -617,7 +618,7 @@ def cmd_add_task(args: argparse.Namespace) -> int:
 def cmd_dispatch(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
     if args.mode in WRITE_MODES and not getattr(args, "owned_path", None):
-        # delegate.py refuses a write dispatch without scope (#9739); say so before writing a prompt file.
+        # Retain the write-scope requirement before writing a prompt file (#9739).
         print(json.dumps({"error": f"--mode {args.mode} requires --owned-path (#9739)"}, indent=2))
         return 2
     try:
@@ -626,7 +627,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(json.dumps({"error": str(exc)}, indent=2))
         return 2
 
-    command = build_delegate_command(args, prompt_file)
+    command = build_dispatch_command(args, prompt_file)
     if args.dry_run:
         print(
             json.dumps(
@@ -649,18 +650,18 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             capture_output=True,
             text=True,
             check=False,
-            timeout=DEFAULT_DELEGATE_TIMEOUT_SECONDS,
+            timeout=DEFAULT_DISPATCH_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as exc:
         print(
             json.dumps(
                 {
-                    "error": "delegate dispatch timed out",
+                    "error": "worker dispatch timed out",
                     "returncode": 124,
                     "stdout": (exc.stdout or "") if isinstance(exc.stdout, str) else "",
-                    "stderr": (exc.stderr or f"delegate dispatch timed out after {DEFAULT_DELEGATE_TIMEOUT_SECONDS}s")
+                    "stderr": (exc.stderr or f"worker dispatch timed out after {DEFAULT_DISPATCH_TIMEOUT_SECONDS}s")
                     if isinstance(exc.stderr, str)
-                    else f"delegate dispatch timed out after {DEFAULT_DELEGATE_TIMEOUT_SECONDS}s",
+                    else f"worker dispatch timed out after {DEFAULT_DISPATCH_TIMEOUT_SECONDS}s",
                     "command": command,
                 },
                 indent=2,
@@ -671,7 +672,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(
             json.dumps(
                 {
-                    "error": "delegate dispatch failed",
+                    "error": "worker dispatch failed",
                     "returncode": proc.returncode,
                     "stdout": proc.stdout,
                     "stderr": proc.stderr,
@@ -745,7 +746,16 @@ def build_parser() -> argparse.ArgumentParser:
     add.add_argument("--lifecycle-file")
     add.set_defaults(func=cmd_add_task)
 
-    dispatch = sub.add_parser("dispatch", help="Dispatch a delegate worker and record it in a run ledger.")
+    dispatch = sub.add_parser(
+        "dispatch",
+        help="Dispatch a v2 worker and record it in a run ledger.",
+        description=(
+            "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
+            "silence/initial-response deadlines, budget ceilings, lifecycle-file propagation, "
+            "and authoring-review-risk. Legacy options and defaults remain forwarded so "
+            "unsupported requests fail explicitly. Default watchdogs currently prevent launch."
+        ),
+    )
     dispatch.add_argument("--run-id", required=True, type=validate_run_id)
     dispatch.add_argument("--task-id", required=True)
     dispatch.add_argument(
@@ -769,14 +779,14 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--prompt-file")
     dispatch.add_argument("--note", default="")
     dispatch.add_argument("--mode", default="read-only", choices=["read-only", "workspace-write", "danger"])
-    dispatch.add_argument("--model")
+    dispatch.add_argument("--model", help="Exact model required by dispatch v2; omission is refused by v2.")
     dispatch.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"])
     dispatch.add_argument("--cwd")
     dispatch.add_argument("--worktree", nargs="?", const="auto")
     dispatch.add_argument(
         "--full-checkout",
         action="store_true",
-        help="Pass through to delegate.py: materialize full worktree (no sparse exclusions).",
+        help="Pass through to dispatch v2: materialize full worktree (no sparse exclusions).",
     )
     dispatch.add_argument(
         "--sparse-include",
@@ -784,29 +794,29 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="DIR",
         help=(
-            "Pass through to delegate.py: keep a default-excluded tree (curriculum, wiki, data/projects, data/lexicon)."
+            "Pass through to dispatch v2: keep a default-excluded tree (curriculum, wiki, data/projects, data/lexicon)."
         ),
     )
     dispatch.add_argument("--base", default="main")
     dispatch.add_argument("--hard-timeout", type=int, default=7200)
-    dispatch.add_argument("--silence-timeout", type=int, default=3600)
-    dispatch.add_argument("--initial-response-timeout", type=int, default=180)
-    dispatch.add_argument("--max-budget-usd", type=float)
+    dispatch.add_argument("--silence-timeout", type=int, default=3600, help="GAP: unsupported by dispatch v2.")
+    dispatch.add_argument("--initial-response-timeout", type=int, default=180, help="GAP: unsupported by dispatch v2.")
+    dispatch.add_argument("--max-budget-usd", type=float, help="GAP: unsupported by dispatch v2.")
     dispatch.add_argument(
         "--lifecycle-file",
-        help="Canonical task-lifecycle.v1 ledger forwarded to delegate state and the run ledger.",
+        help="GAP: v2 lacks lifecycle-file propagation; forwarded unchanged and refused by v2.",
     )
     dispatch.add_argument(
         "--owned-path",
         action="append",
         default=None,
         metavar="PATH",
-        help="Pass through to delegate.py (repeatable): a path this worker owns. Required for write modes (#9739).",
+        help="Pass through to dispatch v2 (repeatable): a path this worker owns. Required for write modes (#9739).",
     )
     dispatch.add_argument(
         "--authoring-review-risk",
         choices=["low", "medium", "high", "critical"],
-        help="Pass through to delegate.py: the branch's planned review risk. Default: unset (checked as critical).",
+        help="GAP: v2 lacks authoring-review-risk; its --risk is review metadata, not writer admission.",
     )
     dispatch.add_argument("--dry-run", action="store_true")
     dispatch.set_defaults(func=cmd_dispatch)
