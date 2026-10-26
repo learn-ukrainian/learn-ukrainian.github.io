@@ -56,7 +56,6 @@ SCHEMAS = {
             "body": "text",
             "body_file": "file",
             "match_head": "sha",
-            "recovery": "bool",
         },
     ),
     "pr-update-branch": ({"number"}, {**COMMON, "number": "number"}),
@@ -341,7 +340,7 @@ def _squash_text(gh_repo, fields, dest, temp, runner, cwd, environment):
     return {"subject": subject, "body": body, "queue": pull["isMergeQueueEnabled"]}
 
 
-def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=False):
+def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     """Resolve live PR/run identities and posted evidence before any recovery write."""
     from scripts.gh_merge_queue_status import extract_pr_number
     from scripts.orchestration.integration_sweep import lookup_verdict
@@ -432,43 +431,8 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
         if run.get("event") != "merge_group" and associations[0].get("head", {}).get("sha") != head:
             raise gate.PublishBlocked("RECOVERY_HEAD_MOVED: run belongs to another PR head")
         action = "run-rerun"
-    elif queue or fields.get("recovery"):
-        number, head = fields["number"], fields["match_head"]
-        try:
-            pages, cursors = [], set()
-            selectors = {"number": number}
-            for _ in range(100):
-                page = fetch("queue-removal", **selectors)
-                pages.append(page)
-                info = page["data"]["repository"]["pullRequest"]["removals"]["pageInfo"]
-                if type(info["hasNextPage"]) is not bool:
-                    raise ValueError
-                if not info["hasNextPage"]:
-                    break
-                cursor = info["endCursor"]
-                if not isinstance(cursor, str) or not cursor or cursor in cursors:
-                    raise ValueError
-                cursors.add(cursor)
-                selectors["cursor"] = cursor
-            else:
-                raise ValueError
-            at_head = recovery.queue_removal_at_head(pages, head)
-        except github_client.GitHubRateLimited:
-            raise
-        except (gate.PublishBlocked, ValueError, KeyError, TypeError, AttributeError):
-            raise gate.PublishBlocked("RECOVERY_REMOVAL_UNKNOWN: GitHub removal head unreadable; enqueue refused") from None
-        run = None
-        action = "re-enqueue"
-    else:
-        return None
     path = recovery.ledger_path(cwd)
     prior = recovery.first_attempt(path, dest, number, head)
-    if run is None and not at_head:
-        # Branch-run reruns still allow initial queue admission; a re-enqueue
-        # record survives a later removal at another head or missing history.
-        if prior and prior["action"] != "run-rerun":
-            raise gate.PublishBlocked(recovery.spent_reason(prior))
-        return None
     if prior:
         raise gate.PublishBlocked(recovery.spent_reason(prior))
     comments = fetch("comments", number=number)
@@ -476,9 +440,9 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     if not isinstance(login, str) or lookup_verdict(comments, head, login).state != "APPROVED":
         raise gate.PublishBlocked("RECOVERY_APPROVAL_MISSING: exact-head recorded approval required")
     evidence = recovery.evidence_from_comments(
-        comments, number, head, authenticated_login=login, run_id=fields["number"] if run is not None else None
+        comments, number, head, authenticated_login=login, run_id=fields["number"]
     )
-    failed_run = run if run is not None else fetch("run", number=evidence["run_id"])
+    failed_run = run
     if (type(failed_run.get("run_attempt")) is not int or failed_run["run_attempt"] < 1
             or failed_run.get("status") != "completed"
             or failed_run.get("conclusion") not in {"failure", "cancelled", "timed_out", "action_required"}):
@@ -487,10 +451,6 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
         raise gate.PublishBlocked("RECOVERY_ALLOWANCE_SPENT: first=prior workflow run attempt")
     if failed_run.get("head_sha") != evidence["tested_sha"]:
         raise gate.PublishBlocked("RECOVERY_EVIDENCE_MISMATCH: tested SHA does not match run")
-    if run is None and (
-        failed_run.get("event") != "merge_group" or extract_pr_number(failed_run.get("head_branch", "")) != number
-    ):
-        raise gate.PublishBlocked("RECOVERY_EVIDENCE_MISMATCH: ejected merge-group run required")
     jobs = fetch("jobs", number=evidence["run_id"])
     failed_ids = {
         job.get("id")
@@ -572,7 +532,6 @@ def publish(
                 raise refusal
             return result
 
-        recovery_queue = False
         if verb == "pr-merge":
             from scripts.publish.merge_guard import ensure_merge_ready
 
@@ -588,7 +547,6 @@ def publish(
             # Omitted fields are sent explicitly so the scanned text is the sent text;
             # a merge queue ignores explicit text, so its defaults are scanned too.
             default = _squash_text(gh_repo, fields, dest, temp, readiness_runner, cwd, environment)
-            recovery_queue = default["queue"]
             for key in ("subject", "body"):
                 if key not in fields:
                     fields[key] = default[key]
@@ -750,10 +708,8 @@ def publish(
             argv = ["gh", "api", "--method", method, endpoint, "--input", str(frozen)]
             if endpoint == "graphql":
                 argv += _hostname_flag(dest)
-        if verb in {"run-rerun", "pr-merge"}:
-            reservation = _prepare_recovery(
-                verb, fields, dest, cwd, environment, readiness_runner, queue=recovery_queue
-            )
+        if verb == "run-rerun":
+            reservation = _prepare_recovery(verb, fields, dest, cwd, environment, readiness_runner)
             if reservation:
                 path, number, head, action, evidence = reservation
                 recovery.consume(path, dest, number, head, action, evidence)
@@ -818,7 +774,7 @@ def main(argv=None, *, runner=None):
                 "  .venv/bin/python -m scripts.publish run-rerun --repo unit/public --number 12345678901\n"
                 "Outputs: requests a GitHub rerun with --failed on the original pinned run, not the latest PR head.\n"
                 "  PR recovery requires an eligible failed run, current-head approval and posted failure evidence.\n"
-                "  It consumes the one PR-head recovery allowance shared with re-enqueue before sending the write.\n"
+                "  It consumes the one PR-head recovery allowance for reruns before sending the write.\n"
                 "  An unclassified run lookup failure stays RECOVERY_LOOKUP_UNKNOWN, sends no write and consumes no allowance.\n"
                 "Exit codes: 0 request accepted, job results unverified; 1 gh failure;\n"
                 "  2 invalid input, unknown lookup, policy refusal or transport error.\n"

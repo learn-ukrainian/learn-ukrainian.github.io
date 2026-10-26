@@ -1,7 +1,7 @@
 """Open pull-request pipeline for the fleet board.
 
 GitHub reads go through the shared GitHub client (REST, plus one queue-membership
-query for the field REST does not provide). Keeper hold, flake grant, and check
+query for the field REST does not provide). Keeper hold and check
 state come from the keeper's own helpers. A short-lived cache keeps repeat
 reads off the network. Source failures stay inside the envelope.
 """
@@ -29,8 +29,6 @@ from scripts.orchestration.merge_queue_keeper import (
     _hold,
     _latest,
     _load,
-    _requeue_grants,
-    _requeue_hold,
 )
 
 from .activity import (
@@ -57,7 +55,6 @@ MQ_FRESH_S = 120.0
 REQUEST_TIMEOUT_S = 20.0
 MAX_PAGES = 10
 
-REQUEUE_FILE = "requeue.json"
 KEEPER_FILES = ("keeper.json", "merge_queue_keeper.json")
 ALERT_FILE = "stale-approved.json"
 
@@ -129,7 +126,6 @@ class GithubView:
 class MqSnapshot:
     usable: bool
     keeper: Mapping[str, Any]
-    grants: dict[str, dict[str, Any]] | None
     since: Mapping[str, str]
 
 
@@ -724,8 +720,8 @@ def read_mq_state(
     *,
     now: datetime | None = None,
 ) -> tuple[SourceReport, MqSnapshot]:
-    """Keeper state, requeue gate, and stale-approved times from ``FLEET_MQ_STATE_DIR``."""
-    empty = MqSnapshot(False, {}, None, {})
+    """Keeper state and stale-approved times from ``FLEET_MQ_STATE_DIR``."""
+    empty = MqSnapshot(False, {}, {})
     location = read_location("FLEET_MQ_STATE_DIR", environ)
     if location is None:
         return report(MQ_SOURCE, "not_configured"), empty
@@ -738,8 +734,6 @@ def read_mq_state(
         if keeper_path is None:
             return report(MQ_SOURCE, "unavailable"), empty
         keeper = _load(keeper_path)
-        gate = root / REQUEUE_FILE
-        grants = _requeue_grants(gate if gate.is_file() else None)
         alert = root / ALERT_FILE
         since: dict[str, str] = {}
         if alert.is_file():
@@ -747,15 +741,14 @@ def read_mq_state(
             if parsed is None:
                 return report(MQ_SOURCE, "unavailable"), empty
             since = parsed
-        watched = [path for path in (keeper_path, gate if gate.is_file() else None) if path is not None]
-        ages = [_file_age(path, moment) for path in watched]
+        ages = [_file_age(keeper_path, moment)]
     except (OSError, ValueError, KeeperError, RecursionError):
         return report(MQ_SOURCE, "unavailable"), empty
     # The alert file is written once, when a head becomes ready. Its age is the
-    # ready time, so freshness follows the keeper and the requeue gate.
+    # ready time, so freshness follows the keeper.
     age = max(ages) if ages else 0.0
     status = "stale" if ages and age > MQ_FRESH_S else "ok"
-    return report(MQ_SOURCE, status, age_s=age), MqSnapshot(True, keeper, grants, since)
+    return report(MQ_SOURCE, status, age_s=age), MqSnapshot(True, keeper, since)
 
 
 def _drop_count(keeper: Mapping[str, Any], drop_key: str) -> int:
@@ -777,36 +770,7 @@ def _keeper_hold(
         return None, None
     if drop_key in mq.keeper.get("squash_revoked", {}):
         return True, "squash-text-blocked"
-    reason = _requeue_hold(drop_key, _drop_count(mq.keeper, drop_key), mq.grants, mq.keeper)
-    if reason:
-        return True, reason
     return False, None
-
-
-def _flake(drop_key: str, mq: MqSnapshot) -> dict[str, Any] | None:
-    if not mq.usable:
-        return None
-    row: Mapping[str, Any] = {}
-    if isinstance(mq.grants, dict):
-        raw = mq.grants.get(drop_key)
-        if isinstance(raw, dict):
-            row = raw
-    decision = row.get("decision")
-    if decision not in {"grant", "deny"}:
-        decision = None
-    requeued = mq.keeper.get("requeued", {})
-    used = isinstance(requeued, Mapping) and drop_key in requeued
-    recorded = requeued.get(drop_key) if isinstance(requeued, Mapping) else None
-    at = row.get("at") if isinstance(row.get("at"), str) else None
-    if at is None and isinstance(recorded, str):
-        at = recorded
-    if decision is None and not used:
-        return None
-    return {
-        "decision": decision or "grant",
-        "used": used,
-        "at": _stamp(at),
-    }
 
 
 def _mq_status(pull: Pull, view: GithubView, mq: MqSnapshot, drop_key: str) -> str | None:
@@ -965,7 +929,7 @@ def assemble_prs(
                     "gate": gate,
                     "mq": queue,
                     "keeper": {"hold": hold, "reason": reason},
-                    "flake_grant": _flake(drop_key, mq),
+                    "flake_grant": None,
                     "ready_since": ready_since,
                     "stale_green": stale_green,
                     "minutes": minutes,

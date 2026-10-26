@@ -40,7 +40,6 @@ from scripts.orchestration.integration_sweep import (
     parse_marker,
     verdict_detail,
 )
-from scripts.publish import recovery
 from scripts.publish.github import Request, request_run
 
 FLOOR = 500
@@ -64,10 +63,6 @@ DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
 REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
 # GitHub's PR-files endpoint stops at this many files without saying so.
 PR_FILES_LIMIT = 3000
-# A head the merge queue ejected is re-enqueued at most once, and only with
-# a ``grant`` decision for ``"<pr>:<head>"`` in this JSON file (written by
-# the operator's flake prover). Without a configured file, no grant exists.
-REQUEUE_GATE_ENV = "MQ_KEEPER_REQUEUE_GATE"
 # Slow mode: ``--apply`` skips a run that starts within this many seconds of
 # the last recorded run, so a frequent timer can be throttled without a unit edit.
 MIN_INTERVAL_ENV = "MQ_KEEPER_MIN_INTERVAL_SECONDS"
@@ -75,12 +70,6 @@ SLOW_FLAG_ENV = "MQ_KEEPER_SLOW_FLAG"
 SLOW_INTERVAL_SECONDS = 300
 # Timer jitter allowance so a throttled minute timer still runs on the fifth minute.
 INTERVAL_SLACK_SECONDS = 15
-# Gate holds the keeper reports without a PR comment: the drop comment already says why.
-QUIET_GATE_REASONS = frozenset({"requeue-pending"})
-# Matching failed jobs identify a possible shared failure only. Recovery still
-# needs posted diagnosis of the complete queue candidate diff and consumes the
-# shared one-attempt allowance. Aggregate jobs cannot establish attribution.
-SHARED_FAILURE_REQUEUE_LIMIT = 3
 AGGREGATE_JOBS = frozenset({"CI Gate"})
 # Job and check names and failed-test identifiers come from workflow files and CI
 # logs, so any PR author controls them; gate reasons embed check names, and
@@ -346,8 +335,8 @@ class GitHub:
             return None
         return False
 
-    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
-        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head, recovery=recovery_attempt))
+    def enqueue(self, number: int, head: str) -> None:
+        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
 
     def dequeue(self, node_id: str) -> None:
         data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
@@ -559,82 +548,11 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
     return "ready"
 
 
-def _requeue_grants(path: Path | None) -> dict[str, dict[str, Any]] | None:
-    """Requeue decisions keyed ``"<pr>:<head>"``, or None when no file is configured.
-
-    A missing, unreadable or malformed decision file grants nothing, so a
-    keeper holds every ejected head instead of guessing.
-    """
-    if path is None:
-        return None
-    try:
-        data = json.loads(path.read_text())
-    except (OSError, ValueError):
-        return {}
-    if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("requeue"), dict):
-        return {}
-    return {key: value for key, value in data["requeue"].items() if isinstance(key, str) and isinstance(value, dict)}
-
-
-def _requeue_hold(
-    drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
-) -> str | None:
-    """Why the gate keeps an ejected head out of the queue, or None to let it through."""
-    if drop_key in previous.get("requeued", {}):
-        return recovery.spent_reason({"action": "re-enqueue (legacy)", "at": previous["requeued"][drop_key]})
-    if drop_key in previous.get("shared_pass", {}):
-        return None
-    if drop_key in previous.get("undiagnosed", {}):
-        return "requeue-unknown"
-    if drops < 1:
-        return None
-    if grants is None:
-        return "requeue-pending"
-    decision = grants.get(drop_key, {}).get("decision")
-    if decision == "grant":
-        return None
-    return "requeue-denied" if decision == "deny" else "requeue-pending"
-
-
-def _gate_hold(
-    gh: GitHub,
-    number: int,
-    head: str,
-    drops: int,
-    grants: dict[str, dict[str, Any]] | None,
-    previous: Mapping[str, Any],
-    comments: list[dict[str, Any]],
-    login: str,
-) -> str | None:
-    """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
-    drop_key = f"{number}:{head}"
-    needs_recovery = drops >= 1 or drop_key in previous.get("shared_pass", {})
-    if needs_recovery:
-        try:
-            prior = recovery.first_attempt(
-                recovery.ledger_path(gh.root), normalize_repository(gh.repository), number, head
-            )
-        except PublishBlocked as exc:
-            raise KeeperError(str(exc)) from exc
-        if prior:
-            return recovery.spent_reason(prior)
-    if (
-        grants is not None
-        and drop_key in previous.get("squash_revoked", {})
-        and gh.squash_blocked(number, head) is not False
-    ):
+def _gate_hold(gh: GitHub, number: int, head: str, previous: Mapping[str, Any]) -> str | None:
+    """Retain the published-text safeguard after a squash-text revocation."""
+    if f"{number}:{head}" in previous.get("squash_revoked", {}) and gh.squash_blocked(number, head) is not False:
         return "squash-text-blocked"
-    hold = _requeue_hold(drop_key, drops, grants, previous)
-    if hold is None and needs_recovery:
-        try:
-            evidence = recovery.evidence_from_comments(comments, number, head, authenticated_login=login)
-            if not isinstance(evidence.get("queue_group_diff"), dict):
-                return "RECOVERY_QUEUE_DIFF_UNKNOWN"
-            # The publisher resolves the real failed candidate's complete
-            # merge-base diff and verifies these paths before any mutation.
-        except PublishBlocked as exc:
-            return str(exc)
-    return hold
+    return None
 
 
 def _min_interval(environ: Mapping[str, str]) -> int:
@@ -678,13 +596,14 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("queued"), dict)
         or not isinstance(data.get("drops"), dict)
         or not isinstance(data.get("approved", {}), dict)
-        or not isinstance(data.get("requeued", {}), dict)
         or not isinstance(data.get("undiagnosed", {}), dict)
         or not isinstance(data.get("squash_revoked", {}), dict)
         or not isinstance(data.get("pending_comments", {}), dict)
         or not isinstance(data.get("flake_issue_updates", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
+    for name in ("requeued", "shared_pass", "shared_requeues"):
+        data.pop(name, None)
     return data
 
 
@@ -782,12 +701,13 @@ def _flush_pending_comments(
 def _comment_once(
     gh: GitHub, number: int, head: str, reason: str, comments: list[dict[str, Any]], login: str, detail: str = ""
 ) -> None:
-    """Post why ``head`` was not queued, once per head and reason; ``detail`` is already display-safe."""
+    """Post a hold reason or prior removal diagnosis once; ``detail`` is already display-safe."""
     marker = MARKER.format(head=marker_value(head), reason=marker_value(reason))
     if any(marker in str(row.get("body", "")) and (row.get("user") or {}).get("login") == login for row in comments):
         return
     shown = display_text(reason, DISPLAY_REASON_LIMIT)
-    gh.comment(number, f"Merge queue keeper: #{number} was not queued because {shown}.{detail}\n\n{marker}")
+    message = "was previously removed from the queue" if reason == "queue-drop" else f"was not queued because {shown}"
+    gh.comment(number, f"Merge queue keeper: #{number} {message}.{detail}\n\n{marker}")
     comments.append({"body": marker, "user": {"login": login}})
 
 
@@ -846,24 +766,6 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         except KeeperError:
             pass  # Optional log enrichment must not hide the run/job diagnosis.
     return detail, failed, tests, run["id"]
-
-
-def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[int]:
-    """Other PRs whose merge_group runs failed every non-aggregate job of this removal.
-
-    Empty when this removal has no non-aggregate failing job or any of them is
-    new to the failure window, so the drop stays attributed to this head.
-    """
-    jobs = [job for job in failed_jobs if job not in AGGREGATE_JOBS]
-    if not jobs or not isinstance(failures, list):
-        return []
-    others: dict[str, set[int]] = defaultdict(set)
-    for item in failures:
-        if isinstance(item, dict) and isinstance(item.get("pr"), int) and item["pr"] != number:
-            others[str(item.get("job"))].add(item["pr"])
-    if not all(others.get(job) for job in jobs):
-        return []
-    return sorted(set().union(*(others[job] for job in jobs)))
 
 
 def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
@@ -1127,9 +1029,7 @@ def _canonical_flake_issue(
     return (min(matches, key=lambda item: item["number"]) if matches else None), None
 
 
-def run(
-    gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
-) -> tuple[list[str], bool]:
+def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str], bool]:
     branches = gh.branch_names()
     snap = gh.snapshot(branches)
     lines: list[str] = []
@@ -1145,7 +1045,6 @@ def run(
     approved_now: dict[str, str] = {}
     login = gh.identity()
     observed = datetime.now(UTC).isoformat()
-    grants = _requeue_grants(requeue_gate)
     open_numbers = {str(pr.get("number")) for pr in snap["prs"]}
     for pr in snap["prs"]:
         number, head, node_id = pr.get("number"), pr.get("headRefOid"), pr.get("id")
@@ -1194,17 +1093,6 @@ def run(
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
                     if dropped_head == head:
                         drops = previous["drops"][drop_key]
-                    shared_count = previous.setdefault("shared_requeues", {})
-                    shared = _shared_failure(previous.get("failures"), failed_jobs, number)
-                    if shared and int(shared_count.get(prior_drop_key, 0)) < SHARED_FAILURE_REQUEUE_LIMIT:
-                        shared_count[prior_drop_key] = int(shared_count.get(prior_drop_key, 0)) + 1
-                        previous.setdefault("shared_pass", {})[prior_drop_key] = observed
-                        detail += (
-                            " The same jobs also failed merge_group runs of "
-                            + ", ".join(f"#{n}" for n in shared)
-                            + "; this alone does not prove a service failure. Recovery requires diagnosis of the "
-                            "whole queue-group diff and uses this head's shared recovery allowance."
-                        )
                 else:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError as exc:
@@ -1212,7 +1100,7 @@ def run(
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
         if reason == "ready" and queued is not True and not armed:
             try:
-                reason = _gate_hold(gh, number, head, drops, grants, previous, comments, login) or reason
+                reason = _gate_hold(gh, number, head, previous) or reason
             except KeeperError:
                 reason = "requeue-unknown"
         rollup = project_check_runs(check_rows)
@@ -1290,7 +1178,7 @@ def run(
                     else "fresh-evidence-unknown"
                 )
                 if reason == "ready" and queued is not True and not armed:
-                    reason = _gate_hold(gh, number, head, drops, grants, previous, current_comments, login) or reason
+                    reason = _gate_hold(gh, number, head, previous) or reason
             if queued is True or armed:
                 fresh = bool(
                     current
@@ -1335,10 +1223,7 @@ def run(
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":
-                if drops >= 1 or drop_key in previous.get("shared_pass", {}):
-                    gh.enqueue(number, head, recovery_attempt=True)
-                else:
-                    gh.enqueue(number, head)
+                gh.enqueue(number, head)
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
                     if _auto_merge_armed(after_enqueue):
@@ -1348,20 +1233,15 @@ def run(
                 else:
                     queued_now[key] = head
                     lines.append(f"#{number} enqueued")
-                if previous.get("shared_pass", {}).pop(drop_key, None) is not None:
-                    lines.append(f"#{number} requeued after a queue-wide failure")
-                elif grants is not None and drops >= 1:
-                    previous.setdefault("requeued", {})[drop_key] = observed
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
-                and reason not in QUIET_GATE_REASONS
                 and comment_safe
                 and (_ever_approved(comments, login) or dropped)
             ):
                 _comment_once(gh, number, head, reason, comments, login, detail)
-            elif reason != "ready" and dropped and detail and comment_safe:
+            elif dropped and dropped_head == head and detail and comment_safe:
                 _comment_once(gh, number, head, "queue-drop", comments, login, detail)
             for job in failed_jobs:
                 if job in AGGREGATE_JOBS:
@@ -1381,7 +1261,7 @@ def run(
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("requeued", "squash_revoked", "undiagnosed", "pending_comments", "shared_pass", "shared_requeues"):
+        for name in ("squash_revoked", "undiagnosed", "pending_comments"):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
@@ -1465,7 +1345,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_REQUEUE_GATE=<decision file> re-enqueues an ejected head once, only with a grant; MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")
@@ -1486,15 +1366,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = args.repo_root.resolve()
     lock_path = root / "batch_state/locks/merge_queue_keeper.lock"
-    gate_value = os.environ.get(REQUEUE_GATE_ENV, "").strip()
-    requeue_gate = Path(gate_value) if gate_value else None
     if not args.apply:
         try:
             lines, failed = run(
                 GitHub(root, args.repo),
                 root / "batch_state/merge_queue_keeper.json",
                 apply=False,
-                requeue_gate=requeue_gate,
             )
         except GitHubRateLimited as exc:
             print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
@@ -1518,7 +1395,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"merge queue keeper: slow mode, skipped interval={interval}s")
             return 0
         try:
-            lines, failed = run(GitHub(root, args.repo), state_path, apply=args.apply, requeue_gate=requeue_gate)
+            lines, failed = run(GitHub(root, args.repo), state_path, apply=args.apply)
         except GitHubRateLimited as exc:
             print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
             return 0
