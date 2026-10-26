@@ -249,7 +249,7 @@ def _run_dispatch(
         print(f"State file: {_task_state_path(task_id)}")
         return 0
     try:
-        proc = subprocess.run(command, cwd=REPO_ROOT, timeout=timeout)
+        proc = github_client.run(command, cwd=REPO_ROOT, timeout=timeout)
         return int(proc.returncode)
     except subprocess.TimeoutExpired:
         print(
