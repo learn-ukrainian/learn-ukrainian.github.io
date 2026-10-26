@@ -571,6 +571,93 @@ def _no_pr_states(_repo: Path, _branch: str | None):
     return [], None
 
 
+@pytest.fixture
+def open_review_checkout(hermetic_reap, monkeypatch):
+    repo, tasks = hermetic_reap
+    task_id = "review-11683"
+    tree = _add_dispatch_worktree(repo, "claude", task_id)
+    (tree / "README.md").write_text("reviewed change\n")
+    _run(["git", "commit", "-am", "reviewed change"], cwd=tree)
+    _run(["git", "push", "origin", "HEAD:refs/heads/author/feature"], cwd=tree)
+    head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+    _write_task_state(tasks, task_id, "done", tree, agent="claude", pid=999999999)
+    record = tasks / f"{task_id}.json"
+    state = json.loads(record.read_text())
+    state.update(
+        mode="read-only",
+        push_state="not_applicable",
+        worktree_branch=f"claude/{task_id}",
+        review_branch="author/feature",
+        pinned_head=head,
+    )
+    record.write_text(json.dumps(state))
+    rw = post_task_reap.reap_worktrees
+    pr = rw.PullRequestState(11683, "OPEN", head)
+    monkeypatch.setattr(
+        rw, "_query_pr_states", lambda _repo, branch: ([pr] if branch == "author/feature" else [], None)
+    )
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _head: ([pr], None))
+    monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _number: ([pr], None))
+    return repo, tasks, tree, task_id, record
+
+
+@pytest.mark.parametrize("detached", [False, True])
+def test_settled_read_only_review_checkout_is_reaped_while_its_reviewed_pr_is_open(open_review_checkout, detached):
+    repo, tasks, tree, task_id, _record = open_review_checkout
+    if detached:
+        _run(["git", "checkout", "--detach"], cwd=tree)
+    else:
+        with (repo / ".git/info/exclude").open("a") as exclude:
+            exclude.write("review-output.txt\n")
+        (tree / "review-output.txt").write_text("preserve reviewed findings\n")
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] == "removed", report
+    assert not tree.exists()
+    if not detached:
+        receipt = json.loads(_record.read_text())["preserved_artifacts"]
+        assert (repo / receipt["location"] / "review-output.txt").read_text() == "preserve reviewed findings\n"
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger", None])
+def test_write_mode_author_tree_with_an_open_pr_is_still_retained(open_review_checkout, mode):
+    repo, tasks, tree, task_id, record = open_review_checkout
+    state = json.loads(record.read_text())
+    state.update(mode=mode, push_state="pushed")
+    record.write_text(json.dumps(state))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] in {"retained", "skipped"}, report
+    assert report["main_worktree"]["reason"] == "open PR #11683"
+    assert tree.exists()
+
+
+@pytest.mark.parametrize("guard", ["dirty", "live_pid", "keep_worktree", "unpushed"])
+def test_read_only_tree_that_is_dirty_or_has_live_pid_is_still_retained(open_review_checkout, guard):
+    repo, tasks, tree, task_id, record = open_review_checkout
+    if guard == "dirty":
+        (tree / "README.md").write_text("uncommitted review notes\n")
+    elif guard == "unpushed":
+        (tree / "README.md").write_text("unique unpublished work\n")
+        _run(["git", "commit", "-am", "unpublished"], cwd=tree)
+    else:
+        state = json.loads(record.read_text())
+        state.update({"pid": os.getpid()} if guard == "live_pid" else {"keep_worktree": True})
+        record.write_text(json.dumps(state))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] in {"retained", "skipped"}, report
+    assert tree.exists()
+    if guard == "dirty":
+        assert (tree / "README.md").read_text() == "uncommitted review notes\n"
+
+
+def test_tree_whose_own_branch_is_the_pr_head_ref_is_still_retained(open_review_checkout):
+    repo, tasks, tree, task_id, _record = open_review_checkout
+    _run(["git", "checkout", "-b", "author/feature"], cwd=tree)
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] == "skipped", report
+    assert report["main_worktree"]["reason"] == "open PR #11683"
+    assert tree.exists()
+
+
 def test_no_pr_terminal_reap_dry_run(hermetic_reap, monkeypatch):
     """A terminal task with no PR and a clean tree reaps even without GitHub."""
     repo_root, tasks_dir = hermetic_reap
