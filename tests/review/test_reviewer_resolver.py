@@ -140,6 +140,7 @@ def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
         ("participant", "codex"),
         ("catalog_transport", "native_codex"),
         ("sealed_executable", "other.py"),
+        ("sealed_executable", "scripts/delegate.py"),
         ("adapter_transport", "acp"),
     ],
 )

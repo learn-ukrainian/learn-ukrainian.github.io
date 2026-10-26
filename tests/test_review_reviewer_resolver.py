@@ -1191,7 +1191,7 @@ def test_sealed_executable_catalog_and_resolver_parity():
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
             executable = (
-                "scripts/delegate.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
+                "scripts/dispatch.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
             )
             assert candidate.sealed_executable == executable, (
                 f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
@@ -1786,7 +1786,7 @@ def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile)
         author_model="gpt-6.1-sol",
         risk=risk,
         review_profile=profile,
-        changed_paths=("scripts/delegate.py",),
+        changed_paths=("scripts/dispatch.py",),
         owned_paths=("site/src/app.ts",), claude_account=HOST_ACCOUNT,
     )
     result = resolve_reviewer(inputs)
@@ -1802,7 +1802,7 @@ def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile)
 @pytest.mark.parametrize("risk", ["low", "medium", "high"])
 @pytest.mark.parametrize("candidate", [SONNET_5_5])
 def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evaluation(risk, candidate):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=("scripts/delegate.py",), claude_account=HOST_ACCOUNT)
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=("scripts/dispatch.py",), claude_account=HOST_ACCOUNT)
     direct = evaluate_candidate(candidate, inputs)
     assert direct.status == "excluded" and direct.reason
     custom = resolve_reviewer(inputs, ladder=((candidate,),))
@@ -1816,7 +1816,7 @@ def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evalua
 
 def test_security_owned_paths_only_add_coverage():
     inputs = ResolverInputs(
-        author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=("scripts/delegate.py",), claude_account=HOST_ACCOUNT
+        author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=("scripts/dispatch.py",), claude_account=HOST_ACCOUNT
     )
     assert resolve_reviewer(inputs).resolved_risk == "critical"
 
@@ -1826,7 +1826,7 @@ def test_security_qualified_reviewer_unavailable_refuses_without_downgrade():
         ResolverInputs(
             author_model="gpt-6.1-sol",
             risk="low",
-            changed_paths=("scripts/delegate.py",),
+            changed_paths=("scripts/dispatch.py",),
             routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
@@ -1840,7 +1840,7 @@ def test_security_subject_seat_exclusion_still_binds():
         ResolverInputs(
             author_model="gpt-6.1-sol",
             risk="low",
-            changed_paths=("scripts/delegate.py",),
+            changed_paths=("scripts/dispatch.py",),
             subject_seats=frozenset({"claude"}), claude_account=HOST_ACCOUNT,
         )
     )

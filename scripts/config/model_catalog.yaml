@@ -186,7 +186,7 @@ review_scheduler:
       participant: agy
       adapter_transport: native_agy
       catalog_transport: agy
-      sealed_executable: scripts/delegate.py
+      sealed_executable: scripts/dispatch.py
       quota_bucket: agy
       credential_bucket: agy
       quota_limit: 2
@@ -303,7 +303,7 @@ execution_routing:
     # Every dispatch to a bounded worker (preferred_worker, or the Gemini Flash
     # fallback below unless it carries a Ukrainian authoring/review
     # classification) needs a complete advisory envelope from the advisor above,
-    # bound to that dispatch; delegate.py refuses one without it.
+    # bound to that dispatch.
     bounded_fallback_worker:
       model_id: {role: bounded_fallback}
       effort: high
@@ -1302,7 +1302,7 @@ seats:
         effort: high
         route: codex
         transport: native_codex
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --model {wire_id} --effort high
         review_profiles:
         - code
         - infra
@@ -1326,7 +1326,7 @@ seats:
         - critical_review
         route: grok
         transport: native_grok
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model {wire_id}
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent grok --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1342,7 +1342,7 @@ seats:
         transport_fallback_for: grok-4.7
         route: cursor
         transport: cursor
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model {wire_id}
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1361,7 +1361,7 @@ seats:
         effort: high
         route: claude
         transport: native_claude
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id}
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent claude --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1381,7 +1381,7 @@ seats:
         effort: high
         route: claude
         transport: native_claude
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id}
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent claude --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1399,7 +1399,7 @@ seats:
         route: claude
         transport: native_claude
         effort: high
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent claude --model {wire_id} --effort high
   bounded_worker:
     model_id: gpt-6-luna
     bindings:
@@ -1411,7 +1411,7 @@ seats:
         route: codex
         transport: native_codex
         effort: high
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --model {wire_id} --effort high
   google_bounded:
     model_id: gemini-3.8-flash-high
     bindings:
@@ -1428,7 +1428,7 @@ seats:
         route: agy
         transport: agy
         effort: high
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent agy --model {wire_id} --effort high
 roles:
   routine_mechanical:
     routes: [mechanical_worker/native, anthropic_practical/native]
