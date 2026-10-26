@@ -46,7 +46,7 @@
     "better-sqlite3": "^13.0.3",
     "playwright": "^1.63.0",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react-dom": "^19.3.1",
     "rehype-mermaid": "^3.0.0",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
