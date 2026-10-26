@@ -97,6 +97,47 @@ def _spec(record: dict, options: dict) -> TaskSpec:
     )
 
 
+def _reap_settled(record: dict, path: Path) -> None:
+    if record["worktree_dirty_on_exit"] is not False or record["push_state"] != (
+        "not_applicable" if record["mode"] == "read-only" else "pushed"
+    ):
+        return
+    try:
+        owner = os.getpid()
+        identity = _identity(owner)
+        if os.fork():
+            return
+    except OSError:
+        record["reap_note"] = "common reaper helper launch failed"
+        with contextlib.suppress(OSError):
+            store.replace(record, path)
+        return
+    # The common reaper refuses live task PIDs. Keep the recorded identity intact
+    # and wait outside the worktree until this supervisor has actually exited.
+    try:
+        os.setsid()
+        os.chdir(git.ROOT)
+        while identity is not None and _identity(owner) == identity:
+            time.sleep(0.05)
+        result = subprocess.run(
+            [str(project_interpreter()), "-m", "scripts.fleet.post_task_reap",
+             "--task-id", record["task_id"], "--apply", "--tasks-dir", str(path.parent)],
+            cwd=git.ROOT, capture_output=True, check=True, timeout=120,
+        )
+        action = json.loads(result.stdout)["main_worktree"]["action"]
+        note = "common reaper: " + (action if action in {"removed", "retained", "skipped", "error"} else "unknown")
+        current = json.loads(path.read_text())
+        current["reap_note"] = note
+        store.replace(current, path)
+    except Exception:
+        with contextlib.suppress(OSError, ValueError):
+            current = json.loads(path.read_text())
+            current["reap_note"] = "common reaper failed"
+            store.replace(current, path)
+    finally:
+        os._exit(0)
+
+
 def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
@@ -180,6 +221,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
             )
         store.replace(record, path)
+
+        _reap_settled(record, path)
 
 
 def wait(task_id: str, nonce: str | None = None, timeout: float = 0, poll_interval: float = 1) -> tuple[dict, int]:

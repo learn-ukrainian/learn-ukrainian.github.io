@@ -12,6 +12,19 @@ from scripts.dispatcher.types import TaskSpec
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
+# Mirrors scripts/delegate.py::_DISPATCH_SPARSE_EXCLUDE_DEFAULT without importing its runtime.
+SPARSE_EXCLUDE_DEFAULT = frozenset({
+    "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
+    "registry/projects", "registry/lexicon/source-inventory",
+    "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
+})
+
+
+def sparse_excludes(includes=()) -> list[str]:
+    includes = {name.strip().strip("/") for name in includes}
+    if includes - SPARSE_EXCLUDE_DEFAULT:
+        raise ValueError("--sparse-include must name a default-excluded tree: " + ", ".join(sorted(SPARSE_EXCLUDE_DEFAULT)))
+    return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
 
 
 def _git(path: Path, *args: str) -> str:
@@ -51,14 +64,19 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
     return path, branch, sha
 
 
-def create_worktree(repo: Path, path: Path, branch: str, sha: str) -> None:
+def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=()) -> None:
+    excluded = sparse_excludes(sparse_include)
     path.parent.mkdir(parents=True, exist_ok=True)
     # Git's sparse-checkout setup writes shared repository config even for a fresh tree.
     fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
     with os.fdopen(fd, "rb") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        _git(repo, "worktree", "add", "--no-track", "-b", branch, str(path), sha)
-        _git(path, "sparse-checkout", "disable")
+        _git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
+        if full_checkout:
+            _git(path, "sparse-checkout", "disable")
+        else:
+            _git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
+        _git(path, "reset", "--hard", sha)
 
 
 def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
