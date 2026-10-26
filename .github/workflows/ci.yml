@@ -69,7 +69,7 @@ jobs:
       # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
       # newer — never an older tag to clear a finding) and re-scan with
       # scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # action v3.99.2
+      - uses: trufflesecurity/trufflehog@e63326d6545de8f425d93ce24078c6e68d83f70e # action v3.99.3
         with:
           version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
@@ -130,7 +130,7 @@ jobs:
       # Same scanner pin as the queue-metadata step. Bump both together:
       # newest trufflesecurity/trufflehog release, never an older tag to clear
       # a finding, then re-scan with scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # action v3.99.2
+      - uses: trufflesecurity/trufflehog@e63326d6545de8f425d93ce24078c6e68d83f70e # action v3.99.3
         with:
           version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
