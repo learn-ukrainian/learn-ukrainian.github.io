@@ -71,7 +71,7 @@ def run_stub(invocation, spec):
 @pytest.mark.parametrize("model", MODELS)
 @pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
 @pytest.mark.parametrize("effort", (None, "high"))
-@pytest.mark.parametrize("contributor", (None, "on"))
+@pytest.mark.parametrize("contributor", (None, "on", "off"))
 def test_muse_argv(spec, stub_env, model, mode, effort, contributor):
     options = {} if contributor is None else {"contributor_mode": contributor}
     spec = replace(spec, model=model, mode=mode, effort=effort, options=options)

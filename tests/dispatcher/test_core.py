@@ -335,6 +335,50 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox):
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--prompt-file", "y", expected=2)
 
 
+@pytest.mark.parametrize("contributor", ["on", "off", None])
+def test_muse_cli_forwards_contributor_mode_and_keeps_auditable_record(sandbox, contributor):
+    """Missing CLI options must not silently force explicit contributor requests off."""
+    args = ["dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0", "--prompt", "public input"]
+    if contributor is not None:
+        args += ["--contributor-mode", contributor]
+    plan = json.loads(sandbox.cli(*args, "--dry-run").stdout)
+    argv = plan["argv"]
+    assert argv[argv.index("--contributor-mode") + 1] == (contributor or "off")
+    assert not sandbox.tasks.exists()
+    assert not Path(plan["worktree"]).exists()
+
+    # Exercise persistence and the detached lifecycle without a paid Muse invocation.
+    shutil.copy(Path(__file__).with_name("stub_provider.py"), sandbox.repo / "scripts/dispatcher/providers/muse.py")
+    run_git(sandbox.repo, "add", "scripts/dispatcher/providers/muse.py")
+    run_git(sandbox.repo, "commit", "-m", "fixture Muse transport")
+    run_git(sandbox.repo, "push", "origin", "main")
+    task = sandbox.cli(*args).stdout.splitlines()
+    record = sandbox.settle(task)
+    assert record["contributor_mode"] == (contributor or "off")
+    assert json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["contributor_mode"] == (contributor or "off")
+
+
+@pytest.mark.parametrize("agent", sorted((set(ALIASES) | set(ALIASES.values()) | {"claude"}) - {"muse"}))
+@pytest.mark.parametrize("contributor", ["on", "off"])
+def test_contributor_mode_refuses_non_muse_agents_without_side_effects(sandbox, agent, contributor):
+    before = run_git(sandbox.repo, "branch", "--list")
+    result = sandbox.cli(
+        "dispatch",
+        "--agent",
+        agent,
+        "--model",
+        "echo",
+        "--prompt",
+        "public input",
+        "--contributor-mode",
+        contributor,
+        expected=2,
+    )
+    assert result.stderr == "dispatcher: --contributor-mode is only supported with --agent muse\n"
+    assert not sandbox.tasks.exists()
+    assert run_git(sandbox.repo, "branch", "--list") == before
+
+
 def test_legacy_archive_is_read_only_and_nonce_checked(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
     archive = tmp_path / "archive"
