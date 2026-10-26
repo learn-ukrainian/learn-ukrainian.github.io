@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import json
 import re
-import unicodedata
 from collections.abc import Iterator
 
 ACCEPTED_VERDICT_TOKENS = (
@@ -26,16 +25,14 @@ ACCEPTED_VERDICT_TOKENS = (
 # cf_preflight.py and the review prompts actually ask reviewers to write.
 # Reviewers routinely render the label and token in Markdown emphasis
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
-# full verdicts and must not be misread as missing (#8786). After optional
-# block markers (below), a verdict line STARTS with optional emphasis
-# (``*``, ``_``), ``VERDICT``, then
+# full verdicts and must not be misread as missing (#8786). A verdict line
+# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
 # either a colon surrounded by emphasis/backticks/whitespace or at least one
 # emphasis/backtick/whitespace separator, then the token and a word boundary
 # (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
-# Only closing emphasis/backticks, optional punctuation (``.``/``!``), and
-# whitespace may follow the token. Every other colon-labelled line poisons the
-# reply, and all visible strict verdict lines must carry the same token.
-# Competing tokens in the same visible paragraph also refuse it. An inline or
+# Anything may follow the token — reviewers write
+# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
+# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
 # quoted example ("I will report ``VERDICT: APPROVE`` later",
 # ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
 # The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
@@ -47,10 +44,6 @@ ACCEPTED_VERDICT_TOKENS = (
 # and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
 # has no space, which CommonMark does not treat as a heading, and
 # ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
-# A CommonMark list marker (``-``, ``*``, ``+``, or 1–9 digits plus ``.``/``)``)
-# followed by spaces or tabs may precede the heading/label as well.
-# A list verdict counts only when the next non-blank line does not continue
-# that item. Plain verdict lines may still precede review prose.
 # CommonMark line endings are LF, CR, and CRLF. str.splitlines() also breaks
 # on VT, FF, and Unicode separators, which moves fence spans off the real text.
 _COMMONMARK_LINE_RE = re.compile(r"\r\n|\r|\n")
@@ -79,17 +72,14 @@ def _commonmark_keepends(text: str) -> list[str]:
     return lines
 
 
-_VERDICT_MARKER_PREFIX = r"^ {0,3}(?:(?:[-*+]|[0-9]{1,9}[.)])[ \t]+)?(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
-_VERDICT_LINE_PREFIX = _VERDICT_MARKER_PREFIX + r"[*_`\s]*:[*_`\s]*"
-_VERDICT_LABEL_RE = re.compile(_VERDICT_LINE_PREFIX, re.IGNORECASE)
-_VERDICT_TOKEN = r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)(?![^\W_]|_+[^\W_])"
-_PERMISSIVE_VERDICT_LINE_RE = re.compile(
-    _VERDICT_MARKER_PREFIX + r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
-    + _VERDICT_TOKEN,
+_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+_REVIEW_VERDICT_LINE_RE = re.compile(
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
+    r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
+    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
+    r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
 )
-_REVIEW_VERDICT_LINE_RE = re.compile(_PERMISSIVE_VERDICT_LINE_RE.pattern + r"[*_`.!\s]*\Z", re.IGNORECASE)
-_PARAGRAPH_VERDICT_TOKEN_RE = re.compile(r"_*" + _VERDICT_TOKEN, re.IGNORECASE)
 # Diagnostics echo only bounded ASCII identifier tokens, never paths, URLs or
 # arbitrary verdict-line text. Trailing underscores may be Markdown emphasis.
 _UNSUPPORTED_VERDICT_LINE_RE = re.compile(
@@ -100,29 +90,6 @@ _UNSUPPORTED_VERDICT_LINE_RE = re.compile(
 # A CommonMark fence line: at most three leading spaces, then three or more
 # backticks or tildes; group 2 is the rest of the line (info string).
 _CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
-_LIST_ITEM_RE = re.compile(r"^( {0,3})(?:[-*+]|[0-9]{1,9}[.)])(?:[ \t]+|$)")
-_HEADING_OR_QUOTE_RE = re.compile(r"^ {0,3}(?:#{1,6}(?:[ \t]+|$)|>)")
-
-
-def _list_item_continues(lines: list[str], index: int) -> bool:
-    item = _LIST_ITEM_RE.match(lines[index])
-    if item is None:
-        return False
-    for following in range(index + 1, len(lines)):
-        line = lines[following]
-        if not line.strip():
-            continue
-        expanded = line.expandtabs(4)
-        indent = len(expanded) - len(expanded.lstrip(" "))
-        if indent > len(item.group(1)):
-            return True
-        return following == index + 1 and not (
-            _LIST_ITEM_RE.match(line)
-            or _HEADING_OR_QUOTE_RE.match(line)
-            or _code_fence_opener(line)
-            or re.match(_VERDICT_MARKER_PREFIX, line, re.IGNORECASE)
-        )
-    return False
 
 
 def _code_fence_opener(line: str) -> str | None:
@@ -177,13 +144,12 @@ def _code_fence_spans(lines: list[str]) -> Iterator[tuple[int, int, bool]]:
         yield start, len(lines), False
 
 
-def _without_code_fences(text: str, *, keep_unclosed: bool, preserve_lines: bool = False) -> str:
+def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
     """Remove fenced spans, retaining unterminated bodies when requested.
 
     Keep non-fenced text verbatim and leave a paragraph boundary for LF/CRLF
     input where a block was removed. Dispatch/DoR remove only closed top-level
     CommonMark tokens: a container can end a fence without a lexical closer.
-    ``preserve_lines`` retains source indices for list-continuation checks.
     """
     raw_lines = _commonmark_lines(text, keepends=True)
     lines = _commonmark_lines(text)
@@ -225,20 +191,10 @@ def _without_code_fences(text: str, *, keep_unclosed: bool, preserve_lines: bool
         if end <= cursor:
             continue
         parts.extend(raw_lines[cursor:start])
-        if preserve_lines:
-            parts.extend(_COMMONMARK_LINE_RE.findall("".join(raw_lines[max(start, cursor):end])))
-        else:
-            parts.append("\n")
+        parts.append("\n")
         cursor = end
     parts.extend(raw_lines[cursor:])
     return "".join(parts)
-
-
-def _normalize_verdict_text(text: str) -> str:
-    """Fold label/token lookalikes without changing Markdown whitespace."""
-    text = "".join(c if c.isspace() else unicodedata.normalize("NFKC", c)
-                   for c in text if unicodedata.category(c) != "Cf")
-    return "".join("-" if unicodedata.category(c) == "Pd" else ":" if c == "\u2236" else c for c in text)
 
 
 def recognized_verdicts(response: str) -> list[str]:
@@ -248,27 +204,9 @@ def recognized_verdicts(response: str) -> list[str]:
     fence suppresses verdict lines through EOF or the enclosing container's end.
     """
     verdicts: list[str] = []
-    source_lines = _commonmark_lines(_normalize_verdict_text(response))
-    visible = _without_code_fences(response, keep_unclosed=False, preserve_lines=True)
-    visible = _normalize_verdict_text(visible)
-    strict_tokens: set[str] = set()
-    for paragraph in re.split(r"\n[ \t]*\n", "\n".join(_commonmark_lines(visible))):
-        accepted: set[str] = set()
-        for line in paragraph.split("\n"):
-            match = _REVIEW_VERDICT_LINE_RE.match(line)
-            if match:
-                accepted.add(match.group(1).upper())
-                strict_tokens.add(match.group(1).upper())
-            elif _VERDICT_LABEL_RE.match(line) or _PERMISSIVE_VERDICT_LINE_RE.match(line):
-                return []
-        tokens = {match.group(1).upper() for match in _PARAGRAPH_VERDICT_TOKEN_RE.finditer(paragraph)}
-        if accepted and tokens - accepted:
-            return []
-    if len(strict_tokens) > 1:
-        return []
-    for index, line in enumerate(_commonmark_lines(visible)):
+    for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
-        if match and not _list_item_continues(source_lines, index):
+        if match:
             verdicts.append(match.group(1).upper())
     return verdicts or _findings_json_verdicts(response)
 

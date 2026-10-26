@@ -59,9 +59,9 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
     for part in parts:
         if not part.strip():
             continue
-        if text and not text.endswith(("\n", "\r")) and not part.lstrip(" \t").startswith(("\n", "\r")):
+        if text and not text.endswith(("\n", "\r")) and not part.startswith(("\n", "\r")):
             text += "\n"
-        text += part.rstrip(" \t")
+        text += part
     text = text.rstrip() or None
     if text is None:
         fallback = result.get("result")

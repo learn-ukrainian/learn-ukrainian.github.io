@@ -91,13 +91,13 @@ def test_container_visibility_reaches_real_dispatch_decisions(case, reply, expec
     assert gate.detail == (failure or "")
 
 
-def test_dispatch_conflicting_visible_labels_refuse_the_reply():
+def test_dispatch_final_token_and_diagnostic_visibility_stay_separate():
     from scripts import delegate
 
     response = "> Example:\nVERDICT: UNKNOWN\n\nVERDICT: APPROVE\nVERDICT: BLOCKED"
-    assert recognized_verdicts(response) == []
-    assert delegate.parse_review_verdict(response) is None
-    assert delegate._review_verdict_failure_reason(response) == "review_missing_verdict_line"
+    assert recognized_verdicts(response) == ["APPROVE", "BLOCKED"]
+    assert delegate.parse_review_verdict(response) == "BLOCKED"
+    assert delegate._review_verdict_failure_reason(response) is None
     gate = delegate.run_completion_gate(
         delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response="> Example:\nVERDICT: UNKNOWN\n",
         commits_ahead=None, worktree=None,
@@ -127,111 +127,14 @@ def test_dispatch_parser_failure_cannot_pass_completion(monkeypatch):
     ("**Verdict**: **APPROVED**", ["APPROVED"]),
     ("__VERDICT__: __REQUEST_CHANGES__", ["REQUEST_CHANGES"]),
     ("   ###### VERDICT: CHANGES_REQUESTED", ["CHANGES_REQUESTED"]),
-    ("*VERDICT: BLOCKED.* Findings follow.", []),
-    ("VERDICT: APPROVE\nVERDICT: BLOCKED", []),
+    ("*VERDICT: BLOCKED.* Findings follow.", ["BLOCKED"]),
+    ("VERDICT: APPROVE\nVERDICT: BLOCKED", ["APPROVE", "BLOCKED"]),
     ("```\nVERDICT: BLOCKED\n`````\n**VERDICT: APPROVE**", ["APPROVE"]),
     ("  ~~~text\nVERDICT: APPROVE\n   ~~~~ \t\nVERDICT: BLOCKED", ["BLOCKED"]),
     ("```VERDICT: example``` is inline code\nVERDICT: APPROVE", ["APPROVE"]),
 ])
 def test_recognized_lines_preserve_tokens_and_order(reply, expected):
     assert recognized_verdicts(reply) == expected
-
-
-# Emphasized label/value fixture: atlas-1544-ulif-contact-cf-agy.result, trimmed.
-@pytest.mark.parametrize("prefix", ["- ", "* ", "+ ", "1. ", "1) ", "123456789. "])
-@pytest.mark.parametrize("template", [
-    "VERDICT: APPROVE", "**VERDICT: APPROVE**", "VERDICT: **APPROVE**",
-    "**VERDICT**: **`APPROVE`**", "**VERDICT** APPROVE", "## VERDICT: APPROVE",
-    "VERDICT: APPROVE.", "**VERDICT: APPROVE.**", "VERDICT: **APPROVE**! \t",
-])
-@pytest.mark.parametrize("indent", ["", "   "])
-def test_list_item_verdict_reaches_recorder(prefix, template, indent):
-    reply = indent + prefix + template
-    assert recognized_verdicts(reply) == ["APPROVE"]
-    assert normalize_verdict(reply) == "APPROVED"
-
-
-@pytest.mark.parametrize("reply", [
-    "I cannot give VERDICT: APPROVE until the checks pass.",
-    "- I cannot give VERDICT: APPROVE until the checks pass.",
-    '"VERDICT: APPROVE" is the requested instruction.',
-    '- "VERDICT: APPROVE" is the requested instruction.',
-    "> - **VERDICT**: **`APPROVE`**",
-    "- `VERDICT: APPROVE`",
-    "```\n- VERDICT: APPROVE\n```",
-    "    - VERDICT: APPROVE",
-    "-VERDICT: APPROVE", "1.VERDICT: APPROVE", "1234567890. VERDICT: APPROVE",
-    "using tracked-file reads only.**VERDICT: APPROVE**",
-])
-def test_list_support_does_not_admit_prose_quotes_or_code(reply):
-    assert recognized_verdicts(reply) == []
-    with pytest.raises(RecordError, match="missing or ambiguous"):
-        normalize_verdict(reply)
-
-
-def test_conflicting_list_verdicts_remain_ambiguous():
-    reply = "- **VERDICT**: **`APPROVE`**\n1) VERDICT: REQUEST_CHANGES"
-    assert recognized_verdicts(reply) == []
-    with pytest.raises(RecordError, match="missing or ambiguous"):
-        normalize_verdict(reply)
-
-
-@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
-@pytest.mark.parametrize("prefix", ["- ", "* ", "1. ", "   - "])
-@pytest.mark.parametrize("verdict", ["VERDICT: APPROVE", "**VERDICT**: **APPROVE**"])
-@pytest.mark.parametrize("continuation", [
-    "  or REQUEST_CHANGES per the rubric", "or REQUEST_CHANGES per the rubric",
-    "\n  or REQUEST_CHANGES per the rubric", "\tor REQUEST_CHANGES per the rubric",
-])
-def test_list_item_continuation_cannot_create_false_approval(newline, prefix, verdict, continuation):
-    indent = len(prefix) - len(prefix.lstrip(" "))
-    reply = (prefix + verdict + "\n" + continuation.replace("  ", " " * (indent + 2))).replace("\n", newline)
-    assert recognized_verdicts(reply) == []
-    with pytest.raises(RecordError, match="missing or ambiguous"):
-        normalize_verdict(reply)
-
-
-@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
-@pytest.mark.parametrize("following", [
-    "\nFindings follow.", "\nor **REQUEST_CHANGES** per the rubric",
-    "- Finding", "* Finding", "1. Finding", "# Findings",
-    "```\nexample\n```", "> Quoted finding", "VERDICT: APPROVE",
-])
-def test_separate_blocks_after_list_verdict_preserve_approval(newline, following):
-    reply = ("- **VERDICT**: **`APPROVE`**\n" + following).replace("\n", newline)
-    assert normalize_verdict(reply) == "APPROVED"
-
-
-def test_plain_verdict_still_allows_following_prose():
-    assert recognized_verdicts("VERDICT: APPROVE\nFindings follow.") == ["APPROVE"]
-
-
-@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
-@pytest.mark.parametrize("example", ["```\nexample\n```\n", "> example\n\n", "    example\n\n"])
-@pytest.mark.parametrize("following,expected", [
-    ("or REQUEST_CHANGES", []), ("# Findings", ["APPROVE"]),
-])
-def test_removed_example_preserves_list_continuation_source_lines(newline, example, following, expected):
-    reply = "Context\n\n" + example + "- VERDICT: APPROVE\n" + following
-    assert recognized_verdicts(reply.replace("\n", newline)) == expected
-
-
-@pytest.mark.parametrize("prefix", ["", "- ", "* ", "+ ", "1. ", "1) "])
-@pytest.mark.parametrize("line", [
-    "VERDICT: APPROVE or REQUEST_CHANGES per the rubric",
-    "**VERDICT**: **APPROVE** or **REQUEST_CHANGES**",
-    "VERDICT: REQUEST_CHANGES or APPROVE per the rubric",
-    "**VERDICT**: **REQUEST_CHANGES** or **APPROVE**",
-    "VERDICT: APPROVE with caveats",
-    "**VERDICT: APPROVE.** Both issues are fixed.",
-    "**VERDICT: APPROVE** (three non-blocking findings below)",
-    "**VERDICT APPROVE** — reviewed exact head …",
-])
-def test_trailing_rubric_or_prose_cannot_be_recorded_as_approval(prefix, line):
-    reply = prefix + line
-    assert recognized_verdicts(reply) == []
-    with pytest.raises(RecordError, match="missing or ambiguous"):
-        normalize_verdict(reply)
 
 
 @pytest.mark.parametrize("token", [
@@ -244,6 +147,7 @@ def test_trailing_rubric_or_prose_cannot_be_recorded_as_approval(prefix, line):
     "**VERDICT** {token}",
     "**VERDICT**: {token}",
     "**VERDICT**: **{token}**",
+    "**VERDICT {token}** — reviewed exact head …",
     "**VERDICT**{token}",
 ])
 def test_colon_and_markdown_separators_accept_all_verdict_tokens(template, token):
@@ -333,3 +237,60 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
     assert recognized_verdicts("````text\n" + response + "\n````") == []
     payload["overall"].pop("confidence")
     assert recognized_verdicts(wrapper.format(json.dumps(payload))) == []
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
+@pytest.mark.parametrize("body,expected", [
+    ("VERDICT: APPROVE", "APPROVED"), ("APPROVED", "APPROVED"),
+    ("REQUEST_CHANGES", "CHANGES_REQUESTED"), ("CHANGES_REQUESTED", "CHANGES_REQUESTED"),
+    ("BLOCKED", "BLOCKED"), ("\n \tVERDICT: APPROVE \t\n", "APPROVED"),
+])
+def test_structured_fence_exact_token_acceptance(newline, body, expected):
+    reply = ("Review prose.\n\n```verdict\n" + body + "\n```\nTrailing prose.").replace("\n", newline)
+    assert normalize_verdict(reply) == expected
+
+
+@pytest.mark.parametrize("reply", [
+    "VERDICT: APPROVE", "**VERDICT: APPROVE**", "## VERDICT: APPROVE",
+    "- VERDICT: APPROVE\n  or REQUEST_CHANGES per the rubric",
+    "- VERDICT: APPROVE\n\n  or REQUEST_CHANGES per the rubric",
+    "VERDICT: APPROVE\nor REQUEST_CHANGES per the rubric",
+    "VERDICT: APPROVE\nFinal verdict: REQUEST_CHANGES",
+    "VERDICT: APPROVE\n\nFinal verdict: REQUEST_CHANGES",
+    "VERDICT: APPROVE\n| Verdict | REQUEST_CHANGES |",
+    *["VERDICT: APPROVE" + gap + label for gap in ("\n", "\n\n") for label in (
+        "Verdict: Changes requested", "VERDICT: REQUEST CHANGES", "VERDICT: REQUEST-CHANGES",
+        "VERDICT: REQUEST\u2011CHANGES", "VERDICT: REQUEST\u2013CHANGES", "VERDICT: REJECT",
+        "VERDICT: ~~APPROVE~~ REQUEST_CHANGES", "Verdict: Approve with nits",
+        "\u200bVERDICT: REQUEST_CHANGES", "\ufeffVERDICT: REQUEST_CHANGES", "\u202eVERDICT: REQUEST_CHANGES",
+        "- **\u200bVerdict**: Changes requested", "ＶＥＲＤＩＣＴ： REQUEST CHANGES", "абоREQUEST_CHANGES",
+    )],
+])
+def test_free_prose_false_approval_corpus_has_no_structured_verdict(reply):
+    with pytest.raises(RecordError, match=r"code-review-findings\.v1 JSON or exactly one.*verdict"):
+        normalize_verdict(reply)
+
+
+@pytest.mark.parametrize("reply", [
+    "```verdict\nAPPROVE\n```\n```verdict\nAPPROVE\n```",
+    "```verdict\nAPPROVE\n```\n```verdict\nBLOCKED\n```",
+    "```verdict\nAPPROVE\nREQUEST_CHANGES\n```",
+    "```verdict\nAPPROVE or REQUEST_CHANGES\n```",
+    "```verdict\nVERDICT: APPROVE with caveats\n```", "```verdict\napprove\n```",
+    "```verdict\nVERDICT: approved\n```", "```verdict\nverdict: APPROVE\n```",
+    "> ```verdict\n> APPROVE\n> ```", "    ```verdict\n    APPROVE\n    ```",
+    " ```verdict\nAPPROVE\n```", "```Verdict\nAPPROVE\n```",
+    "```verdict extra\nAPPROVE\n```", "```verdict \nAPPROVE\n```",
+    "```verdict\nAPPROVE", "```verdict\nAPPROVE\n````",
+    "```verdict\nAPPROVE\n ```", "````text\n```verdict\nAPPROVE\n```\n````",
+    "```verdict\n```verdict\nAPPROVE\n```\n```",
+    "- ```verdict\n  APPROVE\n  ```", "~~~verdict\nAPPROVE\n~~~",
+])
+def test_ambiguous_or_noncanonical_verdict_fence_refused(reply):
+    with pytest.raises(RecordError, match=r"code-review-findings\.v1 JSON or exactly one.*verdict"):
+        normalize_verdict(reply)
+
+
+def test_noncanonical_lookalikes_do_not_count_as_real_fences():
+    reply = "```Verdict\nBLOCKED\n```\n" * 2 + "```verdict\nAPPROVE\n```"
+    assert normalize_verdict(reply) == "APPROVED"

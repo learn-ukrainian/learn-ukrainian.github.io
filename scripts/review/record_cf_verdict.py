@@ -86,7 +86,7 @@ from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
-from scripts.review.verdict_parser import recognized_verdicts
+from scripts.review.verdict_parser import _findings_json_verdicts
 
 NORMALIZED = {
     "APPROVE": "APPROVED",
@@ -115,10 +115,32 @@ class RecordError(RuntimeError):
 
 
 def normalize_verdict(reply: str) -> str:
-    tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
-    if len(tokens) != 1:
-        raise RecordError("review reply has missing or ambiguous VERDICT token")
-    return tokens.pop()
+    """Accept canonical findings JSON or one exact, top-level verdict fence."""
+    from markdown_it import MarkdownIt
+
+    findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply)}
+    if findings:
+        if len(findings) == 1:
+            return findings.pop()
+    else:
+        lines = reply.replace("\r\n", "\n").split("\n")
+        fences = [
+            token for token in MarkdownIt("commonmark").parse(reply)
+            if token.type == "fence" and token.level == 0 and token.map is not None
+            and token.map[0] < len(lines) and lines[token.map[0]] == "```verdict"
+        ]
+        if len(fences) == 1 and "\r" not in reply.replace("\r\n", ""):
+            start, end = fences[0].map
+            if end > start + 1 and lines[end - 1] == "```":
+                body = "\n".join(lines[start + 1:end - 1]).strip()
+                token = body.removeprefix("VERDICT: ")
+                if token in NORMALIZED:
+                    return NORMALIZED[token]
+    raise RecordError(
+        "review reply has missing or ambiguous structured verdict; required: "
+        "code-review-findings.v1 JSON or exactly one column-0 ```verdict block "
+        "containing one VERDICT: <TOKEN> or <TOKEN> line"
+    )
 
 
 def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]]:
