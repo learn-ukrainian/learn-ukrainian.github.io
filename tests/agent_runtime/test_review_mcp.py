@@ -14,6 +14,7 @@ import threading
 import tomllib
 import uuid
 from collections.abc import Iterator
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -75,6 +76,113 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return app_data
 
 
+@pytest.mark.parametrize("harness", ["claude", "codex", "agy"])
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_path, harness, access):
+    """Catch dropped grants, binding keys or scoped homes in the reusable builder."""
+    plan = prepare_review_attempt(
+        "rev-config",
+        "att-config",
+        manifest_file,
+        harness,
+        receipts_root=tmp_path / "receipts",
+        review_access=access,
+    )
+    # Pinned from delegate._run_worker's inline builder; no standalone legacy
+    # builder can be imported without running the worker and its admission loop.
+    expected = {
+        "mcp_config_path": str(plan.config_path),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-config",
+        "attempt_id": "att-config",
+        "review_manifest": str(manifest_file),
+        "review_input_root": str(tmp_path),
+        "review_access": access,
+        "review_cwd": str(tmp_path),
+    }
+    if harness == "claude":
+        if access == "isolated":
+            expected["allowed_tools"] = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+        else:
+            expected["reviewer_tools"] = True
+    if harness == "agy":
+        expected.update(review_profile="code", review_ledger_path=str(plan.ledger_path))
+    if harness in {"codex", "agy"} and access == "isolated":
+        expected[f"{harness}_home_override"] = str(getattr(plan, f"{harness}_home"))
+    with (
+        patch.object(review_mcp_module, "verify_codex_review_launch") as codex_gate,
+        patch.object(review_mcp_module, "verify_agy_review_launch") as agy_gate,
+        patch.object(
+            review_mcp_module, "verify_review_attempt_paths", side_effect=AssertionError("runtime owns check")
+        ),
+    ):
+        result = review_mcp_module.review_attempt_tool_config(
+            plan,
+            manifest_path=manifest_file,
+            input_root=tmp_path,
+            cwd=tmp_path,
+            task_id="config-test",
+            model="fixture-model",
+            effort="high",
+            review_access=access,
+        )
+        assert result == expected
+        for name, gate in (("codex", codex_gate), ("agy", agy_gate)):
+            if harness == name and access == "isolated":
+                gate.assert_called_once_with(
+                    config_path=plan.config_path,
+                    cwd=tmp_path,
+                    mode="read-only",
+                    model="fixture-model",
+                    effort="high",
+                    task_id="config-test",
+                    tool_config=expected,
+                )
+            else:
+                gate.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "field,value", [("harness", "unknown"), ("review_id", None), ("attempt_id", ""), ("config_path", None)]
+)
+def test_tool_config_refuses_missing_attempt_binding(manifest_file, tmp_path, field, value):
+    plan = prepare_review_attempt(
+        "rev-config", "att-config", manifest_file, "claude", receipts_root=tmp_path / "receipts"
+    )
+    with pytest.raises(ValueError, match="review attempt refused"):
+        review_mcp_module.review_attempt_tool_config(
+            replace(plan, **{field: value}),
+            manifest_path=manifest_file,
+            input_root=tmp_path,
+            cwd=tmp_path,
+            task_id="config-test",
+        )
+
+
+@pytest.mark.parametrize("harness", ["codex", "agy"])
+def test_tool_config_propagates_effective_mcp_refusal(manifest_file, tmp_path, harness):
+    """Never return launch options when the original effective-config gate refuses."""
+    plan = prepare_review_attempt(
+        "rev-config",
+        "att-config",
+        manifest_file,
+        harness,
+        receipts_root=tmp_path / "receipts",
+    )
+    with (
+        patch.object(review_mcp_module, f"verify_{harness}_review_launch", side_effect=ValueError("extra MCP server")),
+        pytest.raises(ValueError, match="extra MCP server"),
+    ):
+        review_mcp_module.review_attempt_tool_config(
+            plan,
+            manifest_path=manifest_file,
+            input_root=tmp_path,
+            cwd=tmp_path,
+            task_id="config-test",
+        )
+
+
 def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_agy_user_home):
     root = tmp_path / "lease"
     root.mkdir()
@@ -85,7 +193,8 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
     settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
     readers, writers = sources_tool_sets()
     assert settings["permissions"]["allow"] == [
-        f"read_file({tmp_path.resolve()})", *[f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+        f"read_file({tmp_path.resolve()})",
+        *[f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)],
     ]
     assert settings["permissions"]["deny"] == [
         "command(*)",
