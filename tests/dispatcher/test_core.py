@@ -515,14 +515,15 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
         ("own", 1, False, "pushed", "remote_head_matches"),
         ("unrelated", 1, False, "unpushed", "remote_head_differs"),
         ("pinned", 1, True, "unpushed", "dirty_worktree"),
-        (None, 0, False, "unpushed", "remote_head_differs"),
+        (None, 0, False, "unpushed", "remote_branch_missing"),
         ("pinned", 0, False, "pushed", "remote_head_matches"),
     ],
 )
 def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target, commits, dirty, expected, reason):
     pinned = "codex/existing-pr"
     run_git(sandbox.repo, "branch", pinned, "main")
-    run_git(sandbox.repo, "push", "origin", pinned)
+    if target is not None:
+        run_git(sandbox.repo, "push", "origin", pinned)
     task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
     record_path = sandbox.tasks / f"{task[0]}.json"
     record = json.loads(record_path.read_text())
@@ -553,7 +554,7 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
         assert observed["remote_head_sha"] == head
         assert run_git(sandbox.remote, "rev-parse", f"refs/heads/{matched}") == head
     else:
-        assert observed["remote_head_sha"] == record["worktree_base_sha"]
+        assert observed["remote_head_sha"] == (record["worktree_base_sha"] if target else None)
 
 
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
