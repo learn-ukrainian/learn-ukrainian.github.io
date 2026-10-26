@@ -462,14 +462,15 @@ def _classify(
         # Fingerprint first: a write after it shows at the post-rename comparison,
         # a write before it is seen by the age scan below.
         candidate.before = sweep.tree_fingerprint(path) if apply else None
-        row["bytes"], _newest, changed, problem = sweep.tree_facts(path)
+        owner_reason, candidate.owner_dead = _abandonment(
+            candidate, boot_id=ownership.current_boot_id()
+        )
+        facts = sweep.tree_facts(path, disposable_git=True) if candidate.owner_dead else sweep.tree_facts(path)
+        row["bytes"], _newest, changed, problem = facts
         row["newest_change"] = changed
         row["idle_hours"] = round(max(0.0, now - changed) / 3600, 2)
         pids, channels = holders.holding([path])
         row.update(live_pids=pids, holders=channels)
-        owner_reason, candidate.owner_dead = _abandonment(
-            candidate, boot_id=ownership.current_boot_id()
-        )
         if problem:
             row["reason"] = problem
             row["bytes"] = None
