@@ -114,21 +114,29 @@ def _enforce_delivery(record: dict) -> None:
                 branch = base.removeprefix("origin/")
                 git._git(worktree, "fetch", "--no-tags", "--no-write-fetch-head", "origin",
                          f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
+            else:
+                raise ValueError("ownership verification requires a refreshable origin base ref")
             base_sha = git._git(worktree, "rev-parse", "--verify", "--end-of-options", f"{base}^{{commit}}")
             merge_base = git._git(worktree, "merge-base", record["head_sha"], base_sha)
-            commits = git._git(worktree, "rev-list", "--no-merges", f"{merge_base}..{record['head_sha']}")
-            paths = set()
-            for commit in commits.splitlines():
-                paths.update(git._git(
-                    worktree, "diff-tree", "--no-commit-id", "--name-only", "-r", "--no-renames", "-m", "-z",
-                    commit, strip=False,
-                ).split("\0"))
+            revision_range = (record["head_sha"], "--not", merge_base, record["worktree_base_sha"])
+            version = tuple(int(part) for part in git._git(worktree, "version").split()[2].split(".")[:2])
+            remerge = version >= (2, 36)
+            # Remerge diffs isolate edits made during a merge from clean upstream changes.
+            # Older Git and octopus merges cannot prove the absence of resolution edits.
+            paths = git._git(
+                worktree, "log", "--format=", "--name-only", "-z", "-r", "--no-renames", "--root",
+                "--remerge-diff" if remerge else "--cc", *revision_range, strip=False,
+            ).split("\0")
+            if git._git(worktree, "rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
+                raise ValueError("merge resolution paths cannot be verified")
             outside = sorted(path for path in paths if path and not path_is_owned(path, owned))
             if outside:
                 cause = "outside_owned_paths: " + ", ".join(
-                    sanitize_for_display(redact_text(path)) for path in outside
+                    sanitize_for_display(redact_text(path)) for path in sorted(set(outside))
                 )
-        except (OSError, ValueError, TypeError, subprocess.SubprocessError):
+                if len(cause) > 1024:
+                    cause = cause[:1009] + "... (truncated)"
+        except (OSError, ValueError, TypeError, IndexError, subprocess.SubprocessError):
             cause = "owned_paths_verification_failed"
     if cause is None:
         if record["worktree_dirty_on_exit"] is not False:
