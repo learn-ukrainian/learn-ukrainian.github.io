@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shlex
 import shutil
 import sqlite3
 from pathlib import Path
@@ -223,6 +224,21 @@ def test_prepare_writes_three_cards_with_exact_hashes_and_commands(prepared: tup
     iv = card(out, "iv")
     assert iv["record"][iv["record"].index("--decided-by") + 1] == iv["task_id"]  # the decision is made under the task
     assert state_of(out, "iv")["ledger"] == iv["ledger"] and state_of(out, "iv")["tasks_dir"] == str(tasks)
+
+
+def test_render_card_wait_uses_dispatcher(tmp_path: Path) -> None:
+    """Rendered wait commands must use the current CLI, including quoted task paths."""
+    one = dict(
+        case="i", title="Plan", prompt="prompt path", prompt_sha256="a" * 64, prompt_check="PASS",
+        manifest="manifest path", manifest_sha256="b" * 64, review_id="review", attempt_id="attempt",
+        task_id="task", ledger="ledger path", return_path="return path", dispatch=["dispatch"], record=["record"],
+    )
+    rendered = ic.render_card(tmp_path, one)
+    expected_wait = shlex.join(
+        [str(ic.PYTHON), str(ic.PRIMARY / "scripts" / "dispatch.py"), "wait", "task"]
+    )
+    assert f"   {expected_wait}\n" in rendered
+    assert json.loads((tmp_path / "cards/i.json").read_text())["task_id"] == "task"
 
 
 def test_the_settle_item_alone_holds_the_module_while_the_seat_has_not_answered(

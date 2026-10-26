@@ -33,3 +33,5 @@ def test_contracts_routes_endpoint_exposes_locality(tmp_path: Path) -> None:
     for entry in data["route_contracts"]:
         assert "locality" in entry
         assert entry["locality"] in VALID_LOCALITIES
+    budget = next(entry for entry in data["route_contracts"] if entry["pattern"] == "/api/state/routing-budget")
+    assert budget["consumers"] == ["routing.html", "agents"]

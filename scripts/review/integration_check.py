@@ -1162,7 +1162,7 @@ def render_card(out: Path, card: dict[str, Any]) -> str:
     card["dispatch_cmd"] = shlex.join(card["dispatch"])
     card["record_cmd"] = f"cd {shlex.quote(str(REPO_ROOT))} && {shlex.join(card['record'])}"
     (cards / f"{card['case']}.json").write_text(json.dumps(card, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    wait = shlex.join([str(PYTHON), str(PRIMARY / "scripts" / "delegate.py"), "wait", card["task_id"]])
+    wait = shlex.join([str(PYTHON), str(PRIMARY / "scripts" / "dispatch.py"), "wait", card["task_id"]])
     finish = shlex.join([str(PYTHON), "-m", "scripts.review.integration_check", "finish-real", "--out", str(out)])
     lines = [
         f"=== DISPATCH CARD ({card['case']}) {card['title']} ===",
