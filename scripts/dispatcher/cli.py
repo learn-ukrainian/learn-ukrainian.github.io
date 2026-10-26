@@ -36,7 +36,19 @@ def build_parser() -> argparse.ArgumentParser:
         "Related: docs/design/dispatch-v2.md (C-2188).",
     )
     subs = parser.add_subparsers(dest="command", required=True)
-    dispatch = subs.add_parser("dispatch", help="Start a detached task; print task ID and nonce")
+    dispatch = subs.add_parser(
+        "dispatch",
+        help="Start a detached task; print task ID and nonce",
+        description="Start a detached provider task.\nUse --dry-run to inspect its command without creating task files.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 "
+        "--prompt 'Explain X' --contributor-mode on --dry-run\n"
+        "Outputs: task ID and nonce; task JSON, prompt, result, logs and dispatch worktree.\n"
+        "  Muse task JSON records the effective contributor_mode. --dry-run prints a plan and creates nothing.\n"
+        "Exit codes: 0 task started or plan printed, 2 invalid/refused request.\n"
+        "Related: docs/design/dispatch-v2.md.",
+    )
     for flag, default, help_text in (
         ("agent", None, "Provider or alias, e.g. sol (required)"),
         ("model", None, "Exact provider model, e.g. gpt-6.1-sol (required)"),
@@ -63,6 +75,11 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-mode", None, "Review mode label (default: none)"),
     ):
         dispatch.add_argument(f"--{flag}", default=default, required=flag in {"agent", "model"}, help=help_text)
+    dispatch.add_argument(
+        "--contributor-mode",
+        choices=("on", "off"),
+        help="Muse contributor mode, on or off; Muse only (default: omitted, provider default off)",
+    )
     dispatch.add_argument(
         "--mode",
         choices=("read-only", "workspace-write"),
@@ -103,6 +120,8 @@ def _dispatch(args) -> int:
     agent = ALIASES.get(args.agent, args.agent)
     if agent not in providers.PROVIDERS or args.claude_account not in {None, "a", "b"}:
         raise ValueError("unknown agent or Claude account")
+    if args.contributor_mode is not None and agent != "muse":
+        raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     task_id = args.task_id or uuid.uuid4().hex
@@ -138,6 +157,8 @@ def _dispatch(args) -> int:
     if not args.cwd:
         git.create_worktree(repo, worktree, branch, sha)
     record = store.new_record(spec, info, branch, sha, vars(args))
+    if agent == "muse":
+        record["contributor_mode"] = spec.options.get("contributor_mode", "off")
     worker.start(spec, record, prompt, args.hard_timeout)
     print(task_id, record["run_nonce"], sep="\n")
     return 0
