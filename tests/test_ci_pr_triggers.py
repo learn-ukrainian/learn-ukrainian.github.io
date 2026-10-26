@@ -619,7 +619,7 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
         assert result.returncode == 1, result.stdout
     result = _run_gate('pull_request', PR_AFFECTED='success')
     assert result.returncode == 0
-    assert 'Full supported pytest suite and partition audits are required.' in result.stdout
+    assert 'PR admission: full pytest was not run.' in result.stdout
     # An absent dependency is distinct from a present dependency with no result.
     from scripts.ci.gate import COMMON
     assert 'pr-affected' in COMMON

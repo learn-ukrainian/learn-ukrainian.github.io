@@ -32,12 +32,20 @@ def title(number: int, head: str) -> str:
 
 
 def inspect(repo: str, number: int, head: str, get_json) -> Proof:
+    """Malformed external metadata is unknown, never permission to dispatch or enqueue."""
+    try:
+        return _inspect(repo, number, head, get_json)
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return Proof('unknown')
+
+
+def _inspect(repo: str, number: int, head: str, get_json) -> Proof:
     """Absence requires a complete read; a known unsuccessful run never means absence."""
     repo = normalize_repository(repo).removeprefix('github.com/')
     root = f'repos/{repo}'
     workflow = get_json(f'{root}/actions/workflows/ci.yml')
     page = get_json(f'{root}/actions/workflows/ci.yml/runs?event=workflow_dispatch&head_sha={head}&per_page=100')
-    if (not isinstance(workflow, dict) or type(workflow.get('id')) is not int
+    if (not isinstance(workflow, dict) or type(workflow.get('id')) is not int or workflow['id'] < 1
             or workflow.get('path') != '.github/workflows/ci.yml' or workflow.get('name') != 'CI'
             or not isinstance(page, dict) or type(page.get('total_count')) is not int
             or not isinstance(page.get('workflow_runs'), list)

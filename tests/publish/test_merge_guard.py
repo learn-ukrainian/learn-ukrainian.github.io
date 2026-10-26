@@ -330,3 +330,5 @@ def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypa
     # The same admission-only response in unrelated repositories retains its old contract.
     views = 0
     assert ensure_merge_ready("unit/other", 1, runner=runner, cwd=".", environment={}) == head
+    views = 0
+    assert ensure_merge_ready("unit/private", 1, runner=runner, cwd=".", environment={}) == head

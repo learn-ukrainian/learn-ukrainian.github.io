@@ -602,13 +602,26 @@ def test_queued_stale_recorded_approval_is_revoked(tmp_path: Path) -> None:
     assert "reason=needs-CF" in lines[0]
 
 
-def test_enqueue_happy_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("full_state", ["success", "absent", "pending", "failed", "unknown"])
+def test_enqueue_happy_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, full_state) -> None:
+    from scripts.ci import approved_pr_ci as full
+
+    monkeypatch.setattr(full, "catalog", lambda: CATALOG)
     fake = FakeGitHub()
-    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    fake.fresh["headRefName"] = "codex/fixture"
+    fake.full_ci = lambda number, head: full.Proof(full_state, 91 if full_state != "absent" else None)
+    dispatches = []
+    fake.dispatch_full = lambda number, head, ref: dispatches.append((number, head, ref))
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
-    assert mutations(fake) == ["enqueue"]
-    assert fake.actions[0][1] == (42, HEAD_A)
-    assert "#42 enqueued" in lines
+    if full_state == "success":
+        assert mutations(fake) == ["enqueue"]
+        assert fake.actions[0][1] == (42, HEAD_A)
+        assert "#42 enqueued" in lines
+    else:
+        assert "enqueue" not in mutations(fake)
+        assert any("full-CI-" in line for line in lines)
+    assert dispatches == ([(42, HEAD_A, "codex/fixture")] if full_state == "absent" else [])
 
 
 @pytest.mark.parametrize(

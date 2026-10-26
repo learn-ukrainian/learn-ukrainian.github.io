@@ -731,7 +731,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert record['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
     assert record['execution_status'] == 'completed' and record['exit_code'] == 0
     assert record['skipped_cases'] == 0 and record['failed_cases'] == 0
-    assert 'Full pytest is required in the parallel shard jobs.' in (tmp_path / 'summary').read_text()
+    assert 'Approved-head and merge-group full pytest remain required.' in (tmp_path / 'summary').read_text()
     assert 'deferred test-case count: UNKNOWN' in (tmp_path / 'summary').read_text()
     assert affected.main() == 1  # stale report cannot masquerade as this execution
     monkeypatch.setenv('GITHUB_SHA', base)

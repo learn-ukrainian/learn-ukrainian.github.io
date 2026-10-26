@@ -1053,11 +1053,16 @@ def _canonical_flake_issue(
 
 def _approved_full_ci(gh, number, head, previous, state_path, *, apply):
     """Called only with fresh canonical CF and PR identity, under the keeper lock."""
-    proof = gh.full_ci(number, head)
+    try:
+        proof = gh.full_ci(number, head)
+    except KeeperError:
+        return "full-CI-unknown"
     key = f"{number}:{head}"
     requests = previous.setdefault("full_ci", {})
+    identity = {"pr": number, "head": head, "title": approved_pr_ci.title(number, head),
+                "workflow": "ci.yml", "inputs": {"approved_pr": str(number), "expected_head": head}}
     if proof.run_id is not None and apply:
-        requests.setdefault(key, {})["run_id"] = proof.run_id
+        requests.setdefault(key, identity)["run_id"] = proof.run_id
         _save(state_path, previous)
     if proof.state != "absent":
         return "ready" if proof.state == "success" else "full-CI-" + proof.state
@@ -1075,8 +1080,7 @@ def _approved_full_ci(gh, number, head, previous, state_path, *, apply):
         return "full-CI-ref-unknown"
     # Persist intent before the side effect. An uncertain response or visibility lag
     # retains this identity forever; only a driver-owned recovery may proceed.
-    requests[key] = {"pr": number, "head": head, "title": approved_pr_ci.title(number, head), "ref": ref,
-                     "workflow": "ci.yml", "inputs": {"approved_pr": str(number), "expected_head": head}}
+    requests[key] = {**identity, "ref": ref}
     _save(state_path, previous)
     gh.dispatch_full(number, head, ref)
     return "full-CI-dispatch-pending"
@@ -1151,11 +1155,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             except KeeperError as exc:
                 detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
-        if reason == "ready" and not apply and approved_pr_ci.applies(gh.repository):
-            try:
+        if reason == "ready" and approved_pr_ci.applies(gh.repository):
+            if apply:
+                reason = "full-CI-awaiting-proof"
+            else:
                 reason = _approved_full_ci(gh, number, head, previous, state_path, apply=False)
-            except KeeperError:
-                reason = "full-CI-unknown"
         if reason == "ready" and queued is not True and not armed:
             try:
                 reason = _gate_hold(gh, number, head, previous) or reason
@@ -1169,6 +1173,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             observed_at=observed,
         )
         state = "ready" if reason == "ready" and not queued and not armed else report.state
+        if reason.startswith("full-CI-"):
+            state = "held"
         lines.append(
             f"#{number} head={head[:12]} state={state} reason={reason} queued={queued} armed={armed}"
             + verdict_detail(verdict.reason, verdict.comment_id, verdict.superseded_markers)
@@ -1298,6 +1304,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     queued_now[key] = head
                     lines.append(f"#{number} enqueued")
                 estimated_remaining -= 30
+            else:
+                lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}

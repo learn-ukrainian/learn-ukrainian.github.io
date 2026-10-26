@@ -214,7 +214,8 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert aggregation["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
     for event in ("opened", "synchronize", "reopened", "merge_group", "schedule", "workflow_dispatch"):
         results, _ = _simulate(_EVENTS[event])
-        assert all(results[name] == "success" for name in ("refresh-pytest-durations", "pytest", "pytest-report"))
+        expected = "skipped" if event in {"opened", "synchronize", "reopened"} else "success"
+        assert {results[name] for name in ("refresh-pytest-durations", "pytest", "pytest-report")} == {expected}
     results, _ = _simulate(_EVENTS["merge_group"], failures={"pytest"})
     assert results["pytest-report"] == "skipped", "failed partition must not publish timing weights"
     result = _run_gate("merge_group", REFRESH="failure")

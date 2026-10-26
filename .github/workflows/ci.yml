@@ -1,5 +1,5 @@
 name: CI
-run-name: ${{ inputs.approved_pr && format('Approved PR #{0} head {1}', inputs.approved_pr, inputs.expected_head) || 'CI' }}
+run-name: "${{ inputs.approved_pr && format('Approved PR #{0} head {1}', inputs.approved_pr, inputs.expected_head) || 'CI' }}"
 
 # PRs run admission; approved heads, merge_group, nightly and manual runs execute the full suite.
 # Merge-group candidates repeat the full partition before landing.

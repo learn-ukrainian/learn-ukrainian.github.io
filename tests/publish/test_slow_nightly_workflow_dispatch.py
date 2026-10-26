@@ -43,6 +43,13 @@ def test_missing_registration_or_wrong_dispatch_request(dispatch_calls):
         ],
     ]
 
+    assert pub.main([
+        "workflow-run", "--repo", "unit/public", "--workflow", "ci.yml", "--ref", "codex/fixture",
+        "--inputs", '{"approved_pr":"42","expected_head":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}',
+    ], runner=sender) == 0
+    assert calls[-1] == ["gh", "workflow", "run", "ci.yml", "--repo", "unit/public", "--ref=codex/fixture",
+                         "--raw-field=approved_pr=42", "--raw-field=expected_head=" + "a" * 40]
+
 
 def test_unknown_workflow_cannot_reach_dispatch(dispatch_calls, capsys):
     """A near-match filename must not bypass the exact workflow allowlist."""
