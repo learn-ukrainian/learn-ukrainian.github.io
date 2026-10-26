@@ -1829,6 +1829,13 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     state = json.loads(path.read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
+    if scenario == "permission_denied":
+        assert row["action"] == "error" and row["error"], row
+        assert (worktree / "ignored/locked/report.bin").read_bytes() == links.PAYLOAD
+        receipt = state["preserved_artifacts"]
+        _assert_record_only(repo, receipt)
+        assert receipt["inventory_error"] == "inventory_failed" and receipt["paths"] == []
+        return
     assert row["action"] == "removed", row
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state

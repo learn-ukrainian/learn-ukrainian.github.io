@@ -6897,6 +6897,14 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
+    if scenario == "permission_denied":
+        assert result.action == "error" and result.error, result
+        assert (worktree / "ignored/locked/report.bin").read_bytes() == links.PAYLOAD
+        receipt = state["preserved_artifacts"]
+        assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+        assert receipt["inventory_error"] == "inventory_failed" and receipt["paths"] == []
+        assert not (repo / "batch_state/preserved").exists()
+        return
     assert result.action == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
