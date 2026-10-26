@@ -189,6 +189,17 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             status = "crashed"
         if status != "done":
             error = "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+        if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
+            try:
+                from scripts.review.verdict_parser import recognized_verdicts
+
+                verdicts = set(recognized_verdicts(text))
+                if not verdicts:
+                    status, error = "failed", "review_missing_verdict_line"
+                elif len(verdicts) > 1:
+                    status, error = "failed", "review_ambiguous_verdict"
+            except Exception:
+                status, error = "failed", "review_gate_error"
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
     except subprocess.TimeoutExpired:
