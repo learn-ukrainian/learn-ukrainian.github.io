@@ -1431,8 +1431,10 @@ def _review_branch(task: dict[str, Any]) -> str:
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
     from scripts.guardrails.worktree_containment import PROTECTED_BRANCHES
 
+    # V2 owns a separate checkout branch; only review_branch identifies its PR.
+    fields = ("review_branch",) if task.get("schema_version") == 2 else ("review_branch", "worktree_branch")
     branches = []
-    for field in ("review_branch", "worktree_branch"):
+    for field in fields:
         value = task.get(field)
         if value is None:
             continue

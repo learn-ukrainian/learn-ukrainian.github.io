@@ -571,6 +571,93 @@ def _no_pr_states(_repo: Path, _branch: str | None):
     return [], None
 
 
+@pytest.fixture
+def open_review_checkout(hermetic_reap, monkeypatch):
+    repo, tasks = hermetic_reap
+    task_id = "review-11683"
+    tree = _add_dispatch_worktree(repo, "claude", task_id)
+    (tree / "README.md").write_text("reviewed change\n")
+    _run(["git", "commit", "-am", "reviewed change"], cwd=tree)
+    _run(["git", "push", "origin", "HEAD:refs/heads/author/feature"], cwd=tree)
+    head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+    _write_task_state(tasks, task_id, "done", tree, agent="claude", pid=999999999)
+    record = tasks / f"{task_id}.json"
+    state = json.loads(record.read_text())
+    state.update(
+        mode="read-only",
+        push_state="not_applicable",
+        worktree_branch=f"claude/{task_id}",
+        review_branch="author/feature",
+        pinned_head=head,
+    )
+    record.write_text(json.dumps(state))
+    rw = post_task_reap.reap_worktrees
+    pr = rw.PullRequestState(11683, "OPEN", head)
+    monkeypatch.setattr(
+        rw, "_query_pr_states", lambda _repo, branch: ([pr] if branch == "author/feature" else [], None)
+    )
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _head: ([pr], None))
+    monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _number: ([pr], None))
+    return repo, tasks, tree, task_id, record
+
+
+@pytest.mark.parametrize("detached", [False, True])
+def test_settled_read_only_review_checkout_is_reaped_while_its_reviewed_pr_is_open(open_review_checkout, detached):
+    repo, tasks, tree, task_id, _record = open_review_checkout
+    if detached:
+        _run(["git", "checkout", "--detach"], cwd=tree)
+    else:
+        with (repo / ".git/info/exclude").open("a") as exclude:
+            exclude.write("review-output.txt\n")
+        (tree / "review-output.txt").write_text("preserve reviewed findings\n")
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] == "removed", report
+    assert not tree.exists()
+    if not detached:
+        receipt = json.loads(_record.read_text())["preserved_artifacts"]
+        assert (repo / receipt["location"] / "review-output.txt").read_text() == "preserve reviewed findings\n"
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger", None])
+def test_write_mode_author_tree_with_an_open_pr_is_still_retained(open_review_checkout, mode):
+    repo, tasks, tree, task_id, record = open_review_checkout
+    state = json.loads(record.read_text())
+    state.update(mode=mode, push_state="pushed")
+    record.write_text(json.dumps(state))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] in {"retained", "skipped"}, report
+    assert report["main_worktree"]["reason"] == "open PR #11683"
+    assert tree.exists()
+
+
+@pytest.mark.parametrize("guard", ["dirty", "live_pid", "keep_worktree", "unpushed"])
+def test_read_only_tree_that_is_dirty_or_has_live_pid_is_still_retained(open_review_checkout, guard):
+    repo, tasks, tree, task_id, record = open_review_checkout
+    if guard == "dirty":
+        (tree / "README.md").write_text("uncommitted review notes\n")
+    elif guard == "unpushed":
+        (tree / "README.md").write_text("unique unpublished work\n")
+        _run(["git", "commit", "-am", "unpublished"], cwd=tree)
+    else:
+        state = json.loads(record.read_text())
+        state.update({"pid": os.getpid()} if guard == "live_pid" else {"keep_worktree": True})
+        record.write_text(json.dumps(state))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] in {"retained", "skipped"}, report
+    assert tree.exists()
+    if guard == "dirty":
+        assert (tree / "README.md").read_text() == "uncommitted review notes\n"
+
+
+def test_tree_whose_own_branch_is_the_pr_head_ref_is_still_retained(open_review_checkout):
+    repo, tasks, tree, task_id, _record = open_review_checkout
+    _run(["git", "checkout", "-b", "author/feature"], cwd=tree)
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    assert report["main_worktree"]["action"] == "skipped", report
+    assert report["main_worktree"]["reason"] == "open PR #11683"
+    assert tree.exists()
+
+
 def test_no_pr_terminal_reap_dry_run(hermetic_reap, monkeypatch):
     """A terminal task with no PR and a clean tree reaps even without GitHub."""
     repo_root, tasks_dir = hermetic_reap
@@ -1144,6 +1231,49 @@ def test_reap_pending_reservation_blocks_canonical_prefixed_path(hermetic_reap):
     assert worktree.exists()
 
 
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux zombie process state")
+def test_zombie_supervisor_does_not_keep_a_clean_settled_tree(hermetic_reap, monkeypatch):
+    repo_root, _ = hermetic_reap
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
+    task_id = "zombie-supervisor"
+    worktree = _add_dispatch_worktree(repo_root, "kimi", task_id)
+    child = subprocess.Popen([sys.executable, "-c", "pass"])
+    try:
+        os.waitid(os.P_PID, child.pid, os.WEXITED | os.WNOWAIT)
+        os.kill(child.pid, 0)
+        assert post_task_reap._pid_alive(child.pid) is False
+        _write_task_state(tasks_dir, task_id, "done", worktree, pid=child.pid)
+        report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+        assert report["main_worktree"]["action"] == "removed", report["main_worktree"]
+        assert not worktree.exists()
+    finally:
+        child.wait(timeout=10)
+
+
+@pytest.mark.parametrize("state,alive", [("Z", False), ("S", True), ("R", True)])
+def test_zombie_supervisor_liveness_handles_parentheses_in_process_name(monkeypatch, state, alive):
+    monkeypatch.setattr(post_task_reap.os, "kill", lambda *_args: None)
+    monkeypatch.setattr(Path, "read_text", lambda *_args, **_kwargs: f"123 (task ) supervisor) {state} 1 2")
+    assert post_task_reap._pid_alive(123) is alive
+
+
+@pytest.mark.parametrize("entry", [PermissionError(), FileNotFoundError(), UnicodeError(), "broken", "123 (task)"])
+def test_zombie_supervisor_unreadable_or_malformed_proc_entry_retains_live_pid(monkeypatch, entry):
+    monkeypatch.setattr(post_task_reap.os, "kill", lambda *_args: None)
+    def read_stat(*_args, **_kwargs):
+        if isinstance(entry, Exception):
+            raise entry
+        return entry
+    monkeypatch.setattr(Path, "read_text", read_stat)
+    assert post_task_reap._pid_alive(123) is True
+
+
+def test_zombie_supervisor_fix_keeps_a_live_pid_alive():
+    assert post_task_reap._pid_alive(os.getpid()) is True
+
+
 def test_main_worktree_retain_when_pid_alive(hermetic_reap, monkeypatch):
     repo_root, tasks_dir = hermetic_reap
     worktree = _add_dispatch_worktree(repo_root, "kimi", "pid-alive-task")
@@ -1594,3 +1724,87 @@ def test_10303_post_task_reap_uses_complete_preservation_path(request, monkeypat
     assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
     state = json.loads((tasks / "boundary.json").read_text())
     assert state["status"] == creator["status"] and state["run_nonce"] == creator["run_nonce"]
+
+
+def test_enqueued_exact_head_reaps_only_bound_pushed_terminal_worktree(tmp_path, monkeypatch, record_property):
+    """Queued exact bindings must reap; wrong identity or unknown provenance must retain."""
+    from scripts.fleet import ignored_task_output
+    from tests.orchestration.test_reap_worktrees_clean_pushed import fake_fuser, write_task
+
+    rw = post_task_reap.reap_worktrees
+    fake_fuser(tmp_path, monkeypatch, "exit 1")
+    monkeypatch.setattr(rw, "_uninspectable_same_user", lambda *_args: False)
+    monkeypatch.setattr(post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "unit/public")
+    for case in ("wrong-repo", "wrong-branch", "wrong-head", "remote-moved", "nonqueued", "missing-creator", "success"):
+        repo = tmp_path / case
+        _init_repo(repo)
+        (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.cache/\n")
+        _run(["git", "add", ".gitignore"], cwd=repo)
+        _run(["git", "commit", "-m", "ignore fixture output"], cwd=repo)
+        _run(["git", "push", "origin", "main"], cwd=repo)
+        tree = _add_dispatch_worktree(repo, "codex", "queued")
+        sibling = _add_dispatch_worktree(repo, "codex", "collision")
+        branch = "codex/queued"
+        _run(["git", "push", "-u", "origin", branch], cwd=repo)
+        head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+        record_path = write_task(repo, "queued", tree, status="done", repository="unit/public")
+        assert ignored_task_output.record_created_worktree(json.loads(record_path.read_text()))
+        if case == "remote-moved":
+            _run(["git", "commit", "--allow-empty", "-m", "remote branch moved"], cwd=repo)
+            _run(["git", "push", "origin", "main:refs/heads/codex/queued"], cwd=repo)
+        if case == "wrong-branch":
+            _run(["git", "switch", "-c", "codex/moved"], cwd=tree)
+        if case == "missing-creator":
+            record = json.loads(record_path.read_text())
+            record.pop("ignored_output_baseline")
+            record_path.write_text(json.dumps(record))
+        (tree / ".cache").mkdir()
+        (tree / ".cache" / "result.txt").write_text("retrievable before removal")
+        current = {"number": 23, "state": "OPEN", "isInMergeQueue": case != "nonqueued",
+                   "headRefName": branch, "headRefOid": "f" * 40 if case == "wrong-head" else head,
+                   "isCrossRepository": False}
+        receipt = post_task_reap.reap_enqueued_worktrees(
+            repo_root=repo, repository="other/repo" if case == "wrong-repo" else "unit/public",
+            number=23, head=head, branch=branch, queue_probe=lambda current=current: current,
+        )
+        record_property(case, json.dumps(receipt, sort_keys=True))
+        assert json.loads((repo / receipt["receipt"]).read_text()) == receipt
+        assert sibling.exists(), "equal SHA must never select an unrelated branch"
+        if case == "success":
+            assert receipt["removed"] == 1 and receipt["retained"] == 0, receipt
+            assert not tree.exists()
+            saved = next(row["preserved_artifacts"] for row in receipt["rows"] if row["action"] == "removed")
+            assert saved["retrieval_proof_sha256"]
+            assert (repo / saved["location"] / ".cache" / "result.txt").read_text() == "retrievable before removal"
+            assert _run(["git", "ls-remote", "--heads", "origin", branch], cwd=repo).stdout.strip()
+        else:
+            assert tree.exists() and receipt["retained"] > 0, receipt
+            assert all(row.get("owner") and row.get("next_condition") for row in receipt["rows"])
+
+    # A reset before worktree creation leaves unique history only in the shared branch reflog.
+    repo = tmp_path / "shared-history"
+    _init_repo(repo)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.cache/\n")
+    _run(["git", "add", ".gitignore"], cwd=repo)
+    _run(["git", "commit", "-m", "ignore fixture output"], cwd=repo)
+    _run(["git", "push", "origin", "main"], cwd=repo)
+    base = _run(["git", "rev-parse", "HEAD"], cwd=repo).stdout.strip()
+    _run(["git", "branch", branch], cwd=repo)
+    obj = _run(["git", "rev-parse", "HEAD^{tree}"], cwd=repo).stdout.strip()
+    unique = _run(["git", "commit-tree", obj, "-p", base, "-m", "unpublished round"], cwd=repo).stdout.strip()
+    _run(["git", "update-ref", f"refs/heads/{branch}", unique], cwd=repo)
+    _run(["git", "update-ref", f"refs/heads/{branch}", base], cwd=repo)
+    tree = repo / ".worktrees/dispatch/codex/queued"
+    tree.parent.mkdir(parents=True)
+    _run(["git", "worktree", "add", str(tree), branch], cwd=repo)
+    _run(["git", "push", "-u", "origin", branch], cwd=repo)
+    write_task(repo, "queued", tree, status="done", repository="unit/public")
+    current = {"number": 23, "state": "OPEN", "isInMergeQueue": True,
+               "headRefName": branch, "headRefOid": base, "isCrossRepository": False}
+    receipt = post_task_reap.reap_enqueued_worktrees(
+        repo_root=repo, repository="unit/public", number=23, head=base, branch=branch,
+        queue_probe=lambda: current,
+    )
+    assert receipt["removed"] == 0 and receipt["retained"] > 0 and tree.exists(), receipt
+    assert unique in _run(["git", "log", "-g", "--all", "--format=%H"], cwd=repo).stdout
+    assert any("unpublished_reflog_commit" in row["reason"] for row in receipt["rows"])

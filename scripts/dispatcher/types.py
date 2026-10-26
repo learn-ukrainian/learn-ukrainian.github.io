@@ -34,3 +34,4 @@ class ParsedResult:
     text: str | None
     usage: dict | None
     error: str | None  # set when the run must not count as success
+    resolved_model: str | None = None  # runtime observation only; None includes conflicting reports

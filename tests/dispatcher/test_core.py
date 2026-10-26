@@ -12,6 +12,7 @@ import sys
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 import yaml
@@ -19,7 +20,9 @@ import yaml
 from scripts.dispatcher import checks, git, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
+from scripts.dispatcher.providers import muse
 from scripts.dispatcher.types import TaskSpec
+from scripts.review.record_cf_verdict import _review_branch
 
 SOURCE = Path(__file__).resolve().parents[2]
 
@@ -98,7 +101,7 @@ def sandbox(tmp_path):
             ).stdout
         )
 
-    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, cli=cli, dispatch=dispatch, settle=settle)
+    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle)
     yield box
     # Reap detached test supervisors, including a test interrupted by an assertion.
     for path in tasks.glob("*.json"):
@@ -115,6 +118,176 @@ def await_file(path):
     return path.read_text()
 
 
+def stub_common_reaper(box):
+    fleet = box.repo / "scripts/fleet"
+    fleet.mkdir()
+    (fleet / "post_task_reap.py").write_text('''import json, os, sys
+from pathlib import Path
+from scripts.dispatcher.worker import _identity
+tasks = Path(os.environ["LU_TASKS_DIR"])
+task_id = sys.argv[2]
+record = json.loads((tasks / (task_id + ".json")).read_text())
+with (tasks / (task_id + ".reap-calls")).open("a") as calls:
+    calls.write("called\\n")
+receipt = dict(argv=sys.argv[1:], cwd=os.getcwd(), record=record, alive=_identity(record["pid"]))
+target = tasks / (task_id + ".reaped")
+target.with_suffix(".tmp").write_text(json.dumps(receipt))
+target.with_suffix(".tmp").replace(target)
+print(json.dumps({"main_worktree": {"action": "retained"}}))
+sys.exit(1 if (tasks / "reap-fail").exists() else 0)
+''')
+
+
+@pytest.mark.parametrize("flags,restored", [
+    ([], set()), (["--full-checkout"], {"curriculum", "site/src/data"}),
+    (["--sparse-include", "/curriculum/"], {"curriculum"}),
+    (["--sparse-include", "curriculum", "--sparse-include", "site/src/data"], {"curriculum", "site/src/data"}),
+])
+def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_worktrees(sandbox, flags, restored):
+    excluded = {
+        "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
+        "registry/projects", "registry/lexicon/source-inventory",
+        "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
+    }
+    for directory in excluded | {"site/src/components", "registry/lexicon/kept"}:
+        path = sandbox.repo / directory / "fixture.txt"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("tracked fixture")
+    (sandbox.repo / "data/kept.txt").write_text("parent file")
+    run_git(sandbox.repo, "add", ".")
+    run_git(sandbox.repo, "commit", "-m", "heavy fixture trees")
+    run_git(sandbox.repo, "push", "origin", "main")
+    sibling = sandbox.repo.parent / "sibling"
+    run_git(sandbox.repo, "worktree", "add", "-b", "sibling", str(sibling))
+    untracked = sandbox.repo / "curriculum/untracked.txt"
+    untracked.write_text("uncommitted primary file")
+    record = sandbox.settle(sandbox.dispatch("echo", *flags))
+    worktree = Path(record["cwd"])
+    for directory in excluded:
+        assert (worktree / directory / "fixture.txt").exists() == ("--full-checkout" in flags or directory in restored)
+    assert (worktree / "site/src/components/fixture.txt").exists()
+    assert (worktree / "registry/lexicon/kept/fixture.txt").exists()
+    assert (worktree / "data/kept.txt").exists()
+    assert run_git(worktree, "status", "--porcelain") == ""
+    assert untracked.read_text() == "uncommitted primary file"
+    for checkout in (sandbox.repo, sibling):
+        assert (checkout / "curriculum/fixture.txt").read_text() == "tracked fixture"
+        config = run_git(checkout, "config", "--show-origin", "--list")
+        assert "core.sparsecheckout=true" not in config.lower()
+    assert run_git(sandbox.repo, "config", "--local", "--get", "extensions.worktreeConfig") == "true"
+    if "--full-checkout" not in flags:
+        origin = run_git(worktree, "config", "--show-origin", "--get", "core.sparseCheckout")
+        assert origin.endswith("/config.worktree\ttrue")
+
+
+@pytest.mark.parametrize("redirected", [False, True])
+def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redirects(sandbox, monkeypatch, redirected):
+    tracked = sandbox.repo / "curriculum/tracked.txt"
+    tracked.parent.mkdir()
+    tracked.write_text("tracked primary file")
+    run_git(sandbox.repo, "add", "curriculum")
+    run_git(sandbox.repo, "commit", "-m", "excluded tree")
+    untracked = tracked.with_name("untracked.txt")
+    untracked.write_text("untracked primary file")
+    sha = run_git(sandbox.repo, "rev-parse", "HEAD")
+    path = sandbox.repo / ".worktrees/dispatch/sol/redirects"
+    if redirected:
+        for key, value in {
+            "GIT_DIR": sandbox.repo / ".git", "GIT_WORK_TREE": sandbox.repo,
+            "GIT_COMMON_DIR": sandbox.repo / ".git", "GIT_INDEX_FILE": sandbox.repo / ".git/index",
+        }.items():
+            monkeypatch.setenv(key, str(value))
+    git.create_worktree(sandbox.repo, path, "sol/redirects", sha)
+    if redirected:
+        for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE"):
+            monkeypatch.delenv(key)
+    assert tracked.read_text() == "tracked primary file"
+    assert untracked.read_text() == "untracked primary file"
+    assert not (path / "curriculum").exists()
+    primary = subprocess.run(
+        ["git", "-C", str(sandbox.repo), "config", "--show-origin", "--get", "core.sparseCheckout"],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert (primary.returncode, primary.stdout) == (1, "")
+    assert run_git(path, "config", "--show-origin", "--get", "core.sparseCheckout").endswith("/config.worktree\ttrue")
+    assert run_git(sandbox.repo, "diff", "--cached") == ""
+
+
+@pytest.mark.parametrize("model,state", [
+    ("echo", "done"), ("fail", "failed"), ("crash", "crashed"), ("blocked", "timeout"), ("tree", "cancelled"),
+    ("pushed", "done"),
+])
+def test_settled_clean_read_only_task_worktree_is_reaped_through_the_common_reaper(sandbox, model, state):
+    stub_common_reaper(sandbox)
+    task = sandbox.dispatch(model, "--hard-timeout", "0.2" if state == "timeout" else "0",
+                            "--mode", "workspace-write" if model == "pushed" else "read-only")
+    if state == "cancelled":
+        await_file(sandbox.tasks / f"{task[0]}.grandchild")
+        sandbox.cli("cancel", task[0], "--run-nonce", task[1])
+    sandbox.settle(task, expected=0 if state == "done" else 1)
+    receipt = json.loads(await_file(sandbox.tasks / f"{task[0]}.reaped"))
+    assert receipt["record"]["status"] == state
+    assert receipt["record"]["worktree_dirty_on_exit"] is False
+    assert receipt["record"]["push_state"] == ("pushed" if model == "pushed" else "not_applicable")
+    assert receipt["argv"] == ["--task-id", task[0], "--apply", "--tasks-dir", str(sandbox.tasks)]
+    assert receipt["cwd"] == str(sandbox.repo)
+    assert receipt["alive"] is None
+    assert (sandbox.tasks / f"{task[0]}.reap-calls").read_text() == "called\n"
+
+
+@pytest.mark.parametrize("mode,model", [("read-only", "dirty"), ("workspace-write", "dirty"), ("workspace-write", "unpushed")])
+def test_dirty_or_unpushed_worktree_is_never_reaped(sandbox, mode, model):
+    stub_common_reaper(sandbox)
+    task = sandbox.dispatch(model, "--mode", mode)
+    record = sandbox.settle(task)
+    deadline = time.monotonic() + 5
+    while worker._identity(record["pid"]):
+        assert time.monotonic() < deadline
+        time.sleep(0.02)
+    assert not (sandbox.tasks / f"{task[0]}.reap-calls").exists()
+    assert (Path(record["cwd"]) / "delivered.txt").read_text() == "literal delivered value\n"
+
+
+@pytest.mark.parametrize("dirty,push", [(None, "pushed"), (False, "unknown"), (False, "unpushed")])
+def test_unknown_or_unpushed_delivery_never_starts_a_reaper(tmp_path, monkeypatch, dirty, push):
+    def forbidden():
+        pytest.fail("ineligible delivery forked a reaper")
+    monkeypatch.setattr(worker.os, "fork", forbidden)
+    worker._reap_settled(dict(worktree_dirty_on_exit=dirty, push_state=push, mode="workspace-write"), tmp_path / "task.json")
+
+
+def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatch):
+    identity = worker._identity(os.getpid())
+    record = dict(schema_version=2, status="running", pid=os.getpid(), process_start=identity)
+    identities = iter([identity, f"{identity}-reused"])
+    monkeypatch.setattr(worker.store, "read", lambda *_args: record)
+    monkeypatch.setattr(worker, "_identity", lambda _pid: next(identities))
+    send_signal = Mock()
+    monkeypatch.setattr(worker.signal, "pidfd_send_signal", send_signal)
+    with pytest.raises(ValueError, match="supervisor identity changed; cancellation refused"):
+        worker.cancel("reused-supervisor")
+    send_signal.assert_not_called()
+
+
+def test_reaper_failure_does_not_change_task_status(sandbox):
+    stub_common_reaper(sandbox)
+    sandbox.tasks.mkdir()
+    (sandbox.tasks / "reap-fail").touch()
+    task = sandbox.dispatch()
+    record = sandbox.settle(task)
+    assert record["status"] == "done"
+    path = sandbox.tasks / f"{task[0]}.json"
+    deadline = time.monotonic() + 5
+    while "reap_note" not in record:
+        assert time.monotonic() < deadline
+        time.sleep(0.02)
+        record = json.loads(path.read_text())
+    assert record["status"] == "done"
+    assert record["returncode"] == 0
+    assert record["reap_note"] == "common reaper failed"
+    assert Path(record["cwd"]).is_dir()
+
+
 def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cancel(sandbox):
     task = sandbox.dispatch("blocked")
     pid = int(await_file(sandbox.tasks / f"{task[0]}.started"))
@@ -127,13 +300,63 @@ def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cance
     assert record["status"] == "done"
     assert Path(record["result_file"]).read_text() == "literal final response"
     assert record["returncode"] == 0
+    assert "review_branch" not in record
+    assert "pinned_head" not in record
     assert record["started_at"] <= record["finished_at"]
     assert record["duration_s"] > 0
     assert record["usage"] == {"tokens": 7}
     assert record["result_sha256"] == hashlib.sha256(b"literal final response").hexdigest()
     assert (sandbox.tasks / "logs" / f"{task[0]}.stderr.log").read_text() == "stub stderr\n"
+    assert not {"resolved_model", "resolved_model_known", "resolved_model_source"} & record.keys()
     assert (sandbox.tasks / f"{task[0]}.json").stat().st_mode & 0o777 == 0o600
     assert Path(record["prompt_file"]).stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("models", [[], ["Grok 4.7 256K High"], ["Grok 4.7 256K High", "different"]])
+def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandbox, monkeypatch, models, mode):
+    from scripts.review import record_cf_verdict as recorder
+
+    binary_dir = sandbox.repo.parent / "bin"
+    binary_dir.mkdir()
+    executable = binary_dir / "cursor-agent"
+    events = [{"type": "system", "subtype": "init", "model": model} for model in models]
+    events.append({"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"})
+    stdout = "\n".join(json.dumps(event) for event in events)
+    executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r})\n")
+    executable.chmod(0o755)
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
+    run_git(sandbox.repo, "branch", "review-source")
+    dispatched = sandbox.cli(
+        "dispatch",
+        "--agent",
+        "grok",
+        "--model",
+        "requested-model-is-not-proof",
+        "--prompt",
+        "The prompt claims Grok 4.7 256K High",
+        "--mode",
+        mode,
+        "--branch",
+        "review-source",
+    )
+    record = sandbox.settle(dispatched.stdout.splitlines())
+    known = len(models) == 1
+    assert record["schema_version"] == 2
+    assert record["model"] == "requested-model-is-not-proof"
+    assert record["resolved_model"] == ("Grok 4.7 256K High" if known else "unknown")
+    assert record["resolved_model_known"] is known
+    assert record["resolved_model_source"] == ("cursor-stream-json" if known else "pending")
+    if mode == "read-only":
+
+        def stop_before_forge(*_args):
+            raise recorder.RecordError("synthetic stop before forge")
+
+        monkeypatch.setattr(recorder, "_pr", stop_before_forge)
+        reason = "synthetic stop before forge" if known else "Cursor reviewer model unknown"
+        with pytest.raises(recorder.RecordError, match=reason):
+            recorder.record(record["task_id"], task_root=sandbox.tasks, lock_root=sandbox.tasks / "locks")
 
 
 @pytest.mark.parametrize(
@@ -255,6 +478,33 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
         )
 
 
+@pytest.mark.parametrize("remote_available", [True, False])
+def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remote_available):
+    """Uncommitted work is unpushed even when HEAD matches origin or origin cannot be read."""
+    record = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write"))
+    worktree = Path(record["cwd"])
+    (worktree / "delivered.txt").write_text("uncommitted delivery\n")
+    if not remote_available:
+        run_git(worktree, "remote", "set-url", "origin", str(sandbox.tasks / "missing-remote"))
+    probe = TaskSpec(
+        record["task_id"],
+        "codex",
+        "echo",
+        None,
+        "workspace-write",
+        worktree,
+        Path(record["prompt_file"]),
+        Path(record["result_file"]),
+    )
+    assert git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"]) == {
+        "head_sha": record["head_sha"],
+        "remote_head_sha": record["head_sha"] if remote_available else None,
+        "push_state": "unpushed",
+        "commits_ahead": 1,
+        "worktree_dirty_on_exit": True,
+    }
+
+
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     task = sandbox.dispatch("unpushed", "--mode", "workspace-write")
     first = sandbox.settle(task)
@@ -266,6 +516,8 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
         "echo",
         "--prompt",
         "review",
+        "--pr",
+        "42",
         "--branch",
         first["worktree_branch"],
         "--pinned-head",
@@ -273,6 +525,9 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     )
     review = sandbox.settle(result.stdout.splitlines())
     assert review["worktree_base_sha"] == first["head_sha"]
+    assert review["pinned_head"] == first["head_sha"]
+    assert review["review_branch"] == first["worktree_branch"]
+    assert _review_branch(review) == first["worktree_branch"]
     assert review["worktree_branch"] != first["worktree_branch"]
     assert review["push_state"] == "not_applicable"
     reused = sandbox.dispatch("echo", "--cwd", review["cwd"])
@@ -306,6 +561,59 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox):
     assert run_git(sandbox.repo, "branch", "--list") == before
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--force-new", expected=2)
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--prompt-file", "y", expected=2)
+    for include in ("../curriculum", "site/src", "unknown", ""):
+        sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--sparse-include", include, expected=2)
+    for branch in ("unsafe..branch", "origin/feature", "refs/heads/feature", "bad:name", ""):
+        sandbox.cli(
+            "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x",
+            "--branch", branch, "--pinned-head", run_git(sandbox.repo, "rev-parse", "HEAD"), expected=2,
+        )
+    assert run_git(sandbox.repo, "branch", "--list") == before
+    assert not sandbox.tasks.exists()
+
+
+@pytest.mark.parametrize("contributor", ["on", "off", None])
+def test_muse_cli_forwards_contributor_mode_and_keeps_auditable_record(sandbox, contributor):
+    """Missing CLI options must not silently force explicit contributor requests off."""
+    args = ["dispatch", "--agent", "muse", "--model", "muse-wonder-full-1.0", "--prompt", "public input"]
+    if contributor is not None:
+        args += ["--contributor-mode", contributor]
+    plan = json.loads(sandbox.cli(*args, "--dry-run").stdout)
+    argv = plan["argv"]
+    assert argv[argv.index("--contributor-mode") + 1] == (contributor or "off")
+    assert not sandbox.tasks.exists()
+    assert not Path(plan["worktree"]).exists()
+
+    # Exercise persistence and the detached lifecycle without a paid Muse invocation.
+    shutil.copy(Path(__file__).with_name("stub_provider.py"), sandbox.repo / "scripts/dispatcher/providers/muse.py")
+    run_git(sandbox.repo, "add", "scripts/dispatcher/providers/muse.py")
+    run_git(sandbox.repo, "commit", "-m", "fixture Muse transport")
+    run_git(sandbox.repo, "push", "origin", "main")
+    task = sandbox.cli(*args).stdout.splitlines()
+    record = sandbox.settle(task)
+    assert record["contributor_mode"] == (contributor or "off")
+    assert json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["contributor_mode"] == (contributor or "off")
+
+
+@pytest.mark.parametrize("agent", sorted((set(ALIASES) | set(ALIASES.values()) | {"claude"}) - {"muse"}))
+@pytest.mark.parametrize("contributor", ["on", "off"])
+def test_contributor_mode_refuses_non_muse_agents_without_side_effects(sandbox, agent, contributor):
+    before = run_git(sandbox.repo, "branch", "--list")
+    result = sandbox.cli(
+        "dispatch",
+        "--agent",
+        agent,
+        "--model",
+        "echo",
+        "--prompt",
+        "public input",
+        "--contributor-mode",
+        contributor,
+        expected=2,
+    )
+    assert result.stderr == "dispatcher: --contributor-mode is only supported with --agent muse\n"
+    assert not sandbox.tasks.exists()
+    assert run_git(sandbox.repo, "branch", "--list") == before
 
 
 def test_legacy_archive_is_read_only_and_nonce_checked(tmp_path, monkeypatch):
@@ -338,16 +646,27 @@ def spec(tmp_path):
     return TaskSpec("task", "muse", "model", None, "read-only", tmp_path, prompt, tmp_path / "task.result")
 
 
+def assert_private_input_policy(spec, repo_key, error):
+    if spec.agent == "muse":
+        spec = dataclasses.replace(spec, options={**spec.options, "contributor_mode": "on"})
+        checks.check_private_input(spec, repo_key)
+        argv = muse.build(spec, {}).argv
+        assert argv[argv.index("--contributor-mode") + 1] == "off"
+    else:
+        with pytest.raises(ValueError, match=error):
+            checks.check_private_input(spec, repo_key)
+
+
 @pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
 @pytest.mark.parametrize("classification", [{"role": "private-product"}, {"role": "product", "private": True}])
-def test_private_repo_and_prompt_file_origin_are_refused(spec, private_repos, agent):
+def test_private_repo_and_prompt_origin_cannot_bypass_private_policy(spec, private_repos, agent):
     private, alias = private_repos
     spec = dataclasses.replace(spec, agent=agent)
-    with pytest.raises(ValueError, match="private input"):
-        checks.check_private_input(spec, "private")
+    assert_private_input_policy(spec, "private", "private input")
     for origin in (private / "secret.txt", alias / "secret.txt"):
-        with pytest.raises(ValueError, match="private prompt file"):
-            checks.check_private_input(dataclasses.replace(spec, options={"prompt_file": str(origin)}), "public")
+        assert_private_input_policy(
+            dataclasses.replace(spec, options={"prompt_file": str(origin)}), "public", "private prompt file"
+        )
 
 
 @pytest.fixture
@@ -381,6 +700,38 @@ def private_repos(tmp_path, monkeypatch, classification):
     return private, alias
 
 
+@pytest.mark.parametrize("classification", [{"role": "private-product"}, {"role": "product", "private": True}])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("source", ["repo", "prompt-origin", "symlink-origin", "owned-path", "encoded-identifier"])
+def test_private_muse_never_receives_contributor_on(spec, private_repos, mode, source):
+    private, alias = private_repos
+    options = {"contributor_mode": "on", "unrelated": "preserved"}
+    if source in {"prompt-origin", "symlink-origin"}:
+        root = private if source == "prompt-origin" else alias
+        options["prompt_file"] = str(root / "brief.txt")
+    elif source == "owned-path":
+        spec.prompt_file.write_text(f"Owned paths: {private}/notes.md")
+    elif source == "encoded-identifier":
+        spec.prompt_file.write_text("Owned paths: %56AULT%2dDATA/notes.md")
+    expected_options = {**options, "contributor_mode": "off"}
+    spec = dataclasses.replace(spec, mode=mode, options=options)
+    before = spec.prompt_file.read_bytes()
+
+    checks.check_private_input(spec, "private" if source == "repo" else "public")
+
+    argv = muse.build(spec, {}).argv
+    assert argv[argv.index("--contributor-mode") + 1] == "off"
+    assert spec.options == expected_options
+    assert spec.prompt_file.read_bytes() == before
+
+
+def test_public_muse_contributor_on_is_preserved(spec, private_repos):
+    spec = dataclasses.replace(spec, options={"contributor_mode": "on"})
+    checks.check_private_input(spec, "public")
+    argv = muse.build(spec, {}).argv
+    assert argv[argv.index("--contributor-mode") + 1] == "on"
+
+
 @pytest.mark.parametrize("agent", ["muse", "opencode", "hermes"])
 @pytest.mark.parametrize(
     "prompt",
@@ -391,14 +742,13 @@ def private_repos(tmp_path, monkeypatch, classification):
         pytest.param("Read source:{encoded}", id="encoded-source-private-path"),
     ],
 )
-def test_private_path_equals_and_encoded_source_bypasses_are_refused(spec, private_repos, agent, prompt):
+def test_private_path_equals_and_encoded_source_cannot_bypass_private_policy(spec, private_repos, agent, prompt):
     """Old tokenizer lost the private path after '=' or left source: escapes undecoded."""
     private, _ = private_repos
     prompt = prompt.format(private=private, encoded=str(private / "secret.txt").replace("/", "%2F"))
     spec = dataclasses.replace(spec, agent=agent)
     spec.prompt_file.write_text(prompt)
-    with pytest.raises(ValueError, match="private path"):
-        checks.check_private_input(spec, "public")
+    assert_private_input_policy(spec, "public", "private path")
     assert spec.prompt_file.read_text() == prompt
 
 
@@ -422,8 +772,7 @@ def test_private_identifier_substring_contract(spec, private_repos, agent, promp
     prompt = prompt.format(private=private, encoded=str(private / "secret.txt").replace("/", "%2F"))
     spec = dataclasses.replace(spec, agent=agent)
     spec.prompt_file.write_text(prompt)
-    with pytest.raises(ValueError, match="private path"):
-        checks.check_private_input(spec, "public")
+    assert_private_input_policy(spec, "public", "private path")
     assert spec.prompt_file.read_text() == prompt
 
 
@@ -484,8 +833,7 @@ def test_empty_private_identifiers_do_not_refuse_all_public_prompts(spec, tmp_pa
     spec = dataclasses.replace(spec, agent=agent)
     checks.check_private_input(spec, "public")
     spec.prompt_file.write_text(f"Read {root}/secret.txt")
-    with pytest.raises(ValueError, match="private path"):
-        checks.check_private_input(spec, "public")
+    assert_private_input_policy(spec, "public", "private path")
 
 
 @pytest.mark.parametrize("character", ["\n", "\u202e", "\u2028"])
@@ -572,6 +920,70 @@ def test_environment_contains_only_context_and_selected_auth(spec, monkeypatch, 
         env = child_env(dataclasses.replace(spec, agent="claude", claude_account=account))
         assert env["CLAUDE_CONFIG_DIR"] == str(tmp_path / directory)
         assert "MUSE_API_KEY" not in env
+
+
+def test_cursor_child_env_present_process_key_wins_over_env_file(spec, monkeypatch):
+    loader = Mock(return_value="stub-file-key")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.setenv("CURSOR_API_KEY", "stub-process-key")
+
+    env = child_env(dataclasses.replace(spec, agent="cursor"))
+
+    assert env["CURSOR_API_KEY"] == "stub-process-key"
+    loader.assert_not_called()
+
+
+@pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
+def test_cursor_child_env_missing_or_blank_process_key_falls_back_to_env_file(spec, monkeypatch, process_key):
+    loader = Mock(return_value="stub-file-key")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
+
+    env = child_env(dataclasses.replace(spec, agent="cursor"))
+
+    assert env["CURSOR_API_KEY"] == "stub-file-key"
+    assert os.environ.get("CURSOR_API_KEY") == process_key
+    loader.assert_called_once_with()
+
+
+@pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
+def test_cursor_child_env_missing_or_blank_key_without_file_key_forwards_nothing(spec, monkeypatch, process_key):
+    loader = Mock(return_value=None)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
+
+    assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent="cursor"))
+    loader.assert_called_once_with()
+
+
+@pytest.mark.parametrize("agent", ["codex", "claude", "agy", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("process_key", [None, "stub-process-key", "", " \t\n"])
+def test_non_cursor_child_env_never_loads_or_forwards_cursor_key(spec, monkeypatch, agent, process_key):
+    loader = Mock(return_value="stub-file-key")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
+
+    assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent=agent))
+    loader.assert_not_called()
+
+
+def test_cursor_child_env_corrupt_invalid_utf8_file_forwards_no_key_without_raising(spec, monkeypatch, tmp_path, capsys):
+    key_file = tmp_path / "api.key.env"
+    key_file.write_bytes(b"CURSOR_API_KEY=stub-\xff-key\n")
+    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._cursor_api_key_env_path", lambda: key_file)
+
+    assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent="cursor"))
+    assert capsys.readouterr() == ("", "")
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():

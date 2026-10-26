@@ -38,6 +38,8 @@ SECURITY_SENSITIVE_PATHS = (
     "scripts/agent_runtime/**",
     "scripts/session_supervisor/**",
     "scripts/delegate.py",
+    "scripts/dispatch.py",
+    "scripts/dispatcher/**",
     "scripts/orchestration/dispatch_admission.py",
     "scripts/api/delegate_router.py",
     "scripts/opsec/**",

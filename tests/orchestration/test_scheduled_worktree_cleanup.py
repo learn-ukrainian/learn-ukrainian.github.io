@@ -1890,3 +1890,30 @@ def test_rescue_diagnostics_do_not_bypass_existing_invocation_guards(tmp_path: P
     assert result["rescue"] is None
     if mode == "unknown_activity":
         assert result["errors"] == ["process-CWD activity probe unavailable; apply skipped"]
+
+
+def test_systemd_timer_does_not_leave_both_root_cleanup_on_four_hour_cadence() -> None:
+    """A slow or randomized timer leaves eligible resources past the hourly sweep."""
+    import configparser
+
+    packaging = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
+    timer = configparser.ConfigParser()
+    timer.read(packaging / "learn-ukrainian-worktree-gc.timer")
+    assert timer["Timer"]["OnCalendar"] == "hourly"
+    assert timer["Timer"].get("RandomizedDelaySec", "0") == "0"
+    assert "OnUnitActiveSec" not in timer["Timer"]
+    assert timer["Timer"]["OnBootSec"] == "15min"
+    assert timer["Timer"]["Persistent"] == "true"
+    assert timer["Timer"]["Unit"] == "learn-ukrainian-worktree-gc.service"
+    service = configparser.ConfigParser()
+    service.read(packaging / "learn-ukrainian-worktree-gc.service")
+    assert service["Service"]["ExecStart"].split() == [
+        "/usr/bin/env",
+        "bash",
+        "@REPO_ROOT@/scripts/orchestration/run_scheduled_worktree_cleanup.sh",
+        "--repo-root",
+        "@REPO_ROOT@",
+        "--repo-root",
+        "@PRIVATE_ROOT@",
+        "--apply",
+    ]

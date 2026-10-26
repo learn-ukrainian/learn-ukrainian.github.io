@@ -3,8 +3,8 @@ Description=Learn Ukrainian worktree garbage collection timer
 
 [Timer]
 OnBootSec=15min
-OnUnitActiveSec=4h
-RandomizedDelaySec=1800
+OnCalendar=hourly
+RandomizedDelaySec=0
 Persistent=true
 Unit=learn-ukrainian-worktree-gc.service
 

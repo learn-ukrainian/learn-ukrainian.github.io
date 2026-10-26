@@ -1,4 +1,4 @@
-"""Exact raw-gh read admission regressions for #9358; synthetic inputs only."""
+"""Raw-gh read forwarding and retained exposure controls; synthetic inputs only."""
 
 import pytest
 
@@ -8,6 +8,87 @@ from scripts.opsec.prepublish import PublishBlocked
 
 def read_api(*args):
     return admit(["api", *args], cwd=".", environment={})
+
+
+def test_pr_revert_mutation_cannot_be_forwarded_as_a_native_read():
+    for args in [["1"], ["1", "--title", "fixture", "--body", "fixture"], ["--repo=unit/public", "1"]]:
+        with pytest.raises(PublishBlocked, match="typed publisher"):
+            admit(["pr", "revert", *args], cwd=".", environment={"GH_REPO": "unit/public"})
+    for args in [["pr", "view", "revert"], ["pr", "list", "--search", "revert"], ["release", "view", "revert"]]:
+        result = admit(args, cwd=".", environment={"GH_REPO": "unit/public"})
+        assert result.argv == args and not result.write
+
+
+@pytest.mark.parametrize("args", [
+    ["release", "delete-asset", "v1", "fixture-asset"],
+    ["release", "delete-asset", "v1", "fixture-asset", "-y"],
+    ["release", "delete-asset", "v1", "fixture-asset", "--yes"],
+    ["repo", "set-default", "unit/public"],
+    ["repo", "set-default", "origin"],
+    ["repo", "set-default"],
+    ["repo", "set-default", "--unset"],
+    ["repo", "set-default", "-u"],
+    ["repo", "set-default", "unit/public", "--view=false"],
+    ["repo", "set-default", "unit/public", "--view", "-v=false"],
+    ["repo", "set-default", "--view", "-uv=false"],
+    ["repo", "set-default", "unit/public", "--", "--view"],
+    ["pr", "update-branch", "1"],
+    ["auth", "setup-git"],
+])
+@pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
+def test_compound_mutators_cannot_bypass_the_typed_write_boundary(args, repo):
+    # Unsupported writes must be refused even when a private repo is selected.
+    with pytest.raises(PublishBlocked, match="typed publisher"):
+        admit(args, cwd=".", environment={"GH_REPO": repo}, reader=lambda *a, **k: pytest.fail("no execution"))
+
+
+@pytest.mark.parametrize("flags", [
+    ["--view"], ["-v"], ["--view=true"], ["--view=1"], ["-v=T"],
+    ["--view=false", "--view"], ["-uv"], ["-vu=false"],
+    ["--view", "--unset"], ["--view", "--", "unit/public"],
+])
+def test_set_default_view_mode_never_becomes_a_raw_write(flags):
+    args = ["repo", "set-default", *flags]
+    result = admit(args, cwd=".", environment={})
+    assert result.argv == args and not result.write
+
+
+def test_nested_mutations_behind_flags_cannot_be_forwarded_as_native_reads():
+    mutations = [
+        ["deploy-key", "add", "synthetic-key-file"],
+        ["deploy-key", "delete", "1"],
+        ["autolink", "create", "FIXTURE-", "https://example.invalid/<num>"],
+        ["autolink", "new", "FIXTURE-", "https://example.invalid/<num>"],
+        ["autolink", "delete", "1"],
+    ]
+    selectors = [
+        [], ["--repo", "unit/public"], ["--repo=unit/public"],
+        ["-R", "unit/public"], ["-Runit/public"], ["-R=unit/public"],
+        ["--help=false", "-R", "unit/public"], ["-h=false", "--repo=unit/public"],
+        ["--repo", "add", "--repo=unit/public"],
+    ]
+    for group, action, *operands in mutations:
+        for selector in selectors:
+            for args in [
+                ["repo", group, *selector, action, *operands],
+                ["repo", group, action, *selector, *operands],
+            ]:
+                with pytest.raises(PublishBlocked, match="typed publisher"):
+                    admit(args, cwd=".", environment={"GH_REPO": "unit/public"})
+    # Native command lookup also accepts value-taking child flags before the action.
+    with pytest.raises(PublishBlocked, match="typed publisher"):
+        admit(["repo", "deploy-key", "--title", "fixture", "add", "synthetic-key-file"], cwd=".", environment={})
+    reads = [
+        ["repo", "deploy-key", "--repo", "add", "list"],
+        ["repo", "deploy-key", "-Rdelete", "list"],
+        ["repo", "deploy-key", "list", "--json", "id", "--jq", "add"],
+        ["repo", "autolink", "--repo=unit/public", "view", "delete"],
+        ["repo", "autolink", "list", "--json", "id", "--template", "create"],
+        ["pr", "list", "--hostname", "example.invalid", "--limit", "invalid"],
+    ]
+    for args in reads:
+        result = admit(args, cwd=".", environment={"GH_REPO": "unit/public"})
+        assert result.argv == args and not result.write
 
 
 @pytest.mark.parametrize("flag", ["-H", "--header"])
@@ -50,18 +131,16 @@ def test_api_hostname_is_refused(flag):
 
 @pytest.mark.parametrize("segment", ["unit%2Fextra", "unit%2fextra", "%2e", "%2E%2e", ".", "..", "..."])
 @pytest.mark.parametrize("position", ["owner", "repo"])
-def test_encoded_separators_and_dot_only_repository_segments_are_refused(segment, position):
+def test_encoded_separators_and_dot_only_repository_segments_reach_gh(segment, position):
     owner, repo = (segment, "public") if position == "owner" else ("unit", segment)
-    with pytest.raises(PublishBlocked):
-        read_api(f"repos/{owner}/{repo}/issues/1")
+    assert not read_api(f'repos/{owner}/{repo}/issues/1').write
 
 
 @pytest.mark.parametrize(
     "path", ["repos/unit/public/branches/feature%2Fextra", "repos/unit/public/commits/ref%2eextra"]
 )
 def test_encoded_dot_or_slash_in_suffix_is_refused(path):
-    with pytest.raises(PublishBlocked):
-        read_api(path)
+    assert not read_api(path).write
 
 
 @pytest.mark.parametrize(
@@ -136,9 +215,8 @@ def test_github_repo_host_remains_allowed_for_reads(cmd):
         "repos/unit/public/compare/..",
     ],
 )
-def test_dot_only_segments_in_read_api_paths_are_refused(path):
-    with pytest.raises(PublishBlocked):
-        read_api(path)
+def test_dot_only_segments_in_read_api_paths_reach_gh(path):
+    assert not read_api(path).write
 
 
 @pytest.mark.parametrize(
@@ -156,8 +234,11 @@ def test_dot_only_segments_in_read_api_paths_are_refused(path):
     ],
 )
 def test_dot_only_segments_in_read_commands_are_refused(cmd):
-    with pytest.raises(PublishBlocked, match="dot-only segments refused"):
-        admit(cmd, cwd=".", environment={})
+    if "--repo" in cmd:
+        with pytest.raises(PublishBlocked, match="dot-only segments refused"):
+            admit(cmd, cwd=".", environment={})
+    else:
+        assert not admit(cmd, cwd=".", environment={}).write
 
 
 @pytest.mark.parametrize(
@@ -211,9 +292,8 @@ def test_url_positional_arguments_allow_github_com(cmd):
         ["run", "view", "-j", ".."],
     ],
 )
-def test_dot_only_segments_in_job_flag_are_refused(cmd):
-    with pytest.raises(PublishBlocked, match="dot-only segments refused"):
-        admit(cmd, cwd=".", environment={})
+def test_dot_only_segments_in_job_flag_reach_gh(cmd):
+    assert not admit(cmd, cwd='.', environment={}).write
 
 
 DIAGNOSTIC_PATHS = [
@@ -245,8 +325,12 @@ def test_diagnostic_get_paths_are_admitted(suffix, prefix, method):
 @pytest.mark.parametrize("method", ["POST", "PATCH", "DELETE", "PUT", "HEAD", "OPTIONS"])
 @pytest.mark.parametrize("flag", ["--method", "-X"])
 def test_diagnostic_non_get_methods_are_refused(suffix, method, flag):
-    with pytest.raises(PublishBlocked):
-        admit(["api", "repos/unit/public/" + suffix, flag, method], cwd=".", environment={}, reader=origin_reader)
+    args = ["api", "repos/unit/public/" + suffix, flag, method]
+    if method in {"HEAD", "OPTIONS"}:
+        assert not admit(args, cwd=".", environment={}, reader=origin_reader).write
+    else:
+        with pytest.raises(PublishBlocked):
+            admit(args, cwd=".", environment={}, reader=origin_reader)
 
 
 @pytest.mark.parametrize(
@@ -260,15 +344,14 @@ def test_diagnostic_non_get_methods_are_refused(suffix, method, flag):
 )
 @pytest.mark.parametrize("flag", ["-f", "-F", "--field", "--raw-field", "--input"])
 @pytest.mark.parametrize("method", [[], ["--method", "GET"]])
-def test_diagnostic_field_flags_are_refused(suffix, flag, method):
+def test_diagnostic_fields_follow_native_method_and_upload_semantics(suffix, flag, method):
     value = "-" if flag == "--input" else "state=fixture"
-    with pytest.raises(PublishBlocked):
-        admit(
-            ["api", "repos/unit/public/" + suffix, *method, flag, value],
-            cwd=".",
-            environment={},
-            reader=origin_reader,
-        )
+    args = ["api", "repos/unit/public/" + suffix, *method, flag, value]
+    if method and flag != "--input":
+        assert not admit(args, cwd=".", environment={}, reader=origin_reader).write
+    else:
+        with pytest.raises(PublishBlocked):
+            admit(args, cwd=".", environment={}, reader=origin_reader)
 
 
 @pytest.mark.parametrize(
@@ -290,31 +373,31 @@ def test_diagnostic_field_flags_are_refused(suffix, flag, method):
         "check-runs/123/rerequest",
     ],
 )
-def test_out_of_pattern_diagnostic_paths_are_refused(suffix):
-    with pytest.raises(PublishBlocked):
-        admit(["api", "repos/unit/public/" + suffix], cwd=".", environment={}, reader=origin_reader)
+def test_out_of_pattern_diagnostic_paths_reach_gh(suffix):
+    assert not admit(['api', 'repos/unit/public/' + suffix], cwd='.', environment={}, reader=origin_reader).write
 
 
 @pytest.mark.parametrize("suffix", DIAGNOSTIC_PATHS)
 @pytest.mark.parametrize(
-    "prefix", ["repos/other/public/", "repos/unit/other/", "https://other.invalid/repos/unit/public/"]
+    "prefix,refused",
+    [
+        ("repos/other/public/", False),
+        ("repos/unit/other/", False),
+        ("https://other.invalid/repos/unit/public/", True),
+    ],
 )
-def test_diagnostic_other_repository_or_host_is_refused(suffix, prefix):
-    with pytest.raises(PublishBlocked):
-        admit(["api", prefix + suffix], cwd=".", environment={}, reader=origin_reader)
+def test_diagnostic_other_repository_or_host_is_refused(suffix, prefix, refused):
+    if refused:
+        with pytest.raises(PublishBlocked):
+            admit(["api", prefix + suffix], cwd=".", environment={}, reader=origin_reader)
+    else:
+        assert not admit(["api", prefix + suffix], cwd=".", environment={}, reader=origin_reader).write
 
 
 @pytest.mark.parametrize("suffix", DIAGNOSTIC_PATHS)
-def test_diagnostic_gh_repo_cannot_override_origin(suffix):
-    with pytest.raises(PublishBlocked):
-        admit(
-            ["api", "repos/other/public/" + suffix],
-            cwd=".",
-            environment={"GH_REPO": "other/public"},
-            reader=origin_reader,
-        )
+def test_diagnostic_gh_repo_does_not_require_origin(suffix):
+    assert not admit(['api', 'repos/other/public/' + suffix], cwd='.', environment={'GH_REPO': 'other/public'}, reader=origin_reader).write
 
 
-def test_diagnostic_unknown_origin_fails_closed():
-    with pytest.raises(PublishBlocked, match="repository refused"):
-        admit(["api", "repos/unit/public/code-scanning/alerts"], cwd=".", environment={}, reader=lambda *a, **k: None)
+def test_diagnostic_unknown_origin_does_not_block_reads():
+    assert not admit(['api', 'repos/unit/public/code-scanning/alerts'], cwd='.', environment={}, reader=lambda *a, **k: None).write

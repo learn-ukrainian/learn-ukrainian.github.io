@@ -228,7 +228,8 @@ The sole ordered landing and cleanup recipe is
 `agents_extensions/shared/rules/workflow.md` § Merge policy. Follow it after
 §6's toolful exact-head cross-family settlement: approval before opening any
 PR, same-head CI before enqueue, non-draft PR, no `--auto`, `--delete-branch`
-or `--admin`, confirm MERGED, then common-reaper cleanup. A moved head voids
+or `--admin`, common-reaper cleanup at successful enqueue, then confirm MERGED
+and complete the separate merged closeout. A moved head voids
 both gates; missing evidence never grants approval.
 
 Immediately before enqueue, run the [core inbox drain](../SKILL.md#the-loop--run-it-every-cycle)
@@ -311,7 +312,25 @@ Missing local proof on a user-visible API/UI change is incomplete closeout. Issu
 never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
 cutover. Claiming prod HA without the operator or advisor GO is out of scope.
 
-## §7a. Post-merge cleanup is mandatory
+## §7a. Enqueue cleanup and separate merged closeout
+
+After a successful enqueue, the shared publisher immediately runs the common
+reaper for clean pushed terminal worktrees bound to that repository, PR head
+branch, exact approved head and canonical creator/cohort. It rechecks current
+queue membership and head, activity, publication and output retrieval before
+removal. Missing or conflicting proof retains the tree with an owner and next
+condition. Already-queued unchanged heads reconcile cleanup without another
+enqueue. Failed or unknown publication never authorizes cleanup.
+
+Publication and cleanup have separate results. Known enqueue success keeps its
+return code and raw transport output. Read the durable common receipt named by
+`enqueue-cleanup removed=<count> retained=<count> receipt=<relative-path>` on
+stderr. Retained, pending or unavailable cleanup blocks full delivery; it does
+not authorize another enqueue. The keeper uses the same publisher path.
+A repair starts in a fresh managed worktree from the pushed branch.
+Local branch removal uses supported safe cleanup only after its tree is gone
+and publication is proven. Remote branches remain until `MERGED`.
+
 
 Follow `agents_extensions/shared/rules/workflow.md` § Merge policy /
 Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, common-reaper

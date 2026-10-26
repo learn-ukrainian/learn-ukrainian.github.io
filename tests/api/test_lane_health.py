@@ -23,6 +23,7 @@ def test_is_spawn_phase_failure():
     # Spawn failure: status failed, non-zero returncode, short duration
     assert is_spawn_phase_failure({"status": "failed", "returncode": 1, "duration_s": 10}) is True
     assert is_spawn_phase_failure({"status": "error", "returncode": 2, "duration_s": 119}) is True
+    assert is_spawn_phase_failure({"schema_version": 2, "status": "crashed", "returncode": -9, "duration_s": 10}) is True
 
     # Long duration -> not a spawn failure
     assert is_spawn_phase_failure({"status": "failed", "returncode": 1, "duration_s": 120}) is False
@@ -103,6 +104,13 @@ def test_compute_lane_health_carries_newest_error_text(tmp_path):
         now - timedelta(minutes=5),
         stderr_excerpt='\x1b[91mError:\x1b[0m {"name": "UnknownError", "ref": "err_new"}',
     )
+    newest_path = tmp_path / "ds-2.json"
+    newest = json.loads(newest_path.read_text())
+    newest.update(schema_version=2, error=newest.pop("stderr_excerpt"))
+    newest_path.write_text(json.dumps(newest))
+    archive = tmp_path / "archive"
+    archive.mkdir()
+    (tmp_path / "ds-1.json").rename(archive / "ds-1.json")
 
     health = compute_lane_health(tmp_path, now=now)
     record = health["deepseek"]
@@ -168,6 +176,10 @@ def test_compute_lane_health_consecutive_failures(tmp_path):
     # Write 2 spawn failures for Claude in window
     _write_task(tmp_path, "task-1", "claude", "failed", 1, 15.0, now - timedelta(minutes=45))
     _write_task(tmp_path, "task-2", "claude", "failed", 2, 20.0, now - timedelta(minutes=15))
+    # An active v2 record with partial exit telemetry cannot reset the streak.
+    _write_task(tmp_path, "active", "claude", "running", 0, 10.0, now - timedelta(minutes=1))
+    active = tmp_path / "active.json"
+    active.write_text(json.dumps({**json.loads(active.read_text()), "schema_version": 2}))
 
     health = compute_lane_health(tmp_path, now=now)
     assert health["claude"]["healthy"] is False
@@ -478,11 +490,15 @@ def test_scan_outcome_distinguishes_idle_observed_from_scan_unavailable(tmp_path
     now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
     _write_task(tmp_path, "c-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=30))
     _write_task(tmp_path, "c-2", "claude", "failed", 1, 10.0, now - timedelta(minutes=10))
+    _write_task(tmp_path, "pending", "cursor", "spawning", None, None, now - timedelta(minutes=1))
+    _write_task(tmp_path, "incomplete", "gemini", "crashed", None, None, now - timedelta(minutes=1))
     scan = scan_lane_health(tmp_path, now=now)
     assert scan.observed is True
     assert scan.records == compute_lane_health(tmp_path, now=now)
     assert scan.health_for("claude")["healthy"] is False
     assert scan.health_for("claude")["basis"] == BASIS_RECENT_TASKS
+    assert scan.health_for("cursor")["healthy"] is None
+    assert scan.health_for("gemini")["healthy"] is None
     idle = scan.health_for("codex")
     assert idle["healthy"] is True and idle["basis"] == BASIS_SCAN_OBSERVED_IDLE
 
