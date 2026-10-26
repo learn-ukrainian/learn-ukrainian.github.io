@@ -379,7 +379,7 @@ def test_archive_between_digest_and_record_does_not_recreate_the_hot_record(
         # The sweep already holds the checkout lock. Archive takes that same
         # lock; this call drops it so the move lands between the digest write
         # and the record write, which is the interleaving under test.
-        monkeypatch.setattr(delegate, "worktree_lock", lambda *_args, **_kwargs: contextlib.nullcontext())
+        monkeypatch.setattr(stale_task_records, "worktree_lock", lambda *_args, **_kwargs: contextlib.nullcontext())
         stale_task_records.archive_terminal(tasks, min_age_days=0, apply=True, now=NOW)
 
     report = plan_retention(root, min_age_days=0, apply=True, now=NOW, on_after_digest=_archive_midway)
