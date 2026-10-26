@@ -35,8 +35,8 @@ def muse_env(tmp_path: Path) -> dict[str, str]:
         "gh": (
             '[ "${MUSE_TEST_GH_RC:-0}" = 0 ] || exit "$MUSE_TEST_GH_RC"\n'
             '[ -z "${GH_REPO:-}${GITHUB_REPOSITORY:-}" ] || exit 98\n'
-            "printf 'HTTP/2 200 OK\\r\\nContent-Type: application/json\\r\\n\\r\\n"
-            '{"visibility":"%s"}\\n\' "${MUSE_TEST_VISIBILITY:-PUBLIC}"'
+            '[ "$*" = "repo view --json visibility --jq .visibility" ] || exit 97\n'
+            'printf "%s\\n" "${MUSE_TEST_VISIBILITY:-PUBLIC}"'
         ),
     }.items():
         binary = bindir / name

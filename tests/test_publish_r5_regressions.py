@@ -58,22 +58,35 @@ def test_listed_rest_read_reaches_transport(caller, args, tmp_path):
     assert result.returncode == 0 and calls == [["gh", *args]]
 
 
-@pytest.mark.parametrize("args", [
-    ["api", "repos/unit/public/issues/1", "-X", "POST"],
-    ["api", "repos/unit/public/issues/1", "--method=GET", "-X=POST"],
-    ["api", "repos/unit/public/issues/1", "-XGET"],
-    ["api", "repos/unit/public/issues/1", "--field=x=y"],
-    ["api", "repos/unit/public/issues/1", "--raw-field=x=y"],
-    ["api", "repos/unit/public/issues/1", "--input=-"],
-    ["api", "repos/unit/public/issues/1", "-f", "x=y"],
-    ["api", "repos/unit/public/issues/1", "-F", "x=y"],
-    ["api", "graphql", "-f", "query=query{x}"],
-    ["api", "repos/unit/public/unknown/endpoint"],
-    ["api", "https://other.invalid/repos/unit/public/issues/1"],
+@pytest.mark.parametrize("args,read", [
+    (["api", "repos/unit/public/issues/1", "-X", "POST"], False),
+    (["api", "repos/unit/public/issues/1", "--method=GET", "-X=POST"], False),
+    (["api", "repos/unit/public/issues/1", "-XGET"], True),
+    (["api", "repos/unit/public/issues/1", "--field=x=y"], False),
+    (["api", "repos/unit/public/issues/1", "--raw-field=x=y"], False),
+    (["api", "repos/unit/public/issues/1", "--input=-"], False),
+    (["api", "repos/unit/public/issues/1", "-f", "x=y"], False),
+    (["api", "repos/unit/public/issues/1", "-F", "x=y"], False),
+    (["api", "graphql", "-f", "query=query{x}"], True),
+    (["api", "repos/unit/public/unknown/endpoint"], True),
+    (["api", "https://other.invalid/repos/unit/public/issues/1"], False),
 ])
-def test_rest_read_grammar_never_admits_write_fields(args, tmp_path):
-    with pytest.raises(gate.PublishBlocked):
-        gate.checked_run(["gh", *args], cwd=tmp_path, env={}, runner=lambda *a, **k: pytest.fail("send"))
+def test_native_reads_preserve_semantics_and_public_writes_remain_refused(args, read, tmp_path):
+    """Retired read inventories must not refuse GET/query forms or admit public writes/uploads."""
+    calls = []
+
+    def transport(argv, **kwargs):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, 7, "native output", "native diagnostic")
+
+    if read:
+        result = gate.checked_run(["gh", *args], cwd=tmp_path, env={}, runner=transport)
+        assert calls == [["gh", *args]]
+        assert (result.returncode, result.stdout, result.stderr) == (7, "native output", "native diagnostic")
+    else:
+        with pytest.raises(gate.PublishBlocked):
+            gate.checked_run(["gh", *args], cwd=tmp_path, env={}, runner=transport)
+        assert calls == []
 
 
 @pytest.mark.parametrize("flag", ["-t", "-t=true", "-t=false", "-t=1", "-ttrue", "-t1", "-at", "--show-token", "--show-token=true", "--show-token=false", "--show-token=1"])

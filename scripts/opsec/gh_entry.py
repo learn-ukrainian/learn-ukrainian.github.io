@@ -27,7 +27,10 @@ def main() -> int:
         print(str(exc), file=sys.stderr)
         return 2
     except Exception:
-        if frozen is not None and not frozen.write:
+        if frozen is None:
+            print("OPSEC: command admission failed; verify repository and flags.", file=sys.stderr)
+            return 2
+        if not frozen.write:
             print("OPSEC: read command failed; verify repository and flags.", file=sys.stderr)
             return 2
         print("OPSEC: publishing input unresolved; use explicit repository and --body-file.", file=sys.stderr)
