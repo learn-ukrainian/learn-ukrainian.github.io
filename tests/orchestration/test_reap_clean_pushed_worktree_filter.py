@@ -15,6 +15,7 @@ from typing import Any
 import pytest
 
 from scripts.orchestration import reap_worktrees as rw
+from tests.orchestration.test_reap_worktrees_clean_pushed import write_task
 
 
 def git(cwd: Path, *args: str) -> str:
@@ -96,6 +97,7 @@ def dispatch_tree(repo: Path, name: str, *, agent: str = "codex") -> Path:
     tree = repo / ".worktrees" / "dispatch" / agent / name
     tree.parent.mkdir(parents=True, exist_ok=True)
     git(repo, "worktree", "add", "-b", f"{agent}/{name}", str(tree), "main")
+    write_task(repo, f"{agent}-{name}", tree)
     age_tree(tree)
     return tree
 
@@ -195,6 +197,7 @@ def test_cli_without_filter_keeps_existing_report(repo: Path, capsys: pytest.Cap
             "task_status": None,
             "size_mb": None,
             "freed_bytes": 0,
+            "preserved_artifacts": None,
         }
     ]
     assert set(report) == {
@@ -545,6 +548,7 @@ def test_quarantine_recovery_respects_selection(
             "task_status": None,
             "size_mb": None,
             "freed_bytes": 0,
+            "preserved_artifacts": None,
         }
         assert b.exists() is apply
         assert holder.exists() is not apply

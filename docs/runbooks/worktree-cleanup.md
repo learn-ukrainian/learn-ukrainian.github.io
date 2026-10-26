@@ -27,6 +27,25 @@ Dispatch worktrees receive `node_modules` and `site/node_modules` as symlinks in
 
 Every npm/npx call through the shim runs with umask 022 to prevent the tree from becoming group-writable. The refusal message from the ACP adapter prints the exact corrective command class.
 
+## Cleanup at enqueue
+
+After a successful enqueue, the shared publisher immediately runs the common
+reaper for clean pushed terminal worktrees bound to that repository, PR head
+branch, exact approved head and canonical creator/cohort. It rechecks current
+queue membership and head, activity, publication and output retrieval before
+removal. Missing or conflicting proof retains the tree with an owner and next
+condition. Already-queued unchanged heads reconcile cleanup without another
+enqueue. Failed or unknown publication never authorizes cleanup.
+
+Publication and cleanup have separate results. Known enqueue success keeps its
+return code and raw transport output. Read the durable common receipt named by
+`enqueue-cleanup removed=<count> retained=<count> receipt=<relative-path>` on
+stderr. Retained, pending or unavailable cleanup blocks full delivery; it does
+not authorize another enqueue. The keeper uses the same publisher path.
+A repair starts in a fresh managed worktree from the pushed branch.
+Local branch removal uses supported safe cleanup only after its tree is gone
+and publication is proven. Remote branches remain until `MERGED`.
+
 ## Safety contract
 
 Every Git-based worktree removal preserves ignored output at the sole raw
@@ -477,7 +496,7 @@ PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir
 For regular dispatch worktrees, `post_task_reap` delegates automatic removal
 to this same P0 reaper rather than maintaining a second deletion path.
 
-## Clean, fully pushed, idle dispatch worktrees (#10778)
+## Clean, fully pushed, inactive dispatch worktrees (#10778)
 
 The classes above retain many finished dispatch checkouts that hold nothing
 Git does not already keep (`unknown ownership`, `needs_finalize`), and they
@@ -514,7 +533,8 @@ third time after the checkout is moved into the quarantine (below):
 - HEAD is unchanged since the listing, `git status --porcelain
   --untracked-files=all` is empty (no change, no untracked file) and HEAD is
   proven published by the origin census; a detached HEAD at a commit
-  contained in an advertised branch or tag counts as pushed;
+  contained in a currently advertised branch counts as pushed. A tag alone
+  does not establish HEAD eligibility;
 - no file flagged `assume-unchanged` or `skip-worktree` differs from the index.
   `git status` and `git worktree remove` both trust those flags, so the reaper
   hashes each flagged file that exists on disk (its raw bytes, or its symlink
@@ -585,11 +605,15 @@ third time after the checkout is moved into the quarantine (below):
   worker that is live or unknown. `needs_finalize` and finished records pass
   once their worker is proven gone. A record that cannot be read, or cannot be
   parsed and may name the checkout, refuses;
-- the newest of the checkout's `HEAD` and `index` mtimes, the newest
+- a canonical creator and settled reuse cohort bind the actual directory,
+  recorded path and branch, creation inventory and run nonce. Missing or
+  conflicting creator proof retains the tree. No PR state or minimum idle
+  interval is required once positive inactivity is proven;
+- the checkout's `HEAD` and `index` mtimes, the newest
   committer timestamp among every `logs/HEAD` entry (seconds since the
   epoch, the field before the timezone), the time a change in that file's
   bytes was last observed, and every claiming task record, including
-  `<task>.json`, is more than 60 minutes old. The reflog read is bounded at
+  `<task>.json`, must be inspectable. The reflog read is bounded at
   1 MiB; a larger file is activity unknown. The file's mtime is not
   activity: `git gc` rewrites it without changing entries. A missing,
   empty, unreadable, non-regular, unparseable, or out-of-range `logs/HEAD`

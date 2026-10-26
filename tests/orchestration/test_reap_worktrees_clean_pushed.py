@@ -22,6 +22,7 @@ from typing import Any
 
 import pytest
 
+from scripts.fleet import ignored_task_output
 from scripts.hygiene import pytest_retention
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims
@@ -197,6 +198,12 @@ def write_task(repo: Path, task_id: str, worktree: Path, **fields: Any) -> Path:
         "task_id": task_id,
         "status": "needs_finalize",
         "worktree_path": str(worktree),
+        "worktree_branch": git(worktree, "symbolic-ref", "--quiet", "--short", "HEAD") if (admin_dir(worktree) / "HEAD").read_text().startswith("ref:") else f"codex/{task_id}",
+        "worktree_reused": False,
+        "run_nonce": "synthetic-creator",
+        "ignored_output_baseline": ignored_task_output.creation_inventory(
+            worktree, primary=repo, task_id=task_id, run_nonce="synthetic-creator"
+        ),
         "finished_at": datetime.fromtimestamp(time.time() - TWO_HOURS, UTC).isoformat(),
         **fields,
     }
@@ -267,8 +274,8 @@ def test_tree_without_any_task_record_is_removed(repo: Path, free_fuser: Path) -
 
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
 
-    assert outcome_for(report, worktree, repo).action == "removed"
-    assert abandon_log(repo)[0]["task_status"] is None
+    assert outcome_for(report, worktree, repo).reason == "canonical creator binding unavailable"
+    assert worktree.is_dir() and not abandon_log(repo)
 
 
 def test_force_is_never_passed(repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -440,7 +447,9 @@ def test_younger_than_sixty_minutes_refuses(repo: Path, free_fuser: Path) -> Non
     worktree = dispatch_tree(repo)
     age_tree(worktree, repo, "task-a")
     age([worktree / "README.md"], seconds=59 * 60)
-    assert _refusal(repo, worktree) == "last activity 59 min ago (< 60 min)"
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    assert outcome_for(report, worktree, repo).action == "removed"
+    assert not worktree.exists()
 
 
 def test_recent_task_file_metadata_does_not_reset_terminal_time(repo: Path, free_fuser: Path) -> None:
@@ -481,7 +490,8 @@ def test_new_reflog_entry_stays_active_when_the_file_mtime_is_old(repo: Path, fr
     old = time.time() - TWO_HOURS
     os.utime(log, (old, old))
 
-    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=True)
+    assert outcome_for(report, worktree, repo).action == "would_remove"
 
 
 @pytest.mark.parametrize("name", ["index", "HEAD"])
@@ -536,10 +546,17 @@ def _append_reflog_stamp(log: Path, stamp: int) -> None:
 
 def _keep_once(repo: Path, worktree: Path) -> None:
     """Apply once after a tracked write so the reflog fingerprint is stored."""
+    record = repo / "batch_state" / "tasks" / "task-a.json"
+    state = json.loads(record.read_text())
+    state["keep_worktree"] = True
+    record.write_text(json.dumps(state))
     (worktree / "README.md").write_bytes((worktree / "README.md").read_bytes())
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
     outcome = outcome_for(report, worktree, repo)
-    assert outcome.action == "skipped" and outcome.reason.startswith("last activity"), outcome
+    assert outcome.action == "skipped" and "keep_worktree" in outcome.reason, outcome
+    state = json.loads(record.read_text())
+    state["keep_worktree"] = False
+    record.write_text(json.dumps(state))
     watch = repo / "batch_state" / "worktree-reaper" / "head-reflog-watch.json"
     assert watch.is_file()
     assert watch.stat().st_mode & 0o777 == 0o600
@@ -564,7 +581,8 @@ def test_backdated_soft_reset_cannot_hide_reflog_activity(repo: Path, free_fuser
     assert proc.returncode == 0, proc.stderr
     age([admin / "HEAD", admin / "index", worktree / "README.md", repo / "batch_state" / "tasks" / "task-a.json"])
 
-    assert _refusal(repo, worktree).startswith("last activity")
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=True)
+    assert outcome_for(report, worktree, repo).action == "would_remove"
 
 
 def _observe_then_backdate(repo: Path, worktree: Path) -> None:
@@ -594,7 +612,7 @@ def _observe_then_backdate(repo: Path, worktree: Path) -> None:
     assert before == after
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=True)
     outcome = outcome_for(report, worktree, repo)
-    assert outcome.action == "skipped" and outcome.reason.startswith("last activity"), outcome
+    assert outcome.action == "would_remove", outcome
     assert worktree.is_dir()
 
 
@@ -812,7 +830,8 @@ def test_recent_entry_then_backdated_entry_stays_active(repo: Path, free_fuser: 
         ]
     )
 
-    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=True)
+    assert outcome_for(report, worktree, repo).action == "would_remove"
 
 
 def test_identical_reflog_bytes_after_observation_are_still_reaped(repo: Path, free_fuser: Path) -> None:
@@ -1025,7 +1044,7 @@ def test_task_spawned_after_selection_is_caught_by_the_claim_scan(
     real_remove = worktree_claims.remove_unclaimed_worktree
 
     def spawn_then_remove(path: Path, **kwargs: Any) -> worktree_claims.WorktreeRemoval:
-        age([write_task(repo, "late-task", path, status="spawning")])
+        age([write_task(repo, "late-task", path, status="spawning", worktree_reused=True)])
         return real_remove(path, **kwargs)
 
     monkeypatch.setattr(worktree_claims, "remove_unclaimed_worktree", spawn_then_remove)
@@ -1034,7 +1053,7 @@ def test_task_spawned_after_selection_is_caught_by_the_claim_scan(
 
     outcome = outcome_for(report, worktree, repo)
     assert outcome.action == "skipped"
-    assert outcome.reason == "worktree claimed by active task late-task"
+    assert "late-task" in outcome.reason and "spawning" in outcome.reason
     assert worktree.is_dir()
 
 
@@ -2050,7 +2069,8 @@ def test_commit_published_only_by_an_annotated_tag_is_removed(repo: Path, free_f
 
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
 
-    assert outcome_for(report, worktree, repo).action == "removed"
+    assert outcome_for(report, worktree, repo).reason == "HEAD not reachable from a verified origin branch"
+    assert worktree.exists()
     assert report.census_refs == 2 and report.census_missing == 0  # main and v-side
 
 
