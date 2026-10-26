@@ -1231,6 +1231,49 @@ def test_reap_pending_reservation_blocks_canonical_prefixed_path(hermetic_reap):
     assert worktree.exists()
 
 
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux zombie process state")
+def test_zombie_supervisor_does_not_keep_a_clean_settled_tree(hermetic_reap, monkeypatch):
+    repo_root, _ = hermetic_reap
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
+    task_id = "zombie-supervisor"
+    worktree = _add_dispatch_worktree(repo_root, "kimi", task_id)
+    child = subprocess.Popen([sys.executable, "-c", "pass"])
+    try:
+        os.waitid(os.P_PID, child.pid, os.WEXITED | os.WNOWAIT)
+        os.kill(child.pid, 0)
+        assert post_task_reap._pid_alive(child.pid) is False
+        _write_task_state(tasks_dir, task_id, "done", worktree, pid=child.pid)
+        report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+        assert report["main_worktree"]["action"] == "removed", report["main_worktree"]
+        assert not worktree.exists()
+    finally:
+        child.wait(timeout=10)
+
+
+@pytest.mark.parametrize("state,alive", [("Z", False), ("S", True), ("R", True)])
+def test_zombie_supervisor_liveness_handles_parentheses_in_process_name(monkeypatch, state, alive):
+    monkeypatch.setattr(post_task_reap.os, "kill", lambda *_args: None)
+    monkeypatch.setattr(Path, "read_text", lambda *_args, **_kwargs: f"123 (task ) supervisor) {state} 1 2")
+    assert post_task_reap._pid_alive(123) is alive
+
+
+@pytest.mark.parametrize("entry", [PermissionError(), FileNotFoundError(), UnicodeError(), "broken", "123 (task)"])
+def test_zombie_supervisor_unreadable_or_malformed_proc_entry_retains_live_pid(monkeypatch, entry):
+    monkeypatch.setattr(post_task_reap.os, "kill", lambda *_args: None)
+    def read_stat(*_args, **_kwargs):
+        if isinstance(entry, Exception):
+            raise entry
+        return entry
+    monkeypatch.setattr(Path, "read_text", read_stat)
+    assert post_task_reap._pid_alive(123) is True
+
+
+def test_zombie_supervisor_fix_keeps_a_live_pid_alive():
+    assert post_task_reap._pid_alive(os.getpid()) is True
+
+
 def test_main_worktree_retain_when_pid_alive(hermetic_reap, monkeypatch):
     repo_root, tasks_dir = hermetic_reap
     worktree = _add_dispatch_worktree(repo_root, "kimi", "pid-alive-task")

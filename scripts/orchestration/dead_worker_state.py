@@ -34,6 +34,17 @@ def _process_stat(process: str) -> tuple[int, int]:
     return int(text.split("(", 1)[0]), int(text.rsplit(")", 1)[1].split()[19])
 
 
+def process_is_zombie(pid: int) -> bool:
+    """Only readable Linux state Z proves exit; unavailable stat retains the PID."""
+    try:
+        text = (PROC_ROOT / str(pid) / "stat").read_text(encoding="ascii")
+        process, fields = text.rsplit(")", 1)
+        raw_pid, _comm = process.split("(", 1)
+        return int(raw_pid) == pid and fields.split()[0] == "Z"
+    except (OSError, ValueError, IndexError):
+        return False
+
+
 def _proc_pid_namespace() -> str | None:
     """Confirm the initial PID view, or identify the procfs view's PID 1.
 
@@ -129,12 +140,13 @@ def worker_liveness(
             return None
         if type(identity.get("start_time")) is not int:
             return None
-        return actual_pid == pid and start == identity["start_time"]
+        return actual_pid == pid and start == identity["start_time"] and not process_is_zombie(pid)
     if namespace != INITIAL_PID_NAMESPACE or view != namespace:
         return None
     try:
         if pid_alive is not None:
-            return pid_alive(pid)
+            alive = pid_alive(pid)
+            return alive if alive is not True else not process_is_zombie(pid)
         os.kill(pid, 0)
     except ProcessLookupError:
         return False
@@ -142,7 +154,7 @@ def worker_liveness(
         return True
     except OSError:
         return None
-    return True
+    return not process_is_zombie(pid)
 
 
 @contextmanager

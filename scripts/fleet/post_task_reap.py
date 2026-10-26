@@ -39,6 +39,7 @@ from scripts.orchestration import (
     worktree_claims,
     worktree_paths,
 )
+from scripts.orchestration.dead_worker_state import process_is_zombie
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -232,7 +233,7 @@ def _git_worktree_lock_reason(path: Path, repo_root: Path) -> str | None:
 
 
 def _pid_alive(pid: int) -> bool | None:
-    """Return True if ``pid`` is alive, False if dead, None if probe failed.
+    """Return True if ``pid`` is alive, False if dead/zombie, None if probe failed.
 
     Fail-closed callers must treat ``None`` as 'retain'.
     """
@@ -246,7 +247,7 @@ def _pid_alive(pid: int) -> bool | None:
         return True
     except OSError:
         return None
-    return True
+    return not process_is_zombie(pid)
 
 
 def _probe_path_liveness(path: Path) -> bool | None:
