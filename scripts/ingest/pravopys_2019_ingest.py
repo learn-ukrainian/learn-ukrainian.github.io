@@ -46,7 +46,10 @@ except ImportError:  # pragma: no cover - direct script execution
         vesum_word_predicate,
     )
 
-USER_AGENT = "learn-ukrainian-pravopys-ingest/1.0 (noncommercial educational corpus; issue 9610)"
+USER_AGENT = (
+    "learn-ukrainian-pravopys-ingest/1.0 (noncommercial educational corpus; issue 9610; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 
 
 def file_sha256(path: Path) -> str:
