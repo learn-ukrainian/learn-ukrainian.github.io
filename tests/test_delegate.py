@@ -1231,6 +1231,7 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
         path,
         {
             "task_id": "wait-zombie",
+            "schema_version": 2,
             "status": "running",
             "pid": 999_999_998,
             "started_at": "2026-04-10T12:00:00+00:00",
@@ -2431,6 +2432,7 @@ def test_zombie_probes_record_final_worktree_head(tmp_tasks_dir, tmp_path, monke
         state_path,
         {
             "task_id": f"{probe}-head",
+            "schema_version": 2,
             "agent": "codex",
             "status": "running",
             "pid": 999_999_998,
@@ -3014,6 +3016,7 @@ def test_zombie_detection_works_on_pid_before_worker_writes(tmp_tasks_dir, capsy
         path,
         {
             "task_id": "early-crash",
+            "schema_version": 2,
             "status": "spawning",
             "pid": 999_999_997,  # parent wrote this, worker never ran
         },
@@ -12201,7 +12204,7 @@ def test_list_preserves_dead_running_record(tmp_tasks_dir, capsys):
 
 def test_zombie_probe_preserves_done_written_after_initial_read(tmp_tasks_dir):
     path = delegate._state_path("race")
-    running = {"task_id": "race", "status": "running", "pid": 999_999_998, "run_nonce": "same-run"}
+    running = {"schema_version": 2, "task_id": "race", "status": "running", "pid": 999_999_998, "run_nonce": "same-run"}
     delegate._write_state_atomic(path, running)
     observed = delegate._read_state(path)
     done = {
@@ -16216,7 +16219,7 @@ def test_settle_zombie_with_unpushed_commit_is_rescue_candidate(tmp_path, monkey
 
     primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
     state = delegate._read_state(state_path)
-    state.update({"status": "running", "pid": 999_999_998, "finished_at": None})
+    state.update({"schema_version": 2, "status": "running", "pid": 999_999_998, "finished_at": None})
     delegate._write_state_atomic(state_path, state)
     monkeypatch.setattr(ds, "default_ledger_path", lambda: tmp_path / "ownership.sqlite3")
     monkeypatch.setattr(ds, "_find_pr", lambda *_args: (None, None))
@@ -23609,6 +23612,7 @@ def test_namespace_readonly_dead_worker_record_is_byte_identical(tmp_tasks_dir, 
 @pytest.mark.parametrize("reused", [False, True])
 def test_namespace_owner_sweep_marks_proven_dead_worker(tmp_tasks_dir, reused):
     state = _namespace_worker_record(reused=reused)
+    state["schema_version"] = 2
     path = delegate._state_path(state["task_id"])
     delegate._write_state_atomic(path, state)
     delegate._heal_dead_task(path, state, source="admission")

@@ -362,6 +362,8 @@ def test_force_admission_requires_a_reason(tasks_dir, capsys):
 
 def test_admission_sweeps_dead_workers_to_crashed_and_frees_their_slot(tasks_dir, monkeypatch):
     dead = _running_record(tasks_dir, "dead-writer", pid=424242)
+    record = json.loads(dead.read_text(encoding="utf-8"))
+    dead.write_text(json.dumps({**record, "schema_version": 2}), encoding="utf-8")
     _running_record(tasks_dir, "live-writer", pid=515151)
     monkeypatch.setattr(delegate, "_pid_alive", lambda pid: pid == 515151)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "2")
@@ -897,6 +899,7 @@ def test_admission_marks_a_record_whose_dispatcher_died_crashed(tasks_dir, block
         json.dumps(
             {
                 "task_id": "orphan",
+                "schema_version": 2,
                 "run_nonce": "nonce-orphan",
                 "status": "spawning",
                 "pid": None,

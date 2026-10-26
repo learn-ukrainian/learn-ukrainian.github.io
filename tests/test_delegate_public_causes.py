@@ -379,6 +379,7 @@ def test_a_raw_reason_assigned_in_memory_during_status_is_persisted_as_a_typed_c
     path = delegate._state_path(task_id)
     record = {
         "task_id": task_id,
+        "schema_version": 2,
         "status": "spawning",
         "pid": None,
         "run_nonce": "nonce-1",
@@ -409,7 +410,8 @@ def test_a_raw_reason_already_on_disk_is_replaced_when_wait_heals_the_record(mon
     task_id = "sink-status-disk"
     path = delegate._state_path(task_id)
     path.write_text(
-        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999, "last_error": HOSTILE}), encoding="utf-8"
+        json.dumps({"schema_version": 2, "task_id": task_id, "status": "running", "pid": 999_999, "last_error": HOSTILE}),
+        encoding="utf-8",
     )
     monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
 
