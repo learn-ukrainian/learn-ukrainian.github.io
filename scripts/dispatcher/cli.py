@@ -192,6 +192,7 @@ def _dispatch(args) -> int:
             raise ValueError("protected subject scope needs a code-profile review without --language-lane")
     checks.check_resources((worktree, path.parent))
     if args.dry_run:
+        # The real run re-checks child_env after worktree creation in worker.py.
         invocation = providers.load(agent).build(spec, child_env(spec))
         print(json.dumps(dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path)), indent=2))
         return 0

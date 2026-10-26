@@ -98,7 +98,16 @@ def _spec(record: dict, options: dict) -> TaskSpec:
 
 
 def _reap_settled(record: dict, path: Path) -> None:
-    if record["worktree_dirty_on_exit"] is not False or record["push_state"] != (
+    # The sole caller persists terminal status before this call, so no retry is needed.
+    if record.get("status") not in {
+        "done", "failed", "timeout", "rate_limited", "cancelled", "crashed",
+        "dry_run", "needs_finalize", "no_deliverable",
+    }:
+        record["reap_note"] = f"common reaper skipped: task status is not terminal ({record.get('status')})"
+        with contextlib.suppress(OSError):
+            store.replace(record, path)
+        return
+    if record.get("worktree_dirty_on_exit") is not False or record.get("push_state") != (
         "not_applicable" if record["mode"] == "read-only" else "pushed"
     ):
         return
@@ -189,6 +198,17 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             status = "crashed"
         if status != "done":
             error = "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+        if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
+            try:
+                from scripts.review.verdict_parser import recognized_verdicts
+
+                verdicts = set(recognized_verdicts(text))
+                if not verdicts:
+                    status, error = "failed", "review_missing_verdict_line"
+                elif len(verdicts) > 1:
+                    status, error = "failed", "review_ambiguous_verdict"
+            except Exception:
+                status, error = "failed", "review_gate_error"
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
     except subprocess.TimeoutExpired:

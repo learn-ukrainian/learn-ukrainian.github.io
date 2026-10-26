@@ -16,7 +16,6 @@ Orphaned ``.worktrees/**`` directories are reported but never deleted.
 from __future__ import annotations
 
 import argparse
-import base64
 import fcntl
 import hashlib
 import json
@@ -26,7 +25,6 @@ import stat
 import subprocess
 import sys
 import tempfile
-import time
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -41,6 +39,8 @@ from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import backup_failure_alert, disk_watermark_alert, reap_worktrees
+from scripts.orchestration.execution_safe_git import run_git as safe_git
+from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
@@ -468,70 +468,69 @@ def _delete_origin_branch(
     return None
 
 
-# A rescue row that could not run because the driver GitHub identity is not
-# available to the timer. The worktree is left in place, so this is reported
-# as a hard warning instead of failing the unit on every run.
-RESCUE_IDENTITY_UNAVAILABLE = "rescue_identity_unavailable"
-RESCUE_DIAGNOSTIC_LIMIT = 16 * 1024
+def _inspect_terminal_git(worktree: Path, *args: str) -> str:
+    return safe_git(
+        list(args),
+        cwd=worktree,
+        integrity=True,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    ).stdout.strip()
 
 
-def _rescue_evidence(value: bytes | str | None) -> dict[str, Any]:
-    """Keep an exact bounded prefix in the private receipt, including binary output."""
-    content = value.encode("utf-8", errors="surrogatepass") if isinstance(value, str) else value
-    if content is None:
-        return {"available": False}
-    retained = content[:RESCUE_DIAGNOSTIC_LIMIT]
-    return {
-        "available": True,
-        "bytes": len(content),
-        "retained_bytes": len(retained),
-        "truncated": len(retained) < len(content),
-        "sha256": hashlib.sha256(retained).hexdigest(),
-        "observed_sha256": hashlib.sha256(content).hexdigest(),
-        "base64": base64.b64encode(retained).decode("ascii"),
-    }
+def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
+    """Inventory old terminal work without preserving or changing the worktrees."""
+    rows: list[dict[str, Any]] = []
+    root = repo_root.resolve()
+    tasks_dir = reap_worktrees.control_plane_root(root) / "batch_state" / "tasks"
+    now = datetime.now(UTC)
+    for path in iter_task_records(tasks_dir, include_archive=True):
+        row = {"task_id": path.stem, "action": "error"}
+        try:
+            record = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(record, dict):
+                raise ValueError("invalid task record")
+            if record.get("status") not in reap_worktrees._TERMINAL_DISPATCH_STATUSES:
+                continue
+            finished = datetime.fromisoformat(str(record.get("finished_at")).replace("Z", "+00:00"))
+            age_seconds = (now - finished).total_seconds()
+            if age_seconds < 6 * 3600:
+                continue
+            raw_path = record.get("worktree_path")
+            if raw_path is None:
+                continue
+            if not isinstance(raw_path, str):
+                raise ValueError("invalid worktree path")
+            worktree = (root / raw_path).resolve()
+            if not worktree.is_relative_to(root):
+                continue
+            try:
+                worktree.stat()
+            except FileNotFoundError:
+                continue
+            row["task_id"] = record.get("task_id") or path.stem
+            row["worktree_path"] = worktree.relative_to(root).as_posix()
 
-
-def _parse_rescue_output(output: bytes | str) -> dict[str, Any]:
-    payload = json.loads(output)
-    if not isinstance(payload, dict):
-        raise ValueError("invalid terminal rescue payload")
-    summary, tasks = payload.get("summary"), payload.get("tasks")
-    if summary is not None:
-        if not isinstance(summary, dict):
-            raise ValueError("invalid terminal rescue summary")
-        candidate = summary.get("candidate", 0)
-        if type(candidate) is not int or candidate < 0:
-            raise ValueError("invalid terminal rescue candidate count")
-    if tasks is not None and (not isinstance(tasks, list) or any(not isinstance(row, dict) for row in tasks)):
-        raise ValueError("invalid terminal rescue tasks")
-    return {"summary": summary, "tasks": tasks}
-
-
-def _split_rescue_errors(tasks: Any) -> tuple[int, int]:
-    """Count rescue error rows as ``(identity unavailable, any other cause)``."""
-    blocked = other = 0
-    for row in tasks if isinstance(tasks, list) else []:
-        if not isinstance(row, dict) or row.get("action") != "error":
-            continue
-        if row.get("failure_code") == RESCUE_IDENTITY_UNAVAILABLE:
-            blocked += 1
-        else:
-            other += 1
-    return blocked, other
-
-
-def rescue_warning_lines(receipt: dict[str, Any]) -> list[str]:
-    """One hard warning per repository whose rescue lacked the driver identity."""
-    lines = []
-    for repository in receipt.get("repositories") or []:
-        count = repository.get("rescue_identity_unavailable") if isinstance(repository, dict) else None
-        if count:
-            lines.append(
-                f"HARD WARNING: {count} terminal dispatch task(s) were not rescued because the driver GitHub "
-                "identity is unavailable to this run; their worktrees are retained for a manual rescue."
+            dirty = len(
+                _inspect_terminal_git(worktree, "status", "--porcelain=v1", "--untracked-files=all").splitlines()
             )
-    return lines
+            # F3 follow-up: squash-merged branches may count as unpushed once before the reaper removes them.
+            unpushed = int(_inspect_terminal_git(worktree, "rev-list", "--count", "HEAD", "--not", "--remotes=origin"))
+            if dirty or unpushed:
+                row.update(
+                    action="report",
+                    branch=_inspect_terminal_git(worktree, "rev-parse", "--abbrev-ref", "HEAD"),
+                    dirty=dirty,
+                    unpushed=unpushed,
+                    age_seconds=int(age_seconds),
+                )
+                rows.append(row)
+        except (OSError, ValueError, TypeError, RecursionError, subprocess.SubprocessError) as exc:
+            row["error"] = f"terminal worktree inspection failed ({type(exc).__name__})"
+            rows.append(row)
+    return {"summary": {"candidate": sum(row["action"] == "report" for row in rows)}, "tasks": rows}
 
 
 def cleanup_stale_origin_branches(
@@ -1112,60 +1111,9 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["errors"].append("process-CWD activity probe unavailable; apply skipped")
         return result
 
-    # Report terminal rescue candidates before reaping. Only an explicit
-    # driver-invoked rescue may commit or push their work.
-    delegate_script = repo_root / "scripts" / "delegate.py"
-    if apply and delegate_script.is_file() and os.environ.get("LU_REAPER_DISABLED") != "1":
-        started = time.monotonic()
-        stdout = stderr = exception = None
-        returncode = None
-        failure_class = "none"
-        try:
-            proc = subprocess.run(
-                [
-                    sys.executable,
-                    str(repo_root / "scripts" / "delegate.py"),
-                    "rescue",
-                    "--all-stale",
-                    "--older-than",
-                    "6h",
-                ],
-                cwd=repo_root,
-                capture_output=True,
-                check=False,
-                timeout=600,
-                env=reap_worktrees.sanitized_git_env(),
-            )
-            stdout, stderr, returncode = proc.stdout, proc.stderr, proc.returncode
-            payload = _parse_rescue_output(stdout)
-            result["rescue"] = payload
-            if returncode != 0:
-                failure_class = "child_reported_failure"
-                blocked, other = _split_rescue_errors(payload.get("tasks"))
-                if blocked:
-                    result["rescue_identity_unavailable"] = blocked
-                if other or not blocked:
-                    result["errors"].append("terminal rescue reported errors")
-        except subprocess.TimeoutExpired as exc:
-            failure_class = "deadline_expired"
-            stdout, stderr, exception = exc.output, exc.stderr, str(exc)
-        except OSError as exc:
-            failure_class, exception = "launch_failure", str(exc)
-        except (ValueError, RecursionError) as exc:
-            failure_class, exception = "invalid_output", str(exc)
-        elapsed = time.monotonic() - started
-        if failure_class in {"launch_failure", "deadline_expired", "invalid_output"}:
-            result["errors"].append(f"terminal rescue unavailable ({failure_class})")
-        result["rescue_diagnostic"] = {
-            "failure_class": failure_class,
-            "elapsed_seconds": elapsed,
-            "returncode": returncode,
-            "evidence": {
-                "stdout": _rescue_evidence(stdout),
-                "stderr": _rescue_evidence(stderr),
-                "exception": _rescue_evidence(exception),
-            },
-        }
+    if apply and os.environ.get("LU_REAPER_DISABLED") != "1":
+        result["rescue"] = report_terminal_worktrees(repo_root)
+        result["errors"].extend(row["error"] for row in result["rescue"]["tasks"] if row["action"] == "error")
 
     try:
         rows = reap_worktrees.reap_worktrees(
@@ -1499,17 +1447,6 @@ def build_public_summary(
                 + sum(1 for row in repo_dict.get("origin_branches", []) if row.get("action") == "deleted")
             ),
         }
-        diagnostic = repo_dict.get("rescue_diagnostic")
-        if diagnostic is not None:
-            repos_summary[repo_name]["rescue_diagnostic"] = {
-                "failure_class": diagnostic["failure_class"],
-                "elapsed_seconds": diagnostic["elapsed_seconds"],
-                "returncode": diagnostic["returncode"],
-                "evidence": {
-                    name: {key: value for key, value in evidence.items() if key != "base64"}
-                    for name, evidence in diagnostic["evidence"].items()
-                },
-            }
 
     public_payload: dict[str, Any] = {
         "schema_version": receipt.get("schema_version", SCHEMA_VERSION),
@@ -1616,8 +1553,6 @@ def main(argv: list[str] | None = None) -> int:
         if receipt["disk_watermark_alert"]["errors"]:
             sys.stderr.write(f"{receipt['disk_watermark_alert']['detail']}\n")
     for line in home_session_retention_check.warning_lines(home_session_retention):
-        sys.stderr.write(f"{line}\n")
-    for line in rescue_warning_lines(receipt):
         sys.stderr.write(f"{line}\n")
     receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())
     public_summary = build_public_summary(receipt, receipt_path)

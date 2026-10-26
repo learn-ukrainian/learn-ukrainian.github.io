@@ -33,4 +33,5 @@ if ! _is_guarded_shim; then
 fi
 
 export AGENT_SHIM_TOOL=npx
+# The sibling's real-tool lookup skips both runtime and dispatcher shim directories.
 exec "$sibling" "$@"

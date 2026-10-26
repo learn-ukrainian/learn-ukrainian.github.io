@@ -1253,11 +1253,7 @@ an advisory envelope's ceilings or a content exemption's changed paths
 (`delegate.applicable_completion_gates`). Those gates run only in the worker, on its tree
 and its response, so recovery (`stale_task_records settle-stale` and the rate-limit
 reclassifier `scripts/maintenance/reclassify_dispatch_status.py`) never re-measures a tree
-or re-reads a saved response for them. It settles such a record `failed` with
-`failure_reason: recovery_requires_rerun`, keeping a failure the record already carries,
-and reports it: the driver re-runs the task or finalizes it by hand. A delivery-only record
-keeps its recovery: `settle-stale` settles it `done` when a merged pull request carries its
-recorded commit, with the delivery check unchanged.
+or re-reads a saved response for them. `settle-stale --apply` only reports (`action: report`, `mode: read-only`), leaving gated and delivery-only records unchanged with no receipt.
 
 Admission classifies a path by its resolved target as well: a `.md` symlink to a file whose
 git attributes mark it as code (for example `diff=python`) is not content.
