@@ -40,6 +40,7 @@ class Transport:
     def __init__(self) -> None:
         self.sent: list[tuple[str, str, str]] = []
         self.log = ""
+        self.is_in_merge_queue = False
 
     def __call__(self, argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess:
         verb = argv[1:3]
@@ -52,17 +53,21 @@ class Transport:
             return subprocess.CompletedProcess(argv, 0, self.log, "")
         # Recovery-free admission now reaches the existing merge preflight.
         if verb == ["pr", "view"]:
-            return subprocess.CompletedProcess(argv, 0, json.dumps({"number": 42, "isDraft": False, "headRefOid": HEAD}), "")
+            return subprocess.CompletedProcess(argv, 0, json.dumps({
+                "number": 42, "isDraft": False, "headRefOid": HEAD,
+                "isCrossRepository": False, "baseRefName": "main",
+            }), "")
         if verb == ["pr", "checks"]:
             return subprocess.CompletedProcess(argv, 0, "[]", "")
         if verb == ["api", "--method"] and "graphql" in argv:
             return subprocess.CompletedProcess(argv, 0, json.dumps({"data": {"repository": {"pullRequest": {
-                "headRefOid": HEAD, "isMergeQueueEnabled": True, "isInMergeQueue": True,
+                "headRefOid": HEAD, "isMergeQueueEnabled": True, "isInMergeQueue": self.is_in_merge_queue,
                 "viewerMergeHeadlineText": "A change", "viewerMergeBodyText": "A change",
             }}}}), "")
         if verb == ["pr", "merge"]:
             body = Path(argv[argv.index("--body-file") + 1]).read_text(encoding="utf-8")
             self.sent.append(("pr merge", json.dumps(argv), body))
+            self.is_in_merge_queue = True
             return subprocess.CompletedProcess(argv, 0, "", "")
         raise AssertionError(f"unexpected gh operation: {verb}")
 
