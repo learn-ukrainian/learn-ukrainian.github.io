@@ -114,15 +114,19 @@ def curl_queue(monkeypatch, tmp_path):
 
 
 @pytest.mark.parametrize("code,body,reason", [
+    (400, _ARTICLE, "HTTP 400"),
+    (401, _ARTICLE, "HTTP 401"),
     (403, _ARTICLE, "HTTP 403"),
+    (451, _ARTICLE, "HTTP 451"),
+    (499, _ARTICLE, "HTTP 499"),
     (200, _CHALLENGE, "Cloudflare challenge (HTTP 200)"),
     (429, _ARTICLE, "HTTP 429"),
-], ids=["403", "challenge", "429"])
+], ids=["400", "401", "403", "451", "499", "challenge", "429"])
 @pytest.mark.parametrize("legacy_limit", [20, 999, 0])
-def test_filler_stops_before_second_request_on_first_refusal(
+def test_filler_stops_access_denial_continuation_before_second_request(
     curl_queue, tmp_path, capsys, code, body, reason, legacy_limit,
 ):
-    """A refused batch used to continue and could fetch/cache the second word."""
+    """Access-denial continuation could fetch/cache the second word after a refusal."""
     curl_queue.responses.extend([(code, body), (200, _ARTICLE)])
     stats = filler.fill_slovnyk_newsum_cache(
         ["вода", "книга"], work_dir=tmp_path / "work", consecutive_403_limit=legacy_limit,
@@ -142,8 +146,10 @@ def test_filler_stops_before_second_request_on_first_refusal(
     assert "ABORT:" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("code,body", [(403, _ARTICLE), (200, _CHALLENGE), (429, _ARTICLE)],
-                         ids=["403", "challenge", "429"])
+@pytest.mark.parametrize("code,body", [
+    (400, _ARTICLE), (401, _ARTICLE), (403, _ARTICLE), (451, _ARTICLE), (499, _ARTICLE),
+    (200, _CHALLENGE), (429, _ARTICLE),
+], ids=["400", "401", "403", "451", "499", "challenge", "429"])
 def test_filler_refusal_preserves_existing_cache_bytes_when_forced(curl_queue, code, body):
     path = em._slovnyk_cache_path("вода")
     path.parent.mkdir(parents=True)
@@ -215,9 +221,10 @@ def test_filler_counts_ordinary_errors_and_continues(curl_queue, code, body):
 
 
 @pytest.mark.parametrize("code,body,exit_code", [
+    (400, _ARTICLE, 1), (401, _ARTICLE, 1), (451, _ARTICLE, 1), (499, _ARTICLE, 1),
     (403, _ARTICLE, 1), (200, _CHALLENGE, 1), (429, _ARTICLE, 1),
     (200, _ARTICLE, 0), (404, "missing", 0),
-], ids=["403", "challenge", "429", "200", "404"])
+], ids=["400", "401", "451", "499", "403", "challenge", "429", "200", "404"])
 @pytest.mark.parametrize("audit_format", [False, True])
 def test_filler_cli_refusal_is_failure_even_with_legacy_limit(
     curl_queue, monkeypatch, tmp_path, capsys, code, body, exit_code, audit_format,
@@ -236,5 +243,11 @@ def test_filler_cli_refusal_is_failure_even_with_legacy_limit(
     curl_queue.responses.extend([(code, body), (404, "missing")])
 
     assert filler.main() == exit_code
-    assert len(curl_queue.calls) == (2 if audit_format and exit_code == 0 else 1)
+    if exit_code == 1:
+        assert len(curl_queue.calls) == 1
+        assert not em._slovnyk_cache_path("вода").exists()
+        assert not em._slovnyk_cache_path("книга").exists()
+        assert (tmp_path / "work" / "blocked.md").exists()
+    else:
+        assert len(curl_queue.calls) == (2 if audit_format else 1)
     assert "Finished. Summary:" in capsys.readouterr().out

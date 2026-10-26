@@ -111,13 +111,13 @@ def fill_slovnyk_newsum_cache(
         url = f"https://slovnyk.me/dict/newsum/{urllib.parse.quote(lookup_word)}"
         code, body = fetch_newsum_curl(lookup_word)
 
-        if code in {403, 429} or "Just a moment..." in body:
+        if (400 <= code < 500 and code != 404) or "Just a moment..." in body:
             if code == 429:
                 stats["rate_limited_429"] += 1
                 reason = "HTTP 429"
             else:
                 stats["cf_challenge_403"] += 1
-                reason = "HTTP 403" if code == 403 else f"Cloudflare challenge (HTTP {code})"
+                reason = f"HTTP {code}" if 400 <= code < 500 and code != 404 else f"Cloudflare challenge (HTTP {code})"
             blocked_msg = (
                 f"# Blocked: slovnyk.me returned {reason}; stopped on first refusal.\n"
                 f"Last requested lemma: {slug} ({lookup_word})\n"
@@ -191,7 +191,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Populate slovnyk.me СУМ-20 cache using curl.\n"
-            "Use for cache fill batches; stops on the first 403, bot challenge or 429."
+            "Use for cache fill batches; stops on the first non-404 client error or bot challenge."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -218,7 +218,7 @@ def main() -> int:
     parser.add_argument("--sleep", type=float, default=0.3, help="Sleep between requests in seconds (default: 0.3).")
     parser.add_argument(
         "--consecutive-403-limit", type=int, default=20,
-        help="Legacy option, ignored (default: 20); the first 403, challenge or 429 always stops the batch.",
+        help="Legacy option, ignored (default: 20); the first non-404 client error or challenge stops the batch.",
     )
     parser.add_argument("--checkpoint-interval", type=int, default=50, help="Log progress every N entries (default: 50).")
     parser.add_argument("--force", action="store_true", help="Re-fetch even if already cached (default: false).")
