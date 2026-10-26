@@ -30,6 +30,10 @@ hook rejects an oversized rendered envelope visibly, without clipping goals.
 turn on a question or a plan, or with fewer of its own workers running than the
 private ``LU_DRIVER_MIN_WORKERS`` target.
 An absent or invalid target is unknown and cannot force a worker-count continuation.
+If no other continuation reason applies and the payload reports ``fullyIdle``
+as true, it also must not stop with nothing armed to wake it: the hook requires
+starting a background ``delegate.py wait`` or setting a ``schedule`` timer
+before ending the turn.
 When continuation is required, it returns
 ``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
 reason as a system message. A turn whose final text starts with
