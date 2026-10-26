@@ -579,10 +579,9 @@ def build_ssh_argv(host: str, remote_command: str) -> list[str]:
 
 
 def _dispatch_argv(remote_argv: list[str]) -> list[str] | None:
-    """Return ``[scripts/dispatch.py, dispatch, ...]`` when this is a dispatch."""
-    try:
-        idx = remote_argv.index("scripts/dispatch.py")
-    except ValueError:
+    """Recognize both current and legacy dispatch entry-point basenames."""
+    idx = next((i for i, arg in enumerate(remote_argv) if Path(arg).name in {"dispatch.py", "delegate.py"}), None)
+    if idx is None:
         return None
     rest = remote_argv[idx:]
     if len(rest) < 2 or rest[1] != "dispatch":

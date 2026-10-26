@@ -28,6 +28,8 @@ _IMPORT_ROOT = Path(__file__).resolve().parents[2]
 if str(_IMPORT_ROOT) not in sys.path:
     sys.path.insert(0, str(_IMPORT_ROOT))
 
+from scripts.dispatcher.cli import ALIASES
+from scripts.orchestration.execution_safe_git import run_git
 from scripts.orchestration.task_record_store import (
     iter_task_records,
     locate_task_record,
@@ -189,6 +191,8 @@ def record_task(
         {
             "task_id": task_id,
             "agent": agent,
+            "requested_seat": agent,
+            "effective_provider": ALIASES.get(agent, agent),
             "prompt_file": prompt_file,
             "command": command,
             "note": note or "",
@@ -540,7 +544,7 @@ def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[
         "scripts/dispatch.py",
         "dispatch",
         "--agent",
-        args.agent,
+        ALIASES.get(args.agent, args.agent),
         "--task-id",
         args.task_id,
         "--mode",
@@ -563,7 +567,10 @@ def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[
     for name in getattr(args, "sparse_include", None) or []:
         command.extend(["--sparse-include", str(name)])
     if args.base:
-        command.extend(["--base", args.base])
+        base = args.base
+        if not base.startswith(("origin/", "refs/")) and not re.fullmatch(r"[0-9a-fA-F]{40,64}", base):
+            base = f"origin/{base}"
+        command.extend(["--base", base])
     if args.hard_timeout is not None:
         command.extend(["--hard-timeout", str(args.hard_timeout)])
     if args.silence_timeout not in (None, 0):
@@ -643,6 +650,22 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         return 0
 
+    base = command[command.index("--base") + 1]
+    if base.startswith("origin/"):
+        branch = base.removeprefix("origin/")
+        try:
+            run_git(
+                ["fetch", "origin", f"refs/heads/{branch}:refs/remotes/origin/{branch}"],
+                cwd=repo_root,
+                profile="remote",
+                timeout=30,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+        except (OSError, ValueError, subprocess.SubprocessError):
+            print(json.dumps({"error": "base fetch failed; worker not dispatched", "base": base}))
+            return 2
     try:
         proc = subprocess.run(
             command,
@@ -752,7 +775,9 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
             "silence/initial-response deadlines, budget ceilings, lifecycle-file propagation, "
-            "and authoring-review-risk. Legacy options and defaults remain forwarded so "
+            "and authoring-review-risk. Unset authoring-review-risk is unchecked, unlike legacy critical admission. "
+            "Seats grok-build, grok-hermes, qwen, kimi are refused. "
+            "Legacy options and defaults remain forwarded so "
             "unsupported requests fail explicitly. Default watchdogs currently prevent launch; explicit zero disables each watchdog."
         ),
     )
@@ -766,14 +791,11 @@ def build_parser() -> argparse.ArgumentParser:
             "gemini",
             "claude",
             "grok",
-            "grok-build",
-            "grok-hermes",
             "deepseek",
-            "qwen",
             "agy",
             "cursor",
-            "kimi",
         ],
+        help="Requested seat; gemini/grok/deepseek use agy/cursor/opencode. Both identities are recorded.",
     )
     dispatch.add_argument("--prompt")
     dispatch.add_argument("--prompt-file")
@@ -797,7 +819,12 @@ def build_parser() -> argparse.ArgumentParser:
             "Pass through to dispatch v2: keep a default-excluded tree (curriculum, wiki, data/projects, data/lexicon)."
         ),
     )
-    dispatch.add_argument("--base", default="main")
+    dispatch.add_argument(
+        "--base",
+        default="origin/main",
+        help="Default origin/main; branch names become origin/<name>, fetched with a 30s limit before launch. "
+        "GAP: explicit refs/commit pins are not fetched; caller owns their freshness.",
+    )
     dispatch.add_argument("--hard-timeout", type=int, default=7200)
     dispatch.add_argument(
         "--silence-timeout", type=int, default=3600, help="GAP: v2 lacks this watchdog; 0 explicitly disables it."
@@ -823,7 +850,8 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument(
         "--authoring-review-risk",
         choices=["low", "medium", "high", "critical"],
-        help="GAP: v2 lacks authoring-review-risk; its --risk is review metadata, not writer admission.",
+        help="GAP: v2 lacks authoring-review-risk; unset is unchecked (legacy treated it as critical). "
+        "Its --risk is review metadata, not writer admission.",
     )
     dispatch.add_argument("--dry-run", action="store_true")
     dispatch.set_defaults(func=cmd_dispatch)

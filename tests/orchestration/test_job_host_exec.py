@@ -220,7 +220,8 @@ def test_main_dispatch_preserves_session_initiator(tmp_path: Path, monkeypatch: 
     assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
 
 
-def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("entrypoint", ["scripts/dispatch.py", "scripts/delegate.py", "/local/scripts/delegate.py"])
+def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entrypoint) -> None:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
@@ -235,13 +236,16 @@ def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pyt
     monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
     monkeypatch.setenv(jh.ENV_HOST, "job-alias")
     monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "cursor")
+    lifecycle = tmp_path / "lifecycle.json"
+    lifecycle.write_text('{"version": 1}', encoding="utf-8")
     rc = jh.main(
         [
             "--host-id",
             "host-job",
             "--",
             ".venv/bin/python",
-            "scripts/dispatch.py",
+            entrypoint,
             "dispatch",
             "--agent",
             "codex",
@@ -249,6 +253,10 @@ def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pyt
             "cf",
             "--prompt-file",
             str(prompt),
+            "--lifecycle-file",
+            str(lifecycle),
+            "--run-nonce",
+            "test-nonce",
         ]
     )
     assert rc == 0
@@ -260,6 +268,13 @@ def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pyt
     assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
     assert "$LU_DISPATCH_PROMPT_0" in script
     assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
+    assert f"export {jh.ENV_RUNTIME_INITIATOR}=cursor" in script
+    assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
+    assert f"export {jh.ENV_RUNTIME_RUN_NONCE}=test-nonce" in script
+    assert str(lifecycle) not in recorded
+    assert str(lifecycle) not in script
+    assert "eyJ2ZXJzaW9uIjogMX0=" in script
+    assert f"scripts/{Path(entrypoint).name}" in script
 
 
 def test_main_help_contract() -> None:
