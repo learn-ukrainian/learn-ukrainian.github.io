@@ -257,17 +257,18 @@ class DelegateComposer:
                 (
                     path
                     for path in worktree_containment.registered_worktrees(main)
-                    if path != main
-                    and validated.is_relative_to(path)
-                    and not any(
-                        path.parts[i : i + 3] == (".worktrees", "dispatch", "acp") for i in range(len(path.parts) - 2)
-                    )
+                    if path != main and validated.is_relative_to(path)
                 ),
                 None,
             )
             if main is not None
             else None
         )
+        if self.worktree is not None and any(
+            self.worktree.parts[i : i + 3] == (".worktrees", "dispatch", "acp")
+            for i in range(len(self.worktree.parts) - 2)
+        ):
+            self.worktree = None
         if self.worktree is None:
             raise DispatchError(
                 "--worker-cwd must resolve inside a registered added Git worktree; "

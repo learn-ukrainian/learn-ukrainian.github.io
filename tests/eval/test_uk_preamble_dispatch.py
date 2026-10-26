@@ -490,6 +490,19 @@ def test_legacy_composer_refuses_unsafe_symlink_target(tmp_path):
         DelegateComposer(object(), link)
 
 
+def test_legacy_composer_does_not_fall_back_from_first_acp_match(linked_worktree, monkeypatch):
+    candidate = linked_worktree / ".worktrees" / "dispatch" / "acp" / "nested"
+    candidate.parent.mkdir(parents=True)
+    _git(linked_worktree, "worktree", "add", "-q", "-b", "nested-acp", str(candidate))
+    main = linked_worktree.parents[3]
+    monkeypatch.setattr(
+        dispatch_module.worktree_containment, "registered_worktrees", lambda _root: [main, candidate, linked_worktree]
+    )
+    assert delegate._resolve_verified_worktree_path(candidate) is None
+    with pytest.raises(DispatchError, match="isolated Git worktree"):
+        DelegateComposer(object(), candidate)
+
+
 @pytest.mark.parametrize("kind", ["primary", "unregistered", "acp"])
 def test_legacy_composer_refuses_unowned_worktrees(linked_worktree, kind):
     main = linked_worktree.parents[3]
