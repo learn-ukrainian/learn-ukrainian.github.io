@@ -9,7 +9,9 @@ from pathlib import Path
 def test_dashboard_renders_versions_and_preserves_quoted_run_identity():
     """A quoted nonce must not split an HTML handler or lose run identity."""
     page = Path("dashboards/delegate.html").read_text()
-    script = re.search(r"<script>(.*?)</script>", page, re.S)[1]
+    scripts = re.findall(r"<script\b[^>]*>(.*?)</script\s*>", page, re.S | re.I)
+    assert len(scripts) == 1
+    script = scripts[0]
     probe = r"""
 const vm = require('node:vm');
 const elements = {};
