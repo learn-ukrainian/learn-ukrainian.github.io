@@ -51,7 +51,10 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
     shims = npm_shim_dir()
     if shims is not None:
         original_path = os.pathsep.join(
-            entry for entry in env.get("PATH", os.defpath).split(os.pathsep) if Path(entry).resolve() != shims
+            entry for entry in env.get("PATH", os.defpath).split(os.pathsep)
+            if Path(entry).resolve() != shims
+            and Path(entry).parts[-3:] != ("scripts", "dispatcher", "npm_shims")
+            and Path(entry).resolve().parts[-3:] != ("scripts", "dispatcher", "npm_shims")
         )
         env.update(
             PATH=f"{shims}{os.pathsep}{original_path}", AGENT_ORIGINAL_PATH=original_path,

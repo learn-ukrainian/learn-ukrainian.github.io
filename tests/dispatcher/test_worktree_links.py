@@ -12,8 +12,9 @@ import pytest
 from scripts.dispatcher import environment, git
 from scripts.dispatcher.types import TaskSpec
 from scripts.orchestration.worktree_artifacts import is_disposable_path
+from scripts.storage.topology import STORE_FILES
 
-LINKS = ("data/sources.db", "data/vesum.db", "node_modules", "site/node_modules")
+LINKS = (*(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum")), "node_modules", "site/node_modules")
 
 
 @pytest.fixture
@@ -202,3 +203,35 @@ def test_unavailable_guard_skips_shared_install_links_only(layout, monkeypatch, 
     spec = TaskSpec("fixture", "codex", "stub", None, "workspace-write", worktree, worktree / "prompt", worktree / "final")
     with pytest.raises(ValueError, match="npm/npx guard unavailable"):
         environment.child_env(spec)
+
+
+@pytest.mark.parametrize("tool", ["npm", "npx"])
+@pytest.mark.parametrize("route", ["child", "legacy_path", "legacy_pinned"])
+def test_foreign_dispatcher_shims_cannot_recurse(layout, monkeypatch, tool, route):
+    """Nested dispatch and legacy lookup must reach real tools without wrapper recursion."""
+    _primary, worktree = layout
+    foreign = worktree.parent / "other/scripts/dispatcher/npm_shims"
+    shutil.copytree(environment._NPM_SHIMS, foreign)
+    runtime = Path(environment.__file__).resolve().parents[1] / "agent_runtime"
+    (foreign.parents[1] / "agent_runtime").symlink_to(runtime, target_is_directory=True)
+    binaries = worktree.parent / "bin"
+    binaries.mkdir()
+    binary = binaries / tool
+    binary.write_text('#!/bin/sh\nprintf "real-tool\\n"\n')
+    binary.chmod(0o755)
+    original_path = os.pathsep.join([f"{foreign}/.", str(binaries), "/usr/bin", "/bin"])
+    monkeypatch.setenv("PATH", original_path)
+    spec = TaskSpec("fixture", "codex", "stub", None, "workspace-write", worktree, worktree / "prompt", worktree / "final")
+    env = environment.child_env(spec)
+    if route == "child":
+        assert str(foreign) not in env["PATH"]
+        assert str(foreign) not in env["AGENT_ORIGINAL_PATH"]
+    else:
+        env["AGENT_ORIGINAL_PATH"] = original_path
+        if route == "legacy_pinned":
+            env[f"AGENT_REAL_{tool.upper()}"] = str(foreign / tool)
+    result = subprocess.run(
+        [tool, "--version"], cwd=worktree, env=env, capture_output=True, text=True, timeout=10
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "real-tool\n"

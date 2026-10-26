@@ -40,7 +40,7 @@ def sandbox(tmp_path):
     run_git(repo, "init", "-b", "main")
     run_git(repo, "config", "user.email", "stub@example.invalid")
     run_git(repo, "config", "user.name", "Stub")
-    for relative in ("scripts/dispatcher", "scripts/common"):
+    for relative in ("scripts/dispatcher", "scripts/common", "scripts/storage"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
     # Disposable repositories share the test interpreter; they own no project environment.
     resolver = repo / "scripts/common/repo_root.py"

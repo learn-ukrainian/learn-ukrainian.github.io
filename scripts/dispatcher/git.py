@@ -16,6 +16,7 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import resolve_repo_root
 from scripts.dispatcher.environment import npm_shim_dir
 from scripts.dispatcher.types import TaskSpec
+from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
@@ -97,7 +98,8 @@ def provision_links(repo: Path, worktree: Path) -> None:
     if npm_shim_dir() is None:
         logging.getLogger(__name__).warning("Skipping node_modules and site/node_modules: npm/npx guard unavailable")
         node_links = ()
-    for relative in ("data/sources.db", "data/vesum.db", *node_links):
+    database_links = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
+    for relative in (*database_links, *node_links):
         parts = Path(relative).parts
         with ExitStack() as stack:
             def open_directory(name, parent=None):
