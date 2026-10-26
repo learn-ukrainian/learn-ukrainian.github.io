@@ -14,6 +14,7 @@ import threading
 import tomllib
 import uuid
 from collections.abc import Iterator
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -75,6 +76,166 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return app_data
 
 
+@pytest.mark.parametrize("harness", ["claude", "codex", "agy"])
+@pytest.mark.parametrize("access", ["isolated", "full"])
+@pytest.mark.parametrize("profile", ["code", "", "ukrainian"])
+def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_path, harness, access, profile):
+    """Catch incomplete gate inputs, mutable results, or dropped legacy grants."""
+    base = {
+        "read_only_tmp_root": str(tmp_path), "run_nonce": "nonce", "owned_paths": [], "risk": "critical",
+        "disable_features": ["plugins"], "metadata": {"enabled": ["sources"]},
+    }
+    plan = prepare_review_attempt(
+        "rev-config", "att-config", manifest_file, harness, receipts_root=tmp_path / "receipts", review_access=access
+    )
+    expected = {
+        **base,
+        "disable_features": ["plugins"],
+        "metadata": {"enabled": ["sources"]},
+        "mcp_config_path": str(plan.config_path),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-config",
+        "attempt_id": "att-config",
+        "review_manifest": str(manifest_file),
+        "review_input_root": str(tmp_path),
+        "review_access": access,
+        "review_cwd": str(tmp_path),
+    }
+    if harness == "claude":
+        if access == "isolated":
+            expected["allowed_tools"] = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+        else:
+            expected["reviewer_tools"] = True
+    if harness == "agy":
+        expected.update(review_profile=profile or "code", review_ledger_path=str(plan.ledger_path))
+    if harness in {"codex", "agy"} and access == "isolated":
+        expected[f"{harness}_home_override"] = str(getattr(plan, f"{harness}_home"))
+    with (
+        patch.object(review_mcp_module, "verify_codex_review_launch") as codex_gate,
+        patch.object(review_mcp_module, "verify_agy_review_launch") as agy_gate,
+        patch.object(
+            review_mcp_module, "verify_review_attempt_paths", side_effect=AssertionError("runtime owns check")
+        ),
+    ):
+        options = dict(
+            manifest_path=manifest_file,
+            input_root=tmp_path,
+            cwd=tmp_path,
+            task_id="config-test",
+            model="fixture-model",
+            effort="high",
+            review_access=access,
+            review_profile=profile,
+            base_tool_config=base,
+        )
+        result = review_mcp_module.review_attempt_tool_config(plan, **options)
+        assert result == expected
+        with pytest.raises(TypeError):
+            result["review_access"] = "full"
+        checked = []
+        for name, gate in (("codex", codex_gate), ("agy", agy_gate)):
+            if harness == name and access == "isolated":
+                gate.assert_called_once_with(
+                    config_path=plan.config_path,
+                    cwd=tmp_path,
+                    mode="read-only",
+                    model="fixture-model",
+                    effort="high",
+                    task_id="config-test",
+                    tool_config=expected,
+                )
+                checked.append(gate.call_args.kwargs["tool_config"])
+                second = review_mcp_module.review_attempt_tool_config(plan, **options)
+                checked.append(gate.call_args.kwargs["tool_config"])
+                for config in checked:
+                    assert config["disable_features"] is not base["disable_features"]
+                    assert config["metadata"] is not base["metadata"]
+            else:
+                gate.assert_not_called()
+        base["risk"] = "low"
+        base["disable_features"].remove("plugins")
+        base["metadata"].clear()
+        assert result == expected
+        if checked:
+            assert second == checked[0] == checked[1] == expected
+            checked[0]["risk"] = "low"
+            checked[0]["disable_features"].clear()
+            checked[0]["metadata"]["enabled"].clear()
+            assert result == second == checked[1] == expected
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("harness", "unknown"),
+        ("review_id", None),
+        ("attempt_id", ""),
+        ("config_path", None),
+        ("review_id", "../x"),
+        ("attempt_id", "../x"),
+        ("review_access", "bogus"),
+        *[(field, value) for field in ("manifest_path", "input_root", "cwd") for value in (None, "", "  ", "missing")],
+    ],
+)
+@pytest.mark.parametrize("harness", ["claude", "codex", "agy"])
+def test_tool_config_refuses_invalid_or_missing_attempt_binding(manifest_file, tmp_path, harness, field, value):
+    plan = prepare_review_attempt(
+        "rev-config", "att-config", manifest_file, harness, receipts_root=tmp_path / "receipts"
+    )
+    options = dict(manifest_path=manifest_file, input_root=tmp_path, cwd=tmp_path, task_id="config-test")
+    if field in {"harness", "review_id", "attempt_id", "config_path"}:
+        plan = replace(plan, **{field: value})
+    elif value == "missing":
+        options.pop(field)
+    else:
+        options[field] = value
+    error, message = (
+        (TypeError, "required keyword-only argument") if value == "missing" else (ValueError, "review attempt refused")
+    )
+    with pytest.raises(error, match=message):
+        review_mcp_module.review_attempt_tool_config(plan, **options)
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "mcp_config_path", "strict_mcp_config", "mcp_server_names", "review_id", "attempt_id",
+        "review_manifest", "review_input_root", "review_access", "review_cwd", "allowed_tools",
+        "reviewer_tools", "codex_home_override", "agy_home_override", "claude_home_override",
+        "mcp_servers", "review_profile", "review_ledger_path",
+    ],
+)
+def test_tool_config_refuses_reserved_base_key_collision(manifest_file, tmp_path, key):
+    plan = prepare_review_attempt(
+        "rev-config", "att-config", manifest_file, "claude", receipts_root=tmp_path / "receipts"
+    )
+    with pytest.raises(ValueError, match="reserved tool_config key"):
+        review_mcp_module.review_attempt_tool_config(
+            plan,
+            manifest_path=manifest_file,
+            input_root=tmp_path,
+            cwd=tmp_path,
+            task_id="config-test",
+            base_tool_config={key: "override"},
+        )
+
+
+@pytest.mark.parametrize("harness", ["codex", "agy"])
+def test_tool_config_propagates_effective_mcp_refusal(manifest_file, tmp_path, harness):
+    """Never return launch options when the original effective-config gate refuses."""
+    plan = prepare_review_attempt(
+        "rev-config", "att-config", manifest_file, harness, receipts_root=tmp_path / "receipts"
+    )
+    with (
+        patch.object(review_mcp_module, f"verify_{harness}_review_launch", side_effect=ValueError("extra MCP server")),
+        pytest.raises(ValueError, match="extra MCP server"),
+    ):
+        review_mcp_module.review_attempt_tool_config(
+            plan, manifest_path=manifest_file, input_root=tmp_path, cwd=tmp_path, task_id="config-test"
+        )
+
+
 def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_agy_user_home):
     root = tmp_path / "lease"
     root.mkdir()
@@ -85,7 +246,8 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
     settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
     readers, writers = sources_tool_sets()
     assert settings["permissions"]["allow"] == [
-        f"read_file({tmp_path.resolve()})", *[f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+        f"read_file({tmp_path.resolve()})",
+        *[f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)],
     ]
     assert settings["permissions"]["deny"] == [
         "command(*)",

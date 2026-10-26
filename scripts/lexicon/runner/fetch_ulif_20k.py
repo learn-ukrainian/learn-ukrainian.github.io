@@ -71,7 +71,10 @@ class DictUAClient:
         # Headers stay on the client so argparse / in-process tests can
         # construct it without importing ``requests``.
         self.headers = {
-            "User-Agent": ("learn-ukrainian-atlas/1.0 (noncommercial educational ULIF per-lemma fetch; issue #5230)")
+            "User-Agent": (
+                "learn-ukrainian-atlas/1.0 (noncommercial educational ULIF per-lemma fetch; issue #5230; "
+                "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+            )
         }
 
     def _http_session(self) -> Any:
