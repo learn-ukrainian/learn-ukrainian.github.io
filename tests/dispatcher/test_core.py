@@ -515,6 +515,12 @@ def test_v2_record_without_owned_paths_remains_readable(sandbox):
 def delivery_settle(sandbox):
     run_git(sandbox.repo, "push", "origin", "main:release")
     record = sandbox.settle(sandbox.dispatch("echo", "--base", "origin/release"))
+    # Finish the initial reaper's record write before reusing this run for settle probes.
+    deadline = time.monotonic() + 10
+    path = sandbox.tasks / f"{record['task_id']}.json"
+    while "reap_note" not in json.loads(path.read_text()):
+        assert time.monotonic() < deadline, "initial reaper did not finish"
+        time.sleep(0.02)
     def settle(model="echo", owned=("delivered.txt",)):
         record.update(mode="workspace-write", model=model, status="running", owned_paths=list(owned or []))
         if owned is None:
@@ -759,6 +765,7 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
         "GIT_CONFIG": str(global_config), "GIT_REPLACE_REF_BASE": "refs/heads/",
     }.items():
         monkeypatch.setenv(key, value)
+    monkeypatch.delenv("TMPDIR", raising=False)
     with git.ownership_git(record) as run:
         config = run("config", "--list", "--includes")
         assert "worker." not in config
@@ -775,7 +782,7 @@ def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch,
     if missing == "git-binary":
         monkeypatch.setattr(git, "GIT_BINARY", None)
     elif missing == "scratch":
-        monkeypatch.delenv("TMPDIR")
+        monkeypatch.setattr(git, "allocate", Mock(side_effect=worker.TaskScratchError("unavailable")))
     elif missing == "remote-tip":
         record["head_sha"] = "0" * 40
     else:

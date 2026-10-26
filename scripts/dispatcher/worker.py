@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
+from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import git, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
@@ -127,7 +128,7 @@ def _enforce_delivery(record: dict) -> None:
                 )
                 if len(cause) > 1024:
                     cause = cause[:1009] + "... (truncated)"
-        except (OSError, ValueError, TypeError, IndexError, KeyError, subprocess.SubprocessError):
+        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError):
             cause = "owned_paths_verification_failed"
     if cause is None:
         if record["worktree_dirty_on_exit"] is not False:

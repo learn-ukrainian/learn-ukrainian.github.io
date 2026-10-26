@@ -4,7 +4,6 @@ import fcntl
 import os
 import shutil
 import subprocess
-import tempfile
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
@@ -13,6 +12,7 @@ import yaml
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.task_scratch import allocate
 from scripts.dispatcher.types import TaskSpec
 
 ROOT = resolve_repo_root(Path(__file__), 2)
@@ -58,8 +58,8 @@ def verification_origin(path: Path) -> str:
 def ownership_git(record: dict):
     """Walk trusted remote objects in a private config/ref namespace.
 
-    -c include.path= does not remove existing include/includeIf entries. A fresh
-    bare Git directory instead excludes both worker config and config.worktree,
+    A command-line include.path override is not a local-config sandbox. A fresh
+    bare Git directory excludes both worker config and config.worktree,
     their includes, grafts and replacement refs. Objects and refs come only from
     the remote URL recorded before provider execution. No local objects are reused.
     """
@@ -69,8 +69,9 @@ def ownership_git(record: dict):
     base = record["worktree_base_ref"].removeprefix("refs/remotes/")
     if not base.startswith("origin/"):
         raise ValueError("ownership verification requires an origin base")
-    with tempfile.TemporaryDirectory(prefix="dispatch-ownership-", dir=os.environ["TMPDIR"]) as directory:
-        run = partial(_verification_git, Path(directory), git_dir=Path(directory))
+    scratch = allocate(record["task_id"] + "-ownership")
+    try:
+        run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir)
         run("init", "--bare", "--template=")
         run("fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
             f"+refs/heads/{base.removeprefix('origin/')}:refs/heads/base",
@@ -78,6 +79,11 @@ def ownership_git(record: dict):
         if run("rev-parse", "--verify", "refs/heads/delivery^{commit}") != record["head_sha"]:
             raise ValueError("remote delivery tip does not match snapshot")
         yield run
+    finally:
+        try:
+            scratch.remove()
+        finally:
+            scratch.preserve()
 
 
 def sparse_excludes(includes=()) -> list[str]:
