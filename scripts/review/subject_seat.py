@@ -345,6 +345,9 @@ def subject_exclusion_reason(
     """Return the trace reason when ``candidate`` is a governed seat, else None."""
     if not seats and not families:
         return None
+    # The Grok model governs both admitted transports (#9769).
+    if "cursor" in seats:
+        families = families | {"xai"}
     matched_seats = [seat for seat in sorted(seats) if candidate_matches_subject_seat(candidate, seat)]
     matched_families = [family for family in sorted(families) if candidate.family.casefold() == family]
     if not matched_seats and not matched_families:

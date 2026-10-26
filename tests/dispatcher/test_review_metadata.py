@@ -63,14 +63,35 @@ def test_review_metadata_loss_round_trip_enforces_risk_and_subjects(dispatch, mo
     ("cursor", "grok-4.7-high", "--subject-seat", "cursor"),
     ("cursor", "grok-4.7-high", "--subject-family", "xai"),
     ("cursor", "gpt-6.1-sol", "--subject-seat", "codex"),
+    ("cursor", "gpt-6.1-sol", "--subject-seat", "grok"),
+    ("cursor", "gpt-6.1-sol", "--subject-family", "xai"),
+    ("sol", "grok-4.7-high", "--subject-seat", "cursor"),
+    ("sol", "grok-4.7-high", "--owned-path", "scripts/dispatcher/providers/cursor.py"),
     ("sol", "gpt-6.1-sol", "--subject-seat", "unknown-seat"),
     ("sol", "gpt-6.1-sol", "--subject-family", "unknown-family"),
     ("cursor", "auto", "--subject-seat", "grok"),
     ("sol", "gpt-6.1-sol", "--owned-path", "scripts/dispatcher/providers/codex.py"),
     ("cursor", "grok-4.7-high", "--owned-path", "scripts/dispatcher/providers/cursor.py"),
 ])
-def test_subject_self_review_alias_or_unknown_identity_refused_before_launch(dispatch, capsys, agent, model, flag, value):
+def test_subject_self_review_effective_identity_or_unknown_refused_before_launch(dispatch, capsys, agent, model, flag, value):
     dispatch(flag, value, agent=agent, model=model, expected=2)
+    assert "subject" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("model,flags", [
+    ("grok-4.7-high", ("--subject-seat", "claude")),
+    ("gpt-6.1-sol", ()),
+    ("unknown-model", ()),
+])
+def test_effective_identity_does_not_overexclude_cursor_without_matching_subject(dispatch, model, flags):
+    assert dispatch(*flags, agent="cursor", model=model)["model"] == model
+
+
+def test_unresolvable_cursor_fallback_identity_fails_closed(dispatch, monkeypatch, capsys):
+    from scripts.review import model_catalog
+
+    monkeypatch.setattr(model_catalog, "substitution_default_model", lambda _: "unknown-model")
+    dispatch("--subject-seat", "claude", agent="cursor", expected=2)
     assert "subject" in capsys.readouterr().err
 
 

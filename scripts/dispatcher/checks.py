@@ -76,14 +76,29 @@ def check_review_subjects(agent, model, seats, families, owned_paths, *, review=
                                           owned_paths=tuple(owned_paths))
     if exclusion.fail_closed_reason:
         raise ValueError(exclusion.fail_closed_reason)
-    family = _model_families().get(model)
-    if (exclusion.seats or exclusion.families) and not family:
-        raise ValueError("subject exclusion requires a known reviewer model family")
-    candidate = SimpleNamespace(name=agent, family=family or "", concrete_model=model, route=agent, transport=agent)
-    reason = subject_exclusion_reason(candidate, seats=exclusion.seats, families=exclusion.families,
-                                      evidence=exclusion.evidence)
-    if reason:
-        raise ValueError(reason)
+    if not exclusion.seats and not exclusion.families:
+        return exclusion
+    models = {model}
+    if agent == "cursor":
+        from scripts.review.model_catalog import (
+            CURSOR_APPROVED_WIRE_PINS,
+            cursor_pinned_models,
+            substitution_default_model,
+        )
+
+        if model not in {*cursor_pinned_models(), *CURSOR_APPROVED_WIRE_PINS}:
+            models.add(substitution_default_model("cursor"))
+    model_families = _model_families()
+    for effective_model in models:
+        family = model_families.get(effective_model)
+        if not family:
+            raise ValueError("subject exclusion requires a known effective reviewer model family")
+        candidate = SimpleNamespace(name=agent, family=family, concrete_model=effective_model,
+                                    route=agent, transport=agent)
+        reason = subject_exclusion_reason(candidate, seats=exclusion.seats, families=exclusion.families,
+                                          evidence=exclusion.evidence)
+        if reason:
+            raise ValueError(reason)
     return exclusion
 
 
