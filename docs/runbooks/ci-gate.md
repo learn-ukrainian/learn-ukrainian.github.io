@@ -1,10 +1,32 @@
 # CI Gate
 
 `.github/workflows/ci.yml` emits the required `CI Gate` context. PR events
-(`opened`, `synchronize`, `reopened`) run the same full supported 24-shard
-pytest partition as merge-group, nightly and manual events. CI Gate requires
-frontend, duration refresh, every pytest shard and the whole-run partition report
-to succeed. Missing, skipped, failed or cancelled required results fail the gate.
+(`opened`, `synchronize`, `reopened`) run admission checks, pytest collection,
+changed tests and guards. They skip the full supported 24-shard partition.
+The existing keeper dispatches `ci.yml` once for each canonically approved exact
+PR head. It uses the validated independent CF reader, then rechecks the current
+PR head and records pending PR/head dispatch intent in its existing locked state
+before sending the request. Visibility lag, empty run lists after dispatch and
+uncertain transport retain that intent and hold; they never trigger a retry.
+Existing runs, including failed or cancelled runs, prevent a second dispatch.
+The driver owns the existing one-recovery policy.
+
+Dispatch inputs `approved_pr` and `expected_head` bind the run title to the PR
+and head. `Approved head identity` checks the actual checkout against
+`GITHUB_SHA` and the expected head before full jobs start. A moved ref fails
+before the shards. Manual dispatches without those inputs still run full CI,
+but cannot supply approved-PR proof.
+
+The central `pr-merge` publisher requires a successful exact-head dispatch for
+the configured public monorepo. It validates the workflow ID/path, event,
+repository, PR/head title, Actions app/suite identity and successful CI Gate,
+all 24 shards, report, frontend, refresh, checks, scans and audit. Admission-only
+success, partial/unavailable metadata, skipped, failed, cancelled or pending
+results cannot authorize enqueue. It rechecks the head after reading proof.
+Private and unrelated repositories retain their existing gates. Enqueue still
+requires canonical exact-head CF and all other required CI; the real merge-group
+candidate independently repeats the full suite and audits before landing.
+
 PRs also retain file-content secret scanning, the large-file guard, attribution,
 lint and content contracts, dependency-audit scoping, and `pytest --collect-only`.
 Checks executes the slow sparse collection guard on every supported event;
@@ -27,7 +49,7 @@ The job has a ten-minute timeout and targets under five minutes on hosted
 runners. The committed serial file-duration sum plus 60 seconds for setup and
 collection is the conservative estimate. If it exceeds 600 seconds, a selected
 file lacks timing data, or pytest infrastructure changes, all guards still run
-and changed files outside the guards defer to the full PR pytest partition. Infrastructure
+and changed files outside the guards defer to the approved-head full pytest partition. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded

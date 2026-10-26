@@ -260,3 +260,73 @@ def test_oo48_garbage_provenance_reply_is_refused():
 
     with pytest.raises(PublishBlocked, match="cannot establish check state"):
         ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+
+
+@pytest.mark.parametrize("fault", [
+    "none", "absent", "partial", "unavailable", "head", "workflow", "event", "title", "repo",
+    "failed", "cancelled", "queued", "missing-shard", "skipped", "forged-app", "suite", "url", "moved",
+])
+def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypatch, fault):
+    from scripts.ci import approved_pr_ci as full
+    from tests.opsec_fixtures import CATALOG
+
+    monkeypatch.setattr(full, "catalog", lambda: CATALOG)
+    head = "a" * 40
+    run = {"id": 91, "workflow_id": 7, "path": ".github/workflows/ci.yml", "name": "CI",
+           "event": "workflow_dispatch", "head_sha": head, "repository": {"full_name": "unit/public"},
+           "display_title": "Approved PR #1 head " + head, "status": "completed", "conclusion": "success",
+           "check_suite_id": 81}
+    checks = [{"name": name, "head_sha": head, "app": {"id": 15368, "slug": "github-actions"},
+               "check_suite": {"id": 81}, "details_url": "https://github.com/unit/public/actions/runs/91/job/11",
+               "status": "completed", "conclusion": "success"} for name in sorted(full.REQUIRED)]
+    page = {"total_count": 1, "workflow_runs": [run]}
+    if fault == "absent":
+        page = {"total_count": 0, "workflow_runs": []}
+    elif fault == "partial":
+        page["total_count"] = 2
+    elif fault == "unavailable":
+        page = None
+    elif fault in {"head", "workflow", "event", "title", "repo"}:
+        field = {"head": "head_sha", "workflow": "workflow_id", "event": "event", "title": "display_title", "repo": "repository"}[fault]
+        run[field] = {"head": "b" * 40, "workflow": 8, "event": "pull_request", "title": "CI", "repo": {"full_name": "unit/other"}}[fault]
+    elif fault in {"failed", "cancelled"}:
+        run["conclusion"] = "failure" if fault == "failed" else "cancelled"
+    elif fault == "queued":
+        run.update(status="queued", conclusion=None)
+    elif fault == "missing-shard":
+        checks = [row for row in checks if row["name"] != "pytest (24)"]
+    elif fault == "skipped":
+        checks[0]["conclusion"] = "skipped"
+    elif fault == "forged-app":
+        checks[0]["app"] = {"id": 1, "slug": "github-actions"}
+    elif fault == "suite":
+        checks[0]["check_suite"]["id"] = 99
+    elif fault == "url":
+        checks[0]["details_url"] = "https://github.com/unit/public/actions/runs/92/job/11"
+    views = 0
+
+    def runner(args, **kwargs):
+        nonlocal views
+        if args[1] == "api":
+            endpoint = args[4]
+            if endpoint.endswith("/actions/workflows/ci.yml"):
+                body = {"id": 7, "path": ".github/workflows/ci.yml", "name": "CI"}
+            elif "/runs?" in endpoint:
+                body = page
+            else:
+                body = {"total_count": len(checks), "check_runs": checks}
+        elif args[2] == "checks":
+            body = []
+        else:
+            views += 1
+            body = {"number": 1, "isDraft": False, "headRefOid": "b" * 40 if fault == "moved" and views > 1 else head}
+        return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
+
+    if fault == "none":
+        assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}) == head
+    else:
+        with pytest.raises(PublishBlocked, match=r"approved-head full CI|reviewed head changed"):
+            ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    # The same admission-only response in unrelated repositories retains its old contract.
+    views = 0
+    assert ensure_merge_ready("unit/other", 1, runner=runner, cwd=".", environment={}) == head

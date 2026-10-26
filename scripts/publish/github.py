@@ -121,7 +121,7 @@ SCHEMAS = {
 # workflow -> {input name: (kind, required)}. Kinds other than "bool" name a
 # PATTERNS entry. coverage-ref's contexts input is an optional typed boolean.
 WORKFLOWS = {
-    "ci.yml": {},
+    "ci.yml": {"approved_pr": ("pr_number", False), "expected_head": ("sha", False)},
     "deploy-pages.yml": {},
     "pytest-slow-nightly.yml": {},
     "stale-branch-cleanup.yml": {},
@@ -151,6 +151,7 @@ PATTERNS = {
     "repo": r"(?:[A-Za-z0-9.-]+/)?[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
     "ref": r"[A-Za-z0-9_][A-Za-z0-9_./-]*",
     "sha": r"[0-9a-fA-F]{40}",
+    "pr_number": r"[1-9][0-9]*",
     "node": r"[A-Za-z0-9_=-]+",
     "color": r"[0-9a-fA-F]{6}",
 }
@@ -188,6 +189,10 @@ def _validate(verb, fields):
         raise gate.PublishBlocked("OPSEC: required publisher field missing.")
     if verb == "workflow-run":
         fields = {**fields, "inputs": fields.get("inputs", {})}
+    if verb == "workflow-run" and fields.get("workflow") == "ci.yml":
+        inputs = fields.get("inputs", {})
+        if isinstance(inputs, dict) and bool(inputs.get("approved_pr")) != bool(inputs.get("expected_head")):
+            raise gate.PublishBlocked("OPSEC: invalid publisher field inputs.")
     for key, value in fields.items():
         kind = schema[key]
         valid = True
@@ -980,6 +985,9 @@ def request_run(request, *, runner=None, input=None, **kwargs):
 
 
 REST_READS = {
+    "approved-ci-checks": ("repos/{repo}/commits/{sha}/check-runs?filter=all", {"sha": "sha"}),
+    "ci-workflow": ("repos/{repo}/actions/workflows/ci.yml", {}),
+    "approved-ci-runs": ("repos/{repo}/actions/workflows/ci.yml/runs?event=workflow_dispatch&head_sha={sha}", {"sha": "sha"}),
     "identity": ("user", {}),
     "issue": ("repos/{repo}/issues/{number}", {"number": "number"}),
     "comments": ("repos/{repo}/issues/{number}/comments", {"number": "number"}),

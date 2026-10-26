@@ -83,3 +83,19 @@ def test_invalid_ref_cannot_reach_dispatch(dispatch_calls, capsys):
     ], runner=sender) == 2
     assert capsys.readouterr().err == "OPSEC: invalid publisher field ref.\n"
     assert calls == []
+
+
+@pytest.mark.parametrize("inputs,valid", [
+    ({"approved_pr": "42", "expected_head": "a" * 40}, True),
+    ({}, True), ({"approved_pr": "42"}, False), ({"expected_head": "a" * 40}, False),
+    ({"approved_pr": "0", "expected_head": "a" * 40}, False),
+    ({"approved_pr": "42", "expected_head": "a" * 40, "force": "true"}, False),
+    ({"approved_pr": "42", "expected_head": "not-a-sha"}, False),
+])
+def test_ci_dispatch_inputs_remain_narrow_and_paired(inputs, valid):
+    fields = {"workflow": "ci.yml", "ref": "codex/fixture", "inputs": inputs}
+    if valid:
+        pub._validate("workflow-run", fields)
+    else:
+        with pytest.raises(gate.PublishBlocked, match="inputs"):
+            pub._validate("workflow-run", fields)

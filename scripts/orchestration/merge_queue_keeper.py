@@ -22,6 +22,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.ci import approved_pr_ci
 from scripts.common.github_client import GitHubRateLimited
 from scripts.gh_merge_queue_status import extract_pr_number
 from scripts.github_check_rollup import bind_workflow_runs, group_collapsed_by_name, project_check_runs
@@ -270,6 +271,21 @@ class GitHub:
             raise KeeperError("check workflow provenance unknown")
         return rows
 
+    def full_ci(self, number: int, head: str):
+        def read(endpoint):
+            if "/actions/workflows/ci.yml/runs?" in endpoint:
+                request = Request("read-approved-ci-runs", repo=self.repository, sha=head)
+            elif endpoint.endswith("/actions/workflows/ci.yml"):
+                request = Request("read-ci-workflow", repo=self.repository)
+            else:
+                request = Request("read-approved-ci-checks", repo=self.repository, sha=head)
+            return self.json(request)
+        return approved_pr_ci.inspect(self.repository, number, head, read)
+
+    def dispatch_full(self, number: int, head: str, ref: str) -> None:
+        self.call(Request("workflow-run", repo=self.repository, workflow="ci.yml", ref=ref,
+                          inputs={"approved_pr": str(number), "expected_head": head}))
+
     def files(self, number: int) -> list[dict[str, Any]]:
         """Every changed file of a PR; raises when the list may be truncated or incomplete."""
         pull = self.json(Request("read-pull", repo=self.repository, number=number))
@@ -291,7 +307,7 @@ class GitHub:
             "-R",
             self.repository,
             "--json",
-            "number,title,isDraft,headRefOid,baseRefName,autoMergeRequest,mergeStateStatus,state",
+            "number,title,isDraft,headRefOid,headRefName,baseRefName,autoMergeRequest,mergeStateStatus,state",
         )
         if not isinstance(row, dict):
             raise KeeperError("current PR lookup incomplete")
@@ -598,6 +614,7 @@ def _load(path: Path) -> dict[str, Any]:
         not isinstance(data, dict)
         or not isinstance(data.get("queued"), dict)
         or not isinstance(data.get("drops"), dict)
+        or not isinstance(data.get("full_ci", {}), dict)
         or not isinstance(data.get("approved", {}), dict)
         or not isinstance(data.get("undiagnosed", {}), dict)
         or not isinstance(data.get("squash_revoked", {}), dict)
@@ -605,6 +622,8 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("flake_issue_updates", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
+    if any(not isinstance(value, dict) for value in data.get("full_ci", {}).values()):
+        raise KeeperError("keeper full CI state malformed")
     for name in ("requeued", "shared_pass", "shared_requeues"):
         data.pop(name, None)
     return data
@@ -1032,6 +1051,37 @@ def _canonical_flake_issue(
     return (min(matches, key=lambda item: item["number"]) if matches else None), None
 
 
+def _approved_full_ci(gh, number, head, previous, state_path, *, apply):
+    """Called only with fresh canonical CF and PR identity, under the keeper lock."""
+    proof = gh.full_ci(number, head)
+    key = f"{number}:{head}"
+    requests = previous.setdefault("full_ci", {})
+    if proof.run_id is not None and apply:
+        requests.setdefault(key, {})["run_id"] = proof.run_id
+        _save(state_path, previous)
+    if proof.state != "absent":
+        return "ready" if proof.state == "success" else "full-CI-" + proof.state
+    if key in requests:
+        return "full-CI-dispatch-pending"
+    if not apply:
+        return "full-CI-awaiting-dispatch"
+    current = gh.current(number)
+    if current.get("headRefOid") != head or current.get("state") != "OPEN":
+        return "head-moved"
+    if lookup_verdict(gh.comments(number), head, gh.identity()).state != "APPROVED":
+        return "needs-CF"
+    ref = current.get("headRefName")
+    if not isinstance(ref, str) or not ref:
+        return "full-CI-ref-unknown"
+    # Persist intent before the side effect. An uncertain response or visibility lag
+    # retains this identity forever; only a driver-owned recovery may proceed.
+    requests[key] = {"pr": number, "head": head, "title": approved_pr_ci.title(number, head), "ref": ref,
+                     "workflow": "ci.yml", "inputs": {"approved_pr": str(number), "expected_head": head}}
+    _save(state_path, previous)
+    gh.dispatch_full(number, head, ref)
+    return "full-CI-dispatch-pending"
+
+
 def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str], bool]:
     branches = gh.branch_names()
     snap = gh.snapshot(branches)
@@ -1101,6 +1151,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             except KeeperError as exc:
                 detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
+        if reason == "ready" and not apply and approved_pr_ci.applies(gh.repository):
+            try:
+                reason = _approved_full_ci(gh, number, head, previous, state_path, apply=False)
+            except KeeperError:
+                reason = "full-CI-unknown"
         if reason == "ready" and queued is not True and not armed:
             try:
                 reason = _gate_hold(gh, number, head, previous) or reason
@@ -1180,6 +1235,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     if verdict_lookup_ok
                     else "fresh-evidence-unknown"
                 )
+                if (reason == "ready" and approved_pr_ci.applies(gh.repository)):
+                    reason = _approved_full_ci(gh, number, head, previous, state_path, apply=True)
                 if reason == "ready" and queued is not True and not armed:
                     reason = _gate_hold(gh, number, head, previous) or reason
             if queued is True or armed:

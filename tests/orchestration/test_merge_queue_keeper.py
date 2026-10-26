@@ -2408,3 +2408,51 @@ def test_create_issue_returns_new_issue_number(tmp_path, monkeypatch):
     monkeypatch.setattr(client, "call", lambda *args: pytest.fail("automatic issue creation reached transport"))
     with pytest.raises(keeper.KeeperError, match="report finding to CTO"):
         client.create_issue("title", "body")
+
+
+@pytest.mark.parametrize("state", ["absent", "pending", "success", "failed", "unknown", "transport", "moved", "stale", "negative", "unavailable"])
+def test_approved_full_dispatch_intent_survives_visibility_lag_and_failures(tmp_path, state):
+    from scripts.ci.approved_pr_ci import Proof
+
+    path = tmp_path / "state.json"
+    previous = {"queued": {}, "drops": {}, "shared_field": {"keep": True}}
+    fake = FakeGitHub()
+    fake.fresh["headRefName"] = "codex/fixture"
+    if state == "moved":
+        fake.fresh["headRefOid"] = HEAD_B
+    if state == "stale":
+        fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", HEAD_B)]
+    if state == "negative":
+        fake.comments_rows = [recorded("CHANGES_REQUESTED", "2026-09-23T12:00:00.000001+00:00", HEAD_A)]
+    if state == "unavailable":
+        def unavailable(number):
+            raise keeper.KeeperError("fixture unavailable")
+        fake.comments = unavailable
+    fake.full_ci = lambda number, head: Proof("absent" if state in {"transport", "moved", "stale", "negative", "unavailable"} else state,
+                                               91 if state in {"pending", "success", "failed"} else None)
+    dispatched = []
+
+    def dispatch(number, head, ref):
+        saved = json.loads(path.read_text())
+        assert saved["full_ci"]["42:" + HEAD_A]["inputs"] == {"approved_pr": "42", "expected_head": HEAD_A}
+        assert saved["shared_field"] == {"keep": True}
+        dispatched.append((number, head, ref))
+        if state == "transport":
+            raise keeper.KeeperError("fixture uncertain transport")
+
+    fake.dispatch_full = dispatch
+    if state in {"transport", "unavailable"}:
+        with pytest.raises(keeper.KeeperError):
+            keeper._approved_full_ci(fake, 42, HEAD_A, previous, path, apply=True)
+    else:
+        result = keeper._approved_full_ci(fake, 42, HEAD_A, previous, path, apply=True)
+        assert result == {"absent": "full-CI-dispatch-pending", "pending": "full-CI-pending", "success": "ready",
+                          "failed": "full-CI-failed", "unknown": "full-CI-unknown", "moved": "head-moved",
+                          "stale": "needs-CF", "negative": "needs-CF"}[state]
+    expected = [(42, HEAD_A, "codex/fixture")] if state in {"absent", "transport"} else []
+    assert dispatched == expected
+    if expected:
+        reloaded = keeper._load(path)
+        fake.full_ci = lambda number, head: Proof("absent")
+        assert keeper._approved_full_ci(fake, 42, HEAD_A, reloaded, path, apply=True) == "full-CI-dispatch-pending"
+        assert dispatched == expected

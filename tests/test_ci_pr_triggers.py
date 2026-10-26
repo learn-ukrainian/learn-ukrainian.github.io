@@ -315,6 +315,8 @@ def test_every_event_runs_every_job(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
     skipped = {job for job, result in results.items() if result != "success"}
     expected = set() if event == "merge_group" else {"queue-metadata-scan"}
+    if event in {"opened", "synchronize", "reopened"}:
+        expected |= {"frontend", "refresh-pytest-durations", "pytest", "pytest-report"}
     assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
 
@@ -408,12 +410,16 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
             payload["schedule"] = "30 3 * * *"
         elif event == "workflow_dispatch":
             payload["ref"] = "refs/heads/main"
+        full = {"FRONTEND", "REFRESH", "PYTEST", "PYTEST_REPORT"}
         jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
+        jobs["IDENTITY"] = "success"
+        if event == "pull_request":
+            jobs.update({key: "skipped" for key in full})
         # Existing test bodies can corrupt the real entry-point event and candidate.
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
         jobs.update(results)
-        mapping = {"PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
+        mapping = {"IDENTITY": "approved-head", "PR_AFFECTED": "pr-affected", "SECRET_SCAN": "secret-scan", "CHECKS": "checks", "FRONTEND": "frontend", "DEPENDENCY_AUDIT": "dependency-audit", "REFRESH": "refresh-pytest-durations", "PYTEST": "pytest", "PYTEST_REPORT": "pytest-report", "METADATA_SCAN": "queue-metadata-scan"}
         needs = {mapping.get(name, name): {"result": value} for name, value in jobs.items()}
         event_path = Path(directory) / "event.json"
         event_path.write_text(raw_payload)
@@ -423,7 +429,7 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
         )
         if result.returncode == 0:
             summary = (Path(directory) / "summary").read_text()
-            assert "Full supported pytest suite and partition audits are required." in summary
+            assert ("PR admission: full pytest was not run." if event == "pull_request" else "Full supported pytest suite and partition audits are required.") in summary
         return result
 
 
@@ -432,16 +438,16 @@ def test_gate_passes_a_green_pull_request_run() -> None:
     result = _run_gate("pull_request")
     assert result.returncode == 0, result.stdout
     assert "CI Gate green" in result.stdout
-    assert "Full supported pytest suite and partition audits are required." in result.stdout
+    assert "PR admission: full pytest was not run." in result.stdout
 
 
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"PYTEST": "failure"}, {"PYTEST": "skipped"}, {"PYTEST": "cancelled"},
-        {"PYTEST_REPORT": "skipped"}, {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""},
-        {"FRONTEND": "skipped"}, {"DEPENDENCY_AUDIT": "failure"},
-        {"DEPENDENCY_AUDIT": "skipped"}, {"REFRESH": "skipped"},
+        {"PYTEST": "failure"}, {"PYTEST": "success"}, {"PYTEST": "cancelled"},
+        {"PYTEST_REPORT": "success"}, {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""},
+        {"FRONTEND": "success"}, {"DEPENDENCY_AUDIT": "failure"},
+        {"DEPENDENCY_AUDIT": "skipped"}, {"REFRESH": "success"},
         {"METADATA_SCAN": "success"}, {"NEEDS_JSON": "{}"},
     ],
 )
@@ -622,3 +628,21 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert _run_gate('pull_request', NEEDS_JSON=json.dumps(needs)).returncode == 1
     result = _run_gate('pull_request', UNEXPECTED='success')
     assert result.returncode == 1
+
+
+@pytest.mark.parametrize("expected,number,valid", [("a" * 40, "7", True), ("b" * 40, "7", False), ("a" * 40, "", False), ("", "7", False), ("a" * 40, "-1", False)])
+def test_manual_approved_dispatch_binds_actual_checkout_before_full_jobs(expected, number, valid):
+    from scripts.ci.gate import event_tier
+
+    payload = {"repository": {"default_branch": "main"}, "ref": "main",
+               "inputs": {"approved_pr": number, "expected_head": expected}}
+    if valid:
+        assert event_tier("workflow_dispatch", payload, "a" * 40, "refs/heads/main", "a" * 40) == "full"
+    else:
+        with pytest.raises(ValueError):
+            event_tier("workflow_dispatch", payload, "a" * 40, "refs/heads/main", "a" * 40)
+    jobs = _load("ci.yml")["jobs"]
+    assert jobs["approved-head"]["steps"][-1]["run"] == "python3 -m scripts.ci.gate --validate-event"
+    result, _ = _simulate(_EVENTS["workflow_dispatch"], failures={"approved-head"})
+    assert {name: result[name] for name in ["frontend", "refresh-pytest-durations", "pytest", "pytest-report"]} == {
+        "frontend": "skipped", "refresh-pytest-durations": "skipped", "pytest": "skipped", "pytest-report": "skipped"}

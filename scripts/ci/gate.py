@@ -1,4 +1,4 @@
-"""Require full-suite results for the checked-out candidate."""
+"""Require PR admission or full-suite results for the checked-out candidate."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 SHA = re.compile(r"[0-9a-f]{40}\Z")
-COMMON = frozenset({"secret-scan", "checks", "dependency-audit", "pr-affected"})
+COMMON = frozenset({"secret-scan", "checks", "dependency-audit", "pr-affected", "approved-head"})
 FULL = frozenset({"frontend", "refresh-pytest-durations", "pytest", "pytest-report"})
 
 
@@ -30,7 +30,7 @@ def event_tier(event: str, payload: dict, sha: str, ref: str, actual: str) -> st
                 or type(number) is not int or number < 1 or ref != f"refs/pull/{number}/merge"
                 or not SHA.fullmatch(pr["base"]["sha"]) or not SHA.fullmatch(pr["head"]["sha"])):
             raise ValueError("invalid pull_request identity")
-        return "full"
+        return "admission"
     if event == "merge_group":
         group = payload["merge_group"]
         queue_ref = rf"refs/heads/gh-readonly-queue/{re.escape(default)}/pr-[1-9][0-9]*-[0-9a-f]{{40}}"
@@ -56,6 +56,9 @@ def event_tier(event: str, payload: dict, sha: str, ref: str, actual: str) -> st
             inputs = {}
         if inputs.get("secret_scan_mode", "bounded") not in {"bounded", "full-history-audit"}:
             raise ValueError("invalid manual scan mode")
+        pr, expected = inputs.get("approved_pr", ""), inputs.get("expected_head", "")
+        if (pr or expected) and (not isinstance(pr, str) or not re.fullmatch(r"[1-9][0-9]*", pr) or expected != sha):
+            raise ValueError("approved PR dispatch does not match actual head")
         return "full"
     raise ValueError("unsupported CI event")
 
@@ -75,6 +78,7 @@ def main() -> int:
     )
     parser.add_argument("--record-queue", action="store_true", default=False,
                         help="Write original queue identity to QUEUE_RECORD, e.g. queue-candidate.json; default: validate job results.")
+    parser.add_argument("--validate-event", action="store_true", help="Validate checkout identity before full jobs.")
     args = parser.parse_args()
     try:
         event = os.environ["EVENT_NAME"]
@@ -83,6 +87,8 @@ def main() -> int:
             ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True, timeout=30
         ).stdout.strip()
         tier = event_tier(event, payload, os.environ["GITHUB_SHA"], os.environ["GITHUB_REF"], actual)
+        if args.validate_event:
+            return 0
         if args.record_queue:
             if event != "merge_group":
                 raise ValueError("queue record requires a merge-group event")
@@ -106,7 +112,8 @@ def main() -> int:
                 if value == "cancelled":
                     print(f"::error::required job was cancelled: {name}")
                 failed = True
-        summary = "Full supported pytest suite and partition audits are required."
+        summary = ("PR admission: full pytest was not run. Approved-head full CI is required before enqueue."
+                   if tier == "admission" else "Full supported pytest suite and partition audits are required.")
         print(summary)
         if os.environ.get("GITHUB_STEP_SUMMARY"):
             with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as stream:

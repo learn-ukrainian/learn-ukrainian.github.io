@@ -588,8 +588,8 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 def test_pytest_runs_on_every_supported_event() -> None:
     jobs = _jobs_of_ci()
     assert "reuse" not in jobs
-    assert jobs["pytest"]["needs"] == ["refresh-pytest-durations"]
-    full = "${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
+    assert jobs["pytest"]["needs"] == ["approved-head", "refresh-pytest-durations"]
+    full = "${{ !cancelled() && needs.approved-head.result == 'success' && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
     for name in ("pytest", "refresh-pytest-durations", "frontend"):
         assert jobs[name]["if"] == full
     guard = next(step for step in jobs["checks"]["steps"] if step.get("name") == "Sparse tree collection guard")

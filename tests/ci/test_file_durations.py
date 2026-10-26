@@ -154,8 +154,8 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert "freeze-durations" not in jobs
     refresh = jobs["refresh-pytest-durations"]
     assert "reuse" not in jobs
-    assert not refresh.get("needs")
-    full = "${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
+    assert refresh["needs"] == ["approved-head"]
+    full = "${{ !cancelled() && needs.approved-head.result == 'success' && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
     assert refresh["if"] == full
     assert refresh["timeout-minutes"] == 10
     assert refresh["permissions"] == {"contents": "read", "actions": "read"}
@@ -168,7 +168,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert upload["with"]["name"] == "pytest-duration-input"
     assert upload["with"]["path"] == "ci-artifacts/pytest-file-durations.json"
     pytest_job = jobs["pytest"]
-    assert pytest_job["needs"] == ["refresh-pytest-durations"]
+    assert pytest_job["needs"] == ["approved-head", "refresh-pytest-durations"]
     assert pytest_job["if"] == full
     assert pytest_job["timeout-minutes"] == 15
     assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 25))

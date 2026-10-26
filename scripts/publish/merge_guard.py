@@ -8,6 +8,7 @@ import subprocess
 from collections.abc import Callable
 from urllib.parse import quote
 
+from scripts.ci import approved_pr_ci
 from scripts.ci.advisory_checks import (
     external_advisory_check,
     is_advisory,
@@ -413,6 +414,15 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
         if states is None:
             raise PublishBlocked("OPSEC: merge refused: cannot establish check state.")
         reason = readiness_reason(meta, states)
+        if reason is None and approved_pr_ci.applies(repo):
+            proof = approved_pr_ci.inspect(repo, number, meta["headRefOid"], get_json)
+            if proof.state != "success":
+                reason = "approved-head full CI " + proof.state
+            # Re-read after the proof lookup; a push invalidates the entire proof.
+            latest = get(["view", str(number), "--json", "number,isDraft,headRefOid"])
+            current = json.loads(latest.stdout) if latest.returncode == 0 else None
+            if not isinstance(current, dict) or current.get("headRefOid") != meta["headRefOid"]:
+                reason = "reviewed head changed"
         if match_head is not None and meta["headRefOid"].lower() != match_head.lower():
             reason = "reviewed head changed"
     except (PublishBlocked, GitHubRateLimited):

@@ -1,6 +1,7 @@
 name: CI
+run-name: ${{ inputs.approved_pr && format('Approved PR #{0} head {1}', inputs.approved_pr, inputs.expected_head) || 'CI' }}
 
-# PRs, merge_group, nightly and opt-in workflow_dispatch run the full supported suite.
+# PRs run admission; approved heads, merge_group, nightly and manual runs execute the full suite.
 # Merge-group candidates repeat the full partition before landing.
 # Every merge candidate must pass the same required "CI Gate" context.
 
@@ -24,6 +25,14 @@ on:
   merge_group:
   workflow_dispatch:
     inputs:
+      approved_pr:
+        description: PR number for keeper-approved full CI
+        type: string
+        default: ''
+      expected_head:
+        description: Exact approved PR head SHA
+        type: string
+        default: ''
       secret_scan_mode:
         description: Secret scan coverage (full-history-audit scans all history)
         type: choice
@@ -35,6 +44,23 @@ on:
     - cron: '30 3 * * *'
 
 jobs:
+  approved-head:
+    name: Approved head identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version-file: '.python-version'
+      - name: Bind event to actual checkout before full jobs
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: python3 -m scripts.ci.gate --validate-event
+
   queue-metadata-scan:
     # The queue writes PR-derived text into its commit's message, so the
     # commit's metadata needs its own scan. Scans message, author
@@ -188,10 +214,11 @@ jobs:
           PATH="$PWD/.venv/bin:$PATH" bash scripts/ci/checks.sh
 
   frontend:
+    needs: [approved-head]
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
     # (site/ plus the backend inputs hydrate reads) or the base is unknown.
     name: Frontend
-    if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() && needs.approved-head.result == 'success' && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -249,8 +276,9 @@ jobs:
   # One snapshot per run, then every shard downloads that same artifact (#11040).
   # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
   refresh-pytest-durations:
+    needs: [approved-head]
     name: Refresh pytest durations
-    if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() && needs.approved-head.result == 'success' && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -303,8 +331,8 @@ jobs:
 
   pytest:
     name: pytest (${{ matrix.shard }})
-    needs: [refresh-pytest-durations]
-    if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    needs: [approved-head, refresh-pytest-durations]
+    if: ${{ !cancelled() && needs.approved-head.result == 'success' && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # actions:read is only so this job can download the same-run snapshot.
@@ -542,7 +570,7 @@ jobs:
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
     # Every dependency must finish with the result required by its event tier.
-    needs: [queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pr-affected, refresh-pytest-durations, pytest, pytest-report]
+    needs: [approved-head, queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pr-affected, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
