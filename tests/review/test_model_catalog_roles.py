@@ -27,6 +27,8 @@ from scripts.review.role_resolution import expanded_legacy_view
 from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.review.test_model_catalog import (
     CAPTURE,
+    MUSE_REVIEW_CANDIDATE,
+    approved_muse_review_receipt,
     assert_frozen_surfaces,
 )
 from tests.review.test_model_catalog import (
@@ -102,7 +104,9 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_p
         "native_claude": "claude-opus-5-5",
         "agy": "claude-opus-5-5-high",
     }
-    assert expanded_legacy_view(catalog)["review_candidates"] == APPROVED_BASELINE["catalog"]["review_candidates"]
+    assert expanded_legacy_view(catalog)["review_candidates"] == {
+        **APPROVED_BASELINE["catalog"]["review_candidates"], "muse": MUSE_REVIEW_CANDIDATE,
+    }
 
 
 def test_launch_explicitly_pins_current_review_models():
@@ -113,6 +117,7 @@ def test_launch_explicitly_pins_current_review_models():
         "claude-opus-5-5",
         "claude-sonnet-5-5",
         "gemini-3.8-flash-high",
+        "muse-wonder-full-1.0",
     }
     for row in launched.candidates:
         assert row.argv.count("--model") == 1
@@ -413,4 +418,6 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
     monkeypatch.setattr(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief,
                         now=CAPTURE["FIXED_NOW"]))
     actual = CAPTURE["observed"](lambda: resolve_reviewer(ResolverInputs(**case, claude_account=HOST_ACCOUNT)))
-    assert json.loads(CAPTURE["encode"](actual)) == APPROVED_BASELINE["reviewer"][index]
+    assert json.loads(CAPTURE["encode"](actual)) == approved_muse_review_receipt(
+        APPROVED_BASELINE["reviewer"][index], APPROVED_INPUTS["reviewer"][index]
+    )
