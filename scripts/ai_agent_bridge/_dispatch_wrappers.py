@@ -1,4 +1,4 @@
-"""Hardcoded delegate.py wrapper commands for recurring agent dispatches."""
+"""Bridge wrapper commands for recurring agent dispatches."""
 
 from __future__ import annotations
 
@@ -178,7 +178,7 @@ def brief_owned_paths(text: str) -> tuple[str, ...]:
 
     Paths are the backticked tokens of that section, or the lines of a fenced
     block in it, including repository-root files. Absolute paths, ``..``
-    segments and bare words are dropped; ``delegate.py`` validates the rest.
+    segments and bare words are dropped before dispatch.
     """
     match = _OWNED_PATHS_HEADING.search(text)
     if match is None:
@@ -276,7 +276,7 @@ def _serialize_files(files: Any) -> str:
 def _write_review_deep_pr_prompt(pr_number: str, prompt_directory: Path) -> Path:
     """Pointer-only PR review prompt (Sol fleet-comms Phase 2).
 
-    Never embed full PR body or diff — worker/delegate pulls evidence under
+    Never embed full PR body or diff — the reviewer pulls evidence under
     read-only mode. Exact-head cross-family review through ``ask-<lane> --type review``
     (headless dispatch) replaced the removed ``review-pr``.
     """
@@ -364,7 +364,7 @@ def _review_prompt_file(target: str, prompt_directory: Path) -> Path:
 def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> list[str]:
     return [
         PYTHON,
-        "scripts/delegate.py",
+        "scripts/dispatch.py",
         "dispatch",
         "--agent",
         "claude",
@@ -521,7 +521,7 @@ def build_ask_review_dispatch_command(
 
 
 def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
-    return [PYTHON, "scripts/delegate.py", "wait", task_id, "--timeout", str(timeout)]
+    return [PYTHON, "scripts/dispatch.py", "wait", task_id, "--timeout", str(timeout)]
 
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
@@ -590,7 +590,7 @@ def run_ask_review_dispatch(
 
     Fires `delegate.py dispatch --agent <agent> --worktree --mode read-only`
     (a real TUI agent with tools in an isolated worktree), then
-    `delegate.py wait` to block for the terminal state. Returns the terminal
+    `scripts/dispatch.py wait` to block for the terminal state. Returns the terminal
     state dict plus the read-back ``response`` text and a normalized ``ok``.
     Raises ``RuntimeError`` if dispatch itself could not be started or the
     wait output could not be parsed — callers turn that into a hard failure,
@@ -657,14 +657,14 @@ def run_ask_review_dispatch(
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(
-                f"delegate.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
+                f"scripts/dispatch.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
                 f"Command: {' '.join(wait_command)}"
             ) from exc
         try:
             state = json.loads(wait_proc.stdout or "{}")
         except json.JSONDecodeError as exc:
             raise RuntimeError(
-                f"delegate.py wait produced non-JSON output (rc={wait_proc.returncode}): "
+                f"scripts/dispatch.py wait produced non-JSON output (rc={wait_proc.returncode}): "
                 f"stdout={wait_proc.stdout!r} stderr={wait_proc.stderr!r}"
             ) from exc
 

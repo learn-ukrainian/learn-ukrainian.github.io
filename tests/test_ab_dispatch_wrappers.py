@@ -77,7 +77,6 @@ def _capture_native_review(
 
 @pytest.mark.parametrize("verdict", [None, "REQUEST_CHANGES"])
 def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp_path, verdict):
-    from scripts import delegate
     from scripts.review.verdict_parser import recognized_verdicts
 
     assert recognized_verdicts(wrappers._NATIVE_CODE_REVIEW_OUTPUT) == []
@@ -87,7 +86,7 @@ def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp
         guidance = prompt[len(wrappers._REVIEW_VERDICT_OUTPUT) + 2 + len(content) :]
         assert recognized_verdicts(guidance) == []
         response = (f"VERDICT: {verdict}\n" if verdict else "") + "Contract noted:\n" + guidance
-        assert delegate.parse_review_verdict(response) == verdict
+        assert (recognized_verdicts(response) or [None])[-1] == verdict
         return response
 
     _capture_native_review(monkeypatch, tmp_path, content, None, echo_guidance, ok=verdict is not None)
@@ -371,6 +370,13 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
 
     assert rc == 0
     command = calls[0][0]
+    from scripts.dispatcher.cli import build_parser
+
+    assert command[:3] == [".venv/bin/python", "scripts/dispatch.py", "dispatch"]
+    parsed = build_parser().parse_args(command[2:])
+    assert (parsed.agent, parsed.model, parsed.mode, parsed.effort) == (
+        "claude", "claude-opus-5-5", "read-only", "high",
+    )
     assert _option(command, "--agent") == "claude"
     assert _option(command, "--mode") == "read-only"
     assert _option(command, "--model") == "claude-opus-5-5"
@@ -731,3 +737,33 @@ def test_run_ask_review_dispatch_last_verdict_line_wins(monkeypatch, tmp_path):
     )
     assert state["ok"] is True
     assert state["status"] == "done"
+
+
+@pytest.mark.parametrize("schema", [None, 1, 2], ids=["legacy", "v1", "v2"])
+@pytest.mark.parametrize("archived", [False, True], ids=["hot", "archive"])
+@pytest.mark.parametrize("status,expected_rc", [("done", 0), ("no_deliverable", 1), ("failed", 1), ("running", 124)])
+def test_review_wait_reads_both_schemas_without_rewriting_records(monkeypatch, tmp_path, schema, archived, status, expected_rc):
+    """Switching wait tools must preserve legacy records and terminal exit codes."""
+    from scripts.dispatcher.cli import build_parser
+
+    task_root = tmp_path / "tasks"
+    folder = task_root / "archive" if archived else task_root
+    folder.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(task_root))
+    record = {"task_id": "review-read", "status": status, "pid": None, "run_nonce": "run-1"}
+    if schema is not None:
+        record["schema_version"] = schema
+    path = folder / "review-read.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    before = {p.relative_to(task_root): p.read_bytes() for p in task_root.rglob("*") if p.is_file()}
+    command = wrappers.build_ask_review_wait_command("review-read", timeout=0.01)
+    assert command[1:3] == ["scripts/dispatch.py", "wait"]
+    parsed = build_parser().parse_args(command[2:])
+    assert (parsed.task_id, parsed.timeout) == ("review-read", 0.01)
+    result = subprocess.run(
+        [sys.executable, *command[1:]], cwd=wrappers.REPO_ROOT, capture_output=True, text=True, timeout=10,
+    )
+    assert result.returncode == expected_rc, result.stderr
+    observed = json.loads(result.stdout)
+    assert {k: observed[k] for k in record} == record
+    assert {p.relative_to(task_root): p.read_bytes() for p in task_root.rglob("*") if p.is_file()} == before
