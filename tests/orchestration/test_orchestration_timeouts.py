@@ -37,6 +37,7 @@ from scripts.orchestration import (
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
+
 def _completed(
     args: list[str] | None = None,
     returncode: int = 0,
@@ -177,7 +178,7 @@ def test_job_host_exec_forward_dispatch_timeout(monkeypatch: pytest.MonkeyPatch)
     with patch("subprocess.run", side_effect=fake_run):
         rc = jhe.forward_dispatch(
             host_id="host-job",
-            argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
+            argv=["scripts/dispatch.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
         )
         assert rc == 0
 
@@ -191,7 +192,7 @@ def test_job_host_exec_forward_dispatch_timeout(monkeypatch: pytest.MonkeyPatch)
         with pytest.raises(jhe.SshTransportError, match=r"SSH transport timed out after 300\.0s"):
             jhe.forward_dispatch(
                 host_id="host-job",
-                argv=["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
+                argv=["scripts/dispatch.py", "dispatch", "--agent", "codex", "--task-id", "test-task"],
             )
 
 
@@ -291,9 +292,7 @@ def test_task_closeout_default_runner_timeout(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_orchestrator_control_cmd_dispatch_timeout(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_orchestrator_control_cmd_dispatch_timeout(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     args = argparse.Namespace(
         repo_root=tmp_path,
         run_id="run-1",
@@ -324,27 +323,38 @@ def test_orchestrator_control_cmd_dispatch_timeout(
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout='{"status": "running"}\n')
 
-    with patch("subprocess.run", side_effect=fake_run):
+    with patch.object(oc, "run_git") as fetch, patch("subprocess.run", side_effect=fake_run):
         rc = oc.cmd_dispatch(args)
         assert rc == 0
 
+    fetch.assert_called_once_with(
+        ["fetch", "origin", "refs/heads/main:refs/remotes/origin/main"],
+        cwd=tmp_path,
+        profile="remote",
+        timeout=30,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
     assert len(calls) == 1
-    assert calls[0]["timeout"] == oc.DEFAULT_DELEGATE_TIMEOUT_SECONDS
+    assert calls[0]["cmd"][:3] == [oc.PYTHON, "scripts/dispatch.py", "dispatch"]
+    assert calls[0]["timeout"] == oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS
     capsys.readouterr()
 
-    with patch(
-
-        "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(
-            ["python", "delegate.py"], oc.DEFAULT_DELEGATE_TIMEOUT_SECONDS
+    with (
+        patch.object(oc, "run_git"),
+        patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired(calls[0]["cmd"], oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS),
         ),
     ):
         rc = oc.cmd_dispatch(args)
         assert rc == 124
         out = json.loads(capsys.readouterr().out)
-        assert out["error"] == "delegate dispatch timed out"
+        assert out["error"] == "worker dispatch timed out"
         assert out["returncode"] == 124
         assert "timed out after 180.0s" in out["stderr"]
+        assert out["command"] == calls[0]["cmd"]
 
 
 # ---------------------------------------------------------------------------

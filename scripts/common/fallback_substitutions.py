@@ -1,7 +1,7 @@
 """Shared loader for ``scripts/config/agent_fallback_substitutions.yaml``.
 
 The ``dispatch_fallbacks`` table is the single source of truth for hard seat
-substitutions. ``delegate.py --check-budget`` (pre-dispatch budget shed) and
+substitutions. Legacy budget admission (pre-dispatch budget shed) and
 the ACP ask path (#8499: post-failure quota substitution) both read it through
 this loader so the mapping is never duplicated: a deleted row means refuse,
 not a silently resurrected route.
