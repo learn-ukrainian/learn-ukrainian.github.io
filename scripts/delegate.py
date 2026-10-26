@@ -3129,9 +3129,8 @@ def _review_verdict_failure_reason(response: str) -> str | None:
 
     Applies only to dispatches that opt in via ``--require-review-verdict``
     (the ask-* review wrapper); ordinary asks and implement dispatches never
-    require a magic marker. A review reply that never states
-    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED>``
-    at the start of a line is not a completed review — on 2026-09-21 several
+    require a magic marker. A review reply needs a recognized verdict line or
+    valid ``code-review-findings.v1`` JSON. On 2026-09-21 several
     review tasks settled ``done`` with a promise to wait for a background
     command as the whole body (#8421).
     """

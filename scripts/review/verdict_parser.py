@@ -1,10 +1,11 @@
-"""Lightweight shared Markdown verdict-line scanner (#9756).
+"""Shared Markdown and findings-JSON review verdict scanner (#9756, C-2178).
 
 Extracted from dispatch's proven scanner; consumer decision policies stay local.
 """
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Iterator
 
@@ -25,7 +26,7 @@ ACCEPTED_VERDICT_TOKENS = (
 # Reviewers routinely render the label and token in Markdown emphasis
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
 # full verdicts and must not be misread as missing (#8786). A verdict line
-# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
+# STARTS with the label: optional emphasis or inline backticks, ``VERDICT``, then
 # either a colon surrounded by emphasis/backticks/whitespace or at least one
 # emphasis/backtick/whitespace separator, then the token and a word boundary
 # (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
@@ -71,9 +72,9 @@ def _commonmark_keepends(text: str) -> list[str]:
     return lines
 
 
-_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_`][*_`\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_`][*_`\s]*)?VERDICT"
     r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",
@@ -197,16 +198,47 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
 
 
 def recognized_verdicts(response: str) -> list[str]:
-    """Return recognized verdict tokens in order, excluding code and examples.
+    """Return verdict lines, or validated findings-JSON verdicts if none exist.
 
     Selection and normalization belong to consumers. An unclosed CommonMark
-    fence suppresses its body through EOF or the enclosing container's end.
+    fence suppresses verdict lines through EOF or the enclosing container's end.
     """
     verdicts: list[str] = []
     for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match:
             verdicts.append(match.group(1).upper())
+    return verdicts or _findings_json_verdicts(response)
+
+
+def _findings_json_verdicts(response: str) -> list[str]:
+    """Read whole JSON replies and top-level JSON blocks, never quoted examples."""
+    from markdown_it import MarkdownIt
+
+    from scripts.review.review_contract import ContractError, validate_reviewer_payload
+
+    candidates = [_without_code_fences(response, keep_unclosed=False)]
+    candidates.extend(
+        token.content
+        for token in MarkdownIt("commonmark").parse(response)
+        if token.type == "fence" and token.level == 0 and token.info.strip() in {"", "json"}
+    )
+    verdicts: list[str] = []
+    for candidate in candidates:
+        try:
+            payload = json.loads(candidate)
+        except ValueError:
+            continue
+        if not isinstance(payload, dict):
+            continue
+        try:
+            validate_reviewer_payload(payload)
+        except ContractError:
+            continue
+        blocking = any(finding["priority"] in {"P0", "P1"} for finding in payload["findings"])
+        verdicts.append(
+            "APPROVE" if not blocking and payload["overall"]["correctness"] == "correct" else "REQUEST_CHANGES"
+        )
     return verdicts
 
 
