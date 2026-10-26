@@ -28,12 +28,84 @@ def _isolated_task_scratch_root(tmp_path_factory, monkeypatch) -> Path:
     the live ``/var/tmp/lu/task-scratch`` namespace.
     """
     root = tmp_path_factory.mktemp("task-scratch-root")
+    # Simulate the unmarked timer only inside this synthetic cleanup namespace.
+    monkeypatch.delenv("LU_DISPATCH_TASK_ID", raising=False)
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(root))
+    monkeypatch.setattr(cleanup, "disk_watermark_alert_report", lambda _state_dir: {"errors": 0})
     session_root = root / f"claude-{os.getuid()}"
     monkeypatch.setattr(cleanup, "sweep_sessions", lambda **kwargs: sweep_sessions(session_root, **kwargs))
     real_tmp_sweep = cleanup.sweep_tmp_leaks
     monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda **kwargs: real_tmp_sweep(tmp_roots=[root], **kwargs))
     return root
+
+
+@pytest.mark.parametrize("marker", ["", "native-task", "malformed/private\nvalue"])
+@pytest.mark.parametrize("mode", [None, "read-only", "workspace-write", "driver"])
+@pytest.mark.parametrize(
+    "entrypoint",
+    [
+        "main", "build_receipt", "cleanup_stale_origin_branches", "cleanup_gone_local_branches",
+        "cleanup_untracked_local_branches", "batch_state_retention_reports",
+    ],
+)
+def test_dispatched_apply_refuses_before_side_effects(tmp_path, monkeypatch, capsys, marker, mode, entrypoint):
+    monkeypatch.setenv("LU_DISPATCH_TASK_ID", marker)
+    if mode is None:
+        monkeypatch.delenv("LU_DISPATCH_MODE", raising=False)
+    else:
+        monkeypatch.setenv("LU_DISPATCH_MODE", mode)
+    payload = tmp_path / "payload"
+    payload.write_bytes(b"keep")
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("refused apply reached a cleanup side-effect boundary")
+
+    for name in (
+        "_repo_result", "_run_git", "_checked_out_branches", "sweep_sessions", "sweep_tmp_leaks",
+        "recover_task_scratch", "sweep_review_temp_orphans", "write_receipt", "disk_watermark_alert_report",
+    ):
+        monkeypatch.setattr(cleanup, name, forbidden)
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", forbidden)
+    from scripts.maintenance import batch_state_retention
+
+    monkeypatch.setattr(batch_state_retention, "plan_retention", forbidden)
+    message = "dispatch_apply_refused: destructive cleanup is disabled for dispatched children"
+    if entrypoint == "main":
+        monkeypatch.setattr(cleanup, "build_receipt", forbidden)
+        assert cleanup.main([
+            "--apply", "--repo-root", str(tmp_path), "--receipt-dir", str(tmp_path / "receipts"),
+        ]) == 1
+        captured = capsys.readouterr()
+        assert captured.out == ""
+        assert captured.err == message + "\n"
+    else:
+        target = [tmp_path] if entrypoint in {"build_receipt", "batch_state_retention_reports"} else tmp_path
+        with pytest.raises(cleanup.DispatchApplyRefused) as error:
+            getattr(cleanup, entrypoint)(target, apply=True)
+        assert str(error.value) == message
+    assert payload.read_bytes() == b"keep"
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["payload"]
+
+
+@pytest.mark.parametrize("marker", ["", "native-task"])
+def test_marked_dry_run_keeps_report_behavior(tmp_path, monkeypatch, capsys, marker):
+    monkeypatch.setenv("LU_DISPATCH_TASK_ID", marker)
+    calls = []
+
+    def repo_result(repo_root, *, apply):
+        calls.append((repo_root, apply))
+        return cleanup._empty_repo_result(repo_root)
+
+    monkeypatch.setattr(cleanup, "_repo_result", repo_result)
+    monkeypatch.setattr(cleanup.home_session_retention_check, "build_report", lambda: {})
+    monkeypatch.setattr(cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
+    monkeypatch.setattr(cleanup, "sweep_sessions", lambda **_kwargs: {"summary": {"errors": 0}})
+    receipts = tmp_path / "receipts"
+    assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(receipts)]) == 0
+    assert calls == [(tmp_path, False)]
+    assert json.loads(capsys.readouterr().out)["mode"] == "dry_run"
+    assert len(list(receipts.glob("*.json"))) == 1
 
 
 @pytest.mark.parametrize("apply", [False, True])

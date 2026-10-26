@@ -39,6 +39,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
+from scripts.hygiene.tmp_sweep import DispatchApplyRefused, refuse_dispatched_apply
 from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import backup_failure_alert, disk_watermark_alert, reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
@@ -541,6 +542,8 @@ def cleanup_stale_origin_branches(
     fetch_ok: bool = True,
 ) -> list[dict[str, Any]]:
     """Delete origin heads only with merged/closed, ancestry, or remote-ref proof."""
+    if apply:
+        refuse_dispatched_apply()
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _origin_heads(repo_root):
@@ -680,6 +683,8 @@ def cleanup_gone_local_branches(
     fetch_ok: bool = True,
 ) -> list[dict[str, Any]]:
     """Delete gone-upstream branches only with containment proof, never by name."""
+    if apply:
+        refuse_dispatched_apply()
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _gone_local_branches(repo_root):
@@ -832,6 +837,8 @@ def cleanup_untracked_local_branches(
     fetch_ok: bool = True,
 ) -> list[dict[str, Any]]:
     """Delete never-tracked local branches only with containment proof."""
+    if apply:
+        refuse_dispatched_apply()
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _untracked_local_branches(repo_root):
@@ -1302,6 +1309,8 @@ def build_receipt(
     apply: bool,
     observed_at: str | None = None,
 ) -> dict[str, Any]:
+    if apply:
+        refuse_dispatched_apply()
     timestamp = observed_at or utc_now()
     repositories = [_repo_result(path.resolve(), apply=apply) for path in repo_roots]
     removed = sum(
@@ -1425,9 +1434,10 @@ def build_parser() -> argparse.ArgumentParser:
 Outputs:
   Private JSON receipt and aggregate JSON on stdout. Dry-run is the default.
   --apply reaps eligible worktrees/refs, snapshots and proven-ended Claude scratch.
+  Destructive cleanup is refused when LU_DISPATCH_TASK_ID is present, even empty.
   Large batch_state files are reported for their owners; they are never auto-deleted.
 Exit codes:
-  0 report written without errors; 1 cleanup errors; 2 invalid arguments.
+  0 report written without errors; 1 cleanup errors or dispatched apply refused; 2 invalid arguments.
 Related:
   docs/runbooks/worktree-cleanup.md; #8783; thread_handoff.py
 """,
@@ -1569,6 +1579,8 @@ def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> lis
     Large files are reported for owner disposition. The run also performs a
     separate once-per-host ended-session sweep in main().
     """
+    if apply:
+        refuse_dispatched_apply()
     from scripts.maintenance.batch_state_retention import plan_retention
 
     reports: list[dict[str, Any]] = []
@@ -1600,6 +1612,12 @@ def disk_watermark_alert_report(state_dir: Path) -> dict[str, Any]:
 @github_client.timer
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.apply:
+        try:
+            refuse_dispatched_apply()
+        except DispatchApplyRefused as error:
+            print(str(error), file=sys.stderr)
+            return 1
     repo_roots = args.repo_root or args.default_repo_roots
     receipt = build_receipt(repo_roots, apply=bool(args.apply))
     home_session_retention = home_session_retention_check.build_report()
