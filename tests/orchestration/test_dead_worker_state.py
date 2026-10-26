@@ -171,7 +171,7 @@ def test_pidless_dead_marker_does_not_release_unproven_worker_claim(proc, tmp_pa
     import json
     from unittest.mock import Mock
 
-    record = {"task_id": "worker", "status": "running", "pid": None, "worker_identity": _record()["worker_identity"]}
+    record = {"schema_version": 2, "task_id": "worker", "status": "running", "pid": None, "worker_identity": _record()["worker_identity"]}
     path = tmp_path / "worker.json"
     path.write_text(json.dumps(record))
     ledger = Mock()
