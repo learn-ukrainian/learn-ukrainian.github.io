@@ -47,6 +47,8 @@ def _observe(record: dict) -> dict:
 
 
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+    if spec.agent == "cursor":
+        record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
     logs = path.parent / "logs"
     logs.mkdir(exist_ok=True, mode=0o700)
@@ -100,6 +102,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     record = json.loads(path.read_text())
     spec = _spec(record, options)
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
+    resolved_model = None
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
@@ -139,6 +142,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage = parsed.text, parsed.usage
+        resolved_model = parsed.resolved_model
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
         if returncode < 0:
             status = "crashed"
@@ -169,6 +173,12 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
         )
         record.update(git.snapshot_delivery(spec, record["worktree_base_sha"], record["worktree_branch"]))
+        if spec.agent == "cursor":
+            record.update(
+                resolved_model=resolved_model if resolved_model is not None else "unknown",
+                resolved_model_known=resolved_model is not None,
+                resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
+            )
         store.replace(record, path)
 
 

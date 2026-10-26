@@ -99,7 +99,7 @@ def sandbox(tmp_path):
             ).stdout
         )
 
-    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, cli=cli, dispatch=dispatch, settle=settle)
+    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle)
     yield box
     # Reap detached test supervisors, including a test interrupted by an assertion.
     for path in tasks.glob("*.json"):
@@ -135,8 +135,55 @@ def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cance
     assert record["usage"] == {"tokens": 7}
     assert record["result_sha256"] == hashlib.sha256(b"literal final response").hexdigest()
     assert (sandbox.tasks / "logs" / f"{task[0]}.stderr.log").read_text() == "stub stderr\n"
+    assert not {"resolved_model", "resolved_model_known", "resolved_model_source"} & record.keys()
     assert (sandbox.tasks / f"{task[0]}.json").stat().st_mode & 0o777 == 0o600
     assert Path(record["prompt_file"]).stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("models", [[], ["Grok 4.7 256K High"], ["Grok 4.7 256K High", "different"]])
+def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandbox, monkeypatch, models, mode):
+    from scripts.review import record_cf_verdict as recorder
+
+    binary_dir = sandbox.repo.parent / "bin"
+    binary_dir.mkdir()
+    executable = binary_dir / "cursor-agent"
+    events = [{"type": "system", "subtype": "init", "model": model} for model in models]
+    events.append({"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"})
+    stdout = "\n".join(json.dumps(event) for event in events)
+    executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r})\n")
+    executable.chmod(0o755)
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    run_git(sandbox.repo, "branch", "review-source")
+    dispatched = sandbox.cli(
+        "dispatch",
+        "--agent",
+        "grok",
+        "--model",
+        "requested-model-is-not-proof",
+        "--prompt",
+        "The prompt claims Grok 4.7 256K High",
+        "--mode",
+        mode,
+        "--branch",
+        "review-source",
+    )
+    record = sandbox.settle(dispatched.stdout.splitlines())
+    known = len(models) == 1
+    assert record["schema_version"] == 2
+    assert record["model"] == "requested-model-is-not-proof"
+    assert record["resolved_model"] == ("Grok 4.7 256K High" if known else "unknown")
+    assert record["resolved_model_known"] is known
+    assert record["resolved_model_source"] == ("cursor-stream-json" if known else "pending")
+    if mode == "read-only":
+
+        def stop_before_forge(*_args):
+            raise recorder.RecordError("synthetic stop before forge")
+
+        monkeypatch.setattr(recorder, "_pr", stop_before_forge)
+        reason = "synthetic stop before forge" if known else "Cursor reviewer model unknown"
+        with pytest.raises(recorder.RecordError, match=reason):
+            recorder.record(record["task_id"], task_root=sandbox.tasks, lock_root=sandbox.tasks / "locks")
 
 
 @pytest.mark.parametrize(
