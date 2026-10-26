@@ -49,9 +49,8 @@ Usage::
 
     python scripts/audit/check_venv_integrity.py
 
-Wire-up (matches ``check_node_modules_integrity``'s three call sites): the
-``cmd_dispatch`` pre-dispatch gate, the post-worker sweep (both in
-``scripts/delegate.py``), and the Monitor API health-orient canary
+Available as a local diagnostic and through the Monitor API health-orient
+canary
 (``scripts/api/main.py``). Callers fail open on any probe exception —
 consistent with the existing watchdogs, a probe bug must never itself block
 or crash a dispatch.

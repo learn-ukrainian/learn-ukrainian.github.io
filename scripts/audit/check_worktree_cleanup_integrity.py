@@ -14,9 +14,8 @@ no receipt was written for two days. This probe is DETECTION ONLY, mirroring
 - ALERT ONLY, never repairs. Reloading launchd is an explicit operator
   action from the merged primary checkout.
 
-Wired into the same three surfaces as the other integrity watchdogs: the
-``cmd_dispatch`` pre-dispatch warning, the post-worker sweep (both in
-``scripts/delegate.py``), and the Monitor API health-orient canary
+Available as a local diagnostic and through the Monitor API health-orient
+canary
 (``scripts/api/main.py``). Callers fail open on any probe exception.
 """
 

@@ -1613,8 +1613,8 @@ _ACP_RUNTIME_REASON_PREFIX = "acp runtime "
 _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
 _GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
 # Minimum age for a zero-file dispatch husk before it may be removed.
-# ``delegate.py`` creates the dispatch directory before ``git worktree add``
-# registers it, so an unregistered empty directory can be mid-creation; the
+# An unregistered empty dispatch directory can be mid-creation before
+# ``git worktree add`` registers it; the
 # provisioning window is seconds, and one hour bounds it with a wide margin
 # while still reaping same-day debris.
 _DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
