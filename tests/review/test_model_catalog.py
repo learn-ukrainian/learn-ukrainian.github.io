@@ -1299,13 +1299,17 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
                                "stdout": "", "stderr": ""}
                 elif surface == "reviewer":
                     template_case = {k: v for k, v in case.items() if k not in {"subject_families", "author_family"}}
-                    if case["author_model"] in workers:
+                    if case["author_model"] == "muse-wonder-full-1.0":
+                        # Full has known Meta identity. Like DeepSeek, its family
+                        # has no reviewer candidate, so every receipt field agrees.
+                        template_case["author_model"] = "deepseek-v4.1-flash"
+                    elif case["author_model"] in workers:
                         template_case["author_model"] = "unknown"
                     elif "author_family" in case:
                         template_case["author_family"] = "anthropic"
                     receipt = deepcopy(reference[dispatch_key(template_case)])
                     reason = receipt["value"]["fail_closed_reason"]
-                    if case["author_model"] in workers:
+                    if case["author_model"] == "muse-spark-1.3":
                         receipt["value"]["fail_closed_reason"] = reason.replace(
                             "author_model='unknown'", f"author_model='{case['author_model']}'"
                         )
