@@ -13,15 +13,32 @@ def _stat(pid, start, state="S"):
     return f"{pid} (worker (with spaces)) " + " ".join([state] + ["0"] * 18 + [str(start)])
 
 
-@pytest.fixture
-def proc(tmp_path, monkeypatch):
-    root = tmp_path / "proc"
-    for pid, number in (("self", os.getpid()), ("1", 1), ("123", 123)):
+@pytest.fixture(autouse=True)
+def proc(tmp_path_factory, monkeypatch):
+    from scripts.common import acp_runtime_lock
+    from scripts.dispatcher import worker
+    from scripts.guardrails import delegate_ownership
+
+    root = tmp_path_factory.mktemp("proc")
+    for pid, number in (("self", os.getpid()), (str(os.getpid()), os.getpid()), ("1", 1), ("123", 123)):
         directory = root / pid
         (directory / "ns").mkdir(parents=True)
         (directory / "stat").write_text(_stat(number, 100))
         (directory / "ns" / "pid").symlink_to(d.INITIAL_PID_NAMESPACE)
     monkeypatch.setattr(d, "PROC_ROOT", root)
+    monkeypatch.setattr(acp_runtime_lock, "_PROC_ROOT", root)
+    monkeypatch.setattr(worker, "_identity", lambda pid: "boot:100" if (root / str(pid)).exists() else None)
+    matches = delegate_ownership._pid_matches_task
+    monkeypatch.setattr(
+        delegate_ownership, "_pid_matches_task", lambda pid, task, **kw: matches(pid, task, **(kw | {"proc_root": root})),
+    )
+
+    def kill(pid, signal):
+        assert signal == 0, "only synthetic liveness probes are allowed"
+        if pid != os.getpid() and not (root / str(pid)).exists():
+            raise ProcessLookupError
+
+    monkeypatch.setattr(d.os, "kill", kill)
     return root
 
 
@@ -197,7 +214,11 @@ def test_capture_unreadable_identity_keeps_unknown_start_time(proc):
 
 def test_live_same_namespace_worker_hidden_from_proc_is_unknown(proc):
     # A restricted procfs view can omit a process in our own PID namespace.
-    # Signal-0 still sees this real process, so absence is not proof of death.
+    # The synthetic signal-0 probe still sees it, so absence is not proof of death.
+    (proc / str(os.getpid()) / "stat").unlink()
+    (proc / str(os.getpid()) / "ns" / "pid").unlink()
+    (proc / str(os.getpid()) / "ns").rmdir()
+    (proc / str(os.getpid())).rmdir()
     record = {"pid": os.getpid(), "worker_identity": {
         **_record()["worker_identity"], "pid": os.getpid(), "host_pid": os.getpid(),
     }}
@@ -250,7 +271,9 @@ def test_v2_liveness_uses_supervisor_identity(proc, monkeypatch, identity, expec
     from scripts.dispatcher import worker
 
     monkeypatch.setattr(worker, "_identity", lambda _pid: identity)
-    assert d.worker_liveness({"schema_version": 2, "pid": 123, "process_start": "boot:100"}) is expected
+    assert d.worker_liveness(
+        {"schema_version": 2, "pid": 123, "process_start": "boot:100"}, pid_alive=lambda _pid: True,
+    ) is expected
 
 
 def test_v2_marker_rechecks_schema_under_lock(proc, tmp_path, monkeypatch):
@@ -274,3 +297,41 @@ def test_v2_marker_rechecks_schema_under_lock(proc, tmp_path, monkeypatch):
     )
     assert result == current and changed is False
     assert json.loads(path.read_text()) == current
+
+
+@pytest.mark.parametrize("marker", ["dead", "missing", "orphaned"])
+def test_stale_snapshot_terminal_overwrite_preserves_done_and_claim(tmp_path, monkeypatch, marker):
+    import json
+    from unittest.mock import Mock
+
+    from scripts.dispatcher import store
+
+    path = tmp_path / "worker.json"
+    observed = {
+        "schema_version": 2, "run_nonce": "attempt", "status": "running",
+        "pid": None if marker == "orphaned" else 123,
+        "worktree_path": str(tmp_path / "missing"),
+    }
+    done = {**observed, "status": "done", "returncode": 0}
+    path.write_text(json.dumps(observed))
+    ledger = Mock()
+
+    def proof(*_args, **_kwargs):
+        store.replace(done, path)
+        return marker == "orphaned"
+
+    monkeypatch.setattr(d, "worker_liveness", proof)
+    if marker == "dead":
+        result, changed = d.mark_dead_worker_terminal(
+            path, observed, source="test", terminal_status="crashed", allowed_statuses=("running",),
+            pid_alive=lambda _pid: False, resolve_head=lambda _path: None, ledger=ledger,
+        )
+    elif marker == "missing":
+        result, changed = d.mark_missing_worktree_failed(path, observed, pid_alive=lambda _pid: False, ledger=ledger)
+    else:
+        result, changed = d._mark_orphaned_pidless_crashed(
+            path, observed, is_orphaned=proof, reason="orphaned", excerpt=lambda *_args: "dispatcher died",
+        )
+    assert result == done and changed is False
+    assert json.loads(path.read_text()) == done
+    ledger.release.assert_not_called()

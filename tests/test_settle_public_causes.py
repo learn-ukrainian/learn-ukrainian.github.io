@@ -7,6 +7,7 @@ import json
 import pytest
 
 from scripts.orchestration import dead_worker_state, dispatch_settle
+from tests.orchestration.test_dead_worker_state import proc as proc
 
 
 @pytest.mark.parametrize("schema", [None, 1])

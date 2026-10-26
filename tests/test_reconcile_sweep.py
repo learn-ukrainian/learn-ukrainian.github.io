@@ -13,13 +13,7 @@ import pytest
 
 from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.orchestration import dead_worker_state, reconcile_sweep
-
-
-@pytest.fixture(autouse=True)
-def _synthetic_host_pid_view(monkeypatch):
-    """Legacy-record cases explicitly model a host reader, even in a sandbox."""
-    monkeypatch.setattr(dead_worker_state, "_pid_namespace", lambda process="self": dead_worker_state.INITIAL_PID_NAMESPACE)
-    monkeypatch.setattr(dead_worker_state, "_proc_pid_namespace", lambda: dead_worker_state.INITIAL_PID_NAMESPACE)
+from tests.orchestration.test_dead_worker_state import proc as proc
 
 
 @pytest.mark.parametrize("apply", [False, True])
@@ -450,10 +444,9 @@ def test_reconcile_sweep_preserves_legacy_prep_record_whose_dispatcher_died(
 ) -> None:
     """An interrupted legacy dispatch is reported without rewriting its record."""
     from scripts.guardrails.delegate_ownership import _task_still_active
-    from tests.worktree_prep_helpers import exited_process_identity
 
     task_dir = tmp_path / "tasks"
-    task_file = _publish_prep_record(task_dir, monkeypatch, "died-mid-prep", exited_process_identity())
+    task_file = _publish_prep_record(task_dir, monkeypatch, "died-mid-prep", (999_999_999, 100))
     ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
     # The dead dispatcher's claim stops counting before any sweep runs.
     assert _task_still_active("died-mid-prep", None, task_dir) is False
@@ -486,14 +479,13 @@ def test_reconcile_sweep_keeps_prep_record_without_proof_its_dispatcher_died(
 ) -> None:
     from scripts.guardrails.delegate_ownership import _task_still_active
     from scripts.orchestration.worktree_prep import process_identity
-    from tests.worktree_prep_helpers import exited_process_identity
 
     if owner == "self":
         me = process_identity(os.getpid())
         identity: tuple[int, int | None] = (me["pid"], me["start"])  # type: ignore[assignment]
     else:
         # A dead pid whose start time was never readable is not proof of death.
-        identity = (exited_process_identity()[0], None)
+        identity = (999_999_999, None)
     task_dir = tmp_path / "tasks"
     task_file = _publish_prep_record(task_dir, monkeypatch, "preparing", identity)
     ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
@@ -514,14 +506,13 @@ def test_reconcile_sweep_preserves_legacy_admission_hold_whose_dispatcher_died(
     from scripts import delegate
     from scripts.guardrails.delegate_ownership import _task_still_active
     from scripts.orchestration import dispatch_admission
-    from tests.worktree_prep_helpers import exited_process_identity
 
     task_dir = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(task_dir))
     delegate._publish_admission_hold("died-after-admission", "nonce-h", mode="danger", admission={"admitted": True})
     task_file = task_dir / "died-after-admission.json"
     state = json.loads(task_file.read_text(encoding="utf-8"))
-    pid, start = exited_process_identity()
+    pid, start = 999_999_999, 100
     state[dispatch_admission.ADMISSION_HOLD_KEY].update(
         owner_pid=pid, owner_start=start,
         owner_identity={"pid": pid, "start_time": start, "pid_namespace": dead_worker_state.INITIAL_PID_NAMESPACE},

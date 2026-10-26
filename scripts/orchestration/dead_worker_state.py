@@ -208,6 +208,31 @@ def _write_v2_state_unlocked(path: Path, state: dict[str, Any]) -> None:
     store.replace(state, path)
 
 
+def _replace_if_unchanged(
+    path: Path,
+    expected: dict[str, Any],
+    updated: dict[str, Any],
+    write: Callable[[Path, dict[str, Any]], None] | None,
+) -> tuple[dict[str, Any], bool]:
+    """Compare the decision snapshot with the record immediately before writing."""
+    try:
+        current = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return expected, False
+    if not isinstance(current, dict):
+        return expected, False
+    if (
+        any(current.get(key) != expected.get(key) for key in ("schema_version", "run_nonce", "status"))
+        or current.get("status") in TERMINAL_TASK_STATUSES
+        or current.get("status") == "needs_finalize"
+    ):
+        return current, False
+    # worker.py still replaces records without this lock, leaving a residual
+    # race between this comparison and the replace; closing it requires that writer.
+    (write or _write_v2_state_unlocked)(path, updated)
+    return updated, True
+
+
 def mark_dead_worker_terminal(
     path: Path,
     observed: dict[str, Any],
@@ -247,6 +272,7 @@ def mark_dead_worker_terminal(
             or (pid is None and current.get("worker_identity") is not None)
         ):
             return current, False
+        expected = dict(current)
         prior_status = current["status"]
         current["status"] = terminal_status
         current["finished_at"] = datetime.now(UTC).isoformat()
@@ -263,7 +289,9 @@ def mark_dead_worker_terminal(
             current["stderr_excerpt"] = (
                 f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
             )
-        (write or _write_v2_state_unlocked)(path, current)
+        current, changed = _replace_if_unchanged(path, expected, current, write)
+        if not changed:
+            return current, False
         if ledger is not None:
             task_id = current.get("task_id") or path.stem
             ledger.release(task_id, pid=pid)
@@ -295,13 +323,13 @@ def _mark_orphaned_pidless_crashed(
             or not is_orphaned(current)
         ):
             return current if isinstance(current, dict) else observed, False
+        expected = dict(current)
         prior_status = current["status"]
         current["status"] = "crashed"
         current["finished_at"] = datetime.now(UTC).isoformat()
         current["returncode_reason"] = reason
         current["stderr_excerpt"] = excerpt(current, prior_status)
-        (write or _write_v2_state_unlocked)(path, current)
-        return current, True
+        return _replace_if_unchanged(path, expected, current, write)
 
 
 def mark_orphaned_worktree_prep_crashed(
@@ -401,6 +429,7 @@ def mark_missing_worktree_failed(
             or current.get("started_at") != observed.get("started_at")
         ):
             return current, False
+        expected = dict(current)
         current["status"] = "failed"
         current["finished_at"] = datetime.now(UTC).isoformat()
         if current.get("require_review_verdict"):
@@ -408,7 +437,9 @@ def mark_missing_worktree_failed(
         current["exit_code"] = current.get("exit_code") if current.get("exit_code") is not None else -9
         current["returncode"] = current.get("returncode") if current.get("returncode") is not None else -9
         current["last_error"] = current.get("last_error") or "worktree_missing_at_settle"
-        (write or _write_v2_state_unlocked)(path, current)
+        current, changed = _replace_if_unchanged(path, expected, current, write)
+        if not changed:
+            return current, False
         if ledger is not None:
             task_id = current.get("task_id") or path.stem
             ledger.release(task_id, pid=pid)

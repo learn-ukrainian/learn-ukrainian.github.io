@@ -10,6 +10,7 @@ from typing import Any
 
 import pytest
 
+from tests.orchestration.test_dead_worker_state import proc as proc
 from tests.orchestration.test_interrupted_caller_matrix import hashes
 from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
 
