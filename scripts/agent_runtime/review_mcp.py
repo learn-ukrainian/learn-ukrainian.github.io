@@ -82,6 +82,7 @@ Note: Ledger creation and sidecar management will be consolidated once R1
 from __future__ import annotations
 
 import contextlib
+import copy
 import errno
 import hashlib
 import json
@@ -94,6 +95,7 @@ import unicodedata
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
@@ -1071,6 +1073,87 @@ def prepare_review_attempt(
         codex_home=codex_home,
         agy_home=agy_home,
     )
+
+
+def review_attempt_tool_config(
+    plan: ReviewMcpPlan,
+    *,
+    manifest_path: Path | str,
+    input_root: Path | str,
+    cwd: Path | str,
+    task_id: str,
+    mode: str = "read-only",
+    model: str | None = None,
+    effort: str | None = None,
+    review_access: str = "isolated",
+    review_profile: str = "code",
+    base_tool_config: Mapping[str, Any] | None = None,
+) -> Mapping[str, Any]:
+    """Build a bound attempt's launch options, preserving delegate's MCP gates.
+
+    Pass every worker option in base_tool_config so the gate checks the full launch.
+    The base, gate input and result have independent nested copies. Preserve list/dict
+    types for adapters; the runner must treat nested values as read-only after admission.
+    The top level is frozen. The runner owns the boundary and pre-launch path checks.
+    """
+    if plan.harness not in SUPPORTED_HARNESSES:
+        raise ValueError("review attempt refused: unsupported harness")
+    if any(not isinstance(value, str) or not _TOKEN_RE.fullmatch(value) for value in (plan.review_id, plan.attempt_id)):
+        raise ValueError("review attempt refused: missing or invalid binding")
+    if any(
+        not isinstance(value, (str, Path)) or not str(value).strip()
+        for value in (plan.config_path, manifest_path, input_root, cwd)
+    ):
+        raise ValueError("review attempt refused: missing path binding")
+    if review_access not in {"isolated", "full"}:
+        raise ValueError("review attempt refused: invalid review_access")
+
+    tool_config = copy.deepcopy(dict(base_tool_config or {}))
+    reserved = {
+        "mcp_config_path", "strict_mcp_config", "mcp_server_names", "review_id", "attempt_id",
+        "review_manifest", "review_input_root", "review_access", "review_cwd", "allowed_tools",
+        "reviewer_tools", "mcp_servers", "review_profile", "review_ledger_path",
+    }
+    if any(key in reserved or key.endswith("_home_override") for key in tool_config):
+        raise ValueError("review attempt refused: reserved tool_config key")
+    tool_config.update(
+        {
+            "mcp_config_path": str(plan.config_path),
+            "strict_mcp_config": True,
+            "mcp_server_names": ["sources"],
+            "review_id": plan.review_id,
+            "attempt_id": plan.attempt_id,
+            "review_manifest": str(manifest_path),
+            "review_input_root": str(input_root),
+            "review_access": review_access,
+            "review_cwd": str(cwd),
+        }
+    )
+    if plan.harness == "claude":
+        if review_access == "isolated":
+            tool_config["allowed_tools"] = review_tools_allowed_csv(plan.harness)
+        elif mode == "read-only":
+            tool_config["reviewer_tools"] = True
+    if plan.harness == "agy":
+        tool_config["review_profile"] = review_profile or "code"
+        tool_config["review_ledger_path"] = str(review_ledger_path(plan.config_path))
+    if plan.harness in {"codex", "agy"} and review_access != "full":
+        home_path, verify_launch = (
+            (codex_review_home_path, verify_codex_review_launch)
+            if plan.harness == "codex"
+            else (agy_review_home_path, verify_agy_review_launch)
+        )
+        tool_config[f"{plan.harness}_home_override"] = str(home_path(plan.config_path))
+        verify_launch(
+            config_path=plan.config_path,
+            cwd=cwd,
+            mode=mode,
+            model=model,
+            effort=effort,
+            task_id=task_id,
+            tool_config=tool_config,
+        )
+    return MappingProxyType(copy.deepcopy(tool_config))
 
 
 def _config_flags(argv: Sequence[str]) -> list[str]:

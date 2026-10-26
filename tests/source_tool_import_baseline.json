@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 412,
-    "probe_count": 824,
+    "cli_count": 411,
+    "probe_count": 822,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
@@ -300,7 +300,6 @@
       "scripts/lexicon/verify_synonym_pairs.py",
       "scripts/lint/lint_model_catalog.py",
       "scripts/maintenance/batch_state_retention.py",
-      "scripts/maintenance/reclassify_dispatch_status.py",
       "scripts/migrate/rehash_module.py",
       "scripts/orchestration/claudex_supervisor.py",
       "scripts/orchestration/codex_transport_health.py",
@@ -417,7 +416,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "900bbdd0b28271e23baf1124d57b7ec34758209452b21ead886398c1f815b650"
+    "cli_paths_sha256": "0aa40a895e19b38ac05009511c264406a2d7c5580fb7b801091b8edc5bbe0090"
   },
   "failures": [
     {

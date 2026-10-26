@@ -14328,6 +14328,7 @@ def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir,
     main, _ = _init_repo_with_worktree(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.setattr(adj, "_delegate_module", lambda: delegate)
+    monkeypatch.setattr(adj, "REPO_ROOT", main)
     monkeypatch.setenv("LU_TASKS_DIR", str(case.env.tasks))
     # The initial fixture record must not stand in for the real dispatch.
     (case.env.tasks / f"{case.task_id}.json").unlink()
