@@ -20,6 +20,7 @@ from scripts.dispatcher import checks, git, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
+from scripts.review.record_cf_verdict import _review_branch
 
 SOURCE = Path(__file__).resolve().parents[2]
 
@@ -127,6 +128,8 @@ def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cance
     assert record["status"] == "done"
     assert Path(record["result_file"]).read_text() == "literal final response"
     assert record["returncode"] == 0
+    assert "review_branch" not in record
+    assert "pinned_head" not in record
     assert record["started_at"] <= record["finished_at"]
     assert record["duration_s"] > 0
     assert record["usage"] == {"tokens": 7}
@@ -293,6 +296,8 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
         "echo",
         "--prompt",
         "review",
+        "--pr",
+        "42",
         "--branch",
         first["worktree_branch"],
         "--pinned-head",
@@ -300,6 +305,9 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     )
     review = sandbox.settle(result.stdout.splitlines())
     assert review["worktree_base_sha"] == first["head_sha"]
+    assert review["pinned_head"] == first["head_sha"]
+    assert review["review_branch"] == first["worktree_branch"]
+    assert _review_branch(review) == first["worktree_branch"]
     assert review["worktree_branch"] != first["worktree_branch"]
     assert review["push_state"] == "not_applicable"
     reused = sandbox.dispatch("echo", "--cwd", review["cwd"])
@@ -333,6 +341,13 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox):
     assert run_git(sandbox.repo, "branch", "--list") == before
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--force-new", expected=2)
     sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--prompt-file", "y", expected=2)
+    for branch in ("unsafe..branch", "origin/feature", "refs/heads/feature", "bad:name", ""):
+        sandbox.cli(
+            "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x",
+            "--branch", branch, "--pinned-head", run_git(sandbox.repo, "rev-parse", "HEAD"), expected=2,
+        )
+    assert run_git(sandbox.repo, "branch", "--list") == before
+    assert not sandbox.tasks.exists()
 
 
 @pytest.mark.parametrize("contributor", ["on", "off", None])
