@@ -135,8 +135,8 @@ requires an operator reference. The item lifecycle is in
    launch.
 8. **§4 Dispatch** only when the task card and dispatch preflight are both green; chat
    "ready" is not DoR. Use `--check-budget`, research flags, and `--owned-path`.
-9. **§5 Settle.** Arm `delegate.py wait <task-id>` (or the Monitor tool) in the same turn
-   as the dispatch. State a worker's status only after `delegate.py status <task-id>` in
+9. **§5 Settle.** Arm `scripts/dispatch.py wait <task-id>` (or the Monitor tool) in the same turn
+   as the dispatch. State a worker's status only after `scripts/dispatch.py status <task-id>` in
    this turn, and record its task ID, full run nonce, status, and branch head in its
    tracker item. When the wait returns, act on the result. After a terminal status,
    run `post_task_reap`.

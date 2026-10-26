@@ -2,7 +2,7 @@
 
 Use this pattern only for an operator-owned local service that must outlive the
 agent task that launches it: for example, a local teacher app or a deliberately
-long-lived diagnostic loop. Ordinary builds, reviews, and `delegate.py wait`
+long-lived diagnostic loop. Ordinary builds, reviews, and `scripts/dispatch.py wait <task-id> --run-nonce <nonce>`
 remain harness background tasks and must end with their task.
 
 ## Why detachment is required

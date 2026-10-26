@@ -91,7 +91,7 @@ visible-worker pipeline, but keep the orchestrator accountable for integration.
   dossiers or modules inline except to fix a narrow release blocker.
 - **Visible worker threads only for writing:** writer workers run in visible
   Codex app threads/worktrees, own their branch/PR, open draft PRs, and stop.
-  Hidden `scripts/delegate.py` workers are allowed only if the user explicitly
+  Hidden `scripts/dispatch.py` workers are allowed only if the user explicitly
   asks for invisible local delegation.
 - **Parallelism target:** keep two independent writer workers active by default
   when scopes are disjoint. Use three only for low-risk one-file base-prep

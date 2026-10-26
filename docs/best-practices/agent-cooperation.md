@@ -10,7 +10,7 @@
 >
 > **Seat onboarding (canonical ownership matrix):**
 > [`docs/runbooks/agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md) —
-> `discuss` vs `delegate.py` vs fleet-comms/file handoffs vs experimental ACPX vs
+> `discuss` vs `scripts/dispatch.py` vs fleet-comms/file handoffs vs experimental ACPX vs
 > Buzz deferred; Kimi and KimiCC are retired (OO-58, #11327); formal CF via
 > `ask-* --type review` (shielded `review-pr` RETIRED); fresh-agent smoke.
 
@@ -21,7 +21,7 @@
 | Surface | Role | Authority |
 | --- | --- | --- |
 | **`discuss`** (bridge) | Bounded deliberation / design input | Never implementation; never the formal cross-family review gate |
-| **`scripts/delegate.py dispatch`** | Isolated implementation execution | Worktree writes only; not durable fleet authority |
+| **`scripts/dispatch.py dispatch`** | Isolated implementation execution | Worktree writes only; not durable fleet authority |
 | **Fleet-comms + file handoffs** | Durable coordination | Fleet Comms owns durable messages/jobs in `authority` mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query `.venv/bin/python -m scripts.fleet_comms plane-status`, preserve existing stream ownership, and never create legacy message/job writes or another control plane |
 | **ACPX** | Explicit fixed Codex↔Grok panel for one consequential read-only design/risk comparison (default-off/shadow) | Sole surface `acp-discuss`; no automatic launcher/delegate use, queue, retry, formal review, or authority |
 | **Entire context recall** | Optional body-free historical discovery and provenance | Local verified locator cards only; never coordination, source authority, rollover, Monitor, or formal review |
@@ -824,7 +824,7 @@ Never parse Gemini's prose output for structured data.
 Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` or
-`scripts/delegate.py dispatch --agent agy ...`.
+`scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief> ...`.
 
 Direct `agy --model` calls use display labels from `agy models`, such as
 `Gemini 3.1 Pro (High)` and `Gemini 3.5 Flash (High)`. The bridge and runtime

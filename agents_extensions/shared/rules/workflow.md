@@ -58,9 +58,13 @@ repository writes. API reads use the module's named read helpers; arbitrary
 API or GraphQL passthrough is unavailable. See `docs/dev/agent-public-text.md`.
 Run Python with the task's prescribed project interpreter.
 
+New tasks use `scripts/dispatch.py` and schema v2 task records. Its `status`,
+`list` and `wait` commands can read legacy v1 records without rewriting them.
+Legacy-only admission and finalization recipes below have no automatic v2 mapping.
+
 ### Project Research Registry — orchestrator dispatch duty
 
-Cold-start awareness is not enough. Before **every** `delegate.py dispatch`, the
+Cold-start awareness is not enough. Before **every** `scripts/dispatch.py dispatch`, the
 accountable orchestrator must classify the task from its issue/brief and record
 one of these outcomes in the brief or orchestration note:
 
@@ -78,10 +82,10 @@ one of these outcomes in the brief or orchestration note:
 Example scoped dispatch fragment:
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
-  --agent codex --task-id quality-4952 \
+.venv/bin/python scripts/dispatch.py dispatch \
+  --agent codex --model gpt-6.1-sol --task-id quality-4952 \
   --prompt-file docs/dispatch-briefs/quality-4952.md --worktree \
-  --mode danger \
+  --mode workspace-write \
   --research-role quality \
   --research-task-family difficulty-gate \
   --research-track core \
@@ -103,7 +107,7 @@ context or weakening the generic pointer-free contract.
 
 ### Dispatch brief unit (binding — #5737)
 
-Every `delegate.py dispatch` `--prompt-file` (and equivalent inline prompt) must name
+Every `scripts/dispatch.py dispatch` `--prompt-file` (and equivalent inline prompt) must name
 **one shippable unit** and its **acceptance criteria** — not an open-ended objective.
 
 - **Shippable unit: one user-visible outcome, delivered whole, in one PR** (owned paths +

@@ -23,7 +23,7 @@ graph TB
         MsgBroker[(message_broker.db<br/>SQLite)]
     end
 
-    subgraph Delegate["scripts/delegate.py"]
+    subgraph Delegate["scripts/dispatch.py"]
         Dispatch[dispatch fire-and-forget]
         TaskState[(batch_state/tasks/*.json)]
         TaskResults[batch_state/tasks/*.result]
@@ -153,14 +153,14 @@ agent → GET /api/orient
 ### Delegated task
 
 ```
-claude (session) → delegate.py dispatch --agent codex --task-id issue-X
+claude (session) → scripts/dispatch.py dispatch --agent codex --model <model> --prompt-file <brief> --task-id issue-X --mode workspace-write --worktree
   → spawns detached worker process
   → worker writes batch_state/tasks/issue-X.json (status=spawning → running)
-  → worker calls runner.invoke() → codex CLI
-  → claude runs delegate.py wait in background (Bash run_in_background)
+  → worker calls scripts/dispatcher/providers/codex.py → codex CLI
+  → claude runs scripts/dispatch.py wait <task-id> --run-nonce <nonce> in background (Bash run_in_background)
   → worker finishes, writes .result file + updates state (status=done)
   → wait process exits → claude gets <task-notification>
-  → claude reads .result, verifies, commits from main session
+  → claude reads .result and verifies the worker's pushed dispatch branch
 ```
 
 ### Wiki compilation
@@ -185,7 +185,7 @@ user → compile.py --track hist --slug kyivan-rus
 | `scripts/api/main.py` | The one API server |
 | `scripts/wiki/compile.py` | The one wiki compiler |
 | `scripts/ai_agent_bridge/__main__.py` | The one bridge CLI |
-| `scripts/delegate.py` | Fire-and-forget task runner |
+| `scripts/dispatch.py` | Detached task runner |
 | `data/sources.db` | SQLite FTS5 — 660K source chunks |
 | `.mcp/servers/sources/server.py` | MCP sources tool server (port 8766) |
 | `.mcp/servers/message-broker/messages.db` | Agent message broker (SQLite) |

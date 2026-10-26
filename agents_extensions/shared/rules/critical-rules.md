@@ -14,7 +14,7 @@
 **English**: all technical work. **Ukrainian**: curriculum content only.
 
 ### 4. External LLM Access
-Gemini-family work goes through the AGY lane (`ab ask-agy`, `delegate.py --agent agy`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
+Gemini-family work goes through the AGY lane (`ab ask-agy`, `scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief>`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
 Code review eligibility follows the `model-assignment.md` Code review row.
 
 ### 5. Word Targets Are Minimums
@@ -82,11 +82,14 @@ legitimately complete with no PR: reviews, audits, research, diagnosis, and any 
 `--mode read-only`. For those, the deliverable *is* the report. The mechanical test is the dispatch's
 own mode plus whether its worktree is dirty — not a judgement about intent.
 
-**Four distinct terminal outcomes; do not collapse them into `done`:**
+Dispatch v2 reports execution success separately from Git delivery observations.
+Verify the pushed branch and PR before claiming a change task is delivered.
+
+**Legacy terminal outcomes; readers must keep these distinct from `done`:**
 - **`done`** — the deliverable exists (a pushed PR for change tasks, a report for read-only tasks).
 - **`needs_finalize`** — work was produced but not committed or pushed. This is a **failure to finish**,
-  and it is now detected mechanically for every write-capable mode (`delegate.py`); a dirty worktree with
-  no commits can no longer report `done`.
+  under the legacy supervisor. Dispatch v2 reports Git delivery observations separately;
+  inspect `push_state`, `commits_ahead` and `worktree_dirty_on_exit` before claiming delivery.
 - **`no_deliverable`** — a clean write-capable dispatch produced nothing verifiable: zero commits on
   its branch, a clean worktree, and only a trivial response that cannot itself be the deliverable.
   Detection is inferred from observable git facts, not from any formatting contract — commits on the

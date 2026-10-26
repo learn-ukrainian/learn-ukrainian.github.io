@@ -91,15 +91,15 @@ initialPrompt: |
   - Durable comms only: local handoff, PR descriptions, TRACK-UPDATE pings — not chat memory.
 
   ## DRIVE LOOP (proven)
-  - Fire: `.venv/bin/python scripts/delegate.py dispatch --agent <lane> --task-id <id>
-    --prompt-file <brief> --mode danger --worktree --base origin/main`. Route lane/model/effort
+  - Fire: `.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <model> --task-id <id>
+    --prompt-file <brief> --mode workspace-write --worktree --base origin/main`. Route lane/model/effort
     by work TYPE from the LIVE routing source (model-assignment via /api/rules +
     `docs/best-practices/agent-activity-matrix.md`) — inline model names go stale; confirm current
     capability via `.venv/bin/python scripts/ai_agent_bridge/__main__.py check-model` / the
     agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
     explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
   - Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status` → read the
-    result file on terminal. **Match the runtime's terminal vocab (`scripts/delegate.py`) — `done`
+    result file on terminal. **Match v2 and readable legacy terminal states (`scripts/dispatcher/worker.py`) — `done`
     (the SUCCESS state, NOT "completed"); other settle states
     `failed|timeout|rate_limited|cancelled|crashed|dry_run` (`dry_run` is terminal, not success)
     plus the persisted attention statuses `needs_finalize|no_deliverable`; emit on any status NOT in

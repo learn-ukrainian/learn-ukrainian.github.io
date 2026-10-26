@@ -113,7 +113,7 @@ non-skippable:
   bounded search before prioritization or dispatch. Treat results as body-free,
   supplemental locators; record use only when a verified locator informed work.
 - Before delegation, classify role, task family, track, and owned paths for the
-  Project Research Registry. Before every `delegate.py dispatch`, the accountable
+  Project Research Registry. Before every `scripts/dispatch.py dispatch`, the accountable
   orchestrator records a scoped classification using `--research-role`,
   `--research-task-family`, `--research-track`, and `--research-owned-path`, or
   deliberately classifies it as genuinely generic or unknown and omits all

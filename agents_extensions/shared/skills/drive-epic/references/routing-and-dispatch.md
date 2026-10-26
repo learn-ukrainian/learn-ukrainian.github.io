@@ -42,7 +42,7 @@ from memory.
 **Binding full text:** `agents_extensions/shared/rules/fleet-driver-routing.md` (served at
 `/api/rules` after model-assignment).
 
-Before **every** implement `delegate.py dispatch`:
+Before **every** implementation dispatch with `scripts/dispatch.py`:
 
 1. Emit a **ROUTING_CARD_V1** (handoff / issue / `batch_state/` receipt) with:
    `tier` (authority|practical|heap) · `model_x_harness` · `why_this_tier` ·
@@ -182,16 +182,17 @@ authorized work until its terminal goal, a real blocker, an explicit operator
 pause, or the seat's handoff signal. A reminder neither settles a live task nor
 waives a gate.
 
-A dispatch returning is not a settle. Arm a wait in the same turn: `delegate.py
-wait <task-id>` where the seat has no Monitor tool; otherwise watch the task's
+A dispatch returning is not a settle. Arm a wait in the same turn: `scripts/dispatch.py
+wait <task-id> --run-nonce <nonce>` where the seat has no Monitor tool; otherwise watch the task's
 `batch_state/tasks/<id>.json` `status` with the **Monitor** tool. Ending the turn with a
 live worker and no wait is a driver defect. When the wait returns, read the result and
 take the next action. This wait is a §2c fill window, not an idle period: fill free lanes
 before holding.
 
-Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
-other terminal/attention states: `failed | timeout | rate_limited | cancelled |
-crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
+V2 terminal states (`scripts/dispatcher/worker.py`): `done`, `failed`, `timeout`,
+`cancelled` and `crashed`. `done` reports execution success; verify Git delivery
+separately. Legacy records can also contain `rate_limited`, `dry_run`,
+`needs_finalize` and `no_deliverable`; these remain attention states. Emit on any
 status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
 first, then check the worktree for finished-but-unpushed work. **After terminal status,**

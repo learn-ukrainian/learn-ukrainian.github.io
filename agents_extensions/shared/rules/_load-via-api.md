@@ -40,8 +40,8 @@ read this full fallback list — same paths, same order as
 
 Scoped selections — `GET /api/rules?scope=<scope>&format=markdown`, each with
 its own hash. Offline, `scripts/lib/rules_core.py` reads the same files in the
-same order (launchers, `delegate.py` workers and ACP asks already inject the
-core):
+same order. Launchers and ACP asks inject the core; dispatch v2 briefs must
+include the applicable rule sources:
 
     scope=core             agents_extensions/shared/rules/core.md
     scope=content          agents_extensions/shared/rules/core.md

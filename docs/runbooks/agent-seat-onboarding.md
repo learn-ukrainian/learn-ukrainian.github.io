@@ -120,7 +120,7 @@ and the narrowly allowlisted dual paths.
 | Surface | Owns | Never owns |
 | --- | --- | --- |
 | **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
-| **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
+| **`scripts/dispatch.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + legacy file handoffs** | Durable coordination authority in `authority` mode; legacy file stores remain read-only migration/projection inputs | Competing message buses; new legacy writes; silent plane/retention/eligibility flips |
 | **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (Kimi is retired, OO-58); not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
@@ -275,8 +275,8 @@ path. Never fall back to `python`, `.venv/bin/python`, or `python -m venv .venv`
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py dispatch \
-  --agent <lane> --task-id <id> --prompt-file <path> --worktree
+"$PRIMARY_REPO/.venv/bin/python" scripts/dispatch.py dispatch \
+  --agent <lane> --model <model> --task-id <id> --prompt-file <path> --worktree
 ```
 
 The delegate worker preamble repeats this constraint. If preparation finds a
@@ -545,7 +545,7 @@ Every fleet launcher exports ACP as the routine transport. The project
 2 to 4 distinct enabled participants: Codex, Grok, Claude,
 Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. Never Kimi. The direct `acp-discuss` command remains available for
 operators and tests. Selection starts no process at cold start and does not
-change `delegate.py`. Any other count or invalid seat list is rejected loudly
+change `scripts/dispatch.py`. Any other count or invalid seat list is rejected loudly
 before it creates a conversation; there is no bridge/provider-execution
 fallback. Use the default two rounds; three is the hard maximum. Admission is
 one conversation repository-wide. If it is occupied, return `busy`
@@ -558,7 +558,7 @@ execution engine, for supported 2-to-4-seat panels: it delegates to ACP and
 records the durable ACP conversation. Ordinary `ask-*` calls also use the
 2-to-4-seat ACP controller; queued ordinary `process-*` calls drain through that
 same transport. Do not add one-shot provider launch logic. Toolful tasks use
-`delegate.py`; explicit review asks retain headless toolful dispatch.
+`scripts/dispatch.py`; explicit review asks retain headless toolful dispatch.
 The retirement order is compatibility shim → deprecation event → measured zero
 use → operator GO → code removal. Keep telemetry, Broker Ops, and legacy HTTP
 routes until that gate passes; #6106 remains open during caller migration. Fleet-comms persistence, leases, inbox delivery, formal verdicts,
@@ -804,7 +804,7 @@ printf '%s\n' 'Review PR #<N> at head <SHA>: verdict + findings.' | \
   --task-id review-<N> --type review
 
 # Execution
-.venv/bin/python scripts/delegate.py dispatch --agent <lane> --worktree ...
+.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --worktree ...
 
 # Topology (never hard-code the answer)
 .venv/bin/python -m scripts.fleet_comms plane-status

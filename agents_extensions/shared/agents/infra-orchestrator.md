@@ -97,7 +97,7 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
   code is reviewed by the resolver's `--risk critical` cross-family seat, never Sonnet.
 - Drive the high-judgment work yourself — design, architecture, review taste, precise dispatch briefs,
   the final merge read; on security-code PRs the merge read relies on the Opus or critical
-  review verdict and is not your own review. Dispatch the implementation to the fleet through `scripts/delegate.py` (worktree,
+  review verdict and is not your own review. Dispatch the implementation to the fleet through `scripts/dispatch.py` (worktree,
   numbered brief, routing card, `#M-4` evidence preamble); intra-session subagents are for large,
   genuinely independent work only.
 - Fleet collaboration is the default reflex, not an afterthought: pull in at least one independent-

@@ -69,7 +69,7 @@ through Cursor (D-129, #10464), and the Other Models pool never carries a review
 `.venv/bin/python -m scripts.fleet.usage show` (per-lane remaining% + pace lines)
 + `/api/delegate/active` + disk. (`codexbar usage` is retired — do not cite it.)
 
-**Mandatory pre-dispatch (binding):** Before every implement `delegate.py dispatch`, run:
+**Mandatory pre-dispatch (binding):** Before every implementation dispatch with `scripts/dispatch.py`, run:
 
 ```bash
 .venv/bin/python -m scripts.fleet.capacity_pick
@@ -227,7 +227,7 @@ the routing card records why heap was refused.
 
 ## 3. Mandatory pre-dispatch routing card
 
-Before **every** `delegate.py dispatch` and before every cross-family review
+Before **every** `scripts/dispatch.py dispatch` and before every cross-family review
 request that spends a scarce seat, the live driver MUST record (handoff, issue
 comment, or `batch_state/` receipt — not only inner monologue):
 

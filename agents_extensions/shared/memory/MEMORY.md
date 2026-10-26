@@ -114,10 +114,10 @@ Agent-run builds go through `scripts/build/v7_build.py <level> <slug> --worktree
 - Do not `--resume`/`--continue` the interactive orchestrator session; continue through the `thread-rollover` skill's packet.
 - Diary handoff: `docs/session-state/YYYY-MM-DD-<slug>.md`.
 - Overnight = orchestrator-only, ALL execution dispatched.
-- Intra-session subagents are for large, genuinely independent work; dispatch volume through `delegate.py` and keep working while it runs.
+- Intra-session subagents are for large, genuinely independent work; dispatch volume through `scripts/dispatch.py` and keep working while it runs.
 
 ## TOOL SELECTION
-- `delegate.py dispatch` → EXECUTION (code+commits). Fire-and-forget, `--mode danger`.
+- `scripts/dispatch.py dispatch` → EXECUTION (code+commits). Detached worktree, `--mode workspace-write`; specify agent, model and prompt.
 - `ai_agent_bridge` → COMMUNICATION (discussions, reviews, Q&A). NOT execution. `ab discuss` is analysis-only — filesystem writes during discussion = HARD STOP, dispatch the work as a separate brief.
 - `Monitor` → watch long-running. Never ScheduleWakeup loops.
 - Monitor API `localhost:8765` → state queries. One curl > custom scripts.

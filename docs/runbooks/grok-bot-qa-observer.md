@@ -13,7 +13,7 @@ observer**. It reads GitHub Actions / site signals and **files GitHub issues or
 comments**. It must **never**:
 
 - merge PRs
-- run `scripts/delegate.py` (no dispatch seat)
+- run `scripts/dispatch.py` (no dispatch seat)
 - act as CF of record
 - write the primary checkout (local-computer: **Never** / **Ask** only)
 
@@ -25,7 +25,7 @@ review, and not Entire-cloud.
 Do **not** confuse Grok Bot with the native Grok CLI / Grok Build lane already
 on the roster (`delegate.py --agent grok`, alias `grok-build`).
 
-- No `delegate.py` / registry adapter for Grok Bot
+- No `scripts/dispatch.py` / registry adapter for Grok Bot
 - Do **not** add `--agent grok-bot`
 - Do **not** add `ask-grok-bot`
 - Auth is the Cursor account, not `XAI_API_KEY`

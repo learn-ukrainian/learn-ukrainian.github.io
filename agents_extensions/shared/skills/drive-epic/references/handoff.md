@@ -17,7 +17,7 @@ Use `lu-driver-state add --lane <lane>` for every new order, commitment, goal,
 in-flight task, blocker, decision and next action. Use the matching kind, an owner
 and a done condition. Record goals under their program's `operator_order` with
 `--parent <id>`. Every `inflight` item includes the task ID and FULL run nonce;
-`delegate.py wait --run-nonce` compares the nonce exactly.
+`scripts/dispatch.py wait <task-id> --run-nonce <nonce>` compares the nonce exactly.
 
 Update existing items with `link`, `note`, `evidence` and `status`. Attach references
 with `link`, progress with `note`, and proof with `evidence`. Never delete items or

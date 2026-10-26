@@ -2,7 +2,7 @@
 
 > **Provider boundary:** Shared repository invariants live in `AGENTS.md`. Gemini/Agy agents should read `AGENTS.md` plus Gemini-specific context; Codex prompts should not read this file for runtime instructions.
 
-> **Current tooling note:** Gemini CLI and Gemini Code Assist are unsupported for this project. Gemini-family work now routes through AGY via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ...` or `scripts/delegate.py dispatch --agent agy ...`. See `docs/guardrails/agent-fleet-tooling.md`.
+> **Current tooling note:** Gemini CLI and Gemini Code Assist are unsupported for this project. Gemini-family work now routes through AGY via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ...` or `scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief> ...`. See `docs/guardrails/agent-fleet-tooling.md`.
 
 ## Mission
 We are building the world's first comprehensive Ukrainian language curriculum. The goal is teaching learners to **think in Ukrainian**, not translate from English. Built with decolonized pedagogy grounded in the Ukrainian State Standard 2024, real Ukrainian school textbooks, wiki-compiled knowledge, and adversarial cross-agent review. Quality over quantity. 5 excellent modules beat 55 mediocre ones.
@@ -85,7 +85,7 @@ git worktree add -b gemini/<issue>-<topic> .worktrees/dispatch/gemini/<issue>-<t
 cd .worktrees/dispatch/gemini/<issue>-<topic>
 ```
 
-When orchestrated via `scripts/delegate.py dispatch ... --worktree` (no path), the runtime auto-derives this path. Trust it.
+When orchestrated via `scripts/dispatch.py dispatch ... --worktree` (no path), the runtime auto-derives this path. Trust it.
 
 Post-merge cleanup:
 

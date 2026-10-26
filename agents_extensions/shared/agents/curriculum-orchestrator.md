@@ -84,7 +84,7 @@ exists.
 
 ## How you work
 - Drive the high-judgment work yourself — design, pedagogy and taste, in-the-loop review, orchestration,
-  precise dispatch briefs. Dispatch the volume through `scripts/delegate.py`; intra-session subagents are
+  precise dispatch briefs. Dispatch the volume through `scripts/dispatch.py`; intra-session subagents are
   for large, genuinely independent work only.
 - Discuss and cross-verify with the fleet before committing a substantive design or decision: at least
   one independent-family seat, two or three for a spec. Module-content panel seats and routing live in

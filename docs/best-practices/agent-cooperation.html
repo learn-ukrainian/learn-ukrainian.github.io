@@ -135,7 +135,7 @@ Review evidence contract: <a href="../review-protocol.md"><code>docs/review-prot
 If you're touching an agent subprocess, read <a href="../agent-runtime-guide.md"><code>docs/agent-runtime-guide.md</code></a> first.</p>
 <p><strong>Seat onboarding (canonical ownership matrix):</strong>
 <a href="../runbooks/agent-seat-onboarding.md"><code>docs/runbooks/agent-seat-onboarding.md</code></a> —
-<code>discuss</code> vs <code>delegate.py</code> vs fleet-comms/file handoffs vs experimental ACPX vs
+<code>discuss</code> vs <code>scripts/dispatch.py</code> vs fleet-comms/file handoffs vs experimental ACPX vs
 Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 <code>ask-* --type review</code> (shielded <code>review-pr</code> RETIRED); fresh-agent smoke.</p>
 </blockquote>
@@ -156,7 +156,7 @@ Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 <td>Never implementation; never the formal cross-family review gate</td>
 </tr>
 <tr>
-<td><strong><code>scripts/delegate.py dispatch</code></strong></td>
+<td><strong><code>scripts/dispatch.py dispatch</code></strong></td>
 <td>Isolated implementation execution</td>
 <td>Worktree writes only; not durable fleet authority</td>
 </tr>
@@ -1031,7 +1031,7 @@ research = _extract_delimiter(output, &quot;===RESEARCH_START===&quot;, &quot;==
 <p>Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
 <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> or
-<code>scripts/delegate.py dispatch --agent agy ...</code>.</p>
+<code>scripts/dispatch.py dispatch --agent agy --model &lt;model&gt; --prompt-file &lt;brief&gt; ...</code>.</p>
 <p>Direct <code>agy --model</code> calls use display labels from <code>agy models</code>, such as
 <code>Gemini 3.1 Pro (High)</code> and <code>Gemini 3.5 Flash (High)</code>. The bridge and runtime
 may accept slugs such as <code>gemini-3.1-pro-high</code> and map them to AGY display

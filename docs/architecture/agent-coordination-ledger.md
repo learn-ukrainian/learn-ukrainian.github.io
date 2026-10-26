@@ -20,8 +20,8 @@ The first implementation slice stores task records in ignored runtime state:
 batch_state/agent-ledger/tasks/<task-id>.json
 ```
 
-The ledger integrates with, but does not replace, `scripts/delegate.py`.
-`delegate.py` owns process lifecycle and worktree setup. The coordination
+The ledger integrates with, but does not replace, `scripts/dispatch.py`.
+`scripts/dispatcher/` owns process lifecycle and worktree setup. The coordination
 ledger owns the orchestrator view: who is working, where, on what paths, with
 which issue/thread/branch, and with which validation/review state.
 

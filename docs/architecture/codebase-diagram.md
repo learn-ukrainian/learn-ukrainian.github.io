@@ -211,7 +211,7 @@ flowchart TB
     subgraph Comms["Communication"]
         AB["ai_agent_bridge<br/>SQLite message broker"]
         Discuss["ab discuss — multi-agent deliberation"]
-        Delegate["delegate.py — worktree dispatch"]
+        Delegate["scripts/dispatch.py — worktree dispatch"]
     end
 
     subgraph Runtime["agent_runtime/"]

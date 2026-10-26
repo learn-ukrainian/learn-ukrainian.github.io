@@ -56,7 +56,7 @@ working tree changes while participants are running. A failed round
 posts a loud system warning into the thread before returning non-zero,
 including `READ_ONLY_VIOLATION: <agent>` for the agent family that must
 be treated as the write source. Filesystem writes during discussion are
-a hard stop; dispatch the work as a separate `scripts/delegate.py dispatch`
+a hard stop; dispatch the work as a separate `scripts/dispatch.py dispatch`
 brief.
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py post` creates channel
@@ -65,7 +65,7 @@ delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
 write-capable modes only when the post is explicitly an execution
 request. Implementation work that needs file edits, commits, pushes, or
-a PR should normally go through `scripts/delegate.py dispatch` or
+a PR should normally go through `scripts/dispatch.py dispatch` or
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix`, not
 through discussion.
 
@@ -503,7 +503,7 @@ from a plain shell; launchers can supply the sender identity. `discuss`
 accepts 2 to 4 distinct enabled seats. Neither surface falls back to a one-shot
 provider process on failure.
 
-Use `delegate.py dispatch --worktree` for planning, creation, design, or other
+Use `scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --worktree` for planning, creation, design, or other
 toolful work. Explicit `ask-* --type review`, `--review`, and `--pr` requests
 retain their headless toolful dispatch path. The `process-*` commands exist to
 drain old queued messages; do not create new one-shot jobs for them. Ordinary

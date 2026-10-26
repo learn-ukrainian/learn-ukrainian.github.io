@@ -42,10 +42,9 @@ echo ""
 
 # ---------------------------------------------------------------------------
 # 0. Worktree hygiene — auto-reap finished dispatch/build worktrees
-#    The disk-bleed backstop: dispatch worktrees are each a full ~700MB
-#    checkout, and delegate.py only reaps them on the happy path (danger
-#    mode + status=done + clean). Everything else (needs_finalize, no_deliverable, crashed,
-#    dirty, review mode) leaked forever → 11GB before this was wired in.
+#    Backstop for dispatch/build worktrees retained after task settlement.
+#    Dispatch v2 also invokes the common reaper after settlement; inspect
+#    its receipt rather than assuming that a terminal task was reaped.
 #    reap_worktrees.py is safe-by-default: it ONLY reaps worktrees whose PR
 #    is MERGED/CLOSED or whose HEAD matches origin/<branch>, prunes merged
 #    branches, and preserves dirty ones (surfaced below, never auto-touched).

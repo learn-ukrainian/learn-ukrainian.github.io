@@ -2,7 +2,7 @@
 
 Use this runbook for a planned reboot of the host that runs the tmux driver
 lanes (for example a pending kernel upgrade). A reboot kills the tmux server,
-every lane, every `delegate.py wait`, in-flight workers and every transient
+every lane, every `scripts/dispatch.py wait <task-id> --run-nonce <nonce>`, in-flight workers and every transient
 systemd unit. Enabled user units come back on their own when linger is on. The
 lanes come back through `learn-ukrainian-lane-relaunch.service`, and the
 context guard through `learn-ukrainian-context-guard.timer` (#10814).
@@ -76,8 +76,8 @@ All items must pass before the upgrade starts.
 - [ ] **Every lane handed off.** Each of the six lanes wrote the top of its
   `DRIVER-STATE.md` and posted `HANDOFF-DONE`; its in-flight worker task ids and
   waits are in that handoff.
-- [ ] **No task spawning.** `.venv/bin/python scripts/delegate.py status`
-  shows no task in `spawning`.
+- [ ] **No task spawning.** `.venv/bin/python scripts/dispatch.py list --status spawning`
+  returns no tasks.
 - [ ] **No push in flight.** No pre-push gate holder or ticket under
   `<git-common-dir>/lu-pre-push-gate/` (`docs/runbooks/pre-push-gate.md`), and
   no transient push unit (`systemctl --user list-units --type=service`).
@@ -144,7 +144,7 @@ Service restarts by `needrestart` are superseded by the reboot. The host's
     `${XDG_STATE_HOME:-$HOME/.local/state}/learn-ukrainian/context-guard/guard.log`
     has a `watch ctx_pct=` line for every lane.
 11. **Per lane.** Each lane drains its Fleet Comms inbox, re-arms its waits
-    from the handoff, and runs `.venv/bin/python scripts/delegate.py status`.
+    from the handoff, and runs `.venv/bin/python scripts/dispatch.py list`.
     Reap dead tasks with
     `.venv/bin/python -m scripts.fleet.post_task_reap --task-id <id>` (dry-run
     first, then `--apply`). A per-lane dispatch dry run is **NOT CHECKED**.

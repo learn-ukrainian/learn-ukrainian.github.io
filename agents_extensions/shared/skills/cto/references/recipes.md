@@ -73,8 +73,9 @@ owner and done condition. Attach its task ID with `link <id> task <task-id>` and
 FULL run nonce with `note <id> <text>` so the tracker handoff can re-arm its wait.
 
 Run every dispatch through the scratch table helper. It builds each
-`delegate.py dispatch` argv from a table and logs stdout and stderr per task; grep the log
-for `run_nonce=`, `SUBSTITUTE` and `queued behind`. Record the actual substituted identity.
+`scripts/dispatch.py dispatch` argv from a table and logs stdout and stderr per task.
+A successful v2 launch prints the task ID and full run nonce on separate lines.
+Preserve both; do not expect legacy substitution or queue messages.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Briefs state expected eligible PR lines and files; require a one-line size justification
 above the `workflow.md` small-batch threshold, including data files.
