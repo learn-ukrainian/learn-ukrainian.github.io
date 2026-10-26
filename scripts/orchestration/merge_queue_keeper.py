@@ -278,7 +278,8 @@ class GitHub:
             elif endpoint.endswith("/actions/workflows/ci.yml"):
                 request = Request("read-ci-workflow", repo=self.repository)
             else:
-                request = Request("read-approved-ci-checks", repo=self.repository, sha=head)
+                suite_id = int(endpoint.split("/check-suites/", 1)[1].split("/", 1)[0])
+                request = Request("read-approved-ci-checks", repo=self.repository, number=suite_id)
             return self.json(request)
         return approved_pr_ci.inspect(self.repository, number, head, read)
 
@@ -1155,7 +1156,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             except KeeperError as exc:
                 detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
-        if reason == "ready" and approved_pr_ci.applies(gh.repository):
+        if reason == "ready" and not queued and not armed and approved_pr_ci.applies(gh.repository):
             if apply:
                 reason = "full-CI-awaiting-proof"
             else:
@@ -1216,6 +1217,14 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     else "state-changed"
                 )
             else:
+                # Use fresh membership for changeover; the snapshot alone cannot
+                # exempt a PR which has since left the queue or been disarmed.
+                queued = current.get("isInMergeQueue")
+                armed = _auto_merge_armed(current)
+                if queued is True:
+                    queued_now[key] = head
+                else:
+                    queued_now.pop(key, None)
                 try:
                     current_comments = gh.comments(number)
                     current_verdict = lookup_verdict(current_comments, head, login)
@@ -1241,7 +1250,10 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     if verdict_lookup_ok
                     else "fresh-evidence-unknown"
                 )
-                if (reason == "ready" and approved_pr_ci.applies(gh.repository)):
+                if reason == "ready" and not isinstance(queued, bool) and not armed:
+                    reason = "fresh-membership-unknown"
+                if (reason == "ready" and queued is not True and not armed
+                        and approved_pr_ci.applies(gh.repository)):
                     reason = _approved_full_ci(gh, number, head, previous, state_path, apply=True)
                 if reason == "ready" and queued is not True and not armed:
                     reason = _gate_hold(gh, number, head, previous) or reason

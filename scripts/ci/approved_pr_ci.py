@@ -76,11 +76,15 @@ def _inspect(repo: str, number: int, head: str, get_json) -> Proof:
         return Proof('unknown', run_id)
     if run.get('conclusion') != 'success':
         return Proof('failed', run_id)
-    checks = get_json(f'{root}/commits/{head}/check-runs?filter=all&per_page=100')
+    suite_id = run.get('check_suite_id')
+    if type(suite_id) is not int or suite_id < 1:
+        return Proof('unknown', run_id)
+    # GitHub selects the latest effective check per name within this suite.
+    # A commit-wide latest read can instead select a later admission suite.
+    checks = get_json(f'{root}/check-suites/{suite_id}/check-runs?filter=latest&per_page=100')
     if (not isinstance(checks, dict) or type(checks.get('total_count')) is not int
             or not isinstance(checks.get('check_runs'), list)
-            or checks['total_count'] != len(checks['check_runs'])
-            or type(run.get('check_suite_id')) is not int):
+            or checks['total_count'] != len(checks['check_runs'])):
         return Proof('unknown', run_id)
     found = []
     for check in checks['check_runs']:
@@ -89,8 +93,8 @@ def _inspect(repo: str, number: int, head: str, get_json) -> Proof:
         suite = check.get('check_suite')
         if not isinstance(suite, dict):
             return Proof('unknown', run_id)
-        if suite.get('id') != run['check_suite_id']:
-            continue
+        if type(suite.get('id')) is not int or suite['id'] != suite_id:
+            return Proof('unknown', run_id)
         if check.get('name') not in REQUIRED:
             continue
         app = check.get('app')

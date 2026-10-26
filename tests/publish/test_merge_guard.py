@@ -265,6 +265,8 @@ def test_oo48_garbage_provenance_reply_is_refused():
 @pytest.mark.parametrize("fault", [
     "none", "absent", "partial", "unavailable", "head", "workflow", "event", "title", "repo",
     "failed", "cancelled", "queued", "missing-shard", "skipped", "forged-app", "suite", "url", "moved",
+    "rerun", "rerun-failed", "rerun-skipped", "rerun-cancelled", "duplicate", "checks-partial",
+    "check-head", "app-slug", "duplicate-run", "suite-bool",
 ])
 def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypatch, fault):
     from scripts.ci import approved_pr_ci as full
@@ -280,6 +282,25 @@ def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypa
                "check_suite": {"id": 81}, "details_url": "https://github.com/unit/public/actions/runs/91/job/11",
                "status": "completed", "conclusion": "success"} for name in sorted(full.REQUIRED)]
     page = {"total_count": 1, "workflow_runs": [run]}
+    # F1 reproducer: same SHA/run/suite, failed attempt 1, successful attempt 2.
+    # More than 100 historical rows must not truncate the latest-suite read.
+    history = [{**row, "conclusion": "failure" if row["name"] in {"CI Gate", "pytest (17)"} else "success"}
+               for _ in range(4) for row in checks]
+    if fault.startswith("rerun"):
+        run["run_attempt"] = 2
+        if fault != "rerun":
+            checks[0]["conclusion"] = {"rerun-failed": "failure", "rerun-skipped": "skipped",
+                                        "rerun-cancelled": "cancelled"}[fault]
+    if fault == "duplicate":
+        checks.append(dict(checks[0]))
+    elif fault == "check-head":
+        checks[0]["head_sha"] = "b" * 40
+    elif fault == "app-slug":
+        checks[0]["app"]["slug"] = "other"
+    elif fault == "duplicate-run":
+        page = {"total_count": 2, "workflow_runs": [run, dict(run)]}
+    elif fault == "suite-bool":
+        run["check_suite_id"] = True
     if fault == "absent":
         page = {"total_count": 0, "workflow_runs": []}
     elif fault == "partial":
@@ -314,7 +335,11 @@ def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypa
             elif "/runs?" in endpoint:
                 body = page
             else:
-                body = {"total_count": len(checks), "check_runs": checks}
+                assert endpoint == "repos/unit/public/check-suites/81/check-runs?filter=latest&per_page=100"
+                assert len(history) > 100
+                # GitHub's suite-scoped latest response excludes historical
+                # attempts and later same-name admission checks in other suites.
+                body = {"total_count": len(checks) + (fault == "checks-partial"), "check_runs": checks}
         elif args[2] == "checks":
             body = []
         else:
@@ -322,7 +347,7 @@ def test_approved_head_full_proof_blocks_admission_only_and_forged_runs(monkeypa
             body = {"number": 1, "isDraft": False, "headRefOid": "b" * 40 if fault == "moved" and views > 1 else head}
         return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
 
-    if fault == "none":
+    if fault in {"none", "rerun"}:
         assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}) == head
     else:
         with pytest.raises(PublishBlocked, match=r"approved-head full CI|reviewed head changed"):

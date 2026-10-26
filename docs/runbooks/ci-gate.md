@@ -11,6 +11,23 @@ uncertain transport retain that intent and hold; they never trigger a retry.
 Existing runs, including failed or cancelled runs, prevent a second dispatch.
 The driver owns the existing one-recovery policy.
 
+Branches created before rollout lack the new `ci.yml` dispatch inputs. Use the
+normal `pr-update-branch` path, then obtain fresh CF and CI on the new head.
+An old pending intent never permits redispatching the same head or blindly
+reusing a legacy full CI Gate. Do not dispatch another full run on the old head
+to repair migration.
+
+The keeper rechecks current queue membership and armed identity before dispatch.
+Already queued or armed PRs retain existing CF and required-CI protections
+without an extra approved-head full run. Newly eligible PRs outside both states
+still require approved-head full proof before enqueue.
+
+The `full_ci` intent map remains conservative. The existing cleanup uses an
+open-PR snapshot, which cannot confirm why an entry is absent or safely erase
+an uncertain dispatch intent. Nonblocking residual owner: DevOps. Pruning needs
+complete authoritative confirmation of closed or superseded identities while
+preserving pending, unknown and live entries; no age or retention policy is added.
+
 Dispatch inputs `approved_pr` and `expected_head` bind the run title to the PR
 and head. `Approved head identity` checks the actual checkout against
 `GITHUB_SHA` and the expected head before full jobs start. A moved ref fails
@@ -23,9 +40,15 @@ repository, PR/head title, Actions app/suite identity and successful CI Gate,
 all 24 shards, report, frontend, refresh, checks, scans and audit. Admission-only
 success, partial/unavailable metadata, skipped, failed, cancelled or pending
 results cannot authorize enqueue. It rechecks the head after reading proof.
+Proof reads the matched run's suite with `filter=latest`, so the existing allowed
+rerun on an unchanged head can qualify despite failed rows from an older attempt.
+It still refuses incomplete pages, duplicate current checks and invalid identity.
 Private and unrelated repositories retain their existing gates. Enqueue still
 requires canonical exact-head CF and all other required CI; the real merge-group
 candidate independently repeats the full suite and audits before landing.
+The unchanged native auto-merge direct path is not certified by this publisher
+proof. Driver and worker `--auto` and admin bypass remain forbidden. The full
+merge-group suite remains the backstop for that existing path.
 
 PRs also retain file-content secret scanning, the large-file guard, attribution,
 lint and content contracts, dependency-audit scoping, and `pytest --collect-only`.

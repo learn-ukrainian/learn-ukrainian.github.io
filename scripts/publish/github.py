@@ -985,7 +985,7 @@ def request_run(request, *, runner=None, input=None, **kwargs):
 
 
 REST_READS = {
-    "approved-ci-checks": ("repos/{repo}/commits/{sha}/check-runs?filter=all", {"sha": "sha"}),
+    "approved-ci-checks": ("repos/{repo}/check-suites/{number}/check-runs?filter=latest", {"number": "number"}),
     "ci-workflow": ("repos/{repo}/actions/workflows/ci.yml", {}),
     "approved-ci-runs": ("repos/{repo}/actions/workflows/ci.yml/runs?event=workflow_dispatch&head_sha={sha}", {"sha": "sha"}),
     "identity": ("user", {}),

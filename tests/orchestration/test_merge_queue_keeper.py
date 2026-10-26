@@ -624,6 +624,75 @@ def test_enqueue_happy_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ful
     assert dispatches == ([(42, HEAD_A, "codex/fixture")] if full_state == "absent" else [])
 
 
+@pytest.mark.parametrize("membership", ["queued", "armed", "left-queue", "disarmed", "unknown"])
+@pytest.mark.parametrize("blocker", ["none", "negative-CF", "failed-CI"])
+def test_changeover_uses_fresh_membership_without_extra_full_run(tmp_path, monkeypatch, membership, blocker):
+    from scripts.ci import approved_pr_ci as full
+
+    monkeypatch.setattr(full, "catalog", lambda: CATALOG)
+    fake = FakeGitHub(pr(isInMergeQueue=membership in {"queued", "left-queue"},
+                         autoMergeRequest={"enabledAt": "2026-09-23T13:00:00Z"}
+                         if membership in {"armed", "disarmed"} else None))
+    fake.fresh["headRefName"] = "codex/fixture"
+    if membership in {"left-queue", "disarmed"}:
+        fake.fresh.update(isInMergeQueue=False, autoMergeRequest=None)
+    elif membership == "unknown":
+        fake.fresh.pop("isInMergeQueue")
+    if blocker == "negative-CF":
+        fake.comments_rows = [recorded("CHANGES_REQUESTED", "2026-09-23T12:00:00.000001+00:00")]
+    elif blocker == "failed-CI":
+        fake.check_rows = checks(conclusion="failure")
+    reads, dispatched = [], []
+    fake.full_ci = lambda *args: reads.append(args) or full.Proof("absent")
+    fake.dispatch_full = lambda *args: dispatched.append(args)
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed, lines
+    assert dispatched == ([(42, HEAD_A, "codex/fixture")]
+                          if membership in {"left-queue", "disarmed"} and blocker == "none" else [])
+    assert reads == ([(42, HEAD_A)]
+                     if membership in {"left-queue", "disarmed"} and blocker == "none" else [])
+    assert "enqueue" not in mutations(fake)
+    if membership in {"queued", "armed"} and blocker != "none":
+        assert ("dequeue" if membership == "queued" else "disarm") in mutations(fake)
+
+
+def test_keeper_full_ci_reads_latest_checks_from_matched_suite(tmp_path, monkeypatch, synthetic_opsec):
+    from scripts.ci import approved_pr_ci as full
+
+    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    calls = []
+    run_row = {"id": 91, "check_suite_id": 81, "run_attempt": 2, "workflow_id": 7,
+               "path": ".github/workflows/ci.yml", "name": "CI", "event": "workflow_dispatch",
+               "head_sha": HEAD_A, "repository": {"full_name": "unit/public"},
+               "display_title": full.title(42, HEAD_A), "status": "completed", "conclusion": "success"}
+
+    def sender(args, **kwargs):
+        endpoint = args[4]
+        calls.append(endpoint)
+        if endpoint == "repos/unit/public/actions/workflows/ci.yml?per_page=100":
+            body = {"id": 7, "path": ".github/workflows/ci.yml", "name": "CI"}
+        elif "/runs?" in endpoint:
+            body = {"total_count": 1, "workflow_runs": [run_row]}
+        else:
+            assert endpoint == "repos/unit/public/check-suites/81/check-runs?filter=latest&per_page=100"
+            rows = [{"name": name, "head_sha": HEAD_A, "check_suite": {"id": 81},
+                     "app": {"id": 15368, "slug": "github-actions"}, "status": "completed",
+                     "conclusion": "success", "details_url": "https://github.com/unit/public/actions/runs/91/job/11"}
+                    for name in full.REQUIRED]
+            body = {"total_count": len(rows), "check_runs": rows}
+        return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
+
+    monkeypatch.setattr(keeper, "request_run", lambda request, **kwargs:
+                        publisher.request_run(request, runner=sender, **kwargs))
+    assert keeper.GitHub(tmp_path, "unit/public").full_ci(42, HEAD_A) == full.Proof("success", 91)
+    assert len(calls) == 3
+    with pytest.raises(gate.PublishBlocked, match="read"):
+        publisher.read("approved-ci-checks", repo="unit/public", sha=HEAD_A, runner=sender, cwd=tmp_path)
+    with pytest.raises(gate.PublishBlocked, match="identifier"):
+        publisher.read("approved-ci-checks", repo="unit/public", number=True, runner=sender, cwd=tmp_path)
+    assert len(calls) == 3
+
+
 @pytest.mark.parametrize(
     "change,verdict",
     [
@@ -708,7 +777,7 @@ def test_zero_exit_without_membership_is_failure(tmp_path: Path, monkeypatch: py
     assert failed and any("without queue membership" in line for line in lines)
 
 
-def test_enqueue_without_membership_but_armed_auto_merge_reports_armed(
+def test_fresh_armed_auto_merge_needs_no_new_enqueue(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     fake = FakeGitHub()
@@ -716,7 +785,7 @@ def test_enqueue_without_membership_but_armed_auto_merge_reports_armed(
     fake.fresh["autoMergeRequest"] = {"enabledAt": "2026-09-23T13:00:00Z"}
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
     assert not failed
-    assert any(line == "#42 armed" for line in lines)
+    assert "enqueue" not in mutations(fake)
     assert not any("FAILED" in line for line in lines)
 
 
