@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 from pathlib import Path
 
 import pytest
@@ -278,41 +279,12 @@ def test_recent_inbox_declares_hot_only_history(tmp_path: Path, capsys):
 def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, capsys):
     prompt = tmp_path / "brief.md"
     prompt.write_text("Scoped task.", encoding="utf-8")
-    assert (
-        oc.main(
-            [
-                "--repo-root",
-                str(tmp_path),
-                "dispatch",
-                "--run-id",
-                "parity",
-                "--task-id",
-                "worker",
-                "--agent",
-                "codex",
-                "--model",
-                "gpt-6.1-sol",
-                "--effort",
-                "high",
-                "--mode",
-                "workspace-write",
-                "--prompt-file",
-                str(prompt),
-                "--worktree",
-                "--full-checkout",
-                "--sparse-include",
-                "curriculum",
-                "--owned-path",
-                "scripts/one.py",
-                "--silence-timeout",
-                "0",
-                "--initial-response-timeout",
-                "0",
-                "--dry-run",
-            ]
-        )
-        == 0
+    options = shlex.split(
+        "dispatch --run-id parity --task-id worker --agent codex --model gpt-6.1-sol "
+        "--effort high --mode workspace-write --worktree --full-checkout --sparse-include curriculum "
+        "--owned-path scripts/one.py --silence-timeout 0 --initial-response-timeout 0 --dry-run"
     )
+    assert oc.main(["--repo-root", str(tmp_path), *options, "--prompt-file", str(prompt)]) == 0
     command = json.loads(capsys.readouterr().out)["command"]
     parsed = build_dispatch_parser().parse_args(command[2:])
     assert command[:3] == [".venv/bin/python", "scripts/dispatch.py", "dispatch"]

@@ -555,7 +555,15 @@ def test_main_missing_ssh_dispatch_returns_255(tmp_path: Path, monkeypatch: pyte
     assert rc == 255
 
 
-@pytest.mark.parametrize("entrypoint", ["scripts/dispatch.py", "scripts/custom_dispatch.py"])
+@pytest.mark.parametrize(
+    "entrypoint",
+    [
+        "scripts/dispatch.py",
+        "/local/checkout/scripts/dispatch.py",
+        "scripts/delegate.py",
+        "/local/checkout/scripts/delegate.py",
+    ],
+)
 def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entrypoint: str
 ) -> None:
@@ -579,7 +587,8 @@ def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     )
     assert rc == 0
     script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert f".venv/bin/python {entrypoint} dispatch" in script
+    assert f".venv/bin/python scripts/{Path(entrypoint).name} dispatch" in script
+    assert "/local/checkout" not in script
     assert "--run-nonce" in script
     assert "nonce-fwd-9876" in script
     assert f"export {jh.ENV_RUNTIME_RUN_NONCE}=" in script

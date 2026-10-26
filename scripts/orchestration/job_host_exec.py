@@ -495,7 +495,7 @@ def forward_dispatch(
     initiator_source: str | None = None,
     run_nonce: str | None = None,
 ) -> int:
-    """SSH a dispatch onto the chosen VPS using the entry point supplied in argv[0].
+    """SSH a dispatch using the caller's entry-point filename in the remote scripts directory.
 
     Remote spawn retains the legacy local-spawn environment for callers that
     still inspect it. Dispatch v2 does not forward itself. Initiator identity is
@@ -503,6 +503,9 @@ def forward_dispatch(
     """
     if len(argv) < 2:
         raise ValueError("dispatch argv is empty")
+    entrypoint = Path(argv[0]).name
+    if entrypoint not in {"delegate.py", "dispatch.py"}:
+        raise ValueError("unsupported dispatch entry point")
     alias = ssh_alias_for_host_id(host_id)
     repo = repo_for_host_id(host_id)
     payload = list(argv[1:])
@@ -547,7 +550,7 @@ def forward_dispatch(
         remote_repo=repo,
         extra_exports=extra_exports,
         payloads=payloads,
-        entrypoint=argv[0],
+        entrypoint=f"scripts/{entrypoint}",
     )
     try:
         completed = subprocess.run(
