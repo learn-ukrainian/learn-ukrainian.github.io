@@ -33,6 +33,9 @@ def main():
     model, prompt, final = sys.argv[1:]
     prompt = Path(prompt)
     prompt.with_suffix(".started").write_text(str(os.getpid()))
+    if model == "cancel":
+        os.kill(os.getppid(), signal.SIGTERM)
+        time.sleep(120)
     if model in {"blocked", "tree"}:
         if model == "tree":
             process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])

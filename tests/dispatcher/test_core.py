@@ -486,11 +486,7 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
     ("pushed-nested", "workspace-write", ["src/*.txt"], "done", None),
     ("pushed", "workspace-write", ["delivered"], "no_deliverable", "outside_owned_paths: delivered.txt"),
     ("pushed-nested", "workspace-write", ["src/"], "done", None),
-    ("pushed", "workspace-write", [], "done", None),
-    ("dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
     ("pushed-dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
-    ("unpushed", "workspace-write", [], "no_deliverable", "work_not_pushed_or_unknown"),
-    ("echo", "workspace-write", [], "no_deliverable", "no_commits_or_unknown"),
     ("echo", "read-only", ["other/"], "done", None),
     ("dirty", "read-only", ["other/"], "done", None),
     ("pushed", "read-only", ["other/"], "done", None),
@@ -513,6 +509,105 @@ def test_v2_record_without_owned_paths_remains_readable(sandbox):
     record.pop("owned_paths", None)
     (sandbox.tasks / f"{record['task_id']}.json").write_text(json.dumps(record))
     assert json.loads(sandbox.cli("status", record["task_id"]).stdout)["status"] == "done"
+
+
+@pytest.fixture
+def delivery_settle(sandbox):
+    run_git(sandbox.repo, "push", "origin", "main:release")
+    record = sandbox.settle(sandbox.dispatch("echo", "--base", "origin/release"))
+    def settle(model="echo", owned=("delivered.txt",)):
+        record.update(mode="workspace-write", model=model, status="running", owned_paths=list(owned or []))
+        if owned is None:
+            record.pop("owned_paths")
+        path = sandbox.tasks / f"{record['task_id']}.json"
+        path.write_text(json.dumps(record))
+        subprocess.run([
+            sys.executable, "-c", "import sys; from pathlib import Path; "
+            "from scripts.dispatcher.worker import supervise; "
+            "supervise(Path(sys.argv[1]), {}, 0.2 if sys.argv[2] == 'blocked' else 10)", str(path), model,
+        ], cwd=sandbox.repo, env=sandbox.env, check=True, timeout=30)
+        return json.loads(path.read_text())
+    return record, settle
+
+
+@pytest.mark.parametrize("owned", [None, []])
+@pytest.mark.parametrize("model,cause", [
+    ("pushed", None), ("dirty", "worktree_dirty_or_unknown"),
+    ("unpushed", "work_not_pushed_or_unknown"), ("echo", "no_commits_or_unknown"),
+])
+def test_write_settle_without_ownership(delivery_settle, owned, model, cause):
+    _, settle = delivery_settle
+    result = settle(model, owned)
+    assert result["status"] == ("no_deliverable" if cause else "done")
+    assert result["error"] == cause
+    assert ("owned_paths" in result) is (owned is not None)
+
+
+@pytest.mark.parametrize("model,status,error", [
+    ("fail", "failed", "provider exited unsuccessfully"),
+    ("cancel", "cancelled", "cancelled by client"),
+    ("blocked", "timeout", "process deadline exceeded"),
+    ("crash", "crashed", "provider exited unsuccessfully"),
+])
+def test_unsuccessful_settle_preserves_cause_with_outside_commit(delivery_settle, model, status, error):
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    (tree / "outside.txt").write_text("outside\n")
+    run_git(tree, "add", "outside.txt")
+    run_git(tree, "commit", "-m", "outside scope")
+    result = settle(model)
+    assert (result["status"], result["error"]) == (status, error)
+    assert "no_deliverable_reason" not in result
+
+
+@pytest.mark.parametrize("history", ["merged", "restored", "rename-in", "rename-out", "deleted"])
+def test_scope_checks_each_own_commit(sandbox, delivery_settle, history):
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    if history == "merged":
+        run_git(tree, "commit", "--allow-empty", "-m", "worker before upstream")
+    if history != "restored":
+        source = "delivered.txt" if history == "rename-out" else "outside.txt"
+        (sandbox.repo / source).write_text("upstream\n")
+        run_git(sandbox.repo, "add", source)
+        run_git(sandbox.repo, "commit", "-m", "upstream")
+        run_git(sandbox.repo, "push", "origin", "main:release")
+        run_git(tree, "merge", "--no-edit", "main")
+    if history.startswith("rename"):
+        run_git(tree, "mv", source, "delivered.txt" if history == "rename-in" else "outside.txt")
+        run_git(tree, "config", "diff.renames", "true")
+    elif history == "deleted":
+        run_git(tree, "rm", "outside.txt")
+    else:
+        (tree / "delivered.txt").write_text("delivery\n")
+        if history == "restored":
+            (tree / "outside.txt").write_text("outside\n")
+            run_git(tree, "add", ".")
+            run_git(tree, "commit", "-m", "temporary outside path")
+            run_git(tree, "rm", "outside.txt")
+    run_git(tree, "add", ".")
+    run_git(tree, "commit", "-m", "worker delivery")
+    run_git(tree, "push", "origin", "HEAD")
+    result = settle()
+    assert result["status"] == ("done" if history == "merged" else "no_deliverable")
+    assert result["error"] == (None if history == "merged" else "outside_owned_paths: outside.txt")
+
+
+@pytest.mark.parametrize("status", ["done", "failed", "cancelled", "timeout", "crashed"])
+@pytest.mark.parametrize("command", ["fetch", "merge-base", "rev-list", "diff-tree"])
+def test_scope_verification_failure_only_rejects_success(delivery_settle, monkeypatch, status, command):
+    record, settle = delivery_settle
+    record = settle("pushed")
+    record.update(status=status, error="original cause")
+    original = git._git
+    def broken(path, *args, **kwargs):
+        if args[0] == command:
+            raise subprocess.CalledProcessError(1, ["git", command])
+        return original(path, *args, **kwargs)
+    monkeypatch.setattr(git, "_git", broken)
+    worker._enforce_delivery(record)
+    assert record["status"] == ("no_deliverable" if status == "done" else status)
+    assert record["error"] == ("owned_paths_verification_failed" if status == "done" else "original cause")
 
 
 @pytest.mark.parametrize("remote_available", [True, False])
