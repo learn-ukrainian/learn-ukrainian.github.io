@@ -215,6 +215,7 @@ def _findings_json_verdicts(response: str) -> list[str]:
     """Read whole JSON replies and top-level JSON blocks, never quoted examples."""
     from markdown_it import MarkdownIt
 
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
     from scripts.review.review_contract import ContractError, validate_reviewer_payload
 
     candidates = [_without_code_fences(response, keep_unclosed=False)]
@@ -233,11 +234,11 @@ def _findings_json_verdicts(response: str) -> list[str]:
             continue
         try:
             validate_reviewer_payload(payload)
-        except ContractError:
+            verdict, _ = resolve_verdict_and_evidence(payload)
+        except (ContractError, ReviewPublicationError):
             continue
-        blocking = any(finding["priority"] in {"P0", "P1"} for finding in payload["findings"])
         verdicts.append(
-            "APPROVE" if not blocking and payload["overall"]["correctness"] == "correct" else "REQUEST_CHANGES"
+            {"APPROVED": "APPROVE", "CHANGES_REQUESTED": "REQUEST_CHANGES", "BLOCKED": "BLOCKED"}[verdict]
         )
     return verdicts
 

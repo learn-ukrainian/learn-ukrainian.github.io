@@ -190,16 +190,17 @@ def test_examples_and_invalid_tokens_are_not_formal_verdicts(reply):
 @pytest.mark.parametrize("correctness,priority,expected", [
     ("correct", None, "APPROVE"),
     ("incorrect", None, "REQUEST_CHANGES"),
-    ("uncertain", None, "REQUEST_CHANGES"),
+    ("uncertain", None, "BLOCKED"),
     ("correct", "P0", "REQUEST_CHANGES"),
     ("correct", "P1", "REQUEST_CHANGES"),
-    ("correct", "P2", "APPROVE"),
-    ("correct", "P3", "APPROVE"),
+    ("correct", "P2", "REQUEST_CHANGES"),
+    ("correct", "P3", "REQUEST_CHANGES"),
 ])
 @pytest.mark.parametrize("wrapper", ["{}", "Review result:\n\n```json\n{}\n```"])
 def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expected, wrapper):
+    """Fenced findings must not approve findings or misclassify uncertainty."""
     from scripts import delegate
-    from scripts.review.record_cf_verdict import normalize_verdict
+    from scripts.review.record_cf_verdict import _review_verdict_and_count, normalize_verdict
 
     payload = {
         "schema_version": "code-review-findings.v1",
@@ -221,7 +222,12 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
         commits_ahead=None, worktree=None,
     )
     assert gate.failure is None
-    assert normalize_verdict(response) == ("APPROVED" if expected == "APPROVE" else "CHANGES_REQUESTED")
+    canonical = {
+        "APPROVE": "APPROVED", "REQUEST_CHANGES": "CHANGES_REQUESTED", "BLOCKED": "BLOCKED",
+    }[expected]
+    assert normalize_verdict(response) == canonical
+    raw = json.dumps(payload)
+    assert _review_verdict_and_count(raw)[0] == _review_verdict_and_count(f"```json\n{raw}\n```")[0] == canonical
 
     # Explicit verdict lines take precedence over the JSON fallback.
     assert recognized_verdicts(response + "\n\n`VERDICT: APPROVE` for `0123456789abcdef`") == ["APPROVE"]
