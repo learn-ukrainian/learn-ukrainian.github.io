@@ -193,7 +193,7 @@ def test_fresh_capacity_status_does_not_spend_sticky_cap(tmp_path, monkeypatch, 
 
     def harness(cmd, **kwargs):
         calls.append(cmd[2])
-        output = json.dumps({"status": status}) if cmd[2] == "wait" else ""
+        output = json.dumps({"status": status}) if cmd[2] == "wait" else f"{cmd[cmd.index('--task-id') + 1]}\nn1\n"
         return subprocess.CompletedProcess(cmd, returncode if cmd[2] == "wait" else 0, output, "")
 
     monkeypatch.setattr(subprocess, "run", harness)

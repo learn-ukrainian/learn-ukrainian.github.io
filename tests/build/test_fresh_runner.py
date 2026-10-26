@@ -110,8 +110,9 @@ def test_literacy_inline_letters_bypass_word_lookup(surface):
     lesson = plan["lessons"][0]
     lesson["inventory"]["phonetics"] = {"letters": ["А", "О", "У", "И"], "sounds": []}
     # Word records for а/о/у must never win over the phonetics classification.
-    letters_as_words = [make_word_record(i, ch, pos="intj", gloss_en="synthetic")
-                        for i, ch in enumerate(["а", "о", "у"], 2)]
+    letters_as_words = [
+        make_word_record(i, ch, pos="intj", gloss_en="synthetic") for i, ch in enumerate(["а", "о", "у"], 2)
+    ]
     allowlist = Allowlist.from_records(words["words"] + letters_as_words, letters={"А", "О", "У", "И"})
     expanded, provenance = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
     stream = resolve(ExpandedDocument.from_data(expanded), allowlist, _FixtureSources())
@@ -132,10 +133,11 @@ def test_literacy_unlisted_letter_has_typed_engine_failure():
     lesson = plan["lessons"][0]
     lesson["inventory"]["phonetics"] = {"letters": ["И"], "sounds": []}
     expanded, _ = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
-    stream = resolve(ExpandedDocument.from_data(expanded), Allowlist.from_records(words["words"], letters={"И"}), _FixtureSources())
+    stream = resolve(
+        ExpandedDocument.from_data(expanded), Allowlist.from_records(words["words"], letters={"И"}), _FixtureSources()
+    )
     row = runner.check_7_deterministic(stream, lesson)
-    assert (row["status"], row["code"], row["layer"], row["token"]) == (
-        "failed", "letter_outside_state", "engine", "Н")
+    assert (row["status"], row["code"], row["layer"], row["token"]) == ("failed", "letter_outside_state", "engine", "Н")
 
 
 def test_internal_term_triggers_writer_regeneration_feedback(tmp_path, monkeypatch):
@@ -326,7 +328,25 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
 
     def fake_run(cmd, **kwargs):
         calls.append((cmd, kwargs))
-        output = "" if len(calls) == 1 else json.dumps({"status": "done", "result_file": str(answer_file)})
+        if len(calls) == 1:
+            task_id = cmd[cmd.index("--task-id") + 1]
+            output = f"{task_id}\nn1\n"
+        else:
+            output = json.dumps(
+                {
+                    "schema_version": 2,
+                    "task_id": cmd[3],
+                    "run_nonce": "n1",
+                    "status": "done",
+                    "agent": "agy",
+                    "model": "fixture",
+                    "result_file": str(answer_file),
+                    "result_sha256": runner.hashlib.sha256(answer_file.read_bytes()).hexdigest(),
+                    "prompt_sha256": runner.hashlib.sha256(
+                        Path(calls[0][0][calls[0][0].index("--prompt-file") + 1]).read_bytes()
+                    ).hexdigest(),
+                }
+            )
         return subprocess.CompletedProcess(cmd, 0, stdout=output, stderr="")
 
     monkeypatch.setattr(runner.subprocess, "run", fake_run)
@@ -337,6 +357,8 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
     assert calls[0][0][0] == calls[1][0][0] == sys.executable
     assert "--model" in calls[0][0] and "fixture" in calls[0][0]
     assert "wait" in calls[1][0]
+    assert calls[0][0][1].endswith("scripts/dispatch.py")
+    assert calls[1][0][calls[1][0].index("--run-nonce") + 1] == "n1"
     assert all(call[1]["timeout"] for call in calls)
 
 
