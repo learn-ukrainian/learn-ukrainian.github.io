@@ -201,14 +201,17 @@ def test_list_item_continuation_cannot_create_false_approval(newline, prefix, ve
         normalize_verdict(reply)
 
 
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
 @pytest.mark.parametrize("following", [
-    "\nFindings follow.", "- Finding", "* Finding", "1. Finding", "# Findings",
+    "\nFindings follow.", "\nor **REQUEST_CHANGES** per the rubric",
+    "- Finding", "* Finding", "1. Finding", "# Findings",
     "```\nexample\n```", "> Quoted finding", "VERDICT: APPROVE",
 ])
-def test_separate_blocks_after_list_verdict_preserve_approval(following):
+def test_separate_blocks_after_list_verdict_preserve_approval(newline, following):
     from scripts.review.record_cf_verdict import normalize_verdict
 
-    assert normalize_verdict("- **VERDICT**: **`APPROVE`**\n" + following) == "APPROVED"
+    reply = ("- **VERDICT**: **`APPROVE`**\n" + following).replace("\n", newline)
+    assert normalize_verdict(reply) == "APPROVED"
 
 
 def test_plain_verdict_still_allows_following_prose():
