@@ -58,10 +58,14 @@ def test_reaper_removes_a_worktree_whose_residue_is_untracked(interrupted_reap):
     repo, tree, tasks, record, result, _log = interrupted_reap
     _run(["git", "push", "-u", "origin", "codex/interrupted"], cwd=tree)
     (tree / "leftover.bin").write_bytes(b"untracked")
+    log = tasks / "interrupted.log"
+    log.write_text("small task log")
     report = post_task_reap.post_task_reap(
         "interrupted", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
     )
     assert report["main_worktree"]["action"] == "removed", report
-    assert not tree.exists() and result.exists()
-    assert json.loads(record.read_text())["preserved_artifacts"]["mode"] == "record-only"
+    assert not tree.exists() and result.exists() and log.read_text() == "small task log"
+    receipt = json.loads(record.read_text())["preserved_artifacts"]
+    assert receipt["mode"] == "record-only"
+    assert "leftover.bin" in {entry["path"] for entry in receipt["paths"]}
     assert not (repo / "batch_state/preserved").exists()

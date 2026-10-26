@@ -1237,10 +1237,8 @@ def _ignored_output_files(
     ignored = set(names)
     tracked = set(artifacts._git_paths(worktree, "--cached"))
     release_pins = committed_release_pins(worktree, tracked)
-    if not tracked:
-        # --no-checkout leaves an empty index and no on-disk .gitignore.
-        # Unignored scratch can be task output too; inventory both classes.
-        names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
+    # C-2481 records both residue classes, including with a populated index.
+    names += artifacts._git_paths(worktree, "--others", "--exclude-standard")
     files: set[str] = set()
     for name in names:
         relative = Path(name)
