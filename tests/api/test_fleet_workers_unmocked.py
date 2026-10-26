@@ -43,6 +43,7 @@ def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch)
         json.dumps(
             {
                 "task_id": "live-task",
+                "schema_version": 2,
                 "agent": "cursor",
                 "status": "running",
                 "pid": os.getpid(),
@@ -72,6 +73,9 @@ def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch)
     assert host["workers_status"] == "reported"
     kinds = {row["kind"] for row in host["workers"]}
     assert "delegate" in kinds
+    delegate = next(row for row in host["workers"] if row["kind"] == "delegate")
+    assert delegate["state"] == "live"
+    assert delegate["harness"] is None and delegate["epic"] is None
 
     observer = _host_by_id(client.get("/api/fleet/workers/v1?host_id=cloud-observer").json(), "cloud-observer")
     assert any(row["kind"] == "observer" for row in observer["workers"])

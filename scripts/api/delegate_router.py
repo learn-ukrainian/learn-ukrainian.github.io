@@ -30,6 +30,7 @@ from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 from scripts.work.sources_public import public_repository_id
 
+from .lane_health import sanitize_error_excerpt
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
 from .state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
@@ -47,6 +48,18 @@ _TASK_SCAN_LOCK = threading.Lock()
 # Authoritative repository-attribution fields on task state. Paths, branch names,
 # cwd, worktree, and task_id are never used for repository matching.
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
+
+
+def _task_observations(task: dict[str, Any]) -> dict[str, Any]:
+    """Project recorded observations only; schema version is not an attestation."""
+    fields = (
+        "schema_version", "finished_at", "returncode", "head_sha", "remote_head_sha",
+        "push_state", "commits_ahead", "worktree_dirty_on_exit",
+    )
+    result = {key: task[key] for key in fields if key in task}
+    if "error" in task:
+        result["error"] = sanitize_error_excerpt(task["error"])
+    return result
 
 
 
@@ -232,7 +245,8 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQL
                 run_nonce TEXT,
                 linked_issues TEXT,
                 model_accounting TEXT,
-                fingerprint TEXT
+                fingerprint TEXT,
+                observations TEXT
             )
             """
         )
@@ -244,6 +258,8 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQL
             conn.execute("ALTER TABLE task_cache ADD COLUMN model_accounting TEXT")
         with contextlib.suppress(sqlite3.OperationalError):
             conn.execute("ALTER TABLE task_cache ADD COLUMN fingerprint TEXT")
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("ALTER TABLE task_cache ADD COLUMN observations TEXT")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_task_cache_mtime ON task_cache(mtime)")
         conn.commit()
         return conn
@@ -267,7 +283,7 @@ def _load_task_cache_from_db(
             """
             SELECT path, fingerprint, task_id, status, derived_status, pid, alive,
                    started_at, duration_s, agent, model, effort, cli_version,
-                   substitution, claimed_repo, run_nonce, linked_issues, model_accounting
+                   substitution, claimed_repo, run_nonce, linked_issues, model_accounting, observations
             FROM task_cache
             """
         )
@@ -296,16 +312,18 @@ def _load_task_cache_from_db(
                 run_nonce,
                 linked_issues_raw,
                 model_accounting_raw,
+                observations_raw,
             ) = row
             # Old cache entries must reread their task record after this upgrade.
-            if model_accounting_raw is None or fingerprint_raw is None:
+            if model_accounting_raw is None or fingerprint_raw is None or observations_raw is None:
                 continue
             try:
                 fingerprint = tuple(json.loads(fingerprint_raw))
                 model_accounting = json.loads(model_accounting_raw)
+                observations = json.loads(observations_raw)
             except (json.JSONDecodeError, TypeError):
                 continue
-            if not isinstance(model_accounting, dict):
+            if not isinstance(model_accounting, dict) or not isinstance(observations, dict):
                 continue
             subst = None
             if subst_str:
@@ -325,6 +343,7 @@ def _load_task_cache_from_db(
                 "started_at": started_at,
                 "duration_s": duration_s,
                 "run_nonce": run_nonce,
+                **_task_observations(observations),
             }
             linked_issues = _decode_linked_issues(linked_issues_raw)
             if linked_issues is not None:
@@ -354,7 +373,7 @@ def _save_task_cache_entries(
             return
         conn.executemany(
             """
-            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             records,
         )
@@ -592,6 +611,7 @@ def _delegate_task_rows_locked(
                 "started_at": task.get("started_at"),
                 "duration_s": task.get("duration_s"),
                 "run_nonce": run_nonce,
+                **_task_observations(task),
             }
             if linked_issues is not None:
                 summary["linked_issues"] = linked_issues
@@ -630,6 +650,7 @@ def _delegate_task_rows_locked(
                     json.dumps(linked_issues) if linked_issues is not None else None,
                     json.dumps(recorded_model_accounting_fields(summary)),
                     json.dumps(fingerprint),
+                    json.dumps(_task_observations(summary)),
                 )
             )
 
@@ -656,6 +677,8 @@ def _delegate_task_rows_locked(
             "duration_s": summary.get("duration_s"),
             "age_s": _task_age_seconds(summary.get("started_at")),
             "alive": alive,
+            "run_nonce": summary.get("run_nonce"),
+            **_task_observations(summary),
         }
         if "linked_issues" in summary:
             row["linked_issues"] = summary["linked_issues"]
@@ -690,7 +713,7 @@ def list_delegate_tasks(
     *,
     status: Literal[
         "running", "done", "failed", "timeout", "spawning",
-        "needs_finalize", "no_deliverable", "all",
+        "needs_finalize", "no_deliverable", "crashed", "cancelled", "rate_limited", "dry_run", "all",
     ] = "all",
     limit: int = 50,
     repository: str | None = None,
@@ -732,7 +755,7 @@ def get_delegate_task_detail(
     _, alive = _derived_task_status(task)
     result_text = None
     truncated = False
-    if task.get("status") != "running":
+    if task.get("status") not in ACTIVE_TASK_STATUSES:
         result_file = task.get("result_file")
         if result_file:
             result_text = _read_result_file(str(result_file), ctx)
@@ -748,7 +771,7 @@ def get_delegate_task_detail(
                 truncated = True
 
     return task, {
-        "task": {**task, **recorded_model_accounting_fields(task)},
+        "task": {**task, **recorded_model_accounting_fields(task), **_task_observations(task)},
         "result": result_text,
         "result_truncated": truncated,
         "alive": alive,
@@ -831,7 +854,7 @@ def _delegate_list_cache_key(
 async def delegate_tasks(
     status: Literal[
         "running", "done", "failed", "timeout", "spawning",
-        "needs_finalize", "no_deliverable", "all",
+        "needs_finalize", "no_deliverable", "crashed", "cancelled", "rate_limited", "dry_run", "all",
     ] = Query("all"),
     limit: int = Query(50, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),
