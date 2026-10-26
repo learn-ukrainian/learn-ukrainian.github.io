@@ -1,8 +1,8 @@
 """No-cost dispatch-lane self-test.
 
-The probe exercises the same adapter selection and invocation construction as
-``delegate.py``, then runs only the resolved CLI's ``--version`` command.  It
-does not submit a prompt, create a delegate task, or make a provider request.
+The probe exercises runtime adapter selection and invocation construction,
+then runs only the resolved CLI's ``--version`` command. It does not submit a
+prompt, create a task, or make a provider request.
 
 It is intentionally useful both as an operator diagnostic and from
 SessionStart, where a single active lane can be checked inside the bounded

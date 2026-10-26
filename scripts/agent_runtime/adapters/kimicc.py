@@ -40,7 +40,7 @@ from .claude import (
 )
 
 _HEADLESS_WRAPPER = Path(__file__).resolve().parents[1] / "kimicc_headless.sh"
-# Keys delegate.py may add to any attempt. Agent-specific homes (codex/agy)
+# Shared attempt keys. Agent-specific homes (codex/agy)
 # are ignored here; rejecting them would make a shared tool_config unusable
 # on this harness. Review markers (review_id, review_verdict_required) are
 # refused by the admission check before this list is consulted.

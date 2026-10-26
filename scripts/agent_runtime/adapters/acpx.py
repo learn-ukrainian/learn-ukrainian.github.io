@@ -2707,7 +2707,7 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
     # `ask-hermes` alias) on the acpx-deepseek-shadow ACP seat; direct
     # one-shot review/research runs `opencode run --model
     # deepseek/deepseek-flash --variant high`; tool-heavy work goes
-    # to `delegate.py dispatch --agent deepseek`.
+    # to `scripts/dispatch.py dispatch --agent deepseek --model deepseek/deepseek-flash`.
     "hermes": (
         "Remediation: Hermes was permanently removed from this host "
         "(operator order 2026-08-16) — do not reinstall. The DeepSeek seat "
@@ -2715,7 +2715,7 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
         "use `ask-deepseek` (or the `ask-hermes` alias), direct one-shot "
         "review/research runs `opencode run --model "
         "deepseek/deepseek-flash --variant high`, and tool-heavy "
-        "work goes to `delegate.py dispatch --agent deepseek`. See "
+        "work goes to `scripts/dispatch.py dispatch --agent deepseek --model deepseek/deepseek-flash`. See "
         "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport "
         "recovery'."
     ),
