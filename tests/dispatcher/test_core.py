@@ -12,6 +12,7 @@ import sys
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 import yaml
@@ -572,6 +573,53 @@ def test_environment_contains_only_context_and_selected_auth(spec, monkeypatch, 
         env = child_env(dataclasses.replace(spec, agent="claude", claude_account=account))
         assert env["CLAUDE_CONFIG_DIR"] == str(tmp_path / directory)
         assert "MUSE_API_KEY" not in env
+
+
+@pytest.mark.parametrize("process_key", ["stub-process-key", ""])
+def test_cursor_child_env_present_process_key_wins_over_env_file(spec, monkeypatch, process_key):
+    loader = Mock(return_value="stub-file-key")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.setenv("CURSOR_API_KEY", process_key)
+
+    env = child_env(dataclasses.replace(spec, agent="cursor"))
+
+    assert env["CURSOR_API_KEY"] == process_key
+    loader.assert_not_called()
+
+
+def test_cursor_child_env_falls_back_to_env_file_key_when_process_env_lacks_it(spec, monkeypatch):
+    loader = Mock(return_value="stub-file-key")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+
+    env = child_env(dataclasses.replace(spec, agent="cursor"))
+
+    assert env["CURSOR_API_KEY"] == "stub-file-key"
+    assert "CURSOR_API_KEY" not in os.environ
+    loader.assert_called_once_with()
+
+
+def test_cursor_child_env_without_process_or_env_file_key_forwards_nothing(spec, monkeypatch):
+    loader = Mock(return_value=None)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+
+    assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent="cursor"))
+    loader.assert_called_once_with()
+
+
+@pytest.mark.parametrize("agent", ["codex", "claude", "agy", "muse", "opencode", "hermes"])
+@pytest.mark.parametrize("process_key", [None, "stub-process-key"])
+def test_non_cursor_child_env_never_loads_or_forwards_cursor_key(spec, monkeypatch, agent, process_key):
+    loader = Mock(return_value="stub-file-key")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
+
+    assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent=agent))
+    loader.assert_not_called()
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():
