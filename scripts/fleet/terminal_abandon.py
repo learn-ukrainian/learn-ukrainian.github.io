@@ -524,7 +524,7 @@ def main(argv: list[str] | None = None) -> int:
             "Monitor-verified current lease of the stream that scripts/config/\n"
             "terminal_abandon_succession.yaml maps the creator's initiator to. It keeps the\n"
             "creator identity and nonce, appends a succession receipt and copies untracked and\n"
-            "ignored output below batch_state/preserved/<task> before publishing, with a hash-bound\n"
+            "ignored output as record-only metadata before publishing, with a hash-bound\n"
             "tar archive and a 256 MiB payload cap. Detached HEAD also requires clean tracked\n"
             "bytes and a thin Git bundle excluding base_sha, separately capped at 256 MiB\n"
             "(MAX_DETACHED_BUNDLE_BYTES). Restore by fetching into a repository containing the base.\n"

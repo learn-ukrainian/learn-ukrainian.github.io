@@ -625,12 +625,10 @@ def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
     proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path, timeout=timeout)
     if proc.returncode != 0:
         return None
-    primary = primary_checkout_root(path)
     for raw in (proc.stdout or "").splitlines():
         if len(raw) < 4:
             continue
-        rel = raw[3:].strip().strip('"')
-        if raw[:2] == "??" and worktree_artifacts.is_disposable_path(Path(rel), worktree=path, primary=primary):
+        if raw[:2] == "??":
             continue
         return False
     return True

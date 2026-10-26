@@ -511,7 +511,8 @@ def _reap_main_worktree(
             "error": None,
         }
 
-    dirty = _worktree_is_dirty(bound_path)
+    probe = _run_git(["status", "--porcelain", "--untracked-files=no"], cwd=bound_path)
+    dirty = bool((probe.stdout or "").strip()) if probe.returncode == 0 else None
     if dirty is None:
         return {
             "path": str(bound_path),
@@ -610,7 +611,7 @@ def _retrieve_retained_reuse(
             raise ValueError("retained reuse retrieval requires all recorded processes gone")
         receipt = creator.get("preserved_artifacts") or {
             "owner": task_id,
-            "location": f"batch_state/preserved/{task_id}/<retrieval-attempt>",
+            "mode": "record-only",
         }
         reason = "would retrieve retained reuse output; creator must release retention before reap"
         if apply:
