@@ -115,6 +115,24 @@ def test_token_normalization(reply, expected):
     assert recorder.normalize_verdict(reply) == expected
 
 
+@pytest.mark.parametrize("label", ["json", ""])
+@pytest.mark.parametrize("token", ["REQUEST_CHANGES", "APPROVE"])
+def test_findings_payload_cannot_override_verdict_fence(tmp_path, monkeypatch, label, token):
+    payload = json.dumps({
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": "correct", "explanation": "Reviewed the diff.", "confidence": 0.9},
+        "findings": [],
+    })
+    reply = f"Review.\n```{label}\n{payload}\n```\n```verdict\n{token}\n```"
+    for reader in (recorder.normalize_verdict, recorder._review_verdict_and_count):
+        with pytest.raises(recorder.RecordError, match="reply carries both a findings payload and a verdict block"):
+            reader(reply)
+    monkeypatch.setattr(recorder, "_pr", lambda *_a: pytest.fail("mixed reply must precede forge access"))
+    write_task(tmp_path / "tasks", reply=reply)
+    with pytest.raises(recorder.RecordError, match="reply carries both a findings payload and a verdict block"):
+        recorder.record("review-one", task_root=tmp_path / "tasks", lock_root=tmp_path / "locks")
+
+
 @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
 @pytest.mark.parametrize("case,reply,expected", FROZEN_CONTAINER_CASES, ids=[c[0] for c in FROZEN_CONTAINER_CASES])
 def test_container_visibility_reaches_recorder_before_any_forge_effect(tmp_path, monkeypatch, case, reply, expected, newline):

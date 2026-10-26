@@ -240,14 +240,26 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
 
 
 @pytest.mark.parametrize("newline", ["\n", "\r\n"])
-@pytest.mark.parametrize("body,expected", [
-    ("VERDICT: APPROVE", "APPROVED"), ("APPROVED", "APPROVED"),
-    ("REQUEST_CHANGES", "CHANGES_REQUESTED"), ("CHANGES_REQUESTED", "CHANGES_REQUESTED"),
-    ("BLOCKED", "BLOCKED"), ("\n \tVERDICT: APPROVE \t\n", "APPROVED"),
+@pytest.mark.parametrize("prefix", ["", "Review.\n"])
+@pytest.mark.parametrize("body,expected,dispatch_token", [
+    ("VERDICT: APPROVE", "APPROVED", "APPROVE"), ("APPROVED", "APPROVED", "APPROVED"),
+    ("REQUEST_CHANGES", "CHANGES_REQUESTED", "REQUEST_CHANGES"),
+    ("CHANGES_REQUESTED", "CHANGES_REQUESTED", "CHANGES_REQUESTED"),
+    ("BLOCKED", "BLOCKED", "BLOCKED"), ("\n \tVERDICT: APPROVE \t\n", "APPROVED", "APPROVE"),
 ])
-def test_structured_fence_exact_token_acceptance(newline, body, expected):
-    reply = ("Review prose.\n\n```verdict\n" + body + "\n```\nTrailing prose.").replace("\n", newline)
+def test_structured_fence_exact_token_acceptance(newline, prefix, body, expected, dispatch_token):
+    from scripts import delegate
+
+    reply = (prefix + "```verdict\n" + body + "\n```").replace("\n", newline)
     assert normalize_verdict(reply) == expected
+    assert normalize_verdict(reply + "\nTrailing prose.") == expected
+    assert recognized_verdicts(reply) == [dispatch_token]
+    assert delegate.parse_review_verdict(reply) == dispatch_token
+    gate = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=reply,
+        commits_ahead=None, worktree=None,
+    )
+    assert gate.failure is None
 
 
 @pytest.mark.parametrize("newline", ["\n", "\r\n"])
@@ -296,10 +308,17 @@ def test_free_prose_false_approval_corpus_has_no_structured_verdict(reply, newli
     "- ```verdict\n  APPROVE\n  ```", "~~~verdict\nAPPROVE\n~~~",
 ])
 def test_ambiguous_or_noncanonical_verdict_fence_refused(reply):
+    from scripts import delegate
+
     with pytest.raises(RecordError, match=r"code-review-findings\.v1 JSON or exactly one.*verdict"):
         normalize_verdict(reply)
+    assert recognized_verdicts(reply) == []
+    assert delegate.parse_review_verdict(reply) is None
 
 
-def test_noncanonical_lookalikes_do_not_count_as_real_fences():
-    reply = "```Verdict\nBLOCKED\n```\n" * 2 + "```verdict\nAPPROVE\n```"
-    assert normalize_verdict(reply) == "APPROVED"
+@pytest.mark.parametrize("opener", ["```Verdict", "```VERDICT", "```verdict ", "```verdict\t"])
+def test_noncanonical_lookalikes_refuse_reply(opener):
+    reply = opener + "\nREQUEST_CHANGES\n```\n```verdict\nAPPROVE\n```"
+    with pytest.raises(RecordError, match="missing or ambiguous"):
+        normalize_verdict(reply)
+    assert recognized_verdicts(reply) == []

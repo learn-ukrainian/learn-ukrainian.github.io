@@ -9,6 +9,8 @@ import json
 import re
 from collections.abc import Iterator
 
+from markdown_it.token import Token
+
 ACCEPTED_VERDICT_TOKENS = (
     "APPROVE",
     "APPROVED",
@@ -197,8 +199,32 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
     return "".join(parts)
 
 
+def _verdict_fences(response: str) -> list[Token]:
+    """Include rendered verdict lookalikes so they cannot be silently skipped."""
+    from markdown_it import MarkdownIt
+
+    return [token for token in MarkdownIt("commonmark").parse(response)
+            if token.type == "fence" and token.info.strip().casefold() == "verdict"]
+
+
+def strict_verdict_token(response: str) -> str | None:
+    """Return exactly one canonical, top-level verdict fence's token."""
+    fences = _verdict_fences(response)
+    lines = response.replace("\r\n", "\n").split("\n")
+    if len(fences) != 1 or "\r" in response.replace("\r\n", ""):
+        return None
+    fence = fences[0]
+    if fence.level != 0 or fence.map is None:
+        return None
+    start, end = fence.map
+    if lines[start] != "```verdict" or end <= start + 1 or lines[end - 1] != "```":
+        return None
+    token = "\n".join(lines[start + 1:end - 1]).strip().removeprefix("VERDICT: ")
+    return token if token in ACCEPTED_VERDICT_TOKENS else None
+
+
 def recognized_verdicts(response: str) -> list[str]:
-    """Return verdict lines, or validated findings-JSON verdicts if none exist.
+    """Return legacy verdicts plus the token of one strict verdict fence.
 
     Selection and normalization belong to consumers. An unclosed CommonMark
     fence suppresses verdict lines through EOF or the enclosing container's end.
@@ -208,7 +234,9 @@ def recognized_verdicts(response: str) -> list[str]:
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match:
             verdicts.append(match.group(1).upper())
-    return verdicts or _findings_json_verdicts(response)
+    verdicts = verdicts or _findings_json_verdicts(response)
+    token = strict_verdict_token(response)
+    return verdicts + ([token] if token else [])
 
 
 def _findings_json_verdicts(response: str) -> list[str]:
@@ -218,7 +246,8 @@ def _findings_json_verdicts(response: str) -> list[str]:
     from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
     from scripts.review.review_contract import ContractError, validate_reviewer_payload
 
-    candidates = [_without_code_fences(response, keep_unclosed=False)]
+    _without_code_fences(response, keep_unclosed=False)  # Enforce visibility capacity before accepting JSON.
+    candidates = [response]
     candidates.extend(
         token.content
         for token in MarkdownIt("commonmark").parse(response)
