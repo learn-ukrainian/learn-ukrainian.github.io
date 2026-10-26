@@ -32,7 +32,8 @@ WIKTIONARY_DUMP_SHA256 = "a3544dc777eb152d0bdb57c394c0cf7074f0f0a3e70b0ec9534490
 DEFAULT_DUMP = REPO / "tmp" / "wiktionary" / WIKTIONARY_DUMP_FILENAME
 DEFAULT_USER_AGENT = (
     "learn-ukrainian-wiktionary-etymology/1.0 "
-    "(noncommercial educational lookup; issue 2882)"
+    "(noncommercial educational lookup; issue 2882; "
+    "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
 )
 
 WIKTIONARY_SCHEMA_SQL = """
