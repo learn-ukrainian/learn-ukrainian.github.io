@@ -39,6 +39,7 @@ from scripts.orchestration import (
     worktree_claims,
     worktree_paths,
 )
+from scripts.orchestration.dead_worker_state import process_is_zombie
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -246,13 +247,7 @@ def _pid_alive(pid: int) -> bool | None:
         return True
     except OSError:
         return None
-    try:
-        # comm may contain spaces and parentheses; state follows the final ')'.
-        fields = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8").rsplit(")", 1)[1].split()
-        return fields[0] != "Z"
-    except (OSError, UnicodeError, IndexError):
-        pass
-    return True
+    return not process_is_zombie(pid)
 
 
 def _probe_path_liveness(path: Path) -> bool | None:

@@ -1232,8 +1232,11 @@ def test_reap_pending_reservation_blocks_canonical_prefixed_path(hermetic_reap):
 
 
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux zombie process state")
-def test_zombie_supervisor_does_not_keep_a_clean_settled_tree(hermetic_reap):
-    repo_root, tasks_dir = hermetic_reap
+def test_zombie_supervisor_does_not_keep_a_clean_settled_tree(hermetic_reap, monkeypatch):
+    repo_root, _ = hermetic_reap
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     task_id = "zombie-supervisor"
     worktree = _add_dispatch_worktree(repo_root, "kimi", task_id)
     child = subprocess.Popen([sys.executable, "-c", "pass"])
