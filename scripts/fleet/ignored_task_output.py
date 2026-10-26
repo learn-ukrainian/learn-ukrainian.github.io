@@ -1556,7 +1556,7 @@ def preserve_worktree_artifacts(
         inventory_error = None
         try:
             files = output_files()
-        except (OSError, RuntimeError, subprocess.SubprocessError):
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
             files, inventory_error = [], "inventory_failed"
         if not files and not absent and not kept and inventory_error is None:
             if disposition == "merged":
@@ -1610,9 +1610,6 @@ def preserve_worktree_artifacts(
                         "next_condition": "existing owner releases retention after proven retrieval via post_task_reap --release-retention",
                     }
                 )
-            prior_release = current.get("preserved_artifacts", {}).get("retention_release")
-            if prior_release:
-                metadata["retention_release"] = prior_release
             if metadata["retention_disposition"] != "retained":
                 metadata["next_condition"] = "none"
             current["preserved_artifacts"] = metadata
