@@ -3264,7 +3264,7 @@ def _native_response(output, error, *, paginate, complete):
     return None
 
 
-def _native_command(args, client, runner, kwargs):
+def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
     """Fall through once using the bounded, colour-safe native transport, inside the same admission.
 
     A ``gh api`` command line that is neither paginated nor verbose, and does not print
@@ -3292,7 +3292,7 @@ def _native_command(args, client, runner, kwargs):
             return _result_process(args, Result(error="github_transport_unavailable"), {}, kwargs)
     presentation = _gh_api_presentation(args)
     # gh merges paginated JSON pages only without --include, and --verbose prints no frame.
-    injected = presentation is not None and not (presentation.include or presentation.paginate or presentation.verbose)
+    injected = not preserve_argv and presentation is not None and not (presentation.include or presentation.paginate or presentation.verbose)
     command = [executable, *args[1:]]
     if injected:
         flags_end = 2 + presentation.end
@@ -3301,7 +3301,7 @@ def _native_command(args, client, runner, kwargs):
         input=kwargs.get("input").encode() if isinstance(kwargs.get("input"), str) else kwargs.get("input"),
         env=client.env,
         cwd=client.cwd,
-        timeout=kwargs.get("timeout") or 30,
+        timeout=kwargs.get("timeout", 30) if preserve_argv else kwargs.get("timeout") or 30,
         capture_output=True,
         check=False,
     )
@@ -3373,7 +3373,7 @@ def _native_command(args, client, runner, kwargs):
     return native
 
 
-def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
+def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=False, native=False, **kwargs):
     """subprocess.run-compatible seam; non-GitHub commands pass through.
 
     A CompletedProcess carries ``github_result``. Stale reads also emit a
@@ -3423,6 +3423,8 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     if "--hostname" in host_options:
         client._configure_host(_opt(host_options, "--hostname"))
         args = [*args[:2], *host_args]
+    if native:
+        return _native_command(args, client, runner, kwargs, preserve_argv=True)
     translation = _translation_options(args)
     if translation is None:
         return _native_command(args, client, runner, kwargs)

@@ -805,7 +805,7 @@ class PublisherParser(argparse.ArgumentParser):
 
 def main(argv=None, *, runner=None):
     parser = PublisherParser(
-        description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh is reserved for allowlisted reads.",
+        description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh reads use native CLI arguments.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md\n  .venv/bin/python -m scripts.publish read code-scanning-alerts --number 9781\n  .venv/bin/python -m scripts.publish read check-annotations --number 112001533549\nOutputs: GitHub mutation for write verbs; JSON on stdout for reads; temporary snapshots removed on exit.\nExit codes: 0 success; 1 gh failure; 2 schema or publishing refusal.\nRelated: docs/dev/agent-public-text.md; #9297; #9792",
         allow_abbrev=False,
@@ -969,7 +969,7 @@ class Request:
 
 
 def request_run(request, *, runner=None, input=None, **kwargs):
-    """Adapt typed requests; raw argv is admitted only by the raw read guard."""
+    """Adapt typed requests; raw argv retains the write and exposure controls."""
     if not isinstance(request, Request):
         return gate.checked_run(request, runner=runner, input=input, **kwargs)
     if input is not None:
