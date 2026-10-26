@@ -622,6 +622,7 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
             "repo_root": str(repo_root),
             "fetch": {"ok": True, "detail": None},
             "activity_probe": {"available": True, "cwd_count": 2},
+            "completed_resources": ["worktrees", "branches", "orphans"],
             "results": [
                 {
                     "action": "removed" if repo_root == public else "skipped",
@@ -663,11 +664,11 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "origin_branches_deleted": 0,
         "orphans_reported": 1,
         "errors": 0,
-        "review_temp_reaped": 0,
-        "review_temp_bytes_freed": 0,
-        "task_scratch_reaped": 0,
-        "task_scratch_bytes_freed": 0,
-        "task_scratch_preserved": 0,
+        "review_temp_reaped": None,
+        "review_temp_bytes_freed": None,
+        "task_scratch_reaped": None,
+        "task_scratch_bytes_freed": None,
+        "task_scratch_preserved": None,
         "needs_finalize_worktrees": [],
     }
     assert receipt["mode"] == "apply"
@@ -1483,6 +1484,7 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
         "repositories": [
             {
                 "repo_root": "/home/secret/host/learn-ukrainian",
+                "completed_resources": ["worktrees", "branches", "orphans"],
                 "retained": 2,
                 "retained_exceptions": 1,
                 "by_preservation_class": {"primary": 1, "dirty": 1},
@@ -1504,6 +1506,7 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
             },
             {
                 "repo_root": "/home/secret/host/learn-ukrainian-infra-private",
+                "completed_resources": ["worktrees", "branches", "orphans"],
                 "retained": 1,
                 "retained_exceptions": 1,
                 "by_preservation_class": {"permission_error": 1},
@@ -1623,18 +1626,37 @@ def test_scheduled_apply_reclaims_proven_orphan_and_reports_counts_only(tmp_path
     assert "8738-orphan" not in serialized
 
 
-def test_scheduled_recovery_failure_is_reported_not_fatal(tmp_path: Path, monkeypatch) -> None:
+@pytest.mark.parametrize(
+    "helper,field",
+    [
+        ("sweep_review_temp_orphans", "review_temp_sweep"),
+        ("sweep_tmp_leaks", "tmp_leak_sweep"),
+        ("recover_task_scratch", "task_scratch_recovery"),
+    ],
+)
+def test_scheduled_recovery_failure_is_reported_not_fatal(tmp_path: Path, monkeypatch, helper, field) -> None:
+    """An invoked helper failure must not masquerade as a missed or empty probe."""
     repo = _repo(tmp_path)
     calls: list[bool] = []
     _stub_repo_hooks(monkeypatch, leak_sweep_calls=calls)
 
-    def boom(*, apply: bool):
-        raise RuntimeError("namespace exploded")
+    def boom(**_kwargs):
+        raise RuntimeError("/private/diagnostic secret=synthetic-private-canary")
 
-    monkeypatch.setattr(cleanup, "recover_task_scratch", boom)
-    result = cleanup._repo_result(repo, apply=False)
-    assert any("task scratch recovery failed" in error for error in result["errors"])
-    assert "task_scratch_recovery" not in result
+    monkeypatch.setattr(cleanup, helper, boom)
+    monkeypatch.setattr(cleanup, "_fetch_origin", lambda _repo: SimpleNamespace(returncode=0))
+    result = cleanup._repo_result(repo, apply=True)
+    assert result[field]["errors"] == 1
+    public = cleanup.build_public_summary({"repositories": [result]})
+    name = {"review_temp_sweep": "review_temp", "tmp_leak_sweep": "tmp_leaks", "task_scratch_recovery": "task_scratch"}[
+        field
+    ]
+    resource = public["repositories"]["repository_1"]["resources"]["temp"][name]
+    assert resource["status"] == "error"
+    assert resource["counts"]["errors"] == 1
+    assert all(value is None for key, value in resource["counts"].items() if key != "errors")
+    assert "synthetic-private-canary" not in json.dumps(result)
+    assert "/private/diagnostic" not in json.dumps(public)
 
 
 def test_origin_branch_deleted_by_someone_else_is_already_absent_not_an_error(tmp_path: Path, monkeypatch) -> None:
@@ -1973,8 +1995,8 @@ def test_hourly_receipts_do_not_hide_same_named_repositories_or_unobserved_resou
             "retained": 6,
             "errors": 0,
         }
-        assert public["summary"]["retained"] == 6
-        assert public["summary"]["retained_exceptions"] == 3
+        assert public["summary"]["retained"] is None
+        assert public["summary"]["retained_exceptions"] is None
         assert public["repositories"]["repository_1"]["retained"] == 6
         assert first["branches"]["local"]["examined"] == 2
         assert first["branches"]["local"]["would_remove"] == 1
@@ -1986,6 +2008,85 @@ def test_hourly_receipts_do_not_hide_same_named_repositories_or_unobserved_resou
         assert second["worktrees"] == {"status": "not_observed", "counts": None}
         assert second["branches"]["local"] == {"status": "not_observed", "counts": None}
         assert second["temp"]["task_scratch"] == {"status": "not_observed", "counts": None}
+        for key in ("reaped", "retained", "retained_exceptions", "branches_deleted", "orphans_reported"):
+            assert public["repositories"]["repository_2"][key] is None
+        for key in (
+            "review_temp_reaped",
+            "review_temp_bytes_freed",
+            "task_scratch_reaped",
+            "task_scratch_bytes_freed",
+            "task_scratch_preserved",
+        ):
+            assert public["summary"][key] is None
         assert "private-name" not in json.dumps(public)
         assert str(tmp_path) not in json.dumps(public)
     assert summaries[0]["receipt_id"] != summaries[1]["receipt_id"]
+
+
+@pytest.mark.parametrize("failure", [None, "missing", "raised", "in_band"])
+def test_shared_scratch_stock_is_not_summed_and_incomplete_flows_are_unknown(tmp_path, monkeypatch, failure) -> None:
+    """Repeated host stock is not additive; missing or failed passes cannot prove complete flow."""
+    roots = [tmp_path / "one", tmp_path / "two"]
+
+    def fake_repo(root, *, apply):
+        result = cleanup._empty_repo_result(root)
+        result["completed_resources"] = ["worktrees", "branches", "orphans"]
+        result.update(cleanup.classify_repo_results([]))
+        result["review_temp_sweep"] = {"roots_reaped": 0, "bytes_freed": 0, "errors": 0}
+        report = {"candidates": 5, "reaped": 2, "bytes_freed": 10, "preserved": 3, "errors": 0}
+        if root == roots[1]:
+            report.update(candidates=4, reaped=1, bytes_freed=7)
+            if failure == "missing":
+                return result
+            if failure == "raised":
+                report = {"errors": 1}
+            elif failure == "in_band":
+                report["errors"] = 1
+        result["task_scratch_recovery"] = report
+        return result
+
+    monkeypatch.setattr(cleanup, "_repo_result", fake_repo)
+    receipt = cleanup.build_receipt(roots, apply=True)
+    public = cleanup.build_public_summary(receipt)
+    assert len(public["repositories"]) == 2
+    expected = {"task_scratch_preserved": 3, "task_scratch_reaped": 3, "task_scratch_bytes_freed": 17}
+    for key, value in expected.items():
+        assert receipt["summary"][key] == (value if failure is None else None)
+        assert public["summary"][key] == (value if failure is None else None)
+    assert public["summary"]["review_temp_reaped"] == 0
+    assert public["summary"]["review_temp_bytes_freed"] == 0
+
+
+def test_unobserved_legacy_counters_do_not_default_to_zero(tmp_path, monkeypatch) -> None:
+    """Old receipts and skipped inventories cannot certify an empty inventory."""
+    result = cleanup._empty_repo_result(tmp_path)
+    monkeypatch.setattr(cleanup, "_repo_result", lambda *_args, **_kwargs: result)
+    public = cleanup.build_public_summary(cleanup.build_receipt([tmp_path], apply=False))
+    for key in (
+        "removed",
+        "retained",
+        "retained_exceptions",
+        "branches_deleted",
+        "origin_branches_deleted",
+        "orphans_reported",
+        "review_temp_reaped",
+        "review_temp_bytes_freed",
+        "task_scratch_reaped",
+        "task_scratch_bytes_freed",
+        "task_scratch_preserved",
+    ):
+        assert public["summary"][key] is None
+    legacy = cleanup.build_public_summary(
+        {
+            "repositories": [{"results": []}],
+            "summary": {
+                "removed": 0,
+                "retained": 0,
+                "task_scratch_reaped": 0,
+            },
+        }
+    )
+    assert legacy["repositories"]["repository_1"]["reaped"] is None
+    assert legacy["summary"]["removed"] is None
+    assert legacy["summary"]["retained"] is None
+    assert legacy["summary"]["task_scratch_reaped"] is None

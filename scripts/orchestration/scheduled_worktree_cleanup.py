@@ -1044,8 +1044,8 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "activity_probe": None,
         "results": [],
         "completed_resources": [],
-        "retained": 0,
-        "retained_exceptions": 0,
+        "retained": None,
+        "retained_exceptions": None,
         "by_preservation_class": {
             "primary": 0,
             "active_dispatch": 0,
@@ -1224,6 +1224,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             f"{row['branch']}: {row.get('error') or row['reason']}" for row in branches if row["action"] == "error"
         )
         result["orphans"] = find_orphaned_worktree_directories(repo_root)
+        result["completed_resources"].append("orphans")
         # #10856: git gc --auto rewrites every worktree logs/HEAD. Fetch above
         # runs with automatic maintenance disabled; this explicit gc stays
         # after the reaper has judged activity.
@@ -1237,8 +1238,9 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 result["review_temp_sweep"] = sweep_res
                 if sweep_res.get("errors"):
                     result["errors"].append(f"review temp sweep encountered {sweep_res['errors']} error(s)")
-            except Exception as exc:
-                result["errors"].append(f"review temp sweep failed: {exc}")
+            except Exception:
+                result["review_temp_sweep"] = {"errors": 1}
+                result["errors"].append("review temp sweep failed")
         try:
             leak_res = sweep_tmp_leaks(apply=apply)
             result["tmp_leak_sweep"] = {
@@ -1254,8 +1256,9 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             }
             if leak_res.get("errors"):
                 result["errors"].append(f"tmp leak sweep encountered {leak_res['errors']} error(s)")
-        except Exception as exc:
-            result["errors"].append(f"tmp leak sweep failed: {exc}")
+        except Exception:
+            result["tmp_leak_sweep"] = {"errors": 1}
+            result["errors"].append("tmp leak sweep failed")
         # #8738: task-owned scratch leases whose owner and child group are
         # provably dead. Counts only — never paths — reach the receipt.
         try:
@@ -1272,8 +1275,9 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             }
             if scratch_res.get("errors"):
                 result["errors"].append(f"task scratch recovery encountered {scratch_res['errors']} error(s)")
-        except Exception as exc:
-            result["errors"].append(f"task scratch recovery failed: {exc}")
+        except Exception:
+            result["task_scratch_recovery"] = {"errors": 1}
+            result["errors"].append("task scratch recovery failed")
 
         result["needs_finalize_worktrees"] = reap_worktrees.find_needs_finalize_worktrees(repo_root)
         counts = classify_repo_results(result["results"])
@@ -1302,6 +1306,22 @@ def _repo_result(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         return result
 
 
+def _all_observed(repositories: list[dict[str, Any]], *resources: str) -> bool:
+    return bool(repositories) and all(
+        all(resource in repository.get("completed_resources", []) for resource in resources)
+        for repository in repositories
+    )
+
+
+def _helper_total(repositories: list[dict[str, Any]], field: str, key: str, *, stock: bool = False) -> int | None:
+    """Require complete passes; stock uses the last snapshot, removal flows add."""
+    reports = [repository.get(field) for repository in repositories]
+    if not reports or any(report is None or report.get("errors") or report.get(key) is None for report in reports):
+        return None
+    values = [report[key] for report in reports]
+    return values[-1] if stock else sum(values)
+
+
 def build_receipt(
     repo_roots: list[Path],
     *,
@@ -1328,25 +1348,8 @@ def build_receipt(
         + sum(1 for repository in repositories for row in repository["results"] if row.get("branch_pruned") is True)
         + origin_branches_deleted
     )
-    review_temp_reaped = sum(
-        repository.get("review_temp_sweep", {}).get("roots_reaped", 0)
-        for repository in repositories
-        if repository.get("review_temp_sweep")
-    )
-    review_temp_bytes_freed = sum(
-        repository.get("review_temp_sweep", {}).get("bytes_freed", 0)
-        for repository in repositories
-        if repository.get("review_temp_sweep")
-    )
-    task_scratch_reaped = sum(
-        (repository.get("task_scratch_recovery") or {}).get("reaped", 0) for repository in repositories
-    )
-    task_scratch_bytes_freed = sum(
-        (repository.get("task_scratch_recovery") or {}).get("bytes_freed", 0) for repository in repositories
-    )
-    task_scratch_preserved = sum(
-        (repository.get("task_scratch_recovery") or {}).get("preserved", 0) for repository in repositories
-    )
+    worktrees_observed = _all_observed(repositories, "worktrees")
+    branches_observed = _all_observed(repositories, "worktrees", "branches")
     needs_finalize_worktrees = [
         item for repository in repositories for item in repository.get("needs_finalize_worktrees", [])
     ]
@@ -1359,20 +1362,20 @@ def build_receipt(
         "mode": "apply" if apply else "dry_run",
         "summary": {
             "repositories": len(repositories),
-            "removed": removed,
-            "retained": aggregate["retained"],
-            "retained_exceptions": aggregate["retained_exceptions"],
-            "by_preservation_class": aggregate["by_preservation_class"],
-            "by_owner": aggregate["by_owner"],
-            "branches_deleted": branches_deleted,
-            "origin_branches_deleted": origin_branches_deleted,
-            "orphans_reported": orphans,
+            "removed": removed if worktrees_observed else None,
+            "retained": aggregate["retained"] if worktrees_observed else None,
+            "retained_exceptions": aggregate["retained_exceptions"] if worktrees_observed else None,
+            "by_preservation_class": aggregate["by_preservation_class"] if worktrees_observed else None,
+            "by_owner": aggregate["by_owner"] if worktrees_observed else None,
+            "branches_deleted": branches_deleted if branches_observed else None,
+            "origin_branches_deleted": origin_branches_deleted if _all_observed(repositories, "branches") else None,
+            "orphans_reported": orphans if _all_observed(repositories, "orphans") else None,
             "errors": errors,
-            "review_temp_reaped": review_temp_reaped,
-            "review_temp_bytes_freed": review_temp_bytes_freed,
-            "task_scratch_reaped": task_scratch_reaped,
-            "task_scratch_bytes_freed": task_scratch_bytes_freed,
-            "task_scratch_preserved": task_scratch_preserved,
+            "review_temp_reaped": _helper_total(repositories, "review_temp_sweep", "roots_reaped"),
+            "review_temp_bytes_freed": _helper_total(repositories, "review_temp_sweep", "bytes_freed"),
+            "task_scratch_reaped": _helper_total(repositories, "task_scratch_recovery", "reaped"),
+            "task_scratch_bytes_freed": _helper_total(repositories, "task_scratch_recovery", "bytes_freed"),
+            "task_scratch_preserved": _helper_total(repositories, "task_scratch_recovery", "preserved", stock=True),
             "needs_finalize_worktrees": needs_finalize_worktrees,
         },
         "repositories": repositories,
@@ -1518,7 +1521,9 @@ def _public_resource_counts(repository: dict[str, Any]) -> dict[str, Any]:
         temp[name] = (
             {
                 "status": "error" if report.get("errors") else "observed",
-                "counts": {key: report[key] for key in keys if key in report},
+                "counts": {
+                    key: report.get(key) if key == "errors" or not report.get("errors") else None for key in keys
+                },
             }
             if report is not None
             else {"status": "not_observed", "counts": None}
@@ -1544,23 +1549,28 @@ def build_public_summary(
         # Input order binds these slots to roots in the private receipt. Names
         # can be private, and identical basenames must not overwrite a row.
         repo_name = f"repository_{index}"
+        worktrees_observed = _all_observed([repo_dict], "worktrees")
         repos_summary[repo_name] = {
             "resources": _public_resource_counts(repo_dict),
             "reaped": sum(
                 1 for row in repo_dict.get("results", []) if row.get("action") in {"removed", "preserved_then_removed"}
-            ),
-            "retained": repo_dict.get("retained", 0),
-            "retained_exceptions": repo_dict.get("retained_exceptions", 0),
-            "by_preservation_class": repo_dict.get("by_preservation_class", {}),
-            "by_owner": repo_dict.get("by_owner", {}),
-            "orphans_reported": len(repo_dict.get("orphans", [])),
+            )
+            if worktrees_observed
+            else None,
+            "retained": repo_dict.get("retained") if worktrees_observed else None,
+            "retained_exceptions": repo_dict.get("retained_exceptions") if worktrees_observed else None,
+            "by_preservation_class": repo_dict.get("by_preservation_class") if worktrees_observed else None,
+            "by_owner": repo_dict.get("by_owner") if worktrees_observed else None,
+            "orphans_reported": len(repo_dict.get("orphans", [])) if _all_observed([repo_dict], "orphans") else None,
             "errors": len(repo_dict.get("errors", [])),
-            "rescue_candidates": ((repo_dict.get("rescue") or {}).get("summary") or {}).get("candidate", 0),
+            "rescue_candidates": ((repo_dict.get("rescue") or {}).get("summary") or {}).get("candidate"),
             "branches_deleted": (
                 sum(1 for row in repo_dict.get("branches", []) if row.get("action") == "deleted")
                 + sum(1 for row in repo_dict.get("results", []) if row.get("branch_pruned") is True)
                 + sum(1 for row in repo_dict.get("origin_branches", []) if row.get("action") == "deleted")
-            ),
+            )
+            if _all_observed([repo_dict], "worktrees", "branches")
+            else None,
         }
         diagnostic = repo_dict.get("rescue_diagnostic")
         if diagnostic is not None:
@@ -1580,23 +1590,43 @@ def build_public_summary(
         "mode": receipt.get("mode"),
         "summary": {
             "repositories": summary.get("repositories", len(repos_summary)),
-            "removed": summary.get("removed", 0),
-            "retained": summary.get("retained", 0),
-            "retained_exceptions": summary.get("retained_exceptions", 0),
-            "by_preservation_class": summary.get("by_preservation_class", {}),
-            "by_owner": summary.get("by_owner", {}),
-            "branches_deleted": summary.get("branches_deleted", 0),
-            "origin_branches_deleted": summary.get("origin_branches_deleted", 0),
-            "orphans_reported": summary.get("orphans_reported", 0),
+            "removed": summary.get("removed"),
+            "retained": summary.get("retained"),
+            "retained_exceptions": summary.get("retained_exceptions"),
+            "by_preservation_class": summary.get("by_preservation_class"),
+            "by_owner": summary.get("by_owner"),
+            "branches_deleted": summary.get("branches_deleted"),
+            "origin_branches_deleted": summary.get("origin_branches_deleted"),
+            "orphans_reported": summary.get("orphans_reported"),
             "errors": summary.get("errors", 0),
-            "review_temp_reaped": summary.get("review_temp_reaped", 0),
-            "review_temp_bytes_freed": summary.get("review_temp_bytes_freed", 0),
-            "task_scratch_reaped": summary.get("task_scratch_reaped", 0),
-            "task_scratch_bytes_freed": summary.get("task_scratch_bytes_freed", 0),
-            "task_scratch_preserved": summary.get("task_scratch_preserved", 0),
+            "review_temp_reaped": summary.get("review_temp_reaped"),
+            "review_temp_bytes_freed": summary.get("review_temp_bytes_freed"),
+            "task_scratch_reaped": summary.get("task_scratch_reaped"),
+            "task_scratch_bytes_freed": summary.get("task_scratch_bytes_freed"),
+            "task_scratch_preserved": summary.get("task_scratch_preserved"),
         },
         "repositories": repos_summary,
     }
+    # Legacy receipts may contain zero defaults without observation markers.
+    repositories = receipt.get("repositories", [])
+    for resource, keys in (
+        ("worktrees", ("removed", "retained", "retained_exceptions", "by_preservation_class", "by_owner")),
+        ("branches", ("branches_deleted", "origin_branches_deleted")),
+        ("orphans", ("orphans_reported",)),
+    ):
+        if not _all_observed(repositories, resource):
+            for key in keys:
+                public_payload["summary"][key] = None
+    if not _all_observed(repositories, "worktrees"):
+        public_payload["summary"]["branches_deleted"] = None
+    for key, field, count, stock in (
+        ("review_temp_reaped", "review_temp_sweep", "roots_reaped", False),
+        ("review_temp_bytes_freed", "review_temp_sweep", "bytes_freed", False),
+        ("task_scratch_reaped", "task_scratch_recovery", "reaped", False),
+        ("task_scratch_bytes_freed", "task_scratch_recovery", "bytes_freed", False),
+        ("task_scratch_preserved", "task_scratch_recovery", "preserved", True),
+    ):
+        public_payload["summary"][key] = _helper_total(repositories, field, count, stock=stock)
     if "home_session_retention" in receipt:
         public_payload["home_session_retention"] = receipt["home_session_retention"]
     if "claude_session_scratch" in receipt:

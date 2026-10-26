@@ -1321,13 +1321,20 @@ plans, and `retained` includes planned candidates still present. Unknown or
 unsafe retained work is an exception. A helper that did not run reports
 `not_observed` with null counts, including the review-temp helper in dry-run
 mode. A failed temp helper reports `error`; neither state proves zero resources.
+Legacy repository counters are also null when their inventory was not observed.
+Aggregate totals are null if any required repository pass is missing or failed.
+Zero means a completed observation counted zero.
 Branch rows count cleanup candidates, not a full inventory of protected refs.
 The worktree reaper can also prune a branch; its private result records
 `branch_pruned`, and the existing `branches_deleted` total includes that action.
 
 Temp rows describe shared host namespaces inspected during each repository pass.
 Do not add their candidate or preservation counts across repositories as unique
-objects. The existing top-level temp totals aggregate helper observations.
+objects. The top-level `task_scratch_preserved` uses the final complete helper
+observation of that shared namespace, once per run. Removal and bytes-freed
+totals add actual flows across passes. These totals are null if any pass is
+missing or failed. Counts do not establish object identity, durability, or
+deletion eligibility.
 Their inherited age thresholds remain visible as `min_age_s` where provided.
 These helpers cover named scratch only, with no new expiry for preserved
 evidence, user files, corpus, or bulk data.
@@ -1336,8 +1343,11 @@ After deployment, preserve two actual receipts at least one hour apart and
 verify both roots and all three resource classes in each. Keep any unknown or
 retained exception explicit; never delete to reach an inventory target.
 Fixed timestamps in fixtures prove receipt behavior only. They do not prove
-deployment, elapsed runtime, or the parent program's 15-minute p50 requirement.
-The driver owns those operational proofs and the full inventory comparison.
+deployment or elapsed runtime. This source repair does not measure PR
+open-to-merged time or assert an 8-minute or 15-minute result. The parent
+requirement remains a median of at most 20 minutes across the next 10 landings.
+The driver owns that cohort measurement, deployment, and the two real
+hour-separated observations of both roots and all three resource classes.
 
 ## Inspect the LaunchAgent
 
