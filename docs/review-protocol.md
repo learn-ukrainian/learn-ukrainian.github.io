@@ -9,7 +9,9 @@
 ## CF recording format
 
 `record_cf_verdict` accepts canonical `code-review-findings.v1` JSON OR a reply
-that includes exactly one `verdict` code block:
+that includes exactly one `verdict` code block. Reply with EITHER only the native
+JSON object, unfenced, with no other `code-review-findings.v1` text, OR a verdict
+block; never both:
 
 ````markdown
 ```verdict
@@ -24,8 +26,9 @@ are accepted. Strip surrounding body whitespace, then require one line:
 Only exact top-level fences count. Zero or multiple verdict fences, nested or
 unterminated blocks, and invalid bodies are refused. Fences labelled `verdict`
 after trimming and case-folding must match the canonical form or the reply is refused.
-Prose outside the block, including text after it, is ignored. A reply carrying both
-a findings payload and a verdict block is refused, even if their verdicts agree.
+Prose outside the block, including text after it, is ignored unless it contains
+`code-review-findings.v1` or a findings payload. Either beside a verdict block
+refuses the reply, even if their verdicts agree.
 Free-text verdict lines cannot be recorded. Re-run legacy captures in the new
 format; there is no compatibility flag. Canonical JSON findings validation is unchanged.
 

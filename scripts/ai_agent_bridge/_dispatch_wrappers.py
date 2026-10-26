@@ -541,7 +541,8 @@ _REVIEW_VERDICT_OUTPUT = (
 
 _NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract
 
-In your first completed reply, include one native JSON object, unfenced, conforming to
+Reply with EITHER only one native JSON object, unfenced, with no other
+code-review-findings.v1 text, OR a verdict block; never both. The JSON must conform to
 schemas/code-review-findings.v1.schema.json (schema_version: code-review-findings.v1).
 Read that schema: overall requires correctness, explanation, confidence; each
 finding requires id, title, body, priority, confidence, category, location,

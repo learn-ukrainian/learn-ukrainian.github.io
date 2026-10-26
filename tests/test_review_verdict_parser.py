@@ -196,6 +196,7 @@ def test_examples_and_invalid_tokens_are_not_formal_verdicts(reply):
 ])
 @pytest.mark.parametrize("wrapper,recordable", [
     ("{}", True), ("Review result:\n\n```json\n{}\n```", True), ("{}\n```python\nexample()\n```", False),
+    ("Review.\n{}", True), ("{}\nNotes.", True), ("{}\nNotes.\nMore notes.", True),
 ])
 def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expected, wrapper, recordable):
     """Fenced findings must not approve findings or misclassify uncertainty."""
@@ -232,6 +233,15 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
             normalize_verdict(response)
     raw = json.dumps(payload)
     assert _review_verdict_and_count(raw)[0] == _review_verdict_and_count(f"```json\n{raw}\n```")[0] == canonical
+
+    # Mixed output must fail closed regardless of prose placement or encoded markers.
+    fence = "```verdict\nAPPROVE\n```"
+    for mixed in (response + "\n" + fence, fence + "\n" + response + "\nNotes.",
+                  'Quoted "code-review-findings.v1".\n' + fence,
+                  response.replace("code-review-findings.v1", r"code-review-findings.\u00761") + "\n" + fence):
+        with pytest.raises(RecordError, match="reply carries both a findings payload and a verdict block"):
+            normalize_verdict(mixed)
+        assert recognized_verdicts(mixed) == []
 
     # Explicit verdict lines take precedence over the JSON fallback.
     assert recognized_verdicts(response + "\n\nVERDICT: APPROVE") == ["APPROVE"]

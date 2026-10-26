@@ -78,10 +78,12 @@ alongside the scope breakers.
 
 ## Output
 
-The reply must contain canonical `code-review-findings.v1` JSON OR include exactly
+Reply with EITHER only the native JSON object, unfenced, with no other
+`code-review-findings.v1` text, OR a verdict block; never both. Include exactly
 one column-0 ` ```verdict ` block, closed by column-0 ` ``` `. Its body must be
 one line, `VERDICT: <TOKEN>` or `<TOKEN>`, using `APPROVE`, `APPROVED`,
-`REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Text after the block is ignored.
+`REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Any schema marker or findings
+payload outside the verdict block refuses the reply.
 Do not mix findings JSON and a verdict block. Free-text verdicts are refused.
 
 Print a structured report to the conversation (the checklist's Step 8 gives

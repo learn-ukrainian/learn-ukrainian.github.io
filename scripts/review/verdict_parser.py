@@ -229,6 +229,8 @@ def recognized_verdicts(response: str) -> list[str]:
     Selection and normalization belong to consumers. An unclosed CommonMark
     fence suppresses verdict lines through EOF or the enclosing container's end.
     """
+    if _mixed_findings_and_verdict(response):
+        return []
     verdicts: list[str] = []
     for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
@@ -239,8 +241,31 @@ def recognized_verdicts(response: str) -> list[str]:
     return verdicts + ([token] if token else [])
 
 
+def _mixed_findings_and_verdict(response: str) -> bool:
+    fences = _verdict_fences(response)
+    if not fences:
+        return False
+    lines = _commonmark_lines(response, keepends=True)
+    for fence in reversed(fences):
+        if fence.map is not None:
+            lines[fence.map[0]:fence.map[1]] = []
+    outside = "".join(lines)
+    return "code-review-findings.v1" in outside or any(
+        _findings_json_verdicts(candidate) for candidate in [outside, *_line_start_json_candidates(outside)]
+    )
+
+
+def _line_start_json_candidates(response: str) -> Iterator[str]:
+    for match in re.finditer(r"(?m)^\{", response):
+        try:
+            _, end = json.JSONDecoder().raw_decode(response, match.start())
+        except ValueError:
+            continue
+        yield response[match.start():end]
+
+
 def _findings_json_verdicts(response: str, *, strip_fences: bool = True) -> list[str]:
-    """Read whole JSON replies and top-level JSON blocks, never quoted examples."""
+    """Read findings with surrounding prose and top-level JSON blocks."""
     from markdown_it import MarkdownIt
 
     from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
@@ -248,6 +273,10 @@ def _findings_json_verdicts(response: str, *, strip_fences: bool = True) -> list
 
     visible = _without_code_fences(response, keep_unclosed=False)
     candidates = [visible if strip_fences else response]
+    if strip_fences or not list(_code_fence_spans(_commonmark_lines(response))):
+        for candidate in _line_start_json_candidates(candidates[0]):
+            if not any(item.strip() == candidate for item in candidates):
+                candidates.append(candidate)
     candidates.extend(
         token.content
         for token in MarkdownIt("commonmark").parse(response)

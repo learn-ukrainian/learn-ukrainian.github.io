@@ -86,7 +86,7 @@ from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
-from scripts.review.verdict_parser import _findings_json_verdicts, _verdict_fences, strict_verdict_token
+from scripts.review.verdict_parser import _findings_json_verdicts, _mixed_findings_and_verdict, strict_verdict_token
 
 NORMALIZED = {
     "APPROVE": "APPROVED",
@@ -116,9 +116,9 @@ class RecordError(RuntimeError):
 
 def normalize_verdict(reply: str) -> str:
     """Accept canonical findings JSON or one exact, top-level verdict fence."""
-    findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply)}
-    if findings and _verdict_fences(reply):
+    if _mixed_findings_and_verdict(reply):
         raise RecordError("reply carries both a findings payload and a verdict block")
+    findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply)}
     if findings:
         findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, strip_fences=False)}
         if len(findings) == 1:
