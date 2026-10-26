@@ -303,7 +303,7 @@ execution_routing:
     # Every dispatch to a bounded worker (preferred_worker, or the Gemini Flash
     # fallback below unless it carries a Ukrainian authoring/review
     # classification) needs a complete advisory envelope from the advisor above,
-    # bound to that dispatch.
+    # bound to that dispatch; delegate.py refuses one without it.
     bounded_fallback_worker:
       model_id: {role: bounded_fallback}
       effort: high
@@ -1326,7 +1326,7 @@ seats:
         - critical_review
         route: grok
         transport: native_grok
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent grok --model {wire_id}
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model {wire_id}
         review_profiles:
         - code
         - infra
@@ -1411,7 +1411,7 @@ seats:
         route: codex
         transport: native_codex
         effort: high
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent codex --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model {wire_id} --effort high
   google_bounded:
     model_id: gemini-3.8-flash-high
     bindings:
@@ -1428,7 +1428,7 @@ seats:
         route: agy
         transport: agy
         effort: high
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent agy --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model {wire_id} --effort high
 roles:
   routine_mechanical:
     routes: [mechanical_worker/native, anthropic_practical/native]

@@ -1781,12 +1781,13 @@ def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high"])
 @pytest.mark.parametrize("profile", ["code", "infra"])
-def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile):
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile, launcher_path):
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol",
         risk=risk,
         review_profile=profile,
-        changed_paths=("scripts/dispatch.py",),
+        changed_paths=(launcher_path,),
         owned_paths=("site/src/app.ts",), claude_account=HOST_ACCOUNT,
     )
     result = resolve_reviewer(inputs)
@@ -1801,8 +1802,9 @@ def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile)
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high"])
 @pytest.mark.parametrize("candidate", [SONNET_5_5])
-def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evaluation(risk, candidate):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=("scripts/dispatch.py",), claude_account=HOST_ACCOUNT)
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evaluation(risk, candidate, launcher_path):
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=(launcher_path,), claude_account=HOST_ACCOUNT)
     direct = evaluate_candidate(candidate, inputs)
     assert direct.status == "excluded" and direct.reason
     custom = resolve_reviewer(inputs, ladder=((candidate,),))
@@ -1814,19 +1816,21 @@ def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evalua
     assert pinned.selected is None and pinned.fail_closed_reason
 
 
-def test_security_owned_paths_only_add_coverage():
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_owned_paths_only_add_coverage(launcher_path):
     inputs = ResolverInputs(
-        author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=("scripts/dispatch.py",), claude_account=HOST_ACCOUNT
+        author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=(launcher_path,), claude_account=HOST_ACCOUNT
     )
     assert resolve_reviewer(inputs).resolved_risk == "critical"
 
 
-def test_security_qualified_reviewer_unavailable_refuses_without_downgrade():
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_qualified_reviewer_unavailable_refuses_without_downgrade(launcher_path):
     result = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-6.1-sol",
             risk="low",
-            changed_paths=("scripts/dispatch.py",),
+            changed_paths=(launcher_path,),
             routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
@@ -1835,12 +1839,13 @@ def test_security_qualified_reviewer_unavailable_refuses_without_downgrade():
     assert all(entry.reason for entry in result.trace)
 
 
-def test_security_subject_seat_exclusion_still_binds():
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_subject_seat_exclusion_still_binds(launcher_path):
     result = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-6.1-sol",
             risk="low",
-            changed_paths=("scripts/dispatch.py",),
+            changed_paths=(launcher_path,),
             subject_seats=frozenset({"claude"}), claude_account=HOST_ACCOUNT,
         )
     )
