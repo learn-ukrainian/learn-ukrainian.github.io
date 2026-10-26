@@ -229,13 +229,13 @@ def recognized_verdicts(response: str) -> list[str]:
     Selection and normalization belong to consumers. An unclosed CommonMark
     fence suppresses verdict lines through EOF or the enclosing container's end.
     """
-    if _mixed_findings_and_verdict(response):
-        return []
     verdicts: list[str] = []
     for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match:
             verdicts.append(match.group(1).upper())
+    if _mixed_findings_and_verdict(response):
+        return []
     verdicts = verdicts or _findings_json_verdicts(response)
     token = strict_verdict_token(response)
     return verdicts + ([token] if token else [])
