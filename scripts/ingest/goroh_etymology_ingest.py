@@ -25,7 +25,8 @@ DEFAULT_MANIFEST = REPO / "site" / "src" / "data" / "lexicon-manifest.json"
 GOROH_BASE = "https://goroh.pp.ua/Етимологія"
 DEFAULT_USER_AGENT = (
     "learn-ukrainian-goroh-etymology/1.0 "
-    "(noncommercial educational lookup; issue 2882)"
+    "(noncommercial educational lookup; issue 2882; "
+    "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
 )
 
 GOROH_SCHEMA_SQL = """
