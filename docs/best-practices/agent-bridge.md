@@ -503,7 +503,7 @@ from a plain shell; launchers can supply the sender identity. `discuss`
 accepts 2 to 4 distinct enabled seats. Neither surface falls back to a one-shot
 provider process on failure.
 
-Use `scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --worktree` for planning, creation, design, or other
+Use `scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --mode workspace-write --worktree` for planning, creation, design, or other
 toolful work. Explicit `ask-* --type review`, `--review`, and `--pr` requests
 retain their headless toolful dispatch path. The `process-*` commands exist to
 drain old queued messages; do not create new one-shot jobs for them. Ordinary

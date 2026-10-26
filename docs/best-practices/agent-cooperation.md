@@ -824,7 +824,7 @@ Never parse Gemini's prose output for structured data.
 Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` or
-`scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief> ...`.
+`scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief> --mode read-only --worktree ...`.
 
 Direct `agy --model` calls use display labels from `agy models`, such as
 `Gemini 3.1 Pro (High)` and `Gemini 3.5 Flash (High)`. The bridge and runtime

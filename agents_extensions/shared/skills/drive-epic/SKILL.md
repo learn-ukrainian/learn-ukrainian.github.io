@@ -134,7 +134,8 @@ requires an operator reference. The item lifecycle is in
 7. **§4a Inbox drain — immediately before dispatch.** Apply every message before the
    launch.
 8. **§4 Dispatch** only when the task card and dispatch preflight are both green; chat
-   "ready" is not DoR. Use `--check-budget`, research flags, and `--owned-path`.
+   "ready" is not DoR. Use research flags and `--owned-path`. `--check-budget` is
+   legacy-only admission with no v2 mapping; never pass it to `scripts/dispatch.py`.
 9. **§5 Settle.** Arm `scripts/dispatch.py wait <task-id>` (or the Monitor tool) in the same turn
    as the dispatch. State a worker's status only after `scripts/dispatch.py status <task-id>` in
    this turn, and record its task ID, full run nonce, status, and branch head in its

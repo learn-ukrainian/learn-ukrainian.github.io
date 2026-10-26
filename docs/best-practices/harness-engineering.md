@@ -170,7 +170,7 @@ We have already been doing harness engineering for ~6 months. The OpenAI posts g
 | Structured `docs/` system of record | `docs/best-practices/`, `docs/decisions/`, `docs/session-state/` (two-tier), `docs/bug-autopsies/`, `docs/SCRIPTS.md`, `docs/MONITOR-API.md` |
 | Mechanical enforcement / custom lints | `check_decisions.py`, `lint_anti_menu.py`, `lint_agent_trailer.py`, deploy-idempotency test, pre-commit ruff, pre-push X-Agent trailer hook |
 | Agent-legible app surfaces | Monitor API for state, `mcp__sources__*` for linguistic verification |
-| Per-worktree isolated runs | `scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --worktree` (mandatory per #M0 dispatch routing) |
+| Per-worktree isolated runs | `scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --mode workspace-write --worktree` (mandatory per #M0 dispatch routing) |
 | Bug autopsies / continuous GC | `docs/bug-autopsies/INDEX.md`, MEMORY trim cadence, ADR hygiene flags |
 | Repo as only state | Decisions, comms, channel history all in-repo or DB-served |
 | Multi-agent feedback loops | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` channels, dispatch with cross-agent code review |

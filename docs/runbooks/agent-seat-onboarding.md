@@ -276,7 +276,7 @@ path. Never fall back to `python`, `.venv/bin/python`, or `python -m venv .venv`
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 "$PRIMARY_REPO/.venv/bin/python" scripts/dispatch.py dispatch \
-  --agent <lane> --model <model> --task-id <id> --prompt-file <path> --worktree
+  --agent <lane> --model <model> --task-id <id> --prompt-file <path> --mode workspace-write --worktree
 ```
 
 The delegate worker preamble repeats this constraint. If preparation finds a
@@ -804,7 +804,7 @@ printf '%s\n' 'Review PR #<N> at head <SHA>: verdict + findings.' | \
   --task-id review-<N> --type review
 
 # Execution
-.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --worktree ...
+.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --mode workspace-write --worktree ...
 
 # Topology (never hard-code the answer)
 .venv/bin/python -m scripts.fleet_comms plane-status

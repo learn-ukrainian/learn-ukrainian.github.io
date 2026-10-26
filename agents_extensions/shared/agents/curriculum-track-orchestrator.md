@@ -99,10 +99,10 @@ initialPrompt: |
     agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
     explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
   - Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status` → read the
-    result file on terminal. **Match v2 and readable legacy terminal states (`scripts/dispatcher/worker.py`) — `done`
-    (the SUCCESS state, NOT "completed"); other settle states
-    `failed|timeout|rate_limited|cancelled|crashed|dry_run` (`dry_run` is terminal, not success)
-    plus the persisted attention statuses `needs_finalize|no_deliverable`; emit on any status NOT in
+    result file on terminal. **V2 terminal states (`scripts/dispatcher/worker.py`): `done`, `failed`, `timeout`,
+    `cancelled` and `crashed`. `done` reports execution success; verify Git delivery separately.
+    Legacy records can also contain `rate_limited`, `dry_run`, `needs_finalize` and
+    `no_deliverable`; these remain attention states. Emit on any status NOT in
     {spawning,running,""}** (a dispatch persists `spawning` before it forks
     the worker — treating it as terminal would retry/clean up a live task) — a loop that waits for
     "completed" silently times out on

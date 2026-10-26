@@ -539,7 +539,7 @@ with exactly two enabled seats: sender and recipient. Pass <code>--from</code> e
 from a plain shell; launchers can supply the sender identity. <code>discuss</code>
 accepts 2 to 4 distinct enabled seats. Neither surface falls back to a one-shot
 provider process on failure.</p>
-<p>Use <code>scripts/dispatch.py dispatch --agent &lt;lane&gt; --model &lt;model&gt; --prompt-file &lt;brief&gt; --worktree</code> for planning, creation, design, or other
+<p>Use <code>scripts/dispatch.py dispatch --agent &lt;lane&gt; --model &lt;model&gt; --prompt-file &lt;brief&gt; --mode workspace-write --worktree</code> for planning, creation, design, or other
 toolful work. Explicit <code>ask-* --type review</code>, <code>--review</code>, and <code>--pr</code> requests
 retain their headless toolful dispatch path. The <code>process-*</code> commands exist to
 drain old queued messages; do not create new one-shot jobs for them. Ordinary

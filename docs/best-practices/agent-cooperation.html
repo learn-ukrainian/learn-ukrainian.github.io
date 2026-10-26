@@ -1031,7 +1031,7 @@ research = _extract_delimiter(output, &quot;===RESEARCH_START===&quot;, &quot;==
 <p>Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
 <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> or
-<code>scripts/dispatch.py dispatch --agent agy --model &lt;model&gt; --prompt-file &lt;brief&gt; ...</code>.</p>
+<code>scripts/dispatch.py dispatch --agent agy --model &lt;model&gt; --prompt-file &lt;brief&gt; --mode read-only --worktree ...</code>.</p>
 <p>Direct <code>agy --model</code> calls use display labels from <code>agy models</code>, such as
 <code>Gemini 3.1 Pro (High)</code> and <code>Gemini 3.5 Flash (High)</code>. The bridge and runtime
 may accept slugs such as <code>gemini-3.1-pro-high</code> and map them to AGY display

@@ -147,7 +147,7 @@ At `low` or `medium`, Sonnet 5.5 can check in before finishing. Make completion 
 | Activity | Entry |
 |---|---|
 | Thin orchestration | One accountable lead selected from the current catalog for the stream |
-| Implementation | `scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --worktree` |
+| Implementation | `scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --mode workspace-write --worktree` |
 | Formal code CF review | Qualified native toolful lane resolved through the canonical `local-code-review` workflow |
 | Advisory design | Qualified advisor from the current catalog with an **explicit decision question** |
 | Multi-agent debate | `discuss` — **not** the merge gate |
