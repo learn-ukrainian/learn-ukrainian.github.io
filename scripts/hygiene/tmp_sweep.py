@@ -93,6 +93,15 @@ MANIFEST_MATCHES = frozenset({"verified", "unverified_digest_skipped"})
 _DIR_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0)
 
 
+class DispatchApplyRefused(PermissionError):
+    """A dispatched child attempted a mutating cleanup operation."""
+
+
+def refuse_dispatched_apply() -> None:
+    if "LU_DISPATCH_TASK_ID" in os.environ:
+        raise DispatchApplyRefused("dispatch_apply_refused: destructive cleanup is disabled for dispatched children")
+
+
 @dataclass(frozen=True)
 class ScratchPolicy:
     """Unattributed-scratch thresholds (#9737); both default to 24 hours.
@@ -1045,6 +1054,8 @@ def purge_quarantine(
     stays in quarantine and counts as an error every run until a person
     restores or removes it. Entries inside the window get no row.
     """
+    if apply:
+        refuse_dispatched_apply()
     rows: list[dict[str, Any]] = []
     errors = 0
     for entry in sorted(entries.values(), key=lambda item: item.quarantined_at):
@@ -1128,6 +1139,8 @@ def sweep(
     same passes without changing anything. Inactive pytest scratch follows
     its own rule (:mod:`scripts.hygiene.pytest_retention`, #11297).
     """
+    if apply:
+        refuse_dispatched_apply()
     if not math.isfinite(min_age_s) or min_age_s <= 0:
         raise ValueError("minimum age must be finite and positive")
     if not math.isfinite(quarantine_s) or quarantine_s <= 0 or digest_limit < 0:
@@ -1347,6 +1360,7 @@ def restore(ledger: Ledger, entry_id: str) -> dict[str, Any]:
     restored too: what survives comes back, and the verification lists what
     is missing or changed.
     """
+    refuse_dispatched_apply()
     if entry_id not in ledger.entries()[0]:
         raise KeyError(entry_id)
     with ledger.exclusive(wait=False):
@@ -1565,8 +1579,10 @@ def build_ledger_parser() -> argparse.ArgumentParser:
 def ledger_main(argv: list[str]) -> int:
     parser = build_ledger_parser()
     args = parser.parse_args(argv)
-    ledger = Ledger((args.state_dir or default_state_dir()).expanduser())
     try:
+        if args.command == "restore":
+            refuse_dispatched_apply()
+        ledger = Ledger((args.state_dir or default_state_dir()).expanduser())
         if args.command == "restore":
             try:
                 result = restore(ledger, args.ledger_id)
@@ -1597,6 +1613,9 @@ def ledger_main(argv: list[str]) -> int:
                 manifest=args.manifest,
             )
             columns = ("at", "event", "ledger_id", "run_id", "original_path", "reason", "outcome", "found", "error")
+    except DispatchApplyRefused as error:
+        print(str(error), file=sys.stderr)
+        return 1
     except LedgerError as error:
         print(f"ledger unavailable or not durable: {error}", file=sys.stderr)
         return 1
@@ -1691,7 +1710,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Purge expired quarantine, recheck proofs and quarantine proven entries, and delete inactive "
-            "unheld pytest run folders (default dry-run)."
+            "unheld pytest run folders (default dry-run; refused in dispatched children)."
         ),
     )
     output = parser.add_mutually_exclusive_group()
@@ -1713,6 +1732,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
+        if args.apply:
+            refuse_dispatched_apply()
         scratch = (
             ScratchPolicy(min_age_s=args.scratch_age_hours * 3600, quiet_s=args.scratch_quiet_hours * 3600)
             if args.unattributed_scratch
@@ -1730,6 +1751,9 @@ def main(argv: list[str] | None = None) -> int:
             quarantine_s=args.quarantine_days * 86400,
             digest_limit=int(args.digest_limit_mib * (1 << 20)),
         )
+    except DispatchApplyRefused as error:
+        print(str(error), file=sys.stderr)
+        return 1
     except LedgerError as error:
         # The step in progress stays unconfirmed in the ledger, and the next run reconciles it.
         print(f"ledger unavailable or not durable, run stopped: {error}", file=sys.stderr)

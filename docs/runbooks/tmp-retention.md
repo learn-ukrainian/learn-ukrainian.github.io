@@ -1,5 +1,17 @@
 # Temp scratch retention and batch_state staleness
 
+Native dispatched children receive `LU_DISPATCH_TASK_ID` and `LU_DISPATCH_MODE`
+from their task specification, replacing inherited markers for every provider.
+When the task marker is present, even empty or malformed, `tmp_sweep --apply`,
+its apply API, restore and purge APIs, and direct pytest retention apply raise
+`DispatchApplyRefused` before cleanup work. The CLI prints the fixed
+`dispatch_apply_refused` refusal and exits 1 without exposing marker values or
+paths. Both `read-only` and `workspace-write` modes deny apply; mode is diagnostic.
+Dry runs and ledger/quarantine reports remain available. Unmarked timers and
+lane drivers retain existing behavior. Verifier and QA dispatches use `read-only`.
+Do not remove a real task marker to run cleanup.
+
+
 Operator retention decision, 2026-10-06 (#9737). An hourly user timer
 (#11297) removes agent scratch from the system temp area that no task owns and
 that has gone quiet. It also deletes inactive pytest scratch (see

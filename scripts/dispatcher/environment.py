@@ -32,4 +32,6 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
     if spec.agent == "claude" and spec.claude_account:
         suffix = "" if spec.claude_account == "a" else "-b"
         env["CLAUDE_CONFIG_DIR"] = str(Path(env.get("HOME", str(Path.home()))) / f".claude{suffix}")
+    env["LU_DISPATCH_TASK_ID"] = spec.task_id
+    env["LU_DISPATCH_MODE"] = spec.mode
     return env

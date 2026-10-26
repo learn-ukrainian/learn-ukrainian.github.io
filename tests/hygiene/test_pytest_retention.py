@@ -47,6 +47,8 @@ sys.stdin.read()
 
 @pytest.fixture
 def area(tmp_path, monkeypatch):
+    # Model an unmarked timer exclusively on this fixture's synthetic roots.
+    monkeypatch.delenv("LU_DISPATCH_TASK_ID", raising=False)
     root = tmp_path / "managed"
     root.mkdir(mode=0o700)
     tasks = tmp_path / "tasks"
@@ -1982,3 +1984,21 @@ def test_receipt_carries_preserved_reasons_measured_bytes_and_largest_preserved(
         for row in report["rows"] if "largest_preserved_rank" in row
     }
     assert ranked == {1: unreadable.name, 2: live.name, 3: other.name}
+
+
+@pytest.mark.parametrize("marker", ["", "malformed/secret\nvalue", "native-task"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_direct_dispatched_pytest_apply_refuses_before_scan(tmp_path, monkeypatch, marker, mode):
+    monkeypatch.setenv("LU_DISPATCH_TASK_ID", marker)
+    monkeypatch.setenv("LU_DISPATCH_MODE", mode)
+
+    def forbidden():
+        pytest.fail("refused apply scanned cleanup roots")
+
+    monkeypatch.setattr(pytest_retention, "scratch_scan_roots", forbidden)
+    with pytest.raises(tmp_sweep.DispatchApplyRefused) as error:
+        pytest_retention.sweep_pytest_runs(apply=True, ledger=None, run_id="private-run",
+                                          task_root=tmp_path, quarantine_s=1, repo_root=tmp_path)
+    assert str(error.value) == (
+        "dispatch_apply_refused: destructive cleanup is disabled for dispatched children"
+    )

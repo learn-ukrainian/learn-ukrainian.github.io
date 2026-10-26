@@ -1013,3 +1013,19 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+@pytest.mark.parametrize("agent,provider", [("codex", None), ("claude", None), ("cursor", None),
+                                          ("agy", None), ("muse", None), ("opencode", None),
+                                          ("hermes", None), ("opencode", "openrouter")])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_child_env_overwrites_dispatch_markers_for_every_provider(spec, monkeypatch, agent, provider, mode):
+    monkeypatch.setenv("LU_DISPATCH_TASK_ID", "forged")
+    monkeypatch.setenv("LU_DISPATCH_MODE", "forged")
+    monkeypatch.setenv("INFRA_TOKEN", "unrelated-secret")
+    monkeypatch.setenv("CURSOR_API_KEY", "test-cursor")
+    task = dataclasses.replace(spec, agent=agent, mode=mode, provider=provider)
+    env = child_env(task)
+    assert env["LU_DISPATCH_TASK_ID"] == task.task_id
+    assert env["LU_DISPATCH_MODE"] == mode
+    assert "INFRA_TOKEN" not in env

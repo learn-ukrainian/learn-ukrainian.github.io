@@ -6,7 +6,6 @@ import os
 import shutil
 import socket
 import subprocess
-import tempfile
 import time
 from pathlib import Path
 from types import SimpleNamespace
@@ -277,9 +276,11 @@ def test_shared_task_predicate_at_retention_boundaries(inventory, consumer, loca
 
 @pytest.fixture
 def inventory(tmp_path, tmp_path_factory, monkeypatch):
-    # The pre-push gate runs pytest with a basetemp outside /tmp. The sweep
-    # only accepts a real system temp, so the fixture root cannot be tmp_path.
-    root = Path(tempfile.mkdtemp(prefix="impl-8755-temp-", dir="/tmp"))
+    # Model an unmarked timer exclusively on this fixture's synthetic roots.
+    monkeypatch.delenv("LU_DISPATCH_TASK_ID", raising=False)
+    root = tmp_path / "system-temp"
+    root.mkdir()
+    monkeypatch.setattr(sweep, "SYSTEM_TEMP_AREAS", (root,))
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     # Never the user's real ledger (#9887).
@@ -671,3 +672,39 @@ def test_socket_endpoint_is_preserved_even_without_fd_path_reference(inventory, 
         report = inventory.run(apply=True)
         assert path.exists() and report["rows"][0]["reason"] == "special_file"
         assert report["bytes_reclaimed"] == 0
+
+
+@pytest.mark.parametrize("marker", ["", "malformed/secret\nvalue", "native-task"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "forged"])
+def test_dispatched_apply_refuses_before_mutation(tmp_path, monkeypatch, capsys, marker, mode):
+    monkeypatch.setenv("LU_DISPATCH_TASK_ID", marker)
+    monkeypatch.setenv("LU_DISPATCH_MODE", mode)
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("cleanup reached a mutation or ledger boundary")
+
+    for name in ("Ledger", "rename_noreplace", "reap_attributed_temp", "open_quarantine"):
+        monkeypatch.setattr(sweep, name, forbidden)
+    message = "dispatch_apply_refused: destructive cleanup is disabled for dispatched children"
+    with pytest.raises(sweep.DispatchApplyRefused) as error:
+        sweep.sweep(temp_root=tmp_path / "private-path", apply=True)
+    assert str(error.value) == message
+    with pytest.raises(sweep.DispatchApplyRefused):
+        sweep.restore(None, "private-ledger-id")
+    with pytest.raises(sweep.DispatchApplyRefused):
+        sweep.purge_quarantine({}, None, "private-run", now=0, quarantine_s=1,
+                               task_root=tmp_path, repo_root=tmp_path, apply=True)
+    assert sweep.main(["--apply", "--temp-root", str(tmp_path / "private-path")]) == 1
+    assert sweep.main(["restore", "private-ledger-id"]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == (message + "\n") * 2
+
+
+def test_dispatched_dry_run_and_reports_remain_available(inventory, monkeypatch, capsys):
+    monkeypatch.setenv("LU_DISPATCH_TASK_ID", "")
+    report = inventory.run()
+    assert report["mode"] == "dry-run"
+    assert sweep.main(["ledger", "--json"]) == 0
+    assert sweep.main(["quarantine", "--json"]) == 0
+    capsys.readouterr()

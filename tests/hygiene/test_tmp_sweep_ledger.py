@@ -65,8 +65,11 @@ os._exit(0)
 @pytest.fixture
 def box(tmp_path, monkeypatch, isolated_state_home):
     """A temp root with a three-day-old tree and file, a task root, and a movable sweep clock."""
+    # Model an unmarked timer exclusively on this fixture's synthetic roots.
+    monkeypatch.delenv("LU_DISPATCH_TASK_ID", raising=False)
     root = tmp_path / "system-temp"
     root.mkdir()
+    monkeypatch.setattr(sweep, "SYSTEM_TEMP_AREAS", (root,))
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     start = time.time() + 3 * DAY

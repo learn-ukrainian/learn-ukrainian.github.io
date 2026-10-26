@@ -686,6 +686,8 @@ def sweep_pytest_runs(
     only measured rows; ``*_bytes_complete`` and ``*_unmeasured_entries``
     explicitly distinguish these lower bounds from complete totals.
     """
+    if apply:
+        sweep.refuse_dispatched_apply()
     rows = []
     errors = 0
     unreadable = 0

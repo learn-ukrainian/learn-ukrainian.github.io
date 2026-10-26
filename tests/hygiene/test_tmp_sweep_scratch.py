@@ -33,8 +33,11 @@ def scratch(tmp_path, monkeypatch):
     Change time cannot be backdated, so the sweep's clock moves forward
     instead; mtimes are pinned to the real present minus three days.
     """
+    # Model an unmarked timer exclusively on this fixture's synthetic roots.
+    monkeypatch.delenv("LU_DISPATCH_TASK_ID", raising=False)
     root = tmp_path / "system-temp"
     root.mkdir()
+    monkeypatch.setattr(sweep, "SYSTEM_TEMP_AREAS", (root,))
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     now = time.time() + 3 * DAY
