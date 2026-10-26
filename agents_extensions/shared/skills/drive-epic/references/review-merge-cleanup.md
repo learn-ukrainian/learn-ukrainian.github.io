@@ -195,10 +195,11 @@ read-only dispatch (#8703, above).
    by the fix diff and check listed fixes, interactions and weakened tests at the new exact
    head. A missing required capability is INCONCLUSIVE: the structured verdict uses `BLOCKED` and
    names the capability; it still blocks.
-   The reply must contain canonical `code-review-findings.v1` JSON OR end with exactly
+   The reply must contain canonical `code-review-findings.v1` JSON OR include exactly
    one column-0 ` ```verdict ` block closed by column-0 ` ``` `. Its body must be
    one `VERDICT: <TOKEN>` or `<TOKEN>` line using `APPROVE`, `APPROVED`,
-   `REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Free-text verdicts are refused.
+   `REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Text after the block is ignored.
+   Do not mix findings JSON and a verdict block. Free-text verdicts are refused.
 6. **Breakers** — the review stopping rule above and `local-code-review` checklist
    Step 6 apply, even when the outstanding-finding count shrinks.
 

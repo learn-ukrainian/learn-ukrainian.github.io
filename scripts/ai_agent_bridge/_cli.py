@@ -459,8 +459,8 @@ def _add_review_options(parser: argparse.ArgumentParser) -> None:
         "--review",
         action="store_true",
         help=(
-            "Review ask (same as --type review): reply must contain canonical findings JSON or end with exactly one ```verdict block "
-            "grounded in evidence; sealed review-pr was removed in #8520"
+            "Review ask (same as --type review): reply must contain canonical findings JSON or include exactly one ```verdict block "
+            "grounded in evidence. Text after the block is ignored; sealed review-pr was removed in #8520"
         ),
     )
     review_target = parser.add_mutually_exclusive_group()

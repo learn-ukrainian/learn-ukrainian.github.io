@@ -434,7 +434,7 @@ def test_ask_non_kimi_review_argv_omits_kimicc_harness():
 
 def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
     result_file = tmp_path / "result.md"
-    result_file.write_text("Reviewed the diff.\nVERDICT: APPROVED\n", encoding="utf-8")
+    result_file.write_text("Reviewed the diff.\n```verdict\nVERDICT: APPROVED\n```\n", encoding="utf-8")
     calls = []
 
     def fake_run(cmd, **kwargs):
@@ -454,7 +454,7 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
     state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123", hard_timeout=600)
     assert state["ok"] is True
     assert state["status"] == "done"
-    assert state["response"] == "Reviewed the diff.\nVERDICT: APPROVED\n"
+    assert state["response"] == "Reviewed the diff.\n```verdict\nVERDICT: APPROVED\n```\n"
     assert "--require-review-verdict" in calls[0][0]
     assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
     assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS

@@ -57,7 +57,7 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
     from scripts.opsec import prepublish as gate
 
     tasks, comments, calls, sent, tooling = scanned_recorder
-    reply = f"VERDICT: {verdict}\n{detail}\nHarmless reviewer sentence quoting `<!-- cf-verdict`.\n- A prose bullet."
+    reply = f"```verdict\nVERDICT: {verdict}\n```\n{detail}\nHarmless reviewer sentence quoting `<!-- cf-verdict`.\n- A prose bullet."
     write_task(tasks, reply=reply)
     before = {suffix: (tasks / f"review-one.{suffix}").read_bytes() for suffix in ("json", "result")}
     with pytest.raises(gate.PublishBlocked, match=f"rule={rule}"):
@@ -89,7 +89,7 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
 
 def test_clean_publication_bytes_unchanged(scanned_recorder, tmp_path):
     tasks, comments, calls, sent, _ = scanned_recorder
-    reply = "VERDICT: APPROVE\nOrdinary reviewer text.\n\n  Preserve spacing.\n"
+    reply = "```verdict\nVERDICT: APPROVE\n```\nOrdinary reviewer text.\n\n  Preserve spacing.\n"
     write_task(tasks, reply=reply)
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     expected = (
@@ -114,7 +114,7 @@ def test_skeleton_scanner_rejection_has_no_write(scanned_recorder, tmp_path, mon
     rules["3"] = {"patterns": [{"id": "3-absolute-path", "regex": r"(?!)"}]}
     (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
     monkeypatch.setattr(gate, "private_tooling", lambda: synthetic_opsec)
-    write_task(tasks, reply="VERDICT: APPROVE\ncredential stored SYNTHETIC-DETAIL")
+    write_task(tasks, reply="```verdict\nVERDICT: APPROVE\n```\ncredential stored SYNTHETIC-DETAIL")
     with pytest.raises(recorder.RecordError, match="synthetic-skeleton-refusal"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
@@ -192,7 +192,7 @@ def test_invalid_structured_verdict_or_count_refuses(scanned_recorder, tmp_path,
 @pytest.mark.parametrize("payload,expected", [
     ({"schema_version": "code-review-findings.v1", "overall": {
         "correctness": "correct", "explanation": "", "confidence": 0.9}, "findings": []}, "BLOCKED"),
-    ("VERDICT: APPROVE\n- prose item\n- another prose item", "APPROVED"),
+    ("```verdict\nVERDICT: APPROVE\n```\n- prose item\n- another prose item", "APPROVED"),
 ])
 def test_unavailable_structured_count_is_unknown(payload, expected):
     reply = json.dumps(payload) if isinstance(payload, dict) else payload
@@ -234,7 +234,7 @@ def test_transport_failure_after_scan_never_retries_skeleton(scanned_recorder, t
 
 def test_head_movement_before_skeleton_write_refuses(scanned_recorder, tmp_path, monkeypatch):
     tasks, comments, calls, sent, _ = scanned_recorder
-    write_task(tasks, reply="VERDICT: APPROVE\ncredential stored SYNTHETIC-DETAIL")
+    write_task(tasks, reply="```verdict\nVERDICT: APPROVE\n```\ncredential stored SYNTHETIC-DETAIL")
     heads = iter([SHA, "b" * 40])
     monkeypatch.setattr(recorder, "_pr", lambda *args: {
         "number": 42, "headRefName": "codex/42", "headRefOid": next(heads),
@@ -246,7 +246,7 @@ def test_head_movement_before_skeleton_write_refuses(scanned_recorder, tmp_path,
 
 def test_edited_skeleton_cannot_reconcile(scanned_recorder, tmp_path):
     tasks, comments, calls, sent, _ = scanned_recorder
-    write_task(tasks, reply="VERDICT: APPROVE\ncredential stored SYNTHETIC-DETAIL")
+    write_task(tasks, reply="```verdict\nVERDICT: APPROVE\n```\ncredential stored SYNTHETIC-DETAIL")
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     comments[0]["updated_at"] = "2026-09-23T14:00:00Z"
     with pytest.raises(recorder.RecordError, match="existing verdict marker was edited or conflicts"):
@@ -436,7 +436,7 @@ def test_ukrainian_review_without_known_positive_count_refused_before_network(
     monkeypatch, tmp_path, verdict, count
 ):
     tasks = tmp_path / "tasks"
-    write_task(tasks, reply=f"VERDICT: {verdict}", review_profile="ukrainian", sources_mcp_call_count=count)
+    write_task(tasks, reply=f"```verdict\nVERDICT: {verdict}\n```", review_profile="ukrainian", sources_mcp_call_count=count)
 
     def unexpected_network(*args, **kwargs):
         pytest.fail("Sources evidence must be checked before GitHub lookup or publication")
@@ -449,7 +449,7 @@ def test_ukrainian_review_without_known_positive_count_refused_before_network(
 
 def test_missing_runtime_count_cannot_be_replaced_by_reviewer_prose(tmp_path):
     tasks = tmp_path / "tasks"
-    write_task(tasks, review_profile="ukrainian", reply="Used mcp__sources__verify_words.\nVERDICT: APPROVE")
+    write_task(tasks, review_profile="ukrainian", reply="Used mcp__sources__verify_words.\n```verdict\nVERDICT: APPROVE\n```")
     with pytest.raises(recorder.RecordError, match="call count unknown"):
         recorder.record("review-one", task_root=tasks, lock_root=tmp_path / "locks")
 

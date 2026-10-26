@@ -36,10 +36,11 @@ _REVIEW_TYPE_RE = re.compile(r"^(review|code.review|pr.review)$", re.IGNORECASE)
 _REVIEW_TASK_RE = re.compile(r"(^|[-_/])review($|[-_/])", re.IGNORECASE)
 
 REVIEW_VERDICT_FORMAT = f"""\
-The reply must contain canonical code-review-findings.v1 JSON OR end with exactly
+The reply must contain canonical code-review-findings.v1 JSON OR include exactly
 one ```verdict block. Open with exactly ```verdict and close with exactly ``` at
 column 0. Its body must be one line: VERDICT: <TOKEN> or <TOKEN>.
 Accepted tokens: {", ".join(ACCEPTED_VERDICT_TOKENS)}.
+Text after the block is ignored. Do not mix findings JSON and a verdict block.
 Free-text verdict lines cannot be recorded.
 """
 

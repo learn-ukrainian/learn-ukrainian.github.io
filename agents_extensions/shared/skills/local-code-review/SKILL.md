@@ -78,10 +78,11 @@ alongside the scope breakers.
 
 ## Output
 
-The reply must contain canonical `code-review-findings.v1` JSON OR end with exactly
+The reply must contain canonical `code-review-findings.v1` JSON OR include exactly
 one column-0 ` ```verdict ` block, closed by column-0 ` ``` `. Its body must be
 one line, `VERDICT: <TOKEN>` or `<TOKEN>`, using `APPROVE`, `APPROVED`,
-`REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Free-text verdicts are refused.
+`REQUEST_CHANGES`, `CHANGES_REQUESTED`, or `BLOCKED`. Text after the block is ignored.
+Do not mix findings JSON and a verdict block. Free-text verdicts are refused.
 
 Print a structured report to the conversation (the checklist's Step 8 gives
 the exact shape). Do NOT write a file unless specifically asked.

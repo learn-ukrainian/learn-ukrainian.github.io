@@ -88,7 +88,7 @@ steps:
     intent: Request the designated independent review via ask-* --type review (shielded review-pr removed in #8520).
     command:
       adapter: shell
-      argv: [sh, -c, 'printf "%s\n" "Cross-family review of PR $PR_NUMBER: the reply must contain canonical code-review-findings.v1 JSON OR end with exactly one \`\`\`verdict block." | .venv/bin/python scripts/ai_agent_bridge/__main__.py "ask-$REVIEWER_SEAT" - --task-id "review-$PR_NUMBER" --type review >/dev/null 2>&1 && echo review-request-command-succeeded || echo review-request-command-failed']
+      argv: [sh, -c, 'printf "%s\n" "Cross-family review of PR $PR_NUMBER: the reply must contain canonical code-review-findings.v1 JSON OR include exactly one \`\`\`verdict block." | .venv/bin/python scripts/ai_agent_bridge/__main__.py "ask-$REVIEWER_SEAT" - --task-id "review-$PR_NUMBER" --type review >/dev/null 2>&1 && echo review-request-command-succeeded || echo review-request-command-failed']
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         PR_NUMBER: "{pr_number}"
