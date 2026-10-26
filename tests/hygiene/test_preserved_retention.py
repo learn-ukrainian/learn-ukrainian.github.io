@@ -211,13 +211,13 @@ def test_latest_manifest_controls_whole_entry_age(batch):
 
 
 @pytest.mark.parametrize("released", [False, True])
-def test_unresolved_held_bundle_requires_explicit_manifest_release(batch, released):
+def test_held_manifest_cannot_self_release_without_nonce_and_digest_proof(batch, released):
     fields = {"retention_disposition": "released"} if released else {}
     entry = make_entry(batch, bundle="held-example", schema="runtime-held-work.v1", **fields)
     code, rows = invoke(batch)
     assert code == 0
-    assert entry.exists() is not released
-    assert rows[0]["result"] == ("deleted" if released else "skipped:held")
+    assert entry.exists()
+    assert rows[0]["result"] == "skipped:held"
 
 
 @pytest.mark.parametrize("pin", [{"keep_worktree": True}, {"preserved_artifacts": {"retention_disposition": "retained"}}])
@@ -740,4 +740,126 @@ def test_write_task_with_not_applicable_push_state_cannot_use_read_only_release(
     code, rows = invoke(batch)
     assert code == 0 and entry.exists()
     assert rows[0]["result"] == "skipped:held"
+    assert "reason" not in rows[0]
+
+
+@pytest.mark.parametrize("bundle", ["held-copy-interrupted", "evidence-copy-interrupted"])
+def test_preexisting_unmanifested_copy_keeps_entry_with_other_releasable_manifest(batch, bundle):
+    entry = held_task(batch)
+    # Simulate a crash after copying, before the writer creates its manifest.
+    incomplete = entry / bundle
+    incomplete.mkdir()
+    (incomplete / "only-copy.txt").write_text("irreplaceable work")
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert (incomplete / "only-copy.txt").read_text() == "irreplaceable work"
+    assert rows[0]["result"] == "skipped:missing_manifest"
+    assert "reason" not in rows[0]
+
+
+@pytest.mark.parametrize("head", ["a" * 39, "a" * 41, "g" * 40, "", "aB" * 20])
+def test_invalid_head_sha_keeps_held_bundle_even_when_remote_head_matches(batch, monkeypatch, head):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha=head, remote_head_sha=head, branch="task-branch")
+    monkeypatch.setattr(retention, "landed_reason", lambda *args: "pushed_merged")
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:held"
+    assert "reason" not in rows[0]
+
+
+@pytest.mark.parametrize("branch", [None, ""])
+def test_missing_or_empty_branch_keeps_pushed_held_bundle(batch, monkeypatch, branch):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch=branch)
+    monkeypatch.setattr(retention, "landed_reason", lambda *args: "pushed_merged")
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:held"
+    assert "reason" not in rows[0]
+
+
+@pytest.mark.parametrize("invalid", [
+    {"number": None}, {"number": "1"}, {"number": True}, {"number": 0}, {"number": -1},
+    {"state": None}, {"state": "UNKNOWN"}, {"state": "OPEN"},
+    {"isCrossRepository": True},
+], ids=["missing-number", "string-number", "boolean-number", "zero-number", "negative-number",
+        "missing-state", "unknown-state", "open-despite-probe", "different-repository"])
+def test_invalid_individual_pr_row_keeps_held_bundle_despite_valid_merged_row(batch, monkeypatch, invalid):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+    monkeypatch.setattr(retention.subprocess, "run", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 1))
+    monkeypatch.setattr(retention.pr_identity, "resolve_repo_slug", lambda root: "owner/repo")
+    # An OPEN row must be rejected independently of this optimistic probe.
+    monkeypatch.setattr(retention.pr_identity, "probe_open_pr_for_branch", lambda **kw: (False, None))
+    valid = {"number": 1, "state": "MERGED", "headRefName": "task-branch", "headRefOid": "a" * 40, "isCrossRepository": False}
+    bad = {**valid, "number": 2, **invalid}
+    bad = {key: value for key, value in bad.items() if value is not None}
+    monkeypatch.setattr(retention.pr_identity, "_run_gh", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 0, json.dumps([valid, bad])))
+    retention.landed_reason.cache_clear()
+    try:
+        code, rows = invoke(batch)
+        assert code == 0 and entry.exists()
+        assert rows[0]["result"] == "skipped:held"
+        assert "reason" not in rows[0]
+    finally:
+        retention.landed_reason.cache_clear()
+
+
+@pytest.mark.parametrize("line", ["old-task ", "  old-task\t", "\told-task\t"])
+def test_keep_list_whitespace_preserves_named_entry(batch, line):
+    entry = make_entry(batch)
+    (batch / "preserved-keep.txt").write_text("\n  # explanation\n" + line + "\n\t\n")
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:keep_list"
+
+
+@pytest.mark.parametrize("prefix", ["", "  "])
+def test_keep_list_comment_lines_do_not_pin_matching_entry_names(batch, prefix):
+    entry = make_entry(batch, "# comment")
+    (batch / "preserved-keep.txt").write_text("\n \t\n" + prefix + entry.name + "\n")
+    code, rows = invoke(batch)
+    assert code == 0 and not entry.exists()
+    assert rows[0]["result"] == "deleted"
+
+
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("pin", [
+    {"keep_worktree": True},
+    {"preserved_artifacts": {"retention_disposition": "retained"}},
+])
+def test_task_pin_added_during_landing_probe_prevents_removal(batch, monkeypatch, archived, pin):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+    path = archive_task(batch, entry) if archived else batch / "tasks" / f"{entry.name}.json"
+
+    def landing_probe(*args):
+        task = json.loads(path.read_text())
+        path.write_text(json.dumps({**task, **pin}))
+        return "pushed_merged"
+
+    monkeypatch.setattr(retention, "landed_reason", landing_probe)
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert (entry / "held-example" / "report.txt").read_text() == "evidence\n"
+    assert rows[0]["result"] == "skipped:changed_before_removal"
+    assert "reason" not in rows[0]
+
+
+@pytest.mark.parametrize("kind", ["default", "custom", "absent-default"])
+def test_keep_list_pin_added_during_landing_probe_prevents_removal(batch, monkeypatch, kind):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+    path = batch / ("custom-keep.txt" if kind == "custom" else "preserved-keep.txt")
+    if kind == "absent-default":
+        path.unlink()
+    else:
+        path.write_text("")
+
+    def landing_probe(*args):
+        path.write_text("\n # newly pinned\n  " + entry.name + " \n")
+        return "pushed_merged"
+
+    monkeypatch.setattr(retention, "landed_reason", landing_probe)
+    options = {"keep_list": path} if kind == "custom" else {"allow_empty_keep_list": True}
+    code, rows = invoke(batch, **options)
+    assert code == 0 and entry.exists()
+    assert (entry / "held-example" / "report.txt").read_text() == "evidence\n"
+    assert rows[0]["result"] == "skipped:changed_before_removal"
     assert "reason" not in rows[0]

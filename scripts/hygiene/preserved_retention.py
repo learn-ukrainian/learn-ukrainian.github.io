@@ -68,7 +68,7 @@ def release_reason(task: dict, cutoff: datetime) -> str | None:
     if task.get("mode") == "read-only" and task.get("push_state") == "not_applicable":
         return "released:read_only" if type(task.get("commits_ahead")) is int and task["commits_ahead"] == 0 else None
     head, branch = task.get("head_sha"), task.get("branch") or task.get("worktree_branch")
-    if task.get("push_state") != "pushed" or not isinstance(head, str) or len(head) != 40 or any(c not in "0123456789abcdefABCDEF" for c in head) or head != task.get("remote_head_sha") or not isinstance(branch, str) or not branch:
+    if task.get("push_state") != "pushed" or not isinstance(head, str) or len(head) != 40 or any(c not in "0123456789abcdef" for c in head) or head != task.get("remote_head_sha") or not isinstance(branch, str) or not branch:
         return None
     reason = landed_reason(head, branch)
     return f"released:{reason}" if reason else None
@@ -151,15 +151,21 @@ def measure(fd: int) -> tuple[int, bool]:
     return total, unsafe
 
 
+def task_record(batch: Path, name: str) -> tuple[dict, bool]:
+    try:
+        return json.loads(read_text(batch / "tasks" / f"{name}.json")), False
+    except FileNotFoundError:
+        return json.loads(read_text(batch / "tasks" / "archive" / f"{name}.json")), True
+
+
+def keep_names(path: Path) -> set[str]:
+    return {line.strip() for line in read_text(path).splitlines() if line.strip() and not line.lstrip().startswith("#")}
+
+
 def eligible(fd: int, name: str, batch: Path, cutoff: datetime, release_cutoff: datetime) -> str | None:
     """Unknown provenance and unresolved retention always keep the entire entry."""
-    archived = False
     try:
-        try:
-            task = json.loads(read_text(batch / "tasks" / f"{name}.json"))
-        except FileNotFoundError:
-            task = json.loads(read_text(batch / "tasks" / "archive" / f"{name}.json"))
-            archived = True
+        task, archived = task_record(batch, name)
     except (OSError, ValueError, ComponentOpenError):
         return "task_unreadable"
     if not isinstance(task, dict) or task.get("task_id") != name or task.get("status") not in _TERMINAL_STATUSES:
@@ -190,7 +196,7 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime, release_cutoff: 
         if child.startswith("held-") and child in records:
             if records[child].get("schema") != "runtime-held-work.v1":
                 return "held"
-            if records[child].get("retention_disposition") != "released":
+            if not manifest_release_proven(task, pin, records[child], batch, child):
                 held.add(child)
     retained = {child for child, record in records.items() if record.get("retention_disposition") == "retained" and not manifest_release_proven(task, pin, record, batch, child)}
     released = None
@@ -230,7 +236,7 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
     root = directory(batch / "preserved")
     try:
         try:
-            keep = set(read_text(keep_list or batch / "preserved-keep.txt").splitlines())
+            keep = keep_names(keep_list or batch / "preserved-keep.txt")
         except FileNotFoundError:
             keep = set() if keep_list is None and (not apply or allow_empty_keep_list) else None
             if keep is None:
@@ -268,6 +274,9 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
                             size, unsafe = measure(child)
                             reason = "symlink_or_special" if unsafe else None
                             reason = reason or ("keep_list_unreadable" if keep is None else "keep_list" if name in keep else None)
+                            task_before = None
+                            with contextlib.suppress(OSError, ValueError, ComponentOpenError):
+                                task_before = task_record(batch, name)
                             reason = reason or eligible(child, name, batch, cutoff, release_cutoff)
                         finally:
                             os.close(child)
@@ -280,8 +289,22 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
                             if child_set(child) != classified:
                                 result, released = "skipped:changed_during_scan", None
                             else:
-                                _remove_invocation_dir(root, name, namespace=batch / "preserved", expected_dev=info.st_dev, expected_ino=info.st_ino)
-                                result = "deleted"
+                                try:
+                                    current_task = task_record(batch, name)
+                                    try:
+                                        current_keep = keep_names(keep_list or batch / "preserved-keep.txt")
+                                    except FileNotFoundError:
+                                        if keep_list is not None or not allow_empty_keep_list:
+                                            raise
+                                        current_keep = set()
+                                    changed = current_task != task_before or name in current_keep
+                                except (OSError, ValueError, ComponentOpenError):
+                                    changed = True
+                                if changed:
+                                    result, released = "skipped:changed_before_removal", None
+                                else:
+                                    _remove_invocation_dir(root, name, namespace=batch / "preserved", expected_dev=info.st_dev, expected_ino=info.st_ino)
+                                    result = "deleted"
                         finally:
                             os.close(child)
                 except (OSError, ContainmentError) as exc:
