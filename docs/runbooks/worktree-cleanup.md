@@ -1317,8 +1317,9 @@ The collector sweeps both repository roots. Before installing the service
 template, replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@`.
 
 The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
-`--apply`, the same as macOS launchd. Its timer fires every 4 hours
-(`OnUnitActiveSec=4h`, matching the launchd cadence below) using the existing
+`--apply`, the same as macOS launchd. Its timer fires hourly
+(`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min`
+and `Persistent=true`, using the existing
 cleanup wrapper and P0 reaper; this adds no daemon or cleanup class, and the
 denser cadence does not loosen the dirty/open-PR/unreadable-GitHub-state
 guards. See `packaging/systemd/README.md` for enable and disable
