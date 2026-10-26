@@ -1727,7 +1727,23 @@ def test_terminal_report_filters_and_never_writes(rescue_repo, schema: int, case
             assert (worktree / "new.txt").read_text() == "untracked\n"
 
 
-@pytest.mark.parametrize("failure", ["json", "read", "git"])
+@pytest.mark.parametrize("status", ["done", "dry_run"])
+@pytest.mark.parametrize("archived", [False, True])
+def test_terminal_record_without_worktree_is_skipped(rescue_repo, monkeypatch, status: str, archived: bool) -> None:
+    repo, _worktree, tasks = rescue_repo
+    directory = tasks / "archive" if archived else tasks
+    directory.mkdir(exist_ok=True)
+    (directory / "no-worktree.json").write_text(
+        json.dumps({"status": status, "finished_at": "2000-01-01T00:00:00Z", "worktree_path": None, "cwd": str(repo)})
+    )
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    result = cleanup._repo_result(repo, apply=True)
+    assert result["errors"] == []
+    assert result["rescue"] == {"summary": {"candidate": 0}, "tasks": []}
+
+
+@pytest.mark.parametrize("failure", ["json", "recursion", "path_type", "read", "git"])
 def test_rescue_read_errors_reach_caller_without_crashing(rescue_repo, monkeypatch, failure: str) -> None:
     """Defect class: an unreadable record or failed Git probe silently drops work or crashes cleanup."""
     repo, worktree, tasks = rescue_repo
@@ -1739,10 +1755,12 @@ def test_rescue_read_errors_reach_caller_without_crashing(rescue_repo, monkeypat
             {
                 "status": "failed",
                 "finished_at": "2000-01-01T00:00:00Z",
-                "worktree_path": str(worktree),
+                "worktree_path": 42 if failure == "path_type" else str(worktree),
             }
         )
     )
+    if failure == "recursion":
+        task.write_text("[" * 10000 + "]" * 10000)
     if failure == "read":
         real_read = Path.read_text
 

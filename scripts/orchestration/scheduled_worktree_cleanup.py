@@ -499,8 +499,10 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
             if age_seconds < 6 * 3600:
                 continue
             raw_path = record.get("worktree_path")
-            if not isinstance(raw_path, str) or not raw_path:
-                raise ValueError("missing worktree path")
+            if raw_path is None:
+                continue
+            if not isinstance(raw_path, str):
+                raise ValueError("invalid worktree path")
             worktree = (root / raw_path).resolve()
             if not worktree.is_relative_to(root):
                 continue
@@ -514,6 +516,7 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
             dirty = len(
                 _inspect_terminal_git(worktree, "status", "--porcelain=v1", "--untracked-files=all").splitlines()
             )
+            # F3 follow-up: squash-merged branches may count as unpushed once before the reaper removes them.
             unpushed = int(_inspect_terminal_git(worktree, "rev-list", "--count", "HEAD", "--not", "--remotes=origin"))
             if dirty or unpushed:
                 row.update(
@@ -524,7 +527,7 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
                     age_seconds=int(age_seconds),
                 )
                 rows.append(row)
-        except (OSError, ValueError, TypeError, subprocess.SubprocessError) as exc:
+        except (OSError, ValueError, TypeError, RecursionError, subprocess.SubprocessError) as exc:
             row["error"] = f"terminal worktree inspection failed ({type(exc).__name__})"
             rows.append(row)
     return {"summary": {"candidate": sum(row["action"] == "report" for row in rows)}, "tasks": rows}
