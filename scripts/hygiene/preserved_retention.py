@@ -6,10 +6,12 @@ import errno
 import json
 import os
 import stat
+import subprocess
 import sys
 import time
 from collections import Counter
 from datetime import UTC, datetime, timedelta
+from functools import lru_cache
 from pathlib import Path
 
 if __package__ in (None, ""):
@@ -17,8 +19,55 @@ if __package__ in (None, ""):
 
 from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
 from scripts.common.task_scratch import ContainmentError, _remove_invocation_dir, fd_mount_id
+from scripts.fleet import pr_identity
 from scripts.fleet.post_task_reap import _TERMINAL_STATUSES
 from scripts.hygiene.batch_state_retention import default_batch_root
+
+RELEASE_AGE_DAYS = 3
+
+
+@lru_cache(maxsize=4096)
+def landed_reason(head: str, branch: str) -> str | None:
+    repo_root = Path(__file__).resolve().parents[2]
+    try:
+        result = subprocess.run(["git", "merge-base", "--is-ancestor", head, "origin/main"], cwd=repo_root, env=pr_identity._sanitized_env(), capture_output=True, timeout=15, check=False)
+        if result.returncode == 0:
+            return "ancestor_of_main"
+        repo = pr_identity.resolve_repo_slug(repo_root)
+        opened, error = pr_identity.probe_open_pr_for_branch(repo_root=repo_root, repo=repo, branch=branch)
+        if opened is not False or error:
+            return None
+        result = pr_identity._run_gh(["gh", "pr", "list", "--repo", repo, "--head", branch, "--state", "all", "--json", "number,state,headRefName,isCrossRepository"], cwd=repo_root, timeout=30)
+        if result.returncode != 0:
+            return None
+        rows = json.loads(result.stdout)
+        if not isinstance(rows, list) or not rows:
+            return None
+        for row in rows:
+            if not isinstance(row, dict) or type(row.get("number")) is not int or row["number"] <= 0 or row.get("headRefName") != branch or row.get("isCrossRepository") is not False or row.get("state") not in {"MERGED", "CLOSED"}:
+                return None
+        return "pushed_merged" if any(row["state"] == "MERGED" for row in rows) else "pushed_closed"
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return None
+
+
+def release_reason(task: dict, cutoff: datetime) -> str | None:
+    if task.get("status") not in {"done", "failed", "timeout", "crashed", "cancelled", "no_deliverable"}:
+        return None
+    stamp = task.get("finished_at")
+    try:
+        finished = datetime.fromisoformat(stamp) if isinstance(stamp, str) else None
+    except ValueError:
+        return None
+    if finished is None or finished.tzinfo is None or finished >= cutoff or task.get("worktree_dirty_on_exit"):
+        return None
+    if task.get("mode") == "read-only" and task.get("push_state") == "not_applicable":
+        return "released:read_only"
+    head, branch = task.get("head_sha"), task.get("branch")
+    if task.get("push_state") != "pushed" or task.get("worktree_dirty_on_exit") is not False or not isinstance(head, str) or len(head) != 40 or any(c not in "0123456789abcdefABCDEF" for c in head) or head != task.get("remote_head_sha") or not isinstance(branch, str) or not branch:
+        return None
+    reason = landed_reason(head, branch)
+    return f"released:{reason}" if reason else None
 
 
 def directory(path: Path) -> int:
@@ -75,7 +124,7 @@ def measure(fd: int) -> tuple[int, bool]:
     return total, unsafe
 
 
-def eligible(fd: int, name: str, batch: Path, cutoff: datetime) -> str | None:
+def eligible(fd: int, name: str, batch: Path, cutoff: datetime, release_cutoff: datetime) -> str | None:
     """Unknown provenance and unresolved retention always keep the entire entry."""
     archived = False
     try:
@@ -89,8 +138,9 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime) -> str | None:
     if not isinstance(task, dict) or task.get("task_id") != name or task.get("status") not in _TERMINAL_STATUSES:
         return "task_state"
     pin = task.get("preserved_artifacts") or {}
-    if not isinstance(pin, dict) or task.get("keep_worktree") or pin.get("retention_disposition") == "retained":
+    if not isinstance(pin, dict):
         return "pin"
+    pinned = bool(task.get("keep_worktree") or pin.get("retention_disposition") == "retained")
     children = os.listdir(fd)
     manifests = sorted(child for child in children if child.endswith(".manifest.json"))
     if not manifests:
@@ -106,14 +156,25 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime) -> str | None:
         if archived and (not isinstance(task.get("run_nonce"), str) or not task["run_nonce"] or record.get("run_nonce") != task["run_nonce"]):
             return "manifest_identity"
         records[manifest.removesuffix(".manifest.json")] = record
+    held = set()
     for child in children:
         if child not in records and not child.endswith(".manifest.json"):
             return "missing_manifest"
         if child.startswith("held-") and child in records and records[child].get("retention_disposition") != "released":
+            held.add(child)
+    retained = {child for child, record in records.items() if record.get("retention_disposition") == "retained" and not (pin.get("retention_disposition") == "released" and pin.get("run_nonce") == record.get("run_nonce"))}
+    released = None
+    if pinned or held or retained:
+        released = release_reason(task, release_cutoff)
+        if not released:
+            return "pin" if pinned else "held" if held else "pin"
+        if any(not isinstance(task.get("run_nonce"), str) or not task["run_nonce"] or record.get("run_nonce") != task["run_nonce"] for record in records.values()):
+            return "manifest_identity"
+        if any(records[child].get("schema") != "runtime-held-work.v1" for child in held):
             return "held"
-    for record in records.values():
-        if record.get("retention_disposition") == "retained" and not (pin.get("retention_disposition") == "released" and pin.get("run_nonce") == record.get("run_nonce")):
-            return "pin"
+    for child, record in records.items():
+        if released and (pinned or child in held or child in retained):
+            continue
         stamp = record.get("preserved_at") or record.get("recorded_at") or record.get("created_at")
         if not isinstance(stamp, str):
             return "timestamp_unknown"
@@ -122,7 +183,7 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime) -> str | None:
             return "timestamp_unknown"
         if preserved >= cutoff:
             return "fresh"
-    return None
+    return released
 
 
 def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> int:
@@ -148,9 +209,10 @@ def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> 
             os.close(report_fd)
         counts, sizes = Counter(), Counter()
         cutoff = datetime.now(UTC) - timedelta(days=3)
+        release_cutoff = datetime.now(UTC) - timedelta(days=RELEASE_AGE_DAYS)
         with os.fdopen(receipt_fd, "w", encoding="utf-8") as receipt:
             for name in sorted(os.listdir(root)):
-                size, result = 0, "skipped:unknown"
+                size, result, released = 0, "skipped:unknown", None
                 try:
                     info = os.stat(name, dir_fd=root, follow_symlinks=False)
                     size = info.st_size
@@ -162,10 +224,12 @@ def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> 
                             size, unsafe = measure(child)
                             reason = "symlink_or_special" if unsafe else None
                             reason = reason or ("keep_list_unreadable" if keep is None else "keep_list" if name in keep else None)
-                            reason = reason or eligible(child, name, batch, cutoff)
+                            reason = reason or eligible(child, name, batch, cutoff, release_cutoff)
                         finally:
                             os.close(child)
-                    result = f"skipped:{reason}" if reason else "skipped:dry_run"
+                    if reason and reason.startswith("released:"):
+                        released, reason = reason, None
+                    result = f"skipped:{reason}" if reason else released or "skipped:dry_run"
                     if not reason and apply:
                         _remove_invocation_dir(root, name, namespace=batch / "preserved", expected_dev=info.st_dev, expected_ino=info.st_ino)
                         result = "deleted"
@@ -173,7 +237,7 @@ def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> 
                     result = f"error:{getattr(exc, 'errno', None) or errno.EIO}"
                 except (ValueError, TypeError, KeyError, ComponentOpenError):
                     result = "skipped:unreadable_or_invalid_record"
-                receipt.write(json.dumps({"name": name, "bytes": size, "result": result}) + "\n")
+                receipt.write(json.dumps({"name": name, "bytes": size, "result": result, **({"reason": released} if released else {})}) + "\n")
                 receipt.flush()
                 os.fsync(receipt.fileno())
                 counts[result] += 1
@@ -186,9 +250,9 @@ def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Delete direct preserved task entries with verified times older than 3 days.\nUse for evidence retention; unknown times, live tasks and pins are kept. Default: DRY-RUN.\nManifest preserved_at/recorded_at/created_at must be ISO 8601 with a timezone; every manifest must be old.",
+        description="Delete direct preserved task entries with verified times older than 3 days.\nUse for evidence retention; unknown times and live tasks are kept. Default: DRY-RUN.\nOrdinary manifests need old ISO 8601 preservation times; held/pinned entries need terminal task identity, old finished_at and read-only or pushed/landed proof.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.preserved_retention\n  .venv/bin/python -m scripts.hygiene.preserved_retention --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nOnly --apply deletes; no Git operations or archives. Receipts include lstat bytes and typed results.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Legacy manifests without recorded preservation times are kept.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.preserved_retention\n  .venv/bin/python -m scripts.hygiene.preserved_retention --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nOnly --apply deletes; Git ancestry checks are local and PR probes are read-only. Receipts include lstat bytes and typed release reasons.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Unknown provenance is kept; RELEASE_AGE_DAYS configures held/pin age (default 3 days).",
     )
     parser.add_argument("--batch-root", type=Path, help="State root (default: primary checkout batch_state; example fixture/batch_state).")
     parser.add_argument("--keep-list", type=Path, help="Plain entry names, one per line; absent = empty (default: batch_state/preserved-keep.txt).")

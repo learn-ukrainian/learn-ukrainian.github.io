@@ -393,3 +393,174 @@ def test_cli_help_documents_defaults_outputs_and_exit_codes(capsys):
     assert exc.value.code == 0
     text = capsys.readouterr().out
     assert all(term in text for term in ("DRY-RUN", "Outputs:", "Exit codes:", "--apply", "preserved-keep.txt"))
+
+
+def held_task(batch, **fields):
+    entry = make_entry(batch, bundle="held-example", schema="runtime-held-work.v1", preserved_at=None)
+    task = {
+        "task_id": entry.name, "status": "done", "run_nonce": "run-one",
+        "mode": "read-only", "push_state": "not_applicable",
+        "finished_at": (datetime.now(UTC) - timedelta(days=4)).isoformat(),
+        "worktree_dirty_on_exit": False, **fields,
+    }
+    (batch / "tasks" / f"{entry.name}.json").write_text(json.dumps(task))
+    return entry
+
+
+@pytest.mark.parametrize("status", ["done", "failed", "timeout", "crashed", "cancelled", "no_deliverable"])
+@pytest.mark.parametrize("apply", [False, True])
+def test_read_only_terminal_held_bundle_older_than_three_days_is_released(batch, status, apply):
+    entry = held_task(batch, status=status)
+    code, rows = invoke(batch, apply=apply)
+    assert code == 0
+    assert entry.exists() is not apply
+    assert rows[0]["result"] == ("deleted" if apply else "released:read_only")
+    assert rows[0]["reason"] == "released:read_only"
+
+
+@pytest.mark.parametrize("pin", [{"keep_worktree": True}, {"preserved_artifacts": {"retention_disposition": "retained"}}])
+def test_terminal_read_only_pin_uses_finished_at_without_manifest_timestamp(batch, pin):
+    entry = held_task(batch, **pin)
+    manifest = entry / "held-example.manifest.json"
+    record = json.loads(manifest.read_text())
+    record["schema"] = "runtime-evidence.v1"
+    manifest.rename(entry / "evidence.manifest.json")
+    (entry / "evidence.manifest.json").write_text(json.dumps(record))
+    (entry / "held-example").rename(entry / "evidence")
+    code, rows = invoke(batch)
+    assert code == 0 and not entry.exists()
+    assert rows[0]["reason"] == "released:read_only"
+
+
+@pytest.mark.parametrize("fields", [
+    {"push_state": "unpushed"}, {"push_state": "unknown"}, {"push_state": None},
+    {"worktree_dirty_on_exit": True}, {"run_nonce": "other-run"},
+    {"finished_at": datetime.now(UTC).isoformat()}, {"finished_at": None},
+    {"finished_at": "2020-01-01T00:00:00"}, {"finished_at": "invalid"},
+    {"status": "running"}, {"status": "needs_finalize"}, {"status": "dry_run"},
+])
+def test_unsafe_push_dirty_nonce_young_or_uncertain_finished_at_held_bundle_is_kept(batch, fields):
+    entry = held_task(batch, **fields)
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"].startswith("skipped:")
+    assert "reason" not in rows[0]
+
+
+def test_missing_push_state_held_bundle_is_kept(batch):
+    entry = held_task(batch)
+    path = batch / "tasks" / f"{entry.name}.json"
+    task = json.loads(path.read_text())
+    del task["push_state"]
+    path.write_text(json.dumps(task))
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:held"
+
+
+@pytest.mark.parametrize("contents", [None, "invalid"])
+def test_absent_or_unreadable_bound_task_never_releases_held_bundle(batch, contents):
+    entry = held_task(batch)
+    path = batch / "tasks" / f"{entry.name}.json"
+    if contents is None:
+        path.unlink()
+    else:
+        path.write_text(contents)
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:task_unreadable"
+
+
+def test_archive_only_terminal_read_only_held_bundle_is_released(batch):
+    entry = held_task(batch)
+    archived = archive_task(batch, entry)
+    before = archived.read_bytes(), archived.stat().st_mtime_ns
+    code, rows = invoke(batch)
+    assert code == 0 and not entry.exists()
+    assert rows[0]["reason"] == "released:read_only"
+    assert (archived.read_bytes(), archived.stat().st_mtime_ns) == before
+
+
+def test_symlinked_held_bundle_is_kept_without_following_target(batch, tmp_path):
+    entry = held_task(batch)
+    outside = tmp_path / "outside"
+    (entry / "held-example").rename(outside)
+    (entry / "held-example").symlink_to(outside, target_is_directory=True)
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert (outside / "report.txt").read_text() == "evidence\n"
+    assert rows[0]["result"] == "skipped:symlink_or_special"
+
+
+@pytest.mark.parametrize("state", ["MERGED", "CLOSED", "OPEN", "unavailable", "absent", "malformed", "wrong_branch", "fork"])
+def test_pushed_write_task_releases_only_proven_merged_or_closed_pr(batch, monkeypatch, state):
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+    retention.landed_reason.cache_clear()
+    monkeypatch.setattr(retention.subprocess, "run", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 1))
+    monkeypatch.setattr(retention.pr_identity, "resolve_repo_slug", lambda root: "owner/repo")
+    monkeypatch.setattr(retention.pr_identity, "probe_open_pr_for_branch", lambda **kw: (None, "unavailable") if state == "unavailable" else (state == "OPEN", None))
+    row = {"number": 1, "state": state, "headRefName": "task-branch", "isCrossRepository": False}
+    if state == "wrong_branch":
+        row.update(state="MERGED", headRefName="other")
+    if state == "fork":
+        row.update(state="MERGED", isCrossRepository=True)
+    payload = [] if state == "absent" else [row]
+    monkeypatch.setattr(retention.pr_identity, "_run_gh", lambda *a, **kw: retention.subprocess.CompletedProcess(a, 0, "bad-json" if state == "malformed" else json.dumps(payload)))
+    try:
+        code, rows = invoke(batch)
+        released = state in {"MERGED", "CLOSED"}
+        assert code == 0 and entry.exists() is not released
+        assert rows[0]["result"] == ("deleted" if released else "skipped:held")
+        if released:
+            assert rows[0]["reason"] == "released:pushed_" + state.lower()
+    finally:
+        retention.landed_reason.cache_clear()
+
+
+def test_pushed_head_ancestor_of_origin_main_releases_using_real_local_git(batch, tmp_path, monkeypatch):
+    import subprocess
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=repo, capture_output=True, text=True, timeout=30, check=True).stdout.strip()
+
+    git("init")
+    git("-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "--allow-empty", "-m", "base")
+    head = git("rev-parse", "HEAD")
+    git("-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "--allow-empty", "-m", "main")
+    git("update-ref", "refs/remotes/origin/main", "HEAD")
+    monkeypatch.setattr(retention, "__file__", str(repo / "scripts" / "hygiene" / "preserved_retention.py"))
+
+    def forbid_network(**kwargs):
+        pytest.fail("local ancestry must not query PRs")
+
+    monkeypatch.setattr(retention.pr_identity, "probe_open_pr_for_branch", forbid_network)
+    entry = held_task(batch, mode="workspace-write", push_state="pushed", head_sha=head, remote_head_sha=head, branch="task-branch")
+    retention.landed_reason.cache_clear()
+    try:
+        code, rows = invoke(batch)
+        assert code == 0 and not entry.exists()
+        assert rows[0]["reason"] == "released:ancestor_of_main"
+    finally:
+        retention.landed_reason.cache_clear()
+
+
+@pytest.mark.parametrize("fields", [
+    {"push_state": "unpushed"}, {"push_state": "unknown"}, {"push_state": None},
+    {"worktree_dirty_on_exit": True}, {"worktree_dirty_on_exit": None},
+    {"remote_head_sha": "b" * 40}, {"head_sha": None},
+])
+def test_write_held_bundle_with_unsafe_push_dirty_or_head_record_is_kept(batch, monkeypatch, fields):
+    data = dict(mode="workspace-write", push_state="pushed", head_sha="a" * 40, remote_head_sha="a" * 40, branch="task-branch")
+    data.update(fields)
+    entry = held_task(batch, **data)
+
+    def no_proof(*args):
+        pytest.fail("unsafe delivery record must not reach landing proof")
+
+    monkeypatch.setattr(retention, "landed_reason", no_proof)
+    code, rows = invoke(batch)
+    assert code == 0 and entry.exists()
+    assert rows[0]["result"] == "skipped:held"
