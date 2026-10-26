@@ -321,7 +321,10 @@ def test_clean_environment_build_cli_fails_closed_before_dispatch(tmp_path):
     assert '"layer": "driver"' in completed.stderr
 
 
-def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    "nonce", ["n1", '{"text":"alpha\u2028beta"}'], ids=["plain", "json_event_unicode_line_separator_stays_one_event"]
+)
+def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, monkeypatch, nonce):
     answer_file = tmp_path / "answers.yaml"
     answer_file.write_text("```yaml\nanswers:\n- id: Q-001\n  record: W-1\n```\n", encoding="utf-8")
     calls = []
@@ -330,13 +333,13 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
         calls.append((cmd, kwargs))
         if len(calls) == 1:
             task_id = cmd[cmd.index("--task-id") + 1]
-            output = f"{task_id}\nn1\n"
+            output = f"{task_id}\n{nonce}\n"
         else:
             output = json.dumps(
                 {
                     "schema_version": 2,
                     "task_id": cmd[3],
-                    "run_nonce": "n1",
+                    "run_nonce": nonce,
                     "status": "done",
                     "agent": "agy",
                     "model": "fixture",
@@ -358,7 +361,7 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
     assert "--model" in calls[0][0] and "fixture" in calls[0][0]
     assert "wait" in calls[1][0]
     assert calls[0][0][1].endswith("scripts/dispatch.py")
-    assert calls[1][0][calls[1][0].index("--run-nonce") + 1] == "n1"
+    assert calls[1][0][calls[1][0].index("--run-nonce") + 1] == nonce
     assert all(call[1]["timeout"] for call in calls)
 
 

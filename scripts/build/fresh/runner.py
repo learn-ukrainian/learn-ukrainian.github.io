@@ -78,6 +78,7 @@ from scripts.build.fresh.manifest import unlink_current, write_manifest, write_m
 from scripts.build.fresh.path_guard import checked_existing_path, public_diagnostic
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.build.fresh.writer import strip_markdown_fence
+from scripts.common.jsonl import jsonl_lines
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.evidence.tags import to_oracle
 from scripts.curriculum.learner_state import codes as learner_codes
@@ -1394,7 +1395,9 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     sent = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=False)
     if sent.returncode:
         raise RuntimeError(f"question dispatch failed: {sent.stderr.strip()}")
-    lines = sent.stdout.splitlines()
+    lines = jsonl_lines(sent.stdout)
+    if lines[-1] == "":
+        lines.pop()
     if len(lines) != 2 or lines[0] != task_id or not lines[1].strip():
         raise RuntimeError("question dispatch did not return the task id and run nonce")
     nonce = lines[1].strip()

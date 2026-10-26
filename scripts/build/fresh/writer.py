@@ -47,6 +47,7 @@ from scripts.build.fresh.regeneration import (
     record_harness_failure,
     writer_task_id,
 )
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.dispatcher.store import read as read_task_record
@@ -409,7 +410,9 @@ def dispatch_writer(
                     f"delegate.py dispatch failed with exit code {disp_proc.returncode}: {disp_proc.stderr}"
                 )
 
-            lines = disp_proc.stdout.splitlines()
+            lines = jsonl_lines(disp_proc.stdout)
+            if lines[-1] == "":
+                lines.pop()
             if len(lines) != 2 or lines[0] != task_id or not lines[1].strip():
                 raise WriterHarnessError("Writer dispatch did not return the task id and run nonce")
             run_nonce = lines[1].strip()
