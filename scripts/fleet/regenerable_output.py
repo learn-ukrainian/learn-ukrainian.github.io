@@ -515,6 +515,8 @@ def _external_copy_matches(worktree: Path, relative: Path) -> bool:
                 )
             for record_path, record in run.records[worktree]:
                 receipt = record.get("preserved_artifacts") or {}
+                if receipt.get("mode") == "record-only":
+                    continue
                 if not isinstance(receipt, dict):
                     continue
                 # Retention and its release bind the original retrieval receipt.

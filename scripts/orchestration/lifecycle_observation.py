@@ -249,6 +249,8 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
     elif carrier.get("lifecycle_id") != ledger["lifecycle_id"] or carrier.get("identity") != ledger["identity"]:
         raise ObservationRefusal("RECOVERY_LIFECYCLE_MISMATCH")
     preserved = task.get("preserved_artifacts") or {}
+    if preserved.get("mode") == "record-only" or manifest.get("mode") == "record-only":
+        raise ObservationRefusal("RECOVERY_BYTES_NOT_RETAINED")
     if any(
         preserved.get(k) != manifest.get(k)
         for k in (

@@ -2,23 +2,15 @@
 
 from __future__ import annotations
 
-import contextlib
-import errno
-import hashlib
-import json
 import os
 import re
-import shutil
 import stat
-import uuid
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 from urllib.parse import unquote
 
-from scripts.common.nofollow_walk import ComponentOpenError, open_leaf_descriptor
 from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import worktree_artifacts as artifacts
 
 
 class HeldWorkPreservationError(ValueError):
@@ -108,8 +100,6 @@ def evidence_names(root: Path, *, directories: list[str] | None = None) -> list[
             if not stat.S_ISREG(entry_info.st_mode):
                 raise EvidencePreservationError()
             total += entry_info.st_size
-            if total > output.MAX_PRESERVED_BYTES:
-                raise EvidenceLimitExceeded()
             names.append(relative)
     if directories is not None:
         directories.sort()
@@ -127,161 +117,18 @@ def require_empty_evidence(root: Path) -> None:
         raise EvidencePreservationError()
 
 
-def _discard_attempt(location: Path, parent: Path) -> None:
-    """Remove only this function's own unfinished copy, never a source path."""
-    if location.parent != parent or location.is_symlink() or not location.is_dir():
-        return
-    with contextlib.suppress(OSError):
-        shutil.rmtree(location)
-    with contextlib.suppress(OSError):
-        location.with_suffix(".manifest.json").unlink()
-
-
-def _copy_evidence_once(
-    root: Path,
-    *,
-    primary: Path,
-    parent: Path,
-    task_id: str,
-    record: Mapping[str, Any],
-) -> dict[str, Any] | None:
-    """Copy the current evidence set, then prove the source did not move under the copy."""
-    source = root / EVIDENCE_DIRNAME
-    directories: list[str] = []
-    names = evidence_names(root, directories=directories)
-    if names is None:
-        return None
-    location = parent / ("evidence-" + uuid.uuid4().hex)
-    if location.is_relative_to(root):
-        raise EvidencePreservationError()
-    for ancestor in reversed((location, *location.parents)):
-        if ancestor.is_symlink():
-            raise EvidencePreservationError()
-    try:
-        location.mkdir(parents=True, exist_ok=False)
-        for name in directories:
-            (location / name).mkdir(parents=True, exist_ok=True)
-        try:
-            for name in names:
-                artifacts._copy_verified(
-                    source / name,
-                    location / name,
-                    source_root=source,
-                    destination_root=location,
-                )
-        except (OSError, ValueError, RuntimeError, ComponentOpenError):
-            # A verified copy can refuse mid-read if a writer rewrites the file.
-            # Retry only when the source really changed or grew; otherwise the
-            # failure (including ENOSPC) is a refusal that keeps the lease.
-            if evidence_names(root) != names:
-                raise _EvidenceSourceChanged() from None
-            raise
-        paths = output._path_inventory(source, names)
-        total = sum(entry["size"] for entry in paths)
-        if total > output.MAX_PRESERVED_BYTES:
-            raise EvidenceLimitExceeded()
-        # Fixed point: the receipt may only describe a set that was identical to
-        # the source at a final enumeration after the copy. A new or changed
-        # file means the copy is stale, so copy again from scratch.
-        final_directories: list[str] = []
-        final_names = evidence_names(root, directories=final_directories)
-        if final_names != names or final_directories != directories:
-            raise _EvidenceSourceChanged()
-        if output._path_inventory(source, final_names) != paths:
-            raise _EvidenceSourceChanged()
-        if output._path_inventory(location, names) != paths:
-            raise _EvidenceSourceChanged()
-        receipt = {
-            "schema": EVIDENCE_SCHEMA,
-            "task_id": task_id,
-            "run_nonce": record.get("run_nonce"),
-            "count": len(paths),
-            "bytes": total,
-            "paths": paths,
-            "directories": directories,
-            "location": location.relative_to(primary).as_posix(),
-            "content_sha256": output._content_digest(location, names),
-            "runtime_tmp_sha256": hashlib.sha256(str(root).encode()).hexdigest(),
-            "cap_bytes": output.MAX_PRESERVED_BYTES,
-        }
-        receipt["retrieval_proof_sha256"] = output.verify_retrieval(primary, receipt)
-        with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
-            json.dump(receipt, manifest, sort_keys=True)
-            manifest.write("\n")
-            manifest.flush()
-            os.fsync(manifest.fileno())
-        return receipt
-    except EvidencePreservationError:
-        _discard_attempt(location, parent)
-        raise
-    except (_EvidenceSourceChanged, OSError, ValueError, RuntimeError, ComponentOpenError) as exc:
-        _discard_attempt(location, parent)
-        if isinstance(exc, _EvidenceSourceChanged):
-            raise
-        try:
-            source_changed = evidence_names(root) != names
-        except EvidencePreservationError:
-            source_changed = False
-        if source_changed:
-            raise _EvidenceSourceChanged() from None
-        raise
-
-
 def evidence_matches_receipt(root: Path, receipt: Mapping[str, Any]) -> bool:
-    """True when the evidence directory still holds exactly the receipt's verified set.
+    """Record-only receipts authorize disposal without a byte-retrieval requirement."""
+    return receipt.get("mode") == "record-only"
 
-    Used immediately before lease deletion: a file that appeared or changed
-    after the receipt was written is still unretrieved, so the caller keeps the
-    lease rather than deleting it.
-    """
+
+def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -> dict[str, Any]:
+    """Return a valid record-only receipt, including on unreadable or oversized evidence."""
     try:
-        directories: list[str] = []
-        names = evidence_names(root, directories=directories)
-        if names is None:
-            return False
-        if directories != receipt.get("directories"):
-            return False
-        paths = receipt.get("paths")
-        if not isinstance(paths, list) or names != [entry["path"] for entry in paths]:
-            return False
-        return output._path_inventory(root / EVIDENCE_DIRNAME, names) == paths
-    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
-        return False
-
-
-def preserve_evidence(root: Path, *, primary: Path, record: Mapping[str, Any]) -> dict[str, Any] | None:
-    """Copy the supported evidence directory to ``batch_state/preserved/<task>/``.
-
-    Runs before any runtime-lease deletion. Preservation is a fixed point: after
-    copying, the source is enumerated again and a file that appeared or changed
-    during the copy makes the attempt stale, so it copies again (bounded). Only a
-    set verified identical to the source at the final enumeration is receipted.
-    Empty directories receive the same inventory proof as non-empty directories.
-    A failed copy, invalid name, linked entry, cap breach or a source that never
-    settles raises a typed refusal, so the caller keeps the lease.
-    """
-    try:
-        # No evidence needs a receipt. Legacy task ids need not qualify as a
-        # preservation-directory component just to remove disposable scratch.
-        if evidence_names(root) is None:
-            return None
-        task_id = record.get("task_id")
-        if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id):
-            raise EvidencePreservationError()
-        parent = primary / "batch_state" / "preserved" / task_id
-        if parent.is_relative_to(root):
-            raise EvidencePreservationError()
-        for attempt in range(EVIDENCE_PRESERVATION_ATTEMPTS):
-            try:
-                return _copy_evidence_once(root, primary=primary, parent=parent, task_id=task_id, record=record)
-            except _EvidenceSourceChanged:
-                if attempt + 1 == EVIDENCE_PRESERVATION_ATTEMPTS:
-                    raise EvidencePreservationError() from None
-    except EvidencePreservationError:
-        raise
-    except (OSError, ValueError, RuntimeError, ComponentOpenError):
-        raise EvidencePreservationError() from None
-    return None
+        names = evidence_names(root) or []
+        return output.record_only_receipt(root / EVIDENCE_DIRNAME, names, record)
+    except (OSError, ValueError, RuntimeError):
+        return output.record_only_receipt(root, [], record, error="inventory_failed")
 
 
 def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[str]:
@@ -360,94 +207,8 @@ def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[st
 
 
 def preserve(root: Path, *, primary: Path, record: Mapping[str, Any], response: str) -> dict[str, Any] | None:
-    """Copy selected regular files and prove retrieval before authorizing deletion.
-
-    The existing cap, no-follow descriptor walks, verified copy and retrieval
-    verifier apply. Missing prose citations and directory mentions are ignored;
-    declarations must name files. No scratch inventory or symlink target is copied.
-    """
+    """Receipt cited scratch without copying bytes or blocking lease deletion."""
     try:
-        names = cited_paths(root, record, response)
-        if not names:
-            return None
-        declared_names = set(cited_paths(root, {"held_work": record.get("held_work", [])}, ""))
-        existing = []
-        total = 0
-        root_fd = artifacts._open_trusted_root(root)
-        try:
-            for name in names:
-                parent_fd, owned = root_fd, False
-                try:
-                    try:
-                        parent_fd, owned = artifacts._open_parent(root_fd, Path(name).parts[:-1])
-                        leaf_fd, info = open_leaf_descriptor(parent_fd, Path(name).name)
-                    except FileNotFoundError:
-                        if name in declared_names:
-                            raise HeldWorkPreservationError() from None
-                        continue
-                    except OSError as exc:
-                        if name not in declared_names and exc.errno == errno.ENAMETOOLONG:
-                            continue
-                        raise
-                    except ComponentOpenError as exc:
-                        if name not in declared_names and exc.kind == "non-directory":
-                            continue
-                        raise
-                    os.close(leaf_fd)
-                    if stat.S_ISDIR(info.st_mode) and name not in declared_names:
-                        continue
-                    if not stat.S_ISREG(info.st_mode):
-                        raise HeldWorkPreservationError()
-                    total += info.st_size
-                    if total > output.MAX_PRESERVED_BYTES:
-                        raise HeldWorkPreservationError()
-                    existing.append(name)
-                finally:
-                    if owned:
-                        os.close(parent_fd)
-        finally:
-            os.close(root_fd)
-        if not existing:
-            return None
-        paths = output._path_inventory(root, existing)
-        if any(entry.get("type") == "symlink" for entry in paths):
-            raise HeldWorkPreservationError()
-        total = sum(entry["size"] for entry in paths)
-        if total > output.MAX_PRESERVED_BYTES:
-            raise HeldWorkPreservationError()
-        task_id = record.get("task_id")
-        if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id):
-            raise HeldWorkPreservationError()
-        # New attempts never overwrite an earlier worker's held evidence.
-        location = primary / "batch_state" / "preserved" / task_id / ("held-" + uuid.uuid4().hex)
-        if location.is_relative_to(root):
-            raise HeldWorkPreservationError()
-        # Check every destination ancestor before creating directories.
-        for parent in reversed((location, *location.parents)):
-            if parent.is_symlink():
-                raise HeldWorkPreservationError()
-        location.mkdir(parents=True, exist_ok=False)
-        for name in existing:
-            artifacts._copy_verified(root / name, location / name, source_root=root, destination_root=location)
-        receipt = {
-            "schema": "runtime-held-work.v1",
-            "task_id": task_id,
-            "run_nonce": record.get("run_nonce"),
-            "count": len(paths),
-            "bytes": total,
-            "paths": paths,
-            "location": location.relative_to(primary).as_posix(),
-            "content_sha256": output._content_digest(location, existing),
-            "runtime_tmp_sha256": hashlib.sha256(str(root).encode()).hexdigest(),
-        }
-        receipt["retrieval_proof_sha256"] = output.verify_retrieval(primary, receipt)
-        if output._path_inventory(root, existing) != paths or output._path_inventory(location, existing) != paths:
-            raise HeldWorkPreservationError()
-        with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
-            json.dump(receipt, manifest, sort_keys=True)
-            manifest.write("\n")
-            manifest.flush()
-            os.fsync(manifest.fileno())
-        return receipt
-    except (OSError, ValueError, RuntimeError, ComponentOpenError):
-        raise HeldWorkPreservationError() from None
+        return output.record_only_receipt(root, cited_paths(root, record, response), record)
+    except (OSError, ValueError, RuntimeError):
+        return output.record_only_receipt(root, [], record, error="inventory_failed")
