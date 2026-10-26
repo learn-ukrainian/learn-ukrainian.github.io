@@ -121,9 +121,10 @@ def rollup_timestamp(entry: dict[str, Any]) -> datetime | None:
 def collapse_status_rollup(rollup: list[Any]) -> list[Any]:
     """One row per check identity, the latest by start time.
 
-    Missing identity, a missing timestamp anywhere in the group, or a tie at
-    the latest timestamp keeps every row in that group. A newer success must
-    not erase an older failure unless the timestamps say which run won.
+    Missing identity or a missing timestamp keeps every row in that group.
+    Latest timestamp ties collapse only for identical check-suite, name,
+    start/end times and outcome. A newer success must not erase an older
+    failure unless the timestamps say which run won.
     """
     grouped: dict[tuple[str, ...], list[dict[str, Any]]] = {}
     order: list[tuple[str, ...]] = []
@@ -150,7 +151,19 @@ def collapse_status_rollup(rollup: list[Any]) -> list[Any]:
             kept.extend(group)
             continue
         latest = max(stamp for stamp in stamps if stamp is not None)
-        kept.extend(entry for entry, stamp in zip(group, stamps, strict=True) if stamp == latest)
+        winners = [entry for entry, stamp in zip(group, stamps, strict=True) if stamp == latest]
+        first = winners[0]
+        suite = first.get("check_suite")
+        fields = ("name", "startedAt", "completedAt", "status", "conclusion", "state")
+        if (identity[0] == "check" and isinstance(suite, dict)
+                and type(suite.get("id")) is int and suite["id"] > 0
+                and first.get("startedAt") and first.get("completedAt")
+                and all(isinstance(row.get("check_suite"), dict)
+                        and row["check_suite"].get("id") == suite["id"]
+                        and all(row.get(field) == first.get(field) for field in fields)
+                        for row in winners)):
+            winners = winners[:1]
+        kept.extend(winners)
     return kept
 
 
