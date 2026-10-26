@@ -63,11 +63,15 @@ def check_review_family(author_model: str | None, reviewer_model: str) -> None:
         raise ValueError("review independence requires two known, different model families")
 
 
-def check_review_subjects(agent, model, seats, families, owned_paths):
+def check_review_subjects(agent, model, seats, families, owned_paths, *, review=False):
     from types import SimpleNamespace
 
-    from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
+    from scripts.review.subject_seat import classify_owned_path, prepare_subject_exclusion, subject_exclusion_reason
 
+    if review:
+        for path in owned_paths:
+            if classify_owned_path(path).kind == "ambiguous":
+                raise ValueError(f"ambiguous review subject path: {path}")
     exclusion = prepare_subject_exclusion(subject_seats=frozenset(seats), subject_families=frozenset(families),
                                           owned_paths=tuple(owned_paths))
     if exclusion.fail_closed_reason:

@@ -172,8 +172,14 @@ def _dispatch(args) -> int:
     checks.check_review_family(args.review_author_model, args.model)
     if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
-                                                args.owned_path)
+                                                args.owned_path, review=any((args.review_profile, args.language_lane,
+                                                args.review_author_model, args.risk, args.review_mode, args.pr,
+                                                args.require_review_verdict, args.subject_seat, args.subject_family)))
         args.subject_seat, args.subject_family = sorted(exclusion.seats), sorted(exclusion.families)
+        if (exclusion.seats or exclusion.families) and (
+            (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
+        ):
+            raise ValueError("protected subject scope needs a code-profile review without --language-lane")
     checks.check_resources((worktree, path.parent))
     if args.dry_run:
         invocation = providers.load(agent).build(spec, child_env(spec))

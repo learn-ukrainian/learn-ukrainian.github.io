@@ -33,6 +33,7 @@ _SUBJECT_ALIASES: dict[str, str] = {
     "grok-4.5": "grok",
     "grok-4.7-cursor-fallback": "grok",
     "hermes-deepseek": "deepseek",
+    "opencode": "deepseek",
     "kimicc": "kimi",
     "kimi-k3": "kimi",
     "kimi-code/k3": "kimi",
@@ -241,7 +242,10 @@ def adapter_subject_index() -> Mapping[str, frozenset[str]]:
     from scripts.dispatcher.providers import PROVIDERS
 
     for provider in PROVIDERS:
-        by_file[f"{_PROVIDER_PREFIX}{provider}.py"] = {canonical_subject_seat(provider)}
+        by_file[f"{_PROVIDER_PREFIX}{provider}.py"] = (
+            {canonical_subject_seat(name) for name, entry in AGENTS.items() if ".adapters.hermes_" in entry["adapter"]}
+            if provider == "hermes" else {canonical_subject_seat(provider)}
+        )
     return {path: frozenset(seats) for path, seats in by_file.items()}
 
 
