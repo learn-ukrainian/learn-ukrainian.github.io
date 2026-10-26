@@ -39,7 +39,9 @@ UNKNOWN = {
 STUB = """import json, os, pathlib, sys
 pathlib.Path(os.environ["CAPTURE"]).write_text(json.dumps({
     "argv": sys.argv[1:], "cwd": os.getcwd(), "stdin": sys.stdin.buffer.read().hex(),
-    "account": os.environ.get("CLAUDE_CONFIG_DIR"), "marker": os.environ.get("PROVIDER_TEST")
+    "account": os.environ.get("CLAUDE_CONFIG_DIR"), "marker": os.environ.get("PROVIDER_TEST"),
+    "background": os.environ.get("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS"),
+    "advisor": os.environ.get("CLAUDE_CODE_DISABLE_ADVISOR_TOOL"), "context": os.environ.get("CLAUDECODE")
 }))
 if "-o" in sys.argv:
     pathlib.Path(sys.argv[sys.argv.index("-o") + 1]).write_text("Finished.")
@@ -51,7 +53,7 @@ sys.stdout.write(os.environ["STUB_STREAM"])
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
 @pytest.mark.parametrize("effort", [None, "high"])
 def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, effort):
-    """Catch lost stdin, wrong model/effort, wrong cwd and plan-only writers."""
+    """Catch lost stdin, wrong mode and headless background work escaping print completion."""
     worktree = tmp_path / "checkout with spaces"
     worktree.mkdir()
     prompt = tmp_path / "prompt.txt"
@@ -64,6 +66,9 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     binary.write_text(f"#!{sys.executable}\n" + STUB)
     binary.chmod(0o755)
     monkeypatch.setenv("PATH", str(tmp_path) + os.pathsep + os.environ["PATH"])
+    monkeypatch.setenv("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", "0")
+    monkeypatch.setenv("CLAUDE_CODE_DISABLE_ADVISOR_TOOL", "0")
+    monkeypatch.setenv("CLAUDECODE", "inherited-session")
     env = dict(os.environ, CAPTURE=str(tmp_path / "capture.json"), STUB_STREAM=SUCCESS[provider], PROVIDER_TEST="kept")
     env["CLAUDE_CONFIG_DIR"] = str(tmp_path / "selected-account-a")
     original_env = env.copy()
@@ -105,10 +110,19 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
             if mode == "read-only"
             else "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
         ]
+        denies = "Monitor,ScheduleWakeup,CronCreate,Workflow"
         if mode == "read-only":
-            expected += ["--disallowedTools", invocation.argv[-1]]
-            denies = set(invocation.argv[-1].split(","))
-            assert {"Edit", "Write", "NotebookEdit", "Bash(git push *)", "Bash(gh api --input *)"} <= denies
+            denies = (
+                "Edit,Write,NotebookEdit,Bash(git push *),Bash(git commit *),Bash(git merge *),"
+                "Bash(git rebase *),Bash(git reset *),Bash(git tag *),Bash(git branch -D *),"
+                "Bash(gh pr merge *),Bash(gh pr create *),Bash(gh pr comment *),Bash(gh pr review *),"
+                "Bash(gh pr edit *),Bash(gh pr close *),Bash(gh pr reopen *),Bash(gh issue create *),"
+                "Bash(gh issue comment *),Bash(gh issue edit *),Bash(gh issue close *),Bash(gh issue reopen *),"
+                "Bash(gh api -X *),Bash(gh api --method *),Bash(gh release *),Bash(gh api -f *),"
+                "Bash(gh api -F *),Bash(gh api --field *),Bash(gh api --raw-field *),Bash(gh api --input *),"
+                "Bash(gh workflow run *)," + denies
+            )
+        expected += ["--disallowedTools", denies]
     elif provider == "cursor":
         expected += ["--mode", "ask"] if mode == "read-only" else ["--approve-mcps", "--sandbox", "disabled", "--force"]
     else:
@@ -121,6 +135,13 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     )
     assert proc.returncode == 0, proc.stderr.decode()
     capture = json.loads((tmp_path / "capture.json").read_text())
+    if provider == "claude":
+        assert capture["background"] == "1"
+        assert capture["advisor"] == "1"
+        assert capture["context"] == "inherited-session"
+        assert invocation.env == dict(
+            original_env, CLAUDE_CODE_DISABLE_BACKGROUND_TASKS="1", CLAUDE_CODE_DISABLE_ADVISOR_TOOL="1"
+        )
     assert capture["argv"] == expected
     assert capture["cwd"] == str(worktree)
     expected_stdin = prompt_bytes

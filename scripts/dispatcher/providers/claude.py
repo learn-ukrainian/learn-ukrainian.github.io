@@ -18,6 +18,12 @@ _READ_DENIES = (
     "Bash(gh api -F *),Bash(gh api --field *),Bash(gh api --raw-field *),Bash(gh api --input *),"
     "Bash(gh workflow run *)"
 )
+# Print mode ends with its final turn; no work may remain scheduled after it.
+_BACKGROUND_DENIES = "Monitor,ScheduleWakeup,CronCreate,Workflow"
+_BACKGROUND_ENV = {
+    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
+    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
+}
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
@@ -26,9 +32,9 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         argv += ["--effort", spec.effort]
     argv += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk"]
     argv += ["--allowedTools", _READ_TOOLS if spec.mode == "read-only" else _WRITE_TOOLS]
-    if spec.mode == "read-only":
-        argv += ["--disallowedTools", _READ_DENIES]
-    return Invocation(argv, spec.prompt_file.read_bytes(), env, None)
+    denies = f"{_READ_DENIES},{_BACKGROUND_DENIES}" if spec.mode == "read-only" else _BACKGROUND_DENIES
+    argv += ["--disallowedTools", denies]
+    return Invocation(argv, spec.prompt_file.read_bytes(), {**env, **_BACKGROUND_ENV}, None)
 
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:

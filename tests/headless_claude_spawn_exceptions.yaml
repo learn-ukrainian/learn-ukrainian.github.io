@@ -73,6 +73,8 @@ exceptions:
   - {module: scripts/agent_runtime/telemetry.py, function: "<module>", program: "<reference>", category: non-claude, reason: "keeps a reference to the original Popen to recognise it; spawns nothing"}
   # scripts/agent_runtime/tool_config.py
   - {module: scripts/agent_runtime/tool_config.py, function: "_run_agy_mcp", program: "cmd", category: non-claude, reason: "`agy mcp ...` configuration command"}
+  # scripts/dispatcher/providers/claude.py
+  - {module: scripts/dispatcher/providers/claude.py, function: "build", program: "<argv-holder>", category: generic-runner, reason: "builds a Claude print-mode Invocation for the dispatcher process boundary, which this rule cannot follow; forces both background/advisor environment switches and the Monitor,ScheduleWakeup,CronCreate,Workflow denies in both modes; tests/dispatcher/test_providers_b.py::test_cli_prompt_or_mode_regression checks the real Invocation at a fake CLI child with hostile ambient switches, preserved account/context and unchanged prompt; not a legacy runner-tested harness"}
   # scripts/ai_agent_bridge/_ask_lifecycle.py
   - {module: scripts/ai_agent_bridge/_ask_lifecycle.py, function: "launch_background_ask", program: "str(project_interpreter())", category: non-claude, reason: "runs the ai_agent_bridge entry point; the bridge's own spawns are checked by this rule"}
   # scripts/ai_agent_bridge/_broker.py
