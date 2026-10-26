@@ -50,14 +50,14 @@ substitutions:
     fallback: "Resolve catalog role routine_mechanical: Haiku 5.5 first, Sonnet 5.5 fallback"
     budget_bucket: "Claude; provider health and quota must admit the selected route"
 
-  - currently_uses: "Claude adversarial review via the v2 dispatcher"
+  - currently_uses: "delegate.py --agent claude (adversarial review)"
     fallback: 'Agent(subagent_type="general-purpose", model="opus")'
     fallback_note: "Agent tool subagents run as children of this session"
     budget_bucket: "interactive (orchestrator session, not programmatic)"
 
-  - currently_uses: "Claude code dispatch >50 LOC via the v2 dispatcher"
+  - currently_uses: "delegate.py --agent claude (code dispatch >50 LOC)"
     fallback: |
-      (a) Codex via the v2 dispatcher (separate weekly quota), OR
+      (a) Codex via `delegate.py --agent codex` (separate weekly quota), OR
       (b) inline by orchestrator if context-continuity gives it an edge
     budget_bucket: "Codex weekly quota OR interactive"
 
@@ -69,25 +69,24 @@ substitutions:
 
   - currently_uses: "ab discuss (Codex + Claude adversarial)"
     fallback: |
-      Codex via the v2 dispatcher + Agent subagent for Claude role,
+      Codex via `delegate.py --agent codex` + Agent subagent for Claude role,
       OR escalate to user for cold-start interactive Claude (highest-stakes
       adversarial dynamic only)
     budget_bucket: "Codex + interactive"
 
-  - currently_uses: "Codex dispatch via the v2 dispatcher"
+  - currently_uses: "delegate.py --agent codex"
     fallback: |
-      Legacy budget admission, when Codex is hot / near_cap / weekly deficit: hard auto-sub to
+      When Codex is hot / near_cap / weekly deficit: hard auto-sub to
       `delegate.py --agent cursor` via dispatch_fallbacks (operator 2026-08-12).
       Otherwise Codex weekly quota is independent of Claude interactive.
     budget_bucket: "Codex weekly → Cursor when shed"
 
-  - currently_uses: "Gemini dispatch via the v2 dispatcher alias"
+  - currently_uses: "delegate.py --agent gemini"
     fallback: |
       PERMANENT, always-on (not a budget-status shed): gemini CLI is
       retired and will not be reinstalled (operator 2026-08-18). Resolves
-      to the agy agent through the dispatcher
-      CLI alias. Legacy admission uses dispatch_fallbacks.gemini and
-      agent_identity.RETIRED_AGENT_ALIASES.
+      to `delegate.py --agent agy` before Popen, via
+      dispatch_fallbacks.gemini and agent_identity.RETIRED_AGENT_ALIASES.
       Do not tell agents to install `gemini` — the live Gemini-family
       implementer is agy.
     budget_bucket: "Gemini-family quota, tracked under agy"
