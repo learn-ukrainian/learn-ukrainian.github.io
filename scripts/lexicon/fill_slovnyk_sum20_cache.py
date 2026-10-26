@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Fill slovnyk.me СУМ-20 (newsum) cache entries using curl.
 
-Bypasses Cloudflare automated client challenges by using curl with a polite
-Atlas User-Agent and rate limiting (~0.3s delay).
+Uses the Atlas User-Agent and rate limiting (~0.3s delay). Stops the batch on
+the first access denial, Cloudflare challenge or rate limit without bypassing it.
 """
 
 from __future__ import annotations
@@ -75,6 +75,7 @@ def fill_slovnyk_newsum_cache(
     checkpoint_interval: int = 50,
     force: bool = False,
 ) -> dict[str, Any]:
+    """Fill until the first refusal; consecutive_403_limit is ignored for compatibility."""
     if work_dir is not None:
         work_dir.mkdir(parents=True, exist_ok=True)
 
@@ -84,10 +85,9 @@ def fill_slovnyk_newsum_cache(
         "fetched_ok": 0,
         "not_found_404": 0,
         "cf_challenge_403": 0,
+        "rate_limited_429": 0,
         "other_error": 0,
     }
-
-    consecutive_403 = 0
 
     for idx, slug in enumerate(slugs, 1):
         path = _slovnyk_cache_path(slug)
@@ -104,28 +104,30 @@ def fill_slovnyk_newsum_cache(
                         print(
                             f"[{idx}/{len(slugs)}] Progress: cached={stats['already_cached']}, "
                             f"fetched_ok={stats['fetched_ok']}, 404={stats['not_found_404']}, "
-                            f"403={stats['cf_challenge_403']}"
+                            f"403={stats['cf_challenge_403']}, 429={stats['rate_limited_429']}"
                         )
                     continue
 
         url = f"https://slovnyk.me/dict/newsum/{urllib.parse.quote(lookup_word)}"
         code, body = fetch_newsum_curl(lookup_word)
 
-        if code == 403 or "Just a moment..." in body or "<title>Just a moment...</title>" in body:
-            consecutive_403 += 1
-            stats["cf_challenge_403"] += 1
-            if consecutive_403 >= consecutive_403_limit:
-                blocked_msg = (
-                    f"# Blocked: slovnyk.me returned 403 on {consecutive_403} consecutive requests.\n"
-                    f"Last requested lemma: {slug} ({lookup_word})\n"
-                    f"Timestamp: {dt.datetime.now(dt.UTC).isoformat()}\n"
-                )
-                if work_dir is not None:
-                    (work_dir / "blocked.md").write_text(blocked_msg, encoding="utf-8")
-                print(f"ABORT: 403 circuit breaker triggered ({consecutive_403} consecutive 403s)", file=sys.stderr)
-                break
+        if code in {403, 429} or "Just a moment..." in body:
+            if code == 429:
+                stats["rate_limited_429"] += 1
+                reason = "HTTP 429"
+            else:
+                stats["cf_challenge_403"] += 1
+                reason = "HTTP 403" if code == 403 else f"Cloudflare challenge (HTTP {code})"
+            blocked_msg = (
+                f"# Blocked: slovnyk.me returned {reason}; stopped on first refusal.\n"
+                f"Last requested lemma: {slug} ({lookup_word})\n"
+                f"Timestamp: {dt.datetime.now(dt.UTC).isoformat()}\n"
+            )
+            if work_dir is not None:
+                (work_dir / "blocked.md").write_text(blocked_msg, encoding="utf-8")
+            print(f"ABORT: access circuit breaker triggered ({reason})", file=sys.stderr)
+            break
         elif code == 200:
-            consecutive_403 = 0
             row = _parse_slovnyk_entry(body, lemma=slug, lookup_word=lookup_word, slug="newsum", url=url)
             if row and row.get("text"):
                 if not existing_cache or existing_cache.get("schema_version") != _SLOVNYK_CACHE_SCHEMA_VERSION:
@@ -151,7 +153,6 @@ def fill_slovnyk_newsum_cache(
             else:
                 stats["other_error"] += 1
         elif code == 404:
-            consecutive_403 = 0
             stats["not_found_404"] += 1
             if not existing_cache or existing_cache.get("schema_version") != _SLOVNYK_CACHE_SCHEMA_VERSION:
                 cache_entry = {
@@ -171,14 +172,13 @@ def fill_slovnyk_newsum_cache(
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(cache_entry, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         else:
-            consecutive_403 = 0
             stats["other_error"] += 1
 
         if idx % checkpoint_interval == 0 or idx == len(slugs):
             print(
                 f"[{idx}/{len(slugs)}] Progress: cached={stats['already_cached']}, "
                 f"fetched_ok={stats['fetched_ok']}, 404={stats['not_found_404']}, "
-                f"403={stats['cf_challenge_403']}"
+                f"403={stats['cf_challenge_403']}, 429={stats['rate_limited_429']}"
             )
 
         if sleep_seconds > 0:
@@ -188,24 +188,41 @@ def fill_slovnyk_newsum_cache(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Populate slovnyk.me СУМ-20 cache using curl.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Populate slovnyk.me СУМ-20 cache using curl.\n"
+            "Use for cache fill batches; stops on the first 403, bot challenge or 429."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example:\n"
+            "  bash scripts/pre_commit/project_python.sh scripts/lexicon/fill_slovnyk_sum20_cache.py "
+            "--slugs-file words.json --limit 10\n"
+            "Outputs: dictionary cache JSON; runtime blocked.md on refusal; progress and counts.\n"
+            "Exit codes: 0 completed; 1 access denial, challenge or rate limit.\n"
+            "Related: #8999; scripts/lexicon/enrich_manifest.py"
+        ),
+    )
     parser.add_argument(
         "--slugs-file",
         type=Path,
         default=PROJECT_ROOT / "batch_state" / "atlas-encyclopedia-easy-vs-dig" / "easy-slugs.json",
-        help="JSON file containing array of slugs or audit dump.",
+        help="JSON array of slugs or class_b_detail audit dump (default: batch_state/atlas-encyclopedia-easy-vs-dig/easy-slugs.json).",
     )
     parser.add_argument(
         "--work-dir",
         type=Path,
         default=PROJECT_ROOT / ".runtime" / "slovnyk-curl",
-        help="Directory to save runtime state/blocked.md if tripped.",
+        help="Directory for blocked.md on refusal (default: .runtime/slovnyk-curl).",
     )
-    parser.add_argument("--sleep", type=float, default=0.3, help="Polite sleep between requests (seconds).")
-    parser.add_argument("--consecutive-403-limit", type=int, default=20, help="Abort on N consecutive 403s.")
-    parser.add_argument("--checkpoint-interval", type=int, default=50, help="Log progress every N entries.")
-    parser.add_argument("--force", action="store_true", help="Re-fetch even if already cached.")
-    parser.add_argument("--limit", type=int, default=None, help="Limit number of slugs to process.")
+    parser.add_argument("--sleep", type=float, default=0.3, help="Sleep between requests in seconds (default: 0.3).")
+    parser.add_argument(
+        "--consecutive-403-limit", type=int, default=20,
+        help="Legacy option, ignored (default: 20); the first 403, challenge or 429 always stops the batch.",
+    )
+    parser.add_argument("--checkpoint-interval", type=int, default=50, help="Log progress every N entries (default: 50).")
+    parser.add_argument("--force", action="store_true", help="Re-fetch even if already cached (default: false).")
+    parser.add_argument("--limit", type=int, default=None, help="Maximum slugs to process, e.g. 10 (default: all).")
 
     args = parser.parse_args()
 
@@ -230,7 +247,7 @@ def main() -> int:
         force=args.force,
     )
     print(f"Finished. Summary: {stats}")
-    if stats["cf_challenge_403"] >= args.consecutive_403_limit:
+    if stats["cf_challenge_403"] or stats["rate_limited_429"]:
         return 1
     return 0
 
