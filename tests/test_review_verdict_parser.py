@@ -215,6 +215,16 @@ def test_plain_verdict_still_allows_following_prose():
     assert recognized_verdicts("VERDICT: APPROVE\nFindings follow.") == ["APPROVE"]
 
 
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("example", ["```\nexample\n```\n", "> example\n\n", "    example\n\n"])
+@pytest.mark.parametrize("following,expected", [
+    ("or REQUEST_CHANGES", []), ("# Findings", ["APPROVE"]),
+])
+def test_removed_example_preserves_list_continuation_source_lines(newline, example, following, expected):
+    reply = "Context\n\n" + example + "- VERDICT: APPROVE\n" + following
+    assert recognized_verdicts(reply.replace("\n", newline)) == expected
+
+
 @pytest.mark.parametrize("prefix", ["", "- ", "* ", "+ ", "1. ", "1) "])
 @pytest.mark.parametrize("line", [
     "VERDICT: APPROVE or REQUEST_CHANGES per the rubric",

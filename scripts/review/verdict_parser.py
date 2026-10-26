@@ -220,7 +220,10 @@ def _without_code_fences(text: str, *, keep_unclosed: bool, preserve_lines: bool
         if end <= cursor:
             continue
         parts.extend(raw_lines[cursor:start])
-        parts.append("\n" * (end - start) if preserve_lines else "\n")
+        if preserve_lines:
+            parts.extend(_COMMONMARK_LINE_RE.findall("".join(raw_lines[max(start, cursor):end])))
+        else:
+            parts.append("\n")
         cursor = end
     parts.extend(raw_lines[cursor:])
     return "".join(parts)
