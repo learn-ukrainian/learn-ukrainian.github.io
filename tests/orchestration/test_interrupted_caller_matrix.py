@@ -78,8 +78,8 @@ def interrupted_checkout(tmp_path, monkeypatch):
     return repo, tree, tasks, record, result, output
 
 
-def test_guarded_remove_non_utf8_result_retains_and_reports(interrupted_checkout):
-    """Corrupt textual receipts fail closed; neither output nor result is lost."""
+def test_guarded_remove_non_utf8_result_records_inventory_failure(interrupted_checkout):
+    """C-2481 permits disposal after inventory failure; task results and Git refs survive."""
     repo, tree, _tasks, record, result, output = interrupted_checkout
     result.write_bytes(b"corrupt result\x00\xff")
     state = {
@@ -93,19 +93,20 @@ def test_guarded_remove_non_utf8_result_retains_and_reports(interrupted_checkout
     record.write_text(json.dumps(state))
     before = hashes([record, result, output])
     head = git(tree, "rev-parse", "HEAD")
-    for _ in range(2):
-        row = wc.remove_unclaimed_worktree(
-            tree, repo_root=repo, reason="corrupt result qualification", owner_task_id=None
-        )
-        assert row.action == "skipped" and "utf-8" in row.reason
-        assert hashes([result, output]) == before[1:]
-        current = json.loads(record.read_text())
-        error = current.pop("artifact_preservation_error")
-        receipt = current.pop("preserved_artifacts")
-        assert current == state and "utf-8" in error
-        assert receipt["retention_disposition"] == "retained"
-        assert receipt["owner"] and receipt["next_condition"]
-        assert tree.exists() and git(tree, "rev-parse", "HEAD") == head
+    row = wc.remove_unclaimed_worktree(
+        tree, repo_root=repo, reason="corrupt result qualification", owner_task_id=None
+    )
+    assert row.action == "removed", row
+    assert hashes([result]) == before[1:2]
+    current = json.loads(record.read_text())
+    receipt = current.pop("preserved_artifacts")
+    assert current == state
+    assert receipt["retention_disposition"] == receipt["mode"] == "record-only"
+    assert receipt["inventory_error"] == "inventory_failed"
+    assert receipt["owner"] == state["task_id"] and receipt["next_condition"] == "none"
+    assert receipt["copied_bytes"] == 0 and "location" not in receipt
+    assert not (repo / "batch_state/preserved").exists()
+    assert not tree.exists() and git(repo, "rev-parse", "codex/interrupted") == head
 
 
 @pytest.mark.parametrize("writer", ["settle", "locked_healer"])

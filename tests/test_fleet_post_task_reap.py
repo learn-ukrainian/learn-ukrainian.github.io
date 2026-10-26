@@ -1829,18 +1829,16 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     state = json.loads(path.read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    if scenario in links.REFUSALS:
-        assert row["action"] == ("retained" if runtime else "skipped"), row
-        assert links.REFUSALS[scenario] in row["reason"], row
-        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
-        assert worktree.exists()
-        return
     assert row["action"] == "removed", row
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
     receipt = state.get("preserved_artifacts")
     assert not (repo / "batch_state/preserved").exists()
-    if preserved is not None:
+    if scenario in links.REFUSALS:
+        _assert_record_only(repo, receipt)
+        assert receipt["inventory_error"] == "inventory_failed"
+        assert receipt["count"] == 0 and receipt["paths"] == []
+    elif preserved is not None:
         _assert_record_only(repo, receipt)
         _assert_entry(receipt, preserved, links.PAYLOAD)
         assert receipt["inventory_error"] == "inventory_incomplete"

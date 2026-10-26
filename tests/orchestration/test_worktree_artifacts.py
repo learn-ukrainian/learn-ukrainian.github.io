@@ -519,14 +519,10 @@ def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, r
     (checkout[0] / "link").symlink_to(outside)
     reference = str(outside) if reference == "absolute" else reference
     ok, reason, metadata = guard(checkout, record={"response": f"Read `{reference}`."})
-    assert ok is not refused
-    if refused:
-        assert metadata["retention_disposition"] == "retained"
-        assert links.REFUSAL in reason
-    else:
-        _assert_record_only(checkout, metadata)
-        assert metadata["count"] == 0 and metadata["paths"] == []
-        assert metadata["inventory_error"] == "inventory_incomplete"
+    assert ok and not reason
+    _assert_record_only(checkout, metadata)
+    assert metadata["count"] == 0 and metadata["paths"] == []
+    assert metadata["inventory_error"] == ("inventory_failed" if refused else "inventory_incomplete")
     assert not (checkout[1] / "batch_state/preserved").exists()
     assert outside.read_bytes() == b"lives outside the checkout"
 
@@ -589,10 +585,11 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
     saved = json.loads((tasks / "artifact-task.json").read_text())
     assert target is None or target.read_bytes() == links.PAYLOAD
     if scenario in links.REFUSALS:
-        assert not ok and links.REFUSALS[scenario] in reason
-        assert links.REFUSALS[scenario] in saved["artifact_preservation_error"]
-        assert "\x00" not in reason and "x" * 300 not in reason
-        assert not (primary / "batch_state/preserved").exists()
+        assert ok and not reason
+        assert "artifact_preservation_error" not in saved
+        _assert_record_only(checkout, metadata)
+        assert metadata["inventory_error"] == "inventory_failed"
+        assert metadata["count"] == 0 and metadata["paths"] == []
         return
     assert ok and not reason
     assert "artifact_preservation_error" not in saved

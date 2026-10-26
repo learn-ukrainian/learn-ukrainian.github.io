@@ -22651,16 +22651,16 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
     assert not (primary / "batch_state/preserved").exists()
-    if scenario in links.REFUSALS:
-        assert result["action"] == "skipped" and links.REFUSALS[scenario] in result["reason"], result
-        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
-        assert worktree.exists()
-        return
     assert result["action"] == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
     receipt = state.get("preserved_artifacts")
-    if preserved is not None:
+    if scenario in links.REFUSALS:
+        assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
+        assert "location" not in receipt
+        assert receipt["inventory_error"] == "inventory_failed"
+        assert receipt["count"] == 0 and receipt["paths"] == []
+    elif preserved is not None:
         assert receipt["mode"] == "record-only" and receipt["copied_bytes"] == 0
         assert "location" not in receipt
         assert receipt["paths"] == [{

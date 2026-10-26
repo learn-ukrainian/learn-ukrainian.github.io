@@ -6897,17 +6897,15 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    if scenario in links.REFUSALS:
-        assert result.action == "skipped" and links.REFUSALS[scenario] in result.reason
-        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
-        assert worktree.exists()
-        return
     assert result.action == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
     assert not (repo / "batch_state/preserved").exists()
     receipt = state.get("preserved_artifacts")
-    if scenario == "outbound_batch_state":
+    if scenario in links.REFUSALS:
+        assert receipt["inventory_error"] == "inventory_failed"
+        assert receipt["count"] == 0 and receipt["paths"] == []
+    elif scenario == "outbound_batch_state":
         assert receipt["inventory_error"] == "inventory_incomplete" and receipt["paths"] == []
     elif preserved is None:
         assert receipt is None
