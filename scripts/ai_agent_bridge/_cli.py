@@ -33,10 +33,8 @@ from ._codex import (
 )
 from ._db import get_db
 from ._dispatch_wrappers import (
-    MANDATORY_COMMIT_PUSH_PR_CHECKLIST,
     REPO_ROOT,
     REVIEW_DEEP_INSTRUCTIONS,
-    handle_dispatch_fix,
     handle_review_deep,
 )
 from ._gemini import converse_gemini
@@ -500,6 +498,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for gemini\n"
             "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --from claude --task-id query-123 < prompt.md\n"
             "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --task-id review-123 < prompt.md\n\n"
+            "Authoring: scripts/dispatch.py dispatch --agent <agent> --model <model>\n"
+            "  --mode workspace-write --owned-path <path> --prompt-file <brief>.\n\n"
             "Outputs:\n"
             "  Reads and writes broker messages, may invoke agent CLIs, and can post follow-up data to GitHub.\n\n"
             "Exit codes:\n"
@@ -1150,49 +1150,27 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Emit machine-readable JSON instead of text",
     )
 
-    dispatch_fix_parser = subparsers.add_parser(
-        "dispatch-fix",
-        help="Dispatch a Codex worktree fix run with commit/push/PR guardrails",
-        description=(
-            "Dispatch a Codex worktree run using the hardcoded model assignment "
-            "for code changes: Codex, danger mode, worktree, origin/main base, "
-            "high effort."
-        ),
-        epilog=(
-            "Example:\n"
-            "  ab dispatch-fix 1701 --dry-run\n\n"
-            "Mandatory checklist appended to dispatch-fix briefs:\n"
-            f"{MANDATORY_COMMIT_PUSH_PR_CHECKLIST}"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    dispatch_fix_parser.add_argument(
-        "task_id",
-        metavar="issue-or-task-id",
-        help="GitHub issue number or stable task ID to use for the dispatch --task-id.",
-    )
-    dispatch_fix_parser.add_argument(
-        "--brief-file",
-        help="Use an existing brief file instead of generating one from gh issue view.",
-    )
-    dispatch_fix_parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Write the prompt/state preview and print the dispatch command without dispatching.",
-    )
-
     review_deep_parser = subparsers.add_parser(
         "review-deep",
         help="Dispatch an adversarial Claude Opus read-only review run",
         description=(
             "Dispatch an adversarial Claude review using the hardcoded model "
-            "assignment for deep design/code review: read-only Opus 4.7, xhigh "
+            "assignment for deep PR review: read-only Opus 5.5, xhigh "
             "effort by default."
         ),
         epilog=(
             "Example:\n"
             "  ab review-deep 1740 --dry-run\n"
-            "  ab review-deep scripts/ai_agent_bridge --effort high --dry-run\n\n"
+            "  ab review-deep 1740 --effort high --dry-run\n\n"
+            "For authoring, use scripts/dispatch.py dispatch --agent <agent> --model <model>\n"
+            "  --mode workspace-write --owned-path <path> --prompt-file <brief>.\n"
+            "For a live checkout review, use scripts/dispatch.py dispatch --agent <agent>\n"
+            "  --model <model> --mode read-only --cwd <dispatch-worktree> --prompt-file <brief>.\n"
+            "Wait with scripts/dispatch.py wait <task-id>. Publish eligible completed PR reviews\n"
+            "  with .venv/bin/python -m scripts.review.record_cf_verdict after its qualification checks.\n\n"
+            "Outputs: dispatch task record, prompt and worktree; --dry-run writes a preview.\n"
+            "Exit codes: 0 success, 2 for a retired local path or unavailable PR head; other non-zero dispatch failure.\n"
+            "Related: scripts/dispatch.py, scripts.review.record_cf_verdict.\n\n"
             "Prompt wrapper:\n"
             f"{REVIEW_DEEP_INSTRUCTIONS}"
         ),
@@ -1200,8 +1178,8 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     review_deep_parser.add_argument(
         "target",
-        metavar="PR-or-path",
-        help="PR number, #PR, file path, or directory path to review.",
+        metavar="PR",
+        help="PR number or #PR to review. Local-path review is retired; see the v2 recipe below.",
     )
     review_deep_parser.add_argument(
         "--effort",
@@ -1485,8 +1463,6 @@ def _dispatch_command(args):
         process_all_codex(args.new_session)
     elif args.command == "codex-usage":
         _handle_codex_usage(args)
-    elif args.command == "dispatch-fix":
-        sys.exit(handle_dispatch_fix(args))
     elif args.command == "review-deep":
         sys.exit(handle_review_deep(args))
     elif args.command == "check-model":
