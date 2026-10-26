@@ -165,19 +165,14 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
     monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
     monkeypatch.setenv(jh.ENV_TEACHER_HOST, "teacher-alias")
     monkeypatch.setenv(jh.ENV_TEACHER_REPO, "/remote/repo")
-    rc = jh.main(
-        ["--host-id", "host-teacher", "--", ".venv/bin/python", "scripts/dispatch.py", "dispatch"]
-    )
+    rc = jh.main(["--host-id", "host-teacher", "--", ".venv/bin/python", "scripts/dispatch.py", "dispatch"])
     assert rc == 0
     recorded = args_file.read_text(encoding="utf-8")
     script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
@@ -189,18 +184,13 @@ def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
 
 
-def test_main_dispatch_preserves_session_initiator(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_dispatch_preserves_session_initiator(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f"cat > {args_file}.stdin\n"
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
@@ -230,18 +220,13 @@ def test_main_dispatch_preserves_session_initiator(
     assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
 
 
-def test_main_dispatch_copies_local_prompt_file(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_dispatch_copies_local_prompt_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
@@ -289,18 +274,13 @@ def test_main_help_contract() -> None:
     assert "Issue: #7062" in help_text
 
 
-def test_forward_dispatch_inlines_prompt_file(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_forward_dispatch_inlines_prompt_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
@@ -334,24 +314,20 @@ def test_forward_dispatch_inlines_prompt_file(
     assert "keep curriculum/l2-uk-en in the worktree" not in script
 
 
-def test_forward_dispatch_rewrites_prompt_dash(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_forward_dispatch_rewrites_prompt_dash(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
     monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
     monkeypatch.setenv(jh.ENV_HOST, "job-alias")
     monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
+
     class _Stdin:
         buffer = io.BytesIO(b"touch wiki/pages.md\n")
 
@@ -379,18 +355,13 @@ def test_forward_dispatch_rewrites_prompt_dash(
     assert "touch wiki/pages.md" not in recorded
 
 
-def test_forward_dispatch_copies_lifecycle_file(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_forward_dispatch_copies_lifecycle_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
@@ -422,9 +393,7 @@ def test_forward_dispatch_copies_lifecycle_file(
     assert "base64 -d >" in script
 
 
-def test_forward_dispatch_rejects_notebook_cwd(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_forward_dispatch_rejects_notebook_cwd(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(jh.ENV_HOST, "job-alias")
     monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
     with pytest.raises(ValueError, match="--cwd"):
@@ -443,18 +412,13 @@ def test_forward_dispatch_rejects_notebook_cwd(
         )
 
 
-def test_forward_dispatch_strips_notebook_worktree_path(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_forward_dispatch_strips_notebook_worktree_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)
@@ -483,9 +447,7 @@ def test_forward_dispatch_strips_notebook_worktree_path(
     assert "--worktree" in script
 
 
-def test_forward_dispatch_missing_ssh_is_transport_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_forward_dispatch_missing_ssh_is_transport_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     empty = tmp_path / "empty"
     empty.mkdir()
     monkeypatch.setenv("PATH", str(empty))
@@ -540,9 +502,7 @@ def test_remote_payload_script_cleans_private_files_on_exit_failure_and_signal(
     )
     prompt = tmp_path / "brief.md"
     prompt.write_text("private body\n", encoding="utf-8")
-    rest, payloads = jh.materialize_local_dispatch_argv(
-        ["dispatch", "--prompt-file", str(prompt)]
-    )
+    rest, payloads = jh.materialize_local_dispatch_argv(["dispatch", "--prompt-file", str(prompt)])
     script = jh._build_remote_dispatch_script(
         argv=rest,
         remote_repo=str(tmp_path),
@@ -572,9 +532,7 @@ def test_remote_payload_script_cleans_private_files_on_exit_failure_and_signal(
     assert not payload_path.exists()
 
 
-def test_main_missing_ssh_dispatch_returns_255(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_main_missing_ssh_dispatch_returns_255(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     empty = tmp_path / "empty"
     empty.mkdir()
     monkeypatch.setenv("PATH", str(empty))
@@ -606,10 +564,7 @@ def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(
     args_file = tmp_path / "ssh.args"
     fake_ssh = fake_bin / "ssh"
     fake_ssh.write_text(
-        "#!/usr/bin/env bash\n"
-        f'printf "%s\\n" "$@" > {args_file}\n'
-        f'cat > {args_file}.stdin\n'
-        "exit 0\n",
+        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)

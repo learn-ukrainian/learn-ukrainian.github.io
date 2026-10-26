@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.dispatcher.cli import build_parser as build_dispatch_parser
 from scripts.orchestration import orchestrator_control as oc
 
 
@@ -272,3 +273,90 @@ def test_recent_inbox_declares_hot_only_history(tmp_path: Path, capsys):
     assert rc == 0
     assert payload["history_scope"] == "hot"
     assert [task["task_id"] for task in payload["tasks"]] == ["hot-worker"]
+
+
+def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, capsys):
+    prompt = tmp_path / "brief.md"
+    prompt.write_text("Scoped task.", encoding="utf-8")
+    assert (
+        oc.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "dispatch",
+                "--run-id",
+                "parity",
+                "--task-id",
+                "worker",
+                "--agent",
+                "codex",
+                "--model",
+                "gpt-6.1-sol",
+                "--effort",
+                "high",
+                "--mode",
+                "workspace-write",
+                "--prompt-file",
+                str(prompt),
+                "--worktree",
+                "--full-checkout",
+                "--sparse-include",
+                "curriculum",
+                "--owned-path",
+                "scripts/one.py",
+                "--silence-timeout",
+                "0",
+                "--initial-response-timeout",
+                "0",
+                "--dry-run",
+            ]
+        )
+        == 0
+    )
+    command = json.loads(capsys.readouterr().out)["command"]
+    parsed = build_dispatch_parser().parse_args(command[2:])
+    assert command[:3] == [".venv/bin/python", "scripts/dispatch.py", "dispatch"]
+    assert parsed.model == "gpt-6.1-sol"
+    assert parsed.mode == "workspace-write"
+    assert parsed.full_checkout is True
+    assert parsed.sparse_include == ["curriculum"]
+    assert parsed.owned_path == ["scripts/one.py"]
+    assert "--silence-timeout" not in command
+    assert "--initial-response-timeout" not in command
+
+
+@pytest.mark.parametrize(
+    "option",
+    [
+        ["--silence-timeout", "3600"],
+        ["--initial-response-timeout", "180"],
+        ["--max-budget-usd", "1"],
+        ["--lifecycle-file", "ledger.json"],
+        ["--authoring-review-risk", "medium"],
+        ["--mode", "danger"],
+    ],
+)
+def test_v2_gaps_are_forwarded_for_explicit_refusal(tmp_path: Path, option):
+    args = oc.build_parser().parse_args(
+        [
+            "dispatch",
+            "--run-id",
+            "gaps",
+            "--task-id",
+            "worker",
+            "--agent",
+            "codex",
+            "--model",
+            "gpt-6.1-sol",
+            "--silence-timeout",
+            "0",
+            "--initial-response-timeout",
+            "0",
+            *option,
+        ]
+    )
+    command = oc.build_dispatch_command(args, tmp_path / "brief.md")
+    assert option[0] in command
+    with pytest.raises(SystemExit) as exc:
+        build_dispatch_parser().parse_args(command[2:])
+    assert exc.value.code == 2

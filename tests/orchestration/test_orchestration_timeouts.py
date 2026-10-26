@@ -37,6 +37,7 @@ from scripts.orchestration import (
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
+
 def _completed(
     args: list[str] | None = None,
     returncode: int = 0,
@@ -291,9 +292,7 @@ def test_task_closeout_default_runner_timeout(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_orchestrator_control_cmd_dispatch_timeout(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_orchestrator_control_cmd_dispatch_timeout(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     args = argparse.Namespace(
         repo_root=tmp_path,
         run_id="run-1",
@@ -333,11 +332,8 @@ def test_orchestrator_control_cmd_dispatch_timeout(
     capsys.readouterr()
 
     with patch(
-
         "subprocess.run",
-        side_effect=subprocess.TimeoutExpired(
-            ["python", "delegate.py"], oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS
-        ),
+        side_effect=subprocess.TimeoutExpired(["python", "delegate.py"], oc.DEFAULT_DISPATCH_TIMEOUT_SECONDS),
     ):
         rc = oc.cmd_dispatch(args)
         assert rc == 124

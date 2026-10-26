@@ -103,10 +103,7 @@ def format_forward_config_refusal(error: BaseException | str, *, host_id: str | 
 
 
 def job_dispatch_host() -> str:
-    host = (
-        os.environ.get(ENV_HOST, "").strip()
-        or os.environ.get(ENV_HOST_FALLBACK, "").strip()
-    )
+    host = os.environ.get(ENV_HOST, "").strip() or os.environ.get(ENV_HOST_FALLBACK, "").strip()
     if not host:
         raise ForwardConfigError(f"{ENV_HOST} or {ENV_HOST_FALLBACK} is required")
     return host
@@ -375,10 +372,7 @@ def materialize_local_dispatch_argv(
         if prompt_val is not None:
             if prompt_val == "-":
                 if stdin_body is None:
-                    raise ValueError(
-                        "--prompt - cannot be forwarded without the prompt body; "
-                        "pass --prompt-file"
-                    )
+                    raise ValueError("--prompt - cannot be forwarded without the prompt body; pass --prompt-file")
                 var, remote_path = _remote_payload_binding("prompt", seq=seq)
                 seq += 1
                 payloads.append((var, "prompt", stdin_body))
@@ -563,9 +557,7 @@ def forward_dispatch(
     except (FileNotFoundError, PermissionError) as exc:
         raise SshTransportError(str(exc)) from exc
     except subprocess.TimeoutExpired as exc:
-        raise SshTransportError(
-            f"SSH transport timed out after {DEFAULT_SSH_TIMEOUT_SECONDS}s: {exc}"
-        ) from exc
+        raise SshTransportError(f"SSH transport timed out after {DEFAULT_SSH_TIMEOUT_SECONDS}s: {exc}") from exc
     return int(completed.returncode)
 
 

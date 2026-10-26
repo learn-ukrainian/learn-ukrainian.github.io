@@ -566,9 +566,9 @@ def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[
         command.extend(["--base", args.base])
     if args.hard_timeout is not None:
         command.extend(["--hard-timeout", str(args.hard_timeout)])
-    if args.silence_timeout is not None:
+    if args.silence_timeout not in (None, 0):
         command.extend(["--silence-timeout", str(args.silence_timeout)])
-    if args.initial_response_timeout is not None:
+    if args.initial_response_timeout not in (None, 0):
         command.extend(["--initial-response-timeout", str(args.initial_response_timeout)])
     if args.max_budget_usd is not None:
         command.extend(["--max-budget-usd", str(args.max_budget_usd)])
@@ -753,7 +753,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
             "silence/initial-response deadlines, budget ceilings, lifecycle-file propagation, "
             "and authoring-review-risk. Legacy options and defaults remain forwarded so "
-            "unsupported requests fail explicitly. Default watchdogs currently prevent launch."
+            "unsupported requests fail explicitly. Default watchdogs currently prevent launch; explicit zero disables each watchdog."
         ),
     )
     dispatch.add_argument("--run-id", required=True, type=validate_run_id)
@@ -799,8 +799,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument("--base", default="main")
     dispatch.add_argument("--hard-timeout", type=int, default=7200)
-    dispatch.add_argument("--silence-timeout", type=int, default=3600, help="GAP: unsupported by dispatch v2.")
-    dispatch.add_argument("--initial-response-timeout", type=int, default=180, help="GAP: unsupported by dispatch v2.")
+    dispatch.add_argument(
+        "--silence-timeout", type=int, default=3600, help="GAP: v2 lacks this watchdog; 0 explicitly disables it."
+    )
+    dispatch.add_argument(
+        "--initial-response-timeout",
+        type=int,
+        default=180,
+        help="GAP: v2 lacks this watchdog; 0 explicitly disables it.",
+    )
     dispatch.add_argument("--max-budget-usd", type=float, help="GAP: unsupported by dispatch v2.")
     dispatch.add_argument(
         "--lifecycle-file",
