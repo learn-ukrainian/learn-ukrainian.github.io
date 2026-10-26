@@ -133,7 +133,7 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
             raise ValueError(
                 f"AGY ACP supports only its registered model pin {pin!r}; "
                 f"cannot honor explicit model {model!r}. Use "
-                f"`delegate.py dispatch --agent agy --model {accepted_model}` "
+                f"`scripts/dispatch.py dispatch --agent agy --model {accepted_model}` "
                 "to run a model accepted by AGY."
             )
     return model

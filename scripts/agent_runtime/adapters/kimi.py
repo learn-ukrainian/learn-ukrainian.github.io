@@ -7,7 +7,7 @@ injects them.
 
 Kimi Code prompt mode runs with automatic tool approval and cannot be combined
 with its interactive permission or plan flags, so headless workspace-write is
-flagless (delegate.py already verifies its worktree). Kimi seats admit web, UI
+flagless. The caller must verify its worktree. Kimi seats admit web, UI
 and backend coding only: every other mode is refused by the shared admission
 check before planning.
 """

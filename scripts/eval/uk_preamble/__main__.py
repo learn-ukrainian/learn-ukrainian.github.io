@@ -254,6 +254,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Label review tasks with scripts/dispatch.py --review-profile ukrainian; "
         "review prompts then end with a VERDICT marker line. "
+        "The dispatcher accepts the label without enforcing a verdict or permission profile. "
+        "Writing tasks are unchanged. "
         "Frozen in the manifest; a resume with another value is refused. Default: off.",
     )
     _add_dispatch_args(run)

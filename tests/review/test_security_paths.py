@@ -49,6 +49,12 @@ def test_every_security_glob_matches_a_tracked_file(pattern):
         (("scripts/ocr/_credentials.py",), ("!scripts/ocr/_credentials.py",), True),
         (("./scripts/delegate.py",), (), True),
         ((), ("./scripts/delegate.py",), True),
+        (("./scripts/dispatch.py",), (), True),
+        ((), ("./scripts/dispatch.py",), True),
+        (("scripts/dispatcher/cli.py",), (), True),
+        (("scripts/dispatcher/providers/codex.py",), (), True),
+        ((), ("scripts/dispatcher",), True),
+        ((), ("scripts/dispatcher/",), True),
         ((), ("scripts/agent_runtime",), True),
         ((), ("scripts/agent_runtime/",), True),
         ((), ("scripts/hooks",), True),
@@ -68,9 +74,10 @@ def test_classifier_and_risk_are_additive(paths, owned, expected):
         assert effective_review_risk(risk, paths, owned) == ("critical" if expected else risk)
 
 
+@pytest.mark.parametrize("path", ["scripts/delegate.py", "scripts/dispatch.py", "scripts/dispatcher/cli.py"])
 @pytest.mark.parametrize("profile", ["code", "infra", "ukrainian"])
-def test_security_floor_is_scoped_to_code_and_infra(profile):
-    assert effective_review_risk("low", ("scripts/delegate.py",), profile=profile) == (
+def test_security_floor_is_scoped_to_code_and_infra(profile, path):
+    assert effective_review_risk("low", (path,), profile=profile) == (
         "low" if profile == "ukrainian" else "critical"
     )
     assert effective_review_risk("medium", (), ("scripts/agent_runtime",), profile=profile) == (

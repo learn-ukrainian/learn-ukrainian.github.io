@@ -5,7 +5,7 @@ write-back via the broker). Agy is the Gemini-3.5-Flash-High Antigravity
 CLI; docs at https://antigravity.google/docs/cli-overview. Agy is used
 for cheap, fast Q&A and short coordination — NOT long-running task
 execution. Long-running V7 writer-phase work goes through
-``delegate.py dispatch --agent agy`` instead.
+``scripts/dispatch.py dispatch --agent agy --model MODEL`` instead.
 """
 
 import json

@@ -7,6 +7,7 @@ import json
 import subprocess
 import sys
 import textwrap
+from argparse import Namespace
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import replace
 from pathlib import Path
@@ -18,6 +19,7 @@ from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.dispatcher.cli import build_parser
 from scripts.eval.uk_preamble import dispatch as dispatch_module
+from scripts.eval.uk_preamble.__main__ import make_dispatcher
 from scripts.eval.uk_preamble.common import SEATS, ResultsDir, read_json, sha256_text
 from scripts.eval.uk_preamble.dispatch import (
     DelegateComposer,
@@ -294,6 +296,9 @@ def test_expected_args_hash_is_the_delegate_parser_hash_of_the_built_dispatch(fa
         cwd=dispatcher.cwd,
     )
     assert canonical.dispatch_script.name == "dispatch.py"
+    entrypoint = make_dispatcher(Namespace(python=sys.executable, hard_timeout=600), dispatcher.cwd)
+    assert entrypoint.dispatch_script == Path(dispatch_module.__file__).resolve().parents[2] / "dispatch.py"
+    assert entrypoint._dispatch_args("t-opus", seat, "review", prompt) == sent
 
 
 def test_condition_problems_name_every_departure(tmp_path: Path):
