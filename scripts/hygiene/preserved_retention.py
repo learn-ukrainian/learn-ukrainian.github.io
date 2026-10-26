@@ -1,4 +1,4 @@
-"""Expire preserved task entries by recorded preservation time only (C-2428)."""
+"""Expire preserved task entries by preservation proof or content age."""
 
 import argparse
 import contextlib
@@ -130,17 +130,22 @@ def read_text(path: Path) -> str:
         os.close(parent)
 
 
-def measure(fd: int) -> tuple[int, bool]:
+def measure(fd: int, *, newest: list[int] | None = None) -> tuple[int, bool]:
     """Sum lstat sizes including directories and links; never traverse links."""
-    total, unsafe = os.fstat(fd).st_size, False
+    info = os.fstat(fd)
+    total, unsafe = info.st_size, False
+    if newest is not None:
+        newest[0] = max(newest[0], info.st_mtime_ns)
     for name in os.listdir(fd):
         info = os.stat(name, dir_fd=fd, follow_symlinks=False)
+        if newest is not None:
+            newest[0] = max(newest[0], info.st_mtime_ns)
         if stat.S_ISDIR(info.st_mode):
             child = open_directory_component(fd, name)
             try:
                 if fd_mount_id(child) is None or fd_mount_id(child) != fd_mount_id(fd):
                     raise ValueError("mount_boundary")
-                size, linked = measure(child)
+                size, linked = measure(child, newest=newest)
             finally:
                 os.close(child)
             total += size
@@ -232,7 +237,57 @@ def child_set(fd: int) -> tuple:
     return tuple(children)
 
 
-def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = False, allow_empty_keep_list: bool = False) -> int:
+def expire_entry(root: int, name: str, batch: Path, keep_list: Path | None, keep: set[str] | None, cutoff_ns: int, apply: bool, allow_empty: bool) -> dict:
+    row = {"name": name, "bytes": 0, "newest_mtime_ns": None}
+    snapshots = []
+    for removing in (False, True) if apply else (False,):
+        try:
+            info = os.stat(name, dir_fd=root, follow_symlinks=False)
+            newest, size = [info.st_mtime_ns], info.st_size
+            row["bytes"] = size
+            reason = "symlink" if stat.S_ISLNK(info.st_mode) else None
+            if stat.S_ISDIR(info.st_mode):
+                child = open_directory_component(root, name)
+                try:
+                    if fd_mount_id(child) is None or fd_mount_id(child) != fd_mount_id(root):
+                        raise ValueError("mount_boundary")
+                    size, unsafe = measure(child, newest=newest)
+                    reason = "symlink_or_special" if unsafe else None
+                finally:
+                    os.close(child)
+            elif not stat.S_ISREG(info.st_mode):
+                reason = reason or "not_regular"
+            row.update(bytes=size, newest_mtime_ns=newest[0])
+        except (OSError, ValueError, ComponentOpenError):
+            row.update(result="skipped:age_unreadable", reason="age_unreadable", newest_mtime_ns=None)
+            return row
+        if removing:
+            try:
+                keep = keep_names(keep_list or batch / "preserved-keep.txt")
+            except FileNotFoundError:
+                keep = set() if keep_list is None and allow_empty else None
+            except (OSError, ValueError, ComponentOpenError, UnicodeError):
+                keep = None
+        reason = reason or ("keep_list_unreadable" if keep is None else "keep_list" if name in keep else None)
+        reason = reason or ("fresh" if newest[0] >= cutoff_ns else None)
+        snapshot = (info.st_dev, info.st_ino, info.st_mtime_ns, info.st_ctime_ns, size, newest[0])
+        if removing and snapshots[0] != snapshot:
+            reason = reason or "changed_before_removal"
+        if reason:
+            return {**row, "result": f"skipped:{reason}", "reason": reason}
+        snapshots.append(snapshot)
+    if apply:
+        try:
+            if stat.S_ISDIR(info.st_mode):
+                _remove_invocation_dir(root, name, namespace=batch / "preserved", expected_dev=info.st_dev, expected_ino=info.st_ino)
+            else:
+                os.unlink(name, dir_fd=root)
+        except (OSError, ContainmentError) as exc:
+            return {**row, "result": f"error:{getattr(exc, 'errno', None) or errno.EIO}", "reason": "removal_failed"}
+    return {**row, "result": "deleted" if apply else "skipped:dry_run", "reason": "expired"}
+
+
+def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = False, allow_empty_keep_list: bool = False, expire_older_than_hours: int | None = None) -> int:
     root = directory(batch / "preserved")
     try:
         try:
@@ -259,8 +314,17 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
         counts, sizes = Counter(), Counter()
         cutoff = datetime.now(UTC) - timedelta(days=3)
         release_cutoff = datetime.now(UTC) - timedelta(days=RELEASE_AGE_DAYS)
+        cutoff_ns = time.time_ns() - expire_older_than_hours * 3600 * 10**9 if expire_older_than_hours is not None else 0
         with os.fdopen(receipt_fd, "w", encoding="utf-8") as receipt:
             for name in sorted(os.listdir(root)):
+                if expire_older_than_hours is not None:
+                    row = expire_entry(root, name, batch, keep_list, keep, cutoff_ns, apply, allow_empty_keep_list)
+                    receipt.write(json.dumps({**row, "decision": row["result"].split(":")[0]}) + "\n")
+                    receipt.flush()
+                    os.fsync(receipt.fileno())
+                    counts[row["result"]] += 1
+                    sizes[row["result"]] += row["bytes"]
+                    continue
                 size, result, released = 0, "skipped:unknown", None
                 try:
                     info = os.stat(name, dir_fd=root, follow_symlinks=False)
@@ -317,26 +381,29 @@ def run(batch: Path, keep_list: Path | None, reports: Path, *, apply: bool = Fal
                 counts[result] += 1
                 sizes[result] += size
         print(json.dumps({"mode": "apply" if apply else "dry-run", "counts": counts, "bytes": sizes, "receipt": str(reports / receipt_name)}))
-        return int(keep is None or any(key.startswith("error:") for key in counts))
+        return int(keep is None or "skipped:keep_list_unreadable" in counts or any(key.startswith("error:") for key in counts))
     finally:
         os.close(root)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Delete direct preserved task entries with verified times older than 3 days.\nUse for evidence retention; unknown times and live tasks are kept. Default: DRY-RUN.\nOrdinary manifests need old ISO 8601 preservation times; held/pinned entries need terminal task identity, old finished_at and read-only or pushed/landed proof.",
+        description="Delete direct preserved task entries with verified times older than 3 days.\nUse --expire-older-than-hours N for age-only residue expiry without proof rules.\nDefault evidence retention keeps unknown times and live tasks. Default: DRY-RUN.\nOrdinary manifests need old ISO 8601 preservation times; held/pinned entries need terminal task identity, old finished_at and read-only or pushed/landed proof.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.preserved_retention\n  .venv/bin/python -m scripts.hygiene.preserved_retention --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nMissing explicit keep-lists refuse all deletion. An absent default is empty only in dry-run; --apply refuses it unless --allow-empty-keep-list is passed.\nOnly --apply deletes; Git ancestry checks are local and PR probes are read-only. Receipts include lstat bytes and typed release reasons.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Unknown provenance is kept; RELEASE_AGE_DAYS configures held/pin age (default 3 days).",
+        epilog="Examples:\n  .venv/bin/python -m scripts.hygiene.preserved_retention\n  .venv/bin/python -m scripts.hygiene.preserved_retention --apply\nOutputs: one JSON-line receipt per entry under batch_state/reports/; one stdout summary.\nMissing explicit keep-lists refuse all deletion. An absent default is empty only in dry-run; --apply refuses it unless --allow-empty-keep-list is passed.\nOnly --apply deletes; Git ancestry checks are local and PR probes are read-only. Receipts include lstat bytes and typed release reasons.\nExit codes: 0 scan complete (skips allowed); 1 I/O/deletion error or unreadable keep-list; 2 invalid arguments/configuration.\nRelated: C-2428; docs/runbooks/tmp-retention.md. Without backstop, unknown provenance is kept; RELEASE_AGE_DAYS configures held/pin age (default 3 days).",
     )
     parser.add_argument("--batch-root", type=Path, help="State root (default: primary checkout batch_state; example fixture/batch_state).")
     parser.add_argument("--keep-list", type=Path, help="Plain entry names, one per line (example keep.txt; default: batch_state/preserved-keep.txt). Explicit paths must be readable. An absent default is empty in dry-run; apply requires --allow-empty-keep-list.")
     parser.add_argument("--reports-dir", type=Path, help="Receipt directory (default: batch_state/reports; example worktree/batch_state/reports).")
     parser.add_argument("--apply", action="store_true", help="Delete eligible entries (default: dry-run, receipts only).")
     parser.add_argument("--allow-empty-keep-list", action="store_true", help="Allow --apply with an absent DEFAULT keep-list (default: off; example --apply --allow-empty-keep-list). Explicit missing or unreadable paths still refuse deletion.")
+    parser.add_argument("--expire-older-than-hours", type=int, metavar="N", help="Backstop: expire entries whose newest content mtime is strictly older than N positive integer hours (example 24; default: off). Ignores task, landed, held, pin and release proof; honors keep-list and refuses symlinks. Only --apply deletes; receipts include newest_mtime_ns, decision and reason.")
     args = parser.parse_args(argv)
+    if args.expire_older_than_hours is not None and args.expire_older_than_hours <= 0:
+        parser.error("--expire-older-than-hours must be a positive integer")
     batch = (args.batch_root or default_batch_root()).absolute()
     try:
-        return run(batch, args.keep_list, args.reports_dir or batch / "reports", apply=args.apply, allow_empty_keep_list=args.allow_empty_keep_list)
+        return run(batch, args.keep_list, args.reports_dir or batch / "reports", apply=args.apply, allow_empty_keep_list=args.allow_empty_keep_list, expire_older_than_hours=args.expire_older_than_hours)
     except (OSError, ValueError, ComponentOpenError) as exc:
         print(f"preserved-retention: {type(exc).__name__}", file=sys.stderr)
         return 1 if isinstance(exc, OSError) else 2
