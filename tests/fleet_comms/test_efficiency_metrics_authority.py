@@ -484,7 +484,10 @@ def test_missing_pg_schema_fails_closed(authority_db, collector):
             collector(plane_db)
 
 
-def test_bottleneck_metadata_uses_authority_dialect(authority_db, tmp_path):
+@pytest.mark.parametrize("schema_version", [1, 2])
+@pytest.mark.parametrize("active_status", ["running", "spawning"])
+def test_bottleneck_metadata_uses_authority_dialect(authority_db, tmp_path, schema_version, active_status):
+    """Mixed-version active records must not be counted as completed dispatches."""
     from datetime import UTC, datetime
 
     from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
@@ -509,11 +512,12 @@ def test_bottleneck_metadata_uses_authority_dialect(authority_db, tmp_path):
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     (tasks / "legacy.json").write_text(json.dumps({
-        "task_id": "legacy", "status": "done", "stream_epic": 4707, "task_family": "metrics",
+        "task_id": "legacy", "schema_version": schema_version,
+        "status": "done", "stream_epic": 4707, "task_family": "metrics",
         "started_at": "2026-08-01T11:00:00Z", "finished_at": "2026-08-01T11:02:00Z",
     }))
     (tasks / "active.json").write_text(json.dumps({
-        "task_id": "active", "schema_version": 2, "status": "running",
+        "task_id": "active", "schema_version": 2, "status": active_status,
         "started_at": "2026-08-01T11:00:00Z", "finished_at": "2026-08-01T11:02:00Z",
     }))
     payload = collect_stream_bottleneck_metrics(
