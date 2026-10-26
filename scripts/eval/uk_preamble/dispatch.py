@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
+from scripts.common.repo_root import main_checkout_root
 from scripts.lib.rules_core import RulesCoreError
 
 from .common import Seat, sha256_bytes, sha256_text
@@ -148,7 +149,11 @@ def task_family(kind: str) -> str:
 
 def frame(composition: dict[str, Any]) -> dict[str, Any]:
     """The prompt-independent part of an expected composition."""
-    return {key: composition.get(key) for key in FRAME_FIELDS}
+    shared = {key: composition.get(key) for key in FRAME_FIELDS}
+    if composition.get("schema_version") == 2:
+        shared.update(cwd=None, worktree_path=None)
+        shared.update({key: composition[key] for key in ("schema_version", "dispatch_root", "worker_head")})
+    return shared
 
 
 def _same_path(recorded: Any, expected: str | None) -> bool:
@@ -203,7 +208,9 @@ def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], 
     return problems
 
 
-def composition_of(composed: str, prompt: str, *, cwd: str, worktree_path: str | None, blocks: list[str]) -> dict:
+def composition_of(
+    composed: str, prompt: str, *, cwd: str | None, worktree_path: str | None, blocks: list[str]
+) -> dict:
     """An expected composition: the record fields delegate would write and the frame around ``prompt``."""
     at = composed.find(prompt)
     if at < 0:
@@ -344,6 +351,7 @@ class DelegateDispatcher:
         self.hard_timeout = hard_timeout
         self.review_profile = review_profile
         self.wait_timeout = hard_timeout + WAIT_MARGIN
+        self.legacy_resume = False
 
     def _run(self, *args: str, timeout: int = CONTROL_TIMEOUT) -> subprocess.CompletedProcess[str]:
         """Run one delegate subcommand; a timeout is a DispatchError (pending markers survive for resume)."""
@@ -356,31 +364,70 @@ class DelegateDispatcher:
                 f"delegate {args[0]} {args[1] if len(args) > 1 else ''} timed out after {timeout}s"
             ) from exc
 
-    def _dispatch_args(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> list[str]:
+    def _dispatch_args(
+        self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, legacy: bool = False
+    ) -> list[str]:
         args = ["dispatch", "--agent", seat.agent, "--model", seat.model, "--task-id", task_id]
-        args += ["--prompt-file", str(prompt_path), "--mode", READ_ONLY, "--language-lane", "ukrainian"]
-        args += ["--cwd", str(self.cwd), "--hard-timeout", str(self.hard_timeout)]
+        args += ["--prompt-file", str(prompt_path), "--mode", READ_ONLY, "--language-lane"]
+        if legacy:
+            args += ["--cwd", str(self.cwd), "--rules-seat", RULES_SEAT]
+        else:
+            head = _git(self.cwd, "rev-parse", "HEAD")
+            if not head:
+                raise DispatchError("cannot pin the worker commit")
+            args += ["ukrainian", "--pinned-head", head.strip()]
+        args += ["--hard-timeout", str(self.hard_timeout)]
         args += ["--research-task-family", task_family(kind)]
         if seat.effort:
             args += ["--effort", seat.effort]
         if self.review_profile and kind == "review":
             args += ["--review-profile", self.review_profile]
+            if legacy:
+                args += ["--require-review-verdict"]
         return args
 
-    def expected_args_sha256(self, task_id: str, seat: Seat, kind: str, prompt_path: Path) -> str:
-        """Caller-owned fingerprint of the exact v2 invocation, frozen by the evaluation manifest."""
+    def expected_args_sha256(
+        self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, legacy: bool = False
+    ) -> str:
+        """Schema-specific argument fingerprint for the frozen evaluation."""
+        if legacy or self.legacy_resume:
+            from scripts import delegate
+
+            args = delegate.build_parser().parse_args(
+                self._dispatch_args(task_id, seat, kind, prompt_path, legacy=True)
+            )
+            return delegate.dispatch_args_sha256(args)
         return sha256_text(json.dumps(self._dispatch_args(task_id, seat, kind, prompt_path), ensure_ascii=False))
 
+    def legacy_inputs(self, task_id: str, seat: Seat, kind: str, path: Path, prompt: str) -> tuple[dict, str]:
+        from scripts import delegate
+
+        return (
+            DelegateComposer(delegate, self.cwd).compose(prompt),
+            self.expected_args_sha256(task_id, seat, kind, path, legacy=True),
+        )
+
     def compose(self, prompt: str) -> dict[str, Any]:
+        if self.legacy_resume:
+            from scripts import delegate
+
+            return DelegateComposer(delegate, self.cwd).compose(prompt)
         cwd = self.cwd.resolve()
         if not (cwd / ".git").is_file() or _git(cwd, "rev-parse", "--show-toplevel") != f"{cwd}\n":
             raise DispatchError("pass an existing isolated Git worktree root with --worker-cwd")
-        return {"schema_version": 2, **composition_of(prompt, prompt, cwd=str(cwd), worktree_path=str(cwd), blocks=[])}
+        return {
+            "schema_version": 2,
+            "dispatch_root": str(main_checkout_root(cwd) / ".worktrees" / "dispatch"),
+            "worker_head": (_git(cwd, "rev-parse", "HEAD") or "").strip(),
+            **composition_of(prompt, prompt, cwd=None, worktree_path=None, blocks=[]),
+        }
 
     def known(self, task_id: str) -> bool:
         return self._run("status", task_id).returncode == 0
 
     def dispatch(self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, force_new: bool) -> str | None:
+        if self.legacy_resume:
+            raise DispatchError("legacy evaluations support resume only; use a new run tag for new tasks")
         args = self._dispatch_args(task_id, seat, kind, prompt_path)
         if force_new:
             raise DispatchError("v2 refuses task-id replacement; start a new evaluation run tag")

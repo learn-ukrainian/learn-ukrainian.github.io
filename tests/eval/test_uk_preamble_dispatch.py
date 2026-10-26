@@ -73,13 +73,14 @@ FAKE_DELEGATE = textwrap.dedent(
         if "tamper" in task_id:
             result.write_text("changed after the fact")
         prompt_sha = hashlib.sha256(prompt).hexdigest()
+        worktree = str(Path(__file__).parent / ".worktrees" / "dispatch" / args[args.index("--agent") + 1] / task_id)
         record.write_text(json.dumps({
             "schema_version": 2, "task_id": task_id, "prompt_file": str(prompt_file),
             "research_task_family": args[args.index("--research-task-family") + 1],
             "status": "done", "agent": args[args.index("--agent") + 1], "model": args[args.index("--model") + 1],
             "substitution": None, "result_file": str(result), "result_sha256": digest, "run_nonce": "n1",
             "prompt_sha256": prompt_sha,
-            "cwd": args[args.index("--cwd") + 1], "mode": args[args.index("--mode") + 1], "worktree_path": args[args.index("--cwd") + 1],
+            "cwd": worktree, "mode": args[args.index("--mode") + 1], "worktree_path": worktree,
             "effort": "high",
         }))
         print(task_id); print("n1"); sys.exit(0)
@@ -99,14 +100,15 @@ FAKE_DELEGATE = textwrap.dedent(
 
 
 @pytest.fixture
-def fake(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[DelegateDispatcher, Path, Path]:
+def fake(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, linked_worktree: Path
+) -> tuple[DelegateDispatcher, Path, Path]:
     monkeypatch.setattr(dispatch_module, "caller_initiator", lambda: CALLER)
     script = tmp_path / "delegate.py"
     script.write_text(FAKE_DELEGATE.replace("__CALLER__", CALLER), encoding="utf-8")
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Завдання.\n", encoding="utf-8")
-    worker = tmp_path / "worker"
-    worker.mkdir()
+    worker = linked_worktree
     dispatcher = DelegateDispatcher(python=sys.executable, delegate=script, cwd=worker, hard_timeout=600)
     return dispatcher, prompt, tmp_path / "state"
 
@@ -233,14 +235,14 @@ def test_dispatch_wait_attributes_the_answer_and_its_conditions(fake):
     for call in _calls(state)[-2:]:
         assert call[call.index("--run-nonce") + 1] == "n1"
     dispatch_args = next(call for call in _calls(state) if call[0] == "dispatch")
-    for flag in ("--mode", "read-only", "--language-lane", "--cwd", str(dispatcher.cwd), "ukrainian"):
+    for flag in ("--mode", "read-only", "--language-lane", "--pinned-head", "ukrainian"):
         assert flag in dispatch_args
     assert dispatch_args[dispatch_args.index("--effort") + 1] == "high"
     # The family classifies the task. Pointer-selecting research flags, and flags that add other context, stay off.
     assert dispatch_args[dispatch_args.index("--research-task-family") + 1] == "ukrainian-review"
     assert [arg for arg in dispatch_args if arg.startswith("--research")] == ["--research-task-family"]
     assert "--advisory-task" not in dispatch_args and "--force-new" not in dispatch_args
-    assert not any(arg in {"--worktree", "--lifecycle-file"} for arg in dispatch_args)
+    assert not any(arg in {"--cwd", "--lifecycle-file"} for arg in dispatch_args)
 
 
 def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
@@ -475,7 +477,9 @@ class SimulatedDelegate(DelegateDispatcher):
         return subprocess.CompletedProcess(args, code, out.getvalue(), err.getvalue())
 
 
-def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: Path, outside_dir: Path, monkeypatch):
+def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
+    linked_worktree: Path, outside_dir: Path, monkeypatch
+):
     from scripts.dispatcher import git, providers, store, worker
 
     monkeypatch.setenv("LU_TASKS_DIR", str(outside_dir / "tasks"))
@@ -485,7 +489,10 @@ def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: P
 
     def finish(spec, record, prompt, hard_timeout):
         # The provider builder must receive exactly the bytes stored by the real CLI.
-        assert providers.load(spec.agent).build(spec, {}).stdin == prompt
+        submitted = providers.load(spec.agent).build(spec, {}).stdin
+        if spec.agent == "agy":
+            submitted = json.loads(submitted)["message"]["content"][0]["text"].encode()
+        assert submitted == prompt
         store.create(record, prompt)
         response = json.dumps({"items": [{"id": "W1", "text": "Текст."}]}, ensure_ascii=False)
         spec.final_file.write_text(response, encoding="utf-8")
@@ -494,9 +501,9 @@ def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: P
 
     monkeypatch.setattr(worker, "start", finish)
     dispatcher = SimulatedDelegate(linked_worktree)
-    seat = SEATS["gpt-6.1-sol"]
     tasks = [
-        TaskSpec(f"uk9623-t-sol-{label}-r1-writing-00", seat, "writing", label, 1, ("W1",), prompt)
+        TaskSpec(f"uk9623-t-{seat.agent}-{label}-r1-writing-00", seat, "writing", label, 1, ("W1",), prompt)
+        for seat in SEATS.values()
         for label, prompt in (
             ("none", PROMPT),
             ("adapted-v2", render("Преамбула.\n\n" + PROMPT[len(rules_block()) + 2 :], rules_block())),
@@ -511,14 +518,20 @@ def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: P
         worker_cwd=linked_worktree,
         workspace=workspace_probe(linked_worktree),
         frame=plan_frame,
-        max_parallel=1,  # delegate serialises dispatches into one worktree with its worktree lock
+        max_parallel=1,  # the in-process CLI redirects process-global stdout
         spawn_interval=0,
     )
     summary = executor.run(tasks)
-    assert summary.accepted == 2 and summary.complete
+    assert summary.accepted == 6 and summary.complete and not summary.not_run
     for task in tasks:
         raw = read_json(raw_path(results, task.task_id))
         assert raw["accepted"] is True and raw["condition_problem"] is None
+        actual = Path(raw["conditions"]["cwd"])
+        assert actual == linked_worktree.parents[1] / task.seat.agent / task.task_id
+        assert raw["composition"]["worktree_path"] == str(actual)
+        assert raw["workspace"] == raw["workspace_after"] == workspace_fingerprint(actual)
+        args = dispatcher._dispatch_args(task.task_id, task.seat, task.kind, prompt_path(results, task.task_id))
+        assert "--cwd" not in args
         assert frame(raw["composition"]) == plan_frame
         assert raw["conditions"]["stored_prompt_sha256"] == task.prompt_sha256
         assert raw["conditions"]["effective_prompt_sha256"] is None
@@ -535,6 +548,62 @@ def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: P
             )
             == []
         )
+
+
+@pytest.mark.parametrize("tamper", [None, "dispatch_args_sha256", "effective_prompt_sha256", "prompt_blocks"])
+def test_legacy_resume_accepts_faithful_record_and_refuses_tampering(linked_worktree, outside_dir, monkeypatch, tamper):
+    from scripts.eval.uk_preamble.common import write_private_json
+
+    tasks_dir = outside_dir / "tasks"
+    tasks_dir.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
+    dispatcher = SimulatedDelegate(linked_worktree)
+    results = ResultsDir(outside_dir / "results")
+    seat = SEATS["gpt-6.1-sol"]
+    task = TaskSpec("legacy-resume", seat, "review", "none", 1, ("W1",), PROMPT)
+    path = prompt_path(results, task.task_id)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(PROMPT)
+    argv = ["dispatch", "--agent", seat.agent, "--model", seat.model, "--task-id", task.task_id]
+    argv += ["--prompt-file", str(path), "--mode", "read-only", "--language-lane", "--cwd", str(linked_worktree)]
+    argv += ["--rules-seat", "core", "--hard-timeout", "3600", "--research-task-family", "ukrainian-review"]
+    argv += ["--effort", "high"]
+    args_hash = delegate.dispatch_args_sha256(delegate.build_parser().parse_args(argv))
+    record = _delegate_record(linked_worktree, PROMPT, args_hash)
+    dispatcher.legacy_resume = True
+    assert dispatcher.expected_args_sha256(task.task_id, seat, task.kind, path) == args_hash
+    assert dispatcher.compose(PROMPT)["effective_prompt_sha256"] == record["effective_prompt_sha256"]
+    result = tasks_dir / "legacy.result"
+    result.write_text('{"items": []}')
+    record.update(
+        task_id=task.task_id,
+        status="done",
+        run_nonce="n1",
+        agent=seat.agent,
+        model=seat.model,
+        prompt_sha256=task.prompt_sha256,
+        result_file=str(result),
+        result_sha256=sha256_text(result.read_text()),
+    )
+    if tamper:
+        record[tamper] = ["unexpected"] if tamper == "prompt_blocks" else "tampered"
+    write_private_json(tasks_dir / f"{task.task_id}.json", record)
+    write_private_json(
+        results.path("raw", f"{task.task_id}.pending.json"),
+        {
+            "run_nonce": "n1",
+            "prompt_sha256": task.prompt_sha256,
+            "workspace": workspace_fingerprint(linked_worktree),
+        },
+    )
+    executor = Executor(
+        dispatcher, results, worker_cwd=linked_worktree, workspace=workspace_probe(linked_worktree), spawn_interval=0
+    )
+    summary = executor.run([task])
+    raw = read_json(raw_path(results, task.task_id))
+    assert raw["accepted"] is (tamper is None)
+    assert summary.accepted == (1 if tamper is None else 0)
+    assert not summary.not_run
 
 
 def test_workspace_fingerprint_tracks_commit_changes_and_instruction_files(tmp_path: Path):
