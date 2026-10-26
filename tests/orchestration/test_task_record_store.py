@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+import json
+import subprocess
+import sys
+
+import pytest
+
 from scripts.orchestration import task_record_store as store
 
 
@@ -60,3 +66,66 @@ def test_relocated_result_file_points_at_the_moved_sidecar(tmp_path):
     # Hot records and empty values are never rewritten.
     assert store.relocated_result_file(tasks / "old.json", hot_result) == hot_result
     assert store.relocated_result_file(archived, None) is None
+
+
+@pytest.mark.parametrize("schema", [None, 2])
+def test_shared_writer_atomically_sanitizes_records_without_importing_delegate(tmp_path, schema):
+    """#11708: maintenance must preserve the cause sink without loading the retired CLI."""
+    path = tmp_path / "worker.json"
+    result = subprocess.run(
+        [sys.executable, "-c", '''
+import builtins
+import json
+import os
+import stat
+import sys
+from pathlib import Path
+
+original_import = builtins.__import__
+def guarded_import(name, globals=None, locals=None, fromlist=(), level=0):
+    if "delegate" in name.split(".") or "delegate" in (fromlist or ()):
+        raise AssertionError("maintenance imported delegate")
+    return original_import(name, globals, locals, fromlist, level)
+builtins.__import__ = guarded_import
+
+from scripts.orchestration import task_record_store as store
+
+path = Path(sys.argv[1])
+schema = json.loads(sys.argv[2])
+record = {"task_id": "worker", "status": "crashed", "last_error": "raw private diagnostic"}
+if schema is not None:
+    record["schema_version"] = schema
+path.write_text('{"status": "running"}')
+before = path.read_bytes()
+replace = os.replace
+calls = []
+def observed_replace(source, target):
+    assert path.read_bytes() == before
+    assert Path(source).parent == path.parent
+    assert json.loads(Path(source).read_text())["last_error"] == "unclassified_error"
+    calls.append(str(target))
+    replace(source, target)
+os.replace = observed_replace
+with store.task_state_lock(path):
+    store.write_record_unlocked(path, record)
+assert calls == [str(path)]
+assert record["last_error"] == "raw private diagnostic"
+assert path.with_suffix(".json.lock").is_file()
+assert not list(path.parent.glob("*.tmp.*"))
+diagnostic = path.with_suffix(".diag")
+assert stat.S_IMODE(diagnostic.stat().st_mode) == 0o600
+entry = json.loads(diagnostic.read_text())
+assert entry["diagnostic"] == "raw private diagnostic"
+assert entry["source"] == "record"
+assert not any(name == "delegate" or name.endswith(".delegate") for name in sys.modules)
+print(path.read_text())
+''', str(path), json.dumps(schema)],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    expected = {"task_id": "worker", "status": "crashed", "last_error": "unclassified_error"}
+    if schema is not None:
+        expected["schema_version"] = schema
+    assert json.loads(result.stdout) == expected

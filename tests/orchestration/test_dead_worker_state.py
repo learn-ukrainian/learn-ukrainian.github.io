@@ -160,7 +160,7 @@ def test_marker_rechecks_identity_before_writing_or_releasing_claim(proc, foreig
     import json
     from unittest.mock import Mock
 
-    record = {"schema_version": 2, **_record(), "task_id": "worker", "status": "running", "run_nonce": "run"}
+    record = {**_record(), "task_id": "worker", "status": "running", "run_nonce": "run"}
     if foreign:
         record["worker_identity"]["pid_namespace"] = "pid:[999999]"
     else:
@@ -188,7 +188,7 @@ def test_pidless_dead_marker_does_not_release_unproven_worker_claim(proc, tmp_pa
     import json
     from unittest.mock import Mock
 
-    record = {"schema_version": 2, "task_id": "worker", "status": "running", "pid": None, "worker_identity": _record()["worker_identity"]}
+    record = {"task_id": "worker", "status": "running", "pid": None, "worker_identity": _record()["worker_identity"]}
     path = tmp_path / "worker.json"
     path.write_text(json.dumps(record))
     ledger = Mock()
@@ -238,17 +238,19 @@ def test_confirmed_nested_namespace_dead_pid_ignores_legacy_unknown_callback(pro
 
 @pytest.mark.parametrize("schema", [None, 1])
 @pytest.mark.parametrize("marker", ["dead", "missing", "prep", "admission"])
-def test_legacy_markers_never_invoke_injected_writer(tmp_path, schema, marker):
+def test_legacy_markers_heal_through_injected_writer(tmp_path, schema, marker):
     import json
     from unittest.mock import Mock
 
-    state = {"task_id": "history", "status": "running", "pid": 123}
+    state = {
+        "task_id": "history", "status": "running", "pid": 999_999_999,
+        "worktree_path": str(tmp_path / "missing"), "worktree_prep": {}, "admission_hold": {},
+    }
     if schema is not None:
         state["schema_version"] = schema
     path = tmp_path / "history.json"
     path.write_text(json.dumps(state))
-    before = path.read_bytes()
-    write = Mock(side_effect=AssertionError("legacy write"))
+    write = Mock(wraps=d.write_state_unlocked)
     if marker == "dead":
         current, changed = d.mark_dead_worker_terminal(
             path, state, source="test", terminal_status="crashed", allowed_statuses=("running",),
@@ -260,10 +262,11 @@ def test_legacy_markers_never_invoke_injected_writer(tmp_path, schema, marker):
         callback = d.mark_orphaned_worktree_prep_crashed if marker == "prep" else d.mark_orphaned_admission_hold_crashed
         kwargs = {"reason": "dispatch_died_after_admission"} if marker == "admission" else {}
         current, changed = callback(path, state, source="test", is_orphaned=lambda _state: True, write=write, **kwargs)
-    assert current == state and current is not state and changed is False
-    assert path.read_bytes() == before
-    assert list(tmp_path.iterdir()) == [path]
-    write.assert_not_called()
+    assert changed is True
+    assert current["status"] == ("failed" if marker == "missing" else "crashed")
+    assert current.get("schema_version") == schema
+    assert json.loads(path.read_text()) == current
+    write.assert_called_once_with(path, current)
 
 
 @pytest.mark.parametrize("identity,expected", [("boot:100", True), ("boot:101", False), (None, None)])

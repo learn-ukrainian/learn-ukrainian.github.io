@@ -52,16 +52,18 @@ class ReconcileSweepReport:
     stale_claims: list[str]
     live_tasks: list[str]
     unparseable_tasks: list[str] = field(default_factory=list)
+    zombies_crashed: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
     def summary_line(self) -> str:
         zombie_label = "zombies_crashed" if self.mode == "apply" else "zombie_tasks"
+        zombie_count = self.zombies_crashed if self.mode == "apply" else len(self.zombie_tasks)
         claim_label = "stale_claims_released" if self.mode == "apply" else "stale_claims"
         summary = (
             f"reconcile-sweep: mode={self.mode} scanned_tasks={self.scanned_tasks} "
-            f"{zombie_label}={len(self.zombie_tasks)} {claim_label}={len(self.stale_claims)}"
+            f"{zombie_label}={zombie_count} {claim_label}={len(self.stale_claims)}"
         )
         if self.unparseable_tasks:
             summary += f" unparseable_tasks={len(self.unparseable_tasks)}"
@@ -158,6 +160,7 @@ def _run_reconcile_sweep(
 
     # 2. Zombie task reconciliation / probe
     zombie_tasks: list[str] = []
+    zombies_crashed = 0
     live_tasks: list[str] = []
     unparseable_tasks: list[str] = []
     task_files = sorted(tdir.glob("*.json")) if tdir.is_dir() else []
@@ -210,7 +213,14 @@ def _run_reconcile_sweep(
                     zombie_tasks.append(task_id)
                     if apply:
                         # Re-prove the observed identity under the shared writer lock.
+                        observed_run = (state.get("run_nonce"), state.get("started_at"))
                         delegate._heal_dead_task(state_file, state, source="reconcile_sweep")
+                        persisted = json.loads(state_file.read_text(encoding="utf-8"))
+                        if (
+                            persisted.get("status") == "crashed"
+                            and (persisted.get("run_nonce"), persisted.get("started_at")) == observed_run
+                        ):
+                            zombies_crashed += 1
                 else:
                     live_tasks.append(task_id)
         except Exception:
@@ -225,6 +235,7 @@ def _run_reconcile_sweep(
         stale_claims=stale_claims,
         live_tasks=live_tasks,
         unparseable_tasks=unparseable_tasks,
+        zombies_crashed=zombies_crashed,
     )
 
 

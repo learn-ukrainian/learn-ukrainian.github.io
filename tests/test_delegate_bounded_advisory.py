@@ -2469,8 +2469,6 @@ def test_r5_abrupt_termination_during_the_gate_leaves_a_recoverable_non_success_
     killed = on_disk[0]
     assert killed["status"] == "running"
     assert _GATE_KEY[gate] not in killed
-    # Maintenance now settles v2 records; legacy delegate history is read-only.
-    killed["schema_version"] = 2
     # Model the killed worker with a real exited child, rather than the live
     # pytest worker whose identity _run_worker captured during simulation.
     from scripts.orchestration.dead_worker_state import capture_worker_identity

@@ -2,17 +2,23 @@
 
 from __future__ import annotations
 
-import fcntl
 import json
 import os
-from collections.abc import Callable, Iterator
-from contextlib import contextmanager
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.dispatcher import store
 from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
+from scripts.orchestration.task_record_store import (
+    task_state_lock as task_state_lock,
+)
+from scripts.orchestration.task_record_store import (
+    write_record_unlocked,
+)
+from scripts.orchestration.task_record_store import (
+    write_state_unlocked as write_state_unlocked,
+)
 from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
 
 PROC_ROOT = Path("/proc")
@@ -169,44 +175,6 @@ def worker_liveness(
     return not process_is_zombie(pid)
 
 
-@contextmanager
-def task_state_lock(path: Path) -> Iterator[None]:
-    """Use a stable adjacent lock file; locking the replaced JSON inode is unsafe.
-
-    Lock files (<task>.json.lock) are permanent stable anchors: deleting or moving
-    a lock file while a writer holds or waits on its descriptor breaks mutual exclusion
-    by letting subsequent callers open a new, distinct inode (#8659).
-    """
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor = os.open(path.with_suffix(path.suffix + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
-    try:
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
-        yield
-    finally:
-        fcntl.flock(descriptor, fcntl.LOCK_UN)
-        os.close(descriptor)
-
-
-def write_state_unlocked(path: Path, state: dict[str, Any]) -> None:
-    """Replace state while the caller holds its per-task lock."""
-    tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
-    tmp.write_text(json.dumps(state, indent=2, default=str), encoding="utf-8")
-    os.replace(tmp, path)
-
-
-def _read_current(path: Path, observed: dict[str, Any]) -> dict[str, Any]:
-    """Read legacy history without creating a writer lock or returning an alias."""
-    try:
-        current = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return dict(observed)
-    return current if isinstance(current, dict) else dict(observed)
-
-
-def _write_v2_state_unlocked(path: Path, state: dict[str, Any]) -> None:
-    """Persist a v2 record while the caller holds its per-task lock."""
-    store.replace(state, path)
-
 
 def _replace_if_unchanged(
     path: Path,
@@ -229,7 +197,7 @@ def _replace_if_unchanged(
         return current, False
     # worker.py still replaces records without this lock, leaving a residual
     # race between this comparison and the replace; closing it requires that writer.
-    (write or _write_v2_state_unlocked)(path, updated)
+    (write or write_record_unlocked)(path, updated)
     return updated, True
 
 
@@ -247,10 +215,8 @@ def mark_dead_worker_terminal(
 ) -> tuple[dict[str, Any], bool]:
     """Recheck a dead worker under the writer lock, then persist its final HEAD.
 
-    Legacy records are read-only. ``write`` overrides the v2 record writer.
+    Legacy and v2 records share the public-cause writer; ``write`` overrides it.
     """
-    if observed.get("schema_version") != 2:
-        return _read_current(path, observed), False
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text(encoding="utf-8"))
@@ -258,7 +224,7 @@ def mark_dead_worker_terminal(
             return observed, False
         if not isinstance(current, dict):
             return observed, False
-        if current.get("schema_version") != 2:
+        if current.get("schema_version") != observed.get("schema_version"):
             return current, False
         raw_pid = current.get("pid")
         pid = int(raw_pid) if isinstance(raw_pid, int) or (isinstance(raw_pid, str) and raw_pid.isdigit()) else None
@@ -308,8 +274,6 @@ def _mark_orphaned_pidless_crashed(
     write: Callable[[Path, dict[str, Any]], None] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Re-prove ``is_orphaned`` under the writer lock, then mark the record ``crashed`` (``write`` as above)."""
-    if observed.get("schema_version") != 2:
-        return _read_current(path, observed), False
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text(encoding="utf-8"))
@@ -317,7 +281,7 @@ def _mark_orphaned_pidless_crashed(
             return observed, False
         if (
             not isinstance(current, dict)
-            or current.get("schema_version") != 2
+            or current.get("schema_version") != observed.get("schema_version")
             or current.get("run_nonce") != observed.get("run_nonce")
             or current.get("started_at") != observed.get("started_at")
             or not is_orphaned(current)
@@ -399,10 +363,8 @@ def mark_missing_worktree_failed(
     """Recheck a dead worker whose worktree is missing under the writer lock, then mark it failed.
 
     If ledger is provided, releases write claims bound to the observed PID before releasing the lock (#8659).
-    Legacy records are read-only. ``write`` overrides the v2 record writer.
+    Legacy and v2 records share the public-cause writer; ``write`` overrides it.
     """
-    if observed.get("schema_version") != 2:
-        return _read_current(path, observed), False
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text(encoding="utf-8"))
@@ -410,7 +372,7 @@ def mark_missing_worktree_failed(
             return observed, False
         if not isinstance(current, dict):
             return observed, False
-        if current.get("schema_version") != 2:
+        if current.get("schema_version") != observed.get("schema_version"):
             return current, False
         raw_pid = current.get("pid")
         pid = int(raw_pid) if isinstance(raw_pid, int) or (isinstance(raw_pid, str) and raw_pid.isdigit()) else None

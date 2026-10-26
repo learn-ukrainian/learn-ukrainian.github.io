@@ -13,7 +13,13 @@ import pytest
 
 from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.orchestration import dead_worker_state, reconcile_sweep
-from tests.orchestration.test_dead_worker_state import proc as proc
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_host_pid_view(monkeypatch):
+    """Legacy-record cases explicitly model a host reader, even in a sandbox."""
+    monkeypatch.setattr(dead_worker_state, "_pid_namespace", lambda process="self": dead_worker_state.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead_worker_state, "_proc_pid_namespace", lambda: dead_worker_state.INITIAL_PID_NAMESPACE)
 
 
 @pytest.mark.parametrize("apply", [False, True])
@@ -60,7 +66,10 @@ def test_reconcile_sweep_uses_worker_identity(tmp_path, monkeypatch, apply, iden
     assert report.zombie_tasks == (["identity-worker"] if dead else [])
     assert report.live_tasks == ([] if dead else ["identity-worker"])
     assert report.unparseable_tasks == []
-    assert path.read_bytes() == before
+    if dead and apply:
+        assert json.loads(path.read_bytes())["status"] == "crashed"
+    else:
+        assert path.read_bytes() == before
 
 
 def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
@@ -96,7 +105,7 @@ def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
     assert "reconcile-sweep: mode=dry_run scanned_tasks=1 zombie_tasks=1 stale_claims=0" in report.summary_line()
 
 
-def test_reconcile_sweep_apply_preserves_legacy_dead_record(tmp_path: Path) -> None:
+def test_reconcile_sweep_apply_settles_dead_record(tmp_path: Path) -> None:
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()
     dead_task_id = "dead-task-2"
@@ -118,12 +127,14 @@ def test_reconcile_sweep_apply_preserves_legacy_dead_record(tmp_path: Path) -> N
     )
 
     assert report.mode == "apply"
+    assert report.zombies_crashed == 1
     assert report.scanned_tasks == 1
     assert report.zombie_tasks == [dead_task_id]
 
-    # Legacy history remains readable and unchanged even in apply mode.
+    # File on disk must be marked crashed by the explicit mutating path.
     healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed == state
+    assert healed["status"] == "crashed"
+    assert "marked crashed by reconcile_sweep probe" in healed.get("stderr_excerpt", "")
     assert (
         "reconcile-sweep: mode=apply scanned_tasks=1 zombies_crashed=1 stale_claims_released=0" in report.summary_line()
     )
@@ -384,9 +395,9 @@ def test_reconcile_sweep_malformed_pid_handled_per_record(tmp_path: Path) -> Non
     assert report_apply.live_tasks == ["task_valid_live"]
     assert len(report_apply.unparseable_tasks) == 7
 
-    # Legacy zombie task is inspected without rewriting its history.
+    # Zombie task healed to crashed
     zombie_state = json.loads((task_dir / "task_valid_zombie.json").read_text(encoding="utf-8"))
-    assert zombie_state["status"] == "running"
+    assert zombie_state["status"] == "crashed"
 
     # Live task still running
     live_state = json.loads((task_dir / "task_valid_live.json").read_text(encoding="utf-8"))
@@ -439,14 +450,15 @@ def _publish_prep_record(
     return task_dir / f"{task_id}.json"
 
 
-def test_reconcile_sweep_preserves_legacy_prep_record_whose_dispatcher_died(
+def test_reconcile_sweep_crashes_prep_record_whose_dispatcher_died(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """An interrupted legacy dispatch is reported without rewriting its record."""
+    """Review blocker: an interrupted dispatch's provisional record is healed, not unparseable."""
     from scripts.guardrails.delegate_ownership import _task_still_active
+    from tests.worktree_prep_helpers import exited_process_identity
 
     task_dir = tmp_path / "tasks"
-    task_file = _publish_prep_record(task_dir, monkeypatch, "died-mid-prep", (999_999_999, 100))
+    task_file = _publish_prep_record(task_dir, monkeypatch, "died-mid-prep", exited_process_identity())
     ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
     # The dead dispatcher's claim stops counting before any sweep runs.
     assert _task_still_active("died-mid-prep", None, task_dir) is False
@@ -459,10 +471,10 @@ def test_reconcile_sweep_preserves_legacy_prep_record_whose_dispatcher_died(
     applied = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
     assert applied.zombie_tasks == ["died-mid-prep"]
     healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "spawning"
-    assert "returncode_reason" not in healed
+    assert healed["status"] == "crashed"
+    assert healed["returncode_reason"] == "dispatch_died_during_worktree_prep"
     assert healed["pid"] is None
-    assert not healed.get("finished_at")
+    assert healed["finished_at"]
     # The reservation stays: it is the evidence the reaper reports for any leftover.
     assert healed["worktree_prep"]["reserved_by_mkdir"] is True
 
@@ -479,13 +491,14 @@ def test_reconcile_sweep_keeps_prep_record_without_proof_its_dispatcher_died(
 ) -> None:
     from scripts.guardrails.delegate_ownership import _task_still_active
     from scripts.orchestration.worktree_prep import process_identity
+    from tests.worktree_prep_helpers import exited_process_identity
 
     if owner == "self":
         me = process_identity(os.getpid())
         identity: tuple[int, int | None] = (me["pid"], me["start"])  # type: ignore[assignment]
     else:
         # A dead pid whose start time was never readable is not proof of death.
-        identity = (999_999_999, None)
+        identity = (exited_process_identity()[0], None)
     task_dir = tmp_path / "tasks"
     task_file = _publish_prep_record(task_dir, monkeypatch, "preparing", identity)
     ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
@@ -499,20 +512,21 @@ def test_reconcile_sweep_keeps_prep_record_without_proof_its_dispatcher_died(
     assert _task_still_active("preparing", None, task_dir) is True
 
 
-def test_reconcile_sweep_preserves_legacy_admission_hold_whose_dispatcher_died(
+def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """An orphaned legacy admission hold is reported without rewriting history."""
+    """#8717: an admission hold left by a dispatcher that died before the worktree is healed, not unparseable."""
     from scripts import delegate
     from scripts.guardrails.delegate_ownership import _task_still_active
     from scripts.orchestration import dispatch_admission
+    from tests.worktree_prep_helpers import exited_process_identity
 
     task_dir = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(task_dir))
     delegate._publish_admission_hold("died-after-admission", "nonce-h", mode="danger", admission={"admitted": True})
     task_file = task_dir / "died-after-admission.json"
     state = json.loads(task_file.read_text(encoding="utf-8"))
-    pid, start = 999_999_999, 100
+    pid, start = exited_process_identity()
     state[dispatch_admission.ADMISSION_HOLD_KEY].update(
         owner_pid=pid, owner_start=start,
         owner_identity={"pid": pid, "start_time": start, "pid_namespace": dead_worker_state.INITIAL_PID_NAMESPACE},
@@ -526,7 +540,8 @@ def test_reconcile_sweep_preserves_legacy_admission_hold_whose_dispatcher_died(
     assert applied.zombie_tasks == ["died-after-admission"]
     assert applied.unparseable_tasks == []
     healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed == state
+    assert healed["status"] == "crashed"
+    assert healed["returncode_reason"] == "dispatch_died_after_admission"
 
 
 @pytest.mark.parametrize("prior", [None, "1"])
@@ -566,6 +581,9 @@ def test_reconcile_sweep_runs_git_children_without_optional_locks(
     )
 
     assert report.zombie_tasks == ["dead-task-locks"]
+    assert report.zombies_crashed == 0
+    assert "zombies_crashed=0" in report.summary_line()
+    assert json.loads((task_dir / "dead-task-locks.json").read_text())["status"] == "running"
     expected = prior or "0"
     assert seen == {"settle": expected, "heal": expected}
     assert os.environ.get("GIT_OPTIONAL_LOCKS") == prior
