@@ -1614,9 +1614,8 @@ _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
 _GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
 # Minimum age for a zero-file dispatch husk before it may be removed.
 # An unregistered empty dispatch directory can be mid-creation before
-# ``git worktree add`` registers it; the
-# provisioning window is seconds, and one hour bounds it with a wide margin
-# while still reaping same-day debris.
+# ``git worktree add`` registers it. The provisioning window is seconds,
+# and one hour bounds it with a wide margin while still reaping same-day debris.
 _DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
 # How long the husk sweep waits for the per-path worktree lock before it
 # skips. ``git worktree add`` writes its admin registration

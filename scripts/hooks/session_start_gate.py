@@ -197,9 +197,9 @@ def _dispatch_worker_identity(args: argparse.Namespace) -> tuple[str, str] | Non
     """Return ``(agent, task_id)`` when this session is a dispatch
     worker, else ``None``.
 
-    Deterministic, two signals (either suffices): the explicit marker
-    legacy ``LEARN_UKRAINIAN_DISPATCH_TASK_ID`` environment marker, or — the layout-A fallback — the session checkout
-    sitting under the primary's ``.worktrees/dispatch/<agent>/<task>/``
+    Deterministic, two signals (either suffices): the legacy environment
+    marker ``LEARN_UKRAINIAN_DISPATCH_TASK_ID``, or the session checkout
+    under the primary's ``.worktrees/dispatch/<agent>/<task>/``
     (layout A is binding, so that path shape is unambiguous).
     """
     task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip()

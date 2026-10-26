@@ -50,8 +50,7 @@ Usage::
     python scripts/audit/check_venv_integrity.py
 
 Available as a local diagnostic and through the Monitor API health-orient
-canary
-(``scripts/api/main.py``). Callers fail open on any probe exception —
+canary (``scripts/api/main.py``). Callers fail open on any probe exception —
 consistent with the existing watchdogs, a probe bug must never itself block
 or crash a dispatch.
 """
