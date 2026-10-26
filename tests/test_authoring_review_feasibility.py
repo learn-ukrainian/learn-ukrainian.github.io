@@ -553,14 +553,38 @@ def test_protected_changes_stay_in_scope_beyond_a_narrow_latest_packet(repo, tas
     assert selected(fact, "low") is None
 
 
-def test_explicit_subjects_and_ambiguous_shared_hooks(repo, tasks):
+def test_explicit_subjects_and_ambiguous_shared_hooks(repo, tasks, monkeypatch, tmp_path):
     repo.commit(OPUS)
     assert selected(facts(repo, tasks, writer=OPUS, seats=("codex", "grok")), "critical") is None
-    with pytest.raises(recorder.BranchFactsError, match="ambiguous subject-seat") as refused:
-        facts(repo, tasks, writer=OPUS, owned=(SHARED_HOOK,))
-    assert refused.value.code == recorder.FACTS_SCOPE_UNKNOWN
+    unknown = facts(repo, tasks, writer=OPUS, owned=(SHARED_HOOK,))
+    assert unknown.subject_seats == unknown.subject_families == frozenset()
+    assert unknown.subject_evidence == ()
+    assert selected(unknown, "critical") is not None
     named = facts(repo, tasks, writer=OPUS, owned=(SHARED_HOOK,), seats=("claude",))
     assert named.subject_seats == {"claude"}
+    known = facts(repo, tasks, writer=OPUS, owned=(SHARED_HOOK, CLAUDE_ADAPTER), families=("meta",))
+    assert known.subject_seats == {"claude"}
+    assert known.subject_families == {"meta"}
+    assert known.subject_evidence == (CLAUDE_ADAPTER,)
+
+    repo.commit(OPUS, path=SHARED_HOOK)
+    repo.publish()
+    receipt = record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol", review_risk="critical")
+    assert receipt["verdict"] == "APPROVED"
+    with pytest.raises(recorder.RecordError, match="equals an author family"):
+        record_verdict(monkeypatch, tmp_path, repo, agent="claude", model="claude-opus-5-5", review_risk="critical")
+
+    muse = "scripts/agent_runtime/adapters/muse.py"
+    repo.commit(OPUS, path=muse)
+    repo.publish()
+    inferred = facts(repo, tasks, writer=OPUS)
+    assert inferred.subject_seats == {"muse"}
+    assert inferred.subject_families == frozenset()
+    assert inferred.subject_evidence == (muse,)
+    receipt = record_verdict(
+        monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol", review_risk="critical", _task_id="review-muse"
+    )
+    assert receipt["verdict"] == "APPROVED"
 
 
 def test_recorder_applies_protected_seats_to_the_actual_reviewer(repo, tasks, monkeypatch, tmp_path):
@@ -1470,7 +1494,6 @@ def test_cursor_auto_writer_refuses_where_only_the_cursor_seat_could_review(boun
     "extra,code",
     [
         (("--worktree",), delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN),
-        (("--worktree", "--owned-path", SHARED_HOOK), delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN),
         (("--branch", "feature", "--owned-path", "docs/a.md"), delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
         (("--branch", "absent", "--owned-path", "docs/a.md"), "DISPATCH_BRANCH_NOT_FOUND"),
     ],

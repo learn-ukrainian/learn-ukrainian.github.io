@@ -473,6 +473,39 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  pr-affected:
+    name: PR changed tests and guards
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Python CI environment
+        if: github.event_name == 'pull_request'
+        uses: ./.github/actions/python-ci-env
+      - name: Run changed test files and guards
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = pull_request ]; then
+            .venv/bin/python -m scripts.ci.pr_affected_tests
+          else
+            echo 'Full tier: full pytest jobs remain required.'
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        with:
+          name: pr-affected-proof
+          path: ci-artifacts/pr-affected.*
+          if-no-files-found: error
+          retention-days: 14
+
   dependency-audit:
     name: Dependency audit
     if: ${{ !cancelled() }}
@@ -510,7 +543,7 @@ jobs:
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
     # Every dependency must finish with the result required by its event tier.
-    needs: [queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, refresh-pytest-durations, pytest, pytest-report]
+    needs: [queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pr-affected, refresh-pytest-durations, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

@@ -653,3 +653,205 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
             if uses.startswith("actions/checkout@"):
                 assert step["with"]["persist-credentials"] is False, job_id
     assert yaml.safe_load(text)["permissions"] == {"contents": "read"}
+
+def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Use immutable merge parents despite stale metadata; reject wrong heads and dirty sources."""
+    from scripts.ci import pr_affected_tests as affected
+
+    guards = [
+        'tests/test_delegate_review_admission.py', 'tests/review/test_routing_consumers.py',
+        'tests/agent_runtime/test_lane_probe.py',
+        'tests/common/test_jsonl_splitlines_guard.py', 'tests/test_review_reviewer_resolver.py',
+    ]
+    assert (_REPO_ROOT / affected.GUARDS).read_text().splitlines() == guards
+    repo = tmp_path / 'candidate'
+    repo.mkdir()
+    _git(repo, 'init', '-q', '-b', 'fixture-base')
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    for name in [*guards, 'tests/test_deleted.py', 'tests/test_old.py', 'tests/test_space name.py']:
+        path = repo / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text('def test_exact_candidate():\n    assert 2 + 2 == 4\n')
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / affected.GUARDS).write_text('\n'.join(guards) + '\n')
+    weights = {p: 1 for p in [*guards, 'tests/test_new.py', 'tests/test_space name.py']}
+    (repo / affected.DURATIONS).write_text(json.dumps(weights))
+    (repo / 'scripts/ci/pr_affected_tests.py').write_bytes(Path(affected.__file__).read_bytes())
+    (repo / 'scripts/ci/gate.py').write_bytes((_REPO_ROOT / 'scripts/ci/gate.py').read_bytes())
+    (repo / '.gitignore').write_text('ci-artifacts/\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    event_base = _git(repo, 'rev-parse', 'HEAD')
+    (repo / 'README.md').write_text('Target advances before GitHub creates its test merge.\n')
+    _git(repo, 'add', 'README.md')
+    _git(repo, *ident, 'commit', '-qm', 'advanced target')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'update-ref', 'refs/remotes/origin/fixture-base', base)
+    _git(repo, 'checkout', '-qb', 'pr')
+    _git(repo, 'mv', 'tests/test_old.py', 'tests/test_new.py')
+    _git(repo, 'rm', '-q', 'tests/test_deleted.py')
+    (repo / 'tests/test_space name.py').write_text('def test_exact_candidate():\n    assert "candidate" != "base"\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'PR')
+    head = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'checkout', '-q', 'fixture-base')
+    _git(repo, *ident, 'merge', '--no-ff', '-qm', 'candidate', 'pr')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    advanced_target = _git(repo, *ident, 'commit-tree', f'{base}^{{tree}}', '-p', base, '-m', 'later target')
+    _git(repo, 'update-ref', 'refs/remotes/origin/fixture-base', advanced_target)
+    monkeypatch.chdir(repo)
+    selected = affected.plan(base, candidate)
+    assert selected['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
+    assert selected['deferred_files'] == []
+    assert selected['deleted_test_files'] == ['tests/test_deleted.py', 'tests/test_old.py']
+    assert selected['estimate_seconds'] == 67
+    payload = {'action': 'opened', 'repository': {'default_branch': 'fixture-base'},
+               'pull_request': {'number': 7, 'base': {'sha': event_base, 'ref': 'fixture-base'}, 'head': {'sha': head}}}
+    event = tmp_path / 'event.json'
+    event.write_text(json.dumps(payload))
+    for key, value in {'EVENT_NAME': 'pull_request', 'GITHUB_EVENT_PATH': str(event),
+                       'GITHUB_SHA': candidate, 'GITHUB_REF': 'refs/pull/7/merge',
+                       'GITHUB_BASE_REF': 'fixture-base',
+                       'GITHUB_STEP_SUMMARY': str(tmp_path / 'summary')}.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(sys, 'argv', ['pr-affected'])
+    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+                         capture_output=True, text=True, timeout=60)
+    assert cli.returncode == 0, cli.stdout + cli.stderr
+    print(cli.stdout)
+    record = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
+    assert record['candidate'] == candidate and record['reported_cases'] == 7
+    assert record['base'] == base and record['event_base'] == event_base
+    assert record['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
+    assert record['execution_status'] == 'completed' and record['exit_code'] == 0
+    assert record['skipped_cases'] == 0 and record['failed_cases'] == 0
+    assert 'full pytest was not run' in (tmp_path / 'summary').read_text()
+    assert 'deferred test-case count: UNKNOWN' in (tmp_path / 'summary').read_text()
+    assert affected.main() == 1  # stale report cannot masquerade as this execution
+    monkeypatch.setenv('GITHUB_SHA', base)
+    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+                         capture_output=True, text=True, timeout=60)
+    assert cli.returncode == 1
+    assert 'stage=event_identity' in cli.stderr
+    assert 'ValueError: checked-out candidate does not match GITHUB_SHA' in cli.stderr
+    print(cli.stderr)
+    monkeypatch.setenv('GITHUB_SHA', candidate)
+    payload['pull_request']['head']['sha'] = base
+    event.write_text(json.dumps(payload))
+    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+                         capture_output=True, text=True, timeout=60)
+    assert cli.returncode == 1
+    assert 'stage=merge_parents' in cli.stderr
+    assert 'ValueError: PR merge candidate must have two parents and match event head' in cli.stderr
+    print(cli.stderr)
+
+    payload['pull_request']['head']['sha'] = head
+    event.write_text(json.dumps(payload))
+    _git(repo, 'checkout', '-q', 'pr')
+    (repo / '.github/workflows').mkdir(parents=True)
+    (repo / '.github/workflows/ci.yml').write_text('name: changed workflow\n')
+    _git(repo, 'add', '.github/workflows/ci.yml')
+    _git(repo, *ident, 'commit', '-qm', 'workflow change')
+    workflow_head = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'checkout', '-qB', 'workflow-candidate', base)
+    _git(repo, *ident, 'merge', '--no-ff', '-qm', 'workflow merge', 'pr')
+    workflow_candidate = _git(repo, 'rev-parse', 'HEAD')
+    payload['pull_request']['head']['sha'] = workflow_head
+    event.write_text(json.dumps(payload))
+    monkeypatch.setenv('GITHUB_SHA', workflow_candidate)
+    # The candidate needs no mutable local target ref or untracked-file gate.
+    _git(repo, 'update-ref', '-d', 'refs/remotes/origin/fixture-base')
+    (repo / 'untracked-note.txt').write_text('unrelated runner output\n')
+    (repo / 'ci-artifacts/pr-affected.xml').unlink()
+    cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
+                         capture_output=True, text=True, timeout=60)
+    assert cli.returncode == 0, cli.stdout + cli.stderr
+    print(cli.stdout)
+    workflow = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
+    assert workflow['candidate'] == workflow_candidate and workflow['base'] == base
+    assert workflow['event_base'] == event_base
+    assert workflow['run_files'] == sorted(guards) and workflow['reported_cases'] == 5
+    assert workflow['deferred_files'] == ['tests/test_new.py', 'tests/test_space name.py']
+    assert workflow['reason'] == 'pytest infrastructure changed'
+    assert workflow['execution_status'] == 'completed' and workflow['exit_code'] == 0
+    assert workflow['failed_cases'] == 0 and workflow['skipped_cases'] == 0
+    assert workflow['deferred_case_count'] is None
+    (repo / 'untracked-note.txt').unlink()
+    (repo / guards[0]).write_text('# dirty selected source\n')
+    assert affected.main() == 1
+    _git(repo, 'restore', guards[0])
+    _git(repo, 'checkout', '-q', 'pr')
+    (repo / 'tests/conftest.py').write_text('# infrastructure defers changed test files\n')
+    (repo / guards[0]).write_text('def test_exact_candidate():\n    assert False, "candidate defect"\n')
+    _git(repo, 'add', 'tests/conftest.py', guards[0])
+    _git(repo, *ident, 'commit', '-qm', 'broken PR')
+    broken_head = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'checkout', '-qB', 'broken-candidate', base)
+    _git(repo, *ident, 'merge', '--no-ff', '-qm', 'broken merge candidate', 'pr')
+    broken_candidate = _git(repo, 'rev-parse', 'HEAD')
+    payload['pull_request']['head']['sha'] = broken_head
+    event.write_text(json.dumps(payload))
+    monkeypatch.setenv('GITHUB_SHA', broken_candidate)
+    (repo / 'ci-artifacts/pr-affected.xml').unlink()
+    assert affected.main() == 1
+    failed = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
+    assert failed['failed_cases'] == 1 and failed['exit_code'] == 1
+    assert failed['run_files'] == sorted(guards)
+    assert failed['deferred_files'] == ['tests/test_new.py', 'tests/test_space name.py']
+    assert failed['reason'] == 'pytest infrastructure changed'
+    assert failed['deferred_case_count'] is None
+    # Missing JUnit must preserve an incomplete plan with unknown case counts.
+    (repo / 'pytest.ini').write_text('[pytest]\naddopts = -p no:junitxml\n')
+    (repo / guards[0]).write_text('def test_exact_candidate():\n    assert 2 + 2 == 4\n')
+    _git(repo, 'add', 'pytest.ini', guards[0])
+    _git(repo, *ident, 'commit', '-qm', 'missing report head')
+    missing_head = _git(repo, 'rev-parse', 'HEAD')
+    _git(repo, 'checkout', '-qB', 'missing-report-candidate', base)
+    _git(repo, *ident, 'merge', '--no-ff', '-qm', 'missing report merge', missing_head)
+    payload['pull_request']['head']['sha'] = missing_head
+    event.write_text(json.dumps(payload))
+    monkeypatch.setenv('GITHUB_SHA', _git(repo, 'rev-parse', 'HEAD'))
+    (repo / 'ci-artifacts/pr-affected.xml').unlink()
+    assert affected.main() == 1
+    partial = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
+    assert partial['execution_status'] == 'incomplete'
+    assert partial['reported_cases'] is None and partial['exit_code'] == 0
+    _git(repo, 'checkout', '-q', 'fixture-base')
+
+    weights['tests/test_new.py'] = 600
+    (repo / affected.DURATIONS).write_text(json.dumps(weights))
+    deferred = affected.plan(base, candidate)
+    assert deferred['run_files'] == sorted(guards)
+    assert deferred['deferred_files'] == ['tests/test_new.py', 'tests/test_space name.py']
+    assert deferred['reason'] == 'recorded estimate exceeds 600 second cap'
+    del weights['tests/test_new.py']
+    (repo / affected.DURATIONS).write_text(json.dumps(weights))
+    assert affected.plan(base, candidate)['reason'] == 'recorded duration unknown'
+    weights['tests/test_new.py'] = -1
+    (repo / affected.DURATIONS).write_text(json.dumps(weights))
+    with pytest.raises(ValueError, match='invalid recorded duration'):
+        affected.plan(base, candidate)
+    weights['tests/test_new.py'] = 1
+    (repo / affected.DURATIONS).write_text(json.dumps(weights))
+    (repo / 'tests/conftest.py').write_text('# changed infrastructure\n')
+    _git(repo, 'add', 'tests/conftest.py')
+    _git(repo, *ident, 'commit', '-qm', 'infrastructure')
+    infrastructure = _git(repo, 'rev-parse', 'HEAD')
+    assert affected.plan(base, infrastructure)['reason'] == 'pytest infrastructure changed'
+    for unsafe in ('../tests/test_bad.py', '/tests/test_bad.py', 'tests/../test_bad.py',
+                   'tests//test_bad.py', 'tests/test_\n.py', 'tests/test_\u202e.py', 'tests/test_a::b.py', 'tests/test_a\\b.py'):
+        with pytest.raises(ValueError, match='unsafe repository path'):
+            affected.safe_path(unsafe)
+    (repo / affected.GUARDS).write_text('\n'.join([*guards, guards[0]]) + '\n')
+    with pytest.raises(ValueError, match='duplicate guard'):
+        affected.plan(base, candidate)
+    (repo / affected.GUARDS).write_text('tests/test_absent.py\n')
+    with pytest.raises(ValueError, match='tracked regular file'):
+        affected.plan(base, candidate)
+    (repo / affected.GUARDS).write_text('\n'.join(guards) + '\n')
+    (repo / guards[0]).unlink()
+    (repo / guards[0]).symlink_to(repo / guards[1])
+    with pytest.raises(ValueError, match='symlinked test path'):
+        affected.plan(base, candidate)
