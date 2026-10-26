@@ -81,7 +81,7 @@ Exit codes:
   (convert-set: an unmappable source line is refused and nothing is written).
 
 Related:
-  Protocol v2 on issue #9623; docs/evaluations/uk-preamble.md; scripts/delegate.py.
+  Protocol v2 on issue #9623; docs/evaluations/uk-preamble.md; scripts/dispatch.py.
 """
 
 
@@ -96,7 +96,7 @@ def _default_python() -> str:
 def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
     dispatcher = DelegateDispatcher(
         python=args.python or _default_python(),
-        delegate=REPO_ROOT / "scripts" / "delegate.py",
+        dispatch_script=REPO_ROOT / "scripts" / "dispatch.py",
         cwd=worker_cwd,
         hard_timeout=args.hard_timeout,
         review_profile=getattr(args, "review_profile", None),
@@ -172,7 +172,7 @@ def _add_dispatch_args(sub: argparse.ArgumentParser) -> None:
     sub.add_argument(
         "--python",
         default=None,
-        help="Interpreter used to call scripts/delegate.py. Default: the shared project interpreter.",
+        help="Interpreter used to call scripts/dispatch.py. Default: the shared project interpreter.",
     )
 
 
@@ -191,7 +191,7 @@ def build_parser() -> argparse.ArgumentParser:
     run = commands.add_parser(
         "run",
         help="Dispatch every seat x variant x repeat task (resumable)",
-        description="Dispatch read-only review and writing tasks through scripts/delegate.py; resume safely.",
+        description="Dispatch read-only review and writing tasks through scripts/dispatch.py; resume safely.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=EPILOG,
     )

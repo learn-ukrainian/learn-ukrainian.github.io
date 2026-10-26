@@ -1,4 +1,4 @@
-"""DelegateDispatcher against a fake delegate.py script (#9623); no network, no workers."""
+"""DelegateDispatcher against a fake dispatch.py script (#9623); no network, no workers."""
 
 from __future__ import annotations
 
@@ -105,12 +105,12 @@ def fake(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, linked_worktree: Path
 ) -> tuple[DelegateDispatcher, Path, Path]:
     monkeypatch.setattr(dispatch_module, "caller_initiator", lambda: CALLER)
-    script = tmp_path / "delegate.py"
+    script = tmp_path / "dispatch.py"
     script.write_text(FAKE_DELEGATE.replace("__CALLER__", CALLER), encoding="utf-8")
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Завдання.\n", encoding="utf-8")
     worker = linked_worktree
-    dispatcher = DelegateDispatcher(python=sys.executable, delegate=script, cwd=worker, hard_timeout=600)
+    dispatcher = DelegateDispatcher(python=sys.executable, dispatch_script=script, cwd=worker, hard_timeout=600)
     return dispatcher, prompt, tmp_path / "state"
 
 
@@ -288,8 +288,12 @@ def test_expected_args_hash_is_the_delegate_parser_hash_of_the_built_dispatch(fa
     writing = dispatcher._dispatch_args("t-opus", seat, "writing", prompt)
     assert sha256_text(json.dumps(writing, ensure_ascii=False)) != expected
     assert writing[writing.index("--research-task-family") + 1] == "ukrainian-authoring"
-    canonical = DelegateDispatcher(python=sys.executable, delegate=Path(delegate.__file__), cwd=dispatcher.cwd)
-    assert canonical.delegate.name == "dispatch.py"
+    canonical = DelegateDispatcher(
+        python=sys.executable,
+        dispatch_script=Path(__file__).resolve().parents[2] / "scripts" / "dispatch.py",
+        cwd=dispatcher.cwd,
+    )
+    assert canonical.dispatch_script.name == "dispatch.py"
 
 
 def test_condition_problems_name_every_departure(tmp_path: Path):
@@ -454,20 +458,86 @@ def test_eval_composer_accepts_a_real_dispatch_composition_with_the_evidence_blo
 @pytest.mark.parametrize("spelling", ["absolute", "relative"])
 def test_primary_readonly_cwd_is_refused_before_dispatch(tmp_path: Path, monkeypatch, spelling: str):
     """Paired runs cannot freeze a primary cwd that delegate redirects per task."""
-    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
     monkeypatch.chdir(tmp_path)
     cwd = tmp_path if spelling == "absolute" else Path(".")
-    dispatcher = DelegateDispatcher(python=sys.executable, delegate=Path(delegate.__file__), cwd=cwd)
+    dispatcher = DelegateDispatcher(
+        python=sys.executable, dispatch_script=Path(__file__).resolve().parents[2] / "scripts" / "dispatch.py", cwd=cwd
+    )
     monkeypatch.setattr(dispatcher, "_run", lambda *_a, **_k: pytest.fail("must refuse before a worker call"))
     with pytest.raises(DispatchError, match="pass an existing isolated Git worktree"):
         dispatcher.compose(PROMPT)
+
+
+@pytest.mark.parametrize("relative", [False, True])
+def test_legacy_composer_resolves_registered_worktree_without_cli_helpers(linked_worktree, monkeypatch, relative):
+    nested = linked_worktree / "scripts"
+    monkeypatch.chdir(linked_worktree)
+    composer = DelegateComposer(object(), Path("scripts") if relative else nested)
+    assert composer.cwd == str(linked_worktree)
+    assert composer.worktree == linked_worktree
+
+
+@pytest.mark.parametrize("char", ["\n", "\u202e", "\ud800", "\u2028", "\u2029"])
+def test_legacy_composer_refuses_unsafe_raw_paths(tmp_path, char):
+    with pytest.raises(DispatchError, match="control or format"):
+        DelegateComposer(object(), tmp_path / f"unsafe{char}path")
+
+
+def test_legacy_composer_refuses_unsafe_symlink_target(tmp_path):
+    link = tmp_path / "safe-name"
+    link.symlink_to(tmp_path / "unsafe\u202epath")
+    with pytest.raises(DispatchError, match="control or format"):
+        DelegateComposer(object(), link)
+
+
+@pytest.mark.parametrize("kind", ["primary", "unregistered", "acp"])
+def test_legacy_composer_refuses_unowned_worktrees(linked_worktree, kind):
+    main = linked_worktree.parents[3]
+    candidate = main
+    if kind != "primary":
+        candidate = main / ".worktrees" / "dispatch" / ("acp" if kind == "acp" else "codex") / kind
+        candidate.parent.mkdir(parents=True, exist_ok=True)
+        if kind == "acp":
+            _git(main, "worktree", "add", "-q", "-b", "acp", str(candidate))
+        else:
+            candidate.mkdir()
+    with pytest.raises(DispatchError, match="isolated Git worktree"):
+        DelegateComposer(object(), candidate)
+
+
+def test_v2_eval_arguments_keep_manifest_hash_without_loading_legacy_runtime(linked_worktree, tmp_path):
+    probe = """
+import json, sys
+from pathlib import Path
+from scripts.eval.uk_preamble.common import SEATS, sha256_text
+from scripts.eval.uk_preamble.dispatch import DelegateDispatcher
+from scripts.eval.uk_preamble.__main__ import make_dispatcher
+from argparse import Namespace
+d = make_dispatcher(Namespace(python=sys.executable, hard_timeout=3600), Path(sys.argv[1]))
+path = Path(sys.argv[2])
+argv = d._dispatch_args('probe', SEATS['gpt-6.1-sol'], 'review', path)
+assert d.expected_args_sha256('probe', SEATS['gpt-6.1-sol'], 'review', path) == sha256_text(json.dumps(argv, ensure_ascii=False))
+assert d.dispatch_script.name == 'dispatch.py'
+assert 'scripts.delegate' not in sys.modules
+"""
+    proc = subprocess.run(
+        [sys.executable, "-c", probe, str(linked_worktree), str(tmp_path / "prompt.md")],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert proc.returncode == 0, proc.stderr
 
 
 class SimulatedDelegate(DelegateDispatcher):
     """Run the real v2 CLI in-process; only provider execution is stubbed."""
 
     def __init__(self, cwd: Path) -> None:
-        super().__init__(python=sys.executable, delegate=Path(delegate.__file__), cwd=cwd)
+        super().__init__(
+            python=sys.executable,
+            dispatch_script=Path(__file__).resolve().parents[2] / "scripts" / "dispatch.py",
+            cwd=cwd,
+        )
 
     def _run(self, *args: str, **kwargs):
         from scripts.dispatcher import cli
