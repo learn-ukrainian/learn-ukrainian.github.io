@@ -1,10 +1,11 @@
-"""Lightweight shared Markdown verdict-line scanner (#9756).
+"""Shared Markdown and findings-JSON review verdict scanner (#9756, C-2178).
 
 Extracted from dispatch's proven scanner; consumer decision policies stay local.
 """
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Iterator
 
@@ -197,16 +198,48 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
 
 
 def recognized_verdicts(response: str) -> list[str]:
-    """Return recognized verdict tokens in order, excluding code and examples.
+    """Return verdict lines, or validated findings-JSON verdicts if none exist.
 
     Selection and normalization belong to consumers. An unclosed CommonMark
-    fence suppresses its body through EOF or the enclosing container's end.
+    fence suppresses verdict lines through EOF or the enclosing container's end.
     """
     verdicts: list[str] = []
     for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match:
             verdicts.append(match.group(1).upper())
+    return verdicts or _findings_json_verdicts(response)
+
+
+def _findings_json_verdicts(response: str) -> list[str]:
+    """Read whole JSON replies and top-level JSON blocks, never quoted examples."""
+    from markdown_it import MarkdownIt
+
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
+    from scripts.review.review_contract import ContractError, validate_reviewer_payload
+
+    candidates = [_without_code_fences(response, keep_unclosed=False)]
+    candidates.extend(
+        token.content
+        for token in MarkdownIt("commonmark").parse(response)
+        if token.type == "fence" and token.level == 0 and token.info.strip() in {"", "json"}
+    )
+    verdicts: list[str] = []
+    for candidate in candidates:
+        try:
+            payload = json.loads(candidate)
+        except ValueError:
+            continue
+        if not isinstance(payload, dict):
+            continue
+        try:
+            validate_reviewer_payload(payload)
+            verdict, _ = resolve_verdict_and_evidence(payload)
+        except (ContractError, ReviewPublicationError):
+            continue
+        verdicts.append(
+            {"APPROVED": "APPROVE", "CHANGES_REQUESTED": "REQUEST_CHANGES", "BLOCKED": "BLOCKED"}[verdict]
+        )
     return verdicts
 
 
