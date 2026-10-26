@@ -209,7 +209,7 @@ def drop_with_check(tmp_path: Path, name: str, status: str) -> tuple[Subject, Pa
     """An ejected PR whose ``name`` check failed (``completed``) or is still running (``in_progress``)."""
     subject = Subject(tmp_path)
     conclusion = "failure" if status == "completed" else None
-    subject.check_rows = [check("CI Gate"), check(name, status, conclusion)]
+    subject.check_rows = [check("CI Gate", status, conclusion), check(name, status, conclusion)]
     path = tmp_path / "state.json"
     ejected(subject, path, [name])
     return subject, path
@@ -243,11 +243,11 @@ def test_reviewer_reproducer_publishes_no_mention_or_link_in_reason_or_marker(
     assert not failed, lines
     [body] = transport.comments()
     text = assert_inert(body)
-    reason = prefix + REPRODUCER
+    reason = prefix + "CI Gate"
     assert f"was not queued because {keeper.display_text(reason, keeper.DISPLAY_REASON_LIMIT)}." in text
     assert "review-probe/maintainers" in text  # the job stays identifiable
     assert body.endswith(f"reason={keeper.marker_value(reason)} -->")
-    # Decisions and the local log keep the raw name; nothing was enqueued.
+    # The admission reason names CI Gate; hostile merge-group jobs stay inert.
     assert f"reason={reason} " in lines[0]
     assert keeper._check_state(subject.check_rows, HEAD) == reason
     assert json.loads(path.read_text())["drops"] == {f"42:{HEAD}": 1}
@@ -300,7 +300,7 @@ def test_plain_check_name_publishes_byte_identical_comment_and_marker(
 ) -> None:
     subject, path = drop_with_check(tmp_path, "Analyze (python)", status)
     keeper.run(subject, path, apply=True)
-    reason = f"{prefix}Analyze (python)"
+    reason = f"{prefix}CI Gate"
     assert transport.comments() == [
         f"Merge queue keeper: #42 was not queued because {reason}. Failing merge_group: {RUN_URL}; "
         f"failing jobs: `Analyze (python)`.\n\n<!-- mq-keeper head={HEAD} reason={reason} -->"
@@ -309,7 +309,7 @@ def test_plain_check_name_publishes_byte_identical_comment_and_marker(
 
 def test_comment_posted_before_the_fix_still_deduplicates(tmp_path: Path, transport: Transport) -> None:
     subject, path = drop_with_check(tmp_path, "Analyze (python)", "completed")
-    old = f"Merge queue keeper: #42 was not queued because CI-red-Analyze (python).\n\n<!-- mq-keeper head={HEAD} reason=CI-red-Analyze (python) -->"
+    old = f"Merge queue keeper: #42 was not queued because CI-red-CI Gate.\n\n<!-- mq-keeper head={HEAD} reason=CI-red-CI Gate -->"
     subject.comment_rows.append({"body": old, "user": {"login": "driver"}})
     keeper.run(subject, path, apply=True)
     assert transport.comments() == []
@@ -324,8 +324,7 @@ def test_comment_posted_before_the_fix_still_deduplicates(tmp_path: Path, transp
         "queue-drop",
         "CF-changes_requested",
         "CI-red-CI Gate",
-        "CI-pending-Analyze (javascript-typescript)",
-        "CI-red-CodeQL",
+        "CI-pending-CI Gate",
         "requeue-denied",
         "RECOVERY_EVIDENCE_MISSING: run/job IDs, tested SHA, failure evidence and diff diagnosis required on PR",
         recovery.spent_reason({"action": "re-enqueue", "at": "2026-10-15T12:00:00.123456+00:00", "run_id": 7}),
