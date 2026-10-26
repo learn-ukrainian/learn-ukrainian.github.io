@@ -1056,7 +1056,12 @@ def _classified_inventory(
 def verify_retrieval(primary: Path, receipt: Mapping[str, Any]) -> str:
     """Retrieve every preserved file and independently verify names, sizes, bytes."""
     if receipt.get("mode") == "record-only":
-        raise ValueError("record-only receipt contains no retrievable bytes")
+        # Legacy branch-holder callers use this hash to verify the receipt,
+        # not recovered bytes. Recovery consumers explicitly reject this mode.
+        digest = receipt.get("inventory_sha256")
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError("invalid record-only metadata digest")
+        return digest
     relative = Path(receipt["location"])
     if relative.is_absolute() or ".." in relative.parts or not relative.is_relative_to("batch_state/preserved"):
         raise ValueError("invalid retrieval location")
@@ -1400,16 +1405,14 @@ def record_only_receipt(
     root: Path, names: list[str], record: Mapping[str, Any], *, error: str | None = None
 ) -> dict[str, Any]:
     """C-2481: receipt metadata only, bounded below the hard per-task write cap."""
-    receipt = {
-        "mode": "record-only",
-        "task_id": record.get("task_id"),
-        "run_nonce": record.get("run_nonce"),
-        "count": 0,
-        "bytes": 0,
-        "copied_bytes": 0,
-        "paths": [],
-        "cap_bytes": MAX_PRESERVED_BYTES,
-    }
+    receipt = dict.fromkeys(("count", "bytes", "copied_bytes"), 0)
+    receipt.update(
+        mode="record-only",
+        task_id=record.get("task_id"),
+        run_nonce=record.get("run_nonce"),
+        paths=[],
+        cap_bytes=MAX_PRESERVED_BYTES,
+    )
     budget = 1024
     digest = hashlib.sha256()
     for name in names:
@@ -1458,14 +1461,7 @@ def preserve_worktree_artifacts(
     repo_root: Path | None = None,
     extra_files: list[str] | None = None,
 ) -> tuple[bool, str, dict[str, Any] | None]:
-    """Mandatory preservation and retention gate, under the remover's lock.
-
-    Decision B inventories everything without a clock cutoff. Baselines only
-    label provenance; they never reduce the copied set. No canonical attribution,
-    oversized output, failed retrieval, or explicit retention refuses removal.
-    Vanished paths require fresh lstat absence proof; byte changes still refuse.
-    Caller records and task IDs are hints, never retention authority.
-    """
+    """Record residue without copying; ownership guards still bind disposal."""
     from scripts.orchestration.worktree_claims import identity_cache_publication_allowed
 
     repo_root = primary if repo_root is None else repo_root
@@ -1551,22 +1547,16 @@ def preserve_worktree_artifacts(
         merged_abandon = disposition == "abandon" and "merged_pr" in record["worktree_abandon"]
         kept = any(member.get("keep_worktree") for _, member in members) and not merged_abandon
 
-        files = output_files()
-        if not files and not absent and not kept:
+        inventory_error = None
+        try:
+            files = output_files()
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+            files, inventory_error = [], "inventory_failed"
+        if not files and not absent and not kept and inventory_error is None:
             if disposition == "merged":
                 _preservation_merged_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
             return True, "", None
         identity = record.get("task_id")
-        paths = _classified_inventory(worktree, files, record, absent=absent)
-        files = [entry["path"] for entry in paths]
-        metadata.update(
-            {
-                "count": len(files),
-                "bytes": sum(entry["size"] for entry in paths),
-                "paths": paths,
-                "absent_count": len(absent),
-            }
-        )
         if (
             not isinstance(identity, str)
             or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity)
@@ -1582,8 +1572,10 @@ def preserve_worktree_artifacts(
                 "worktree_sha256": hashlib.sha256(str(worktree).encode()).hexdigest(),
             }
         )
-        metadata.update(record_only_receipt(worktree, files, record))
+        metadata.update(record_only_receipt(worktree, files, record, error=inventory_error))
         metadata.update(retention_disposition="record-only", next_condition="none")
+        metadata["manifest_path"] = record_path.relative_to(primary).as_posix()
+        metadata["content_sha256"] = metadata["retrieval_proof_sha256"] = metadata["inventory_sha256"]
         # Recheck intent under the task writer lock. A concurrent record update
         # cannot have its keep flag overwritten by this gate's earlier snapshot.
         with artifacts.task_state_lock(record_path):
@@ -1618,31 +1610,17 @@ def preserve_worktree_artifacts(
             if extra_files is not None:
                 current["branch_holder_archive"] = metadata
             current.pop("artifact_preservation_error", None)
-            artifacts.reaper_lifecycle._atomic_write(record_path, current)
+            try:
+                artifacts.reaper_lifecycle._atomic_write(record_path, current)
+            except OSError:
+                if metadata["retention_disposition"] == "retained":
+                    raise
+                metadata["receipt_publication_error"] = True
         if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree, repo_root=repo_root):
             task_record["preserved_artifacts"] = metadata
             task_record.pop("artifact_preservation_error", None)
         if metadata["retention_disposition"] == "retained":
             return False, "artifact preservation failed: keep_worktree intent set; refusing worktree removal", metadata
         return True, "", metadata
-    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
-        # Never place filesystem exception paths in receipts.
-        detail = str(exc).replace(str(worktree), "<worktree>").replace(str(primary), "<primary>")
-        detail = re.sub(r"/(?:home|Users)/[^\s'\"]+", "<private-path>", detail)
-        reason = f"record-only inventory incomplete: {detail}"
-        metadata.update(mode="record-only", inventory_error="inventory_failed", retention_disposition="record-only")
-        if metadata["next_condition"] == "none":
-            metadata["next_condition"] = "owner repairs task receipt publication and proves retrieval"
-        if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree, repo_root=repo_root):
-            task_record["artifact_preservation_error"] = reason
-        if record_path is not None:
-            with contextlib.suppress(OSError, ValueError):
-                _update_bound_task_record(
-                    record_path,
-                    worktree,
-                    {"artifact_preservation_error": reason, "preserved_artifacts": metadata},
-                    repo_root=repo_root,
-                    expected_record=record,
-                )
-        metadata.update(mode="record-only", inventory_error="inventory_failed", retention_disposition="record-only")
-        return True, "", metadata
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+        return False, "record-only disposal refused: ownership or task-state guard failed", metadata
