@@ -1,0 +1,28 @@
+"""Construct a provider environment without inherited infrastructure credentials."""
+
+import os
+from pathlib import Path
+
+from scripts.dispatcher.types import TaskSpec
+
+_CONTEXT = ("PATH", "HOME", "LANG", "TERM", "TMPDIR")
+_AUTH = {
+    "codex": ("OPENAI_API_KEY", "CODEX_API_KEY", "CODEX_HOME"),
+    "claude": ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CONFIG_DIR"),
+    "cursor": ("CURSOR_API_KEY",),
+    "agy": ("AGY_API_KEY", "AGY_TOKEN", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"),
+    "muse": ("MUSE_API_KEY", "MUSE_TOKEN"),
+    "opencode": ("DEEPSEEK_API_KEY",),
+    "hermes": ("OPENROUTER_API_KEY",),
+}
+
+
+def child_env(spec: TaskSpec) -> dict[str, str]:
+    names = _CONTEXT + _AUTH[spec.agent]
+    if spec.provider == "openrouter" and spec.agent == "opencode":
+        names = (*_CONTEXT, "OPENROUTER_API_KEY")
+    env = {name: os.environ[name] for name in names if name in os.environ}
+    if spec.agent == "claude" and spec.claude_account:
+        suffix = "" if spec.claude_account == "a" else "-b"
+        env["CLAUDE_CONFIG_DIR"] = str(Path(env.get("HOME", str(Path.home()))) / f".claude{suffix}")
+    return env

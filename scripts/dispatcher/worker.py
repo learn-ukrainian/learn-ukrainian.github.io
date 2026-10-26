@@ -1,0 +1,210 @@
+"""Detached supervision, client waits and process-group cancellation."""
+
+import contextlib
+import json
+import os
+import signal
+import subprocess
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+
+from scripts.common.repo_root import project_interpreter
+from scripts.dispatcher import git, providers, store
+from scripts.dispatcher.environment import child_env
+from scripts.dispatcher.types import TaskSpec
+
+
+def _identity(pid: int | None) -> str | None:
+    if not pid:
+        return None
+    try:
+        fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+        boot = Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+        return None if fields[0] == "Z" else f"{boot}:{fields[19]}"
+    except (OSError, IndexError):
+        return None
+
+
+def _observe(record: dict) -> dict:
+    if (
+        record.get("schema_version") == 2
+        and record["status"] in store.ACTIVE
+        and record.get("pid")
+        and _identity(record["pid"]) != record.get("process_start")
+    ):
+        current = store.read(record["task_id"], record["run_nonce"])
+        if current["status"] not in store.ACTIVE:
+            return current
+        record.update(status="crashed", finished_at=store.now(), error="supervisor exited without a result")
+        record["duration_s"] = (
+            datetime.fromisoformat(record["finished_at"]) - datetime.fromisoformat(record["started_at"])
+        ).total_seconds()
+        record.update(git.snapshot_delivery(_spec(record, {}), record["worktree_base_sha"], record["worktree_branch"]))
+        store.replace(record)
+    return record
+
+
+def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+    path = store.create(record, prompt)
+    logs = path.parent / "logs"
+    logs.mkdir(exist_ok=True, mode=0o700)
+    try:
+        with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
+            mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
+            try:
+                process = subprocess.Popen(
+                    [str(project_interpreter()), "-m", "scripts.dispatcher.worker", str(path)],
+                    cwd=Path(__file__).resolve().parents[2],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.DEVNULL,
+                    stderr=err,
+                    start_new_session=True,
+                )
+            finally:
+                signal.pthread_sigmask(signal.SIG_SETMASK, mask)
+        record.update(pid=process.pid, process_start=_identity(process.pid))
+        store.replace(record, path)
+        payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
+        process.stdin.write(payload)
+        process.stdin.close()
+    except Exception:
+        record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
+        store.replace(record, path)
+        raise
+
+
+class _Cancelled(Exception):
+    pass
+
+
+def _spec(record: dict, options: dict) -> TaskSpec:
+    return TaskSpec(
+        record["task_id"],
+        record["agent"],
+        record["model"],
+        record["effort"],
+        record["mode"],
+        Path(record["worktree_path"]),
+        Path(record["prompt_file"]),
+        Path(record["result_file"]),
+        record["claude_account"],
+        record["provider"],
+        options,
+    )
+
+
+def supervise(path: Path, options: dict, hard_timeout: float) -> None:
+    os.umask(0o077)
+    record = json.loads(path.read_text())
+    spec = _spec(record, options)
+    child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
+    started = time.monotonic()
+
+    def cancelled(_signum, _frame):
+        raise _Cancelled()
+
+    def terminate():
+        if child:
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(child.pid, signal.SIGKILL)
+            child.wait()
+
+    signal.signal(signal.SIGTERM, cancelled)
+    signal.signal(signal.SIGINT, cancelled)
+    stdout_path = path.parent / "logs" / f"{spec.task_id}.stdout.log"
+    stderr_path = path.parent / "logs" / f"{spec.task_id}.stderr.log"
+    try:
+        signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM, signal.SIGINT})
+        provider = providers.load(spec.agent)
+        invocation = provider.build(spec, child_env(spec))
+        with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
+            child = subprocess.Popen(
+                invocation.argv,
+                stdin=subprocess.PIPE,
+                stdout=out,
+                stderr=err,
+                cwd=spec.worktree,
+                env=invocation.env,
+                start_new_session=True,
+            )
+            record.update(status="running")
+            store.replace(record, path)
+            child.communicate(invocation.stdin, timeout=hard_timeout if hard_timeout else None)
+        returncode = child.returncode
+        final = invocation.final_file
+        final_text = final.read_text(errors="replace") if final and final.exists() else None
+        parsed = provider.parse(
+            stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
+        )
+        text, usage = parsed.text, parsed.usage
+        status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
+        if returncode < 0:
+            status = "crashed"
+        if status != "done":
+            error = "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+    except _Cancelled:
+        status, error = "cancelled", "cancelled by client"
+    except subprocess.TimeoutExpired:
+        status, error = "timeout", "process deadline exceeded"
+    except Exception:
+        status, error = "crashed", "supervisor or provider processing failed"
+    finally:
+        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
+            terminate()
+            returncode = child.returncode
+        if text is not None:
+            spec.final_file.write_text(text)
+            spec.final_file.chmod(0o600)
+        record.update(
+            status=status,
+            returncode=returncode,
+            error=error,
+            usage=usage,
+            finished_at=store.now(),
+            duration_s=round(time.monotonic() - started, 3),
+            result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
+        )
+        record.update(git.snapshot_delivery(spec, record["worktree_base_sha"], record["worktree_branch"]))
+        store.replace(record, path)
+
+
+def wait(task_id: str, nonce: str | None = None, timeout: float = 0, poll_interval: float = 1) -> tuple[dict, int]:
+    deadline = time.monotonic() + timeout if timeout else None
+    while True:
+        record = _observe(store.read(task_id, nonce))
+        if record["status"] not in store.ACTIVE:
+            return record, 0 if record["status"] == "done" else 1
+        remaining = deadline - time.monotonic() if deadline else None
+        if remaining is not None and remaining <= 0:
+            return record, 124
+        time.sleep(min(poll_interval, remaining) if remaining is not None else poll_interval)
+
+
+def cancel(task_id: str, nonce: str | None = None) -> dict:
+    record = _observe(store.read(task_id, nonce))
+    if record.get("schema_version") != 2:
+        raise ValueError("legacy task cancellation belongs to its original supervisor")
+    if record["status"] in store.ACTIVE:
+        if not record.get("pid") or not record.get("process_start"):
+            raise ValueError("supervisor identity is unavailable; cancellation refused")
+        try:
+            pidfd = os.pidfd_open(record["pid"])
+            try:
+                if _identity(record["pid"]) != record["process_start"]:
+                    raise ValueError("supervisor identity changed; cancellation refused")
+                signal.pidfd_send_signal(pidfd, signal.SIGTERM)
+            finally:
+                os.close(pidfd)
+        except ProcessLookupError:
+            return _observe(record)
+        return wait(task_id, nonce, timeout=10, poll_interval=0.05)[0]
+    return record
+
+
+if __name__ == "__main__":
+    settings = json.load(sys.stdin)
+    supervise(Path(sys.argv[1]), **settings)
