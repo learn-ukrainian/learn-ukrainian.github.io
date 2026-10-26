@@ -270,15 +270,33 @@ def test_cursor_assistant_messages_preserve_verdict_boundary_over_result(verdict
 
 @pytest.mark.parametrize("nested", [False, True])
 @pytest.mark.parametrize("trailing", ["", " "])
-def test_cursor_split_rubric_cannot_create_false_approval(nested, trailing):
-    parts = ["- **VERDICT**: **APPROVE**" + trailing, "or **REQUEST_CHANGES** per the rubric"]
+@pytest.mark.parametrize("parts,expected", [
+    (["- **VERDICT**: **APPROVE**", "or **REQUEST_CHANGES** per the rubric"], []),
+    (["VERDICT: APPROVE\n\nVERDICT: REQUEST_CHANGES (one blocker below)"], []),
+    (["**VERDICT: APPROVE**\n*VERDICT: BLOCKED.* Findings follow."], []),
+    (["*VERDICT: BLOCKED.* Findings follow."], []),
+    (["VERDICT: APPROVE\nor REQUEST_CHANGES per the rubric"], []),
+    (["VERDICT: APPROVE\n    or REQUEST_CHANGES per the rubric"], []),
+    (["**VERDICT**: **APPROVE**\nor **REQUEST_CHANGES**"], []),
+    (["VERDICT: APPROVE", "or REQUEST_CHANGES per the rubric"], []),
+    (["VERDICT: APPROVE", " or REQUEST_CHANGES per the rubric"], []),
+    (["Review\n\nChecked head.\n- **VERDICT**: **`APPROVE`**\n\n" + "Finding.\n" * 74], ["APPROVE"]),
+    (["VERDICT: APPROVE\nFindings follow."], ["APPROVE"]),
+])
+def test_cursor_split_rubric_cannot_create_false_approval(nested, trailing, parts, expected):
+    parts = [parts[0] + trailing, *parts[1:]]
     events = [{"type": "assistant", **({"message": {"content": [{"type": "text", "text": p}]}}
               if nested else {"content": p})} for p in parts]
     events.append({"type": "result", "subtype": "success", "result": "".join(parts)})
     parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
     assert parsed.error is None
-    assert recognized_verdicts(parsed.text) == []
-    assert parsed.text == parts[0].rstrip() + "\n" + parts[1]
+    assert recognized_verdicts(parsed.text) == expected
+    assert parsed.text == "\n".join(p.rstrip() for p in parts)
+    if expected:
+        assert normalize_verdict(parsed.text) == "APPROVED"
+    else:
+        with pytest.raises(RecordError, match="missing or ambiguous"):
+            normalize_verdict(parsed.text)
 
 
 @pytest.mark.parametrize("event_type", ["assistant", "text"])

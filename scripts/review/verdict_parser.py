@@ -32,8 +32,8 @@ ACCEPTED_VERDICT_TOKENS = (
 # emphasis/backtick/whitespace separator, then the token and a word boundary
 # (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
 # Only closing emphasis/backticks, optional punctuation (``.``/``!``), and
-# whitespace may follow the token. Trailing prose, parentheticals, or rubric
-# alternatives such as ``APPROVE or REQUEST_CHANGES`` are not verdicts. An inline or
+# whitespace may follow the token. Other labelled token lines poison the reply.
+# Competing tokens in the same visible paragraph also refuse it. An inline or
 # quoted example ("I will report ``VERDICT: APPROVE`` later",
 # ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
 # The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
@@ -79,12 +79,14 @@ def _commonmark_keepends(text: str) -> list[str]:
 
 _VERDICT_MARKER_PREFIX = r"^ {0,3}(?:(?:[-*+]|[0-9]{1,9}[.)])[ \t]+)?(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
 _VERDICT_LINE_PREFIX = _VERDICT_MARKER_PREFIX + r"[*_`\s]*:[*_`\s]*"
-_REVIEW_VERDICT_LINE_RE = re.compile(
+_VERDICT_TOKEN = r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)(?![^\W_]|_+[^\W_])"
+_PERMISSIVE_VERDICT_LINE_RE = re.compile(
     _VERDICT_MARKER_PREFIX + r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
-    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
-    r"(?![^\W_]|_+[^\W_])[*_`.!\s]*\Z",
+    + _VERDICT_TOKEN,
     re.IGNORECASE,
 )
+_REVIEW_VERDICT_LINE_RE = re.compile(_PERMISSIVE_VERDICT_LINE_RE.pattern + r"[*_`.!\s]*\Z", re.IGNORECASE)
+_PARAGRAPH_VERDICT_TOKEN_RE = re.compile(r"(?<!\w)_*" + _VERDICT_TOKEN, re.IGNORECASE)
 # Diagnostics echo only bounded ASCII identifier tokens, never paths, URLs or
 # arbitrary verdict-line text. Trailing underscores may be Markdown emphasis.
 _UNSUPPORTED_VERDICT_LINE_RE = re.compile(
@@ -238,6 +240,17 @@ def recognized_verdicts(response: str) -> list[str]:
     verdicts: list[str] = []
     source_lines = _commonmark_lines(response)
     visible = _without_code_fences(response, keep_unclosed=False, preserve_lines=True)
+    for paragraph in re.split(r"\n[ \t]*\n", "\n".join(_commonmark_lines(visible))):
+        accepted: set[str] = set()
+        for line in paragraph.split("\n"):
+            match = _REVIEW_VERDICT_LINE_RE.match(line)
+            if match:
+                accepted.add(match.group(1).upper())
+            elif _PERMISSIVE_VERDICT_LINE_RE.match(line):
+                return []
+        tokens = {match.group(1).upper() for match in _PARAGRAPH_VERDICT_TOKEN_RE.finditer(paragraph)}
+        if accepted and tokens - accepted:
+            return []
     for index, line in enumerate(_commonmark_lines(visible)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match and not _list_item_continues(source_lines, index):
