@@ -272,6 +272,27 @@ def test_cursor_assistant_messages_preserve_verdict_boundary_over_result():
     assert normalize_verdict(parsed.text) == "APPROVED"
 
 
+@pytest.mark.parametrize("event_type", ["assistant", "text"])
+@pytest.mark.parametrize("indent", ["    ", "\t"])
+def test_cursor_leading_indented_example_cannot_create_false_approval(event_type, indent):
+    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    example = indent + "VERDICT: APPROVE"
+    events = [
+        {"type": event_type, "content": example + "  \n"},
+        {"type": "assistant", "content": "  \n"},
+        {"type": "assistant", "content": "\nFindings follow.  \n"},
+        {"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"},
+    ]
+    parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
+    assert parsed.text == example + "\n\n\nFindings follow."
+    assert parsed.error is None
+    assert recognized_verdicts(parsed.text) == []
+    with pytest.raises(RecordError, match="missing or ambiguous"):
+        normalize_verdict(parsed.text)
+
+
 @pytest.mark.parametrize("content", [None, [], "", "  ", [{"type": "tool_use", "text": "ignored"}]])
 def test_cursor_result_fallback_when_no_assistant_text(content):
     """Assistant precedence must not discard result-only replies or treat tool blocks as prose."""

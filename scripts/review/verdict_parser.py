@@ -47,6 +47,8 @@ ACCEPTED_VERDICT_TOKENS = (
 # ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
 # A CommonMark list marker (``-``, ``*``, ``+``, or 1–9 digits plus ``.``/``)``)
 # followed by spaces or tabs may precede the heading/label as well.
+# A list verdict counts only when the next non-blank line does not continue
+# that item. Plain verdict lines may still precede review prose.
 # CommonMark line endings are LF, CR, and CRLF. str.splitlines() also breaks
 # on VT, FF, and Unicode separators, which moves fence spans off the real text.
 _COMMONMARK_LINE_RE = re.compile(r"\r\n|\r|\n")
@@ -93,6 +95,29 @@ _UNSUPPORTED_VERDICT_LINE_RE = re.compile(
 # A CommonMark fence line: at most three leading spaces, then three or more
 # backticks or tildes; group 2 is the rest of the line (info string).
 _CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+_LIST_ITEM_RE = re.compile(r"^( {0,3})(?:[-*+]|[0-9]{1,9}[.)])(?:[ \t]+|$)")
+_HEADING_OR_QUOTE_RE = re.compile(r"^ {0,3}(?:#{1,6}(?:[ \t]+|$)|>)")
+
+
+def _list_item_continues(lines: list[str], index: int) -> bool:
+    item = _LIST_ITEM_RE.match(lines[index])
+    if item is None:
+        return False
+    for following in range(index + 1, len(lines)):
+        line = lines[following]
+        if not line.strip():
+            continue
+        expanded = line.expandtabs(4)
+        indent = len(expanded) - len(expanded.lstrip(" "))
+        if indent > len(item.group(1)):
+            return True
+        return following == index + 1 and not (
+            _LIST_ITEM_RE.match(line)
+            or _HEADING_OR_QUOTE_RE.match(line)
+            or _code_fence_opener(line)
+            or re.match(_VERDICT_MARKER_PREFIX, line, re.IGNORECASE)
+        )
+    return False
 
 
 def _code_fence_opener(line: str) -> str | None:
@@ -147,12 +172,13 @@ def _code_fence_spans(lines: list[str]) -> Iterator[tuple[int, int, bool]]:
         yield start, len(lines), False
 
 
-def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
+def _without_code_fences(text: str, *, keep_unclosed: bool, preserve_lines: bool = False) -> str:
     """Remove fenced spans, retaining unterminated bodies when requested.
 
     Keep non-fenced text verbatim and leave a paragraph boundary for LF/CRLF
     input where a block was removed. Dispatch/DoR remove only closed top-level
     CommonMark tokens: a container can end a fence without a lexical closer.
+    ``preserve_lines`` retains source indices for list-continuation checks.
     """
     raw_lines = _commonmark_lines(text, keepends=True)
     lines = _commonmark_lines(text)
@@ -194,7 +220,7 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
         if end <= cursor:
             continue
         parts.extend(raw_lines[cursor:start])
-        parts.append("\n")
+        parts.append("\n" * (end - start) if preserve_lines else "\n")
         cursor = end
     parts.extend(raw_lines[cursor:])
     return "".join(parts)
@@ -207,9 +233,11 @@ def recognized_verdicts(response: str) -> list[str]:
     fence suppresses verdict lines through EOF or the enclosing container's end.
     """
     verdicts: list[str] = []
-    for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
+    source_lines = _commonmark_lines(response)
+    visible = _without_code_fences(response, keep_unclosed=False, preserve_lines=True)
+    for index, line in enumerate(_commonmark_lines(visible)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
-        if match:
+        if match and not _list_item_continues(source_lines, index):
             verdicts.append(match.group(1).upper())
     return verdicts or _findings_json_verdicts(response)
 

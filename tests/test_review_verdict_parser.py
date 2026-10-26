@@ -184,6 +184,37 @@ def test_conflicting_list_verdicts_remain_ambiguous():
         normalize_verdict(reply)
 
 
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("prefix", ["- ", "* ", "1. ", "   - "])
+@pytest.mark.parametrize("verdict", ["VERDICT: APPROVE", "**VERDICT**: **APPROVE**"])
+@pytest.mark.parametrize("continuation", [
+    "  or REQUEST_CHANGES per the rubric", "or REQUEST_CHANGES per the rubric",
+    "\n  or REQUEST_CHANGES per the rubric", "\tor REQUEST_CHANGES per the rubric",
+])
+def test_list_item_continuation_cannot_create_false_approval(newline, prefix, verdict, continuation):
+    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+
+    indent = len(prefix) - len(prefix.lstrip(" "))
+    reply = (prefix + verdict + "\n" + continuation.replace("  ", " " * (indent + 2))).replace("\n", newline)
+    assert recognized_verdicts(reply) == []
+    with pytest.raises(RecordError, match="missing or ambiguous"):
+        normalize_verdict(reply)
+
+
+@pytest.mark.parametrize("following", [
+    "\nFindings follow.", "- Finding", "* Finding", "1. Finding", "# Findings",
+    "```\nexample\n```", "> Quoted finding", "VERDICT: APPROVE",
+])
+def test_separate_blocks_after_list_verdict_preserve_approval(following):
+    from scripts.review.record_cf_verdict import normalize_verdict
+
+    assert normalize_verdict("- **VERDICT**: **`APPROVE`**\n" + following) == "APPROVED"
+
+
+def test_plain_verdict_still_allows_following_prose():
+    assert recognized_verdicts("VERDICT: APPROVE\nFindings follow.") == ["APPROVE"]
+
+
 @pytest.mark.parametrize("prefix", ["", "- ", "* ", "+ ", "1. ", "1) "])
 @pytest.mark.parametrize("line", [
     "VERDICT: APPROVE or REQUEST_CHANGES per the rubric",
