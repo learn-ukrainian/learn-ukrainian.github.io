@@ -96,9 +96,14 @@ def test_non_bounded_model_needs_no_advisory(launch, model):
 
 
 @pytest.mark.parametrize("complete", [False, True])
-def test_driver_brief_exception_requires_acceptance_command(launch, complete, capsys, tmp_path):
-    """Defect class: driver-brief exemption either bypasses validation or rejects valid recon."""
-    launch += ["--research-role", "recon", "--research-task-family", "readonly_recon"]
+@pytest.mark.parametrize("model", ["gpt-6-luna", "claude-haiku-5-5", "haiku"])
+def test_driver_brief_exception_requires_acceptance_command(launch, complete, capsys, tmp_path, model):
+    """Defect class: concrete or alias models bypass brief validation or reject valid bounded implementation."""
+    if model != "gpt-6-luna":
+        launch[launch.index("--agent") + 1] = "claude"
+    launch[launch.index("--model") + 1] = model
+    launch += ["--research-role", "implementation", "--research-task-family", "bounded_implementation",
+               "--mode", "workspace-write"]
     if complete:
         (tmp_path / "docs/example.md").write_text("Assigned document")
         for command in (("init",), ("-c", "user.name=Stub", "-c", "user.email=stub@example.invalid",

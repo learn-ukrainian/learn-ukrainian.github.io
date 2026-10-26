@@ -25,6 +25,13 @@ def advisory_binding(args, prompt: bytes) -> tuple[dict, str, str]:
 def check_bounded_advisory(args, model: str, repo: Path, prompt: bytes) -> dict:
     """Apply the legacy bounded-worker policy before creating a worktree or starting a provider."""
     try:
+        alias = model.strip().casefold().split("[", 1)[0]
+        if args.agent == "claude" and alias in {"haiku", "opus", "sonnet", "fable"}:
+            from scripts.agent_runtime.model_pause import _newest_claude
+
+            model = _newest_claude(alias)
+            if model is None:
+                raise ValueError("cannot resolve native Claude model alias for bounded admission")
         model = canonical_model_id(model)
         requirement = advisory.bounded_requirement(
             model, mode=args.mode, task_family=args.research_task_family, review_profile=args.review_profile,
