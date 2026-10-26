@@ -1143,7 +1143,8 @@ def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
     else:
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "gemini-3.8-flash-high"
-        assert len(ladder) == 6
+        assert ladder[6][0].name == "muse"
+        assert len(ladder) == 7
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1397,6 +1398,38 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
 def test_normalize_muse_subject_seat_and_meta_family():
     assert normalize_subject_seat("muse") == "muse"
     assert normalize_subject_family("meta") == "meta"
+    candidate = REVIEW_CANDIDATES["muse"]
+    assert candidate.model_roles == frozenset({"coding", "standard_review", "routine_review"})
+    assert candidate.suitability_roles == frozenset({"routine_review"})
+    assert not candidate.formal_review_eligible
+    assert candidate.requires_data_egress_policy == "public_only"
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol", data_egress_policy="public_only", claude_account=HOST_ACCOUNT,
+    )
+    formal = evaluate_candidate(candidate, inputs)
+    assert formal.status == "excluded"
+    assert formal.reason == "formal-review transport is not eligible for a sealed cross-family gate"
+    advisory = replace(inputs, formal_review=False)
+    assert evaluate_candidate(candidate, advisory).status == "eligible"
+    for risk in ("low", "medium", "high", "critical"):
+        assert (candidate in {c for rung in REVIEW_LADDERS[risk] for c in rung}) == (risk in {"low", "medium"})
+    for risk in ("high", "critical"):
+        assert evaluate_candidate(candidate, replace(advisory, risk=risk)).status == "excluded"
+        pinned = replace(advisory, risk=risk, pinned_candidate="muse", pressure_override_reason="fixture")
+        assert resolve_reviewer(pinned).selected is None
+    for role in ("critical_review", "security_review"):
+        assert evaluate_candidate(candidate, replace(advisory, requested_role=role)).status == "excluded"
+    meta_author = evaluate_candidate(candidate, replace(advisory, author_families=frozenset({"meta"})))
+    assert meta_author.status == "excluded"
+    assert "same family as author (meta)" in meta_author.reason
+    for changes in (
+        {"subject_seats": frozenset({"muse"})}, {"subject_families": frozenset({"meta"})},
+        {"language_lane": True}, {"data_egress_policy": "private_repo"}, {"data_egress_policy": None},
+        {"review_profile": "infra"},
+        {"isolation_required": True}, {"required_capabilities": frozenset({"sealed_evidence"})},
+        {"changed_paths": ("scripts/hooks/admission.py",)},
+    ):
+        assert evaluate_candidate(candidate, replace(advisory, **changes)).status == "excluded"
 
 
 @pytest.mark.parametrize(
@@ -1542,6 +1575,9 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
 
     for seats in adapter_subject_index().values():
         assert seats <= KNOWN_SUBJECT_SEATS
+    assert classify_owned_path("scripts/dispatcher/providers/opencode.py").seats == frozenset({"deepseek"})
+    hermes = classify_owned_path("scripts/dispatcher/providers/hermes.py")
+    assert hermes.kind == "ambiguous" and hermes.seats == frozenset({"deepseek", "grok", "qwen"})
 
 
 _AUTHOR_MODELS = {

@@ -4,6 +4,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Literal, TypedDict
+
+ReviewAccess = Literal["isolated", "full"]
+
+
+class ReviewAttempt(TypedDict):
+    review_id: str
+    attempt_id: str
+    manifest_sha256: str
 
 
 @dataclass(frozen=True)

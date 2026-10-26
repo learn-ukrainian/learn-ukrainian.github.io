@@ -183,7 +183,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "cb1cd99c2f7bac2b3bea8295fd7bc3633e6fbb1bbd6d3074b798e1f14848af45"
+        "sha256": "22d64b056b40054df8064d1256439c6093fbd318c3760e5a5bb13e7c3c4d6e70"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -211,7 +211,7 @@
       },
       {
         "path": "scripts/lexicon/fill_slovnyk_sum20_cache.py",
-        "sha256": "7507a9ad475abe79ecf2e480d3445a157c3360ee6380dd79e84233e5bad8dbd1"
+        "sha256": "a2caf01d788192dd617bf80b0becc2bfd649f3700faf20c89d039f4f98a72898"
       },
       {
         "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",
