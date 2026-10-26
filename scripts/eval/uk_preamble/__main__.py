@@ -72,7 +72,7 @@ Outputs (all under --results, owner-only files; never commit them):
   convert-set writes one owner-only set file (--output, also refused inside a Git work tree) and prints a
   JSON report: counts per error type and protection kind, validation problems by item id and rule (never
   text), Protocol v2 shortfalls, and the SHA-256 of the input and the output.
-  Dispatches create delegate task records under batch_state/tasks/.
+  Dispatches create task records under batch_state/tasks/.
 
 Exit codes:
   0 success (run: every planned task accepted; convert-set: the converted set is valid);
@@ -225,7 +225,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--dry-run",
         action="store_true",
-        help="Write prompts and validate every dispatch with delegate --dry-run; spawn nothing.",
+        help="Write prompts and validate every dispatch with scripts/dispatch.py --dry-run; spawn nothing.",
     )
     run.add_argument(
         "--worker-cwd",
@@ -252,9 +252,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--review-profile",
         choices=("ukrainian",),
         default=None,
-        help="Dispatch review tasks as Ukrainian reviews (delegate --review-profile ukrainian "
-        "--require-review-verdict), so delegate's Ukrainian-review AGY permission profile applies; "
-        "review prompts then end with a VERDICT marker line. Writing tasks are unchanged. "
+        help="Label review tasks with scripts/dispatch.py --review-profile ukrainian; "
+        "review prompts then end with a VERDICT marker line. "
         "Frozen in the manifest; a resume with another value is refused. Default: off.",
     )
     _add_dispatch_args(run)
