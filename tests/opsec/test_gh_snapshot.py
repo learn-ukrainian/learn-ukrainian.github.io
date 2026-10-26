@@ -19,6 +19,40 @@ def test_pr_revert_mutation_cannot_be_forwarded_as_a_native_read():
         assert result.argv == args and not result.write
 
 
+@pytest.mark.parametrize("args", [
+    ["release", "delete-asset", "v1", "fixture-asset"],
+    ["release", "delete-asset", "v1", "fixture-asset", "-y"],
+    ["release", "delete-asset", "v1", "fixture-asset", "--yes"],
+    ["repo", "set-default", "unit/public"],
+    ["repo", "set-default", "origin"],
+    ["repo", "set-default"],
+    ["repo", "set-default", "--unset"],
+    ["repo", "set-default", "-u"],
+    ["repo", "set-default", "unit/public", "--view=false"],
+    ["repo", "set-default", "unit/public", "--view", "-v=false"],
+    ["repo", "set-default", "--view", "-uv=false"],
+    ["repo", "set-default", "unit/public", "--", "--view"],
+    ["pr", "update-branch", "1"],
+    ["auth", "setup-git"],
+])
+@pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
+def test_compound_mutators_cannot_bypass_the_typed_write_boundary(args, repo):
+    # Unsupported writes must be refused even when a private repo is selected.
+    with pytest.raises(PublishBlocked, match="typed publisher"):
+        admit(args, cwd=".", environment={"GH_REPO": repo}, reader=lambda *a, **k: pytest.fail("no execution"))
+
+
+@pytest.mark.parametrize("flags", [
+    ["--view"], ["-v"], ["--view=true"], ["--view=1"], ["-v=T"],
+    ["--view=false", "--view"], ["-uv"], ["-vu=false"],
+    ["--view", "--unset"], ["--view", "--", "unit/public"],
+])
+def test_set_default_view_mode_never_becomes_a_raw_write(flags):
+    args = ["repo", "set-default", *flags]
+    result = admit(args, cwd=".", environment={})
+    assert result.argv == args and not result.write
+
+
 def test_nested_mutations_behind_flags_cannot_be_forwarded_as_native_reads():
     mutations = [
         ["deploy-key", "add", "synthetic-key-file"],

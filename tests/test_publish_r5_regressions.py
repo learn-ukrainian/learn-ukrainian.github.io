@@ -70,6 +70,20 @@ def test_listed_rest_read_reaches_transport(caller, args, tmp_path):
     (["api", "graphql", "-f", "query=query{x}"], True),
     (["api", "repos/unit/public/unknown/endpoint"], True),
     (["api", "https://other.invalid/repos/unit/public/issues/1"], False),
+    (["release", "delete-asset", "v1", "fixture-asset"], False),
+    (["release", "delete-asset", "v1", "fixture-asset", "-y"], False),
+    (["repo", "set-default", "unit/public"], False),
+    (["repo", "set-default", "--unset"], False),
+    (["repo", "set-default", "--view", "--view=false", "unit/public"], False),
+    (["repo", "set-default", "--view"], True),
+    (["release", "verify-asset", "v1", "fixture-asset"], True),
+    (["release", "view", "delete-asset"], True),
+    (["repo", "view", "set-default"], True),
+    (["repo", "read-file", "delete-asset"], True),
+    (["repo", "read-dir", "set-default"], True),
+    (["pr", "list", "--search", "delete-asset set-default update-branch"], True),
+    (["pr", "list", "--limit", "invalid"], True),
+    (["run", "watch", "1", "--compact"], True),
 ])
 def test_native_reads_preserve_semantics_and_public_writes_remain_refused(args, read, tmp_path):
     """Retired read inventories must not refuse GET/query forms or admit public writes/uploads."""

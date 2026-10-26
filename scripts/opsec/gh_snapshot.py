@@ -46,6 +46,26 @@ def _validate_read_environment(environment: dict[str, str]) -> None:
         _validate_read_repo(gh_repo)
 
 
+def _set_default_view(argv: list[str]) -> bool:
+    """View mode returns before either set-default mutation in native gh."""
+    view = False
+    true_values = {"1", "t", "T", "TRUE", "true", "True"}
+    # This command's flags are boolean. Last occurrence wins; '=' applies to
+    # the last shorthand in a cluster. Operands after '--' are never flags.
+    for token in argv:
+        if token == "--":
+            break
+        flag, equal, value = token.partition("=")
+        if flag == "--view":
+            view = not equal or value in true_values
+        elif flag.startswith("-") and not flag.startswith("--"):
+            shorthands = flag[1:]
+            for index, short in enumerate(shorthands):
+                if short == "v":
+                    view = index < len(shorthands) - 1 or not equal or value in true_values
+    return view
+
+
 # Raw writes are only forwarded for a proven private destination. Closed flags
 # prevent an unknown option/value from manufacturing that proof.
 WRITE_GRAMMARS = {
@@ -391,7 +411,7 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
             "run", "workflow", "repo", "auth", "gist", "label", "search", "ruleset",
         }
         write_actions = {
-            "add", "archive", "cancel", "clone", "close", "comment", "create", "delete",
+            "add", "archive", "cancel", "clone", "close", "comment", "create", "delete", "delete-asset",
             "develop", "disable", "edit", "enable", "fork", "import", "install", "link", "lock",
             "merge", "pin", "publish", "ready", "remove", "rename", "reopen", "rerun",
             "revert", "review", "run", "set", "sync", "transfer", "unarchive", "uninstall",
@@ -416,7 +436,8 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
                 )
                 index += 2 if takes_value else 1
         if (len(key) != 2 or key[0] not in groups or key[1].startswith("-")
-                or key[1] in write_actions or key[1].rsplit("-", 1)[-1] in write_actions
+                or key[1] in write_actions
+                or (key == ("repo", "set-default") and not _set_default_view(argv[start + 2 :]))
                 or nested_action in write_actions
                 or (key == ("repo", "autolink") and nested_action == "new")
                 or (key[0] == "auth" and (key[1] != "status" or any(
