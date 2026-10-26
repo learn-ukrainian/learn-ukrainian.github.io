@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Bound wrapper re-entry, including the shim's Git discovery calls. Allow a
+# small nesting depth for Git hooks and helpers that legitimately invoke git.
+_git_shim_depth=1
+if [[ "${LU_GIT_SHIM_ACTIVE:-}" == 1 ]]; then
+  case "${LU_GIT_SHIM_DEPTH:-}" in
+    [1-7]) _git_shim_depth=$((LU_GIT_SHIM_DEPTH + 1)) ;;
+    *)
+      echo "error: git shim re-entry refused (recursion limit)." >&2
+      exit 126
+      ;;
+  esac
+fi
+# Shim helpers must not inherit these; set them only on a Git exec below.
+unset LU_GIT_SHIM_ACTIVE LU_GIT_SHIM_DEPTH
+# Non-final calls belong in subshells; exec also keeps timeout PIDs on Git.
+_exec_git() {
+  LU_GIT_SHIM_ACTIVE=1 LU_GIT_SHIM_DEPTH="$_git_shim_depth" exec "$@"
+}
+
 # The shim's own lookups (the real git, its commands and aliases, the guard)
 # publish nothing, so they run without the command's LU_OPSEC_OVERRIDE; only
 # the Git command the caller asked for receives it back (#9681).
@@ -85,7 +104,7 @@ _blocks_branch_switch() {
   local shim_main_root="$shim_repo"
   if [[ -n "$real_git_bin" && -x "$real_git_bin" ]]; then
     local shim_common_dir
-    shim_common_dir="$("$real_git_bin" -C "$shim_repo" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    shim_common_dir="$(_exec_git "$real_git_bin" -C "$shim_repo" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
     if [[ -n "$shim_common_dir" ]]; then
       shim_main_root="$(dirname "$shim_common_dir")"
     fi
@@ -314,7 +333,7 @@ elif [[ -n "$_opsec_command" && "$_opsec_informational" == 0 ]]; then
   # PATH, a typo Git could autocorrect) is refused before Git runs.
   # Configuration diagnostics can contain private filenames or terminal controls.
   # Only discovery is quiet; the requested command retains its own diagnostics.
-  _opsec_commands="$("$real_git" "${_opsec_globals[@]}" --list-cmds=builtins,main 2>/dev/null)" || {
+  _opsec_commands="$(_exec_git "$real_git" "${_opsec_globals[@]}" --list-cmds=builtins,main 2>/dev/null)" || {
     echo "OPSEC: could not list Git's commands, so the command was not run." >&2
     exit 2
   }
@@ -375,7 +394,7 @@ _opsec_aliased() {
     set +e
     git_pid=""
     trap '[[ -n "${git_pid}" ]] && kill "${git_pid}" 2>/dev/null || true; exit 143' TERM
-    env -u GIT_CONFIG "$real_git" "${_opsec_globals[@]}" -c "${_opsec_probe}=1" \
+    _exec_git env -u GIT_CONFIG "$real_git" "${_opsec_globals[@]}" -c "${_opsec_probe}=1" \
       config --name-only --get-regexp "^(alias\\..*|${_opsec_probe//./\\.})\$" 2>/dev/null &
     git_pid=$!
     wait "${git_pid}"
@@ -502,7 +521,7 @@ if [[ "$_opsec_push" == 1 ]]; then
   _opsec_python="$_opsec_root/.venv/bin/python"
   if [[ ! -x "$_opsec_python" ]]; then
     # A linked worktree has no interpreter of its own: use the main checkout's.
-    _opsec_common="$(env -u GIT_DIR -u GIT_COMMON_DIR -u GIT_WORK_TREE "$real_git" -C "$_opsec_root" \
+    _opsec_common="$(_exec_git env -u GIT_DIR -u GIT_COMMON_DIR -u GIT_WORK_TREE "$real_git" -C "$_opsec_root" \
       rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
     _opsec_python="${_opsec_common:+$(dirname "$_opsec_common")/.venv/bin/python}"
   fi
@@ -513,8 +532,8 @@ if [[ "$_opsec_push" == 1 ]]; then
   [[ -n "$_opsec_python" && -x "$_opsec_python" ]] || _opsec_refuse "project interpreter unavailable"
   export LU_OPSEC_PUSH_PYTHON="$_opsec_python" LU_OPSEC_REAL_GIT="$real_git"
   _opsec_restore_override
-  exec "$real_git" "${_opsec_globals[@]}" -c "core.hooksPath=$_opsec_hooks" "${@:_opsec_index+1}"
+  _exec_git "$real_git" "${_opsec_globals[@]}" -c "core.hooksPath=$_opsec_hooks" "${@:_opsec_index+1}"
 fi
 
 _opsec_restore_override
-exec "$real_git" "$@"
+_exec_git "$real_git" "$@"
