@@ -31,9 +31,9 @@ ACCEPTED_VERDICT_TOKENS = (
 # either a colon surrounded by emphasis/backticks/whitespace or at least one
 # emphasis/backtick/whitespace separator, then the token and a word boundary
 # (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
-# Anything may follow the token — reviewers write
-# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
-# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
+# Only closing emphasis/backticks, optional punctuation (``.``/``!``), and
+# whitespace may follow the token. Trailing prose, parentheticals, or rubric
+# alternatives such as ``APPROVE or REQUEST_CHANGES`` are not verdicts. An inline or
 # quoted example ("I will report ``VERDICT: APPROVE`` later",
 # ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
 # The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
@@ -80,7 +80,7 @@ _VERDICT_LINE_PREFIX = _VERDICT_MARKER_PREFIX + r"[*_`\s]*:[*_`\s]*"
 _REVIEW_VERDICT_LINE_RE = re.compile(
     _VERDICT_MARKER_PREFIX + r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
-    r"(?![^\W_]|_+[^\W_])",
+    r"(?![^\W_]|_+[^\W_])[*_`.!\s]*\Z",
     re.IGNORECASE,
 )
 # Diagnostics echo only bounded ASCII identifier tokens, never paths, URLs or

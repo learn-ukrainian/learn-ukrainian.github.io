@@ -126,7 +126,7 @@ def test_dispatch_parser_failure_cannot_pass_completion(monkeypatch):
     ("**Verdict**: **APPROVED**", ["APPROVED"]),
     ("__VERDICT__: __REQUEST_CHANGES__", ["REQUEST_CHANGES"]),
     ("   ###### VERDICT: CHANGES_REQUESTED", ["CHANGES_REQUESTED"]),
-    ("*VERDICT: BLOCKED.* Findings follow.", ["BLOCKED"]),
+    ("*VERDICT: BLOCKED.* Findings follow.", []),
     ("VERDICT: APPROVE\nVERDICT: BLOCKED", ["APPROVE", "BLOCKED"]),
     ("```\nVERDICT: BLOCKED\n`````\n**VERDICT: APPROVE**", ["APPROVE"]),
     ("  ~~~text\nVERDICT: APPROVE\n   ~~~~ \t\nVERDICT: BLOCKED", ["BLOCKED"]),
@@ -141,6 +141,7 @@ def test_recognized_lines_preserve_tokens_and_order(reply, expected):
 @pytest.mark.parametrize("template", [
     "VERDICT: APPROVE", "**VERDICT: APPROVE**", "VERDICT: **APPROVE**",
     "**VERDICT**: **`APPROVE`**", "**VERDICT** APPROVE", "## VERDICT: APPROVE",
+    "VERDICT: APPROVE.", "**VERDICT: APPROVE.**", "VERDICT: **APPROVE**! \t",
 ])
 @pytest.mark.parametrize("indent", ["", "   "])
 def test_list_item_verdict_reaches_recorder(prefix, template, indent):
@@ -183,6 +184,27 @@ def test_conflicting_list_verdicts_remain_ambiguous():
         normalize_verdict(reply)
 
 
+@pytest.mark.parametrize("prefix", ["", "- ", "* ", "+ ", "1. ", "1) "])
+@pytest.mark.parametrize("line", [
+    "VERDICT: APPROVE or REQUEST_CHANGES per the rubric",
+    "**VERDICT**: **APPROVE** or **REQUEST_CHANGES**",
+    "VERDICT: REQUEST_CHANGES or APPROVE per the rubric",
+    "**VERDICT**: **REQUEST_CHANGES** or **APPROVE**",
+    "VERDICT: APPROVE with caveats",
+    "**VERDICT: APPROVE.** Both issues are fixed.",
+    "**VERDICT: APPROVE** (three non-blocking findings below)",
+    "**VERDICT APPROVE** — reviewed exact head …",
+])
+def test_trailing_rubric_or_prose_cannot_be_recorded_as_approval(prefix, line):
+    """A quoted rubric or qualified verdict must never become a false approval."""
+    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+
+    reply = prefix + line
+    assert recognized_verdicts(reply) == []
+    with pytest.raises(RecordError, match="missing or ambiguous"):
+        normalize_verdict(reply)
+
+
 @pytest.mark.parametrize("token", [
     "APPROVE", "APPROVED", "CHANGES_REQUESTED", "REQUEST_CHANGES", "BLOCKED",
 ])
@@ -193,7 +215,6 @@ def test_conflicting_list_verdicts_remain_ambiguous():
     "**VERDICT** {token}",
     "**VERDICT**: {token}",
     "**VERDICT**: **{token}**",
-    "**VERDICT {token}** — reviewed exact head …",
     "**VERDICT**{token}",
 ])
 def test_colon_and_markdown_separators_accept_all_verdict_tokens(template, token):
