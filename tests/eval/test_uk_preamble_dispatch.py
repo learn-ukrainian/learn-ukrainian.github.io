@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import io
 import json
 import subprocess
 import sys
 import textwrap
+from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import replace
 from pathlib import Path
 
@@ -14,6 +16,7 @@ import pytest
 import scripts.delegate as delegate
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
+from scripts.dispatcher.cli import build_parser
 from scripts.eval.uk_preamble import dispatch as dispatch_module
 from scripts.eval.uk_preamble.common import SEATS, ResultsDir, read_json, sha256_text
 from scripts.eval.uk_preamble.dispatch import (
@@ -26,7 +29,15 @@ from scripts.eval.uk_preamble.dispatch import (
     workspace_fingerprint,
     workspace_probe,
 )
-from scripts.eval.uk_preamble.runner import Executor, TaskSpec, composition_frame, raw_path, render, rules_block
+from scripts.eval.uk_preamble.runner import (
+    Executor,
+    TaskSpec,
+    composition_frame,
+    prompt_path,
+    raw_path,
+    render,
+    rules_block,
+)
 
 CALLER = "harness"
 
@@ -43,7 +54,7 @@ FAKE_DELEGATE = textwrap.dedent(
     command, task_id = args[0], (args[args.index("--task-id") + 1] if "--task-id" in args else args[1])
     record = state_dir / f"{task_id}.json"
     if command == "dispatch":
-        if record.exists() and "--force-new" not in args:
+        if record.exists():
             status = json.loads(record.read_text()).get("status")
             print(
                 f"task_id {task_id!r} is already {status}. Dispatch refuses to reuse a task-id in any state. "
@@ -52,24 +63,24 @@ FAKE_DELEGATE = textwrap.dedent(
             )
             sys.exit(2)
         if "--dry-run" in args:
-            record.write_text(json.dumps({
-                "status": "dry_run", "task_id": task_id, "initiator": "__CALLER__",
-            }))
-            print(task_id); print("dry-nonce"); sys.exit(0)
-        prompt = Path(args[args.index("--prompt-file") + 1]).read_text()
+            print(json.dumps({"argv": args})); sys.exit(0)
+        prompt_file = Path(args[args.index("--prompt-file") + 1])
+        prompt = prompt_file.read_bytes()
         result = state_dir / f"{task_id}.result"
         answer = '{"items": []}'
         result.write_text(answer)
         digest = hashlib.sha256(answer.encode()).hexdigest()
         if "tamper" in task_id:
             result.write_text("changed after the fact")
-        prompt_sha = hashlib.sha256(prompt.encode()).hexdigest()
+        prompt_sha = hashlib.sha256(prompt).hexdigest()
         record.write_text(json.dumps({
+            "schema_version": 2, "task_id": task_id, "prompt_file": str(prompt_file),
+            "research_task_family": args[args.index("--research-task-family") + 1],
             "status": "done", "agent": args[args.index("--agent") + 1], "model": args[args.index("--model") + 1],
             "substitution": None, "result_file": str(result), "result_sha256": digest, "run_nonce": "n1",
-            "prompt_sha256": prompt_sha, "effective_prompt_sha256": prompt_sha, "prompt_blocks": [],
-            "cwd": args[args.index("--cwd") + 1], "mode": args[args.index("--mode") + 1], "worktree_path": None,
-            "dispatch_args_sha256": "recorded-args", "cli_version": "1.2.3", "effort": "high",
+            "prompt_sha256": prompt_sha,
+            "cwd": args[args.index("--cwd") + 1], "mode": args[args.index("--mode") + 1], "worktree_path": args[args.index("--cwd") + 1],
+            "effort": "high",
         }))
         print(task_id); print("n1"); sys.exit(0)
     if command == "wait":
@@ -80,7 +91,7 @@ FAKE_DELEGATE = textwrap.dedent(
         if "unreadable" in task_id:
             print("NOT-JSON"); sys.exit(1)
         if not record.exists():
-            print(json.dumps({"error": f"no state file for task {task_id!r}"})); sys.exit(1)
+            print("dispatcher: task not found", file=sys.stderr); sys.exit(2)
         print(record.read_text()); sys.exit(0)
     sys.exit(2)
     """
@@ -214,10 +225,15 @@ def test_dispatch_wait_attributes_the_answer_and_its_conditions(fake):
     assert outcome.response_text == '{"items": []}'
     assert outcome.identity_problem(SEATS["gpt-6.1-sol"], sha256_text("Завдання.\n")) is None
     assert outcome.identity_problem(SEATS["claude-opus-5-5"], sha256_text("Завдання.\n"))
-    assert outcome.conditions["effective_prompt_sha256"] == sha256_text("Завдання.\n")
-    assert outcome.conditions["prompt_blocks"] == [] and outcome.conditions["cli_version"] == "1.2.3"
+    assert replace(outcome, conditions={**outcome.conditions, "effort": "low"}).identity_problem(
+        SEATS["gpt-6.1-sol"], sha256_text("Завдання.\n")
+    )
+    assert outcome.conditions["stored_prompt_sha256"] == sha256_text("Завдання.\n")
+    assert outcome.conditions["schema_version"] == 2 and outcome.conditions["prompt_blocks"] is None
+    for call in _calls(state)[-2:]:
+        assert call[call.index("--run-nonce") + 1] == "n1"
     dispatch_args = next(call for call in _calls(state) if call[0] == "dispatch")
-    for flag in ("--mode", "read-only", "--language-lane", "--cwd", str(dispatcher.cwd), "--rules-seat", "core"):
+    for flag in ("--mode", "read-only", "--language-lane", "--cwd", str(dispatcher.cwd), "ukrainian"):
         assert flag in dispatch_args
     assert dispatch_args[dispatch_args.index("--effort") + 1] == "high"
     # The family classifies the task. Pointer-selecting research flags, and flags that add other context, stay off.
@@ -234,25 +250,23 @@ def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
     assert "--review-profile" not in plain and "--require-review-verdict" not in plain
     dispatcher.review_profile = "ukrainian"
     review = dispatcher._dispatch_args("t-flash", seat, "review", prompt)
-    assert review == [*plain, "--review-profile", "ukrainian", "--require-review-verdict"]
+    assert review == [*plain, "--review-profile", "ukrainian"]
     for kind in ("writing", "judge"):
         other = dispatcher._dispatch_args("t-flash", seat, kind, prompt)
         assert "--review-profile" not in other and "--require-review-verdict" not in other
-    # Delegate's own parser reads it as a target-less Ukrainian review, and the argument hash changes.
-    parsed = delegate.build_parser().parse_args(review)
-    assert parsed.review_profile == "ukrainian" and parsed.require_review_verdict is True
-    assert parsed.branch is None and parsed.pr is None
-    assert delegate._dispatch_is_review_typed(parsed) and delegate._dispatch_is_language_lane(parsed)
-    assert dispatcher.expected_args_sha256("t-flash", seat, "review", prompt) != delegate.dispatch_args_sha256(
-        delegate.build_parser().parse_args(plain)
-    )
+    parsed = build_parser().parse_args(review)
+    assert parsed.review_profile == "ukrainian" and parsed.language_lane == "ukrainian"
+    assert parsed.branch is None
+    assert dispatcher.expected_args_sha256("t-flash", seat, "review", prompt) != sha256_text(json.dumps(plain))
 
 
 def test_flash_dispatch_carries_no_effort(fake):
     dispatcher, prompt, state = fake
-    dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
+    with pytest.raises(DispatchError, match="new evaluation run tag"):
+        dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
+    dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=False)
     args = _calls(state)[-1]
-    assert "--effort" not in args and "--force-new" in args
+    assert "--effort" not in args and "--force-new" not in args
     assert args[args.index("--agent") + 1] == "agy"
     assert args[args.index("--research-task-family") + 1] == "ukrainian-authoring"
 
@@ -262,20 +276,17 @@ def test_expected_args_hash_is_the_delegate_parser_hash_of_the_built_dispatch(fa
     seat = SEATS["claude-opus-5-5"]
     dispatcher.dispatch("t-opus", seat, "review", prompt, force_new=False)
     sent = next(call for call in _calls(state) if call[0] == "dispatch")
-    expected = delegate.dispatch_args_sha256(delegate.build_parser().parse_args(sent))
+    expected = sha256_text(json.dumps(sent, ensure_ascii=False))
     assert dispatcher.expected_args_sha256("t-opus", seat, "review", prompt) == expected
     built = dispatcher._dispatch_args("t-opus", seat, "review", prompt)
     assert built == sent
+    parsed = build_parser().parse_args(sent)
+    assert parsed.language_lane == "ukrainian" and parsed.mode == "read-only"
     writing = dispatcher._dispatch_args("t-opus", seat, "writing", prompt)
-    writing_hash = delegate.dispatch_args_sha256(delegate.build_parser().parse_args(writing))
-    assert writing_hash != expected  # the task family is part of the frozen argument hash
+    assert sha256_text(json.dumps(writing, ensure_ascii=False)) != expected
     assert writing[writing.index("--research-task-family") + 1] == "ukrainian-authoring"
-    flash = dispatcher._dispatch_args("t-flash", SEATS["gemini-3.8-flash-high"], "review", prompt)
-    assert flash[flash.index("--research-task-family") + 1] == "ukrainian-review"
-    with_extra = delegate.dispatch_args_sha256(delegate.build_parser().parse_args([*built, "--research-role", "x"]))
-    assert with_extra != expected  # an extra flag would show in the recorded hash
-    forced = delegate.dispatch_args_sha256(delegate.build_parser().parse_args([*built, "--force-new"]))
-    assert forced == expected  # delegate excludes --force-new, so a retry keeps the same hash
+    canonical = DelegateDispatcher(python=sys.executable, delegate=Path(delegate.__file__), cwd=dispatcher.cwd)
+    assert canonical.delegate.name == "dispatch.py"
 
 
 def test_condition_problems_name_every_departure(tmp_path: Path):
@@ -311,6 +322,23 @@ def test_condition_problems_name_every_departure(tmp_path: Path):
     unwrapped = {**expected, "prompt_blocks": [], "worktree_path": None}
     assert len(condition_problems(good, expected=unwrapped, args_sha256="a")) == 2
 
+    # The same departures fail closed for v2 without inventing legacy attestations.
+    v2_expected = {**expected, "schema_version": 2, "prompt_blocks": []}
+    v2_good = {
+        **good,
+        "schema_version": 2,
+        "effective_prompt_sha256": None,
+        "prompt_blocks": None,
+        "dispatch_args_sha256": None,
+        "prompt_sha256": "p",
+        "stored_prompt_sha256": "p",
+    }
+    assert condition_problems(v2_good, expected=v2_expected, args_sha256="a") == []
+    v2_bad = {**bad, "schema_version": 2, "prompt_sha256": "q", "stored_prompt_sha256": "q"}
+    assert len(condition_problems(v2_bad, expected=v2_expected, args_sha256="a")) == 7
+    assert condition_problems({"schema_version": 2}, expected=v2_expected, args_sha256="a")
+    assert condition_problems(v2_good, expected=expected, args_sha256="a")
+
 
 # --------------------------------------------------------------------------- delegate's real composition
 
@@ -338,7 +366,8 @@ def linked_worktree(tmp_path: Path) -> Path:
     _git(main.parent, "init", "-q", str(main))
     _git(main, "add", "-A")
     _git(main, "commit", "-q", "-m", "init")
-    linked = tmp_path / "linked"
+    linked = main / ".worktrees" / "dispatch" / "codex" / "linked"
+    linked.parent.mkdir(parents=True)
     _git(main, "worktree", "add", "-q", "-b", "eval", str(linked))
     return linked.resolve()
 
@@ -407,7 +436,10 @@ def test_eval_composer_accepts_a_real_dispatch_composition_with_the_evidence_blo
     """
     expected = DelegateComposer(delegate, linked_worktree).compose(PROMPT)
     assert expected["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
-    for evidence_dir in (linked_worktree.parent / "lease-one" / "evidence", linked_worktree.parent / "other" / "evidence"):
+    for evidence_dir in (
+        linked_worktree.parent / "lease-one" / "evidence",
+        linked_worktree.parent / "other" / "evidence",
+    ):
         record = _delegate_record(linked_worktree, PROMPT, "a", evidence_dir=evidence_dir)
         assert condition_problems(record, expected=expected, args_sha256="a") == []
         # A task-specific evidence directory does not change the prompt suffix, so
@@ -429,39 +461,38 @@ def test_primary_readonly_cwd_is_refused_before_dispatch(tmp_path: Path, monkeyp
 
 
 class SimulatedDelegate(DelegateDispatcher):
-    """DelegateDispatcher whose dispatch writes the record delegate's real composition path produces."""
+    """Run the real v2 CLI in-process; only provider execution is stubbed."""
 
     def __init__(self, cwd: Path) -> None:
         super().__init__(python=sys.executable, delegate=Path(delegate.__file__), cwd=cwd)
-        self.outcomes: dict[str, TaskOutcome] = {}
 
-    def known(self, task_id: str) -> bool:
-        return task_id in self.outcomes
+    def _run(self, *args: str, **kwargs):
+        from scripts.dispatcher import cli
 
-    def dispatch(self, task_id, seat, kind, prompt_path: Path, *, force_new: bool) -> str:
-        prompt = prompt_path.read_text(encoding="utf-8")
-        record = _delegate_record(self.cwd, prompt, self.expected_args_sha256(task_id, seat, kind, prompt_path))
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = cli.main(list(args))
+        return subprocess.CompletedProcess(args, code, out.getvalue(), err.getvalue())
+
+
+def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: Path, outside_dir: Path, monkeypatch):
+    from scripts.dispatcher import git, providers, store, worker
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(outside_dir / "tasks"))
+    monkeypatch.setattr(
+        git, "resolve_repo", lambda key: (linked_worktree.parents[3], {"key": "public", "github": "example/public"})
+    )
+
+    def finish(spec, record, prompt, hard_timeout):
+        # The provider builder must receive exactly the bytes stored by the real CLI.
+        assert providers.load(spec.agent).build(spec, {}).stdin == prompt
+        store.create(record, prompt)
         response = json.dumps({"items": [{"id": "W1", "text": "Текст."}]}, ensure_ascii=False)
-        conditions = {key: record.get(key) for key in dispatch_module.CONDITION_FIELDS}
-        self.outcomes[task_id] = TaskOutcome(
-            task_id,
-            "done",
-            seat.agent,
-            seat.model,
-            None,
-            response,
-            sha256_text(response),
-            "n",
-            sha256_text(prompt),
-            conditions=conditions,
-        )
-        return "n"
+        spec.final_file.write_text(response, encoding="utf-8")
+        record.update(status="done", result_sha256=sha256_text(response))
+        store.replace(record)
 
-    def wait(self, task_id: str, run_nonce: str | None) -> TaskOutcome:
-        return self.outcomes[task_id]
-
-
-def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: Path, outside_dir: Path):
+    monkeypatch.setattr(worker, "start", finish)
     dispatcher = SimulatedDelegate(linked_worktree)
     seat = SEATS["gpt-6.1-sol"]
     tasks = [
@@ -472,7 +503,7 @@ def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: P
         )
     ]
     plan_frame = composition_frame(dispatcher, tasks)
-    assert plan_frame["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
+    assert plan_frame["prompt_blocks"] == []
     results = ResultsDir(outside_dir / "results")
     executor = Executor(
         dispatcher,
@@ -489,6 +520,21 @@ def test_task_dispatched_through_real_composition_is_accepted(linked_worktree: P
         raw = read_json(raw_path(results, task.task_id))
         assert raw["accepted"] is True and raw["condition_problem"] is None
         assert frame(raw["composition"]) == plan_frame
+        assert raw["conditions"]["stored_prompt_sha256"] == task.prompt_sha256
+        assert raw["conditions"]["effective_prompt_sha256"] is None
+        assert raw["conditions"]["dispatch_args_sha256"] is None
+        resumed = SimulatedDelegate(linked_worktree).wait(task.task_id, raw["run_nonce"])
+        assert resumed.identity_problem(task.seat, task.prompt_sha256) is None
+        assert (
+            condition_problems(
+                resumed.conditions,
+                expected=raw["composition"],
+                args_sha256=dispatcher.expected_args_sha256(
+                    task.task_id, task.seat, task.kind, prompt_path(results, task.task_id)
+                ),
+            )
+            == []
+        )
 
 
 def test_workspace_fingerprint_tracks_commit_changes_and_instruction_files(tmp_path: Path):
@@ -534,11 +580,10 @@ def test_preflight_dry_run_is_idempotent_and_a_real_dispatch_still_refuses_reuse
     dry_calls = [call for call in _calls(state) if "--dry-run" in call]
     assert len(dry_calls) == 2
     assert "--force-new" not in dry_calls[0]
-    assert "--force-new" in dry_calls[1]
+    assert "--force-new" not in dry_calls[1]
     for call in dry_calls:
         assert call[call.index("--research-task-family") + 1] == "ukrainian-review"
-    record = json.loads((state / "t-pre.json").read_text(encoding="utf-8"))
-    assert record["status"] == "dry_run" and record["initiator"] == CALLER
+    assert not (state / "t-pre.json").exists()
     dispatcher.dispatch("t-real", seat, "writing", prompt, force_new=False)
     with pytest.raises(DispatchError, match="already"):
         dispatcher.dispatch("t-real", seat, "writing", prompt, force_new=False)
