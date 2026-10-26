@@ -94,6 +94,7 @@ import unicodedata
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
@@ -1078,18 +1079,21 @@ def review_attempt_tool_config(
     *,
     manifest_path: Path | str,
     input_root: Path | str,
-    cwd: Path,
+    cwd: Path | str,
     task_id: str,
     mode: str = "read-only",
     model: str | None = None,
     effort: str | None = None,
     review_access: str = "isolated",
     review_profile: str = "code",
-) -> dict[str, Any]:
+    base_tool_config: Mapping[str, Any] | None = None,
+) -> Mapping[str, Any]:
     """Build a bound attempt's launch options, preserving delegate's MCP gates.
 
     The runner owns the filesystem boundary and verifies attempt paths again
     before launch. This builder has no callers until dispatch v2 wires it in.
+    Pass every worker option, including AGY's run_nonce, owned_paths and risk,
+    in base_tool_config so the gate checks the complete launch configuration.
     """
     if plan.harness not in SUPPORTED_HARNESSES:
         raise ValueError("review attempt refused: unsupported harness")
@@ -1103,17 +1107,38 @@ def review_attempt_tool_config(
     if review_access not in {"isolated", "full"}:
         raise ValueError("review attempt refused: invalid review_access")
 
-    tool_config: dict[str, Any] = {
-        "mcp_config_path": str(plan.config_path),
-        "strict_mcp_config": True,
-        "mcp_server_names": ["sources"],
-        "review_id": plan.review_id,
-        "attempt_id": plan.attempt_id,
-        "review_manifest": str(manifest_path),
-        "review_input_root": str(input_root),
-        "review_access": review_access,
-        "review_cwd": str(cwd),
+    tool_config = dict(base_tool_config or {})
+    reserved = {
+        "mcp_config_path",
+        "strict_mcp_config",
+        "mcp_server_names",
+        "review_id",
+        "attempt_id",
+        "review_manifest",
+        "review_input_root",
+        "review_access",
+        "review_cwd",
+        "allowed_tools",
+        "reviewer_tools",
+        "mcp_servers",
+        "review_profile",
+        "review_ledger_path",
     }
+    if any(key in reserved or key.endswith("_home_override") for key in tool_config):
+        raise ValueError("review attempt refused: reserved tool_config key")
+    tool_config.update(
+        {
+            "mcp_config_path": str(plan.config_path),
+            "strict_mcp_config": True,
+            "mcp_server_names": ["sources"],
+            "review_id": plan.review_id,
+            "attempt_id": plan.attempt_id,
+            "review_manifest": str(manifest_path),
+            "review_input_root": str(input_root),
+            "review_access": review_access,
+            "review_cwd": str(cwd),
+        }
+    )
     if plan.harness == "claude":
         if review_access == "isolated":
             tool_config["allowed_tools"] = review_tools_allowed_csv(plan.harness)
@@ -1138,7 +1163,7 @@ def review_attempt_tool_config(
             task_id=task_id,
             tool_config=tool_config,
         )
-    return tool_config
+    return MappingProxyType(dict(tool_config))
 
 
 def _config_flags(argv: Sequence[str]) -> list[str]:

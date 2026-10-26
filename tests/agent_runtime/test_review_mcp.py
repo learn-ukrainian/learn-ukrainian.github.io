@@ -80,7 +80,8 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 @pytest.mark.parametrize("access", ["isolated", "full"])
 @pytest.mark.parametrize("profile", ["code", "", "ukrainian"])
 def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_path, harness, access, profile):
-    """Catch dropped grants, binding keys or scoped homes in the reusable builder."""
+    """Catch incomplete gate inputs, mutable results, or dropped legacy grants."""
+    base = {"read_only_tmp_root": str(tmp_path), "run_nonce": "nonce", "owned_paths": [], "risk": "critical"}
     plan = prepare_review_attempt(
         "rev-config",
         "att-config",
@@ -92,6 +93,7 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
     # Pinned from delegate._run_worker's inline builder; no standalone legacy
     # builder can be imported without running the worker and its admission loop.
     expected = {
+        **base,
         "mcp_config_path": str(plan.config_path),
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
@@ -128,8 +130,13 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
             effort="high",
             review_access=access,
             review_profile=profile,
+            base_tool_config=base,
         )
         assert result == expected
+        with pytest.raises(TypeError):
+            result["review_access"] = "full"
+        base["risk"] = "low"
+        assert result["risk"] == "critical"
         for name, gate in (("codex", codex_gate), ("agy", agy_gate)):
             if harness == name and access == "isolated":
                 gate.assert_called_once_with(
@@ -146,19 +153,71 @@ def test_tool_config_preserves_legacy_bound_attempt_contract(manifest_file, tmp_
 
 
 @pytest.mark.parametrize(
-    "field,value", [("harness", "unknown"), ("review_id", None), ("attempt_id", ""), ("config_path", None)]
+    "field,value",
+    [
+        ("harness", "unknown"),
+        ("review_id", None),
+        ("attempt_id", ""),
+        ("config_path", None),
+        ("review_id", "../x"),
+        ("attempt_id", "../x"),
+        ("review_access", "bogus"),
+        *[(field, value) for field in ("manifest_path", "input_root", "cwd") for value in (None, "", "  ", "missing")],
+    ],
 )
-def test_tool_config_refuses_missing_attempt_binding(manifest_file, tmp_path, field, value):
+@pytest.mark.parametrize("harness", ["claude", "codex", "agy"])
+def test_tool_config_refuses_invalid_or_missing_attempt_binding(manifest_file, tmp_path, harness, field, value):
+    plan = prepare_review_attempt(
+        "rev-config", "att-config", manifest_file, harness, receipts_root=tmp_path / "receipts"
+    )
+    options = dict(manifest_path=manifest_file, input_root=tmp_path, cwd=tmp_path, task_id="config-test")
+    if field in {"harness", "review_id", "attempt_id", "config_path"}:
+        plan = replace(plan, **{field: value})
+    elif value == "missing":
+        options.pop(field)
+    else:
+        options[field] = value
+    error, message = (
+        (TypeError, "required keyword-only argument") if value == "missing" else (ValueError, "review attempt refused")
+    )
+    with pytest.raises(error, match=message):
+        review_mcp_module.review_attempt_tool_config(plan, **options)
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "mcp_config_path",
+        "strict_mcp_config",
+        "mcp_server_names",
+        "review_id",
+        "attempt_id",
+        "review_manifest",
+        "review_input_root",
+        "review_access",
+        "review_cwd",
+        "allowed_tools",
+        "reviewer_tools",
+        "codex_home_override",
+        "agy_home_override",
+        "claude_home_override",
+        "mcp_servers",
+        "review_profile",
+        "review_ledger_path",
+    ],
+)
+def test_tool_config_refuses_reserved_base_key_collision(manifest_file, tmp_path, key):
     plan = prepare_review_attempt(
         "rev-config", "att-config", manifest_file, "claude", receipts_root=tmp_path / "receipts"
     )
-    with pytest.raises(ValueError, match="review attempt refused"):
+    with pytest.raises(ValueError, match="reserved tool_config key"):
         review_mcp_module.review_attempt_tool_config(
-            replace(plan, **{field: value}),
+            plan,
             manifest_path=manifest_file,
             input_root=tmp_path,
             cwd=tmp_path,
             task_id="config-test",
+            base_tool_config={key: "override"},
         )
 
 
