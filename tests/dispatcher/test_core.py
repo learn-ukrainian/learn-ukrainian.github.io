@@ -430,7 +430,7 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
 def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     """Defect class: scanner exceptions lose terminal failure or expose exception contents."""
     review = sandbox.repo / "scripts/review"
-    review.mkdir()
+    review.mkdir(exist_ok=True)
     (review / "verdict_parser.py").write_text(
         "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
     )
