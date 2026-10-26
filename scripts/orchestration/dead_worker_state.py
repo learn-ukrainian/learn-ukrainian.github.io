@@ -11,6 +11,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.dispatcher import store
 from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
 from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
 
@@ -112,6 +113,17 @@ def worker_liveness(
         return None
     namespace = _pid_namespace()
     view = _proc_pid_namespace()
+    if record.get("schema_version") == 2 and "process_start" in record:
+        from scripts.dispatcher.worker import _identity
+
+        expected = record["process_start"]
+        if not isinstance(expected, str) or namespace != INITIAL_PID_NAMESPACE or view != namespace:
+            return None
+        actual = _identity(pid)
+        if actual is not None:
+            return actual == expected
+        # An unreadable identity alone does not prove death.
+        return False if worker_liveness({"pid": pid}, pid_alive=pid_alive) is False else None
     identity = record.get("worker_identity")
     if identity is not None:
         if (
@@ -182,11 +194,18 @@ def write_state_unlocked(path: Path, state: dict[str, Any]) -> None:
     os.replace(tmp, path)
 
 
-def _write_public_state_unlocked(path: Path, state: dict[str, Any]) -> None:
-    """Use delegate's cause sink by default; import lazily because it imports these markers."""
-    from scripts.delegate import _write_record_unlocked
+def _read_current(path: Path, observed: dict[str, Any]) -> dict[str, Any]:
+    """Read legacy history without creating a writer lock or returning an alias."""
+    try:
+        current = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return dict(observed)
+    return current if isinstance(current, dict) else dict(observed)
 
-    _write_record_unlocked(path, state)
+
+def _write_v2_state_unlocked(path: Path, state: dict[str, Any]) -> None:
+    """Persist a v2 record while the caller holds its per-task lock."""
+    store.replace(state, path)
 
 
 def mark_dead_worker_terminal(
@@ -203,8 +222,10 @@ def mark_dead_worker_terminal(
 ) -> tuple[dict[str, Any], bool]:
     """Recheck a dead worker under the writer lock, then persist its final HEAD.
 
-    ``write`` replaces the default delegate public-cause sink for a caller with its own record writer.
+    Legacy records are read-only. ``write`` overrides the v2 record writer.
     """
+    if observed.get("schema_version") != 2:
+        return _read_current(path, observed), False
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text(encoding="utf-8"))
@@ -212,6 +233,8 @@ def mark_dead_worker_terminal(
             return observed, False
         if not isinstance(current, dict):
             return observed, False
+        if current.get("schema_version") != 2:
+            return current, False
         raw_pid = current.get("pid")
         pid = int(raw_pid) if isinstance(raw_pid, int) or (isinstance(raw_pid, str) and raw_pid.isdigit()) else None
         if (
@@ -240,7 +263,7 @@ def mark_dead_worker_terminal(
             current["stderr_excerpt"] = (
                 f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
             )
-        (write or _write_public_state_unlocked)(path, current)
+        (write or _write_v2_state_unlocked)(path, current)
         if ledger is not None:
             task_id = current.get("task_id") or path.stem
             ledger.release(task_id, pid=pid)
@@ -257,6 +280,8 @@ def _mark_orphaned_pidless_crashed(
     write: Callable[[Path, dict[str, Any]], None] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Re-prove ``is_orphaned`` under the writer lock, then mark the record ``crashed`` (``write`` as above)."""
+    if observed.get("schema_version") != 2:
+        return _read_current(path, observed), False
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text(encoding="utf-8"))
@@ -264,6 +289,7 @@ def _mark_orphaned_pidless_crashed(
             return observed, False
         if (
             not isinstance(current, dict)
+            or current.get("schema_version") != 2
             or current.get("run_nonce") != observed.get("run_nonce")
             or current.get("started_at") != observed.get("started_at")
             or not is_orphaned(current)
@@ -274,7 +300,7 @@ def _mark_orphaned_pidless_crashed(
         current["finished_at"] = datetime.now(UTC).isoformat()
         current["returncode_reason"] = reason
         current["stderr_excerpt"] = excerpt(current, prior_status)
-        (write or _write_public_state_unlocked)(path, current)
+        (write or _write_v2_state_unlocked)(path, current)
         return current, True
 
 
@@ -345,8 +371,10 @@ def mark_missing_worktree_failed(
     """Recheck a dead worker whose worktree is missing under the writer lock, then mark it failed.
 
     If ledger is provided, releases write claims bound to the observed PID before releasing the lock (#8659).
-    ``write`` replaces the default delegate public-cause sink, as in :func:`mark_dead_worker_terminal`.
+    Legacy records are read-only. ``write`` overrides the v2 record writer.
     """
+    if observed.get("schema_version") != 2:
+        return _read_current(path, observed), False
     with task_state_lock(path):
         try:
             current = json.loads(path.read_text(encoding="utf-8"))
@@ -354,6 +382,8 @@ def mark_missing_worktree_failed(
             return observed, False
         if not isinstance(current, dict):
             return observed, False
+        if current.get("schema_version") != 2:
+            return current, False
         raw_pid = current.get("pid")
         pid = int(raw_pid) if isinstance(raw_pid, int) or (isinstance(raw_pid, str) and raw_pid.isdigit()) else None
         worktree_raw = current.get("worktree_path") or current.get("cwd")
@@ -378,7 +408,7 @@ def mark_missing_worktree_failed(
         current["exit_code"] = current.get("exit_code") if current.get("exit_code") is not None else -9
         current["returncode"] = current.get("returncode") if current.get("returncode") is not None else -9
         current["last_error"] = current.get("last_error") or "worktree_missing_at_settle"
-        (write or _write_public_state_unlocked)(path, current)
+        (write or _write_v2_state_unlocked)(path, current)
         if ledger is not None:
             task_id = current.get("task_id") or path.stem
             ledger.release(task_id, pid=pid)

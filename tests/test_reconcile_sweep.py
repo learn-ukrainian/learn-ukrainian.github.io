@@ -66,10 +66,7 @@ def test_reconcile_sweep_uses_worker_identity(tmp_path, monkeypatch, apply, iden
     assert report.zombie_tasks == (["identity-worker"] if dead else [])
     assert report.live_tasks == ([] if dead else ["identity-worker"])
     assert report.unparseable_tasks == []
-    if dead and apply:
-        assert json.loads(path.read_bytes())["status"] == "crashed"
-    else:
-        assert path.read_bytes() == before
+    assert path.read_bytes() == before
 
 
 def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
@@ -105,7 +102,7 @@ def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
     assert "reconcile-sweep: mode=dry_run scanned_tasks=1 zombie_tasks=1 stale_claims=0" in report.summary_line()
 
 
-def test_reconcile_sweep_apply_settles_dead_record(tmp_path: Path) -> None:
+def test_reconcile_sweep_apply_preserves_legacy_dead_record(tmp_path: Path) -> None:
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()
     dead_task_id = "dead-task-2"
@@ -130,10 +127,9 @@ def test_reconcile_sweep_apply_settles_dead_record(tmp_path: Path) -> None:
     assert report.scanned_tasks == 1
     assert report.zombie_tasks == [dead_task_id]
 
-    # File on disk must be marked crashed by the explicit mutating path.
+    # Legacy history remains readable and unchanged even in apply mode.
     healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "crashed"
-    assert "marked crashed by reconcile_sweep probe" in healed.get("stderr_excerpt", "")
+    assert healed == state
     assert (
         "reconcile-sweep: mode=apply scanned_tasks=1 zombies_crashed=1 stale_claims_released=0" in report.summary_line()
     )
@@ -394,9 +390,9 @@ def test_reconcile_sweep_malformed_pid_handled_per_record(tmp_path: Path) -> Non
     assert report_apply.live_tasks == ["task_valid_live"]
     assert len(report_apply.unparseable_tasks) == 7
 
-    # Zombie task healed to crashed
+    # Legacy zombie task is inspected without rewriting its history.
     zombie_state = json.loads((task_dir / "task_valid_zombie.json").read_text(encoding="utf-8"))
-    assert zombie_state["status"] == "crashed"
+    assert zombie_state["status"] == "running"
 
     # Live task still running
     live_state = json.loads((task_dir / "task_valid_live.json").read_text(encoding="utf-8"))
@@ -449,10 +445,10 @@ def _publish_prep_record(
     return task_dir / f"{task_id}.json"
 
 
-def test_reconcile_sweep_crashes_prep_record_whose_dispatcher_died(
+def test_reconcile_sweep_preserves_legacy_prep_record_whose_dispatcher_died(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Review blocker: an interrupted dispatch's provisional record is healed, not unparseable."""
+    """An interrupted legacy dispatch is reported without rewriting its record."""
     from scripts.guardrails.delegate_ownership import _task_still_active
     from tests.worktree_prep_helpers import exited_process_identity
 
@@ -470,10 +466,10 @@ def test_reconcile_sweep_crashes_prep_record_whose_dispatcher_died(
     applied = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
     assert applied.zombie_tasks == ["died-mid-prep"]
     healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "crashed"
-    assert healed["returncode_reason"] == "dispatch_died_during_worktree_prep"
+    assert healed["status"] == "spawning"
+    assert "returncode_reason" not in healed
     assert healed["pid"] is None
-    assert healed["finished_at"]
+    assert not healed.get("finished_at")
     # The reservation stays: it is the evidence the reaper reports for any leftover.
     assert healed["worktree_prep"]["reserved_by_mkdir"] is True
 
@@ -511,10 +507,10 @@ def test_reconcile_sweep_keeps_prep_record_without_proof_its_dispatcher_died(
     assert _task_still_active("preparing", None, task_dir) is True
 
 
-def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
+def test_reconcile_sweep_preserves_legacy_admission_hold_whose_dispatcher_died(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """#8717: an admission hold left by a dispatcher that died before the worktree is healed, not unparseable."""
+    """An orphaned legacy admission hold is reported without rewriting history."""
     from scripts import delegate
     from scripts.guardrails.delegate_ownership import _task_still_active
     from scripts.orchestration import dispatch_admission
@@ -539,8 +535,7 @@ def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
     assert applied.zombie_tasks == ["died-after-admission"]
     assert applied.unparseable_tasks == []
     healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "crashed"
-    assert healed["returncode_reason"] == "dispatch_died_after_admission"
+    assert healed == state
 
 
 @pytest.mark.parametrize("prior", [None, "1"])

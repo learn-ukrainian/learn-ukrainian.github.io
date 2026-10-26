@@ -143,7 +143,7 @@ def test_marker_rechecks_identity_before_writing_or_releasing_claim(proc, foreig
     import json
     from unittest.mock import Mock
 
-    record = {**_record(), "task_id": "worker", "status": "running", "run_nonce": "run"}
+    record = {"schema_version": 2, **_record(), "task_id": "worker", "status": "running", "run_nonce": "run"}
     if foreign:
         record["worker_identity"]["pid_namespace"] = "pid:[999999]"
     else:
@@ -213,3 +213,64 @@ def test_confirmed_nested_namespace_dead_pid_ignores_legacy_unknown_callback(pro
         "pid": 999_999_998, "start_time": 100, "pid_namespace": "pid:[999999]",
     }}
     assert d.worker_liveness(record, pid_alive=lambda pid: True) is False
+
+
+@pytest.mark.parametrize("schema", [None, 1])
+@pytest.mark.parametrize("marker", ["dead", "missing", "prep", "admission"])
+def test_legacy_markers_never_invoke_injected_writer(tmp_path, schema, marker):
+    import json
+    from unittest.mock import Mock
+
+    state = {"task_id": "history", "status": "running", "pid": 123}
+    if schema is not None:
+        state["schema_version"] = schema
+    path = tmp_path / "history.json"
+    path.write_text(json.dumps(state))
+    before = path.read_bytes()
+    write = Mock(side_effect=AssertionError("legacy write"))
+    if marker == "dead":
+        current, changed = d.mark_dead_worker_terminal(
+            path, state, source="test", terminal_status="crashed", allowed_statuses=("running",),
+            pid_alive=lambda _pid: False, resolve_head=lambda _path: None, write=write,
+        )
+    elif marker == "missing":
+        current, changed = d.mark_missing_worktree_failed(path, state, pid_alive=lambda _pid: False, write=write)
+    else:
+        callback = d.mark_orphaned_worktree_prep_crashed if marker == "prep" else d.mark_orphaned_admission_hold_crashed
+        kwargs = {"reason": "dispatch_died_after_admission"} if marker == "admission" else {}
+        current, changed = callback(path, state, source="test", is_orphaned=lambda _state: True, write=write, **kwargs)
+    assert current == state and current is not state and changed is False
+    assert path.read_bytes() == before
+    assert list(tmp_path.iterdir()) == [path]
+    write.assert_not_called()
+
+
+@pytest.mark.parametrize("identity,expected", [("boot:100", True), ("boot:101", False), (None, None)])
+def test_v2_liveness_uses_supervisor_identity(proc, monkeypatch, identity, expected):
+    from scripts.dispatcher import worker
+
+    monkeypatch.setattr(worker, "_identity", lambda _pid: identity)
+    assert d.worker_liveness({"schema_version": 2, "pid": 123, "process_start": "boot:100"}) is expected
+
+
+def test_v2_marker_rechecks_schema_under_lock(proc, tmp_path, monkeypatch):
+    import json
+    from contextlib import contextmanager
+
+    path = tmp_path / "worker.json"
+    observed = {"schema_version": 2, "task_id": "worker", "status": "running", "pid": 123}
+    current = {**observed, "schema_version": 1}
+    path.write_text(json.dumps(observed))
+
+    @contextmanager
+    def replaced(_path):
+        path.write_text(json.dumps(current))
+        yield
+
+    monkeypatch.setattr(d, "task_state_lock", replaced)
+    result, changed = d.mark_dead_worker_terminal(
+        path, observed, source="test", terminal_status="crashed", allowed_statuses=("running",),
+        pid_alive=lambda _pid: False, resolve_head=lambda _path: None,
+    )
+    assert result == current and changed is False
+    assert json.loads(path.read_text()) == current

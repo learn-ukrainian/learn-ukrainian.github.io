@@ -83,7 +83,7 @@ def test_heal_zombie_task_marks_failed_and_releases(tmp_path: Path) -> None:
     task_dir.mkdir()
     task_id = "example-task"
     state = {
-        "task_id": task_id,
+        "schema_version": 2, "task_id": task_id,
         "status": "running",
         "pid": 999_999_999,
         "worktree_path": str(tmp_path / "wt"),
@@ -124,7 +124,7 @@ def test_heal_zombie_review_names_dead_worker_reason(tmp_path: Path) -> None:
     path.write_text(
         json.dumps(
             {
-                "task_id": task_id,
+                "schema_version": 2, "task_id": task_id,
                 "status": "running",
                 "pid": 999_999_999,
                 "require_review_verdict": True,
@@ -148,7 +148,7 @@ def test_settle_missing_worktree_review_names_reason(tmp_path: Path) -> None:
     path.write_text(
         json.dumps(
             {
-                "task_id": task_id,
+                "schema_version": 2, "task_id": task_id,
                 "status": "running",
                 "pid": 999_999_999,
                 "worktree_path": str(tmp_path / "missing"),
@@ -175,7 +175,7 @@ def test_settle_task_reports_closeout(tmp_path: Path, monkeypatch: pytest.Monkey
     (task_dir / f"{task_id}.json").write_text(
         json.dumps(
             {
-                "task_id": task_id,
+                "schema_version": 2, "task_id": task_id,
                 "status": "done",
                 "pid": os.getpid(),
                 "worktree_path": str(wt),
@@ -395,7 +395,7 @@ def test_settle_task_settles_missing_worktree(tmp_path: Path, monkeypatch: pytes
     (task_dir / f"{task_id}.json").write_text(
         json.dumps(
             {
-                "task_id": task_id,
+                "schema_version": 2, "task_id": task_id,
                 "status": "spawning",
                 "pid": 999_999_999,
                 "worktree_path": str(tmp_path / "reaped-wt"),
@@ -433,7 +433,7 @@ def test_settle_task_missing_worktree_live_pid_not_settled(tmp_path: Path, monke
     (task_dir / f"{task_id}.json").write_text(
         json.dumps(
             {
-                "task_id": task_id,
+                "schema_version": 2, "task_id": task_id,
                 "status": "running",
                 "pid": os.getpid(),
                 "worktree_path": str(tmp_path / "reaped-wt"),
@@ -477,7 +477,7 @@ def test_settle_task_worktree_present_path_unchanged(tmp_path: Path, monkeypatch
     (task_dir / f"{task_id}.json").write_text(
         json.dumps(
             {
-                "task_id": task_id,
+                "schema_version": 2, "task_id": task_id,
                 "status": "done",
                 "pid": 999_999_999,
                 "worktree_path": str(wt),
@@ -520,7 +520,7 @@ def test_settle_missing_worktree_stale_observation_rejected_preserves_claims(tmp
     path = task_dir / f"{task_id}.json"
 
     initial_data = {
-        "task_id": task_id,
+        "schema_version": 2, "task_id": task_id,
         "run_nonce": "run-1",
         "started_at": "2026-01-01T00:00:00Z",
         "status": "running",
@@ -553,7 +553,7 @@ def test_settle_missing_worktree_stale_observation_rejected_preserves_claims(tmp
         loaded = real_load(tdir, tid)
         if tid == task_id and loaded.get("run_nonce") == "run-1":
             replaced_data = {
-                "task_id": task_id,
+                "schema_version": 2, "task_id": task_id,
                 "run_nonce": "run-2",
                 "started_at": "2026-01-01T01:00:00Z",
                 "status": "running",
@@ -594,7 +594,7 @@ def test_settle_missing_worktree_replacement_after_transition_preserves_new_run_
     path = task_dir / f"{task_id}.json"
 
     initial_data = {
-        "task_id": task_id,
+        "schema_version": 2, "task_id": task_id,
         "run_nonce": "run-1",
         "started_at": "2026-01-01T00:00:00Z",
         "status": "running",
@@ -671,7 +671,7 @@ def test_heal_zombie_task_pidless_preserves_replacement_run_claims(tmp_path: Pat
     path = task_dir / f"{task_id}.json"
 
     initial_data = {
-        "task_id": task_id,
+        "schema_version": 2, "task_id": task_id,
         "run_nonce": "run-1",
         "started_at": "2026-01-01T00:00:00Z",
         "status": "running",
@@ -747,7 +747,7 @@ def test_reconciliation_cleans_recycled_pid_after_settlement(tmp_path: Path) -> 
     path = task_dir / f"{task_id}.json"
 
     initial_data = {
-        "task_id": task_id,
+        "schema_version": 2, "task_id": task_id,
         "run_nonce": "run-1",
         "started_at": "2026-01-01T00:00:00Z",
         "status": "failed",
