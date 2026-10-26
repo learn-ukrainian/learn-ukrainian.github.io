@@ -239,6 +239,49 @@ def test_deletion_errno_is_receipted(batch, monkeypatch):
     assert rows[0]["result"] == "error:13"
 
 
+def test_partial_deletion_containment_failure_is_an_error(batch, monkeypatch):
+    entry = make_entry(batch)
+    payload = entry / "evidence-example" / "report.txt"
+
+    def partial(*args, **kwargs):
+        payload.unlink()
+        raise retention.ContainmentError("directory changed before rmdir")
+
+    monkeypatch.setattr(retention, "_remove_invocation_dir", partial)
+    code, rows = invoke(batch)
+    assert code == 1
+    assert entry.exists() and not payload.exists()
+    assert rows[0]["result"] == "error:5"
+
+
+@pytest.mark.parametrize("nonce", ["run-one", "other-run"])
+def test_released_task_pin_must_match_manifest_run(batch, nonce):
+    entry = make_entry(batch, retention_disposition="retained")
+    task = {
+        "task_id": entry.name,
+        "status": "done",
+        "run_nonce": "run-one",
+        "preserved_artifacts": {"retention_disposition": "released", "run_nonce": nonce},
+    }
+    (batch / "tasks" / f"{entry.name}.json").write_text(json.dumps(task))
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists() is (nonce != "run-one")
+    assert rows[0]["result"] == ("deleted" if nonce == "run-one" else "skipped:pin")
+
+
+def test_archived_record_cannot_override_missing_required_hot_task_record(batch):
+    entry = make_entry(batch)
+    hot = batch / "tasks" / f"{entry.name}.json"
+    archive = batch / "tasks" / "archive"
+    archive.mkdir()
+    hot.rename(archive / hot.name)
+    code, rows = invoke(batch)
+    assert code == 0
+    assert entry.exists()
+    assert rows[0]["result"] == "skipped:task_unreadable"
+
+
 def test_symlinked_state_ancestor_refuses_configuration(batch, tmp_path):
     make_entry(batch)
     alias = tmp_path / "alias"

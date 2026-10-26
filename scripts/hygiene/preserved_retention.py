@@ -162,9 +162,9 @@ def run(batch: Path, keep_list: Path, reports: Path, *, apply: bool = False) -> 
                     if not reason and apply:
                         _remove_invocation_dir(root, name, namespace=batch / "preserved", expected_dev=info.st_dev, expected_ino=info.st_ino)
                         result = "deleted"
-                except OSError as exc:
-                    result = f"error:{exc.errno or errno.EIO}"
-                except (ValueError, TypeError, KeyError, ComponentOpenError, ContainmentError):
+                except (OSError, ContainmentError) as exc:
+                    result = f"error:{getattr(exc, 'errno', None) or errno.EIO}"
+                except (ValueError, TypeError, KeyError, ComponentOpenError):
                     result = "skipped:unreadable_or_invalid_record"
                 receipt.write(json.dumps({"name": name, "bytes": size, "result": result}) + "\n")
                 receipt.flush()
