@@ -40,8 +40,13 @@ def sandbox(tmp_path):
     run_git(repo, "init", "-b", "main")
     run_git(repo, "config", "user.email", "stub@example.invalid")
     run_git(repo, "config", "user.name", "Stub")
-    for relative in ("scripts/dispatcher", "scripts/common"):
+    for relative in ("scripts/dispatcher", "scripts/common", "scripts/review"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
+    for relative in ("scripts/agent_runtime/bounded_advisory.py",
+                     "scripts/orchestration/worktree_paths.py", "scripts/orchestration/task_record_store.py"):
+        target = repo / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(SOURCE / relative, target)
     # Disposable repositories share the test interpreter; they own no project environment.
     resolver = repo / "scripts/common/repo_root.py"
     with resolver.open("a") as stream:

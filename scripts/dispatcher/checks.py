@@ -6,10 +6,55 @@ from urllib.parse import unquote
 
 import yaml
 
-from scripts.dispatcher import git
+from scripts.agent_runtime import bounded_advisory as advisory
+from scripts.dispatcher import git, store
 from scripts.dispatcher.types import TaskSpec
+from scripts.review.model_catalog import canonical_model_id
 
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
+
+
+def advisory_binding(args, prompt: bytes) -> tuple[dict, str, str]:
+    """Bind every dispatch input except attribution, parser plumbing and envelope reference."""
+    excluded = {"command", "initiator", "advisory_task", "print_advisory_binding"}
+    bound = {key: value for key, value in vars(args).items() if key not in excluded}
+    prompt_sha = store.digest(prompt)
+    return bound, prompt_sha, advisory.binding_digest(advisory.canonical_sha256(bound), prompt_sha)
+
+
+def check_bounded_advisory(args, model: str, repo: Path, prompt: bytes) -> dict:
+    """Apply the legacy bounded-worker policy before creating a worktree or starting a provider."""
+    try:
+        model = canonical_model_id(model)
+        requirement = advisory.bounded_requirement(
+            model, mode=args.mode, task_family=args.research_task_family, review_profile=args.review_profile,
+            owned_paths=[*args.owned_path, *args.research_owned_path], repo_root=repo,
+        )
+        task = args.advisory_task
+        if task is not None and (not task.strip() or task.strip() == args.task_id or requirement is None):
+            raise advisory.AdvisoryRefused(advisory.FLAG_CONFLICT, "--advisory-task must name another task for a bounded worker")
+        if requirement is None:
+            return {}
+        bound, prompt_sha, binding = advisory_binding(args, prompt)
+        if task is None:
+            if model in advisory.driver_brief_models() and args.research_task_family in {
+                "bounded_implementation", "readonly_recon", "mechanical_classification",
+            }:
+                owned = advisory.validate_driver_brief(bound, repo_root=repo, brief_sha256=prompt_sha, model_id=model)
+                return {"driver_brief": dict(advisory_args=bound, prompt_sha256=prompt_sha,
+                                             dispatch_args_sha256=binding, owned_paths=owned)}
+            raise advisory.AdvisoryRefused(advisory.ENVELOPE_REQUIRED, f"{requirement}; use --advisory-task TASK_ID")
+        if args.prompt == "-" or args.prompt_file == "-":
+            raise advisory.AdvisoryRefused(advisory.FLAG_CONFLICT, "bounded dispatch requires --prompt or --prompt-file, not stdin")
+        path = store.record_path(task.strip())
+        path = store.locate_task_record(path.parent, task.strip()) or path
+        envelope = advisory.load_envelope(task.strip(), state_path=path, binding_sha256=binding, repo_root=repo)
+        advisory.require_owned_paths_match(envelope.owned_paths, args.owned_path)
+        return {"advisory_envelope": envelope.state_record(
+            requirement, args=bound, prompt_sha256=prompt_sha, repo_root=repo, execution=None,
+        )}
+    except advisory.AdvisoryRefused as exc:
+        raise ValueError(str(exc)) from None
 
 
 def _handle_private_input(spec: TaskSpec, message: str) -> None:
