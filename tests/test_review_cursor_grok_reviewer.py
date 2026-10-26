@@ -143,7 +143,7 @@ def test_catalog_refuses_a_cursor_review_pin_outside_policy(model):
 
 def test_catalog_requires_the_cursor_grok_high_effort_slug():
     catalog = _catalog()
-    catalog["review_candidates"][GROK_SEAT]["invocation"] = ".venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7"
+    catalog["review_candidates"][GROK_SEAT]["invocation"] = ".venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7"
     with pytest.raises(ModelCatalogError, match="runtime-attestable Cursor slug"):
         validate_catalog(catalog)
 
