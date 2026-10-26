@@ -39,7 +39,7 @@ shim_dir_physical="$(cd -P "$shim_dir" && pwd -P)"
 _is_shim_dir() {
   local physical
   physical="$(cd -P -- "$1" 2> /dev/null && pwd -P)" || return 1
-  [[ "$physical" == "$shim_dir_physical" || "$physical" == */scripts/agent_runtime/shims ]]
+  [[ "$physical" == "$shim_dir_physical" || "$physical" == */scripts/agent_runtime/shims || "$physical" == */scripts/dispatcher/npm_shims ]]
 }
 
 # The real NAME: the PINNED path unless it is a shim, else the first executable

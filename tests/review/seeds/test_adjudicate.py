@@ -318,6 +318,17 @@ def test_the_task_dispatches_through_delegate_py(seeded: Case) -> None:
     )
 
 
+def test_render_dispatch_command_does_not_load_legacy_runtime(tmp_path, monkeypatch):
+    def refuse_import():
+        pytest.fail("rendering the command must not load the legacy runtime")
+
+    monkeypatch.setattr(adj, "_delegate_module", refuse_import)
+    argv = adj.dispatch_argv(tmp_path / "prompt.md", "adj-test", "codex", model="gpt-6.1-sol")
+    assert argv[argv.index("--cwd") + 1] == str(delegate._REPO_ROOT)
+    assert argv[argv.index("--mode") + 1] == "read-only"
+    assert "--full-checkout" in argv
+
+
 def test_a_failed_or_rejected_attempt_has_no_task(env: Env) -> None:
     seed = mechanical_seed("seed-a1")
     env.add(seed)

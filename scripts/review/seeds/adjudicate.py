@@ -71,7 +71,9 @@ except ModuleNotFoundError as exc:
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration.task_record_store import locate_task_record
+from scripts.orchestration.worktree_paths import automatic_worktree_path
 from scripts.review import findings_db, record, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 
@@ -346,7 +348,7 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
         READ_ONLY_MODE,
         "--full-checkout",
         "--cwd",
-        str(_delegate_module()._REPO_ROOT),
+        str(main_checkout_root(REPO_ROOT)),
         "--model",
         model,
         "--review-mode",
@@ -561,7 +563,7 @@ def check_dispatch_binding(
     agent = dispatched.get("agent")
     if not isinstance(agent, str) or not agent:
         raise AdjudicationError(f"the dispatch record of {task_id} names no agent", TASK_MISMATCH)
-    canonical_worktree = delegate._auto_worktree_path(agent, task_id)
+    canonical_worktree = automatic_worktree_path(agent, task_id, repo_root=main_checkout_root(REPO_ROOT))
     canonical_cwd = str(canonical_worktree)
     if (
         dispatched.get("cwd") != canonical_cwd

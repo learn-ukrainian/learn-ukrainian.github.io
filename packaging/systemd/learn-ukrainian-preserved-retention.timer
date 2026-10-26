@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian daily preserved residue backstop timer
+
+[Timer]
+OnCalendar=*-*-* 04:45:00 UTC
+Persistent=true
+RandomizedDelaySec=10min
+Unit=learn-ukrainian-preserved-retention.service
+
+[Install]
+WantedBy=timers.target
