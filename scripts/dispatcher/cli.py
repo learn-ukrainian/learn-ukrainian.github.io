@@ -8,6 +8,7 @@ import sys
 import uuid
 from pathlib import Path
 
+from scripts.common.git_context import validate_plain_branch_name
 from scripts.dispatcher import checks, git, providers, store, worker
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
@@ -70,6 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Mode (default: read-only)",
     )
     dispatch.add_argument("--worktree", nargs="?", const="", help="Dispatch path (default: automatic)")
+    dispatch.add_argument("--pr", type=int, help="Reviewed PR number, e.g. 42 (default: none; use --branch for identity)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument(
         "--hard-timeout", type=float, default=7200, help="Deadline seconds; 0 disables (default: 7200)"
@@ -110,6 +112,8 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
+    if args.mode == "read-only" and args.branch is not None:
+        args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
     )
