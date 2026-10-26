@@ -91,13 +91,13 @@ def test_container_visibility_reaches_real_dispatch_decisions(case, reply, expec
     assert gate.detail == (failure or "")
 
 
-def test_dispatch_final_token_and_diagnostic_visibility_stay_separate():
+def test_dispatch_conflicting_visible_labels_refuse_the_reply():
     from scripts import delegate
 
     response = "> Example:\nVERDICT: UNKNOWN\n\nVERDICT: APPROVE\nVERDICT: BLOCKED"
-    assert recognized_verdicts(response) == ["APPROVE", "BLOCKED"]
-    assert delegate.parse_review_verdict(response) == "BLOCKED"
-    assert delegate._review_verdict_failure_reason(response) is None
+    assert recognized_verdicts(response) == []
+    assert delegate.parse_review_verdict(response) is None
+    assert delegate._review_verdict_failure_reason(response) == "review_missing_verdict_line"
     gate = delegate.run_completion_gate(
         delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response="> Example:\nVERDICT: UNKNOWN\n",
         commits_ahead=None, worktree=None,
@@ -128,7 +128,7 @@ def test_dispatch_parser_failure_cannot_pass_completion(monkeypatch):
     ("__VERDICT__: __REQUEST_CHANGES__", ["REQUEST_CHANGES"]),
     ("   ###### VERDICT: CHANGES_REQUESTED", ["CHANGES_REQUESTED"]),
     ("*VERDICT: BLOCKED.* Findings follow.", []),
-    ("VERDICT: APPROVE\nVERDICT: BLOCKED", ["APPROVE", "BLOCKED"]),
+    ("VERDICT: APPROVE\nVERDICT: BLOCKED", []),
     ("```\nVERDICT: BLOCKED\n`````\n**VERDICT: APPROVE**", ["APPROVE"]),
     ("  ~~~text\nVERDICT: APPROVE\n   ~~~~ \t\nVERDICT: BLOCKED", ["BLOCKED"]),
     ("```VERDICT: example``` is inline code\nVERDICT: APPROVE", ["APPROVE"]),
@@ -171,7 +171,7 @@ def test_list_support_does_not_admit_prose_quotes_or_code(reply):
 
 def test_conflicting_list_verdicts_remain_ambiguous():
     reply = "- **VERDICT**: **`APPROVE`**\n1) VERDICT: REQUEST_CHANGES"
-    assert recognized_verdicts(reply) == ["APPROVE", "REQUEST_CHANGES"]
+    assert recognized_verdicts(reply) == []
     with pytest.raises(RecordError, match="missing or ambiguous"):
         normalize_verdict(reply)
 

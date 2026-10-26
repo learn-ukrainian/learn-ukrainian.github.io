@@ -310,11 +310,46 @@ def test_cursor_leading_indented_example_cannot_create_false_approval(event_type
         {"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"},
     ]
     parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
-    assert parsed.text == example + "\n\nFindings follow."
+    assert parsed.text == example + "  \n\nFindings follow."
     assert parsed.error is None
     assert recognized_verdicts(parsed.text) == []
     with pytest.raises(RecordError, match="missing or ambiguous"):
         normalize_verdict(parsed.text)
+
+
+@pytest.mark.parametrize("event_type", ["assistant", "text"])
+@pytest.mark.parametrize("parts,expected", [
+    (["VERDICT: APPROVE", "\nor REQUEST_CHANGES per the rubric"], []),
+    (["VERDICT: APPROVE", " \nor REQUEST_CHANGES per the rubric"], []),
+    (["VERDICT: APPROVE", "\r\nor REQUEST_CHANGES per the rubric"], []),
+    (["VERDICT: APPROVE\n", "or REQUEST_CHANGES per the rubric"], []),
+    (["VERDICT: APPROVE\r\n", "or REQUEST_CHANGES per the rubric"], []),
+    *[(["VERDICT: APPROVE", gap + label], []) for gap in ("\n", "\n\n") for label in (
+        "Verdict: Changes requested", "Verdict: changes requested", "VERDICT: REQUEST CHANGES",
+        "VERDICT: REQUEST-CHANGES", "VERDICT: REQUEST\u2011CHANGES", "VERDICT: REQUEST\u2013CHANGES",
+        "VERDICT: REJECT", "VERDICT: ~~APPROVE~~ REQUEST_CHANGES", "Verdict: Approve with nits",
+        "\u200bVERDICT: REQUEST_CHANGES", "\ufeffVERDICT: REQUEST_CHANGES", "\u202eVERDICT: REQUEST_CHANGES",
+        "- **\u200bVerdict**: Changes requested", "ＶＥＲＤＩＣＴ： REQUEST CHANGES",
+    )],
+    (["VERDICT: APPROVE", "\nабоREQUEST_CHANGES"], []),
+    (["VERDICT: APPROVE", "\n\nVERDICT: APPROVED"], []),
+    (["VERDICT: APPROVE", "\n\n- VERDICT: REQUEST_CHANGES\n  Finding."], []),
+    (["VERDICT: APPROVE", "\nVERDICT: APPROVE"], ["APPROVE", "APPROVE"]),
+    (["Review\n\nChecked head.\n- **VERDICT**: **`APPROVE`**\n\n" + "Finding.\n" * 74], ["APPROVE"]),
+])
+def test_cursor_event_line_endings_and_malformed_labels_cannot_false_approve(event_type, parts, expected):
+    events = [{"type": "assistant", "content": parts[0]}]
+    events.extend({"type": event_type, "content": p} for p in parts[1:])
+    events.append({"type": "result", "subtype": "success", "result": "".join(parts)})
+    parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
+    assert parsed.error is None
+    assert recognized_verdicts(parsed.text) == expected
+    assert recognized_verdicts("".join(parts)) == expected
+    if expected:
+        assert normalize_verdict(parsed.text) == "APPROVED"
+    else:
+        with pytest.raises(RecordError, match="missing or ambiguous"):
+            normalize_verdict(parsed.text)
 
 
 @pytest.mark.parametrize("content", [None, [], "", "  ", [{"type": "tool_use", "text": "ignored"}]])

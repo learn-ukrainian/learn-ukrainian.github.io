@@ -55,7 +55,14 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
                 )
             if isinstance(content, str) and content.strip():
                 parts.extend([content, ""])
-    text = "\n".join(p.rstrip() for p in parts if p.rstrip()) or None
+    text = ""
+    for part in parts:
+        if not part.strip():
+            continue
+        if text and not text.endswith(("\n", "\r")) and not part.lstrip(" \t").startswith(("\n", "\r")):
+            text += "\n"
+        text += part.rstrip(" \t")
+    text = text.rstrip() or None
     if text is None:
         fallback = result.get("result")
         text = fallback if isinstance(fallback, str) and fallback.strip() else None

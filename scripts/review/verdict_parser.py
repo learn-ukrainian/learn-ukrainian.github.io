@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from collections.abc import Iterator
 
 ACCEPTED_VERDICT_TOKENS = (
@@ -32,7 +33,8 @@ ACCEPTED_VERDICT_TOKENS = (
 # emphasis/backtick/whitespace separator, then the token and a word boundary
 # (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
 # Only closing emphasis/backticks, optional punctuation (``.``/``!``), and
-# whitespace may follow the token. Other labelled token lines poison the reply.
+# whitespace may follow the token. Every other colon-labelled line poisons the
+# reply, and all visible strict verdict lines must carry the same token.
 # Competing tokens in the same visible paragraph also refuse it. An inline or
 # quoted example ("I will report ``VERDICT: APPROVE`` later",
 # ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
@@ -79,6 +81,7 @@ def _commonmark_keepends(text: str) -> list[str]:
 
 _VERDICT_MARKER_PREFIX = r"^ {0,3}(?:(?:[-*+]|[0-9]{1,9}[.)])[ \t]+)?(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
 _VERDICT_LINE_PREFIX = _VERDICT_MARKER_PREFIX + r"[*_`\s]*:[*_`\s]*"
+_VERDICT_LABEL_RE = re.compile(_VERDICT_LINE_PREFIX, re.IGNORECASE)
 _VERDICT_TOKEN = r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)(?![^\W_]|_+[^\W_])"
 _PERMISSIVE_VERDICT_LINE_RE = re.compile(
     _VERDICT_MARKER_PREFIX + r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
@@ -86,7 +89,7 @@ _PERMISSIVE_VERDICT_LINE_RE = re.compile(
     re.IGNORECASE,
 )
 _REVIEW_VERDICT_LINE_RE = re.compile(_PERMISSIVE_VERDICT_LINE_RE.pattern + r"[*_`.!\s]*\Z", re.IGNORECASE)
-_PARAGRAPH_VERDICT_TOKEN_RE = re.compile(r"(?<!\w)_*" + _VERDICT_TOKEN, re.IGNORECASE)
+_PARAGRAPH_VERDICT_TOKEN_RE = re.compile(r"_*" + _VERDICT_TOKEN, re.IGNORECASE)
 # Diagnostics echo only bounded ASCII identifier tokens, never paths, URLs or
 # arbitrary verdict-line text. Trailing underscores may be Markdown emphasis.
 _UNSUPPORTED_VERDICT_LINE_RE = re.compile(
@@ -231,6 +234,13 @@ def _without_code_fences(text: str, *, keep_unclosed: bool, preserve_lines: bool
     return "".join(parts)
 
 
+def _normalize_verdict_text(text: str) -> str:
+    """Fold label/token lookalikes without changing Markdown whitespace."""
+    text = "".join(c if c.isspace() else unicodedata.normalize("NFKC", c)
+                   for c in text if unicodedata.category(c) != "Cf")
+    return "".join("-" if unicodedata.category(c) == "Pd" else ":" if c == "\u2236" else c for c in text)
+
+
 def recognized_verdicts(response: str) -> list[str]:
     """Return verdict lines, or validated findings-JSON verdicts if none exist.
 
@@ -238,19 +248,24 @@ def recognized_verdicts(response: str) -> list[str]:
     fence suppresses verdict lines through EOF or the enclosing container's end.
     """
     verdicts: list[str] = []
-    source_lines = _commonmark_lines(response)
+    source_lines = _commonmark_lines(_normalize_verdict_text(response))
     visible = _without_code_fences(response, keep_unclosed=False, preserve_lines=True)
+    visible = _normalize_verdict_text(visible)
+    strict_tokens: set[str] = set()
     for paragraph in re.split(r"\n[ \t]*\n", "\n".join(_commonmark_lines(visible))):
         accepted: set[str] = set()
         for line in paragraph.split("\n"):
             match = _REVIEW_VERDICT_LINE_RE.match(line)
             if match:
                 accepted.add(match.group(1).upper())
-            elif _PERMISSIVE_VERDICT_LINE_RE.match(line):
+                strict_tokens.add(match.group(1).upper())
+            elif _VERDICT_LABEL_RE.match(line) or _PERMISSIVE_VERDICT_LINE_RE.match(line):
                 return []
         tokens = {match.group(1).upper() for match in _PARAGRAPH_VERDICT_TOKEN_RE.finditer(paragraph)}
         if accepted and tokens - accepted:
             return []
+    if len(strict_tokens) > 1:
+        return []
     for index, line in enumerate(_commonmark_lines(visible)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match and not _list_item_continues(source_lines, index):
