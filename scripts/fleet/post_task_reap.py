@@ -621,13 +621,23 @@ def _reap_pushed_author(
         return None
 
     try:
-        observations = lifecycle_observation.before_reap(
-            repo_root, bound_path, tasks_dir=tasks_dir,
-            no_lifecycle_observation=no_lifecycle_observation,
-        ) if apply else []
+        observations = (
+            lifecycle_observation.before_reap(
+                repo_root,
+                bound_path,
+                tasks_dir=tasks_dir,
+                no_lifecycle_observation=no_lifecycle_observation,
+            )
+            if apply
+            else []
+        )
     except Exception as exc:
-        return {"path": str(bound_path), "action": "skipped",
-                "reason": f"lifecycle observation refused: {exc}", "error": str(exc)}
+        return {
+            "path": str(bound_path),
+            "action": "skipped",
+            "reason": f"lifecycle observation refused: {exc}",
+            "error": str(exc),
+        }
     report = reap_worktrees.reap_clean_pushed(
         repo_root=repo_root, dry_run=not apply, target_paths=[bound_path], enqueue_guard=guard,
     )

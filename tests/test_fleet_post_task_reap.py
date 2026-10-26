@@ -206,7 +206,7 @@ def test_settled_pushed_clean_tree_with_open_pr_is_reaped(pushed_open_pr):
     assert _run(["git", "rev-parse", "refs/heads/codex/open-author"], cwd=repo).stdout.strip()
 
 
-@pytest.mark.parametrize("case", ["missing", "recorded", "bypassed"])
+@pytest.mark.parametrize("case", ["missing", "mismatch", "incomplete", "error", "recorded", "bypassed", "dry_run"])
 def test_pushed_author_lifecycle_must_be_observed_before_removal(pushed_open_pr, monkeypatch, case):
     from scripts.orchestration import task_lifecycle as tl
     from tests.orchestration.test_task_lifecycle import _ledger
@@ -217,12 +217,29 @@ def test_pushed_author_lifecycle_must_be_observed_before_removal(pushed_open_pr,
     state = json.loads(record.read_text())
     state.update(task_lifecycle=tl.carrier_projection(ledger, state_file=str(state_file)),
                  worktree_base_sha=_run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip())
+    if case == "mismatch":
+        state["task_lifecycle"]["lifecycle_id"] = "different-lifecycle"
+    elif case == "incomplete":
+        state["worktree_branch"] = "codex/different-branch"
     record.write_text(json.dumps(state))
-    if case == "recorded":
+    if case in {"recorded", "mismatch", "incomplete"}:
         tl.write_lifecycle(state_file, ledger)
+    if case in {"error", "dry_run"}:
+        def unavailable(*args, **kwargs):
+            if case == "dry_run":
+                pytest.fail("dry-run attempted a lifecycle observation")
+            raise OSError("observation storage unavailable")
+        monkeypatch.setattr(post_task_reap.lifecycle_observation, "before_reap", unavailable)
     remove = post_task_reap.reap_worktrees.reap_clean_pushed
+    refusals = {
+        "missing": "LIFECYCLE_LEDGER_MISSING",
+        "mismatch": "LIFECYCLE_IDENTITY_MISMATCH",
+        "incomplete": "LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE",
+        "error": "observation storage unavailable",
+    }
 
     def checked_remove(**kwargs):
+        assert case not in refusals, "observation refusal reached the remover"
         if case == "recorded":
             local = tl.load_lifecycle(state_file)["observation_receipts"][-1]["observation"]["local"]
             assert tree.exists() and local["worktree_present"]
@@ -230,13 +247,18 @@ def test_pushed_author_lifecycle_must_be_observed_before_removal(pushed_open_pr,
 
     monkeypatch.setattr(post_task_reap.reap_worktrees, "reap_clean_pushed", checked_remove)
     row = post_task_reap.post_task_reap(
-        "open-author", tasks_dir=tasks, repo_root=repo, apply=True,
+        "open-author", tasks_dir=tasks, repo_root=repo, apply=case != "dry_run",
         no_lifecycle_observation="operator bypass" if case == "bypassed" else None,
     )["main_worktree"]
-    assert tree.exists() == (case == "missing")
-    if case == "missing":
+    assert tree.exists() == (case in refusals or case == "dry_run")
+    if case in refusals:
         assert row["action"] == "skipped"
-        assert "LIFECYCLE_LEDGER_MISSING" in row["reason"]
+        assert refusals[case] in row["reason"]
+        assert row["error"] == refusals[case]
+    elif case == "dry_run":
+        assert row["action"] == "would_remove"
+        assert row["lifecycle_observations"] == []
+        assert not state_file.exists()
     else:
         assert row["action"] == "removed"
         assert row["lifecycle_observations"] == (
@@ -751,7 +773,7 @@ def test_settled_read_only_review_checkout_is_reaped_while_its_reviewed_pr_is_op
 
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger", None])
-def test_author_tree_with_unknown_exit_telemetry_is_retained(open_review_checkout, mode):
+def test_author_tree_with_unknown_exit_telemetry_and_open_pr_is_retained(open_review_checkout, mode):
     repo, tasks, tree, task_id, record = open_review_checkout
     state = json.loads(record.read_text())
     state.update(mode=mode, push_state="pushed")
