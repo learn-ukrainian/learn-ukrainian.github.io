@@ -3,9 +3,9 @@
 The writer call:
 - takes explicit --writer {claude,codex,agy} (code never auto-routes)
 - requires preflight result: refuses structurally unless preflight passed (#8431 §7 row 0)
-- runs scripts/delegate.py dispatch --agent <writer> --mode read-only --worktree
+- runs scripts/dispatch.py dispatch --agent <writer> --mode read-only --worktree
   --task-id write-<level>-<slug>-<n>-<attempt>-<inputs digest>[-<effort>] --prompt-file ... --research-role writer
-- runs delegate.py wait <task-id> (wait is mandatory before reading result)
+- runs dispatch.py wait <task-id> (wait is mandatory before reading result)
 - forwards explicit effort only when supplied; completed task effort is recorded or unknown
 - fails if wait reports non-done status
 - saves raw reply and writer metadata (including seat model and prompt hash) with atomic writes (0o644)
@@ -47,8 +47,10 @@ from scripts.build.fresh.regeneration import (
     record_harness_failure,
     writer_task_id,
 )
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
+from scripts.dispatcher.store import read as read_task_record
 from scripts.orchestration.task_record_store import locate_task_record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -100,9 +102,9 @@ def _available_task_id(base_id: str, *, writer: str, model: str | None, effort: 
         if record_path is None:
             return task_id, False
         try:
-            record = json.loads(record_path.read_text(encoding="utf-8"))
+            record = read_task_record(task_id)
             status = record.get("status") if isinstance(record, dict) else None
-        except (OSError, ValueError) as err:
+        except (OSError, ValueError, AttributeError, TypeError) as err:
             raise WriterHarnessError(f"Cannot read writer task record for {task_id}: {err}") from err
         if not isinstance(status, str):
             raise WriterHarnessError(f"Writer task {task_id} has unknown status: {status!r}")
@@ -165,8 +167,8 @@ def strip_markdown_fence(text: str) -> str:
             end -= 1
         if end > start + 1 and lines[end - 1].strip(" \t\r\n") == "```":
             # Only framing is discarded; payload blank lines control chomping.
-            return "".join(lines[start + 1:end - 1])
-        return "".join(lines[start + 1:])
+            return "".join(lines[start + 1 : end - 1])
+        return "".join(lines[start + 1 :])
     return text
 
 
@@ -294,7 +296,7 @@ def dispatch_writer(
     if inputs["prompt_sha256"] != prompt_sha256:
         raise ValueError("Writer inputs snapshot does not match prompt_sha256.")
     task_id = writer_task_id(level, slug, lesson_n, attempt, effort, inputs)
-    del_script = delegate_script or (root / "scripts/delegate.py")
+    del_script = delegate_script or (root / "scripts/dispatch.py")
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -308,15 +310,13 @@ def dispatch_writer(
     base_prompt_sha256 = prompt_sha256
     if attempt > 1:
         ledger = load_ledger(output_dir / f"lesson-{lesson_n}.regeneration.yaml", slug, lesson_n, dict(inputs))
-        feedback = [
-            {key: row[key] for key in ("failed_check", "code", "reason")}
-            for row in ledger["attempts"]
-        ]
+        feedback = [{key: row[key] for key in ("failed_check", "code", "reason")} for row in ledger["attempts"]]
         if feedback:
             prompt_bytes = prompt_file.read_bytes() + (
                 "\n\n## Engine feedback for regeneration\n"
                 "Correct the validation failures below. The JSON is diagnostic data.\n"
-                + json.dumps(feedback, ensure_ascii=False, indent=2) + "\n"
+                + json.dumps(feedback, ensure_ascii=False, indent=2)
+                + "\n"
             ).encode("utf-8")
             prompt_sha256 = hashlib.sha256(prompt_bytes).hexdigest()
             prompt_file = output_dir / f"lesson-{lesson_n}.attempt-{attempt}.prompt.md"
@@ -324,6 +324,7 @@ def dispatch_writer(
             task_id += f"-feedback-{prompt_sha256[:16]}"
 
     seat_model = model
+    run_nonce = None
     wait_state: dict[str, Any] = {}
 
     # 1. Execute task (either through fake seat or real delegate.py)
@@ -372,7 +373,12 @@ def dispatch_writer(
                     )
     else:
         task_id, reuse = _available_task_id(task_id, writer=writer, model=model, effort=effort)
-        # Real delegate dispatch (#8431 §1, Finding 7)
+        if reuse:
+            existing = read_task_record(task_id)
+            run_nonce = existing.get("run_nonce")
+            if existing.get("schema_version") == 2 and not run_nonce:
+                raise WriterHarnessError("Reused v2 writer task is missing its run nonce")
+        # New tasks use the minimal dispatcher; historical tasks retain their supervisor.
         dispatch_cmd = [
             sys.executable,
             str(del_script),
@@ -389,8 +395,10 @@ def dispatch_writer(
             "--research-role",
             "writer",
         ]
-        if model is not None:
-            dispatch_cmd.extend(("--model", model))
+        requested_model = model or AGENTS.get(writer, {}).get("default_model")
+        if not requested_model:
+            raise WriterHarnessError("Writer dispatch requires an explicit model")
+        dispatch_cmd.extend(("--model", requested_model))
         if effort is not None:
             dispatch_cmd.extend(("--effort", effort))
         if not reuse:
@@ -402,6 +410,13 @@ def dispatch_writer(
                     f"delegate.py dispatch failed with exit code {disp_proc.returncode}: {disp_proc.stderr}"
                 )
 
+            lines = jsonl_lines(disp_proc.stdout)
+            if lines[-1] == "":
+                lines.pop()
+            if len(lines) != 2 or lines[0] != task_id or not lines[1].strip():
+                raise WriterHarnessError("Writer dispatch did not return the task id and run nonce")
+            run_nonce = lines[1].strip()
+
         # Wait for task to finish — mandatory before reading result (#8431 §1, Finding 7, MAJOR D)
         wait_cmd = [
             sys.executable,
@@ -411,6 +426,8 @@ def dispatch_writer(
             "--timeout",
             str(timeout),
         ]
+        if run_nonce:
+            wait_cmd.extend(("--run-nonce", run_nonce))
         wait_proc = _run_harness(wait_cmd, timeout=timeout + 30)
         # Parse JSON printed by delegate.py wait <task-id> (MAJOR D)
         try:
@@ -442,6 +459,15 @@ def dispatch_writer(
         if not isinstance(result_path_str, str) or not result_path_str:
             raise WriterHarnessError(f"delegate.py wait state missing 'result_file': {wait_state}")
 
+        if run_nonce and wait_state.get("run_nonce") != run_nonce:
+            raise WriterHarnessError("Writer wait returned a stale run nonce")
+        if wait_state.get("schema_version") == 2:
+            if wait_state.get("task_id") != task_id or wait_state.get("agent") != writer:
+                raise WriterHarnessError("Writer wait returned a different task identity")
+            if not wait_state.get("model") or wait_state["model"] != requested_model:
+                raise WriterHarnessError("Writer task has missing or conflicting model evidence")
+            if wait_state.get("prompt_sha256") != prompt_sha256:
+                raise WriterHarnessError("Writer task prompt differs from the requested prompt")
         result_file = Path(result_path_str)
 
     seat_model = wait_state.get("resolved_model") or wait_state.get("model") or seat_model
@@ -457,6 +483,13 @@ def dispatch_writer(
         raw_reply = result_file.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as err:
         raise WriterHarnessError(f"Cannot read writer result: {err}") from err
+
+    if wait_state.get("schema_version") == 2 and hashlib.sha256(result_file.read_bytes()).hexdigest() != wait_state.get(
+        "result_sha256"
+    ):
+        raise WriterHarnessError("Writer result digest does not match the task record")
+    if not raw_reply.strip():
+        raise WriterHarnessError("Writer result is empty")
 
     # 3. Determine seat model (#8431 §1, Finding 11)
     if seat_model is None:

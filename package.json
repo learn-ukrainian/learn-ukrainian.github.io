@@ -109,13 +109,13 @@
     "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.5.2",
     "js-yaml": "^4.3.2",
-    "markdownlint-cli2": "^0.23.3",
+    "markdownlint-cli2": "^0.24.0",
     "prettier": "^3.9.10",
     "puppeteer": "^25.13.0",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.49.0",
+    "typescript-eslint": "^8.71.2",
     "yaml-language-server": "^1.23.0"
   },
   "dependencies": {

@@ -12,6 +12,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records
+
 try:
     from agent_runtime.agent_identity import normalize_seat, seat_read_aliases
 except ImportError:
@@ -85,7 +87,7 @@ def is_spawn_phase_failure(
     """Determine if a task record represents a spawn-phase failure.
 
     A spawn-phase failure is defined as:
-    - status is "failed" or "error"
+    - status is "failed", "error" or "crashed"
     - returncode is not None and not 0
     - duration_s is not None and less than the duration threshold
     """
@@ -93,7 +95,7 @@ def is_spawn_phase_failure(
     returncode = record.get("returncode")
     duration_s = record.get("duration_s")
 
-    is_failed_status = status in ("failed", "error")
+    is_failed_status = status in ("failed", "error", "crashed")
     # ``needs_finalize`` and ``no_deliverable`` are completion-contract failures,
     # not provider spawn failures. Keep them out of lane availability scoring.
     # If returncode is None, the process is still running or hasn't updated its returncode yet.
@@ -228,9 +230,13 @@ def scan_lane_health(
     cutoff_timestamp = now.timestamp() - (window_minutes * 60) - 300
 
     try:
-        for entry in os.scandir(tasks_path):
-            if not entry.is_file() or not entry.name.endswith(".json"):
-                continue
+        # The shared iterator omits unavailable directories. Probe readability
+        # first so a failed scan cannot be reported as observed idle/healthy.
+        for directory in (tasks_path, tasks_path / ARCHIVE_DIR_NAME):
+            if directory == tasks_path or directory.exists():
+                with os.scandir(directory):
+                    pass
+        for entry in iter_task_records(tasks_path, include_archive=True):
 
             try:
                 # Fast mtime check to prevent loading massive directories
@@ -238,7 +244,7 @@ def scan_lane_health(
                 if stat.st_mtime < cutoff_timestamp:
                     continue
 
-                with open(entry.path, encoding="utf-8") as f:
+                with open(entry, encoding="utf-8") as f:
                     record = json.load(f)
 
                 if not isinstance(record, dict):
@@ -289,15 +295,24 @@ def scan_lane_health(
         streak_tasks = []
 
         # Count consecutive spawn failures walking backward from the newest task
+        observed_outcome = False
         for record in reversed(tasks):
+            # Active or incomplete records provide no settled lane outcome.
+            if (
+                record.get("status") in ("running", "spawning", None, "")
+                or record.get("returncode") is None
+                or record.get("duration_s") is None
+            ):
+                continue
+            observed_outcome = True
             if is_spawn_phase_failure(record, spawn_duration_threshold_s):
                 consecutive_failures += 1
                 streak_tasks.append(record)
             else:
-                # Streak broken by a healthy signal or non-spawn failure or running task
+                # Preserve the existing settled-outcome streak rule.
                 break
 
-        is_healthy = consecutive_failures < failures_threshold
+        is_healthy = consecutive_failures < failures_threshold if observed_outcome else None
 
         span_minutes = 0
         if not is_healthy and streak_tasks:
@@ -308,12 +323,16 @@ def scan_lane_health(
 
         # Newest failure in the streak carries the provider error text so
         # routing surfaces (capacity_pick) can say WHY the lane is down (#8514).
-        last_error = sanitize_error_excerpt(streak_tasks[0].get("stderr_excerpt")) if streak_tasks else None
+        newest_failure = streak_tasks[0] if streak_tasks else {}
+        last_error = sanitize_error_excerpt(
+            newest_failure.get("error") if newest_failure.get("schema_version") == 2
+            else newest_failure.get("stderr_excerpt")
+        )
 
         health_data[lane] = {
             "healthy": is_healthy,
-            "consecutive_failures": consecutive_failures,
-            "span_minutes": span_minutes,
+            "consecutive_failures": consecutive_failures if observed_outcome else None,
+            "span_minutes": span_minutes if observed_outcome else None,
             "last_error": last_error,
         }
 

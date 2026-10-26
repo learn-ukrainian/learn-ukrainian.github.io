@@ -3036,6 +3036,21 @@ def _review_checkout_gate(
     return _is_head_reachable_from_remote(info.path, info.head)
 
 
+def _read_only_checkout(repo_root: Path, info: WorktreeInfo) -> bool:
+    """Prove that every task bound to this checkout disclaims pushed work."""
+    from scripts.fleet import ignored_task_output
+
+    try:
+        matches = ignored_task_output.matching_worktree_records(
+            info.path, task_store_paths.tasks_dir(), repo_root=control_plane_root(repo_root), publish_cache=False
+        )
+    except (OSError, ValueError, RuntimeError):
+        return False
+    return bool(matches) and all(
+        record.get("mode") == "read-only" and record.get("push_state") == "not_applicable" for _, record in matches
+    )
+
+
 def _review_pr_context(
     repo_root: Path,
     info: WorktreeInfo,
@@ -3047,18 +3062,19 @@ def _review_pr_context(
     """
     all_states: list[PullRequestState] = []
     errors: list[str] = []
+    read_only = _read_only_checkout(repo_root, info)
     for cand_branch in _candidate_branches_for_worktree(repo_root, info):
         states, err = _query_pr_states(repo_root, cand_branch)
         if err:
             errors.append(err)
-        all_states.extend(states)
+        all_states.extend(pr for pr in states if not read_only or cand_branch == info.branch or pr.state != "OPEN")
 
     review_number = _worktree_review_pr_number(repo_root, info)
     if review_number is not None:
         review_states, review_err = _query_pr_by_number(repo_root, review_number)
         if review_err and not _is_not_a_pull_request_error(review_err):
             errors.append(review_err)
-        all_states.extend(review_states)
+        all_states.extend(pr for pr in review_states if not read_only or pr.state != "OPEN")
 
     # Follow-up CI branches carry a different branch name than the PR head they
     # fix. Find the MERGED PR that introduced the worktree HEAD by SHA, but only
@@ -3070,6 +3086,11 @@ def _review_pr_context(
         commit_prs, sha_error = _query_prs_by_head_sha(repo_root, info.head)
         if sha_error:
             errors.append(sha_error)
+        # Sharing a reviewed commit does not make a disposable read-only
+        # checkout the PR's author tree. Only its own checkout branch can
+        # bind it to an OPEN PR; write-capable and unknown tasks stay guarded.
+        if read_only:
+            commit_prs = [pr for pr in commit_prs if pr.state != "OPEN"]
         all_states.extend(commit_prs)
     return all_states, commit_prs, review_number, errors
 

@@ -94,13 +94,15 @@ def _default_python() -> str:
 
 
 def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
-    return DelegateDispatcher(
+    dispatcher = DelegateDispatcher(
         python=args.python or _default_python(),
         delegate=REPO_ROOT / "scripts" / "delegate.py",
         cwd=worker_cwd,
         hard_timeout=args.hard_timeout,
         review_profile=getattr(args, "review_profile", None),
     )
+    dispatcher.legacy_resume = getattr(args, "legacy_resume", False)
+    return dispatcher
 
 
 def make_workspace(worker_cwd: Path) -> Callable[[], dict[str, Any]]:
@@ -229,9 +231,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--worker-cwd",
         type=Path,
         default=None,
-        help="Working directory (delegate --cwd) of every task, frozen in the manifest; its commit and "
-        "instruction files are fingerprinted per task. Must resolve inside an existing registered isolated Git "
-        "worktree. Default: this checkout; primary and unregistered checkouts are refused before dispatch.",
+        help="Source checkout whose commit is pinned for dispatcher-created per-task worktrees. "
+        "Frozen in the manifest; each task's actual worktree is fingerprinted separately. "
+        "Default: this checkout; primary and unregistered checkouts are refused before dispatch.",
     )
     run.add_argument(
         "--seat",
@@ -355,6 +357,9 @@ def _cmd_run(args: argparse.Namespace) -> int:
     if plan["protocol_shortfalls"] and not args.smoke:
         raise HarnessError("plan below Protocol v2: " + "; ".join(plan["protocol_shortfalls"]) + " (--smoke to test)")
     tasks = plan_candidate_tasks(eval_set, variants, plan, block)
+    args.legacy_resume = results.path("manifest.json").is_file() and bool(
+        load_manifest(results)["frozen"]["composition"]["prompt_blocks"]
+    )
     dispatcher = make_dispatcher(args, worker_cwd)
     plan["composition"] = composition_frame(dispatcher, tasks)
     plan["dispatch_args_sha256"] = dispatch_args_frame(dispatcher, tasks, results)
@@ -409,6 +414,7 @@ def _cmd_score(args: argparse.Namespace) -> int:
     results = ResultsDir(args.results)
     manifest = load_manifest(results)
     plan = manifest["frozen"]
+    args.legacy_resume = bool(plan["composition"]["prompt_blocks"])
     eval_set = _set_for(args, manifest)
     slots = candidate_slots(plan)
     exit_code = 0
