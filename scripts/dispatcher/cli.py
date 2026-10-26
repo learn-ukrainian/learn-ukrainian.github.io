@@ -7,11 +7,12 @@ import subprocess
 import sys
 import uuid
 from pathlib import Path
+from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.dispatcher import checks, git, providers, store, worker
 from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.types import ReviewAccess, TaskSpec
 
 ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
 
@@ -94,6 +95,11 @@ def build_parser() -> argparse.ArgumentParser:
                               help="Excluded review subject, e.g. grok or xai (repeatable; default: none)")
     dispatch.add_argument("--require-review-verdict", action="store_true", default=None,
                           help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
+    for flag in ("review-id", "attempt-id", "review-attempt"):
+        dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest path/SHA for --review-attempt; "
+                              "all three required; dry-run only until runtime isolation is wired (default: none)")
+    dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
+                          help="Bound review access; dry-run only (default: isolated for bound attempts)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument(
         "--full-checkout", action="store_true",
@@ -124,6 +130,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _dispatch(args) -> int:
+    if binding := store.review_binding(vars(args)):
+        store.check_review_attempt(binding)
+        # GAP: providers do not yet stage the manifest-only runtime boundary,
+        # scoped home or Sources receipts. Never launch on metadata alone.
+        if not args.dry_run:
+            raise ValueError("review_attempt_runtime_unavailable: v2 review isolation is not wired")
     if args.require_review_verdict and args.mode != "read-only":
         raise ValueError("--require-review-verdict requires --mode read-only")
     git.sparse_excludes(args.sparse_include)
@@ -183,7 +195,10 @@ def _dispatch(args) -> int:
     checks.check_resources((worktree, path.parent))
     if args.dry_run:
         invocation = providers.load(agent).build(spec, child_env(spec))
-        print(json.dumps(dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path)), indent=2))
+        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        if binding:
+            plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
+        print(json.dumps(plan, indent=2))
         return 0
     if not args.cwd:
         git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)

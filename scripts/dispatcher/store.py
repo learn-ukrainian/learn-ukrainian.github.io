@@ -10,6 +10,7 @@ from pathlib import Path
 
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.common.task_store_paths import tasks_dir
+from scripts.dispatcher.types import ReviewAttempt
 
 try:
     from scripts.orchestration.task_record_store import iter_task_records, locate_task_record, relocated_result_file
@@ -25,6 +26,42 @@ def now() -> str:
 
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def review_binding(metadata: dict) -> ReviewAttempt | None:
+    """Validate the binding without provisioning receipts or spending an attempt."""
+    names = ("review_id", "attempt_id", "review_attempt")
+    if not any(metadata.get(name) is not None for name in (*names, "review_access")):
+        return None
+    if metadata.get("mode") != "read-only" or metadata.get("cwd"):
+        # A fresh per-task sparse worktree provides no-reuse isolation. V2 never
+        # reaps/rebases branch holders during creation, so dependency guards are unnecessary here.
+        raise ValueError("review attempt requires --mode read-only and a fresh worktree (no --cwd)")
+    if not all(metadata.get(name) for name in names):
+        raise ValueError("--review-id, --attempt-id and --review-attempt must be used together")
+    if metadata.get("review_access") not in (None, "isolated", "full"):
+        raise ValueError("invalid review access")
+    for name in names[:2]:
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", metadata[name]):
+            raise ValueError("invalid review or attempt id")
+    manifest = metadata["review_attempt"]
+    sha = manifest.lower() if re.fullmatch(r"[0-9a-fA-F]{64}", manifest) else digest(Path(manifest).read_bytes())
+    return ReviewAttempt(review_id=metadata["review_id"], attempt_id=metadata["attempt_id"], manifest_sha256=sha)
+
+
+def check_review_attempt(binding: ReviewAttempt) -> None:
+    """Any legacy receipt artifact or hot/archived binding spends the review/attempt pair."""
+    for record in list_tasks(include_archive=True):
+        bound = record.get("review_attempt")
+        if isinstance(bound, dict) and all(bound.get(key) == binding[key] for key in ("review_id", "attempt_id")):
+            raise ValueError("review attempt already spent")
+    root = tasks_dir().parent / "review-receipts" / binding["review_id"]
+    # Legacy prepare_review_attempt checks all five, including dangling symlinks,
+    # before creating anything; failed/partial preparation still spends the pair.
+    for suffix in (".jsonl", ".jsonl.sha256", ".mcp.json", ".codex-home", ".agy-home"):
+        path = root / (binding["attempt_id"] + suffix)
+        if path.exists() or path.is_symlink():
+            raise ValueError("review attempt already spent")
 
 
 def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) -> dict:
@@ -53,6 +90,8 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
         record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
         record["pinned_head"] = metadata.get("pinned_head") or sha
     record.update(prompt_file=str(spec.prompt_file), prompt_sha256=digest(spec.prompt_file.read_bytes()))
+    if binding := review_binding(metadata):
+        record.update(review_attempt=binding, review_access=metadata.get("review_access") or "isolated")
     record.update(
         result_file=str(spec.final_file), push_state="unknown", research_owned_paths=metadata["research_owned_path"]
     )
