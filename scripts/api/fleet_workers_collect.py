@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import json
 import sqlite3
 import threading
 import time
@@ -51,6 +50,7 @@ from scripts.api.project_state_store import (
     workers_status_from_document,
 )
 from scripts.lexicon.runner import atlas_job
+from scripts.orchestration.task_record_store import iter_task_records
 
 WORKERS_SCHEMA = "monitor-fleet-workers.v1"
 UNATTRIBUTED_HOST_ID = "unattributed"
@@ -213,12 +213,9 @@ def collect_delegate_workers(
     rows: list[CollectedWorker] = []
     if not tasks_dir.is_dir():
         return rows
-    for entry in sorted(tasks_dir.glob("*.json")):
-        try:
-            task = json.loads(entry.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        if not isinstance(task, dict):
+    for entry in iter_task_records(tasks_dir, include_archive=False):
+        task = delegate_router._read_task_state(str(entry), tasks_dir=tasks_dir)
+        if task is None:
             continue
         status, alive = _derived_task_status(task)
         mapped = _delegate_state(str(task.get("status") or status), alive=alive, pid=task.get("pid"))

@@ -42,7 +42,14 @@ def test_restored_mtime_does_not_label_stale_in_flight_counts_with_fresh_generat
     assert delegate_router.list_delegate_tasks(ctx=ctx)["tasks"][0]["status"] == "spawning"
     assert read_calls == []
 
-    task.write_text(json.dumps({"task_id": "task", "agent": "codex", "status": "done"}))
+    settled = {
+        "task_id": "task", "agent": "codex", "status": "done", "schema_version": 2,
+        "run_nonce": "v2-cache-run", "model": "requested-model",
+        "finished_at": "2026-10-26T12:00:00Z", "returncode": 0, "error": None,
+        "head_sha": "a" * 40, "remote_head_sha": "b" * 40, "push_state": "unpushed",
+        "commits_ahead": 1, "worktree_dirty_on_exit": True,
+    }
+    task.write_text(json.dumps(settled))
     os.utime(task, ns=(before.st_atime_ns, before.st_mtime_ns))
     assert task.stat().st_mtime_ns == before.st_mtime_ns
     assert task.stat().st_size != before.st_size
@@ -65,7 +72,7 @@ def test_restored_mtime_does_not_label_stale_in_flight_counts_with_fresh_generat
     delegate_router._TASK_STATE_CACHE.clear()
     monkeypatch.setattr(delegate_router, "_LAST_TASKS_DIR_STR", "")
     previous_size = task.stat().st_size
-    task.write_text(json.dumps({"task_id": "task", "agent": "other", "status": "done"}))
+    task.write_text(json.dumps({**settled, "agent": "other"}))
     os.utime(task, ns=(before.st_atime_ns, before.st_mtime_ns))
     assert task.stat().st_size == previous_size
     assert delegate_router.list_delegate_tasks(ctx=ctx)["tasks"][0]["agent"] == "other"
@@ -77,6 +84,17 @@ def test_restored_mtime_does_not_label_stale_in_flight_counts_with_fresh_generat
     delegate_router._TASK_STATE_CACHE.clear()
     monkeypatch.setattr(delegate_router, "_LAST_TASKS_DIR_STR", "")
     assert delegate_router.list_delegate_tasks(ctx=ctx)["tasks"][0]["agent"] == "other"
+    assert read_calls == [str(task), str(task), str(task), str(task)]
+
+    # Version and delivery observations survive a real SQLite cache restart.
+    delegate_router._TASK_STATE_CACHE.clear()
+    monkeypatch.setattr(delegate_router, "_LAST_TASKS_DIR_STR", "")
+    row = delegate_router.list_delegate_tasks(ctx=ctx)["tasks"][0]
+    for key, value in settled.items():
+        assert row[key] == ("other" if key == "agent" else value)
+    assert row["identity_state"] == "unknown"
+    assert row["observed_model"] is None
+    assert row["cli_version"] is None
     assert read_calls == [str(task), str(task), str(task), str(task)]
 
 
@@ -95,7 +113,9 @@ def test_db_skipping_scan_does_not_suppress_persistence_or_vanished_row_deletion
         assert db.execute("SELECT task_id FROM task_cache").fetchall() == [("vanished",)]
 
     vanished.unlink()
-    added = tasks_dir / "added.json"
+    archive = tasks_dir / "archive"
+    archive.mkdir()
+    added = archive / "added.json"
     added.write_text(json.dumps({"task_id": "added", "status": "done"}))
     assert [row["task_id"] for row in delegate_router._delegate_task_rows(tasks_dir=tasks_dir)] == ["added"]
     # The directory-only scan must leave the persistent index untouched.
