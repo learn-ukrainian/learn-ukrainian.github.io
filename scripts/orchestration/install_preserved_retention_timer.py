@@ -22,6 +22,8 @@ def render_units(repo_root: Path) -> dict[str, str]:
 
 def install(rendered: dict[str, str], unit_dir: Path, *, apply: bool, enable: bool) -> int:
     fd = open_unit_dir(unit_dir, create=apply)
+    if apply and fd is None:
+        raise InstallError("unit directory vanished during installation")
     drift = False
     try:
         for name, content in rendered.items():

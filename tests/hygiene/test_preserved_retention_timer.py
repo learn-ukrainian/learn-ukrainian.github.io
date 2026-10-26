@@ -40,3 +40,9 @@ def test_backstop_installer_never_writes_through_symlink(tmp_path):
     with pytest.raises(InstallError):
         installer.install(installer.render_units(tmp_path), units, apply=True, enable=False)
     assert victim.read_text() == "unchanged"
+
+
+def test_vanished_unit_directory_cannot_redirect_backstop_units(tmp_path, monkeypatch):
+    monkeypatch.setattr(installer, "open_unit_dir", lambda *a, **kw: None)
+    with pytest.raises(InstallError, match="vanished"):
+        installer.install(installer.render_units(tmp_path), tmp_path / "units", apply=True, enable=False)
