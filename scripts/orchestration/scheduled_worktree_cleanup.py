@@ -45,7 +45,6 @@ from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
 SCHEMA_VERSION = "scheduled-git-hygiene.v2"
-DEFAULT_INTERVAL_MINUTES = 240
 
 
 def terminal_dispatch_reaping_enabled() -> bool:
@@ -1013,7 +1012,7 @@ def classify_repo_results(results: list[dict[str, Any]]) -> dict[str, Any]:
         owner = res.owner or "unattributed"
         by_owner[owner] = by_owner.get(owner, 0) + 1
         cls = reap_worktrees.classify_preservation(res)
-        if cls == "eligible":
+        if res.action in {"removed", "preserved_then_removed"}:
             reaped += 1
             reaped_by_owner[owner] = reaped_by_owner.get(owner, 0) + 1
         else:
@@ -1021,7 +1020,8 @@ def classify_repo_results(results: list[dict[str, Any]]) -> dict[str, Any]:
                 preservation_classes[cls] += 1
             else:
                 preservation_classes[cls] = preservation_classes.get(cls, 0) + 1
-            if cls in {"dirty", "permission_error"}:
+            unknown_evidence = any(word in res.reason.lower() for word in ("unknown", "unavailable", "unreadable"))
+            if cls not in {"primary", "active_dispatch", "open_pr", "eligible"} or unknown_evidence:
                 retained_exceptions += 1
 
     return {
@@ -1043,6 +1043,7 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "worktree_prune": None,
         "activity_probe": None,
         "results": [],
+        "completed_resources": [],
         "retained": 0,
         "retained_exceptions": 0,
         "by_preservation_class": {
@@ -1182,6 +1183,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             include_terminal_dispatches=terminal_dispatch_reaping_enabled(),
         )
         result["results"] = [asdict(row) for row in rows]
+        result["completed_resources"].append("worktrees")
         try:
             result["adopted"] = reap_worktrees.adopt_dispatch_worktrees(repo_root)
         except Exception as exc:
@@ -1211,6 +1213,8 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             )
         result["origin_branches"] = origin_branches
         result["branches"] = branches
+        if not result["reaper_disabled"]:
+            result["completed_resources"].append("branches")
         result["errors"].extend(
             f"origin/{row['branch']}: {row.get('error') or row['reason']}"
             for row in origin_branches
@@ -1246,6 +1250,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 "inventory_bytes": leak_res.get("inventory_bytes", 0),
                 "errors": leak_res.get("errors", 0),
                 "disk_pressure": leak_res.get("disk_pressure"),
+                "min_age_s": leak_res.get("min_age_s"),
             }
             if leak_res.get("errors"):
                 result["errors"].append(f"tmp leak sweep encountered {leak_res['errors']} error(s)")
@@ -1263,6 +1268,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 "preserved_by_reason": dict(scratch_res.get("preserved_by_reason") or {}),
                 "errors": scratch_res.get("errors", 0),
                 "disk_pressure": scratch_res.get("disk_pressure"),
+                "min_age_s": scratch_res.get("min_age_s"),
             }
             if scratch_res.get("errors"):
                 result["errors"].append(f"task scratch recovery encountered {scratch_res['errors']} error(s)")
@@ -1473,16 +1479,73 @@ def _apply_error_counts(row: dict[str, Any]) -> dict[str, int]:
     return counts
 
 
+def _resource_action_counts(rows: list[dict[str, Any]], *, observed: bool) -> dict[str, Any]:
+    """Count actual removals separately from plans and unobserved probes."""
+    if not observed:
+        return {"status": "not_observed", "counts": None}
+    removed = sum(row.get("action") in {"removed", "preserved_then_removed", "deleted"} for row in rows)
+    absent = sum(row.get("action") == "already_absent" for row in rows)
+    return {
+        "status": "observed",
+        "examined": len(rows),
+        "removed": removed,
+        "already_absent": absent,
+        "would_remove": sum(
+            row.get("action") in {"would_remove", "would_preserve_then_remove", "would_delete"} for row in rows
+        ),
+        "retained": len(rows) - removed - absent,
+        "errors": sum(row.get("action") == "error" for row in rows),
+    }
+
+
+def _public_resource_counts(repository: dict[str, Any]) -> dict[str, Any]:
+    completed = repository.get("completed_resources", [])
+    temp: dict[str, Any] = {"scope": "host_shared"}
+    for name, field, keys in (
+        ("review_temp", "review_temp_sweep", ("roots_reaped", "bytes_freed", "errors")),
+        (
+            "tmp_leaks",
+            "tmp_leak_sweep",
+            ("candidates", "roots_reaped", "bytes_freed", "skipped_live", "inventory_only", "errors", "min_age_s"),
+        ),
+        (
+            "task_scratch",
+            "task_scratch_recovery",
+            ("candidates", "reaped", "bytes_freed", "preserved", "preserved_by_reason", "errors", "min_age_s"),
+        ),
+    ):
+        report = repository.get(field)
+        temp[name] = (
+            {
+                "status": "error" if report.get("errors") else "observed",
+                "counts": {key: report[key] for key in keys if key in report},
+            }
+            if report is not None
+            else {"status": "not_observed", "counts": None}
+        )
+    return {
+        "worktrees": _resource_action_counts(repository.get("results", []), observed="worktrees" in completed),
+        "branches": {
+            "scope": "cleanup_candidates",
+            "local": _resource_action_counts(repository.get("branches", []), observed="branches" in completed),
+            "origin": _resource_action_counts(repository.get("origin_branches", []), observed="branches" in completed),
+        },
+        "temp": temp,
+    }
+
+
 def build_public_summary(
     receipt: dict[str, Any],
     receipt_path: Path | str | None = None,
 ) -> dict[str, Any]:
     summary = receipt.get("summary", {})
     repos_summary: dict[str, Any] = {}
-    for repo_dict in receipt.get("repositories", []):
-        raw_root = repo_dict.get("repo_root", "")
-        repo_name = Path(raw_root).name if raw_root else "unknown"
+    for index, repo_dict in enumerate(receipt.get("repositories", []), start=1):
+        # Input order binds these slots to roots in the private receipt. Names
+        # can be private, and identical basenames must not overwrite a row.
+        repo_name = f"repository_{index}"
         repos_summary[repo_name] = {
+            "resources": _public_resource_counts(repo_dict),
             "reaped": sum(
                 1 for row in repo_dict.get("results", []) if row.get("action") in {"removed", "preserved_then_removed"}
             ),

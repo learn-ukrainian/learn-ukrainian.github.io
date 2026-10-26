@@ -1284,21 +1284,60 @@ unmerged branch heads remain untouched.
 ~/.codex/worktree-cleanup/receipts/v2/
 ```
 
-An unavailable fetch or process-activity probe blocks apply for that
-repository. Standard output contains the same summary as the receipt.
+An unavailable process-activity probe blocks apply for that repository.
+A failed fetch retains candidates that need remote-containment proof; independent
+exact merged-PR and live PR-ref proofs retain their existing behavior.
+Standard output contains a privacy-safe summary of the private receipt.
 
 ## Linux systemd default
 
-The collector sweeps both repository roots. Before installing the service
-template, replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@`.
+The collector sweeps both registered repository roots. Before installing the
+service template, replace `@REPO_ROOT@` and `@PRIVATE_ROOT@` with those roots.
+The placeholder names do not discover or authorize additional repositories.
 
 The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
-`--apply`, the same as macOS launchd. Its timer fires every 4 hours
-(`OnUnitActiveSec=4h`, matching the launchd cadence below) using the existing
-cleanup wrapper and P0 reaper; this adds no daemon or cleanup class, and the
-denser cadence does not loosen the dirty/open-PR/unreadable-GitHub-state
-guards. See `packaging/systemd/README.md` for enable and disable
-instructions.
+`--apply`, the same as macOS launchd. Its timer fires hourly with
+`OnCalendar=hourly`, no randomized delay, and the existing boot trigger.
+The existing wrapper calls `scheduled_worktree_cleanup.py` once with both roots.
+The runner uses the canonical worktree reaper, its existing branch-durability
+checks, and the named temporary-data helpers. Retention constants and protected
+data remain unchanged. Unknown attribution or safety evidence retains data.
+
+The separate clean-pushed reaper and temporary-data timer keep their existing
+responsibilities and locks. This source change does not install, enable, or
+restart any service. Deployment requires the driver's approved operations step.
+See `packaging/systemd/README.md` for enable and disable instructions.
+
+### Compare hourly receipts
+
+Each immutable private receipt records `observed_at`, `mode`, the explicit root
+list, and cleanup results. Its public summary identifies repositories by input
+order as `repository_1`, `repository_2`, and so on. The private receipt binds
+each slot to its root; public output contains no repository names or paths.
+
+Each repository's `resources` row covers worktrees, branches, and named temp
+helpers. `removed` counts completed removal, `would_remove` counts dry-run
+plans, and `retained` includes planned candidates still present. Unknown or
+unsafe retained work is an exception. A helper that did not run reports
+`not_observed` with null counts, including the review-temp helper in dry-run
+mode. A failed temp helper reports `error`; neither state proves zero resources.
+Branch rows count cleanup candidates, not a full inventory of protected refs.
+The worktree reaper can also prune a branch; its private result records
+`branch_pruned`, and the existing `branches_deleted` total includes that action.
+
+Temp rows describe shared host namespaces inspected during each repository pass.
+Do not add their candidate or preservation counts across repositories as unique
+objects. The existing top-level temp totals aggregate helper observations.
+Their inherited age thresholds remain visible as `min_age_s` where provided.
+These helpers cover named scratch only, with no new expiry for preserved
+evidence, user files, corpus, or bulk data.
+
+After deployment, preserve two actual receipts at least one hour apart and
+verify both roots and all three resource classes in each. Keep any unknown or
+retained exception explicit; never delete to reach an inventory target.
+Fixed timestamps in fixtures prove receipt behavior only. They do not prove
+deployment, elapsed runtime, or the parent program's 15-minute p50 requirement.
+The driver owns those operational proofs and the full inventory comparison.
 
 ## Inspect the LaunchAgent
 

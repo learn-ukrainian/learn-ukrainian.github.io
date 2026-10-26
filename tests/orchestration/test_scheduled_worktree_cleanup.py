@@ -211,7 +211,7 @@ def test_scheduled_apply_reports_rescue_candidates_before_reaper(tmp_path: Path,
         "tasks": [{"task_id": "rescue-test", "action": "candidate"}],
     }
     public = cleanup.build_public_summary({"repositories": [result], "summary": {}}, None)
-    assert public["repositories"]["repo"]["rescue_candidates"] == 1
+    assert public["repositories"]["repository_1"]["rescue_candidates"] == 1
 
 
 def test_orphaned_broken_gitdir_is_reported_not_deleted(tmp_path: Path) -> None:
@@ -646,7 +646,7 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "repositories": 2,
         "removed": 1,
         "retained": 1,
-        "retained_exceptions": 0,
+        "retained_exceptions": 1,
         "by_preservation_class": {
             "primary": 0,
             "active_dispatch": 0,
@@ -1531,8 +1531,7 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
     public = cleanup.build_public_summary(receipt, receipt_path)
 
     assert public["receipt_id"] == "20260906T200000Z-abcdef123456.json"
-    assert "learn-ukrainian" in public["repositories"]
-    assert "learn-ukrainian-infra-private" in public["repositories"]
+    assert list(public["repositories"]) == ["repository_1", "repository_2"]
     assert public["summary"]["retained_exceptions"] == 2
     assert public["summary"]["by_owner"] == {"codex": 2, "claude": 1}
 
@@ -1806,7 +1805,7 @@ def test_rescue_boundary_keeps_failure_evidence_private_and_preserves_exit_statu
     assert cleanup.main(["--repo-root", str(tmp_path), "--receipt-dir", str(receipt_dir)]) == exit_code
     captured = capsys.readouterr()
     public = json.loads(captured.out)
-    public_diagnostic = public["repositories"]["repo"]["rescue_diagnostic"]
+    public_diagnostic = public["repositories"]["repository_1"]["rescue_diagnostic"]
     assert public_diagnostic["failure_class"] == failure_class
     assert public_diagnostic["elapsed_seconds"] == 2.75
     assert public_diagnostic["returncode"] == returncode
@@ -1890,3 +1889,103 @@ def test_rescue_diagnostics_do_not_bypass_existing_invocation_guards(tmp_path: P
     assert result["rescue"] is None
     if mode == "unknown_activity":
         assert result["errors"] == ["process-CWD activity probe unavailable; apply skipped"]
+
+
+def test_systemd_timer_does_not_leave_both_root_cleanup_on_four_hour_cadence() -> None:
+    """A slow or randomized timer leaves eligible resources past the hourly sweep."""
+    import configparser
+
+    packaging = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
+    timer = configparser.ConfigParser()
+    timer.read(packaging / "learn-ukrainian-worktree-gc.timer")
+    assert timer["Timer"]["OnCalendar"] == "hourly"
+    assert timer["Timer"].get("RandomizedDelaySec", "0") == "0"
+    assert "OnUnitActiveSec" not in timer["Timer"]
+    service = configparser.ConfigParser()
+    service.read(packaging / "learn-ukrainian-worktree-gc.service")
+    assert service["Service"]["ExecStart"].split() == [
+        "/usr/bin/env",
+        "bash",
+        "@REPO_ROOT@/scripts/orchestration/run_scheduled_worktree_cleanup.sh",
+        "--repo-root",
+        "@REPO_ROOT@",
+        "--repo-root",
+        "@PRIVATE_ROOT@",
+        "--apply",
+    ]
+
+
+def test_hourly_receipts_do_not_hide_same_named_repositories_or_unobserved_resources(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Basename collisions lost a repository; absent probes must never look like zero."""
+    roots = [tmp_path / "first" / "private-name", tmp_path / "second" / "private-name"]
+
+    def fake_repo_result(root, *, apply):
+        result = cleanup._empty_repo_result(root)
+        if root == roots[1]:
+            result["errors"] = ["synthetic claim source unavailable"]
+            return result
+        result["completed_resources"] = ["worktrees", "branches"]
+        result["results"] = [
+            {"action": "skipped", "reason": "active dispatch"},
+            {"action": "skipped", "reason": "OPEN PR", "pr": {"state": "OPEN"}},
+            {"action": "skipped", "reason": "dirty", "dirty": True},
+            {"action": "skipped", "reason": "unpushed commits"},
+            {"action": "skipped", "reason": "unknown claim source"},
+            {"action": "would_remove", "reason": "exact merged head"},
+        ]
+        result["branches"] = [{"action": "would_delete"}, {"action": "skipped"}]
+        result["task_scratch_recovery"] = {
+            "candidates": 3,
+            "reaped": 0,
+            "preserved": 2,
+            "errors": 0,
+            "preserved_by_reason": {"in_use": 1, "too_young": 1},
+        }
+        result["tmp_leak_sweep"] = {
+            "candidates": 2,
+            "roots_reaped": 0,
+            "skipped_live": 1,
+            "inventory_only": 1,
+            "errors": 0,
+        }
+        result.update(cleanup.classify_repo_results(result["results"]))
+        return result
+
+    monkeypatch.setattr(cleanup, "_repo_result", fake_repo_result)
+    summaries = []
+    for timestamp in ("2026-10-26T00:00:00Z", "2026-10-26T01:00:00Z"):
+        receipt = cleanup.build_receipt(roots, apply=False, observed_at=timestamp)
+        path = cleanup.write_receipt(receipt, tmp_path / "receipts")
+        public = cleanup.build_public_summary(receipt, path)
+        summaries.append(public)
+        assert public["observed_at"] == timestamp
+        assert public["mode"] == "dry_run"
+        assert list(public["repositories"]) == ["repository_1", "repository_2"]
+        first = public["repositories"]["repository_1"]["resources"]
+        assert first["worktrees"] == {
+            "status": "observed",
+            "examined": 6,
+            "removed": 0,
+            "already_absent": 0,
+            "would_remove": 1,
+            "retained": 6,
+            "errors": 0,
+        }
+        assert public["summary"]["retained"] == 6
+        assert public["summary"]["retained_exceptions"] == 3
+        assert public["repositories"]["repository_1"]["retained"] == 6
+        assert first["branches"]["local"]["examined"] == 2
+        assert first["branches"]["local"]["would_remove"] == 1
+        assert first["temp"]["scope"] == "host_shared"
+        assert first["temp"]["task_scratch"]["counts"]["preserved"] == 2
+        assert first["temp"]["tmp_leaks"]["counts"]["inventory_only"] == 1
+        assert first["temp"]["review_temp"]["status"] == "not_observed"
+        second = public["repositories"]["repository_2"]["resources"]
+        assert second["worktrees"] == {"status": "not_observed", "counts": None}
+        assert second["branches"]["local"] == {"status": "not_observed", "counts": None}
+        assert second["temp"]["task_scratch"] == {"status": "not_observed", "counts": None}
+        assert "private-name" not in json.dumps(public)
+        assert str(tmp_path) not in json.dumps(public)
+    assert summaries[0]["receipt_id"] != summaries[1]["receipt_id"]

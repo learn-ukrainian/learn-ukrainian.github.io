@@ -1,5 +1,5 @@
 [Unit]
-Description=Learn Ukrainian Git worktree garbage collection
+Description=Learn Ukrainian hourly repository and scratch hygiene
 After=network.target
 
 [Service]

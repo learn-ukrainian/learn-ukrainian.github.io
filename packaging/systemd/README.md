@@ -147,9 +147,10 @@ runner, and orchestrator hosts).
 
 ### 2. Worktree Garbage Collection (`learn-ukrainian-worktree-gc.service` + `.timer`)
 
-- **Install**: The collector sweeps both repository roots. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template before installing it.
-- **Frequency**: Every 4 hours (`OnBootSec=15min`, `OnUnitActiveSec=4h`, `RandomizedDelaySec=1800`, `Persistent=true`) — matches the macOS launchd cadence.
-- **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and run automatic git maintenance with receipt logging.
+- **Install**: The collector sweeps both registered repository roots. Replace `@REPO_ROOT@` and `@PRIVATE_ROOT@` with those roots before installing it. Templates do not install or enable themselves.
+- **Frequency**: Hourly (`OnCalendar=hourly`, `RandomizedDelaySec=0`, `Persistent=true`), with the existing `OnBootSec=15min` startup trigger. The macOS launchd default remains separate.
+- **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` once with both roots. The existing runner invokes the canonical worktree reaper, eligible branch cleanup, named scratch cleanup, and automatic Git maintenance. Existing retention thresholds and safety proofs stay unchanged.
+- **Receipts**: Immutable private receipts bind timestamps and repository slots to roots. Public summaries expose counts for worktrees, branch candidates, and named temp helpers per slot; missing probes report `not_observed`, never zero. Shared host temp observations are not unique per-repository inventory. See `docs/runbooks/worktree-cleanup.md` for comparison limits and the two actual observations required after approved deployment.
 - **Default mode**: Apply. The shipped unit passes `--apply`, matching macOS launchd. The reaper stays fail-closed for OPEN PRs, live working directories, dirty worktrees, and unreadable GitHub state — this denser cadence does not loosen any of those guards, it only shrinks the backlog between runs.
 - **Disable automatic reaping**: Set `LU_REAPER_DISABLED=1` in the user unit environment to stop automatic reaps, or `LU_REAPER_TERMINAL_DISPATCHES=0` to disable only the optional terminal-dispatch class. Reload systemd after changing the unit:
   ```bash
