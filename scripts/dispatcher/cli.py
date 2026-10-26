@@ -65,7 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-author-model", None, "Author model for family check (default: no review check)"),
         ("claude-account", None, "Claude account a or b (default: inherited configuration)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
-        ("output-schema", None, "Provider-supported output schema (default: none)"),
+        ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),
         ("research-task-family", None, "Research task family metadata (default: none)"),
         ("research-track", None, "Research track metadata (default: none)"),
@@ -141,6 +141,8 @@ def _dispatch(args) -> int:
         raise ValueError("unknown agent or Claude account")
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
+    if args.output_schema is not None and agent != "codex":
+        raise ValueError("--output-schema is supported only with the effective codex agent")
     if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     task_id = args.task_id or uuid.uuid4().hex
@@ -158,6 +160,10 @@ def _dispatch(args) -> int:
     prompt_path = _PromptPath(path.with_suffix(".prompt"))
     prompt_path.content = prompt
     options = {key: str(value) for key, value in vars(args).items() if value is not None and key != "prompt"}
+    if args.output_schema is not None:
+        from scripts.dispatcher.output_schema import bind
+
+        options.update(bind(args.output_schema, repo))
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider")}
     spec = TaskSpec(
         task_id,

@@ -35,6 +35,9 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     record.update({name: getattr(spec, name) for name in fields})
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
     record.update({name: metadata.get(name) for name in metadata_fields})
+    for name in ("output_schema_path", "output_schema_sha256", "review_write_root"):
+        if name in spec.options:
+            record[name] = spec.options[name]
     for source, target in (
         ("risk", "review_risk"), ("review_profile", "review_profile"),
         ("review_author_model", "review_author_model"), ("review_mode", "review_mode"),
