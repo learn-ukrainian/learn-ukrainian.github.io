@@ -1191,7 +1191,7 @@ def test_sealed_executable_catalog_and_resolver_parity():
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
             executable = (
-                "scripts/dispatch.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
+                "scripts/delegate.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
             )
             assert candidate.sealed_executable == executable, (
                 f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"

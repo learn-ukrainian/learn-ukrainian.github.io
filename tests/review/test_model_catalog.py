@@ -1200,7 +1200,7 @@ assert (
 )
 _RETIREMENT_DATA = json.loads(gzip.decompress(_RETIREMENT_CAPTURE.read_bytes()))
 def dispatcher_catalog_baseline(value):
-    """Apply C-2188 command and endpoint changes without rewriting frozen receipts."""
+    """Apply C-2188 command changes without rewriting frozen receipts."""
     if isinstance(value, dict):
         result = {key: dispatcher_catalog_baseline(item) for key, item in value.items()}
         migrate_invocation = (
@@ -1211,8 +1211,6 @@ def dispatcher_catalog_baseline(value):
             result["invocation"] = result["invocation"].replace(
                 "scripts/delegate.py dispatch", "scripts/dispatch.py dispatch"
             )
-        if result.get("sealed_executable") == "scripts/delegate.py":
-            result["sealed_executable"] = "scripts/dispatch.py"
         if isinstance(result.get("argv"), list) and migrate_invocation:
             result["argv"] = ["scripts/dispatch.py" if arg == "scripts/delegate.py" else arg for arg in result["argv"]]
         return result

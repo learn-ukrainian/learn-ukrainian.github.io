@@ -733,7 +733,7 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
                 candidate.participant != "agy"
                 or candidate.catalog_transport != "agy"
                 or candidate.transport != "agy"
-                or candidate.sealed_executable != "scripts/dispatch.py"
+                or candidate.sealed_executable != "scripts/delegate.py"
             ):
                 return "native AGY review endpoint identity is invalid"
         elif candidate.adapter_transport != "acp":
