@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from scripts.review.verdict_parser import recognized_verdicts
@@ -171,6 +173,7 @@ def test_relaxed_separators_still_reject_examples_and_invalid_tokens(reply):
     "`VERDICT: APPROVE`", "    VERDICT: APPROVE", "\tVERDICT: APPROVE", "\u00a0VERDICT: APPROVE",
     "##VERDICT: APPROVE", "####### VERDICT: APPROVE", "## The VERDICT: APPROVE",
     "```\nVERDICT: APPROVE\n```", "~~~~\nVERDICT: APPROVE\n~~~~",
+    "```\n`VERDICT: APPROVE`\n```", "I will report `VERDICT: APPROVE` later",
     "```text\n~~~\nVERDICT: APPROVE\n```",
     "~~~\n```\nVERDICT: APPROVE\n~~~",
     "````\n```\nVERDICT: APPROVE\n````",
@@ -179,3 +182,57 @@ def test_relaxed_separators_still_reject_examples_and_invalid_tokens(reply):
 ])
 def test_examples_and_invalid_tokens_are_not_formal_verdicts(reply):
     assert recognized_verdicts(reply) == []
+
+
+@pytest.mark.parametrize("correctness,priority,expected", [
+    ("correct", None, "APPROVE"),
+    ("incorrect", None, "REQUEST_CHANGES"),
+    ("uncertain", None, "BLOCKED"),
+    ("correct", "P0", "REQUEST_CHANGES"),
+    ("correct", "P1", "REQUEST_CHANGES"),
+    ("correct", "P2", "REQUEST_CHANGES"),
+    ("correct", "P3", "REQUEST_CHANGES"),
+])
+@pytest.mark.parametrize("wrapper", ["{}", "Review result:\n\n```json\n{}\n```"])
+def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expected, wrapper):
+    """Fenced findings must not approve findings or misclassify uncertainty."""
+    from scripts import delegate
+    from scripts.review.record_cf_verdict import _review_verdict_and_count, normalize_verdict
+
+    payload = {
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": correctness, "explanation": "Reviewed the diff.", "confidence": 0.9},
+        "findings": [] if priority is None else [{
+            "id": "F1", "title": "Finding", "body": "Finding detail.", "priority": priority,
+            "confidence": 0.9, "category": "correctness",
+            "location": {"path": "example.py", "start_line": 1, "end_line": 1, "claim_type": "present"},
+            "verbatim": "example()", "why_wrong": "Observed behavior.", "smallest_fix": "Fix behavior.",
+            "sources": ["none"],
+        }],
+    }
+    response = wrapper.format(json.dumps(payload))
+    assert recognized_verdicts(response) == [expected]
+    assert delegate.parse_review_verdict(response) == expected
+    assert delegate._review_verdict_failure_reason(response) is None
+    gate = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=response,
+        commits_ahead=None, worktree=None,
+    )
+    assert gate.failure is None
+    canonical = {
+        "APPROVE": "APPROVED", "REQUEST_CHANGES": "CHANGES_REQUESTED", "BLOCKED": "BLOCKED",
+    }[expected]
+    assert normalize_verdict(response) == canonical
+    raw = json.dumps(payload)
+    assert _review_verdict_and_count(raw)[0] == _review_verdict_and_count(f"```json\n{raw}\n```")[0] == canonical
+
+    # Explicit verdict lines take precedence over the JSON fallback.
+    assert recognized_verdicts(response + "\n\nVERDICT: APPROVE") == ["APPROVE"]
+    assert recognized_verdicts(response + "\n\nVERDICT: REQUEST_CHANGES") == ["REQUEST_CHANGES"]
+
+    # The same JSON in quoted material or an outer example must stay invisible.
+    quoted = "\n".join("> " + line for line in response.splitlines())
+    assert recognized_verdicts(quoted) == []
+    assert recognized_verdicts("````text\n" + response + "\n````") == []
+    payload["overall"].pop("confidence")
+    assert recognized_verdicts(wrapper.format(json.dumps(payload))) == []

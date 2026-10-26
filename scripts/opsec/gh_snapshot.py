@@ -1,7 +1,7 @@
-"""Strict raw-gh admission. Public writes belong to scripts.publish.github.
+"""Raw gh exposure controls. Public writes belong to scripts.publish.github.
 
-No raw argv token is interpreted as public text. A command is a permitted read
-only if its entire argv matches one closed grammar. REST API reads use a closed GET-only endpoint grammar. Extensions are refused.
+Read endpoints, flags and operands belong to gh. Only write admission and
+credential, file-upload and external-host protections belong here.
 """
 
 from __future__ import annotations
@@ -10,222 +10,11 @@ import re
 import subprocess
 from dataclasses import dataclass
 
-from scripts.opsec.prepublish import PublishBlocked, internal_environment, is_private, normalize_repository
+from scripts.opsec.prepublish import PublishBlocked, check_texts, internal_environment, is_private, normalize_repository
 
-# flag names -> whether a value is required. No abbreviation or short clusters.
-FORMAT = {"--json": True, "--jq": True, "-q": True, "--template": True, "-t": True}
+# Write grammars retain their closed fields and private-destination proof.
 REPO = {"--repo": True, "-R": True}
-VIEW = {**FORMAT, "--web": False, "-w": False}
-LIST = {**FORMAT, "--limit": True, "-L": True}
-READ_GRAMMARS = {
-    ("pr", "view"): (0, 1, {**VIEW, **REPO, "--comments": False, "-c": False}),
-    ("pr", "list"): (
-        0,
-        0,
-        {
-            **LIST,
-            **REPO,
-            "--state": True,
-            "-s": True,
-            "--base": True,
-            "-B": True,
-            "--head": True,
-            "-H": True,
-            "--label": True,
-            "-l": True,
-            "--author": True,
-            "-A": True,
-            "--assignee": True,
-            "-a": True,
-            "--search": True,
-            "-S": True,
-            "--draft": False,
-        },
-    ),
-    ("pr", "status"): (0, 0, {**FORMAT, **REPO, "--conflict-status": False}),
-    ("pr", "checks"): (
-        0,
-        1,
-        {
-            **FORMAT,
-            **REPO,
-            "--watch": False,
-            "--interval": True,
-            "-i": True,
-            "--required": False,
-            "--fail-fast": False,
-            "--web": False,
-            "-w": False,
-        },
-    ),
-    ("pr", "diff"): (0, 1, {**REPO, "--patch": False, "--name-only": False, "--color": True}),
-    ("issue", "view"): (1, 1, {**VIEW, **REPO, "--comments": False, "-c": False}),
-    ("issue", "list"): (
-        0,
-        0,
-        {
-            **LIST,
-            **REPO,
-            "--state": True,
-            "-s": True,
-            "--label": True,
-            "-l": True,
-            "--assignee": True,
-            "-a": True,
-            "--author": True,
-            "-A": True,
-            "--search": True,
-            "-S": True,
-            "--milestone": True,
-            "-m": True,
-        },
-    ),
-    ("issue", "status"): (0, 0, {**FORMAT, **REPO}),
-    ("run", "view"): (
-        0,
-        1,
-        {
-            **VIEW,
-            **REPO,
-            "--job": True,
-            "-j": True,
-            "--log": False,
-            "--log-failed": False,
-            "--exit-status": False,
-            "--attempt": True,
-            "-a": True,
-            "--verbose": False,
-            "-v": False,
-        },
-    ),
-    ("run", "list"): (
-        0,
-        0,
-        {
-            **LIST,
-            **REPO,
-            "--workflow": True,
-            "-w": True,
-            "--branch": True,
-            "-b": True,
-            "--event": True,
-            "-e": True,
-            "--status": True,
-            "-s": True,
-            "--commit": True,
-            "-c": True,
-            "--user": True,
-            "-u": True,
-            "--created": True,
-            "--all": False,
-        },
-    ),
-    ("run", "watch"): (1, 1, {**REPO, "--interval": True, "-i": True, "--exit-status": False, "--compact": False}),
-    ("run", "download"): (
-        0,
-        1,
-        {**REPO, "--dir": True, "-D": True, "--name": True, "-n": True, "--pattern": True, "-p": True},
-    ),
-    ("workflow", "list"): (0, 0, {**LIST, **REPO, "--all": False, "-a": False}),
-    ("workflow", "view"): (
-        0,
-        1,
-        {**REPO, "--yaml": False, "-y": False, "--ref": True, "-r": True, "--web": False, "-w": False},
-    ),
-    ("repo", "view"): (0, 1, {**VIEW, "--branch": True, "-b": True}),
-    ("repo", "list"): (
-        0,
-        1,
-        {
-            **LIST,
-            "--archived": False,
-            "--no-archived": False,
-            "--fork": False,
-            "--source": False,
-            "--language": True,
-            "--topic": True,
-            "--visibility": True,
-        },
-    ),
-    ("release", "view"): (0, 1, {**VIEW, **REPO}),
-    ("release", "list"): (
-        0,
-        0,
-        {**LIST, **REPO, "--exclude-drafts": False, "--exclude-pre-releases": False, "--order": True},
-    ),
-    ("release", "download"): (
-        0,
-        1,
-        {
-            **REPO,
-            "--output": True,
-            "-O": True,
-            "--archive": True,
-            "-A": True,
-            "--dir": True,
-            "-D": True,
-            "--pattern": True,
-            "-p": True,
-            "--clobber": False,
-            "--skip-existing": False,
-        },
-    ),
-    ("auth", "status"): (
-        0,
-        0,
-        {"--json": True, "--jq": True, "-q": True, "--hostname": True, "-h": True, "--active": False},
-    ),
-    ("gist", "view"): (
-        1,
-        1,
-        {"--files": False, "--filename": True, "-f": True, "--raw": False, "--web": False, "-w": False},
-    ),
-    ("gist", "list"): (0, 0, {"--limit": True, "-L": True, "--public": False, "--secret": False}),
-    ("label", "list"): (0, 0, {**LIST, **REPO, "--search": True, "-S": True, "--order": True, "--sort": True}),
-}
-READ_GRAMMARS[("search", "prs")] = (1, 1, {**LIST, **REPO, "--state": True, "--owner": True, "--merged": False})
-
-# No fields/input: gh cannot infer POST. All method occurrences must be GET.
-REST_GET = (
-    1,
-    1,
-    {
-        "--method": True,
-        "-X": True,
-        "--paginate": False,
-        "--slurp": False,
-        "--include": False,
-        "-i": False,
-        "--jq": True,
-        "-q": True,
-        "--header": True,
-        "-H": True,
-        "--cache": True,
-    },
-)
 READ_HEADERS = {"accept", "if-none-match", "x-github-api-version"}
-_SEGMENT = r"(?!\.+(?:/|\?|$))(?:[A-Za-z0-9_.{}-]|%(?!2[eEfF])[0-9A-Fa-f]{2})+"
-_REPOSITORY_SEGMENT = _SEGMENT
-_READ_SUFFIX = (
-    r"(?:issues(?:/\d+(?:/(?:comments|labels|timeline|sub_issues))?|/comments/\d+)?"
-    r"|pulls(?:/\d+(?:/(?:reviews|commits|files))?)?"
-    r"|branches(?:/" + _SEGMENT + r"(?:/protection)?)?"
-    r"|commits/" + _SEGMENT + r"(?:/(?:check-runs|status|statuses))?"
-    r"|code-scanning/alerts(?:/\d+(?:/instances)?)?"
-    r"|check-runs/\d+/annotations"
-    r"|actions/(?:runs(?:/\d+(?:/(?:jobs|artifacts))?)?|caches|workflows(?:/" + _SEGMENT + r"(?:/runs)?)?)"
-    r"|releases(?:/(?:latest|\d+|assets/\d+|tags/" + _SEGMENT + r"))?"
-    r"|compare/" + _SEGMENT + r"|deployments(?:/\d+/statuses)?|labels|milestones(?:/\d+)?)"
-)
-REST_READ_PATH = re.compile(
-    r"(?:user|rate_limit|repos/"
-    + _REPOSITORY_SEGMENT
-    + r"/"
-    + _REPOSITORY_SEGMENT
-    + r"(?:/"
-    + _READ_SUFFIX
-    + r")?)(?:\?[^\s#\x00-\x1f]*)?"
-)
 
 
 def _has_dot_only_segment(value: str) -> bool:
@@ -257,7 +46,25 @@ def _validate_read_environment(environment: dict[str, str]) -> None:
         _validate_read_repo(gh_repo)
 
 
-READ_VERBS = {g: {v for group, v in READ_GRAMMARS if group == g} for g, _ in READ_GRAMMARS}
+def _set_default_view(argv: list[str]) -> bool:
+    """View mode returns before either set-default mutation in native gh."""
+    view = False
+    true_values = {"1", "t", "T", "TRUE", "true", "True"}
+    # This command's flags are boolean. Last occurrence wins; '=' applies to
+    # the last shorthand in a cluster. Operands after '--' are never flags.
+    for token in argv:
+        if token == "--":
+            break
+        flag, equal, value = token.partition("=")
+        if flag == "--view":
+            view = not equal or value in true_values
+        elif flag.startswith("-") and not flag.startswith("--"):
+            shorthands = flag[1:]
+            for index, short in enumerate(shorthands):
+                if short == "v":
+                    view = index < len(shorthands) - 1 or not equal or value in true_values
+    return view
+
 
 # Raw writes are only forwarded for a proven private destination. Closed flags
 # prevent an unknown option/value from manufacturing that proof.
@@ -483,42 +290,49 @@ def repository(cwd, environment, explicit=None, reader=subprocess.run):
 
 
 def admit(argv, *, cwd, environment, reader=subprocess.run):
-    """Admit an exact builtin read or a closed-grammar verified private write."""
+    """Pass native reads without endpoint/flag inventories; retain write and exposure controls."""
     if tuple(argv) in {("--version",), ("version",)}:
         return FrozenCommand(list(argv), "unknown", False)
     if len(argv) < 2:
         raise PublishBlocked("OPSEC: use python -m scripts.publish <verb>; raw gh command refused.")
     if argv[0] == "api":
-        try:
-            found, positional = parse(argv[1:], REST_GET)
-        except PublishBlocked:
-            pass
-        else:
-            _validate_read_environment(environment)
-            for flag, value in found:
-                if flag in {"--header", "-H"}:
-                    name, separator, _ = value.partition(":")
-                    if (
-                        not separator
-                        or name.lower() not in READ_HEADERS
-                        or any(ord(c) < 32 or ord(c) == 127 for c in value)
-                    ):
-                        raise PublishBlocked("OPSEC: API read header refused; use an approved header name and value.")
-            read_path = positional[0].removeprefix("https://api.github.com/").lstrip("/")
-            if all(value == "GET" for flag, value in found if flag in {"--method", "-X"}) and REST_READ_PATH.fullmatch(
-                read_path
-            ):
-                diagnostic = re.match(r"repos/([^/]+)/([^/]+)/(?:code-scanning/|check-runs/)", read_path)
-                if diagnostic:
-                    # These new reads are scoped to the checkout's origin; GH_REPO
-                    # must not redirect the repository whose diagnostics are admitted.
-                    origin_env = {key: value for key, value in environment.items() if key != "GH_REPO"}
-                    origin = repository(cwd, origin_env, reader=reader)
-                    target = normalize_repository(f"github.com/{diagnostic[1]}/{diagnostic[2]}")
-                    if origin == "unknown" or target != origin:
-                        raise PublishBlocked("OPSEC: diagnostic read repository refused.")
+        from scripts.common import github_client
+
+        _validate_read_environment(environment)
+        call = github_client._gh_api_call(argv[1:], stdin=None, cwd=cwd)
+        if call is None:
+            # The shared native parser models gh's argument checks. A parsed
+            # command that cannot build a request makes no HTTP call; gh owns
+            # its original usage diagnostic (for example --slurp alone).
+            if github_client._gh_api_argv(argv[1:]) is not None:
                 return FrozenCommand(list(argv), "unknown", False)
-            raise PublishBlocked("OPSEC: API read refused; use python -m scripts.publish read <name>.")
+            raise PublishBlocked("OPSEC: unresolved API request; use a typed publisher for writes.")
+        host = call.host or environment.get("GH_HOST", "github.com")
+        if host.lower() != "github.com":
+            raise PublishBlocked("OPSEC: non-github.com API host refused.")
+        host_class, path = github_client._canonical_endpoint(call.endpoint, host)
+        if host_class == "rejected":
+            raise PublishBlocked("OPSEC: external or malformed API host refused.")
+        # Preview values become Accept header content even when -p consumes a
+        # following apparent field flag. Keep the existing no-exposure scan.
+        if call.flags.get("preview"):
+            check_texts("unknown", call.flags["preview"], environment=environment)
+        for value in call.flags.get("header", []):
+            name, separator, _ = value.partition(":")
+            if (not separator or name.lower() not in READ_HEADERS
+                    or any(ord(c) < 32 or ord(c) == 127 for c in value)):
+                raise PublishBlocked("OPSEC: credential, method-override or malformed API header refused.")
+        # A GET can still upload a file or stdin. Preserve that exposure control.
+        sources = call.flags.get("input", []) or [
+            value for value in call.flags.get("field", []) if value.partition("=")[2].startswith("@")
+        ]
+        if not sources:
+            if call.method in {"GET", "HEAD", "OPTIONS"}:
+                return FrozenCommand(list(argv), "unknown", False)
+            if path == "graphql" and call.method == "POST":
+                body = call.body()
+                if isinstance(body, bytes) and github_client._graphql_request(github_client._json_body(body))[0] == "query":
+                    return FrozenCommand(list(argv), "unknown", False)
         found, positional = parse(argv[1:], PRIVATE_API)
         endpoint = positional[0]
         match = re.fullmatch(
@@ -590,26 +404,62 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         except Exception:
             raise PublishBlocked("OPSEC: pr checkout requires a verified dispatch repository.") from None
         return FrozenCommand(list(argv), "unknown", False)
-    if key in READ_GRAMMARS:
-        _validate_read_environment(environment)
-        found, positional = parse(globals_ + argv[start + 2 :], READ_GRAMMARS[key])
-        for flag, value in found:
-            if flag in REPO:
-                _validate_read_repo(value)
-            elif value and _has_dot_only_segment(value):
-                raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
-        if any(_has_dot_only_segment(arg) for arg in positional):
-            raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
-        for arg in positional:
-            if arg.startswith(("http://", "https://")) or "://" in arg:
-                _validate_read_repo(arg)
-        if key in {("repo", "view"), ("repo", "list")} and positional:
-            _validate_read_repo(positional[0])
-        return FrozenCommand(list(argv), "unknown", False)
     if key not in WRITE_GRAMMARS:
-        raise PublishBlocked(
-            "OPSEC: raw gh refused; use python -m scripts.publish <verb> (API/aliases/extensions refused)."
-        )
+        # Keep executable aliases/extensions and credential commands outside this
+        # boundary. Native builtin subcommands supply their own read argument grammar.
+        groups = {group for group, _ in WRITE_GRAMMARS} | {
+            "run", "workflow", "repo", "auth", "gist", "label", "search", "ruleset",
+        }
+        write_actions = {
+            "add", "archive", "cancel", "clone", "close", "comment", "create", "delete", "delete-asset",
+            "develop", "disable", "edit", "enable", "fork", "import", "install", "link", "lock",
+            "merge", "pin", "publish", "ready", "remove", "rename", "reopen", "rerun",
+            "revert", "review", "run", "set", "sync", "transfer", "unarchive", "uninstall",
+            "unlink", "unlock", "unpin", "update", "update-branch", "upload",
+        }
+        nested_action = None
+        if key in {("repo", "autolink"), ("repo", "deploy-key"), ("repo", "custom-property"), ("issue", "type")}:
+            # Cobra finds the first non-flag command, skipping option values.
+            # These parent commands inherit only the boolean help flag; other
+            # separate long/single-short options consume the following value.
+            index = start + 2
+            while index < len(argv):
+                token = argv[index]
+                if token == "--":
+                    break
+                if token and not token.startswith("-"):
+                    nested_action = token
+                    break
+                takes_value = (
+                    "=" not in token and token not in {"--help", "-h"}
+                    and (token.startswith("--") or (token.startswith("-") and len(token) == 2))
+                )
+                index += 2 if takes_value else 1
+        if (len(key) != 2 or key[0] not in groups or key[1].startswith("-")
+                or key[1] in write_actions
+                or (key == ("repo", "set-default") and not _set_default_view(argv[start + 2 :]))
+                or nested_action in write_actions
+                or (key == ("repo", "autolink") and nested_action == "new")
+                or (key[0] == "auth" and (key[1] != "status" or any(
+                    arg.startswith("--show-token") or (arg.startswith("-") and not arg.startswith("--") and "t" in arg)
+                    for arg in argv[start + 2 :]
+                )))):
+            raise PublishBlocked("OPSEC: raw write or executable/credential command refused; use a typed publisher.")
+        _validate_read_environment(environment)
+        tokens = globals_ + argv[start + 2 :]
+        for index, token in enumerate(tokens):
+            flag, equal, value = token.partition("=")
+            if flag in REPO:
+                if not equal:
+                    value = tokens[index + 1] if index + 1 < len(tokens) else ""
+                _validate_read_repo(value)
+            elif token.startswith("-R") and token != "-R":
+                _validate_read_repo(token[2:].removeprefix("="))
+            elif "://" in token:
+                _validate_read_repo(token)
+        if key[0] == "repo" and len(argv) > start + 2 and not argv[start + 2].startswith("-"):
+            _validate_read_repo(argv[start + 2])
+        return FrozenCommand(list(argv), "unknown", False)
     found, positional = parse(globals_ + argv[start + 2 :], WRITE_GRAMMARS[key])
     selectors = [value for flag, value in found if flag in REPO]
     dest = repository(cwd, environment, selectors[-1] if selectors else None, reader)

@@ -308,13 +308,26 @@ _LEGACY_DELEGATE_SUMMARY_KEYS = {
     "observed_model_source",
     "observed_model_provenance",
 }
+_DELEGATE_SUMMARY_OBSERVATION_KEYS = {
+    "run_nonce",
+    "schema_version",
+    "finished_at",
+    "returncode",
+    "head_sha",
+    "remote_head_sha",
+    "push_state",
+    "commits_ahead",
+    "worktree_dirty_on_exit",
+    "error",
+}
 
 
 def _assert_legacy_summary_shape(tasks: list) -> None:
-    """Rows must keep legacy keys and never emit repository identity fields."""
+    """Rows retain legacy keys, allow observations, and exclude repository identity."""
     for task in tasks:
         assert isinstance(task, dict)
-        assert set(task) <= _LEGACY_DELEGATE_SUMMARY_KEYS
+        assert set(task) >= _LEGACY_DELEGATE_SUMMARY_KEYS
+        assert set(task) <= _LEGACY_DELEGATE_SUMMARY_KEYS | _DELEGATE_SUMMARY_OBSERVATION_KEYS
         assert "repository" not in task
         assert "repository_id" not in task
 

@@ -876,7 +876,31 @@ PRIOR_RAW_WRITES = [
 
 
 @pytest.mark.parametrize("args", PRIOR_RAW_WRITES)
-def test_prior_round_raw_writes_never_send(args, tmp_path):
+def test_prior_round_raw_writes_never_send(args, tmp_path, synthetic_opsec):
+    if args[:2] == ["pr", "unit-unknown"]:
+        # Native gh rejects this flag locally. Keep that diagnostic unchanged;
+        # the synthetic oracle avoids real gh/network access in the test suite.
+        oracle = subprocess.CompletedProcess(["gh", *args], 1, "", "unknown flag: --unknown\n")
+        result = gate.checked_run(
+            ["gh", *args], cwd=tmp_path, env={"GH_REPO": "unit/public"},
+            runner=lambda argv, **kw: subprocess.CompletedProcess(argv, oracle.returncode, oracle.stdout, oracle.stderr),
+        )
+        assert result.args == ["gh", *args]
+        assert result.returncode == oracle.returncode and result.stderr == oracle.stderr
+        return
+    if args == ["api", "graphql", "-f", "query=unresolved"]:
+        from scripts.common import github_client
+
+        call = github_client._gh_api_call(args[1:], stdin=None, cwd=tmp_path)
+        assert call.method == "POST"
+        assert github_client._graphql_request(github_client._json_body(call.body())) == ("query", False)
+        result = gate.checked_run(
+            ["gh", *args], cwd=tmp_path, env={"GH_REPO": "unit/public"},
+            runner=lambda argv, **kw: subprocess.CompletedProcess(argv, 1, "", "synthetic GraphQL syntax error"),
+        )
+        assert result.args == ["gh", *args] and result.returncode == 1
+        assert result.stderr == "synthetic GraphQL syntax error"
+        return
     with pytest.raises(gate.PublishBlocked):
         gate.checked_run(
             ["gh", *args],

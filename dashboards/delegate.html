@@ -144,6 +144,7 @@ function formatElapsed(seconds) {
 }
 
 function finishedAt(task) {
+  if (task && task.finished_at) return formatTs(task.finished_at);
   if (!task || !task.started_at || typeof task.duration_s !== 'number') return '—';
   const start = new Date(task.started_at);
   if (Number.isNaN(start.getTime())) return '—';
@@ -180,7 +181,7 @@ function setBanner(id, message) {
 
 function statusClass(status) {
   if (status === 'done') return 'ok';
-  if (status === 'failed' || status === 'zombie') return 'err';
+  if (['failed', 'zombie', 'crashed', 'timeout', 'rate_limited', 'needs_finalize', 'no_deliverable'].includes(status)) return 'err';
   if (status === 'running' || status === 'spawning') return 'warn';
   return 'gray';
 }
@@ -193,11 +194,13 @@ function observerTaskView(task) {
   }
   const verdict = {};
   if (task.verdict != null) verdict.outcome = task.verdict;
-  for (const key of ['returncode', 'no_deliverable_reason', 'delivery_declaration', 'substitution']) {
+  for (const key of ['returncode', 'error', 'no_deliverable_reason', 'delivery_declaration', 'substitution']) {
     if (task[key] != null) verdict[key] = task[key];
   }
   const view = {
     task_id: task.task_id ?? null,
+    schema_version: task.schema_version ?? null,
+    run_nonce: task.run_nonce ?? null,
     agent: task.agent ?? null,
     accounting_model: task.model ?? null,
     requested_selector: task.requested_selector ?? null,
@@ -208,6 +211,11 @@ function observerTaskView(task) {
   };
   if (Object.keys(timings).length) view.timings = timings;
   if (Object.keys(verdict).length) view.verdict = verdict;
+  const delivery = {};
+  for (const key of ['head_sha', 'remote_head_sha', 'push_state', 'commits_ahead', 'worktree_dirty_on_exit']) {
+    if (task[key] != null) delivery[key] = task[key];
+  }
+  if (Object.keys(delivery).length) view.delivery = delivery;
   return view;
 }
 
@@ -220,6 +228,7 @@ function isToday(date) {
 }
 
 function taskTouchedToday(task) {
+  if (task && task.finished_at && isToday(new Date(task.finished_at))) return true;
   if (!task || !task.started_at) return false;
   const start = new Date(task.started_at);
   if (isToday(start)) return true;
@@ -253,7 +262,7 @@ function renderActive(tasks, finishedToday) {
         <div class="k">started</div><div>${formatTs(task.started_at)}</div>
         <div class="k">elapsed</div><div>${formatElapsed(task.age_s)}</div>
       </div>
-      <button class="btn" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))})'>View detail</button>
+      <button class="btn" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))}, ${JSON.stringify(task.run_nonce ?? null)})'>View detail</button>
     </div>
   `).join('')}</div>`;
 }
@@ -266,7 +275,7 @@ function renderCompleted(tasks) {
   }
   document.getElementById('completed-content').innerHTML = `<table>
     <thead><tr><th>task_id</th><th>agent</th><th>status</th><th>duration</th><th>finished_at</th></tr></thead>
-    <tbody>${tasks.map(task => `<tr class="task-row" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))})'>
+    <tbody>${tasks.map(task => `<tr class="task-row" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))}, ${JSON.stringify(task.run_nonce ?? null)})'>
       <td class="mono">${escapeHtml(task.task_id || '—')}</td>
       <td>${escapeHtml(task.agent || '—')}</td>
       <td><span class="pill ${statusClass(task.status)}">${escapeHtml(task.status || 'unknown')}</span></td>
@@ -276,7 +285,7 @@ function renderCompleted(tasks) {
   </table>`;
 }
 
-async function openDetail(taskId) {
+async function openDetail(taskId, runNonce = null) {
   document.getElementById('overlay').classList.add('open');
   document.getElementById('modal-title').textContent = taskId;
   document.getElementById('detail-meta').textContent = 'Loading...';
@@ -284,7 +293,8 @@ async function openDetail(taskId) {
   document.getElementById('task-result').textContent = 'Loading...';
   setBanner('detail-banner', '');
   try {
-    const detail = await fetchJson(`/api/delegate/tasks/${encodeURIComponent(taskId)}`);
+    const query = runNonce == null ? '' : `?run_nonce=${encodeURIComponent(runNonce)}`;
+    const detail = await fetchJson(`/api/delegate/tasks/${encodeURIComponent(taskId)}${query}`);
     document.getElementById('detail-meta').textContent = detail.result_truncated ? 'Result truncated to 64 KiB' : 'Result loaded';
     document.getElementById('task-json').textContent = JSON.stringify(observerTaskView(detail.task || {}), null, 2);
     document.getElementById('task-result').textContent = detail.result ? detail.result : 'no result';
@@ -306,7 +316,7 @@ async function loadTasks() {
     const data = await fetchJson('/api/delegate/tasks?limit=100');
     const tasks = Array.isArray(data.tasks) ? data.tasks : [];
     const active = tasks.filter(task => ['running', 'spawning', 'zombie'].includes(task.status));
-    const completed = tasks.filter(task => ['done', 'failed'].includes(task.status));
+    const completed = tasks.filter(task => ['done', 'failed', 'timeout', 'crashed', 'cancelled', 'rate_limited', 'needs_finalize', 'no_deliverable', 'dry_run'].includes(task.status));
     const finishedToday = completed.filter(taskTouchedToday).length;
     renderActive(active, finishedToday);
     renderCompleted(completed);

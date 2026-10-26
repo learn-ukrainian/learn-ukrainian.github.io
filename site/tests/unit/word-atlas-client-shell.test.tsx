@@ -18,6 +18,7 @@ import {
 import { reportAtlasShellAnalytics } from "@site/src/lib/lexicon/atlas-shell-analytics";
 import { AtlasDataSourceError } from "@site/src/lib/lexicon/atlas-data-source";
 import WordAtlasClientShell from "@site/src/lexicon/WordAtlasClientShell";
+import type { SearchRow } from "@site/src/lib/lexicon/search";
 
 const fixtureRuntimeTree = resolve(
   process.cwd(),
@@ -364,6 +365,81 @@ describe("WordAtlasClientShell React mount", () => {
 });
 
 // Real React mount and shared search, without an Astro child.
+test("article insertion cannot lose search input before passive effects bind the widget", async () => {
+  const rows: SearchRow[] = [{ l: "прапор", s: "прапор", g: "flag" }];
+  vi.stubGlobal("fetch", async (input: RequestInfo | URL) =>
+    String(input).endsWith("search-index.json")
+      ? Response.json(rows)
+      : new Response("missing", { status: 404 }),
+  );
+  for (let mount = 0; mount < 2; mount++) {
+    const container = document.createElement("div");
+    document.body.append(container);
+    let boundAtInsertion = false;
+    const observer = new MutationObserver(() => {
+      const input = container.querySelector<HTMLInputElement>("[data-atlas-typeahead-input]");
+      if (!input) return;
+      observer.disconnect();
+      boundAtInsertion = input.closest("[data-atlas-typeahead]")?.getAttribute("data-atlas-typeahead-ready") === "true";
+      fireEvent.input(input, { target: { value: "прапор" } });
+    });
+    observer.observe(container, { childList: true, subtree: true });
+    try {
+      const view = render(createElement(WordAtlasClientShell, {
+        pathname: "/lexicon/прапор/", assetBaseUrl: "/atlas", fetchImpl: fixtureFetchImpl(),
+      }), { container });
+      await waitFor(() => expect(container.querySelector(
+        '[data-atlas-typeahead-list] a[href="/lexicon/%D0%BF%D1%80%D0%B0%D0%BF%D0%BE%D1%80/"]',
+      )).not.toBeNull());
+      expect(boundAtInsertion).toBe(true);
+      const input = screen.getByRole("combobox");
+      fireEvent.keyDown(input, { key: "Escape" });
+      expect(input).toHaveAttribute("aria-expanded", "false");
+      expect(input).toHaveValue("прапор");
+      fireEvent.keyDown(input, { key: "Escape" });
+      expect(input).toHaveValue("");
+      view.unmount();
+      fireEvent.input(input, { target: { value: "прапор" } });
+      expect(input).toHaveAttribute("aria-expanded", "false");
+      expect(input.closest("[data-atlas-typeahead]")).not.toHaveAttribute("data-atlas-typeahead-ready");
+    } finally {
+      observer.disconnect();
+    }
+  }
+});
+
+test.each([
+  { name: "missing result", rows: [] },
+  { name: "row without required gloss", rows: [{ l: "прапор", s: "прапор" }] },
+  { name: "valid null gloss", rows: [{ l: "прапор", s: "прапор", g: null }] },
+])("mounted search distinguishes $name from binding failure across mounts", async ({ name, rows }) => {
+  vi.stubGlobal("fetch", async (input: RequestInfo | URL) =>
+    String(input).endsWith("search-index.json")
+      ? Response.json(rows)
+      : new Response("missing", { status: 404 }),
+  );
+  for (let mount = 0; mount < 2; mount++) {
+    const view = render(createElement(WordAtlasClientShell, {
+      pathname: "/lexicon/прапор/", assetBaseUrl: "/atlas", fetchImpl: fixtureFetchImpl(),
+    }));
+    const input = await screen.findByRole("combobox");
+    expect(input.closest("[data-atlas-typeahead]")).toHaveAttribute("data-atlas-typeahead-ready", "true");
+    fireEvent.input(input, { target: { value: "прапор" } });
+    const list = view.container.querySelector("[data-atlas-typeahead-list]");
+    if (name === "valid null gloss") {
+      await waitFor(() => expect(list?.querySelector("a")).toHaveAttribute(
+        "href", "/lexicon/%D0%BF%D1%80%D0%B0%D0%BF%D0%BE%D1%80/",
+      ));
+    } else {
+      await waitFor(() => expect(list?.textContent).toContain("Нічого не знайдено"));
+      expect(list?.querySelector("a")).toBeNull();
+    }
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveAttribute("aria-expanded", "false");
+    view.unmount();
+  }
+});
+
 test("mounted word article searches actual results after mount and remount", async () => {
   const searchRows = JSON.parse(readFileSync(resolve(process.cwd(), "src/data/lexicon-search-index.json"), "utf8"));
   vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {

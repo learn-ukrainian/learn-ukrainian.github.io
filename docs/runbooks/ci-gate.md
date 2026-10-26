@@ -1,9 +1,14 @@
 # CI Gate
 
-`.github/workflows/ci.yml` emits the required `CI Gate` context in two tiers.
-PR events run admission checks: file-content secret scanning, the large-file
-guard, attribution, lint and content contracts, dependency-audit scoping, and
-`pytest --collect-only`. Its summary states plainly that full pytest was not run.
+`.github/workflows/ci.yml` emits the required `CI Gate` context. PR events
+(`opened`, `synchronize`, `reopened`) run the same full supported 24-shard
+pytest partition as merge-group, nightly and manual events. CI Gate requires
+frontend, duration refresh, every pytest shard and the whole-run partition report
+to succeed. Missing, skipped, failed or cancelled required results fail the gate.
+PRs also retain file-content secret scanning, the large-file guard, attribution,
+lint and content contracts, dependency-audit scoping, and `pytest --collect-only`.
+Checks executes the slow sparse collection guard on every supported event;
+collection alone does not replace its execution.
 The parallel required `pr-affected` job executes literal changed existing
 `tests/**/test_*.py` files plus every path in `scripts/ci/pr-affected-guards.txt`.
 It verifies the checked-out candidate against `GITHUB_SHA` and the event's PR
@@ -22,7 +27,7 @@ The job has a ten-minute timeout and targets under five minutes on hosted
 runners. The committed serial file-duration sum plus 60 seconds for setup and
 collection is the conservative estimate. If it exceeds 600 seconds, a selected
 file lacks timing data, or pytest infrastructure changes, all guards still run
-and changed files outside the guards defer to merge-group pytest. Infrastructure
+and changed files outside the guards defer to the full PR pytest partition. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded
@@ -37,13 +42,11 @@ markers, quarantine and governor apply. Hosted duration and the independent
 The initial list includes all six runtime/catalog/global suites from the
 original failed group; later PR changes cannot establish old coverage.
 
-Every `merge_group` candidate runs the full supported non-slow pytest suite,
+Every `merge_group` candidate independently reruns the full supported non-slow pytest suite,
 frontend toolchain tests, the sparse collection guard and partition audits.
 Required full green queue CI gates landing. Nightly `schedule` runs at 03:30 UTC
 on `main` and opt-in `workflow_dispatch` runs also execute the full suite.
 Other slow tests retain `pytest-slow-nightly.yml`.
-
-Operator approval under the gate freeze, 2026-10-23.
 
 The advisory Hygiene workflow keeps a separate slim environment. Its focused
 agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
@@ -70,10 +73,10 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | --- | --- |
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
-| Checks | PR pytest collection or the full-tier sparse collection guard, then `scripts/ci/checks.sh` for every lint and content-contract gate; fails if any failed. |
-| PR changed tests and guards | PRs execute changed test files and all explicit guards; full tiers exit without duplicate execution. |
-| Frontend | Full tier only. Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
-| pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
+| Checks | Sparse collection guard on every event, additional PR pytest collection, then `scripts/ci/checks.sh` for every lint and content-contract gate; fails if any failed. |
+| PR changed tests and guards | PRs execute changed test files and all explicit guards alongside full pytest; other events exit without duplicate execution. |
+| Frontend | All supported events. Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
+| pytest (1..N) | All supported events. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
 | pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run. |
 | CI Gate | `if: always()`; fails on any job result other than the expected one. |
 

@@ -47,6 +47,8 @@ def _observe(record: dict) -> dict:
 
 
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+    if spec.agent == "cursor":
+        record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
     logs = path.parent / "logs"
     logs.mkdir(exist_ok=True, mode=0o700)
@@ -95,11 +97,53 @@ def _spec(record: dict, options: dict) -> TaskSpec:
     )
 
 
+def _reap_settled(record: dict, path: Path) -> None:
+    if record["worktree_dirty_on_exit"] is not False or record["push_state"] != (
+        "not_applicable" if record["mode"] == "read-only" else "pushed"
+    ):
+        return
+    try:
+        owner = os.getpid()
+        identity = _identity(owner)
+        if os.fork():
+            return
+    except OSError:
+        record["reap_note"] = "common reaper helper launch failed"
+        with contextlib.suppress(OSError):
+            store.replace(record, path)
+        return
+    # The common reaper refuses live task PIDs. Keep the recorded identity intact
+    # and wait outside the worktree until this supervisor has actually exited.
+    try:
+        os.setsid()
+        os.chdir(git.ROOT)
+        while identity is not None and _identity(owner) == identity:
+            time.sleep(0.05)
+        result = subprocess.run(
+            [str(project_interpreter()), "-m", "scripts.fleet.post_task_reap",
+             "--task-id", record["task_id"], "--apply", "--tasks-dir", str(path.parent)],
+            cwd=git.ROOT, capture_output=True, check=True, timeout=120,
+        )
+        action = json.loads(result.stdout)["main_worktree"]["action"]
+        note = "common reaper: " + (action if action in {"removed", "retained", "skipped", "error"} else "unknown")
+        current = json.loads(path.read_text())
+        current["reap_note"] = note
+        store.replace(current, path)
+    except Exception:
+        with contextlib.suppress(OSError, ValueError):
+            current = json.loads(path.read_text())
+            current["reap_note"] = "common reaper failed"
+            store.replace(current, path)
+    finally:
+        os._exit(0)
+
+
 def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
     spec = _spec(record, options)
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
+    resolved_model = None
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
@@ -139,6 +183,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage = parsed.text, parsed.usage
+        resolved_model = parsed.resolved_model
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
         if returncode < 0:
             status = "crashed"
@@ -169,7 +214,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
         )
         record.update(git.snapshot_delivery(spec, record["worktree_base_sha"], record["worktree_branch"]))
+        if spec.agent == "cursor":
+            record.update(
+                resolved_model=resolved_model if resolved_model is not None else "unknown",
+                resolved_model_known=resolved_model is not None,
+                resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
+            )
         store.replace(record, path)
+
+        _reap_settled(record, path)
 
 
 def wait(task_id: str, nonce: str | None = None, timeout: float = 0, poll_interval: float = 1) -> tuple[dict, int]:

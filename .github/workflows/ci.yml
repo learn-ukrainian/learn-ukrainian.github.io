@@ -1,7 +1,7 @@
 name: CI
 
-# PRs run admission checks and collect pytest without executing the full suite.
-# merge_group, nightly and opt-in workflow_dispatch run the full supported suite.
+# PRs, merge_group, nightly and opt-in workflow_dispatch run the full supported suite.
+# Merge-group candidates repeat the full partition before landing.
 # Every merge candidate must pass the same required "CI Gate" context.
 
 concurrency:
@@ -163,7 +163,6 @@ jobs:
         uses: ./.github/actions/python-ci-env
       # CI Gate requires Checks; ordinary pytest shards deselect this slow node.
       - name: Sparse tree collection guard
-        if: github.event_name != 'pull_request'
         run: >-
           .venv/bin/python -m pytest
           tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent
@@ -192,7 +191,7 @@ jobs:
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
     # (site/ plus the backend inputs hydrate reads) or the base is unknown.
     name: Frontend
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -251,7 +250,7 @@ jobs:
   # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
   refresh-pytest-durations:
     name: Refresh pytest durations
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -305,7 +304,7 @@ jobs:
   pytest:
     name: pytest (${{ matrix.shard }})
     needs: [refresh-pytest-durations]
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # actions:read is only so this job can download the same-run snapshot.

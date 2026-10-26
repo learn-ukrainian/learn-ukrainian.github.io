@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import fcntl
 import json
 import math
@@ -1582,15 +1583,21 @@ def use_real_proc(monkeypatch) -> None:
     monkeypatch.setattr(pytest_retention, "PROC_ROOT", Path("/proc"))
 
 
-def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, monkeypatch):
+@pytest.mark.parametrize("ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
+@pytest.mark.parametrize("fixture_git", [False, True])
+def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, monkeypatch, ns, fixture_git):
     """Defect class #11409: an unreadable unrelated process blocked every reclaim.
 
     The lease names a real child that has exited; the run lock is free and the
     tree is old, so the run must be deleted against the real process table.
+    C-2447 also requires disposable fixture Git metadata to remain reclaimable.
     """
     root, args = area
     pid, start = reaped_pid()
-    run = leased(root, "dead-owner", pid=pid, start_time=start, boot_id=current_boot())
+    run = leased(root, "dead-owner", pid=pid, start_time=start, boot_id=current_boot(), ns=ns)
+    if fixture_git:
+        subprocess.run(["git", "init", str(run / "scratch" / "fixture")], check=True, capture_output=True, timeout=10)
+    expected_bytes = allocated(run)
     later(monkeypatch, 3 * HOUR)
     use_real_proc(monkeypatch)
     before = tree_state(root, args["temp_root"])
@@ -1599,13 +1606,154 @@ def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, mo
     assert (row_for(dry, run)["decision"], row_for(dry, run)["reason"]) == (
         "would_delete", "inactive_pytest_scratch",
     )
+    assert dry["would_delete_bytes"] == expected_bytes > 0
     # The host may expose unreadable same-user processes; the lease proof, not a
     # complete snapshot, is what must admit the deletion.
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     row = row_for(report, run)
     assert row["decision"] == "deleted" and not run.exists()
     assert report["reclaimed_entries"] == 1
-    assert report["reclaimed_bytes"] == report["deleted_bytes"] > 0
+    assert report["reclaimed_bytes"] == report["deleted_bytes"] == expected_bytes > 0
+
+
+@pytest.mark.parametrize("ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
+@pytest.mark.parametrize("case,reason", [
+    ("separate_git_dir", "git_metadata"), ("linked_worktree", "git_metadata"),
+    ("external_worktree", "git_metadata"), ("git_symlink", "git_metadata"),
+    ("objects_symlink", "git_metadata"), ("alternates", "git_metadata"),
+    ("commondir", "git_metadata"), ("core_worktree", "git_metadata"),
+    ("include", "git_metadata"), ("extension", "git_metadata"),
+    ("unfamiliar_config", "git_metadata"), ("invalid_config", "git_metadata"),
+    ("no_owner", "git_metadata"), ("live_owner", "git_metadata"),
+    ("unknown_owner", "git_metadata"), ("probe_failure", "git_metadata"),
+    ("hardlink", "hardlinked_content"), ("fifo", "special_file"),
+    ("registered", "registered_worktree"), ("young", "too_young"),
+])
+def test_fixture_git_custody_and_safety_preserve(area, monkeypatch, tmp_path, ns, case, reason):
+    """Data-loss class: the disposable Git exception admits external custody or unsafe runs."""
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(root, "fixture-control", pid=pid, start_time=start, boot_id=current_boot(), ns=ns)
+    fixture = run / "scratch" / "fixture"
+    outside = tmp_path / "external"
+    outside.mkdir()
+    (outside / "sentinel").write_text("keep outside")
+
+    def git(*arguments):
+        return subprocess.run(["git", *map(str, arguments)], check=True, capture_output=True, timeout=10)
+
+    if case == "separate_git_dir":
+        git("init", "--separate-git-dir", outside / "metadata", fixture)
+    elif case == "linked_worktree":
+        git("init", outside / "source")
+        git("-C", outside / "source", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+            "commit", "--allow-empty", "-m", "fixture")
+        git("-C", outside / "source", "worktree", "add", "--detach", fixture)
+    else:
+        git("init", fixture)
+        metadata = fixture / ".git"
+        if case == "external_worktree":
+            git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+                "commit", "--allow-empty", "-m", "fixture")
+            git("-C", fixture, "worktree", "add", "--detach", outside / "worktree")
+        elif case == "git_symlink":
+            metadata.rename(outside / "metadata")
+            metadata.symlink_to(outside / "metadata", target_is_directory=True)
+        elif case == "objects_symlink":
+            (metadata / "objects").rename(outside / "objects")
+            (metadata / "objects").symlink_to(outside / "objects", target_is_directory=True)
+        elif case == "alternates":
+            (metadata / "objects" / "info" / "alternates").write_text(str(outside) + "\n")
+        elif case == "commondir":
+            (metadata / "commondir").write_text(str(outside) + "\n")
+        elif case in {"core_worktree", "include", "extension", "unfamiliar_config"}:
+            key, value = {
+                "core_worktree": ("core.worktree", str(outside)),
+                "include": ("include.path", str(outside / "sentinel")),
+                "extension": ("extensions.worktreeConfig", "true"),
+                "unfamiliar_config": ("core.hooksPath", str(outside)),
+            }[case]
+            git("config", "--file", metadata / "config", key, value)
+        elif case == "invalid_config":
+            (metadata / "config").write_text("[broken")
+        elif case == "no_owner":
+            (run / "lease.json").unlink()
+        elif case in {"live_owner", "unknown_owner"}:
+            write_lease(run, pid=os.getpid(), start_time=None, boot_id=current_boot())
+            use_real_proc(monkeypatch)
+            if case == "live_owner":
+                from scripts.common.acp_runtime_lock import process_start_time
+
+                write_lease(run, pid=os.getpid(), start_time=process_start_time(os.getpid()), boot_id=current_boot())
+        elif case == "probe_failure":
+            def unavailable(*args, **kwargs):
+                raise OSError(errno.EIO, "Git config probe unavailable")
+
+            monkeypatch.setattr(tmp_sweep.subprocess, "run", unavailable)
+        elif case == "hardlink":
+            os.link(metadata / "HEAD", outside / "linked-head")
+        elif case == "fifo":
+            os.mkfifo(metadata / "endpoint")
+        elif case == "registered":
+            monkeypatch.setattr(tmp_sweep, "registered_worktrees", lambda _: {fixture})
+    if case != "young":
+        later(monkeypatch, 3 * HOUR)
+    before = tree_state(root, outside)
+    for apply in (False, True):
+        report = tmp_sweep.sweep(**args, apply=apply)["pytest_retention"]
+        assert (row_for(report, run)["decision"], row_for(report, run)["reason"]) == ("preserve", reason)
+        assert report["deleted_bytes"] == report["would_delete_bytes"] == 0
+        assert tree_state(root, outside) == before
+        assert (outside / "sentinel").read_text() == "keep outside"
+
+
+@pytest.mark.parametrize("ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
+@pytest.mark.parametrize("fixture_git", [False, True])
+def test_managed_ledger_purge_keeps_git_protection_and_retention_window(area, monkeypatch, ns, fixture_git):
+    """Data-loss class: the fixture exception bypasses a retained entry's Git guard or recovery window."""
+    root, args = area
+    run = unowned(root, "retained", ns=ns)
+    now = later(monkeypatch, 3 * HOUR)
+    row = row_for(tmp_sweep.sweep(**args)["pytest_retention"], run)
+    before = tmp_sweep.tree_fingerprint(run)
+    ledger = tmp_sweep.Ledger(args["state_dir"])
+    ns_fd = os.open(run.parent, tmp_sweep._DIR_FLAGS)
+    try:
+        with ledger.exclusive(wait=False):
+            quarantine = tmp_sweep.open_quarantine(run.parent, ns_fd)
+            try:
+                result = tmp_sweep.quarantine_entry(
+                    run, row, before, quarantine, root_fd=ns_fd, task_root=args["task_root"],
+                    ledger=ledger, run_id="prior-policy", digest_limit=tmp_sweep.DEFAULT_DIGEST_LIMIT,
+                )
+                assert result["decision"] == "quarantined"
+            finally:
+                tmp_sweep.close_quarantine(quarantine, ns_fd)
+    finally:
+        os.close(ns_fd)
+    [entry] = ledger.entries()[0].values()
+    if fixture_git:
+        subprocess.run(["git", "init", str(entry.location / "fixture")], check=True, capture_output=True, timeout=10)
+    # Neither mode may purge inside the existing recovery window.
+    for apply in (False, True):
+        report = tmp_sweep.sweep(**args, apply=apply)["pytest_retention"]
+        assert report["rows"] == [] and entry.location.exists()
+    later(monkeypatch, 8 * 86400, base=now)
+    before = tree_state(root)
+    dry = tmp_sweep.sweep(**args)["pytest_retention"]
+    assert tree_state(root) == before
+    applied = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    if fixture_git:
+        for report in (dry, applied):
+            assert (row_for(report, run)["decision"], row_for(report, run)["reason"]) == (
+                "preserve", "purge_git_metadata",
+            )
+            assert report["purged_entries"] == 0
+        assert tree_state(root) == before
+    else:
+        assert row_for(dry, run)["decision"] == "would_purge"
+        assert row_for(applied, run)["decision"] == "purged"
+        assert not entry.location.exists()
 
 
 def test_live_lease_owner_preserves_the_run(area, monkeypatch):
@@ -1642,6 +1790,7 @@ def test_tree_change_on_recheck_preserves_a_dead_owner_run(area, monkeypatch):
     root, args = area
     pid, start = reaped_pid()
     run = leased(root, "recent-write", pid=pid, start_time=start, boot_id=current_boot())
+    subprocess.run(["git", "init", str(run / "scratch" / "fixture")], check=True, capture_output=True, timeout=10)
     later(monkeypatch, 3 * HOUR)
 
     def write(held: Path) -> None:

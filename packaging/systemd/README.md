@@ -148,9 +148,9 @@ runner, and orchestrator hosts).
 ### 2. Worktree Garbage Collection (`learn-ukrainian-worktree-gc.service` + `.timer`)
 
 - **Install**: The collector sweeps both repository roots. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template before installing it.
-- **Frequency**: Every 4 hours (`OnBootSec=15min`, `OnUnitActiveSec=4h`, `RandomizedDelaySec=1800`, `Persistent=true`) — matches the macOS launchd cadence.
+- **Frequency**: The shipped systemd timer schedules cleanup hourly (`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min` and `Persistent=true`.
 - **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and run automatic git maintenance with receipt logging.
-- **Default mode**: Apply. The shipped unit passes `--apply`, matching macOS launchd. The reaper stays fail-closed for OPEN PRs, live working directories, dirty worktrees, and unreadable GitHub state — this denser cadence does not loosen any of those guards, it only shrinks the backlog between runs.
+- **Default mode**: Apply. The shipped unit still passes both repository roots and `--apply` to the existing wrapper. Cleanup eligibility, retention, and protections for live, dirty, unpublished, OPEN-PR, or unknown state are unchanged.
 - **Disable automatic reaping**: Set `LU_REAPER_DISABLED=1` in the user unit environment to stop automatic reaps, or `LU_REAPER_TERMINAL_DISPATCHES=0` to disable only the optional terminal-dispatch class. Reload systemd after changing the unit:
   ```bash
   systemctl --user daemon-reload
