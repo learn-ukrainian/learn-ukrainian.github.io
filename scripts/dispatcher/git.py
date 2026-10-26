@@ -207,24 +207,38 @@ def provision_links(repo: Path, worktree: Path) -> None:
                 logging.getLogger(__name__).warning("Skipping link %s: %s", relative, errno.errorcode[exc.errno])
 
 
-def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
+def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
     delivery = dict(
-        head_sha=None, remote_head_sha=None, push_state="unknown", commits_ahead=None, worktree_dirty_on_exit=None
+        head_sha=None, remote_head_sha=None, remote_ref=None, publish_branch=record.get("publish_branch"),
+        push_state="unknown", push_state_reason="observation_failed", commits_ahead=None,
+        worktree_dirty_on_exit=None,
     )
     try:
         delivery.update(
             head_sha=_git(spec.worktree, "rev-parse", "HEAD"),
-            commits_ahead=int(_git(spec.worktree, "rev-list", "--count", f"{base_sha}..HEAD")),
+            commits_ahead=int(_git(spec.worktree, "rev-list", "--count", f"{record['worktree_base_sha']}..HEAD")),
             worktree_dirty_on_exit=bool(_git(spec.worktree, "status", "--porcelain")),
         )
         if spec.mode == "read-only":
             delivery["push_state"] = "not_applicable"
+            delivery["push_state_reason"] = "read_only"
         else:
-            remote = _git(spec.worktree, "ls-remote", "--heads", "origin", f"refs/heads/{branch}")
-            delivery["remote_head_sha"] = remote.split()[0] if remote else None
+            branches = [record["worktree_branch"]]
+            if delivery["publish_branch"] is not None:
+                branches.append(delivery["publish_branch"])
+            refs = list(dict.fromkeys(f"refs/heads/{name}" for name in branches))
+            remote = _git(spec.worktree, "ls-remote", "--heads", "origin", *refs)
+            heads = {ref: sha for sha, ref in (line.split() for line in remote.splitlines()) if ref in refs}
+            matched = next((ref for ref in refs if heads.get(ref) == delivery["head_sha"]), None)
+            delivery["remote_ref"] = matched
+            delivery["remote_head_sha"] = heads[matched] if matched else next(iter(heads.values()), None)
             delivery["push_state"] = "pushed" if delivery["remote_head_sha"] == delivery["head_sha"] else "unpushed"
+            delivery["push_state_reason"] = (
+                "remote_head_matches" if matched else "remote_head_differs" if heads else "remote_branch_missing"
+            )
     except (OSError, ValueError, subprocess.SubprocessError):
         pass
     if spec.mode != "read-only" and delivery["worktree_dirty_on_exit"]:
         delivery["push_state"] = "unpushed"
+        delivery["push_state_reason"] = "dirty_worktree"
     return delivery

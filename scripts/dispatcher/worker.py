@@ -42,7 +42,7 @@ def _observe(record: dict) -> dict:
         record["duration_s"] = (
             datetime.fromisoformat(record["finished_at"]) - datetime.fromisoformat(record["started_at"])
         ).total_seconds()
-        record.update(git.snapshot_delivery(_spec(record, {}), record["worktree_base_sha"], record["worktree_branch"]))
+        record.update(git.snapshot_delivery(_spec(record, {}), record))
         store.replace(record)
     return record
 
@@ -214,6 +214,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     stderr_path = path.parent / "logs" / f"{spec.task_id}.stderr.log"
     try:
         signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM, signal.SIGINT})
+        schema = None
+        if options.get("output_schema_path") is not None:
+            from scripts.dispatcher.output_schema import load
+
+            try:
+                schema = load(options)
+            except (OSError, ValueError):
+                status, error = "failed", "output schema binding invalid"
+                return
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
@@ -236,6 +245,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage = parsed.text, parsed.usage
+        if schema is not None:
+            from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
+
+            result = structured_result(json_value(text), schema, returncode=returncode, terminal_ok=not parsed.error)
+            text = result.response
+            if not result.ok:
+                error = f"{result.failure_code}: {result.stderr_excerpt}"
+                status = "failed"
+                return
         resolved_model = parsed.resolved_model
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
         if returncode < 0:
@@ -277,7 +295,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             duration_s=round(time.monotonic() - started, 3),
             result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
         )
-        record.update(git.snapshot_delivery(spec, record["worktree_base_sha"], record["worktree_branch"]))
+        record.update(git.snapshot_delivery(spec, record))
         _enforce_delivery(record)
         if spec.agent == "cursor":
             record.update(

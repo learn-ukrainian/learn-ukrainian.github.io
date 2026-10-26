@@ -215,7 +215,10 @@ _SLOVNYK_DELAY_SECONDS = float(os.environ.get("LEXICON_SLOVNYK_DELAY", "0.34"))
 _SLOVNYK_MAX_RETRIES = int(os.environ.get("LEXICON_SLOVNYK_MAX_RETRIES", "5"))
 _SLOVNYK_BACKOFF_BASE_SECONDS = 1.5
 _SLOVNYK_BACKOFF_CAP_SECONDS = 90.0
-_SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985)"
+_SLOVNYK_USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 _STRESS_SOURCE = "ukrainian-word-stress"
 _CEFR_SOURCE = "PULS CEFR"
 _CEFR_ESTIMATED_SOURCE = "estimated (GRAC frequency)"

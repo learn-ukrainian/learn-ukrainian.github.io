@@ -7,11 +7,12 @@ import subprocess
 import sys
 import uuid
 from pathlib import Path
+from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.dispatcher import checks, git, providers, store, worker
 from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.types import ReviewAccess, TaskSpec
 
 ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
 
@@ -59,13 +60,13 @@ def build_parser() -> argparse.ArgumentParser:
         ("effort", None, "Provider effort, e.g. high (default: provider default)"),
         ("repo", None, "fleet_repos.yaml key (default: public primary)"),
         ("base", "origin/main", "Starting Git ref (default: origin/main)"),
-        ("branch", None, "Review source branch (default: base)"),
+        ("branch", None, "Plain review source or publish branch, e.g. codex/fix (default: base)"),
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
         ("claude-account", None, "Claude account a or b (default: inherited configuration)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
-        ("output-schema", None, "Provider-supported output schema (default: none)"),
+        ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),
         ("research-task-family", None, "Research task family metadata (default: none)"),
         ("research-track", None, "Research track metadata (default: none)"),
@@ -94,6 +95,11 @@ def build_parser() -> argparse.ArgumentParser:
                               help="Excluded review subject, e.g. grok or xai (repeatable; default: none)")
     dispatch.add_argument("--require-review-verdict", action="store_true", default=None,
                           help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
+    for flag in ("review-id", "attempt-id", "review-attempt"):
+        dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; "
+                              "all three required; dry-run only until runtime isolation is wired (default: none)")
+    dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
+                          help="Bound review access; dry-run only (default: isolated for bound attempts)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument(
         "--full-checkout", action="store_true",
@@ -124,6 +130,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _dispatch(args) -> int:
+    if binding := store.review_binding(vars(args)):
+        store.check_review_attempt(binding)
+        # STAGE 1: dry-run-only binding; bound launches exit 2 until the port adds
+        # the manifest-only runtime boundary, scoped home, Sources receipts,
+        # review_contract/review_input_paths and the no-reuse marker.
+        if not args.dry_run:
+            raise ValueError("review_attempt_runtime_unavailable: v2 review isolation is not wired")
     if args.require_review_verdict and args.mode != "read-only":
         raise ValueError("--require-review-verdict requires --mode read-only")
     git.sparse_excludes(args.sparse_include)
@@ -141,6 +154,8 @@ def _dispatch(args) -> int:
         raise ValueError("unknown agent or Claude account")
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
+    if args.output_schema is not None and agent != "codex":
+        raise ValueError("--output-schema is supported only with the effective codex agent")
     if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     task_id = args.task_id or uuid.uuid4().hex
@@ -148,7 +163,7 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
-    if args.mode == "read-only" and args.branch is not None:
+    if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
@@ -158,6 +173,10 @@ def _dispatch(args) -> int:
     prompt_path = _PromptPath(path.with_suffix(".prompt"))
     prompt_path.content = prompt
     options = {key: str(value) for key, value in vars(args).items() if value is not None and key != "prompt"}
+    if args.output_schema is not None:
+        from scripts.dispatcher.output_schema import bind
+
+        options.update(bind(args.output_schema, repo))
     fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider")}
     spec = TaskSpec(
         task_id,
@@ -184,11 +203,16 @@ def _dispatch(args) -> int:
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = providers.load(agent).build(spec, child_env(spec))
-        print(json.dumps(dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path)), indent=2))
+        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        if binding:
+            plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
+        print(json.dumps(plan, indent=2))
         return 0
+    if binding:
+        store.check_review_attempt(binding, claim=True)
     if not args.cwd:
         git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
-    record = store.new_record(spec, info, branch, sha, vars(args))
+    record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
     if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
         raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
     if agent == "muse":
