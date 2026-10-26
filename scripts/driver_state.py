@@ -56,6 +56,7 @@ import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
+from urllib.parse import quote
 
 from markdown_it import MarkdownIt
 
@@ -86,7 +87,7 @@ POLICY = f"""## {POLICY_TITLE}
 - Never ask for an admission or gate override; the answer is always no. Use the clean path (fresh recorded branch, rebase, new commit).
 - When you list an action for yourself, do it in the same turn; never end a turn on a plan.
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
-- End every turn with the privately configured worker target met and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
+- End every turn with the privately configured worker target met and a wake-up armed (a background `scripts/dispatch.py wait` or the `schedule` tool), never with a question.
 """
 # Keep the existing envelope limit after removing the retired posting protocol.
 MAX_ENVELOPE_CHARS = 9_381
@@ -349,13 +350,22 @@ def minimum_workers() -> int | None:
     return value if value > 0 else None
 
 
+def _fetch_monitor_task(task_id: str, *, run_nonce: str) -> dict | None:
+    """Probe a legacy run through the shared Monitor client without changing it."""
+    from scripts.ai_agent_bridge.monitor_client import MonitorClient
+
+    client = MonitorClient(os.environ.get("DELEGATE_MONITOR_API"), timeout_s=2)
+    path = f"/api/delegate/tasks/{quote(task_id, safe='')}?run_nonce={quote(run_nonce, safe='')}"
+    status, body, _ = client.get(path)
+    return json.loads(body) if status == 200 else None
+
+
 def running_workers(initiator: str) -> int | None:
-    """Count own workers only after a nonce-bound live Monitor status probe."""
+    """Count own live runs, reading both task schemas without settling records."""
     try:
-        scripts_dir = str(Path(__file__).resolve().parent)
-        if scripts_dir not in sys.path:
-            sys.path.insert(0, scripts_dir)
-        from scripts.delegate import _TERMINAL_STATUSES, _fetch_monitor_task
+        from scripts.dispatcher import store
+        from scripts.dispatcher.worker import _identity
+        from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
     except Exception:
         return None
 
@@ -366,8 +376,8 @@ def running_workers(initiator: str) -> int | None:
     deadline = time.monotonic() + 6
     for record in tasks.glob("*.json"):
         try:
-            data = json.loads(record.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
+            data = store.read(record.stem)
+        except (OSError, ValueError, TypeError):
             return None
         if not isinstance(data, dict):
             return None
@@ -376,6 +386,17 @@ def running_workers(initiator: str) -> int | None:
             if not isinstance(task_id, str) or not task_id or not isinstance(nonce, str) or not nonce:
                 return None
             if time.monotonic() >= deadline:
+                return None
+            if data.get("schema_version") == 2:
+                pid, expected = data.get("pid"), data.get("process_start")
+                if type(pid) is not int or pid <= 0 or not isinstance(expected, str) or not expected:
+                    return None
+                actual = _identity(pid)
+                if actual is None:
+                    return None
+                count += actual == expected
+                continue
+            if data.get("schema_version", 1) != 1:
                 return None
             try:
                 live = _fetch_monitor_task(task_id, run_nonce=nonce)
@@ -389,7 +410,7 @@ def running_workers(initiator: str) -> int | None:
                 or task.get("initiator") != initiator
             ):
                 return None
-            if task.get("status") not in LIVE_WORKER_STATUSES | _TERMINAL_STATUSES:
+            if task.get("status") not in LIVE_WORKER_STATUSES | TERMINAL_TASK_STATUSES | {"needs_finalize"}:
                 return None
             if task.get("status") in LIVE_WORKER_STATUSES:
                 if live.get("alive") is not True:
@@ -543,7 +564,7 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
         reasons.append(f"{why}; decide per the policy and execute it now")
     if not reasons and payload.get("fullyIdle") is True:
         reasons.append(
-            "nothing is armed to wake you; start a background `delegate.py wait` or set a `schedule` timer, then end the turn"
+            "nothing is armed to wake you; start a background `scripts/dispatch.py wait` or set a `schedule` timer, then end the turn"
         )
     if not reasons:
         with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
