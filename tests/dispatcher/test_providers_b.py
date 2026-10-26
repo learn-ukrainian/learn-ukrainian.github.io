@@ -251,6 +251,39 @@ def test_cursor_message_content_does_not_lose_assistant_text(content):
     assert load("cursor").parse(stdout, "", 0, None).text == "Finished."
 
 
+def test_cursor_assistant_messages_preserve_verdict_boundary_over_result():
+    """Cursor's separator-free terminal result must not hide a standalone approval."""
+    from scripts.review.record_cf_verdict import normalize_verdict
+    from scripts.review.verdict_parser import recognized_verdicts
+
+    # Trimmed from atlas-1538-query-ua-cf-grok.result; no private content retained.
+    preamble, verdict = "using tracked-file reads only.", "**VERDICT: APPROVE**"
+    glued = preamble + verdict
+    events = []
+    for text in (preamble, verdict):
+        events.append({"type": "assistant", "message": {"role": "assistant", "content": [
+            {"type": "text", "text": text},
+        ]}})
+    events.append({"type": "result", "subtype": "success", "is_error": False, "result": glued})
+    assert recognized_verdicts(glued) == []
+    parsed = load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None)
+    assert (parsed.text, parsed.error) == ("using tracked-file reads only.\n\n**VERDICT: APPROVE**", None)
+    assert recognized_verdicts(parsed.text) == ["APPROVE"]
+    assert normalize_verdict(parsed.text) == "APPROVED"
+
+
+@pytest.mark.parametrize("content", [None, [], "", "  ", [{"type": "tool_use", "text": "ignored"}]])
+def test_cursor_result_fallback_when_no_assistant_text(content):
+    """Assistant precedence must not discard result-only replies or treat tool blocks as prose."""
+    events = [
+        {"type": "assistant", "message": {"content": content}},
+        {"type": "result", "subtype": "success", "result": "VERDICT: APPROVE"},
+    ]
+    assert load("cursor").parse("\n".join(map(json.dumps, events)), "", 0, None) == ParsedResult(
+        "VERDICT: APPROVE", None, None,
+    )
+
+
 def test_codex_turn_usage_is_read_without_token_event():
     stdout = '{"type":"turn.completed","usage":{"input_tokens":4,"output_tokens":2}}'
     assert load("codex").parse(stdout, "", 0, "Finished.") == ParsedResult(

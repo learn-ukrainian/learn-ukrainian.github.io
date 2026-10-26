@@ -136,6 +136,53 @@ def test_recognized_lines_preserve_tokens_and_order(reply, expected):
     assert recognized_verdicts(reply) == expected
 
 
+# Emphasized label/value fixture: atlas-1544-ulif-contact-cf-agy.result, trimmed.
+@pytest.mark.parametrize("prefix", ["- ", "* ", "+ ", "1. ", "1) ", "123456789. "])
+@pytest.mark.parametrize("template", [
+    "VERDICT: APPROVE", "**VERDICT: APPROVE**", "VERDICT: **APPROVE**",
+    "**VERDICT**: **`APPROVE`**", "**VERDICT** APPROVE", "## VERDICT: APPROVE",
+])
+@pytest.mark.parametrize("indent", ["", "   "])
+def test_list_item_verdict_reaches_recorder(prefix, template, indent):
+    """List-prefix rejection must not hide real approvals, including the AGY shape."""
+    from scripts.review.record_cf_verdict import normalize_verdict
+
+    reply = indent + prefix + template
+    assert recognized_verdicts(reply) == ["APPROVE"]
+    assert normalize_verdict(reply) == "APPROVED"
+
+
+@pytest.mark.parametrize("reply", [
+    "I cannot give VERDICT: APPROVE until the checks pass.",
+    "- I cannot give VERDICT: APPROVE until the checks pass.",
+    '"VERDICT: APPROVE" is the requested instruction.',
+    '- "VERDICT: APPROVE" is the requested instruction.',
+    "> - **VERDICT**: **`APPROVE`**",
+    "- `VERDICT: APPROVE`",
+    "```\n- VERDICT: APPROVE\n```",
+    "    - VERDICT: APPROVE",
+    "-VERDICT: APPROVE", "1.VERDICT: APPROVE", "1234567890. VERDICT: APPROVE",
+    "using tracked-file reads only.**VERDICT: APPROVE**",
+])
+def test_list_support_does_not_admit_prose_quotes_or_code(reply):
+    """Prefix relaxation must not turn examples or glued Cursor prose into approvals."""
+    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+
+    assert recognized_verdicts(reply) == []
+    with pytest.raises(RecordError, match="missing or ambiguous"):
+        normalize_verdict(reply)
+
+
+def test_conflicting_list_verdicts_remain_ambiguous():
+    """Recognizing a list approval must not hide a conflicting rejection."""
+    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+
+    reply = "- **VERDICT**: **`APPROVE`**\n1) VERDICT: REQUEST_CHANGES"
+    assert recognized_verdicts(reply) == ["APPROVE", "REQUEST_CHANGES"]
+    with pytest.raises(RecordError, match="missing or ambiguous"):
+        normalize_verdict(reply)
+
+
 @pytest.mark.parametrize("token", [
     "APPROVE", "APPROVED", "CHANGES_REQUESTED", "REQUEST_CHANGES", "BLOCKED",
 ])

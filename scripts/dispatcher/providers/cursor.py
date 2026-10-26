@@ -55,9 +55,10 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
                 )
             if isinstance(content, str) and content.strip():
                 parts.extend([content, ""])
-    text = result.get("result")
-    if not isinstance(text, str) or not text.strip():
-        text = "\n\n".join(p.strip() for p in parts if p.strip()) or None
+    text = "\n\n".join(p.strip() for p in parts if p.strip()) or None
+    if text is None:
+        fallback = result.get("result")
+        text = fallback if isinstance(fallback, str) and fallback.strip() else None
     usage = result.get("usage")
     usage = usage if isinstance(usage, dict) else None
     if returncode:

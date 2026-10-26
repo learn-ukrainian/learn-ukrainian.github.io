@@ -25,8 +25,9 @@ ACCEPTED_VERDICT_TOKENS = (
 # cf_preflight.py and the review prompts actually ask reviewers to write.
 # Reviewers routinely render the label and token in Markdown emphasis
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
-# full verdicts and must not be misread as missing (#8786). A verdict line
-# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
+# full verdicts and must not be misread as missing (#8786). After optional
+# block markers (below), a verdict line STARTS with optional emphasis
+# (``*``, ``_``), ``VERDICT``, then
 # either a colon surrounded by emphasis/backticks/whitespace or at least one
 # emphasis/backtick/whitespace separator, then the token and a word boundary
 # (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
@@ -44,6 +45,8 @@ ACCEPTED_VERDICT_TOKENS = (
 # and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
 # has no space, which CommonMark does not treat as a heading, and
 # ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
+# A CommonMark list marker (``-``, ``*``, ``+``, or 1–9 digits plus ``.``/``)``)
+# followed by spaces or tabs may precede the heading/label as well.
 # CommonMark line endings are LF, CR, and CRLF. str.splitlines() also breaks
 # on VT, FF, and Unicode separators, which moves fence spans off the real text.
 _COMMONMARK_LINE_RE = re.compile(r"\r\n|\r|\n")
@@ -72,10 +75,10 @@ def _commonmark_keepends(text: str) -> list[str]:
     return lines
 
 
-_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+_VERDICT_MARKER_PREFIX = r"^ {0,3}(?:(?:[-*+]|[0-9]{1,9}[.)])[ \t]+)?(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
+_VERDICT_LINE_PREFIX = _VERDICT_MARKER_PREFIX + r"[*_`\s]*:[*_`\s]*"
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
-    r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
+    _VERDICT_MARKER_PREFIX + r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
