@@ -668,7 +668,7 @@ def test_merge_resolution_and_root_paths_cannot_escape_scope(sandbox, delivery_s
 
 
 @pytest.mark.parametrize("reuse_cwd", [False, True])
-def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reuse_cwd):
+def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reuse_cwd, monkeypatch):
     if reuse_cwd:
         initial = sandbox.settle(sandbox.dispatch())
         tree = Path(initial["cwd"])
@@ -684,6 +684,11 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
     result = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write",
                                             "--owned-path", "delivered.txt", *flags))
     assert result["worktree_base_sha"] == starting_head
+    assert (result["status"], result["error"]) == ("done", None)
+    original = git._git
+    monkeypatch.setattr(git, "_git", lambda path, command, *args, **kw:
+                        "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
+    worker._enforce_delivery(result)
     assert (result["status"], result["error"]) == ("done", None)
 
 

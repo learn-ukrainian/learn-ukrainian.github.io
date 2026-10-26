@@ -129,10 +129,10 @@ def _enforce_delivery(record: dict) -> None:
             ).split("\0")
             if git._git(worktree, "rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
                 raise ValueError("merge resolution paths cannot be verified")
-            outside = sorted(path for path in paths if path and not path_is_owned(path, owned))
+            outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
             if outside:
                 cause = "outside_owned_paths: " + ", ".join(
-                    sanitize_for_display(redact_text(path)) for path in sorted(set(outside))
+                    sanitize_for_display(redact_text(path)) for path in outside
                 )
                 if len(cause) > 1024:
                     cause = cause[:1009] + "... (truncated)"
