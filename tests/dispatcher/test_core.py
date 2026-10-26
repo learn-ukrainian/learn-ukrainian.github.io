@@ -378,6 +378,53 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     assert record["prompt_sha256"] == hashlib.sha256(b"exact\nbytes\n").hexdigest()
 
 
+@pytest.mark.parametrize("text,model,required,error", [
+    ("\nReview details\nVERDICT: APPROVE\n  \t", "file", True, None),
+    ("VERDICT: REQUEST_CHANGES", "echo", True, None),
+    ("VERDICT: APPROVE\nVERDICT: APPROVE", "echo", True, None),
+    ("Review has no decision", "echo", True, "review_missing_verdict_line"),
+    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "echo", True, "review_ambiguous_verdict"),
+    ("> VERDICT: APPROVE\nI might report VERDICT: APPROVE later", "echo", True,
+     "review_missing_verdict_line"),
+    ("VERDICT: APPROVE", "fail", True, "provider exited unsuccessfully"),
+    ("Review has no decision", "fail", True, "provider exited unsuccessfully"),
+    ("Review has no decision", "echo", False, None),
+])
+def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, text, model, required, error):
+    """Defect classes: false completion, failure promotion, result corruption and opt-in leakage."""
+    # Use the production shared parser and its dependencies in the disposable CLI repo.
+    (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
+    dispatched = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", model, "--prompt", text,
+        *(["--require-review-verdict"] if required else []),
+    )
+    task = dispatched.stdout.splitlines()
+    record = sandbox.settle(task, expected=1 if error else 0)
+    assert record["status"] == ("failed" if error else "done")
+    assert record["error"] == error
+    assert record["returncode"] == (17 if model == "fail" else 0)
+    assert Path(record["result_file"]).read_bytes() == text.encode()
+    assert record["result_sha256"] == hashlib.sha256(text.encode()).hexdigest()
+    assert json.loads(sandbox.cli("status", task[0]).stdout)["status"] == record["status"]
+    assert json.loads(sandbox.cli("list", "--status", record["status"]).stdout)[0]["task_id"] == task[0]
+
+
+def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
+    """Defect class: scanner exceptions lose terminal failure or expose exception contents."""
+    review = sandbox.repo / "scripts/review"
+    review.mkdir()
+    (review / "verdict_parser.py").write_text(
+        "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
+    )
+    record = sandbox.settle(sandbox.dispatch("echo", "--require-review-verdict"), expected=1)
+    assert record["status"] == "failed"
+    assert record["error"] == "review_gate_error"
+    assert record["returncode"] == 0
+    assert record["finished_at"] is not None
+    assert Path(record["result_file"]).read_text() == "literal final response"
+    assert "sensitive scanner diagnostic" not in json.dumps(record)
+
+
 def test_nonce_refuses_status_wait_and_cancel(sandbox):
     task = sandbox.dispatch("blocked")
     await_file(sandbox.tasks / f"{task[0]}.started")
