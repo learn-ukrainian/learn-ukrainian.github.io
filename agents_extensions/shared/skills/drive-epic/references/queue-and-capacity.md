@@ -44,12 +44,14 @@ the epic's open issue set:
    grok-bot QA issues per §2b). Quote the count.
 2. **Disposition each item** — for every open issue, exactly one of:
    - **in_flight** (named PR/task id + head),
-   - **dispatch now** (ROUTING_CARD + `capacity_pick` / `/api/state/routing-budget` +
-     `--check-budget`),
+   - **dispatch now** (driver completes budget/capacity admission with `capacity_pick`,
+     `usage show` and `/api/state/routing-budget` before dispatch; records ROUTING_CARD),
    - **named hold** with one §2c hold code.
 3. **Silence is a defect** — an open epic issue with no disposition is a driver failure.
 4. **Closeout** — merge alone is not done; the post-merge issue disposition and cleanup
    are the core `SKILL.md` Definition of done.
+
+`--check-budget` is legacy-only, with no v2 mapping; never pass it to `scripts/dispatch.py`.
 
 **Anti-passive (all seats, Cursor especially):** while CF or CI runs on unit N, you
 **must** either dispatch the next ready epic child or emit a §2c disposition code in the

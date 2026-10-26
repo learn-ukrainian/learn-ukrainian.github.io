@@ -75,8 +75,8 @@ through Cursor (D-129, #10464), and the Other Models pool never carries a review
 .venv/bin/python -m scripts.fleet.capacity_pick
 # pace detail per lane (remaining%, pace lines, will_last, deficit):
 .venv/bin/python -m scripts.fleet.usage show
-# then dispatch with budget guard (flag or LU_DISPATCH_CHECK_BUDGET=1):
-.venv/bin/python scripts/delegate.py dispatch --check-budget ...
+# Driver completes budget/capacity admission from these results before dispatch:
+.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --mode workspace-write --worktree
 ```
 
 **Refuse deficit when cooler seats exist.** Do **not** habit-route to Codex (or any
@@ -84,9 +84,8 @@ subscription lane) while `usage show` / `routing-budget` shows hot / near_cap /
 deficit (visible pace, projected to run out before reset, and more than 2 points
 ahead of pace; near_cap ≥ 90% unchanged) or a thinning reserve **and** `capacity_pick`
 lists cool/idle free seats
-(Cursor, AGY, …). `--check-budget` hard-subs when
-`dispatch_fallbacks` has a row (e.g. `codex → cursor`); otherwise it **refuses**
-unless `--force-agent` with a written NOTE.
+(Cursor, AGY, …). The driver applies budget/capacity admission before dispatch.
+`--check-budget` is legacy-only, with no v2 mapping; never pass it to `scripts/dispatch.py`.
 
 **Concurrent drivers (typical):** ~**2 Grok** + **1 Claude** + **1–4 Codex**. Shared free
 worker pools — coordinate via active-delegate + disjoint owned paths so drivers do not

@@ -121,7 +121,7 @@ Agent-run builds go through `scripts/build/v7_build.py <level> <slug> --worktree
 - `ai_agent_bridge` → COMMUNICATION (discussions, reviews, Q&A). NOT execution. `ab discuss` is analysis-only — filesystem writes during discussion = HARD STOP, dispatch the work as a separate brief.
 - `Monitor` → watch long-running. Never ScheduleWakeup loops.
 - Monitor API `localhost:8765` → state queries. One curl > custom scripts.
-- `/api/state/routing-budget` → pre-dispatch capacity check. Add `--check-budget` to delegate.py for warnings. Soft-fail when API down.
+- `/api/state/routing-budget`, `scripts.fleet.capacity_pick` and `scripts.fleet.usage show` → driver budget/capacity admission before dispatch. `--check-budget` is legacy-only, with no v2 mapping. Missing telemetry is unknown.
 - `ugrep` → prefer over grep (faster, parallel, binary-safe).
 
 ## INVESTIGATE BEFORE ACTING

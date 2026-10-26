@@ -119,16 +119,16 @@ Chat "ready" is not DoR. Tables: `docs/best-practices/task-quality.md` and `/api
 behaviour for one PR. Before review, apply the size guide, exclusions and
 split-or-justify rule in [workflow.md § Merge policy](../../../rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450).
 
+Before dispatch, the driver completes budget/capacity admission using §3's live
+`routing-budget`, `capacity_pick` and `usage show` results and records the chosen lane.
+`--check-budget` is legacy-only, with no v2 mapping; never pass it to `scripts/dispatch.py`.
+
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --check-budget --agent <lane> --worktree ...
+.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <model> --prompt-file <brief> --mode workspace-write --worktree
 ```
 
-`--check-budget` (or `LU_DISPATCH_CHECK_BUDGET=1` in the launcher) hard-subs via
-`dispatch_fallbacks` when mapped (e.g. `codex → cursor`); otherwise it exits non-zero
-unless `--force-agent` + NOTE. Before claiming who authored work, read the
-`🔄 HARD AUTO-SUBSTITUTE` line (stderr) and the task record's `agent`/`model` in
-`batch_state/tasks/<id>.json` (2026-09-25). Never filter dispatch output down to the
-base-SHA line or drop stderr; that hides the substitution.
+Before claiming who authored work, read the task record's `agent`/`model` in
+`batch_state/tasks/<id>.json`. Preserve launch stdout and stderr, task ID and full run nonce.
 
 Before launch, verify the brief's actual worktree path and owned paths against the
 dispatch target and the worktree contract. Reconcile current queue instructions
