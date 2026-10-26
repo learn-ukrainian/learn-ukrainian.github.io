@@ -561,7 +561,7 @@ def test_unsuccessful_settle_preserves_cause_with_outside_commit(delivery_settle
 
 
 @pytest.mark.parametrize("history", ["merged", "restored", "rename-in", "rename-out", "deleted"])
-def test_scope_checks_each_own_commit(sandbox, delivery_settle, history):
+def test_scope_checks_each_own_commit(sandbox, delivery_settle, history, monkeypatch):
     record, settle = delivery_settle
     tree = Path(record["cwd"])
     if history == "merged":
@@ -575,7 +575,6 @@ def test_scope_checks_each_own_commit(sandbox, delivery_settle, history):
         run_git(tree, "merge", "--no-edit", "main")
     if history.startswith("rename"):
         run_git(tree, "mv", source, "delivered.txt" if history == "rename-in" else "outside.txt")
-        run_git(tree, "config", "diff.renames", "true")
     elif history == "deleted":
         run_git(tree, "rm", "outside.txt")
     else:
@@ -589,6 +588,13 @@ def test_scope_checks_each_own_commit(sandbox, delivery_settle, history):
     run_git(tree, "commit", "-m", "worker delivery")
     run_git(tree, "push", "origin", "HEAD")
     result = settle()
+    if history == "rename-in":
+        # Force rename detection before the guard's explicit --no-renames override.
+        original = git._git
+        monkeypatch.setattr(git, "_git", lambda path, command, *args, **kw:
+                            original(path, command, *(("-M",) if command == "diff-tree" else ()), *args, **kw))
+        result["status"] = "done"
+        worker._enforce_delivery(result)
     assert result["status"] == ("done" if history == "merged" else "no_deliverable")
     assert result["error"] == (None if history == "merged" else "outside_owned_paths: outside.txt")
 
