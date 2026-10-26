@@ -148,9 +148,6 @@ def test_recognized_lines_preserve_tokens_and_order(reply, expected):
     "**VERDICT**: **{token}**",
     "**VERDICT {token}** — reviewed exact head …",
     "**VERDICT**{token}",
-    "`VERDICT: {token}`",
-    "`VERDICT {token}`",
-    "`VERDICT: {token}` for `0123456789abcdef`",
 ])
 def test_colon_and_markdown_separators_accept_all_verdict_tokens(template, token):
     assert recognized_verdicts(template.format(token=token)) == [token]
@@ -161,7 +158,7 @@ def test_colon_and_markdown_separators_accept_all_verdict_tokens(template, token
     "VERDICT APPROVE_LATER", "VERDICT APPROVE_2", "VERDICT APPROVEé",
     "**VERDICT** APPROVEX", "**VERDICT**APPROVE_LATER",
     "I will report VERDICT APPROVE later", "> **VERDICT APPROVE**",
-    "    VERDICT APPROVE", "\tVERDICT APPROVE",
+    "`VERDICT APPROVE`", "    VERDICT APPROVE", "\tVERDICT APPROVE",
     "```\n**VERDICT APPROVE**\n```", "~~~\nVERDICT BLOCKED\n~~~",
     "```\nVERDICT APPROVE", "##VERDICT APPROVE", "## The VERDICT APPROVE",
 ])
@@ -173,7 +170,7 @@ def test_relaxed_separators_still_reject_examples_and_invalid_tokens(reply):
     "", "No verdict", "VERDICT: UNKNOWN", "VERDICT: APPROVEX",
     "VERDICT: APPROVE_LATER", "VERDICT: APPROVE_2", "VERDICT: APPROVEé",
     "> VERDICT: APPROVE", "I will report VERDICT: APPROVE later",
-    "    VERDICT: APPROVE", "\tVERDICT: APPROVE", "\u00a0VERDICT: APPROVE",
+    "`VERDICT: APPROVE`", "    VERDICT: APPROVE", "\tVERDICT: APPROVE", "\u00a0VERDICT: APPROVE",
     "##VERDICT: APPROVE", "####### VERDICT: APPROVE", "## The VERDICT: APPROVE",
     "```\nVERDICT: APPROVE\n```", "~~~~\nVERDICT: APPROVE\n~~~~",
     "```\n`VERDICT: APPROVE`\n```", "I will report `VERDICT: APPROVE` later",
@@ -230,8 +227,8 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
     assert _review_verdict_and_count(raw)[0] == _review_verdict_and_count(f"```json\n{raw}\n```")[0] == canonical
 
     # Explicit verdict lines take precedence over the JSON fallback.
-    assert recognized_verdicts(response + "\n\n`VERDICT: APPROVE` for `0123456789abcdef`") == ["APPROVE"]
-    assert recognized_verdicts(response + "\n\n`VERDICT: REQUEST_CHANGES`") == ["REQUEST_CHANGES"]
+    assert recognized_verdicts(response + "\n\nVERDICT: APPROVE") == ["APPROVE"]
+    assert recognized_verdicts(response + "\n\nVERDICT: REQUEST_CHANGES") == ["REQUEST_CHANGES"]
 
     # The same JSON in quoted material or an outer example must stay invisible.
     quoted = "\n".join("> " + line for line in response.splitlines())

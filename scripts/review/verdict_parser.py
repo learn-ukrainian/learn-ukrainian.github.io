@@ -26,7 +26,7 @@ ACCEPTED_VERDICT_TOKENS = (
 # Reviewers routinely render the label and token in Markdown emphasis
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
 # full verdicts and must not be misread as missing (#8786). A verdict line
-# STARTS with the label: optional emphasis or inline backticks, ``VERDICT``, then
+# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
 # either a colon surrounded by emphasis/backticks/whitespace or at least one
 # emphasis/backtick/whitespace separator, then the token and a word boundary
 # (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
@@ -72,9 +72,9 @@ def _commonmark_keepends(text: str) -> list[str]:
     return lines
 
 
-_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_`][*_`\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_`][*_`\s]*)?VERDICT"
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
     r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",

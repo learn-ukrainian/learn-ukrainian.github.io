@@ -103,9 +103,6 @@ def write_task(root: Path, *, task_id="review-one", reply="VERDICT: APPROVE", **
         ("VERDICT: REQUEST_CHANGES", "CHANGES_REQUESTED"),
         ("VERDICT: CHANGES_REQUESTED", "CHANGES_REQUESTED"),
         ("VERDICT: BLOCKED", "BLOCKED"),
-        ("`VERDICT: APPROVE`", "APPROVED"),
-        ("`VERDICT: APPROVE` for `0123456789abcdef`", "APPROVED"),
-        ("`VERDICT: REQUEST_CHANGES`", "CHANGES_REQUESTED"),
         (
             '```json\n{"schema_version":"code-review-findings.v1",'
             '"overall":{"correctness":"correct","explanation":"Reviewed the diff.","confidence":0.9},'
