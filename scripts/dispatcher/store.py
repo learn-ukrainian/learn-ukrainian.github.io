@@ -52,6 +52,8 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict) ->
     if spec.mode == "read-only" and metadata.get("branch") is not None:
         record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
         record["pinned_head"] = metadata.get("pinned_head") or sha
+    elif spec.mode == "workspace-write" and metadata.get("branch") is not None:
+        record["publish_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
     record.update(prompt_file=str(spec.prompt_file), prompt_sha256=digest(spec.prompt_file.read_bytes()))
     record.update(
         result_file=str(spec.final_file), push_state="unknown", research_owned_paths=metadata["research_owned_path"]

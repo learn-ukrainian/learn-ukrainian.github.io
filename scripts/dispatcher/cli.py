@@ -59,7 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("effort", None, "Provider effort, e.g. high (default: provider default)"),
         ("repo", None, "fleet_repos.yaml key (default: public primary)"),
         ("base", "origin/main", "Starting Git ref (default: origin/main)"),
-        ("branch", None, "Review source branch (default: base)"),
+        ("branch", None, "Plain review source or publish branch, e.g. codex/fix (default: base)"),
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
@@ -148,7 +148,7 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
-    if args.mode == "read-only" and args.branch is not None:
+    if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
