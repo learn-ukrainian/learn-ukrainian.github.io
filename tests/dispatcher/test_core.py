@@ -255,6 +255,33 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
         )
 
 
+@pytest.mark.parametrize("remote_available", [True, False])
+def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remote_available):
+    """Uncommitted work is unpushed even when HEAD matches origin or origin cannot be read."""
+    record = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write"))
+    worktree = Path(record["cwd"])
+    (worktree / "delivered.txt").write_text("uncommitted delivery\n")
+    if not remote_available:
+        run_git(worktree, "remote", "set-url", "origin", str(sandbox.tasks / "missing-remote"))
+    probe = TaskSpec(
+        record["task_id"],
+        "codex",
+        "echo",
+        None,
+        "workspace-write",
+        worktree,
+        Path(record["prompt_file"]),
+        Path(record["result_file"]),
+    )
+    assert git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"]) == {
+        "head_sha": record["head_sha"],
+        "remote_head_sha": record["head_sha"] if remote_available else None,
+        "push_state": "unpushed",
+        "commits_ahead": 1,
+        "worktree_dirty_on_exit": True,
+    }
+
+
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     task = sandbox.dispatch("unpushed", "--mode", "workspace-write")
     first = sandbox.settle(task)

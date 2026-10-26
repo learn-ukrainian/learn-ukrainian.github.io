@@ -79,4 +79,6 @@ def snapshot_delivery(spec: TaskSpec, base_sha: str, branch: str) -> dict:
             delivery["push_state"] = "pushed" if delivery["remote_head_sha"] == delivery["head_sha"] else "unpushed"
     except (OSError, ValueError, subprocess.SubprocessError):
         pass
+    if spec.mode != "read-only" and delivery["worktree_dirty_on_exit"]:
+        delivery["push_state"] = "unpushed"
     return delivery
