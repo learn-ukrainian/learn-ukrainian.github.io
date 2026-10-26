@@ -206,6 +206,45 @@ def test_settled_pushed_clean_tree_with_open_pr_is_reaped(pushed_open_pr):
     assert _run(["git", "rev-parse", "refs/heads/codex/open-author"], cwd=repo).stdout.strip()
 
 
+@pytest.mark.parametrize("case", ["missing", "recorded", "bypassed"])
+def test_pushed_author_lifecycle_must_be_observed_before_removal(pushed_open_pr, monkeypatch, case):
+    from scripts.orchestration import task_lifecycle as tl
+    from tests.orchestration.test_task_lifecycle import _ledger
+
+    repo, tree, tasks, record = pushed_open_pr
+    ledger = _ledger()
+    state_file = tl.lifecycle_path(repo, ledger["identity"])
+    state = json.loads(record.read_text())
+    state.update(task_lifecycle=tl.carrier_projection(ledger, state_file=str(state_file)),
+                 worktree_base_sha=_run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip())
+    record.write_text(json.dumps(state))
+    if case == "recorded":
+        tl.write_lifecycle(state_file, ledger)
+    remove = post_task_reap.reap_worktrees.reap_clean_pushed
+
+    def checked_remove(**kwargs):
+        if case == "recorded":
+            local = tl.load_lifecycle(state_file)["observation_receipts"][-1]["observation"]["local"]
+            assert tree.exists() and local["worktree_present"]
+        return remove(**kwargs)
+
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "reap_clean_pushed", checked_remove)
+    row = post_task_reap.post_task_reap(
+        "open-author", tasks_dir=tasks, repo_root=repo, apply=True,
+        no_lifecycle_observation="operator bypass" if case == "bypassed" else None,
+    )["main_worktree"]
+    assert tree.exists() == (case == "missing")
+    if case == "missing":
+        assert row["action"] == "skipped"
+        assert "LIFECYCLE_LEDGER_MISSING" in row["reason"]
+    else:
+        assert row["action"] == "removed"
+        assert row["lifecycle_observations"] == (
+            [{"status": "bypassed", "reason": "operator bypass"}] if case == "bypassed" else
+            [{"status": "recorded", "receipt_id": tl.load_lifecycle(state_file)["observation_receipts"][-1]["id"]}]
+        )
+
+
 def test_tree_with_unpushed_commit_is_kept_even_when_pr_is_open(pushed_open_pr):
     _, tree, _, _ = pushed_open_pr
     (tree / "README.md").write_text("unpushed\n")
@@ -662,14 +701,18 @@ def _no_pr_states(_repo: Path, _branch: str | None):
 
 @pytest.fixture
 def open_review_checkout(hermetic_reap, monkeypatch):
-    repo, tasks = hermetic_reap
+    repo, _ = hermetic_reap
+    tasks = repo / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     task_id = "review-11683"
     tree = _add_dispatch_worktree(repo, "claude", task_id)
     (tree / "README.md").write_text("reviewed change\n")
     _run(["git", "commit", "-am", "reviewed change"], cwd=tree)
     _run(["git", "push", "origin", "HEAD:refs/heads/author/feature"], cwd=tree)
     head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
-    _write_task_state(tasks, task_id, "done", tree, agent="claude", pid=999999999)
+    _write_task_state(tasks, task_id, "done", tree, agent="claude", pid=999999999,
+                      worktree_reused=False, creation_evidence=True)
     record = tasks / f"{task_id}.json"
     state = json.loads(record.read_text())
     state.update(
@@ -708,14 +751,14 @@ def test_settled_read_only_review_checkout_is_reaped_while_its_reviewed_pr_is_op
 
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger", None])
-def test_unproven_author_tree_with_an_open_pr_is_still_retained(open_review_checkout, mode):
+def test_author_tree_with_unknown_exit_telemetry_is_retained(open_review_checkout, mode):
     repo, tasks, tree, task_id, record = open_review_checkout
     state = json.loads(record.read_text())
     state.update(mode=mode, push_state="pushed")
     record.write_text(json.dumps(state))
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     assert report["main_worktree"]["action"] in {"retained", "skipped"}, report
-    assert report["main_worktree"]["reason"] == "canonical creator binding unavailable"
+    assert report["main_worktree"]["reason"] == "settled pushed clean author proof unavailable"
     assert tree.exists()
 
 

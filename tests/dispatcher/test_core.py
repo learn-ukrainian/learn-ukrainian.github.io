@@ -262,6 +262,9 @@ def test_running_or_unknown_task_never_starts_a_reaper(tmp_path, monkeypatch, st
     monkeypatch.setattr(worker.os, "fork", lambda: pytest.fail("unsettled task forked a reaper"))
     worker._reap_settled(dict(status=status, worktree_dirty_on_exit=False, push_state="pushed",
                               mode="workspace-write"), tmp_path / "task.json")
+    assert json.loads((tmp_path / "task.json").read_text())["reap_note"] == (
+        f"common reaper skipped: task status is not terminal ({status})"
+    )
 
 
 def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatch):

@@ -556,6 +556,7 @@ def _reap_main_worktree(
         return _reap_pushed_author(
             task_id=task_id, state=state, bound_path=bound_path,
             tasks_dir=tasks_dir, repo_root=repo_root, apply=apply,
+            no_lifecycle_observation=no_lifecycle_observation,
         )
 
     row = _reap_via_canonical(
@@ -598,6 +599,7 @@ def _reap_main_worktree(
 def _reap_pushed_author(
     *, task_id: str, state: dict[str, Any], bound_path: Path,
     tasks_dir: Path, repo_root: Path, apply: bool,
+    no_lifecycle_observation: str | None = None,
 ) -> dict[str, Any]:
     """Use the common PR-independent remover, retaining its locked rechecks."""
     def guard(info, tree, census):
@@ -618,6 +620,14 @@ def _reap_pushed_author(
             return "HEAD differs from branch remote head"
         return None
 
+    try:
+        observations = lifecycle_observation.before_reap(
+            repo_root, bound_path, tasks_dir=tasks_dir,
+            no_lifecycle_observation=no_lifecycle_observation,
+        ) if apply else []
+    except Exception as exc:
+        return {"path": str(bound_path), "action": "skipped",
+                "reason": f"lifecycle observation refused: {exc}", "error": str(exc)}
     report = reap_worktrees.reap_clean_pushed(
         repo_root=repo_root, dry_run=not apply, target_paths=[bound_path], enqueue_guard=guard,
     )
@@ -627,6 +637,7 @@ def _reap_pushed_author(
     )
     return {
         "path": str(bound_path),
+        "lifecycle_observations": observations,
         "action": outcome.action if outcome else "retained",
         "reason": outcome.reason if outcome else report.refusal or "common reaper did not evaluate bound path",
         "error": None,
