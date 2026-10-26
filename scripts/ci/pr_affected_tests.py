@@ -129,6 +129,7 @@ def main() -> int:
         "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
     )
     parser.parse_args()
+    stage, reason = "event_identity", "invalid_event_or_candidate"
     try:
         actual = git("rev-parse", "HEAD").decode().strip()
         payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
@@ -136,16 +137,29 @@ def main() -> int:
         if tier != "admission":
             print("Full tier: required full-suite jobs provide pytest proof.")
             return 0
-        base, head = payload["pull_request"]["base"]["sha"], payload["pull_request"]["head"]["sha"]
-        if git("show", "-s", "--format=%P", actual).decode().split() != [base, head]:
-            raise ValueError("PR merge candidate parents do not match event base and head")
+        pr = payload["pull_request"]
+        # GitHub checkout pins the event's test merge. Its first parent is the
+        # tested base, even when event metadata or fetched branches have moved.
+        stage, reason = "merge_parents", "unexpected_merge_or_head"
+        parents = git("show", "-s", "--format=%P", actual).decode().split()
+        if len(parents) != 2 or parents[1] != pr["head"]["sha"]:
+            raise ValueError("PR merge candidate must have two parents and match event head")
+        base = parents[0]
+        stage, reason = "clean_checkout", "dirty_checkout"
         subprocess.run(["git", "diff", "--quiet", actual, "--"], check=True, capture_output=True, timeout=30)
+        stage, reason = "test_plan", "invalid_paths_tests_or_durations"
         record = plan(base, actual)
+        record["event_base"] = pr["base"]["sha"]
+        stage, reason = "fresh_report", "stale_or_unwritable_report"
         output = Path("ci-artifacts")
         output.mkdir(exist_ok=True)
         junit = output / "pr-affected.xml"
         if junit.exists():
             raise ValueError("stale PR pytest report")
+        record.update(exit_code=None, reported_cases=None, skipped_cases=None, failed_cases=None,
+                      deferred_case_count=None, execution_status="incomplete")
+        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        stage, reason = "pytest_execution", "execution_incomplete"
         result = subprocess.run(
             [
                 sys.executable,
@@ -166,14 +180,19 @@ def main() -> int:
             check=False,
             timeout=480,
         )
-        cases = list(ET.parse(junit).getroot().iter("testcase")) if junit.is_file() else []
+        stage, reason = "pytest_report", "missing_or_invalid_junit"
+        record["exit_code"] = result.returncode
+        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        cases = list(ET.parse(junit).getroot().iter("testcase"))
         record.update(
             exit_code=result.returncode,
             reported_cases=len(cases),
             skipped_cases=sum(c.find("skipped") is not None for c in cases),
             failed_cases=sum(c.find("failure") is not None or c.find("error") is not None for c in cases),
             deferred_case_count=None,
+            execution_status="completed",
         )
+        stage, reason = "proof_output", "proof_output_incomplete"
         (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         summary = (
             "PR admission: full pytest was not run.\n"
@@ -194,7 +213,8 @@ def main() -> int:
                 stream.write(summary)
         return int(result.returncode != 0 or not cases)
     except (KeyError, TypeError, ValueError, OSError, UnicodeError, ET.ParseError, subprocess.SubprocessError) as exc:
-        print(f"::error::PR affected proof incomplete: {type(exc).__name__}", file=sys.stderr)
+        detail = f": {exc}" if type(exc) is ValueError else ""
+        print(f"::error::PR affected proof incomplete: stage={stage}; reason={reason}; error={type(exc).__name__}{detail}", file=sys.stderr)
         return 1
 
 
