@@ -100,7 +100,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     if provider == "codex":
         if effort:
             expected += ["-c", "model_reasoning_effort=high"]
-        expected += ["-s", mode]
+        expected += ["-s", "read-only"] if mode == "read-only" else ["--dangerously-bypass-approvals-and-sandbox"]
     elif provider == "claude":
         if effort:
             expected += ["--effort", "high"]
