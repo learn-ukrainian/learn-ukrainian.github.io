@@ -156,14 +156,14 @@ def _dispatch(args) -> int:
     agent = ALIASES.get(args.agent, args.agent)
     if agent not in providers.PROVIDERS or args.claude_account not in {None, "a", "b"}:
         raise ValueError("unknown agent or Claude account")
-    account_fields = admission.claude_account(agent, args.claude_account)
-    args.claude_account = account_fields.get("claude_account", args.claude_account)
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.output_schema is not None and agent != "codex":
         raise ValueError("--output-schema is supported only with the effective codex agent")
     if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
+    account_fields = admission.claude_account(agent, args.claude_account)
+    args.claude_account = account_fields.get("claude_account", args.claude_account)
     if args.print_advisory_binding:
         if not args.task_id or source == "-":
             raise ValueError("--print-advisory-binding requires --task-id and a non-stdin prompt")

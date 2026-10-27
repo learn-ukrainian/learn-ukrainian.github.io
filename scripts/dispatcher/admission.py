@@ -47,6 +47,7 @@ def claude_account(agent: str, explicit: str | None) -> dict:
         DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
         resolve_claude_account_label,
+        resolve_dispatch_claude_account,
         verify_claude_account,
     )
 
@@ -56,20 +57,18 @@ def claude_account(agent: str, explicit: str | None) -> dict:
                 raise ClaudeAccountRefused("claude_account_seat_unsupported")
             # v2 never reselects a claude reviewer for another seat, so no other seat reads the account file.
             return {}
-        from scripts.fleet import claude_account_lane
-
-        account = claude_account_lane.resolve_route_account(explicit, strict=True)
-        if account.label is None:
-            raise ClaudeAccountRefused(account.refusal or "claude_account_unknown")
-        binding = verify_claude_account(account.label)
+        # ``claude_account_lane.resolve_route_account(explicit, strict=True)`` without a recorded
+        # label (v2 has no --force-new re-run): flag, default-account file, built-in default.
+        label, source = resolve_dispatch_claude_account(explicit)
+        binding = verify_claude_account(label)
     except ClaudeAccountRefused as exc:
         raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code}") from None
     if binding is not None:
         from scripts.dispatcher.environment import claude_config_dir
 
-        if Path(binding.config_dir).resolve() != Path(claude_config_dir(account.label)).resolve():
+        if Path(binding.config_dir).resolve() != Path(claude_config_dir(label)).resolve():
             raise ValueError("CLAUDE_ACCOUNT_REFUSED: bound login directory is not the dispatcher's account directory")
-    return {CLAUDE_ACCOUNT_KEY: account.label, CLAUDE_ACCOUNT_SOURCE_KEY: account.source}
+    return {CLAUDE_ACCOUNT_KEY: label, CLAUDE_ACCOUNT_SOURCE_KEY: source}
 
 
 def hold_review_test_slots(
