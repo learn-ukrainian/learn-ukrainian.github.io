@@ -1229,7 +1229,7 @@ MUSE_REVIEW_CANDIDATE = {
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
     "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["standard_review", "routine_review"],
 }
-MUSE_REVIEW_ROLES = {"legacy_reviewers", "code_review_low", "code_review_medium", "readonly_recon"}
+MUSE_REVIEW_ROLES = {"legacy_reviewers", "code_review_low", "code_review_medium"}
 MUSE_QUALIFICATION = (
     "2026-10-26 paired exact-head qualification: PRs #11730, #11703, #11751, "
     "#11746, #11729; low/medium code review only"
@@ -1310,7 +1310,7 @@ def approved_muse_review_receipt(receipt, case):
 
 
 def approved_muse_role_receipt(receipt, case):
-    """Apply the qualified low/medium code review and source-only recon roles."""
+    """Apply the qualified low/medium code review roles."""
     receipt = deepcopy(receipt)
     if case["role"] not in MUSE_REVIEW_ROLES or "value" not in receipt:
         return receipt
@@ -1324,7 +1324,7 @@ def approved_muse_role_receipt(receipt, case):
         exclusions.append("isolation_required")
     if context.get("pinned_model") not in {None, "muse-wonder-full-1.0"}:
         exclusions.append("explicit_pin_mismatch")
-    position = {"readonly_recon": 0, "code_review_low": 2, "code_review_medium": 2}.get(
+    position = {"code_review_low": 2, "code_review_medium": 2}.get(
         case["role"], len(receipt["value"]["candidates"])
     )
     receipt["value"]["candidates"].insert(position, {
@@ -1353,8 +1353,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
     workers = {
         "muse-wonder-full-1.0": {
             "family": "meta", "tier": "frontier_practical", "lifecycle": "active",
-            "roles": ["coding", "standard_review", "routine_review", "readonly_recon", "bounded_checks",
-                      "bounded_implementation"], "transports": ["native_muse"],
+            "roles": ["coding", "standard_review", "routine_review"], "transports": ["native_muse"],
             "strengths": ["explicit_native_worker", "measured_low_medium_code_review", "source_only_audits"],
             "weaknesses": ["worker_qualification_pending", "verdict_severity_calibration_required", "no_driver_authority"],
             "notes": "Low/medium code review qualified on five paired exact-head cases, 2026-10-26. "
@@ -1390,7 +1389,7 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
         "model_id": "muse-wonder-full-1.0", "wire_ids": {"native": "muse-wonder-full-1.0"},
     }
     for role in MUSE_REVIEW_ROLES:
-        position = {"readonly_recon": 0, "code_review_low": 2, "code_review_medium": 2}.get(
+        position = {"code_review_low": 2, "code_review_medium": 2}.get(
             role, len(holders["roles"][role])
         )
         holders["roles"][role].insert(position, {

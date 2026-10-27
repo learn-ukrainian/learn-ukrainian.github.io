@@ -336,7 +336,7 @@ models:
     # MUSE-RANK-1026 / C-2649: qualified for low/medium code review only.
     tier: frontier_practical
     lifecycle: active
-    roles: [coding, standard_review, routine_review, readonly_recon, bounded_checks, bounded_implementation]
+    roles: [coding, standard_review, routine_review]
     routing_wire_ids: {native_muse: muse-wonder-full-1.0}
     transports: [native_muse]
     strengths: [explicit_native_worker, measured_low_medium_code_review, source_only_audits]
@@ -1480,7 +1480,7 @@ roles:
     seat: mechanical_worker
     required_model_roles: [mechanical_classification]
   readonly_recon:
-    routes: [meta_reviewer/native, mechanical_worker/native, bounded_worker/native]
+    routes: [mechanical_worker/native, bounded_worker/native]
   bounded_advisor:
     seat: openai_frontier
     required_model_roles:

@@ -1408,7 +1408,7 @@ def test_normalize_muse_subject_seat_and_meta_family():
     assert normalize_subject_family("meta") == "meta"
     candidate = REVIEW_CANDIDATES["muse"]
     assert candidate.model_roles == frozenset({
-        "coding", "standard_review", "routine_review", "readonly_recon", "bounded_checks", "bounded_implementation",
+        "coding", "standard_review", "routine_review",
     })
     assert candidate.suitability_roles == frozenset({"standard_review", "routine_review"})
     assert candidate.formal_review_eligible
