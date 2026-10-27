@@ -179,7 +179,7 @@ def _dispatch(args) -> int:
     # Legacy launch refusals, in delegate.py cmd_dispatch order, before any record or worktree.
     launch_guards.check_open_pr_freeze(args, info)
     launch_guards.check_early_host(args.mode)
-    launch_guards.check_model_pause(args.model)
+    launch_guards.check_model_pause(args)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)

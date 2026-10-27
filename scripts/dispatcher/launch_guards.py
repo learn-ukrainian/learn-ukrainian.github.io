@@ -105,16 +105,22 @@ def check_early_host(mode: str) -> None:
     )
 
 
-def check_model_pause(model: str) -> None:
+def check_model_pause(args) -> None:
     """Operator model pauses and plan-headroom stops (target_admission._refuse_paused, new_dispatch=True).
 
     v2 pins ``--model`` and never substitutes, so the requested and selected models are the same one.
     No Claude account is passed (the claude lane's headroom reads as unknown) until v2 resolves one.
+    As in legacy (delegate.py 19069 ``review=_dispatch_is_review_typed(args)``), only the claude lane's
+    headroom holds a review dispatch; operator pauses bind every dispatch.
     """
     from scripts.agent_runtime.model_pause import ModelPausedRefused, account_used_pct, refuse_paused_models
 
+    review = _dispatch_is_review_typed(args)
+    used_pct = account_used_pct(None)
     try:
-        refuse_paused_models([model], used_pct=account_used_pct(None))
+        refuse_paused_models(
+            [args.model], used_pct=lambda lane: used_pct(lane) if not review or lane == "claude" else None
+        )
     except ModelPausedRefused as exc:
         raise Refused(f"❌ {exc}") from None
 
@@ -438,13 +444,14 @@ def _resolve_primary_integrity_error(*, mode: str, root: Path) -> str | None:
 
 
 def check_primary(mode: str) -> None:
-    """delegate.py cmd_dispatch 14990-14998: the dirty-primary refusal, then the primary-integrity refusal."""
-    for error in (
-        _resolve_dirty_primary_checkout_error(mode=mode, root=git.ROOT),
-        _resolve_primary_integrity_error(mode=mode, root=git.ROOT),
-    ):
-        if error:
-            raise Refused(error)
+    """delegate.py cmd_dispatch 14990-14998: the dirty-primary refusal, then the primary-integrity refusal.
+
+    Sequential, as in legacy: a dirty refusal returns before the integrity watchdog writes its telemetry.
+    """
+    if error := _resolve_dirty_primary_checkout_error(mode=mode, root=git.ROOT):
+        raise Refused(error)
+    if error := _resolve_primary_integrity_error(mode=mode, root=git.ROOT):
+        raise Refused(error)
 
 
 def admit_write_claim(args, task_id: str, cwd: Path) -> None:

@@ -1794,3 +1794,45 @@ def test_open_pr_freeze_explicit_opt_in(monkeypatch, tmp_path, threshold, open_p
     """Ported from tests/test_delegate_admission.py::test_open_pr_freeze_explicit_opt_in."""
     monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", threshold)
     assert _freeze_check(monkeypatch, tmp_path, open_prs=open_prs) == expected
+
+
+def test_review_dispatch_stays_admissible_when_a_non_claude_lane_is_over_headroom(sandbox, tmp_path):
+    """Legacy _refuse_paused(review=True) holds a review only on the claude lane's headroom.
+
+    A non-review dispatch on the same over-headroom lane is refused, and an operator pause still binds a review.
+    """
+    import http.server
+    import threading
+
+    codexbar = {"stale": False, "freshness": "fresh", "weekly_used_pct": 95}
+    body = json.dumps({"diagnostics": {"stale": False}, "agents": {"codex": {"status": "hot", "codexbar": codexbar}}})
+
+    class Monitor(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(body.encode())
+
+        def log_message(self, *_args):
+            pass
+
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Monitor)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    # The real usage reader needs scripts.fleet.claude_account_lane behind the sandbox's stub package.
+    (sandbox.repo / "scripts/fleet/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts/fleet')!r})\n")
+    policy = tmp_path / "pause.json"
+    sandbox.env.update(
+        LU_MODEL_PAUSE_FILE=str(policy), DELEGATE_MONITOR_API=f"http://127.0.0.1:{server.server_address[1]}"
+    )
+    plan = ("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--dry-run")
+    review = (*plan, "--review-profile", "code")
+    try:
+        policy.write_text(json.dumps({"headroom": [{"lane": "codex", "pattern": "echo", "max_weekly_used_pct": 80}]}))
+        assert "MODEL_HEADROOM: echo" in sandbox.cli(*plan, expected=2).stderr
+        assert json.loads(sandbox.cli(*review).stdout)["argv"]
+        until = "2999-01-01T00:00:00Z"
+        policy.write_text(json.dumps({"pauses": [{"pattern": "echo", "until": until, "reason": "operator"}]}))
+        assert "MODEL_PAUSED: echo" in sandbox.cli(*review, expected=2).stderr
+    finally:
+        server.shutdown()
+    assert not sandbox.tasks.exists() or not list(sandbox.tasks.glob("*.json"))
