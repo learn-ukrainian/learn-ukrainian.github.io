@@ -882,6 +882,29 @@ def test_worker_git_state_cannot_hide_outside_commit(sandbox, delivery_settle, a
     assert (record["status"], record["error"]) == ("no_deliverable", expected)
 
 
+def test_ownership_walk_verifies_distinct_publish_branch(sandbox, delivery_settle):
+    """Publish-branch confusion must neither reject owned delivery nor hide outside paths."""
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    record["publish_branch"] = "fix/published"
+    delivery_ref = f"refs/heads/{record['publish_branch']}"
+    (tree / "delivered.txt").write_text("owned delivery\n")
+    run_git(tree, "add", "delivered.txt")
+    run_git(tree, "commit", "-m", "owned delivery")
+    run_git(tree, "push", "origin", f"HEAD:{delivery_ref}")
+    assert run_git(sandbox.remote, "for-each-ref", f"refs/heads/{record['worktree_branch']}") == ""
+    delivered = settle()
+    assert delivered["remote_ref"] == delivery_ref
+    assert (delivered["status"], delivered["error"]) == ("done", None)
+    (tree / "outside.txt").write_text("outside scope\n")
+    run_git(tree, "add", "outside.txt")
+    run_git(tree, "commit", "-m", "outside scope")
+    run_git(tree, "push", "origin", f"HEAD:{delivery_ref}")
+    rejected = settle()
+    assert rejected["remote_ref"] == delivery_ref
+    assert (rejected["status"], rejected["error"]) == ("no_deliverable", "outside_owned_paths: outside.txt")
+
+
 def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandbox, delivery_settle, monkeypatch):
     """Local/worktree includes and injected process config cannot alter the private walk."""
     record, settle = delivery_settle
