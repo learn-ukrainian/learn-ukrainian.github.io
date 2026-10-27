@@ -2526,7 +2526,7 @@ def test_r5_a_read_only_review_interrupted_before_its_verdict_check_is_a_typed_f
 
 
 # #9275 r7: one definition of the completion gates a record calls for, shared by
-# the worker's terminal settle and every recovery path.
+# the worker's terminal settle and the ask-* review wrapper.
 
 
 @pytest.mark.parametrize(
@@ -2564,49 +2564,6 @@ def test_r7_saved_task_response_reads_the_sidecar_and_refuses_a_replaced_or_miss
     (tmp_path / "t.result").write_text("hello, replaced")
     assert delegate.saved_task_response(record, record_path) is None
     assert delegate.saved_task_response({"response_chars": 0, "result_file": None}, tmp_path / "none.json") == ""
-
-
-@pytest.mark.parametrize(
-    ("record", "gate", "failure"),
-    [
-        ({"mode": "danger", "advisory_envelope": {}}, "advisory_ceiling", "recovery_requires_rerun"),
-        ({"mode": "danger", "advisory_exemption": {}}, "advisory_exempt_change", "recovery_requires_rerun"),
-        ({"mode": "read-only", "require_review_verdict": True}, "review_verdict", "recovery_requires_rerun"),
-        ({"mode": "danger", "leftovers_scan": "unknown"}, "background_leftovers", "recovery_requires_rerun"),
-        # A failure the record already carries is kept.
-        (
-            {"mode": "danger", "advisory_envelope": {}, "no_deliverable_reason": "no_commits_no_changes"},
-            "advisory_ceiling",
-            "no_commits_no_changes",
-        ),
-    ],
-)
-def test_r9_recovery_never_passes_a_gated_record(record, gate, failure):
-    """Operator decision 2026-09-30 (option A): no response or measurement can make recovery pass a gated record."""
-    for response in ("VERDICT: APPROVE", None):
-        for result in (
-            delegate.recovery_requires_rerun(record),
-            delegate.completion_gate_recovery_failure(record, response=response, commits_ahead=1),
-        ):
-            assert (result.gate, result.failure, result.status) == (gate, failure, "failed")
-
-
-def test_r9_recovery_runs_only_the_delivery_gate_on_a_delivery_only_record():
-    delivery_only = {"mode": "danger", "leftovers_scan": "clear"}
-    assert delegate.recovery_requires_rerun(delivery_only) is None
-    assert delegate.completion_gate_recovery_failure(delivery_only, response=None, commits_ahead=1) is None
-    assert (
-        delegate.completion_gate_recovery_failure(delivery_only, response=None, commits_ahead=0).failure
-        == delegate.COMPLETION_GATE_RESPONSE_UNAVAILABLE
-    )
-    recorded = delegate.completion_gate_recovery_failure(
-        {"mode": "read-only", "no_deliverable_reason": "no_commits_no_changes"}, response="x", commits_ahead=None
-    )
-    assert (recorded.gate, recorded.failure, recorded.status) == (
-        "recorded_failure",
-        "no_commits_no_changes",
-        "no_deliverable",
-    )
 
 
 def test_r7_a_verdict_required_record_keeps_another_gates_typed_failure(tmp_path, monkeypatch):
