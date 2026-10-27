@@ -374,16 +374,19 @@ to Sol at `high` or the accountable orchestrator before making a consequential d
 - Plane / retention-apply / `formal_review_eligible` flips belong to the
   infra/harness lane after parity + present-tense operator/advisor GO.
 
-### Native Grok dispatch effort
+### Grok dispatch through Cursor
 
-`scripts/dispatch.py dispatch --model <catalog-model> --agent grok` accepts only the native Grok CLI
-effort vocabulary: `low`, `medium`, or `high`. The permanent
-`--agent grok-build` alias has the identical contract. Dispatch checks this
-per-agent capability before it creates task state, a worktree, a runtime lease,
-or a worker process; `xhigh` and `max` are refused with a clear error rather
-than silently clamped to a different reasoning level. Omit `--effort` to use
-the native Grok default (`high`). This restriction does not apply to the
-separate historical `grok-hermes` transport.
+Native Grok dispatch is retired. Dispatch v2 maps `--agent grok` and
+`--agent grok-build` to Cursor. Use the explicit Cursor seat at `grok-4.7-high`:
+
+```bash
+.venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high \
+  --mode read-only --task-id <task-id> --prompt-file <brief>
+```
+
+The Cursor model pin supplies high effort. The former native Grok CLI effort
+vocabulary is not a dispatch v2 contract. Native Grok CLI callers outside detached
+dispatch retain their own interfaces.
 
 ### ACPX — structured transport boundary
 
@@ -752,7 +755,8 @@ counts and outcomes.
 1. Disable the ACPX feature flag (default-off posture).
 2. Continue on native agent runtime transport
    (`scripts/agent_runtime/` via `runner.invoke`, bridge, `dispatch.py`) —
-   native Codex and native Grok remain the authoritative paths.
+   native Codex remains available. Grok detached dispatch uses Cursor at
+   `grok-4.7-high`; native Grok dispatch is retired.
 3. Leave fleet-comms plane mode and formal-review eligibility unchanged.
 4. Preserve the read-only legacy projections; resume legacy writes only as part
    of an explicitly approved rollback to `dual_write`.

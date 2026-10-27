@@ -102,7 +102,8 @@ def test_review_admission_preserves_anchor_manifest_and_dynamic_digest():
     text = (RULES / "core.md").read_text(encoding="utf-8")
     sentence = next(line for line in text.splitlines() if "<!-- p2-review: M30 -->" in line)
     assert "Grok 4.7 reviews code and infra at every risk, including critical" in sentence
-    assert "native CLI and Cursor with runtime model attestation" in sentence
+    assert "through Cursor at `grok-4.7-high` with runtime model attestation" in sentence
+    assert "native Grok dispatch is retired" in sentence
     assert "never for xAI authors or its own subject seat" in sentence
     assert "operator decision 2026-10-05, #9769" in sentence
     assert "Native AGY admits low or medium risk code review." in sentence
