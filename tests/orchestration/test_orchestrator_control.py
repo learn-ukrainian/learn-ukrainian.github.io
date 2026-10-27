@@ -372,13 +372,13 @@ def test_v2_gaps_are_forwarded_for_explicit_refusal(tmp_path: Path, option):
     assert option[0] in command
     supported = {
         "--max-budget-usd": 1.0,
-        "--lifecycle-file": "ledger.json",
+        "--lifecycle-file": str(Path("ledger.json").resolve()),
         "--authoring-review-risk": "medium",
     }
     if option[0] in supported:
         parsed = build_dispatch_parser().parse_args(command[2:])
         assert getattr(parsed, option[0][2:].replace("-", "_")) == supported[option[0]]
-        assert _option(command, option[0]) == option[1]
+        assert _option(command, option[0]) == str(supported[option[0]])
         return
     with pytest.raises(SystemExit) as exc:
         build_dispatch_parser().parse_args(command[2:])
