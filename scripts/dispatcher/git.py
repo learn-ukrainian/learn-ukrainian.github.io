@@ -30,7 +30,7 @@ SPARSE_EXCLUDE_DEFAULT = frozenset({
     "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
 })
 GIT_BINARY = shutil.which("git", path=os.defpath)
-# Bound for each remote transfer of the ownership walk. On the 8 GB public repository
+# Bound for each explicit fetch of the ownership walk. On the 8 GB public repository
 # the bounded fetch measured about one second and the blob-less full-history fallback
 # about three; 60 seconds leaves headroom for a slow link without hanging a settling task.
 VERIFICATION_FETCH_TIMEOUT = 60
@@ -126,9 +126,13 @@ def ownership_git(record: dict):
 
     The transfer is blob-less and starts at the task base date, so it stays small
     on a multi-gigabyte repository. Blobs are fetched lazily from the same URL only
-    when a merge must be re-run. If that bounded history does not reach the task
-    base on every path, or the delivery contains a merge, the full blob-less
-    history is fetched instead and must leave the repository unshallow.
+    when a merge must be re-run. If a remote tip is dated before the cutoff (clock
+    skew), that bounded history does not reach the task base on every path, or the
+    delivery contains a merge, the full blob-less history is fetched instead and
+    must leave the repository unshallow.
+
+    The explicit fetches get VERIFICATION_FETCH_TIMEOUT. Lazy blob transfers run
+    inside the caller's commands and share those commands' 30-second timeout.
     """
     remote = record["worktree_remote_url"]
     if verification_origin(Path(record["worktree_path"])) != remote:
@@ -151,11 +155,16 @@ def ownership_git(record: dict):
             run("config", key, value)
         fetch = partial(run, "fetch", "--no-tags", "--no-write-fetch-head", "--filter=blob:none",
                         timeout=VERIFICATION_FETCH_TIMEOUT)
-        fetch("--depth=1", "--", "origin", task_base)
+        fetch("--depth=1", "--", "origin", task_base, *refspecs)
         since = int(run("show", "-s", "--format=%ct", task_base)) - HISTORY_SLACK_SECONDS
-        fetch(f"--shallow-since=@{since}", "--", "origin", *refspecs)
+        # Git selects no history below a tip dated before the cutoff and aborts the
+        # bounded fetch; its message does not reach HTTPS clients, so decide by date.
+        bounded = min(map(int, run("show", "-s", "--format=%ct", "refs/heads/base",
+                                   "refs/heads/delivery").split())) >= since
+        if bounded:
+            fetch(f"--shallow-since=@{since}", "--", "origin", *refspecs)
         shallow = scratch.payload_dir / "shallow"
-        if not _complete_since_task_base(run, shallow, task_base):
+        if not (bounded and _complete_since_task_base(run, shallow, task_base)):
             if run("rev-parse", "--is-shallow-repository") == "false":
                 raise ValueError("task base is not reachable from the remote tips")
             fetch("--unshallow", "--", "origin", *refspecs)

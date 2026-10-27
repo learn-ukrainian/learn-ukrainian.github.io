@@ -964,6 +964,58 @@ def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape
     assert (record["status"], record.get("error")) == expected
 
 
+def test_ownership_walk_falls_back_to_full_history_when_tips_predate_skewed_task_base(tmp_path, monkeypatch):
+    """Clock skew: a future-dated task base must not reject a valid delivery.
+
+    With both remote tips dated before the cutoff, Git selects no commits for --shallow-since and
+    aborts the bounded fetch. The walk must take the full-history fallback and still enforce scope.
+    """
+    remote, tree = tmp_path / "remote.git", tmp_path / "tree"
+    run_git(tmp_path, "init", "--bare", str(remote))
+    run_git(remote, "config", "uploadpack.allowFilter", "true")
+    run_git(tmp_path, "init", "-b", "main", str(tree))
+    run_git(tree, "config", "user.email", "stub@example.invalid")
+    run_git(tree, "config", "user.name", "Stub")
+    run_git(tree, "remote", "add", "origin", str(remote))
+    for date, message in (("2020-01-01", "old history"), ("2099-01-01", "task base")):
+        monkeypatch.setenv("GIT_COMMITTER_DATE", f"{date}T00:00:00Z")
+        monkeypatch.setenv("GIT_AUTHOR_DATE", f"{date}T00:00:00Z")
+        run_git(tree, "commit", "--allow-empty", "-m", message)
+    base = run_git(tree, "rev-parse", "HEAD")
+    monkeypatch.setenv("GIT_COMMITTER_DATE", "2020-02-01T00:00:00Z")
+    monkeypatch.setenv("GIT_AUTHOR_DATE", "2020-02-01T00:00:00Z")
+    run_git(tree, "commit", "--allow-empty", "-m", "base branch moves on")
+    run_git(tree, "push", "origin", "main")
+    run_git(tree, "checkout", "-b", "sol/skew", base)
+    (tree / "delivered.txt").write_text("delivery\n")
+    run_git(tree, "add", "delivered.txt")
+    run_git(tree, "commit", "-m", "delivery")
+    run_git(tree, "push", "origin", "HEAD")
+    head = run_git(tree, "rev-parse", "HEAD")
+    since = int(run_git(tree, "show", "-s", "--format=%ct", base)) - git.HISTORY_SLACK_SECONDS
+    probe = tmp_path / "probe.git"
+    run_git(tmp_path, "init", "--bare", str(probe))
+    rejected = subprocess.run(["git", "-C", str(probe), "fetch", f"--shallow-since=@{since}", str(remote),
+                               "main", "sol/skew"], capture_output=True, text=True, timeout=30)
+    assert "no commits selected for shallow requests" in rejected.stderr
+
+    def record(owned):
+        return dict(
+            task_id="skew", worktree_path=str(tree), worktree_remote_url=str(remote),
+            worktree_base_ref="refs/remotes/origin/main", worktree_base_sha=base, worktree_branch="sol/skew",
+            head_sha=head, mode="workspace-write", status="done", owned_paths=owned,
+            worktree_dirty_on_exit=False, commits_ahead=1, push_state="pushed",
+        )
+
+    with git.ownership_git(record(["delivered.txt"])) as run:
+        assert run("rev-parse", "--is-shallow-repository") == "false"
+    for owned, expected in ((["delivered.txt"], ("done", None)),
+                            (["other.txt"], ("no_deliverable", "outside_owned_paths: delivered.txt"))):
+        settled = record(owned)
+        worker._enforce_delivery(settled)
+        assert (settled["status"], settled.get("error")) == expected
+
+
 @pytest.mark.parametrize("missing", ["worktree_remote_url", "git-binary", "scratch", "remote-tip"])
 def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch, missing):
     record, settle = delivery_settle
