@@ -12,7 +12,7 @@ from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import admission, git, providers, store
+from scripts.dispatcher import admission, git, headroom, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 
@@ -228,6 +228,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     stderr_path = path.parent / "logs" / f"{spec.task_id}.stderr.log"
     try:
         signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM, signal.SIGINT})
+        try:
+            headroom.check_plan(spec.agent, spec.model, record, review=admission.review_typed(record))
+            headroom.check_runtime(spec.agent, spec.model)
+        except ValueError as exc:
+            status, error = "failed", str(exc)
+            return
+        except headroom.RateLimitedError as exc:
+            status, error = "rate_limited", str(exc)
+            return
         schema = None
         if options.get("output_schema_path") is not None:
             from scripts.dispatcher.output_schema import load
