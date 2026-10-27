@@ -1,5 +1,6 @@
 """V2 custody of AGY provider-init identity, copied from the retained runner."""
 
+import re
 from typing import Any
 
 from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result, agy_model_state
@@ -56,3 +57,15 @@ def observe_agy_identity(
                             run_nonce=run_nonce, invocation_id=invocation_id)
     receipt = state["model_identity"]
     return receipt
+
+
+def boundary_refusal(exc: Exception, *, stage: str) -> str:
+    """Keep the refusal identifier, never isolation diagnostics or exception text."""
+    from scripts.review.isolation import ReviewIsolationError
+
+    detail = type(exc).__name__
+    if isinstance(exc, ReviewIsolationError):
+        code = str(exc).partition(":")[0]
+        if re.fullmatch(r"[a-z][a-z0-9_]*", code):
+            detail = code
+    return f"formal attempt filesystem boundary refused: {stage}: {detail}"

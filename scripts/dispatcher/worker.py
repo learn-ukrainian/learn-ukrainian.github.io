@@ -288,7 +288,10 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     except subprocess.TimeoutExpired:
         status, error = "timeout", "process deadline exceeded"
     except (ValueError, RuntimeError) as exc:
-        status, error = "failed", str(exc).splitlines()[0]
+        if record.get("review_attempt") or record.get("require_review_verdict"):
+            status, error = "failed", str(exc).splitlines()[0]
+        else:
+            status, error = "crashed", "supervisor or provider processing failed"
     except Exception:
         status, error = "crashed", "supervisor or provider processing failed"
     finally:

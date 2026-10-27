@@ -137,7 +137,11 @@ def _dispatch(args) -> int:
     if args.cwd:
         from scripts.review.dispatch_execution import _refuse_review_attempt_worktree_reuse
 
-        _refuse_review_attempt_worktree_reuse(Path(args.cwd))
+        try:
+            _refuse_review_attempt_worktree_reuse(Path(args.cwd))
+        except (OSError, ValueError, RuntimeError) as exc:
+            print(f"❌ failed to reuse worktree for {args.task_id!r}: {exc}", file=sys.stderr)
+            return 1
     if binding := store.review_binding(vars(args)):
         store.check_review_attempt(binding)
     if args.require_review_verdict and args.mode != "read-only":

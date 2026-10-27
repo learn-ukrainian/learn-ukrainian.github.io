@@ -329,39 +329,51 @@ class Execution:
         self.boundary = None
         self.spec = spec
         self.record = record
-        self.plan = None
         self.cli_digest = None
         self.cli_version = "unknown"
         config = spec.options.get("review_tool_config")
         if record.get("review_attempt"):
-            if not config:
-                raise ValueError("attempt_boundary_inputs_missing")
-            if store.digest(spec.prompt_file.read_bytes()) != record["prompt_sha256"]:
-                raise ValueError("review_prompt_changed")
-            if store.digest(Path(config["review_manifest"]).read_bytes()) != record["review_attempt"]["manifest_sha256"]:
-                raise ValueError("attempt_manifest_hash_mismatch")
-            self.boundary = prepare_attempt_boundary(spec.agent, spec.mode, None, config, environ=env)
-            spec.options["review_tool_config"] = self.boundary.tool_config
+            from scripts.review.isolation import ReviewIsolationError
+            from scripts.review.runtime_identity import boundary_refusal
+
+            try:
+                if not config:
+                    raise ReviewIsolationError("attempt_boundary_inputs_missing")
+                if store.digest(spec.prompt_file.read_bytes()) != record["prompt_sha256"]:
+                    raise ReviewIsolationError("review_prompt_changed")
+                if store.digest(Path(config["review_manifest"]).read_bytes()) != record["review_attempt"]["manifest_sha256"]:
+                    raise ReviewIsolationError("attempt_manifest_hash_mismatch")
+                self.boundary = prepare_attempt_boundary(spec.agent, spec.mode, None, config, environ=env)
+                spec.options["review_tool_config"] = self.boundary.tool_config
+            except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
+                raise ValueError(boundary_refusal(exc, stage="prepare")) from exc
 
     def wrap(self, invocation):
         from dataclasses import replace
 
-        if self.spec.agent == "agy":
-            import shutil
+        try:
+            if self.spec.agent == "agy":
+                import shutil
 
-            binary = Path(shutil.which(invocation.argv[0]) or invocation.argv[0]).resolve(strict=True)
-            self.cli_digest = store.digest(binary.read_bytes())
-            command, env = [str(binary), "--version"], invocation.env
-            if self.boundary:
-                command, env = self.boundary.wrap(command, env)
-            version = subprocess.run(command, env=env, capture_output=True, text=True, timeout=5, check=False)
-            if version.returncode == 0:
-                self.cli_version = version.stdout.strip()
-        if not self.boundary:
-            return invocation
-        self.boundary.verify_seat(invocation.argv, invocation.env)
-        argv, env = self.boundary.wrap(invocation.argv, invocation.env)
-        return replace(invocation, argv=argv, env=env)
+                binary = Path(shutil.which(invocation.argv[0]) or invocation.argv[0]).resolve(strict=True)
+                self.cli_digest = store.digest(binary.read_bytes())
+                command, env = [str(binary), "--version"], invocation.env
+                if self.boundary:
+                    command, env = self.boundary.wrap(command, env)
+                version = subprocess.run(command, env=env, capture_output=True, text=True, timeout=5, check=False)
+                if version.returncode == 0:
+                    self.cli_version = version.stdout.strip()
+            if not self.boundary:
+                return invocation
+            self.boundary.verify_seat(invocation.argv, invocation.env)
+            argv, env = self.boundary.wrap(invocation.argv, invocation.env)
+            return replace(invocation, argv=argv, env=env)
+        except (OSError, ValueError, RuntimeError) as exc:
+            if not self.boundary:
+                raise
+            from scripts.review.runtime_identity import boundary_refusal
+
+            raise ValueError(boundary_refusal(exc, stage="wrap")) from exc
 
     @property
     def cwd(self):
@@ -371,14 +383,16 @@ class Execution:
         """Runtime observations only; no model prose can grant identity or Sources."""
         from scripts.common.jsonl import jsonl_lines
 
-        events = []
+        events, complete = [], True
         for line in jsonl_lines(stdout):
             try:
                 event = json.loads(line)
                 if isinstance(event, dict):
                     events.append(event)
+                else:
+                    complete = False
             except ValueError:
-                pass
+                complete = False
         calls = []
         for event in events:
             message = event.get("message")
@@ -392,6 +406,18 @@ class Execution:
 
         count = sum(bool(re.fullmatch(r"(?:mcp__sources__|mcp_sources_)[A-Za-z][A-Za-z0-9_]*", name))
                     for name in calls if isinstance(name, str))
+        if not complete or any(not isinstance(name, str) or not name.strip() for name in calls):
+            count = None
+        if self.spec.agent == "agy" and not self.boundary:
+            from scripts.agent_runtime.adapters.agy import _invocation_transcript, _parse_transcript_tool_calls
+
+            plan = self.spec.options["review_plan"]
+            if _invocation_transcript(plan) is None:
+                count = None
+            else:
+                runtime_calls = _parse_transcript_tool_calls(plan)
+                count = sum(bool(re.fullmatch(r"(?:mcp__sources__|mcp_sources_)[A-Za-z][A-Za-z0-9_]*", call["name"]))
+                            for call in runtime_calls)
         if self.record.get("review_attempt"):
             from scripts.review.receipts.ledger import records
 
@@ -401,7 +427,7 @@ class Execution:
                    or row.get("manifest_sha256") != binding["manifest_sha256"] for row in rows):
                 raise ValueError("attempt_identity_mismatch")
             count = len(rows)
-        self.record["sources_mcp_call_count"] = count if self.spec.agent != "agy" or self.boundary else None
+        self.record["sources_mcp_call_count"] = count
         if self.spec.agent == "agy":
             from scripts.agent_runtime.adapters.agy import agy_model_state
             from scripts.review.runtime_identity import observe_agy_identity

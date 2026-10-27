@@ -208,8 +208,10 @@ def test_runner_reports_real_input_hash_refusal_before_provider_launch(world, tm
                     tmp_path / "result", options={"review_tool_config": tc})
     record = dict(review_attempt={"manifest_sha256": store.digest(Path(tc["review_manifest"]).read_bytes())},
                   prompt_sha256=store.digest(prompt.read_bytes()))
-    with pytest.raises(ReviewIsolationError, match=r"^attempt_input_hash_mismatch$"):
+    with pytest.raises(ValueError) as caught:
         Execution(spec, record, {})
+    assert str(caught.value) == "formal attempt filesystem boundary refused: prepare: attempt_input_hash_mismatch"
+    assert isinstance(caught.value.__cause__, ReviewIsolationError)
 
 
 @pytest.mark.parametrize("agent", ["agy", "codex"])
@@ -391,7 +393,7 @@ def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(tmp_pat
     assert marker.read_text() == "review-original\n"
     with pytest.raises(ValueError, match=r"review-original.*#8517"):
         execution._refuse_review_attempt_worktree_reuse(dispatch_wt)
-    assert invoke([], "--task-id", "marked", "--cwd", str(dispatch_wt)) == 2
+    assert invoke([], "--task-id", "marked", "--cwd", str(dispatch_wt)) == 1
     assert "review-original" in capsys.readouterr().err
 
 
