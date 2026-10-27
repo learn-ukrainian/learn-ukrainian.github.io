@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 410,
-    "probe_count": 820,
+    "cli_count": 409,
+    "probe_count": 818,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
@@ -308,7 +308,6 @@
       "scripts/orchestration/dispatch_settle.py",
       "scripts/orchestration/handoff_slot_registry.py",
       "scripts/orchestration/install_worktree_cleanup_launchd.py",
-      "scripts/orchestration/job_host_exec.py",
       "scripts/orchestration/merge_closeout.py",
       "scripts/orchestration/observer_heartbeat.py",
       "scripts/orchestration/precompact_handoff_check.py",
@@ -415,7 +414,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "058f408eaa70690c633681ea4054de8e1c8ea05dea188392b3e12f42fd55bfcf"
+    "cli_paths_sha256": "2bc834f4208aa8b75749d3397aa82da847b675bdf3e42266e62e5b64965db5f6"
   },
   "failures": [
     {

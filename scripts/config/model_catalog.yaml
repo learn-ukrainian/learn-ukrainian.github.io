@@ -46,8 +46,8 @@ policy:
       reviews through Cursor (operator decision D-129, #10464).
       Grok dispatch uses Cursor at grok-4.7-high. Native Grok dispatch is retired.
       The native CLI remains available to direct interactive and ACP callers.
-      Operator decision 2026-10-05 (#9769): native Grok and the Cursor seat pinned to
-      grok-4.7-high are regular code/infra reviewers at every risk, including critical;
+      The Cursor seat pinned to grok-4.7-high is a regular code/infra reviewer at
+      every risk, including critical;
       verdicts require runtime model attestation and exclude xAI-authored changes.
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
@@ -315,7 +315,7 @@ execution_routing:
     # Every dispatch to a bounded worker (preferred_worker, or the Gemini Flash
     # fallback below unless it carries a Ukrainian authoring/review
     # classification) needs a complete advisory envelope from the advisor above,
-    # bound to that dispatch by dispatch v2.
+    # supplied by the driver; dispatch v2 does not inject or enforce it.
     bounded_fallback_worker:
       model_id: {role: bounded_fallback}
       effort: high
@@ -753,8 +753,8 @@ models:
     # 2026-10-16 (#10835) admits native Grok to Ukrainian work under
     # measurement with the Sources MCP. The role confers no route: review
     # routes list only the code and infra profiles, and the resolver,
-    # delegate language-lane and sense-binding family filters still refuse
-    # xAI until the native harness wires the Sources MCP.
+    # language-lane and sense-binding family filters still refuse xAI until
+    # the native harness wires the Sources MCP.
     roles: [coding, strong_review, adversarial_review, critical_review, debugging, ukrainian_review]
     runtime_model_ids: [grok-4.7-build]
     transports: [native_grok, cursor]
@@ -1214,7 +1214,7 @@ orchestrator_seats:
       unknown_auto_union_families field describes the concrete allowlist only.
       A concrete Cursor grok-4.7 pin uses the xAI family; it is
       a regular formal code/infra reviewer at every risk, including critical
-      (operator decision 2026-10-05, #9769), alongside the native Grok seat.
+      (operator decision 2026-10-05, #9769).
       Driver-of-record still requires an attested concrete resolved_model from the run.
       Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
       from within the driver session).
