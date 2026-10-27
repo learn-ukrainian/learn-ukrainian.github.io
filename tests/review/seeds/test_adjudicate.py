@@ -63,6 +63,7 @@ def _dispatch_args_hash(
 def _v2_dispatch(case: Case, monkeypatch: pytest.MonkeyPatch, *, task_id: str | None = None) -> dict:
     """Exercise the real producer against a stubbed v2 launcher, without a paid worker."""
     task_id = task_id or case.task_id
+    (case.env.tasks / f"{task_id}.json").unlink(missing_ok=True)  # a v2 task starts without historical evidence
     prepared = adj.prepare_dispatch(case.task_file, task_id, "agy", model="gemini-3.1-pro-preview")
     argv = prepared["dispatch"]
     request = adj._execution_request(argv, case.task_file.read_bytes())
@@ -81,6 +82,9 @@ def _v2_dispatch(case: Case, monkeypatch: pytest.MonkeyPatch, *, task_id: str | 
         worktree_branch=request["worktree_branch"],
         worktree_base_sha=request["options"]["pinned_head"],
         review_mode="cross_family",
+        owned_paths=[],
+        research_owned_paths=[],
+        worktree_base_ref="origin/main",
         prompt_file=str(prompt_file),
         prompt_sha256=request["prompt_sha256"],
     )
@@ -917,6 +921,7 @@ def test_a_task_created_with_model_round_trips_through_the_emitted_command(
 ) -> None:
     """A task created through the CLI with ``--model`` emits a dispatch command that, dispatched as printed,
     passes ``check_dispatch_binding`` and resolves the adjudicator's identity from it (#8430 R3-A r9)."""
+    (seeded.env.tasks / f"{seeded.task_id}.json").unlink()
     lesson = tmp_path / "lesson.expanded.yaml"
     lesson.write_text(LESSON_TEXT, encoding="utf-8")
     argv = [
@@ -951,7 +956,10 @@ def test_a_task_created_with_model_round_trips_through_the_emitted_command(
     assert identity == {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
 
 
-def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
+def test_the_task_and_record_commands(
+    seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (seeded.env.tasks / f"{seeded.task_id}.json").unlink()
     lesson = tmp_path / "lesson.expanded.yaml"
     lesson.write_text(LESSON_TEXT, encoding="utf-8")
     common = [
@@ -972,6 +980,7 @@ def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixtur
     )
     payload = json.loads(capsys.readouterr().out)
     assert Path(payload["task_file"]).is_file() and payload["dispatch"][2:4] == ["dispatch", "--agent"]
+    _v2_dispatch(seeded, monkeypatch)
     reply = tmp_path / "reply.txt"
     reply.write_text(
         yaml.safe_dump(seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})), encoding="utf-8"
@@ -1076,4 +1085,20 @@ def test_every_v2_dispatch_argument_binds_the_hash(seeded: Case, monkeypatch: py
     assert len(tested) >= 40, tested
     assert "review_mode" in tested
     path.write_bytes(original)
+    assert seeded.record(good)["new"] is True
+
+
+def test_a_v2_dispatch_with_an_output_schema_is_refused(seeded: Case, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Ported from test_a_dispatch_with_an_output_schema_is_refused: an extra schema changes execution."""
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    dispatched = _v2_dispatch(seeded, monkeypatch)
+    path = seeded.env.tasks / f"{seeded.task_id}.json"
+    altered = {
+        **dispatched,
+        "output_schema_path": str(seeded.env.root / "caller-schema.json"),
+        "output_schema_sha256": "0" * 64,
+    }
+    path.write_text(json.dumps(altered), encoding="utf-8")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    path.write_text(json.dumps(dispatched), encoding="utf-8")
     assert seeded.record(good)["new"] is True

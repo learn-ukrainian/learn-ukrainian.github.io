@@ -41,7 +41,7 @@ exact branch, never an existing caller checkout. Provider resolution is required
 for multi-model Cursor; other providers retain the dispatcher's explicit model
 contract and reject a contradictory reported resolution. This is an integrity
 binding over trusted launcher evidence, not a signature against a malicious
-actor who can replace both the request and receipt. Runtime home instructions
+actor who can write a receipt using the visible task nonce. Runtime home instructions
 remain outside this binding.
 
 Historical schema-1 records have a separate verifier using the frozen legacy
@@ -318,7 +318,9 @@ def write_task(subject: Subject, lesson_text: str, *, review_id: str, root: Path
 
 
 def legacy_dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> list[str]:
-    """The ``delegate.py dispatch`` command that runs the task read-only on ``agent``.
+    """Reconstruct a historical ``delegate.py dispatch`` command for verification only.
+
+    The task command never emits this legacy argv.
 
     The primary ``--cwd`` redirects to a canonical detached worktree. ``--full-checkout``
     preserves primary-root tree availability and makes its prompt wrapper deterministic.
@@ -424,8 +426,20 @@ def _execution_request(argv: list[str], prompt: bytes) -> dict:
     )
 
 
+def _refuse_existing_dispatch(task_file: Path, task_id: str) -> None:
+    """Rendering must not replace evidence belonging to an existing hot or archived run."""
+    from scripts.common.task_store_paths import tasks_dir
+
+    for directory in {tasks_dir(), task_file.parents[2] / "tasks"}:
+        if locate_task_record(directory, task_id) is not None:
+            raise AdjudicationError(
+                "adjudication task already has dispatch evidence; do not re-render it", TASK_MISMATCH
+            )
+
+
 def prepare_dispatch(task_file: Path, task_id: str, agent: str, *, model: str) -> dict:
     """Freeze the request before execution. Re-rendering identical work is idempotent."""
+    _refuse_existing_dispatch(task_file, task_id)
     path = _binding_path(task_file, "request")
     if path.exists():
         request = json.loads(path.read_text(encoding="utf-8"))
@@ -440,6 +454,7 @@ def prepare_dispatch(task_file: Path, task_id: str, agent: str, *, model: str) -
         raise AdjudicationError("adjudication request already frozen differently", TASK_MISMATCH)
     return dict(
         dispatch=argv,
+        dispatch_usage="Informational only; execute launch to retain the execution binding",
         launch=[
             str(project_interpreter()),
             "-m",
@@ -484,6 +499,9 @@ def _check_v2_binding(dispatched: dict, task_file: Path, task_id: str, record_pa
     try:
         request, _ = _load_request(task_file)
         receipt = json.loads(_binding_path(task_file, "execution").read_text(encoding="utf-8"))
+        started = json.loads(_binding_path(task_file, "started").read_text(encoding="utf-8"))
+        if started != dict(request_sha256=_canonical_digest(request)):
+            raise ValueError("launch reservation differs from frozen request")
         options = request["options"]
         nonce = receipt["run_nonce"]
         if (
@@ -497,6 +515,9 @@ def _check_v2_binding(dispatched: dict, task_file: Path, task_id: str, record_pa
             raise ValueError("execution nonce or request digest differs")
         expected = {name: options[name] for name in ("model", "effort", "mode", "provider", "claude_account")}
         expected.update(
+            owned_paths=options["owned_path"],
+            research_owned_paths=options["research_owned_path"],
+            worktree_base_ref=options["base"],
             agent=request["agent"],
             cwd=request["worktree_path"],
             worktree_path=request["worktree_path"],
@@ -505,6 +526,34 @@ def _check_v2_binding(dispatched: dict, task_file: Path, task_id: str, record_pa
             prompt_sha256=request["prompt_sha256"],
             review_mode="cross_family",
         )
+        expected.update(
+            {
+                name: options[name]
+                for name in (
+                    "research_role",
+                    "research_task_family",
+                    "research_track",
+                    "initiator",
+                    "review_profile",
+                    "review_author_model",
+                    "review_mode",
+                    "language_lane",
+                    "pr",
+                    "require_review_verdict",
+                )
+            }
+        )
+        expected.update(
+            review_risk=options["risk"],
+            output_schema_path=None,
+            output_schema_sha256=None,
+            review_write_root=None,
+            review_attempt=None,
+            review_access=None,
+        )
+        for name in ("review_subject_seats", "review_subject_families"):
+            if dispatched.get(name, []) != []:
+                raise ValueError(f"execution {name} differs from canonical subjects")
         for name, value in expected.items():
             if dispatched.get(name) != value:
                 raise ValueError(f"execution {name} differs from the frozen request")
@@ -690,21 +739,13 @@ def _expected_dispatch_args_sha256(delegate: Any, dispatched: dict[str, Any], ta
 def check_dispatch_binding(
     unit_id: str, review_id: str, attempt_id: str, task_id: str, tasks_dir: Path, root: Path | None = None
 ) -> dict[str, str]:
-    """The dispatch record is this adjudication's own task, dispatched exactly as ``dispatch_argv`` builds it.
+    """Verify this adjudication's task identity and schema-specific execution evidence.
 
-    ``dispatch_argv`` is the only way an adjudication task is dispatched. The task id and the prompt hashes pin
-    the task file; ``dispatch_args_sha256`` (R3-A r8) pins every parsed ``dispatch`` argument at once — mode,
-    cwd, worktree, output-schema, lifecycle and research flags, and anything added to ``dispatch`` later — against
-    the one Namespace a canonical dispatch of this record's own agent/model could have parsed to (see
-    :func:`_expected_dispatch_args_sha256`); any difference, present or future, is ``adjudication_task_mismatch``.
-    ``prompt_blocks`` is checked directly because it covers the *prompt* delegate built, not an argument.
-
-    The execution cwd must be the exact automatic detached worktree for the recorded agent and task.
-    Recompose the canonical full-checkout prompt, rather than trusting the recorded blocks or sparse telemetry.
-    This remains verifiable after delegate reaps the checkout.
-
-    Returns the adjudicator's identity read from this same parsed record (its ``agent`` and ``model`` must resolve);
-    nothing rereads the file.
+    V2 requires the frozen request and launch nonce receipt described in the module
+    docstring, plus the stored verbatim prompt and canonical worktree/runtime frame.
+    Legacy verification is allowed only without v2 artifacts; it recomputes the
+    historical argument hash and effective prompt through the frozen codec. Both
+    paths derive the adjudicator identity from this same parsed task record.
     """
     expected = task_id_for(unit_id, review_id, attempt_id)
     if task_id != expected:
@@ -736,6 +777,11 @@ def check_dispatch_binding(
         )
     if dispatched.get("schema_version") == 2:
         return _check_v2_binding(dispatched, task_file, task_id, record_path)
+    if dispatched.get("schema_version") not in (None, 1) or any(
+        _binding_path(task_file, kind).exists() or _binding_path(task_file, kind).is_symlink()
+        for kind in ("request", "started", "execution")
+    ):
+        raise AdjudicationError("a v2 adjudication cannot use legacy dispatch evidence", TASK_MISMATCH)
     delegate = legacy_codec
     agent = dispatched.get("agent")
     if not isinstance(agent, str) or not agent:
@@ -898,7 +944,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "Blinded adjudication of one review of a seeded lesson (seed-<id>) or of a lesson meant to be clean\n"
-            "(clean-<id>) (#8430 R3). `task` renders the prompt into a task file and prints the delegate.py command\n"
+            "(clean-<id>) (#8430 R3). `task` renders the prompt into a task file and prints v2 dispatch and launch commands\n"
             "that runs it; `record` validates the adjudicator's reply and writes seed_results / clean_results.\n"
             "Do NOT use it on a failed or rejected attempt (there is nothing to map: the scorer counts it as not\n"
             "detected) or to judge a review by hand."
@@ -907,9 +953,13 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python -m scripts.review.seeds.adjudicate task seed-1 --review-id R --attempt-id A \\\n"
             "    --lesson lesson-2.expanded.yaml --agent codex --model gpt-6.1-sol\n"
+            "  .venv/bin/python -m scripts.review.seeds.adjudicate launch --task-file adj-0123456789abcdef.task.md\n"
             "  .venv/bin/python -m scripts.review.seeds.adjudicate record seed-1 --review-id R --attempt-id A \\\n"
             "    --reply batch_state/tasks/adj-0123456789abcdef.result --task-id adj-0123456789abcdef\n"
-            "\nOutputs: one JSON object on stdout. Exit codes: 0 done; 2 refused (error and its code on stderr)."
+            "\nOutputs: private prompt/request files and one JSON object. Execute the printed launch command; "
+            "dispatch argv is informational. Launch retains the returned nonce and never retries.\n"
+            "Exit codes: 0 done; 2 refused (error and its code on stderr).\n"
+            "Related: schemas/seed-adjudication-v1.schema.json; docs/design/dispatch-v2.md."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True)
@@ -957,6 +1007,9 @@ def main(argv: list[str] | None = None) -> int:
                 subject = load_subject(conn, args.unit_id, args.review_id, args.attempt_id, root)
             finally:
                 conn.close()
+            task_id = task_id_for(subject.unit_id, args.review_id, subject.attempt["attempt_id"])
+            task_file = seed_manifest.measurement_dir(root) / TASKS_SUBDIR / f"{task_id}.task.md"
+            _refuse_existing_dispatch(task_file, task_id)
             path, task_id = write_task(
                 subject, args.lesson.read_text(encoding="utf-8"), review_id=args.review_id, root=root
             )
