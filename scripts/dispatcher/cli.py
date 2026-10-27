@@ -13,8 +13,9 @@ from scripts.common.git_context import validate_plain_branch_name
 from scripts.dispatcher import checks, git, providers, store, worker
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
+from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 
-ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
+ALIASES = {"sol": "codex", "grok-build": "grok", "gemini": "agy", "deepseek": "opencode", "openrouter": "hermes"}
 
 
 class _PromptPath(type(Path())):
@@ -117,6 +118,16 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument(
         "--hard-timeout", type=float, default=7200, help="Deadline seconds; 0 disables (default: 7200)"
     )
+    dispatch.add_argument(
+        "--silence-timeout", type=float, default=DEFAULT_SILENCE_TIMEOUT_S, metavar="SECS",
+        help="Kill with status timeout after no stdout/stderr, liveness-file or process-tree work "
+             "for SECS; 0 disables, --hard-timeout still applies (default: 3600)",
+    )
+    dispatch.add_argument(
+        "--initial-response-timeout", type=float, default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, metavar="SECS",
+        help="Kill with status timeout after no first stdout/stderr, liveness-file or process-tree work "
+             "within SECS; 0 disables (default: 600)",
+    )
     for flag in ("owned-path", "research-owned-path"):
         dispatch.add_argument(f"--{flag}", action="append", default=[], help="Path label (repeatable; default: empty)")
     for name in ("wait", "status", "cancel", "list"):
@@ -160,7 +171,8 @@ def _dispatch(args) -> int:
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.output_schema is not None and agent != "codex":
         raise ValueError("--output-schema is supported only with the effective codex agent")
-    if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
+    deadlines(vars(args))
+    if args.cwd and (args.branch or args.pinned_head or args.worktree is not None):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     if args.print_advisory_binding:
         if not args.task_id or source == "-":
@@ -213,7 +225,11 @@ def _dispatch(args) -> int:
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = providers.load(agent).build(spec, child_env(spec))
-        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        try:
+            plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        finally:
+            if cleanup := getattr(invocation, "cleanup", None):
+                cleanup()
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))

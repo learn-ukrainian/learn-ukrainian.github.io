@@ -15,6 +15,7 @@ from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import git, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
 
 
 def _identity(pid: int | None) -> str | None:
@@ -48,7 +49,7 @@ def _observe(record: dict) -> dict:
 
 
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
-    if spec.agent == "cursor":
+    if spec.agent in {"cursor", "grok"}:
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
     logs = path.parent / "logs"
@@ -94,7 +95,7 @@ def _spec(record: dict, options: dict) -> TaskSpec:
         Path(record["result_file"]),
         record["claude_account"],
         record["provider"],
-        options,
+        {**record.get("options", {}), **options},
     )
 
 
@@ -191,12 +192,19 @@ def _reap_settled(record: dict, path: Path) -> None:
         os._exit(0)
 
 
-def supervise(path: Path, options: dict, hard_timeout: float) -> None:
+def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
-    spec = _spec(record, options)
+    spec = _spec(record, options or {})
+    options = spec.options
+    hard_timeout, silence_timeout, initial_response_timeout = deadlines({
+        **options, **{key: record[key] for key in ("hard_timeout", "silence_timeout", "initial_response_timeout")
+                     if key in record},
+        **({"hard_timeout": hard_timeout} if hard_timeout is not None else {}),
+    })
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     resolved_model = None
+    invocation = None
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
@@ -237,14 +245,17 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             )
             record.update(status="running")
             store.replace(record, path)
-            child.communicate(invocation.stdin, timeout=hard_timeout if hard_timeout else None)
+            communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
+                        initial_response_timeout, liveness_paths(spec, invocation))
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
-        parsed = provider.parse(
+        parsed = getattr(invocation, "parse", provider.parse)(
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage = parsed.text, parsed.usage
+        if spec.agent == "grok":
+            record["failure_code"] = parsed.failure_code
         if schema is not None:
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
@@ -256,10 +267,14 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 return
         resolved_model = parsed.resolved_model
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
+        if getattr(parsed, "rate_limited", False):
+            status = "rate_limited"
         if returncode < 0:
             status = "crashed"
         if status != "done":
-            error = "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+            error = parsed.error or (
+                "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+            )
         if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
             try:
                 from scripts.review.verdict_parser import recognized_verdicts
@@ -273,6 +288,9 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 status, error = "failed", "review_gate_error"
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
+    except DeadlineExpired as exc:
+        status, error = "timeout", exc.diagnostic
+        record.update(kill_reason=exc.kind, stderr_excerpt=exc.diagnostic)
     except subprocess.TimeoutExpired:
         status, error = "timeout", "process deadline exceeded"
     except Exception:
@@ -283,6 +301,12 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
             terminate()
             returncode = child.returncode
+        if invocation is not None and (cleanup := getattr(invocation, "cleanup", None)):
+            try:
+                cleanup()
+            except OSError:
+                record["cleanup_error"] = "provider invocation cleanup failed"
+                status, error = "crashed", "provider invocation cleanup failed"
         if text is not None:
             spec.final_file.write_text(text)
             spec.final_file.chmod(0o600)
@@ -297,11 +321,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         )
         record.update(git.snapshot_delivery(spec, record))
         _enforce_delivery(record)
-        if spec.agent == "cursor":
+        if spec.agent in {"cursor", "grok"}:
+            source = "grok-model-usage" if spec.agent == "grok" else "cursor-stream-json"
+            unknown = "unattested-harness" if spec.agent == "grok" else "unknown"
             record.update(
-                resolved_model=resolved_model if resolved_model is not None else "unknown",
+                resolved_model=resolved_model if resolved_model is not None else unknown,
                 resolved_model_known=resolved_model is not None,
-                resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
+                resolved_model_source=source if resolved_model is not None else (
+                    "unattested-harness" if spec.agent == "grok" else "pending"
+                ),
             )
         store.replace(record, path)
 
@@ -342,5 +370,5 @@ def cancel(task_id: str, nonce: str | None = None) -> dict:
 
 
 if __name__ == "__main__":
-    settings = json.load(sys.stdin)
+    settings = json.loads(sys.stdin.read() or "{}")
     supervise(Path(sys.argv[1]), **settings)

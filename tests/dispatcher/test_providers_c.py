@@ -292,3 +292,78 @@ def test_opencode_tool_step_before_final_completion():
 def test_opencode_unknown_terminal_before_completion_stays_failed():
     output = stream({"type": "step_finish", "part": {"reason": "future_outcome"}}, OC_TEXT, OC_STOP)
     assert opencode.parse(output, "", 0, None).error
+
+
+@pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
+def test_exact_argv_per_mode(spec, monkeypatch, mode):
+    """Ported from tests/test_grok_build_adapter.py::test_exact_argv_per_mode."""
+    from scripts.dispatcher.providers import grok
+
+    monkeypatch.setattr("scripts.agent_runtime.adapters.grok_build.shutil.which", lambda _: "/usr/bin/grok")
+    invocation = grok.build(replace(spec, agent="grok", model="grok-4.7-high", mode=mode), {})
+    try:
+        argv = invocation.argv
+        assert argv[0] == "/usr/bin/grok"
+        assert argv[argv.index("-m") + 1] == "grok-4.7"
+        assert argv[argv.index("--effort") + 1] == "high"
+        assert argv[argv.index("--output-format") + 1] == "streaming-messages-json"
+        assert argv[argv.index("--cwd") + 1] == str(spec.worktree)
+        assert "--agent" in argv
+        if mode == "read-only":
+            assert argv[argv.index("--permission-mode") + 1] == "auto"
+            assert "--always-approve" not in argv
+            denies = [argv[i + 1] for i, arg in enumerate(argv) if arg == "--deny"]
+            assert {"Write", "Edit", "Bash", "MCPTool", "WebFetch", "WebSearch"} == set(denies)
+            assert argv[argv.index("--tools") + 1] == "read_file,list_dir,grep"
+            assert "--no-subagents" in argv and "--disable-web-search" in argv
+        else:
+            assert argv[argv.index("--permission-mode") + 1] == "bypassPermissions"
+            assert "--always-approve" in argv
+        from pathlib import Path
+        guard = Path(argv[argv.index("--agent") + 1])
+        assert "grok_hook_bridge.py" in guard.read_text()
+    finally:
+        invocation.cleanup()
+    assert not guard.exists()
+
+
+@pytest.mark.parametrize("usage,expected", [
+    ({"grok-4.7-build": {"modelCalls": 1}}, "grok-4.7-build"),
+    ({"grok-4.7-build-fast": {"modelCalls": 1}}, "grok-4.7-build-fast"),
+    ({}, None), (None, None), ([], None),
+    ({"grok-4.7-build": {}, "grok-4.7-build-fast": {}}, None),
+    ({"": {}}, None),
+])
+def test_native_runtime_identity_comes_only_from_single_model_usage_key(usage, expected):
+    """Ported from tests/test_grok_build_adapter.py with the same test name."""
+    from scripts.dispatcher.providers import grok
+
+    stdout = json.dumps({"text": "VERDICT: APPROVE grok-4.7-build", "stopReason": "end_turn",
+                         "model": "grok-4.7-build", "modelUsage": usage})
+    result = grok.parse(stdout, "", 0, None)
+    assert result.text == "VERDICT: APPROVE grok-4.7-build"
+    assert result.error is None
+    assert result.resolved_model == expected
+
+
+@pytest.mark.parametrize("reason", ["cancelled", "max_tokens", "max_turns", "refusal", "tool_use",
+                                    "error", "new_provider_reason", "EndTurn", "", None, 0, [], {}])
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_exact_nonterminal_reason_is_recorded(reason, returncode):
+    """Ported from tests/agent_runtime/test_grok_stop_reasons.py with the same test name."""
+    from scripts.dispatcher.providers import grok
+
+    result = grok.parse(json.dumps({"text": "partial report", "stopReason": reason}), "", returncode, None)
+    assert not result.text
+    assert "stopReason=" + json.dumps(reason) in result.error
+    assert len(result.error) <= 500
+
+
+@pytest.mark.parametrize("model", ["grok-4.6", "grok-4.7-build-fast", "grok-4.5"])
+def test_grok_build_rejects_retired_or_expensive_pins(spec, monkeypatch, model):
+    """Ported from tests/test_grok_build_adapter.py with the same test name."""
+    from scripts.dispatcher.providers import grok
+
+    monkeypatch.setattr("scripts.agent_runtime.adapters.grok_build.shutil.which", lambda _: "/usr/bin/grok")
+    with pytest.raises(ValueError, match="unsupported Grok model"):
+        grok.build(replace(spec, agent="grok", model=model), {})

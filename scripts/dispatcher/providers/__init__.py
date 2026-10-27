@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from types import ModuleType
 
-PROVIDERS = ("codex", "claude", "cursor", "agy", "muse", "opencode", "hermes")
+PROVIDERS = ("codex", "claude", "cursor", "grok", "agy", "muse", "opencode", "hermes")
 
 
 def load(name: str) -> ModuleType:
@@ -18,6 +18,8 @@ def load(name: str) -> ModuleType:
         from scripts.dispatcher.providers import claude as module
     elif name == "cursor":
         from scripts.dispatcher.providers import cursor as module
+    elif name == "grok":
+        from scripts.dispatcher.providers import grok as module
     elif name == "agy":
         from scripts.dispatcher.providers import agy as module
     elif name == "muse":

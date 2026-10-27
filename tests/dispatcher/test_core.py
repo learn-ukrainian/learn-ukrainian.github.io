@@ -357,7 +357,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     dispatched = sandbox.cli(
         "dispatch",
         "--agent",
-        "grok",
+        "cursor",
         "--model",
         "requested-model-is-not-proof",
         "--prompt",
@@ -1669,7 +1669,7 @@ def test_cursor_child_env_corrupt_invalid_utf8_file_forwards_no_key_without_rais
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():
-    assert dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes") == ALIASES
+    assert ALIASES == {"sol": "codex", "grok-build": "grok", "gemini": "agy", "deepseek": "opencode", "openrouter": "hermes"}
     args = build_parser().parse_args(
         [
             "dispatch",
@@ -1695,3 +1695,41 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+
+def test_initial_response_timeout_default_is_600():
+    """Ported from tests/test_delegate.py::test_initial_response_timeout_default_is_600."""
+    args = build_parser().parse_args(["dispatch", "--agent", "codex", "--model", "gpt-6.1-sol", "--prompt", "hi"])
+    assert args.initial_response_timeout == 600
+    assert args.silence_timeout == 3600
+
+
+def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
+    """Ported from tests/test_delegate.py with the same test name, including process-tree cleanup."""
+    started = time.monotonic()
+    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "1")
+    record = sandbox.settle(task, expected=1)
+    assert time.monotonic() - started < 6
+    assert record["returncode"] == -signal.SIGKILL
+    assert record["status"] == "timeout"
+    assert "stdout_silence_timeout" in record["stderr_excerpt"]
+    assert record["silence_timeout"] == 1
+    grandchild = int(Path(record["prompt_file"]).with_suffix(".grandchild").read_text())
+    assert worker._identity(grandchild) is None
+
+
+def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
+    """Ported from tests/test_delegate.py with the same test name."""
+    started = time.monotonic()
+    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "30",
+                            "--initial-response-timeout", "1")
+    record = sandbox.settle(task, expected=1)
+    assert time.monotonic() - started < 6
+    assert record["returncode"] == -signal.SIGKILL
+    assert record["status"] == "timeout"
+    excerpt = record["stderr_excerpt"]
+    assert "initial_response_timeout" in excerpt
+    assert "fired after 1s" in excerpt
+    assert "no first observable startup activity" in excerpt
+    assert "--initial-response-timeout" in excerpt

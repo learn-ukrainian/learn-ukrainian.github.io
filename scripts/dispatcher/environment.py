@@ -11,6 +11,7 @@ _AUTH = {
     "codex": ("OPENAI_API_KEY", "CODEX_API_KEY", "CODEX_HOME"),
     "claude": ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CONFIG_DIR"),
     "cursor": ("CURSOR_API_KEY",),
+    "grok": ("GROK_HOME",),
     "agy": ("AGY_API_KEY", "AGY_TOKEN", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"),
     "muse": ("MUSE_API_KEY", "MUSE_TOKEN"),
     "opencode": ("DEEPSEEK_API_KEY",),

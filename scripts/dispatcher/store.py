@@ -94,6 +94,10 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict, *,
             record["worktree_remote_url"] = None
     fields = ("task_id", "agent", "provider", "model", "effort", "mode", "claude_account")
     record.update({name: getattr(spec, name) for name in fields})
+    from scripts.dispatcher.watchdog import deadlines
+
+    record.update(zip(("hard_timeout", "silence_timeout", "initial_response_timeout"), deadlines(spec.options), strict=True))
+    record["options"] = spec.options
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
     record.update({name: metadata.get(name) for name in metadata_fields})
     for name in ("output_schema_path", "output_schema_sha256", "review_write_root"):
