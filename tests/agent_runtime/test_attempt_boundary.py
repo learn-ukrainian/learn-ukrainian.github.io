@@ -957,6 +957,27 @@ def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monke
         boundary.cleanup()
 
 
+@pytest.mark.parametrize("failure", ["timeout", "group_writable", "shell"])
+def test_claude_helper_timeout_or_writable_settings_is_boundary_refusal(world, monkeypatch, failure):
+    """Unsafe helper settings and helper timeouts must refuse before provider launch."""
+    _, home = world
+    config = home / ".claude"
+    config.mkdir()
+    settings = config / "settings.json"
+    settings.write_text(json.dumps({"apiKeyHelper": "fixture-helper" if failure != "shell" else "echo key | cat"}))
+    settings.chmod(0o620 if failure == "group_writable" else 0o600)
+
+    def run(argv, **kwargs):
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(argv, 10)
+        assert isinstance(argv, list) and not kwargs.get("shell", False)
+        pytest.fail("unsafe helper was executed")
+
+    monkeypatch.setattr(attempt_boundary.subprocess, "run", run)
+    with pytest.raises(ReviewIsolationError):
+        attempt_boundary.linux_claude_auth("a", environ={"CLAUDE_CONFIG_DIR": str(config)})
+
+
 def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     """No sandbox gets a known-expired token: a renewable default credential refuses, unrenewed."""
     from scripts.agent_runtime.attempt_boundary import linux_claude_auth

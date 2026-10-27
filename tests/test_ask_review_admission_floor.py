@@ -150,9 +150,13 @@ def test_branch_without_owned_paths_uses_merge_base_and_pins_head(review_repo, r
     assert args.pinned_head == head
 
 
-def test_ask_review_command_reaches_delegate_floor(review_repo, tmp_path):
+def test_ask_review_command_reaches_delegate_floor(review_repo, tmp_path, monkeypatch, capsys):
+    from unittest.mock import Mock
+
     from agent_runtime.target_admission import resolve_and_admit
     from scripts.ai_agent_bridge._dispatch_wrappers import build_ask_review_dispatch_command
+    from scripts.dispatcher import checks, cli, git, worker
+    from scripts.dispatcher.cli import build_parser
 
     repo, _ = review_repo
     head = _change(repo, "scripts/agent_runtime/adapters/claude.py")
@@ -160,11 +164,34 @@ def test_ask_review_command_reaches_delegate_floor(review_repo, tmp_path):
     command = build_ask_review_dispatch_command(
         seat, "floor-ask-9125", tmp_path / "prompt.md", effort="high", branch="review-target", pinned_head=head
     )
-    args = delegate.build_parser().parse_args(command[2:])
+    (tmp_path / "prompt.md").write_text("Review")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr("scripts.review.dispatch_execution._local_repo_root", repo)
+    monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (repo, "claude/review", head))
+    monkeypatch.setattr(git, "create_worktree", Mock())
+    monkeypatch.setattr(worker, "start", Mock())
+    monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    args = build_parser().parse_args(command[2:])
     assert args.branch == "review-target" and args.pinned_head == head
-    refusal, target = _admit(args)
-    assert target is None
-    assert "REVIEW_ROUTE_REFUSED" in refusal and "ineligible" in refusal
+    assert cli.main(command[2:]) == 2
+    assert "REVIEW_ROUTE_REFUSED" in capsys.readouterr().err
+    git.create_worktree.assert_not_called()
+    worker.start.assert_not_called()
+
+
+@pytest.mark.parametrize("seat_name", ["claude", "codex", "agy"])
+def test_unpinned_bridge_review_carries_registered_model_for_v2_parser(tmp_path, seat_name):
+    """An unpinned admitted seat must not produce an unparseable v2 command."""
+    from scripts.agent_runtime.registry import AGENTS
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from scripts.ai_agent_bridge._dispatch_wrappers import build_ask_review_dispatch_command
+    from scripts.dispatcher.cli import build_parser
+
+    (seat,) = resolve_and_admit((seat_name,), mode="read-only", review=True)
+    command = build_ask_review_dispatch_command(seat, "unpinned-review", tmp_path / "prompt", effort="high")
+    args = build_parser().parse_args(command[2:])
+    assert args.model == AGENTS[seat_name]["default_model"]
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])

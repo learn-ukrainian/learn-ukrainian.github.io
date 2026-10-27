@@ -7,6 +7,7 @@ lifetime; receipt files are created by review_mcp's exclusive reservation.
 import argparse
 import contextlib
 import json
+import re
 import subprocess
 from collections.abc import Sequence
 from pathlib import Path
@@ -17,6 +18,20 @@ from scripts.common.task_scratch import resolve_scratch_root
 from scripts.dispatcher import git, store
 from scripts.guardrails import worktree_containment
 from scripts.orchestration import worktree_claims
+from scripts.review.target_resolution import _origin_github_repo
+
+_UKRAINIAN_MODEL_FAMILIES = frozenset({"anthropic", "openai", "google"})
+_UKRAINIAN_AGENT_FAMILIES = {"claude": "anthropic", "codex": "openai", "agy": "google", "gemini": "google"}
+
+
+def _dispatch_is_language_lane(args, *, model=None):
+    from scripts.review.language_lane import is_ukrainian_review
+
+    return (is_ukrainian_review(vars(args))
+            or str(args.research_track or "").strip().lower().startswith("l2-uk")
+            or any(str(path).replace("\\", "/").lstrip("./").startswith(("curriculum/", "scripts/curriculum/"))
+                   for path in args.research_owned_path))
+
 
 _local_repo_root = Path(__file__).resolve().parents[2]
 _REPO_ROOT = main_checkout_root(_local_repo_root)
@@ -248,10 +263,271 @@ def _mark_review_attempt_worktree(worktree_path: Path, task_id: str) -> None:
 
 
 
+def _origin_base_ref(base_branch: str) -> str:
+    """Return the remote ref used for ahead-count checks."""
+    if base_branch.startswith("origin/"):
+        return base_branch
+    return f"origin/{_base_branch_name(base_branch)}"
+
+def _base_branch_name(base_branch: str) -> str:
+    """Return a PR base branch name without the remote prefix.
+
+    ``origin/main`` and ``github/main`` both name the canonical ``main`` —
+    the dispatch fetch lands every base into ``refs/remotes/origin/<name>``
+    regardless of which remote served it (#7522).
+    """
+    stripped = base_branch.removeprefix("origin/")
+    return stripped.removeprefix("github/")
+
+def _require_ukrainian_model_family(args: argparse.Namespace, model: str | None, *, resolved: bool = False) -> None:
+    """Fail closed for Ukrainian content using the declared language lane.
+
+    An omitted model on an allowed seat waits for resolution. A resolved
+    model that is still missing is a refusal.
+    """
+    from scripts.review.reviewer_resolver import resolve_family
+
+    family = str(getattr(args, "research_task_family", None) or "").strip().casefold()
+    content_task = family in {"data", "text", "word cards", "word-cards", "word_cards", "dataset", "reviews"}
+    language_lane = getattr(args, "language_lane", None)
+    if content_task and not language_lane:
+        raise ValueError(
+            "UKRAINIAN_MODEL_REFUSED: content task language is missing or unknown; use --language-lane"
+        )
+    if not (content_task or _dispatch_is_language_lane(args, model=model)):
+        return
+    if model is None and not resolved:
+        agent = str(getattr(args, "agent", "") or "").strip().lower()
+        if _UKRAINIAN_AGENT_FAMILIES.get(agent) in _UKRAINIAN_MODEL_FAMILIES:
+            return
+    if not model or resolve_family(model) not in _UKRAINIAN_MODEL_FAMILIES:
+        raise ValueError(
+            "UKRAINIAN_MODEL_REFUSED: Ukrainian jobs require a known GPT, Gemini or Claude model"
+        )
+
+def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
+    """Resolve a review's exact scope before route selection, pinning branch heads.
+
+    Branch refs use the existing remote-tracking objects; a missing object
+    refuses and must be refreshed before retrying. PR resolution uses its
+    actual base. Attempt records supply their frozen target.changed_paths.
+    """
+    from scripts.review.security_paths import git_changed_paths
+    from scripts.review.target_resolution import (
+        TargetResolutionError,
+        resolve_branch_target,
+        resolve_pr_target,
+        resolve_review_repository,
+    )
+
+    attempt = getattr(args, "review_attempt", None)
+    paths: tuple[str, ...] | None = None
+    if attempt:
+        import yaml
+
+        try:
+            record = yaml.safe_load(Path(attempt).read_bytes())
+        except (OSError, ValueError, yaml.YAMLError) as exc:
+            raise TargetResolutionError("review attempt target unreadable") from exc
+        target_record = record.get("target") if isinstance(record, dict) else None
+        changed = target_record.get("changed_paths") if isinstance(target_record, dict) else None
+        if not isinstance(changed, list) or not all(isinstance(path, str) and path for path in changed):
+            raise TargetResolutionError("review attempt target.changed_paths missing or invalid")
+        paths = tuple(changed)
+
+    branch = getattr(args, "branch", None)
+    pr = getattr(args, "pr", None)
+    pinned = getattr(args, "pinned_head", None)
+    if pinned and not (branch or pr):
+        raise TargetResolutionError("--pinned-head requires --branch or --pr")
+    repo_key = getattr(args, "repo", None)
+    anchor = _REPO_ROOT if repo_key else _local_repo_root
+    if pr is not None:
+        resolution_mode, resolution_branch, resolution_base = "pr", None, None
+    elif branch:
+        resolution_mode = "branch"
+        resolution_branch = pinned or _origin_base_ref(branch)
+        resolution_base = _origin_base_ref(getattr(args, "base", None) or "main")
+    else:
+        resolution_mode, resolution_branch, resolution_base = None, None, None
+    repo_root = resolve_review_repository(
+        anchor,
+        repo_key,
+        mode=resolution_mode,
+        branch=resolution_branch,
+        base=resolution_base,
+    )
+    args._review_repo_root = repo_root
+    if pr is not None:
+        target = resolve_pr_target(repo_root, int(pr))
+        if pinned and pinned.lower() != target.head_sha:
+            raise TargetResolutionError("pinned head differs from PR head")
+        args._review_admission_head = target.head_sha
+    elif branch:
+        if pinned and not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
+            raise TargetResolutionError("pinned head must be a full commit SHA")
+        target = resolve_branch_target(repo_root, resolution_branch, resolution_base)
+        args.pinned_head = target.head_sha
+    elif paths is not None:
+        return paths
+    else:
+        raise TargetResolutionError("review target required: supply --branch, --pr or a resolved --review-attempt")
+    literal = git_changed_paths(repo_root, target.base_sha, target.head_sha)
+    # The frozen endpoints the complete-authorship facts are read from (#9739).
+    args._review_target = target
+    return tuple(dict.fromkeys((*literal, *(paths or ()))))
+
+def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str]) -> Any:
+    """Complete authorship and scope of the review target for a trusted code review (#9739).
+
+    A review with a risk reads complete branch facts, including verified app
+    bots that have no author model; legacy reviews keep intrinsic eligibility.
+    Runs after :func:`_dispatch_review_changed_paths` pinned the
+    target. Returns None without a branch or PR target.
+    """
+    from scripts.review.record_cf_verdict import admitted_unknown_history, collect_branch_review_facts
+
+    target = getattr(args, "_review_target", None)
+    if target is None or not (
+        (getattr(args, "review_mode", None) or "cross_family") == "red_team" or getattr(args, "risk", None)
+    ):
+        return None
+    repo_root = getattr(args, "_review_repo_root", _local_repo_root)
+    repository = _origin_github_repo(repo_root) or ""
+    unknown_history = ()
+    if (getattr(args, "review_mode", None) or "cross_family") == "red_team":
+        branch = getattr(args, "branch", None)
+        if not branch and getattr(args, "pr", None):
+            from scripts.review.record_cf_verdict import FACTS_TARGET_UNKNOWN, BranchFactsError, RecordError, _run_json
+
+            try:
+                pr = _run_json(
+                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid,isCrossRepository"]
+                )
+            except RecordError as exc:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
+            if (
+                not isinstance(pr, dict)
+                or pr.get("isCrossRepository") is not False
+                or not isinstance(pr.get("headRefName"), str)
+                or not pr["headRefName"]
+                or not isinstance(pr.get("headRefOid"), str)
+                or not re.fullmatch(r"[0-9a-fA-F]{40}", pr["headRefOid"])
+                or pr["headRefOid"] == "0" * 40
+            ):
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
+            branch = pr["headRefName"]
+            from scripts.review.target_resolution import TargetResolutionError, live_canonical_branch_head
+
+            try:
+                live_head = live_canonical_branch_head(repo_root, branch, repository=repository)
+            except TargetResolutionError as exc:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
+            if live_head != target.head_sha:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
+        if branch:
+            unknown_history = admitted_unknown_history(
+                repository=repository,
+                branch=branch,
+                head_sha=target.head_sha,
+                task_root=store.tasks_dir(),
+                repo_root=repo_root,
+            )
+    facts = collect_branch_review_facts(
+        repository=repository,
+        repo_root=repo_root,
+        base_tip_sha=target.base_sha,
+        head_sha=target.head_sha,
+        task_root=store.tasks_dir(),
+        owned_paths=owned_paths,
+        subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
+        subject_families=tuple(getattr(args, "subject_family", None) or ()),
+        unknown_history=unknown_history,
+    )
+    # An empty target without a declared author supplies no trusted authorship.
+    if (
+        (getattr(args, "review_mode", None) or "cross_family") != "red_team"
+        and not getattr(args, "review_author_model", None)
+        and not facts.existing_families
+    ):
+        return None
+    return facts
+
+
 def admit(args, prompt: bytes, agent: str) -> dict:
     """Validate before provisioning or spending the pair (delegate:14799)."""
     from scripts.agent_runtime.review_mcp import SUPPORTED_HARNESSES, check_review_tool_requirements
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.fleet.claude_account_lane import resolve_route_account
+    from scripts.review.target_resolution import TargetResolutionError, repository_target_error
 
+    account = resolve_route_account(args.claude_account, strict=agent == "claude")
+
+    def collect_review_paths():
+        try:
+            return _dispatch_review_changed_paths(args)
+        except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
+            error = repository_target_error(args.repo, exc)
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {error}") from exc
+
+    def collect_review_facts():
+        from scripts.review.record_cf_verdict import BranchFactsError
+
+        try:
+            facts = _dispatch_review_facts(args, tuple(args.owned_path))
+            if args.review_mode == "red_team" and facts is not None:
+                args._red_team_branch_facts = {**facts.receipt(), "author_task_ids": sorted(facts.author_task_ids)}
+            return facts
+        except (BranchFactsError, OSError, subprocess.TimeoutExpired) as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+
+    def initial_snapshot():
+        from scripts.fleet.claude_account_lane import select_account
+        from scripts.fleet.credit_lane import read_routing_budget
+
+        snapshot = read_routing_budget()
+        if snapshot is None:
+            raise ReviewAdmissionRefused("RED_TEAM_REFUSED: routing state unavailable")
+        return select_account(snapshot, account=account)[0]
+
+    code_review = (args.review_profile or "code") in {"code", "infra"}
+    try:
+        _require_ukrainian_model_family(args, args.model)
+        (target,) = resolve_and_admit(
+            (agent,), mode=args.mode, model=args.model, review_dispatch=True, review_attempt=bool(args.review_attempt),
+            review_profile=args.review_profile or "code", review_risk=args.risk,
+            review_author_model=args.review_author_model, review_owned_paths=tuple(args.owned_path),
+            review_subject_seats=frozenset(args.subject_seat), review_subject_families=frozenset(args.subject_family),
+            review_changed_paths=collect_review_paths if code_review else (),
+            review_facts=collect_review_facts if code_review else None,
+            review_mode=args.review_mode or "cross_family", review_task_id=args.task_id,
+            review_initial_snapshot=initial_snapshot if args.review_mode == "red_team" else None,
+            claude_account=account, review=True,
+        )
+        if (target.recipient, target.model) != (agent, args.model):
+            raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: v2 requires the admitted seat and model")
+        _require_ukrainian_model_family(args, target.model, resolved=True)
+        if args.review_mode == "red_team" and (target := getattr(args, "_review_target", None)) is not None:
+            from scripts.review.record_cf_verdict import RecordError, require_no_branch_outside_rejection
+
+            try:
+                require_no_branch_outside_rejection(
+                    _origin_github_repo(args._review_repo_root) or "", args.branch, target.head_sha,
+                    pr_number=args.pr, task_root=store.tasks_dir(),
+                )
+            except RecordError as exc:
+                raise ReviewAdmissionRefused(str(exc)) from exc
+    except ReviewAdmissionRefused as exc:
+        raise ValueError(str(exc)) from None
+    admitted = {}
+    if head := getattr(args, "_review_admission_head", None):
+        args.pinned_head = head
+    if facts := getattr(args, "_red_team_branch_facts", None):
+        admitted["review_branch_facts"] = facts
+    if agent == "claude":
+        admitted.update(claude_account=account.label, claude_account_source=account.source)
+    if not args.review_attempt:
+        return admitted
     access = args.review_access or "isolated"
     if access == "full" and not args.full_checkout:
         raise ValueError("full_review_requires_full_checkout: use --full-checkout")
@@ -260,34 +536,14 @@ def admit(args, prompt: bytes, agent: str) -> dict:
     if agent not in SUPPORTED_HARNESSES:
         raise ValueError(f"review attempt refused for {agent}: unsupported harness {agent!r} (#8517)")
     args.review_attempt = str(Path(args.review_attempt).resolve())
-    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
-    from scripts.fleet.claude_account_lane import no_claude_account, resolve_route_account
-
-    account = resolve_route_account(args.claude_account, strict=True) if agent == "claude" else no_claude_account()
-    try:
-        resolve_and_admit(
-            (agent,), mode=args.mode, model=args.model, review_dispatch=True, review_attempt=True,
-            review_profile=args.review_profile or "code", review_risk=args.risk,
-            review_author_model=args.review_author_model, review_owned_paths=tuple(args.owned_path),
-            review_subject_seats=frozenset(args.subject_seat), review_subject_families=frozenset(args.subject_family),
-            claude_account=account, review=True,
-        )
-    except ReviewAdmissionRefused as exc:
-        raise ValueError(str(exc)) from None
     check_review_tool_requirements(prompt.decode(), access)
     refusal, contract = _review_attempt_prompt_admission(args, prompt.decode(), args.review_id, args.attempt_id)
     if refusal:
         raise ValueError(refusal)
     root = worktree_claims.required_review_input_root(contract)
     _refuse_review_scratch_in_worktree()
-    admitted = dict(review_contract=contract, review_input_root=root,
+    admitted.update(review_contract=contract, review_input_root=root,
                     review_input_paths=[str(p) for p in _review_attempt_input_paths(args.review_attempt)])
-    if agent == "claude":
-        from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
-
-        admitted["claude_account_source"] = account.source
-        if account.label != DEFAULT_CLAUDE_ACCOUNT:
-            admitted["claude_account"] = account.label
     return admitted
 
 

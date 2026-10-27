@@ -64,7 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
-        ("claude-account", None, "Claude account a or b (default: inherited configuration)"),
+        ("claude-account", None, "Claude account a or b (default: configured label or a; never ambient config dir)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
         ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),
@@ -178,6 +178,26 @@ def _dispatch(args) -> int:
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    from scripts.review import dispatch_execution as review_execution
+
+    if args.review_mode != "red_team":
+        checks.check_review_family(args.review_author_model, args.model)
+    if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
+        exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
+                                                args.owned_path, review=any((args.review_profile, args.language_lane,
+                                                args.review_author_model, args.risk, args.review_mode, args.pr,
+                                                args.require_review_verdict, args.subject_seat, args.subject_family)))
+        args.subject_seat, args.subject_family = sorted(exclusion.seats), sorted(exclusion.families)
+        if (exclusion.seats or exclusion.families) and (
+            (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
+        ):
+            raise ValueError("protected subject scope needs a code-profile review without --language-lane")
+    review_typed = any((binding, args.require_review_verdict, args.review_profile, args.review_author_model,
+                        args.risk, args.review_mode, args.pr))
+    args.task_id = task_id
+    admitted = review_execution.admit(args, prompt, agent) if review_typed and not args.dry_run else None
+    if admitted and agent == "claude":
+        args.claude_account = admitted["claude_account"]
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
     )
@@ -201,21 +221,7 @@ def _dispatch(args) -> int:
         **fields,
     )
     checks.check_private_input(spec, info["key"])
-    checks.check_review_family(args.review_author_model, args.model)
-    if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
-        exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
-                                                args.owned_path, review=any((args.review_profile, args.language_lane,
-                                                args.review_author_model, args.risk, args.review_mode, args.pr,
-                                                args.require_review_verdict, args.subject_seat, args.subject_family)))
-        args.subject_seat, args.subject_family = sorted(exclusion.seats), sorted(exclusion.families)
-        if (exclusion.seats or exclusion.families) and (
-            (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
-        ):
-            raise ValueError("protected subject scope needs a code-profile review without --language-lane")
-    from scripts.review import dispatch_execution as review_execution
-
-    admitted = review_execution.admit(args, prompt, agent) if binding and not args.dry_run else None
-    if admitted:
+    if binding and admitted is not None:
         spec.options["review_attempt"] = args.review_attempt
     checks.check_resources((worktree, path.parent))
     if args.dry_run:
@@ -234,7 +240,9 @@ def _dispatch(args) -> int:
     record.update(advisory_fields)
     if agent == "muse":
         record["contributor_mode"] = spec.options.get("contributor_mode", "off")
-    if admitted:
+    if admitted is not None:
+        record.update(admitted)
+    if binding and admitted is not None:
         with review_execution.prepare(spec, record, admitted):
             worker.start(spec, record, prompt, args.hard_timeout)
     else:

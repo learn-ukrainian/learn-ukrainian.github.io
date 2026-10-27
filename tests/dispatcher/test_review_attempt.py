@@ -16,11 +16,162 @@ from tests.agent_runtime import test_attempt_boundary as boundary_tests
 world = boundary_tests.world
 
 
+@pytest.mark.parametrize("agent,model,admitted", [
+    ("claude", "claude-opus-5-5", False), ("codex", "gpt-6.1-sol", False),
+    ("cursor", "grok-4.7-high", True),
+])
+def test_trusted_review_admission_excludes_every_author_of_the_branch(tmp_path, monkeypatch, agent, model, admitted):
+    """Ported from tests/test_delegate_review_admission.py::test_trusted_review_admission_excludes_every_author_of_the_branch."""
+    from scripts.review import dispatch_execution as execution
+    from tests.test_authoring_review_feasibility import OPUS, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    repo.commit(OPUS, message="first author")
+    repo.commit(SOL, message="latest author")
+    repo.publish()
+    monkeypatch.setattr(execution, "_local_repo_root", repo.root)
+    args = cli.build_parser().parse_args([
+        "dispatch", "--agent", agent, "--model", model, "--branch", "feature",
+        "--review-author-model", "gpt-6.1-sol", "--risk", "medium",
+    ])
+    if admitted:
+        assert execution.admit(args, b"Review", agent) == {}
+    else:
+        with pytest.raises(ValueError, match="REVIEW_ROUTE_REFUSED"):
+            execution.admit(args, b"Review", agent)
+
+
+@pytest.mark.parametrize("author_id,archived", [("author-one", False), ("gpt-6.1-sol", False), ("gpt-6.1-sol", True)])
+@pytest.mark.parametrize("same_task,outside_available", [(True, False), (True, True), (False, True), (False, False)])
+def test_red_team_branch_task_and_preference_gate(tmp_path, monkeypatch, author_id, archived, same_task, outside_available):
+    """Ported from tests/test_delegate_review_admission.py::test_red_team_branch_task_and_preference_gate.
+
+    V2 has no --force-agent flag; both legacy force variants share this admission.
+    """
+    from scripts.fleet import credit_lane
+    from scripts.review import dispatch_execution as execution
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    tasks = tmp_path / "tasks"
+    records = tasks / "archive" if archived else tasks
+    records.mkdir(parents=True)
+    (records / f"{author_id}.json").write_text(json.dumps({
+        "repository": "learn-ukrainian/learn-ukrainian.github.io", "agent": "codex",
+        "model": "gpt-6.1-sol", "task_id": f"codex/{author_id.upper()}",
+    }))
+    repo.commit(f"codex/{author_id}")
+    repo.publish()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(execution, "_local_repo_root", repo.root)
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda: {
+        "claude": "healthy" if outside_available else "unhealthy", "grok": "unhealthy",
+        "cursor": "unhealthy", "agy": "unhealthy",
+    })
+    args = cli.build_parser().parse_args([
+        "dispatch", "--agent", "codex", "--model", "gpt-6.1-sol", "--branch", "feature",
+        "--review-author-model", "gpt-6.1-sol", "--risk", "critical", "--review-mode", "red_team",
+        "--task-id", author_id if same_task else "review-one",
+    ])
+    refusal = "SELF_REVIEW_DETECTED" if same_task else "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+    with pytest.raises(ValueError, match=refusal):
+        execution.admit(args, b"Adversarial red-team review", "codex")
+    assert args._red_team_branch_facts["author_task_ids"] == [author_id]
+
+
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_attempt_record_paths_reach_immutable_review_admission(tmp_path, monkeypatch, profile):
+    """Ported from tests/test_ask_review_admission_floor.py::test_attempt_record_paths_reach_immutable_review_admission."""
+    from scripts.review import dispatch_execution as execution
+
+    manifest = tmp_path / "attempt.json"
+    manifest.write_text(json.dumps({"target": {"changed_paths": ["scripts/delegate.py"]}}))
+    args = cli.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--model", "claude-sonnet-5-5", "--task-id", "immutable",
+        "--review-id", "review", "--attempt-id", "attempt", "--review-attempt", str(manifest),
+        "--review-profile", profile,
+    ])
+    # A route refusal must precede prompt rendering, reservation and provisioning.
+    monkeypatch.setattr(execution, "_review_attempt_prompt_admission",
+                        lambda *a: pytest.fail("ineligible reviewer reached prompt preparation"))
+    with pytest.raises(ValueError, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        execution.admit(args, b"Review", "claude")
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_default_label_ignores_ambient_other_config_directory(world, monkeypatch, explicit):
+    """Account a must never run on another account's inherited config directory."""
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+    from scripts.dispatcher.environment import child_env
+
+    root, home = world
+    for directory, token in ((".claude", "fixture-default-token"), (".claude-b", "fixture-other-token")):
+        config = home / directory
+        config.mkdir()
+        credential = config / ".credentials.json"
+        credential.write_text(json.dumps({"claudeAiOauth": {"accessToken": token, "expiresAt": 4102444800000}}))
+        credential.chmod(0o600)
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(home / ".claude-b"))
+    spec = TaskSpec("default-a", "claude", "claude-opus-5-5", None, "read-only", root,
+                    root / "prompt", root / "result", claude_account="a" if explicit else None)
+    env = child_env(spec)
+    assert env["CLAUDE_CONFIG_DIR"] == str(home / ".claude")
+    assert linux_claude_auth(spec.claude_account, environ=env) == {"CLAUDE_CODE_OAUTH_TOKEN": "fixture-default-token"}
+
+
+@pytest.mark.parametrize("label,source,verify,method,credential", [
+    ("a", "builtin", False, "host_login", "api_key"),
+    ("b", "default-file", True, "bound_account_token", "oauth_token"),
+    ("b", "explicit", False, "unverified", "oauth_token"),
+])
+def test_worker_records_this_runs_claude_auth_receipt(tmp_path, monkeypatch, label, source, verify, method, credential):
+    """Ported from tests/test_delegate.py::test_worker_records_a_verified_value_free_auth_receipt,
+    tests/test_delegate.py::test_worker_receipt_is_unverified_without_this_runs_verification,
+    tests/test_delegate.py::test_worker_receipt_for_the_default_label_names_the_host_login.
+    """
+    import sys
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime.attempt_boundary import note_claude_account_verified
+    from scripts.dispatcher.types import Invocation, ParsedResult
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    prompt = tmp_path / "prompt"
+    spec = TaskSpec("receipt", "claude", "claude-opus-5-5", None, "read-only", tmp_path,
+                    prompt, tmp_path / "result", claude_account=label)
+    prompt.write_bytes(b"Review")
+    record = store.new_record(spec, dict(key="public", github="example/public"), "claude/receipt", "a" * 40,
+                              dict(research_owned_path=[]))
+    prompt.unlink()  # store.create exclusively owns prompt creation.
+    record["claude_account_source"] = source
+    path = store.create(record, b"Review")
+    (path.parent / "logs").mkdir()
+    note_claude_account_verified("b", "subscription_login")  # stale receipt must never survive.
+    env = {"ANTHROPIC_API_KEY" if credential == "api_key" else "CLAUDE_CODE_OAUTH_TOKEN": "fixture-value"}
+
+    def build(spec, env):
+        if verify:
+            note_claude_account_verified(label, method)
+        return Invocation([sys.executable, "-c", "print('reviewed')"], None, env, None)
+
+    monkeypatch.setattr(worker, "child_env", lambda spec: dict(env))
+    monkeypatch.setattr(worker.providers, "load", lambda _: SimpleNamespace(
+        build=build, parse=lambda *a: ParsedResult("reviewed", None, None)))
+    monkeypatch.setattr(worker.git, "snapshot_delivery", lambda *a: {})
+    monkeypatch.setattr(worker, "_reap_settled", lambda *a: None)
+    worker.supervise(path, {}, 30)
+    saved = json.loads(path.read_bytes())
+    assert saved["status"] == "done", saved["error"]
+    assert saved["claude_account_auth"] == dict(label=label, source=source, method=method,
+                                               verified=verify, credential_class=credential)
+
+
 @pytest.fixture
 def attempt(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     manifest = tmp_path / "manifest.yaml"
-    manifest.write_text("inputs: []\n")
+    manifest.write_text("inputs: []\ntarget:\n  changed_paths: [ordinary.py]\n")
     return ["--review-id", "review", "--attempt-id", "attempt", "--review-attempt", str(manifest)]
 
 
@@ -54,7 +205,7 @@ def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, mon
         assert invoke(attempt, "--dry-run") == 0
         plan = json.loads(capsys.readouterr().out)
         assert plan["review_attempt"] == dict(review_id="review", attempt_id="attempt",
-                                             manifest_sha256=store.digest(b"inputs: []\n"))
+                                             manifest_sha256=store.digest(b"inputs: []\ntarget:\n  changed_paths: [ordinary.py]\n"))
         assert plan["review_access"] == "isolated"
     assert not (tmp_path / "tasks").exists()
 
@@ -95,7 +246,7 @@ def test_binding_snapshot_attests_v2_return_and_survives_record_corruption(attem
     store.create(record, b"Review\n")
     record = store.read("task")
     assert record["schema_version"] == 2 and record["review_attempt"] == binding
-    assert binding == dict(review_id="review", attempt_id="attempt", manifest_sha256=store.digest(b"inputs: []\n"))
+    assert binding == dict(review_id="review", attempt_id="attempt", manifest_sha256=store.digest(b"inputs: []\ntarget:\n  changed_paths: [ordinary.py]\n"))
     assert record["prompt_sha256"] == store.digest(b"Review\n") and record["review_access"] == (access or "isolated")
     data = f"reviewer:\n  prompt_sha256: '{record['prompt_sha256']}'\n".encode()
     spec.final_file.write_bytes(data)
@@ -290,7 +441,7 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
 
     monkeypatch.setattr(attempt_boundary, "_run_claude_renewal", lambda _directory: pytest.fail("renewed"))
     _, home = world
-    credential = home / "selected-config" / ".credentials.json"
+    credential = home / ".claude" / ".credentials.json"
     credential.parent.mkdir()
     selected = {"CLAUDE_CONFIG_DIR": str(credential.parent)}
     access = "fixture-access-" + "x" * 30
@@ -443,7 +594,8 @@ def test_default_file_b_records_and_launches_b(tmp_path, monkeypatch):
         "--review-id", "review", "--attempt-id", "current", "--review-attempt", str(manifest),
         "--prompt-file", str(prompt),
     ])
-    monkeypatch.setattr("scripts.agent_runtime.target_admission.resolve_and_admit", lambda *a, **kw: None)
+    monkeypatch.setattr("scripts.agent_runtime.target_admission.resolve_and_admit", lambda *a, **kw: (
+        SimpleNamespace(recipient="claude", model="claude-opus-5-5"),))
     monkeypatch.setattr(execution, "_review_attempt_prompt_admission",
                         lambda *a: (None, {"input_root": str(root)}))
     admitted = execution.admit(args, b"Review", "claude")

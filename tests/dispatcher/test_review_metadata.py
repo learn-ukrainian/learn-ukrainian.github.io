@@ -13,6 +13,15 @@ from scripts.review.subject_seat import classify_owned_path
 
 @pytest.fixture
 def dispatch(tmp_path, monkeypatch):
+    from scripts.review import dispatch_execution as execution
+    from scripts.review import target_resolution
+    from tests.test_ask_review_admission_floor import _git, _init_review_repo
+
+    repo, base = _init_review_repo(tmp_path, monkeypatch)
+    _git(repo, "update-ref", "refs/remotes/origin/review-target", base)
+    monkeypatch.setattr(execution, "_local_repo_root", repo)
+    monkeypatch.setattr(target_resolution, "resolve_pr_target", lambda *a: target_resolution.resolve_branch_target(
+        repo, "origin/review-target", "origin/main"))
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
@@ -23,7 +32,7 @@ def dispatch(tmp_path, monkeypatch):
 
     def invoke(*flags, agent="sol", model="gpt-6.1-sol", expected=0):
         assert cli.main(["dispatch", "--agent", agent, "--model", model, "--task-id", "review",
-                         "--prompt", "Review this change", *flags]) == expected
+                         "--prompt", "Review this change", "--branch", "review-target", *flags]) == expected
         if expected:
             start.assert_not_called()
             git.create_worktree.assert_not_called()

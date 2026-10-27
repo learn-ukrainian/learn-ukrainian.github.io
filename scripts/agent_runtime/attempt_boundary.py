@@ -932,6 +932,7 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
 
     ``account`` is the run's label. The default label (or none) keeps the
     legacy selection: an ambient credential, else the default credential file.
+    An ambient CLAUDE_CONFIG_DIR never changes that default directory.
     A non-default label reads only its verified bound account's credential
     file and refuses every conflicting source before anything is returned.
     """
@@ -953,12 +954,15 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
             return {key: value}
     if platform.system() != "Linux":
         return {}
-    config = Path(selected.get("CLAUDE_CONFIG_DIR") or (Path.home() / ".claude"))
-    if environ is not None and selected.get("CLAUDE_CONFIG_DIR"):
-        # V2 dispatch selects a config directory. Resolve only its auth helper;
+    config = Path.home() / ".claude"
+    if environ is not None:
+        # V2 dispatch selects the default label. Resolve only its auth helper;
         # the seat receives the resulting key, never that directory or settings.
-        settings = _read_private_bytes(config / "settings.json", limit=65536,
-                                       code="claude_account_settings", forbidden_mode=0o002)
+        try:
+            settings = _read_private_bytes(config / "settings.json", limit=65536,
+                                           code="claude_account_settings", forbidden_mode=0o077)
+        except ClaudeAccountRefused as exc:
+            raise ReviewIsolationError(exc.code) from None
         if settings:
             try:
                 helper = json.loads(settings).get("apiKeyHelper")
@@ -967,9 +971,24 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
             if helper:
                 if not isinstance(helper, str):
                     raise ReviewIsolationError("attempt_claude_api_key_helper_invalid")
-                result = subprocess.run(helper, shell=True, capture_output=True, text=True, timeout=10,
-                                        env={k: selected[k] for k in ("HOME", "PATH", "LANG") if k in selected},
-                                        check=False)
+                import shlex
+
+                lexer = shlex.shlex(helper, posix=True, punctuation_chars=True)
+                lexer.whitespace_split = True
+                try:
+                    argv = list(lexer)
+                except ValueError:
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_invalid") from None
+                if not argv or any(set(word) <= set("();<>|&") for word in argv):
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_invalid")
+                try:
+                    result = subprocess.run(argv, capture_output=True, text=True, timeout=10,
+                                            env={k: selected[k] for k in ("HOME", "PATH", "LANG") if k in selected},
+                                            check=False)
+                except subprocess.TimeoutExpired:
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_timeout") from None
+                except OSError:
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_failed") from None
                 key = result.stdout.strip()
                 if result.returncode or not key or len(key) > 8192 or "\n" in key or "\r" in key:
                     raise ReviewIsolationError("attempt_claude_api_key_helper_failed")

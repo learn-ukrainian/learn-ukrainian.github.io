@@ -322,7 +322,11 @@ def build_ask_review_dispatch_command(
     from agent_runtime.target_admission import require_admitted
 
     target = require_admitted(target)
-    model = target.model
+    from scripts.agent_runtime.target_admission import _seat_default_model
+
+    model = target.model or _seat_default_model(target.recipient)
+    if not model:
+        raise ValueError("REVIEW_ROUTE_REFUSED: registered seat model unavailable")
     cmd = [
         PYTHON,
         "scripts/dispatch.py",

@@ -197,6 +197,11 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
     spec = _spec(record, options)
+    credential_class = "unverified"
+    if spec.agent == "claude":
+        from scripts.agent_runtime.attempt_boundary import reset_claude_account_receipts
+
+        reset_claude_account_receipts()
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     resolved_model = None
     review_execution = None
@@ -235,6 +240,12 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         invocation = provider.build(spec, env)
         if review_execution:
             invocation = review_execution.wrap(invocation)
+        if spec.agent == "claude":
+            auth_env = review_execution.boundary.env if review_execution and review_execution.boundary else invocation.env
+            credential_class = next((kind for name, kind in (
+                ("ANTHROPIC_API_KEY", "api_key"), ("CLAUDE_API_KEY", "api_key"),
+                ("ANTHROPIC_AUTH_TOKEN", "auth_token"), ("CLAUDE_CODE_OAUTH_TOKEN", "oauth_token"),
+            ) if auth_env.get(name)), "host_login")
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             child = subprocess.Popen(
                 invocation.argv,
@@ -322,6 +333,13 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             )
         if review_execution:
             review_execution.cleanup()
+        if spec.agent == "claude":
+            from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt
+
+            record["claude_account_auth"] = {
+                **claude_account_auth_receipt(spec.claude_account or "a", source=record.get("claude_account_source")),
+                "credential_class": credential_class,
+            }
         store.replace(record, path)
 
         _reap_settled(record, path)
