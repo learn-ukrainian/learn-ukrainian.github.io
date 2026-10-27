@@ -1201,7 +1201,27 @@ assert (
     == "024471fb8b0413f52b30788aa9c6961928720ae98c1e756336cbd41838155a59"
 )
 _RETIREMENT_DATA = json.loads(gzip.decompress(_RETIREMENT_CAPTURE.read_bytes()))
-CURRENT_BASELINE = _RETIREMENT_DATA["baseline"]
+def dispatcher_catalog_baseline(value):
+    """Apply C-2188 command changes without rewriting frozen receipts."""
+    if isinstance(value, dict):
+        result = {key: dispatcher_catalog_baseline(item) for key, item in value.items()}
+        migrate_invocation = (
+            result.get("transport") != "native_grok"
+            and result.get("model_id", result.get("concrete_model")) not in {"gpt-6-luna", "gemini-3.8-flash-high"}
+        )
+        if "invocation" in result and migrate_invocation:
+            result["invocation"] = result["invocation"].replace(
+                "scripts/delegate.py dispatch", "scripts/dispatch.py dispatch"
+            )
+        if isinstance(result.get("argv"), list) and migrate_invocation:
+            result["argv"] = ["scripts/dispatch.py" if arg == "scripts/delegate.py" else arg for arg in result["argv"]]
+        return result
+    if isinstance(value, list):
+        return [dispatcher_catalog_baseline(item) for item in value]
+    return value
+
+
+CURRENT_BASELINE = dispatcher_catalog_baseline(_RETIREMENT_DATA["baseline"])
 CURRENT_INPUTS = _RETIREMENT_DATA["inputs"]
 
 MUSE_REVIEW_CANDIDATE = {

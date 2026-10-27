@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shlex
 import subprocess
 import sys
 from copy import deepcopy
@@ -32,6 +33,40 @@ from scripts.review.model_catalog import (
     validate_kimi_alias_consumers,
 )
 from tests.claude_route_accounts import HOST_ACCOUNT
+
+
+@pytest.mark.parametrize("seat,route,launcher,agent,model,effort", [
+    ("openai_frontier", "native", "dispatch.py", "codex", "gpt-6.1-sol", "high"),
+    ("xai_reviewer", "native", "delegate.py", "grok", "grok-4.7", None),
+    ("xai_reviewer", "cursor_fallback", "dispatch.py", "cursor", "grok-4.7-high", None),
+    ("anthropic_authority", "native", "dispatch.py", "claude", "claude-opus-5-5", None),
+    ("anthropic_practical", "native", "dispatch.py", "claude", "claude-sonnet-5-5", None),
+    ("mechanical_worker", "native", "dispatch.py", "claude", "claude-haiku-5-5", "high"),
+    ("bounded_worker", "native", "delegate.py", "codex", "gpt-6-luna", "high"),
+    ("google_bounded", "native", "delegate.py", "agy", "gemini-3.8-flash-high", "high"),
+])
+def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, launcher, agent, model, effort):
+    from scripts.review.role_resolution import resolve_role
+
+    catalog = load_model_catalog()
+    template = catalog["seats"][seat]["routes"][route]["invocation"]
+    argv = shlex.split(template.format(wire_id=model))
+    expected = [".venv/bin/python", f"scripts/{launcher}", "dispatch", "--agent", agent, "--model", model]
+    if effort:
+        expected += ["--effort", effort]
+    assert argv == expected
+    if launcher == "dispatch.py":
+        from scripts.dispatcher.cli import build_parser
+    else:
+        from scripts.delegate import build_parser
+
+    args = build_parser().parse_args([*argv[2:],
+        "--worktree", "--mode", "read-only", "--task-id", "catalog-review", "--prompt-file", "prompt.md",
+    ])
+    assert (args.agent, args.model, args.effort, args.task_id) == (agent, model, effort, "catalog-review")
+    if seat == "google_bounded":
+        candidate = resolve_role("bounded_fallback", purpose="inspect").candidates[0]
+        assert list(candidate.argv) == expected
 
 
 @pytest.mark.parametrize("value", [None, "grok-4.7-build", [], [""], [" "], [1], ["grok-4.7-build", None]])

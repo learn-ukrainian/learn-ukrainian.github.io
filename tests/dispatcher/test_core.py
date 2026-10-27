@@ -41,8 +41,13 @@ def sandbox(tmp_path):
     run_git(repo, "init", "-b", "main")
     run_git(repo, "config", "user.email", "stub@example.invalid")
     run_git(repo, "config", "user.name", "Stub")
-    for relative in ("scripts/dispatcher", "scripts/common", "scripts/storage"):
+    for relative in ("scripts/dispatcher", "scripts/common", "scripts/review", "scripts/storage"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
+    for relative in ("scripts/agent_runtime/bounded_advisory.py",
+                     "scripts/orchestration/worktree_paths.py", "scripts/orchestration/task_record_store.py"):
+        target = repo / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(SOURCE / relative, target)
     # Disposable repositories share the test interpreter; they own no project environment.
     resolver = repo / "scripts/common/repo_root.py"
     with resolver.open("a") as stream:
@@ -200,7 +205,14 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redi
             "GIT_COMMON_DIR": sandbox.repo / ".git", "GIT_INDEX_FILE": sandbox.repo / ".git/index",
         }.items():
             monkeypatch.setenv(key, str(value))
-    git.create_worktree(sandbox.repo, path, "sol/redirects", sha)
+    with monkeypatch.context() as injected:
+        injected.setenv("GIT_CONFIG_PARAMETERS", "'core.sparseCheckout=false'")
+        injected.setenv("GIT_CONFIG_COUNT", "2")
+        injected.setenv("GIT_CONFIG_KEY_0", "core.worktree")
+        injected.setenv("GIT_CONFIG_VALUE_0", str(sandbox.repo))
+        injected.setenv("GIT_CONFIG_KEY_1", "core.hooksPath")
+        injected.setenv("GIT_CONFIG_VALUE_1", str(sandbox.repo / "missing-hooks"))
+        git.create_worktree(sandbox.repo, path, "sol/redirects", sha)
     if redirected:
         for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE"):
             monkeypatch.delenv(key)
@@ -428,7 +440,7 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
 def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     """Defect class: scanner exceptions lose terminal failure or expose exception contents."""
     review = sandbox.repo / "scripts/review"
-    review.mkdir()
+    review.mkdir(exist_ok=True)
     (review / "__init__.py").touch()
     (review / "verdict_parser.py").write_text(
         "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"

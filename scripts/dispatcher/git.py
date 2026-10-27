@@ -121,7 +121,7 @@ def _git(path: Path, *args: str, isolate: bool = False, strip: bool = True) -> s
         text=True,
         check=True,
         timeout=30,
-        env={**(sanitized_git_env() if isolate else os.environ), "GIT_TERMINAL_PROMPT": "0"},
+        env={**(sanitized_git_env(strip_config_injection=True) if isolate else os.environ), "GIT_TERMINAL_PROMPT": "0"},
     ).stdout
     return output.strip() if strip else output
 

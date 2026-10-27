@@ -75,6 +75,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-profile", None, "Review context label (default: none)"),
         ("risk", None, "Review risk label (default: none)"),
         ("review-mode", None, "Review mode label (default: none)"),
+        ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
+        ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
     ):
         dispatch.add_argument(f"--{flag}", default=default, required=flag in {"agent", "model"}, help=help_text)
     dispatch.add_argument(
@@ -101,6 +103,8 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
                           help="Bound review access; dry-run only (default: isolated for bound attempts)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
+    dispatch.add_argument("--print-advisory-binding", action="store_true",
+                          help="Print this request's envelope binding; needs --task-id, creates nothing (default: off)")
     dispatch.add_argument(
         "--full-checkout", action="store_true",
         help="Materialize the full Git working tree instead of excluding heavy trees (default: off)",
@@ -158,11 +162,17 @@ def _dispatch(args) -> int:
         raise ValueError("--output-schema is supported only with the effective codex agent")
     if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
+    if args.print_advisory_binding:
+        if not args.task_id or source == "-":
+            raise ValueError("--print-advisory-binding requires --task-id and a non-stdin prompt")
+        print(checks.advisory_binding(args, prompt)[2])
+        return 0
     task_id = args.task_id or uuid.uuid4().hex
     path = store.record_path(task_id)
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
+    advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
     worktree, branch, sha = git.worktree_plan(
@@ -215,6 +225,7 @@ def _dispatch(args) -> int:
     record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
     if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
         raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
+    record.update(advisory_fields)
     if agent == "muse":
         record["contributor_mode"] = spec.options.get("contributor_mode", "off")
     worker.start(spec, record, prompt, args.hard_timeout)

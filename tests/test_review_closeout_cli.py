@@ -1061,17 +1061,17 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
 
 
-# Re-pinned for #11705 after stdout comparison: only the excluded Muse trace is added.
+# Re-pinned for #11728 and #11705: dispatcher command strings plus the excluded Muse trace.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "fa9920a15f2972acbe5a29d4b8dc6d90849a106a54e4e68f2ea4330e8f517b5a"),
-        ("claude-opus-5-5", "low", "ordinary.py", "acfacc78717d010a8e2e42e65a4ac5394f3365dc1a94ad3864d8efab996844b3"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "89386a775cc6b4961c858d5c3c5861db03a069ecfcc0b3f5e287b6f475b818c6"),
+        ("claude-opus-5-5", "low", "ordinary.py", "4c3ca200f2af90a29cf3581c3e059c9ec8bc0bc51816cee20f4c51678334a355"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "1e48f88f0ddfc76128a0b62fccaf1ebf24e4f652994b422a398f0fd799439e36",
+            "fd2e5d083650eaf92378c1caae2f5ff061fbfb0c6ed7dc6db08f53a0ec8e0274",
         ),
     ],
 )
