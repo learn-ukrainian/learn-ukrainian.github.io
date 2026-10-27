@@ -206,6 +206,18 @@ review_scheduler:
       quota_limit: 1
       credential_limit: 1
       capacity_weight: 1.0
+    muse:
+      formal_review_eligible: true
+      models: [{role: legacy_reviewers, seat: meta_reviewer}]
+      participant: muse
+      adapter_transport: native_muse
+      catalog_transport: native_muse
+      sealed_executable: scripts/dispatch.py
+      quota_bucket: muse
+      credential_bucket: muse
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
     kimi:
       formal_review_eligible: false
       formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
@@ -321,18 +333,21 @@ execution_routing:
 models:
   muse-wonder-full-1.0:
     family: meta
-    # Minimum admitted code-review tier; runtime qualification remains pending.
-    tier: economical
+    # MUSE-RANK-1026 / C-2649: qualified for low/medium code review only.
+    tier: frontier_practical
     lifecycle: active
-    roles: [coding, standard_review, routine_review]
+    roles: [coding, standard_review, routine_review, readonly_recon, bounded_checks, bounded_implementation]
     routing_wire_ids: {native_muse: muse-wonder-full-1.0}
     transports: [native_muse]
-    strengths: [explicit_native_worker]
-    weaknesses: [worker_qualification_pending, review_qualification_pending, no_driver_authority]
+    strengths: [explicit_native_worker, measured_low_medium_code_review, source_only_audits]
+    weaknesses: [worker_qualification_pending, verdict_severity_calibration_required, no_driver_authority]
     notes: >-
-      Explicit native coding and low/medium code-review seat under measurement.
-      No driver, automatic fallback, Ukrainian, private-repository or security-final authority.
-      Catalog eligibility does not attest provider-origin identity or effective permissions.
+      Low/medium code review qualified on five paired exact-head cases, 2026-10-26.
+      Review tier does not certify coding performance. Prefer source-only sweeps
+      and evidence inspection; bounded non-security coding remains under measurement
+      with independent cross-family review. Private inputs require contributor mode
+      off. High-risk work is supplemental dissent only; no critical, security-final,
+      Ukrainian, driver or automatic fallback authority.
     sources: [https://dev.meta.ai/docs/muse-code]
   muse-spark-1.3:
     family: meta
@@ -1260,11 +1275,11 @@ review_ladders:
   medium: &practical_first_code_review
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: meta_reviewer, route_name: native, field: legacy_label}]
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
@@ -1298,20 +1313,25 @@ routing_schema_version: model-catalog.v1.1
 seats:
   meta_reviewer:
     model_id: muse-wonder-full-1.0
+    qualification:
+      model_id: muse-wonder-full-1.0
+      bindings: [legacy_review_candidate]
+      reference: >-
+        2026-10-26 paired exact-head qualification: PRs #11730, #11703, #11751,
+        #11746, #11729; low/medium code review only
     bindings: [legacy_review_candidate]
     priority: 110
     decision_reference: agents_extensions/shared/rules/model-assignment.md
     routes:
       native:
         legacy_name: muse
-        suitability_roles: [routine_review]
+        suitability_roles: [standard_review, routine_review]
         route: muse
         transport: native_muse
         effort: high
         invocation: .venv/bin/python scripts/dispatch.py dispatch --agent muse --model {wire_id} --effort high
         review_profiles: [code]
         capabilities: [code_review]
-        requires_data_egress_policy: public_only
   openai_frontier:
     model_id: gpt-6.1-sol
     bindings:
@@ -1460,7 +1480,7 @@ roles:
     seat: mechanical_worker
     required_model_roles: [mechanical_classification]
   readonly_recon:
-    routes: [mechanical_worker/native, bounded_worker/native]
+    routes: [meta_reviewer/native, mechanical_worker/native, bounded_worker/native]
   bounded_advisor:
     seat: openai_frontier
     required_model_roles:
@@ -1493,22 +1513,22 @@ roles:
     routes:
     - openai_frontier/native
     - anthropic_authority/native
+    - meta_reviewer/native
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
     - anthropic_practical/native
     - google_bounded/native
-    - meta_reviewer/native
     cardinality: many
     risk: low
   code_review_medium:
     routes:
     - openai_frontier/native
     - anthropic_authority/native
+    - meta_reviewer/native
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
     - anthropic_practical/native
     - google_bounded/native
-    - meta_reviewer/native
     cardinality: many
     risk: medium
   code_review_high:
