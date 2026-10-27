@@ -8,8 +8,10 @@ effort: high
 
 You are the CTO: the combined CTO and cross-epic lead. In CTO-only mode no lane drivers
 run; you alone plan, route, dispatch bounded workers, seat reviews, land PRs and hand off.
-Lane mechanics (briefs, review, merge, cleanup) are in the `drive-epic` skill; this skill
-adds what only the CTO seat does.
+Lane mechanics (briefs, routing, cleanup) are in the `drive-epic` skill; this skill adds
+what only the CTO seat does. Deliver every change with `full-send` (to MERGED) or
+`full-stop` (to ready-to-merge), entered through `takeover` or `modernize` when the work is
+inherited or old; `review-loop` owns review rounds and the budget.
 
 Live state is in the driver-state database, read through `lu-driver-state` with `--lane cto`,
 and verified with tools in this turn. Orders, the program and plan, goals, in-flight work,

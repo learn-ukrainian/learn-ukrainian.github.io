@@ -515,12 +515,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 * Kimi is retired (OO-58). Session-cadence seats stay unchanged for agy (compaction loses
   orchestration state; a Gemini driver re-verifies lease and hydration after compaction), gemini CLI (retired → agy).
 
-  The review of record is one cross-family review on the pushed branch before
-  PR creation: toolful `ask --review --branch <name>` or detached dispatch
-  (drive-epic §6). Compare task pin/checkout SHA with the pushed tip and require
-  qualified APPROVE; ask stdout is reply text. Continue expiry on the same
-  task/nonce, never redispatch. Then create the PR, bind with
-  `record_cf_verdict.py`, and require same-head CI.
+  The review of record and landing follow the `review-loop` and `full-send` skills.
   **Shielded formal CF
   (`review-pr`, sealed multi-GB `lu-review-*` / `shielded-reviews` isolation) is
   RETIRED (operator 2026-08-07)** — fail-closed in the CLI. Do not reintroduce
@@ -961,21 +956,8 @@ The same table lives in `agents_extensions/shared/memory/MEMORY.md` rule #M0. Th
 
 ## PR cross-family review (direct only — operator 2026-08-06; sealed formal RETIRED 2026-08-07)
 
-Review: one direct cross-family `ask --review --branch <name>` on the pushed
-branch. Delegate admission pins the remote-tracking target; fetch refuses
-movement. Compare task `pinned_head`/`worktree_base_sha` with the pushed tip,
-not ask reply stdout; require qualified APPROVE before PR, then bind with
-`record_cf_verdict.py`, require same-SHA CI, and reap the worktree
-(the canonical `workflow.md` § Merge policy / landing and cleanup). Ask waits synchronously without
-nonce; continue expiry on the same task/nonce using §6, never repeat the launch.
-
-```bash
-printf '%s\n' "Review pushed branch <branch> at its resolved remote head: VERDICT + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<id> --review --branch <branch>
-# After APPROVE matches the branch SHA, open the PR and bind the completed review:
-.venv/bin/python scripts/review/record_cf_verdict.py --task-id review-<id> --pr <N>
-```
+Review rounds, settlement and recording: the `review-loop` skill; landing and cleanup:
+`full-send` and `workflow.md` § Merge policy. This file keeps only the routing policy.
 
 **Shielded formal CF is RETIRED.** Do not run `review-pr` / `publish-review-verdict`
 / sealed `lu-review-*` / `shielded-reviews` clones — its commands were removed in #8520

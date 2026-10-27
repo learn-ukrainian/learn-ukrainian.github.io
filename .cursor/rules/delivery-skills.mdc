@@ -1,0 +1,21 @@
+---
+description: Who may run the delivery skills (full-send, full-stop, review-loop, takeover, modernize, pr-comments)
+alwaysApply: true
+---
+
+# Delivery skills
+
+Cursor loads the shared skills from `.agents/skills/`. Use them by
+name. Source: `agents_extensions/cursor/rules/delivery-skills.md`.
+
+- `full-send` — deliver a change to MERGED and closeout. Only the accountable driver of the
+  PR's stream, the integration owner or the CTO.
+- `full-stop` — deliver to ready-to-merge and never merge. Anyone, including workers.
+- `review-loop` — review rounds and the budget to a recorded verdict. The driver runs it; a
+  worker asks its driver.
+- `takeover`, `modernize` — entry skills that end in a hand-off record for `full-send` or
+  `full-stop`. Closing or merging the original needs the driver or the CTO.
+- `pr-comments` — every agent comment on GitHub.
+
+A worker seat never merges, enqueues, arms auto-merge or dispatches reviewers. The skills never
+override the repository rules or the operator-only list.
