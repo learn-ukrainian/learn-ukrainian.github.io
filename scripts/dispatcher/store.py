@@ -12,6 +12,7 @@ from pathlib import Path
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher.types import ReviewAttempt
+from scripts.orchestration.task_record_store import task_state_lock
 
 try:
     from scripts.orchestration.task_record_store import iter_task_records, locate_task_record, relocated_result_file
@@ -77,7 +78,10 @@ def check_review_attempt(binding: ReviewAttempt, *, claim=False) -> None:
             os.close(fd)
 
 
-def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict, *, binding: ReviewAttempt | None = None) -> dict:
+def new_record(
+    spec, repository: dict, branch: str, sha: str, metadata: dict, *,
+    binding: ReviewAttempt | None = None, admission_hold: dict | None = None,
+) -> dict:
     record = dict(pid=None, process_start=None, finished_at=None, duration_s=None, returncode=None)
     record.update(result_sha256=None, usage=None, head_sha=None, remote_head_sha=None, commits_ahead=None)
     record.update(worktree_dirty_on_exit=None, error=None)
@@ -125,6 +129,9 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict, *,
     record.update(
         result_file=str(spec.final_file), push_state="unknown", research_owned_paths=metadata["research_owned_path"]
     )
+    if admission_hold is not None:
+        for name in ("run_nonce", "started_at", "admission", "admission_hold"):
+            record[name] = admission_hold[name]
     return record
 
 
@@ -135,6 +142,9 @@ def record_path(task_id: str) -> Path:
 
 
 def _write(path: Path, record: dict, exclusive: bool = False) -> None:
+    # A PID transfers the slot to the supervisor. Every terminal path releases it.
+    if record.get("pid") is not None or record.get("status") not in ACTIVE:
+        record.pop("admission_hold", None)
     # Stage beside the record so the atomic replacement stays on one filesystem.
     name = path.with_name(f".{path.stem}.{uuid.uuid4().hex}.tmp")
     try:
@@ -154,9 +164,16 @@ def _write(path: Path, record: dict, exclusive: bool = False) -> None:
 def create(record: dict, prompt: bytes) -> Path:
     path = record_path(record["task_id"])
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    if read(record["task_id"], missing_ok=True) is not None:
-        raise ValueError("task id already exists; choose a new task id")
-    _write(path, record, exclusive=True)
+    with task_state_lock(path):
+        existing = read(record["task_id"], missing_ok=True)
+        if existing is not None:
+            from scripts.orchestration.dispatch_admission import is_admission_hold_record
+
+            if not (existing.get("schema_version") == 2 and existing.get("status") == "spawning"
+                    and existing.get("run_nonce") == record.get("run_nonce")
+                    and is_admission_hold_record(existing) and existing.get("admission_hold") == record.get("admission_hold")):
+                raise ValueError("task id already exists; choose a new task id")
+        _write(path, record, exclusive=existing is None)
     with open(record["prompt_file"], "xb", opener=lambda p, f: os.open(p, f, 0o600)) as stream:
         stream.write(prompt)
     return path

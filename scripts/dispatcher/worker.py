@@ -29,6 +29,12 @@ def _identity(pid: int | None) -> str | None:
 
 
 def _observe(record: dict) -> dict:
+    if (record.get("schema_version") == 2 and record.get("status") in store.ACTIVE
+            and record.get("pid") is None and record.get("admission_hold")):
+        from scripts.dispatcher.host_admission import heal_dead
+
+        heal_dead(store.record_path(record["task_id"]), record)
+        return store.read(record["task_id"], record["run_nonce"])
     if (
         record.get("schema_version") == 2
         and record["status"] in store.ACTIVE
