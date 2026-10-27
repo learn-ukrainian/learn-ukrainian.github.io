@@ -960,6 +960,14 @@ def test_inputs_changed_while_queued_cannot_reuse_a_receipt(
 
 def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget(tmp_path: Path) -> None:
     """Actual flocks/processes, four distinct passing plans, shortened bounds and simulated stages."""
+    stage_s = 8.0
+    run_budget_s = 15
+    predecessor_allowance_s = 16
+    assert stage_s < stage_s + 0.5 < run_budget_s < predecessor_allowance_s
+    # Eight seconds of headroom on each side preserve the old flat-wait counterfactual.
+    assert predecessor_allowance_s - stage_s == 8
+    assert 3 * stage_s - predecessor_allowance_s == 8
+    # Four sequential stages cost 32s, intentionally 24s more than the former 2s stages.
     driver = textwrap.dedent(
         """\
         import importlib.util, sys, time
@@ -970,14 +978,16 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
         spec.loader.exec_module(gate)
         root = Path(sys.argv[2])
         number = sys.argv[3]
+        stage_s = float(sys.argv[4])
+        remaining_budget_guard_s = stage_s + 0.5
         plan = gate.Plan(number * 40, 'a' * 40, 'b' * 40)
         gate.git_ok = lambda *args, **kwargs: str(root)
         gate.build_plan = lambda *args: plan
         gate.state_dir = lambda *args: root / 'state'
         def pre_commit(plan, root, launcher, config, deadline, **kwargs):
-            if deadline - time.monotonic() < 2.5:
+            if deadline - time.monotonic() < remaining_budget_guard_s:
                 raise gate.GateOutcome('validation_incomplete', 'waiting consumed budget', incomplete=True)
-            time.sleep(2.0)
+            time.sleep(stage_s)
             if time.monotonic() >= deadline:
                 raise gate.GateOutcome('validation_incomplete', 'the stage ran out of budget', incomplete=True)
             (root / ('pre-' + number)).write_text('ran')
@@ -997,9 +1007,14 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
             for number in range(1, 5):
                 processes.append(
                     subprocess.Popen(
-                        [sys.executable, "-c", driver, str(GATE_PATH), str(tmp_path), str(number)],
+                        [sys.executable, "-c", driver, str(GATE_PATH), str(tmp_path), str(number), str(stage_s)],
                         cwd=tmp_path,
-                        env=_env({"LU_PRE_PUSH_GATE_RUN_BUDGET_S": "3", "LU_PRE_PUSH_GATE_ADMISSION_WAIT_S": "4"}),
+                        env=_env(
+                            {
+                                "LU_PRE_PUSH_GATE_RUN_BUDGET_S": str(run_budget_s),
+                                "LU_PRE_PUSH_GATE_ADMISSION_WAIT_S": str(predecessor_allowance_s),
+                            }
+                        ),
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                         text=True,
@@ -1013,8 +1028,9 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
                 return False
 
             wait_until(four_registered, timeout=10.0, interval=0.02, message="four pushers registering")
+        settle_deadline = time.monotonic() + 75.0
         for process in processes:
-            stdout, stderr = process.communicate(timeout=30)
+            stdout, stderr = process.communicate(timeout=max(0.0, settle_deadline - time.monotonic()))
             assert process.returncode == 0, stdout + stderr
             assert "queue position" in stderr
     finally:
@@ -1028,7 +1044,8 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
         if (row := json.loads(line)).get("phase") != "BEGIN"
     ]
     assert len(rows) == 4 and all(row["outcome"] == "green" for row in rows)
-    assert max(row["admission_wait_s"] for row in rows) > 4.0  # old fixed wait would refuse
+    # This also exceeds the run budget: charging queue wait to validation fails the guard.
+    assert max(row["admission_wait_s"] for row in rows) > predecessor_allowance_s  # old fixed wait would refuse
     assert max(row["queue_depth"] for row in rows) >= 4
     assert all(row["admission_wait_s"] <= row["admission_wait_limit_s"] for row in rows)
     assert len(list(tmp_path.glob("pre-*"))) == 4
