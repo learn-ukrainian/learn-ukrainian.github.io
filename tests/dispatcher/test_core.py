@@ -1922,6 +1922,62 @@ def test_review_dispatch_stays_admissible_when_a_non_claude_lane_is_over_headroo
     assert not sandbox.tasks.exists() or not list(sandbox.tasks.glob("*.json"))
 
 
+def test_write_reservation_outlives_admission_grace_during_worktree_preparation(sandbox):
+    """A dispatcher waiting on the worktree lock past the admission grace keeps its write paths.
+
+    Writer A is admitted, then blocks on the held lock with no task record yet. After the grace,
+    writer B with an overlapping path must still be refused, and releasing the lock launches only A.
+    """
+    import fcntl
+    import sqlite3
+
+    ledger = Path(sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_LEDGER"])
+    # Holder liveness reads the v2 task store, as in production.
+    sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
+    shrink_grace = (
+        "import sys; from scripts.guardrails import delegate_ownership; "
+        "delegate_ownership.ADMISSION_PID_GRACE_S = 1.0; "
+        "from scripts.dispatcher.cli import main; sys.exit(main(sys.argv[1:]))"
+    )
+
+    def writer(task_id):
+        return subprocess.Popen(
+            [sys.executable, "-c", shrink_grace, "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x",
+             "--mode", "workspace-write", "--owned-path", "delivered.txt", "--task-id", task_id],
+            cwd=sandbox.repo, env=sandbox.env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
+
+    def claimed(task_id):
+        with contextlib.closing(sqlite3.connect(f"file:{ledger}?mode=ro", uri=True)) as conn:
+            return bool(conn.execute("SELECT 1 FROM write_claims WHERE task_id = ?", (task_id,)).fetchone())
+
+    def until(predicate):
+        deadline = time.monotonic() + 20
+        while not predicate():
+            assert time.monotonic() < deadline
+            time.sleep(0.05)
+
+    first = second = None
+    try:
+        with open(sandbox.repo / ".git" / "dispatch-worktree.lock", "a+b") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            first = writer("writer-a")
+            until(lambda: claimed("writer-a"))
+            time.sleep(2.5)
+            assert first.poll() is None
+            second = writer("writer-b")
+            # Refused at once, or admitted and blocked on the same lock.
+            until(lambda: second.poll() is not None or claimed("writer-b"))
+    finally:
+        outputs = [process.communicate(timeout=30) for process in (first, second) if process]
+    assert first.returncode == 0, outputs[0]
+    assert second.returncode == 2, outputs[1]
+    assert "write-path ownership refused for task_id='writer-b'" in outputs[1][1]
+    assert (sandbox.tasks / "writer-a.json").exists()
+    assert not (sandbox.tasks / "writer-b.json").exists()
+    assert claimed("writer-a") and not claimed("writer-b")
+
+
 # ---- ported from tests/test_delegate_review_test_slots.py and tests/test_delegate.py (C-2188 unit D) ----
 
 
