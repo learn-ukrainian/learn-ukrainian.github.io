@@ -76,6 +76,8 @@ def sandbox(tmp_path):
     )
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
+    # Ignore what the real primary ignores, so the dirty-primary refusal sees only test-made dirt.
+    (repo / ".gitignore").write_text("__pycache__/\n.worktrees/\n")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
     run_git(repo, "init", "--bare", str(remote))
@@ -144,6 +146,9 @@ target.with_suffix(".tmp").replace(target)
 print(json.dumps({"main_worktree": {"action": "retained"}}))
 sys.exit(1 if (tasks / "reap-fail").exists() else 0)
 ''')
+    # A tracked stub, like the real reaper: untracked files in the primary refuse write dispatches.
+    run_git(box.repo, "add", "scripts/fleet")
+    run_git(box.repo, "commit", "-m", "stub reaper")
 
 
 @pytest.mark.parametrize("flags,restored", [
@@ -1712,3 +1717,77 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+def test_dirty_primary_guard_allowlists_untracked_receipts(sandbox):
+    """#6967: untracked receipts under batch_state/atlas-jobs/receipts do not fail guard.
+
+    Ported from tests/test_delegate.py::test_dirty_primary_guard_allowlists_untracked_receipts.
+    """
+    receipt_dir = sandbox.repo / "batch_state" / "atlas-jobs" / "receipts"
+    receipt_dir.mkdir(parents=True)
+    (receipt_dir / "job-100.json").write_text('{"status": "done"}\n')
+
+    task = sandbox.dispatch("echo", "--mode", "workspace-write")
+    assert json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["mode"] == "workspace-write"
+
+
+def test_dirty_primary_guard_rejects_untracked_non_receipt_file(sandbox):
+    """#6967: random untracked non-receipt file still fails the clean-tree guard.
+
+    Ported from tests/test_delegate.py::test_dirty_primary_guard_rejects_untracked_non_receipt_file.
+    """
+    receipt_dir = sandbox.repo / "batch_state" / "atlas-jobs" / "receipts"
+    receipt_dir.mkdir(parents=True)
+    (receipt_dir / "job-100.json").write_text('{"status": "done"}\n')
+    (sandbox.repo / "scratch.txt").write_text("random\n")
+
+    err = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--mode", "workspace-write", expected=2
+    ).stderr
+    assert "primary checkout is dirty" in err
+    assert "scratch.txt" in err
+    # Allowlisted receipt must not be reported in dirty files list
+    assert "job-100.json" not in err
+    assert not sandbox.tasks.exists() or not list(sandbox.tasks.glob("*.json"))
+    assert not (sandbox.repo / ".worktrees").exists()
+
+
+def _freeze_check(monkeypatch, tmp_path, open_prs: int) -> int | None:
+    from scripts.dispatcher import launch_guards
+    from scripts.orchestration import pr_freeze
+
+    fetched: list[str] = []
+
+    def fetch(repo):
+        fetched.append(repo)
+        return open_prs
+
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", fetch)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
+    args = build_parser().parse_args(
+        ["dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x", "--mode", "workspace-write"]
+    )
+    try:
+        launch_guards.check_open_pr_freeze(args, {"github": "example/repo", "role": "public-monorepo"})
+    except launch_guards.Refused as exc:
+        return exc.code
+    return None
+
+
+def test_open_pr_freeze_is_off_by_default(monkeypatch, tmp_path, capsys):
+    """With no override a new-PR dispatch is admitted however many PRs are open (#11272).
+
+    Ported from tests/test_delegate_admission.py::test_open_pr_freeze_is_off_by_default.
+    """
+    monkeypatch.delenv("LU_OPEN_PR_FREEZE_THRESHOLD", raising=False)
+    assert _freeze_check(monkeypatch, tmp_path, open_prs=500) is None
+    assert "dispatch refused" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("threshold, open_prs, expected", [("5", 4, None), ("5", 5, 3), ("5", 50, 3), ("0", 500, None)])
+def test_open_pr_freeze_explicit_opt_in(monkeypatch, tmp_path, threshold, open_prs, expected):
+    """Ported from tests/test_delegate_admission.py::test_open_pr_freeze_explicit_opt_in."""
+    monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", threshold)
+    assert _freeze_check(monkeypatch, tmp_path, open_prs=open_prs) == expected

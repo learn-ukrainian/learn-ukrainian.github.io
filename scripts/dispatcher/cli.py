@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import checks, git, providers, store, worker
+from scripts.dispatcher import checks, git, launch_guards, providers, store, worker
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 
@@ -84,6 +84,10 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("on", "off"),
         help="Muse contributor mode, on or off; Muse only (default: omitted, provider default off)",
     )
+    dispatch.add_argument("--allow-dor-warn", metavar="REASON",
+                          help="Admit a write dispatch whose issue card is WARN; reason recorded (default: refuse)")
+    dispatch.add_argument("--allow-path-overlap", metavar="REASON",
+                          help="Admit a write dispatch overlapping an active claim, without queueing (default: none)")
     dispatch.add_argument(
         "--mode",
         choices=("read-only", "workspace-write"),
@@ -172,6 +176,11 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
+    # Legacy launch refusals, in delegate.py cmd_dispatch order, before any record or worktree.
+    launch_guards.check_open_pr_freeze(args, info)
+    launch_guards.check_early_host(args.mode)
+    launch_guards.check_model_pause(args.model)
+    guard_fields = launch_guards.check_dor(args, agent, prompt.decode("utf-8"), info)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
@@ -210,6 +219,7 @@ def _dispatch(args) -> int:
         ):
             raise ValueError("protected subject scope needs a code-profile review without --language-lane")
     checks.check_resources((worktree, path.parent))
+    launch_guards.check_primary(args.mode)
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = providers.load(agent).build(spec, child_env(spec))
@@ -218,6 +228,8 @@ def _dispatch(args) -> int:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
+    claim_root = Path(args.cwd) if args.cwd else repo
+    launch_guards.admit_write_claim(args, task_id, claim_root)
     if binding:
         store.check_review_attempt(binding, claim=True)
     if not args.cwd:
@@ -225,10 +237,11 @@ def _dispatch(args) -> int:
     record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
     if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
         raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
-    record.update(advisory_fields)
+    record.update(advisory_fields, **guard_fields)
     if agent == "muse":
         record["contributor_mode"] = spec.options.get("contributor_mode", "off")
     worker.start(spec, record, prompt, args.hard_timeout)
+    launch_guards.bind_write_claim(args.mode, task_id, record["pid"], claim_root)
     print(task_id, record["run_nonce"], sep="\n")
     return 0
 
@@ -251,6 +264,9 @@ def main(argv=None) -> int:
             result = worker._observe(store.read(args.task_id, args.run_nonce))
         print(json.dumps(result, indent=2))
         return code
+    except launch_guards.Refused as exc:
+        print(exc.text, file=sys.stderr)
+        return exc.code
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         message = str(exc).splitlines()[0] if isinstance(exc, ValueError) else type(exc).__name__
         print(f"dispatcher: {message}", file=sys.stderr)
