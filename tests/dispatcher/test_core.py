@@ -1714,6 +1714,45 @@ def test_status_or_fail_running_task_exits_zero_quiet(tmp_path, monkeypatch, cap
     assert captured.err == ""
 
 
+@pytest.mark.parametrize("case, expected_status, nonce", [
+    ("dead-pid", "stale", "record-nonce"),
+    ("mismatched-process-start", "stale", "record-nonce"),
+    ("missing-process-start", "stale", "record-nonce"),
+    ("nonce-mismatch", "stale_run_nonce", "wrong-nonce"),
+])
+def test_status_or_fail_dead_supervisor_never_reported_alive(
+    tmp_path, monkeypatch, capsys, case, expected_status, nonce,
+):
+    """Reject stale supervisor identities and nonces without rewriting the record."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    record = dict(
+        task_id="sleep-task", status="running", started_at=store.now(),
+        run_nonce="record-nonce", pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )
+    if case == "dead-pid":
+        with subprocess.Popen([sys.executable, "-c", "pass"]) as process:
+            process.wait(timeout=10)
+        record["pid"] = process.pid
+    elif case == "mismatched-process-start":
+        record["process_start"] = "different-process-start"
+    elif case == "missing-process-start":
+        record.pop("process_start")
+    path = tmp_path / "sleep-task.json"
+    original = json.dumps(record).encode()
+    path.write_bytes(original)
+
+    rc = cli.main(["status-or-fail", "sleep-task", "--verbose", "--run-nonce", nonce])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+    assert payload["status"] == expected_status
+    assert payload["alive"] is False
+    assert payload["run_nonce"] == (None if case == "nonce-mismatch" else "record-nonce")
+    assert f"task sleep-task is not running (status={expected_status}, age=" in captured.err
+    assert path.read_bytes() == original
+
+
 @pytest.mark.parametrize("status", [
     "done", "failed", "timeout", "rate_limited", "cancelled", "crashed", "dry_run",
     "needs_finalize", "no_deliverable",
