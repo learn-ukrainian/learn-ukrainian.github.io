@@ -10,7 +10,6 @@ import requests
 from scripts.lexicon import enrich_manifest
 from scripts.rag.source_query import (
     WIKI_REST,
-    WIKI_USER_AGENT,
     _is_disambiguation_summary,
     wikipedia_summary,
 )
@@ -72,7 +71,11 @@ def test_wikidata_outgoing_headers_preserve_service_identity(monkeypatch, operat
         assert sq.wikidata_get_entities(["Q1"]) == {"Q1": {"id": "Q1"}}
     assert outgoing_headers == [{
         **sq._SESSION.headers,
-        "User-Agent": "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma)",
+        "User-Agent": (
+            "learn-ukrainian-word-atlas/1.0 "
+            "(noncommercial educational; Wikidata wbsearch/entity per lemma; "
+            "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+        ),
         "Accept": "application/json",
     }]
 
@@ -80,8 +83,10 @@ def test_wikidata_outgoing_headers_preserve_service_identity(monkeypatch, operat
 def test_wikipedia_summary_lowercase_403_falls_back_to_capitalized_200(monkeypatch: pytest.MonkeyPatch) -> None:
     recorded_calls: list[tuple[str, dict]] = []
 
-    def mock_get(url: str, headers: dict | None = None, timeout: int = 15):
-        recorded_calls.append((url, headers or {}))
+    def fake_send(self, request, **kwargs):
+        url = request.url
+        recorded_calls.append((url, dict(request.headers)))
+        assert kwargs["timeout"] == 15
         # Lowercase path returns 403 HTML
         if quote("ампір") in url:
             return DummyResponse(403, text="<html>Wikimedia Error 403 Forbidden</html>")
@@ -103,7 +108,7 @@ def test_wikipedia_summary_lowercase_403_falls_back_to_capitalized_200(monkeypat
             )
         return DummyResponse(404)
 
-    monkeypatch.setattr(requests, "get", mock_get)
+    monkeypatch.setattr(requests.Session, "send", fake_send)
 
     result = wikipedia_summary("ампір")
     assert result == {
@@ -117,7 +122,11 @@ def test_wikipedia_summary_lowercase_403_falls_back_to_capitalized_200(monkeypat
     assert recorded_calls[0][0] == f"{WIKI_REST}/page/summary/{quote('ампір')}"
     assert recorded_calls[1][0] == f"{WIKI_REST}/page/summary/{quote('Ампір')}"
     for _, hdrs in recorded_calls:
-        assert hdrs.get("User-Agent") == WIKI_USER_AGENT
+        assert hdrs.get("User-Agent") == (
+            "learn-ukrainian-word-atlas/1.0 "
+            "(noncommercial educational; uk.wikipedia REST summary per lemma; "
+            "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+        )
         assert hdrs.get("Accept") == "application/json"
 
 

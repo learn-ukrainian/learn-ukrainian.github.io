@@ -78,6 +78,33 @@ def test_shared_requests_identify_project_without_browser_impersonation(monkeypa
         )
 
 
+@pytest.mark.parametrize("status", [200, 403])
+def test_wiktionary_outgoing_headers_identify_project_with_contact(monkeypatch, status):
+    import scripts.rag.source_query as sq
+
+    outgoing_requests = []
+
+    def fake_send(self, request, **kwargs):
+        outgoing_requests.append(request)
+        assert kwargs["timeout"] == 15
+        return DummyResponse(status, data={"parse": {"wikitext": {"*": "==Ukrainian==\n# [[house]]\n"}}})
+
+    monkeypatch.setattr(requests.Session, "send", fake_send)
+
+    assert sq.wiktionary_translate("FIXTURE") == ("house" if status == 200 else "")
+    assert len(outgoing_requests) == 1
+    request = outgoing_requests[0]
+    assert request.url == (
+        "https://en.wiktionary.org/w/api.php"
+        "?action=parse&page=fixture&format=json&prop=wikitext"
+    )
+    assert request.headers["User-Agent"] == (
+        "LearnUkrainian/1.0 "
+        "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+    )
+    assert request.headers["Accept"] == "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+
+
 CLOUDFLARE_CHALLENGE_HTML = (
     "<html><head><title>Just a moment...</title></head>"
     "<body>Checking your browser before accessing slovnyk.me. "
