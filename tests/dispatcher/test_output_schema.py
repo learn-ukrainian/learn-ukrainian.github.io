@@ -104,7 +104,7 @@ def test_invalid_schema_result_cannot_settle_done(dispatch, monkeypatch, output,
 
     def popen(*a, **kw):
         kw["stdout"].write(b'{"type":"turn.completed"}\n')
-        return SimpleNamespace(returncode=0, communicate=lambda *a, **kw: None)
+        return SimpleNamespace(pid=None, returncode=0, communicate=lambda *a, **kw: None)
 
     monkeypatch.setattr(worker.subprocess, "Popen", popen)
     worker.supervise(path, spec.options, 10)
