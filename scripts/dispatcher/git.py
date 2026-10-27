@@ -30,9 +30,17 @@ SPARSE_EXCLUDE_DEFAULT = frozenset({
     "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
 })
 GIT_BINARY = shutil.which("git", path=os.defpath)
+# Bound for each explicit fetch of the ownership walk. On the 8 GB public repository
+# the bounded fetch measured about one second and the blob-less full-history fallback
+# about three; 60 seconds leaves headroom for a slow link without hanging a settling task.
+VERIFICATION_FETCH_TIMEOUT = 60
+# Committer-clock slack below the task base date. Speed depends on this value;
+# correctness does not, because _complete_since_task_base checks the fetched graph.
+HISTORY_SLACK_SECONDS = 86400
 
 
-def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path | None = None) -> str:
+def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path | None = None,
+                      timeout: float = 30) -> str:
     """Use the system Git with no inherited Git configuration or process redirects."""
     if not GIT_BINARY:
         raise ValueError("system Git unavailable")
@@ -43,7 +51,7 @@ def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path 
         [GIT_BINARY, "--no-replace-objects", "-c", "core.alternateRefsCommand=",
          "-c", f"core.hooksPath={os.devnull}", "-c", "protocol.ext.allow=never",
          *([f"--git-dir={git_dir}"] if git_dir else []), "-C", str(path), *args],
-        capture_output=True, text=True, check=True, timeout=30, env=env,
+        capture_output=True, text=True, check=True, timeout=timeout, env=env,
     ).stdout
     return output.strip() if strip else output
 
@@ -80,6 +88,32 @@ def verification_origin(path: Path) -> str:
     return urls[0]
 
 
+def _complete_since_task_base(run, shallow: Path, task_base: str) -> bool:
+    """Whether the fetched graph is enough to walk the delivery above the task base.
+
+    Callers walk from the delivery tip, excluding the task base and a merge base
+    with the base tip. Single-parent commits are diffed against their parent and
+    merges are re-run, which recomputes the merge bases of their parents.
+
+    Every commit the walk inspects needs its real parents. A bounded fetch records
+    each shallow boundary commit without parents, so no boundary may lie on a
+    tip's path above the task base. A boundary parent is itself present with its
+    tree, so a single-parent diff against it is exact, and a merge base found in
+    the bounded graph is a real common ancestor of the delivery and the base tip.
+
+    A merge in the inspected range needs the complete ancestry of its parents to
+    be recomputed. A graph with shallow boundaries does not provide it, so a
+    delivery with any merge above the task base requires non-shallow history.
+    """
+    tips = ("refs/heads/delivery", "refs/heads/base")
+    if task_base not in run("rev-list", *tips).split():
+        return False
+    if run("rev-parse", "--is-shallow-repository") == "false":
+        return True
+    return (set(shallow.read_text().split()).isdisjoint(run("rev-list", *tips, "--not", task_base).split())
+            and not run("rev-list", "--min-parents=2", "refs/heads/delivery", "--not", task_base))
+
+
 @contextmanager
 def ownership_git(record: dict):
     """Walk trusted remote objects in a private config/ref namespace.
@@ -88,6 +122,16 @@ def ownership_git(record: dict):
     bare Git directory excludes both worker config and config.worktree,
     their includes, grafts and replacement refs. Objects and refs come only from
     the remote URL recorded before provider execution. No local objects are reused.
+
+    The transfer is blob-less and starts at the task base date, so it stays small
+    on a multi-gigabyte repository. Blobs are fetched lazily from the same URL only
+    when a merge must be re-run. If a remote tip is dated before the cutoff (clock
+    skew), that bounded history does not reach the task base on every path, or the
+    delivery contains a merge, the full blob-less history is fetched instead and
+    must leave the repository unshallow.
+
+    The explicit fetches get VERIFICATION_FETCH_TIMEOUT. Lazy blob transfers run
+    inside the caller's commands and share those commands' 30-second timeout.
     """
     remote = record["worktree_remote_url"]
     if verification_origin(Path(record["worktree_path"])) != remote:
@@ -95,13 +139,38 @@ def ownership_git(record: dict):
     base = record["worktree_base_ref"].removeprefix("refs/remotes/")
     if not base.startswith("origin/"):
         raise ValueError("ownership verification requires an origin base")
+    task_base = record["worktree_base_sha"]
+    if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", task_base):
+        raise ValueError("task base must be a full object name")
+    refspecs = (f"+refs/heads/{base.removeprefix('origin/')}:refs/heads/base",
+                f"+refs/heads/{record['worktree_branch']}:refs/heads/delivery")
     scratch = allocate(record["task_id"] + "-ownership")
     try:
         run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir)
         run("init", "--bare", "--template=")
-        run("fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
-            f"+refs/heads/{base.removeprefix('origin/')}:refs/heads/base",
-            f"+refs/heads/{record['worktree_branch']}:refs/heads/delivery")
+        for key, value in (("remote.origin.url", remote), ("remote.origin.promisor", "true"),
+                           ("remote.origin.partialCloneFilter", "blob:none"),
+                           ("extensions.partialClone", "origin")):
+            run("config", key, value)
+        fetch = partial(run, "fetch", "--no-tags", "--no-write-fetch-head", "--filter=blob:none",
+                        timeout=VERIFICATION_FETCH_TIMEOUT)
+        fetch("--depth=1", "--", "origin", task_base, *refspecs)
+        since = int(run("show", "-s", "--format=%ct", task_base)) - HISTORY_SLACK_SECONDS
+        # Git selects no history below a tip dated before the cutoff and aborts the
+        # bounded fetch; its message does not reach HTTPS clients, so decide by date.
+        bounded = min(map(int, run("show", "-s", "--format=%ct", "refs/heads/base",
+                                   "refs/heads/delivery").split())) >= since
+        if bounded:
+            fetch(f"--shallow-since=@{since}", "--", "origin", *refspecs)
+        shallow = scratch.payload_dir / "shallow"
+        if not (bounded and _complete_since_task_base(run, shallow, task_base)):
+            if run("rev-parse", "--is-shallow-repository") == "false":
+                raise ValueError("task base is not reachable from the remote tips")
+            fetch("--unshallow", "--", "origin", *refspecs)
+            if run("rev-parse", "--is-shallow-repository") != "false":
+                raise ValueError("full history could not be fetched")
+            if not _complete_since_task_base(run, shallow, task_base):
+                raise ValueError("task base is not reachable from the remote tips")
         if run("rev-parse", "--verify", "refs/heads/delivery^{commit}") != record["head_sha"]:
             raise ValueError("remote delivery tip does not match snapshot")
         yield run

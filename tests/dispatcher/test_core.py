@@ -911,6 +911,140 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
     assert (record["status"], record["error"]) == ("done", None)
 
 
+@pytest.mark.parametrize("shape", ["linear", "merge"])
+def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape):
+    """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base.
+
+    A delivery containing a merge is the exception: re-running a merge needs the complete ancestry
+    of its parents. The merge shape has a common ancestor older than the bounded window, and the
+    walk must obtain non-shallow history and apply the ownership rules to it.
+    """
+    remote, tree = tmp_path / "remote.git", tmp_path / "tree"
+    run_git(tmp_path, "init", "--bare", str(remote))
+    run_git(remote, "config", "uploadpack.allowFilter", "true")
+    run_git(tmp_path, "init", "-b", "main", str(tree))
+    run_git(tree, "config", "user.email", "stub@example.invalid")
+    run_git(tree, "config", "user.name", "Stub")
+    run_git(tree, "remote", "add", "origin", str(remote))
+    old_commits, old_blobs = set(), set()
+    for n in range(20):
+        monkeypatch.setenv("GIT_COMMITTER_DATE", f"2020-01-{n + 1:02d}T00:00:00Z")
+        (tree / f"old-{n}.txt").write_text(f"old history {n}\n")
+        run_git(tree, "add", ".")
+        run_git(tree, "commit", "-m", f"old history {n}")
+        commit, blob = run_git(tree, "rev-parse", "HEAD", f"HEAD:old-{n}.txt").split()
+        old_commits.add(commit)
+        old_blobs.add(blob)
+    if shape == "merge":
+        (tree / "outside.txt").write_text("outside\n")
+        run_git(tree, "add", "outside.txt")
+        run_git(tree, "commit", "-m", "A")
+    monkeypatch.delenv("GIT_COMMITTER_DATE")
+    if shape == "linear":
+        run_git(tree, "commit", "--allow-empty", "-m", "task base")
+        run_git(tree, "push", "origin", "main")
+        run_git(tree, "checkout", "-b", "sol/fetch")
+    else:
+        # A is older than the bounded window; P and Q are newer and share only A as an ancestor.
+        # B = merge(P, Q) is the task base.
+        run_git(tree, "checkout", "-b", "q")
+        (tree / "q.txt").write_text("q\n")
+        run_git(tree, "add", "q.txt")
+        run_git(tree, "commit", "-m", "Q")
+        run_git(tree, "checkout", "main")
+        run_git(tree, "rm", "outside.txt")
+        run_git(tree, "commit", "-m", "P")
+        run_git(tree, "merge", "--no-ff", "-m", "task base", "q")
+        run_git(tree, "push", "origin", "main")
+        # The delivery branch has two merges above the task base: D of P and Q, then F of B into D.
+        run_git(tree, "checkout", "-b", "sol/fetch", "main^1")
+        run_git(tree, "merge", "--no-ff", "--no-commit", "q")
+        run_git(tree, "checkout", "main^1^1", "--", "outside.txt")
+        run_git(tree, "commit", "-m", "D")
+        run_git(tree, "merge", "--no-commit", "main")
+        run_git(tree, "rm", "outside.txt")
+        run_git(tree, "commit", "-m", "F")
+    (tree / "delivered.txt").write_text("delivery\n")
+    run_git(tree, "add", "delivered.txt")
+    run_git(tree, "commit", "-m", "delivery")
+    run_git(tree, "push", "origin", "HEAD")
+    base, head = run_git(tree, "rev-parse", "main", "HEAD").split()
+    record = dict(
+        task_id="fetch", worktree_path=str(tree), worktree_remote_url=str(remote),
+        worktree_base_ref="refs/remotes/origin/main", worktree_base_sha=base, worktree_branch="sol/fetch",
+        head_sha=head, mode="workspace-write", status="done", owned_paths=["delivered.txt"],
+        worktree_dirty_on_exit=False, commits_ahead=1, push_state="pushed",
+    )
+    with git.ownership_git(record) as run:
+        present = set(run("cat-file", "--batch-all-objects", "--batch-check=%(objectname)").split())
+        shallow = run("rev-parse", "--is-shallow-repository")
+    assert {base, head} <= present
+    assert old_blobs.isdisjoint(present)
+    assert run_git(tree, "rev-parse", "HEAD:delivered.txt") not in present
+    if shape == "linear":
+        assert shallow == "true"
+        assert old_commits.isdisjoint(present)
+        expected = ("done", None)
+    else:
+        assert shallow == "false"
+        expected = ("no_deliverable", "outside_owned_paths: outside.txt")
+    worker._enforce_delivery(record)
+    assert (record["status"], record.get("error")) == expected
+
+
+def test_ownership_walk_falls_back_to_full_history_when_tips_predate_skewed_task_base(tmp_path, monkeypatch):
+    """Clock skew: a future-dated task base must not reject a valid delivery.
+
+    With both remote tips dated before the cutoff, Git selects no commits for --shallow-since and
+    aborts the bounded fetch. The walk must take the full-history fallback and apply the ownership
+    rules to it.
+    """
+    remote, tree = tmp_path / "remote.git", tmp_path / "tree"
+    run_git(tmp_path, "init", "--bare", str(remote))
+    run_git(remote, "config", "uploadpack.allowFilter", "true")
+    run_git(tmp_path, "init", "-b", "main", str(tree))
+    run_git(tree, "config", "user.email", "stub@example.invalid")
+    run_git(tree, "config", "user.name", "Stub")
+    run_git(tree, "remote", "add", "origin", str(remote))
+    for date, message in (("2020-01-01", "old history"), ("2099-01-01", "task base")):
+        monkeypatch.setenv("GIT_COMMITTER_DATE", f"{date}T00:00:00Z")
+        monkeypatch.setenv("GIT_AUTHOR_DATE", f"{date}T00:00:00Z")
+        run_git(tree, "commit", "--allow-empty", "-m", message)
+    base = run_git(tree, "rev-parse", "HEAD")
+    monkeypatch.setenv("GIT_COMMITTER_DATE", "2020-02-01T00:00:00Z")
+    monkeypatch.setenv("GIT_AUTHOR_DATE", "2020-02-01T00:00:00Z")
+    run_git(tree, "commit", "--allow-empty", "-m", "base branch moves on")
+    run_git(tree, "push", "origin", "main")
+    run_git(tree, "checkout", "-b", "sol/skew", base)
+    (tree / "delivered.txt").write_text("delivery\n")
+    run_git(tree, "add", "delivered.txt")
+    run_git(tree, "commit", "-m", "delivery")
+    run_git(tree, "push", "origin", "HEAD")
+    head = run_git(tree, "rev-parse", "HEAD")
+    since = int(run_git(tree, "show", "-s", "--format=%ct", base)) - git.HISTORY_SLACK_SECONDS
+    probe = tmp_path / "probe.git"
+    run_git(tmp_path, "init", "--bare", str(probe))
+    rejected = subprocess.run(["git", "-C", str(probe), "fetch", f"--shallow-since=@{since}", str(remote),
+                               "main", "sol/skew"], capture_output=True, text=True, timeout=30)
+    assert "no commits selected for shallow requests" in rejected.stderr
+
+    def record(owned):
+        return dict(
+            task_id="skew", worktree_path=str(tree), worktree_remote_url=str(remote),
+            worktree_base_ref="refs/remotes/origin/main", worktree_base_sha=base, worktree_branch="sol/skew",
+            head_sha=head, mode="workspace-write", status="done", owned_paths=owned,
+            worktree_dirty_on_exit=False, commits_ahead=1, push_state="pushed",
+        )
+
+    with git.ownership_git(record(["delivered.txt"])) as run:
+        assert run("rev-parse", "--is-shallow-repository") == "false"
+    for owned, expected in ((["delivered.txt"], ("done", None)),
+                            (["other.txt"], ("no_deliverable", "outside_owned_paths: delivered.txt"))):
+        settled = record(owned)
+        worker._enforce_delivery(settled)
+        assert (settled["status"], settled.get("error")) == expected
+
+
 @pytest.mark.parametrize("missing", ["worktree_remote_url", "git-binary", "scratch", "remote-tip"])
 def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch, missing):
     record, settle = delivery_settle
