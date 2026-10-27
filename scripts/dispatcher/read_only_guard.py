@@ -771,29 +771,45 @@ _REMOTE_TAG_PROBE_ERRORS = (
     subprocess.SubprocessError,
     TaskScratchError,
     yaml.YAMLError,
+    _RefSnapshotFailed,
 )
 
+# ``-F`` replaces the user and system ssh client configuration, so a
+# ``ProxyCommand`` or ``Hostname`` in ``~/.ssh/config`` cannot pick the host.
+_REMOTE_TAG_PROBE_SSH_COMMAND = f"ssh -F {os.devnull} -o BatchMode=yes"
 
-def _read_only_remote_tags(cwd: Path) -> tuple[frozenset[tuple[str, str]] | None, str | None]:
+
+def _read_only_remote_tags(cwd: Path, config_digest: str) -> tuple[frozenset[tuple[str, str]] | None, str | None]:
     """Return every ``(tag ref, object)`` pair the configured remotes' fetch URLs advertise.
 
     The answer exempts a new tag from the ref comparison, so neither the
-    checkout nor the caller may choose it. Each remote's fetch URL is resolved
-    once from the checkout's own configuration, then probed verbatim through
-    the isolated Git of the ownership check (:func:`_verification_git`): the
-    system executable, no global or system configuration, an environment
-    reduced to the home, SSH agent and gh locations (no inherited ``GIT_*``
-    or ssh command), and a fresh bare repository, so the checkout's
-    ``core.sshCommand``, URL rewrites, upload-pack and proxy settings never
+    checkout nor the caller may choose it. The configuration is read again and
+    must match ``config_digest``, the digest the ref snapshot recorded, so a
+    rewrite added after that snapshot refuses the probe. Each remote's first
+    ``remote.<name>.url`` value is taken literally from that same listing, with
+    no ``insteadOf`` applied, and probed through the isolated Git of the
+    ownership check (:func:`_verification_git`): the system executable, no
+    global or system configuration, an environment reduced to the home, SSH
+    agent and gh locations (no inherited ``GIT_*``), a fresh bare repository,
+    and ssh without client configuration, so the checkout's ``core.sshCommand``,
+    URL rewrites, upload-pack and proxy settings and ``~/.ssh/config`` never
     reach the transport. Peeled ``^{}`` lines are skipped so a pair compares
     with ``%(objectname)``. Without a configured remote there is nothing to
     resolve a tag against, which is an error rather than an empty answer.
     """
     try:
-        remotes = sorted(set(_verification_git(cwd, "remote").split()))
-        if not remotes:
+        config = _ref_git(cwd, "config", "--list", "--show-origin", "-z")
+        if hashlib.sha256(config.encode()).hexdigest() != config_digest:
+            return None, "remote tag probe failed: configuration changed after the ref snapshot"
+        configured: dict[str, str] = {}
+        # Each entry is ``<origin>\0<key>\n<value>\0``.
+        for entry in config.split("\0")[1::2]:
+            key, _, value = entry.partition("\n")
+            if key.startswith("remote.") and key.endswith(".url") and len(key) > len("remote..url"):
+                configured.setdefault(key[len("remote.") : -len(".url")], value)
+        if not configured:
             return None, "remote tag probe failed: no configured remote"
-        urls = sorted({_verification_git(cwd, "remote", "get-url", remote) for remote in remotes})
+        urls = sorted(set(configured.values()))
         scratch = allocate("read-only-remote-tags")
         try:
             private = scratch.payload_dir
@@ -809,6 +825,7 @@ def _read_only_remote_tags(cwd: Path) -> tuple[frozenset[tuple[str, str]] | None
                     git_dir=private,
                     timeout=DEFAULT_GIT_TIMEOUT_S,
                     credential_remote=url,
+                    ssh_command=_REMOTE_TAG_PROBE_SSH_COMMAND,
                 )
                 for line in listing.splitlines():
                     sha, ref = line.split("\t", 1)
@@ -1306,7 +1323,7 @@ class ReadOnlyGuard:
             # fails the ref snapshot.
             added_tags = [ref for ref in ref_mutations if ref.startswith("refs/tags/") and ref not in self.refs_pre]
             if added_tags:
-                remote_tags, tags_error = _read_only_remote_tags(self.cwd)
+                remote_tags, tags_error = _read_only_remote_tags(self.cwd, refs_post["config"])
                 if remote_tags is None:
                     if self.refs_error is None:
                         self.refs_error = f"ref snapshot failed: {tags_error}"

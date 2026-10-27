@@ -42,14 +42,21 @@ HISTORY_SLACK_SECONDS = 86400
 
 
 def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path | None = None,
-                      timeout: float = 30, credential_remote: str | None = None) -> str:
-    """Use the system Git with no inherited Git configuration or process redirects."""
+                      timeout: float = 30, credential_remote: str | None = None,
+                      ssh_command: str | None = None) -> str:
+    """Use the system Git with no inherited Git configuration or process redirects.
+
+    ``ssh_command`` becomes the command's ``GIT_SSH_COMMAND``; without it Git
+    runs ordinary ``ssh``, which reads the user's client configuration.
+    """
     if not GIT_BINARY:
         raise ValueError("system Git unavailable")
     env = {key: os.environ[key] for key in ("HOME", "SSH_AUTH_SOCK", "GH_CONFIG_DIR", "XDG_CONFIG_HOME")
            if key in os.environ}
     env.update(PATH=os.defpath, GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_SYSTEM=os.devnull,
                GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0", LC_ALL="C")
+    if ssh_command is not None:
+        env["GIT_SSH_COMMAND"] = ssh_command
     credentials = verification_credentials(credential_remote) if credential_remote else []
     try:
         output = subprocess.run(

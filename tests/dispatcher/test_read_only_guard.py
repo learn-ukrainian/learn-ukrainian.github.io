@@ -1174,3 +1174,72 @@ def test_read_only_task_whose_ssh_command_advertises_a_worker_tag_settles_failed
     assert state["status"] == "failed"
     assert state["read_only_ref_mutations"] == ["refs/tags/worker-made"]
     assert state["read_only_ref_snapshot_error"].startswith("ref snapshot failed: remote tag probe failed:")
+
+
+def test_read_only_task_whose_url_rewrite_appears_after_the_ref_snapshot_settles_failed(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    """A URL rewrite added after the configuration digest cannot redirect the remote tag probe.
+
+    The rewrite sends origin to a repository that advertises the worker's tag at
+    its object; the probe still answers from the configuration the digest covers.
+    """
+    checkout, _branch = _seed_pushed_checkout(tmp_path)
+    other = tmp_path / "other.git"
+    snapshot = read_only_guard._read_only_ref_snapshot
+    calls = []
+
+    def rewrite_after_snapshot(*args, **kwargs):
+        result = snapshot(*args, **kwargs)
+        calls.append(args)
+        if len(calls) == 2:
+            _git(checkout, "config", f"url.{other}.insteadOf", str(tmp_path / "remote.git"))
+        return result
+
+    monkeypatch.setattr(read_only_guard, "_read_only_ref_snapshot", rewrite_after_snapshot)
+
+    def tag(repo):
+        _git(repo, "clone", "-q", "--bare", str(tmp_path / "remote.git"), str(other))
+        _git(repo, "tag", "worker-made", "HEAD")
+        _git(repo, "push", "-q", str(other), "refs/tags/worker-made")
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=tag,
+    )
+
+    assert len(calls) == 2
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_ref_mutations"] == ["refs/tags/worker-made"]
+    assert state["read_only_ref_snapshot_error"].startswith("ref snapshot failed: remote tag probe failed:")
+
+
+def test_remote_tag_probe_runs_ssh_without_client_configuration(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The probe's ssh reads no user or system client configuration, so ``~/.ssh/config`` cannot redirect it."""
+    checkout, _branch = _seed_pushed_checkout(tmp_path)
+    run = subprocess.run
+    probes = []
+
+    def record(argv, *args, **kwargs):
+        if "ls-remote" in argv and "--tags" in argv:
+            probes.append(kwargs["env"].get("GIT_SSH_COMMAND"))
+        return run(argv, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", record)
+
+    def tag(repo):
+        _git(repo, "tag", "worker-made", "HEAD")
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=tag,
+    )
+
+    assert len(probes) == 1
+    assert shlex.split(probes[0] or "")[:3] == ["ssh", "-F", os.devnull]
+    assert "BatchMode=yes" in shlex.split(probes[0])
+    assert rc == 1
+    assert state["read_only_ref_mutations"] == ["refs/tags/worker-made"]
