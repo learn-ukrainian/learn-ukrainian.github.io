@@ -142,6 +142,8 @@ requires an operator reference. The item lifecycle is in
     render/check instructions. Preserve the Entire dual-write and Fleet receipt:
     [handoff](references/handoff.md).
 
+Write the brief for a new multi-PR outcome as a [decision report](references/decision-report.md).
+
 Report to the CTO hourly, and every 30 minutes while an operator-priority outcome is open, in the [lane-report](references/lane-report.md) format.
 
 Seat-specific adjustments for your model and for the seats you route to:
