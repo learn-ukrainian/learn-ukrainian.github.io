@@ -41,7 +41,7 @@ approval (Opus 5.5 and Sol 6.1 agreeing; when one of them authored the proposal,
 presentation or dispatch, substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map,
 independent held-out evaluation, stop/residual policy, and completion terms; live-routed
 critics re-review material drift. Prompt review is not exact-head implementation or
-cross-family PR review; engine proof is not product completion · **simplest adequate solution** (adjust code to data; proportionate review; stopping rule after two rounds) · **DoD (ready=delivered):** e2e outcome + driver merges after CF+CI (never ask operator) + git/GitHub hygiene; "Next:" ≠ Done · repo hard gates bind.
+cross-family PR review; engine proof is not product completion · **simplest adequate solution** (adjust code to data; proportionate review; `review-loop` budget: 1 full + 1 delta, up to 3 deltas for security/data-loss/concurrency, then escalate) · **DoD (ready=delivered):** e2e outcome + driver merges after CF+CI (never ask operator) + git/GitHub hygiene; "Next:" ≠ Done · repo hard gates bind.
 
 ---
 
