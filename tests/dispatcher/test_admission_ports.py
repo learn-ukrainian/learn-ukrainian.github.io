@@ -249,7 +249,7 @@ def headroom_box(tmp_path, monkeypatch):
     ))
     monkeypatch.setattr(host_admission, "precheck", lambda *_a, **_k: None)
     monkeypatch.setattr(host_admission, "check_credit", lambda *_a: None)
-    monkeypatch.setattr(git, "resolve_repo", lambda *_a: (tmp_path, {"key": "public"}))
+    monkeypatch.setattr(git, "resolve_repo", lambda *_a: (tmp_path, {"key": "public", "github": "example/repo"}))
     monkeypatch.setattr(git, "worktree_plan", lambda *_a: (tmp_path, "fixture", "a" * 40))
     monkeypatch.setattr(host_admission, "check", lambda *_a, **_k: None)
     monkeypatch.setattr(worker, "_reap_settled", lambda *_a: None)
