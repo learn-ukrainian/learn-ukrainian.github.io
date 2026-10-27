@@ -123,6 +123,37 @@ def sandbox(tmp_path, hermetic_monitor):
             cli("cancel", record["task_id"], "--run-nonce", record["run_nonce"])
 
 
+def test_supervise_restores_signal_handlers_after_cleanup(sandbox, monkeypatch):
+    """Defect class: leaked signal disposition after in-process supervision."""
+    from tests.dispatcher import stub_provider
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker.providers, "load", lambda _agent: stub_provider)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args: None)
+    spec = TaskSpec("signal-cleanup", "codex", "echo", None, "read-only", sandbox.repo,
+                    sandbox.repo / "signal-cleanup.prompt", sandbox.tasks / "signal-cleanup.result")
+    spec.prompt_file.write_bytes(b"literal final response")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main",
+                              run_git(sandbox.repo, "rev-parse", "HEAD"), {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "signal-cleanup.prompt")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+    original_term, original_int = signal.getsignal(signal.SIGTERM), signal.getsignal(signal.SIGINT)
+
+    def previous_term(_signum, _frame):
+        pass
+
+    try:
+        signal.signal(signal.SIGTERM, previous_term)
+        worker.supervise(path, {}, 10)
+        assert json.loads(path.read_text())["status"] == "done"
+        assert signal.getsignal(signal.SIGTERM) is previous_term
+        assert signal.getsignal(signal.SIGINT) is original_int
+    finally:
+        signal.signal(signal.SIGTERM, original_term)
+        signal.signal(signal.SIGINT, original_int)
+
+
 def await_file(path):
     deadline = time.monotonic() + 10
     while not path.exists():
