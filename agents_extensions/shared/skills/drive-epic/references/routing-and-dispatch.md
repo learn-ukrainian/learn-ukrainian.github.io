@@ -180,9 +180,9 @@ live worker and no wait is a driver defect. When the wait returns, read the resu
 take the next action. This wait is a §2c fill window, not an idle period: fill free lanes
 before holding.
 
-Terminal vocab (match `scripts/dispatch.py`): **`done` = SUCCESS** (NOT "completed");
-other terminal/attention states: `failed | timeout | rate_limited | cancelled |
-crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
+Dispatch v2 terminal statuses (`scripts/dispatcher/worker.py`): **`done` = SUCCESS**;
+other terminal statuses: `failed | timeout | rate_limited | cancelled |
+crashed | no_deliverable`. `--dry-run` prints a plan without creating a task record. Emit on any
 status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
 first, then check the worktree for finished-but-unpushed work. **After terminal status,**

@@ -195,13 +195,10 @@ read-only dispatch (#8703, above).
 6. **Breakers** — the review budget and `local-code-review` checklist
    Step 6 apply, even when the outstanding-finding count shrinks.
 
-Every review brief names the supported evidence directory: write the report, archives,
-logs and screenshots under `$LU_TASK_EVIDENCE_DIR` (dispatch creates it and names it in
-the worker preamble). Task cleanup copies it to `batch_state/preserved/<task>/` with a
-retrieval receipt before deleting the runtime lease. Do not rely on ignored files left in
-the worktree: a later dispatch that reuses the worktree runs a cone sparse-checkout that
-removes them, and reuse is refused while a terminal task's worktree evidence is
-unretrieved. Cite the preserved path from the result as well as stating the verdict.
+Every review brief requires the verdict and supporting evidence in the result text.
+Workers write additional artifacts under their own worktrees. Dispatch v2 does not
+preserve these artifacts automatically. Explicitly retrieve and verify required artifacts
+before cleanup or reuse, and cite their verified durable locations in the result.
 
 **Security-code variant** (hooks, launchers, credentials, admission, sandbox, guards):
 section 3 also states the trust boundary, the allowed inputs, the refusal behaviour, the

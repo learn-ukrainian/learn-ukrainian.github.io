@@ -937,9 +937,10 @@ supervisor identity; its exit codes are 0 for running, 1 for not running and 2 f
 unavailable state. `cancel TASK --run-nonce NONCE` requests cancellation of that
 specific run. Read the returned task ID and nonce before arming a wait.
 
-A write task must produce a pushed branch to satisfy delivery. `done` is success;
-`needs_finalize` and `no_deliverable` require driver disposition. Workers do not
-merge. Landing and common-reaper cleanup follow
+A write task must produce a pushed branch to satisfy delivery. Dispatch v2 terminal
+statuses are `done`, `failed`, `timeout`, `rate_limited`, `cancelled`, `crashed`, and
+`no_deliverable`. Only `done` is success; other terminal statuses require driver
+disposition. Workers do not merge. Landing and common-reaper cleanup follow
 `agents_extensions/shared/rules/workflow.md`.
 
 The dispatcher requires the local rules core to exist. It does not inject rules

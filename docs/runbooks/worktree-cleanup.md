@@ -989,37 +989,13 @@ orphan). Before re-using a task id, kill any stale detached launcher for it:
 Confirm the match is the stale launcher, then terminate that pid before the
 new dispatch.
 
-### Reusing a worktree with evidence (#11342)
+### Evidence before cleanup or reuse
 
-Dispatch preparation applies a cone sparse-checkout to a reused worktree, and
-`git sparse-checkout set` removes untracked/ignored directories inside a
-tracked cone directory. Because of that, `dispatch.py` refuses to reuse a
-worktree while any released task bound to it still has ignored output and no
-retrieval receipt (`worktree_reuse_evidence_unretrieved`). Preserve first:
-
-```bash
-.venv/bin/python -m scripts.fleet.post_task_reap --task-id <task> --apply
-```
-
-That copies the ignored output under `batch_state/preserved/<task>/` with a
-retrieval receipt and then reaps the tree; dispatch into a fresh worktree.
-
-New work should not rely on ignored worktree files surviving at all. Every
-dispatch exposes an empty `$LU_TASK_EVIDENCE_DIR` (`evidence/` in the task's
-runtime lease) and names it in the worker preamble. Task cleanup copies that
-directory to `batch_state/preserved/<task>/` with a retrieval receipt before
-deleting the lease. The copy is capped at 256 MiB; an over-cap, unreadable or
-linked entry is a typed refusal (`runtime_evidence_over_cap`,
-`runtime_evidence_preservation_failed`) that keeps the lease instead of
-deleting bytes silently.
-
-Retrieve the evidence into durable storage and verify its manifest and content
-digests, keeping the original lease until retrieval succeeds.
-Restore the original task record from a trusted recovery copy if it is missing
-or unreadable, and correct the cap, readability or linked-entry condition
-without discarding source data.
-Retry the same cleanup path to publish a verified retrieval receipt before lease
-removal; never delete evidence or the lease just to clear a refusal.
+Workers write artifacts under their own worktrees. Dispatch v2 does not preserve
+these artifacts automatically or require an evidence retrieval receipt before
+worktree reuse. Explicitly retrieve required evidence into durable storage and
+verify its content before cleanup or reuse. Put the verdict and supporting
+evidence in the result text, and cite verified durable artifact locations.
 
 ## Immediate cleanup after merge
 
@@ -1399,9 +1375,9 @@ these files. Scheduled public summaries expose their count and total bytes.
 
 ## Worker-held runtime scratch (#10000)
 
-Dispatch v2 does not export `LU_TASK_EVIDENCE_DIR` or automatically preserve
-cited runtime scratch and `held_work`. The legacy launcher preservation module
-is retired. Preserve required evidence explicitly before cleanup, with a
+Dispatch v2 does not automatically preserve cited runtime scratch or
+`held_work`. The legacy launcher preservation module is retired. Preserve required
+evidence explicitly before cleanup, with a
 retrieval receipt where the common reaper requires one. Existing unknown
 custody remains protected. The standalone task-scratch wrapper below retains
 its explicit evidence-directory contract.

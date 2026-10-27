@@ -104,7 +104,7 @@ initialPrompt: |
     `spawning|running` and terminal states `done|failed|timeout|rate_limited|cancelled|crashed|no_deliverable`.
     Only `done` is success (wait exit 0); other terminal states return 1. Exit 124 means the
     client wait timed out; wait again on the same ID and nonce. `--dry-run` prints a plan without
-    creating a task record; `dry_run` and `needs_finalize` belong to legacy records.
+    creating a task record.
     Trust the task record rather than an active-list projection. Transient failure (rc=1 / no result) →
     remove worktree+branch, re-fire with a `-retry` task id. Check the worktree for finished-but-
     unpushed work before declaring a dispatch dead (silent-exit class).

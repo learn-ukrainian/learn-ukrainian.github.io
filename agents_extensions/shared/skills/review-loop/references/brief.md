@@ -41,4 +41,5 @@ delta scope in [policy](policy.md#delta-scope).
 
 A read-only dispatch refuses a brief in which a sentence or list item starts with a write verb
 (#8703). Phrase asks as questions or statements, and quote any brief under review inside a
-fenced or `>`-quoted block. Write evidence under `$LU_TASK_EVIDENCE_DIR`, as the template says.
+fenced or `>`-quoted block. Include the verdict and supporting evidence in the result text,
+as the template says.
