@@ -2526,7 +2526,7 @@ def test_r5_a_read_only_review_interrupted_before_its_verdict_check_is_a_typed_f
 
 
 # #9275 r7: one definition of the completion gates a record calls for, shared by
-# the worker's terminal settle and every recovery path.
+# the worker's terminal settle and the ask-* review wrapper.
 
 
 @pytest.mark.parametrize(

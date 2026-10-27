@@ -7913,6 +7913,7 @@ def _advisory_completion_gate(
 
 # #9275: the single definition of the completion gates a task record calls for.
 # The worker's terminal settle runs them, and so does the ask-* review wrapper;
+# success needs every applicable gate to pass.
 COMPLETION_GATE_BACKGROUND_LEFTOVERS = "background_leftovers"
 COMPLETION_GATE_DELIVERY = "delivery"
 COMPLETION_GATE_REVIEW_VERDICT = "review_verdict"
@@ -7923,6 +7924,8 @@ COMPLETION_GATE_RESPONSE_UNAVAILABLE = "completion_gate_response_unavailable"
 # Operator decision 2026-09-30 (option A): recovery never settles a record with a
 # completion gate beyond delivery ``done``; it settles it ``failed`` with this cause.
 RECOVERY_REQUIRES_RERUN = "recovery_requires_rerun"
+
+
 @dataclass(frozen=True)
 class CompletionGateResult:
     """One completion gate's verdict on a task record.
@@ -8008,7 +8011,7 @@ def run_completion_gate(
 def saved_task_response(record: Mapping[str, Any], record_path: Path | None = None) -> str | None:
     """The worker's response as the record saved it, or None when it is gone or was replaced.
 
-    Recovery's delivery gate reads it for a zero-commit run. The ``.result`` sidecar next to the record is read first (it moves with the
+    Held-work preservation reads it. The ``.result`` sidecar next to the record is read first (it moves with the
     record into the archive), then ``result_file``. A text whose length is not
     the recorded ``response_chars`` was replaced after the worker finished. A
     record with an empty response wrote no result file: that response is ``""``.
