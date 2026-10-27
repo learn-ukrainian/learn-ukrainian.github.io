@@ -1,6 +1,7 @@
 """Command interface for the minimal dispatcher."""
 
 import argparse
+import contextlib
 import json
 import re
 import subprocess
@@ -16,7 +17,8 @@ from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 
-ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
+# Grok runs through Cursor's TUI: --agent cursor --model grok-4.7-high (grok-build is the separate Grok TUI).
+ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes")
 
 
 class _PromptPath(type(Path())):
@@ -49,6 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog="Examples:\n"
         "  .venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 "
         "--prompt 'Explain X' --contributor-mode on --dry-run\n"
+        "  .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high --prompt 'Explain X'\n"
         "Outputs: task ID and nonce; task JSON, prompt, result, logs and dispatch worktree.\n"
         "  Muse task JSON records the effective contributor_mode. --dry-run prints a plan and creates nothing.\n"
         "Exit codes: 0 task started or plan printed, 1 hold publication failed, 2 invalid/refused request,\n"
@@ -56,7 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
         "Related: docs/design/dispatch-v2.md.",
     )
     for flag, default, help_text in (
-        ("agent", None, "Provider or alias, e.g. sol (required)"),
+        ("agent", None, "Provider or alias, e.g. sol; Grok is cursor with --model grok-4.7-high (required)"),
         ("model", None, "Exact provider model, e.g. gpt-6.1-sol (required)"),
         ("task-id", None, "Unique safe task ID (default: random UUID)"),
         ("prompt-file", None, "UTF-8 prompt path; '-' reads stdin (one source required)"),
@@ -200,7 +203,9 @@ def _dispatch(args) -> int:
     agent = ALIASES.get(args.agent, args.agent)
     # An unknown Claude account label reaches admission, which refuses it typed (claude_account_unknown).
     if agent not in providers.PROVIDERS:
-        raise ValueError("unknown agent or Claude account")
+        aliases = ", ".join(f"{name}={target}" for name, target in ALIASES.items())
+        raise ValueError(f"unknown agent {args.agent!r}; supported agents: {', '.join(providers.PROVIDERS)} "
+                         f"(aliases: {aliases}); dispatch Grok as --agent cursor --model grok-4.7-high")
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.output_schema is not None and agent != "codex":
@@ -220,6 +225,9 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
+    if not args.dry_run:
+        # Crash recovery: finish settling this dispatcher's earlier tasks before creating a worktree.
+        worker.settle_left_worktrees()
     host_admission.precheck(args.mode, force_reason=args.force_admission)
     try:
         headroom.check_plan(agent, args.model, account_fields,
@@ -305,7 +313,12 @@ def _dispatch(args) -> int:
         if agent == "muse":
             record["contributor_mode"] = spec.options.get("contributor_mode", "off")
         try:
-            worker.start(spec, record, prompt, args.hard_timeout)
+            # Attach to a borrowed worktree under the lock its settlement removes it under, so an
+            # active record names it before any removal can start.
+            with git.worktree_lock(repo) if args.cwd else contextlib.nullcontext():
+                if args.cwd and not worktree.is_dir():
+                    raise ValueError("cwd worktree was removed before the task started")
+                worker.start(spec, record, prompt, args.hard_timeout)
         except admission.LaunchRefused as exc:
             # The record is terminal: preserve the account/placement port's no-relaunch refusal.
             print(f"dispatcher: failed to spawn worker for {task_id!r}: {exc}", file=sys.stderr)

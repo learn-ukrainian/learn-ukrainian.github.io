@@ -267,6 +267,15 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
     return path, branch, sha
 
 
+@contextmanager
+def worktree_lock(repo: Path):
+    """Serialize worktree creation, attachment (--cwd) and removal in one repository."""
+    fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
+    with os.fdopen(fd, "rb") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        yield
+
+
 def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=(),
                     exact=False) -> None:
     excluded = sparse_excludes(sparse_include)
@@ -277,9 +286,7 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         return _git(where, *no_replace, *args, isolate=True)
     path.parent.mkdir(parents=True, exist_ok=True)
     # Serialize config enablement and keep sparse settings local to the new worktree.
-    fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
-    with os.fdopen(fd, "rb") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+    with worktree_lock(repo):
         run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
         run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
         if full_checkout:
@@ -290,16 +297,26 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         provision_links(repo, path)
 
 
+DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
+NODE_LINKS = ("node_modules", "site/node_modules")
+# Ignored entries a settled worktree may still hold: regenerable caches and the links provisioned above.
+CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"})
+# Work this branch contains on the canonical remote is published, even after its own branch was deleted.
+MAIN_REF = "refs/heads/main"
+# A squash merge leaves the task's own commit out of main; its pull-request head ref still proves the push.
+PULL_HEADS = "refs/pull/*/head"
+PULL_HEAD = re.compile(r"refs/pull/[0-9]+/head")
+
+
 def provision_links(repo: Path, worktree: Path) -> None:
     """Provision only real primary targets; atomic symlink creation never replaces entries."""
     repo = repo.absolute()
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    node_links = ("node_modules", "site/node_modules")
+    node_links = NODE_LINKS
     if npm_shim_dir() is None:
         logging.getLogger(__name__).warning("Skipping node_modules and site/node_modules: npm/npx guard unavailable")
         node_links = ()
-    database_links = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
-    for relative in (*database_links, *node_links):
+    for relative in (*DATABASE_LINKS, *node_links):
         parts = Path(relative).parts
         with ExitStack() as stack:
             def open_directory(name, parent=None):
@@ -363,3 +380,80 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
         delivery["push_state"] = "unpushed"
         delivery["push_state_reason"] = "dirty_worktree"
     return delivery
+
+
+def _disposable(tree: Path, entry: str) -> bool:
+    if not entry.startswith("!! "):
+        return False
+    relative = entry[3:].rstrip("/")
+    return bool(CACHE_DIRS.intersection(Path(relative).parts)) or (
+        relative in (*DATABASE_LINKS, *NODE_LINKS) and (tree / relative).is_symlink()
+    )
+
+
+def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | None, bool]:
+    """Return the canonical remote's tip of ref and whether it holds head under another ref.
+
+    Only the URL recorded at dispatch is read, in a private Git namespace, so neither the worktree's
+    mutable origin nor a configured URL rewrite can redirect the proof. A merged branch may since have
+    been deleted, so head also counts as published when a pull-request head ref advertises it exactly
+    (GitHub keeps refs/pull/N/head after a squash merge) or, fetched commits-only, main contains it.
+    """
+    remote = record["worktree_remote_url"]
+    if not remote:
+        raise ValueError("no canonical remote URL was recorded at dispatch")
+    with _private_remote_git(record["task_id"] + "-settle", remote) as (run, _):
+        advertised = [line.split() for line in run("ls-remote", "--", "origin", ref, PULL_HEADS).splitlines()]
+        tip = next((sha for sha, name in advertised if name == ref), None)
+        if tip == head:
+            return tip, False
+        if any(sha == head and PULL_HEAD.fullmatch(name) for sha, name in advertised):
+            return tip, True
+        run("fetch", "--no-tags", "--no-write-fetch-head", "--filter=tree:0", "--", "origin",
+            f"+{MAIN_REF}:{MAIN_REF}", timeout=VERIFICATION_FETCH_TIMEOUT)
+        return tip, head in run("rev-list", MAIN_REF).split()
+
+
+def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
+    """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
+
+    Runs from outside the worktree after the provider has exited. A write task's worktree goes only
+    when its HEAD is the publish branch's tip on the canonical remote recorded at dispatch (without
+    --branch that is the task branch), a pull-request head there, or is already in that remote's main.
+    borrowed() is asked under the worktree lock, right before removal, whether another task's
+    provider may still work in this tree.
+    """
+    def disposition(state, reason):
+        return dict(worktree_disposition=state, worktree_disposition_reason=reason)
+
+    if record.get("options", {}).get("cwd"):
+        return disposition("retained", "borrowed_worktree")
+    try:
+        repo, tree, branch = resolve_repo(record.get("repo"))[0], Path(record["worktree_path"]), record["worktree_branch"]
+        entries = _git(tree, "status", "--porcelain", "-z", "--ignored", isolate=True, strip=False).split("\0")
+        head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
+        if not all(_disposable(tree, entry) for entry in entries if entry):
+            return disposition("retained", "dirty")
+        if record["mode"] != "read-only":
+            remote, merged = _canonical_publication(record, f"refs/heads/{record.get('publish_branch') or branch}", head)
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+        return disposition("retained", "unknown")
+    published = head == remote or merged
+    if record["mode"] != "read-only" and not published:
+        return disposition("retained", "unpublished" if remote is None else "remote_mismatch")
+    with worktree_lock(repo):
+        if borrowed():
+            return disposition("retained", "borrowed_by_live_task")
+        try:
+            _git(repo, "worktree", "remove", str(tree), isolate=True)
+        except (OSError, subprocess.SubprocessError):
+            return disposition("error", "worktree_remove_failed")
+    try:
+        # The task branch goes only when its tip is published or reachable from another ref.
+        if not published and _git(repo, "rev-list", "-n1", head, "--not", f"--exclude=refs/heads/{branch}", "--all",
+                                  isolate=True):
+            return disposition("removed", "branch_kept_unmerged")
+        _git(repo, "update-ref", "-d", f"refs/heads/{branch}", head, isolate=True)
+    except (OSError, subprocess.SubprocessError):
+        return disposition("removed", "branch_delete_failed")
+    return disposition("removed", "clean")

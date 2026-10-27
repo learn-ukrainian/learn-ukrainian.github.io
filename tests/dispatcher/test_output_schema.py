@@ -100,11 +100,11 @@ def test_invalid_schema_result_cannot_settle_done(dispatch, monkeypatch, output,
     monkeypatch.setattr(worker.signal, "signal", lambda *a: None)
     monkeypatch.setattr(worker.signal, "pthread_sigmask", lambda *a: None)
     monkeypatch.setattr(git, "snapshot_delivery", lambda *a: {})
-    monkeypatch.setattr(worker, "_reap_settled", lambda *a: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *a, **k: None)
 
     def popen(*a, **kw):
         kw["stdout"].write(b'{"type":"turn.completed"}\n')
-        return SimpleNamespace(returncode=0, wait=lambda *a, **kw: 0)
+        return SimpleNamespace(pid=None, returncode=0, wait=lambda *a, **kw: 0)
 
     monkeypatch.setattr(worker.subprocess, "Popen", popen)
     worker.supervise(path, spec.options, 10)

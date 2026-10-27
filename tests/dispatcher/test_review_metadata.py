@@ -62,7 +62,7 @@ def test_review_metadata_loss_round_trip_enforces_risk_and_subjects(dispatch, mo
     ("sol", "gpt-6.1-sol", "--subject-seat", "codex-desktop"),
     ("sol", "gpt-6.1-sol", "--subject-family", " OPENAI "),
     ("claude", "claude-opus-5-5", "--subject-seat", "claude-infra"),
-    ("grok", "grok-4.7-high", "--subject-seat", "grok-build"),
+    ("cursor", "grok-4.7-high", "--subject-seat", "grok-build"),
     ("cursor", "grok-4.7-high", "--subject-seat", "cursor"),
     ("cursor", "grok-4.7-high", "--subject-family", "xai"),
     ("cursor", "gpt-6.1-sol", "--subject-seat", "codex"),
