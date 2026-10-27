@@ -398,7 +398,7 @@ def test_404_is_never_consumption(reg_root, emit_sink, task_store):
     assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
 
 
-@pytest.mark.parametrize("boundary", ["resources", "family", "target-moved", "canonical-origin", "spawn"])
+@pytest.mark.parametrize("boundary", ["dry-run", "resources", "family", "target-moved", "canonical-origin", "spawn"])
 def test_research_surfacing_never_precedes_task_creation(reg_root, monkeypatch, boundary):
     """Defect class: refused admissions emit surfaced-pointer events for nonexistent tasks."""
     from scripts.dispatcher import admission, authoring
@@ -418,7 +418,9 @@ def test_research_surfacing_never_precedes_task_creation(reg_root, monkeypatch, 
     monkeypatch.setattr(consumption, "emit_event", lambda t, p, **kw: events.append(
         (t, p, store.record_path("worker").is_file())))
     flags = []
-    if boundary == "resources":
+    if boundary == "dry-run":
+        flags += ["--dry-run"]
+    elif boundary == "resources":
         monkeypatch.setattr(checks, "check_resources", Mock(side_effect=ValueError("fixture resources refusal")))
     elif boundary == "family":
         flags += ["--review-author-model", "gpt-6.1-sol"]
@@ -427,7 +429,8 @@ def test_research_surfacing_never_precedes_task_creation(reg_root, monkeypatch, 
     elif boundary == "canonical-origin":
         flags += ["--mode", "workspace-write", "--owned-path", "docs/example.md"]
     assert cli.main(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--task-id", "worker",
-                     "--prompt", "Inspect the document", "--research-role", "quality", *flags]) == 2
+                     "--prompt", "Inspect the document", "--research-role", "quality", *flags]) == (
+                         0 if boundary == "dry-run" else 2)
     if boundary == "spawn":
         assert events == [(consumption.SURFACED_EVENT,
                            {"task_id": "worker", "research_id": "cefr", "surface": "dispatch"}, True)]

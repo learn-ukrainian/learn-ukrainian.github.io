@@ -106,6 +106,7 @@ def test_delegate_dispatch_without_the_core_refuses(tmp_path, monkeypatch, missi
 
     err = capsys.readouterr().err
     assert "dispatch refused" in err
+    assert "the rules core is required" in err
     assert "agents_extensions/shared/rules/core.md" in err
     assert not tasks.exists()
 

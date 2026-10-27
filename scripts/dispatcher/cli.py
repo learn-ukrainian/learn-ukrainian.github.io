@@ -222,7 +222,9 @@ def _dispatch(args) -> int:
         options=options,
         **fields,
     )
+    prompt_path.content = prompt + lifecycle_block.encode("utf-8")
     checks.check_private_input(spec, info["key"])
+    prompt_path.content = effective_prompt
     checks.check_review_family(args.review_author_model, args.model)
     if args.mode == "read-only" and (args.subject_seat or args.subject_family or args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,

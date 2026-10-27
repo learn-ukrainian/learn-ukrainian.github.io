@@ -1988,7 +1988,7 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
           for flags in ((), ("--worktree",), ("--worktree", "--dry-run"))],
     ],
 )
-def test_dispatch_refuses_invalid_request_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):
+def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):
     from scripts.dispatcher import cli
 
     tasks = tmp_path / "tasks"
