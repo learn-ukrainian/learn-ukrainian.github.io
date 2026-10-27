@@ -967,6 +967,8 @@ class ReadOnlyGuard:
         self.records_pre: dict[str, tuple[str, str | None]] | None = None
         self.records_error: str | None = None
         self.snapshot_error: str | None = None
+        # The provider starts only after begin returns, so until then there is nothing to guard.
+        self.begun = False
 
     def begin(self, hard_timeout: float) -> None:
         """Initialize the harness, then take the baseline; a ValueError refuses the provider."""
@@ -988,9 +990,16 @@ class ReadOnlyGuard:
         if self.snapshot_error is None:
             self.snapshot_error = self.records_error
         _write_read_only_snapshot_sidecar(self.task_id, "pre", self.pre)
+        self.begun = True
 
     def finish(self) -> tuple[dict[str, Any], str | None, Path | None]:
-        """Return the record fields, the public failure cause or None, and phases to discard."""
+        """Return the record fields, the public failure cause or None, and phases to discard.
+
+        A refused or cancelled :meth:`begin` never started the provider, which
+        settles without ``done``; nothing is snapshotted or blamed on it then.
+        """
+        if not self.begun:
+            return {}, None, None
         post, post_error = _read_only_checkout_snapshot(self.cwd, **self.snapshot_options)
         records_post, records_error = _read_only_task_record_snapshot(self.task_id, self.records_pre)
         if self.records_error is None:
