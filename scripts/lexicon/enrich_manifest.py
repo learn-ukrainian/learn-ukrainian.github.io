@@ -272,10 +272,16 @@ _SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
 _GOROH_TRANSLATION_SOURCE = GOROH_LABEL
 _E2U_TRANSLATION_SOURCE = E2U_LABEL
 _E2U_DELAY_SECONDS = float(os.environ.get("LEXICON_E2U_DELAY", "0.34"))
-_E2U_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup)"
+_E2U_USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 _WIKIDATA_TRANSLATION_SOURCE = WIKIDATA_LABEL
 _WIKIDATA_DELAY_SECONDS = float(os.environ.get("LEXICON_WIKIDATA_DELAY", "0.34"))
-_WIKIDATA_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma)"
+_WIKIDATA_USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 _SLOVNYK_BASE = "https://slovnyk.me"
 # v3 (#6524 P1): bumped because every schema_version==2 cache file on disk was
 # written by the pre-fix `" ".join(...)` article-text join (#6465's root-cause
