@@ -2091,10 +2091,11 @@ _install_socket_guard()
 # always runs them. Needs are derived from the test module (path joins,
 # Path/open arguments, imported path constants, fixtures, and
 # pytest.mark.needs_sparse_tree), not from a hand list. A string that only
-# mentions the tree name is not a read. Every default exclusion in
-# scripts/dispatcher/git.py is represented below. A partially materialized
-# source-inventory tree needs a cone-membership check rather than only a
-# directory existence check. This does not add sparse anchors to dispatch.
+# mentions the tree name is not a read. The tables below cover only the
+# trees handled by this skip mechanism, not every dispatch exclusion.
+# A partially materialized source-inventory tree needs a cone-membership
+# check rather than only a directory existence check. This does not add
+# sparse anchors to dispatch.
 _SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
     "data/projects": ("tests/projects/open_model_data",),
     "data/lexicon": ("tests/lexicon",),
