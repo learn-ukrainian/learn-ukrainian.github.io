@@ -519,6 +519,11 @@ def resolve_and_admit(
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 
 
+def seat_default_model(seat: str, harness: str | None = None) -> str | None:
+    """Return the default model used by admission for a seat and optional harness."""
+    return _seat_default_model(seat, harness)
+
+
 def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
     """The model a seat runs when the request pins none.
 

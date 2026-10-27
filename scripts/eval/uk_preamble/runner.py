@@ -264,9 +264,8 @@ def load_manifest(results: ResultsDir) -> dict[str, Any]:
 def composition_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec]) -> dict[str, Any]:
     """The frame dispatcher puts around every candidate prompt; refused unless it is the same for all of them.
 
-    Delegate's worktree block depends on paths the prompt names (its sparse-checkout
-    note), so a preamble or item naming such a path would frame its arm differently
-    and the arms would differ in more than the preamble.
+    Dispatch v2 passes the prompt bytes unchanged. The frame also records the
+    dispatch root and pinned worker head, which must match across every arm.
     """
     seen: dict[str, dict[str, Any]] = {}
     first: tuple[str, dict[str, Any]] | None = None
@@ -737,10 +736,9 @@ class Executor:
         """Write prompts and validate each dispatch with the dispatcher's dry run; nothing is spawned.
 
         Each prompt's composition is computed and checked against the frozen frame first. The dry run
-        uses a distinct ``-preflight`` task id so it never collides with the real task. When that id
-        already names this caller's terminal ``dry_run`` record, the dispatcher passes ``--force-new``
-        so the dry run can be repeated. When no record exists, it omits ``--force-new``. Any other
-        existing record refuses that preflight and archives nothing. A real dispatch omits it too.
+        uses a distinct ``-preflight`` task id so it never collides with the real task. Dispatch v2
+        creates no record for a dry run, so it can be repeated while that id remains unused.
+        Any existing record refuses that preflight and archives nothing; v2 refuses task-id replacement.
         """
         summary = RunSummary()
         for task in tasks:

@@ -864,7 +864,6 @@ Owned source and template paths:
 - `scripts/hygiene/tmp_sweep.py`
 - `scripts/session_start.sh`
 - `scripts/config/trails/decision-tables.v0.yaml`
-- `scripts/config/trails/rb2-dispatch-loop.trail.yaml`
 - `scripts/orchestration/integration_sweep.py`
 - `scripts/orchestration/merge_queue_keeper.py`
 - `scripts/review/record_cf_verdict.py`

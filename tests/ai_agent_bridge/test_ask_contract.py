@@ -1,0 +1,804 @@
+"""Regression coverage for the uniform ask model/effort/provenance contract."""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from contextlib import contextmanager
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+
+from scripts.ai_agent_bridge import _acp_compat, _cli
+from scripts.ai_agent_bridge._ask_contract import (
+    failed_response_provenance,
+    resolve_model_selection,
+    response_provenance,
+    unsupported_effort_note,
+)
+
+ASK_SEATS = (
+    ("ask-claude", "_handle_ask_claude", "claude"),
+    ("ask-codex", "_handle_ask_codex", "codex"),
+    ("ask-agy", "_handle_ask_agy", "agy"),
+    ("ask-grok", "_handle_ask_grok_build", "grok"),
+    ("ask-glm", "_handle_ask_glm", "glm"),
+    ("ask-gemma", "_handle_ask_gemma", "gemma"),
+    ("ask-cursor", "_handle_ask_cursor", "cursor"),
+    ("ask-hermes", "_handle_ask_hermes", "hermes"),
+    ("ask-deepseek", "_handle_ask_deepseek", "deepseek"),
+    ("ask-pool", "_handle_ask_pool", "pool"),
+)
+
+RETIRED_ASK_SEATS = (
+    ("ask-opencode", "_handle_ask_opencode", "opencode"),
+)
+
+# Kimi: web, UI and backend coding only — the parser stays, every ask is refused.
+REFUSED_ASK_SEATS = (
+    ("ask-kimi", "_handle_ask_kimi", "kimi"),
+)
+
+
+@pytest.mark.parametrize(("command", "handler_name", "target"), ASK_SEATS)
+def test_effort_and_to_model_reach_every_enabled_acp_route(
+    command: str, handler_name: str, target: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Every enabled compatibility parser forwards controls to the ACP shim."""
+    captured: dict[str, object] = {}
+
+    def fake_compat(*args, **kwargs):
+        captured["args"] = args
+        captured.update(kwargs)
+        return SimpleNamespace(ok=True)
+
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", fake_compat)
+    args = _cli._build_parser().parse_args(
+        [
+            command,
+            "question",
+            "--task-id",
+            "contract-seat",
+            "--from",
+            "claude",
+            "--to-model",
+            "requested-model",
+            "--effort",
+            "xhigh",
+        ]
+    )
+
+    getattr(_cli, handler_name)(args)
+
+    forwarded = tuple(captured.get("args", ())) + tuple(captured.values())
+    assert captured["args"][0] == target
+    assert "requested-model" in forwarded
+    assert captured["effort"] == "xhigh"
+
+
+def test_terminal_failure_replays_without_invoking_provider_again(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet-comms"))
+    invoke = Mock(side_effect=RuntimeError("protected primary refused"))
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    # Hermetic from host PATH state: the reachability probe is stubbed, and
+    # the replay path must never call it — only the real invocation may.
+    probe = Mock(return_value=None)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability", probe
+    )
+
+    with pytest.raises(RuntimeError, match="protected primary refused"):
+        _acp_compat.run_compat_ask(
+            "agy",
+            "same prompt",
+            task_id="failure-replay",
+            source="codex",
+            model="gemini-3.8-flash-high",
+            effort="high",
+        )
+
+    replay = _acp_compat.run_compat_ask(
+        "agy",
+        "same prompt",
+        task_id="failure-replay",
+        source="codex",
+        model="gemini-3.8-flash-high",
+        effort="high",
+    )
+
+    assert replay.ok is False
+    assert replay.transport_outcome == "error"
+    assert replay.usage_record == {
+        "from_model": "gemini-3.8-flash-high",
+        "model_requested": "gemini-3.8-flash-high",
+        "effort_requested": "high",
+        "effort_applied": None,
+        "harness": "acp",
+        "replayed": True,
+        "transport": "acp",
+    }
+    assert invoke.call_count == 1
+    # The probe fires once — for the call that actually invoked the provider —
+    # and never for the terminal replay.
+    assert probe.call_count == 1
+
+
+def test_terminalization_conflict_preserves_completed_provider_response(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A bookkeeping collision must not hide the completed provider response."""
+    from scripts.fleet_comms.authority import AuthorityStaleLeaseError
+
+    claim_state = {"claimed": False}
+
+    class TerminalConflictAuthority:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def enqueue_request(self, **_kwargs):
+            return SimpleNamespace(job_id="job-6367", state="queued")
+
+        def claim_job(self, *_args, **_kwargs):
+            claim_state["claimed"] = True
+            return SimpleNamespace(fence_token=1)
+
+        def finish_job(self, *_args, **_kwargs):
+            raise AuthorityStaleLeaseError("terminalization_conflict")
+
+    def probe_after_claim(_participant: str) -> str | None:
+        # Hermetic from host PATH state, and order-sensitive: the probe is
+        # legitimate only once a job was claimed — i.e. only when a real
+        # provider invocation is about to occur, never at admission.
+        if not claim_state["claimed"]:
+            return "probe fired before any provider invocation was due"
+        return None
+
+    @contextmanager
+    def execution_cwd(*_args, **_kwargs):
+        yield tmp_path
+
+    provider_result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.8-flash-high",
+        response="completed provider response",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+    invoke = Mock(return_value=provider_result)
+    output_path = tmp_path / "response.txt"
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", TerminalConflictAuthority)
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr("scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        probe_after_claim,
+    )
+
+    with pytest.raises(RuntimeError, match="terminal bookkeeping failed after provider response"):
+        _acp_compat._run_compat_ask_impl(
+            "agy",
+            "question",
+            task_id="terminalization-conflict",
+            model="gemini-3.8-flash-high",
+            effort="high",
+            output_path=str(output_path),
+        )
+
+    captured = capsys.readouterr()
+    assert captured.out == "completed provider response\n"
+    assert "terminalization_conflict" in captured.err
+    assert output_path.read_text(encoding="utf-8") == "completed provider response"
+    assert invoke.call_count == 1
+
+
+def test_claim_race_to_terminal_replays_without_invoking_provider(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A terminal race after enqueue must replay instead of spending a provider call."""
+    from scripts.fleet_comms.authority import AuthorityServiceError
+
+    replay_result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.8-flash-high",
+        response="durably completed response",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+
+    class ConcurrentTerminalAuthority:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def enqueue_request(self, **_kwargs):
+            return SimpleNamespace(job_id="job-race", state="queued")
+
+        def claim_job(self, *_args, **_kwargs):
+            raise AuthorityServiceError("job_not_claimable")
+
+        def get_job(self, _job_id):
+            return SimpleNamespace(job_id="job-race", state="complete")
+
+        def read_job_result(self, _job_id):
+            return _acp_compat._result_receipt(replay_result)
+
+    invoke = Mock(side_effect=AssertionError("terminal job reinvoked provider"))
+    # Hermetic from host PATH state, and order-sensitive: a claim-race replay
+    # must never reach the reachability probe at all.
+    probe = Mock(return_value="probe fired on a terminal-replay path")
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", ConcurrentTerminalAuthority)
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability", probe
+    )
+
+    result = _acp_compat._run_compat_ask_impl(
+        "agy",
+        "question",
+        task_id="terminal-claim-race",
+        model="gemini-3.8-flash-high",
+        effort="high",
+    )
+
+    assert result.response == "durably completed response"
+    assert result.usage_record["replayed"] is True
+    assert result.usage_record["transport"] == "acp"
+    assert result.usage_record["from_model"] == "gemini-3.8-flash-high"
+    assert result.usage_record["harness"] == "acp"
+    assert invoke.call_count == 0
+    assert probe.call_count == 0
+
+
+# Raw DSML tool-call markup leaked by the toolless deepseek seat on the first
+# live firing of the #6878 gate (#6886): the model attempted tool calls it
+# does not have instead of delivering a verdict. Kept as a gate fixture.
+DSML_TOOLCALL_GARBLE = (
+    "<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>function<｜tool▁sep｜>read_file\n"
+    '```json\n{"path": "scripts/fleet_comms/authority.py"}\n```'
+    "<｜tool▁call▁end｜><｜tool▁calls▁end｜>"
+)
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        # Documented on #6805: literal garbage with transport outcome=ok.
+        "DXVECTOR",
+        # The #6886 live firing: raw DSML tool-call markup, no verdict.
+        DSML_TOOLCALL_GARBLE,
+        # Model preamble / harness confusion, no verdict ever delivered.
+        "Deep breath — emit the tool call now… Wait, formatting requires blocks.",
+        "I'll verify key claims against the diff before writing anything.",
+        # A verdict with zero grounding is not a review outcome either.
+        "VERDICT: APPROVED. Looks fine to me.",
+        "",
+    ],
+)
+def test_review_outcome_failure_rejects_non_evidentiary_replies(response: str) -> None:
+    assert _acp_compat.review_outcome_failure(response) is not None
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        "VERDICT: REQUEST_CHANGES\n- Finding: scripts/foo.py:42 swallows the error.",
+        "verdict: approved\nEvidence: reviewed the diff at head 0123abc, 3 files.",
+        "Verdict: PASS\nFindings: none. Checked scripts/ai_agent_bridge/_cli.py and #6805.",
+    ],
+)
+def test_review_outcome_failure_accepts_grounded_verdicts(response: str) -> None:
+    assert _acp_compat.review_outcome_failure(response) is None
+
+
+def _make_ok_result(response: str) -> object:
+    from agent_runtime.result import Result
+
+    return Result(
+        ok=True,
+        agent="glm",
+        model="glm-5.3",
+        mode="read-only",
+        response=response,
+        stderr_excerpt=None,
+        duration_s=1.0,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+        effort="high",
+        transport_outcome="ok",
+    )
+
+
+def _stub_live_invocation(
+    monkeypatch: pytest.MonkeyPatch, authority: object, result: object
+) -> Mock:
+    """Wire the recording authority plus a one-shot provider result."""
+
+    @contextmanager
+    def execution_cwd(*_args, **_kwargs):
+        yield Path.cwd()
+
+    invoke = Mock(return_value=result)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.authority.AuthorityService", lambda: authority
+    )
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
+    )
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        Mock(return_value=None),
+    )
+    return invoke
+
+
+def test_review_ask_with_garbled_reply_terminalizes_failed_non_evidentiary(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """#6805: transport-ok garbage on a review ask must never terminalize as
+    a silent success — the job fails with the non_evidentiary code."""
+    authority = _RecordingAuthority()
+    _stub_live_invocation(monkeypatch, authority, _make_ok_result("DXVECTOR"))
+
+    result = _acp_compat._run_compat_ask_impl(
+        "glm", "review this diff", task_id="garbled-review", review=True
+    )
+
+    assert result.ok is False
+    assert result.transport_outcome == "non_evidentiary"
+    assert result.response == "DXVECTOR"  # body preserved for forensics
+    assert "no VERDICT token" in (result.stderr_excerpt or "")
+    assert len(authority.finished) == 1
+    assert authority.finished[0]["state"] == "failed"
+    assert authority.finished[0]["failure"] == {
+        "phase": "postprocess",
+        "code": "non_evidentiary",
+        "retryable": False,
+    }
+    assert "outcome=non_evidentiary" in capsys.readouterr().err
+
+
+def test_review_ask_with_grounded_verdict_stays_complete(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    authority = _RecordingAuthority()
+    _stub_live_invocation(
+        monkeypatch,
+        authority,
+        _make_ok_result("VERDICT: APPROVED\nEvidence: diff at head 0123abc, 2 files."),
+    )
+
+    result = _acp_compat._run_compat_ask_impl(
+        "glm", "review this diff", task_id="grounded-review", review=True
+    )
+
+    assert result.ok is True
+    assert authority.finished[0]["state"] == "complete"
+    assert authority.finished[0]["failure"] is None
+
+
+def test_non_review_ask_is_not_outcome_validated(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Plain queries keep transport semantics — a one-token answer is fine."""
+    authority = _RecordingAuthority()
+    _stub_live_invocation(monkeypatch, authority, _make_ok_result("OK glm-5.3"))
+
+    result = _acp_compat._run_compat_ask_impl("glm", "ping", task_id="plain-query")
+
+    assert result.ok is True
+    assert authority.finished[0]["state"] == "complete"
+
+
+def test_non_evidentiary_review_ask_terminalizes_through_real_authority_store(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#6886: end-to-end seam the #6878 tests missed — the gate and the
+    failure metadata were each validated against a recording stub, so the real
+    authority failure-code allowlist rejecting ``non_evidentiary`` crashed
+    finish_job AFTER the provider replied and stranded the claimed lease.
+    Run the gate through the real store: the job must terminalize
+    failed:non_evidentiary with the lease released and no exception."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet-comms"))
+    invoke = Mock(return_value=_make_ok_result(DSML_TOOLCALL_GARBLE))
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
+        Mock(return_value=None),
+    )
+
+    @contextmanager
+    def execution_cwd(*_args, **_kwargs):
+        yield tmp_path
+
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._acp_execution.acp_execution_cwd", execution_cwd
+    )
+
+    result = _acp_compat._run_compat_ask_impl(
+        "deepseek", "review this diff", task_id="review-6886-seam", review=True
+    )
+
+    assert result.ok is False
+    assert result.transport_outcome == "non_evidentiary"
+
+    with AuthorityService() as service:
+        rows = service.store.connection.execute(
+            "SELECT job_id FROM authority_jobs"
+        ).fetchall()
+        assert len(rows) == 1
+        job = service.get_job(str(rows[0]["job_id"]))
+        events = service.store.connection.execute(
+            """SELECT event_type, metadata_json FROM authority_job_events
+               WHERE job_id = ? ORDER BY created_at""",
+            (job.job_id,),
+        ).fetchall()
+
+    # Clean terminalization — the #6886 crash left the job mid-lease instead.
+    assert job.state == "failed"
+    assert job.lease_owner is None
+    assert job.lease_expires_at is None
+    finished = [event for event in events if event["event_type"] == "finished"]
+    assert len(finished) == 1
+    metadata = json.loads(str(finished[0]["metadata_json"]))
+    assert metadata["failure"] == {
+        "phase": "postprocess",
+        "code": "non_evidentiary",
+        "retryable": False,
+    }
+
+
+@pytest.mark.parametrize(
+    ("command", "handler_name", "extra_argv"),
+    [
+        # Drivers pass --type review (#6805 evidence); ask-glm has no --review.
+        ("ask-glm", "_handle_ask_glm", ["--type", "review"]),
+        ("ask-claude", "_handle_ask_claude", ["--review"]),
+    ],
+)
+def test_review_intent_never_reaches_the_toolless_acp_shim(
+    command: str, handler_name: str, extra_argv: list[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#7155: review intent must reach a reviewer WITH tools, never ACP.
+
+    ACP's `--deny-all --no-fs --no-terminal` transport cannot run `gh`
+    (Terra ABSTAIN on #7155). Both spellings of review intent — `--type
+    review` and `--review` — must route to headless dispatch instead of
+    `run_compat_ask`.
+    """
+
+    def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("run_compat_ask must not be called for review intent (#7155)")
+
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", fail_if_called)
+
+    captured: dict[str, object] = {}
+    from scripts.ai_agent_bridge import _dispatch_wrappers
+
+    def fake_dispatch(agent, content, **kwargs):
+        captured["agent"] = agent
+        captured["content"] = content
+        captured.update(kwargs)
+        return {"ok": True, "status": "done", "response": "VERDICT: APPROVED\nEvidence: reviewed diff."}
+
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", fake_dispatch)
+
+    args = _cli._build_parser().parse_args(
+        [command, "question", "--task-id", "review-intent", "--from", "kimi", *extra_argv]
+    )
+
+    getattr(_cli, handler_name)(args)
+
+    assert captured["agent"] == command.removeprefix("ask-")
+
+
+def _capture_review_dispatch_argv(
+    command: str,
+    handler_name: str,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> list[str]:
+    """Drive one review ask and return the headless dispatch argv it built."""
+    from scripts.ai_agent_bridge import _dispatch_wrappers
+
+    result_file = tmp_path / f"{command}.md"
+    result_file.write_text("Findings: none.\nVERDICT: APPROVED\n", encoding="utf-8")
+    captured: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            captured.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(_dispatch_wrappers.subprocess, "run", fake_run)
+    args = _cli._build_parser().parse_args(
+        [command, "review this diff", "--task-id", "review-parity", "--review", "--branch", "agy/impl-8786"]
+    )
+    getattr(_cli, handler_name)(args)
+    assert captured, "review ask did not build a headless dispatch"
+    return captured[0]
+
+
+def _review_argv_without_agent_and_prompt(argv: list[str]) -> list[str]:
+    """Drop values that differ per lane: agent, prompt path and required v2 model."""
+    normalized: list[str] = []
+    skip = False
+    for token in argv:
+        if skip:
+            skip = False
+            continue
+        if token in {"--agent", "--prompt-file", "--model"}:
+            skip = True
+            continue
+        normalized.append(token)
+    return normalized
+
+
+def test_ask_deepseek_review_builds_same_dispatch_argv_as_ask_codex(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """#8786: ask-deepseek accepts --review/--branch and routes like ask-codex.
+
+    Both lanes must parse the review flags and build the same headless
+    read-only verdict-required dispatch, differing only in the ``--agent``
+    value, required model identity and the lane's own temp prompt path.
+    """
+    codex = _capture_review_dispatch_argv("ask-codex", "_handle_ask_codex", monkeypatch, tmp_path)
+    deepseek = _capture_review_dispatch_argv(
+        "ask-deepseek", "_handle_ask_deepseek", monkeypatch, tmp_path
+    )
+
+    assert codex[codex.index("--agent") + 1] == "codex"
+    assert deepseek[deepseek.index("--agent") + 1] == "deepseek"
+    assert codex[codex.index("--model") + 1] == "gpt-6.1-sol"
+    assert deepseek[deepseek.index("--model") + 1] == "deepseek-v4.1-flash"
+    assert _review_argv_without_agent_and_prompt(deepseek) == _review_argv_without_agent_and_prompt(codex)
+    assert "--mode" in deepseek and deepseek[deepseek.index("--mode") + 1] == "read-only"
+    assert "--worktree" in deepseek
+    assert "--require-review-verdict" in deepseek
+    assert deepseek[deepseek.index("--branch") + 1] == "agy/impl-8786"
+
+
+class _RecordingAuthority:
+    """Minimal in-memory authority: enqueue + claim succeed, finish_job records."""
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        self.finished: list[dict[str, object]] = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return None
+
+    def enqueue_request(self, **_kwargs):
+        return SimpleNamespace(job_id="job-dead-seat", state="queued")
+
+    def claim_job(self, *_args, **_kwargs):
+        return SimpleNamespace(fence_token=1)
+
+    def finish_job(self, _job_id, **kwargs):
+        self.finished.append(kwargs)
+
+
+def test_compat_ask_fails_before_provider_invocation_when_provider_binary_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#6805: a dead seat fails before the provider is invoked, with the
+    actionable remediation and documented route — not mid-review at spawn.
+    The authority job is enqueued and claimed first: terminal-replay paths
+    must stay reachable even when the provider CLI is absent."""
+    from scripts.agent_runtime import binary_resolve as binary_resolve_module
+
+    invoke = Mock(side_effect=AssertionError("dead seat invoked the provider"))
+    monkeypatch.setattr(binary_resolve_module, "_which", lambda _name, *_a, **_k: None)
+    monkeypatch.setattr(
+        "scripts.fleet_comms.authority.AuthorityService", _RecordingAuthority
+    )
+    monkeypatch.setattr("agent_runtime.runner.invoke_inter_agent", invoke)
+
+    with pytest.raises(ValueError) as exc_info:
+        _acp_compat._run_compat_ask_impl("hermes", "question", task_id="dead-seat")
+
+    message = str(exc_info.value)
+    # The DeepSeek participant rides the opencode transport since the Hermes
+    # removal (#6805): the admission refusal names the binary that is actually
+    # required now, with the opencode remediation — never the dead hermes path.
+    assert "opencode binary not found on PATH" in message
+    assert "hermes binary not found on PATH" not in message
+    assert "docs/runbooks/agent-seat-onboarding.md" in message
+    assert invoke.call_count == 0
+
+
+def test_to_model_wins_only_when_legacy_alias_agrees() -> None:
+    assert (
+        resolve_model_selection(
+            lane="ask-cursor",
+            to_model="requested",
+            model="requested",
+            default="default",
+        )
+        == "requested"
+    )
+    with pytest.raises(ValueError, match="conflicts with deprecated --model"):
+        resolve_model_selection(
+            lane="ask-cursor",
+            to_model="requested",
+            model="legacy",
+            default="default",
+        )
+
+
+def test_unsupported_effort_emits_note_and_stamps_null(capsys: pytest.CaptureFixture[str]) -> None:
+    applied, reason = unsupported_effort_note(
+        lane="cursor", effort="xhigh", reason="Cursor Agent has no per-invocation effort flag"
+    )
+    assert applied is None
+    assert reason == "Cursor Agent has no per-invocation effort flag"
+    assert "NOTE: cursor cannot apply requested effort=xhigh" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "harness",
+    [seat[0].removeprefix("ask-") for seat in (*ASK_SEATS, *RETIRED_ASK_SEATS, *REFUSED_ASK_SEATS)],
+)
+def test_every_response_provenance_shape_has_required_fields(harness: str) -> None:
+    data, from_model = response_provenance(
+        {"data": json.dumps({"to_model": "requested", "effort": "xhigh"})},
+        actual_model="actual",
+        harness=harness,
+        effort_applied="xhigh",
+    )
+    assert from_model == "actual"
+    assert json.loads(data) == {
+        "effort_applied": "xhigh",
+        "effort_requested": "xhigh",
+        "from_model": "actual",
+        "harness": harness,
+        "model_requested": "requested",
+    }
+
+
+def test_failed_response_provenance_preserves_request_and_marks_unapplied_effort() -> None:
+    data, from_model = failed_response_provenance(
+        {"data": json.dumps({"to_model": "requested", "effort": "xhigh"})},
+        bridge_model="agy-bridge-error",
+        harness="agy",
+    )
+
+    assert from_model == "agy-bridge-error"
+    assert json.loads(data) == {
+        "effort_applied": None,
+        "effort_reason": "bridge execution failed before the requested effort could be applied",
+        "effort_requested": "xhigh",
+        "from_model": "agy-bridge-error",
+        "harness": "agy",
+        "model_requested": "requested",
+    }
+
+
+def test_acp_result_receipt_and_replay_preserve_response_provenance() -> None:
+    result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.8-flash-high",
+        response="answer",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+
+    receipt = _acp_compat._result_receipt(
+        result, model_requested="gemini-3.8-flash-high", effort_requested="high"
+    )
+    payload = json.loads(receipt)
+    assert {key: payload[key] for key in ("from_model", "model_requested", "effort_requested", "effort_applied", "harness")} == {
+        "from_model": "gemini-3.8-flash-high",
+        "model_requested": "gemini-3.8-flash-high",
+        "effort_requested": "high",
+        "effort_applied": "high",
+        "harness": "acp",
+    }
+    replay = _acp_compat._replay_result(receipt)
+    assert replay.usage_record == {
+        "from_model": "gemini-3.8-flash-high",
+        "model_requested": "gemini-3.8-flash-high",
+        "effort_requested": "high",
+        "effort_applied": "high",
+        "harness": "acp",
+        "replayed": True,
+        "transport": "acp",
+    }
+
+
+def test_acp_replay_preserves_explicit_none_effort_applied() -> None:
+    result = SimpleNamespace(
+        ok=True,
+        agent="agy",
+        model="gemini-3.8-flash-high",
+        response="answer",
+        stderr_excerpt=None,
+        duration_s=1.0,
+        returncode=0,
+        effort="high",
+        transport_metadata=None,
+        transport_outcome="ok",
+    )
+    payload = json.loads(_acp_compat._result_receipt(result))
+    payload["effort_applied"] = None
+
+    replay = _acp_compat._replay_result(json.dumps(payload).encode("utf-8"))
+
+    assert replay.usage_record["effort_applied"] is None
+
+
+def test_acp_failed_result_receipt_serializes_none_effort_as_unapplied() -> None:
+    result = SimpleNamespace(
+        ok=False,
+        agent="agy",
+        model="gemini-3.8-flash-high",
+        response="",
+        stderr_excerpt="provider failed",
+        duration_s=1.0,
+        returncode=1,
+        effort=None,
+        transport_metadata=None,
+        transport_outcome="error",
+    )
+
+    payload = json.loads(_acp_compat._result_receipt(result))
+
+    assert payload["effort"] == "unknown"
+    assert payload["effort_applied"] is None
+
+
+# --- #6877: per-seat ask timeout profiles -------------------------------
+
+
+@pytest.mark.parametrize(("command", "handler_name", "_target"), REFUSED_ASK_SEATS)
+@pytest.mark.parametrize("extra", [[], ["--effort", "high"], ["--review"]])
+def test_kimi_ask_is_a_clean_refusal_before_the_shim(
+    command: str, handler_name: str, _target: str, extra: list[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Kimi: web, UI and backend coding only — ask-kimi never reaches ACP or review dispatch."""
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", lambda *_a, **_k: pytest.fail("ACP shim reached"))
+    args = _cli._build_parser().parse_args(
+        [command, "question", "--task-id", "kimi-refused", "--from", "codex", *extra]
+    )
+    with pytest.raises(SystemExit) as exc_info:
+        getattr(_cli, handler_name)(args)
+    assert "KIMI CODING-ONLY" in str(exc_info.value)

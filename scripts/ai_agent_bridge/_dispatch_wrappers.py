@@ -320,10 +320,10 @@ def build_ask_review_dispatch_command(
     ``target`` is the ``AdmittedTarget`` ``resolve_and_admit`` produced for
     the review seat; the command carries its seat and model.
     """
-    from agent_runtime.target_admission import _seat_default_model, require_admitted
+    from agent_runtime.target_admission import require_admitted, seat_default_model
 
     target = require_admitted(target)
-    model = target.model or _seat_default_model(target.recipient)
+    model = target.model or seat_default_model(target.recipient)
     if not model:
         raise ValueError(f"no default dispatch model for {target.recipient!r}")
     cmd = [

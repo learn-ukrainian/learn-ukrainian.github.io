@@ -25,7 +25,8 @@ task id is the one derived for this unit and attempt, its ``prompt_sha256`` is t
 and the stored prompt bytes equal that task file (``adjudication_task_mismatch`` otherwise), so an
 unrelated independent dispatch cannot stand in. The lesson text and the findings are data, not instructions.
 
-**Dispatch contract.** The printed command uses dispatch v2 in read-only mode with a full checkout.
+**Dispatch contract.** The printed command requests dispatch v2 in read-only mode with a full checkout;
+checkout completeness is not checked by the record binding.
 The record binds the task id, stored prompt bytes, model identity and automatic worktree path.
 Dispatch v2 does not provide the legacy composed-prompt or dispatch-argument hash attestations.
 Instructions read from a runtime's home and repository instruction files remain outside this binding.
@@ -636,7 +637,7 @@ def build_parser() -> argparse.ArgumentParser:
                 required=True,
                 help=(
                     "the adjudicating model (dispatch.py dispatch's --model); required so "
-                    "check_dispatch_binding can reconstruct the canonical dispatch byte-for-byte"
+                    "the dispatch record can be checked against the selected model identity"
                 ),
             )
         else:
