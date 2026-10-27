@@ -721,13 +721,17 @@ def test_legacy_resume_accepts_faithful_record_and_refuses_tampering(linked_work
     from scripts.eval.uk_preamble.common import write_private_json
     from scripts.storage.topology import StoreBinding
 
-    monkeypatch.setattr(
-        dispatch_module.legacy_codec,
-        "resolve_store",
-        lambda store, root: StoreBinding(
-            store, delegate._primary_database_path(root, f"{store}.db"), provenance="injected"
-        ),
-    )
+    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+    monkeypatch.delenv("LU_VESUM_DB", raising=False)
+
+    def resolve_legacy_store(store, root):
+        path = delegate._primary_database_path(root, f"{store}.db")
+        assert dispatch_module.legacy_codec._primary_database_connect_code(path) == (
+            f"sqlite3.connect('{root.as_uri()}/data/{store}.db?mode=ro', uri=True)"
+        )
+        return StoreBinding(store, path, provenance="injected")
+
+    monkeypatch.setattr(dispatch_module.legacy_codec, "resolve_store", resolve_legacy_store)
 
     tasks_dir = outside_dir / "tasks"
     tasks_dir.mkdir()
@@ -803,7 +807,7 @@ def test_legacy_resume_refuses_unresolvable_read_stores(linked_worktree, tmp_pat
     local = tmp_path / "fixture.sqlite"
     local.write_bytes(b"fixture")
     monkeypatch.setenv("LU_SOURCES_DB", str(local))
-    monkeypatch.setenv("LU_VESUM_DB", str(local))
+    monkeypatch.delenv("LU_VESUM_DB", raising=False)
     key = f"LU_{store.upper()}_DB"
     if kind == "unset":
         monkeypatch.delenv(key)
@@ -827,7 +831,21 @@ def test_legacy_resume_refuses_unresolvable_read_stores(linked_worktree, tmp_pat
             sources.write_bytes(b"fixture")
             monkeypatch.setenv("LU_SOURCES_DB", str(sources))
             monkeypatch.setattr(topology, "_store_locality", lambda path: kind if path == local else "local")
+    if store == "vesum" and kind not in {"empty", "unset"}:
+        reason = "legacy_override_unsupported"
     with pytest.raises(DispatchError, match=f"{store} read store refused: {reason}"):
+        DelegateComposer(dispatch_module.legacy_codec, linked_worktree).compose(PROMPT)
+
+
+def test_legacy_resume_refuses_valid_vesum_override_that_changes_historical_hash(
+    linked_worktree, tmp_path, monkeypatch
+):
+    """A valid VESUM override must fail verification instead of changing frozen prompt bytes."""
+    local = tmp_path / "override.sqlite"
+    local.write_bytes(b"fixture")
+    monkeypatch.setenv("LU_SOURCES_DB", str(local))
+    monkeypatch.setenv("LU_VESUM_DB", str(local))
+    with pytest.raises(DispatchError, match="vesum read store refused: legacy_override_unsupported"):
         DelegateComposer(dispatch_module.legacy_codec, linked_worktree).compose(PROMPT)
 
 

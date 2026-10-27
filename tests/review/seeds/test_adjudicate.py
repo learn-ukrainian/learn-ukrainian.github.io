@@ -129,13 +129,17 @@ def _different_value(old: Any) -> Any:
 @pytest.fixture
 def env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Env:
     # Inject historical path bytes so verification never needs the live corpus.
-    monkeypatch.setattr(
-        adj.legacy_codec,
-        "resolve_store",
-        lambda store, root: StoreBinding(
-            store, delegate._primary_database_path(root, f"{store}.db"), provenance="injected"
-        ),
-    )
+    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+    monkeypatch.delenv("LU_VESUM_DB", raising=False)
+
+    def resolve_legacy_store(store, root):
+        path = delegate._primary_database_path(root, f"{store}.db")
+        assert adj.legacy_codec._primary_database_connect_code(path) == (
+            f"sqlite3.connect('{root.as_uri()}/data/{store}.db?mode=ro', uri=True)"
+        )
+        return StoreBinding(store, path, provenance="injected")
+
+    monkeypatch.setattr(adj.legacy_codec, "resolve_store", resolve_legacy_store)
     return Env(tmp_path)
 
 

@@ -472,6 +472,11 @@ def _compose_dispatch_prompt(
     comparable. The worker reads the path from ``$LU_TASK_EVIDENCE_DIR`` and the
     task record keeps it in ``evidence_dir``.
     """
+    if os.environ.get("LU_VESUM_DB"):
+        raise ValueError(
+            "vesum read store refused: legacy_override_unsupported "
+            "(LU_VESUM_DB was ignored historically; historical hashes cannot be guaranteed)"
+        )
     prompt = _augment_prompt_with_worktree(
         base,
         worktree_path,
