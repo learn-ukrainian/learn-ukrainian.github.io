@@ -791,6 +791,33 @@ def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, mon
     assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
 
 
+@pytest.mark.parametrize("transport", ["ssh", "https"])
+def test_canonical_origins_does_not_reject_same_identity_when_clone_transport_differs(transport):
+    """Clone transport mismatches must not reject the registered repository identity."""
+    origins = git.canonical_origins({"github": "org/repo", "transport": transport})
+    assert "https://github.com/org/repo.git" in origins
+    accepted = {
+        "https://github.com/org/repo.git", "https://github.com/org/repo",
+        "git@github.com:org/repo.git", "git@github.com:org/repo",
+        "ssh://git@github.com/org/repo.git", "ssh://git@github.com/org/repo",
+    }
+    assert set(origins) == accepted
+    assert len(origins) == len(accepted)
+    refused = [
+        "https://github.com/org/other.git", "git@github.com:org/other.git", "https://github.com/org/rep.git",
+        "https://github.com/org/repo-fork.git", "https://github.com/someone/repo.git", "git@github.com:someone/repo.git",
+        "https://gitlab.com/org/repo.git", "git@gitlab.com:org/repo.git", "ssh://git@example.com/org/repo.git",
+        "/srv/org/repo.git", "file:///srv/org/repo.git", "https://user:token@github.com/org/repo.git",
+        "https://token@github.com/org/repo.git", "ssh://user:token@github.com/org/repo.git",
+        "https://github.com/Org/repo.git", "https://GitHub.com/org/repo.git", "git@github.com:org/Repo.git",
+        "https://github.com/org/repo/", "https://github.com/org/repo.git/", "git@github.com:org/repo.git/",
+        "https://github.com/org/repo.git.bak", "git@github.com:org/repo.gitx", "https://github.com/org/repo.git/extra",
+        " https://github.com/org/repo.git", "\tgit@github.com:org/repo.git", "https://github.com/org/repo.git\n",
+    ]
+    for origin in refused:
+        assert origin not in origins
+
+
 def test_prior_worker_origin_poisoning_refuses_dispatch_and_fails_closed(sandbox):
     """Shared config poisoned before dispatch cannot certify a forged empty range."""
     earlier = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
