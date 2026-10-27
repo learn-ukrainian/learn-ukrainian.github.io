@@ -191,14 +191,6 @@ def verify(spec, record: dict, hard_timeout: float) -> str | None:
             if actual[field] != allowed:
                 raise contract.AdvisoryRefused(contract.EXECUTION_MISMATCH,
                                                 f"{field} {actual[field]!r} is not the admitted {allowed!r}")
-    policy = contract.bounded_execution_policy()
-    if (admitted is None and actual["model_id"] != policy.bounded_fallback_model_id
-            and contract.bounded_requirement(
-                actual["model_id"], mode=spec.mode, task_family=record.get("research_task_family"),
-                review_profile=record.get("review_profile"), owned_paths=record.get("owned_paths") or [],
-                repo_root=spec.worktree, policy=policy,
-            ) is None):
-        return None
     rest = {key: value for key, value in actual.items() if key not in {"agent", "model_id", "mode", "cwd"}}
     return contract.verify_worker_admission(
         record, agent=spec.agent, model_id=actual["model_id"], mode=spec.mode, cwd=spec.worktree,

@@ -537,7 +537,9 @@ def test_m7_advisor_result_changed_after_validation_is_refused_before_spawn(laun
 
 
 @pytest.mark.parametrize("agent,model", [("sol", "gpt-6-luna"), ("claude", "claude-haiku-5-5")])
-def test_driver_brief_normal_dispatch_and_replay(launch, runtime, capsys, agent, model):
+@pytest.mark.parametrize("family", [None, "routine_mechanical"])
+@pytest.mark.parametrize("handoff", ["worker", "provider"])
+def test_driver_brief_normal_dispatch_and_replay(launch, runtime, capsys, agent, model, family, handoff):
     launch[launch.index("--agent") + 1] = agent
     launch[launch.index("--model") + 1] = model
     assert cli.main([*launch, "--research-role", "recon", "--research-task-family", "readonly_recon",
@@ -551,12 +553,21 @@ def test_driver_brief_normal_dispatch_and_replay(launch, runtime, capsys, agent,
     assert "advisory_envelope" not in record
     assert b"Run and report: test -d docs" in runtime.submitted[0]
     assert record["advisory_prompt_sha256"] == store.digest(runtime.submitted[0])
-    record.pop("driver_brief")
     record["status"] = "spawning"
     store.replace(record)
+    record.pop("driver_brief")
+    if family is not None:
+        record["research_task_family"] = family
+    if handoff == "worker":
+        store.replace(record)
+    else:
+        build = runtime.provider.build.side_effect
+        runtime.provider.build.side_effect = lambda spec, env: (store.replace(record), build(spec, env))[1]
     refused = runtime.settle()
     assert refused["status"] == "failed"
     assert refused["failure_reason"] == advisory.ADMISSION_MISSING
+    assert f"{model} is a bounded model and its task record carries no advisory admission" in refused["error"]
+    assert runtime.provider.build.call_count == (1 if handoff == "worker" else 2)
     assert len(runtime.calls) == 1
 
 
