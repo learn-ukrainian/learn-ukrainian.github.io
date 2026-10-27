@@ -1,6 +1,7 @@
 """Creator ownership and fail-closed cohort release for #9934."""
 
 import contextlib
+import hashlib
 import json
 import os
 
@@ -393,7 +394,37 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
     assert source.read_bytes() == b"current output"
     assert not (repo / "batch_state/preserved").exists()
     assert tree.exists()
+    legacy_receipt = None
+    if boundary == "retry":
+        owner_path = tasks / f"{creator['task_id']}.json"
+        owner_record = json.loads(owner_path.read_text())
+        locator, _ = output.capture_abandon_output(tree, primary=repo, record=owner_record)
+        output.publish_abandon_output(tree, primary=repo, record=owner_record, locator=locator)
+        legacy_receipt = {
+            **receipt,
+            **locator,
+            "schema": output.PRESERVED_ARTIFACTS_SCHEMA,
+            "owner": creator["task_id"],
+            "task_id": creator["task_id"],
+            "run_nonce": creator["run_nonce"],
+            "count": len(locator["paths"]),
+            "bytes": sum(entry["size"] for entry in locator["paths"]),
+            "worktree_sha256": hashlib.sha256(str(tree.resolve()).encode()).hexdigest(),
+            "retrieval_proof_sha256": output.verify_retrieval(repo, locator),
+        }
+        for key in (
+            "mode",
+            "copied_bytes",
+            "inventory_complete",
+            "entries_truncated",
+            "inventory_sha256",
+        ):
+            legacy_receipt.pop(key, None)
+        owner_record["preserved_artifacts"] = legacy_receipt
+        owner_path.write_text(json.dumps(owner_record))
     assert release(renamed_creator, task_id=creator["task_id"]) is None
+    released_record = json.loads((tasks / f"{creator['task_id']}.json").read_text())
+    released_marker = released_record["preserved_artifacts"]["retention_release"] if boundary == "retry" else None
     if boundary == "retry":
         # Preservation can finish before Git refuses removal. Its refreshed
         # receipt must retain the release authority for the next guarded retry.
@@ -412,7 +443,21 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
         result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
     assert result["action"] == "removed", result
     assert not tree.exists()
-    assert json.loads((tasks / "codex-boundary.json").read_text())["status"] == "needs_finalize"
+    final_record = json.loads((tasks / "codex-boundary.json").read_text())
+    assert final_record["status"] == "needs_finalize"
+    if legacy_receipt is not None:
+        assert legacy_receipt is not None and released_marker is not None
+        assert output.verify_retrieval(repo, legacy_receipt) == legacy_receipt["retrieval_proof_sha256"]
+        assert (repo / legacy_receipt["location"] / "ignored/output.txt").read_bytes() == b"current output"
+        final_receipt = final_record["preserved_artifacts"]
+        final_release = final_receipt["retention_release"]
+        assert final_receipt["mode"] == "record_only"
+        assert "retrieval_proof_sha256" not in final_receipt
+        assert final_release["mode"] == "record_only"
+        assert "retrieval_proof_sha256" not in final_release
+        assert final_release["owner"] == released_marker["owner"] == creator["task_id"]
+        assert final_release["run_nonce"] == released_marker["run_nonce"] == creator["run_nonce"]
+        assert final_release["finalized_by"] == released_marker["finalized_by"]
 
 
 @pytest.mark.parametrize("failure", ["receipt", "owner", "nonce", "successor_nonce", "head", "keep", "live", "merge"])

@@ -4509,11 +4509,15 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
         )
         if not ok or receipt is None:
             return False, refusal or "archive_receipt_missing"
-        record_only = receipt.get("mode") == "record_only"
-        receipt_keys = ("mode", "copied_bytes", "inventory_sha256") if record_only else (
+        if (
+            receipt.get("mode") == "record_only"
+            or receipt.get("entries_truncated")
+            or receipt.get("count") != len(receipt["paths"])
+        ):
+            return False, "archive_inventory_incomplete"
+        archive_receipt = {key: receipt[key] for key in (
             "manifest_path", "content_sha256", "retrieval_proof_sha256"
-        )
-        archive_receipt = {key: receipt[key] for key in receipt_keys}
+        )}
         # Publish the locator even if the final recheck/removal later refuses.
         print("Branch holder archive: " + json.dumps(archive_receipt, sort_keys=True), file=sys.stderr)
 
@@ -4538,14 +4542,18 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
                 or branch_holder_scratch_inventory(path, primary=_REPO_ROOT) != inventory
             ):
                 raise ValueError("holder_changed_before_delete")
-            if not record_only:
-                ignored_task_output.verify_retrieval(_REPO_ROOT, receipt)
+            ignored_task_output.verify_retrieval(_REPO_ROOT, receipt)
 
-        # Retire only receipt-covered entries, including ignored output, so
-        # the common boundary does not archive it again. Its regenerable
-        # output exemptions remain outside this explicit unlink pass.
-        archived_names = {entry["path"] for entry in receipt["paths"]}
-        archived = [entry for entry in inventory["paths"] if entry["path"] in archived_names]
+        # Use the complete inventory only after every archived name and byte matches.
+        # Regenerable exemptions are absent from this verified copy and stay excluded.
+        verified = {entry["path"]: (entry["size"], entry["sha256"]) for entry in receipt["paths"]}
+        archived = [entry for entry in inventory["paths"] if entry["path"] in verified]
+        if (
+            len(archived) != len(verified)
+            or any(entry["path"] not in verified for entry in scratch)
+            or any((entry["size"], entry["sha256"]) != verified[entry["path"]] for entry in archived)
+        ):
+            return False, "archive_inventory_mismatch"
         worktree_artifacts.unlink_archived_regular_files(path, archived, recheck=recheck)
         return True, detail + "; archive=" + json.dumps(archive_receipt, sort_keys=True)
     except Exception as exc:

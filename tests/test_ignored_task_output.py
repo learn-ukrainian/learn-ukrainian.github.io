@@ -340,6 +340,15 @@ def test_failure_retains_sources(checkout, monkeypatch, failure):
             lambda *args, **kwargs: (_ for _ in ()).throw(OSError("record denied")),
         )
     else:
+        extras = []
+        if failure in {"changed", "added"}:
+            extras = [
+                f"ignored/receipt-cap-{index:02d}-{'x' * 64}.txt"
+                for index in range(32)
+            ]
+            for name in extras:
+                artifact(checkout, name, b"padding")
+            monkeypatch.setattr(output, "MAX_RESIDUE_RECEIPT_BYTES", 2048)
         copy = output._classified_inventory
 
         def faulty_copy(*args, **kwargs):
@@ -353,11 +362,30 @@ def test_failure_retains_sources(checkout, monkeypatch, failure):
             return entries
 
         monkeypatch.setattr(output, "_classified_inventory", faulty_copy)
-    ok, reason, _ = preserve(checkout, record)
+    ok, reason, receipt = preserve(checkout, record)
     assert not ok and "refusing worktree removal" in reason
     assert source.exists()
     if failure == "cap":
+        state = json.loads((checkout[2] / "output-task.json").read_text())
+        assert receipt is None
+        assert "artifact_preservation_error" in state
+        assert "preserved_artifacts" not in state
         assert not (checkout[1] / "batch_state/preserved").exists()
+    elif failure in {"changed", "added"}:
+        expected_source = b"changed" if failure == "changed" else b"task output"
+        assert source.read_bytes() == expected_source
+        for name in extras:
+            assert (checkout[0] / name).read_bytes() == b"padding"
+        if failure == "added":
+            assert (checkout[0] / "ignored/added.txt").exists()
+        assert receipt["mode"] == "record_only"
+        assert receipt["copied_bytes"] == 0
+        assert receipt["retention_disposition"] == "retained"
+        assert receipt["entries_truncated"] is True
+        assert len(json.dumps(receipt, sort_keys=True).encode()) <= 2048
+        state = json.loads((checkout[2] / "output-task.json").read_text())
+        assert state["preserved_artifacts"] == receipt
+        assert len(json.dumps(state["preserved_artifacts"], sort_keys=True).encode()) <= 2048
 
 
 def test_missing_record_retains_unknown_output_without_fallback_attribution(checkout):
@@ -1036,7 +1064,7 @@ def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation
     from tests.test_reused_worktree_retention import save
 
     repo, tree, tasks, creator, successor, source = abandon_cohort
-    copy = output._classified_inventory
+    copy = output.artifacts._copy_verified
     changed = []
 
     def change_after_copy(*args, **kwargs):
@@ -1060,7 +1088,7 @@ def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation
                 (tree / "README.md").write_bytes(b"new dirty bytes")
         return result
 
-    monkeypatch.setattr(output, "_classified_inventory", change_after_copy)
+    monkeypatch.setattr(output.artifacts, "_copy_verified", change_after_copy)
     with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
         ok, reason, _ = output.preserve_worktree_artifacts(
             tree,
@@ -1070,6 +1098,7 @@ def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation
             repo_root=repo,
         )
     assert not ok and "artifact preservation failed" in reason
+    assert changed
     assert tree.exists() and source.read_bytes() == b"current output"
 
 
@@ -1078,7 +1107,7 @@ def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_c
     from tests.test_continuation_worktree_reap import _write_abandon_receipt
     from tests.test_reused_worktree_retention import save
 
-    repo, tree, tasks, creator, successor, source = abandon_cohort
+    repo, tree, tasks, creator, successor, _source = abandon_cohort
     (tree / "large-tracked.bin").write_bytes(b"x" * 4096)
     _git(tree, "add", "large-tracked.bin")
     _git(tree, "commit", "-m", "large tracked fixture")
@@ -1087,7 +1116,7 @@ def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_c
         save(tasks, member)
     _write_abandon_receipt(repo, tree, tasks, creator)
     (tree / "untracked.txt").write_bytes(b"unique")
-    expected = len(source.read_bytes()) + len(b"unique")
+    expected = len(b"current output") + len(b"unique")
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", expected)
     ok, reason, receipt = output.preserve_worktree_artifacts(
         tree, primary=repo, tasks_dir=tasks, task_id="boundary", repo_root=repo
@@ -1095,7 +1124,11 @@ def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_c
     assert ok and not reason, (reason, receipt)
     assert receipt["bytes"] == expected
     assert [entry["path"] for entry in receipt["paths"]] == ["ignored/output.txt", "untracked.txt"]
-    assert_record_only(receipt, {"ignored/output.txt": b"current output", "untracked.txt": b"unique"})
+    copy = repo / receipt["location"]
+    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
+    assert (copy / "untracked.txt").read_bytes() == b"unique"
+    assert not (copy / "large-tracked.bin").exists()
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
 
 
 @pytest.mark.parametrize("flag", ["--assume-unchanged", "--skip-worktree"])
@@ -1113,7 +1146,13 @@ def test_10303_abandon_preserves_present_hidden_tracked_bytes(abandon_cohort, fl
         tree, primary=repo, tasks_dir=tasks, task_id="boundary", repo_root=repo
     )
     assert ok and not reason, (reason, receipt)
-    assert_record_only(receipt, {"ignored/output.txt": b"current output", **({"README.md": b"hidden local bytes"} if present else {})})
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    copy = repo / receipt["location"]
+    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
+    if present:
+        assert (copy / "README.md").read_bytes() == b"hidden local bytes"
+    else:
+        assert not (copy / "README.md").exists()
 
 
 def test_10303_abandon_refuses_unmerged_index(abandon_cohort):

@@ -1811,14 +1811,10 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
     assert not tree.exists()
     receipt = row.preserved_artifacts
     assert receipt["abandon_proof"]["head_sha"] == head
-    assert_record_only_receipt(
-        receipt,
-        {
-            source.relative_to(tree).as_posix(): b"current output",
-            **({"untracked.txt": b"untracked unique bytes"} if dirty else {}),
-        },
-    )
-    assert not (repo / "batch_state" / "preserved").exists()
+    assert "mode" not in receipt
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    copy = repo / receipt["location"]
+    assert (copy / source.relative_to(tree)).read_bytes() == b"current output"
     manifest = json.loads((repo / creator["worktree_abandon"]["preservation"]["path"]).read_bytes())
     # Restore from the preserved patch using a separate index; compare the real tree.
     environment = dict(os.environ, GIT_INDEX_FILE=str(tmp_path / "restore.index"))
@@ -1835,7 +1831,9 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
     ).stdout.strip()
     assert restored == _git(repo, "rev-parse", f"{head}^{{tree}}")
     if dirty:
+        assert not (copy / "README.md").exists()
         assert b"GIT binary patch" in (repo / manifest["working_patch"]["path"]).read_bytes()
+        assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
         assert b"GIT binary patch" in (repo / manifest["index_patch"]["path"]).read_bytes()
         subprocess.run(
             ["git", "apply", "--cached", str(repo / manifest["index_patch"]["path"])],
@@ -1859,6 +1857,8 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
             ["git", "show", ":README.md"], cwd=repo, env=environment, check=True, capture_output=True, timeout=30
         ).stdout
         assert working == b"working unique bytes\x00"
+    else:
+        assert not (copy / "README.md").exists()
     state = json.loads((tasks / "boundary.json").read_text())
     assert state["status"] == "needs_finalize" and state["run_nonce"] == creator["run_nonce"]
     assert _git(repo, "rev-parse", "codex/boundary") == head

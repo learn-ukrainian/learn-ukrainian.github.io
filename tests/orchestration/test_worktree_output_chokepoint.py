@@ -569,8 +569,12 @@ def test_post_task_release_cli_requires_owner_and_current_retrieval(boundary_tre
     if failure is None:
         assert code == 0 and report["main_worktree"]["action"] == "removed", report
         assert not tree.exists() and state["keep_worktree"] is False
-        assert state["preserved_artifacts"]["retention_release"]["retrieval_proof_sha256"] == receipt["retrieval_proof_sha256"]
+        current = state["preserved_artifacts"]
+        assert_record_only(current, [{"path": "ignored/output.json", "size": 21, "sha256": hashlib.sha256(b"retrieval proof bytes").hexdigest(), "class": "task_created"}])
+        assert current["retention_release"] == {"owner": "boundary", "run_nonce": "creation-nonce", "mode": "record_only"}
+        assert "retrieval_proof_sha256" not in current
         assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+        assert (archive / "ignored/output.json").read_bytes() == b"retrieval proof bytes"
     else:
         assert code == 1 and report["main_worktree"]["action"] == "retained"
         assert tree.exists() and state["keep_worktree"] is True

@@ -1,7 +1,6 @@
 """Real Git fixtures for the approved first slice of #10227."""
 from __future__ import annotations
 
-import hashlib
 import io
 import json
 import os
@@ -105,17 +104,14 @@ def test_archives_all_bytes_and_releases_exact_branch(holder, names, capsys):
     assert not path.exists()
     receipt = json.loads(record.read_text())["branch_holder_archive"]
     assert receipt["count"] == len(names)
-    assert receipt["mode"] == "record_only"
-    assert receipt["copied_bytes"] == 0
-    assert receipt["inventory_complete"] is True
-    assert receipt["entries_truncated"] is False
-    assert receipt["bytes"] == sum(map(len, expected.values()))
-    assert {entry["path"]: (entry["size"], entry["sha256"]) for entry in receipt["paths"]} == {
-        name: (len(payload), hashlib.sha256(payload).hexdigest()) for name, payload in expected.items()
-    }
-    assert not (primary / "batch_state" / "preserved").exists()
+    assert {e["path"] for e in receipt["paths"]} == set(names)
+    assert ignored_task_output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    for name, payload in expected.items():
+        assert (primary / receipt["location"] / name).read_bytes() == payload
+    assert (primary / receipt["manifest_path"]).is_file()
     output = capsys.readouterr().err
-    assert receipt["inventory_sha256"] in output
+    for key in ("manifest_path", "content_sha256", "retrieval_proof_sha256"):
+        assert receipt[key] in output
     # The caller can actually attach the same branch, without another name.
     git(primary, "worktree", "add", str(primary / ".worktrees" / "next"), branch)
 
@@ -223,48 +219,24 @@ def test_archive_and_final_recheck_failures_delete_nothing(holder, monkeypatch, 
     (path / "pytest_out.txt").write_text("first")
     (path / "second.patch").write_text("second")
     before = {"pytest_out.txt": b"first", "second.patch": b"second"}
-    if failure == "total_cap":
-        exclude = primary / ".git" / "info" / "exclude"
-        exclude.write_text(exclude.read_text() + "\nzzz-ignored/\n")
-        for index in range(32):
-            name = f"zzz-ignored/{index:02d}-" + ("x" * 120) + ".txt"
-            file = path / name
-            file.parent.mkdir(parents=True, exist_ok=True)
-            file.write_bytes(b"x")
-        monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 4096)
-        assert release(holder) == [path]
-        assert not path.exists()
-        receipt = json.loads(record.read_text())["branch_holder_archive"]
-        assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
-        assert receipt["inventory_complete"] is True and receipt["entries_truncated"] is True
-        assert receipt["count"] == 34 and receipt["bytes"] == sum(map(len, before.values())) + 32
-        assert len(receipt["paths"]) < receipt["count"]
-        assert {entry["path"] for entry in receipt["paths"]} >= set(before)
-        assert len(json.dumps(receipt, sort_keys=True).encode()) <= 4096
-        common = json.loads(record.read_text())["preserved_artifacts"]
-        assert common["mode"] == "record_only" and common["copied_bytes"] == 0
-        assert common["inventory_complete"] is True
-        assert common["count"] == 26 and common["bytes"] == 26
-        assert common["entries_truncated"] is True
-        assert not (primary / "batch_state" / "preserved").exists()
-        return
-    if failure == "partial_copy":
-        monkeypatch.setattr(ignored_task_output, "_classified_inventory", lambda *_a, **_k: (_ for _ in ()).throw(OSError("injected inventory failure")))
-    elif failure == "corrupt_archive":
-        classify = ignored_task_output._classified_inventory
+    copy = worktree_artifacts._copy_verified
+    calls = 0
 
-        def corrupt_inventory(*args, **kwargs):
-            entries = classify(*args, **kwargs)
-            entries[0]["sha256"] = "0" * 64
-            return entries
-
-        monkeypatch.setattr(ignored_task_output, "_classified_inventory", corrupt_inventory)
-    elif failure == "receipt":
+    def copying(source, destination, **kwargs):
+        nonlocal calls
+        calls += 1
+        if failure == "partial_copy" and calls == 2:
+            raise OSError("injected copy failure")
+        copy(source, destination, **kwargs)
+    monkeypatch.setattr(worktree_artifacts, "_copy_verified", copying)
+    if failure == "receipt":
         monkeypatch.setattr(worktree_artifacts.reaper_lifecycle, "_atomic_write", lambda *_a: (_ for _ in ()).throw(OSError("receipt failed")))
     elif failure == "keep":
         data = json.loads(record.read_text())
         data["keep_worktree"] = True
         record.write_text(json.dumps(data))
+    elif failure == "total_cap":
+        monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 8)
     else:
         unlink = worktree_artifacts.unlink_archived_regular_files
         def before_delete(root, entries, *, recheck):
@@ -281,6 +253,9 @@ def test_archive_and_final_recheck_failures_delete_nothing(holder, monkeypatch, 
                 (record.parent / "reader.json").write_text(json.dumps({"task_id": "reader", "status": "running", "worktree_path": str(root)}))
             elif failure == "race_liveness":
                 monkeypatch.setattr(delegate, "_branch_holder_active_task_ids", lambda: None)
+            elif failure == "corrupt_archive":
+                receipt = json.loads(record.read_text())["branch_holder_archive"]
+                (primary / receipt["location"] / "second.patch").write_text("corrupt")
             unlink(root, entries, recheck=recheck)
         monkeypatch.setattr(worktree_artifacts, "unlink_archived_regular_files", before_delete)
     assert release(holder) == []
@@ -288,10 +263,39 @@ def test_archive_and_final_recheck_failures_delete_nothing(holder, monkeypatch, 
     assert {name: (path / name).read_bytes() for name in before} == before
     output = capsys.readouterr().err
     assert "artifact preservation failed" in output or "scratch_release_refused" in output
-    if failure.startswith("race_"):
+    if failure.startswith("race_") or failure == "corrupt_archive":
         receipt = json.loads(record.read_text())["branch_holder_archive"]
-        for key in ("mode", "inventory_sha256"):
+        for key in ("manifest_path", "content_sha256", "retrieval_proof_sha256"):
             assert receipt[key] in output
+    if failure == "total_cap":
+        monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 256 * 1024 * 1024)
+        monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 10)
+        prior_receipt = json.loads(record.read_text())["branch_holder_archive"]
+        assert release(holder) == []
+        saved = json.loads(record.read_text())
+        assert "artifact_preservation_error" in saved
+        assert saved["branch_holder_archive"] == prior_receipt
+        assert "preserved_artifacts" not in saved
+        assert {name: (path / name).read_bytes() for name in before} == before
+        monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 10 * 1024 * 1024)
+        ok, reason, receipt = ignored_task_output.preserve_worktree_artifacts(
+            path, primary=primary, tasks_dir=record.parent, task_id="finished",
+            repo_root=primary, extra_files=list(before),
+        )
+        assert ok and not reason
+        assert ignored_task_output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+        for name, payload in before.items():
+            assert (primary / receipt["location"] / name).read_bytes() == payload
+        for incomplete in (
+            dict(receipt, entries_truncated=True),
+            dict(receipt, paths=receipt["paths"][:1]),
+        ):
+            monkeypatch.setattr(
+                ignored_task_output, "preserve_worktree_artifacts",
+                lambda *_a, _receipt=incomplete, **_k: (True, "", _receipt),
+            )
+            assert release(holder) == []
+            assert {name: (path / name).read_bytes() for name in before} == before
 
 
 @pytest.mark.parametrize("payload", [{}, {"tasks": None}, {"tasks": [{}]}, {"tasks": []}])
@@ -341,7 +345,7 @@ def test_final_proof_and_non_force_removal_hold_attachment_lock(holder, monkeypa
 @pytest.mark.parametrize("race", ["replacement", "bytes", "symlink", "restore_failure", "restore_conflict", "receipt_failure"])
 def test_final_stat_rename_race_refuses_and_preserves_replacement(holder, monkeypatch, tmp_path, capsys, race):
     """#10227: replacement after the last source stat must never be unlinked."""
-    _primary, path, _branch, record = holder
+    primary, path, _branch, record = holder
     (path / "pytest_out.txt").write_bytes(b"first")
     (path / "second.patch").write_bytes(b"archived")
     replacement = tmp_path / "replacement"
@@ -394,11 +398,7 @@ def test_final_stat_rename_race_refuses_and_preserves_replacement(holder, monkey
     assert (path / "pytest_out.txt").read_bytes() == b"first"
     output = capsys.readouterr().err
     saved = json.loads(record.read_text())
-    receipt = saved["branch_holder_archive"]
-    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
-    assert {entry["path"]: (entry["size"], entry["sha256"]) for entry in receipt["paths"]}["second.patch"] == (
-        len(b"archived"), hashlib.sha256(b"archived").hexdigest()
-    )
+    assert (primary / saved["branch_holder_archive"]["location"] / "second.patch").read_bytes() == b"archived"
     if race in {"restore_failure", "restore_conflict", "receipt_failure"}:
         if race == "receipt_failure":
             assert '"receipt_recorded": false' in output
@@ -431,6 +431,8 @@ def test_ignored_output_is_archived_once_with_scratch(holder, monkeypatch):
     (path / "pytest_out.txt").write_bytes(b"scratch")
     (path / "ignored").mkdir()
     (path / "ignored/log.txt").write_bytes(b"ignored")
+    copy = worktree_artifacts._copy_verified
+    copied = []
     preserve = ignored_task_output.preserve_worktree_artifacts
     extras = []
 
@@ -439,22 +441,19 @@ def test_ignored_output_is_archived_once_with_scratch(holder, monkeypatch):
             extras.append(kwargs["extra_files"])
         return preserve(*args, **kwargs)
 
-    def refuse_copy(*_args, **_kwargs):
-        pytest.fail("record-only preservation must not copy residue bytes")
+    def copying(source, destination, **kwargs):
+        copied.append(source.relative_to(path).as_posix())
+        return copy(source, destination, **kwargs)
 
-    monkeypatch.setattr(worktree_artifacts, "_copy_verified", refuse_copy)
+    monkeypatch.setattr(worktree_artifacts, "_copy_verified", copying)
     monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", preserving)
     assert release(holder) == [path]
+    assert copied.count("ignored/log.txt") == 1
     assert extras == [["pytest_out.txt"]]
     saved = json.loads(record.read_text())
-    assert saved["preserved_artifacts"] == saved["branch_holder_archive"]
-    receipt = saved["branch_holder_archive"]
-    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
-    assert {entry["path"]: (entry["size"], entry["sha256"]) for entry in receipt["paths"]} == {
-        "ignored/log.txt": (len(b"ignored"), hashlib.sha256(b"ignored").hexdigest()),
-        "pytest_out.txt": (len(b"scratch"), hashlib.sha256(b"scratch").hexdigest()),
-    }
-    assert not (primary / "batch_state" / "preserved").exists()
+    assert "preserved_artifacts" not in saved
+    assert ignored_task_output.verify_retrieval(primary, saved["branch_holder_archive"]) == saved["branch_holder_archive"]["retrieval_proof_sha256"]
+    assert len(list((primary / "batch_state/preserved/finished").glob("*.manifest.json"))) == 1
 
 
 
@@ -497,6 +496,5 @@ def test_generated_output_exempt_from_archive_is_not_explicitly_unlinked(holder,
     assert seen == ["pytest_out.txt"]
     saved = json.loads(record.read_text())
     assert saved["branch_holder_archive"]["count"] == 1
-    assert saved["branch_holder_archive"]["mode"] == "record_only"
-    assert saved["branch_holder_archive"]["copied_bytes"] == 0
-    assert saved["preserved_artifacts"] == saved["branch_holder_archive"]
+    assert "preserved_artifacts" not in saved
+    assert ignored_task_output.verify_retrieval(primary, saved["branch_holder_archive"]) == saved["branch_holder_archive"]["retrieval_proof_sha256"]
