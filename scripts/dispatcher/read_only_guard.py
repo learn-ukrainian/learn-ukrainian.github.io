@@ -730,7 +730,8 @@ def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[
     configuration with each value's origin, and the task branch's tip at the
     fetch URL and at every distinct push URL of every configured remote, each
     probed exactly as push or fetch would rewrite it. Any difference fails the
-    task. ``branch`` pins the branch observed at the baseline, so a later
+    task, except a tag absent from the baseline, which a fetch may have
+    auto-followed (see :meth:`ReadOnlyGuard.finish`). ``branch`` pins the branch observed at the baseline, so a later
     checkout cannot move the remote comparison.
 
     Boundary: a push to a destination that is not a configured remote — a URL
@@ -1212,8 +1213,17 @@ class ReadOnlyGuard:
             )
         ref_mutations: list[str] = []
         if self.refs_pre is not None and refs_post is not None:
+            # A tag in the baseline that was deleted or now points elsewhere is a
+            # mutation; a tag absent from the baseline is not. ``git fetch``
+            # auto-follows tags into the shared ref store, the task's or a
+            # concurrent lane's, so a new tag cannot be told apart from one a
+            # worker created. That gap is a known residual (#11797); the legacy
+            # guard compared no tags at all.
             ref_mutations = sorted(
-                ref for ref in set(self.refs_pre) | set(refs_post) if self.refs_pre.get(ref) != refs_post.get(ref)
+                ref
+                for ref in set(self.refs_pre) | set(refs_post)
+                if self.refs_pre.get(ref) != refs_post.get(ref)
+                and not (ref.startswith("refs/tags/") and ref not in self.refs_pre)
             )
         fields: dict[str, Any] = {
             "read_only_checkout_snapshot_error": self.snapshot_error,

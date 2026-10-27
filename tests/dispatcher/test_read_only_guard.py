@@ -978,7 +978,16 @@ def _seed_pushed_checkout(tmp_path: Path) -> tuple[Path, str]:
     _git(checkout, "remote", "add", "origin", str(tmp_path / "remote.git"))
     for alias in ("refs/heads/alias-a", "refs/heads/alias-b"):
         _git(checkout, "symbolic-ref", alias, branch)
+    for tag in ("baseline-deleted", "baseline-moved"):
+        _git(checkout, "tag", tag, "HEAD")
     return checkout, branch
+
+
+def _rewrite_baseline_tags(repo: Path, tmp: Path) -> None:
+    _git(repo, "tag", "review-leak", "HEAD")
+    _git(repo, "tag", "-d", "baseline-deleted")
+    unseen = _git(repo, "commit-tree", _git(repo, "rev-parse", "HEAD^{tree}"), "-m", "x")
+    _git(repo, "tag", "-f", "baseline-moved", unseen)
 
 
 def _add_empty_push_url(repo: Path, tmp: Path) -> None:
@@ -989,7 +998,7 @@ def _add_empty_push_url(repo: Path, tmp: Path) -> None:
 @pytest.mark.parametrize(
     ("mutate", "expected"),
     [
-        (lambda repo, tmp: _git(repo, "tag", "review-leak", "HEAD"), lambda repo: ["refs/tags/review-leak"]),
+        (_rewrite_baseline_tags, lambda repo: ["refs/tags/baseline-deleted", "refs/tags/baseline-moved"]),
         (lambda repo, tmp: _git(repo, "branch", "review-leak"), lambda repo: ["refs/heads/review-leak"]),
         (lambda repo, tmp: _git(repo, "notes", "add", "-m", "unauthorized", "HEAD"), lambda repo: ["refs/notes/commits"]),
         (
@@ -1076,19 +1085,26 @@ def test_read_only_task_that_pushes_to_a_separate_push_url_settles_failed(
     assert state["error"] == "read_only_remote_push"
 
 
-def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(tmp_tasks_dir, tmp_path, monkeypatch):
-    """A fetch writes only remote-tracking refs and FETCH_HEAD, which read-only work may do."""
+@pytest.mark.parametrize("tagged", [False, True], ids=["branch", "auto-followed-tag"])
+def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(
+    tmp_tasks_dir, tmp_path, monkeypatch, tagged
+):
+    """A fetch writes remote-tracking refs, FETCH_HEAD and new tags it auto-follows, which read-only work may do."""
     checkout, _branch = _seed_pushed_checkout(tmp_path)
     remote = str(tmp_path / "remote.git")
     _git(checkout, "push", "-q", remote, "HEAD:refs/heads/other")
     _git(checkout, "fetch", "-q", "origin")
     advanced = _git(checkout, "commit-tree", _git(checkout, "rev-parse", "HEAD^{tree}"), "-p", "HEAD", "-m", "other")
     _git(checkout, "push", "-q", remote, f"{advanced}:refs/heads/other")
+    if tagged:
+        _git(checkout, "push", "-q", remote, f"{advanced}:refs/tags/fetched")
 
     def fetch(repo):
         before = _git(repo, "rev-parse", "refs/remotes/origin/other")
         _git(repo, "fetch", "-q", "origin")
         assert _git(repo, "rev-parse", "refs/remotes/origin/other") != before
+        if tagged:
+            assert _git(repo, "rev-parse", "refs/tags/fetched") == advanced
         assert _status(repo) == ""
 
     rc, state, _ = _supervise(
