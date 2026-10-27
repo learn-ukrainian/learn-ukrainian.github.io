@@ -48,6 +48,9 @@ ALLOWLIST: dict[tuple[str, str | None], str] = {
     ("scripts/orchestration/reap_worktrees.py", "_reap_qualified_worktree"): (
         "the reaper pipeline: calls the raw remover only under _enter_dispatch_worktree_guard (same lock and scan)"
     ),
+    ("scripts/dispatcher/git.py", "settle_worktree"): (
+        "creator-owned settlement under the task lock: publication proof on the recorded remote, never another task's or a borrowed live tree"
+    ),
 }
 
 # Names of functions that remove a worktree without the guard, current or
