@@ -420,8 +420,8 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
     Runs from outside the worktree after the provider has exited. A write task's worktree goes only
     when its HEAD is the publish branch's tip on the canonical remote recorded at dispatch (without
     --branch that is the task branch), a pull-request head there, or is already in that remote's main.
-    borrowed() is asked under the worktree lock, right before removal, whether another running task
-    works in this tree.
+    borrowed() is asked under the worktree lock, right before removal, whether another task's
+    provider may still work in this tree.
     """
     def disposition(state, reason):
         return dict(worktree_disposition=state, worktree_disposition_reason=reason)
@@ -443,7 +443,7 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
         return disposition("retained", "unpublished" if remote is None else "remote_mismatch")
     with worktree_lock(repo):
         if borrowed():
-            return disposition("retained", "borrowed_by_running_task")
+            return disposition("retained", "borrowed_by_live_task")
         try:
             _git(repo, "worktree", "remove", str(tree), isolate=True)
         except (OSError, subprocess.SubprocessError):

@@ -408,20 +408,42 @@ def test_crash_recovery_keeps_worktree_while_the_orphaned_provider_runs(sandbox)
     assert not Path(record["worktree_path"]).exists()
 
 
-def test_settlement_keeps_a_worktree_that_a_running_task_borrowed(sandbox):
-    """Defect (F3): a finished task removed its worktree while another running task worked there via --cwd."""
+@pytest.mark.parametrize("borrower_state", ["running", "crashed", "aliased"])
+def test_settlement_keeps_a_worktree_that_a_live_task_borrowed(sandbox, borrower_state):
+    """Defect (F3): a finished task removed its worktree while another task's provider worked there via --cwd.
+
+    crashed: the borrower's supervisor died, so its record is terminal while its provider still runs.
+    aliased: the borrower named the tree by another spelling (TREE/../TREE_NAME).
+    """
     owner = sandbox.dispatch("blocked")
     await_file(sandbox.tasks / f"{owner[0]}.started")
     tree = Path(json.loads((sandbox.tasks / f"{owner[0]}.json").read_text())["worktree_path"])
-    borrower = sandbox.dispatch("blocked", "--cwd", str(tree))
-    await_file(sandbox.tasks / f"{borrower[0]}.started")
+    cwd = tree / ".." / tree.name if borrower_state == "aliased" else tree
+    borrower = sandbox.dispatch("blocked", "--cwd", str(cwd))
+    provider = int(await_file(sandbox.tasks / f"{borrower[0]}.started"))
+    if borrower_state == "crashed":
+        supervisor = json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())
+        os.kill(supervisor["pid"], signal.SIGKILL)
+        deadline = time.monotonic() + 10
+        while worker._identity(supervisor["pid"]) == supervisor["process_start"]:
+            assert time.monotonic() < deadline, "supervisor survived SIGKILL"
+            time.sleep(0.02)
+        sandbox.settle(sandbox.dispatch())  # crash recovery records the borrower as crashed
+        assert json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())["status"] == "crashed"
     (sandbox.tasks / f"{owner[0]}.release").touch()
     record = sandbox.settle(owner)
     assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == (
-        "retained", "borrowed_by_running_task")
+        "retained", "borrowed_by_live_task")
     assert tree.is_dir()
-    (sandbox.tasks / f"{borrower[0]}.release").touch()
-    assert sandbox.settle(borrower)["worktree_disposition_reason"] == "borrowed_worktree"
+    if borrower_state == "crashed":
+        os.killpg(provider, signal.SIGKILL)
+        deadline = time.monotonic() + 10
+        while worker._provider_alive(json.loads((sandbox.tasks / f"{borrower[0]}.json").read_text())):
+            assert time.monotonic() < deadline, "provider survived SIGKILL"
+            time.sleep(0.02)
+    else:
+        (sandbox.tasks / f"{borrower[0]}.release").touch()
+        assert sandbox.settle(borrower)["worktree_disposition_reason"] == "borrowed_worktree"
     sandbox.settle(sandbox.dispatch())
     assert json.loads((sandbox.tasks / f"{owner[0]}.json").read_text())["worktree_disposition"] == "removed"
     assert not tree.exists()

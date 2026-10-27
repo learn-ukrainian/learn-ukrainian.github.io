@@ -194,15 +194,30 @@ def _provider_alive(record: dict) -> bool | None:
     return True
 
 
+def _same_tree(left: str | None, right: str | None) -> bool:
+    """Whether two recorded paths name one directory: by inode while both exist, else by resolved path."""
+    if not left or not right:
+        return False
+    with contextlib.suppress(OSError):
+        return os.path.samefile(left, right)
+    return os.path.realpath(left) == os.path.realpath(right)
+
+
 def _borrowed(record: dict) -> bool:
-    """Whether another active task runs in this task's worktree (dispatched there with --cwd)."""
-    return any(other.get("task_id") != record["task_id"] and other.get("status") in store.ACTIVE
-               and other.get("worktree_path") == record.get("worktree_path") for other in store.list_tasks())
+    """Whether another task may still work in this task's worktree (dispatched there with --cwd).
+
+    Liveness outranks status: a terminal borrower (a crashed supervisor) holds the tree until its
+    provider is proven gone. A borrower whose supervisor never started (no pid) never ran a provider.
+    """
+    return any(
+        other.get("task_id") != record["task_id"] and _same_tree(other.get("worktree_path"), record.get("worktree_path"))
+        and (other.get("status") in store.ACTIVE or (other.get("pid") is not None and _provider_alive(other) is not False))
+        for other in store.list_tasks())
 
 
 # Dispositions that can change once other processes end or the work is published (pushed or merged
 # after the task ended); crash recovery settles these again and still removes only with the proof.
-RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_running_task",
+RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
                            "unpublished", "remote_mismatch"})
 
 
