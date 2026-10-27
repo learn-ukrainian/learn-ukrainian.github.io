@@ -204,7 +204,8 @@ def test_prepare_writes_three_cards_with_exact_hashes_and_commands(prepared: tup
         assert manifest["kind"] == kind
         argv = one["dispatch"]
         assert argv[1].endswith("scripts/dispatch.py")
-        assert argv[argv.index("--model") + 1] == "gpt-6.1-sol"
+        assert argv[argv.index("--agent") + 1] == "claude"
+        assert argv[argv.index("--model") + 1] == "claude-opus-5-5"
         assert argv[argv.index("--review-access") + 1] == "isolated"
         assert argv[argv.index("--review-profile") + 1] == "ukrainian"
         assert argv[argv.index("--review-attempt") + 1] == one["manifest"]
