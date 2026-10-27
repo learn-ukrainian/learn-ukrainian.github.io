@@ -117,12 +117,12 @@ def test_driver_brief_exception_requires_acceptance_command(launch, complete, ca
     launch[launch.index("--model") + 1] = model
     launch += ["--research-role", "implementation", "--research-task-family", "bounded_implementation",
                "--mode", "workspace-write"]
+    (tmp_path / "docs/example.md").write_text("Assigned document")
+    for command in (("init",), ("remote", "add", "origin", "git@github.com:example/public.git"),
+                    ("-c", "user.name=Stub", "-c", "user.email=stub@example.invalid",
+                                "commit", "--allow-empty", "-m", "fixture")):
+        subprocess.run(["git", "-C", str(tmp_path), *command], check=True, capture_output=True, timeout=30)
     if complete:
-        (tmp_path / "docs/example.md").write_text("Assigned document")
-        for command in (("init",), ("remote", "add", "origin", "git@github.com:example/public.git"),
-                        ("-c", "user.name=Stub", "-c", "user.email=stub@example.invalid",
-                                    "commit", "--allow-empty", "-m", "fixture")):
-            subprocess.run(["git", "-C", str(tmp_path), *command], check=True, capture_output=True, timeout=30)
         launch += ["--verify-command", "test -f docs/example.md"]
     assert cli.main(launch) == (0 if complete else 2)
     if complete:
@@ -586,3 +586,84 @@ def test_existing_haiku_routine_mechanical_dispatch_needs_no_new_brief_contract(
     assert "driver_brief" not in record and "advisory_envelope" not in record
     assert "advisory_prompt_sha256" not in record
     assert len(runtime.calls) == 1
+
+
+@pytest.mark.parametrize("model,agent", [("gpt-6-luna", "sol"), ("claude-haiku-5-5", "claude")])
+@pytest.mark.parametrize("flag", ["--owned-path", "--research-owned-path"])
+def test_explicit_bounded_envelope_retains_security_path_refusal(launch, runtime, capsys, model, agent, flag):
+    """Ported from tests/test_delegate_bounded_advisory.py::test_explicit_bounded_envelope_retains_security_path_refusal."""
+    launch[launch.index("--agent") + 1] = agent
+    launch[launch.index("--model") + 1] = model
+    owned = "scripts/agent_runtime/new_gate.py" if flag == "--owned-path" else "docs/example.md"
+    launch[launch.index("--owned-path") + 1] = owned
+    launch += ["--mode", "workspace-write", "--research-task-family", "bounded_implementation",
+               "--research-role", "implementation"]
+    if flag == "--research-owned-path":
+        launch += [flag, "scripts/agent_runtime/new_gate.py"]
+    _write_advisor(launch, capsys, owned_paths=[owned])
+    assert cli.main([*launch, "--advisory-task", "advisor"]) == 2
+    assert "MECHANICAL_TASK_REFUSED: security-sensitive" in capsys.readouterr().err
+    worker.start.assert_not_called()
+    git.create_worktree.assert_not_called()
+    assert not store.record_path("worker").exists()
+
+
+@pytest.mark.parametrize("role", ["driver", "security_code", "ukrainian_authoring", "formal-review", "design_approval",
+                                  "consult", "consultation", "advice", "adviser"])
+def test_luna_free_form_roles_do_not_authorize_excluded_activity_classes(launch, capsys, role):
+    """Ported from tests/agent_runtime/test_mechanical_admission.py::test_luna_free_form_roles_do_not_authorize_excluded_activity_classes."""
+    launch += ["--research-role", role]
+    _write_advisor(launch, capsys)
+    assert cli.main([*launch, "--advisory-task", "advisor"]) == 2
+    assert "MECHANICAL_TASK_REFUSED: bounded workers cannot take" in capsys.readouterr().err
+    worker.start.assert_not_called()
+    git.create_worktree.assert_not_called()
+    assert not store.record_path("worker").exists()
+
+
+@pytest.mark.parametrize("extra,reason", [
+    ([], "catalog-eligible"),
+    (["--research-task-family", "routine_mechanical", "--prompt", "Напиши текст"], "task prompt"),
+    (["--research-task-family", "routine_mechanical", "--owned-path", "curriculum/a1/item.md"], "Ukrainian"),
+    (["--research-task-family", "routine_mechanical", "--require-review-verdict", "--mode", "read-only"], "review"),
+])
+def test_excluded_work_refuses_before_routing(launch, runtime, capsys, extra, reason):
+    """Ported from tests/agent_runtime/test_mechanical_admission.py::test_excluded_work_refuses_before_routing."""
+    launch[launch.index("--agent") + 1] = "claude"
+    launch[launch.index("--model") + 1] = "claude-haiku-5-5"
+    assert cli.main([*launch, "--mode", "workspace-write", *extra]) == 2
+    error = capsys.readouterr().err
+    assert "MECHANICAL_TASK_REFUSED" in error and reason in error
+    worker.start.assert_not_called()
+    git.create_worktree.assert_not_called()
+    assert not store.record_path("worker").exists()
+
+
+@pytest.mark.parametrize("change", ["missing-family", "classification-write", "tampered-family", "tampered-mode"])
+def test_worker_refuses_invalid_or_tampered_record_with_typed_terminal_cause(launch, runtime, capsys, change):
+    """Ported from tests/test_delegate_mechanical_worker_admission.py::test_worker_refuses_invalid_or_tampered_record_with_typed_terminal_cause."""
+    from scripts.agent_runtime.target_admission import mechanical_scope_digest
+
+    launch[launch.index("--agent") + 1] = "claude"
+    launch[launch.index("--model") + 1] = "claude-haiku-5-5"
+    assert cli.main([*launch, "--research-task-family", "routine_mechanical"]) == 0, capsys.readouterr().err
+    record = store.read("worker")
+    scope = record["mechanical_task"]
+    assert scope["sha256"] == mechanical_scope_digest(scope)
+    if change == "missing-family":
+        record.pop("mechanical_task")
+    elif change == "classification-write":
+        record["mode"] = scope["mode"] = "workspace-write"
+        scope["family"] = "mechanical_classification"
+        scope["sha256"] = mechanical_scope_digest(scope)
+    elif change == "tampered-mode":
+        record["mode"] = "workspace-write"
+    else:
+        scope["family"] = "readonly_recon"
+    store.replace(record)
+    terminal = runtime.settle()
+    assert terminal["status"] == "failed"
+    assert terminal["failure_reason"] == terminal["last_error"] == "mechanical_admission_refused"
+    assert terminal["returncode_reason"] == "mechanical_admission_refused"
+    assert terminal["finished_at"] and terminal["stderr_excerpt"].startswith("MECHANICAL_TASK_REFUSED:")
+    assert runtime.calls == []

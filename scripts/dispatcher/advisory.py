@@ -180,6 +180,10 @@ def prepare(spec, record: dict, prompt: bytes, hard_timeout: float):
 
 
 def verify(spec, record: dict, hard_timeout: float) -> str | None:
+    if record.get("advisory_required") is False and not any(
+        record.get(key) is not None for key in ("driver_brief", "advisory_envelope", "advisory_exemption")
+    ):
+        return None
     actual = execution(spec, hard_timeout)
     admitted = record.get("driver_brief") or record.get("advisory_envelope")
     if admitted is not None and isinstance(admitted.get("admitted_execution"), dict):

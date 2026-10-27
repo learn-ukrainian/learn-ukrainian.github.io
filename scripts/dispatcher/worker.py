@@ -12,7 +12,7 @@ from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import advisory, advisory_completion, git, providers, store
+from scripts.dispatcher import advisory, advisory_completion, git, mechanical, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 
@@ -231,12 +231,18 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             except (OSError, ValueError):
                 status, error = "failed", "output schema binding invalid"
                 return
-        spec = advisory.snapshot(spec, spec.prompt_file.read_bytes())
+        if record.get("mechanical_task") or any(record.get(key) is not None for key in (
+            "driver_brief", "advisory_envelope", "advisory_exemption", "advisory_role",
+        )):
+            spec = advisory.snapshot(spec, spec.prompt_file.read_bytes())
+        mechanical.verify(spec, record)
         advisory.handoff(spec, record, options, hard_timeout)
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
         advisory_stage = "at the provider handoff"
-        checked = advisory.handoff(spec, store.read(spec.task_id, record["run_nonce"]), options, hard_timeout)
+        current = store.read(spec.task_id, record["run_nonce"])
+        mechanical.verify(spec, current)
+        checked = advisory.handoff(spec, current, options, hard_timeout)
         if checked is not None:
             record["advisory_prompt_sha256"] = checked
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
@@ -285,6 +291,10 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                     status, error = "failed", "review_ambiguous_verdict"
             except Exception:
                 status, error = "failed", "review_gate_error"
+    except mechanical.MechanicalAdmissionRefused as exc:
+        status, error = "failed", str(exc)
+        record.update(failure_reason="mechanical_admission_refused", last_error="mechanical_admission_refused",
+                      returncode_reason="mechanical_admission_refused", stderr_excerpt=str(exc)[:500])
     except advisory.contract.AdvisoryRefused as exc:
         status, error = "failed", f"worker refused {advisory_stage}: {exc}"
         record.update(failure_reason=exc.code, last_error=exc.code,
