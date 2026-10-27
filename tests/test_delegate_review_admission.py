@@ -2820,7 +2820,7 @@ def test_default_dispatch_arguments_match_pre_10437_golden(mode):
 def test_authoring_review_plan_default_matches_absent_and_red_team_binds(builder, tmp_path):
     from scripts.review.seeds import adjudicate
 
-    argv = adjudicate.dispatch_argv(tmp_path / "review.task.md", "review-fixture", "codex", model="gpt-6.1-sol")[2:]
+    argv = adjudicate.legacy_dispatch_argv(tmp_path / "review.task.md", "review-fixture", "codex", model="gpt-6.1-sol")[2:]
     parser = delegate.build_parser()
     canonical = parser.parse_args(argv)
     assert canonical.authoring_review_plan == "cross_family"
