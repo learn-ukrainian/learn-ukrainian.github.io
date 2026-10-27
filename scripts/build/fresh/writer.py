@@ -327,7 +327,7 @@ def dispatch_writer(
     run_nonce = None
     wait_state: dict[str, Any] = {}
 
-    # 1. Execute task (either through fake seat or real delegate.py)
+    # 1. Execute task (either through fake seat or real dispatch.py)
     if fake_seat is not None:
         result_file = root / f"batch_state/tasks/{task_id}.result"
         result_file.parent.mkdir(parents=True, exist_ok=True)
@@ -358,7 +358,7 @@ def dispatch_writer(
             proc = _run_harness(cmd, timeout=60)
             if proc.returncode != 0:
                 raise WriterHarnessError(f"Fake seat script failed with exit code {proc.returncode}: {proc.stderr}")
-        # Fake seats may emit the same task-record sidecar as delegate.py.
+        # Fake seats may emit the same task-record sidecar as dispatch.py.
         task_record = result_file.with_suffix(".json")
         if task_record.is_file():
             try:
@@ -407,7 +407,7 @@ def dispatch_writer(
             disp_proc = _run_harness(dispatch_cmd, timeout=60)
             if disp_proc.returncode != 0:
                 raise WriterHarnessError(
-                    f"delegate.py dispatch failed with exit code {disp_proc.returncode}: {disp_proc.stderr}"
+                    f"dispatch.py dispatch failed with exit code {disp_proc.returncode}: {disp_proc.stderr}"
                 )
 
             lines = jsonl_lines(disp_proc.stdout)
@@ -429,27 +429,27 @@ def dispatch_writer(
         if run_nonce:
             wait_cmd.extend(("--run-nonce", run_nonce))
         wait_proc = _run_harness(wait_cmd, timeout=timeout + 30)
-        # Parse JSON printed by delegate.py wait <task-id> (MAJOR D)
+        # Parse JSON printed by dispatch.py wait <task-id> (MAJOR D)
         try:
             wait_state = json.loads(wait_proc.stdout)
         except Exception as err:
             if wait_proc.returncode != 0:
                 raise WriterHarnessError(
-                    f"delegate.py wait failed with exit code {wait_proc.returncode}: "
+                    f"dispatch.py wait failed with exit code {wait_proc.returncode}: "
                     f"{wait_proc.stderr or wait_proc.stdout}"
                 ) from err
             raise WriterHarnessError(
-                f"delegate.py wait output was not valid JSON: {err}; stdout={wait_proc.stdout!r}"
+                f"dispatch.py wait output was not valid JSON: {err}; stdout={wait_proc.stdout!r}"
             ) from err
 
         if wait_proc.returncode != 0:
             raise WriterHarnessError(
-                f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr or wait_proc.stdout}",
+                f"dispatch.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr or wait_proc.stdout}",
                 status=wait_state.get("status") if isinstance(wait_state, dict) else None,
             )
 
         if not isinstance(wait_state, dict):
-            raise WriterHarnessError(f"delegate.py wait output must be a JSON object, got {type(wait_state).__name__}")
+            raise WriterHarnessError(f"dispatch.py wait output must be a JSON object, got {type(wait_state).__name__}")
 
         status = wait_state.get("status")
         if not isinstance(status, str) or status != "done":
@@ -457,7 +457,7 @@ def dispatch_writer(
 
         result_path_str = wait_state.get("result_file")
         if not isinstance(result_path_str, str) or not result_path_str:
-            raise WriterHarnessError(f"delegate.py wait state missing 'result_file': {wait_state}")
+            raise WriterHarnessError(f"dispatch.py wait state missing 'result_file': {wait_state}")
 
         if run_nonce and wait_state.get("run_nonce") != run_nonce:
             raise WriterHarnessError("Writer wait returned a stale run nonce")

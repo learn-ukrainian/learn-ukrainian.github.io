@@ -8,8 +8,9 @@ from pathlib import Path
 
 import pytest
 
-from scripts.github_check_rollup import group_collapsed_by_name
+from scripts.github_check_rollup import collapse_status_rollup, group_collapsed_by_name, project_check_runs
 from scripts.orchestration import integration_sweep as sweep
+from scripts.publish.merge_guard import bound_rollup_states
 from scripts.review.record_cf_verdict import build_comment
 
 SHA = "a" * 40
@@ -333,6 +334,28 @@ def test_timestamp_tie_failure_is_not_hidden_by_list_order():
         ]
     )
     assert sweep._check_blockers(item) == ["CI red CI Gate"]
+
+
+def test_identical_duplicate_check_run_rows_after_a_rerun_must_not_block_merge():
+    row = {"id": 1, "name": "CI Gate", "workflowName": "CI", "check_suite": {"id": 123},
+           "started_at": START, "completed_at": "2026-09-23T13:00:00Z",
+           "status": "completed", "conclusion": "success"}
+    rows = project_check_runs([row, {**row, "id": 2}])
+    assert collapse_status_rollup(rows) == [rows[0]]
+    assert bound_rollup_states(pr(statusCheckRollup=rows), SHA, "unit/repo", lambda _: None) == ([], [])
+
+
+def test_conflicting_rows_fail_closed():
+    row = {"id": 1, "name": "CI Gate", "workflowName": "CI", "check_suite": {"id": 123},
+           "started_at": START, "completed_at": "2026-09-23T13:00:00Z",
+           "status": "completed", "conclusion": "success"}
+    for change in ({"conclusion": "failure"}, {"status": "in_progress"}, {"state": "FAILURE"},
+                   {"check_suite": {"id": 124}}, {"check_suite": None},
+                   {"started_at": None, "completed_at": None}, {"completed_at": None}):
+        rows = project_check_runs([row, {**row, "id": 2, **change}])
+        for ordered in (rows, rows[::-1]):
+            assert collapse_status_rollup(ordered) == ordered
+            assert bound_rollup_states(pr(statusCheckRollup=ordered), SHA, "unit/repo", lambda _: None) is None
 
 
 def test_cross_workflow_in_progress_is_pending():

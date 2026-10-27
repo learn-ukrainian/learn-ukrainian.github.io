@@ -1,6 +1,6 @@
 """Allowlisted fleet repository resolution for multi-repo dispatch (#672 P2.1).
 
-The public primary that owns ``scripts/delegate.py`` remains the control-plane
+The public primary that owns ``scripts/dispatch.py`` remains the control-plane
 root. ``--repo`` selects which sibling git checkout receives worktree creation
 and GitHub targeting.
 """

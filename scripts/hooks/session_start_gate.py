@@ -194,13 +194,12 @@ def _import_thread_handoff() -> Any:
 
 
 def _dispatch_worker_identity(args: argparse.Namespace) -> tuple[str, str] | None:
-    """Return ``(agent, task_id)`` when this session is a delegate.py dispatch
+    """Return ``(agent, task_id)`` when this session is a dispatch
     worker, else ``None``.
 
-    Deterministic, two signals (either suffices): the explicit marker
-    ``LEARN_UKRAINIAN_DISPATCH_TASK_ID`` that delegate.py exports into every
-    worker environment, or — the layout-A fallback — the session checkout
-    sitting under the primary's ``.worktrees/dispatch/<agent>/<task>/``
+    Deterministic, two signals (either suffices): the legacy environment
+    marker ``LEARN_UKRAINIAN_DISPATCH_TASK_ID``, or the session checkout
+    under the primary's ``.worktrees/dispatch/<agent>/<task>/``
     (layout A is binding, so that path shape is unambiguous).
     """
     task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip()
@@ -244,7 +243,7 @@ def _recorded_lease_owner(args: argparse.Namespace) -> tuple[str, str]:
 def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
     if not args.claim_lease:
         return {"status": "skipped", "reason": "not a claude lane"}
-    # #7827: a headless worker dispatched by delegate.py shares the agent
+    # #7827: a headless dispatch worker shares the agent
     # family's checkout state with the orchestrator that legitimately holds
     # the per-agent thread lease. Evaluating the lease here would conflict
     # with that live owner on every dispatch, so the worker neither claims

@@ -9,7 +9,7 @@ than two xdist processes, and a full-suite run takes one host-wide lock. A
 ``--collect-only`` run executes no test, so it never takes the lock (#9434).
 An exact ``-m repo_wide`` selection runs the bounded invariant registry and
 also skips the lock (#9670); other full-tree filters remain locked.
-``delegate.py`` sets ``PYTEST_PLUGINS``, and ``build_agent_env`` forwards only
+Legacy worker environments set ``PYTEST_PLUGINS``, and ``build_agent_env`` forwards only
 ``ci.pytest_dispatch_cap`` while the dispatch marker is set, so the cap still
 loads when a worker copies CI's ``--override-ini addopts=-v`` and drops the
 ``addopts`` ``-p`` registration. Operator shells and CI leave the dispatch

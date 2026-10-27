@@ -863,3 +863,111 @@ def test_keep_list_pin_added_during_landing_probe_prevents_removal(batch, monkey
     assert (entry / "held-example" / "report.txt").read_text() == "evidence\n"
     assert rows[0]["result"] == "skipped:changed_before_removal"
     assert "reason" not in rows[0]
+
+
+@pytest.fixture
+def backstop_clock(monkeypatch):
+    now = 1_800_000_000 * 10**9
+    monkeypatch.setattr(retention.time, "time_ns", lambda: now)
+    return now
+
+
+def age_entry(entry, stamp):
+    for path in [*entry.rglob("*"), entry] if entry.is_dir() else [entry]:
+        os.utime(path, ns=(stamp, stamp), follow_symlinks=False)
+
+
+@pytest.mark.parametrize("kind", ["unproven", "held", "pinned", "file"])
+def test_backstop_deletes_expired_entries_without_proof_rules(batch, backstop_clock, kind, monkeypatch):
+    entry = batch / "preserved" / "residue"
+    if kind == "file":
+        entry.write_text("residue")
+    else:
+        entry = make_entry(batch, bundle="held-example" if kind == "held" else "bundle", status="running")
+        (batch / "tasks" / f"{entry.name}.json").write_text('{"keep_worktree": true}')
+    age_entry(entry, backstop_clock - 25 * 3600 * 10**9)
+    monkeypatch.setattr(retention, "eligible", lambda *args: pytest.fail("backstop consulted proof rules"))
+    (batch / "preserved-keep.txt").unlink()
+    code, rows = invoke(batch, expire_older_than_hours=24, allow_empty_keep_list=True)
+    assert code == 0 and not entry.exists()
+    assert rows[0]["decision"] == "deleted" and rows[0]["reason"] == "expired"
+    assert rows[0]["bytes"] > 0
+
+
+@pytest.mark.parametrize("offset", [-1, 0, 1])
+def test_backstop_never_deletes_entries_newer_than_the_cutoff(batch, backstop_clock, offset):
+    entry = make_entry(batch)
+    age_entry(entry, backstop_clock - 25 * 3600 * 10**9)
+    newest = backstop_clock - 24 * 3600 * 10**9 + offset
+    os.utime(entry / "evidence-example" / "report.txt", ns=(newest, newest))
+    code, rows = invoke(batch, expire_older_than_hours=24)
+    assert code == 0 and entry.exists() == (offset >= 0)
+    assert rows[0]["newest_mtime_ns"] == newest
+    assert rows[0]["result"] == ("skipped:fresh" if offset >= 0 else "deleted")
+
+
+def test_backstop_honors_the_keep_list_for_expired_entries(batch, backstop_clock):
+    entry = make_entry(batch)
+    age_entry(entry, backstop_clock - 25 * 3600 * 10**9)
+    (batch / "preserved-keep.txt").write_text(entry.name + "\n")
+    code, rows = invoke(batch, expire_older_than_hours=24)
+    assert code == 0 and entry.exists() and rows[0]["reason"] == "keep_list"
+
+
+@pytest.mark.parametrize("direct", [False, True])
+def test_backstop_never_follows_symlinks_out_of_preserved(batch, tmp_path, backstop_clock, direct):
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    target = outside / "data.txt"
+    target.write_text("untouched")
+    entry = batch / "preserved" / "linked"
+    if not direct:
+        entry.mkdir()
+    link = entry if direct else entry / "link"
+    link.symlink_to(outside, target_is_directory=True)
+    os.utime(link, ns=(0, 0), follow_symlinks=False)
+    code, rows = invoke(batch, expire_older_than_hours=24)
+    assert code == 0 and link.is_symlink() and target.read_text() == "untouched"
+    assert rows[0]["reason"] == ("symlink" if direct else "symlink_or_special")
+
+
+def test_backstop_skips_an_entry_with_unreadable_age(batch, backstop_clock, monkeypatch):
+    entry = make_entry(batch)
+    monkeypatch.setattr(retention, "measure", lambda *args, **kwargs: (_ for _ in ()).throw(PermissionError()))
+    code, rows = invoke(batch, expire_older_than_hours=24)
+    assert code == 0 and entry.exists()
+    assert rows[0]["reason"] == "age_unreadable" and rows[0]["newest_mtime_ns"] is None
+
+
+def test_backstop_dry_run_deletes_nothing_and_writes_receipts(batch, backstop_clock):
+    entry = make_entry(batch)
+    age_entry(entry, backstop_clock - 25 * 3600 * 10**9)
+    code, rows = invoke(batch, apply=False, expire_older_than_hours=24)
+    assert code == 0 and entry.exists() and len(rows) == 1
+    assert rows[0]["result"] == "skipped:dry_run" and rows[0]["reason"] == "expired"
+
+
+@pytest.mark.parametrize("invalid", ["0", "-1", "1.5", "text"])
+def test_backstop_rejects_invalid_hour_values(batch, invalid):
+    with pytest.raises(SystemExit) as error:
+        invoke(batch, expire_older_than_hours=invalid)
+    assert error.value.code == 2 and not (batch / "reports").exists()
+
+
+@pytest.mark.parametrize("change", ["keep", "age"])
+def test_backstop_rechecks_keep_list_and_age_before_removal(batch, backstop_clock, monkeypatch, change):
+    entry = make_entry(batch)
+    age_entry(entry, backstop_clock - 25 * 3600 * 10**9)
+    original = retention.measure
+
+    def changed_scan(fd, **kwargs):
+        result = original(fd, **kwargs)
+        if change == "keep":
+            (batch / "preserved-keep.txt").write_text(entry.name + "\n")
+        else:
+            os.utime(entry, ns=(backstop_clock, backstop_clock))
+        return result
+
+    monkeypatch.setattr(retention, "measure", changed_scan)
+    code, rows = invoke(batch, expire_older_than_hours=24)
+    assert code == 0 and entry.exists() and rows[0]["decision"] == "skipped"

@@ -1283,20 +1283,14 @@ dedicated `rescue/<agent>/<task>` branch before worktree reaping runs:
 - `python scripts/delegate.py rescue --all-stale --older-than 6h --apply` cleans disposable residue, commits uncommitted changes, pushes to `rescue/<agent>/<task>`, and records the rescue ref.
 
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
-`batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
+`batch_state/tasks/` small. `--apply` enables moves for `archive` and `restore`.
 
-- `settle-stale` settles `needs_finalize` records older than 7 days once their worktree,
+- `settle-stale` reports `needs_finalize` records older than 7 days. Class C means their worktree,
   local branch, remote branch **and work** are gone. The work counts as gone only when the
   record names a commit (preferring `final_branch_head_commit`, falling back to `auto_finalize.commit_sha`) that no ref holds under any name, or
   when the task exited clean with no commits. Each run (dry runs too) first does one
-  `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
-  that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
-  `no_deliverable` or `failed` and carry a `settled_by` receipt. `done` needs a merged PR
-  that carries a recorded commit. A record with a completion gate beyond delivery (an exit
-  scan that did not clear, a review verdict, an advisory envelope or content exemption) is
-  never settled `done`: it settles `failed` with `recovery_requires_rerun` (or the failure it
-  already carries) for the driver to re-run or finalize by hand. A PR that only reuses the
-  branch name leaves the record in class D. Classes A, B and D are reported and never changed. They cover a branch or
+  fetch into private scan refs per repository; failure leaves class D (`fetch_failed`).
+  Even with `--apply`, it exits 0 with a READ-ONLY report (`action: report`, `mode: read-only`), changes no records and writes no `settled_by` receipt. Classes A, B and D cover a branch or
   commit still on origin, a local branch or ref still holding the work (even renamed), a
   dirty worktree, and commits with no recorded commit id.
 - `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`

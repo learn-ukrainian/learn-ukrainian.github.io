@@ -49,20 +49,6 @@ HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
 # No recorded approval for the head that would merge. All three surface as needs-CF.
 MISSING_CF_STATES = frozenset({"needs-CF", "CF-stale", "CF-unrecorded"})
 SHA = re.compile(r"[0-9a-f]{40}\Z")
-# Dependency-update PRs get no per-language ``Analyze (…)`` CodeQL runs, only
-# the top-level CodeQL check from GitHub code scanning (#8587, #9921). That
-# check stands in for Analyze only when every changed file is an npm or pip/uv
-# lockfile or package.json, whoever authored the PR: anyone with write access
-# can push code to a dependabot branch, and github-actions bumps edit workflows.
-CODEQL_CHECK = "CodeQL"
-# GitHub's code-scanning app; both its id and its reserved slug must match.
-CODEQL_APP_ID = 57789
-CODEQL_APP = "github-advanced-security"
-CODEQL_PASSING = frozenset({"success", "neutral"})
-DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
-REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
-# GitHub's PR-files endpoint stops at this many files without saying so.
-PR_FILES_LIMIT = 3000
 # Slow mode: ``--apply`` skips a run that starts within this many seconds of
 # the last recorded run, so a frequent timer can be throttled without a unit edit.
 MIN_INTERVAL_ENV = "MQ_KEEPER_MIN_INTERVAL_SECONDS"
@@ -270,19 +256,6 @@ class GitHub:
             raise KeeperError("check workflow provenance unknown")
         return rows
 
-    def files(self, number: int) -> list[dict[str, Any]]:
-        """Every changed file of a PR; raises when the list may be truncated or incomplete."""
-        pull = self.json(Request("read-pull", repo=self.repository, number=number))
-        changed = pull.get("changed_files") if isinstance(pull, dict) else None
-        if type(changed) is not int:
-            raise KeeperError("PR changed-file count unknown")
-        if changed >= PR_FILES_LIMIT:
-            raise KeeperError("PR file list truncated")
-        rows = self.paged(Request("read-pr-files", repo=self.repository, number=number))
-        if len(rows) >= PR_FILES_LIMIT or len(rows) != changed:
-            raise KeeperError("PR file list incomplete")
-        return rows
-
     def current(self, number: int) -> dict[str, Any]:
         row = self.json(
             "pr",
@@ -456,41 +429,14 @@ def _latest(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return max(rows, key=lambda item: item.get("started_at") or item.get("created_at") or "")
 
 
-def _codeql_rows(checks: list[dict[str, Any]], head: str) -> list[dict[str, Any]]:
-    """Top-level CodeQL check runs at ``head`` from GitHub code scanning (not a same-named workflow job)."""
-    return [
-        row
-        for row in checks
-        if isinstance(row, dict)
-        and row.get("head_sha") == head
-        and row.get("name") == CODEQL_CHECK
-        and isinstance(row.get("app"), dict)
-        and row["app"].get("id") == CODEQL_APP_ID
-        and row["app"].get("slug") == CODEQL_APP
-    ]
-
-
-def _check_state(checks: list[dict[str, Any]], head: str, *, dependency_update: bool = False) -> str:
-    """``ok``, a pending reason or ``CI-red-<check>`` for ``CI Gate`` plus CodeQL at ``head``.
-
-    CodeQL evidence is the ``Analyze (…)`` runs. A PR with none of them waits
-    (``CodeQL-pending``) unless ``dependency_update`` is set, in which case the
-    completed top-level CodeQL check must be success or neutral (#9921).
-    """
+def _check_state(checks: list[dict[str, Any]], head: str) -> str:
+    """``ok``, a pending reason or ``CI-red-<check>`` for ``CI Gate`` at ``head``."""
     for row in checks:
         if not isinstance(row, dict) or row.get("head_sha") != head or not isinstance(row.get("name"), str):
             return "CI-unknown"
     names, _ = group_collapsed_by_name(project_check_runs(checks))
-    required = ["CI Gate", *(name for name in names if name.startswith("Analyze ("))]
-    pending: str | None = "CodeQL-pending" if len(required) == 1 else None
-    if pending and dependency_update:
-        codeql = _codeql_rows(checks, head)
-        latest, _ = group_collapsed_by_name(project_check_runs(codeql))
-        survivors = latest.get(CODEQL_CHECK, [])
-        if survivors and all(row.get("status") == "COMPLETED" for row in survivors):
-            if any(row.get("conclusion", "").lower() not in CODEQL_PASSING for row in survivors):
-                return f"CI-red-{CODEQL_CHECK}"
-            pending = None
+    required = ["CI Gate"]
+    pending: str | None = None
     for name in required:
         rows = names.get(name, [])
         if not rows:
@@ -503,31 +449,6 @@ def _check_state(checks: list[dict[str, Any]], head: str, *, dependency_update: 
             if row.get("conclusion") != "SUCCESS":
                 return f"CI-red-{name}"
     return pending or "ok"
-
-
-def _dependency_file(path: Any) -> bool:
-    if not isinstance(path, str) or not path:
-        return False
-    name = path.rsplit("/", 1)[-1]
-    return name in DEPENDENCY_FILES or bool(REQUIREMENTS_FILE.fullmatch(name))
-
-
-def _dependency_update(gh: GitHub, number: int) -> bool:
-    """Whether the PR changes only lockfiles and package.json; the author never matters."""
-    files = gh.files(number)
-    return bool(files) and all(
-        _dependency_file(row.get("filename"))
-        and ("previous_filename" not in row or _dependency_file(row.get("previous_filename")))
-        for row in files
-    )
-
-
-def _evaluate_checks(gh: GitHub, number: int, head: str, checks: list[dict[str, Any]]) -> str:
-    """:func:`_check_state`, reading the file list only when a PR has no ``Analyze`` runs but a CodeQL check."""
-    state = _check_state(checks, head)
-    if state != "CodeQL-pending" or not _codeql_rows(checks, head):
-        return state
-    return _check_state(checks, head, dependency_update=_dependency_update(gh, number))
 
 
 def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: int, queue_enabled: bool | None) -> str:
@@ -1066,7 +987,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             comments = gh.comments(number)
             verdict = lookup_verdict(comments, head, login)
             check_rows = gh.checks(head)
-            checks = _evaluate_checks(gh, number, head, check_rows)
+            checks = _check_state(check_rows, head)
         except KeeperError:
             comments, checks, check_rows = [], "CI-unknown", []
             verdict = Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
@@ -1172,7 +1093,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         approved_before = True
                         approved_now[key] = head
                 try:
-                    current_checks = _evaluate_checks(gh, number, head, gh.checks(head))
+                    current_checks = _check_state(gh.checks(head), head)
                 except KeeperError:
                     current_checks = "CI-unknown"
                 reason = (
@@ -1225,7 +1146,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     estimated_remaining -= 30
                 elif reason == "ready" and queued is True:
                     gh.enqueue(number, head)
-                    lines.append(f"#{number} queued cleanup reconciled; read enqueue-cleanup receipt")
+                    lines.append(f"#{number} remains queued")
                     estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))

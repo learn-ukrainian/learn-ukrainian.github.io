@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import shlex
 from pathlib import Path
 
 import pytest
 
+from scripts.dispatcher.cli import build_parser as build_dispatch_parser
 from scripts.orchestration import orchestrator_control as oc
 
 
@@ -152,7 +154,7 @@ def test_inbox_json_reports_missing_recorded_task(tmp_path: Path, capsys):
     assert payload["tasks"][0]["status"] == "missing"
 
 
-def test_dispatch_dry_run_builds_delegate_command(tmp_path: Path, capsys):
+def test_dispatch_dry_run_builds_dispatch_command(tmp_path: Path, capsys):
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Do the worker task.", encoding="utf-8")
 
@@ -185,13 +187,13 @@ def test_dispatch_dry_run_builds_delegate_command(tmp_path: Path, capsys):
     command = payload["command"]
 
     assert rc == 0
-    assert command[:3] == [".venv/bin/python", "scripts/delegate.py", "dispatch"]
+    assert command[:3] == [".venv/bin/python", "scripts/dispatch.py", "dispatch"]
     assert _option(command, "--agent") == "codex"
     assert _option(command, "--task-id") == "worker-3"
     assert _option(command, "--mode") == "danger"
     assert _option(command, "--prompt-file") == str(prompt)
     assert "--worktree" in command
-    assert _option(command, "--base") == "main"
+    assert _option(command, "--base") == "origin/main"
     # #9739: delegate.py checks the writer's review scope and planned risk from these.
     owned = [command[i + 1] for i, item in enumerate(command) if item == "--owned-path"]
     assert owned == ["scripts/one.py", "tests/test_one.py"]
@@ -272,3 +274,95 @@ def test_recent_inbox_declares_hot_only_history(tmp_path: Path, capsys):
     assert rc == 0
     assert payload["history_scope"] == "hot"
     assert [task["task_id"] for task in payload["tasks"]] == ["hot-worker"]
+
+
+@pytest.mark.parametrize("seat,provider", [("gemini", "agy"), ("grok", "cursor"), ("deepseek", "opencode")])
+@pytest.mark.parametrize("base", ["main", "origin/main", "topic/repair", ""])
+def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, capsys, monkeypatch, seat, provider, base):
+    prompt = tmp_path / "brief.md"
+    prompt.write_text("Scoped task.", encoding="utf-8")
+    options = shlex.split(
+        f"dispatch --run-id parity --task-id worker --agent {seat} --model exact-model --base {shlex.quote(base)} "
+        "--effort high --mode workspace-write --worktree --full-checkout --sparse-include curriculum "
+        "--owned-path scripts/one.py --silence-timeout 0 --initial-response-timeout 0 --dry-run"
+    )
+    assert oc.main(["--repo-root", str(tmp_path), *options, "--prompt-file", str(prompt)]) == 0
+    command = json.loads(capsys.readouterr().out)["command"]
+    parsed = build_dispatch_parser().parse_args(command[2:])
+    assert command[:3] == [".venv/bin/python", "scripts/dispatch.py", "dispatch"]
+    assert parsed.model == "exact-model"
+    assert parsed.agent == provider
+    expected_base = "origin/topic/repair" if base == "topic/repair" else "origin/main"
+    assert parsed.base == expected_base
+    assert parsed.mode == "workspace-write"
+    assert parsed.full_checkout is True
+    assert parsed.sparse_include == ["curriculum"]
+    assert parsed.owned_path == ["scripts/one.py"]
+    assert "--silence-timeout" not in command
+    assert "--initial-response-timeout" not in command
+    calls = []
+    monkeypatch.setattr(oc, "run_git", lambda argv, **kw: calls.append((argv, kw)))
+
+    def launch(argv, **kw):
+        assert calls[0][0] == ["fetch", "origin", f"refs/heads/{expected_base[7:]}:refs/remotes/{expected_base}"]
+        assert calls[0][1]["profile"] == "remote"
+        assert calls[0][1]["timeout"] == 30
+        return oc.subprocess.CompletedProcess(argv, 0, "started", "")
+
+    monkeypatch.setattr(oc.subprocess, "run", launch)
+    options.remove("--dry-run")
+    assert oc.main(["--repo-root", str(tmp_path), *options, "--prompt-file", str(prompt)]) == 0
+    capsys.readouterr()
+    task = oc.load_run_state(tmp_path, "parity")["tasks"][0]
+    assert task["agent"] == task["requested_seat"] == seat
+    assert task["effective_provider"] == provider
+
+    def failed_fetch(*args, **kwargs):
+        raise oc.subprocess.TimeoutExpired("fetch", 30)
+
+    monkeypatch.setattr(oc, "run_git", failed_fetch)
+    assert oc.main(["--repo-root", str(tmp_path), *options, "--prompt-file", str(prompt)]) == 2
+    assert "worker not dispatched" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "option",
+    [
+        ["--silence-timeout", "3600"],
+        ["--initial-response-timeout", "180"],
+        ["--max-budget-usd", "1"],
+        ["--lifecycle-file", "ledger.json"],
+        ["--authoring-review-risk", "medium"],
+        ["--mode", "danger"],
+        *(["--agent", seat] for seat in ("grok-build", "grok-hermes", "qwen", "kimi")),
+    ],
+)
+def test_v2_gaps_are_forwarded_for_explicit_refusal(tmp_path: Path, option):
+    if option[0] == "--agent":
+        with pytest.raises(SystemExit) as exc:
+            oc.build_parser().parse_args(["dispatch", "--run-id", "gaps", "--task-id", "worker", *option])
+        assert exc.value.code == 2
+        return
+    args = oc.build_parser().parse_args(
+        [
+            "dispatch",
+            "--run-id",
+            "gaps",
+            "--task-id",
+            "worker",
+            "--agent",
+            "codex",
+            "--model",
+            "gpt-6.1-sol",
+            "--silence-timeout",
+            "0",
+            "--initial-response-timeout",
+            "0",
+            *option,
+        ]
+    )
+    command = oc.build_dispatch_command(args, tmp_path / "brief.md")
+    assert option[0] in command
+    with pytest.raises(SystemExit) as exc:
+        build_dispatch_parser().parse_args(command[2:])
+    assert exc.value.code == 2
