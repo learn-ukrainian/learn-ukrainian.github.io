@@ -20,6 +20,7 @@ import scripts.delegate as delegate
 from scripts.dispatcher.cli import build_parser as v2_parser
 from scripts.review.seeds import adjudicate as adj
 from scripts.review.seeds import manifest as sm
+from scripts.storage.topology import StoreBinding
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 LESSON_TEXT = "lesson text placeholder for the adjudicator"
@@ -126,7 +127,15 @@ def _different_value(old: Any) -> Any:
 
 
 @pytest.fixture
-def env(tmp_path: Path) -> Env:
+def env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Env:
+    # Historical prompt verification needs path bytes, never the live corpus.
+    monkeypatch.setattr(
+        adj.legacy_codec,
+        "resolve_store",
+        lambda store, root: StoreBinding(
+            store, delegate._primary_database_path(root, f"{store}.db"), provenance="injected"
+        ),
+    )
     return Env(tmp_path)
 
 

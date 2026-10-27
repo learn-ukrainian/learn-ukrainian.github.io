@@ -370,6 +370,8 @@ def linked_worktree(tmp_path: Path) -> Path:
         "wiki/y.md",
         "data/projects/p.txt",
         "data/other/o.txt",
+        "data/sources.db",
+        "data/vesum.db",
         "registry/projects/r.txt",
         "registry/lexicon/l.txt",
     ):
