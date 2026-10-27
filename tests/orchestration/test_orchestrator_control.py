@@ -278,14 +278,17 @@ def test_recent_inbox_declares_hot_only_history(tmp_path: Path, capsys):
 
 @pytest.mark.parametrize("seat,provider", [("gemini", "agy"), ("grok", "cursor"), ("deepseek", "opencode")])
 @pytest.mark.parametrize("base", ["main", "origin/main", "topic/repair", ""])
-def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, capsys, monkeypatch, seat, provider, base):
+@pytest.mark.parametrize("watchdogs", [None, (0, 0), (3600, 180), (7, 11)])
+def test_v2_launch_flag_parity_and_watchdog_forwarding(tmp_path: Path, capsys, monkeypatch, seat, provider, base, watchdogs):
     prompt = tmp_path / "brief.md"
     prompt.write_text("Scoped task.", encoding="utf-8")
     options = shlex.split(
         f"dispatch --run-id parity --task-id worker --agent {seat} --model exact-model --base {shlex.quote(base)} "
         "--effort high --mode workspace-write --worktree --full-checkout --sparse-include curriculum "
-        "--owned-path scripts/one.py --silence-timeout 0 --initial-response-timeout 0 --dry-run"
+        "--owned-path scripts/one.py --dry-run"
     )
+    if watchdogs is not None:
+        options.extend(["--silence-timeout", str(watchdogs[0]), "--initial-response-timeout", str(watchdogs[1])])
     assert oc.main(["--repo-root", str(tmp_path), *options, "--prompt-file", str(prompt)]) == 0
     command = json.loads(capsys.readouterr().out)["command"]
     parsed = build_dispatch_parser().parse_args(command[2:])
@@ -298,8 +301,14 @@ def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, cap
     assert parsed.full_checkout is True
     assert parsed.sparse_include == ["curriculum"]
     assert parsed.owned_path == ["scripts/one.py"]
-    assert "--silence-timeout" not in command
-    assert "--initial-response-timeout" not in command
+    silence_timeout, initial_response_timeout = watchdogs if watchdogs is not None else (3600, 600)
+    assert command[command.index("--silence-timeout") + 1] == str(silence_timeout)
+    if watchdogs is None:
+        assert "--initial-response-timeout" not in command
+    else:
+        assert command[command.index("--initial-response-timeout") + 1] == str(initial_response_timeout)
+    assert parsed.silence_timeout == silence_timeout
+    assert parsed.initial_response_timeout == initial_response_timeout
     calls = []
     monkeypatch.setattr(oc, "run_git", lambda argv, **kw: calls.append((argv, kw)))
 
@@ -328,8 +337,6 @@ def test_v2_launch_flag_parity_and_explicit_watchdog_opt_out(tmp_path: Path, cap
 @pytest.mark.parametrize(
     "option",
     [
-        ["--silence-timeout", "3600"],
-        ["--initial-response-timeout", "180"],
         ["--max-budget-usd", "1"],
         ["--lifecycle-file", "ledger.json"],
         ["--authoring-review-risk", "medium"],

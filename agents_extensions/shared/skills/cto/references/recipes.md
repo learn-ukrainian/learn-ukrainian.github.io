@@ -5,8 +5,8 @@ file only points there and adds what the CTO seat learned on top.
 
 ## Writes and merging
 
-- Publishing and landing follow `agents_extensions/shared/rules/workflow.md` (§ Public
-  GitHub publishing, § Merge policy); CI recovery follows `docs/runbooks/ci-gate.md`.
+- Delivery follows the `full-send` and `full-stop` skills; publishing follows
+  `workflow.md` § Public GitHub publishing; CI recovery follows `docs/runbooks/ci-gate.md`.
 - The merge-queue keeper usually enqueues on its own; check its log before enqueueing by
   hand.
 
@@ -40,10 +40,9 @@ follow `docs/runbooks/ci-gate.md` for the one evidenced recovery attempt.
 
 ## Reviews
 
-Seat, run and record every code or infra review with the `local-code-review` skill, which owns reviewer resolution.
-Load that skill before seating a review; a copied dispatch command skips its steps. After the
-reviewer exits, publish the verdict with `scripts/review/record_cf_verdict.py`. A review
-dispatch alone publishes nothing, and the merge-queue keeper waits for the published verdict.
+Seat, run and record every code or infra review with the `review-loop` skill; the reviewer
+follows `local-code-review`. A review dispatch alone publishes nothing, and the merge-queue
+keeper waits for the published verdict.
 Name allowed read tools per harness: Codex uses read-only shell; Cursor/Grok uses tracked-file
 reads. Read attestation from the task JSON's top-level `resolved_model_known`, `resolved_model`
 and `resolved_model_source`; never grep nested status output for these fields.

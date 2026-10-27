@@ -117,6 +117,73 @@ class TestLitopysFindNextLink:
         assert result is None
 
 
+class TestLitopysFetchPage:
+    """fetch_page must identify the project with public contact (missing-project-contact defect class)."""
+
+    CONTACT_UA = (
+        "learn-ukrainian-litopys/1.0 "
+        "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+    )
+
+    def setup_method(self):
+        import scrape_litopys
+
+        self.mod = scrape_litopys
+
+    def _patch_run(self, monkeypatch, result=None, exc=None):
+        calls = []
+
+        def fake_run(argv, **kwargs):
+            calls.append((argv, kwargs))
+            if exc is not None:
+                raise exc
+            return result
+
+        monkeypatch.setattr(self.mod.subprocess, "run", fake_run)
+        return calls
+
+    def test_curl_argv_carries_project_contact_user_agent(self, monkeypatch):
+        """Missing project contact: curl argv lacked the explicit contact User-Agent."""
+        result = SimpleNamespace(returncode=0, stdout="Привіт".encode("windows-1251"), stderr=b"")
+        calls = self._patch_run(monkeypatch, result=result)
+
+        text = self.mod.fetch_page("http://litopys.org.ua/page1.htm")
+
+        assert text == "Привіт"
+        argv, kwargs = calls[0]
+        assert argv[argv.index("-A") + 1] == self.CONTACT_UA
+        # Transport preserved: only the identity was added.
+        assert argv[0] == "curl"
+        assert "-sL" in argv
+        assert argv[argv.index("--max-time") + 1] == "30"
+        assert argv[argv.index("-e") + 1] == "http://litopys.org.ua/"
+        assert argv[-1] == "http://litopys.org.ua/page1.htm"
+        assert kwargs == {"capture_output": True, "timeout": 60}
+
+    def test_fetch_errors_and_utf8_fallback_unchanged_with_contact_user_agent(self, monkeypatch):
+        """Missing project contact fix must not alter error handling or decoding fallback."""
+        self._patch_run(
+            monkeypatch,
+            exc=subprocess.TimeoutExpired(cmd="curl", timeout=60),
+        )
+        with pytest.raises(RuntimeError, match="curl timed out for http://x"):
+            self.mod.fetch_page("http://x")
+
+        self._patch_run(
+            monkeypatch,
+            result=SimpleNamespace(returncode=22, stdout=b"", stderr=b"boom"),
+        )
+        with pytest.raises(RuntimeError, match="curl failed for http://x: boom"):
+            self.mod.fetch_page("http://x")
+
+        # 0x98 is undefined in windows-1251, forcing the UTF-8 replace fallback.
+        self._patch_run(
+            monkeypatch,
+            result=SimpleNamespace(returncode=0, stdout=b"a\x98\xd0\x96", stderr=b""),
+        )
+        assert self.mod.fetch_page("http://x") == "a�Ж"
+
+
 # ── scrape_wikisource: is_skip_page, chunk_text ──────────────
 
 

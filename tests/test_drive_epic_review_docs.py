@@ -394,6 +394,7 @@ raise SystemExit(args.func(args))
             "AUTHOR_BRANCH": "codex/author",
             "HEAD_SHA": HEAD,
             "AUTHOR_MODEL": "gpt-6.1-sol",
+            "REVIEW_PROFILE": "code",
             "REVIEW_RISK": "medium",
         },
     )
