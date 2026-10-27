@@ -547,6 +547,28 @@ assert 'scripts.delegate' not in sys.modules
     assert proc.returncode == 0, proc.stderr
 
 
+def test_v2_eval_inherited_content_seat_cannot_drift_from_frozen_prompt_hash(
+    linked_worktree, tmp_path, monkeypatch
+):
+    from scripts.dispatcher import prompt_context
+
+    monkeypatch.setenv("LU_RULES_SEAT", "content")
+    monkeypatch.setenv("LEARN_UK_RESEARCH_REGISTRY_ENABLED", "0")
+    dispatcher = DelegateDispatcher(
+        python=sys.executable, dispatch_script=Path("scripts/dispatch.py"), cwd=linked_worktree
+    )
+    prompt = "Evaluate the supplied text.\n"
+    path = tmp_path / "prompt.md"
+    path.write_text(prompt, encoding="utf-8")
+    frozen = dispatcher.compose(prompt)
+    args = build_parser().parse_args(
+        dispatcher._dispatch_args("content-seat", SEATS["gpt-6.1-sol"], "review", path)
+    )
+    effective, fields = prompt_context.effective(args, "content-seat", path.read_bytes(), "")
+    assert sha256_text(effective.decode("utf-8")) == frozen["effective_prompt_sha256"]
+    assert fields["effective_prompt_sha256"] == frozen["effective_prompt_sha256"]
+
+
 class SimulatedDelegate(DelegateDispatcher):
     """Run the real v2 CLI in-process; only provider execution is stubbed."""
 

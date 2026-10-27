@@ -403,7 +403,7 @@ class DelegateDispatcher:
             head = _git(self.cwd, "rev-parse", "HEAD")
             if not head:
                 raise DispatchError("cannot pin the worker commit")
-            args += ["ukrainian", "--pinned-head", head.strip()]
+            args += ["ukrainian", "--pinned-head", head.strip(), "--rules-seat", RULES_SEAT]
         args += ["--hard-timeout", str(self.hard_timeout)]
         args += ["--research-task-family", task_family(kind)]
         if seat.effort:
