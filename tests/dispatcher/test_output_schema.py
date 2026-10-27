@@ -6,7 +6,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import cli, git, store, worker
 from scripts.dispatcher.providers import codex
 
 
@@ -16,7 +16,6 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/schema", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
     start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(record, prompt))
     monkeypatch.setattr(worker, "start", start)
     schema = tmp_path / "schema.json"
@@ -92,21 +91,45 @@ def test_schema_symlink_substitution_after_binding_refused(dispatch):
         codex.build(spec, {})
 
 
-def test_verdict_schema_read_root_used_as_output_write_root(dispatch, tmp_path, monkeypatch):
+@pytest.mark.parametrize("launch_fails", [False, True])
+def test_verdict_schema_read_root_used_as_output_write_root(dispatch, tmp_path, monkeypatch, launch_fails):
     import tempfile
 
     private = tmp_path / "private-adapter-temp"
     private.mkdir(mode=0o700)
     monkeypatch.setattr(tempfile, "tempdir", str(private))
-    spec, _ = dispatch.invoke()
+    spec, record = dispatch.invoke()
     spec.options["require_review_verdict"] = True
+    record["require_review_verdict"] = True
+    store.replace(record)
     invocation = codex.build(spec, {})
-    try:
-        assert invocation.final_file.parent == private
-        assert not list(dispatch.schema.parent.glob("codex-runtime-*.txt"))
-        assert invocation.argv[invocation.argv.index("--output-schema") + 1] == str(dispatch.schema)
-    finally:
-        invocation.final_file.unlink()
+    assert invocation.final_file.parent == private
+    assert not list(dispatch.schema.parent.glob("codex-runtime-*.txt"))
+    assert invocation.argv[invocation.argv.index("--output-schema") + 1] == str(dispatch.schema)
+    path = store.record_path(spec.task_id)
+    (path.parent / "logs").mkdir()
+    monkeypatch.setattr(codex, "build", lambda *a: invocation)
+    monkeypatch.setattr(worker.signal, "signal", lambda *a: None)
+    monkeypatch.setattr(worker.signal, "pthread_sigmask", lambda *a: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *a: {})
+    monkeypatch.setattr(worker, "_reap_settled", lambda *a: None)
+
+    def popen(*a, **kw):
+        if launch_fails:
+            raise OSError("launch refused")
+        invocation.final_file.write_text('{"verdict":"APPROVE"}')
+        kw["stdout"].write(b'{"type":"turn.completed"}\n')
+        return SimpleNamespace(returncode=0, wait=lambda *a, **kw: 0)
+
+    monkeypatch.setattr(worker.subprocess, "Popen", popen)
+    worker.supervise(path, spec.options, 10)
+    settled = store.read(spec.task_id)
+    assert settled["status"] == ("crashed" if launch_fails else "failed")
+    if not launch_fails:
+        assert settled["error"] == "review_missing_verdict_line"
+        assert spec.final_file.read_text() == '{"verdict":"APPROVE"}'
+    assert not invocation.final_file.exists()
+    assert not list(private.glob("codex-runtime-*.txt"))
 
 
 @pytest.mark.parametrize("output,status", [('{}', "failed"), ('prose', "failed"), ('{"verdict":"APPROVE"}', "done")])

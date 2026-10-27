@@ -8,7 +8,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import cli, git, store, worker
 from scripts.dispatcher.types import TaskSpec
 from scripts.review.record import attested_return, dispatch_prompt_sha256
 from tests.agent_runtime import test_attempt_boundary as boundary_tests
@@ -226,48 +226,48 @@ def test_bound_launch_refuses_until_runtime_isolation_is_wired(attempt, monkeypa
 
 @pytest.mark.parametrize("low_memory", [False, True])
 def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, monkeypatch, capsys, low_memory):
-    """Resource refusal precedes dry-run output, reservation and checkout creation."""
-    from types import SimpleNamespace
-
+    """Dry runs preserve attempts; live dispatch checks admission before reserving."""
     real_read = Path.read_text
-    available = 8.5 * 1024**3 - (1024 if low_memory else 0)
+    available = (1 if low_memory else 64) * 1024**3
     monkeypatch.setattr(Path, "read_text", lambda path, *a, **kw: (
         f"MemAvailable: {int(available / 1024)} kB\n" if path == Path("/proc/meminfo")
         else real_read(path, *a, **kw)
     ))
-    monkeypatch.setattr(checks.shutil, "disk_usage", lambda _: SimpleNamespace(used=89, total=100))
-    resources = Mock(wraps=checks.check_resources)
+    admission_calls = Mock()
+    check = Mock(wraps=cli.host_admission.check)
+    reserve = Mock(wraps=cli.host_admission.reserve)
+    admission_calls.attach_mock(check, "check")
+    admission_calls.attach_mock(reserve, "reserve")
     create = Mock()
-    reserve = Mock()
+    start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(record, prompt))
     worktree = tmp_path / "checkout"
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (worktree, "codex/review", "a" * 40))
-    monkeypatch.setattr(checks, "check_resources", resources)
+    monkeypatch.setattr(cli.host_admission, "check", check)
     monkeypatch.setattr(git, "create_worktree", create)
     monkeypatch.setattr(cli.host_admission, "reserve", reserve)
+    monkeypatch.setattr(worker, "start", start)
     for _ in range(2):
-        if low_memory:
-            assert invoke(attempt, "--dry-run") == 2
-            output = capsys.readouterr()
-            assert "insufficient memory" in output.err
-            assert not output.out
-            continue
         assert invoke(attempt, "--dry-run") == 0
         plan = json.loads(capsys.readouterr().out)
         assert plan["review_attempt"] == dict(review_id="review", attempt_id="attempt",
                                              manifest_sha256=store.digest(b"inputs: []\ntarget:\n  changed_paths: [ordinary.py]\n"))
         assert plan["review_access"] == "isolated"
-    assert resources.call_count == 2
-    resources.assert_called_with((worktree, tmp_path / "tasks"))
-    if low_memory:
-        for flags in ((), ("--mode", "workspace-write", "--force-admission", "resource regression")):
-            assert invoke([], *flags) == 2
-            assert "insufficient memory" in capsys.readouterr().err
-        assert resources.call_count == 4
+    assert check.call_count == 2
+    check.assert_called_with("read-only", dry_run=True, disk_guard=True, force_reason=None)
     create.assert_not_called()
     reserve.assert_not_called()
+    start.assert_not_called()
     assert not worktree.exists()
     assert not (tmp_path / "tasks").exists()
+    assert invoke([], "--task-id", "forced-review", "--force-admission", "resource regression") == 0
+    assert [call[0] for call in admission_calls.mock_calls] == ["check", "check", "check", "reserve"]
+    check.assert_called_with("read-only", dry_run=False, disk_guard=True, force_reason="resource regression")
+    assert reserve.call_args.args[:2] == ("forced-review", "read-only")
+    assert reserve.call_args.args[2].exempt is True
+    assert reserve.call_args.kwargs["force_reason"] == "resource regression"
+    assert store.read("forced-review")["mode"] == "read-only"
+    start.assert_called_once()
 
 
 @pytest.mark.parametrize("suffix", [".jsonl", ".jsonl.sha256", ".mcp.json", ".codex-home", ".agy-home"])
@@ -384,7 +384,6 @@ def test_refusal_after_creation_leaves_no_orphan_worktree_or_branch_and_exits_2(
              "commit", "--allow-empty", "-m", "fixture")
     monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "ROOT", repo)
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
     monkeypatch.setattr(execution, "_REPO_ROOT", repo)
     monkeypatch.setattr(execution, "_worktree_lock_dir", lambda: tmp_path / "locks")
     monkeypatch.setattr(execution, "admit", lambda *a: dict(
@@ -434,7 +433,6 @@ def test_post_record_spawn_failure_leaks_unstarted_checkout_and_reservation(
              "commit", "-m", "fixture")
     monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "ROOT", repo)
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
     monkeypatch.setattr(execution, "_REPO_ROOT", repo)
     monkeypatch.setattr(execution, "_worktree_lock_dir", lambda: repo / ".git/lu-worktree-locks")
     monkeypatch.setattr(execution, "admit", lambda *a: dict(
@@ -719,7 +717,6 @@ def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(tmp_pat
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(git, "resolve_repo", lambda _: (main, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (dispatch_wt, "codex/review", "a" * 40))
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
     monkeypatch.setattr(worker, "start", lambda spec, record, prompt, timeout: store.create(record, prompt))
     marker = execution._review_attempt_marker_path(dispatch_wt)
     assert not marker.exists()

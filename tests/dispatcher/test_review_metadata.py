@@ -7,7 +7,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import cli, git, store, worker
 from scripts.review import record_cf_verdict as cf
 from scripts.review.subject_seat import classify_owned_path
 
@@ -27,7 +27,6 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
     start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(
         {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
     ))

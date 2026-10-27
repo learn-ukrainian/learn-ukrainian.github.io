@@ -155,7 +155,7 @@ def test_ask_review_command_reaches_delegate_floor(review_repo, tmp_path, monkey
 
     from agent_runtime.target_admission import resolve_and_admit
     from scripts.ai_agent_bridge._dispatch_wrappers import build_ask_review_dispatch_command
-    from scripts.dispatcher import checks, cli, git, worker
+    from scripts.dispatcher import cli, git, worker
     from scripts.dispatcher.cli import build_parser
 
     repo, _ = review_repo
@@ -171,7 +171,6 @@ def test_ask_review_command_reaches_delegate_floor(review_repo, tmp_path, monkey
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (repo, "claude/review", head))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(worker, "start", Mock())
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
     args = build_parser().parse_args(command[2:])
     assert args.branch == "review-target" and args.pinned_head == head
     assert cli.main(command[2:]) == 2

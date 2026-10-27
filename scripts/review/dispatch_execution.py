@@ -736,6 +736,9 @@ class Execution:
     def cleanup(self):
         if self.boundary:
             self.boundary.cleanup()
+        elif (self.spec.agent == "codex" and (plan := self.spec.options.get("review_plan"))
+                and plan.output_file is not None):
+            plan.output_file.unlink(missing_ok=True)
 
 
 def build_invocation(spec, env, adapter):

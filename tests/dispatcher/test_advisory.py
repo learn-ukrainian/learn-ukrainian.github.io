@@ -8,7 +8,7 @@ from unittest.mock import Mock
 import pytest
 
 from scripts.agent_runtime import bounded_advisory as advisory
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import cli, git, store, worker
 
 
 @pytest.fixture
@@ -18,7 +18,6 @@ def launch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/worker", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
     monkeypatch.setattr(worker, "start", Mock(side_effect=lambda spec, record, prompt, _: store.create(
         {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
     )))
