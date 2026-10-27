@@ -324,7 +324,7 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
     worker_record = runtime.settle()
     assert worker_record["status"] == "done"
     assert worker_record["advisory_prompt_sha256"] == store.digest(runtime.submitted[-1])
-    store.record_path("producer").with_suffix(".result").write_text(response + "changed")
+    store.record_path("producer").with_suffix(".result").write_text(response + "changed", encoding="utf-8")
     with pytest.raises(advisory.AdvisoryRefused, match=advisory.SEAL_MISMATCH):
         advisory.load_envelope("producer", state_path=store.record_path("producer"),
                                binding_sha256=binding, repo_root=tmp_path)
