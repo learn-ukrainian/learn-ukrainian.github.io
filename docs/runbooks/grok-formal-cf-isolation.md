@@ -13,8 +13,8 @@ Use the resolver-selected invocation. The explicit Grok dispatch route is:
   --mode read-only --task-id <task-id> --prompt-file <brief>
 ```
 
-Dispatch v2 maps `--agent grok` and `--agent grok-build` to Cursor.
-Those aliases do not launch the native Grok CLI. Native TUI and bridge callers
+Dispatch v2 maps `--agent grok` to Cursor.
+That alias does not launch the native Grok CLI. Native TUI and bridge callers
 outside detached dispatch retain their own interfaces and do not establish
 eligibility for resolver-selected review.
 
