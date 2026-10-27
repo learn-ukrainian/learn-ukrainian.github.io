@@ -734,7 +734,7 @@ class Executor:
         return summary
 
     def preflight(self, tasks: Sequence[TaskSpec]) -> RunSummary:
-        """Write prompts and validate each dispatch with the the dispatcher's dry run; nothing is spawned.
+        """Write prompts and validate each dispatch with the dispatcher's dry run; nothing is spawned.
 
         Each prompt's composition is computed and checked against the frozen frame first. The dry run
         uses a distinct ``-preflight`` task id so it never collides with the real task. When that id

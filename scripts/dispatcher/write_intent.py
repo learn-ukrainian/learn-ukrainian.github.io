@@ -224,6 +224,5 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
         return None
     return (
         "❌ write-shaped prompt cannot run with --mode read-only. "
-        "Re-run with --mode workspace-write --worktree for repository edits "
-        "(or --mode workspace-write --worktree only when its extra permissions are required)."
+        "Re-run with --mode workspace-write --worktree for repository edits."
     )

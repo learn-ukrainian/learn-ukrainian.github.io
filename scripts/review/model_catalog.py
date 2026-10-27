@@ -643,8 +643,6 @@ def usage_pool_for_seat(seat: str, catalog: dict[str, Any] | None = None) -> str
     return needle
 
 
-
-
 def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> None:
     if raw is None:
         return
