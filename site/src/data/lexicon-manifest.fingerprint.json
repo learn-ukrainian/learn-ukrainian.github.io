@@ -19,7 +19,7 @@
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",
-        "sha256": "2593f3b93af5932239012ae3891ce9739cb70dd797d7017960a1b85a0512bcad"
+        "sha256": "f41770910259d8c4ec1f598050f2fb1ec30bddc7d58451578617d01cedd4e682"
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
@@ -183,7 +183,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "22d64b056b40054df8064d1256439c6093fbd318c3760e5a5bb13e7c3c4d6e70"
+        "sha256": "70490f5e59d231dd0a72384781618a8f535fc6a7e3e27d6a2ce72c05eb1f4c7f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",

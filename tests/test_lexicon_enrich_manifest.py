@@ -3921,6 +3921,37 @@ def test_e2u_translation_decode_html_entities(monkeypatch) -> None:
     assert res["en"] == ["first&second", "third"]
 
 
+@pytest.mark.parametrize("status_code", [200, 403])
+def test_query_e2u_sends_public_contact(monkeypatch, status_code) -> None:
+    from scripts.rag import source_query
+
+    calls = []
+
+    def fake_send(request, **kwargs):
+        calls.append((request.url, request.headers["User-Agent"], kwargs["timeout"]))
+        response = source_query.requests.Response()
+        response.status_code = status_code
+        response._content = b'<td class="result_row"><b>entry</b> fixture</td>'
+        response.request = request
+        return response
+
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: False)
+    monkeypatch.setattr(enrich_manifest_module, "_polite_e2u_delay", lambda: None)
+    monkeypatch.setattr(source_query._SESSION, "send", fake_send)
+    enrich_manifest_module.query_e2u_uk_en.cache_clear()
+    try:
+        result = enrich_manifest_module.query_e2u_uk_en("sample")
+    finally:
+        enrich_manifest_module.query_e2u_uk_en.cache_clear()
+
+    assert result == ([] if status_code == 403 else [{"headword": "entry", "translation": "entry fixture"}])
+    assert calls == [(
+        "https://e2u.org.ua/s?w=sample&dicts=all",
+        "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; +https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)",
+        20,
+    )]
+
+
 def test_e2u_translation_offline_mode(monkeypatch) -> None:
     called = False
 
@@ -6535,6 +6566,48 @@ def test_wikidata_translation_sitelink_match_kept(monkeypatch) -> None:
     assert res["en"] == ["sculpture"]
     assert res["source"] == WIKIDATA_LABEL
     assert res["source_url"] == "https://www.wikidata.org/wiki/Q400"
+
+
+@pytest.mark.parametrize("refused_action", [None, "wbsearchentities", "wbgetentities"])
+def test_query_wikidata_sends_public_contact(monkeypatch, refused_action) -> None:
+    from scripts.rag import source_query
+
+    calls = []
+
+    def fake_send(request, **kwargs):
+        action = "wbsearchentities" if "action=wbsearchentities&" in request.url else "wbgetentities"
+        calls.append((request.url, request.headers["User-Agent"], request.headers["Accept"], kwargs["timeout"]))
+        response = source_query.requests.Response()
+        response.status_code = 403 if action == refused_action else 200
+        payload = {"search": [{"id": "Q1"}]} if action == "wbsearchentities" else {"entities": {"Q1": {"id": "Q1"}}}
+        response._content = json.dumps(payload).encode()
+        response.request = request
+        return response
+
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: False)
+    monkeypatch.setattr(enrich_manifest_module, "_polite_wikidata_delay", lambda: None)
+    monkeypatch.setattr(source_query._SESSION, "send", fake_send)
+    enrich_manifest_module.query_wikidata_uk_en.cache_clear()
+    try:
+        result = enrich_manifest_module.query_wikidata_uk_en("sample")
+    finally:
+        enrich_manifest_module.query_wikidata_uk_en.cache_clear()
+
+    assert result == ([] if refused_action else [{"id": "Q1"}])
+    expected = [(
+        "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=sample&language=uk&type=item&limit=5&format=json&utf8=1",
+        "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma; +https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)",
+        "application/json",
+        15,
+    )]
+    if refused_action != "wbsearchentities":
+        expected.append((
+            "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q1&format=json&utf8=1&languages=uk%7Cen&props=labels%7Cdescriptions%7Cclaims%7Csitelinks",
+            "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma; +https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)",
+            "application/json",
+            15,
+        ))
+    assert calls == expected
 
 
 def test_wikidata_translation_offline_mode(monkeypatch) -> None:
