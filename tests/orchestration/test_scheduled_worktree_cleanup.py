@@ -1680,6 +1680,8 @@ def test_terminal_report_filters_and_never_writes(rescue_repo, schema: int, case
         "worktree_branch": "test/terminal",
         "worktree_path": str(worktree),
     }
+    if case == "missing":
+        record["finished_at"] = None
     directory = tasks if schema == 2 else tasks / "archive"
     directory.mkdir(exist_ok=True)
     task_file = directory / "terminal.json"
@@ -1734,7 +1736,7 @@ def test_terminal_record_without_worktree_is_skipped(rescue_repo, monkeypatch, s
     directory = tasks / "archive" if archived else tasks
     directory.mkdir(exist_ok=True)
     (directory / "no-worktree.json").write_text(
-        json.dumps({"status": status, "finished_at": "2000-01-01T00:00:00Z", "worktree_path": None, "cwd": str(repo)})
+        json.dumps({"status": status, "finished_at": None, "worktree_path": None, "cwd": str(repo)})
     )
     monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
@@ -1743,9 +1745,9 @@ def test_terminal_record_without_worktree_is_skipped(rescue_repo, monkeypatch, s
     assert result["rescue"] == {"summary": {"candidate": 0}, "tasks": []}
 
 
-@pytest.mark.parametrize("failure", ["json", "recursion", "path_type", "read", "git"])
+@pytest.mark.parametrize("failure", ["json", "recursion", "path_type", "read", "git", "finished_at"])
 def test_rescue_read_errors_reach_caller_without_crashing(rescue_repo, monkeypatch, failure: str) -> None:
-    """Defect class: an unreadable record or failed Git probe silently drops work or crashes cleanup."""
+    """Defect classes: unreadable records, failed Git probes, and suppressed unknown finish metadata on real targets."""
     repo, worktree, tasks = rescue_repo
     task = tasks / "broken.json"
     task.write_text(
@@ -1754,11 +1756,16 @@ def test_rescue_read_errors_reach_caller_without_crashing(rescue_repo, monkeypat
         else json.dumps(
             {
                 "status": "failed",
-                "finished_at": "2000-01-01T00:00:00Z",
+                "finished_at": None if failure == "finished_at" else "2000-01-01T00:00:00Z",
                 "worktree_path": 42 if failure == "path_type" else str(worktree),
             }
         )
     )
+    if failure == "finished_at":
+        companion = tasks / "stale.json"
+        companion.write_text(json.dumps({"status": "failed", "finished_at": None, "worktree_path": None}))
+        before_task = task.read_bytes()
+        before_companion = companion.read_bytes()
     if failure == "recursion":
         task.write_text("[" * 10000 + "]" * 10000)
     if failure == "read":
@@ -1779,6 +1786,12 @@ def test_rescue_read_errors_reach_caller_without_crashing(rescue_repo, monkeypat
     assert row["action"] == "error"
     assert row["error"] in result["errors"]
     assert result["rescue"]["summary"] == {"candidate": 0}
+    if failure == "finished_at":
+        assert row["task_id"] == "broken"
+        assert result["errors"] == [row["error"]]
+        assert task.read_bytes() == before_task
+        assert companion.read_bytes() == before_companion
+        assert worktree.exists()
 
 
 @pytest.mark.parametrize("mode", ["apply", "dry_run", "disabled"])

@@ -494,10 +494,6 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
                 raise ValueError("invalid task record")
             if record.get("status") not in reap_worktrees._TERMINAL_DISPATCH_STATUSES:
                 continue
-            finished = datetime.fromisoformat(str(record.get("finished_at")).replace("Z", "+00:00"))
-            age_seconds = (now - finished).total_seconds()
-            if age_seconds < 6 * 3600:
-                continue
             raw_path = record.get("worktree_path")
             if raw_path is None:
                 continue
@@ -509,6 +505,10 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
             try:
                 worktree.stat()
             except FileNotFoundError:
+                continue
+            finished = datetime.fromisoformat(str(record.get("finished_at")).replace("Z", "+00:00"))
+            age_seconds = (now - finished).total_seconds()
+            if age_seconds < 6 * 3600:
                 continue
             row["task_id"] = record.get("task_id") or path.stem
             row["worktree_path"] = worktree.relative_to(root).as_posix()
