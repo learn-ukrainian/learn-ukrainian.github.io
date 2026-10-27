@@ -231,8 +231,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 os.killpg(child.pid, signal.SIGKILL)
             child.wait()
 
-    signal.signal(signal.SIGTERM, cancelled)
-    signal.signal(signal.SIGINT, cancelled)
+    previous_term = signal.signal(signal.SIGTERM, cancelled)
+    previous_int = signal.signal(signal.SIGINT, cancelled)
     stdout_path = path.parent / "logs" / f"{spec.task_id}.stdout.log"
     stderr_path = path.parent / "logs" / f"{spec.task_id}.stderr.log"
     try:
@@ -333,36 +333,40 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     finally:
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
         signal.signal(signal.SIGINT, signal.SIG_IGN)
-        if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
-            terminate()
-            returncode = child.returncode
-        if slots is not None:
-            # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
-            # keep their slots shared until they exit (test_slots).
-            slots.release()
-        if text is not None:
-            spec.final_file.write_text(text)
-            spec.final_file.chmod(0o600)
-        record.update(
-            status=status,
-            returncode=returncode,
-            error=error,
-            usage=usage,
-            finished_at=store.now(),
-            duration_s=round(time.monotonic() - started, 3),
-            result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
-        )
-        record.update(git.snapshot_delivery(spec, record))
-        _enforce_delivery(record)
-        if spec.agent == "cursor":
+        try:
+            if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
+                terminate()
+                returncode = child.returncode
+            if slots is not None:
+                # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
+                # keep their slots shared until they exit (test_slots).
+                slots.release()
+            if text is not None:
+                spec.final_file.write_text(text)
+                spec.final_file.chmod(0o600)
             record.update(
-                resolved_model=resolved_model if resolved_model is not None else "unknown",
-                resolved_model_known=resolved_model is not None,
-                resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
+                status=status,
+                returncode=returncode,
+                error=error,
+                usage=usage,
+                finished_at=store.now(),
+                duration_s=round(time.monotonic() - started, 3),
+                result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
             )
-        store.replace(record, path)
+            record.update(git.snapshot_delivery(spec, record))
+            _enforce_delivery(record)
+            if spec.agent == "cursor":
+                record.update(
+                    resolved_model=resolved_model if resolved_model is not None else "unknown",
+                    resolved_model_known=resolved_model is not None,
+                    resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
+                )
+            store.replace(record, path)
 
-        _reap_settled(record, path)
+            _reap_settled(record, path)
+        finally:
+            signal.signal(signal.SIGTERM, previous_term)
+            signal.signal(signal.SIGINT, previous_int)
 
 
 def wait(task_id: str, nonce: str | None = None, timeout: float = 0, poll_interval: float = 1) -> tuple[dict, int]:
