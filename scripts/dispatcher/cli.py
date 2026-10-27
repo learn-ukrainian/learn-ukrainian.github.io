@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import uuid
+from contextlib import ExitStack
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import get_args
@@ -304,10 +305,13 @@ def _dispatch(args) -> int:
     with host_admission.reserve(
         task_id, args.mode, decision, agent=agent, force_reason=force_reason,
         disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),
-    ) as hold:
+    ) as hold, ExitStack() as attachment:
         if binding:
             store.check_review_attempt(binding, claim=True)
-        if not args.cwd:
+        if args.cwd:
+            # Held until the task record names the worktree, so another dispatch's cleanup cannot remove it.
+            attachment.enter_context(git.attached_worktree(repo, worktree))
+        else:
             # A failed preparation removes what it created, so only a complete worktree reaches this point.
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
         try:

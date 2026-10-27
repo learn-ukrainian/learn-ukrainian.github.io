@@ -20,6 +20,7 @@ from scripts.common.git_credentials import canonical_origins as canonical_origin
 from scripts.common.git_credentials import verification_credentials
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import allocate
+from scripts.dispatcher import store
 from scripts.dispatcher.environment import npm_shim_dir
 from scripts.dispatcher.types import TaskSpec
 from scripts.storage.topology import STORE_FILES
@@ -246,11 +247,9 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
     return path, branch, sha
 
 
-def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=()) -> None:
-    excluded = sparse_excludes(sparse_include)
-    run_git = partial(_git, isolate=True)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    # Serialize config enablement and keep sparse settings local to the new worktree.
+@contextmanager
+def worktree_lock(repo: Path):
+    """The dispatch worktree lock: creation, removal and attachment to an existing worktree hold it."""
     fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
     with os.fdopen(fd, "rb") as lock:
         timeout = _worktree_lock_timeout_s()
@@ -265,6 +264,52 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
                         f"worktree_lock_timeout: worktree lock still held after {timeout:g}s"
                     ) from None
                 time.sleep(0.05)
+        yield
+
+
+def in_use(path: Path) -> bool:
+    """Whether a task record names this worktree or a live process other than this one works inside it.
+
+    An unreadable task store counts as in use, so a cleanup that cannot tell keeps the checkout.
+    """
+    target, resolved = path.absolute(), path.resolve()
+    try:
+        records = store.list_tasks(strict=True)
+    except (OSError, ValueError):
+        return True
+    if any(isinstance(record.get(key), str) and Path(record[key]).absolute() == target
+           for record in records for key in ("worktree_path", "cwd")):
+        return True
+    try:
+        processes = [entry for entry in Path("/proc").iterdir() if entry.name.isdigit() and int(entry.name) != os.getpid()]
+    except OSError:
+        return True
+    for entry in processes:
+        with suppress(OSError):
+            if Path(os.readlink(entry / "cwd")).is_relative_to(resolved):
+                return True
+    return False
+
+
+@contextmanager
+def attached_worktree(repo: Path, path: Path):
+    """Attach to an existing worktree under the worktree lock, held until the caller's record names it.
+
+    A concurrent dispatch removing a worktree it partly prepared either finishes first, so the root check
+    here refuses, or finds this task's record and keeps the worktree.
+    """
+    with worktree_lock(repo):
+        if not (path / ".git").exists() or Path(_git(path, "rev-parse", "--show-toplevel")).resolve() != path.resolve():
+            raise ValueError("cwd must name an existing dispatch worktree root")
+        yield
+
+
+def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=()) -> None:
+    excluded = sparse_excludes(sparse_include)
+    run_git = partial(_git, isolate=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    # Serialize config enablement and keep sparse settings local to the new worktree.
+    with worktree_lock(repo):
         run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
         new_branch = not run_git(repo, "for-each-ref", "--format=%(refname)", f"refs/heads/{branch}")
         added = False
@@ -278,23 +323,32 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
             run_git(path, "reset", "--hard", sha)
             provision_links(repo, path)
         except BaseException:
-            # Remove only what this call created. Git creates the branch before it checks the path, so a
-            # refused add can leave a new branch; a pre-existing branch or path is never touched.
-            if added:
+            # Remove only what this call created, and never a worktree another task or process uses; a kept
+            # worktree keeps its branch. Git creates the branch before it checks the path, so a refused add
+            # can leave a new branch; a pre-existing branch or path is never touched.
+            kept = added and in_use(path)
+            if added and not kept:
                 with suppress(OSError, subprocess.SubprocessError):
                     run_git(repo, "worktree", "remove", "--force", str(path))
-            if new_branch:
+            if new_branch and not kept:
                 with suppress(OSError, subprocess.SubprocessError):
                     run_git(repo, "update-ref", "-d", f"refs/heads/{branch}", sha)
             raise
 
 
 def discard_worktree(repo: Path, path: Path, branch: str) -> None:
-    """Remove a worktree this dispatch created and never launched in, with its branch (best effort)."""
+    """Remove a worktree this dispatch created and never launched in, with its branch (best effort).
+
+    Under the worktree lock, a worktree another task or process uses is kept, and so is a worktree
+    whose use cannot be checked because the lock stayed held.
+    """
     run_git = partial(_git, isolate=True)
-    for args in (("worktree", "remove", "--force", str(path)), ("branch", "-D", branch)):
-        with suppress(OSError, subprocess.SubprocessError):
-            run_git(repo, *args)
+    with suppress(WorktreeLockTimeout), worktree_lock(repo):
+        if in_use(path):
+            return
+        for args in (("worktree", "remove", "--force", str(path)), ("branch", "-D", branch)):
+            with suppress(OSError, subprocess.SubprocessError):
+                run_git(repo, *args)
 
 
 def provision_links(repo: Path, worktree: Path) -> None:

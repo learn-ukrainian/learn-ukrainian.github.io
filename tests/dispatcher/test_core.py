@@ -2250,6 +2250,40 @@ def test_failed_worktree_preparation_leaves_no_branch_or_worktree_and_retries_cl
     assert not (sandbox.repo / ".worktrees" / "dispatch" / "codex" / "writer-c").exists()
 
 
+@pytest.mark.parametrize("attachment", ["record", "pid"])
+def test_partial_worktree_cleanup_keeps_a_worktree_another_task_uses(sandbox, monkeypatch, attachment):
+    """Another task's record or live process in a partly prepared worktree keeps it and its branch."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    sandbox.tasks.mkdir(exist_ok=True)
+    path = sandbox.repo / ".worktrees/dispatch/sol/partial"
+    other = sandbox.tasks / "attached.json"
+    holders = []
+
+    def attached_then_failing(_repo, worktree):
+        (worktree / "uncommitted.txt").write_text("live work\n")
+        if attachment == "record":
+            other.write_text(json.dumps(dict(task_id="attached", status="running", worktree_path=str(worktree))))
+        else:
+            holders.append(subprocess.Popen(["sleep", "30"], cwd=worktree))
+        raise OSError("link provisioning failed")
+
+    monkeypatch.setattr(git, "provision_links", attached_then_failing)
+    try:
+        with pytest.raises(OSError, match="link provisioning failed"):
+            git.create_worktree(sandbox.repo, path, "sol/partial", run_git(sandbox.repo, "rev-parse", "HEAD"))
+        git.discard_worktree(sandbox.repo, path, "sol/partial")
+        assert (path / "uncommitted.txt").read_text() == "live work\n"
+        assert run_git(sandbox.repo, "branch", "--list", "sol/partial")
+    finally:
+        other.unlink(missing_ok=True)
+        for holder in holders:
+            holder.kill()
+            holder.wait()
+    # Once nothing uses it, the dispatch's own cleanup removes what it created.
+    git.discard_worktree(sandbox.repo, path, "sol/partial")
+    assert not path.exists()
+    assert not run_git(sandbox.repo, "branch", "--list", "sol/partial")
+
 
 def test_interrupt_during_claim_admission_releases_committed_claim(sandbox):
     """SIGINT after the ledger commits a claim, before admission returns, still releases that claim."""
