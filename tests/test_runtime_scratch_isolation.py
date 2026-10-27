@@ -274,7 +274,6 @@ def _assert_typed_scan_root_error(caught: pytest.ExceptionInfo[scratch.ScratchSc
     assert frames[-1].name == "_scratch_scan_roots"
 
 
-
 @pytest.mark.parametrize("misconfigured_scan_root", _CALLER_MISCONFIGURATIONS, indirect=True)
 def test_review_sweep_refuses_a_misconfigured_scan_root(
     misconfigured_scan_root: str,

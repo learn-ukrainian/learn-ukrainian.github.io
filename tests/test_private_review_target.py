@@ -129,12 +129,6 @@ def review_repositories(tmp_path, monkeypatch):
     return public, private, heads
 
 
-
-
-
-
-
-
 def test_closeout_private_only_sha_resolves(review_repositories, tmp_path):
     public, private, heads = review_repositories
     state = tmp_path / "closeout.json"
@@ -188,12 +182,6 @@ def test_typed_missing_commit_neutralizes_and_wrong_base_stays_specific():
     assert kept is wrong_base
     assert "no-such-base" in str(kept)
     assert "PRIVATE_REVIEW_TARGET_UNRESOLVED" not in str(kept)
-
-
-
-
-
-
 
 
 def test_private_missing_merge_base_keeps_specific_text(review_repositories, tmp_path):
@@ -482,8 +470,6 @@ def test_missing_or_unparsable_origin_is_not_kept(review_repositories, tmp_path)
     )
     assert unparsable.returncode == 1, unparsable.stderr
     assert json.loads(unparsable.stderr)["error"] == REVIEW_ROOT_MISMATCH
-
-
 
 
 def test_same_repo_pr_head_pins_catalog_repository(tmp_path, monkeypatch):
