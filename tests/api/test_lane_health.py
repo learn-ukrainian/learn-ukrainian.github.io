@@ -5,6 +5,8 @@ import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
+
 from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_helpers, state_router
@@ -40,6 +42,20 @@ def test_is_spawn_phase_failure():
 
     # Active/running task (no returncode) -> not a spawn failure
     assert is_spawn_phase_failure({"status": "running", "returncode": None, "duration_s": None}) is False
+
+
+@pytest.mark.parametrize("overrides", [
+    {"status": "future"}, {"duration_s": "unknown"}, {"duration_s": None}, {"returncode": "unknown"},
+])
+def test_unknown_v2_outcome_cannot_reset_legacy_failure_streak(tmp_path, overrides):
+    """Unrecognized outcomes must not mask known failures or crash lane health."""
+    now = datetime.now(UTC)
+    for i in range(2):
+        _write_task(tmp_path, f"legacy-{i}", "codex", "failed", 1, 10, now - timedelta(minutes=i + 2))
+    recent = {"task_id": "v2", "schema_version": 2, "agent": "codex", "status": "done",
+              "returncode": 0, "duration_s": 10, "started_at": now.isoformat(), **overrides}
+    (tmp_path / "v2.json").write_text(json.dumps(recent))
+    assert compute_lane_health(tmp_path, now=now)["codex"]["consecutive_failures"] == 2
 
 
 def _write_task(

@@ -147,8 +147,19 @@ def _read_result_file(result_file: str, ctx: MonitorContext | None = None) -> st
         return None
 
 
+def _task_pid(value: Any) -> int | None:
+    if isinstance(value, bool) or not isinstance(value, (int, str)):
+        return None
+    try:
+        pid = int(value)
+    except ValueError:
+        return None
+    return pid if 0 < pid <= 2**31 - 1 else None
+
+
 def _pid_alive(pid: int | None) -> bool:
-    if not pid:
+    pid = _task_pid(pid)
+    if pid is None:
         return False
     try:
         os.kill(int(pid), 0)
@@ -593,7 +604,7 @@ def _delegate_task_rows_locked(
             derived_status, alive = _derived_task_status(task)
             claimed_repo = _authoritative_task_repository(task)
             pid = task.get("pid")
-            pid_int = int(pid) if pid and str(pid).isdigit() else None
+            pid_int = _task_pid(pid)
             task_id = str(task.get("task_id") or path.stem)
             raw_status = str(task.get("status") or "")
             subst = task.get("substitution")

@@ -15,7 +15,6 @@ from scripts.api import main as api_main
 from scripts.api.fleet_board import activity as activity_mod
 from scripts.api.fleet_board import prs as prs_mod
 from scripts.api.fleet_board.envelope import endpoint_schema
-from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import lookup_verdict
 from scripts.review.record_cf_verdict import build_comment
 
@@ -105,7 +104,7 @@ def _check(name: str, sha: str = SHA, *, status: str = "completed", conclusion: 
 
 
 def _green(sha: str = SHA) -> tuple[dict[str, str], ...]:
-    return (_check("CI Gate", sha), _check("Analyze (python)", sha))
+    return (_check("CI Gate", sha),)
 
 
 def _pull(
@@ -170,7 +169,7 @@ def _rows(*pulls: prs_mod.Pull, **kwargs: object) -> list[dict]:
     activity = kwargs.pop("activity", None)
     view_kwargs = {
         key: kwargs.pop(key)
-        for key in ("queued", "login", "comments", "checks", "files", "queue_failed", "default_branch")
+        for key in ("queued", "login", "comments", "checks", "queue_failed", "default_branch")
         if key in kwargs
     }
     return prs_mod.assemble_prs(
@@ -310,27 +309,21 @@ def test_ci_gate_is_separate_from_a_red_analyze_check() -> None:
         )
     }
     rows = _rows(_pull(), checks=checks)
-    assert rows[0]["ci"] == "red"
+    assert rows[0]["ci"] == "green"
     assert rows[0]["gate"] == "green"
+    assert rows[0]["blocker"] == {"kind": "none"}
 
 
-def test_lockfile_pr_reuses_the_keeper_codeql_rule() -> None:
-    checks = (
-        _check("CI Gate"),
-        {
-            "name": "CodeQL",
-            "head_sha": SHA,
-            "status": "completed",
-            "conclusion": "neutral",
-            "started_at": "2026-10-09T00:00:00Z",
-            "app": {"id": keeper.CODEQL_APP_ID, "slug": keeper.CODEQL_APP},
-        },
-    )
-    waiting = _rows(_pull(), checks={SHA: checks})
-    assert waiting[0]["ci"] == "pending"
-    ready = _rows(_pull(), checks={SHA: checks}, files={42: ({"filename": "uv.lock"},)})
-    assert ready[0]["ci"] == "green"
-    assert ready[0]["gate"] == "green"
+def test_lockfile_pr_uses_ci_gate_only() -> None:
+    for checks in (
+        (_check("CI Gate"),),
+        (_check("CI Gate"), _check("CodeQL", conclusion="failure")),
+        (_check("CI Gate"), _check("CodeQL", status="in_progress", conclusion="")),
+    ):
+        ready = _rows(_pull(title="Update uv.lock"), checks={SHA: checks})
+        assert ready[0]["ci"] == "green"
+        assert ready[0]["gate"] == "green"
+        assert ready[0]["blocker"] == {"kind": "none"}
 
 
 def test_stacked_base_is_the_open_pr_on_the_base_branch() -> None:
@@ -706,7 +699,7 @@ def test_blocker_precedence_and_a_stacked_pr_is_never_ready() -> None:
     assert conflict[0]["blocker"] == {"kind": "conflict"}
 
     failing = _rows(_pull(), checks={SHA: red})
-    assert failing[0]["blocker"] == {"kind": "failing_check", "checks": ["Analyze (python)", "CI Gate"]}
+    assert failing[0]["blocker"] == {"kind": "failing_check", "checks": ["CI Gate"]}
 
     changes = _rows(_pull(), comments={42: (_comment(SHA, verdict="CHANGES_REQUESTED"),)})
     assert changes[0]["blocker"] == {"kind": "cf_changes"}

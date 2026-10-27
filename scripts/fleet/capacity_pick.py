@@ -4,8 +4,8 @@
 Drivers run this before every implement dispatch. Prefer cool/idle seats;
 mark hot / near_cap / deficit lanes AVOID. Shares the Monitor snapshot and
 blocking native refresh path with ``scripts.fleet.usage``. The admission line
-reports whether ``delegate.py dispatch`` would admit a write worker on this host
-now, from the same function dispatch calls (#8645).
+reports the legacy write-admission decision on this host, from
+``dispatch_admission.evaluate`` (#8645). It does not predict v2 admission.
 
 Every row's capacity comes from the shared owner,
 :func:`scripts.fleet.credit_lane.routing_facts` (#9740): this module adds only
@@ -109,7 +109,7 @@ _WRITE_NON_ATTEMPT_STATUSES = frozenset({"dry_run", "cancelled", "running", "spa
 # Task-record agent names that are another lane's dispatch alias.
 _RECORD_AGENT_LANE = {"grok-build": "grok"}
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
-# delegate.py's task records, anchored to the primary checkout.
+# Dispatch task records, anchored to the primary checkout.
 
 
 def _monitor_base() -> str:
@@ -677,7 +677,7 @@ def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
 
 
 def admission_status(tasks_dir: Path | None = None) -> dict[str, Any]:
-    """Would ``delegate.py dispatch`` admit a write worker now? Report only: dead pids are not swept
+    """Report the legacy write-admission decision. Dead pids are not swept
     and the disk reaper does not run. PSI diagnostics do not read or write journal
     state. A disk at the refuse threshold reads as a refusal."""
     try:

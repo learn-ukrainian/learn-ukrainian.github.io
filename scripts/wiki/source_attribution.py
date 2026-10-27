@@ -407,7 +407,7 @@ def _effective_db_path() -> Path:
 
     # In a dispatch worktree, data/ is sparse-excluded (or holds an empty 0-byte
     # placeholder a read-write opener once created) — fall back to the main checkout's
-    # populated DB. Worktrees nest arbitrarily deep: delegate.py uses
+    # populated DB. Worktrees nest arbitrarily deep: scripts/dispatch.py uses
     # `.worktrees/dispatch/<agent>/<name>`, so the old `PROJECT_ROOT.parent.name
     # == ".worktrees"` check (which only matched the shallow `.worktrees/<name>`
     # layout) silently failed and the compile got an EMPTY DB. Walk UP to the
