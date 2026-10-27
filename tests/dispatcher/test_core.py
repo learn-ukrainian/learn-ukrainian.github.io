@@ -621,7 +621,7 @@ def delivery_settle(sandbox):
     # Synthetic write records need the trusted remote omitted from read-only dispatches.
     record["worktree_remote_url"] = str(sandbox.remote)
     def settle(model="echo", owned=("delivered.txt",)):
-        record.update(mode="workspace-write", model=model, status="running", owned_paths=list(owned or []))
+        record.update(mode="workspace-write", provider=model, status="running", owned_paths=list(owned or []))
         if owned is None:
             record.pop("owned_paths")
         path = sandbox.tasks / f"{record['task_id']}.json"
