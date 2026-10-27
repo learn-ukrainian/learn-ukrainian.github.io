@@ -64,6 +64,16 @@ newly provisioned checkout is removed through the common worktree reaper.
 Reused checkouts remain their owner's responsibility. The tree is checked
 again before the sandboxed adapter launch.
 
+Default-label protected Claude reviews read `settings.json` only when it is
+owner-controlled, with no group or other write permission. Read permission is
+allowed; credential files still require owner-only permissions. `apiKeyHelper`
+supports literal executable arguments with POSIX quoting. Shell expansion,
+operators, assignments and comments are refused with
+`attempt_claude_api_key_helper_shell_unsupported`. Helpers run without a shell.
+Protected reviews pin the resolved account directory for credential receipts.
+Ordinary Claude dispatches without an explicit account preserve the host's
+default config lookup and inherited `CLAUDE_CONFIG_DIR`.
+
 `review_access` lives beside, never inside, the task's exact `review_attempt`
 binding. The recorder reads it from that task, verifies the saved result bytes,
 result hash, fresh rendered prompt and attempt identity as before, and stores

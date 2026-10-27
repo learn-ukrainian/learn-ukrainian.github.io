@@ -302,7 +302,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         status, error = "timeout", "process deadline exceeded"
     except (ValueError, RuntimeError) as exc:
         if record.get("review_attempt") or record.get("require_review_verdict"):
-            status, error = "failed", str(exc).splitlines()[0]
+            status, error = "failed", type(exc).__name__
         else:
             status, error = "crashed", "supervisor or provider processing failed"
     except Exception:
@@ -333,8 +333,6 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 resolved_model_known=resolved_model is not None,
                 resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
             )
-        if review_execution:
-            review_execution.cleanup()
         if spec.agent == "claude":
             from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt
 
@@ -343,6 +341,14 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 credential_class = receipt["method"]
             record["claude_account_auth"] = {**receipt, "credential_class": credential_class}
         store.replace(record, path)
+
+        if review_execution:
+            try:
+                review_execution.cleanup()
+            except Exception:
+                record.update(status="failed", error="review_cleanup_failed")
+                store.replace(record, path)
+                return
 
         _reap_settled(record, path)
 

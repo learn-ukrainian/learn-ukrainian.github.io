@@ -255,6 +255,30 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         provision_links(repo, path)
 
 
+def discard_unstarted_worktree(repo: Path, worktree: Path, branch: str, sha: str, task_id: str) -> bool:
+    """Reap only this dispatch's unchanged checkout through the shared remover."""
+    from scripts.dispatcher import store
+    from scripts.orchestration import worktree_claims
+
+    def releasable():
+        unchanged = (_git(worktree, "rev-parse", "HEAD", isolate=True) == sha
+                     and _git(worktree, "branch", "--show-current", isolate=True) == branch)
+        return unchanged, "unstarted dispatch checkout"
+
+    try:
+        removal = worktree_claims.remove_unclaimed_worktree(
+            worktree, repo_root=repo, control_root=ROOT, tasks_dir=store.tasks_dir(),
+            reason="review preparation refused", owner_task_id=task_id, releasable=releasable,
+        )
+        if removal.action != "removed":
+            return False
+        # Compare-and-delete cannot remove a ref another process has moved.
+        _git(repo, "update-ref", "-d", f"refs/heads/{branch}", sha, isolate=True)
+        return True
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+        return False
+
+
 def provision_links(repo: Path, worktree: Path) -> None:
     """Provision only real primary targets; atomic symlink creation never replaces entries."""
     repo = repo.absolute()

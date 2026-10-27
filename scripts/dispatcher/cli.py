@@ -243,8 +243,16 @@ def _dispatch(args) -> int:
     if admitted is not None:
         record.update(admitted)
     if binding and admitted is not None:
-        with review_execution.prepare(spec, record, admitted):
-            worker.start(spec, record, prompt, args.hard_timeout)
+        try:
+            with review_execution.prepare(spec, record, admitted):
+                worker.start(spec, record, prompt, args.hard_timeout)
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+            # prepare's ExitStack has released the input and checkout locks.
+            # A persisted task belongs to its supervisor and normal closeout.
+            if (not args.cwd and not path.exists()
+                    and not git.discard_unstarted_worktree(repo, worktree, branch, sha, task_id)):
+                raise ValueError("review_preparation_refused_cleanup_retained") from None
+            raise ValueError("review_preparation_refused") from None
     else:
         worker.start(spec, record, prompt, args.hard_timeout)
     print(task_id, record["run_nonce"], sep="\n")

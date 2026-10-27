@@ -114,7 +114,8 @@ def test_default_label_ignores_ambient_other_config_directory(world, monkeypatch
         credential.chmod(0o600)
     monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(home / ".claude-b"))
     spec = TaskSpec("default-a", "claude", "claude-opus-5-5", None, "read-only", root,
-                    root / "prompt", root / "result", claude_account="a" if explicit else None)
+                    root / "prompt", root / "result", claude_account="a" if explicit else None,
+                    options={"review_attempt": "fixture-manifest"})
     env = child_env(spec)
     assert env["CLAUDE_CONFIG_DIR"] == str(home / ".claude")
     assert linux_claude_auth(spec.claude_account, environ=env) == {"CLAUDE_CODE_OAUTH_TOKEN": "fixture-default-token"}
@@ -285,15 +286,17 @@ def test_concurrent_admissions_claim_one_pair_for_different_tasks(attempt, tmp_p
     barrier, create = Barrier(2), review_mcp._create_file
 
     def exclusive(*args):
-        barrier.wait(timeout=10)  # Force both admissions past the record/artifact scan.
+        if args[0].endswith(".jsonl"):
+            barrier.wait(timeout=10)  # Force both preparations past the artifact scan.
         create(*args)
 
     monkeypatch.setattr(review_mcp, "_create_file", exclusive)
 
     def admit(task_id):
         try:
-            store.check_review_attempt(binding, claim=True)
-        except ValueError:
+            review_mcp.prepare_review_attempt("review", "attempt", Path(attempt[-1]), "claude",
+                                              receipts_root=tmp_path / "review-receipts")
+        except FileExistsError:
             return "spent"
         store.create(dict(task_id=task_id, prompt_file=str(tmp_path / f"{task_id}.prompt"),
                           review_attempt=binding), b"Review")
@@ -302,6 +305,57 @@ def test_concurrent_admissions_claim_one_pair_for_different_tasks(attempt, tmp_p
     with ThreadPoolExecutor(2) as pool:
         assert sorted(pool.map(admit, ["first", "second"])) == ["admitted", "spent"]
     assert len(store.list_tasks()) == 1
+
+
+@pytest.mark.parametrize("refusal", ["concurrent_pair_taken", "worktree_lock_error"])
+def test_refusal_after_creation_leaves_no_orphan_worktree_or_branch_and_exits_2(
+    attempt, tmp_path, monkeypatch, capsys, refusal,
+):
+    from scripts.agent_runtime import review_mcp
+    from scripts.orchestration import worktree_claims
+    from scripts.review import dispatch_execution as execution
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    git._git(repo, "init", "-b", "main")
+    (repo / ".gitignore").write_text(".worktrees/\nnode_modules\nsite/node_modules\ndata/*.db\n")
+    (repo / "node_modules").mkdir()
+    (repo / "data").mkdir()
+    (repo / "data/sources.db").write_bytes(b"fixture")
+    git._git(repo, "add", ".gitignore")
+    git._git(repo, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+             "commit", "--allow-empty", "-m", "fixture")
+    monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
+    monkeypatch.setattr(git, "ROOT", repo)
+    monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    monkeypatch.setattr(execution, "_REPO_ROOT", repo)
+    monkeypatch.setattr(execution, "_worktree_lock_dir", lambda: tmp_path / "locks")
+    monkeypatch.setattr(execution, "admit", lambda *a: dict(
+        review_contract={}, review_input_root=str(repo), review_input_paths=[]))
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: tmp_path)
+    monkeypatch.setattr(review_mcp, "check_launch_contract", lambda *a: None)
+    worktree = repo / ".worktrees/dispatch/codex/refused"
+
+    def refuse_after_creation(*args, **kwargs):
+        assert worktree.is_dir()
+        assert git._git(worktree, "branch", "--show-current") == "codex/refused"
+        if refusal == "worktree_lock_error":
+            raise worktree_claims.WorktreeLockError(f"private lock directory: {tmp_path / 'locks'}")
+        # Another dispatcher spends the pair between admission and preparation.
+        receipts = tmp_path / "batch_state/review-receipts/review"
+        receipts.mkdir(parents=True)
+        (receipts / "attempt.jsonl").write_bytes(b"")
+
+    monkeypatch.setattr(execution, "_lock_review_input_root", refuse_after_creation)
+    monkeypatch.setattr(worker, "start", lambda *a: pytest.fail("refused review launched a worker"))
+    assert invoke(attempt, "--task-id", "refused", "--base", "main") == 2
+    output = capsys.readouterr()
+    assert "Traceback" not in output.err
+    assert str(tmp_path) not in output.err
+    assert not worktree.exists()
+    assert str(worktree) not in git._git(repo, "worktree", "list", "--porcelain")
+    assert "refs/heads/codex/refused" not in git._git(repo, "for-each-ref", "--format=%(refname)")
+    assert store.read("refused", missing_ok=True) is None
 
 
 def test_review_attempt_input_paths_cover_manifest_and_code(tmp_path, monkeypatch):
@@ -445,6 +499,9 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     _, home = world
     credential = home / ".claude" / ".credentials.json"
     credential.parent.mkdir()
+    settings = credential.parent / "settings.json"
+    settings.write_text("{}")
+    settings.chmod(0o644)
     selected = {"CLAUDE_CONFIG_DIR": str(credential.parent)}
     access = "fixture-access-" + "x" * 30
     refresh = "fixture-refresh-" + "y" * 30

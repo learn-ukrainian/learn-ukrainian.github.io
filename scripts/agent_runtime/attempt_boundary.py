@@ -935,6 +935,9 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
     An ambient CLAUDE_CONFIG_DIR never changes that default directory.
     A non-default label reads only its verified bound account's credential
     file and refuses every conflicting source before anything is returned.
+    Default-label apiKeyHelper supports literal argv with POSIX quoting only.
+    Shell expansion, operators, assignments and comments refuse with a typed
+    error rather than changing the command's meaning or invoking a shell.
     """
     from scripts.review.isolation import ReviewIsolationError
 
@@ -960,7 +963,7 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
         # the seat receives the resulting key, never that directory or settings.
         try:
             settings = _read_private_bytes(config / "settings.json", limit=65536,
-                                           code="claude_account_settings", forbidden_mode=0o077)
+                                           code="claude_account_settings", forbidden_mode=0o022)
         except ClaudeAccountRefused as exc:
             raise ReviewIsolationError(exc.code) from None
         if settings:
@@ -971,6 +974,8 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
             if helper:
                 if not isinstance(helper, str):
                     raise ReviewIsolationError("attempt_claude_api_key_helper_invalid")
+                if any(character in helper for character in "$`~*?[]{}();<>|&\\\n\r#"):
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_shell_unsupported")
                 import shlex
 
                 lexer = shlex.shlex(helper, posix=True, punctuation_chars=True)
@@ -981,6 +986,8 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
                     raise ReviewIsolationError("attempt_claude_api_key_helper_invalid") from None
                 if not argv or any(set(word) <= set("();<>|&") for word in argv):
                     raise ReviewIsolationError("attempt_claude_api_key_helper_invalid")
+                if "=" in argv[0]:
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_shell_unsupported")
                 try:
                     result = subprocess.run(argv, capture_output=True, text=True, timeout=10,
                                             env={k: selected[k] for k in ("HOME", "PATH", "LANG") if k in selected},

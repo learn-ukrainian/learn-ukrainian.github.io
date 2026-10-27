@@ -957,15 +957,16 @@ def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monke
         boundary.cleanup()
 
 
-@pytest.mark.parametrize("failure", ["timeout", "group_writable", "shell"])
+@pytest.mark.parametrize("failure", ["timeout", "group_writable", "shell", "$HOME/helper", "`helper`", "helper *"])
 def test_claude_helper_timeout_or_writable_settings_is_boundary_refusal(world, monkeypatch, failure):
     """Unsafe helper settings and helper timeouts must refuse before provider launch."""
     _, home = world
     config = home / ".claude"
     config.mkdir()
     settings = config / "settings.json"
-    settings.write_text(json.dumps({"apiKeyHelper": "fixture-helper" if failure != "shell" else "echo key | cat"}))
-    settings.chmod(0o620 if failure == "group_writable" else 0o600)
+    helper = {"shell": "echo key | cat", "timeout": "fixture-helper", "group_writable": "fixture-helper"}
+    settings.write_text(json.dumps({"apiKeyHelper": helper.get(failure, failure)}))
+    settings.chmod(0o620 if failure == "group_writable" else 0o644)
 
     def run(argv, **kwargs):
         if failure == "timeout":

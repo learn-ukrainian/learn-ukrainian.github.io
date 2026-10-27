@@ -45,7 +45,7 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         file_key = _load_cursor_api_key_from_env_file()
         if file_key:
             env["CURSOR_API_KEY"] = file_key
-    if spec.agent == "claude":
+    if spec.agent == "claude" and (spec.claude_account is not None or spec.options.get("review_attempt")):
         suffix = "" if spec.claude_account in {None, "a"} else "-b"
         env["CLAUDE_CONFIG_DIR"] = str(Path(env.get("HOME", str(Path.home()))) / f".claude{suffix}")
     shims = npm_shim_dir()
