@@ -1257,7 +1257,7 @@ def _query_prs_by_head_sha(
 
     raw_items, error = _scope_pr_rows(raw_items, repository)
     if error:
-        return [], error
+        return [], f"{_PR_LOOKUP_FAILED} ({error})"
     states: list[PullRequestState] = []
     for item in raw_items:
         # ``[null]`` and ``[{}]`` used to be skipped, which is an empty list,
@@ -1282,8 +1282,10 @@ def _parse_search_pr_item(item: Any, head_sha: str) -> tuple[PullRequestState | 
     if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
         return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has no usable PR number)"
     return (
-        PullRequestState(number=number, state=state, head_sha=head_sha, head_from_commit_search=True,
-                         repository=pull_request_repository(item)),
+        PullRequestState(
+            number=number, state=state, head_sha=head_sha, head_from_commit_search=True,
+            repository=pull_request_repository(item),
+        ),
         None,
     )
 
@@ -3937,8 +3939,10 @@ def _continuation_head_is_merged(
     """
     if preservation is not None and not _preserved_merged_head_valid(info, preservation):
         return False
-    if (pr is None or pr.state != "MERGED" or pr.head_from_commit_search
-            or not _pr_belongs_to_checkout(info, pr) or not pr.head_sha or not info.head):
+    if (
+        pr is None or pr.state != "MERGED" or pr.head_from_commit_search
+        or not _pr_belongs_to_checkout(info, pr) or not pr.head_sha or not info.head
+    ):
         return False
     if allow_equivalent and not _pr_matches_worktree_head(info, pr) and _merged_equivalent(info, pr):
         return bool(cohort) and all(
@@ -4351,8 +4355,10 @@ def _preservation_merged_creator(
     holder = creators[0] if len(creators) == 1 else cohort[0]
     proof = holder[1].get("worktree_reap_proof")
     proof_pr = (
-        PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"),
-                         repository=proof.get("pr_repository"))
+        PullRequestState(
+            proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"),
+            repository=proof.get("pr_repository"),
+        )
         if isinstance(proof, dict)
         else None
     )
@@ -4365,8 +4371,10 @@ def _preservation_merged_creator(
     head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
     branch = worktree_claims.checked_out_branch(worktree)
     info = WorktreeInfo(worktree, branch, proof.get("head_sha"), detached=branch is None)
-    pr = PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"),
-                         repository=proof.get("pr_repository"))
+    pr = PullRequestState(
+        proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"),
+        repository=proof.get("pr_repository"),
+    )
     preservation = proof.get("preservation")
     expected_head = info.head
     if preservation is not None:

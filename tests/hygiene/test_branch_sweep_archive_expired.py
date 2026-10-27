@@ -1618,7 +1618,7 @@ def test_production_pr_snapshot_reads_whole_batch_once(
     if fault:
         assert all(error == "batch PR snapshot unavailable or incomplete" for _, error in found.values())
     else:
-        assert found == {"codex/alpha": ([PullRequestState(7, "OPEN", sha)], None), "codex/beta": ([], None)}
+        assert found == {"codex/alpha": ([PullRequestState(7, "OPEN", sha, repository="example/project")], None), "codex/beta": ([], None)}
 
 
 @pytest.mark.parametrize("guard", ["OPEN", "task", "worktree"])

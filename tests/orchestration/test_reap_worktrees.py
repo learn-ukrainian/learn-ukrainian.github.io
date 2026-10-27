@@ -1893,7 +1893,7 @@ def test_open_pr_wins_over_historical_merged_pr(
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
     assert result.action == "skipped"
-    assert result.pr == {"number": 9, "state": "OPEN", "head_sha": head}
+    assert result.pr == {"number": 9, "state": "OPEN", "head_sha": head, "repository": None}
     assert worktree.exists()
 
 

@@ -1100,7 +1100,10 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
                     {
                         "number": row["number"], "state": "closed" if row["state"] == "MERGED" else "open",
                         "merged_at": "2026-01-02T03:04:05Z" if row["state"] == "MERGED" else None,
-                        "head": {"sha": head}, "base": {"repo": {"full_name": row["repository"]["nameWithOwner"]}},
+                        "head": {"sha": head, "ref": branch, "repo": {"full_name": "example/fork"}},
+                        "base": {"repo": {"full_name": row["repository"]["nameWithOwner"]}},
+                        "url": f"https://api.github.com/repos/{row['repository']['nameWithOwner']}/pulls/42",
+                        "html_url": row["url"],
                     }
                     for row in rows
                 ]
@@ -1119,6 +1122,50 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
             assert error is None
             assert [(state.number, state.state, state.head_sha) for state in states] == [(42, "MERGED", head)]
             assert states[0].repository == repository
+            if transport in {"rest", "graphql"}:
+                scoped.setattr(
+                    rw, "_run_gh",
+                    lambda *args, row=rows[1], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
+                )
+                if transport == "rest":
+                    states, error = rw._query_pr_by_number_rest(repo, 42)
+                else:
+                    states, error = rw._query_pr_by_number_graphql(repo, 42)
+                assert error is None and len(states) == 1
+                assert states[0].repository == repository and states[0].head_sha == head
+                scoped.setattr(
+                    rw, "_run_gh",
+                    lambda *args, row=rows[0], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
+                )
+                states, error = (rw._query_pr_by_number_rest(repo, 42) if transport == "rest"
+                                 else rw._query_pr_by_number_graphql(repo, 42))
+                assert states == [] and error is None
+                if transport == "rest":
+                    scoped.setattr(
+                        mc, "_run_gh",
+                        lambda *args, row=rows[1], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
+                    )
+                    own_pr, error = mc._fetch_pr_info_rest(repo, 42, repo=repository)
+                    assert error == "" and own_pr is not None
+                    assert own_pr.repository == repository and own_pr.head_sha == head
+
+    # The batched branch sweep must retain the same attribution as individual lookups.
+    from scripts.hygiene import branch_sweep
+
+    with monkeypatch.context() as scoped:
+        scoped.setattr(
+            branch_sweep.github_client, "run",
+            lambda *args, **kwargs: subprocess.CompletedProcess(
+                [], 0, json.dumps({"data": {"repository": {"b0": {
+                    "nodes": [opened, merged], "pageInfo": {"hasNextPage": False},
+                }}}}), "",
+            ),
+        )
+        states, error = branch_sweep._archive_pr_snapshot(repo, [branch], rw._query_pr_states)[branch]
+        assert error is None
+        assert [(state.number, state.state, state.head_sha, state.repository) for state in states] == [
+            (42, "MERGED", head, repository)
+        ]
 
     # An OPEN PR in the checkout's own repository must still block branch deletion.
     patch_gh(

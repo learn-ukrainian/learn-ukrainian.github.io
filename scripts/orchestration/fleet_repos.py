@@ -200,7 +200,7 @@ def pull_request_repository(payload: Any, *, scoped_repository: str | None = Non
     """
     if not isinstance(payload, dict):
         raise FleetRepoError("PR payload is not an object")
-    names: list[str] = []
+    names: list[Any] = []
     base = payload.get("base")
     if isinstance(base, dict) and isinstance(base.get("repo"), dict):
         names.append(base["repo"].get("full_name"))
@@ -213,9 +213,13 @@ def pull_request_repository(payload: Any, *, scoped_repository: str | None = Non
                 raise FleetRepoError("PR payload has unusable repository attribution")
             url = urlsplit(payload[field])
             parts = url.path.strip("/").split("/")
-            if url.hostname != "github.com" or len(parts) != 4 or parts[2] != "pull":
+            if url.hostname == "github.com" and len(parts) == 4 and parts[2] == "pull":
+                names.append("/".join(parts[:2]))
+            elif (url.hostname == "api.github.com" and len(parts) == 5
+                  and parts[0] == "repos" and parts[3] == "pulls"):
+                names.append("/".join(parts[1:3]))
+            else:
                 raise FleetRepoError("PR payload has unusable repository attribution")
-            names.append("/".join(parts[:2]))
     if any(not isinstance(name, str) or not name for name in names):
         raise FleetRepoError("PR payload has unusable repository attribution")
     canonical = {canonical_repository(name) for name in names}

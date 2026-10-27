@@ -559,7 +559,7 @@ def query_pr_by_head(
             "all",
             "--json",
             "number,state,headRefOid,headRefName,baseRefName,mergeStateStatus,mergeCommit,isCrossRepository,url",
-                *repo_args,
+            *repo_args,
         ],
         cwd=repo_root,
         timeout=timeout,

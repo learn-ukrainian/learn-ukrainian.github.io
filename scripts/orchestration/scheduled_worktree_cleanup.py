@@ -838,7 +838,6 @@ def _query_pr_by_number(
     return ([parsed] if parsed is not None else []), error
 
 
-
 def cleanup_untracked_local_branches(
     repo_root: Path,
     *,
