@@ -2007,6 +2007,62 @@ def test_dispatch_popen_failure_records_worktree_head(tmp_path, monkeypatch) -> 
     assert state["pid"] is None
     assert state["error"] == "worker_spawn_failed: Popen failed: FileNotFoundError: no such file"
     assert state["head_sha"] == "a" * 40
+
+
+def _fake_pool(directory, *, current, file_cache, high=21 * 1024**3):
+    """Ported from tests/test_dispatch_admission.py::_fake_pool."""
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "memory.current").write_text(f"{current}\n", encoding="ascii")
+    (directory / "memory.high").write_text(f"{high}\n", encoding="ascii")
+    (directory / "memory.max").write_text(f"{23 * 1024**3}\n", encoding="ascii")
+    (directory / "memory.stat").write_text(f"active_file {file_cache}\ninactive_file 0\n", encoding="ascii")
+    return directory
+
+
+def _full_disk(monkeypatch, *readings):
+    """Ported from tests/test_delegate_admission.py::_full_disk."""
+    from scripts.orchestration import dispatch_admission
+
+    seen = {"readings": list(readings), "reaper": [], "alerts": []}
+
+    def probe():
+        values = seen["readings"]
+        used = values.pop(0) if len(values) > 1 else values[0]
+        used_bytes = int(400 * 1024**3 * used / 100)
+        return dispatch_admission.DiskProbe(used_bytes=used_bytes, free_bytes=400 * 1024**3 - used_bytes)
+
+    def reaper(repo_root, _timeout_s=None):
+        seen["reaper"].append(repo_root)
+        return dispatch_admission.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s)")
+
+    monkeypatch.setattr(dispatch_admission, "probe_disk", probe)
+    monkeypatch.setattr(dispatch_admission, "run_disk_reaper", reaper)
+    monkeypatch.setattr(dispatch_admission, "post_disk_alert", lambda body, _key: seen["alerts"].append(body))
+    return seen
+
+
+def _credit_balance_snapshot():
+    """Inlined ports of test_credit_lane::_credit_balance_snapshot, _budget, _live and _codex."""
+    from datetime import UTC, datetime
+
+    codex = {
+        "status": "near_cap", "remaining_pct": 1.0, "burn_pct_7d": 99.0,
+        "freshness": "fresh", "age_s": 60.0, "eligible": True, "health": {"healthy": True},
+        "credit_balance": 62500.0, "reset_credits": None,
+        "runtime": {"headroom_blocked": False, "rate_limited": 0},
+        "codexbar": {
+            "weekly_used_pct": 99.0, "weekly_remaining_pct": 1.0,
+            "weekly_resets_at": "2026-10-03T17:00:00+00:00", "will_last_to_reset": False,
+            "pace_summary": "13% in deficit", "freshness": "fresh", "age_s": 60.0, "stale": False,
+            "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        },
+    }
+    return {
+        "agents": {"codex": codex}, "api_accounts": {}, "diagnostics": {"stale": False},
+        "recommendation": {"primary_agent_for_code": "codex", "rationale": "", "warnings": []},
+    }
+
+
 # D5 ports of legacy admission contracts; originals remain untouched.
 @pytest.fixture
 def admission_dispatch(sandbox, monkeypatch):
@@ -2062,7 +2118,6 @@ def test_read_only_dispatch_is_exempt(admission_dispatch, monkeypatch, capsys):
 
 def test_full_shared_pool_refuses_a_write_worker(admission_dispatch, tmp_path, monkeypatch, capsys):
     """Ported from tests/test_dispatch_admission.py::test_full_shared_pool_refuses_a_write_worker."""
-    from tests.test_dispatch_admission import _fake_pool
 
     pool = _fake_pool(tmp_path / "lu.slice", current=21 * 1024**3, file_cache=1024**3 // 2)
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
@@ -2076,7 +2131,6 @@ def test_full_shared_pool_refuses_a_write_worker(admission_dispatch, tmp_path, m
 
 def test_file_cache_does_not_count_against_the_pool(admission_dispatch, tmp_path, monkeypatch, capsys):
     """Ported from tests/test_dispatch_admission.py::test_file_cache_does_not_count_against_the_pool."""
-    from tests.test_dispatch_admission import _fake_pool
 
     pool = _fake_pool(tmp_path / "lu.slice", current=28 * 1024**3, file_cache=14 * 1024**3)
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
@@ -2183,7 +2237,6 @@ def test_admission_marks_a_record_whose_dispatcher_died_crashed(admission_dispat
 def test_admission_refuses_off_allowlist_model_on_credit_balance_lane(admission_dispatch, monkeypatch, capsys, model):
     """Ported from tests/test_credit_lane.py::test_admission_refuses_off_allowlist_model_on_credit_balance_lane."""
     from scripts.fleet import credit_lane
-    from tests.test_credit_lane import _credit_balance_snapshot
 
     monkeypatch.setattr(credit_lane, "read_routing_budget", _credit_balance_snapshot)
     assert admission_dispatch.dispatch(model=model, mode="read-only") == 2
@@ -2227,7 +2280,6 @@ def test_force_admission_requires_a_reason(admission_dispatch, capsys):
 
 def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(admission_dispatch, monkeypatch, capsys):
     """Ported from tests/test_delegate_admission.py::test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate."""
-    from tests.test_delegate_admission import _full_disk
 
     disk = _full_disk(monkeypatch, 90.0)
     assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
@@ -2240,7 +2292,6 @@ def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(admission_d
 
 def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(admission_dispatch, monkeypatch, capsys):
     """Ported from tests/test_delegate_admission.py::test_locked_recheck_holds_a_disk_refusal_against_a_force_reason."""
-    from tests.test_delegate_admission import _full_disk
 
     disk = _full_disk(monkeypatch, 60.0, 90.0)
     monkeypatch.setattr(git, "create_worktree", lambda *_a, **_k: pytest.fail("must not create a worktree"))
@@ -2255,9 +2306,9 @@ def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(admission_di
 def test_force_admission_skips_the_early_refusal(admission_dispatch, monkeypatch, capsys):
     """Ported from tests/test_delegate_admission.py::test_force_admission_skips_the_early_refusal."""
     from scripts.orchestration import dispatch_admission
-    from tests.test_delegate_admission import _OVERLOADED
 
-    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+    overloaded = dispatch_admission.HostProbe(mem_available_bytes=1024**3, load1=40.0, cpu_count=8, proc_available=True)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
     assert admission_dispatch.dispatch("--force-admission", "drain one worker") == 0
     assert "overridden by --force-admission ('drain one worker'): MemAvailable 1.0 GiB" in capsys.readouterr().err
     assert store.read("adm-worker")["admission"]["forced"] is True
@@ -2274,8 +2325,8 @@ def test_early_refusal_reports_an_invalid_threshold_as_an_invalid_request(admiss
 def test_read_only_dispatch_on_an_overloaded_host_is_exempt(admission_dispatch, monkeypatch, capsys):
     """Ported from tests/test_delegate_admission.py::test_read_only_dispatch_on_an_overloaded_host_is_exempt."""
     from scripts.orchestration import dispatch_admission
-    from tests.test_delegate_admission import _OVERLOADED
 
-    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+    overloaded = dispatch_admission.HostProbe(mem_available_bytes=1024**3, load1=40.0, cpu_count=8, proc_available=True)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
     assert admission_dispatch.dispatch(mode="read-only") == 0
     assert "admission" not in capsys.readouterr().err
