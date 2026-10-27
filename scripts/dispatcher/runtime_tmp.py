@@ -37,6 +37,8 @@ _state_path_no_create = store.record_path
 
 def _runtime_tmp_lease_name(task_id: str) -> str:
     """Return one safe path component for a task's runtime tmp lease."""
+    if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", task_id):
+        return task_id
     return re.sub(r"[^A-Za-z0-9._-]+", "-", task_id).strip("./-") or "task"
 
 

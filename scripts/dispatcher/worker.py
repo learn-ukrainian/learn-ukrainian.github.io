@@ -15,7 +15,7 @@ from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import git, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
-from scripts.dispatcher.worker_environment import prepare_worker_record, reap_worker_record, worker_exports
+from scripts.dispatcher.worker_environment import prepare_worker_record, reap_worker_record, supervisor_env
 
 
 def _identity(pid: int | None) -> str | None:
@@ -68,7 +68,7 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
                     stdout=subprocess.DEVNULL,
                     stderr=err,
                     start_new_session=True,
-                    env={**os.environ, **worker_exports(spec, record, base_env={})},
+                    env=supervisor_env(record),
                 )
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
@@ -185,7 +185,7 @@ def _reap_settled(record: dict, path: Path) -> None:
         result = subprocess.run(
             [str(project_interpreter()), "-m", "scripts.fleet.post_task_reap",
              "--task-id", record["task_id"], "--apply", "--tasks-dir", str(path.parent)],
-            cwd=git.ROOT, capture_output=True, check=True, timeout=120,
+            cwd=git.ROOT, env=supervisor_env(record), capture_output=True, check=True, timeout=120,
         )
         action = json.loads(result.stdout)["main_worktree"]["action"]
         note = "common reaper: " + (action if action in {"removed", "retained", "skipped", "error"} else "unknown")

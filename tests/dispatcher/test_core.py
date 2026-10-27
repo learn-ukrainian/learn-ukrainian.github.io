@@ -1715,6 +1715,128 @@ def test_aliases_and_all_retained_metadata_flags_parse():
 
 
 # Unit G0: legacy tests copied and adapted; originals remain unchanged.
+
+
+def test_worker_writable_python_paths_cannot_execute_in_trusted_supervisor_or_reaper(sandbox, tmp_path):
+    """A worker shadow module must never execute with the trusted parent's environment."""
+    sentinel = tmp_path / "trusted-shadow-imported"
+    supervisor_env_file = tmp_path / "supervisor-env.json"
+    shadow = sandbox.repo / "scripts/json.py"
+    shadow.write_text(
+        "import os, sysconfig\nfrom pathlib import Path\n"
+        "if os.environ.get('G0_TRUSTED_ONLY'):\n"
+        f"    Path({str(sentinel)!r}).write_text('worker code ran in a trusted process')\n"
+        "__package__ = 'json'\n"
+        "__path__ = [str(Path(sysconfig.get_path('stdlib')) / 'json')]\n"
+        "exec((Path(__path__[0]) / '__init__.py').read_text())\n"
+    )
+    supervisor = sandbox.repo / "scripts/dispatcher/worker.py"
+    supervisor.write_text(supervisor.read_text().replace(
+        "    settings = json.load(sys.stdin)",
+        f"    Path({str(supervisor_env_file)!r}).write_text(json.dumps(dict(os.environ)))\n"
+        "    settings = json.load(sys.stdin)",
+    ).replace(
+        "        _reap_settled(record, path)",
+        "        os.environ['PYTHONPATH'] = str(spec.worktree / 'scripts')\n"
+        "        _reap_settled(record, path)",
+    ))
+    stub_common_reaper(sandbox)
+    (sandbox.repo / "scripts/fleet/__init__.py").write_text(
+        f"__path__.append({str(SOURCE / 'scripts/fleet')!r})\n"
+    )
+    reaper = sandbox.repo / "scripts/fleet/post_task_reap.py"
+    reaper.write_text(reaper.read_text().replace("receipt = dict(", "receipt = dict(env=dict(os.environ), "))
+    run_git(sandbox.repo, "add", "scripts")
+    run_git(sandbox.repo, "commit", "-m", "fixture shadow module and trusted environment probes")
+    run_git(sandbox.repo, "push", "origin", "main")
+    sandbox.env.clear()
+    sandbox.env.update(
+        PATH=os.defpath, HOME=str(tmp_path), LANG="C.UTF-8", LU_TASKS_DIR=str(sandbox.tasks),
+        G0_TRUSTED_ONLY="present", LU_SCRATCH_ROOT=str(tmp_path / "scratch"),
+    )
+
+    task = sandbox.dispatch()
+    record = sandbox.settle(task)
+    receipt = json.loads(await_file(sandbox.tasks / f"{task[0]}.reaped"))
+    environments = [json.loads(supervisor_env_file.read_text()), receipt["env"]]
+
+    assert not sentinel.exists(), "worker shadow module executed in the supervisor or common reaper"
+    from tests import cursor_exec_tripwire
+
+    for env in environments:
+        assert not {
+            "PYTEST_PLUGINS", "PYTHONPYCACHEPREFIX", "TMPDIR",
+            "MYPY_CACHE_DIR", "RUFF_CACHE_DIR", "LU_RUNTIME_TMP_ROOT", "LU_TASK_EVIDENCE_DIR",
+        } & env.keys()
+        assert env["PYTHONPATH"] == str(cursor_exec_tripwire.child_directory)
+        assert not any(record["worktree_path"] in value or record["runtime_tmp_root"] in value
+                       for value in env.values())
+    assert record["tmp_reap_error"] is None
+    assert not Path(record["runtime_tmp_root"]).exists()
+
+
+def test_worker_environment_split_keeps_provider_exports_and_exact_supervisor_keys(sandbox, tmp_path):
+    """No worker paths or pool overrides cross into the wrong process environment."""
+    supervisor_env_file, provider_env_file = tmp_path / "supervisor.json", tmp_path / "provider.json"
+    supervisor = sandbox.repo / "scripts/dispatcher/worker.py"
+    supervisor.write_text(supervisor.read_text().replace(
+        "    settings = json.load(sys.stdin)",
+        f"    Path({str(supervisor_env_file)!r}).write_text(json.dumps(dict(os.environ)))\n"
+        "    settings = json.load(sys.stdin)",
+    ))
+    provider = sandbox.repo / "scripts/dispatcher/providers/codex.py"
+    provider.write_text(provider.read_text().replace(
+        "    raise SystemExit(main())",
+        f"    Path({str(provider_env_file)!r}).write_text(__import__('json').dumps(dict(os.environ)))\n"
+        "    raise SystemExit(main())",
+    ))
+    run_git(sandbox.repo, "add", "scripts")
+    run_git(sandbox.repo, "commit", "-m", "fixture supervisor and provider environment probes")
+    run_git(sandbox.repo, "push", "origin", "main")
+    parent = {
+        "PATH": os.defpath, "HOME": str(tmp_path), "LANG": "C.UTF-8", "TERM": "dumb",
+        "LU_TASKS_DIR": str(sandbox.tasks), "LU_SCRATCH_ROOT": str(tmp_path / "scratch"),
+        "OPENAI_API_KEY": "fixture-selected-auth", "GH_TOKEN": "fixture-parent-auth",
+        "ANTHROPIC_API_KEY": "fixture-unrelated-auth", "AB_POOL_OVERRIDE": "fixture-parent-pool",
+    }
+    worker_only = {
+        "PYTHONPATH", "PYTEST_PLUGINS", "PYTHONPYCACHEPREFIX", "TMPDIR", "MYPY_CACHE_DIR",
+        "RUFF_CACHE_DIR", "LU_RUNTIME_TMP_ROOT", "LU_TASK_EVIDENCE_DIR", "LU_X_AGENT_TRAILER",
+        "LU_RUNTIME_TMP_BASE_ROOT",
+    }
+    sandbox.env.clear()
+    sandbox.env.update(parent, **dict.fromkeys(worker_only, str(tmp_path / "inherited-worker-path")))
+    sandbox.env.update(LEARN_UKRAINIAN_DISPATCH_TASK_ID="parent-task", LEARN_UKRAINIAN_DISPATCH_AGENT="claude")
+
+    task = sandbox.dispatch("echo", "--initiator", "g0-test")
+    record = sandbox.settle(task)
+    trusted, provider_env = json.loads(supervisor_env_file.read_text()), json.loads(provider_env_file.read_text())
+    identity = {
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task[0], "LEARN_UKRAINIAN_DISPATCH_AGENT": "codex",
+        "LU_RUNTIME_RUN_NONCE": task[1], "LU_RUNTIME_INITIATOR": "g0-test",
+        "LU_RUNTIME_INITIATOR_SOURCE": "explicit",
+    }
+    # The test execution tripwire adds its own trusted path at the exec boundary.
+    from tests import cursor_exec_tripwire
+
+    tripwire = {key: sandbox.env[key] for key in (
+        "LU_TEST_CURSOR_SESSION_TOKEN", "LU_TEST_CURSOR_TARGETS", "LU_TEST_CURSOR_ROOTS",
+    )}
+    trusted_path = str(cursor_exec_tripwire.child_directory)
+    expected_trusted = {**parent, **identity, **tripwire, "PYTHONPATH": trusted_path}
+    assert set(trusted) == set(expected_trusted)
+    assert trusted == expected_trusted
+    lease = Path(record["runtime_tmp_root"])
+    assert provider_env == {
+        **{key: parent[key] for key in ("HOME", "LANG", "TERM", "OPENAI_API_KEY")}, **identity, **tripwire,
+        "PATH": os.defpath,
+        "LU_X_AGENT_TRAILER": f"X-Agent: codex/{task[0]}",
+        "PYTHONPATH": f"{trusted_path}{os.pathsep}{Path(record['worktree_path']) / 'scripts'}",
+        "PYTEST_PLUGINS": "ci.pytest_dispatch_cap", "TMPDIR": str(lease), "LU_RUNTIME_TMP_ROOT": str(lease),
+        "LU_TASK_EVIDENCE_DIR": str(lease / "evidence"), "LU_RUNTIME_TMP_BASE_ROOT": str(lease.parent.parent),
+        "MYPY_CACHE_DIR": str(lease / "tool-cache/mypy"),
+        "PYTHONPYCACHEPREFIX": str(lease / "tool-cache/pycache"), "RUFF_CACHE_DIR": str(lease / "tool-cache/ruff"),
+    }
 _SOURCE_INVENTORY_TREES = (
     "registry/lexicon/source-inventory", "registry/lexicon/source-inventory-review-decisions",
 )

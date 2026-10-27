@@ -15,6 +15,29 @@ from scripts.dispatcher.types import TaskSpec
 from scripts.orchestration.worktree_paths import normalize_task_id as _normalize_task_id
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 2)
+_WORKER_ONLY_ENV = frozenset({
+    "PYTHONPATH", "PYTEST_PLUGINS", "PYTHONPYCACHEPREFIX", "TMPDIR",
+    "MYPY_CACHE_DIR", "RUFF_CACHE_DIR", "LU_RUNTIME_TMP_ROOT", "LU_TASK_EVIDENCE_DIR",
+    "LU_RUNTIME_TMP_BASE_ROOT", "LU_X_AGENT_TRAILER",
+})
+
+
+def supervisor_env(record: dict) -> dict[str, str]:
+    """Keep trusted driver context, excluding worker import, scratch and cache paths.
+
+    The provider still needs selected credentials from this process. Only child
+    identity is added here; cleanup validates the persisted lease as its parent.
+    """
+    env = {name: value for name, value in os.environ.items() if name not in _WORKER_ONLY_ENV}
+    env.update(
+        LEARN_UKRAINIAN_DISPATCH_TASK_ID=record["task_id"],
+        LEARN_UKRAINIAN_DISPATCH_AGENT=record["agent"],
+        LU_RUNTIME_RUN_NONCE=record["run_nonce"],
+        LU_RUNTIME_INITIATOR=record["initiator"],
+        LU_RUNTIME_INITIATOR_SOURCE=record["initiator_source"],
+    )
+    return env
+
 
 def _x_agent_task_id(agent: str, task_id: str) -> str:
     normalized = _normalize_task_id(agent, task_id)
