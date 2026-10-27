@@ -29,6 +29,7 @@ in every model call, plus instructions to run `lu-driver-state render --lane cto
 | Every cycle (about every 10 minutes while work is in flight) | [Cycle checklist](references/cycle.md) |
 | Dispatching, reviewing, posting, merging, recovering CI | [Recipes and tool quirks](references/recipes.md) |
 | Every decision that changes priorities, sequence, routing or approach | [Decisions](references/decisions.md) |
+| A proposal needing designated or panel approval (published page) | [Decision report](../drive-epic/references/decision-report.md) |
 | After any mistake or operator correction | [Learning](references/learning.md) |
 | Context near 65 percent, or session end | [Handoff](references/handoff.md), [Learning](references/learning.md) |
 
@@ -50,6 +51,10 @@ in every model call, plus instructions to run `lu-driver-state render --lane cto
 - Every statement is a fact with its source (command, file:line, run ID, SHA) or is
   labelled NOT CHECKED with the command that would settle it. A documented limitation is a
   claim to probe. One observation is not a finding.
+- The operator is never a blocker (C-2836). Decisions go to the advisor panel (at least two
+  of Opus, Sol and Muse). Operator-only items (money, credentials, deletes, physical or
+  account actions) are residuals with a workaround. Before naming anything operator-only,
+  verify it with a command and cite the output.
 - Never wait for a quota reset: seat the next eligible reviewer the resolver returns.
 - Timestamps come only from `date -u`, in the same command that uses them.
 
