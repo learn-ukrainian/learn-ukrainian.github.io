@@ -224,16 +224,49 @@ def test_bound_launch_refuses_until_runtime_isolation_is_wired(attempt, monkeypa
     create.assert_not_called()
 
 
-def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, monkeypatch, capsys):
+@pytest.mark.parametrize("low_memory", [False, True])
+def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, monkeypatch, capsys, low_memory):
+    """Resource refusal precedes dry-run output, reservation and checkout creation."""
+    from types import SimpleNamespace
+
+    real_read = Path.read_text
+    available = 8.5 * 1024**3 - (1024 if low_memory else 0)
+    monkeypatch.setattr(Path, "read_text", lambda path, *a, **kw: (
+        f"MemAvailable: {int(available / 1024)} kB\n" if path == Path("/proc/meminfo")
+        else real_read(path, *a, **kw)
+    ))
+    monkeypatch.setattr(checks.shutil, "disk_usage", lambda _: SimpleNamespace(used=89, total=100))
+    resources = Mock(wraps=checks.check_resources)
+    create = Mock()
+    reserve = Mock()
+    worktree = tmp_path / "checkout"
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
-    monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
-    monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (worktree, "codex/review", "a" * 40))
+    monkeypatch.setattr(checks, "check_resources", resources)
+    monkeypatch.setattr(git, "create_worktree", create)
+    monkeypatch.setattr(cli.host_admission, "reserve", reserve)
     for _ in range(2):
+        if low_memory:
+            assert invoke(attempt, "--dry-run") == 2
+            output = capsys.readouterr()
+            assert "insufficient memory" in output.err
+            assert not output.out
+            continue
         assert invoke(attempt, "--dry-run") == 0
         plan = json.loads(capsys.readouterr().out)
         assert plan["review_attempt"] == dict(review_id="review", attempt_id="attempt",
                                              manifest_sha256=store.digest(b"inputs: []\ntarget:\n  changed_paths: [ordinary.py]\n"))
         assert plan["review_access"] == "isolated"
+    assert resources.call_count == 2
+    resources.assert_called_with((worktree, tmp_path / "tasks"))
+    if low_memory:
+        for flags in ((), ("--mode", "workspace-write", "--force-admission", "resource regression")):
+            assert invoke([], *flags) == 2
+            assert "insufficient memory" in capsys.readouterr().err
+        assert resources.call_count == 4
+    create.assert_not_called()
+    reserve.assert_not_called()
+    assert not worktree.exists()
     assert not (tmp_path / "tasks").exists()
 
 

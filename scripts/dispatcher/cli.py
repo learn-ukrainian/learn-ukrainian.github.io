@@ -268,6 +268,7 @@ def _dispatch(args) -> int:
     checks.check_private_input(spec, info["key"])
     if binding and admitted is not None:
         spec.options["review_attempt"] = args.review_attempt
+    checks.check_resources((worktree, path.parent))
     decision = host_admission.check(
         args.mode, dry_run=args.dry_run, disk_guard=not (args.worktree is not None and (worktree / ".git").exists()),
         force_reason=force_reason,
