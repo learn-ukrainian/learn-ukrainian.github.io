@@ -129,7 +129,7 @@ def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
         )
     )
     assert result.selected.name == "openai_frontier"
-    grok = next(row for row in result.trace if row.name == "grok-4.7")
+    grok = next(row for row in result.trace if row.name == "grok-4.7-cursor-fallback")
     assert grok.status == "eligible"
     assert result.selected.suitability_rank < grok.suitability_rank
 
@@ -360,10 +360,10 @@ def test_critical_grok_is_eligible_but_frontier_authority_is_selected(author):
     healthy = {"codex": "healthy", "claude": "healthy", "grok": "healthy", "cursor": "healthy"}
     result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", routing_snapshot=healthy, claude_account=HOST_ACCOUNT))
     trace = {row.name: row for row in result.trace}
-    assert trace["grok-4.7"].status == "eligible"
+    assert trace["grok-4.7-cursor-fallback"].status == "eligible"
     assert result.selected.name == ("openai_frontier" if author.startswith("claude") else "claude-opus-5-5")
     assert result.selected.family != "xai"
-    assert (result.selected.quality_tier, trace["grok-4.7"].quality_tier) == (
+    assert (result.selected.quality_tier, trace["grok-4.7-cursor-fallback"].quality_tier) == (
         "frontier_authority",
         "frontier_practical",
     )
@@ -372,17 +372,20 @@ def test_critical_grok_is_eligible_but_frontier_authority_is_selected(author):
 def test_critical_grok_is_excluded_for_an_xai_author():
     result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", claude_account=HOST_ACCOUNT))
     trace = {row.name: row for row in result.trace}
-    assert trace["grok-4.7"].status == "excluded"
+    assert "grok-4.7" not in trace
     assert trace["grok-4.7-cursor-fallback"].status == "excluded"
     assert result.selected.family != "xai"
 
 
-def test_critical_native_grok_precedes_its_cursor_fallback_when_frontier_is_ineligible():
-    native = resolve_reviewer(
+def test_critical_cursor_grok_is_selected_when_frontier_is_ineligible():
+    cursor = resolve_reviewer(
         ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=FRONTIER_DOWN, claude_account=HOST_ACCOUNT)
     )
-    assert native.selected.name == "grok-4.7"
-    assert {row.name: row.status for row in native.trace}["grok-4.7-cursor-fallback"] == "eligible"
+    assert cursor.selected.name == "grok-4.7-cursor-fallback"
+    assert cursor.selected.invocation == REVIEW_CANDIDATES["grok-4.7-cursor-fallback"].invocation
+    assert "--model grok-4.7-high" in cursor.selected.invocation
+    assert "grok-4.7" not in {row.name for row in cursor.trace}
+    assert {row.name: row.status for row in cursor.trace}["grok-4.7-cursor-fallback"] == "selected"
     fallback = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-6.1-sol", risk="critical", routing_snapshot={**FRONTIER_DOWN, "grok": "unhealthy"}, claude_account=HOST_ACCOUNT
