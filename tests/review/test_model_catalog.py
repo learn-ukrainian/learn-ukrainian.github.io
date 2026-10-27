@@ -1327,7 +1327,9 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
             "strengths": ["explicit_native_worker"],
             "weaknesses": ["worker_qualification_pending", "review_qualification_pending", "no_driver_authority"],
             "notes": "Explicit native coding and low/medium code-review seat under measurement. "
-                     "No driver, automatic fallback, Ukrainian, private-repository or security-final authority. "
+                     "Private inputs are allowed only with contributor mode off (operator order C-2401). "
+                     "No driver, automatic fallback, Ukrainian or security-final authority. "
+                     "Formal review only when chosen explicitly. "
                      "Catalog eligibility does not attest provider-origin identity or effective permissions.",
             "sources": ["https://dev.meta.ai/docs/muse-code"],
         },
