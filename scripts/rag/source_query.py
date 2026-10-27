@@ -78,7 +78,11 @@ def _get(url: str, timeout: int = REQUEST_TIMEOUT, **kwargs) -> requests.Respons
 
 WIKI_REST = "https://uk.wikipedia.org/api/rest_v1"
 WIKI_API = "https://uk.wikipedia.org/w/api.php"
-WIKI_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational; uk.wikipedia REST summary per lemma)"
+WIKI_USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 "
+    "(noncommercial educational; uk.wikipedia REST summary per lemma; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 WIKI_REST_HEADERS = {
     "User-Agent": WIKI_USER_AGENT,
     "Accept": "application/json",
@@ -1331,7 +1335,10 @@ def wiktionary_translate(ukrainian_word: str) -> str:
         r = _get(WIKTIONARY_API, params={
             "action": "parse", "page": ukrainian_word.lower(),
             "format": "json", "prop": "wikitext",
-        }, timeout=15, headers={"User-Agent": "LearnUkrainian/1.0"})
+        }, timeout=15, headers={"User-Agent": (
+            "LearnUkrainian/1.0 "
+            "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+        )})
         if r.status_code != 200:
             return ""
 
@@ -1366,7 +1373,11 @@ def wiktionary_translate(ukrainian_word: str) -> str:
 # ══════════════════════════════════════════════════════════════════
 
 WIKIDATA_API = "https://www.wikidata.org/w/api.php"
-WIKIDATA_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma)"
+WIKIDATA_USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 "
+    "(noncommercial educational; Wikidata wbsearch/entity per lemma; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 
 
 def wikidata_search_entities(
