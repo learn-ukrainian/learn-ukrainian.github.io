@@ -119,7 +119,8 @@ def new_record(
     record.update(schema_version=2, run_nonce=uuid.uuid4().hex, status="spawning", started_at=now())
     record.update(repo=repository["key"], repository_id=repository["github"], repository=repository["github"])
     record.update(
-        worktree_branch=branch, worktree_path=str(spec.worktree), cwd=str(spec.worktree), worktree_base_sha=sha
+        worktree_branch=branch, worktree_path=str(spec.worktree), cwd=str(spec.worktree),
+        worktree_base_sha=sha, worktree_start_sha=sha
     )
     if spec.mode == "read-only" and metadata.get("branch") is not None:
         record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)

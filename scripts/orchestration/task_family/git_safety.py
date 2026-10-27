@@ -26,6 +26,7 @@ from scripts.guardrails.worktree_containment import (
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.execution_safe_git import REMOTE_COMMANDS
 from scripts.orchestration.execution_safe_git import run_git as safe_git
+from scripts.orchestration.fleet_repos import pull_request_repository
 
 
 class GitSafetyError(RuntimeError):
@@ -496,6 +497,7 @@ def _normalize_pr_payload(payload: Any) -> dict[str, Any]:
         raise GitHubQueryError("unexpected pr payload shape")
     data = {
         "number": payload.get("number"),
+        "repository": pull_request_repository(payload),
         "state": str(payload.get("state") or "").upper(),
         "head_ref_oid": str(payload.get("headRefOid") or "").strip(),
         "head_ref_name": str(payload.get("headRefName") or "").strip(),
@@ -516,6 +518,10 @@ def query_pr_by_head(
     pr_number: int | None = None,
     timeout: float = 30.0,
 ) -> dict[str, Any]:
+    from scripts.orchestration.reap_worktrees import _pr_repository, _scope_pr_rows
+
+    repository = _pr_repository(repo_root)
+    repo_args = ["--repo", repository] if repository else []
     if pr_number is not None:
         proc = run_gh(
             [
@@ -523,7 +529,8 @@ def query_pr_by_head(
                 "view",
                 str(pr_number),
                 "--json",
-                "number,state,headRefOid,headRefName,baseRefName,mergeStateStatus,mergeCommit,isCrossRepository",
+                "number,state,headRefOid,headRefName,baseRefName,mergeStateStatus,mergeCommit,isCrossRepository,url",
+                *repo_args,
             ],
             cwd=repo_root,
             timeout=timeout,
@@ -534,6 +541,10 @@ def query_pr_by_head(
             payload = json.loads(proc.stdout or "{}")
         except json.JSONDecodeError as exc:
             raise GitHubQueryError("invalid JSON from gh pr view") from exc
+        rows, error = _scope_pr_rows([payload], repository, number=pr_number)
+        if error or not rows:
+            raise GitHubQueryError(error or "PR repository does not match checkout")
+        payload = rows[0]
         if str(payload.get("headRefName") or "") != branch:
             raise GitHubQueryError(f"PR #{pr_number} head mismatch for branch {branch}")
         return _normalize_pr_payload(payload)
@@ -547,7 +558,8 @@ def query_pr_by_head(
             "--state",
             "all",
             "--json",
-            "number,state,headRefOid,headRefName,baseRefName,mergeStateStatus,mergeCommit,isCrossRepository",
+            "number,state,headRefOid,headRefName,baseRefName,mergeStateStatus,mergeCommit,isCrossRepository,url",
+            *repo_args,
         ],
         cwd=repo_root,
         timeout=timeout,
@@ -560,6 +572,10 @@ def query_pr_by_head(
         raise GitHubQueryError("invalid JSON from gh pr list") from exc
     if not isinstance(items, list):
         raise GitHubQueryError("unexpected pr payload shape")
+    items, error = _scope_pr_rows(items, repository)
+    if error:
+        raise GitHubQueryError(error)
+    items = [item for item in items if item.get("headRefName") == branch]
     if len(items) == 0:
         raise GitHubQueryError(f"no PR found for head {branch}")
     if len(items) != 1:

@@ -255,7 +255,8 @@ def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observati
     bundle = manifest.with_suffix("").with_suffix("")
     closeout = bundle / "closeout.json"
     closeout.write_text(json.dumps({
-        "pr": {"number": 77, "state": "MERGED", "head_ref_name": "codex/42-closeout", "head_sha": head},
+        "pr": {"number": 77, "state": "MERGED", "head_ref_name": "codex/42-closeout", "head_sha": head,
+               "repository": tl.load_lifecycle(ledger)["identity"]["repository"]},
         "apply": True, "ok": True, "errors": [], "matched_worktrees": [str(worktree)],
         "reap_results": [{"path": str(worktree), "branch": "codex/42-closeout",
                           "action": "preserved_then_removed", "error": None}],

@@ -1616,9 +1616,10 @@ def test_production_pr_snapshot_reads_whole_batch_once(
     found = sweep._archive_pr_snapshot(repo, ["codex/alpha", "codex/beta"], sweep.reaper._query_pr_states)
     assert len(calls) == 1
     if fault:
-        assert all(error == "batch PR snapshot unavailable or incomplete" for _, error in found.values())
+        expected_error = "PR payload is not an object" if fault == "row" else "batch PR snapshot unavailable or incomplete"
+        assert all(error == expected_error for _, error in found.values())
     else:
-        assert found == {"codex/alpha": ([PullRequestState(7, "OPEN", sha)], None), "codex/beta": ([], None)}
+        assert found == {"codex/alpha": ([PullRequestState(7, "OPEN", sha, repository="example/project")], None), "codex/beta": ([], None)}
 
 
 @pytest.mark.parametrize("guard", ["OPEN", "task", "worktree"])
