@@ -16,7 +16,7 @@ def binding(args, prompt: bytes) -> tuple[dict, str, str]:
     return bound, prompt_sha, contract.binding_digest(contract.canonical_sha256(bound), prompt_sha)
 
 
-def model_id(agent: str, model: str) -> str:
+def model_id(agent: str, model: str) -> str | None:
     alias = model.strip().casefold().split("[", 1)[0]
     if agent == "claude" and alias in {"haiku", "opus", "sonnet", "fable"}:
         from scripts.agent_runtime.model_pause import _newest_claude
@@ -208,6 +208,23 @@ def handoff(spec, record: dict, options: dict, hard_timeout: float) -> str | Non
 
                 if field == "agent" and ALIASES.get(options[field], options[field]) == actual:
                     continue
+                if field == "mode":
+                    raise contract.AdvisoryRefused(
+                        contract.ADMISSION_INVALID,
+                        f"the task record's mode {actual!r} is not {options[field]!r}",
+                    )
                 raise contract.AdvisoryRefused(contract.EXECUTION_MISMATCH,
                                                 f"{field} {options[field]!r} is not the admitted {actual!r}")
     return verify(spec, record, hard_timeout)
+
+
+def record_refusal(spec, record: dict, prompt: bytes, exc) -> None:
+    """Keep the legacy failed record when an admitted envelope changes before spawn (delegate.py:16405)."""
+    from scripts.dispatcher import git
+
+    refusal = f"dispatch refused before spawn: {exc}"
+    record.update(status="failed", finished_at=store.now(), stderr_excerpt=refusal[:500],
+                  returncode=None, exit_code=None, last_error=exc.code, failure_reason=exc.code,
+                  returncode_reason="advisory envelope changed before spawn; worker not started")
+    record.update(git.snapshot_delivery(spec, record))
+    store.create(record, prompt)

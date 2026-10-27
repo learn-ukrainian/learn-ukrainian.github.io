@@ -51,7 +51,8 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     try:
         spec, prompt = advisory.prepare(spec, record, prompt, hard_timeout)
     except advisory.contract.AdvisoryRefused as exc:
-        raise ValueError(str(exc)) from None
+        advisory.record_refusal(spec, record, prompt, exc)
+        raise ValueError(f"dispatch refused before spawn: {exc}") from None
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)

@@ -332,7 +332,7 @@ def test_b1_worker_with_a_valid_parent_admission_reaches_the_provider(launch, ru
     (lambda rec: rec["advisory_envelope"].pop("advisory_args_sha256"), "", advisory.ADMISSION_INVALID),
     (lambda rec: rec["advisory_envelope"].update(advisor_task_id=""), "", advisory.ADMISSION_INVALID),
     (lambda rec: rec.update(owned_paths=["docs/example.md", "tests/"]), "", advisory.OWNED_PATHS_MISMATCH),
-    (lambda rec: rec.update(mode="workspace-write"), "", advisory.EXECUTION_MISMATCH),
+    (lambda rec: rec.update(mode="workspace-write"), "", advisory.ADMISSION_INVALID),
 ])
 def test_b1_worker_refuses_an_admission_that_does_not_re_verify(launch, runtime, capsys, tamper, prompt_suffix, code):
     record = _admit(launch, capsys)
@@ -510,8 +510,12 @@ def test_m7_advisor_result_changed_after_validation_is_refused_before_spawn(laun
 
     git.create_worktree.side_effect = tamper
     assert cli.main([*launch, "--advisory-task", "advisor"]) == 2
-    assert code in capsys.readouterr().err
-    assert not store.record_path("worker").exists()
+    error = capsys.readouterr().err
+    assert code in error and "dispatch refused before spawn" in error
+    record = store.read("worker")
+    assert record["status"] == "failed"
+    assert record["failure_reason"] == code
+    assert record["returncode_reason"] == "advisory envelope changed before spawn; worker not started"
 
 
 @pytest.mark.parametrize("agent,model", [("sol", "gpt-6-luna"), ("claude", "claude-haiku-5-5")])
