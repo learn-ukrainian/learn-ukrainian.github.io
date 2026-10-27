@@ -86,7 +86,13 @@ from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
-from scripts.review.verdict_parser import recognized_verdicts
+from scripts.review.verdict_parser import (
+    _REVIEW_VERDICT_LINE_RE,
+    _commonmark_lines,
+    _findings_json_verdicts,
+    _without_code_fences,
+    recognized_verdicts,
+)
 
 NORMALIZED = {
     "APPROVE": "APPROVED",
@@ -116,6 +122,18 @@ class RecordError(RuntimeError):
 
 def normalize_verdict(reply: str) -> str:
     tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
+    visible = _without_code_fences(reply, keep_unclosed=False)
+    if any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible)):
+        findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply)}
+        for match in re.finditer(r"(?m)^ {0,3}\{", visible):
+            start = match.end() - 1
+            try:
+                _, end = json.JSONDecoder().raw_decode(visible, start)
+            except ValueError:
+                continue
+            findings.update(NORMALIZED[token] for token in _findings_json_verdicts(visible[start:end]))
+        if findings and findings != tokens:
+            raise RecordError("reply carries a findings payload contradicting a verdict line")
     if len(tokens) != 1:
         raise RecordError("review reply has missing or ambiguous VERDICT token")
     return tokens.pop()

@@ -236,3 +236,19 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
     assert recognized_verdicts("````text\n" + response + "\n````") == []
     payload["overall"].pop("confidence")
     assert recognized_verdicts(wrapper.format(json.dumps(payload))) == []
+
+
+@pytest.mark.parametrize("correctness,verdict", [
+    ("correct", "REQUEST_CHANGES"),
+    ("incorrect", "APPROVE"),
+])
+def test_findings_json_beside_contradicting_free_text_verdict_is_refused_by_recorder(correctness, verdict):
+    from scripts.review.record_cf_verdict import RecordError, normalize_verdict
+
+    response = json.dumps({
+        "schema_version": "code-review-findings.v1",
+        "overall": {"correctness": correctness, "explanation": "Reviewed the diff.", "confidence": 0.9},
+        "findings": [],
+    })
+    with pytest.raises(RecordError, match=r"findings payload.*verdict line"):
+        normalize_verdict(response + "\n\nVERDICT: " + verdict)
