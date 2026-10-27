@@ -1035,6 +1035,108 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
     assert (record["status"], record["error"]) == ("done", None)
 
 
+def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_remote(
+    sandbox, delivery_settle, monkeypatch, tmp_path,
+):
+    """Missing private HTTPS auth rejected pushed work; host-wide auth could leak to another repo.
+
+    Real Git and a fake gh helper exercise credential selection on both production
+    fetch paths. Only the network transport is replaced by the disposable remote
+    after credential fill succeeds. No live credentials or network are used.
+    """
+    import shlex
+
+    from scripts.common import git_credentials
+    from scripts.orchestration import merge_closeout
+
+    record, settle = delivery_settle
+    record = settle("pushed")
+    tree = Path(record["cwd"])
+    remote = "https://github.com/fixture/private.git"
+    run_git(sandbox.repo, "update-ref", "refs/pull/42/head", record["head_sha"])
+    run_git(tree, "push", "origin", "HEAD:refs/pull/42/head")
+    run_git(tree, "config", "remote.origin.url", remote)
+    record["worktree_remote_url"] = remote
+    registry = tmp_path / "registry.yaml"
+    registry.write_text(yaml.safe_dump({"repos": {"fixture": {"github": "fixture/private", "transport": "https"}}}))
+    monkeypatch.setattr(git_credentials, "CONFIG", registry)
+    log = tmp_path / "helper-contexts"
+    marker = tmp_path / "untrusted-helper-ran"
+    fake_gh = tmp_path / "fake gh"
+    fake_gh.write_text(
+        '#!/bin/sh\n[ "$*" = "auth git-credential get" ] || exit 1\n'
+        f"cat >> {shlex.quote(str(log))}\n"
+        "printf 'username=fixture-user\\npassword=fixture-password\\n'\n"
+    )
+    fake_gh.chmod(0o700)
+    monkeypatch.setenv("AGENT_REAL_GH", str(fake_gh))
+    home = tmp_path / "home"
+    home.mkdir()
+    included = tmp_path / "untrusted.config"
+    included.write_text(f"[credential]\n helper = !touch {shlex.quote(str(marker))}\n[worker]\n global = consulted\n")
+    (home / ".gitconfig").write_text(f"[include]\n path = {included}\n")
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(included))
+    monkeypatch.setenv("GIT_CONFIG_SYSTEM", str(included))
+    # The cleanup runner also has to reset URL-scoped primary-repo helpers.
+    run_git(tree, "config", f"credential.{remote}.helper", f"!touch {shlex.quote(str(marker))}")
+    real_run = subprocess.run
+    prefixes = []
+    local_imports = []
+
+    def local_transport(argv, **kwargs):
+        if "fetch" not in argv:
+            return real_run(argv, **kwargs)
+        index = argv.index("fetch")
+        prefix = argv[:index]
+        env = kwargs["env"]
+        assert env["GIT_CONFIG_GLOBAL"] == env["GIT_CONFIG_SYSTEM"] == os.devnull
+        assert env["GIT_TERMINAL_PROMPT"] == "0" and env["PATH"] == os.defpath
+        credentials = real_run(
+            [*prefix, "credential", "fill"], cwd=kwargs.get("cwd"), env=env,
+            input=f"url={remote}\n\n", capture_output=True, text=True, check=False, timeout=10,
+        )
+        if any(arg.startswith("file://") for arg in argv[index:]):
+            assert env["GIT_ALLOW_PROTOCOL"] == "file"
+            assert credentials.returncode != 0
+            assert "fixture-password" not in credentials.stdout
+            assert not any(".helper=!" in arg for arg in prefix)
+            local_imports.append(argv)
+            return real_run(argv, **kwargs)
+        assert Path(kwargs.get("cwd") or argv[argv.index("-C") + 1]) != sandbox.repo
+        assert credentials.returncode == 0
+        assert "username=fixture-user\npassword=fixture-password\n" in credentials.stdout
+        before = log.read_text()
+        config = real_run([*prefix, "config", "--list", "--includes"], cwd=kwargs.get("cwd"), env=env,
+                          capture_output=True, text=True, check=True, timeout=10).stdout
+        assert "worker.global" not in config
+        for other in (
+            "https://github.com/fixture/other.git", "https://github.com/other/private.git",
+            remote + "/child", remote + "-suffix", remote.removesuffix(".git"),
+            "https://other.invalid/fixture/private.git", "http://github.com/fixture/private.git",
+        ):
+            result = real_run([*prefix, "credential", "fill"], cwd=kwargs.get("cwd"), env=env,
+                              input=f"url={other}\n\n", capture_output=True, text=True, check=False, timeout=10)
+            assert result.returncode != 0 and "fixture-password" not in result.stdout
+        assert log.read_text() == before
+        prefixes.append((prefix, kwargs.get("cwd"), env))
+        fetch_args = [str(sandbox.remote) if arg == "origin" else arg for arg in argv[index:]]
+        return real_run([*prefix, *fetch_args], **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", local_transport)
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("done", None)
+    assert merge_closeout._fetch_live_pr_head(sandbox.repo, 42) == (record["head_sha"], None)
+    assert len(prefixes) >= 3  # ownership's bounded fetches and closeout's live PR fetch
+    assert len(local_imports) == 1
+    expected_contexts = log.read_text()
+    assert expected_contexts.count("protocol=https\nhost=github.com\npath=fixture/private.git\n") == len(prefixes)
+    assert not marker.exists()
+    for other in ("https://github.com/fixture/other.git", "https://user@github.com/fixture/private.git",
+                  "git@github.com:fixture/private.git", str(sandbox.remote)):
+        assert git_credentials.verification_credentials(other) == []
+
+
 @pytest.mark.parametrize("shape", ["linear", "merge"])
 def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape):
     """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base.
