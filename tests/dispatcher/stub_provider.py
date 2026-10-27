@@ -59,6 +59,8 @@ def main():
     if model == "file":
         Path(final).write_text(text)
     else:
+        if text.startswith('<rules-core'):
+            text = text.split('</rules-core>\n\n', 1)[1]
         print("PARSE_ERROR" if model == "error" else ("" if model == "empty" else text))
     print("stub stderr", file=sys.stderr)
     return 17 if model == "fail" else 0

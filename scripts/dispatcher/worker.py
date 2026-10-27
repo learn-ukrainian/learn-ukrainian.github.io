@@ -1,6 +1,7 @@
 """Detached supervision, client waits and process-group cancellation."""
 
 import contextlib
+import dataclasses
 import json
 import os
 import signal
@@ -54,6 +55,9 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     logs = path.parent / "logs"
     logs.mkdir(exist_ok=True, mode=0o700)
     try:
+        if record.get('effective_prompt_file'):
+            with open(record['effective_prompt_file'], 'xb', opener=lambda p, f: os.open(p, f, 0o600)) as stream:
+                stream.write(spec.prompt_file.read_bytes())
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
             try:
@@ -226,6 +230,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 status, error = "failed", "output schema binding invalid"
                 return
         provider = providers.load(spec.agent)
+        if record.get('effective_prompt_file'):
+            effective_file = Path(record['effective_prompt_file'])
+            if store.digest(effective_file.read_bytes()) != record['effective_prompt_sha256']:
+                raise ValueError('effective prompt binding invalid')
+            from scripts.dispatcher.prompt_context import _PromptPath
+
+            prompt_path = _PromptPath(spec.prompt_file)
+            prompt_path.content = effective_file.read_bytes()
+            spec = dataclasses.replace(spec, prompt_file=prompt_path)
         invocation = provider.build(spec, child_env(spec))
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             child = subprocess.Popen(

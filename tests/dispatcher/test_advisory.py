@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
@@ -117,3 +118,128 @@ def test_driver_brief_exception_requires_acceptance_command(launch, complete, ca
     else:
         assert "BOUNDED_DRIVER_BRIEF_REFUSED" in capsys.readouterr().err
         worker.start.assert_not_called()
+
+
+# Ports from tests/test_research_registry_p3.py and test_task_lifecycle_carriers.py.
+from scripts.dispatcher import prompt_context
+from scripts.orchestration import task_identity, task_lifecycle
+from scripts.research import consumption
+from scripts.research import registry as reg
+from tests.test_research_registry_p3 import _make_record, _write_registry
+from tests.test_research_registry_p3 import reg_root as reg_root
+
+
+def test_delegate_state_never_persists_research_null():
+    # ADR-011 P3 default compatibility: a no-flags dispatch, a disabled registry,
+    # or a degraded injection all resolve research_state to None; the persisted
+    # state dict must OMIT the "research" key entirely — never "research": null.
+    delegate = prompt_context
+    base_state = {"task_id": "t", "status": "spawning"}
+
+    no_flags = delegate._with_optional_research_state(dict(base_state), None)
+    assert "research" not in no_flags
+    assert no_flags == base_state
+
+    with_context = delegate._with_optional_research_state(
+        dict(base_state), {"pointer_ids": ["r1"], "filtered_etag": "e", "dropped_ids": [], "context_fingerprint": "f"}
+    )
+    assert with_context["research"] == {
+        "pointer_ids": ["r1"], "filtered_etag": "e", "dropped_ids": [], "context_fingerprint": "f",
+    }
+
+
+
+def test_delegate_injection_is_pointer_only_and_persists_safely(reg_root, monkeypatch):
+    delegate = prompt_context
+    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", reg_root)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", reg_root)
+    _write_registry(
+        reg_root,
+        [
+            _make_record(
+                reg_root,
+                "cefr",
+                routing={"roles": ["quality"], "task_families": ["difficulty-gate"]},
+            )
+        ],
+    )
+    surfaced: list[tuple[str, dict]] = []
+    monkeypatch.setattr(consumption, "emit_event", lambda t, p, **k: surfaced.append((t, p)))
+
+    ctx = reg.normalize_context("quality", "difficulty-gate", None, [])
+    block, state = delegate._resolve_research_injection(ctx, "task-9")
+
+    # pointer-only prompt block: ids + fetch instruction, never a digest body
+    assert "cefr" in block and "/api/knowledge/record/{id}" in block
+    assert "Paraphrase-only" not in block
+    # persistence allowlist: ids / etag / dropped / fingerprint only
+    assert set(state) == {"pointer_ids", "filtered_etag", "dropped_ids", "context_fingerprint"}
+    assert state["pointer_ids"] == ["cefr"]
+    assert "owned_paths" not in state and "role" not in state
+    # a surface (not consumption) event was emitted for the injected pointer
+    assert surfaced == [
+        (consumption.SURFACED_EVENT, {"task_id": "task-9", "research_id": "cefr", "surface": "dispatch"})
+    ]
+
+
+
+@pytest.mark.parametrize("fresh", [False, True], ids=["rollover", "fresh"])
+def test_delegate_loads_validated_carrier_and_prompt(tmp_path: Path, fresh: bool) -> None:
+    path = _lifecycle_file(tmp_path, fresh=fresh)
+
+    carrier, prompt = prompt_context._load_task_lifecycle_carrier(str(path))
+
+    assert carrier is not None
+    assert carrier["state_file"] == str(path.resolve())
+    assert carrier["identity"]["github_issue_number"] == 42
+    assert "authoritative carrier" in prompt
+    assert carrier["lifecycle_id"] in prompt
+    assert carrier["identity"] == task_lifecycle.load_lifecycle(path)["identity"]
+    if fresh:
+        assert carrier["identity"]["task_id"] == "native-driver-42"
+        assert "native-driver-42" in prompt
+
+
+
+NOW = "2026-07-16T10:00:00Z"
+
+def _lifecycle_file(tmp_path: Path, *, fresh: bool = False) -> Path:
+    thread = (
+        {"fresh_task_id": "native-driver-42", "lifecycle_state": "active"}
+        if fresh else {
+            "predecessor_task_id": "thread-old",
+            "replacement_task_id": "thread-new",
+            "lineage_id": "lineage-closeout",
+            "generation": 1,
+            "lifecycle_state": "confirmed",
+        }
+    )
+    identity = task_identity.build_identity(
+        repository="org/repo",
+        stream_epic=10,
+        stream_epic_url=None,
+        github_issue_number=42,
+        github_issue_url=None,
+        semantic_title="Enforce task closeout",
+        task_family="infrastructure",
+        role="implementer",
+        terminal_goal="merge",
+        **thread,
+    )
+    body = "- [ ] **AC-IMPL** — Implementation is verified.\n"
+    policy = {
+        "AC-IMPL": {
+            "due_state": "IMPLEMENTATION_READY",
+            "required_evidence": ["test"],
+        }
+    }
+    ledger = task_lifecycle.build_lifecycle(
+        identity,
+        author_family="codex",
+        ac_snapshot=task_lifecycle.build_ac_snapshot(body, policy, finalized_at=NOW),
+        required_checks=["CI Gate"],
+        now=NOW,
+    )
+    path = tmp_path / "task-lifecycle.json"
+    task_lifecycle.write_lifecycle(path, ledger)
+    return path

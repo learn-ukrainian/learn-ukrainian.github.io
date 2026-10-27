@@ -28,6 +28,8 @@ _BACKGROUND_ENV = {
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["claude", "-p", "--model", spec.model]
+    if spec.options.get('max_budget_usd') is not None:
+        argv += ['--max-budget-usd', f"{float(spec.options['max_budget_usd']):.2f}"]
     if spec.effort is not None:
         argv += ["--effort", spec.effort]
     argv += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk"]

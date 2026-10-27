@@ -773,8 +773,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Dispatch a v2 worker and record it in a run ledger.",
         description=(
             "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
-            "silence/initial-response deadlines, budget ceilings, lifecycle-file propagation, "
-            "and authoring-review-risk. Unset authoring-review-risk is unchecked, unlike legacy critical admission. "
+            "silence/initial-response deadlines, "
+            "with default authoring review risk critical. "
             "Seats grok-build, grok-hermes, qwen, kimi are refused. "
             "Legacy options and defaults remain forwarded so "
             "unsupported requests fail explicitly. Default watchdogs currently prevent launch; explicit zero disables each watchdog."
@@ -834,10 +834,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=180,
         help="GAP: v2 lacks this watchdog; 0 explicitly disables it.",
     )
-    dispatch.add_argument("--max-budget-usd", type=float, help="GAP: unsupported by dispatch v2.")
+    dispatch.add_argument("--max-budget-usd", type=float, help="Claude print-mode API spend ceiling in USD.")
     dispatch.add_argument(
         "--lifecycle-file",
-        help="GAP: v2 lacks lifecycle-file propagation; forwarded unchanged and refused by v2.",
+        help="Canonical task-lifecycle.v1 ledger carried into the worker prompt and record.",
     )
     dispatch.add_argument(
         "--owned-path",

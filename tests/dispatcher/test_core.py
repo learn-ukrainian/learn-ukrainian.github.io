@@ -22,6 +22,7 @@ from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
 from scripts.dispatcher.types import TaskSpec
+from scripts.lib import rules_core
 from scripts.review.record_cf_verdict import _review_branch
 
 SOURCE = Path(__file__).resolve().parents[2]
@@ -41,7 +42,8 @@ def sandbox(tmp_path):
     run_git(repo, "init", "-b", "main")
     run_git(repo, "config", "user.email", "stub@example.invalid")
     run_git(repo, "config", "user.name", "Stub")
-    for relative in ("scripts/dispatcher", "scripts/common", "scripts/review", "scripts/storage"):
+    for relative in ("scripts/dispatcher", "scripts/common", "scripts/review", "scripts/storage", "scripts/lib",
+                     "agents_extensions/shared/rules"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
     for relative in ("scripts/agent_runtime/bounded_advisory.py",
                      "scripts/orchestration/worktree_paths.py", "scripts/orchestration/task_record_store.py"):
@@ -400,7 +402,12 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
         "dispatch", "--agent", "codex", "--model", "file", "--prompt-file", "-", stdin="exact\nbytes\n"
     )
     record = sandbox.settle(result.stdout.splitlines())
-    assert Path(record["result_file"]).read_bytes() == b"exact\nbytes\n"
+    original = b"exact\nbytes\n"
+    injected = rules_core.with_core(original.decode()).encode()
+    assert Path(record['prompt_file']).read_bytes() == original
+    assert Path(record['effective_prompt_file']).read_bytes() == injected
+    assert Path(record["result_file"]).read_bytes() == injected
+    assert record['effective_prompt_sha256'] == hashlib.sha256(injected).hexdigest()
     assert record["prompt_sha256"] == hashlib.sha256(b"exact\nbytes\n").hexdigest()
 
 
@@ -1712,3 +1719,23 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+def test_delegate_dispatch_leads_with_the_core(sandbox):
+    """Ported from tests/test_rules_core_loading.py::test_delegate_dispatch_leads_with_the_core."""
+    record = sandbox.settle(sandbox.dispatch('file'))
+    prompt = Path(record['effective_prompt_file']).read_text()
+    assert record['prompt_blocks'] == ['rules_core']
+    assert record['effective_prompt_sha256'] == hashlib.sha256(prompt.encode()).hexdigest()
+    assert prompt.startswith(rules_core.core_block('core') + '\n\n')
+    assert 'literal final response' in prompt
+    assert prompt.count(rules_core.core_block('core')) == 1
+
+
+def test_delegate_rules_seat_flag_and_env(sandbox):
+    """Ported from tests/test_rules_core_loading.py::test_delegate_rules_seat_flag_and_env."""
+    for flags in [('--rules-seat', 'content'), ()]:
+        sandbox.env['LU_RULES_SEAT'] = 'content' if not flags else 'core'
+        record = sandbox.settle(sandbox.dispatch('file', *flags))
+        prompt = Path(record['effective_prompt_file']).read_text()
+        assert prompt.startswith(rules_core.core_block('content') + '\n\n')

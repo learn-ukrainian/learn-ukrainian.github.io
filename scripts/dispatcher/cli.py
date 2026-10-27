@@ -10,21 +10,12 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import checks, git, providers, store, worker
+from scripts.dispatcher import authoring, checks, git, prompt_context, providers, store, worker
 from scripts.dispatcher.environment import child_env
+from scripts.dispatcher.prompt_context import _PromptPath
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 
 ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
-
-
-class _PromptPath(type(Path())):
-    """Let builders read submitted bytes while dry-run leaves the filesystem untouched."""
-
-    def read_bytes(self):
-        return self.content
-
-    def read_text(self, encoding=None, errors=None):
-        return self.content.decode(encoding or "utf-8", errors or "strict")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -102,6 +93,15 @@ def build_parser() -> argparse.ArgumentParser:
                               "all three required; dry-run only until runtime isolation is wired (default: none)")
     dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
                           help="Bound review access; dry-run only (default: isolated for bound attempts)")
+    dispatch.add_argument('--rules-seat', choices=('core', 'content'),
+                          help='Rules bundle to inject (default: LU_RULES_SEAT or core)')
+    dispatch.add_argument('--lifecycle-file', help='Canonical task-lifecycle.v1 carrier (default: none)')
+    dispatch.add_argument('--authoring-review-risk', choices=('low', 'medium', 'high', 'critical'),
+                          help='Planned writer review risk; path risk may raise it (default: critical)')
+    dispatch.add_argument('--authoring-review-plan', choices=('cross_family', 'red_team'), default='cross_family',
+                          help='Authoring review plan for frozen historical commits (default: cross_family)')
+    dispatch.add_argument('--max-budget-usd', type=float,
+                          help='Claude print-mode API spend cap in USD (default: no cap)')
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument("--print-advisory-binding", action="store_true",
                           help="Print this request's envelope binding; needs --task-id, creates nothing (default: off)")
@@ -172,16 +172,23 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
+    lifecycle_carrier, lifecycle_block = prompt_context.lifecycle(args)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    planned_worktree = Path(args.cwd or args.worktree or repo / '.worktrees' / 'dispatch' / agent / task_id).absolute()
+    authoring_admission = authoring.admit(args, agent, task_id, repo, info, planned_worktree)
+    admitted_sha = (authoring_admission.creation_sha or authoring_admission.head_sha) if authoring_admission else None
     worktree, branch, sha = git.worktree_plan(
-        repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
+        repo, agent, task_id, admitted_sha or args.pinned_head or args.branch or args.base, args.cwd, args.worktree
     )
+    if authoring_admission is not None:
+        sha = authoring_admission.creation_sha or authoring_admission.head_sha
+    effective_prompt, prompt_fields = prompt_context.effective(args, task_id, prompt, lifecycle_block)
     if args.pinned_head and not re.fullmatch(r"[0-9a-fA-F]{40}", args.pinned_head):
         raise ValueError("pinned head must be a full commit SHA")
     prompt_path = _PromptPath(path.with_suffix(".prompt"))
-    prompt_path.content = prompt
+    prompt_path.content = effective_prompt
     options = {key: str(value) for key, value in vars(args).items() if value is not None and key != "prompt"}
     if args.output_schema is not None:
         from scripts.dispatcher.output_schema import bind
@@ -199,7 +206,7 @@ def _dispatch(args) -> int:
     )
     checks.check_private_input(spec, info["key"])
     checks.check_review_family(args.review_author_model, args.model)
-    if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
+    if args.mode == "read-only" and (args.subject_seat or args.subject_family or args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
                                                 args.owned_path, review=any((args.review_profile, args.language_lane,
                                                 args.review_author_model, args.risk, args.review_mode, args.pr,
@@ -211,24 +218,35 @@ def _dispatch(args) -> int:
             raise ValueError("protected subject scope needs a code-profile review without --language-lane")
     checks.check_resources((worktree, path.parent))
     if args.dry_run:
+        authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = providers.load(agent).build(spec, child_env(spec))
-        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
+        plan = dict(**authoring._authoring_review_state_fields(args, authoring_admission), worktree=str(worktree), argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
     if binding:
         store.check_review_attempt(binding, claim=True)
-    if not args.cwd:
-        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
-    record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
-    if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
-        raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
-    record.update(advisory_fields)
-    if agent == "muse":
-        record["contributor_mode"] = spec.options.get("contributor_mode", "off")
-    worker.start(spec, record, prompt, args.hard_timeout)
+    with authoring.locked_target(repo, worktree):
+        authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
+        if not args.cwd:
+            git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
+        record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
+        if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
+            raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
+        record.update(advisory_fields)
+        record.update(authoring._authoring_review_state_fields(args, authoring_admission))
+        record.update(prompt_fields)
+        record['prompt_sha256'] = store.digest(prompt)
+        record['effective_prompt_file'] = str(path.with_suffix('.effective.prompt'))
+        if lifecycle_carrier is not None:
+            record['task_lifecycle'] = lifecycle_carrier
+        if args.max_budget_usd is not None:
+            record['max_budget_usd'] = args.max_budget_usd
+        if agent == "muse":
+            record["contributor_mode"] = spec.options.get("contributor_mode", "off")
+        worker.start(spec, record, prompt, args.hard_timeout)
     print(task_id, record["run_nonce"], sep="\n")
     return 0
 
@@ -251,6 +269,9 @@ def main(argv=None) -> int:
             result = worker._observe(store.read(args.task_id, args.run_nonce))
         print(json.dumps(result, indent=2))
         return code
+    except authoring._AuthoringReviewRefused as exc:
+        print(exc.render(), file=sys.stderr)
+        return 2
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         message = str(exc).splitlines()[0] if isinstance(exc, ValueError) else type(exc).__name__
         print(f"dispatcher: {message}", file=sys.stderr)
