@@ -414,16 +414,12 @@ def test_flaky_issue_title_and_body_stay_inert(tmp_path: Path, transport: Transp
     subject.issue_rows = [{"number": 77, "title": title}]
     lines, failed = keeper.run(subject, path, apply=True)
     assert not failed, lines
-    [(merge_argv, merge_body)] = [(json.loads(argv), body) for verb, argv, body in transport.sent if verb == "pr merge"]
-    assert merge_argv[:-1] == [
-        "gh", "pr", "merge", "42", "--repo", "unit/public", "--squash", "--subject=A change",
-        f"--match-head-commit={HEAD}", "--body-file",
-    ]
-    assert merge_body == "A change"
-    assert "#42 enqueued" in lines
+    assert not any(verb == "pr merge" for verb, _, _ in transport.sent)
+    assert "#42 enqueued" not in lines
+    assert "reason=queue-failed-candidate" in lines[0]
     [queue_comment] = transport.comments()
-    assert "was previously removed from the queue." in assert_inert(queue_comment)
-    assert "was not queued" not in queue_comment
+    assert "was not queued because queue-failed-candidate" in assert_inert(queue_comment)
+    assert "cause not established" in queue_comment
     assert transport.issues() == []
     [(verb, _, body)] = [row for row in transport.sent if row[0] == "issue comment"]
     assert verb == "issue comment"

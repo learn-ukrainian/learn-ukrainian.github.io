@@ -57,6 +57,7 @@ SLOW_INTERVAL_SECONDS = 300
 # Timer jitter allowance so a throttled minute timer still runs on the fifth minute.
 INTERVAL_SLACK_SECONDS = 15
 AGGREGATE_JOBS = frozenset({"CI Gate"})
+FAILED_CANDIDATE_STATES = frozenset({"failure", "timed_out", "startup_failure"})
 # Job and check names and failed-test identifiers come from workflow files and CI
 # logs, so any PR author controls them; gate reasons embed check names, and
 # GitHub error text is unvetted. They reach public issue titles, issue bodies and
@@ -138,6 +139,18 @@ def marker_value(raw: str) -> str:
 
 class KeeperError(RuntimeError):
     """A GitHub response or mutation was incomplete or failed."""
+
+
+def _timestamp(value: Any) -> datetime:
+    if not isinstance(value, str):
+        raise KeeperError("timestamp missing")
+    try:
+        stamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise KeeperError("timestamp malformed") from exc
+    if stamp.tzinfo is None:
+        raise KeeperError("timestamp timezone missing")
+    return stamp.astimezone(UTC)
 
 
 def _auto_merge_armed(row: Mapping[str, Any]) -> bool:
@@ -328,6 +341,64 @@ class GitHub:
     def timeline(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-timeline", repo=self.repository, number=number))
 
+    def queue_removals(self, number: int, head: str) -> tuple[list[datetime], datetime | None]:
+        """Read complete bounded history; candidate OIDs never identify a PR head."""
+        removals: list[datetime] = []
+        cursors: set[str] = set()
+        fields: dict[str, Any] = {"repo": self.repository, "number": number}
+        total = None
+        count = 0
+        force_push = None
+        for page in range(10):
+            data = self.json(Request("read-queue-removal", **fields))
+            try:
+                pull = data["data"]["repository"]["pullRequest"]
+                history = pull["removals"]
+                nodes = history["nodes"]
+                info = history["pageInfo"]
+                pushes = pull["pushes"]["nodes"]
+                if (
+                    data.get("errors") or pull["headRefOid"] != head
+                    or not isinstance(nodes, list) or len(nodes) > 100
+                    or type(history["totalCount"]) is not int or history["totalCount"] < 0
+                    or type(info["hasNextPage"]) is not bool
+                    or not isinstance(pushes, list) or len(pushes) > 1
+                ):
+                    raise KeeperError("queue removal history incomplete")
+                push = None
+                if pushes:
+                    after = pushes[0]["afterCommit"]["oid"]
+                    stamp = _timestamp(pushes[0]["createdAt"])
+                    if not isinstance(after, str) or not SHA.fullmatch(after):
+                        raise KeeperError("queue removal force-push head malformed")
+                    push = (after, stamp)
+                if page == 0:
+                    total, force_push = history["totalCount"], push
+                elif total != history["totalCount"] or force_push != push:
+                    raise KeeperError("queue removal history changed during pagination")
+                for node in nodes:
+                    reason = node["reason"]
+                    stamp = _timestamp(node["createdAt"])
+                    if reason is not None and not isinstance(reason, str):
+                        raise KeeperError("queue removal reason malformed")
+                    if reason != "manual":
+                        removals.append(stamp)
+                count += len(nodes)
+                if count > total:
+                    raise KeeperError("queue removal count inconsistent")
+                if not info["hasNextPage"]:
+                    if count != total:
+                        raise KeeperError("queue removal history partial")
+                    return removals, force_push[1] if force_push and force_push[0] == head else None
+                cursor = info["endCursor"]
+                if not nodes or not isinstance(cursor, str) or not cursor or cursor in cursors:
+                    raise KeeperError("queue removal cursor invalid")
+                cursors.add(cursor)
+                fields["cursor"] = cursor
+            except (KeyError, TypeError, AttributeError) as exc:
+                raise KeeperError("queue removal history malformed") from exc
+        raise KeeperError("queue removal history page limit exceeded")
+
     def created_at(self, number: int) -> str:
         """PR creation is a complete lower bound when its queue-entry event is absent."""
         pull = self.json(Request("read-pull", repo=self.repository, number=number))
@@ -473,8 +544,22 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
 
 
 def _gate_hold(gh: GitHub, number: int, head: str, previous: Mapping[str, Any]) -> str | None:
-    """Retain the published-text safeguard after a squash-text revocation."""
-    if f"{number}:{head}" in previous.get("squash_revoked", {}) and gh.squash_blocked(number, head) is not False:
+    """Block automatic retries without changing accountable manual recovery."""
+    key = f"{number}:{head}"
+    if key in previous.get("failed_candidates", {}):
+        return "queue-failed-candidate"
+    if key in previous.get("undiagnosed", {}):
+        return "queue-drop-undiagnosed"
+    try:
+        removals, pushed_after = gh.queue_removals(number, head)
+        observation = previous.get("head_observations", {}).get(str(number), {})
+        arrived_after = observation.get("arrived_after") if observation.get("head") == head else None
+        bounds = [stamp for stamp in (pushed_after, _timestamp(arrived_after) if arrived_after else None) if stamp]
+        if any(not bounds or stamp >= max(bounds) for stamp in removals):
+            return "queue-removal-unbound"
+    except KeeperError:
+        return "queue-removal-unknown"
+    if key in previous.get("squash_revoked", {}) and gh.squash_blocked(number, head) is not False:
         return "squash-text-blocked"
     return None
 
@@ -524,8 +609,28 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("squash_revoked", {}), dict)
         or not isinstance(data.get("pending_comments", {}), dict)
         or not isinstance(data.get("flake_issue_updates", {}), dict)
+        or not isinstance(data.get("failed_candidates", {}), dict)
+        or not isinstance(data.get("head_observations", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
+    for key, run_id in data.get("failed_candidates", {}).items():
+        if not re.fullmatch(r"[1-9][0-9]*:[0-9a-f]{40}", key) or type(run_id) is not int or run_id <= 0:
+            raise KeeperError("failed candidate state malformed")
+    observations = {}
+    for number, item in data.get("head_observations", {}).items():
+        if (
+            not re.fullmatch(r"[1-9][0-9]*", number) or not isinstance(item, dict)
+            or not isinstance(item.get("head"), str) or not SHA.fullmatch(item["head"])
+            or "arrived_after" not in item
+        ):
+            continue
+        try:
+            if item["arrived_after"] is not None and _timestamp(item["arrived_after"]) > _timestamp(data.get("observed")):
+                continue
+        except KeeperError:
+            continue
+        observations[number] = item
+    data["head_observations"] = observations
     for name in ("requeued", "shared_pass", "shared_requeues"):
         data.pop(name, None)
     return data
@@ -631,6 +736,8 @@ def _comment_once(
         return
     shown = display_text(reason, DISPLAY_REASON_LIMIT)
     message = "was previously removed from the queue" if reason == "queue-drop" else f"was not queued because {shown}"
+    if reason in {"queue-failed-candidate", "queue-drop-undiagnosed", "queue-removal-unbound", "queue-removal-unknown"}:
+        message += "; cause not established; automatic retry held for accountable recovery"
     gh.comment(number, f"Merge queue keeper: #{number} {message}.{detail}\n\n{marker}")
     comments.append({"body": marker, "user": {"login": login}})
 
@@ -658,7 +765,7 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         item
         for item in gh.runs(start)
         if item.get("event") == "merge_group"
-        and item.get("conclusion") == "failure"
+        and item.get("conclusion") in FAILED_CANDIDATE_STATES
         and (item.get("updated_at") or item.get("created_at", "")) >= (start if entries else since)
         and item.get("created_at", "") >= start
         and extract_pr_number(str(item.get("head_branch", ""))) == number
@@ -674,13 +781,13 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     except KeeperError as exc:
         return f"{run_detail}; failing job lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}.", [], {}, run["id"]
     failed = sorted(
-        {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
+        {str(job["name"]) for job in jobs if job.get("conclusion") in FAILED_CANDIDATE_STATES and isinstance(job.get("name"), str)}
     )
     names = ", ".join(code_span(name) for name in failed) or "none reported"
     detail = f"{run_detail}; failing jobs: {names}."
     tests: dict[str, list[str]] = {}
     for job in jobs:
-        if job.get("conclusion") != "failure" or "pytest" not in str(job.get("name", "")) or type(job.get("id")) is not int:
+        if job.get("conclusion") not in FAILED_CANDIDATE_STATES or "pytest" not in str(job.get("name", "")) or type(job.get("id")) is not int:
             continue
         try:
             nodes = gh.failed_tests(job["id"])
@@ -955,6 +1062,7 @@ def _canonical_flake_issue(
 
 def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str], bool]:
     branches = gh.branch_names()
+    observed = datetime.now(UTC).isoformat()
     snap = gh.snapshot(branches)
     lines: list[str] = []
     failed = False
@@ -968,14 +1076,26 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
     queued_now: dict[str, str] = {}
     approved_now: dict[str, str] = {}
     login = gh.identity()
-    observed = datetime.now(UTC).isoformat()
     open_numbers = {str(pr.get("number")) for pr in snap["prs"]}
     for pr in snap["prs"]:
         number, head, node_id = pr.get("number"), pr.get("headRefOid"), pr.get("id")
         if not isinstance(number, int) or not isinstance(head, str) or not isinstance(node_id, str):
+            previous.get("head_observations", {}).pop(str(number), None)
             lines.append("invalid PR identity: unknown, no mutation")
             continue
         key = str(number)
+        observations = previous.setdefault("head_observations", {})
+        prior_head = observations.get(key)
+        if prior_head is None or prior_head["head"] != head:
+            arrived_after = None
+            if prior_head is not None:
+                try:
+                    stamp = _timestamp(previous.get("observed"))
+                    if stamp < _timestamp(observed):
+                        arrived_after = stamp.isoformat()
+                except KeeperError:
+                    pass
+            observations[key] = {"head": head, "arrived_after": arrived_after}
         approved_before = previous.get("approved", {}).get(key) == head
         queued = pr.get("isInMergeQueue")
         armed = _auto_merge_armed(pr)
@@ -1013,6 +1133,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             try:
                 detail, failed_jobs, failed_tests, failed_run = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
+                    if failed_run is not None:
+                        previous.setdefault("failed_candidates", {})[prior_drop_key] = failed_run
                     previous["undiagnosed"].pop(prior_drop_key)
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
                     if dropped_head == head:
@@ -1189,7 +1311,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("squash_revoked", "undiagnosed", "pending_comments"):
+        for name in ("squash_revoked", "undiagnosed", "pending_comments", "failed_candidates", "head_observations"):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
