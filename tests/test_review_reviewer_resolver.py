@@ -389,13 +389,13 @@ def test_invalid_or_conflicting_author_identity_fails_closed():
 
 def test_critical_uses_authority_while_routine_uses_practical_defaults():
     # #9394: OpenAI author gets Opus at critical; #9538: high is Opus too;
-    # the practical defaults at medium and low remain Sonnet.
+    # medium uses Opus and low without public egress policy retains Sonnet.
     for risk in ("critical", "high"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk, claude_account=HOST_ACCOUNT))
         assert resolution.selected.name == "claude-opus-5-5", risk
     for risk in ("medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk, claude_account=HOST_ACCOUNT))
-        assert resolution.selected.name == "claude-sonnet-5-5", risk
+        assert resolution.selected.name == ("claude-opus-5-5" if risk == "medium" else "claude-sonnet-5-5"), risk
 
 
 @pytest.mark.parametrize("author_model", ("gpt-6.1-sol", "grok-4.7"))
@@ -494,9 +494,9 @@ def test_opus_keeps_native_claude_when_native_health_is_degraded():
     assert resolution.selected.health == "degraded"
 
 
-def test_medium_risk_uses_sonnet_and_omits_retired_pool():
+def test_medium_risk_uses_opus_and_omits_retired_pool():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", claude_account=HOST_ACCOUNT))
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.name == "claude-opus-5-5"
     assert "pool" not in {entry.name for entry in resolution.trace}
 
 
@@ -523,7 +523,7 @@ def test_codexbar_unavailable_status_fail_open_does_not_ban_lane():
         )
     )
     assert resolution.selected is not None
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.name == "claude-opus-5-5"
     assert resolution.selected.health in {None, "healthy"}
 
 
@@ -535,8 +535,8 @@ def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
             routing_snapshot={"codex": "unhealthy", "cursor": "healthy"}, claude_account=HOST_ACCOUNT,
         )
     )
-    # Practical ladder: Astra dark → Sonnet 5.5 (Claude healthy by default).
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    # Sol unavailable: Opus precedes the secondary seats.
+    assert resolution.selected.name == "claude-opus-5-5"
     terra = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
     assert terra.status == "excluded"
     assert "unhealthy" in terra.reason
@@ -552,7 +552,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
         },
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.name == "claude-opus-5-5"
     assert resolution.selected.health == "healthy"
     assert resolution.selected.capacity.freshness == credit_lane.UNKNOWN
 
@@ -596,7 +596,7 @@ def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed(
             routing_snapshot={"agy": "UNHEALTHY", "grok": "healthy"}, claude_account=HOST_ACCOUNT,
         )
     )
-    assert unhealthy.selected.name == "claude-sonnet-5-5"
+    assert unhealthy.selected.name == "claude-opus-5-5"
 
     invalid = resolve_reviewer(
         ResolverInputs(
@@ -618,7 +618,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
             routing_snapshot={"agy": "pre_launch", "grok": "near_cap"}, claude_account=HOST_ACCOUNT,
         )
     )
-    assert pre_launch.selected.name == "claude-sonnet-5-5"
+    assert pre_launch.selected.name == "claude-opus-5-5"
     assert pre_launch.selected.health is None
 
     unknown = resolve_reviewer(
@@ -629,7 +629,7 @@ def test_pre_launch_is_healthy_and_unknown_is_fail_open():
         )
     )
     missing = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", claude_account=HOST_ACCOUNT))
-    assert unknown.selected.name == missing.selected.name == "claude-sonnet-5-5"
+    assert unknown.selected.name == missing.selected.name == "claude-opus-5-5"
     assert unknown.substitution_note is None
 
 
@@ -1192,7 +1192,7 @@ def test_sealed_executable_catalog_and_resolver_parity():
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
             executable = (
-                "scripts/delegate.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
+                "scripts/delegate.py" if candidate.adapter_transport in {"native_agy", "native_muse"} else _SEALED_REVIEW_EXECUTABLE
             )
             assert candidate.sealed_executable == executable, (
                 f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
@@ -1210,8 +1210,8 @@ def test_sealed_executable_catalog_and_resolver_parity():
             # Tampered executable is rejected
             mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
             expected = (
-                "native AGY review endpoint identity is invalid"
-                if candidate.adapter_transport == "native_agy"
+                f"native {'AGY' if candidate.route == 'agy' else 'Muse'} review endpoint identity is invalid"
+                if candidate.adapter_transport in {"native_agy", "native_muse"}
                 else "candidate is not bound to the sealed ACP executable"
             )
             assert _hard_exclusion_reason(mismatched, inputs) == expected
@@ -1401,14 +1401,19 @@ def test_normalize_muse_subject_seat_and_meta_family():
     candidate = REVIEW_CANDIDATES["muse"]
     assert candidate.model_roles == frozenset({"coding", "standard_review", "routine_review"})
     assert candidate.suitability_roles == frozenset({"routine_review"})
-    assert not candidate.formal_review_eligible
+    assert candidate.formal_review_eligible
     assert candidate.requires_data_egress_policy == "public_only"
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol", data_egress_policy="public_only", claude_account=HOST_ACCOUNT,
     )
     formal = evaluate_candidate(candidate, inputs)
-    assert formal.status == "excluded"
-    assert formal.reason == "formal-review transport is not eligible for a sealed cross-family gate"
+    assert formal.status == "eligible"
+    low = replace(inputs, risk="low")
+    assert resolve_reviewer(low).selected.name == candidate.name
+    medium = resolve_reviewer(replace(inputs, risk="medium"))
+    assert medium.selected.name == "claude-opus-5-5"
+    fallback = replace(inputs, risk="medium", subject_seats=frozenset({"claude", "codex"}))
+    assert resolve_reviewer(fallback).selected.name == candidate.name
     advisory = replace(inputs, formal_review=False)
     assert evaluate_candidate(candidate, advisory).status == "eligible"
     for risk in ("low", "medium", "high", "critical"):
@@ -1603,6 +1608,8 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
         expected = (
             "gpt-6.1-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
         )
+    elif risk == "medium" and profile == "code" and family == "openai":
+        expected = "claude-opus-5-5"
     else:
         expected = "claude-sonnet-5-5" if family == "openai" else "gpt-6.1-sol"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile, claude_account=HOST_ACCOUNT))
@@ -1651,7 +1658,7 @@ def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallba
     elif risk == "critical" or (risk == "high" and (author == "gpt-6.1-sol" or profile == "infra")):
         expected = "claude-opus-5-5"
     elif author == "gpt-6.1-sol":
-        expected = "claude-sonnet-5-5"
+        expected = "claude-opus-5-5" if profile == "code" and risk == "medium" else "claude-sonnet-5-5"
     else:
         expected = "openai_frontier"
     if state == "native-near-cap":

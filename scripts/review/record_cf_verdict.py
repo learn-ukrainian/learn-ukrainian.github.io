@@ -1257,7 +1257,13 @@ def _require_qualified_reviewer(
     ]
     if not candidates:
         raise RecordError(f"reviewer not qualified: {agent}/{model} is not a catalog review candidate")
+    data_egress_policy = None
+    if any(candidate.requires_data_egress_policy for candidate in candidates):
+        visibility = _run_json(["gh", "repo", "view", facts.repository, "--json", "isPrivate"])
+        if isinstance(visibility, dict) and visibility.get("isPrivate") is False:
+            data_egress_policy = "public_only"
     inputs = facts.resolver_inputs(
+        data_egress_policy=data_egress_policy,
         risk=str(task.get("review_risk") or "medium"),
         review_profile=profile,
         author_model=task.get("review_author_model") or "" if review_mode == "red_team" else "",

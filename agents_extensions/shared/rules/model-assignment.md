@@ -11,16 +11,21 @@ read-only: tracked-file reads only, with no shell, tests or scripts. Route
 execution-dependent reviews to Opus 5.5 or Sol 6.1. Grok review briefs supply
 the diff and CI evidence and never ask for execution. Risk admission is unchanged.
 Grok never ranks ahead of an eligible, healthy Sol 6.1 or Opus 5.5; native Grok ranks before
-the Cursor Grok transport fallback. The resolver chooses an eligible, healthy Sol 6.1 first at low,
-medium and high risk; Sonnet is chosen at medium and low risk only when Sol is excluded (for example a
-Sol-authored change), and at critical risk Opus 5.5 is chosen for non-Anthropic authors.
+the Cursor Grok transport fallback. The resolver chooses an eligible, healthy Muse first
+for low-risk code, Sol 6.1 or Opus 5.5 first at medium risk, and Sol 6.1 first at high risk. At medium risk Muse follows
+Sol/Opus and precedes Grok. At critical risk Opus 5.5 is chosen for non-Anthropic authors.
 Neither transport reviews an xAI-authored change, or its own subject seat. Verdicts count only with runtime model attestation: native `modelUsage`
 reports exactly one admitted model id; Cursor reports its pinned high-effort model itself.
 Operator decision 2026-10-25 (C-1949): Grok 4.7 may give critical-risk final sign-off through either
 transport under those attestation, cross-family and subject-seat limits. Opus 5.5 and Sol 6.1 remain
 eligible. Security final sign-off (catalog `security_review` role) stays Opus 5.5 or Sol 6.1.
 Designated approval remains Opus 5.5 + Sol 6.1. Kimi models are retired (OO-58, #11327).
-Muse Wonder Full is a review seat under measurement (operator 2026-10-24, C-1518; 2026-10-25, C-1949); its verdicts count as review of record only after measured results are recorded.
+MUSE-RANK-1026 (joint CTO+Sol): native `muse-wonder-full-1.0` is a qualified first
+reviewer for low-risk code and a secondary reviewer after Sol/Opus, ahead of Grok,
+at medium risk. At high/critical/security risk it may add a second opinion beside
+a qualified reviewer but never signs off or counts as review of record. It has no
+driver, Ukrainian, private-repository or security-final authority. Real reviews
+use contributor mode off by default; public tests/probes alone may turn it on.
 The 2026-10-08 approval admits Gemini as a formal reviewer of low-risk and medium-risk code, and of
 Ukrainian work when the reviewer uses the Sources MCP. High-risk and critical review use Opus 5.5,
 Sol 6.1, or Grok 4.7. Gemini code review runs directly through native AGY in the exact-head dispatch
@@ -54,9 +59,9 @@ including Ukrainian content review under a fixed brief. Task-level Flash rows be
 **Resolver preference:** after hard gates, `review_scheduler.profile_risk_role_order`
 prefers primary seats before last resort, then ranks semantic suitability before quality tier; health and quota break ties
 within that suitability and tier. YAML rung order is a fallback inventory.
-At `medium` and `low`, an eligible Opus seat can lose to Sonnet 5.5, because
-Sonnet's roles match earlier in that profile's role order; when both match the
-requested role equally, Opus's authority tier wins. The resolver's returned
+For code at `low`, Muse's routine-review suitability ranks first. At `medium`,
+Sol's standard-review suitability precedes Opus's architecture role, then Muse's
+routine-review suitability. Quality and resources break ties within the same suitability. The resolver's returned
 `suitability_rank` and selection trace are the authority: inspect them rather than
 inferring eligibility or priority from rung position or from this text.
 
@@ -346,7 +351,7 @@ or count as a formal review.
 * **Current subscriptions:** Codex Sol 6.1 and Luna, native/ Cursor Grok 4.7,
   AGY Gemini 3.8 Flash High, OpenCode DeepSeek V4.1 Flash on OpenCode credit,
   and native Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5.
-  Muse is subscribed but has no delegate adapter yet. Do not add a route.
+  Muse uses its native delegate adapter under MUSE-RANK-1026's review limits above.
   Fable 5.1 stays parked, explicit pin only, with its existing restrictions.
 * **OpenRouter:** no general fleet routing. Existing DeepSeek compatibility
   remains subject to the named US provider allow-list and data restrictions.

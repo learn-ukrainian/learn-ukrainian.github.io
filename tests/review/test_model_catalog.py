@@ -1234,19 +1234,34 @@ MUSE_REVIEW_ROLES = {"legacy_reviewers", "code_review_low", "code_review_medium"
 
 
 def approved_muse_review_receipt(receipt, case):
-    """Append only the ordered, still-unqualified Meta review seat to a frozen trace."""
+    """Apply MUSE-RANK-1026 to frozen receipts without recapturing other behavior."""
     receipt = deepcopy(receipt)
     value = receipt.get("value", {})
+    if case["review_profile"] == "code" and value.get("resolved_risk") == "medium":
+        ranks = {"openai_frontier": 0, "claude-opus-5-5": 1, "claude-sonnet-5-5": 3,
+                 "gemini-3.8-flash-high": 4, "grok-4.7": 5, "grok-4.7-cursor-fallback": 5}
+        for row in value.get("trace", []):
+            if row["suitability_rank"] is not None:
+                row["suitability_rank"] = 0 if case.get("requested_role") else ranks[row["name"]]
+        if value.get("selected"):
+            selected = value["selected"]
+            selected["suitability_rank"] = 0 if case.get("requested_role") else ranks[selected["name"]]
+            opus = next(row for row in value["trace"] if row["name"] == "claude-opus-5-5")
+            if selected["suitability_rank"] > 1 and opus["status"] == "eligible" and not case.get("pinned_candidate"):
+                next(row for row in value["trace"] if row["name"] == selected["name"])["status"] = "eligible"
+                opus["status"] = "selected"
+                value["selected"] = deepcopy(opus)
+            if selected["name"].startswith("grok-") and not case.get("requested_role"):
+                prefix = f"fell back to {selected['name']}: no eligible candidate remained in a higher-quality tier; "
+                value["substitution_note"] = (value["substitution_note"] or "").removeprefix(prefix) or None
     if not value.get("trace") or (value["resolved_risk"] not in {"low", "medium"} and case.get("pinned_candidate") != "muse"):
         return receipt
-    reason = "formal-review transport is not eligible for a sealed cross-family gate"
-    if not case.get("formal_review", True):
-        reason = (
-            "review profile exclusion: muse supports ['code'], got 'infra'"
-            if case["review_profile"] == "infra" else
-            "data-egress policy fail-closed: muse requires data_egress_policy='public_only', "
-            f"got {case.get('data_egress_policy')!r} (requires --data-egress-policy public_only)"
-        )
+    reason = (
+        "review profile exclusion: muse supports ['code'], got 'infra'"
+        if case["review_profile"] == "infra" else
+        "data-egress policy fail-closed: muse requires data_egress_policy='public_only', "
+        f"got {case.get('data_egress_policy')!r} (requires --data-egress-policy public_only)"
+    )
     if case["author_model"] == "muse-wonder-full-1.0" or case.get("author_family") == "meta":
         reason = "same family as author (meta) — cross-family review requires a different family"
     if "meta" in case.get("subject_families", []):
@@ -1257,7 +1272,7 @@ def approved_muse_review_receipt(receipt, case):
     value["trace"].append({
         "name": "muse", "concrete_model": "muse-wonder-full-1.0", "family": "meta",
         "route": "muse", "transport": "native_muse", "invocation": MUSE_REVIEW_CANDIDATE["invocation"],
-        "quality_tier": "economical", "requires_silence_timeout": False,
+        "quality_tier": "frontier_practical", "requires_silence_timeout": False,
         "status": "excluded", "reason": reason, "health": None, "capacity": deepcopy(capacity),
         "suitability_rank": None, "selection_score": None, "credit": None,
     })
@@ -1265,7 +1280,7 @@ def approved_muse_review_receipt(receipt, case):
 
 
 def approved_muse_role_receipt(receipt, case):
-    """Extend the frozen role envelope without granting runtime qualification."""
+    """Extend the frozen role envelope with the qualified public Muse route."""
     receipt = deepcopy(receipt)
     if case["role"] not in MUSE_REVIEW_ROLES or "value" not in receipt:
         return receipt
@@ -1281,8 +1296,6 @@ def approved_muse_role_receipt(receipt, case):
         exclusions.append("explicit_pin_mismatch")
     if context.get("data_egress_policy") != "public_only":
         exclusions.append("data_egress_policy_required")
-    if case["role"] != "legacy_reviewers":
-        exclusions.append("formal_endpoint_not_eligible")
     receipt["value"]["candidates"].append({
         "seat": "meta_reviewer", "route_name": "native", "model_id": "muse-wonder-full-1.0",
         "family": "meta", "route": "muse", "transport": "native_muse", "wire_id": "muse-wonder-full-1.0",
@@ -1307,12 +1320,15 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
         return
     workers = {
         "muse-wonder-full-1.0": {
-            "family": "meta", "tier": "economical", "lifecycle": "active",
+            "family": "meta", "tier": "frontier_practical", "lifecycle": "active",
             "roles": ["coding", "standard_review", "routine_review"], "transports": ["native_muse"],
             "strengths": ["explicit_native_worker"],
-            "weaknesses": ["worker_qualification_pending", "review_qualification_pending", "no_driver_authority"],
-            "notes": "Explicit native coding and low/medium code-review seat under measurement. "
-                     "No driver, automatic fallback, Ukrainian, private-repository or security-final authority. "
+            "weaknesses": ["worker_qualification_pending", "no_high_risk_signoff", "no_driver_authority"],
+            "notes": "MUSE-RANK-1026: qualified native first reviewer for low-risk code; at medium "
+                     "risk follows Sol or Opus and precedes Grok. At high/critical/security risk, "
+                     "second opinion only, never review of record or sign-off. "
+                     "No driver, Ukrainian, private-repository or security-final authority. "
+                     "Real reviews use contributor mode off; public tests/probes alone may turn it on. "
                      "Catalog eligibility does not attest provider-origin identity or effective permissions.",
             "sources": ["https://dev.meta.ai/docs/muse-code"],
         },
@@ -1328,6 +1344,15 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
     assert not workers.keys() & expected["catalog"]["models"].keys()
     expected["catalog"]["models"].update(workers)
     expected["catalog"]["review_candidates"]["muse"] = deepcopy(MUSE_REVIEW_CANDIDATE)
+    expected["catalog"]["review_scheduler"]["profile_risk_role_order"]["code"]["medium"] = [
+        "standard_review", "architecture", "routine_review", "strong_review", "long_context_review", "critical_review",
+    ]
+    expected["catalog"]["review_scheduler"]["endpoints"]["muse"] = {
+        "formal_review_eligible": True, "models": ["muse-wonder-full-1.0"], "participant": "muse",
+        "adapter_transport": "native_muse", "catalog_transport": "native_muse",
+        "sealed_executable": "scripts/delegate.py", "quota_bucket": "muse", "credential_bucket": "muse",
+        "quota_limit": 1, "credential_limit": 1, "capacity_weight": 1.0,
+    }
     for risk in ("low", "medium"):
         expected["catalog"]["review_ladders"][risk].append(["muse"])
     holders = expected["routing_holders"]

@@ -108,7 +108,7 @@ review_scheduler:
     code:
       critical: [critical_review]
       high: [strong_review, standard_review, long_context_review, critical_review]
-      medium: [standard_review, strong_review, long_context_review, routine_review, critical_review]
+      medium: [standard_review, architecture, routine_review, strong_review, long_context_review, critical_review]
       low: [routine_review, standard_review, strong_review, long_context_review, critical_review]
     infra:
       critical: [critical_review, security_review]
@@ -154,6 +154,18 @@ review_scheduler:
   risk_reviewer_models:
     high: [{role: openai_frontier_coder}, {role: anthropic_authority_reviewer}, {role: legacy_reviewers, seat: xai_reviewer}]
   endpoints:
+    muse:
+      formal_review_eligible: true
+      models: [{role: legacy_reviewers, seat: meta_reviewer}]
+      participant: muse
+      adapter_transport: native_muse
+      catalog_transport: native_muse
+      sealed_executable: scripts/delegate.py
+      quota_bucket: muse
+      credential_bucket: muse
+      quota_limit: 1
+      credential_limit: 1
+      capacity_weight: 1.0
     claude:
       formal_review_eligible: true
       # Active formal CF pins; superseded Opus/Sonnet identities are historical only.
@@ -321,17 +333,20 @@ execution_routing:
 models:
   muse-wonder-full-1.0:
     family: meta
-    # Minimum admitted code-review tier; runtime qualification remains pending.
-    tier: economical
+    # MUSE-RANK-1026: qualified practical reviewer, without authority roles.
+    tier: frontier_practical
     lifecycle: active
     roles: [coding, standard_review, routine_review]
     routing_wire_ids: {native_muse: muse-wonder-full-1.0}
     transports: [native_muse]
     strengths: [explicit_native_worker]
-    weaknesses: [worker_qualification_pending, review_qualification_pending, no_driver_authority]
+    weaknesses: [worker_qualification_pending, no_high_risk_signoff, no_driver_authority]
     notes: >-
-      Explicit native coding and low/medium code-review seat under measurement.
-      No driver, automatic fallback, Ukrainian, private-repository or security-final authority.
+      MUSE-RANK-1026: qualified native first reviewer for low-risk code; at medium
+      risk follows Sol or Opus and precedes Grok. At high/critical/security risk,
+      second opinion only, never review of record or sign-off.
+      No driver, Ukrainian, private-repository or security-final authority.
+      Real reviews use contributor mode off; public tests/probes alone may turn it on.
       Catalog eligibility does not attest provider-origin identity or effective permissions.
     sources: [https://dev.meta.ai/docs/muse-code]
   muse-spark-1.3:
