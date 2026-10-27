@@ -11,11 +11,12 @@ from pathlib import Path
 def build(spec, env):
     from scripts.dispatcher.types import Invocation
 
+    scenario = spec.provider or spec.model
     return Invocation(
-        [sys.executable, str(Path(__file__)), spec.model, str(spec.prompt_file), str(spec.final_file)],
+        [sys.executable, str(Path(__file__)), scenario, str(spec.prompt_file), str(spec.final_file)],
         spec.prompt_file.read_bytes(),
         env,
-        spec.final_file if spec.model == "file" else None,
+        spec.final_file if scenario == "file" else None,
     )
 
 
@@ -48,7 +49,8 @@ def main():
         delivered.write_text("literal delivered value\n")
         if model != "dirty":
             subprocess.run(["git", "add", str(delivered)], check=True, stdout=subprocess.DEVNULL, timeout=30)
-            subprocess.run(["git", "commit", "-m", "stub delivery"], check=True, stdout=subprocess.DEVNULL, timeout=30)
+            subprocess.run(["git", "commit", "-m", "stub delivery\n\nX-Agent: codex/gpt-6.1-sol"],
+                           check=True, stdout=subprocess.DEVNULL, timeout=30)
         if model.startswith("pushed"):
             subprocess.run(["git", "push", "origin", "HEAD"], check=True, stdout=subprocess.DEVNULL, timeout=30)
         if model == "pushed-dirty":

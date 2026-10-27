@@ -57,7 +57,7 @@ def sandbox(tmp_path):
     shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
-    (repo / "scripts/fleet/__init__.py").touch()
+    (repo / "scripts/fleet/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts/fleet')!r})\n")
     config = repo / "scripts/config"
     config.mkdir()
     (config / "fleet_repos.yaml").write_text(
@@ -80,11 +80,19 @@ def sandbox(tmp_path):
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
-    run_git(repo, "init", "--bare", str(remote))
+    run_git(repo, "init", "--bare", "-b", "main", str(remote))
     run_git(repo, "remote", "add", "origin", str(remote))
     run_git(repo, "push", "-u", "origin", "main")
     env = {**os.environ, "LU_TASKS_DIR": str(tasks)}
     env.pop("PYTHONPATH", None)
+    # Admission observes a disposable remote and an empty PR registry, never GitHub.
+    binary_dir = tmp_path / "admission-bin"
+    binary_dir.mkdir()
+    gh = binary_dir / "gh"
+    gh.write_text(f"#!{sys.executable}\nimport sys\n"
+                  "assert sys.argv[1:3] == ['pr', 'list'], sys.argv\nprint('[]')\n")
+    gh.chmod(0o755)
+    env["PATH"] = str(binary_dir) + os.pathsep + env.get("PATH", os.defpath)
 
     def cli(*args, expected=0, stdin=None):
         result = subprocess.run(
@@ -100,7 +108,10 @@ def sandbox(tmp_path):
         return result
 
     def dispatch(model="echo", *args):
-        result = cli("dispatch", "--agent", "sol", "--model", model, "--prompt", "literal final response", *args)
+        if "workspace-write" in args and "--owned-path" not in args:
+            args = (*args, "--owned-path", "delivered.txt", "--owned-path", "fix.txt")
+        result = cli("dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--provider", model,
+                     "--prompt", "literal final response", *args)
         task_id, nonce = result.stdout.splitlines()
         return task_id, nonce
 
@@ -353,26 +364,28 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     stdout = "\n".join(json.dumps(event) for event in events)
     executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r})\n")
     executable.chmod(0o755)
-    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + sandbox.env["PATH"]
     sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
     run_git(sandbox.repo, "branch", "review-source")
+    run_git(sandbox.repo, "push", "origin", "review-source")
     dispatched = sandbox.cli(
         "dispatch",
         "--agent",
         "grok",
         "--model",
-        "requested-model-is-not-proof",
+        "grok-4.7-high",
         "--prompt",
         "The prompt claims Grok 4.7 256K High",
         "--mode",
         mode,
         "--branch",
         "review-source",
+        "--owned-path", "delivered.txt",
     )
     record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if mode == "read-only" else 1)
     known = len(models) == 1
     assert record["schema_version"] == 2
-    assert record["model"] == "requested-model-is-not-proof"
+    assert record["model"] == "grok-4.7-high"
     assert record["resolved_model"] == ("Grok 4.7 256K High" if known else "unknown")
     assert record["resolved_model_known"] is known
     assert record["resolved_model_source"] == ("cursor-stream-json" if known else "pending")
@@ -404,6 +417,8 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     record = sandbox.settle(result.stdout.splitlines())
     original = b"exact\nbytes\n"
     injected = rules_core.with_core(original.decode()).encode()
+    assert injected.startswith(rules_core.core_block('core').encode() + b'\n\n')
+    assert injected.endswith(original)
     assert Path(record['prompt_file']).read_bytes() == original
     assert Path(record['effective_prompt_file']).read_bytes() == injected
     assert Path(record["prompt_file"]).with_suffix(".stdin").read_bytes() == injected
@@ -568,7 +583,7 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
     ("pushed-nested", "workspace-write", ["src/*.txt"], "done", None),
     ("pushed", "workspace-write", ["delivered"], "no_deliverable", "outside_owned_paths: delivered.txt"),
     ("pushed-nested", "workspace-write", ["src/"], "done", None),
-    ("pushed-dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
+    ("pushed-dirty", "workspace-write", ["delivered.txt"], "no_deliverable", "worktree_dirty_or_unknown"),
     ("echo", "read-only", ["other/"], "done", None),
     ("dirty", "read-only", ["other/"], "done", None),
     ("pushed", "read-only", ["other/"], "done", None),
@@ -769,7 +784,8 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
         flags = ["--branch", "feature-x"]
     (tree / "outside.txt").write_text("previous task\n")
     run_git(tree, "add", "outside.txt")
-    run_git(tree, "commit", "-m", "preexisting outside scope")
+    run_git(tree, "commit", "-m", "preexisting outside scope\n\nX-Agent: codex/gpt-6.1-sol")
+    run_git(tree, "push", "origin", "HEAD")
     starting_head = run_git(tree, "rev-parse", "HEAD")
     result = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write",
                                             "--owned-path", "delivered.txt", *flags))
@@ -834,7 +850,7 @@ def test_prior_worker_origin_poisoning_refuses_dispatch_and_fails_closed(sandbox
     run_git(tree, "clone", "--bare", str(sandbox.remote), str(fake))
     run_git(tree, "remote", "set-url", "origin", str(fake))
     result = sandbox.cli(
-        "dispatch", "--agent", "sol", "--model", "pushed", "--prompt", "deliver",
+        "dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--provider", "pushed", "--prompt", "deliver",
         "--task-id", "poisoned", "--mode", "workspace-write", "--owned-path", "delivered.txt", expected=2,
     )
     assert "origin must match the registered canonical repository URL" in result.stderr
@@ -1156,9 +1172,10 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
     """Prefix tricks and supervisor crashes cannot falsify pinned-branch delivery evidence."""
     pinned = "codex/existing-pr"
     run_git(sandbox.repo, "branch", pinned, "main")
-    if target not in {None, "prefix"}:
-        run_git(sandbox.repo, "push", "origin", pinned)
+    run_git(sandbox.repo, "push", "origin", pinned)
     task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
+    if target in {None, "prefix"}:
+        run_git(sandbox.remote, "update-ref", "-d", f"refs/heads/{pinned}")
     record_path = sandbox.tasks / f"{task[0]}.json"
     record = json.loads(record_path.read_text())
     assert record["publish_branch"] == pinned
@@ -1185,7 +1202,8 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
     else:
         Path(record["prompt_file"]).with_suffix(".release").touch()
     delivery_error = (
-        "worktree_dirty_or_unknown" if dirty else "no_commits_or_unknown" if not commits
+        "owned_paths_verification_failed" if target in {None, "prefix", "unrelated"}
+        else "worktree_dirty_or_unknown" if dirty else "no_commits_or_unknown" if not commits
         else "work_not_pushed_or_unknown" if expected != "pushed" else None
     )
     observed = sandbox.settle(task, expected=1 if crash or delivery_error else 0)

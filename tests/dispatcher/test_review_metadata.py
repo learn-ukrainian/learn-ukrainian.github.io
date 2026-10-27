@@ -1,6 +1,7 @@
 """Review metadata loss and subject self-review must fail before a paid launch."""
 
 import json
+import subprocess
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -13,6 +14,10 @@ from scripts.review.subject_seat import classify_owned_path
 
 @pytest.fixture
 def dispatch(tmp_path, monkeypatch):
+    # The metadata fixture is a sibling repository with a verifiable canonical origin.
+    subprocess.run(["git", "init", "-q", "-b", "fixture", str(tmp_path)], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(tmp_path), "remote", "add", "origin",
+                    "https://github.com/example/public.git"], check=True, timeout=30)
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
@@ -22,6 +27,8 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(worker, "start", start)
 
     def invoke(*flags, agent="sol", model="gpt-6.1-sol", expected=0):
+        if "workspace-write" in flags and "--owned-path" not in flags:
+            flags = (*flags, "--owned-path", "docs/review.md")
         assert cli.main(["dispatch", "--agent", agent, "--model", model, "--task-id", "review",
                          "--prompt", "Review this change", *flags]) == expected
         if expected:
