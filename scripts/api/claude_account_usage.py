@@ -89,6 +89,7 @@ from scripts.agent_runtime.attempt_boundary import (
     _open_claude_directory,
     claude_accounts_file,
     load_claude_account_binding,
+    renew_claude_login,
 )
 from scripts.api.subscription_usage import _codexbar_bin, _codexbar_cache_ttl_s, _parse_resets_at_any
 from scripts.common import scratch
@@ -335,13 +336,15 @@ def account_binding(label: str, *, verified: _Watch | None = None) -> Iterator[_
     for a missing, invalid or unsafe binding, one that names the default
     directory (that would count one account twice), or one whose directory does
     not hold the bound account. Either label is refused unless the provider names
-    the bound account as the owner of the directory's credentials. Background
-    only: it reads, parses and may ask the provider.
+    the bound account as the owner of the directory's credentials. A renewable
+    login is renewed first, before any fact is taken (``renew_claude_login``).
+    Background only: it reads, parses and may ask the provider.
     """
     if label == DEFAULT_CLAUDE_ACCOUNT:
         home = Path.home()
         default, record = home / ".claude", home / _LOGIN_RECORD
         with _open_default_directory(default) as directory:
+            renew_claude_login(default, directory)
             recorded_facts = _facts_before_reading(record, "claude_account_config")
             recorded = _claude_config_account_uuid(record)
             account = recorded.strip().lower() if isinstance(recorded, str) else ""
@@ -362,6 +365,7 @@ def account_binding(label: str, *, verified: _Watch | None = None) -> Iterator[_
             info = None
         if info is not None and (selected.st_dev, selected.st_ino) == (info.st_dev, info.st_ino):
             raise ClaudeAccountRefused("claude_account_binding_is_default")
+        renew_claude_login(binding.config_dir, directory)
         recorded_facts = _facts_before_reading(_LOGIN_RECORD, "claude_account_config", dir_fd=directory)
         if _claude_config_account_uuid(Path(_LOGIN_RECORD), dir_fd=directory) != binding.account_uuid:
             raise ClaudeAccountRefused("claude_account_unverified")

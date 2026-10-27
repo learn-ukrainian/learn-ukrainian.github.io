@@ -957,9 +957,11 @@ def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monke
         boundary.cleanup()
 
 
-def test_linux_claude_auth_selects_fresh_or_refreshable_credentials(world, monkeypatch):
-    """Access-token expiry alone does not expire a refreshable account's login."""
+def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
+    """No sandbox gets a known-expired token: a renewable default credential refuses, unrenewed."""
     from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    monkeypatch.setattr(attempt_boundary, "_run_claude_renewal", lambda _directory: pytest.fail("renewed"))
 
     _, home = world
     credential = home / ".claude" / ".credentials.json"
@@ -974,7 +976,8 @@ def test_linux_claude_auth_selects_fresh_or_refreshable_credentials(world, monke
     credential.write_text(
         json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": refresh, "expiresAt": 0}})
     )
-    assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}
+    with pytest.raises(ReviewIsolationError, match="expired"):
+        linux_claude_auth()
     credential.chmod(0o644)
     with pytest.raises(ReviewIsolationError, match="not_private"):
         linux_claude_auth()
@@ -982,9 +985,7 @@ def test_linux_claude_auth_selects_fresh_or_refreshable_credentials(world, monke
     credential.write_text(json.dumps({"claudeAiOauth": {"accessToken": access, "expiresAt": 0}}))
     with pytest.raises(ReviewIsolationError, match="expired"):
         linux_claude_auth()
-    credential.write_text(
-        json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": {}, "expiresAt": 0}})
-    )
+    credential.write_text(json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": {}, "expiresAt": 0}}))
     with pytest.raises(ReviewIsolationError, match="expired"):
         linux_claude_auth()
     credential.write_text(
@@ -1201,6 +1202,7 @@ def two_accounts(world, tmp_path, monkeypatch):
     )
     identities.update({accounts.default_token: DEFAULT_ACCOUNT_UUID, accounts.bound_token: BOUND_ACCOUNT_UUID})
     accounts.profile_calls = calls
+    accounts.identities = identities
     _credentials(home / ".claude" / ".credentials.json", accounts.default_token)
     (home / ".claude").chmod(0o700)
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
@@ -1216,6 +1218,38 @@ def two_accounts(world, tmp_path, monkeypatch):
     )
     monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(accounts.binding))
     return accounts
+
+
+def _renewable(path: Path, token: str) -> None:
+    """A login whose access token is past ``expiresAt`` beside a refresh credential."""
+    _credentials(path, token)
+    record = json.loads(path.read_text())
+    record["claudeAiOauth"]["expiresAt"] = 0
+    _private_json(path, record)
+
+
+# Fails on f181a42959: the preflight sent the expired access token to the provider,
+# which refuses it, so the bound account stayed unresolved.
+def test_bound_preflight_renews_then_proves_the_renewed_token(two_accounts, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    path = two_accounts.config_dir / ".credentials.json"
+    _renewable(path, two_accounts.bound_token)
+    renewed = "fixture-renewed-" + "r" * 30
+    two_accounts.profile_calls.clear()
+    del two_accounts.identities[two_accounts.bound_token]  # the provider refuses the expired token
+    two_accounts.identities[renewed] = BOUND_ACCOUNT_UUID
+    renewals = []
+
+    def renew(config_dir):
+        renewals.append(config_dir)
+        _credentials(path, renewed)
+
+    monkeypatch.setattr(attempt_boundary, "_claude_renewals", {})
+    monkeypatch.setattr(attempt_boundary, "_run_claude_renewal", renew)
+    assert linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": renewed}
+    assert renewals == [two_accounts.config_dir]
+    assert two_accounts.profile_calls == [renewed]
 
 
 def test_selected_material_must_match_bound_identity(two_accounts):

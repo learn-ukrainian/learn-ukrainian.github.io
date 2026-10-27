@@ -91,6 +91,16 @@ _CLAUDE_AMBIENT_AUTH_ENV = (
     "CLAUDE_API_KEY",
     "CLAUDE_CODE_OAUTH_TOKEN",
 )
+# A renewable login is renewed by Claude Code itself with one fixed one-token
+# request: no customization, MCP server, tool or saved session.
+CLAUDE_RENEWAL_INTERVAL_S = 600.0
+_CLAUDE_RENEWAL_TIMEOUT_S = 60.0
+_CLAUDE_RENEWAL_REQUEST = ("-p", "Reply with OK.", "--model", "claude-haiku-5-5")
+_CLAUDE_RENEWAL_ISOLATION = ("--safe-mode", "--tools", "", "--strict-mcp-config", "--no-session-persistence")
+_CLAUDE_RENEWAL_ENV_NAMES = ("PATH", "LANG", "LC_ALL", "LC_CTYPE", "TZ")
+_CLAUDE_RENEWAL_HOME_ENV = ("HOME", "TMPDIR", "XDG_CONFIG_HOME", "XDG_CACHE_HOME", "XDG_DATA_HOME", "XDG_STATE_HOME")
+_claude_renewals: dict[str, float] = {}  # config directory -> monotonic time of its last renewal attempt
+_claude_renewal_lock = threading.Lock()
 # Claude Code (2.1.300) takes a Linux host for WSL when either variable is set
 # or the kernel string names it, and then also reads the Windows machine policy
 # chain (registry included), which no check here can enumerate (#10619).
@@ -718,6 +728,7 @@ def _validated_claude_selection(
             _refuse_claude_settings_credential_source(directory)
             _refuse_policy_caches(directory)
             _refuse_profile_store(env)
+            renew_claude_login(binding.config_dir, directory)
             try:
                 selected = _claude_oauth_record(Path(".credentials.json"), dir_fd=directory)
             except ReviewIsolationError as exc:
@@ -749,16 +760,34 @@ def verify_claude_account(label: str, *, environ: Mapping[str, str] | None = Non
 
 
 def _claude_access_token(path: Path, *, dir_fd: int | None = None) -> str | None:
-    """An access token from fresh or refreshable credentials; ``None`` when absent."""
+    """A fresh access token from a Claude credentials file; ``None`` when absent."""
     selected = _claude_oauth_record(path, dir_fd=dir_fd)
     return None if selected is None else selected[0]
 
 
 def _claude_oauth_record(path: Path, *, dir_fd: int | None = None) -> tuple[str, dict] | None:
-    """Read fresh or refreshable credentials; live authentication still needs proof.
+    """A fresh access token and its whole ``claudeAiOauth`` record; ``None`` when absent.
 
-    ``expiresAt`` describes the access token, not the refresh credential. Its
-    timestamp alone cannot establish that the account's login has expired.
+    A renewable record is still expired here: its access token is refused, so
+    only ``renew_claude_login`` acts on it, never a provider or a sandbox.
+    """
+    from scripts.review.isolation import ReviewIsolationError
+
+    selected = _claude_oauth_state(path, dir_fd=dir_fd)
+    if selected is None:
+        return None
+    state, token, oauth = selected
+    if state != "ok":
+        raise ReviewIsolationError("attempt_claude_auth_expired")
+    return token, oauth
+
+
+def _claude_oauth_state(path: Path, *, dir_fd: int | None = None) -> tuple[str, str, dict] | None:
+    """Classify a credentials file from structure alone: ``ok`` or ``renewable``, with its token and record.
+
+    ``renewable``: the access token is past ``expiresAt`` but the record holds a
+    refresh credential, which Claude Code can use to renew the login. Expired
+    without one, invalid, oversized or not private raises; ``None`` when absent.
     """
     from scripts.review.isolation import ReviewIsolationError
 
@@ -788,21 +817,93 @@ def _claude_oauth_record(path: Path, *, dir_fd: int | None = None) -> tuple[str,
             and bool(refresh.strip())
             and not any(c in refresh for c in "\n\r\0")
         )
-        if expires <= (time.time() + 60) * 1000 and not refreshable:
+        if expires > (time.time() + 60) * 1000:
+            return "ok", token, oauth
+        if not refreshable:
             raise ReviewIsolationError("attempt_claude_auth_expired")
-        return token, oauth
+        return "renewable", token, oauth
     except (ValueError, KeyError, TypeError) as exc:
         raise ReviewIsolationError("attempt_claude_auth_invalid") from exc
     finally:
         os.close(fd)
 
 
-def linux_claude_auth(account: str | None = None) -> dict[str, str]:
-    """Select an access token from fresh or refreshable credentials.
+def renew_claude_login(config_dir: Path, directory: int) -> None:
+    """Let Claude Code renew a renewable login in place, at most once per directory per interval.
 
-    ``--bare`` ignores file-backed login. Auth staging supports keychain selection
-    on Darwin. Linux needs equivalent selection from its credential file, never a home grant,
-    refresh token, login mutation or copied credential store.
+    ``directory`` is the held descriptor of ``config_dir``. Only the CLI uses the
+    refresh credential; this process reads none of it and no sandbox receives
+    it. Callers then read and prove the credentials as usual, so a skipped,
+    failed or unfinished renewal still refuses them as expired.
+    """
+    from scripts.review.isolation import ReviewIsolationError
+
+    try:
+        selected = _claude_oauth_state(Path(".credentials.json"), dir_fd=directory)
+    except ReviewIsolationError:
+        return
+    if selected is None or selected[0] != "renewable":
+        return
+    now = time.monotonic()
+    with _claude_renewal_lock:
+        last = _claude_renewals.get(str(config_dir))
+        if last is not None and now - last < CLAUDE_RENEWAL_INTERVAL_S:
+            return
+        _claude_renewals[str(config_dir)] = now
+    _run_claude_renewal(config_dir)
+
+
+def _run_claude_renewal(config_dir: Path) -> None:
+    """One fixed one-token request with only ``config_dir``'s login, bounded and silent.
+
+    The child has a private home, no ambient credential, no customization, MCP
+    server or tool, and no saved session; its output is discarded and its whole
+    process group is killed on every path.
+    """
+    from scripts.agent_runtime.adapters.claude import _default_claude_bin
+    from scripts.common.scratch import ensure_scratch_root
+
+    claude = _default_claude_bin()
+    if claude is None:
+        return
+    with tempfile.TemporaryDirectory(prefix="lu-claude-renewal-", dir=ensure_scratch_root()) as home:
+        env = {name: os.environ[name] for name in _CLAUDE_RENEWAL_ENV_NAMES if os.environ.get(name)}
+        env.update(dict.fromkeys(_CLAUDE_RENEWAL_HOME_ENV, home))
+        env["CLAUDE_CONFIG_DIR"] = str(config_dir)
+        try:
+            proc = subprocess.Popen(
+                [claude, *_CLAUDE_RENEWAL_REQUEST, *_CLAUDE_RENEWAL_ISOLATION],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                env=env,
+                cwd=home,
+                close_fds=True,
+                start_new_session=True,
+            )
+        except OSError:
+            return
+        deadline = time.monotonic() + _CLAUDE_RENEWAL_TIMEOUT_S
+        try:
+            # Wait without reaping, so the group id stays reserved for the kill below.
+            while os.waitid(os.P_PID, proc.pid, os.WEXITED | os.WNOWAIT | os.WNOHANG) is None:
+                if time.monotonic() >= deadline:
+                    break
+                time.sleep(0.05)
+        finally:
+            with contextlib.suppress(ProcessLookupError, PermissionError):
+                os.killpg(proc.pid, signal.SIGKILL)
+            proc.wait()
+
+
+def linux_claude_auth(account: str | None = None) -> dict[str, str]:
+    """Select only a fresh access token; --bare ignores file-backed login.
+
+    The existing auth staging supports keychain selection on Darwin. Linux
+    needs equivalent selection from its credential file, never a home grant,
+    refresh token, login mutation or copied credential store. A renewable
+    default credential refuses as expired before any sandbox is built; a bound
+    label's preflight renews it first.
 
     ``account`` is the run's label. The default label (or none) keeps the
     legacy selection: an ambient credential, else the default credential file.
