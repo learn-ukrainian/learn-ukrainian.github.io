@@ -35,7 +35,7 @@ def run_git(repo, *args):
 
 
 @pytest.fixture
-def sandbox(tmp_path):
+def sandbox(tmp_path, hermetic_monitor):
     repo, tasks = tmp_path / "public", tmp_path / "tasks"
     remote = tmp_path / "remote.git"
     repo.mkdir()
@@ -57,6 +57,9 @@ def sandbox(tmp_path):
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
     (repo / "scripts/fleet/__init__.py").touch()
+    # D5: expose only the credit reader, keeping the common reaper stub isolated.
+    for name in ("credit_lane.py", "claude_account_lane.py"):
+        shutil.copy(SOURCE / "scripts/fleet" / name, repo / "scripts/fleet" / name)
     config = repo / "scripts/config"
     config.mkdir()
     (config / "fleet_repos.yaml").write_text(
@@ -76,6 +79,7 @@ def sandbox(tmp_path):
         )
     )
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
+    shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
@@ -2003,3 +2007,275 @@ def test_dispatch_popen_failure_records_worktree_head(tmp_path, monkeypatch) -> 
     assert state["pid"] is None
     assert state["error"] == "worker_spawn_failed: Popen failed: FileNotFoundError: no such file"
     assert state["head_sha"] == "a" * 40
+# D5 ports of legacy admission contracts; originals remain untouched.
+@pytest.fixture
+def admission_dispatch(sandbox, monkeypatch):
+    """Ported setup from test_delegate_admission::_stub_worktree and credit_lane::dispatch_env."""
+    from scripts.dispatcher import cli
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(git, "ROOT", sandbox.repo)
+    monkeypatch.setattr(git, "CONFIG", sandbox.repo / "scripts/config/fleet_repos.yaml")
+    spawned = []
+
+    def start(spec, record, prompt, hard_timeout):
+        store.create(record, prompt)
+        record.update(pid=os.getpid(), process_start=worker._identity(os.getpid()))
+        store.replace(record)
+        spawned.append(record)
+
+    monkeypatch.setattr(worker, "start", start)
+
+    def dispatch(*flags, model="echo", mode="workspace-write", task_id="adm-worker"):
+        return cli.main(["dispatch", "--agent", "sol", "--model", model, "--mode", mode,
+                         "--task-id", task_id, "--prompt", "Map the parser flags.", *flags])
+
+    yield SimpleNamespace(dispatch=dispatch, box=sandbox, spawned=spawned)
+    # The fake supervisor is this test process; release its records before sandbox cancellation.
+    for path in sandbox.tasks.glob("*.json"):
+        record = json.loads(path.read_text())
+        if record.get("pid") == os.getpid():
+            record["status"] = "done"
+            store.replace(record, path)
+
+
+def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line."""
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
+    assert admission_dispatch.dispatch("--dry-run") == 3
+    refusal = [line for line in capsys.readouterr().err.splitlines() if "admission" in line]
+    assert refusal == [
+        "❌ dispatch admission refused for a workspace-write worker: live write workers 0/0 reached the cap "
+        "(DISPATCH_MAX_LIVE_WRITE_WORKERS=0). Wait for a worker to finish or for the host to recover, raise the "
+        'threshold through the named environment variable, or pass --force-admission "<reason>" to override.'
+    ]
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_read_only_dispatch_is_exempt(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_read_only_dispatch_is_exempt."""
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
+    assert admission_dispatch.dispatch(mode="read-only") == 0
+    assert "admission" not in capsys.readouterr().err
+    assert "admission" not in store.read("adm-worker")
+
+
+def test_full_shared_pool_refuses_a_write_worker(admission_dispatch, tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_dispatch_admission.py::test_full_shared_pool_refuses_a_write_worker."""
+    from tests.test_dispatch_admission import _fake_pool
+
+    pool = _fake_pool(tmp_path / "lu.slice", current=21 * 1024**3, file_cache=1024**3 // 2)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    assert admission_dispatch.dispatch() == 3
+    assert ("lu.slice non-cache use 20.5 GiB plus a 2.5 GiB worker reserve exceeds MemoryHigh 21.0 GiB "
+            "(DISPATCH_WORKER_MEM_RESERVE_GIB=2.5)") in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.repo / ".worktrees").exists()
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_file_cache_does_not_count_against_the_pool(admission_dispatch, tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_dispatch_admission.py::test_file_cache_does_not_count_against_the_pool."""
+    from tests.test_dispatch_admission import _fake_pool
+
+    pool = _fake_pool(tmp_path / "lu.slice", current=28 * 1024**3, file_cache=14 * 1024**3)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    assert admission_dispatch.dispatch() == 0
+    assert "lu.slice 14.0/21.0 GiB non-cache (+14.0 GiB file cache; worker reserve 2.5 GiB)" in capsys.readouterr().err
+    record = store.read("adm-worker")
+    assert record["admission"]["pool_nonreclaimable_gib"] == 14.0
+    assert record["admission"]["pool_file_cache_gib"] == 14.0
+    assert record["admission"]["pool_limit_gib"] == 21.0
+
+
+def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_locked_recheck_refuses_a_dispatch_that_lost_the_race."""
+    from scripts.dispatcher import host_admission as admission
+    from scripts.orchestration import dispatch_admission
+
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
+    real_evaluate = admission.evaluate
+    calls = []
+
+    def evaluate_after_competitor(mode, **kwargs):
+        calls.append(kwargs)
+        if len(calls) == 2:
+            record = dict(schema_version=2, task_id="competitor", status="running", mode="workspace-write",
+                          pid=os.getpid(), process_start=worker._identity(os.getpid()))
+            store.replace(record)
+        return real_evaluate(mode, **kwargs)
+
+    monkeypatch.setattr(admission, "evaluate", evaluate_after_competitor)
+    monkeypatch.setattr(git, "create_worktree", lambda *_a, **_k: pytest.fail("must not create a worktree"))
+    assert admission_dispatch.dispatch() == 3
+    assert len(calls) == 2
+    assert "live write workers 1/1 reached the cap" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+    assert dispatch_admission.scan_task_records(admission_dispatch.box.tasks).live_task_ids == ("competitor",)
+
+
+def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(admission_dispatch, monkeypatch):
+    """Ported from tests/test_delegate_admission.py::test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created."""
+    from scripts.guardrails.delegate_ownership import _task_still_active
+    from scripts.orchestration import dispatch_admission
+
+    seen = {}
+    create = git.create_worktree
+
+    def create_worktree(*args, **kwargs):
+        held = store.read("adm-worker")
+        seen["record"] = held
+        seen["live"] = dispatch_admission.scan_task_records(admission_dispatch.box.tasks).live_task_ids
+        assert _task_still_active("adm-worker", os.getpid(), admission_dispatch.box.tasks, created_at=0)
+        assert [state["task_id"] for _, state in dispatch_admission.iter_active_records(
+            admission_dispatch.box.tasks)] == ["adm-worker"]
+        return create(*args, **kwargs)
+
+    monkeypatch.setattr(git, "create_worktree", create_worktree)
+    assert admission_dispatch.dispatch() == 0
+    held = seen["record"]
+    assert held["status"] == "spawning" and held["pid"] is None and held["mode"] == "workspace-write"
+    assert held[dispatch_admission.ADMISSION_HOLD_KEY]["owner_pid"] == os.getpid()
+    assert seen["live"] == ("adm-worker",)
+    final = store.read("adm-worker")
+    assert dispatch_admission.ADMISSION_HOLD_KEY not in final
+    assert final["run_nonce"] == held["run_nonce"]
+    assert final["admission"] == held["admission"]
+
+
+def test_dispatch_that_stops_after_admission_drops_its_hold(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_dispatch_that_stops_after_admission_drops_its_hold."""
+    def disappear(*_args, **_kwargs):
+        assert store.read("adm-worker")["admission_hold"]
+        raise ValueError("worktree disappeared before its task record was published")
+
+    monkeypatch.setattr(git, "create_worktree", disappear)
+    assert admission_dispatch.dispatch() == 2
+    assert "disappeared before its task record was published" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_admission_marks_a_record_whose_dispatcher_died_crashed(admission_dispatch):
+    """Ported from tests/test_delegate_admission.py::test_admission_marks_a_record_whose_dispatcher_died_crashed."""
+    from scripts.dispatcher import host_admission as admission
+    from scripts.orchestration import dispatch_admission
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    pid, start = exited_process_identity()
+    record = dict(schema_version=2, task_id="orphan", run_nonce="nonce-orphan", status="spawning", pid=None,
+                  mode="workspace-write", started_at=store.now(),
+                  admission_hold=dict(run_nonce="nonce-orphan", owner_pid=pid, owner_start=start))
+    admission_dispatch.box.tasks.mkdir(exist_ok=True)
+    store.replace(record)
+    decision = admission.evaluate("workspace-write", sweep=True)
+    assert decision.live_task_ids == ()
+    assert decision.dead_task_ids == ("orphan",)
+    healed = store.read("orphan")
+    assert healed["status"] == "crashed"
+    assert healed["returncode_reason"] == dispatch_admission.ORPHANED_HOLD_REASON
+    assert "marked crashed by admission probe" in healed["stderr_excerpt"]
+    assert "admission_hold" not in healed
+
+
+@pytest.mark.parametrize("model", ["gpt-6-astra", "gpt-5-codex", "claude-opus-5-5"])
+def test_admission_refuses_off_allowlist_model_on_credit_balance_lane(admission_dispatch, monkeypatch, capsys, model):
+    """Ported from tests/test_credit_lane.py::test_admission_refuses_off_allowlist_model_on_credit_balance_lane."""
+    from scripts.fleet import credit_lane
+    from tests.test_credit_lane import _credit_balance_snapshot
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", _credit_balance_snapshot)
+    assert admission_dispatch.dispatch(model=model, mode="read-only") == 2
+    err = capsys.readouterr().err
+    assert "❌ dispatch refused: CREDIT_PERIOD_MODEL_REFUSED: lane codex is credit_balance_present" in err
+    assert f"model {model} is outside the credit-period allowlist [gpt-6.1-sol, gpt-6-luna]" in err
+    assert "credit_lanes.yaml" in err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.repo / ".worktrees").exists()
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+@pytest.mark.parametrize("model", ["gpt-6.1-sol", "gpt-6-luna", "codex:gpt-6-luna", "GPT-6.1-Sol", None])
+def test_admission_accepts_allowlisted_and_default_models_without_reading_state(monkeypatch, model):
+    """Ported from tests/test_credit_lane.py::test_admission_accepts_allowlisted_and_default_models_without_reading_state."""
+    from scripts.dispatcher import host_admission as admission
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_k: pytest.fail("must not read state"))
+    assert admission.credit_period_refusal("codex", model) is None
+
+
+def test_force_admission_records_the_reason(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_force_admission_records_the_reason."""
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
+    assert admission_dispatch.dispatch("--force-admission", "hotfix #1234 while one worker drains") == 0
+    assert "overridden by --force-admission ('hotfix #1234 while one worker drains')" in capsys.readouterr().err
+    decision = store.read("adm-worker")["admission"]
+    assert decision["admitted"] is False
+    assert decision["forced"] is True
+    assert decision["force_reason"] == "hotfix #1234 while one worker drains"
+    assert decision["max_live_write_workers"] == 0
+
+
+def test_force_admission_requires_a_reason(admission_dispatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_force_admission_requires_a_reason."""
+    assert admission_dispatch.dispatch("--force-admission", "   ") == 2
+    assert "--force-admission requires a non-empty reason" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+
+
+def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate."""
+    from tests.test_delegate_admission import _full_disk
+
+    disk = _full_disk(monkeypatch, 90.0)
+    assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
+    assert len(disk["reaper"]) == 1
+    assert "--force-admission cannot override a full disk" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+    assert not (admission_dispatch.box.repo / ".worktrees").exists()
+
+
+def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_locked_recheck_holds_a_disk_refusal_against_a_force_reason."""
+    from tests.test_delegate_admission import _full_disk
+
+    disk = _full_disk(monkeypatch, 60.0, 90.0)
+    monkeypatch.setattr(git, "create_worktree", lambda *_a, **_k: pytest.fail("must not create a worktree"))
+    assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
+    assert disk["reaper"] == []
+    err = capsys.readouterr().err
+    assert "disk 90.0% used" in err and "--force-admission cannot override a full disk" in err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_force_admission_skips_the_early_refusal(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_force_admission_skips_the_early_refusal."""
+    from scripts.orchestration import dispatch_admission
+    from tests.test_delegate_admission import _OVERLOADED
+
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+    assert admission_dispatch.dispatch("--force-admission", "drain one worker") == 0
+    assert "overridden by --force-admission ('drain one worker'): MemAvailable 1.0 GiB" in capsys.readouterr().err
+    assert store.read("adm-worker")["admission"]["forced"] is True
+
+
+def test_early_refusal_reports_an_invalid_threshold_as_an_invalid_request(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_early_refusal_reports_an_invalid_threshold_as_an_invalid_request."""
+    monkeypatch.setenv("DISPATCH_MIN_MEM_AVAILABLE_GIB", "-1")
+    assert admission_dispatch.dispatch() == 2
+    assert "invalid dispatch admission threshold: DISPATCH_MIN_MEM_AVAILABLE_GIB='-1' must be zero or more" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+
+
+def test_read_only_dispatch_on_an_overloaded_host_is_exempt(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_read_only_dispatch_on_an_overloaded_host_is_exempt."""
+    from scripts.orchestration import dispatch_admission
+    from tests.test_delegate_admission import _OVERLOADED
+
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+    assert admission_dispatch.dispatch(mode="read-only") == 0
+    assert "admission" not in capsys.readouterr().err
