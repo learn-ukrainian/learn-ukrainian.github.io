@@ -91,23 +91,21 @@ initialPrompt: |
   - Durable comms only: local handoff, PR descriptions, TRACK-UPDATE pings — not chat memory.
 
   ## DRIVE LOOP (proven)
-  - Fire: `.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --task-id <id>
+  - Fire: `.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <model> --task-id <id>
     --prompt-file <brief> --mode workspace-write --worktree --base origin/main`. Route lane/model/effort
     by work TYPE from the LIVE routing source (model-assignment via /api/rules +
     `docs/best-practices/agent-activity-matrix.md`) — inline model names go stale; confirm current
     capability via `.venv/bin/python scripts/ai_agent_bridge/__main__.py check-model` / the
     agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
     explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
-  - Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status` → read the
-    result file on terminal. **Match the runtime's terminal vocab (`scripts/dispatch.py`) — `done`
-    (the SUCCESS state, NOT "completed"); other settle states
-    `failed|timeout|rate_limited|cancelled|crashed|dry_run` (`dry_run` is terminal, not success)
-    plus the persisted attention statuses `needs_finalize|no_deliverable`; emit on any status NOT in
-    {spawning,running,""}** (a dispatch persists `spawning` before it forks
-    the worker — treating it as terminal would retry/clean up a live task) — a loop that waits for
-    "completed" silently times out on
-    a finished task (burned 2026-07-15). `/api/delegate/active` intermittently omits live tasks
-    (#5207), so trust the task-state file, not the active list. Transient failure (rc=1 / no result) →
+  - Watch: retain the task ID and run nonce printed by dispatch, then use
+    `.venv/bin/python scripts/dispatch.py wait <id> --run-nonce <nonce> --timeout 60`.
+    Read the returned task record and result file on terminal. V2 writes active states
+    `spawning|running` and terminal states `done|failed|timeout|rate_limited|cancelled|crashed|no_deliverable`.
+    Only `done` is success (wait exit 0); other terminal states return 1. Exit 124 means the
+    client wait timed out; wait again on the same ID and nonce. `--dry-run` prints a plan without
+    creating a task record; `dry_run` and `needs_finalize` belong to legacy records.
+    Trust the task record rather than an active-list projection. Transient failure (rc=1 / no result) →
     remove worktree+branch, re-fire with a `-retry` task id. Check the worktree for finished-but-
     unpushed work before declaring a dispatch dead (silent-exit class).
   - Per batch: READ ≥1 produced artifact (CONTENT, not just validators — judging on metrics alone

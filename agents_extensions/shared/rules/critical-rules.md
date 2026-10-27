@@ -14,7 +14,7 @@
 **English**: all technical work. **Ukrainian**: curriculum content only.
 
 ### 4. External LLM Access
-Gemini-family work goes through the AGY lane (`ab ask-agy`, `dispatch.py --agent agy`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
+Gemini-family work goes through the AGY lane (`ab ask-agy`, `.venv/bin/python scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief>`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
 Code review eligibility follows the `model-assignment.md` Code review row.
 
 ### 5. Word Targets Are Minimums
