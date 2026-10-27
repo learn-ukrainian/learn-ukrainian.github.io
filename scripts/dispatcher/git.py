@@ -49,18 +49,23 @@ def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path 
 
 
 def canonical_origins(repository: dict) -> tuple[str, ...]:
-    """Derive exact destinations from the registry, never shared Git config."""
+    """Derive exact destinations from the registry, never shared Git config.
+
+    The registry ``transport`` is sibling clone policy, not repository identity:
+    any host may clone the same GitHub repository over HTTPS or SSH, so both
+    standard spellings of the registered identity are accepted for ``ssh`` and
+    ``https`` entries. Callers compare the full URL string against this tuple.
+    """
     github = repository["github"]
     transport = repository.get("transport", "ssh")
     if transport == "file" and Path(github).is_absolute():
         return (github,)
     if not re.fullmatch(r"[A-Za-z0-9_-][A-Za-z0-9_.-]*/[A-Za-z0-9_-][A-Za-z0-9_.-]*", github):
         raise ValueError("invalid registered repository identity")
-    if transport == "https":
-        return (f"https://github.com/{github}.git", f"https://github.com/{github}")
-    if transport == "ssh":
-        return (f"git@github.com:{github}.git", f"ssh://git@github.com/{github}.git")
-    raise ValueError("unsupported registered transport")
+    if transport not in ("https", "ssh"):
+        raise ValueError("unsupported registered transport")
+    bases = (f"https://github.com/{github}", f"git@github.com:{github}", f"ssh://git@github.com/{github}")
+    return tuple(base + suffix for base in bases for suffix in (".git", ""))
 
 
 def verification_origin(path: Path) -> str:
