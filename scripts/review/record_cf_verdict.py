@@ -125,8 +125,14 @@ def normalize_verdict(reply: str) -> str:
     visible = _without_code_fences(reply, keep_unclosed=False)
     if any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible)):
         findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply)}
-        for match in re.finditer(r"(?m)^ {0,3}\{", visible):
-            start = match.end() - 1
+        offset = 0
+        for line in _commonmark_lines(visible, keepends=True):
+            line_start = offset
+            offset += len(line)
+            match = re.match(r" {0,3}\{", line)
+            if match is None:
+                continue
+            start = line_start + match.end() - 1
             try:
                 _, end = json.JSONDecoder().raw_decode(visible, start)
             except ValueError:

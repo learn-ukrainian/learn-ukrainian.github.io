@@ -242,13 +242,21 @@ def test_findings_json_reaches_dispatch_and_recorder(correctness, priority, expe
     ("correct", "REQUEST_CHANGES"),
     ("incorrect", "APPROVE"),
 ])
-def test_findings_json_beside_contradicting_free_text_verdict_is_refused_by_recorder(correctness, verdict):
+@pytest.mark.parametrize("preamble,newline,indent", [
+    pytest.param("", "\n\n", None, id="original"),
+    pytest.param("Reviewed.\r", "\r", None, id="cr"),
+    pytest.param("Reviewed.\r\n", "\r\n", None, id="crlf"),
+    pytest.param("Reviewed.\r", "\r", 2, id="cr-indented-json"),
+])
+def test_findings_json_beside_contradicting_free_text_verdict_is_refused_by_recorder(
+    correctness, verdict, preamble, newline, indent,
+):
     from scripts.review.record_cf_verdict import RecordError, normalize_verdict
 
     response = json.dumps({
         "schema_version": "code-review-findings.v1",
         "overall": {"correctness": correctness, "explanation": "Reviewed the diff.", "confidence": 0.9},
         "findings": [],
-    })
+    }, indent=indent).replace("\n", newline)
     with pytest.raises(RecordError, match=r"findings payload.*verdict line"):
-        normalize_verdict(response + "\n\nVERDICT: " + verdict)
+        normalize_verdict(preamble + response + newline + "VERDICT: " + verdict)
