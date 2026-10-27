@@ -217,7 +217,7 @@ def _receipts(repo: Path) -> list[Path]:
     return sorted((repo / ".git/lu-pre-push-gate/receipts").glob("*.json"))
 
 
-# ---- both push paths run no tests; the kept stages still block (#11276) ----------------------------------
+# ---- git push runs no tests; the kept stages still block (#11276) ----------------------------------
 
 # Committed tripwires: each logs when a push loads it. pytest loads ``tests/conftest.py``; the gate's test
 # stage loaded the host test-slot governor and ran the affected-test selector, both from its own checkout.
@@ -4254,8 +4254,6 @@ def _tripwire(name: str, log: Path) -> str:
     )
 
 
-
-
 @pytest.fixture
 def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_opsec) -> Path:
     """``repo`` with the test-stage tripwires and the real OPSEC scanner hook at the ``pre-push`` stage."""
@@ -4305,8 +4303,6 @@ def _push(repo: Path, path: str) -> tuple[bool, str]:
         timeout=180,
     )
     return result.returncode == 0, result.stderr
-
-
 
 
 def _remote_feature(repo: Path) -> str:
@@ -4366,7 +4362,7 @@ KEPT_STAGES = {
 
 @pytest.mark.parametrize("path", PUSH_PATHS)
 @pytest.mark.parametrize("stage", list(KEPT_STAGES))
-def test_each_kept_stage_still_blocks_both_push_paths(push_repo: Path, path: str, stage: str) -> None:
+def test_each_kept_stage_still_blocks_git_push(push_repo: Path, path: str, stage: str) -> None:
     trip, reason, failing = KEPT_STAGES[stage]
     trip(push_repo)
 
@@ -4380,7 +4376,7 @@ def test_each_kept_stage_still_blocks_both_push_paths(push_repo: Path, path: str
 
 
 @pytest.mark.parametrize("path", PUSH_PATHS)
-def test_a_kept_stage_timeout_is_validation_incomplete_on_both_push_paths(
+def test_a_kept_stage_timeout_is_validation_incomplete_on_git_push(
     push_repo: Path, path: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("LU_PRE_PUSH_GATE_STAGE_BUDGET_S", "3")
