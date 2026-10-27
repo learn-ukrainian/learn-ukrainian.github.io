@@ -489,6 +489,9 @@ jobs:
       - name: Python CI environment
         if: github.event_name == 'pull_request'
         uses: ./.github/actions/python-ci-env
+      - name: Set up bubblewrap
+        if: github.event_name == 'pull_request'
+        run: bash scripts/ci/setup_bubblewrap.sh
       - name: Run changed test files and guards
         env:
           EVENT_NAME: ${{ github.event_name }}

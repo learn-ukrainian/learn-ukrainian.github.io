@@ -608,7 +608,18 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert 'pr-affected' in _ci_gate_job()['needs']
     checkout = next(s for s in job['steps'] if str(s.get('uses', '')).startswith('actions/checkout@'))
     assert checkout['with'] == {'persist-credentials': False, 'fetch-depth': 0}
+    setup = next(s for s in job['steps'] if s.get('name') == 'Set up bubblewrap')
+    assert setup['if'] == "github.event_name == 'pull_request'"
+    assert setup['run'] == 'bash scripts/ci/setup_bubblewrap.sh'
+    assert not setup.get('continue-on-error', False)
+    shared = (_REPO_ROOT / 'scripts/ci/setup_bubblewrap.sh').read_text()
+    assert 'set -euo pipefail' in shared
+    assert 'for pkg in bubblewrap "$@" apparmor; do' in shared
+    assert 'bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true' in shared
+    postgres = (_REPO_ROOT / 'scripts/ci/start_postgres.sh').read_text()
+    assert 'bash "$(dirname "${BASH_SOURCE[0]}")/setup_bubblewrap.sh" postgresql-16 libpq-dev' in postgres
     step = next(s for s in job['steps'] if s.get('name') == 'Run changed test files and guards')
+    assert job['steps'].index(setup) < job['steps'].index(step)
     assert '.venv/bin/python -m scripts.ci.pr_affected_tests' in step['run']
     assert '"$EVENT_NAME" = pull_request' in step['run']
     for status in ('failure', 'skipped', 'cancelled', '', 'unknown'):

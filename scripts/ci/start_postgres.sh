@@ -12,34 +12,7 @@ set -euo pipefail
 : "${LEARN_UKRAINIAN_CP_PG_DSN:?LEARN_UKRAINIAN_CP_PG_DSN must be set}"
 : "${RUNNER_TEMP:?RUNNER_TEMP must be set}"
 
-sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google* \
-  /var/lib/apt/lists/*chrome* /var/lib/apt/lists/*google*
-missing=()
-for pkg in bubblewrap postgresql-16 libpq-dev apparmor; do
-  dpkg -s "$pkg" >/dev/null 2>&1 || missing+=("$pkg")
-done
-if [ "${#missing[@]}" -gt 0 ]; then
-  echo "Installing missing native packages: ${missing[*]}"
-  if ! sudo apt-get install -y --no-install-recommends "${missing[@]}"; then
-    echo 'apt install failed against the image package lists; refreshing and retrying'
-    sudo apt-get update -qq
-    sudo apt-get install -y --no-install-recommends "${missing[@]}"
-  fi
-fi
-
-# Ubuntu-hosted runners require an application-specific userns grant. This
-# profile belongs only to the disposable CI VM.
-if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
-  cat > "${RUNNER_TEMP}/v4-ci-bwrap.apparmor" <<'PROFILE'
-abi <abi/4.0>,
-include <tunables/global>
-profile v4_ci_bwrap /usr/bin/bwrap flags=(unconfined) {
-  userns,
-}
-PROFILE
-  sudo apparmor_parser -r "${RUNNER_TEMP}/v4-ci-bwrap.apparmor"
-fi
-bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true
+bash "$(dirname "${BASH_SOURCE[0]}")/setup_bubblewrap.sh" postgresql-16 libpq-dev
 
 if ! pg_lsclusters --no-header | grep -q '^16 main '; then
   sudo pg_createcluster 16 main
