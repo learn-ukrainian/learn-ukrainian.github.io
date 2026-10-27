@@ -590,6 +590,23 @@ def refuse_claude_machine_policy() -> None:
         raise ClaudeAccountRefused(f"claude_account_machine_policy_{state}")
 
 
+def _refuse_claude_launch(directory: int, account_uuid: str, env: Mapping[str, str]) -> dict:
+    """Every gate a Claude Code start against this login directory must pass (#10619); return its login account.
+
+    The preflight and the renewal both start Claude Code there, and that start
+    applies the directory's ``.claude.json`` env map and runs machine policy
+    before any request, so both pass the same gates first.
+    """
+    if platform.system() != "Linux" or _claude_host_is_wsl(env):
+        raise ClaudeAccountRefused("claude_account_platform_unsupported")
+    refuse_claude_machine_policy()
+    account = _checked_login_global_config(directory, account_uuid)
+    _refuse_claude_settings_credential_source(directory)
+    _refuse_policy_caches(directory)
+    _refuse_profile_store(env)
+    return account
+
+
 def _claude_host_is_wsl(env: Mapping[str, str]) -> bool:
     """Whether Claude Code would take this Linux host for WSL, as it decides it (2.1.300)."""
     if any(env.get(name) for name in _CLAUDE_WSL_ENV):
@@ -703,9 +720,6 @@ def _validated_claude_selection(
         raise ClaudeAccountRefused("claude_account_ambient_conflict")
     try:
         binding = load_claude_account_binding(label, environ=env)
-        if platform.system() != "Linux" or _claude_host_is_wsl(env):
-            raise ClaudeAccountRefused("claude_account_platform_unsupported")
-        refuse_claude_machine_policy()
         with _open_claude_directory(binding.config_dir) as directory:
             selected = os.fstat(directory)
             ambient = env.get("CLAUDE_CONFIG_DIR")
@@ -724,11 +738,8 @@ def _validated_claude_selection(
                     raise ClaudeAccountRefused("claude_account_binding_is_default")
             if _claude_config_account_uuid(home / ".claude.json") == binding.account_uuid:
                 raise ClaudeAccountRefused("claude_account_binding_is_default")
-            account = _checked_login_global_config(directory, binding.account_uuid)
-            _refuse_claude_settings_credential_source(directory)
-            _refuse_policy_caches(directory)
-            _refuse_profile_store(env)
-            renew_claude_login(binding.config_dir, directory)
+            account = _refuse_claude_launch(directory, binding.account_uuid, env)
+            renew_claude_login(binding.config_dir, directory, binding.account_uuid)
             try:
                 selected = _claude_oauth_record(Path(".credentials.json"), dir_fd=directory)
             except ReviewIsolationError as exc:
@@ -828,13 +839,16 @@ def _claude_oauth_state(path: Path, *, dir_fd: int | None = None) -> tuple[str, 
         os.close(fd)
 
 
-def renew_claude_login(config_dir: Path, directory: int) -> None:
+def renew_claude_login(config_dir: Path, directory: int, account_uuid: str) -> None:
     """Let Claude Code renew a renewable login in place, at most once per directory per interval.
 
-    ``directory`` is the held descriptor of ``config_dir``. Only the CLI uses the
-    refresh credential; this process reads none of it and no sandbox receives
-    it. Callers then read and prove the credentials as usual, so a skipped,
-    failed or unfinished renewal still refuses them as expired.
+    ``directory`` is the held descriptor of ``config_dir``, whose login must
+    belong to ``account_uuid``. Only the CLI uses the refresh credential; this
+    process reads none of it and no sandbox receives it. The CLI is started
+    only after every launch gate passes (``_refuse_claude_launch``), so the
+    refresh exchange never runs where a normal launch would be refused.
+    Callers then read and prove the credentials as usual, so a refused,
+    skipped, failed or unfinished renewal still refuses them as expired.
     """
     from scripts.review.isolation import ReviewIsolationError
 
@@ -843,6 +857,10 @@ def renew_claude_login(config_dir: Path, directory: int) -> None:
     except ReviewIsolationError:
         return
     if selected is None or selected[0] != "renewable":
+        return
+    try:
+        _refuse_claude_launch(directory, account_uuid, os.environ)
+    except (OSError, ValueError):  # ClaudeAccountRefused included
         return
     now = time.monotonic()
     with _claude_renewal_lock:
@@ -858,9 +876,10 @@ def _run_claude_renewal(config_dir: Path) -> None:
 
     The child has a private home, no ambient credential, no customization, MCP
     server or tool, and no saved session; its output is discarded and its whole
-    process group is killed on every path.
+    process group is killed on every path. Like a labelled run, it loads no
+    user-scope settings, so no key helper or settings env from ``config_dir``.
     """
-    from scripts.agent_runtime.adapters.claude import _default_claude_bin
+    from scripts.agent_runtime.adapters.claude import LABELLED_ACCOUNT_SETTING_SOURCES, _default_claude_bin
     from scripts.common.scratch import ensure_scratch_root
 
     claude = _default_claude_bin()
@@ -872,7 +891,13 @@ def _run_claude_renewal(config_dir: Path) -> None:
         env["CLAUDE_CONFIG_DIR"] = str(config_dir)
         try:
             proc = subprocess.Popen(
-                [claude, *_CLAUDE_RENEWAL_REQUEST, *_CLAUDE_RENEWAL_ISOLATION],
+                [
+                    claude,
+                    *_CLAUDE_RENEWAL_REQUEST,
+                    *_CLAUDE_RENEWAL_ISOLATION,
+                    "--setting-sources",
+                    LABELLED_ACCOUNT_SETTING_SOURCES,
+                ],
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,

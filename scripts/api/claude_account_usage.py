@@ -337,19 +337,20 @@ def account_binding(label: str, *, verified: _Watch | None = None) -> Iterator[_
     directory (that would count one account twice), or one whose directory does
     not hold the bound account. Either label is refused unless the provider names
     the bound account as the owner of the directory's credentials. A renewable
-    login is renewed first, before any fact is taken (``renew_claude_login``).
+    login is renewed before its credentials are read, and only where the
+    launch gates admit that directory (``renew_claude_login``).
     Background only: it reads, parses and may ask the provider.
     """
     if label == DEFAULT_CLAUDE_ACCOUNT:
         home = Path.home()
         default, record = home / ".claude", home / _LOGIN_RECORD
         with _open_default_directory(default) as directory:
-            renew_claude_login(default, directory)
             recorded_facts = _facts_before_reading(record, "claude_account_config")
             recorded = _claude_config_account_uuid(record)
             account = recorded.strip().lower() if isinstance(recorded, str) else ""
             if not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(account):
                 raise ClaudeAccountRefused("claude_account_unverified")  # no recorded account to prove
+            renew_claude_login(default, directory, account)  # its private home leaves ``record`` untouched
             yield _proven(label, default, directory, account, [(record, False, recorded_facts)], verified)
         return
     binding_file = claude_accounts_file()
@@ -365,7 +366,7 @@ def account_binding(label: str, *, verified: _Watch | None = None) -> Iterator[_
             info = None
         if info is not None and (selected.st_dev, selected.st_ino) == (info.st_dev, info.st_ino):
             raise ClaudeAccountRefused("claude_account_binding_is_default")
-        renew_claude_login(binding.config_dir, directory)
+        renew_claude_login(binding.config_dir, directory, binding.account_uuid)
         recorded_facts = _facts_before_reading(_LOGIN_RECORD, "claude_account_config", dir_fd=directory)
         if _claude_config_account_uuid(Path(_LOGIN_RECORD), dir_fd=directory) != binding.account_uuid:
             raise ClaudeAccountRefused("claude_account_unverified")

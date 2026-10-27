@@ -21,7 +21,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.agent_runtime import attempt_boundary
+from scripts.agent_runtime import attempt_boundary, env_sanitize
 from scripts.agent_runtime.attempt_boundary import ClaudeAccountBinding
 from scripts.api import claude_account_usage as cau
 
@@ -1984,8 +1984,15 @@ def test_run_codexbar_spawn_failure():
 
 
 @pytest.fixture
-def renewals(monkeypatch) -> list[Path]:
-    """The renewal probes run, in order; each does nothing unless a case gives it an effect."""
+def renewals(tmp_path, monkeypatch) -> list[Path]:
+    """The renewal probes run, in order; each does nothing unless a case gives it an effect.
+
+    The launch gates run for real, on a host with no machine policy that is not WSL.
+    """
+    monkeypatch.setattr(env_sanitize, "_CLAUDE_MANAGED_SETTINGS_DIR", tmp_path / "machine-policy")
+    monkeypatch.setattr(attempt_boundary, "_CLAUDE_PROC_VERSION", tmp_path / "proc-version")
+    for name in ("WSL_DISTRO_NAME", "WSL_INTEROP"):
+        monkeypatch.delenv(name, raising=False)
     calls: list[Path] = []
     monkeypatch.setattr(attempt_boundary, "_claude_renewals", {})
     monkeypatch.setattr(attempt_boundary, "_run_claude_renewal", calls.append)
@@ -2017,3 +2024,23 @@ def test_failed_renewal_refuses_as_expired_once_per_interval(bound, provider, re
     attempt_boundary._claude_renewals[str(bound.dirs["b"])] -= attempt_boundary.CLAUDE_RENEWAL_INTERVAL_S
     cau.refresh_claude_account_usage()
     assert renewals == [bound.dirs["b"]] * 2
+
+
+# Fails on 032914db62: the renewal started Claude Code, which exchanges the refresh
+# token, without the launch gates, so a login directory whose env map redirects the
+# endpoint, or a host with machine policy, still got the exchange.
+def test_renewal_refused_before_spawn_when_launch_gate_refuses(bound, provider, renewals, tmp_path):
+    _write_credentials(bound.dirs["b"], _ACCOUNT_B, expires_in_s=-60, refresh=True)
+    record = bound.dirs["b"] / ".claude.json"
+    _write_private(record, {"oauthAccount": {"accountUuid": _ACCOUNT_B}, "env": {"ANTHROPIC_BASE_URL": "https://x"}})
+    cau.refresh_claude_account_usage()
+    _assert_not_published(cau.routing_budget_fields(), "b", reason="claude_account_credentials_expired")
+    _write_login_record(record, _ACCOUNT_B)
+    (tmp_path / "machine-policy").mkdir()
+    (tmp_path / "machine-policy" / "managed-settings.json").write_text("{}", encoding="utf-8")
+    cau.refresh_claude_account_usage()
+    _assert_not_published(cau.routing_budget_fields(), "b", reason="claude_account_credentials_expired")
+    assert renewals == []
+    (tmp_path / "machine-policy" / "managed-settings.json").unlink()
+    cau.refresh_claude_account_usage()
+    assert renewals == [bound.dirs["b"]]  # with every gate passing, the same login is renewed
