@@ -737,6 +737,10 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
         if "fetch" in args:
             timeline.append("fetch")
             fetched.append(args)
+            if len(fetched) == 1:
+                return subprocess.CompletedProcess(
+                    args, 1, "", ("error: fetching ref refs/remotes/origin/main failed: incorrect old value provided\n")
+                )
             before = trace.stat().st_size if trace.exists() else 0
             result = real_run_git(repo_root, *args)
             fetch_traces.append(trace.read_bytes()[before:])
@@ -748,7 +752,11 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     monkeypatch.setattr(cleanup, "_run_git", spy_run_git)
     monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: timeline.append("reaper") or [])
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "reap_worktrees",
+        lambda **kwargs: timeline.append("reaper" if kwargs["preserve_then_reap"] else "no-preservation") or [],
+    )
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
@@ -767,8 +775,8 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
 
     result = cleanup._repo_result(repo, apply=True)
 
-    assert timeline == ["fetch", "reaper", "fetch", "gc"]
-    assert fetched == [("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")] * 2
+    assert timeline == ["fetch", "fetch", "reaper", "fetch", "gc"]
+    assert fetched == [("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")] * 3
     assert fetch_traces and not any(_maintenance_child(argv) for blob in fetch_traces for argv in _trace_children(blob))
     assert result["maintenance"]["action"] == "ran"
     assert result["maintenance"]["ok"] is True

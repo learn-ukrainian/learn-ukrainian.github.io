@@ -94,7 +94,21 @@ def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
     ``gc --auto`` before this process reaches the reaper (#10856). The
     explicit ``git gc --auto`` after the reaper stays the only maintenance.
     """
-    return _run_git(repo_root, *reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
+    args = (*reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
+    fetched = _run_git(repo_root, *args)
+    diagnostics = [line for line in (fetched.stderr or "").splitlines() if line.startswith(("error:", "fatal:"))]
+    old_value = r"error: fetching ref refs/remotes/origin/[^\s]+ failed: incorrect old value provided"
+    lock_race = r"error: cannot lock ref 'refs/remotes/origin/[^']+': is at [0-9a-f]+ but expected [0-9a-f]+"
+    if (
+        fetched.returncode
+        and any(re.fullmatch(old_value, line) for line in diagnostics)
+        and all(re.fullmatch(f"(?:{old_value}|{lock_race})", line) for line in diagnostics)
+    ):
+        # Re-read the remote and current local refs. Never repair a ref by
+        # deleting it or accept the failed fetch as containment evidence.
+        print("Origin fetch old-value race; retrying fetch once", file=sys.stderr)
+        return _run_git(repo_root, *args)
+    return fetched
 
 
 def _failure(proc: subprocess.CompletedProcess[str]) -> str:
@@ -1119,7 +1133,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         rows = reap_worktrees.reap_worktrees(
             repo_root=repo_root,
             apply=apply,
-            preserve_then_reap=False,
+            preserve_then_reap=terminal_dispatch_reaping_enabled(),
             prune_merged_branches=True,
             safe_only=True,
             live_cwds=live_cwds,

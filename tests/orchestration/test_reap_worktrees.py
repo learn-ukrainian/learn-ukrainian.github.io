@@ -1038,7 +1038,7 @@ def test_merged_dirty_is_preserved_by_default(
     (worktree / "dirty.txt").write_text("not committed\n", encoding="utf-8")
     patch_gh(monkeypatch, {"codex/dirty": [{"number": 13, "state": "MERGED"}]})
 
-    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    results = rw.reap_worktrees(repo_root=repo, apply=True, preserve_then_reap=True, include_terminal_dispatches=True)
 
     result = result_for(results, worktree)
     assert result.action == "skipped"
@@ -1197,11 +1197,13 @@ def test_class_a_settled_dispatch_removed(
     assert not worktree_path.exists()
 
 
-def test_settled_dispatch_with_unpushed_local_commit_is_skipped_unpushed_head(
+def test_settled_dispatch_unpublished_preservation_prevents_loss_of_index_and_output(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Settled dispatch worktree with unpushed commits must NOT be reaped (skip: unpushed_head)."""
+    """Explicit preservation must retrieve unpublished Git, index and output bytes before reap."""
+    from scripts.fleet import ignored_task_output as output
+
     repo = init_repo(tmp_path)
     task_id = "grok-unpushed-task"
     worktree_path = repo / ".worktrees" / "dispatch" / "grok" / task_id
@@ -1212,30 +1214,89 @@ def test_settled_dispatch_with_unpushed_local_commit_is_skipped_unpushed_head(
     git(worktree_path, "add", "deliverable.txt")
     git(worktree_path, "commit", "-m", "feat: unpushed deliverable")
 
-    # Set task status to done
+    head = git(worktree_path, "rev-parse", "HEAD")
+    baseline = output.creation_inventory(worktree_path, primary=repo, task_id=task_id, run_nonce="original")
+    (worktree_path / "deliverable.txt").write_text("staged deliverable\n")
+    git(worktree_path, "add", "deliverable.txt")
+    (worktree_path / "deliverable.txt").write_text("working deliverable\n")
+    (worktree_path / "untracked.txt").write_text("untracked deliverable\n")
+    (worktree_path / "batch_state").mkdir()
+    (worktree_path / "batch_state" / "answer.txt").write_text("ignored deliverable\n")
+    index = Path(git(worktree_path, "rev-parse", "--git-path", "index")).read_bytes()
+    index_patch = git(worktree_path, "diff", "--binary", "--full-index", "--cached", head)
+    working_patch = git(worktree_path, "diff", "--binary", "--full-index")
+    # Set task status to done with authentic creation evidence.
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
+    pid, started = exited_process_identity()
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "done",
+                "worktree_path": str(worktree_path),
+                "worktree_branch": "grok/grok-unpushed-task",
+                "worktree_reused": False,
+                "ignored_output_baseline": baseline,
+                "run_nonce": "original",
+                "pid": pid,
+                "pid_start_time": started,
+            }
+        ),
+        encoding="utf-8",
+    )
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {"grok/grok-unpushed-task": []})
 
+    planned = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=False,
+            preserve_then_reap=True,
+            live_cwds=set(),
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+        ),
+        worktree_path,
+    )
+    assert planned.action == "would_preserve_then_remove", planned.reason
+    assert not (repo / "batch_state/preserved").exists()
+
     results = rw.reap_worktrees(
         repo_root=repo,
         apply=True,
+        preserve_then_reap=True,
         live_cwds=set(),
         merged_pr_only=True,
         include_terminal_dispatches=True,
     )
     result = result_for(results, worktree_path)
-    assert result.action == "skipped"
-    assert result.reason == "unpushed_head"
-    assert worktree_path.exists()
-    assert (worktree_path / "deliverable.txt").read_text(encoding="utf-8") == "precious deliverable\n"
-    journal = reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
-    assert '"event": "skip"' in journal
-    assert '"reason": "unpushed_head"' in journal
+    assert result.action == "preserved_then_removed", (result.reason, result.error)
+    assert not worktree_path.exists()
+    assert git(repo, "rev-parse", result.recovery_ref) == head
+    snapshot = result.preserved_artifacts["git_snapshot"]
+    saved = repo / snapshot["location"]
+    assert (saved / "index").read_bytes() == index
+    assert (saved / "index.patch").read_text().strip() == index_patch
+    assert (saved / "working.patch").read_text().strip() == working_patch
+    assert snapshot["head_sha"] == head
+    assert snapshot["recovery_ref"] == result.recovery_ref
+    assert (saved / "head.patch").read_text().endswith("+precious deliverable\n")
+    assert output.verify_retrieval(repo, snapshot["output"])
+    copied = repo / snapshot["output"]["location"]
+    assert (copied / "untracked.txt").read_text() == "untracked deliverable\n"
+    assert (copied / "batch_state" / "answer.txt").read_text() == "ignored deliverable\n"
+    assert git(repo, "rev-parse", "grok/grok-unpushed-task") == head
+
+    recovered = tmp_path / "recovered-unpublished"
+    git(repo, "worktree", "add", "--detach", str(recovered), result.recovery_ref)
+    git(recovered, "apply", "--index", str(saved / "index.patch"))
+    git(recovered, "apply", str(saved / "working.patch"))
+    assert git(recovered, "show", ":deliverable.txt") == "staged deliverable"
+    assert (recovered / "deliverable.txt").read_text() == "working deliverable\n"
 
 
 def test_terminal_dispatch_class_reaps_only_explicit_terminal_task(

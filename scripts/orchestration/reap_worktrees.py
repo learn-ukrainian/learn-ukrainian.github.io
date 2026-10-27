@@ -4775,6 +4775,152 @@ def _enter_dispatch_worktree_guard(
     return worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=still_settled, **claim_scan)
 
 
+def _unpublished_snapshot(
+    repo_root: Path, info: WorktreeInfo, recovery_ref: str | None, saved: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """Preserve exact Git state without staging or changing the unpublished checkout.
+
+    Called under the dispatch lock, then again at the common removal boundary.
+    The saved bytes are evidence only; current claims and liveness still bind.
+    """
+    from scripts.fleet import ignored_task_output as output
+
+    primary = control_plane_root(repo_root)
+    tasks = task_store_paths.tasks_dir()
+    matches = output.matching_worktree_records(info.path, tasks, repo_root=primary, publish_cache=False)
+    path, creator = output.reused_worktree_creator(matches, info.path, repo_root=primary, tasks_dir=tasks)
+    identity, nonce = creator.get("task_id"), creator.get("run_nonce")
+    baseline = creator.get("ignored_output_baseline", {})
+    directory = info.path.stat()
+    if (
+        not isinstance(identity, str)
+        or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity) is None
+        or path not in (tasks / f"{identity}.json", tasks / "archive" / f"{identity}.json")
+        or not isinstance(nonce, str)
+        or not nonce.strip()
+        or baseline.get("schema") != "ignored-baseline.v1"
+        or baseline.get("task_id") != identity
+        or baseline.get("run_nonce") != nonce
+        or baseline.get("directory_identity") != [directory.st_dev, directory.st_ino]
+        or not isinstance(baseline.get("paths"), list)
+        or not all(output._baseline_entry_ok(entry) for entry in baseline["paths"])
+        or len({entry["path"] for entry in baseline["paths"]}) != len(baseline["paths"])
+        or any(
+            member.get("keep_worktree")
+            or member.get("status") not in _TERMINAL_DISPATCH_STATUSES
+            or member.get("lease_state") == "active"
+            or (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
+            or not _pid_proven_absent(member)
+            for _, member in matches
+        )
+    ):
+        raise ValueError("unpublished creator, retention or settled claim unverifiable")
+    records = {
+        str(member_path.relative_to(tasks)): hashlib.sha256(
+            json.dumps(
+                {
+                    key: value
+                    for key, value in member.items()
+                    if key not in {"preserved_artifacts", "artifact_preservation_error"}
+                },
+                sort_keys=True,
+            ).encode()
+        ).hexdigest()
+        for member_path, member in matches
+    }
+    head = _run(["git", "rev-parse", "HEAD", *([recovery_ref] if recovery_ref else [])], cwd=info.path)
+    base = _run(["git", "merge-base", "origin/main", info.head or "HEAD"], cwd=info.path)
+    split = _run(["git", "rev-parse", "--shared-index-path"], cwd=info.path)
+    if (
+        not info.head
+        or head.returncode
+        or head.stdout.splitlines() != [info.head] * (2 if recovery_ref else 1)
+        or worktree_claims.checked_out_branch(info.path) != info.branch
+        or base.returncode
+        or not base.stdout.strip()
+        or split.returncode
+        or split.stdout.strip()
+        or output.artifacts._git_paths(info.path, "--unmerged")
+        or any(entry.startswith("160000 ") for entry in output.artifacts._git_paths(info.path, "--stage"))
+    ):
+        raise ValueError("unpublished Git identity or index cannot be preserved")
+    patches = {}
+    for name, revisions in (
+        ("head.patch", [base.stdout.strip(), info.head]),
+        ("index.patch", ["--cached", info.head]),
+        ("working.patch", []),
+    ):
+        probe = output.artifacts.safe_git(
+            ["diff", "--binary", "--full-index", "--no-ext-diff", "--no-textconv", *revisions, "--"],
+            cwd=info.path,
+            env=output.artifacts._safe_git_env(),
+            capture_output=True,
+            check=True,
+            timeout=30,
+        )
+        patches[name] = probe.stdout
+    git_dir = _worktree_git_dir(info.path)
+    if git_dir is None:
+        raise ValueError("unpublished index location unavailable")
+    # Git status may refresh index stat data without changing staging. Keep
+    # the original raw index and compare semantic entries and flags at removal.
+    for name, args in (("index.entries", ["--stage"]), ("index.flags", ["-v"])):
+        probe = output.artifacts.safe_git(
+            ["ls-files", "-z", *args],
+            cwd=info.path,
+            env=output.artifacts._safe_git_env(),
+            capture_output=True,
+            check=True,
+            timeout=30,
+        )
+        patches[name] = probe.stdout
+    index = git_dir / "index" if saved is None else primary / saved["location"] / "index"
+    index_root = git_dir if saved is None else primary / "batch_state"
+    patches["index"] = output.artifacts._read_preserved_bytes(index, root=index_root).payload
+    if sum(map(len, patches.values())) > output.MAX_PRESERVED_BYTES:
+        raise ValueError("unpublished Git snapshot exceeds preservation cap")
+    binding = {
+        "head_sha": info.head,
+        "branch": info.branch,
+        "base_sha": base.stdout.strip(),
+        "recovery_ref": recovery_ref,
+        "records": records,
+        "files": {name: hashlib.sha256(payload).hexdigest() for name, payload in patches.items()},
+    }
+    if recovery_ref is None:
+        # Plan-time checks are read-only and cannot claim that a copy exists.
+        paths = output._abandon_output_inventory(info.path, primary=primary, record=creator)
+        if sum(entry["size"] for entry in paths) > output.MAX_PRESERVED_BYTES:
+            raise ValueError("unpublished output exceeds preservation cap")
+        return binding
+    if saved is None:
+        locator, _ = output.capture_abandon_output(info.path, primary=primary, record=creator)
+        parent = primary / "batch_state" / "preserved" / identity
+        saved = {**binding, "output": locator}
+        encoded = json.dumps(saved, sort_keys=True).encode()
+        destination = parent / ("git-" + hashlib.sha256(encoded).hexdigest())
+        if not destination.exists():
+            destination.mkdir(mode=0o700)
+            for name, payload in patches.items():
+                output.artifacts._write_verified_bytes(payload, destination / name)
+            # Publish the manifest last. An interrupted or failed write keeps
+            # the original checkout; only full retrieval below permits removal.
+            output.artifacts._write_verified_bytes(encoded, destination / "snapshot.json")
+        saved["location"] = destination.relative_to(primary).as_posix()
+    if any(saved.get(key) != value for key, value in binding.items()):
+        raise ValueError("unpublished checkout or task claims changed during preservation")
+    location = primary / saved["location"]
+    for name, payload in patches.items():
+        if output.artifacts._read_preserved_bytes(location / name, root=primary / "batch_state").payload != payload:
+            raise ValueError("unpublished Git snapshot retrieval failed")
+    encoded = output.artifacts._read_preserved_bytes(location / "snapshot.json", root=primary / "batch_state").payload
+    if json.loads(encoded) != {key: value for key, value in saved.items() if key != "location"}:
+        raise ValueError("unpublished snapshot manifest changed")
+    output.verify_retrieval(primary, saved["output"])
+    output.verify_abandon_output(info.path, primary=primary, record=creator, locator=saved["output"])
+    return saved
+
+
 def _reap_qualified_worktree(
     *,
     repo_root: Path,
@@ -4792,6 +4938,8 @@ def _reap_qualified_worktree(
 ) -> ReapResult:
     expected_head = info.head
     abandoning = reason.startswith("terminal-abandon.v1 ")
+    unpublished = reason.endswith("; preserve unpublished")
+    unpublished_snapshot = None
     if dirty is None:
         return ReapResult(
             path=str(info.path),
@@ -4851,7 +4999,9 @@ def _reap_qualified_worktree(
                 info.path, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
             )
             cohort = ignored_task_output._current_reuse_records(matches, task_store_paths.tasks_dir())
-            if abandoning:
+            if unpublished:
+                _unpublished_snapshot(repo_root, info, None)
+            elif abandoning:
                 if _terminal_abandon_matches(repo_root, info.path) is None:
                     raise ValueError("terminal-abandon proof disappeared")
             elif len(cohort) > 1:
@@ -4892,7 +5042,7 @@ def _reap_qualified_worktree(
                 dirty=dirty,
                 pr=_pr_dict(pr_state),
             )
-        action = "would_preserve_then_remove" if dirty else "would_remove"
+        action = "would_preserve_then_remove" if dirty or unpublished else "would_remove"
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
@@ -4962,7 +5112,10 @@ def _reap_qualified_worktree(
         pr_snapshot: tuple[list[PullRequestState], str | None] | None = None
         if reason.startswith("dispatch HEAD ancestor of origin/main"):
             live_origin = _live_origin_heads_present(info.path, info.branch)
-        if info.branch is not None and (
+        if unpublished:
+            states, _, _, errors = _review_pr_context(repo_root, info)
+            pr_snapshot = states, "; ".join(errors) if errors else None
+        elif info.branch is not None and (
             require_terminal_dispatch_guards or reason.startswith("dispatch HEAD ancestor of origin/main")
         ):
             pr_snapshot = _query_pr_states(repo_root, info.branch)
@@ -5046,7 +5199,7 @@ def _reap_qualified_worktree(
                         dirty=True,
                         pr=_pr_dict(pr_state),
                     )
-            if dirty and not abandoning:
+            if dirty and not abandoning and not unpublished:
                 preservation = {}
                 try:
                     preserve_error = _preserve_dirty_worktree(
@@ -5155,7 +5308,7 @@ def _reap_qualified_worktree(
                         pr=_pr_dict(pr_state),
                         owner=owner,
                     )
-            else:
+            elif not unpublished:
                 current_clean = _worktree_clean(info.path, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
                 if current_clean is not True:
                     return ReapResult(
@@ -5211,6 +5364,11 @@ def _reap_qualified_worktree(
                     info=info,
                     active_ids=current_active_ids,
                 )
+                if unpublished:
+                    settled, _ = _is_settled_dispatch_task(
+                        repo_root=repo_root, info=info, active_ids=current_active_ids
+                    )
+                    terminal_reason = reason if settled else None
                 activity = _activity_reason(
                     repo_root=repo_root,
                     info=info,
@@ -5218,7 +5376,7 @@ def _reap_qualified_worktree(
                     live_cwds=current_live_cwds,
                     check_pending=False,
                 )
-                if not _is_head_reachable_from_remote(info.path, current_head):
+                if not unpublished and not _is_head_reachable_from_remote(info.path, current_head):
                     return ReapResult(
                         path=str(info.path),
                         branch=info.branch,
@@ -5236,7 +5394,7 @@ def _reap_qualified_worktree(
                         dirty=dirty,
                         pr=_pr_dict(pr_state),
                     )
-                if info.branch is not None:
+                if info.branch is not None or unpublished:
                     if pr_snapshot is None:
                         current_prs, current_pr_error = [], "PR snapshot missing"
                     else:
@@ -5364,6 +5522,19 @@ def _reap_qualified_worktree(
                     pr=_pr_dict(pr_state),
                     error=recovery_error,
                 )
+            if unpublished:
+                try:
+                    unpublished_snapshot = _unpublished_snapshot(repo_root, info, recovery_ref)
+                except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+                    return ReapResult(
+                        str(info.path),
+                        info.branch,
+                        "skipped",
+                        f"unpublished preservation refused: {exc}",
+                        dirty,
+                        _pr_dict(pr_state),
+                        recovery_ref=recovery_ref,
+                    )
             if preservation is not None:
                 preservation["recovery_ref"] = recovery_ref
 
@@ -5392,7 +5563,7 @@ def _reap_qualified_worktree(
         try:
             merged_reuse_proof = (
                 None
-                if abandoning
+                if abandoning or unpublished
                 else _record_merged_reuse_proof(
                     control_root,
                     info,
@@ -5436,6 +5607,25 @@ def _reap_qualified_worktree(
 
         @contextlib.contextmanager
         def recheck_preservation(target: Path) -> Iterator[Path]:
+            if unpublished:
+                try:
+                    _unpublished_snapshot(repo_root, info, recovery_ref, unpublished_snapshot)
+                    current_ids, error = _resolve_activity_probe(repo_root, info, _read_active_task_probe())
+                    current_cwds = _live_cwd_paths(repo_root)
+                    settled, _ = _is_settled_dispatch_task(repo_root=repo_root, info=info, active_ids=current_ids)
+                    if error or current_ids is None or current_cwds is None or not settled:
+                        raise ValueError("unpublished activity unknown or changed before removal")
+                    activity = _activity_reason(
+                        repo_root=repo_root,
+                        info=info,
+                        active_ids=current_ids,
+                        live_cwds=current_cwds,
+                        check_pending=False,
+                    )
+                    if activity:
+                        raise ValueError(activity)
+                except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+                    raise worktree_claims.RemovalStageRefused(str(exc)) from exc
             # A replacement creator can hide the fresh proof from the output
             # selector. This removal still belongs to the original cohort.
             if merged_reuse_proof is not None and preservation is not None:
@@ -5459,12 +5649,14 @@ def _reap_qualified_worktree(
         @contextlib.contextmanager
         def stage_removal(target: Path) -> Iterator[Path]:
             nonlocal removal_started
-            with _measured_removal(measurement, recheck_preservation)(target) as staged:
+            check = contextlib.nullcontext if unpublished else recheck_preservation
+            with _measured_removal(measurement, check)(target) as staged:
                 # An open root descriptor can outlive a competing removal,
                 # leaving a successful walk of an already detached directory.
                 target.lstat()
                 try:
-                    yield staged
+                    with recheck_preservation(target) if unpublished else contextlib.nullcontext():
+                        yield staged
                 finally:
                     # Entry can fail before destructive Git. Once its body
                     # runs, even a stager finalizer failure follows our attempt.
@@ -5482,14 +5674,20 @@ def _reap_qualified_worktree(
                 stage_removal=stage_removal,
                 **approval,
             )
+        if unpublished_snapshot is not None:
+            preservation_receipt["git_snapshot"] = unpublished_snapshot
         preserved_artifacts = preservation_receipt or None
-        freed_bytes = _freed_bytes(measurement, preserved_artifacts)
+        # Snapshot and output archives also retain bytes outside the checkout.
+        # Do not report a freed-byte total that excludes those copies.
+        freed_bytes = None if unpublished else _freed_bytes(measurement, preserved_artifacts)
         if remove_error is not None:
             if not removal_started:
                 # Preservation and staging translate entry failures into
                 # refusals. Classify actual absence before reporting one.
                 target.lstat()
-            preservation_failed = remove_error.startswith("artifact preservation failed:")
+            preservation_failed = remove_error.startswith("artifact preservation failed:") or (
+                unpublished and remove_error.startswith(worktree_claims.REMOVAL_STAGE_REFUSED)
+            )
             return ReapResult(
                 path=str(info.path),
                 branch=info.branch,
@@ -5541,7 +5739,7 @@ def _reap_qualified_worktree(
         return ReapResult(
             path=str(info.path),
             branch=info.branch,
-            action="preserved_then_removed" if dirty else "removed",
+            action="preserved_then_removed" if dirty or unpublished else "removed",
             reason=reason,
             dirty=dirty,
             pr=_pr_dict(pr_state),
@@ -5878,6 +6076,19 @@ def reap_worktrees(
                 )
             )
             continue
+        if (
+            not foreign
+            and preserve_then_reap
+            and include_terminal_dispatches
+            and not pr_unknown
+            and not any(pr.state == "OPEN" for pr in all_pr_states)
+        ):
+            settled, status = _is_settled_dispatch_task(repo_root=repo_root, info=info, active_ids=active_ids)
+            if settled and (
+                reason is None or dirty is True or not _is_head_reachable_from_remote(info.path, info.head)
+            ):
+                task_id = _dispatch_task_id(repo_root, info)
+                reason = f"settled dispatch task-id={task_id} status={status}; preserve unpublished"
         if reason is None:
             if pr_state is not None and pr_state.state == "OPEN":
                 pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
@@ -5942,7 +6153,10 @@ def reap_worktrees(
                 dirty=dirty,
                 pr_state=pr_state,
                 apply=apply,
-                preserve_then_reap=preserve_then_reap,
+                preserve_then_reap=(
+                    preserve_then_reap
+                    and (not include_terminal_dispatches or reason.endswith("; preserve unpublished"))
+                ),
                 prune_merged_branches=prune_merged_branches,
                 require_terminal_dispatch_guards=(
                     include_terminal_dispatches and reason.startswith("settled dispatch task-id=")

@@ -254,13 +254,14 @@ open-model-data owner verifies it.
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
 
 - its pull request is open (`open_pr`);
-- its pull-request head does not exactly match the worktree HEAD, unless the PR
-  is `MERGED` and the origin branch is gone, or it lacks merge proof (`unmerged`);
+- its pull-request head lacks the required merge proof (`unmerged`), unless the
+  explicit preserve-then-reap terminal-dispatch path below verifies preservation;
 - its task is active or non-terminal, a live process has a working directory inside it,
   or an active task lease, rollover lease, write-ownership claim, or reap reservation exists (`active_dispatch`);
 - a non-terminal review attempt reads from it. The task record claims the deepest registered linked checkout containing each of these inputs, including subdirectories and symlink spellings: its `review_contract.input_root`, and every `review_input_paths` entry, namely the attempt manifest (dispatch resolves its path once at admission, so every later read and the worker use the symlink target, never the supplied spelling) and the worker's own code checkout (it runs from there for the whole attempt). A formal attempt takes no output schema (`--review-attempt` with `--output-schema` is refused). Inputs in the primary checkout, or outside any registered checkout, claim nothing. Before it reserves the attempt id, dispatch refuses a review contract without an `input_root`, and refuses the attempt when the fleet scratch root (`LU_SCRATCH_ROOT`, which holds the worker's runtime tmp lease) lies inside a registered linked checkout (`review_scratch_root_in_worktree`). It holds the shared removal lock of every claimed checkout during input preparation until the task record publishes the claims. Only a terminal task status ends the protection; an owner or settled-claim exemption does not, and a record with an unreadable or malformed claim, or an unavailable worktree registration, refuses removal rather than releasing it;
 - it is the repository's primary checkout (`primary`);
-- it has uncommitted changes or untracked files (`dirty`), which are retained as exceptions and never force-deleted;
+- it has uncommitted changes or untracked files (`dirty`) and explicit
+  preserve-then-reap has not verified recovery material;
 - it is in a detached HEAD or unresolvable state and does not meet the
   `detached_clean_contained` proof below (`detached_unknown`);
 - it encountered filesystem permission errors during evaluation or removal (`permission_error`), which are retained as exceptions;
@@ -325,8 +326,10 @@ The scheduled job reports terminal non-success dispatches older than six hours
 as rescue candidates in its result and status; it does not commit or push them.
 A clean tree with unpushed commits is flagged at task exit as
 `unpushed work - needs rescue` when the upstream count is known, or
-`unpushed state unknown - needs rescue` otherwise. The driver inspects the
-report and explicitly runs rescue when appropriate. Rescue commits dirty work
+`unpushed state unknown - needs rescue` otherwise. Candidate reporting never
+grants removal permission. The scheduled reaper may preserve and remove a
+settled unpublished tree only through the guarded path below. The driver
+explicitly runs rescue when publication is appropriate. Rescue commits dirty work
 on `rescue/<task-id>`, pushes it, and verifies the remote head with
 `git ls-remote`. A failed push, unverified remote head, or changed file over
 5 MB leaves the worktree in place. To inspect candidates without writing:
@@ -461,8 +464,31 @@ whose task record is explicitly `done`, `failed`, or `no_deliverable`, whose PID
 is dead, whose active-task and live-CWD probes are available and clear, and
 whose GitHub query confirms no open PR. Set `LU_REAPER_TERMINAL_DISPATCHES=0`
 to disable only this optional scheduled class during an incident; merged-clean
-reaping remains enabled. Before removal the reaper writes an
-append-only local journal, reserves the path as reap-pending, and creates a
+reaping remains enabled.
+
+With the terminal-dispatch class enabled, the scheduled caller also enables
+preserve-then-reap. Dirty work without a qualified snapshot remains protected.
+Settled unpublished dispatch work requires canonical creation inventory bound to the current directory and
+run, no retention claim, proven absent workers, and clear activity and PR
+probes. A private snapshot under the existing preserved-output root records
+HEAD, branch, base, recovery ref, binary head/index/working patches, the raw
+index, semantic index entries and flags, and verified untracked/ignored output.
+The checkout is neither staged nor committed by this path. Before common
+removal, the reaper re-reads current records and aliases, checks retention and
+late liveness, compares current Git state, and retrieves every saved byte.
+Preservation reuses its initial inventory for attribution and performs a fresh
+inventory after copying. Empty-output paths also recheck the inventory before
+returning. No inventory is reused across removals.
+Git's stat-only index refresh is allowed; staging entries and flags must match.
+Missing creators, unknown state, unmerged or split indexes, submodules and
+failed preservation retain the original. Rescue names alone grant nothing.
+The snapshot locator is in the result's `preserved_artifacts.git_snapshot`;
+its `snapshot.json` and output locator support retrieval. Freed bytes for this
+path remain unknown because the extra preservation copies are not measured.
+Existing retention rules apply unchanged.
+
+Before removal the reaper writes an append-only local journal, reserves the
+path as reap-pending, and creates a
 `refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
 reaps immediately. Apply mode also recovers interrupted reap reservations:
 new reservations record the holding PID, and recovery requires that PID to be
@@ -1309,8 +1335,11 @@ unmerged branch heads remain untouched.
 ~/.codex/worktree-cleanup/receipts/v2/
 ```
 
-An unavailable fetch or process-activity probe blocks apply for that
-repository. Standard output contains the same summary as the receipt.
+A fetch reporting an origin ref old-value race gets one ordinary fetch retry.
+Only a successful retry restores remote proof. Unrelated errors or a failed
+retry stay errors in the receipt, and remote-containment deletions remain
+blocked. An unavailable process-activity probe blocks apply for that repository.
+Standard output contains the same summary as the receipt.
 
 ## Linux systemd default
 

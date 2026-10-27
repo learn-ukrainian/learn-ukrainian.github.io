@@ -366,7 +366,7 @@ def _matching_worktree_records_once(
         resolved_worktree = worktree.resolve(strict=True)
     except (OSError, ValueError, RuntimeError):
         resolved_worktree = None
-    claim_paths: dict[str, Path] = {}
+    claim_paths: dict[str, Path | None] = {}
     cache_path = _identity_cache_path(tasks_dir)
     cached = _read_identity_cache(cache_path)
     identities = {}
@@ -489,11 +489,17 @@ def resolve_worktree_record(
     worktree: Path, tasks_dir: Path, *, repo_root: Path, publish_cache: bool = True
 ) -> tuple[Path | None, dict[str, Any]]:
     """Resolve the creator; multiple retention claims require a proven reuse cohort."""
+    matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
+    return _select_worktree_record(matches, worktree, tasks_dir, repo_root=repo_root)
+
+
+def _select_worktree_record(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, tasks_dir: Path, *, repo_root: Path
+) -> tuple[Path | None, dict[str, Any]]:
+    """Select from one current inventory; callers still re-read before removal."""
     from scripts.orchestration.worktree_claims import is_superseded_record
 
-    matches = _current_reuse_records(
-        matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache), tasks_dir
-    )
+    matches = _current_reuse_records(matches, tasks_dir)
     if len(matches) > 1:
         kept = [match for match in matches if match[1].get("keep_worktree")]
         if kept:
@@ -1361,7 +1367,7 @@ def _record_matches_worktree(
     *,
     repo_root: Path,
     resolved_worktree: Path | None = None,
-    claim_paths: dict[str, Path] | None = None,
+    claim_paths: dict[str, Path | None] | None = None,
 ) -> bool:
     """Task names are hints; only resolved filesystem identity binds a record."""
     from scripts.orchestration.worktree_claims import resolve_claim_path
@@ -1379,9 +1385,19 @@ def _record_matches_worktree(
         if not isinstance(location, str) or not location:
             continue
         try:
-            claimed = claim_paths.get(location) if claim_paths is not None else None
-            if claimed is None:
-                claimed = resolve_claim_path(location, repo_root=repo_root)
+            if claim_paths is not None and location in claim_paths:
+                claimed = claim_paths[location]
+            else:
+                path = Path(location).expanduser()
+                if not path.is_absolute():
+                    path = repo_root / path
+                # Kernel lookup follows symlinks without a Python realpath
+                # walk for every unrelated historical checkout. Only equal
+                # inodes need the existing canonical-path comparison. This
+                # memo belongs to one current-byte inventory, never a run.
+                claimed = (
+                    resolve_claim_path(location, repo_root=repo_root) if path.samefile(resolved_worktree) else None
+                )
                 if claim_paths is not None:
                     claim_paths[location] = claimed
             if claimed == resolved_worktree:
@@ -1510,7 +1526,12 @@ def preserve_worktree_artifacts(
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
-        matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+        matches = matching_worktree_records(
+            worktree,
+            tasks_dir,
+            repo_root=repo_root,
+            publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
+        )
         merged_preservation = any(
             isinstance(member.get("worktree_reap_proof"), dict) and "preservation" in member["worktree_reap_proof"]
             for _, member in _current_reuse_records(matches, tasks_dir)
@@ -1525,12 +1546,7 @@ def preserve_worktree_artifacts(
             disposition_members = matches
         try:
             if disposition is None:
-                record_path, record = resolve_worktree_record(
-                    worktree,
-                    tasks_dir,
-                    repo_root=repo_root,
-                    publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
-                )
+                record_path, record = _select_worktree_record(matches, worktree, tasks_dir, repo_root=repo_root)
                 if record_path is None and any(member.get("worktree_reap_proof") for _, member in matches):
                     # Zero creators resolve to no owner rather than raising.
                     # Reuse the same proof verifier as ambiguous creators below.
@@ -1564,12 +1580,13 @@ def preserve_worktree_artifacts(
         if merged_preservation:
             disposition = "merged"
             disposition_members = matches
-        members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         merged_abandon = disposition == "abandon" and "merged_pr" in record["worktree_abandon"]
-        kept = any(member.get("keep_worktree") for _, member in members) and not merged_abandon
+        kept = any(member.get("keep_worktree") for _, member in matches) and not merged_abandon
 
         files = output_files()
         if not files and not absent and not kept:
+            if matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False) != matches:
+                raise ValueError("task records changed during preservation")
             if disposition == "merged":
                 _preservation_merged_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
             return True, "", None
@@ -1672,10 +1689,12 @@ def preserve_worktree_artifacts(
         # cannot have its keep flag overwritten by this gate's earlier snapshot.
         with artifacts.task_state_lock(record_path):
             current = json.loads(record_path.read_text(encoding="utf-8"))
+            # Reuse only the initial attribution inventory. Copying is followed
+            # by a full current-byte, alias and retention scan for every class.
+            current_members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+            if current_members != matches:
+                raise ValueError("task records changed during preservation")
             if disposition is not None:
-                current_members = matching_worktree_records(
-                    worktree, tasks_dir, repo_root=repo_root, publish_cache=False
-                )
                 if current_members != disposition_members:
                     raise ValueError("disposition task records changed during preservation")
                 if disposition == "abandon":
