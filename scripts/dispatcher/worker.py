@@ -12,7 +12,7 @@ from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import git, providers, store
+from scripts.dispatcher import advisory, advisory_completion, git, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 
@@ -48,6 +48,10 @@ def _observe(record: dict) -> dict:
 
 
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+    try:
+        spec, prompt = advisory.prepare(spec, record, prompt, hard_timeout)
+    except advisory.contract.AdvisoryRefused as exc:
+        raise ValueError(str(exc)) from None
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
@@ -225,8 +229,13 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             except (OSError, ValueError):
                 status, error = "failed", "output schema binding invalid"
                 return
+        spec = advisory.snapshot(spec, spec.prompt_file.read_bytes())
+        advisory.handoff(spec, record, options, hard_timeout)
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
+        checked = advisory.handoff(spec, store.read(spec.task_id, record["run_nonce"]), options, hard_timeout)
+        if checked is not None:
+            record["advisory_prompt_sha256"] = checked
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             child = subprocess.Popen(
                 invocation.argv,
@@ -273,6 +282,10 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                     status, error = "failed", "review_ambiguous_verdict"
             except Exception:
                 status, error = "failed", "review_gate_error"
+    except advisory.contract.AdvisoryRefused as exc:
+        status, error = "failed", f"worker refused before start: {exc}"
+        record.update(failure_reason=exc.code, last_error=exc.code,
+                      returncode_reason="bounded model without a valid advisory admission; provider not started")
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
     except subprocess.TimeoutExpired:
@@ -288,6 +301,10 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         if text is not None:
             spec.final_file.write_text(text)
             spec.final_file.chmod(0o600)
+            if record.get("advisory_role") is not None:
+                record[advisory.contract.SEAL_FIELD] = advisory.contract.seal_advisor_result(
+                    text, model=spec.model, run_nonce=record["run_nonce"],
+                )
         record.update(
             status=status,
             returncode=returncode,
@@ -299,6 +316,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         )
         record.update(git.snapshot_delivery(spec, record))
         _enforce_delivery(record)
+        try:
+            advisory_completion.settle(record)
+        except Exception:
+            if record.get("advisory_envelope") or record.get("advisory_exemption"):
+                cause = (advisory.contract.CEILING_UNMEASURED if record.get("advisory_envelope")
+                         else advisory.contract.EXEMPT_CHANGES_UNMEASURED)
+                record.update(status="failed", failure_reason=cause, last_error=cause, error=cause)
+            else:
+                raise
         if spec.agent == "cursor":
             record.update(
                 resolved_model=resolved_model if resolved_model is not None else "unknown",

@@ -75,6 +75,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-profile", None, "Review context label (default: none)"),
         ("risk", None, "Review risk label (default: none)"),
         ("review-mode", None, "Review mode label (default: none)"),
+        ("advisory-binding", None, "Worker binding SHA-256 for --advisory-role (default: none)"),
         ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
         ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
     ):
@@ -103,6 +104,8 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
                           help="Bound review access; dry-run only (default: isolated for bound attempts)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
+    dispatch.add_argument("--advisory-role", choices=("bounded_advisory_envelope",),
+                          help="Produce a sealed advisory envelope; read-only advisor model (default: none)")
     dispatch.add_argument("--print-advisory-binding", action="store_true",
                           help="Print this request's envelope binding; needs --task-id, creates nothing (default: off)")
     dispatch.add_argument(
