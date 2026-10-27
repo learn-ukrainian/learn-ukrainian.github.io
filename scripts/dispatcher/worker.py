@@ -233,7 +233,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             try:
                 guard.begin(hard_timeout)
             except ValueError as exc:
-                status, error = "failed", f"adapter rejected before spawn: {exc}"
+                # No provider ran, so there is nothing for the guard to compare.
+                guard, status, error = None, "failed", f"adapter rejected before spawn: {exc}"
                 return
             record.update(read_only_checkout_snapshot_error=guard.snapshot_error)
             store.replace(record, path)

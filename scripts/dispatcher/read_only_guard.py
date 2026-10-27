@@ -5,7 +5,10 @@ delegate retirement unit D4). A read-only task initializes its provider harness
 first, then snapshots the checkout and the other tasks' terminal results; after
 the provider exits it snapshots again, and any attributable change fails the
 task. Function bodies are copied unchanged except where they named delegate's
-task store, which now resolves through the v2 record location.
+task store, which now resolves through the v2 record location, and in two
+places where legacy failed open: any unacquired checkout snapshot now fails the
+task, and AGY's guard registration is validated here because the v2 provider
+does not run the adapter's check.
 """
 
 import contextlib
@@ -186,18 +189,6 @@ _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS = frozenset({".worktrees"})
 # The workspace guard file the AGY adapter installs and AGY executes (#10727).
 _READ_ONLY_AGY_HOOK_PATH = ".agents/hooks.json"
 _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR = "agy hook snapshot failed:"
-# Snapshot errors that withhold content evidence Git status cannot provide.
-# A read-only task with one never settles ``done``.
-_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = (
-    "linked database snapshot failed:",
-    _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR,
-    "opencode snapshot failed:",
-)
-
-
-def _read_only_snapshot_error_fails_closed(error: str | None) -> bool:
-    """Return whether a snapshot error must fail the read-only task."""
-    return (error or "").startswith(_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS)
 
 
 def _is_read_only_snapshot_excluded_path(path: str) -> bool:
@@ -403,8 +394,8 @@ def _provision_agy_read_only_guard(cwd: Path) -> None:
     the pre-snapshot, so the harness's own file read as a provider mutation.
     Only an absent file is provisioned, through the installer's dispatch
     containment; an existing file, valid or not, is never touched. A failure
-    here is left to the adapter's provider-time check, which stays
-    authoritative and refuses before any provider subprocess.
+    here is left to :func:`_require_agy_read_only_guard`, which refuses
+    before any provider subprocess.
     """
     from scripts.agent_runtime.agy_hook_config import install_worktree_guard
 
@@ -412,6 +403,21 @@ def _provision_agy_read_only_guard(cwd: Path) -> None:
         return
     with contextlib.suppress(OSError, ValueError):
         install_worktree_guard(cwd)
+
+
+def _require_agy_read_only_guard(cwd: Path) -> None:
+    """Refuse an AGY launch whose effective hooks lack a valid guard registration.
+
+    The legacy adapter ran this check while building the invocation; the v2
+    provider does not, so the guard runs it after provisioning. Every existing
+    candidate must validate and one must exist, so an unrelated or invalid
+    existing file, or a failed provisioning, raises the adapter's typed
+    ``AgyHookConfigError`` (a ``ValueError``) and no provider starts.
+    """
+    from scripts.agent_runtime.agy_hook_config import require_hook_config
+
+    # The v2 AGY child inherits this process's HOME (environment._CONTEXT).
+    require_hook_config(cwd, Path.home())
 
 
 class _AgyHookChangedDuringSnapshot(Exception):
@@ -976,6 +982,7 @@ class ReadOnlyGuard:
             )
         if self.agent == "agy":
             _provision_agy_read_only_guard(self.cwd)
+            _require_agy_read_only_guard(self.cwd)
         self.pre, self.snapshot_error = _read_only_checkout_snapshot(self.cwd, **self.snapshot_options)
         self.records_pre, self.records_error = _read_only_task_record_snapshot(self.task_id)
         if self.snapshot_error is None:
@@ -1020,6 +1027,10 @@ class ReadOnlyGuard:
             causes.append(f"read_only_checkout_mutation, count {len(mutations)}")
         if self.records_error:
             causes.append("task_records_snapshot_failed")
-        elif _read_only_snapshot_error_fails_closed(self.snapshot_error):
+        # Without both checkout snapshots there is no content evidence, whatever
+        # the error was, so each side fails closed on its own and an earlier
+        # error can never mask a later one. The cause stays static; the detail
+        # remains in ``read_only_checkout_snapshot_error``.
+        if self.pre is None or post is None:
             causes.append("read_only_checkout_snapshot_failed")
         return fields, "; ".join(causes) or None, discard

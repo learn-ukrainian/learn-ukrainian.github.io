@@ -318,6 +318,43 @@ def test_other_harness_starts_without_opencode_initialization(checkout, monkeypa
     assert not (checkout.parent / "init.log").exists()
 
 
+@pytest.mark.parametrize("case", ["git-missing", "post-git-timeout-after-write", "generic-pre-then-fail-closed-post"])
+def test_unacquired_checkout_snapshot_settles_failed_never_done(checkout, monkeypatch, case):
+    """Without both checkout snapshots there is no content evidence, so a read-only task cannot settle done."""
+    phase = {"post": False}
+    real_run = read_only_guard.subprocess.run
+    real_opencode = read_only_guard._read_only_opencode_fingerprints
+
+    def run(command, *args, **kwargs):
+        if command[:2] == ["git", "status"] and "-z" in command:
+            if case == "git-missing":
+                raise FileNotFoundError(2, "private diagnostic", "git")
+            if case == "post-git-timeout-after-write" and phase["post"]:
+                raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+            if case == "generic-pre-then-fail-closed-post" and not phase["post"]:
+                return subprocess.CompletedProcess(command, 128, "", "fatal: private diagnostic\n")
+        return real_run(command, *args, **kwargs)
+
+    def opencode(cwd):
+        if case == "generic-pre-then-fail-closed-post" and phase["post"]:
+            raise PermissionError("private diagnostic")
+        return real_opencode(cwd)
+
+    def mutate(repo):
+        phase["post"] = True
+        (repo / "tracked.txt").write_text("worker mutation\n")
+
+    monkeypatch.setattr(read_only_guard.subprocess, "run", run)
+    monkeypatch.setattr(read_only_guard, "_read_only_opencode_fingerprints", opencode)
+    rc, state, launches = _launch(checkout, monkeypatch, agent="codex", model="gpt-6.1-sol", mutation=mutate)
+    assert len(launches) == 1
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert "read_only_checkout_snapshot_failed" in state["error"]
+    assert "private diagnostic" not in state["error"]
+    assert state["read_only_snapshot_retention"] == "full"
+
+
 # --- Ported from tests/test_delegate_readonly_guard.py -----------------------
 
 
@@ -600,6 +637,43 @@ def test_valid_hook_rewrite_with_unchanged_ignored_status_still_fails(primary, t
     assert state["status"] == "failed"
     assert state["error"] == "read_only_checkout_mutation, count 1"
     assert rc == 1
+
+
+@pytest.mark.parametrize(
+    ("case", "reason"),
+    [
+        ("unrelated-existing-hook", "missing_guard"),
+        ("invalid-existing-hook", "invalid_json"),
+        ("provisioning-failed", "missing_file"),
+    ],
+)
+def test_agy_without_a_valid_guard_registration_is_refused_before_spawn(
+    primary, tmp_tasks_dir, monkeypatch, case, reason
+):
+    """An existing hook is never repaired, and a launch it or failed provisioning leaves unguarded never starts."""
+    task_id = f"ro-agy-refused-{case}"
+    worktree = _dispatch_worktree(primary, task_id)
+    contents = {"unrelated-existing-hook": b'{"unrelated-hook":{"Stop":[]}}\n', "invalid-existing-hook": b"not json\n"}
+    if case in contents:
+        (worktree / ".agents").mkdir()
+        (worktree / HOOK).write_bytes(contents[case])
+    else:
+
+        def refuse(cwd, **kwargs):
+            raise hooks.AgyHookConfigError("unsafe_install_path")
+
+        monkeypatch.setattr(hooks, "install_worktree_guard", refuse)
+
+    rc, state, launches = _launch_agy(monkeypatch, worktree, task_id, _READ)
+
+    assert launches == []
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["error"] == f"adapter rejected before spawn: agy_hook_config_refused: {reason}"
+    if case in contents:
+        assert (worktree / HOOK).read_bytes() == contents[case]
+    else:
+        assert not (worktree / HOOK).exists()
 
 
 def test_hook_fingerprint_distinguishes_bytes_links_and_file_types(tmp_path):
