@@ -6,7 +6,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import checks, cli, git, prompt_context, store, worker
 from scripts.dispatcher.providers import codex
 
 
@@ -17,7 +17,12 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/schema", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
-    start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(record, prompt))
+    def persist(spec, record, prompt, timeout):
+        path = store.create(record, prompt)
+        prompt_context.persist_effective(spec, record)
+        return path
+
+    start = Mock(side_effect=persist)
     monkeypatch.setattr(worker, "start", start)
     schema = tmp_path / "schema.json"
     schema.write_text('{"type":"object","required":["verdict"]}')

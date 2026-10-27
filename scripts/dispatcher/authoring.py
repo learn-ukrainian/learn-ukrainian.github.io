@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.common.git_context import sanitized_git_env as _sanitized_git_env
+from scripts.common.git_context import sanitized_git_env
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import git
 
@@ -28,6 +28,13 @@ DEFAULT_GIT_TIMEOUT_S = 30.0
 DEFAULT_NETWORK_GIT_TIMEOUT_S = 180.0
 DEFAULT_GH_CLI_TIMEOUT_S = 180.0
 _WRITE_CAPABLE_MODES = frozenset({'workspace-write', 'danger'})
+
+
+def _sanitized_git_env():
+    # Legacy delegate.py:5823, over the shared redirect guard.
+    env = {key: value for key, value in sanitized_git_env().items() if not key.startswith('PRE_COMMIT')}
+    env['GIT_TERMINAL_PROMPT'] = '0'
+    return env
 
 AUTHORING_REVIEW_NO_ROUTE = "AUTHORING_REVIEW_NO_ROUTE"
 AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN = "AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN"
@@ -1160,7 +1167,7 @@ def admit(args, agent, task_id, repo, info, worktree):
         return _authoring_review_admission(
             request, dispatch_agent=agent, requested_harness=None,
             requested_branch=args.branch, worktree_arg='auto' if not args.cwd else None,
-            validated_worktree=worktree,
+            validated_worktree=None if args.cwd else worktree,
             validated_cwd=worktree if args.cwd else None,
             target_repo_root=repo, repository=info['github'], default_repo=bool(info.get('default')),
         )

@@ -5,6 +5,7 @@ CLI and substitutes only the launch/worktree side effects.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import subprocess
@@ -574,3 +575,258 @@ def test_admission_observes_the_canonical_remote_not_a_lagging_mirror(boundary, 
         delegate.AUTHORING_REVIEW_NO_ROUTE,
     )
     assert receipt["head_sha"] == head and receipt["existing_families"] == ["anthropic", "openai", "xai"]
+
+
+def history_admission(repo, tasks, *, plan="red_team", writer=OPUS, owned="docs/a.md"):
+    agent, model = writer.split("/", 1)
+    args = cli.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            agent,
+            "--model",
+            model,
+            "--task-id",
+            "writer-1",
+            "--mode",
+            "workspace-write",
+            "--branch",
+            "feature",
+            "--owned-path",
+            owned,
+            "--authoring-review-plan",
+            plan,
+        ]
+    )
+    return delegate._authoring_review_admission(
+        args,
+        dispatch_agent=agent,
+        requested_harness=None,
+        requested_branch="feature",
+        worktree_arg="auto",
+        validated_worktree=None,
+        validated_cwd=None,
+        target_repo_root=repo.root,
+        repository=REPOSITORY,
+        default_repo=True,
+    )
+
+
+def save_history_admission(repo, tasks):
+    admission = history_admission(repo, tasks)
+    checked, refusal = delegate._authoring_recheck_under_lock(admission, readmit=lambda: None)
+    assert checked is admission and refusal is None
+    fields = delegate._authoring_review_state_fields(argparse.Namespace(), admission)
+    (tasks / "repair.json").write_text(json.dumps(fields))
+    return fields[delegate.AUTHORING_REVIEW_STATE_KEY]
+
+
+def last_receipt(err: str) -> dict:
+    return json.loads(err.strip().splitlines()[-1])[delegate.AUTHORING_REVIEW_STATE_KEY]
+
+
+@pytest.mark.parametrize(
+    "trailers,historical",
+    [
+        (["claude/claude-sonnet-5-5", "codex/gpt-6-luna", GROK], False),
+        (["codex/gpt-6-luna", GROK], False),
+        (["codex/gpt-6-luna", GROK], True),
+    ],
+)
+def test_red_team_plan_preserves_family_exhaustion(repo, tasks, boundary, capsys, trailers, historical):
+    for trailer in trailers:
+        repo.commit(trailer)
+    repo.publish()
+    with pytest.raises(delegate._AuthoringReviewRefused) as default:
+        history_admission(repo, tasks, plan="cross_family")
+    assert default.value.code == delegate.AUTHORING_REVIEW_NO_ROUTE
+    old_head = repo.sha("feature")
+    if historical:
+        repo.commit(None)
+        repo.publish()
+    expected = default.value.detail.replace(old_head[:12], repo.sha("feature")[:12])
+    with pytest.raises(delegate._AuthoringReviewRefused) as red_team:
+        history_admission(repo, tasks)
+    assert red_team.value.code == delegate.AUTHORING_REVIEW_NO_ROUTE
+    assert red_team.value.detail == expected
+    rc, before = boundary("--branch", "feature", "--owned-path", "docs/a.md", "--authoring-review-plan", "red_team")
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert err.splitlines()[0] == (
+        f"❌ {delegate.AUTHORING_REVIEW_NO_ROUTE}: {expected} Branch preserved; provider_calls=0."
+    )
+    assert boundary.calls == []
+    assert repo.snapshot() == before
+    assert not list(tasks.rglob("*"))
+
+
+def test_red_team_plan_without_suspect_history_keeps_cross_family(repo, tasks, boundary):
+    repo.commit(OPUS)
+    repo.publish()
+    admitted = history_admission(repo, tasks)
+    receipt = delegate._authoring_review_state_fields(argparse.Namespace(), admitted)[
+        delegate.AUTHORING_REVIEW_STATE_KEY
+    ]
+    assert admitted.suspect_history == ()
+    assert receipt["reviewer"] == history_admission(repo, tasks, plan="cross_family").record["reviewer"]
+    assert receipt["reviewer"].get("review_mode", "cross_family") == "cross_family"
+
+
+def test_red_team_plan_with_history_and_known_authors_keeps_qualified_route(repo, tasks, boundary):
+    historical = repo.commit(None)
+    repo.commit(OPUS)
+    repo.publish()
+    receipt = save_history_admission(repo, tasks)
+    assert receipt["unknown_history"] == [historical]
+    assert receipt["reviewer"]["family"] != "anthropic"
+    assert receipt["reviewer"]["review_mode"] == "red_team"
+
+
+def test_dry_run_refusal_writes_nothing(boundary, capsys, repo, tasks):
+    repo.commit(OPUS)
+    repo.commit(SOL)
+    repo.commit(GROK)
+    repo.publish()
+    assert_refused(
+        boundary,
+        capsys,
+        repo,
+        tasks,
+        boundary("--branch", "feature", "--owned-path", "docs/a.md", "--dry-run"),
+        delegate.AUTHORING_REVIEW_NO_ROUTE,
+    )
+
+
+def test_reused_worktree_head_moving_after_admission_refuses_before_any_rebase(
+    boundary, capsys, repo, tasks, monkeypatch
+):
+    repo.commit(OPUS)
+    checkout = delegate._auto_worktree_path("claude", "writer-1", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "claude/writer-1", str(checkout), "feature")
+    moved = MiniRepo(checkout)
+
+    with _admitted_host(monkeypatch, on_admission=lambda: moved.commit(SOL, message="another writer")):
+        rc, _ = boundary("--worktree", "--owned-path", "docs/a.md", "--dry-run")
+    receipt = assert_moved_refusal(rc, capsys, tasks)
+    assert receipt["current_head_sha"] == moved.sha("HEAD") != receipt["head_sha"]
+    assert boundary.calls == []  # the rebase helper never ran
+
+
+def test_a_checkout_reaped_before_the_lock_is_admitted_again_at_its_actual_start_commit(
+    boundary, capsys, repo, tasks, monkeypatch
+):
+    """A7 §3: when the admitted checkout is reaped while dispatch waits, the fresh worktree is admitted in full; becoming
+    a new branch exempts nothing, so the moved custom base is enumerated and refused."""
+    repo.publish("trunk", to="custom")
+    checkout = delegate._auto_worktree_path("codex", "writer-1", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "codex/writer-1", str(checkout), "trunk")
+
+    def reap_and_advance():
+        repo.git("worktree", "remove", "--force", str(checkout))
+        repo.git("branch", "-q", "-D", "codex/writer-1")
+        repo.advance_remote("custom", OPUS)
+        repo.advance_remote("custom", GROK)
+
+    with _admitted_host(monkeypatch, on_admission=reap_and_advance):
+        rc, _ = boundary("--worktree", "--base", "custom", "--owned-path", CODEX_ADAPTER, "--dry-run", writer=SOL)
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert f"❌ {delegate.AUTHORING_REVIEW_NO_ROUTE}:" in err and "provider_calls=0" in err
+    receipt = last_receipt(err)
+    assert receipt["target"] == "new-branch" and receipt["creation_sha"] == repo.remote_sha("custom")
+    assert receipt["existing_families"] == ["anthropic", "xai"]
+    assert list(tasks.rglob("*")) == [] and boundary.calls == []
+
+
+def test_a_detached_checkout_has_no_known_pr_and_refuses(boundary, capsys, repo, tasks):
+    """M6: a detached HEAD names no head branch, so no PR, and so no review base, can be bound to it."""
+    repo.commit(OPUS)
+    checkout = delegate._auto_worktree_path("claude", "writer-1", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "--detach", str(checkout), "feature")
+    rc, before = boundary("--worktree", "--owned-path", "docs/a.md")
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert f"❌ {delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN}: the checkout has a detached HEAD" in err
+    assert last_receipt(err)["target"] == "existing-worktree"
+    assert repo.snapshot() == before and list(tasks.rglob("*")) == [] and boundary.calls == []
+
+
+def test_a_cwd_branch_switch_at_the_same_commit_refuses_as_moved(boundary, github, capsys, repo, tasks, monkeypatch):
+    """Round-6 probe 2 (#9739): the --cwd checkout was admitted on a branch whose PR targets main; under the lock it
+    is on another branch at the same commit, whose PR targets an older release. The branch binding refuses, and the
+    refusal leaves no log file behind."""
+    release = repo.publish("trunk", to="release")
+    repo.git("checkout", "-q", "trunk")
+    main = repo.commit(SOL, path="src/app.py", message="main moves on")
+    repo.publish("trunk", to="main")
+    checkout = delegate._auto_worktree_path("claude", "earlier-task", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "feat-a", str(checkout), main)
+    head = MiniRepo(checkout).commit(OPUS, message="feature work")
+    repo.git("branch", "feat-b", head)
+    github.prs = [pr_row(42, "main", main, head="feat-a"), pr_row(43, "release", release, head="feat-b")]
+    with _admitted_host(monkeypatch, on_admission=lambda: MiniRepo(checkout).git("checkout", "-q", "feat-b")):
+        rc, _ = boundary("--cwd", str(checkout), "--owned-path", "docs/a.md")
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert f"❌ {delegate.AUTHORING_REVIEW_TARGET_MOVED}:" in err and "provider_calls=0" in err
+    receipt = last_receipt(err)
+    assert (receipt["binding"], receipt["admitted_branch"], receipt["current_branch"]) == (
+        "head_branch",
+        "feat-a",
+        "feat-b",
+    )
+    assert receipt["review_base"]["pr"] == 42 and receipt["head_sha"] == MiniRepo(checkout).sha("HEAD")
+    assert [path for path in tasks.rglob("*") if path.is_file()] == []
+    assert boundary.calls == []
+
+
+def test_a_cwd_checkout_detached_at_the_same_commit_refuses_as_moved(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    repo.commit(OPUS)
+    repo.publish()
+    checkout = delegate._auto_worktree_path("claude", "earlier-task", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "feat-a", str(checkout), "feature")
+    detach = lambda: MiniRepo(checkout).git("checkout", "-q", "--detach")  # noqa: E731
+    with _admitted_host(monkeypatch, on_admission=detach):
+        rc, _ = boundary("--cwd", str(checkout), "--owned-path", "docs/a.md")
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert "now a detached HEAD" in err
+    assert last_receipt(err)["current_branch"] == "HEAD"
+    assert [path for path in tasks.rglob("*") if path.is_file()] == []
+
+
+def test_dry_run_evaluates_the_check_without_side_effects(boundary, capsys, repo, tasks, monkeypatch):
+    repo.commit(OPUS)
+    repo.publish()
+    head = repo.sha("feature")
+    worktree = delegate._auto_worktree_path('claude', 'writer-1', repo_root=repo.root)
+    rc, before = boundary('--branch', 'feature', '--owned-path', 'docs/a.md', '--dry-run')
+    assert rc == 0, capsys.readouterr().err
+    record = json.loads(capsys.readouterr().out)
+    admission = record[delegate.AUTHORING_REVIEW_STATE_KEY]
+    assert list(tasks.rglob("*")) == []
+    assert admission["reviewer"]["name"] == "openai_frontier" and admission["reviewer_availability"] == "unknown"
+    assert admission["head_sha"] == head and admission["applicable"] is True
+    assert repo.snapshot() == before and not worktree.exists()
+    assert boundary.calls == []
+
+
+def test_an_admitted_new_branch_is_created_at_the_frozen_creation_commit(boundary, capsys, repo, tasks, monkeypatch):
+    """A7 §3 feasible control, ordinary dispatch: creation receives the admitted commit and resolves no base again."""
+    admitted = repo.publish("trunk", to="custom")
+    created: dict = {}
+
+    class _Created(Exception):
+        pass
+
+    def ensure_worktree(repo_root, path, branch, sha, **kwargs):
+        created.update(resolved_base_sha=sha, branch=branch)
+        raise _Created
+
+    monkeypatch.setattr(git, "create_worktree", ensure_worktree)
+    with _admitted_host(monkeypatch), pytest.raises(_Created):
+        boundary("--worktree", "--base", "custom", "--owned-path", CODEX_ADAPTER, writer=SOL)
+    assert created["resolved_base_sha"] == admitted and created["branch"] == "codex/writer-1"
+    assert boundary.calls == []  # the base resolver (a fetch and dereference) never ran

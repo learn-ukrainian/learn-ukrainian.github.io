@@ -172,21 +172,28 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
-    lifecycle_carrier, lifecycle_block = prompt_context.lifecycle(args)
+    try:
+        lifecycle_carrier, lifecycle_block = prompt_context.lifecycle(args)
+    except ValueError as exc:
+        print(f'❌ {exc}', file=sys.stderr)
+        return 2
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
-    planned_worktree = Path(args.cwd or args.worktree or repo / '.worktrees' / 'dispatch' / agent / task_id).absolute()
-    authoring_admission = authoring.admit(args, agent, task_id, repo, info, planned_worktree)
-    admitted_sha = (authoring_admission.creation_sha or authoring_admission.head_sha) if authoring_admission else None
-    worktree, branch, sha = git.worktree_plan(
-        repo, agent, task_id, admitted_sha or args.pinned_head or args.branch or args.base, args.cwd, args.worktree
-    )
-    if authoring_admission is not None:
-        sha = authoring_admission.creation_sha or authoring_admission.head_sha
-    effective_prompt, prompt_fields = prompt_context.effective(args, task_id, prompt, lifecycle_block)
     if args.pinned_head and not re.fullmatch(r"[0-9a-fA-F]{40}", args.pinned_head):
         raise ValueError("pinned head must be a full commit SHA")
+    requested_base = args.pinned_head or args.branch or args.base
+    # Validate the checkout before remote observations. A writer's creation SHA
+    # comes from admission's canonical remote, never a stale local base ref.
+    worktree, branch, sha = git.worktree_plan(
+        repo, agent, task_id, 'HEAD' if args.mode == 'workspace-write' else requested_base, args.cwd, args.worktree
+    )
+    authoring_admission = authoring.admit(args, agent, task_id, repo, info, worktree)
+    if authoring_admission is not None:
+        sha = authoring_admission.creation_sha or authoring_admission.head_sha
+    elif args.mode == 'workspace-write':
+        worktree, branch, sha = git.worktree_plan(repo, agent, task_id, requested_base, args.cwd, args.worktree)
+    effective_prompt, prompt_fields = prompt_context.effective(args, task_id, prompt, lifecycle_block)
     prompt_path = _PromptPath(path.with_suffix(".prompt"))
     prompt_path.content = effective_prompt
     options = {key: str(value) for key, value in vars(args).items() if value is not None and key != "prompt"}
@@ -204,7 +211,9 @@ def _dispatch(args) -> int:
         options=options,
         **fields,
     )
+    prompt_path.content = prompt
     checks.check_private_input(spec, info["key"])
+    prompt_path.content = effective_prompt
     checks.check_review_family(args.review_author_model, args.model)
     if args.mode == "read-only" and (args.subject_seat or args.subject_family or args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
@@ -220,7 +229,8 @@ def _dispatch(args) -> int:
     if args.dry_run:
         authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
         # The real run re-checks child_env after worktree creation in worker.py.
-        invocation = providers.load(agent).build(spec, child_env(spec))
+        planned_spec = prompt_context.provider_spec(spec, effective_prompt, path.with_suffix('.effective.prompt'))
+        invocation = providers.load(agent).build(planned_spec, child_env(spec))
         plan = dict(**authoring._authoring_review_state_fields(args, authoring_admission), worktree=str(worktree), argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
@@ -230,7 +240,11 @@ def _dispatch(args) -> int:
         store.check_review_attempt(binding, claim=True)
     with authoring.locked_target(repo, worktree):
         authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
-        if not args.cwd:
+        if authoring_admission is not None:
+            sha = authoring_admission.creation_sha or authoring_admission.head_sha
+            if authoring_admission.kind == 'new-branch':
+                branch = authoring_admission.head_branch
+        if not args.cwd or (authoring_admission is not None and authoring_admission.kind == 'new-branch'):
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
@@ -269,6 +283,9 @@ def main(argv=None) -> int:
             result = worker._observe(store.read(args.task_id, args.run_nonce))
         print(json.dumps(result, indent=2))
         return code
+    except prompt_context.ResearchContextError as exc:
+        print(f'❌ {exc}', file=sys.stderr)
+        return 2
     except authoring._AuthoringReviewRefused as exc:
         print(exc.render(), file=sys.stderr)
         return 2

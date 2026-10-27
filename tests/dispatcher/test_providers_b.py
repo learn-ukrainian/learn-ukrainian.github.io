@@ -362,3 +362,14 @@ def test_agy_partial_stderr_rejects_incomplete_runs_with_safe_reason(stderr, err
 def test_agy_duplicate_terminal_cannot_replace_first_result_or_clear_failure(first, second, expected):
     """agy-duplicate-terminal: accept neither a second answer nor recovery after a malformed terminal."""
     assert load("agy").parse(first + "\n" + second + "\n", "", 0, None) == expected
+
+
+def test_claude_adapter_emits_max_budget_usd_from_tool_config(tmp_path):
+    """Ported from tests/test_agent_runtime.py::test_claude_adapter_emits_max_budget_usd_from_tool_config."""
+    prompt = tmp_path / 'prompt.txt'
+    prompt.write_text('hello')
+    spec = TaskSpec('budget', 'claude', 'claude-opus-5-5', None, 'read-only', tmp_path,
+                    prompt, tmp_path / 'result', options={'max_budget_usd': '0.5'})
+    plan = load('claude').build(spec, {})
+    assert '--max-budget-usd' in plan.argv
+    assert plan.argv[plan.argv.index('--max-budget-usd') + 1] == '0.50'

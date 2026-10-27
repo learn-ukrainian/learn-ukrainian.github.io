@@ -773,8 +773,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Dispatch a v2 worker and record it in a run ledger.",
         description=(
             "Launch via scripts/dispatch.py. GAP: v2 requires --model and lacks danger mode, "
-            "silence/initial-response deadlines, "
-            "with default authoring review risk critical. "
+            "and silence/initial-response deadlines. "
+            "Authoring review risk defaults to critical. "
             "Seats grok-build, grok-hermes, qwen, kimi are refused. "
             "Legacy options and defaults remain forwarded so "
             "unsupported requests fail explicitly. Default watchdogs currently prevent launch; explicit zero disables each watchdog."

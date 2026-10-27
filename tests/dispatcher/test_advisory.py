@@ -1,5 +1,6 @@
 """Bounded workers must pass sealed-envelope admission before any paid launch."""
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -243,3 +244,153 @@ def _lifecycle_file(tmp_path: Path, *, fresh: bool = False) -> Path:
     path = tmp_path / "task-lifecycle.json"
     task_lifecycle.write_lifecycle(path, ledger)
     return path
+
+
+def test_dispatch_parses_max_budget_usd_flag():
+    parser = cli.build_parser()
+    args = parser.parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "claude", "--model", "claude-opus-5-5",
+            "--task-id",
+            "budget-task",
+            "--prompt",
+            "hi",
+            "--max-budget-usd",
+            "0.50",
+        ]
+    )
+
+    assert args.max_budget_usd == 0.5
+
+
+
+
+def test_dispatch_persists_and_forwards_max_budget_usd(launch):
+    """Ported from tests/test_delegate.py::test_dispatch_persists_and_forwards_max_budget_usd."""
+    from scripts.dispatcher.providers import claude
+
+    launch[launch.index('--agent') + 1] = 'claude'
+    launch[launch.index('--model') + 1] = 'claude-opus-5-5'
+    assert cli.main([*launch, '--max-budget-usd', '0.50']) == 0
+    spec, state, _, _ = worker.start.call_args.args
+    assert state['max_budget_usd'] == 0.5
+    cmd = claude.build(spec, {}).argv
+    assert '--max-budget-usd' in cmd
+    assert cmd[cmd.index('--max-budget-usd') + 1] == '0.50'
+
+
+def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(launch, monkeypatch):
+    """Ported from tests/test_delegate.py::test_dispatch_records_the_effective_prompt_and_its_appended_blocks."""
+    launch[launch.index('--model') + 1] = 'gpt-6.1-sol'
+    launch[launch.index('--prompt') + 1] = 'the source prompt'
+    source = hashlib.sha256(b'the source prompt').hexdigest()
+    for task_id in ('eff-plain', 'eff-ro'):
+        launch[launch.index('--task-id') + 1] = task_id
+        assert cli.main(launch) == 0
+        spec, state, _, _ = worker.start.call_args.args
+        assert state['prompt_sha256'] == source
+        assert state['mode'] == 'read-only'
+        assert state['prompt_blocks'] == ['rules_core']
+        assert state['effective_prompt_sha256'] != source
+        assert state['effective_prompt_sha256'] == hashlib.sha256(spec.prompt_file.read_bytes()).hexdigest()
+
+    monkeypatch.setattr(prompt_context, '_load_task_lifecycle_carrier',
+                        lambda raw: ({'lifecycle_id': 'L'}, '\n[lifecycle carrier]\n'))
+    monkeypatch.setattr(prompt_context, '_build_research_context', lambda args: object())
+    monkeypatch.setattr(prompt_context, '_resolve_research_injection',
+                        lambda ctx, task_id: ('\n[research]\n', None))
+    launch[launch.index('--task-id') + 1] = 'eff-all'
+    assert cli.main(launch) == 0
+    spec, state, _, _ = worker.start.call_args.args
+    worker_prompt = spec.prompt_file.read_bytes().decode()
+    assert state['prompt_sha256'] == source
+    assert state['prompt_blocks'] == ['rules_core', 'lifecycle', 'research']
+    assert state['effective_prompt_sha256'] == hashlib.sha256(worker_prompt.encode()).hexdigest()
+    assert state['effective_prompt_sha256'] != source
+    assert worker_prompt.startswith('<rules-core')
+    assert 'the source prompt\n[lifecycle carrier]\n' in worker_prompt
+    assert worker_prompt.endswith('\n[research]\n')
+    assert state['task_lifecycle'] == {'lifecycle_id': 'L'}
+
+
+# Consumption ports use v2-created task records and the unchanged record endpoint.
+import os
+
+from scripts.dispatcher.types import TaskSpec
+from tests.test_research_registry_p3 import client
+from tests.test_research_registry_p3 import emit_sink as emit_sink
+
+
+@pytest.fixture
+def task_store(tmp_path, monkeypatch):
+    """Port of tests/test_research_registry_p3.py::task_store using schema-v2 records."""
+    from scripts.api import delegate_router
+
+    tasks_dir = tmp_path / 'tasks'
+    monkeypatch.setenv('LU_TASKS_DIR', str(tasks_dir))
+    monkeypatch.setattr(delegate_router, '_tasks_dir', lambda ctx=None: tasks_dir)
+
+    def _put(task_id, *, status='spawning', pid=None):
+        prompt = prompt_context._PromptPath(tasks_dir / (task_id + '.prompt'))
+        prompt.content = b'the source prompt'
+        spec = TaskSpec(task_id, 'codex', 'gpt-6.1-sol', None, 'read-only', tmp_path,
+                        prompt, tasks_dir / (task_id + '.result'))
+        record = store.new_record(spec, {'key': 'public', 'github': 'org/repo'}, 'codex/task',
+                                  'a' * 40, {'research_owned_path': []})
+        record.update(status=status, pid=pid, process_start=worker._identity(pid))
+        store.create(record, prompt.content)
+
+    return _put
+
+
+def test_valid_active_task_emits_consumption_on_200(reg_root, emit_sink, task_store):
+    _write_registry(reg_root, [_make_record(reg_root, "r1")])
+    task_store("job-1", status="spawning", pid=os.getpid())
+    resp = client.get("/api/knowledge/record/r1", params={"task": "job-1"})
+    assert resp.status_code == 200
+    consumed = [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
+    assert consumed == [{"task_id": "job-1", "research_id": "r1", "surface": "record", "status": 200}]
+
+
+
+def test_cache_backed_304_emits_consumption_after_prior_200(reg_root, emit_sink, task_store):
+    # ADR-011 P3: a 304 only counts as consumption when this task already has
+    # evidence of a matching prior 200 for this exact record.
+    _write_registry(reg_root, [_make_record(reg_root, "r1")])
+    task_store("job-1", pid=os.getpid())
+    first = client.get("/api/knowledge/record/r1", params={"task": "job-1"})
+    etag = first.headers["ETag"]
+    resp = client.get(
+        "/api/knowledge/record/r1", params={"task": "job-1"}, headers={"If-None-Match": etag}
+    )
+    assert resp.status_code == 304
+    consumed = [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
+    assert [c["status"] for c in consumed] == [200, 304]
+
+
+
+def test_manufactured_304_without_prior_fetch_emits_nothing(reg_root, emit_sink, task_store):
+    # A caller can learn a record's content_hash/ETag from the public filtered
+    # manifest/pointer projection WITHOUT ever fetching the body. Replaying that
+    # publicly-known ETag as If-None-Match under an active task must not
+    # manufacture a consumption event — there is no proof the task ever consumed
+    # the body. The HTTP response (304) is unaffected regardless of attribution.
+    _write_registry(reg_root, [_make_record(reg_root, "r1")])
+    task_store("job-1", pid=os.getpid())
+    etag = client.get("/api/knowledge/record/r1").headers["ETag"]  # unattributed fetch
+    resp = client.get(
+        "/api/knowledge/record/r1", params={"task": "job-1"}, headers={"If-None-Match": etag}
+    )
+    assert resp.status_code == 304
+    assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
+
+
+
+def test_404_is_never_consumption(reg_root, emit_sink, task_store):
+    _write_registry(reg_root, [_make_record(reg_root, "r1")])
+    task_store("job-1", pid=os.getpid())
+    resp = client.get("/api/knowledge/record/does-not-exist", params={"task": "job-1"})
+    assert resp.status_code == 404
+    assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]

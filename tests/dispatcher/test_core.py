@@ -406,7 +406,8 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     injected = rules_core.with_core(original.decode()).encode()
     assert Path(record['prompt_file']).read_bytes() == original
     assert Path(record['effective_prompt_file']).read_bytes() == injected
-    assert Path(record["result_file"]).read_bytes() == injected
+    assert Path(record["prompt_file"]).with_suffix(".stdin").read_bytes() == injected
+    assert Path(record["result_file"]).read_bytes() == b"exact\nbytes\n"
     assert record['effective_prompt_sha256'] == hashlib.sha256(injected).hexdigest()
     assert record["prompt_sha256"] == hashlib.sha256(b"exact\nbytes\n").hexdigest()
 

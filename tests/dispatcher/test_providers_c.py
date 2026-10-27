@@ -292,3 +292,33 @@ def test_opencode_tool_step_before_final_completion():
 def test_opencode_unknown_terminal_before_completion_stays_failed():
     output = stream({"type": "step_finish", "part": {"reason": "future_outcome"}}, OC_TEXT, OC_STOP)
     assert opencode.parse(output, "", 0, None).error
+
+
+@pytest.mark.parametrize('agent', ('codex', 'claude', 'agy', 'cursor', 'muse', 'opencode', 'hermes'))
+def test_worker_row_carries_the_core(spec, agent):
+    """Ported from tests/test_rules_core_loading.py::test_worker_row_carries_the_core."""
+    from scripts.dispatcher import cli, prompt_context
+    from tests.test_rules_core_loading import _assert_core
+
+    args = cli.build_parser().parse_args(['dispatch', '--agent', agent, '--model', 'explicit-model',
+                                         '--prompt', 'the source prompt'])
+    effective, _ = prompt_context.effective(args, 'rules-core', b'the source prompt', '')
+    path = prompt_context._PromptPath(spec.prompt_file)
+    path.content = effective
+    spec = replace(spec, agent=agent, model='explicit-model', prompt_file=path)
+    effective_file = spec.prompt_file.with_suffix('.effective.prompt')
+    prompt_context.persist_effective(spec, {'effective_prompt_file': str(effective_file)})
+    plan = load(agent).build(prompt_context.provider_spec(spec, effective, effective_file), {})
+    context = '\n'.join(plan.argv) + (plan.stdin.decode() if plan.stdin else '')
+    file_bytes = 0
+    if agent == 'muse':
+        from pathlib import Path
+
+        carrier = Path(plan.argv[plan.argv.index('--prompt-file') + 1]).read_bytes()
+        assert carrier == effective
+        context += carrier.decode()
+        file_bytes = len(carrier)
+    if agent == 'agy':
+        context += json.loads(plan.stdin)['message']['content'][0]['text']
+    sent = len('\0'.join(plan.argv).encode()) + len(plan.stdin or b'') + file_bytes
+    _assert_core(context, 'core', f'dispatch-v2-worker-{agent}', context_bytes=sent)

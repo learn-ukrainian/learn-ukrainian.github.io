@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import hashlib
+import os
 import sys
 from pathlib import Path
 from typing import Any
 
+from scripts.dispatcher.git import ROOT as _REPO_ROOT
 from scripts.lib import rules_core
 
 
@@ -19,8 +22,6 @@ class _PromptPath(type(Path())):
     def read_text(self, encoding=None, errors=None):
         return self.content.decode(encoding or "utf-8", errors or "strict")
 
-
-_REPO_ROOT = Path(__file__).resolve().parents[2]
 
 def _load_task_lifecycle_carrier(raw_path: str | None) -> tuple[dict[str, Any] | None, str]:
     """Validate one canonical lifecycle ledger before dispatch side effects."""
@@ -181,3 +182,17 @@ def effective(args, task_id, prompt, lifecycle_block):
               'prompt_blocks': (['rules_core'] if cored != text else [])
               + (['lifecycle'] if lifecycle_block else []) + (['research'] if block else [])}
     return cored.encode('utf-8'), _with_optional_research_state(fields, research)
+
+
+def persist_effective(spec, record):
+    """Persist the bound provider payload beside the original brief before launch."""
+    if record.get('effective_prompt_file'):
+        with open(record['effective_prompt_file'], 'xb', opener=lambda p, f: os.open(p, f, 0o600)) as stream:
+            stream.write(spec.prompt_file.read_bytes())
+
+
+def provider_spec(spec, effective_bytes, effective_file):
+    """Bind in-memory carriers and Muse's on-disk carrier to the same payload."""
+    path = _PromptPath(effective_file if spec.agent == 'muse' else spec.prompt_file)
+    path.content = effective_bytes
+    return dataclasses.replace(spec, prompt_file=path)
