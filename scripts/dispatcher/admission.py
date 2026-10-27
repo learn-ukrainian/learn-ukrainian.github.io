@@ -49,7 +49,6 @@ def claude_account(agent: str, explicit: str | None) -> dict:
         resolve_claude_account_label,
         verify_claude_account,
     )
-    from scripts.fleet import claude_account_lane
 
     try:
         if agent != "claude":
@@ -57,6 +56,8 @@ def claude_account(agent: str, explicit: str | None) -> dict:
                 raise ClaudeAccountRefused("claude_account_seat_unsupported")
             # v2 never reselects a claude reviewer for another seat, so no other seat reads the account file.
             return {}
+        from scripts.fleet import claude_account_lane
+
         account = claude_account_lane.resolve_route_account(explicit, strict=True)
         if account.label is None:
             raise ClaudeAccountRefused(account.refusal or "claude_account_unknown")
