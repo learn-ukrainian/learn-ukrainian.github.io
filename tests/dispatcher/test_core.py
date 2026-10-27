@@ -1922,60 +1922,86 @@ def test_review_dispatch_stays_admissible_when_a_non_claude_lane_is_over_headroo
     assert not sandbox.tasks.exists() or not list(sandbox.tasks.glob("*.json"))
 
 
-def test_write_reservation_outlives_admission_grace_during_worktree_preparation(sandbox):
-    """A dispatcher waiting on the worktree lock past the admission grace keeps its write paths.
+def _overlapping_writer(sandbox, task_id, model="echo", wrapper=None, env=None):
+    entry = wrapper or "import sys; from scripts.dispatcher.cli import main; sys.exit(main(sys.argv[1:]))"
+    return subprocess.Popen(
+        [sys.executable, "-c", entry, "dispatch", "--agent", "sol", "--model", model, "--prompt", "x",
+         "--mode", "workspace-write", "--owned-path", "delivered.txt", "--task-id", task_id],
+        cwd=sandbox.repo, env={**sandbox.env, **(env or {})}, text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
 
-    Writer A is admitted, then blocks on the held lock with no task record yet. After the grace,
-    writer B with an overlapping path must still be refused, and releasing the lock launches only A.
-    """
-    import fcntl
+
+def _claim_rows(sandbox):
     import sqlite3
 
     ledger = Path(sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_LEDGER"])
-    # Holder liveness reads the v2 task store, as in production.
+    if not ledger.exists():
+        return []
+    with contextlib.closing(sqlite3.connect(f"file:{ledger}?mode=ro", uri=True)) as conn:
+        return conn.execute("SELECT task_id, pid FROM write_claims").fetchall()
+
+
+def test_stuck_worktree_lock_fails_writers_fast_without_holding_write_paths(sandbox):
+    """A held worktree lock bounds every waiting writer: typed timeout, no launch, no claim, no worktree."""
+    import fcntl
+
     sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
-    shrink_grace = (
-        "import sys; from scripts.guardrails import delegate_ownership; "
-        "delegate_ownership.ADMISSION_PID_GRACE_S = 1.0; "
-        "from scripts.dispatcher.cli import main; sys.exit(main(sys.argv[1:]))"
+    timeout = {git.WORKTREE_LOCK_TIMEOUT_ENV: "1"}
+    with open(sandbox.repo / ".git" / "dispatch-worktree.lock", "a+b") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        writers = [_overlapping_writer(sandbox, task_id, env=timeout) for task_id in ("writer-a", "writer-b")]
+        outputs = [process.communicate(timeout=30) for process in writers]
+        assert not _claim_rows(sandbox)
+    for process, (stdout, stderr) in zip(writers, outputs, strict=True):
+        assert process.returncode == 2, stderr
+        assert stdout == ""
+        assert stderr.startswith("dispatcher: worktree_lock_timeout:"), stderr
+        assert "Traceback" not in stderr and "dispatch-worktree.lock" not in stderr
+    assert not list(sandbox.tasks.glob("writer-*"))
+    dispatch_dir = sandbox.repo / ".worktrees" / "dispatch" / "sol"
+    assert not dispatch_dir.exists() or not any(dispatch_dir.iterdir())
+    assert not run_git(sandbox.repo, "branch", "--list", "sol/writer-*")
+
+
+def test_interrupt_after_payload_delivery_keeps_write_paths_with_live_supervisor(sandbox):
+    """SIGINT once the supervisor holds its payload cannot hand its write paths to an overlapping writer.
+
+    The losing writer is refused with the overlap text and leaves no record, worktree or branch.
+    """
+    sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
+    interrupt_after_payload = (
+        "import os, signal, sys\n"
+        "from scripts.dispatcher import admission\n"
+        "spawn = admission.spawn_supervisor\n"
+        "class Stdin:\n"
+        "    def __init__(self, pipe): self.pipe = pipe\n"
+        "    def write(self, data): return self.pipe.write(data)\n"
+        "    def close(self):\n"
+        "        self.pipe.close()\n"
+        "        os.kill(os.getpid(), signal.SIGINT)\n"
+        "def interrupted(*args, **kwargs):\n"
+        "    process, launch = spawn(*args, **kwargs)\n"
+        "    process.stdin = Stdin(process.stdin)\n"
+        "    return process, launch\n"
+        "admission.spawn_supervisor = interrupted\n"
+        "from scripts.dispatcher.cli import main\n"
+        "sys.exit(main(sys.argv[1:]))\n"
     )
-
-    def writer(task_id):
-        return subprocess.Popen(
-            [sys.executable, "-c", shrink_grace, "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x",
-             "--mode", "workspace-write", "--owned-path", "delivered.txt", "--task-id", task_id],
-            cwd=sandbox.repo, env=sandbox.env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        )
-
-    def claimed(task_id):
-        with contextlib.closing(sqlite3.connect(f"file:{ledger}?mode=ro", uri=True)) as conn:
-            return bool(conn.execute("SELECT 1 FROM write_claims WHERE task_id = ?", (task_id,)).fetchone())
-
-    def until(predicate):
-        deadline = time.monotonic() + 20
-        while not predicate():
-            assert time.monotonic() < deadline
-            time.sleep(0.05)
-
-    first = second = None
-    try:
-        with open(sandbox.repo / ".git" / "dispatch-worktree.lock", "a+b") as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)
-            first = writer("writer-a")
-            until(lambda: claimed("writer-a"))
-            time.sleep(2.5)
-            assert first.poll() is None
-            second = writer("writer-b")
-            # Refused at once, or admitted and blocked on the same lock.
-            until(lambda: second.poll() is not None or claimed("writer-b"))
-    finally:
-        outputs = [process.communicate(timeout=30) for process in (first, second) if process]
-    assert first.returncode == 0, outputs[0]
-    assert second.returncode == 2, outputs[1]
-    assert "write-path ownership refused for task_id='writer-b'" in outputs[1][1]
-    assert (sandbox.tasks / "writer-a.json").exists()
+    first = _overlapping_writer(sandbox, "writer-a", model="blocked", wrapper=interrupt_after_payload)
+    first.communicate(timeout=30)
+    assert first.returncode != 0
+    await_file(sandbox.tasks / "writer-a.started")
+    record = json.loads((sandbox.tasks / "writer-a.json").read_text())
+    assert worker._identity(record["pid"]) == record["process_start"]
+    assert _claim_rows(sandbox) == [("writer-a", record["pid"])]
+    second = _overlapping_writer(sandbox, "writer-b")
+    _, stderr = second.communicate(timeout=30)
+    assert second.returncode == 2, stderr
+    assert "write-path ownership refused for task_id='writer-b'" in stderr
     assert not (sandbox.tasks / "writer-b.json").exists()
-    assert claimed("writer-a") and not claimed("writer-b")
+    assert not (sandbox.repo / ".worktrees" / "dispatch" / "sol" / "writer-b").exists()
+    assert not run_git(sandbox.repo, "branch", "--list", "sol/writer-b")
 
 
 # ---- ported from tests/test_delegate_review_test_slots.py and tests/test_delegate.py (C-2188 unit D) ----

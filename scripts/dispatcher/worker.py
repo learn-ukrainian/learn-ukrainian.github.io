@@ -7,6 +7,7 @@ import signal
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -47,7 +48,14 @@ def _observe(record: dict) -> dict:
     return record
 
 
-def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+def start(
+    spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float, on_spawn: Callable[[int], None] | None = None
+) -> None:
+    """Create the record and launch its supervisor; ``on_spawn`` takes over the supervisor pid before its payload.
+
+    Signals stay deferred from the spawn until the payload is delivered, so an interrupt can only land
+    before a supervisor exists or after ``on_spawn`` has run for it.
+    """
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
@@ -62,13 +70,15 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
                     task_id=spec.task_id, run_nonce=record["run_nonce"], cwd=Path(__file__).resolve().parents[2],
                     stderr=err, stderr_log=logs / f"{spec.task_id}.stderr.log",
                 )
+                if on_spawn:
+                    on_spawn(process.pid)
+                record.update(pid=process.pid, process_start=_identity(process.pid), **launch)
+                store.replace(record, path)
+                payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
+                process.stdin.write(payload)
+                process.stdin.close()
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
-        record.update(pid=process.pid, process_start=_identity(process.pid), **launch)
-        store.replace(record, path)
-        payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
-        process.stdin.write(payload)
-        process.stdin.close()
     except admission.LaunchRefused as exc:
         record.update(exc.fields, finished_at=store.now())
         store.replace(record, path)

@@ -8,6 +8,7 @@ import re
 import shutil
 import stat
 import subprocess
+import time
 from contextlib import ExitStack, contextmanager, suppress
 from functools import partial
 from pathlib import Path
@@ -37,6 +38,21 @@ VERIFICATION_FETCH_TIMEOUT = 60
 # Committer-clock slack below the task base date. Speed depends on this value;
 # correctness does not, because _complete_since_task_base checks the fetched graph.
 HISTORY_SLACK_SECONDS = 86400
+# Bound on waiting for the dispatch worktree lock; a stuck holder must not stall dispatch forever.
+WORKTREE_LOCK_TIMEOUT_ENV = "LU_DISPATCH_WORKTREE_LOCK_TIMEOUT_S"
+WORKTREE_LOCK_TIMEOUT_S = 120.0
+
+
+class WorktreeLockTimeout(ValueError):
+    """The dispatch worktree lock stayed held past the bounded wait; nothing was created."""
+
+
+def _worktree_lock_timeout_s() -> float:
+    try:
+        value = float(os.environ.get(WORKTREE_LOCK_TIMEOUT_ENV) or WORKTREE_LOCK_TIMEOUT_S)
+    except ValueError:
+        return WORKTREE_LOCK_TIMEOUT_S
+    return value if 0 < value < float("inf") else WORKTREE_LOCK_TIMEOUT_S
 
 
 def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path | None = None,
@@ -244,7 +260,18 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
     # Serialize config enablement and keep sparse settings local to the new worktree.
     fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
     with os.fdopen(fd, "rb") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+        timeout = _worktree_lock_timeout_s()
+        deadline = time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise WorktreeLockTimeout(
+                        f"worktree_lock_timeout: worktree lock still held after {timeout:g}s"
+                    ) from None
+                time.sleep(0.05)
         run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
         run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
         if full_checkout:
@@ -253,6 +280,14 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
             run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
         run_git(path, "reset", "--hard", sha)
         provision_links(repo, path)
+
+
+def discard_worktree(repo: Path, path: Path, branch: str) -> None:
+    """Remove a worktree this dispatch created and never launched in, with its branch (best effort)."""
+    run_git = partial(_git, isolate=True)
+    for args in (("worktree", "remove", "--force", str(path)), ("branch", "-D", branch)):
+        with suppress(OSError, subprocess.SubprocessError):
+            run_git(repo, *args)
 
 
 def provision_links(repo: Path, worktree: Path) -> None:

@@ -242,30 +242,31 @@ def _dispatch(args) -> int:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
-    claim_root = Path(args.cwd) if args.cwd else repo
-    with launch_guards.write_claim(args, task_id, claim_root) as claim:
-        if binding:
-            store.check_review_attempt(binding, claim=True)
-        if not args.cwd:
-            git.create_worktree(
-                repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include
-            )
+    if binding:
+        store.check_review_attempt(binding, claim=True)
+    if not args.cwd:
+        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
+    try:
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
-            raise ValueError(
-                "write task with owned paths refused: origin must match the registered canonical repository URL"
-            )
+            raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
         record.update(advisory_fields, **account_fields, **guard_fields)
         if agent == "muse":
             record["contributor_mode"] = spec.options.get("contributor_mode", "off")
-        claim.verify()
+        # The write-path claim comes last, so nothing that can wait runs between it and the task record.
+        claim = launch_guards.WriteClaim(args, task_id, Path(args.cwd) if args.cwd else repo)
+    except BaseException:
+        # Refused before any record: leave no worktree or branch from this dispatch behind.
+        if not args.cwd:
+            git.discard_worktree(repo, worktree, branch)
+        raise
+    with claim:
         try:
-            worker.start(spec, record, prompt, args.hard_timeout)
+            worker.start(spec, record, prompt, args.hard_timeout, on_spawn=claim.bind)
         except admission.LaunchRefused as exc:
             # The record is already terminal: exit 1 like the legacy spawn refusal, never relaunch.
             print(f"dispatcher: failed to spawn worker for {task_id!r}: {exc}", file=sys.stderr)
             return 1
-        claim.bind(record["pid"])
     print(task_id, record["run_nonce"], sep="\n")
     return 0
 

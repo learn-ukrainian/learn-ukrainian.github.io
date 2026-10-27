@@ -2,17 +2,16 @@
 
 Each guard is a mechanical copy of the legacy ``scripts/delegate.py`` function it names, adapted only to v2's
 argument names and repository root. Refusals keep the legacy stderr text and exit code (``Refused``); all
-run before any task record, worktree or branch exists, in the legacy order. The write claim admitted there
-stays held through worktree preparation (``write_claim``) and is re-verified before the worker starts.
+run before any task record, worktree or branch exists, in the legacy order, except the write-path claim
+(``WriteClaim``): it is taken once the worktree exists, immediately before the task record, so nothing
+that can wait (the worktree lock, the checkout) ever runs while it is held.
 """
 
-import contextlib
 import json
 import os
 import re
 import subprocess
 import sys
-import threading
 from pathlib import Path
 from typing import Any
 
@@ -459,7 +458,7 @@ def check_primary(mode: str) -> None:
 
 
 def admit_write_claim(args, task_id: str, cwd: Path) -> bool:
-    """delegate.py cmd_dispatch 15570-15626: write-path ownership admission before any record or worktree.
+    """delegate.py cmd_dispatch 15570-15626: write-path ownership admission, immediately before the task record.
 
     The ledger reads holder liveness from the shared task store, where v2 records live. The requeue
     notification goes only to a caller who named ``--initiator`` (legacy always has an attribution), and
@@ -524,70 +523,32 @@ def bind_write_claim(mode: str, task_id: str, pid: int, cwd: Path) -> None:
 
 
 class WriteClaim:
-    """This dispatcher's write-path reservation, from admission until the worker owns it.
+    """This dispatcher's write-path claim, from admission until the supervisor owns it.
 
-    Without a task record the ledger trusts a claim only for ``ADMISSION_PID_GRACE_S``, while preparation
-    (the worktree lock, the checkout) has no bound. A daemon thread renews the dispatcher's rows well inside
-    the grace, ``verify`` refuses a launch whose rows were lost, and ``close`` releases them unless a worker
-    started.
+    Admission runs after worktree preparation, so the claim exists only from just before the task record
+    is created. ``worker.start`` calls ``bind`` with signals deferred, right after the supervisor exists
+    and before it receives its payload; from then on the supervisor pid owns the rows and the ledger
+    releases them when it ends. Leaving the context releases only the claim of a dispatch that never spawned.
     """
 
-    def __init__(self, mode: str, task_id: str, cwd: Path, held: bool):
-        self.mode, self.task_id, self.cwd, self.held = mode, task_id, cwd, held
-        self.pid, self.started = os.getpid(), False
-        self._stop = threading.Event()
-        self._renewer = threading.Thread(target=self._renew, daemon=True) if held else None
-        if self._renewer:
-            self._renewer.start()
-
-    def _renew(self) -> None:
-        from scripts.guardrails import delegate_ownership
-
-        while not self._stop.wait(delegate_ownership.ADMISSION_PID_GRACE_S / 4):
-            try:
-                delegate_ownership.renew_write_claim(self.task_id, self.pid, cwd=self.cwd)
-            except Exception as own_exc:
-                print(f"⚠️  write-path ownership: failed to renew reservation: {own_exc}", file=sys.stderr)
-
-    def verify(self) -> None:
-        """Refuse unless this dispatcher still holds every reservation it was admitted with."""
-        if not self.held:
-            return
-        from scripts.guardrails.delegate_ownership import renew_write_claim
-
-        try:
-            held = renew_write_claim(self.task_id, self.pid, cwd=self.cwd)
-        except Exception as own_exc:
-            print(f"⚠️  write-path ownership: ledger error: {own_exc}", file=sys.stderr)
-            raise Refused(f"❌ write-path ownership refused (ledger error) for task_id={self.task_id!r}") from None
-        if not held:
-            raise Refused(
-                f"❌ write-path ownership refused for task_id={self.task_id!r}: reservation lost during preparation"
-            )
+    def __init__(self, args, task_id: str, cwd: Path):
+        self.mode, self.task_id, self.cwd = str(args.mode), task_id, cwd
+        self.spawned = False
+        self.held = admit_write_claim(args, task_id, cwd)
 
     def bind(self, pid: int) -> None:
-        self.started = True
+        self.spawned = True
         bind_write_claim(self.mode, self.task_id, pid, self.cwd)
 
-    def close(self) -> None:
-        self._stop.set()
-        if self._renewer:
-            self._renewer.join()
-        if not self.held or self.started:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_exc) -> None:
+        if not self.held or self.spawned:
             return
         from scripts.guardrails.delegate_ownership import OwnershipLedger
 
         try:
-            OwnershipLedger(cwd=self.cwd).release(self.task_id, pid=self.pid)
+            OwnershipLedger(cwd=self.cwd).release(self.task_id, pid=os.getpid())
         except Exception as own_exc:
-            print(f"⚠️  write-path ownership: failed to release reservation: {own_exc}", file=sys.stderr)
-
-
-@contextlib.contextmanager
-def write_claim(args, task_id: str, cwd: Path):
-    """Admit write paths, hold them through preparation, and release them on every unlaunched exit."""
-    claim = WriteClaim(str(args.mode), task_id, cwd, admit_write_claim(args, task_id, cwd))
-    try:
-        yield claim
-    finally:
-        claim.close()
+            print(f"⚠️  write-path ownership: failed to release write claim: {own_exc}", file=sys.stderr)

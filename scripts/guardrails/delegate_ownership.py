@@ -1044,18 +1044,6 @@ class OwnershipLedger:
                     conn.execute("UPDATE write_claims SET pid = ? WHERE rowid = ?", (int(new_pid), row["claim_id"]))
             conn.execute("COMMIT")
 
-    def renew_claim(self, task_id: str, pid: int) -> bool:
-        """Restart the admission grace of rows the live ``pid`` holds; False when none remain."""
-        with self._connect() as conn:
-            conn.execute("BEGIN IMMEDIATE")
-            now, held = time.time(), False
-            for row in self._claim_rows(conn):
-                if row["task_id"] == task_id and row["pid"] == int(pid):
-                    conn.execute("UPDATE write_claims SET created_at = ? WHERE rowid = ?", (now, row["claim_id"]))
-                    held = True
-            conn.execute("COMMIT")
-        return held
-
     def _holder_wait_s(self, blockers: list[dict[str, object]], fallback: float) -> float:
         """Bound this window by the longest actual blocker, never by waiter claims.
 
@@ -1598,15 +1586,3 @@ def update_write_claim_pid(
 ) -> None:
     """Public helper: bind claim rows to the detached worker PID after Popen."""
     OwnershipLedger(ledger_path, task_state_dir=task_state_dir, cwd=cwd).update_claim_pid(task_id, new_pid)
-
-
-def renew_write_claim(
-    task_id: str,
-    pid: int,
-    *,
-    ledger_path: Path | None = None,
-    task_state_dir: Path | None = None,
-    cwd: str | Path | None = None,
-) -> bool:
-    """Public helper: a live dispatcher keeps its pid-bound claim rows inside the admission grace."""
-    return OwnershipLedger(ledger_path, task_state_dir=task_state_dir, cwd=cwd).renew_claim(task_id, pid)
