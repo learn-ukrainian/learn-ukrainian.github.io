@@ -17,10 +17,12 @@ import re
 import sqlite3
 import sys
 import unicodedata
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+import requests
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
@@ -603,6 +605,45 @@ def test_ingest_requires_retrieval_time_and_db(tmp_path: Path) -> None:
         pravopys_2019_ingest.main(["--pdf", str(tmp_path / "x.pdf"), "--dry-run"])
     with pytest.raises(SystemExit):
         pravopys_2019_ingest.main(["--pdf", str(tmp_path / "x.pdf"), "--retrieved-at", "2026-10-03T00:00:00Z"])
+
+
+@pytest.mark.parametrize("accepted", [True, False])
+def test_fetch_transport_identifies_public_contact_and_preserves_hash_atomicity(tmp_path: Path, accepted: bool) -> None:
+    """Catch missing collector contact at the prepared request and unsafe hash publication."""
+    official_bytes = b"%PDF-1.4\nsynthetic pinned test bytes\n%%EOF\n"
+    official_sha = hashlib.sha256(official_bytes).hexdigest()
+    target = tmp_path / "pravopys-2019-ulif.pdf"
+    target.write_bytes(b"previous verified file")
+
+    def send(request, **kwargs):
+        assert request.method == "GET"
+        assert request.url == "https://www.ulif.org.ua/system/files/pravopus-new.pdf"
+        assert request.headers["User-Agent"] == (
+            "learn-ukrainian-pravopys-ingest/1.0 (noncommercial educational corpus; issue 9610; "
+            "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+        )
+        assert kwargs["timeout"] == 120
+        assert target.read_bytes() == b"previous verified file"
+        assert not target.with_suffix(".part").exists()
+        response = requests.Response()
+        response.status_code = 200
+        response._content = official_bytes if accepted else b"changed download"
+        return response
+
+    with (
+        patch.object(pravopys_2019_ingest, "OFFICIAL_FILES", {official_sha: replace(ULIF, sha256=official_sha)}),
+        patch.object(pravopys_2019_ingest, "utc_now", return_value="2026-10-26T00:00:00Z"),
+        patch.object(requests.sessions.Session, "send", side_effect=send) as transport,
+    ):
+        if accepted:
+            assert pravopys_2019_ingest.fetch_official_pdf(tmp_path) == (target, "2026-10-26T00:00:00Z")
+        else:
+            with pytest.raises(pravopys_2019_ingest.PravopysParseError, match="not the pinned official file"):
+                pravopys_2019_ingest.fetch_official_pdf(tmp_path)
+    assert transport.call_count == 1
+    assert target.read_bytes() == (official_bytes if accepted else b"previous verified file")
+    assert not target.with_suffix(".part").exists()
+    assert list(tmp_path.iterdir()) == [target]
 
 
 def test_fetch_discards_a_download_with_the_wrong_hash(tmp_path: Path) -> None:
