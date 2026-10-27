@@ -551,14 +551,14 @@ def _capture_review_dispatch_argv(
 
 
 def _review_argv_without_agent_and_prompt(argv: list[str]) -> list[str]:
-    """Drop the two values that legitimately differ per lane (agent, temp prompt)."""
+    """Drop the identity and prompt values that legitimately differ per lane."""
     normalized: list[str] = []
     skip = False
     for token in argv:
         if skip:
             skip = False
             continue
-        if token in {"--agent", "--prompt-file"}:
+        if token in {"--agent", "--model", "--prompt-file"}:
             skip = True
             continue
         normalized.append(token)
@@ -571,8 +571,8 @@ def test_ask_deepseek_review_builds_same_dispatch_argv_as_ask_codex(
     """#8786: ask-deepseek accepts --review/--branch and routes like ask-codex.
 
     Both lanes must parse the review flags and build the same headless
-    read-only verdict-required dispatch, differing only in the ``--agent``
-    value (and the lane's own temp prompt path).
+    read-only verdict-required dispatch with each lane's registered model pin
+    and its own temp prompt path.
     """
     codex = _capture_review_dispatch_argv("ask-codex", "_handle_ask_codex", monkeypatch, tmp_path)
     deepseek = _capture_review_dispatch_argv(
@@ -581,6 +581,12 @@ def test_ask_deepseek_review_builds_same_dispatch_argv_as_ask_codex(
 
     assert codex[codex.index("--agent") + 1] == "codex"
     assert deepseek[deepseek.index("--agent") + 1] == "deepseek"
+    from scripts.agent_runtime.registry import AGENTS
+    from scripts.dispatcher.cli import build_parser
+
+    for command, seat in ((codex, "codex"), (deepseek, "deepseek")):
+        assert command[command.index("--model") + 1] == AGENTS[seat]["default_model"]
+        assert build_parser().parse_args(command[2:]).model == AGENTS[seat]["default_model"]
     assert _review_argv_without_agent_and_prompt(deepseek) == _review_argv_without_agent_and_prompt(codex)
     assert "--mode" in deepseek and deepseek[deepseek.index("--mode") + 1] == "read-only"
     assert "--worktree" in deepseek

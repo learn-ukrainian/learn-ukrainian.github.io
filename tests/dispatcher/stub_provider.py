@@ -7,15 +7,18 @@ import sys
 import time
 from pathlib import Path
 
+MODEL_BEHAVIORS = {}
+
 
 def build(spec, env):
     from scripts.dispatcher.types import Invocation
 
+    behavior = MODEL_BEHAVIORS.get(spec.model, spec.model)
     return Invocation(
-        [sys.executable, str(Path(__file__)), spec.model, str(spec.prompt_file), str(spec.final_file)],
+        [sys.executable, str(Path(__file__)), behavior, str(spec.prompt_file), str(spec.final_file)],
         spec.prompt_file.read_bytes(),
         env,
-        spec.final_file if spec.model == "file" else None,
+        spec.final_file if behavior == "file" else None,
     )
 
 

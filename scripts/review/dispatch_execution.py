@@ -742,7 +742,9 @@ def build_invocation(spec, env, adapter):
     """Use retained adapter flags rather than approximating the tool contract."""
     from scripts.dispatcher.types import Invocation
 
-    config = spec.options.get("review_tool_config") or {"reviewer_tools": True}
+    config = dict(spec.options.get("review_tool_config") or {"reviewer_tools": True})
+    if spec.agent == "claude":
+        config["claude_account"] = spec.claude_account or "a"
     boundary = config.get("review_attempt_boundary")
     cwd = boundary.workspace if boundary else spec.worktree
     plan = adapter.build_invocation(prompt=spec.prompt_file.read_text(), mode=spec.mode, cwd=cwd, model=spec.model,

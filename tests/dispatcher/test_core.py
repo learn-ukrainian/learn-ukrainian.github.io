@@ -55,7 +55,7 @@ def sandbox(tmp_path):
     shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
-    (repo / "scripts/fleet/__init__.py").touch()
+    (repo / "scripts/fleet/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts/fleet')!r})\n")
     config = repo / "scripts/config"
     config.mkdir()
     (config / "fleet_repos.yaml").write_text(
@@ -422,9 +422,11 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     stub_common_reaper(sandbox)
     (sandbox.repo / "scripts/fleet/__init__.py").touch()
     (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
+    with (sandbox.repo / "scripts/dispatcher/providers/codex.py").open("a") as stream:
+        stream.write(f"\nMODEL_BEHAVIORS = {{'gpt-6.1-sol': {model!r}}}\n")
     dispatched = sandbox.cli(
-        "dispatch", "--agent", "sol", "--model", model, "--prompt", text,
-        *(["--require-review-verdict"] if required else []),
+        "dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--prompt", text,
+        *(["--require-review-verdict", "--branch", "main"] if required else []),
     )
     task = dispatched.stdout.splitlines()
     record = sandbox.settle(task, expected=1 if error else 0)
@@ -442,10 +444,9 @@ def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     review = sandbox.repo / "scripts/review"
     review.mkdir(exist_ok=True)
     (review / "__init__.py").touch()
-    (review / "verdict_parser.py").write_text(
-        "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
-    )
-    record = sandbox.settle(sandbox.dispatch("echo", "--require-review-verdict"), expected=1)
+    with (review / "verdict_parser.py").open("a") as stream:
+        stream.write("\ndef recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n")
+    record = sandbox.settle(sandbox.dispatch("gpt-6.1-sol", "--require-review-verdict", "--branch", "main"), expected=1)
     assert record["status"] == "failed"
     assert record["error"] == "review_gate_error"
     assert record["returncode"] == 0
@@ -1205,12 +1206,17 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     task = sandbox.dispatch("unpushed", "--mode", "workspace-write")
     first = sandbox.settle(task, expected=1)
+    # The disposable remote has no GitHub API; supply its real frozen endpoints.
+    with (sandbox.repo / "scripts/review/target_resolution.py").open("a") as stream:
+        stream.write("\ndef resolve_pr_target(repo_root, pr_number):\n"
+                     "    assert pr_number == 42\n"
+                     f"    return resolve_branch_target(repo_root, {first['head_sha']!r}, 'origin/main')\n")
     result = sandbox.cli(
         "dispatch",
         "--agent",
         "sol",
         "--model",
-        "echo",
+        "gpt-6.1-sol",
         "--prompt",
         "review",
         "--pr",

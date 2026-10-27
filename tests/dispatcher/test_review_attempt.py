@@ -123,6 +123,7 @@ def test_default_label_ignores_ambient_other_config_directory(world, monkeypatch
 @pytest.mark.parametrize("label,source,verify,method,credential", [
     ("a", "builtin", False, "host_login", "api_key"),
     ("b", "default-file", True, "bound_account_token", "oauth_token"),
+    ("b", "default-file", True, "subscription_login", "subscription_login"),
     ("b", "explicit", False, "unverified", "oauth_token"),
 ])
 def test_worker_records_this_runs_claude_auth_receipt(tmp_path, monkeypatch, label, source, verify, method, credential):
@@ -148,7 +149,8 @@ def test_worker_records_this_runs_claude_auth_receipt(tmp_path, monkeypatch, lab
     path = store.create(record, b"Review")
     (path.parent / "logs").mkdir()
     note_claude_account_verified("b", "subscription_login")  # stale receipt must never survive.
-    env = {"ANTHROPIC_API_KEY" if credential == "api_key" else "CLAUDE_CODE_OAUTH_TOKEN": "fixture-value"}
+    env = ({"ANTHROPIC_API_KEY" if credential == "api_key" else "CLAUDE_CODE_OAUTH_TOKEN": "fixture-value"}
+           if credential in {"api_key", "oauth_token"} else {})
 
     def build(spec, env):
         if verify:
@@ -636,3 +638,11 @@ def test_default_file_b_records_and_launches_b(tmp_path, monkeypatch):
         assert selected not in json.dumps(running.boundary.env)
     finally:
         running.cleanup()
+
+    # Verdict-only reviews must pass the frozen label to the retained adapter too.
+    seen = {}
+    adapter = SimpleNamespace(build_invocation=lambda **kw: (seen.update(kw) or SimpleNamespace(
+        cmd=["claude"], stdin_payload=None, env_overrides={}, env_unsets=(), output_file=None)))
+    verdict_spec = worker._spec(record, {"require_review_verdict": "True"})
+    execution.build_invocation(verdict_spec, child_env(verdict_spec), adapter)
+    assert seen["tool_config"]["claude_account"] == "b"

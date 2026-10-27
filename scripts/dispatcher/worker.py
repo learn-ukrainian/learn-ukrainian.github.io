@@ -242,10 +242,12 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             invocation = review_execution.wrap(invocation)
         if spec.agent == "claude":
             auth_env = review_execution.boundary.env if review_execution and review_execution.boundary else invocation.env
-            credential_class = next((kind for name, kind in (
+            credential_classes = {kind for name, kind in (
                 ("ANTHROPIC_API_KEY", "api_key"), ("CLAUDE_API_KEY", "api_key"),
                 ("ANTHROPIC_AUTH_TOKEN", "auth_token"), ("CLAUDE_CODE_OAUTH_TOKEN", "oauth_token"),
-            ) if auth_env.get(name)), "host_login")
+            ) if auth_env.get(name)}
+            credential_class = (next(iter(credential_classes)) if len(credential_classes) == 1
+                                else "unverified" if credential_classes else "host_login")
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             child = subprocess.Popen(
                 invocation.argv,
@@ -336,10 +338,10 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         if spec.agent == "claude":
             from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt
 
-            record["claude_account_auth"] = {
-                **claude_account_auth_receipt(spec.claude_account or "a", source=record.get("claude_account_source")),
-                "credential_class": credential_class,
-            }
+            receipt = claude_account_auth_receipt(spec.claude_account or "a", source=record.get("claude_account_source"))
+            if credential_class == "host_login" and receipt["verified"]:
+                credential_class = receipt["method"]
+            record["claude_account_auth"] = {**receipt, "credential_class": credential_class}
         store.replace(record, path)
 
         _reap_settled(record, path)
