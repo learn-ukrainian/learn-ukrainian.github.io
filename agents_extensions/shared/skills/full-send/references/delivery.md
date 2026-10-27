@@ -4,6 +4,18 @@ Shared by `full-send` (terminal `merge`) and `full-stop` (terminal `ready`). The
 itself stays in `workflow.md` § Merge policy; this file defines what the delivery skills carry
 and check.
 
+## Interpreter
+
+Linked dispatch worktrees have no `.venv` of their own. Resolve the primary checkout's
+interpreter once per shell, as drive-epic §6 does
+([review-merge-cleanup](../../drive-epic/references/review-merge-cleanup.md)), and run every
+recipe in the delivery skills with `"$PY"`:
+
+```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+PY="$PRIMARY_REPO/.venv/bin/python"
+```
+
 ## Hand-off record
 
 An entry skill (`takeover`, `modernize`) or a plain brief ends by writing one hand-off record
@@ -37,6 +49,7 @@ handoff:
   authors: {models: ["<model>"], credit: ["<contributor>"]}
   review:
     catalog_risk: low|medium|high|critical
+    profile: code|infra
     budget_tier: default|elevated
     tier_set_by: "<reviewer or CTO>"
     rounds_used: {full: 0, delta: 0}

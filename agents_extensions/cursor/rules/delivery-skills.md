@@ -10,8 +10,8 @@ Cursor loads the shared skills from `.agents/skills/`, which
 | `full-send` | Deliver a change to MERGED and closeout | Accountable driver of the PR's stream, integration owner, CTO |
 | `full-stop` | Deliver a change to ready-to-merge, never merging | Anyone, including workers |
 | `review-loop` | Run review rounds and the budget to a recorded verdict | The driver; a worker asks its driver |
-| `takeover` | Continue someone else's PR, branch, issue or task | Driver, or a worker under a brief; never closes or merges the original |
-| `modernize` | Bring old work up to date, or scope one area | Driver, or a worker under a brief; closing needs the driver or CTO |
+| `takeover` | Continue someone else's PR, branch, issue or task | Driver, or a worker under a brief; a worker never closes, merges or enqueues |
+| `modernize` | Bring old work up to date, or scope one area | Driver, or a worker under a brief; a worker never closes, merges or enqueues |
 | `pr-comments` | Post an agent comment safely | Everyone |
 
 A Cursor worker seat never merges, enqueues or arms auto-merge, and never dispatches

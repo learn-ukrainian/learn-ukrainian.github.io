@@ -11,7 +11,9 @@ belongs in the product, and "no conflicts" is never proof that it is current.
 
 **Who may run it.** A driver, or a worker under a brief that names the target. Modernizing
 authorizes rebasing and updating this task's branch. It does not authorize merging, closing,
-changing the base branch or widening scope; closing is a driver or CTO act.
+changing the base branch or widening scope. A worker never closes, merges or enqueues, whoever
+authorizes it (rules core P1); closing and landing are acts of the accountable driver, the
+integration owner or the CTO.
 
 **Chain.** `modernize branch codex/x then full-stop`, `modernize area scripts/foo then
 full-send`. Without a chain, stop after the verdict and the hand-off record.

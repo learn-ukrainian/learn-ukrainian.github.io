@@ -22,18 +22,34 @@ budget tier and who set it, the finding ledger and rounds already used.
 **Budget, ledger and severity:** [policy](references/policy.md) is the single source. Read it
 before round 1 and before every further round.
 
+Recipes run with the primary checkout's interpreter, resolved once
+([delivery](../full-send/references/delivery.md#interpreter)):
+
+```bash
+PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python"
+```
+
 ## Steps
 
 1. **Freeze the round-1 brief** ([brief](references/brief.md)): outcome, acceptance criteria,
    non-goals, threat and input model, dispositions. The reviewer or the CTO records the budget
    tier before round 1. Later rounds reuse the frozen sections unchanged.
-2. **Resolve the target and the reviewer live.** Never pick a fixed model.
+2. **Resolve the target and the reviewer live.** Never pick a fixed model. Derive the review
+   profile from the target and record it in the hand-off record (`review.profile`) and the
+   frozen brief: `infra` when the change touches the build pipeline, gates, CI, deploy, the
+   agent runtime and harness, dispatch, review or routing tooling, or the rules and config that
+   govern them; `code` for any other code change. A change that spans both is `infra`.
+   `infra` walks a different ladder and excludes code-only seats (Gemini Flash and Muse are
+   `review_profiles: [code]` in `scripts/config/model_catalog.yaml`), so the same value goes to
+   the resolver (`--review-profile` and `--domain`) and to the dispatch below.
 
    ```bash
-   .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE" \
+   REVIEW_PROFILE=infra   # or code, as derived above
+   "$PY" -m scripts.review.closeout_cli --state-file "$STATE" \
      target --mode branch --branch "$BRANCH" --base "origin/$BASE"
-   .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE" \
-     resolve-reviewer --author-model "$AUTHOR_MODEL" --review-profile code --risk "$RISK"
+   "$PY" -m scripts.review.closeout_cli --state-file "$STATE" \
+     resolve-reviewer --author-model "$AUTHOR_MODEL" --review-profile "$REVIEW_PROFILE" \
+     --domain "$REVIEW_PROFILE" --risk "$RISK"
    ```
 
    Add `--owned-path`, `--subject-seat` or `--subject-family` when the change governs a seat's
@@ -44,14 +60,15 @@ before round 1 and before every further round.
 3. **Dispatch the reviewer read-only at the exact pushed head.**
    Requires #11785 (v2 protected review). Until it is merged on your base, launch and settle
    with the `delegate.py` recipe in drive-epic §6
-   ([review-merge-cleanup](../drive-epic/references/review-merge-cleanup.md)).
+   ([review-merge-cleanup](../drive-epic/references/review-merge-cleanup.md)), passing the same
+   `$REVIEW_PROFILE`.
 
    ```bash
-   .venv/bin/python scripts/dispatch.py dispatch \
+   "$PY" scripts/dispatch.py dispatch \
      --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
      --mode read-only --worktree --task-id "$REVIEW_TASK" \
      --prompt-file "$REVIEW_BRIEF" --branch "$BRANCH" --pinned-head "$HEAD_SHA" \
-     --review-profile code --review-author-model "$AUTHOR_MODEL" --risk "$RISK" \
+     --review-profile "$REVIEW_PROFILE" --review-author-model "$AUTHOR_MODEL" --risk "$RISK" \
      --review-mode cross_family --require-review-verdict
    ```
 
@@ -59,7 +76,7 @@ before round 1 and before every further round.
 4. **Wait on that task and nonce.** Never re-dispatch.
 
    ```bash
-   .venv/bin/python scripts/dispatch.py wait "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE" --timeout 1800
+   "$PY" scripts/dispatch.py wait "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE" --timeout 1800
    ```
 
    Exit 0: `done`. Exit 124: client expiry while the task still runs; run the same wait again.
@@ -75,12 +92,12 @@ before round 1 and before every further round.
 7. **Record the verdict once a PR exists** (the PR may already be open, `workflow.md:195`):
 
    ```bash
-   .venv/bin/python -m scripts.review.record_cf_verdict --task-id "$REVIEW_TASK" --pr "$PR"
+   "$PY" -m scripts.review.record_cf_verdict --task-id "$REVIEW_TASK" --pr "$PR"
    ```
 
    Exit 0 means recorded with a JSON receipt; exit 1 means refused, so nothing is recorded.
    If an accepted P0 or P1 finding lands on a PR that already has a recorded APPROVE, add the
-   `hold` label at once: `.venv/bin/python -m scripts.publish pr-edit --number "$PR" --add-labels hold`.
+   `hold` label at once: `"$PY" -m scripts.publish pr-edit --number "$PR" --add-labels hold`.
 
 ## Always true, whatever the round
 

@@ -3,6 +3,8 @@
 Used by `full-send` and `full-stop` between opening the PR and the gate. One supervisor per PR:
 the accountable driver's cycle.
 
+`"$PY"` is the primary checkout's interpreter ([delivery](delivery.md#interpreter)).
+
 ## Waiting
 
 - Do not write a watcher, polling loop or `sleep` loop, and do not run a second watcher on the
@@ -13,8 +15,8 @@ the accountable driver's cycle.
   ```bash
   gh pr view "$PR" --json state,isDraft,headRefOid,mergeable,mergeStateStatus,autoMergeRequest
   gh pr checks "$PR"
-  .venv/bin/python -m scripts.publish read checks --sha "$HEAD_SHA"   # REST, when GraphQL is spent
-  .venv/bin/python -m scripts.gh_merge_queue_status "$PR" --json
+  "$PY" -m scripts.publish read checks --sha "$HEAD_SHA"   # REST, when GraphQL is spent
+  "$PY" -m scripts.gh_merge_queue_status "$PR" --json
   ```
 
 - While CI or a review runs, dispatch the next ready item instead of idling (drive-epic §2c).
@@ -40,7 +42,7 @@ the accountable driver's cycle.
   re-enqueue after an infrastructure ejection), recorded on the PR first, as rules core P4
   describes. A second failure, a related failure or an unclear cause means stop and report.
 - After a base-branch fix, refresh with
-  `.venv/bin/python -m scripts.publish pr-update-branch --number "$PR"`, never `run-rerun`.
+  `"$PY" -m scripts.publish pr-update-branch --number "$PR"`, never `run-rerun`.
 
 ## The base moves
 

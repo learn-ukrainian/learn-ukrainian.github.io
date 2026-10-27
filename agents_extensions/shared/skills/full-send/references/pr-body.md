@@ -3,6 +3,8 @@
 Used by `full-send` and `full-stop` when they create or update a PR. Publishing goes through the
 typed publisher (`docs/dev/agent-public-text.md`), which scans every field before it is sent.
 
+`"$PY"` is the primary checkout's interpreter ([delivery](delivery.md#interpreter)).
+
 ## Before creating
 
 - Check whether a PR already exists for the branch: `gh pr list --head "$BRANCH" --state all`.
@@ -31,9 +33,9 @@ or the operator's words in a title or body (rules core P8).
 ## Commands
 
 ```bash
-.venv/bin/python -m scripts.publish pr-create --title "$TITLE" --body-file "$BODY" \
+"$PY" -m scripts.publish pr-create --title "$TITLE" --body-file "$BODY" \
   --base main --head "$BRANCH"
-.venv/bin/python -m scripts.publish pr-edit --number "$PR" --body-file "$BODY"
+"$PY" -m scripts.publish pr-edit --number "$PR" --body-file "$BODY"
 ```
 
 `pr-create` takes no labels. Open a non-draft PR so admission CI and review bots run, unless the

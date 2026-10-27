@@ -13,14 +13,25 @@ skill never overrides repository rules or the operator-only list (rules core P6)
 The landing order is `workflow.md` § Merge policy. The hand-off record, proof rules and the
 gate are in [delivery](references/delivery.md).
 
+Recipes run with the primary checkout's interpreter, resolved once
+([delivery](references/delivery.md#interpreter)):
+
+```bash
+PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python"
+```
+
 ## Step 0 — who may run this (fail closed)
 
 - You must be the accountable driver of the change's stream, the integration owner, or the
   CTO. A worker never merges or enqueues (rules core P1): a worker runs `full-stop`.
-- The PR's linked issue must resolve to exactly one stream epic, and it must be yours:
+- **A stream driver lands only its own stream** (`workflow.md` § Merge policy, stream-scoped
+  sweeps). The PR's linked issue must resolve to exactly one stream epic, and it must be yours:
   `curl -s http://127.0.0.1:8765/api/issues/streams` (built by
   `scripts.orchestration.issue_stream_audit`). No link, several links, or not yet indexed means
   out of stream: stop. Branch prefixes are author lanes, never streams.
+- **The integration owner and the CTO are not limited to one stream.** The integration owner
+  holds cross-stream merge judgment (rules core P1; `workflow.md` § Merge policy, the
+  integration-owner role), and the CTO is the cross-epic lead who lands PRs (`cto` skill).
 - If the next step is on the operator-only list (production or public cutover, host access,
   credentials, paid plans), stop and escalate.
 
@@ -41,7 +52,7 @@ gate are in [delivery](references/delivery.md).
    approval so admission CI runs (`workflow.md:195`); an open PR or green CI is not approval.
 
    ```bash
-   .venv/bin/python -m scripts.publish pr-create --title "$TITLE" --body-file "$BODY" \
+   "$PY" -m scripts.publish pr-create --title "$TITLE" --body-file "$BODY" \
      --base main --head "$BRANCH"
    ```
 
@@ -56,12 +67,12 @@ gate are in [delivery](references/delivery.md).
 
    `headRefOid` must equal the head of the recorded APPROVE and of the green admission CI.
    Send follow-ups to the CTO through Fleet Comms
-   (`.venv/bin/python -m scripts.fleet_comms channel publish … --recipient <CTO slot>`).
+   (`"$PY" -m scripts.fleet_comms channel publish … --recipient <CTO slot>`).
 8. **Drain the inbox, then enqueue** at the approved head. The merge-queue keeper may already
-   have queued it: check `.venv/bin/python -m scripts.gh_merge_queue_status "$PR" --json` first.
+   have queued it: check `"$PY" -m scripts.gh_merge_queue_status "$PR" --json` first.
 
    ```bash
-   .venv/bin/python -m scripts.publish pr-merge --number "$PR" --match-head "$HEAD_SHA"
+   "$PY" -m scripts.publish pr-merge --number "$PR" --match-head "$HEAD_SHA"
    ```
 
    Never `--auto`, `--delete-branch` or `--admin`. Queued is not merged.
@@ -70,7 +81,7 @@ gate are in [delivery](references/delivery.md).
 10. **Close out.** After every worker and reviewer process on the PR's worktrees has exited:
 
     ```bash
-    .venv/bin/python -m scripts.orchestration.merge_closeout "$PR" --apply
+    "$PY" -m scripts.orchestration.merge_closeout "$PR" --apply
     ```
 
     Exit 0 with a residue-free receipt is required. A non-zero exit or a SKIPPED row means not

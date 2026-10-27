@@ -14,7 +14,8 @@ name. Source: `agents_extensions/cursor/rules/delivery-skills.md`.
 - `review-loop` — review rounds and the budget to a recorded verdict. The driver runs it; a
   worker asks its driver.
 - `takeover`, `modernize` — entry skills that end in a hand-off record for `full-send` or
-  `full-stop`. Closing or merging the original needs the driver or the CTO.
+  `full-stop`. A worker never closes, merges or enqueues, even with authorization; only the
+  accountable driver, the integration owner or the CTO does.
 - `pr-comments` — every agent comment on GitHub.
 
 A worker seat never merges, enqueues, arms auto-merge or dispatches reviewers. The skills never

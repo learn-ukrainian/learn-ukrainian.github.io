@@ -57,7 +57,9 @@ remote-tracking target and sets `pinned_head` before routing; checkout preparati
 and refuses a different head. After settlement compare task `pinned_head` and actual
 `worktree_base_sha` with the current pushed branch tip; the recorder uses `worktree_base_sha`.
 
-Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author model, and risk.
+Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author model, and risk,
+and pass the same `REVIEW_PROFILE` (`code` or `infra`, derived from the target as in
+`review-loop` step 2) to both the resolver and the dispatch.
 `requires_silence_timeout` is boolean; if true, use documented seat/runtime seconds,
 pass `--silence-timeout <seconds>` explicitly (default 3600), and confirm `silence_timeout`
 in the task record. Never infer duration or reuse stale routing. `REVIEW_BRIEF` names branch/SHA
@@ -76,7 +78,7 @@ dispatch_result="$("$PY" scripts/delegate.py dispatch \
   --mode read-only --worktree --task-id "$REVIEW_TASK" \
   --prompt-file "$REVIEW_BRIEF" --branch "$AUTHOR_BRANCH" \
   --pinned-head "$HEAD_SHA" --require-review-verdict \
-  --review-profile code --review-author-model "$AUTHOR_MODEL" \
+  --review-profile "$REVIEW_PROFILE" --review-author-model "$AUTHOR_MODEL" \
   --review-risk "$REVIEW_RISK")"
 mapfile -t dispatch_lines <<<"$dispatch_result"
 REVIEW_TASK="${dispatch_lines[0]}"
