@@ -60,7 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("effort", None, "Provider effort, e.g. high (default: provider default)"),
         ("repo", None, "fleet_repos.yaml key (default: public primary)"),
         ("base", "origin/main", "Starting Git ref (default: origin/main)"),
-        ("branch", None, "Review source or publish branch; published writes use origin tip, e.g. codex/fix (default: base)"),
+        ("branch", None, "Review source or publish branch; unpinned writes require a remote tip, e.g. codex/fix (default: base)"),
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
@@ -189,8 +189,9 @@ def _dispatch(args) -> int:
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
     start = args.pinned_head or args.branch or args.base
+    publish_remote = None
     if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
-        start = git.publish_start(repo, info, args.branch)
+        start, publish_remote = git.publish_start(repo, info, args.branch, task_id)
     worktree, branch, sha = git.worktree_plan(
         repo, agent, task_id, start, args.cwd, args.worktree
     )
@@ -239,6 +240,8 @@ def _dispatch(args) -> int:
     if not args.cwd:
         git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
     record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
+    if publish_remote is not None:
+        record["worktree_remote_url"] = publish_remote
     if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
         raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
     record.update(advisory_fields, **account_fields)

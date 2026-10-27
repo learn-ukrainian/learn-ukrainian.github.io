@@ -355,6 +355,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
     sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
     run_git(sandbox.repo, "branch", "review-source")
+    run_git(sandbox.repo, "push", "origin", "review-source")
     dispatched = sandbox.cli(
         "dispatch",
         "--agent",
@@ -849,6 +850,8 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
     run_git(tree, "add", "outside.txt")
     run_git(tree, "commit", "-m", "preexisting outside scope")
     starting_head = run_git(tree, "rev-parse", "HEAD")
+    if not reuse_cwd:
+        run_git(tree, "push", "origin", "feature-x")
     result = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write",
                                             "--owned-path", "delivered.txt", *flags))
     assert result["worktree_base_sha"] == starting_head
@@ -904,7 +907,7 @@ def test_branch_fix_round_ownership_starts_after_preexisting_commits(sandbox, at
 
 @pytest.mark.parametrize("pinned", [False, True])
 @pytest.mark.parametrize("new_path", ["delivered.txt", "new-outside.txt"])
-def test_branch_fix_round_uses_remote_start_when_local_branch_is_stale(sandbox, pinned, new_path):
+def test_branch_fix_round_uses_remote_start_when_local_branch_is_stale(sandbox, pinned, new_path, monkeypatch):
     branch = "codex/existing-pr"
     stale_head = run_git(sandbox.repo, "rev-parse", "HEAD")
     run_git(sandbox.repo, "branch", branch)
@@ -916,6 +919,33 @@ def test_branch_fix_round_uses_remote_start_when_local_branch_is_stale(sandbox, 
     remote_start = run_git(previous_tree, "rev-parse", "HEAD")
     run_git(previous_tree, "push", "origin", f"HEAD:{branch}")
     assert run_git(sandbox.repo, "rev-parse", branch) == stale_head
+    if not pinned:
+        # Change shared refs and URL rewrites after origin validation. Neither may
+        # replace the object advertised through the private canonical origin.
+        run_git(previous_tree, "commit", "--allow-empty", "-m", "unpublished local tip")
+        planted = run_git(previous_tree, "rev-parse", "HEAD")
+        alternate = sandbox.repo.parent / "alternate.git"
+        run_git(sandbox.repo, "init", "--bare", str(alternate))
+        run_git(previous_tree, "push", str(alternate), f"HEAD:{branch}")
+        original = git._verification_git
+        rewrite = f"url.{alternate}.insteadOf"
+        def race(path, command, *args, **kwargs):
+            if command == "init":
+                run_git(sandbox.repo, "config", rewrite, str(sandbox.remote))
+                run_git(sandbox.repo, "config", "remote.origin.url", str(alternate))
+            result = original(path, command, *args, **kwargs)
+            if command in {"ls-remote", "fetch"}:
+                run_git(sandbox.repo, "update-ref", f"refs/remotes/origin/{branch}", planted)
+            return result
+        with monkeypatch.context() as injected:
+            injected.setattr(git, "_verification_git", race)
+            resolved, remote = git.publish_start(
+                sandbox.repo, {"github": str(sandbox.remote), "transport": "file"}, branch, "private-start",
+            )
+        assert (resolved, remote) == (remote_start, str(sandbox.remote))
+        assert run_git(sandbox.repo, "rev-parse", f"refs/remotes/origin/{branch}") == planted
+        run_git(sandbox.repo, "config", "--unset", rewrite)
+        run_git(sandbox.repo, "config", "remote.origin.url", str(sandbox.remote))
     flags = ["--branch", branch]
     if pinned:
         flags += ["--pinned-head", remote_start]
@@ -941,6 +971,34 @@ def test_branch_fix_round_uses_remote_start_when_local_branch_is_stale(sandbox, 
     assert result["push_state"] == "pushed"
     assert result["remote_head_sha"] == result["head_sha"]
     assert run_git(sandbox.repo, "rev-parse", branch) == stale_head
+
+
+def test_branch_write_refuses_local_outside_commit_after_remote_branch_deleted(sandbox):
+    """A deleted remote must not let a planted local commit escape ownership."""
+    branch = "codex/existing-pr"
+    run_git(sandbox.repo, "branch", branch)
+    run_git(sandbox.repo, "push", "origin", branch)
+    (sandbox.repo / "outside.txt").write_text("outside current ownership\n")
+    run_git(sandbox.repo, "add", "outside.txt")
+    run_git(sandbox.repo, "commit", "-m", "local outside-scope commit")
+    planted = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "update-ref", f"refs/heads/{branch}", planted)
+    run_git(sandbox.repo, "push", "origin", f":refs/heads/{branch}")
+    result = subprocess.run(
+        [sys.executable, "scripts/dispatch.py", "dispatch", "--agent", "sol", "--model", "pushed",
+         "--prompt", "literal final response", "--task-id", "missing-remote", "--mode", "workspace-write",
+         "--owned-path", "delivered.txt", "--branch", branch],
+        cwd=sandbox.repo, env=sandbox.env, text=True, capture_output=True, timeout=30,
+    )
+    if result.returncode == 0:
+        accepted = sandbox.settle(tuple(result.stdout.splitlines()))
+        assert accepted["worktree_start_sha"] == planted
+        assert (Path(accepted["cwd"]) / "outside.txt").read_text() == "outside current ownership\n"
+        print(f"Deleted-remote delivery accepted: status={accepted['status']}, error={accepted['error']}")
+    assert result.returncode == 2, (result.stdout, result.stderr)
+    assert "publish branch is absent from the canonical remote" in result.stderr
+    assert not (sandbox.tasks / "missing-remote.json").exists()
+    assert not (sandbox.repo / ".worktrees/dispatch/codex/missing-remote").exists()
 
 
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
@@ -1326,13 +1384,14 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(
         run_git(sandbox.repo, "commit", "-m", "preexisting branch commit")
     starting_head = run_git(sandbox.repo, "rev-parse", "HEAD")
     run_git(sandbox.repo, "checkout", "main")
-    if target not in {None, "prefix"}:
-        run_git(sandbox.repo, "push", "origin", pinned)
+    run_git(sandbox.repo, "push", "origin", pinned)
     task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
     record_path = sandbox.tasks / f"{task[0]}.json"
     record = json.loads(record_path.read_text())
     assert record["publish_branch"] == pinned
     child = int(await_file(Path(record["prompt_file"]).with_suffix(".started")))
+    if target in {None, "prefix"}:
+        run_git(sandbox.repo, "push", "origin", f":refs/heads/{pinned}")
     worktree = Path(record["worktree_path"])
     branch = record["worktree_branch"]
     if commits:

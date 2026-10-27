@@ -115,6 +115,25 @@ def _complete_since_task_base(run, shallow: Path, task_base: str) -> bool:
 
 
 @contextmanager
+def _private_remote_git(task_id: str, remote: str):
+    """Use one recorded URL in the ownership verifier's private Git namespace."""
+    scratch = allocate(task_id + "-ownership")
+    try:
+        run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir)
+        run("init", "--bare", "--template=")
+        for key, value in (("remote.origin.url", remote), ("remote.origin.promisor", "true"),
+                           ("remote.origin.partialCloneFilter", "blob:none"),
+                           ("extensions.partialClone", "origin")):
+            run("config", key, value)
+        yield run, scratch.payload_dir
+    finally:
+        try:
+            scratch.remove()
+        finally:
+            scratch.preserve()
+
+
+@contextmanager
 def ownership_git(record: dict):
     """Walk trusted remote objects in a private config/ref namespace.
 
@@ -155,14 +174,7 @@ def ownership_git(record: dict):
         raise ValueError("delivery ref must differ from base ref")
     refspecs = (f"+{base_ref}:refs/heads/base",
                 f"+{delivery_ref}:refs/heads/delivery")
-    scratch = allocate(record["task_id"] + "-ownership")
-    try:
-        run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir)
-        run("init", "--bare", "--template=")
-        for key, value in (("remote.origin.url", remote), ("remote.origin.promisor", "true"),
-                           ("remote.origin.partialCloneFilter", "blob:none"),
-                           ("extensions.partialClone", "origin")):
-            run("config", key, value)
+    with _private_remote_git(record["task_id"], remote) as (run, git_dir):
         fetch = partial(run, "fetch", "--no-tags", "--no-write-fetch-head", "--filter=blob:none",
                         timeout=VERIFICATION_FETCH_TIMEOUT)
         fetch("--depth=1", "--", "origin", task_base, *refspecs)
@@ -173,7 +185,7 @@ def ownership_git(record: dict):
                                    "refs/heads/delivery").split())) >= since
         if bounded:
             fetch(f"--shallow-since=@{since}", "--", "origin", *refspecs)
-        shallow = scratch.payload_dir / "shallow"
+        shallow = git_dir / "shallow"
         if not (bounded and _complete_since_task_base(run, shallow, task_base)):
             if run("rev-parse", "--is-shallow-repository") == "false":
                 raise ValueError("task base is not reachable from the remote tips")
@@ -185,11 +197,6 @@ def ownership_git(record: dict):
         if run("rev-parse", "--verify", "refs/heads/delivery^{commit}") != record["head_sha"]:
             raise ValueError("remote delivery tip does not match snapshot")
         yield run
-    finally:
-        try:
-            scratch.remove()
-        finally:
-            scratch.preserve()
 
 
 def sparse_excludes(includes=()) -> list[str]:
@@ -220,23 +227,28 @@ def resolve_repo(key: str | None = None) -> tuple[Path, dict]:
     return (ROOT if item.get("default") else ROOT.parent / item["local_name"]).resolve(), item
 
 
-def publish_start(repo: Path, repository: dict, branch: str) -> str:
+def publish_start(repo: Path, repository: dict, branch: str, task_id: str) -> tuple[str, str]:
     """Start published fix rounds at origin's tip without moving the local PR branch."""
     remote = verification_origin(repo)
     if remote not in canonical_origins(repository):
         raise ValueError("publish branch origin must match the registered canonical repository URL")
     source = f"refs/heads/{branch}"
-    try:
-        _verification_git(repo, "ls-remote", "--exit-code", "--heads", "--", remote, source)
-    except subprocess.CalledProcessError as exc:
-        if exc.returncode != 2:
-            raise
-        # An unpublished local branch has no earlier remote rounds to exclude.
-        return _verification_git(repo, "rev-parse", "--verify", f"{source}^{{commit}}")
-    target = f"refs/remotes/origin/{branch}"
+    with _private_remote_git(task_id, remote) as (run, _):
+        try:
+            advertised = run("ls-remote", "--exit-code", "--heads", "--", "origin", source)
+        except subprocess.CalledProcessError as exc:
+            if exc.returncode != 2:
+                raise
+            raise ValueError("publish branch is absent from the canonical remote") from None
+        fields = advertised.split()
+        if len(fields) != 2 or fields[1] != source or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", fields[0]):
+            raise ValueError("publish branch must advertise one full object name")
+        sha = fields[0]
+    # Materialize the immutable advertised object, never a worker-writable ref.
+    # Shared URL rewrites can make this transfer fail, but cannot change its SHA.
     _verification_git(repo, "fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
-                      f"+{source}:{target}", timeout=VERIFICATION_FETCH_TIMEOUT)
-    return _verification_git(repo, "rev-parse", "--verify", f"{target}^{{commit}}")
+                      sha, timeout=VERIFICATION_FETCH_TIMEOUT)
+    return sha, remote
 
 
 def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, worktree=None):
