@@ -24,7 +24,8 @@ DEFAULT_GIT_TIMEOUT_S = 30
 
 
 def _sanitized_git_env():
-    return git.sanitized_git_env()
+    return {key: value for key, value in git.sanitized_git_env().items()
+            if not key.startswith("PRE_COMMIT")} | {"GIT_TERMINAL_PROMPT": "0"}
 
 
 def _load_worktree_containment():
@@ -32,7 +33,7 @@ def _load_worktree_containment():
 
 
 def _worktree_lock_dir():
-    common = git._git(_REPO_ROOT, "rev-parse", "--path-format=absolute", "--git-common-dir")
+    common = git._git(_REPO_ROOT, "rev-parse", "--path-format=absolute", "--git-common-dir", isolate=True)
     return Path(common) / worktree_claims.LOCK_DIR_NAME
 
 
@@ -292,7 +293,10 @@ def prepare(spec, record, admitted):
 
     try:
         with contextlib.ExitStack() as locks:
-            _lock_review_input_root(admitted["review_contract"], locks,
+            locks.enter_context(worktree_lock(spec.worktree))
+            if not spec.worktree.is_dir():
+                raise ValueError("review worktree disappeared while dispatch waited for its lock")
+            _lock_review_input_root(admitted["review_contract"], locks, locked_worktree=spec.worktree,
                                     inputs=[Path(p) for p in admitted["review_input_paths"]])
             binding = record["review_attempt"]
             manifest = Path(spec.options["review_attempt"])
