@@ -601,13 +601,13 @@ def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fre
     assert first.failed == [task.task_id] and first.not_run == []
     assert raw["status"] == status and raw["accepted"] is False
     assert raw["detail"]["error"] == "provider failure evidence"
-    original = (tasks_dir / f"{task.task_id}.json").read_bytes()
+    original = read_json(tasks_dir / f"{task.task_id}.json")
     original_raw = raw_path(results, task.task_id).read_bytes()
     assert executor.run([task]).failed == [task.task_id]
     executor.retry_failed = True
     second = executor.run([task])
     assert second.failed == ["retry-seat-attempt-1"] and second.not_run == []
-    previous = (tasks_dir / "retry-seat-attempt-1.json").read_bytes()
+    previous = read_json(tasks_dir / "retry-seat-attempt-1.json")
     wait = dispatcher.wait
 
     def interrupted_wait(*args):
@@ -623,9 +623,11 @@ def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fre
     assert accepted["task_id"] == "retry-seat-attempt-2" and accepted["accepted"] is True
     assert accepted["identity_problem"] is None and accepted["condition_problem"] is None
     assert len({read_json(tasks_dir / f"{tid}.json")["run_nonce"] for tid in started}) == 3
-    assert (tasks_dir / f"{task.task_id}.json").read_bytes() == original
+    # Only the settlement outcome is added to the failed record; nothing else is rewritten.
+    settled = dict(worktree_disposition="retained", worktree_disposition_reason="provider_liveness_unknown")
+    assert read_json(tasks_dir / f"{task.task_id}.json") == {**original, **settled}
     assert raw_path(results, task.task_id).read_bytes() == original_raw
-    assert (tasks_dir / "retry-seat-attempt-1.json").read_bytes() == previous
+    assert read_json(tasks_dir / "retry-seat-attempt-1.json") == {**previous, **settled}
     assert executor.run([task]).skipped_accepted == 1
 
 

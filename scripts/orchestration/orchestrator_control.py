@@ -38,6 +38,8 @@ from scripts.orchestration.task_record_store import (
 
 SCHEMA_VERSION = 1
 PYTHON = ".venv/bin/python"
+# Dispatch v2 has no grok alias (grok-build is the Grok TUI); the Grok seat runs as the Cursor TUI.
+SEAT_PROVIDERS = {**ALIASES, "grok": "cursor"}
 DEFAULT_DISPATCH_TIMEOUT_SECONDS = 180.0
 TASK_STATUS_ATTENTION = {
     "cancelled",
@@ -192,7 +194,7 @@ def record_task(
             "task_id": task_id,
             "agent": agent,
             "requested_seat": agent,
-            "effective_provider": ALIASES.get(agent, agent),
+            "effective_provider": SEAT_PROVIDERS.get(agent, agent),
             "prompt_file": prompt_file,
             "command": command,
             "note": note or "",
@@ -544,7 +546,7 @@ def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[
         "scripts/dispatch.py",
         "dispatch",
         "--agent",
-        ALIASES.get(args.agent, args.agent),
+        SEAT_PROVIDERS.get(args.agent, args.agent),
         "--task-id",
         args.task_id,
         "--mode",
