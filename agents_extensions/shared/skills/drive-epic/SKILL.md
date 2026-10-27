@@ -100,8 +100,8 @@ requires an operator reference. The item lifecycle is in
    [orient](references/orient.md).
 2. **§0a Inbox drain — cycle start.** A CTO demand (an URGENT delivery order or a
    blocker-report request) outranks all other lane work. Answer within its deadline, by
-   default 10 minutes, with one line per named deliverable:
-   state | exact blocker | who fixes it | next step | ETA. Then work the named
+   default 10 minutes, with one blocker line per named deliverable
+   ([lane-report](references/lane-report.md)). Then work the named
    deliverables and their blockers first, until they land or the CTO releases them. Fix
    any blocker you can fix; name the owner of any you cannot. Other ready work may fill
    only the worker slots the demanded deliverables cannot use. Report again on every
@@ -141,6 +141,8 @@ requires an operator reference. The item lifecycle is in
     Keep `DRIVER-STATE.md` under 4 KB as a pointer with pinned provider facts and the
     render/check instructions. Preserve the Entire dual-write and Fleet receipt:
     [handoff](references/handoff.md).
+
+Report to the CTO hourly, and every 30 minutes while an operator-priority outcome is open, in the [lane-report](references/lane-report.md) format.
 
 Seat-specific adjustments for your model and for the seats you route to:
 [model-deltas](references/model-deltas.md).
