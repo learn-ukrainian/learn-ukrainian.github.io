@@ -32,10 +32,13 @@ it (an attributed fetch, a run, a receipt), not only that it merged.
 
 ## Panel decisions
 
-Each decision with who approved it (designated pair or advisor panel). The operator is
-informed; nothing waits on the operator. Operator-only items (money, credentials, deletes,
-physical or account actions) are residuals with a workaround and the command output that
-shows they are operator-only.
+Each decision with who approved it. Designated approval is Opus 5.5 and Sol 6.1, the
+non-author completing an advisor's proposal (operator-expectations.md item 12); panel voices
+such as Muse advise and never replace it, and the author's family never approves its own
+proposal. A disagreement goes to the operator. The operator is informed; approved work does
+not wait on the operator. Operator-only items (core.md P6) wait for the operator while
+independent work continues; list each as a residual with a workaround and the command output
+that shows it is operator-only.
 
 ## Sources
 

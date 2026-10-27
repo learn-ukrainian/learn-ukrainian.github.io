@@ -9,19 +9,24 @@ cards, dataset rows). What blocks, reporting by class and evidence stay in
 
 - **Two independent reviewers from two different families, neither in the author's family.**
   Each reviews the same exact head from the same frozen brief without the other's findings.
-- Author Anthropic or any other family: Gemini (AGY) + Sol. Author OpenAI: Gemini (AGY) +
-  Grok 4.7 (Cursor). Author Google: Sol + Grok 4.7 (Cursor).
-- Opus 5.5 substitutes for one seat when the author is not Anthropic; note the substitution.
+- Default, and for an Anthropic author: Gemini (AGY) + Sol. Author OpenAI: Gemini (AGY) +
+  Opus 5.5. Author Google: Sol + Opus 5.5. Any other author: Gemini (AGY) + Sol.
+- Grok is not a seat. Cursor stays off language seats (`model-assignment.md`, native Grok
+  language seat), and delegate admission refuses xAI for Ukrainian
+  (`UKRAINIAN_MODEL_REFUSED`, `scripts/delegate.py`; grok-4.7 note in
+  `scripts/config/model_catalog.yaml`). Admitting Grok via Cursor for Ukrainian needs a
+  separate catalog change backed by the measurement below (Grok 25/27, Sources tools
+  reachable).
   Muse is advisory only, never a seat, until it can call the Sources tools.
 - `closeout_cli resolve-reviewer` refuses content profiles, so these pairs are the seat source.
-  Dispatch each seat with `--review-profile ukrainian`. The recorder admits only Claude, GPT
-  and Gemini seats for this profile, so record those verdicts; a Grok verdict goes in the ledger.
+  Dispatch each seat with `--review-profile ukrainian` and record each verdict.
 
 ## Findings
 
 - A finding changes content only after a Sources MCP / VESUM check confirms it, chosen by
-  facet (§4) and cited in the ledger. A finding without a tool check is advisory only: the
-  driver runs the check first; a blocker no tool can settle keeps the review INCONCLUSIVE (§8).
+  facet (§4) and cited in the ledger. An alleged blocker without a tool check stays blocking:
+  the review is INCONCLUSIVE (`BLOCKED`, §8) until a tool check confirms or refutes it, and no
+  content changes before that check. Only an unverified non-blocking note is advisory.
 - Measured on 27 tool-verified planted errors plus 2 clean passages (CTO grading 2026-10-27):
-  Gemini 27/27 (1 disputed), Sol 25, Grok 25, Opus 25 (8 unverified), Muse 26 (all 29 of its
-  findings unverified). One small set, to be replicated before the pairs change.
+  Gemini 27/27 (1 disputed), Sol 25, Grok 25 (Sources tools reachable), Opus 25 (8
+  unverified), Muse 26 (all 29 of its findings unverified). One small set, to be replicated before the pairs change.

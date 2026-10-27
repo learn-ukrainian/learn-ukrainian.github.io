@@ -51,10 +51,14 @@ in every model call, plus instructions to run `lu-driver-state render --lane cto
 - Every statement is a fact with its source (command, file:line, run ID, SHA) or is
   labelled NOT CHECKED with the command that would settle it. A documented limitation is a
   claim to probe. One observation is not a finding.
-- The operator is never a blocker (C-2836). Decisions go to the advisor panel (at least two
-  of Opus, Sol and Muse). Operator-only items (money, credentials, deletes, physical or
-  account actions) are residuals with a workaround. Before naming anything operator-only,
-  verify it with a command and cite the output.
+- The operator is never a blocker for approved work (C-2836). New decisions need designated
+  approval (operator-expectations.md item 12): Opus 5.5 and Sol 6.1, where the non-author
+  completes an advisor's proposal and any other author needs both; if they disagree, the
+  operator decides. The panel never lets the author's family approve its own proposal; Muse
+  adds a third voice, never replacing the non-author advisor. Operator-only items (core.md
+  P6) wait for the operator while independent approved work continues; record each as a
+  residual with a workaround. Before naming anything operator-only, verify it with a command
+  and cite the output.
 - Never wait for a quota reset: seat the next eligible reviewer the resolver returns.
 - Timestamps come only from `date -u`, in the same command that uses them.
 
