@@ -102,6 +102,8 @@ def test_attempt_record_paths_reach_immutable_review_admission(tmp_path, monkeyp
 @pytest.mark.parametrize("explicit", [False, True])
 def test_default_label_ignores_ambient_other_config_directory(world, monkeypatch, explicit):
     """Account a must never run on another account's inherited config directory."""
+    from dataclasses import replace
+
     from scripts.agent_runtime.attempt_boundary import linux_claude_auth
     from scripts.dispatcher.environment import child_env
 
@@ -119,6 +121,12 @@ def test_default_label_ignores_ambient_other_config_directory(world, monkeypatch
     env = child_env(spec)
     assert env["CLAUDE_CONFIG_DIR"] == str(home / ".claude")
     assert linux_claude_auth(spec.claude_account, environ=env) == {"CLAUDE_CODE_OAUTH_TOKEN": "fixture-default-token"}
+    # Account resolution also records a built-in a for an ordinary unlabelled run.
+    spec = replace(spec, claude_account="a", options={
+        "claude_account_source": "explicit" if explicit else "builtin",
+    })
+    ordinary = child_env(spec)
+    assert ordinary["CLAUDE_CONFIG_DIR"] == str(home / (".claude" if explicit else ".claude-b"))
 
 
 @pytest.mark.parametrize("label,source,verify,method,credential", [
@@ -159,6 +167,8 @@ def test_worker_records_this_runs_claude_auth_receipt(tmp_path, monkeypatch, lab
         return Invocation([sys.executable, "-c", "print('reviewed')"], None, env, None)
 
     monkeypatch.setattr(worker, "child_env", lambda spec: dict(env))
+    # This fixture supplies auth observations; test_admission_ports covers the launch guard.
+    monkeypatch.setattr(worker.admission, "claude_launch", lambda spec, invocation: invocation)
     monkeypatch.setattr(worker.providers, "load", lambda _: SimpleNamespace(
         build=build, parse=lambda *a: ParsedResult("reviewed", None, None)))
     monkeypatch.setattr(worker.git, "snapshot_delivery", lambda *a: {})

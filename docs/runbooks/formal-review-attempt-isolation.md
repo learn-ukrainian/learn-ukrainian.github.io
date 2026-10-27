@@ -67,8 +67,8 @@ again before the sandboxed adapter launch.
 Default-label protected Claude reviews read `settings.json` only when it is
 owner-controlled, with no group or other write permission. Read permission is
 allowed; credential files still require owner-only permissions. `apiKeyHelper`
-supports literal executable arguments with POSIX quoting. Shell expansion,
-operators, assignments and comments are refused with
+supports literal executable arguments with POSIX quoting. Strings containing
+shell metacharacters, including quoted occurrences, or assignments are refused with
 `attempt_claude_api_key_helper_shell_unsupported`. Helpers run without a shell.
 Protected reviews pin the resolved account directory for credential receipts.
 Ordinary Claude dispatches without an explicit account preserve the host's

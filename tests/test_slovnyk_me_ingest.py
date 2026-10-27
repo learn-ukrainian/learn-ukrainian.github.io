@@ -277,3 +277,66 @@ def test_existing_live_cli_path_and_word_file_still_use_bounded_fetch(tmp_path, 
     output = capsys.readouterr()
     assert "UNAVAILABLE: newsum (fixture unavailable)" in output.out
     assert "Skipping slovnyk.me/sum" in output.err
+
+
+PUBLIC_CONTACT = "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues"
+
+
+def _capture_prepared_requests(monkeypatch, status_code):
+    """Capture real PreparedRequests at the HTTPAdapter boundary; no socket is opened."""
+    import requests
+
+    sent = []
+
+    def fake_send(self, request, **kwargs):
+        sent.append((request, kwargs))
+        response = requests.Response()
+        response.status_code = status_code
+        response._content = b"<html></html>"
+        response.url = request.url
+        return response
+
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", fake_send)
+    return sent
+
+
+def test_wiki_fetch_entry_default_request_carries_public_contact_and_original_identity(monkeypatch):
+    from scripts.wiki.slovnyk_me import DEFAULT_USER_AGENT, fetch_entry
+
+    sent = _capture_prepared_requests(monkeypatch, 404)
+
+    assert fetch_entry("слово", "newsum", timeout=7) is None
+
+    (request, kwargs), = sent
+    agent = request.headers["User-Agent"]
+    assert agent == DEFAULT_USER_AGENT
+    assert PUBLIC_CONTACT in agent
+    assert agent.startswith("learn-ukrainian-slovnyk-me/1.0 ")
+    assert "noncommercial educational verification; issue 1715" in agent
+    assert request.url == "https://slovnyk.me/dict/newsum/%D1%81%D0%BB%D0%BE%D0%B2%D0%BE"
+    assert kwargs["timeout"] == 7
+
+
+def test_wiki_fetch_entry_keeps_explicit_user_agent(monkeypatch):
+    from scripts.wiki.slovnyk_me import fetch_entry
+
+    sent = _capture_prepared_requests(monkeypatch, 404)
+
+    assert fetch_entry("слово", "newsum", user_agent="caller-agent/2.0") is None
+
+    (request, _kwargs), = sent
+    assert request.headers["User-Agent"] == "caller-agent/2.0"
+
+
+def test_wiki_fetch_entry_refusal_still_raises_and_still_identifies(monkeypatch):
+    import requests
+
+    from scripts.wiki.slovnyk_me import fetch_entry
+
+    sent = _capture_prepared_requests(monkeypatch, 403)
+
+    with pytest.raises(requests.HTTPError):
+        fetch_entry("слово", "newsum")
+
+    (request, _kwargs), = sent
+    assert PUBLIC_CONTACT in request.headers["User-Agent"]
