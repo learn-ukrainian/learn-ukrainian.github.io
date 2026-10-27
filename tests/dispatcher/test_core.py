@@ -1791,3 +1791,16 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(spec, monkeypatch
     assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == agent
     assert os.environ["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "parent-task"
     assert os.environ["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "parent-agent"
+
+    process = SimpleNamespace(pid=os.getpid(), stdin=SimpleNamespace(write=Mock(), close=Mock()))
+    launch = Mock(return_value=process)
+    monkeypatch.setattr(worker.subprocess, "Popen", launch)
+    monkeypatch.setattr(worker, "project_interpreter", Mock(return_value=Path(sys.executable)))
+    monkeypatch.setattr(store, "create", Mock(return_value=spec.worktree / "record.json"))
+    monkeypatch.setattr(store, "replace", Mock())
+
+    worker.start(dataclasses.replace(spec, task_id="dispatch-marker-check", agent=agent), {}, b"test", 3600)
+
+    supervisor_env = launch.call_args.kwargs["env"]
+    assert supervisor_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
+    assert supervisor_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == agent

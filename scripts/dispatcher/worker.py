@@ -64,6 +64,9 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
                     stdout=subprocess.DEVNULL,
                     stderr=err,
                     start_new_session=True,
+                    env={**os.environ,
+                         "LEARN_UKRAINIAN_DISPATCH_TASK_ID": spec.task_id,
+                         "LEARN_UKRAINIAN_DISPATCH_AGENT": spec.agent},
                 )
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
