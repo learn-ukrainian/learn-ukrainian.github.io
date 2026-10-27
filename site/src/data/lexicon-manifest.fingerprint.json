@@ -19,7 +19,7 @@
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",
-        "sha256": "2593f3b93af5932239012ae3891ce9739cb70dd797d7017960a1b85a0512bcad"
+        "sha256": "f41770910259d8c4ec1f598050f2fb1ec30bddc7d58451578617d01cedd4e682"
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
