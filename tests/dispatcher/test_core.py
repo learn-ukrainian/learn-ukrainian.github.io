@@ -973,6 +973,24 @@ def test_branch_fix_round_uses_remote_start_when_local_branch_is_stale(sandbox, 
     assert run_git(sandbox.repo, "rev-parse", branch) == stale_head
 
 
+def test_branch_write_starts_at_advertised_object_despite_shared_replace_ref(sandbox):
+    """A shared replace ref must not change the published start's checkout or record."""
+    branch = "codex/existing-pr"
+    advertised = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "push", "origin", f"HEAD:refs/heads/{branch}")
+    run_git(sandbox.repo, "checkout", "-b", "planted")
+    (sandbox.repo / "outside.txt").write_text("outside current ownership\n")
+    run_git(sandbox.repo, "add", "outside.txt")
+    run_git(sandbox.repo, "commit", "-m", "local outside-scope commit")
+    run_git(sandbox.repo, "replace", advertised, run_git(sandbox.repo, "rev-parse", "HEAD"))
+    run_git(sandbox.repo, "checkout", "main")
+    task = sandbox.dispatch("pushed", "--mode", "workspace-write", "--owned-path", "delivered.txt", "--branch", branch)
+    result = sandbox.settle(task)
+    assert not (Path(result["cwd"]) / "outside.txt").exists()
+    assert result["worktree_start_sha"] == advertised
+    assert (result["status"], result["error"], result["commits_ahead"]) == ("done", None, 1)
+
+
 def test_branch_write_refuses_local_outside_commit_after_remote_branch_deleted(sandbox):
     """A deleted remote must not let a planted local commit escape ownership."""
     branch = "codex/existing-pr"

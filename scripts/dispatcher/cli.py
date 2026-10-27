@@ -193,7 +193,7 @@ def _dispatch(args) -> int:
     if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
         start, publish_remote = git.publish_start(repo, info, args.branch, task_id)
     worktree, branch, sha = git.worktree_plan(
-        repo, agent, task_id, start, args.cwd, args.worktree
+        repo, agent, task_id, start, args.cwd, args.worktree, exact=publish_remote is not None
     )
     if args.pinned_head and not re.fullmatch(r"[0-9a-fA-F]{40}", args.pinned_head):
         raise ValueError("pinned head must be a full commit SHA")
@@ -238,7 +238,8 @@ def _dispatch(args) -> int:
     if binding:
         store.check_review_attempt(binding, claim=True)
     if not args.cwd:
-        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
+        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
+                            sparse_include=args.sparse_include, exact=publish_remote is not None)
     record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
     if publish_remote is not None:
         record["worktree_remote_url"] = publish_remote

@@ -251,7 +251,7 @@ def publish_start(repo: Path, repository: dict, branch: str, task_id: str) -> tu
     return sha, remote
 
 
-def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, worktree=None):
+def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, worktree=None, *, exact=False):
     branch = f"{agent}/{task_id}"
     parent = repo / ".worktrees" / "dispatch" / agent
     path = Path(cwd or worktree or parent / task_id).absolute()
@@ -264,13 +264,24 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
         if Path(_git(path, "rev-parse", "--path-format=absolute", "--git-common-dir")).resolve() != repo / ".git":
             raise ValueError("cwd belongs to a different repository")
         branch = _git(path, "symbolic-ref", "--short", "HEAD")
+    if exact:
+        # A published start is used verbatim; shared replace refs must not re-resolve it.
+        if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", base):
+            raise ValueError("exact start must be a full object name")
+        _verification_git(repo, "cat-file", "-e", f"{base}^{{commit}}")
+        return path, branch, base
     sha = _git(path if cwd else repo, "rev-parse", "--verify", f"{('HEAD' if cwd else base)}^{{commit}}")
     return path, branch, sha
 
 
-def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=()) -> None:
+def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=(),
+                    exact=False) -> None:
     excluded = sparse_excludes(sparse_include)
-    run_git = partial(_git, isolate=True)
+    # A published start is checked out as that exact object, not a shared replacement.
+    no_replace = ("--no-replace-objects",) if exact else ()
+
+    def run_git(where, *args):
+        return _git(where, *no_replace, *args, isolate=True)
     path.parent.mkdir(parents=True, exist_ok=True)
     # Serialize config enablement and keep sparse settings local to the new worktree.
     fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
