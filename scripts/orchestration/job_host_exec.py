@@ -6,9 +6,7 @@ occupancy hosts are the worker pool: agent CLIs and long Python jobs run
 on either box. The job host also holds Monitor and fleet-comms. The
 teacher host also holds the teacher product. Workers stay out of teacher
 product data trees. Occupancy headroom decides who takes the next job.
-The CLI forwards dispatch v2 payload files over SSH. Placement and fallback
-helpers remain for legacy callers; dispatch v2 does not use that policy.
-This helper never prints host aliases, IPs, or occupancy env.
+The CLI forwards dispatch v2 payload files over SSH. This helper never prints host aliases, IPs, or occupancy env.
 
 SSH aliases and remote checkout paths stay in operator env (not git):
 
@@ -16,7 +14,6 @@ SSH aliases and remote checkout paths stay in operator env (not git):
 - ``LU_JOB_DISPATCH_HOST`` / ``ATLAS_RUNNER_HOST`` — job-host (required)
 - ``LU_TEACHER_DISPATCH_HOST`` — teacher-host (required for teacher host_id)
 - ``LU_JOB_REPO`` / ``LU_TEACHER_REPO`` — absolute remote checkouts (required)
-- ``LU_ALLOW_NOTEBOOK_DISPATCH`` — legacy placement helpers only, not this SSH CLI
 
 Remote PATH always includes ``$HOME/.local/bin`` and ``$HOME/.opencode/bin``.
 """
@@ -39,8 +36,6 @@ _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
-from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
-from scripts.guardrails.worktree_containment import resolve_main_root
 
 ENV_HOST = "LU_JOB_DISPATCH_HOST"
 ENV_HOST_FALLBACK = "ATLAS_RUNNER_HOST"
@@ -60,22 +55,12 @@ _REMOTE_VAR_PREFIX = "__LU_REMOTE_VAR:"
 DEFAULT_MEM_FULL_PCT = 85.0
 DEFAULT_DISK_FULL_PCT = 85.0
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
-_MISSING = object()
 TEACHER_HOST_ID = "host-teacher"
 JOB_HOST_ID = "host-job"
 DEFAULT_SSH_TIMEOUT_SECONDS = 300.0
 
-Placement = Literal["notebook", "vps"]
-PlacementReason = Literal[
-    "no_retire_marker",
-    "allow_env",
-    "unavailable",
-    "full",
-    "available",
-]
 _COPY_FILE_FLAGS = {
     "--prompt-file": "prompt",
-    "--lifecycle-file": "lifecycle",
     "--output-schema": "output-schema",
 }
 
@@ -273,31 +258,6 @@ def pick_worker_host(payload: dict[str, Any] | None) -> tuple[str | None, Litera
     return None, "unavailable"
 
 
-def decide_dispatch_placement(
-    *,
-    repo_root: Path | None = None,
-    occupancy: Any = _MISSING,
-) -> tuple[Placement, PlacementReason, str | None]:
-    """Choose notebook or VPS placement for callers of the legacy placement policy.
-
-    ``vps`` means refuse Darwin spawn and name the opaque occupancy host.
-    ``notebook`` is allowed when the retire marker is absent, the operator
-    opted in, or every VPS worker host is unavailable or full.
-    """
-    if os.environ.get(ENV_ALLOW_NOTEBOOK, "").strip() == "1":
-        return "notebook", "allow_env", None
-    root = Path(repo_root) if repo_root is not None else resolve_main_root(Path.cwd())
-    marker = root / "batch_state" / "fleet-comms" / "v1" / RETIRED_LOCAL_MARKER
-    sibling = root / "batch_state" / "fleet-comms" / RETIRED_LOCAL_MARKER
-    if not marker.is_file() and not sibling.is_file():
-        return "notebook", "no_retire_marker", None
-    payload = fetch_occupancy() if occupancy is _MISSING else occupancy
-    host_id, capacity = pick_worker_host(payload if isinstance(payload, dict) else None)
-    if capacity == "available" and host_id:
-        return "vps", "available", host_id
-    return "notebook", capacity, None
-
-
 def build_remote_command(
     argv: list[str],
     *,
@@ -346,7 +306,7 @@ def materialize_local_dispatch_argv(
 ) -> tuple[list[str], list[tuple[str, str, bytes]]]:
     """Rewrite notebook-only paths so SSH does not send Darwin paths.
 
-    File payloads (``--prompt-file``, ``--lifecycle-file``, ``--output-schema``)
+    File payloads (``--prompt-file``, ``--output-schema``)
     are written to unique private ``mktemp`` files by a remote stdin script,
     so remote argparse still sees a real file (sparse-checkout inference reads
     ``--prompt-file`` before stdin). The script has EXIT/signal cleanup traps.
@@ -469,22 +429,6 @@ def _build_remote_dispatch_script(
         )
     )
     return ("\n".join(lines) + "\n").encode("utf-8")
-
-
-def notebook_fallback_after_forward(rc: int | None, *, error: BaseException | None = None) -> bool:
-    """True only for SSH transport failure, so the notebook may spawn.
-
-    Occupancy miss/full is decided before forward. Payload errors
-    (missing local files, ``--cwd``, bad host config) must fail closed —
-    they are not a reason to spawn on Darwin. Missing or unexecutable ``ssh``
-    is classified by ``SshTransportError`` from the exec site
-    (``FileNotFoundError`` / ``PermissionError``), not by filename basename.
-    """
-    if isinstance(error, SshTransportError):
-        return True
-    if error is not None:
-        return False
-    return rc == 255
 
 
 def forward_dispatch(

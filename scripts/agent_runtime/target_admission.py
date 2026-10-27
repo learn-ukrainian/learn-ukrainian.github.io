@@ -903,9 +903,6 @@ def describe_slot_holder(slot: str) -> Any:
     return slot_routing.resolve_slot_holder(slot)
 
 
-def launch_seat(agent: str) -> str:
-    """The seat a retired CLI name launches as (its successor), for naming its dispatch worktree only; never a launch target."""
-    return _retired_successor(agent) or agent
 
 
 def _retired_successor(seat: str | None) -> str | None:

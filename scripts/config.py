@@ -35,9 +35,6 @@ DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX = 300
 # keeps waiting while the checkout is still gaining files, gives up once it has
 # gained none for the stall window, and never waits past the ceiling. A stopped
 # add gets SIGTERM first so git cleans up its own partial worktree.
-DELEGATE_WORKTREE_ADD_TIMEOUT_S = 120.0
-DELEGATE_WORKTREE_ADD_STALL_S = 60.0
-DELEGATE_WORKTREE_ADD_MAX_S = 900.0
 
 # Dispatch admission (#8645 part A; scripts/orchestration/dispatch_admission.py).
 # Legacy dispatch admission refuses a new write-capable worker (workspace-write,

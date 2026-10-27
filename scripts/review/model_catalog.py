@@ -643,15 +643,6 @@ def usage_pool_for_seat(seat: str, catalog: dict[str, Any] | None = None) -> str
     return needle
 
 
-def usage_pool_representative(seat: str, catalog: dict[str, Any] | None = None) -> str:
-    """First listed member of the seat's pool, used when budget routing names one meter."""
-    source = catalog if catalog is not None else load_model_catalog()
-    pool_id = usage_pool_for_seat(seat, source)
-    spec = (source.get("usage_pools") or {}).get(pool_id) if isinstance(source.get("usage_pools"), dict) else None
-    seats = spec.get("seats") if isinstance(spec, dict) else None
-    if isinstance(seats, list) and seats and isinstance(seats[0], str) and seats[0].strip():
-        return seats[0].strip().lower()
-    return str(seat or "").strip().lower()
 
 
 def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> None:

@@ -73,7 +73,6 @@ _CLAUDE_DEFAULT_ACCOUNT_MAX_BYTES = 64
 # Task-record fields: where the dispatch label came from, and the worker's
 # value-free authentication receipt.
 CLAUDE_ACCOUNT_SOURCE_KEY = "claude_account_source"
-CLAUDE_ACCOUNT_AUTH_KEY = "claude_account_auth"
 # ``record``: a re-dispatch of the same task id keeps its earlier record's label.
 CLAUDE_ACCOUNT_SOURCES = ("explicit", "default-file", "builtin", "record")
 # Authentication method classes a receipt may name. The default label runs on

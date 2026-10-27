@@ -846,13 +846,6 @@ def unknown_model_suggestion(model: str) -> str:
     return f"Accepted AGY model ids: {accepted_ids}."
 
 
-_WRITE_MODE_PROMPT_CONTRACT = (
-    "\n\n[WRITE MODE CONTRACT: Do not start timers or waits. "
-    'If a command becomes a background task, use the native manage_task tool with Action="status" '
-    'and the exact returned TaskId to track it to confirmed completion before replying. '
-    'Do not spawn shell pgrep/sleep wait loops or use manage_task Action="kill" to coordinate waiting. '
-    "Never end the turn while a task is running. Reply ONLY after push and verification are confirmed.]"
-)
 
 
 class AgyRuntimeIdentity(dict):

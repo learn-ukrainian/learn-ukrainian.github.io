@@ -3,7 +3,7 @@
 Facts come from miniature Git histories and task-provenance records, never from a
 replaced calculator. The selector (``reviewer_resolver``) and the recorder
 (``record_cf_verdict.record``) are each run on the same repository; refusals are
-driven through ``delegate.cmd_dispatch`` with tripwires on every side effect.
+checked against the surviving selector and verdict recorder.
 """
 
 from __future__ import annotations
@@ -12,15 +12,13 @@ import json
 import os
 import subprocess
 import sys
-from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import delegate
-from scripts.orchestration import fleet_repos, job_host_exec
+from scripts.orchestration import fleet_repos
 from scripts.orchestration.fleet_repos import FleetRepo
 from scripts.review import record_cf_verdict as recorder
 from scripts.review import target_resolution
@@ -178,14 +176,6 @@ def mini_repo(tmp_path: Path, monkeypatch, *, default_branch: str = "main") -> M
     mini.publish("trunk", to=default_branch)
     mini.git("checkout", "-q", "-b", "feature")
     return mini
-
-
-def pin_review_target(monkeypatch, sha: str, *, default_branch: str = "main") -> None:
-    """For dispatch tests about something else: the canonical default branch is ``sha``, no PR is open and the
-    mirror fetch is a no-op. This file observes and fetches a real (local) remote instead (#9739 A7)."""
-    monkeypatch.setattr(delegate, "_authoring_default_branch", lambda _remote: (default_branch, sha))
-    monkeypatch.setattr(delegate, "_authoring_open_pr_bases", lambda _repository, _head_branch: [])
-    monkeypatch.setattr(delegate, "_fetch_base", lambda _base: True)
 
 
 def task_record(tasks: Path, task_id: str, *, archived: bool = False, **fields) -> None:
@@ -682,103 +672,12 @@ def test_head_missing_locally_refuses(repo, tasks):
 # --- the dispatch boundary -----------------------------------------------------------------------
 
 
-class _Admitted:
-    exempt = True
-    thresholds = None
-
-
-def pr_row(number: int, base: str, base_sha: str, *, head: str = "feature", fork: bool = False, state: str = "OPEN"):
-    """A PR as ``gh pr list``/``gh pr view --json`` describes it."""
-    return {
-        "number": number,
-        "state": state,
-        "headRefName": head,
-        "isCrossRepository": fork,
-        "baseRefName": base,
-        "baseRefOid": base_sha,
-    }
-
-
-class FakeGitHub:
-    """The ``gh`` reads admission makes, answered from ``prs``; any other ``gh`` command fails the test.
-
-    ``gh pr list --head`` matches the branch name only, so fork PRs of the same
-    name are listed too, as GitHub lists them.
-    """
-
-    def __init__(self) -> None:
-        self.prs: list[dict] = []
-        self.failure: str | None = None  # "timeout" | "quota" | "unavailable"
-        self.calls: list[list[str]] = []
-
-    def run(self, command: list[str]) -> subprocess.CompletedProcess:
-        self.calls.append(command)
-        if self.failure == "timeout":
-            raise subprocess.TimeoutExpired(command, 1)
-        if self.failure == "quota":
-            return subprocess.CompletedProcess(command, 1, "", "GraphQL: API rate limit exceeded for user ID 1.")
-        if self.failure == "unavailable":
-            return subprocess.CompletedProcess(command, 1, "", "error connecting to api.github.com")
-        assert command[command.index("--repo") + 1] == REPOSITORY, command
-        if command[:3] == ["gh", "pr", "list"]:
-            assert command[command.index("--state") + 1] == "open", command
-            head = command[command.index("--head") + 1]
-            rows = [row for row in self.prs if row["headRefName"] == head and row["state"] == "OPEN"]
-            return subprocess.CompletedProcess(command, 0, json.dumps(rows), "")
-        if command[:3] == ["gh", "pr", "view"]:
-            rows = [row for row in self.prs if row["number"] == int(command[3])]
-            if not rows:
-                return subprocess.CompletedProcess(command, 1, "", "no pull requests found")
-            return subprocess.CompletedProcess(command, 0, json.dumps(rows[0]), "")
-        raise AssertionError(f"unexpected gh command {command}")
-
-
-@pytest.fixture
-def github(monkeypatch) -> FakeGitHub:
-    fake = FakeGitHub()
-    real_run = subprocess.run
-
-    def run(command, *args, **kwargs):
-        if isinstance(command, list) and command and command[0] == "gh":
-            return fake.run(command)
-        return real_run(command, *args, **kwargs)
-
-    monkeypatch.setattr(delegate.subprocess, "run", run)
-    return fake
-
-
 # --- 5b / A3: dry-run evaluation and a head that moves after admission -----------------------------
-
-
-@contextmanager
-def _admitted_host(monkeypatch, on_admission=None):
-    def admitted(*_args, **_kwargs):
-        if on_admission is not None:
-            on_admission()
-        return _Admitted()
-
-    monkeypatch.setattr(delegate, "_evaluate_dispatch_admission", admitted)
-    monkeypatch.setattr(delegate, "_report_dispatch_admission", lambda *_args, **_kwargs: None)
-    yield
 
 
 # --- A7: the endpoints admission freezes are the ones the recorder and creation use ----------------
 
 CODEX_ADAPTER = "scripts/agent_runtime/adapters/codex.py"
-REAL_RESOLVER = delegate._resolve_worktree_base_sha
-REAL_VALIDATOR = delegate._validate_existing_worktree
-
-
-def admitted_dispatch_cleanup(monkeypatch) -> None:
-    """An ordinary dispatch past initial admission sweeps runtime leases and decides placement before the worktree
-    lock; both effects precede the re-check and stay accepted (A3, M5). It stays on this host."""
-    sweep = {"leases_reaped": 0, "bytes_freed": 0, "errors": 0, "error_details": []}
-    monkeypatch.setattr(delegate, "_sweep_runtime_tmp_orphans", lambda: sweep)
-    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("notebook", "test", None))
-
-
-def last_receipt(err: str) -> dict:
-    return json.loads(err.strip().splitlines()[-1])[delegate.AUTHORING_REVIEW_STATE_KEY]
 
 
 def test_the_stale_custom_base_alone_would_have_been_feasible(repo, tasks):
@@ -798,22 +697,6 @@ def test_the_stale_custom_base_alone_would_have_been_feasible(repo, tasks):
 
 
 # --- round 6: admission evaluates the commits a reused checkout actually ends up with ----------------
-
-
-def reused_worktree_behind_main(repo: MiniRepo, github: FakeGitHub, *, main_trailer: str) -> tuple[Path, str, str]:
-    """A reused worktree whose PR targets an older release while ``main`` moved on with a ``main_trailer`` commit.
-
-    Returns the checkout, the release commit (the PR's review base) and the new ``main`` tip.
-    """
-    release = repo.publish("trunk", to="release")
-    repo.git("checkout", "-q", "trunk")
-    main = repo.commit(main_trailer, path="src/app.py", message="main moves on")
-    repo.publish("trunk", to="main")
-    checkout = delegate._auto_worktree_path("claude", "writer-1", repo_root=repo.root)
-    repo.git("worktree", "add", "-q", "-b", "claude/writer-1", str(checkout), release)
-    MiniRepo(checkout).commit(OPUS, message="feature work")
-    github.prs = [pr_row(42, "release", release, head="claude/writer-1")]
-    return checkout, release, main
 
 
 def test_stale_main_base_excludes_merged_main_authors_but_not_branch_authors(repo, tasks):

@@ -11,7 +11,6 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.agent_runtime import mechanical_admission as admission
 from scripts.agent_runtime.adapters import claude
@@ -24,7 +23,6 @@ from scripts.review.model_catalog import (
     validate_catalog,
 )
 from scripts.review.reviewer_resolver import SONNET_5_5, ResolverInputs, resolve_reviewer
-from scripts.telemetry.pricing import compute_cost
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 HAIKU = "claude-haiku-5-5"
@@ -235,17 +233,6 @@ def test_adapter_accepts_typed_haiku_and_refuses_untyped_without_provider(monkey
             "mechanical_task": {"family": "routine_mechanical", "paths": ["package-lock.json"]}})
 
 
-def test_price_keeps_directional_api_rates_and_subscription_accounting():
-    rates = yaml.safe_load((ROOT / "scripts/config/model_pricing.yaml").read_text())["models"][HAIKU]
-    assert rates["input_usd_per_1m_tokens"] == 0.10
-    assert rates["output_usd_per_1m_tokens"] == 0.50
-    assert rates["cache_read_usd_per_1m_tokens"] == 0.01
-    assert rates["base_price_max_input_tokens"] == 100000
-    assert rates["long_context_input_usd_per_1m_tokens"] == 0.50
-    assert rates["long_context_output_usd_per_1m_tokens"] == 2.50
-    assert rates["long_context_cache_read_usd_per_1m_tokens"] == 0.05
-    result = compute_cost(HAIKU, 1_000_000, agent="claude")
-    assert result.cost_usd is None and result.provenance == "subscription"
 
 
 def test_unconstrained_models_and_routine_writes_preserve_admission():

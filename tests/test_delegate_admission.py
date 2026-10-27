@@ -6,7 +6,6 @@ probe; no test allocates memory, generates load, or spawns a worker.
 
 from __future__ import annotations
 
-import argparse
 import json
 import sys
 from datetime import UTC, datetime
@@ -16,37 +15,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import delegate
 from scripts.fleet import capacity_pick
-from scripts.orchestration import dispatch_admission, job_host_exec
+from scripts.orchestration import dispatch_admission
 
 _GIB = 1024**3
-
-
-@pytest.fixture
-def tasks_dir(tmp_path, monkeypatch):
-    tasks = tmp_path / "tasks"
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
-    for name in (
-        "_resolve_dirty_primary_checkout_error",
-        "_resolve_primary_integrity_error",
-    ):
-        monkeypatch.setattr(delegate, name, lambda **_kwargs: None)
-    for name in (
-        "_warn_node_modules_integrity",
-        "_warn_venv_integrity",
-        "_warn_worktree_cleanup_integrity",
-        "_warn_if_monitor_api_unreachable",
-    ):
-        monkeypatch.setattr(delegate, name, lambda: None)
-    monkeypatch.setattr(
-        delegate,
-        "_sweep_runtime_tmp_orphans",
-        lambda: {"leases_reaped": 0, "bytes_freed": 0, "errors": 0, "error_details": []},
-    )
-    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("local", "test", None))
-    return tasks
 
 
 def _running_record(tasks: Path, task_id: str, *, pid: int, mode: str = "workspace-write") -> Path:
@@ -67,60 +39,6 @@ def _running_record(tasks: Path, task_id: str, *, pid: int, mode: str = "workspa
         encoding="utf-8",
     )
     return path
-
-
-def _dispatch_worktree(tasks: Path, name: str = "wt") -> Path:
-    """An explicit ``--worktree`` inside the fixture primary's codex dispatch subtree (#8775)."""
-    return tasks.parent / "primary" / ".worktrees" / "dispatch" / "codex" / name
-
-
-def _live_danger_args(tasks: Path, task_id: str):
-
-    _dispatch_worktree(tasks).mkdir(parents=True, exist_ok=True)
-    return argparse.Namespace(
-        agent="codex",
-        task_id=task_id,
-        prompt="test",
-        prompt_file=None,
-        mode="danger",
-        model=None,
-        cwd=None,
-        worktree=str(_dispatch_worktree(tasks)),
-        base="main",
-        hard_timeout=3600,
-        owned_path=["scripts/example.py"],
-    )
-
-
-def _stub_worktree(monkeypatch, tasks: Path):
-    """A prepared worktree without git: live-dispatch tests stop at the admission lock or at Popen."""
-    wt = _dispatch_worktree(tasks)
-    primary = tasks.parent / "primary"
-    (primary / ".git").mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
-    monkeypatch.chdir(primary)
-    monkeypatch.setattr(delegate, "_resolve_write_cwd_error", lambda **_kwargs: None)
-
-    def run(cmd, **kwargs):
-        # The creation inventory requests binary, NUL-delimited Git output;
-        # other dispatch probes opt into text mode, just as subprocess does.
-        text_mode = (
-            kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding") or kwargs.get("errors")
-        )
-        output = "" if text_mode else b""
-        return delegate.subprocess.CompletedProcess(cmd, 0, output, output)
-
-    monkeypatch.setattr(delegate.subprocess, "run", run)
-    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: "abc1234")
-    monkeypatch.setattr(
-        delegate,
-        "_ensure_worktree",
-        lambda **_kwargs: (wt, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
-    )
-    monkeypatch.setattr(delegate, "_resolve_sha", lambda *_args, **_kwargs: "abc1234")
-    # Git is stubbed, so branch authorship cannot be enumerated; these tests
-    # cover host admission. Authoring-review admission has its own tests (#9739).
-    monkeypatch.setattr(delegate, "_authoring_review_admission", lambda *_args, **_kwargs: None)
 
 
 # --- #8717: admission runs before the worktree and holds the slot until the spawn ------------

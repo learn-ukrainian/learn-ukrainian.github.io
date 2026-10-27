@@ -1613,52 +1613,6 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
         raise RecordError("RED_TEAM_REFUSED: task ledger unavailable") from exc
 
 
-def require_no_branch_outside_rejection(
-    repository: str, branch: str | None, sha: str, *, pr_number: int | None = None, task_root: Path | None = None
-) -> None:
-    """Check a resolvable PR at dispatch; a branch without a PR has no marker history."""
-    require_no_outside_review_in_flight(task_root or _repo_root() / "batch_state" / "tasks", repository, sha)
-    if pr_number is None:
-        if not branch:
-            raise RecordError("RED_TEAM_REFUSED: review branch unavailable")
-        matches = _run_json(
-            [
-                "gh",
-                "pr",
-                "list",
-                "--repo",
-                repository,
-                "--state",
-                "open",
-                "--head",
-                branch,
-                "--limit",
-                "2",
-                "--json",
-                "number,headRefOid,headRefName",
-            ]
-        )
-        if not isinstance(matches, list):
-            raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable")
-        if not matches:
-            return
-        if len(matches) != 1 or not isinstance(matches[0], dict):
-            raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable")
-        pr = matches[0]
-    else:
-        pr = _pr(repository, branch, pr_number)
-    if (
-        pr.get("headRefOid") != sha
-        or (branch is not None and pr.get("headRefName") != branch)
-        or type(pr.get("number")) is not int
-        or pr["number"] < 1
-    ):
-        raise RecordError("RED_TEAM_REFUSED: PR head unavailable or moved")
-    try:
-        comments = GitHubAdapter(Path.cwd()).comments(repository, pr["number"])
-    except SweepError as exc:
-        raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable") from exc
-    require_no_outside_rejection(comments, sha)
 
 
 def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
