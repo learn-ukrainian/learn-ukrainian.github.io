@@ -33,7 +33,11 @@ never fine.
    wake. They are host-local code, not in this repository; their units and log location
    belong in the private operations doc. A tick must report no errors and must list
    every running lane pane. An error, or no lane panes, means no lane gets nudged; fix it
-   this cycle. After a keeper config edit, verify one tick before nudging lanes.
+   this cycle. A critical keeper alert is probed to its cause before it is called stale or
+   noise: read the lane pane's process tree and state, and confirm the keeper can restart
+   the lane (its launcher runs as a child of the pane shell); a lane that cannot be
+   restarted stalls at its next handoff. After a keeper config edit, verify one tick
+   before nudging lanes.
    Read the keeper's per-CLI context flow: Claude waits for the keeper's tokened handoff
    prompt. Codex compacts natively, but a Codex driver hands off to a fresh session after
    its 4th compaction and before its 8th (operator 2026-10-25). Count each live Codex
