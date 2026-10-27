@@ -42,7 +42,7 @@ import sys
 import time
 from collections.abc import Callable, Iterator, Sequence
 from dataclasses import asdict, dataclass, field, replace
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, NamedTuple
 from urllib.error import HTTPError, URLError
@@ -4776,7 +4776,12 @@ def _enter_dispatch_worktree_guard(
 
 
 def _unpublished_snapshot(
-    repo_root: Path, info: WorktreeInfo, recovery_ref: str | None, saved: dict[str, Any] | None = None
+    repo_root: Path,
+    info: WorktreeInfo,
+    recovery_ref: str | None,
+    saved: dict[str, Any] | None = None,
+    *,
+    rollback: contextlib.ExitStack | None = None,
 ) -> dict[str, Any]:
     """Preserve exact Git state without staging or changing the unpublished checkout.
 
@@ -4807,7 +4812,7 @@ def _unpublished_snapshot(
         or len({entry["path"] for entry in baseline["paths"]}) != len(baseline["paths"])
         or any(
             member.get("keep_worktree")
-            or member.get("status") not in _TERMINAL_DISPATCH_STATUSES
+            or member.get("status") not in worktree_claims.RELEASED_TASK_STATUSES
             or member.get("lease_state") == "active"
             or (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
             or not _pid_proven_absent(member)
@@ -4893,19 +4898,67 @@ def _unpublished_snapshot(
         if sum(entry["size"] for entry in paths) > output.MAX_PRESERVED_BYTES:
             raise ValueError("unpublished output exceeds preservation cap")
         return binding
+    output_copies = None
     if saved is None:
-        locator, _ = output.capture_abandon_output(info.path, primary=primary, record=creator)
+        if rollback is None:
+            raise ValueError("unpublished preservation requires attempt-owned rollback")
+        output_copies = contextlib.ExitStack()
+        rollback.callback(output_copies.close)
+        owned_manifests: dict[Path, tuple[int, int]] = {}
+
+        def own(location: Path, custody: contextlib.ExitStack) -> None:
+            identity = location.lstat()
+
+            def discard() -> None:
+                current = location.lstat()
+                if (current.st_dev, current.st_ino) != (identity.st_dev, identity.st_ino):
+                    raise ValueError("attempt-owned preservation path changed; source retained")
+                if stat.S_ISDIR(identity.st_mode):
+                    shutil.rmtree(location)
+                else:
+                    location.unlink()
+                manifest = location.with_name(location.name + ".manifest.json")
+                if manifest in owned_manifests:
+                    current = manifest.lstat()
+                    if (current.st_dev, current.st_ino) != owned_manifests[manifest]:
+                        raise ValueError("attempt-owned preservation manifest changed; source retained")
+                    manifest.unlink()
+
+            custody.callback(discard)
+
+        locator, created = output.capture_abandon_output(info.path, primary=primary, record=creator)
+        if created is not None:
+            own(created, output_copies)
+            own(created.with_suffix(".tar"), output_copies)
         parent = primary / "batch_state" / "preserved" / identity
+        metadata = {"task_id": identity, "run_nonce": nonce, "preserved_at": datetime.now(UTC).isoformat()}
+
+        def publish(location: Path, record: dict[str, Any]) -> None:
+            manifest = location.with_name(location.name + ".manifest.json")
+            with manifest.open("x", encoding="utf-8") as handle:
+                current = os.fstat(handle.fileno())
+                owned_manifests[manifest] = (current.st_dev, current.st_ino)
+                json.dump({**record, **metadata}, handle, sort_keys=True)
+                handle.write("\n")
+
+        if created is not None:
+            publish(
+                created,
+                {**locator, "worktree_sha256": hashlib.sha256(str(info.path.resolve()).encode()).hexdigest()},
+            )
+            publish(created.with_suffix(".tar"), locator["archive"])
         saved = {**binding, "output": locator}
         encoded = json.dumps(saved, sort_keys=True).encode()
         destination = parent / ("git-" + hashlib.sha256(encoded).hexdigest())
         if not destination.exists():
             destination.mkdir(mode=0o700)
+            own(destination, rollback)
             for name, payload in patches.items():
                 output.artifacts._write_verified_bytes(payload, destination / name)
             # Publish the manifest last. An interrupted or failed write keeps
             # the original checkout; only full retrieval below permits removal.
             output.artifacts._write_verified_bytes(encoded, destination / "snapshot.json")
+            publish(destination, saved)
         saved["location"] = destination.relative_to(primary).as_posix()
     if any(saved.get(key) != value for key, value in binding.items()):
         raise ValueError("unpublished checkout or task claims changed during preservation")
@@ -4917,7 +4970,17 @@ def _unpublished_snapshot(
     if json.loads(encoded) != {key: value for key, value in saved.items() if key != "location"}:
         raise ValueError("unpublished snapshot manifest changed")
     output.verify_retrieval(primary, saved["output"])
-    output.verify_abandon_output(info.path, primary=primary, record=creator, locator=saved["output"])
+    # Snapshot comparison always inventories the source bytes. The common
+    # gate may independently omit bytes proven present in an external copy.
+    token = _COPY_PROOF_RUN.set(None)
+    try:
+        output.verify_abandon_output(info.path, primary=primary, record=creator, locator=saved["output"])
+    finally:
+        _COPY_PROOF_RUN.reset(token)
+    if output_copies is not None:
+        # The common gate can publish this locator into its existing receipt.
+        # Keep verified output reusable even if removal subsequently refuses.
+        output_copies.pop_all()
     return saved
 
 
@@ -4940,6 +5003,8 @@ def _reap_qualified_worktree(
     abandoning = reason.startswith("terminal-abandon.v1 ")
     unpublished = reason.endswith("; preserve unpublished")
     unpublished_snapshot = None
+    unpublished_copies = contextlib.ExitStack()
+    unpublished_custody_retained = False
     if dirty is None:
         return ReapResult(
             path=str(info.path),
@@ -5524,7 +5589,7 @@ def _reap_qualified_worktree(
                 )
             if unpublished:
                 try:
-                    unpublished_snapshot = _unpublished_snapshot(repo_root, info, recovery_ref)
+                    unpublished_snapshot = _unpublished_snapshot(repo_root, info, recovery_ref, rollback=unpublished_copies)
                 except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
                     return ReapResult(
                         str(info.path),
@@ -5648,19 +5713,25 @@ def _reap_qualified_worktree(
 
         @contextlib.contextmanager
         def stage_removal(target: Path) -> Iterator[Path]:
-            nonlocal removal_started
+            nonlocal removal_started, unpublished_custody_retained
             check = contextlib.nullcontext if unpublished else recheck_preservation
             with _measured_removal(measurement, check)(target) as staged:
                 # An open root descriptor can outlive a competing removal,
                 # leaving a successful walk of an already detached directory.
                 target.lstat()
-                try:
-                    with recheck_preservation(target) if unpublished else contextlib.nullcontext():
+                with recheck_preservation(target) if unpublished else contextlib.nullcontext():
+                    try:
+                        removal_started = True
                         yield staged
-                finally:
-                    # Entry can fail before destructive Git. Once its body
-                    # runs, even a stager finalizer failure follows our attempt.
-                    removal_started = True
+                    finally:
+                        # A failed Git command can leave a partial checkout.
+                        # Roll back copies only after full source verification.
+                        if unpublished:
+                            try:
+                                _unpublished_snapshot(repo_root, info, recovery_ref, unpublished_snapshot)
+                            except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+                                unpublished_copies.pop_all()
+                                unpublished_custody_retained = True
 
         with copy_proof_run(primary=control_root, tasks=task_store_paths.tasks_dir(), publish_receipts=True):
             remove_error = worktree_claims.git_worktree_remove(
@@ -5688,6 +5759,14 @@ def _reap_qualified_worktree(
             preservation_failed = remove_error.startswith("artifact preservation failed:") or (
                 unpublished and remove_error.startswith(worktree_claims.REMOVAL_STAGE_REFUSED)
             )
+            if unpublished and not unpublished_custody_retained:
+                unpublished_copies.close()
+                # The verified output remains reusable; only this attempt's
+                # Git snapshot was rolled back. Do not advertise its locator.
+                preservation_receipt.pop("git_snapshot", None)
+                preserved_artifacts = preservation_receipt or None
+            elif unpublished_custody_retained:
+                remove_error += "; source verification unavailable after removal attempt; preservation retained"
             return ReapResult(
                 path=str(info.path),
                 branch=info.branch,
@@ -5700,6 +5779,8 @@ def _reap_qualified_worktree(
                 preserved_artifacts=preserved_artifacts,
                 freed_bytes=freed_bytes,
             )
+
+        unpublished_copies.pop_all()
 
         # Prune and the daily-cap write do not need the per-worktree lock.
         # A waiter blocked on removal can proceed as soon as the checkout is gone.
@@ -5779,9 +5860,12 @@ def _reap_qualified_worktree(
             recovery_ref=recovery_ref,
         )
     finally:
-        dispatch_guard.close()
-        if pending_marked:
-            reaper_lifecycle.clear_reap_pending(repo_root, info.path)
+        try:
+            unpublished_copies.close()
+        finally:
+            dispatch_guard.close()
+            if pending_marked:
+                reaper_lifecycle.clear_reap_pending(repo_root, info.path)
 
 
 def _target_filter(target_paths: Sequence[Path] | None) -> set[Path] | None:
@@ -6084,7 +6168,7 @@ def reap_worktrees(
             and not any(pr.state == "OPEN" for pr in all_pr_states)
         ):
             settled, status = _is_settled_dispatch_task(repo_root=repo_root, info=info, active_ids=active_ids)
-            if settled and (
+            if settled and status in worktree_claims.RELEASED_TASK_STATUSES and (
                 reason is None or dirty is True or not _is_head_reachable_from_remote(info.path, info.head)
             ):
                 task_id = _dispatch_task_id(repo_root, info)

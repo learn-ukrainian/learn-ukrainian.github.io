@@ -23,6 +23,7 @@ import tarfile
 import tempfile
 import uuid
 from collections.abc import Mapping
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -1514,6 +1515,9 @@ def preserve_worktree_artifacts(
     absent: list[dict[str, str]] = []
     disposition = None
     disposition_members = None
+    created_copy: tuple[Path, os.stat_result] | None = None
+    created_manifest: tuple[Path, os.stat_result] | None = None
+    published = False
 
     def output_files() -> list[str]:
         names = _ignored_output_files(worktree, primary, record, absent=absent)
@@ -1639,6 +1643,7 @@ def preserve_worktree_artifacts(
                 location = parent / uuid.uuid4().hex
                 metadata["next_condition"] = "owner completes verified copy and retrieval"
                 location.mkdir(parents=True, exist_ok=False)
+                created_copy = location, location.lstat()
                 for name in files:
                     destination = location / name
                     if destination.resolve() != destination.absolute():
@@ -1674,8 +1679,18 @@ def preserve_worktree_artifacts(
             # The manifest is only a locator; retries independently read all bytes.
             if not reused:
                 with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
-                    json.dump(metadata, manifest, sort_keys=True)
+                    created_manifest = Path(manifest.name), os.fstat(manifest.fileno())
+                    json.dump(
+                        {
+                            **metadata,
+                            "preserved_at": datetime.now(UTC).isoformat(),
+                            "retention_disposition": "retained" if kept else "retrieved",
+                        },
+                        manifest,
+                        sort_keys=True,
+                    )
                     manifest.write("\n")
+                published = True
             metadata["manifest_path"] = location.with_suffix(".manifest.json").relative_to(primary).as_posix()
         if kept:
             metadata["next_condition"] = (
@@ -1736,6 +1751,20 @@ def preserve_worktree_artifacts(
         )
         return True, "", metadata
     except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+        if created_copy is not None and not published:
+            # Failed copies never become custody. Remove only this call's
+            # directory, and keep its manifest if directory cleanup fails.
+            location, original = created_copy
+            current = location.lstat()
+            if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+                raise ValueError("attempt-owned preservation path changed; source retained") from exc
+            shutil.rmtree(location)
+            if created_manifest is not None:
+                manifest_path, original = created_manifest
+                current = manifest_path.lstat()
+                if (current.st_dev, current.st_ino) != (original.st_dev, original.st_ino):
+                    raise ValueError("attempt-owned preservation manifest changed; source retained") from exc
+                manifest_path.unlink()
         # Never place filesystem exception paths in receipts.
         detail = str(exc).replace(str(worktree), "<worktree>").replace(str(primary), "<primary>")
         detail = re.sub(r"/(?:home|Users)/[^\s'\"]+", "<private-path>", detail)

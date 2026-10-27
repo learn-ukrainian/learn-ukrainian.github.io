@@ -468,7 +468,7 @@ reaping remains enabled.
 
 With the terminal-dispatch class enabled, the scheduled caller also enables
 preserve-then-reap. Dirty work without a qualified snapshot remains protected.
-Settled unpublished dispatch work requires canonical creation inventory bound to the current directory and
+Unpublished dispatch work in `worktree_claims.RELEASED_TASK_STATUSES` requires canonical creation inventory bound to the current directory and
 run, no retention claim, proven absent workers, and clear activity and PR
 probes. A private snapshot under the existing preserved-output root records
 HEAD, branch, base, recovery ref, binary head/index/working patches, the raw
@@ -485,7 +485,33 @@ failed preservation retain the original. Rescue names alone grant nothing.
 The snapshot locator is in the result's `preserved_artifacts.git_snapshot`;
 its `snapshot.json` and output locator support retrieval. Freed bytes for this
 path remain unknown because the extra preservation copies are not measured.
-Existing retention rules apply unchanged.
+`needs_finalize` remains an unfinished claim; this unpublished path cannot
+release it. Existing merge-proof paths remain unchanged.
+Each new snapshot directory, output directory and output tar has a timestamped
+sidecar manifest for the existing retention reader. Eligibility and retention
+duration remain unchanged. After a refusal, verified output remains retrievable
+and reusable by the next attempt. The reaper rolls back only its own new Git
+snapshot, never existing or reused copies. If destructive removal started and
+the full source cannot be verified afterwards, it retains the snapshot and
+reports that custody in the refusal receipt. Rollback I/O errors propagate;
+before destructive removal the original checkout remains the source of recovery.
+
+To restore an unpublished snapshot into a fresh repository, locate
+`preserved_artifacts.git_snapshot` in the successful removal receipt and read
+its `snapshot.json`. Fetch its `recovery_ref` from the original repository into
+the fresh repository, check out that ref detached, and verify `HEAD` equals
+`head_sha`. Apply `index.patch` with `git apply --index`, then `working.patch`
+with `git apply`. Verify the output locator with
+`scripts.fleet.ignored_task_output.verify_retrieval(original_repo, snapshot["output"])`
+before overlaying its listed paths, including hidden tracked, untracked and
+ignored files, onto the restored checkout. Regular files are in the output
+directory; symlinks are inert `symlink\n` records whose target bytes must be
+restored as links, without following them while copying. Finally install the
+saved raw `index` at `git rev-parse --git-path index`. Compare `git ls-files
+--stage -z` and `git ls-files -v -z` with `index.entries` and `index.flags` to
+verify staging and flags. The recovery ref supplies the exact commit objects;
+`head.patch` records the change from `base_sha` but does not recreate commit
+identity by itself.
 
 Before removal the reaper writes an append-only local journal, reserves the
 path as reap-pending, and creates a
