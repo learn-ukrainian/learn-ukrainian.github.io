@@ -84,11 +84,14 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict, *,
     record["owned_paths"] = list(metadata.get("owned_path") or [])
     record["worktree_base_ref"] = metadata.get("base") or "origin/main"
     from scripts.dispatcher.git import canonical_origins, verification_origin
-    try:
-        origin = verification_origin(spec.worktree)
-        record["worktree_remote_url"] = origin if origin in canonical_origins(repository) else None
-    except (OSError, ValueError, subprocess.SubprocessError):
+    if spec.mode != "workspace-write":
         record["worktree_remote_url"] = None
+    else:
+        try:
+            origin = verification_origin(spec.worktree)
+            record["worktree_remote_url"] = origin if origin in canonical_origins(repository) else None
+        except (OSError, ValueError, subprocess.SubprocessError):
+            record["worktree_remote_url"] = None
     fields = ("task_id", "agent", "provider", "model", "effort", "mode", "claude_account")
     record.update({name: getattr(spec, name) for name in fields})
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")

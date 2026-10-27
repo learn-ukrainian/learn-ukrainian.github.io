@@ -595,6 +595,8 @@ def delivery_settle(sandbox):
     while "reap_note" not in json.loads(path.read_text()):
         assert time.monotonic() < deadline, "initial reaper did not finish"
         time.sleep(0.02)
+    # Synthetic write records need the trusted remote omitted from read-only dispatches.
+    record["worktree_remote_url"] = str(sandbox.remote)
     def settle(model="echo", owned=("delivered.txt",)):
         record.update(mode="workspace-write", model=model, status="running", owned_paths=list(owned or []))
         if owned is None:
