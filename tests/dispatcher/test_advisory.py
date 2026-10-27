@@ -551,6 +551,13 @@ def test_driver_brief_normal_dispatch_and_replay(launch, runtime, capsys, agent,
     assert "advisory_envelope" not in record
     assert b"Run and report: test -d docs" in runtime.submitted[0]
     assert record["advisory_prompt_sha256"] == store.digest(runtime.submitted[0])
+    record.pop("driver_brief")
+    record["status"] = "spawning"
+    store.replace(record)
+    refused = runtime.settle()
+    assert refused["status"] == "failed"
+    assert refused["failure_reason"] == advisory.ADMISSION_MISSING
+    assert len(runtime.calls) == 1
 
 
 def _exempt_writer_run(launch, runtime, tmp_path, files):

@@ -88,6 +88,7 @@ def verify(spec, record: dict, prompt: bytes | None = None) -> bool:
         model in direct - {policy.bounded_worker_model_id}
         and scope.get("task_family") in {"routine_mechanical", "readonly_recon", "mechanical_classification"}
         and record.get("driver_brief") is None and record.get("advisory_envelope") is None
+        and "driver_brief" not in (record.get("prompt_blocks") or ())
     )
     return (model in {policy.bounded_worker_model_id, policy.bounded_fallback_model_id}
             or (model in direct and not mechanical_exempt) or any(record.get(key) is not None for key in (
