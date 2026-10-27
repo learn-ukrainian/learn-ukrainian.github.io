@@ -1391,9 +1391,20 @@ def _record_matches_worktree(
                 path = Path(location).expanduser()
                 if not path.is_absolute():
                     path = repo_root / path
-                # Kernel lookup follows aliases without walking every historic
-                # path in Python. Equal inodes still need canonical binding.
-                claimed = resolve_claim_path(location, repo_root=repo_root) if path.samefile(resolved_worktree) else None
+                # Kernel lookup cannot reject non-strict canonical spellings
+                # when it fails, including missing/../tree and dangling aliases.
+                try:
+                    matches = path.samefile(resolved_worktree)
+                except OSError as exc:
+                    matches = True
+                    if isinstance(exc, FileNotFoundError):
+                        # Only a non-symlink absent leaf under an accessible
+                        # directory is a safe negative without canonicalizing.
+                        try:
+                            matches = path.is_symlink() or not path.parent.is_dir()
+                        except OSError:
+                            matches = True  # Stat errors leave canonical resolution authoritative.
+                claimed = resolve_claim_path(location, repo_root=repo_root) if matches else None
                 claim_paths[location] = claimed
             if claimed == resolved_worktree:
                 return True
