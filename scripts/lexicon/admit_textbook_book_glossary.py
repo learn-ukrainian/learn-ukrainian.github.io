@@ -89,7 +89,10 @@ from scripts.lexicon.enrich_manifest import (
 )
 from scripts.lexicon.extract_book_headword_inventory import _atomic_write_yaml
 
-USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #7551)"
+USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #7551; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 SLOVNYK_SLUGS = ("newsum", "vts", "ukreng")
 SLEEP_SECONDS = 0.3
 DEFINITION_CHAR_LIMIT = 320

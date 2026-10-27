@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -245,3 +246,74 @@ def test_main_runs_with_primary_fallback_db(tmp_path: Path, monkeypatch: pytest.
     assert headwords[0]["lemma"] == "мама"
     assert headwords[0]["gloss"] == "mother"
     assert headwords[0]["gloss_source"] == "dmklinger"
+
+
+PUBLIC_CONTACT = "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues"
+
+
+@pytest.mark.parametrize("slug", admit.SLOVNYK_SLUGS)
+def test_fetch_slovnyk_curl_sends_public_contact(monkeypatch: pytest.MonkeyPatch, slug: str) -> None:
+    calls: list[tuple[list[str], dict]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        return subprocess.CompletedProcess(cmd, 0, stdout="тіло\nвідповіді\n200", stderr="")
+
+    monkeypatch.setattr(admit.subprocess, "run", fake_run)
+
+    assert admit.fetch_slovnyk_curl("мама", slug) == (200, "тіло\nвідповіді")
+
+    assert len(calls) == 1
+    cmd, kwargs = calls[0]
+    user_agent = cmd[cmd.index("-A") + 1]
+    assert PUBLIC_CONTACT in user_agent
+    assert user_agent.startswith("learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #7551; ")
+    assert cmd == [
+        "curl",
+        "-s",
+        "-w",
+        "\n%{http_code}",
+        "-A",
+        user_agent,
+        "--max-time",
+        "15",
+        f"https://slovnyk.me/dict/{slug}/%D0%BC%D0%B0%D0%BC%D0%B0",
+    ]
+    assert kwargs == {"capture_output": True, "text": True, "timeout": 20}
+
+
+def test_fetch_slovnyk_curl_preserves_status_and_failure_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+    outcomes: list = []
+    timeouts: list[tuple[list[str], int]] = []
+
+    def fake_run(cmd, **kwargs):
+        timeouts.append((cmd, kwargs["timeout"]))
+        outcome = outcomes.pop(0)
+        if isinstance(outcome, Exception):
+            raise outcome
+        return outcome
+
+    monkeypatch.setattr(admit.subprocess, "run", fake_run)
+
+    def completed(stdout: str, returncode: int = 0) -> subprocess.CompletedProcess:
+        return subprocess.CompletedProcess(["curl"], returncode, stdout=stdout, stderr="")
+
+    outcomes[:] = [
+        completed("не знайдено\n404"),
+        completed("відмова\n403"),
+        completed("", returncode=28),
+        subprocess.TimeoutExpired("curl", 7),
+        completed("тіло\nне-код"),
+        completed("без-коду"),
+    ]
+
+    assert admit.fetch_slovnyk_curl("мама", "newsum", timeout=2) == (404, "не знайдено")
+    assert admit.fetch_slovnyk_curl("мама", "vts", timeout=2) == (403, "відмова")
+    assert admit.fetch_slovnyk_curl("мама", "ukreng", timeout=2) == (0, "")
+    assert admit.fetch_slovnyk_curl("мама", "newsum", timeout=2) == (0, "")
+    assert admit.fetch_slovnyk_curl("мама", "vts", timeout=2) == (0, "тіло")
+    assert admit.fetch_slovnyk_curl("мама", "ukreng", timeout=2) == (0, "")
+
+    assert [timeout for _cmd, timeout in timeouts] == [7] * 6
+    assert all(cmd[cmd.index("--max-time") + 1] == "2" for cmd, _timeout in timeouts)
+    assert all(PUBLIC_CONTACT in cmd[cmd.index("-A") + 1] for cmd, _timeout in timeouts)
