@@ -6,7 +6,9 @@ Each guard is a mechanical copy of the legacy ``scripts/delegate.py`` function i
 argument names and repository root. Refusals keep the legacy stderr text and exit code (``Refused``); all
 run before any task record, worktree or branch exists, in the legacy order, except the write-path claim
 (``WriteClaim``): it is taken once the worktree exists, immediately before the task record, so nothing
-that can wait (the worktree lock, the checkout) ever runs while it is held.
+that can wait (the worktree lock, the checkout) runs while it is held. The one exception is a ``--cwd``
+dispatch, which then waits for the worktree lock, by default bounded below the admission grace; a claim lost meanwhile
+refuses the launch at the pid bind.
 """
 
 import json

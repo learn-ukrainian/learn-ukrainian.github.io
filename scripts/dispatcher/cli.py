@@ -6,7 +6,7 @@ import re
 import subprocess
 import sys
 import uuid
-from contextlib import ExitStack
+from contextlib import nullcontext
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import get_args
@@ -305,13 +305,10 @@ def _dispatch(args) -> int:
     with host_admission.reserve(
         task_id, args.mode, decision, agent=agent, force_reason=force_reason,
         disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),
-    ) as hold, ExitStack() as attachment:
+    ) as hold:
         if binding:
             store.check_review_attempt(binding, claim=True)
-        if args.cwd:
-            # Held until the task record names the worktree, so another dispatch's cleanup cannot remove it.
-            attachment.enter_context(git.attached_worktree(repo, worktree))
-        else:
+        if not args.cwd:
             # A failed preparation removes what it created, so only a complete worktree reaches this point.
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
         try:
@@ -328,7 +325,9 @@ def _dispatch(args) -> int:
             if not args.cwd:
                 git.discard_worktree(repo, worktree, branch)
             raise
-        with claim:
+        # An existing worktree is attached under the worktree lock until the task record names it, so another
+        # dispatch's cleanup cannot remove it. The lock is taken after the claim, whose queue can wait long.
+        with claim, git.attached_worktree(repo, worktree) if args.cwd else nullcontext():
             try:
                 worker.start(spec, record, prompt, args.hard_timeout, on_spawn=claim.bind)
             except admission.LaunchRefused as exc:
