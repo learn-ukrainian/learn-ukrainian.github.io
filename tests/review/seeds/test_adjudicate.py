@@ -20,7 +20,6 @@ import scripts.delegate as delegate
 from scripts.dispatcher.cli import build_parser as v2_parser
 from scripts.review.seeds import adjudicate as adj
 from scripts.review.seeds import manifest as sm
-from scripts.storage.topology import StoreBinding
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 LESSON_TEXT = "lesson text placeholder for the adjudicator"
@@ -127,15 +126,7 @@ def _different_value(old: Any) -> Any:
 
 
 @pytest.fixture
-def env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Env:
-    # Historical prompt verification needs path bytes, never the live corpus.
-    monkeypatch.setattr(
-        adj.legacy_codec,
-        "resolve_store",
-        lambda store, root: StoreBinding(
-            store, delegate._primary_database_path(root, f"{store}.db"), provenance="injected"
-        ),
-    )
+def env(tmp_path: Path) -> Env:
     return Env(tmp_path)
 
 
@@ -1075,6 +1066,70 @@ def test_the_canonical_v2_record_is_accepted(seeded: Case, monkeypatch: pytest.M
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]
     cold.write_bytes(canonical)
     assert seeded.record(good)["new"] is True
+
+
+@pytest.mark.parametrize("schema_version", [None, 1])
+@pytest.mark.parametrize("kind", ["request", "started", "execution"])
+@pytest.mark.parametrize("symlink", [False, True], ids=["file", "dangling-symlink"])
+def test_v2_legacy_dispatch_evidence_downgrade_is_refused(
+    seeded: Case, monkeypatch: pytest.MonkeyPatch, schema_version: int | None, kind: str, symlink: bool
+) -> None:
+    binding = (seeded.unit_id, seeded.review_id, seeded.attempt_id, seeded.task_id, seeded.env.tasks, seeded.env.root)
+    identity = {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
+    assert adj.check_dispatch_binding(*binding) == identity
+    record_path = seeded.env.tasks / f"{seeded.task_id}.json"
+    legacy = json.loads(record_path.read_bytes())
+    if schema_version is None:
+        legacy.pop("schema_version", None)
+    else:
+        legacy["schema_version"] = schema_version
+    _v2_dispatch(seeded, monkeypatch)
+    record_path.write_text(json.dumps(legacy), encoding="utf-8")
+    for other_kind in ("request", "started", "execution"):
+        path = adj._binding_path(seeded.task_file, other_kind)
+        if other_kind != kind or symlink:
+            path.unlink()
+    if symlink:
+        path = adj._binding_path(seeded.task_file, kind)
+        path.symlink_to(path.with_name("missing-binding.json"))
+        assert path.is_symlink() and not path.exists()
+    with pytest.raises(adj.AdjudicationError, match="a v2 adjudication cannot use legacy dispatch evidence") as error:
+        adj.check_dispatch_binding(*binding)
+    assert error.value.code == adj.TASK_MISMATCH
+
+
+@pytest.mark.parametrize(
+    ("artifact", "field", "value", "message"),
+    [
+        ("record", "run_nonce", "b" * 32, "execution nonce or request digest differs"),
+        ("started", "request_sha256", "0" * 64, "launch reservation differs from frozen request"),
+        ("execution", "format", "different-format", "execution nonce or request digest differs"),
+        ("execution", "request_sha256", "0" * 64, "execution nonce or request digest differs"),
+        ("execution", "task_id", "another-task", "execution nonce or request digest differs"),
+        ("execution", "run_nonce", "b" * 32, "execution nonce or request digest differs"),
+    ],
+)
+def test_v2_nonce_or_launch_receipt_mutation_is_refused(
+    seeded: Case, monkeypatch: pytest.MonkeyPatch, artifact: str, field: str, value: str, message: str
+) -> None:
+    _v2_dispatch(seeded, monkeypatch)
+    binding = (seeded.unit_id, seeded.review_id, seeded.attempt_id, seeded.task_id, seeded.env.tasks, seeded.env.root)
+    identity = {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
+    assert adj.check_dispatch_binding(*binding) == identity
+    path = (
+        seeded.env.tasks / f"{seeded.task_id}.json"
+        if artifact == "record"
+        else adj._binding_path(seeded.task_file, artifact)
+    )
+    original = path.read_bytes()
+    mutated = json.loads(original)
+    mutated[field] = value
+    path.write_text(json.dumps(mutated), encoding="utf-8")
+    with pytest.raises(adj.AdjudicationError, match=message) as error:
+        adj.check_dispatch_binding(*binding)
+    assert error.value.code == adj.TASK_MISMATCH
+    path.write_bytes(original)
+    assert adj.check_dispatch_binding(*binding) == identity
 
 
 def test_every_v2_dispatch_argument_binds_the_hash(seeded: Case, monkeypatch: pytest.MonkeyPatch) -> None:

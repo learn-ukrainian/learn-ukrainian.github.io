@@ -1,8 +1,9 @@
 """Frozen legacy codec for resume of historical evaluation manifests and adjudications.
 
-Snapshot of delegate argument defaults, fingerprinting and prompt composition at
-8dd9ea4f18. Never use this module to create or launch legacy tasks. It contains
-no launcher or dispatch implementation. Defaults and prompt strings are evidence
+Preserves delegate's historical argument defaults, fingerprinting, path strings
+and prompt composition for legacy evidence verification. Never use this module
+to create or launch legacy tasks. It contains no launcher or dispatch
+implementation. Defaults and prompt strings are evidence
 format bytes: changing them invalidates historical hashes. The sparse reader is
 restricted to the no-owned-path evaluation frame.
 """
@@ -22,7 +23,7 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root
 from scripts.common.repo_root import project_interpreter
 from scripts.lib import rules_core
-from scripts.storage.topology import StoreRefusal, resolve_store
+from scripts.storage.topology import STORE_FILES
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_GIT_TIMEOUT_S = 30.0
@@ -269,12 +270,15 @@ def _resolve_primary_root_for_worktree(cwd_or_worktree: Path) -> Path:
 
 
 def _primary_database_path(primary_root: Path, name: str) -> Path:
-    """Resolve a logical read store without bypassing topology refusals."""
-    store = "sources" if name == "sources.db" else "vesum"
-    binding = resolve_store(store, primary_root)
-    if isinstance(binding, StoreRefusal):
-        raise ValueError(f"legacy {store} store unavailable: {binding.reason}")
-    return binding.path
+    """Reproduce legacy evidence path bytes without accessing a live store."""
+    store = "sources" if name == STORE_FILES["sources"][0] else "vesum"
+    filename, override_key = STORE_FILES[store]
+    if store == "sources":
+        override = os.environ.get(override_key)
+        if override:
+            path = Path(override).expanduser()
+            return path.resolve() if path.is_absolute() else (primary_root / path).resolve()
+    return (primary_root / "data" / filename).resolve()
 
 
 def _primary_database_connect_code(target: Path) -> str:
