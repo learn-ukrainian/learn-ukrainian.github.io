@@ -809,7 +809,8 @@ def _query_pr_by_number(
                 "view",
                 str(number),
                 "--json",
-                "number,state,headRefOid",
+                "number,state,headRefOid,url",
+                *(["--repo", repository] if (repository := reap_worktrees._pr_repository(repo_root)) else []),
             ],
             capture_output=True,
             text=True,
@@ -830,17 +831,12 @@ def _query_pr_by_number(
         return [], f"gh pr view returned invalid JSON: {exc}"
     if not isinstance(item, dict):
         return [], "gh pr view returned invalid JSON"
-    state = str(item.get("state") or "").upper()
-    if not state:
-        return [], None
-    number_value = item.get("number")
-    return [
-        reap_worktrees.PullRequestState(
-            number=number_value if isinstance(number_value, int) else number,
-            state=state,
-            head_sha=(str(item.get("headRefOid")) if item.get("headRefOid") else None),
-        )
-    ], None
+    rows, error = reap_worktrees._scope_pr_rows([item], reap_worktrees._pr_repository(repo_root), number=number)
+    if error or not rows:
+        return [], error
+    parsed, error = reap_worktrees._parse_pr_item(rows[0])
+    return ([parsed] if parsed is not None else []), error
+
 
 
 def cleanup_untracked_local_branches(

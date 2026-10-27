@@ -7,10 +7,12 @@ and GitHub targeting.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -176,3 +178,47 @@ def fleet_repo_as_dict(repo: FleetRepo, checkout: Path) -> dict[str, Any]:
         "default": repo.default,
         "checkout": str(checkout),
     }
+
+
+def canonical_repository(value: str) -> str:
+    """Canonical owner/name, accepting the registry's keys and slug spellings."""
+    spelling = value.strip().casefold()
+    for repo in load_fleet_repos().values():
+        if spelling in {repo.key.casefold(), repo.github.casefold()}:
+            return repo.github.casefold()
+    if re.fullmatch(r"[a-z0-9_.-]+/[a-z0-9_.-]+", spelling):
+        return spelling
+    raise FleetRepoError("PR repository must be owner/name")
+
+
+def pull_request_repository(payload: Any, *, scoped_repository: str | None = None) -> str | None:
+    """Read the PR's base repository, never its possibly forked head repository.
+
+    A repository-scoped response can omit attribution. Explicit attribution
+    always wins, including when it disagrees with the requested repository.
+    Conflicting or malformed attribution is unknown, never deletion proof.
+    """
+    if not isinstance(payload, dict):
+        raise FleetRepoError("PR payload is not an object")
+    names: list[str] = []
+    base = payload.get("base")
+    if isinstance(base, dict) and isinstance(base.get("repo"), dict):
+        names.append(base["repo"].get("full_name"))
+    repository = payload.get("repository")
+    if repository is not None:
+        names.append(repository.get("nameWithOwner") if isinstance(repository, dict) else repository)
+    for field in ("url", "html_url"):
+        if field in payload:
+            if not isinstance(payload[field], str):
+                raise FleetRepoError("PR payload has unusable repository attribution")
+            url = urlsplit(payload[field])
+            parts = url.path.strip("/").split("/")
+            if url.hostname != "github.com" or len(parts) != 4 or parts[2] != "pull":
+                raise FleetRepoError("PR payload has unusable repository attribution")
+            names.append("/".join(parts[:2]))
+    if any(not isinstance(name, str) or not name for name in names):
+        raise FleetRepoError("PR payload has unusable repository attribution")
+    canonical = {canonical_repository(name) for name in names}
+    if len(canonical) > 1:
+        raise FleetRepoError("PR payload has conflicting repository attribution")
+    return next(iter(canonical)) if canonical else scoped_repository

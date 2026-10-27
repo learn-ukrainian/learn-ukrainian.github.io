@@ -174,7 +174,7 @@ def test_fetch_pr_info_parses_gh_payload(tmp_path: Path, monkeypatch: pytest.Mon
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef")
+    assert pr == mc.PullRequestInfo(number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef", repository="learn-ukrainian/learn-ukrainian.github.io")
 
 
 @pytest.mark.parametrize(
@@ -208,7 +208,7 @@ def test_fetch_pr_info_maps_rest_state(
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(42, expected_state, "codex/feature", "deadbeef")
+    assert pr == mc.PullRequestInfo(42, expected_state, "codex/feature", "deadbeef", repository="learn-ukrainian/learn-ukrainian.github.io")
     assert len(calls) == 1
     assert calls[0][-1] == "repos/learn-ukrainian/learn-ukrainian.github.io/pulls/42"
 
@@ -232,7 +232,7 @@ def test_fetch_pr_info_rest_failure_falls_back_to_graphql(tmp_path: Path, monkey
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(42, "MERGED", "fallback", "bead")
+    assert pr == mc.PullRequestInfo(42, "MERGED", "fallback", "bead", repository="learn-ukrainian/learn-ukrainian.github.io")
     assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
 
 
@@ -277,7 +277,7 @@ def test_fetch_pr_info_malformed_rest_falls_back_instead_of_guessing(
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(42, "OPEN", "safe", "sha")
+    assert pr == mc.PullRequestInfo(42, "OPEN", "safe", "sha", repository="learn-ukrainian/learn-ukrainian.github.io")
     assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
 
 
@@ -296,7 +296,7 @@ def test_fetch_pr_info_honors_repo_override_for_rest(tmp_path: Path, monkeypatch
 
     pr = mc.fetch_pr_info(repo, 42, repo="other/project")
 
-    assert pr == mc.PullRequestInfo(42, "OPEN", "override", "sha")
+    assert pr == mc.PullRequestInfo(42, "OPEN", "override", "sha", repository="other/project")
     assert calls[0][-1] == "repos/other/project/pulls/42"
 
 
@@ -1053,3 +1053,76 @@ def test_text_report_renders_cleanup_and_criterion_residuals():
     assert "remote_error: remote unavailable" in text
     assert "local_error: local retained" in text
     assert text.endswith("errors:\n  cleanup residual\nRESIDUAL / ERROR")
+
+
+def test_cross_repository_pr_identity_collision_does_not_block_closeout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/repository-collision"
+    head = commit_on_branch(repo, branch, "collision.txt")
+    publish_pr_head(repo, 42, branch, head)
+    worktree = add_detached_worktree(repo, "pr-42", head)
+    repository = "learn-ukrainian/learn-ukrainian.github.io"
+    second_repository = "example/second-repository"
+    merged = {
+        "number": 42, "state": "MERGED", "headRefOid": head,
+        "repository": {"nameWithOwner": repository},
+        "url": f"https://github.com/{repository}/pull/42",
+    }
+    opened = {
+        **merged, "state": "OPEN",
+        "repository": {"nameWithOwner": second_repository},
+        "url": f"https://github.com/{second_repository}/pull/42",
+    }
+    calls = patch_gh(
+        monkeypatch, pr_number=42, state="MERGED", head_ref_name=branch, head_sha=head,
+        branch_prs={branch: [opened, merged]}, sha_prs={head: [opened, merged]},
+    )
+
+    result = mc.run_merge_closeout(repo, 42, apply=True, live_cwds=set())
+
+    assert result.ok is True, result.errors
+    assert result.matched_worktrees == [str(worktree)]
+    assert [entry["action"] for entry in result.reap_results] == ["removed"]
+    assert not worktree.exists()
+    assert result.branch_status is not None
+    assert result.branch_status.remote_gone and result.branch_status.local_gone
+    assert git(repo, "ls-remote", "--heads", "origin", branch) == ""
+    assert any(call[1:3] == ["search", "prs"] for call in calls)
+
+    # Both transports must filter the same collision before choosing OPEN over MERGED.
+    for transport in ("rest", "graphql", "search"):
+        with monkeypatch.context() as scoped:
+            rows = [opened, merged]
+            if transport == "rest":
+                rows = [
+                    {
+                        "number": row["number"], "state": "closed" if row["state"] == "MERGED" else "open",
+                        "merged_at": "2026-01-02T03:04:05Z" if row["state"] == "MERGED" else None,
+                        "head": {"sha": head}, "base": {"repo": {"full_name": row["repository"]["nameWithOwner"]}},
+                    }
+                    for row in rows
+                ]
+            scoped.setattr(
+                rw, "_run_gh",
+                lambda *args, rows=rows, transport=transport, **kwargs: subprocess.CompletedProcess(
+                    [], 0, json.dumps([rows] if transport == "rest" else rows), ""
+                ),
+            )
+            if transport == "rest":
+                states, error = rw._query_pr_states_rest(repo, branch)
+            elif transport == "graphql":
+                states, error = rw._query_pr_states_graphql(repo, branch)
+            else:
+                states, error = rw._query_prs_by_head_sha(repo, head)
+            assert error is None
+            assert [(state.number, state.state, state.head_sha) for state in states] == [(42, "MERGED", head)]
+            assert states[0].repository == repository
+
+    # An OPEN PR in the checkout's own repository must still block branch deletion.
+    patch_gh(
+        monkeypatch, pr_number=42, state="MERGED", head_ref_name=branch, head_sha=head,
+        branch_prs={branch: [{**merged, "state": "OPEN"}]},
+    )
+    assert "open PR" in (mc._guard_branch_not_open(repo, branch) or "")

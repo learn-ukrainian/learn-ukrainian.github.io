@@ -71,6 +71,7 @@ from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_a
 from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
 from scripts.orchestration.execution_safe_git import run_git as safe_git
+from scripts.orchestration.fleet_repos import canonical_repository, pull_request_repository
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -111,6 +112,7 @@ class PullRequestState:
     state: str
     head_sha: str | None = None
     head_from_commit_search: bool = False
+    repository: str | None = None
 
 
 @dataclass(frozen=True)
@@ -718,6 +720,28 @@ def _github_owner_repo(repo_root: Path) -> tuple[str, str] | None:
         return None
 
 
+def _pr_repository(repo_root: Path) -> str | None:
+    slug = _github_owner_repo(repo_root)
+    return canonical_repository("/".join(slug)) if slug else None
+
+
+def _scope_pr_rows(
+    rows: list[Any], repository: str | None, *, number: int | None = None,
+) -> tuple[list[dict[str, Any]], str | None]:
+    scoped = []
+    for row in rows:
+        try:
+            actual = pull_request_repository(row, scoped_repository=repository)
+        except (TypeError, ValueError) as exc:
+            return [], str(exc)
+        if repository is not None and actual != repository:
+            continue
+        if number is not None and row.get("number") != number:
+            return [], "PR payload number does not match requested PR"
+        scoped.append({**row, **({"repository": actual} if actual else {})})
+    return scoped, None
+
+
 def _parse_rest_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
     """Map one REST pull object onto ``PullRequestState``; unreadable is an error."""
     if not isinstance(item, dict):
@@ -742,6 +766,7 @@ def _parse_rest_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]
             number=number,
             state=state,
             head_sha=str(head_sha) if head_sha else None,
+            repository=pull_request_repository(item),
         ),
         None,
     )
@@ -787,13 +812,15 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         return [], f"REST PR lookup returned invalid JSON: {exc}"
     if not isinstance(raw_items, list) or any(not isinstance(page, list) for page in raw_items):
         return [], "REST PR lookup returned a non-list page"
+    rows, error = _scope_pr_rows([item for page in raw_items for item in page], _pr_repository(repo_root))
+    if error:
+        return [], error
     states: list[PullRequestState] = []
-    for page in raw_items:
-        for item in page:
-            parsed, err = _parse_rest_pr_item(item)
-            if err is not None or parsed is None:
-                return [], err or "REST PR lookup returned an unusable row"
-            states.append(parsed)
+    for item in rows:
+        parsed, err = _parse_rest_pr_item(item)
+        if err is not None or parsed is None:
+            return [], err or "REST PR lookup returned an unusable row"
+        states.append(parsed)
     return states, None
 
 
@@ -825,7 +852,8 @@ def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullReq
                 "--limit",
                 "1000",
                 "--json",
-                "number,state,headRefOid",
+                "number,state,headRefOid,url",
+                *(["--repo", repository] if (repository := _pr_repository(repo_root)) else []),
             ],
             cwd=repo_root,
             timeout=30,
@@ -849,6 +877,9 @@ def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullReq
     if len(raw_items) >= 1000:
         return [], "gh pr list reached its limit; PR state is incomplete"
 
+    raw_items, error = _scope_pr_rows(raw_items, _pr_repository(repo_root))
+    if error:
+        return [], error
     states: list[PullRequestState] = []
     for item in raw_items:
         # A row we cannot read is an UNKNOWN, never an absence. Silently
@@ -899,6 +930,7 @@ def _parse_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
             number=number,
             state=state,
             head_sha=str(head) if head else None,
+            repository=pull_request_repository(item),
         ),
         None,
     )
@@ -929,7 +961,10 @@ def _query_pr_by_number_rest(repo_root: Path, number: int) -> tuple[list[PullReq
         item = json.loads(proc.stdout or "null")
     except json.JSONDecodeError as exc:
         return [], f"REST PR lookup returned invalid JSON: {exc}"
-    parsed, err = _parse_rest_pr_item(item)
+    rows, error = _scope_pr_rows([item], _pr_repository(repo_root), number=number)
+    if error or not rows:
+        return [], error
+    parsed, err = _parse_rest_pr_item(rows[0])
     if err is not None or parsed is None:
         return [], err or "REST PR lookup returned an unusable payload"
     return [parsed], None
@@ -958,7 +993,8 @@ def _query_pr_by_number_graphql(repo_root: Path, number: int) -> tuple[list[Pull
                 "view",
                 str(number),
                 "--json",
-                "number,state,headRefOid",
+                "number,state,headRefOid,url",
+                *(["--repo", repository] if (repository := _pr_repository(repo_root)) else []),
             ],
             cwd=repo_root,
             timeout=30,
@@ -971,7 +1007,10 @@ def _query_pr_by_number_graphql(repo_root: Path, number: int) -> tuple[list[Pull
         item = json.loads(proc.stdout or "null")
     except json.JSONDecodeError as exc:
         return [], f"gh pr view returned invalid JSON: {exc}"
-    parsed, err = _parse_pr_item(item)
+    rows, error = _scope_pr_rows([item], _pr_repository(repo_root), number=number)
+    if error or not rows:
+        return [], error
+    parsed, err = _parse_pr_item(rows[0])
     if err is not None or parsed is None:
         return [], err or "gh pr view returned an unusable payload"
     return [parsed], None
@@ -1193,9 +1232,11 @@ def _query_prs_by_head_sha(
     """
     if not head_sha:
         return [], None
+    repository = _pr_repository(repo_root)
     try:
         proc = _run_gh(
-            ["gh", "search", "prs", head_sha, "--json", "number,state"],
+            ["gh", "search", "prs", head_sha, "--json", "number,state,repository,url",
+             *(["--repo", repository] if repository else [])],
             cwd=repo_root,
             timeout=30,
         )
@@ -1214,6 +1255,9 @@ def _query_prs_by_head_sha(
     if not isinstance(raw_items, list):
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned a non-list)"
 
+    raw_items, error = _scope_pr_rows(raw_items, repository)
+    if error:
+        return [], error
     states: list[PullRequestState] = []
     for item in raw_items:
         # ``[null]`` and ``[{}]`` used to be skipped, which is an empty list,
@@ -1238,7 +1282,8 @@ def _parse_search_pr_item(item: Any, head_sha: str) -> tuple[PullRequestState | 
     if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
         return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has no usable PR number)"
     return (
-        PullRequestState(number=number, state=state, head_sha=head_sha, head_from_commit_search=True),
+        PullRequestState(number=number, state=state, head_sha=head_sha, head_from_commit_search=True,
+                         repository=pull_request_repository(item)),
         None,
     )
 
@@ -1250,6 +1295,7 @@ def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
         "number": pr_state.number,
         "state": pr_state.state,
         "head_sha": pr_state.head_sha,
+        "repository": pr_state.repository,
     }
 
 
@@ -1299,6 +1345,10 @@ def _sha_is_ancestor(cwd: Path, sha: str, descendant: str) -> bool:
     return proc.returncode == 0
 
 
+def _pr_belongs_to_checkout(info: WorktreeInfo, pr: PullRequestState) -> bool:
+    return pr.repository is None or pr.repository == _pr_repository(info.path)
+
+
 def _pr_matches_worktree_head(
     info: WorktreeInfo,
     pr_state: PullRequestState | None,
@@ -1312,6 +1362,8 @@ def _pr_matches_worktree_head(
     one. A git error is not ancestry.
     """
     if pr_state is None or not pr_state.head_sha or not info.head:
+        return False
+    if not _pr_belongs_to_checkout(info, pr_state):
         return False
     if pr_state.head_sha == info.head:
         return True
@@ -1328,6 +1380,7 @@ def _merged_equivalent(info: WorktreeInfo, pr: PullRequestState | None) -> bool:
         pr is None
         or pr.state != "MERGED"
         or pr.head_from_commit_search
+        or not _pr_belongs_to_checkout(info, pr)
         or not pr.head_sha
         or not info.head
         or _worktree_clean(info.path) is not True
@@ -1382,6 +1435,8 @@ def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) ->
 
     try:
         primary = primary_checkout_root(info.path)
+        if not _pr_belongs_to_checkout(info, pr_state):
+            return unproven(local_commits(), "PR repository does not match checkout")
         if pr_state.number is None or not pr_state.head_sha:
             return unproven(local_commits(), "PR head unavailable")
         live_branch = _run(
@@ -1448,6 +1503,8 @@ def _same_tree_hint(
     match. A missing or dummy head, or any diff, is not a hint.
     """
     if pr_state is None or not pr_state.head_sha or not info.head:
+        return None
+    if not _pr_belongs_to_checkout(info, pr_state):
         return None
     if pr_state.head_sha == info.head:
         return None
@@ -3112,7 +3169,7 @@ def _current_open_pr_heads(
             continue
         if any(state is hit for hit in commit_prs):
             fresh, error = _query_pr_by_number(repo_root, state.number)
-            fresh_open = next((pr for pr in fresh if pr.number == state.number), None)
+            fresh_open = next((pr for pr in fresh if pr.number == state.number and pr.repository == state.repository), None)
             if error is not None or fresh_open is None or not fresh_open.head_sha:
                 return {}, f"PR #{state.number} head unavailable: {error or 'no head'}"
             if fresh_open.state == "OPEN":
@@ -3834,6 +3891,7 @@ def _same_branch_merged_cohort(
         or pr is None
         or pr.state != "MERGED"
         or pr.head_from_commit_search
+        or not _pr_belongs_to_checkout(info, pr)
         or not pr.head_sha
         or _worktree_clean(info.path) is not True
         or not _pr_matches_worktree_head(info, pr)
@@ -3879,7 +3937,8 @@ def _continuation_head_is_merged(
     """
     if preservation is not None and not _preserved_merged_head_valid(info, preservation):
         return False
-    if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
+    if (pr is None or pr.state != "MERGED" or pr.head_from_commit_search
+            or not _pr_belongs_to_checkout(info, pr) or not pr.head_sha or not info.head):
         return False
     if allow_equivalent and not _pr_matches_worktree_head(info, pr) and _merged_equivalent(info, pr):
         return bool(cohort) and all(
@@ -4026,6 +4085,7 @@ def _resolve_merged_reuse_creator(
                 and branch
                 and merged_pr.state == "MERGED"
                 and not merged_pr.head_from_commit_search
+                and _pr_belongs_to_checkout(info, merged_pr)
                 and merged_pr.head_sha == info.head
                 and not any(member.get("keep_worktree") for _, member in matches)
                 and not _retention_release_present(matches)
@@ -4291,7 +4351,8 @@ def _preservation_merged_creator(
     holder = creators[0] if len(creators) == 1 else cohort[0]
     proof = holder[1].get("worktree_reap_proof")
     proof_pr = (
-        PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"))
+        PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"),
+                         repository=proof.get("pr_repository"))
         if isinstance(proof, dict)
         else None
     )
@@ -4304,7 +4365,8 @@ def _preservation_merged_creator(
     head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
     branch = worktree_claims.checked_out_branch(worktree)
     info = WorktreeInfo(worktree, branch, proof.get("head_sha"), detached=branch is None)
-    pr = PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"))
+    pr = PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"),
+                         repository=proof.get("pr_repository"))
     preservation = proof.get("preservation")
     expected_head = info.head
     if preservation is not None:
@@ -4312,7 +4374,8 @@ def _preservation_merged_creator(
             raise ValueError("merged continuation preservation head changed")
         expected_head = preservation["head_sha"]
     if (
-        proof.get("owner") != creator.get("task_id")
+        (pr.repository is not None and pr.repository != _pr_repository(worktree))
+        or proof.get("owner") != creator.get("task_id")
         or proof.get("run_nonce") != creator.get("run_nonce")
         or head.returncode != 0
         or head.stdout.strip() != expected_head
@@ -4437,6 +4500,7 @@ def _merged_reuse_claim_proven_settled(
             # the full cohort's containment and worker-absence requirements.
             if (
                 merged_pr is not None
+                and _pr_belongs_to_checkout(info, merged_pr)
                 and merged_pr.head_sha == info.head
                 and _same_branch_merged_cohort(info, merged_pr, cohort)
             ):
@@ -4526,7 +4590,8 @@ def _record_merged_reuse_proof(
     if alternate:
         proven_head = _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head)
         real_pr = (
-            pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search and pr.head_sha == info.head
+            pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search
+            and _pr_belongs_to_checkout(info, pr) and pr.head_sha == info.head
         )
         if not proven_head or not real_pr:
             if _retention_release_present(matches):
@@ -4557,6 +4622,7 @@ def _record_merged_reuse_proof(
         "pr_head_sha": pr.head_sha,
         "head_relation": _merged_head_relation(info, pr),
         "pr_number": pr.number,
+        "pr_repository": pr.repository,
         "pr_state": pr.state,
         "pr_head_source": "merged_pr_record",
         "clean": True,
@@ -4830,7 +4896,7 @@ def _reap_qualified_worktree(
         cohort = []
     if len(cohort) >= 2:
         states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
-        fresh = next((state for state in states if state.number == pr_state.number), None)
+        fresh = next((state for state in states if state.number == pr_state.number and state.repository == pr_state.repository), None)
         if (
             error is not None
             or fresh is None
@@ -4877,6 +4943,7 @@ def _reap_qualified_worktree(
                         pr_state is not None
                         and pr_state.state == "MERGED"
                         and not pr_state.head_from_commit_search
+                        and _pr_belongs_to_checkout(info, pr_state)
                         and pr_state.head_sha == info.head
                     )
                     if not real_pr or not _switched_branch_merge_proven(
