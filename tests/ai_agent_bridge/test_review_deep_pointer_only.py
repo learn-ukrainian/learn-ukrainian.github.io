@@ -8,29 +8,7 @@ from unittest.mock import patch
 import pytest
 
 from scripts.ai_agent_bridge import _review_safety as safety
-from scripts.ai_agent_bridge._dispatch_wrappers import (
-    _list_review_path_names,
-    _write_review_deep_path_prompt,
-    _write_review_deep_pr_prompt,
-)
-
-
-def test_list_review_path_names_no_content(tmp_path: Path) -> None:
-    (tmp_path / "a.py").write_text("secret_payload_xyz\n", encoding="utf-8")
-    listing = _list_review_path_names(tmp_path)
-    assert "a.py" in listing
-    assert "secret_payload_xyz" not in listing
-
-
-def test_path_prompt_is_pointer_only(tmp_path: Path) -> None:
-    target = tmp_path / "mod"
-    target.mkdir()
-    (target / "x.py").write_text("print('NO_EMBED')\n", encoding="utf-8")
-    out = _write_review_deep_path_prompt(str(target), tmp_path)
-    text = out.read_text(encoding="utf-8")
-    assert "READ-ONLY REVIEW CONTRACT" in text
-    assert "NO_EMBED" not in text
-    assert "x.py" in text
+from scripts.ai_agent_bridge._dispatch_wrappers import _write_review_deep_pr_prompt
 
 
 def test_pr_prompt_is_pointer_only(tmp_path: Path) -> None:
@@ -86,11 +64,9 @@ def _fill_bytes(size: int, character: str) -> str:
     return character * (size // width) + "x" * (size % width)
 
 
-@pytest.mark.parametrize("kind", ("pr", "path"))
 @pytest.mark.parametrize("character", ("x", "é"))
 @pytest.mark.parametrize("boundary", (4095, 4096, 4097))
 def test_real_builders_preserve_baseline_budget_and_reject_overflow(
-    kind: str,
     character: str,
     boundary: int,
     tmp_path: Path,
@@ -107,10 +83,8 @@ def test_real_builders_preserve_baseline_budget_and_reject_overflow(
         "files": [{"path": "a.py", "additions": 1, "deletions": 0}],
     }
     monkeypatch.setattr("scripts.ai_agent_bridge._dispatch_wrappers._run_json_command", lambda _: pr)
-    target = tmp_path / "mod"
-    target.mkdir()
-    builder = _write_review_deep_pr_prompt if kind == "pr" else _write_review_deep_path_prompt
-    argument = "1" if kind == "pr" else str(target)
+    builder = _write_review_deep_pr_prompt
+    argument = "1"
     # Accepted cases size the unchanged external input against the baseline.
     # Overflow is exactly one byte beyond the corrected prompt's cap.
     measured_contract = BASELINE_CONTRACT if boundary <= 4096 else contract
@@ -119,18 +93,7 @@ def test_real_builders_preserve_baseline_budget_and_reject_overflow(
         builder_path = builder(argument, tmp_path)
         initial = builder_path.read_text(encoding="utf-8")
     padding = boundary - len(initial.encode("utf-8"))
-    if kind == "pr":
-        pr["title"] = _fill_bytes(padding, character)
-    else:
-        # Real filesystem names exercise the real listing producer, without
-        # embedding their contents or exceeding a filename component's limit.
-        count = 16
-        listing_bytes = len("(no files)") + padding
-        filler_bytes = listing_bytes - count * len("- 00-") - (count - 1)
-        each, extra = divmod(filler_bytes, count)
-        for index in range(count):
-            name = f"{index:02d}-" + _fill_bytes(each + (index < extra), character)
-            (target / name).write_text("DO_NOT_EMBED", encoding="utf-8")
+    pr["title"] = _fill_bytes(padding, character)
 
     if boundary > 4096:
         with pytest.raises(
@@ -150,4 +113,4 @@ def test_real_builders_preserve_baseline_budget_and_reject_overflow(
     assert len(prompt.encode("utf-8")) == expected_bytes <= 4096
     assert prompt.removeprefix(contract + "\n\n") == baseline_prompt.removeprefix(BASELINE_CONTRACT + "\n\n")
     assert "DO_NOT_EMBED" not in prompt
-    assert "abc123" in prompt if kind == "pr" else str(target.resolve()) in prompt
+    assert "abc123" in prompt

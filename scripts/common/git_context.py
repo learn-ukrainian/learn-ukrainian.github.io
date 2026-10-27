@@ -19,9 +19,21 @@ GIT_REDIRECT_ENV_KEYS = (
 )
 
 
-def sanitized_git_env() -> dict[str, str]:
-    """Return an environment that lets ``git -C`` select only its explicit root."""
-    return {key: value for key, value in os.environ.items() if key not in GIT_REDIRECT_ENV_KEYS}
+def sanitized_git_env(*, strip_config_injection: bool = False) -> dict[str, str]:
+    """Strip repository redirects, preserving runtime defensive config by default.
+
+    Worktree creation may opt in to stripping inline config injection.
+    Config-file selection is preserved in both modes.
+    """
+    if not strip_config_injection:
+        return {key: value for key, value in os.environ.items() if key not in GIT_REDIRECT_ENV_KEYS}
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if key not in GIT_REDIRECT_ENV_KEYS
+        and key not in {"GIT_CONFIG_PARAMETERS", "GIT_CONFIG_COUNT"}
+        and not key.startswith(("GIT_CONFIG_KEY_", "GIT_CONFIG_VALUE_"))
+    }
 
 
 # Names that look like a remote, a ref namespace, or a fetch refspec. A plain

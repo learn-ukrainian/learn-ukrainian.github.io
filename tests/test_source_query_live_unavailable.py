@@ -55,6 +55,29 @@ def _patch_get(monkeypatch: pytest.MonkeyPatch, respond):
     monkeypatch.setattr(requests.Session, "get", fake_get)
 
 
+def test_shared_requests_identify_project_without_browser_impersonation(monkeypatch):
+    import scripts.rag.source_query as sq
+
+    outgoing_headers = []
+
+    def fake_send(self, request, **kwargs):
+        outgoing_headers.append(dict(request.headers))
+        return DummyResponse(403)
+
+    monkeypatch.setattr(requests.Session, "send", fake_send)
+
+    assert sq._get("https://dictionary.invalid/entry").status_code == 403
+    result = sq.slovnyk_me_lookup("fixture", "vts")
+    assert result["status"] == "unavailable"
+    assert result["http_status"] == 403
+    assert len(outgoing_headers) == 2
+    for headers in outgoing_headers:
+        assert headers["User-Agent"] == (
+            "learn-ukrainian-word-atlas/1.0 "
+            "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+        )
+
+
 CLOUDFLARE_CHALLENGE_HTML = (
     "<html><head><title>Just a moment...</title></head>"
     "<body>Checking your browser before accessing slovnyk.me. "

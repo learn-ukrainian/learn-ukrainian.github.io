@@ -1143,7 +1143,8 @@ def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
     else:
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "gemini-3.8-flash-high"
-        assert len(ladder) == 6
+        assert ladder[6][0].name == "muse"
+        assert len(ladder) == 7
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1397,6 +1398,38 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
 def test_normalize_muse_subject_seat_and_meta_family():
     assert normalize_subject_seat("muse") == "muse"
     assert normalize_subject_family("meta") == "meta"
+    candidate = REVIEW_CANDIDATES["muse"]
+    assert candidate.model_roles == frozenset({"coding", "standard_review", "routine_review"})
+    assert candidate.suitability_roles == frozenset({"routine_review"})
+    assert not candidate.formal_review_eligible
+    assert candidate.requires_data_egress_policy == "public_only"
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol", data_egress_policy="public_only", claude_account=HOST_ACCOUNT,
+    )
+    formal = evaluate_candidate(candidate, inputs)
+    assert formal.status == "excluded"
+    assert formal.reason == "formal-review transport is not eligible for a sealed cross-family gate"
+    advisory = replace(inputs, formal_review=False)
+    assert evaluate_candidate(candidate, advisory).status == "eligible"
+    for risk in ("low", "medium", "high", "critical"):
+        assert (candidate in {c for rung in REVIEW_LADDERS[risk] for c in rung}) == (risk in {"low", "medium"})
+    for risk in ("high", "critical"):
+        assert evaluate_candidate(candidate, replace(advisory, risk=risk)).status == "excluded"
+        pinned = replace(advisory, risk=risk, pinned_candidate="muse", pressure_override_reason="fixture")
+        assert resolve_reviewer(pinned).selected is None
+    for role in ("critical_review", "security_review"):
+        assert evaluate_candidate(candidate, replace(advisory, requested_role=role)).status == "excluded"
+    meta_author = evaluate_candidate(candidate, replace(advisory, author_families=frozenset({"meta"})))
+    assert meta_author.status == "excluded"
+    assert "same family as author (meta)" in meta_author.reason
+    for changes in (
+        {"subject_seats": frozenset({"muse"})}, {"subject_families": frozenset({"meta"})},
+        {"language_lane": True}, {"data_egress_policy": "private_repo"}, {"data_egress_policy": None},
+        {"review_profile": "infra"},
+        {"isolation_required": True}, {"required_capabilities": frozenset({"sealed_evidence"})},
+        {"changed_paths": ("scripts/hooks/admission.py",)},
+    ):
+        assert evaluate_candidate(candidate, replace(advisory, **changes)).status == "excluded"
 
 
 @pytest.mark.parametrize(
@@ -1784,12 +1817,13 @@ def test_advisory_resolution_is_outside_the_formal_high_risk_rule():
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high"])
 @pytest.mark.parametrize("profile", ["code", "infra"])
-def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile):
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile, launcher_path):
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol",
         risk=risk,
         review_profile=profile,
-        changed_paths=("scripts/delegate.py",),
+        changed_paths=(launcher_path,),
         owned_paths=("site/src/app.ts",), claude_account=HOST_ACCOUNT,
     )
     result = resolve_reviewer(inputs)
@@ -1804,8 +1838,9 @@ def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile)
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high"])
 @pytest.mark.parametrize("candidate", [SONNET_5_5])
-def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evaluation(risk, candidate):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=("scripts/delegate.py",), claude_account=HOST_ACCOUNT)
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evaluation(risk, candidate, launcher_path):
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=(launcher_path,), claude_account=HOST_ACCOUNT)
     direct = evaluate_candidate(candidate, inputs)
     assert direct.status == "excluded" and direct.reason
     custom = resolve_reviewer(inputs, ladder=((candidate,),))
@@ -1817,19 +1852,21 @@ def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evalua
     assert pinned.selected is None and pinned.fail_closed_reason
 
 
-def test_security_owned_paths_only_add_coverage():
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_owned_paths_only_add_coverage(launcher_path):
     inputs = ResolverInputs(
-        author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=("scripts/delegate.py",), claude_account=HOST_ACCOUNT
+        author_model="gpt-6.1-sol", risk="low", changed_paths=("site/src/app.ts",), owned_paths=(launcher_path,), claude_account=HOST_ACCOUNT
     )
     assert resolve_reviewer(inputs).resolved_risk == "critical"
 
 
-def test_security_qualified_reviewer_unavailable_refuses_without_downgrade():
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_qualified_reviewer_unavailable_refuses_without_downgrade(launcher_path):
     result = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-6.1-sol",
             risk="low",
-            changed_paths=("scripts/delegate.py",),
+            changed_paths=(launcher_path,),
             routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
         )
     )
@@ -1838,12 +1875,13 @@ def test_security_qualified_reviewer_unavailable_refuses_without_downgrade():
     assert all(entry.reason for entry in result.trace)
 
 
-def test_security_subject_seat_exclusion_still_binds():
+@pytest.mark.parametrize("launcher_path", ["scripts/dispatch.py", "scripts/delegate.py"])
+def test_security_subject_seat_exclusion_still_binds(launcher_path):
     result = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-6.1-sol",
             risk="low",
-            changed_paths=("scripts/delegate.py",),
+            changed_paths=(launcher_path,),
             subject_seats=frozenset({"claude"}), claude_account=HOST_ACCOUNT,
         )
     )

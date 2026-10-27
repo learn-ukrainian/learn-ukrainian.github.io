@@ -29,9 +29,12 @@ RESOURCES_FILE = Path(__file__).resolve().parents[2] / "docs" / "resources" / "e
 # Timeout per request (seconds)
 REQUEST_TIMEOUT = 15
 
-# User-Agent to avoid bot blocks
+# Identify the audit client and provide a public project contact.
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) learn-ukrainian-audit/1.0",
+    "User-Agent": (
+        "learn-ukrainian-audit/1.0 "
+        "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+    ),
 }
 
 

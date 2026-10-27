@@ -144,9 +144,10 @@ def _is_github_http_literal(value: str) -> bool:
 
 def bypasses(source: str, path: str) -> list[str]:
     tree = ast.parse(source)
+    tree_nodes = tuple(ast.walk(tree))
     violations = []
     gh_functions = set()
-    functions = [node for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
+    functions = [node for node in tree_nodes if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
     function_names = {node.name for node in functions}
     functions.append(
         ast.FunctionDef(
@@ -157,7 +158,7 @@ def bypasses(source: str, path: str) -> list[str]:
         )
     )
     aliases = {}
-    for node in ast.walk(tree):
+    for node in tree_nodes:
         if isinstance(node, ast.Import):
             aliases.update({item.asname or item.name: item.name for item in node.names})
         elif isinstance(node, ast.ImportFrom):
@@ -177,7 +178,7 @@ def bypasses(source: str, path: str) -> list[str]:
         "http.client.HTTPSConnection",
         "http.client.HTTPConnection",
     }
-    for assignment in ast.walk(tree):
+    for assignment in tree_nodes:
         if (
             isinstance(assignment, (ast.Assign, ast.AnnAssign))
             and isinstance(assignment.value, ast.Call)
@@ -216,24 +217,27 @@ def bypasses(source: str, path: str) -> list[str]:
     track([n for n in tree.body if isinstance(n, (ast.Assign, ast.AnnAssign))])
     module_tainted = set(tainted)
     # Track commands stored in variables and local wrapper call chains.
+    scopes = []
     for function in functions:
+        nodes = tuple(ast.walk(function))
         tainted = set(module_tainted)
-        track([n for n in ast.walk(function) if isinstance(n, (ast.Assign, ast.AnnAssign))])
-        for node in ast.walk(function):
-            if isinstance(node, ast.Call) and node.args and is_gh(node.args[0]):
-                name = node.func.id if isinstance(node.func, ast.Name) else ""
-                if name in function_names:
-                    gh_functions.add(name)
+        track([n for n in nodes if isinstance(n, (ast.Assign, ast.AnnAssign))])
+        scopes.append((function, nodes, tainted))
+        for node in nodes:
+            if (
+                isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                and node.func.id in function_names and node.args and is_gh(node.args[0])
+            ):
+                gh_functions.add(node.func.id)
     github_http = any(
         isinstance(node, ast.Constant)
         and isinstance(node.value, str)
         and (node.value == "asset_url" or _is_github_http_literal(node.value))
-        for node in ast.walk(tree)
+        for node in tree_nodes
     )
-    for function in functions:
-        tainted = set(module_tainted)
-        track([n for n in ast.walk(function) if isinstance(n, (ast.Assign, ast.AnnAssign))])
-        for node in ast.walk(function):
+    for function, nodes, scope_tainted in scopes:
+        tainted = scope_tainted
+        for node in nodes:
             if not isinstance(node, ast.Call):
                 continue
             name = ast.unparse(node.func)
@@ -279,9 +283,7 @@ def bypasses(source: str, path: str) -> list[str]:
                     and (is_gh(node) or function.name in gh_functions)
                 )
                 or (
-                    (is_gh(node) or function.name in gh_functions)
-                    and name
-                    in {
+                    name in {
                         "urllib.request.urlopen",
                         "urllib.request.urlretrieve",
                         "urlopen",
@@ -299,6 +301,7 @@ def bypasses(source: str, path: str) -> list[str]:
                         "httpx.delete",
                         "httpx.request",
                     }
+                    and (is_gh(node) or function.name in gh_functions)
                 )
             ):
                 violations.append(f"{path}:{node.lineno}: GitHub HTTP bypasses shared client")
