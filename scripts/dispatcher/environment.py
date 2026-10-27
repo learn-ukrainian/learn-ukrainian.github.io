@@ -34,7 +34,7 @@ def npm_shim_dir() -> Path | None:
 
 
 def claude_config_dir(account: str, home: str | None = None) -> str:
-    """The login directory a Claude account runs in; admission checks the verified binding against it."""
+    """The login directory a Claude account runs in until ``admission.claude_launch`` binds the verified one."""
     suffix = "" if account == "a" else "-b"
     return str(Path(home or os.environ.get("HOME") or str(Path.home())) / f".claude{suffix}")
 

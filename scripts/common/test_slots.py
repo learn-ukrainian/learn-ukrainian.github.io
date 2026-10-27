@@ -556,6 +556,11 @@ class Hold:
         marker = {HOLDER_ENV: self.marker()} if self._record is not None else {}
         return {**marker, **self._session_environment}
 
+    @property
+    def descriptors(self) -> tuple[int, ...]:
+        """The lock descriptors; a child given them (``pass_fds``) keeps the slots taken until it exits too."""
+        return self._descriptors
+
     def inheritable(self) -> None:
         """Keep the locks across ``exec``, so the command itself holds the slots until it exits."""
         for fd in self._descriptors:

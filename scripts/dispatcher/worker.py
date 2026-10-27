@@ -227,6 +227,11 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 return
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
+        try:
+            invocation = admission.claude_launch(spec, invocation)
+        except ValueError as exc:
+            status, error = "failed", str(exc)
+            return
         slots, slots_record = admission.hold_review_test_slots(
             agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
             sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
@@ -242,6 +247,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 cwd=spec.worktree,
                 # The CLI's governed test runs join this hold through its marker (#11230).
                 env={**invocation.env, **slots.environment()} if slots else invocation.env,
+                # The provider shares the hold's locks, so they outlive a killed supervisor.
+                pass_fds=slots.descriptors if slots else (),
                 start_new_session=True,
             )
             record.update(status="running")
@@ -293,7 +300,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             terminate()
             returncode = child.returncode
         if slots is not None:
-            # Every exit returns the hold; a killed supervisor's locks end with its process.
+            # Every exit returns the hold; after a killed supervisor the locks end with the provider.
             slots.release()
         if text is not None:
             spec.final_file.write_text(text)

@@ -1796,6 +1796,9 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
 @pytest.mark.parametrize(
     "extra,code",
     [
+        # Ported from tests/test_delegate.py (the claude_account refusal table): unknown labels.
+        (["--agent", "claude", "--claude-account", "c"], "claude_account_unknown"),
+        (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
         (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
     ],

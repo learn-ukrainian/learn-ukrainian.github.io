@@ -36,10 +36,11 @@ def claude_account(agent: str, explicit: str | None) -> dict:
 
     A claude request resolves its label from ``--claude-account``, the default-account file, then
     the built-in default, and verifies a non-default label's binding and credential sources before
-    any worktree exists; a refusal raises ``ValueError`` with the legacy ``ClaudeAccountRefused``
-    code. Another seat may not name a non-default account (``claude_account_seat_unsupported``) and
-    records none. The verified login directory must be the one ``environment.child_env`` selects, so
-    a worker never authenticates in a directory the binding did not verify.
+    any worktree exists; a refusal, an unknown label included (``claude_account_unknown``), raises
+    ``ValueError`` with the legacy ``ClaudeAccountRefused`` code. Another seat may not name a
+    non-default account (``claude_account_seat_unsupported``) and records none. A non-default label
+    loads none of its login directory's user settings (:func:`claude_launch`), recorded as
+    ``claude_account_user_scope_omitted`` (#10619).
     """
     from scripts.agent_runtime.attempt_boundary import (
         CLAUDE_ACCOUNT_KEY,
@@ -63,12 +64,77 @@ def claude_account(agent: str, explicit: str | None) -> dict:
         binding = verify_claude_account(label)
     except ClaudeAccountRefused as exc:
         raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code}") from None
-    if binding is not None:
-        from scripts.dispatcher.environment import claude_config_dir
+    fields = {CLAUDE_ACCOUNT_KEY: label, CLAUDE_ACCOUNT_SOURCE_KEY: source}
+    if binding is not None:  # v2 launches no sealed review attempt, so every labelled run omits the user scope
+        fields["claude_account_user_scope_omitted"] = True
+    return fields
 
-        if Path(binding.config_dir).resolve() != Path(claude_config_dir(label)).resolve():
-            raise ValueError("CLAUDE_ACCOUNT_REFUSED: bound login directory is not the dispatcher's account directory")
-    return {CLAUDE_ACCOUNT_KEY: label, CLAUDE_ACCOUNT_SOURCE_KEY: source}
+
+def claude_launch(spec, invocation):
+    """Bind a labelled Claude run to its verified login, at the launch boundary (#10619).
+
+    Composes the legacy worker-side checks (``adapters/claude.py`` ``_claude_account_binding`` and
+    ``_verified_labelled_launch``) over the v2 environment: the binding is verified again in the
+    supervisor and its login directory becomes ``CLAUDE_CONFIG_DIR``; ``claude auth status``, run
+    with the launch's own ``--settings``, ``--setting-sources project,local``, working directory and
+    environment, must report the bound subscription login and nothing else, so a checkout setting
+    such as ``apiKeyHelper`` refuses (``claude_account_auth_method_conflict``); the inputs must not
+    change while verified and no machine policy may exist. The returned argv runs the CLI behind
+    the legacy launch guard, which recomputes the inputs digest in the spawned process. The default
+    label and other seats are returned unchanged. A refusal raises ``ValueError`` with the code.
+    """
+    from scripts.agent_runtime.adapters import claude as adapter
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_AUTH_SUBSCRIPTION_LOGIN,
+        DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
+        note_claude_account_verified,
+        refuse_claude_machine_policy,
+        resolve_claude_account_label,
+        verify_claude_account,
+    )
+    from scripts.agent_runtime.env_sanitize import (
+        claude_fingerprints_match,
+        claude_labelled_inputs_digest,
+        claude_login_credential_fingerprint,
+    )
+    from scripts.common.repo_root import project_interpreter
+    from scripts.dispatcher.types import Invocation
+
+    if spec.agent != "claude":
+        return invocation
+    try:
+        label = resolve_claude_account_label(spec.claude_account)
+        if label == DEFAULT_CLAUDE_ACCOUNT:
+            return invocation
+        binding = verify_claude_account(label)
+        if binding is None:  # only the default label verifies without a binding
+            raise ClaudeAccountRefused("claude_account_default_has_no_binding")
+        login_dir = str(binding.config_dir)
+        env = {**invocation.env, "CLAUDE_CONFIG_DIR": login_dir}
+        argv = invocation.argv
+        settings = argv[argv.index("--settings") + 1]
+        sources = argv[argv.index("--setting-sources") + 1]
+        if sources != adapter.LABELLED_ACCOUNT_SETTING_SOURCES:
+            raise ClaudeAccountRefused("claude_account_settings_changed")
+
+        def digest() -> str:
+            return claude_labelled_inputs_digest(
+                login_dir=login_dir, cwd=spec.worktree, settings=settings, setting_sources=sources, environ=env
+            )
+
+        verified = digest()
+        adapter._verify_labelled_auth_method((argv[0],), settings, cwd=spec.worktree, env=env, login_dir=login_dir)
+        if not claude_fingerprints_match(digest(), verified) or not claude_fingerprints_match(
+            claude_login_credential_fingerprint(login_dir), binding.credential
+        ):
+            raise ClaudeAccountRefused("claude_account_settings_changed")
+        refuse_claude_machine_policy()
+        note_claude_account_verified(label, CLAUDE_AUTH_SUBSCRIPTION_LOGIN)
+    except ClaudeAccountRefused as exc:
+        raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code}") from None
+    guarded = [str(project_interpreter()), "-I", "-c", adapter._LAUNCH_GUARD_CODE, str(adapter._CODE_ROOT), verified]
+    return Invocation([*guarded, "--", *argv], invocation.stdin, env, invocation.final_file)
 
 
 def hold_review_test_slots(
@@ -81,8 +147,9 @@ def hold_review_test_slots(
     returns; the CLI's governed runs check the holder marker read-only. Other routes, and sealed
     attempts whose inputs carry no pool, take their own slots or none. A refusal is recorded and the
     review runs on; its governed runs are then refused, typed. Returns the hold (or ``None``) and the
-    record for the task's ``review_test_slots`` field. The hold's locks end with the supervisor
-    process, so a crash or kill releases the slots too.
+    record for the task's ``review_test_slots`` field. The supervisor passes the hold's descriptors
+    to the provider (``Hold.descriptors``), so the locks end only when both have exited: a killed
+    supervisor no longer frees the slots of a provider that still runs.
     """
     if agent != "codex" or mode != "read-only" or not review_typed or sealed_attempt:
         return None, None

@@ -20,6 +20,11 @@ _READ_DENIES = (
 )
 # Print mode ends with its final turn; no work may remain scheduled after it.
 _BACKGROUND_DENIES = "Monitor,ScheduleWakeup,CronCreate,Workflow"
+# A non-default account loads none of its login directory's user settings (hooks, permission rules,
+# MCP servers, plugins; #10619): adapters/claude.py LABELLED_ACCOUNT_SETTING_SOURCES. The launch
+# guard and ``claude auth status`` read the run's ``--settings``, so a labelled run always carries one.
+_LABELLED_SETTING_SOURCES = "project,local"
+_LABELLED_SETTINGS = json.dumps({"permissions": {"deny": _BACKGROUND_DENIES.split(",")}}, separators=(",", ":"))
 _BACKGROUND_ENV = {
     "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
     "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
@@ -39,6 +44,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         raise ValueError(f"claude: unsupported mode {spec.mode!r}")
     argv += ["--allowedTools", allowed_tools]
     argv += ["--disallowedTools", denies]
+    if spec.claude_account not in (None, "a"):
+        argv += ["--settings", _LABELLED_SETTINGS, "--setting-sources", _LABELLED_SETTING_SOURCES]
     return Invocation(argv, spec.prompt_file.read_bytes(), {**env, **_BACKGROUND_ENV}, None)
 
 
