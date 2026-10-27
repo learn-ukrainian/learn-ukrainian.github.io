@@ -18,8 +18,8 @@ the human can always run the merge directly if it is genuinely intended.
 
 Blocking (required) checks per #M-0.5: pytest, ruff, frontend/vitest, schema/MDX drift,
 gitleaks/secret-scan, radon/quality-gates, prompt-lint.
-PR enqueue requires approved admission checks; CodeQL runs in the merge queue, on main and nightly,
-and is not a per-PR enqueue requirement.
+PR enqueue requires approved admission checks.
+CodeQL runs on pushes to main, nightly and on manual dispatch; it is not a per-PR or merge-queue requirement.
 """
 
 from __future__ import annotations
@@ -309,8 +309,9 @@ def _block_msg(reason: str) -> str:
         f"BLOCKED by guard-admin-merge (#M-0.5): {reason}.\n\n"
         "`gh pr merge --admin` bypasses branch protection INCLUDING required CI "
         "(pytest, ruff, frontend, schema/MDX drift, gitleaks, radon, prompt-lint).\n"
-        "PR enqueue requires approved admission checks; CodeQL runs in the merge queue, "
-        "on main and nightly, and is not a per-PR enqueue requirement.\n"
+        "PR enqueue requires approved admission checks. "
+        "CodeQL runs on pushes to main, nightly and on manual dispatch; "
+        "it is not a per-PR or merge-queue requirement.\n"
         "Per #M-0.5, --admin is ONLY for explicitly-advisory failures. If a blocking check is\n"
         "red: STOP, report, and ask — do NOT bypass. If this is a genuine advisory-only case,\n"
         "fix the failing checks first, or the human runs the merge directly.\n\n"
