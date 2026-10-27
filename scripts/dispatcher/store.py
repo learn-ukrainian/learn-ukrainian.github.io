@@ -112,8 +112,10 @@ def new_record(spec, repository: dict, branch: str, sha: str, metadata: dict, *,
     record.update(repo=repository["key"], repository_id=repository["github"], repository=repository["github"])
     record.update(
         worktree_branch=branch, worktree_path=str(spec.worktree), cwd=str(spec.worktree), worktree_base_sha=sha,
-        worktree_reused=bool(metadata.get("cwd")), pinned_head=metadata.get("pinned_head")
+        worktree_reused=bool(metadata.get("cwd"))
     )
+    if metadata.get("pinned_head") is not None:
+        record["pinned_head"] = metadata["pinned_head"]
     if spec.mode == "read-only" and metadata.get("branch") is not None:
         record["review_branch"] = validate_plain_branch_name(metadata["branch"], repo_root=spec.worktree)
         record["pinned_head"] = metadata.get("pinned_head") or sha
