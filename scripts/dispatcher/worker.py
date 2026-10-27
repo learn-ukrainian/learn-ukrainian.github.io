@@ -54,6 +54,7 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     path = store.create(record, prompt)
     logs = path.parent / "logs"
     logs.mkdir(exist_ok=True, mode=0o700)
+    process = None
     try:
         prepare_worker_record(spec, record)
         store.replace(record, path)
@@ -79,7 +80,8 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     except Exception:
         record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
         store.replace(record, path)
-        reap_worker_record(record, response="")
+        if process is None:
+            reap_worker_record(record, response="")
         store.replace(record, path)
         raise
 

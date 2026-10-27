@@ -2364,3 +2364,182 @@ def test_worker_env_resolves_cap_plugin_for_nested_pytest_outside_rootdir(tmp_pa
     assert completed.returncode == 0, combined
     assert "No module named 'ci'" not in combined
     assert "1 passed" in completed.stdout
+
+
+# Ported fixture from tests/test_delegate_held_work.py::lease.
+@pytest.fixture
+def g0_lease(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(runtime_tmp, "scratch_scan_roots", lambda: [tmp_path])
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(runtime_tmp, "_main_checkout_root", lambda _root: tmp_path)
+    root, namespace = runtime_tmp._create_runtime_tmp_lease("held-worker")
+    record = {
+        "task_id": "held-worker",
+        "run_nonce": "attempt-1",
+        "status": "done",
+        "pid": None,
+        "runtime_tmp_root": str(root),
+        "runtime_tmp_namespace_root": str(namespace),
+    }
+    store.record_path(record["task_id"]).parent.mkdir(parents=True, exist_ok=True)
+    store.replace(record)
+    return root, namespace, record
+
+
+# Ported from tests/test_delegate_held_work.py::test_supported_evidence_directory_is_preserved_before_lease_reap.
+def test_supported_evidence_directory_is_preserved_before_lease_reap(g0_lease, tmp_path):
+    from scripts.dispatcher import runtime_tmp
+    from scripts.fleet import ignored_task_output as output
+    from scripts.fleet import runtime_held_work as held
+
+    root, namespace, record = g0_lease
+    (root / "evidence" / "screenshots").mkdir(parents=True)
+    (root / "evidence" / "publish-review.md").write_text("report\n")
+    (root / "evidence" / "screenshots" / "card.png").write_bytes(b"png")
+    result = runtime_tmp._reap_runtime_tmp_lease(root, namespace, task_record=record)
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    saved = store.read(record["task_id"])
+    receipt = saved["preserved_evidence"]
+    assert receipt["schema"] == held.EVIDENCE_SCHEMA
+    assert receipt["task_id"] == record["task_id"]
+    assert receipt["run_nonce"] == record["run_nonce"]
+    assert receipt["count"] == 2
+    assert output.verify_retrieval(tmp_path, receipt) == receipt["retrieval_proof_sha256"]
+    location = tmp_path / receipt["location"]
+    assert (location / "publish-review.md").read_text() == "report\n"
+    assert (location / "screenshots" / "card.png").read_bytes() == b"png"
+
+
+# Ported from tests/test_delegate_held_work.py::test_evidence_over_cap_refuses_reap_and_keeps_the_lease.
+def test_evidence_over_cap_refuses_reap_and_keeps_the_lease(g0_lease, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    from scripts.fleet import runtime_held_work as held
+
+    root, namespace, record = g0_lease
+    (root / "evidence").mkdir()
+    (root / "evidence" / "archive.tar.gz").write_bytes(b"x" * 64)
+    monkeypatch.setattr(held.output, "MAX_PRESERVED_BYTES", 8)
+    result = runtime_tmp._reap_runtime_tmp_lease(root, namespace, task_record=record)
+    assert result["tmp_reap_error"] == held.EvidenceLimitExceeded.code
+    assert root.exists()
+    assert (root / "evidence" / "archive.tar.gz").read_bytes() == b"x" * 64
+    assert "preserved_evidence" not in store.read(record["task_id"])
+
+
+# Ported from tests/test_delegate_held_work.py::test_linked_evidence_refuses_reap_without_following_the_link.
+def test_linked_evidence_refuses_reap_without_following_the_link(g0_lease, tmp_path):
+    from scripts.dispatcher import runtime_tmp
+    from scripts.fleet import runtime_held_work as held
+
+    root, namespace, record = g0_lease
+    (root / "evidence").mkdir()
+    outside = tmp_path / "outside.txt"
+    outside.write_text("secret")
+    (root / "evidence" / "link.txt").symlink_to(outside)
+    result = runtime_tmp._reap_runtime_tmp_lease(root, namespace, task_record=record)
+    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
+    assert root.exists()
+    assert outside.read_text() == "secret"
+
+
+# Ported from tests/test_delegate_held_work.py::test_evidence_written_after_the_receipt_refuses_before_deletion.
+def test_evidence_written_after_the_receipt_refuses_before_deletion(g0_lease, monkeypatch):
+    """The pre-deletion recheck keeps a lease when a file appears after preservation returns."""
+    from scripts.dispatcher import runtime_tmp
+    from scripts.fleet import runtime_held_work as held
+
+    root, namespace, record = g0_lease
+    (root / "evidence").mkdir()
+    (root / "evidence" / "report.md").write_text("report\n")
+    original = held.preserve_evidence
+
+    def preserve_then_write_again(*args, **kwargs):
+        receipt = original(*args, **kwargs)
+        (root / "evidence" / "after-receipt.md").write_text("written after the final enumeration")
+        return receipt
+
+    monkeypatch.setattr(held, "preserve_evidence", preserve_then_write_again)
+    result = runtime_tmp._reap_runtime_tmp_lease(root, namespace, task_record=record)
+
+    assert result["tmp_reap_error"] == held.EvidencePreservationError.code
+    assert result["tmp_bytes_freed"] == 0
+    assert root.exists()
+    assert (root / "evidence" / "after-receipt.md").read_text() == "written after the final enumeration"
+
+
+# Ported from tests/test_delegate_held_work.py::test_worker_env_exposes_the_supported_evidence_directory.
+def test_worker_env_exposes_the_supported_evidence_directory(tmp_path):
+    from scripts.dispatcher import worker_environment
+
+    lease_root = tmp_path / "lease"
+    env = worker_environment._build_worker_env(
+        task_id="evidence-worker",
+        dispatch_agent="codex",
+        runtime_tmp_root=lease_root,
+        runtime_tmp_namespace_root=tmp_path / "namespace",
+    )
+    assert env["LU_TASK_EVIDENCE_DIR"] == str(lease_root / "evidence")
+
+
+# Ported from tests/audit/test_lint_agent_trailer.py::test_worker_env_carries_lu_x_agent_trailer.
+def test_worker_env_carries_lu_x_agent_trailer(monkeypatch: pytest.MonkeyPatch) -> None:
+    """worker_environment.py exports LU_X_AGENT_TRAILER into worker_env via _build_worker_env and _x_agent_trailer."""
+    from scripts.dispatcher import worker_environment
+
+
+    # Direct helper verification
+    assert worker_environment._x_agent_trailer("codex", "dispatch-trailer-test") == "X-Agent: codex/dispatch-trailer-test"
+    assert worker_environment._x_agent_trailer("codex", "codex-1472-foo") == "X-Agent: codex/1472-foo"
+
+    env = worker_environment._build_worker_env(
+        task_id="dispatch-trailer-test",
+        dispatch_agent="codex",
+        base_env={},
+    )
+    assert env["LU_X_AGENT_TRAILER"] == "X-Agent: codex/dispatch-trailer-test"
+    assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-trailer-test"
+    assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "codex"
+
+
+# Ported from tests/test_delegate.py::test_dispatch_checks_out_the_excluded_trees_its_owned_paths_need.
+def test_dispatch_checks_out_the_excluded_trees_its_owned_paths_need(sandbox, monkeypatch):
+    """--owned-path keeps its excluded tree; research paths only add (#10777)."""
+    from scripts.dispatcher import cli
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(git, "resolve_repo", lambda _key: (
+        sandbox.repo, {"key": "public", "github": str(sandbox.remote), "transport": "file"},
+    ))
+    monkeypatch.setattr(worker, "start", Mock())
+    create = git.create_worktree
+    sparse_includes = {}
+
+    def recording_create(repo, path, branch, sha, **kwargs):
+        sparse_includes[path.name] = tuple(kwargs["sparse_include"])
+        return create(repo, path, branch, sha, **kwargs)
+
+    monkeypatch.setattr(git, "create_worktree", recording_create)
+    for task_id, extra in (
+        ("sparse-owned", ["--owned-path", "site/src/data/curriculum-stats.json"]),
+        ("sparse-owned-alias", ["--owned-path", "./site/src/data/curriculum-stats.json"]),
+        (
+            "sparse-owned-and-research",
+            ["--owned-path", "site/src/data/curriculum-stats.json",
+             "--research-owned-path", "registry/projects/open_model_data/x.json"],
+        ),
+    ):
+        assert cli.main([
+            "dispatch", "--agent", "codex", "--model", "echo", "--task-id", task_id,
+            "--prompt", "test", "--mode", "read-only", *extra,
+        ]) == 0
+
+    assert sparse_includes == {
+        "sparse-owned": ("site/src/data",),
+        "sparse-owned-alias": ("site/src/data",),
+        "sparse-owned-and-research": ("site/src/data", "registry/projects"),
+    }

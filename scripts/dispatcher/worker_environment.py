@@ -116,12 +116,16 @@ def worker_exports(spec: TaskSpec, record: dict | None = None, *, base_env: Mapp
         from scripts.agent_runtime.attribution import InvocationAttribution
 
         attribution = InvocationAttribution(record["initiator"], record["initiator_source"], spec.task_id)
-    return _build_worker_env(
+    exports = _build_worker_env(
         task_id=spec.task_id, dispatch_agent=spec.agent, attribution=attribution,
         run_nonce=record.get("run_nonce", ""), runtime_tmp_root=record.get("runtime_tmp_root"),
         runtime_tmp_namespace_root=record.get("runtime_tmp_namespace_root"),
-        worktree_path=spec.worktree, base_env=base_env,
+        worktree_path=spec.worktree,
     )
+    # V2's selected-provider allowlist also supports seats absent from the legacy
+    # runtime sanitizer (Muse, OpenCode and Hermes). Sanitize derived exports,
+    # then combine them with those already admitted credentials and context.
+    return {**base_env, **exports}
 
 
 def prepare_worker_record(spec: TaskSpec, record: dict) -> None:
