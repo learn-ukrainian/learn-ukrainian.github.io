@@ -9,6 +9,7 @@ owner preserves it.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -79,6 +80,22 @@ def _head(worktree: Path) -> str:
     return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=worktree, text=True, timeout=30).strip()
 
 
+def _legacy_receipt(repo, wt, tasks):
+    record_path = tasks / "previous-review.json"
+    record = json.loads(record_path.read_text())
+    receipt, _ = output.capture_abandon_output(wt, primary=repo, record=record)
+    output.publish_abandon_output(wt, primary=repo, record=record, locator=receipt)
+    receipt.update(
+        schema=output.PRESERVED_ARTIFACTS_SCHEMA,
+        task_id="previous-review", run_nonce="nonce-1",
+        worktree_sha256=hashlib.sha256(str(wt.resolve()).encode()).hexdigest(),
+        retrieval_proof_sha256=output.verify_retrieval(repo, receipt),
+    )
+    record["preserved_artifacts"] = receipt
+    record_path.write_text(json.dumps(record))
+    return receipt
+
+
 def _reuse(worktree: Path):
     return delegate._ensure_worktree(
         agent="codex",
@@ -104,10 +121,7 @@ def test_reuse_refuses_and_keeps_unretrieved_terminal_evidence(worktree):
 def test_reuse_allows_terminal_evidence_after_a_verified_receipt(worktree):
     repo, wt, tasks = worktree
     (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
-    ok, reason, receipt = output.preserve_worktree_artifacts(
-        wt, primary=repo, task_id="previous-review", tasks_dir=tasks, repo_root=repo
-    )
-    assert ok, reason
+    receipt = _legacy_receipt(repo, wt, tasks)
     assert receipt is not None and receipt["schema"] == output.PRESERVED_ARTIFACTS_SCHEMA
 
     _path, _branch, telemetry = _reuse(wt)
@@ -140,10 +154,7 @@ def test_reuse_refuses_a_stale_receipt_after_the_source_changed(worktree):
     repo, wt, tasks = worktree
     source = wt / "batch_state/cto/publish/review-1/evidence.md"
     (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
-    ok, reason, _receipt = output.preserve_worktree_artifacts(
-        wt, primary=repo, task_id="previous-review", tasks_dir=tasks, repo_root=repo
-    )
-    assert ok, reason
+    _legacy_receipt(repo, wt, tasks)
     source.write_text("new unique evidence, after successful retrieval\n")
 
     with pytest.raises(RuntimeError, match="worktree_reuse_evidence_unverified"):
@@ -156,10 +167,7 @@ def test_reuse_refuses_a_receipt_location_outside_the_task_preserved_root(worktr
     """A receipt that points at another task's copy is not this task's retrieval."""
     repo, wt, tasks = worktree
     (tasks / "previous-review.json").write_text(json.dumps(_task_record(wt)))
-    ok, reason, receipt = output.preserve_worktree_artifacts(
-        wt, primary=repo, task_id="previous-review", tasks_dir=tasks, repo_root=repo
-    )
-    assert ok, reason
+    receipt = _legacy_receipt(repo, wt, tasks)
     other = dict(receipt)
     other["location"] = receipt["location"].replace(
         "batch_state/preserved/previous-review/", "batch_state/preserved/another-task/"

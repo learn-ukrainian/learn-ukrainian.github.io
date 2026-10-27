@@ -8,6 +8,7 @@ import pytest
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import regenerable_output as classifier
 from tests import test_fleet_post_task_reap as fixtures
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 hermetic_base = fixtures.hermetic_reap
 
@@ -82,11 +83,13 @@ def test_unproven_names_stay_capped(hermetic_reap, monkeypatch, name, proof):
             outside = put(repo, "outside", b"only-copy" * 32)
             external.unlink()
             external.symlink_to(outside)
-    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 16)
+    monkeypatch.setattr(output, "MAX_RESIDUE_RECEIPT_BYTES", 600)
     row = reap(repo, tasks)
-    assert row["action"] == "skipped" and tree.exists(), row
-    assert "exceeds preservation cap" in row["reason"]
-    assert (tree / name).read_bytes() == b"only-copy" * 32
+    assert row["action"] == "removed" and not tree.exists(), row
+    assert row["preserved_artifacts"]["paths"] == [] and row["preserved_artifacts"]["entries_truncated"] is True
+    assert len(json.dumps(row["preserved_artifacts"], sort_keys=True).encode()) <= 600
+    assert row["preserved_artifacts"]["count"] == 1 and row["preserved_artifacts"]["inventory_complete"] is True
+    assert row["preserved_artifacts"]["bytes"] == 288 and row["preserved_artifacts"]["copied_bytes"] == 0
 
 
 @pytest.mark.parametrize("evidence_size", [16, 33])
@@ -99,11 +102,8 @@ def test_mixed_output_preserves_evidence_and_excludes_only_proven_bytes(hermetic
     row = reap(repo, tasks)
     receipt = row["preserved_artifacts"]
     assert [entry["path"] for entry in receipt["paths"]] == [".cache/evidence.txt"], row
-    if evidence_size > 32:
-        assert row["action"] == "skipped" and tree.exists()
-    else:
-        assert row["action"] == "removed" and not tree.exists(), row
-        assert (repo / receipt["location"] / ".cache/evidence.txt").read_bytes() == b"e" * evidence_size
+    assert row["action"] == "removed" and not tree.exists(), row
+    assert_record_only(receipt, {".cache/evidence.txt": b"e" * evidence_size})
 
 
 @pytest.mark.parametrize("kind", ["symlink", "fifo", "ancestor"])
@@ -160,7 +160,7 @@ def test_public_reaper_retains_unproven_links_and_special_entries(hermetic_reap,
         source.symlink_to(outside)
     else:
         os.mkfifo(source)
-    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+    monkeypatch.setattr(output, "MAX_RESIDUE_RECEIPT_BYTES", 1)
     row = reap(repo, tasks)
     assert row["action"] in {"skipped", "error"} and tree.exists(), row
     assert os.path.lexists(source)
@@ -190,10 +190,11 @@ def test_environment_proof_refuses_unrebuildable_or_external_files(hermetic_reap
 def test_recorded_archive_is_verified_before_exclusion(hermetic_reap, monkeypatch):
     repo, tasks, tree = prepare(hermetic_reap)
     put(tree, "screenshots/page.png", b"archived screenshot" * 30)
-    ok, reason, receipt = output.preserve_worktree_artifacts(
-        tree, primary=repo, tasks_dir=tasks, task_id="proof-cap", repo_root=repo
-    )
-    assert ok, reason
+    record = json.loads((tasks / "proof-cap.json").read_text())
+    receipt, _ = output.capture_abandon_output(tree, primary=repo, record=record)
+    output.publish_abandon_output(tree, primary=repo, record=record, locator=receipt)
+    record["preserved_artifacts"] = receipt
+    (tasks / "proof-cap.json").write_text(json.dumps(record))
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
     # Use the actual bound canonical receipt, rather than a filename assertion.
     record = json.loads((tasks / "proof-cap.json").read_text())
@@ -210,7 +211,10 @@ def test_environment_and_build_proof_cannot_discard_database_content(hermetic_re
     repo, tasks, tree = prepare(hermetic_reap)
     put(tree, ".venv/pyvenv.cfg", b"home = toolchain\n")
     put(tree, name, b"only database" * 50)
-    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 32)
+    monkeypatch.setattr(output, "MAX_RESIDUE_RECEIPT_BYTES", 600)
     row = reap(repo, tasks)
-    assert row["action"] == "skipped" and tree.exists(), row
-    assert "exceeds preservation cap" in row["reason"]
+    assert row["action"] == "removed" and not tree.exists(), row
+    assert row["preserved_artifacts"]["paths"] == [] and row["preserved_artifacts"]["entries_truncated"] is True
+    assert len(json.dumps(row["preserved_artifacts"], sort_keys=True).encode()) <= 600
+    assert row["preserved_artifacts"]["count"] == 1 and row["preserved_artifacts"]["inventory_complete"] is True
+    assert row["preserved_artifacts"]["bytes"] == 650 and row["preserved_artifacts"]["copied_bytes"] == 0

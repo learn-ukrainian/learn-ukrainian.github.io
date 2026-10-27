@@ -25,19 +25,20 @@ from tests.orchestration.test_reap_worktrees_clean_pushed import (
 from tests.orchestration.test_reap_worktrees_clean_pushed import (
     repo as repo,
 )
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 
 @pytest.mark.parametrize("evidence_size", [0, 19])
 def test_post_task_receipt_counts_unlinked_sizes_without_preserved_bytes(hermetic_reap, evidence_size):
     repo, tasks, tree = prepare(hermetic_reap)
     put(tree, "site/dist/index.html", b"build" * 31)
-    evidence = put(tree, ".cache/answer.txt", b"e" * evidence_size) if evidence_size else None
-    expected = sum(path.stat().st_size for path in tree.rglob("*") if path.is_file() and path != evidence)
+    put(tree, ".cache/answer.txt", b"e" * evidence_size) if evidence_size else None
+    expected = sum(path.stat().st_size for path in tree.rglob("*") if path.is_file())
     row = reap(repo, tasks)
     assert row["action"] == "removed", row
     assert row["freed_bytes"] == expected
     if evidence_size:
-        assert (repo / row["preserved_artifacts"]["location"] / ".cache/answer.txt").read_bytes() == b"e" * evidence_size
+        assert_record_only(row["preserved_artifacts"], {".cache/answer.txt": b"e" * evidence_size})
 
 
 def test_hardlinked_bytes_are_not_claimed_as_freed(hermetic_reap):
@@ -59,8 +60,7 @@ def test_multiple_unlinked_names_count_one_inode_and_exclude_preserved_inode(her
     other.parent.mkdir(parents=True, exist_ok=True)
     os.link(source, other)
     expected = sum(path.stat().st_size for path in tree.rglob("*") if path.is_file() and path not in {source, other})
-    if not preserved:
-        expected += len(b"shared inode")
+    expected += len(b"shared inode")
     row = reap(repo, tasks)
     assert row["action"] == "removed", row
     assert row["freed_bytes"] == expected
@@ -87,7 +87,7 @@ def test_clean_pushed_receipt_uses_measured_bytes_and_zero_for_dry_run(repo, fre
     tree = dispatch_tree(repo)
     put(tree, "out/evidence.txt", b"preserved proof")
     age_tree(tree, repo, "task-a")
-    expected = sum(path.stat().st_size for path in tree.rglob("*") if path.is_file() and path.name != "evidence.txt")
+    expected = sum(path.stat().st_size for path in tree.rglob("*") if path.is_file())
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=not apply, actor="test")
     assert len(report.removed) == 1, report
     assert report.freed_bytes == (expected if apply else 0)
@@ -151,3 +151,4 @@ def test_partial_unlink_counts_only_the_inode_actually_unlinked(tmp_path):
             raise RuntimeError("partial deletion")
     assert rw._freed_bytes(measured, None) == 3
     assert rw._freed_bytes(measured, {"paths": [{"path": "first"}]}) == 0
+    assert rw._freed_bytes(measured, {"mode": "record_only", "paths": [{"path": "first"}]}) == 3

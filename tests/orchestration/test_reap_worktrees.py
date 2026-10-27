@@ -23,6 +23,7 @@ from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
 from tests import _worktree_artifact_links as links
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
@@ -454,10 +455,10 @@ def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, c
     patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
     if copy_fails:
 
-        def fail_copy(_source, _destination):
+        def fail_copy(_source, **_kwargs):
             raise OSError("injected reaper copy failure")
 
-        monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
+        monkeypatch.setattr(worktree_artifacts, "_read_preserved_bytes", fail_copy)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -471,9 +472,7 @@ def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, c
         assert result.action == "removed", result
         assert not worktree.exists()
         assert state["preserved_artifacts"]["count"] == 1
-        assert (
-            (repo / state["preserved_artifacts"]["location"]) / "batch_state/reports/evidence.bin"
-        ).read_bytes() == b"independent evidence\x00\xff"
+        assert_record_only(state["preserved_artifacts"], {"batch_state/reports/evidence.bin": b"independent evidence\x00\xff"})
 
 
 def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
@@ -1754,9 +1753,8 @@ def test_reap_callers_interrupted_retention_preserves_bytes(tmp_path, monkeypatc
             assert after[0] != before[0]
             assert receipt["retention_disposition"] == "retained"
             assert receipt["owner"] == "interrupted" and receipt["next_condition"]
-            assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
-            copied = repo / receipt["location"] / ".cache/output.bin"
-            assert hashlib.sha256(copied.read_bytes()).hexdigest() == before[2]
+            assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+            assert receipt["paths"][0]["path"] == ".cache/output.bin" and receipt["paths"][0]["sha256"] == before[2]
 
 
 def test_class_b_fail_safe_skips(
@@ -6808,9 +6806,7 @@ def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, referen
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
     assert result.action == "removed", result
     assert not worktree.exists()
-    location = repo / result.preserved_artifacts["location"]
-    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
-    assert not (location / ".pytest_cache/cache.txt").exists()
+    assert_record_only(result.preserved_artifacts, {"ignored/report.txt": b"named evidence"})
     saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
     assert saved["preserved_artifacts"]["count"] == 1
 
@@ -6869,7 +6865,7 @@ def test_canonical_reaper_preserves_earlier_attempt_output_in_reused_checkout(tm
     receipt = result.preserved_artifacts
     assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
     assert json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())["preserved_artifacts"] == receipt
-    assert ((repo / receipt["location"]) / ".cache/out/page.txt").read_bytes() == payload
+    assert_record_only(receipt, {".cache/out/page.txt": b"earlier attempt output"})
 
 
 @pytest.mark.parametrize("scenario", links.SCENARIOS)
@@ -6902,14 +6898,13 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     if scenario == "outbound_batch_state":
         entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
         assert entry["path"] == "ignored/link" and entry["target"] == str(target)
-        copied = location / entry["path"]
-        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert_record_only(state["preserved_artifacts"], {"ignored/link": b"symlink\n" + os.fsencode(str(target))})
         assert state["preserved_artifacts"]["count"] == 1
     elif preserved is None:
         assert not location.exists()
     else:
         link_path, link_target = links.IGNORED_LINK[scenario]
-        assert (location / preserved).read_bytes() == links.PAYLOAD
+        assert_record_only(state["preserved_artifacts"], {preserved: links.PAYLOAD, link_path: b"symlink\n" + os.fsencode(link_target)})
         entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
         assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
         assert state["preserved_artifacts"]["count"] == 2

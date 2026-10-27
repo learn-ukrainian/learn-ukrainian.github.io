@@ -1,5 +1,6 @@
 """Reproduce descriptor exhaustion, unsafe copy roots and repeated receipt scans."""
 
+import hashlib
 import json
 import os
 import signal
@@ -15,6 +16,7 @@ from scripts.orchestration import reap_worktrees as rw
 from tests.fleet.test_reaper_regenerable_cap import hermetic_base as hermetic_base
 from tests.fleet.test_reaper_regenerable_cap import hermetic_reap as hermetic_reap
 from tests.fleet.test_reaper_regenerable_cap import prepare, put, reap
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 
 def test_killed_measurement_pins_use_existing_managed_recovery(tmp_path):
@@ -223,15 +225,24 @@ def test_copy_receipt_publication_failure_retains_tree(hermetic_reap, monkeypatc
 def test_prior_preservation_locator_survives_new_receipt(hermetic_reap, monkeypatch, evidence_size):
     repo, tasks, tree = prepare(hermetic_reap)
     put(tree, "screenshots/first.png", b"earlier evidence")
-    ok, reason, earlier = output.preserve_worktree_artifacts(
-        tree, primary=repo, tasks_dir=tasks, task_id="proof-cap", repo_root=repo
+    record_path = tasks / "proof-cap.json"
+    record = json.loads(record_path.read_text())
+    record["run_nonce"] = "proof-cap-run"
+    earlier, _ = output.capture_abandon_output(tree, primary=repo, record=record)
+    output.publish_abandon_output(tree, primary=repo, record=record, locator=earlier)
+    earlier.update(
+        schema=output.PRESERVED_ARTIFACTS_SCHEMA,
+        owner="proof-cap", task_id="proof-cap", run_nonce=record["run_nonce"],
+        worktree_sha256=hashlib.sha256(str(tree.resolve()).encode()).hexdigest(),
+        retrieval_proof_sha256=output.verify_retrieval(repo, earlier),
     )
-    assert ok, reason
+    record["preserved_artifacts"] = earlier
+    record_path.write_text(json.dumps(record))
     put(tree, ".cache/new-evidence.txt", b"n" * evidence_size)
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 64)
     row = reap(repo, tasks)
-    assert row["action"] == ("removed" if evidence_size <= 64 else "skipped"), row
-    assert tree.exists() is (evidence_size > 64)
+    assert row["action"] == "removed" and not tree.exists(), row
+    assert_record_only(row["preserved_artifacts"], {".cache/new-evidence.txt": b"n" * evidence_size})
     record = json.loads((tasks / "proof-cap.json").read_text())
     assert earlier["location"] in {
         entry["location"] for entry in record["preserved_artifacts"]["external_copies"]

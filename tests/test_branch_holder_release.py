@@ -267,6 +267,35 @@ def test_archive_and_final_recheck_failures_delete_nothing(holder, monkeypatch, 
         receipt = json.loads(record.read_text())["branch_holder_archive"]
         for key in ("manifest_path", "content_sha256", "retrieval_proof_sha256"):
             assert receipt[key] in output
+    if failure == "total_cap":
+        monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 256 * 1024 * 1024)
+        monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 10)
+        prior_receipt = json.loads(record.read_text())["branch_holder_archive"]
+        assert release(holder) == []
+        saved = json.loads(record.read_text())
+        assert "artifact_preservation_error" in saved
+        assert saved["branch_holder_archive"] == prior_receipt
+        assert "preserved_artifacts" not in saved
+        assert {name: (path / name).read_bytes() for name in before} == before
+        monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 10 * 1024 * 1024)
+        ok, reason, receipt = ignored_task_output.preserve_worktree_artifacts(
+            path, primary=primary, tasks_dir=record.parent, task_id="finished",
+            repo_root=primary, extra_files=list(before),
+        )
+        assert ok and not reason
+        assert ignored_task_output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+        for name, payload in before.items():
+            assert (primary / receipt["location"] / name).read_bytes() == payload
+        for incomplete in (
+            dict(receipt, entries_truncated=True),
+            dict(receipt, paths=receipt["paths"][:1]),
+        ):
+            monkeypatch.setattr(
+                ignored_task_output, "preserve_worktree_artifacts",
+                lambda *_a, _receipt=incomplete, **_k: (True, "", _receipt),
+            )
+            assert release(holder) == []
+            assert {name: (path / name).read_bytes() for name in before} == before
 
 
 @pytest.mark.parametrize("payload", [{}, {"tasks": None}, {"tasks": [{}]}, {"tasks": []}])
@@ -422,7 +451,8 @@ def test_ignored_output_is_archived_once_with_scratch(holder, monkeypatch):
     assert copied.count("ignored/log.txt") == 1
     assert extras == [["pytest_out.txt"]]
     saved = json.loads(record.read_text())
-    assert saved["preserved_artifacts"] == saved["branch_holder_archive"]
+    assert "preserved_artifacts" not in saved
+    assert ignored_task_output.verify_retrieval(primary, saved["branch_holder_archive"]) == saved["branch_holder_archive"]["retrieval_proof_sha256"]
     assert len(list((primary / "batch_state/preserved/finished").glob("*.manifest.json"))) == 1
 
 
@@ -466,4 +496,5 @@ def test_generated_output_exempt_from_archive_is_not_explicitly_unlinked(holder,
     assert seen == ["pytest_out.txt"]
     saved = json.loads(record.read_text())
     assert saved["branch_holder_archive"]["count"] == 1
-    assert saved["preserved_artifacts"] == saved["branch_holder_archive"]
+    assert "preserved_artifacts" not in saved
+    assert ignored_task_output.verify_retrieval(primary, saved["branch_holder_archive"]) == saved["branch_holder_archive"]["retrieval_proof_sha256"]

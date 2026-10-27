@@ -19,6 +19,7 @@ from tests.test_reused_worktree_retention import cohort as cohort
 
 checkout = fixtures.checkout
 artifact = fixtures.artifact
+assert_record_only = fixtures.assert_record_only
 
 
 def tracked_lockfile(repo, directory):
@@ -100,16 +101,16 @@ def test_lexicon_manifest_is_counted_and_preserved_as_ignored_output(
     assert output._ignored_output_files(repo, primary, record) == [name]
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload) - 1)
     ok, reason, receipt = preserve(checkout, record)
-    assert not ok and "cap" in reason
+    assert ok and not reason
     assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
-    assert receipt["retention_disposition"] == "retained"
+    assert receipt["retention_disposition"] == "recorded"
     assert manifest.read_bytes() == payload
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload))
     ok, reason, receipt = preserve(checkout, record)
     assert ok and not reason
     assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
     assert [entry["path"] for entry in receipt["paths"]] == [name]
-    assert (primary / receipt["location"] / name).read_bytes() == payload
+    assert_record_only(receipt, {name: payload})
 
 
 @pytest.mark.parametrize("lock_kind", ["absent", "untracked", "symlink", "vanished"])
@@ -158,9 +159,8 @@ def test_ignored_symlinks_never_read_outside(checkout, monkeypatch, name):
     relative = link.relative_to(repo).as_posix()
     entry = next(item for item in receipt["paths"] if item["path"] == relative)
     assert entry["type"] == "symlink" and entry["target"] == os.readlink(link)
-    copied = primary / receipt["location"] / relative
-    assert copied.is_file() and not copied.is_symlink()
-    assert b"unique outside output" not in copied.read_bytes()
+    assert_record_only(receipt, {relative: b"symlink\n" + os.fsencode(os.readlink(link))})
+    assert not (primary / "batch_state/preserved").exists()
     assert link.is_symlink() and source.stat().st_size == len(b"unique outside output")
 
 
@@ -287,11 +287,9 @@ def test_preservation_uses_isolated_environment_for_all_inventory(checkout, monk
         assert not (primary / "batch_state/preserved").exists()
     else:
         assert ok and not reason
-        assert (primary / receipt["location"] / name).read_bytes() == payload
+        assert_record_only(receipt, {name: payload, **({".gitignore": b"batch_state/\nignored/\n.pytest_cache/\n__pycache__/\n"} if empty_index else {})})
         named_probe = ["ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name]
         assert sum(args == named_probe for _, args in calls) == 2  # Initial inventory and post-copy recheck.
-        if empty_index:
-            assert (primary / receipt["location"] / ".gitignore").read_bytes() == (repo / ".gitignore").read_bytes()
 
 
 @pytest.mark.parametrize("status", ["done", "no_deliverable", "failed"])
@@ -303,8 +301,7 @@ def test_all_ignored_output_preserved_without_response_names(checkout, status):
     ok, reason, receipt = preserve(checkout, {"status": status, "started_at": "2000-01-01T00:00:00Z"})
     assert ok and not reason
     assert receipt["count"] == 2 and receipt["bytes"] == 13
-    assert ((checkout[1] / receipt["location"]) / ".cache/transcriptions/page.txt").read_bytes() == b"transcription"
-    assert ((checkout[1] / receipt["location"]) / "ignored/empty.txt").is_file()
+    assert_record_only(receipt, {".cache/transcriptions/page.txt": b"transcription", "ignored/empty.txt": b""})
     assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
 
 
@@ -320,11 +317,8 @@ def test_start_values_are_irrelevant_to_selection(checkout, start):
     record = {} if start is None else {"started_at": start}
     ok, _, receipt = preserve(checkout, record)
     assert ok and receipt["count"] == 2
-    location = checkout[1] / receipt["location"]
-    assert (location / "ignored/old.txt").read_bytes() == old.read_bytes()
-    assert (location / "ignored/modified.txt").read_bytes() == modified.read_bytes()
-    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
-    assert receipt["retention_disposition"] == "retrieved"
+    assert_record_only(receipt, {"ignored/old.txt": b"proof\x00\xff", "ignored/modified.txt": b"new version"})
+    assert receipt["retention_disposition"] == "recorded"
     assert all(entry["class"] == "unknown_baseline" for entry in receipt["paths"])
     assert str(checkout[0]) not in json.dumps(receipt)
 
@@ -334,7 +328,7 @@ def test_failure_retains_sources(checkout, monkeypatch, failure):
     source = artifact(checkout, "ignored/report.txt", b"task output")
     record = {"status": "done"}
     if failure == "cap":
-        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 10)
+        monkeypatch.setattr(output, "MAX_RESIDUE_RECEIPT_BYTES", 10)
     elif failure == "inventory":
         monkeypatch.setattr(
             output.artifacts, "_git_paths", lambda *args: (_ for _ in ()).throw(subprocess.SubprocessError())
@@ -346,23 +340,52 @@ def test_failure_retains_sources(checkout, monkeypatch, failure):
             lambda *args, **kwargs: (_ for _ in ()).throw(OSError("record denied")),
         )
     else:
-        copy = output.artifacts._copy_verified
+        extras = []
+        if failure in {"changed", "added"}:
+            extras = [
+                f"ignored/receipt-cap-{index:02d}-{'x' * 64}.txt"
+                for index in range(32)
+            ]
+            for name in extras:
+                artifact(checkout, name, b"padding")
+            monkeypatch.setattr(output, "MAX_RESIDUE_RECEIPT_BYTES", 2048)
+        copy = output._classified_inventory
 
-        def faulty_copy(src, dst, **kwargs):
+        def faulty_copy(*args, **kwargs):
             if failure == "copy":
                 raise OSError("copy denied")
-            copy(src, dst, **kwargs)
+            entries = copy(*args, **kwargs)
             if failure == "changed":
                 source.write_bytes(b"changed")
             else:
                 artifact(checkout, "ignored/added.txt")
+            return entries
 
-        monkeypatch.setattr(output.artifacts, "_copy_verified", faulty_copy)
-    ok, reason, _ = preserve(checkout, record)
+        monkeypatch.setattr(output, "_classified_inventory", faulty_copy)
+    ok, reason, receipt = preserve(checkout, record)
     assert not ok and "refusing worktree removal" in reason
     assert source.exists()
     if failure == "cap":
+        state = json.loads((checkout[2] / "output-task.json").read_text())
+        assert receipt is None
+        assert "artifact_preservation_error" in state
+        assert "preserved_artifacts" not in state
         assert not (checkout[1] / "batch_state/preserved").exists()
+    elif failure in {"changed", "added"}:
+        expected_source = b"changed" if failure == "changed" else b"task output"
+        assert source.read_bytes() == expected_source
+        for name in extras:
+            assert (checkout[0] / name).read_bytes() == b"padding"
+        if failure == "added":
+            assert (checkout[0] / "ignored/added.txt").exists()
+        assert receipt["mode"] == "record_only"
+        assert receipt["copied_bytes"] == 0
+        assert receipt["retention_disposition"] == "retained"
+        assert receipt["entries_truncated"] is True
+        assert len(json.dumps(receipt, sort_keys=True).encode()) <= 2048
+        state = json.loads((checkout[2] / "output-task.json").read_text())
+        assert state["preserved_artifacts"] == receipt
+        assert len(json.dumps(state["preserved_artifacts"], sort_keys=True).encode()) <= 2048
 
 
 def test_missing_record_retains_unknown_output_without_fallback_attribution(checkout):
@@ -381,7 +404,7 @@ def test_touch_old_mtime_during_task_is_preserved(checkout):
     assert source.stat().st_mtime < started.timestamp() <= source.stat().st_ctime
     ok, _, receipt = preserve(checkout, {"started_at": started.isoformat()})
     assert ok and receipt["count"] == 1
-    assert ((checkout[1] / receipt["location"]) / "ignored/touched.txt").read_bytes() == b"new task output"
+    assert_record_only(receipt, {"ignored/touched.txt": b"new task output"})
 
 
 def test_retry_preserves_different_bytes_without_overwriting_first_attempt(checkout):
@@ -390,23 +413,23 @@ def test_retry_preserves_different_bytes_without_overwriting_first_attempt(check
     assert ok
     source.write_bytes(b"second attempt")
     ok, _, second = preserve(checkout)
-    assert ok and first["location"] != second["location"]
-    assert ((checkout[1] / first["location"]) / "ignored/report.txt").read_bytes() == b"first attempt"
-    assert ((checkout[1] / second["location"]) / "ignored/report.txt").read_bytes() == b"second attempt"
+    assert ok and first["inventory_sha256"] != second["inventory_sha256"]
+    assert_record_only(first, {"ignored/report.txt": b"first attempt"})
+    assert_record_only(second, {"ignored/report.txt": b"second attempt"})
     assert json.loads((checkout[2] / "output-task.json").read_text())["preserved_artifacts"] == second
 
 
 def test_retry_reuses_identical_copy_without_copying(checkout, monkeypatch):
     artifact(checkout, "ignored/report.txt", b"same attempt")
     ok, _, first = preserve(checkout, {"status": "done"})
-    assert ok and not first["reused"]
+    assert ok and first["copied_bytes"] == 0
     monkeypatch.setattr(
         output.artifacts,
         "_copy_verified",
         lambda *_args, **_kwargs: pytest.fail("identical output copied again"),
     )
     ok, _, second = preserve(checkout)
-    assert ok and second["reused"] and second["location"] == first["location"]
+    assert ok and second == first and second["copied_bytes"] == 0
     assert json.loads((checkout[2] / "output-task.json").read_text())["preserved_artifacts"] == second
 
 
@@ -433,7 +456,7 @@ def test_only_real_path_bound_record_receives_receipt(checkout, binding):
     assert receipt["count"] == 1
     if binding in {"cwd", "alias"}:
         assert ok
-        assert (checkout[1] / receipt["location"] / "ignored/old.txt").read_bytes() == b"old output"
+        assert_record_only(receipt, {"ignored/old.txt": b"old output"})
         assert json.loads(path.read_text())["preserved_artifacts"] == receipt
         assert record["preserved_artifacts"] == receipt
     else:
@@ -453,10 +476,8 @@ def test_matching_archive_wins_over_unrelated_hot_record(checkout):
     archive.parent.mkdir()
     archive.write_text(json.dumps({"task_id": "output-task", "cwd": str(repo), "started_at": "2999-01-01T00:00:00Z"}))
     ok, _, receipt = output.preserve_worktree_artifacts(repo, primary=primary, task_id="output-task", tasks_dir=tasks)
-    assert ok and receipt["count"] == 2 and not receipt["reused"]
-    assert ((checkout[1] / receipt["location"]) / "ignored/new.txt").read_bytes() == b"new"
-    assert ((checkout[1] / receipt["location"]) / "ignored/old.txt").read_bytes() == old.read_bytes()
-    assert ((checkout[1] / receipt["location"]) / "ignored/new.txt").read_bytes() == new.read_bytes()
+    assert ok and receipt["count"] == 2 and receipt["copied_bytes"] == 0
+    assert_record_only(receipt, {"ignored/new.txt": b"new", "ignored/old.txt": b"old"})
     assert json.loads(archive.read_text())["preserved_artifacts"] == receipt
     assert json.loads((tasks / "output-task.json").read_text()) == hot
 
@@ -467,13 +488,14 @@ def test_record_redispatched_during_copy_refuses_removal_without_updating_new_re
     other = repo.parent / "other"
     other.mkdir()
     replacement = {"worktree_path": str(other), "status": "running"}
-    original = output.artifacts._copy_verified
+    original = output._classified_inventory
 
-    def redispatch(src, dst, **kwargs):
-        original(src, dst, **kwargs)
+    def redispatch(*args, **kwargs):
+        entries = original(*args, **kwargs)
         (tasks / "output-task.json").write_text(json.dumps(replacement))
+        return entries
 
-    monkeypatch.setattr(output.artifacts, "_copy_verified", redispatch)
+    monkeypatch.setattr(output, "_classified_inventory", redispatch)
     ok, _, receipt = preserve(checkout, {"status": "done"})
     assert not ok and receipt["count"] == 1 and receipt["retention_disposition"] == "retained"
     assert json.loads((tasks / "output-task.json").read_text()) == replacement
@@ -539,7 +561,7 @@ def test_force_new_reuse_requires_one_same_task_archived_creator(checkout, varia
     assert source.read_bytes() == b"redispatched output"
     if variant == "same_task":
         assert ok and not reason and receipt["task_id"] == "output-task"
-        assert output.verify_retrieval(primary, receipt) == receipt["content_sha256"]
+        assert_record_only(receipt, {"ignored/report.txt": b"redispatched output"})
         assert json.loads(canonical.read_text())["preserved_artifacts"] == receipt
         assert json.loads(archive.read_text()) == creator
     else:
@@ -548,7 +570,7 @@ def test_force_new_reuse_requires_one_same_task_archived_creator(checkout, varia
 
 @pytest.mark.parametrize("stage", ["git_inventory", "after_lstat", "fingerprint", "copy"])
 def test_vanished_output_is_rechecked_and_recorded_absent(checkout, monkeypatch, stage):
-    _, primary, tasks = checkout
+    _, _primary, tasks = checkout
     missing = artifact(checkout, "ignored/vanished.txt", b"transient")
     survivor = artifact(checkout, "ignored/report.txt", b"retain these bytes")
     if stage == "git_inventory":
@@ -572,7 +594,7 @@ def test_vanished_output_is_rechecked_and_recorded_absent(checkout, monkeypatch,
         monkeypatch.setattr(Path, "resolve", vanish_after_lstat)
     else:
         # Inventory reads the descriptor-walk record, which is what the fingerprint hashes.
-        name = "_read_preserved_bytes" if stage == "fingerprint" else "_copy_verified"
+        name = "_read_preserved_bytes"
         original = getattr(output.artifacts, name)
 
         def disappear(src, *args, **kwargs):
@@ -585,17 +607,17 @@ def test_vanished_output_is_rechecked_and_recorded_absent(checkout, monkeypatch,
     assert ok and not reason
     assert receipt["count"] == 1 and receipt["bytes"] == len(survivor.read_bytes())
     assert receipt["absent_paths"] == [{"path": "ignored/vanished.txt", "proof": "lstat_enoent"}]
-    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == survivor.read_bytes()
-    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    assert_record_only(receipt, {"ignored/report.txt": b"retain these bytes"})
     assert json.loads((tasks / "output-task.json").read_text())["preserved_artifacts"] == receipt
 
 
 @pytest.mark.parametrize("failure", ["changed_before_copy", "false_enoent", "reappeared", "permission"])
 def test_disappearance_neighbours_refuse_removal(checkout, monkeypatch, failure):
     source = artifact(checkout, "ignored/report.txt", b"original")
-    original = output.artifacts._copy_verified
+    original = output._classified_inventory
 
-    def copy(src, dst, **kwargs):
+    def copy(*args, **kwargs):
+        entries = original(*args, **kwargs)
         if failure == "changed_before_copy":
             source.write_bytes(b"modified")
         elif failure == "false_enoent":
@@ -604,10 +626,9 @@ def test_disappearance_neighbours_refuse_removal(checkout, monkeypatch, failure)
             raise PermissionError("copy denied")
         else:
             source.unlink()
-            raise FileNotFoundError("source vanished")
-        original(src, dst, **kwargs)
+        return entries
 
-    monkeypatch.setattr(output.artifacts, "_copy_verified", copy)
+    monkeypatch.setattr(output, "_classified_inventory", copy)
     if failure == "reappeared":
         inventory = output._ignored_output_files
         calls = 0
@@ -679,28 +700,18 @@ def test_ignored_output_symlink_is_a_link_record(checkout, monkeypatch, kind):
     relative = link.relative_to(repo).as_posix()
     entry = next(item for item in receipt["paths"] if item["path"] == relative)
     assert entry["type"] == "symlink" and entry["target"] == expected == os.readlink(link)
-    location = primary / receipt["location"]
-    copied = location / relative
-    assert copied.is_file() and not copied.is_symlink()
-    assert os.fsencode(expected) in copied.read_bytes()
-    assert hashlib.sha256(copied.read_bytes()).hexdigest() == entry["sha256"]
-    assert entry["size"] == copied.stat().st_size
-    assert not any(path.is_symlink() for path in location.rglob("*"))
-    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    expected_files = {relative: b"symlink\n" + os.fsencode(expected)}
+    if kind == "directory-inside":
+        expected_files["ignored/site/marker.txt"] = payload
+    elif kind == "file-inside":
+        expected_files["ignored/note.txt"] = payload
+    elif kind == "relative":
+        expected_files["ignored/releases/sha/file.txt"] = b"snapshot"
+    assert_record_only(receipt, expected_files)
+    assert not (primary / "batch_state/preserved").exists()
     if kind == "outside":
         assert outside.read_bytes() == outside_before == payload
-        assert copied.read_bytes() != payload
-    elif kind == "directory-inside":
-        assert (location / "ignored/site/marker.txt").read_bytes() == payload
-        assert not (location / "ignored/site-link/marker.txt").exists()
-    elif kind == "file-inside":
-        assert (location / "ignored/note.txt").read_bytes() == payload
-        assert copied.read_bytes() != payload
-    elif kind == "relative":
-        assert (location / "ignored/releases/sha/file.txt").read_bytes() == b"snapshot"
-        assert not (location / "ignored/releases/current/file.txt").exists()
-    else:
-        assert receipt["absent_paths"] == []
+    assert receipt["absent_paths"] == []
 
 
 def test_swapped_ancestor_cannot_publish_an_outside_symlink_target(checkout, monkeypatch, tmp_path):
@@ -774,11 +785,8 @@ def test_removal_does_not_follow_symlink(tmp_path):
     receipt = record["preserved_artifacts"]
     entry = next(item for item in receipt["paths"] if item["path"] == "ignored/outside")
     assert entry["type"] == "symlink" and entry["target"] == str(outside)
-    copied = primary / receipt["location"] / "ignored/outside"
-    assert copied.is_file() and not copied.is_symlink()
-    assert copied.read_bytes() != b"do-not-follow"
-    assert not (primary / receipt["location"] / "ignored/outside/marker.txt").exists()
-    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == b"preserve me"
+    assert_record_only(receipt, {"ignored/outside": b"symlink\n" + os.fsencode(str(outside)), "ignored/report.txt": b"preserve me"})
+    assert not (primary / "batch_state/preserved").exists()
 
 
 def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout):
@@ -806,8 +814,7 @@ def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout
         assert output.resolve_worktree_record(repo, tasks, repo_root=primary) == (canonical, creator)
     ok, reason, receipt = output.preserve_worktree_artifacts(repo, primary=primary, tasks_dir=tasks, task_id=None)
     assert ok and not reason and receipt["task_id"] == "output-task"
-    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == source.read_bytes()
-    assert output.verify_retrieval(primary, receipt) == receipt["content_sha256"]
+    assert_record_only(receipt, {"ignored/report.txt": b"proof\x00\xff"})
     assert json.loads(canonical.read_text())["preserved_artifacts"] == receipt
     assert json.loads(reused_record.read_text()) == reuser
 
@@ -845,17 +852,17 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
     else:
         transient = tree / "ignored/transient.txt"
         transient.write_bytes(b"transient")
-        original = output.artifacts._copy_verified
+        original = output._classified_inventory
 
-        def copy(src, dst, **kwargs):
-            if src == transient:
-                if case == "vanished_copy":
-                    transient.unlink()
-                else:
-                    transient.write_bytes(b"modified")
-            original(src, dst, **kwargs)
+        def copy(*args, **kwargs):
+            if case == "vanished_copy":
+                transient.unlink()
+            entries = original(*args, **kwargs)
+            if case == "changed_copy":
+                transient.write_bytes(b"modified")
+            return entries
 
-        monkeypatch.setattr(output.artifacts, "_copy_verified", copy)
+        monkeypatch.setattr(output, "_classified_inventory", copy)
     record_absence = output._record_absence
 
     def locked_absence(*args):
@@ -875,24 +882,23 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
     assert result.action == "removed" and not tree.exists()
     record = json.loads((primary / "batch_state/tasks/output-task.json").read_text())
     receipt = record["preserved_artifacts"]
-    assert (primary / receipt["location"] / "ignored/report.txt").read_bytes() == b"preserve me"
-    assert output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
+    assert_record_only(receipt, {"ignored/report.txt": b"preserve me", **({".runtime/api/releases/test-release/.pids": b"symlink\n" + os.fsencode(str(tree / ".pids"))} if case == "internal_link" else {})})
     if case == "vanished_copy":
         assert receipt["absent_paths"] == [{"path": "ignored/transient.txt", "proof": "lstat_enoent"}]
     elif case == "internal_link":
         assert receipt["absent_paths"] == []
         entry = next(item for item in receipt["paths"] if item["path"].endswith("/.pids"))
         assert entry["type"] == "symlink" and entry["target"] == str(tree / ".pids")
-        copied = primary / receipt["location"] / entry["path"]
-        assert copied.is_file() and not copied.is_symlink()
+        assert entry["sha256"] == hashlib.sha256(b"symlink\n" + os.fsencode(str(tree / ".pids"))).hexdigest()
 
 
 @pytest.mark.parametrize("change", ["corrupt", "extra", "symlink", "other_worktree", "invalid_manifest"])
 def test_unverified_previous_copy_is_not_reused(checkout, change):
     artifact(checkout, "ignored/report.txt", b"original")
-    ok, _, first = preserve(checkout)
-    assert ok
+    first, _ = output.capture_abandon_output(checkout[0], primary=checkout[1], record={"task_id": "output-task"})
     location = checkout[1] / first["location"]
+    location.with_suffix(".manifest.json").write_text(json.dumps({**first, "worktree_sha256": hashlib.sha256(str(checkout[0]).encode()).hexdigest()}))
+    assert output._reusable_copy(location.parent, checkout[0], ["ignored/report.txt"], first["content_sha256"]) == location
     if change == "corrupt":
         (location / "ignored/report.txt").write_bytes(b"corrupt!")
     elif change == "extra":
@@ -907,21 +913,22 @@ def test_unverified_previous_copy_is_not_reused(checkout, change):
     else:
         location.with_suffix(".manifest.json").write_text("not json")
     ok, _, second = preserve(checkout)
-    assert ok and not second["reused"] and first["location"] != second["location"]
-    assert ((checkout[1] / second["location"]) / "ignored/report.txt").read_bytes() == b"original"
+    assert output._reusable_copy(location.parent, checkout[0], ["ignored/report.txt"], first["content_sha256"]) is None
+    assert ok
+    assert_record_only(second, {"ignored/report.txt": b"original"})
 
 
 def test_source_change_during_reuse_refuses_removal(checkout, monkeypatch):
     source = artifact(checkout, "ignored/report.txt", b"original")
     assert preserve(checkout)[0]
-    original = output._reusable_copy
+    original = output._classified_inventory
 
-    def mutate(*args):
-        location = original(*args)
+    def mutate(*args, **kwargs):
+        entries = original(*args, **kwargs)
         source.write_bytes(b"different")
-        return location
+        return entries
 
-    monkeypatch.setattr(output, "_reusable_copy", mutate)
+    monkeypatch.setattr(output, "_classified_inventory", mutate)
     ok, reason, _ = preserve(checkout)
     assert not ok and "changed during preservation" in reason
     assert source.read_bytes() == b"different"
@@ -934,8 +941,8 @@ def test_tool_state_excluded_but_cache_output_survives(checkout, cache):
     artifact(checkout, ".cache/out/answer.txt", b"task output")
     ok, _, receipt = preserve(checkout, {"response": f"Tool state: `{cache}/tool.bin`."})
     assert ok and receipt["count"] == 1 and receipt["bytes"] == len(b"task output")
-    assert ((checkout[1] / receipt["location"]) / ".cache/out/answer.txt").read_bytes() == b"task output"
-    assert not ((checkout[1] / receipt["location"]) / cache).exists()
+    assert_record_only(receipt, {".cache/out/answer.txt": b"task output"})
+    assert not (checkout[1] / "batch_state/preserved").exists()
 
 
 def _stub_path_limit(monkeypatch, reported):
@@ -1047,8 +1054,7 @@ def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pen
     assert ok is (failure is None), reason
     assert tree.exists() and source.read_bytes() == b"current output"
     if failure is None:
-        assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-        assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"current output"
+        assert_record_only(receipt, {"ignored/output.txt": b"current output"})
 
 
 @pytest.mark.parametrize("mutation", ["pid", "keep", "head", "patch", "new_claim", "dirty"])
@@ -1092,6 +1098,7 @@ def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation
             repo_root=repo,
         )
     assert not ok and "artifact preservation failed" in reason
+    assert changed
     assert tree.exists() and source.read_bytes() == b"current output"
 
 
@@ -1100,7 +1107,7 @@ def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_c
     from tests.test_continuation_worktree_reap import _write_abandon_receipt
     from tests.test_reused_worktree_retention import save
 
-    repo, tree, tasks, creator, successor, source = abandon_cohort
+    repo, tree, tasks, creator, successor, _source = abandon_cohort
     (tree / "large-tracked.bin").write_bytes(b"x" * 4096)
     _git(tree, "add", "large-tracked.bin")
     _git(tree, "commit", "-m", "large tracked fixture")
@@ -1109,7 +1116,7 @@ def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_c
         save(tasks, member)
     _write_abandon_receipt(repo, tree, tasks, creator)
     (tree / "untracked.txt").write_bytes(b"unique")
-    expected = len(source.read_bytes()) + len(b"unique")
+    expected = len(b"current output") + len(b"unique")
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", expected)
     ok, reason, receipt = output.preserve_worktree_artifacts(
         tree, primary=repo, tasks_dir=tasks, task_id="boundary", repo_root=repo
@@ -1118,6 +1125,7 @@ def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_c
     assert receipt["bytes"] == expected
     assert [entry["path"] for entry in receipt["paths"]] == ["ignored/output.txt", "untracked.txt"]
     copy = repo / receipt["location"]
+    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
     assert (copy / "untracked.txt").read_bytes() == b"unique"
     assert not (copy / "large-tracked.bin").exists()
     assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
@@ -1139,10 +1147,12 @@ def test_10303_abandon_preserves_present_hidden_tracked_bytes(abandon_cohort, fl
     )
     assert ok and not reason, (reason, receipt)
     assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    copy = repo / receipt["location"]
+    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
     if present:
-        assert (repo / receipt["location"] / "README.md").read_bytes() == b"hidden local bytes"
+        assert (copy / "README.md").read_bytes() == b"hidden local bytes"
     else:
-        assert not (repo / receipt["location"] / "README.md").exists()
+        assert not (copy / "README.md").exists()
 
 
 def test_10303_abandon_refuses_unmerged_index(abandon_cohort):

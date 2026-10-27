@@ -999,23 +999,25 @@ def test_locked_worktree_refuses(repo: Path, free_fuser: Path) -> None:
     assert _refusal(repo, worktree) == "git worktree is locked"
 
 
-def test_ignored_output_over_the_preservation_cap_is_retained(repo: Path, free_fuser: Path) -> None:
+def test_ignored_output_over_the_preservation_cap_is_retained(repo: Path, free_fuser: Path, monkeypatch) -> None:
     worktree = dispatch_tree(repo)
     (worktree / "out").mkdir()
     with (worktree / "out" / "big.bin").open("wb") as handle:
         handle.truncate(300 * 1024 * 1024)  # sparse: no real disk use
     age_tree(worktree, repo, "task-a")
 
+    monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 600)
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
 
     outcome = outcome_for(report, worktree, repo)
-    assert outcome.action == "skipped", outcome
-    assert outcome.reason == (
-        "artifact preservation failed: ignored output exceeds preservation cap "
-        "(314572800 > 268435456 bytes); refusing worktree removal"
-    )
-    assert (worktree / "out" / "big.bin").exists()
-    assert abandon_log(repo) == []
+    assert outcome.action == "removed" and not worktree.exists(), outcome
+    receipt = outcome.preserved_artifacts
+    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+    assert receipt["count"] == 1 and receipt["bytes"] == 314572800
+    assert receipt["inventory_complete"] is True and receipt["entries_truncated"] is True
+    assert receipt["paths"] == []
+    assert len(json.dumps(receipt, sort_keys=True).encode()) <= 600
+    assert not (repo / "batch_state/preserved").exists()
 
 
 def test_recheck_under_the_lock_refuses_a_tree_that_changed(

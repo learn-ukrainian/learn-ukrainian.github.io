@@ -24,6 +24,7 @@ import pytest
 
 import scripts.delegate as delegate
 from scripts.orchestration import reap_worktrees, worktree_artifacts, worktree_claims
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 
 @pytest.mark.parametrize("caller", ["superseded-review", "stale-holder"])
@@ -75,13 +76,9 @@ def test_cleanup_requires_canonical_attribution_and_verified_retrieval(
     assert released == [worktree] and not worktree.exists()
     receipt = json.loads(record_path.read_text())["preserved_artifacts"]
     assert receipt["count"] == 1 and receipt["bytes"] == len(b"review output")
-    location = primary / receipt["location"]
-    assert location.parent.name == task_id
-    assert (location / ".cache/out/answer.txt").read_bytes() == b"review output"
-    from scripts.fleet import ignored_task_output
-
-    assert ignored_task_output.verify_retrieval(primary, receipt) == receipt["retrieval_proof_sha256"]
-    assert receipt["retrieval_proof_sha256"] in diagnostic
+    assert_record_only(receipt, {".cache/out/answer.txt": b"review output"})
+    assert not (primary / "batch_state/preserved").exists()
+    assert "copied 0 bytes" in diagnostic
 
 
 @pytest.fixture(autouse=True)

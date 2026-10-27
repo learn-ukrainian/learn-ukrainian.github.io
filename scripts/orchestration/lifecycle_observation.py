@@ -248,6 +248,8 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
             raise ObservationRefusal("RECOVERY_ASSOCIATION_INVALID")
     elif carrier.get("lifecycle_id") != ledger["lifecycle_id"] or carrier.get("identity") != ledger["identity"]:
         raise ObservationRefusal("RECOVERY_LIFECYCLE_MISMATCH")
+    if manifest.get("mode") == "record_only":
+        raise ObservationRefusal("RECOVERY_BUNDLE_MISMATCH")
     preserved = task.get("preserved_artifacts") or {}
     if any(
         preserved.get(k) != manifest.get(k)

@@ -48,13 +48,13 @@ def test_family_cleanup_interrupted_work_preserves_bytes(interrupted_checkout, s
             assert after[0] != before[0]
             assert receipt["owner"] == "interrupted" and receipt["next_condition"]
             assert receipt["retention_disposition"] == "retained"
-            assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
-            copied = repo / receipt["location"] / ".cache/output.bin"
-            assert hashes([copied]) == (before[2],)
+            assert_record_only(receipt, {".cache/output.bin": b"ignored output\x00\xff"})
+            assert not (repo / "batch_state/preserved").exists()
 
 
 from scripts.orchestration.task_family import codex_state, executor, git_safety
 from scripts.orchestration.task_family.storage import TaskFamilyStorage
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 
 def _git_env() -> dict[str, str]:

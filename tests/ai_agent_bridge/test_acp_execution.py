@@ -21,6 +21,7 @@ from scripts.ai_agent_bridge._acp_execution import (
 )
 from scripts.common.acp_runtime_lock import build_lock_reason, process_start_time
 from scripts.guardrails.worktree_containment import classify_repo_path
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 PROJECT_ROOT = Path(scripts.__file__).resolve().parents[1]
 
@@ -132,10 +133,10 @@ def test_acp_teardown_explicit_retention_preserves_canonical_bytes(tmp_path):
         assert current == state
         assert hashlib.sha256(record.read_bytes()).hexdigest() != before[0]
         assert receipt["retention_disposition"] == "retained" and receipt["owner"] == "retained-9742"
-        assert receipt["next_condition"] and receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
-        copied = primary / receipt["location"] / ".cache/output.bin"
+        assert receipt["next_condition"]
+        assert_record_only(receipt, {".cache/output.bin": b"ignored output\x00\xff"})
+        assert not (primary / "batch_state/preserved").exists()
         assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (result, output)] == before[1:]
-        assert hashlib.sha256(copied.read_bytes()).hexdigest() == before[2]
         assert workspace.exists() and _git(workspace, "rev-parse", "HEAD").stdout.strip() == head
         row = _acp_execution._remove_runtime_worktree(
             primary,

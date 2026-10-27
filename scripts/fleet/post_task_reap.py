@@ -1312,7 +1312,7 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
             receipt = record.get("preserved_artifacts", {})
             if (
                 not isinstance(receipt, dict)
-                or not receipt.get("retrieval_proof_sha256")
+                or (receipt.get("mode") != "record_only" and not receipt.get("retrieval_proof_sha256"))
                 or receipt.get("task_id") != task_id
                 or receipt.get("run_nonce") != record.get("run_nonce")
             ):
@@ -1360,13 +1360,17 @@ def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply:
                 if refusal:
                     return refusal
                 primary = worktree_claims.control_plane_root(repo_root)
-                digest = ignored_task_output.verify_retrieval(primary, receipt)
-                files = ignored_task_output._ignored_output_files(worktree, primary, record)
-                if digest != receipt["retrieval_proof_sha256"] or digest != ignored_task_output._content_digest(
-                    worktree, files
-                ):
-                    return "retention release requires retrieval of the current output bytes"
-                release = {"owner": task_id, "run_nonce": record["run_nonce"], "retrieval_proof_sha256": digest}
+                if receipt.get("mode") == "record_only":
+                    ignored_task_output._ignored_output_files(worktree, primary, record)
+                    release = {"owner": task_id, "run_nonce": record["run_nonce"], "mode": "record_only"}
+                else:
+                    digest = ignored_task_output.verify_retrieval(primary, receipt)
+                    files = ignored_task_output._ignored_output_files(worktree, primary, record)
+                    if digest != receipt["retrieval_proof_sha256"] or digest != ignored_task_output._content_digest(
+                        worktree, files
+                    ):
+                        return "retention release requires retrieval of the current output bytes"
+                    release = {"owner": task_id, "run_nonce": record["run_nonce"], "retrieval_proof_sha256": digest}
                 if finalized is not None:
                     release["finalized_by"] = {
                         "task_id": finalized["task_id"],
@@ -1422,7 +1426,7 @@ Related: #9934; scripts/orchestration/reap_worktrees.py; docs/runbooks/worktree-
     parser.add_argument(
         "--release-retention",
         action="store_true",
-        help="Release creator and settled reused successors after current-byte retrieval (requires --apply; default: off)",
+        help="Release creator and settled reused successors with a residue receipt or verified legacy retrieval (requires --apply; default: off)",
     )
     parser.add_argument(
         "--apply",
