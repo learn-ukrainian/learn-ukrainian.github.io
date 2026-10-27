@@ -24,7 +24,7 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root
 from scripts.common.repo_root import project_interpreter
 from scripts.lib import rules_core
-from scripts.storage.topology import StoreRefusal, resolve_store
+from scripts.storage.topology import ENV_VESUM_DB, StoreRefusal, resolve_store
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_GIT_TIMEOUT_S = 30.0
@@ -472,7 +472,7 @@ def _compose_dispatch_prompt(
     comparable. The worker reads the path from ``$LU_TASK_EVIDENCE_DIR`` and the
     task record keeps it in ``evidence_dir``.
     """
-    if os.environ.get("LU_VESUM_DB"):
+    if os.environ.get(ENV_VESUM_DB):
         raise ValueError(
             "vesum read store refused: legacy_override_unsupported "
             "(LU_VESUM_DB was ignored historically; historical hashes cannot be guaranteed)"
