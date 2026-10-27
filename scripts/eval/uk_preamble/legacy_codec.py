@@ -22,6 +22,7 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root
 from scripts.common.repo_root import project_interpreter
 from scripts.lib import rules_core
+from scripts.storage.topology import StoreRefusal, resolve_store
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_GIT_TIMEOUT_S = 30.0
@@ -268,14 +269,12 @@ def _resolve_primary_root_for_worktree(cwd_or_worktree: Path) -> Path:
 
 
 def _primary_database_path(primary_root: Path, name: str) -> Path:
-    """Resolve the canonical primary path for data/sources.db or data/vesum.db (#9122)."""
-    if name == "sources.db":
-        override = os.environ.get("LU_SOURCES_DB")
-        if override:
-            p = Path(override).expanduser()
-            return p.resolve() if p.is_absolute() else (primary_root / p).resolve()
-        return (primary_root / "data" / "sources.db").resolve()
-    return (primary_root / "data" / "vesum.db").resolve()
+    """Resolve a logical read store without bypassing topology refusals."""
+    store = "sources" if name == "sources.db" else "vesum"
+    binding = resolve_store(store, primary_root)
+    if isinstance(binding, StoreRefusal):
+        raise ValueError(f"legacy {store} store unavailable: {binding.reason}")
+    return binding.path
 
 
 def _primary_database_connect_code(target: Path) -> str:

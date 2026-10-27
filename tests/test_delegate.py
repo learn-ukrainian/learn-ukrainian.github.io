@@ -14327,7 +14327,7 @@ def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir,
     case = Case(Env(tmp_path / "measurement"), mechanical_seed("seed-a1"), [finding("F-01", "BLOCKER")])
     main, _ = _init_repo_with_worktree(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
-    monkeypatch.setattr(adj, "_delegate_module", lambda: delegate)
+    monkeypatch.setattr(adj, "legacy_codec", delegate)
     monkeypatch.setattr(adj, "REPO_ROOT", main)
     monkeypatch.setenv("LU_TASKS_DIR", str(case.env.tasks))
     # The initial fixture record must not stand in for the real dispatch.
@@ -14336,7 +14336,7 @@ def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir,
     _patch_worker_popen(monkeypatch)
     base_sha = delegate._resolve_sha(main)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base_sha)
-    argv = adj.dispatch_argv(case.task_file, case.task_id, "codex", model="gpt-6.1-sol")
+    argv = adj.legacy_dispatch_argv(case.task_file, case.task_id, "codex", model="gpt-6.1-sol")
     parsed = delegate.build_parser().parse_args(argv[2:])
 
     assert delegate.cmd_dispatch(parsed) == 0
