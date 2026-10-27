@@ -51,9 +51,18 @@ from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.claude_route_accounts import HOST_ACCOUNT, account
+from tests.helpers.claude_account_fixtures import bind_claude_account_b as _bind_claude_account_b
+from tests.helpers.claude_account_fixtures import default_account_file as _default_account_file
+from tests.helpers.review_scope import make_ordinary_review_scope as _make_ordinary_review_scope
+from tests.helpers.review_scope import write_code_review_manifest
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
-from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
-from tests.test_ask_review_admission_floor import write_code_review_manifest
+
+
+@pytest.fixture
+def ordinary_review_scope(tmp_path, monkeypatch):
+    repo = _make_ordinary_review_scope(tmp_path, monkeypatch)
+    monkeypatch.setattr(delegate, "_local_repo_root", repo)
+    return repo
 
 
 class _PinnedRemotePublicHead:
@@ -7491,49 +7500,6 @@ def test_omitted_claude_account_leaves_dispatch_hashes_unchanged():
 
 
 # The fleet-wide default account file (#10619 PR1c). Every fixture path below is temporary.
-def _default_account_file(tmp_path: Path, monkeypatch, content: bytes | None = None, *, mode: int = 0o600) -> Path:
-    path = tmp_path / "operator-config" / "claude-default-account"
-    path.parent.mkdir(exist_ok=True)
-    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
-    if content is not None:
-        path.write_bytes(content)
-        path.chmod(mode)
-    return path
-
-
-def _bind_claude_account_b(tmp_path: Path, monkeypatch, *, bound: bool = True) -> str:
-    """Account b's verified login directory and private binding, or (``bound=False``) no binding at all."""
-    from tests.agent_runtime.test_attempt_boundary import (
-        BOUND_ACCOUNT_UUID,
-        CLAUDE_AMBIENT_AUTH,
-        DEFAULT_ACCOUNT_UUID,
-        _credentials,
-        _login_identity,
-        _mock_selected_account_runtime,
-        _private_json,
-    )
-
-    identities, _calls = _mock_selected_account_runtime(tmp_path, monkeypatch)
-    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
-        monkeypatch.delenv(key, raising=False)
-    home, selected = tmp_path / "home", tmp_path / "selected"
-    selected.mkdir(mode=0o700)
-    token = "fixture-bound-" + "b" * 30
-    identities[token] = BOUND_ACCOUNT_UUID
-    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
-    _private_json(selected / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
-    _credentials(selected / ".credentials.json", token)
-    binding = tmp_path / "binding.json"
-    if bound:
-        _private_json(
-            binding,
-            {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
-        )
-    monkeypatch.setenv("HOME", str(home))
-    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
-    return str(selected)
-
-
 def _dry_run_claude_dispatch(tmp_path: Path, monkeypatch, task_id: str, *extra: str) -> int:
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
@@ -7640,7 +7606,10 @@ def test_check_budget_judges_the_selected_claude_account(tmp_tasks_dir, tmp_path
     On 50016b7b2e this refused: the guard read only the lane row (account a),
     hard-substituted codex, and codex cannot run Opus.
     """
-    from tests.test_delegate_check_budget import _UNVERIFIED_ROW, _account_row, _accounts_budget, _default_claude_lane
+    from tests.helpers.claude_account_fixtures import UNVERIFIED_ROW as _UNVERIFIED_ROW
+    from tests.helpers.claude_account_fixtures import account_row as _account_row
+    from tests.helpers.claude_account_fixtures import accounts_budget as _accounts_budget
+    from tests.helpers.claude_account_fixtures import default_claude_lane as _default_claude_lane
 
     _bind_claude_account_b(tmp_path, monkeypatch)
     extra = ["--claude-account", "b"] if source == "explicit" else []
@@ -7670,7 +7639,9 @@ def test_check_budget_refuses_an_exhausted_claude_account_as_before(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys, extra, b_left
 ):
     """The default label still reads the lane row, and a b as exhausted as a is refused the same way."""
-    from tests.test_delegate_check_budget import _account_row, _accounts_budget, _default_claude_lane
+    from tests.helpers.claude_account_fixtures import account_row as _account_row
+    from tests.helpers.claude_account_fixtures import accounts_budget as _accounts_budget
+    from tests.helpers.claude_account_fixtures import default_claude_lane as _default_claude_lane
 
     _bind_claude_account_b(tmp_path, monkeypatch)
     budget = _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(b_left)})
@@ -7729,7 +7700,9 @@ def test_headroom_stop_reads_the_selected_claude_account(
 
 def test_ordinary_check_budget_dispatch_records_the_unknown_account(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """#10619 finding 4: without --force-agent the record keeps the account evaluated and capacity unknown."""
-    from tests.test_delegate_check_budget import _UNVERIFIED_ROW, _accounts_budget, _default_claude_lane
+    from tests.helpers.claude_account_fixtures import UNVERIFIED_ROW as _UNVERIFIED_ROW
+    from tests.helpers.claude_account_fixtures import accounts_budget as _accounts_budget
+    from tests.helpers.claude_account_fixtures import default_claude_lane as _default_claude_lane
 
     _bind_claude_account_b(tmp_path, monkeypatch)
     budget = _accounts_budget(_default_claude_lane("hot"), {"a": _UNVERIFIED_ROW, "b": _UNVERIFIED_ROW})

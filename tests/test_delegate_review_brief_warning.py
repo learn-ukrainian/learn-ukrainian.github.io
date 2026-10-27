@@ -135,7 +135,7 @@ def pr_review(tmp_path, monkeypatch):
     """A same-repository PR review whose target resolves without the network (#9272 fixture)."""
     from scripts.orchestration.fleet_repos import load_fleet_repos
     from scripts.review import target_resolution
-    from tests.test_ask_review_admission_floor import _git
+    from tests.helpers.review_scope import _git
     from tests.test_delegate import _sanitize_git_env_for_test
 
     repo = tmp_path / "ordinary-review"

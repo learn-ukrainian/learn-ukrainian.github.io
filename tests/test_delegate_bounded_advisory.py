@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
 from scripts.agent_runtime import bounded_advisory
-from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
+from tests.helpers.review_scope import make_ordinary_review_scope as _make_ordinary_review_scope
 
 # Delivery is proven against the driver-bound destination, never the worker's
 # tracking refs (#10931); workers built by _bounded_worktree push to its origin.git.
@@ -35,6 +35,14 @@ OWNED = "scripts/delegate.py"
 # across xdist workers (#9927). Each case gets its own worker id and advisor id.
 _LEASE_IDS: contextvars.ContextVar[tuple[str, str]] = contextvars.ContextVar("bounded_advisory_lease_ids")
 
+
+
+
+@pytest.fixture
+def ordinary_review_scope(tmp_path, monkeypatch):
+    repo = _make_ordinary_review_scope(tmp_path, monkeypatch)
+    monkeypatch.setattr(delegate, "_local_repo_root", repo)
+    return repo
 
 def _worker_id() -> str:
     return _LEASE_IDS.get()[0]

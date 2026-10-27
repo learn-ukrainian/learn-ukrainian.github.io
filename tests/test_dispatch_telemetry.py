@@ -44,7 +44,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     import delegate
     from agent_runtime.errors import AgentTimeoutError
     from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
-    from tests.test_delegate_readonly_guard import _seed_read_only_checkout_fixture
+    from tests.helpers.read_only_checkout import seed_read_only_checkout as _seed_read_only_checkout_fixture
 
     repo = tmp_path / "repo"
     repo.mkdir()

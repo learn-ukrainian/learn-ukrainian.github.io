@@ -25,8 +25,29 @@ import delegate
 from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
 from scripts.fleet import claude_account_lane
 from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
-from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
+from tests.helpers.claude_account_fixtures import (
+    UNVERIFIED_ROW as _UNVERIFIED_ROW,
+)
+from tests.helpers.claude_account_fixtures import (
+    account_row as _account_row,
+)
+from tests.helpers.claude_account_fixtures import (
+    accounts_budget as _accounts_budget,
+)
+from tests.helpers.claude_account_fixtures import (
+    default_claude_lane as _default_claude_lane,
+)
+from tests.helpers.claude_account_fixtures import (
+    fresh_lane as _fresh_lane,
+)
+from tests.helpers.review_scope import make_ordinary_review_scope as _make_ordinary_review_scope
 
+
+@pytest.fixture
+def ordinary_review_scope(tmp_path, monkeypatch):
+    repo = _make_ordinary_review_scope(tmp_path, monkeypatch)
+    monkeypatch.setattr(delegate, "_local_repo_root", repo)
+    return repo
 
 @pytest.fixture(autouse=True)
 def _allow_notebook_dispatch(monkeypatch):
@@ -459,7 +480,7 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
 def test_issue_9272_review_dry_run_never_prints_grok_substitution(ordinary_review_scope, monkeypatch, tmp_path, capsys):
     import subprocess
 
-    from tests.test_ask_review_admission_floor import _git
+    from tests.helpers.review_scope import _git
 
     worktree = ordinary_review_scope / ".worktrees/dispatch/codex/budget-check-fixture"
     _git(ordinary_review_scope, "worktree", "add", "-b", "review-target", str(worktree), "HEAD")
@@ -2121,13 +2142,6 @@ def test_worker_keeps_budget_substitution_beside_runtime_attribution(monkeypatch
 # --- #9740 round 2: the budget guard acts on the owner's routing facts -----------------
 
 
-def _fresh_lane(**overrides) -> dict:
-    """A healthy lane record with a fresh probe, as the routing-budget producer publishes it."""
-    record = {"health": {"healthy": True}, "freshness": "fresh", "age_s": 30.0, **overrides}
-    record["codexbar"] = {"freshness": "fresh", "age_s": 30.0, **record.get("codexbar", {})}
-    return record
-
-
 def _owner_guard(monkeypatch, lane: str, record: dict, *, model: str | None = None, **budget) -> str:
     snapshot = {
         "recommendation": {"primary_agent_for_code": None, "warnings": []},
@@ -2207,89 +2221,6 @@ def test_demoted_message_prints_unknown_health_as_unknown(monkeypatch, capsys):
 
 def _utc_in(delta: timedelta) -> str:
     return (datetime.now(UTC) + delta).isoformat(timespec="seconds").replace("+00:00", "Z")
-
-
-def _account_row(
-    weekly_left: float | None,
-    *,
-    session_left: float | None = 100.0,
-    status: str = "ok",
-    weekly_resets_in: timedelta = timedelta(days=5),
-    reason: str | None = None,
-) -> dict:
-    """One ``claude_accounts`` row as ``scripts.api.claude_account_usage`` serves it."""
-
-    def window(left: float | None, resets_in: timedelta) -> dict:
-        resets = None if left is None else _utc_in(resets_in)
-        return {"left_pct": left, "resets_at": resets, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
-
-    return {
-        "session5h": window(session_left, timedelta(hours=3)),
-        "weekly": window(weekly_left, weekly_resets_in),
-        "updated": _utc_in(timedelta(minutes=-1)),
-        "age_s": 60.0,
-        "stale": status == "stale",
-        "status": status,
-        "reason": reason,
-    }
-
-
-_UNVERIFIED_ROW = {
-    "session5h": dict.fromkeys(("left_pct", "resets_at", "pace", "pace_delta_pct", "leftover_pct")),
-    "weekly": dict.fromkeys(("left_pct", "resets_at", "pace", "pace_delta_pct", "leftover_pct")),
-    "updated": None,
-    "age_s": None,
-    "stale": False,
-    "status": "unknown",
-    "reason": "claude_account_unverified",
-}
-
-
-def _default_claude_lane(state: str) -> dict:
-    """The ``claude`` lane row (the Monitor host's default account) as the producer publishes it."""
-    if state == "healthy":
-        return _fresh_lane(
-            status="cool",
-            status_source="weekly_pace",
-            interactive={"status": "cool", "burn_pct_7d": 10.0},
-            remaining_pct=90.0,
-            codexbar={"weekly_used_pct": 10.0, "weekly_remaining_pct": 90.0, "will_last_to_reset": True},
-        )
-    if state == "near_cap":
-        return _fresh_lane(
-            status="near_cap",
-            status_source="weekly_pace",
-            interactive={"status": "near_cap", "burn_pct_7d": 99.5},
-            remaining_pct=0.5,
-            codexbar={"weekly_used_pct": 99.5, "weekly_remaining_pct": 0.5, "primary_remaining_pct": 100.0},
-        )
-    # The live shape that motivated #10619: 84% used, a weekly-pace deficit, capacity avoid.
-    return _fresh_lane(
-        status="hot",
-        status_source="weekly_pace",
-        interactive={"status": "hot", "burn_pct_7d": 84.0},
-        remaining_pct=16.0,
-        codexbar={
-            "weekly_used_pct": 84.0,
-            "weekly_remaining_pct": 16.0,
-            "primary_remaining_pct": 100.0,
-            "weekly_pace_delta_pct": 40.7,
-            "weekly_expected_pct": 43.3,
-            "will_last_to_reset": False,
-        },
-    )
-
-
-def _accounts_budget(lane: dict, rows: dict[str, dict | None]) -> dict:
-    return {
-        "recommendation": {"primary_agent_for_code": "codex", "rationale": "fixture rationale", "warnings": []},
-        "agents": {
-            "claude": lane,
-            "codex": _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 90.0, "will_last_to_reset": True}),
-        },
-        "claude_accounts": {f"claude:{label}": row for label, row in rows.items() if row is not None},
-        "diagnostics": {"records_loaded": 0, "stale": False, "codexbar_data_available": True},
-    }
 
 
 def _route_account(label: str | claude_account_lane.ClaudeAccount | None) -> claude_account_lane.ClaudeAccount:

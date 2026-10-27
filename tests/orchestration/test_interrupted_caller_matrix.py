@@ -7,7 +7,6 @@ qualify interruption handling; they do not supply AC-03's independent controls.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -22,6 +21,7 @@ from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration import worktree_claims as wc
 from scripts.orchestration.task_family import git_safety
+from tests.helpers.interrupted_checkout import hashes, make_interrupted_checkout
 from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 CASES = ("cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late")
@@ -37,46 +37,13 @@ def git(repo: Path, *args: str) -> str:
     ).stdout.strip()
 
 
-def hashes(paths):
-    return tuple(hashlib.sha256(path.read_bytes()).hexdigest() for path in paths)
-
-
 @pytest.fixture
 def interrupted_checkout(tmp_path, monkeypatch):
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    git(repo, "init", "-b", "main")
-    git(repo, "config", "user.name", "Caller Test")
-    git(repo, "config", "user.email", "caller@example.invalid")
-    (repo / "base").write_text("base")
-    git(repo, "add", "base")
-    git(repo, "commit", "-m", "base")
-    remote = tmp_path / "origin.git"
-    git(repo, "init", "--bare", str(remote))
-    git(repo, "remote", "add", "origin", str(remote))
-    git(repo, "push", "-u", "origin", "main")
-    (repo / ".git/info/exclude").write_text("batch_state/\n.cache/\n.worktrees/\n")
-    tree = repo / ".worktrees/dispatch/codex/interrupted"
-    git(repo, "worktree", "add", "-b", "codex/interrupted", str(tree), "main")
-    (tree / "unique.txt").write_bytes(b"unique commit\x00\xff")
-    git(tree, "add", "unique.txt")
-    git(tree, "commit", "-m", "unique work")
-    tasks = repo / "batch_state/tasks"
-    tasks.mkdir(parents=True)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    record = tasks / "interrupted.json"
-    result = record.with_suffix(".result")
-    result.write_text("Український звіт\u2028recoverable result\n", encoding="utf-8")
-    output = tree / ".cache/output.bin"
-    output.parent.mkdir()
-    output.write_bytes(b"ignored output\x00\xff")
+    shared_interrupted_checkout = make_interrupted_checkout(tmp_path, monkeypatch)
+    repo, _tree, tasks, *_rest = shared_interrupted_checkout
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
     monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
-    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
-    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(rw, "_query_pr_states", lambda *_args: ([], None))
-    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda *_args, **_kw: ([], None))
-    return repo, tree, tasks, record, result, output
+    return shared_interrupted_checkout
 
 
 def test_guarded_remove_non_utf8_result_retains_and_reports(interrupted_checkout):

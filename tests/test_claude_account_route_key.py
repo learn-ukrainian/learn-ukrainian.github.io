@@ -28,14 +28,13 @@ from scripts.fleet.claude_account_lane import HEALTHY, HOT, UNKNOWN, ClaudeAccou
 from scripts.review import closeout_cli
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
-from tests.test_delegate import _bind_claude_account_b, _default_account_file
-from tests.test_delegate_check_budget import (
-    _UNVERIFIED_ROW,
-    _account_row,
-    _accounts_budget,
-    _default_claude_lane,
-    _fresh_lane,
-)
+from tests.helpers.claude_account_fixtures import UNVERIFIED_ROW as _UNVERIFIED_ROW
+from tests.helpers.claude_account_fixtures import account_row as _account_row
+from tests.helpers.claude_account_fixtures import accounts_budget as _accounts_budget
+from tests.helpers.claude_account_fixtures import bind_claude_account_b as _bind_claude_account_b
+from tests.helpers.claude_account_fixtures import default_account_file as _default_account_file
+from tests.helpers.claude_account_fixtures import default_claude_lane as _default_claude_lane
+from tests.helpers.claude_account_fixtures import fresh_lane as _fresh_lane
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 HEADROOM_CAP = 90

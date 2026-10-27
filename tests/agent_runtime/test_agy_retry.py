@@ -609,7 +609,7 @@ def test_receipt_cancellation_requires_fresh_dispatch_and_503_requires_empty_led
 
 
 def test_real_git_state_detects_worktree_changes(tmp_path, monkeypatch):
-    from tests.test_delegate_readonly_guard import _seed_read_only_checkout_fixture
+    from tests.helpers.read_only_checkout import seed_read_only_checkout as _seed_read_only_checkout_fixture
 
     _seed_read_only_checkout_fixture(tmp_path, monkeypatch)
     before = runner._agy_git_state(tmp_path)

@@ -52,8 +52,8 @@ from scripts.review import render_contract
 from scripts.review.receipts import ledger as ledger_module
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from scripts.review.render_contract import ReviewContractError
-from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
-from tests.test_ask_review_admission_floor import write_code_review_manifest
+from tests.helpers.review_scope import ordinary_review_scope as ordinary_review_scope
+from tests.helpers.review_scope import write_code_review_manifest
 
 
 @pytest.fixture(autouse=True)
@@ -855,7 +855,15 @@ def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
 def test_delegate_dispatch_refuses_reused_attempt_id(
     manifest_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from tests.test_delegate import _add_local_bare_origin, _init_repo_with_worktree, _sanitize_git_env_for_test
+    from tests.helpers.git_checkouts import (
+        add_local_bare_origin as _add_local_bare_origin,
+    )
+    from tests.helpers.git_checkouts import (
+        init_repo_with_worktree as _init_repo_with_worktree,
+    )
+    from tests.helpers.git_checkouts import (
+        sanitize_git_env_for_test as _sanitize_git_env_for_test,
+    )
 
     main, reviewer = _init_repo_with_worktree(tmp_path)
     _add_local_bare_origin(main)

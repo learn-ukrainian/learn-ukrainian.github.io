@@ -66,7 +66,7 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
     from scripts.orchestration.fleet_repos import load_fleet_repos
-    from tests.test_ask_review_admission_floor import _git
+    from tests.helpers.review_scope import _git
 
     repo = tmp_path_factory.mktemp("ordinary-review")
     _git(repo, "init", "-q", "-b", "main")

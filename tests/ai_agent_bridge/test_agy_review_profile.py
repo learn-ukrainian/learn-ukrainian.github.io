@@ -15,7 +15,7 @@ from scripts.ai_agent_bridge._agy import (
 )
 from scripts.ai_agent_bridge._channels_cli import _gemini_review_request_error
 from scripts.ai_agent_bridge._cli import _handle_acp_compat
-from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
+from tests.helpers.review_scope import ordinary_review_scope as ordinary_review_scope
 
 pytestmark = pytest.mark.reads_content
 

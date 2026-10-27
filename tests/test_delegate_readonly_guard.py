@@ -53,56 +53,12 @@ def _init_git_repo_for_test(path: Path, monkeypatch) -> None:
     )
 
 
-def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
-    """Git repo with production-shaped ignore rules + one tracked file."""
-    _init_git_repo_for_test(repo, monkeypatch)
-    entire = repo / ".entire"
-    entire.mkdir(parents=True, exist_ok=True)
-    (entire / ".gitignore").write_text(
-        "tmp/\nsettings.local.json\nmetadata/\nlogs/\nredactors/local/\n",
-        encoding="utf-8",
-    )
-    (repo / ".gitignore").write_text(
-        ".agent/\n"
-        ".mcp/servers/message-broker/*.log\n"
-        "scratch/\n"
-        ".cache/\n"
-        "batch_state/\n"
-        ".pytest_cache/\n"
-        ".pytest_breadcrumbs/\n"
-        ".ruff_cache/\n"
-        "__pycache__/\n"
-        ".runtime/\n"
-        "*.sqlite3-wal\n"
-        "*.sqlite3-shm\n"
-        "*.sqlite3-journal\n",
-        encoding="utf-8",
-    )
-    (repo / "tracked.txt").write_text("baseline\n", encoding="utf-8")
-    subprocess.run(
-        ["git", "add", ".entire/.gitignore", ".gitignore", "tracked.txt"],
-        cwd=repo,
-        check=True,
-        timeout=30,
-    )
-    subprocess.run(
-        ["git", "commit", "-m", "fixture"],
-        cwd=repo,
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
-
-
-# What dispatch records for a read-only Gemini Flash Ukrainian review; the worker
-# re-classifies it before starting the model (#9275).
-_AGY_UKRAINIAN_REVIEW = {"mode": "read-only", "advisory_exemption": {
-        "model_id": "gemini-3.8-flash-high",
-        "task_family": "ukrainian-review",
-        "review_profile": None,
-        "mode": "read-only",
-        "classified_paths": [],
-    }}
+from tests.helpers.read_only_checkout import (
+    AGY_UKRAINIAN_REVIEW as _AGY_UKRAINIAN_REVIEW,
+)
+from tests.helpers.read_only_checkout import (
+    seed_read_only_checkout as _seed_read_only_checkout_fixture,
+)
 
 
 def _finalize_mock_result(response: str = "done"):

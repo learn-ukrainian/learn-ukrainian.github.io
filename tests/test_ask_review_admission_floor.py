@@ -7,9 +7,7 @@ import subprocess
 import sys
 import urllib.request
 from copy import deepcopy
-from dataclasses import asdict
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -18,6 +16,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import delegate
 from scripts.common.git_context import sanitized_git_env
 from tests.claude_route_accounts import HOST_ACCOUNT
+from tests.helpers.review_scope import _git
+from tests.helpers.review_scope import ordinary_review_scope as ordinary_review_scope
 
 
 @pytest.fixture(autouse=True)
@@ -34,33 +34,15 @@ def test_uninjected_routing_snapshot_fails_before_network(as_request):
         urllib.request.urlopen(request, timeout=1)
 
 
-def _git(repo, *args):
-    return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30).strip()
+@pytest.fixture
+def review_repo(tmp_path, monkeypatch):
+    from tests.helpers.review_scope import init_review_repo
 
-
-def _init_review_repo(tmp_path, monkeypatch):
-    repo = tmp_path / "target"
-    repo.mkdir()
-    _git(repo, "init", "-q", "-b", "main")
-    _git(repo, "config", "user.name", "Test")
-    _git(repo, "config", "user.email", "test@example.com")
-    _git(repo, "config", "core.hooksPath", "/dev/null")
-    (repo / "ordinary.py").write_text("value = 1\n")
-    _git(repo, "add", ".")
-    _git(repo, "commit", "-qm", "base")
-    base = _git(repo, "rev-parse", "HEAD")
-    _git(repo, "update-ref", "refs/remotes/origin/main", base)
+    repo, base = init_review_repo(tmp_path)
     monkeypatch.setattr(delegate, "_local_repo_root", repo)
     return repo, base
 
 
-@pytest.fixture
-def review_repo(tmp_path, monkeypatch):
-    return _init_review_repo(tmp_path, monkeypatch)
-
-
-# The fixture commits' author, matching the tests' --review-author-model: review
-# admission attributes every branch commit by its X-Agent trailer (#9739).
 FIXTURE_AUTHOR_TRAILER = "X-Agent: codex/gpt-6.1-sol"
 
 
@@ -68,39 +50,14 @@ def _change(repo, path):
     file = repo / path
     file.parent.mkdir(parents=True, exist_ok=True)
     file.write_text("value = 2\n")
-    _git(repo, "add", ".")
-    _git(repo, "commit", "-qm", f"review target\n\n{FIXTURE_AUTHOR_TRAILER}")
-    head = _git(repo, "rev-parse", "HEAD")
-    _git(repo, "update-ref", "refs/remotes/origin/review-target", head)
+    subprocess.run(["git", "add", "."], cwd=repo, check=True, env=sanitized_git_env(), timeout=30)
+    subprocess.run(
+        ["git", "commit", "-qm", f"review target\n\n{FIXTURE_AUTHOR_TRAILER}"],
+        cwd=repo, check=True, env=sanitized_git_env(), timeout=30,
+    )
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True, env=sanitized_git_env(), timeout=30).strip()
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/review-target", head], cwd=repo, check=True, env=sanitized_git_env(), timeout=30)
     return head
-
-
-@pytest.fixture
-def ordinary_review_scope(tmp_path, monkeypatch):
-    """Real ordinary Git scope, even when a dispatch test stubs process spawning."""
-    from scripts.review import security_paths, target_resolution
-
-    repo, _base = _init_review_repo(tmp_path, monkeypatch)
-    _change(repo, "ordinary.py")
-    run_git = target_resolution._run_git
-    real_run, real_popen = subprocess.run, subprocess.Popen
-
-    def fixture_git(args, cwd, *, timeout=30.0):
-        with patch.object(subprocess, "run", real_run), patch.object(subprocess, "Popen", real_popen):
-            return run_git(args, cwd, timeout=timeout)
-
-    monkeypatch.setattr(target_resolution, "_run_git", fixture_git)
-    monkeypatch.setattr(security_paths, "_run_git", fixture_git)
-    return repo
-
-
-def write_code_review_manifest(repo, path):
-    """Freeze a real code target in the same target shape admission reads."""
-    from scripts.review.target_resolution import resolve_branch_target
-
-    target = resolve_branch_target(repo, "refs/remotes/origin/review-target", "refs/remotes/origin/main")
-    path.write_text(json.dumps({"target": asdict(target)}))
-    return path
 
 
 def _args(*flags):

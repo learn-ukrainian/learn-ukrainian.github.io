@@ -42,8 +42,8 @@ from scripts.orchestration import curriculum_coordinator as coordinator
 from scripts.review import bench_health, closeout_cli, reviewer_resolver, reviewer_scheduler
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT, account, bound, unresolved
+from tests.helpers.claude_account_fixtures import account_row as _account_row
 from tests.test_claude_account_route_key import _agreement_snapshot, _route_key_for
-from tests.test_delegate_check_budget import _account_row
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 B = account("b")
