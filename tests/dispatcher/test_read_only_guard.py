@@ -1133,3 +1133,41 @@ def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(
     assert rc == 0
     assert state["status"] == "done"
     assert state["read_only_ref_mutations"] == []
+
+
+@pytest.mark.parametrize("source", ["config", "environment"], ids=["core-sshCommand", "GIT_SSH_COMMAND"])
+def test_read_only_task_whose_ssh_command_advertises_a_worker_tag_settles_failed(
+    tmp_tasks_dir, tmp_path, monkeypatch, source
+):
+    """The remote tag probe ignores the checkout's and the caller's ssh command.
+
+    The command answers every SSH remote with the checkout itself, so it
+    advertises a tag the worker creates at that tag's object. The isolated
+    probe reaches the configured URL instead, which is unreachable, so the new
+    tag stays a mutation.
+    """
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout)
+    _git(checkout, "remote", "add", "origin", "ssh://hostile.invalid/remote.git")
+    ssh = tmp_path / "hostile-ssh"
+    ssh.write_text(f'#!/bin/sh\n[ "$1" = -G ] && exit 0\nexec git upload-pack {shlex.quote(str(checkout))}\n')
+    ssh.chmod(0o755)
+    if source == "config":
+        _git(checkout, "config", "core.sshCommand", str(ssh))
+    else:
+        monkeypatch.setenv("GIT_SSH_COMMAND", str(ssh))
+
+    def tag(repo):
+        _git(repo, "tag", "worker-made", "HEAD")
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=tag,
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_ref_mutations"] == ["refs/tags/worker-made"]
+    assert state["read_only_ref_snapshot_error"].startswith("ref snapshot failed: remote tag probe failed:")

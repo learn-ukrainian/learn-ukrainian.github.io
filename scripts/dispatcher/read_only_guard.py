@@ -24,7 +24,11 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+import yaml
+
+from scripts.common.task_scratch import TaskScratchError, allocate
 from scripts.common.task_store_paths import tasks_dir
+from scripts.dispatcher.git import _verification_git
 
 DEFAULT_GIT_TIMEOUT_S: float = 30.0
 _READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX = ".snapshots"
@@ -757,34 +761,67 @@ def _ref_probe_for(cwd: Path, url: str, candidates: list[str]) -> str:
     raise _RefSnapshotFailed("a configured remote URL cannot be probed without rewriting it")
 
 
+# Everything the isolated probe, its scratch repository and its credential
+# settings can raise; any of them leaves every new tag a mutation.
+_REMOTE_TAG_PROBE_ERRORS = (
+    OSError,
+    ValueError,
+    LookupError,
+    TypeError,
+    subprocess.SubprocessError,
+    TaskScratchError,
+    yaml.YAMLError,
+)
+
+
 def _read_only_remote_tags(cwd: Path) -> tuple[frozenset[tuple[str, str]] | None, str | None]:
     """Return every ``(tag ref, object)`` pair the configured remotes' fetch URLs advertise.
 
-    Each distinct fetch URL is probed once, exactly as ``git fetch`` would
-    rewrite it, through the same sanitized environment as the remote tip probe.
-    Peeled ``^{}`` lines are skipped so a pair compares with ``%(objectname)``.
-    Without a configured remote there is nothing to resolve a tag against,
-    which is an error rather than an empty answer.
+    The answer exempts a new tag from the ref comparison, so neither the
+    checkout nor the caller may choose it. Each remote's fetch URL is resolved
+    once from the checkout's own configuration, then probed verbatim through
+    the isolated Git of the ownership check (:func:`_verification_git`): the
+    system executable, no global or system configuration, an environment
+    reduced to the home, SSH agent and gh locations (no inherited ``GIT_*``
+    or ssh command), and a fresh bare repository, so the checkout's
+    ``core.sshCommand``, URL rewrites, upload-pack and proxy settings never
+    reach the transport. Peeled ``^{}`` lines are skipped so a pair compares
+    with ``%(objectname)``. Without a configured remote there is nothing to
+    resolve a tag against, which is an error rather than an empty answer.
     """
     try:
-        remotes = sorted(set(_ref_git(cwd, "remote").split()))
+        remotes = sorted(set(_verification_git(cwd, "remote").split()))
         if not remotes:
             return None, "remote tag probe failed: no configured remote"
-        probes: dict[str, str] = {}
-        for remote in remotes:
-            fetch_url, raw = _remote_fetch_url_and_probe_candidates(cwd, remote)
-            if fetch_url not in probes:
-                probes[fetch_url] = _ref_probe_for(cwd, fetch_url, [*raw, fetch_url])
-        pairs: set[tuple[str, str]] = set()
-        for probe in probes.values():
-            for line in _ref_git(cwd, "ls-remote", "--tags", probe).splitlines():
-                sha, ref = line.split("\t", 1)
-                if not ref.endswith("^{}"):
-                    pairs.add((ref, sha))
-    except _RefSnapshotFailed as exc:
-        return None, f"remote tag probe failed: {exc}"
-    except ValueError:
-        return None, "remote tag probe failed: unparseable tag listing"
+        urls = sorted({_verification_git(cwd, "remote", "get-url", remote) for remote in remotes})
+        scratch = allocate("read-only-remote-tags")
+        try:
+            private = scratch.payload_dir
+            _verification_git(private, "init", "--bare", "--template=", git_dir=private)
+            pairs: set[tuple[str, str]] = set()
+            for url in urls:
+                listing = _verification_git(
+                    private,
+                    "ls-remote",
+                    "--tags",
+                    "--",
+                    url,
+                    git_dir=private,
+                    timeout=DEFAULT_GIT_TIMEOUT_S,
+                    credential_remote=url,
+                )
+                for line in listing.splitlines():
+                    sha, ref = line.split("\t", 1)
+                    if not ref.endswith("^{}"):
+                        pairs.add((ref, sha))
+        finally:
+            try:
+                scratch.remove()
+            finally:
+                scratch.preserve()
+    except _REMOTE_TAG_PROBE_ERRORS as exc:
+        # Isolated Git failures are already scrubbed of transport output and URLs.
+        return None, f"remote tag probe failed: {type(exc).__name__}: {exc}"
     return frozenset(pairs), None
 
 
