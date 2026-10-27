@@ -3,14 +3,18 @@
 Each test names its legacy source; assertions are adapted to the v2 entry points only.
 """
 
+import json
 import os
 import subprocess
+import sys
+from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
 
 import pytest
 
-from scripts.dispatcher import admission, cli, git, providers, worker, write_intent
+from scripts.dispatcher import admission, cli, git, host_admission, providers, store, worker, write_intent
 from scripts.dispatcher.environment import child_env
-from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 from scripts.lib import rules_core
 from tests.agent_runtime.test_attempt_boundary import CLAUDE_AMBIENT_AUTH, _private_json
 from tests.agent_runtime.test_claude_account_worker import _calls, _run, accounts  # noqa: F401  (fixture)
@@ -222,3 +226,168 @@ def test_read_only_wrapped_prose_continuation_line_is_not_refused():
         "fix report `batch_state/tasks/impl-conftest-light-r2.result`.\n"
     )
     assert write_intent._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+
+# ----------------------------------------------------------------- plan headroom and runtime exhaustion (unit D6)
+
+
+@pytest.fixture
+def headroom_box(tmp_path, monkeypatch):
+    from scripts.agent_runtime import model_pause, usage
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "logs").mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    policy = tmp_path / "model-pause.json"
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
+    monkeypatch.delenv("LU_BYPASS_RATE_LIMIT", raising=False)
+    monkeypatch.setattr(usage, "_usage_dir", lambda: tmp_path)
+    usage._reset_rate_limit_cache_for_tests()
+    monkeypatch.setattr(admission, "claude_account", lambda agent, label: (
+        {"claude_account": label or "a", "claude_account_source": "explicit"} if agent == "claude" else {}
+    ))
+    monkeypatch.setattr(host_admission, "precheck", lambda *_a, **_k: None)
+    monkeypatch.setattr(host_admission, "check_credit", lambda *_a: None)
+    monkeypatch.setattr(git, "resolve_repo", lambda *_a: (tmp_path, {"key": "public"}))
+    monkeypatch.setattr(git, "worktree_plan", lambda *_a: (tmp_path, "fixture", "a" * 40))
+    monkeypatch.setattr(host_admission, "check", lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_a: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *_a: {})
+    monkeypatch.setattr(admission, "claude_launch", lambda _spec, invocation: invocation)
+    launches = []
+
+    def build(spec, env):
+        launches.append((spec.agent, spec.model, spec.claude_account))
+        return Invocation([sys.executable, "-c", "print('literal final response')"], None, env, None)
+
+    monkeypatch.setattr(providers, "load", lambda _agent: SimpleNamespace(
+        build=build, parse=lambda *_a: ParsedResult("literal final response", None, None)
+    ))
+
+    def meter(a_used=84.0, b_used=11.0, codex_used=30.0):
+        import io
+
+        window = dict(left_pct=None, resets_at=None, pace=None, pace_delta_pct=None, leftover_pct=None)
+        payload = {
+            "agents": {"claude": {"status": "hot", "codexbar": {
+                "stale": False, "freshness": "fresh", "weekly_used_pct": a_used,
+            }, "runtime": {"headroom_blocked": True}}, "codex": {"status": "cool", "codexbar": {
+                "stale": False, "freshness": "fresh", "weekly_used_pct": codex_used,
+            }}},
+            "claude_accounts": {"claude:b": {
+                "session5h": window | {"left_pct": 100.0},
+                "weekly": window | {"left_pct": None if b_used is None else 100 - b_used},
+                "updated": None, "age_s": 60.0, "stale": False, "status": "ok", "reason": None,
+            }},
+        }
+        monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *_a, **_k: io.StringIO(json.dumps(payload)))
+
+    def set_policy(value):
+        policy.write_text(json.dumps(value))
+
+    def dispatch(*flags, agent="claude", model="claude-opus-5-5"):
+        return cli.main(["dispatch", "--agent", agent, "--model", model, "--prompt", "Explain the result",
+                         "--dry-run", *flags])
+
+    def supervise(label="a", *, agent="claude", model="claude-opus-5-5", mode="read-only"):
+        prompt = tmp_path / "prompt"
+        prompt.write_text("Explain the result")
+        spec = TaskSpec("headroom-worker", agent, model, None, mode, tmp_path, prompt, tmp_path / "result", label)
+        record = store.new_record(spec, {"key": "public", "github": "example/repo"}, "fixture", "a" * 40,
+                                  {"research_owned_path": []})
+        record["prompt_file"] = str(tasks / "headroom-worker.prompt")
+        path = store.create(record, prompt.read_bytes())
+        worker.supervise(path, {}, 10)
+        return json.loads(path.read_text())
+
+    meter()
+    set_policy({"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]})
+    yield SimpleNamespace(meter=meter, policy=set_policy, dispatch=dispatch, supervise=supervise,
+                          launches=launches, tasks=tasks, root=tmp_path)
+    usage._reset_rate_limit_cache_for_tests()
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("label", ["a", "b"])
+@pytest.mark.parametrize("force", [[], ["--force-admission", "operator host override"]])
+def test_plan_headroom_stop_cannot_be_bypassed_by_pin_or_host_override(headroom_box, capsys, mode, label, force):
+    """Granted D6 defect class: v2 launches a pinned account at the plan-headroom threshold."""
+    box = headroom_box
+    box.meter(a_used=80.0 if label == "a" else 11.0, b_used=80.0 if label == "b" else 11.0)
+    assert box.dispatch("--mode", mode, "--claude-account", label, *force) == 2
+    assert capsys.readouterr().err == "❌ MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom\n"
+    assert box.launches == []
+    assert list(box.tasks.glob("*.json")) == []
+
+
+@pytest.mark.parametrize("block", ["pause", "headroom", "runtime"])
+@pytest.mark.parametrize("agent,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")])
+def test_paused_or_exhausted_lane_never_silently_substitutes(headroom_box, capsys, block, agent, model):
+    """Granted D6 defect class: a refused/exhausted v2 route silently launches a different model."""
+    box = headroom_box
+    if block == "runtime":
+        box.policy({})
+        records = [{"ts": (datetime.now(UTC) - timedelta(seconds=age)).isoformat(), "agent": agent,
+                    "model": model, "outcome": "rate_limited"} for age in (30, 10)]
+        (box.root / f"usage_{agent}-fixture.jsonl").write_text("".join(json.dumps(row) + "\n" for row in records))
+    elif block == "pause":
+        box.policy({"pauses": [{"pattern": model, "until": "2999-01-01T00:00:00Z"}]})
+    else:
+        box.meter(a_used=100.0, codex_used=100.0)
+        box.policy({"headroom": [{"lane": agent, "pattern": model, "max_weekly_used_pct": 80}]})
+    if block != "runtime":
+        assert box.dispatch(agent=agent, model=model) == 2
+        expected = "MODEL_PAUSED" if block == "pause" else "MODEL_HEADROOM"
+        assert expected in capsys.readouterr().err
+        assert list(box.tasks.glob("*.json")) == []
+    record = box.supervise(agent=agent, model=model)
+    assert record["status"] == ("rate_limited" if block == "runtime" else "failed")
+    assert record["agent"] == agent and record["model"] == model
+    assert record["returncode"] is None
+    assert record["finished_at"] is not None
+    assert box.launches == []
+
+
+@pytest.mark.parametrize("label,refused", [("b", False), ("a", True), (None, True)])
+def test_worker_admission_reads_the_records_claude_account(headroom_box, label, refused):
+    """Ported from tests/test_model_pause.py::test_worker_admission_reads_the_records_claude_account."""
+    record = headroom_box.supervise(label)
+    assert record["status"] == ("failed" if refused else "done")
+    if refused:
+        assert record["error"] == "MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom"
+        assert headroom_box.launches == []
+    else:
+        assert headroom_box.launches == [("claude", "claude-opus-5-5", "b")]
+
+
+def test_invoke_rate_limit_short_circuit(headroom_box, monkeypatch):
+    """Ported from tests/test_agent_runtime.py::test_invoke_rate_limit_short_circuit."""
+    from scripts.agent_runtime import usage
+
+    headroom_box.policy({})
+    monkeypatch.setattr(usage, "has_headroom", lambda *_a, **_k: (False, "cached rate limit"))
+    record = headroom_box.supervise(agent="codex", model="gpt-6.1-sol")
+    assert record["status"] == "rate_limited"
+    assert record["error"] == "codex/gpt-6.1-sol rate limited: cached rate limit"
+    assert record["returncode"] is None
+    assert headroom_box.launches == []
+
+
+def test_headroom_stop_refuses_matching_models_only(headroom_box, capsys):
+    """Ported from tests/test_model_pause.py::test_headroom_stop_refuses_matching_models_only."""
+    assert headroom_box.dispatch(model="claude-sonnet-5-5") == 2
+    assert "MODEL_HEADROOM: claude-sonnet-5-5" in capsys.readouterr().err
+    assert headroom_box.dispatch(agent="codex", model="gpt-6.1-sol") == 0
+
+
+def test_unreadable_usage_does_not_block(headroom_box):
+    """Ported from tests/test_model_pause.py::test_unreadable_usage_does_not_block."""
+    headroom_box.meter(a_used=None, b_used=None)
+    assert headroom_box.dispatch() == 0
+
+
+def test_pause_lifts_by_itself_after_until(headroom_box):
+    """Ported from tests/test_model_pause.py::test_pause_lifts_by_itself_after_until."""
+    headroom_box.policy({"pauses": [{"pattern": "claude-*", "until": "2000-01-01T00:00:00Z"}]})
+    assert headroom_box.dispatch() == 0

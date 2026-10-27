@@ -41,7 +41,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
 - For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; native grok for plan and create, operator 2026-10-16, while review of a Grok author stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi is retired (OO-58, #11327) and is not a seat).
-- Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = qualified toolful approval before PR, then `record_cf_verdict.py` binding + same-head CI (drive-epic §6–§7).
+- Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = the `review-loop` skill (qualified toolful exact-head approval, bound with `record_cf_verdict.py`, then same-head CI).
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
 ## Two halves (do not conflate)
@@ -103,18 +103,7 @@ cold-prompts; silent plane flips; “for now” cutovers.
 .venv/bin/python -m agents_extensions.shared.session_streams tail --stream epic:<N> --limit 20
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
 
-# Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
-# Push the author branch, then get exact-head APPROVE before opening any PR.
-# Delegate admission pins the remote-tracking target; fetch refuses movement.
-# Compare task pinned_head/worktree_base_sha with the pushed tip, not ask stdout.
-# Ask waits synchronously without nonce; on expiry continue the same task/nonce
-# using drive-epic §6's wait recipe, never repeat this launch.
-printf '%s\n' "Review pushed branch <branch> at its resolved remote head; return verdict + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<id> --review --branch <branch>
-# Only after APPROVE matches that SHA, open the PR and bind the completed review:
-.venv/bin/python scripts/review/record_cf_verdict.py --task-id review-<id> --pr <N>
-# Then require CI on that same SHA before landing; see drive-epic §7 / §7a for cleanup.
+# Cross-family PR review and landing: the review-loop and full-send / full-stop skills.
 # SHIELDED formal path (review-pr / lu-review snaps / shielded-reviews) is RETIRED —
 # do not run it. Its commands were removed in #8520, and the snapshot flow is
 # refused with no bypass.
@@ -140,8 +129,7 @@ job/reservation state. The dashboard is read-only: its filters, search,
 details, and load-more controls never select, retry, cancel, reclaim, or reroute
 work.
 
-- Cross-family review is **direct only** (qualified toolful APPROVE before PR, then
-  `record_cf_verdict.py` binding + same-head CI; drive-epic §6–§7).
+- Cross-family review is **direct only**: the `review-loop` skill.
   Shielded formal `review-pr` / eligibility pins are RETIRED (operator 2026-08-07).
   Route the reviewer seat by model-assignment (outside the author's family).
 
@@ -155,9 +143,9 @@ Every epic driver session (any harness) MUST:
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
    mode, never create a new legacy bridge/channel/broker/file coordination write.
-4. Review of record = one round of direct cross-family review on the pushed branch before the PR;
-   after opening the PR, `record_cf_verdict` binds the completed review to its
-   head and author qualification. **Shielded formal CF (`review-pr`, sealed MCP,
+4. Review of record = direct exact-head cross-family review under the `review-loop` skill;
+   `record_cf_verdict` binds the completed review to the PR head and author
+   qualification. **Shielded formal CF (`review-pr`, sealed MCP,
    multi-GB `lu-review-*` / `shielded-reviews` clones) is RETIRED** (operator
    2026-08-07) — disk and process harm outweighed isolation benefit. Discussion
    and same-family chat are still not the gate.
@@ -209,9 +197,8 @@ Supported fleet seats cold-start through:
 
 Discussion is never the review of record. **Shielded formal CF (`review-pr` /
 `publish-review-verdict` / sealed `lu-review-*`) is RETIRED** (operator 2026-08-07).
-Review of record = one direct cross-family `ask-* --review --branch <name>` on
-the pushed branch before PR creation, followed after PR creation by
-`record_cf_verdict` to bind the completed review, head, and author qualification.
+Review of record = direct exact-head cross-family review under the `review-loop`
+skill, bound to the PR head with `record_cf_verdict`.
 ACP is structured provider transport for ordinary `ask-*` / `discuss`; fleet-comms
 owns durable coordination state.
 
@@ -246,12 +233,11 @@ The default is two rounds and the hard maximum is three.
 `gh`/pytest/fs, so a reviewer seated there cannot ground a verdict (live
 proof: `ask-codex --review --pr 7155` ABSTAINed via ACP with `gh auth`
 unavailable; the same review via headless dispatch with tools approved).
-For pre-PR CF, `ask-<lane> --review --branch <name>` uses native dispatch +
+For branch CF, `ask-<lane> --review --branch <name>` uses native dispatch +
 synchronous wait. Delegate admission pins the remote-tracking target and fetch
 refuses movement; compare task SHA evidence, not reply stdout (drive-epic §6).
-Require qualified outside-family APPROVE before PR, then bind it with
-`record_cf_verdict.py` and require same-head CI. Continue an expired wait on
-the same task/nonce (§6), never repeat the launch.
+Settlement, recording and landing follow the `review-loop` and `full-send`
+skills.
 `--pr` targets an existing PR; only non-review `ask-*` stays on ACP.
 
 There is no bridge/provider-execution fallback. Unknown routes, invalid model or
