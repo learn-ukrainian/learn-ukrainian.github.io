@@ -255,7 +255,7 @@ files; those are imported only with `import type`, which the compiler erases.
 Seven test files are listed in `scripts/ci/history-tests.txt`. Five read old
 commits: `git show`/`git cat-file` of an old SHA, a recorded historical
 commit, a frozen base commit, and `origin/main` ancestry. Two run a
-`--dry-run` `delegate.py dispatch --worktree`, which fetches `main` from
+`--dry-run` `dispatch.py dispatch --worktree`, which fetches `main` from
 GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
 s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out

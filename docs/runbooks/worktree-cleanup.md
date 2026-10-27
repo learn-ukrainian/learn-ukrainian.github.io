@@ -12,7 +12,7 @@ interpreter instead:
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/test_delegate.py
+"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/test_dispatch.py
 ```
 
 Do not substitute `python`, `.venv/bin/python`, or `python -m venv .venv`.
@@ -318,35 +318,14 @@ Git still refuses new ordinary untracked/modified files at non-force removal;
 already archived scratch remains retrievable if removal fails. Unknown state
 always refuses release. This slice adds no probe retry, identity bypass,
 retention release or automatic archive deletion. The reaper's dirty-tree and
-activity refusals and `delegate.py rescue` identity/activity refusals remain
+activity refusals remain
 residuals owned by the accountable driver (`claude-monitor`).
 
-The scheduled job reports terminal non-success dispatches older than six hours
-as rescue candidates in its result and status; it does not commit or push them.
-A clean tree with unpushed commits is flagged at task exit as
-`unpushed work - needs rescue` when the upstream count is known, or
-`unpushed state unknown - needs rescue` otherwise. The driver inspects the
-report and explicitly runs rescue when appropriate. Rescue commits dirty work
-on `rescue/<task-id>`, pushes it, and verifies the remote head with
-`git ls-remote`. A failed push, unverified remote head, or changed file over
-5 MB leaves the worktree in place. To inspect candidates without writing:
-
-```bash
-"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py rescue --all-stale --older-than 6h
-```
-
-To preserve a reviewed candidate explicitly, run:
-
-```bash
-"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py rescue TASK_ID --apply
-```
-
-After the driver has inspected a rescue, use `git log origin/rescue/<task-id>`
-to see its commits. Delete an unneeded rescue branch explicitly with
-`git push origin --delete rescue/<task-id>` only after its work is otherwise
-preserved or discarded by the responsible driver. Scheduled branch cleanup
-retains a rescue ref with unique commits; a ref whose tip is proven contained
-in another origin ref may be removed under the existing containment rules.
+The scheduled job reports terminal non-success dispatches as preservation
+candidates; it does not commit or push their work. Dispatch v2 has no rescue
+subcommand. The accountable driver inspects branch/worktree evidence and
+preserves unfinished work before invoking the common reaper. Unknown custody
+or unpushed work remains protected.
 
 ## Branch sweep evidence (#9909)
 
@@ -867,7 +846,7 @@ Callers and their ownership proofs:
   path: its executor repeats frozen-plan, merged-PR, bundle, and candidate
   checks immediately before deletion.
 
-`delegate.py dispatch` refuses a `--cwd` or `--worktree` inside
+`dispatch.py dispatch` refuses a `--cwd` or `--worktree` inside
 `.worktrees/dispatch/acp/`: those runtimes belong to the ACP bridge and are
 never a dispatch target.
 
@@ -990,7 +969,7 @@ record, detached HEAD for the detached classes) before removal, and
 
 ### Interrupted `git worktree add` (#8663)
 
-`delegate.py` bounds `git worktree add` by `DELEGATE_WORKTREE_ADD_*` in
+`dispatch.py` bounds `git worktree add` by `DELEGATE_WORKTREE_ADD_*` in
 `scripts/config.py`: a base window, then more time only while the checkout is
 still gaining files, up to a hard ceiling. The add runs in the C locale (so
 git's lock reason is the literal `initializing`) in its own process group.
@@ -1066,7 +1045,7 @@ The dispatcher's `owner_pid`/`owner_start` serve one more purpose. While
 the dispatcher dies before writing a terminal record, two paths mark it
 `crashed` with `returncode_reason: dispatch_died_during_worktree_prep` once
 the owner is proven gone (`worktree_prep.is_orphaned_prep_record`): the lazy
-heal in `delegate.py status|wait|list`, and `reconcile_sweep --apply`. The
+heal in `dispatch.py status|wait|list`, and `reconcile_sweep --apply`. The
 ownership ledger stops counting such a record immediately.
 
 Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
@@ -1076,20 +1055,20 @@ subdirectories) are reported as `would_remove` husks and removed under
 removed by this rule. The rule fails closed on every other guard too: an
 unavailable process-CWD probe skips the directory, a live process cwd inside
 preserves it, and it must be at least one hour old measured by the newest
-mtime anywhere in its subtree — a directory a concurrent `delegate.py` is
+mtime anywhere in its subtree — a directory a concurrent `dispatch.py` is
 still provisioning (created before `git worktree add` registers it) is never
 "old". Husk removals, dry-run observations, and skips are recorded through
 the same `reaper_lifecycle` journal as every other reaper action.
 
 ## Before re-firing a task id
 
-A detached `delegate.py dispatch` launcher that is still grinding from a prior
+A detached `dispatch.py dispatch` launcher that is still grinding from a prior
 attempt can finish after you re-fire the same task id, leaving two workers on
 one worktree (the task record points at the newer pid; the older process is an
 orphan). Before re-using a task id, kill any stale detached launcher for it:
 
 ```bash
-/bin/ps -axo pid,etime,command | grep 'delegate.py dispatch .*--task-id <id>'
+/bin/ps -axo pid,etime,command | grep 'dispatch.py dispatch .*--task-id <id>'
 ```
 
 Confirm the match is the stale launcher, then terminate that pid before the
@@ -1099,7 +1078,7 @@ new dispatch.
 
 Dispatch preparation applies a cone sparse-checkout to a reused worktree, and
 `git sparse-checkout set` removes untracked/ignored directories inside a
-tracked cone directory. Because of that, `delegate.py` refuses to reuse a
+tracked cone directory. Because of that, `dispatch.py` refuses to reuse a
 worktree while any released task bound to it still has ignored output and no
 retrieval receipt (`worktree_reuse_evidence_unretrieved`). Preserve first:
 

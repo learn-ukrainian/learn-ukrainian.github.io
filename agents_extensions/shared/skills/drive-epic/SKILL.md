@@ -124,9 +124,9 @@ requires an operator reference. The item lifecycle is in
 7. **§4a Inbox drain — immediately before dispatch.** Apply every message before the
    launch.
 8. **§4 Dispatch** only when the task card and dispatch preflight are both green; chat
-   "ready" is not DoR. Use `--check-budget`, research flags, and `--owned-path`.
-9. **§5 Settle.** Arm `delegate.py wait <task-id>` (or the Monitor tool) in the same turn
-   as the dispatch. State a worker's status only after `delegate.py status <task-id>` in
+   "ready" is not DoR. Use explicit provider/model selection, research metadata, and `--owned-path`.
+9. **§5 Settle.** Arm `dispatch.py wait <task-id>` (or the Monitor tool) in the same turn
+   as the dispatch. State a worker's status only after `dispatch.py status <task-id>` in
    this turn, and record its task ID, full run nonce, status, and branch head in its
    tracker item. When the wait returns, act on the result. After a terminal status,
    run `post_task_reap`.

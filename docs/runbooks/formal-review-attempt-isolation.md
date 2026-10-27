@@ -258,7 +258,7 @@ used templates, fixture input roots and `previous_attempt` re-reviews remain
 admissible. If a legitimate flow cannot meet these checks, stop and report it;
 do not substitute render-checkout templates. Pinning tests live in
 `tests/review/test_template_admission.py` and
-`tests/test_delegate.py::test_render_manifest_server_authority_refuses_before_launch`.
+`tests/test_dispatch.py::test_render_manifest_server_authority_refuses_before_launch`.
 
 Dispatch stores the manifest hash supplied by `prepare_review_attempt`'s plan;
 it does not reopen the manifest to construct the task's binding. The runner's
@@ -497,14 +497,14 @@ ATTEMPT_ID=agy-full-9464
 "$PROJECT_PYTHON" -m scripts.review.prompts.render "$MANIFEST" \
   --repo-root "$INPUT_ROOT" --output "$PROMPT" \
   --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID"
-"$PROJECT_PYTHON" scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/dispatch.py dispatch \
   --agent agy --model gemini-3.8-flash-high --mode read-only \
   --review-profile ukrainian --effort high \
   --task-id review-9464-plan-proof --cwd "$INPUT_ROOT" \
   --full-checkout --review-access full --hard-timeout 180 \
   --prompt-file "$PROMPT" --review-attempt "$MANIFEST" \
   --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID"
-"$PROJECT_PYTHON" scripts/delegate.py wait review-9464-plan-proof
+"$PROJECT_PYTHON" scripts/dispatch.py wait review-9464-plan-proof
 ```
 
 After live routing/capacity preflight, record the captured task result through

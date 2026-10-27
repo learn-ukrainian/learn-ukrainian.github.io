@@ -62,7 +62,7 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    there. Never review your own work.
 3. **Dispatch the reviewer read-only at the exact pushed head.**
    Requires #11785 (v2 protected review). Until it is merged on your base, launch and settle
-   with the `delegate.py` recipe in drive-epic §6
+   with the `dispatch.py` recipe in drive-epic §6
    ([review-merge-cleanup](../drive-epic/references/review-merge-cleanup.md)), passing the same
    `$REVIEW_PROFILE`.
 

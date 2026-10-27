@@ -45,7 +45,7 @@ the epic's open issue set:
 2. **Disposition each item** — for every open issue, exactly one of:
    - **in_flight** (named PR/task id + head),
    - **dispatch now** (ROUTING_CARD + `capacity_pick` / `/api/state/routing-budget` +
-     `--check-budget`),
+     explicit provider/model selection),
    - **named hold** with one §2c hold code.
 3. **Silence is a defect** — an open epic issue with no disposition is a driver failure.
 4. **Closeout** — merge alone is not done; the post-merge issue disposition and cleanup

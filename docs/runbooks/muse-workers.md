@@ -47,7 +47,7 @@ interface. A real qualification task still needs the accountable driver's
 separate authorization and held-out evidence.
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+.venv/bin/python scripts/dispatch.py dispatch \
   --agent muse --model muse-wonder-full-1.0 --effort high \
   --task-id muse-worker-preview --mode read-only \
   --cwd "$MUSE_WORKTREE" --prompt-file "$PUBLIC_PROMPT" --dry-run

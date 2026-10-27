@@ -35,7 +35,7 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
   hand-written ticket, whether it claims free slots, another run's slots or sits in a pool the caller
   made without holding its slots. A run that names no
   task stays inside its ancestor's slots, as tests do when the suite strips the agent's identity.
-  `delegate.py` removes any marker from a dispatched worker's environment, so a worker never runs inside
+  `dispatch.py` removes any marker from a dispatched worker's environment, so a worker never runs inside
   its dispatcher's slots.
 - A pytest run below a live holder, dispatch run or not, starts at most the held count of xdist
   workers. Before the session starts, the `ci.pytest_dispatch_cap` plugin caps `-n` (`auto` included),
@@ -48,10 +48,10 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
 
 | Caller | How |
 | --- | --- |
-| Dispatch-worker pytest runs | The `ci.pytest_dispatch_cap` plugin holds slots when `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set. This covers every documented command, such as `.venv/bin/python -m pytest -n 2 -q <files>`, the pre-commit pytest hooks and `scripts/ci/components.py`. It skips `--collect-only` and `--help`. A nested run queues for nothing and starts at most the inherited count of workers. A wait timeout is a pytest usage error (exit 4) naming `test_slots_wait_timeout`. |
+| Dispatch-worker pytest runs | Use `.venv/bin/python -m scripts.common.test_slots run -- <command>`; dispatch v2 does not inject the nested-pytest plugin. When loaded explicitly, `ci.pytest_dispatch_cap` holds slots when `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set. This covers every documented command, such as `.venv/bin/python -m pytest -n 2 -q <files>`, the pre-commit pytest hooks and `scripts/ci/components.py`. It skips `--collect-only` and `--help`. A nested run queues for nothing and starts at most the inherited count of workers. A wait timeout is a pytest usage error (exit 4) naming `test_slots_wait_timeout`. |
 | Any other test command | `.venv/bin/python -m scripts.common.test_slots run -- <command>` waits for slots, rewrites a visible `-n`/`--numprocesses` (including `auto`) to the slots held, caps a hidden `-n auto` through `PYTEST_XDIST_AUTO_NUM_WORKERS`, and execs the command, so the command itself holds the slots until it exits. A repo pytest the command starts with a hidden explicit `-n` is capped by the plugin above. |
 | Codex read-only reviews | The dispatch worker holds 2 `review` slots before the CLI starts. See "Sandboxed reviews" below. |
-| Dispatch admission | `delegate.py dispatch` refuses a new write worker while more than `DISPATCH_MAX_TEST_SLOT_QUEUE` runs (default 4) wait for slots. The refusal uses the usual admission message and exit 3. |
+| Dispatch admission | `dispatch.py dispatch` refuses a new write worker while more than `DISPATCH_MAX_TEST_SLOT_QUEUE` runs (default 4) wait for slots. The refusal uses the usual admission message and exit 3. |
 
 Operator shells and CI are unchanged: the plugin takes slots only for dispatch workers, it caps
 workers only for runs below a live holder, and a true `CI` variable turns the pool off unless

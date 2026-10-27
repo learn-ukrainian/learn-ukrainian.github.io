@@ -83,7 +83,7 @@ STEM admit?, priority Score. Never rewrite human Ukrainian — only classify/rou
 
 ### 3.3 Pre-dispatch / lane triage
 
-Before expensive `delegate.py` seats: stream/lane Choice, effort Score, “needs CF?”
+Before expensive `dispatch.py` seats: stream/lane Choice, effort Score, “needs CF?”
 Noul. High confidence → cheap seat; low confidence → Opus 5.5 / Sol 6.1;
 operator escalation unchanged.
 
@@ -91,10 +91,8 @@ operator escalation unchanged.
 
 Docs-only?, blocking vs nit?, evidence-missing?, scope-creep? → fewer review loops.
 
-`scripts/delegate.py dispatch --preflight-triage` is the pre-dispatch hook (#8183): it triages the
-candidate diff plus a bounded local test log before spawning a seat and exits 3 on a confident
-`broken_or_failing` verdict (missing key / API failure skips). It reuses the CI primitives; the
-`typesafe_pr_triage` CI job remains the advisory Gate job once a PR exists. Neither is CF or merge authority.
+The dispatch preflight-triage hook and its PR-triage modules are retired.
+Dispatch v2 does not run Jev triage. Review and CI retain their separate gates.
 
 ### 3.5 RAG / review / skills
 

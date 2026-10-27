@@ -55,7 +55,7 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** pass an explicit
 `--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
 `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
-card; `delegate.py` refuses it otherwise. The driver seat, design, consults, discussions, recon and
+card. The legacy Cursor Auto DoR admission gate is retired; dispatch v2 does not enforce it. The driver seat, design, consults, discussions, recon and
 unclear work pin `grok-4.7-high`; a review runs the approved concrete model the reviewer
 resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
@@ -69,14 +69,14 @@ through Cursor (D-129, #10464), and the Other Models pool never carries a review
 `.venv/bin/python -m scripts.fleet.usage show` (per-lane remaining% + pace lines)
 + `/api/delegate/active` + disk. (`codexbar usage` is retired — do not cite it.)
 
-**Mandatory pre-dispatch (binding):** Before every implement `delegate.py dispatch`, run:
+**Mandatory pre-dispatch (binding):** Before every implement `dispatch.py dispatch`, run:
 
 ```bash
 .venv/bin/python -m scripts.fleet.capacity_pick
 # pace detail per lane (remaining%, pace lines, will_last, deficit):
 .venv/bin/python -m scripts.fleet.usage show
-# then dispatch with budget guard (flag or LU_DISPATCH_CHECK_BUDGET=1):
-.venv/bin/python scripts/delegate.py dispatch --check-budget ...
+# then dispatch with an explicit eligible provider/model:
+.venv/bin/python scripts/dispatch.py dispatch --agent <lane> --model <catalog-model> --prompt-file <brief> --worktree
 ```
 
 **Refuse deficit when cooler seats exist.** Do **not** habit-route to Codex (or any
@@ -84,9 +84,8 @@ subscription lane) while `usage show` / `routing-budget` shows hot / near_cap /
 deficit (visible pace, projected to run out before reset, and more than 2 points
 ahead of pace; near_cap ≥ 90% unchanged) or a thinning reserve **and** `capacity_pick`
 lists cool/idle free seats
-(Cursor, AGY, …). `--check-budget` hard-subs when
-`dispatch_fallbacks` has a row (e.g. `codex → cursor`); otherwise it **refuses**
-unless `--force-agent` with a written NOTE.
+(Cursor, AGY, …). Dispatch v2 does not substitute lanes from budget signals;
+choose the eligible lane explicitly and record any substitution.
 
 **Concurrent drivers (typical):** ~**2 Grok** + **1 Claude** + **1–4 Codex**. Shared free
 worker pools — coordinate via active-delegate + disjoint owned paths so drivers do not
@@ -126,11 +125,10 @@ plan window is exhausted read `credit_use_unconfirmed` and keep near_cap/AVOID. 
 naive-timestamp or non-numeric credit data also keep near_cap/AVOID. Admission is a separate question
 from the recommendation: whenever the plan window is at or below the threshold and a fresh positive
 balance exists (states `credit_balance_present`, `credit_use_unconfirmed` and `credits_unverified`
-from unreadable usage records), `delegate.py dispatch` refuses any model outside the lane allowlist
+from unreadable usage records), `dispatch.py dispatch` refuses any model outside the lane allowlist
 (Codex: `gpt-6.1-sol`, `gpt-6-luna`) with `CREDIT_PERIOD_MODEL_REFUSED`, even when the router no
 longer recommends the lane. Nothing is gated with a healthy plan window, with no fresh positive
-balance (near cap without credits: unchanged), or on other lanes. A dispatch without `--model` is
-judged by the lane default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
+balance (near cap without credits: unchanged), or on other lanes. Dispatch v2 requires an explicit `--model`. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
 lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
 decision, and no tool consumes credits or resets.
 Luna handles bounded work under the driver-brief or Sol-envelope contract (§2); hard advice uses Opus 5.5 / Sol 6.1.
@@ -191,21 +189,22 @@ Other bounded work retains the existing envelope flow:
 
 ```text
 0) Driver fixes the worker dispatch arguments and prints their binding digest:
-   delegate.py dispatch <worker args> --print-advisory-binding
+   dispatch.py dispatch <worker args> --print-advisory-binding
 1) ADVISOR envelope from the catalog advisor route (the Sol advisor (`gpt-6.1-sol` @ high)):
-   delegate.py dispatch --agent codex --model gpt-6.1-sol --mode read-only \
-     --advisory-role bounded_advisory_envelope --advisory-binding <digest> ...
+   dispatch.py dispatch --agent codex --model gpt-6.1-sol --mode read-only \
+     --prompt-file <advisor-brief>
+   Put the worker binding digest and envelope request in the advisor brief.
    → task_contract, owned_paths, max_changed_files, max_non_test_loc, constraints,
      risk_boundaries, acceptance_evidence, escalation_triggers
 2) BOUNDED worker executes ONLY that envelope:
-   delegate.py dispatch <worker args> --advisory-task <advisor task id>
+   dispatch.py dispatch <worker args> --advisory-task <advisor task id>
 3) Driver integrates; formal CF = independent cross-family (discussion ≠ CF)
 ```
 
 This is the catalog `execution_routing.sol_advised_bounded` route. Outside the #10919
 driver-brief exception, Luna dispatches and the `gemini-3.8-flash-high` fallback
 unless classified Ukrainian authoring or review need a complete envelope from a finished
-`gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `delegate.py` refuses it
+`gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `dispatch.py` refuses it
 otherwise (`BOUNDED_ENVELOPE_REQUIRED`), including after a budget substitution, and fails
 the worker at finalize when it exceeds the envelope ceilings (a completion gate checked after
 the worker exits, not a limit on what it does while running). A second completion gate
@@ -227,7 +226,7 @@ the routing card records why heap was refused.
 
 ## 3. Mandatory pre-dispatch routing card
 
-Before **every** `delegate.py dispatch` and before every cross-family review
+Before **every** `dispatch.py dispatch` and before every cross-family review
 request that spends a scarce seat, the live driver MUST record (handoff, issue
 comment, or `batch_state/` receipt — not only inner monologue):
 

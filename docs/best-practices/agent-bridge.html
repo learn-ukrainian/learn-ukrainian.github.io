@@ -179,7 +179,7 @@ working tree changes while participants are running. A failed round
 posts a loud system warning into the thread before returning non-zero,
 including <code>READ_ONLY_VIOLATION: &lt;agent&gt;</code> for the agent family that must
 be treated as the write source. Filesystem writes during discussion are
-a hard stop; dispatch the work as a separate <code>scripts/delegate.py dispatch</code>
+a hard stop; dispatch the work as a separate <code>scripts/dispatch.py dispatch</code>
 brief.</p>
 <p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post</code> creates channel
 messages and delivery rows. Its default
@@ -187,7 +187,7 @@ delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
 write-capable modes only when the post is explicitly an execution
 request. Implementation work that needs file edits, commits, pushes, or
-a PR should normally go through <code>scripts/delegate.py dispatch</code> or
+a PR should normally go through <code>scripts/dispatch.py dispatch</code> or
 <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix</code>, not
 through discussion.</p>
 <p>Current adapter policy for discussion calls:</p>
@@ -257,12 +257,12 @@ SSE replay, and attachments.</p>
 assignment enforced by tooling instead of memory.</p>
 <p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix &lt;issue-or-task-id&gt; [--brief-file PATH]</code> dispatches a
 Codex worktree implementation run for &quot;fix this and ship a PR&quot; tasks.
-It hardcodes <code>scripts/delegate.py dispatch --agent codex --mode danger --worktree --base origin/main --effort high</code>, and every generated
+It hardcodes <code>scripts/dispatch.py dispatch --agent codex --mode workspace-write --worktree --base origin/main --effort high</code>, and every generated
 brief includes the commit, push, and PR checklist. If <code>--brief-file</code>
 is omitted, the wrapper builds <code>/tmp/dispatch-fix-&lt;task-id&gt;.md</code> from
 <code>gh issue view &lt;issue&gt; --json title,body</code>.</p>
 <p>Exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code> (headless dispatch via
-<code>scripts/delegate.py dispatch --agent &lt;reviewer&gt; --mode read-only --worktree --branch &lt;branch&gt;</code>)
+<code>scripts/dispatch.py dispatch --agent &lt;reviewer&gt; --mode read-only --worktree --branch &lt;branch&gt;</code>)
 is the <strong>canonical formal PR review entry</strong> (sealed <code>review-pr</code> and <code>publish-review-verdict</code>
 were removed in #8520):</p>
 <ul>
@@ -341,7 +341,7 @@ cannot change primary <code>HEAD</code>/<code>status</code>.</p>
 <code>batch_state/tasks/&lt;task-id&gt;.json</code> preview without launching the
 delegate worker.</p>
 <h2>Silence-timeout vs hard-timeout</h2>
-<p><code>scripts/delegate.py dispatch</code> has two watchdogs with different jobs.
+<p><code>scripts/dispatch.py dispatch</code> has two watchdogs with different jobs.
 <code>--hard-timeout</code> is the absolute wall-clock fallback for the worker.
 <code>--silence-timeout</code> is narrower: it kills the agent CLI when no watchdog
 activity arrives within the configured window, then marks the task
@@ -407,7 +407,7 @@ agent.</strong> Per channel conventions:</p>
 <li>Commit only after the review is CLEAN or BLOCKING is resolved</li>
 <li>Commit message includes <code>Reviewed-By: &lt;qualified cross-family reviewer&gt; (task-id)</code> trailer</li>
 </ol>
-<p>The AGY bridge reviews Ukrainian content only. Native AGY dispatch through <code>delegate.py</code> admits low/medium risk code reviews subject to resolver admission, scoped permissions and command denial; high/critical, infra and security reviews exclude Gemini. A <code>post reviews --to agy</code> or <code>discuss --with agy</code> call is refused unless <code>--review-profile ukrainian</code> is set. <code>--review-profile code</code> is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.</p>
+<p>The AGY bridge reviews Ukrainian content only. Native AGY dispatch through <code>dispatch.py</code> admits low/medium risk code reviews subject to resolver admission, scoped permissions and command denial; high/critical, infra and security reviews exclude Gemini. A <code>post reviews --to agy</code> or <code>discuss --with agy</code> call is refused unless <code>--review-profile ukrainian</code> is set. <code>--review-profile code</code> is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.</p>
 <p>This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.</p>
 <h2>Spawned-agent env hygiene</h2>
@@ -429,7 +429,7 @@ AWS access-key, and Google <code>AIza</code> patterns.</li>
 <li>Provider credentials pass through only to that provider: Gemini sees
 Gemini/Google keys, Claude sees Anthropic/Claude keys, and Codex sees
 OpenAI/Codex keys. Cross-provider keys stay absent. <code>GITHUB_TOKEN</code>
-is never passed through directly; <code>delegate.py</code> resolves it once from
+is never passed through directly; <code>dispatch.py</code> resolves it once from
 the environment or <code>~/.bash_secrets</code> and exposes it as <code>GH_TOKEN</code> only
 for Codex, Claude, and bridge subprocesses so authenticated <code>gh</code>
 commands work without sourcing shell secrets. Gemini subprocesses do
@@ -539,7 +539,7 @@ with exactly two enabled seats: sender and recipient. Pass <code>--from</code> e
 from a plain shell; launchers can supply the sender identity. <code>discuss</code>
 accepts 2 to 4 distinct enabled seats. Neither surface falls back to a one-shot
 provider process on failure.</p>
-<p>Use <code>delegate.py dispatch --worktree</code> for planning, creation, design, or other
+<p>Use <code>dispatch.py dispatch --worktree</code> for planning, creation, design, or other
 toolful work. Explicit <code>ask-* --type review</code>, <code>--review</code>, and <code>--pr</code> requests
 retain their headless toolful dispatch path. The <code>process-*</code> commands exist to
 drain old queued messages; do not create new one-shot jobs for them. Ordinary

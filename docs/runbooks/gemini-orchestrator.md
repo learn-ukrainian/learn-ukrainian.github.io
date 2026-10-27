@@ -47,7 +47,7 @@ standalone launcher; it never claims a driver lease.
 | `--help` | Show launcher help without starting a session |
 | `--` | Forward remaining arguments to AGY |
 
-Standalone `start-gemini.sh` and `delegate.py --agent agy` remain available
+Standalone `start-gemini.sh` and `dispatch.py --agent agy` remain available
 for their permitted non-driver roles. The rules core is included in the
 standalone session. Gemini driver slots are listed in
 `scripts/config/area_assignments.yaml` wherever Codex has one, and

@@ -31,8 +31,8 @@ fails. ``os.stat`` and ``os.lstat`` have no audit event and are wrapped.
 and leave the final component unresolved, so ``os.lstat("/proc/self/cwd")``
 returns the symlink itself when cwd is a hidden root.
 
-``SPARSE_TEST_VISIBLE_ANCHORS`` names cone anchors inside hidden trees
-(``scripts/delegate.py`` ``_DISPATCH_SPARSE_ANCHORS``, #10777). As in a cone
+``SPARSE_TEST_VISIBLE_ANCHORS`` names explicitly visible fixture paths inside
+hidden trees. It does not describe dispatch v2 defaults. As in a cone
 sparse checkout, an anchor's subtree, its ancestor directories and the
 non-directory entries directly inside those ancestors stay visible. A listing
 of an ancestor still shows its hidden sibling directories, which a real

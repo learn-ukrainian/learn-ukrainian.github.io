@@ -1,7 +1,7 @@
 """Launch protections the legacy launcher applied: Claude account, review test slots, systemd placement.
 
-Ported from ``scripts/delegate.py`` (C-2188 unit D). Each helper names the legacy function whose
-refusal conditions, error text and recorded fields it keeps.
+These helpers retain the account, review-slot and placement contracts used by
+dispatch v2 (C-2188 unit D).
 """
 
 import functools
@@ -31,8 +31,7 @@ def review_typed(record: dict) -> bool:
 
 
 def claude_account(agent: str, explicit: str | None) -> dict:
-    """The resolved account fields a dispatch records (``delegate._resolve_dispatch_claude_account`` and
-    ``_claude_account_state``).
+    """The resolved account fields recorded by dispatch v2.
 
     A claude request resolves its label from ``--claude-account``, the default-account file, then
     the built-in default, and verifies a non-default label's binding and credential sources before
@@ -176,7 +175,7 @@ def spawn_supervisor(
 ):
     """Start the supervisor in ``lu-dispatch.slice`` or, when isolation is unavailable, with plain ``Popen``.
 
-    Mirrors the legacy spawn (``delegate.py`` ``dispatch_isolation.spawn_detached_worker`` call): the
+    Uses ``dispatch_isolation.spawn_detached_worker``: the
     returned pid is the supervisor in both cases, and the launch fields (``launch_mode``,
     ``launch_unit``, ``launch_fallback_reason``, ``launch_user_bus``) go into the record. A refused
     fallback (a caller inside a driver scope) or an ambiguous scoped start raises

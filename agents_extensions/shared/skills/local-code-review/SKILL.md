@@ -31,7 +31,7 @@ reviewer; a shared posting identity does not establish independence. See
 Red-team exception (`workflow.md` § Merge policy), for code review only:
 only when no eligible outside-family reviewer exists, resolve with
 `closeout_cli resolve-reviewer --review-mode red_team`, dispatch a
-separate review task with `delegate.py dispatch --review-mode red_team
+separate review task with `dispatch.py dispatch --review-mode red_team
 --prompt-file <file>` whose prompt text names a red team, then publish
 with `record_cf_verdict.py --review-mode red_team --red-team-prompt
 <file>`. The author's task stays refused, and so does every canonical

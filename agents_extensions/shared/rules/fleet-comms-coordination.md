@@ -36,11 +36,11 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | --- | --- |
 | Fleet-comms | Durable authority for queues, receipts, jobs |
 | ACP / ACPX | Toolless provider transport for ordinary inter-agent asks/discuss only |
-| Toolful native / `delegate.py` | Plan, create, review, design, implementation |
+| Toolful native / `dispatch.py` | Plan, create, review, design, implementation |
 | Caveman | Optional output-style compression (lite default); never persisted GitHub/curriculum text |
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
-- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; native grok for plan and create, operator 2026-10-16, while review of a Grok author stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi is retired (OO-58, #11327) and is not a seat).
+- For plan, create, review, and design, use **toolful** native or `dispatch.py` seats (claude/codex/glm/opencode; native grok for plan and create, operator 2026-10-16, while review of a Grok author stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi is retired (OO-58, #11327) and is not a seat).
 - Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = the `review-loop` skill (qualified toolful exact-head approval, bound with `record_cf_verdict.py`, then same-head CI).
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
@@ -189,7 +189,7 @@ Supported fleet seats cold-start through:
 
 1. This rule (binding fleet-comms musts).
 2. **`docs/runbooks/agent-seat-onboarding.md`** — ownership matrix for `discuss`,
-   `delegate.py dispatch`, Fleet Comms authority + read-only legacy projections,
+   `dispatch.py dispatch`, Fleet Comms authority + read-only legacy projections,
    experimental ACPX (default-off/shadow, one read-only/stateless Codex
    participant), and **Buzz deferred**. Kimi routes are retired (OO-58,
    #11327): do not select a Kimi model or KimiCC. Also covers rollback and
@@ -225,7 +225,7 @@ Codex, Grok, Claude, Cursor, Pool, AGY, GLM, and DeepSeek. Kimi seats are never 
 Any other participant count is rejected
 loudly before a conversation begins. The direct `.venv/bin/python -m
 scripts.fleet_comms acp-discuss` surface remains available to operators.
-Selection starts no process at cold start and does not change `delegate.py`.
+Selection starts no process at cold start and does not change `dispatch.py`.
 The default is two rounds and the hard maximum is three.
 
 **ACP is intercommunication only — never review** (operator 2026-08-23,

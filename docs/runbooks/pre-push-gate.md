@@ -1,7 +1,7 @@
 # Pre-push gate (#10033)
 
 `.githooks/pre-push` runs `.githooks/pre_push_gate.py` on the exact outgoing commit before any push
-leaves a checkout. Worker `git push` and the auto-finalize push (`scripts/delegate.py`) both go through
+leaves a checkout. Worker `git push` and the auto-finalize push (`scripts/dispatch.py`) both go through
 it. Install and repair the hook chain with `scripts/install_git_hooks.sh`.
 
 ## What it checks
@@ -98,7 +98,7 @@ can only shorten these.
 One predecessor's admission allowance (`ADMISSION_WAIT_S`) covers one complete run of gate version 11,
 which also waited for host test slots and its selector: checkouts that still run it share this queue
 (one Git common directory), so the allowance keeps that length until none does (#11276). The hard
-admission ceiling is ten of these. The auto-finalize push timeout in `scripts/delegate.py` reads both
+admission ceiling is ten of these. The auto-finalize push timeout in `scripts/dispatch.py` reads both
 values from the gate.
 
 Before joining the global queue, a caller joins a FIFO queue for its immutable outgoing head under
@@ -293,5 +293,5 @@ approval and CI; merge-group CI stays the authority for semantic combinations.
 
 ## Bypass
 
-`git push --no-verify` is the explicit operator bypass; the rescue path in `scripts/delegate.py` uses it
+`git push --no-verify` is the explicit operator bypass; the rescue path in `scripts/dispatch.py` uses it
 deliberately. Agent sessions must not.

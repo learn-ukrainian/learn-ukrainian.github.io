@@ -1,7 +1,7 @@
 """Read-only write-intent admission: a write-shaped brief cannot run with ``--mode read-only``.
 
-Mechanical copy of ``scripts/delegate.py`` ``_read_only_write_intent_error`` and its helpers
-(#8703, #7814, #9672; C-2188 unit D). The CLI checks the brief as given, before any side effect.
+The CLI checks the brief as given, before any side effect
+(#8703, #7814, #9672; C-2188 unit D).
 The fence scan (``_without_code_fences`` and its line/fence helpers) is copied unchanged from
 ``scripts/review/verdict_parser.py``, so dispatch admission does not import the review gate's
 verdict module. A parser import or parse failure still propagates and refuses the dispatch.
@@ -225,5 +225,5 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     return (
         "❌ write-shaped prompt cannot run with --mode read-only. "
         "Re-run with --mode workspace-write --worktree for repository edits "
-        "(or --mode danger --worktree only when its extra permissions are required)."
+        "(or --mode workspace-write --worktree only when its extra permissions are required)."
     )

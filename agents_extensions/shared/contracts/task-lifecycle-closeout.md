@@ -224,7 +224,7 @@ action.
 
 The validated carrier contains the full task identity and AC snapshot, terminal
 goal, PR binding, remaining scope, current projection, ledger path, and latest
-receipt digest. `delegate.py`, the agent ledger, and orchestrator run/inbox state
+receipt digest. `dispatch.py`, the agent ledger, and orchestrator run/inbox state
 carry this exact projection. Monitor coordination endpoints expose agent-ledger
 records unchanged.
 

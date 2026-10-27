@@ -20,7 +20,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 `cursor:auto` is a dynamic harness selector, never a concrete model identity. The driver seat and every interactive Cursor session launched through `scripts/lib/launcher_core.sh` run the concrete pin `grok-4.7-high` (or `composer-2.5`) and never Auto (operator decision 2026-09-30, #9274). An interactive session is not a typed implementation dispatch, so it has no Auto exception. The launcher defaults to the pin in both modes and refuses Auto, a Fast variant, a previous generation, an empty model and a `--model` forwarded after `--` before anything executes. The identity contract enforces:
 
-1. **Attested `resolved_model` Required for Driver-of-Record:** Driver-of-record requires an attested concrete `resolved_model` extracted from the run (via headless telemetry extraction in `scripts/delegate.py` and `scripts/agent_runtime/adapters/cursor.py`). An unattested run or unknown-Auto can **never** be driver-of-record.
+1. **Attested `resolved_model` Required for Driver-of-Record:** Driver-of-record requires an attested concrete `resolved_model` extracted from the run (via headless telemetry extraction in `scripts/dispatch.py` and `scripts/agent_runtime/adapters/cursor.py`). An unattested run or unknown-Auto can **never** be driver-of-record.
 2. **Unknown-Auto Resolves to Allowlist-Union Family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, resolve its identity to the **allowlist-union family {xAI, Moonshot}** (`grok-4.7` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum:
    - **Cursor-Authored PR:** Single cross-family reviewer from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, Gemini/AGY, or GLM under local-only egress). This supersedes the #6489 dual-family quorum as the default for unknown-Auto PRs (dual-family quorum text remains as fallback history).
    - **Cursor-as-Reviewer:** Eligible only against author models outside {xAI, Moonshot}.
@@ -28,7 +28,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 ## Auto Allowlist & ~30-Day Refresh Contract
 
-- **Scope (operator decision 2026-09-30, #9274):** Auto runs only a well-defined coding task — a worker `delegate.py dispatch --agent cursor --model auto` typed `--research-role implementation`, in a write-capable mode with `--owned-path` and a PASS DoR issue card, not review-typed. A missing or other role is unclassified. `delegate.py` refuses anything else (`cursor_auto_outside_coding_task`) and names the pins; the Cursor adapter refuses Auto without delegate's admission and in `plan` or `ask` mode. The driver seat, ACP consults and discussions pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer resolver selects.
+- **Scope (operator decision 2026-09-30, #9274):** Auto runs only a well-defined coding task — a worker `dispatch.py dispatch --agent cursor --model auto` typed `--research-role implementation`, in a write-capable mode with `--owned-path` and a PASS DoR issue card, not review-typed. The driver checks that scope; the legacy Cursor Auto DoR admission gate is retired. The driver seat, ACP consults and discussions pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer resolver selects.
 - **Explicit Allowlist:** Within that scope, Auto is permitted only when it resolves within the catalog allowlist:
   - `grok-4.7`
   - `composer-2.5`
@@ -45,25 +45,14 @@ Cross-family independence checks evaluate either the **attested concrete model f
 
 ## Operating Constraints & Concurrency
 
-- **Concurrency 1:** A Cursor driver session **is** the Cursor lane. Do not dispatch `delegate.py dispatch --agent cursor` from inside a Cursor driver session (causes deadlock on the single-concurrency lease).
+- **Concurrency 1:** A Cursor driver session **is** the Cursor lane. Do not dispatch `dispatch.py dispatch --model <catalog-model> --agent cursor` from inside a Cursor driver session (causes deadlock on the single-concurrency lease).
 - **What serializes today (investigate receipt for #6956):**
   - Epic **stream leases** fail closed on a second live driver:
     `stream {id} already has live session …` in
     `agents_extensions/shared/session_streams/store.py` (`LifecycleError`).
-  - `scripts/delegate.py` `_check_capacity_hint` keeps a non-blocking stderr
-    note for ordinary busy lanes, but reads the session-stream store for Cursor
-    admission. A live Cursor process-driver lease refuses `--agent cursor`
-    before spawn **only for self-dispatch**: when the lease's
-    `holder_process_id` is the dispatching process or one of its ancestors
-    (walked via `/proc/<pid>/stat`) on the same `holder_host_id` — exactly the
-    case that deadlocks the single-concurrency lane. A live lease from any
-    other lane, session, or host prints a stderr NOTE naming the lease stream
-    and spawns a separate Cursor worker: concurrent Cursor workers are
-    supported. An ancestry lookup failure (no `/proc`, permission error) is
-    treated as "not self" with a NOTE; an unreadable or malformed store stays
-    fail-closed. `--force-agent` overrides the self-dispatch refusal with an
-    explicit NOTE. Cursor worker-only in-flight state does not satisfy this
-    lease check.
+  - Dispatch v2 does not implement the retired Cursor self-dispatch guard.
+    The driver checks lane ownership before launching another worker.
+
   - `scripts/config/fleet_communications.yaml` `cursor.concurrency_limit: 1` is
     endpoint metadata (surfaced by the fleet API), not a general dispatch worker
     cap; the session-stream lease is the Cursor driver admission signal.
@@ -96,7 +85,7 @@ second discuss API):
 | Verb | How |
 | --- | --- |
 | **inbox** | `… __main__.py inbox show\|ack …` (fleet-comms dual-write) |
-| **dispatch** | `scripts/delegate.py dispatch --agent <non-cursor> …` (Cursor driver holds concurrency 1 — do not self-dispatch) |
+| **dispatch** | `scripts/dispatch.py dispatch --model <catalog-model> --agent <non-cursor> …` (Cursor driver holds concurrency 1 — do not self-dispatch) |
 | **discuss** | `ab discuss` via the venv bridge above → ACPX controller (`LU_ACPX_TRANSPORT=active`) on the same plane |
 | **receipts** | `batch_state/tasks/<task-id>.json` + channel/thread ids; Cursor receipts must carry `resolved_model` / `resolved_model_known` / `resolved_model_source` |
 

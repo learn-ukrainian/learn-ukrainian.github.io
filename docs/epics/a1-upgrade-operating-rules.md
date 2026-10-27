@@ -133,7 +133,7 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 - **Auto-finalize must not mix `scripts/` into curriculum PRs.** Content PRs
   from this epic stay scripts-free; `scripts/` changes are a separate PR.
   This is a constraint on the existing auto-finalize path in
-  `scripts/delegate.py`, not a new control plane — do not build one to
+  `scripts/dispatch.py`, not a new control plane — do not build one to
   enforce it unless a future revision of this file says otherwise.
 - **A1 module titles and lesson names are bilingual.** Landing cards (`title`
   + `titleEn`, `sub` + `subEn`) and the lesson list on each module landing

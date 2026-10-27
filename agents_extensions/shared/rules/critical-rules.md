@@ -14,7 +14,7 @@
 **English**: all technical work. **Ukrainian**: curriculum content only.
 
 ### 4. External LLM Access
-Gemini-family work goes through the AGY lane (`ab ask-agy`, `delegate.py --agent agy`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
+Gemini-family work goes through the AGY lane (`ab ask-agy`, `dispatch.py --agent agy`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
 Code review eligibility follows the `model-assignment.md` Code review row.
 
 ### 5. Word Targets Are Minimums
@@ -63,7 +63,7 @@ PR CI, review, and the pre-commit hooks in a single action.
 **8.2 — ALWAYS work in a git worktree**, never the primary checkout, and never switch branches in it:
 `git worktree add .worktrees/dispatch/<agent>/<task> -b <agent>/<task> origin/main`. The primary
 checkout is reserved for humans and services on `main`.
-Full contract: [`delegate-must-use-worktree.md`](delegate-must-use-worktree.md). Pass git an explicit
+Full contract: [`dispatch-must-use-worktree.md`](dispatch-must-use-worktree.md). Pass git an explicit
 **literal** `-C <absolute worktree path>`: the primary-checkout guard cannot resolve shell variables
 and will refuse the write, which is a guard working correctly, not a bug to route around.
 > **Scope honesty: this is hygiene, not a supply-chain control.** It prevents agent and human
@@ -85,7 +85,7 @@ own mode plus whether its worktree is dirty — not a judgement about intent.
 **Four distinct terminal outcomes; do not collapse them into `done`:**
 - **`done`** — the deliverable exists (a pushed PR for change tasks, a report for read-only tasks).
 - **`needs_finalize`** — work was produced but not committed or pushed. This is a **failure to finish**,
-  and it is now detected mechanically for every write-capable mode (`delegate.py`); a dirty worktree with
+  and it is now detected mechanically for every write-capable mode (`dispatch.py`); a dirty worktree with
   no commits can no longer report `done`.
 - **`no_deliverable`** — a clean write-capable dispatch produced nothing verifiable: zero commits on
   its branch, a clean worktree, and only a trivial response that cannot itself be the deliverable.

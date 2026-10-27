@@ -13,7 +13,7 @@ cards, dataset rows). What blocks, reporting by class and evidence stay in
   Opus 5.5. Author Google: Sol + Opus 5.5. Any other author: Gemini (AGY) + Sol.
 - Grok is not a seat. Cursor stays off language seats (`model-assignment.md`, native Grok
   language seat), and delegate admission refuses xAI for Ukrainian
-  (`UKRAINIAN_MODEL_REFUSED`, `scripts/delegate.py`; grok-4.7 note in
+  (`UKRAINIAN_MODEL_REFUSED`, `scripts/dispatch.py`; grok-4.7 note in
   `scripts/config/model_catalog.yaml`). Admitting Grok via Cursor for Ukrainian needs a
   separate catalog change backed by the measurement below (Grok 25/27, Sources tools
   reachable).

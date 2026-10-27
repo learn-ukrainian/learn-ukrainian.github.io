@@ -31,7 +31,7 @@ read this full fallback list — same paths, same order as
     agents_extensions/shared/rules/non-negotiable-rules.md
     agents_extensions/shared/rules/workflow.md
     agents_extensions/shared/rules/fleet-comms-coordination.md
-    agents_extensions/shared/rules/delegate-must-use-worktree.md
+    agents_extensions/shared/rules/dispatch-must-use-worktree.md
     agents_extensions/shared/rules/cli-help-standard.md
     agents_extensions/shared/rules/model-assignment.md
     agents_extensions/shared/rules/fleet-driver-routing.md
@@ -40,14 +40,14 @@ read this full fallback list — same paths, same order as
 
 Scoped selections — `GET /api/rules?scope=<scope>&format=markdown`, each with
 its own hash. Offline, `scripts/lib/rules_core.py` reads the same files in the
-same order (launchers, `delegate.py` workers and ACP asks already inject the
-core):
+same order. Launchers and ACP asks inject the core; dispatch v2 requires it
+to exist but does not inject it into prompts:
 
     scope=core             agents_extensions/shared/rules/core.md
     scope=content          agents_extensions/shared/rules/core.md
                            agents_extensions/shared/rules/core-curriculum.md
     scope=task:repo-change agents_extensions/shared/rules/critical-rules.md
-                           agents_extensions/shared/rules/delegate-must-use-worktree.md
+                           agents_extensions/shared/rules/dispatch-must-use-worktree.md
                            agents_extensions/shared/rules/workflow.md
     scope=task:cli         agents_extensions/shared/rules/cli-help-standard.md
     scope=task:curriculum  agents_extensions/shared/rules/non-negotiable-rules.md

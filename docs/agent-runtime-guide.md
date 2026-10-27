@@ -57,7 +57,7 @@ Targets are admitted in the same step they are resolved:
 resolution a request goes through (explicit recipients and model, `data`
 attachments, compat names, ACP route pins, slot holders, registry lookups,
 quota substitution) and then runs the Kimi gate. Delivery, insertion, wake and
-launch sinks in the bridge, channels, ACP, fleet-comms and `delegate.py` take
+launch sinks in the bridge, channels, ACP, fleet-comms and `dispatch.py` take
 the `AdmittedTarget` it returns, never a raw name, and the resolvers are
 called from that module only (`tests/test_target_admission_structure.py`).
 
@@ -171,7 +171,7 @@ exactly the approved participants: `codex,grok`.
 Every supported fleet orchestrator may explicitly select this fixed panel for
 one consequential read-only design or risk comparison when direct
 cross-provider critique is materially useful. `acp-discuss` is the sole
-surface: never invoke it automatically from a launcher or `delegate.py`.
+surface: never invoke it automatically from a launcher or `dispatch.py`.
 Admission is one conversation repository-wide; `busy` returns immediately with
 no queue or automatic retry, and bridge `discuss` is the fallback when ACPX is
 busy or unready. A typed partial result is inspectable evidence, not success,
@@ -523,7 +523,7 @@ all module artifacts into a temporary test context.
 | Channel inbox | **yes** for resumable agents | Exact `agent + channel + thread_id`; resumed prompts contain only unseen deliveries. |
 | Sealed review | **no** | A review checkout is an isolation boundary and must not inherit a normal-worktree session. |
 | `/v1/chat/completions` proxy | **no** | Stateless compatibility endpoint; the caller owns and supplies the full message history. |
-| `delegate.py` (future, coding tasks) | **no** | Worktree is the isolation boundary. Resume across worktrees is an incoherence footgun. |
+| `dispatch.py` (future, coding tasks) | **no** | Worktree is the isolation boundary. Resume across worktrees is an incoherence footgun. |
 | `dispatch.py` pipeline | **no** | Already fresh-session today. Don't regress. |
 
 The runner enforces the boundary: it raises `ValueError` if a caller passes a
@@ -767,7 +767,7 @@ usage stop and does not expand the Opus exception.
 ### Claude account labels for ordinary workers (#10619)
 
 Moved to [`docs/runbooks/claude-account-labels.md`](runbooks/claude-account-labels.md):
-the `delegate.py dispatch --claude-account` label, its checks and threat model,
+the `dispatch.py dispatch --claude-account` label, its checks and threat model,
 and the fleet-wide default-account file a dispatch without the flag reads.
 
 ### Native Grok headless permission mapping (#7583)
@@ -1025,330 +1025,57 @@ v1 adapter coverage:
 The runner rejects zai/GLM failover targets before launch using the shared
 local-only route guard.
 
-## Dispatch worktree layout (#1476)
+## Dispatch worktree layout
 
-`delegate.py dispatch --worktree ...` creates the dispatched agent a
-private git worktree so its writes are isolated from the main checkout.
-
-| Layout | Path | Status | Triggered by |
-| --- | --- | --- | --- |
-| **dispatch subtree** | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path), or `--worktree <explicit-path>` inside `.worktrees/dispatch/{agent}/` |
-| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated | attach an existing one with `--cwd <that-worktree>` |
-| custom | anywhere else | not created by delegate | attach an existing added worktree with `--cwd <that-worktree>` |
-
-An explicit `--worktree <explicit-path>` must resolve, after following symlinks,
-inside `.worktrees/dispatch/{agent}/` of the target repository for the agent named
-by `--agent`. `.worktrees`, `.worktrees/dispatch` and `.worktrees/dispatch/{agent}`
-must each already exist as a real directory, not a symlink; bare `--worktree`
-creates them. Neither the `--worktree` or `--cwd` value nor the path it resolves
-to may contain a control character (Unicode category Cc), a format character
-(Cf, including the bidi marks, overrides and isolates U+200E/U+200F,
-U+202A–U+202E and U+2066–U+2069), a lone surrogate, or a line or paragraph
-separator (#8775).
-
-Dispatch validates both flags right after it resolves the target repository:
-before the DoR check, `--pr` resolution, or any other step that can run an
-external command. Only the per-task parent-record read, invocation attribution,
-and the `--repo` lookup run first, and none of them runs a command. Every later
-step (the worktree lock, git operations, provisioning, the task record, and the
-worker prompt) uses the resolved path from that validation, never the caller's
-string. The order after validation is:
-
-1. Read-only checks can run git with the validated path as its working
-   directory: the write-mode worktree check (`git rev-parse` and
-   `git worktree list`, for `--cwd` and an explicit `--worktree`), the cursor
-   review-attempt check for `--cwd`, and `git diff` under `--preflight-triage`.
-2. For `--cwd`, dispatch checks that the validated path still resolves to
-   itself, looks up the registered worktree that contains it, and takes the
-   worktree lock. For `--worktree`, it takes the lock.
-3. Under the lock, dispatch checks again that the validated path still resolves
-   to itself and refuses if a component has since been replaced by a symlink.
-4. The base-SHA and worktree-creation helpers then use that validated path as
-   given; they do not resolve it again.
-
-`--dry-run` takes no worktree lock, so steps 2 and 3 do not hold for it as
-written. A `--worktree` dry run still runs the step-3 re-check, without the
-lock, before the base-SHA helper, which does not rebase in a dry run. A
-detached read-only dry run resolves no worktree. A `--cwd` dry run looks up the
-registered worktree and reads its branch and HEAD with git, then returns before
-either re-check.
-
-The prompt-injection vector (#8775) is closed by the character check on the raw
-and resolved paths and by JSON quoting: the worker prompt renders the worktree
-path as a JSON-quoted value, so a path is data, never an instruction. Path
-containment is checked on real directories and re-checked after the lock. A
-symlink swap in the gap that remains (after the step-3 check, while git or the
-filesystem follows the path) needs write access to a directory on the validated
-path. For a worktree under `.worktrees/dispatch/`, that is a process running as
-the same user with write access to that subtree. Such a process already holds
-every capability the dispatcher has, so the race grants it nothing new; it is
-out of scope. `--cwd` also accepts a registered worktree outside
-`.worktrees/dispatch/`. There, write access to any parent directory of the
-worktree is enough to rename it and put a symlink in its place, without any
-access to the worktree itself. The out-of-scope argument holds only when every
-directory on that path is writable by the dispatching user alone; a custom
-worktree under a directory another user can write (for example group-writable,
-or world-writable without the sticky bit) is outside this guarantee.
-
-Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
-subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into
-the primary checkout; `--worktree <primary-checkout>` is refused.
-
-`delegate.py list` and `delegate.py status` print a deprecation notice
-when they encounter a flat-layout worktree.
-
-Operator-created non-dispatch worktrees may live alongside these and are **out
-of scope** for delegate lifecycle; do not prune or rename them without proving
-ownership. `start-codex.sh` itself runs from the canonical `main` checkout and
-does not own a persistent worktree. Legacy `.worktrees/codex-interactive/`
-checkouts remain protected as operator-created state until explicitly removed.
-
-### Stale-base safety (the actual #1476 bug)
-
-Before creating or reusing a worktree, `delegate.py` runs
-`git fetch origin <base>` and branches from `origin/<base>`, not local
-`<base>`. The local ref drifts the moment a PR merges while a dispatch
-is queued — the resulting worktree would miss any commits landed in the
-gap. This is what shipped PRs #1473 and #1474 against stale tips
-(2026-04-23).
-
-When a worktree is reused, it is validated:
-1. **Branch match** — must be on the expected derived branch
-   (`{agent}/{task_normalized}`). Mismatch → `WorktreeBranchMismatch`.
-2. **Clean tree** — no uncommitted changes. Dirty → `WorktreeDirty`.
-3. **Base freshness** — at most 0 commits behind `origin/<base>`; if
-   behind, attempt `git rebase origin/<base>` and raise
-   `WorktreeStaleBase` if that fails.
-
-For follow-up work on an existing PR, pass `--branch EXISTING` to
-`delegate.py dispatch`. Delegate fetches `origin/EXISTING`, attaches the
-worktree to that branch rather than `origin/main`, and applies the same clean
-tree / branch-match validation. Staleness and fast-forward are validated
-against `origin/EXISTING` itself — never `origin/main`, since a follow-up
-worktree is almost always legitimately behind main. It refuses `main`/`master`
-and a branch already checked out in another worktree. A branch-reuse
-`--dry-run` validates an existing worktree without creating or rebasing one.
-
-Offline fallback: if `git fetch` fails (no network, no remote), delegate
-warns on stderr and branches from the local ref. Pin the `--base` flag
-to override the default `main`.
-
-### Branch-name normalization (Fix 2 of #1476)
-
-Task-ids that already include the agent name (our common convention:
-`codex-1472-foo`) don't produce doubled-prefix branch names. The
-normalizer strips a leading `{agent}-` or `{agent}/` before prefixing:
-
-| Agent | Task-id | Branch |
-| --- | --- | --- |
-| codex | `codex-1472-foo` | `codex/1472-foo` |
-| codex | `codex/1472-foo` | `codex/1472-foo` |
-| codex | `1472-foo` | `codex/1472-foo` |
-| codex | `random-name` | `codex/random-name` (no strip — `random` ≠ `codex`) |
-| claude | `claude-bar` | `claude/bar` |
-
-### Dispatch telemetry (Fix 5 of #1476)
-
-The state file at `batch_state/tasks/<task-id>.json` now carries:
-- `worktree_path`, `worktree_branch`, `worktree_layout` (`flat` | `dispatch` | `external`)
-- `worktree_base`, `worktree_base_sha` — resolved at dispatch start
-- `worktree_rebased`, `worktree_reused` — reuse-path telemetry
-- `worktree_dirty_on_exit` — whether the agent left uncommitted changes
-
-`delegate.py list` surfaces `worktree_layout`; `delegate.py status`
-prints a deprecation notice for flat-layout tasks.
-
-Telemetry uses `not-exposed` when a CLI genuinely has no effort setting (for
-example Agy and Cursor), instead of printing an `unknown` warning on every
-dispatch. `unknown` remains reserved for an unexpected resolution failure.
-Every terminal state records a concrete subprocess `returncode`, or a
-`returncode_reason` when no child process ever yielded one.
-
-### Bounded workers need an advisory envelope (#9275)
-
-Operator decision 2026-09-30: there is no direct bounded dispatch. A dispatch whose admitted
-route launches `gpt-6-luna`, or `gemini-3.8-flash-high` without a Ukrainian authoring or
-review classification (`--research-task-family ukrainian-authoring|ukrainian-review`, or
-read-only `--review-profile ukrainian`), is refused (`BOUNDED_ENVELOPE_REQUIRED`) unless
-`--advisory-task` names a finished advisor task that issued an envelope for it. The check
-runs after aliases, `--force-agent` and budget substitution, before any task record or
-worktree. Either Ukrainian exemption holds only while every `--owned-path` and
-`--research-owned-path` is Ukrainian content only, judged by what it resolves to. The path
-is normalized (`./`, `..`, repeated or trailing `/`) and must start under `curriculum`,
-`wiki`, `docs`, `data` or `plans`. A glob must end in a literal non-code extension and use
-no character class, so `docs/**/*.p[y]`, `docs/**/*.p?` and `docs/**/*` can match code.
-Every file the path owns, as dispatch ownership reads it, is then enumerated from git's
-index and from disk with symlinks followed. Each file, and each directory reached, must
-resolve under a content root, and no file may be code by extension or by a git attribute
-(a programming-language `diff` driver or a non-content `linguist-language`). A directory is
-judged by the files it holds, and an unreadable tree fails closed. Anything else is an
-ambiguous classification and needs an envelope.
+Run detached tasks through `scripts/dispatch.py`. Supply `--agent`, `--model`
+and one of `--prompt` or `--prompt-file`. The supported modes are `read-only`
+and `workspace-write`.
 
 ```bash
-# 1. Fix the worker dispatch and print its binding (arguments + prompt text).
-.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-luna --task-id W \
-  --prompt-file brief.md --worktree --mode danger --owned-path scripts/x.py --print-advisory-binding
-# 2. The advisor (catalog advisor route, gpt-6.1-sol, read-only) issues the envelope.
-.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6.1-sol --task-id A \
-  --prompt-file advise.md --advisory-role bounded_advisory_envelope --advisory-binding <digest>
-# 3. The worker runs the same arguments plus the advisor task.
-.venv/bin/python scripts/delegate.py dispatch <same arguments as step 1> --advisory-task A
+.venv/bin/python scripts/dispatch.py dispatch \
+  --agent codex --model gpt-6.1-sol --effort high \
+  --task-id example-task --prompt-file brief.md \
+  --mode workspace-write --worktree --owned-path scripts/example.py
 ```
 
-**Threat model.** The rule is cooperative. It stops omitted advice, stale or foreign
-bindings, accidental prompt drift and scope overruns by processes that follow the dispatch
-path. Deliberate forgery by a process that can rewrite task records, results or launcher
-code is out of scope: such a process can recompute every digest described here, and none
-of them authenticates who wrote a record or result.
+Automatic paths are `.worktrees/dispatch/<agent>/<task>/`. Explicit `--worktree`
+paths and `--cwd` must name a valid dispatch checkout for that agent. The primary
+checkout stays on `main` and is read-only to agents. The worktree planner lives
+in `scripts/dispatcher/git.py`.
 
-The advisor task must be `done`, read-only, on `gpt-6.1-sol`, with role
-`bounded_advisory_envelope` and the same binding. When the advisor's worker writes its
-result it records `advisory_seal` (SHA-256 of the result and of its envelope, the model it
-ran, its run nonce). The seal is a consistency checksum, not proof of authorship: admission
-recomputes both digests and refuses a missing seal (`ADVISORY_SEAL_MISSING`) or a result,
-envelope, model or run that no longer matches it (`ADVISORY_SEAL_MISMATCH`), which catches a
-result edited or replaced after finish without a matching record update. Its canonical `.result` must hold exactly
-one fenced `advisory-envelope` JSON object with every catalog `output_fields` key (non-empty
-`task_contract`; non-empty lists; positive integer ceilings; `owned_paths` repo-relative under
-an existing top-level root) plus `dispatch_args_sha256` equal to the binding. `--owned-path`
-must equal the envelope's `owned_paths`. The result is re-validated just before spawn; a
-change fails the task (`ADVISORY_ENVELOPE_CHANGED`). The worker record keeps
-`advisory_envelope` (advisor task, result path and SHA-256, envelope SHA-256, binding,
-ceilings) and the worker prompt carries the envelope.
+Default sparse exclusions are defined by `SPARSE_EXCLUDE_DEFAULT` in that
+module. Use repeatable `--sparse-include DIR` or `--full-checkout` when a task
+needs excluded inputs. Owned paths do not re-include sparse files, and no
+anchor files are added automatically.
 
-Two completion gates run after a write-mode worker exits, on its diff from the merge base
-(commits plus uncommitted and untracked files). Nothing stops a worker from breaching
-either while it runs; the breach fails the task instead of settling it, and in `danger`
-mode the gate runs before auto-finalize too, so a failing tree is never committed or
-offered as a PR.
+The dispatcher checks rules-core availability but does not prepend the core or
+research pointers. Include required instructions and relevant source locators
+in the brief. Research flags and owned paths record metadata; write-path claim
+admission and overlap overrides are retired.
 
-- **Envelope ceilings.** A bounded worker whose diff exceeds `max_changed_files` or
-  `max_non_test_loc` fails (`advisory_ceiling_exceeded`); a diff that cannot be measured
-  fails too (`advisory_ceiling_unmeasured`). Exactly reaching a ceiling passes.
-- **Content exemption.** Admission classifies a Ukrainian exemption's owned directories and
-  globs by the files they hold at that moment, so it cannot rule out a code file the worker
-  adds later (an owned `docs/new-lessons/` and a brief asking for `generate.py`). A Gemini
-  Flash write worker running on an `advisory_exemption` therefore has every changed path
-  classified (`advisory_exempt_change_check`): a path outside the Ukrainian content roots,
-  a `.gitattributes` file, or a file that is code by extension or git attributes, judged on
-  the file and on its resolved symlink target, fails the task
-  (`advisory_exempt_code_change`); changes that cannot be read fail too
-  (`advisory_exempt_changes_unmeasured`). Every committed path is classified; uncommitted
-  scratch residue that auto-finalize never publishes (`.venv`, `node_modules`,
-  `__pycache__`, `.pytest_cache`, `*.pyc`) is listed as `ignored_residue` instead. A
-  content-only diff settles `done`.
+Use `status TASK --run-nonce NONCE` and `wait TASK --run-nonce NONCE` to observe
+the exact run. `list --status running` reports active tasks. Write-task delivery
+requires a pushed branch; inspect the terminal record and Git evidence.
+A dirty or empty deliverable is not success. Follow the common reaper's custody
+checks before removing a worktree.
 
-`done` is reachable only after every applicable completion gate (these two, the delivery
-check and the review-verdict check) has run on the current tree, and the gate's measurement
-is written in the same record write as the outcome. Only this run's measurement counts:
-evidence left on the record by an earlier run is dropped first. An interrupt before that
-point settles a write dispatch `needs_finalize` and a read-only one `failed`, never `done`;
-a worker killed outright leaves its record `running`, which the dead-worker probes settle
-as non-success.
+Budget/cost/pricing guards, preflight triage, lifecycle-file propagation,
+keep/force-worktree switches, repository backfill, Cursor self-dispatch and DoR
+checks, dirty-primary admission, open-PR freeze, Kimi boundary hooks, danger
+mode and RB2 are retired. Native Grok dispatch is retired; `grok` aliases Cursor.
+No additional worker exports beyond `scripts/dispatcher/environment.py` are
+promised. The provider adapter layer still serves its other callers.
 
-Recovery never settles a gated record `done` (operator decision 2026-09-30). A record is
-gated when it calls for any completion gate beyond delivery: an exit scan that did not
-clear (`leftovers_scan` `live` or `unknown`), a review verdict (`require_review_verdict`),
-an advisory envelope's ceilings or a content exemption's changed paths
-(`delegate.applicable_completion_gates`). Those gates run only in the worker, on its tree
-and its response, so recovery (`stale_task_records settle-stale` and the rate-limit
-reclassifier `scripts/maintenance/reclassify_dispatch_status.py`) never re-measures a tree
-or re-reads a saved response for them. `settle-stale --apply` only reports (`action: report`, `mode: read-only`), leaving gated and delivery-only records unchanged with no receipt.
-
-Admission classifies a path by its resolved target as well: a `.md` symlink to a file whose
-git attributes mark it as code (for example `diff=python`) is not content.
-
-The internal `_worker` entry re-verifies all of this before it starts a bounded model and
-again at the provider handoff, so a hand-built or stale worker argv cannot skip admission.
-The record's `advisory_envelope` keeps both binding halves: the parsed dispatch arguments
-(`advisory_args`, hashing to `advisory_args_sha256`) and the brief's `prompt_sha256`. The
-worker re-derives the binding, reloads the advisor's sealed envelope and compares the
-recorded ceilings and owned paths with it. It checks that it runs the admitted launch
-recorded as `admitted_execution`: agent, model, mode, cwd, effort, hard, silence and
-initial-response timeouts, budget, provider, harness and PR opening. Each value must equal
-the admitted one and, where a dispatch argument sets it, that bound argument; the cwd is
-always compared, with the recorded worktree too when there is one, and the bound
-`--owned-path` must equal the envelope's. A difference refuses before any provider call
-(`BOUNDED_EXECUTION_MISMATCH`). It then
-rebuilds the expected prompt from the brief the envelope binds plus the dispatcher blocks it
-can re-derive: the rules core, the worktree block, the lifecycle block from the recorded
-carrier, the research block only when it re-renders from its own pointers, and the envelope
-block from the sealed result. The exact prompt object it hands the provider must equal that
-rebuild byte for byte, so an appended, prepended or altered instruction refuses
-(`ADVISORY_BINDING_MISMATCH`). The record's `effective_prompt_sha256` plays no part. The
-checked digest is kept as `advisory_prompt_sha256`. A Gemini Flash worker instead runs on a
-recorded `advisory_exemption`, re-classified in its own tree. Otherwise it exits before the
-provider starts, marking an existing task record `failed` (`BOUNDED_ADMISSION_MISSING`,
-`BOUNDED_ADMISSION_INVALID` or the envelope code).
-
-### Auto-finalize scope and unfinished background jobs (#8991)
-
-**Pass `--owned-path` for every write dispatch whose dirty tree may be auto-finalized.**
-When a `danger` worker exits 0 with uncommitted work and no commits, delegate commits and
-pushes it only under the task's `--owned-path` values (repeatable; `dir/`, `dir/**`, a
-file, or a glob). They are recorded as `owned_paths`. `--research-owned-path` is research
-classification and is never used as commit authority. With no `--owned-path`, nothing is
-committed and the task ends `needs_finalize` (`no_owned_paths_declared`). Changes outside
-the owned paths, and both sides of any possible move across them (an owned addition while
-an outside file is deleted, or the reverse), stay uncommitted and are
-listed in `finalize_skipped_paths`; the task then ends `needs_finalize`, not `done`.
-
-```bash
-.venv/bin/python scripts/delegate.py dispatch --agent <lane> --worktree --mode danger \
-  --owned-path scripts/fleet/ --owned-path tests/fleet/test_x.py \
-  --research-owned-path scripts/fleet/ ...
-```
-
-A headless worker whose own background jobs are still running at CLI exit, or whose
-exit scan could not rule them out (`leftovers_scan: unknown`), ends `needs_finalize` in
-every mode, read-only included. Reapers stop those jobs only inside the scope that matches
-the task's recorded launch identity, and signal individual processes only through
-pidfds whose start time, scope membership and user id are re-checked after opening. If
-any of those jobs now belongs to another user, the reaper stops nothing (not even the
-scope unit) and refuses the reap. Guaranteed: a job seen with another user id at scan
-time blocks both the scope unit stop and every signal, and each pidfd target's user id is
-re-checked after the pidfd opens. Not guaranteed (accepted residual, #8991): a job that
-changes its identity after the user-id scan and before the scope unit stop or the pidfd
-signal lands. A unit stop cannot be made atomic with the scan; closing that window would
-need a privileged helper inside the worker's own scope. Details: [`docs/SCRIPTS.md`](SCRIPTS.md) §
-Background jobs at exit.
-
-### Worktree removal and sibling repositories (#8610, #8624)
-
-Every removal of a dispatch worktree (dispatch's own stale-holder and
-superseded-review release, settle, the scheduled reaper, `wt.sh`, the ACP
-runtime reap, and the `worktree_claims remove` CLI) goes through
-`scripts/orchestration/worktree_claims.py`. It takes a per-worktree lock,
-runs the caller's ownership proof, and refuses while another unfinished task
-record names the checkout.
-
-**One control plane.** Dispatch writes task records and per-worktree locks on
-the **public primary checkout** only, even for `--repo infra-private|hramatka`
-(`scripts/config/fleet_repos.yaml`). A remover acting on a sibling-repo
-worktree therefore reads both from the public primary, never from the sibling
-repository's own `batch_state/` or git dir:
-
-| What | Where, for any repository | Resolved by |
-| --- | --- | --- |
-| task records | `<public primary>/batch_state/tasks/` | `worktree_claims.control_plane_root(repo)` |
-| per-worktree lock | `<public primary git common dir>/lu-worktree-locks/<sha256(path)[:32]>.lock` | same |
-| git operations (`worktree remove`, branch, dirty probe) | the worktree's **own** repository | `owning_repo_root(worktree)` |
-
-`control_plane_root` returns the public primary for an allowlisted non-default
-fleet checkout (`<public parent>/<local_name>`) or any linked worktree of one,
-and the repository itself otherwise. If the fleet catalog cannot be read the
-removers refuse (`worktree lock unavailable (fleet repository catalog
-unreadable ...)`) rather than guess. The read-only reaper probes (task status,
-ownership ledger, rollover leases) fall back to the repository's own primary
-in that case; the removal guard does not.
-
-The sibling repositories do not get their own `batch_state` or lock namespace.
-Do not add one: a second lock file for the same path would let a reaper and a
-dispatch hold "the" lock at once.
+Bounded workers retain the v2 driver-brief and `--advisory-task` admission paths.
+Use `--print-advisory-binding` with the exact worker request. Legacy advisor-role
+and advisor-binding switches are absent; include the requested envelope and
+binding in the read-only advisor's brief.
 
 ### Review attempts: server and templates must match (#9163)
 
-A `--review-attempt` seat always runs the sources MCP server from the primary
+Dispatch v2 supports bound attempts only in dry runs; protected execution is
+unavailable. The retained rendering and MCP helpers define the following
+contract for their other callers. A bound review seat runs the Sources MCP server from the primary
 checkout, but its prompt may have been rendered in any checkout. The two must
 come from the same code, so the check binds the prompt to the checkout that
 rendered it (`scripts/review/render_contract.py`):
@@ -1371,8 +1098,7 @@ rendered it (`scripts/review/render_contract.py`):
   checkout without it refuses as `review_server_lock_missing`. Accepted
   residual: an installed package that changes without a lock change (for
   example a reinstall of `packages/v4-runtime`) is not seen.
-- **Dispatch time.** Before any archival (`--force-new` included), worktree,
-  task record or worker, `review_mcp.check_review_contract` refuses with exit 2:
+- **Contract validation.** `review_mcp.check_review_contract` reports:
   - `review_render_record_missing` — the prompt is a literal or stdin prompt,
     or its sidecar has no render record; re-render with `--output` and dispatch
     with `--prompt-file`;
@@ -1393,9 +1119,7 @@ rendered it (`scripts/review/render_contract.py`):
   from it when the worker runs, and the worker does not check again (accepted
   residual: a change inside that window is not caught).
 
-The checkout running `delegate.py` plays no part. The task record keeps the
-digests compared, the per-component digests and the interpreter under
-`review_contract`.
+These helpers do not imply protected execution support in dispatch v2.
 
 ## Common mistakes
 
@@ -1403,7 +1127,7 @@ digests compared, the per-component digests and the interpreter under
   calling an agent CLI, route through `runner.invoke()`. The moment you
   build a second `subprocess.Popen([...])` for an agent, you've
   reintroduced the thing we deleted.
-- **Passing `session_id` to `delegate.py` calls.** Coding tasks are
+- **Passing `session_id` to `dispatch.py` calls.** Coding tasks are
   ALWAYS fresh-session. The runner will raise `ValueError` at you.
 - **Omitting `cwd` for write-mode calls.** Runner raises `ValueError`.
   Even if it worked, every write-mode call needs a pinned cwd to

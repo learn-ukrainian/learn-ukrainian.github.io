@@ -45,11 +45,11 @@ Don't pattern-match on principles ("orchestrate when possible") — match the EX
 | Task | Tool + model |
 |---|---|
 | Inline code edit ≤5 LOC, only when fixing a CI failure I just caused | Me, current model |
-| Code change >5 LOC, mechanical / pattern / fixtures | Dispatch — 3:3:3 split: codex (`--agent codex --mode danger --worktree --base main`), claude-headless (architectural / cross-file), gemini (tests, schema migrations, docs-near-code). NOT gemini for: cross-file refactor, security/concurrency, GH-auth, mass mechanical |
-| Wiki/content writing | `delegate.py dispatch --agent gemini` (Gemini sub, unmetered) |
-| Adversarial review of design / ADR / architecture | `delegate.py dispatch --agent claude --mode read-only --model <formal CF pin from model-assignment.md> --effort xhigh` (headless, separate billing) |
+| Code change >5 LOC, mechanical / pattern / fixtures | Dispatch — 3:3:3 split: codex (`--agent codex --mode workspace-write --worktree --base main`), claude-headless (architectural / cross-file), gemini (tests, schema migrations, docs-near-code). NOT gemini for: cross-file refactor, security/concurrency, GH-auth, mass mechanical |
+| Wiki/content writing | `dispatch.py dispatch --model <catalog-model> --agent agy` (Gemini sub, unmetered) |
+| Adversarial review of design / ADR / architecture | `dispatch.py dispatch --agent claude --mode read-only --model <formal CF pin from model-assignment.md> --effort xhigh` (headless, separate billing) |
 | Q&A without need to commit | `ab ask-codex` / `ab ask-agy` (advisory only; current ids in `model-assignment.md` § Gemini) |
-| Single-shot code review without need to commit | `ab ask-codex` or another qualified cross-family seat. Native AGY admits low/medium risk code reviews through `delegate.py`; high/critical, infra and security reviews exclude Gemini. The bridge refuses Gemini code reviews. Ukrainian content review: `ab ask-agy --review --review-profile ukrainian` |
+| Single-shot code review without need to commit | `ab ask-codex` or another qualified cross-family seat. Native AGY admits low/medium risk code reviews through `dispatch.py`; high/critical, infra and security reviews exclude Gemini. The bridge refuses Gemini code reviews. Ukrainian content review: `ab ask-agy --review --review-profile ukrainian` |
 | Search / grep / "find me X" across files | `Agent` tool with `subagent_type: Explore`, `model: "haiku"` |
 | Status check on running dispatches | Monitor API curl, never inline file scans |
 | Memory / rules / Claude-owned text | Me, inline. Claude's brain = Claude's job. Never deflect to user. |
@@ -69,7 +69,7 @@ Compound decisions = ONE table + ONE recommendation, NEVER N parallel sign-off q
 - After exact-head CF pass + green blocking CI on that same head: `.venv/bin/python -m scripts.publish pr-merge --number N` (action bias — don’t leave PRs limbo). A moved head requires fresh CF and CI; hold for CF fail or blocking CI.
 
 ## #0G — NEVER REPORT ASYNC-TASK STATE FROM MEMORY (2026-05-08)
-Before saying "task X is running / X just finished / X is at step Y", ALWAYS query `delegate.py status-or-fail X` or Monitor API `/api/delegate/active`. Memory of state from 2 minutes ago is wrong by default. Established 2026-05-08 after orchestrator reported bakeoff "Gemini mid-write" when it had finished.
+Before saying "task X is running / X just finished / X is at step Y", ALWAYS query `dispatch.py status-or-fail X` or Monitor API `/api/delegate/active`. Memory of state from 2 minutes ago is wrong by default. Established 2026-05-08 after orchestrator reported bakeoff "Gemini mid-write" when it had finished.
 
 ## #0C — COLD-START VIA MONITOR API + HANDOFF CHAIN
 Orient from live state per the agent definition and `workflow.md` § Cold-start sequence (Monitor API manifest → orientation → inbox); read `CLAUDE.md`, the rule files or `session-state/current.md` directly only when the Monitor API is down, and say so. Before any multi-session topic, run `ls -lt docs/session-state/*.md | head -10` and read the chain — the newest file alone is not enough; framings land 1-3 days back.
@@ -114,14 +114,14 @@ Agent-run builds go through `scripts/build/v7_build.py <level> <slug> --worktree
 - Do not `--resume`/`--continue` the interactive orchestrator session; continue through the `thread-rollover` skill's packet.
 - Diary handoff: `docs/session-state/YYYY-MM-DD-<slug>.md`.
 - Overnight = orchestrator-only, ALL execution dispatched.
-- Intra-session subagents are for large, genuinely independent work; dispatch volume through `delegate.py` and keep working while it runs.
+- Intra-session subagents are for large, genuinely independent work; dispatch volume through `dispatch.py` and keep working while it runs.
 
 ## TOOL SELECTION
-- `delegate.py dispatch` → EXECUTION (code+commits). Fire-and-forget, `--mode danger`.
+- `dispatch.py dispatch` → EXECUTION (code+commits). Fire-and-forget, `--mode workspace-write`.
 - `ai_agent_bridge` → COMMUNICATION (discussions, reviews, Q&A). NOT execution. `ab discuss` is analysis-only — filesystem writes during discussion = HARD STOP, dispatch the work as a separate brief.
 - `Monitor` → watch long-running. Never ScheduleWakeup loops.
 - Monitor API `localhost:8765` → state queries. One curl > custom scripts.
-- `/api/state/routing-budget` → pre-dispatch capacity check. Add `--check-budget` to delegate.py for warnings. Soft-fail when API down.
+- `/api/state/routing-budget` → pre-dispatch capacity evidence. Dispatch v2 has no budget substitution guard; unavailable telemetry is unknown.
 - `ugrep` → prefer over grep (faster, parallel, binary-safe).
 
 ## INVESTIGATE BEFORE ACTING
@@ -153,7 +153,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - Multi-agent discuss: `discuss <chan> "topic-or-stdin" --with codex,claude,agy --max-rounds 3 [--review]`
 - Broker: inbox / send / post / channel / converse / process-*
 
-**Delegate real work (edits, builds — ALWAYS --worktree):** `scripts/delegate.py dispatch --agent codex --task-id bar --brief docs/dispatch-briefs/xx.md --worktree --mode workspace-write` (or read-only). Agents: codex/claude/agy/cursor/grok (alias grok-build)/etc. Follow with `status`, `wait`, `list`.
+**Delegate real work (edits, builds — ALWAYS --worktree):** `scripts/dispatch.py dispatch --model <catalog-model> --agent codex --task-id bar --prompt-file docs/dispatch-briefs/xx.md --worktree --mode workspace-write` (or read-only). Agents: codex/claude/agy/cursor/grok (alias grok-build)/etc. Follow with `status`, `wait`, `list`.
 
 **CodexBar.app (local Mac app on this machine):** Visual for 5h / weekly / monthly limits + consumption across agents + self. (Agents query `.venv/bin/python -m scripts.fleet.capacity_pick` and `.venv/bin/python -m scripts.fleet.usage show`; `codexbar usage` is retired.)
 

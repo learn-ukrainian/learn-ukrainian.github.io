@@ -33,7 +33,7 @@ fallback and is not an interchangeable formal-review route.
 
 ## Live lane (non-formal)
 
-- `delegate.py --agent grok --model grok-4.7`
+- `dispatch.py --agent grok --model grok-4.7`
 - `ai_agent_bridge ask-grok` / `ask-grok-build`
 - Native Grok Build TUI / CLI cold-start
 - Cursor **explicit** `--model grok-4.7` if native path dark (never Cursor `auto` as identity)

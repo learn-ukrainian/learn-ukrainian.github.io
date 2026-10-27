@@ -74,27 +74,21 @@ address for the opaque ID.
 
 **Cursor concurrency (documented serialization, #6956):** A Cursor driver session
 **is** the Cursor lane (`fleet_communications.yaml` `concurrency_limit: 1`). Do not
-also `delegate.py dispatch --agent cursor` from that session. What the runtime
+also `dispatch.py dispatch --model <catalog-model> --agent cursor` from that session. What the runtime
 already enforces today:
 
 - **Stream lease (drivers only):** `SessionStreamStore.open_session` refuses a second
   live driver on the same epic stream with
   `stream {id} already has live session …` (`agents_extensions/shared/session_streams/store.py`).
-- **Worker dispatch:** `scripts/delegate.py` `_check_capacity_hint` keeps the
-  ordinary busy-lane note, but reads the session-stream store before a Cursor
-  dispatch. A live Cursor process-driver lease refuses `dispatch --agent cursor`
-  before spawn **only when the dispatch is self-dispatch from within that
-  driver's session** (lease `holder_process_id` is the dispatching process or
-  an ancestor on the same `holder_host_id`) — the case that deadlocks the
-  single-concurrency lane. A live lease held by any other lane, session, or
-  host prints a NOTE naming the lease stream and spawns a separate worker;
-  concurrent Cursor workers are supported. `--force-agent` overrides the
-  self-dispatch refusal with an explicit NOTE.
+- **Worker dispatch:** the Cursor self-dispatch refusal and its override are
+  retired. Dispatch v2 does not read driver leases for this gate; the driver
+  checks lane ownership before launch.
+
 - **Fleet endpoint metadata:** `concurrency_limit: 1` on the `cursor` endpoint is
   declarative / API-surfaced and is not used as a general worker cap. The
   session-stream lease is the dispatch admission signal for the Cursor driver.
 
-This lease↔dispatch coupling is fail-closed by default. Full charter:
+Driver stream leases remain separate from worker dispatch. Full charter:
 `docs/runbooks/cursor-driver.md`.
 
 **Opus 5.5 @ high is the DEFAULT Anthropic driver seat** (operator decision 2026-09-22,

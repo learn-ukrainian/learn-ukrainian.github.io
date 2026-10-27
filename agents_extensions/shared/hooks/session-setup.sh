@@ -436,7 +436,7 @@ if [ "$IS_CODEX_SESSION" = "0" ] \
     done < <(declared_diff_excludes "$PROJECT_DIR/agents_extensions/shared" "$PROJECT_DIR/.claude" \
       "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS")
   else
-    for item in settings.local.json scheduled_tasks.lock worktrees folk-epic bio-epic critical-rules.md non-negotiable-rules.md workflow.md delegate-must-use-worktree.md cli-help-standard.md model-assignment.md; do
+    for item in settings.local.json scheduled_tasks.lock worktrees folk-epic bio-epic critical-rules.md non-negotiable-rules.md workflow.md dispatch-must-use-worktree.md cli-help-standard.md model-assignment.md; do
       DIFF_EXCLUDES+=("$item")
     done
   fi

@@ -2,7 +2,7 @@
 
 Moved from [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 
-`delegate.py dispatch --claude-account b` runs an ordinary Claude worker on the
+`dispatch.py dispatch --claude-account b` runs an ordinary Claude worker on the
 bound account's verified login directory. The default label `a` (also what a
 dispatch without the flag and without a default-account file, below, resolves
 to) leaves the plan unchanged; `tests/fixtures/claude_default_account_plan.json`
@@ -217,7 +217,7 @@ through `_validated_claude_selection`):
 
 | Entry point | Check | `autoMode` refusal test |
 | --- | --- | --- |
-| Dispatch (`delegate.py`, `_resolve_dispatch_claude_account`) | `verify_claude_account`: both lists. | `tests/test_delegate.py::test_every_label_source_meets_every_refusal_of_an_explicit_b` (`user_settings_auto_mode*`, every label source, ordinary and sealed attempt) |
+| Dispatch (`dispatch.py`, `_resolve_dispatch_claude_account`) | `verify_claude_account`: both lists. | `tests/test_dispatch.py::test_every_label_source_meets_every_refusal_of_an_explicit_b` (`user_settings_auto_mode*`, every label source, ordinary and sealed attempt) |
 | Ordinary worker launch preparation (`adapters/claude.py`, `_claude_account_binding`) | `verify_claude_account`: both lists. | `test_claude_account_worker.py::test_bound_label_auto_mode_is_refused` |
 | Launch guard (`env_sanitize.run_claude_launch_guard`) | No second name check: it recomputes the digest that binds the verified `settings.json` and global config `env` map, so any change refuses (`claude_account_settings_changed`). | `test_claude_account_worker.py::test_bound_label_auto_mode_written_after_verification_never_launches` |
 | Sealed attempt boundary (`attempt_boundary.linux_claude_auth`) | Both lists. | `test_attempt_boundary.py::test_second_claude_account_refuses_auto_mode` |
@@ -249,28 +249,14 @@ new Claude dispatch to that account without changing any dispatch command.
   `_not_private` (not a regular file, not owned by the current user, or group-
   or world-writable; readable by others is fine) or `_unavailable` (unreadable,
   including a symbolic link).
-- The file is read once, at dispatch. The task record keeps `claude_account`
-  and `claude_account_source` (`explicit`, `default-file`, `builtin`, or
-  `record` for a `--force-new` re-run of the same task id, which keeps the
-  earlier record's label; a `--claude-account` that contradicts it is refused
-  with `claude_account_record_conflict`, and a record label that is not a known
-  one with `claude_account_unknown`). A record without a label (another
-  seat's, or one from before labels) has none to keep, so its re-run resolves
-  like a new dispatch. A recorded label passes every check above again, like
-  an explicit one. The worker, runner failover and re-runs use the recorded
-  label and never read the file, so changing it affects only new task ids.
-- A dispatch that `delegate.py` forwards to a worker host sends the label
-  resolved here as `--claude-account` (an explicit flag is sent as given), so
-  the worker host never resolves its own default file or record for it: it
-  admits that label with every check above or refuses (its own record naming
-  another label refuses with `claude_account_record_conflict`), and records the
-  source as `explicit`. A worker host whose `delegate.py` predates the flag
-  rejects it as an unknown argument and nothing spawns. If the argv to forward
-  cannot be shown to name the label, nothing is forwarded
-  (`claude_account_forward_unsupported`). An SSH transport failure falls back
-  to this host, which runs the label it resolved. `job_host_exec.py -- …
-  delegate.py dispatch` resolves nothing locally: dispatch runs on the worker
-  host, with that host's file.
+- The default-account file is read once for a new dispatch. The task records
+  `claude_account` and `claude_account_source` (`explicit`, `default-file` or
+  `builtin`). Worker launch uses the recorded label. Dispatch v2 refuses a
+  reused task ID and has no force-new replay path.
+
+- Dispatch v2 does not automatically forward Claude account dispatches between
+  hosts. The manual `scripts/orchestration/job_host_exec.py` CLI remains
+  available; pass the intended `--claude-account` explicitly when using it.
 - The worker adds `claude_account_auth` to its record: `label`, `source`,
   `method` and `verified`, never a token, identity or path. `method` is
   `subscription_login` when the adapter's launch preparation passed every check
