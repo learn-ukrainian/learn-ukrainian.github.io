@@ -19,6 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common import github_client
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import git
@@ -178,7 +179,9 @@ def _authoring_default_branch(remote: str) -> tuple[str, str]:
 def _authoring_gh_json(command: list[str], *, what: str) -> Any:
     """One GitHub read; a failure is typed (timeout, quota, unavailable, malformed), never echoed."""
     try:
-        proc = subprocess.run(command, capture_output=True, text=True, check=False, timeout=DEFAULT_GH_CLI_TIMEOUT_S)
+        proc = github_client.run(
+            command, capture_output=True, text=True, check=False, timeout=DEFAULT_GH_CLI_TIMEOUT_S, fresh=True,
+        )
     except subprocess.TimeoutExpired as exc:
         raise _AuthoringObservationUnknown(f"{what} timed out") from exc
     except OSError as exc:

@@ -29,6 +29,7 @@ from scripts.dispatcher.prompt_context import _PromptPath
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 from scripts.lib import rules_core
+from scripts.orchestration.worktree_claims import WorktreeLockError
 
 ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
 
@@ -226,6 +227,7 @@ def _dispatch(args) -> int:
         print(checks.advisory_binding(args, prompt)[2])
         return 0
     task_id = args.task_id or uuid.uuid4().hex
+    args.task_id = task_id
     path = store.record_path(task_id)
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
@@ -426,6 +428,9 @@ def main(argv=None) -> int:
     except host_admission.Refused as exc:
         print(str(exc), file=sys.stderr)
         return exc.code
+    except WorktreeLockError as exc:
+        print(f"❌ failed to lock worktree for {args.task_id!r}: {exc}", file=sys.stderr)
+        return 1
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         message = str(exc).splitlines()[0] if isinstance(exc, ValueError) else type(exc).__name__
         print(f"dispatcher: {message}", file=sys.stderr)

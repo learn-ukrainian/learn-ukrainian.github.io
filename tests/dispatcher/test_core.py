@@ -145,6 +145,35 @@ def await_file(path):
     return path.read_text()
 
 
+@pytest.mark.parametrize("flags", [(), ("--worktree",)], ids=["automatic", "worktree"])
+def test_held_worktree_lock_exits_one_without_traceback(sandbox, flags):
+    """A contended worktree lock must produce the legacy one-line dispatch failure."""
+    from scripts.orchestration import worktree_claims
+
+    task_id = "held-lock"
+    worktree = sandbox.repo / ".worktrees/dispatch/codex" / task_id
+    with worktree_claims.worktree_lock(worktree, lock_dir=sandbox.repo / ".git" / worktree_claims.LOCK_DIR_NAME):
+        result = subprocess.run(
+            [sys.executable, "-c",
+             "from scripts.orchestration import worktree_claims; "
+             "worktree_claims.DEFAULT_LOCK_TIMEOUT_S = 0.01; "
+             "from scripts.dispatcher import cli; raise SystemExit(cli.main())",
+             "dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--task-id", task_id,
+             "--prompt", "Inspect the parser.", *flags],
+            cwd=sandbox.repo, env=sandbox.env, text=True, capture_output=True, timeout=10,
+        )
+
+    assert result.returncode == 1
+    assert result.stdout == ""
+    assert result.stderr == (
+        f"❌ failed to lock worktree for '{task_id}': worktree lock for {worktree.resolve()} "
+        "still held by another process after 0.01s\n"
+    )
+    assert "Traceback" not in result.stderr
+    assert not list(sandbox.tasks.glob("*.json"))
+    assert not worktree.exists()
+
+
 def stub_common_reaper(box):
     fleet = box.repo / "scripts/fleet"
     fleet.mkdir(exist_ok=True)

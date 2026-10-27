@@ -267,7 +267,7 @@ def github(monkeypatch) -> FakeGitHub:
             return fake.run(command)
         return real_run(command, *args, **kwargs)
 
-    monkeypatch.setattr(delegate.subprocess, "run", run)
+    monkeypatch.setattr(delegate.github_client, "run", run)
     return fake
 
 
