@@ -33,6 +33,7 @@ from scripts.common import github_client
 from scripts.orchestration import lifecycle_observation
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
+from scripts.orchestration.fleet_repos import canonical_repository, pull_request_repository
 from scripts.publish.github import Request, request_run
 
 DEFAULT_TIMEOUT = 30
@@ -49,6 +50,7 @@ class PullRequestInfo:
     state: str
     head_ref_name: str | None
     head_sha: str | None
+    repository: str | None = None
 
 
 @dataclass(frozen=True)
@@ -155,22 +157,33 @@ def _fetch_pr_info_rest(
     head_sha = head.get("sha")
     if not isinstance(head_ref, str) or not head_ref or not isinstance(head_sha, str) or not head_sha:
         return None, "REST PR payload has unusable head ref or sha"
-    return PullRequestInfo(pr_number, state, head_ref, head_sha), ""
+    try:
+        expected = canonical_repository(f"{owner}/{repo_name}")
+        repository = pull_request_repository(payload, scoped_repository=expected)
+    except (TypeError, ValueError) as exc:
+        return None, str(exc)
+    if repository != expected:
+        return None, "REST PR payload repository does not match requested repository"
+    return PullRequestInfo(pr_number, state, head_ref, head_sha, repository), ""
 
 
 def _fetch_pr_info_graphql(
     repo_root: Path, pr_number: int, *, repo: str | None
 ) -> tuple[PullRequestInfo | None, str]:
+    try:
+        repository = canonical_repository(repo) if repo else rw._pr_repository(repo_root)
+    except (TypeError, ValueError) as exc:
+        return None, str(exc)
     args = [
         "gh",
         "pr",
         "view",
         str(pr_number),
         "--json",
-        "number,state,headRefName,headRefOid",
+        "number,state,headRefName,headRefOid,url",
     ]
-    if repo:
-        args += ["--repo", repo]
+    if repository:
+        args += ["--repo", repository]
     try:
         proc = _run_gh(args, cwd=repo_root)
     except (FileNotFoundError, subprocess.SubprocessError) as exc:
@@ -185,6 +198,12 @@ def _fetch_pr_info_graphql(
     if not isinstance(payload, dict):
         return None, f"gh pr view {pr_number} returned a non-object payload"
 
+    try:
+        actual = pull_request_repository(payload, scoped_repository=repository)
+    except (TypeError, ValueError) as exc:
+        return None, str(exc)
+    if actual != repository or payload.get("number") != pr_number:
+        return None, "gh pr view payload repository or number does not match requested PR"
     state = str(payload.get("state") or "").upper()
     head_ref = payload.get("headRefName")
     head_sha = payload.get("headRefOid")
@@ -194,6 +213,7 @@ def _fetch_pr_info_graphql(
             state=state,
             head_ref_name=str(head_ref) if head_ref else None,
             head_sha=str(head_sha) if head_sha else None,
+            repository=actual,
         ),
         "",
     )
@@ -270,6 +290,8 @@ def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.Wor
     A match is the PR branch, the exact merged head, or a detached checkout
     of an earlier commit that exists only on that PR.
     """
+    if pr.repository is not None and pr.repository != rw._pr_repository(repo_root):
+        raise MergeCloseoutError("PR repository does not match cleanup repository")
     primary = rw.primary_checkout_root(repo_root)
     matches: list[rw.WorktreeInfo] = []
     for info in rw.list_git_worktrees(repo_root):
@@ -365,6 +387,8 @@ def verify_branch_gone(
     (unreachable origin, failed gh call) is never read as "branch is gone";
     it leaves the branch alone and is reported as an error.
     """
+    if pr.repository is not None and pr.repository != rw._pr_repository(repo_root):
+        raise MergeCloseoutError("PR repository does not match cleanup repository")
     branch = pr.head_ref_name
     if not branch:
         return None
@@ -516,7 +540,7 @@ def collect_criterion_receipts(repo_root: Path, pr: PullRequestInfo, *, repo: st
     from scripts.orchestration import task_lifecycle as tl
 
     primary = tl.canonical_state_root(repo_root)
-    slug = repo or "/".join(rw._github_owner_repo(repo_root) or ())
+    slug = canonical_repository(repo) if repo else rw._pr_repository(repo_root)
     if not slug:
         return [{"closure_ready": False, "error": "CLOSEOUT_REPOSITORY_UNKNOWN"}]
     namespace = hashlib.sha256(slug.encode()).hexdigest()[:16]
@@ -527,7 +551,7 @@ def collect_criterion_receipts(repo_root: Path, pr: PullRequestInfo, *, repo: st
                 ledger = tl.load_lifecycle(path)
                 if ledger["pr"]["number"] != pr.number:
                     continue
-                if ledger["identity"]["repository"] != slug:
+                if canonical_repository(ledger["identity"]["repository"]) != slug:
                     raise MergeCloseoutError("CLOSEOUT_REPOSITORY_MISMATCH")
                 now = datetime.now(UTC).isoformat()
                 prior = tl._latest_premerge_local(ledger)
@@ -556,6 +580,8 @@ def run_merge_closeout(
     no_lifecycle_observation: str | None = None,
 ) -> CloseoutResult:
     pr = fetch_pr_info(repo_root, pr_number, repo=repo)
+    if pr.repository is not None and pr.repository != rw._pr_repository(repo_root):
+        raise MergeCloseoutError("PR repository does not match cleanup repository")
     if pr.state != "MERGED":
         raise MergeCloseoutError(f"PR #{pr_number} is not MERGED (state={pr.state or 'UNKNOWN'})")
 

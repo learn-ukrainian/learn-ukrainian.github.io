@@ -1667,7 +1667,7 @@ def _archive_pr_snapshot(
     owner, repository = slug
     fields = " ".join(
         f"b{index}:pullRequests(headRefName:{json.dumps(name)},states:[OPEN,CLOSED,MERGED],first:100)"
-        "{nodes{number state headRefOid} pageInfo{hasNextPage}}"
+        "{nodes{number state headRefOid url} pageInfo{hasNextPage}}"
         for index, name in enumerate(names)
     )
     query = f"query{{repository(owner:{json.dumps(owner)},name:{json.dumps(repository)}){{{fields}}}}}"
@@ -1699,6 +1699,9 @@ def _archive_pr_snapshot(
             rows = connection["nodes"]
             if not isinstance(rows, list):
                 return unavailable
+            rows, error = reaper._scope_pr_rows(rows, reaper._pr_repository(repo))
+            if error:
+                return {name: ([], error) for name in names}
             states: list[reaper.PullRequestState] = []
             for row in rows:
                 number, state, sha = row["number"], row["state"], row["headRefOid"]
@@ -1711,7 +1714,7 @@ def _archive_pr_snapshot(
                     or not SHA_RE.fullmatch(sha)
                 ):
                     return unavailable
-                states.append(reaper.PullRequestState(number, state, sha))
+                states.append(reaper.PullRequestState(number, state, sha, repository=row.get("repository")))
             found[name] = (states, None)
         return found
     except (KeyError, TypeError, ValueError):

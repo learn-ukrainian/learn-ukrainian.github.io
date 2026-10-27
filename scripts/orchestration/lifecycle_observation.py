@@ -427,6 +427,7 @@ def _recovery_pr_head(
             "state": "MERGED",
             "head_ref_name": pr["head_branch"],
             "head_sha": pr.get("head_sha"),
+            **({"repository": ledger["identity"]["repository"]} if "repository" in cleanup_pr else {}),
         }
         or branch.get("branch") != task["worktree_branch"]
         or branch.get("remote_gone") is not True

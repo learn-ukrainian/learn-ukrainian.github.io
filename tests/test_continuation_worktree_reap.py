@@ -2008,7 +2008,7 @@ def test_10303_abandon_cleanup_refusal_names_pr_owner_condition(abandon_cohort, 
     )
     assert rechecks == [True]
     assert row.action == "skipped", row
-    assert row.pr == ({"number": 9645, "state": "CLOSED", "head_sha": head} if closed else None)
+    assert row.pr == ({"number": 9645, "state": "CLOSED", "head_sha": head, "repository": None} if closed else None)
     assert row.owner == "codex"
     assert "owner=codex" in row.reason
     assert "awaited=owner refreshes exact-head ABANDON and verified preservation proof" in row.reason

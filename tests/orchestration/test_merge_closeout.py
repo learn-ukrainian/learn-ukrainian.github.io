@@ -174,7 +174,7 @@ def test_fetch_pr_info_parses_gh_payload(tmp_path: Path, monkeypatch: pytest.Mon
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef")
+    assert pr == mc.PullRequestInfo(number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef", repository="learn-ukrainian/learn-ukrainian.github.io")
 
 
 @pytest.mark.parametrize(
@@ -208,7 +208,7 @@ def test_fetch_pr_info_maps_rest_state(
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(42, expected_state, "codex/feature", "deadbeef")
+    assert pr == mc.PullRequestInfo(42, expected_state, "codex/feature", "deadbeef", repository="learn-ukrainian/learn-ukrainian.github.io")
     assert len(calls) == 1
     assert calls[0][-1] == "repos/learn-ukrainian/learn-ukrainian.github.io/pulls/42"
 
@@ -232,7 +232,7 @@ def test_fetch_pr_info_rest_failure_falls_back_to_graphql(tmp_path: Path, monkey
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(42, "MERGED", "fallback", "bead")
+    assert pr == mc.PullRequestInfo(42, "MERGED", "fallback", "bead", repository="learn-ukrainian/learn-ukrainian.github.io")
     assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
 
 
@@ -277,7 +277,7 @@ def test_fetch_pr_info_malformed_rest_falls_back_instead_of_guessing(
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(42, "OPEN", "safe", "sha")
+    assert pr == mc.PullRequestInfo(42, "OPEN", "safe", "sha", repository="learn-ukrainian/learn-ukrainian.github.io")
     assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
 
 
@@ -296,7 +296,7 @@ def test_fetch_pr_info_honors_repo_override_for_rest(tmp_path: Path, monkeypatch
 
     pr = mc.fetch_pr_info(repo, 42, repo="other/project")
 
-    assert pr == mc.PullRequestInfo(42, "OPEN", "override", "sha")
+    assert pr == mc.PullRequestInfo(42, "OPEN", "override", "sha", repository="other/project")
     assert calls[0][-1] == "repos/other/project/pulls/42"
 
 
@@ -1053,3 +1053,175 @@ def test_text_report_renders_cleanup_and_criterion_residuals():
     assert "remote_error: remote unavailable" in text
     assert "local_error: local retained" in text
     assert text.endswith("errors:\n  cleanup residual\nRESIDUAL / ERROR")
+
+
+def test_cross_repository_pr_identity_collision_does_not_block_closeout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/repository-collision"
+    head = commit_on_branch(repo, branch, "collision.txt")
+    publish_pr_head(repo, 42, branch, head)
+    worktree = add_detached_worktree(repo, "pr-42", head)
+    repository = "learn-ukrainian/learn-ukrainian.github.io"
+    second_repository = "example/second-repository"
+    merged = {
+        "number": 42, "state": "MERGED", "headRefOid": head,
+        "repository": {"nameWithOwner": repository},
+        "url": f"https://github.com/{repository}/pull/42",
+    }
+    opened = {
+        **merged, "state": "OPEN",
+        "repository": {"nameWithOwner": second_repository},
+        "url": f"https://github.com/{second_repository}/pull/42",
+    }
+    calls = patch_gh(
+        monkeypatch, pr_number=42, state="MERGED", head_ref_name=branch, head_sha=head,
+        branch_prs={branch: [merged]}, sha_prs={head: [merged]},
+    )
+
+    result = mc.run_merge_closeout(repo, 42, apply=True, live_cwds=set())
+
+    assert result.ok is True, result.errors
+    assert result.matched_worktrees == [str(worktree)]
+    assert [entry["action"] for entry in result.reap_results] == ["removed"]
+    assert not worktree.exists()
+    assert result.branch_status is not None
+    assert result.branch_status.remote_gone and result.branch_status.local_gone
+    assert git(repo, "ls-remote", "--heads", "origin", branch) == ""
+    searches = [call for call in calls if call[1:3] == ["search", "prs"]]
+    assert searches
+    assert all(call[call.index("--repo") + 1] == repository for call in searches)
+
+    # Requests are repository restricted; a foreign row makes their proof unknown.
+    for transport in ("rest", "graphql", "search"):
+        with monkeypatch.context() as scoped:
+            rows = [opened, merged]
+            if transport == "rest":
+                rows = [
+                    {
+                        "number": row["number"], "state": "closed" if row["state"] == "MERGED" else "open",
+                        "merged_at": "2026-01-02T03:04:05Z" if row["state"] == "MERGED" else None,
+                        "head": {"sha": head, "ref": branch, "repo": {"full_name": "example/fork"}},
+                        "base": {"repo": {"full_name": row["repository"]["nameWithOwner"]}},
+                        "url": f"https://api.github.com/repos/{row['repository']['nameWithOwner']}/pulls/42",
+                        "html_url": row["url"],
+                    }
+                    for row in rows
+                ]
+            scoped.setattr(
+                rw, "_run_gh",
+                lambda *args, rows=rows, transport=transport, **kwargs: subprocess.CompletedProcess(
+                    [], 0, json.dumps([rows] if transport == "rest" else rows), ""
+                ),
+            )
+            if transport == "rest":
+                states, error = rw._query_pr_states_rest(repo, branch)
+            elif transport == "graphql":
+                states, error = rw._query_pr_states_graphql(repo, branch)
+            else:
+                states, error = rw._query_prs_by_head_sha(repo, head)
+            assert states == []
+            assert "repository does not match" in (error or "")
+            if transport in {"rest", "graphql"}:
+                scoped.setattr(
+                    rw, "_run_gh",
+                    lambda *args, row=rows[1], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
+                )
+                if transport == "rest":
+                    states, error = rw._query_pr_by_number_rest(repo, 42)
+                else:
+                    states, error = rw._query_pr_by_number_graphql(repo, 42)
+                assert error is None and len(states) == 1
+                assert states[0].repository == repository and states[0].head_sha == head
+                scoped.setattr(
+                    rw, "_run_gh",
+                    lambda *args, row=rows[0], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
+                )
+                states, error = (rw._query_pr_by_number_rest(repo, 42) if transport == "rest"
+                                 else rw._query_pr_by_number_graphql(repo, 42))
+                assert states == [] and "repository does not match" in (error or "")
+                if transport == "rest":
+                    scoped.setattr(
+                        mc, "_run_gh",
+                        lambda *args, row=rows[1], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
+                    )
+                    own_pr, error = mc._fetch_pr_info_rest(repo, 42, repo=repository)
+                    assert error == "" and own_pr is not None
+                    assert own_pr.repository == repository and own_pr.head_sha == head
+
+    # A foreign row also invalidates the entire batched branch snapshot.
+    from scripts.hygiene import branch_sweep
+
+    with monkeypatch.context() as scoped:
+        scoped.setattr(
+            branch_sweep.github_client, "run",
+            lambda *args, **kwargs: subprocess.CompletedProcess(
+                [], 0, json.dumps({"data": {"repository": {"b0": {
+                    "nodes": [opened, merged], "pageInfo": {"hasNextPage": False},
+                }}}}), "",
+            ),
+        )
+        states, error = branch_sweep._archive_pr_snapshot(repo, [branch], rw._query_pr_states)[branch]
+        assert states == [] and "repository does not match" in (error or "")
+
+    from scripts.orchestration.task_family import git_safety
+
+    for pr_number in (None, 42):
+        with monkeypatch.context() as scoped:
+            scoped.setattr(
+                git_safety, "run_gh",
+                lambda *args, pr_number=pr_number, **kwargs: subprocess.CompletedProcess(
+                    [], 0, json.dumps(opened if pr_number else [opened]), "",
+                ),
+            )
+            with pytest.raises(git_safety.GitHubQueryError, match="repository does not match"):
+                git_safety.query_pr_by_head(repo, branch=branch, pr_number=pr_number)
+
+    # An OPEN PR in the checkout's own repository must still block branch deletion.
+    patch_gh(
+        monkeypatch, pr_number=42, state="MERGED", head_ref_name=branch, head_sha=head,
+        branch_prs={branch: [{**merged, "state": "OPEN"}]},
+    )
+    assert "open PR" in (mc._guard_branch_not_open(repo, branch) or "")
+
+
+def test_renamed_repository_open_pr_refuses_branch_deletion(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A redirected restricted lookup must not turn an OPEN PR into deletion proof."""
+    repo = init_repo(tmp_path)
+    branch = "codex/renamed-repository"
+    head = commit_on_branch(repo, branch, "renamed.txt")
+    repository = "example/original"
+    renamed_repository = "example/renamed"
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _: tuple(repository.split("/")))
+
+    def redirected_lookup(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[1] == "api":
+            payload = [[{
+                "number": 43, "state": "open", "merged_at": None,
+                "head": {"ref": branch, "sha": head},
+                "base": {"repo": {"full_name": renamed_repository}},
+            }]]
+        else:
+            assert args[1:3] == ["pr", "list"]
+            assert args[args.index("--repo") + 1] == repository
+            payload = [{
+                "number": 43, "state": "OPEN", "headRefOid": head,
+                "url": f"https://github.com/{renamed_repository}/pull/43",
+            }]
+        return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+
+    monkeypatch.setattr(rw, "_run_gh", redirected_lookup)
+    status = mc.verify_branch_gone(
+        repo, mc.PullRequestInfo(42, "MERGED", branch, head, repository), apply=True,
+    )
+
+    assert status is not None
+    assert status.remote_gone is False, "restricted lookup lost the OPEN PR and deleted its remote branch"
+    assert status.local_gone is False
+    assert "PR guard unavailable" in (status.remote_error or "")
+    assert "PR guard unavailable" in (status.local_error or "")
+    assert git(repo, "rev-parse", f"refs/heads/{branch}") == head
+    assert git(repo, "ls-remote", "--heads", "origin", branch).split()[0] == head
