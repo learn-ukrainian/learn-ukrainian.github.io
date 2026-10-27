@@ -43,6 +43,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common.git_credentials import verification_credentials
 from scripts.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
 
 GIT = shutil.which("git", path=os.defpath) or "/usr/bin/git"
@@ -684,6 +685,16 @@ def run_git(
             return refusal
         if any(arg.startswith(("--upload-pack", "--exec")) or arg == "-u" for arg in args[1:]):
             raise ValueError("remote upload-pack override is unsupported")
+        destination = remote
+        if remote == "origin":
+            origin = subprocess.run(
+                [*prefix, "config", "--get-all", "remote.origin.url"], cwd=cwd, env=safe_env,
+                capture_output=True, text=True, check=False, timeout=timeout,
+            )
+            urls = origin.stdout.splitlines() if origin.returncode == 0 else []
+            destination = urls[0] if len(urls) == 1 else None
+        for setting in verification_credentials(destination) if destination else ():
+            prefix.extend(["-c", setting])
         args = [args[0], "--upload-pack=git-upload-pack", *args[1:]]
         if args[0] == "fetch":
             args = [args[0], "--no-recurse-submodules", "--no-auto-maintenance", *args[1:]]
@@ -714,4 +725,21 @@ def run_git(
             return failure
     if args[0] in {"diff", "diff-tree", "diff-index"}:
         args = [args[0], "--no-ext-diff", "--no-textconv", *args[1:]]
-    return subprocess.run([*prefix, *args], cwd=cwd, env=safe_env, timeout=timeout, **kwargs)
+    if profile != "remote":
+        return subprocess.run([*prefix, *args], cwd=cwd, env=safe_env, timeout=timeout, **kwargs)
+    check = kwargs.pop("check", False)
+    try:
+        result = subprocess.run([*prefix, *args], cwd=cwd, env=safe_env, timeout=timeout, check=False, **kwargs)
+    except subprocess.TimeoutExpired as exc:
+        raise subprocess.TimeoutExpired([executable, args[0]], exc.timeout) from None
+    if result.returncode:
+        # Closeout persists diagnostics. Keep raw transport/helper output and
+        # remote URLs out of that evidence, including check=True exceptions.
+        result = subprocess.CompletedProcess(
+            [executable, args[0]], result.returncode,
+            "" if kwargs.get("text") else b"",
+            "remote Git command failed" if kwargs.get("text") else b"remote Git command failed",
+        )
+    if check:
+        result.check_returncode()
+    return result
