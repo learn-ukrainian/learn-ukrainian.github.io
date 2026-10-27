@@ -38,7 +38,7 @@ The initial list includes all six runtime/catalog/global suites from the
 original failed group; later PR changes cannot establish old coverage.
 
 Every `merge_group` candidate runs the full supported non-slow pytest suite,
-frontend toolchain tests, the sparse collection guard and partition audits.
+frontend toolchain tests and partition audits.
 Required full green queue CI gates landing. Nightly `schedule` runs at 03:30 UTC
 on `main` and opt-in `workflow_dispatch` runs also execute the full suite.
 Other slow tests retain `pytest-slow-nightly.yml`.
@@ -70,7 +70,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | --- | --- |
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
-| Checks | PR pytest collection or the full-tier sparse collection guard, then `scripts/ci/checks.sh` for every lint and content-contract gate; fails if any failed. |
+| Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
 | PR changed tests and guards | PRs execute changed test files and all explicit guards; full tiers exit without duplicate execution. |
 | Frontend | Full tier only. Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |

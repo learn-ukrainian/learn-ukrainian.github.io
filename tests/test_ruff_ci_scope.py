@@ -76,7 +76,7 @@ def test_pre_commit_pytest_guards_covered_by_ci_are_absent() -> None:
 def test_pre_commit_has_no_pytest_hooks_and_checks_remains_required() -> None:
     """Reject pytest returning to push hooks or Checks losing required CI ownership."""
     hooks = _local_hooks()
-    assert "sparse-collection-guard" not in hooks, "sparse collection belongs in required CI, not push hooks"
+    assert "sparse-collection-guard" not in hooks, "the retired sparse collection guard must not return as a push hook"
     stray = [hook_id for hook_id, hook in hooks.items() if "pytest" in hook.get("entry", "")]
     assert not stray, f"pytest hooks {stray} must not run during a push, including through implicit stages"
     workflow = yaml.safe_load((_REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))

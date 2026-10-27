@@ -76,9 +76,9 @@ mutation parameters. The test and its parameter helpers have identical ASTs to
   part of the toolchain. `collect` writes node ids and parameter values, `check-covered`
   verifies the D-COVERED claims, `apply` edits `tests/`, and `verify` diffs the before and
   after collections.
-- `2026-10-21-phase-b-restores.jsonl`: the 118 selected entries phase B keeps (107 tests and
+- `2026-10-21-phase-b-restores.jsonl`: the 117 selected entries phase B keeps (106 tests and
   11 whole files), one row each with its source and reason.
-- `2026-10-21-phase-b-recheck-sample.jsonl`: the 65 recheck-sample decisions.
+- `2026-10-21-phase-b-recheck-sample.jsonl`: the 63 recheck-sample decisions.
 
 ### Method
 
