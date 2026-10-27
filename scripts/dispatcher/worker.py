@@ -12,7 +12,7 @@ from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import git, providers, store
+from scripts.dispatcher import git, providers, read_only_guard, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 
@@ -200,6 +200,10 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     resolved_model = None
     started = time.monotonic()
+    guard = None
+    if spec.mode == "read-only":
+        guard = read_only_guard.ReadOnlyGuard(spec.task_id, spec.agent, spec.model, spec.worktree)
+    discard = None
 
     def cancelled(_signum, _frame):
         raise _Cancelled()
@@ -225,6 +229,14 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             except (OSError, ValueError):
                 status, error = "failed", "output schema binding invalid"
                 return
+        if guard is not None:
+            try:
+                guard.begin(hard_timeout)
+            except ValueError as exc:
+                status, error = "failed", f"adapter rejected before spawn: {exc}"
+                return
+            record.update(read_only_checkout_snapshot_error=guard.snapshot_error)
+            store.replace(record, path)
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
@@ -285,6 +297,15 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
             terminate()
             returncode = child.returncode
+        if guard is not None:
+            # A read-only mutation or missing content evidence never settles done (delegate.py:12736-12741).
+            try:
+                fields, cause, discard = guard.finish()
+            except Exception:
+                fields, cause = {}, "read_only_checkout_snapshot_failed"
+            record.update(fields)
+            if cause:
+                status, error = "failed", f"{error}; {cause}" if error else cause
         if text is not None:
             spec.final_file.write_text(text)
             spec.final_file.chmod(0o600)
@@ -306,6 +327,9 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
             )
         store.replace(record, path)
+        if discard is not None:
+            with contextlib.suppress(OSError):
+                read_only_guard.discard_read_only_snapshot_phases(discard)
 
         _reap_settled(record, path)
 

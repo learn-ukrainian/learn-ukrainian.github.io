@@ -254,7 +254,7 @@ def test_settled_clean_read_only_task_worktree_is_reaped_through_the_common_reap
 def test_dirty_or_unpushed_worktree_is_never_reaped(sandbox, mode, model):
     stub_common_reaper(sandbox)
     task = sandbox.dispatch(model, "--mode", mode)
-    record = sandbox.settle(task, expected=0 if mode == "read-only" else 1)
+    record = sandbox.settle(task, expected=1)
     deadline = time.monotonic() + 5
     while worker._identity(record["pid"]):
         assert time.monotonic() < deadline
@@ -562,7 +562,7 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
     ("pushed-nested", "workspace-write", ["src/"], "done", None),
     ("pushed-dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
     ("echo", "read-only", ["other/"], "done", None),
-    ("dirty", "read-only", ["other/"], "done", None),
+    ("dirty", "read-only", ["other/"], "failed", "read_only_checkout_mutation, count 1"),
     ("pushed", "read-only", ["other/"], "done", None),
 ])
 def test_settle_rejects_out_of_scope_or_unpublished_write_delivery(sandbox, model, mode, owned, state, cause):
@@ -573,7 +573,7 @@ def test_settle_rejects_out_of_scope_or_unpublished_write_delivery(sandbox, mode
     assert record["owned_paths"] == owned
     assert record["research_owned_paths"] == []
     assert record["error"] == cause
-    assert record.get("no_deliverable_reason") == cause
+    assert record.get("no_deliverable_reason") == (None if mode == "read-only" else cause)
     assert record["returncode"] == 0
     assert Path(record["result_file"]).read_text() == "literal final response"
 
