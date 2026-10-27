@@ -1019,7 +1019,7 @@ def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_
             assert not any(".helper=!" in arg for arg in prefix)
             local_imports.append(argv)
             return real_run(argv, **kwargs)
-        assert Path(kwargs["cwd"]) != sandbox.repo
+        assert Path(kwargs.get("cwd") or argv[argv.index("-C") + 1]) != sandbox.repo
         assert credentials.returncode == 0
         assert "username=fixture-user\npassword=fixture-password\n" in credentials.stdout
         before = log.read_text()
