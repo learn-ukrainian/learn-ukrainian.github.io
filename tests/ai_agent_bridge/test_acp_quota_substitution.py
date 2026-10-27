@@ -3,7 +3,7 @@
 The fake ACP participant is a monkeypatched ``invoke_inter_agent``; no real
 provider is ever called. The substitution map comes from a tmp-path YAML via
 the shared loader, so these tests exercise the same ``dispatch_fallbacks``
-table delegate.py reads.
+table used by the surviving ACP substitution path.
 
 The substitution decision is a pure function of typed signals (the runner's
 RateLimitedError, the result's rate_limited flag, a rate_limited transport
@@ -222,7 +222,7 @@ def _wire(
     """Fake the ACP participant, the reachability probe, and the subs table.
 
     Ordinary asks stay on ACP. ``runner.invoke``, a provider subprocess, the
-    headless review dispatcher, and ``delegate.py`` dispatch all fail the
+    headless review dispatcher, and dispatch v2 all fail the
     test if the ask reaches them. The local-plane probe is pinned off so the
     subprocess guard is not tripped by the git check that decides forwarding.
     """
@@ -250,8 +250,8 @@ def _wire(
         "scripts.ai_agent_bridge._job_host_forward.local_plane_is_retired",
         lambda *_args, **_kwargs: False,
     )
-    # Import delegate before the subprocess guard: module import may probe git.
-    monkeypatch.setattr("delegate.cmd_dispatch", _forbidden_acp_bypass("delegate.cmd_dispatch"))
+    # Import the dispatch module before guarding provider subprocesses.
+    monkeypatch.setattr("scripts.dispatcher.cli._dispatch", _forbidden_acp_bypass("scripts.dispatcher.cli._dispatch"))
     monkeypatch.setattr(
         _cli,
         "_dispatch_headless_review",

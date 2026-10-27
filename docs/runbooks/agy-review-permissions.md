@@ -252,7 +252,7 @@ Use the dispatch's prescribed shared interpreter as `PROJECT_PYTHON`.
 
 ```bash
 "$PROJECT_PYTHON" -m pytest \
-  tests/test_dispatch.py \
+  tests/dispatcher/test_core.py \
   tests/test_agent_runtime.py \
   tests/test_coverage_bridge_audit.py \
   tests/test_rules_core_loading.py \

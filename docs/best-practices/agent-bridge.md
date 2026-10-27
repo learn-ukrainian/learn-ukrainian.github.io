@@ -307,7 +307,7 @@ agent.** Per channel conventions:
 5. Commit only after the review is CLEAN or BLOCKING is resolved
 6. Commit message includes `Reviewed-By: <qualified cross-family reviewer> (task-id)` trailer
 
-The AGY bridge reviews Ukrainian content only. Native AGY dispatch through `dispatch.py` admits low/medium risk code reviews subject to resolver admission, scoped permissions and command denial; high/critical, infra and security reviews exclude Gemini. A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.
+The AGY bridge reviews Ukrainian content only. Native AGY dispatch through `dispatch.py` admits low/medium risk code reviews subject to resolver admission. Dispatch v2 does not provide protected review isolation. High/critical, infra and security reviews exclude Gemini. A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.
 
 This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.

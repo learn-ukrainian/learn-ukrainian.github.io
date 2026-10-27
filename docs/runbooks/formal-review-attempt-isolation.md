@@ -1,5 +1,10 @@
 # Formal review attempt isolation
 
+Dispatch v2 does not execute protected bound attempts. The retained rendering,
+MCP and recorder helpers below serve their other callers; the v2 binding flags
+are dry-run-only. A plain read-only launch cannot supply their Sources receipts
+or isolation proof. The accountable driver owns that execution gap.
+
 ## Curriculum reviews use full access
 
 Operator direction adopted on 2026-10-01 (#9464) requires curriculum plan,
@@ -258,7 +263,7 @@ used templates, fixture input roots and `previous_attempt` re-reviews remain
 admissible. If a legitimate flow cannot meet these checks, stop and report it;
 do not substitute render-checkout templates. Pinning tests live in
 `tests/review/test_template_admission.py` and
-`tests/test_dispatch.py::test_render_manifest_server_authority_refuses_before_launch`.
+`tests/review/test_template_admission.py`.
 
 Dispatch stores the manifest hash supplied by `prepare_review_attempt`'s plan;
 it does not reopen the manifest to construct the task's binding. The runner's
@@ -487,32 +492,7 @@ present in that reply, and at least one successful `verify_words` ledger row.
 in ignored local storage. This proves full-mode permission and receipt transport;
 it does not certify a plan's semantic review or replace the post-landing proof.
 
-Set `MANIFEST` to the current engine-produced plan manifest, `INPUT_ROOT` to
-an expendable full review checkout containing those exact pinned inputs and git
-history, and `PROMPT` to an ignored prompt file. Use fresh IDs and a short timeout:
-
-```bash
-REVIEW_ID=plan-a1-position2-full-proof
-ATTEMPT_ID=agy-full-9464
-"$PROJECT_PYTHON" -m scripts.review.prompts.render "$MANIFEST" \
-  --repo-root "$INPUT_ROOT" --output "$PROMPT" \
-  --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID"
-"$PROJECT_PYTHON" scripts/dispatch.py dispatch \
-  --agent agy --model gemini-3.8-flash-high --mode read-only \
-  --review-profile ukrainian --effort high \
-  --task-id review-9464-plan-proof --cwd "$INPUT_ROOT" \
-  --full-checkout --review-access full --hard-timeout 180 \
-  --prompt-file "$PROMPT" --review-attempt "$MANIFEST" \
-  --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID"
-"$PROJECT_PYTHON" scripts/dispatch.py wait review-9464-plan-proof
-```
-
-After live routing/capacity preflight, record the captured task result through
-`scripts.review.record`. The proof is independent of the verdict: require the
-exact task binding and `review_access: full`; a nonempty ledger cited by the
-return; a trace showing a repo read outside the pins or a git command; a recorder
-content disposition; `plan_review_status` naming that manifest; and changing
-one input making the review stale. A completion string or APPROVE alone is
-insufficient. The captured-return fixture establishes the chain but not real
-seat access or source use; AC-04 remains open until this run. The driver also
-owns independent exact-head review and landing of this implementation.
+The former live bound-attempt recipe has no dispatch v2 execution equivalent.
+Use the renderer and recorder helpers only through a caller that supplies their
+required isolation, immutable task binding and Sources evidence. A dry run
+validates a binding without starting a seat or establishing execution proof.

@@ -876,14 +876,11 @@ Owned test paths:
 
 - `tests/test_writer_lifecycle.py`, new disposition and supervisor integration tests.
 - `tests/test_writer_lifecycle_consumers.py`, new parameterized producer/consumer and board tests.
-- `tests/test_dispatch.py`
+- `tests/dispatcher/test_core.py`
 - `tests/test_dispatch_settle.py`
 - `tests/test_delegate_review_admission.py`
-- `tests/test_delegate_review_rounds.py`
-- `tests/test_delegate_timeouts.py`
 - `tests/test_delegate_public_causes.py`
 - `tests/test_delegate_ownership.py`
-- `tests/test_delegate_ownership_dispatch.py`
 - `tests/orchestration/test_task_record_store.py`
 - `tests/orchestration/test_task_lifecycle.py`
 - `tests/orchestration/test_task_closeout.py`
@@ -942,7 +939,7 @@ Owned test paths:
 | I01-AC12 | Schema validates writer/non-writer ledgers; pre-removal local readiness is durable at each H/H' and closeout consumes only the exact current head after removal | `tests/orchestration/test_task_lifecycle.py`, `tests/orchestration/test_task_closeout.py` and supervisor tests, real Git reaped-tree reconcile/AC-sync/review/CI fixtures; H evidence for H', absent/tampered observation and interrupted write all refuse |
 | I01-AC13 | Writer resolver/closeout state uses the canonical durable path; nonwriter debt gates ordinary nonwriter dispatches, bounded prerequisites remain possible, and disputes preserve clocks/counts after PUSHED | `tests/test_review_closeout_cli.py`, `tests/test_delegate_review_admission.py` and `tests/test_writer_lifecycle_consumers.py`, state survives real removal, relative/worktree path refusal, zero/nonzero/UNKNOWN admission, prerequisite bounds and dispute deadline across restart/head/tree changes |
 
-Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/test_writer_lifecycle.py tests/test_writer_lifecycle_consumers.py tests/test_dispatch.py tests/test_dispatch_settle.py tests/test_delegate_review_admission.py tests/test_record_cf_verdict.py tests/orchestration/test_integration_sweep.py tests/orchestration/test_merge_queue_keeper.py`.
+Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/test_writer_lifecycle.py tests/test_writer_lifecycle_consumers.py tests/dispatcher/test_core.py tests/test_dispatch_settle.py tests/test_delegate_review_admission.py tests/test_record_cf_verdict.py tests/orchestration/test_integration_sweep.py tests/orchestration/test_merge_queue_keeper.py`.
 Also verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/orchestration/test_task_lifecycle.py tests/orchestration/test_task_closeout.py tests/review/test_record_cf_verdict.py tests/test_review_closeout_cli.py tests/test_typed_github_publisher.py tests/test_publish_r5_regressions.py tests/test_publish_diagnostics.py tests/test_publish_hostname.py tests/publish/test_pr_merge_squash_scan.py`.
 The card names the remaining owned test paths and any read-only importer tests explicitly in additional bounded commands.
 Stop on a missing receipt accepted as terminal, review shopping, inconsistent discard attribution, or invisible overdue custody.

@@ -217,7 +217,7 @@ through `_validated_claude_selection`):
 
 | Entry point | Check | `autoMode` refusal test |
 | --- | --- | --- |
-| Dispatch (`dispatch.py`, `_resolve_dispatch_claude_account`) | `verify_claude_account`: both lists. | `tests/test_dispatch.py::test_every_label_source_meets_every_refusal_of_an_explicit_b` (`user_settings_auto_mode*`, every label source, ordinary and sealed attempt) |
+| Dispatch (`scripts/dispatcher/admission.py`, `claude_account`) | `verify_claude_account`: both lists. | `tests/dispatcher/test_core.py` (ordinary v2 account admission; protected bound execution is unavailable) |
 | Ordinary worker launch preparation (`adapters/claude.py`, `_claude_account_binding`) | `verify_claude_account`: both lists. | `test_claude_account_worker.py::test_bound_label_auto_mode_is_refused` |
 | Launch guard (`env_sanitize.run_claude_launch_guard`) | No second name check: it recomputes the digest that binds the verified `settings.json` and global config `env` map, so any change refuses (`claude_account_settings_changed`). | `test_claude_account_worker.py::test_bound_label_auto_mode_written_after_verification_never_launches` |
 | Sealed attempt boundary (`attempt_boundary.linux_claude_auth`) | Both lists. | `test_attempt_boundary.py::test_second_claude_account_refuses_auto_mode` |

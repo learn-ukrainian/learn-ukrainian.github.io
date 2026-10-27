@@ -407,7 +407,7 @@ agent.</strong> Per channel conventions:</p>
 <li>Commit only after the review is CLEAN or BLOCKING is resolved</li>
 <li>Commit message includes <code>Reviewed-By: &lt;qualified cross-family reviewer&gt; (task-id)</code> trailer</li>
 </ol>
-<p>The AGY bridge reviews Ukrainian content only. Native AGY dispatch through <code>dispatch.py</code> admits low/medium risk code reviews subject to resolver admission, scoped permissions and command denial; high/critical, infra and security reviews exclude Gemini. A <code>post reviews --to agy</code> or <code>discuss --with agy</code> call is refused unless <code>--review-profile ukrainian</code> is set. <code>--review-profile code</code> is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.</p>
+<p>The AGY bridge reviews Ukrainian content only. Native AGY dispatch through <code>dispatch.py</code> admits low/medium risk code reviews subject to resolver admission. Dispatch v2 does not provide protected review isolation. High/critical, infra and security reviews exclude Gemini. A <code>post reviews --to agy</code> or <code>discuss --with agy</code> call is refused unless <code>--review-profile ukrainian</code> is set. <code>--review-profile code</code> is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.</p>
 <p>This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.</p>
 <h2>Spawned-agent env hygiene</h2>
