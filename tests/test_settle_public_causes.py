@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts import delegate
-from scripts.orchestration import dead_worker_state, dispatch_settle, task_record_causes
+from scripts.orchestration import dead_worker_state, dispatch_settle, task_record_causes, task_record_store
 
 RAW_REASON = "synthetic settle diagnostic at private-worker.example.invalid"
 DEFAULT_REASONS = {
@@ -146,6 +146,16 @@ def test_orphaned_default_writer_uses_the_same_sink(tmp_path, monkeypatch, schem
 
 def test_settle_default_writers_cannot_bypass_the_public_cause_sink():
     """Extend #9878's delegate sink enumeration to the external settle writers."""
+    assert task_record_causes._REPO_ROOT == delegate._REPO_ROOT
+    assert task_record_causes.public_causes() == delegate.public_causes()
+    for module in (dead_worker_state, task_record_store, task_record_causes):
+        source = ast.parse(Path(module.__file__).read_text(encoding="utf-8"))
+        for node in ast.walk(source):
+            if isinstance(node, ast.ImportFrom):
+                assert node.module != "scripts.delegate"
+                assert not (node.module == "scripts" and any(alias.name == "delegate" for alias in node.names))
+            elif isinstance(node, ast.Import):
+                assert all(alias.name != "scripts.delegate" for alias in node.names)
     tree = ast.parse(Path(dead_worker_state.__file__).read_text(encoding="utf-8"))
     writers = {}
     for function in tree.body:

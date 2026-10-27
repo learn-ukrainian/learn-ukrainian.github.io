@@ -22,9 +22,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common.repo_root import resolve_repo_root
 from scripts.secret_redactor import redact_text
 
-_REPO_ROOT = Path(__file__).resolve().parents[2]
+_REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 
 
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
