@@ -1748,6 +1748,7 @@ def test_run_worker_periodic_stdout_avoids_silence_timeout(sandbox, output):
                             "--initial-response-timeout", "1")
     record = sandbox.settle(task)
     assert record["status"] == "done"
-    assert Path(record["result_file"]).read_text().endswith("literal final response")
+    expected = "tick\n" * 5 + "literal final response" if output == "sys.stdout" else "literal final response"
+    assert Path(record["result_file"]).read_text() == expected
     assert record["silence_timeout"] == 1
     assert record["initial_response_timeout"] == 1
