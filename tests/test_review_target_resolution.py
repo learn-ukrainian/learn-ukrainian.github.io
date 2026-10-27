@@ -12,7 +12,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.common.git_context import sanitized_git_env
+from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 from scripts.review.target_resolution import (
     TargetResolutionError,
     resolve_branch_target,
@@ -21,6 +21,70 @@ from scripts.review.target_resolution import (
     resolve_pr_target,
     resolve_review_target,
 )
+
+
+@pytest.mark.parametrize("key", [
+    "GIT_CONFIG_PARAMETERS", "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0",
+    "GIT_CONFIG_KEY_19", "GIT_CONFIG_VALUE_19", "GIT_CONFIG_KEY_orphan", "GIT_CONFIG_VALUE_orphan",
+])
+def test_config_injection_variables_never_reach_isolated_git_calls(monkeypatch, key):
+    kept = {
+        "PATH": "/example/bin", "HOME": "/example/home", "GIT_TERMINAL_PROMPT": "0",
+        "GIT_SSH_COMMAND": "ssh -o BatchMode=yes", "GIT_CONFIG_GLOBAL": "/example/global",
+        "GIT_CONFIG_SYSTEM": "/example/system", "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_DIR_X": "kept", "GIT_CONFIGURATION": "kept",
+    }
+    for name, value in kept.items():
+        monkeypatch.setenv(name, value)
+    monkeypatch.setenv(key, "injected")
+    before = dict(os.environ)
+
+    assert sanitized_git_env() == {name: value for name, value in before.items() if name not in GIT_REDIRECT_ENV_KEYS}
+    env = sanitized_git_env(strip_config_injection=True)
+
+    assert key not in env
+    assert {name: env[name] for name in kept} == kept
+    assert dict(os.environ) == before
+
+
+def test_config_injection_variables_cannot_override_user_identity(monkeypatch, tmp_path):
+    config = tmp_path / "global.gitconfig"
+    config.write_text("[user]\n\tname = Expected Identity\n", encoding="utf-8")
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(config))
+    monkeypatch.setenv("GIT_CONFIG_PARAMETERS", "'user.name=Injected Identity'")
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "user.name")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", "Injected Identity")
+
+    _git(tmp_path, "init", "-q")
+    result = subprocess.run(
+        ["git", "config", "--get", "user.name"], cwd=tmp_path, check=True,
+        capture_output=True, text=True, timeout=30, env=sanitized_git_env(strip_config_injection=True),
+    )
+
+    assert result.stdout.strip() == "Expected Identity"
+
+
+def test_default_sanitized_env_preserves_runtime_read_only_push_block(monkeypatch, tmp_path):
+    from scripts.agent_runtime.env_sanitize import _append_push_rewrite
+
+    repo = _init_repo(tmp_path)
+    remote = tmp_path / "remote.git"
+    _git(repo, "init", "--bare", str(remote))
+    _git(repo, "push", str(remote), "HEAD:refs/heads/allowed")
+    runtime_env = {}
+    _append_push_rewrite(runtime_env, "file:///dev/null/claude-read-only/")
+    for key, value in runtime_env.items():
+        monkeypatch.setenv(key, value)
+
+    result = subprocess.run(
+        ["git", "push", str(remote), "HEAD:refs/heads/denied"], cwd=repo,
+        capture_output=True, text=True, timeout=30, env=sanitized_git_env(),
+    )
+
+    assert result.returncode != 0
+    assert "/dev/null/claude-read-only/" in result.stderr
+    assert _git(repo, "--git-dir", str(remote), "for-each-ref", "--format=%(refname)").stdout.strip() == "refs/heads/allowed"
 
 
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
