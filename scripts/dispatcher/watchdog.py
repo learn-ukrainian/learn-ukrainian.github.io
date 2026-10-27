@@ -82,8 +82,16 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
     next_activity_poll = started
     payload = invocation.stdin
     while True:
+        now = time.monotonic()
+        waits = [0.1]
+        if hard_timeout > 0:
+            waits.append(hard_timeout - (now - started))
+        if initial_response_timeout > 0 and not state.observed_io:
+            waits.append(initial_response_timeout - (now - started))
+        if silence_timeout > 0:
+            waits.append(silence_timeout - (now - state.last_activity))
         try:
-            child.communicate(payload, timeout=0.1)
+            child.communicate(payload, timeout=max(0, min(waits)))
             return
         except subprocess.TimeoutExpired:
             payload = None

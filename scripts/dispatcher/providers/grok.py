@@ -1,6 +1,7 @@
 """Native Grok transport, reusing the legacy permissions and terminal parser."""
 
 from dataclasses import dataclass, replace
+from time import time
 
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
@@ -40,7 +41,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> GrokInvocation:
         session_id=None, tool_config={"reviewer_tools": True} if spec.mode == "read-only" else {},
     )
     # Bind session lookups and permission-cancellation evidence to the child home.
-    plan = replace(plan, env_overrides={**env, **plan.env_overrides})
+    plan = replace(plan, env_overrides={**env, **plan.env_overrides},
+                   metadata={**plan.metadata, "dispatch_call_start_time": time()})
     invocation = GrokInvocation(plan.cmd, plan.stdin_payload.encode(), dict(plan.env_overrides),
                                 plan.output_file, adapter, plan)
     if spec.options.get("dry_run") == "True":
@@ -51,6 +53,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> GrokInvocation:
 def parse(stdout, stderr, returncode, final_text, *, adapter=None, plan=None) -> ParsedResult:
     result = (adapter or GrokBuildAdapter()).parse_response(
         stdout=stdout, stderr=stderr, returncode=returncode, output_file=None, plan=plan,
+        call_start_time=plan.metadata.get("dispatch_call_start_time") if plan else None,
     )
     identity = result.substitution or {}
     error = None if result.ok else result.stderr_excerpt or result.failure_code or "grok: provider failed"
