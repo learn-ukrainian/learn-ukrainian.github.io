@@ -835,8 +835,8 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument(
         "--initial-response-timeout",
         type=int,
-        default=180,
-        help="Pass through to dispatch v2: first-response deadline in seconds (default: 180); 0 disables it.",
+        default=None,
+        help="Pass through to dispatch v2: first-response deadline in seconds (default: dispatch v2 default 600); 0 disables it.",
     )
     dispatch.add_argument("--max-budget-usd", type=float, help="GAP: unsupported by dispatch v2.")
     dispatch.add_argument(

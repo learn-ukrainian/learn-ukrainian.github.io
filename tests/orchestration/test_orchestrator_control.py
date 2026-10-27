@@ -301,9 +301,12 @@ def test_v2_launch_flag_parity_and_watchdog_forwarding(tmp_path: Path, capsys, m
     assert parsed.full_checkout is True
     assert parsed.sparse_include == ["curriculum"]
     assert parsed.owned_path == ["scripts/one.py"]
-    silence_timeout, initial_response_timeout = watchdogs if watchdogs is not None else (3600, 180)
+    silence_timeout, initial_response_timeout = watchdogs if watchdogs is not None else (3600, 600)
     assert command[command.index("--silence-timeout") + 1] == str(silence_timeout)
-    assert command[command.index("--initial-response-timeout") + 1] == str(initial_response_timeout)
+    if watchdogs is None:
+        assert "--initial-response-timeout" not in command
+    else:
+        assert command[command.index("--initial-response-timeout") + 1] == str(initial_response_timeout)
     assert parsed.silence_timeout == silence_timeout
     assert parsed.initial_response_timeout == initial_response_timeout
     calls = []
