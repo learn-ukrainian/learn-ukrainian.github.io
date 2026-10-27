@@ -668,6 +668,7 @@
   "tests/review/test_reviewer_resolver.py": 8.846,
   "tests/review/test_routing_consumers.py": 19.431,
   "tests/review/test_second_seat.py": 1.693,
+  "tests/review/test_security_paths.py": 6.964,
   "tests/review/test_settle.py": 87.256,
   "tests/review/test_temp_lifecycle.py": 1.363,
   "tests/review/test_temp_worktree_guard.py": 0.917,
