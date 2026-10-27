@@ -252,14 +252,16 @@ def _dispatch(args) -> int:
 
 def _status_or_fail_payload(task_id: str, *, run_nonce: str | None = None) -> dict:
     try:
-        record = store.read(task_id, run_nonce, missing_ok=True)
+        record = store.read(task_id, run_nonce or None)
     except ValueError as exc:
+        if str(exc) == "task not found":
+            return dict(task_id=task_id, status="task not found", age_s=0)
         if str(exc) != "run nonce mismatch":
             raise
         # The legacy Monitor's 409 response exposes no conflicting run identity.
         record = dict(task_id=task_id, status="stale_run_nonce")
-    if record is None:
-        return dict(task_id=task_id, status="task not found", age_s=0)
+    if not isinstance(record, dict):
+        raise ValueError("invalid task record")
     status = str(record.get("status") or "unknown")
     identity = worker._identity(record.get("pid"))
     alive = identity is not None and identity == record.get("process_start")
