@@ -720,15 +720,21 @@ class _RefSnapshotFailed(Exception):
 
 
 def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[str, str | None] | None, str | None]:
-    """Record the refs a read-only worker could commit or push to.
+    """Record the repository state a read-only worker could write without touching the tree.
 
-    The checkout snapshot cannot see a commit, which leaves the tree clean. This
-    records HEAD, the branch it names, that branch's tip and remote-tracking
-    refs, the configured remotes, and the branch's tip on every remote, as
-    ``git ls-remote`` reports it. Every dispatch task owns its branch, so a
-    change to any of these is the worker's; refs of other branches are shared
-    with concurrent lanes and stay out. ``branch`` pins the branch observed at
-    the baseline, so a later checkout cannot move the remote comparison.
+    The checkout snapshot cannot see a commit, tag, note or config edit, which
+    leave the tree clean. This records HEAD, every ref ``git for-each-ref``
+    lists (branches, tags, notes, replace refs, the stash, remote-tracking refs
+    and this worktree's own refs, packed or loose), a digest of the effective
+    configuration with each value's origin, and the task branch's tip at the
+    fetch URL and at every distinct push URL of every configured remote. Any
+    difference fails the task. ``branch`` pins the branch observed at the
+    baseline, so a later checkout cannot move the remote comparison.
+
+    Boundary: a push to a destination that is not a configured remote — a URL
+    typed on the command line or a remote defined only through ``git -c`` —
+    changes no state this snapshot can read. Keeping such pushes out belongs to
+    the sandbox and egress layer, not to this comparison.
     """
 
     def git(*args: str, ok: tuple[int, ...] = (0,)) -> str:
@@ -753,18 +759,23 @@ def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[
         refs: dict[str, str | None] = {
             "HEAD": git("rev-parse", "--verify", "HEAD^{commit}").strip(),
             "HEAD symbolic-ref": symbolic,
-            "remote config": hashlib.sha256(git("remote", "-v").encode()).hexdigest(),
+            "config": hashlib.sha256(git("config", "--list", "--show-origin", "-z").encode()).hexdigest(),
         }
+        listing = git("for-each-ref", "--format=%(refname)%00%(objectname) %(symref)")
+        refs.update(line.split("\0", 1) for line in listing.splitlines())
         branch = branch or symbolic
         if branch is None:
             return refs, None
-        name = branch.removeprefix("refs/heads/")
-        local = git("for-each-ref", "--format=%(objectname) %(refname)", branch, f"refs/remotes/*/{name}")
-        refs.update((ref, sha) for sha, ref in (line.split(" ", 1) for line in local.splitlines()))
         for remote in sorted(set(git("remote").split())):
-            tips = git("ls-remote", "--heads", remote, branch)
-            heads = {ref: sha for sha, ref in (line.split("\t", 1) for line in tips.splitlines())}
-            refs[f"ls-remote {remote} {branch}"] = heads.get(branch)
+            fetch_url = git("remote", "get-url", remote).strip()
+            pushes = git("remote", "get-url", "--push", "--all", remote).splitlines()
+            urls = {fetch_url: remote}
+            for url in pushes:
+                urls.setdefault(url, f"{remote} push" + (f" {len(urls)}" if len(urls) > 1 else ""))
+            for url, label in urls.items():
+                tips = git("ls-remote", "--heads", url, branch)
+                heads = {ref: sha for sha, ref in (line.split("\t", 1) for line in tips.splitlines())}
+                refs[f"ls-remote {label} {branch}"] = heads.get(branch)
     except _RefSnapshotFailed as exc:
         return None, f"ref snapshot failed: {exc}"
     except ValueError:

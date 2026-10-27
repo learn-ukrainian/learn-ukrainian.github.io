@@ -965,3 +965,83 @@ def test_read_only_task_that_pushes_settles_failed(tmp_tasks_dir, tmp_path, monk
     assert state["read_only_mutation_paths"] == []
     assert state["read_only_ref_mutations"] == [f"ls-remote origin {branch}"]
     assert state["error"] == "read_only_remote_push"
+
+
+def _seed_pushed_checkout(tmp_path: Path) -> tuple[Path, str]:
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout)
+    branch = _git(checkout, "symbolic-ref", "HEAD")
+    for name in ("remote.git", "push.git"):
+        _git(checkout, "init", "-q", "--bare", str(tmp_path / name))
+        _git(checkout, "push", "-q", str(tmp_path / name), f"HEAD:{branch}")
+    _git(checkout, "remote", "add", "origin", str(tmp_path / "remote.git"))
+    return checkout, branch
+
+
+def _add_empty_push_url(repo: Path, tmp: Path) -> None:
+    _git(repo, "init", "-q", "--bare", str(tmp / "empty.git"))
+    _git(repo, "remote", "set-url", "--push", "origin", str(tmp / "empty.git"))
+
+
+@pytest.mark.parametrize(
+    ("mutate", "expected"),
+    [
+        (lambda repo, tmp: _git(repo, "tag", "review-leak", "HEAD"), lambda repo: ["refs/tags/review-leak"]),
+        (lambda repo, tmp: _git(repo, "notes", "add", "-m", "unauthorized", "HEAD"), lambda repo: ["refs/notes/commits"]),
+        (
+            lambda repo, tmp: _git(
+                repo, "replace", "HEAD", _git(repo, "commit-tree", _git(repo, "rev-parse", "HEAD^{tree}"), "-m", "x")
+            ),
+            lambda repo: [f"refs/replace/{_git(repo, 'rev-parse', 'HEAD')}"],
+        ),
+        (lambda repo, tmp: _git(repo, "update-ref", "refs/worktree/leak", "HEAD"), lambda repo: ["refs/worktree/leak"]),
+        (_add_empty_push_url, lambda repo: ["config"]),
+        (lambda repo, tmp: _git(repo, "config", "core.hooksPath", str(tmp)), lambda repo: ["config"]),
+    ],
+    ids=["tag", "notes", "replace", "worktree-ref", "pushurl", "config"],
+)
+def test_read_only_task_that_writes_any_ref_or_config_settles_failed(
+    tmp_tasks_dir, tmp_path, monkeypatch, mutate, expected
+):
+    """Every ref, HEAD and the effective config are compared, not only the task branch."""
+    checkout, _branch = _seed_pushed_checkout(tmp_path)
+
+    def write(repo):
+        mutate(repo, tmp_path)
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=write,
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ref_mutations"] == expected(checkout)
+    assert state["error"] == "read_only_ref_mutation"
+
+
+def test_read_only_task_that_pushes_to_a_separate_push_url_settles_failed(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A configured push URL is probed as well as the fetch URL it differs from."""
+    checkout, branch = _seed_pushed_checkout(tmp_path)
+    push_url = str(tmp_path / "push.git")
+    _git(checkout, "remote", "set-url", "--push", "origin", push_url)
+
+    def push(repo):
+        tree = _git(repo, "rev-parse", "HEAD^{tree}")
+        unseen = _git(repo, "commit-tree", tree, "-p", "HEAD", "-m", "worker push")
+        _git(repo, "push", "-q", push_url, f"{unseen}:{branch}")
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=push,
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ref_mutations"] == [f"ls-remote origin push {branch}"]
+    assert state["error"] == "read_only_remote_push"
