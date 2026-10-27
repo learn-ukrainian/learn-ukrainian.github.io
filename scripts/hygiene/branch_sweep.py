@@ -1701,7 +1701,7 @@ def _archive_pr_snapshot(
                 return unavailable
             rows, error = reaper._scope_pr_rows(rows, reaper._pr_repository(repo))
             if error:
-                return unavailable
+                return {name: ([], error) for name in names}
             states: list[reaper.PullRequestState] = []
             for row in rows:
                 number, state, sha = row["number"], row["state"], row["headRefOid"]

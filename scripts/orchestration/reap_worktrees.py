@@ -104,6 +104,7 @@ class WorktreeInfo:
     head: str | None
     detached: bool = False
     locked_reason: str | None = None
+    repository: str | None = None
 
 
 @dataclass(frozen=True)
@@ -601,7 +602,11 @@ def list_git_worktrees(
         raise RuntimeError(f"git worktree list timed out after {exc.timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"git worktree list failed: {_format_failure(proc)}")
-    return parse_worktree_porcelain(proc.stdout or "", resolve_paths=resolve_paths)
+    repository = _pr_repository(repo_root)
+    return [
+        replace(info, repository=repository)
+        for info in parse_worktree_porcelain(proc.stdout or "", resolve_paths=resolve_paths)
+    ]
 
 
 def _worktrees_root(repo_root: Path) -> Path:
@@ -735,7 +740,7 @@ def _scope_pr_rows(
         except (TypeError, ValueError) as exc:
             return [], str(exc)
         if repository is not None and actual != repository:
-            continue
+            return [], "PR payload repository does not match requested repository"
         if number is not None and row.get("number") != number:
             return [], "PR payload number does not match requested PR"
         scoped.append({**row, **({"repository": actual} if actual else {})})
@@ -1348,7 +1353,7 @@ def _sha_is_ancestor(cwd: Path, sha: str, descendant: str) -> bool:
 
 
 def _pr_belongs_to_checkout(info: WorktreeInfo, pr: PullRequestState) -> bool:
-    return pr.repository is None or pr.repository == _pr_repository(info.path)
+    return pr.repository is None or pr.repository == info.repository
 
 
 def _pr_matches_worktree_head(
@@ -4081,7 +4086,10 @@ def _resolve_merged_reuse_creator(
             creators = [item for item in cohort if ignored_task_output.record_created_worktree(item[1])]
             head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
             branch = worktree_claims.checked_out_branch(worktree)
-            info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
+            info = WorktreeInfo(
+                worktree, branch, head.stdout.strip(), detached=branch is None,
+                repository=_pr_repository(worktree),
+            )
             if (
                 len(creators) != 1
                 and len(cohort) >= 2
@@ -4370,7 +4378,10 @@ def _preservation_merged_creator(
         raise ValueError("merged continuation preservation proof unavailable")
     head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
     branch = worktree_claims.checked_out_branch(worktree)
-    info = WorktreeInfo(worktree, branch, proof.get("head_sha"), detached=branch is None)
+    info = WorktreeInfo(
+        worktree, branch, proof.get("head_sha"), detached=branch is None,
+        repository=_pr_repository(worktree),
+    )
     pr = PullRequestState(
         proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"),
         repository=proof.get("pr_repository"),
@@ -4502,7 +4513,10 @@ def _merged_reuse_claim_proven_settled(
         if head.returncode != 0:
             return None
         branch = worktree_claims.checked_out_branch(worktree)
-        info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
+        info = WorktreeInfo(
+            worktree, branch, head.stdout.strip(), detached=branch is None,
+            repository=_pr_repository(worktree),
+        )
         if branch is not None:
             # The numbered PR record survives deletion of the branch. Keep
             # the full cohort's containment and worker-absence requirements.

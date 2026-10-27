@@ -157,8 +157,8 @@ def _fetch_pr_info_rest(
     head_sha = head.get("sha")
     if not isinstance(head_ref, str) or not head_ref or not isinstance(head_sha, str) or not head_sha:
         return None, "REST PR payload has unusable head ref or sha"
-    expected = canonical_repository(f"{owner}/{repo_name}")
     try:
+        expected = canonical_repository(f"{owner}/{repo_name}")
         repository = pull_request_repository(payload, scoped_repository=expected)
     except (TypeError, ValueError) as exc:
         return None, str(exc)
@@ -170,7 +170,10 @@ def _fetch_pr_info_rest(
 def _fetch_pr_info_graphql(
     repo_root: Path, pr_number: int, *, repo: str | None
 ) -> tuple[PullRequestInfo | None, str]:
-    repository = canonical_repository(repo) if repo else rw._pr_repository(repo_root)
+    try:
+        repository = canonical_repository(repo) if repo else rw._pr_repository(repo_root)
+    except (TypeError, ValueError) as exc:
+        return None, str(exc)
     args = [
         "gh",
         "pr",

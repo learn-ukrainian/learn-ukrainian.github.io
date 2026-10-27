@@ -81,7 +81,7 @@ def merged_abandon_proof(worktree: Path, creator: Mapping[str, Any], head: str) 
     states, error = rw._query_pr_states(worktree, branch)
     if error is not None or any(pr.state == "OPEN" for pr in states):
         raise ValueError("merged terminal proof unavailable or source PR is open")
-    info = rw.WorktreeInfo(worktree, branch, head)
+    info = rw.WorktreeInfo(worktree, branch, head, repository=rw._pr_repository(worktree))
     for pr in states:
         if (
             pr.state == "MERGED"

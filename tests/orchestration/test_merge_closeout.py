@@ -1077,7 +1077,7 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
     }
     calls = patch_gh(
         monkeypatch, pr_number=42, state="MERGED", head_ref_name=branch, head_sha=head,
-        branch_prs={branch: [opened, merged]}, sha_prs={head: [opened, merged]},
+        branch_prs={branch: [merged]}, sha_prs={head: [merged]},
     )
 
     result = mc.run_merge_closeout(repo, 42, apply=True, live_cwds=set())
@@ -1089,9 +1089,11 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
     assert result.branch_status is not None
     assert result.branch_status.remote_gone and result.branch_status.local_gone
     assert git(repo, "ls-remote", "--heads", "origin", branch) == ""
-    assert any(call[1:3] == ["search", "prs"] for call in calls)
+    searches = [call for call in calls if call[1:3] == ["search", "prs"]]
+    assert searches
+    assert all(call[call.index("--repo") + 1] == repository for call in searches)
 
-    # Both transports must filter the same collision before choosing OPEN over MERGED.
+    # Requests are repository restricted; a foreign row makes their proof unknown.
     for transport in ("rest", "graphql", "search"):
         with monkeypatch.context() as scoped:
             rows = [opened, merged]
@@ -1119,9 +1121,8 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
                 states, error = rw._query_pr_states_graphql(repo, branch)
             else:
                 states, error = rw._query_prs_by_head_sha(repo, head)
-            assert error is None
-            assert [(state.number, state.state, state.head_sha) for state in states] == [(42, "MERGED", head)]
-            assert states[0].repository == repository
+            assert states == []
+            assert "repository does not match" in (error or "")
             if transport in {"rest", "graphql"}:
                 scoped.setattr(
                     rw, "_run_gh",
@@ -1139,7 +1140,7 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
                 )
                 states, error = (rw._query_pr_by_number_rest(repo, 42) if transport == "rest"
                                  else rw._query_pr_by_number_graphql(repo, 42))
-                assert states == [] and error is None
+                assert states == [] and "repository does not match" in (error or "")
                 if transport == "rest":
                     scoped.setattr(
                         mc, "_run_gh",
@@ -1149,7 +1150,7 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
                     assert error == "" and own_pr is not None
                     assert own_pr.repository == repository and own_pr.head_sha == head
 
-    # The batched branch sweep must retain the same attribution as individual lookups.
+    # A foreign row also invalidates the entire batched branch snapshot.
     from scripts.hygiene import branch_sweep
 
     with monkeypatch.context() as scoped:
@@ -1162,10 +1163,20 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
             ),
         )
         states, error = branch_sweep._archive_pr_snapshot(repo, [branch], rw._query_pr_states)[branch]
-        assert error is None
-        assert [(state.number, state.state, state.head_sha, state.repository) for state in states] == [
-            (42, "MERGED", head, repository)
-        ]
+        assert states == [] and "repository does not match" in (error or "")
+
+    from scripts.orchestration.task_family import git_safety
+
+    for pr_number in (None, 42):
+        with monkeypatch.context() as scoped:
+            scoped.setattr(
+                git_safety, "run_gh",
+                lambda *args, pr_number=pr_number, **kwargs: subprocess.CompletedProcess(
+                    [], 0, json.dumps(opened if pr_number else [opened]), "",
+                ),
+            )
+            with pytest.raises(git_safety.GitHubQueryError, match="repository does not match"):
+                git_safety.query_pr_by_head(repo, branch=branch, pr_number=pr_number)
 
     # An OPEN PR in the checkout's own repository must still block branch deletion.
     patch_gh(
@@ -1173,3 +1184,44 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
         branch_prs={branch: [{**merged, "state": "OPEN"}]},
     )
     assert "open PR" in (mc._guard_branch_not_open(repo, branch) or "")
+
+
+def test_renamed_repository_open_pr_refuses_branch_deletion(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A redirected restricted lookup must not turn an OPEN PR into deletion proof."""
+    repo = init_repo(tmp_path)
+    branch = "codex/renamed-repository"
+    head = commit_on_branch(repo, branch, "renamed.txt")
+    repository = "example/original"
+    renamed_repository = "example/renamed"
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _: tuple(repository.split("/")))
+
+    def redirected_lookup(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[1] == "api":
+            payload = [[{
+                "number": 43, "state": "open", "merged_at": None,
+                "head": {"ref": branch, "sha": head},
+                "base": {"repo": {"full_name": renamed_repository}},
+            }]]
+        else:
+            assert args[1:3] == ["pr", "list"]
+            assert args[args.index("--repo") + 1] == repository
+            payload = [{
+                "number": 43, "state": "OPEN", "headRefOid": head,
+                "url": f"https://github.com/{renamed_repository}/pull/43",
+            }]
+        return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+
+    monkeypatch.setattr(rw, "_run_gh", redirected_lookup)
+    status = mc.verify_branch_gone(
+        repo, mc.PullRequestInfo(42, "MERGED", branch, head, repository), apply=True,
+    )
+
+    assert status is not None
+    assert status.remote_gone is False, "restricted lookup lost the OPEN PR and deleted its remote branch"
+    assert status.local_gone is False
+    assert "PR guard unavailable" in (status.remote_error or "")
+    assert "PR guard unavailable" in (status.local_error or "")
+    assert git(repo, "rev-parse", f"refs/heads/{branch}") == head
+    assert git(repo, "ls-remote", "--heads", "origin", branch).split()[0] == head

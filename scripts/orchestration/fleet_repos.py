@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass
+from functools import cache
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -180,10 +181,20 @@ def fleet_repo_as_dict(repo: FleetRepo, checkout: Path) -> dict[str, Any]:
     }
 
 
+@cache
+def _repository_catalog(path: Path) -> dict[str, FleetRepo]:
+    return load_fleet_repos(path)
+
+
+def clear_repository_cache() -> None:
+    """Reload registry edits on the next canonical repository lookup."""
+    _repository_catalog.cache_clear()
+
+
 def canonical_repository(value: str) -> str:
     """Canonical owner/name, accepting the registry's keys and slug spellings."""
     spelling = value.strip().casefold()
-    for repo in load_fleet_repos().values():
+    for repo in _repository_catalog(_CONFIG_PATH.resolve()).values():
         if spelling in {repo.key.casefold(), repo.github.casefold()}:
             return repo.github.casefold()
     if re.fullmatch(r"[a-z0-9_.-]+/[a-z0-9_.-]+", spelling):
