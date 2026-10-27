@@ -21,6 +21,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime import attempt_boundary, env_sanitize
 from scripts.agent_runtime.attempt_boundary import ClaudeAccountBinding
 from scripts.api import claude_account_usage as cau
 
@@ -137,6 +138,8 @@ def _write_login_record(path: Path, account: str | None) -> None:
 
 
 _TOKEN_PREFIX = "synthetic-access-token-"
+# token -> its expiresAt (ms) as last written; the fixture provider refuses an expired one.
+_ISSUED: dict[str, int] = {}
 
 
 def _token(account: str, serial: int = 0) -> str:
@@ -144,14 +147,20 @@ def _token(account: str, serial: int = 0) -> str:
     return f"{_TOKEN_PREFIX}{serial}:{account}"
 
 
-def _write_credentials(directory: Path, account: str | None, *, serial: int = 0, expires_in_s: float = 3600) -> None:
+def _write_credentials(
+    directory: Path, account: str | None, *, serial: int = 0, expires_in_s: float = 3600, refresh: bool = False
+) -> None:
     """The directory's Claude credentials file, holding a token of ``account`` (none: removed)."""
     path = directory / ".credentials.json"
     if account is None:
         path.unlink(missing_ok=True)
         return
-    expires_at = int((time.time() + expires_in_s) * 1000)
-    _write_private(path, {"claudeAiOauth": {"accessToken": _token(account, serial), "expiresAt": expires_at}})
+    token, expires_at = _token(account, serial), int((time.time() + expires_in_s) * 1000)
+    _ISSUED[token] = expires_at
+    record = {"accessToken": token, "expiresAt": expires_at}
+    if refresh:
+        record["refreshToken"] = "synthetic-refresh"
+    _write_private(path, {"claudeAiOauth": record})
 
 
 class _Provider:
@@ -163,7 +172,7 @@ class _Provider:
 
     def __call__(self, token: str) -> tuple[str, object]:
         self.calls += 1
-        if self.down or not token.startswith(_TOKEN_PREFIX):
+        if self.down or not token.startswith(_TOKEN_PREFIX) or _ISSUED.get(token, 0) <= time.time() * 1000:
             raise cau.ClaudeAccountRefused("claude_account_identity_unavailable")
         return token.split(":", 1)[1], None
 
@@ -171,6 +180,7 @@ class _Provider:
 @pytest.fixture
 def provider(monkeypatch) -> _Provider:
     answer = _Provider()
+    _ISSUED.clear()
     monkeypatch.setattr(cau, "_claude_selected_identity", answer)
     return answer
 
@@ -1971,3 +1981,66 @@ def test_run_codexbar_spawn_failure():
 
 
 # ---- refresh wiring -----------------------------------------------------------
+
+
+@pytest.fixture
+def renewals(tmp_path, monkeypatch) -> list[Path]:
+    """The renewal probes run, in order; each does nothing unless a case gives it an effect.
+
+    The launch gates run for real, on a host with no machine policy that is not WSL.
+    """
+    monkeypatch.setattr(env_sanitize, "_CLAUDE_MANAGED_SETTINGS_DIR", tmp_path / "machine-policy")
+    monkeypatch.setattr(attempt_boundary, "_CLAUDE_PROC_VERSION", tmp_path / "proc-version")
+    for name in ("WSL_DISTRO_NAME", "WSL_INTEROP"):
+        monkeypatch.delenv(name, raising=False)
+    calls: list[Path] = []
+    monkeypatch.setattr(attempt_boundary, "_claude_renewals", {})
+    monkeypatch.setattr(attempt_boundary, "_run_claude_renewal", calls.append)
+    return calls
+
+
+# Fails on f181a42959: the expired token of a renewable login was sent to the
+# provider, which refuses it, so the row stayed unknown and Opus was excluded.
+def test_renewable_login_is_renewed_before_the_proof(bound, provider, renewals, monkeypatch):
+    _write_credentials(bound.dirs["b"], _ACCOUNT_B, expires_in_s=-60, refresh=True)
+
+    def renew(config_dir):
+        renewals.append(config_dir)
+        _write_credentials(config_dir, _ACCOUNT_B, serial=1, refresh=True)
+
+    monkeypatch.setattr(attempt_boundary, "_run_claude_renewal", renew)
+    cau.refresh_claude_account_usage()
+    row = _row(cau.routing_budget_fields()["claude_accounts"], "b")
+    assert (row["status"], row["weekly"]["left_pct"]) == ("ok", 80.0)
+    assert renewals == [bound.dirs["b"]]
+
+
+def test_failed_renewal_refuses_as_expired_once_per_interval(bound, provider, renewals):
+    _write_credentials(bound.dirs["b"], _ACCOUNT_B, expires_in_s=-60, refresh=True)
+    for _ in range(2):
+        cau.refresh_claude_account_usage()
+        _assert_not_published(cau.routing_budget_fields(), "b", reason="claude_account_credentials_expired")
+    assert renewals == [bound.dirs["b"]]
+    attempt_boundary._claude_renewals[str(bound.dirs["b"])] -= attempt_boundary.CLAUDE_RENEWAL_INTERVAL_S
+    cau.refresh_claude_account_usage()
+    assert renewals == [bound.dirs["b"]] * 2
+
+
+# Fails on 032914db62: the renewal started Claude Code, which exchanges the refresh
+# token, without the launch gates, so a login directory whose env map redirects the
+# endpoint, or a host with machine policy, still got the exchange.
+def test_renewal_refused_before_spawn_when_launch_gate_refuses(bound, provider, renewals, tmp_path):
+    _write_credentials(bound.dirs["b"], _ACCOUNT_B, expires_in_s=-60, refresh=True)
+    record = bound.dirs["b"] / ".claude.json"
+    _write_private(record, {"oauthAccount": {"accountUuid": _ACCOUNT_B}, "env": {"ANTHROPIC_BASE_URL": "https://x"}})
+    cau.refresh_claude_account_usage()
+    _assert_not_published(cau.routing_budget_fields(), "b", reason="claude_account_credentials_expired")
+    _write_login_record(record, _ACCOUNT_B)
+    (tmp_path / "machine-policy").mkdir()
+    (tmp_path / "machine-policy" / "managed-settings.json").write_text("{}", encoding="utf-8")
+    cau.refresh_claude_account_usage()
+    _assert_not_published(cau.routing_budget_fields(), "b", reason="claude_account_credentials_expired")
+    assert renewals == []
+    (tmp_path / "machine-policy" / "managed-settings.json").unlink()
+    cau.refresh_claude_account_usage()
+    assert renewals == [bound.dirs["b"]]  # with every gate passing, the same login is renewed
