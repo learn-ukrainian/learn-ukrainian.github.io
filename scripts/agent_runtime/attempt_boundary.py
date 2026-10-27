@@ -921,7 +921,7 @@ def _run_claude_renewal(config_dir: Path) -> None:
             proc.wait()
 
 
-def linux_claude_auth(account: str | None = None) -> dict[str, str]:
+def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] | None = None) -> dict[str, str]:
     """Select only a fresh access token; --bare ignores file-backed login.
 
     The existing auth staging supports keychain selection on Darwin. Linux
@@ -940,17 +940,39 @@ def linux_claude_auth(account: str | None = None) -> dict[str, str]:
     try:
         label = resolve_claude_account_label(account)
         if label != DEFAULT_CLAUDE_ACCOUNT:
-            _, token = _validated_claude_selection(label)
+            _, token = _validated_claude_selection(label, environ=environ)
             note_claude_account_verified(label, CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN)
             return {"CLAUDE_CODE_OAUTH_TOKEN": token}
     except ClaudeAccountRefused as exc:
         raise ReviewIsolationError(exc.code) from None
+    selected = os.environ if environ is None else environ
     for key in _CLAUDE_AMBIENT_AUTH_ENV:
-        if value := os.environ.get(key):
+        if value := selected.get(key):
             return {key: value}
     if platform.system() != "Linux":
         return {}
-    token = _claude_access_token(Path.home() / ".claude" / ".credentials.json")
+    config = Path(selected.get("CLAUDE_CONFIG_DIR") or (Path.home() / ".claude"))
+    if environ is not None and selected.get("CLAUDE_CONFIG_DIR"):
+        # V2 dispatch selects a config directory. Resolve only its auth helper;
+        # the seat receives the resulting key, never that directory or settings.
+        settings = _read_private_bytes(config / "settings.json", limit=65536,
+                                       code="claude_account_settings", forbidden_mode=0o002)
+        if settings:
+            try:
+                helper = json.loads(settings).get("apiKeyHelper")
+            except (ValueError, AttributeError):
+                raise ReviewIsolationError("attempt_claude_api_key_helper_invalid") from None
+            if helper:
+                if not isinstance(helper, str):
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_invalid")
+                result = subprocess.run(helper, shell=True, capture_output=True, text=True, timeout=10,
+                                        env={k: selected[k] for k in ("HOME", "PATH", "LANG") if k in selected},
+                                        check=False)
+                key = result.stdout.strip()
+                if result.returncode or not key or len(key) > 8192 or "\n" in key or "\r" in key:
+                    raise ReviewIsolationError("attempt_claude_api_key_helper_failed")
+                return {"ANTHROPIC_API_KEY": key}
+    token = _claude_access_token(config / ".credentials.json")
     return {} if token is None else {"CLAUDE_CODE_OAUTH_TOKEN": token}
 
 
@@ -1108,7 +1130,7 @@ def runtime_files(binary: Path) -> list[Path]:
 
 
 class AttemptBoundary:
-    def __init__(self, *, agent: str, tool_config: dict[str, Any]):
+    def __init__(self, *, agent: str, tool_config: dict[str, Any], environ: Mapping[str, str] | None = None):
         from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
 
         from .attempt_network import AttemptEgress, load_allowlist
@@ -1163,7 +1185,11 @@ class AttemptBoundary:
             if agent != "agy":
                 self.env.update(stage_engine_auth(agent, write_home=home))
             if agent == "claude":
-                self.env.update(linux_claude_auth(tool_config.get(CLAUDE_ACCOUNT_KEY)))
+                for name in _CLAUDE_AMBIENT_AUTH_ENV:
+                    self.env.pop(name, None)
+                self.env.update(linux_claude_auth(tool_config.get(CLAUDE_ACCOUNT_KEY), environ=environ))
+                # The selected host config supplies auth only. Never mount it.
+                self.env.pop("CLAUDE_CONFIG_DIR", None)
             self.env.update(HOME=str(home), TMPDIR=str(self.write_root / "tmp"))
             # Native CLI shell discovery calls getpwuid. Supply only this
             # namespace's account, never the host's passwd/group databases.
@@ -1445,7 +1471,8 @@ def full_review_reads(workspace: Path) -> tuple[list[Path], list[Path]]:
         raise ReviewIsolationError("full_review_git_context_unavailable") from exc
 
 
-def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool_config: dict | None):
+def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool_config: dict | None,
+                             *, environ: Mapping[str, str] | None = None):
     """Use the isolated boundary with only a wider read set for full attempts."""
     tc = tool_config or {}
     if not (tc.get("review_id") or tc.get("attempt_id")):
@@ -1459,7 +1486,7 @@ def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool
         raise ReviewIsolationError("attempt_boundary_inputs_missing")
     access = tc.get("review_access", "isolated")  # legacy runtime callers remain isolated
     if access == "isolated":
-        return AttemptBoundary(agent=agent, tool_config=tc)
+        return AttemptBoundary(agent=agent, tool_config=tc, environ=environ)
     if access != "full":
         raise ReviewIsolationError("review_access_invalid")
     from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
@@ -1483,4 +1510,4 @@ def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool
     if agent == "claude" and (not tc.get("reviewer_tools") or tc.get("allowed_tools")):
         raise ReviewIsolationError("full_review_write_denial_missing")
     verify_full_review_tree(Path(tc["review_manifest"]), Path(tc["review_cwd"]))
-    return AttemptBoundary(agent=agent, tool_config=tc)
+    return AttemptBoundary(agent=agent, tool_config=tc, environ=environ)

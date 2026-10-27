@@ -199,6 +199,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     spec = _spec(record, options)
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     resolved_model = None
+    review_execution = None
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
@@ -226,14 +227,21 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 status, error = "failed", "output schema binding invalid"
                 return
         provider = providers.load(spec.agent)
-        invocation = provider.build(spec, child_env(spec))
+        env = child_env(spec)
+        if record.get("review_attempt") or record.get("require_review_verdict"):
+            from scripts.review.dispatch_execution import Execution
+
+            review_execution = Execution(spec, record, env)
+        invocation = provider.build(spec, env)
+        if review_execution:
+            invocation = review_execution.wrap(invocation)
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             child = subprocess.Popen(
                 invocation.argv,
                 stdin=subprocess.PIPE,
                 stdout=out,
                 stderr=err,
-                cwd=spec.worktree,
+                cwd=review_execution.cwd if review_execution else spec.worktree,
                 env=invocation.env,
                 start_new_session=True,
             )
@@ -247,6 +255,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage = parsed.text, parsed.usage
+        if review_execution:
+            review_execution.evidence(stdout_path.read_text(errors="replace"))
         if schema is not None:
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
@@ -277,6 +287,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         status, error = "cancelled", "cancelled by client"
     except subprocess.TimeoutExpired:
         status, error = "timeout", "process deadline exceeded"
+    except (ValueError, RuntimeError) as exc:
+        status, error = "failed", str(exc).splitlines()[0]
     except Exception:
         status, error = "crashed", "supervisor or provider processing failed"
     finally:
@@ -305,6 +317,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 resolved_model_known=resolved_model is not None,
                 resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
             )
+        if review_execution:
+            review_execution.cleanup()
         store.replace(record, path)
 
         _reap_settled(record, path)

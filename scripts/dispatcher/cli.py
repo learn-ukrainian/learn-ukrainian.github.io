@@ -99,9 +99,9 @@ def build_parser() -> argparse.ArgumentParser:
                           help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
     for flag in ("review-id", "attempt-id", "review-attempt"):
         dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; "
-                              "all three required; dry-run only until runtime isolation is wired (default: none)")
+                              "all three required; fresh read-only Sources attempt (default: none)")
     dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
-                          help="Bound review access; dry-run only (default: isolated for bound attempts)")
+                          help="Bound review access; full requires --full-checkout (default: isolated)")
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument("--print-advisory-binding", action="store_true",
                           help="Print this request's envelope binding; needs --task-id, creates nothing (default: off)")
@@ -134,13 +134,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _dispatch(args) -> int:
+    if args.cwd:
+        from scripts.review.dispatch_execution import _refuse_review_attempt_worktree_reuse
+
+        _refuse_review_attempt_worktree_reuse(Path(args.cwd))
     if binding := store.review_binding(vars(args)):
         store.check_review_attempt(binding)
-        # STAGE 1: dry-run-only binding; bound launches exit 2 until the port adds
-        # the manifest-only runtime boundary, scoped home, Sources receipts,
-        # review_contract/review_input_paths and the no-reuse marker.
-        if not args.dry_run:
-            raise ValueError("review_attempt_runtime_unavailable: v2 review isolation is not wired")
     if args.require_review_verdict and args.mode != "read-only":
         raise ValueError("--require-review-verdict requires --mode read-only")
     git.sparse_excludes(args.sparse_include)
@@ -209,6 +208,11 @@ def _dispatch(args) -> int:
             (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
         ):
             raise ValueError("protected subject scope needs a code-profile review without --language-lane")
+    from scripts.review import dispatch_execution as review_execution
+
+    admitted = review_execution.admit(args, prompt, agent) if binding and not args.dry_run else None
+    if admitted:
+        spec.options["review_attempt"] = args.review_attempt
     checks.check_resources((worktree, path.parent))
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
@@ -218,8 +222,6 @@ def _dispatch(args) -> int:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
-    if binding:
-        store.check_review_attempt(binding, claim=True)
     if not args.cwd:
         git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
     record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
@@ -228,7 +230,11 @@ def _dispatch(args) -> int:
     record.update(advisory_fields)
     if agent == "muse":
         record["contributor_mode"] = spec.options.get("contributor_mode", "off")
-    worker.start(spec, record, prompt, args.hard_timeout)
+    if admitted:
+        with review_execution.prepare(spec, record, admitted):
+            worker.start(spec, record, prompt, args.hard_timeout)
+    else:
+        worker.start(spec, record, prompt, args.hard_timeout)
     print(task_id, record["run_nonce"], sep="\n")
     return 0
 

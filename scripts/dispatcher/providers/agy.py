@@ -11,6 +11,11 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    if spec.options.get("review_tool_config") or spec.options.get("require_review_verdict"):
+        from scripts.agent_runtime.adapters.agy import AgyAdapter
+        from scripts.review.dispatch_execution import build_invocation
+
+        return build_invocation(spec, env, AgyAdapter())
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
     argv += ["--model", spec.model]
     if spec.mode == "read-only":

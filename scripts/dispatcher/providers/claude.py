@@ -27,6 +27,11 @@ _BACKGROUND_ENV = {
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    if spec.options.get("review_tool_config") or spec.options.get("require_review_verdict"):
+        from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+        from scripts.review.dispatch_execution import build_invocation
+
+        return build_invocation(spec, env, ClaudeAdapter())
     argv = ["claude", "-p", "--model", spec.model]
     if spec.effort is not None:
         argv += ["--effort", spec.effort]

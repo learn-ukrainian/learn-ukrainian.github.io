@@ -1847,9 +1847,9 @@ def _dispatch_headless_review(
 ) -> None:
     """Run a review-intent ask-* through the headless native-CLI dispatch path.
 
-    `delegate.py dispatch --agent <target> --worktree --mode read-only` spawns
+    `dispatch.py dispatch --agent <target> --worktree --mode read-only` spawns
     a real TUI agent with tools (gh, fs, pytest) in an isolated worktree, then
-    `delegate.py wait` blocks for the terminal result — this is the reviewer
+    `dispatch.py wait` blocks for the terminal result — this is the reviewer
     seat other headless reviews already use. Never falls back to ACP.
     """
     from agent_runtime.target_admission import ReviewAdmissionRefused
@@ -1859,7 +1859,7 @@ def _dispatch_headless_review(
 
     try:
         # Same legacy-alias resolution as the ACP path (e.g. hermes→deepseek,
-        # gemini→agy) so `--agent` is a name `delegate.py dispatch` accepts.
+        # gemini→agy) so `--agent` is a name `dispatch.py dispatch` accepts.
         dispatch_agent = require_compat_target(target, model=model, data=data)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc

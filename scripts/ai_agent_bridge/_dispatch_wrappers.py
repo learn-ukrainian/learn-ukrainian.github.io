@@ -325,7 +325,7 @@ def build_ask_review_dispatch_command(
     model = target.model
     cmd = [
         PYTHON,
-        "scripts/delegate.py",
+        "scripts/dispatch.py",
         "dispatch",
         "--agent",
         target.recipient,
@@ -358,7 +358,7 @@ def build_ask_review_dispatch_command(
 
 
 def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
-    return [PYTHON, "scripts/delegate.py", "wait", task_id, "--timeout", str(timeout)]
+    return [PYTHON, "scripts/dispatch.py", "wait", task_id, "--timeout", str(timeout)]
 
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
@@ -425,9 +425,9 @@ def run_ask_review_dispatch(
 ) -> dict[str, Any]:
     """Dispatch one review-intent ask-* to the headless native CLI and block for it.
 
-    Fires `delegate.py dispatch --agent <agent> --worktree --mode read-only`
+    Fires `dispatch.py dispatch --agent <agent> --worktree --mode read-only`
     (a real TUI agent with tools in an isolated worktree), then
-    `delegate.py wait` to block for the terminal state. Returns the terminal
+    `dispatch.py wait` to block for the terminal state. Returns the terminal
     state dict plus the read-back ``response`` text and a normalized ``ok``.
     Raises ``RuntimeError`` if dispatch itself could not be started or the
     wait output could not be parsed — callers turn that into a hard failure,
@@ -473,12 +473,12 @@ def run_ask_review_dispatch(
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(
-                f"delegate.py dispatch timed out after {DISPATCH_COMMAND_TIMEOUT_SECONDS}s: "
+                f"dispatch.py dispatch timed out after {DISPATCH_COMMAND_TIMEOUT_SECONDS}s: "
                 f"Command: {' '.join(dispatch_command)}"
             ) from exc
         if dispatch_proc.returncode != 0:
             raise RuntimeError(
-                f"delegate.py dispatch failed rc={dispatch_proc.returncode}: "
+                f"dispatch.py dispatch failed rc={dispatch_proc.returncode}: "
                 f"{(dispatch_proc.stderr or dispatch_proc.stdout).strip()}\n"
                 f"Command: {' '.join(dispatch_command)}"
             )
@@ -494,14 +494,14 @@ def run_ask_review_dispatch(
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(
-                f"delegate.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
+                f"dispatch.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
                 f"Command: {' '.join(wait_command)}"
             ) from exc
         try:
             state = json.loads(wait_proc.stdout or "{}")
         except json.JSONDecodeError as exc:
             raise RuntimeError(
-                f"delegate.py wait produced non-JSON output (rc={wait_proc.returncode}): "
+                f"dispatch.py wait produced non-JSON output (rc={wait_proc.returncode}): "
                 f"stdout={wait_proc.stdout!r} stderr={wait_proc.stderr!r}"
             ) from exc
 

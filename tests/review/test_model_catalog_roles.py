@@ -421,3 +421,42 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
     assert json.loads(CAPTURE["encode"](actual)) == approved_muse_review_receipt(
         APPROVED_BASELINE["reviewer"][index], APPROVED_INPUTS["reviewer"][index]
     )
+
+
+def test_sealed_executable_catalog_and_resolver_parity():
+    """Ported from tests/test_review_reviewer_resolver.py::test_sealed_executable_catalog_and_resolver_parity."""
+    import dataclasses
+
+    from scripts.review.reviewer_resolver import _SEALED_REVIEW_EXECUTABLE, REVIEW_CANDIDATES, _hard_exclusion_reason
+    from tests.claude_route_accounts import HOST_ACCOUNT
+
+    assert _SEALED_REVIEW_EXECUTABLE == "agent_runtime.runner:invoke_inter_agent"
+    for name, candidate in REVIEW_CANDIDATES.items():
+        if candidate.formal_review_eligible:
+            executable = (
+                {"native_agy": "scripts/dispatch.py", "native_muse": "scripts/dispatch.py"}.get(
+                    candidate.adapter_transport, _SEALED_REVIEW_EXECUTABLE
+                )
+            )
+            assert candidate.sealed_executable == executable, (
+                f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
+            )
+            # Normal inputs pass sealed_executable hard exclusion
+            inputs = ResolverInputs(
+                author_model="gemini",
+                risk="medium",
+                formal_review=True,
+                review_profile="code", claude_account=HOST_ACCOUNT,
+            )
+            reason = _hard_exclusion_reason(candidate, inputs)
+            assert reason != "candidate is not bound to the sealed ACP executable"
+
+            # Tampered executable is rejected
+            mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
+            expected = (
+                {
+                    "native_agy": "native AGY review endpoint identity is invalid",
+                    "native_muse": "native Muse review endpoint identity is invalid",
+                }.get(candidate.adapter_transport, "candidate is not bound to the sealed ACP executable")
+            )
+            assert _hard_exclusion_reason(mismatched, inputs) == expected

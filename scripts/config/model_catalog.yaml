@@ -186,7 +186,7 @@ review_scheduler:
       participant: agy
       adapter_transport: native_agy
       catalog_transport: agy
-      sealed_executable: scripts/delegate.py
+      sealed_executable: scripts/dispatch.py
       quota_bucket: agy
       credential_bucket: agy
       quota_limit: 2

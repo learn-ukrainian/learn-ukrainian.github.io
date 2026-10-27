@@ -1500,6 +1500,8 @@ def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
         for surface, overlay in (("reviewer", approved_muse_review_receipt), ("roles", approved_muse_role_receipt)):
             expected[surface] = [overlay(row, case) for row, case in zip(expected[surface], CURRENT_INPUTS[surface], strict=True)]
     assert actual.keys() == (BASELINE.keys() if surfaces is None else set(surfaces))
+    if "catalog" in expected:
+        expected["catalog"]["review_scheduler"]["endpoints"]["agy"]["sealed_executable"] = "scripts/dispatch.py"
     for surface in actual:
         assert actual[surface] == expected[surface], f"current surface differs: {surface}"
     if surfaces is None:

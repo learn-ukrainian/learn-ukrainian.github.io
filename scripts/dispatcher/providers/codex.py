@@ -7,6 +7,11 @@ from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    if spec.options.get("review_tool_config") or spec.options.get("require_review_verdict"):
+        from scripts.agent_runtime.adapters.codex import CodexAdapter
+        from scripts.review.dispatch_execution import build_invocation
+
+        return build_invocation(spec, env, CodexAdapter())
     argv = ["codex", "exec", "--json", "-C", str(spec.worktree), "-m", spec.model, "-o", str(spec.final_file)]
     if spec.options.get("output_schema_path") is not None:
         from scripts.dispatcher.output_schema import load
