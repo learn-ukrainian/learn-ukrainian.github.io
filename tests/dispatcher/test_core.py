@@ -121,10 +121,10 @@ def sandbox(tmp_path):
 
 def await_file(path):
     deadline = time.monotonic() + 10
-    while not path.exists():
-        assert time.monotonic() < deadline, f"stub did not create {path.name}"
+    while not path.exists() or not (content := path.read_text()):
+        assert time.monotonic() < deadline, f"stub did not populate {path.name}"
         time.sleep(0.02)
-    return path.read_text()
+    return content
 
 
 def stub_common_reaper(box):
