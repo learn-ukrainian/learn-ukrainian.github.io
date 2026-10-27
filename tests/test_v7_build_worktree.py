@@ -54,10 +54,11 @@ def _install_fake_subprocess_run(
 
     monkeypatch.setattr(v7_build.subprocess, "run", fake_run)
 
-    def fake_safe_git(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
-        # Cleanup moved to the runner seam. Keep its binary preflight probes
-        # out of this text-only build/subprocess stub.
+    def fake_safe_git(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str] | subprocess.CompletedProcess[bytes]:
         kwargs.pop("profile", None)
+        if args == ["config", "--get", "remote.origin.url"]:
+            assert kwargs["text"] is False
+            return subprocess.CompletedProcess(["git", *args], 1, b"", b"")
         assert kwargs["text"] is True
         return fake_run(["git", *args], **kwargs)
 
