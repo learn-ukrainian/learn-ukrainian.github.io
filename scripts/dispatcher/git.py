@@ -95,16 +95,15 @@ def _complete_since_task_base(run, shallow: Path, task_base: str) -> bool:
     with the base tip. Single-parent commits are diffed against their parent and
     merges are re-run, which recomputes the merge bases of their parents.
 
-    A bounded fetch gives each cut commit no parents, so no cut may lie on a tip's
-    path above the task base: every commit the walk inspects then has its real
-    parents, and a merge base found in the bounded graph is still a real common
-    ancestor reachable from the trusted base tip. A cut parent is itself present
-    with its tree, so a single-parent diff against it is exact.
+    Every commit the walk inspects needs its real parents. A bounded fetch records
+    each shallow boundary commit without parents, so no boundary may lie on a
+    tip's path above the task base. A boundary parent is itself present with its
+    tree, so a single-parent diff against it is exact, and a merge base found in
+    the bounded graph is a real common ancestor of the delivery and the base tip.
 
-    Merge bases of a merge's parents can lie anywhere, including below the cut.
-    With none left, Git merges against an empty tree, which can reproduce an
-    edited resolution exactly and hide it. So a delivery with any merge above the
-    task base needs a graph that is not shallow at all.
+    A merge in the inspected range needs the complete ancestry of its parents to
+    be recomputed. A graph with shallow boundaries does not provide it, so a
+    delivery with any merge above the task base requires non-shallow history.
     """
     tips = ("refs/heads/delivery", "refs/heads/base")
     if task_base not in run("rev-list", *tips).split():

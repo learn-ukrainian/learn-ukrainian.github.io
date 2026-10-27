@@ -888,8 +888,9 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
 def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape):
     """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base.
 
-    A delivery containing a merge is the exception. Re-running a merge needs every merge base, and
-    a cut below the task base can remove one, so Git would merge against an empty tree instead.
+    A delivery containing a merge is the exception: re-running a merge needs the complete ancestry
+    of its parents. The merge shape has a common ancestor older than the bounded window, and the
+    walk must obtain non-shallow history and apply the ownership rules to it.
     """
     remote, tree = tmp_path / "remote.git", tmp_path / "tree"
     run_git(tmp_path, "init", "--bare", str(remote))
@@ -910,32 +911,32 @@ def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape
     if shape == "merge":
         (tree / "outside.txt").write_text("outside\n")
         run_git(tree, "add", "outside.txt")
-        run_git(tree, "commit", "-m", "A adds outside.txt")
+        run_git(tree, "commit", "-m", "A")
     monkeypatch.delenv("GIT_COMMITTER_DATE")
     if shape == "linear":
         run_git(tree, "commit", "--allow-empty", "-m", "task base")
         run_git(tree, "push", "origin", "main")
         run_git(tree, "checkout", "-b", "sol/fetch")
     else:
-        # P deletes outside.txt and Q leaves it alone. Both are newer than the cut and A is older,
-        # so a bounded fetch leaves P and Q with no common ancestor. B = merge(P, Q) is the task base.
+        # A is older than the bounded window; P and Q are newer and share only A as an ancestor.
+        # B = merge(P, Q) is the task base.
         run_git(tree, "checkout", "-b", "q")
         (tree / "q.txt").write_text("q\n")
         run_git(tree, "add", "q.txt")
         run_git(tree, "commit", "-m", "Q")
         run_git(tree, "checkout", "main")
         run_git(tree, "rm", "outside.txt")
-        run_git(tree, "commit", "-m", "P deletes outside.txt")
+        run_git(tree, "commit", "-m", "P")
         run_git(tree, "merge", "--no-ff", "-m", "task base", "q")
         run_git(tree, "push", "origin", "main")
-        # D re-merges P and Q but keeps outside.txt; F merges B into D and drops it again.
+        # The delivery branch has two merges above the task base: D of P and Q, then F of B into D.
         run_git(tree, "checkout", "-b", "sol/fetch", "main^1")
         run_git(tree, "merge", "--no-ff", "--no-commit", "q")
         run_git(tree, "checkout", "main^1^1", "--", "outside.txt")
-        run_git(tree, "commit", "-m", "D keeps outside.txt")
+        run_git(tree, "commit", "-m", "D")
         run_git(tree, "merge", "--no-commit", "main")
         run_git(tree, "rm", "outside.txt")
-        run_git(tree, "commit", "-m", "F drops outside.txt")
+        run_git(tree, "commit", "-m", "F")
     (tree / "delivered.txt").write_text("delivery\n")
     run_git(tree, "add", "delivered.txt")
     run_git(tree, "commit", "-m", "delivery")
@@ -968,7 +969,8 @@ def test_ownership_walk_falls_back_to_full_history_when_tips_predate_skewed_task
     """Clock skew: a future-dated task base must not reject a valid delivery.
 
     With both remote tips dated before the cutoff, Git selects no commits for --shallow-since and
-    aborts the bounded fetch. The walk must take the full-history fallback and still enforce scope.
+    aborts the bounded fetch. The walk must take the full-history fallback and apply the ownership
+    rules to it.
     """
     remote, tree = tmp_path / "remote.git", tmp_path / "tree"
     run_git(tmp_path, "init", "--bare", str(remote))
