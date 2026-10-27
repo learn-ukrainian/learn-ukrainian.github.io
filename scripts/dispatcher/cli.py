@@ -284,8 +284,6 @@ def _dispatch(args) -> int:
         task_id, args.mode, decision, agent=agent, force_reason=force_reason,
         disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),
     ) as hold:
-        if binding:
-            store.check_review_attempt(binding, claim=True)
         if not args.cwd:
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
