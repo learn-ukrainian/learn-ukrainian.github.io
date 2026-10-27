@@ -171,7 +171,9 @@ class LaunchRefused(ValueError):
         self.fields = fields
 
 
-def spawn_supervisor(cmd: list[str], *, task_id: str, run_nonce: str, cwd: Path, stderr, stderr_log: Path):
+def spawn_supervisor(
+    cmd: list[str], *, task_id: str, run_nonce: str, cwd: Path, stderr, stderr_log: Path, env: dict[str, str],
+):
     """Start the supervisor in ``lu-dispatch.slice`` or, when isolation is unavailable, with plain ``Popen``.
 
     Mirrors the legacy spawn (``delegate.py`` ``dispatch_isolation.spawn_detached_worker`` call): the
@@ -186,6 +188,7 @@ def spawn_supervisor(cmd: list[str], *, task_id: str, run_nonce: str, cwd: Path,
             task_id=task_id,
             run_nonce=run_nonce,
             popen=functools.partial(subprocess.Popen, cwd=cwd),
+            env=env,
             stdin=subprocess.PIPE,
             stdout=subprocess.DEVNULL,
             stderr=stderr,

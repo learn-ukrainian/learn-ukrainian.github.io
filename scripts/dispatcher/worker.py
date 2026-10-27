@@ -61,6 +61,9 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
                     [str(project_interpreter()), "-m", "scripts.dispatcher.worker", str(path)],
                     task_id=spec.task_id, run_nonce=record["run_nonce"], cwd=Path(__file__).resolve().parents[2],
                     stderr=err, stderr_log=logs / f"{spec.task_id}.stderr.log",
+                    env={**os.environ,
+                         "LEARN_UKRAINIAN_DISPATCH_TASK_ID": spec.task_id,
+                         "LEARN_UKRAINIAN_DISPATCH_AGENT": spec.agent},
                 )
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
