@@ -315,7 +315,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             terminate()
             returncode = child.returncode
         if text is not None:
-            spec.final_file.write_text(text)
+            spec.final_file.write_bytes(text.encode("utf-8"))
             spec.final_file.chmod(0o600)
             if record.get("advisory_role") is not None:
                 record[advisory.contract.SEAL_FIELD] = advisory.contract.seal_advisor_result(

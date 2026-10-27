@@ -15,7 +15,7 @@ def _git(worktree: Path, args, *, env=None):
                           env=env if env is not None else sanitized_git_env(strip_config_injection=True))
 
 
-def _worktree_diff_read(worktree: Path, diff_args) -> tuple[str | None, str | None]:
+def _worktree_diff_read(worktree: Path, diff_args, *, record: dict) -> tuple[str | None, str | None]:
     """Legacy scratch-index measurement includes untracked files, without touching the real index."""
     env = sanitized_git_env(strip_config_injection=True)
     code = "temp_index_failed"
@@ -41,6 +41,8 @@ def _worktree_diff_read(worktree: Path, diff_args) -> tuple[str | None, str | No
         if scratch is not None:
             try:
                 scratch.remove()
+            except (OSError, TaskScratchError) as exc:
+                record["advisory_diff_cleanup_error"] = type(exc).__name__
             finally:
                 scratch.preserve()
     if diff_proc.returncode != 0:
@@ -54,10 +56,9 @@ def worker_diff(record: dict, diff_args, *, committed_only=False) -> tuple[str |
         return None, "no worktree to measure"
     merge_base = None
     try:
-        # V2 --cwd attaches at the recorded SHA; a fresh checkout uses the base merge point.
-        admitted = record.get("driver_brief") or record.get("advisory_envelope") or {}
-        args = admitted.get("advisory_args") or {}
-        if args.get("cwd"):
+        # Attached rounds start at admission's recorded commit, including content exemptions.
+        # Only fresh worktrees from --base use the merge point with the base branch.
+        if record.get("worktree_reused") or record.get("publish_branch") or record.get("pinned_head"):
             merge_base = record["worktree_base_sha"]
             proc = _git(worktree, ["rev-parse", "--verify", f"{merge_base}^{{commit}}"])
             if proc.returncode:
@@ -87,7 +88,7 @@ def worker_diff(record: dict, diff_args, *, committed_only=False) -> tuple[str |
                     return proc.stdout, None
                 error = f"the worker's committed diff could not be read (return code {proc.returncode})"
         else:
-            output, why = _worktree_diff_read(worktree, [*diff_args, merge_base, "--"])
+            output, why = _worktree_diff_read(worktree, [*diff_args, merge_base, "--"], record=record)
             if output is not None:
                 return output, None
             error = f"the worker's diff could not be read ({why})" if why else error

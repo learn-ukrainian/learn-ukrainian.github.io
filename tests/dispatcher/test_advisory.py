@@ -159,7 +159,7 @@ def _write_advisor(launch, capsys, **overrides):
 
 
 @pytest.fixture
-def runtime(launch, tmp_path, tmp_path_factory, monkeypatch):
+def runtime(launch, tmp_path, tmp_path_factory, monkeypatch, request):
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path_factory.mktemp("bounded-scratch")))
     def run_git(*args):
         return subprocess.run(["git", "-C", str(tmp_path), *args], check=True,
@@ -178,6 +178,15 @@ def runtime(launch, tmp_path, tmp_path_factory, monkeypatch):
     run_git("init", "--bare", str(remote))
     run_git("remote", "add", "origin", str(remote))
     run_git("push", "origin", "HEAD:main", "HEAD:codex/worker")
+    attach = getattr(request, "param", "base")
+    if attach != "base":
+        (tmp_path / "prior.py").write_text("x = 1\n" * 20)
+        run_git("add", ".")
+        run_git("commit", "-m", "earlier branch work")
+        run_git("push", "origin", "HEAD")
+        base = run_git("rev-parse", "HEAD")
+        launch += {"branch": ["--branch", "codex/worker"],
+                   "pinned-head": ["--pinned-head", base], "cwd": ["--cwd", str(tmp_path)]}[attach]
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github=str(remote), transport="file")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/worker", base))
     monkeypatch.setattr(worker.signal, "signal", lambda *a: None)
@@ -282,8 +291,21 @@ def test_advisor_must_run_read_only(launch, capsys):
     worker.start.assert_not_called()
 
 
-def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_it(launch, runtime, capsys, tmp_path):
-    binding, envelope, response = _write_advisor(launch, capsys)
+@pytest.mark.parametrize("locale_encoding", [None, "cp1251"])
+def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_it(
+    launch, runtime, capsys, tmp_path, monkeypatch, locale_encoding,
+):
+    """Sealed advisor bytes must remain UTF-8 under a non-UTF-8 text-write default."""
+    write_text = Path.write_text
+
+    def locale_write_text(path, text, *args, **kwargs):
+        if path.suffix == ".result" and locale_encoding:
+            kwargs.setdefault("encoding", locale_encoding)
+        return write_text(path, text, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", locale_write_text)
+    binding, envelope, response = _write_advisor(launch, capsys, constraints=["Працюй у межах завдання"])
+    response = "```advisory-envelope\n" + json.dumps(envelope, ensure_ascii=False) + "\n```\n"
     runtime.response = response
     advisor_launch = list(launch)
     advisor_launch[advisor_launch.index("--model") + 1] = "gpt-6.1-sol"
@@ -291,6 +313,7 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
     assert cli.main([*advisor_launch, "--advisory-role", "bounded_advisory_envelope", "--advisory-binding", binding]) == 0
     record = runtime.settle()
     assert record["status"] == "done"
+    assert Path(record["result_file"]).read_bytes() == response.encode("utf-8")
     assert record["advisory_seal"] == dict(result_sha256=store.digest(response.encode()),
                                           envelope_sha256=advisory.envelope_sha256(envelope),
                                           advisor_model="gpt-6.1-sol", run_nonce=record["run_nonce"])
@@ -424,12 +447,34 @@ def test_m12_worker_exceeding_envelope_ceilings_is_a_typed_failure(launch, runti
     assert state["last_error"].startswith(advisory.CEILING_EXCEEDED)
 
 
-def test_m13_worker_within_envelope_ceilings_settles_done(launch, runtime, capsys, tmp_path):
+@pytest.mark.parametrize("runtime", ["base", "branch", "pinned-head", "cwd"], indirect=True)
+@pytest.mark.parametrize("cleanup_failure", [False, True])
+def test_m13_worker_within_envelope_ceilings_settles_done(
+    launch, runtime, capsys, tmp_path, monkeypatch, cleanup_failure,
+):
+    """Earlier branch commits and scratch cleanup failures must not invalidate a valid round."""
+    from scripts.common.task_scratch import TaskScratchError
+    from scripts.dispatcher import advisory_completion
+
+    allocate = advisory_completion.allocate
+
+    def failing_cleanup(*args, **kwargs):
+        scratch = allocate(*args, **kwargs)
+        monkeypatch.setattr(scratch, "remove", Mock(side_effect=TaskScratchError("cleanup refused")))
+        return scratch
+
+    if cleanup_failure:
+        monkeypatch.setattr(advisory_completion, "allocate", failing_cleanup)
     state = _run_bounded_worker(launch, capsys, runtime, tmp_path,
                                {"docs/a.py": "x = 1\n" * 4, "tests/test_a.py": "ok\n" * 90})
     assert state["status"] == "done", state.get("error")
     assert state["advisory_ceiling_check"]["exceeded"] == []
     assert state["advisory_ceiling_check"]["non_test_loc"] == 4
+    assert state["advisory_ceiling_check"]["changed_files"] == 2
+    if cleanup_failure:
+        assert state["advisory_diff_cleanup_error"] == "TaskScratchError"
+    else:
+        assert "advisory_diff_cleanup_error" not in state
 
 
 def test_m13_worker_exactly_at_both_ceilings_settles_done(launch, runtime, capsys, tmp_path):
@@ -598,10 +643,14 @@ def test_b3_reviewer_probe_a_content_exempt_worker_adding_code_is_a_typed_failur
     assert state["last_error"].startswith(advisory.EXEMPT_CODE_CHANGE)
 
 
+@pytest.mark.parametrize("runtime", ["base", "branch", "pinned-head", "cwd"], indirect=True)
 def test_b3_a_content_only_diff_in_the_same_directory_settles_done(launch, runtime, tmp_path):
+    """Earlier code commits must not invalidate an attached content-exempt worker round."""
     state = _exempt_writer_run(launch, runtime, tmp_path, {"docs/lesson-1.md": "# Lesson\n", "docs/l.yaml": "a: 1\n"})
     assert state["status"] == "done", state.get("error")
     assert state["advisory_exempt_change_check"]["problems"] == []
+    assert state["advisory_exempt_change_check"]["changed_paths"] == ["docs/l.yaml", "docs/lesson-1.md"]
+    assert "advisory_envelope" not in state
 
 
 def test_b3_unreadable_exempt_changes_fail_closed(launch, runtime, tmp_path, monkeypatch):
