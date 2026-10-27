@@ -380,7 +380,7 @@ def build_packet(
             },
             {
                 "name": "live_workers",
-                "locator": ".venv/bin/python -m scripts.delegate status",
+                "locator": ".venv/bin/python scripts/dispatch.py list",
                 "observed_at": None,
                 "freshness": "unknown",
             },
