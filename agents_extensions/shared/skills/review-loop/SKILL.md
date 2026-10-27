@@ -1,6 +1,6 @@
 ---
 name: review-loop
-description: Run the bounded independent review of one change, from its pushed head to a recorded exact-head verdict, inside full-send or full-stop. Use when a driver needs the review of record for a code or infra change; a worker asks its driver instead.
+description: Run the bounded independent review of one change, from its pushed head to a recorded exact-head verdict, inside full-send or full-stop. Use when a driver needs the review of record for a code, infra or Ukrainian change; a worker asks its driver instead.
 argument-hint: "<branch> [pr <number>]"
 ---
 
@@ -8,8 +8,9 @@ argument-hint: "<branch> [pr <number>]"
 
 Take one pushed change to an exact-head cross-family verdict within the review budget, and
 record that verdict on the PR. This skill owns rounds, the budget and the finding ledger.
-The reviewer's own procedure is `local-code-review`; learner-content review stays with
-`track-completion` and `post-build-review`. ACP discussion is never review.
+The reviewer's own procedure is `local-code-review`; learner-content review procedure stays
+with `track-completion` and `post-build-review`, seated by the `ukrainian` profile below.
+ACP discussion is never review.
 
 **Who runs it.** The accountable driver, the integration owner or the CTO. A worker does not
 dispatch reviewers (rules core P1): it sends its driver a review request through Fleet Comms
@@ -39,6 +40,8 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    frozen brief: `infra` when the change touches the build pipeline, gates, CI, deploy, the
    agent runtime and harness, dispatch, review or routing tooling, or the rules and config that
    govern them; `code` for any other code change. A change that spans both is `infra`.
+   A change to learner-facing Ukrainian is `ukrainian`: seat it from
+   [ukrainian](references/ukrainian.md), not the resolver.
    `infra` walks a different ladder and excludes code-only seats (Gemini Flash and Muse are
    `review_profiles: [code]` in `scripts/config/model_catalog.yaml`), so the same value goes to
    the resolver (`--review-profile` and `--domain`) and to the dispatch below.
@@ -116,11 +119,8 @@ silence or approval proves nothing. Making it mandatory needs the operator's app
 ## Review profiles
 
 - `code` and `infra`: this skill as written.
-- **EXTENSION POINT — `ukrainian` profile (not yet active).** A follow-up will define it after
-  a qualification run: two independent reviewers, with findings verified through the Sources
-  MCP. Until that follow-up lands, Ukrainian review keeps its current route
-  (drive-epic §6 Ukrainian content variant; `ukrainian-linguistics.md` §8). Do not apply a
-  `ukrainian` loop policy from this note.
+- `ukrainian`: two independent cross-family seats and tool-verified findings, seated from
+  [ukrainian](references/ukrainian.md) instead of the resolver; the rest of this skill applies.
 
 ## Stop and report
 

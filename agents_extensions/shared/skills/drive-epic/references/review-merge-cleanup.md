@@ -209,7 +209,8 @@ rows): the contract is the unit's plan or acceptance (learning goals, CEFR level
 sources). Blocking, class reporting and evidence follow
 `agents_extensions/shared/rules/ukrainian-linguistics.md` §8: every Ukrainian error in added
 or edited text blocks, one finding per error class lists every occurrence with a
-source-verified correction, and an unsourced blocker is INCONCLUSIVE.
+source-verified correction, and an unsourced blocker is INCONCLUSIVE. Seats and finding
+verification: the `review-loop` [ukrainian profile](../../review-loop/references/ukrainian.md).
 
 Reviewers do not re-run test suites that the PR's CI runs: review the diff, run at
 most the specific existing tests that cover a finding you are checking, and cite CI run

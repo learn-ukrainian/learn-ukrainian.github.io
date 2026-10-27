@@ -29,6 +29,7 @@ in every model call, plus instructions to run `lu-driver-state render --lane cto
 | Every cycle (about every 10 minutes while work is in flight) | [Cycle checklist](references/cycle.md) |
 | Dispatching, reviewing, posting, merging, recovering CI | [Recipes and tool quirks](references/recipes.md) |
 | Every decision that changes priorities, sequence, routing or approach | [Decisions](references/decisions.md) |
+| A proposal needing designated or panel approval (published page) | [Decision report](../drive-epic/references/decision-report.md) |
 | After any mistake or operator correction | [Learning](references/learning.md) |
 | Context near 65 percent, or session end | [Handoff](references/handoff.md), [Learning](references/learning.md) |
 
@@ -50,6 +51,14 @@ in every model call, plus instructions to run `lu-driver-state render --lane cto
 - Every statement is a fact with its source (command, file:line, run ID, SHA) or is
   labelled NOT CHECKED with the command that would settle it. A documented limitation is a
   claim to probe. One observation is not a finding.
+- The operator is never a blocker for approved work (C-2836). New decisions need designated
+  approval (operator-expectations.md item 12): Opus 5.5 and Sol 6.1, where the non-author
+  completes an advisor's proposal and any other author needs both; if they disagree, the
+  operator decides. The panel never lets the author's family approve its own proposal; Muse
+  adds a third voice, never replacing the non-author advisor. Operator-only items (core.md
+  P6) wait for the operator while independent approved work continues; record each as a
+  residual with a workaround. Before naming anything operator-only, verify it with a command
+  and cite the output.
 - Never wait for a quota reset: seat the next eligible reviewer the resolver returns.
 - Timestamps come only from `date -u`, in the same command that uses them.
 
