@@ -142,8 +142,15 @@ def ownership_git(record: dict):
     task_base = record["worktree_base_sha"]
     if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", task_base):
         raise ValueError("task base must be a full object name")
+    delivery_ref = f"refs/heads/{record['worktree_branch']}"
+    allowed_refs = {delivery_ref}
+    if record.get("publish_branch") is not None:
+        allowed_refs.add(f"refs/heads/{record['publish_branch']}")
+    # Ignore unrecorded branch names so an observed ref cannot widen delivery trust.
+    if record.get("remote_ref") in allowed_refs:
+        delivery_ref = record["remote_ref"]
     refspecs = (f"+refs/heads/{base.removeprefix('origin/')}:refs/heads/base",
-                f"+refs/heads/{record['worktree_branch']}:refs/heads/delivery")
+                f"+{delivery_ref}:refs/heads/delivery")
     scratch = allocate(record["task_id"] + "-ownership")
     try:
         run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir)
