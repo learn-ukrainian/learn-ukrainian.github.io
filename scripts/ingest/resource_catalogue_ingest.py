@@ -33,6 +33,10 @@ CATALOGUES = (
     "verba/verba_db.json",
 )
 KINDS = ("podcast", "video", "article", "reference")
+LINK_CHECK_USER_AGENT = (
+    "learn-ukrainian-resource-catalogue/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 MAX_HITS = 20
 MAX_HIT_BYTES = 24576
 PROVENANCE_BUDGETS = {
@@ -415,10 +419,20 @@ def check_link(url: str, timeout: float = 10) -> dict:
         return {"http_status": None, "checked_at": None, "link_check": "not_applicable"}
     checked_at = datetime.now(UTC).isoformat()
     try:
-        with requests.head(url, timeout=timeout, allow_redirects=True) as response:
+        with requests.head(
+            url,
+            timeout=timeout,
+            allow_redirects=True,
+            headers={"User-Agent": LINK_CHECK_USER_AGENT},
+        ) as response:
             status = response.status_code
         if status in {405, 501}:
-            with requests.get(url, timeout=timeout, stream=True) as response:
+            with requests.get(
+                url,
+                timeout=timeout,
+                stream=True,
+                headers={"User-Agent": LINK_CHECK_USER_AGENT},
+            ) as response:
                 status = response.status_code
         return {
             "http_status": status,

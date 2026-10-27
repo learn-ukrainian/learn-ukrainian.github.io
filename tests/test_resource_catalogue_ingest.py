@@ -207,6 +207,71 @@ def test_network_failure_and_internal_link(monkeypatch):
     assert catalogue.check_link("sources://collection/textbooks")["link_check"] == "not_applicable"
 
 
+LINK_CHECK_IDENTITY = (
+    "learn-ukrainian-resource-catalogue/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
+
+
+def _capture_outgoing(monkeypatch, statuses, error=None):
+    """Capture real PreparedRequests at HTTPAdapter.send; no socket is opened."""
+    sent = []
+    queue = list(statuses)
+
+    def fake_send(self, request, **kwargs):
+        sent.append((request, kwargs))
+        if error is not None:
+            raise error
+        response = requests.Response()
+        response.status_code = queue.pop(0)
+        response.url = request.url
+        response.request = request
+        response._content = b""
+        response._content_consumed = True
+        return response
+
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", fake_send)
+    return sent
+
+
+@pytest.mark.parametrize(
+    ("statuses", "methods", "expected_status"),
+    [
+        ([200], ["HEAD"], 200),
+        ([405, 200], ["HEAD", "GET"], 200),
+        ([501, 200], ["HEAD", "GET"], 200),
+    ],
+)
+def test_link_check_prepared_requests_identify_project_with_public_contact(
+    monkeypatch, statuses, methods, expected_status
+):
+    """Defect class: anonymous python-requests identity on outgoing HEAD and fallback GET."""
+    sent = _capture_outgoing(monkeypatch, statuses)
+    check = catalogue.check_link("https://example.org/a?b=1", timeout=3)
+    assert [request.method for request, _ in sent] == methods
+    for request, kwargs in sent:
+        assert request.headers["User-Agent"] == LINK_CHECK_IDENTITY
+        assert request.url == "https://example.org/a?b=1"
+        assert kwargs["timeout"] == 3
+    assert sent[0][1]["stream"] is False
+    if len(sent) == 2:
+        assert sent[1][1]["stream"] is True
+    assert check["http_status"] == expected_status
+    assert check["link_check"] == "live"
+    assert check["checked_at"]
+
+
+def test_link_check_identity_does_not_change_network_error_or_internal_paths(monkeypatch):
+    """Defect class: identity header altering exception handling or the sources:// no-network path."""
+    sent = _capture_outgoing(monkeypatch, [], error=requests.ConnectionError("down"))
+    assert catalogue.check_link("https://example.org")["link_check"] == "network_error"
+    assert [request.method for request, _ in sent] == ["HEAD"]
+    assert sent[0][0].headers["User-Agent"] == LINK_CHECK_IDENTITY
+    sent.clear()
+    assert catalogue.check_link("sources://collection/textbooks")["link_check"] == "not_applicable"
+    assert sent == []
+
+
 def test_offline_preserves_previous_checks(database, monkeypatch):
     monkeypatch.setattr(
         catalogue, "check_link", lambda *a: {"http_status": 200, "checked_at": "2026-10-01", "link_check": "live"}
