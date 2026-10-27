@@ -208,12 +208,13 @@ def runtime(launch, tmp_path, tmp_path_factory, monkeypatch, request):
         if argv != ["unit-c-provider"]:
             return real_popen(argv, *args, **kw)
         box.calls.append(argv)
-        def communicate(data, **kw):
-            box.submitted.append(data)
+        def wait(*args, **kwargs):
+            box.submitted.append(kw["stdin"].read())
             if box.on_execute:
                 box.on_execute()
+            return 0
 
-        return SimpleNamespace(returncode=0, communicate=communicate)
+        return SimpleNamespace(returncode=0, wait=wait)
 
     monkeypatch.setattr(worker.subprocess, "Popen", popen)
 
