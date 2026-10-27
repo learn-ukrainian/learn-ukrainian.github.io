@@ -267,6 +267,15 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
     return path, branch, sha
 
 
+@contextmanager
+def worktree_lock(repo: Path):
+    """Serialize worktree creation, attachment (--cwd) and removal in one repository."""
+    fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
+    with os.fdopen(fd, "rb") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        yield
+
+
 def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=(),
                     exact=False) -> None:
     excluded = sparse_excludes(sparse_include)
@@ -277,9 +286,7 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         return _git(where, *no_replace, *args, isolate=True)
     path.parent.mkdir(parents=True, exist_ok=True)
     # Serialize config enablement and keep sparse settings local to the new worktree.
-    fd = os.open(repo / ".git" / "dispatch-worktree.lock", os.O_CREAT | os.O_RDWR, 0o600)
-    with os.fdopen(fd, "rb") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+    with worktree_lock(repo):
         run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
         run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
         if full_checkout:
@@ -294,6 +301,8 @@ DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", 
 NODE_LINKS = ("node_modules", "site/node_modules")
 # Ignored entries a settled worktree may still hold: regenerable caches and the links provisioned above.
 CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"})
+# Work this branch contains on the canonical remote is published, even after its own branch was deleted.
+MAIN_REF = "refs/heads/main"
 
 
 def provision_links(repo: Path, worktree: Path) -> None:
@@ -379,11 +388,33 @@ def _disposable(tree: Path, entry: str) -> bool:
     )
 
 
-def settle_worktree(record: dict) -> dict:
+def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | None, bool]:
+    """Return the canonical remote's tip of ref and whether its main branch contains head.
+
+    Only the URL recorded at dispatch is read, in a private Git namespace, so neither the worktree's
+    mutable origin nor a configured URL rewrite can redirect the proof. Main is fetched (commits only)
+    just when head is not the advertised tip: a merged branch may since have been deleted.
+    """
+    remote = record["worktree_remote_url"]
+    if not remote:
+        raise ValueError("no canonical remote URL was recorded at dispatch")
+    with _private_remote_git(record["task_id"] + "-settle", remote) as (run, _):
+        advertised = run("ls-remote", "--", "origin", ref)
+        tip = next((sha for sha, name in (line.split() for line in advertised.splitlines()) if name == ref), None)
+        if tip == head:
+            return tip, False
+        run("fetch", "--no-tags", "--no-write-fetch-head", "--filter=tree:0", "--", "origin",
+            f"+{MAIN_REF}:{MAIN_REF}", timeout=VERIFICATION_FETCH_TIMEOUT)
+        return tip, head in run("rev-list", MAIN_REF).split()
+
+
+def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
     Runs from outside the worktree after the provider has exited. A write task's worktree goes only
-    when its HEAD is the publish branch's tip on origin, read fresh; without --branch that is the task branch.
+    when its HEAD is the publish branch's tip on the canonical remote recorded at dispatch (without
+    --branch that is the task branch), or is already in that remote's main. borrowed() is asked under
+    the worktree lock, right before removal, whether another running task works in this tree.
     """
     def disposition(state, reason):
         return dict(worktree_disposition=state, worktree_disposition_reason=reason)
@@ -393,25 +424,27 @@ def settle_worktree(record: dict) -> dict:
     try:
         repo, tree, branch = resolve_repo(record.get("repo"))[0], Path(record["worktree_path"]), record["worktree_branch"]
         entries = _git(tree, "status", "--porcelain", "-z", "--ignored", isolate=True, strip=False).split("\0")
-        head, remote = _git(tree, "rev-parse", "HEAD", isolate=True), None
+        head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
+        if not all(_disposable(tree, entry) for entry in entries if entry):
+            return disposition("retained", "dirty")
         if record["mode"] != "read-only":
-            ref = f"refs/heads/{record.get('publish_branch') or branch}"
-            advertised = _git(repo, "ls-remote", "origin", ref, isolate=True)
-            remote = next((sha for sha, name in (line.split() for line in advertised.splitlines()) if name == ref), None)
+            remote, merged = _canonical_publication(record, f"refs/heads/{record.get('publish_branch') or branch}", head)
     except (OSError, ValueError, KeyError, subprocess.SubprocessError):
         return disposition("retained", "unknown")
-    if not all(_disposable(tree, entry) for entry in entries if entry):
-        return disposition("retained", "dirty")
-    if record["mode"] != "read-only" and head != remote:
+    published = head == remote or merged
+    if record["mode"] != "read-only" and not published:
         return disposition("retained", "unpublished" if remote is None else "remote_mismatch")
-    try:
-        _git(repo, "worktree", "remove", str(tree), isolate=True)
-    except (OSError, subprocess.SubprocessError):
-        return disposition("error", "worktree_remove_failed")
+    with worktree_lock(repo):
+        if borrowed():
+            return disposition("retained", "borrowed_by_running_task")
+        try:
+            _git(repo, "worktree", "remove", str(tree), isolate=True)
+        except (OSError, subprocess.SubprocessError):
+            return disposition("error", "worktree_remove_failed")
     try:
         # The task branch goes only when its tip is published or reachable from another ref.
-        if head != remote and _git(repo, "rev-list", "-n1", head, "--not", f"--exclude=refs/heads/{branch}", "--all",
-                                   isolate=True):
+        if not published and _git(repo, "rev-list", "-n1", head, "--not", f"--exclude=refs/heads/{branch}", "--all",
+                                  isolate=True):
             return disposition("removed", "branch_kept_unmerged")
         _git(repo, "update-ref", "-d", f"refs/heads/{branch}", head, isolate=True)
     except (OSError, subprocess.SubprocessError):

@@ -129,7 +129,7 @@ def test_supervise_restores_signal_handlers_after_cleanup(sandbox, monkeypatch):
 
     monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
     monkeypatch.setattr(worker.providers, "load", lambda _agent: stub_provider)
-    monkeypatch.setattr(worker, "_reap_settled", lambda *_args: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
     spec = TaskSpec("signal-cleanup", "codex", "echo", None, "read-only", sandbox.repo,
                     sandbox.repo / "signal-cleanup.prompt", sandbox.tasks / "signal-cleanup.result")
     spec.prompt_file.write_bytes(b"literal final response")
@@ -324,6 +324,104 @@ def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
     assert record["worktree_branch"] not in local_branches(sandbox.repo)
 
 
+def in_process_repo(sandbox, monkeypatch):
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(git, "ROOT", sandbox.repo)
+    monkeypatch.setattr(git, "CONFIG", sandbox.repo / "scripts/config/fleet_repos.yaml")
+
+
+@pytest.mark.parametrize("redirect", ["set-url", "insteadOf"])
+def test_settlement_proves_publication_only_on_the_recorded_canonical_remote(sandbox, monkeypatch, redirect):
+    """Defect (F1): settlement trusted the shared, mutable origin instead of the URL recorded at dispatch."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    assert record["worktree_remote_url"] == str(sandbox.remote)
+    tree = Path(record["worktree_path"])
+    decoy = sandbox.repo.parent / "decoy.git"
+    run_git(sandbox.repo, "init", "--bare", str(decoy))
+    run_git(tree, "push", str(decoy), f"HEAD:refs/heads/{record['worktree_branch']}")
+    if redirect == "set-url":
+        run_git(sandbox.repo, "remote", "set-url", "origin", str(decoy))
+    else:
+        run_git(sandbox.repo, "config", f"url.{decoy}.insteadOf", str(sandbox.remote))
+    in_process_repo(sandbox, monkeypatch)
+    assert git.settle_worktree(record) == dict(worktree_disposition="retained", worktree_disposition_reason="unpublished")
+    assert tree.is_dir()
+    assert record["worktree_branch"] in local_branches(sandbox.repo)
+
+
+def test_write_task_merged_into_main_counts_as_published_after_its_branch_is_deleted(sandbox, monkeypatch):
+    """CTO D3: work the canonical main already contains is published, though its branch left the remote."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree, branch = Path(record["worktree_path"]), record["worktree_branch"]
+    run_git(tree, "push", str(sandbox.remote), f"HEAD:refs/heads/{branch}")
+    run_git(tree, "push", str(sandbox.remote), "HEAD:refs/heads/main")
+    run_git(tree, "push", str(sandbox.remote), f":refs/heads/{branch}")
+    in_process_repo(sandbox, monkeypatch)
+    assert git.settle_worktree(record) == dict(worktree_disposition="removed", worktree_disposition_reason="clean")
+    assert not tree.exists()
+    assert branch not in local_branches(sandbox.repo)
+
+
+def test_crash_recovery_keeps_worktree_while_the_orphaned_provider_runs(sandbox):
+    """Defect (F2): recovery removed a crashed task's worktree without proving its provider had exited."""
+    task = sandbox.dispatch("blocked")
+    provider = int(await_file(sandbox.tasks / f"{task[0]}.started"))
+    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    os.kill(record["pid"], signal.SIGKILL)
+    deadline = time.monotonic() + 10
+    while worker._identity(record["pid"]) == record["process_start"]:
+        assert time.monotonic() < deadline, "supervisor survived SIGKILL"
+        time.sleep(0.02)
+    sandbox.settle(sandbox.dispatch())
+    crashed = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert crashed["status"] == "crashed"
+    assert (crashed["worktree_disposition"], crashed["worktree_disposition_reason"]) == (
+        "retained", "provider_processes_alive")
+    assert Path(record["worktree_path"]).is_dir()
+    os.killpg(provider, signal.SIGKILL)
+    deadline = time.monotonic() + 10
+    while worker._provider_alive(crashed):
+        assert time.monotonic() < deadline, "provider survived SIGKILL"
+        time.sleep(0.02)
+    sandbox.settle(sandbox.dispatch())
+    settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert not Path(record["worktree_path"]).exists()
+
+
+def test_settlement_keeps_a_worktree_that_a_running_task_borrowed(sandbox):
+    """Defect (F3): a finished task removed its worktree while another running task worked there via --cwd."""
+    owner = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{owner[0]}.started")
+    tree = Path(json.loads((sandbox.tasks / f"{owner[0]}.json").read_text())["worktree_path"])
+    borrower = sandbox.dispatch("blocked", "--cwd", str(tree))
+    await_file(sandbox.tasks / f"{borrower[0]}.started")
+    (sandbox.tasks / f"{owner[0]}.release").touch()
+    record = sandbox.settle(owner)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == (
+        "retained", "borrowed_by_running_task")
+    assert tree.is_dir()
+    (sandbox.tasks / f"{borrower[0]}.release").touch()
+    assert sandbox.settle(borrower)["worktree_disposition_reason"] == "borrowed_worktree"
+    sandbox.settle(sandbox.dispatch())
+    assert json.loads((sandbox.tasks / f"{owner[0]}.json").read_text())["worktree_disposition"] == "removed"
+    assert not tree.exists()
+
+
+def test_wait_does_not_report_a_task_while_its_settlement_holds_the_lock(sandbox, monkeypatch):
+    """Defect (F4): wait returned a terminal task while crash recovery was still removing its worktree."""
+    task = sandbox.dispatch()
+    sandbox.settle(task)
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    with concurrent.futures.ThreadPoolExecutor(1) as pool:
+        with store.task_state_lock(store.record_path(task[0])):
+            waiting = pool.submit(worker.wait, task[0], task[1], 15, 0.02)
+            with pytest.raises(TimeoutError):
+                waiting.result(timeout=0.5)
+        assert waiting.result(timeout=15)[1] == 0
+
+
 def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatch):
     identity = worker._identity(os.getpid())
     record = dict(schema_version=2, status="running", pid=os.getpid(), process_start=identity)
@@ -381,7 +479,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     dispatched = sandbox.cli(
         "dispatch",
         "--agent",
-        "grok",
+        "cursor",
         "--model",
         "requested-model-is-not-proof",
         "--prompt",
@@ -2091,8 +2189,17 @@ def test_cursor_child_env_corrupt_invalid_utf8_file_forwards_no_key_without_rais
     assert capsys.readouterr() == ("", "")
 
 
+def test_grok_is_no_alias_and_an_unknown_agent_names_the_supported_agents(sandbox):
+    """Operator 2026-10-27: --agent grok silently launched cursor-agent; Grok runs as cursor + grok-4.7-high."""
+    result = sandbox.cli("dispatch", "--agent", "grok", "--model", "grok-4.7-high", "--prompt", "Explain X",
+                         expected=2)
+    assert "unknown agent 'grok'; supported agents: codex, claude, cursor, agy, muse, opencode, hermes" in result.stderr
+    assert "dispatch Grok as --agent cursor --model grok-4.7-high" in result.stderr
+    assert not sandbox.tasks.exists()
+
+
 def test_aliases_and_all_retained_metadata_flags_parse():
-    assert dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes") == ALIASES
+    assert dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes") == ALIASES
     args = build_parser().parse_args(
         [
             "dispatch",
@@ -2809,7 +2916,9 @@ def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(admission_d
 
     disk = _full_disk(monkeypatch, 90.0)
     assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
-    assert len(disk["reaper"]) == 1
+    # Disk admission measures, alerts and refuses; only each task's creator removes its worktree.
+    assert disk["reaper"] == []
+    assert disk["alerts"]
     assert "--force-admission cannot override a full disk" in capsys.readouterr().err
     assert not admission_dispatch.spawned
     assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()

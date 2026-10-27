@@ -68,13 +68,16 @@ def _head(root):
         return None
 
 
-def evaluate(mode, *, sweep, thresholds=None, reap_disk=False, disk_guard=True):
-    """Copy-adapted from delegate._evaluate_dispatch_admission, including v2 liveness."""
+def evaluate(mode, *, sweep, thresholds=None, disk_guard=True):
+    """Copy-adapted from delegate._evaluate_dispatch_admission, including v2 liveness.
+
+    Disk admission measures, alerts and refuses; it never removes anything. Each task's creator
+    removes its own worktree at settlement (worker._reap_settled), so no reaper runs here.
+    """
     return legacy.evaluate(
         mode, tasks_dir(), pid_alive=legacy.process_alive,
         record_liveness=lambda record: worker_liveness(record, pid_alive=legacy.process_alive),
-        on_dead=heal_dead if sweep else None, thresholds=thresholds,
-        reaper=legacy.run_disk_reaper if reap_disk else None, disk_guard=disk_guard,
+        on_dead=heal_dead if sweep else None, thresholds=thresholds, disk_guard=disk_guard,
     )
 
 
@@ -111,7 +114,7 @@ def precheck(mode, *, force_reason=None):
 
 def check(mode, *, dry_run, disk_guard, force_reason=None):
     try:
-        decision = evaluate(mode, sweep=not dry_run, reap_disk=not dry_run and disk_guard, disk_guard=disk_guard)
+        decision = evaluate(mode, sweep=not dry_run, disk_guard=disk_guard)
     except ValueError as exc:
         raise Refused(f"❌ invalid dispatch admission threshold: {exc}", 2) from exc
     report(decision, force_reason=force_reason)

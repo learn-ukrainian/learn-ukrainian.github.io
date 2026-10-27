@@ -246,7 +246,7 @@ def headroom_box(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "resolve_repo", lambda *_a: (tmp_path, {"key": "public"}))
     monkeypatch.setattr(git, "worktree_plan", lambda *_a: (tmp_path, "fixture", "a" * 40))
     monkeypatch.setattr(host_admission, "check", lambda *_a, **_k: None)
-    monkeypatch.setattr(worker, "_reap_settled", lambda *_a: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_a, **_k: None)
     monkeypatch.setattr(git, "snapshot_delivery", lambda *_a: {})
     monkeypatch.setattr(admission, "claude_launch", lambda _spec, invocation: invocation)
     launches = []

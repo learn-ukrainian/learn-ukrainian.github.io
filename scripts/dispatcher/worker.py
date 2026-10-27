@@ -77,6 +77,9 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
         record.update(pid=process.pid, process_start=_identity(process.pid), **launch)
+        if record.get("launch_mode") == "scope":
+            # Crash recovery reads the scope's members to prove the whole task tree has exited.
+            record["launch_cgroup"] = _cgroup(process.pid)
         store.replace(record, path)
         payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
         process.stdin.write(payload)
@@ -157,15 +160,33 @@ def _enforce_delivery(record: dict) -> None:
         record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
 
 
-def _provider_alive(record: dict, child) -> bool:
+def _cgroup(pid: int) -> str | None:
+    with contextlib.suppress(OSError):
+        return next((line[3:] for line in Path(f"/proc/{pid}/cgroup").read_text().splitlines()
+                     if line.startswith("0::")), None)
+    return None
+
+
+def _provider_alive(record: dict) -> bool | None:
+    """Whether the provider's process tree still runs, from the identity recorded for it; None when unknown."""
     if record.get("launch_mode") == "scope":
         # The scope holds every descendant, including ones that left the provider's process group.
-        with contextlib.suppress(OSError, StopIteration):
-            line = next(line for line in Path("/proc/self/cgroup").read_text().splitlines() if line.startswith("0::"))
-            procs = Path("/sys/fs/cgroup" + line[3:], "cgroup.procs").read_text().split()
-            return any(int(pid) != os.getpid() for pid in procs)
+        if not (cgroup := record.get("launch_cgroup")):
+            return None
+        try:
+            procs = Path("/sys/fs/cgroup" + cgroup, "cgroup.procs").read_text().split()
+        except FileNotFoundError:
+            # The kernel refuses to remove a cgroup that still holds processes, so a gone scope is empty.
+            return False if Path("/sys/fs/cgroup/cgroup.controllers").exists() else None
+        except OSError:
+            return None
+        return any(int(pid) != os.getpid() for pid in procs)
+    if "provider_pgid" not in record:
+        return None  # the supervisor ended before recording whether it started a provider
+    if record["provider_pgid"] is None:
+        return False
     try:
-        os.killpg(child.pid, 0)
+        os.killpg(record["provider_pgid"], 0)
     except ProcessLookupError:
         return False
     except PermissionError:
@@ -173,18 +194,38 @@ def _provider_alive(record: dict, child) -> bool:
     return True
 
 
-def _reap_settled(record: dict, child=None) -> None:
-    """Record the task worktree's disposition; never changes the task's execution status."""
-    deadline = time.monotonic() + 2
-    while child is not None and _provider_alive(record, child):
-        if time.monotonic() > deadline:
-            record.update(worktree_disposition="retained", worktree_disposition_reason="provider_processes_alive")
-            return
+def _borrowed(record: dict) -> bool:
+    """Whether another active task runs in this task's worktree (dispatched there with --cwd)."""
+    return any(other.get("task_id") != record["task_id"] and other.get("status") in store.ACTIVE
+               and other.get("worktree_path") == record.get("worktree_path") for other in store.list_tasks())
+
+
+# Dispositions that can change once other processes end; crash recovery settles these again.
+RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_running_task"})
+
+
+def _reap_settled(record: dict, patience: float = 0) -> None:
+    """Record the task worktree's disposition; never changes the task's execution status.
+
+    The worktree goes only once the provider's whole process tree is proven gone; liveness that
+    cannot be proven either way keeps it.
+    """
+    deadline = time.monotonic() + patience
+    while (alive := _provider_alive(record)) and time.monotonic() < deadline:
         time.sleep(0.05)
+    if alive is not False:
+        reason = "provider_processes_alive" if alive else "provider_liveness_unknown"
+        record.update(worktree_disposition="retained", worktree_disposition_reason=reason)
+        return
     try:
-        record.update(git.settle_worktree(record))
+        record.update(git.settle_worktree(record, borrowed=lambda: _borrowed(record)))
     except Exception:
         record.update(worktree_disposition="error", worktree_disposition_reason="settlement_failed")
+
+
+def _unsettled(record: dict) -> bool:
+    return record.get("status") not in store.ACTIVE and (
+        "worktree_disposition" not in record or record.get("worktree_disposition_reason") in RETRY_REASONS)
 
 
 def settle_left_worktrees() -> None:
@@ -195,15 +236,14 @@ def settle_left_worktrees() -> None:
             with contextlib.suppress(OSError, ValueError, KeyError, TypeError):
                 record = _observe(record)
             records.append(record)
-    busy = {record.get("worktree_path") for record in records if record.get("status") in store.ACTIVE}
     for record in records:
-        if (record.get("status") in store.ACTIVE or "worktree_disposition" in record
-                or record.get("worktree_path") in busy or not Path(record.get("worktree_path") or "").is_dir()):
+        if not _unsettled(record) or not Path(record.get("worktree_path") or "").is_dir():
             continue
         path = store.record_path(record["task_id"])
+        # wait() takes this lock before it reports a terminal task, so it never returns mid-removal.
         with contextlib.suppress(OSError, ValueError, KeyError), store.task_state_lock(path):
             current = json.loads(path.read_text())
-            if current.get("status") not in store.ACTIVE and "worktree_disposition" not in current:
+            if _unsettled(current):
                 _reap_settled(current)
                 store.replace(current, path)
 
@@ -287,7 +327,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 env={**invocation.env, **slots.environment()} if slots else invocation.env,
                 start_new_session=True,
             )
-            record.update(status="running")
+            record.update(status="running", provider_pgid=child.pid)
             store.replace(record, path)
             communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
                         initial_response_timeout, liveness_paths(spec, invocation), output_sizes)
@@ -370,7 +410,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                     resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
                 )
             # Settle before publishing the terminal record, so a waiter never sees the worktree mid-removal.
-            _reap_settled(record, child)
+            record["provider_pgid"] = child.pid if child else None
+            _reap_settled(record, patience=2)
             store.replace(record, path)
         finally:
             signal.signal(signal.SIGTERM, previous_term)
@@ -382,6 +423,10 @@ def wait(task_id: str, nonce: str | None = None, timeout: float = 0, poll_interv
     while True:
         record = _observe(store.read(task_id, nonce))
         if record["status"] not in store.ACTIVE:
+            if record.get("schema_version") == 2:
+                # Crash recovery settles a terminal task under this lock; report it only after that ends.
+                with store.task_state_lock(store.record_path(task_id)):
+                    record = store.read(task_id, nonce)
             return record, 0 if record["status"] == "done" else 1
         remaining = deadline - time.monotonic() if deadline else None
         if remaining is not None and remaining <= 0:
