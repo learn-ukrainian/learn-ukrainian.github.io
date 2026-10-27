@@ -733,7 +733,6 @@
   "tests/test_agent_runtime_tool_config.py": 0.8,
   "tests/test_agent_settings.py": 0.198,
   "tests/test_aggregate_findings.py": 1.148,
-  "tests/test_agy_integration.py": 5.053,
   "tests/test_agy_pending_orders_hook.py": 723.35,
   "tests/test_agy_sealed_review_refuse.py": 0.183,
   "tests/test_ai_llm_claude_call.py": 0.18,
