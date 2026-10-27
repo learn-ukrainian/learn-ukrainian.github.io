@@ -2,11 +2,110 @@
 
 Mechanical copy of ``scripts/delegate.py`` ``_read_only_write_intent_error`` and its helpers
 (#8703, #7814, #9672; C-2188 unit D). The CLI checks the brief as given, before any side effect.
+The fence scan (``_without_code_fences`` and its line/fence helpers) is copied unchanged from
+``scripts/review/verdict_parser.py``, so dispatch admission does not import the review gate's
+verdict module. A parser import or parse failure still propagates and refuses the dispatch.
 """
 
 import re
 
-from scripts.review.verdict_parser import _without_code_fences
+_COMMONMARK_LINE_RE = re.compile(r"\r\n|\r|\n")
+
+
+def _commonmark_lines(text: str, *, keepends: bool = False) -> list[str]:
+    """Split on CommonMark line endings, matching str.splitlines for those three."""
+    if text == "":
+        return []
+    if keepends:
+        return _commonmark_keepends(text)
+    lines = _COMMONMARK_LINE_RE.split(text)
+    if text.endswith(("\n", "\r")) and lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
+def _commonmark_keepends(text: str) -> list[str]:
+    lines: list[str] = []
+    cursor = 0
+    for match in _COMMONMARK_LINE_RE.finditer(text):
+        lines.append(text[cursor : match.end()])
+        cursor = match.end()
+    if cursor < len(text):
+        lines.append(text[cursor:])
+    return lines
+
+
+# A CommonMark fence line: at most three leading spaces, then three or more
+# backticks or tildes; group 2 is the rest of the line (info string).
+_CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+
+
+def _closes_code_fence(line: str, opener: str) -> bool:
+    """Return whether ``line`` closes the fence opened by ``opener``.
+
+    Per CommonMark the closer uses the opener's character, is at least as
+    long, and carries nothing but trailing spaces or tabs; any other line —
+    including a fence of the other character — is block content.
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return False
+    fence, rest = match.groups()
+    return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
+
+
+def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
+    """Remove fenced spans, retaining unterminated bodies when requested.
+
+    Keep non-fenced text verbatim and leave a paragraph boundary for LF/CRLF
+    input where a block was removed. Dispatch/DoR remove only closed top-level
+    CommonMark tokens: a container can end a fence without a lexical closer.
+    """
+    raw_lines = _commonmark_lines(text, keepends=True)
+    lines = _commonmark_lines(text)
+    spans: list[tuple[int, int]] = []
+    # CommonMark fences end at their container boundary. Blockquote maps also
+    # include lazy continuations whose source lines have no quote marker.
+    # Import/parse failures propagate before either consumer can admit a review.
+    from markdown_it import MarkdownIt
+
+    parser = MarkdownIt("commonmark")
+    for token in parser.parse("\n".join(lines)):
+        # These containers recurse after push() increments the open token's
+        # level. At maxNesting, tokenize() silently skips its remaining input;
+        # outer maps can still cover every line, so they cannot prove visibility.
+        if token.type in {"list_item_open", "blockquote_open"} and token.level + 1 >= parser.options["maxNesting"]:
+            raise ValueError("CommonMark verdict visibility nesting limit reached")
+        if keep_unclosed:
+            if token.type != "fence" or token.level != 0:
+                continue
+        elif token.type not in {"fence", "code_block", "blockquote_open"}:
+            continue
+        source_map = token.map
+        if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
+            if keep_unclosed:
+                continue
+            raise ValueError("CommonMark verdict visibility map unavailable")
+        start, end = source_map
+        if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
+            if keep_unclosed:
+                continue
+            raise ValueError("CommonMark verdict visibility map invalid")
+        # Dispatch/DoR still require a source closer for top-level data removal.
+        # Verdict examples include EOF/container-terminated fences and quotes.
+        if not keep_unclosed or (end - 1 > start and _closes_code_fence(lines[end - 1], token.markup)):
+            spans.append((start, end))
+    parts: list[str] = []
+    cursor = 0
+    for start, end in sorted(spans):
+        if end <= cursor:
+            continue
+        parts.extend(raw_lines[cursor:start])
+        parts.append("\n")
+        cursor = end
+    parts.extend(raw_lines[cursor:])
+    return "".join(parts)
+
 
 # This is deliberately a narrow, directive-only check.  It catches briefs
 # whose first-order outcome is a repository mutation without treating an
