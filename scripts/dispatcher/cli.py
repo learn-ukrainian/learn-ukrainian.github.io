@@ -225,11 +225,7 @@ def _dispatch(args) -> int:
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
         invocation = providers.load(agent).build(spec, child_env(spec))
-        try:
-            plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
-        finally:
-            if cleanup := getattr(invocation, "cleanup", None):
-                cleanup()
+        plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))

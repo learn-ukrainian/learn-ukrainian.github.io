@@ -41,8 +41,11 @@ def build(spec: TaskSpec, env: dict[str, str]) -> GrokInvocation:
     )
     # Bind session lookups and permission-cancellation evidence to the child home.
     plan = replace(plan, env_overrides={**env, **plan.env_overrides})
-    return GrokInvocation(plan.cmd, plan.stdin_payload.encode(), dict(plan.env_overrides),
-                          plan.output_file, adapter, plan)
+    invocation = GrokInvocation(plan.cmd, plan.stdin_payload.encode(), dict(plan.env_overrides),
+                                plan.output_file, adapter, plan)
+    if spec.options.get("dry_run") == "True":
+        invocation.cleanup()
+    return invocation
 
 
 def parse(stdout, stderr, returncode, final_text, *, adapter=None, plan=None) -> ParsedResult:
