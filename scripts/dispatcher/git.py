@@ -241,6 +241,10 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
         run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
         profile = _apply_dispatch_sparse_checkout(path, full_checkout=full_checkout, sparse_include=sparse_include)
+        if not full_checkout and not profile["excluded"]:
+            # Preserve v2's orphan-history checkout behavior even when this ref
+            # has no excluded trees. The materialized files are still the full tree.
+            run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*")
         run_git(path, "reset", "--hard", sha)
         provision_links(repo, path)
         return profile
