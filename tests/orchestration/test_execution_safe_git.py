@@ -157,6 +157,46 @@ def test_local_file_import_ref_and_transport_substitution(boundary_tree, tmp_pat
         assert not _git(repo, "for-each-ref", "refs/remotes/origin/gone")
 
 
+@pytest.mark.parametrize("key", ["uploadpack", "vcs"])
+def test_local_import_remote_command_injection(boundary_tree, tmp_path, monkeypatch, key):
+    """An import-boundary remote command must never execute in the runner."""
+    from scripts.orchestration import execution_safe_git as safe
+
+    repo, tree, _tasks, _record = boundary_tree
+    upstream = tmp_path / "upstream"
+    _git(tmp_path, "clone", "--branch", "main", _git(repo, "remote", "get-url", "origin"), str(upstream))
+    _git(upstream, "config", "user.name", "Fixture")
+    _git(upstream, "config", "user.email", "fixture@example.invalid")
+    (upstream / "new-object").write_text("requires an object transfer\n")
+    _git(upstream, "add", "new-object")
+    _git(upstream, "commit", "-m", "fixture advance")
+    _git(upstream, "push", "origin", "HEAD:main")
+    expected = _git(upstream, "rev-parse", "HEAD")
+    monkeypatch.setattr(safe, "verification_credentials", lambda remote: ["credential.helper="])
+    tripwire = tmp_path / "TRIPWIRE"
+    command = tmp_path / "tripwire-command"
+    command.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(tripwire))}\nexit 1\n")
+    command.chmod(0o700)
+    real_run = subprocess.run
+    imports = []
+
+    def import_hook(argv, **kwargs):
+        if "fetch" in argv and any(arg.startswith("file://") for arg in argv):
+            source = next(arg for arg in argv if arg.startswith("file://"))
+            real_run([safe.GIT, "config", f"remote.{source}.{key}", str(command)], cwd=repo, check=True)
+            imports.append(source)
+        return real_run(argv, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", import_hook)
+    result = safe.run_git(["fetch", "--no-tags", "origin", "refs/heads/main"], cwd=tree,
+                          profile="remote", capture_output=True, text=True)
+    assert len(imports) == 1
+    assert not tripwire.exists(), "import executed a repository-configured command"
+    if result.returncode == 0:
+        assert _git(repo, "rev-parse", "refs/remotes/origin/main") == expected
+        assert _git(repo, "rev-parse", "FETCH_HEAD^{commit}") == expected
+
+
 @pytest.fixture(autouse=True)
 def _real_git_observations(boundary_tree, monkeypatch):
     """Stub GitHub observations without replacing subprocess.run for Git.

@@ -569,9 +569,11 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
             return GitRefusal(args, "remote_object_id_invalid", text=bool(kwargs.get("text")))
         # Preserve forced updates and pruning for the existing origin refspecs.
         # The private repository contains only refs produced by this transfer.
-        mappings = [spec for spec in [*fetchspecs, *args[operand + 1:]] if ":" in spec and not spec.startswith("-")]
+        explicit = [spec for spec in args[operand + 1:] if not spec.startswith("-")]
+        mappings = [spec for spec in [*fetchspecs, *explicit] if ":" in spec and not spec.startswith("-")]
         forced = [spec.partition(":")[2] for spec in mappings if spec.startswith("+")]
-        pruned = [spec.partition(":")[2] for spec in mappings if "*" in spec and not spec.startswith("^")]
+        pruned = [spec.partition(":")[2] for spec in (explicit or fetchspecs)
+                  if ":" in spec and not spec.startswith(("-", "^"))]
         prune = "--prune" in args and "--no-prune" not in args
         refspecs = list(dict.fromkeys(heads))
         for sha, ref in refs:
@@ -585,17 +587,28 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
             return result
         # File transport is the only allowed protocol here. The helper list is
         # empty, including URL-scoped helpers discovered in primary config.
-        local_env = {**env, "GIT_ALLOW_PROTOCOL": "file"}
+        local_env = safe_git_env({key: env[key] for key in ("HOME", "XDG_CONFIG_HOME") if key in env})
+        local_env["GIT_ALLOW_PROTOCOL"] = "file"
         local_prefix = [*prefix, "-c", "protocol.https.allow=never", "-c", "protocol.ssh.allow=never"]
         keys, failure = _execution_keys(local_prefix, [(Path(cwd), False)], local_env, timeout)
         if failure is not None:
             return failure
+        # These multi-valued settings cannot all be reset with command-scope
+        # config. Only the named origin's identity/ref mapping is needed here.
+        if any(key.lower().startswith(("remote.", "url.")) and key.lower() not in
+               {"remote.origin.url", "remote.origin.fetch"} for key in keys):
+            return GitRefusal(args, "remote_import_config_unsupported", text=bool(kwargs.get("text")))
         for key in sorted(keys):
             if re.fullmatch(r"credential(?:\..+)?\.helper", key, re.I):
                 local_prefix.extend(["-c", f"{key}="])
+        uri = private.as_uri()
+        for setting in (f"remote.{uri}.uploadpack=git-upload-pack",
+                        f"remote.{uri}.receivepack=git-receive-pack", f"remote.{uri}.proxy=",
+                        f"remote.{uri}.url=", f"remote.{uri}.url={uri}"):
+            local_prefix.extend(["-c", setting])
         imported = subprocess.run(
             [*local_prefix, "fetch", "--no-tags", "--no-recurse-submodules", "--no-auto-maintenance",
-             *(["--prune"] if prune else []), "--", private.as_uri(), *refspecs],
+             "--upload-pack=git-upload-pack", *(["--prune"] if prune else []), "--", uri, *refspecs],
             cwd=cwd, env=local_env, timeout=timeout, check=False, **kwargs,
         )
         if imported.returncode:
@@ -855,7 +868,11 @@ def run_git(
             result = subprocess.run([*prefix, *args], cwd=cwd, env=safe_env, timeout=timeout, check=False, **kwargs)
     except subprocess.TimeoutExpired as exc:
         raise subprocess.TimeoutExpired([executable, args[0]], exc.timeout) from None
-    if result.returncode:
+    except (subprocess.CalledProcessError, OSError, ValueError):
+        result = GitRefusal([executable, args[0]], "remote_verification_failed", text=bool(kwargs.get("text")))
+    if isinstance(result, GitRefusal):
+        result = GitRefusal([executable, args[0]], result.code, text=bool(kwargs.get("text")))
+    if result.returncode and not isinstance(result, GitRefusal):
         # Closeout persists diagnostics. Keep raw transport/helper output and
         # remote URLs out of that evidence, including check=True exceptions.
         result = subprocess.CompletedProcess(
