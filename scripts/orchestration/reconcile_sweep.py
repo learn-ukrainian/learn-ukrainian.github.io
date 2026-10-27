@@ -3,8 +3,7 @@
 
 Runs:
 1. `dispatch_settle release-stale` (releases write-ownership claims for inactive tasks)
-2. Explicit identity-aware healing for running task records whose worker is dead,
-   and for pid-less worktree-prep records whose dispatcher is dead (#8663)
+2. Reconcile dispatcher v2 records and report legacy v1 workers read-only
 3. Logs a one-line summary (counts) to stdout (journal)
 
 DEFAULT DRY-RUN: without `--apply`, only reports what would be settled.
@@ -29,15 +28,15 @@ for path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from scripts import delegate
 from scripts.common.task_store_paths import tasks_dir
+from scripts.dispatcher import worker
 from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     _task_still_active,
     default_ledger_path,
 )
 from scripts.orchestration import dispatch_admission, dispatch_settle
-from scripts.orchestration.dead_worker_state import worker_liveness
+from scripts.orchestration.dead_worker_state import process_is_zombie, worker_liveness
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -52,19 +51,21 @@ class ReconcileSweepReport:
     stale_claims: list[str]
     live_tasks: list[str]
     unparseable_tasks: list[str] = field(default_factory=list)
+    unknown_tasks: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
     def summary_line(self) -> str:
-        zombie_label = "zombies_crashed" if self.mode == "apply" else "zombie_tasks"
         claim_label = "stale_claims_released" if self.mode == "apply" else "stale_claims"
         summary = (
             f"reconcile-sweep: mode={self.mode} scanned_tasks={self.scanned_tasks} "
-            f"{zombie_label}={len(self.zombie_tasks)} {claim_label}={len(self.stale_claims)}"
+            f"zombie_tasks={len(self.zombie_tasks)} {claim_label}={len(self.stale_claims)}"
         )
         if self.unparseable_tasks:
             summary += f" unparseable_tasks={len(self.unparseable_tasks)}"
+        if self.unknown_tasks:
+            summary += f" unknown_tasks={len(self.unknown_tasks)}"
         return summary
 
 
@@ -77,6 +78,26 @@ def _parse_pid(raw_pid: Any) -> int | None:
         val = int(raw_pid.strip())
         if val > 0:
             return val
+    return None
+
+
+def _v2_worker_liveness(state: dict[str, Any], pid: int) -> bool | None:
+    # Match dead_worker_state.worker_liveness's unknown-safe contract until
+    # its v2 process_start support from #11708 is merged.
+    recorded = state.get("process_start")
+    if not isinstance(recorded, str) or not recorded:
+        return None
+    identity = worker._identity(pid)
+    if identity is not None:
+        return identity == recorded
+    if process_is_zombie(pid):
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except OSError:
+        return None
     return None
 
 
@@ -113,8 +134,8 @@ def _probe_stale_claims(ledger: OwnershipLedger) -> list[str]:
 def _git_optional_locks_disabled() -> Iterator[None]:
     """Run git children with ``GIT_OPTIONAL_LOCKS=0`` for the sweep (#8874).
 
-    The sweep reaches git only through settle and the delegate explicit heal
-    path. Read-only commands there (``git status`` refreshing the index) must
+    The sweep reaches git through settle and dispatcher v2 observation.
+    Read-only commands there (``git status`` refreshing the index) must
     not take ``index.lock``: a sweep killed mid-call would leave it behind.
     An explicit operator value wins and is left untouched.
     """
@@ -135,8 +156,17 @@ def run_reconcile_sweep(
     task_dir: Path | None = None,
     ledger: OwnershipLedger | None = None,
 ) -> ReconcileSweepReport:
-    with _git_optional_locks_disabled():
-        return _run_reconcile_sweep(apply=apply, repo_root=repo_root, task_dir=task_dir, ledger=ledger)
+    tdir = task_dir or default_task_dir(repo_root)
+    previous = os.environ.get("LU_TASKS_DIR")
+    os.environ["LU_TASKS_DIR"] = str(tdir.resolve())
+    try:
+        with _git_optional_locks_disabled():
+            return _run_reconcile_sweep(apply=apply, repo_root=repo_root, task_dir=tdir, ledger=ledger)
+    finally:
+        if previous is None:
+            os.environ.pop("LU_TASKS_DIR", None)
+        else:
+            os.environ["LU_TASKS_DIR"] = previous
 
 
 def _run_reconcile_sweep(
@@ -160,6 +190,7 @@ def _run_reconcile_sweep(
     zombie_tasks: list[str] = []
     live_tasks: list[str] = []
     unparseable_tasks: list[str] = []
+    unknown_tasks: list[str] = []
     task_files = sorted(tdir.glob("*.json")) if tdir.is_dir() else []
     scanned_tasks = len(task_files)
 
@@ -180,7 +211,18 @@ def _run_reconcile_sweep(
             if status in ("running", "spawning"):
                 raw_pid = state.get("pid")
                 pid = _parse_pid(raw_pid)
-                if (
+                if state.get("schema_version") == 2:
+                    if raw_pid is None:
+                        unknown_tasks.append(task_id)
+                        continue
+                    if pid is None:
+                        unparseable_tasks.append(task_id)
+                        continue
+                    pid_alive = _v2_worker_liveness(state, pid)
+                    if pid_alive is None:
+                        unknown_tasks.append(task_id)
+                        continue
+                elif (
                     pid is None
                     and raw_pid is None
                     and (
@@ -192,25 +234,23 @@ def _run_reconcile_sweep(
                     # admission and while its git worktree add runs; the
                     # dispatcher recorded in ``admission_hold`` or
                     # ``worktree_prep`` owns the record until a worker exists.
-                    pid_alive = (
-                        worker_liveness({"pid": os.getpid()}) is None
-                        or not dispatch_admission.is_orphaned_pidless_record(state)
-                    )
+                    pid_alive = worker_liveness(
+                        {"pid": os.getpid()}
+                    ) is None or not dispatch_admission.is_orphaned_pidless_record(state)
                 elif pid is None:
                     unparseable_tasks.append(task_id)
                     continue
                 else:
                     try:
-                        pid_alive = worker_liveness(state, pid_alive=delegate._pid_alive) is not False
+                        pid_alive = worker_liveness(state) is not False
                     except Exception:
                         unparseable_tasks.append(task_id)
                         continue
 
                 if not pid_alive:
                     zombie_tasks.append(task_id)
-                    if apply:
-                        # Re-prove the observed identity under the shared writer lock.
-                        delegate._heal_dead_task(state_file, state, source="reconcile_sweep")
+                    if apply and state.get("schema_version") == 2:
+                        worker._observe(state)
                 else:
                     live_tasks.append(task_id)
         except Exception:
@@ -225,6 +265,7 @@ def _run_reconcile_sweep(
         stale_claims=stale_claims,
         live_tasks=live_tasks,
         unparseable_tasks=unparseable_tasks,
+        unknown_tasks=unknown_tasks,
     )
 
 
@@ -232,23 +273,22 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="reconcile_sweep.py",
         description=(
-            "Reconcile stale write-ownership claims and heal dead-PID zombie task records.\n"
+            "Reconcile stale write-ownership claims and dispatcher v2 task records.\n"
             "Use on scheduled timer or manual sweep; do not use as a replacement for dispatch_settle on active tasks."
         ),
         epilog=(
             "Examples:\n"
             "  # Dry-run report (default — read-only inspection, zero mutations):\n"
             "  .venv/bin/python scripts/orchestration/reconcile_sweep.py\n\n"
-            "  # Apply reconciliation (heal zombies and release stale claims):\n"
+            "  # Apply reconciliation (observe v2 workers and release stale claims):\n"
             "  .venv/bin/python scripts/orchestration/reconcile_sweep.py --apply\n\n"
             "  # Machine-readable JSON output:\n"
             "  .venv/bin/python scripts/orchestration/reconcile_sweep.py --json\n\n"
             "Outputs:\n"
             "  Stdout: one-line summary line (and optional JSON payload).\n"
-            "  In --apply mode: explicitly heals proven-dead workers in batch_state/tasks/*.json to 'crashed'\n"
-            "  (including worktree-prep records and admission holds whose dispatcher died:\n"
-            "  dispatch_died_during_worktree_prep, dispatch_died_after_admission)\n"
-            "  and removes stale rows from write-ownership.sqlite3.\n\n"
+            "  In --apply mode: reconciles dispatcher v2 records through dispatcher observation\n"
+            "  and removes stale rows from write-ownership.sqlite3. Legacy v1 records are read-only;\n"
+            "  zombie_tasks includes observed dead workers from both schemas.\n\n"
             "Exit codes:\n"
             "  0 on successful sweep (in dry-run or apply mode);\n"
             "  2 on invalid CLI arguments.\n\n"
@@ -263,7 +303,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Apply reconciliation (mark zombies crashed and release stale claims). Default: false (dry-run report only).",
+        help=(
+            "Apply dispatcher v2 reconciliation and release stale claims; v1 records stay read-only. "
+            "Default: false (dry-run report only)."
+        ),
     )
     parser.add_argument(
         "--repo-root",

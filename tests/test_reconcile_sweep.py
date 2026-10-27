@@ -18,7 +18,9 @@ from scripts.orchestration import dead_worker_state, reconcile_sweep
 @pytest.fixture(autouse=True)
 def _synthetic_host_pid_view(monkeypatch):
     """Legacy-record cases explicitly model a host reader, even in a sandbox."""
-    monkeypatch.setattr(dead_worker_state, "_pid_namespace", lambda process="self": dead_worker_state.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(
+        dead_worker_state, "_pid_namespace", lambda process="self": dead_worker_state.INITIAL_PID_NAMESPACE
+    )
     monkeypatch.setattr(dead_worker_state, "_proc_pid_namespace", lambda: dead_worker_state.INITIAL_PID_NAMESPACE)
 
 
@@ -57,19 +59,12 @@ def test_reconcile_sweep_uses_worker_identity(tmp_path, monkeypatch, apply, iden
     before = path.read_bytes()
     ledger = OwnershipLedger(tmp_path / "claims.sqlite3", task_state_dir=task_dir)
 
-    def read_only_status(_args):
-        pytest.fail("explicit reconciliation must not use the read-only status command")
-
-    monkeypatch.setattr(reconcile_sweep.delegate, "cmd_status", read_only_status)
     report = reconcile_sweep.run_reconcile_sweep(apply=apply, task_dir=task_dir, ledger=ledger)
     dead = identity_case in ("dead", "reused")
     assert report.zombie_tasks == (["identity-worker"] if dead else [])
     assert report.live_tasks == ([] if dead else ["identity-worker"])
     assert report.unparseable_tasks == []
-    if dead and apply:
-        assert json.loads(path.read_bytes())["status"] == "crashed"
-    else:
-        assert path.read_bytes() == before
+    assert path.read_bytes() == before
 
 
 def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
@@ -105,38 +100,71 @@ def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
     assert "reconcile-sweep: mode=dry_run scanned_tasks=1 zombie_tasks=1 stale_claims=0" in report.summary_line()
 
 
-def test_reconcile_sweep_apply_settles_dead_record(tmp_path: Path) -> None:
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize(
+    "identity",
+    ["absent_pid", "pid_reuse", "alive", "unpublished", "null_start", "empty_start", "unreadable", "eperm", "zombie"],
+)
+def test_reconcile_sweep_requires_proven_death_before_crashing_v2(tmp_path: Path, monkeypatch, apply, identity) -> None:
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()
     dead_task_id = "dead-task-2"
-    state = {
-        "task_id": dead_task_id,
-        "status": "running",
-        "pid": 999_999_999,
-    }
+    state = _v2_record(dead_task_id, 999_999_999, tmp_path / "missing-worktree")
+    if identity == "unpublished":
+        state.update(pid=None, process_start=None, status="spawning")
+    elif identity == "null_start":
+        state["process_start"] = None
+    elif identity == "empty_start":
+        state["process_start"] = ""
+    readable = identity in ("pid_reuse", "alive", "null_start", "empty_start")
+    actual = "exited-process" if identity == "alive" else "live-process"
+    monkeypatch.setattr(reconcile_sweep.worker, "_identity", lambda pid: actual if readable else None)
+    monkeypatch.setattr(reconcile_sweep, "process_is_zombie", lambda pid: identity == "zombie")
+
+    def probe(pid, sig):
+        assert (pid, sig) == (999_999_999, 0)
+        if identity == "absent_pid":
+            raise ProcessLookupError
+        if identity == "eperm":
+            raise PermissionError
+
+    monkeypatch.setattr(reconcile_sweep.os, "kill", probe)
+    dead = identity in ("absent_pid", "pid_reuse", "zombie")
+    unknown = not dead and identity != "alive"
     task_file = task_dir / f"{dead_task_id}.json"
     task_file.write_text(json.dumps(state), encoding="utf-8")
+    before = task_file.read_bytes()
 
     ledger_path = tmp_path / "own.sqlite3"
     ledger = OwnershipLedger(ledger_path, task_state_dir=task_dir)
 
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "other-store"))
     report = reconcile_sweep.run_reconcile_sweep(
-        apply=True,
+        apply=apply,
         task_dir=task_dir,
         ledger=ledger,
     )
 
-    assert report.mode == "apply"
+    assert report.mode == ("apply" if apply else "dry_run")
     assert report.scanned_tasks == 1
-    assert report.zombie_tasks == [dead_task_id]
+    assert report.zombie_tasks == ([dead_task_id] if dead else [])
+    assert report.live_tasks == ([dead_task_id] if identity == "alive" else [])
+    assert report.unknown_tasks == ([dead_task_id] if unknown else [])
+    assert report.to_dict()["unknown_tasks"] == ([dead_task_id] if unknown else [])
+    assert report.unparseable_tasks == []
 
-    # File on disk must be marked crashed by the explicit mutating path.
-    healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "crashed"
-    assert "marked crashed by reconcile_sweep probe" in healed.get("stderr_excerpt", "")
-    assert (
-        "reconcile-sweep: mode=apply scanned_tasks=1 zombies_crashed=1 stale_claims_released=0" in report.summary_line()
-    )
+    observed = json.loads(task_file.read_text(encoding="utf-8"))
+    assert observed["status"] == ("crashed" if apply and dead else state["status"])
+    if apply and dead:
+        assert observed["error"] == "supervisor exited without a result"
+        assert observed["finished_at"]
+    else:
+        assert observed == state
+        assert task_file.read_bytes() == before
+    if unknown:
+        assert "unknown_tasks=1" in report.summary_line()
+    assert os.environ["LU_TASKS_DIR"] == str(tmp_path / "other-store")
+    assert f"zombie_tasks={int(dead)}" in report.summary_line()
 
 
 def test_reconcile_sweep_does_not_touch_live_pid(tmp_path: Path) -> None:
@@ -382,7 +410,7 @@ def test_reconcile_sweep_malformed_pid_handled_per_record(tmp_path: Path) -> Non
     )
     assert "unparseable_tasks=7" in report_dry.summary_line()
 
-    # 2. Apply mode — should heal only valid dead PID zombie and not crash on unparseable records
+    # Apply reports legacy zombies without rewriting their state.
     report_apply = reconcile_sweep.run_reconcile_sweep(
         apply=True,
         task_dir=task_dir,
@@ -394,9 +422,9 @@ def test_reconcile_sweep_malformed_pid_handled_per_record(tmp_path: Path) -> Non
     assert report_apply.live_tasks == ["task_valid_live"]
     assert len(report_apply.unparseable_tasks) == 7
 
-    # Zombie task healed to crashed
+    # Legacy zombie stays read-only.
     zombie_state = json.loads((task_dir / "task_valid_zombie.json").read_text(encoding="utf-8"))
-    assert zombie_state["status"] == "crashed"
+    assert zombie_state["status"] == "running"
 
     # Live task still running
     live_state = json.loads((task_dir / "task_valid_live.json").read_text(encoding="utf-8"))
@@ -427,127 +455,51 @@ def test_reconcile_sweep_cli_help_standard() -> None:
     assert "--json" in help_text
 
 
-# --- #8663: pid-less worktree-prep records --------------------------------------------------
-
-
-def _publish_prep_record(
-    task_dir: Path, monkeypatch: pytest.MonkeyPatch, task_id: str, owner: tuple[int, int | None]
-) -> Path:
-    """Write the provisional record dispatch publishes before ``git worktree add``."""
-    from scripts import delegate
-
-    monkeypatch.setenv("LU_TASKS_DIR", str(task_dir))
-    prep = {
-        "path": str(task_dir / "wt" / task_id),
-        "run_nonce": f"nonce-{task_id}",
-        "reserved_by_mkdir": True,
-        "reserved_at": "2026-09-24T00:00:00+00:00",
-        "owner_pid": owner[0],
-        "owner_start": owner[1],
-    }
-    delegate._publish_worktree_prep(task_id, f"nonce-{task_id}", prep)
-    return task_dir / f"{task_id}.json"
-
-
-def test_reconcile_sweep_crashes_prep_record_whose_dispatcher_died(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Review blocker: an interrupted dispatch's provisional record is healed, not unparseable."""
-    from scripts.guardrails.delegate_ownership import _task_still_active
-    from tests.worktree_prep_helpers import exited_process_identity
-
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("kind", ["worktree_prep", "admission_hold"])
+def test_reconcile_sweep_keeps_prep_record_without_rewriting_legacy_state(tmp_path, apply, kind):
     task_dir = tmp_path / "tasks"
-    task_file = _publish_prep_record(task_dir, monkeypatch, "died-mid-prep", exited_process_identity())
-    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
-    # The dead dispatcher's claim stops counting before any sweep runs.
-    assert _task_still_active("died-mid-prep", None, task_dir) is False
-
-    dry = reconcile_sweep.run_reconcile_sweep(apply=False, task_dir=task_dir, ledger=ledger)
-    assert dry.zombie_tasks == ["died-mid-prep"]
-    assert dry.unparseable_tasks == []
-    assert json.loads(task_file.read_text(encoding="utf-8"))["status"] == "spawning"
-
-    applied = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
-    assert applied.zombie_tasks == ["died-mid-prep"]
-    healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "crashed"
-    assert healed["returncode_reason"] == "dispatch_died_during_worktree_prep"
-    assert healed["pid"] is None
-    assert healed["finished_at"]
-    # The reservation stays: it is the evidence the reaper reports for any leftover.
-    assert healed["worktree_prep"]["reserved_by_mkdir"] is True
-
-
-@pytest.mark.parametrize(
-    "owner",
-    [
-        pytest.param("self", id="dispatcher-alive"),
-        pytest.param("unreadable-start", id="start-time-unknown"),
-    ],
-)
-def test_reconcile_sweep_keeps_prep_record_without_proof_its_dispatcher_died(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owner: str
-) -> None:
-    from scripts.guardrails.delegate_ownership import _task_still_active
-    from scripts.orchestration.worktree_prep import process_identity
-    from tests.worktree_prep_helpers import exited_process_identity
-
-    if owner == "self":
-        me = process_identity(os.getpid())
-        identity: tuple[int, int | None] = (me["pid"], me["start"])  # type: ignore[assignment]
-    else:
-        # A dead pid whose start time was never readable is not proof of death.
-        identity = (exited_process_identity()[0], None)
-    task_dir = tmp_path / "tasks"
-    task_file = _publish_prep_record(task_dir, monkeypatch, "preparing", identity)
-    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
-
-    report = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
-
-    assert report.live_tasks == ["preparing"]
-    assert report.zombie_tasks == []
-    assert report.unparseable_tasks == []
-    assert json.loads(task_file.read_text(encoding="utf-8"))["status"] == "spawning"
-    assert _task_still_active("preparing", None, task_dir) is True
-
-
-def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """#8717: an admission hold left by a dispatcher that died before the worktree is healed, not unparseable."""
-    from scripts import delegate
-    from scripts.guardrails.delegate_ownership import _task_still_active
-    from scripts.orchestration import dispatch_admission
-    from tests.worktree_prep_helpers import exited_process_identity
-
-    task_dir = tmp_path / "tasks"
-    monkeypatch.setenv("LU_TASKS_DIR", str(task_dir))
-    delegate._publish_admission_hold("died-after-admission", "nonce-h", mode="danger", admission={"admitted": True})
-    task_file = task_dir / "died-after-admission.json"
-    state = json.loads(task_file.read_text(encoding="utf-8"))
-    pid, start = exited_process_identity()
-    state[dispatch_admission.ADMISSION_HOLD_KEY].update(
-        owner_pid=pid, owner_start=start,
-        owner_identity={"pid": pid, "start_time": start, "pid_namespace": dead_worker_state.INITIAL_PID_NAMESPACE},
+    task_dir.mkdir()
+    state = {"task_id": "legacy-prep", "status": "spawning", "pid": None, kind: {}}
+    path = task_dir / "legacy-prep.json"
+    path.write_text(json.dumps(state))
+    before = path.read_bytes()
+    reconcile_sweep.run_reconcile_sweep(
+        apply=apply,
+        task_dir=task_dir,
+        ledger=OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir),
     )
-    task_file.write_text(json.dumps(state), encoding="utf-8")
-    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
-    assert _task_still_active("died-after-admission", None, task_dir) is False
+    assert path.read_bytes() == before
 
-    applied = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
 
-    assert applied.zombie_tasks == ["died-after-admission"]
-    assert applied.unparseable_tasks == []
-    healed = json.loads(task_file.read_text(encoding="utf-8"))
-    assert healed["status"] == "crashed"
-    assert healed["returncode_reason"] == "dispatch_died_after_admission"
+def _v2_record(task_id, pid, worktree):
+    return dict(
+        schema_version=2,
+        task_id=task_id,
+        run_nonce="test-nonce",
+        status="running",
+        pid=pid,
+        process_start="exited-process",
+        started_at="2026-10-26T00:00:00+00:00",
+        agent="codex",
+        model="test-model",
+        effort=None,
+        mode="read-only",
+        worktree_path=str(worktree),
+        prompt_file=str(worktree / "prompt"),
+        result_file=str(worktree / "result"),
+        claude_account=None,
+        provider=None,
+        worktree_base_sha="HEAD",
+        worktree_branch="test-branch",
+    )
 
 
 @pytest.mark.parametrize("prior", [None, "1"])
 def test_reconcile_sweep_runs_git_children_without_optional_locks(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, prior: str | None
 ) -> None:
-    """#8874: settle and the explicit heal path run git; none may take index.lock.
+    """#8874: settle and dispatcher observation must not take index.lock.
 
     An explicit operator value wins and is left as it was.
     """
@@ -558,7 +510,7 @@ def test_reconcile_sweep_runs_git_children_without_optional_locks(
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()
     (task_dir / "dead-task-locks.json").write_text(
-        json.dumps({"task_id": "dead-task-locks", "status": "running", "pid": 999_999_999}),
+        json.dumps(_v2_record("dead-task-locks", 999_999_999, tmp_path)),
         encoding="utf-8",
     )
     seen: dict[str, str | None] = {}
@@ -567,12 +519,12 @@ def test_reconcile_sweep_runs_git_children_without_optional_locks(
         seen["settle"] = os.environ.get("GIT_OPTIONAL_LOCKS")
         return []
 
-    def _heal(_path: Path, _state: dict, *, source: str) -> None:
-        assert source == "reconcile_sweep"
-        seen["heal"] = os.environ.get("GIT_OPTIONAL_LOCKS")
+    def _observe(state: dict) -> dict:
+        seen["observe"] = os.environ.get("GIT_OPTIONAL_LOCKS")
+        return state
 
     monkeypatch.setattr(reconcile_sweep.dispatch_settle, "release_inactive_claims", _release)
-    monkeypatch.setattr(reconcile_sweep.delegate, "_heal_dead_task", _heal)
+    monkeypatch.setattr(reconcile_sweep.worker, "_observe", _observe)
     report = reconcile_sweep.run_reconcile_sweep(
         apply=True,
         task_dir=task_dir,
@@ -581,5 +533,5 @@ def test_reconcile_sweep_runs_git_children_without_optional_locks(
 
     assert report.zombie_tasks == ["dead-task-locks"]
     expected = prior or "0"
-    assert seen == {"settle": expected, "heal": expected}
+    assert seen == {"settle": expected, "observe": expected}
     assert os.environ.get("GIT_OPTIONAL_LOCKS") == prior
