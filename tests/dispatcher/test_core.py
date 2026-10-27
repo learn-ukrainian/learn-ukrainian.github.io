@@ -123,6 +123,37 @@ def sandbox(tmp_path, hermetic_monitor):
             cli("cancel", record["task_id"], "--run-nonce", record["run_nonce"])
 
 
+def test_supervise_restores_signal_handlers_after_cleanup(sandbox, monkeypatch):
+    """Defect class: leaked signal disposition after in-process supervision."""
+    from tests.dispatcher import stub_provider
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker.providers, "load", lambda _agent: stub_provider)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args: None)
+    spec = TaskSpec("signal-cleanup", "codex", "echo", None, "read-only", sandbox.repo,
+                    sandbox.repo / "signal-cleanup.prompt", sandbox.tasks / "signal-cleanup.result")
+    spec.prompt_file.write_bytes(b"literal final response")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main",
+                              run_git(sandbox.repo, "rev-parse", "HEAD"), {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "signal-cleanup.prompt")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+    original_term, original_int = signal.getsignal(signal.SIGTERM), signal.getsignal(signal.SIGINT)
+
+    def previous_term(_signum, _frame):
+        pass
+
+    try:
+        signal.signal(signal.SIGTERM, previous_term)
+        worker.supervise(path, {}, 10)
+        assert json.loads(path.read_text())["status"] == "done"
+        assert signal.getsignal(signal.SIGTERM) is previous_term
+        assert signal.getsignal(signal.SIGINT) is original_int
+    finally:
+        signal.signal(signal.SIGTERM, original_term)
+        signal.signal(signal.SIGINT, original_int)
+
+
 def await_file(path):
     deadline = time.monotonic() + 10
     while not path.exists():
@@ -407,6 +438,26 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     record = sandbox.settle(result.stdout.splitlines())
     assert Path(record["result_file"]).read_bytes() == b"exact\nbytes\n"
     assert record["prompt_sha256"] == hashlib.sha256(b"exact\nbytes\n").hexdigest()
+
+
+def test_prompt_over_pipe_buffer_reaches_late_reading_child_complete(sandbox):
+    stub = sandbox.repo / "scripts/dispatcher/providers/codex.py"
+    stub.write_text(stub.read_text().replace(
+        '    text = sys.stdin.buffer.read().decode()',
+        '    time.sleep(0.5)\n    text = sys.stdin.buffer.read().decode()',
+    ))
+    prompt = ("0123456789abcdef" * 65536).encode()
+    result = sandbox.cli(
+        "dispatch", "--agent", "codex", "--model", "file", "--prompt-file", "-",
+        stdin=prompt.decode(),
+    )
+    record = sandbox.settle(result.stdout.splitlines())
+    received = Path(record["result_file"]).read_bytes()
+    assert record["status"] == "done"
+    assert len(received) == len(prompt)
+    assert received == prompt
+    assert hashlib.sha256(received).hexdigest() == hashlib.sha256(prompt).hexdigest()
+    assert record["result_sha256"] == hashlib.sha256(prompt).hexdigest()
 
 
 @pytest.mark.parametrize("text,model,required,error", [
@@ -1902,6 +1953,63 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+
+def test_initial_response_timeout_default_is_600():
+    """Ported from tests/test_delegate.py::test_initial_response_timeout_default_is_600."""
+    args = build_parser().parse_args(["dispatch", "--agent", "codex", "--model", "gpt-6.1-sol", "--prompt", "hi"])
+    assert args.initial_response_timeout == 600
+    assert args.silence_timeout == 3600
+
+
+def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
+    """Ported from tests/test_delegate.py with the same test name, including process-tree cleanup."""
+    started = time.monotonic()
+    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "1")
+    record = sandbox.settle(task, expected=1)
+    assert time.monotonic() - started < 6
+    assert record["returncode"] == -signal.SIGKILL
+    assert record["status"] == "timeout"
+    assert "stdout_silence_timeout" in record["stderr_excerpt"]
+    assert record["silence_timeout"] == 1
+    grandchild = int(Path(record["prompt_file"]).with_suffix(".grandchild").read_text())
+    assert worker._identity(grandchild) is None
+
+
+def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
+    """Ported from tests/test_delegate.py with the same test name."""
+    started = time.monotonic()
+    task = sandbox.dispatch("tree", "--hard-timeout", "30", "--silence-timeout", "30",
+                            "--initial-response-timeout", "1")
+    record = sandbox.settle(task, expected=1)
+    assert time.monotonic() - started < 6
+    assert record["returncode"] == -signal.SIGKILL
+    assert record["status"] == "timeout"
+    excerpt = record["stderr_excerpt"]
+    assert "initial_response_timeout" in excerpt
+    assert "fired after 1s" in excerpt
+    assert "no first observable startup activity" in excerpt
+    assert "--initial-response-timeout" in excerpt
+
+
+@pytest.mark.parametrize("output", ["sys.stdout", "sys.stderr"])
+def test_run_worker_periodic_stdout_avoids_silence_timeout(sandbox, output):
+    """Ported from tests/test_delegate.py with the same test name, observing both output streams."""
+    stub = sandbox.repo / "scripts/dispatcher/providers/codex.py"
+    stub.write_text(stub.read_text().replace(
+        '    model, prompt, final = sys.argv[1:]',
+        f"    for i in range(5):\n        print('tick', file={output}, flush=True)\n        time.sleep(0.2)\n"
+        '    model, prompt, final = sys.argv[1:]',
+    ))
+    task = sandbox.dispatch("echo", "--hard-timeout", "10", "--silence-timeout", "1",
+                            "--initial-response-timeout", "1")
+    record = sandbox.settle(task)
+    assert record["status"] == "done"
+    expected = "tick\n" * 5 + "literal final response" if output == "sys.stdout" else "literal final response"
+    assert Path(record["result_file"]).read_text() == expected
+    assert record["silence_timeout"] == 1
+    assert record["initial_response_timeout"] == 1
 
 
 # Ports of the legacy status-or-fail and child identity contracts in tests/test_delegate.py.
