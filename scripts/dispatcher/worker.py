@@ -157,54 +157,55 @@ def _enforce_delivery(record: dict) -> None:
         record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
 
 
-def _reap_settled(record: dict, path: Path) -> None:
-    # The sole caller persists terminal status before this call, so no retry is needed.
-    if record.get("status") not in {
-        "done", "failed", "timeout", "rate_limited", "cancelled", "crashed",
-        "dry_run", "needs_finalize", "no_deliverable",
-    }:
-        record["reap_note"] = f"common reaper skipped: task status is not terminal ({record.get('status')})"
-        with contextlib.suppress(OSError):
-            store.replace(record, path)
-        return
-    if record.get("worktree_dirty_on_exit") is not False or record.get("push_state") != (
-        "not_applicable" if record["mode"] == "read-only" else "pushed"
-    ):
-        return
+def _provider_alive(record: dict, child) -> bool:
+    if record.get("launch_mode") == "scope":
+        # The scope holds every descendant, including ones that left the provider's process group.
+        with contextlib.suppress(OSError, StopIteration):
+            line = next(line for line in Path("/proc/self/cgroup").read_text().splitlines() if line.startswith("0::"))
+            procs = Path("/sys/fs/cgroup" + line[3:], "cgroup.procs").read_text().split()
+            return any(int(pid) != os.getpid() for pid in procs)
     try:
-        owner = os.getpid()
-        identity = _identity(owner)
-        if os.fork():
+        os.killpg(child.pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        pass
+    return True
+
+
+def _reap_settled(record: dict, child=None) -> None:
+    """Record the task worktree's disposition; never changes the task's execution status."""
+    deadline = time.monotonic() + 2
+    while child is not None and _provider_alive(record, child):
+        if time.monotonic() > deadline:
+            record.update(worktree_disposition="retained", worktree_disposition_reason="provider_processes_alive")
             return
-    except OSError:
-        record["reap_note"] = "common reaper helper launch failed"
-        with contextlib.suppress(OSError):
-            store.replace(record, path)
-        return
-    # The common reaper refuses live task PIDs. Keep the recorded identity intact
-    # and wait outside the worktree until this supervisor has actually exited.
+        time.sleep(0.05)
     try:
-        os.setsid()
-        os.chdir(git.ROOT)
-        while identity is not None and _identity(owner) == identity:
-            time.sleep(0.05)
-        result = subprocess.run(
-            [str(project_interpreter()), "-m", "scripts.fleet.post_task_reap",
-             "--task-id", record["task_id"], "--apply", "--tasks-dir", str(path.parent)],
-            cwd=git.ROOT, capture_output=True, check=True, timeout=120,
-        )
-        action = json.loads(result.stdout)["main_worktree"]["action"]
-        note = "common reaper: " + (action if action in {"removed", "retained", "skipped", "error"} else "unknown")
-        current = json.loads(path.read_text())
-        current["reap_note"] = note
-        store.replace(current, path)
+        record.update(git.settle_worktree(record))
     except Exception:
-        with contextlib.suppress(OSError, ValueError):
+        record.update(worktree_disposition="error", worktree_disposition_reason="settlement_failed")
+
+
+def settle_left_worktrees() -> None:
+    """Settle worktrees of finished tasks whose supervisor ended before settling them."""
+    records = []
+    for record in store.list_tasks():
+        if record.get("schema_version") == 2:
+            with contextlib.suppress(OSError, ValueError, KeyError, TypeError):
+                record = _observe(record)
+            records.append(record)
+    busy = {record.get("worktree_path") for record in records if record.get("status") in store.ACTIVE}
+    for record in records:
+        if (record.get("status") in store.ACTIVE or "worktree_disposition" in record
+                or record.get("worktree_path") in busy or not Path(record.get("worktree_path") or "").is_dir()):
+            continue
+        path = store.record_path(record["task_id"])
+        with contextlib.suppress(OSError, ValueError, KeyError), store.task_state_lock(path):
             current = json.loads(path.read_text())
-            current["reap_note"] = "common reaper failed"
-            store.replace(current, path)
-    finally:
-        os._exit(0)
+            if current.get("status") not in store.ACTIVE and "worktree_disposition" not in current:
+                _reap_settled(current)
+                store.replace(current, path)
 
 
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
@@ -223,6 +224,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
+        # One cancellation per run: a later signal cannot interrupt cleanup.
+        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         raise _Cancelled()
 
     def terminate():
@@ -332,8 +336,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     except Exception:
         status, error = "crashed", "supervisor or provider processing failed"
     finally:
-        signal.signal(signal.SIGTERM, signal.SIG_IGN)
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        try:
+            signal.signal(signal.SIGTERM, signal.SIG_IGN)
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
+        except _Cancelled:
+            pass  # The work already ended; the handler ignored further signals before raising.
         try:
             if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
                 terminate()
@@ -362,9 +369,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                     resolved_model_known=resolved_model is not None,
                     resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
                 )
+            # Settle before publishing the terminal record, so a waiter never sees the worktree mid-removal.
+            _reap_settled(record, child)
             store.replace(record, path)
-
-            _reap_settled(record, path)
         finally:
             signal.signal(signal.SIGTERM, previous_term)
             signal.signal(signal.SIGINT, previous_int)

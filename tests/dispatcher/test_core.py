@@ -162,26 +162,6 @@ def await_file(path):
     return content
 
 
-def stub_common_reaper(box):
-    fleet = box.repo / "scripts/fleet"
-    fleet.mkdir(exist_ok=True)
-    (fleet / "post_task_reap.py").write_text('''import json, os, sys
-from pathlib import Path
-from scripts.dispatcher.worker import _identity
-tasks = Path(os.environ["LU_TASKS_DIR"])
-task_id = sys.argv[2]
-record = json.loads((tasks / (task_id + ".json")).read_text())
-with (tasks / (task_id + ".reap-calls")).open("a") as calls:
-    calls.write("called\\n")
-receipt = dict(argv=sys.argv[1:], cwd=os.getcwd(), record=record, alive=_identity(record["pid"]))
-target = tasks / (task_id + ".reaped")
-target.with_suffix(".tmp").write_text(json.dumps(receipt))
-target.with_suffix(".tmp").replace(target)
-print(json.dumps({"main_worktree": {"action": "retained"}}))
-sys.exit(1 if (tasks / "reap-fail").exists() else 0)
-''')
-
-
 @pytest.mark.parametrize("flags,restored", [
     ([], set()), (["--full-checkout"], {"curriculum", "site/src/data"}),
     (["--sparse-include", "/curriculum/"], {"curriculum"}),
@@ -205,8 +185,9 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_wo
     run_git(sandbox.repo, "worktree", "add", "-b", "sibling", str(sibling))
     untracked = sandbox.repo / "curriculum/untracked.txt"
     untracked.write_text("uncommitted primary file")
-    record = sandbox.settle(sandbox.dispatch("echo", *flags))
-    worktree = Path(record["cwd"])
+    task = sandbox.dispatch("blocked", *flags)
+    worktree = Path(json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["cwd"])
+    await_file(sandbox.tasks / f"{task[0]}.started")
     for directory in excluded:
         assert (worktree / directory / "fixture.txt").exists() == ("--full-checkout" in flags or directory in restored)
     assert (worktree / "site/src/components/fixture.txt").exists()
@@ -222,6 +203,8 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_wo
     if "--full-checkout" not in flags:
         origin = run_git(worktree, "config", "--show-origin", "--get", "core.sparseCheckout")
         assert origin.endswith("/config.worktree\ttrue")
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    assert sandbox.settle(task)["worktree_disposition"] == "removed"
 
 
 @pytest.mark.parametrize("redirected", [False, True])
@@ -264,58 +247,81 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redi
     assert run_git(sandbox.repo, "diff", "--cached") == ""
 
 
-@pytest.mark.parametrize("model,state", [
-    ("echo", "done"), ("fail", "failed"), ("crash", "crashed"), ("blocked", "timeout"), ("tree", "cancelled"),
-    ("pushed", "done"),
+def prior_worktree(sandbox, name="prior-round", start="origin/main"):
+    """An earlier round's worktree; a task's own clean worktree is removed when it settles."""
+    tree = sandbox.repo / ".worktrees/dispatch/codex" / name
+    git.create_worktree(sandbox.repo, tree, f"codex/{name}", run_git(sandbox.repo, "rev-parse", start))
+    return tree
+
+
+def local_branches(repo):
+    return run_git(repo, "for-each-ref", "--format=%(refname:short)", "refs/heads").split()
+
+
+def test_read_only_task_removes_its_worktree_at_settle(sandbox):
+    """Defect: the dispatcher left every task worktree it created for a separate reaper."""
+    record = sandbox.settle(sandbox.dispatch())
+    assert record["status"] == "done"
+    assert not Path(record["worktree_path"]).exists()
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("removed", "clean")
+    assert record["worktree_branch"] not in local_branches(sandbox.repo)
+    assert Path(record["result_file"]).read_text() == "literal final response"
+
+
+@pytest.mark.parametrize("model,flags,status", [
+    ("pushed", [], "done"),
+    # A fix round starts at its publish branch's tip; the task branch never exists on origin.
+    ("echo", ["--branch", "release"], "no_deliverable"),
 ])
-def test_settled_clean_read_only_task_worktree_is_reaped_through_the_common_reaper(sandbox, model, state):
-    stub_common_reaper(sandbox)
-    task = sandbox.dispatch(model, "--hard-timeout", "0.2" if state == "timeout" else "0",
-                            "--mode", "workspace-write" if model == "pushed" else "read-only")
-    if state == "cancelled":
-        await_file(sandbox.tasks / f"{task[0]}.grandchild")
-        sandbox.cli("cancel", task[0], "--run-nonce", task[1])
-    sandbox.settle(task, expected=0 if state == "done" else 1)
-    receipt = json.loads(await_file(sandbox.tasks / f"{task[0]}.reaped"))
-    assert receipt["record"]["status"] == state
-    assert receipt["record"]["worktree_dirty_on_exit"] is False
-    assert receipt["record"]["push_state"] == ("pushed" if model == "pushed" else "not_applicable")
-    assert receipt["argv"] == ["--task-id", task[0], "--apply", "--tasks-dir", str(sandbox.tasks)]
-    assert receipt["cwd"] == str(sandbox.repo)
-    assert receipt["alive"] is None
-    assert (sandbox.tasks / f"{task[0]}.reap-calls").read_text() == "called\n"
+def test_pushed_write_task_removes_its_worktree_at_settle(sandbox, model, flags, status):
+    """Defect: published write work kept its worktree and local branch after the task ended."""
+    run_git(sandbox.repo, "push", "origin", "main:release")
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write", *flags),
+                            expected=0 if status == "done" else 1)
+    assert record["status"] == status
+    assert not Path(record["worktree_path"]).exists()
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("removed", "clean")
+    assert record["worktree_branch"] not in local_branches(sandbox.repo)
+    published = record.get("publish_branch") or record["worktree_branch"]
+    assert run_git(sandbox.remote, "rev-parse", f"refs/heads/{published}") == record["head_sha"]
 
 
-@pytest.mark.parametrize("mode,model", [("read-only", "dirty"), ("workspace-write", "dirty"), ("workspace-write", "unpushed")])
-def test_dirty_or_unpushed_worktree_is_never_reaped(sandbox, mode, model):
-    stub_common_reaper(sandbox)
-    task = sandbox.dispatch(model, "--mode", mode)
-    record = sandbox.settle(task, expected=0 if mode == "read-only" else 1)
-    deadline = time.monotonic() + 5
-    while worker._identity(record["pid"]):
-        assert time.monotonic() < deadline
+@pytest.mark.parametrize("model,flags,reason", [
+    ("dirty", [], "dirty"),
+    ("pushed-dirty", [], "dirty"),
+    ("unpushed", [], "unpublished"),
+    ("unpushed", ["--branch", "release"], "remote_mismatch"),
+])
+def test_dirty_or_unpublished_write_task_keeps_worktree_with_reason(sandbox, model, flags, reason):
+    """Defect: settlement must never discard uncommitted or unpublished work, and must say why it kept it."""
+    run_git(sandbox.repo, "push", "origin", "main:release")
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write", *flags), expected=1)
+    assert record["status"] == "no_deliverable"
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", reason)
+    tree = Path(record["worktree_path"])
+    assert (tree / "delivered.txt").exists()
+    assert record["worktree_branch"] in local_branches(sandbox.repo)
+    assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
+
+
+def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
+    """Defect: a supervisor killed before settlement left its worktree behind for good."""
+    task = sandbox.dispatch("blocked")
+    provider = int(await_file(sandbox.tasks / f"{task[0]}.started"))
+    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    os.kill(record["pid"], signal.SIGKILL)
+    deadline = time.monotonic() + 10
+    while worker._identity(record["pid"]) == record["process_start"]:
+        assert time.monotonic() < deadline, "supervisor survived SIGKILL"
         time.sleep(0.02)
-    assert not (sandbox.tasks / f"{task[0]}.reap-calls").exists()
-    assert (Path(record["cwd"]) / "delivered.txt").read_text() == "literal delivered value\n"
-
-
-@pytest.mark.parametrize("dirty,push", [(None, "pushed"), (False, "unknown"), (False, "unpushed")])
-def test_unknown_or_unpushed_delivery_never_starts_a_reaper(tmp_path, monkeypatch, dirty, push):
-    def forbidden():
-        pytest.fail("ineligible delivery forked a reaper")
-    monkeypatch.setattr(worker.os, "fork", forbidden)
-    worker._reap_settled(dict(status="done", worktree_dirty_on_exit=dirty, push_state=push,
-                              mode="workspace-write"), tmp_path / "task.json")
-
-
-@pytest.mark.parametrize("status", ["running", "spawning", "unknown", None])
-def test_running_or_unknown_task_never_starts_a_reaper(tmp_path, monkeypatch, status):
-    monkeypatch.setattr(worker.os, "fork", lambda: pytest.fail("unsettled task forked a reaper"))
-    worker._reap_settled(dict(status=status, worktree_dirty_on_exit=False, push_state="pushed",
-                              mode="workspace-write"), tmp_path / "task.json")
-    assert json.loads((tmp_path / "task.json").read_text())["reap_note"] == (
-        f"common reaper skipped: task status is not terminal ({status})"
-    )
+    os.killpg(provider, signal.SIGKILL)
+    assert Path(record["worktree_path"]).is_dir()
+    sandbox.settle(sandbox.dispatch())
+    crashed = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert crashed["status"] == "crashed"
+    assert not Path(record["worktree_path"]).exists()
+    assert (crashed["worktree_disposition"], crashed["worktree_disposition_reason"]) == ("removed", "clean")
+    assert record["worktree_branch"] not in local_branches(sandbox.repo)
 
 
 def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatch):
@@ -329,25 +335,6 @@ def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatc
     with pytest.raises(ValueError, match="supervisor identity changed; cancellation refused"):
         worker.cancel("reused-supervisor")
     send_signal.assert_not_called()
-
-
-def test_reaper_failure_does_not_change_task_status(sandbox):
-    stub_common_reaper(sandbox)
-    sandbox.tasks.mkdir()
-    (sandbox.tasks / "reap-fail").touch()
-    task = sandbox.dispatch()
-    record = sandbox.settle(task)
-    assert record["status"] == "done"
-    path = sandbox.tasks / f"{task[0]}.json"
-    deadline = time.monotonic() + 5
-    while "reap_note" not in record:
-        assert time.monotonic() < deadline
-        time.sleep(0.02)
-        record = json.loads(path.read_text())
-    assert record["status"] == "done"
-    assert record["returncode"] == 0
-    assert record["reap_note"] == "common reaper failed"
-    assert Path(record["cwd"]).is_dir()
 
 
 def test_dispatch_returns_before_blocked_child_and_client_timeout_does_not_cancel(sandbox):
@@ -476,7 +463,6 @@ def test_prompt_over_pipe_buffer_reaches_late_reading_child_complete(sandbox):
 def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, text, model, required, error):
     """Defect classes: false completion, failure promotion, result corruption and opt-in leakage."""
     # Use the production shared parser and its dependencies in the disposable CLI repo.
-    stub_common_reaper(sandbox)
     (sandbox.repo / "scripts/fleet/__init__.py").touch()
     (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     dispatched = sandbox.cli(
@@ -667,6 +653,10 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
     assert record["push_state"] == push_state
     assert record["commits_ahead"] == ahead
     assert record["worktree_dirty_on_exit"] is dirty
+    if push_state == "pushed":
+        # Settlement removed the published worktree; re-attach it at its head for the probes below.
+        assert record["worktree_disposition"] == "removed"
+        run_git(sandbox.repo, "worktree", "add", "-b", record["worktree_branch"], record["cwd"], record["head_sha"])
     assert record["head_sha"] == run_git(Path(record["cwd"]), "rev-parse", "HEAD")
     if push_state == "pushed":
         assert (
@@ -728,13 +718,9 @@ def test_v2_record_without_owned_paths_remains_readable(sandbox):
 @pytest.fixture
 def delivery_settle(sandbox):
     run_git(sandbox.repo, "push", "origin", "main:release")
-    record = sandbox.settle(sandbox.dispatch("echo", "--base", "origin/release"))
-    # Finish the initial reaper's record write before reusing this run for settle probes.
-    deadline = time.monotonic() + 10
-    path = sandbox.tasks / f"{record['task_id']}.json"
-    while "reap_note" not in json.loads(path.read_text()):
-        assert time.monotonic() < deadline, "initial reaper did not finish"
-        time.sleep(0.02)
+    # The probes reuse one worktree; a borrowed (--cwd) worktree survives each settlement.
+    tree = prior_worktree(sandbox, "delivery-probe", "origin/release")
+    record = sandbox.settle(sandbox.dispatch("echo", "--cwd", str(tree), "--base", "origin/release"))
     # Synthetic write records need the trusted remote omitted from read-only dispatches.
     record["worktree_remote_url"] = str(sandbox.remote)
     # Existing settle probes also cover records created before the start-SHA field.
@@ -894,8 +880,7 @@ def test_merge_resolution_and_root_paths_cannot_escape_scope(sandbox, delivery_s
 @pytest.mark.parametrize("reuse_cwd", [False, True])
 def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reuse_cwd, monkeypatch):
     if reuse_cwd:
-        initial = sandbox.settle(sandbox.dispatch())
-        tree = Path(initial["cwd"])
+        tree = prior_worktree(sandbox)
         flags = ["--cwd", str(tree)]
     else:
         tree = sandbox.repo
@@ -921,14 +906,13 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
 @pytest.mark.parametrize("attach", ["branch", "pinned-head", "cwd"])
 @pytest.mark.parametrize("new_path", ["delivered.txt", "new-outside.txt"])
 def test_branch_fix_round_ownership_starts_after_preexisting_commits(sandbox, attach, new_path):
-    initial = sandbox.settle(sandbox.dispatch())
-    tree = Path(initial["cwd"])
+    tree = prior_worktree(sandbox)
     base = run_git(sandbox.repo, "rev-parse", "origin/main")
     (tree / "earlier-outside.txt").write_text("previous round\n")
     run_git(tree, "add", "earlier-outside.txt")
     run_git(tree, "commit", "-m", "previous round outside current scope")
     starting_head = run_git(tree, "rev-parse", "HEAD")
-    branch = initial["worktree_branch"]
+    branch = "codex/prior-round"
     run_git(tree, "push", "origin", "HEAD")
     flags = ["--cwd", str(tree)] if attach == "cwd" else ["--branch", branch]
     if attach == "pinned-head":
@@ -945,6 +929,10 @@ def test_branch_fix_round_ownership_starts_after_preexisting_commits(sandbox, at
     Path(record["prompt_file"]).with_suffix(".release").touch()
     outside = new_path != "delivered.txt"
     result = sandbox.settle(task, expected=1 if outside else 0)
+    if attach != "cwd":
+        # Settlement removed the published worktree; re-attach it at its head for the recheck below.
+        assert result["worktree_disposition"] == "removed"
+        run_git(sandbox.repo, "worktree", "add", "-b", result["worktree_branch"], result["cwd"], result["head_sha"])
     # Recheck the reported defect's record shape: base is main, start is the branch tip.
     # Keep the actual start captured at dispatch, independent of the configured base.
     result.update(worktree_base_sha=base, status="done", error=None)
@@ -966,8 +954,7 @@ def test_branch_fix_round_uses_remote_start_when_local_branch_is_stale(sandbox, 
     branch = "codex/existing-pr"
     stale_head = run_git(sandbox.repo, "rev-parse", "HEAD")
     run_git(sandbox.repo, "branch", branch)
-    earlier = sandbox.settle(sandbox.dispatch())
-    previous_tree = Path(earlier["cwd"])
+    previous_tree = prior_worktree(sandbox)
     (previous_tree / "earlier-outside.txt").write_text("previous author round\n")
     run_git(previous_tree, "add", "earlier-outside.txt")
     run_git(previous_tree, "commit", "-m", "earlier outside-scope delivery")
@@ -1135,14 +1122,15 @@ def test_prior_worker_origin_poisoning_refuses_dispatch_and_fails_closed(sandbox
     # Read-only admission still records missing trust; even a later write settle fails closed.
     record = sandbox.settle(sandbox.dispatch())
     assert record["worktree_remote_url"] is None
-    tree = Path(record["cwd"])
+    # Its own worktree was removed at settlement; forge the delivery from an earlier round's worktree.
+    tree = prior_worktree(sandbox)
     for name in ("outside.txt", "delivered.txt"):
         (tree / name).write_text("forged delivery\n")
     run_git(tree, "add", "outside.txt", "delivered.txt")
     run_git(tree, "commit", "-m", "forged delivery")
-    run_git(tree, "push", "origin", "HEAD", "HEAD:main")
+    run_git(tree, "push", "origin", f"HEAD:refs/heads/{record['worktree_branch']}", "HEAD:main")
     record.update(
-        mode="workspace-write", owned_paths=["delivered.txt"], head_sha=run_git(tree, "rev-parse", "HEAD"),
+        worktree_path=str(tree), cwd=str(tree), mode="workspace-write", owned_paths=["delivered.txt"], head_sha=run_git(tree, "rev-parse", "HEAD"),
         push_state="pushed", commits_ahead=1, worktree_dirty_on_exit=False,
     )
     assert run_git(fake, "rev-parse", "main") == record["head_sha"]
@@ -1508,6 +1496,9 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
     """Uncommitted work is unpushed even when HEAD matches origin or origin cannot be read."""
     record = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write"))
     worktree = Path(record["cwd"])
+    # Settlement removed the published worktree; re-attach it at the same head to probe a dirty tree.
+    assert record["worktree_disposition"] == "removed"
+    run_git(sandbox.repo, "worktree", "add", "-b", record["worktree_branch"], str(worktree), record["head_sha"])
     (worktree / "delivered.txt").write_text("uncommitted delivery\n")
     if not remote_available:
         run_git(worktree, "remote", "set-url", "origin", str(sandbox.tasks / "missing-remote"))
@@ -1580,6 +1571,7 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(
         run_git(worktree, "push", "origin", f"HEAD:refs/heads/{remote_branch}")
     if dirty:
         (worktree / "uncommitted.txt").write_text("still local\n")
+    head = run_git(worktree, "rev-parse", "HEAD")
     if crash:
         before_crash = git.snapshot_delivery(worker._spec(record, {}), record)
         assert before_crash["push_state"] == "pushed"
@@ -1596,7 +1588,6 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(
     assert observed["status"] == ("crashed" if crash else "no_deliverable" if delivery_error else "done")
     if not crash:
         assert observed.get("no_deliverable_reason") == delivery_error
-    head = run_git(worktree, "rev-parse", "HEAD")
     matched = remote_branch if target in {"pinned", "own"} else None
     assert observed["push_state"] == expected
     assert observed["push_state_reason"] == reason
@@ -1640,8 +1631,10 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     assert _review_branch(review) == first["worktree_branch"]
     assert review["worktree_branch"] != first["worktree_branch"]
     assert review["push_state"] == "not_applicable"
-    reused = sandbox.dispatch("echo", "--cwd", review["cwd"])
-    assert sandbox.settle(reused)["cwd"] == review["cwd"]
+    assert not Path(review["cwd"]).exists()
+    reused = sandbox.settle(sandbox.dispatch("echo", "--cwd", first["cwd"]))
+    assert (reused["cwd"], reused["worktree_disposition_reason"]) == (first["cwd"], "borrowed_worktree")
+    assert Path(first["cwd"]).is_dir()
     assert run_git(sandbox.repo, "branch", "--show-current") == "main"
 
 

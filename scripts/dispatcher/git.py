@@ -290,16 +290,21 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         provision_links(repo, path)
 
 
+DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
+NODE_LINKS = ("node_modules", "site/node_modules")
+# Ignored entries a settled worktree may still hold: regenerable caches and the links provisioned above.
+CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"})
+
+
 def provision_links(repo: Path, worktree: Path) -> None:
     """Provision only real primary targets; atomic symlink creation never replaces entries."""
     repo = repo.absolute()
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    node_links = ("node_modules", "site/node_modules")
+    node_links = NODE_LINKS
     if npm_shim_dir() is None:
         logging.getLogger(__name__).warning("Skipping node_modules and site/node_modules: npm/npx guard unavailable")
         node_links = ()
-    database_links = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
-    for relative in (*database_links, *node_links):
+    for relative in (*DATABASE_LINKS, *node_links):
         parts = Path(relative).parts
         with ExitStack() as stack:
             def open_directory(name, parent=None):
@@ -363,3 +368,52 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
         delivery["push_state"] = "unpushed"
         delivery["push_state_reason"] = "dirty_worktree"
     return delivery
+
+
+def _disposable(tree: Path, entry: str) -> bool:
+    if not entry.startswith("!! "):
+        return False
+    relative = entry[3:].rstrip("/")
+    return bool(CACHE_DIRS.intersection(Path(relative).parts)) or (
+        relative in (*DATABASE_LINKS, *NODE_LINKS) and (tree / relative).is_symlink()
+    )
+
+
+def settle_worktree(record: dict) -> dict:
+    """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
+
+    Runs from outside the worktree after the provider has exited. A write task's worktree goes only
+    when its HEAD is the publish branch's tip on origin, read fresh; without --branch that is the task branch.
+    """
+    def disposition(state, reason):
+        return dict(worktree_disposition=state, worktree_disposition_reason=reason)
+
+    if record.get("options", {}).get("cwd"):
+        return disposition("retained", "borrowed_worktree")
+    try:
+        repo, tree, branch = resolve_repo(record.get("repo"))[0], Path(record["worktree_path"]), record["worktree_branch"]
+        entries = _git(tree, "status", "--porcelain", "-z", "--ignored", isolate=True, strip=False).split("\0")
+        head, remote = _git(tree, "rev-parse", "HEAD", isolate=True), None
+        if record["mode"] != "read-only":
+            ref = f"refs/heads/{record.get('publish_branch') or branch}"
+            advertised = _git(repo, "ls-remote", "origin", ref, isolate=True)
+            remote = next((sha for sha, name in (line.split() for line in advertised.splitlines()) if name == ref), None)
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+        return disposition("retained", "unknown")
+    if not all(_disposable(tree, entry) for entry in entries if entry):
+        return disposition("retained", "dirty")
+    if record["mode"] != "read-only" and head != remote:
+        return disposition("retained", "unpublished" if remote is None else "remote_mismatch")
+    try:
+        _git(repo, "worktree", "remove", str(tree), isolate=True)
+    except (OSError, subprocess.SubprocessError):
+        return disposition("error", "worktree_remove_failed")
+    try:
+        # The task branch goes only when its tip is published or reachable from another ref.
+        if head != remote and _git(repo, "rev-list", "-n1", head, "--not", f"--exclude=refs/heads/{branch}", "--all",
+                                   isolate=True):
+            return disposition("removed", "branch_kept_unmerged")
+        _git(repo, "update-ref", "-d", f"refs/heads/{branch}", head, isolate=True)
+    except (OSError, subprocess.SubprocessError):
+        return disposition("removed", "branch_delete_failed")
+    return disposition("removed", "clean")

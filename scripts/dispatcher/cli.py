@@ -220,6 +220,9 @@ def _dispatch(args) -> int:
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
+    if not args.dry_run:
+        # Crash recovery: finish settling this dispatcher's earlier tasks before creating a worktree.
+        worker.settle_left_worktrees()
     host_admission.precheck(args.mode, force_reason=args.force_admission)
     try:
         headroom.check_plan(agent, args.model, account_fields,
