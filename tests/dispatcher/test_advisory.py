@@ -575,3 +575,14 @@ def test_b3_unreadable_exempt_changes_fail_closed(launch, runtime, tmp_path, mon
     state = _exempt_writer_run(launch, runtime, tmp_path, {"docs/lesson-1.md": "# Lesson\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == advisory.EXEMPT_CHANGES_UNMEASURED
+
+
+def test_existing_haiku_routine_mechanical_dispatch_needs_no_new_brief_contract(launch, runtime, capsys):
+    launch[launch.index("--agent") + 1] = "claude"
+    launch[launch.index("--model") + 1] = "claude-haiku-5-5"
+    assert cli.main([*launch, "--research-task-family", "routine_mechanical"]) == 0, capsys.readouterr().err
+    record = runtime.settle()
+    assert record["status"] == "done", record.get("error")
+    assert "driver_brief" not in record and "advisory_envelope" not in record
+    assert "advisory_prompt_sha256" not in record
+    assert len(runtime.calls) == 1
