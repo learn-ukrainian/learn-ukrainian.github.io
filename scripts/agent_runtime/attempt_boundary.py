@@ -940,7 +940,9 @@ def linux_claude_auth(account: str | None = None, *, environ: Mapping[str, str] 
     try:
         label = resolve_claude_account_label(account)
         if label != DEFAULT_CLAUDE_ACCOUNT:
-            _, token = _validated_claude_selection(label, environ=environ)
+            _, token = _validated_claude_selection(
+                label, environ=None if environ is None else {**os.environ, **environ}
+            )
             note_claude_account_verified(label, CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN)
             return {"CLAUDE_CODE_OAUTH_TOKEN": token}
     except ClaudeAccountRefused as exc:

@@ -280,8 +280,15 @@ def admit(args, prompt: bytes, agent: str) -> dict:
         raise ValueError(refusal)
     root = worktree_claims.required_review_input_root(contract)
     _refuse_review_scratch_in_worktree()
-    return dict(review_contract=contract, review_input_root=root,
-                review_input_paths=[str(p) for p in _review_attempt_input_paths(args.review_attempt)])
+    admitted = dict(review_contract=contract, review_input_root=root,
+                    review_input_paths=[str(p) for p in _review_attempt_input_paths(args.review_attempt)])
+    if agent == "claude":
+        from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
+
+        admitted["claude_account_source"] = account.source
+        if account.label != DEFAULT_CLAUDE_ACCOUNT:
+            admitted["claude_account"] = account.label
+    return admitted
 
 
 @contextlib.contextmanager
@@ -315,8 +322,13 @@ def prepare(spec, record, admitted):
                 review_profile=record.get("review_profile") or "code",
             )
             spec.options["review_tool_config"] = dict(config)
-            if spec.claude_account:
-                spec.options["review_tool_config"]["claude_account"] = spec.claude_account
+            if label := admitted.get("claude_account") or spec.claude_account:
+                from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT, load_claude_account_binding
+
+                spec.options["review_tool_config"]["claude_account"] = label
+                if label != DEFAULT_CLAUDE_ACCOUNT:
+                    account_binding = load_claude_account_binding(label)
+                    spec.options["review_tool_config"]["review_claude_config_dir"] = str(account_binding.config_dir)
             record.update(admitted, review_ledger_path=str(plan.ledger_path))
             _mark_review_attempt_worktree(spec.worktree, spec.task_id)
             yield
@@ -341,6 +353,8 @@ class Execution:
             from scripts.review.runtime_identity import boundary_refusal
 
             try:
+                if config and spec.agent == "claude" and config.get("review_claude_config_dir"):
+                    env["CLAUDE_CONFIG_DIR"] = config["review_claude_config_dir"]
                 if not config:
                     raise ReviewIsolationError("attempt_boundary_inputs_missing")
                 if store.digest(spec.prompt_file.read_bytes()) != record["prompt_sha256"]:

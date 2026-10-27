@@ -419,3 +419,68 @@ def test_review_input_lock_refuses_invalid_explicit_root(root):
     from scripts.review import dispatch_execution as execution
     with contextlib.ExitStack() as locks, pytest.raises(ValueError, match="review_input_root_invalid"):
         execution._lock_review_input_root({"input_root": root}, locks)
+
+
+def test_default_file_b_records_and_launches_b(tmp_path, monkeypatch):
+    """Ported from tests/test_delegate.py::test_default_file_b_records_and_launches_b."""
+    from contextlib import nullcontext
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime import review_mcp
+    from scripts.review import dispatch_execution as execution
+    from tests.test_delegate import _bind_claude_account_b, _default_account_file
+
+    selected = _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    root = tmp_path / "checkout"
+    root.mkdir()
+    manifest = root / "manifest.yaml"
+    manifest.write_text("inputs: []\n")
+    prompt = tmp_path / "prompt"
+    prompt.write_bytes(b"Review")
+    args = cli.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--model", "claude-opus-5-5", "--task-id", "default-b",
+        "--review-id", "review", "--attempt-id", "current", "--review-attempt", str(manifest),
+        "--prompt-file", str(prompt),
+    ])
+    monkeypatch.setattr("scripts.agent_runtime.target_admission.resolve_and_admit", lambda *a, **kw: None)
+    monkeypatch.setattr(execution, "_review_attempt_prompt_admission",
+                        lambda *a: (None, {"input_root": str(root)}))
+    admitted = execution.admit(args, b"Review", "claude")
+    spec = TaskSpec("default-b", "claude", "claude-opus-5-5", None, "read-only", root, prompt,
+                    tmp_path / "result", options={"review_attempt": str(manifest)})
+    record = store.new_record(spec, dict(key="public", github="example/public"), "claude/default-b", "a" * 40,
+                              dict(research_owned_path=[]), binding=dict(review_id="review", attempt_id="current",
+                                manifest_sha256=store.digest(manifest.read_bytes())))
+    monkeypatch.setattr(execution, "worktree_lock", lambda *a: nullcontext())
+    monkeypatch.setattr(execution, "_lock_review_input_root", lambda *a, **kw: None)
+    monkeypatch.setattr(execution, "_mark_review_attempt_worktree", lambda *a: None)
+    monkeypatch.setattr(review_mcp, "prepare_review_attempt",
+                        lambda *a, **kw: SimpleNamespace(ledger_path=tmp_path / "ledger"))
+    monkeypatch.setattr(review_mcp, "review_attempt_tool_config", lambda *a, **kw: {})
+    with execution.prepare(spec, record, admitted):
+        assert (record["claude_account"], record["claude_account_source"]) == ("b", "default-file")
+        assert selected not in json.dumps(record)
+        assert spec.options["review_tool_config"]["claude_account"] == "b"
+        assert worker._spec(record, spec.options).claude_account == "b"
+
+    # Native bound-account custody is also ported from
+    # tests/agent_runtime/test_attempt_boundary.py::test_attempt_boundary_authenticates_claude_seat_as_the_labelled_account.
+    import subprocess
+
+    from scripts.dispatcher.environment import child_env
+    from tests.agent_runtime.test_attempt_boundary import attempt_config, manifest_world
+
+    config = attempt_config(root, tmp_path, manifest_world(root, "plan"), "claude", review_access="full")
+    config.update(review_access="full", review_cwd=str(root), claude_account="b",
+                  review_claude_config_dir=spec.options["review_tool_config"]["review_claude_config_dir"])
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    record["review_attempt"]["manifest_sha256"] = store.digest(Path(config["review_manifest"]).read_bytes())
+    record["review_access"] = "full"
+    run_spec = worker._spec(record, {"review_tool_config": config})
+    running = execution.Execution(run_spec, record, child_env(run_spec))
+    try:
+        assert running.boundary.env["CLAUDE_CODE_OAUTH_TOKEN"] == "fixture-bound-" + "b" * 30
+        assert selected not in json.dumps(running.boundary.env)
+    finally:
+        running.cleanup()
