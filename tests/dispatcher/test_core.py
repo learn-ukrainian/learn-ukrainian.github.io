@@ -884,6 +884,46 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
     assert (record["status"], record["error"]) == ("done", None)
 
 
+def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch):
+    """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base."""
+    remote, tree = tmp_path / "remote.git", tmp_path / "tree"
+    run_git(tmp_path, "init", "--bare", str(remote))
+    run_git(remote, "config", "uploadpack.allowFilter", "true")
+    run_git(tmp_path, "init", "-b", "main", str(tree))
+    run_git(tree, "config", "user.email", "stub@example.invalid")
+    run_git(tree, "config", "user.name", "Stub")
+    run_git(tree, "remote", "add", "origin", str(remote))
+    old = set()
+    for n in range(20):
+        monkeypatch.setenv("GIT_COMMITTER_DATE", f"2020-01-{n + 1:02d}T00:00:00Z")
+        (tree / f"old-{n}.txt").write_text(f"old history {n}\n")
+        run_git(tree, "add", ".")
+        run_git(tree, "commit", "-m", f"old history {n}")
+        old.update(run_git(tree, "rev-parse", "HEAD", f"HEAD:old-{n}.txt").split())
+    monkeypatch.delenv("GIT_COMMITTER_DATE")
+    run_git(tree, "commit", "--allow-empty", "-m", "task base")
+    run_git(tree, "push", "origin", "main")
+    run_git(tree, "checkout", "-b", "sol/fetch")
+    (tree / "delivered.txt").write_text("delivery\n")
+    run_git(tree, "add", "delivered.txt")
+    run_git(tree, "commit", "-m", "delivery")
+    run_git(tree, "push", "origin", "HEAD")
+    base, head = run_git(tree, "rev-parse", "main", "HEAD").split()
+    record = dict(
+        task_id="fetch", worktree_path=str(tree), worktree_remote_url=str(remote),
+        worktree_base_ref="refs/remotes/origin/main", worktree_base_sha=base, worktree_branch="sol/fetch",
+        head_sha=head, mode="workspace-write", status="done", owned_paths=["delivered.txt"],
+        worktree_dirty_on_exit=False, commits_ahead=1, push_state="pushed",
+    )
+    with git.ownership_git(record) as run:
+        present = set(run("cat-file", "--batch-all-objects", "--batch-check=%(objectname)").split())
+    assert {base, head} <= present
+    assert old.isdisjoint(present)
+    assert run_git(tree, "rev-parse", "HEAD:delivered.txt") not in present
+    worker._enforce_delivery(record)
+    assert (record["status"], record.get("error")) == ("done", None)
+
+
 @pytest.mark.parametrize("missing", ["worktree_remote_url", "git-binary", "scratch", "remote-tip"])
 def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch, missing):
     record, settle = delivery_settle
