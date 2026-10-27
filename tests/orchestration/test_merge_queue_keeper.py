@@ -170,7 +170,9 @@ class FakeGitHub:
         client = keeper.GitHub(self.root, self.repository)
         client.json = lambda request: {"data": {"repository": {"pullRequest": {
             "headRefOid": self.row["headRefOid"],
-            "removals": {"totalCount": len(nodes), "nodes": nodes, "pageInfo": {"hasNextPage": False}},
+            # The full timeline count includes events excluded by itemTypes.
+            "removals": {"totalCount": len(nodes) + 44, "nodes": nodes,
+                         "pageInfo": {"hasNextPage": False, "endCursor": "removal-end" if nodes else None}},
             "pushes": {"nodes": self.pushes},
         }}}}
         return client.queue_removals(number, head)
@@ -1434,7 +1436,7 @@ def test_keeper_manual_dequeue_then_fix_reenqueues_without_ci_failure_proof(tmp_
             "event": "removed_from_merge_queue",
             "created_at": "2026-10-09T11:00:00Z",
             "beforeCommit": None,
-            "reason": "manual",
+            "reason": "MANUAL",
         }
     ]
     lines, failed = gated(fixed, path, monkeypatch, gate_path)

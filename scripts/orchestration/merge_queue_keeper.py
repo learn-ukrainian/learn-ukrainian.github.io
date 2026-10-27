@@ -381,17 +381,21 @@ class GitHub:
                     stamp = _timestamp(node["createdAt"])
                     if reason is not None and not isinstance(reason, str):
                         raise KeeperError("queue removal reason malformed")
-                    if reason != "manual":
+                    if reason is None or reason.lower() != "manual":
                         removals.append(stamp)
                 count += len(nodes)
+                # itemTypes filters nodes, but totalCount includes the full timeline.
                 if count > total:
                     raise KeeperError("queue removal count inconsistent")
-                if not info["hasNextPage"]:
-                    if count != total:
-                        raise KeeperError("queue removal history partial")
-                    return removals, force_push[1] if force_push and force_push[0] == head else None
                 cursor = info["endCursor"]
-                if not nodes or not isinstance(cursor, str) or not cursor or cursor in cursors:
+                if (
+                    (cursor is not None and (not isinstance(cursor, str) or not cursor or cursor in cursors))
+                    or (cursor is None and (nodes or info["hasNextPage"]))
+                ):
+                    raise KeeperError("queue removal cursor invalid")
+                if not info["hasNextPage"]:
+                    return removals, force_push[1] if force_push and force_push[0] == head else None
+                if not nodes:
                     raise KeeperError("queue removal cursor invalid")
                 cursors.add(cursor)
                 fields["cursor"] = cursor
