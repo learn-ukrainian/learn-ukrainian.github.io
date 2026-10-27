@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from scripts.common.repo_root import project_interpreter
+from scripts.common.repo_root import main_checkout_root, project_interpreter
 from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import admission, git, providers, store
 from scripts.dispatcher.environment import child_env
@@ -48,13 +48,13 @@ def _observe(record: dict) -> dict:
     return record
 
 
-def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float, *, release_preparation=None) -> None:
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
     logs = path.parent / "logs"
-    logs.mkdir(exist_ok=True, mode=0o700)
     try:
+        logs.mkdir(exist_ok=True, mode=0o700)
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
             try:
@@ -63,6 +63,7 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
                     task_id=spec.task_id, run_nonce=record["run_nonce"], cwd=Path(__file__).resolve().parents[2],
                     stderr=err, stderr_log=logs / f"{spec.task_id}.stderr.log",
                 )
+                record["pid"] = process.pid
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
         record.update(pid=process.pid, process_start=_identity(process.pid), **launch)
@@ -70,13 +71,27 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
         payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
         process.stdin.write(payload)
         process.stdin.close()
-    except admission.LaunchRefused as exc:
-        record.update(exc.fields, finished_at=store.now())
+    except BaseException as exc:
+        if isinstance(exc, admission.LaunchRefused):
+            record.update(exc.fields)
+        else:
+            record.update(status="crashed" if record.get("pid") else "failed",
+                          error=f"worker_spawn_failed: {type(exc).__name__}")
+        record["finished_at"] = store.now()
         store.replace(record, path)
-        raise
-    except Exception:
-        record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
-        store.replace(record, path)
+        if not record.get("pid"):
+            if release_preparation is not None:
+                release_preparation()
+            if not spec.options.get("cwd") and record.get("worktree_branch") and record.get("worktree_base_sha"):
+                repo = main_checkout_root(spec.worktree)
+                removed = git.discard_unstarted_worktree(
+                    repo, spec.worktree, record["worktree_branch"], record["worktree_base_sha"], spec.task_id,
+                )
+                record["unstarted_worktree_cleanup"] = "removed" if removed else "retained"
+            if record.get("review_attempt"):
+                # Retain the exclusive ledger and failed task as an audit tombstone; never replay it.
+                record["review_attempt_reservation"] = "released"
+            store.replace(record, path)
         raise
 
 

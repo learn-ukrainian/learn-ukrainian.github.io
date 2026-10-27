@@ -1037,6 +1037,10 @@ def claude_labelled_inputs_digest(
         "settings": settings,
         "setting_sources": setting_sources,
         "login_dir": login_dir,
+        "ambient_auth": {
+            name: environ.get(name)
+            for name in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY")
+        },
         "user_settings": _file_fingerprint(login / "settings.json"),
         "global_config": _json_fingerprint(login / ".claude.json", _global_config_inputs),
         "legacy_global_config": _file_fingerprint(login / CLAUDE_LEGACY_GLOBAL_CONFIG),

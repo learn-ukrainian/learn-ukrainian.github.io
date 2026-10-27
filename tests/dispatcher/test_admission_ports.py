@@ -93,6 +93,39 @@ def test_bound_label_runs_with_only_the_bound_login_directory(accounts, monkeypa
 # ----------------------------------------------------------------- rules core
 
 
+@pytest.mark.parametrize("key", ["ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY"])
+def test_labelled_verdict_review_ambient_credential_confusion(accounts, monkeypatch, key):  # noqa: F811
+    from dataclasses import replace
+
+    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from scripts.review.dispatch_execution import build_invocation
+
+    spec, _ = _labelled(accounts, monkeypatch)
+    spec = replace(spec, mode="read-only", options={"require_review_verdict": True})
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(prompt="Review", mode=spec.mode, cwd=spec.worktree, model=None,
+                                    effort=None, task_id=spec.task_id, session_id=None,
+                                    tool_config={"reviewer_tools": True, "claude_account": "b"})
+    # The parent environment changes after verification, before the launch is composed.
+    monkeypatch.setenv(key, "fixture-ambient-key")
+    env = {**child_env(spec), "LU_FAKE_CLAUDE_DUMP": str(accounts.dump)}
+    assert key not in env
+    env[key] = "fixture-child-drift"
+    monkeypatch.setattr(adapter, "build_invocation", lambda **kw: plan)
+    invocation = build_invocation(spec, env, adapter)
+    assert key not in invocation.env
+    assert invocation.env["CLAUDE_CONFIG_DIR"] == str(accounts.config_dir)
+    completed = subprocess.run(invocation.argv, input=invocation.stdin, env=invocation.env,
+                               cwd=spec.worktree, capture_output=True, timeout=60)
+    assert completed.returncode == 0, completed.stderr
+    # Reintroducing a key after plan construction must invalidate the launch guard.
+    changed = subprocess.run(invocation.argv, input=invocation.stdin,
+                             env={**invocation.env, key: "fixture-reintroduced-key"},
+                             cwd=spec.worktree, capture_output=True, timeout=60)
+    assert changed.returncode != 0
+    assert len(_calls(accounts, "run")) == 1
+
+
 def test_delegate_dispatch_without_the_core_refuses(tmp_path, monkeypatch, missing_core, capsys):  # noqa: F811
     """Ported from tests/test_rules_core_loading.py::test_delegate_dispatch_without_the_core_refuses."""
     tasks = _refuse_side_effects(monkeypatch, tmp_path)

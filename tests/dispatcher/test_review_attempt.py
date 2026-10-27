@@ -382,6 +382,64 @@ def test_refusal_after_creation_leaves_no_orphan_worktree_or_branch_and_exits_2(
     assert store.read("refused", missing_ok=True) is None
 
 
+@pytest.mark.parametrize("failure", ["launch_refused", "fallback_refused", "popen_failed", "pid_exists"])
+def test_post_record_spawn_failure_leaks_unstarted_checkout_and_reservation(
+    attempt, tmp_path, monkeypatch, failure,
+):
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime import review_mcp
+    from scripts.dispatcher import admission
+    from scripts.review import dispatch_execution as execution
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    git._git(repo, "init", "-b", "main")
+    (repo / ".gitignore").write_text(".worktrees/\n")
+    git._git(repo, "add", ".gitignore")
+    git._git(repo, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+             "commit", "-m", "fixture")
+    monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
+    monkeypatch.setattr(git, "ROOT", repo)
+    monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    monkeypatch.setattr(execution, "_REPO_ROOT", repo)
+    monkeypatch.setattr(execution, "_worktree_lock_dir", lambda: repo / ".git/lu-worktree-locks")
+    monkeypatch.setattr(execution, "admit", lambda *a: dict(
+        review_contract={}, review_input_root=str(repo), review_input_paths=[]))
+    monkeypatch.setattr(execution, "_lock_review_input_root", lambda *a, **kw: None)
+    server_launch = review_mcp.sources_server_launch()
+    monkeypatch.setattr(review_mcp, "sources_server_launch", lambda: server_launch)
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: tmp_path)
+    monkeypatch.setattr(review_mcp, "check_launch_contract", lambda *a: None)
+    monkeypatch.setattr(review_mcp, "review_attempt_tool_config", lambda *a, **kw: {})
+    error = (OSError("sensitive /private/credential") if failure == "popen_failed" else
+             admission.LaunchRefused("private diagnostic", dict(status="failed", error=(
+                 "dispatch_fallback_refused" if failure == "fallback_refused" else "worker_spawn_failed"))))
+
+    def spawn(*a, **kw):
+        if failure == "pid_exists":
+            return SimpleNamespace(pid=12345, stdin=SimpleNamespace(write=Mock(side_effect=error))), {}
+        raise error
+
+    monkeypatch.setattr(admission, "spawn_supervisor", spawn)
+    monkeypatch.setattr(worker, "_identity", lambda pid: "fixture-start")
+    assert invoke(attempt, "--task-id", "spawn-refused", "--base", "main") in {1, 2}
+    state = store.read("spawn-refused")
+    worktree = repo / ".worktrees/dispatch/codex/spawn-refused"
+    if failure == "pid_exists":
+        assert state["pid"] == 12345
+        assert worktree.is_dir()
+        assert state.get("review_attempt_reservation") != "released"
+        return
+    assert state["pid"] is None
+    assert state["status"] == "failed"
+    assert "sensitive" not in state["error"] and "/private" not in state["error"]
+    assert not worktree.exists()
+    assert str(worktree) not in git._git(repo, "worktree", "list", "--porcelain")
+    assert "refs/heads/codex/spawn-refused" not in git._git(repo, "for-each-ref", "--format=%(refname)")
+    assert state["review_attempt_reservation"] == "released"
+
+
 def test_review_attempt_input_paths_cover_manifest_and_code(tmp_path, monkeypatch):
     """Ported from tests/test_delegate_review_admission.py::test_review_attempt_input_paths_cover_manifest_and_code."""
     from scripts.review import dispatch_execution

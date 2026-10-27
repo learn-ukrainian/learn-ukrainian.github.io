@@ -587,7 +587,7 @@ def prepare(spec, record, admitted):
                     spec.options["review_tool_config"]["review_claude_config_dir"] = str(account_binding.config_dir)
             record.update(admitted, review_ledger_path=str(plan.ledger_path))
             _mark_review_attempt_worktree(spec.worktree, spec.task_id)
-            yield
+            yield locks.close
     except (ReviewIsolationError, FileExistsError) as exc:
         raise ValueError(str(exc)) from None
 
@@ -744,7 +744,7 @@ def build_invocation(spec, env, adapter):
 
     config = dict(spec.options.get("review_tool_config") or {"reviewer_tools": True})
     if spec.options.get("output_schema_path") is not None:
-        config.update({key: spec.options[key] for key in ("output_schema_path", "output_schema_sha256", "review_write_root")
+        config.update({key: spec.options[key] for key in ("output_schema_path", "output_schema_sha256")
                        if key in spec.options})
     if spec.agent == "claude":
         config["claude_account"] = spec.claude_account or "a"

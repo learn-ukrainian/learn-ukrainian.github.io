@@ -53,6 +53,9 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
             env["CURSOR_API_KEY"] = file_key
     if spec.agent == "claude":
         env["CLAUDE_CONFIG_DIR"] = claude_config_dir(spec.claude_account or "a", env.get("HOME"))
+        if spec.claude_account not in (None, "a"):
+            for name in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY"):
+                env.pop(name, None)
     shims = npm_shim_dir()
     if shims is not None:
         original_path = os.pathsep.join(

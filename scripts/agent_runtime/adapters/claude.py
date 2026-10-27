@@ -1059,6 +1059,7 @@ class ClaudeAdapter:
             stdin_payload=prompt if use_stdin else "",
             output_file=None,
             env_overrides=env_overrides,
+            env_unsets=("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY") if account is not None else (),
             liveness_paths=_recent_project_dir(account_login_dir),
             metadata={
                 **schema_metadata(output_schema),

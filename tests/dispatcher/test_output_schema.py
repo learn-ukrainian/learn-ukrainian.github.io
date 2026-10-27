@@ -92,6 +92,23 @@ def test_schema_symlink_substitution_after_binding_refused(dispatch):
         codex.build(spec, {})
 
 
+def test_verdict_schema_read_root_used_as_output_write_root(dispatch, tmp_path, monkeypatch):
+    import tempfile
+
+    private = tmp_path / "private-adapter-temp"
+    private.mkdir(mode=0o700)
+    monkeypatch.setattr(tempfile, "tempdir", str(private))
+    spec, _ = dispatch.invoke()
+    spec.options["require_review_verdict"] = True
+    invocation = codex.build(spec, {})
+    try:
+        assert invocation.final_file.parent == private
+        assert not list(dispatch.schema.parent.glob("codex-runtime-*.txt"))
+        assert invocation.argv[invocation.argv.index("--output-schema") + 1] == str(dispatch.schema)
+    finally:
+        invocation.final_file.unlink()
+
+
 @pytest.mark.parametrize("output,status", [('{}', "failed"), ('prose', "failed"), ('{"verdict":"APPROVE"}', "done")])
 def test_invalid_schema_result_cannot_settle_done(dispatch, monkeypatch, output, status):
     spec, _record = dispatch.invoke()

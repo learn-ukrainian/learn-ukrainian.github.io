@@ -260,8 +260,8 @@ def _dispatch(args) -> int:
     try:
         if binding and admitted is not None:
             try:
-                with review_execution.prepare(spec, record, admitted):
-                    worker.start(spec, record, prompt, args.hard_timeout)
+                with review_execution.prepare(spec, record, admitted) as release_preparation:
+                    worker.start(spec, record, prompt, args.hard_timeout, release_preparation=release_preparation)
             except admission.LaunchRefused:
                 raise
             except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
