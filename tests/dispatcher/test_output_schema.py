@@ -127,7 +127,7 @@ def test_verdict_schema_read_root_used_as_output_write_root(dispatch, tmp_path, 
     assert settled["status"] == ("crashed" if launch_fails else "failed")
     if not launch_fails:
         assert settled["error"] == "review_missing_verdict_line"
-        assert spec.final_file.read_text() == '{"verdict":"APPROVE"}'
+        assert json.loads(spec.final_file.read_text()) == {"verdict": "APPROVE"}
     assert not invocation.final_file.exists()
     assert not list(private.glob("codex-runtime-*.txt"))
 
