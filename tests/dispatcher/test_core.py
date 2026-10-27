@@ -2285,6 +2285,68 @@ def test_partial_worktree_cleanup_keeps_a_worktree_another_task_uses(sandbox, mo
     assert not run_git(sandbox.repo, "branch", "--list", "sol/partial")
 
 
+@pytest.mark.parametrize("alias", ["dotdot", "symlink"])
+def test_partial_worktree_cleanup_keeps_a_worktree_a_record_names_by_another_spelling(sandbox, monkeypatch, alias):
+    """A record naming the worktree through ``..`` or a symlink still keeps it and its branch."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    sandbox.tasks.mkdir(exist_ok=True)
+    path = sandbox.repo / ".worktrees/dispatch/sol/partial"
+    other = sandbox.tasks / "attached.json"
+    link = sandbox.tasks.parent / "partial-alias"
+
+    def attached_then_failing(_repo, worktree):
+        (worktree / "uncommitted.txt").write_text("live work\n")
+        if alias == "symlink":
+            link.symlink_to(worktree, target_is_directory=True)
+        spelling = link if alias == "symlink" else worktree / ".." / "partial"
+        other.write_text(json.dumps(dict(task_id="attached", status="running", cwd=str(spelling))))
+        raise OSError("link provisioning failed")
+
+    monkeypatch.setattr(git, "provision_links", attached_then_failing)
+    try:
+        with pytest.raises(OSError, match="link provisioning failed"):
+            git.create_worktree(sandbox.repo, path, "sol/partial", run_git(sandbox.repo, "rev-parse", "HEAD"))
+        git.discard_worktree(sandbox.repo, path, "sol/partial")
+        assert (path / "uncommitted.txt").read_text() == "live work\n"
+        assert run_git(sandbox.repo, "branch", "--list", "sol/partial")
+    finally:
+        other.unlink(missing_ok=True)
+    git.discard_worktree(sandbox.repo, path, "sol/partial")
+    assert not path.exists()
+    assert not run_git(sandbox.repo, "branch", "--list", "sol/partial")
+
+
+def test_partial_worktree_cleanup_keeps_the_worktree_when_the_task_directory_cannot_be_listed(sandbox, monkeypatch):
+    """A task directory that cannot be listed may hide an attachment record, so cleanup keeps the worktree."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    sandbox.tasks.mkdir(exist_ok=True)
+    path = sandbox.repo / ".worktrees/dispatch/sol/partial"
+    other = sandbox.tasks / "attached.json"
+    scandir = os.scandir
+
+    def unlistable_tasks(target=".", *args):
+        if not isinstance(target, int) and Path(target).resolve() == sandbox.tasks.resolve():
+            raise PermissionError(f"Permission denied: {target}")
+        return scandir(target, *args)
+
+    def attached_then_failing(_repo, worktree):
+        (worktree / "uncommitted.txt").write_text("live work\n")
+        record = dict(task_id="attached", status="running", worktree_path=str(worktree))
+        other.write_text(json.dumps(record))
+        raise OSError("link provisioning failed")
+
+    monkeypatch.setattr(git, "provision_links", attached_then_failing)
+    monkeypatch.setattr(os, "scandir", unlistable_tasks)
+    try:
+        with pytest.raises(OSError, match="link provisioning failed"):
+            git.create_worktree(sandbox.repo, path, "sol/partial", run_git(sandbox.repo, "rev-parse", "HEAD"))
+        git.discard_worktree(sandbox.repo, path, "sol/partial")
+        assert (path / "uncommitted.txt").read_text() == "live work\n"
+        assert run_git(sandbox.repo, "branch", "--list", "sol/partial")
+    finally:
+        other.unlink(missing_ok=True)
+
+
 def test_interrupt_during_claim_admission_releases_committed_claim(sandbox):
     """SIGINT after the ledger commits a claim, before admission returns, still releases that claim."""
     sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)

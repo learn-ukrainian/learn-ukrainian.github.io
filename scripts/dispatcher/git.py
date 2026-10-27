@@ -270,23 +270,29 @@ def worktree_lock(repo: Path):
 def in_use(path: Path) -> bool:
     """Whether a task record names this worktree or a live process other than this one works inside it.
 
-    An unreadable task store counts as in use, so a cleanup that cannot tell keeps the checkout.
+    Paths compare by canonical identity (symlinks and ``..`` resolved), so every spelling of the worktree
+    counts. An unreadable task store counts as in use, so a cleanup that cannot tell keeps the checkout.
     """
-    target, resolved = path.absolute(), path.resolve()
+    # Path.resolve raises RuntimeError on a symlink loop; a path that cannot be resolved counts as in use.
     try:
-        records = store.list_tasks(strict=True)
-    except (OSError, ValueError):
-        return True
-    if any(isinstance(record.get(key), str) and Path(record[key]).absolute() == target
-           for record in records for key in ("worktree_path", "cwd")):
-        return True
-    try:
+        resolved = path.resolve()
+        records = []
+        # list_tasks skips a task directory it cannot list or stat, so that failure is caught here first.
+        with suppress(FileNotFoundError), os.scandir(store.tasks_dir()) as entries:
+            for entry in entries:
+                if entry.name.endswith(".json"):
+                    with suppress(FileNotFoundError):
+                        entry.stat()
+            records = store.list_tasks(strict=True)
+        if any(isinstance(record.get(key), str) and Path(record[key]).resolve() == resolved
+               for record in records for key in ("worktree_path", "cwd")):
+            return True
         processes = [entry for entry in Path("/proc").iterdir() if entry.name.isdigit() and int(entry.name) != os.getpid()]
-    except OSError:
+    except (OSError, RuntimeError, ValueError):
         return True
     for entry in processes:
-        with suppress(OSError):
-            if Path(os.readlink(entry / "cwd")).is_relative_to(resolved):
+        with suppress(OSError, RuntimeError):
+            if Path(os.readlink(entry / "cwd")).resolve().is_relative_to(resolved):
                 return True
     return False
 
