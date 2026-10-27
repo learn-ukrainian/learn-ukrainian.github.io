@@ -1051,14 +1051,14 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         "medium",
     )
     body = json.loads(result.stdout)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert body["selected"]["name"] == "gemini-3.8-flash-high"
     if excluded:
-        assert result.returncode == 0, result.stdout + result.stderr
         assert body["branch_facts"]["existing_families"] == ["anthropic"]
-        assert body["selected"]["name"] == "gemini-3.8-flash-high"
     else:
-        assert result.returncode == 1, result.stdout + result.stderr
-        assert body["selected"] is None
-        assert "missing explicit X-Agent" in body["fail_closed_reason"]
+        # Not the default branch: the main squash stays in the PR's range and is
+        # attributed by its own trailers; the clean sync merge adds no author.
+        assert body["branch_facts"]["existing_families"] == ["anthropic", "openai"]
 
 
 # Re-pinned for #11756: Muse is explicit-only and absent from automatic traces.
