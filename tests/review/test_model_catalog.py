@@ -1205,10 +1205,7 @@ def dispatcher_catalog_baseline(value):
     """Apply C-2188 command changes without rewriting frozen receipts."""
     if isinstance(value, dict):
         result = {key: dispatcher_catalog_baseline(item) for key, item in value.items()}
-        migrate_invocation = (
-            result.get("transport") != "native_grok"
-            and result.get("model_id", result.get("concrete_model")) not in {"gpt-6-luna", "gemini-3.8-flash-high"}
-        )
+        migrate_invocation = result.get("transport") != "native_grok"
         if "invocation" in result and migrate_invocation:
             result["invocation"] = result["invocation"].replace(
                 "scripts/delegate.py dispatch", "scripts/dispatch.py dispatch"
