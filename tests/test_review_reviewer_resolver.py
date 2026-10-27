@@ -1143,8 +1143,8 @@ def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
     else:
         assert ladder[4][0].name == "claude-sonnet-5-5"
         assert ladder[5][0].name == "gemini-3.8-flash-high"
-        assert ladder[6][0].name == "muse"
-        assert len(ladder) == 7
+        assert len(ladder) == 6
+        assert "muse" not in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1192,7 +1192,9 @@ def test_sealed_executable_catalog_and_resolver_parity():
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
             executable = (
-                "scripts/delegate.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
+                {"native_agy": "scripts/delegate.py", "native_muse": "scripts/dispatch.py"}.get(
+                    candidate.adapter_transport, _SEALED_REVIEW_EXECUTABLE
+                )
             )
             assert candidate.sealed_executable == executable, (
                 f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
@@ -1210,9 +1212,10 @@ def test_sealed_executable_catalog_and_resolver_parity():
             # Tampered executable is rejected
             mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
             expected = (
-                "native AGY review endpoint identity is invalid"
-                if candidate.adapter_transport == "native_agy"
-                else "candidate is not bound to the sealed ACP executable"
+                {
+                    "native_agy": "native AGY review endpoint identity is invalid",
+                    "native_muse": "native Muse review endpoint identity is invalid",
+                }.get(candidate.adapter_transport, "candidate is not bound to the sealed ACP executable")
             )
             assert _hard_exclusion_reason(mismatched, inputs) == expected
 
@@ -1399,23 +1402,24 @@ def test_normalize_muse_subject_seat_and_meta_family():
     assert normalize_subject_seat("muse") == "muse"
     assert normalize_subject_family("meta") == "meta"
     candidate = REVIEW_CANDIDATES["muse"]
-    assert candidate.model_roles == frozenset({"coding", "standard_review", "routine_review"})
+    assert candidate.model_roles == frozenset({
+        "coding", "standard_review", "routine_review",
+    })
     assert candidate.suitability_roles == frozenset({"routine_review"})
-    assert not candidate.formal_review_eligible
-    assert candidate.requires_data_egress_policy == "public_only"
+    assert candidate.formal_review_eligible
+    assert candidate.requires_data_egress_policy is None
     inputs = ResolverInputs(
         author_model="gpt-6.1-sol", data_egress_policy="public_only", claude_account=HOST_ACCOUNT,
     )
     formal = evaluate_candidate(candidate, inputs)
-    assert formal.status == "excluded"
-    assert formal.reason == "formal-review transport is not eligible for a sealed cross-family gate"
+    assert formal.status == "eligible"
     advisory = replace(inputs, formal_review=False)
     assert evaluate_candidate(candidate, advisory).status == "eligible"
     for risk in ("low", "medium", "high", "critical"):
-        assert (candidate in {c for rung in REVIEW_LADDERS[risk] for c in rung}) == (risk in {"low", "medium"})
+        assert candidate not in {c for rung in REVIEW_LADDERS[risk] for c in rung}
     for risk in ("high", "critical"):
-        assert evaluate_candidate(candidate, replace(advisory, risk=risk)).status == "excluded"
-        pinned = replace(advisory, risk=risk, pinned_candidate="muse", pressure_override_reason="fixture")
+        assert evaluate_candidate(candidate, replace(inputs, risk=risk)).status == "excluded"
+        pinned = replace(inputs, risk=risk, pinned_candidate="muse", pressure_override_reason="fixture")
         assert resolve_reviewer(pinned).selected is None
     for role in ("critical_review", "security_review"):
         assert evaluate_candidate(candidate, replace(advisory, requested_role=role)).status == "excluded"
@@ -1424,12 +1428,35 @@ def test_normalize_muse_subject_seat_and_meta_family():
     assert "same family as author (meta)" in meta_author.reason
     for changes in (
         {"subject_seats": frozenset({"muse"})}, {"subject_families": frozenset({"meta"})},
-        {"language_lane": True}, {"data_egress_policy": "private_repo"}, {"data_egress_policy": None},
+        {"language_lane": True},
         {"review_profile": "infra"},
         {"isolation_required": True}, {"required_capabilities": frozenset({"sealed_evidence"})},
         {"changed_paths": ("scripts/hooks/admission.py",)},
     ):
         assert evaluate_candidate(candidate, replace(advisory, **changes)).status == "excluded"
+
+
+@pytest.mark.parametrize("data_egress_policy", [None, "private_repo", "public_only"])
+def test_muse_formal_review_eligibility_must_stay_limited_to_low_medium_code_review(data_egress_policy):
+    candidate = REVIEW_CANDIDATES["muse"]
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol", review_profile="code", formal_review=True,
+        data_egress_policy=data_egress_policy, claude_account=HOST_ACCOUNT,
+        pinned_candidate="muse", pressure_override_reason="explicit Muse formal-review control",
+    )
+    for risk in ("low", "medium"):
+        permitted = replace(inputs, risk=risk)
+        assert evaluate_candidate(candidate, permitted).status == "eligible"
+        assert resolve_reviewer(permitted).selected.name == "muse"
+        security = replace(permitted, changed_paths=("scripts/hooks/admission.py",))
+        assert evaluate_candidate(candidate, security).status == "excluded"
+        assert resolve_reviewer(security).selected is None
+    for changes in (
+        {"risk": "critical"}, {"risk": "high"}, {"requested_role": "security_review"},
+    ):
+        refused = replace(inputs, **changes)
+        assert evaluate_candidate(candidate, refused).status == "excluded"
+        assert resolve_reviewer(refused).selected is None
 
 
 @pytest.mark.parametrize(
