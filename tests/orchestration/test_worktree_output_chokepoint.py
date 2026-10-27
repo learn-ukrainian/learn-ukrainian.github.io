@@ -1,4 +1,4 @@
-"""Each formerly bypassing remover preserves real ignored bytes (#9645)."""
+"""Each formerly bypassing remover records ignored residue before removal."""
 
 from __future__ import annotations
 
@@ -18,6 +18,33 @@ from scripts.orchestration.task_family import git_safety
 from tests.orchestration.test_worktree_claims_cli import _git, _linked, _primary, _record
 
 CALLERS = ["acp", "data-tier", "sibling", "task-family", "cli"]
+
+
+def assert_record_only(receipt, expected, *, truncated=False):
+    assert receipt["mode"] == "record_only"
+    assert receipt["copied_bytes"] == 0
+    assert receipt["inventory_complete"] is True
+    assert receipt["entries_truncated"] is truncated
+    assert receipt["paths"] == expected
+
+
+def seed_legacy_retrieval(repo, worktree, receipt):
+    names = [entry["path"] for entry in receipt["paths"]]
+    location = repo / "batch_state/preserved/boundary/legacy"
+    location.mkdir(parents=True)
+    for name in names:
+        ignored_task_output.artifacts._copy_verified(
+            worktree / name,
+            location / name,
+            source_root=worktree,
+            destination_root=location,
+        )
+    receipt.pop("mode", None)
+    receipt.pop("copied_bytes", None)
+    receipt["location"] = location.relative_to(repo).as_posix()
+    receipt["content_sha256"] = ignored_task_output._content_digest(location, names)
+    receipt["retrieval_proof_sha256"] = ignored_task_output.verify_retrieval(repo, receipt)
+    return location
 
 
 def remove(caller, primary, checkout, capsys, monkeypatch):
@@ -79,7 +106,7 @@ def remove(caller, primary, checkout, capsys, monkeypatch):
     captured = capsys.readouterr()
     result = json.loads(captured.out)
     if code == worktree_claims.EXIT_REMOVED:
-        assert "Preserved " in captured.err
+        assert "Recorded " in captured.err and "copied 0 bytes" in captured.err
     else:
         assert "artifact preservation failed:" in captured.err
     if code != worktree_claims.EXIT_REMOVED:
@@ -105,13 +132,12 @@ def test_all_removers_preserve_output_or_retain_checkout(tmp_path, monkeypatch, 
         _record(primary, "done-output", status="done", worktree_path=str(checkout), started_at="2000-01-01T00:00:00Z")
     assert _git(checkout, "status", "--porcelain") == ""
     if failure == "cap":
-        monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", len(payload) - 1)
+        monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 650)
     if failure == "copy":
-
-        def fail_copy(*_args, **_kwargs):
-            raise OSError("copy denied")
-
-        monkeypatch.setattr(ignored_task_output.artifacts, "_copy_verified", fail_copy)
+        monkeypatch.setattr(
+            ignored_task_output, "_path_inventory",
+            lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("inventory denied")),
+        )
 
     calls = []
     original = ignored_task_output.preserve_worktree_artifacts
@@ -123,16 +149,19 @@ def test_all_removers_preserve_output_or_retain_checkout(tmp_path, monkeypatch, 
     monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", preserve_once)
     removed = remove(caller, primary, checkout, capsys, monkeypatch)
     assert calls == [checkout]
-    if failure or not record_exists:
+    if failure == "copy" or not record_exists:
         assert not removed and checkout.exists()
         assert source.read_bytes() == payload
         return
     assert removed and not checkout.exists()
     destination = primary.parent / "public" if caller == "sibling" else primary
-    copies = list((destination / "batch_state/preserved").glob("*/*/.cache/transcriptions/page.txt"))
-    assert len(copies) == 1
-    assert copies[0].read_bytes() == payload
-    assert hashlib.sha256(copies[0].read_bytes()).digest() == hashlib.sha256(payload).digest()
+    record_path = destination / "batch_state/tasks/done-output.json"
+    receipt = json.loads(record_path.read_text())["preserved_artifacts"]
+    expected = [] if failure == "cap" and receipt["entries_truncated"] else [
+        {"path": ".cache/transcriptions/page.txt", "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest(), "class": "unknown_baseline"}
+    ]
+    assert_record_only(receipt, expected, truncated=failure == "cap")
+    assert not (destination / "batch_state/preserved").exists()
 
 
 def test_active_claim_prevents_preservation_and_removal(tmp_path, monkeypatch):
@@ -171,8 +200,8 @@ def test_raw_removal_checks_preservation_without_adapter(tmp_path, monkeypatch):
             preservation_receipt=receipt,
         )
     assert error is None and not checkout.exists()
-    assert ((primary / receipt["location"]) / ".cache/report.txt").read_bytes() == b"raw remover output"
-    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+    assert_record_only(receipt, [{"path": ".cache/report.txt", "size": 18, "sha256": hashlib.sha256(b"raw remover output").hexdigest(), "class": "unknown_baseline"}])
+    assert not (primary / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("changed", [True, False])
@@ -204,10 +233,10 @@ def test_retry_after_git_refusal_reuses_identical_or_preserves_changed_output(tm
             preservation_receipt=second,
         )
     assert error is None and not checkout.exists()
-    assert (first["location"] != second["location"]) is changed
-    assert second["reused"] is not changed
-    assert ((primary / first["location"]) / ".cache/report.txt").read_bytes() == b"first"
-    assert ((primary / second["location"]) / ".cache/report.txt").read_bytes() == (b"second" if changed else b"first")
+    assert_record_only(first, [{"path": ".cache/report.txt", "size": 5, "sha256": hashlib.sha256(b"first").hexdigest(), "class": "unknown_baseline"}])
+    payload = b"second" if changed else b"first"
+    assert_record_only(second, [{"path": ".cache/report.txt", "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest(), "class": "unknown_baseline"}])
+    assert not (primary / "batch_state/preserved").exists()
 
 
 def test_claims_remove_preserves_old_output_when_task_id_was_redispatched(tmp_path, monkeypatch, capsys):
@@ -261,7 +290,8 @@ def test_claims_remove_preserves_earlier_attempt_output_in_reused_checkout(tmp_p
     receipt = json.loads(record_path.read_text())["preserved_artifacts"]
     assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
     assert result["preserved_artifacts"] == receipt
-    assert ((primary / receipt["location"]) / ".cache/out/page.txt").read_bytes() == payload
+    assert_record_only(receipt, [{"path": ".cache/out/page.txt", "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest(), "class": "unknown_baseline"}])
+    assert not (primary / "batch_state/preserved").exists()
 
 
 # These fixtures execute production removal callers against disposable Git
@@ -393,22 +423,36 @@ def test_actual_boundaries_preserve_or_retain(boundary_tree, monkeypatch, bounda
     else:
         (tasks / "boundary.json").unlink()
     if scenario == "oversized":
-        monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", len(payload) - 1)
+        monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 650)
     elif scenario == "copy":
         monkeypatch.setattr(
-            ignored_task_output.artifacts,
-            "_copy_verified",
-            lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("injected copy failure")),
+            ignored_task_output, "_path_inventory",
+            lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("injected inventory failure")),
         )
     elif scenario == "retrieval":
+        original_write = ignored_task_output.artifacts.reaper_lifecycle._atomic_write
+        failed = False
+
+        def fail_receipt_publication(path, value):
+            nonlocal failed
+            if (
+                not failed
+                and Path(path) == tasks / "boundary.json"
+                and isinstance(value, dict)
+                and isinstance(value.get("preserved_artifacts"), dict)
+            ):
+                failed = True
+                raise OSError("injected receipt publication failure")
+            return original_write(path, value)
+
         monkeypatch.setattr(
-            ignored_task_output,
-            "verify_retrieval",
-            lambda *_args: (_ for _ in ()).throw(ValueError("injected retrieval failure")),
+            ignored_task_output.artifacts.reaper_lifecycle,
+            "_atomic_write",
+            fail_receipt_publication,
         )
     assert _git(tree, "status", "--porcelain") == ""
     result = boundary_remove(boundary, boundary_tree, monkeypatch)
-    retained = scenario in {"missing_attribution", "oversized", "copy", "retrieval", "keep"}
+    retained = scenario in {"missing_attribution", "copy", "retrieval", "keep"}
     assert tree.exists() is retained, result
     receipt = result.get("preserved_artifacts")
     if retained:
@@ -422,15 +466,9 @@ def test_actual_boundaries_preserve_or_retain(boundary_tree, monkeypatch, bounda
             assert receipt is None
             assert not (repo / "batch_state/preserved").exists()
             return
-        retrieved = repo / receipt["location"] / name
-        assert hashlib.sha256(retrieved.read_bytes()).hexdigest() == hashlib.sha256(payload).hexdigest()
-        assert receipt["retrieval_proof_sha256"] == ignored_task_output.verify_retrieval(repo, receipt)
-        expected = (
-            "pre_existing"
-            if scenario == "pre_existing"
-            else ("unknown_baseline" if scenario == "missing_baseline" else "task_created")
-        )
-        assert receipt["paths"][0]["class"] == expected
+        expected = [] if scenario == "oversized" and receipt["entries_truncated"] else [{"path": name, "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest(), "class": "pre_existing" if scenario == "pre_existing" else ("unknown_baseline" if scenario == "missing_baseline" else "task_created")}]
+        assert_record_only(receipt, expected, truncated=scenario == "oversized")
+        assert not (repo / "batch_state/preserved").exists()
     assert str(repo) not in json.dumps(receipt)
     assert str(tree) not in json.dumps(receipt)
 
@@ -452,20 +490,14 @@ def test_existing_owner_release_after_retrieval_allows_removal(boundary_tree, mo
     assert first["action"] in {"retained", "skipped"} and tree.exists()
     saved = json.loads((tasks / "boundary.json").read_text())
     receipt = saved["preserved_artifacts"]
-    assert (
-        hashlib.sha256((repo / receipt["location"] / "ignored/corpus.yaml").read_bytes()).hexdigest()
-        == hashlib.sha256(source.read_bytes()).hexdigest()
-    )
+    assert_record_only(receipt, [{"path": "ignored/corpus.yaml", "size": 22, "sha256": hashlib.sha256(b"retrieved corpus bytes").hexdigest(), "class": "task_created"}])
     assert post_task_reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
     released = json.loads((tasks / "boundary.json").read_text())
     assert released["keep_worktree"] is False
     assert released["preserved_artifacts"]["retention_release"]["owner"] == "boundary"
     result = boundary_remove(boundary, boundary_tree, monkeypatch)
     assert result["action"] == "removed" and not tree.exists(), result
-    assert (
-        result["preserved_artifacts"]["retention_release"]["retrieval_proof_sha256"]
-        == receipt["retrieval_proof_sha256"]
-    )
+    assert result["preserved_artifacts"]["retention_release"]["owner"] == "boundary"
 
 
 @pytest.mark.parametrize("caller", CALLERS)
@@ -498,11 +530,9 @@ def test_transcript_extensions_outside_disposable_directories_are_output(boundar
     result = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
     assert result.action == "removed"
     receipt = result.preserved_artifacts
-    assert receipt["paths"][0]["class"] == "unknown_baseline"
-    assert (
-        hashlib.sha256((repo / receipt["location"] / source.relative_to(tree)).read_bytes()).hexdigest()
-        == hashlib.sha256(b"unique output").hexdigest()
-    )
+    payload = b"unique output"
+    assert_record_only(receipt, [{"path": source.relative_to(tree).as_posix(), "size": len(payload), "sha256": hashlib.sha256(payload).hexdigest(), "class": "unknown_baseline"}])
+    assert not (repo / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("failure", [None, "corrupt_copy", "changed_source", "reused", "wrong_nonce", "dry_run"])
@@ -519,14 +549,16 @@ def test_post_task_release_cli_requires_owner_and_current_retrieval(boundary_tre
     assert result["action"] == "skipped" and tree.exists()
     saved = json.loads((tasks / "boundary.json").read_text())
     receipt = saved["preserved_artifacts"]
-    if failure == "corrupt_copy":
-        (repo / receipt["location"] / "ignored/output.json").write_bytes(b"corrupt retrieval")
-    elif failure == "changed_source":
+    archive = seed_legacy_retrieval(repo, tree, receipt)
+    if failure == "changed_source":
         source.write_bytes(b"new unretrieved output")
+    elif failure == "corrupt_copy":
+        (archive / "ignored/output.json").write_bytes(b"corrupt retrieval")
     elif failure == "reused":
         saved["worktree_reused"] = True
     elif failure == "wrong_nonce":
         saved["run_nonce"] = "other-owner-run"
+    saved["preserved_artifacts"] = receipt
     (tasks / "boundary.json").write_text(json.dumps(saved))
     argv = ["--task-id", "boundary", "--tasks-dir", str(tasks), "--repo-root", str(repo), "--release-retention"]
     if failure != "dry_run":
@@ -537,14 +569,8 @@ def test_post_task_release_cli_requires_owner_and_current_retrieval(boundary_tre
     if failure is None:
         assert code == 0 and report["main_worktree"]["action"] == "removed", report
         assert not tree.exists() and state["keep_worktree"] is False
-        assert (
-            state["preserved_artifacts"]["retention_release"]["retrieval_proof_sha256"]
-            == receipt["retrieval_proof_sha256"]
-        )
-        assert (
-            hashlib.sha256((repo / receipt["location"] / "ignored/output.json").read_bytes()).hexdigest()
-            == hashlib.sha256(b"retrieval proof bytes").hexdigest()
-        )
+        assert state["preserved_artifacts"]["retention_release"]["retrieval_proof_sha256"] == receipt["retrieval_proof_sha256"]
+        assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
     else:
         assert code == 1 and report["main_worktree"]["action"] == "retained"
         assert tree.exists() and state["keep_worktree"] is True
@@ -574,7 +600,8 @@ def test_untrusted_creation_inventory_never_shrinks_preservation(boundary_tree, 
     assert result.action == "removed"
     receipt = result.preserved_artifacts
     assert receipt["paths"][0]["class"] == "unknown_baseline"
-    assert (repo / receipt["location"] / "ignored/preexisting.txt").read_bytes() == b"old corpus bytes"
+    assert_record_only(receipt, [{"path": "ignored/preexisting.txt", "size": 16, "sha256": hashlib.sha256(b"old corpus bytes").hexdigest(), "class": "unknown_baseline"}])
+    assert not (repo / "batch_state/preserved").exists()
 
 
 def test_empty_kept_tree_still_requires_explicit_retrieved_owner_release(boundary_tree, monkeypatch):
@@ -586,7 +613,7 @@ def test_empty_kept_tree_still_requires_explicit_retrieved_owner_release(boundar
     first = boundary_remove("claims", boundary_tree, monkeypatch)
     assert first["action"] == "skipped" and tree.exists()
     assert first["preserved_artifacts"]["count"] == 0
-    assert first["preserved_artifacts"]["retrieval_proof_sha256"]
+    assert_record_only(first["preserved_artifacts"], [])
     assert post_task_reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
     result = boundary_remove("claims", boundary_tree, monkeypatch)
     assert result["action"] == "removed" and not tree.exists()
@@ -604,7 +631,8 @@ def test_regular_files_with_cache_directory_names_are_preserved(boundary_tree, n
     result = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
     assert result.action == "removed"
     receipt = result.preserved_artifacts
-    assert (repo / receipt["location"] / name).read_bytes() == b"only transcript copy"
+    assert_record_only(receipt, [{"path": name, "size": 20, "sha256": hashlib.sha256(b"only transcript copy").hexdigest(), "class": "task_created"}])
+    assert not (repo / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("ambiguous", [False, True])
@@ -681,10 +709,13 @@ def test_kept_record_path_spellings_refuse_removal(boundary_tree, monkeypatch, s
     receipt = result.preserved_artifacts
     assert receipt["owner"] == "boundary" and receipt["count"] == int(has_output)
     assert receipt["retention_disposition"] == "retained"
-    assert receipt["retrieval_proof_sha256"] == ignored_task_output.verify_retrieval(repo, receipt)
+    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+    assert receipt["inventory_complete"] is True
     assert json.loads(path.read_text())["preserved_artifacts"] == receipt
     if has_output:
-        assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == source.read_bytes()
+        assert receipt["paths"][0]["path"] == "ignored/output.txt"
+        assert receipt["paths"][0]["sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    assert not (repo / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("spelling", ["relative", "tilde"])
@@ -727,10 +758,10 @@ def test_release_retention_cli_matches_record_path_spellings(boundary_tree, monk
     assert saved["keep_worktree"] is False
     release = saved["preserved_artifacts"]["retention_release"]
     assert release["owner"] == "boundary"
-    assert release["retrieval_proof_sha256"] == receipt["retrieval_proof_sha256"]
-    assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert release == {"owner": "boundary", "run_nonce": record["run_nonce"], "mode": "record_only"}
     if has_output:
-        assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"released output"
+        assert receipt["paths"][0]["sha256"] == hashlib.sha256(b"released output").hexdigest()
+    assert not (repo / "batch_state/preserved").exists()
 
 
 @pytest.mark.parametrize("spelling", ["relative", "tilde"])
@@ -748,14 +779,21 @@ def test_record_path_spellings_publish_copy_failure(boundary_tree, monkeypatch, 
     source.parent.mkdir()
     source.write_bytes(b"uncopied output")
 
-    def fail_copy(*_args, **_kwargs):
-        raise OSError("injected copy failure")
+    original_write = ignored_task_output.artifacts.reaper_lifecycle._atomic_write
+    attempts = 0
 
-    monkeypatch.setattr(ignored_task_output.artifacts, "_copy_verified", fail_copy)
+    def fail_publication(*args, **kwargs):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise OSError("injected receipt publication failure")
+        return original_write(*args, **kwargs)
+
+    monkeypatch.setattr(ignored_task_output.artifacts.reaper_lifecycle, "_atomic_write", fail_publication)
     result = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
     assert result.action == "skipped" and tree.exists()
     saved = json.loads(path.read_text())
-    assert "injected copy failure" in saved["artifact_preservation_error"]
+    assert "injected receipt publication failure" in saved["artifact_preservation_error"]
     assert saved["keep_worktree"] is True
     assert saved["preserved_artifacts"] == result.preserved_artifacts
     assert result.preserved_artifacts["owner"] == "boundary"

@@ -9,6 +9,7 @@ import pytest
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import post_task_reap as reap
 from scripts.orchestration import worktree_claims as claims
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
 
@@ -42,7 +43,11 @@ def retrieve(cohort):
     )
     assert not ok and "keep_worktree" in reason
     assert receipt["owner"] == "boundary"
-    assert receipt["content_sha256"] == receipt["retrieval_proof_sha256"]
+    expected = {"ignored/output.txt": b"current output"}
+    if (tree / "ignored/report.txt").exists():
+        expected["ignored/report.txt"] = b"successor output"
+    assert_record_only(receipt, expected)
+    assert not (repo / "batch_state/preserved").exists()
     return receipt
 
 
@@ -138,7 +143,7 @@ def test_release_all_successors_under_locks_and_atomic_writes(cohort, monkeypatc
         assert proof == {
             "owner": "boundary",
             "run_nonce": "creation-nonce",
-            "retrieval_proof_sha256": receipt["retrieval_proof_sha256"],
+            "mode": "record_only",
         }
 
 
@@ -149,6 +154,14 @@ def test_release_requires_creator_and_current_retrieval(cohort, failure):
     repo, _, tasks, _, _, source = cohort
     receipt = retrieve(cohort)
     owner = json.loads((tasks / "boundary.json").read_text())
+    if failure in {"changed_bytes", "corrupt_copy"}:
+        # Keep legacy byte-retrieval refusals distinct from record-only release.
+        locator, _ = output.capture_abandon_output(cohort[1], primary=repo, record=owner)
+        output.publish_abandon_output(cohort[1], primary=repo, record=owner, locator=locator)
+        receipt = dict(receipt, **locator, retrieval_proof_sha256=output.verify_retrieval(repo, locator))
+        receipt["schema"] = output.PRESERVED_ARTIFACTS_SCHEMA
+        receipt.pop("mode")
+        owner["preserved_artifacts"] = receipt
     if failure == "missing_receipt":
         owner.pop("preserved_artifacts")
     elif failure == "changed_bytes":
@@ -376,8 +389,9 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
     retrieved = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)
     receipt = retrieved["main_worktree"]["preserved_artifacts"]
     assert receipt["owner"] == creator["task_id"]
-    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-    assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == source.read_bytes()
+    assert_record_only(receipt, {"ignored/output.txt": b"current output"})
+    assert source.read_bytes() == b"current output"
+    assert not (repo / "batch_state/preserved").exists()
     assert tree.exists()
     assert release(renamed_creator, task_id=creator["task_id"]) is None
     if boundary == "retry":
@@ -386,7 +400,7 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
         ok, _, receipt = output.preserve_worktree_artifacts(
             tree, primary=repo, tasks_dir=tasks, task_id=creator["task_id"], repo_root=repo
         )
-        assert ok and receipt["retention_disposition"] == "retrieved"
+        assert ok and receipt["retention_disposition"] == "recorded"
         boundary = "post-task"
     if boundary == "post-task":
         result = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)["main_worktree"]

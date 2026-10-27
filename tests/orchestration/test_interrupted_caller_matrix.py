@@ -22,6 +22,7 @@ from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration import worktree_claims as wc
 from scripts.orchestration.task_family import git_safety
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 CASES = ("cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late")
 
@@ -301,8 +302,8 @@ def test_interrupted_caller_preserves_bytes_on_repeated_call(interrupted_checkou
         assert current == state
         assert hashes([result]) == (before[1],)
         if receipt:
-            assert hashes([repo / receipt["location"] / ".cache/output.bin"]) == (before[2],)
-            assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+            assert_record_only(receipt, {".cache/output.bin": b"ignored output\x00\xff"})
+            assert not (repo / "batch_state/preserved").exists()
             assert receipt["owner"] == "interrupted" and receipt["next_condition"]
         else:
             assert hashes([record]) == (before[0],)

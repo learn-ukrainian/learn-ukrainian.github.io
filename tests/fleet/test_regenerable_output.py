@@ -1,5 +1,6 @@
 """Build-writer examples and preservation boundaries for #10061."""
 
+import json
 import os
 import subprocess
 
@@ -105,18 +106,20 @@ def test_unlisted_ignored_output_still_blocks(checkout, monkeypatch, name):
     repo, primary, _ = checkout
     ignore_site(repo)
     path = fixtures.artifact(checkout, name, b"unique output" * 100)
-    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 10)
+    monkeypatch.setattr(output, "MAX_RESIDUE_RECEIPT_BYTES", 600)
     assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
     assert output._ignored_output_files(repo, primary, {}) == [name]
     ok, reason, receipt = fixtures.guard(checkout)
-    assert not ok and "exceeds preservation cap" in reason
+    assert ok and not reason and receipt["entries_truncated"] is True
+    assert receipt["paths"] == [] and receipt["copied_bytes"] == 0
+    assert len(json.dumps(receipt, sort_keys=True).encode()) <= 600 and receipt["inventory_complete"] is True
     assert receipt["count"] == 1 and receipt["bytes"] == path.stat().st_size
     assert path.exists()
 
 
 @pytest.mark.parametrize("name", UNPUBLISHED_SITE_OUTPUTS)
 def test_unpublished_site_output_is_preserved_byte_for_byte(checkout, monkeypatch, name):
-    repo, primary, _ = checkout
+    repo, _primary, _ = checkout
     ignore_site(repo)
     payload = b'{"entries": ["unpublished"]}'
     path = fixtures.artifact(checkout, name, payload)
@@ -125,7 +128,7 @@ def test_unpublished_site_output_is_preserved_byte_for_byte(checkout, monkeypatc
     assert ok and not reason
     assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
     assert [entry["path"] for entry in receipt["paths"]] == [name]
-    assert (primary / receipt["location"] / name).read_bytes() == payload
+    fixtures.assert_record_only(receipt, {name: b'{"entries": ["unpublished"]}'})
     assert path.read_bytes() == payload
 
 
@@ -232,8 +235,8 @@ def test_common_reaper_removes_only_regenerable_build_output(hermetic_reap, monk
     )
     row = report["main_worktree"]
     if remaining:
-        assert row["action"] == "skipped" and tree.exists(), report
-        assert "exceeds preservation cap" in row["reason"]
+        assert row["action"] == "removed" and not tree.exists(), report
+        fixtures.assert_record_only(row["preserved_artifacts"], {remaining: b"x" * 64})
         assert [entry["path"] for entry in row["preserved_artifacts"]["paths"]] == [remaining]
     else:
         assert row["action"] == "removed" and not tree.exists(), report

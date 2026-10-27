@@ -4509,7 +4509,11 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
         )
         if not ok or receipt is None:
             return False, refusal or "archive_receipt_missing"
-        archive_receipt = {key: receipt[key] for key in ("manifest_path", "content_sha256", "retrieval_proof_sha256")}
+        record_only = receipt.get("mode") == "record_only"
+        receipt_keys = ("mode", "copied_bytes", "inventory_sha256") if record_only else (
+            "manifest_path", "content_sha256", "retrieval_proof_sha256"
+        )
+        archive_receipt = {key: receipt[key] for key in receipt_keys}
         # Publish the locator even if the final recheck/removal later refuses.
         print("Branch holder archive: " + json.dumps(archive_receipt, sort_keys=True), file=sys.stderr)
 
@@ -4534,7 +4538,8 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
                 or branch_holder_scratch_inventory(path, primary=_REPO_ROOT) != inventory
             ):
                 raise ValueError("holder_changed_before_delete")
-            ignored_task_output.verify_retrieval(_REPO_ROOT, receipt)
+            if not record_only:
+                ignored_task_output.verify_retrieval(_REPO_ROOT, receipt)
 
         # Retire only receipt-covered entries, including ignored output, so
         # the common boundary does not archive it again. Its regenerable

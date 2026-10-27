@@ -12,6 +12,7 @@ from scripts.fleet import ignored_task_output as output
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import worktree_claims as claims
 from tests.orchestration import test_merge_closeout as closeout
+from tests.orchestration.test_worktree_artifacts import assert_record_only
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
 
@@ -96,8 +97,8 @@ def test_superseded_creator_proof_survives_output_preservation(merged_cohort):
     assert applied.action == "preserved_then_removed", applied.reason
     assert not tree.exists()
     receipt = applied.preserved_artifacts
-    assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"output from the reused checkout"
-    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert_record_only(receipt, {"ignored/output.txt": b"output from the reused checkout"})
+    assert not (repo / "batch_state/preserved").exists()
     proof = json.loads(path.read_text())["worktree_reap_proof"]
     assert proof["owner"] == "boundary" and proof["run_nonce"] == "creation-nonce"
     assert proof == receipt["merged_head_proof"]

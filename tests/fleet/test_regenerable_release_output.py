@@ -119,7 +119,7 @@ def pinned_checkout(checkout):
 
 @pytest.mark.parametrize("capped", [False, True])
 def test_never_uploaded_pointer_preserves_only_copy(checkout, monkeypatch, capped):
-    payload, _ = pinned_checkout(checkout)
+    payload, shard = pinned_checkout(checkout)
     repo, primary, _ = checkout
     monkeypatch.setattr(
         github_client, "run", lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, '{"assets":[]}')
@@ -129,26 +129,22 @@ def test_never_uploaded_pointer_preserves_only_copy(checkout, monkeypatch, cappe
     tracked = set(output.artifacts._git_paths(repo, "--cached"))
     assert not patterns.is_regenerable_ignored_path(MANIFEST, worktree=repo, tracked=tracked)
     ok, reason, receipt = fixtures.guard(checkout)
-    assert ok is not capped
-    assert {entry["path"] for entry in receipt["paths"]} == {MANIFEST, PRACTICE}
-    if capped:
-        assert "exceeds preservation cap" in reason
-        assert (repo / MANIFEST).read_bytes() == payload
-    else:
-        assert (primary / receipt["location"] / MANIFEST).read_bytes() == payload
+    assert ok and not reason
+    fixtures.assert_record_only(receipt, {MANIFEST: payload, PRACTICE: shard})
+    assert not (primary / "batch_state/preserved").exists()
 
 
 def test_reviewer_unuploaded_pointer_manifest_requires_preservation(checkout, monkeypatch):
     # Regression form of 9828-review-probe-test.py. The pointer commit has
     # never reached main and its asset is absent from the release store.
-    payload, _ = pinned_checkout(checkout)
+    payload, shard = pinned_checkout(checkout)
     repo = checkout[0]
     head = git(repo, "rev-parse", "HEAD").strip()
     assert head and (repo / MANIFEST).read_bytes() == payload
     monkeypatch.setattr(github_client, "run", lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, '{"assets":[]}'))
     ok, reason, receipt = fixtures.guard(checkout)
     assert ok and not reason and receipt is not None
-    assert (checkout[1] / receipt["location"] / MANIFEST).read_bytes() == payload
+    fixtures.assert_record_only(receipt, {MANIFEST: payload, PRACTICE: shard})
 
 
 @pytest.mark.parametrize("change", ["digest", "digestless", "size", "url", "state", "duplicate", "shape"])
@@ -237,10 +233,10 @@ def test_kept_gzip_requires_safe_matching_bytes(checkout, monkeypatch, stem, nam
     if state == "valid":
         ok, reason, receipt = fixtures.guard(checkout)
         assert ok and not reason
-        assert (primary / receipt["location"] / kept).read_bytes() == gz.read_bytes()
+        fixtures.assert_record_only(receipt, {kept: gz.read_bytes()})
         monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
         ok, reason, _ = fixtures.guard(checkout)
-        assert not ok and "exceeds preservation cap" in reason
+        assert ok and not reason
 
 
 @pytest.mark.parametrize("total_bytes", [760_367_968, 788_933_556])
@@ -330,7 +326,7 @@ def test_mixed_pinned_release_preserves_only_unique_output(checkout):
     ok, reason, receipt = fixtures.guard(checkout)
     assert ok and not reason
     assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
-    assert (checkout[1] / receipt["location"] / "ignored/answer.txt").read_bytes() == b"unique answer"
+    fixtures.assert_record_only(receipt, {"ignored/answer.txt": b"unique answer"})
 
 
 def test_database_provenance_remains_a_cap_refusal(checkout):
@@ -339,7 +335,7 @@ def test_database_provenance_remains_a_cap_refusal(checkout):
     with database.open("wb") as stream:
         stream.truncate(462_831_616)
     ok, reason, receipt = fixtures.guard(checkout)
-    assert not ok and "exceeds preservation cap" in reason
+    assert ok and not reason and receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
     assert receipt["bytes"] == 462_831_616
     assert [entry["path"] for entry in receipt["paths"]] == ["data/atlas.db"]
     assert database.exists()
@@ -479,7 +475,7 @@ def test_tracked_file_wins_over_stale_ignored_inventory(checkout):
 
 
 def test_build_file_symlink_is_preserved_without_reading_target(checkout):
-    repo, primary, _ = checkout
+    repo, _primary, _ = checkout
     name = "site/dist/index.html"
     (repo / ".gitignore").write_text("site/dist/\n")
     outside = repo.parent / "outside.html"
@@ -491,7 +487,7 @@ def test_build_file_symlink_is_preserved_without_reading_target(checkout):
     ok, reason, receipt = fixtures.guard(checkout)
     assert ok and not reason
     assert receipt["paths"][0]["type"] == "symlink"
-    assert b"only outside copy" not in (primary / receipt["location"] / name).read_bytes()
+    fixtures.assert_record_only(receipt, {name: b"symlink\n" + os.fsencode(str(outside))})
     assert outside.read_bytes() == b"only outside copy"
 
 

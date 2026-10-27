@@ -103,9 +103,9 @@ def test_post_task_reap_interrupted_pushed_regenerable_work_is_removed(interrupt
     _leave_regenerable_output(tree)
     output.unlink()
     _run(["git", "push", "-u", "origin", "codex/interrupted"], cwd=tree)
-    # Misclassifying either cache as unique output must block removal rather
-    # than silently copying it and allowing the control to pass.
-    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 1)
+    # Misclassifying either cache as residue must fail the tiny metadata budget
+    # and block removal instead of letting the control pass.
+    monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", 1)
 
     report = post_task_reap.post_task_reap(
         "interrupted", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
@@ -159,10 +159,16 @@ def test_s3_post_task_reap_preserves_tar_member_with_restored_old_mtime(hermetic
     assert report["main_worktree"]["action"] == "removed", report
     assert not worktree.exists()
     receipt = json.loads(record_path.read_text())["preserved_artifacts"]
+    assert receipt["mode"] == "record_only"
+    assert receipt["copied_bytes"] == 0 and receipt["inventory_complete"] is True
+    assert receipt["entries_truncated"] is False
     assert receipt["count"] == 2 and receipt["bytes"] == len(payload) + 6
-    location = repo / receipt["location"]
-    assert (location / ".cache/dl/archive_member.txt").read_bytes() == payload
-    assert (location / ".cache/dl/recent.txt").read_bytes() == b"recent"
+    entries = {entry["path"]: entry for entry in receipt["paths"]}
+    assert entries[".cache/dl/archive_member.txt"]["size"] == len(payload)
+    assert entries[".cache/dl/archive_member.txt"]["sha256"] == hashlib.sha256(payload).hexdigest()
+    assert entries[".cache/dl/recent.txt"]["size"] == 6
+    assert entries[".cache/dl/recent.txt"]["sha256"] == hashlib.sha256(b"recent").hexdigest()
+    assert not (repo / "batch_state/preserved" / task_id).exists()
 
 
 @pytest.fixture
@@ -524,8 +530,13 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
         (worktree / "site/src/data/lexicon-manifest.json").write_bytes(
             unpublished if contents == "unpublished_manifest" else b"x" * 64
         )
-    cap = {"unpublished_manifest": 32, "symlink": 4096}.get(contents, 16)
-    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", cap)
+    if contents in {"oversized_output", "oversized_manifest"}:
+        for index in range(20):
+            path = worktree / f"ignored/entry-{index:02}.txt"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"metadata entry")
+    cap = 1024 if contents in {"oversized_output", "oversized_manifest"} else 10 * 1024 * 1024
+    monkeypatch.setattr(ignored_task_output, "MAX_RESIDUE_RECEIPT_BYTES", cap)
     _write_task_state(tasks, task_id, "done", worktree, agent="codex")
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["main_worktree"]
@@ -536,14 +547,22 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
         entry = next(item for item in receipt["paths"] if item["path"] == "site/node_modules")
         assert entry["type"] == "symlink"
         assert entry["target"] == str(outside)
-        copied = repo / receipt["location"] / entry["path"]
-        assert copied.is_file() and not copied.is_symlink()
-        assert b"unique outside output" not in copied.read_bytes()
+        assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+        assert receipt["inventory_complete"] is True
+        assert receipt["entries_truncated"] is False
+        link_record = b"symlink\n" + os.fsencode(str(outside))
+        assert entry["size"] == len(link_record)
+        assert entry["sha256"] == hashlib.sha256(link_record).hexdigest()
+        assert not (repo / "batch_state/preserved" / task_id).exists()
         return
     if contents in {"oversized_output", "oversized_manifest"}:
-        assert row["action"] == "skipped" and worktree.exists(), row
-        assert "exceeds preservation cap" in row["reason"]
-        assert not (repo / "batch_state/preserved").exists()
+        assert row["action"] == "removed" and not worktree.exists(), row
+        receipt = row["preserved_artifacts"]
+        assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+        assert receipt["inventory_complete"] is True and receipt["entries_truncated"] is True
+        assert len(json.dumps(receipt, sort_keys=True).encode()) <= cap
+        assert receipt["count"] >= len(receipt["paths"]) > 0
+        assert not (repo / "batch_state/preserved" / task_id).exists()
     else:
         assert row["action"] == "removed" and not worktree.exists(), row
         if contents == "regenerable_only":
@@ -551,15 +570,27 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
             assert not (repo / "batch_state/preserved").exists()
         elif contents == "unpublished_manifest":
             receipt = row["preserved_artifacts"]
+            assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+            assert receipt["inventory_complete"] is True
+            assert receipt["entries_truncated"] is False
             assert receipt["count"] == 1 and receipt["bytes"] == len(unpublished)
             manifest = "site/src/data/lexicon-manifest.json"
-            assert [entry["path"] for entry in receipt["paths"]] == [manifest]
-            assert (repo / receipt["location"] / manifest).read_bytes() == unpublished
+            entry, = receipt["paths"]
+            assert entry["path"] == manifest
+            assert entry["size"] == len(unpublished)
+            assert entry["sha256"] == hashlib.sha256(unpublished).hexdigest()
+            assert not (repo / "batch_state/preserved" / task_id).exists()
         else:
             receipt = row["preserved_artifacts"]
+            assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+            assert receipt["inventory_complete"] is True
+            assert receipt["entries_truncated"] is False
             assert receipt["count"] == 1 and receipt["bytes"] == 6
-            assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
-            assert (repo / receipt["location"] / "ignored/answer.txt").read_bytes() == b"answer"
+            entry, = receipt["paths"]
+            assert entry["path"] == "ignored/answer.txt"
+            assert entry["size"] == 6
+            assert entry["sha256"] == hashlib.sha256(b"answer").hexdigest()
+            assert not (repo / "batch_state/preserved" / task_id).exists()
 
 
 @pytest.mark.parametrize(
@@ -661,10 +692,16 @@ def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime, arti
     state = json.loads(path.read_text())
     receipt = row["preserved_artifacts"]
     assert state["preserved_artifacts"] == receipt
-    assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+    assert receipt["mode"] == "record_only"
+    assert receipt["copied_bytes"] == 0 and receipt["inventory_complete"] is True
+    assert receipt["entries_truncated"] is False
     assert receipt["count"] == 1
     assert receipt["bytes"] == len(b"post-task evidence")
-    assert ((repo / receipt["location"]) / artifact_name).read_bytes() == b"post-task evidence"
+    entry, = receipt["paths"]
+    assert entry["path"] == artifact_name
+    assert entry["size"] == len(b"post-task evidence")
+    assert entry["sha256"] == hashlib.sha256(b"post-task evidence").hexdigest()
+    assert not (repo / "batch_state/preserved" / task_id).exists()
 
 
 def test_running_skip(hermetic_reap):
@@ -769,7 +806,13 @@ def test_settled_read_only_review_checkout_is_reaped_while_its_reviewed_pr_is_op
     assert not tree.exists()
     if not detached:
         receipt = json.loads(_record.read_text())["preserved_artifacts"]
-        assert (repo / receipt["location"] / "review-output.txt").read_text() == "preserve reviewed findings\n"
+        assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+        assert receipt["inventory_complete"] is True and receipt["entries_truncated"] is False
+        entry, = receipt["paths"]
+        assert entry["path"] == "review-output.txt"
+        assert entry["size"] == len(b"preserve reviewed findings\n")
+        assert entry["sha256"] == hashlib.sha256(b"preserve reviewed findings\n").hexdigest()
+        assert not (repo / "batch_state/preserved" / task_id).exists()
 
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger", None])
@@ -1767,15 +1810,17 @@ def test_post_task_reap_result_named_file_scope(hermetic_reap, runtime, referenc
     state = json.loads(path.read_text())
     receipt = row["preserved_artifacts"]
     assert state["preserved_artifacts"] == receipt
-    location = repo / receipt["location"]
-    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
-    assert not (location / ".pytest_cache/cache.txt").exists()
+    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+    assert receipt["inventory_complete"] is True and receipt["entries_truncated"] is False
+    entry, = receipt["paths"]
+    assert entry["path"] == "ignored/report.txt"
+    assert entry["size"] == len(b"named evidence")
+    assert entry["sha256"] == hashlib.sha256(b"named evidence").hexdigest()
+    assert not (repo / "batch_state/preserved" / task_id).exists()
     assert receipt["count"] == 1
 
 
 def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
-    from scripts.orchestration import worktree_artifacts
-
     repo, tasks = hermetic_reap
     task_id = "acp-copy-failure"
     runtime = _add_acp_runtime_worktree(repo, task_id, locked=True)
@@ -1786,16 +1831,16 @@ def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
     source.write_bytes(b"must survive failed copy")
     _write_task_state(tasks, task_id, "done", None, acp_runtime_paths=[runtime])
 
-    def fail_copy(*_args):
-        raise OSError("injected ACP copy failure")
+    def fail_inventory(*_args, **_kwargs):
+        raise OSError("injected ACP inventory failure")
 
-    monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
+    monkeypatch.setattr(ignored_task_output, "_path_inventory", fail_inventory)
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["acp_runtimes"][0]
     assert row["action"] == "retained", row
-    assert "injected ACP copy failure" in row["reason"]
+    assert "injected ACP inventory failure" in row["reason"]
     assert source.read_bytes() == b"must survive failed copy"
-    assert not (repo / "batch_state/preserved" / task_id / "batch_state/report.txt").exists()
+    assert not (repo / "batch_state/preserved" / task_id).exists()
 
 
 @pytest.mark.parametrize("runtime", [False, True])
@@ -1821,9 +1866,6 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     state = json.loads(path.read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = repo / Path(
-        state.get("preserved_artifacts", {}).get("location", repo / "batch_state/preserved" / task_id)
-    )
     if scenario in links.REFUSALS:
         assert row["action"] == ("retained" if runtime else "skipped"), row
         assert links.REFUSALS[scenario] in row["reason"], row
@@ -1833,20 +1875,32 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     assert row["action"] == "removed", row
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
+    assert not (repo / "batch_state/preserved" / task_id).exists()
+    receipt = state.get("preserved_artifacts")
+    if receipt is None:
+        assert scenario in {"nul_name", "overlong_name", "worker_tokens"}
+        assert not (repo / "batch_state/preserved" / task_id).exists()
+        return
+    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+    assert receipt["inventory_complete"] is True
+    assert receipt["entries_truncated"] is False
     if scenario == "outbound_batch_state":
-        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
+        entry = next(item for item in receipt["paths"] if item.get("type") == "symlink")
         assert entry["path"] == "ignored/link" and entry["target"] == str(target)
-        copied = location / entry["path"]
-        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
-        assert state["preserved_artifacts"]["count"] == 1
-    elif preserved is None:
-        assert not location.exists()
+        link_record = b"symlink\n" + os.fsencode(str(target))
+        assert entry["size"] == len(link_record)
+        assert entry["sha256"] == hashlib.sha256(link_record).hexdigest()
+        assert receipt["count"] == 1
+    elif scenario in {"nul_name", "overlong_name", "worker_tokens"} or preserved is None:
+        assert not receipt["paths"]
     else:
         link_path, link_target = links.IGNORED_LINK[scenario]
-        assert (location / preserved).read_bytes() == links.PAYLOAD
-        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
+        entries = {item["path"]: item for item in receipt["paths"]}
         assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
-        assert state["preserved_artifacts"]["count"] == 2
+        assert entries[preserved]["path"] == preserved
+        assert entries[preserved]["size"] == len(links.PAYLOAD)
+        assert entries[preserved]["sha256"] == hashlib.sha256(links.PAYLOAD).hexdigest()
+        assert receipt["count"] == 2
 
 
 @pytest.mark.parametrize("disposition", ["merged", "abandon"])
@@ -1874,8 +1928,14 @@ def test_10303_post_task_reap_uses_complete_preservation_path(request, monkeypat
     assert row["action"] == "removed", row
     assert not tree.exists()
     receipt = row["preserved_artifacts"]
-    assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    assert receipt["mode"] == "record_only" and receipt["copied_bytes"] == 0
+    assert receipt["inventory_complete"] is True
+    assert receipt["entries_truncated"] is False
+    entry, = receipt["paths"]
+    assert entry["path"] == source.relative_to(tree).as_posix()
+    assert entry["size"] == len(b"current output")
+    assert entry["sha256"] == hashlib.sha256(b"current output").hexdigest()
+    assert not (repo / "batch_state/preserved" / "boundary").exists()
     state = json.loads((tasks / "boundary.json").read_text())
     assert state["status"] == creator["status"] and state["run_nonce"] == creator["run_nonce"]
 
@@ -1928,8 +1988,14 @@ def test_enqueued_exact_head_reaps_only_bound_pushed_terminal_worktree(tmp_path,
             assert receipt["removed"] == 1 and receipt["retained"] == 0, receipt
             assert not tree.exists()
             saved = next(row["preserved_artifacts"] for row in receipt["rows"] if row["action"] == "removed")
-            assert saved["retrieval_proof_sha256"]
-            assert (repo / saved["location"] / ".cache" / "result.txt").read_text() == "retrievable before removal"
+            assert saved["mode"] == "record_only" and saved["copied_bytes"] == 0
+            assert saved["inventory_complete"] is True
+            assert saved["entries_truncated"] is False
+            entry, = saved["paths"]
+            assert entry["path"] == ".cache/result.txt"
+            assert entry["size"] == len(b"retrievable before removal")
+            assert entry["sha256"] == hashlib.sha256(b"retrievable before removal").hexdigest()
+            assert not (repo / "batch_state/preserved" / "queued").exists()
             assert _run(["git", "ls-remote", "--heads", "origin", branch], cwd=repo).stdout.strip()
         else:
             assert tree.exists() and receipt["retained"] > 0, receipt

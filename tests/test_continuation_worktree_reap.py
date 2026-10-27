@@ -20,6 +20,17 @@ from tests.test_reused_worktree_retention import cohort as cohort
 from tests.test_reused_worktree_retention import save
 
 
+def assert_record_only_receipt(receipt, expected):
+    assert receipt["mode"] == "record_only"
+    assert receipt["copied_bytes"] == 0
+    assert receipt["inventory_complete"] is True
+    assert receipt["entries_truncated"] is False
+    assert receipt["bytes"] == sum(len(payload) for payload in expected.values())
+    assert {entry["path"]: (entry["size"], entry["sha256"]) for entry in receipt["paths"]} == {
+        name: (len(payload), hashlib.sha256(payload).hexdigest()) for name, payload in expected.items()
+    }
+
+
 @pytest.fixture
 def earlier_cohort(cohort, monkeypatch):
     """Three real commits: creator, settled successor, and later reviewed PR head."""
@@ -94,8 +105,8 @@ def test_detached_earlier_cohort_settles_through_common_reaper(earlier_cohort, m
     assert proof == row["preserved_artifacts"]["merged_head_proof"]
     if ignored_output:
         receipt = row["preserved_artifacts"]
-        assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-        assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"current output"
+        assert_record_only_receipt(receipt, {"ignored/output.txt": b"current output"})
+        assert not (repo / "batch_state" / "preserved").exists()
 
 
 @pytest.mark.parametrize(
@@ -170,7 +181,11 @@ def test_earlier_cohort_uncertainty_retains_checkout(earlier_cohort, monkeypatch
     elif failure == "pr_unknown":
         monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([], "PR lookup unavailable"))
     else:
-        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 0)
+        monkeypatch.setattr(
+            output,
+            "_classified_inventory",
+            lambda *_a, **_k: (_ for _ in ()).throw(OSError("injected inventory failure")),
+        )
     for record in (creator, successor):
         save(tasks, record)
     before = {p: p.read_bytes() for p in tasks.glob("*.json")}
@@ -181,7 +196,7 @@ def test_earlier_cohort_uncertainty_retains_checkout(earlier_cohort, monkeypatch
         current = json.loads(path.read_text())
         if failure == "preservation":
             if path.name == "boundary.json":
-                assert "exceeds preservation cap" in current.pop("artifact_preservation_error")
+                assert "injected inventory failure" in current.pop("artifact_preservation_error")
                 current.pop("worktree_reap_proof")
             current.pop("preserved_artifacts", None)
         assert current == json.loads(data)
@@ -284,8 +299,8 @@ def test_merged_continuations_closeout_without_force(cohort, monkeypatch, case, 
     assert len(proof["members"]) == 3
     if ignored_output:
         receipt = row["preserved_artifacts"]
-        assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-        assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"current output"
+        assert_record_only_receipt(receipt, {"ignored/output.txt": b"current output"})
+        assert not (repo / "batch_state" / "preserved").exists()
 
 
 @pytest.mark.parametrize("case", ["C", "E"])
@@ -354,8 +369,8 @@ def test_10606_existing_continuation_multiple_creators_reap_at_source_head(cohor
     assert not tree.exists()
     receipt = row.preserved_artifacts
     assert receipt["merged_head_proof"]["head_relation"] == "exact"
-    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    assert_record_only_receipt(receipt, {source.relative_to(tree).as_posix(): b"current output"})
+    assert not (repo / "batch_state" / "preserved").exists()
     for path, member in before.items():
         current = json.loads(path.read_bytes())
         assert current["status"] == member["status"]
@@ -418,15 +433,20 @@ def test_unproven_archive_stays_ambiguous(cohort, failure):
 def test_explicit_receipt_release_keeps_existing_nonmerge_reap_path(cohort, monkeypatch):
     repo, tree, tasks, _, _, _ = cohort
     retrieved = reap.post_task_reap("boundary", tasks_dir=tasks, repo_root=repo, apply=True)
-    assert retrieved["main_worktree"]["preserved_artifacts"]["retrieval_proof_sha256"]
+    recorded = retrieved["main_worktree"]["preserved_artifacts"]
+    assert_record_only_receipt(recorded, {"ignored/output.txt": b"current output"})
+    assert "retrieval_proof_sha256" not in recorded
     assert reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
+    released = json.loads((tasks / "boundary.json").read_text())["preserved_artifacts"]["retention_release"]
+    assert released == {"owner": "boundary", "run_nonce": "creation-nonce", "mode": "record_only"}
     monkeypatch.setattr(reap.reap_worktrees, "_query_pr_states", lambda *_args: ([], None))
     monkeypatch.setattr(reap.reap_worktrees, "_query_prs_by_head_sha", lambda *_args: ([], None))
     row = next(r for r in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=True) if r.path == str(tree))
     assert row.action == "removed", row
     receipt = row.preserved_artifacts
     assert receipt["retention_release"]["owner"] == "boundary"
-    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert_record_only_receipt(receipt, {"ignored/output.txt": b"current output"})
+    assert "retrieval_proof_sha256" not in receipt
 
 
 def test_merged_cohort_change_at_lock_keeps_claim(cohort, monkeypatch):
@@ -1464,8 +1484,8 @@ def test_10606_exact_merged_head_replaces_single_creator(exact_merged_ambiguous_
     assert calls == [False] and not tree.exists()
     receipt = row.preserved_artifacts
     assert receipt["merged_head_proof"]["head_relation"] == "exact"
-    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    assert_record_only_receipt(receipt, {source.relative_to(tree).as_posix(): b"current output"})
+    assert not (repo / "batch_state" / "preserved").exists()
     for path, data in before.items():
         current = json.loads(path.read_bytes())
         prior = json.loads(data)
@@ -1507,7 +1527,11 @@ def test_10606_exact_merged_head_preserves_refusals(exact_merged_ambiguous_cohor
     elif failure == "keep":
         creator["keep_worktree"] = True
     elif failure == "ignored_output":
-        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 0)
+        monkeypatch.setattr(
+            output,
+            "_classified_inventory",
+            lambda *_a, **_k: (_ for _ in ()).throw(OSError("injected ignored-output inventory failure")),
+        )
     elif failure == "source_branch":
         successor["worktree_branch"] = "codex/different-source"
     elif failure in {"squash_head", "merge_group_head"}:
@@ -1550,7 +1574,7 @@ def test_10606_exact_merged_head_preserves_refusals(exact_merged_ambiguous_cohor
         )
         assert plan.action in {"skipped", "would_preserve_then_remove"}, plan.reason
     if failure == "ignored_output":
-        assert "exceeds preservation cap" in row.reason
+        assert "injected ignored-output inventory failure" in row.reason
 
 
 @pytest.mark.parametrize("change", ["head", "branch", "cohort", "live_pid", "keep"])
@@ -1678,8 +1702,8 @@ def test_10303_same_branch_pending_removal_preserves_output(same_branch_pending_
     assert not tree.exists()
     receipt = row.preserved_artifacts
     assert receipt["merged_head_proof"]["head_relation"] == relation
-    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    assert_record_only_receipt(receipt, {source.relative_to(tree).as_posix(): b"current output"})
+    assert not (repo / "batch_state" / "preserved").exists()
     assert json.loads((tasks / "boundary.json").read_text())["status"] == creator["status"]
 
 
@@ -1787,9 +1811,14 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
     assert not tree.exists()
     receipt = row.preserved_artifacts
     assert receipt["abandon_proof"]["head_sha"] == head
-    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-    copy = repo / receipt["location"]
-    assert (copy / source.relative_to(tree)).read_bytes() == b"current output"
+    assert_record_only_receipt(
+        receipt,
+        {
+            source.relative_to(tree).as_posix(): b"current output",
+            **({"untracked.txt": b"untracked unique bytes"} if dirty else {}),
+        },
+    )
+    assert not (repo / "batch_state" / "preserved").exists()
     manifest = json.loads((repo / creator["worktree_abandon"]["preservation"]["path"]).read_bytes())
     # Restore from the preserved patch using a separate index; compare the real tree.
     environment = dict(os.environ, GIT_INDEX_FILE=str(tmp_path / "restore.index"))
@@ -1806,9 +1835,7 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
     ).stdout.strip()
     assert restored == _git(repo, "rev-parse", f"{head}^{{tree}}")
     if dirty:
-        assert not (copy / "README.md").exists()
         assert b"GIT binary patch" in (repo / manifest["working_patch"]["path"]).read_bytes()
-        assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
         assert b"GIT binary patch" in (repo / manifest["index_patch"]["path"]).read_bytes()
         subprocess.run(
             ["git", "apply", "--cached", str(repo / manifest["index_patch"]["path"])],
@@ -1832,8 +1859,6 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
             ["git", "show", ":README.md"], cwd=repo, env=environment, check=True, capture_output=True, timeout=30
         ).stdout
         assert working == b"working unique bytes\x00"
-    else:
-        assert not (copy / "README.md").exists()
     state = json.loads((tasks / "boundary.json").read_text())
     assert state["status"] == "needs_finalize" and state["run_nonce"] == creator["run_nonce"]
     assert _git(repo, "rev-parse", "codex/boundary") == head
@@ -2094,8 +2119,8 @@ def test_10593_merged_equivalent_ambiguous_cohort(merged_equivalent_cohort, appl
         assert not tree.exists()
         receipt = row.preserved_artifacts
         assert receipt["merged_head_proof"]["head_relation"] == "patch-equivalent"
-        assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-        assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+        assert_record_only_receipt(receipt, {source.relative_to(tree).as_posix(): b"current output"})
+        assert not (repo / "batch_state" / "preserved").exists()
         assert json.loads((tasks / "boundary.json").read_text())["status"] == creator["status"]
     else:
         assert {p: p.read_bytes() for p in before} == before

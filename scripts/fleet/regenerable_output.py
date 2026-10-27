@@ -525,7 +525,7 @@ def _external_copy_matches(worktree: Path, relative: Path) -> bool:
                 if not isinstance(previous, list):
                     continue
                 for saved in [receipt, *previous]:
-                    if not isinstance(saved, dict) or not isinstance(saved.get("location"), str):
+                    if not isinstance(saved, dict) or saved.get("mode") == "record_only" or not isinstance(saved.get("location"), str):
                         continue
                     location = Path(saved["location"])
                     if (location.is_absolute() or ".." in location.parts

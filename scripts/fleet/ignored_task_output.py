@@ -36,6 +36,7 @@ from scripts.orchestration.task_record_store import task_record_path
 # Bound automatic disk duplication. Larger outputs require owner disposition;
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
+MAX_RESIDUE_RECEIPT_BYTES = 10 * 1024 * 1024
 # A detached bundle gets the same ceiling as the existing output payload budget.
 # It is a separate artifact; neither budget permits a partial preservation.
 MAX_DETACHED_BUNDLE_BYTES = MAX_PRESERVED_BYTES
@@ -1478,9 +1479,9 @@ def preserve_worktree_artifacts(
 ) -> tuple[bool, str, dict[str, Any] | None]:
     """Mandatory preservation and retention gate, under the remover's lock.
 
-    Decision B inventories everything without a clock cutoff. Baselines only
-    label provenance; they never reduce the copied set. No canonical attribution,
-    oversized output, failed retrieval, or explicit retention refuses removal.
+    Inventories everything without a clock cutoff, retaining discovery failures.
+    Ignored residue gets bounded metadata only. Missing canonical attribution,
+    failed publication, or explicit retention refuses removal.
     Vanished paths require fresh lstat absence proof; byte changes still refuse.
     Caller records and task IDs are hints, never retention authority.
     """
@@ -1491,9 +1492,15 @@ def preserve_worktree_artifacts(
     record: dict[str, Any] = {}
     metadata: dict[str, Any] = {
         "schema": PRESERVED_ARTIFACTS_SCHEMA,
+        "mode": "record_only",
+        "copied_bytes": 0,
+        "inventory_complete": False,
+        "entries_truncated": False,
+        "bytes": None,
+        "count": None,
         "retention_disposition": "retained",
         "owner": "infra lane",
-        "next_condition": "establish canonical task attribution and verified retrieval",
+        "next_condition": "establish canonical task attribution and publish an inventory receipt",
     }
     absent: list[dict[str, str]] = []
     disposition = None
@@ -1599,73 +1606,16 @@ def preserve_worktree_artifacts(
                 "worktree_sha256": hashlib.sha256(str(worktree).encode()).hexdigest(),
             }
         )
-        total_bytes = metadata["bytes"]
-        if total_bytes > MAX_PRESERVED_BYTES:
-            metadata["next_condition"] = "owner retrieves output exceeding the preservation cap"
-            raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {MAX_PRESERVED_BYTES} bytes)")
-        if files or absent or kept:
-            parent = primary / "batch_state" / "preserved" / identity
-            if parent.is_relative_to(worktree):
-                raise ValueError("preservation destination is inside the worktree")
-            # Bind copying to the original inventory, including mutations before
-            # _copy_verified takes its own source fingerprint.
-            digest = hashlib.sha256(
-                json.dumps([(entry["path"], entry["size"], entry["sha256"]) for entry in paths]).encode()
-            ).hexdigest()
-            location = _reusable_copy(parent, worktree, files, digest)
-            reused = location is not None
-            if reused:
-                saved = json.loads(location.with_suffix(".manifest.json").read_bytes())
-                if "archive" in saved:
-                    metadata["archive"] = saved["archive"]
-            if location is None:
-                location = parent / uuid.uuid4().hex
-                metadata["next_condition"] = "owner completes verified copy and retrieval"
-                location.mkdir(parents=True, exist_ok=False)
-                for name in files:
-                    destination = location / name
-                    if destination.resolve() != destination.absolute():
-                        raise ValueError("preserved artifact destination contains a symlink")
-                    try:
-                        artifacts._copy_verified(
-                            worktree / name,
-                            destination,
-                            source_root=worktree,
-                            destination_root=location,
-                        )
-                    except FileNotFoundError:
-                        _record_absence(worktree, name, absent)
-                        # A destination-side failure is not source absence proof.
-                        if destination.exists() or destination.is_symlink():
-                            raise
-                        continue
-                paths = [entry for entry in paths if entry["path"] not in {proof["path"] for proof in absent}]
-                files = [entry["path"] for entry in paths]
-                metadata.update(count=len(files), bytes=sum(entry["size"] for entry in paths), paths=paths)
-                digest = _content_digest(location, files)
-                if _byte_identity(_path_inventory(location, files)) != _byte_identity(paths):
-                    raise ValueError("ignored output changed during preservation")
-            metadata.update(
-                {"location": location.relative_to(primary).as_posix(), "content_sha256": digest, "reused": reused}
-            )
-            metadata["next_condition"] = "owner repairs failed retrieval and verifies all bytes"
-            metadata["retrieval_proof_sha256"] = verify_retrieval(primary, metadata)
-            if files != output_files() or _content_digest(worktree, files) != digest:
-                raise ValueError("ignored output changed during preservation")
-            for proof in list(absent):
-                _record_absence(worktree, proof["path"], absent)
-            # The manifest is only a locator; retries independently read all bytes.
-            if not reused:
-                with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
-                    json.dump(metadata, manifest, sort_keys=True)
-                    manifest.write("\n")
-            metadata["manifest_path"] = location.with_suffix(".manifest.json").relative_to(primary).as_posix()
+        metadata.update(
+            inventory_complete=True,
+            inventory_sha256=hashlib.sha256(json.dumps(_byte_identity(paths)).encode()).hexdigest(),
+        )
         if kept:
             metadata["next_condition"] = (
-                "existing owner releases retention after proven retrieval via post_task_reap --release-retention"
+                "existing owner releases retention via post_task_reap --release-retention"
             )
         else:
-            metadata.update({"retention_disposition": "retrieved", "next_condition": "none"})
+            metadata.update({"retention_disposition": "recorded", "next_condition": "none"})
         if metadata["retention_disposition"] != "retained":
             metadata["next_condition"] = "owner repairs task receipt publication"
         # Recheck intent under the task writer lock. A concurrent record update
@@ -1693,7 +1643,7 @@ def preserve_worktree_artifacts(
                 metadata.update(
                     {
                         "retention_disposition": "retained",
-                        "next_condition": "existing owner releases retention after proven retrieval via post_task_reap --release-retention",
+                        "next_condition": "existing owner releases retention via post_task_reap --release-retention",
                     }
                 )
             prior_release = current.get("preserved_artifacts", {}).get("retention_release")
@@ -1701,6 +1651,20 @@ def preserve_worktree_artifacts(
                 metadata["retention_release"] = prior_release
             if metadata["retention_disposition"] != "retained":
                 metadata["next_condition"] = "none"
+            # Recheck full discovery, regardless of receipt truncation, before removal.
+            if files != output_files() or _byte_identity(_path_inventory(worktree, files)) != _byte_identity(paths):
+                raise ValueError("ignored output changed during preservation")
+            for proof in list(absent):
+                _record_absence(worktree, proof["path"], absent)
+            # Bound the serialized receipt, including escaping and audit fields.
+            while len(json.dumps(metadata, sort_keys=True).encode()) > MAX_RESIDUE_RECEIPT_BYTES:
+                metadata["entries_truncated"] = True
+                if metadata["paths"]:
+                    metadata["paths"] = metadata["paths"][:len(metadata["paths"]) // 2]
+                elif metadata["absent_paths"]:
+                    metadata["absent_paths"] = metadata["absent_paths"][:len(metadata["absent_paths"]) // 2]
+                else:
+                    raise ValueError("residue receipt metadata exceeds limit")
             current["preserved_artifacts"] = metadata
             if extra_files is not None:
                 current["branch_holder_archive"] = metadata
@@ -1712,7 +1676,7 @@ def preserve_worktree_artifacts(
         if metadata["retention_disposition"] == "retained":
             return False, "artifact preservation failed: keep_worktree intent set; refusing worktree removal", metadata
         print(
-            f"Preserved {len(files)} files ({metadata['bytes']} bytes); retrieval SHA-256: {metadata.get('retrieval_proof_sha256')}",
+            f"Recorded {len(files)} ignored files ({metadata['bytes']} bytes); copied 0 bytes",
             file=sys.stderr,
         )
         return True, "", metadata
@@ -1723,7 +1687,7 @@ def preserve_worktree_artifacts(
         reason = f"artifact preservation failed: {detail}; refusing worktree removal"
         metadata["retention_disposition"] = "retained"
         if metadata["next_condition"] == "none":
-            metadata["next_condition"] = "owner repairs task receipt publication and proves retrieval"
+            metadata["next_condition"] = "owner repairs task receipt publication"
         if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree, repo_root=repo_root):
             task_record["artifact_preservation_error"] = reason
         if record_path is not None:

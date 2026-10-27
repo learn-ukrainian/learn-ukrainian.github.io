@@ -305,7 +305,9 @@ def _freed_bytes(measurement: dict[str, Any], preserved: dict[str, Any] | None) 
     """
     if measurement.get("unmeasured"):
         return None
-    kept = {entry["path"] for entry in (preserved or {}).get("paths", [])}
+    kept = set() if (preserved or {}).get("mode") == "record_only" else {
+        entry["path"] for entry in (preserved or {}).get("paths", [])
+    }
     unlinked = measurement.get("unlinked", {})
     kept_ids = {entry[:2] for name, entry in unlinked.items() if name in kept}
     # Multiple removed names can share one inode. Count its bytes once, and
@@ -3779,15 +3781,19 @@ def _released_reuse_claim_proven_settled(
         receipt = record["preserved_artifacts"]
         release = receipt["retention_release"]
         finalized = release["finalized_by"]
+        record_only = receipt.get("mode") == release.get("mode") == "record_only"
+        dispositions = {"released", "recorded"} if record_only else {"released", "retrieved"}
         if (
-            receipt.get("retention_disposition") not in {"released", "retrieved"}
+            receipt.get("retention_disposition") not in dispositions
             or receipt.get("owner") != record["task_id"]
             or receipt.get("task_id") != record["task_id"]
             or receipt.get("run_nonce") != record["run_nonce"]
             or release.get("owner") != record["task_id"]
             or release.get("run_nonce") != record["run_nonce"]
-            or not receipt.get("retrieval_proof_sha256")
-            or release.get("retrieval_proof_sha256") != receipt["retrieval_proof_sha256"]
+            or (not record_only and (
+                not receipt.get("retrieval_proof_sha256")
+                or release.get("retrieval_proof_sha256") != receipt["retrieval_proof_sha256"]
+            ))
             or not all(_pid_proven_absent(member) for _, member in cohort)
         ):
             return None
