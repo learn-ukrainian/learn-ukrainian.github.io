@@ -2004,6 +2004,68 @@ def test_interrupt_after_payload_delivery_keeps_write_paths_with_live_supervisor
     assert not run_git(sandbox.repo, "branch", "--list", "sol/writer-b")
 
 
+@pytest.mark.parametrize("loss, survivors", [
+    ("DELETE FROM write_claims WHERE task_id = 'writer-a'", []),
+    ("UPDATE write_claims SET pid = 1 WHERE task_id = 'writer-a'", [("writer-a", 1)]),
+])
+def test_claim_lost_before_launch_refuses_and_cancels_supervisor(sandbox, loss, survivors):
+    """A claim reclaimed between admission and the pid bind fails the launch instead of binding zero rows.
+
+    The supervisor is cancelled before it starts a provider, the record ends failed, and rows another
+    owner holds are left alone.
+    """
+    sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
+    reclaim_before_spawn = (
+        "import os, sqlite3, sys\n"
+        "from scripts.dispatcher import store\n"
+        "create = store.create\n"
+        "def reclaimed(*args, **kwargs):\n"
+        "    path = create(*args, **kwargs)\n"
+        "    with sqlite3.connect(os.environ['LEARN_UKRAINIAN_OWNERSHIP_LEDGER']) as conn:\n"
+        f"        conn.execute({loss!r})\n"
+        "    return path\n"
+        "store.create = reclaimed\n"
+        "from scripts.dispatcher.cli import main\n"
+        "sys.exit(main(sys.argv[1:]))\n"
+    )
+    writer = _overlapping_writer(sandbox, "writer-a", model="blocked", wrapper=reclaim_before_spawn)
+    stdout, stderr = writer.communicate(timeout=30)
+    assert writer.returncode == 1, stderr
+    assert stdout == ""
+    assert "write-path ownership lost before launch for task_id='writer-a'" in stderr
+    record = json.loads((sandbox.tasks / "writer-a.json").read_text())
+    assert record["status"] == "failed"
+    assert record["error"].startswith("write_claim_lost: ")
+    assert worker._identity(record["pid"]) != record["process_start"]
+    assert not (sandbox.tasks / "writer-a.started").exists()
+    assert _claim_rows(sandbox) == survivors
+
+
+def test_interrupt_during_claim_admission_releases_committed_claim(sandbox):
+    """SIGINT after the ledger commits a claim, before admission returns, still releases that claim."""
+    sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
+    interrupt_after_commit = (
+        "import os, signal, sys\n"
+        "from scripts.guardrails import delegate_ownership\n"
+        "admit = delegate_ownership.admit_write_paths\n"
+        "def interrupted(*args, **kwargs):\n"
+        "    result = admit(*args, **kwargs)\n"
+        "    os.kill(os.getpid(), signal.SIGINT)\n"
+        "    return result\n"
+        "delegate_ownership.admit_write_paths = interrupted\n"
+        "from scripts.dispatcher.cli import main\n"
+        "sys.exit(main(sys.argv[1:]))\n"
+    )
+    writer = _overlapping_writer(sandbox, "writer-a", wrapper=interrupt_after_commit)
+    _, stderr = writer.communicate(timeout=30)
+    assert writer.returncode != 0
+    assert "KeyboardInterrupt" in stderr
+    assert not _claim_rows(sandbox)
+    assert not (sandbox.tasks / "writer-a.json").exists()
+    assert not (sandbox.repo / ".worktrees" / "dispatch" / "sol" / "writer-a").exists()
+    assert not run_git(sandbox.repo, "branch", "--list", "sol/writer-a")
+
+
 # ---- ported from tests/test_delegate_review_test_slots.py and tests/test_delegate.py (C-2188 unit D) ----
 
 

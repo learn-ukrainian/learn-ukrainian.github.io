@@ -54,7 +54,8 @@ def start(
     """Create the record and launch its supervisor; ``on_spawn`` takes over the supervisor pid before its payload.
 
     Signals stay deferred from the spawn until the payload is delivered, so an interrupt can only land
-    before a supervisor exists or after ``on_spawn`` has run for it.
+    before a supervisor exists or after ``on_spawn`` has run for it. When ``on_spawn`` refuses the launch,
+    the supervisor is cancelled before it can start a provider and the record ends failed.
     """
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
@@ -70,15 +71,29 @@ def start(
                     task_id=spec.task_id, run_nonce=record["run_nonce"], cwd=Path(__file__).resolve().parents[2],
                     stderr=err, stderr_log=logs / f"{spec.task_id}.stderr.log",
                 )
-                if on_spawn:
-                    on_spawn(process.pid)
                 record.update(pid=process.pid, process_start=_identity(process.pid), **launch)
                 store.replace(record, path)
-                payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
-                process.stdin.write(payload)
+                payload, refused = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode(), None
+                try:
+                    if on_spawn:
+                        on_spawn(process.pid)
+                except admission.LaunchRefused as exc:
+                    refused = exc
+                    try:
+                        # Its signals are still blocked, so the cancel lands before it can start a provider.
+                        _signal_supervisor(record)
+                    except (OSError, ValueError):
+                        payload = b""  # A supervisor that cannot be cancelled never receives its payload.
+                if payload:
+                    process.stdin.write(payload)
                 process.stdin.close()
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
+        if refused:
+            settled = wait(spec.task_id, record["run_nonce"], timeout=10, poll_interval=0.05)[0]
+            if settled["status"] not in store.ACTIVE:
+                record.update(settled)
+            raise refused
     except admission.LaunchRefused as exc:
         record.update(exc.fields, finished_at=store.now())
         store.replace(record, path)
@@ -356,20 +371,25 @@ def cancel(task_id: str, nonce: str | None = None) -> dict:
     if record.get("schema_version") != 2:
         raise ValueError("legacy task cancellation belongs to its original supervisor")
     if record["status"] in store.ACTIVE:
-        if not record.get("pid") or not record.get("process_start"):
-            raise ValueError("supervisor identity is unavailable; cancellation refused")
         try:
-            pidfd = os.pidfd_open(record["pid"])
-            try:
-                if _identity(record["pid"]) != record["process_start"]:
-                    raise ValueError("supervisor identity changed; cancellation refused")
-                signal.pidfd_send_signal(pidfd, signal.SIGTERM)
-            finally:
-                os.close(pidfd)
+            _signal_supervisor(record)
         except ProcessLookupError:
             return _observe(record)
         return wait(task_id, nonce, timeout=10, poll_interval=0.05)[0]
     return record
+
+
+def _signal_supervisor(record: dict) -> None:
+    """Send SIGTERM to the recorded supervisor through a pidfd, refusing a missing or changed identity."""
+    if not record.get("pid") or not record.get("process_start"):
+        raise ValueError("supervisor identity is unavailable; cancellation refused")
+    pidfd = os.pidfd_open(record["pid"])
+    try:
+        if _identity(record["pid"]) != record["process_start"]:
+            raise ValueError("supervisor identity changed; cancellation refused")
+        signal.pidfd_send_signal(pidfd, signal.SIGTERM)
+    finally:
+        os.close(pidfd)
 
 
 if __name__ == "__main__":

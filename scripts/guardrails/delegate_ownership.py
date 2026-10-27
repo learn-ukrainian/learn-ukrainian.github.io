@@ -1035,14 +1035,21 @@ class OwnershipLedger:
                     conn.execute("DELETE FROM write_claims WHERE rowid = ?", (row["claim_id"],))
             conn.execute("COMMIT")
 
-    def update_claim_pid(self, task_id: str, new_pid: int) -> None:
-        """Patch ledger PID after the long-lived worker is spawned."""
+    def update_claim_pid(self, task_id: str, new_pid: int, *, owner_pid: int | None = None) -> int:
+        """Patch ledger PID after the long-lived worker is spawned; return how many rows were rebound.
+
+        With ``owner_pid`` the patch proves ownership: unless every row of ``task_id`` still names
+        ``owner_pid``, nothing is rebound and 0 is returned.
+        """
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
-            for row in self._claim_rows(conn):
-                if row["task_id"] == task_id:
-                    conn.execute("UPDATE write_claims SET pid = ? WHERE rowid = ?", (int(new_pid), row["claim_id"]))
+            rows = [row for row in self._claim_rows(conn) if row["task_id"] == task_id]
+            if owner_pid is not None and any(row["pid"] != int(owner_pid) for row in rows):
+                rows = []
+            for row in rows:
+                conn.execute("UPDATE write_claims SET pid = ? WHERE rowid = ?", (int(new_pid), row["claim_id"]))
             conn.execute("COMMIT")
+        return len(rows)
 
     def _holder_wait_s(self, blockers: list[dict[str, object]], fallback: float) -> float:
         """Bound this window by the longest actual blocker, never by waiter claims.
@@ -1583,6 +1590,8 @@ def update_write_claim_pid(
     ledger_path: Path | None = None,
     task_state_dir: Path | None = None,
     cwd: str | Path | None = None,
-) -> None:
-    """Public helper: bind claim rows to the detached worker PID after Popen."""
-    OwnershipLedger(ledger_path, task_state_dir=task_state_dir, cwd=cwd).update_claim_pid(task_id, new_pid)
+    owner_pid: int | None = None,
+) -> int:
+    """Public helper: bind claim rows to the detached worker PID after Popen; see ``update_claim_pid``."""
+    ledger = OwnershipLedger(ledger_path, task_state_dir=task_state_dir, cwd=cwd)
+    return ledger.update_claim_pid(task_id, new_pid, owner_pid=owner_pid)

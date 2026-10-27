@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from scripts.dispatcher import git
+from scripts.dispatcher import admission, git
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 _CANONICAL_GITHUB_REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -510,16 +510,24 @@ def admit_write_claim(args, task_id: str, cwd: Path) -> bool:
     return not ownership.skipped
 
 
-def bind_write_claim(mode: str, task_id: str, pid: int, cwd: Path) -> None:
-    """delegate.py cmd_dispatch 16634-16647: bind the claim rows to the long-lived supervisor pid (best effort)."""
-    if mode not in _WRITE_CAPABLE_MODES:
-        return
+def bind_write_claim(task_id: str, pid: int, cwd: Path) -> None:
+    """delegate.py cmd_dispatch 16634-16647: bind the claim rows to the long-lived supervisor pid.
+
+    Unlike the legacy best-effort bind, the rebind proves ownership: it succeeds only while every row of
+    the task still names this dispatcher's pid. A claim reclaimed meanwhile (rows gone or re-owned), a bind
+    that updates zero rows, or a ledger error refuses the launch.
+    """
     from scripts.guardrails.delegate_ownership import update_write_claim_pid
 
     try:
-        update_write_claim_pid(task_id, int(pid), cwd=cwd)
+        bound = update_write_claim_pid(task_id, int(pid), cwd=cwd, owner_pid=os.getpid())
     except Exception as own_exc:
-        print(f"⚠️  write-path ownership: failed to bind worker pid: {own_exc}", file=sys.stderr)
+        bound, detail = 0, f"ledger error: {own_exc}"
+    else:
+        detail = "the claim is no longer held by this dispatcher"
+    if not bound:
+        message = f"write-path ownership lost before launch for task_id={task_id!r}: {detail}"[:500]
+        raise admission.LaunchRefused(message, {"status": "failed", "error": f"write_claim_lost: {message}"})
 
 
 class WriteClaim:
@@ -528,17 +536,27 @@ class WriteClaim:
     Admission runs after worktree preparation, so the claim exists only from just before the task record
     is created. ``worker.start`` calls ``bind`` with signals deferred, right after the supervisor exists
     and before it receives its payload; from then on the supervisor pid owns the rows and the ledger
-    releases them when it ends. Leaving the context releases only the claim of a dispatch that never spawned.
+    releases them when it ends. Leaving the context releases this dispatcher's rows unless the supervisor
+    took them over; an interrupt during admission releases whatever the admission committed.
     """
 
     def __init__(self, args, task_id: str, cwd: Path):
         self.mode, self.task_id, self.cwd = str(args.mode), task_id, cwd
         self.spawned = False
-        self.held = admit_write_claim(args, task_id, cwd)
+        try:
+            self.held = admit_write_claim(args, task_id, cwd)
+        except Refused:
+            raise
+        except BaseException:
+            # The ledger may have committed this dispatcher's rows before the interrupt landed.
+            self.held = self.mode in _WRITE_CAPABLE_MODES
+            self.__exit__()
+            raise
 
     def bind(self, pid: int) -> None:
+        if self.held:
+            bind_write_claim(self.task_id, pid, self.cwd)
         self.spawned = True
-        bind_write_claim(self.mode, self.task_id, pid, self.cwd)
 
     def __enter__(self):
         return self
@@ -549,6 +567,7 @@ class WriteClaim:
         from scripts.guardrails.delegate_ownership import OwnershipLedger
 
         try:
+            # Only rows still naming this dispatcher's pid: a claim another writer reclaimed stays theirs.
             OwnershipLedger(cwd=self.cwd).release(self.task_id, pid=os.getpid())
         except Exception as own_exc:
             print(f"⚠️  write-path ownership: failed to release write claim: {own_exc}", file=sys.stderr)
