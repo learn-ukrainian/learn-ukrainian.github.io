@@ -17,7 +17,7 @@ from unittest.mock import Mock
 import pytest
 import yaml
 
-from scripts.dispatcher import checks, git, store, worker
+from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
@@ -1695,3 +1695,99 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+# Ports of the legacy status-or-fail and child identity contracts in tests/test_delegate.py.
+def test_status_or_fail_running_task_exits_zero_quiet(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_running_task_exits_zero_quiet."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "sleep-task.json").write_text(json.dumps(dict(
+        task_id="sleep-task", status="running", started_at=store.now(),
+        pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
+
+@pytest.mark.parametrize("status", [
+    "done", "failed", "timeout", "rate_limited", "cancelled", "crashed", "dry_run",
+    "needs_finalize", "no_deliverable",
+])
+def test_status_or_fail_completed_task_exits_one(tmp_path, monkeypatch, capsys, status):
+    """Ported from tests/test_delegate.py::test_status_or_fail_completed_task_exits_one."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "sleep-task.json").write_text(json.dumps(dict(
+        task_id="sleep-task", status=status, started_at=store.now(),
+    )))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert f"task sleep-task is not running (status={status}, age=" in captured.err
+    assert captured.err.rstrip().endswith("s)")
+
+
+def test_status_or_fail_unknown_task_exits_one(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_unknown_task_exits_one."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+
+    rc = cli.main(["status-or-fail", "missing"])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "task missing is not running" in captured.err
+    assert "task not found" in captured.err
+
+
+def test_status_or_fail_monitor_api_down_exits_two(monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_monitor_api_down_exits_two.
+
+    V2's unavailable authority is its task store, rather than the Monitor API.
+    """
+    monkeypatch.setattr(store, "read", Mock(side_effect=OSError("unavailable")))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "Dispatcher state unavailable" in captured.err
+
+
+def test_status_or_fail_verbose_byte_compatible_without_run_nonce(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_verbose_byte_compatible_without_run_nonce."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "test-sof-task.json").write_text(json.dumps(dict(
+        task_id="test-sof-task", status="running", started_at="2026-08-20T10:00:00Z",
+        run_nonce="sof-nonce-12345", pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )))
+
+    rc = cli.main(["status-or-fail", "test-sof-task", "--verbose"])
+    assert rc == 0
+    data_no_nonce = json.loads(capsys.readouterr().out)
+    assert list(data_no_nonce.keys()) == ["task_id", "status", "age_s", "alive"]
+    assert "run_nonce" not in data_no_nonce
+
+    rc2 = cli.main(["status-or-fail", "test-sof-task", "--verbose", "--run-nonce", "sof-nonce-12345"])
+    assert rc2 == 0
+    data_with_nonce = json.loads(capsys.readouterr().out)
+    assert data_with_nonce["run_nonce"] == "sof-nonce-12345"
+
+
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode", "hermes"])
+def test_dispatch_worker_env_carries_dispatch_identity_markers(spec, monkeypatch, agent):
+    """Ported from tests/test_delegate.py::test_dispatch_worker_env_carries_dispatch_identity_markers."""
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "parent-task")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "parent-agent")
+
+    env = child_env(dataclasses.replace(spec, task_id="dispatch-marker-check", agent=agent))
+
+    assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
+    assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == agent
+    assert os.environ["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "parent-task"
+    assert os.environ["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "parent-agent"

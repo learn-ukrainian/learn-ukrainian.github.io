@@ -1,4 +1,4 @@
-"""Five-command interface for the minimal dispatcher."""
+"""Command interface for the minimal dispatcher."""
 
 import argparse
 import json
@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import uuid
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import get_args
 
@@ -130,6 +131,22 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "wait":
             sub.add_argument("--timeout", type=float, default=0, help="Wait seconds; 0 is unlimited (default: 0)")
             sub.add_argument("--poll-interval", type=float, default=1, help="Read interval in seconds (default: 1)")
+    sof = subs.add_parser(
+        "status-or-fail",
+        help="Exit 0 only for a confirmed running task",
+        description="Verify task state and supervisor process identity.\n"
+        "Use for liveness guardrails; use status to inspect terminal records.",
+        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py status-or-fail TASK\n"
+        "  .venv/bin/python scripts/dispatch.py status-or-fail TASK --run-nonce NONCE --verbose\n"
+        "Outputs: quiet by default; --verbose prints legacy-shaped status JSON. No records changed.\n"
+        "Exit codes: 0 confirmed running; 1 not running, missing, stale or nonce mismatch; "
+        "2 unavailable or invalid state.\n"
+        "Related: status; docs/design/dispatch-v2.md (C-2188).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    sof.add_argument("task_id", help="Task ID to verify, e.g. review-123")
+    sof.add_argument("--run-nonce", help="Expected run identity (default: omit nonce check)")
+    sof.add_argument("--verbose", action="store_true", help="Print structured status JSON (default: quiet)")
     return parser
 
 
@@ -233,9 +250,56 @@ def _dispatch(args) -> int:
     return 0
 
 
+def _status_or_fail_payload(task_id: str, *, run_nonce: str | None = None) -> dict:
+    try:
+        record = store.read(task_id, run_nonce, missing_ok=True)
+    except ValueError as exc:
+        if str(exc) != "run nonce mismatch":
+            raise
+        # The legacy Monitor's 409 response exposes no conflicting run identity.
+        record = dict(task_id=task_id, status="stale_run_nonce")
+    if record is None:
+        return dict(task_id=task_id, status="task not found", age_s=0)
+    status = str(record.get("status") or "unknown")
+    identity = worker._identity(record.get("pid"))
+    alive = identity is not None and identity == record.get("process_start")
+    if status == "running" and not alive:
+        status = "stale"
+    try:
+        started = datetime.fromisoformat(str(record.get("started_at")).replace("Z", "+00:00"))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        age = max(0, round((datetime.now(UTC) - started.astimezone(UTC)).total_seconds()))
+    except (TypeError, ValueError):
+        age = 0
+    result = dict(task_id=record.get("task_id") or task_id, status=status, age_s=age, alive=alive)
+    if run_nonce is not None:
+        result["run_nonce"] = record.get("run_nonce")
+    return result
+
+
+def _status_or_fail(args: argparse.Namespace) -> int:
+    try:
+        status = _status_or_fail_payload(args.task_id, run_nonce=args.run_nonce)
+    except (OSError, ValueError, TypeError, AttributeError) as exc:
+        print(f"Dispatcher state unavailable: {type(exc).__name__}", file=sys.stderr)
+        return 2
+    if args.verbose:
+        print(json.dumps(status, indent=2))
+    if status["status"] == "running":
+        return 0
+    print(
+        f"task {args.task_id} is not running (status={status['status']}, age={status['age_s']}s)",
+        file=sys.stderr,
+    )
+    return 1
+
+
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        if args.command == "status-or-fail":
+            return _status_or_fail(args)
         if args.command == "dispatch":
             return _dispatch(args)
         code = 0

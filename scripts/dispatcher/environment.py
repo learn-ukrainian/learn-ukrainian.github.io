@@ -62,4 +62,8 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         )
     elif any((spec.worktree / name).is_symlink() for name in ("node_modules", "site/node_modules")):
         raise ValueError("npm/npx guard unavailable for shared node_modules links")
+    env.update(
+        LEARN_UKRAINIAN_DISPATCH_TASK_ID=spec.task_id,
+        LEARN_UKRAINIAN_DISPATCH_AGENT=spec.agent,
+    )
     return env
