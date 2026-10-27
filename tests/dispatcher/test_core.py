@@ -1712,3 +1712,655 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+# Unit G0: legacy tests copied and adapted; originals remain unchanged.
+_SOURCE_INVENTORY_TREES = (
+    "registry/lexicon/source-inventory", "registry/lexicon/source-inventory-review-decisions",
+)
+_SOURCE_INVENTORY = _SOURCE_INVENTORY_TREES
+
+
+# Ported from tests/test_delegate.py::test_normalize_sparse_include_dedupes_and_strips.
+def test_normalize_sparse_include_dedupes_and_strips():
+    from scripts.dispatcher import sparse
+    assert sparse._normalize_sparse_include(None) == ()
+    assert sparse._normalize_sparse_include(["curriculum/", " wiki ", "curriculum"]) == (
+        "curriculum",
+        "wiki",
+    )
+    assert sparse._normalize_sparse_include(["data/projects/", " data/lexicon ", "registry/projects"]) == (
+        "data/projects",
+        "data/lexicon",
+        "registry/projects",
+    )
+
+
+# Ported from tests/test_delegate.py::test_normalize_sparse_include_rejects_nested_and_unknown.
+def test_normalize_sparse_include_rejects_nested_and_unknown():
+    import pytest
+
+    from scripts.dispatcher import sparse
+
+    with pytest.raises(ValueError, match="must name a default-excluded tree"):
+        sparse._normalize_sparse_include(["curriculum/l2-uk-en"])
+    with pytest.raises(ValueError, match="not a default-excluded"):
+        sparse._normalize_sparse_include(["scripts"])
+    with pytest.raises(ValueError, match="must name a default-excluded tree"):
+        sparse._normalize_sparse_include(["data/raw"])
+    with pytest.raises(ValueError, match="empty or invalid"):
+        sparse._normalize_sparse_include([""])
+
+
+# Ported from tests/test_delegate.py::test_infer_sparse_include_from_owned_paths_and_prompt.
+def test_infer_sparse_include_from_owned_paths_and_prompt():
+    from scripts.dispatcher import sparse
+    assert sparse._infer_sparse_include(None) == ()
+    assert sparse._infer_sparse_include(
+        None,
+        owned_paths=["curriculum/l2-uk-en/bio/foo", "scripts/x.py"],
+    ) == ("curriculum",)
+    assert sparse._infer_sparse_include(
+        ["wiki"],
+        owned_paths=["curriculum/a", "wiki/b"],
+    ) == ("wiki", "curriculum")
+    assert sparse._infer_sparse_include(
+        None,
+        prompt_text="Edit curriculum/l2-uk-en/a1/foo.md and leave scripts alone.",
+    ) == ("curriculum",)
+    assert "wiki" not in sparse._infer_sparse_include(
+        None,
+        prompt_text="Discuss Wikipedia articles without path refs.",
+    )
+    assert sparse._infer_sparse_include(
+        None,
+        owned_paths=["scripts/projects/open_model_data/mine.py"],
+    ) == ("data/projects",)
+    assert sparse._infer_sparse_include(
+        None,
+        owned_paths=["tests/projects/open_model_data/test_mine.py"],
+    ) == ("data/projects",)
+    assert sparse._infer_sparse_include(
+        None,
+        owned_paths=["registry/projects/open_model_data/grammar/grammar_rules.json"],
+    ) == ("registry/projects",)
+    assert sparse._infer_sparse_include(
+        None,
+        owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
+    ) == (*_SOURCE_INVENTORY_TREES, "site/src/content", "site/src/data")
+    assert sparse._infer_sparse_include(
+        None,
+        owned_paths=["site/src/pages/index.astro"],
+    ) == ("site/src/content", "site/src/data")
+    assert sparse._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_open_model_foundry_cli.py"],
+    ) == ("data/projects",)
+    assert (
+        sparse._infer_sparse_include(
+            None,
+            owned_paths=["tests/test_open_model_data_timeouts.py"],
+        )
+        == ()
+    )
+    assert (
+        sparse._infer_sparse_include(
+            None,
+            owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
+    assert (
+        sparse._infer_sparse_include(
+            None,
+            owned_paths=["scripts/audit/source_inventory_intake.py"],
+        )
+        == ()
+    )
+    assert (
+        sparse._infer_sparse_include(
+            None,
+            owned_paths=["tests/test_source_inventory_intake.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
+    assert (
+        sparse._infer_sparse_include(
+            None,
+            owned_paths=["scripts/practice/author_densified_pairs.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
+    assert (
+        sparse._infer_sparse_include(
+            None,
+            owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
+    assert (
+        sparse._infer_sparse_include(
+            None,
+            owned_paths=["scripts/practice/noun_mechanics_engine.py"],
+        )
+        == ()
+    )
+    assert sparse._infer_sparse_include(
+        None,
+        prompt_text="Read data/projects/foo.jsonl and leave data/raw alone.",
+    ) == ("data/projects",)
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_owned_path_includes_the_trees_it_needs.
+@pytest.mark.parametrize(
+    ("owned", "expected"),
+    [
+        ("site/src/data/curriculum-stats.json", ("site/src/data",)),
+        ("site/src/pages/index.astro", ("site/src/content", "site/src/data")),
+        ("site", ("site/src/content", "site/src/data")),
+        ("registry/lexicon", _SOURCE_INVENTORY),
+        ("data", ("data/datasets", "data/lexicon", "data/processed", "data/projects")),
+        ("scripts/sparse.py", ()),
+        ("tests/test_preparation_api.py", ("site/src/content",)),
+        ("tests/test_landings_use_levellanding.py", ("curriculum", "site/src/content", "site/src/data")),
+        ("tests/test_env_sanitize.py", ()),
+        ("scripts/generate_landing_pages.py", ("curriculum", "site/src/content")),
+        ("scripts/audit/check_static_practice_assets.py", ("site/src/data",)),
+        ("scripts/lexicon/lesson_atlas_link_census.py", (*_SOURCE_INVENTORY, "site/src/content", "site/src/data")),
+        (".", ()),
+    ],
+)
+def test_owned_path_includes_the_trees_it_needs(owned: str, expected: tuple[str, ...]) -> None:
+    from scripts.dispatcher import sparse
+    assert sparse._infer_sparse_include(None, owned_paths=[owned]) == expected
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_owned_path_aliases_include_what_their_canonical_spelling_includes.
+@pytest.mark.parametrize(
+    ("alias", "canonical"),
+    [
+        ("./site/src/data/curriculum-stats.json", "site/src/data/curriculum-stats.json"),
+        ("registry/./projects/open_model_data/x.json", "registry/projects/open_model_data/x.json"),
+        ("site//src//data/curriculum-stats.json", "site/src/data/curriculum-stats.json"),
+        ("site/src/data/", "site/src/data"),
+        ("site/src/data/**", "site/src/data"),
+        ("./registry/lexicon/", "registry/lexicon"),
+        (".\\site\\src\\data\\curriculum-stats.json", "site/src/data/curriculum-stats.json"),
+    ],
+)
+def test_owned_path_aliases_include_what_their_canonical_spelling_includes(alias: str, canonical: str) -> None:
+    """Every spelling ownership admission accepts names the same trees (#10777)."""
+    from scripts.dispatcher import sparse
+    from scripts.guardrails.delegate_ownership import owned_path_matcher
+
+    assert owned_path_matcher(alias) is not None
+    expected = sparse._infer_sparse_include(None, owned_paths=[canonical])
+
+    assert expected
+    assert sparse._infer_sparse_include(None, owned_paths=[alias]) == expected
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_owned_glob_includes_the_trees_its_literal_directories_reach.
+@pytest.mark.parametrize(
+    ("glob", "expected"),
+    [
+        ("curriculum/l2-uk-en/evidence/a1/**/lessons.lock.yaml", ("curriculum",)),
+        ("site/src/data/lexicon-*.json", ("site/src/data",)),
+        # fnmatch's ``*`` crosses ``/``: this glob can own files in both site trees.
+        ("site/*.json", ("site/src/content", "site/src/data")),
+        ("./registry/projects/*/x.json", ("registry/projects",)),
+        ("scripts/*.py", ()),
+    ],
+)
+def test_owned_glob_includes_the_trees_its_literal_directories_reach(glob: str, expected: tuple[str, ...]) -> None:
+    from scripts.dispatcher import sparse
+    assert sparse._infer_sparse_include(None, owned_paths=[glob]) == expected
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_owned_path_prefix_confusion_includes_nothing.
+@pytest.mark.parametrize(
+    "owned",
+    [
+        "site-extra/src/data/x.json",
+        "site-extra",
+        "registry/projects2/x.json",
+        "registry/projects2",
+        "data/projects-old/x",
+        "curriculum2/a1.yaml",
+        "registry/lexicon/source-inventory-old/x.yaml",
+    ],
+)
+def test_owned_path_prefix_confusion_includes_nothing(owned: str) -> None:
+    from scripts.dispatcher import sparse
+    assert sparse._infer_sparse_include(None, owned_paths=[owned]) == ()
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_an_owned_path_that_owns_nothing_includes_nothing.
+@pytest.mark.parametrize("owned", ["", ".", "./", "/site/src/data", "site/../site/src/data", "**", "./**", "*/x"])
+def test_an_owned_path_that_owns_nothing_includes_nothing(owned: str) -> None:
+    """Admission refuses these claims; inference reads them the same way."""
+    from scripts.dispatcher import sparse
+    from scripts.guardrails.delegate_ownership import owned_path_matcher
+
+    assert owned_path_matcher(owned) is None
+    assert sparse._infer_sparse_include(None, owned_paths=[owned]) == ()
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_an_owned_test_gets_the_excluded_trees_its_marks_name.
+def test_an_owned_test_gets_the_excluded_trees_its_marks_name(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.dispatcher import sparse
+    test_file = tmp_path / "tests" / "test_reader.py"
+    test_file.parent.mkdir()
+    test_file.write_text(
+        "import pytest\n"
+        'needs_data = pytest.mark.needs_sparse_tree("site/src/data")\n'
+        '@pytest.mark.needs_sparse_tree("data/projects", "not/excluded")\n'
+        "def test_x(): pass\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "tests" / "test_broken.py").write_text("def (\n", encoding="utf-8")
+    monkeypatch.setattr(sparse, "_REPO_ROOT", tmp_path)
+
+    assert sparse._owned_test_marked_trees("tests/test_reader.py") == ("data/projects", "site/src/data")
+    assert sparse._owned_test_marked_trees("tests/test_broken.py") == ()
+    assert sparse._owned_test_marked_trees("tests/test_missing.py") == ()
+    # Only test files are read for marks.
+    assert sparse._owned_test_marked_trees("scripts/test_reader.py") == ()
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_cone_dirs_drop_nested_trees_and_keep_their_siblings.
+def test_cone_dirs_drop_nested_trees_and_keep_their_siblings() -> None:
+    from scripts.dispatcher import sparse
+    tree = {
+        "": ("data", "docs", "site"),
+        "data": ("data/datasets", "data/raw"),
+        "site": ("site/src", "site/tests"),
+        "site/src": ("site/src/content", "site/src/data", "site/src/lib"),
+    }
+
+    cone, excluded = sparse._dispatch_sparse_cone_dirs(
+        lambda parent: tree.get(parent, ()),
+        {"data/datasets", "site/src/data", "site/src/content", "registry/projects", "docs/missing/deep"},
+    )
+
+    assert excluded == ["data/datasets", "site/src/content", "site/src/data"]
+    # docs/ has no excluded tree at this ref, so it stays whole.
+    assert sorted(cone) == ["data/raw", "docs", "site/src/lib", "site/tests"]
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_apply_sparse_checkout_drops_nested_trees_real_git.
+def test_apply_sparse_checkout_drops_nested_trees_real_git(tmp_path: Path) -> None:
+    primary = tmp_path / "primary"
+    files = {
+        "README.md": "root\n",
+        "site/package.json": "{}\n",
+        "site/src/content.config.ts": "export {}\n",
+        "site/src/data/stats.json": "{}\n",
+        "site/src/content/docs/a1/index.mdx": "x\n",
+        "site/src/lib/a.ts": "x\n",
+        "registry/lexicon/f.txt": "x\n",
+        "registry/lexicon/source-inventory/big.yaml": "x\n",
+        "registry/lexicon/source-inventory/grade-01/g.yaml": "x\n",
+        "registry/lexicon/source-inventory/oneshot/o.yaml": "x\n",
+        "scripts/s.py": "x\n",
+    }
+    for relative, text in files.items():
+        path = primary / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    env = {"GIT_CEILING_DIRECTORIES": str(tmp_path), "HOME": str(tmp_path), "PATH": "/usr/bin:/bin"}
+
+    def git(*args: str) -> None:
+        subprocess.run(["git", *args], cwd=primary, check=True, capture_output=True, env=env, timeout=30)
+
+    git("init", "-q", "-b", "main")
+    git("add", ".")
+    git("-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "init")
+    worktree = tmp_path / "wt"
+    from scripts.dispatcher.git import create_worktree
+
+    meta = create_worktree(primary, worktree, "g0-nested", "HEAD")
+
+    assert meta["excluded"] == ["registry/lexicon/source-inventory", "site/src/content", "site/src/data"]
+    present = {relative for relative in files if (worktree / relative).is_file()}
+    assert present == {
+        "README.md",
+        "site/package.json",
+        "site/src/content.config.ts",
+        "site/src/lib/a.ts",
+        "registry/lexicon/f.txt",
+        # The grade-01 anchor brings the inventories beside it, not oneshot/.
+        "registry/lexicon/source-inventory/big.yaml",
+        "registry/lexicon/source-inventory/grade-01/g.yaml",
+        "scripts/s.py",
+    }
+
+
+# Ported from tests/test_delegate.py::test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest.
+
+def test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest(tmp_path):
+    """Default cone keeps curriculum.yaml via the evidence anchor, not the tree."""
+    import os
+    import subprocess
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    clean_env = {
+        k: v
+        for k, v in os.environ.items()
+        if k
+        not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_COMMON_DIR",
+            "GIT_NAMESPACE",
+        }
+    }
+    clean_env["GIT_CEILING_DIRECTORIES"] = str(tmp_path)
+
+    def git(*args, cwd=primary):
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=clean_env,
+            timeout=30,
+        )
+
+    git("init", "-b", "main")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    manifest = primary / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("levels: {}\n", encoding="utf-8")
+    arc = primary / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml"
+    arc.parent.mkdir(parents=True)
+    arc.write_text("level: a1\n", encoding="utf-8")
+    plans = primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml"
+    plans.parent.mkdir(parents=True)
+    plans.write_text("slug: x\n", encoding="utf-8")
+    other = primary / "curriculum" / "l2-uk-direct" / "manifest.yaml"
+    other.parent.mkdir(parents=True)
+    other.write_text("tracks: []\n", encoding="utf-8")
+    wiki = primary / "wiki" / "f.txt"
+    wiki.parent.mkdir(parents=True)
+    wiki.write_text("wiki\n", encoding="utf-8")
+    scripts = primary / "scripts" / "f.txt"
+    scripts.parent.mkdir(parents=True)
+    scripts.write_text("scripts\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "init")
+
+    worktree = tmp_path / "wt"
+    from scripts.dispatcher.git import create_worktree
+
+    meta = create_worktree(primary, worktree, "g0-manifest", "HEAD")
+    assert meta["applied"] is True
+    assert "curriculum" in meta["excluded"]
+    assert "curriculum/l2-uk-en/lesson-plans" in meta["included_dirs"]
+    assert (worktree / "curriculum" / "l2-uk-en" / "curriculum.yaml").is_file()
+    assert (worktree / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml").is_file()
+    assert not (worktree / "curriculum" / "l2-uk-en" / "plans").exists()
+    assert not (worktree / "curriculum" / "l2-uk-direct").exists()
+    assert not (worktree / "wiki").exists()
+    assert (worktree / "scripts" / "f.txt").is_file()
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_worker_env_points_tool_caches_at_the_scratch_lease.
+def test_worker_env_points_tool_caches_at_the_scratch_lease(tmp_path: Path) -> None:
+    from scripts.dispatcher import worker_environment
+    lease = tmp_path / "lease"
+
+    env = worker_environment._build_worker_env(
+        task_id="infra-10777-size",
+        dispatch_agent="claude",
+        runtime_tmp_root=lease,
+        base_env={"PATH": "/usr/bin", "HOME": str(tmp_path)},
+    )
+
+    assert env["MYPY_CACHE_DIR"] == str(lease / "tool-cache" / "mypy")
+    assert env["PYTHONPYCACHEPREFIX"] == str(lease / "tool-cache" / "pycache")
+    assert env["RUFF_CACHE_DIR"] == str(lease / "tool-cache" / "ruff")
+
+
+# Ported from tests/test_dispatch_checkout_size.py::test_worker_env_without_a_lease_leaves_tool_caches_alone.
+def test_worker_env_without_a_lease_leaves_tool_caches_alone(tmp_path: Path) -> None:
+    from scripts.dispatcher import worker_environment
+    env = worker_environment._build_worker_env(
+        task_id="infra-10777-size",
+        dispatch_agent="claude",
+        base_env={"PATH": "/usr/bin", "HOME": str(tmp_path)},
+    )
+
+    assert not {"MYPY_CACHE_DIR", "PYTHONPYCACHEPREFIX", "RUFF_CACHE_DIR"} & env.keys()
+
+
+# Ported from tests/test_delegate.py::test_create_runtime_tmp_lease_sanitizes_task_id.
+def test_create_runtime_tmp_lease_sanitizes_task_id(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+
+    lease_root, namespace_root = runtime_tmp._create_runtime_tmp_lease(
+        "codex/4956 tmp/../lease",
+    )
+
+    assert namespace_root == tmp_path / "learn-ukrainian"
+    assert lease_root == namespace_root / "codex-4956-tmp-..-lease"
+    assert lease_root.is_dir()
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_refuses_root_outside_namespace.
+def test_runtime_tmp_reap_refuses_root_outside_namespace(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    namespace_root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    payload = outside / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    result = runtime_tmp._reap_runtime_tmp_lease(outside, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "not under $TMPDIR/learn-ukrainian" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_refuses_namespace_outside_tempdir.
+def test_runtime_tmp_reap_refuses_namespace_outside_tempdir(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    os_tmp_root = tmp_path / "os-tmp"
+    os_tmp_root.mkdir()
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(os_tmp_root))
+    namespace_root = tmp_path / "repository" / "learn-ukrainian"
+    lease_root = namespace_root / "scripts"
+    lease_root.mkdir(parents=True)
+    payload = lease_root / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    result = runtime_tmp._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "not directly under an approved scratch root" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_refuses_wrong_namespace_name.
+def test_runtime_tmp_reap_refuses_wrong_namespace_name(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "wrong-namespace"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+    payload = lease_root / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    result = runtime_tmp._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "namespace has the wrong name" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_refuses_missing_symlink_protection.
+def test_runtime_tmp_reap_refuses_missing_symlink_protection(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+    payload = lease_root / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+
+    def unprotected_rmtree(*_args, **_kwargs):
+        raise AssertionError("rmtree must not run without symlink protection")
+
+    monkeypatch.setattr(runtime_tmp.shutil, "rmtree", unprotected_rmtree)
+
+    result = runtime_tmp._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "lacks symlink-attack protection" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_refuses_a_symlinked_lease_root.
+def test_runtime_tmp_reap_refuses_a_symlinked_lease_root(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    namespace_root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    payload = outside / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+    lease_root = namespace_root / "task"
+    lease_root.symlink_to(outside, target_is_directory=True)
+
+    result = runtime_tmp._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "lease is a symlink" in str(result["tmp_reap_error"])
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_unlinks_child_symlinks_without_following_them.
+def test_runtime_tmp_reap_unlinks_child_symlinks_without_following_them(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+    (lease_root / "payload.bin").write_bytes(b"lease")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    payload = outside / "keep.txt"
+    payload.write_text("keep", encoding="utf-8")
+    (lease_root / "outside-link").symlink_to(outside, target_is_directory=True)
+
+    result = runtime_tmp._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result == {"tmp_bytes_freed": 5 + len(str(outside)), "tmp_reap_error": None}
+    assert not lease_root.exists()
+    assert payload.read_text(encoding="utf-8") == "keep"
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_repairs_mode_zero_descendant.
+def test_runtime_tmp_reap_repairs_mode_zero_descendant(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    blocked = lease_root / "lu-review-view-restrictive"
+    blocked.mkdir(parents=True)
+    (blocked / "evidence.txt").write_text("sealed", encoding="utf-8")
+    blocked.chmod(0o000)
+
+    try:
+        result = runtime_tmp._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+        assert result["tmp_reap_error"] is None
+        assert not os.path.lexists(lease_root)
+    finally:
+        if blocked.exists():
+            blocked.chmod(0o700)
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_remove_absent_lease_returns_cleanly.
+def test_runtime_tmp_remove_absent_lease_returns_cleanly(tmp_path, monkeypatch):
+    """A lease a concurrent sweep already removed is success, not a survived-cleanup raise."""
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    namespace_root.mkdir()
+    lease_root = namespace_root / "task-already-gone"
+
+    runtime_tmp._remove_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert not os.path.lexists(lease_root)
+
+
+# Ported from tests/test_delegate.py::test_runtime_tmp_reap_records_cleanup_errors.
+def test_runtime_tmp_reap_records_cleanup_errors(tmp_path, monkeypatch):
+    from scripts.dispatcher import runtime_tmp
+    monkeypatch.setattr(runtime_tmp.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace_root = tmp_path / "learn-ukrainian"
+    lease_root = namespace_root / "task"
+    lease_root.mkdir(parents=True)
+
+    def fail_rmtree(*_args, **_kwargs):
+        raise OSError("permission denied")
+
+    fail_rmtree.avoids_symlink_attacks = True
+    monkeypatch.setattr(runtime_tmp.shutil, "rmtree", fail_rmtree)
+
+    result = runtime_tmp._reap_runtime_tmp_lease(lease_root, namespace_root)
+
+    assert result["tmp_bytes_freed"] == 0
+    assert "permission denied" in str(result["tmp_reap_error"])
+    assert lease_root.exists()
+
+
+# Ported from tests/test_dispatch_xdist_cap.py::test_worker_env_resolves_cap_plugin_for_nested_pytest_outside_rootdir.
+def test_worker_env_resolves_cap_plugin_for_nested_pytest_outside_rootdir(tmp_path: Path, spec) -> None:
+    """#8795: a real dispatch-worker env must not break a nested pytest.
+
+    ``PYTEST_PLUGINS=ci.pytest_dispatch_cap`` only resolves via pyproject.toml's
+    rootdir-relative ``pythonpath = ["scripts"]``. A test like
+    ``tests/test_pytest_tmp_guard.py`` spawns a nested pytest from ``tmp_path``
+    with its own bare ini (no ``pythonpath`` entry), which used to fail with
+    ``ImportError: No module named 'ci'`` once it inherited the worker's
+    ``PYTEST_PLUGINS``. This builds a real worker env via
+    ``scripts.delegate._build_worker_env`` (not a hand-rolled stand-in) and
+    proves a pytest project with no local pythonpath config still loads the
+    cap plugin cleanly.
+    """
+    worker_env = child_env(dataclasses.replace(
+        spec, task_id="impl-8795-nested-pytest", agent="codex", worktree=SOURCE,
+    ))
+    assert worker_env["PYTEST_PLUGINS"] == "ci.pytest_dispatch_cap"
+    assert worker_env["PYTHONPATH"] == str(SOURCE / "scripts")
+    project = tmp_path / "nested-project"
+    project.mkdir()
+    (project / "test_sample.py").write_text("def test_ok():\n    assert True\n", encoding="utf-8")
+
+    completed = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "test_sample.py"],
+        cwd=project,
+        env=worker_env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    combined = completed.stdout + completed.stderr
+    assert completed.returncode == 0, combined
+    assert "No module named 'ci'" not in combined
+    assert "1 passed" in completed.stdout

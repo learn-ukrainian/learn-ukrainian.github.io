@@ -18,17 +18,13 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import allocate
 from scripts.dispatcher.environment import npm_shim_dir
+from scripts.dispatcher.sparse import _DISPATCH_SPARSE_EXCLUDE_DEFAULT as SPARSE_EXCLUDE_DEFAULT
+from scripts.dispatcher.sparse import _apply_dispatch_sparse_checkout, _normalize_sparse_include
 from scripts.dispatcher.types import TaskSpec
 from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
-# Mirrors scripts/delegate.py::_DISPATCH_SPARSE_EXCLUDE_DEFAULT without importing its runtime.
-SPARSE_EXCLUDE_DEFAULT = frozenset({
-    "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
-    "registry/projects", "registry/lexicon/source-inventory",
-    "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
-})
 GIT_BINARY = shutil.which("git", path=os.defpath)
 # Bound for each explicit fetch of the ownership walk. On the 8 GB public repository
 # the bounded fetch measured about one second and the blob-less full-history fallback
@@ -193,10 +189,7 @@ def ownership_git(record: dict):
 
 
 def sparse_excludes(includes=()) -> list[str]:
-    includes = {name.strip().strip("/") for name in includes}
-    if includes - SPARSE_EXCLUDE_DEFAULT:
-        raise ValueError("--sparse-include must name a default-excluded tree: " + ", ".join(sorted(SPARSE_EXCLUDE_DEFAULT)))
-    return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
+    return sorted(SPARSE_EXCLUDE_DEFAULT - set(_normalize_sparse_include(includes)))
 
 
 def _git(path: Path, *args: str, isolate: bool = False, strip: bool = True) -> str:
@@ -237,8 +230,8 @@ def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, wor
     return path, branch, sha
 
 
-def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=()) -> None:
-    excluded = sparse_excludes(sparse_include)
+def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_checkout=False, sparse_include=()) -> dict:
+    sparse_excludes(sparse_include)
     run_git = partial(_git, isolate=True)
     path.parent.mkdir(parents=True, exist_ok=True)
     # Serialize config enablement and keep sparse settings local to the new worktree.
@@ -247,12 +240,10 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
         fcntl.flock(lock, fcntl.LOCK_EX)
         run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
         run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
-        if full_checkout:
-            run_git(path, "sparse-checkout", "disable")
-        else:
-            run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
+        profile = _apply_dispatch_sparse_checkout(path, full_checkout=full_checkout, sparse_include=sparse_include)
         run_git(path, "reset", "--hard", sha)
         provision_links(repo, path)
+        return profile
 
 
 def provision_links(repo: Path, worktree: Path) -> None:

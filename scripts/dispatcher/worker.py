@@ -15,6 +15,7 @@ from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import git, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.worker_environment import prepare_worker_record, reap_worker_record, worker_exports
 
 
 def _identity(pid: int | None) -> str | None:
@@ -54,6 +55,8 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     logs = path.parent / "logs"
     logs.mkdir(exist_ok=True, mode=0o700)
     try:
+        prepare_worker_record(spec, record)
+        store.replace(record, path)
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
             try:
@@ -64,6 +67,7 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
                     stdout=subprocess.DEVNULL,
                     stderr=err,
                     start_new_session=True,
+                    env={**os.environ, **worker_exports(spec, record, base_env={})},
                 )
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
@@ -74,6 +78,8 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
         process.stdin.close()
     except Exception:
         record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
+        store.replace(record, path)
+        reap_worker_record(record, response="")
         store.replace(record, path)
         raise
 
@@ -226,7 +232,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 status, error = "failed", "output schema binding invalid"
                 return
         provider = providers.load(spec.agent)
-        invocation = provider.build(spec, child_env(spec))
+        invocation = provider.build(spec, child_env(spec, record))
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             child = subprocess.Popen(
                 invocation.argv,
@@ -306,7 +312,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
             )
         store.replace(record, path)
-
+        reap_worker_record(record, response=text or "")
+        store.replace(record, path)
         _reap_settled(record, path)
 
 

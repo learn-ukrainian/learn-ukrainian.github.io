@@ -12,6 +12,7 @@ from typing import get_args
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.dispatcher import checks, git, providers, store, worker
 from scripts.dispatcher.environment import child_env
+from scripts.dispatcher.sparse import _infer_sparse_include
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 
 ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
@@ -153,6 +154,10 @@ def _dispatch(args) -> int:
         else (args.prompt.encode() if args.prompt is not None else Path(source).read_bytes())
     )
     prompt.decode("utf-8")
+    sparse_include = _infer_sparse_include(
+        args.sparse_include, owned_paths=[*args.owned_path, *args.research_owned_path],
+        prompt_text=prompt.decode("utf-8"),
+    )
     agent = ALIASES.get(args.agent, args.agent)
     if agent not in providers.PROVIDERS or args.claude_account not in {None, "a", "b"}:
         raise ValueError("unknown agent or Claude account")
@@ -221,7 +226,7 @@ def _dispatch(args) -> int:
     if binding:
         store.check_review_attempt(binding, claim=True)
     if not args.cwd:
-        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
+        git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=sparse_include)
     record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
     if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
         raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")

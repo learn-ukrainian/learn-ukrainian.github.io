@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.worker_environment import worker_exports
 
 _CONTEXT = ("PATH", "HOME", "LANG", "TERM", "TMPDIR")
 _AUTH = {
@@ -33,7 +34,7 @@ def npm_shim_dir() -> Path | None:
     return None
 
 
-def child_env(spec: TaskSpec) -> dict[str, str]:
+def child_env(spec: TaskSpec, record: dict | None = None) -> dict[str, str]:
     names = _CONTEXT + _AUTH[spec.agent]
     if spec.provider == "openrouter" and spec.agent == "opencode":
         names = (*_CONTEXT, "OPENROUTER_API_KEY")
@@ -62,4 +63,4 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         )
     elif any((spec.worktree / name).is_symlink() for name in ("node_modules", "site/node_modules")):
         raise ValueError("npm/npx guard unavailable for shared node_modules links")
-    return env
+    return worker_exports(spec, record, base_env=env)
