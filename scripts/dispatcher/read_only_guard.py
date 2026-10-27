@@ -719,6 +719,75 @@ class _RefSnapshotFailed(Exception):
     """A Git command the ref snapshot needs did not answer."""
 
 
+def _ref_git(cwd: Path, *args: str, ok: tuple[int, ...] = (0,)) -> str:
+    try:
+        proc = subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise _RefSnapshotFailed(f"{args[0]} could not start: {type(exc).__name__}") from exc
+    if proc.returncode not in ok:
+        raise _RefSnapshotFailed(f"{args[0]} failed: {_format_process_failure(proc)}")
+    return proc.stdout
+
+
+def _remote_fetch_url_and_probe_candidates(cwd: Path, remote: str) -> tuple[str, list[str]]:
+    """Return a remote's fetch URL and the configured values that may stand for it."""
+    fetch_url = _ref_git(cwd, "remote", "get-url", remote).strip()
+    raw = [
+        *_ref_git(cwd, "config", "--get-all", f"remote.{remote}.pushurl", ok=(0, 1)).splitlines(),
+        *_ref_git(cwd, "config", "--get-all", f"remote.{remote}.url", ok=(0, 1)).splitlines(),
+    ]
+    return fetch_url, raw
+
+
+def _ref_probe_for(cwd: Path, url: str, candidates: list[str]) -> str:
+    # ``remote get-url`` has already applied insteadOf (or pushInsteadOf) once
+    # and ``ls-remote`` applies insteadOf again, so probe a value whose
+    # single expansion is exactly ``url``.
+    for candidate in candidates:
+        if _ref_git(cwd, "ls-remote", "--get-url", candidate).strip() == url:
+            return candidate
+    raise _RefSnapshotFailed("a configured remote URL cannot be probed without rewriting it")
+
+
+def _read_only_remote_tags(cwd: Path) -> tuple[frozenset[tuple[str, str]] | None, str | None]:
+    """Return every ``(tag ref, object)`` pair the configured remotes' fetch URLs advertise.
+
+    Each distinct fetch URL is probed once, exactly as ``git fetch`` would
+    rewrite it, through the same sanitized environment as the remote tip probe.
+    Peeled ``^{}`` lines are skipped so a pair compares with ``%(objectname)``.
+    Without a configured remote there is nothing to resolve a tag against,
+    which is an error rather than an empty answer.
+    """
+    try:
+        remotes = sorted(set(_ref_git(cwd, "remote").split()))
+        if not remotes:
+            return None, "remote tag probe failed: no configured remote"
+        probes: dict[str, str] = {}
+        for remote in remotes:
+            fetch_url, raw = _remote_fetch_url_and_probe_candidates(cwd, remote)
+            if fetch_url not in probes:
+                probes[fetch_url] = _ref_probe_for(cwd, fetch_url, [*raw, fetch_url])
+        pairs: set[tuple[str, str]] = set()
+        for probe in probes.values():
+            for line in _ref_git(cwd, "ls-remote", "--tags", probe).splitlines():
+                sha, ref = line.split("\t", 1)
+                if not ref.endswith("^{}"):
+                    pairs.add((ref, sha))
+    except _RefSnapshotFailed as exc:
+        return None, f"remote tag probe failed: {exc}"
+    except ValueError:
+        return None, "remote tag probe failed: unparseable tag listing"
+    return frozenset(pairs), None
+
+
 def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[str, str | None] | None, str | None]:
     """Record the repository state a read-only worker could write without touching the tree.
 
@@ -730,9 +799,10 @@ def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[
     configuration with each value's origin, and the task branch's tip at the
     fetch URL and at every distinct push URL of every configured remote, each
     probed exactly as push or fetch would rewrite it. Any difference fails the
-    task, except a tag absent from the baseline, which a fetch may have
-    auto-followed (see :meth:`ReadOnlyGuard.finish`). ``branch`` pins the branch observed at the baseline, so a later
-    checkout cannot move the remote comparison.
+    task, except a tag absent from the baseline whose name and object a
+    configured remote also advertises, which a fetch may have auto-followed (see
+    :meth:`ReadOnlyGuard.finish`). ``branch`` pins the branch observed at the
+    baseline, so a later checkout cannot move the remote comparison.
 
     Boundary: a push to a destination that is not a configured remote — a URL
     typed on the command line or a remote defined only through ``git -c`` —
@@ -741,35 +811,12 @@ def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[
     """
 
     def git(*args: str, ok: tuple[int, ...] = (0,)) -> str:
-        try:
-            proc = subprocess.run(
-                ["git", *args],
-                cwd=cwd,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            raise _RefSnapshotFailed(f"{args[0]} could not start: {type(exc).__name__}") from exc
-        if proc.returncode not in ok:
-            raise _RefSnapshotFailed(f"{args[0]} failed: {_format_process_failure(proc)}")
-        return proc.stdout
+        return _ref_git(cwd, *args, ok=ok)
 
     def immediate_target(ref: str) -> str | None:
         # Both ``symbolic-ref`` and ``%(symref)`` resolve chains, which hides a
         # retarget between two aliases of one branch.
         return git("symbolic-ref", "-q", "--no-recurse", ref, ok=(0, 1)).strip() or None
-
-    def probe_for(url: str, candidates: list[str]) -> str:
-        # ``remote get-url`` has already applied insteadOf (or pushInsteadOf) once
-        # and ``ls-remote`` applies insteadOf again, so probe a value whose
-        # single expansion is exactly ``url``.
-        for candidate in candidates:
-            if git("ls-remote", "--get-url", candidate).strip() == url:
-                return candidate
-        raise _RefSnapshotFailed("a configured remote URL cannot be probed without rewriting it")
 
     try:
         symbolic = git("symbolic-ref", "-q", "HEAD", ok=(0, 1)).strip() or None
@@ -791,17 +838,13 @@ def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[
         if branch is None:
             return refs, None
         for remote in sorted(set(git("remote").split())):
-            fetch_url = git("remote", "get-url", remote).strip()
+            fetch_url, raw = _remote_fetch_url_and_probe_candidates(cwd, remote)
             pushes = git("remote", "get-url", "--push", "--all", remote).splitlines()
-            raw = [
-                *git("config", "--get-all", f"remote.{remote}.pushurl", ok=(0, 1)).splitlines(),
-                *git("config", "--get-all", f"remote.{remote}.url", ok=(0, 1)).splitlines(),
-            ]
             urls = {fetch_url: remote}
             for url in pushes:
                 urls.setdefault(url, f"{remote} push" + (f" {len(urls)}" if len(urls) > 1 else ""))
             for url, label in urls.items():
-                tips = git("ls-remote", "--heads", probe_for(url, [*raw, url]), branch)
+                tips = git("ls-remote", "--heads", _ref_probe_for(cwd, url, [*raw, url]), branch)
                 heads = {ref: sha for sha, ref in (line.split("\t", 1) for line in tips.splitlines())}
                 refs[f"ls-remote {label} {branch}"] = heads.get(branch)
     except _RefSnapshotFailed as exc:
@@ -1213,18 +1256,28 @@ class ReadOnlyGuard:
             )
         ref_mutations: list[str] = []
         if self.refs_pre is not None and refs_post is not None:
-            # A tag in the baseline that was deleted or now points elsewhere is a
-            # mutation; a tag absent from the baseline is not. ``git fetch``
-            # auto-follows tags into the shared ref store, the task's or a
-            # concurrent lane's, so a new tag cannot be told apart from one a
-            # worker created. That gap is a known residual (#11797); the legacy
-            # guard compared no tags at all.
             ref_mutations = sorted(
-                ref
-                for ref in set(self.refs_pre) | set(refs_post)
-                if self.refs_pre.get(ref) != refs_post.get(ref)
-                and not (ref.startswith("refs/tags/") and ref not in self.refs_pre)
+                ref for ref in set(self.refs_pre) | set(refs_post) if self.refs_pre.get(ref) != refs_post.get(ref)
             )
+            # A tag in the baseline that was deleted or now points elsewhere is a
+            # mutation. ``git fetch`` auto-follows tags into the shared ref store,
+            # the task's or a concurrent lane's, so a tag absent from the baseline
+            # is not a mutation only when its name and object match a tag a
+            # configured remote advertises. A tag a worker created matches none.
+            # The remotes are probed once, and only when such a tag exists; if
+            # the probe fails, every new tag stays a mutation and the probe error
+            # fails the ref snapshot.
+            added_tags = [ref for ref in ref_mutations if ref.startswith("refs/tags/") and ref not in self.refs_pre]
+            if added_tags:
+                remote_tags, tags_error = _read_only_remote_tags(self.cwd)
+                if remote_tags is None:
+                    if self.refs_error is None:
+                        self.refs_error = f"ref snapshot failed: {tags_error}"
+                else:
+                    # A plain ref is recorded as ``"<object> "``; a symbolic tag never matches.
+                    advertised = {(ref, f"{sha} ") for ref, sha in remote_tags}
+                    fetched = {ref for ref in added_tags if (ref, refs_post[ref]) in advertised}
+                    ref_mutations = [ref for ref in ref_mutations if ref not in fetched]
         fields: dict[str, Any] = {
             "read_only_checkout_snapshot_error": self.snapshot_error,
             "read_only_ignored_mutation_paths": ignored,
@@ -1255,6 +1308,6 @@ class ReadOnlyGuard:
             causes.append("read_only_ref_mutation")
         if any(ref.startswith("ls-remote ") for ref in ref_mutations):
             causes.append("read_only_remote_push")
-        if self.refs_pre is None or refs_post is None:
+        if self.refs_pre is None or refs_post is None or self.refs_error:
             causes.append("read_only_ref_snapshot_failed")
         return fields, "; ".join(causes) or None, discard

@@ -998,7 +998,10 @@ def _add_empty_push_url(repo: Path, tmp: Path) -> None:
 @pytest.mark.parametrize(
     ("mutate", "expected"),
     [
-        (_rewrite_baseline_tags, lambda repo: ["refs/tags/baseline-deleted", "refs/tags/baseline-moved"]),
+        (
+            _rewrite_baseline_tags,
+            lambda repo: ["refs/tags/baseline-deleted", "refs/tags/baseline-moved", "refs/tags/review-leak"],
+        ),
         (lambda repo, tmp: _git(repo, "branch", "review-leak"), lambda repo: ["refs/heads/review-leak"]),
         (lambda repo, tmp: _git(repo, "notes", "add", "-m", "unauthorized", "HEAD"), lambda repo: ["refs/notes/commits"]),
         (
@@ -1085,11 +1088,16 @@ def test_read_only_task_that_pushes_to_a_separate_push_url_settles_failed(
     assert state["error"] == "read_only_remote_push"
 
 
-@pytest.mark.parametrize("tagged", [False, True], ids=["branch", "auto-followed-tag"])
+@pytest.mark.parametrize("tagged", [None, "fetched", "worker"], ids=["branch", "auto-followed-tag", "worker-tag"])
 def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(
     tmp_tasks_dir, tmp_path, monkeypatch, tagged
 ):
-    """A fetch writes remote-tracking refs, FETCH_HEAD and new tags it auto-follows, which read-only work may do."""
+    """A fetch writes remote-tracking refs, FETCH_HEAD and new tags it auto-follows, which read-only work may do.
+
+    A new tag passes only when the remote has that name at that object, so tags
+    a worker creates beside the fetch, one reusing a remote tag's name and one
+    reusing its object, still fail.
+    """
     checkout, _branch = _seed_pushed_checkout(tmp_path)
     remote = str(tmp_path / "remote.git")
     _git(checkout, "push", "-q", remote, "HEAD:refs/heads/other")
@@ -1101,9 +1109,12 @@ def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(
 
     def fetch(repo):
         before = _git(repo, "rev-parse", "refs/remotes/origin/other")
+        if tagged == "worker":
+            _git(repo, "tag", "fetched", "HEAD")
+            _git(repo, "tag", "worker-made", advanced)
         _git(repo, "fetch", "-q", "origin")
         assert _git(repo, "rev-parse", "refs/remotes/origin/other") != before
-        if tagged:
+        if tagged == "fetched":
             assert _git(repo, "rev-parse", "refs/tags/fetched") == advanced
         assert _status(repo) == ""
 
@@ -1112,6 +1123,13 @@ def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(
         provider=_stub_provider("done"), mutation=fetch,
     )
 
+    if tagged == "worker":
+        assert rc == 1
+        assert state["status"] == "failed"
+        assert state["read_only_ref_mutations"] == ["refs/tags/fetched", "refs/tags/worker-made"]
+        assert state["read_only_ref_snapshot_error"] is None
+        assert state["error"] == "read_only_ref_mutation"
+        return
     assert rc == 0
     assert state["status"] == "done"
     assert state["read_only_ref_mutations"] == []
