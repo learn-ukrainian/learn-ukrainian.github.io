@@ -510,11 +510,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "463896cf52010bb03278ce5931e7bc372678af953d9f2d42def060aed8fd0233:1",
     ),
     (
-        "scripts/delegate.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "ff6e6a522074d377b94513a605dcf02cef3bd105dc90cfb168337039cd124528:1",
-    ),
-    (
         "scripts/deploy/vendor_atlas_tree.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
         "3e5ac5ff259db1b3a45b6b8a6e7f84c45befc97735a9e9ccdb5fdf422516ba07:1 52ccec40c03ecc9d1cb4496aff26984b804654b3354e3b26ed667fc9a3ad47e6:1 683bc12f9222df18c0caf3302ebeff8f35778ff07374307eceedf5dad19e291a:1",
@@ -1902,24 +1897,9 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "0da758d1bbc117d5869f3184a60562a4f4e7e0fff754bb8428202045aeb22ade:1 2d406e7daf9227aaea86990d198b3119cb94c7f17f174861223b200c2a2d16b2:1 5b87ee12783b64bff080ca2fffa592c237344744576a593b8cc5f377c14233e9:1 d2bbe3a8ddb22edd0dda2e34f482e04abf35a75523138059e29dea33bc51ef24:1",
     ),
     (
-        "tests/test_delegate.py",
-        "Existing test literal; migration outside this bounded packet (#9702). Expanded checks retain exact legacy fingerprints (#9702).",
-        "33f0583cd7c9a5955f851b1f7129c74eadd35308f59e735b9915596c45c3050e:1 4c93ba07004280171691c7a937f0ab990fc01bc70a984628177794e7ed483c46:1 50f5927d6114b6c3db54f70bb61068dfd94692452ba74b8cb3d67f071b8ba19f:2 632590773554973a0ad1e4e55a86eac6ec96e7defb18e77da7ed0381d165b017:1 70926b0281d7d07271b04529b2986ccbb7db229bae7231ccd9b801e17473aa2f:1 8485f898695fe7220b4734debaeefb13765ea8c694a0279b3b891e6929c2f175:1 8b870bb888fbd23c3deb973080fc6e19a9a49b44c67ac9cf85447cac1562b643:1 8c8d172dfae7820cec62bbe1d16acfc6292341e409870ab2c4fba2c528c77552:3 b9fb0b1fa2c3073b4dfe1573194920e5e3830248609b8dd1a893b63933497793:1 e3283a47ff84da2099322ff56bf6c3df86282c321d7d236d77d4b9ca6f55b479:1 e4957ef6a1af4d7f73bddfbfba66d6e0155da1a1a2910986e9509a4adadaa3ac:1 e6b7baa63b5d1f5cb1f444df2100444a8e016fedcdcb11a12c6fe8d2358aa39a:1 ea106d8e0097a0f65c300dd488275e16e7879c06a94192fc80b08d4d7d2870a1:1",
-    ),
-    (
         "tests/test_delegate_api.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "f1ba4371fa43ea259a115979dba64872159c6a7ef4907f9ede4f0a8faac2a602:1",
-    ),
-    (
-        "tests/test_delegate_primary_integrity.py",
-        "Existing test literal; migration outside this bounded packet (#9702).",
-        "9731e2b13468a18309c3631198515a58523bc2e0e963b59b8bb32a9d0dfb61e7:1",
-    ),
-    (
-        "tests/test_delegate_read_only_db_lookups.py",
-        "Existing test literal; migration outside this bounded packet (#9702).",
-        "4cc1be937798d635eddb3739d7f484d29721fbad1391e19ff6ff6c01daca2b52:1",
     ),
     (
         "tests/test_deploy_prompts_orphan_guard.sh",
@@ -2010,11 +1990,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/test_human_eval_tracker.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "a4b24ada95971b11223fe6969f2f981509c635e03415ebcc849f4f44a5a69937:4",
-    ),
-    (
-        "tests/test_kimi_finalize_tmp_reap.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "ebf79b85a024c41e0003dec7b49f8526af40d5b7f28f9207e8fab2e5359b4e15:1",
     ),
     (
         "tests/test_launch_reenrich_target_detection.py",
