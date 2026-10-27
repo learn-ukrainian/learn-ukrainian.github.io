@@ -180,7 +180,7 @@ def runtime(launch, tmp_path, tmp_path_factory, monkeypatch):
     monkeypatch.setattr(worker.signal, "signal", lambda *a: None)
     monkeypatch.setattr(worker.signal, "pthread_sigmask", lambda *a: None)
     monkeypatch.setattr(worker, "_reap_settled", lambda *a: None)
-    box = SimpleNamespace(response="Committed and pushed the change.", calls=[], submitted=[], run_git=run_git)
+    box = SimpleNamespace(response="Committed and pushed the change.", calls=[], submitted=[], run_git=run_git, on_execute=None)
 
     def build(spec, env):
         from scripts.dispatcher.types import Invocation
@@ -196,7 +196,12 @@ def runtime(launch, tmp_path, tmp_path_factory, monkeypatch):
         if argv != ["unit-c-provider"]:
             return real_popen(argv, *args, **kw)
         box.calls.append(argv)
-        return SimpleNamespace(returncode=0, communicate=lambda data, **kw: box.submitted.append(data))
+        def communicate(data, **kw):
+            box.submitted.append(data)
+            if box.on_execute:
+                box.on_execute()
+
+        return SimpleNamespace(returncode=0, communicate=communicate)
 
     monkeypatch.setattr(worker.subprocess, "Popen", popen)
 
@@ -224,13 +229,16 @@ def _run_bounded_worker(launch, capsys, runtime, tmp_path, files):
     index = launch.index("--owned-path")
     del launch[index:index + 2]
     _admit(launch, capsys, owned_paths=["docs/", "tests/"])
-    for name, content in files.items():
-        path = tmp_path / name
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content)
-    runtime.run_git("add", ".")
-    runtime.run_git("commit", "-m", "worker change")
-    runtime.run_git("push", "origin", "HEAD")
+    def execute():
+        for name, content in files.items():
+            path = tmp_path / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content)
+        runtime.run_git("add", ".")
+        runtime.run_git("commit", "-m", "worker change")
+        runtime.run_git("push", "origin", "HEAD")
+
+    runtime.on_execute = execute
     return runtime.settle()
 
 
@@ -432,3 +440,134 @@ def test_m12_unmeasurable_ceilings_fail_closed(launch, runtime, capsys, tmp_path
     state = _run_bounded_worker(launch, capsys, runtime, tmp_path, {"docs/a.py": "x = 1\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == advisory.CEILING_UNMEASURED
+
+
+def test_b1_worker_submits_exactly_the_bytes_it_checked(launch, runtime, capsys):
+    record = _admit(launch, capsys)
+    prompt = Path(record["prompt_file"]).read_bytes()
+    build = runtime.provider.build.side_effect
+
+    def build_then_change_file(spec, env):
+        invocation = build(spec, env)
+        Path(str(spec.prompt_file)).write_bytes(prompt + b"\nInstructions added after build")
+        return invocation
+
+    runtime.provider.build.side_effect = build_then_change_file
+    final = runtime.settle()
+    assert final["status"] == "done", final.get("error")
+    assert runtime.submitted == [prompt]
+    assert final["advisory_prompt_sha256"] == store.digest(prompt)
+
+
+def test_b1_instructions_appended_after_the_start_backstop_refuse_at_the_provider_handoff(launch, runtime, capsys):
+    _admit(launch, capsys)
+    build = runtime.provider.build.side_effect
+
+    def change_prompt(spec, env):
+        spec.prompt_file.content += b"\nAlso rewrite admission."
+        return build(spec, env)
+
+    runtime.provider.build.side_effect = change_prompt
+    final = runtime.settle()
+    assert final["status"] == "failed"
+    assert final["failure_reason"] == advisory.BINDING_MISMATCH
+    assert "provider handoff" in final["error"]
+    assert "advisory_prompt_sha256" not in final
+    assert runtime.calls == []
+
+
+def test_b1_updating_only_the_recorded_effective_prompt_digest_cannot_bless_an_appended_instruction(launch, runtime, capsys):
+    record = _admit(launch, capsys)
+    path = Path(record["prompt_file"])
+    path.write_text(path.read_text() + "\nAlso rewrite admission.")
+    record["effective_prompt_sha256"] = store.digest(path.read_bytes())
+    store.replace(record)
+    final = runtime.settle()
+    assert final["status"] == "failed"
+    assert final["failure_reason"] == advisory.BINDING_MISMATCH
+    assert runtime.calls == []
+
+
+@pytest.mark.parametrize("change,code", [("result", advisory.SEAL_MISMATCH),
+                                        ("status", advisory.TASK_NOT_DONE),
+                                        ("resealed", advisory.ENVELOPE_CHANGED)])
+def test_m7_advisor_result_changed_after_validation_is_refused_before_spawn(launch, capsys, change, code):
+    _write_advisor(launch, capsys)
+
+    def tamper(*args, **kwargs):
+        path = store.record_path("advisor")
+        record = json.loads(path.read_text())
+        if change == "status":
+            record["status"] = "running"
+        else:
+            result = path.with_suffix(".result")
+            result.write_text(result.read_text() + "changed")
+            if change == "resealed":
+                record["advisory_seal"] = advisory.seal_advisor_result(
+                    result.read_text(), model=record["model"], run_nonce=record["run_nonce"],
+                )
+        path.write_text(json.dumps(record))
+
+    git.create_worktree.side_effect = tamper
+    assert cli.main([*launch, "--advisory-task", "advisor"]) == 2
+    assert code in capsys.readouterr().err
+    assert not store.record_path("worker").exists()
+
+
+@pytest.mark.parametrize("agent,model", [("sol", "gpt-6-luna"), ("claude", "claude-haiku-5-5")])
+def test_driver_brief_normal_dispatch_and_replay(launch, runtime, capsys, agent, model):
+    launch[launch.index("--agent") + 1] = agent
+    launch[launch.index("--model") + 1] = model
+    assert cli.main([*launch, "--research-role", "recon", "--research-task-family", "readonly_recon",
+                     "--verify-command", "test -d docs", "--initiator", "infra-driver"]) == 0
+    record = runtime.settle()
+    brief = record["driver_brief"]
+    assert record["status"] == "done", record.get("error")
+    assert brief["driver"] == {"identity": "infra-driver", "source": "explicit"}
+    assert brief["prompt_sha256"] == store.digest(b"Inspect the assigned document")
+    assert brief["owned_paths"] == ["docs/example.md"]
+    assert "advisory_envelope" not in record
+    assert b"Run and report: test -d docs" in runtime.submitted[0]
+    assert record["advisory_prompt_sha256"] == store.digest(runtime.submitted[0])
+
+
+def _exempt_writer_run(launch, runtime, tmp_path, files):
+    launch[launch.index("--agent") + 1] = "agy"
+    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
+    launch[launch.index("--owned-path") + 1] = "docs/"
+    assert cli.main([*launch, "--mode", "workspace-write", "--research-task-family", "ukrainian-authoring"]) == 0
+    def execute():
+        for name, content in files.items():
+            (tmp_path / name).write_text(content)
+        runtime.run_git("add", ".")
+        runtime.run_git("commit", "-m", "worker change")
+        runtime.run_git("push", "origin", "HEAD")
+
+    runtime.on_execute = execute
+    return runtime.settle()
+
+
+def test_b3_reviewer_probe_a_content_exempt_worker_adding_code_is_a_typed_failure(launch, runtime, tmp_path):
+    state = _exempt_writer_run(launch, runtime, tmp_path,
+                               {"docs/generate.py": "print('lesson')\n", "docs/lesson-1.md": "# Lesson\n"})
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == advisory.EXEMPT_CODE_CHANGE
+    check = state["advisory_exempt_change_check"]
+    assert check["changed_paths"] == ["docs/generate.py", "docs/lesson-1.md"]
+    assert check["problems"] == ["'docs/generate.py', which is a code file"]
+    assert state["last_error"].startswith(advisory.EXEMPT_CODE_CHANGE)
+
+
+def test_b3_a_content_only_diff_in_the_same_directory_settles_done(launch, runtime, tmp_path):
+    state = _exempt_writer_run(launch, runtime, tmp_path, {"docs/lesson-1.md": "# Lesson\n", "docs/l.yaml": "a: 1\n"})
+    assert state["status"] == "done", state.get("error")
+    assert state["advisory_exempt_change_check"]["problems"] == []
+
+
+def test_b3_unreadable_exempt_changes_fail_closed(launch, runtime, tmp_path, monkeypatch):
+    from scripts.dispatcher import advisory_completion
+
+    monkeypatch.setattr(advisory_completion, "worker_diff", lambda *a, **kw: (None, "unreadable"))
+    state = _exempt_writer_run(launch, runtime, tmp_path, {"docs/lesson-1.md": "# Lesson\n"})
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == advisory.EXEMPT_CHANGES_UNMEASURED

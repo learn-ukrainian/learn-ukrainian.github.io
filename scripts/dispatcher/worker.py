@@ -203,6 +203,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     spec = _spec(record, options)
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     resolved_model = None
+    advisory_stage = "before start"
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
@@ -233,6 +234,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         advisory.handoff(spec, record, options, hard_timeout)
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
+        advisory_stage = "at the provider handoff"
         checked = advisory.handoff(spec, store.read(spec.task_id, record["run_nonce"]), options, hard_timeout)
         if checked is not None:
             record["advisory_prompt_sha256"] = checked
@@ -283,9 +285,11 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             except Exception:
                 status, error = "failed", "review_gate_error"
     except advisory.contract.AdvisoryRefused as exc:
-        status, error = "failed", f"worker refused before start: {exc}"
+        status, error = "failed", f"worker refused {advisory_stage}: {exc}"
         record.update(failure_reason=exc.code, last_error=exc.code,
-                      returncode_reason="bounded model without a valid advisory admission; provider not started")
+                      returncode_reason=("bounded model without a valid advisory admission; provider not started"
+                                         if advisory_stage == "before start" else
+                                         "bounded model failed its advisory admission at the provider handoff; provider not started"))
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
     except subprocess.TimeoutExpired:
