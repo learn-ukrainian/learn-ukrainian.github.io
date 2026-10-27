@@ -43,14 +43,12 @@ def deadlines(options):
         ("silence_timeout", DEFAULT_SILENCE_TIMEOUT_S),
         ("initial_response_timeout", DEFAULT_INITIAL_RESPONSE_TIMEOUT_S),
     ))
-    if values[0] < 0:
+    if any(value < 0 for value in values):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     return values
 
 
 def liveness_paths(spec, invocation):
-    if paths := getattr(invocation, "liveness_paths", None):
-        return paths
     if spec.agent in {"claude", "codex"}:
         from scripts.agent_runtime.adapters.base import InvocationPlan
         from scripts.agent_runtime.adapters.claude import ClaudeAdapter
@@ -96,7 +94,10 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
             pass
         now = time.monotonic()
         for path in paths:
-            size = path.stat().st_size
+            try:
+                size = path.stat().st_size
+            except OSError:
+                continue
             if size != sizes[path]:
                 state.last_activity, state.observed_io = now, True
                 sizes[path] = size

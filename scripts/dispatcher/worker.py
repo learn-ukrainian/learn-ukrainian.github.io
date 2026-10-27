@@ -360,5 +360,5 @@ def cancel(task_id: str, nonce: str | None = None) -> dict:
 
 
 if __name__ == "__main__":
-    settings = json.loads(sys.stdin.read() or "{}")
+    settings = json.load(sys.stdin)
     supervise(Path(sys.argv[1]), **settings)

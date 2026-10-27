@@ -404,6 +404,26 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     assert record["prompt_sha256"] == hashlib.sha256(b"exact\nbytes\n").hexdigest()
 
 
+def test_prompt_over_pipe_buffer_reaches_late_reading_child_complete(sandbox):
+    stub = sandbox.repo / "scripts/dispatcher/providers/codex.py"
+    stub.write_text(stub.read_text().replace(
+        '    text = sys.stdin.buffer.read().decode()',
+        '    time.sleep(0.5)\n    text = sys.stdin.buffer.read().decode()',
+    ))
+    prompt = ("0123456789abcdef" * 65536).encode()
+    result = sandbox.cli(
+        "dispatch", "--agent", "codex", "--model", "file", "--prompt-file", "-",
+        stdin=prompt.decode(),
+    )
+    record = sandbox.settle(result.stdout.splitlines())
+    received = Path(record["result_file"]).read_bytes()
+    assert record["status"] == "done"
+    assert len(received) == len(prompt)
+    assert received == prompt
+    assert hashlib.sha256(received).hexdigest() == hashlib.sha256(prompt).hexdigest()
+    assert record["result_sha256"] == hashlib.sha256(prompt).hexdigest()
+
+
 @pytest.mark.parametrize("text,model,required,error", [
     ("\nReview details\nVERDICT: APPROVE\n  \t", "file", True, None),
     ("VERDICT: REQUEST_CHANGES", "echo", True, None),
