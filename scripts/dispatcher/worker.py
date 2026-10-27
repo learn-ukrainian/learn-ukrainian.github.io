@@ -3,6 +3,7 @@
 import contextlib
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -81,6 +82,17 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
 
 class _Cancelled(Exception):
     pass
+
+
+def _refusal_error(exc: Exception) -> str:
+    """Retain fixed refusal codes and boundary diagnostics; redact other text."""
+    message = str(exc)
+    if re.fullmatch(
+        r"(?:[A-Za-z_]+(?:: [a-z0-9_]+)?|formal attempt filesystem boundary refused: "
+        r"(?:prepare|wrap): [A-Za-z_][A-Za-z0-9_]*)", message,
+    ):
+        return message
+    return type(exc).__name__
 
 
 def _spec(record: dict, options: dict) -> TaskSpec:
@@ -246,7 +258,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             if review_execution is None:
                 invocation = admission.claude_launch(spec, invocation)
         except ValueError as exc:
-            status, error = "failed", type(exc).__name__
+            status, error = "failed", _refusal_error(exc)
             return
         if review_execution:
             invocation = review_execution.wrap(invocation)
@@ -319,7 +331,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         status, error = "timeout", "process deadline exceeded"
     except (ValueError, RuntimeError) as exc:
         if record.get("review_attempt") or record.get("require_review_verdict"):
-            status, error = "failed", type(exc).__name__
+            status, error = "failed", _refusal_error(exc)
         else:
             status, error = "crashed", "supervisor or provider processing failed"
     except Exception:

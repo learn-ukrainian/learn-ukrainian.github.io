@@ -36,8 +36,11 @@ def dispatch(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize("absolute", [False, True])
-def test_schema_loss_record_and_real_codex_argv(dispatch, absolute):
+@pytest.mark.parametrize("verdict_only", [False, True])
+def test_schema_loss_record_and_real_codex_argv(dispatch, absolute, verdict_only):
     spec, record = dispatch.invoke(dispatch.schema if absolute else "schema.json")
+    if verdict_only:
+        spec.options["require_review_verdict"] = True
     assert record["output_schema_path"] == str(dispatch.schema)
     assert record["output_schema_sha256"] == store.digest(dispatch.schema.read_bytes())
     argv = codex.build(spec, {}).argv

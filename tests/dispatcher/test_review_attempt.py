@@ -126,7 +126,7 @@ def test_default_label_ignores_ambient_other_config_directory(world, monkeypatch
         "claude_account_source": "explicit" if explicit else "builtin",
     })
     ordinary = child_env(spec)
-    assert ordinary["CLAUDE_CONFIG_DIR"] == str(home / (".claude" if explicit else ".claude-b"))
+    assert ordinary["CLAUDE_CONFIG_DIR"] == str(home / ".claude")
 
 
 @pytest.mark.parametrize("label,source,verify,method,credential", [
@@ -135,7 +135,11 @@ def test_default_label_ignores_ambient_other_config_directory(world, monkeypatch
     ("b", "default-file", True, "subscription_login", "subscription_login"),
     ("b", "explicit", False, "unverified", "oauth_token"),
 ])
-def test_worker_records_this_runs_claude_auth_receipt(tmp_path, monkeypatch, label, source, verify, method, credential):
+@pytest.mark.parametrize("launch_error", [None, "CLAUDE_ACCOUNT_REFUSED: claude_account_auth_method_conflict",
+                                         "sensitive diagnostic /private/path"])
+def test_worker_records_this_runs_claude_auth_receipt(
+    tmp_path, monkeypatch, label, source, verify, method, credential, launch_error,
+):
     """Ported from tests/test_delegate.py::test_worker_records_a_verified_value_free_auth_receipt,
     tests/test_delegate.py::test_worker_receipt_is_unverified_without_this_runs_verification,
     tests/test_delegate.py::test_worker_receipt_for_the_default_label_names_the_host_login.
@@ -168,13 +172,23 @@ def test_worker_records_this_runs_claude_auth_receipt(tmp_path, monkeypatch, lab
 
     monkeypatch.setattr(worker, "child_env", lambda spec: dict(env))
     # This fixture supplies auth observations; test_admission_ports covers the launch guard.
-    monkeypatch.setattr(worker.admission, "claude_launch", lambda spec, invocation: invocation)
+    def launch(spec, invocation):
+        if launch_error:
+            raise ValueError(launch_error)
+        return invocation
+
+    monkeypatch.setattr(worker.admission, "claude_launch", launch)
     monkeypatch.setattr(worker.providers, "load", lambda _: SimpleNamespace(
         build=build, parse=lambda *a: ParsedResult("reviewed", None, None)))
     monkeypatch.setattr(worker.git, "snapshot_delivery", lambda *a: {})
     monkeypatch.setattr(worker, "_reap_settled", lambda *a: None)
     worker.supervise(path, {}, 30)
     saved = json.loads(path.read_bytes())
+    if launch_error:
+        assert saved["status"] == "failed"
+        assert saved["error"] == (launch_error if launch_error.startswith("CLAUDE_ACCOUNT_REFUSED:") else "ValueError")
+        assert "sensitive diagnostic" not in json.dumps(saved)
+        return
     assert saved["status"] == "done", saved["error"]
     assert saved["claude_account_auth"] == dict(label=label, source=source, method=method,
                                                verified=verify, credential_class=credential)
@@ -432,7 +446,10 @@ def test_runner_reports_real_input_hash_refusal_before_provider_launch(world, tm
 
 
 @pytest.mark.parametrize("agent", ["agy", "codex"])
-def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path, monkeypatch, agent):
+@pytest.mark.parametrize("evidence_error", [None, "review_model_mismatch", "attempt_identity_mismatch",
+    "agy_model_identity_unverified", "formal attempt filesystem boundary refused: wrap: attempt_input_hash_mismatch",
+    "sensitive diagnostic /private/path"])
+def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path, monkeypatch, agent, evidence_error):
     """Ported from tests/agent_runtime/test_attempt_boundary.py::test_runner_executes_attempt_boundary_and_cleans_after_parse."""
     import sys
     from types import SimpleNamespace
@@ -493,9 +510,17 @@ def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path
         monkeypatch.setattr(dispatch_execution.Execution, "wrap", wrap)
     else:
         monkeypatch.setattr(dispatch_execution.Execution, "wrap", original_wrap)
+    if evidence_error:
+        def refuse_evidence(self, stdout):
+            raise ValueError(evidence_error)
+
+        monkeypatch.setattr(dispatch_execution.Execution, "evidence", refuse_evidence)
     worker.supervise(path, {"review_tool_config": tc}, 30)
     saved = json.loads(path.read_bytes())
-    assert saved["status"] == "done", saved["error"]
+    assert saved["status"] == ("failed" if evidence_error else "done"), saved["error"]
+    if evidence_error:
+        assert saved["error"] == ("ValueError" if evidence_error.startswith("sensitive") else evidence_error)
+        assert "sensitive diagnostic" not in json.dumps(saved)
     assert spec.final_file.read_text() == "own return"
     assert observed and not observed[0].workspace.exists()
 

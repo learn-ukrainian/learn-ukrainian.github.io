@@ -51,12 +51,7 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         file_key = _load_cursor_api_key_from_env_file()
         if file_key:
             env["CURSOR_API_KEY"] = file_key
-    if spec.agent == "claude" and (
-        spec.options.get("review_attempt") or spec.options.get("require_review_verdict")
-        or (spec.claude_account is not None and (
-            spec.claude_account != "a" or spec.options.get("claude_account_source", "explicit") == "explicit"
-        ))
-    ):
+    if spec.agent == "claude":
         env["CLAUDE_CONFIG_DIR"] = claude_config_dir(spec.claude_account or "a", env.get("HOME"))
     shims = npm_shim_dir()
     if shims is not None:

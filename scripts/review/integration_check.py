@@ -1012,6 +1012,7 @@ def token_of(out: Path) -> str:
 
 def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review_id: str, attempt_id: str) -> list[str]:
     """Dispatch the plan, lesson and settle content attempts with their Ukrainian profile."""
+    # The integration card deliberately pins Opus as its Claude reviewer.
     return [
         str(PYTHON),
         str(PRIMARY / "scripts" / "dispatch.py"),

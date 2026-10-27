@@ -743,6 +743,9 @@ def build_invocation(spec, env, adapter):
     from scripts.dispatcher.types import Invocation
 
     config = dict(spec.options.get("review_tool_config") or {"reviewer_tools": True})
+    if spec.options.get("output_schema_path") is not None:
+        config.update({key: spec.options[key] for key in ("output_schema_path", "output_schema_sha256", "review_write_root")
+                       if key in spec.options})
     if spec.agent == "claude":
         config["claude_account"] = spec.claude_account or "a"
     boundary = config.get("review_attempt_boundary")
