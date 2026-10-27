@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import admission, checks, git, host_admission, providers, store, worker, write_intent
+from scripts.dispatcher import admission, checks, git, headroom, host_admission, providers, store, worker, write_intent
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 
@@ -209,6 +209,11 @@ def _dispatch(args) -> int:
         raise ValueError("task id already exists; choose a new task id")
     repo, info = git.resolve_repo(args.repo)
     host_admission.precheck(args.mode, force_reason=args.force_admission)
+    try:
+        headroom.check_plan(agent, args.model, account_fields,
+                            review=admission.review_typed(vars(args)) or bool(args.risk))
+    except headroom.model_pause.ModelPausedRefused as exc:
+        raise host_admission.Refused(f"❌ {exc}", 2) from None
     host_admission.check_credit(agent, args.model)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     force_reason = args.force_admission
