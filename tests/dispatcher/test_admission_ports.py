@@ -248,6 +248,9 @@ def headroom_box(tmp_path, monkeypatch):
     monkeypatch.setattr(host_admission, "check", lambda *_a, **_k: None)
     monkeypatch.setattr(worker, "_reap_settled", lambda *_a: None)
     monkeypatch.setattr(git, "snapshot_delivery", lambda *_a: {})
+    # The worktree is not a Git checkout; the read-only guard's snapshots are not under test here.
+    monkeypatch.setattr(worker.read_only_guard.ReadOnlyGuard, "begin", lambda self, timeout: None)
+    monkeypatch.setattr(worker.read_only_guard.ReadOnlyGuard, "finish", lambda self: ({}, None, None))
     monkeypatch.setattr(admission, "claude_launch", lambda _spec, invocation: invocation)
     launches = []
 
