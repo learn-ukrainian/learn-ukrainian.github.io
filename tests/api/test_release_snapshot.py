@@ -22,6 +22,7 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.release_layout import MANIFEST_NAME, is_release_root
 from scripts.path_safety import safe_join
 from tests.helpers.python import project_python
+from tests.wait_helpers import wait_until
 
 pytestmark = pytest.mark.reads_content
 
@@ -486,6 +487,16 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
         )
         agent_url = f"http://127.0.0.1:{port}/api/agent/module/a1/people-around-me"
         try:
+            def application_started() -> bool:
+                lines = log_path.read_text(encoding="utf-8").splitlines(keepends=True)
+                assert process.poll() is None, "release API exited during startup"
+                return "INFO:     Application startup complete.\n" in lines
+
+            try:
+                wait_until(application_started, message="release API completing ASGI startup")
+            except AssertionError as exc:
+                pytest.fail(f"{exc}:\n{log_path.read_text(encoding='utf-8')}")
+
             deadline = time.monotonic() + 15
             while True:
                 try:
@@ -510,7 +521,11 @@ def test_real_release_serves_live_data_routers_with_logical_paths(
             docs_text = _read_text(f"http://127.0.0.1:{port}/files/{doc_path}")
         finally:
             process.terminate()
-            process.wait(timeout=5)
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
 
     key_paths = agent_payload["key_paths"]
     assert curriculum_payload["tracks"]["a1-v1"]["total"] > 0
