@@ -1948,9 +1948,13 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
         (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
         (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
+        # Ported from test_delegate_review_admission.py::test_bare_pinned_head_refuses_before_probes_worktree_or_task_record.
+        *[(list(("--agent", "codex", "--mode", "workspace-write", "--pinned-head", "a" * 40, *flags)),
+           "PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr")
+          for flags in ((), ("--worktree",), ("--worktree", "--dry-run"))],
     ],
 )
-def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):
+def test_dispatch_refuses_invalid_request_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):
     from scripts.dispatcher import cli
 
     tasks = tmp_path / "tasks"
@@ -1963,7 +1967,8 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkey
     assert cli.main(["dispatch", "--task-id", "claude-account-refused", "--prompt", "test", "--model", "m", *extra]) == 2
 
     err = capsys.readouterr().err
-    assert f"CLAUDE_ACCOUNT_REFUSED: {code}\n" in err
+    expected = code if code.startswith("PINNED_HEAD_TARGET_REQUIRED") else f"CLAUDE_ACCOUNT_REFUSED: {code}"
+    assert expected + "\n" in err
     assert "fixture-ambient" not in err
     assert not tasks.exists()
 

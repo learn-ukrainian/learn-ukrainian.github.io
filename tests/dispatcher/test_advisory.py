@@ -177,7 +177,9 @@ def test_delegate_injection_is_pointer_only_and_persists_safely(reg_root, monkey
     assert set(state) == {"pointer_ids", "filtered_etag", "dropped_ids", "context_fingerprint"}
     assert state["pointer_ids"] == ["cefr"]
     assert "owned_paths" not in state and "role" not in state
-    # a surface (not consumption) event was emitted for the injected pointer
+    # Selection is side-effect free. Only the created-task spawn path records surfacing.
+    assert surfaced == []
+    delegate.surface_research({'task_id': 'task-9', 'research': state})
     assert surfaced == [
         (consumption.SURFACED_EVENT, {"task_id": "task-9", "research_id": "cefr", "surface": "dispatch"})
     ]
@@ -394,3 +396,42 @@ def test_404_is_never_consumption(reg_root, emit_sink, task_store):
     resp = client.get("/api/knowledge/record/does-not-exist", params={"task": "job-1"})
     assert resp.status_code == 404
     assert not [p for t, p in emit_sink if t == consumption.CONSUMED_EVENT]
+
+
+@pytest.mark.parametrize("boundary", ["resources", "family", "target-moved", "canonical-origin", "spawn"])
+def test_research_surfacing_never_precedes_task_creation(reg_root, monkeypatch, boundary):
+    """Defect class: refused admissions emit surfaced-pointer events for nonexistent tasks."""
+    from scripts.dispatcher import admission, authoring
+
+    tasks = reg_root / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(prompt_context, "_REPO_ROOT", reg_root)
+    _write_registry(reg_root, [_make_record(reg_root, "cefr", routing={"roles": ["quality"]})])
+    monkeypatch.setattr(git, "resolve_repo", lambda _: (reg_root, dict(key="public", github="example/public")))
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (reg_root, "codex/worker", "a" * 40))
+    monkeypatch.setattr(git, "create_worktree", Mock())
+    monkeypatch.setattr(authoring, "admit", Mock(return_value=None))
+    monkeypatch.setattr(authoring, "recheck", Mock(return_value=None))
+    monkeypatch.setattr(checks, "check_resources", Mock())
+    monkeypatch.setattr(admission, "spawn_supervisor", Mock(side_effect=OSError("fixture spawn stop")))
+    events = []
+    monkeypatch.setattr(consumption, "emit_event", lambda t, p, **kw: events.append(
+        (t, p, store.record_path("worker").is_file())))
+    flags = []
+    if boundary == "resources":
+        monkeypatch.setattr(checks, "check_resources", Mock(side_effect=ValueError("fixture resources refusal")))
+    elif boundary == "family":
+        flags += ["--review-author-model", "gpt-6.1-sol"]
+    elif boundary == "target-moved":
+        monkeypatch.setattr(authoring, "recheck", Mock(side_effect=ValueError("fixture target moved")))
+    elif boundary == "canonical-origin":
+        flags += ["--mode", "workspace-write", "--owned-path", "docs/example.md"]
+    assert cli.main(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--task-id", "worker",
+                     "--prompt", "Inspect the document", "--research-role", "quality", *flags]) == 2
+    if boundary == "spawn":
+        assert events == [(consumption.SURFACED_EVENT,
+                           {"task_id": "worker", "research_id": "cefr", "surface": "dispatch"}, True)]
+        assert store.read("worker")["status"] == "crashed"
+    else:
+        assert events == []
+        assert not store.record_path("worker").exists()

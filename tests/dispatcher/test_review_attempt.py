@@ -7,9 +7,12 @@ from unittest.mock import Mock
 
 import pytest
 
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import checks, cli, git, prompt_context, store, worker
 from scripts.dispatcher.types import TaskSpec
+from scripts.research import consumption
 from scripts.review.record import attested_return, dispatch_prompt_sha256
+from tests.test_research_registry_p3 import _make_record, _write_registry
+from tests.test_research_registry_p3 import reg_root as reg_root
 
 
 @pytest.fixture
@@ -41,17 +44,22 @@ def test_bound_launch_refuses_until_runtime_isolation_is_wired(attempt, monkeypa
     create.assert_not_called()
 
 
-def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, monkeypatch, capsys):
+def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, monkeypatch, capsys, reg_root):
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    monkeypatch.setattr(prompt_context, "_REPO_ROOT", reg_root)
+    _write_registry(reg_root, [_make_record(reg_root, "cefr", routing={"roles": ["quality"]})])
+    events = []
+    monkeypatch.setattr(consumption, "emit_event", lambda t, p, **kw: events.append((t, p)))
     for _ in range(2):
-        assert invoke(attempt, "--dry-run") == 0
+        assert invoke(attempt, "--research-role", "quality", "--dry-run") == 0
         plan = json.loads(capsys.readouterr().out)
         assert plan["review_attempt"] == dict(review_id="review", attempt_id="attempt",
                                              manifest_sha256=store.digest(b"inputs: []\n"))
         assert plan["review_access"] == "isolated"
     assert not (tmp_path / "tasks").exists()
+    assert events == []
 
 
 @pytest.mark.parametrize("suffix", [".jsonl", ".jsonl.sha256", ".mcp.json", ".codex-home", ".agy-home"])

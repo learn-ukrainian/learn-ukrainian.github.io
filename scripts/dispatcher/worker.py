@@ -54,9 +54,10 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
     logs = path.parent / "logs"
     logs.mkdir(exist_ok=True, mode=0o700)
     try:
-        from scripts.dispatcher.prompt_context import persist_effective
+        from scripts.dispatcher.prompt_context import persist_effective, surface_research
 
         persist_effective(spec, record)
+        surface_research(record)
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
             try:

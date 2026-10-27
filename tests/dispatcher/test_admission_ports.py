@@ -93,11 +93,16 @@ def test_bound_label_runs_with_only_the_bound_login_directory(accounts, monkeypa
 # ----------------------------------------------------------------- rules core
 
 
-def test_delegate_dispatch_without_the_core_refuses(tmp_path, monkeypatch, missing_core, capsys):  # noqa: F811
+@pytest.mark.parametrize("prompt_flags", [
+    ["--prompt", "the source prompt"],
+    ["--prompt-file", "missing-brief.md"],
+    ["--prompt", "the source prompt", "--review-id", "incomplete"],
+])
+def test_delegate_dispatch_without_the_core_refuses(tmp_path, monkeypatch, missing_core, capsys, prompt_flags):  # noqa: F811
     """Ported from tests/test_rules_core_loading.py::test_delegate_dispatch_without_the_core_refuses."""
     tasks = _refuse_side_effects(monkeypatch, tmp_path)
 
-    assert cli.main(["dispatch", "--agent", "codex", "--model", "m", "--prompt", "the source prompt"]) == 2
+    assert cli.main(["dispatch", "--agent", "codex", "--model", "m", *prompt_flags]) == 2
 
     err = capsys.readouterr().err
     assert "dispatch refused" in err

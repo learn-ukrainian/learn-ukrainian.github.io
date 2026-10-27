@@ -14,6 +14,7 @@ from scripts.dispatcher import admission, authoring, checks, git, prompt_context
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.prompt_context import _PromptPath
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
+from scripts.lib import rules_core
 
 ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
 
@@ -134,6 +135,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _dispatch(args) -> int:
+    # Reuse port D's precheck before admission, remote observations or side effects.
+    rules_core.require_core(args.rules_seat)
+    if args.mode == "workspace-write" and args.pinned_head and not (args.branch or args.pr):
+        print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
+        return 2
     if binding := store.review_binding(vars(args)):
         store.check_review_attempt(binding)
         # STAGE 1: dry-run-only binding; bound launches exit 2 until the port adds
@@ -153,14 +159,6 @@ def _dispatch(args) -> int:
         else (args.prompt.encode() if args.prompt is not None else Path(source).read_bytes())
     )
     prompt.decode("utf-8")
-    # Every worker and review seat needs the rules core: without it nothing is dispatched, and this
-    # runs before any check, worktree or task record (delegate.py cmd_dispatch, rules_core.require_core).
-    from scripts.lib import rules_core
-
-    try:
-        rules_core.require_core()
-    except rules_core.RulesCoreMissing as exc:
-        raise ValueError(f"dispatch refused: {exc}; the rules core is required.") from None
     if write_intent_error := write_intent._read_only_write_intent_error(mode=args.mode, prompt=prompt.decode()):
         raise ValueError(write_intent_error)
     agent = ALIASES.get(args.agent, args.agent)
@@ -301,6 +299,9 @@ def main(argv=None) -> int:
             result = worker._observe(store.read(args.task_id, args.run_nonce))
         print(json.dumps(result, indent=2))
         return code
+    except rules_core.RulesCoreError as exc:
+        print(f"❌ dispatch refused: {exc}; the rules core is required.", file=sys.stderr)
+        return 2
     except prompt_context.ResearchContextError as exc:
         print(f'❌ {exc}', file=sys.stderr)
         return 2

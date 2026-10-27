@@ -117,12 +117,11 @@ def _resolve_research_injection(ctx, task_id: str) -> tuple[str, dict[str, Any] 
     pointer ids, filtered projection ETag, dropped ids, and a context fingerprint —
     never raw owned paths, digest/source/prompt text, role, or task family. Any
     disabled/malformed/unexpected registry condition degrades to ``("", None)`` so a
-    dispatch is never blocked by the research surface. Emits one surface (not
-    consumption) telemetry event per injected pointer, attributed to ``task_id``.
+    dispatch is never blocked by research selection. Selection emits no telemetry;
+    the spawn path records surfacing after the task record exists.
     """
     if str(_REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT))
-    from scripts.research import consumption
     from scripts.research import registry as reg
 
     try:
@@ -141,12 +140,6 @@ def _resolve_research_injection(ctx, task_id: str) -> tuple[str, dict[str, Any] 
         }
         if not pointers:
             return "", persist_state
-        for ptr in pointers:
-            consumption.emit_surface(
-                research_id=ptr["id"],
-                surface=consumption.SURFACE_DISPATCH,
-                task_id=task_id,
-            )
         return _render_research_prompt_block(pointers), persist_state
     except Exception as exc:  # fail-open: research never blocks a dispatch
         print(
@@ -154,6 +147,21 @@ def _resolve_research_injection(ctx, task_id: str) -> tuple[str, dict[str, Any] 
             file=sys.stderr,
         )
         return "", None
+
+
+def surface_research(record):
+    """Record selected pointers only after the spawn path creates the task."""
+    from scripts.research import consumption
+
+    try:
+        for research_id in record.get('research', {}).get('pointer_ids', []):
+            consumption.emit_surface(
+                research_id=research_id,
+                surface=consumption.SURFACE_DISPATCH,
+                task_id=record['task_id'],
+            )
+    except Exception as exc:  # fail-open: telemetry never blocks a dispatch
+        print(f"[delegate] WARNING: research surfacing skipped: {type(exc).__name__}", file=sys.stderr)
 
 
 def lifecycle(args):
