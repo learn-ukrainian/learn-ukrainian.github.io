@@ -43,8 +43,8 @@ def deadlines(options):
         ("silence_timeout", DEFAULT_SILENCE_TIMEOUT_S),
         ("initial_response_timeout", DEFAULT_INITIAL_RESPONSE_TIMEOUT_S),
     ))
-    if any(not math.isfinite(value) or value < 0 for value in values):
-        raise ValueError("invalid process deadline")
+    if values[0] < 0:
+        raise ValueError("invalid process deadline or conflicting existing-worktree options")
     return values
 
 
@@ -67,12 +67,12 @@ def liveness_paths(spec, invocation):
 
 
 def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                initial_response_timeout, liveness):
+                initial_response_timeout, liveness, output_sizes):
     """Keep stdin nonblocking while observing I/O, session files and tree work."""
     started = time.monotonic()
     state = WatchdogState(start_time=started, last_activity=started)
     paths = (stdout_path, stderr_path)
-    sizes = {path: path.stat().st_size for path in paths}
+    sizes = dict(zip(paths, output_sizes, strict=True))
     mtimes, primed, cpu, io = {}, set(), {}, {}
     for path in tuple(liveness())[:_MAX_LIVENESS_PATHS]:
         try:
@@ -82,6 +82,11 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
     next_activity_poll = started
     payload = invocation.stdin
     while True:
+        try:
+            child.communicate(payload, timeout=0.1)
+            return
+        except subprocess.TimeoutExpired:
+            payload = None
         now = time.monotonic()
         for path in paths:
             size = path.stat().st_size
@@ -109,8 +114,3 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
             seconds = {"hard_timeout": hard_timeout, "stdout_silence_timeout": silence_timeout,
                        "initial_response_timeout": initial_response_timeout}[reason]
             raise DeadlineExpired(invocation.argv, reason, seconds)
-        try:
-            child.communicate(payload, timeout=0.1)
-            return
-        except subprocess.TimeoutExpired:
-            payload = None

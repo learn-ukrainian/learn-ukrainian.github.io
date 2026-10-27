@@ -119,12 +119,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--hard-timeout", type=float, default=7200, help="Deadline seconds; 0 disables (default: 7200)"
     )
     dispatch.add_argument(
-        "--silence-timeout", type=float, default=DEFAULT_SILENCE_TIMEOUT_S, metavar="SECS",
+        "--silence-timeout", type=int, default=DEFAULT_SILENCE_TIMEOUT_S, metavar="SECS",
         help="Kill with status timeout after no stdout/stderr, liveness-file or process-tree work "
              "for SECS; 0 disables, --hard-timeout still applies (default: 3600)",
     )
     dispatch.add_argument(
-        "--initial-response-timeout", type=float, default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, metavar="SECS",
+        "--initial-response-timeout", type=int, default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, metavar="SECS",
         help="Kill with status timeout after no first stdout/stderr, liveness-file or process-tree work "
              "within SECS; 0 disables (default: 600)",
     )

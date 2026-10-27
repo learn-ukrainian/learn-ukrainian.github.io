@@ -234,6 +234,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
+            output_sizes = out.tell(), err.tell()
             child = subprocess.Popen(
                 invocation.argv,
                 stdin=subprocess.PIPE,
@@ -246,7 +247,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             record.update(status="running")
             store.replace(record, path)
             communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                        initial_response_timeout, liveness_paths(spec, invocation))
+                        initial_response_timeout, liveness_paths(spec, invocation), output_sizes)
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
