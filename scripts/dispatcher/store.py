@@ -101,7 +101,7 @@ def new_record(
     from scripts.dispatcher.watchdog import deadlines
 
     record.update(zip(("hard_timeout", "silence_timeout", "initial_response_timeout"), deadlines(spec.options), strict=True))
-    record["options"] = spec.options
+    record["options"] = {key: value for key, value in spec.options.items() if key != "review_tool_config"}
     metadata_fields = ("research_role", "research_task_family", "research_track", "initiator")
     record.update({name: metadata.get(name) for name in metadata_fields})
     for name in ("output_schema_path", "output_schema_sha256", "review_write_root"):
