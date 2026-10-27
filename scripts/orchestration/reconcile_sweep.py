@@ -36,7 +36,7 @@ from scripts.guardrails.delegate_ownership import (
     default_ledger_path,
 )
 from scripts.orchestration import dispatch_admission, dispatch_settle
-from scripts.orchestration.dead_worker_state import process_is_zombie, worker_liveness
+from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, worker_liveness
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -82,23 +82,7 @@ def _parse_pid(raw_pid: Any) -> int | None:
 
 
 def _v2_worker_liveness(state: dict[str, Any], pid: int) -> bool | None:
-    # Match dead_worker_state.worker_liveness's unknown-safe contract until
-    # its v2 process_start support from #11708 is merged.
-    recorded = state.get("process_start")
-    if not isinstance(recorded, str) or not recorded:
-        return None
-    identity = worker._identity(pid)
-    if identity is not None:
-        return identity == recorded
-    if process_is_zombie(pid):
-        return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except OSError:
-        return None
-    return None
+    return worker_liveness(state)
 
 
 def _probe_stale_claims(ledger: OwnershipLedger) -> list[str]:
@@ -251,6 +235,15 @@ def _run_reconcile_sweep(
                     zombie_tasks.append(task_id)
                     if apply and state.get("schema_version") == 2:
                         worker._observe(state)
+                        if state.get("status") in ("running", "spawning"):
+                            # Null process_start compares equal to a missing identity
+                            # in _observe; re-prove death through the shared marker.
+                            mark_dead_worker_terminal(
+                                state_file, state, source="reconcile_sweep", terminal_status="crashed",
+                                allowed_statuses=("running", "spawning"),
+                                pid_alive=lambda pid: worker_liveness({"pid": pid}) is not False,
+                                resolve_head=lambda path: None,
+                            )
                 else:
                     live_tasks.append(task_id)
         except Exception:

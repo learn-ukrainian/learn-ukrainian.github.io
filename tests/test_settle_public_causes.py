@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts import delegate
-from scripts.orchestration import dead_worker_state, dispatch_settle
+from scripts.orchestration import dead_worker_state, dispatch_settle, task_record_causes
 
 RAW_REASON = "synthetic settle diagnostic at private-worker.example.invalid"
 DEFAULT_REASONS = {
@@ -20,7 +20,7 @@ DEFAULT_REASONS = {
 }
 
 
-def _record(tmp_path: Path, writer: str, last_error: str | None) -> tuple[Path, dict]:
+def _record(tmp_path: Path, writer: str, last_error: str | None, schema: int | None = None) -> tuple[Path, dict]:
     path = tmp_path / f"{writer}.json"
     state = {
         "task_id": writer,
@@ -34,6 +34,8 @@ def _record(tmp_path: Path, writer: str, last_error: str | None) -> tuple[Path, 
         "finalize_error": RAW_REASON,
         "auto_finalize": {"error": RAW_REASON},
     }
+    if schema is not None:
+        state.update(schema_version=schema, process_start=None)
     path.write_text(json.dumps(state), encoding="utf-8")
     return path, state
 
@@ -65,8 +67,9 @@ def _assert_persisted(path: Path, writer: str, last_error: str | None) -> None:
 
 
 @pytest.mark.parametrize("last_error", [None, RAW_REASON, "worker_failed"])
-def test_dead_worker_settle_persists_only_public_causes(tmp_path, monkeypatch, capsys, last_error):
-    path, _state = _record(tmp_path, "dead-worker", last_error)
+@pytest.mark.parametrize("schema", [None, 1, 2])
+def test_dead_worker_settle_persists_only_public_causes(tmp_path, monkeypatch, capsys, last_error, schema):
+    path, _state = _record(tmp_path, "dead-worker", last_error, schema)
     monkeypatch.setattr(dispatch_settle, "_pid_alive", lambda _pid: False)
 
     assert dispatch_settle.heal_zombie_task(tmp_path, "dead-worker") == ["marked_failed_zombie_running"]
@@ -80,8 +83,9 @@ def test_dead_worker_settle_persists_only_public_causes(tmp_path, monkeypatch, c
 
 
 @pytest.mark.parametrize("last_error", [None, RAW_REASON, "worker_failed"])
-def test_missing_worktree_settle_persists_only_public_causes(tmp_path, monkeypatch, capsys, last_error):
-    path, _state = _record(tmp_path, "missing-worktree", last_error)
+@pytest.mark.parametrize("schema", [None, 1, 2])
+def test_missing_worktree_settle_persists_only_public_causes(tmp_path, monkeypatch, capsys, last_error, schema):
+    path, _state = _record(tmp_path, "missing-worktree", last_error, schema)
     monkeypatch.setattr(dispatch_settle, "_pid_alive", lambda _pid: False)
 
     assert dispatch_settle.settle_missing_worktree(tmp_path, "missing-worktree") == ["marked_failed_missing_worktree"]
@@ -94,16 +98,45 @@ def test_missing_worktree_settle_persists_only_public_causes(tmp_path, monkeypat
     assert RAW_REASON not in json.dumps(shown)
 
 
-def test_orphaned_default_writer_uses_the_same_sink(tmp_path):
-    path, state = _record(tmp_path, "orphaned", RAW_REASON)
-    _current, changed = dead_worker_state._mark_orphaned_pidless_crashed(
+@pytest.mark.parametrize("schema", [None, 1, 2])
+@pytest.mark.parametrize("injected", [False, True])
+def test_orphaned_default_writer_uses_the_same_sink(tmp_path, monkeypatch, schema, injected):
+    from unittest.mock import Mock
+
+    from scripts.dispatcher import store
+
+    path, state = _record(tmp_path, "orphaned", RAW_REASON, schema)
+    clock = Mock(wraps=dead_worker_state.datetime)
+    clock.now.return_value = dead_worker_state.datetime(2026, 1, 1, tzinfo=dead_worker_state.UTC)
+    monkeypatch.setattr(dead_worker_state, "datetime", clock)
+    monkeypatch.setattr(task_record_causes, "datetime", clock)
+    monkeypatch.setattr(delegate, "datetime", clock)
+    replace = Mock(wraps=store.replace)
+    monkeypatch.setattr(store, "replace", replace)
+    write = Mock(wraps=delegate._write_record_unlocked) if injected else None
+    current, changed = dead_worker_state._mark_orphaned_pidless_crashed(
         path,
         state,
         is_orphaned=lambda _state: True,
         reason="dispatch_died_during_worktree_prep",
         excerpt=lambda _state, _prior: "dispatcher died",
+        write=write,
     )
     assert changed
+    if injected:
+        write.assert_called_once_with(path, current)
+    elif schema == 2:
+        replace.assert_called_once()
+        assert replace.call_args.args[1] == path
+    else:
+        replace.assert_not_called()
+    expected_path = tmp_path / "expected.json"
+    delegate._write_record_unlocked(expected_path, current)
+    if schema != 2 or injected:
+        assert path.read_bytes() == expected_path.read_bytes()
+    else:
+        assert json.loads(path.read_text()) == json.loads(expected_path.read_text())
+    assert path.with_suffix(".diag").read_bytes() == expected_path.with_suffix(".diag").read_bytes()
     record = json.loads(path.read_text(encoding="utf-8"))
     assert record["status"] == "crashed"
     assert record["last_error"] == "unclassified_error"
@@ -126,7 +159,5 @@ def test_settle_default_writers_cannot_bypass_the_public_cause_sink():
             elif isinstance(call.func, ast.BoolOp):
                 writers[function.name] = ast.unparse(call.func)
     assert writers == {
-        "mark_dead_worker_terminal": "write or _write_public_state_unlocked",
-        "_mark_orphaned_pidless_crashed": "write or _write_public_state_unlocked",
-        "mark_missing_worktree_failed": "write or _write_public_state_unlocked",
+        "_replace_if_unchanged": "write or write_record_unlocked",
     }
