@@ -29,7 +29,10 @@ from scripts.lexicon.enrich_manifest import (
     _slovnyk_lookup_word,
 )
 
-USER_AGENT = "learn-ukrainian-word-atlas/1.0"
+USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 
 
 def fetch_newsum_curl(
