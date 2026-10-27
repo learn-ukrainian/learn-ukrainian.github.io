@@ -1,6 +1,7 @@
 """Bounded workers must pass sealed-envelope admission before any paid launch."""
 
 import json
+import os
 import subprocess
 from unittest.mock import Mock
 
@@ -18,7 +19,9 @@ def launch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/worker", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
-    monkeypatch.setattr(worker, "start", Mock(side_effect=lambda spec, record, prompt, _: store.create(record, prompt)))
+    monkeypatch.setattr(worker, "start", Mock(side_effect=lambda spec, record, prompt, _: store.create(
+        {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
+    )))
     return ["dispatch", "--agent", "sol", "--model", "gpt-6-luna", "--task-id", "worker",
             "--prompt", "Inspect the assigned document", "--owned-path", "docs/example.md"]
 
