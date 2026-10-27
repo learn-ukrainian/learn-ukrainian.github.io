@@ -810,7 +810,7 @@ def test_legacy_resume_refuses_unresolvable_read_stores(linked_worktree, tmp_pat
     monkeypatch.delenv("LU_VESUM_DB", raising=False)
     key = f"LU_{store.upper()}_DB"
     if kind == "unset":
-        monkeypatch.delenv(key)
+        monkeypatch.delenv(key, raising=False)
     else:
         override = {
             "empty": "",
