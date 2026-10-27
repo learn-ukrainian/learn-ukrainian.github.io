@@ -111,6 +111,8 @@ def _enforce_delivery(record: dict) -> None:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
                 merge_base = run("merge-base", record["head_sha"], base_sha)
                 revision_range = (record["head_sha"], "--not", merge_base, record["worktree_base_sha"])
+                if (record["commits_ahead"] or 0) > 0 and not run("rev-list", "--max-count=1", *revision_range):
+                    raise ValueError("empty ownership range with recorded commits ahead")
                 version = tuple(int(part) for part in run("version").split()[2].split(".")[:2])
                 remerge = version >= (2, 36)
                 # Remerge diffs isolate edits made during a merge from clean upstream changes.
