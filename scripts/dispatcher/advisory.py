@@ -148,13 +148,6 @@ def snapshot(spec, prompt: bytes):
     return dataclasses.replace(spec, prompt_file=path)
 
 
-def requires_check(record: dict) -> bool:
-    """Preserve checks on older records; new ordinary tasks need no advisory runtime."""
-    return record.get("advisory_required") is not False or any(
-        record.get(key) is not None for key in ("driver_brief", "advisory_envelope", "advisory_exemption", "advisory_role")
-    )
-
-
 def prepare(spec, record: dict, prompt: bytes, hard_timeout: float):
     """Bind the admitted execution and append the legacy prompt contract before storing."""
     admitted = record.get("driver_brief") or record.get("advisory_envelope")
@@ -183,12 +176,13 @@ def prepare(spec, record: dict, prompt: bytes, hard_timeout: float):
         prompt += contract.advisor_prompt_block(record["advisory_binding_sha256"]).encode("utf-8")
         record["prompt_blocks"] = ["advisory_contract"]
     record["effective_prompt_sha256"] = store.digest(prompt)
-    return (snapshot(spec, prompt) if requires_check(record) or record.get("mechanical_task") else spec), prompt
+    checked = record.get("mechanical_task") or any(record.get(key) is not None for key in (
+        "driver_brief", "advisory_envelope", "advisory_exemption", "advisory_role",
+    ))
+    return (snapshot(spec, prompt) if checked else spec), prompt
 
 
 def verify(spec, record: dict, hard_timeout: float) -> str | None:
-    if not requires_check(record):
-        return None
     actual = execution(spec, hard_timeout)
     admitted = record.get("driver_brief") or record.get("advisory_envelope")
     if admitted is not None and isinstance(admitted.get("admitted_execution"), dict):

@@ -379,6 +379,13 @@ def test_b1_a_record_without_a_complete_admitted_execution_refuses(launch, runti
     assert final["status"] == "failed"
     assert final["failure_reason"] == advisory.ADMISSION_INVALID
     assert runtime.calls == []
+    record.pop("advisory_envelope")
+    record.update(advisory_required=False, status="spawning")
+    store.replace(record)
+    final = runtime.settle()
+    assert final["status"] == "failed"
+    assert final["failure_reason"] == advisory.ADMISSION_MISSING
+    assert runtime.calls == []
 
 
 @pytest.mark.parametrize("advisor,code", [

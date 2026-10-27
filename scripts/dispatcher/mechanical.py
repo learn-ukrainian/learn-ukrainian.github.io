@@ -11,6 +11,7 @@ from scripts.agent_runtime.mechanical_admission import (
 )
 from scripts.agent_runtime.target_admission import mechanical_scope_digest, mechanical_worker_scope
 from scripts.dispatcher.advisory import model_id
+from scripts.review.model_catalog import bounded_execution_policy, driver_brief_models, load_model_catalog
 
 
 def admit(args, repo: Path, prompt: bytes) -> dict:
@@ -57,10 +58,11 @@ def admit(args, repo: Path, prompt: bytes) -> dict:
     return scope
 
 
-def verify(spec, record: dict) -> None:
-    """Recheck persisted typing and the exact submitted bytes before provider build/spawn."""
+def verify(spec, record: dict, prompt: bytes | None = None) -> bool:
+    """Recheck typing/submitted bytes; return whether the actual route needs advisory replay."""
+    catalog = load_model_catalog()
     model = model_id(spec.agent, spec.model)
-    prompt = spec.prompt_file.read_text(encoding="utf-8")
+    prompt = (prompt if prompt is not None else spec.prompt_file.read_bytes()).decode("utf-8")
     scope = mechanical_worker_scope(record, mode=spec.mode, model=model, prompt=prompt)
     # Luna is bounded rather than mechanical-only. Its persisted scope must also
     # reach the common gate; the envelope/brief replay checks run separately.
@@ -80,3 +82,14 @@ def verify(spec, record: dict) -> None:
     refuse_mechanical_task(
         (spec.model, model), mode=spec.mode, trees=lambda: worktree_trees(spec.worktree), **scope,
     )
+    policy = bounded_execution_policy(catalog)
+    direct = driver_brief_models(catalog)
+    mechanical_exempt = (
+        model in direct - {policy.bounded_worker_model_id}
+        and scope.get("task_family") in {"routine_mechanical", "readonly_recon", "mechanical_classification"}
+        and record.get("driver_brief") is None and record.get("advisory_envelope") is None
+    )
+    return (model in {policy.bounded_worker_model_id, policy.bounded_fallback_model_id}
+            or (model in direct and not mechanical_exempt) or any(record.get(key) is not None for key in (
+                "driver_brief", "advisory_envelope", "advisory_exemption", "advisory_role",
+            )))

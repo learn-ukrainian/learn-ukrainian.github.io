@@ -231,19 +231,19 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             except (OSError, ValueError):
                 status, error = "failed", "output schema binding invalid"
                 return
-        check_advisory = advisory.requires_check(record)
+        prompt = spec.prompt_file.read_bytes()
+        check_advisory = mechanical.verify(spec, record, prompt)
         if record.get("mechanical_task") or check_advisory:
-            spec = advisory.snapshot(spec, spec.prompt_file.read_bytes())
-        mechanical.verify(spec, record)
+            spec = advisory.snapshot(spec, prompt)
         if check_advisory:
             advisory.handoff(spec, record, options, hard_timeout)
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
         advisory_stage = "at the provider handoff"
         current = store.read(spec.task_id, record["run_nonce"])
-        mechanical.verify(spec, current)
+        current_advisory = mechanical.verify(spec, current)
         checked = (advisory.handoff(spec, current, options, hard_timeout)
-                   if check_advisory or advisory.requires_check(current) else None)
+                   if check_advisory or current_advisory else None)
         if checked is not None:
             record["advisory_prompt_sha256"] = checked
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
