@@ -905,6 +905,23 @@ def test_ownership_walk_verifies_distinct_publish_branch(sandbox, delivery_settl
     assert (rejected["status"], rejected["error"]) == ("no_deliverable", "outside_owned_paths: outside.txt")
 
 
+@pytest.mark.parametrize("publish_branch", ["release", "fix/published"])
+def test_ownership_walk_requires_distinct_refs_and_nonempty_range(sandbox, delivery_settle, publish_branch):
+    """Equal delivery/base refs and empty inspected ranges fail ownership verification."""
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    record["publish_branch"] = publish_branch
+    (tree / "outside.txt").write_text("scope fixture\n")
+    run_git(tree, "add", "outside.txt")
+    run_git(tree, "commit", "-m", "scope fixture")
+    refs = list(dict.fromkeys(("refs/heads/release", f"refs/heads/{publish_branch}")))
+    run_git(tree, "push", "origin", *(f"HEAD:{ref}" for ref in refs))
+    rejected = settle()
+    assert rejected["remote_ref"] == f"refs/heads/{publish_branch}"
+    assert rejected["commits_ahead"] == 1
+    assert (rejected["status"], rejected["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+
+
 def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandbox, delivery_settle, monkeypatch):
     """Local/worktree includes and injected process config cannot alter the private walk."""
     record, settle = delivery_settle
