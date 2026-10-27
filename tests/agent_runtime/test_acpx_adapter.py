@@ -1943,12 +1943,21 @@ def test_cursor_acp_variant_refusal_writes_typed_usage_record(tmp_path, monkeypa
     assert records[0]["model"] == "grok-4.7-fast"
 
 
-def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):
-    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+@pytest.mark.parametrize("process_key", [None, "", " \t", "fixture-process-key", " fixture-process-key "])
+def test_cursor_acp_blank_env_falls_back_and_nonblank_env_wins(monkeypatch, process_key):
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
     monkeypatch.setattr(acpx_module, "_load_cursor_api_key_from_env_file", lambda: "fixture-file-key")
     overrides = AcpxCursorShadowAdapter()._env_overrides()
-    assert overrides["CURSOR_API_KEY"] == "fixture-file-key"
-    assert build_agent_env(provider="acpx-cursor-shadow", overrides=overrides)["CURSOR_API_KEY"] == "fixture-file-key"
+    if process_key and process_key.strip():
+        assert "CURSOR_API_KEY" not in overrides
+        expected_key = process_key
+    else:
+        assert overrides["CURSOR_API_KEY"] == "fixture-file-key"
+        expected_key = "fixture-file-key"
+    assert build_agent_env(provider="acpx-cursor-shadow", overrides=overrides)["CURSOR_API_KEY"] == expected_key
 
 
 def test_claude_adapter_preflight_accepts_installed_rolling_dependency(tmp_path):

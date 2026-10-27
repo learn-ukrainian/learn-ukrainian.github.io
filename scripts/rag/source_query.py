@@ -54,10 +54,10 @@ resolve_slovnyk_me_dict_slug = _slovnyk_me.resolve_dict_slug
 # ── Shared config ────────────────────────────────────────────────
 
 REQUEST_TIMEOUT = 15
-# Browser-like UA required by some Ukrainian sites (pravopys blocks bot UAs)
+# Identify the project honestly and provide a public contact for source operators.
 USER_AGENT = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    "learn-ukrainian-word-atlas/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
 )
 _SESSION = requests.Session()
 _SESSION.headers.update({

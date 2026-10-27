@@ -418,6 +418,8 @@ WRITER_INFRA_DENYLIST_PATHS = (
     "~/.claude/CLAUDE.md",
     "CLAUDE.md",
     "scripts/delegate.py",
+    "scripts/dispatch.py",
+    "scripts/dispatcher/**",
     "scripts/ai_agent_bridge/**",
     "agents_extensions/shared/agents/curriculum-orchestrator.md",
     "agents_extensions/shared/rules/**",

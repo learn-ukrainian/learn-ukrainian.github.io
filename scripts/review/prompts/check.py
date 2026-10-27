@@ -674,7 +674,7 @@ def main(argv: list[str] | None = None) -> int:
             "Outputs: PASS/FAIL and validation details on stdout; no files written. "
             "Requires the prompt's .sha256 and files_read sidecars.\n"
             "Exit codes: 0 valid; 1 refused; 2 invalid arguments.\n"
-            "Related: scripts.review.prompts.render; scripts/delegate.py --review-attempt; "
+            "Related: scripts.review.prompts.render; "
             "docs/runbooks/formal-review-attempt-isolation.md; #9012."
         ),
     )

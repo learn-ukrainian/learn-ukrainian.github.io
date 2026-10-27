@@ -930,8 +930,8 @@ def test_module_writer_budget_counts_only_delivered_content(
         record_failure(ledger_path, slug, 1, {"check": check, "layer": "writer", "reason": f"check {check}"}, inputs)
     before = ledger_path.read_bytes() if ledger_path.exists() else None
     errors = {
-        "refusal": WriterHarnessError("delegate.py dispatch refused"),
-        "timeout": WriterHarnessError("delegate.py wait timed out"),
+        "refusal": WriterHarnessError("dispatch.py dispatch refused"),
+        "timeout": WriterHarnessError("dispatch.py wait timed out"),
         "harvest": OSError("result unavailable"),
         "configuration": ValueError(f"invalid seat: {tmp_path / 'state/writer.yaml'} /home/private-user/config.yaml"),
         "invalid_reply": WriterCallError(f"Failed to parse writer output as YAML: {tmp_path / 'state/reply.yaml'}"),

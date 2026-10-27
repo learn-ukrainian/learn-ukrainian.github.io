@@ -40,7 +40,7 @@ def sandbox(tmp_path):
     run_git(repo, "init", "-b", "main")
     run_git(repo, "config", "user.email", "stub@example.invalid")
     run_git(repo, "config", "user.name", "Stub")
-    for relative in ("scripts/dispatcher", "scripts/common"):
+    for relative in ("scripts/dispatcher", "scripts/common", "scripts/storage"):
         shutil.copytree(SOURCE / relative, repo / relative, ignore=shutil.ignore_patterns("__pycache__"))
     # Disposable repositories share the test interpreter; they own no project environment.
     resolver = repo / "scripts/common/repo_root.py"
@@ -260,7 +260,31 @@ def test_unknown_or_unpushed_delivery_never_starts_a_reaper(tmp_path, monkeypatc
     def forbidden():
         pytest.fail("ineligible delivery forked a reaper")
     monkeypatch.setattr(worker.os, "fork", forbidden)
-    worker._reap_settled(dict(worktree_dirty_on_exit=dirty, push_state=push, mode="workspace-write"), tmp_path / "task.json")
+    worker._reap_settled(dict(status="done", worktree_dirty_on_exit=dirty, push_state=push,
+                              mode="workspace-write"), tmp_path / "task.json")
+
+
+@pytest.mark.parametrize("status", ["running", "spawning", "unknown", None])
+def test_running_or_unknown_task_never_starts_a_reaper(tmp_path, monkeypatch, status):
+    monkeypatch.setattr(worker.os, "fork", lambda: pytest.fail("unsettled task forked a reaper"))
+    worker._reap_settled(dict(status=status, worktree_dirty_on_exit=False, push_state="pushed",
+                              mode="workspace-write"), tmp_path / "task.json")
+    assert json.loads((tmp_path / "task.json").read_text())["reap_note"] == (
+        f"common reaper skipped: task status is not terminal ({status})"
+    )
+
+
+def test_zombie_supervisor_fix_preserves_pid_reuse_cancellation_guard(monkeypatch):
+    identity = worker._identity(os.getpid())
+    record = dict(schema_version=2, status="running", pid=os.getpid(), process_start=identity)
+    identities = iter([identity, f"{identity}-reused"])
+    monkeypatch.setattr(worker.store, "read", lambda *_args: record)
+    monkeypatch.setattr(worker, "_identity", lambda _pid: next(identities))
+    send_signal = Mock()
+    monkeypatch.setattr(worker.signal, "pidfd_send_signal", send_signal)
+    with pytest.raises(ValueError, match="supervisor identity changed; cancellation refused"):
+        worker.cancel("reused-supervisor")
+    send_signal.assert_not_called()
 
 
 def test_reaper_failure_does_not_change_task_status(sandbox):
@@ -372,6 +396,55 @@ def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     assert record["prompt_sha256"] == hashlib.sha256(b"exact\nbytes\n").hexdigest()
 
 
+@pytest.mark.parametrize("text,model,required,error", [
+    ("\nReview details\nVERDICT: APPROVE\n  \t", "file", True, None),
+    ("VERDICT: REQUEST_CHANGES", "echo", True, None),
+    ("VERDICT: APPROVE\nVERDICT: APPROVE", "echo", True, None),
+    ("Review has no decision", "echo", True, "review_missing_verdict_line"),
+    ("VERDICT: APPROVE\nVERDICT: REQUEST_CHANGES", "echo", True, "review_ambiguous_verdict"),
+    ("> VERDICT: APPROVE\nI might report VERDICT: APPROVE later", "echo", True,
+     "review_missing_verdict_line"),
+    ("VERDICT: APPROVE", "fail", True, "provider exited unsuccessfully"),
+    ("Review has no decision", "fail", True, "provider exited unsuccessfully"),
+    ("Review has no decision", "echo", False, None),
+])
+def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, text, model, required, error):
+    """Defect classes: false completion, failure promotion, result corruption and opt-in leakage."""
+    # Use the production shared parser and its dependencies in the disposable CLI repo.
+    stub_common_reaper(sandbox)
+    (sandbox.repo / "scripts/fleet/__init__.py").touch()
+    (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
+    dispatched = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", model, "--prompt", text,
+        *(["--require-review-verdict"] if required else []),
+    )
+    task = dispatched.stdout.splitlines()
+    record = sandbox.settle(task, expected=1 if error else 0)
+    assert record["status"] == ("failed" if error else "done")
+    assert record["error"] == error
+    assert record["returncode"] == (17 if model == "fail" else 0)
+    assert Path(record["result_file"]).read_bytes() == text.encode()
+    assert record["result_sha256"] == hashlib.sha256(text.encode()).hexdigest()
+    assert json.loads(sandbox.cli("status", task[0]).stdout)["status"] == record["status"]
+    assert json.loads(sandbox.cli("list", "--status", record["status"]).stdout)[0]["task_id"] == task[0]
+
+
+def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
+    """Defect class: scanner exceptions lose terminal failure or expose exception contents."""
+    review = sandbox.repo / "scripts/review"
+    review.mkdir()
+    (review / "verdict_parser.py").write_text(
+        "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
+    )
+    record = sandbox.settle(sandbox.dispatch("echo", "--require-review-verdict"), expected=1)
+    assert record["status"] == "failed"
+    assert record["error"] == "review_gate_error"
+    assert record["returncode"] == 0
+    assert record["finished_at"] is not None
+    assert Path(record["result_file"]).read_text() == "literal final response"
+    assert "sensitive scanner diagnostic" not in json.dumps(record)
+
+
 def test_nonce_refuses_status_wait_and_cancel(sandbox):
     task = sandbox.dispatch("blocked")
     await_file(sandbox.tasks / f"{task[0]}.started")
@@ -463,11 +536,11 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
             Path(record["prompt_file"]),
             Path(record["result_file"]),
         )
-        observed = git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"])
+        observed = git.snapshot_delivery(probe, record)
         assert observed["push_state"] == "unpushed"
         run_git(probe.worktree, "remote", "set-url", "origin", str(sandbox.tasks / "missing-remote"))
         assert (
-            git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"])["push_state"]
+            git.snapshot_delivery(probe, record)["push_state"]
             == "unknown"
         )
 
@@ -490,13 +563,81 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
         Path(record["prompt_file"]),
         Path(record["result_file"]),
     )
-    assert git.snapshot_delivery(probe, record["worktree_base_sha"], record["worktree_branch"]) == {
+    assert git.snapshot_delivery(probe, record) == {
         "head_sha": record["head_sha"],
         "remote_head_sha": record["head_sha"] if remote_available else None,
+        "remote_ref": f"refs/heads/{record['worktree_branch']}" if remote_available else None,
+        "publish_branch": None,
         "push_state": "unpushed",
+        "push_state_reason": "dirty_worktree",
         "commits_ahead": 1,
         "worktree_dirty_on_exit": True,
     }
+
+
+@pytest.mark.parametrize(
+    ("target", "commits", "dirty", "expected", "reason", "crash"),
+    [
+        ("pinned", 1, False, "pushed", "remote_head_matches", False),
+        ("pinned", 1, False, "pushed", "remote_head_matches", True),
+        ("own", 1, False, "pushed", "remote_head_matches", False),
+        ("unrelated", 1, False, "unpushed", "remote_head_differs", False),
+        ("prefix", 1, False, "unpushed", "remote_branch_missing", False),
+        ("pinned", 1, True, "unpushed", "dirty_worktree", False),
+        (None, 0, False, "unpushed", "remote_branch_missing", False),
+        ("pinned", 0, False, "pushed", "remote_head_matches", False),
+    ],
+)
+def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target, commits, dirty, expected, reason, crash):
+    """Prefix tricks and supervisor crashes cannot falsify pinned-branch delivery evidence."""
+    pinned = "codex/existing-pr"
+    run_git(sandbox.repo, "branch", pinned, "main")
+    if target not in {None, "prefix"}:
+        run_git(sandbox.repo, "push", "origin", pinned)
+    task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
+    record_path = sandbox.tasks / f"{task[0]}.json"
+    record = json.loads(record_path.read_text())
+    assert record["publish_branch"] == pinned
+    child = int(await_file(Path(record["prompt_file"]).with_suffix(".started")))
+    worktree = Path(record["worktree_path"])
+    branch = record["worktree_branch"]
+    if commits:
+        (worktree / "fix.txt").write_text("fix round\n")
+        run_git(worktree, "add", "fix.txt")
+        run_git(worktree, "commit", "-m", "fix round")
+    remote_branch = {
+        "pinned": pinned, "own": branch, "unrelated": "codex/unrelated", "prefix": f"x/refs/heads/{pinned}",
+    }.get(target)
+    if remote_branch:
+        run_git(worktree, "push", "origin", f"HEAD:refs/heads/{remote_branch}")
+    if dirty:
+        (worktree / "uncommitted.txt").write_text("still local\n")
+    if crash:
+        before_crash = git.snapshot_delivery(worker._spec(record, {}), record)
+        assert before_crash["push_state"] == "pushed"
+        assert before_crash["remote_ref"] == f"refs/heads/{pinned}"
+        os.kill(record["pid"], signal.SIGKILL)
+        os.killpg(child, signal.SIGKILL)
+    else:
+        Path(record["prompt_file"]).with_suffix(".release").touch()
+    observed = sandbox.settle(task, expected=1 if crash else 0)
+    assert observed["status"] == ("crashed" if crash else "done")
+    head = run_git(worktree, "rev-parse", "HEAD")
+    matched = remote_branch if target in {"pinned", "own"} else None
+    assert observed["push_state"] == expected
+    assert observed["push_state_reason"] == reason
+    assert observed["publish_branch"] == pinned
+    assert observed["remote_ref"] == (f"refs/heads/{matched}" if matched else None)
+    if crash:
+        assert observed["remote_ref"] == before_crash["remote_ref"]
+    assert observed["head_sha"] == head
+    assert observed["commits_ahead"] == commits
+    assert observed["worktree_dirty_on_exit"] is dirty
+    if matched:
+        assert observed["remote_head_sha"] == head
+        assert run_git(sandbox.remote, "rev-parse", f"refs/heads/{matched}") == head
+    else:
+        assert observed["remote_head_sha"] == (record["worktree_base_sha"] if target not in {None, "prefix"} else None)
 
 
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
@@ -545,7 +686,8 @@ def test_selected_sibling_repo_keeps_records_in_shared_store(sandbox):
     assert run_git(private, "branch", "--show-current") == "main"
 
 
-def test_dry_run_and_invalid_flags_create_nothing(sandbox):
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_dry_run_and_invalid_flags_create_nothing(sandbox, mode):
     before = run_git(sandbox.repo, "branch", "--list")
     result = sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--prompt", "preview", "--dry-run")
     plan = json.loads(result.stdout)
@@ -560,7 +702,8 @@ def test_dry_run_and_invalid_flags_create_nothing(sandbox):
     for branch in ("unsafe..branch", "origin/feature", "refs/heads/feature", "bad:name", ""):
         sandbox.cli(
             "dispatch", "--agent", "sol", "--model", "echo", "--prompt", "x",
-            "--branch", branch, "--pinned-head", run_git(sandbox.repo, "rev-parse", "HEAD"), expected=2,
+            "--mode", mode, "--branch", branch,
+            "--pinned-head", run_git(sandbox.repo, "rev-parse", "HEAD"), expected=2,
         )
     assert run_git(sandbox.repo, "branch", "--list") == before
     assert not sandbox.tasks.exists()
@@ -916,41 +1059,48 @@ def test_environment_contains_only_context_and_selected_auth(spec, monkeypatch, 
         assert "MUSE_API_KEY" not in env
 
 
-@pytest.mark.parametrize("process_key", ["stub-process-key", ""])
-def test_cursor_child_env_present_process_key_wins_over_env_file(spec, monkeypatch, process_key):
+def test_cursor_child_env_present_process_key_wins_over_env_file(spec, monkeypatch):
     loader = Mock(return_value="stub-file-key")
     monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
-    monkeypatch.setenv("CURSOR_API_KEY", process_key)
+    monkeypatch.setenv("CURSOR_API_KEY", "stub-process-key")
 
     env = child_env(dataclasses.replace(spec, agent="cursor"))
 
-    assert env["CURSOR_API_KEY"] == process_key
+    assert env["CURSOR_API_KEY"] == "stub-process-key"
     loader.assert_not_called()
 
 
-def test_cursor_child_env_falls_back_to_env_file_key_when_process_env_lacks_it(spec, monkeypatch):
+@pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
+def test_cursor_child_env_missing_or_blank_process_key_falls_back_to_env_file(spec, monkeypatch, process_key):
     loader = Mock(return_value="stub-file-key")
     monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
-    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
 
     env = child_env(dataclasses.replace(spec, agent="cursor"))
 
     assert env["CURSOR_API_KEY"] == "stub-file-key"
-    assert "CURSOR_API_KEY" not in os.environ
+    assert os.environ.get("CURSOR_API_KEY") == process_key
     loader.assert_called_once_with()
 
 
-def test_cursor_child_env_without_process_or_env_file_key_forwards_nothing(spec, monkeypatch):
+@pytest.mark.parametrize("process_key", [None, "", " \t\n"], ids=["missing", "blank", "whitespace_only"])
+def test_cursor_child_env_missing_or_blank_key_without_file_key_forwards_nothing(spec, monkeypatch, process_key):
     loader = Mock(return_value=None)
     monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
-    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    if process_key is None:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    else:
+        monkeypatch.setenv("CURSOR_API_KEY", process_key)
 
     assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent="cursor"))
     loader.assert_called_once_with()
 
 
 @pytest.mark.parametrize("agent", ["codex", "claude", "agy", "muse", "opencode", "hermes"])
-@pytest.mark.parametrize("process_key", [None, "stub-process-key"])
+@pytest.mark.parametrize("process_key", [None, "stub-process-key", "", " \t\n"])
 def test_non_cursor_child_env_never_loads_or_forwards_cursor_key(spec, monkeypatch, agent, process_key):
     loader = Mock(return_value="stub-file-key")
     monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._load_cursor_api_key_from_env_file", loader)
@@ -961,6 +1111,16 @@ def test_non_cursor_child_env_never_loads_or_forwards_cursor_key(spec, monkeypat
 
     assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent=agent))
     loader.assert_not_called()
+
+
+def test_cursor_child_env_corrupt_invalid_utf8_file_forwards_no_key_without_raising(spec, monkeypatch, tmp_path, capsys):
+    key_file = tmp_path / "api.key.env"
+    key_file.write_bytes(b"CURSOR_API_KEY=stub-\xff-key\n")
+    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor._cursor_api_key_env_path", lambda: key_file)
+
+    assert "CURSOR_API_KEY" not in child_env(dataclasses.replace(spec, agent="cursor"))
+    assert capsys.readouterr() == ("", "")
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():

@@ -29,19 +29,20 @@ Every npm/npx call through the shim runs with umask 022 to prevent the tree from
 
 ## Cleanup at enqueue
 
-After a successful enqueue, the shared publisher immediately runs the common
-reaper for clean pushed terminal worktrees bound to that repository, PR head
-branch, exact approved head and canonical creator/cohort. It rechecks current
-queue membership and head, activity, publication and output retrieval before
-removal. Missing or conflicting proof retains the tree with an owner and next
-condition. Already-queued unchanged heads reconcile cleanup without another
-enqueue. Failed or unknown publication never authorizes cleanup.
+The shared publisher returns after authenticated enqueue or already-queued
+reconciliation and the existing publication gates. Neither path runs the global
+cleanup inventory or common reaper, creates a cleanup receipt, or emits an
+`enqueue-cleanup` line. Known enqueue success keeps its return code and raw
+transport output. Already-queued unchanged heads return without another enqueue.
+The keeper uses the same publisher path. Failed or unknown publication never
+authorizes cleanup.
 
-Publication and cleanup have separate results. Known enqueue success keeps its
-return code and raw transport output. Read the durable common receipt named by
-`enqueue-cleanup removed=<count> retained=<count> receipt=<relative-path>` on
-stderr. Retained, pending or unavailable cleanup blocks full delivery; it does
-not authorize another enqueue. The keeper uses the same publisher path.
+The existing common reaper timer and standard post-task and post-merge lifecycle
+own cleanup and its durable receipts. All common ownership, liveness,
+preservation and branch guards still apply. Publisher queue success does not
+prove cleanup complete. Retained, pending or unavailable cleanup blocks full
+delivery; it does not authorize another enqueue. Post-merge common closeout
+remains mandatory.
 A repair starts in a fresh managed worktree from the pushed branch.
 Local branch removal uses supported safe cleanup only after its tree is gone
 and publication is proven. Remote branches remain until `MERGED`.
@@ -1317,8 +1318,9 @@ The collector sweeps both repository roots. Before installing the service
 template, replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@`.
 
 The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
-`--apply`, the same as macOS launchd. Its timer fires every 4 hours
-(`OnUnitActiveSec=4h`, matching the launchd cadence below) using the existing
+`--apply`, the same as macOS launchd. Its timer fires hourly
+(`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min`
+and `Persistent=true`, using the existing
 cleanup wrapper and P0 reaper; this adds no daemon or cleanup class, and the
 denser cadence does not loosen the dirty/open-PR/unreadable-GitHub-state
 guards. See `packaging/systemd/README.md` for enable and disable

@@ -536,7 +536,7 @@ def test_new_inputs_after_done_attempt_get_fresh_task_id(tmp_path, a1_valid_fixt
     ledger = tmp_path / "lesson-1.regeneration.yaml"
 
     def refusing_seat(task_id, prompt_file, result_file):
-        # Mirror delegate.py: a task ID that already has a result is never reused.
+        # Mirror dispatch.py: a task ID that already has a result is never reused.
         if result_file.exists():
             raise WriterCallError(f"task_id {task_id!r} is already done")
         result_file.write_text(yaml.safe_dump(draft, allow_unicode=True), encoding="utf-8")
@@ -608,7 +608,7 @@ def test_writer_inputs_must_be_complete(tmp_path, passing_preflight, key):
 
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
 def test_real_dispatch_path_with_fake_delegate(tmp_path, a1_valid_fixture, passing_preflight, effort):
-    """Finding 7 & MAJOR D: Test real dispatch path through fake delegate.py writing to a different root, verifying wait JSON parsing."""
+    """Finding 7 & MAJOR D: Test real dispatch path through fake dispatch.py writing to a different root, verifying wait JSON parsing."""
     draft, types = a1_valid_fixture
     raw_yaml = yaml.safe_dump(draft, allow_unicode=True)
 
@@ -618,7 +618,7 @@ def test_real_dispatch_path_with_fake_delegate(tmp_path, a1_valid_fixture, passi
     other_root.mkdir()
 
     calls_log = tmp_path / "delegate_calls.jsonl"
-    fake_delegate_script = tmp_path / "fake_delegate.py"
+    fake_delegate_script = tmp_path / "fake_dispatch.py"
 
     fake_delegate_script.write_text(
         f"""
@@ -753,7 +753,7 @@ sys.exit(1)
     prompt_file = tmp_path / "prompt.md"
     prompt_file.write_text("Test prompt", encoding="utf-8")
 
-    with pytest.raises(WriterCallError, match=r"delegate\.py wait failed"):
+    with pytest.raises(WriterCallError, match=r"dispatch\.py wait failed"):
         dispatch_writer(
             writer="codex",
             level="a1",
@@ -780,7 +780,7 @@ sys.exit(1)
     ],
 )
 def test_real_dispatch_path_malformed_status_fails(tmp_path, passing_preflight, wait_stdout, expected_err):
-    """MAJOR D: A malformed status or missing result_file from delegate.py wait fails loudly."""
+    """MAJOR D: A malformed status or missing result_file from dispatch.py wait fails loudly."""
     fake_delegate = tmp_path / f"fake_delegate_{abs(hash(wait_stdout))}.py"
     fake_delegate.write_text(
         f"""

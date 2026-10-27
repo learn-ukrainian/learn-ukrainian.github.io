@@ -282,17 +282,70 @@ def registered_worktrees(repo_root: Path) -> set[Path] | None:
         return None
 
 
-def tree_facts(path: Path) -> tuple[int, float, float, str | None]:
+def _disposable_git_directory(path: Path) -> bool:
+    """Recognize ordinary fixture metadata without linked or external Git storage.
+
+    The caller has checked every node's owner, type, links and mounts. Keep
+    unfamiliar configuration rather than guessing whether it redirects Git.
+    Parse only this config, without includes, global config or repository discovery.
+    """
+    try:
+        if not all(stat.S_ISDIR((path / name).lstat().st_mode) for name in ("objects", "refs")):
+            return False
+        if not stat.S_ISREG((path / "HEAD").lstat().st_mode):
+            return False
+        if any(os.path.lexists(path / name) for name in (
+            "commondir", "gitdir", "worktrees", "config.worktree",
+            "objects/info/alternates", "objects/info/http-alternates",
+        )):
+            return False
+        fd = os.open(path / "config", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(fd, "rb") as config:
+            if not stat.S_ISREG(os.fstat(config.fileno()).st_mode):
+                return False
+            content = config.read(1024 * 1024 + 1)
+        if len(content) > 1024 * 1024:
+            return False
+        result = subprocess.run(
+            ["git", "config", "--file", "-", "--no-includes", "--null", "--list"],
+            input=content, capture_output=True, check=False, timeout=15,
+            env={"PATH": os.environ.get("PATH", os.defpath)},
+        )
+        if result.returncode:
+            return False
+        ordinary = {
+            b"core.repositoryformatversion", b"core.filemode", b"core.bare", b"core.logallrefupdates",
+            b"core.ignorecase", b"core.precomposeunicode", b"user.name", b"user.email",
+        }
+        for field in result.stdout.split(b"\0"):
+            if not field:
+                continue
+            key, _, value = field.partition(b"\n")
+            if key not in ordinary:
+                return False
+            if key == b"core.bare" and value.lower() != b"false":
+                return False
+            if key == b"core.repositoryformatversion" and value != b"0":
+                return False
+        return True
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float, float, str | None]:
     """Allocated bytes, latest write and latest change; refuse Git metadata, foreign owners and mounts.
 
     Never follow symlinks or cross devices. In-tree Git metadata also protects
-    worktrees registered with a repository other than this checkout. A file
+    worktrees registered with a repository other than this checkout. Only a
+    managed run's proven dead owner permits self-contained fixture metadata.
+    General scratch and ledger purges retain the default Git protection. A file
     can be a bind-mount target, so every node is checked against the mounts.
     """
     allocated = 0
     newest = 0.0
     changed = 0.0
     reason = None
+    git_directories = []
     try:
         mounts = mount_points()
         if mounts is None:
@@ -319,12 +372,19 @@ def tree_facts(path: Path) -> tuple[int, float, float, str | None]:
             if info.st_uid != os.geteuid():
                 reason = reason or "foreign_tree_owner"
             if node.name == ".git":
+                if disposable_git and stat.S_ISDIR(info.st_mode):
+                    git_directories.append(node)
+                else:
+                    reason = reason or "git_metadata"
+            if disposable_git and stat.S_ISLNK(info.st_mode) and ".git" in node.relative_to(path).parts:
                 reason = reason or "git_metadata"
             if info.st_dev != device or str(node) in mounts:
                 reason = reason or "mount_point"
                 continue
             if stat.S_ISDIR(info.st_mode):
                 pending.extend(node.iterdir())
+        if reason is None and any(not _disposable_git_directory(node) for node in git_directories):
+            reason = "git_metadata"
     except OSError:
         return allocated, newest, changed, "tree_unknown"
     return allocated, newest, changed, reason

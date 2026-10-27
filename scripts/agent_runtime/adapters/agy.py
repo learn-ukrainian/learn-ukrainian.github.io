@@ -145,8 +145,7 @@ _logger = logging.getLogger(__name__)
 # its idle-wait diagnostic only on some paths, so its absence proves nothing
 # (#8502 r3). A run whose transcript cannot be bound has no evidence and fails
 # as unconfirmed. Failures lead ``stderr_excerpt`` with a reason code (the
-# dispatch's machine-readable ``last_error``); ``delegate.py`` keys on these
-# codes to refuse auto-finalizing the run as ``done``. A passing run whose
+# dispatch's machine-readable ``last_error``). A passing run whose
 # final reply still reads as pending leads ``stderr_excerpt`` with
 # ``AGY_INTERIM_LANGUAGE_WARNING`` instead — a diagnostic, never a failure.
 AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
@@ -2637,7 +2636,7 @@ def _with_language_warning(detail: str, stderr_text: str | None) -> str:
 
     The code sits alone on the first line, like the failure reason codes, so
     task records and usage rows carry it; it is not in
-    ``AGY_INCOMPLETE_RUN_REASONS``, so ``delegate.py`` still settles the run.
+    ``AGY_INCOMPLETE_RUN_REASONS`` and does not indicate a failed run.
     """
     _logger.warning(AGY_INTERIM_LANGUAGE_WARNING)
     return "\n".join(part for part in (AGY_INTERIM_LANGUAGE_WARNING, detail, stderr_text) if part)[:500]

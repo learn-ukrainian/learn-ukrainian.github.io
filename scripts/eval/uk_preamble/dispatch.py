@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -18,6 +19,8 @@ from typing import Any, Protocol
 
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common.repo_root import main_checkout_root
+from scripts.dispatcher.cli import build_parser
+from scripts.guardrails import worktree_containment
 from scripts.lib.rules_core import RulesCoreError
 
 from .common import Seat, sha256_bytes, sha256_text
@@ -237,17 +240,35 @@ class DelegateComposer:
     """
 
     def __init__(self, delegate: Any, cwd: Path, rules_seat: str = RULES_SEAT) -> None:
-        validated, error = delegate._validate_caller_path("--cwd", str(cwd), resolve=delegate._resolve_cwd_path)
-        if validated is None:
-            raise DispatchError(error or f"--cwd {cwd} refused")
-        if validated == delegate._REPO_ROOT.resolve():
+        validated = _legacy_cwd(cwd)
+        try:
+            main = worktree_containment.resolve_main_root(validated if validated.exists() else validated.parent)
+        except worktree_containment.NotAGitRepositoryError:
+            main = None
+        if validated == main:
             raise DispatchError(
                 "primary --worker-cwd would redirect each read-only task to a different automatic worktree; "
                 "pass an existing isolated Git worktree with --worker-cwd to preserve the paired frame"
             )
         self.delegate = delegate
         self.rules_seat = rules_seat
-        self.worktree: Path | None = delegate._resolve_verified_worktree_path(validated)
+        self.worktree = (
+            next(
+                (
+                    path
+                    for path in worktree_containment.registered_worktrees(main)
+                    if path != main and validated.is_relative_to(path)
+                ),
+                None,
+            )
+            if main is not None
+            else None
+        )
+        if self.worktree is not None and any(
+            self.worktree.parts[i : i + 3] == (".worktrees", "dispatch", "acp")
+            for i in range(len(self.worktree.parts) - 2)
+        ):
+            self.worktree = None
         if self.worktree is None:
             raise DispatchError(
                 "--worker-cwd must resolve inside a registered added Git worktree; "
@@ -283,6 +304,22 @@ class DelegateComposer:
             raise DispatchError(f"cannot compute delegate's composition: {exc}") from exc
         worktree = str(self.worktree) if self.worktree is not None else None
         return composition_of(composed, prompt, cwd=self.cwd, worktree_path=worktree, blocks=blocks)
+
+
+def _legacy_cwd(cwd: Path) -> Path:
+    """Preserve legacy raw/resolved path validation without loading the CLI runtime."""
+
+    def check(value: str) -> None:
+        if any(unicodedata.category(char) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for char in value):
+            raise DispatchError("--cwd refused: path contains control or format characters")
+
+    check(str(cwd))
+    try:
+        resolved = cwd.expanduser().resolve()
+    except (OSError, RuntimeError) as exc:
+        raise DispatchError("--cwd refused: path cannot be resolved") from exc
+    check(str(resolved))
+    return resolved
 
 
 def _git(cwd: Path, *args: str) -> str | None:
@@ -333,20 +370,19 @@ class Dispatcher(Protocol):
 
 
 class DelegateDispatcher:
-    """Evaluation dispatcher, retaining the public constructor used by the CLI and injected fakes."""
+    """Evaluation dispatcher used by the CLI and injected fakes."""
 
     def __init__(
         self,
         *,
         python: str,
-        delegate: Path,
+        dispatch_script: Path,
         cwd: Path,
         hard_timeout: int = 3600,
         review_profile: str | None = None,
     ) -> None:
         self.python = python
-        canonical = Path(__file__).resolve().parents[2] / "delegate.py"
-        self.delegate = canonical.with_name("dispatch.py") if delegate.resolve() == canonical else delegate
+        self.dispatch_script = dispatch_script
         self.cwd = cwd
         self.hard_timeout = hard_timeout
         self.review_profile = review_profile
@@ -354,14 +390,18 @@ class DelegateDispatcher:
         self.legacy_resume = False
 
     def _run(self, *args: str, timeout: int = CONTROL_TIMEOUT) -> subprocess.CompletedProcess[str]:
-        """Run one delegate subcommand; a timeout is a DispatchError (pending markers survive for resume)."""
+        """Run one dispatch subcommand; a timeout preserves pending markers for resume."""
         try:
             return subprocess.run(
-                [self.python, str(self.delegate), *args], capture_output=True, text=True, check=False, timeout=timeout
+                [self.python, str(self.dispatch_script), *args],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=timeout,
             )
         except subprocess.TimeoutExpired as exc:
             raise DispatchError(
-                f"delegate {args[0]} {args[1] if len(args) > 1 else ''} timed out after {timeout}s"
+                f"dispatch {args[0]} {args[1] if len(args) > 1 else ''} timed out after {timeout}s"
             ) from exc
 
     def _dispatch_args(
@@ -397,7 +437,14 @@ class DelegateDispatcher:
                 self._dispatch_args(task_id, seat, kind, prompt_path, legacy=True)
             )
             return delegate.dispatch_args_sha256(args)
-        return sha256_text(json.dumps(self._dispatch_args(task_id, seat, kind, prompt_path), ensure_ascii=False))
+        argv = self._dispatch_args(task_id, seat, kind, prompt_path)
+        # Keep the caller fingerprint byte-for-byte: manifests persist the argv JSON,
+        # not the parser Namespace. Parsing only verifies the replacement CLI contract.
+        try:
+            build_parser().parse_args(argv)
+        except SystemExit as exc:
+            raise DispatchError("evaluation arguments are not supported by scripts/dispatch.py") from exc
+        return sha256_text(json.dumps(argv, ensure_ascii=False))
 
     def legacy_inputs(self, task_id: str, seat: Seat, kind: str, path: Path, prompt: str) -> tuple[dict, str]:
         from scripts import delegate
@@ -433,7 +480,7 @@ class DelegateDispatcher:
             raise DispatchError("v2 refuses task-id replacement; start a new evaluation run tag")
         proc = self._run(*args, timeout=SPAWN_TIMEOUT)
         if proc.returncode != 0:
-            raise DispatchError(f"delegate dispatch {task_id} exited {proc.returncode}: {proc.stderr.strip()[-800:]}")
+            raise DispatchError(f"dispatch {task_id} exited {proc.returncode}: {proc.stderr.strip()[-800:]}")
         lines = proc.stdout.splitlines()
         if len(lines) != 2 or lines[0] != task_id or not lines[1].strip():
             raise DispatchError("dispatch did not return the task id and run nonce")
@@ -441,7 +488,7 @@ class DelegateDispatcher:
         return nonce
 
     def _existing_record(self, task_id: str) -> dict[str, Any] | None:
-        """The task record, or None when delegate reports that none exists.
+        """The task record, or None when dispatch reports that none exists.
 
         Unreadable status output refuses the caller. A missing record is not an error.
         """
@@ -479,14 +526,14 @@ class DelegateDispatcher:
         try:
             state = json.loads(proc.stdout)
         except ValueError as exc:
-            raise DispatchError(f"delegate status {task_id}: unreadable output ({exc})") from exc
+            raise DispatchError(f"dispatch status {task_id}: unreadable output ({exc})") from exc
         failed_v2 = (
             isinstance(state, dict)
             and state.get("schema_version") == 2
             and state.get("status") in {"failed", "timeout", "crashed", "cancelled"}
         )
         if proc.returncode != 0 or not isinstance(state, dict) or (state.get("error") and not failed_v2):
-            raise DispatchError(f"delegate status {task_id}: {proc.stdout.strip()[-400:]}")
+            raise DispatchError(f"dispatch status {task_id}: {proc.stdout.strip()[-400:]}")
         return state
 
     def wait(self, task_id: str, run_nonce: str | None) -> TaskOutcome:

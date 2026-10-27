@@ -1,8 +1,13 @@
 import bz2
 import sqlite3
+from io import BytesIO
 from pathlib import Path
+from unittest.mock import Mock
 from xml.sax.saxutils import escape
 
+import pytest
+
+from scripts.ingest import wiktionary_etymology_ingest as wiktionary
 from scripts.ingest.wiktionary_etymology_ingest import (
     WiktionaryPage,
     ensure_wiktionary_etymology_schema,
@@ -30,6 +35,71 @@ def _write_dump(tmp_path: Path, pages: list[tuple[str, str, str]]) -> Path:
     with bz2.open(path, "wt", encoding="utf-8") as fh:
         fh.write(f'<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.11/">\n{body}\n</mediawiki>')
     return path
+
+
+@pytest.mark.parametrize(
+    ("user_agent", "expected_header"),
+    [
+        (
+            None,
+            "learn-ukrainian-wiktionary-etymology/1.0 "
+            "(noncommercial educational lookup; issue 2882; "
+            "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)",
+        ),
+        (
+            "AtlasTransportTest/2.0 (+https://example.org/contact)",
+            "AtlasTransportTest/2.0 (+https://example.org/contact)",
+        ),
+    ],
+    ids=["default-public-contact", "explicit-override"],
+)
+def test_download_dump_request_omitted_contact_or_clobbered_override(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    user_agent: str | None,
+    expected_header: str,
+) -> None:
+    payload = _write_dump(tmp_path, []).read_bytes()
+    transport = Mock(return_value=BytesIO(payload))
+    monkeypatch.setattr(wiktionary, "urlopen", transport)
+    destination = tmp_path / "download" / "dump.xml.bz2"
+
+    if user_agent is None:
+        wiktionary.download_dump(destination)
+    else:
+        wiktionary.download_dump(destination, user_agent=user_agent)
+
+    request = transport.call_args.args[0]
+    assert request.get_header("User-agent") == expected_header
+    assert request.full_url == (
+        "https://dumps.wikimedia.org/ukwiktionary/20260601/"
+        "ukwiktionary-20260601-pages-articles.xml.bz2"
+    )
+    assert transport.call_count == 1
+    assert transport.call_args.kwargs == {"timeout": 120}
+    assert destination.read_bytes() == payload
+
+
+def test_downloaded_unpinned_archive_is_rejected_before_database_write(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = _write_dump(tmp_path, []).read_bytes()
+    monkeypatch.setattr(wiktionary, "urlopen", Mock(return_value=BytesIO(payload)))
+    destination = tmp_path / "download" / "dump.xml.bz2"
+    database = tmp_path / "sources.db"
+
+    with pytest.raises(
+        ValueError,
+        match="sha256 mismatch: expected "
+        "a3544dc777eb152d0bdb57c394c0cf7074f0f0a3e70b0ec953449055dea5d604, got ",
+    ):
+        wiktionary.main([
+            "--download", "--dump", str(destination),
+            "--db", str(database), "--lemma", "fixture",
+        ])
+
+    assert destination.read_bytes() == payload
+    assert not database.exists()
 
 
 def test_wiktionary_schema_and_ingest_are_idempotent_with_phrase_skip(tmp_path: Path) -> None:

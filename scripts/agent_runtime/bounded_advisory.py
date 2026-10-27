@@ -13,9 +13,7 @@ deliberate forgery by a process that can rewrite task records, results or
 launcher code: such a process can recompute every digest kept here. Nothing in
 this module authenticates who wrote a record or result.
 
-The envelope is accepted only by reference to the advisor's task
-(``delegate.py dispatch --advisory-task <task-id>``), never as a free file. The
-advisor task must have run with ``--advisory-role bounded_advisory_envelope``
+An envelope references the advisor's task, never a free file. The advisor task must have run with ``--advisory-role bounded_advisory_envelope``
 on the advisor model, read-only, and finished ``done``. Its canonical result
 must hold exactly one fenced ``advisory-envelope`` JSON object with every
 catalog ``output_fields`` key, typed and meaningful, plus the
@@ -40,21 +38,12 @@ The worker also compares every admitted execution parameter
 provider, harness, PR opening) with what it is about to run, and with the bound
 dispatch arguments that set them, before any provider call.
 
-Two completion gates run after the worker exits; neither stops a worker while
-it runs. The envelope ceilings: ``delegate.py`` measures a bounded worker's
-changes and fails the task when either ceiling is exceeded or cannot be
-measured. The content exemption: a Gemini Flash write dispatch admitted as
-Ukrainian content classifies its owned directories and globs by the files they
-hold at admission, so ``delegate.py`` classifies every path the worker changed
-(``exempt_change_problems``) and fails the task, never ``done``, when one is
-code or the changes cannot be read.
+Completion validators check measured changes against the envelope ceilings.
+The content exemption classifies changed paths via ``exempt_change_problems``
+and refuses code changes or changes that cannot be read.
 
 This module is pure validation: it reads task records, results and the
 repository tree, and raises ``AdvisoryRefused`` with a typed code.
-``delegate.py`` computes the binding digest, calls it after route resolution
-and again just before the task record is published, re-verifies it in the
-worker before start and at the provider handoff, and runs both completion
-gates at finalize.
 """
 
 from __future__ import annotations

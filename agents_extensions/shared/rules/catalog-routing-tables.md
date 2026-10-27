@@ -42,9 +42,11 @@ Rank follows the catalog; entries at the same rank are peers.
 | medium | 4 | grok-4.7-cursor-fallback | grok-4.7 |
 | medium | 5 | claude-sonnet-5-5 | claude-sonnet-5-5 |
 | medium | 6 | gemini-3.8-flash-high | gemini-3.8-flash-high |
+| medium | 7 | muse | muse-wonder-full-1.0 |
 | low | 1 | openai_frontier | gpt-6.1-sol |
 | low | 2 | claude-opus-5-5 | claude-opus-5-5 |
 | low | 3 | grok-4.7 | grok-4.7 |
 | low | 4 | grok-4.7-cursor-fallback | grok-4.7 |
 | low | 5 | claude-sonnet-5-5 | claude-sonnet-5-5 |
 | low | 6 | gemini-3.8-flash-high | gemini-3.8-flash-high |
+| low | 7 | muse | muse-wonder-full-1.0 |

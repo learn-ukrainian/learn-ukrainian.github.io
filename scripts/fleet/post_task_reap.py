@@ -9,8 +9,9 @@ process holds it.
 
 A terminal dispatch worktree is reaped even when its task never opened a GitHub
 PR (measure-only, timeout, cancelled, …) as long as ownership, cleanliness, and
-dead-PID guards all hold and no open PR is present.  The deletion itself always
-goes through the canonical P0 reaper boundary.
+dead-PID guards all hold. Pushed, clean author trees may be reaped while their
+PR is open; their branch tip must still match origin. The deletion itself
+always goes through the canonical P0 reaper boundary.
 
 Default mode is dry-run; pass --apply to delete anything.
 """
@@ -39,6 +40,7 @@ from scripts.orchestration import (
     worktree_claims,
     worktree_paths,
 )
+from scripts.orchestration.dead_worker_state import process_is_zombie
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -232,7 +234,7 @@ def _git_worktree_lock_reason(path: Path, repo_root: Path) -> str | None:
 
 
 def _pid_alive(pid: int) -> bool | None:
-    """Return True if ``pid`` is alive, False if dead, None if probe failed.
+    """Return True if ``pid`` is alive, False if dead/zombie, None if probe failed.
 
     Fail-closed callers must treat ``None`` as 'retain'.
     """
@@ -246,7 +248,7 @@ def _pid_alive(pid: int) -> bool | None:
         return True
     except OSError:
         return None
-    return True
+    return not process_is_zombie(pid)
 
 
 def _probe_path_liveness(path: Path) -> bool | None:
@@ -550,6 +552,13 @@ def _reap_main_worktree(
     if retrieval is not None:
         return retrieval
 
+    if state.get("mode") != "read-only" and state.get("push_state") == "pushed":
+        return _reap_pushed_author(
+            task_id=task_id, state=state, bound_path=bound_path,
+            tasks_dir=tasks_dir, repo_root=repo_root, apply=apply,
+            no_lifecycle_observation=no_lifecycle_observation,
+        )
+
     row = _reap_via_canonical(
         repo_root=repo_root,
         bound_path=bound_path,
@@ -585,6 +594,67 @@ def _reap_main_worktree(
             branch=row.get("branch") or f"{expected_agent}/{task_id}",
         )
     return row
+
+
+def _reap_pushed_author(
+    *, task_id: str, state: dict[str, Any], bound_path: Path,
+    tasks_dir: Path, repo_root: Path, apply: bool,
+    no_lifecycle_observation: str | None = None,
+) -> dict[str, Any]:
+    """Use the common PR-independent remover, retaining its locked rechecks."""
+    def guard(info, tree, census):
+        current = _load_task_state(tasks_dir, task_id)
+        if (
+            current is None
+            or current.get("run_nonce") != state.get("run_nonce")
+            or current.get("status") not in _TERMINAL_STATUSES
+            or current.get("mode") == "read-only"
+            or current.get("push_state") != "pushed"
+            or current.get("worktree_dirty_on_exit") is not False
+            or _worktree_path_from_state(current, repo_root=repo_root) != bound_path
+        ):
+            return "settled pushed clean author proof unavailable"
+        remote_head = dict(census.branches).get(info.branch)
+        head = _run_git(["rev-parse", "HEAD"], cwd=tree)
+        if not remote_head or head.returncode or head.stdout.strip() != remote_head:
+            return "HEAD differs from branch remote head"
+        return None
+
+    try:
+        observations = (
+            lifecycle_observation.before_reap(
+                repo_root,
+                bound_path,
+                tasks_dir=tasks_dir,
+                no_lifecycle_observation=no_lifecycle_observation,
+            )
+            if apply
+            else []
+        )
+    except Exception as exc:
+        return {
+            "path": str(bound_path),
+            "action": "skipped",
+            "reason": f"lifecycle observation refused: {exc}",
+            "error": str(exc),
+        }
+    report = reap_worktrees.reap_clean_pushed(
+        repo_root=repo_root, dry_run=not apply, target_paths=[bound_path], enqueue_guard=guard,
+    )
+    outcome = next(
+        (item for item in (*report.removed, *report.skipped)
+         if (repo_root / item.path).resolve() == bound_path), None,
+    )
+    return {
+        "path": str(bound_path),
+        "lifecycle_observations": observations,
+        "action": outcome.action if outcome else "retained",
+        "reason": outcome.reason if outcome else report.refusal or "common reaper did not evaluate bound path",
+        "error": None,
+        "branch": outcome.branch if outcome else None,
+        "preserved_artifacts": outcome.preserved_artifacts if outcome else None,
+        "freed_bytes": outcome.freed_bytes if outcome else 0,
+    }
 
 
 def _retrieve_retained_reuse(

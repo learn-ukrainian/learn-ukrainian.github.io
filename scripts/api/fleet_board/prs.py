@@ -24,10 +24,7 @@ from scripts.orchestration.integration_sweep import TRUSTED_ASSOCIATIONS, lookup
 from scripts.orchestration.merge_queue_keeper import (
     KeeperError,
     _check_state,
-    _codeql_rows,
-    _evaluate_checks,
     _hold,
-    _latest,
     _load,
 )
 
@@ -114,7 +111,6 @@ class GithubView:
     pulls: tuple[Pull, ...]
     comments: Mapping[int, tuple[dict[str, Any], ...] | None]
     checks: Mapping[str, tuple[dict[str, Any], ...] | None]
-    files: Mapping[int, tuple[dict[str, Any], ...]] = field(default_factory=dict)
     queued: Mapping[int, bool] = field(default_factory=dict)
     queue_failed: bool = False
     age_s: float = 0.0
@@ -398,40 +394,6 @@ def _pull_from_rest(raw: Mapping[str, Any]) -> Pull | None:
     )
 
 
-def _files(client: Any, repo: str, number: int) -> tuple[dict[str, Any], ...] | None:
-    try:
-        rows, _age, _stale = _pages(client, f"repos/{repo}/pulls/{number}/files?per_page=100")
-    except GithubReadError:
-        return None
-    return tuple(rows)
-
-
-class _FileSource:
-    def __init__(self, files: tuple[dict[str, Any], ...] | list[dict[str, Any]]) -> None:
-        self._files = list(files)
-
-    def files(self, _number: int) -> list[dict[str, Any]]:
-        return self._files
-
-
-def _ci_state(
-    number: int,
-    head: str,
-    checks: tuple[dict[str, Any], ...] | None,
-    files: tuple[dict[str, Any], ...] | None,
-) -> str:
-    if checks is None:
-        return "CI-unknown"
-    rows = list(checks)
-    try:
-        state = _check_state(rows, head)
-        if state == "CodeQL-pending" and _codeql_rows(rows, head) and files is not None:
-            state = _evaluate_checks(_FileSource(files), number, head, rows)
-    except KeeperError:
-        return "CI-unknown"
-    return state
-
-
 def _ci_label(state: str) -> str | None:
     if state == "ok":
         return "green"
@@ -439,7 +401,7 @@ def _ci_label(state: str) -> str | None:
         return "red"
     if state == "CI-unknown":
         return None
-    if state.startswith("CI-pending-") or state == "CodeQL-pending":
+    if state.startswith("CI-pending-"):
         return "pending"
     return None
 
@@ -458,37 +420,6 @@ def _commit_stamp(client: Any, repo: str, sha: str) -> tuple[str | None, float, 
             if stamp is not None:
                 return stamp, age, stale, True
     return None, age, stale, True
-
-
-def _failing_check_names(
-    number: int,
-    head: str,
-    checks: tuple[dict[str, Any], ...] | None,
-    files: tuple[dict[str, Any], ...] | None,
-) -> list[str]:
-    """Names of required checks at ``head`` that finished without succeeding."""
-    if checks is None:
-        return []
-    grouped: dict[str, list[dict[str, Any]]] = {}
-    for row in checks:
-        if not isinstance(row, dict) or row.get("head_sha") != head or not isinstance(row.get("name"), str):
-            return []
-        grouped.setdefault(row["name"], []).append(row)
-    required = ["CI Gate", *[name for name in grouped if name.startswith("Analyze (")]]
-    failed: list[str] = []
-    for name in required:
-        group = grouped.get(name, [])
-        if not group:
-            continue
-        latest = _latest(group)
-        if latest.get("status") == "completed" and latest.get("conclusion") != "success":
-            failed.append(name)
-    state = _ci_state(number, head, checks, files)
-    if state.startswith("CI-red-"):
-        name = state.removeprefix("CI-red-")
-        if name not in failed:
-            failed.append(name)
-    return sorted(set(failed))
 
 
 def _verdict_at(comments: tuple[dict[str, Any], ...] | None, login: str | None) -> datetime | None:
@@ -515,25 +446,6 @@ def _verdict_at(comments: tuple[dict[str, Any], ...] | None, login: str | None) 
     return latest
 
 
-def _gate_label(checks: tuple[dict[str, Any], ...] | None, head: str) -> str | None:
-    if checks is None:
-        return None
-    rows: list[dict[str, Any]] = []
-    for row in checks:
-        if not isinstance(row, dict) or row.get("head_sha") != head or not isinstance(row.get("name"), str):
-            return None
-        if row["name"] == "CI Gate":
-            rows.append(row)
-    if not rows:
-        return "pending"
-    latest = _latest(rows)
-    if latest.get("status") != "completed":
-        return "pending"
-    if latest.get("conclusion") != "success":
-        return "red"
-    return "green"
-
-
 def _fetch_github(repo: str, client: Any) -> GithubView:
     pulls_raw, age, stale = _pages(client, f"repos/{repo}/pulls?state=open&per_page=100&sort=created&direction=desc")
     failed = False
@@ -556,7 +468,6 @@ def _fetch_github(repo: str, client: Any) -> GithubView:
     pulls: list[Pull] = []
     comments: dict[int, tuple[dict[str, Any], ...] | None] = {}
     checks: dict[str, tuple[dict[str, Any], ...] | None] = {}
-    files: dict[int, tuple[dict[str, Any], ...]] = {}
     commit_at: dict[str, str | None] = {}
     for raw in pulls_raw:
         if raw.get("mergeable_state") is None and type(raw.get("number")) is int:
@@ -590,14 +501,6 @@ def _fetch_github(repo: str, client: Any) -> GithubView:
         checks[pull.head_sha] = check_rows
         if check_rows is None:
             failed = True
-            continue
-        state = _check_state(list(check_rows), pull.head_sha)
-        if state == "CodeQL-pending" and _codeql_rows(list(check_rows), pull.head_sha):
-            listed = _files(client, repo, pull.number)
-            if listed is None:
-                failed = True
-            else:
-                files[pull.number] = listed
 
     queued, queue_failed, queue_age, queue_stale = _queue_flags(client, repo)
     age, stale = max(age, queue_age), stale or queue_stale
@@ -610,7 +513,6 @@ def _fetch_github(repo: str, client: Any) -> GithubView:
         pulls=tuple(pulls),
         comments=comments,
         checks=checks,
-        files=files,
         queued=queued,
         queue_failed=queue_failed,
         age_s=age,
@@ -887,9 +789,8 @@ def assemble_prs(
     for pull in sorted(view.pulls, key=lambda item: item.number):
         drop_key = f"{pull.number}:{pull.head_sha}"
         checks = view.checks.get(pull.head_sha)
-        files = view.files.get(pull.number)
-        ci = _ci_label(_ci_state(pull.number, pull.head_sha, checks, files))
-        gate = _gate_label(checks, pull.head_sha)
+        ci_state = _check_state(list(checks), pull.head_sha) if checks is not None else "CI-unknown"
+        ci = _ci_label(ci_state)
         cf = _cf(pull, view)
         queue = _mq_status(pull, view, mq, drop_key)
         hold, reason = _keeper_hold(pull, drop_key, mq)
@@ -904,7 +805,7 @@ def assemble_prs(
             threshold=threshold,
         )
         note = recorded.get(pull.number)
-        failed = _failing_check_names(pull.number, pull.head_sha, checks, files)
+        failed = [ci_state.removeprefix("CI-red-")] if ci_state.startswith("CI-red-") else []
         idle, idle_24h, idle_48h = hours_idle(
             moment,
             _parse_time(pull.commit_at) if isinstance(pull.commit_at, str) else None,
@@ -926,7 +827,7 @@ def assemble_prs(
                     "epics": list(pull.epics),
                     "ci": ci,
                     "cf": cf,
-                    "gate": gate,
+                    "gate": ci,
                     "mq": queue,
                     "keeper": {"hold": hold, "reason": reason},
                     "flake_grant": None,
