@@ -363,6 +363,24 @@ def test_write_task_merged_into_main_counts_as_published_after_its_branch_is_del
     assert branch not in local_branches(sandbox.repo)
 
 
+@pytest.mark.parametrize("pull_ref,disposition", [(True, ("removed", "clean")), (False, ("retained", "unpublished"))])
+def test_recovery_removes_squash_merged_write_task_only_when_a_pull_ref_holds_its_head(sandbox, pull_ref, disposition):
+    """CTO residual: after a squash merge and branch deletion, D3 never fired, so the worktree stayed forever."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "unpublished"
+    tree, branch = Path(record["worktree_path"]), record["worktree_branch"]
+    squash = run_git(tree, "commit-tree", "HEAD^{tree}", "-p", record["worktree_base_sha"], "-m", "squash (#7)")
+    run_git(tree, "push", str(sandbox.remote), f"HEAD:refs/heads/{branch}", f"{squash}:refs/heads/main")
+    if pull_ref:
+        run_git(tree, "push", str(sandbox.remote), "HEAD:refs/pull/7/head")
+    run_git(tree, "push", str(sandbox.remote), f":refs/heads/{branch}")
+    sandbox.settle(sandbox.dispatch())
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == disposition
+    assert tree.exists() is not pull_ref
+    assert (branch in local_branches(sandbox.repo)) is not pull_ref
+
+
 def test_crash_recovery_keeps_worktree_while_the_orphaned_provider_runs(sandbox):
     """Defect (F2): recovery removed a crashed task's worktree without proving its provider had exited."""
     task = sandbox.dispatch("blocked")

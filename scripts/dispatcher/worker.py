@@ -200,8 +200,10 @@ def _borrowed(record: dict) -> bool:
                and other.get("worktree_path") == record.get("worktree_path") for other in store.list_tasks())
 
 
-# Dispositions that can change once other processes end; crash recovery settles these again.
-RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_running_task"})
+# Dispositions that can change once other processes end or the work is published (pushed or merged
+# after the task ended); crash recovery settles these again and still removes only with the proof.
+RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_running_task",
+                           "unpublished", "remote_mismatch"})
 
 
 def _reap_settled(record: dict, patience: float = 0) -> None:

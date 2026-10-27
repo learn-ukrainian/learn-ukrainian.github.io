@@ -303,6 +303,9 @@ NODE_LINKS = ("node_modules", "site/node_modules")
 CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"})
 # Work this branch contains on the canonical remote is published, even after its own branch was deleted.
 MAIN_REF = "refs/heads/main"
+# A squash merge leaves the task's own commit out of main; its pull-request head ref still proves the push.
+PULL_HEADS = "refs/pull/*/head"
+PULL_HEAD = re.compile(r"refs/pull/[0-9]+/head")
 
 
 def provision_links(repo: Path, worktree: Path) -> None:
@@ -389,20 +392,23 @@ def _disposable(tree: Path, entry: str) -> bool:
 
 
 def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | None, bool]:
-    """Return the canonical remote's tip of ref and whether its main branch contains head.
+    """Return the canonical remote's tip of ref and whether it holds head under another ref.
 
     Only the URL recorded at dispatch is read, in a private Git namespace, so neither the worktree's
-    mutable origin nor a configured URL rewrite can redirect the proof. Main is fetched (commits only)
-    just when head is not the advertised tip: a merged branch may since have been deleted.
+    mutable origin nor a configured URL rewrite can redirect the proof. A merged branch may since have
+    been deleted, so head also counts as published when a pull-request head ref advertises it exactly
+    (GitHub keeps refs/pull/N/head after a squash merge) or, fetched commits-only, main contains it.
     """
     remote = record["worktree_remote_url"]
     if not remote:
         raise ValueError("no canonical remote URL was recorded at dispatch")
     with _private_remote_git(record["task_id"] + "-settle", remote) as (run, _):
-        advertised = run("ls-remote", "--", "origin", ref)
-        tip = next((sha for sha, name in (line.split() for line in advertised.splitlines()) if name == ref), None)
+        advertised = [line.split() for line in run("ls-remote", "--", "origin", ref, PULL_HEADS).splitlines()]
+        tip = next((sha for sha, name in advertised if name == ref), None)
         if tip == head:
             return tip, False
+        if any(sha == head and PULL_HEAD.fullmatch(name) for sha, name in advertised):
+            return tip, True
         run("fetch", "--no-tags", "--no-write-fetch-head", "--filter=tree:0", "--", "origin",
             f"+{MAIN_REF}:{MAIN_REF}", timeout=VERIFICATION_FETCH_TIMEOUT)
         return tip, head in run("rev-list", MAIN_REF).split()
@@ -413,8 +419,9 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
 
     Runs from outside the worktree after the provider has exited. A write task's worktree goes only
     when its HEAD is the publish branch's tip on the canonical remote recorded at dispatch (without
-    --branch that is the task branch), or is already in that remote's main. borrowed() is asked under
-    the worktree lock, right before removal, whether another running task works in this tree.
+    --branch that is the task branch), a pull-request head there, or is already in that remote's main.
+    borrowed() is asked under the worktree lock, right before removal, whether another running task
+    works in this tree.
     """
     def disposition(state, reason):
         return dict(worktree_disposition=state, worktree_disposition_reason=reason)
