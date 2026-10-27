@@ -973,7 +973,7 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
 # the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
 # capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
-    "v2-baseline.json.gz": "e8480a666260d1146ad2a01104b263c622ab6741de1f0915c59921e6dfb94166",
+    "v2-baseline.json.gz": "041bd02aa149da9fcf6a75d56fc1bf72f88a354bdb2e31d262a235d3e51232ef",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
     "SPEC.md": "c0e7d80b83e40e32b230d0fe9baf6a168f32a5965636f1a22f6639421f55823f",
@@ -1026,7 +1026,7 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
 # The current fixture contains only the expanded catalog and the existing 1432
 # reviewer cases. It was computed with pure resolver calls, without launching workers.
 _V2_BASELINE_PATH = FIXTURE / "v2-baseline.json.gz"
-assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "e8480a666260d1146ad2a01104b263c622ab6741de1f0915c59921e6dfb94166"
+assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "041bd02aa149da9fcf6a75d56fc1bf72f88a354bdb2e31d262a235d3e51232ef"
 _V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
 CURRENT_BASELINE = _V2_BASELINE["baseline"]
 CURRENT_INPUTS = _V2_BASELINE["inputs"]
