@@ -370,8 +370,6 @@ def linked_worktree(tmp_path: Path) -> Path:
         "wiki/y.md",
         "data/projects/p.txt",
         "data/other/o.txt",
-        "data/sources.db",
-        "data/vesum.db",
         "registry/projects/r.txt",
         "registry/lexicon/l.txt",
     ):
@@ -721,6 +719,15 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
 @pytest.mark.parametrize("tamper", [None, "dispatch_args_sha256", "effective_prompt_sha256", "prompt_blocks"])
 def test_legacy_resume_accepts_faithful_record_and_refuses_tampering(linked_worktree, outside_dir, monkeypatch, tamper):
     from scripts.eval.uk_preamble.common import write_private_json
+    from scripts.storage.topology import StoreBinding
+
+    monkeypatch.setattr(
+        dispatch_module.legacy_codec,
+        "resolve_store",
+        lambda store, root: StoreBinding(
+            store, delegate._primary_database_path(root, f"{store}.db"), provenance="injected"
+        ),
+    )
 
     tasks_dir = outside_dir / "tasks"
     tasks_dir.mkdir()
