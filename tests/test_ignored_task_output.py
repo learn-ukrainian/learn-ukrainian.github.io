@@ -445,10 +445,12 @@ def test_only_real_path_bound_record_receives_receipt(checkout, binding):
         other.mkdir()
         record["worktree_path"] = str(other)
     elif binding == "cwd":
-        record["cwd"] = str(repo)
+        non_directory = repo.parent / "somefile"
+        non_directory.write_text("not a directory")
+        record["cwd"] = str(non_directory / ".." / repo.name)
     elif binding == "alias":
         alias = repo.parent / "alias"
-        alias.symlink_to(repo, target_is_directory=True)
+        alias.symlink_to(repo.parent / "missing" / ".." / repo.name, target_is_directory=True)
         record["worktree_path"] = os.path.relpath(alias, checkout[1])
     path = tasks / "output-task.json"
     path.write_text(json.dumps(record))
@@ -478,7 +480,10 @@ def test_matching_archive_wins_over_unrelated_hot_record(checkout):
     (tasks / "output-task.json").write_text(json.dumps(hot))
     archive = tasks / "archive/output-task.json"
     archive.parent.mkdir()
-    archive.write_text(json.dumps({"task_id": "output-task", "cwd": str(repo), "started_at": "2999-01-01T00:00:00Z"}))
+    canonical_spelling = str(repo / "missing" / "..")
+    archive.write_text(
+        json.dumps({"task_id": "output-task", "cwd": canonical_spelling, "started_at": "2999-01-01T00:00:00Z"})
+    )
     with (
         patch.object(output, "_matching_worktree_records_once", wraps=output._matching_worktree_records_once) as scan,
         patch.object(worktree_claims, "resolve_claim_path", wraps=worktree_claims.resolve_claim_path) as resolve,
@@ -489,7 +494,7 @@ def test_matching_archive_wins_over_unrelated_hot_record(checkout):
     assert sum(call.args[0] == other for call in samefile.call_args_list) == 3
     assert sum(call.args[0] == missing for call in samefile.call_args_list) == 3
     assert all(call.args[0] not in (str(other), str(missing)) for call in resolve.call_args_list)
-    assert any(call.args[0] == str(repo) for call in resolve.call_args_list)
+    assert any(call.args[0] == canonical_spelling for call in resolve.call_args_list)
     assert ok and receipt["count"] == 2 and receipt["copied_bytes"] == 0
     assert_record_only(receipt, {"ignored/new.txt": b"new", "ignored/old.txt": b"old"})
     assert json.loads(archive.read_text())["preserved_artifacts"] == receipt
