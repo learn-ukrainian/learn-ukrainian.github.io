@@ -110,7 +110,7 @@ def test_non_bounded_model_needs_no_advisory(launch, model):
 
 @pytest.mark.parametrize("complete", [False, True])
 @pytest.mark.parametrize("model", ["gpt-6-luna", "claude-haiku-5-5", "haiku"])
-def test_driver_brief_exception_requires_acceptance_command(launch, complete, capsys, tmp_path, model):
+def test_driver_brief_exception_requires_acceptance_command(launch, complete, capsys, tmp_path, model, monkeypatch):
     """Defect class: concrete or alias models bypass brief validation or reject valid bounded implementation."""
     if model != "gpt-6-luna":
         launch[launch.index("--agent") + 1] = "claude"
@@ -122,6 +122,9 @@ def test_driver_brief_exception_requires_acceptance_command(launch, complete, ca
                     ("-c", "user.name=Stub", "-c", "user.email=stub@example.invalid",
                                 "commit", "--allow-empty", "-m", "fixture")):
         subprocess.run(["git", "-C", str(tmp_path), *command], check=True, capture_output=True, timeout=30)
+    head = subprocess.run(["git", "-C", str(tmp_path), "rev-parse", "HEAD"], check=True,
+                          capture_output=True, text=True, timeout=30).stdout.strip()
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/worker", head))
     if complete:
         launch += ["--verify-command", "test -f docs/example.md"]
     assert cli.main(launch) == (0 if complete else 2)
@@ -304,10 +307,18 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
                                binding_sha256=binding, repo_root=tmp_path)
 
 
-def test_b3_a_non_advisor_worker_records_no_seal(launch, runtime):
+def test_b3_a_non_advisor_worker_records_no_seal(launch, runtime, monkeypatch):
+    from scripts.dispatcher import advisory as wiring
+
     launch[launch.index("--model") + 1] = "gpt-6.1-sol"
+    for name in ("snapshot", "handoff", "verify"):
+        monkeypatch.setattr(wiring, name, Mock(side_effect=RuntimeError("advisory runtime unavailable")))
     assert cli.main(launch) == 0
-    assert "advisory_seal" not in runtime.settle()
+    record = runtime.settle()
+    assert record["status"] == "done", record.get("error")
+    assert "advisory_seal" not in record
+    for name in ("snapshot", "handoff", "verify"):
+        getattr(wiring, name).assert_not_called()
 
 
 @pytest.mark.parametrize("model,agent", [("gpt-6-luna", "sol"), ("gemini-3.8-flash-high", "agy")])
@@ -608,7 +619,7 @@ def test_explicit_bounded_envelope_retains_security_path_refusal(launch, runtime
     assert not store.record_path("worker").exists()
 
 
-@pytest.mark.parametrize("role", ["driver", "security_code", "ukrainian_authoring", "formal-review", "design_approval",
+@pytest.mark.parametrize("role", ["driver", "security", "review", "security_code", "ukrainian_authoring", "formal-review", "design_approval",
                                   "consult", "consultation", "advice", "adviser"])
 def test_luna_free_form_roles_do_not_authorize_excluded_activity_classes(launch, capsys, role):
     """Ported from tests/agent_runtime/test_mechanical_admission.py::test_luna_free_form_roles_do_not_authorize_excluded_activity_classes."""

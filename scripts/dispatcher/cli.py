@@ -171,6 +171,7 @@ def _dispatch(args) -> int:
         print(checks.advisory_binding(args, prompt)[2])
         return 0
     task_id = args.task_id or uuid.uuid4().hex
+    args.task_id = task_id
     path = store.record_path(task_id)
     if store.read(task_id, missing_ok=True) is not None:
         raise ValueError("task id already exists; choose a new task id")
