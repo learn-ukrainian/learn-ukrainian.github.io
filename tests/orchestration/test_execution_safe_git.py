@@ -31,27 +31,19 @@ from tests.orchestration.test_worktree_output_chokepoint import (
 CALLERS = ["scheduled", "closeout", "post-task", "delegate", "task-family", "sibling", "stale-record"]
 
 
-@pytest.mark.parametrize("poison", [
-    None,
-    ("http.proxy", "http://proxy.invalid"),
-    ("http.sslVerify", "false"),
-    ("http.https://github.com/fixture/private.git.sslCAInfo", "/untrusted/ca.pem"),
-    ("http.https://github.com/fixture/private.git.proxy", "http://proxy.invalid"),
-    ("http.curloptResolve", "github.com:443:proxy.invalid"),
-    ("remote.origin.proxy", "http://proxy.invalid"),
-    ("remote.origin.proxyAuthMethod", "basic"),
-    ("url.https://proxy.invalid/.insteadOf", "https://github.com/"),
-    ("core.gitProxy", "untrusted-proxy"),
-])
-def test_primary_transport_config_poisoning_withholds_credentials(boundary_tree, tmp_path, monkeypatch, poison):
-    from unittest.mock import Mock
-
+@pytest.mark.parametrize("scope", ["common", "worktree"])
+@pytest.mark.parametrize("operation", ["fetch", "ls-remote"])
+def test_transport_config_toctou_never_delivers_credential(boundary_tree, tmp_path, monkeypatch, scope, operation):
+    """A config swap immediately before transfer must not redirect a credential."""
     from scripts.common import git_credentials
     from scripts.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
+    local_origin = _git(repo, "remote", "get-url", "origin")
+    head = _git(tree, "rev-parse", "HEAD")
     remote = "https://github.com/fixture/private.git"
     _git(repo, "config", "remote.origin.url", remote)
+    _git(repo, "config", "extensions.worktreeConfig", "true")
     registry = tmp_path / "registry.json"
     registry.write_text(json.dumps({"repos": {"fixture": {"github": "fixture/private", "transport": "https"}}}))
     monkeypatch.setattr(git_credentials, "CONFIG", registry)
@@ -64,30 +56,96 @@ def test_primary_transport_config_poisoning_withholds_credentials(boundary_tree,
     )
     fake_gh.chmod(0o700)
     monkeypatch.setenv("AGENT_REAL_GH", str(fake_gh))
-    if poison:
-        # A linked checkout writes transport settings into the primary's shared config.
-        _git(tree, "config", *poison)
-        assert _git(repo, "config", "--get", poison[0]) == poison[1]
     real_run = subprocess.run
-    observed = Mock(wraps=real_run)
-    monkeypatch.setattr(subprocess, "run", observed)
-    probe = safe.run_git(["ls-remote", "--get-url", "origin"], cwd=tree, profile="remote",
-                         capture_output=True, text=True, timeout=10)
-    assert probe.returncode == 0
-    argv = observed.call_args.args[0]
-    kwargs = observed.call_args.kwargs
-    assert Path(kwargs["cwd"]) == repo
-    prefix = argv[:argv.index("ls-remote")]
-    credentials = real_run([*prefix, "credential", "fill"], cwd=kwargs["cwd"], env=kwargs["env"],
-                           input=f"url={remote}\n\n", capture_output=True, text=True, check=False, timeout=10)
-    if poison:
-        assert credentials.returncode != 0
-        assert "fixture-password" not in credentials.stdout + credentials.stderr
-        assert not marker.exists()
+    transfers = []
+    delivered_to_poison = []
+
+    def transfer_hook(argv, **kwargs):
+        command = next((cmd for cmd in ("fetch", "ls-remote") if cmd in argv), None)
+        # Local file imports carry no helper and execute without this transport simulation.
+        credentialed = any(".helper=!" in arg for arg in argv)
+        if command and credentialed:
+            config = ["config"] if scope == "common" else ["config", "--worktree"]
+            real_run([safe.GIT, *config, "http.proxy", "http://poison.invalid"], cwd=repo, check=True)
+            prefix = argv[:argv.index(command)]
+            poison = real_run([*prefix, "config", "--get", "http.proxy"], cwd=kwargs["cwd"],
+                              env=kwargs["env"], capture_output=True, text=True, check=False)
+            credential = real_run([*prefix, "credential", "fill"], cwd=kwargs["cwd"], env=kwargs["env"],
+                                  input=f"url={remote}\n\n", capture_output=True, text=True, check=False)
+            assert credential.returncode == 0 and "password=fixture-password" in credential.stdout
+            if poison.stdout.strip() == "http://poison.invalid":
+                delivered_to_poison.append(True)
+            transfers.append(Path(kwargs["cwd"]))
+            # Execute real Git against the fixture after observing the actual credential context.
+            transfer = list(argv[len(prefix):])
+            transfer[transfer.index("origin")] = local_origin
+            argv = [*prefix, "-c", "http.proxy=", *transfer]
+        result = real_run(argv, **kwargs)
+        if command and credentialed:
+            assert result.returncode == 0, result.stderr
+        return result
+
+    monkeypatch.setattr(subprocess, "run", transfer_hook)
+    args = ["fetch", "--no-tags", "origin", "refs/heads/main"] if operation == "fetch" else ["ls-remote", "--heads", "origin", "main"]
+    result = safe.run_git(args, cwd=tree, profile="remote", capture_output=True, text=True, timeout=10)
+    assert not delivered_to_poison, "credential delivered through transport swapped after inventory"
+    assert result.returncode == 0, result.stderr
+    assert marker.exists() and len(transfers) == 1
+    assert transfers[0] != repo and not transfers[0].exists()
+    if operation == "fetch":
+        assert _git(repo, "rev-parse", "FETCH_HEAD^{commit}") == head
     else:
-        assert credentials.returncode == 0
-        assert "username=fixture-user\npassword=fixture-password\n" in credentials.stdout
-        assert marker.exists()
+        assert result.stdout.strip() == f"{head}\trefs/heads/main"
+
+
+@pytest.mark.parametrize("case", ["refs", "redirect", "nonfastforward"])
+def test_local_file_import_ref_and_transport_substitution(boundary_tree, monkeypatch, case):
+    """Local imports must pin objects/refs and refuse a rewrite to a network transport."""
+    from scripts.orchestration import execution_safe_git as safe
+
+    repo, tree, _tasks, _record = boundary_tree
+    expected = _git(repo, "rev-parse", "main")
+    # Exercise the isolated path using the fixture's real local origin. The
+    # production credential gate is separately exercised by the race test.
+    monkeypatch.setattr(safe, "verification_credentials", lambda remote: ["credential.helper="])
+    _git(repo, "update-ref", "refs/remotes/origin/gone", expected)
+    args = ["fetch", "--no-tags", "origin", "--prune"]
+    if case == "nonfastforward":
+        (tree / "advance.txt").write_text("local advance\n")
+        _git(tree, "add", "advance.txt")
+        _git(tree, "commit", "-m", "local advance")
+        expected = _git(tree, "rev-parse", "HEAD")
+        _git(repo, "update-ref", "refs/heads/proof", expected)
+        args = ["fetch", "--no-tags", "origin", "refs/heads/main:refs/heads/proof"]
+    real_run = subprocess.run
+    imports = []
+
+    def import_hook(argv, **kwargs):
+        if "fetch" in argv and any(arg.startswith("file://") for arg in argv):
+            imports.append(argv)
+            assert kwargs["env"]["GIT_ALLOW_PROTOCOL"] == "file"
+            assert not any(".helper=!" in arg for arg in argv)
+            if case == "redirect":
+                source = next(arg for arg in argv if arg.startswith("file://"))
+                real_run([safe.GIT, "config", "url.https://poison.invalid/.insteadOf", source],
+                         cwd=repo, check=True)
+        return real_run(argv, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", import_hook)
+    result = safe.run_git(args, cwd=tree, profile="remote", capture_output=True, text=True)
+    assert len(imports) == 1
+    if case == "nonfastforward":
+        assert result.returncode != 0
+        assert _git(repo, "rev-parse", "refs/heads/proof") == expected
+    elif case == "redirect":
+        assert result.returncode != 0
+        assert result.stderr == "remote Git command failed"
+        assert _git(repo, "rev-parse", "refs/remotes/origin/gone") == expected
+    else:
+        assert result.returncode == 0, result.stderr
+        assert _git(repo, "rev-parse", "refs/remotes/origin/main") == expected
+        assert _git(repo, "rev-parse", "FETCH_HEAD^{commit}") == expected
+        assert not _git(repo, "for-each-ref", "refs/remotes/origin/gone")
 
 
 @pytest.fixture(autouse=True)
