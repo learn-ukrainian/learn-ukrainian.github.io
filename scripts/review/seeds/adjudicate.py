@@ -72,6 +72,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.eval.uk_preamble import legacy_codec
 from scripts.orchestration.task_record_store import locate_task_record
 from scripts.orchestration.worktree_paths import automatic_worktree_path
 from scripts.review import findings_db, record, second_seat
@@ -85,26 +86,6 @@ SCHEMAS = {
 TASKS_SUBDIR = "adjudication"
 DELEGATE = REPO_ROOT / "scripts" / "delegate.py"
 READ_ONLY_MODE = "read-only"
-
-
-def _delegate_module():
-    """Import ``scripts.delegate`` lazily, on the same ``sys.path`` delegate.py itself needs.
-
-    ``delegate.py`` imports ``agent_runtime.routes`` (``scripts/agent_runtime/``) as a bare top-level
-    package before it does any ``sys.path`` setup of its own; that only resolves today because delegate.py
-    is always *executed* as a script file, so Python auto-adds its own directory (``scripts/``) to
-    ``sys.path[0]``. Importing ``scripts.delegate`` eagerly at this module's import time broke
-    ``python -m scripts.review.seeds.adjudicate`` (whose own ``sys.path[0]`` is the repo root, not
-    ``scripts/``) with ``ModuleNotFoundError: agent_runtime``. Importing it lazily here, with ``scripts/``
-    added to ``sys.path`` first, fixes every caller — script or ``-m`` — the same way, and means a plain
-    ``--help`` (which never checks a dispatch binding) never even needs it.
-    """
-    scripts_dir = str(DELEGATE.parent)
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from scripts import delegate
-
-    return delegate
 
 
 FINDING_ID_RE = re.compile(r"F-[0-9]+\Z")
@@ -559,7 +540,7 @@ def check_dispatch_binding(
             f"(recorded prompt sha256 {dispatched.get('prompt_sha256')!r}, rendered {rendered})",
             TASK_MISMATCH,
         )
-    delegate = _delegate_module()
+    delegate = legacy_codec
     agent = dispatched.get("agent")
     if not isinstance(agent, str) or not agent:
         raise AdjudicationError(f"the dispatch record of {task_id} names no agent", TASK_MISMATCH)

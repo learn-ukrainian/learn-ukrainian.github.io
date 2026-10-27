@@ -23,6 +23,7 @@ from scripts.dispatcher.cli import build_parser
 from scripts.guardrails import worktree_containment
 from scripts.lib.rules_core import RulesCoreError
 
+from . import legacy_codec
 from .common import Seat, sha256_bytes, sha256_text
 
 TERMINAL_STATUSES = frozenset(
@@ -431,12 +432,10 @@ class DelegateDispatcher:
     ) -> str:
         """Schema-specific argument fingerprint for the frozen evaluation."""
         if legacy or self.legacy_resume:
-            from scripts import delegate
-
-            args = delegate.build_parser().parse_args(
+            args = legacy_codec.build_parser().parse_args(
                 self._dispatch_args(task_id, seat, kind, prompt_path, legacy=True)
             )
-            return delegate.dispatch_args_sha256(args)
+            return legacy_codec.dispatch_args_sha256(args)
         argv = self._dispatch_args(task_id, seat, kind, prompt_path)
         # Keep the caller fingerprint byte-for-byte: manifests persist the argv JSON,
         # not the parser Namespace. Parsing only verifies the replacement CLI contract.
@@ -447,18 +446,14 @@ class DelegateDispatcher:
         return sha256_text(json.dumps(argv, ensure_ascii=False))
 
     def legacy_inputs(self, task_id: str, seat: Seat, kind: str, path: Path, prompt: str) -> tuple[dict, str]:
-        from scripts import delegate
-
         return (
-            DelegateComposer(delegate, self.cwd).compose(prompt),
+            DelegateComposer(legacy_codec, self.cwd).compose(prompt),
             self.expected_args_sha256(task_id, seat, kind, path, legacy=True),
         )
 
     def compose(self, prompt: str) -> dict[str, Any]:
         if self.legacy_resume:
-            from scripts import delegate
-
-            return DelegateComposer(delegate, self.cwd).compose(prompt)
+            return DelegateComposer(legacy_codec, self.cwd).compose(prompt)
         cwd = self.cwd.resolve()
         if not (cwd / ".git").is_file() or _git(cwd, "rev-parse", "--show-toplevel") != f"{cwd}\n":
             raise DispatchError("pass an existing isolated Git worktree root with --worker-cwd")
