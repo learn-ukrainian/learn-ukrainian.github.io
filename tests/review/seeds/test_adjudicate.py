@@ -17,6 +17,7 @@ import pytest
 import yaml
 
 import scripts.delegate as delegate
+from scripts.dispatcher.cli import build_parser as v2_parser
 from scripts.review.seeds import adjudicate as adj
 from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
@@ -57,6 +58,44 @@ def _dispatch_args_hash(
         argv += ["--output-schema", output_schema]
     parsed = delegate.build_parser().parse_args(["dispatch", *argv])
     return delegate.dispatch_args_sha256(parsed)
+
+
+def _v2_dispatch(case: Case, monkeypatch: pytest.MonkeyPatch, *, task_id: str | None = None) -> dict:
+    """Exercise the real producer against a stubbed v2 launcher, without a paid worker."""
+    task_id = task_id or case.task_id
+    prepared = adj.prepare_dispatch(case.task_file, task_id, "agy", model="gemini-3.1-pro-preview")
+    argv = prepared["dispatch"]
+    request = adj._execution_request(argv, case.task_file.read_bytes())
+    prompt_file = case.env.tasks / f"{task_id}.prompt"
+    prompt_file.write_bytes(case.task_file.read_bytes())
+    dispatched = dict(
+        schema_version=2,
+        task_id=task_id,
+        run_nonce="a" * 32,
+        agent=request["agent"],
+        model=request["options"]["model"],
+        status="done",
+        mode="read-only",
+        cwd=request["worktree_path"],
+        worktree_path=request["worktree_path"],
+        worktree_branch=request["worktree_branch"],
+        worktree_base_sha=request["options"]["pinned_head"],
+        review_mode="cross_family",
+        prompt_file=str(prompt_file),
+        prompt_sha256=request["prompt_sha256"],
+    )
+    (case.env.tasks / f"{task_id}.json").write_text(json.dumps(dispatched), encoding="utf-8")
+    run = subprocess.run
+
+    def launch(command, **kwargs):
+        if command == argv:
+            return subprocess.CompletedProcess(command, 0, f"{task_id}\n{'a' * 32}\n", "")
+        return run(command, **kwargs)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(subprocess, "run", launch)
+        adj.launch_dispatch(case.task_file)
+    return dispatched
 
 
 def _dispatch_subparser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
@@ -306,25 +345,27 @@ def test_the_task_dispatches_through_delegate_py(seeded: Case) -> None:
     subject = subject_of(seeded)
     path, task_id = adj.write_task(subject, LESSON_TEXT, review_id=seeded.review_id, root=seeded.env.root)
     argv = adj.dispatch_argv(path, task_id, "agy", model="gemini-3.1-pro-preview")
-    assert Path(argv[1]).name == "delegate.py" and argv[2] == "dispatch"
-    parsed = delegate.build_parser().parse_args(argv[2:])  # the real dispatch parser accepts exactly this command
+    assert Path(argv[1]).name == "dispatch.py" and argv[2] == "dispatch"
+    parsed = v2_parser().parse_args(argv[2:])  # the real v2 parser accepts exactly this command
     assert (parsed.agent, parsed.task_id, parsed.prompt_file, parsed.mode, parsed.model, parsed.cwd) == (
         "agy",
         task_id,
         str(path),
         "read-only",
         "gemini-3.1-pro-preview",
-        str(delegate._REPO_ROOT),
+        None,
     )
+    assert parsed.pinned_head and len(parsed.pinned_head) == 40
 
 
 def test_render_dispatch_command_does_not_load_legacy_runtime(tmp_path, monkeypatch):
-    def refuse_import():
+    def refuse_import(*_args, **_kwargs):
         pytest.fail("rendering the command must not load the legacy runtime")
 
-    monkeypatch.setattr(adj, "_delegate_module", refuse_import)
+    monkeypatch.setattr(adj.legacy_codec, "build_parser", refuse_import)
     argv = adj.dispatch_argv(tmp_path / "prompt.md", "adj-test", "codex", model="gpt-6.1-sol")
-    assert argv[argv.index("--cwd") + 1] == str(delegate._REPO_ROOT)
+    assert "--cwd" not in argv
+    assert len(argv[argv.index("--pinned-head") + 1]) == 40
     assert argv[argv.index("--mode") + 1] == "read-only"
     assert "--full-checkout" in argv
 
@@ -649,7 +690,7 @@ def test_every_non_excluded_dispatch_argument_binds_the_hash(seeded: Case) -> No
     ``dispatch_args_sha256``: changing it away from its canonical value must refuse the adjudication — so a flag
     added to ``dispatch`` later is covered automatically without editing this test (#8430 R3-A r8)."""
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    argv = adj.dispatch_argv(seeded.task_file, seeded.task_id, "agy", model="gemini-3.1-pro-preview")
+    argv = adj.legacy_dispatch_argv(seeded.task_file, seeded.task_id, "agy", model="gemini-3.1-pro-preview")
     canonical = delegate.build_parser().parse_args(argv[2:])
     assert canonical.review_mode == "cross_family"
     assert "review_mode" not in delegate.DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
@@ -872,7 +913,7 @@ def test_a_task_without_model_is_refused(seeded: Case, capsys: pytest.CaptureFix
 
 
 def test_a_task_created_with_model_round_trips_through_the_emitted_command(
-    seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path
+    seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """A task created through the CLI with ``--model`` emits a dispatch command that, dispatched as printed,
     passes ``check_dispatch_binding`` and resolves the adjudicator's identity from it (#8430 R3-A r9)."""
@@ -898,10 +939,12 @@ def test_a_task_created_with_model_round_trips_through_the_emitted_command(
     ]
     assert adj.main(argv) == 0
     payload = json.loads(capsys.readouterr().out)
-    parsed = delegate.build_parser().parse_args(payload["dispatch"][2:])
+    parsed = v2_parser().parse_args(payload["dispatch"][2:])
     assert parsed.model == "gemini-3.1-pro-preview"
     task_id = payload["task_id"]
-    seeded.dispatch(parsed.agent, parsed.model, task_id=task_id, mode=parsed.mode)
+    assert Path(payload["dispatch"][1]).name == "dispatch.py"
+    assert "--authoring-review-plan" not in payload["dispatch"]
+    _v2_dispatch(seeded, monkeypatch, task_id=task_id)
     identity = adj.check_dispatch_binding(
         seeded.unit_id, seeded.review_id, seeded.attempt_id, task_id, seeded.env.tasks, seeded.env.root
     )
@@ -972,3 +1015,65 @@ def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixtur
         )
         == 2
     )
+
+
+def test_the_canonical_v2_record_is_accepted(seeded: Case, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Ported from test_the_canonical_record_is_accepted: v2 prompt/frame tampering and archive lookup."""
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    _v2_dispatch(seeded, monkeypatch)
+    hot = seeded.env.tasks / f"{seeded.task_id}.json"
+    cold = seeded.env.tasks / "archive" / hot.name
+    cold.parent.mkdir()
+    canonical = hot.read_bytes()
+    binding = (seeded.unit_id, seeded.review_id, seeded.attempt_id, seeded.task_id, seeded.env.tasks, seeded.env.root)
+    identity = {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
+    assert adj.check_dispatch_binding(*binding) == identity
+    hot.rename(cold)
+    assert cold.read_bytes() == canonical
+    assert adj.check_dispatch_binding(*binding) == identity
+    assert code_of(seeded, good, task_id=f"../{seeded.task_id}") == [adj.TASK_MISMATCH]
+    for path in (hot, cold):
+        # A malformed or superseding hot record must never fall through to the valid archive.
+        for payload in (b"{", b"[]", b'{"task_id":"another-task"}'):
+            path.write_bytes(payload)
+            assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+        path.write_bytes(canonical)
+        dispatched = json.loads(canonical)
+        for field, value in (
+            ("prompt_sha256", "0" * 64),
+            ("prompt_file", "missing-prompt"),
+            ("worktree_base_sha", "0" * 40),
+            ("prompt_blocks", ["worktree", "lifecycle"]),
+            ("cwd", "caller-chosen"),
+            ("worktree_path", None),
+            ("worktree_branch", "caller-branch"),
+            ("mode", "workspace-write"),
+        ):
+            path.write_text(json.dumps({**dispatched, field: value}), encoding="utf-8")
+            assert code_of(seeded, good) == [adj.TASK_MISMATCH], field
+        path.write_bytes(canonical)
+        assert adj.check_dispatch_binding(*binding) == identity
+        path.unlink()
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    cold.write_bytes(canonical)
+    assert seeded.record(good)["new"] is True
+
+
+def test_every_v2_dispatch_argument_binds_the_hash(seeded: Case, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Ported from test_every_non_excluded_dispatch_argument_binds_the_hash for the v2 request/receipt format."""
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    _v2_dispatch(seeded, monkeypatch)
+    path = adj._binding_path(seeded.task_file, "request")
+    original = path.read_bytes()
+    request = json.loads(original)
+    tested = []
+    for dest, value in request["options"].items():
+        mutated = json.loads(original)
+        mutated["options"][dest] = _different_value(value)
+        path.write_text(json.dumps(mutated), encoding="utf-8")
+        assert code_of(seeded, good) == [adj.TASK_MISMATCH], dest
+        tested.append(dest)
+    assert len(tested) >= 40, tested
+    assert "review_mode" in tested
+    path.write_bytes(original)
+    assert seeded.record(good)["new"] is True

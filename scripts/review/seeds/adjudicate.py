@@ -2,8 +2,8 @@
 
 A seat that is neither the lesson writer's nor the reviewer's family reads the private record of the
 measurement lesson and the reviewer's findings and maps **every** finding to one class. The task is an ordinary
-``delegate.py`` dispatch: ``task`` renders the prompt into a task file (``batch_state/review-measurement/
-adjudication/``, ``0o600``) and prints the ``delegate.py dispatch`` command; ``record`` validates the reply and
+``scripts/dispatch.py`` dispatch: ``task`` renders the prompt into a task file (``batch_state/review-measurement/
+adjudication/``, ``0o600``) and prints the v2 dispatch and launch commands; ``record`` validates the reply and
 writes the result.
 
 * seeded lesson (``seed-adjudication-v1``): each finding is ``planted`` (it names the planted defect),
@@ -22,21 +22,31 @@ from its dispatch record (``batch_state/tasks/<task-id>.json``, falling back to 
 the reply's self-report, and the reply is
 refused when its family is the lesson writer's or the reviewer's. The record must be this adjudication's own: its
 task id is the one derived for this unit and attempt, its ``prompt_sha256`` is that of the task file rendered here,
-and delegate appended nothing caller-controlled to that prompt (``adjudication_task_mismatch`` otherwise), so an
+and the launcher appended nothing caller-controlled to that prompt (``adjudication_task_mismatch`` otherwise), so an
 unrelated independent dispatch cannot stand in. The lesson text and the findings are data, not instructions.
 
-**Dispatch contract.** The printed command is read-only, with the primary checkout as the requested
-``--cwd`` and ``--full-checkout``. Delegate redirects that request to the exact automatic detached worktree
-for the agent and task. Full checkout keeps the available trees equivalent to the former primary-root run
-and makes the worktree prompt independent of sparse exclusions. No caller-selected ``--worktree``, lifecycle,
-research or advisory flags are permitted. The checker recomputes the complete effective prompt using delegate's
-composer and that canonical worktree path, including the rules core and worktree instructions.
+**V2 execution binding (adjudication-execution/2).** ``task`` prints the canonical
+``scripts/dispatch.py`` argv and an adjudication ``launch`` command. Run ``launch``:
+it executes that argv, retaining every parsed option in a private request and the
+returned task id/nonce in a separate exclusive launch receipt. Direct dispatch
+without that receipt cannot be adjudicated. JSON uses sorted keys, compact
+separators and UTF-8; SHA-256 binds the request containing the prompt digest,
+options (including defaults), canonical worktree, immutable base commit and
+requested runtime identity. The receipt binds this digest and the launch nonce.
+Verification compares both documents to the same parsed v2 record, the submitted
+prompt bytes, execution cwd/worktree/base, and runtime identity. A changed option,
+prompt, worktree, nonce or reported model resolution is refused. The v2 engine
+uses an isolated task branch in its canonical worktree; the binding requires that
+exact branch, never an existing caller checkout. Provider resolution is required
+for multi-model Cursor; other providers retain the dispatcher's explicit model
+contract and reject a contradictory reported resolution. This is an integrity
+binding over trusted launcher evidence, not a signature against a malicious
+actor who can replace both the request and receipt. Runtime home instructions
+remain outside this binding.
 
-**The recorded dispatch must equal the canonical dispatch.** The argument hash binds every requested flag;
-``cwd``, ``worktree_path`` and the detached/read-only markers bind the execution after automatic redirection.
-The adjudicator's identity comes from the same parsed record, never a second read. Caller-chosen checkout or
-prompt changes are refused. Instructions read from a runtime's home remain outside this binding; scoped review
-homes (#8618, #8623) bound those. Repository instruction files in the canonical checkout are accepted fleet context.
+Historical schema-1 records have a separate verifier using the frozen legacy
+codec, including the original primary-cwd redirection and effective prompt bytes.
+Legacy launches are never offered by the task command.
 
 **What a valid reply is.** The reply matches its schema; it names this unit and attempt; the attempt is an accepted
 first-seat attempt of that unit; the mapping names every finding id of the attempt exactly once and no other;
@@ -51,8 +61,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sqlite3
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -71,7 +83,9 @@ except ModuleNotFoundError as exc:
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import main_checkout_root, project_interpreter
+from scripts.dispatcher.cli import ALIASES
+from scripts.dispatcher.cli import build_parser as v2_parser
 from scripts.eval.uk_preamble import legacy_codec
 from scripts.orchestration.task_record_store import locate_task_record
 from scripts.orchestration.worktree_paths import automatic_worktree_path
@@ -84,7 +98,7 @@ SCHEMAS = {
     "clean": REPO_ROOT / "schemas" / "clean-adjudication-v1.schema.json",
 }
 TASKS_SUBDIR = "adjudication"
-DELEGATE = REPO_ROOT / "scripts" / "delegate.py"
+DISPATCH = REPO_ROOT / "scripts" / "dispatch.py"
 READ_ONLY_MODE = "read-only"
 
 
@@ -303,7 +317,7 @@ def write_task(subject: Subject, lesson_text: str, *, review_id: str, root: Path
     return path, task_id
 
 
-def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> list[str]:
+def legacy_dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> list[str]:
     """The ``delegate.py dispatch`` command that runs the task read-only on ``agent``.
 
     The primary ``--cwd`` redirects to a canonical detached worktree. ``--full-checkout``
@@ -317,7 +331,7 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
         raise ValueError("dispatch_argv requires an explicit model (delegate.py dispatch's --model)")
     return [
         sys.executable,
-        str(DELEGATE),
+        str(REPO_ROOT / "scripts" / "delegate.py"),
         "dispatch",
         "--agent",
         agent,
@@ -337,6 +351,186 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
         "--authoring-review-plan",
         "cross_family",
     ]
+
+
+BINDING_VERSION = "adjudication-execution/2"
+
+
+def _canonical_digest(value: Any) -> str:
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    ).hexdigest()
+
+
+def _binding_path(task_file: Path, kind: str) -> Path:
+    return task_file.with_suffix(f".{kind}.json")
+
+
+def _exclusive_json(path: Path, value: dict) -> None:
+    """A launch receipt is never replaced by a retry or a second process."""
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    with open(path, "x", encoding="utf-8", opener=lambda p, f: os.open(p, f, 0o600)) as stream:
+        json.dump(value, stream, sort_keys=True, ensure_ascii=False)
+        stream.write("\n")
+
+
+def dispatch_argv(
+    task_file: Path, task_id: str, agent: str, *, model: str, pinned_head: str | None = None
+) -> list[str]:
+    """Canonical v2 command; every option is frozen by ``prepare_dispatch``."""
+    if not model:
+        raise ValueError("dispatch_argv requires an explicit model")
+    head = (
+        pinned_head
+        or subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, capture_output=True, text=True, check=True, timeout=30
+        ).stdout.strip()
+    )
+    if not re.fullmatch(r"[a-f0-9]{40}", head):
+        raise ValueError("adjudication requires an immutable commit")
+    return [
+        str(project_interpreter()),
+        str(DISPATCH),
+        "dispatch",
+        "--agent",
+        agent,
+        "--task-id",
+        task_id,
+        "--prompt-file",
+        str(task_file),
+        "--mode",
+        READ_ONLY_MODE,
+        "--full-checkout",
+        "--pinned-head",
+        head,
+        "--model",
+        model,
+        "--review-mode",
+        "cross_family",
+    ]
+
+
+def _execution_request(argv: list[str], prompt: bytes) -> dict:
+    options = vars(v2_parser().parse_args(argv[2:]))
+    agent = ALIASES.get(options["agent"], options["agent"])
+    worktree = main_checkout_root(REPO_ROOT) / ".worktrees" / "dispatch" / agent / options["task_id"]
+    return dict(
+        format=BINDING_VERSION,
+        options=options,
+        prompt_sha256=hashlib.sha256(prompt).hexdigest(),
+        worktree_path=str(worktree),
+        worktree_branch=f"{agent}/{options['task_id']}",
+        agent=agent,
+    )
+
+
+def prepare_dispatch(task_file: Path, task_id: str, agent: str, *, model: str) -> dict:
+    """Freeze the request before execution. Re-rendering identical work is idempotent."""
+    path = _binding_path(task_file, "request")
+    if path.exists():
+        request = json.loads(path.read_text(encoding="utf-8"))
+        head = request["options"]["pinned_head"]
+    else:
+        request, head = None, None
+    argv = dispatch_argv(task_file, task_id, agent, model=model, pinned_head=head)
+    expected = _execution_request(argv, task_file.read_bytes())
+    if request is None:
+        _exclusive_json(path, expected)
+    elif request != expected:
+        raise AdjudicationError("adjudication request already frozen differently", TASK_MISMATCH)
+    return dict(
+        dispatch=argv,
+        launch=[
+            str(project_interpreter()),
+            "-m",
+            "scripts.review.seeds.adjudicate",
+            "launch",
+            "--task-file",
+            str(task_file),
+        ],
+    )
+
+
+def _load_request(task_file: Path) -> tuple[dict, list[str]]:
+    request = json.loads(_binding_path(task_file, "request").read_text(encoding="utf-8"))
+    options = request["options"]
+    argv = dispatch_argv(
+        task_file, options["task_id"], options["agent"], model=options["model"], pinned_head=options["pinned_head"]
+    )
+    if request != _execution_request(argv, task_file.read_bytes()):
+        raise AdjudicationError("frozen adjudication request differs from canonical command or prompt", TASK_MISMATCH)
+    return request, argv
+
+
+def launch_dispatch(task_file: Path) -> dict:
+    """Run only the frozen command and retain its returned nonce; never retry a launch."""
+    request, argv = _load_request(task_file)
+    # Reserve before the subprocess. A crash or uncertain launch requires investigation,
+    # never a second paid execution or a receipt synthesized from an existing record.
+    started = _binding_path(task_file, "started")
+    _exclusive_json(started, dict(request_sha256=_canonical_digest(request)))
+    proc = subprocess.run(argv, capture_output=True, text=True, check=True, timeout=900)
+    lines = proc.stdout.splitlines()
+    if len(lines) != 2 or lines[0] != request["options"]["task_id"] or not re.fullmatch(r"[a-f0-9]{32}", lines[1]):
+        raise AdjudicationError("v2 dispatch did not return this task and a nonce", TASK_MISMATCH)
+    receipt = dict(
+        format=BINDING_VERSION, request_sha256=_canonical_digest(request), task_id=lines[0], run_nonce=lines[1]
+    )
+    _exclusive_json(_binding_path(task_file, "execution"), receipt)
+    return receipt
+
+
+def _check_v2_binding(dispatched: dict, task_file: Path, task_id: str, record_path: Path) -> dict[str, str]:
+    try:
+        request, _ = _load_request(task_file)
+        receipt = json.loads(_binding_path(task_file, "execution").read_text(encoding="utf-8"))
+        options = request["options"]
+        nonce = receipt["run_nonce"]
+        if (
+            receipt
+            != dict(format=BINDING_VERSION, request_sha256=_canonical_digest(request), task_id=task_id, run_nonce=nonce)
+            or not isinstance(nonce, str)
+            or not re.fullmatch(r"[a-f0-9]{32}", nonce)
+            or dispatched.get("run_nonce") != nonce
+            or options["task_id"] != task_id
+        ):
+            raise ValueError("execution nonce or request digest differs")
+        expected = {name: options[name] for name in ("model", "effort", "mode", "provider", "claude_account")}
+        expected.update(
+            agent=request["agent"],
+            cwd=request["worktree_path"],
+            worktree_path=request["worktree_path"],
+            worktree_branch=request["worktree_branch"],
+            worktree_base_sha=options["pinned_head"],
+            prompt_sha256=request["prompt_sha256"],
+            review_mode="cross_family",
+        )
+        for name, value in expected.items():
+            if dispatched.get(name) != value:
+                raise ValueError(f"execution {name} differs from the frozen request")
+        if (
+            dispatched.get("status") != "done"
+            or dispatched.get("error")
+            or dispatched.get("substitution")
+            or dispatched.get("research")
+            or dispatched.get("prompt_blocks")
+            or dispatched.get("effective_prompt_sha256")
+        ):
+            raise ValueError("execution was not a successful verbatim adjudication")
+        if hashlib.sha256(Path(dispatched["prompt_file"]).read_bytes()).hexdigest() != request["prompt_sha256"]:
+            raise ValueError("stored effective prompt differs")
+        if (
+            dispatched.get("resolved_model_known") is True or dispatched.get("resolved_model") not in (None, "unknown")
+        ) and (
+            dispatched.get("resolved_model_known") is not True or dispatched.get("resolved_model") != options["model"]
+        ):
+            raise ValueError("runtime model resolution differs from requested identity")
+        identity = adjudicator_identity(dispatched, task_id, record_path)
+        if identity["model"] != options["model"]:
+            raise ValueError("adjudicator identity differs from the frozen model")
+        return identity
+    except (OSError, ValueError, KeyError, TypeError, argparse.ArgumentError) as error:
+        raise AdjudicationError(f"invalid v2 adjudication execution binding: {error}", TASK_MISMATCH) from error
 
 
 # --- the reply --------------------------------------------------------------------------
@@ -481,7 +675,7 @@ def _expected_dispatch_args_sha256(delegate: Any, dispatched: dict[str, Any], ta
     model = dispatched.get("model")
     if not isinstance(model, str) or not model:
         raise AdjudicationError(f"the dispatch record of {task_id} names no model", TASK_MISMATCH)
-    argv = dispatch_argv(task_file, task_id, agent, model=model)
+    argv = legacy_dispatch_argv(task_file, task_id, agent, model=model)
     try:
         parsed = delegate.build_parser().parse_args(argv[2:])
     except SystemExit as error:
@@ -540,6 +734,8 @@ def check_dispatch_binding(
             f"(recorded prompt sha256 {dispatched.get('prompt_sha256')!r}, rendered {rendered})",
             TASK_MISMATCH,
         )
+    if dispatched.get("schema_version") == 2:
+        return _check_v2_binding(dispatched, task_file, task_id, record_path)
     delegate = legacy_codec
     agent = dispatched.get("agent")
     if not isinstance(agent, str) or not agent:
@@ -717,6 +913,10 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True)
+    launch = commands.add_parser(
+        "launch", help="Execute one frozen v2 adjudication request; never retry a started task"
+    )
+    launch.add_argument("--task-file", type=Path, required=True, help="Task file printed by task, e.g. adj-123.task.md")
     for name, text in (("task", "render the adjudication task file"), ("record", "validate and record a reply")):
         command = commands.add_parser(name, help=text)
         command.add_argument("unit_id", help="seed-<id> or clean-<id>")
@@ -726,12 +926,14 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument("--db", type=Path, default=None, help="findings database (default: the unit's level)")
         if name == "task":
             command.add_argument("--lesson", type=Path, required=True, help="the expanded measurement lesson")
-            command.add_argument("--agent", required=True, help="the adjudicating harness (delegate.py --agent)")
+            command.add_argument(
+                "--agent", required=True, help="the adjudicating harness (scripts/dispatch.py --agent)"
+            )
             command.add_argument(
                 "--model",
                 required=True,
                 help=(
-                    "the adjudicating model (delegate.py dispatch's --model); required so "
+                    "the adjudicating model (scripts/dispatch.py --model); required so "
                     "check_dispatch_binding can reconstruct the canonical dispatch byte-for-byte"
                 ),
             )
@@ -745,7 +947,9 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        if args.command == "task":
+        if args.command == "launch":
+            payload = launch_dispatch(args.task_file)
+        elif args.command == "task":
             root = Path(args.repo_root).resolve() if args.repo_root else REPO_ROOT
             unit = _load_record(args.unit_id, root)
             conn = findings_db.connect(args.db or findings_db.db_path(unit.level, root))
@@ -759,7 +963,7 @@ def main(argv: list[str] | None = None) -> int:
             payload = {
                 "task_file": str(path),
                 "task_id": task_id,
-                "dispatch": dispatch_argv(path, task_id, args.agent, model=args.model),
+                **prepare_dispatch(path, task_id, args.agent, model=args.model),
             }
         else:
             payload = record_adjudication(
@@ -772,7 +976,16 @@ def main(argv: list[str] | None = None) -> int:
                 db_path=args.db,
                 tasks_dir=args.tasks_dir,
             )
-    except (AdjudicationError, findings_db.FindingsDbError, seed_manifest.MeasurementError, OSError) as error:
+    except (
+        AdjudicationError,
+        findings_db.FindingsDbError,
+        seed_manifest.MeasurementError,
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        subprocess.SubprocessError,
+    ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
     print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))

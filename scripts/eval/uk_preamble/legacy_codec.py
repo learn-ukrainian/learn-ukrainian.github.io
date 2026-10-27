@@ -24,7 +24,7 @@ from scripts.common.repo_root import project_interpreter
 from scripts.lib import rules_core
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_GIT_TIMEOUT_S = 60
+DEFAULT_GIT_TIMEOUT_S = 30.0
 
 DISPATCH_ARGS_HASH_EXCLUDED_FIELDS = {
     "run_nonce": "unique per attempt; only used for stale cross-host split-brain detection (#7168)",
@@ -537,7 +537,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument("--harness", dest="harness", default=None, choices=["kimicc", "native"])
     dispatch.add_argument("--task-id", dest="task_id", default=None, required=True)
-    dispatch.add_argument("--force-new", dest="force_new", default=False, action="store_true", nargs=0, const=True)
+    dispatch.add_argument("--force-new", dest="force_new", default=False, action="store_true")
     dispatch.add_argument("--force-admission", dest="force_admission", default=None)
     dispatch.add_argument("--initiator", dest="initiator", default=None)
     dispatch.add_argument("--run-nonce", dest="run_nonce", default=None)
@@ -558,20 +558,9 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--pr", dest="pr", default=None, type=int)
     dispatch.add_argument("--pinned-head", dest="pinned_head", default=None)
     dispatch.add_argument("--branch", dest="branch", default=None)
-    dispatch.add_argument(
-        "--keep-worktree", dest="keep_worktree", default=False, action="store_true", nargs=0, const=True
-    )
-    dispatch.add_argument(
-        "--finalize-open-pr", dest="finalize_open_pr", default=False, action="store_true", nargs=0, const=True
-    )
-    dispatch.add_argument(
-        "--require-review-verdict",
-        dest="require_review_verdict",
-        default=False,
-        action="store_true",
-        nargs=0,
-        const=True,
-    )
+    dispatch.add_argument("--keep-worktree", dest="keep_worktree", default=False, action="store_true")
+    dispatch.add_argument("--finalize-open-pr", dest="finalize_open_pr", default=False, action="store_true")
+    dispatch.add_argument("--require-review-verdict", dest="require_review_verdict", default=False, action="store_true")
     dispatch.add_argument(
         "--review-profile", dest="review_profile", default=None, choices=["code", "infra", "ukrainian"]
     )
@@ -591,20 +580,14 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--review-access", dest="review_access", default="full", choices=["full", "isolated"])
     dispatch.add_argument("--review-id", dest="review_id", default=None)
     dispatch.add_argument("--attempt-id", dest="attempt_id", default=None)
-    dispatch.add_argument(
-        "--full-checkout", dest="full_checkout", default=False, action="store_true", nargs=0, const=True
-    )
+    dispatch.add_argument("--full-checkout", dest="full_checkout", default=False, action="store_true")
     dispatch.add_argument("--sparse-include", dest="sparse_include", default=None, action="append")
     dispatch.add_argument("--base", dest="base", default=None)
-    dispatch.add_argument("--allow-merge", dest="allow_merge", default=False, action="store_true", nargs=0, const=True)
-    dispatch.add_argument(
-        "--language-lane", dest="language_lane", default=False, action="store_true", nargs=0, const=True
-    )
-    dispatch.add_argument(
-        "--check-budget", dest="check_budget", default=False, action="store_true", nargs=0, const=True
-    )
-    dispatch.add_argument("--force-agent", dest="force_agent", default=False, action="store_true", nargs=0, const=True)
-    dispatch.add_argument("--dry-run", dest="dry_run", default=False, action="store_true", nargs=0, const=True)
+    dispatch.add_argument("--allow-merge", dest="allow_merge", default=False, action="store_true")
+    dispatch.add_argument("--language-lane", dest="language_lane", default=False, action="store_true")
+    dispatch.add_argument("--check-budget", dest="check_budget", default=False, action="store_true")
+    dispatch.add_argument("--force-agent", dest="force_agent", default=False, action="store_true")
+    dispatch.add_argument("--dry-run", dest="dry_run", default=False, action="store_true")
     dispatch.add_argument("--hard-timeout", dest="hard_timeout", default=7200, type=int)
     dispatch.add_argument("--silence-timeout", dest="silence_timeout", default=3600, type=int)
     dispatch.add_argument("--initial-response-timeout", dest="initial_response_timeout", default=600, type=int)
@@ -619,28 +602,19 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--advisory-task", dest="advisory_task", default=None)
     dispatch.add_argument("--advisory-role", dest="advisory_role", default=None, choices=["bounded_advisory_envelope"])
     dispatch.add_argument("--advisory-binding", dest="advisory_binding", default=None)
-    dispatch.add_argument(
-        "--print-advisory-binding",
-        dest="print_advisory_binding",
-        default=False,
-        action="store_true",
-        nargs=0,
-        const=True,
-    )
+    dispatch.add_argument("--print-advisory-binding", dest="print_advisory_binding", default=False, action="store_true")
     dispatch.add_argument("--allow-path-overlap", dest="allow_path_overlap", default=None)
-    dispatch.add_argument(
-        "--preflight-triage", dest="preflight_triage", default=False, action="store_true", nargs=0, const=True
-    )
+    dispatch.add_argument("--preflight-triage", dest="preflight_triage", default=False, action="store_true")
     dispatch.add_argument("--preflight-base", dest="preflight_base", default=None)
     dispatch.add_argument("--preflight-test-log", dest="preflight_test_log", default=None)
     dispatch.add_argument("--verify-command", dest="verify_command", default=None)
     dispatch.add_argument(
-        "--review-mode", dest="review_mode", default="==SUPPRESS==", choices=["cross_family", "red_team"]
+        "--review-mode", dest="review_mode", default=argparse.SUPPRESS, choices=["cross_family", "red_team"]
     )
     dispatch.add_argument(
         "--authoring-review-plan",
         dest="authoring_review_plan",
-        default="==SUPPRESS==",
+        default=argparse.SUPPRESS,
         choices=["cross_family", "red_team"],
     )
     return parser
