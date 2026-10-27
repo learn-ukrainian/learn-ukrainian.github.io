@@ -34,7 +34,7 @@ GIT_BINARY = shutil.which("git", path=os.defpath)
 # the bounded fetch measured about one second and the blob-less full-history fallback
 # about three; 60 seconds leaves headroom for a slow link without hanging a settling task.
 VERIFICATION_FETCH_TIMEOUT = 60
-# Committer-clock slack below the task base date. Speed depends on this value;
+# Committer-clock slack below the task start date. Speed depends on this value;
 # correctness does not, because _complete_since_task_base checks the fetched graph.
 HISTORY_SLACK_SECONDS = 86400
 
@@ -89,21 +89,21 @@ def verification_origin(path: Path) -> str:
 
 
 def _complete_since_task_base(run, shallow: Path, task_base: str) -> bool:
-    """Whether the fetched graph is enough to walk the delivery above the task base.
+    """Whether the fetched graph is enough to walk the delivery above the task start.
 
-    Callers walk from the delivery tip, excluding the task base and a merge base
+    Callers walk from the delivery tip, excluding the task start and a merge base
     with the base tip. Single-parent commits are diffed against their parent and
     merges are re-run, which recomputes the merge bases of their parents.
 
     Every commit the walk inspects needs its real parents. A bounded fetch records
     each shallow boundary commit without parents, so no boundary may lie on a
-    tip's path above the task base. A boundary parent is itself present with its
+    tip's path above the task start. A boundary parent is itself present with its
     tree, so a single-parent diff against it is exact, and a merge base found in
     the bounded graph is a real common ancestor of the delivery and the base tip.
 
     A merge in the inspected range needs the complete ancestry of its parents to
     be recomputed. A graph with shallow boundaries does not provide it, so a
-    delivery with any merge above the task base requires non-shallow history.
+    delivery with any merge above the task start requires non-shallow history.
     """
     tips = ("refs/heads/delivery", "refs/heads/base")
     if task_base not in run("rev-list", *tips).split():
@@ -123,10 +123,10 @@ def ownership_git(record: dict):
     their includes, grafts and replacement refs. Objects and refs come only from
     the remote URL recorded before provider execution. No local objects are reused.
 
-    The transfer is blob-less and starts at the task base date, so it stays small
+    The transfer is blob-less and starts at the task start date, so it stays small
     on a multi-gigabyte repository. Blobs are fetched lazily from the same URL only
     when a merge must be re-run. If a remote tip is dated before the cutoff (clock
-    skew), that bounded history does not reach the task base on every path, or the
+    skew), that bounded history does not reach the task start on every path, or the
     delivery contains a merge, the full blob-less history is fetched instead and
     must leave the repository unshallow.
 
@@ -139,7 +139,7 @@ def ownership_git(record: dict):
     base = record["worktree_base_ref"].removeprefix("refs/remotes/")
     if not base.startswith("origin/"):
         raise ValueError("ownership verification requires an origin base")
-    task_base = record["worktree_base_sha"]
+    task_base = record.get("worktree_start_sha", record["worktree_base_sha"])
     if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", task_base):
         raise ValueError("task base must be a full object name")
     delivery_ref = f"refs/heads/{record['worktree_branch']}"
@@ -299,9 +299,10 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
         worktree_dirty_on_exit=None,
     )
     try:
+        start_sha = record.get("worktree_start_sha", record["worktree_base_sha"])
         delivery.update(
             head_sha=_git(spec.worktree, "rev-parse", "HEAD"),
-            commits_ahead=int(_git(spec.worktree, "rev-list", "--count", f"{record['worktree_base_sha']}..HEAD")),
+            commits_ahead=int(_git(spec.worktree, "rev-list", "--count", f"{start_sha}..HEAD")),
             worktree_dirty_on_exit=bool(_git(spec.worktree, "status", "--porcelain")),
         )
         if spec.mode == "read-only":

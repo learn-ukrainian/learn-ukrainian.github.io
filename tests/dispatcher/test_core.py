@@ -681,6 +681,8 @@ def delivery_settle(sandbox):
         time.sleep(0.02)
     # Synthetic write records need the trusted remote omitted from read-only dispatches.
     record["worktree_remote_url"] = str(sandbox.remote)
+    # Existing settle probes also cover records created before the start-SHA field.
+    record.pop("worktree_start_sha", None)
     def settle(model="echo", owned=("delivered.txt",)):
         record.update(mode="workspace-write", model=model, status="running", owned_paths=list(owned or []))
         if owned is None:
@@ -856,6 +858,48 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
                         "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
     worker._enforce_delivery(result)
     assert (result["status"], result["error"]) == ("done", None)
+
+
+@pytest.mark.parametrize("attach", ["branch", "pinned-head", "cwd"])
+@pytest.mark.parametrize("new_path", ["delivered.txt", "new-outside.txt"])
+def test_branch_fix_round_ownership_starts_after_preexisting_commits(sandbox, attach, new_path):
+    initial = sandbox.settle(sandbox.dispatch())
+    tree = Path(initial["cwd"])
+    base = run_git(sandbox.repo, "rev-parse", "origin/main")
+    (tree / "earlier-outside.txt").write_text("previous round\n")
+    run_git(tree, "add", "earlier-outside.txt")
+    run_git(tree, "commit", "-m", "previous round outside current scope")
+    starting_head = run_git(tree, "rev-parse", "HEAD")
+    branch = initial["worktree_branch"]
+    run_git(tree, "push", "origin", "HEAD")
+    flags = ["--cwd", str(tree)] if attach == "cwd" else ["--branch", branch]
+    if attach == "pinned-head":
+        flags += ["--pinned-head", starting_head]
+    task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--owned-path", "delivered.txt", *flags)
+    path = sandbox.tasks / f"{task[0]}.json"
+    record = json.loads(path.read_text())
+    await_file(Path(record["prompt_file"]).with_suffix(".started"))
+    tree = Path(record["cwd"])
+    (tree / new_path).write_text("current round\n")
+    run_git(tree, "add", new_path)
+    run_git(tree, "commit", "-m", "current round delivery")
+    run_git(tree, "push", "origin", f"HEAD:{branch}")
+    Path(record["prompt_file"]).with_suffix(".release").touch()
+    outside = new_path != "delivered.txt"
+    result = sandbox.settle(task, expected=1 if outside else 0)
+    # Recheck the reported defect's record shape: base is main, start is the branch tip.
+    # Keep the actual start captured at dispatch, independent of the configured base.
+    result.update(worktree_base_sha=base, status="done", error=None)
+    result.update(git.snapshot_delivery(worker._spec(result, {}), result))
+    worker._enforce_delivery(result)
+    assert (result["status"], result["error"]) == (
+        ("no_deliverable", "outside_owned_paths: new-outside.txt") if outside else ("done", None)
+    )
+    assert result["worktree_start_sha"] == starting_head
+    assert result["worktree_base_sha"] == base
+    assert result["commits_ahead"] == 1
+    assert result["push_state"] == "pushed"
+    assert result["remote_head_sha"] == result["head_sha"]
 
 
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
@@ -1228,10 +1272,19 @@ def test_delivery_dirty_same_head_cannot_report_pushed_or_unknown(sandbox, remot
         ("pinned", 0, False, "pushed", "remote_head_matches", False),
     ],
 )
-def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target, commits, dirty, expected, reason, crash):
+@pytest.mark.parametrize("preexisting", [False, True])
+def test_delivery_only_counts_exact_heads_on_authorized_branches(
+    sandbox, target, commits, dirty, expected, reason, crash, preexisting,
+):
     """Prefix tricks and supervisor crashes cannot falsify pinned-branch delivery evidence."""
     pinned = "codex/existing-pr"
-    run_git(sandbox.repo, "branch", pinned, "main")
+    run_git(sandbox.repo, "checkout", "-b", pinned, "main")
+    if preexisting:
+        (sandbox.repo / "earlier.txt").write_text("previous round\n")
+        run_git(sandbox.repo, "add", "earlier.txt")
+        run_git(sandbox.repo, "commit", "-m", "preexisting branch commit")
+    starting_head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "checkout", "main")
     if target not in {None, "prefix"}:
         run_git(sandbox.repo, "push", "origin", pinned)
     task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--branch", pinned)
@@ -1278,12 +1331,13 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
         assert observed["remote_ref"] == before_crash["remote_ref"]
     assert observed["head_sha"] == head
     assert observed["commits_ahead"] == commits
+    assert observed["worktree_start_sha"] == starting_head
     assert observed["worktree_dirty_on_exit"] is dirty
     if matched:
         assert observed["remote_head_sha"] == head
         assert run_git(sandbox.remote, "rev-parse", f"refs/heads/{matched}") == head
     else:
-        assert observed["remote_head_sha"] == (record["worktree_base_sha"] if target not in {None, "prefix"} else None)
+        assert observed["remote_head_sha"] == (starting_head if target not in {None, "prefix"} else None)
 
 
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
