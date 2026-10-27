@@ -884,8 +884,13 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
     assert (record["status"], record["error"]) == ("done", None)
 
 
-def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch):
-    """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base."""
+@pytest.mark.parametrize("shape", ["linear", "merge"])
+def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape):
+    """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base.
+
+    A delivery containing a merge is the exception. Re-running a merge needs every merge base, and
+    a cut below the task base can remove one, so Git would merge against an empty tree instead.
+    """
     remote, tree = tmp_path / "remote.git", tmp_path / "tree"
     run_git(tmp_path, "init", "--bare", str(remote))
     run_git(remote, "config", "uploadpack.allowFilter", "true")
@@ -893,17 +898,44 @@ def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch):
     run_git(tree, "config", "user.email", "stub@example.invalid")
     run_git(tree, "config", "user.name", "Stub")
     run_git(tree, "remote", "add", "origin", str(remote))
-    old = set()
+    old_commits, old_blobs = set(), set()
     for n in range(20):
         monkeypatch.setenv("GIT_COMMITTER_DATE", f"2020-01-{n + 1:02d}T00:00:00Z")
         (tree / f"old-{n}.txt").write_text(f"old history {n}\n")
         run_git(tree, "add", ".")
         run_git(tree, "commit", "-m", f"old history {n}")
-        old.update(run_git(tree, "rev-parse", "HEAD", f"HEAD:old-{n}.txt").split())
+        commit, blob = run_git(tree, "rev-parse", "HEAD", f"HEAD:old-{n}.txt").split()
+        old_commits.add(commit)
+        old_blobs.add(blob)
+    if shape == "merge":
+        (tree / "outside.txt").write_text("outside\n")
+        run_git(tree, "add", "outside.txt")
+        run_git(tree, "commit", "-m", "A adds outside.txt")
     monkeypatch.delenv("GIT_COMMITTER_DATE")
-    run_git(tree, "commit", "--allow-empty", "-m", "task base")
-    run_git(tree, "push", "origin", "main")
-    run_git(tree, "checkout", "-b", "sol/fetch")
+    if shape == "linear":
+        run_git(tree, "commit", "--allow-empty", "-m", "task base")
+        run_git(tree, "push", "origin", "main")
+        run_git(tree, "checkout", "-b", "sol/fetch")
+    else:
+        # P deletes outside.txt and Q leaves it alone. Both are newer than the cut and A is older,
+        # so a bounded fetch leaves P and Q with no common ancestor. B = merge(P, Q) is the task base.
+        run_git(tree, "checkout", "-b", "q")
+        (tree / "q.txt").write_text("q\n")
+        run_git(tree, "add", "q.txt")
+        run_git(tree, "commit", "-m", "Q")
+        run_git(tree, "checkout", "main")
+        run_git(tree, "rm", "outside.txt")
+        run_git(tree, "commit", "-m", "P deletes outside.txt")
+        run_git(tree, "merge", "--no-ff", "-m", "task base", "q")
+        run_git(tree, "push", "origin", "main")
+        # D re-merges P and Q but keeps outside.txt; F merges B into D and drops it again.
+        run_git(tree, "checkout", "-b", "sol/fetch", "main^1")
+        run_git(tree, "merge", "--no-ff", "--no-commit", "q")
+        run_git(tree, "checkout", "main^1^1", "--", "outside.txt")
+        run_git(tree, "commit", "-m", "D keeps outside.txt")
+        run_git(tree, "merge", "--no-commit", "main")
+        run_git(tree, "rm", "outside.txt")
+        run_git(tree, "commit", "-m", "F drops outside.txt")
     (tree / "delivered.txt").write_text("delivery\n")
     run_git(tree, "add", "delivered.txt")
     run_git(tree, "commit", "-m", "delivery")
@@ -917,11 +949,19 @@ def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch):
     )
     with git.ownership_git(record) as run:
         present = set(run("cat-file", "--batch-all-objects", "--batch-check=%(objectname)").split())
+        shallow = run("rev-parse", "--is-shallow-repository")
     assert {base, head} <= present
-    assert old.isdisjoint(present)
+    assert old_blobs.isdisjoint(present)
     assert run_git(tree, "rev-parse", "HEAD:delivered.txt") not in present
+    if shape == "linear":
+        assert shallow == "true"
+        assert old_commits.isdisjoint(present)
+        expected = ("done", None)
+    else:
+        assert shallow == "false"
+        expected = ("no_deliverable", "outside_owned_paths: outside.txt")
     worker._enforce_delivery(record)
-    assert (record["status"], record.get("error")) == ("done", None)
+    assert (record["status"], record.get("error")) == expected
 
 
 @pytest.mark.parametrize("missing", ["worktree_remote_url", "git-binary", "scratch", "remote-tip"])

@@ -89,19 +89,30 @@ def verification_origin(path: Path) -> str:
 
 
 def _complete_since_task_base(run, shallow: Path, task_base: str) -> bool:
-    """Whether the fetched graph matches the remote above the task base.
+    """Whether the fetched graph is enough to walk the delivery above the task base.
 
-    A bounded fetch gives each cut commit no parents. Callers walk from the
-    delivery tip, excluding the task base and a merge base with the base tip.
-    Every commit that walk must inspect lies on a tip's path above the task base,
-    so when no cut lies there each one is present with its real parents. A merge
-    base found in the bounded graph is still a real common ancestor, and anything
-    the bounded graph fails to exclude is inspected, so the walk can only widen.
+    Callers walk from the delivery tip, excluding the task base and a merge base
+    with the base tip. Single-parent commits are diffed against their parent and
+    merges are re-run, which recomputes the merge bases of their parents.
+
+    A bounded fetch gives each cut commit no parents, so no cut may lie on a tip's
+    path above the task base: every commit the walk inspects then has its real
+    parents, and a merge base found in the bounded graph is still a real common
+    ancestor reachable from the trusted base tip. A cut parent is itself present
+    with its tree, so a single-parent diff against it is exact.
+
+    Merge bases of a merge's parents can lie anywhere, including below the cut.
+    With none left, Git merges against an empty tree, which can reproduce an
+    edited resolution exactly and hide it. So a delivery with any merge above the
+    task base needs a graph that is not shallow at all.
     """
     tips = ("refs/heads/delivery", "refs/heads/base")
-    cuts = set(shallow.read_text().split()) if shallow.exists() else set()
-    return (task_base in run("rev-list", *tips).split()
-            and cuts.isdisjoint(run("rev-list", *tips, "--not", task_base).split()))
+    if task_base not in run("rev-list", *tips).split():
+        return False
+    if run("rev-parse", "--is-shallow-repository") == "false":
+        return True
+    return (set(shallow.read_text().split()).isdisjoint(run("rev-list", *tips, "--not", task_base).split())
+            and not run("rev-list", "--min-parents=2", "refs/heads/delivery", "--not", task_base))
 
 
 @contextmanager
@@ -116,7 +127,8 @@ def ownership_git(record: dict):
     The transfer is blob-less and starts at the task base date, so it stays small
     on a multi-gigabyte repository. Blobs are fetched lazily from the same URL only
     when a merge must be re-run. If that bounded history does not reach the task
-    base on every path, the full blob-less history is fetched instead.
+    base on every path, or the delivery contains a merge, the full blob-less
+    history is fetched instead and must leave the repository unshallow.
     """
     remote = record["worktree_remote_url"]
     if verification_origin(Path(record["worktree_path"])) != remote:
@@ -144,9 +156,11 @@ def ownership_git(record: dict):
         fetch(f"--shallow-since=@{since}", "--", "origin", *refspecs)
         shallow = scratch.payload_dir / "shallow"
         if not _complete_since_task_base(run, shallow, task_base):
-            if not shallow.exists():
+            if run("rev-parse", "--is-shallow-repository") == "false":
                 raise ValueError("task base is not reachable from the remote tips")
             fetch("--unshallow", "--", "origin", *refspecs)
+            if run("rev-parse", "--is-shallow-repository") != "false":
+                raise ValueError("full history could not be fetched")
             if not _complete_since_task_base(run, shallow, task_base):
                 raise ValueError("task base is not reachable from the remote tips")
         if run("rev-parse", "--verify", "refs/heads/delivery^{commit}") != record["head_sha"]:
